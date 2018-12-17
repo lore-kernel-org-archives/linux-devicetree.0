@@ -1,33 +1,31 @@
-Return-Path: <SRS0=0VMp=OX=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 14/17] arm64: dts: renesas: r8a774c0: Connect RZ/G2E AVB to IPMMU
-Date: Fri, 14 Dec 2018 09:37:37 +0000
-Message-Id: <1544780260-27590-15-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=Jkdf=O2=gmail.com=geert.uytterhoeven@kernel.org>
+MIME-Version: 1.0
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com> <1544780260-27590-13-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <1544780260-27590-13-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Mon, 17 Dec 2018 17:17:48 +0100
+Message-ID: <CAMuHMdWGeF9fWAmb=NoWbTLf2DWxnXfRoN-sZ3W5XyGmDi2iiA@mail.gmail.com>
+Subject: Re: [PATCH 12/17] arm64: dts: renesas: r8a774c0: Add USB3.0 device nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hook up the RZ/G2E AVB device to IPMMU-DS0 as stated by the
-RZ/G2 User's manual.
+On Fri, Dec 14, 2018 at 10:38 AM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> Add usb3.0 host and function device nodes to the RZ/G2E SoC dtsi.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index 5186a1b..58d4c60 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -798,6 +798,7 @@
- 			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
- 			resets = <&cpg 812>;
- 			phy-mode = "rgmii";
-+			iommus = <&ipmmu_ds0 16>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			status = "disabled";
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.7.4
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
