@@ -1,35 +1,31 @@
-Return-Path: <SRS0=Wa7V=OV=linaro.org=loic.poulain@kernel.org>
-From: Loic Poulain <loic.poulain@linaro.org>
-Subject: [PATCH] arm64: dts: apq8096-db820c: Increase load on l21 for SDCARD
-Date: Wed, 12 Dec 2018 18:13:26 +0100
-Message-Id: <1544634806-1037-1-git-send-email-loic.poulain@linaro.org>
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org
-Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, Loic Poulain <loic.poulain@linaro.org>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 17 Dec 2018 14:48:15 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 6/7] remoteproc: qcom: wcss: Add non pas wcss Q6
+ support for QCS404
+Message-ID: <20181217204815.GA17099@bogus>
+References: <20181215103557.2748-1-govinds@codeaurora.org>
+ <20181215103557.2748-7-govinds@codeaurora.org>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181215103557.2748-7-govinds@codeaurora.org>
+To: Govind Singh <govinds@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org, sboyd@kernel.org, linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-In the same way as for msm8974-hammerhead, l21 load, used for SDCARD
-VMMC, needs to be increased in order to prevent any voltage drop issues
-(due to limited current) happening with some SDCARDS or during specific
-operations (e.g. write).
+On Sat, Dec 15, 2018 at 04:05:56PM +0530, Govind Singh wrote:
+> Add non PAS WCSS remoteproc driver support for QCS404 SOC.
+> Add WCSS q6 bootup and shutdown sequence handled from
+> Application Processor SubSystem(APSS).
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> ---
+>  .../bindings/remoteproc/qcom,q6v5.txt         |  61 ++
 
-Fixes: 660a9763c6a9 (arm64: dts: qcom: db820c: Add pm8994 regulator node)
-Signed-off-by: Loic Poulain <loic.poulain@linaro.org>
----
- arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi | 2 ++
- 1 file changed, 2 insertions(+)
+Please add acks/reviewed-bys when posting new versions.
 
-diff --git a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-index 104cad9..c15e2c0 100644
---- a/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-+++ b/arch/arm64/boot/dts/qcom/apq8096-db820c.dtsi
-@@ -634,6 +634,8 @@
- 				l21 {
- 					regulator-min-microvolt = <2950000>;
- 					regulator-max-microvolt = <2950000>;
-+					regulator-allow-set-load;
-+					regulator-system-load = <200000>;
- 				};
- 				l22 {
- 					regulator-min-microvolt = <3300000>;
--- 
-2.7.4
+In the future, please split bindings to a separate patch.
+
+>  drivers/remoteproc/qcom_q6v5_wcss.c           | 544 +++++++++++++++++-
+>  2 files changed, 577 insertions(+), 28 deletions(-)
