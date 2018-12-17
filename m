@@ -1,118 +1,88 @@
-MIME-Version: 1.0
-Date: Mon, 17 Dec 2018 11:00:57 -0600
+Return-Path: <SRS0=2g+B=O2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400103.outbound.protection.outlook.com ([40.107.140.103]:19584
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726657AbeLQQWg (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Dec 2018 11:22:36 -0500
+From: Chris Brandt <Chris.Brandt@renesas.com>
+Subject: RE: [PATCH 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M
+ EVB
+Date: Mon, 17 Dec 2018 16:22:28 +0000
+Message-ID: <TYXPR01MB156894C0FEE2A2CF02820A018ABC0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
 References: <20181129130559.66732-1-chris.brandt@renesas.com>
-	<20181129130559.66732-3-chris.brandt@renesas.com>
-	<20181212021549.GA26333@bogus>
-	<TYXPR01MB1568DD386FE18BD1F985E5178AA70@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-	<CAL_Jsq+Ah7Xg0VnEaYyn4giFeQme9r9GyRsFDucq78BP+Cw2=A@mail.gmail.com>
-	<TY2SPR01MB0015C0AC923F1CDEC44061D88AA70@TY2SPR01MB0015.jpnprd01.prod.outlook.com>
-	<CAL_JsqL5rLb+6Qhet0zqpHuqeU42wsFRJ+S48N0KPg43KxOiDg@mail.gmail.com>
-	<TYXPR01MB156894C0FEE2A2CF02820A018ABC0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-In-Reply-To: <TYXPR01MB156894C0FEE2A2CF02820A018ABC0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
-Message-ID: <CAL_JsqLkqUTWh7RkG8tdTNhaTOMTOovDstZCqC=croQbAWmJSg@mail.gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <Chris.Brandt@renesas.com>
-Cc: Kumar Gala <kumar.gala@linaro.org>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
+ <20181129130559.66732-3-chris.brandt@renesas.com>
+ <20181212021549.GA26333@bogus>
+ <TYXPR01MB1568DD386FE18BD1F985E5178AA70@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+ <CAL_Jsq+Ah7Xg0VnEaYyn4giFeQme9r9GyRsFDucq78BP+Cw2=A@mail.gmail.com>
+ <TY2SPR01MB0015C0AC923F1CDEC44061D88AA70@TY2SPR01MB0015.jpnprd01.prod.outlook.com>
+ <CAL_JsqL5rLb+6Qhet0zqpHuqeU42wsFRJ+S48N0KPg43KxOiDg@mail.gmail.com>
+In-Reply-To: <CAL_JsqL5rLb+6Qhet0zqpHuqeU42wsFRJ+S48N0KPg43KxOiDg@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Kumar Gala <kumar.gala@linaro.org>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Dec 17, 2018 at 10:22 AM Chris Brandt <Chris.Brandt@renesas.com> wrote:
->
-> On Monday, December 17, 2018 1, Rob Herring wrote:
-> > > But, XIP_KERNEL does not seem to be mainstream either.
-> >
-> > Part of the problem there is XIP_KERNEL doesn't work with
-> > multi-platform. I think that is mainly due to the dependency on
-> > run-time phys2virt patching. We should fix that such that either we
-> > can set a default phys_offset or possibly we could do some offline
-> > patching.
->
-> Not really. I fixed all of that back in 4.6.
->
-> The issue is more of the 'theoretical' kind.
->
-> The ARM maintainer defines "multiplatform" as being able to build 1
-> binary image that can be run on multiple SoCs.
-> But...that won't work when you have to define the ROM/RAM area at
-> compile time.
->
-> I prefer to think of "multiplatform" as a way of grouping like SoCs
-> together (if you need to) and use DT to sort out any differences.
-
-Yes, I'm aware of all that. I did a bunch of the work to enable it.
-
-> Basically, I just need this simple patch in order to build and boot so I
-> can test kernel releases:
->
-> [arch/arm/Kconfig]
->
-> config XIP_KERNEL
->         bool "Kernel Execute-In-Place from ROM"
-> -       depends on !ARM_LPAE && !ARCH_MULTIPLATFORM
-> +       depends on !ARM_LPAE
-
-Okay, I guess it's not that hard to enable if one wants. Perhaps all
-
-> However...I've given up on trying to get XIP_KERNEL enabled in Kconfig.
-> But, of course still keep an eye on all the 'code' in the ARM core to
-> make sure no one breaks it.
-
-
-> > > At the end of the day, all I want is for the kernel to do an ioremap of
-> > > this area for me so my file system (XIP cramfs in this case) can access
-> > > it. "mtd-rom" does this for me today.
-> >
-> > And partition layout? If it was only what to map, we could add a
-> > property in chosen or perhaps a reserved-memory node. But I doubt it
-> > will remain that simple. What happens when you have clock management
-> > and need to keep the SPI clock enabled for example.
->
-> Yup...there's the killer!
-> You'll notice that in mainline RZ/A devices, there is no QSPI driver,
-> and also the QSPI clock is left out of the list of HW clocks. Otherwise,
-> as you mentioned, that 'unused' clock would get shut off at the end of
-> boot...and you're whole system would stop immediately.
-
-If you had a simple driver with the binding as I proposed, then it
-could do the ioremap and clock management. And you could also have
-specific SPI and flash drivers for when you need to flashing without
-changing the DT.
-
-> > The other option is just have your platform code instantiate an
-> > mtd-rom device. Either describe the h/w with DT or don't use DT.
->
-> You mean in a 'board' file?
-
-Yes.
-
-> BTW, I still use board files for things that are too complicated for DT.
-
-As you should.
-
-> > > The other XIP file system that we use more often (AXFS, not in mainline)
-> > > does not require the partitions in DT at all, so it's really only
-> > > needed when using cramfs. So for now, maybe it would be better to just
-> > remove
-> > > this confusing portion of the dts.
-> >
-> > What does AXFS have that cramfs doesn't making it not need partitions?
->
-> For AXFS, you pass in the physical address to your rootfs on the kernel
-> command line and then AXFS does the ioreapping itself inside the driver.
->
-> When Nicolas Pitre started adding XIP mode to cramfs last year, he also
-> started out that way. But, that was rejected (as it was also rejected
-> when DAX was first started). The file system people said 'file system
-> drives should not have the ability to map physical memory themselves'.
-
-Right, I remember that now.
-
-> Another thing AXFS can do that Cramfs can't do (yet), is AXFS can within
-> *each file* select what pages will be XIP, and what ones will be
-> compressed. This saves a lot on Flash space when only your executable and
-> const pages are left as uncompressed XIP pages.
->
->
-> Chris
->
+T24gTW9uZGF5LCBEZWNlbWJlciAxNywgMjAxOCAxLCBSb2IgSGVycmluZyB3cm90ZToNCj4gPiBC
+dXQsIFhJUF9LRVJORUwgZG9lcyBub3Qgc2VlbSB0byBiZSBtYWluc3RyZWFtIGVpdGhlci4NCj4g
+DQo+IFBhcnQgb2YgdGhlIHByb2JsZW0gdGhlcmUgaXMgWElQX0tFUk5FTCBkb2Vzbid0IHdvcmsg
+d2l0aA0KPiBtdWx0aS1wbGF0Zm9ybS4gSSB0aGluayB0aGF0IGlzIG1haW5seSBkdWUgdG8gdGhl
+IGRlcGVuZGVuY3kgb24NCj4gcnVuLXRpbWUgcGh5czJ2aXJ0IHBhdGNoaW5nLiBXZSBzaG91bGQg
+Zml4IHRoYXQgc3VjaCB0aGF0IGVpdGhlciB3ZQ0KPiBjYW4gc2V0IGEgZGVmYXVsdCBwaHlzX29m
+ZnNldCBvciBwb3NzaWJseSB3ZSBjb3VsZCBkbyBzb21lIG9mZmxpbmUNCj4gcGF0Y2hpbmcuDQoN
+Ck5vdCByZWFsbHkuIEkgZml4ZWQgYWxsIG9mIHRoYXQgYmFjayBpbiA0LjYuDQoNClRoZSBpc3N1
+ZSBpcyBtb3JlIG9mIHRoZSAndGhlb3JldGljYWwnIGtpbmQuDQoNClRoZSBBUk0gbWFpbnRhaW5l
+ciBkZWZpbmVzICJtdWx0aXBsYXRmb3JtIiBhcyBiZWluZyBhYmxlIHRvIGJ1aWxkIDEgDQpiaW5h
+cnkgaW1hZ2UgdGhhdCBjYW4gYmUgcnVuIG9uIG11bHRpcGxlIFNvQ3MuDQpCdXQuLi50aGF0IHdv
+bid0IHdvcmsgd2hlbiB5b3UgaGF2ZSB0byBkZWZpbmUgdGhlIFJPTS9SQU0gYXJlYSBhdCANCmNv
+bXBpbGUgdGltZS4NCg0KSSBwcmVmZXIgdG8gdGhpbmsgb2YgIm11bHRpcGxhdGZvcm0iIGFzIGEg
+d2F5IG9mIGdyb3VwaW5nIGxpa2UgU29DcyANCnRvZ2V0aGVyIChpZiB5b3UgbmVlZCB0bykgYW5k
+IHVzZSBEVCB0byBzb3J0IG91dCBhbnkgZGlmZmVyZW5jZXMuDQoNCkJhc2ljYWxseSwgSSBqdXN0
+IG5lZWQgdGhpcyBzaW1wbGUgcGF0Y2ggaW4gb3JkZXIgdG8gYnVpbGQgYW5kIGJvb3Qgc28gSQ0K
+Y2FuIHRlc3Qga2VybmVsIHJlbGVhc2VzOg0KDQpbYXJjaC9hcm0vS2NvbmZpZ10NCg0KY29uZmln
+IFhJUF9LRVJORUwNCiAJYm9vbCAiS2VybmVsIEV4ZWN1dGUtSW4tUGxhY2UgZnJvbSBST00iDQot
+CWRlcGVuZHMgb24gIUFSTV9MUEFFICYmICFBUkNIX01VTFRJUExBVEZPUk0NCisJZGVwZW5kcyBv
+biAhQVJNX0xQQUUNCg0KSG93ZXZlci4uLkkndmUgZ2l2ZW4gdXAgb24gdHJ5aW5nIHRvIGdldCBY
+SVBfS0VSTkVMIGVuYWJsZWQgaW4gS2NvbmZpZy4gDQpCdXQsIG9mIGNvdXJzZSBzdGlsbCBrZWVw
+IGFuIGV5ZSBvbiBhbGwgdGhlICdjb2RlJyBpbiB0aGUgQVJNIGNvcmUgdG8gDQptYWtlIHN1cmUg
+bm8gb25lIGJyZWFrcyBpdC4NCg0KDQoNCj4gPiBBdCB0aGUgZW5kIG9mIHRoZSBkYXksIGFsbCBJ
+IHdhbnQgaXMgZm9yIHRoZSBrZXJuZWwgdG8gZG8gYW4gaW9yZW1hcCBvZg0KPiA+IHRoaXMgYXJl
+YSBmb3IgbWUgc28gbXkgZmlsZSBzeXN0ZW0gKFhJUCBjcmFtZnMgaW4gdGhpcyBjYXNlKSBjYW4g
+YWNjZXNzDQo+ID4gaXQuICJtdGQtcm9tIiBkb2VzIHRoaXMgZm9yIG1lIHRvZGF5Lg0KPiANCj4g
+QW5kIHBhcnRpdGlvbiBsYXlvdXQ/IElmIGl0IHdhcyBvbmx5IHdoYXQgdG8gbWFwLCB3ZSBjb3Vs
+ZCBhZGQgYQ0KPiBwcm9wZXJ0eSBpbiBjaG9zZW4gb3IgcGVyaGFwcyBhIHJlc2VydmVkLW1lbW9y
+eSBub2RlLiBCdXQgSSBkb3VidCBpdA0KPiB3aWxsIHJlbWFpbiB0aGF0IHNpbXBsZS4gV2hhdCBo
+YXBwZW5zIHdoZW4geW91IGhhdmUgY2xvY2sgbWFuYWdlbWVudA0KPiBhbmQgbmVlZCB0byBrZWVw
+IHRoZSBTUEkgY2xvY2sgZW5hYmxlZCBmb3IgZXhhbXBsZS4NCg0KWXVwLi4udGhlcmUncyB0aGUg
+a2lsbGVyIQ0KWW91J2xsIG5vdGljZSB0aGF0IGluIG1haW5saW5lIFJaL0EgZGV2aWNlcywgdGhl
+cmUgaXMgbm8gUVNQSSBkcml2ZXIsIA0KYW5kIGFsc28gdGhlIFFTUEkgY2xvY2sgaXMgbGVmdCBv
+dXQgb2YgdGhlIGxpc3Qgb2YgSFcgY2xvY2tzLiBPdGhlcndpc2UsIA0KYXMgeW91IG1lbnRpb25l
+ZCwgdGhhdCAndW51c2VkJyBjbG9jayB3b3VsZCBnZXQgc2h1dCBvZmYgYXQgdGhlIGVuZCBvZiAN
+CmJvb3QuLi5hbmQgeW91J3JlIHdob2xlIHN5c3RlbSB3b3VsZCBzdG9wIGltbWVkaWF0ZWx5Lg0K
+DQo+IFRoZSBvdGhlciBvcHRpb24gaXMganVzdCBoYXZlIHlvdXIgcGxhdGZvcm0gY29kZSBpbnN0
+YW50aWF0ZSBhbg0KPiBtdGQtcm9tIGRldmljZS4gRWl0aGVyIGRlc2NyaWJlIHRoZSBoL3cgd2l0
+aCBEVCBvciBkb24ndCB1c2UgRFQuDQoNCllvdSBtZWFuIGluIGEgJ2JvYXJkJyBmaWxlPw0KDQpC
+VFcsIEkgc3RpbGwgdXNlIGJvYXJkIGZpbGVzIGZvciB0aGluZ3MgdGhhdCBhcmUgdG9vIGNvbXBs
+aWNhdGVkIGZvciBEVC4NCg0KDQo+ID4gVGhlIG90aGVyIFhJUCBmaWxlIHN5c3RlbSB0aGF0IHdl
+IHVzZSBtb3JlIG9mdGVuIChBWEZTLCBub3QgaW4gbWFpbmxpbmUpDQo+ID4gZG9lcyBub3QgcmVx
+dWlyZSB0aGUgcGFydGl0aW9ucyBpbiBEVCBhdCBhbGwsIHNvIGl0J3MgcmVhbGx5IG9ubHkNCj4g
+PiBuZWVkZWQgd2hlbiB1c2luZyBjcmFtZnMuIFNvIGZvciBub3csIG1heWJlIGl0IHdvdWxkIGJl
+IGJldHRlciB0byBqdXN0DQo+IHJlbW92ZQ0KPiA+IHRoaXMgY29uZnVzaW5nIHBvcnRpb24gb2Yg
+dGhlIGR0cy4NCj4gDQo+IFdoYXQgZG9lcyBBWEZTIGhhdmUgdGhhdCBjcmFtZnMgZG9lc24ndCBt
+YWtpbmcgaXQgbm90IG5lZWQgcGFydGl0aW9ucz8NCg0KRm9yIEFYRlMsIHlvdSBwYXNzIGluIHRo
+ZSBwaHlzaWNhbCBhZGRyZXNzIHRvIHlvdXIgcm9vdGZzIG9uIHRoZSBrZXJuZWwgDQpjb21tYW5k
+IGxpbmUgYW5kIHRoZW4gQVhGUyBkb2VzIHRoZSBpb3JlYXBwaW5nIGl0c2VsZiBpbnNpZGUgdGhl
+IGRyaXZlci4NCg0KV2hlbiBOaWNvbGFzIFBpdHJlIHN0YXJ0ZWQgYWRkaW5nIFhJUCBtb2RlIHRv
+IGNyYW1mcyBsYXN0IHllYXIsIGhlIGFsc28gDQpzdGFydGVkIG91dCB0aGF0IHdheS4gQnV0LCB0
+aGF0IHdhcyByZWplY3RlZCAoYXMgaXQgd2FzIGFsc28gcmVqZWN0ZWQgDQp3aGVuIERBWCB3YXMg
+Zmlyc3Qgc3RhcnRlZCkuIFRoZSBmaWxlIHN5c3RlbSBwZW9wbGUgc2FpZCAnZmlsZSBzeXN0ZW0g
+DQpkcml2ZXMgc2hvdWxkIG5vdCBoYXZlIHRoZSBhYmlsaXR5IHRvIG1hcCBwaHlzaWNhbCBtZW1v
+cnkgdGhlbXNlbHZlcycuDQoNCkFub3RoZXIgdGhpbmcgQVhGUyBjYW4gZG8gdGhhdCBDcmFtZnMg
+Y2FuJ3QgZG8gKHlldCksIGlzIEFYRlMgY2FuIHdpdGhpbg0KKmVhY2ggZmlsZSogc2VsZWN0IHdo
+YXQgcGFnZXMgd2lsbCBiZSBYSVAsIGFuZCB3aGF0IG9uZXMgd2lsbCBiZSANCmNvbXByZXNzZWQu
+IFRoaXMgc2F2ZXMgYSBsb3Qgb24gRmxhc2ggc3BhY2Ugd2hlbiBvbmx5IHlvdXIgZXhlY3V0YWJs
+ZSBhbmQgDQpjb25zdCBwYWdlcyBhcmUgbGVmdCBhcyB1bmNvbXByZXNzZWQgWElQIHBhZ2VzLg0K
+DQoNCkNocmlzDQoNCg==
