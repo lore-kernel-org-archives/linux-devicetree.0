@@ -1,191 +1,157 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v2 2/2] irqchip: add driver for imx-irqsteer controller
-Date: Mon, 17 Dec 2018 10:32:06 +0000
-Message-ID: <98217822-208a-9a92-e80b-b0b73111e527@arm.com>
-References: <20181214102244.21509-1-l.stach@pengutronix.de>
- <20181214102244.21509-3-l.stach@pengutronix.de>
- <86r2ejaztt.wl-marc.zyngier@arm.com> <1545041393.5874.1.camel@pengutronix.de>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 1/2] of: of_node_get()/of_node_put() nodes held in phandle cache
+Date: Mon, 17 Dec 2018 21:43:19 +1100
+Message-ID: <874lbcv3g8.fsf@concordia.ellerman.id.au>
+References: <1545033396-24485-1-git-send-email-frowand.list@gmail.com> <1545033396-24485-2-git-send-email-frowand.list@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545041393.5874.1.camel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <1545033396-24485-2-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>
+To: frowand.list@gmail.com, robh+dt@kernel.org, Michael Bringmann <mwb@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
+Cc: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Thomas Falcon <tlfalcon@linux.vnet.ibm.com>, Juliet Kim <minkim@us.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lucas,
+Hi Frank,
 
-On 17/12/2018 10:09, Lucas Stach wrote:
-> Hi Marc,
-> 
-> Am Samstag, den 15.12.2018, 09:45 +0000 schrieb Marc Zyngier:
->> Hi Lucas,
->>
->> On Fri, 14 Dec 2018 10:22:44 +0000,
->>> Lucas Stach <l.stach@pengutronix.de> wrote:
->>>
->>> The irqsteer block is a interrupt multiplexer/remapper found on the
->>> i.MX8 line of SoCs.
->>>
->>>>> Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
->>>>> Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
->>> ---
->>> v2:
->>>  - use raw_spinlock
->>>  - add proper clk error handling
->>>  - align register offset calculation with reality
->>>  - use correct SPDX identifier
->>>  - simplify DT configuration
->>> ---
-> 
-> [...]
-> 
->>> +static const struct irq_domain_ops imx_irqsteer_domain_ops = {
->>>>>>> +	.map		= imx_irqsteer_irq_map,
->>> +	.xlate		= irq_domain_xlate_twocell,
->>
->> I've tried to understand why you are using two cells, but couldn't
->> find an explanation from the DT binding. As far as I can see, you only
->> support LEVEL_HIGH signalling, meaning that you could perfectly
->> encode this in a single cell. What am I missing?
-> 
-> Nothing. At this point I'm sure that the controller only support level-
-> high IRQs. Will switch to a single cell in the next spin.
+frowand.list@gmail.com writes:
+> From: Frank Rowand <frank.rowand@sony.com>
+>
+> The phandle cache contains struct device_node pointers.  The refcount
+> of the pointers was not incremented while in the cache, allowing use
+> after free error after kfree() of the node.  Add the proper increment
+> and decrement of the use count.
+>
+> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
 
-OK, good.
+Can we also add:
 
-> 
-> [...]
-> 
->>> +static int imx_irqsteer_probe(struct platform_device *pdev)
->>> +{
->>>>> +	struct device_node *np = pdev->dev.of_node;
->>>>> +	struct irqsteer_data *data;
->>>>> +	struct resource *res;
->>>>> +	int ret;
->>> +
->>>>> +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
->>>>> +	if (!data)
->>>>> +		return -ENOMEM;
->>> +
->>>>> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->>>>> +	data->regs = devm_ioremap_resource(&pdev->dev, res);
->>>>> +	if (IS_ERR(data->regs)) {
->>>>> +		dev_err(&pdev->dev, "failed to initialize reg\n");
->>>>> +		return PTR_ERR(data->regs);
->>>>> +	}
->>> +
->>>>> +	data->irq = platform_get_irq(pdev, 0);
->>>>> +	if (data->irq <= 0) {
->>>>> +		dev_err(&pdev->dev, "failed to get irq\n");
->>>>> +		return -ENODEV;
->>>>> +	}
->>> +
->>>>> +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
->>>>> +	if (IS_ERR(data->ipg_clk)) {
->>>>> +		ret = PTR_ERR(data->ipg_clk);
->>>>> +		if (ret != -EPROBE_DEFER)
->>>>> +			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
->>>>> +		return ret;
->>>>> +	}
->>> +
->>>>> +	raw_spin_lock_init(&data->lock);
->>> +
->>>>> +	of_property_read_u32(np, "fsl,irq-groups", &data->irq_groups);
->>>>> +	of_property_read_u32(np, "fsl,channel", &data->channel);
->>> +
->>>>> +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
->>>>> +		data->saved_reg = devm_kzalloc(&pdev->dev,
->>>>> +					sizeof(u32) * data->irq_groups * 2,
->>>>> +					GFP_KERNEL);
->>>>> +		if (!data->saved_reg)
->>>>> +			return -ENOMEM;
->>>>> +	}
->>> +
->>>>> +	ret = clk_prepare_enable(data->ipg_clk);
->>>>> +	if (ret) {
->>>>> +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
->>>>> +		return ret;
->>>>> +	}
->>> +
->>>>> +	/* steer all IRQs into configured channel */
->>> +	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
->>
->> Could you explain what this channel is exactly?
-> 
-> I've tired in the cover letter, but seems I still failed, so let me try
-> again. ;)
-> 
-> Each irqsteer instance can be connected to multiple upstream IRQ lines,
-> but only one of them can be used at runtime. This register controls
-> which output IRQ line will be used by this controller instance. With
-> multiple controller instances in the system it's a way to offload the
-> decision of the IRQ routing from the hardware to the software guys.
-> 
-> Let's try to add an example: Suppose there are 2 instances of the
-> irqsteer controller. Both are connected to upstream GIC IRQs 20 and 21.
-> The channel controls which of those IRQs are used by each instance, so
-> there are 2 valid DT configurations in this scenario:
-> 
-> This is valid:
-> 
-> irqsteer@0 {
-> 	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
-> 	fsl,channel = <0>;
-> };
-> 
-> irqsteer@1 {
-> 	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
-> 	fsl,channel = <1>;
-> };
-> 
-> As well as this:
-> 
-> irqsteer@0 {
-> 	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
-> 	fsl,channel = <1>;
-> };
-> 
-> irqsteer@1 {
-> 	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
-> 	fsl,channel = <0>;
-> };
+Cc: stable@vger.kernel.org # v4.17+
 
-OK, this is now making sense, thanks for that. I'm wondering if it'd
-make sense to expose both IRQs in the DT for each irqsteer, and use
-fsl,channel as the selector? It doesn't change much in the driver, but
-seems to describe the HW in a more complete way.
 
-I don't care much either way, and I'll leave it for you and the DT folks
-to decide.
+This and the next patch solve WARN_ONs and other problems for us on some
+systems so I think they meet the criteria for a stable backport.
 
-> 	
-> [...]
->>> +#ifdef CONFIG_PM_SLEEP
->>> +static void imx_irqsteer_save_regs(struct irqsteer_data *data)
->>> +{
->>>>> +	int num;
->>> +
->>>>> +	for (num = 0; num < data->irq_groups; num++)
->>>>> +		data->saved_reg[num + 1] = readl_relaxed(data->regs +
->>> +						CHANMASK(num, data->irq_groups));
->>
->> You seem to only use one u32 per IRQ group. Yet, you've allocated
->> twice as much memory to that effect. Why? Also, you're avoiding to use
->> index 0, which I find rather odd.
->>
->> Given that the DT binding states that each group manages 64
->> interrupts, I have the feeling that you're missing some interrupt
->> enable state.
-> 
-> And you are right with this observation. I failed to properly rework
-> this part of the code when switching to the irq-group indexing.
+Rest of the patch LGTM, I'm not able to test it unfortunately, I have to
+defer to mwb for that.
 
-Thanks,
+cheers
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 09692c9b32a7..6c33d63361b8 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -116,9 +116,6 @@ int __weak of_node_to_nid(struct device_node *np)
+>  }
+>  #endif
+>  
+> -static struct device_node **phandle_cache;
+> -static u32 phandle_cache_mask;
+> -
+>  /*
+>   * Assumptions behind phandle_cache implementation:
+>   *   - phandle property values are in a contiguous range of 1..n
+> @@ -127,6 +124,44 @@ int __weak of_node_to_nid(struct device_node *np)
+>   *   - the phandle lookup overhead reduction provided by the cache
+>   *     will likely be less
+>   */
+> +
+> +static struct device_node **phandle_cache;
+> +static u32 phandle_cache_mask;
+> +
+> +/*
+> + * Caller must hold devtree_lock.
+> + */
+> +static void __of_free_phandle_cache(void)
+> +{
+> +	u32 cache_entries = phandle_cache_mask + 1;
+> +	u32 k;
+> +
+> +	if (!phandle_cache)
+> +		return;
+> +
+> +	for (k = 0; k < cache_entries; k++)
+> +		of_node_put(phandle_cache[k]);
+> +
+> +	kfree(phandle_cache);
+> +	phandle_cache = NULL;
+> +}
+> +
+> +int of_free_phandle_cache(void)
+> +{
+> +	unsigned long flags;
+> +
+> +	raw_spin_lock_irqsave(&devtree_lock, flags);
+> +
+> +	__of_free_phandle_cache();
+> +
+> +	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> +
+> +	return 0;
+> +}
+> +#if !defined(CONFIG_MODULES)
+> +late_initcall_sync(of_free_phandle_cache);
+> +#endif
+> +
+>  void of_populate_phandle_cache(void)
+>  {
+>  	unsigned long flags;
+> @@ -136,8 +171,7 @@ void of_populate_phandle_cache(void)
+>  
+>  	raw_spin_lock_irqsave(&devtree_lock, flags);
+>  
+> -	kfree(phandle_cache);
+> -	phandle_cache = NULL;
+> +	__of_free_phandle_cache();
+>  
+>  	for_each_of_allnodes(np)
+>  		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+> @@ -155,30 +189,15 @@ void of_populate_phandle_cache(void)
+>  		goto out;
+>  
+>  	for_each_of_allnodes(np)
+> -		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+> +		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
+> +			of_node_get(np);
+>  			phandle_cache[np->phandle & phandle_cache_mask] = np;
+> +		}
+>  
+>  out:
+>  	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+>  }
+>  
+> -int of_free_phandle_cache(void)
+> -{
+> -	unsigned long flags;
+> -
+> -	raw_spin_lock_irqsave(&devtree_lock, flags);
+> -
+> -	kfree(phandle_cache);
+> -	phandle_cache = NULL;
+> -
+> -	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+> -
+> -	return 0;
+> -}
+> -#if !defined(CONFIG_MODULES)
+> -late_initcall_sync(of_free_phandle_cache);
+> -#endif
+> -
+>  void __init of_core_init(void)
+>  {
+>  	struct device_node *np;
+> @@ -1195,8 +1214,11 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+>  	if (!np) {
+>  		for_each_of_allnodes(np)
+>  			if (np->phandle == handle) {
+> -				if (phandle_cache)
+> +				if (phandle_cache) {
+> +					/* will put when removed from cache */
+> +					of_node_get(np);
+>  					phandle_cache[masked_handle] = np;
+> +				}
+>  				break;
+>  			}
+>  	}
+> -- 
+> Frank Rowand <frank.rowand@sony.com>
