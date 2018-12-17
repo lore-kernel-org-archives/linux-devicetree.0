@@ -1,37 +1,29 @@
-Return-Path: <SRS0=Wrd/=O3=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH] arm64: dts: renesas: r8a774a1: Fix hsusb reg size
-Date: Tue, 18 Dec 2018 12:02:14 +0000
-Message-Id: <1545134534-22392-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=NQmY=O2=verge.net.au=horms@kernel.org>
+Date: Mon, 17 Dec 2018 11:44:25 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 09/17] arm64: dts: renesas: r8a774c0: Add display output
+ support
+Message-ID: <20181217104425.raiorjlqsgqc2m53@verge.net.au>
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1544780260-27590-10-git-send-email-fabrizio.castro@bp.renesas.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1544780260-27590-10-git-send-email-fabrizio.castro@bp.renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-HS-USB has registers outside the currently specified memory area,
-therefore change the definition accordingly.
+On Fri, Dec 14, 2018 at 09:37:32AM +0000, Fabrizio Castro wrote:
+> The RZ/G2E (a.k.a. R8A774C0) has one RGB output and two LVDS
+> outputs connected to DU.
+> This patch add support for DU, LVDS encoders, VSP and FCP.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 
-Fixes: ed898d4fc19d ("arm64: dts: renesas: r8a774a1: Add USB-DMAC and
-HSUSB device nodes")
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-Thank you Simon for spotting this
+Thanks,
 
- arch/arm64/boot/dts/renesas/r8a774a1.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+This looks fine to me but I will wait to see if there are other reviews
+before applying.
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-index 20745a8..46a8fd2 100644
---- a/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774a1.dtsi
-@@ -599,7 +599,7 @@
- 		hsusb: usb@e6590000 {
- 			compatible = "renesas,usbhs-r8a774a1",
- 				     "renesas,rcar-gen3-usbhs";
--			reg = <0 0xe6590000 0 0x100>;
-+			reg = <0 0xe6590000 0 0x200>;
- 			interrupts = <GIC_SPI 107 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 704>;
- 			dmas = <&usb_dmac0 0>, <&usb_dmac0 1>,
--- 
-2.7.4
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
