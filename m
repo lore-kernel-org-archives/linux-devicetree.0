@@ -1,65 +1,39 @@
-From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Subject: [PATCH v4] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
-Date: Mon, 17 Dec 2018 10:54:09 +0100
-Message-ID: <20181217095409.22627-1-enric.balletbo@collabora.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 1/7] dt-bindings: soc: qcom: Add remote-pid binding for GLINK SMEM
+Date: Mon, 17 Dec 2018 15:37:18 +0530
+Message-ID: <20181217100724.4593-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-There are multiple ChromeOS EC sub-drivers spread in different
-subsystems, as all of them are related to the Chrome stuff add
-Benson and myself as a maintainers for all these sub-drivers.
+Add missing qcom,remote-pid dt binding required for GLINK SMEM
+which specifies the remote endpoint of the GLINK edge.
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Signed-off-by: Benson Leung <bleung@chromium.org>
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Acked-by: Lee Jones <lee.jones@linaro.org>
-Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
-Acked-by: Guenter Roeck <groeck@chromium.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
+ Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Changes in v4:
-- Remove the `for iio parts` from Jonathan's acked-by tag.
-- Add more collected acks.
-- Use two N patterns.
-
-Changes in v3:
-- Add collected acks
-- Use a cros[-_]ec pattern instead of list all the files.
-- Add Guenter as a reviewer.
-
-Changes in v2:
-- Fix typo in Benson email address.
-
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index fa6e2ad90568..1e27b24e912e 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -3629,6 +3629,15 @@ S:	Maintained
- T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
- F:	drivers/platform/chrome/
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+index 0b8cc533ca83..59ae603ba520 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+@@ -21,6 +21,11 @@ edge.
+ 	Definition: should specify the IRQ used by the remote processor to
+ 		    signal this processor about communication related events
  
-+CHROMEOS EC SUBDRIVERS
-+M:	Benson Leung <bleung@chromium.org>
-+M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
-+R:	Guenter Roeck <groeck@chromium.org>
-+S:	Maintained
-+N:	cros_ec
-+N:	cros-ec
-+F:	drivers/power/supply/cros_usbpd-charger.c
++- qcom,remote-pid:
++	Usage: required for glink-smem
++	Value type: <u32>
++	Definition: specifies the identfier of the remote endpoint of this edge
 +
- CIRRUS LOGIC AUDIO CODEC DRIVERS
- M:	Brian Austin <brian.austin@cirrus.com>
- M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
+ - qcom,rpm-msg-ram:
+ 	Usage: required for glink-rpm
+ 	Value type: <prop-encoded-array>
 -- 
-2.19.2
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
