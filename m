@@ -1,41 +1,77 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v5 1/2] dt-bindings: panel: Add Sitronix
- ST7701 panel documentation
-Date: Mon, 17 Dec 2018 15:32:06 -0600
-Message-ID: <20181217213206.GA31758@bogus>
-References: <20181211154358.25293-1-jagan@amarulasolutions.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Marek Behun <marek.behun@nic.cz>
+Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
+Date: Mon, 17 Dec 2018 22:34:30 +0100
+Message-ID: <20181217223430.182d01d8@nic.cz>
+References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+        <20181212102142.16053-4-miquel.raynal@bootlin.com>
+        <20181214014701.373b220b@nic.cz>
+        <20181214015712.31f749ea@nic.cz>
+        <20181217170724.58421a29@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBWFL4DQAKGQEB53X5LQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181211154358.25293-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-Cc: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181217170724.58421a29@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Dec 2018 21:13:57 +0530, Jagan Teki wrote:
-> Techstar TS8550B MIPI DSI panel is 480x854, 2-lane MIPI DSI LCD panel
-> with inbuilt ST7701 chip.
-> 
-> The default regulator names in ST7701 chip is renamed in Techstar TS8550B
-> so, add specific binding names for them.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
-> Changes for v5:
-> - found the chip from vendor, so added new chip binding
-> - here is v4: https://patchwork.kernel.org/patch/10680333/
-> 
->  .../display/panel/sitronix,st7701.txt         | 30 +++++++++++++++++++
->  1 file changed, 30 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/panel/sitronix,st7701.txt
-> 
+Miquel,
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+I tried the patches and they are working, with the exception of Compex
+WLE900X card, but we know that this card is problematic.
+I am interesting if there is a known way to turn of the comphy on
+A3720, or at least change the SGMII mode from 1Gbps to 2.5Gbps and
+back. Marvell documentation does not provide this information and the
+code in ATF providing the SMC calls does not do this either.
+Do you know how this can be achieved?
+Thanks,
+
+Marek
+
+On Mon, 17 Dec 2018 17:07:24 +0100
+Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+> Hi Marek,
+>=20
+> Marek Behun <marek.behun@nic.cz> wrote on Fri, 14 Dec 2018 01:57:12
+> +0100:
+>=20
+> > On Fri, 14 Dec 2018 01:47:01 +0100
+> > Marek Behun <marek.behun@nic.cz> wrote:
+> >  =20
+> > > Hi Miquel,
+> > > are there already patches for the A37xx comphy driver?   =20
+>=20
+> Please try the latest patches on top of phy -next (with PHY interface
+> mode), available there [1]. You can pick only the COMPHY patches, but
+> keep them over the phy -next branch.
+>=20
+> Please note that for the SMC calls to succeed you must use a recent
+> ATF. Personally I used to work with the 'atf-v1.5-devel' branch of
+> Marvell's misl-atf repository but it is not available anymore. If you
+> already have a clone, then you are good to go, otherwise it might be
+> great if someone from Marvell could share a public Github link?
+>=20
+> > Never mind, I found them. I shall test this on Turris Mox.
+> > Is the comphy driver supposed to be able to change eth mode from
+> > 1000BASE-X to 2500BASE-X and back without reboot? =20
+>=20
+> In theory yes, unfortunately I am working on an EspressoBin which uses
+> the SATA, PCIe and SATA configurations of the COMPHY, but not the
+> Ethernet ones (SGMII/1000BASE-X and HS_SGMII/2500BASE-X). So the
+> support is ready to be tested!
+>=20
+> >=20
+> > This would be cool for our SFP cage module of Turris Mox, just to
+> > add support for comphy into mvneta.
+> >=20
+> > Marek =20
+>=20
+> [1] https://github.com/miquelraynal/linux.git branch
+> marvell/phy-next/pm
+>=20
+>=20
+> Thanks,
+> Miqu=C3=A8l
