@@ -1,7 +1,7 @@
 From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v3 1/3] reset: imx7: Add plubming to support multiple IP variants
-Date: Sun, 16 Dec 2018 18:38:25 -0800
-Message-ID: <20181217023827.7947-2-andrew.smirnov@gmail.com>
+Subject: [PATCH v3 2/3] dt-bindings: reset: imx7: Document usage on i.MX8MQ SoCs
+Date: Sun, 16 Dec 2018 18:38:26 -0800
+Message-ID: <20181217023827.7947-3-andrew.smirnov@gmail.com>
 References: <20181217023827.7947-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,8 +12,7 @@ To: linux-kernel@vger.kernel.org
 Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, p.zabel@pengutronix.de, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-In order to enable supporting i.MX8MQ with this driver, convert it to
-expect variant specific bits to be passed via driver data.
+The driver now supports i.MX8MQ, so update bindings accordingly.
 
 Cc: p.zabel@pengutronix.de
 Cc: Fabio Estevam <fabio.estevam@nxp.com>
@@ -29,135 +28,102 @@ Cc: linux-arm-kernel@lists.infradead.org
 Cc: linux-kernel@vger.kernel.org
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- drivers/reset/reset-imx7.c | 62 +++++++++++++++++++++++++++-----------
- 1 file changed, 45 insertions(+), 17 deletions(-)
+ .../bindings/reset/fsl,imx7-src.txt           |  7 +-
+ include/dt-bindings/reset/imx8mq-reset.h      | 64 +++++++++++++++++++
+ 2 files changed, 69 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/reset/imx8mq-reset.h
 
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-index 77911fa8f31d..3a36d5863891 100644
---- a/drivers/reset/reset-imx7.c
-+++ b/drivers/reset/reset-imx7.c
-@@ -17,14 +17,29 @@
+diff --git a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+index 1ab1d109318e..2ecf33815d18 100644
+--- a/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
++++ b/Documentation/devicetree/bindings/reset/fsl,imx7-src.txt
+@@ -5,7 +5,9 @@ Please also refer to reset.txt in this directory for common reset
+ controller binding usage.
  
- #include <linux/mfd/syscon.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/reset-controller.h>
- #include <linux/regmap.h>
- #include <dt-bindings/reset/imx7-reset.h>
+ Required properties:
+-- compatible: Should be "fsl,imx7d-src", "syscon"
++- compatible:
++	- For i.MX7 SoCs should be "fsl,imx7d-src", "syscon"
++	- For i.MX8MQ SoCs should be "fsl,imx8mq-src", "syscon"
+ - reg: should be register base and length as documented in the
+   datasheet
+ - interrupts: Should contain SRC interrupt
+@@ -44,4 +46,5 @@ Example:
  
-+struct imx7_src_signal {
-+	unsigned int offset, bit;
-+};
+ 
+ For list of all valid reset indicies see
+-<dt-bindings/reset/imx7-reset.h>
++<dt-bindings/reset/imx7-reset.h> for i.MX7 and
++<dt-bindings/reset/imx8mq-reset.h> for i.MX8MQ
+diff --git a/include/dt-bindings/reset/imx8mq-reset.h b/include/dt-bindings/reset/imx8mq-reset.h
+new file mode 100644
+index 000000000000..57c592498aa0
+--- /dev/null
++++ b/include/dt-bindings/reset/imx8mq-reset.h
+@@ -0,0 +1,64 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Copyright (C) 2018 Zodiac Inflight Innovations
++ *
++ * Author: Andrey Smirnov <andrew.smirnov@gmail.com>
++ */
 +
-+struct imx7_src;
++#ifndef DT_BINDING_RESET_IMX8MQ_H
++#define DT_BINDING_RESET_IMX8MQ_H
 +
-+struct imx7_src_variant {
-+	const struct imx7_src_signal *signals;
-+	unsigned int signals_num;
-+	unsigned int (*prepare)(struct imx7_src *imx7src, unsigned long id,
-+				bool assert);
-+};
++#define IMX8MQ_RESET_A53_CORE_POR_RESET0	0
++#define IMX8MQ_RESET_A53_CORE_POR_RESET1	1
++#define IMX8MQ_RESET_A53_CORE_POR_RESET2	2
++#define IMX8MQ_RESET_A53_CORE_POR_RESET3	3
++#define IMX8MQ_RESET_A53_CORE_RESET0		4
++#define IMX8MQ_RESET_A53_CORE_RESET1		5
++#define IMX8MQ_RESET_A53_CORE_RESET2		6
++#define IMX8MQ_RESET_A53_CORE_RESET3		7
++#define IMX8MQ_RESET_A53_DBG_RESET0		8
++#define IMX8MQ_RESET_A53_DBG_RESET1		9
++#define IMX8MQ_RESET_A53_DBG_RESET2		10
++#define IMX8MQ_RESET_A53_DBG_RESET3		11
++#define IMX8MQ_RESET_A53_ETM_RESET0		12
++#define IMX8MQ_RESET_A53_ETM_RESET1		13
++#define IMX8MQ_RESET_A53_ETM_RESET2		14
++#define IMX8MQ_RESET_A53_ETM_RESET3		15
++#define IMX8MQ_RESET_A53_SOC_DBG_RESET		16
++#define IMX8MQ_RESET_A53_L2RESET		17
++#define IMX8MQ_RESET_SW_NON_SCLR_M4C_RST	18
++#define IMX8MQ_RESET_OTG1_PHY_RESET		19
++#define IMX8MQ_RESET_OTG2_PHY_RESET		20
++#define IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N	21
++#define IMX8MQ_RESET_MIPI_DSI_RESET_N		22
++#define IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N	23
++#define IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N	24
++#define IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N	25
++#define IMX8MQ_RESET_PCIEPHY			26
++#define IMX8MQ_RESET_PCIEPHY_PERST		27
++#define IMX8MQ_RESET_PCIE_CTRL_APPS_EN		28
++#define IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF	29
++#define IMX8MQ_RESET_HDMI_PHY_APB_RESET		30
++#define IMX8MQ_RESET_DISP_RESET			31
++#define IMX8MQ_RESET_GPU_RESET			32
++#define IMX8MQ_RESET_VPU_RESET			33
++#define IMX8MQ_RESET_PCIEPHY2			34
++#define IMX8MQ_RESET_PCIEPHY2_PERST		35
++#define IMX8MQ_RESET_PCIE2_CTRL_APPS_EN		36
++#define IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF	37
++#define IMX8MQ_RESET_MIPI_CSI1_CORE_RESET	38
++#define IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET	39
++#define IMX8MQ_RESET_MIPI_CSI1_ESC_RESET	40
++#define IMX8MQ_RESET_MIPI_CSI2_CORE_RESET	41
++#define IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET	42
++#define IMX8MQ_RESET_MIPI_CSI2_ESC_RESET	43
++#define IMX8MQ_RESET_DDRC1_PRST			44
++#define IMX8MQ_RESET_DDRC1_CORE_RESET		45
++#define IMX8MQ_RESET_DDRC1_PHY_RESET		46
++#define IMX8MQ_RESET_DDRC2_PRST			47
++#define IMX8MQ_RESET_DDRC2_CORE_RESET		48
++#define IMX8MQ_RESET_DDRC2_PHY_RESET		49
 +
- struct imx7_src {
- 	struct reset_controller_dev rcdev;
- 	struct regmap *regmap;
-+	const struct imx7_src_variant *variant;
- };
- 
- enum imx7_src_registers {
-@@ -39,10 +54,6 @@ enum imx7_src_registers {
- 	SRC_DDRC_RCR		= 0x1000,
- };
- 
--struct imx7_src_signal {
--	unsigned int offset, bit;
--};
--
- static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
- 	[IMX7_RESET_A7_CORE_POR_RESET0] = { SRC_A7RCR0, BIT(0) },
- 	[IMX7_RESET_A7_CORE_POR_RESET1] = { SRC_A7RCR0, BIT(1) },
-@@ -72,17 +83,11 @@ static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
- 	[IMX7_RESET_DDRC_CORE_RST]	= { SRC_DDRC_RCR, BIT(1) },
- };
- 
--static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
-+static unsigned int
-+imx7_src_prepare(struct imx7_src *imx7src, unsigned long id, bool assert)
- {
--	return container_of(rcdev, struct imx7_src, rcdev);
--}
--
--static int imx7_reset_set(struct reset_controller_dev *rcdev,
--			  unsigned long id, bool assert)
--{
--	struct imx7_src *imx7src = to_imx7_src(rcdev);
--	const struct imx7_src_signal *signal = &imx7_src_signals[id];
--	unsigned int value = assert ? signal->bit : 0;
-+	const unsigned int bit = imx7src->variant->signals[id].bit;
-+	unsigned int value = assert ? bit : 0;
- 
- 	switch (id) {
- 	case IMX7_RESET_PCIEPHY:
-@@ -95,10 +100,32 @@ static int imx7_reset_set(struct reset_controller_dev *rcdev,
- 		break;
- 
- 	case IMX7_RESET_PCIE_CTRL_APPS_EN:
--		value = (assert) ? 0 : signal->bit;
-+		value = assert ? 0 : bit;
- 		break;
- 	}
- 
-+	return value;
-+}
++#define IMX8MQ_RESET_NUM			50
 +
-+static const struct imx7_src_variant variant_imx7 = {
-+	.signals = imx7_src_signals,
-+	.signals_num = ARRAY_SIZE(imx7_src_signals),
-+	.prepare = imx7_src_prepare,
-+};
-+
-+static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct imx7_src, rcdev);
-+}
-+
-+static int imx7_reset_set(struct reset_controller_dev *rcdev,
-+			  unsigned long id, bool assert)
-+{
-+	struct imx7_src *imx7src = to_imx7_src(rcdev);
-+	const struct imx7_src_variant *variant = imx7src->variant;
-+	const struct imx7_src_signal *signal = &variant->signals[id];
-+	const unsigned int value = variant->prepare(imx7src, id, assert);
-+
- 	return regmap_update_bits(imx7src->regmap,
- 				  signal->offset, signal->bit, value);
- }
-@@ -130,6 +157,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
- 	if (!imx7src)
- 		return -ENOMEM;
- 
-+	imx7src->variant = of_device_get_match_data(dev);
- 	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
- 	if (IS_ERR(imx7src->regmap)) {
- 		dev_err(dev, "Unable to get imx7-src regmap");
-@@ -138,7 +166,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
- 	regmap_attach_dev(dev, imx7src->regmap, &config);
- 
- 	imx7src->rcdev.owner     = THIS_MODULE;
--	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
-+	imx7src->rcdev.nr_resets = imx7src->variant->signals_num;
- 	imx7src->rcdev.ops       = &imx7_reset_ops;
- 	imx7src->rcdev.of_node   = dev->of_node;
- 
-@@ -146,7 +174,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
- }
- 
- static const struct of_device_id imx7_reset_dt_ids[] = {
--	{ .compatible = "fsl,imx7d-src", },
-+	{ .compatible = "fsl,imx7d-src", .data = &variant_imx7 },
- 	{ /* sentinel */ },
- };
- 
++#endif
 -- 
 2.19.1
