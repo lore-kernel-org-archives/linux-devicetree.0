@@ -1,50 +1,75 @@
-From: =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
-Subject: [PATCH v1 2/3] dt-bindings: mailbox: Document armada-37xx-rwtm-mailbox binding
-Date: Mon, 17 Dec 2018 16:37:05 +0100
-Message-ID: <20181217153706.25873-2-marek.behun@nic.cz>
-References: <20181217153706.25873-1-marek.behun@nic.cz>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v2 1/2] dt-bindings: gpio: Add bindings for Cadence GPIO
+Date: Mon, 17 Dec 2018 15:36:51 +0000
+Message-ID: <20181217153652.20056-2-jank@cadence.com>
+References: <20181217153652.20056-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217153706.25873-1-marek.behun@nic.cz>
+In-Reply-To: <20181217153652.20056-1-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jassi Brar <jassisinghbrar@gmail.com>
-Cc: linux-kernel@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+To: linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds device tree binding documentation for the rWTM BIU mailbox
-driver on the Armada 37xx SOC (EspressoBin, Turris Mox).
+This patch adds a DT binding documentation for
+Cadence GPIO controller.
 
-Signed-off-by: Marek Behún <marek.behun@nic.cz>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
+Signed-off-by: Jan Kotas <jank@cadence.com>
 ---
- .../mailbox/armada-37xx-rwtm-mailbox.txt         | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
+ .../devicetree/bindings/gpio/cdns,gpio.txt         | 44 ++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/cdns,gpio.txt
 
-diff --git a/Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt b/Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
+diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
 new file mode 100644
-index 000000000000..2d182d61eb3f
+index 000000000..c87a47827
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/mailbox/armada-37xx-rwtm-mailbox.txt
-@@ -0,0 +1,16 @@
-+* rWTM BIU Mailbox driver for Armada 37xx
++++ b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+@@ -0,0 +1,44 @@
++Cadence GPIO controller bindings
 +
 +Required properties:
-+- compatible :	must be "marvell,armada-37xx-rwtm-mailbox"
-+- reg : 	physical base address of the mailbox and length of memory mapped
-+		region
-+- interrupts:	the IRQ line for the mailbox
-+- #mbox-cells:	must be 1
++- compatible: should be "cdns,gpio-r1p02".
++- reg: the register base address and size.
++- #gpio-cells: should be 2.
++	* first cell is the GPIO number.
++	* second cell specifies the GPIO flags, as defined in
++		<dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
++		and GPIO_ACTIVE_LOW flags are supported.
++- gpio-controller: marks the device as a GPIO controller.
++- clocks: should contain one entry referencing the peripheral clock driving
++	the GPIO controller.
++
++Optional properties:
++- ngpios: integer number of gpio lines supported by this controller, up to 32.
++- interrupt-parent: phandle of the parent interrupt controller.
++- interrupts: interrupt specifier for the controllers interrupt.
++- interrupt-controller: marks the device as an interrupt controller. When
++	defined, interrupts, interrupt-parent and #interrupt-cells
++	are required.
++- interrupt-cells: should be 2.
++	* first cell is the GPIO number you want to use as an IRQ source.
++	* second cell specifies the IRQ type, as defined in
++		<dt-bindings/interrupt-controller/irq.h>.
++		Currently only level sensitive IRQs are supported.
++
 +
 +Example:
-+	rwtm: mailbox@b0000 {
-+		compatible = "marvell,armada-37xx-rwtm-mailbox";
-+		reg = <0xb0000 0x100>;
-+		interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
-+		#mbox-cells = <1>;
++	gpio0: gpio-controller@fd060000 {
++		compatible = "cdns,gpio-r1p02";
++		reg =<0xfd060000 0x1000>;
++
++		clocks = <&gpio_clk>;
++
++		interrupt-parent = <&gic>;
++		interrupts = <0 5 IRQ_TYPE_LEVEL_HIGH>;
++
++		gpio-controller;
++		#gpio-cells = <2>;
++
++		interrupt-controller;
++		#interrupt-cells = <2>;
 +	};
 -- 
-2.18.1
+2.15.0
