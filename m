@@ -1,133 +1,29 @@
-Return-Path: <SRS0=fHqI=O3=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
-Date: Tue, 18 Dec 2018 12:05:55 -0500
-Message-Id: <20181218170555.121673-3-chris.brandt@renesas.com>
-In-Reply-To: <20181218170555.121673-1-chris.brandt@renesas.com>
-References: <20181218170555.121673-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <robherring2@gmail.com>
+Date: Mon, 17 Dec 2018 15:29:22 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 4/4] doc: usb: ci-hdrc-usb2: Add pinctrl properties
+ for  HSIC pin groups
+Message-ID: <20181217212922.GA27338@bogus>
+References: <20181211020624.9433-1-peter.chen@nxp.com>
+ <20181211020624.9433-5-peter.chen@nxp.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181211020624.9433-5-peter.chen@nxp.com>
+To: Peter Chen <peter.chen@nxp.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for Renesas RZ/A2M evaluation board.
+On Tue, 11 Dec 2018 02:09:04 +0000, Peter Chen wrote:
+> For USB HSIC, the data and strobe pin needs to be pulled down
+> at default, we consider it as "idle" state. When the USB host
+> is ready to be used, the strobe pin needs to be pulled up,
+> we consider it as "active" state.
+> 
+> Signed-off-by: Peter Chen <peter.chen@nxp.com>
+> ---
+>  .../devicetree/bindings/usb/ci-hdrc-usb2.txt       | 31 +++++++++++++++++++++-
+>  1 file changed, 30 insertions(+), 1 deletion(-)
+> 
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v3:
- * Removed QSPI partition (because half baked at the moment)
-v2:
- * Removed patch for shmobile.txt
- * Added SPDX
- * Removed earlycon from bootargs
- * Fixed address in memory node name
- * Removed un-needed "okay" from leds node
- * Added green LED node
- * Dropped this blank line in pinctrl node
----
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 82 ++++++++++++++++++++++++++++++++++
- 2 files changed, 83 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
-
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 78551c4375d5..b2c1de8da368 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -840,6 +840,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r7s72100-genmai.dtb \
- 	r7s72100-gr-peach.dtb \
- 	r7s72100-rskrza1.dtb \
-+	r7s9210-rza2mevb.dtb \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7743-iwg20d-q7.dtb \
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-new file mode 100644
-index 000000000000..991e09de1219
---- /dev/null
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the RZA2MEVB board
-+ *
-+ * Copyright (C) 2018 Renesas Electronics
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "r7s9210.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
-+
-+/ {
-+	model = "RZA2MEVB";
-+	compatible = "renesas,rza2mevb", "renesas,r7s9210";
-+
-+	aliases {
-+		serial0 = &scif4;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x40000000 0x00800000>;	 /* HyperRAM */
-+	};
-+
-+	lbsc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		red {
-+			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
-+		};
-+		green {
-+			gpios = <&pinctrl RZA2_PIN(PORTC, 1) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+/* EXTAL */
-+&extal_clk {
-+	clock-frequency = <24000000>;	/* 24MHz */
-+};
-+
-+/* RTC_X1 */
-+&rtc_x1_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&pinctrl {
-+	/* Serial Console */
-+	scif4_pins: serial4 {
-+		pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
-+			 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
-+	};
-+};
-+
-+/* High resolution System tick timers */
-+&ostm0 {
-+	status = "okay";
-+};
-+
-+&ostm1 {
-+	status = "okay";
-+};
-+
-+/* Serial Console */
-+&scif4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&scif4_pins>;
-+
-+	status = "okay";
-+};
--- 
-2.16.1
+Reviewed-by: Rob Herring <robh@kernel.org>
