@@ -1,98 +1,42 @@
-Return-Path: <SRS0=K2Zf=ON=mellanox.com=kblaiech@kernel.org>
-From: Khalil Blaiech <kblaiech@mellanox.com>
-Subject: [PATCH v2 2/2] dt-bindings: i2c: I2C binding for Mellanox BlueField SoC
-Date: Tue,  4 Dec 2018 12:40:58 -0500
-Message-Id: <559a79756c9da9a7b188ffa141a2056a83c60de6.1543941145.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1543941145.git.kblaiech@mellanox.com>
-References: <cover.1543941145.git.kblaiech@mellanox.com>
-In-Reply-To: <cover.1543941145.git.kblaiech@mellanox.com>
-References: <cover.1543941145.git.kblaiech@mellanox.com>
-To: Rob Herring <robh@kernel.org>, Wolfram Sang <wsa@the-dreams.de>, Wolfram Sang <wsa+renesas@sang-engineering.com>, David Woods <dwoods@mellanox.com>
-Cc: Khalil Blaiech <kblaiech@mellanox.com>, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=2g+B=O2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:45306 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726628AbeLQSxH (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Dec 2018 13:53:07 -0500
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20181215103557.2748-5-govinds@codeaurora.org>
+Subject: Re: [PATCH v3 4/7] clk: qcom: Add WCSS gcc clock control for QCS404
+References: <20181215103557.2748-1-govinds@codeaurora.org> <20181215103557.2748-5-govinds@codeaurora.org>
+Message-ID: <154507278563.19322.18324820054996663733@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Mon, 17 Dec 2018 10:53:05 -0800
+Sender: devicetree-owner@vger.kernel.org
+To: Govind Singh <govinds@codeaurora.org>, bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Added device tree bindings documentation for Mellanox BlueField
-I2C SMBus controller.
+Quoting Govind Singh (2018-12-15 02:35:54)
+> @@ -2726,6 +2770,11 @@ static int gcc_qcs404_probe(struct platform_device=
+ *pdev)
+>                         return ret;
+>         }
+> =20
+> +#ifdef CONFIG_QCS_WCSSCC_404
+> +               gcc_qcs404_clocks[GCC_WCSS_Q6_AHB_CBCR_CLK] =3D &gcc_wdsp=
+_q6ss_ahbs_clk.clkr;
+> +               gcc_qcs404_clocks[GCC_WCSS_Q6_AXIM_CBCR_CLK] =3D &gcc_wds=
+p_q6ss_axim_clk.clkr;
 
-Reviewed-by: David Woods <dwoods@mellanox.com>
-Signed-off-by: Khalil Blaiech <kblaiech@mellanox.com>
----
- .../devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt | 67 ++++++++++++++++++++++
- 1 file changed, 67 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
+What is going on with the tabs here? Why is it under an ifdef?
 
-diff --git a/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-new file mode 100644
-index 0000000..61a8037
---- /dev/null
-+++ b/Documentation/devicetree/bindings/i2c/mellanox,i2c-mlxbf.txt
-@@ -0,0 +1,67 @@
-+Device tree configuration for the Mellanox I2C SMBus on BlueField SoCs
-+
-+Required Properties:
-+- reg        :	address offset and length of the device registers. The
-+		registers consists of a set of dedicated and shared
-+	       	resources:
-+
-+			1: Smbus block registers (dedicated)
-+			2: Cause master registers (dedicated)
-+			3: Cause slave registers (dedicated)
-+			4: Cause coalesce registers (shared)
-+			5: GPIO 0 registers (shared)
-+			6: CorePLL registers (shared)
-+
-+		The BlueField SoCs includes three I2C bus controllers;
-+		the set of resources <address length> must be defined
-+		as follow:
-+
-+		i2c bus 0:
-+		    <0x02804000 0x800>	/* Smbus[0]        */
-+		    <0x02801200 0x020>	/* Cause Master[0] */
-+		    <0x02801260 0x020>	/* Cause Slave[0]  */
-+		    <0x02801300 0x010>	/* Cause Coalesce  */
-+		    <0x02802000 0x100>	/* GPIO 0          */
-+		    <0x02800358 0x008>	/* CorePll         */
-+
-+		i2c bus 1:
-+		    <0x02804800 0x800>	/* Smbus[1]        */
-+		    <0x02801220 0x020>	/* Cause Master[1] */
-+		    <0x02801280 0x020>	/* Cause Slave[1]  */
-+		    <0x02801300 0x010>	/* Cause Coalesce  */
-+		    <0x02802000 0x100>	/* GPIO 0          */
-+		    <0x02800358 0x008>	/* CorePll         */
-+
-+		i2c bus 2:
-+		    <0x02805000 0x800>	/* Smbus[2]        */
-+		    <0x02801240 0x020>	/* Cause Master[2] */
-+		    <0x028012a0 0x020>	/* Cause Slave[2]  */
-+		    <0x02801300 0x010>	/* Cause Coalesce  */
-+		    <0x02802000 0x100>	/* GPIO 0          */
-+		    <0x02800358 0x008>	/* CorePll         */
-+
-+- compatible : 	should be "mellanox,i2c-mlxbf".
-+- interrupts : 	interrupt number.
-+
-+Optional Properties:
-+- clock-frequency :	bus frequency used to configure timing registers;
-+  		    	allowed values are 100000, 400000 and 1000000;
-+		    	those are expressed in Hz.
-+
-+Example:
-+
-+aliases {
-+	i2c0 = &i2c_0
-+};
-+
-+i2c_0: i2c {
-+	compatible = "mellanox,i2c-mlxbf";
-+	reg = <0x02804000 0x800>,
-+	      <0x02801200 0x020>,
-+	      <0x02801260 0x020>,
-+	      <0x02801300 0x010>,
-+	      <0x02802000 0x100>,
-+	      <0x02800358 0x008>;
-+	interrupts = <57>;
-+	clock-frequency = <100000>;
-+};
--- 
-2.1.2
+> +#endif
+> +
+>         return qcom_cc_really_probe(pdev, &gcc_qcs404_desc, regmap);
+>  }
+> =20
+> --=20
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+>=20
