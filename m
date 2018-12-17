@@ -1,36 +1,65 @@
-From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 03/13] mbox: qcom: replace integer with valid macro
-Date: Mon, 17 Dec 2018 10:46:20 +0100
-Message-ID: <1545039990-19984-4-git-send-email-jorge.ramirez-ortiz@linaro.org>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v4] MAINTAINERS: add maintainers for ChromeOS EC sub-drivers
+Date: Mon, 17 Dec 2018 10:54:09 +0100
+Message-ID: <20181217095409.22627-1-enric.balletbo@collabora.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com
-Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: Alessandro Zummo <a.zummo@towertech.it>, linux-pwm@vger.kernel.org, linux-iio@vger.kernel.org, Alexandre Belloni <alexandre.belloni@bootlin.com>, linux-i2c@vger.kernel.org, groeck@chromium.org, kernel@collabora.com, linux-rtc@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, Benson Leung <bleung@chromium.org>, Sebastian Reichel <sre@kernel.org>, linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, devicetree@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-pm@vger.kernel.org, MyungJoo Ham <myungjoo.ham@samsung.com>, Lee Jones <lee.jones@linaro.org>, Hartmut Knaack <knaack.h@gmx.de>, Rob Herring <robh+dt@kernel.org>, Lars
 List-Id: devicetree@vger.kernel.org
 
-Use the correct macro when registering the platform device.
+There are multiple ChromeOS EC sub-drivers spread in different
+subsystems, as all of them are related to the Chrome stuff add
+Benson and myself as a maintainers for all these sub-drivers.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Signed-off-by: Benson Leung <bleung@chromium.org>
+Acked-by: Wolfram Sang <wsa@the-dreams.de>
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Lee Jones <lee.jones@linaro.org>
+Acked-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+Acked-by: Guenter Roeck <groeck@chromium.org>
 ---
- drivers/mailbox/qcom-apcs-ipc-mailbox.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-index dc8fdab1..b782173 100644
---- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-+++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
-@@ -108,7 +108,7 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
- register_clk:
- 	apcs->clk = platform_device_register_data(&pdev->dev,
- 						  "qcom-apcs-msm8916-clk",
--						  -1, NULL, 0);
-+						  PLATFORM_DEVID_NONE, NULL, 0);
- 	if (IS_ERR(apcs->clk))
- 		dev_err(&pdev->dev, "failed to register APCS clk\n");
+Changes in v4:
+- Remove the `for iio parts` from Jonathan's acked-by tag.
+- Add more collected acks.
+- Use two N patterns.
+
+Changes in v3:
+- Add collected acks
+- Use a cros[-_]ec pattern instead of list all the files.
+- Add Guenter as a reviewer.
+
+Changes in v2:
+- Fix typo in Benson email address.
+
+ MAINTAINERS | 9 +++++++++
+ 1 file changed, 9 insertions(+)
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index fa6e2ad90568..1e27b24e912e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -3629,6 +3629,15 @@ S:	Maintained
+ T:	git git://git.kernel.org/pub/scm/linux/kernel/git/bleung/chrome-platform.git
+ F:	drivers/platform/chrome/
  
++CHROMEOS EC SUBDRIVERS
++M:	Benson Leung <bleung@chromium.org>
++M:	Enric Balletbo i Serra <enric.balletbo@collabora.com>
++R:	Guenter Roeck <groeck@chromium.org>
++S:	Maintained
++N:	cros_ec
++N:	cros-ec
++F:	drivers/power/supply/cros_usbpd-charger.c
++
+ CIRRUS LOGIC AUDIO CODEC DRIVERS
+ M:	Brian Austin <brian.austin@cirrus.com>
+ M:	Paul Handrigan <Paul.Handrigan@cirrus.com>
 -- 
-2.7.4
+2.19.2
