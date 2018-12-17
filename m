@@ -1,46 +1,172 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 7/7] arm64: dts: qcom: sdm845: Add shutdown-ack for Q6V5 MSS node
-Date: Mon, 17 Dec 2018 15:37:24 +0530
-Message-ID: <20181217100724.4593-7-sibis@codeaurora.org>
-References: <20181217100724.4593-1-sibis@codeaurora.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] irqchip: add driver for imx-irqsteer controller
+Date: Mon, 17 Dec 2018 11:09:53 +0100
+Message-ID: <1545041393.5874.1.camel@pengutronix.de>
+References: <20181214102244.21509-1-l.stach@pengutronix.de>
+         <20181214102244.21509-3-l.stach@pengutronix.de>
+         <86r2ejaztt.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217100724.4593-1-sibis@codeaurora.org>
+In-Reply-To: <86r2ejaztt.wl-marc.zyngier@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, Sibi Sankar <sibis@codeaurora.org>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Add shutdown-ack smp2p interrupt for Q6V5 MSS node.
+Hi Marc,
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
+Am Samstag, den 15.12.2018, 09:45 +0000 schrieb Marc Zyngier:
+> Hi Lucas,
+> 
+> On Fri, 14 Dec 2018 10:22:44 +0000,
+> > Lucas Stach <l.stach@pengutronix.de> wrote:
+> > 
+> > The irqsteer block is a interrupt multiplexer/remapper found on the
+> > i.MX8 line of SoCs.
+> > 
+> > > > Signed-off-by: Fugang Duan <fugang.duan@nxp.com>
+> > > > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
+> > ---
+> > v2:
+> >  - use raw_spinlock
+> >  - add proper clk error handling
+> >  - align register offset calculation with reality
+> >  - use correct SPDX identifier
+> >  - simplify DT configuration
+> > ---
 
-This patch depends on:
-https://patchwork.kernel.org/patch/10691213/ - shutdown-ack dt bindings
+[...]
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> > +static const struct irq_domain_ops imx_irqsteer_domain_ops = {
+> > > > > > +	.map		= imx_irqsteer_irq_map,
+> > +	.xlate		= irq_domain_xlate_twocell,
+> 
+> I've tried to understand why you are using two cells, but couldn't
+> find an explanation from the DT binding. As far as I can see, you only
+> support LEVEL_HIGH signalling, meaning that you could perfectly
+> encode this in a single cell. What am I missing?
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 56f5f55db9e2..db17216a5bce 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1376,9 +1376,11 @@
- 				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
- 				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
- 				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
--				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
- 			interrupt-names = "wdog", "fatal", "ready",
--					  "handover", "stop-ack";
-+					  "handover", "stop-ack",
-+					  "shutdown-ack";
- 
- 			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
- 				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Nothing. At this point I'm sure that the controller only support level-
+high IRQs. Will switch to a single cell in the next spin.
+
+[...]
+
+> > +static int imx_irqsteer_probe(struct platform_device *pdev)
+> > +{
+> > > > +	struct device_node *np = pdev->dev.of_node;
+> > > > +	struct irqsteer_data *data;
+> > > > +	struct resource *res;
+> > > > +	int ret;
+> > +
+> > > > +	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
+> > > > +	if (!data)
+> > > > +		return -ENOMEM;
+> > +
+> > > > +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > > +	data->regs = devm_ioremap_resource(&pdev->dev, res);
+> > > > +	if (IS_ERR(data->regs)) {
+> > > > +		dev_err(&pdev->dev, "failed to initialize reg\n");
+> > > > +		return PTR_ERR(data->regs);
+> > > > +	}
+> > +
+> > > > +	data->irq = platform_get_irq(pdev, 0);
+> > > > +	if (data->irq <= 0) {
+> > > > +		dev_err(&pdev->dev, "failed to get irq\n");
+> > > > +		return -ENODEV;
+> > > > +	}
+> > +
+> > > > +	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
+> > > > +	if (IS_ERR(data->ipg_clk)) {
+> > > > +		ret = PTR_ERR(data->ipg_clk);
+> > > > +		if (ret != -EPROBE_DEFER)
+> > > > +			dev_err(&pdev->dev, "failed to get ipg clk: %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > +
+> > > > +	raw_spin_lock_init(&data->lock);
+> > +
+> > > > +	of_property_read_u32(np, "fsl,irq-groups", &data->irq_groups);
+> > > > +	of_property_read_u32(np, "fsl,channel", &data->channel);
+> > +
+> > > > +	if (IS_ENABLED(CONFIG_PM_SLEEP)) {
+> > > > +		data->saved_reg = devm_kzalloc(&pdev->dev,
+> > > > +					sizeof(u32) * data->irq_groups * 2,
+> > > > +					GFP_KERNEL);
+> > > > +		if (!data->saved_reg)
+> > > > +			return -ENOMEM;
+> > > > +	}
+> > +
+> > > > +	ret = clk_prepare_enable(data->ipg_clk);
+> > > > +	if (ret) {
+> > > > +		dev_err(&pdev->dev, "failed to enable ipg clk: %d\n", ret);
+> > > > +		return ret;
+> > > > +	}
+> > +
+> > > > +	/* steer all IRQs into configured channel */
+> > +	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+> 
+> Could you explain what this channel is exactly?
+
+I've tired in the cover letter, but seems I still failed, so let me try
+again. ;)
+
+Each irqsteer instance can be connected to multiple upstream IRQ lines,
+but only one of them can be used at runtime. This register controls
+which output IRQ line will be used by this controller instance. With
+multiple controller instances in the system it's a way to offload the
+decision of the IRQ routing from the hardware to the software guys.
+
+Let's try to add an example: Suppose there are 2 instances of the
+irqsteer controller. Both are connected to upstream GIC IRQs 20 and 21.
+The channel controls which of those IRQs are used by each instance, so
+there are 2 valid DT configurations in this scenario:
+
+This is valid:
+
+irqsteer@0 {
+	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
+	fsl,channel = <0>;
+};
+
+irqsteer@1 {
+	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
+	fsl,channel = <1>;
+};
+
+As well as this:
+
+irqsteer@0 {
+	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
+	fsl,channel = <1>;
+};
+
+irqsteer@1 {
+	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
+	fsl,channel = <0>;
+};
+	
+[...]
+> > +#ifdef CONFIG_PM_SLEEP
+> > +static void imx_irqsteer_save_regs(struct irqsteer_data *data)
+> > +{
+> > > > +	int num;
+> > +
+> > > > +	for (num = 0; num < data->irq_groups; num++)
+> > > > +		data->saved_reg[num + 1] = readl_relaxed(data->regs +
+> > +						CHANMASK(num, data->irq_groups));
+> 
+> You seem to only use one u32 per IRQ group. Yet, you've allocated
+> twice as much memory to that effect. Why? Also, you're avoiding to use
+> index 0, which I find rather odd.
+> 
+> Given that the DT binding states that each group manages 64
+> interrupts, I have the feeling that you're missing some interrupt
+> enable state.
+
+And you are right with this observation. I failed to properly rework
+this part of the code when switching to the irq-group indexing.
+
+Regards,
+Lucas
