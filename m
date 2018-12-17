@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 11/13] arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
-Date: Mon, 17 Dec 2018 10:46:28 +0100
-Message-ID: <1545039990-19984-12-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH 07/13] clk: qcom: hfpll: register as clock provider
+Date: Mon, 17 Dec 2018 10:46:24 +0100
+Message-ID: <1545039990-19984-8-git-send-email-jorge.ramirez-ortiz@linaro.org>
 References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
@@ -10,29 +10,43 @@ To: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, an
 Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Specify the clocks that feed the APCS mux/divider instead of using
-default hardcoded values in the source code.
+Make the output of the high frequency pll a clock provider.
+On the QCS404 this PLL controls cpu frequency scaling.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/clk/qcom/hfpll.c | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index ec3f6c7..2d9e70e 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -373,6 +373,9 @@
- 			compatible = "qcom,qcs404-apcs-apps-global", "syscon";
- 			reg = <0x0b011000 0x1000>;
- 			#mbox-cells = <1>;
-+			clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-+			clock-names = "aux", "pll";
-+			#clock-cells = <0>;
- 		};
+diff --git a/drivers/clk/qcom/hfpll.c b/drivers/clk/qcom/hfpll.c
+index 87b7f46..0ffed0d 100644
+--- a/drivers/clk/qcom/hfpll.c
++++ b/drivers/clk/qcom/hfpll.c
+@@ -53,6 +53,7 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+ 	struct regmap *regmap;
+ 	struct clk_hfpll *h;
+ 	struct clk *pclk;
++	int ret;
+ 	struct clk_init_data init = {
+ 		.parent_names = (const char *[]){ "xo" },
+ 		.num_parents = 1,
+@@ -87,7 +88,14 @@ static int qcom_hfpll_probe(struct platform_device *pdev)
+ 	h->clkr.hw.init = &init;
+ 	spin_lock_init(&h->lock);
  
- 		apcs_hfpll: clock-controller@0b016000 {
+-	return devm_clk_register_regmap(&pdev->dev, &h->clkr);
++	ret = devm_clk_register_regmap(dev, &h->clkr);
++	if (ret) {
++		dev_err(dev, "failed to register regmap clock: %d\n", ret);
++		return ret;
++	}
++
++	return devm_of_clk_add_hw_provider(dev, of_clk_hw_simple_get,
++					   &h->clkr.hw);
+ }
+ 
+ static struct platform_driver qcom_hfpll_driver = {
 -- 
 2.7.4
