@@ -1,31 +1,52 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V5 1/2] dt-bindings: iio: magnetometer: add dt-bindings
- for freescale mag3110
-Date: Mon, 17 Dec 2018 08:55:53 -0600
-Message-ID: <CAL_Jsq+NKtKcV9xzSd11vZPfQWUVJMSQx8BB-5UX6O_4ptV44A@mail.gmail.com>
-References: <1545021679-4025-1-git-send-email-Anson.Huang@nxp.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V5 1/4] dt-bindings: serial: lpuart: add imx8qxp compatible
+ string
+Date: Mon, 17 Dec 2018 15:00:51 +0000
+Message-ID: <1545058517-18643-2-git-send-email-aisheng.dong@nxp.com>
+References: <1545058517-18643-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545021679-4025-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, olivier moysan <olivier.moysan@st.com>, Brian Masney <masneyb@onstation.org>, Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Phil Reid <preid@electromag.com.au>, NXP Linux Team <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545058517-18643-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 16, 2018 at 10:47 PM Anson Huang <anson.huang@nxp.com> wrote:
->
-> Add Freescale MAG3110 dt-bindings and remove it from trivial-devices
-> dt-bingding doc.
->
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> ---
->  .../bindings/iio/magnetometer/mag3110.txt          | 27 ++++++++++++++++++++++
->  .../devicetree/bindings/trivial-devices.txt        |  1 -
->  2 files changed, 27 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/mag3110.txt
+Add imx8qxp compatible string
 
-trivial-devices.txt is gone now as it's converted to json-schema. I
-can take this patch thru my tree and fix it up.
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-serial@vger.kernel.org
+Cc: devicetree@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ Documentation/devicetree/bindings/serial/fsl-lpuart.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Rob
+diff --git a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+index 6bd3f2e..21483ba 100644
+--- a/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
++++ b/Documentation/devicetree/bindings/serial/fsl-lpuart.txt
+@@ -8,6 +8,8 @@ Required properties:
+     on LS1021A SoC with 32-bit big-endian register organization
+   - "fsl,imx7ulp-lpuart" for lpuart compatible with the one integrated
+     on i.MX7ULP SoC with 32-bit little-endian register organization
++  - "fsl,imx8qxp-lpuart" for lpuart compatible with the one integrated
++    on i.MX8QXP SoC with 32-bit little-endian register organization
+ - reg : Address and length of the register set for the device
+ - interrupts : Should contain uart interrupt
+ - clocks : phandle + clock specifier pairs, one for each entry in clock-names
+-- 
+2.7.4
