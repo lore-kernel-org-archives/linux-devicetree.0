@@ -1,49 +1,67 @@
-Return-Path: <SRS0=pUvx=O2=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: Re: [PATCH 06/17] arm64: dts: renesas: r8a774c0: Add MSIOF nodes
+Return-Path: <SRS0=2g+B=O2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1400114.outbound.protection.outlook.com ([40.107.140.114]:16946
+        "EHLO JPN01-TY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727771AbeLQQhI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Dec 2018 11:37:08 -0500
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 06/17] arm64: dts: renesas: r8a774c0: Add MSIOF nodes
+Date: Mon, 17 Dec 2018 16:36:59 +0000
+Message-ID: <TY1PR01MB17700E941C41403A2EEF3DE6C0BC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
 References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
  <1544780260-27590-7-git-send-email-fabrizio.castro@bp.renesas.com>
  <f6834dd2-7a2d-5ca9-0961-2c992ce22002@cogentembedded.com>
- <TY1PR01MB17700E941C41403A2EEF3DE6C0BC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <ae733707-ebab-b85f-c1ab-71bc87339a9f@cogentembedded.com>
-Date: Mon, 17 Dec 2018 19:46:03 +0300
+In-Reply-To: <f6834dd2-7a2d-5ca9-0961-2c992ce22002@cogentembedded.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <TY1PR01MB17700E941C41403A2EEF3DE6C0BC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
 Cc: Magnus Damm <magnus.damm@gmail.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On 12/17/2018 07:36 PM, Fabrizio Castro wrote:
-
-[...]
->>> Add the device nodes for all MSIOF SPI controllers on RZ/G2E SoC.
->>>
->>> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
->>> ---
->>>  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 62 +++++++++++++++++++++++++++++++
->>>  1 file changed, 62 insertions(+)
->>>
->>> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
->>> index 9532d29..9bd66b1 100644
->>> --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
->>> +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
->>> @@ -855,6 +855,68 @@
->>>  status = "disabled";
->>>  };
->>>
->>> +msiof0: spi@e6e90000 {
->>> +compatible = "renesas,msiof-r8a774c0",
->>> +     "renesas,rcar-gen3-msiof";
->>> +reg = <0 0xe6e90000 0 0x0064>;
->>
->>    Do we really need the leading zeros in the size cells?
-> 
-> We don't, I just kept it consistent with the same definitions for the other platforms.
-> Do you want me to send a v2 for this?
-
-   Ah, consistency is good. Keep it then. :-)
-
-MBR, Sergei
+SGVsbG8gU2VyZ2VpLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgZmVlZGJhY2shDQoNCj4gRnJvbTog
+U2VyZ2VpIFNodHlseW92IDxzZXJnZWkuc2h0eWx5b3ZAY29nZW50ZW1iZWRkZWQuY29tPg0KPiBT
+ZW50OiAxNyBEZWNlbWJlciAyMDE4IDE2OjI3DQo+IFRvOiBGYWJyaXppbyBDYXN0cm8gPGZhYnJp
+emlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT47IFJvYiBIZXJyaW5nIDxyb2JoK2R0QGtlcm5lbC5v
+cmc+OyBHZWVydCBVeXR0ZXJob2V2ZW4NCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwNi8xN10gYXJt
+NjQ6IGR0czogcmVuZXNhczogcjhhNzc0YzA6IEFkZCBNU0lPRiBub2Rlcw0KPg0KPiBIZWxsbyEN
+Cj4NCj4gT24gMTIvMTQvMjAxOCAxMjozNyBQTSwgRmFicml6aW8gQ2FzdHJvIHdyb3RlOg0KPg0K
+PiA+IEFkZCB0aGUgZGV2aWNlIG5vZGVzIGZvciBhbGwgTVNJT0YgU1BJIGNvbnRyb2xsZXJzIG9u
+IFJaL0cyRSBTb0MuDQo+ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJyaXppbyBDYXN0cm8gPGZh
+YnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4NCj4gPiAtLS0NCj4gPiAgYXJjaC9hcm02NC9i
+b290L2R0cy9yZW5lc2FzL3I4YTc3NGMwLmR0c2kgfCA2MiArKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA2MiBpbnNlcnRpb25zKCspDQo+ID4NCj4g
+PiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5lc2FzL3I4YTc3NGMwLmR0c2kg
+Yi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMvcjhhNzc0YzAuZHRzaQ0KPiA+IGluZGV4IDk1
+MzJkMjkuLjliZDY2YjEgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9yZW5l
+c2FzL3I4YTc3NGMwLmR0c2kNCj4gPiArKysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3JlbmVzYXMv
+cjhhNzc0YzAuZHRzaQ0KPiA+IEBAIC04NTUsNiArODU1LDY4IEBADQo+ID4gIHN0YXR1cyA9ICJk
+aXNhYmxlZCI7DQo+ID4gIH07DQo+ID4NCj4gPiArbXNpb2YwOiBzcGlAZTZlOTAwMDAgew0KPiA+
+ICtjb21wYXRpYmxlID0gInJlbmVzYXMsbXNpb2YtcjhhNzc0YzAiLA0KPiA+ICsgICAgICJyZW5l
+c2FzLHJjYXItZ2VuMy1tc2lvZiI7DQo+ID4gK3JlZyA9IDwwIDB4ZTZlOTAwMDAgMCAweDAwNjQ+
+Ow0KPg0KPiAgICBEbyB3ZSByZWFsbHkgbmVlZCB0aGUgbGVhZGluZyB6ZXJvcyBpbiB0aGUgc2l6
+ZSBjZWxscz8NCg0KV2UgZG9uJ3QsIEkganVzdCBrZXB0IGl0IGNvbnNpc3RlbnQgd2l0aCB0aGUg
+c2FtZSBkZWZpbml0aW9ucyBmb3IgdGhlIG90aGVyIHBsYXRmb3Jtcy4NCkRvIHlvdSB3YW50IG1l
+IHRvIHNlbmQgYSB2MiBmb3IgdGhpcz8NCg0KPg0KPiA+ICtpbnRlcnJ1cHRzID0gPEdJQ19TUEkg
+MTU2IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+ICtjbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDIx
+MT47DQo+ID4gK2RtYXMgPSA8JmRtYWMxIDB4NDE+LCA8JmRtYWMxIDB4NDA+LA0KPiA+ICsgICAg
+ICAgPCZkbWFjMiAweDQxPiwgPCZkbWFjMiAweDQwPjsNCj4gPiArZG1hLW5hbWVzID0gInR4Iiwg
+InJ4IiwgInR4IiwgInJ4IjsNCj4gPiArcG93ZXItZG9tYWlucyA9IDwmc3lzYyBSOEE3NzRDMF9Q
+RF9BTFdBWVNfT04+Ow0KPiA+ICtyZXNldHMgPSA8JmNwZyAyMTE+Ow0KPiA+ICsjYWRkcmVzcy1j
+ZWxscyA9IDwxPjsNCj4gPiArI3NpemUtY2VsbHMgPSA8MD47DQo+ID4gK3N0YXR1cyA9ICJkaXNh
+YmxlZCI7DQo+ID4gK307DQo+IFsuLi5dDQo+DQo+ICAgIFNhbWUgcXVlc3Rpb24gZm9yIHRoZSBv
+dGhlciBpbnN0YW5jZXMgb2YgTVNJT0YuDQoNClNhbWUgYW5zd2VyIGFwcGxpZXMgZm9yIHRoZSBv
+dGhlciBpbnN0YW5jZXMuDQoNClRoYW5rcywNCkZhYg0KDQo+DQo+IE1CUiwgU2VyZ2VpDQoNCg0K
+W2h0dHBzOi8vd3d3Mi5yZW5lc2FzLmV1L21lZGlhL2VtYWlsL3VuaWNlZi5qcGddDQoNClRoaXMg
+Q2hyaXN0bWFzLCBpbnN0ZWFkIG9mIHNlbmRpbmcgb3V0IGNhcmRzLCBSZW5lc2FzIEVsZWN0cm9u
+aWNzIEV1cm9wZSBoYXZlIGRlY2lkZWQgdG8gc3VwcG9ydCBVbmljZWYgd2l0aCBhIGRvbmF0aW9u
+LiBGb3IgZnVydGhlciBkZXRhaWxzIGNsaWNrIGhlcmU8aHR0cHM6Ly93d3cudW5pY2VmLm9yZy8+
+IHRvIGZpbmQgb3V0IGFib3V0IHRoZSB2YWx1YWJsZSB3b3JrIHRoZXkgZG8sIGhlbHBpbmcgY2hp
+bGRyZW4gYWxsIG92ZXIgdGhlIHdvcmxkLg0KV2Ugd291bGQgbGlrZSB0byB0YWtlIHRoaXMgb3Bw
+b3J0dW5pdHkgdG8gd2lzaCB5b3UgYSBNZXJyeSBDaHJpc3RtYXMgYW5kIGEgcHJvc3Blcm91cyBO
+ZXcgWWVhci4NCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVh
+ZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZI
+LCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4g
+MDQ1ODY3MDkuDQo=
