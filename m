@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings for Q6V5
-Date: Mon, 17 Dec 2018 15:37:19 +0530
-Message-ID: <20181217100724.4593-2-sibis@codeaurora.org>
+Subject: [PATCH v2 3/7] dt-bindings: remoteproc: qcom: Fixup regulator dependencies
+Date: Mon, 17 Dec 2018 15:37:20 +0530
+Message-ID: <20181217100724.4593-3-sibis@codeaurora.org>
 References: <20181217100724.4593-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,37 +12,27 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+Fixup regulator supply dependencies for Q6V5 MSS on MSM996 SoCs.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt       | 10 +++++++---
- 1 file changed, 7 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
 diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 9ff5b0309417..780adc043b37 100644
+index 780adc043b37..98894e6ad456 100644
 --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
- - clocks:
+@@ -76,7 +76,9 @@ on the Qualcomm Hexagon core.
  	Usage: required
  	Value type: <phandle>
--	Definition: reference to the iface, bus and mem clocks to be held on
--		    behalf of the booting of the Hexagon core
-+	Definition: reference to the list of 4 clocks for the modem sub-system
-+		    reference to the list of 8 clocks for the modem sub-system
-+		    on SDM845 SoCs
+ 	Definition: reference to the regulators to be held on behalf of the
+-		    booting of the Hexagon core
++		    booting of the Hexagon core on MSM8916 SoCs
++		    reference to the pll-supply regulator to be held on behalf
++		    of the booting of the Hexagon core on MSM8996 SoCs
  
- - clock-names:
- 	Usage: required
- 	Value type: <stringlist>
--	Definition: must be "iface", "bus", "mem"
-+	Definition: must be "iface", "bus", "mem", "xo" for the modem sub-system
-+		    must be "iface", "bus", "mem", "gpll0_mss", "snoc_axi",
-+		    "mnoc_axi", "prng", "xo" for the modem sub-system on SDM845
-+		    SoCs
- 
- - resets:
+ - qcom,smem-states:
  	Usage: required
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
