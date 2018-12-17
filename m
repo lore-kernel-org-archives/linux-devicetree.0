@@ -1,149 +1,53 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 09/15] Bluetooth: hci_bcm: Add support for regulator supplies
-Date: Mon, 17 Dec 2018 12:04:43 +0800
-Message-ID: <20181217040449.31437-10-wens@csie.org>
+Subject: [PATCH v3 04/15] dt-bindings: net: broadcom-bluetooth: Add BCM4330
+ compatible string
+Date: Mon, 17 Dec 2018 12:04:38 +0800
+Message-ID: <20181217040449.31437-5-wens@csie.org>
 References: <20181217040449.31437-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20181217040449.31437-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom Bluetooth chips have two power inputs, VBAT and VDDIO.
-The former provides overall power for the chip, while the latter powers
-the I/O pins and buffers.
+The BCM4330 is a 802.11 a/b/g/n WiFi + Bluetooth 4.0 chip from Broadcom.
+It is found in the Ampak AP6330 WiFi+BT module. The partiular one I have
+identifies as BCM4330B1 for Bluetooth and BCM4330/4 for WiFi.
 
-Model these two as regulator supplies, and let the driver manage them
-in the same way as it does the clock supply.
+It is unclear if the AP6330 module uses this revision of the BCM4330, or
+if there are multiple revisions. The module does not have revision
+markings. This patch elects to use just BCM4330 for the compatible
+string.
 
-Tested-by: Ondrej Jirman <megous@megous.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/bluetooth/hci_bcm.c | 39 ++++++++++++++++++++++++++++---------
- 1 file changed, 30 insertions(+), 9 deletions(-)
+ Documentation/devicetree/bindings/net/broadcom-bluetooth.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/bluetooth/hci_bcm.c b/drivers/bluetooth/hci_bcm.c
-index 345d728a5434..f2101038284e 100644
---- a/drivers/bluetooth/hci_bcm.c
-+++ b/drivers/bluetooth/hci_bcm.c
-@@ -31,6 +31,7 @@
- #include <linux/property.h>
- #include <linux/platform_data/x86/apple.h>
- #include <linux/platform_device.h>
-+#include <linux/regulator/consumer.h>
- #include <linux/clk.h>
- #include <linux/gpio/consumer.h>
- #include <linux/tty.h>
-@@ -53,6 +54,8 @@
+diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+index d9d734a07faf..c26f4e11037c 100644
+--- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
++++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
+@@ -11,6 +11,7 @@ Required properties:
  
- #define BCM_AUTOSUSPEND_DELAY	5000 /* default autosleep delay */
+  - compatible: should contain one of the following:
+    * "brcm,bcm20702a1"
++   * "brcm,bcm4330-bt"
+    * "brcm,bcm43438-bt"
  
-+#define BCM_NUM_SUPPLIES 2
-+
- /**
-  * struct bcm_device - device driver resources
-  * @serdev_hu: HCI UART controller struct
-@@ -73,7 +76,8 @@
-  * @btpd: Apple ACPI method to drive BT_REG_ON pin low ("Bluetooth Power Down")
-  * @txco_clk: external reference frequency clock used by Bluetooth device
-  * @lpo_clk: external LPO clock used by Bluetooth device
-- * @clk_enabled: whether clocks are prepared and enabled
-+ * @supplies: VBAT and VDDIO supplies used by Bluetooth device
-+ * @res_enabled: whether clocks and supplies are prepared and enabled
-  * @init_speed: default baudrate of Bluetooth device;
-  *	the host UART is initially set to this baudrate so that
-  *	it can configure the Bluetooth device for @oper_speed
-@@ -105,7 +109,8 @@ struct bcm_device {
- 
- 	struct clk		*txco_clk;
- 	struct clk		*lpo_clk;
--	bool			clk_enabled;
-+	struct regulator_bulk_data supplies[BCM_NUM_SUPPLIES];
-+	bool			res_enabled;
- 
- 	u32			init_speed;
- 	u32			oper_speed;
-@@ -216,17 +221,21 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- {
- 	int err;
- 
--	if (powered && !dev->clk_enabled) {
-+	if (powered && !dev->res_enabled) {
-+		err = regulator_bulk_enable(BCM_NUM_SUPPLIES, dev->supplies);
-+		if (err)
-+			return err;
-+
- 		/* LPO clock needs to be 32.768 kHz */
- 		err = clk_set_rate(dev->lpo_clk, 32768);
- 		if (err) {
- 			dev_err(dev->dev, "Could not set LPO clock rate\n");
--			return err;
-+			goto err_regulator_disable;
- 		}
- 
- 		err = clk_prepare_enable(dev->lpo_clk);
- 		if (err)
--			return err;
-+			goto err_regulator_disable;
- 
- 		err = clk_prepare_enable(dev->txco_clk);
- 		if (err)
-@@ -241,23 +250,27 @@ static int bcm_gpio_set_power(struct bcm_device *dev, bool powered)
- 	if (err)
- 		goto err_revert_shutdown;
- 
--	if (!powered && dev->clk_enabled) {
-+	if (!powered && dev->res_enabled) {
- 		clk_disable_unprepare(dev->txco_clk);
- 		clk_disable_unprepare(dev->lpo_clk);
-+		regulator_bulk_disable(BCM_NUM_SUPPLIES, dev->supplies);
- 	}
- 
--	dev->clk_enabled = powered;
-+	dev->res_enabled = powered;
- 
- 	return 0;
- 
- err_revert_shutdown:
- 	dev->set_shutdown(dev, !powered);
- err_txco_clk_disable:
--	if (powered && !dev->clk_enabled)
-+	if (powered && !dev->res_enabled)
- 		clk_disable_unprepare(dev->txco_clk);
- err_lpo_clk_disable:
--	if (powered && !dev->clk_enabled)
-+	if (powered && !dev->res_enabled)
- 		clk_disable_unprepare(dev->lpo_clk);
-+err_regulator_disable:
-+	if (powered && !dev->res_enabled)
-+		regulator_bulk_disable(BCM_NUM_SUPPLIES, dev->supplies);
- 	return err;
- }
- 
-@@ -936,6 +949,7 @@ static struct clk *bcm_get_txco(struct device *dev)
- static int bcm_get_resources(struct bcm_device *dev)
- {
- 	const struct dmi_system_id *dmi_id;
-+	int err;
- 
- 	dev->name = dev_name(dev->dev);
- 
-@@ -978,6 +992,13 @@ static int bcm_get_resources(struct bcm_device *dev)
- 	dev->set_device_wakeup = bcm_gpio_set_device_wakeup;
- 	dev->set_shutdown = bcm_gpio_set_shutdown;
- 
-+	dev->supplies[0].supply = "vbat";
-+	dev->supplies[1].supply = "vddio";
-+	err = devm_regulator_bulk_get(dev->dev, BCM_NUM_SUPPLIES,
-+				      dev->supplies);
-+	if (err)
-+		return err;
-+
- 	/* IRQ can be declared in ACPI table as Interrupt or GpioInt */
- 	if (dev->irq <= 0) {
- 		struct gpio_desc *gpio;
+ Optional properties:
 -- 
 2.20.0
