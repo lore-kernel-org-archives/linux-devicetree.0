@@ -1,126 +1,63 @@
-From: Dan Carpenter <dan.carpenter@oracle.com>
-Subject: Re: [PATCH 1/2] net: dsa: ksz9477: add I2C managed mode support
-Date: Mon, 17 Dec 2018 09:54:55 +0300
-Message-ID: <20181217065455.GB15451@kadam>
-References: <20181216075741.13827-1-sergio.paracuellos@gmail.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Mon, 17 Dec 2018 12:36:47 +0530
+Message-ID: <20181217070647.xtvfgsixggua5yod@vireshk-i7>
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+ <20181212211848.26768-3-jcrouse@codeaurora.org>
+ <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
+ <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20181216075741.13827-1-sergio.paracuellos@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Woojung.Huh@microchip.com, andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, devicetree@vger.kernel.org, davem@davemloft.net
+In-Reply-To: <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 16, 2018 at 08:57:40AM +0100, Sergio Paracuellos wrote:
-> +static int ksz_i2c_write(struct ksz_device *dev, u32 reg, u8 *val,
-> +			 unsigned int len)
-> +{
-> +	struct i2c_client *client = dev->priv;
-> +	unsigned int cnt = len;
-> +	int i = 0;
-> +	u8 txb[4];
-> +
-> +	do {
-> +		txb[i++] = (u8)(*val >> (8 * (cnt - 1)));
-                                              ^^^^^^^
-
-Can "cnt" be zero from ksz_i2c_set()?  If so this loop will corrupt
-memory.
-
-> +		cnt--;
-> +	} while (cnt);
-> +
-> +	return ksz_i2c_write_reg(client, reg, txb, len);
-> +}
-> +
-> +static int ksz_i2c_write8(struct ksz_device *dev, u32 reg, u8 value)
-> +{
-> +	return ksz_i2c_write(dev, reg, &value, 1);
-> +}
-> +
-> +static int ksz_i2c_write16(struct ksz_device *dev, u32 reg, u16 value)
-> +{
-> +	value = cpu_to_be16(value);
-> +	return ksz_i2c_write(dev, reg, (u8 *)&value, 2);
-> +}
-> +
-> +static int ksz_i2c_write24(struct ksz_device *dev, u32 reg, u32 value)
-> +{
-> +	/* make it to big endian 24bit from MSB */
-> +	value <<= 8;
-> +	value = cpu_to_be32(value);
-> +
-> +	return ksz_i2c_write(dev, reg, (u8 *)&value, 3);
-> +}
-> +
-> +static int ksz_i2c_write32(struct ksz_device *dev, u32 reg, u32 value)
-> +{
-> +	value = cpu_to_be32(value);
-> +	return ksz_i2c_write(dev, reg, (u8 *)&value, 4);
-> +}
-> +
-> +static int ksz_i2c_get(struct ksz_device *dev, u32 reg, void *data, size_t len)
-> +{
-> +	return ksz_i2c_read(dev, reg, data, len);
-> +}
-> +
-> +static int ksz_i2c_set(struct ksz_device *dev, u32 reg, void *data, size_t len)
-> +{
-> +	return ksz_i2c_write(dev, reg, data, len);
-> +}
-> +
-> +static const struct ksz_io_ops ksz_i2c_ops = {
-> +	.read8 = ksz_i2c_read8,
-> +	.read16 = ksz_i2c_read16,
-> +	.read24 = ksz_i2c_read24,
-> +	.read32 = ksz_i2c_read32,
-> +	.write8 = ksz_i2c_write8,
-> +	.write16 = ksz_i2c_write16,
-> +	.write24 = ksz_i2c_write24,
-> +	.write32 = ksz_i2c_write32,
-> +	.get = ksz_i2c_get,
-> +	.set = ksz_i2c_set,
-> +};
-> +
-> +static int ksz_i2c_probe(struct i2c_client *client,
-> +			 const struct i2c_device_id *id)
-> +{
-> +	struct ksz_device *dev;
-> +	int ret;
-> +
-> +	dev = ksz_switch_alloc(&client->dev, &ksz_i2c_ops, client);
-> +	if (!dev)
-> +		return -ENOMEM;
-> +
-> +	if (client->dev.platform_data)
-> +		dev->pdata = client->dev.platform_data;
-> +
-> +	i2c_set_clientdata(client, dev);
-> +
-> +	ret = ksz9477_switch_register(dev);
-> +	if (ret) {
-> +		dev_err(&client->dev, "registering switch (ret: %d)\n", ret);
-
-
-free dev on this error path?
-
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-
-regards,
-dan carpenter
+K1JvYiArU3RlcGhlbiwKCk9uIDE0LTEyLTE4LCAwOTowNCwgRG91ZyBBbmRlcnNvbiB3cm90ZToK
+PiBIaSwKPiAKPiBPbiBUaHUsIERlYyAxMywgMjAxOCBhdCA4OjQxIFBNIFZpcmVzaCBLdW1hciA8
+dmlyZXNoLmt1bWFyQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIDEyLTEyLTE4LCAxNDox
+OCwgSm9yZGFuIENyb3VzZSB3cm90ZToKPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGdwdV9v
+cHBfdGFibGU6IG9wcC10YWJsZSB7Cj4gPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+IGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIjsKPiA+Cj4gPiBJ
+IHRoaW5rIHlvdSBuZWVkIHRvIG1lbnRpb24gIm9wZXJhdGluZy1wb2ludHMtdjIiIGFzIHdlbGwg
+aGVyZS4KPiAKPiBBcmUgeW91IHNheWluZyB0aGUgYWJvdmUgc2hvdWxkIGJlOgo+ICAgY29tcGF0
+aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiLCAib3BlcmF0aW5nLXBvaW50
+cy12MiI7Cj4gCj4gSWYgc28gSSdtIG5vdCBzdXJlIEkgYWdyZWUuCgpXZWxsIEkgaGF2ZSBteSBk
+b3VidHMgYXMgd2VsbCBvbiB0aGlzLiBUaGlzIGlzIHdoZXJlIHRoZSBvcmRlcmluZyB3YXMgZGlz
+Y3Vzc2VkCmVhcmxpZXI6CgpodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzE1MjMyODk3OTg5
+Ny4xODAyNzYuMTU5NjM5MjU4Nzc0NDI2NTcxNThAc3dib3lkLm10di5jb3JwLmdvb2dsZS5jb20v
+CgpAUm9iL1N0ZXBoZW46IFNob3VsZCB0aGUgb3BwLXRhYmxlIG5vZGUgYWJvdmUgYWxzbyBoYXZl
+ICJvcGVyYXRpbmctcG9pbnRzLXYyIgpzdHJpbmcgaW4gdGhlIGNvbXBhdGlibGUgcHJvcGVydHkg
+PwoKPiBJdCdzIF9ub3RfIHJlYWxseSBjb21wYXRpYmxlIHdpdGggdGhlCj4gIm9wZXJhdGluZy1w
+b2ludHMtdjIiIGJpbmRpbmcuICBJZiB5b3UgaGFkIGEgZHJpdmVyIHRoYXQgaGFkIG5ldmVyCj4g
+aGVhcmQgb2YgIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCIgYW5kIGhhZCBvbmx5IGhl
+YXJkIG9mCj4gIm9wZXJhdGluZy1wb2ludHMtdjIiIGFuZCBpdCB0b29rIGEgbG9vayBhdCB0aGlz
+IG5vZGUgaXQgd291bGQgaGF2ZSBubwo+IGlkZWEgd2hhdCB0byBkbyB3aXRoIGl0LgoKV2VsbCBp
+dCB3aWxsIHBhcnNlIGV2ZXJ5dGhpbmcgYXBhcnQgZnJvbSB0aGUgcWNvbSxsZXZlbCB0aGluZywg
+c28gaXQgY2FuCmFjdHVhbGx5IHBhcnNlIHN0dWZmIGhlcmUuCgo+IEknbGwgYWxzbyBub3RlIHRo
+YXQgb3RoZXIgaW5zdGFuY2VzIHBvc3RlZCB0byB0aGUgbGlzdCBkb24ndCBsaXN0IGJvdGg6Cj4g
+Cj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDcyNTgwMS8gLSBSUE0gLyBS
+UE1IIFBEIGJpbmRpbmdzCj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDcy
+NTc5My8gLSBSUE1IIFBEIGRldmljZSB0cmVlIGZvciBzZG04NDUKPiAKPiBUaGUgYmluZGluZ3Mg
+cGF0Y2ggYWxzbyBtYWtlcyBubyBtZW50aW9uIG9mIG5lZWRpbmcKPiAib3BlcmF0aW5nLXBvaW50
+cy12MiIuICBJIHRoaW5rIHRoZSBjb21tb24gY2FzZSB3aGVuIGEgZmFsbGJhY2sgaXMKPiByZXF1
+aXJlZCBpdCBpcyBleHBsaWNpdGx5IGNhbGxlZCBvdXQgaW4gdGhlIGJpbmRpbmdzOgo+IAo+IGh0
+dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3MjU4MDMvIC0gcWNvbS1vcHAgYmlu
+ZGluZ3MKClN1cmUsIG1heWJlIEkgYW0gd3JvbmcgYnV0IGl0cyBiZXR0ZXIgdG8gZ2V0IHNvbWUg
+Y2xhcml0eSBvbiBpdCBmcm9tIFJvYi9TdGVwaGVuLgoKLS0gCnZpcmVzaApfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
