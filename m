@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names from DT
-Date: Mon, 17 Dec 2018 10:46:22 +0100
-Message-ID: <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH 11/13] arm64: dts: qcom: qcs404: Add the clocks for APCS mux/divider
+Date: Mon, 17 Dec 2018 10:46:28 +0100
+Message-ID: <1545039990-19984-12-git-send-email-jorge.ramirez-ortiz@linaro.org>
 References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
@@ -10,88 +10,29 @@ To: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, an
 Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allow accessing the parent clock names required for the driver
-operation by using the device tree node.
-
-This permits extending the driver to other platforms without having to
-modify its source code.
-
-For backwards compatibility leave previous values as default.
+Specify the clocks that feed the APCS mux/divider instead of using
+default hardcoded values in the source code.
 
 Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- drivers/clk/qcom/apcs-msm8916.c | 33 ++++++++++++++++++++++++---------
- 1 file changed, 24 insertions(+), 9 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/drivers/clk/qcom/apcs-msm8916.c b/drivers/clk/qcom/apcs-msm8916.c
-index a6c89a3..2453242 100644
---- a/drivers/clk/qcom/apcs-msm8916.c
-+++ b/drivers/clk/qcom/apcs-msm8916.c
-@@ -19,7 +19,7 @@
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index ec3f6c7..2d9e70e 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -373,6 +373,9 @@
+ 			compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+ 			reg = <0x0b011000 0x1000>;
+ 			#mbox-cells = <1>;
++			clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
++			clock-names = "aux", "pll";
++			#clock-cells = <0>;
+ 		};
  
- static const u32 gpll0_a53cc_map[] = { 4, 5 };
- 
--static const char * const gpll0_a53cc[] = {
-+static const char *gpll0_a53cc[] = {
- 	"gpll0_vote",
- 	"a53pll",
- };
-@@ -50,17 +50,39 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 	struct regmap *regmap;
- 	struct clk_init_data init = { };
- 	int ret = -ENODEV;
-+	struct clk_bulk_data pclks[] = {
-+		[0] = { .id = "aux", .clk = NULL },
-+		[1] = { .id = "pll", .clk = NULL },
-+	};
- 
- 	regmap = dev_get_regmap(parent, NULL);
- 	if (!regmap) {
- 		dev_err(dev, "failed to get regmap: %d\n", ret);
- 		return ret;
- 	}
--
- 	a53cc = devm_kzalloc(dev, sizeof(*a53cc), GFP_KERNEL);
- 	if (!a53cc)
- 		return -ENOMEM;
- 
-+	/* check if the parent names are present in the device tree */
-+	ret = devm_clk_bulk_get(parent, ARRAY_SIZE(pclks), pclks);
-+	if (ret == -EPROBE_DEFER)
-+		return ret;
-+
-+	if (!ret) {
-+		gpll0_a53cc[0] = __clk_get_name(pclks[0].clk);
-+		gpll0_a53cc[1] = __clk_get_name(pclks[1].clk);
-+		a53cc->pclk = pclks[1].clk;
-+	} else {
-+		/* support old binding where only pll was explicitily defined */
-+		a53cc->pclk = devm_clk_get(parent, NULL);
-+		if (IS_ERR(a53cc->pclk)) {
-+			ret = PTR_ERR(a53cc->pclk);
-+			dev_err(dev, "failed to get clk: %d\n", ret);
-+			return ret;
-+		}
-+	}
-+
- 	init.name = "a53mux";
- 	init.parent_names = gpll0_a53cc;
- 	init.num_parents = ARRAY_SIZE(gpll0_a53cc);
-@@ -76,13 +98,6 @@ static int qcom_apcs_msm8916_clk_probe(struct platform_device *pdev)
- 	a53cc->src_shift = 8;
- 	a53cc->parent_map = gpll0_a53cc_map;
- 
--	a53cc->pclk = devm_clk_get(parent, NULL);
--	if (IS_ERR(a53cc->pclk)) {
--		ret = PTR_ERR(a53cc->pclk);
--		dev_err(dev, "failed to get clk: %d\n", ret);
--		return ret;
--	}
--
- 	a53cc->clk_nb.notifier_call = a53cc_notifier_cb;
- 	ret = clk_notifier_register(a53cc->pclk, &a53cc->clk_nb);
- 	if (ret) {
+ 		apcs_hfpll: clock-controller@0b016000 {
 -- 
 2.7.4
