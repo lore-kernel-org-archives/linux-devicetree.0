@@ -1,83 +1,82 @@
-Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:44974 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbeLVRN1 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:27 -0500
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 09/12] media: mt9m001: register to V4L2 asynchronous subdevice framework
-Date: Sun, 23 Dec 2018 02:12:51 +0900
-Message-Id: <1545498774-11754-10-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
-References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=2g+B=O2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail.kernel.org ([198.145.29.99]:46550 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728301AbeLQSz0 (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Dec 2018 13:55:26 -0500
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20181215103557.2748-6-govinds@codeaurora.org>
+Subject: Re: [PATCH v3 5/7] remoteproc: qcom: wcss: populate hardcoded param using driver data
+References: <20181215103557.2748-1-govinds@codeaurora.org> <20181215103557.2748-6-govinds@codeaurora.org>
+Message-ID: <154507292461.19322.16649255647859149880@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Date: Mon, 17 Dec 2018 10:55:24 -0800
 Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: Govind Singh <govinds@codeaurora.org>, bjorn.andersson@linaro.org, linux-remoteproc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, sricharan@codeaurora.org, sibis@codeaurora.org, linux-arm-msm@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Register a sub-device to the asynchronous subdevice framework, and also
-create subdevice device node.
+Quoting Govind Singh (2018-12-15 02:35:55)
+> diff --git a/drivers/remoteproc/qcom_q6v5_wcss.c b/drivers/remoteproc/qco=
+m_q6v5_wcss.c
+> index f93e1e4a1cc0..129f82404656 100644
+> --- a/drivers/remoteproc/qcom_q6v5_wcss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_wcss.c
+> @@ -16,7 +17,6 @@
+>  #include "qcom_common.h"
+>  #include "qcom_q6v5.h"
+> =20
+> -#define WCSS_CRASH_REASON              421
+> =20
+>  /* Q6SS Register Offsets */
+>  #define Q6SS_RESET_REG         0x014
+> @@ -70,6 +70,14 @@
+>  #define TCSR_WCSS_CLK_MASK     0x1F
+>  #define TCSR_WCSS_CLK_ENABLE   0x14
+> =20
+> +struct wcss_data {
+> +       void (*pas_handover)(struct qcom_q6v5 *q6v5);
+> +       const char *firmware_name;
+> +       int crash_reason_smem;
+> +       int version;
 
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- drivers/media/i2c/Kconfig   | 2 +-
- drivers/media/i2c/mt9m001.c | 9 ++++++++-
- 2 files changed, 9 insertions(+), 2 deletions(-)
+version can be negative?
 
-diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
-index 5e30ad3..a6d8416 100644
---- a/drivers/media/i2c/Kconfig
-+++ b/drivers/media/i2c/Kconfig
-@@ -845,7 +845,7 @@ config VIDEO_VS6624
- 
- config VIDEO_MT9M001
- 	tristate "mt9m001 support"
--	depends on I2C && VIDEO_V4L2
-+	depends on I2C && VIDEO_V4L2 && VIDEO_V4L2_SUBDEV_API
- 	depends on MEDIA_CAMERA_SUPPORT
- 	depends on MEDIA_CONTROLLER
- 	help
-diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
-index e31fb7d..b4deec3 100644
---- a/drivers/media/i2c/mt9m001.c
-+++ b/drivers/media/i2c/mt9m001.c
-@@ -716,6 +716,7 @@ static int mt9m001_probe(struct i2c_client *client,
- 		return PTR_ERR(mt9m001->reset_gpio);
- 
- 	v4l2_i2c_subdev_init(&mt9m001->subdev, client, &mt9m001_subdev_ops);
-+	mt9m001->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
- 	v4l2_ctrl_handler_init(&mt9m001->hdl, 4);
- 	v4l2_ctrl_new_std(&mt9m001->hdl, &mt9m001_ctrl_ops,
- 			V4L2_CID_VFLIP, 0, 1, 1, 0);
-@@ -765,10 +766,16 @@ static int mt9m001_probe(struct i2c_client *client,
- 	if (ret)
- 		goto error_power_off;
- 
-+	ret = v4l2_async_register_subdev(&mt9m001->subdev);
-+	if (ret)
-+		goto error_entity_cleanup;
-+
- 	pm_runtime_put_sync(&client->dev);
- 
- 	return 0;
- 
-+error_entity_cleanup:
-+	media_entity_cleanup(&mt9m001->subdev.entity);
- error_power_off:
- 	pm_runtime_disable(&client->dev);
- 	pm_runtime_set_suspended(&client->dev);
-@@ -785,9 +792,9 @@ static int mt9m001_remove(struct i2c_client *client)
- {
- 	struct mt9m001 *mt9m001 = to_mt9m001(client);
- 
--	v4l2_device_unregister_subdev(&mt9m001->subdev);
- 	pm_runtime_get_sync(&client->dev);
- 
-+	v4l2_async_unregister_subdev(&mt9m001->subdev);
- 	media_entity_cleanup(&mt9m001->subdev.entity);
- 
- 	pm_runtime_disable(&client->dev);
--- 
-2.7.4
+> +       int pas_id;
+
+And the pas_id can be negative too?
+
+> +};
+> +
+>  struct q6v5_wcss {
+>         struct device *dev;
+> =20
+> @@ -553,7 +573,8 @@ static int q6v5_wcss_probe(struct platform_device *pd=
+ev)
+>         if (ret)
+>                 goto free_rproc;
+> =20
+> -       ret =3D qcom_q6v5_init(&wcss->q6v5, pdev, rproc, WCSS_CRASH_REASO=
+N, NULL);
+> +       ret =3D qcom_q6v5_init(&wcss->q6v5, pdev, rproc, desc->crash_reas=
+on_smem,
+> +                            desc->pas_handover);
+>         if (ret)
+>                 goto free_rproc;
+> =20
+> @@ -581,8 +602,15 @@ static int q6v5_wcss_remove(struct platform_device *=
+pdev)
+>         return 0;
+>  }
+> =20
+> +static const struct wcss_data wcss_ipq8074_res_init =3D {
+> +       .firmware_name =3D "IPQ8074/q6_fw.mdt",
+> +       .crash_reason_smem =3D 421,
+
+Why destroy the #define and inline it here? Keep the define around and
+use it here instead?
+
+> +       .pas_handover =3D NULL,
+
+This surely isn't needed to be assigned to NULL.
