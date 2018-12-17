@@ -1,54 +1,41 @@
-From: Michal Simek <michal.simek@xilinx.com>
-Subject: Re: [PATCH 2/3] ASoC: xlnx: Add i2s driver
-Date: Mon, 17 Dec 2018 13:28:42 +0100
-Message-ID: <ce27a85e-ce86-a16f-cd1d-eeb953e9575c@xilinx.com>
-References: <1544207558-72508-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
- <1544207558-72508-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
- <20181213153127.GN10669@sirena.org.uk>
- <19c273d9-c52d-48be-a1e1-88e2b1f14cce@xilinx.com>
- <20181217122441.GC13868@sirena.org.uk>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 04/15] clk: rockchip: use clock id for 24m dsi on rk3368
+Date: Mon, 17 Dec 2018 13:36:39 +0100
+Message-ID: <20181217123650.6773-5-heiko@sntech.de>
+References: <20181217123650.6773-1-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181217122441.GC13868@sirena.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Mark Brown <broonie@kernel.org>, Michal Simek <michal.simek@xilinx.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Vishal Sagar <vsagar@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181217123650.6773-1-heiko@sntech.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: linux-rockchip@lists.infradead.org, hjc@rock-chips.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, Laurent.pinchart@ideasonboard.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 17. 12. 18 13:24, Mark Brown wrote:
-> On Fri, Dec 14, 2018 at 07:50:43AM +0100, Michal Simek wrote:
->> On 13. 12. 18 16:31, Mark Brown wrote:
->>> On Sat, Dec 08, 2018 at 12:02:37AM +0530, Maruthi Srinivas Bayyavarapu wrote:
-> 
->>>> @@ -0,0 +1,185 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Xilinx ASoC I2S audio support
->>>> + *
-> 
->>> This looks otherwise good so I've applied it but please send a followup
->>> patch converting the entire comment block to C++ style so this looks
->>> more consistent.
-> 
->> Is it the rule for your subsystems? Or did it come from any generic
->> agreement how this should be handled in .c files?
-> 
-> It's mainly me, it's certainly not a consistent policy.
-> 
-
-ok.
-Maruthi: Please send that patch which Mark is asking about.
-
-Thanks,
-Michal
+RXhwb3J0IHRoZSBjbG9jayB1c2luZyB0aGUgbmV3bHkgYWRkZWQgY2xvY2sgaWQuCgpTaWduZWQt
+b2ZmLWJ5OiBIZWlrbyBTdHVlYm5lciA8aGVpa29Ac250ZWNoLmRlPgotLS0KIGRyaXZlcnMvY2xr
+L3JvY2tjaGlwL2Nsay1yazMzNjguYyB8IDIgKy0KIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlv
+bigrKSwgMSBkZWxldGlvbigtKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3JvY2tjaGlwL2Ns
+ay1yazMzNjguYyBiL2RyaXZlcnMvY2xrL3JvY2tjaGlwL2Nsay1yazMzNjguYwppbmRleCA1OGRl
+YmY3ZGFmODUuLjU2Y2ExMGZlM2U5NiAxMDA2NDQKLS0tIGEvZHJpdmVycy9jbGsvcm9ja2NoaXAv
+Y2xrLXJrMzM2OC5jCisrKyBiL2RyaXZlcnMvY2xrL3JvY2tjaGlwL2Nsay1yazMzNjguYwpAQCAt
+NTMyLDcgKzUzMiw3IEBAIHN0YXRpYyBzdHJ1Y3Qgcm9ja2NoaXBfY2xrX2JyYW5jaCByazMzNjhf
+Y2xrX2JyYW5jaGVzW10gX19pbml0ZGF0YSA9IHsKIAlHQVRFKEFDTEtfUEVSSSwgImFjbGtfcGVy
+aSIsICJhY2xrX3Blcmlfc3JjIiwgQ0xLX0lHTk9SRV9VTlVTRUQsCiAJCQlSSzMzNjhfQ0xLR0FU
+RV9DT04oMyksIDEsIEdGTEFHUyksCiAKLQlHQVRFKDAsICJzY2xrX21pcGlkc2lfMjRtIiwgInhp
+bjI0bSIsIDAsIFJLMzM2OF9DTEtHQVRFX0NPTig0KSwgMTQsIEdGTEFHUyksCisJR0FURShTQ0xL
+X01JUElEU0lfMjRNLCAic2Nsa19taXBpZHNpXzI0bSIsICJ4aW4yNG0iLCAwLCBSSzMzNjhfQ0xL
+R0FURV9DT04oNCksIDE0LCBHRkxBR1MpLAogCiAJLyoKIAkgKiBDbG9jay1BcmNoaXRlY3R1cmUg
+RGlhZ3JhbSA0Ci0tIAoyLjE5LjIKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2RyaS1kZXZlbAo=
