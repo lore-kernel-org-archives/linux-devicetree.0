@@ -1,152 +1,77 @@
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Mon, 17 Dec 2018 16:19:39 +0800
-Message-ID: <1545034779.8528.8.camel@mhfsdcap03>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
-         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
-         <20181213145517.GB4701@google.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH v3 0/3] Add driver Support for MMCSD on AM654x
+Date: Mon, 17 Dec 2018 13:54:43 +0530
+Message-ID: <38fe3521-f029-5e1b-78be-f265c5764a3b@ti.com>
+References: <20181210183507.9617-1-faiz_abbas@ti.com>
+ <378ace78-7345-8875-f3e7-7cddcaf5e4bc@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213145517.GB4701@google.com>
+In-Reply-To: <378ace78-7345-8875-f3e7-7cddcaf5e4bc@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <helgaas@kernel.org>
-Cc: ryder.lee@mediatek.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, michal.simek@xilinx.com, kishon@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > MT7629 is an arm platform SoC which has the same PCIe IP with MT7622.
+On 17/12/18 1:45 PM, Faiz Abbas wrote:
+> Hi,
 > 
-> s/arm/ARM/
+> On 11/12/18 12:05 AM, Faiz Abbas wrote:
+>> The following patches add driver support for MMCSD on TI's AM654
+>> platforms.
+>>
+>> Previously I had added the support to sdhci-of-arasan driver with
+>> a separate phy driver[1]. Since then it has turned out that tuning
+>> operation (for HS200, HS400 and SDR104 speed modes) will require
+>> configuration of phy registers. This completely breaks the model of
+>> the sdhci-of-arasan driver which relies on a separate driver to
+>> configure the phy register space.
+>>
+>> Because of this, I am creating a new driver with both the sdhci and
+>> phy register spaces. This helps me use the phy registers in a future
+>> patch that adds tuning support.
+>>
+>> DT patches will be posted in a separate series.
+>>
+>> Changes in v3:
+>>  1. Removed reference to clk_ahb as its not being used.
+>>  2. Added comment for pm_runtime being used for enabling
+>>     clocks.
+>>
+>> Changes in v2:
+>>  1. Reset OTAP delay back to default value in init.
+>>  2. Improved patch description for patch 2.
+>>  3. Minor style fixes.
+>>
+>> [1] driver and phy patches posted before
+>>     https://patchwork.kernel.org/project/linux-mmc/list/?series=26623
+>>
+>> Faiz Abbas (3):
+>>   dt-bindings: mmc: sdhci-am654: Document bindings for the host
+>>     controllers on TI's AM654 SOCs
+>>   dt-bindings: mmc: sdhci-of-arasan: Add deprecated message for am65
+>>   mmc: sdhci_am654: Add Initial Support for AM654 SDHCI driver
+>>
+>>  .../devicetree/bindings/mmc/arasan,sdhci.txt  |   4 +
+>>  .../devicetree/bindings/mmc/sdhci-am654.txt   |  37 ++
+>>  drivers/mmc/host/Kconfig                      |  12 +
+>>  drivers/mmc/host/Makefile                     |   1 +
+>>  drivers/mmc/host/sdhci-of-arasan.c            |  46 ---
+>>  drivers/mmc/host/sdhci_am654.c                | 374 ++++++++++++++++++
+>>  6 files changed, 428 insertions(+), 46 deletions(-)
+>>  create mode 100644 Documentation/devicetree/bindings/mmc/sdhci-am654.txt
+>>  create mode 100644 drivers/mmc/host/sdhci_am654.c
 > 
-> > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
-> > in arm64 but bogus alignment values at arm32, the pcie device and devices
-> > behind this bridge will not be enabled. Fix it's BAR0 resource size to
-> > guarantee the pcie devices will be enabled correctly.
 > 
-> So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
-> to 0, and an IO BAR has bit 1 hardwired to 0.
+> Gentle ping.
 
-Yes, it only works properly on 64bit platform.
-> 
-> > The HW default value of its device id is invalid, fix it's device id to
-> > match the hardware implementation.
-> 
-> s/pcie/PCIe/ (all places above)
-> s/it's/its/ (all places above)
-> s/device id/Device ID/
+I see these in linux-next. 
 
-OK, thanks.
-> 
-> > Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
-> > ---
-> >  drivers/pci/controller/pcie-mediatek.c | 26 ++++++++++++++++++++++++++
-> >  include/linux/pci_ids.h                |  1 +
-> >  2 files changed, 27 insertions(+)
-> > 
-> > diff --git a/drivers/pci/controller/pcie-mediatek.c b/drivers/pci/controller/pcie-mediatek.c
-> > index d20cf461ba00..f8937cc3c87c 100644
-> > --- a/drivers/pci/controller/pcie-mediatek.c
-> > +++ b/drivers/pci/controller/pcie-mediatek.c
-> > @@ -73,6 +73,7 @@
-> >  #define PCIE_MSI_VECTOR		0x0c0
-> >  
-> >  #define PCIE_CONF_VEND_ID	0x100
-> > +#define PCIE_CONF_DEVICE_ID	0x102
-> >  #define PCIE_CONF_CLASS_ID	0x106
-> >  
-> >  #define PCIE_INT_MASK		0x420
-> > @@ -135,12 +136,14 @@ struct mtk_pcie_port;
-> >  /**
-> >   * struct mtk_pcie_soc - differentiate between host generations
-> >   * @need_fix_class_id: whether this host's class ID needed to be fixed or not
-> > + * @need_fix_device_id: whether this host's device ID needed to be fixed or not
-> >   * @ops: pointer to configuration access functions
-> >   * @startup: pointer to controller setting functions
-> >   * @setup_irq: pointer to initialize IRQ functions
-> >   */
-> >  struct mtk_pcie_soc {
-> >  	bool need_fix_class_id;
-> > +	bool need_fix_device_id;
-> >  	struct pci_ops *ops;
-> >  	int (*startup)(struct mtk_pcie_port *port);
-> >  	int (*setup_irq)(struct mtk_pcie_port *port, struct device_node *node);
-> > @@ -692,6 +695,11 @@ static int mtk_pcie_startup_port_v2(struct mtk_pcie_port *port)
-> >  		writew(val, port->base + PCIE_CONF_CLASS_ID);
-> >  	}
-> >  
-> > +	if (soc->need_fix_device_id) {
-> > +		val = PCI_DEVICE_ID_MEDIATEK_7629;
-> > +		writew(val, port->base + PCIE_CONF_DEVICE_ID);
-> > +	}
-> > +
-> >  	/* 100ms timeout value should be enough for Gen1/2 training */
-> >  	err = readl_poll_timeout(port->base + PCIE_LINK_STATUS_V2, val,
-> >  				 !!(val & PCIE_PORT_LINKUP_V2), 20,
-> > @@ -1238,11 +1246,29 @@ static const struct mtk_pcie_soc mtk_pcie_soc_mt7622 = {
-> >  	.setup_irq = mtk_pcie_setup_irq,
-> >  };
-> >  
-> > +static const struct mtk_pcie_soc mtk_pcie_soc_mt7629 = {
-> > +	.need_fix_class_id = true,
-> > +	.need_fix_device_id = true,
-> > +	.ops = &mtk_pcie_ops_v2,
-> > +	.startup = mtk_pcie_startup_port_v2,
-> > +	.setup_irq = mtk_pcie_setup_irq,
-> > +};
-> > +
-> > +static void mtk_fixup_bar_size(struct pci_dev *dev)
-> > +{
-> > +	struct resource *dev_res = &dev->resource[0];
-> 
-> Add a blank line here.
+aff88ff23512 (Faiz Abbas) 6 days ago  mmc: sdhci_am654: Add Initial Support for AM654 SDHCI driver
+7f6e4cc6727d (Faiz Abbas) 6 days ago  dt-bindings: mmc: sdhci-of-arasan: Add deprecated message for AM65
+351b766ef2c7 (Faiz Abbas) 6 days ago  dt-bindings: mmc: sdhci-am654: Document bindings for the host controllers on TI's AM654 SOCs
 
-OK.
-> 
-> > +	/* 32bit resource length will calculate size to 0, set it smaller */
-> > +	dev_res->end = 0xfffffffe;
-> 
-> Presumably you know the size of the BAR because that's fixed by the
-> hardware and documented in the spec.  You should do something like
-> this so you don't depend on what the BAR contains, e.g.,
-> 
->   res->end = res->start + size - 1;
-
-Yes, it will be much more better, I will modify the code in next
-version, thanks.
-> 
-> > +}
-> > +DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MEDIATEK, PCI_DEVICE_ID_MEDIATEK_7629,
-> > +			 mtk_fixup_bar_size);
-> > +
-> >  static const struct of_device_id mtk_pcie_ids[] = {
-> >  	{ .compatible = "mediatek,mt2701-pcie", .data = &mtk_pcie_soc_v1 },
-> >  	{ .compatible = "mediatek,mt7623-pcie", .data = &mtk_pcie_soc_v1 },
-> >  	{ .compatible = "mediatek,mt2712-pcie", .data = &mtk_pcie_soc_mt2712 },
-> >  	{ .compatible = "mediatek,mt7622-pcie", .data = &mtk_pcie_soc_mt7622 },
-> > +	{ .compatible = "mediatek,mt7629-pcie", .data = &mtk_pcie_soc_mt7629 },
-> >  	{},
-> >  };
-> >  
-> > diff --git a/include/linux/pci_ids.h b/include/linux/pci_ids.h
-> > index 69f0abe1ba1a..77b278bac3a8 100644
-> > --- a/include/linux/pci_ids.h
-> > +++ b/include/linux/pci_ids.h
-> > @@ -2126,6 +2126,7 @@
-> >  #define PCI_VENDOR_ID_MYRICOM		0x14c1
-> >  
-> >  #define PCI_VENDOR_ID_MEDIATEK		0x14c3
-> > +#define PCI_DEVICE_ID_MEDIATEK_7629	0x7629
-> >  
-> >  #define PCI_VENDOR_ID_TITAN		0x14D2
-> >  #define PCI_DEVICE_ID_TITAN_010L	0x8001
-> > -- 
-> > 2.19.1
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Thanks,
+Sekhar
