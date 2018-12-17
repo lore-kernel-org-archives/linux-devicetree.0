@@ -1,59 +1,33 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH v2 4/4] ARM: dts: aspeed: Add lpc ctrl for Facebook
-Date: Mon, 17 Dec 2018 12:04:05 -0800
-Message-ID: <20181217200405.2904551-4-vijaykhemka@fb.com>
-References: <20181217200405.2904551-1-vijaykhemka@fb.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] dt-bindings: net: ath10k: add new dt entry to
+ identify external FEM
+Date: Mon, 17 Dec 2018 14:37:18 -0600
+Message-ID: <20181217203718.GA29320@bogus>
+References: <1544544804-4039-1-git-send-email-bperumal@codeaurora.org>
+ <1544544804-4039-3-git-send-email-bperumal@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217200405.2904551-1-vijaykhemka@fb.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
-Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1544544804-4039-3-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+To: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Added lpc ctrl device to enable LPC clock in Facebook
-Tiogapass device tree.
+On Tue, Dec 11, 2018 at 09:43:23PM +0530, Bhagavathi Perumal S wrote:
+> This adds new dt entry ext-fem-name, it is used by ath10k driver
+> to select correct timing parameters and configure it in target wifi hardware.
+> The Front End Module(FEM) normally includes tx power amplifier(PA) and
+> rx low noise amplifier(LNA). The default timing parameters like tx end to
+> PA off timing values were fine tuned for internal FEM used in reference
+> design. And these timing values can not be same if ODM modifies hardware
+> design with different external FEM. This DT entry helps to choose correct
+> timing values in driver if different external FEM hardware used.
+> 
+> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt | 9 ++++++++-
+>  1 file changed, 8 insertions(+), 1 deletion(-)
 
-Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
----
- .../boot/dts/aspeed-bmc-facebook-tiogapass.dts  | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-index 73e58a821613..ef7875b54562 100644
---- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
-@@ -22,6 +22,17 @@
- 		reg = <0x80000000 0x20000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		flash_memory: region@98000000 {
-+			no-map;
-+			reg = <0x98000000 0x00001000>; /* 4K */
-+		};
-+	};
-+
- 	iio-hwmon {
- 		compatible = "iio-hwmon";
- 		io-channels = <&adc 0>, <&adc 1>, <&adc 2>, <&adc 3>,
-@@ -54,6 +65,12 @@
- 	};
- };
- 
-+&lpc_ctrl {
-+	status = "okay";
-+	memory-region = <&flash_memory>;
-+	flash = <&spi1>;
-+};
-+
- &uart1 {
- 	// Host Console
- 	status = "okay";
--- 
-2.17.1
+Please add acks/reviewed-bys when posting new versions.
