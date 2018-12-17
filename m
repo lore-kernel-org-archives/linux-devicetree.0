@@ -1,63 +1,59 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v3 01/15] dt-bindings: net: broadcom-bluetooth: Fix external
- clock names
-Date: Mon, 17 Dec 2018 12:04:35 +0800
-Message-ID: <20181217040449.31437-2-wens@csie.org>
-References: <20181217040449.31437-1-wens@csie.org>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH] dt-bindings: watchdog: update bindings for MT7629 SoC
+Date: Mon, 17 Dec 2018 12:15:42 +0800
+Message-ID: <1545020142.9822.2.camel@mtkswgap22>
+References: <55d108719233b3c30c747e75a010b9e64681af09.1541573395.git.ryder.lee@mediatek.com>
+         <4152fe87-0e72-f9aa-6874-9f40dc15f278@gmail.com>
+         <1545017947.7782.1.camel@mtkswgap22>
+         <9fb38853-6202-c124-d254-f8d20b4d469b@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181217040449.31437-1-wens@csie.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Ondrej Jirman <megous@megous.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-bluetooth@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <9fb38853-6202-c124-d254-f8d20b4d469b@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-watchdog@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The Broadcom Bluetooth controllers can take up to two external clocks:
-an external frequency reference, substituting the main crystal, and a
-LPO clock at 32.768 kHz substituting the internal LPO clock.
+On Sun, 2018-12-16 at 19:53 -0800, Guenter Roeck wrote:
+> On 12/16/18 7:39 PM, Ryder Lee wrote:
+> > Hi Matthias,
+> > 
+> > On Sun, 2018-12-16 at 11:31 +0100, Matthias Brugger wrote:
+> >>
+> >> On 07/11/2018 08:10, Ryder Lee wrote:
+> >>> This updates dt-binding documentation for MT7629 SoC
+> >>>
+> >>> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> >>
+> >> Acked-by: Matthias Brugger <matthias.bgg@gmail.com>
+> >>
+> >>> ---
+> >>>   Documentation/devicetree/bindings/watchdog/mtk-wdt.txt | 1 +
+> >>>   1 file changed, 1 insertion(+)
+> >>>
+> >>> diff --git a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> >>> index 859dee1..8682d6a 100644
+> >>> --- a/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> >>> +++ b/Documentation/devicetree/bindings/watchdog/mtk-wdt.txt
+> >>> @@ -8,6 +8,7 @@ Required properties:
+> >>>   	"mediatek,mt6797-wdt", "mediatek,mt6589-wdt": for MT6797
+> >>>   	"mediatek,mt7622-wdt", "mediatek,mt6589-wdt": for MT7622
+> >>>   	"mediatek,mt7623-wdt", "mediatek,mt6589-wdt": for MT7623
+> >>> +	"mediatek,mt7629-wdt", "mediatek,mt6589-wdt": for MT7629
+> >>>   
+> >>>   - reg : Specifies base physical address and size of the registers.
+> >>>   
+> >>>
+> > 
+> > Could you take this through your tree?
+> > 
+> 
+> Why ? We usually take watchdog binding updates through the watchdog tree.
+> 
+> Guenter
 
-In particular, the external LPO clock must be used when the controller
-does not have NVRAM connected, and the main reference frequency is not
-the default 20 MHz. This is described in detail in the datasheet.
+Oh, okay :)
 
-The original "extclk" clock name is ambiguous as to which of these it
-refers to, and some designs might even require both.
-
-This patch deprecates the existing name, and adds "txco" and "lpo".
-
-Tested-by: Ondrej Jirman <megous@megous.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- .../devicetree/bindings/net/broadcom-bluetooth.txt         | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-index 4194ff7e6ee6..711c75ac2bb5 100644
---- a/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-+++ b/Documentation/devicetree/bindings/net/broadcom-bluetooth.txt
-@@ -18,8 +18,11 @@ Optional properties:
-  - shutdown-gpios: GPIO specifier, used to enable the BT module
-  - device-wakeup-gpios: GPIO specifier, used to wakeup the controller
-  - host-wakeup-gpios: GPIO specifier, used to wakeup the host processor
-- - clocks: clock specifier if external clock provided to the controller
-- - clock-names: should be "extclk"
-+ - clocks: 1 or 2 clocks as defined in clock-names below, in that order
-+ - clock-names: names for clock inputs, matching the clocks given
-+   - "extclk": deprecated, replaced by "txco"
-+   - "txco": external reference clock (not a standalone crystal)
-+   - "lpo": external low power 32.768 kHz clock
- 
- 
- Example:
--- 
-2.20.0
+Ryder
