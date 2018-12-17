@@ -1,49 +1,65 @@
-Return-Path: <SRS0=W32e=OW=gmail.com=dwesterg@kernel.org>
-From: dwesterg@gmail.com
-Subject: [PATCH v2 net-next 02/10] net: eth: altera: set rx and tx ring size before init_dma call
-Date: Thu, 13 Dec 2018 09:52:44 -0800
-Message-Id: <20181213175252.21143-3-dalon.westergreen@linux.intel.com>
-In-Reply-To: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
-References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+Return-Path: <SRS0=2g+B=O2=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410111.outbound.protection.outlook.com ([40.107.141.111]:44096
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S2388056AbeLQQSI (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 17 Dec 2018 11:18:08 -0500
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 02/17] arm64: dts: renesas: r8a774c0: Add I2C and IIC-DVFS
+ support
+Date: Mon, 17 Dec 2018 16:17:48 +0000
+Message-ID: <TY1PR01MB1770F1E7A7386FCA2202C6A0C0BC0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1544780260-27590-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdVvGw4-=vxn5CgF7kkb_eYKqjNby0FvD8Mh22EkEt8hTA@mail.gmail.com>
+In-Reply-To: <CAMuHMdVvGw4-=vxn5CgF7kkb_eYKqjNby0FvD8Mh22EkEt8hTA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, mark.rutland@arm.commark.rutland@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
-Cc: Dalon Westergreen <dalon.westergreen@intel.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>, Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Dalon Westergreen <dalon.westergreen@intel.com>
-
-It is more appropriate to set the rx and tx ring size before calling
-the init function for the dma.
-
-Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
----
- drivers/net/ethernet/altera/altera_tse_main.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
-index dcb330129e23..0c0e8f9bba9b 100644
---- a/drivers/net/ethernet/altera/altera_tse_main.c
-+++ b/drivers/net/ethernet/altera/altera_tse_main.c
-@@ -1166,6 +1166,10 @@ static int tse_open(struct net_device *dev)
- 	int i;
- 	unsigned long int flags;
- 
-+	/* set tx and rx ring size */
-+	priv->rx_ring_size = dma_rx_num;
-+	priv->tx_ring_size = dma_tx_num;
-+
- 	/* Reset and configure TSE MAC and probe associated PHY */
- 	ret = priv->dmaops->init_dma(priv);
- 	if (ret != 0) {
-@@ -1208,8 +1212,6 @@ static int tse_open(struct net_device *dev)
- 	priv->dmaops->reset_dma(priv);
- 
- 	/* Create and initialize the TX/RX descriptors chains. */
--	priv->rx_ring_size = dma_rx_num;
--	priv->tx_ring_size = dma_tx_num;
- 	ret = alloc_init_skbufs(priv);
- 	if (ret) {
- 		netdev_err(dev, "DMA descriptors initialization failed\n");
--- 
-2.19.2
+SGVsbG8gR2VlcnQsIGhlbGxvIFNpbW9uDQoNCkkgaGF2ZSBqdXN0IHJlY2VpdmVkIHdvcmQgZnJv
+bSBKYXBhbiwgYXBwYXJlbnRseSB0aGV5IGFyZSBnb2luZyB0byBkcm9wIElDVFIsIElDUlIsIElD
+VEEsIElDVEIsIElDVEMsIElDVEQsIElDU0YsIGFuZCBJQ1ZDT04gZnJvbSB0aGUgUlovRzIgZG9j
+dW1lbnRhdGlvbi4NCg0KVGhhbmtzLA0KRmFiDQoNCj4gRnJvbTogR2VlcnQgVXl0dGVyaG9ldmVu
+IDxnZWVydEBsaW51eC1tNjhrLm9yZz4NCj4gU2VudDogMTcgRGVjZW1iZXIgMjAxOCAxNjoxMg0K
+PiBUbzogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+
+IENjOiBSb2IgSGVycmluZyA8cm9iaCtkdEBrZXJuZWwub3JnPjsgR2VlcnQgVXl0dGVyaG9ldmVu
+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0
+LmF1PjsNCj4gTWFyayBSdXRsYW5kIDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IE1hZ251cyBEYW1t
+IDxtYWdudXMuZGFtbUBnbWFpbC5jb20+OyBMaW51eC1SZW5lc2FzIDxsaW51eC1yZW5lc2FzLQ0K
+PiBzb2NAdmdlci5rZXJuZWwub3JnPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRU
+RU5FRCBERVZJQ0UgVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBD
+aHJpcw0KPiBQYXRlcnNvbiA8Q2hyaXMuUGF0ZXJzb24yQHJlbmVzYXMuY29tPjsgQmlqdSBEYXMg
+PGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDAyLzE3XSBh
+cm02NDogZHRzOiByZW5lc2FzOiByOGE3NzRjMDogQWRkIEkyQyBhbmQgSUlDLURWRlMgc3VwcG9y
+dA0KPg0KPiBPbiBGcmksIERlYyAxNCwgMjAxOCBhdCAxMDozNyBBTSBGYWJyaXppbyBDYXN0cm8N
+Cj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gQWRkIHRoZSBJ
+MkNbMC03XSBhbmQgSUlDIEJ1cyBJbnRlcmZhY2UgZm9yIERWRlMgKElJQyBmb3IgRFZGUykNCj4g
+PiBkZXZpY2VzIG5vZGVzIHRvIHRoZSByOGE3NzRjMCBkZXZpY2UgdHJlZS4NCj4gPg0KPiA+IFNp
+Z25lZC1vZmYtYnk6IEZhYnJpemlvIENhc3RybyA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMu
+Y29tPg0KPg0KPiBSZXZpZXdlZC1ieTogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydCtyZW5lc2Fz
+QGdsaWRlci5iZT4NCj4NCj4gVGhlIHJlZ2lzdGVyIHNpemUgZm9yIElJQ0RWRlMgY2FuIGJlIGVu
+bGFyZ2VkIGxhdGVyLCBhcyB0aGUgbWFwcGluZw0KPiBpbmNsdWRlcyB0aGUgZnVsbCBQQUdFX1NJ
+WkUgYmxvY2sgYW55d2F5Lg0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywNCj4NCj4gICAgICAgICAg
+ICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0dGVyaG9ldmVuIC0tIFRo
+ZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBsaW51eC1tNjhrLm9yZw0K
+Pg0KPiBJbiBwZXJzb25hbCBjb252ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBj
+YWxsIG15c2VsZiBhIGhhY2tlci4gQnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlz
+dHMgSSBqdXN0IHNheSAicHJvZ3JhbW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCltodHRw
+czovL3d3dzIucmVuZXNhcy5ldS9tZWRpYS9lbWFpbC91bmljZWYuanBnXQ0KDQpUaGlzIENocmlz
+dG1hcywgaW5zdGVhZCBvZiBzZW5kaW5nIG91dCBjYXJkcywgUmVuZXNhcyBFbGVjdHJvbmljcyBF
+dXJvcGUgaGF2ZSBkZWNpZGVkIHRvIHN1cHBvcnQgVW5pY2VmIHdpdGggYSBkb25hdGlvbi4gRm9y
+IGZ1cnRoZXIgZGV0YWlscyBjbGljayBoZXJlPGh0dHBzOi8vd3d3LnVuaWNlZi5vcmcvPiB0byBm
+aW5kIG91dCBhYm91dCB0aGUgdmFsdWFibGUgd29yayB0aGV5IGRvLCBoZWxwaW5nIGNoaWxkcmVu
+IGFsbCBvdmVyIHRoZSB3b3JsZC4NCldlIHdvdWxkIGxpa2UgdG8gdGFrZSB0aGlzIG9wcG9ydHVu
+aXR5IHRvIHdpc2ggeW91IGEgTWVycnkgQ2hyaXN0bWFzIGFuZCBhIHByb3NwZXJvdXMgTmV3IFll
+YXIuDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywg
+TWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsu
+IFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2
+NzA5Lg0K
