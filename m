@@ -1,86 +1,88 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sun4i-a10: Add PMU node
-Date: Mon, 17 Dec 2018 14:18:43 +0100
-Message-ID: <20181217131843.zpemfzi5a6ksy5l7@flea>
-References: <20181216092524.20337-1-harald@ccbib.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2 2/2] irqchip: add driver for imx-irqsteer controller
+Date: Mon, 17 Dec 2018 14:52:20 +0100
+Message-ID: <1545054740.5874.6.camel@pengutronix.de>
+References: <20181214102244.21509-1-l.stach@pengutronix.de>
+         <20181214102244.21509-3-l.stach@pengutronix.de>
+         <86r2ejaztt.wl-marc.zyngier@arm.com>
+         <1545041393.5874.1.camel@pengutronix.de>
+         <98217822-208a-9a92-e80b-b0b73111e527@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============8540956307601358818=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181216092524.20337-1-harald@ccbib.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Harald Geyer <harald@ccbib.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <98217822-208a-9a92-e80b-b0b73111e527@arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, linux-kernel@vger.kernel.org, patchwork-lst@pengutronix.de, Rob Herring <robh+dt@kernel.org>, kernel@pengutronix.de, Thomas Gleixner <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
+Am Montag, den 17.12.2018, 10:32 +0000 schrieb Marc Zyngier:
+[...]
+> > > > > > +	/* steer all IRQs into configured channel */
+> > > > +	writel_relaxed(BIT(data->channel), data->regs + CHANCTRL);
+> > > 
+> > > Could you explain what this channel is exactly?
+> > 
+> > I've tired in the cover letter, but seems I still failed, so let me try
+> > again. ;)
+> > 
+> > Each irqsteer instance can be connected to multiple upstream IRQ lines,
+> > but only one of them can be used at runtime. This register controls
+> > which output IRQ line will be used by this controller instance. With
+> > multiple controller instances in the system it's a way to offload the
+> > decision of the IRQ routing from the hardware to the software guys.
+> > 
+> > Let's try to add an example: Suppose there are 2 instances of the
+> > irqsteer controller. Both are connected to upstream GIC IRQs 20 and 21.
+> > The channel controls which of those IRQs are used by each instance, so
+> > there are 2 valid DT configurations in this scenario:
+> > 
+> > This is valid:
+> > 
+> > irqsteer@0 {
+> > 	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
+> > 	fsl,channel = <0>;
+> > };
+> > 
+> > irqsteer@1 {
+> > 	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
+> > 	fsl,channel = <1>;
+> > };
+> > 
+> > As well as this:
+> > 
+> > irqsteer@0 {
+> > 	interrupts = <GIC_SPI 21 IRQ_TYPE_LEVEL_HIGH>
+> > 	fsl,channel = <1>;
+> > };
+> > 
+> > irqsteer@1 {
+> > 	interrupts = <GIC_SPI 20 IRQ_TYPE_LEVEL_HIGH>
+> > 	fsl,channel = <0>;
+> > };
+> 
+> OK, this is now making sense, thanks for that. I'm wondering if it'd
+> make sense to expose both IRQs in the DT for each irqsteer, and use
+> fsl,channel as the selector? It doesn't change much in the driver, but
+> seems to describe the HW in a more complete way.
+> 
+> I don't care much either way, and I'll leave it for you and the DT folks
+> to decide.
 
---===============8540956307601358818==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="7feknatkyrp4aze7"
-Content-Disposition: inline
+At least according to the preliminary documentation available about the
+i.MX8QM not all of the channels are routed to an upstream IRQ which is
+visible to the Linux system. Some of them may also go to the Cortex-M
+subsystem, so for your suggestion to work I would need a scheme to
+describe the output interrupts with holes in between them.
 
+I guess that complicates things a bit too much for little gain, as I
+don't see us switching the controller between different channels at
+runtime (which is the only thing I could imagine which would benefit
+from this more complete HW description). The current binding can deal
+with having some channels which route to something invisible to the
+Linux system just fine, so I'm leaning toward keeping things as they
+are now.
 
---7feknatkyrp4aze7
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-Hi!
-
-On Sun, Dec 16, 2018 at 09:25:24AM +0000, Harald Geyer wrote:
-> This is necessary to use 'perf' for cache profiling etc.
-> Tested on cubieboard with 'perf stat echo foo'.
->=20
-> Signed-off-by: Harald Geyer <harald@ccbib.org>
-
-Queued for 4.22, thanks
-
-> ---
->  arch/arm/boot/dts/sun4i-a10.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
->=20
-> While looking into this, I noticed that the dtsi files for the allwinner
-> SoCs have no information about caches in them. Is this on purpose?
-
-No, it's just that no one did it so far.
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---7feknatkyrp4aze7
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXBeiMwAKCRDj7w1vZxhR
-xV/dAP49kSSgnz1C0Ynfl0fJ3U+FV3PvMk90lLyfR1irrC86sAEAhx0OMehaF6YO
-9s0989O5nN2Zw+AAIP54h+0TPSeOnwc=
-=3ZPY
------END PGP SIGNATURE-----
-
---7feknatkyrp4aze7--
-
-
---===============8540956307601358818==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============8540956307601358818==--
+Regards,
+Lucas
