@@ -1,7 +1,7 @@
 From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: [PATCH v2 2/4] ARM: dts: aspeed: Add KCS support for LPC BMC
-Date: Mon, 17 Dec 2018 12:04:03 -0800
-Message-ID: <20181217200405.2904551-2-vijaykhemka@fb.com>
+Subject: [PATCH v2 3/4] ARM: dts: aspeed: Add KCS for Facebook
+Date: Mon, 17 Dec 2018 12:04:04 -0800
+Message-ID: <20181217200405.2904551-3-vijaykhemka@fb.com>
 References: <20181217200405.2904551-1-vijaykhemka@fb.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,64 +12,35 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel 
 Cc: vijaykhemka@fb.com, "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Added kcs device support for lpc BMC.
+Added kcs device in Facebook Tiogapass device tree.
 
 Signed-off-by: Vijay Khemka <vijaykhemka@fb.com>
 ---
- arch/arm/boot/dts/aspeed-g5.dtsi | 33 +++++++++++++++++++++++++++++++-
- 1 file changed, 32 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/arch/arm/boot/dts/aspeed-g5.dtsi b/arch/arm/boot/dts/aspeed-g5.dtsi
-index d107459fc0f8..2743f400aa29 100644
---- a/arch/arm/boot/dts/aspeed-g5.dtsi
-+++ b/arch/arm/boot/dts/aspeed-g5.dtsi
-@@ -330,8 +330,32 @@
- 				ranges = <0x0 0x1e789000 0x1000>;
+diff --git a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+index 64039dddd853..73e58a821613 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-facebook-tiogapass.dts
+@@ -67,6 +67,18 @@
+ 	status = "okay";
+ };
  
- 				lpc_bmc: lpc-bmc@0 {
--					compatible = "aspeed,ast2500-lpc-bmc";
-+					compatible = "aspeed,ast2500-lpc-bmc", "simple-mfd", "syscon";
- 					reg = <0x0 0x80>;
-+					reg-io-width = <4>;
++&kcs2 {
++	// BMC KCS channel 2
++	status = "okay";
++	kcs_addr = <0xca8>;
++};
 +
-+					#address-cells = <1>;
-+					#size-cells = <1>;
-+					ranges = <0x0 0x0 0x80>;
++&kcs3 {
++	// BMC KCS channel 3
++	status = "okay";
++	kcs_addr = <0xca2>;
++};
 +
-+					kcs1: kcs1@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <1>;
-+						status = "disabled";
-+					};
-+					kcs2: kcs2@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <2>;
-+						status = "disabled";
-+					};
-+					kcs3: kcs3@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <3>;
-+						status = "disabled";
-+					};
- 				};
+ &mac0 {
+ 	status = "okay";
  
- 				lpc_host: lpc-host@80 {
-@@ -343,6 +367,13 @@
- 					#size-cells = <1>;
- 					ranges = <0x0 0x80 0x1e0>;
- 
-+					kcs4: kcs4@0 {
-+						compatible = "aspeed,ast2500-kcs-bmc";
-+						interrupts = <8>;
-+						kcs_chan = <4>;
-+						status = "disabled";
-+					};
-+
- 					lpc_ctrl: lpc-ctrl@0 {
- 						compatible = "aspeed,ast2500-lpc-ctrl";
- 						reg = <0x0 0x80>;
 -- 
 2.17.1
