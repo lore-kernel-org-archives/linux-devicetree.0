@@ -1,106 +1,131 @@
-From: Hanjie Lin <hanjie.lin@amlogic.com>
-Subject: [PATCH v8 1/2] dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe controller
-Date: Tue, 18 Dec 2018 16:04:45 +0800
-Message-ID: <1545120286-129258-2-git-send-email-hanjie.lin@amlogic.com>
-References: <1545120286-129258-1-git-send-email-hanjie.lin@amlogic.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v6 00/11] Add initial RDA8810PL SoC and Orange Pi boards support
+Date: Tue, 18 Dec 2018 13:35:16 +0530
+Message-ID: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545120286-129258-1-git-send-email-hanjie.lin@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Yue Wang <yue.wang@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
+To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
+Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Yue Wang <yue.wang@amlogic.com>
+Hello,
 
-The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
-PCI core. This patch adds documentation for the DT bindings in Meson PCIe
-controller.
+This patchset adds initial RDA8810PL SoC and Orange Pi boards (2G IoT and
+i96) support. RDA8810PL is an ARM Cortex A5 based SoC with Vivante's GC860
+GPU. The SoC has been added as a new ARM sub architecture with myself
+and Andreas as the maintainers.
 
-Signed-off-by: Yue Wang <yue.wang@amlogic.com>
-Signed-off-by: Hanjie Lin <hanjie.lin@amlogic.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/pci/amlogic,meson-pcie.txt | 70 ++++++++++++++++++++++
- 1 file changed, 70 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+More information about the boards can be found in below links:
 
-diff --git a/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-new file mode 100644
-index 0000000..12b18f8
---- /dev/null
-+++ b/Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
-@@ -0,0 +1,70 @@
-+Amlogic Meson AXG DWC PCIE SoC controller
-+
-+Amlogic Meson PCIe host controller is based on the Synopsys DesignWare PCI core.
-+It shares common functions with the PCIe DesignWare core driver and
-+inherits common properties defined in
-+Documentation/devicetree/bindings/pci/designware-pci.txt.
-+
-+Additional properties are described here:
-+
-+Required properties:
-+- compatible:
-+	should contain "amlogic,axg-pcie" to identify the core.
-+- reg:
-+	should contain the configuration address space.
-+- reg-names: Must be
-+	- "elbi"	External local bus interface registers
-+	- "cfg"		Meson specific registers
-+	- "phy"		Meson PCIE PHY registers
-+	- "config"	PCIe configuration space
-+- reset-gpios: The GPIO to generate PCIe PERST# assert and deassert signal.
-+- clocks: Must contain an entry for each entry in clock-names.
-+- clock-names: Must include the following entries:
-+	- "pclk"       PCIe GEN 100M PLL clock
-+	- "port"       PCIe_x(A or B) RC clock gate
-+	- "general"    PCIe Phy clock
-+	- "mipi"       PCIe_x(A or B) 100M ref clock gate
-+- resets: phandle to the reset lines.
-+- reset-names: must contain "phy" "port" and "apb"
-+       - "phy"         Share PHY reset
-+       - "port"        Port A or B reset
-+       - "apb"         Share APB reset
-+- device_type:
-+	should be "pci". As specified in designware-pcie.txt
-+
-+
-+Example configuration:
-+
-+	pcie: pcie@f9800000 {
-+			compatible = "amlogic,axg-pcie", "snps,dw-pcie";
-+			reg = <0x0 0xf9800000 0x0 0x400000
-+					0x0 0xff646000 0x0 0x2000
-+					0x0 0xff644000 0x0 0x2000
-+					0x0 0xf9f00000 0x0 0x100000>;
-+			reg-names = "elbi", "cfg", "phy", "config";
-+			reset-gpios = <&gpio GPIOX_19 GPIO_ACTIVE_HIGH>;
-+			interrupts = <GIC_SPI 177 IRQ_TYPE_EDGE_RISING>;
-+			#interrupt-cells = <1>;
-+			interrupt-map-mask = <0 0 0 0>;
-+			interrupt-map = <0 0 0 0 &gic GIC_SPI 179 IRQ_TYPE_EDGE_RISING>;
-+			bus-range = <0x0 0xff>;
-+			#address-cells = <3>;
-+			#size-cells = <2>;
-+			device_type = "pci";
-+			ranges = <0x82000000 0 0 0x0 0xf9c00000 0 0x00300000>;
-+
-+			clocks = <&clkc CLKID_USB
-+					&clkc CLKID_MIPI_ENABLE
-+					&clkc CLKID_PCIE_A
-+					&clkc CLKID_PCIE_CML_EN0>;
-+			clock-names = "general",
-+					"mipi",
-+					"pclk",
-+					"port";
-+			resets = <&reset RESET_PCIE_PHY>,
-+				<&reset RESET_PCIE_A>,
-+				<&reset RESET_PCIE_APB>;
-+			reset-names = "phy",
-+					"port",
-+					"apb";
-+	};
+1. Orange Pi 2G-IoT - http://www.orangepi.org/OrangePi2GIOT/
+2. Orange Pi i96 - https://www.96boards.org/product/orangepi-i96/
+
+This patchset is based on the initial revision sent out by Andreas long
+back (http://lists.infradead.org/pipermail/linux-arm-kernel/2017-June/515951.html).
+
+I have extended his patchset with proper irqchip and UART drivers. Now,
+boards can boot into initramfs with console at UART2.
+
+Thanks,
+Mani
+
+Changes in v6:
+
+* Fixed the MAINTAINERS patch commit message
+
+Changes in v5:
+
+* Dropped timer and irqchip patches since they got applied
+* Dropped Andreas from MAINTAINERS as per his request
+
+Changes in v4:
+
+* Added Rob's Reviewed-by tags for vendor and SoC patches.
+* Moved platform Kconfig changes from timer and irqchip drivers to
+  SoC support patch.
+* Added Marc's Reviewed-by tag for irqchip driver.
+* Addressed Rob's review comments for bindings patches.
+* Added the newly created linux-unisoc mailing list to MAINTAINERS
+  entry.
+* Dropped overseas.sales@unisoc.com mail address as it is bouncing back.
+* Modified the DTS subject prefix to ARM: from arm:
+
+Changes in v3:
+
+As per Marc's review:
+
+* Removed unused header and defines from irqchip driver.
+* Removed setting flow handlers from set_type callback.
+* Minor code cleanups.
+
+As per Arnd's review:
+
+* Modified the UART indexes to start from 1 to match the SoC numbering
+* Enabled exposed UARTs (all 3 on both boards)
+* Modified the serial aliases as per board numbering
+
+* Added Greg's Reviewed-by tag for serial driver.
+
+Changes in v2:
+
+* Used readl/writel_relaxed calls for both irqchip and timer drivers as
+  per Marc's review.
+* Implemented the logic to prevent counter wrapping during read as
+  suggested by Marc.
+* Used the timer-of API as per Daniel's suggestion.
+* Added description about the timer in both commit log and driver.
+* Changed the Vendor name for RDA to Unisoc Communications Inc.
+* Removed the soc node level and cleaned up devicetrees as per Rob's
+  review.
+* Merged interrupt controller DT patch to SoC.
+* Moved aliases to board dts as per Arnd's suggestion.
+* Removed RDA Micro support mail address and used Unisoc one and added
+  my missing signed off by tag as per Andreas's comments.
+
+Andreas Färber (4):
+  dt-bindings: Add RDA Micro vendor prefix
+  dt-bindings: arm: Document RDA8810PL and reference boards
+  ARM: Prepare RDA8810PL SoC
+  dt-bindings: serial: Document RDA Micro UART
+
+Manivannan Sadhasivam (7):
+  ARM: dts: Add devicetree for RDA8810PL SoC
+  ARM: dts: Add devicetree for OrangePi 2G IoT board
+  ARM: dts: Add devicetree for OrangePi i96 board
+  ARM: dts: rda8810pl: Add timer support
+  ARM: dts: rda8810pl: Add interrupt support for UART
+  tty: serial: Add RDA8810PL UART driver
+  MAINTAINERS: Add entry for RDA Micro SoC architecture
+
+ .../admin-guide/kernel-parameters.txt         |   6 +
+ Documentation/devicetree/bindings/arm/rda.txt |  17 +
+ .../bindings/serial/rda,8810pl-uart.txt       |  17 +
+ .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+ MAINTAINERS                                   |  14 +
+ arch/arm/Kconfig                              |   2 +
+ arch/arm/Makefile                             |   1 +
+ arch/arm/boot/dts/Makefile                    |   3 +
+ .../boot/dts/rda8810pl-orangepi-2g-iot.dts    |  50 ++
+ arch/arm/boot/dts/rda8810pl-orangepi-i96.dts  |  50 ++
+ arch/arm/boot/dts/rda8810pl.dtsi              |  99 +++
+ arch/arm/mach-rda/Kconfig                     |   9 +
+ arch/arm/mach-rda/Makefile                    |   1 +
+ drivers/tty/serial/Kconfig                    |  19 +
+ drivers/tty/serial/Makefile                   |   1 +
+ drivers/tty/serial/rda-uart.c                 | 831 ++++++++++++++++++
+ include/uapi/linux/serial_core.h              |   3 +
+ 17 files changed, 1124 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/rda.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+ create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-2g-iot.dts
+ create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
+ create mode 100644 arch/arm/boot/dts/rda8810pl.dtsi
+ create mode 100644 arch/arm/mach-rda/Kconfig
+ create mode 100644 arch/arm/mach-rda/Makefile
+ create mode 100644 drivers/tty/serial/rda-uart.c
+
 -- 
-2.7.4
+2.17.1
