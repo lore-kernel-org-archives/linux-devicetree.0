@@ -1,14 +1,16 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 2/3] drm/armada: add OF reserved memory support
-Date: Tue, 18 Dec 2018 16:18:58 +0100
-Message-ID: <77130e281e078315d346d54b731c578c68f2ff04.camel@v3.sk>
-References: <20180710102344.GH17271@n2100.armlinux.org.uk>
- <E1fcpoh-0003Z2-BB@rmk-PC.armlinux.org.uk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 01/20] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Tue, 18 Dec 2018 09:19:34 -0600
+Message-ID: <20181218151934.GA10127@bogus>
+References: <20181218091232.23532-1-josephl@nvidia.com>
+ <20181218091232.23532-2-josephl@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <E1fcpoh-0003Z2-BB@rmk-PC.armlinux.org.uk>
+Content-Disposition: inline
+In-Reply-To: <20181218091232.23532-2-josephl@nvidia.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,175 +20,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King <rmk+kernel@armlinux.org.uk>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
+To: Joseph Lo <josephl@nvidia.com>
+Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-07-10 at 11:24 +0100, Russell King wrote:
-> Existing Armada DRM makes use of reserved memory for allocating
-> contiguous screen buffers, which currently prevents its use with
-> DT systems.  Add support for this for DT systems.
+On Tue, Dec 18, 2018 at 05:12:13PM +0800, Joseph Lo wrote:
+> From: Peter De Schrijver <pdeschrijver@nvidia.com>
 > 
-> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+> Add new properties to configure the DFLL PWM regulator support.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
 > ---
->  drivers/gpu/drm/armada/Makefile      |  3 +++
->  drivers/gpu/drm/armada/armada_drv.c  | 24 ++++++++++++++++--
->  drivers/gpu/drm/armada/armada_rmem.c | 49
-> ++++++++++++++++++++++++++++++++++++
->  3 files changed, 74 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/gpu/drm/armada/armada_rmem.c
+> *V3:
+>  - no change
+> *V2:
+>  - update the binding strings and descriptions for
+>  nvidia,pwm-tristate-microvolts
+>  nvidia,pwm-min-microvolts
+>  nvidia,pwm-voltage-step-microvolts
+> ---
+>  .../bindings/clock/nvidia,tegra124-dfll.txt   | 79 ++++++++++++++++++-
+>  1 file changed, 77 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/gpu/drm/armada/Makefile
-> b/drivers/gpu/drm/armada/Makefile
-> index ecf25cf9f9f5..0b8bf3b8aa6a 100644
-> --- a/drivers/gpu/drm/armada/Makefile
-> +++ b/drivers/gpu/drm/armada/Makefile
-> @@ -5,3 +5,6 @@ armada-y	+= armada_510.o
->  armada-$(CONFIG_DEBUG_FS) += armada_debugfs.o
+> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> index dff236f524a7..38e8cc8c70a8 100644
+> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+>  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+>  control module that will automatically adjust the VDD_CPU voltage by
+>  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+> -Currently only the I2C mode is supported by these bindings.
 >  
->  obj-$(CONFIG_DRM_ARMADA) := armada.o
-> +
-> +armada-rmem-$(CONFIG_DRM_ARMADA) += armada_rmem.o
-> +obj-y += $(armada-rmem-y) $(armada-rmem-m)
-> diff --git a/drivers/gpu/drm/armada/armada_drv.c
-> b/drivers/gpu/drm/armada/armada_drv.c
-> index 217f0590fd61..a9ee492a2810 100644
-> --- a/drivers/gpu/drm/armada/armada_drv.c
-> +++ b/drivers/gpu/drm/armada/armada_drv.c
-> @@ -9,6 +9,7 @@
->  #include <linux/component.h>
->  #include <linux/module.h>
->  #include <linux/of_graph.h>
-> +#include <linux/of_reserved_mem.h>
->  #include <drm/drm_crtc_helper.h>
->  #include <drm/drm_fb_helper.h>
->  #include <drm/drm_of.h>
-> @@ -96,6 +97,9 @@ static int armada_drm_bind(struct device *dev)
->  			return -EINVAL;
->  	}
+>  Required properties:
+>  - compatible : should be "nvidia,tegra124-dfll"
+> @@ -45,10 +44,31 @@ Required properties for the control loop parameters:
+>  Optional properties for the control loop parameters:
+>  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
 >  
-> +	if (!mem && dev->of_node)
-> +		mem = dev->platform_data;
+> +Optional properties for mode selection:
+> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
 > +
->  	if (!mem)
->  		return -ENXIO;
+>  Required properties for I2C mode:
+>  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
 >  
-> @@ -250,9 +254,17 @@ static int armada_drm_probe(struct
-> platform_device *pdev)
->  	struct device *dev = &pdev->dev;
->  	int ret;
->  
-> -	ret = drm_of_component_probe(dev, compare_dev_name,
-> &armada_master_ops);
-> -	if (ret != -EINVAL)
-> +	if (dev->of_node) {
-> +		ret = of_reserved_mem_device_init(dev);
-> +		if (ret && ret != -ENODEV)
-> +			return ret;
-> +
-> +		ret = drm_of_component_probe(dev, compare_of,
-> +					     &armada_master_ops);
-> +		if (ret)
-> +			of_reserved_mem_device_release(dev);
->  		return ret;
-> +	}
->  
->  	if (dev->platform_data) {
->  		char **devices = dev->platform_data;
-> @@ -287,6 +299,7 @@ static int armada_drm_probe(struct
-> platform_device *pdev)
->  static int armada_drm_remove(struct platform_device *pdev)
->  {
->  	component_master_del(&pdev->dev, &armada_master_ops);
-> +	of_reserved_mem_device_release(&pdev->dev);
->  	return 0;
->  }
->  
-> @@ -300,11 +313,18 @@ static const struct platform_device_id
-> armada_drm_platform_ids[] = {
->  };
->  MODULE_DEVICE_TABLE(platform, armada_drm_platform_ids);
->  
-> +static const struct of_device_id armada_drm_dt_ids[] = {
-> +	{ .compatible = "marvell,dove-display-subsystem", },
-> +	{ /* sentinel */ },
-> +};
-> +MODULE_DEVICE_TABLE(of, armada_drm_dt_ids);
-> +
->  static struct platform_driver armada_drm_platform_driver = {
->  	.probe	= armada_drm_probe,
->  	.remove	= armada_drm_remove,
->  	.driver	= {
->  		.name	= "armada-drm",
-> +		.of_match_table = armada_drm_dt_ids,
->  	},
->  	.id_table = armada_drm_platform_ids,
->  };
-> diff --git a/drivers/gpu/drm/armada/armada_rmem.c
-> b/drivers/gpu/drm/armada/armada_rmem.c
-> new file mode 100644
-> index 000000000000..36bb20e426b6
-> --- /dev/null
-> +++ b/drivers/gpu/drm/armada/armada_rmem.c
-> @@ -0,0 +1,49 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2017 Russell King
-> +#include <linux/errno.h>
-> +#include <linux/of.h>
-> +#include <linux/of_reserved_mem.h>
-> +#include <linux/slab.h>
-> +
-> +static int armada_rmem_dev_init(struct reserved_mem *rmem, struct
-> device *dev)
-> +{
-> +	struct resource *r;
-> +
-> +	if (dev->platform_data)
-> +		return -EBUSY;
-> +
-> +	r = kzalloc(sizeof(*r), GFP_KERNEL);
-> +	if (!r)
-> +		return -ENOMEM;
-> +
-> +	r->start = rmem->base;
-> +	r->end = rmem->base + rmem->size - 1;
-> +	r->flags = IORESOURCE_MEM;
-> +
-> +	rmem->priv = r;
-> +	dev->platform_data = r;
-> +
-> +	return 0;
-> +}
-> +
-> +static void armada_rmem_dev_release(struct reserved_mem *rmem,
-> +	struct device *dev)
-> +{
-> +	kfree(rmem->priv);
-> +	rmem->priv = NULL;
-> +	dev->platform_data = NULL;
-> +}
-> +
-> +static const struct reserved_mem_ops armada_rmem_ops = {
-> +	.device_init = armada_rmem_dev_init,
-> +	.device_release = armada_rmem_dev_release,
-> +};
-> +
-> +static int __init armada_rmem_init(struct reserved_mem *rmem)
-> +{
-> +	rmem->ops = &armada_rmem_ops;
-> +	return 0;
-> +}
-> +
-> +RESERVEDMEM_OF_DECLARE(armada_rmem, "marvell,dove-framebuffer",
-> +			armada_rmem_init);
+> -Example:
+> +Required properties for PWM mode:
+> +- nvidia,pwm-period: period of PWM square wave in microseconds.
 
-Hi,
-
-wouldn't "marvell,armada-framebuffer" make more sense here?
-The driver will do just well for MMP2 and perhaps more hardware that is
-not Dove; the DTs could just say:
-
-compatible = "marvell,dove-framebuffer", "marvell,armada-framebuffer";
-compatible = "marvell,mmp2-framebuffer", "marvell,armada-framebuffer";
-
-Lubo
+Needs unit suffix.
