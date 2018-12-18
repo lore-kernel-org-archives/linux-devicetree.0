@@ -1,53 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
- for Q6V5
-Date: Tue, 18 Dec 2018 11:27:09 -0600
-Message-ID: <20181218172709.GA19660@bogus>
-References: <20181217100724.4593-1-sibis@codeaurora.org>
- <20181217100724.4593-2-sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: Add bindings for Cadence GPIO
+Date: Tue, 18 Dec 2018 11:33:27 -0600
+Message-ID: <20181218173327.GA29063@bogus>
+References: <20181217153652.20056-1-jank@cadence.com>
+ <20181217153652.20056-2-jank@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181217100724.4593-2-sibis@codeaurora.org>
+In-Reply-To: <20181217153652.20056-2-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org
+To: Jan Kotas <jank@cadence.com>
+Cc: linus.walleij@linaro.org, bgolaszewski@baylibre.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 03:37:19PM +0530, Sibi Sankar wrote:
-> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+On Mon, Dec 17, 2018 at 03:36:51PM +0000, Jan Kotas wrote:
+> This patch adds a DT binding documentation for
+> Cadence GPIO controller.
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Jan Kotas <jank@cadence.com>
 > ---
->  .../devicetree/bindings/remoteproc/qcom,q6v5.txt       | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
+>  .../devicetree/bindings/gpio/cdns,gpio.txt         | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gpio/cdns,gpio.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 9ff5b0309417..780adc043b37 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
->  - clocks:
->  	Usage: required
->  	Value type: <phandle>
-> -	Definition: reference to the iface, bus and mem clocks to be held on
-> -		    behalf of the booting of the Hexagon core
-> +	Definition: reference to the list of 4 clocks for the modem sub-system
-> +		    reference to the list of 8 clocks for the modem sub-system
-> +		    on SDM845 SoCs
->  
->  - clock-names:
->  	Usage: required
->  	Value type: <stringlist>
-> -	Definition: must be "iface", "bus", "mem"
-> +	Definition: must be "iface", "bus", "mem", "xo" for the modem sub-system
-> +		    must be "iface", "bus", "mem", "gpll0_mss", "snoc_axi",
-> +		    "mnoc_axi", "prng", "xo" for the modem sub-system on SDM845
-> +		    SoCs
+> diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+> new file mode 100644
+> index 000000000..c87a47827
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+> @@ -0,0 +1,44 @@
+> +Cadence GPIO controller bindings
+> +
+> +Required properties:
+> +- compatible: should be "cdns,gpio-r1p02".
+> +- reg: the register base address and size.
+> +- #gpio-cells: should be 2.
+> +	* first cell is the GPIO number.
+> +	* second cell specifies the GPIO flags, as defined in
+> +		<dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
+> +		and GPIO_ACTIVE_LOW flags are supported.
+> +- gpio-controller: marks the device as a GPIO controller.
+> +- clocks: should contain one entry referencing the peripheral clock driving
+> +	the GPIO controller.
+> +
+> +Optional properties:
+> +- ngpios: integer number of gpio lines supported by this controller, up to 32.
+> +- interrupt-parent: phandle of the parent interrupt controller.
 
-This seems to me a list of all clocks you need enabled, not what clocks 
-actually go to the modem. Specifically, shouldn't the *noc_axi clocks be 
-managed by the interconnect driver?
+Don't document interrupt-parent as it is implied and could be in a 
+parent. Otherwise,
+
+Reviewed-by: Rob Herring <robh@kernel.org>
 
 Rob
