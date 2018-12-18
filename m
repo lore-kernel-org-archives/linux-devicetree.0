@@ -1,56 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: gpio: Add bindings for Cadence GPIO
-Date: Tue, 18 Dec 2018 11:33:27 -0600
-Message-ID: <20181218173327.GA29063@bogus>
-References: <20181217153652.20056-1-jank@cadence.com>
- <20181217153652.20056-2-jank@cadence.com>
+Subject: Re: [PATCH v2] dt-bindings: PCI: rcar: Add device tree support for
+ r8a774c0
+Date: Tue, 18 Dec 2018 11:48:02 -0600
+Message-ID: <20181218174802.GA27290@bogus>
+References: <1545134562-22450-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181217153652.20056-2-jank@cadence.com>
+In-Reply-To: <1545134562-22450-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: linus.walleij@linaro.org, bgolaszewski@baylibre.com, mark.rutland@arm.com, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 03:36:51PM +0000, Jan Kotas wrote:
-> This patch adds a DT binding documentation for
-> Cadence GPIO controller.
+On Tue, 18 Dec 2018 12:02:42 +0000, Fabrizio Castro wrote:
+> Add PCIe support for the RZ/G2E (a.k.a. R8A774C0).
 > 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 > ---
->  .../devicetree/bindings/gpio/cdns,gpio.txt         | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+> v1->v2:
+> * Dropped change to the description of "phys" optional property according
+>   to Geert's comment
 > 
-> diff --git a/Documentation/devicetree/bindings/gpio/cdns,gpio.txt b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
-> new file mode 100644
-> index 000000000..c87a47827
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gpio/cdns,gpio.txt
-> @@ -0,0 +1,44 @@
-> +Cadence GPIO controller bindings
-> +
-> +Required properties:
-> +- compatible: should be "cdns,gpio-r1p02".
-> +- reg: the register base address and size.
-> +- #gpio-cells: should be 2.
-> +	* first cell is the GPIO number.
-> +	* second cell specifies the GPIO flags, as defined in
-> +		<dt-bindings/gpio/gpio.h>. Only the GPIO_ACTIVE_HIGH
-> +		and GPIO_ACTIVE_LOW flags are supported.
-> +- gpio-controller: marks the device as a GPIO controller.
-> +- clocks: should contain one entry referencing the peripheral clock driving
-> +	the GPIO controller.
-> +
-> +Optional properties:
-> +- ngpios: integer number of gpio lines supported by this controller, up to 32.
-> +- interrupt-parent: phandle of the parent interrupt controller.
-
-Don't document interrupt-parent as it is implied and could be in a 
-parent. Otherwise,
+>  Documentation/devicetree/bindings/pci/rcar-pci.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
-
-Rob
