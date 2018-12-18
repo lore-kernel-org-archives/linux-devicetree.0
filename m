@@ -1,48 +1,44 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: [RESEND PATCH v2 4/8] Input: sx8654 - add sx8655 and sx8656 to compatibles
-Date: Tue, 18 Dec 2018 09:36:02 +0100
-Message-ID: <20181218083606.25795-5-richard.leitner@skidata.com>
-References: <20181218083606.25795-1-richard.leitner@skidata.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names
+ from DT
+Date: Tue, 18 Dec 2018 09:37:29 +0100
+Message-ID: <57ef23b0-9c6b-cdd4-9a1a-41c6d5b3aa93@linaro.org>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218083606.25795-1-richard.leitner@skidata.com>
+In-Reply-To: <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, mark.rutland@arm.com
-Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, richard.leitner@skidata.com
+To: Stephen Boyd <sboyd@kernel.org>, andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com
+Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-As the sx865[456] share the same datasheet and differ only in the
-presence of a "capacitive proximity detection circuit" and a "haptics
-motor driver for LRA/ERM" add them to the compatbiles. As the driver
-doesn't implement these features it should be no problem.
+On 12/18/18 00:37, Stephen Boyd wrote:
+> Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:22)
+>> Allow accessing the parent clock names required for the driver
+>> operation by using the device tree node.
+>>
+>> This permits extending the driver to other platforms without having to
+>> modify its source code.
+>>
+>> For backwards compatibility leave previous values as default.
+> Why do we need to maintain backwards compatibility? Isn't is required
+> that the nodes have clocks properties?
+>
+>
 
-Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
----
- drivers/input/touchscreen/sx8654.c | 4 ++++
- 1 file changed, 4 insertions(+)
+this driver -apcs clock controller- uses platform data (not DT) and 
+therefore it uses the DT from the parent node (mailbox).
+And for the mailbox the clock property is optional.
 
-diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-index 238f56b1581b..afa4da138fe9 100644
---- a/drivers/input/touchscreen/sx8654.c
-+++ b/drivers/input/touchscreen/sx8654.c
-@@ -293,6 +293,8 @@ static int sx8654_probe(struct i2c_client *client,
- #ifdef CONFIG_OF
- static const struct of_device_id sx8654_of_match[] = {
- 	{ .compatible = "semtech,sx8654", },
-+	{ .compatible = "semtech,sx8655", },
-+	{ .compatible = "semtech,sx8656", },
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, sx8654_of_match);
-@@ -300,6 +302,8 @@ MODULE_DEVICE_TABLE(of, sx8654_of_match);
- 
- static const struct i2c_device_id sx8654_id_table[] = {
- 	{ "semtech_sx8654", 0 },
-+	{ "semtech_sx8655", 0 },
-+	{ "semtech_sx8656", 0 },
- 	{ },
- };
- MODULE_DEVICE_TABLE(i2c, sx8654_id_table);
--- 
-2.11.0
+So the APCS clock controller requires that the parent provides at least 
+one clock but the clock is not mandatory in the parent DT node.
+For instance in the case of the msm8916, the parent only provides one 
+clock, just the pll.
+
+am I required to modify that platform instead of maintaining backwards 
+compatibility?
