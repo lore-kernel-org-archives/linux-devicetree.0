@@ -1,66 +1,43 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
-Date: Tue, 18 Dec 2018 09:23:14 +0100
-Message-ID: <20181218092314.725af970@xps13>
-References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
-        <20181212102142.16053-4-miquel.raynal@bootlin.com>
-        <20181214014701.373b220b@nic.cz>
-        <20181214015712.31f749ea@nic.cz>
-        <20181217170724.58421a29@xps13>
-        <20181217223430.182d01d8@nic.cz>
-        <20181218091817.4a8a5d42@xps13>
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: [RESEND PATCH v2 0/8] Input: sx8654 - reset-gpio, sx865[056] support, etc.
+Date: Tue, 18 Dec 2018 09:35:58 +0100
+Message-ID: <20181218083606.25795-1-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218091817.4a8a5d42@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Behun <marek.behun@nic.cz>
-Cc: Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+To: dmitry.torokhov@gmail.com, mark.rutland@arm.com
+Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, richard.leitner@skidata.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add reset-gpio, sx8654[056] and common of_touchscreen functions support
+for the sx8654 driver.
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Tue, 18 Dec 2018
-09:18:17 +0100:
+Changes RESEND v2:
+	- added "Reviewed-by: Rob Herring <robh@kernel.org>" tags
 
-> Hi Marek,
-> 
-> Marek Behun <marek.behun@nic.cz> wrote on Mon, 17 Dec 2018 22:34:30
-> +0100:
-> 
-> > Miquel,
-> > 
-> > I tried the patches and they are working, with the exception of Compex
-> > WLE900X card, but we know that this card is problematic.  
-> 
-> How did you test them? I am surprised that COMPHY calls worked for you
-> out of the box. I am not sure you have A3700 COMPHY support in your ATF
-> but it probably work because U-Boot is doing the initial configuration.
+Changes v2:
+	- use devm_gpiod_get_optional in probe instead of in #ifdef CONFIG_OF
+	- convert flags to BIT() in a separate patch
+	- replace hrtimer with "regular" timer
+	- use of_device_get_match_data instead of of_match_device
+	- add driver data to i2c_device_id table for non-DT fallback
+	- fix sequence of common touchscreen initialization
+	- div. minor stlye changes
 
-Let me correct myself: actually the feature is already mainline! See
-[2]. It will be added to Marvell's BSP by the end of the year. So if
-you are running a recent mainline ATF you are good to go!
+Richard Leitner (8):
+  dt-bindings: input: touchscreen: sx8654: add reset-gpio property
+  Input: sx8654 - add reset-gpio support
+  dt-bindings: input: touchscreen: sx8654: add compatible models
+  Input: sx8654 - add sx8655 and sx8656 to compatibles
+  dt-bindings: input: touchscreen: sx8654: add sx8650 to comatibles
+  Input: sx8654 - add sx8650 support
+  Input: sx8654 - use common of_touchscreen functions
+  Input: sx8654 - convert #defined flags to BIT(x)
 
-> 
-> > I am interesting if there is a known way to turn of the comphy on
-> > A3720, or at least change the SGMII mode from 1Gbps to 2.5Gbps and
-> > back. Marvell documentation does not provide this information and the
-> > code in ATF providing the SMC calls does not do this either.
-> > Do you know how this can be achieved?  
-> 
-> The driver already handles these calls (see [1]), making use of
-> them is just a matter of hacking into drivers (in your case, I
-> suppose it is mvneta) and add phy_set_mode()/phy_power_on() calls.
-> 
-> [1] https://github.com/miquelraynal/linux/blob/marvell/phy-next/pm/drivers/phy/marvell/phy-mvebu-a3700-comphy.c#L189
-> 
-> 
-> Thanks,
-> Miquèl
+ .../bindings/input/touchscreen/sx8654.txt          |  10 +-
+ drivers/input/touchscreen/sx8654.c                 | 245 ++++++++++++++++++---
+ 2 files changed, 229 insertions(+), 26 deletions(-)
 
-[2] https://github.com/ARM-software/arm-trusted-firmware/blob/master/drivers/marvell/comphy/phy-comphy-3700.c
-
-
-Thanks,
-Miquèl
+-- 
+2.11.0
