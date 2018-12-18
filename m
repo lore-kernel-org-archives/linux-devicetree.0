@@ -1,83 +1,55 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: leds: Add pattern initialization from
- Device Tree
-Date: Tue, 18 Dec 2018 10:06:14 +0100
-Message-ID: <CAJKOXPd_icrPUQJhbcHkovQ7DFYM5mVZmXG_qbHv3KKjxVEdbg@mail.gmail.com>
-References: <1544613406-27026-1-git-send-email-krzk@kernel.org>
- <1544613406-27026-2-git-send-email-krzk@kernel.org> <20181217224029.GA16132@bogus>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH V3 02/20] dt-bindings: clock: tegra124-dfll: add Tegra210
+ support
+Date: Tue, 18 Dec 2018 17:12:14 +0800
+Message-ID: <20181218091232.23532-3-josephl@nvidia.com>
+References: <20181218091232.23532-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217224029.GA16132@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181218091232.23532-1-josephl@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2018 at 23:40, Rob Herring <robh@kernel.org> wrote:
->
-> On Wed, Dec 12, 2018 at 12:16:42PM +0100, Krzysztof Kozlowski wrote:
-> > Document new linux,trigger-pattern property for initialization of LED
-> > pattern trigger.
-> >
-> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
-> > ---
-> >  Documentation/devicetree/bindings/leds/common.txt | 36 +++++++++++++++++++++++
-> >  1 file changed, 36 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
-> > index aa1399814a2a..3daccd4ea8a3 100644
-> > --- a/Documentation/devicetree/bindings/leds/common.txt
-> > +++ b/Documentation/devicetree/bindings/leds/common.txt
-> > @@ -37,6 +37,42 @@ Optional properties for child nodes:
-> >       "ide-disk" - LED indicates IDE disk activity (deprecated),
-> >                    in new implementations use "disk-activity"
-> >       "timer" - LED flashes at a fixed, configurable rate
-> > +     "pattern" - LED alters the brightness for the specified duration with one
-> > +                 software timer (requires "led-pattern" property)
-> > +
-> > +- led-pattern : String with default pattern for certain triggers. Each trigger
-> > +                may parse this string differently:
-> > +                - one-shot : two numbers specifying delay on and delay off,
-> > +                - timer : two numbers specifying delay on and delay off,
->
-> I misunderstood that these triggers applied to this. Is there any point
-> to supporting these modes?
+Add Tegra210 support for DFLL clock.
 
-I am not sure whether I explained this clearly enough, so let me be
-more specific. The "led-pattern" is a string with pattern which will
-be interpreted differently, based on LED trigger. One-shot and timer
-triggers expect two numbers. Pattern trigger expects full pattern.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Joseph Lo <josephl@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+---
+*V3:
+ - no change
+*V2:
+ - add ack tag
+---
+ .../devicetree/bindings/clock/nvidia,tegra124-dfll.txt        | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-> Aren't they just a subset or simplification
-> of a pattern?
-
-Yes, they are.
-
->
-> Can we control the timer frequency from DT? The pattern could address
-> that limitation.
-
-No, currently we cannot. This patch with pattern solves that issue.
-
->
-> > +                - pattern : The pattern is given by a series of tuples, of
->
-> Don't you need one-shot vs. repeat modes for patterns too?
-
-Repeat mode is defined by trigger. One-shot is one time. Timer and
-patter triggers are repeating.
-
->
-> I could imagine you'd want a pattern for any trigger.
-
-In general I think that only these three triggers require such
-initialization through pattern. Other triggers - like heartbeat or
-activity - have they own bindings (or do not need any).
-
-Following Pavel's suggestion, I could convert it to array of integers
-which still should be suitable for these and any future triggers
-operating on numbers.
-
-Best regards,
-Krzysztof
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+index 38e8cc8c70a8..8a38c8e78acf 100644
+--- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+@@ -10,7 +10,9 @@ control module that will automatically adjust the VDD_CPU voltage by
+ communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+ 
+ Required properties:
+-- compatible : should be "nvidia,tegra124-dfll"
++- compatible : should be one of:
++  - "nvidia,tegra124-dfll": for Tegra124
++  - "nvidia,tegra210-dfll": for Tegra210
+ - reg : Defines the following set of registers, in the order listed:
+         - registers for the DFLL control logic.
+         - registers for the I2C output logic.
+-- 
+2.20.1
