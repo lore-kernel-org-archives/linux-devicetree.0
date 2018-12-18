@@ -1,49 +1,42 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH 2/2] misc: hx8837: add a HiMax HX8837 display controller
- driver
-Date: Tue, 18 Dec 2018 16:28:05 +0100
-Message-ID: <9e501c50ed5e9a965f7cbedd7079c24d2d95a352.camel@v3.sk>
-References: <20181112023929.650002-1-lkundrak@v3.sk>
-         <20181112023929.650002-2-lkundrak@v3.sk> <20181127074140.GB13965@kroah.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v4 0/6] media/sun6i: Allwinner A64 CSI support
+Date: Tue, 18 Dec 2018 20:58:22 +0530
+Message-ID: <CAMty3ZA4xXVLKx-yj+2_iJ700+yTLesjEAgS8Wu2i8otPScpaw@mail.gmail.com>
+References: <20181218113320.4856-1-jagan@amarulasolutions.com> <20181218152122.4zj6wgbukhrl6ly6@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181127074140.GB13965@kroah.com>
+In-Reply-To: <20181218152122.4zj6wgbukhrl6ly6@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-11-27 at 08:41 +0100, Greg Kroah-Hartman wrote:
-> On Mon, Nov 12, 2018 at 03:39:29AM +0100, Lubomir Rintel wrote:
-> > HiMax HX8837 is a display controller used on OLPC platforms. It controls
-> > backlight and is able to capture and freeze a frame when the LCD controller
-> > (and the rest of the plaform) is powered off.
-> > 
-> > This driver is based on the same code as drivers/staging/olpc_dcon.
-> > I modernized it to use managed GPIO, device-tree bindings, sysfs attribtue
-> > groups, essentially fixing the staging driver's TODO.
-> 
-> You are creating custom sysfs files, with no Documentation/ABI/ update
-> for us to know what those files are or how they are used :(
-> 
-> Why do you need custom sysfs files in the first place?  Isn't there
-> already an api for this type of device in the kernel?
+On Tue, Dec 18, 2018 at 8:51 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Tue, Dec 18, 2018 at 05:03:14PM +0530, Jagan Teki wrote:
+> > This series support CSI on Allwinner A64.
+> >
+> > Tested 640x480, 320x240, 720p, 1080p resolutions UYVY8_2X8 format.
+> >
+> > Changes for v4:
+> > - update the compatible string order
+> > - add proper commit message
+> > - included BPI-M64 patch
+> > - skipped amarula-a64 patch
+> > Changes for v3:
+> > - update dt-bindings for A64
+> > - set mod clock via csi driver
+> > - remove assign clocks from dtsi
+> > - remove i2c-gpio opendrian
+> > - fix avdd and dovdd supplies
+> > - remove vcc-csi pin group supply
+> >
+> > Note: This series created on top of H3 changes [1]
+> >
+> > [1] https://patchwork.kernel.org/cover/10705905/
+>
+> You had memory corruption before, how was this fixed?
 
-I am actually not sure. I certainly didn't find anything similar.
-
-I've later discovered that this should perhaps be a DRM encoder driver,
-because it sits between the LCDC and the panel; I'm submitting an
-updated RFC version to the dri list.
-
-Perhaps the color swizzling and frame freezing functionality that's
-exposed via sysfs in this version could be exposed as a DRI property
-instead.
-
-> 
-> thanks,
-> 
-> greg k-h
-
-Lubo
+Memory corruption observed with default 600MHz on 1080p. It worked
+fine on BPI-M64 (with 300MHz)
