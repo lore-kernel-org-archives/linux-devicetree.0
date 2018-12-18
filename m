@@ -1,64 +1,30 @@
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Tue, 18 Dec 2018 17:19:24 +0800
-Message-ID: <1545124764.25199.3.camel@mhfsdcap03>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
-         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
-         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
-         <20181217143247.GK20725@google.com>
-         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
+Date: Tue, 18 Dec 2018 09:34:21 +0000
+Message-ID: <8149d09e665c4a4efb85a9d60f266d478bee02d8.camel@nxp.com>
+References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
+         <20181218040702.29231-4-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20181218040702.29231-4-andrew.smirnov@gmail.com>
+Content-Language: en-US
+Content-ID: <316A6C852A737245A9B92932430DFBFC@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org, jianjun.wang@mediatek.com
+To: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
-> On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
-> > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
-> > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > > > > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
-> > > > > in arm64 but bogus alignment values at arm32, the pcie device and devices
-> > > > > behind this bridge will not be enabled. Fix it's BAR0 resource size to
-> > > > > guarantee the pcie devices will be enabled correctly.
-> > > > 
-> > > > So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
-> > > > to 0, and an IO BAR has bit 1 hardwired to 0.
-> > > 
-> > > Yes, it only works properly on 64bit platform.
-> > 
-> > I don't understand.  BARs are supposed to work the same regardless of
-> > whether it's a 32- or 64-bit platform.  If this is a workaround for a
-> > hardware defect, please just say that explicitly.
-> 
-> I do not understand this either. First thing to do is to describe the
-> problem properly so that we can actually find a solution to it.
-> 
-> Lorenzo
-
-This BAR0 is a 64-bit memory BAR, the HW default values for this BAR is
-0xffff_ffff_0000_0000 and it could not be changed except by config write
-operation.
-
-The calculated BAR size will be 0 in 32-bit platform since the
-phys_addr_t is a 32bit value in 32-bit platform.
-
-Actually MediaTek's HW does not using this BAR0, just omit it when
-assign resource is totally fine.
-
-When assign the resource for each device, software will check the
-resource alignment first, and the resource of length zero will be
-regarded as a bogus alignment resource, it will be ignored and won't
-claim a resource parent for it.
-
-When drivers try to enable the PCIe devices, the software will enable
-it's resources, but it will return an error number when found a
-unclaimed resource, in that case, the flow of enable devices will be
-interrupted and PCIe devices won't work properly.
-
-Thanks.
+T24gTW9uLCAyMDE4LTEyLTE3IGF0IDIwOjA3IC0wODAwLCBBbmRyZXkgU21pcm5vdiB3cm90ZToN
+Cj4gQWRkIGNvZGUgbmVlZGVkIHRvIHN1cHBvcnQgaS5NWDhNUSB2YXJpYW50Lg0KDQo+ICBzdGF0
+aWMgdm9pZCBpbXg2X3BjaWVfaW5pdF9waHkoc3RydWN0IGlteDZfcGNpZSAqaW14Nl9wY2llKQ0K
+PiAgew0KPiArDQo+ICsNClJlbW92ZSBlbXB0eSBsaW5lcz8NCg0KPiArCXVuc2lnbmVkIGludCBt
+YXNrLCB2YWwsIG9mZnNldDsNCj4gKw0KPiArCW1hc2sgPSBJTVg2UV9HUFIxMl9ERVZJQ0VfVFlQ
+RTsNCj4gKwl2YWwgID0gRklFTERfUFJFUChJTVg2UV9HUFIxMl9ERVZJQ0VfVFlQRSwgUENJX0VY
+UF9UWVBFX1JPT1RfUE9SVCk7DQoNCi4uLiBzbmlwIC4uLg0KDQo+IC0JcmVnbWFwX3VwZGF0ZV9i
+aXRzKGlteDZfcGNpZS0+aW9tdXhjX2dwciwgSU9NVVhDX0dQUjEyLA0KPiAtCQkJSU1YNlFfR1BS
+MTJfREVWSUNFX1RZUEUsIFBDSV9FWFBfVFlQRV9ST09UX1BPUlQgPDwgMTIpOw0KPiArCXJlZ21h
+cF91cGRhdGVfYml0cyhpbXg2X3BjaWUtPmlvbXV4Y19ncHIsIElPTVVYQ19HUFIxMiwgbWFzaywg
+dmFsKTsNCg0KTWF5YmUgc2V0dGluZyBwb3J0IHR5cGUgc2hvdWxkIGJlIGEgc2VwYXJhdGUgZnVu
+Y3Rpb24gZnJvbSBpbml0X3BoeT8NCg==
