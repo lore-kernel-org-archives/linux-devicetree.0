@@ -1,42 +1,35 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: [PATCH 10/25] dt-bindings: timer: renesas, cmt: Document r8a7796 CMT support
-Date: Tue, 18 Dec 2018 22:28:28 +0100
-Message-ID: <20181218212844.30445-10-daniel.lezcano@linaro.org>
-References: <d3f1255a-592d-13d9-5d3f-bd3ec7a36742@linaro.org>
- <20181218212844.30445-1-daniel.lezcano@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218212844.30445-1-daniel.lezcano@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de
-Cc: linux-kernel@vger.kernel.org, Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v7 2/6] drm/msm: drop interrupt-names
+Date: Tue, 18 Dec 2018 16:19:26 -0600
+Message-ID: <20181218221926.GA21242@bogus>
+References: <20181218183241.12830-1-jcrouse@codeaurora.org>
+ <20181218183241.12830-3-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20181218183241.12830-3-jcrouse@codeaurora.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jordan Crouse <jcrouse@codeaurora.org>
+Cc: nm@ti.com, devicetree@vger.kernel.org, rnayak@codeaurora.org, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, dianders@chromium.org, dri-devel@lists.freedesktop.org, vireshk@kernel.org, freedreno@lists.freedesktop.org, georgi.djakov@linaro.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Biju Das <biju.das@bp.renesas.com>
-
-Document SoC specific bindings for R-Car M3-W (r8a7796) SoC.
-
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- Documentation/devicetree/bindings/timer/renesas,cmt.txt | 2 ++
- 1 file changed, 2 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/timer/renesas,cmt.txt b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-index 33992679a8bd..6de27b60b51a 100644
---- a/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-+++ b/Documentation/devicetree/bindings/timer/renesas,cmt.txt
-@@ -36,6 +36,8 @@ Required Properties:
-     - "renesas,r8a7793-cmt1" for the 48-bit CMT1 device included in r8a7793.
-     - "renesas,r8a7794-cmt0" for the 32-bit CMT0 device included in r8a7794.
-     - "renesas,r8a7794-cmt1" for the 48-bit CMT1 device included in r8a7794.
-+    - "renesas,r8a7796-cmt0" for the 32-bit CMT0 device included in r8a7796.
-+    - "renesas,r8a7796-cmt1" for the 48-bit CMT1 device included in r8a7796.
-     - "renesas,r8a77970-cmt0" for the 32-bit CMT0 device included in r8a77970.
-     - "renesas,r8a77970-cmt1" for the 48-bit CMT1 device included in r8a77970.
-     - "renesas,r8a77980-cmt0" for the 32-bit CMT0 device included in r8a77980.
--- 
-2.17.1
+T24gVHVlLCAxOCBEZWMgMjAxOCAxMTozMjozNyAtMDcwMCwgSm9yZGFuIENyb3VzZSB3cm90ZToK
+PiBFYWNoIEdQVSBjb3JlIG9ubHkgdXNlcyBvbmUgaW50ZXJydXB0IHNvIHdlIGRvbid0IHRvIGxv
+b2sgdXAKPiBhbiBpbnRlcnJ1cHQgYnkgbmFtZSBhbmQgdGhlcmVieSB3ZSBkb24ndCBuZWVkIGlu
+dGVycnVwdC1uYW1lcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNl
+QGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9tc20vZ3B1LnR4dCB8IDEgLQo+ICAxIGZpbGUgY2hhbmdlZCwgMSBkZWxldGlv
+bigtKQo+IAoKUmV2aWV3ZWQtYnk6IFJvYiBIZXJyaW5nIDxyb2JoQGtlcm5lbC5vcmc+Cl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWls
+aW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZy
+ZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
