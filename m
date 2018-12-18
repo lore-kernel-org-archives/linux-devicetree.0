@@ -1,56 +1,53 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: drm/msm/a6xx: Document
- interconnect properties for GPU
-Date: Tue, 18 Dec 2018 11:22:01 -0600
-Message-ID: <20181218172201.GA16590@bogus>
-References: <20181214221640.25354-1-jcrouse@codeaurora.org>
- <20181214221640.25354-2-jcrouse@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
+ for Q6V5
+Date: Tue, 18 Dec 2018 11:27:09 -0600
+Message-ID: <20181218172709.GA19660@bogus>
+References: <20181217100724.4593-1-sibis@codeaurora.org>
+ <20181217100724.4593-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181214221640.25354-2-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+In-Reply-To: <20181217100724.4593-2-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMTQsIDIwMTggYXQgMDM6MTY6MzlQTSAtMDcwMCwgSm9yZGFuIENyb3VzZSB3
-cm90ZToKPiBBZGQgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIGludGVyY29ubmVjdCBhbmQgaW50ZXJj
-b25uZWN0LW5hbWVzIGJpbmRpbmdzCj4gZm9yIHRoZSBHUFUgbm9kZSBhcyBkZXRhaWxlZCBieSBi
-aW5kaW5ncy9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dC4KPiAKPiBTaWduZWQtb2ZmLWJ5
-OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCB8IDYgKysrKysr
-Cj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQgYi9Eb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAo+IGluZGV4
-IDhkOTQxNTE4MGMyMi4uMTliNWFlNDU5ZmRiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQKPiBAQCAtMTksNiAr
-MTksOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICogIm1lbV9pZmFjZSIKPiAgLSBpb21t
-dXM6IG9wdGlvbmFsIHBoYW5kbGUgdG8gYW4gYWRyZW5vIGlvbW11IGluc3RhbmNlCj4gIC0gb3Bl
-cmF0aW5nLXBvaW50cy12Mjogb3B0aW9uYWwgcGhhbmRsZSB0byB0aGUgT1BQIG9wZXJhdGluZyBw
-b2ludHMKPiArLSBpbnRlcmNvbm5lY3Q6IG9wdGlvbmFsIHBoYW5kbGUgdG8gYSBpbnRlcmNvbm5l
-Y3QgcHJvdmlkZXIuICBTZWUKPiArICAuLi9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dCBm
-b3IgZGV0YWlscy4KPiArLSBpbnRlcmNvbm5lY3QtbmFtZXM6IE5hbWUgc3RyaW5nIGZvciB0aGUg
-aW50ZXJjb25uZWN0cy4KPiAgLSBxY29tLGdtdTogRm9yIGE2eHggYW5kIG5ld2VyIHRhcmdldHMg
-YSBwaGFuZGxlIHRvIHRoZSBHTVUgZGV2aWNlIHRoYXQgd2lsbAo+ICAgIGNvbnRyb2wgdGhlIHBv
-d2VyIGZvciB0aGUgR1BVCj4gIAo+IEBAIC02OCw2ICs3MSw5IEBAIEV4YW1wbGUgYTZ4eCAod2l0
-aCBHTVUpOgo+ICAKPiAgCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsK
-PiAgCj4gKwkJaW50ZXJjb25uZWN0cyA9IDwmcnNjX2hsb3MgTUFTVEVSX0dGWDNEICZyc2NfaGxv
-cyBTTEFWRV9FQkkxPjsKPiArCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAiZ2Z4LW1lbSI7CgpUaGVy
-ZSdzIG5vdCByZWFsbHkgYW55IHBvaW50IHRvIGhhdmluZyAqLW5hbWVzIHdoZW4gdGhlcmUgaXMg
-b25seSAxIAp2YWx1ZS4KCj4gKwo+ICAJCXFjb20sZ211ID0gPCZnbXU+Owo+ICAJfTsKPiAgfTsK
-PiAtLSAKPiAyLjE4LjAKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJl
-ZWRyZW5vCg==
+On Mon, Dec 17, 2018 at 03:37:19PM +0530, Sibi Sankar wrote:
+> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt       | 10 +++++++---
+>  1 file changed, 7 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> index 9ff5b0309417..780adc043b37 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
+>  - clocks:
+>  	Usage: required
+>  	Value type: <phandle>
+> -	Definition: reference to the iface, bus and mem clocks to be held on
+> -		    behalf of the booting of the Hexagon core
+> +	Definition: reference to the list of 4 clocks for the modem sub-system
+> +		    reference to the list of 8 clocks for the modem sub-system
+> +		    on SDM845 SoCs
+>  
+>  - clock-names:
+>  	Usage: required
+>  	Value type: <stringlist>
+> -	Definition: must be "iface", "bus", "mem"
+> +	Definition: must be "iface", "bus", "mem", "xo" for the modem sub-system
+> +		    must be "iface", "bus", "mem", "gpll0_mss", "snoc_axi",
+> +		    "mnoc_axi", "prng", "xo" for the modem sub-system on SDM845
+> +		    SoCs
+
+This seems to me a list of all clocks you need enabled, not what clocks 
+actually go to the modem. Specifically, shouldn't the *noc_axi clocks be 
+managed by the interconnect driver?
+
+Rob
