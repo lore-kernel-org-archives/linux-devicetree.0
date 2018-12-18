@@ -1,50 +1,56 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v6 11/11] MAINTAINERS: Add entry for RDA Micro SoC architecture
-Date: Tue, 18 Dec 2018 13:35:27 +0530
-Message-ID: <20181218080527.10801-12-manivannan.sadhasivam@linaro.org>
-References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
+Date: Tue, 18 Dec 2018 09:12:05 +0100
+Message-ID: <20181218091205.04588033@xps13>
+References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+        <20181212102142.16053-4-miquel.raynal@bootlin.com>
+        <20181214014701.373b220b@nic.cz>
+        <20181214015712.31f749ea@nic.cz>
+        <20181217170724.58421a29@xps13>
+        <87zht480v5.fsf@tkos.co.il>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <87zht480v5.fsf@tkos.co.il>
 Sender: linux-kernel-owner@vger.kernel.org
-To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
-Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Baruch Siach <baruch@tkos.co.il>
+Cc: Marek Behun <marek.behun@nic.cz>, Nadav Haklai <nadavh@marvell.com>, Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-pci@vger.kernel.org, Gregory Clement <gregory.clement@bootlin.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Add MAINTAINERS entry for RDA Micro SoC architecture with myself
-as the maintainer.
+Hi Baruch,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Baruch Siach <baruch@tkos.co.il> wrote on Mon, 17 Dec 2018 20:27:42
++0200:
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 6c3fbbb361f8..7f2ae2ed53f4 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1945,6 +1945,20 @@ M:	Lennert Buytenhek <kernel@wantstofly.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- 
-+ARM/RDA MICRO ARCHITECTURE
-+M:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-+L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-unisoc@lists.infradead.org (moderated for non-subscribers)
-+S:	Maintained
-+F:	arch/arm/boot/dts/rda8810pl-*
-+F:	drivers/clocksource/timer-rda.c
-+F:	drivers/irqchip/irq-rda-intc.c
-+F:	drivers/tty/serial/rda-uart.c
-+F:	Documentation/devicetree/bindings/arm/rda.txt
-+F:	Documentation/devicetree/bindings/interrupt-controller/rda,8810pl-intc.txt
-+F:	Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
-+F:	Documentation/devicetree/bindings/timer/rda,8810pl-timer.txt
-+
- ARM/REALTEK ARCHITECTURE
- M:	Andreas Färber <afaerber@suse.de>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
--- 
-2.17.1
+> Hi Miquel,
+> 
+> Miquel Raynal writes:
+> > Marek Behun <marek.behun@nic.cz> wrote on Fri, 14 Dec 2018 01:57:12
+> > +0100:
+> >  
+> >> On Fri, 14 Dec 2018 01:47:01 +0100
+> >> Marek Behun <marek.behun@nic.cz> wrote:
+> >>   
+> >> > are there already patches for the A37xx comphy driver?    
+> >
+> > Please try the latest patches on top of phy -next (with PHY interface
+> > mode), available there [1]. You can pick only the COMPHY patches, but
+> > keep them over the phy -next branch.
+> >
+> > Please note that for the SMC calls to succeed you must use a recent
+> > ATF. Personally I used to work with the 'atf-v1.5-devel' branch of
+> > Marvell's misl-atf repository but it is not available anymore. If you
+> > already have a clone, then you are good to go, otherwise it might be
+> > great if someone from Marvell could share a public Github link?  
+> 
+> The latest ATF from Marvell is at the 'atf-v1.5-armada-18.09' branch at
+> 
+>   https://github.com/MarvellEmbeddedProcessors/atf-marvell
+
+Indeed, but I don't see A3700 COMPHY support there (only CP110's), I
+think it will be merged into 18.12 release (will happen this month).
+
+
+Thanks,
+Miquèl
