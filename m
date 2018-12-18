@@ -1,49 +1,88 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
- driver
-Date: Tue, 18 Dec 2018 19:46:13 +0530
-Message-ID: <c5ccf173-d0f3-70f4-f8e3-777fd3339b68@ti.com>
-References: <20181127100722.9993-1-shawn.guo@linaro.org>
- <20181127100722.9993-3-shawn.guo@linaro.org>
- <b0d02b1c-cc44-69fe-0765-84caf76eaea1@ti.com> <20181204060104.GA11391@dragon>
- <20181217003434.GA7208@dragon>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: Re: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names
+ from DT
+Date: Tue, 18 Dec 2018 15:35:03 +0100
+Message-ID: <20181218143503.GA32562@centauri.ideon.se>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217003434.GA7208@dragon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 17/12/18 6:04 AM, Shawn Guo wrote:
-> On Tue, Dec 04, 2018 at 02:01:07PM +0800, Shawn Guo wrote:
->> Hi Kishon,
->>
->> On Tue, Dec 04, 2018 at 10:38:19AM +0530, Kishon Vijay Abraham I wrote:
->>> Hi,
->>>
->>> On 27/11/18 3:37 PM, Shawn Guo wrote:
->>>> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
->>>> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
->>>
->>> Is this Synopsys PHY specific to Qualcomm or could it be used by other vendors
->>> (with just changing tuning parameters)? If it could be used by other vendors
->>> then it would make sense to add this PHY driver in synopsys directory.
->>
->> My knowledge is that this Synopsys PHY is specific to Qualcomm SoCs.
->> @Sriharsha, correct me if I'm wrong.
+On Mon, Dec 17, 2018 at 03:37:43PM -0800, Stephen Boyd wrote:
+> Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:22)
+> > Allow accessing the parent clock names required for the driver
+> > operation by using the device tree node.
+> > 
+> > This permits extending the driver to other platforms without having to
+> > modify its source code.
+> > 
+> > For backwards compatibility leave previous values as default.
 > 
-> Kishon,
+> Why do we need to maintain backwards compatibility? Isn't is required
+> that the nodes have clocks properties?
 > 
-> Do you have any further comments on the patches?  We are close the 4.21
-> merge window, and I really hope they can hit mainline with 4.21 release.
-> Thanks.
 
-Aren't we waiting for feedback from Sriharsha?
+Hello Stephen,
 
--Kishon
+
+This is the existing DT nodes for msm8916:
+
+               a53pll: clock@b016000 {
+                        compatible = "qcom,msm8916-a53pll";
+                        reg = <0xb016000 0x40>;
+                        #clock-cells = <0>;
+                };
+
+                apcs: mailbox@b011000 {
+                        compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+                        reg = <0xb011000 0x1000>;
+                        #mbox-cells = <1>;
+                        clocks = <&a53pll>;
+                        #clock-cells = <0>;
+                };
+
+
+This is the (suggested) DT nodes for qcs404:
+
+                apcs_hfpll: clock-controller@0b016000 {
+                        compatible = "qcom,hfpll";
+                        reg = <0x0b016000 0x30>;
+                        #clock-cells = <0>;
+                        clock-output-names = "apcs_hfpll";
+                        clocks = <&xo_board>;
+                        clock-names = "xo";
+                };
+
+                apcs_glb: mailbox@b011000 {
+                        compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+                        reg = <0x0b011000 0x1000>;
+                        #mbox-cells = <1>;
+                        clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
+                        clock-names = "aux", "pll";
+                        #clock-cells = <0>;
+                };
+
+qcs404 specifies two clocks, with an accompanied clock-name for each clock.
+
+msm8916 specifies a single clock, without an accompanied clock-name.
+
+It is possible to append clock-names = "pll" for the existing clock,
+as well as to define the aux clock in the apcs node in the msm8916 DT:
+clocks = <&gcc GPLL0_VOTE>;
+clock-names = "aux";
+
+However, since the DT is treated as an ABI, the existing DT for msm8916 must
+still work, so I don't think that it is possible to ignore having backwards
+compability in the apcs clock driver.
+
+
+Kind regards,
+Niklas
