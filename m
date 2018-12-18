@@ -1,68 +1,55 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH 1/3] dt-bindings: fsl: scu: add fallback compatible string for
- power domain
-Date: Tue, 18 Dec 2018 16:01:20 +0000
-Message-ID: <1545148524-658-2-git-send-email-aisheng.dong@nxp.com>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
+ for Q6V5
+Date: Tue, 18 Dec 2018 08:07:59 -0800
+Message-ID: <CAD=FV=Xuh0pUTcKOGPANmgfeGxQfHwN5RWg+E9srzuGq2_AmAQ@mail.gmail.com>
+References: <20181217100724.4593-1-sibis@codeaurora.org> <20181217100724.4593-2-sibis@codeaurora.org>
+ <CAD=FV=Ui6ys4R3nenix3USeRPAd_vVdrArXxdf-iEc=4QRhE+A@mail.gmail.com> <8decd38d8e28c6657949f3c140947977@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <8decd38d8e28c6657949f3c140947977@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-SCU power domain can be used in the same way by IMX8QXP and IMX8QM SoCs.
-Let's add a "fsl,scu-pd" fallback compatible string to allow other SoCs
-to reuse the common part.
+Hi,
 
-Cc: Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Cc: Sascha Hauer <kernel@pengutronix.de>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 7 +++++--
- 1 file changed, 5 insertions(+), 2 deletions(-)
+On Mon, Dec 17, 2018 at 9:52 PM Sibi Sankar <sibis@codeaurora.org> wrote:
+> >> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
+> >>  - clocks:
+> >>         Usage: required
+> >>         Value type: <phandle>
+> >> -       Definition: reference to the iface, bus and mem clocks to be
+> >> held on
+> >> -                   behalf of the booting of the Hexagon core
+> >> +       Definition: reference to the list of 4 clocks for the modem
+> >> sub-system
+> >> +                   reference to the list of 8 clocks for the modem
+> >> sub-system
+> >> +                   on SDM845 SoCs
+> >
+> > The above is confusing because you don't list the SoCs that are
+> > supposed to use the 4 clocks.  How about instead:
+> >
+> > Definition: reference to the clocks that match clock-names
+> >
+>
+> AFAIK, only the exceptions are captured. I am fine
+> with both, I'll wait for Bjorn/Rob's preference.
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index c20f38e..849b671 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -58,7 +58,10 @@ This binding for the SCU power domain providers uses the generic power
- domain binding[2].
- 
- Required properties:
--- compatible:		Should be "fsl,imx8qxp-scu-pd".
-+- compatible:		Should be one of:
-+			  "fsl,imx8qxp-scu-pd"
-+			followed by "fsl,scu-pd"
-+
- - #power-domain-cells:	Must be 1. Contains the Resource ID used by
- 			SCU commands.
- 			See detailed Resource ID list from:
-@@ -145,7 +148,7 @@ firmware {
- 		};
- 
- 		pd: imx8qx-pd {
--			compatible = "fsl,imx8qxp-scu-pd";
-+			compatible = "fsl,imx8qxp-scu-pd", "fsl,scu-pd";
- 			#power-domain-cells = <1>;
- 		};
- 	};
--- 
-2.7.4
+Sure, waiting for Bjron / Rob to chime in sounds good.  If you are
+going to document just the exception, though, IMO at least reword it.
+AKA:
+
+reference to the list of 8 clocks for the modem sub-system on SDM845
+SoCs; reference to the list of 4 clocks for the modem sub-system on
+all other SoCs.
+
+...the key being the "on all other" to make it clear.  ...but I still
+like my original suggestion of using less prose and more lists, so
+hopefully Bjorn / Rob are OK with that.
+
+
+-Doug
