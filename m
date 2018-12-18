@@ -1,94 +1,51 @@
-From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Subject: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
-Date: Tue, 18 Dec 2018 09:05:56 +0100
-Message-ID: <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
-References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v6 08/11] dt-bindings: serial: Document RDA Micro UART
+Date: Tue, 18 Dec 2018 13:35:24 +0530
+Message-ID: <20181218080527.10801-9-manivannan.sadhasivam@linaro.org>
+References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+In-Reply-To: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
+Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-These options apply to all regulators in this chip.
+From: Andreas Färber <afaerber@suse.de>
 
-strict-supply-voltage:
-  Set STRICT flag in CONFIG1
-under-voltage-limit:
-  Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
-under-voltage-hysteresis:
-  Select 200mV or 400mV UVLOHYS in CONFIG2
+Add an initial binding for the UART in RDA Micro RDA8810PL SoC.
 
-Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 ---
- drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 46 insertions(+)
+ .../bindings/serial/rda,8810pl-uart.txt         | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
 
-diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-index 8bcdecf..f5e559b 100644
---- a/drivers/mfd/tps65218.c
-+++ b/drivers/mfd/tps65218.c
-@@ -211,6 +211,50 @@ static const struct of_device_id of_tps65218_match_table[] = {
- };
- MODULE_DEVICE_TABLE(of, of_tps65218_match_table);
- 
-+static void tps65218_options(struct tps65218 *tps)
-+{
-+	struct device *dev = tps->dev;
-+	struct device_node *np = dev->of_node;
-+	u32 pval;
+diff --git a/Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt b/Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+new file mode 100644
+index 000000000000..a08df97a69e6
+--- /dev/null
++++ b/Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+@@ -0,0 +1,17 @@
++RDA Micro UART
 +
-+	if (!of_property_read_u32(np, "strict-supply-voltage", &pval)) {
-+		tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
-+			TPS65218_CONFIG1_STRICT,
-+			pval ? TPS65218_CONFIG1_STRICT : 0,
-+			TPS65218_PROTECT_L1);
-+		dev_dbg(dev, "tps65218 strict-supply-voltage: %d\n", pval);
-+	}
-+	if (!of_property_read_u32(np, "under-voltage-hysteresis", &pval)) {
-+		if (pval != 400000 && pval != 200000) {
-+			dev_err(dev,
-+				 "under-voltage-hysteresis must be %d or %d\n",
-+				 200000, 400000);
-+		} else {
-+			tps65218_update_bits(tps, TPS65218_REG_CONFIG2,
-+				TPS65218_CONFIG2_UVLOHYS,
-+				pval == 400000 ? TPS65218_CONFIG2_UVLOHYS : 0,
-+				TPS65218_PROTECT_L1);
-+		}
-+		dev_dbg(dev, "tps65218 under-voltage-hysteresis: %d\n", pval);
-+	}
-+	if (!of_property_read_u32(np, "under-voltage-limit", &pval)) {
-+		int i, vals[] = { 275, 295, 325, 335 };
++Required properties:
++- compatible :  "rda,8810pl-uart" for RDA8810PL SoCs.
++- reg        :  Offset and length of the register set for the device.
++- interrupts :  Should contain UART interrupt.
++- clocks     :  Phandle to the input clock.
 +
-+		for (i = 0; i < ARRAY_SIZE(vals); i++) {
-+			if (pval == vals[i] * 10000)
-+				break;
-+		}
-+		if (i < ARRAY_SIZE(vals)) {
-+			tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
-+				TPS65218_CONFIG1_UVLO_MASK, i,
-+				TPS65218_PROTECT_L1);
-+		} else {
-+			dev_err(dev, "Invalid under-voltage-limit: %d\n", pval);
-+		}
-+		dev_dbg(dev, "tps65218 under-voltage-limit: %d=%d\n", pval, i);
-+	}
-+}
 +
- static int tps65218_probe(struct i2c_client *client,
- 				const struct i2c_device_id *ids)
- {
-@@ -249,6 +293,8 @@ static int tps65218_probe(struct i2c_client *client,
- 
- 	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
- 
-+	tps65218_options(tps);
++Example:
 +
- 	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
- 			      ARRAY_SIZE(tps65218_cells), NULL, 0,
- 			      regmap_irq_get_domain(tps->irq_data));
++		uart2: serial@20a90000 {
++			compatible = "rda,8810pl-uart";
++			reg = <0x20a90000 0x1000>;
++			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&uart_clk>;
++		};
 -- 
-2.7.4
+2.17.1
