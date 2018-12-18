@@ -1,88 +1,88 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ARM: dts: omap4-sdp: Make ethernet working even if booted
- with latest u-boot
-Date: Tue, 18 Dec 2018 12:28:05 +0200
-Message-ID: <409dc60a-8b92-02c0-8c53-fbeaea8a1d17@ti.com>
-References: <20181213135845.3965-1-peter.ujfalusi@ti.com>
- <20181213155054.GK9507@n2100.armlinux.org.uk>
- <f4961633-a151-145f-4337-dedbcafa64bd@ti.com>
- <20181214131616.GM9507@n2100.armlinux.org.uk>
+From: "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Subject: Re: [PATCH 05/12] PCI: aardvark: add suspend to RAM support
+Date: Tue, 18 Dec 2018 11:54:43 +0100
+Message-ID: <28619896.152T6JUIHS@aspire.rjw.lan>
+References: <20181123141831.8214-1-miquel.raynal@bootlin.com> <61805564.abKDZ2rVK7@aspire.rjw.lan> <20181217155426.71058a03@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181214131616.GM9507@n2100.armlinux.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux <linux@armlinux.org.uk>
-Cc: tony@atomide.com, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181217155426.71058a03@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stephen Boyd <sboyd@kernel.org>, sudeep.holla@arm.com, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-CgpPbiAxNC8xMi8yMDE4IDE1LjE2LCBSdXNzZWxsIEtpbmcgLSBBUk0gTGludXggd3JvdGU6Cj4g
-T24gRnJpLCBEZWMgMTQsIDIwMTggYXQgMDM6MDg6MDlQTSArMDIwMCwgUGV0ZXIgVWpmYWx1c2kg
-d3JvdGU6Cj4+IEkgY2VydGFpbmx5IGhhdmUgdGhlIHZlcnNpb24gb2YgdS1ib290IHdoaWNoIGNh
-biBkbyBvbmx5IG9uZSB0ZnRwIGxvYWQKPj4gKG9yIGRoY3AgcmVxdWVzdCkuCj4gCj4gVGhhdCds
-bCBiZSBiZWNhdXNlIG9mIHRoZSBidWdneSBLUzg4NTEgZHJpdmVyLiAgVGhpcyBpcyB0aGUgcGF0
-Y2ggSQo+IGhhdmUgb24gdG9wIG9mIG15IDIwMTQgdmVyc2lvbiBvZiBOaXNoYW50aCdzIHRyZWUu
-CgpUaGFua3MhCgpDYW4geW91IHRlc3QgdGhlIHBhdGNoIHRvIHNlZSBpZiBpdCBpcyBub3QgYnJl
-YWtpbmcgdGhpbmdzPwpJIGJlbGlldmUgdGhlIHBhdGNoIGlzIGNvcnJlY3QgYXMgd2UgY2xlYXJs
-eSBtaXNzaW5nIHBpbm11eApjb25maWd1cmF0aW9uIGZyb20gdGhlIERUIGZvciBwaW5zLgoKPiAK
-PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9uZXQva3M4ODUxLmMgYi9kcml2ZXJzL25ldC9rczg4NTEu
-Ywo+IGluZGV4IDY0NjdkZGU3ZWJmNi4uZjg4OGY0M2FkOTM3IDEwMDY0NAo+IC0tLSBhL2RyaXZl
-cnMvbmV0L2tzODg1MS5jCj4gKysrIGIvZHJpdmVycy9uZXQva3M4ODUxLmMKPiBAQCAtMjcsNiAr
-MjcsMjcgQEAKPiAgCj4gICNpbmNsdWRlICJrczg4NTEuaCIKPiAgI2RlZmluZSBLUzg4NTFfU05M
-CQkxCj4gKyN1bmRlZiBERUJVRwo+ICsKPiArc3RhdGljIHZvaWQgZHVtcF9tZW0oY29uc3QgY2hh
-ciAqc3RyLCBjb25zdCB2b2lkICpiYXNlLCB1bnNpZ25lZCBvcmlnLCB1bnNpZ25lZCBsZW4pCj4g
-K3sKPiArI2lmZGVmIERFQlVHCj4gKwljb25zdCB1bnNpZ25lZCBjaGFyICpwID0gYmFzZTsKPiAr
-CXVuc2lnbmVkIGksIGo7Cj4gKwo+ICsJcHJpbnRmKCIlczoiLCBzdHIpOwo+ICsJCj4gKwlmb3Ig
-KGogPSAwOyBqIDwgbGVuOyBqICs9IDMyKSB7Cj4gKwkJcHJpbnRmKCJcbiUwNHg6Iiwgaik7Cj4g
-KwkJZm9yIChpID0gajsgaSA8IGogKyAzMiAmJiBpIDwgbGVuOyBpKyspCj4gKwkJCXByaW50Zigi
-JXMlcyUwMngiLAo+ICsJCQkJKGkgPT0gaiArIDE2KSA/ICIgIiA6ICIiLAo+ICsJCQkJaSA9PSBv
-cmlnID8gInwiIDogIiAiLAo+ICsJCQkJcFtpXSk7Cj4gKwl9Cj4gKwlwcmludGYoIlxuIik7Cj4g
-KyNlbmRpZgo+ICt9Cj4gIAo+ICAvKgo+ICAgKiBHRVRfS1M4ODUxU05MX1JXV09SRF9DTUQKPiBA
-QCAtMzI0LDYgKzM0NSw3IEBAIHZvaWQgS1M4ODUxU05MX1JFQURfQlVGRkVSKHZvaWQgKnBIYXJk
-d2FyZSwKPiAgCQlwZHcrKzsKPiAgCQkqcHVSZWFkTGVuID0gKHUxNikoKCpwZHcpID4+IDE2KTsK
-PiAgCQkqcHBPdXQgPSBwSW4gKyA4Owo+ICtkdW1wX21lbSgiUlgiLCBwTW92ZSwgc3BpQnVyc3RM
-ZW4gKyA4LCBzcGlCdXJzdExlbiArIDgpOwo+ICAJfQo+ICAKPiAgCWlmIChzcGlCdXJzdEZsYWcg
-IT0gU1BJX1JFQURfQlVSU1RfQUxMKSB7Cj4gQEAgLTYyNiw2ICs2NDgsNyBAQCBzdGF0aWMgaW50
-IGtzODg1MV9ldGhfcmVjdihzdHJ1Y3QgZXRoX2RldmljZSAqZGV2KQo+ICAJCQlwcmludGYoImZy
-YW1lIGNvdW50ID0gJWRcbiIsIHJ4RnJhbWVDb3VudCk7Cj4gICNlbmRpZgo+ICAKPiArCQkJcEhh
-cmR3YXJlLT5tX3VDdXJGcmFtZUluZGV4ID0gMDsKPiAgCQkJcEhhcmR3YXJlLT5tX3VGcmFtZXNS
-ZW1haW5lZCA9IHJ4RnJhbWVDb3VudDsKPiAgCj4gIAkJCWlmIChyeEZyYW1lQ291bnQgPT0gMCkK
-PiBAQCAtNjk3LDcgKzcyMCw3IEBAIHN0YXRpYyBpbnQga3M4ODUxX2V0aF9zZW5kKHN0cnVjdCBl
-dGhfZGV2aWNlICpkZXYsCj4gIAl1aVBhY2tldExlbmd0aCA9IGxlbmd0aDsKPiAgCUdFVF9EQVRB
-X0FMSUdOTUVOVChsZW5ndGgsICZ1aVBhY2tldExlbmd0aCk7Cj4gIAlIV19XUklURV9TVEFSVChw
-SGFyZHdhcmUpOwo+IC0KPiArZHVtcF9tZW0oIlRYIiwgcGFja2V0LCBsZW5ndGgsIHVpUGFja2V0
-TGVuZ3RoKTsKPiAgI2lmZGVmIEtTODg1MV9TTkwKPiAgCUtTODg1MVNOTF9EQVRBX1dSSVRFKCh1
-OCAqKXBhY2tldCwgbGVuZ3RoLCB1aVBhY2tldExlbmd0aCwgJmZSZXR1cm4pOwo+ICAjZWxzZQo+
-IEBAIC03MjIsMTIgKzc0NSwxOSBAQCBzdGF0aWMgaW50IGtzODg1MV9ldGhfc2VuZChzdHJ1Y3Qg
-ZXRoX2RldmljZSAqZGV2LAo+ICAJcmV0dXJuIDE7Cj4gIH0KPiAgCj4gK3N0YXRpYyBpbnQga3M4
-ODUxX2V0aF9pbml0MihzdHJ1Y3QgZXRoX2RldmljZSAqZGV2LCBiZF90ICpiZCkKPiArewo+ICsJ
-cmV0dXJuIDA7Cj4gK30KPiArCj4gIHN0YXRpYyBpbnQga3M4ODUxX2V0aF9pbml0KHN0cnVjdCBl
-dGhfZGV2aWNlICpkZXYsIGJkX3QgKmJkKQo+ICB7Cj4gIAo+ICAJdTE2IHR4Q250bCwgcnhDbnRs
-LCB3LCBpbnRNYXNrOwo+ICAJUEhBUkRXQVJFIHBIYXJkd2FyZSA9ICZnSGFyZHdhcmU7Cj4gIAo+
-ICsJZGV2LT5pbml0ID0ga3M4ODUxX2V0aF9pbml0MjsKPiArCj4gIAlwSGFyZHdhcmUtPm1fdUN1
-ckZyYW1lSW5kZXggPSAwOwo+ICAJcEhhcmR3YXJlLT5tX3VGcmFtZXNSZW1haW5lZCA9IDA7Cj4g
-IAlwSGFyZHdhcmUtPm1fdUN1clJlY3ZGcmFtcyA9IE1BWF9SRUNWX0ZSQU1FUzsKPiBkaWZmIC0t
-Z2l0IGEvaW5jbHVkZS9jb25maWdzL29tYXA0X3NkcDQ0MzAuaCBiL2luY2x1ZGUvY29uZmlncy9v
-bWFwNF9zZHA0NDMwLmgKPiBpbmRleCAwZDljMTZlYTlmMDQuLmFlOTRkZDg1MmYzZCAxMDA2NDQK
-PiAtLS0gYS9pbmNsdWRlL2NvbmZpZ3Mvb21hcDRfc2RwNDQzMC5oCj4gKysrIGIvaW5jbHVkZS9j
-b25maWdzL29tYXA0X3NkcDQ0MzAuaAo+IEBAIC0yMSw2ICsyMSw5IEBACj4gIAo+ICAjaW5jbHVk
-ZSA8Y29uZmlncy9vbWFwNF9jb21tb24uaD4KPiAgCj4gKyN1bmRlZiBDT05GSUdfU1lTX1BST01Q
-VAo+ICsjZGVmaW5lIENPTkZJR19TWVNfUFJPTVBUICAgICAgICAgICAgICJPTUFQNDRYWCBTRFAg
-IyAiCj4gKwo+ICAjaWZuZGVmIENPTkZJR19TUExfQlVJTEQKPiAgLyogQmF0dGVyeSBDaGFyZ2Vy
-ICovCj4gICNkZWZpbmUgQ09ORklHX0NNRF9CQVQJCQkxCj4gCj4gCgotIFDDqXRlcgoKVGV4YXMg
-SW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAxODAgSGVsc2lua2ku
-ClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2EvRG9taWNpbGU6IEhl
-bHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwps
-aW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJh
-ZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51
-eC1hcm0ta2VybmVsCg==
+On Monday, December 17, 2018 3:54:26 PM CET Miquel Raynal wrote:
+> Hi Rafael,
+> 
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> wrote on Thu, 13 Dec 2018
+> 22:50:51 +0100:
+> 
+> > On Thursday, December 13, 2018 3:30:00 PM CET Miquel Raynal wrote:
+> > > Hi Lorenzo,
+> > >   
+> > > > > If that's really the case, then I can see how one device and it's
+> > > > > children are suspended and the irq for it is disabled but the providing
+> > > > > devices (clk, regulator, bus controller, etc.) are still fully active
+> > > > > and not suspended but in fact completely usable and able to service
+> > > > > interrupts. If that all makes sense, then I would answer the question
+> > > > > with a definitive "yes it's all fine" because the clk consumer could be
+> > > > > in the NOIRQ phase of its suspend but the clk provider wouldn't have
+> > > > > even started suspending yet when clk_disable_unprepare() is called.    
+> > > > 
+> > > > That's a very good summary and address my concern, I still question this
+> > > > patch correctness (and many others that carry out clk operations in S2R
+> > > > NOIRQ phase), they may work but do not tell me they are rock solid given
+> > > > your accurate summary above.  
+> > > 
+> > > I understand your concern but I don't see any alternative right now
+> > > and a deep rework of the PM core to respect such dependency is not
+> > > something that can be done in a reasonable amount of time.  
+> > 
+> > Maybe you don't need to rework anything. :-)
+> > 
+> > Have you considered using device links?
+> 
+> Absolutely, yes :) I am actively working on it in parallel, you can
+> check the third version there [1]. Stephen Boyd has a slightly
+> different idea of how it should be done, I will propose a v4 this week,
+> I can add you in copy if you are interested!
+> 
+> Anyway, there is one thing that is still missing:
+> * Let's have device A that requests clock B
+> * With the device link series, A is linked (as a child) to B.
+> * A suspend/resume hooks handle things in the NOIRQ phase.
+
+Why do you need them to run in the "noirq" phase in the first place?
+
+> * B suspend/resume hooks handle things in the default phase.
+> 
+> What I expected during a suspend:
+> 1/ ->suspend_noirq(device A)
+> 2/ ->suspend(clock B)
+
+This expectation is not in agreement with the documented suspend code flow,
+however.
+
+Each phase of it is carried out for *all* devices completely before getting
+to the next phase, "prepare" first, then "suspend", "suspend_late" and
+"suspend_noirq", in this order.
+
+> Unfortunately, device links do not seem to enforce any priority between
+> phases (default/late/noirq) and what happens is:
+> 1/ ->suspend(B)
+> 2/ ->suspend_noirq(A)
+> Which has no sense in my case. Hence, I had to request the clock
+> suspend/resume callbacks to be upgraded to the NOIRQ phase as well (I
+> don't have a better solution for now). This is still under discussion
+> in a thread you have been recently added to by Bjorn, see [2].
+> 
+> So when I told you I was not confident in "reworking the PM core to
+> respect such dependency", this is what I was referring to. I am
+> definitely ready to help, but I don't feel I can do it alone.
+> 
+> [1] https://www.spinics.net/lists/linux-clk/msg32824.html
+> [2] https://marc.info/?l=linux-pm&m=154465198510735&w=2
+
+The rework you seem to be talking about is not possible, I'm afraid.
