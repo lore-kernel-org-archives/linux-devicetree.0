@@ -1,75 +1,192 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
-Date: Tue, 18 Dec 2018 09:15:33 -0600
-Message-ID: <20181218151533.GA2922@bogus>
-References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
- <20181218040702.29231-4-andrew.smirnov@gmail.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 2/3] drm/armada: add OF reserved memory support
+Date: Tue, 18 Dec 2018 16:18:58 +0100
+Message-ID: <77130e281e078315d346d54b731c578c68f2ff04.camel@v3.sk>
+References: <20180710102344.GH17271@n2100.armlinux.org.uk>
+ <E1fcpoh-0003Z2-BB@rmk-PC.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181218040702.29231-4-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <E1fcpoh-0003Z2-BB@rmk-PC.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 08:07:02PM -0800, Andrey Smirnov wrote:
-> Add code needed to support i.MX8MQ variant.
+On Tue, 2018-07-10 at 11:24 +0100, Russell King wrote:
+> Existing Armada DRM makes use of reserved memory for allocating
+> contiguous screen buffers, which currently prevents its use with
+> DT systems.  Add support for this for DT systems.
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-imx@nxp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
 > ---
->  .../bindings/pci/fsl,imx6q-pcie.txt           |  6 +-
->  drivers/pci/controller/dwc/Kconfig            |  4 +-
->  drivers/pci/controller/dwc/pci-imx6.c         | 82 ++++++++++++++++++-
->  3 files changed, 87 insertions(+), 5 deletions(-)
+>  drivers/gpu/drm/armada/Makefile      |  3 +++
+>  drivers/gpu/drm/armada/armada_drv.c  | 24 ++++++++++++++++--
+>  drivers/gpu/drm/armada/armada_rmem.c | 49
+> ++++++++++++++++++++++++++++++++++++
+>  3 files changed, 74 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/gpu/drm/armada/armada_rmem.c
 > 
-> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> index d514c1f2365f..1a10c313e8d7 100644
-> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  	- "fsl,imx6sx-pcie",
->  	- "fsl,imx6qp-pcie"
->  	- "fsl,imx7d-pcie"
-> +	- "fsl,imx8mq-pcie"
->  - reg: base address and length of the PCIe controller
->  - interrupts: A list of interrupt outputs of the controller. Must contain an
->    entry for each entry in the interrupt-names property.
-> @@ -45,7 +46,7 @@ Additional required properties for imx6sx-pcie:
->    PCIE_PHY power domains
->  - power-domain-names: Must be "pcie", "pcie_phy"
+> diff --git a/drivers/gpu/drm/armada/Makefile
+> b/drivers/gpu/drm/armada/Makefile
+> index ecf25cf9f9f5..0b8bf3b8aa6a 100644
+> --- a/drivers/gpu/drm/armada/Makefile
+> +++ b/drivers/gpu/drm/armada/Makefile
+> @@ -5,3 +5,6 @@ armada-y	+= armada_510.o
+>  armada-$(CONFIG_DEBUG_FS) += armada_debugfs.o
 >  
-> -Additional required properties for imx7d-pcie:
-> +Additional required properties for imx7d-pcie and imx8mq-pcie:
->  - power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
->  - resets: Must contain phandles to PCIe-related reset lines exposed by SRC
->    IP block
-> @@ -54,6 +55,9 @@ Additional required properties for imx7d-pcie:
->  	       - "apps"
->  	       - "turnoff"
->  
-> +Additional required properties for imx8mq-pcie:
-> +- fsl,controller-id: Logical ID of a given PCIE controller. PCIE1 is 0, PCIE2 is 1;
+>  obj-$(CONFIG_DRM_ARMADA) := armada.o
 > +
+> +armada-rmem-$(CONFIG_DRM_ARMADA) += armada_rmem.o
+> +obj-y += $(armada-rmem-y) $(armada-rmem-m)
+> diff --git a/drivers/gpu/drm/armada/armada_drv.c
+> b/drivers/gpu/drm/armada/armada_drv.c
+> index 217f0590fd61..a9ee492a2810 100644
+> --- a/drivers/gpu/drm/armada/armada_drv.c
+> +++ b/drivers/gpu/drm/armada/armada_drv.c
+> @@ -9,6 +9,7 @@
+>  #include <linux/component.h>
+>  #include <linux/module.h>
+>  #include <linux/of_graph.h>
+> +#include <linux/of_reserved_mem.h>
+>  #include <drm/drm_crtc_helper.h>
+>  #include <drm/drm_fb_helper.h>
+>  #include <drm/drm_of.h>
+> @@ -96,6 +97,9 @@ static int armada_drm_bind(struct device *dev)
+>  			return -EINVAL;
+>  	}
+>  
+> +	if (!mem && dev->of_node)
+> +		mem = dev->platform_data;
+> +
+>  	if (!mem)
+>  		return -ENXIO;
+>  
+> @@ -250,9 +254,17 @@ static int armada_drm_probe(struct
+> platform_device *pdev)
+>  	struct device *dev = &pdev->dev;
+>  	int ret;
+>  
+> -	ret = drm_of_component_probe(dev, compare_dev_name,
+> &armada_master_ops);
+> -	if (ret != -EINVAL)
+> +	if (dev->of_node) {
+> +		ret = of_reserved_mem_device_init(dev);
+> +		if (ret && ret != -ENODEV)
+> +			return ret;
+> +
+> +		ret = drm_of_component_probe(dev, compare_of,
+> +					     &armada_master_ops);
+> +		if (ret)
+> +			of_reserved_mem_device_release(dev);
+>  		return ret;
+> +	}
+>  
+>  	if (dev->platform_data) {
+>  		char **devices = dev->platform_data;
+> @@ -287,6 +299,7 @@ static int armada_drm_probe(struct
+> platform_device *pdev)
+>  static int armada_drm_remove(struct platform_device *pdev)
+>  {
+>  	component_master_del(&pdev->dev, &armada_master_ops);
+> +	of_reserved_mem_device_release(&pdev->dev);
+>  	return 0;
+>  }
+>  
+> @@ -300,11 +313,18 @@ static const struct platform_device_id
+> armada_drm_platform_ids[] = {
+>  };
+>  MODULE_DEVICE_TABLE(platform, armada_drm_platform_ids);
+>  
+> +static const struct of_device_id armada_drm_dt_ids[] = {
+> +	{ .compatible = "marvell,dove-display-subsystem", },
+> +	{ /* sentinel */ },
+> +};
+> +MODULE_DEVICE_TABLE(of, armada_drm_dt_ids);
+> +
+>  static struct platform_driver armada_drm_platform_driver = {
+>  	.probe	= armada_drm_probe,
+>  	.remove	= armada_drm_remove,
+>  	.driver	= {
+>  		.name	= "armada-drm",
+> +		.of_match_table = armada_drm_dt_ids,
+>  	},
+>  	.id_table = armada_drm_platform_ids,
+>  };
+> diff --git a/drivers/gpu/drm/armada/armada_rmem.c
+> b/drivers/gpu/drm/armada/armada_rmem.c
+> new file mode 100644
+> index 000000000000..36bb20e426b6
+> --- /dev/null
+> +++ b/drivers/gpu/drm/armada/armada_rmem.c
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2017 Russell King
+> +#include <linux/errno.h>
+> +#include <linux/of.h>
+> +#include <linux/of_reserved_mem.h>
+> +#include <linux/slab.h>
+> +
+> +static int armada_rmem_dev_init(struct reserved_mem *rmem, struct
+> device *dev)
+> +{
+> +	struct resource *r;
+> +
+> +	if (dev->platform_data)
+> +		return -EBUSY;
+> +
+> +	r = kzalloc(sizeof(*r), GFP_KERNEL);
+> +	if (!r)
+> +		return -ENOMEM;
+> +
+> +	r->start = rmem->base;
+> +	r->end = rmem->base + rmem->size - 1;
+> +	r->flags = IORESOURCE_MEM;
+> +
+> +	rmem->priv = r;
+> +	dev->platform_data = r;
+> +
+> +	return 0;
+> +}
+> +
+> +static void armada_rmem_dev_release(struct reserved_mem *rmem,
+> +	struct device *dev)
+> +{
+> +	kfree(rmem->priv);
+> +	rmem->priv = NULL;
+> +	dev->platform_data = NULL;
+> +}
+> +
+> +static const struct reserved_mem_ops armada_rmem_ops = {
+> +	.device_init = armada_rmem_dev_init,
+> +	.device_release = armada_rmem_dev_release,
+> +};
+> +
+> +static int __init armada_rmem_init(struct reserved_mem *rmem)
+> +{
+> +	rmem->ops = &armada_rmem_ops;
+> +	return 0;
+> +}
+> +
+> +RESERVEDMEM_OF_DECLARE(armada_rmem, "marvell,dove-framebuffer",
+> +			armada_rmem_init);
 
-Remove this.
+Hi,
 
-If GPR register offset is what you need, then put that into DT. 
-Typically, we'd have a property with iomuxc phandle and offset.
+wouldn't "marvell,armada-framebuffer" make more sense here?
+The driver will do just well for MMP2 and perhaps more hardware that is
+not Dove; the DTs could just say:
 
-Rob
+compatible = "marvell,dove-framebuffer", "marvell,armada-framebuffer";
+compatible = "marvell,mmp2-framebuffer", "marvell,armada-framebuffer";
+
+Lubo
