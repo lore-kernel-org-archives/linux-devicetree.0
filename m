@@ -1,51 +1,50 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v6 09/11] ARM: dts: rda8810pl: Add interrupt support for UART
-Date: Tue, 18 Dec 2018 13:35:25 +0530
-Message-ID: <20181218080527.10801-10-manivannan.sadhasivam@linaro.org>
-References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Subject: [PATCH 1/2] dt-bindings: regulator: extend tps65218 bindings
+Date: Tue, 18 Dec 2018 09:05:55 +0100
+Message-ID: <1545120356-7749-2-git-send-email-Christian.Hohnstaedt@wago.com>
+References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
-Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt support for UART in RDA Micro RDA8810PL SoC.
+Add input voltage configuration options
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
 ---
- arch/arm/boot/dts/rda8810pl.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/regulator/tps65218.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
-index 84baa4c0a14c..19cde895bf65 100644
---- a/arch/arm/boot/dts/rda8810pl.dtsi
-+++ b/arch/arm/boot/dts/rda8810pl.dtsi
-@@ -71,18 +71,21 @@
- 		uart1: serial@0 {
- 			compatible = "rda,8810pl-uart";
- 			reg = <0x0 0x1000>;
-+			interrupts = <9 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
+diff --git a/Documentation/devicetree/bindings/regulator/tps65218.txt b/Documentation/devicetree/bindings/regulator/tps65218.txt
+index 02f0e9b..a9ee377 100644
+--- a/Documentation/devicetree/bindings/regulator/tps65218.txt
++++ b/Documentation/devicetree/bindings/regulator/tps65218.txt
+@@ -16,12 +16,22 @@ Required properties:
+   regulator-dcdc5, regulator-dcdc6, regulator-ldo1, regulator-ls3.
+   Each regulator is defined using the standard binding for regulators.
  
- 		uart2: serial@10000 {
- 			compatible = "rda,8810pl-uart";
- 			reg = <0x10000 0x1000>;
-+			interrupts = <10 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
++Optional properties:
++  If any of these properties is absent, the setting will not be touched.
++- strict-supply-voltage: <1|0> Set/Reset STRICT flag in CONFIG1
++- under-voltage-limit: Select 2.75, 2.95, 3.25 or 3.35V as UVLO in CONFIG1
++- under-voltage-hysteresis: Select 200mV or 400mV UVLOHYS in CONFIG2
++
+ Example:
+ tps65218: tps65218@24 {
+ 	reg = <0x24>;
+ 	compatible = "ti,tps65218";
+ 	interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
+ 	interrupt-controller;
++	strict-supply-voltage = <1>;
++	under-voltage-hysteresis = <400000>;
++	under-voltage-limit = <3350000>;
++
+ 	#interrupt-cells = <2>;
  
- 		uart3: serial@90000 {
- 			compatible = "rda,8810pl-uart";
- 			reg = <0x90000 0x1000>;
-+			interrupts = <11 IRQ_TYPE_LEVEL_HIGH>;
- 			status = "disabled";
- 		};
- 	};
+ 	dcdc1: regulator-dcdc1 {
 -- 
-2.17.1
+2.7.4
