@@ -1,55 +1,44 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
- for Q6V5
-Date: Tue, 18 Dec 2018 08:07:59 -0800
-Message-ID: <CAD=FV=Xuh0pUTcKOGPANmgfeGxQfHwN5RWg+E9srzuGq2_AmAQ@mail.gmail.com>
-References: <20181217100724.4593-1-sibis@codeaurora.org> <20181217100724.4593-2-sibis@codeaurora.org>
- <CAD=FV=Ui6ys4R3nenix3USeRPAd_vVdrArXxdf-iEc=4QRhE+A@mail.gmail.com> <8decd38d8e28c6657949f3c140947977@codeaurora.org>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v3 0/2] gpio: Add a driver for Cadence GPIO controller
+Date: Tue, 18 Dec 2018 16:10:40 +0000
+Message-ID: <20181218161042.16366-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8decd38d8e28c6657949f3c140947977@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>
+To: linus.walleij@linaro.org, bgolaszewski@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This patchset adds a driver support for Cadence GPIO controller.
 
-On Mon, Dec 17, 2018 at 9:52 PM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
-> >>  - clocks:
-> >>         Usage: required
-> >>         Value type: <phandle>
-> >> -       Definition: reference to the iface, bus and mem clocks to be
-> >> held on
-> >> -                   behalf of the booting of the Hexagon core
-> >> +       Definition: reference to the list of 4 clocks for the modem
-> >> sub-system
-> >> +                   reference to the list of 8 clocks for the modem
-> >> sub-system
-> >> +                   on SDM845 SoCs
-> >
-> > The above is confusing because you don't list the SoCs that are
-> > supposed to use the 4 clocks.  How about instead:
-> >
-> > Definition: reference to the clocks that match clock-names
-> >
->
-> AFAIK, only the exceptions are captured. I am fine
-> with both, I'll wait for Bjorn/Rob's preference.
+Number of supported lines is configurable.
+The driver initializes all pins as inputs in probe().
+Currently it only supports level-sensitive interrupts.
 
-Sure, waiting for Bjron / Rob to chime in sounds good.  If you are
-going to document just the exception, though, IMO at least reword it.
-AKA:
+The interrupts controller was tested with I2C and SPI IPs
+acting as interrupt sources.
 
-reference to the list of 8 clocks for the modem sub-system on SDM845
-SoCs; reference to the list of 4 clocks for the modem sub-system on
-all other SoCs.
+Changes since V2:
+	Added spinlocks in request, free and irq_set_type functions.
 
-...the key being the "on all other" to make it clear.  ...but I still
-like my original suggestion of using less prose and more lists, so
-hopefully Bjorn / Rob are OK with that.
+Changes since V1:
+	Switched to generic GPIO infrastructure.
+	Redesigned interrupts, now uses chained irqchip.
+	Drop support for edge-sensitive interrupts.
+	Restore bypass settings at unexport/remove.
 
+Jan Kotas (2):
+  dt-bindings: gpio: Add bindings for Cadence GPIO
+  gpio: Add Cadence GPIO driver
 
--Doug
+ .../devicetree/bindings/gpio/cdns,gpio.txt         |  44 ++++
+ drivers/gpio/Kconfig                               |   8 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-cadence.c                        | 291 +++++++++++++++++++++
+ 4 files changed, 344 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/cdns,gpio.txt
+ create mode 100644 drivers/gpio/gpio-cadence.c
+
+-- 
+2.15.0
