@@ -1,34 +1,36 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V3 02/20] dt-bindings: clock: tegra124-dfll: add Tegra210
- support
-Date: Tue, 18 Dec 2018 10:02:02 -0800
-Message-ID: <154515612274.238328.18319743517874337135@swboyd.mtv.corp.google.com>
-References: <20181218091232.23532-1-josephl@nvidia.com>
- <20181218091232.23532-3-josephl@nvidia.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181218091232.23532-3-josephl@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jonathan Hunter <jonathanh@nvidia.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: msm8998-mtp: Increase load on l21 for sdcard
+Date: Tue, 18 Dec 2018 11:04:43 -0700
+Message-ID: <1545156283-5461-1-git-send-email-jhugo@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Joseph Lo (2018-12-18 01:12:14)
-> Add Tegra210 support for DFLL clock.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
+l21 is used as sdcard vmmc, and needs the load increased to prevent
+voltage drop issues with some sdcards.  This addresses -84 errors seen
+during sdcard init with SDR104 cards.
 
-Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 50e9033..288adbf 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -192,6 +192,8 @@
+ 		vreg_l21a_2p95: l21 {
+ 			regulator-min-microvolt = <2960000>;
+ 			regulator-max-microvolt = <2960000>;
++			regulator-allow-set-load;
++			regulator-system-load = <800000>;
+ 		};
+ 		vreg_l22a_2p85: l22 {
+ 			regulator-min-microvolt = <2864000>;
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
