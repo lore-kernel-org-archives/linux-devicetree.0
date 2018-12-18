@@ -1,51 +1,46 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
-Date: Tue, 18 Dec 2018 18:09:02 +0000
-Message-ID: <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
+Date: Tue, 18 Dec 2018 10:14:26 -0800
+Message-ID: <CAHQ1cqEw47XSfNnohg=VJdQJ+fF-F-nucNm=Qqu5Tt-tZt2-PA@mail.gmail.com>
 References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
- <20181218040702.29231-4-andrew.smirnov@gmail.com>
- <20181218151533.GA2922@bogus>
+ <20181218040702.29231-4-andrew.smirnov@gmail.com> <8149d09e665c4a4efb85a9d60f266d478bee02d8.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <8149d09e665c4a4efb85a9d60f266d478bee02d8.camel@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/18/2018 5:15 PM, Rob Herring wrote:=0A=
-> On Mon, Dec 17, 2018 at 08:07:02PM -0800, Andrey Smirnov wrote:=0A=
->> Add code needed to support i.MX8MQ variant.=0A=
->>=0A=
->> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
->> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>=0A=
-=0A=
->> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt=0A=
->> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt=0A=
->>   =0A=
->> +Additional required properties for imx8mq-pcie:=0A=
->> +- fsl,controller-id: Logical ID of a given PCIE controller. PCIE1 is 0,=
- PCIE2 is 1;=0A=
->> +=0A=
-> =0A=
-> Remove this.=0A=
-> =0A=
-> If GPR register offset is what you need, then put that into DT.=0A=
-> Typically, we'd have a property with iomuxc phandle and offset.=0A=
-=0A=
-This series initially added explicit offsets but I suggested a single =0A=
-"controller-id" because:=0A=
-  * There are multiple bit and byte offsets=0A=
-  * Other imx8 SOCs also have 2x pcie with other bit/byte offsets=0A=
-=0A=
-Hiding this behind a compatible string and single "controller-id" seem =0A=
-preferable to elaborating register maps in dt bindings. It also makes =0A=
-upgrades simpler: if features are added which use other bits there is no =
-=0A=
-need to describe them in DT and deal with compatibility headaches.=0A=
-=0A=
-Link to older thread: https://lkml.org/lkml/2018/11/29/888=0A=
-=0A=
-It's possible my suggestion was misguided.=0A=
+On Tue, Dec 18, 2018 at 1:34 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
+>
+> On Mon, 2018-12-17 at 20:07 -0800, Andrey Smirnov wrote:
+> > Add code needed to support i.MX8MQ variant.
+>
+> >  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+> >  {
+> > +
+> > +
+> Remove empty lines?
+>
+
+Sure, will do.
+
+> > +     unsigned int mask, val, offset;
+> > +
+> > +     mask = IMX6Q_GPR12_DEVICE_TYPE;
+> > +     val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT);
+>
+> ... snip ...
+>
+> > -     regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> > -                     IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
+> > +     regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
+>
+> Maybe setting port type should be a separate function from init_phy?
+
+Sure, will change in v4.
+
+Thanks,
+Andrey Smirnov
