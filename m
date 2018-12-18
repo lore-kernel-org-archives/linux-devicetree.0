@@ -1,55 +1,30 @@
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Subject: Re: [PATCH v2 2/2] gpio: Add Cadence GPIO driver
-Date: Tue, 18 Dec 2018 13:50:48 +0100
-Message-ID: <CAMpxmJUnfnHmopyOfHRZrN1KoqZx_Bsra1BTiGud6UVmzz1ryA@mail.gmail.com>
-References: <20181217153652.20056-1-jank@cadence.com> <20181217153652.20056-3-jank@cadence.com>
- <CAMpxmJXrjyK3m4JwgkxwkHjSj-ugb7UzwNrYcBwYjWwj+JBNxw@mail.gmail.com> <CACRpkdYq5Eg2DrwdED-yTZ4kMoCxew+0rdU-b4zuinOf7BEr6Q@mail.gmail.com>
+From: Marek Behun <marek.behun@nic.cz>
+Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
+Date: Tue, 18 Dec 2018 14:09:20 +0100
+Message-ID: <20181218140920.6935db39@nic.cz>
+References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+        <20181212102142.16053-4-miquel.raynal@bootlin.com>
+        <20181214014701.373b220b@nic.cz>
+        <20181214015712.31f749ea@nic.cz>
+        <20181217170724.58421a29@xps13>
+        <20181217223430.182d01d8@nic.cz>
+        <20181218091817.4a8a5d42@xps13>
+        <20181218092314.725af970@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdYq5Eg2DrwdED-yTZ4kMoCxew+0rdU-b4zuinOf7BEr6Q@mail.gmail.com>
+In-Reply-To: <20181218092314.725af970@xps13>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Jan Kotas <jank@cadence.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-pon., 17 gru 2018 o 23:22 Linus Walleij <linus.walleij@linaro.org> napisa=
-=C5=82(a):
->
-> On Mon, Dec 17, 2018 at 4:51 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
->
-> > The driver looks good but is there any particular reason not to use
-> > regmap for register IO?
->
-> I thought we only use regmap for MMIO when the register range is
-> shared (as in a system controller) so that some registers are for this,
-> some register or even bits in a register for some other driver, so they
-> need the spinlock in the regmap to protect the register range.
->
+> [2]
+> https://github.com/ARM-software/arm-trusted-firmware/blob/master/drivers/marvell/comphy/phy-comphy-3700.c
 
-This is what syscon is for. Regmap simply abstracts any register IO.
-For instance: there's no locking in this driver. Are we sure it's not
-needed? Regmap provides internal locking for you in the form of a
-mutex or spinlock.
+Yes, I used mainline atf (it did not work out of the box with 18.09
+atf-marvell of course). But there is no _power_off function for SGMII,
+nor a digital_reset function like in cp110 implementation.
 
-Also: it looks like the interrupts here are quite simple with a single
-bit per interrupt in the status register and the same layout in the
-mask register - it could probably profit from using the
-regmap_irq_chip and not bother with reimplementing irq_chip callbacks.
-
-> It is also nice for shadowing/caching of register contents I guess,
-> wat does this driver get from regmap MMIO?
->
-
-Code shrinkage IMO.
-
-Note that I'm not blocking this from being merged - I just think that
-using modern frameworks is always a good idea.
-
-Best regards,
-Bartosz Golaszewski
-
-> Yours,
-> Linus Walleij
+Marek
