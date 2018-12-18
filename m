@@ -1,95 +1,96 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH 3/3] drm/bridge: add pwdn-gpios support to the lvds-encoder
-Date: Tue, 18 Dec 2018 23:19:34 +0000
-Message-ID: <20181218231850.3572-4-peda@axentia.se>
-References: <20181218231850.3572-1-peda@axentia.se>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH v2 2/2] of: __of_detach_node() - remove node from phandle cache
+Date: Wed, 19 Dec 2018 10:44:53 +1100
+Message-ID: <87pntys8lm.fsf@concordia.ellerman.id.au>
+References: <1545033396-24485-1-git-send-email-frowand.list@gmail.com> <1545033396-24485-3-git-send-email-frowand.list@gmail.com> <871s6gv30z.fsf@concordia.ellerman.id.au> <b81f9268-a36c-963d-5b1e-d81b38b05143@gmail.com> <CAL_JsqLjc-tWYOT7ga4oAsgx=rpcWX6_cj80pih-kt=KbFVV=w@mail.gmail.com> <893d9327-4353-066d-2efa-414a3db4c282@gmail.com> <6b6a3d11-e60a-f55c-04fa-deafdd58ccec@gmail.com> <CAL_JsqLjhc4LSVKLVm7d+T+74xLK5kYNN0NLZySv1zV0tg5ibQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218231850.3572-1-peda@axentia.se>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqLjhc4LSVKLVm7d+T+74xLK5kYNN0NLZySv1zV0tg5ibQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>
+Cc: mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Optionally power down the LVDS-encoder when it is not in use.
+Rob Herring <robh+dt@kernel.org> writes:
+> On Tue, Dec 18, 2018 at 2:33 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>>
+>> On 12/18/18 12:09 PM, Frank Rowand wrote:
+>> > On 12/18/18 12:01 PM, Rob Herring wrote:
+>> >> On Tue, Dec 18, 2018 at 12:57 PM Frank Rowand <frowand.list@gmail.com> wrote:
+>> >>>
+>> >>> On 12/17/18 2:52 AM, Michael Ellerman wrote:
+>> >>>> Hi Frank,
+>> >>>>
+>> >>>> frowand.list@gmail.com writes:
+>> >>>>> From: Frank Rowand <frank.rowand@sony.com>
+>> >>>>>
+>> >>>>> Non-overlay dynamic devicetree node removal may leave the node in
+>> >>>>> the phandle cache.  Subsequent calls to of_find_node_by_phandle()
+>> >>>>> will incorrectly find the stale entry.  Remove the node from the
+>> >>>>> cache.
+>> >>>>>
+>> >>>>> Add paranoia checks in of_find_node_by_phandle() as a second level
+>> >>>>> of defense (do not return cached node if detached, do not add node
+>> >>>>> to cache if detached).
+>> >>>>>
+>> >>>>> Reported-by: Michael Bringmann <mwb@linux.vnet.ibm.com>
+>> >>>>> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+>> >>>>> ---
+>> >>>>
+>> >>>> Similarly here can we add:
+>> >>>>
+>> >>>> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
+>> >>>
+>> >>> Yes, thanks.
+>> >>>
+>> >>>
+>> >>>> Cc: stable@vger.kernel.org # v4.17+
+>> >>>
+>> >>> Nope, 0b3ce78e90fc does not belong in stable (it is a feature, not a bug
+>> >>> fix).  So the bug will not be in stable.
+>> >>
+>> >> 0b3ce78e90fc landed in v4.17, so Michael's line above is correct.
+>> >> Annotating it with 4.17 only saves Greg from trying and then emailing
+>> >> us to backport this patch as it wouldn't apply.
+>> >
+>> > Thanks for the correction.  I was both under-thinking and over-thinking,
+>> > ending up with an incorrect answer.
+>> >
+>> > Can you add the Cc: to version 3 patch comments (both 1/2 and 2/2) or do
+>> > you want me to re-spin?
+>>
+>> Now that my thinking has been straightened out, a little bit more checking
+>> for the other pre-requisite patches show:
+>>
+>>   v4.18: commit b9952b5218ad ("of: overlay: update phandle cache on overlay apply and remove")
+>>   v4.19: commit e54192b48da7 ("of: fix phandle cache creation for DTs with no phandles")
+>>
+>> These can be addressed by changing the "Cc:" to ... # v4.19+
+>> because stable v4.17.* and v4.18.* are end of life.
+>
+> EOL shouldn't factor into it. There's always the possibility someone
+> else picks any kernel version.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/bridge/lvds-encoder.c | 34 +++++++++++++++++++++++++++++++=
-+++
- 1 file changed, 34 insertions(+)
+Yeah, there are other stable branches out there, so the tag should point
+to the correct version regardless of whether it's currently EOL on
+kernel.org.
 
-diff --git a/drivers/gpu/drm/bridge/lvds-encoder.c b/drivers/gpu/drm/bridge=
-/lvds-encoder.c
-index 75b0d3f6e4de..43d584a6a6b9 100644
---- a/drivers/gpu/drm/bridge/lvds-encoder.c
-+++ b/drivers/gpu/drm/bridge/lvds-encoder.c
-@@ -11,11 +11,13 @@
- #include <drm/drm_bridge.h>
- #include <drm/drm_panel.h>
-=20
-+#include <linux/gpio/consumer.h>
- #include <linux/of_graph.h>
-=20
- struct lvds_encoder {
- 	struct drm_bridge bridge;
- 	struct drm_bridge *panel_bridge;
-+	struct gpio_desc *pwdn_gpio;
- };
-=20
- static int lvds_encoder_attach(struct drm_bridge *bridge)
-@@ -28,8 +30,30 @@ static int lvds_encoder_attach(struct drm_bridge *bridge=
-)
- 				 bridge);
- }
-=20
-+static void lvds_encoder_enable(struct drm_bridge *bridge)
-+{
-+	struct lvds_encoder *lvds_encoder =3D container_of(bridge,
-+							 struct lvds_encoder,
-+							 bridge);
-+
-+	if (lvds_encoder->pwdn_gpio)
-+		gpiod_set_value_cansleep(lvds_encoder->pwdn_gpio, 0);
-+}
-+
-+static void lvds_encoder_disable(struct drm_bridge *bridge)
-+{
-+	struct lvds_encoder *lvds_encoder =3D container_of(bridge,
-+							 struct lvds_encoder,
-+							 bridge);
-+
-+	if (lvds_encoder->pwdn_gpio)
-+		gpiod_set_value_cansleep(lvds_encoder->pwdn_gpio, 1);
-+}
-+
- static struct drm_bridge_funcs funcs =3D {
- 	.attach =3D lvds_encoder_attach,
-+	.enable =3D lvds_encoder_enable,
-+	.disable =3D lvds_encoder_disable,
- };
-=20
- static int lvds_encoder_probe(struct platform_device *pdev)
-@@ -45,6 +69,16 @@ static int lvds_encoder_probe(struct platform_device *pd=
-ev)
- 	if (!lvds_encoder)
- 		return -ENOMEM;
-=20
-+	lvds_encoder->pwdn_gpio =3D devm_gpiod_get_optional(&pdev->dev, "pwdn",
-+							  GPIOD_OUT_HIGH);
-+	if (IS_ERR(lvds_encoder->pwdn_gpio)) {
-+		int err =3D PTR_ERR(lvds_encoder->pwdn_gpio);
-+
-+		if (err !=3D -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "pwdn GPIO failure: %d\n", err);
-+		return err;
-+	}
-+
- 	/* Locate the panel DT node. */
- 	port =3D of_graph_get_port_by_id(pdev->dev.of_node, 1);
- 	if (!port) {
---=20
-2.11.0
+>> Or the pre-requisites can be listed:
+>>
+>>    # v4.17: b9952b5218ad of: overlay: update phandle cache
+>>    # v4.17: e54192b48da7 of: fix phandle cache creation
+>>    # v4.17
+>>
+>>    # v4.18: e54192b48da7 of: fix phandle cache creation
+>>    # v4.18
+>>
+>>    # v4.19+
+>>
+>> Do you have a preference?
+>
+> I think we just list v4.17 and be done with it.
+
+Yep, anyone who wants to backport it can work it out, or ask us.
+
+cheers
