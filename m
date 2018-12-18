@@ -1,67 +1,64 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: [PATCH V3 04/20] dt-bindings: cpufreq: tegra124: remove cpu_lp clock
- from required properties
-Date: Tue, 18 Dec 2018 17:12:16 +0800
-Message-ID: <20181218091232.23532-5-josephl@nvidia.com>
-References: <20181218091232.23532-1-josephl@nvidia.com>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Tue, 18 Dec 2018 17:19:24 +0800
+Message-ID: <1545124764.25199.3.camel@mhfsdcap03>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
+         <20181217143247.GK20725@google.com>
+         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181218091232.23532-1-josephl@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-The cpu_lp clock property is only needed when the CPUfreq driver
-supports CPU cluster switching. But it was not a design for this driver
-and it didn't handle that as well. So removing this property.
+On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
+> On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
+> > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
+> > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
+> > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> > > > > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
+> > > > > in arm64 but bogus alignment values at arm32, the pcie device and devices
+> > > > > behind this bridge will not be enabled. Fix it's BAR0 resource size to
+> > > > > guarantee the pcie devices will be enabled correctly.
+> > > > 
+> > > > So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
+> > > > to 0, and an IO BAR has bit 1 hardwired to 0.
+> > > 
+> > > Yes, it only works properly on 64bit platform.
+> > 
+> > I don't understand.  BARs are supposed to work the same regardless of
+> > whether it's a 32- or 64-bit platform.  If this is a workaround for a
+> > hardware defect, please just say that explicitly.
+> 
+> I do not understand this either. First thing to do is to describe the
+> problem properly so that we can actually find a solution to it.
+> 
+> Lorenzo
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Joseph Lo <josephl@nvidia.com>
-Acked-by: Jon Hunter <jonathanh@nvidia.com>
----
-*V3:
- - no change
-*V2:
- - add ack tag
----
- .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt   | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+This BAR0 is a 64-bit memory BAR, the HW default values for this BAR is
+0xffff_ffff_0000_0000 and it could not be changed except by config write
+operation.
 
-diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-index 031545a29caf..03196d5ea515 100644
---- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-+++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-@@ -9,7 +9,6 @@ Required properties:
-   See ../clocks/clock-bindings.txt for details.
- - clock-names: Must include the following entries:
-   - cpu_g: Clock mux for the fast CPU cluster.
--  - cpu_lp: Clock mux for the low-power CPU cluster.
-   - pll_x: Fast PLL clocksource.
-   - pll_p: Auxiliary PLL used during fast PLL rate changes.
-   - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
-@@ -30,11 +29,10 @@ cpus {
- 		reg = <0>;
- 
- 		clocks = <&tegra_car TEGRA124_CLK_CCLK_G>,
--			 <&tegra_car TEGRA124_CLK_CCLK_LP>,
- 			 <&tegra_car TEGRA124_CLK_PLL_X>,
- 			 <&tegra_car TEGRA124_CLK_PLL_P>,
- 			 <&dfll>;
--		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
-+		clock-names = "cpu_g", "pll_x", "pll_p", "dfll";
- 		clock-latency = <300000>;
- 	};
- 
--- 
-2.20.1
+The calculated BAR size will be 0 in 32-bit platform since the
+phys_addr_t is a 32bit value in 32-bit platform.
+
+Actually MediaTek's HW does not using this BAR0, just omit it when
+assign resource is totally fine.
+
+When assign the resource for each device, software will check the
+resource alignment first, and the resource of length zero will be
+regarded as a bogus alignment resource, it will be ignored and won't
+claim a resource parent for it.
+
+When drivers try to enable the PCIe devices, the software will enable
+it's resources, but it will return an error number when found a
+unclaimed resource, in that case, the flow of enable devices will be
+interrupted and PCIe devices won't work properly.
+
+Thanks.
