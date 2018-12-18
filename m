@@ -1,55 +1,45 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v7 3/6] ARM: dts: qcom: Removed unused
- interrupt-names from GPU node
-Date: Tue, 18 Dec 2018 16:06:28 -0700
-Message-ID: <20181218230628.GE18380@jcrouse-lnx.qualcomm.com>
-References: <20181218183241.12830-1-jcrouse@codeaurora.org>
- <20181218183241.12830-4-jcrouse@codeaurora.org>
- <CAD=FV=Vi2bNCQ-A+h=1w9P15-XwCq7weZJ7LP7HBfs+GMTv=rA@mail.gmail.com>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Wed, 19 Dec 2018 00:14:37 +0100
+Message-ID: <CAFBinCD1x7jcJJx78yNx87MOmKQ2HuSBeRpDRQE0hyNCwm1JAg@mail.gmail.com>
+References: <1545120286-129258-1-git-send-email-hanjie.lin@amlogic.com> <1545120286-129258-2-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Vi2bNCQ-A+h=1w9P15-XwCq7weZJ7LP7HBfs+GMTv=rA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545120286-129258-2-git-send-email-hanjie.lin@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMDI6Mjk6MjVQTSAtMDgwMCwgRG91ZyBBbmRlcnNvbiB3
-cm90ZToKPiBIaSwKPiAKPiBPbiBUdWUsIERlYyAxOCwgMjAxOCBhdCAxMDozMiBBTSBKb3JkYW4g
-Q3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiA+Cj4gPiAnaW50ZXJydXB0
-LW5hbWVzJyBzaG91bGRuJ3QgYmUgdXNlZCBpbiBjYXNlcyB3aGVuIHRoZXJlIGlzIG9ubHkKPiA+
-IG9uZSBpbnRlcnJ1cHQgYW5kIGl0IGlzIG5vdCBvdGhlcndpc2UgdXNlZCBpbiB0aGUgZHJpdmVy
-Lgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9y
-YS5vcmc+Cj4gPiAtLS0KPiA+ICBhcmNoL2FybS9ib290L2R0cy9xY29tLWFwcTgwNjQuZHRzaSB8
-IDEgLQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAxIGRlbGV0aW9uKC0pCj4gCj4gTG9va3MgZ29vZCB0
-byBtZS4gIEl0IHNob3VsZCBiZSBub3RlZCB0aGF0IEFuZHkgc2hvdWxkbid0IGxhbmQgdGhpcwo+
-IHVudGlsIGhlIGhhcyBhIHRyZWUgdGhhdCBjb250YWlucyAoImRybS9tc20vZ3B1OiBSZW1vdmUg
-aGFyZGNvZGVkCj4gaW50ZXJydXB0IG5hbWUiKS4gIC4uLm9yIGhlIHNob3VsZCBBY2sgdGhpcyBh
-bmQgaXQgc2hvdWxkIGdvIHRocm91Z2gKPiB0aGUgc2FtZSB0cmVlIGFzIHRoYXQgcGF0Y2guCj4g
-Cj4gSSdtIGN1cmlvdXM6IGlzIHRoZXJlIGEgcmVhc29uIHlvdSBkaWRuJ3QgcmVtb3ZlIGl0IGZy
-b20gdGhlIG90aGVyIHR3byB1c2Vycz8KPiAKPiBsaW51eG5leHQvbWFzdGVyOmFyY2gvYXJtL2Jv
-b3QvZHRzL2lteDUxLmR0c2k6Cj4gaW50ZXJydXB0LW5hbWVzID0gImtnc2xfM2QwX2lycSI7Cj4g
-bGludXhuZXh0L21hc3RlcjphcmNoL2FybS9ib290L2R0cy9pbXg1My5kdHNpOgo+IGludGVycnVw
-dC1uYW1lcyA9ICJrZ3NsXzNkMF9pcnEiOwoKQmVjYXVzZSB0aG9zZSBhcmVuJ3QgaW4gQW5keSdz
-IHRyZWUuIEkgc3VzcGVjdCBhZnRlciBhbGwgdGhpcyBsYW5kcyB3ZSdsbCBuZWVkCmFub3RoZXIg
-c3dlZXAgdG8gY2xlYW4gdXAgdGhlIGV4dHJhcy4gVGhlcmUgaXMgYWxzbyBhIDg5OTYgZHQgZmxv
-YXRpbmcgYXJvdW5kCnNvbWV3aGVyZS4KCkpvcmRhbgoKPiAuLi5hbHNvOiBpZiB0aGlzIHJlYWxs
-eSBpcyBvbmx5IGZvciAiYXBxODA2NCIgYW5kIG5vdCBnbG9iYWxseSBmb3IgYWxsCj4gcWNvbSBk
-ZXZpY2VzIGl0J2QgYmUgbmljZSB0byBtZW50aW9uICJhcHE4MDY0IiBzb21ld2hlcmUgaW4gdGhl
-Cj4gc3ViamVjdC4KCj4gLURvdWcKCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIs
-IEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlv
-biBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
-Zm8vZnJlZWRyZW5vCg==
+Hi Rob, Hi Hanjie,
+
+(sorry for being late with my question)
+
+On Tue, Dec 18, 2018 at 9:05 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+[...]
+> +- reg-names: Must be
+> +       - "elbi"        External local bus interface registers
+> +       - "cfg"         Meson specific registers
+> +       - "phy"         Meson PCIE PHY registers
+I have learned that there are two PHY register designs:
+- AXG only has a PCIe PHY
+- G12A has a PHY which supports PCIe and USB 3.0. The PCIe part of
+this PHY design is compatible with AXG, but this design also supports
+a USB 3.0 port (it's an exclusive choice: either PCIe *or* USB 3.0)
+
+The PCIe controller itself is identical on both, AXG and G12A.
+This patch adds support for the AXG PCIe controller and PHY within one
+device-tree node.
+
+For G12A I propose to add a separate "phys" property with a phandle to
+the "combo" PCIe and USB3.0 PHY - this can be part of a separate patch
+though.
+I would like to know whether it's OK that for AXG the PCIe PHY is
+described in the same device-tree node as the PCIe controller (in
+other words: we're not using a "phys" property here)?
+
+
+Kind Regards
+Martin
