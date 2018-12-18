@@ -1,75 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v8 03/26] dt-bindings: Add doc for the Ingenic TCU drivers
-Date: Tue, 18 Dec 2018 10:36:36 -0600
-Message-ID: <CAL_JsqLhnitSM7-S1hq8M7S-7BHO5oYByXQ8QD2JkUY3jb63fQ@mail.gmail.com>
-References: <20181212220922.18759-1-paul@crapouillou.net> <20181212220922.18759-4-paul@crapouillou.net>
- <20181217210531.GA29770@bogus> <1545084222.1958.0@smtp.crapouillou.net>
+Subject: Re: [PATCH v2 1/2] dt-bindings: input: Add Raspberry Pi Touchscreen
+Date: Tue, 18 Dec 2018 10:52:42 -0600
+Message-ID: <20181218165242.GA2809@bogus>
+References: <20181211112408.9524-1-nsaenzjulienne@suse.de>
+ <20181211112408.9524-2-nsaenzjulienne@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545084222.1958.0@smtp.crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20181211112408.9524-2-nsaenzjulienne@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, od@zcrc.me
+Cc: linux-kernel@vger.kernel.org, linux-rpi-kernel@lists.infradead.org, stefan.wahren@i2se.com, eric@anholt.net, agraf@suse.de, afaerber@suse.com, Nicolas Saenz Julienne <nsaenzjulienne@suse.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 4:04 PM Paul Cercueil <paul@crapouillou.net> wrote:
->
-> Hi Rob,
->
-> Le lun. 17 d=C3=A9c. 2018 =C3=A0 22:05, Rob Herring <robh@kernel.org> a =
-=C3=A9crit :
-> > On Wed, Dec 12, 2018 at 11:08:58PM +0100, Paul Cercueil wrote:
-> >>  Add documentation about how to properly use the Ingenic TCU
-> >>  (Timer/Counter Unit) drivers from devicetree.
-> >>
-> >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> >>  ---
-> >>
-> >>  Notes:
-> >>       v4: New patch in this series. Corresponds to V2 patches 3-4-5
-> >> with
-> >>           added content.
-> >>
-> >>       v5: - Edited PWM/watchdog DT bindings documentation to point
-> >> to the new
-> >>             document.
-> >>           - Moved main document to
-> >>             Documentation/devicetree/bindings/timer/ingenic,tcu.txt
-> >>           - Updated documentation to reflect the new devicetree
-> >> bindings.
-> >>
-> >>       v6: - Removed PWM/watchdog documentation files as asked by
-> >> upstream
-> >>           - Removed doc about properties that should be implicit
-> >>           - Removed doc about ingenic,timer-channel /
-> >>             ingenic,clocksource-channel as they are gone
-> >>           - Fix WDT clock name in the binding doc
-> >>           - Fix lengths of register areas in watchdog/pwm nodes
-> >>
-> >>       v7: No change
-> >>
-> >>       v8: - Fix address of the PWM node
-> >>           - Added doc about system timer and clocksource children
-> >> nodes
-> >
-> > I thought we'd sorted this out...
->
-> Yeah, well I just can't please everybody. V6/V7 didn't have the
-> system timer or clocksource in devicetree, which was good for
-> you, but then the driver nearly doubled in size and complexity,
-> and Thierry rightfully refused it. Now I'm at the point where
+On Tue, 11 Dec 2018 12:23:53 +0100, Nicolas Saenz Julienne wrote:
+> Adds device tree documentation for Raspberry Pi's official 7"
+> touchscreen.
+> 
+> This binding is meant to be used as an overlay.
+> 
+> Signed-off-by: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
+> ---
+>  .../touchscreen/raspberrypi,firmware-ts.txt   | 26 +++++++++++++++++++
+>  1 file changed, 26 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/input/touchscreen/raspberrypi,firmware-ts.txt
+> 
 
-You mean Daniel?
-
-> I'm trying alternative ways of encoding the information in
-> devicetree, as suggested by various people, just so that you
-> accept it. Because I don't see any other option.
-
-Does the problem boil down to needing to reserve channel x to use PWMx
-pin? If so, just do a mask property of reserved for PWM channels.
-
-Sorry this is going in circles.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
