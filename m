@@ -1,59 +1,55 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] media/sun6i: Allwinner A64 CSI support
-Date: Tue, 18 Dec 2018 16:21:22 +0100
-Message-ID: <20181218152122.4zj6wgbukhrl6ly6@flea>
-References: <20181218113320.4856-1-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 0/3] Finish Armada DRM DT support
+Date: Tue, 18 Dec 2018 16:21:20 +0100
+Message-ID: <1174d7f6742f1c4555f39fbbf2069d7b14193f6c.camel@v3.sk>
+References: <20180710102344.GH17271@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="3jygq7kzqfz5lk2a"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7NA4TQAKGQEWFQ2FAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181218113320.4856-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20180710102344.GH17271@n2100.armlinux.org.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---3jygq7kzqfz5lk2a
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Tue, Dec 18, 2018 at 05:03:14PM +0530, Jagan Teki wrote:
-> This series support CSI on Allwinner A64.
+On Tue, 2018-07-10 at 11:23 +0100, Russell King - ARM Linux wrote:
+> Finish Armada DRM support for DT, finally allowing mainline kernels to
+> use this driver unimpeded.
 > 
-> Tested 640x480, 320x240, 720p, 1080p resolutions UYVY8_2X8 format.
-> 
-> Changes for v4:
-> - update the compatible string order
-> - add proper commit message
-> - included BPI-M64 patch
-> - skipped amarula-a64 patch
-> Changes for v3:
-> - update dt-bindings for A64
-> - set mod clock via csi driver
-> - remove assign clocks from dtsi
-> - remove i2c-gpio opendrian
-> - fix avdd and dovdd supplies
-> - remove vcc-csi pin group supply
-> 
-> Note: This series created on top of H3 changes [1]
-> 
-> [1] https://patchwork.kernel.org/cover/10705905/
+>  arch/arm/boot/dts/dove-cubox.dts     | 43 +++++++++++++++++++++++++++++++
+>  drivers/gpu/drm/armada/Makefile      |  3 +++
+>  drivers/gpu/drm/armada/armada_drv.c  | 29 ++++++++++++++++++---
+>  drivers/gpu/drm/armada/armada_rmem.c | 49 ++++++++++++++++++++++++++++++++++++
+>  4 files changed, 121 insertions(+), 3 deletions(-)
 
-You had memory corruption before, how was this fixed?
+Hi,
 
-Maxime
+thank you for these patches. I've found them while figuring out how to
+make the Armada DRM driver work on an OLPC XO-1.75. Seems like they
+slipped through the cracks and were never applied.
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---3jygq7kzqfz5lk2a--
+With a little more work they indeed seem to work well on my laptop.
+Feel free to slap in my Tested-by tag (and Reviewed-by, if one from me
+is any worth in the DRM land):
+
+Tested-by: Lubomir Rintel <lkundrak@v3.sk>
+Reviewed-by: Lubomir Rintel <lkundrak@v3.sk>
+
+The testing essentially consisted of checking that framebuffer
+emulation, console and "weston --use-pixman" work.
+
+I'll post the XO-1.75 patches that build on top of this soonish. I'm
+fairly new to DRM and they would certainly require significant changes
+before they could be integrated though.
+
+Thanks,
+Lubo
