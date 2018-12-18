@@ -1,80 +1,90 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 6/7] arm64: dts: qcom: sdm845: Add power-domain for
- Q6V5 MSS node
-Date: Tue, 18 Dec 2018 12:08:35 +0530
-Message-ID: <3b86d9853a6448a0a2f2c85deafae1fb@codeaurora.org>
+Subject: Re: [PATCH v2 3/7] dt-bindings: remoteproc: qcom: Fixup regulator
+ dependencies
+Date: Tue, 18 Dec 2018 12:20:41 +0530
+Message-ID: <13e6d8d6bb46dfc31b5bca927b71223f@codeaurora.org>
 References: <20181217100724.4593-1-sibis@codeaurora.org>
- <20181217100724.4593-6-sibis@codeaurora.org>
- <CAD=FV=WEhobH=fBTonJdABYzOqykgk6XYt9=3eoHap8K6rAQKA@mail.gmail.com>
+ <20181217100724.4593-3-sibis@codeaurora.org>
+ <CAD=FV=XNZ5CzKXHogKEGTHgPVg_nbXxVEJR0e9F9usEY3YKEiQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=WEhobH=fBTonJdABYzOqykgk6XYt9=3eoHap8K6rAQKA@mail.gmail.com>
+In-Reply-To: <CAD=FV=XNZ5CzKXHogKEGTHgPVg_nbXxVEJR0e9F9usEY3YKEiQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Doug Anderson <dianders@chromium.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, linux-kernel-owner@vger.kernel.org
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, linux-remoteproc-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Doug,
 Thanks for the review :)
 
-On 2018-12-18 05:32, Doug Anderson wrote:
+On 2018-12-18 05:30, Doug Anderson wrote:
 > Hi,
 > 
 > On Mon, Dec 17, 2018 at 2:08 AM Sibi Sankar <sibis@codeaurora.org> 
 > wrote:
 >> 
->> Add power-domains cx, mx, mss and load_state for Q6V5 MSS node.
+>> Fixup regulator supply dependencies for Q6V5 MSS on MSM996 SoCs.
 >> 
 >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 >> ---
+>>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
 >> 
->> This patch depends on the following bindings:
->> https://patchwork.kernel.org/patch/10725801/ - rpmhpd dt bindings
->> https://patchwork.kernel.org/patch/10725793/ - rpmhpd dt node
->> https://patchwork.kernel.org/patch/10678301/ - AOP QMP dt bindings
->> 
->>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 6 ++++++
->>  1 file changed, 6 insertions(+)
+>> diff --git 
+>> a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt 
+>> b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> index 780adc043b37..98894e6ad456 100644
+>> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> @@ -76,7 +76,9 @@ on the Qualcomm Hexagon core.
+>>         Usage: required
+>>         Value type: <phandle>
+>>         Definition: reference to the regulators to be held on behalf 
+>> of the
+>> -                   booting of the Hexagon core
+>> +                   booting of the Hexagon core on MSM8916 SoCs
+>> +                   reference to the pll-supply regulator to be held 
+>> on behalf
+>> +                   of the booting of the Hexagon core on MSM8996 SoCs
 > 
-> As per my comments on patch #5, I think this patch (AKA patch #6)
-> should be folded in there.
-> 
-
-okay
-
-> 
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi 
->> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 33ff8668828f..56f5f55db9e2 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -1401,6 +1401,12 @@
->>                         qcom,halt-regs = <&tcsr_mutex_regs
->>                                                 0x23000 0x25000 
->> 0x24000>;
->> 
->> +                       power-domains = <&aoss_qmp_pd 
->> AOSS_QMP_LS_MODEM>,
->> +                                       <&rpmhpd SDM845_CX>,
->> +                                       <&rpmhpd SDM845_MX>,
->> +                                       <&rpmhpd SDM845_MSS>;
->> +                       power-domain-names = "load_state", "cx", "mx", 
->> "mss";
-> 
-> I guess you changed this to "load_state" from "aop" before?  Is there
-> code that actually uses this?
+> The prose gets in the way and doesn't add anything.  I also don't
+> understand what you're saying for msm8996.  You're saying that
+> "pll-supply" is required there but none of the others?  That doesn't
+> seem to be true in the code I have in front of me, but maybe I'm
+> missing some patch.  For me, I'd write:
 > 
 
-Bjorn said he will be posting the patch
-for handling power-domains for mss..
+AFAIK, only the exceptions are captured. But your
+suggestion seems more simple/complete. Perhaps I'll
+replace SoCs instead of compatibles? Anyway
+I'll wait for Bjorn/Rob's preference.
 
+> For the compatible strings below the following supplies are required:
+>   "qcom,q6v5-pil"
+>   "qcom,msm8916-mss-pil",
+>   "qcom,msm8974-mss-pil"
+> - cx-supply:
+> - mss-supply:
+> - mx-supply:
+> - pll-supply:
+> Usage: required
+> Value type: <phandle>
+> Definition: reference to the regulators to be held on behalf of the
+>     booting of the Hexagon core
 > 
-> -Doug
 > 
-> -Doug
+> ...and if msm8996 actually needs "pll-supply", you could add in...
+> 
+> For the compatible strings below the following supplies are required:
+>   "qcom,msm8996-mss-pil"
+> - pll-supply:
+> Usage: required
+> Value type: <phandle>
+> Definition: reference to the regulators to be held on behalf of the
+>     booting of the Hexagon core
 
 -- 
 -- Sibi Sankar --
