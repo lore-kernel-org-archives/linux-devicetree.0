@@ -1,80 +1,49 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v4 4/5] leds: trigger: oneshot: Add initialization from Device Tree
-Date: Tue, 18 Dec 2018 16:27:31 +0100
-Message-ID: <1545146852-32207-5-git-send-email-krzk@kernel.org>
-References: <1545146852-32207-1-git-send-email-krzk@kernel.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 2/2] misc: hx8837: add a HiMax HX8837 display controller
+ driver
+Date: Tue, 18 Dec 2018 16:28:05 +0100
+Message-ID: <9e501c50ed5e9a965f7cbedd7079c24d2d95a352.camel@v3.sk>
+References: <20181112023929.650002-1-lkundrak@v3.sk>
+         <20181112023929.650002-2-lkundrak@v3.sk> <20181127074140.GB13965@kroah.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545146852-32207-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <20181127074140.GB13965@kroah.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Raphael Teysseyre <rteysseyre@gmail.com>, Krzysztof Kozlowski <krzk@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Allow initialization of delays used in oneshot trigger from Device
-Tree property.
+On Tue, 2018-11-27 at 08:41 +0100, Greg Kroah-Hartman wrote:
+> On Mon, Nov 12, 2018 at 03:39:29AM +0100, Lubomir Rintel wrote:
+> > HiMax HX8837 is a display controller used on OLPC platforms. It controls
+> > backlight and is able to capture and freeze a frame when the LCD controller
+> > (and the rest of the plaform) is powered off.
+> > 
+> > This driver is based on the same code as drivers/staging/olpc_dcon.
+> > I modernized it to use managed GPIO, device-tree bindings, sysfs attribtue
+> > groups, essentially fixing the staging driver's TODO.
+> 
+> You are creating custom sysfs files, with no Documentation/ABI/ update
+> for us to know what those files are or how they are used :(
+> 
+> Why do you need custom sysfs files in the first place?  Isn't there
+> already an api for this type of device in the kernel?
 
-This is especially useful for embedded systems where the trigger might
-be used early, before bringing up user-space.
+I am actually not sure. I certainly didn't find anything similar.
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/leds/trigger/ledtrig-oneshot.c | 38 ++++++++++++++++++++++++++++++++--
- 1 file changed, 36 insertions(+), 2 deletions(-)
+I've later discovered that this should perhaps be a DRM encoder driver,
+because it sits between the LCDC and the panel; I'm submitting an
+updated RFC version to the dri list.
 
-diff --git a/drivers/leds/trigger/ledtrig-oneshot.c b/drivers/leds/trigger/ledtrig-oneshot.c
-index 95c9be4b6e7e..71baccc00f06 100644
---- a/drivers/leds/trigger/ledtrig-oneshot.c
-+++ b/drivers/leds/trigger/ledtrig-oneshot.c
-@@ -130,6 +130,34 @@ static struct attribute *oneshot_trig_attrs[] = {
- };
- ATTRIBUTE_GROUPS(oneshot_trig);
- 
-+static void pattern_init(struct led_classdev *led_cdev)
-+{
-+	u32 *pattern;
-+	unsigned int size = 0;
-+
-+	pattern = led_classdev_get_default_pattern(led_cdev, &size);
-+	if (!pattern)
-+		goto out_default;
-+
-+	if (size != 2) {
-+		dev_warn(led_cdev->dev,
-+			 "Expected 2 but got %u values for delays pattern\n",
-+			 size);
-+		goto out_default;
-+	}
-+
-+	led_cdev->blink_delay_on = pattern[0];
-+	led_cdev->blink_delay_off = pattern[1];
-+	kfree(pattern);
-+
-+	return;
-+
-+out_default:
-+	kfree(pattern);
-+	led_cdev->blink_delay_on = DEFAULT_DELAY;
-+	led_cdev->blink_delay_off = DEFAULT_DELAY;
-+}
-+
- static int oneshot_trig_activate(struct led_classdev *led_cdev)
- {
- 	struct oneshot_trig_data *oneshot_data;
-@@ -140,8 +168,14 @@ static int oneshot_trig_activate(struct led_classdev *led_cdev)
- 
- 	led_set_trigger_data(led_cdev, oneshot_data);
- 
--	led_cdev->blink_delay_on = DEFAULT_DELAY;
--	led_cdev->blink_delay_off = DEFAULT_DELAY;
-+	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
-+		pattern_init(led_cdev);
-+		/*
-+		 * Mark as initialized even on pattern_init() error because
-+		 * any consecutive call to it would produce the same error.
-+		 */
-+		led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
-+	}
- 
- 	return 0;
- }
--- 
-2.7.4
+Perhaps the color swizzling and frame freezing functionality that's
+exposed via sysfs in this version could be exposed as a DRI property
+instead.
+
+> 
+> thanks,
+> 
+> greg k-h
+
+Lubo
