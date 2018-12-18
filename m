@@ -1,120 +1,198 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v12 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq HW driver
-Date: Tue, 18 Dec 2018 11:13:01 -0800
-Message-ID: <154516038159.238328.2917665370794230521@swboyd.mtv.corp.google.com>
-References: <1544687394-331-1-git-send-email-tdas@codeaurora.org> <1544687394-331-3-git-send-email-tdas@codeaurora.org> <154469510700.19322.7762676027024031719@swboyd.mtv.corp.google.com> <20181213100506.sy3haqjbxtmkthvt@vireshk-i7> <154469596755.19322.16319349046735344084@swboyd.mtv.corp.google.com> <20181218054545.k77jh5lxvmj2zott@vireshk-i7>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V1 1/2] arm64: dts: tegra210: Add SDMMC Auto-cal settings
+Date: Tue, 18 Dec 2018 11:19:46 -0800
+Message-ID: <1545160787-3157-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218054545.k77jh5lxvmj2zott@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>, vincent.guittot@linaro.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Viresh Kumar (2018-12-17 21:45:45)
-> Hi Stephen,
->=20
-> On 13-12-18, 02:12, Stephen Boyd wrote:
-> > Quoting Viresh Kumar (2018-12-13 02:05:06)
-> > > On 13-12-18, 01:58, Stephen Boyd wrote:
-> > > > BTW, Viresh, I see a lockdep splat when cpufreq_init returns an err=
-or
-> > > > upon bringing the policy online the second time. I guess cpufreq_st=
-ats
-> > > > aren't able to be freed from there because they take locks in diffe=
-rent
-> > > > order vs. the normal path?
-> > >=20
-> > > Please share the lockdep report and the steps to reproduce it. I will
-> > > see if I can simulate the failure forcefully..
-> > >=20
-> >=20
-> > It's on a v4.19 kernel with this cpufreq hw driver backported to it. I
-> > think all it takes is to return an error the second time the policy is
-> > initialized when cpufreq_online() calls into the cpufreq driver.
-> >=20
-> >  =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D
-> >  WARNING: possible circular locking dependency detected
-> >  4.19.8 #61 Tainted: G        W
-> >  ------------------------------------------------------
-> >  cpuhp/5/36 is trying to acquire lock:
-> >  000000003e901e8a (kn->count#326){++++}, at: kernfs_remove_by_name_ns+0=
-x44/0x80
-> >=20
-> >  but task is already holding lock:
-> >  00000000dd7f52c3 (&policy->rwsem){++++}, at: cpufreq_policy_free+0x17c=
-/0x1cc
-> >=20
-> >  which lock already depends on the new lock.
-> >=20
-> >=20
-> >  the existing dependency chain (in reverse order) is:
-> >=20
-> >  -> #1 (&policy->rwsem){++++}:
-> >         down_read+0x50/0xcc
-> >         show+0x30/0x78
-> >         sysfs_kf_seq_show+0x17c/0x25c
-> >         kernfs_seq_show+0xb4/0xf8
-> >         seq_read+0x4a8/0x8f0
-> >         kernfs_fop_read+0xe0/0x360
-> >         __vfs_read+0x80/0x328
-> >         vfs_read+0xd0/0x1d4
-> >         ksys_read+0x88/0x118
-> >         __arm64_sys_read+0x4c/0x5c
-> >         el0_svc_common+0x124/0x1c4
-> >         el0_svc_compat_handler+0x64/0x8c
-> >         el0_svc_compat+0x8/0x18
->=20
-> I failed to reproduce it over linux/next.
->=20
-> I had the following changes over linux/next:
-> https://pastebin.ubuntu.com/p/zkVm77PGdY/
+Add SDMMC initial pad offsets used by auto calibration process.
 
-I don't see any failure returned from cpufreq_dt's cpufreq_init()
-function. Maybe put a static int counter =3D 0 and then fail
-cpufreq_init() the second time that it's called for the same policy
-pointer? I have a system with two policies, so I made it fail and return
--EINVAL when the counter =3D=3D 2 and I see the lockdep splat.
+Add SDMMC fixed drive strengths used when calibration timeouts.
+Fixed drive strengths are based on Pre SI Analysis of the pads.
 
->=20
-> I also did savedefconfig to show what all I changed in it. I faked multip=
-le
-> clusters on my hikey960 board, which is not big little..
->=20
-> And here is the command list from history that I ran after boot.
->=20
->   501  grep . /sys/devices/system/cpu/cpufreq/*/*
->   502  grep . /sys/devices/system/cpu/cpufreq/*/*/*
->   503  grep . /sys/devices/system/cpu/cpufreq/*/*/*
->   504  grep . /sys/devices/system/cpu/cpufreq/*/*/*
->   505  grep . /sys/devices/system/cpu/cpufreq/*/*/*
->   506  grep . /sys/devices/system/cpu/cpufreq/*/*
->   507  grep . /sys/devices/system/cpu/cpufreq/*/*
->   508  echo 0 > /sys/devices/system/cpu/cpu4/online=20
->   509  echo 0 > /sys/devices/system/cpu/cpu5/online=20
->   510  echo 0 > /sys/devices/system/cpu/cpu6/online=20
->   511  echo 0 > /sys/devices/system/cpu/cpu7/online=20
->   512  grep . /sys/devices/system/cpu/cpufreq/*/*
->   513  grep . /sys/devices/system/cpu/cpufreq/*/*/*
->   514  grep . /sys/devices/system/cpu/cpufreq/*/*
->   515  echo 1 > /sys/devices/system/cpu/cpu4/online=20
->   516  grep . /sys/devices/system/cpu/cpufreq/*/*
->   517  grep . /sys/devices/system/cpu/cpufreq/*/*/*
->   518  dmesg=20
->=20
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi |  2 ++
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 34 +++++++++++++++++++
+ arch/arm64/boot/dts/nvidia/tegra210.dtsi | 57 ++++++++++++++++++++++++++++++--
+ 3 files changed, 91 insertions(+), 2 deletions(-)
 
-I did the following:
-
-  grep . /sys/devices/system/cpu/cpufreq/*/* >/dev/null
-  echo 0 > /sys/devices/system/cpu/cpu4/online=20
-  echo 0 > /sys/devices/system/cpu/cpu5/online=20
-  echo 0 > /sys/devices/system/cpu/cpu6/online=20
-  echo 0 > /sys/devices/system/cpu/cpu7/online=20
-  echo 1 > /sys/devices/system/cpu/cpu4/online=20
-  dmesg
-
-And boom, lockdep splat.
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 2f3c8e29520d..0631bb9bfcc3 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -311,6 +311,8 @@
+ 		nvidia,pad-autocal-pull-down-offset-hs400 = <0x05>;
+ 		nvidia,pad-autocal-pull-up-offset-1v8-timeout = <0x0a>;
+ 		nvidia,pad-autocal-pull-down-offset-1v8-timeout = <0x0a>;
++		nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x0a>;
++		nvidia,pad-autocal-pull-down-offset-3v3-timeout = <0x0a>;
+ 		nvidia,default-tap = <0x5>;
+ 		nvidia,default-trim = <0x9>;
+ 		nvidia,dqs-trim = <63>;
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index c2091bb16546..3fab6802c335 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -301,6 +301,17 @@
+ 			clock-names = "sdhci";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC1>;
+ 			reset-names = "sdhci";
++			nvidia,pad-autocal-pull-up-offset-3v3-timeout =
++									<0x07>;
++			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
++									<0x07>;
++			nvidia,pad-autocal-pull-up-offset-1v8-timeout = <0x06>;
++			nvidia,pad-autocal-pull-down-offset-1v8-timeout =
++									<0x07>;
++			nvidia,pad-autocal-pull-up-offset-sdr104 = <0x00>;
++			nvidia,pad-autocal-pull-down-offset-sdr104 = <0x00>;
++			nvidia,default-tap = <0x9>;
++			nvidia,default-trim = <0x5>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -312,6 +323,18 @@
+ 			clock-names = "sdhci";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC3>;
+ 			reset-names = "sdhci";
++			nvidia,pad-autocal-pull-up-offset-1v8 = <0x00>;
++			nvidia,pad-autocal-pull-down-offset-1v8 = <0x7a>;
++			nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x07>;
++			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
++									<0x07>;
++			nvidia,pad-autocal-pull-up-offset-1v8-timeout = <0x06>;
++			nvidia,pad-autocal-pull-down-offset-1v8-timeout =
++									<0x07>;
++			nvidia,pad-autocal-pull-up-offset-sdr104 = <0x00>;
++			nvidia,pad-autocal-pull-down-offset-sdr104 = <0x00>;
++			nvidia,default-tap = <0x9>;
++			nvidia,default-trim = <0x5>;
+ 			status = "disabled";
+ 		};
+ 
+@@ -323,6 +346,17 @@
+ 			clock-names = "sdhci";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
+ 			reset-names = "sdhci";
++			nvidia,pad-autocal-pull-up-offset-hs400 = <0x00>;
++			nvidia,pad-autocal-pull-down-offset-hs400 = <0x00>;
++			nvidia,pad-autocal-pull-up-offset-1v8-timeout = <0x0a>;
++			nvidia,pad-autocal-pull-down-offset-1v8-timeout =
++									<0x0a>;
++			nvidia,pad-autocal-pull-up-offset-3v3-timeout = <0x0a>;
++			nvidia,pad-autocal-pull-down-offset-3v3-timeout =
++									<0x0a>;
++			nvidia,default-tap = <0x8>;
++			nvidia,default-trim = <0x14>;
++			nvidia,dqs-trim = <40>;
+ 			status = "disabled";
+ 		};
+ 
+diff --git a/arch/arm64/boot/dts/nvidia/tegra210.dtsi b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+index 2205d66b0443..41408df9d4e9 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra210.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra210.dtsi
+@@ -476,6 +476,48 @@
+ 		compatible = "nvidia,tegra210-pinmux";
+ 		reg = <0x0 0x700008d4 0x0 0x29c>, /* Pad control registers */
+ 		      <0x0 0x70003000 0x0 0x294>; /* Mux registers */
++		sdmmc1_3v3_drv: sdmmc1-3v3-drv {
++			sdmmc1 {
++				nvidia,pins = "drive_sdmmc1";
++				nvidia,pull-down-strength = <0x8>;
++				nvidia,pull-up-strength = <0x8>;
++			};
++		};
++		sdmmc1_1v8_drv: sdmmc1-1v8-drv {
++			sdmmc1 {
++				nvidia,pins = "drive_sdmmc1";
++				nvidia,pull-down-strength = <0x4>;
++				nvidia,pull-up-strength = <0x3>;
++			};
++		};
++		sdmmc2_1v8_drv: sdmmc2-1v8-drv {
++			sdmmc2 {
++				nvidia,pins = "drive_sdmmc2";
++				nvidia,pull-down-strength = <0x10>;
++				nvidia,pull-up-strength = <0x10>;
++			};
++		};
++		sdmmc3_3v3_drv: sdmmc3-3v3-drv {
++			sdmmc3 {
++				nvidia,pins = "drive_sdmmc3";
++				nvidia,pull-down-strength = <0x8>;
++				nvidia,pull-up-strength = <0x8>;
++			};
++		};
++		sdmmc3_1v8_drv: sdmmc3-1v8-drv {
++			sdmmc3 {
++				nvidia,pins = "drive_sdmmc3";
++				nvidia,pull-down-strength = <0x4>;
++				nvidia,pull-up-strength = <0x3>;
++			};
++		};
++		sdmmc4_1v8_drv: sdmmc4-1v8-drv {
++			sdmmc4 {
++				nvidia,pins = "drive_sdmmc4";
++				nvidia,pull-down-strength = <0x10>;
++				nvidia,pull-up-strength = <0x10>;
++			};
++		};
+ 	};
+ 
+ 	/*
+@@ -1050,9 +1092,12 @@
+ 		clock-names = "sdhci";
+ 		resets = <&tegra_car 14>;
+ 		reset-names = "sdhci";
+-		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
++		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
++				"sdmmc-3v3-drv", "sdmmc-1v8-drv";
+ 		pinctrl-0 = <&sdmmc1_3v3>;
+ 		pinctrl-1 = <&sdmmc1_1v8>;
++		pinctrl-2 = <&sdmmc1_3v3_drv>;
++		pinctrl-3 = <&sdmmc1_1v8_drv>;
+ 		nvidia,pad-autocal-pull-up-offset-3v3 = <0x00>;
+ 		nvidia,pad-autocal-pull-down-offset-3v3 = <0x7d>;
+ 		nvidia,pad-autocal-pull-up-offset-1v8 = <0x7b>;
+@@ -1075,6 +1120,8 @@
+ 		clock-names = "sdhci";
+ 		resets = <&tegra_car 9>;
+ 		reset-names = "sdhci";
++		pinctrl-names = "sdmmc-1v8-drv";
++		pinctrl-0 = <&sdmmc2_1v8_drv>;
+ 		nvidia,pad-autocal-pull-up-offset-1v8 = <0x05>;
+ 		nvidia,pad-autocal-pull-down-offset-1v8 = <0x05>;
+ 		nvidia,default-tap = <0x8>;
+@@ -1090,9 +1137,12 @@
+ 		clock-names = "sdhci";
+ 		resets = <&tegra_car 69>;
+ 		reset-names = "sdhci";
+-		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8";
++		pinctrl-names = "sdmmc-3v3", "sdmmc-1v8",
++				"sdmmc-3v3-drv", "sdmmc-1v8-drv";
+ 		pinctrl-0 = <&sdmmc3_3v3>;
+ 		pinctrl-1 = <&sdmmc3_1v8>;
++		pinctrl-2 = <&sdmmc3_3v3_drv>;
++		pinctrl-3 = <&sdmmc3_1v8_drv>;
+ 		nvidia,pad-autocal-pull-up-offset-3v3 = <0x00>;
+ 		nvidia,pad-autocal-pull-down-offset-3v3 = <0x7d>;
+ 		nvidia,pad-autocal-pull-up-offset-1v8 = <0x7b>;
+@@ -1110,6 +1160,9 @@
+ 		clock-names = "sdhci";
+ 		resets = <&tegra_car 15>;
+ 		reset-names = "sdhci";
++		pinctrl-names = "sdmmc-3v3-drv", "sdmmc-1v8-drv";
++		pinctrl-0 = <&sdmmc4_1v8_drv>;
++		pinctrl-1 = <&sdmmc4_1v8_drv>;
+ 		nvidia,pad-autocal-pull-up-offset-1v8 = <0x05>;
+ 		nvidia,pad-autocal-pull-down-offset-1v8 = <0x05>;
+ 		nvidia,default-tap = <0x8>;
+-- 
+2.7.4
