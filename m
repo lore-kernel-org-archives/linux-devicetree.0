@@ -1,34 +1,37 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v5 03/11] ARM: Prepare RDA8810PL SoC
-Date: Tue, 18 Dec 2018 14:51:32 +0100
-Message-ID: <CAK8P3a3h8upNttd15EfBTAAP_EQEbQ0fsqtjjzYy9QZdzj=jmQ@mail.gmail.com>
-References: <20181218034132.5070-1-manivannan.sadhasivam@linaro.org> <20181218034132.5070-4-manivannan.sadhasivam@linaro.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 0/4] Cleanup un-used variant and un-used property for
+ MediaTek PCIe
+Date: Tue, 18 Dec 2018 13:52:51 +0000
+Message-ID: <20181218135251.GA3560@e107981-ln.cambridge.arm.com>
+References: <1544750742-31419-1-git-send-email-honghui.zhang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218034132.5070-4-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1544750742-31419-1-git-send-email-honghui.zhang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Olof Johansson <olof@lixom.net>, Rob Herring <robh+dt@kernel.org>, gregkh <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-unisoc@lists.infradead.org, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-serial@vger.kernel.org, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, zhao_steven@263.net
+To: honghui.zhang@mediatek.com
+Cc: bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, ryder.lee@mediatek.com, matthias.bgg@gmail.com, robh+dt@kernel.org, robh@kernel.org, devicetree@vger.kernel.org, youlin.pei@mediatek.com, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 4:42 AM Manivannan Sadhasivam
-<manivannan.sadhasivam@linaro.org> wrote:
+On Fri, Dec 14, 2018 at 09:25:38AM +0800, honghui.zhang@mediatek.com wrote:
+> From: Honghui Zhang <honghui.zhang@mediatek.com>
+> 
+> The "num-lanes" property in MediaTek's PCIe device node is not used by
+> its driver or anyone else, cleanup those related code.
+> 
+> Honghui Zhang (4):
+>   PCI: mediatek: Remove un-used variant in struct mtk_pcie_port
+>   dt-bindings: PCI: MediaTek: Remove un-used property
+>   arm: dts: mt7623: Remove un-used property for PCIe
+>   arm64: dts: mt7622: Remove un-used property for PCIe
+> 
+>  Documentation/devicetree/bindings/pci/mediatek-pcie.txt | 8 --------
+>  arch/arm/boot/dts/mt7623.dtsi                           | 3 ---
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi                | 2 --
+>  drivers/pci/controller/pcie-mediatek.c                  | 8 --------
+>  4 files changed, 21 deletions(-)
 
-> --- /dev/null
-> +++ b/arch/arm/mach-rda/Kconfig
-> @@ -0,0 +1,9 @@
-> +menuconfig ARCH_RDA
-> +       bool "RDA Micro SoCs"
-> +       depends on ARCH_MULTI_V7
-> +       select COMMON_CLK
-> +       select GENERIC_IRQ_CHIP
-> +       select RDA_INTC
-> +       select RDA_TIMER
-> +       help
-> +         This enables support for the RDA Micro 8810PL SoC family.
+Applied to pci/mediatek for v4.21, thanks.
 
-I would drop the 'COMMON_CLK' and 'GENERIC_IRQ_CHIP' selects here,
-as they are implied by ARCH_MULTI_V7.
-
-      Arnd
+Lorenzo
