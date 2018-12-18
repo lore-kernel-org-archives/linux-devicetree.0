@@ -1,8 +1,8 @@
 From: Joseph Lo <josephl@nvidia.com>
-Subject: [PATCH V3 03/20] dt-bindings: cpufreq: tegra124: remove
- vdd-cpu-supply from required properties
-Date: Tue, 18 Dec 2018 17:12:15 +0800
-Message-ID: <20181218091232.23532-4-josephl@nvidia.com>
+Subject: [PATCH V3 04/20] dt-bindings: cpufreq: tegra124: remove cpu_lp clock
+ from required properties
+Date: Tue, 18 Dec 2018 17:12:16 +0800
+Message-ID: <20181218091232.23532-5-josephl@nvidia.com>
 References: <20181218091232.23532-1-josephl@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,9 +22,9 @@ To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@
 Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra124 cpufreq driver works only with DFLL clock, which is a
-hardware-based frequency/voltage controller. The driver doesn't need to
-control the regulator itself. Hence remove that.
+The cpu_lp clock property is only needed when the CPUfreq driver
+supports CPU cluster switching. But it was not a design for this driver
+and it didn't handle that as well. So removing this property.
 
 Cc: devicetree@vger.kernel.org
 Signed-off-by: Joseph Lo <josephl@nvidia.com>
@@ -35,28 +35,33 @@ Acked-by: Jon Hunter <jonathanh@nvidia.com>
 *V2:
  - add ack tag
 ---
- .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt     | 2 --
- 1 file changed, 2 deletions(-)
+ .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt   | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-index b1669fbfb740..031545a29caf 100644
+index 031545a29caf..03196d5ea515 100644
 --- a/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
 +++ b/Documentation/devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt
-@@ -13,7 +13,6 @@ Required properties:
+@@ -9,7 +9,6 @@ Required properties:
+   See ../clocks/clock-bindings.txt for details.
+ - clock-names: Must include the following entries:
+   - cpu_g: Clock mux for the fast CPU cluster.
+-  - cpu_lp: Clock mux for the low-power CPU cluster.
    - pll_x: Fast PLL clocksource.
    - pll_p: Auxiliary PLL used during fast PLL rate changes.
    - dfll: Fast DFLL clocksource that also automatically scales CPU voltage.
--- vdd-cpu-supply: Regulator for CPU voltage
+@@ -30,11 +29,10 @@ cpus {
+ 		reg = <0>;
  
- Optional properties:
- - clock-latency: Specify the possible maximum transition latency for clock,
-@@ -37,7 +36,6 @@ cpus {
+ 		clocks = <&tegra_car TEGRA124_CLK_CCLK_G>,
+-			 <&tegra_car TEGRA124_CLK_CCLK_LP>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_X>,
+ 			 <&tegra_car TEGRA124_CLK_PLL_P>,
  			 <&dfll>;
- 		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
+-		clock-names = "cpu_g", "cpu_lp", "pll_x", "pll_p", "dfll";
++		clock-names = "cpu_g", "pll_x", "pll_p", "dfll";
  		clock-latency = <300000>;
--		vdd-cpu-supply: <&vdd_cpu>;
  	};
  
- 	<...>
 -- 
 2.20.1
