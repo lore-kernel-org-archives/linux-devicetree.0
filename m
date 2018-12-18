@@ -1,79 +1,262 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Tue, 18 Dec 2018 15:32:32 +0000
-Message-ID: <20181218153232.GA6715@e107981-ln.cambridge.arm.com>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
- <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
- <20181213145517.GB4701@google.com>
- <1545034779.8528.8.camel@mhfsdcap03>
- <20181217143247.GK20725@google.com>
- <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
- <1545124764.25199.3.camel@mhfsdcap03>
+From: Thor Thayer <thor.thayer@linux.intel.com>
+Subject: Re: [PATCH v2 net-next 05/10] net: eth: altera: Move common functions
+ to altera_utils
+Date: Tue, 18 Dec 2018 09:37:41 -0600
+Message-ID: <82ca2c48-ec33-315e-dbdb-71ec01b6b9e9@linux.intel.com>
+References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
+ <20181213175252.21143-6-dalon.westergreen@linux.intel.com>
+Reply-To: thor.thayer@linux.intel.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545124764.25199.3.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181213175252.21143-6-dalon.westergreen@linux.intel.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: dwesterg@gmail.com, netdev@vger.kernel.org, dinguyen@kernel.org, richardcochran@gmail.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, "mark.rutland@arm.commark.rutland"@arm.com, devicetree@vger.kernel.org, hean.loong.ong@intel.com
+Cc: Dalon Westergreen <dalon.westergreen@intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
-> On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
-> > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
-> > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
-> > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
-> > > > > > in arm64 but bogus alignment values at arm32, the pcie device and devices
-> > > > > > behind this bridge will not be enabled. Fix it's BAR0 resource size to
-> > > > > > guarantee the pcie devices will be enabled correctly.
-> > > > > 
-> > > > > So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
-> > > > > to 0, and an IO BAR has bit 1 hardwired to 0.
-> > > > 
-> > > > Yes, it only works properly on 64bit platform.
-> > > 
-> > > I don't understand.  BARs are supposed to work the same regardless of
-> > > whether it's a 32- or 64-bit platform.  If this is a workaround for a
-> > > hardware defect, please just say that explicitly.
-> > 
-> > I do not understand this either. First thing to do is to describe the
-> > problem properly so that we can actually find a solution to it.
-> > 
-> > Lorenzo
+On 12/13/18 11:52 AM, dwesterg@gmail.com wrote:
+> From: Dalon Westergreen <dalon.westergreen@intel.com>
 > 
-> This BAR0 is a 64-bit memory BAR, the HW default values for this BAR is
-> 0xffff_ffff_0000_0000 and it could not be changed except by config write
-> operation.
+> Move request_and_map and other shared functions to altera_utils. This
+> is the first step to moving common code out of tse specific code so
+> that it can be shared with future altera ethernet ip.
 > 
-> The calculated BAR size will be 0 in 32-bit platform since the
-> phys_addr_t is a 32bit value in 32-bit platform.
+> Signed-off-by: Dalon Westergreen <dalon.westergreen@intel.com>
+> ---
+>   drivers/net/ethernet/altera/altera_tse.h      | 45 ------------------
+>   .../net/ethernet/altera/altera_tse_ethtool.c  |  1 +
+>   drivers/net/ethernet/altera/altera_tse_main.c | 32 +------------
+>   drivers/net/ethernet/altera/altera_utils.c    | 30 ++++++++++++
+>   drivers/net/ethernet/altera/altera_utils.h    | 46 +++++++++++++++++++
+>   5 files changed, 78 insertions(+), 76 deletions(-)
 > 
-> Actually MediaTek's HW does not using this BAR0, just omit it when
-> assign resource is totally fine.
+> diff --git a/drivers/net/ethernet/altera/altera_tse.h b/drivers/net/ethernet/altera/altera_tse.h
+> index 7f246040135d..f435fb0eca90 100644
+> --- a/drivers/net/ethernet/altera/altera_tse.h
+> +++ b/drivers/net/ethernet/altera/altera_tse.h
+> @@ -500,49 +500,4 @@ struct altera_tse_private {
+>    */
+>   void altera_tse_set_ethtool_ops(struct net_device *);
+>   
+> -static inline
+> -u32 csrrd32(void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -	return readl(paddr);
+> -}
+> -
+> -static inline
+> -u16 csrrd16(void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -	return readw(paddr);
+> -}
+> -
+> -static inline
+> -u8 csrrd8(void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -	return readb(paddr);
+> -}
+> -
+> -static inline
+> -void csrwr32(u32 val, void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -
+> -	writel(val, paddr);
+> -}
+> -
+> -static inline
+> -void csrwr16(u16 val, void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -
+> -	writew(val, paddr);
+> -}
+> -
+> -static inline
+> -void csrwr8(u8 val, void __iomem *mac, size_t offs)
+> -{
+> -	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> -
+> -	writeb(val, paddr);
+> -}
+> -
+>   #endif /* __ALTERA_TSE_H__ */
+> diff --git a/drivers/net/ethernet/altera/altera_tse_ethtool.c b/drivers/net/ethernet/altera/altera_tse_ethtool.c
+> index 7c367713c3e6..2998655ab316 100644
+> --- a/drivers/net/ethernet/altera/altera_tse_ethtool.c
+> +++ b/drivers/net/ethernet/altera/altera_tse_ethtool.c
+> @@ -33,6 +33,7 @@
+>   #include <linux/phy.h>
+>   
+>   #include "altera_tse.h"
+> +#include "altera_utils.h"
+>   
+>   #define TSE_STATS_LEN	31
+>   #define TSE_NUM_REGS	128
+> diff --git a/drivers/net/ethernet/altera/altera_tse_main.c b/drivers/net/ethernet/altera/altera_tse_main.c
+> index f6b6a14b1ce9..b25d03506470 100644
+> --- a/drivers/net/ethernet/altera/altera_tse_main.c
+> +++ b/drivers/net/ethernet/altera/altera_tse_main.c
+> @@ -34,7 +34,6 @@
+>   #include <linux/if_vlan.h>
+>   #include <linux/init.h>
+>   #include <linux/interrupt.h>
+> -#include <linux/io.h>
+>   #include <linux/kernel.h>
+>   #include <linux/module.h>
+>   #include <linux/mii.h>
+> @@ -44,7 +43,7 @@
+>   #include <linux/of_net.h>
+>   #include <linux/of_platform.h>
+>   #include <linux/phy.h>
+> -#include <linux/platform_device.h>
+> +#include <linux/ptp_classify.h>
+>   #include <linux/skbuff.h>
+>   #include <asm/cacheflush.h>
+>   
+> @@ -1332,35 +1331,6 @@ static struct net_device_ops altera_tse_netdev_ops = {
+>   	.ndo_validate_addr	= eth_validate_addr,
+>   };
+>   
+> -static int request_and_map(struct platform_device *pdev, const char *name,
+> -			   struct resource **res, void __iomem **ptr)
+> -{
+> -	struct resource *region;
+> -	struct device *device = &pdev->dev;
+> -
+> -	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> -	if (*res == NULL) {
+> -		dev_err(device, "resource %s not defined\n", name);
+> -		return -ENODEV;
+> -	}
+> -
+> -	region = devm_request_mem_region(device, (*res)->start,
+> -					 resource_size(*res), dev_name(device));
+> -	if (region == NULL) {
+> -		dev_err(device, "unable to request %s\n", name);
+> -		return -EBUSY;
+> -	}
+> -
+> -	*ptr = devm_ioremap_nocache(device, region->start,
+> -				    resource_size(region));
+> -	if (*ptr == NULL) {
+> -		dev_err(device, "ioremap_nocache of %s failed!", name);
+> -		return -ENOMEM;
+> -	}
+> -
+> -	return 0;
+> -}
+> -
+>   /* Probe Altera TSE MAC device
+>    */
+>   static int altera_tse_probe(struct platform_device *pdev)
+> diff --git a/drivers/net/ethernet/altera/altera_utils.c b/drivers/net/ethernet/altera/altera_utils.c
+> index d7eeb1713ad2..bc33b7f0b0c5 100644
+> --- a/drivers/net/ethernet/altera/altera_utils.c
+> +++ b/drivers/net/ethernet/altera/altera_utils.c
+> @@ -42,3 +42,33 @@ int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask)
+>   	u32 value = csrrd32(ioaddr, offs);
+>   	return (value & bit_mask) ? 0 : 1;
+>   }
+> +
+> +int request_and_map(struct platform_device *pdev, const char *name,
+> +		    struct resource **res, void __iomem **ptr)
+> +{
+> +	struct resource *region;
+> +	struct device *device = &pdev->dev;
+> +
+> +	*res = platform_get_resource_byname(pdev, IORESOURCE_MEM, name);
+> +	if (!*res) {
+> +		dev_err(device, "resource %s not defined\n", name);
+> +		return -ENODEV;
+> +	}
+> +
+> +	region = devm_request_mem_region(device, (*res)->start,
+> +					 resource_size(*res), dev_name(device));
+> +	if (!region) {
+> +		dev_err(device, "unable to request %s\n", name);
+> +		return -EBUSY;
+> +	}
+> +
+> +	*ptr = devm_ioremap_nocache(device, region->start,
+> +				    resource_size(region));
+> +	if (!*ptr) {
+> +		dev_err(device, "ioremap_nocache of %s failed!", name);
+> +		return -ENOMEM;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> diff --git a/drivers/net/ethernet/altera/altera_utils.h b/drivers/net/ethernet/altera/altera_utils.h
+> index baf100ccf587..bb7eff792bb7 100644
+> --- a/drivers/net/ethernet/altera/altera_utils.h
+> +++ b/drivers/net/ethernet/altera/altera_utils.h
+> @@ -14,7 +14,9 @@
+>    * this program.  If not, see <http://www.gnu.org/licenses/>.
+>    */
+>   
+> +#include <linux/io.h>
+>   #include <linux/kernel.h>
+> +#include <linux/platform_device.h>
+>   
+>   #ifndef __ALTERA_UTILS_H__
+>   #define __ALTERA_UTILS_H__
+> @@ -23,5 +25,49 @@ void tse_set_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+>   void tse_clear_bit(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+>   int tse_bit_is_set(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+>   int tse_bit_is_clear(void __iomem *ioaddr, size_t offs, u32 bit_mask);
+> +int request_and_map(struct platform_device *pdev, const char *name,
+> +		    struct resource **res, void __iomem **ptr);
+> +
+> +static inline u32 csrrd32(void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	return readl(paddr);
+> +}
+> +
+> +static inline u16 csrrd16(void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	return readw(paddr);
+> +}
+> +
+> +static inline u8 csrrd8(void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	return readb(paddr);
+> +}
+> +
+> +static inline void csrwr32(u32 val, void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	writel(val, paddr);
+> +}
+> +
+> +static inline void csrwr16(u16 val, void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	writew(val, paddr);
+> +}
+> +
+> +static inline void csrwr8(u8 val, void __iomem *mac, size_t offs)
+> +{
+> +	void __iomem *paddr = (void __iomem *)((uintptr_t)mac + offs);
+> +
+> +	writeb(val, paddr);
+> +}
+>   
+>   #endif /* __ALTERA_UTILS_H__*/
 > 
-> When assign the resource for each device, software will check the
-> resource alignment first, and the resource of length zero will be
-> regarded as a bogus alignment resource, it will be ignored and won't
-> claim a resource parent for it.
-> 
-> When drivers try to enable the PCIe devices, the software will enable
-> it's resources, but it will return an error number when found a
-> unclaimed resource, in that case, the flow of enable devices will be
-> interrupted and PCIe devices won't work properly.
-
-As a starting point, please provide kernel logs for both 64-bit and
-32-bit platforms (without this patch applied) and also a:
-
-cat /proc/iomem
-
-and
-
-lspci
-
-output for both configurations.
-
-Thanks,
-Lorenzo
+Acked-by: Thor Thayer <thor.thayer@linux.intel.com>
