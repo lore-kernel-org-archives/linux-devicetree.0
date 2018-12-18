@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 3/6] media: sun6i: Update default CSI_SCLK
- for A64
-Date: Tue, 18 Dec 2018 17:03:17 +0530
-Message-ID: <20181218113320.4856-4-jagan@amarulasolutions.com>
+Subject: [PATCH v4 5/6] arm64: dts: allwinner: a64: Add pinmux
+ setting for CSI MCLK on PE1
+Date: Tue, 18 Dec 2018 17:03:19 +0530
+Message-ID: <20181218113320.4856-6-jagan@amarulasolutions.com>
 References: <20181218113320.4856-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBEFW4PQAKGQEI7C3HPA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBE5W4PQAKGQEZKOWICQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20181218113320.4856-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,34 +20,33 @@ To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalh
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Unfortunately A64 CSI cannot work with default CSI_SCLK rate.
+Some camera modules have the SoC feeding a master clock to the sensor
+instead of having a standalone crystal. This clock signal is generated
+from the clock control unit and output from the CSI MCLK function of
+pin PE1.
 
-A64 BSP is using 300MHz clock rate as default csi clock,
-so sun6i_csi require explicit change to update CSI_SCLK
-rate to 300MHZ for A64 SoC's.
-
-So, set the clk_mod to 300MHz only for A64.
+Add a pinmux setting for it for camera sensors to reference.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 5 +++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
  1 file changed, 5 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-index 9ff61896e4bb..91470edf7581 100644
---- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -822,6 +822,11 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
- 		return PTR_ERR(sdev->clk_mod);
- 	}
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 89a0deb3fe6a..dd5740bc3fc9 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -538,6 +538,11 @@
+ 				function = "csi0";
+ 			};
  
-+	/* A64 require 300MHz mod clock to operate properly */
-+	if (of_device_is_compatible(pdev->dev.of_node,
-+				    "allwinner,sun50i-a64-csi"))
-+		clk_set_rate_exclusive(sdev->clk_mod, 300000000);
++			csi_mclk_pin: csi-mclk {
++				pins = "PE1";
++				function = "csi0";
++			};
 +
- 	sdev->clk_ram = devm_clk_get(&pdev->dev, "ram");
- 	if (IS_ERR(sdev->clk_ram)) {
- 		dev_err(&pdev->dev, "Unable to acquire dram-csi clock\n");
+ 			i2c0_pins: i2c0_pins {
+ 				pins = "PH0", "PH1";
+ 				function = "i2c0";
 -- 
 2.18.0.321.gffc6fa0e3
