@@ -1,50 +1,79 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCH v1 00/12] Add some functionalities for Tegra soctherm
-Date: Tue, 18 Dec 2018 15:50:32 +0800
-Message-ID: <42b0cd92-ebf3-4e92-dda9-c9e2e4f88d3c@nvidia.com>
-References: <1545118484-23641-1-git-send-email-wni@nvidia.com>
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: [PATCH v7 0/2] add the Amlogic Meson PCIe controller driver
+Date: Tue, 18 Dec 2018 15:56:48 +0800
+Message-ID: <1545119811-26911-1-git-send-email-hanjie.lin@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545118484-23641-1-git-send-email-wni@nvidia.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org
-Cc: rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: Hanjie Lin <hanjie.lin@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Jerome Brunet <jbrunet@baylibre.com>, Rob Herring <robh@kernel.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Sorry, please ignore this cover-letter.
+The Amlogic Meson PCIe host controller is based on the Synopsys DesignWare
+PCI core. This patchset add the driver and dt-bindings of the controller.
+Changes since v7: [6]
+ - include files in alphabetical order
+ - get rid of unused MACROs and variables
+ - optimize meson_pcie_link_up() while loop
+ 
+Changes since v6: [5]
+ - fix bad usage of ERR_PTR(ENXIO)
+ - fix meson_pcie_rd_own_conf() when read PCI_CLASS_DEVICE reg 
 
-Wei.
+Changes since v5: [4]
+ - update MAINTAINER file in alphabetical order
+ - remove meaningless comment
+ - use ERR_PTR function instead of (void *) cast
+ - use is_power_of_2(size) instead of size & (size - 1)
+ - add comment for PCI_CLASS_REVISION register operation
+ 
+Changes since v4: [3]
+ - fix kbuild test robot and compile warnings
 
-On 18/12/2018 3:34 PM, Wei Ni wrote:
-> Move the hw/sw shutdown patches into this serial. There already have
-> some discussion for it in https://lkml.org/lkml/2018/12/7/225.
-> Support GPU HW throttle, thermal IRQ, set_trips(), EDP IRQ and OC
-> hw throttle.
-> 
-> Wei Ni (12):
->   of: Add bindings of thermtrip for Tegra soctherm
->   thermal: tegra: support hw and sw shutdown
->   arm64: dts: tegra210: set thermtrip
->   of: Add bindings of gpu hw throttle for Tegra soctherm
->   thermal: tegra: add support for gpu hw-throttle
->   arm64: dts: tegra210: set gpu hw throttle level
->   thermal: tegra: add support for thermal IRQ
->   thermal: tegra: add set_trips functionality
->   thermal: tegra: add support for EDP IRQ
->   arm64: dts: tegra210: set EDP interrupt line
->   of: Add bindings of OC hw throttle for Tegra soctherm
->   thermal: tegra: enable OC hw throttle
-> 
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  63 +-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  20 +-
->  drivers/thermal/tegra/soctherm.c                   | 955 +++++++++++++++++++--
->  drivers/thermal/tegra/soctherm.h                   |  16 +
->  drivers/thermal/tegra/tegra124-soctherm.c          |   7 +-
->  drivers/thermal/tegra/tegra132-soctherm.c          |   7 +-
->  drivers/thermal/tegra/tegra210-soctherm.c          |  15 +-
->  include/dt-bindings/thermal/tegra124-soctherm.h    |  22 +-
->  8 files changed, 1029 insertions(+), 76 deletions(-)
-> 
+Changes since v3: [2]
+ - modify subject format
+ - update Kconfig
+ - update MAINTAINER file
+ - add comment and error handle for meson_pcie_get_mem_shared()
+ - drop useless initialization code
+ - add comment for meson_size_to_payload()
+ - optimize meson_pcie_establish_link() return code
+ - optimize meson_pcie_enable_interrupts() redundant function
+ - drop device_attch related code
+ - drop dw_pcie_ops read_dbi and write_dbi function
+ - add error handle for meson_add_pcie_port() when probe
+
+Changes since v2: [1]
+ - abandon phy driver, move reset to the controller
+ - use devm_add_action_or_reset() to use clock res
+ - format correcting
+
+Changes since v1: [0]
+ - use gpio lib instead open code
+ - move 'apb' and 'port' reset from phy driver
+ - format correcting
+
+[0] : https://lkml.kernel.org/r/1534227522-186798-1-git-send-email-hanjie.lin@amlogic.com
+[1] : https://lkml.kernel.org/r/1535096165-45827-1-git-send-email-hanjie.lin@amlogic.com
+[2] : https://lkml.kernel.org/r/1537509820-52040-1-git-send-email-hanjie.lin@amlogic.com 
+[3] : https://lkml.kernel.org/r/1538999834-156423-3-git-send-email-hanjie.lin@amlogic.com
+[4] : https://lkml.kernel.org/r/1539049990-30810-1-git-send-email-hanjie.lin@amlogic.com
+[5] : https://lkml.kernel.org/r/1542876836-191355-1-git-send-email-hanjie.lin@amlogic.com
+
+Yue Wang (2):
+  dt-bindings: PCI: meson: add DT bindings for Amlogic Meson PCIe
+    controller
+  PCI: amlogic: Add the Amlogic Meson PCIe controller driver
+
+ .../devicetree/bindings/pci/amlogic,meson-pcie.txt |  70 +++
+ MAINTAINERS                                        |   7 +
+ drivers/pci/controller/dwc/Kconfig                 |  10 +
+ drivers/pci/controller/dwc/Makefile                |   1 +
+ drivers/pci/controller/dwc/pci-meson.c             | 595 +++++++++++++++++++++
+ 5 files changed, 683 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/amlogic,meson-pcie.txt
+ create mode 100644 drivers/pci/controller/dwc/pci-meson.c
+
+-- 
+2.7.4
