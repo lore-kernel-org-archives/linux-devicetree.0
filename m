@@ -1,43 +1,38 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v6 08/11] dt-bindings: serial: Document RDA Micro UART
-Date: Tue, 18 Dec 2018 20:27:32 +0530
-Message-ID: <20181218145732.GA22420@Mani-XPS-13-9360>
-References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
- <20181218080527.10801-9-manivannan.sadhasivam@linaro.org>
- <20181218145443.GA5150@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 01/15] dt-bindings: net: broadcom-bluetooth: Fix
+ external clock names
+Date: Tue, 18 Dec 2018 08:58:53 -0600
+Message-ID: <20181218145853.GA15352@bogus>
+References: <20181217040449.31437-1-wens@csie.org>
+ <20181217040449.31437-2-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181218145443.GA5150@bogus>
+In-Reply-To: <20181217040449.31437-2-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: olof@lixom.net, arnd@arndb.de, gregkh@linuxfoundation.org, jslaby@suse.com, linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net
+Cc: Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Ondrej Jirman <megous@megous.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 08:54:43AM -0600, Rob Herring wrote:
-> On Tue, Dec 18, 2018 at 01:35:24PM +0530, Manivannan Sadhasivam wrote:
-> > From: Andreas Färber <afaerber@suse.de>
-> > 
-> > Add an initial binding for the UART in RDA Micro RDA8810PL SoC.
-> > 
-> > Signed-off-by: Andreas Färber <afaerber@suse.de>
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  .../bindings/serial/rda,8810pl-uart.txt         | 17 +++++++++++++++++
-> >  1 file changed, 17 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
+On Mon, 17 Dec 2018 12:04:35 +0800, Chen-Yu Tsai wrote:
+> The Broadcom Bluetooth controllers can take up to two external clocks:
+> an external frequency reference, substituting the main crystal, and a
+> LPO clock at 32.768 kHz substituting the internal LPO clock.
 > 
-> Please add acks/reviewed-bys when posting new versions.
->
+> In particular, the external LPO clock must be used when the controller
+> does not have NVRAM connected, and the main reference frequency is not
+> the default 20 MHz. This is described in detail in the datasheet.
+> 
+> The original "extclk" clock name is ambiguous as to which of these it
+> refers to, and some designs might even require both.
+> 
+> This patch deprecates the existing name, and adds "txco" and "lpo".
+> 
+> Tested-by: Ondrej Jirman <megous@megous.com>
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> ---
+>  .../devicetree/bindings/net/broadcom-bluetooth.txt         | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+> 
 
-Hi Rob,
-
-Sorry for that. I missed your Reviewed-by tag here. Will add it in the
-next iteration which I'm going to send to ARM SoC list.
-
-Regards,
-Mani
-
-> Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
