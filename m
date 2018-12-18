@@ -1,63 +1,51 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: drm/msm/a6xx: Document
- interconnect properties for GPU
-Date: Tue, 18 Dec 2018 11:07:47 -0700
-Message-ID: <20181218180747.GD18380@jcrouse-lnx.qualcomm.com>
-References: <20181214221640.25354-1-jcrouse@codeaurora.org>
- <20181214221640.25354-2-jcrouse@codeaurora.org>
- <20181218172201.GA16590@bogus>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
+Date: Tue, 18 Dec 2018 18:09:02 +0000
+Message-ID: <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
+References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
+ <20181218040702.29231-4-andrew.smirnov@gmail.com>
+ <20181218151533.GA2922@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181218172201.GA16590@bogus>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMTE6MjI6MDFBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gRnJpLCBEZWMgMTQsIDIwMTggYXQgMDM6MTY6MzlQTSAtMDcwMCwgSm9yZGFuIENy
-b3VzZSB3cm90ZToKPiA+IEFkZCBkb2N1bWVudGF0aW9uIGZvciB0aGUgaW50ZXJjb25uZWN0IGFu
-ZCBpbnRlcmNvbm5lY3QtbmFtZXMgYmluZGluZ3MKPiA+IGZvciB0aGUgR1BVIG5vZGUgYXMgZGV0
-YWlsZWQgYnkgYmluZGluZ3MvaW50ZXJjb25uZWN0L2ludGVyY29ubmVjdC50eHQuCj4gPiAKPiA+
-IFNpZ25lZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+Cj4g
-PiAtLS0KPiA+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20v
-Z3B1LnR4dCB8IDYgKysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDYgaW5zZXJ0aW9ucygrKQo+
-ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvbXNtL2dwdS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9tc20vZ3B1LnR4dAo+ID4gaW5kZXggOGQ5NDE1MTgwYzIyLi4xOWI1YWU0NTlmZGIgMTAw
-NjQ0Cj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
-c20vZ3B1LnR4dAo+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvbXNtL2dwdS50eHQKPiA+IEBAIC0xOSw2ICsxOSw5IEBAIFJlcXVpcmVkIHByb3BlcnRp
-ZXM6Cj4gPiAgICAqICJtZW1faWZhY2UiCj4gPiAgLSBpb21tdXM6IG9wdGlvbmFsIHBoYW5kbGUg
-dG8gYW4gYWRyZW5vIGlvbW11IGluc3RhbmNlCj4gPiAgLSBvcGVyYXRpbmctcG9pbnRzLXYyOiBv
-cHRpb25hbCBwaGFuZGxlIHRvIHRoZSBPUFAgb3BlcmF0aW5nIHBvaW50cwo+ID4gKy0gaW50ZXJj
-b25uZWN0OiBvcHRpb25hbCBwaGFuZGxlIHRvIGEgaW50ZXJjb25uZWN0IHByb3ZpZGVyLiAgU2Vl
-Cj4gPiArICAuLi9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dCBmb3IgZGV0YWlscy4KPiA+
-ICstIGludGVyY29ubmVjdC1uYW1lczogTmFtZSBzdHJpbmcgZm9yIHRoZSBpbnRlcmNvbm5lY3Rz
-Lgo+ID4gIC0gcWNvbSxnbXU6IEZvciBhNnh4IGFuZCBuZXdlciB0YXJnZXRzIGEgcGhhbmRsZSB0
-byB0aGUgR01VIGRldmljZSB0aGF0IHdpbGwKPiA+ICAgIGNvbnRyb2wgdGhlIHBvd2VyIGZvciB0
-aGUgR1BVCj4gPiAgCj4gPiBAQCAtNjgsNiArNzEsOSBAQCBFeGFtcGxlIGE2eHggKHdpdGggR01V
-KToKPiA+ICAKPiA+ICAJCW9wZXJhdGluZy1wb2ludHMtdjIgPSA8JmdwdV9vcHBfdGFibGU+Owo+
-ID4gIAo+ID4gKwkJaW50ZXJjb25uZWN0cyA9IDwmcnNjX2hsb3MgTUFTVEVSX0dGWDNEICZyc2Nf
-aGxvcyBTTEFWRV9FQkkxPjsKPiA+ICsJCWludGVyY29ubmVjdC1uYW1lcyA9ICJnZngtbWVtIjsK
-PiAKPiBUaGVyZSdzIG5vdCByZWFsbHkgYW55IHBvaW50IHRvIGhhdmluZyAqLW5hbWVzIHdoZW4g
-dGhlcmUgaXMgb25seSAxIAo+IHZhbHVlLgoKRm9yIHRoZSBtb21lbnQgd2UgY2FuIG9ubHkgbG9v
-ayB1cCB0aGUgcGF0aCBmcm9tIHRoZSBEVCBieSBuYW1lLiBJIGd1ZXNzIHdlCmNvdWxkIGFkZCBh
-biBsb29rdXAgYnkgaW5kZXggYnV0IEknbSBub3Qgc3VyZSBpZiB0aGF0IGhhZCBhbHJlYWR5IGJl
-ZW4KY29uc2lkZXJlZCBhbmQgcmVqZWN0ZWQuCgpKb3JkYW4KCi0tIApUaGUgUXVhbGNvbW0gSW5u
-b3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgQ29kZSBBdXJvcmEgRm9ydW0sCmEg
-TGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVl
-ZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3Jn
-L21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On 12/18/2018 5:15 PM, Rob Herring wrote:=0A=
+> On Mon, Dec 17, 2018 at 08:07:02PM -0800, Andrey Smirnov wrote:=0A=
+>> Add code needed to support i.MX8MQ variant.=0A=
+>>=0A=
+>> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>=0A=
+>> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>=0A=
+=0A=
+>> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt=0A=
+>> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt=0A=
+>>   =0A=
+>> +Additional required properties for imx8mq-pcie:=0A=
+>> +- fsl,controller-id: Logical ID of a given PCIE controller. PCIE1 is 0,=
+ PCIE2 is 1;=0A=
+>> +=0A=
+> =0A=
+> Remove this.=0A=
+> =0A=
+> If GPR register offset is what you need, then put that into DT.=0A=
+> Typically, we'd have a property with iomuxc phandle and offset.=0A=
+=0A=
+This series initially added explicit offsets but I suggested a single =0A=
+"controller-id" because:=0A=
+  * There are multiple bit and byte offsets=0A=
+  * Other imx8 SOCs also have 2x pcie with other bit/byte offsets=0A=
+=0A=
+Hiding this behind a compatible string and single "controller-id" seem =0A=
+preferable to elaborating register maps in dt bindings. It also makes =0A=
+upgrades simpler: if features are added which use other bits there is no =
+=0A=
+need to describe them in DT and deal with compatibility headaches.=0A=
+=0A=
+Link to older thread: https://lkml.org/lkml/2018/11/29/888=0A=
+=0A=
+It's possible my suggestion was misguided.=0A=
