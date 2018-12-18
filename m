@@ -1,37 +1,72 @@
-From: Nipun Gupta <nipun.gupta@nxp.com>
-Subject: [PATCH 2/2] arm64: dts: ls1088: add missing dma-coherent property in
- fsl-mc
-Date: Tue, 18 Dec 2018 04:52:02 +0000
-Message-ID: <1545109016-1779-2-git-send-email-nipun.gupta@nxp.com>
-References: <1545109016-1779-1-git-send-email-nipun.gupta@nxp.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/7] dt-bindings: soc: qcom: Add remote-pid binding for
+ GLINK SMEM
+Date: Tue, 18 Dec 2018 10:46:47 +0530
+Message-ID: <ae7c275abb7fb2604f2643c04d1dc0ab@codeaurora.org>
+References: <20181217100724.4593-1-sibis@codeaurora.org>
+ <CAD=FV=WJPEzXahN3HRdNPTfcPs+OPCiQ_3f1zQh1-poekPgGRg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545109016-1779-1-git-send-email-nipun.gupta@nxp.com>
-Content-Language: en-US
+In-Reply-To: <CAD=FV=WJPEzXahN3HRdNPTfcPs+OPCiQ_3f1zQh1-poekPgGRg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Nipun Gupta <nipun.gupta@nxp.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
----
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Hi Doug,
+Thanks for the review :)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1088a.dtsi
-index dec0c2d..b8e31a1 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -577,6 +577,7 @@
- 			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
- 			msi-parent =3D <&its>;
- 			iommu-map =3D <0 &smmu 0 0>;	/* This is fixed-up by u-boot */
-+			dma-coherent;
- 			#address-cells =3D <3>;
- 			#size-cells =3D <1>;
-=20
---=20
-1.9.1
+On 2018-12-18 05:29, Doug Anderson wrote:
+> Hi,
+> 
+> On Mon, Dec 17, 2018 at 2:07 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> 
+>> Add missing qcom,remote-pid dt binding required for GLINK SMEM
+>> which specifies the remote endpoint of the GLINK edge.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+>>  1 file changed, 5 insertions(+)
+> 
+> Fixes: 2b41d6c8e696 ("dt-bindings: soc: qcom: Extend GLINK to cover 
+> SMEM")
+> 
+> 
+>> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt 
+>> b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> index 0b8cc533ca83..59ae603ba520 100644
+>> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+>> @@ -21,6 +21,11 @@ edge.
+>>         Definition: should specify the IRQ used by the remote 
+>> processor to
+>>                     signal this processor about communication related 
+>> events
+>> 
+>> +- qcom,remote-pid:
+>> +       Usage: required for glink-smem
+>> +       Value type: <u32>
+>> +       Definition: specifies the identfier of the remote endpoint of 
+>> this edge
+> 
+> s/identfier/identifier/
+> 
+
+missed this, will correct it in v3.
+
+> 
+> Other than the typo this seems right to me.  Feel free to add my
+> Reviewed-by tag when that's fixed.
+> 
+> 
+> -Doug
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
