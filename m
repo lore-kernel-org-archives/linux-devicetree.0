@@ -1,56 +1,33 @@
-Return-Path: <SRS0=9MhD=OS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80051.outbound.protection.outlook.com ([40.107.8.51]:16469
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726067AbeLIFkQ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Sun, 9 Dec 2018 00:40:16 -0500
-From: Peter Chen <peter.chen@nxp.com>
-Subject: [PATCH v4 0/4] usb: chipidea: imx: add HSIC support
-Date: Sun, 9 Dec 2018 05:40:11 +0000
-Message-ID: <20181209053746.24967-1-peter.chen@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "festevam@gmail.com" <festevam@gmail.com>, Peter Chen <peter.chen@nxp.com>
+Return-Path: <SRS0=fHqI=O3=renesas.com=chris.brandt@kernel.org>
+From: Chris Brandt <chris.brandt@renesas.com>
+Subject: [PATCH v4 0/2] Add Initial Device Tree for RZ/A2
+Date: Tue, 18 Dec 2018 12:05:53 -0500
+Message-Id: <20181218170555.121673-1-chris.brandt@renesas.com>
+To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Most of NXP (Freescale) i.mx USB part has HSIC support, in this series,
-we add support for them, it should cover all imx6 and imx7d SoC.
+Add a Device Tree for RZ/A2 and the existing eval board.
 
-Changes for v4:
-- Some code style improvements [Patch 3/4]
-- Add HSIC example at dts [Patch 4/4]
+Once these get approved, I'll start piling on the other drivers in
+another patch series
 
-Changes for v3:
-- Delete the internal API ci_ehci_override_wakeup_flag, and just use
-  register read/write APIs. [Patch 1/4, 3/4]
-- Using dedicated API usbmisc_imx6_hsic_get_reg_offset to calculate
-  offset for HSIC controller. [Patch 2/4]
-- Improve the comments for binding-doc, and add the dts example [Patch 4/4]
+NOTE:
+Since Rob is currently converting shmobile.txt to renesas.yaml,
+I'll wait till renesas.yaml hits -next, then add this RZ/A2M EVB
+board (it's too confusing to me to figure out how to make a patch
+series using multiple different trees)
 
-Changes for v2:
-- Compile error reported by kbuild robot [Patch 2/4]
-- Comment from Frieder Schrempf about code structure [Patch 2/4]
-- Comment from Fabio about adding example for pinctrl [Patch 4/4]
+Chris Brandt (2):
+  ARM: dts: r7s9210: Initial SoC device tree
+  ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
 
-Peter Chen (4):
-  usb: chipidea: add flag for imx hsic implementation
-  usb: chipidea: imx: add HSIC support
-  usb: chipidea: host: override ehci->hub_control
-  doc: usb: ci-hdrc-usb2: Add pinctrl properties for HSIC pin groups
+ arch/arm/boot/dts/Makefile             |   1 +
+ arch/arm/boot/dts/r7s9210-rza2mevb.dts |  82 +++++++++++++
+ arch/arm/boot/dts/r7s9210.dtsi         | 218 +++++++++++++++++++++++++++++++++
+ 3 files changed, 301 insertions(+)
+ create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
+ create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
 
- .../devicetree/bindings/usb/ci-hdrc-usb2.txt       |  34 ++++-
- drivers/usb/chipidea/ci_hdrc_imx.c                 | 140 +++++++++++++++++=
-+---
- drivers/usb/chipidea/ci_hdrc_imx.h                 |   9 +-
- drivers/usb/chipidea/host.c                        |  92 ++++++++++++++
- drivers/usb/chipidea/usbmisc_imx.c                 | 140 +++++++++++++++++=
-++++
- include/linux/usb/chipidea.h                       |   3 +
- 6 files changed, 398 insertions(+), 20 deletions(-)
-
---=20
-2.14.1
+-- 
+2.16.1
