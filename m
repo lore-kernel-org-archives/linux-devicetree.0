@@ -1,54 +1,72 @@
-From: Janek Kotas <jank@cadence.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 Subject: Re: [PATCH v2 2/2] gpio: Add Cadence GPIO driver
-Date: Tue, 18 Dec 2018 13:54:25 +0000
-Message-ID: <220ECBA7-CD30-4221-8878-0DA93390DDCC@global.cadence.com>
-References: <20181217153652.20056-1-jank@cadence.com>
- <20181217153652.20056-3-jank@cadence.com>
+Date: Tue, 18 Dec 2018 15:06:09 +0100
+Message-ID: <CAMpxmJX5ScpYCL0DhM99U=sbhU4VOxaA+gPzBJ698gs0-UFMxQ@mail.gmail.com>
+References: <20181217153652.20056-1-jank@cadence.com> <20181217153652.20056-3-jank@cadence.com>
  <CAMpxmJXrjyK3m4JwgkxwkHjSj-ugb7UzwNrYcBwYjWwj+JBNxw@mail.gmail.com>
  <CACRpkdYq5Eg2DrwdED-yTZ4kMoCxew+0rdU-b4zuinOf7BEr6Q@mail.gmail.com>
- <CAMpxmJUnfnHmopyOfHRZrN1KoqZx_Bsra1BTiGud6UVmzz1ryA@mail.gmail.com>
+ <CAMpxmJUnfnHmopyOfHRZrN1KoqZx_Bsra1BTiGud6UVmzz1ryA@mail.gmail.com> <220ECBA7-CD30-4221-8878-0DA93390DDCC@global.cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMpxmJUnfnHmopyOfHRZrN1KoqZx_Bsra1BTiGud6UVmzz1ryA@mail.gmail.com>
-Content-Language: en-US
-Content-ID: <1AE1CA0FE73F7643841C3D64FF4AD5DB@namprd07.prod.outlook.com>
+In-Reply-To: <220ECBA7-CD30-4221-8878-0DA93390DDCC@global.cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Janek Kotas <jank@cadence.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: Janek Kotas <jank@cadence.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DQo+IE9uIDE4IERlYyAyMDE4LCBhdCAxMzo1MCwgQmFydG9zeiBHb2xhc3pld3NraSA8YmdvbGFz
-emV3c2tpQGJheWxpYnJlLmNvbT4gd3JvdGU6DQo+IA0KPiANCj4gcG9uLiwgMTcgZ3J1IDIwMTgg
-byAyMzoyMiBMaW51cyBXYWxsZWlqIDxsaW51cy53YWxsZWlqQGxpbmFyby5vcmc+IG5hcGlzYcWC
-KGEpOg0KPj4gDQo+PiBPbiBNb24sIERlYyAxNywgMjAxOCBhdCA0OjUxIFBNIEJhcnRvc3ogR29s
-YXN6ZXdza2kNCj4+IDxiZ29sYXN6ZXdza2lAYmF5bGlicmUuY29tPiB3cm90ZToNCj4+IA0KPj4+
-IFRoZSBkcml2ZXIgbG9va3MgZ29vZCBidXQgaXMgdGhlcmUgYW55IHBhcnRpY3VsYXIgcmVhc29u
-IG5vdCB0byB1c2UNCj4+PiByZWdtYXAgZm9yIHJlZ2lzdGVyIElPPw0KPj4gDQo+PiBJIHRob3Vn
-aHQgd2Ugb25seSB1c2UgcmVnbWFwIGZvciBNTUlPIHdoZW4gdGhlIHJlZ2lzdGVyIHJhbmdlIGlz
-DQo+PiBzaGFyZWQgKGFzIGluIGEgc3lzdGVtIGNvbnRyb2xsZXIpIHNvIHRoYXQgc29tZSByZWdp
-c3RlcnMgYXJlIGZvciB0aGlzLA0KPj4gc29tZSByZWdpc3RlciBvciBldmVuIGJpdHMgaW4gYSBy
-ZWdpc3RlciBmb3Igc29tZSBvdGhlciBkcml2ZXIsIHNvIHRoZXkNCj4+IG5lZWQgdGhlIHNwaW5s
-b2NrIGluIHRoZSByZWdtYXAgdG8gcHJvdGVjdCB0aGUgcmVnaXN0ZXIgcmFuZ2UuDQo+PiANCj4g
-DQo+IFRoaXMgaXMgd2hhdCBzeXNjb24gaXMgZm9yLiBSZWdtYXAgc2ltcGx5IGFic3RyYWN0cyBh
-bnkgcmVnaXN0ZXIgSU8uDQo+IEZvciBpbnN0YW5jZTogdGhlcmUncyBubyBsb2NraW5nIGluIHRo
-aXMgZHJpdmVyLiBBcmUgd2Ugc3VyZSBpdCdzIG5vdA0KPiBuZWVkZWQ/IFJlZ21hcCBwcm92aWRl
-cyBpbnRlcm5hbCBsb2NraW5nIGZvciB5b3UgaW4gdGhlIGZvcm0gb2YgYQ0KPiBtdXRleCBvciBz
-cGlubG9jay4NCj4gDQo+IEFsc286IGl0IGxvb2tzIGxpa2UgdGhlIGludGVycnVwdHMgaGVyZSBh
-cmUgcXVpdGUgc2ltcGxlIHdpdGggYSBzaW5nbGUNCj4gYml0IHBlciBpbnRlcnJ1cHQgaW4gdGhl
-IHN0YXR1cyByZWdpc3RlciBhbmQgdGhlIHNhbWUgbGF5b3V0IGluIHRoZQ0KPiBtYXNrIHJlZ2lz
-dGVyIC0gaXQgY291bGQgcHJvYmFibHkgcHJvZml0IGZyb20gdXNpbmcgdGhlDQo+IHJlZ21hcF9p
-cnFfY2hpcCBhbmQgbm90IGJvdGhlciB3aXRoIHJlaW1wbGVtZW50aW5nIGlycV9jaGlwIGNhbGxi
-YWNrcy4NCj4gDQo+PiBJdCBpcyBhbHNvIG5pY2UgZm9yIHNoYWRvd2luZy9jYWNoaW5nIG9mIHJl
-Z2lzdGVyIGNvbnRlbnRzIEkgZ3Vlc3MsDQo+PiB3YXQgZG9lcyB0aGlzIGRyaXZlciBnZXQgZnJv
-bSByZWdtYXAgTU1JTz8NCj4+IA0KPiANCj4gQ29kZSBzaHJpbmthZ2UgSU1PLg0KPiANCj4gTm90
-ZSB0aGF0IEknbSBub3QgYmxvY2tpbmcgdGhpcyBmcm9tIGJlaW5nIG1lcmdlZCAtIEkganVzdCB0
-aGluayB0aGF0DQo+IHVzaW5nIG1vZGVybiBmcmFtZXdvcmtzIGlzIGFsd2F5cyBhIGdvb2QgaWRl
-YS4NCg0KSSBjYW4gcmVpbXBsZW1lbnQgdGhlIGRyaXZlciB1c2luZyByZWdtYXAsIGJ1dCBJdCBz
-ZWVtcyBpbiBzdWNoIGNhc2UNCkkgd29u4oCZdCBiZSBhYmxlIHRvIHVzZSB0aGUgR2VuZXJpYyBH
-UElPIEluZnJhc3RydWN0dXJlLCB3b3VsZCBJPw0KU28gSSB3b3VsZCBuZWVkIHRvIHByb3ZpZGUg
-ZnVuY3Rpb25zIGZvciBzZXR0aW5nIGRpcmVjdGlvbiwgZXRjLg0KSSB0aGluayBpdCB3b3VsZCBt
-YWtlIHRoZSBkcml2ZXIgY29kZSBiaWdnZXIuDQoNClJlZ2FyZHMsDQpKYW4NCg0KPiBCZXN0IHJl
-Z2FyZHMsDQo+IEJhcnRvc3ogR29sYXN6ZXdza2kNCj4gDQo+PiBZb3VycywNCj4+IExpbnVzIFdh
-bGxlaWoNCg0K
+wt., 18 gru 2018 o 14:54 Janek Kotas <jank@cadence.com> napisa=C5=82(a):
+>
+>
+> > On 18 Dec 2018, at 13:50, Bartosz Golaszewski <bgolaszewski@baylibre.co=
+m> wrote:
+> >
+> >
+> > pon., 17 gru 2018 o 23:22 Linus Walleij <linus.walleij@linaro.org> napi=
+sa=C5=82(a):
+> >>
+> >> On Mon, Dec 17, 2018 at 4:51 PM Bartosz Golaszewski
+> >> <bgolaszewski@baylibre.com> wrote:
+> >>
+> >>> The driver looks good but is there any particular reason not to use
+> >>> regmap for register IO?
+> >>
+> >> I thought we only use regmap for MMIO when the register range is
+> >> shared (as in a system controller) so that some registers are for this=
+,
+> >> some register or even bits in a register for some other driver, so the=
+y
+> >> need the spinlock in the regmap to protect the register range.
+> >>
+> >
+> > This is what syscon is for. Regmap simply abstracts any register IO.
+> > For instance: there's no locking in this driver. Are we sure it's not
+> > needed? Regmap provides internal locking for you in the form of a
+> > mutex or spinlock.
+> >
+> > Also: it looks like the interrupts here are quite simple with a single
+> > bit per interrupt in the status register and the same layout in the
+> > mask register - it could probably profit from using the
+> > regmap_irq_chip and not bother with reimplementing irq_chip callbacks.
+> >
+> >> It is also nice for shadowing/caching of register contents I guess,
+> >> wat does this driver get from regmap MMIO?
+> >>
+> >
+> > Code shrinkage IMO.
+> >
+> > Note that I'm not blocking this from being merged - I just think that
+> > using modern frameworks is always a good idea.
+>
+> I can reimplement the driver using regmap, but It seems in such case
+> I won=E2=80=99t be able to use the Generic GPIO Infrastructure, would I?
+> So I would need to provide functions for setting direction, etc.
+> I think it would make the driver code bigger.
+>
+
+Indeed. If anything: gpio-mmio would need to be converted to using regmap.
+
+So I guess nevermind my comment.
+
+Bart
