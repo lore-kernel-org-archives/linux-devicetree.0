@@ -1,8 +1,10 @@
 From: frowand.list@gmail.com
-Subject: [PATCH v3 0/2] of: phandle_cache, fix refcounts, remove stale entry
-Date: Tue, 18 Dec 2018 11:40:01 -0800
-Message-ID: <1545162003-11577-1-git-send-email-frowand.list@gmail.com>
+Subject: [PATCH v3 1/2] of: of_node_get()/of_node_put() nodes held in phandle cache
+Date: Tue, 18 Dec 2018 11:40:02 -0800
+Message-ID: <1545162003-11577-2-git-send-email-frowand.list@gmail.com>
+References: <1545162003-11577-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545162003-11577-1-git-send-email-frowand.list@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, Michael Bringmann <mwb@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
 Cc: Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Thomas Falcon <tlfalcon@linux.vnet.ibm.com>, Juliet Kim <minkim@us.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -10,33 +12,141 @@ List-Id: devicetree@vger.kernel.org
 
 From: Frank Rowand <frank.rowand@sony.com>
 
-Non-overlay dynamic devicetree node removal may leave the node in
-the phandle cache.  Subsequent calls to of_find_node_by_phandle()
-will incorrectly find the stale entry.  This bug exposed the foloowing
-phandle cache refcount bug.
+The phandle cache contains struct device_node pointers.  The refcount
+of the pointers was not incremented while in the cache, allowing use
+after free error after kfree() of the node.  Add the proper increment
+and decrement of the use count.
 
-The refcount of phandle_cache entries is not incremented while in
-the cache, allowing use after free error after kfree() of the
-cached entry.
+Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
 
-Changes since v2:
-  - patch 2/2: add temporary variable np in __of_free_phandle_cache_entry()
-    to improve readability
-  - patch 2/2: explain reason for WARN_ON() in comment
-  - patch 2/2: add Fixes tag in patch comment
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
 
-Changes since v1:
-  - make __of_free_phandle_cache() static
-  - add WARN_ON(1) for unexpected condition in of_find_node_by_phandle()
-  
-Frank Rowand (2):
-  of: of_node_get()/of_node_put() nodes held in phandle cache
-  of: __of_detach_node() - remove node from phandle cache
+do not "cc: stable", unless the following commits are also in stable:
 
- drivers/of/base.c       | 101 ++++++++++++++++++++++++++++++++++++------------
- drivers/of/dynamic.c    |   3 ++
- drivers/of/of_private.h |   4 ++
- 3 files changed, 83 insertions(+), 25 deletions(-)
+  commit e54192b48da7 ("of: fix phandle cache creation for DTs with no phandles")
+  commit b9952b5218ad ("of: overlay: update phandle cache on overlay apply and remove")
+  commit 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
 
+
+ drivers/of/base.c | 70 ++++++++++++++++++++++++++++++++++++-------------------
+ 1 file changed, 46 insertions(+), 24 deletions(-)
+
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 09692c9b32a7..6c33d63361b8 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -116,9 +116,6 @@ int __weak of_node_to_nid(struct device_node *np)
+ }
+ #endif
+ 
+-static struct device_node **phandle_cache;
+-static u32 phandle_cache_mask;
+-
+ /*
+  * Assumptions behind phandle_cache implementation:
+  *   - phandle property values are in a contiguous range of 1..n
+@@ -127,6 +124,44 @@ int __weak of_node_to_nid(struct device_node *np)
+  *   - the phandle lookup overhead reduction provided by the cache
+  *     will likely be less
+  */
++
++static struct device_node **phandle_cache;
++static u32 phandle_cache_mask;
++
++/*
++ * Caller must hold devtree_lock.
++ */
++static void __of_free_phandle_cache(void)
++{
++	u32 cache_entries = phandle_cache_mask + 1;
++	u32 k;
++
++	if (!phandle_cache)
++		return;
++
++	for (k = 0; k < cache_entries; k++)
++		of_node_put(phandle_cache[k]);
++
++	kfree(phandle_cache);
++	phandle_cache = NULL;
++}
++
++int of_free_phandle_cache(void)
++{
++	unsigned long flags;
++
++	raw_spin_lock_irqsave(&devtree_lock, flags);
++
++	__of_free_phandle_cache();
++
++	raw_spin_unlock_irqrestore(&devtree_lock, flags);
++
++	return 0;
++}
++#if !defined(CONFIG_MODULES)
++late_initcall_sync(of_free_phandle_cache);
++#endif
++
+ void of_populate_phandle_cache(void)
+ {
+ 	unsigned long flags;
+@@ -136,8 +171,7 @@ void of_populate_phandle_cache(void)
+ 
+ 	raw_spin_lock_irqsave(&devtree_lock, flags);
+ 
+-	kfree(phandle_cache);
+-	phandle_cache = NULL;
++	__of_free_phandle_cache();
+ 
+ 	for_each_of_allnodes(np)
+ 		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
+@@ -155,30 +189,15 @@ void of_populate_phandle_cache(void)
+ 		goto out;
+ 
+ 	for_each_of_allnodes(np)
+-		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL)
++		if (np->phandle && np->phandle != OF_PHANDLE_ILLEGAL) {
++			of_node_get(np);
+ 			phandle_cache[np->phandle & phandle_cache_mask] = np;
++		}
+ 
+ out:
+ 	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+ }
+ 
+-int of_free_phandle_cache(void)
+-{
+-	unsigned long flags;
+-
+-	raw_spin_lock_irqsave(&devtree_lock, flags);
+-
+-	kfree(phandle_cache);
+-	phandle_cache = NULL;
+-
+-	raw_spin_unlock_irqrestore(&devtree_lock, flags);
+-
+-	return 0;
+-}
+-#if !defined(CONFIG_MODULES)
+-late_initcall_sync(of_free_phandle_cache);
+-#endif
+-
+ void __init of_core_init(void)
+ {
+ 	struct device_node *np;
+@@ -1195,8 +1214,11 @@ struct device_node *of_find_node_by_phandle(phandle handle)
+ 	if (!np) {
+ 		for_each_of_allnodes(np)
+ 			if (np->phandle == handle) {
+-				if (phandle_cache)
++				if (phandle_cache) {
++					/* will put when removed from cache */
++					of_node_get(np);
+ 					phandle_cache[masked_handle] = np;
++				}
+ 				break;
+ 			}
+ 	}
 -- 
 Frank Rowand <frank.rowand@sony.com>
