@@ -1,13 +1,12 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
- for Q6V5
-Date: Mon, 17 Dec 2018 15:59:47 -0800
-Message-ID: <CAD=FV=Ui6ys4R3nenix3USeRPAd_vVdrArXxdf-iEc=4QRhE+A@mail.gmail.com>
-References: <20181217100724.4593-1-sibis@codeaurora.org> <20181217100724.4593-2-sibis@codeaurora.org>
+Subject: Re: [PATCH v2 3/7] dt-bindings: remoteproc: qcom: Fixup regulator dependencies
+Date: Mon, 17 Dec 2018 16:00:58 -0800
+Message-ID: <CAD=FV=XNZ5CzKXHogKEGTHgPVg_nbXxVEJR0e9F9usEY3YKEiQ@mail.gmail.com>
+References: <20181217100724.4593-1-sibis@codeaurora.org> <20181217100724.4593-3-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217100724.4593-2-sibis@codeaurora.org>
+In-Reply-To: <20181217100724.4593-3-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sibis@codeaurora.org
 Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>
@@ -15,71 +14,54 @@ List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Mon, Dec 17, 2018 at 2:07 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+On Mon, Dec 17, 2018 at 2:08 AM Sibi Sankar <sibis@codeaurora.org> wrote:
 >
-> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+> Fixup regulator supply dependencies for Q6V5 MSS on MSM996 SoCs.
 >
 > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  .../devicetree/bindings/remoteproc/qcom,q6v5.txt       | 10 +++++++---
->  1 file changed, 7 insertions(+), 3 deletions(-)
-
-Fixes: 9f058fa2efb1 ("remoteproc: qcom: Add support for mss remoteproc
-on msm8996")
-Fixes: fb22022ff63d ("dt-bindings: remoteproc: Add Q6v5 Modem PIL
-binding for SDM845")
-
-...it probably doesn't matter too much but if we wanted to be really
-careful we could split into two patches, one for the msm8996 and one
-for sdm845.  I don't think people care that much about stable
-backports of bindings though (someone can feel free to correct me)...
-
-
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+>
 > diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 9ff5b0309417..780adc043b37 100644
+> index 780adc043b37..98894e6ad456 100644
 > --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 > +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
->  - clocks:
+> @@ -76,7 +76,9 @@ on the Qualcomm Hexagon core.
 >         Usage: required
 >         Value type: <phandle>
-> -       Definition: reference to the iface, bus and mem clocks to be held on
-> -                   behalf of the booting of the Hexagon core
-> +       Definition: reference to the list of 4 clocks for the modem sub-system
-> +                   reference to the list of 8 clocks for the modem sub-system
-> +                   on SDM845 SoCs
+>         Definition: reference to the regulators to be held on behalf of the
+> -                   booting of the Hexagon core
+> +                   booting of the Hexagon core on MSM8916 SoCs
+> +                   reference to the pll-supply regulator to be held on behalf
+> +                   of the booting of the Hexagon core on MSM8996 SoCs
 
-The above is confusing because you don't list the SoCs that are
-supposed to use the 4 clocks.  How about instead:
+The prose gets in the way and doesn't add anything.  I also don't
+understand what you're saying for msm8996.  You're saying that
+"pll-supply" is required there but none of the others?  That doesn't
+seem to be true in the code I have in front of me, but maybe I'm
+missing some patch.  For me, I'd write:
 
-Definition: reference to the clocks that match clock-names
-
-
->  - clock-names:
->         Usage: required
->         Value type: <stringlist>
-> -       Definition: must be "iface", "bus", "mem"
-> +       Definition: must be "iface", "bus", "mem", "xo" for the modem sub-system
-> +                   must be "iface", "bus", "mem", "gpll0_mss", "snoc_axi",
-> +                   "mnoc_axi", "prng", "xo" for the modem sub-system on SDM845
-> +                   SoCs
-
-Same here where it's confusing.  ...but also, it it correct?  As far
-as I can tell you're missing msm8996.  It's better to just be explicit
-and list each one, ideally without all the prose.
-
-Definition: The clocks needed depend on the compatible string:
-
-qcom,sdm845-mss-pil: "xo", "prng", "iface", "snoc_axi", "bus", "mem",
-"gpll0_mss", "mnoc_axi"
-qcom,msm8996-mss-pil: "xo", "pnoc", "iface", "bus", "mem", "gpll0_mss_clk"
-qcom,msm8974-mss-pil: "xo", "iface", "bus", "mem"
-qcom,msm8916-mss-pil: "xo", "iface", "bus", "mem"
-qcom,q6v5-pil: "xo", "iface", "bus", "mem"
-
-...as far as I can tell this binding is supposed to account for
-"qcom,ipq8074-wcss-pil" too but it seems that one doesn't have
-clock-names.
+For the compatible strings below the following supplies are required:
+  "qcom,q6v5-pil"
+  "qcom,msm8916-mss-pil",
+  "qcom,msm8974-mss-pil"
+- cx-supply:
+- mss-supply:
+- mx-supply:
+- pll-supply:
+Usage: required
+Value type: <phandle>
+Definition: reference to the regulators to be held on behalf of the
+    booting of the Hexagon core
 
 
--Doug
+...and if msm8996 actually needs "pll-supply", you could add in...
+
+For the compatible strings below the following supplies are required:
+  "qcom,msm8996-mss-pil"
+- pll-supply:
+Usage: required
+Value type: <phandle>
+Definition: reference to the regulators to be held on behalf of the
+    booting of the Hexagon core
