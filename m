@@ -1,90 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC v2 1/2] pwm: sifive: Add DT documentation for SiFive PWM
- Controller
-Date: Tue, 18 Dec 2018 11:20:31 -0600
-Message-ID: <20181218172031.GA7272@bogus>
-References: <1544768442-12530-1-git-send-email-yash.shah@sifive.com>
- <1544768442-12530-2-git-send-email-yash.shah@sifive.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: drm/msm/a6xx: Document
+ interconnect properties for GPU
+Date: Tue, 18 Dec 2018 11:22:01 -0600
+Message-ID: <20181218172201.GA16590@bogus>
+References: <20181214221640.25354-1-jcrouse@codeaurora.org>
+ <20181214221640.25354-2-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <1544768442-12530-2-git-send-email-yash.shah@sifive.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yash Shah <yash.shah@sifive.com>
-Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
+In-Reply-To: <20181214221640.25354-2-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 11:50:41AM +0530, Yash Shah wrote:
-> DT documentation for PWM controller added with updated compatible
-> string.
-> 
-> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> [Atish: Compatible string update]
-> Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> ---
->  .../devicetree/bindings/pwm/pwm-sifive.txt         | 44 ++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> new file mode 100644
-> index 0000000..250d8ee
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
-> @@ -0,0 +1,44 @@
-> +SiFive PWM controller
-> +
-> +Unlike most other PWM controllers, the SiFive PWM controller currently only
-> +supports one period for all channels in the PWM. This is set globally in DTS.
-> +The period also has significant restrictions on the values it can achieve,
-> +which the driver rounds to the nearest achievable frequency.
-> +
-> +Required properties:
-> +- compatible: should be something similar to "sifive,<chip>-pwm" for
-> +	      the PWM as integrated on a particular chip, and
-> +	      "sifive,pwm<version>" for the general PWM IP block
-> +	      programming model. Supported compatible strings are:
-> +	      "sifive,fu540-c000-pwm" for the SiFive PWM v0 as
-> +	      integrated onto the SiFive FU540 chip, and "sifive,pwm0"
-> +	      for the SiFive PWM v0 IP block with no chip integration
-> +	      tweaks.
-
-This should reference the common doc Paul has written and not re-explain 
-the versioning scheme again.
-
-> +- reg: physical base address and length of the controller's registers
-> +- clocks: The frequency the controller runs at
-> +- #pwm-cells: Should be 2.
-> +  The first cell is the PWM channel number
-> +  The second cell is the PWM polarity
-> +- sifive,approx-period: the driver will get as close to this period as it can
-
-Needs a unit suffix as defined in property-units.txt
-
-> +- interrupts: one interrupt per PWM channel
-> +
-> +PWM RTL that corresponds to the IP block version numbers can be found
-> +here:
-> +
-> +https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
-> +
-> +Further information on the format of the IP
-> +block-specific version numbers can be found in
-> +Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
-> +
-> +Examples:
-> +
-> +pwm:  pwm@10020000 {
-> +	compatible = "sifive,fu540-c000-pwm","sifive,pwm0";
-> +	reg = <0x0 0x10020000 0x0 0x1000>;
-> +	clocks = <&tlclk>;
-> +	interrupt-parent = <&plic>;
-> +	interrupts = <42 43 44 45>;
-> +	#pwm-cells = <2>;
-> +	sifive,approx-period = <1000000>;
-> +};
-> -- 
-> 1.9.1
-> 
+T24gRnJpLCBEZWMgMTQsIDIwMTggYXQgMDM6MTY6MzlQTSAtMDcwMCwgSm9yZGFuIENyb3VzZSB3
+cm90ZToKPiBBZGQgZG9jdW1lbnRhdGlvbiBmb3IgdGhlIGludGVyY29ubmVjdCBhbmQgaW50ZXJj
+b25uZWN0LW5hbWVzIGJpbmRpbmdzCj4gZm9yIHRoZSBHUFUgbm9kZSBhcyBkZXRhaWxlZCBieSBi
+aW5kaW5ncy9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dC4KPiAKPiBTaWduZWQtb2ZmLWJ5
+OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCB8IDYgKysrKysr
+Cj4gIDEgZmlsZSBjaGFuZ2VkLCA2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQgYi9Eb2N1
+bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dAo+IGluZGV4
+IDhkOTQxNTE4MGMyMi4uMTliNWFlNDU5ZmRiIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUudHh0Cj4gKysrIGIvRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2dwdS50eHQKPiBAQCAtMTksNiAr
+MTksOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICogIm1lbV9pZmFjZSIKPiAgLSBpb21t
+dXM6IG9wdGlvbmFsIHBoYW5kbGUgdG8gYW4gYWRyZW5vIGlvbW11IGluc3RhbmNlCj4gIC0gb3Bl
+cmF0aW5nLXBvaW50cy12Mjogb3B0aW9uYWwgcGhhbmRsZSB0byB0aGUgT1BQIG9wZXJhdGluZyBw
+b2ludHMKPiArLSBpbnRlcmNvbm5lY3Q6IG9wdGlvbmFsIHBoYW5kbGUgdG8gYSBpbnRlcmNvbm5l
+Y3QgcHJvdmlkZXIuICBTZWUKPiArICAuLi9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dCBm
+b3IgZGV0YWlscy4KPiArLSBpbnRlcmNvbm5lY3QtbmFtZXM6IE5hbWUgc3RyaW5nIGZvciB0aGUg
+aW50ZXJjb25uZWN0cy4KPiAgLSBxY29tLGdtdTogRm9yIGE2eHggYW5kIG5ld2VyIHRhcmdldHMg
+YSBwaGFuZGxlIHRvIHRoZSBHTVUgZGV2aWNlIHRoYXQgd2lsbAo+ICAgIGNvbnRyb2wgdGhlIHBv
+d2VyIGZvciB0aGUgR1BVCj4gIAo+IEBAIC02OCw2ICs3MSw5IEBAIEV4YW1wbGUgYTZ4eCAod2l0
+aCBHTVUpOgo+ICAKPiAgCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVfb3BwX3RhYmxlPjsK
+PiAgCj4gKwkJaW50ZXJjb25uZWN0cyA9IDwmcnNjX2hsb3MgTUFTVEVSX0dGWDNEICZyc2NfaGxv
+cyBTTEFWRV9FQkkxPjsKPiArCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAiZ2Z4LW1lbSI7CgpUaGVy
+ZSdzIG5vdCByZWFsbHkgYW55IHBvaW50IHRvIGhhdmluZyAqLW5hbWVzIHdoZW4gdGhlcmUgaXMg
+b25seSAxIAp2YWx1ZS4KCj4gKwo+ICAJCXFjb20sZ211ID0gPCZnbXU+Owo+ICAJfTsKPiAgfTsK
+PiAtLSAKPiAyLjE4LjAKPiAKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJl
+ZWRyZW5vCg==
