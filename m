@@ -1,71 +1,128 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v4 4/6] arm64: dts: allwinner: a64: Add A64 CSI controller
-Date: Tue, 18 Dec 2018 17:03:18 +0530
-Message-ID: <20181218113320.4856-5-jagan@amarulasolutions.com>
-References: <20181218113320.4856-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [v3] drm/msm/dpu: Clean up dpu hw interrupts
+Date: Tue, 18 Dec 2018 17:05:48 +0530
+Message-ID: <1545132948-20833-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBENW4PQAKGQEHILQVVQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181218113320.4856-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Add dts node details for Allwinner A64 CSI controller.
-
-A64 CSI has similar features as like in H3, but the CSI_SCLK
-need to update it to 300MHz than default clock rate.
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 384c417cb7a2..89a0deb3fe6a 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -532,6 +532,12 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
- 
-+			csi_pins: csi-pins {
-+				pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
-+				       "PE7", "PE8", "PE9", "PE10", "PE11";
-+				function = "csi0";
-+			};
-+
- 			i2c0_pins: i2c0_pins {
- 				pins = "PH0", "PH1";
- 				function = "i2c0";
-@@ -899,6 +905,20 @@
- 			status = "disabled";
- 		};
- 
-+		csi: csi@1cb0000 {
-+			compatible = "allwinner,sun50i-a64-csi";
-+			reg = <0x01cb0000 0x1000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CSI>,
-+				 <&ccu CLK_CSI_SCLK>,
-+				 <&ccu CLK_DRAM_CSI>;
-+			clock-names = "bus", "mod", "ram";
-+			resets = <&ccu RST_BUS_CSI>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&csi_pins>;
-+			status = "disabled";
-+		};
-+
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun50i-a64-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
--- 
-2.18.0.321.gffc6fa0e3
+UmVtb3ZlIHVudXNlZCBmdW5jdGlvbnMgYW5kIG1hY3JvcyBmcm9tIGZpbGVzIGhhbmRsaW5nCmRw
+dSBoYXJkd2FyZSBpbnRlcnJ1cHRzLgoKY2hhbmdlcyBpbiB2MjoKICBSZW1vdmVkIGNsZWFyX2lu
+dGVycnVwdF9zdGF0dXMgKEpvcmRhbiBDcm91c2UpCmNoYW5nZXMgaW4gdjM6CiAgQ2hhbmdlZCBj
+b21taXQgdGV4dAoKU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVh
+dXJvcmEub3JnPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRl
+cnJ1cHRzLmMgfCA0NCAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQogZHJpdmVycy9ncHUvZHJtL21z
+bS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuaCB8IDQ0IC0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tCiAyIGZpbGVzIGNoYW5nZWQsIDg4IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmMgYi9kcml2ZXJzL2dw
+dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJydXB0cy5jCmluZGV4IGMwYjdmMDAuLjhh
+MjhhMDMgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19p
+bnRlcnJ1cHRzLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2lu
+dGVycnVwdHMuYwpAQCAtMTcwLDEwICsxNzAsNiBAQAogLyoqCiAgKiBBRDQgaW50ZXJydXB0IHN0
+YXR1cyBiaXQgZGVmaW5pdGlvbnMKICAqLwotI2RlZmluZSBEUFVfSU5UUl9CUklHSFRQUl9VUERB
+VEVEIEJJVCg0KQotI2RlZmluZSBEUFVfSU5UUl9EQVJLRU5IX1VQREFURUQgQklUKDMpCi0jZGVm
+aW5lIERQVV9JTlRSX1NUUkVOX09VVFJPSV9VUERBVEVEIEJJVCgyKQotI2RlZmluZSBEUFVfSU5U
+Ul9TVFJFTl9JTlJPSV9VUERBVEVEIEJJVCgxKQogI2RlZmluZSBEUFVfSU5UUl9CQUNLTElHSFRf
+VVBEQVRFRCBCSVQoMCkKIC8qKgogICogc3RydWN0IGRwdV9pbnRyX3JlZyAtIGFycmF5IG9mIERQ
+VSByZWdpc3RlciBzZXRzCkBAIC03ODIsMTggKzc3OCw2IEBAIHN0YXRpYyBpbnQgZHB1X2h3X2lu
+dHJfaXJxaWR4X2xvb2t1cChlbnVtIGRwdV9pbnRyX3R5cGUgaW50cl90eXBlLAogCXJldHVybiAt
+RUlOVkFMOwogfQogCi1zdGF0aWMgdm9pZCBkcHVfaHdfaW50cl9zZXRfbWFzayhzdHJ1Y3QgZHB1
+X2h3X2ludHIgKmludHIsIHVpbnQzMl90IHJlZ19vZmYsCi0JCXVpbnQzMl90IG1hc2spCi17Ci0J
+aWYgKCFpbnRyKQotCQlyZXR1cm47Ci0KLQlEUFVfUkVHX1dSSVRFKCZpbnRyLT5odywgcmVnX29m
+ZiwgbWFzayk7Ci0KLQkvKiBlbnN1cmUgcmVnaXN0ZXIgd3JpdGVzIGdvIHRocm91Z2ggKi8KLQl3
+bWIoKTsKLX0KLQogc3RhdGljIHZvaWQgZHB1X2h3X2ludHJfZGlzcGF0Y2hfaXJxKHN0cnVjdCBk
+cHVfaHdfaW50ciAqaW50ciwKIAkJdm9pZCAoKmNiZnVuYykodm9pZCAqLCBpbnQpLAogCQl2b2lk
+ICphcmcpCkBAIC0xMDA0LDE4ICs5ODgsNiBAQCBzdGF0aWMgaW50IGRwdV9od19pbnRyX2Rpc2Fi
+bGVfaXJxcyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIpCiAJcmV0dXJuIDA7CiB9CiAKLXN0YXRp
+YyBpbnQgZHB1X2h3X2ludHJfZ2V0X3ZhbGlkX2ludGVycnVwdHMoc3RydWN0IGRwdV9od19pbnRy
+ICppbnRyLAotCQl1aW50MzJfdCAqbWFzaykKLXsKLQlpZiAoIWludHIgfHwgIW1hc2spCi0JCXJl
+dHVybiAtRUlOVkFMOwotCi0JKm1hc2sgPSBJUlFfU09VUkNFX01EUCB8IElSUV9TT1VSQ0VfRFNJ
+MCB8IElSUV9TT1VSQ0VfRFNJMQotCQl8IElSUV9TT1VSQ0VfSERNSSB8IElSUV9TT1VSQ0VfRURQ
+OwotCi0JcmV0dXJuIDA7Ci19Ci0KIHN0YXRpYyB2b2lkIGRwdV9od19pbnRyX2dldF9pbnRlcnJ1
+cHRfc3RhdHVzZXMoc3RydWN0IGRwdV9od19pbnRyICppbnRyKQogewogCWludCBpOwpAQCAtMTA2
+NSwxOSArMTAzNyw2IEBAIHN0YXRpYyB2b2lkIGRwdV9od19pbnRyX2NsZWFyX2ludHJfc3RhdHVz
+X25vbG9jayhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCiAJd21iKCk7CiB9CiAKLXN0YXRpYyB2
+b2lkIGRwdV9od19pbnRyX2NsZWFyX2ludGVycnVwdF9zdGF0dXMoc3RydWN0IGRwdV9od19pbnRy
+ICppbnRyLAotCQlpbnQgaXJxX2lkeCkKLXsKLQl1bnNpZ25lZCBsb25nIGlycV9mbGFnczsKLQot
+CWlmICghaW50cikKLQkJcmV0dXJuOwotCi0Jc3Bpbl9sb2NrX2lycXNhdmUoJmludHItPmlycV9s
+b2NrLCBpcnFfZmxhZ3MpOwotCWRwdV9od19pbnRyX2NsZWFyX2ludHJfc3RhdHVzX25vbG9jayhp
+bnRyLCBpcnFfaWR4KTsKLQlzcGluX3VubG9ja19pcnFyZXN0b3JlKCZpbnRyLT5pcnFfbG9jaywg
+aXJxX2ZsYWdzKTsKLX0KLQogc3RhdGljIHUzMiBkcHVfaHdfaW50cl9nZXRfaW50ZXJydXB0X3N0
+YXR1cyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCiAJCWludCBpcnFfaWR4LCBib29sIGNsZWFy
+KQogewpAQCAtMTExMywxNiArMTA3MiwxMyBAQCBzdGF0aWMgdTMyIGRwdV9od19pbnRyX2dldF9p
+bnRlcnJ1cHRfc3RhdHVzKHN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwKIAogc3RhdGljIHZvaWQg
+X19zZXR1cF9pbnRyX29wcyhzdHJ1Y3QgZHB1X2h3X2ludHJfb3BzICpvcHMpCiB7Ci0Jb3BzLT5z
+ZXRfbWFzayA9IGRwdV9od19pbnRyX3NldF9tYXNrOwogCW9wcy0+aXJxX2lkeF9sb29rdXAgPSBk
+cHVfaHdfaW50cl9pcnFpZHhfbG9va3VwOwogCW9wcy0+ZW5hYmxlX2lycSA9IGRwdV9od19pbnRy
+X2VuYWJsZV9pcnE7CiAJb3BzLT5kaXNhYmxlX2lycSA9IGRwdV9od19pbnRyX2Rpc2FibGVfaXJx
+OwogCW9wcy0+ZGlzcGF0Y2hfaXJxcyA9IGRwdV9od19pbnRyX2Rpc3BhdGNoX2lycTsKIAlvcHMt
+PmNsZWFyX2FsbF9pcnFzID0gZHB1X2h3X2ludHJfY2xlYXJfaXJxczsKIAlvcHMtPmRpc2FibGVf
+YWxsX2lycXMgPSBkcHVfaHdfaW50cl9kaXNhYmxlX2lycXM7Ci0Jb3BzLT5nZXRfdmFsaWRfaW50
+ZXJydXB0cyA9IGRwdV9od19pbnRyX2dldF92YWxpZF9pbnRlcnJ1cHRzOwogCW9wcy0+Z2V0X2lu
+dGVycnVwdF9zdGF0dXNlcyA9IGRwdV9od19pbnRyX2dldF9pbnRlcnJ1cHRfc3RhdHVzZXM7Ci0J
+b3BzLT5jbGVhcl9pbnRlcnJ1cHRfc3RhdHVzID0gZHB1X2h3X2ludHJfY2xlYXJfaW50ZXJydXB0
+X3N0YXR1czsKIAlvcHMtPmNsZWFyX2ludHJfc3RhdHVzX25vbG9jayA9IGRwdV9od19pbnRyX2Ns
+ZWFyX2ludHJfc3RhdHVzX25vbG9jazsKIAlvcHMtPmdldF9pbnRlcnJ1cHRfc3RhdHVzID0gZHB1
+X2h3X2ludHJfZ2V0X2ludGVycnVwdF9zdGF0dXM7CiB9CmRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJydXB0cy5oIGIvZHJpdmVycy9ncHUvZHJt
+L21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuaAppbmRleCA2MWU0Y2JhLi40ZDdhMWM3
+IDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJy
+dXB0cy5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1
+cHRzLmgKQEAgLTIwLDEzICsyMCw2IEBACiAjaW5jbHVkZSAiZHB1X2h3X3V0aWwuaCIKICNpbmNs
+dWRlICJkcHVfaHdfbWRzcy5oIgogCi0jZGVmaW5lIElSUV9TT1VSQ0VfTURQCQlCSVQoMCkKLSNk
+ZWZpbmUgSVJRX1NPVVJDRV9EU0kwCQlCSVQoNCkKLSNkZWZpbmUgSVJRX1NPVVJDRV9EU0kxCQlC
+SVQoNSkKLSNkZWZpbmUgSVJRX1NPVVJDRV9IRE1JCQlCSVQoOCkKLSNkZWZpbmUgSVJRX1NPVVJD
+RV9FRFAJCUJJVCgxMikKLSNkZWZpbmUgSVJRX1NPVVJDRV9NSEwJCUJJVCgxNikKLQogLyoqCiAg
+KiBkcHVfaW50cl90eXBlIC0gSFcgSW50ZXJydXB0IFR5cGUKICAqIEBEUFVfSVJRX1RZUEVfV0Jf
+Uk9UX0NPTVA6CQlXQiByb3RhdG9yIGRvbmUKQEAgLTk2LDE4ICs4OSw2IEBAIGVudW0gZHB1X2lu
+dHJfdHlwZSB7CiAgKi8KIHN0cnVjdCBkcHVfaHdfaW50cl9vcHMgewogCS8qKgotCSAqIHNldF9t
+YXNrIC0gUHJvZ3JhbXMgdGhlIGdpdmVuIGludGVycnVwdCByZWdpc3RlciB3aXRoIHRoZQotCSAq
+ICAgICAgICAgICAgZ2l2ZW4gaW50ZXJydXB0IG1hc2suIFJlZ2lzdGVyIHZhbHVlIHdpbGwgZ2V0
+IG92ZXJ3cml0dGVuLgotCSAqIEBpbnRyOglIVyBpbnRlcnJ1cHQgaGFuZGxlCi0JICogQHJlZ19v
+ZmY6CU1EU1MgSFcgcmVnaXN0ZXIgb2Zmc2V0Ci0JICogQGlycW1hc2s6CUlSUSBtYXNrIHZhbHVl
+Ci0JICovCi0Jdm9pZCAoKnNldF9tYXNrKSgKLQkJCXN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwK
+LQkJCXVpbnQzMl90IHJlZywKLQkJCXVpbnQzMl90IGlycW1hc2spOwotCi0JLyoqCiAJICogaXJx
+X2lkeF9sb29rdXAgLSBMb29rdXAgSVJRIGluZGV4IG9uIHRoZSBIVyBpbnRlcnJ1cHQgdHlwZQog
+CSAqICAgICAgICAgICAgICAgICBVc2VkIGZvciBhbGwgaXJxIHJlbGF0ZWQgb3BzCiAJICogQGlu
+dHJfdHlwZToJCUludGVycnVwdCB0eXBlIGRlZmluZWQgaW4gZHB1X2ludHJfdHlwZQpAQCAtMTc3
+LDE2ICsxNTgsNiBAQCBzdHJ1Y3QgZHB1X2h3X2ludHJfb3BzIHsKIAkJCXN0cnVjdCBkcHVfaHdf
+aW50ciAqaW50cik7CiAKIAkvKioKLQkgKiBjbGVhcl9pbnRlcnJ1cHRfc3RhdHVzIC0gQ2xlYXJz
+IEhXIGludGVycnVwdCBzdGF0dXMgYmFzZWQgb24gZ2l2ZW4KLQkgKiAgICAgICAgICAgICAgICAg
+ICAgICAgICAgbG9va3VwIElSUSBpbmRleC4KLQkgKiBAaW50cjoJSFcgaW50ZXJydXB0IGhhbmRs
+ZQotCSAqIEBpcnFfaWR4OglMb29rdXAgaXJxIGluZGV4IHJldHVybiBmcm9tIGlycV9pZHhfbG9v
+a3VwCi0JICovCi0Jdm9pZCAoKmNsZWFyX2ludGVycnVwdF9zdGF0dXMpKAotCQkJc3RydWN0IGRw
+dV9od19pbnRyICppbnRyLAotCQkJaW50IGlycV9pZHgpOwotCi0JLyoqCiAJICogY2xlYXJfaW50
+cl9zdGF0dXNfbm9sb2NrKCkgLSBjbGVhcnMgdGhlIEhXIGludGVycnVwdHMgd2l0aG91dCBsb2Nr
+CiAJICogQGludHI6CUhXIGludGVycnVwdCBoYW5kbGUKIAkgKiBAaXJxX2lkeDoJTG9va3VwIGly
+cSBpbmRleCByZXR1cm4gZnJvbSBpcnFfaWR4X2xvb2t1cApAQCAtMjA2LDIxICsxNzcsNiBAQCBz
+dHJ1Y3QgZHB1X2h3X2ludHJfb3BzIHsKIAkJCXN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwKIAkJ
+CWludCBpcnFfaWR4LAogCQkJYm9vbCBjbGVhcik7Ci0KLQkvKioKLQkgKiBnZXRfdmFsaWRfaW50
+ZXJydXB0cyAtIEdldHMgYSBtYXNrIG9mIGFsbCB2YWxpZCBpbnRlcnJ1cHQgc291cmNlcwotCSAq
+ICAgICAgICAgICAgICAgICAgICAgICAgd2l0aGluIERQVS4gVGhlc2UgYXJlIGFjdHVhbGx5IHN0
+YXR1cyBiaXRzCi0JICogICAgICAgICAgICAgICAgICAgICAgICB3aXRoaW4gaW50ZXJydXB0IHJl
+Z2lzdGVycyB0aGF0IHNwZWNpZnkgdGhlCi0JICogICAgICAgICAgICAgICAgICAgICAgICBzb3Vy
+Y2Ugb2YgdGhlIGludGVycnVwdCBpbiBJUlFzLiBGb3IgZXhhbXBsZSwKLQkgKiAgICAgICAgICAg
+ICAgICAgICAgICAgIHZhbGlkIGludGVycnVwdCBzb3VyY2VzIGNhbiBiZSBNRFAsIERTSSwKLQkg
+KiAgICAgICAgICAgICAgICAgICAgICAgIEhETUkgZXRjLgotCSAqIEBpbnRyOglIVyBpbnRlcnJ1
+cHQgaGFuZGxlCi0JICogQG1hc2s6CVJldHVybmluZyB0aGUgaW50ZXJydXB0IHNvdXJjZSBNQVNL
+Ci0JICogQHJldHVybjoJMCBmb3Igc3VjY2Vzcywgb3RoZXJ3aXNlIGZhaWx1cmUKLQkgKi8KLQlp
+bnQgKCpnZXRfdmFsaWRfaW50ZXJydXB0cykoCi0JCQlzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIs
+Ci0JCQl1aW50MzJfdCAqbWFzayk7CiB9OwogCiAvKioKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0
+aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEg
+TGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJl
+ZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
