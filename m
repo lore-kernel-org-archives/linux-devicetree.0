@@ -1,90 +1,44 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3 1/6] dt-bindings: ap806: add the cluster clock node in the syscon file
-Date: Tue, 18 Dec 2018 16:46:25 +0100
-Message-ID: <87efaehm7i.fsf@bootlin.com>
-References: <20181216094147.6468-1-gregory.clement@bootlin.com>
-        <20181216094147.6468-2-gregory.clement@bootlin.com>
-        <20181217225044.GA25148@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V3 04/20] dt-bindings: cpufreq: tegra124: remove cpu_lp
+ clock from required properties
+Date: Tue, 18 Dec 2018 09:47:36 -0600
+Message-ID: <20181218154736.GA28224@bogus>
+References: <20181218091232.23532-1-josephl@nvidia.com>
+ <20181218091232.23532-5-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217225044.GA25148@bogus> (Rob Herring's message of "Mon, 17
-        Dec 2018 16:50:44 -0600")
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, Mike Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181218091232.23532-5-josephl@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
- 
- On lun., déc. 17 2018, Rob Herring <robh@kernel.org> wrote:
+On Tue, 18 Dec 2018 17:12:16 +0800, Joseph Lo wrote:
+> The cpu_lp clock property is only needed when the CPUfreq driver
+> supports CPU cluster switching. But it was not a design for this driver
+> and it didn't handle that as well. So removing this property.
+> 
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> Acked-by: Jon Hunter <jonathanh@nvidia.com>
+> ---
+> *V3:
+>  - no change
+> *V2:
+>  - add ack tag
+> ---
+>  .../devicetree/bindings/cpufreq/nvidia,tegra124-cpufreq.txt   | 4 +---
+>  1 file changed, 1 insertion(+), 3 deletions(-)
+> 
 
-> On Sun, Dec 16, 2018 at 10:41:42AM +0100, Gregory CLEMENT wrote:
->> Document the device tree binding for the cluster clock controllers found
->> in the Armada 7K/8K SoCs.
->> 
->> Signed-off-by: Gregory CLEMENT <gregory.clement@bootlin.com>
->> ---
->>  .../arm/marvell/ap806-system-controller.txt   | 22 +++++++++++++++++++
->>  1 file changed, 22 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
->> index 3fd21bb7cb37..8f281816a6b8 100644
->> --- a/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
->> +++ b/Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.txt
->> @@ -136,3 +136,25 @@ ap_syscon1: system-controller@6f8000 {
->>  		#thermal-sensor-cells = <1>;
->>  	};
->>  };
->> +
->> +Cluster clocks:
->> +---------------
->> +
->> +Device Tree Clock bindings for cluster clock of AP806 Marvell. Each
->> +cluster contain up to 2 CPUs running at the same frequency.
->> +
->> +Required properties:
->> +- compatible: must be  "marvell,ap806-cpu-clock";
->> +- #clock-cells : should be set to 1.
->> +- clocks : shall be the input parents clock phandle for the clock.
->> +
->> +ap_syscon1: system-controller@6f8000 {
->> +	compatible = "syscon", "simple-mfd";
->> +	reg = <0x6f8000 0x1000>;
->> +
->> +	cpu_clk: clock-cpu {
->
-> There's not a register address range you can use even if Linux happens 
-> to not need it (currently)?
-
-We can add an optional reg property if you want, but the whole point of
-this, is to be able to ensure the compatibility. Indeed, we have now
-enough experience to know that the information we have from the
-datasheet is incomplete. And when we start to deal with an IP calling
-"system controller", then we can expect a mix between all the registers.
-
->
-> There's already a clock node under this syscon? Are they really separate 
-> sub-blocks?
-
-Actually the other clock node (marvell,ap806-clock) is under the other
-syscon: system controller 0 with gpio and pinctrl, whereas this one
-(marvell,ap806-cpu-clock), is under system controller 1 with thermal.
-
-Gregory
-
->
->> +		compatible = "marvell,ap806-cpu-clock";
->> +		clocks = <&ap_clk 0>, <&ap_clk 1>;
->> +		#clock-cells = <1>;
->> +	};
->> +};
->> -- 
->> 2.19.2
->> 
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Reviewed-by: Rob Herring <robh@kernel.org>
