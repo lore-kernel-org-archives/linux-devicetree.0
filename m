@@ -1,139 +1,89 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH v2 2/2] of: __of_detach_node() - remove node from phandle
- cache
-Date: Tue, 18 Dec 2018 10:57:38 -0800
-Message-ID: <b81f9268-a36c-963d-5b1e-d81b38b05143@gmail.com>
-References: <1545033396-24485-1-git-send-email-frowand.list@gmail.com>
- <1545033396-24485-3-git-send-email-frowand.list@gmail.com>
- <871s6gv30z.fsf@concordia.ellerman.id.au>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Tue, 18 Dec 2018 11:05:31 -0800
+Message-ID: <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+ <20181212211848.26768-3-jcrouse@codeaurora.org>
+ <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
+ <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
+ <20181217070647.xtvfgsixggua5yod@vireshk-i7>
+ <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
+ <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <871s6gv30z.fsf@concordia.ellerman.id.au>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michael Ellerman <mpe@ellerman.id.au>, robh+dt@kernel.org, Michael Bringmann <mwb@linux.vnet.ibm.com>, linuxppc-dev@lists.ozlabs.org
-Cc: Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, Thomas Falcon <tlfalcon@linux.vnet.ibm.com>, Juliet Kim <minkim@us.ibm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <154515840025.238328.5075439774176447808-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/18 2:52 AM, Michael Ellerman wrote:
-> Hi Frank,
-> 
-> frowand.list@gmail.com writes:
->> From: Frank Rowand <frank.rowand@sony.com>
->>
->> Non-overlay dynamic devicetree node removal may leave the node in
->> the phandle cache.  Subsequent calls to of_find_node_by_phandle()
->> will incorrectly find the stale entry.  Remove the node from the
->> cache.
->>
->> Add paranoia checks in of_find_node_by_phandle() as a second level
->> of defense (do not return cached node if detached, do not add node
->> to cache if detached).
->>
->> Reported-by: Michael Bringmann <mwb@linux.vnet.ibm.com>
->> Signed-off-by: Frank Rowand <frank.rowand@sony.com>
->> ---
-> 
-> Similarly here can we add:
-> 
-> Fixes: 0b3ce78e90fc ("of: cache phandle nodes to reduce cost of of_find_node_by_phandle()")
-
-Yes, thanks.
-
-
-> Cc: stable@vger.kernel.org # v4.17+
-
-Nope, 0b3ce78e90fc does not belong in stable (it is a feature, not a bug
-fix).  So the bug will not be in stable.
-
-I've debated with myself over this, because there is a possibility that
-0b3ce78e90fc could somehow be put into a stable despite not being a
-bug fix.  We can always explicitly request this patch series be added
-to stable in that case.
-
-
-> Thanks for doing this series.
-> 
-> Some minor comments below.
-> 
->> diff --git a/drivers/of/base.c b/drivers/of/base.c
->> index 6c33d63361b8..ad71864cecf5 100644
->> --- a/drivers/of/base.c
->> +++ b/drivers/of/base.c
->> @@ -162,6 +162,27 @@ int of_free_phandle_cache(void)
->>  late_initcall_sync(of_free_phandle_cache);
->>  #endif
->>  
->> +/*
->> + * Caller must hold devtree_lock.
->> + */
->> +void __of_free_phandle_cache_entry(phandle handle)
->> +{
->> +	phandle masked_handle;
->> +
->> +	if (!handle)
->> +		return;
-> 
-> We could fold the phandle_cache check into that if and return early for
-> both cases couldn't we?
-
-We could, but that would make the reason for checking phandle_cache
-less obvious.  I would rather leave that check
-> 
->> +	masked_handle = handle & phandle_cache_mask;
->> +
->> +	if (phandle_cache) {
-> 
-> Meaning this wouldn't be necessary.
-> 
->> +		if (phandle_cache[masked_handle] &&
->> +		    handle == phandle_cache[masked_handle]->phandle) {
->> +			of_node_put(phandle_cache[masked_handle]);
->> +			phandle_cache[masked_handle] = NULL;
->> +		}
-> 
-> A temporary would help the readability here I think, eg:
-> 
-> 	struct device_node *np;
->         np = phandle_cache[masked_handle];
-> 
-> 	if (np && handle == np->phandle) {
-> 		of_node_put(np);
-> 		phandle_cache[masked_handle] = NULL;
-> 	}
-
-Yes, much cleaner.
-
-
->> @@ -1209,11 +1230,18 @@ struct device_node *of_find_node_by_phandle(phandle handle)
->>  		if (phandle_cache[masked_handle] &&
->>  		    handle == phandle_cache[masked_handle]->phandle)
->>  			np = phandle_cache[masked_handle];
->> +		if (np && of_node_check_flag(np, OF_DETACHED)) {
->> +			WARN_ON(1);
->> +			of_node_put(np);
->
-> Do we really want to do the put here?
-> 
-> We're here because something has gone wrong, possibly even memory
-> corruption such that np is not even pointing at a device node anymore.
-> So it seems like it would be safer to just leave the ref count alone,
-> possibly leak a small amount of memory, and NULL out the reference.
-
-I like the concept of the code being a little bit paranoid.
-
-But the bug that this check is likely to cache is the bug that led
-to this series -- removing a devicetree node, but failing to remove
-it from the cache as part of the removal.  So I think I'll leave
-it as is.
-
-> 
-> 
-> cheers
-> 
-
-Thanks for the thoughts and suggestions!
-
--Frank
+SGksCgpPbiBUdWUsIERlYyAxOCwgMjAxOCBhdCAxMDo0MCBBTSBTdGVwaGVuIEJveWQgPHNib3lk
+QGtlcm5lbC5vcmc+IHdyb3RlOgo+Cj4gUXVvdGluZyBEb3VnIEFuZGVyc29uICgyMDE4LTEyLTE3
+IDE2OjM0OjMxKQo+ID4gSGksCj4gPgo+ID4gT24gU3VuLCBEZWMgMTYsIDIwMTggYXQgMTE6MDYg
+UE0gVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJAbGluYXJvLm9yZz4gd3JvdGU6Cj4gPiA+Cj4g
+PiA+ICtSb2IgK1N0ZXBoZW4sCj4gPiA+Cj4gPiA+IE9uIDE0LTEyLTE4LCAwOTowNCwgRG91ZyBB
+bmRlcnNvbiB3cm90ZToKPiA+ID4gPiBIaSwKPiA+ID4gPgo+ID4gPiA+IE9uIFRodSwgRGVjIDEz
+LCAyMDE4IGF0IDg6NDEgUE0gVmlyZXNoIEt1bWFyIDx2aXJlc2gua3VtYXJAbGluYXJvLm9yZz4g
+d3JvdGU6Cj4gPiA+ID4gPgo+ID4gPiA+ID4gT24gMTItMTItMTgsIDE0OjE4LCBKb3JkYW4gQ3Jv
+dXNlIHdyb3RlOgo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgZ3B1X29wcF90YWJs
+ZTogb3BwLXRhYmxlIHsKPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+Y29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiOwo+ID4gPiA+ID4K
+PiA+ID4gPiA+IEkgdGhpbmsgeW91IG5lZWQgdG8gbWVudGlvbiAib3BlcmF0aW5nLXBvaW50cy12
+MiIgYXMgd2VsbCBoZXJlLgo+ID4gPiA+Cj4gPiA+ID4gQXJlIHlvdSBzYXlpbmcgdGhlIGFib3Zl
+IHNob3VsZCBiZToKPiA+ID4gPiAgIGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12Mi1x
+Y29tLWxldmVsIiwgIm9wZXJhdGluZy1wb2ludHMtdjIiOwo+ID4gPiA+Cj4gPiA+ID4gSWYgc28g
+SSdtIG5vdCBzdXJlIEkgYWdyZWUuCj4gPiA+Cj4gPiA+IFdlbGwgSSBoYXZlIG15IGRvdWJ0cyBh
+cyB3ZWxsIG9uIHRoaXMuIFRoaXMgaXMgd2hlcmUgdGhlIG9yZGVyaW5nIHdhcyBkaXNjdXNzZWQK
+PiA+ID4gZWFybGllcjoKPiA+ID4KPiA+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8x
+NTIzMjg5Nzk4OTcuMTgwMjc2LjE1OTYzOTI1ODc3NDQyNjU3MTU4QHN3Ym95ZC5tdHYuY29ycC5n
+b29nbGUuY29tLwo+ID4gPgo+ID4gPiBAUm9iL1N0ZXBoZW46IFNob3VsZCB0aGUgb3BwLXRhYmxl
+IG5vZGUgYWJvdmUgYWxzbyBoYXZlICJvcGVyYXRpbmctcG9pbnRzLXYyIgo+ID4gPiBzdHJpbmcg
+aW4gdGhlIGNvbXBhdGlibGUgcHJvcGVydHkgPwo+ID4gPgo+ID4gPiA+IEl0J3MgX25vdF8gcmVh
+bGx5IGNvbXBhdGlibGUgd2l0aCB0aGUKPiA+ID4gPiAib3BlcmF0aW5nLXBvaW50cy12MiIgYmlu
+ZGluZy4gIElmIHlvdSBoYWQgYSBkcml2ZXIgdGhhdCBoYWQgbmV2ZXIKPiA+ID4gPiBoZWFyZCBv
+ZiAib3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIiBhbmQgaGFkIG9ubHkgaGVhcmQgb2YK
+PiA+ID4gPiAib3BlcmF0aW5nLXBvaW50cy12MiIgYW5kIGl0IHRvb2sgYSBsb29rIGF0IHRoaXMg
+bm9kZSBpdCB3b3VsZCBoYXZlIG5vCj4gPiA+ID4gaWRlYSB3aGF0IHRvIGRvIHdpdGggaXQuCj4g
+PiA+Cj4gPiA+IFdlbGwgaXQgd2lsbCBwYXJzZSBldmVyeXRoaW5nIGFwYXJ0IGZyb20gdGhlIHFj
+b20sbGV2ZWwgdGhpbmcsIHNvIGl0IGNhbgo+ID4gPiBhY3R1YWxseSBwYXJzZSBzdHVmZiBoZXJl
+Lgo+ID4gPgo+ID4gPiA+IEknbGwgYWxzbyBub3RlIHRoYXQgb3RoZXIgaW5zdGFuY2VzIHBvc3Rl
+ZCB0byB0aGUgbGlzdCBkb24ndCBsaXN0IGJvdGg6Cj4gPiA+ID4KPiA+ID4gPiBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzI1ODAxLyAtIFJQTSAvIFJQTUggUEQgYmluZGlu
+Z3MKPiA+ID4gPiBodHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzI1NzkzLyAt
+IFJQTUggUEQgZGV2aWNlIHRyZWUgZm9yIHNkbTg0NQo+ID4gPiA+Cj4gPiA+ID4gVGhlIGJpbmRp
+bmdzIHBhdGNoIGFsc28gbWFrZXMgbm8gbWVudGlvbiBvZiBuZWVkaW5nCj4gPiA+ID4gIm9wZXJh
+dGluZy1wb2ludHMtdjIiLiAgSSB0aGluayB0aGUgY29tbW9uIGNhc2Ugd2hlbiBhIGZhbGxiYWNr
+IGlzCj4gPiA+ID4gcmVxdWlyZWQgaXQgaXMgZXhwbGljaXRseSBjYWxsZWQgb3V0IGluIHRoZSBi
+aW5kaW5nczoKPiA+ID4gPgo+ID4gPiA+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0
+Y2gvMTA3MjU4MDMvIC0gcWNvbS1vcHAgYmluZGluZ3MKPiA+ID4KPiA+ID4gU3VyZSwgbWF5YmUg
+SSBhbSB3cm9uZyBidXQgaXRzIGJldHRlciB0byBnZXQgc29tZSBjbGFyaXR5IG9uIGl0IGZyb20g
+Um9iL1N0ZXBoZW4uCj4gPgo+ID4gSW4gY2FzZSBpdCBoZWxwczoKPiA+Cj4gPiBodHRwczovL2xr
+bWwua2VybmVsLm9yZy9yLzIwMTgxMjE3MjEwODQ5LkdBMTU0OTBAYm9ndXMKPiA+Cj4gPiAuLi5z
+aG93cyBSb2IgZ2l2aW5nIGEgUmV2aWV3ZWQtYnkgd2l0aCBqdXN0Cj4gPgo+ID4gICBjb21wYXRp
+YmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCI7Cj4gPgo+ID4gLi4uYW5kIG5v
+dDoKPiA+Cj4gPiAgIGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVs
+IiwgIm9wZXJhdGluZy1wb2ludHMtdjIiOwo+ID4KPgo+IEkgZG9uJ3Qgc2VlIGEgcHJvYmxlbSBp
+ZiBib3RoIGNvbXBhdGlibGUgc3RyaW5ncyBhcmUgdGhlcmUuIERvZXMgdGhhdAo+IGNoYW5nZSBh
+bnl0aGluZz8gSSBzdXBwb3NlIHRoZSBwbGF0Zm9ybSBidXMgcG9wdWxhdGUgY29kZSB3b24ndCBj
+cmVhdGUgYQo+IGRldmljZSBmb3IgdGhlIHN1Ym5vZGUgaWYgaXQgaGFzICdvcGVyYXRpbmctcG9p
+bnRzLXYyJywgc28gbWF5YmUgdGhlCj4gZmFsbGJhY2sgY29tcGF0aWJsZSBzdHJpbmcgc2hvdWxk
+IGJlIHRoZXJlPyBBbmQgdGhlbiB0aGUgZ2VuZXJpYyBPUFAKPiBjb2RlIGNhbiBwYXJzZSBvdXQg
+dGhlIGZyZXF1ZW5jeSBhdCBsZWFzdCB3aXRob3V0IGhhdmluZyB0byBrbm93IHRoYXQKPiBpdCdz
+IGEgcWNvbSBzcGVjaWZpYyBPUFAgdGFibGUuCgpPSywgaXQncyBmaW5lIHdpdGggbWUgdG8gaGF2
+ZSB0aGUgZmFsbGJhY2ssIGJ1dCBpZiB3ZSBkbyB3ZSBzaG91bGQgYmUKY29uc2lzdGVudCBhYm91
+dCBpdCBhbmQgbWFrZSBzdXJlIGl0J3MgaW4gYWxsIHRoZSBiaW5kaW5ncyBhbmQgZGV2aWNlCnRy
+ZWUgZmlsZXMuLi4KCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
+ZWVkcmVubwo=
