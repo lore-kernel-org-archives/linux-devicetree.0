@@ -1,45 +1,33 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v8 1/2] dt-bindings: PCI: meson: add DT bindings for
- Amlogic Meson PCIe controller
-Date: Wed, 19 Dec 2018 00:14:37 +0100
-Message-ID: <CAFBinCD1x7jcJJx78yNx87MOmKQ2HuSBeRpDRQE0hyNCwm1JAg@mail.gmail.com>
-References: <1545120286-129258-1-git-send-email-hanjie.lin@amlogic.com> <1545120286-129258-2-git-send-email-hanjie.lin@amlogic.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH 0/3] drm/bridge: various small lvds-encoder things
+Date: Tue, 18 Dec 2018 23:19:11 +0000
+Message-ID: <20181218231850.3572-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545120286-129258-2-git-send-email-hanjie.lin@amlogic.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob, Hi Hanjie,
+Hi!
 
-(sorry for being late with my question)
+These patches are useful for me. Please consider merging.
 
-On Tue, Dec 18, 2018 at 9:05 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
-[...]
-> +- reg-names: Must be
-> +       - "elbi"        External local bus interface registers
-> +       - "cfg"         Meson specific registers
-> +       - "phy"         Meson PCIE PHY registers
-I have learned that there are two PHY register designs:
-- AXG only has a PCIe PHY
-- G12A has a PHY which supports PCIe and USB 3.0. The PCIe part of
-this PHY design is compatible with AXG, but this design also supports
-a USB 3.0 port (it's an exclusive choice: either PCIe *or* USB 3.0)
+Cheers,
+Peter
 
-The PCIe controller itself is identical on both, AXG and G12A.
-This patch adds support for the AXG PCIe controller and PHY within one
-device-tree node.
+Peter Rosin (3):
+  dt-bindings: display: bridge: lvds-transmitter: add ti,ds90c187
+  dt-bindings: display: bridge: lvds-transmitter: add pwdn-gpios
+  drm/bridge: add pwdn-gpios support to the lvds-encoder
 
-For G12A I propose to add a separate "phys" property with a phandle to
-the "combo" PCIe and USB3.0 PHY - this can be part of a separate patch
-though.
-I would like to know whether it's OK that for AXG the PCIe PHY is
-described in the same device-tree node as the PCIe controller (in
-other words: we're not using a "phys" property here)?
+ .../bindings/display/bridge/lvds-transmitter.txt   |  4 +++
+ drivers/gpu/drm/bridge/lvds-encoder.c              | 34 ++++++++++++++++++=
+++++
+ 2 files changed, 38 insertions(+)
 
-
-Kind Regards
-Martin
+--=20
+2.11.0
