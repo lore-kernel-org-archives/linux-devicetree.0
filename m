@@ -1,37 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] clk: qcom: smd: Add support for MSM8998 rpm clocks
-Date: Tue, 18 Dec 2018 08:55:43 -0600
-Message-ID: <20181218145543.GA10329@bogus>
-References: <1545099336-5615-1-git-send-email-jhugo@codeaurora.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v6 08/11] dt-bindings: serial: Document RDA Micro UART
+Date: Tue, 18 Dec 2018 20:27:32 +0530
+Message-ID: <20181218145732.GA22420@Mani-XPS-13-9360>
+References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+ <20181218080527.10801-9-manivannan.sadhasivam@linaro.org>
+ <20181218145443.GA5150@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545099336-5615-1-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <20181218145443.GA5150@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Rob Herring <robh@kernel.org>
+Cc: olof@lixom.net, arnd@arndb.de, gregkh@linuxfoundation.org, jslaby@suse.com, linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2018 19:15:36 -0700, Jeffrey Hugo wrote:
-> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
-> for clients to vote on.
+On Tue, Dec 18, 2018 at 08:54:43AM -0600, Rob Herring wrote:
+> On Tue, Dec 18, 2018 at 01:35:24PM +0530, Manivannan Sadhasivam wrote:
+> > From: Andreas Färber <afaerber@suse.de>
+> > 
+> > Add an initial binding for the UART in RDA Micro RDA8810PL SoC.
+> > 
+> > Signed-off-by: Andreas Färber <afaerber@suse.de>
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  .../bindings/serial/rda,8810pl-uart.txt         | 17 +++++++++++++++++
+> >  1 file changed, 17 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/serial/rda,8810pl-uart.txt
 > 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
-> v4
-> -Fix compile issue
-> 
-> v3
-> -Ensure Marc's hang was addressed by GCC fixes
-> -Renamed the bb clks to ln_bb to match the schematics
-> 
-> v2
-> -fix compatible ordering nits per Stephen 
-> 
->  .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
->  drivers/clk/qcom/clk-smd-rpm.c                     | 63 ++++++++++++++++++++++
->  include/dt-bindings/clock/qcom,rpmcc.h             | 10 ++++
->  3 files changed, 74 insertions(+)
-> 
+> Please add acks/reviewed-bys when posting new versions.
+>
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Hi Rob,
+
+Sorry for that. I missed your Reviewed-by tag here. Will add it in the
+next iteration which I'm going to send to ARM SoC list.
+
+Regards,
+Mani
+
+> Rob
