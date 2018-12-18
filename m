@@ -1,68 +1,83 @@
-From: Richard Leitner <richard.leitner@skidata.com>
-Subject: [RESEND PATCH v2 8/8] Input: sx8654 - convert #defined flags to BIT(x)
-Date: Tue, 18 Dec 2018 09:40:02 +0100
-Message-ID: <20181218084002.19454-1-richard.leitner@skidata.com>
-References: <20181218083606.25795-1-richard.leitner@skidata.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: leds: Add pattern initialization from
+ Device Tree
+Date: Tue, 18 Dec 2018 10:06:14 +0100
+Message-ID: <CAJKOXPd_icrPUQJhbcHkovQ7DFYM5mVZmXG_qbHv3KKjxVEdbg@mail.gmail.com>
+References: <1544613406-27026-1-git-send-email-krzk@kernel.org>
+ <1544613406-27026-2-git-send-email-krzk@kernel.org> <20181217224029.GA16132@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218083606.25795-1-richard.leitner@skidata.com>
+In-Reply-To: <20181217224029.GA16132@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com, mark.rutland@arm.com
-Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, richard.leitner@skidata.com
+To: Rob Herring <robh@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Mark Rutland <mark.rutland@arm.com>, Baolin Wang <baolin.wang@linaro.org>, linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some of the #defined register values are one-bit flags. Convert them to
-use the BIT(x) macro instead of 1 byte hexadecimal values. This improves
-readability and clarifies the intent.
+On Mon, 17 Dec 2018 at 23:40, Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Dec 12, 2018 at 12:16:42PM +0100, Krzysztof Kozlowski wrote:
+> > Document new linux,trigger-pattern property for initialization of LED
+> > pattern trigger.
+> >
+> > Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> > ---
+> >  Documentation/devicetree/bindings/leds/common.txt | 36 +++++++++++++++++++++++
+> >  1 file changed, 36 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/leds/common.txt b/Documentation/devicetree/bindings/leds/common.txt
+> > index aa1399814a2a..3daccd4ea8a3 100644
+> > --- a/Documentation/devicetree/bindings/leds/common.txt
+> > +++ b/Documentation/devicetree/bindings/leds/common.txt
+> > @@ -37,6 +37,42 @@ Optional properties for child nodes:
+> >       "ide-disk" - LED indicates IDE disk activity (deprecated),
+> >                    in new implementations use "disk-activity"
+> >       "timer" - LED flashes at a fixed, configurable rate
+> > +     "pattern" - LED alters the brightness for the specified duration with one
+> > +                 software timer (requires "led-pattern" property)
+> > +
+> > +- led-pattern : String with default pattern for certain triggers. Each trigger
+> > +                may parse this string differently:
+> > +                - one-shot : two numbers specifying delay on and delay off,
+> > +                - timer : two numbers specifying delay on and delay off,
+>
+> I misunderstood that these triggers applied to this. Is there any point
+> to supporting these modes?
 
-Signed-off-by: Richard Leitner <richard.leitner@skidata.com>
----
- drivers/input/touchscreen/sx8654.c | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+I am not sure whether I explained this clearly enough, so let me be
+more specific. The "led-pattern" is a string with pattern which will
+be interpreted differently, based on LED trigger. One-shot and timer
+triggers expect two numbers. Pattern trigger expects full pattern.
 
-diff --git a/drivers/input/touchscreen/sx8654.c b/drivers/input/touchscreen/sx8654.c
-index b7b263ed52af..3746ea855f94 100644
---- a/drivers/input/touchscreen/sx8654.c
-+++ b/drivers/input/touchscreen/sx8654.c
-@@ -36,6 +36,7 @@
- #include <linux/gpio/consumer.h>
- #include <linux/delay.h>
- #include <linux/input/touchscreen.h>
-+#include <linux/bitops.h>
- 
- /* register addresses */
- #define I2C_REG_TOUCH0			0x00
-@@ -46,7 +47,7 @@
- #define I2C_REG_SOFTRESET		0x3f
- 
- #define I2C_REG_SX8650_STAT		0x05
--#define SX8650_STAT_CONVIRQ		0x80
-+#define SX8650_STAT_CONVIRQ		BIT(7)
- 
- /* commands */
- #define CMD_READ_REGISTER		0x40
-@@ -56,8 +57,8 @@
- #define SOFTRESET_VALUE			0xde
- 
- /* bits for I2C_REG_IRQSRC */
--#define IRQ_PENTOUCH_TOUCHCONVDONE	0x08
--#define IRQ_PENRELEASE			0x04
-+#define IRQ_PENTOUCH_TOUCHCONVDONE	BIT(7)
-+#define IRQ_PENRELEASE			BIT(6)
- 
- /* bits for RegTouch1 */
- #define CONDIRQ				0x20
-@@ -65,8 +66,8 @@
- #define FILT_7SA			0x03
- 
- /* bits for I2C_REG_CHANMASK */
--#define CONV_X				0x80
--#define CONV_Y				0x40
-+#define CONV_X				BIT(7)
-+#define CONV_Y				BIT(6)
- 
- /* coordinates rate: higher nibble of CTRL0 register */
- #define RATE_MANUAL			0x00
--- 
-2.11.0
+> Aren't they just a subset or simplification
+> of a pattern?
+
+Yes, they are.
+
+>
+> Can we control the timer frequency from DT? The pattern could address
+> that limitation.
+
+No, currently we cannot. This patch with pattern solves that issue.
+
+>
+> > +                - pattern : The pattern is given by a series of tuples, of
+>
+> Don't you need one-shot vs. repeat modes for patterns too?
+
+Repeat mode is defined by trigger. One-shot is one time. Timer and
+patter triggers are repeating.
+
+>
+> I could imagine you'd want a pattern for any trigger.
+
+In general I think that only these three triggers require such
+initialization through pattern. Other triggers - like heartbeat or
+activity - have they own bindings (or do not need any).
+
+Following Pavel's suggestion, I could convert it to array of integers
+which still should be suitable for these and any future triggers
+operating on numbers.
+
+Best regards,
+Krzysztof
