@@ -1,73 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V3 01/20] dt-bindings: clock: tegra124-dfll: Update DFLL
- binding for PWM regulator
-Date: Tue, 18 Dec 2018 09:19:34 -0600
-Message-ID: <20181218151934.GA10127@bogus>
-References: <20181218091232.23532-1-josephl@nvidia.com>
- <20181218091232.23532-2-josephl@nvidia.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] media/sun6i: Allwinner A64 CSI support
+Date: Tue, 18 Dec 2018 16:21:22 +0100
+Message-ID: <20181218152122.4zj6wgbukhrl6ly6@flea>
+References: <20181218113320.4856-1-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="3jygq7kzqfz5lk2a"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB7NA4TQAKGQEWFQ2FAI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20181218091232.23532-2-josephl@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joseph Lo <josephl@nvidia.com>
-Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181218113320.4856-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 05:12:13PM +0800, Joseph Lo wrote:
-> From: Peter De Schrijver <pdeschrijver@nvidia.com>
-> 
-> Add new properties to configure the DFLL PWM regulator support.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> ---
-> *V3:
->  - no change
-> *V2:
->  - update the binding strings and descriptions for
->  nvidia,pwm-tristate-microvolts
->  nvidia,pwm-min-microvolts
->  nvidia,pwm-voltage-step-microvolts
-> ---
->  .../bindings/clock/nvidia,tegra124-dfll.txt   | 79 ++++++++++++++++++-
->  1 file changed, 77 insertions(+), 2 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> index dff236f524a7..38e8cc8c70a8 100644
-> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
-> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
->  oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
->  control module that will automatically adjust the VDD_CPU voltage by
->  communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
-> -Currently only the I2C mode is supported by these bindings.
->  
->  Required properties:
->  - compatible : should be "nvidia,tegra124-dfll"
-> @@ -45,10 +44,31 @@ Required properties for the control loop parameters:
->  Optional properties for the control loop parameters:
->  - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
->  
-> +Optional properties for mode selection:
-> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
-> +
->  Required properties for I2C mode:
->  - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
->  
-> -Example:
-> +Required properties for PWM mode:
-> +- nvidia,pwm-period: period of PWM square wave in microseconds.
 
-Needs unit suffix.
+--3jygq7kzqfz5lk2a
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Tue, Dec 18, 2018 at 05:03:14PM +0530, Jagan Teki wrote:
+> This series support CSI on Allwinner A64.
+> 
+> Tested 640x480, 320x240, 720p, 1080p resolutions UYVY8_2X8 format.
+> 
+> Changes for v4:
+> - update the compatible string order
+> - add proper commit message
+> - included BPI-M64 patch
+> - skipped amarula-a64 patch
+> Changes for v3:
+> - update dt-bindings for A64
+> - set mod clock via csi driver
+> - remove assign clocks from dtsi
+> - remove i2c-gpio opendrian
+> - fix avdd and dovdd supplies
+> - remove vcc-csi pin group supply
+> 
+> Note: This series created on top of H3 changes [1]
+> 
+> [1] https://patchwork.kernel.org/cover/10705905/
+
+You had memory corruption before, how was this fixed?
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--3jygq7kzqfz5lk2a--
