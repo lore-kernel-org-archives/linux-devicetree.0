@@ -1,32 +1,46 @@
 MIME-Version: 1.0
-Date: Wed, 19 Dec 2018 08:05:00 -0600
+Date: Tue, 18 Dec 2018 09:44:23 -0600
 References: <20181217144324.99422-1-chris.brandt@renesas.com>
 	<20181217144324.99422-2-chris.brandt@renesas.com>
 	<20181218150551.GA15519@bogus>
-In-Reply-To: <20181218150551.GA15519@bogus>
-Message-ID: <CAL_JsqKqWG39zXa1iBmNvgjzsUhX29q0wkqXy5juKdwXV9_JWA@mail.gmail.com>
+	<TYXPR01MB1568D8FDF5E286B2832703048ABD0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+In-Reply-To: <TYXPR01MB1568D8FDF5E286B2832703048ABD0@TYXPR01MB1568.jpnprd01.prod.outlook.com>
+Message-ID: <CAL_JsqLcnWLK0Uyg1YQ7TRzN+vMqtKNO6Jj+VLb_dTzstTDj-Q@mail.gmail.com>
 Subject: Re: [PATCH v3 1/2] ARM: dts: r7s9210: Initial SoC device tree
 From: Rob Herring <robh@kernel.org>
 Content-Type: text/plain; charset="UTF-8"
-To: Chris Brandt <chris.brandt@renesas.com>
+To: Chris Brandt <Chris.Brandt@renesas.com>
 Cc: Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Tue, Dec 18, 2018 at 9:05 AM Rob Herring <robh@kernel.org> wrote:
+On Tue, Dec 18, 2018 at 9:40 AM Chris Brandt <Chris.Brandt@renesas.com> wrote:
 >
-> On Mon, Dec 17, 2018 at 09:43:23AM -0500, Chris Brandt wrote:
-> > Basic support for the RZ/A2 (R7S9210) SoC.
+> On Tuesday, December 18, 2018 1, Rob Herring wrote:
+> > > +/ {
+> > > +   compatible = "renesas,r7s9210";
+> > > +   interrupt-parent = <&gic>;
+> > > +   #address-cells = <1>;
+> > > +   #size-cells = <1>;
+> > > +
+> > > +   bsid: chipid@fcfe8004 {
 > >
-> > Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
-> > ---
-
-> > +     gic: interrupt-controller@e8221000 {
-> > +             compatible = "arm,gic-400";
+> > Put all the mmio peripherals under a simple-bus node or nodes.
 >
-> Kind of strange that a single core A9 uses an external GIC rather than
-> the built-in one.
+> Just to be clear on what you mean, basically put all the peripherals
+> under a 'soc' node like the other Renesas parts?
 
-Still have this question on v4. It should be "arm,cortex-a9-gic" if
-the A9 built-in GIC is used.
+Yes.
 
-Rob
+>
+>         soc {
+>                 compatible = "simple-bus";
+>                 interrupt-parent = <&gic>;
+>
+>                 #address-cells = <2>;
+>                 #size-cells = <2>;
+>                 ranges;
+>
+>
+> Thanks,
+> Chris
+>
