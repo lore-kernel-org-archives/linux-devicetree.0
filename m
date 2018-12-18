@@ -1,53 +1,94 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v6 07/11] ARM: dts: rda8810pl: Add timer support
-Date: Tue, 18 Dec 2018 13:35:23 +0530
-Message-ID: <20181218080527.10801-8-manivannan.sadhasivam@linaro.org>
-References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Subject: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
+Date: Tue, 18 Dec 2018 09:05:56 +0100
+Message-ID: <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
+References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
-Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add timer support for RDA Micro RDA8810PL SoC.
+These options apply to all regulators in this chip.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+strict-supply-voltage:
+  Set STRICT flag in CONFIG1
+under-voltage-limit:
+  Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
+under-voltage-hysteresis:
+  Select 200mV or 400mV UVLOHYS in CONFIG2
+
+Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
 ---
- arch/arm/boot/dts/rda8810pl.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 46 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
-index 15547b138977..84baa4c0a14c 100644
---- a/arch/arm/boot/dts/rda8810pl.dtsi
-+++ b/arch/arm/boot/dts/rda8810pl.dtsi
-@@ -6,6 +6,8 @@
-  * Copyright (c) 2018 Manivannan Sadhasivam
-  */
+diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+index 8bcdecf..f5e559b 100644
+--- a/drivers/mfd/tps65218.c
++++ b/drivers/mfd/tps65218.c
+@@ -211,6 +211,50 @@ static const struct of_device_id of_tps65218_match_table[] = {
+ };
+ MODULE_DEVICE_TABLE(of, of_tps65218_match_table);
  
-+#include <dt-bindings/interrupt-controller/irq.h>
++static void tps65218_options(struct tps65218 *tps)
++{
++	struct device *dev = tps->dev;
++	struct device_node *np = dev->of_node;
++	u32 pval;
 +
- / {
- 	compatible = "rda,8810pl";
- 	interrupt-parent = <&intc>;
-@@ -50,6 +52,14 @@
- 		#address-cells = <1>;
- 		#size-cells = <1>;
- 		ranges = <0x0 0x20900000 0x100000>;
++	if (!of_property_read_u32(np, "strict-supply-voltage", &pval)) {
++		tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
++			TPS65218_CONFIG1_STRICT,
++			pval ? TPS65218_CONFIG1_STRICT : 0,
++			TPS65218_PROTECT_L1);
++		dev_dbg(dev, "tps65218 strict-supply-voltage: %d\n", pval);
++	}
++	if (!of_property_read_u32(np, "under-voltage-hysteresis", &pval)) {
++		if (pval != 400000 && pval != 200000) {
++			dev_err(dev,
++				 "under-voltage-hysteresis must be %d or %d\n",
++				 200000, 400000);
++		} else {
++			tps65218_update_bits(tps, TPS65218_REG_CONFIG2,
++				TPS65218_CONFIG2_UVLOHYS,
++				pval == 400000 ? TPS65218_CONFIG2_UVLOHYS : 0,
++				TPS65218_PROTECT_L1);
++		}
++		dev_dbg(dev, "tps65218 under-voltage-hysteresis: %d\n", pval);
++	}
++	if (!of_property_read_u32(np, "under-voltage-limit", &pval)) {
++		int i, vals[] = { 275, 295, 325, 335 };
 +
-+		timer@10000 {
-+			compatible = "rda,8810pl-timer";
-+			reg = <0x10000 0x1000>;
-+			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>,
-+				     <17 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hwtimer", "ostimer";
-+		};
- 	};
++		for (i = 0; i < ARRAY_SIZE(vals); i++) {
++			if (pval == vals[i] * 10000)
++				break;
++		}
++		if (i < ARRAY_SIZE(vals)) {
++			tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
++				TPS65218_CONFIG1_UVLO_MASK, i,
++				TPS65218_PROTECT_L1);
++		} else {
++			dev_err(dev, "Invalid under-voltage-limit: %d\n", pval);
++		}
++		dev_dbg(dev, "tps65218 under-voltage-limit: %d=%d\n", pval, i);
++	}
++}
++
+ static int tps65218_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *ids)
+ {
+@@ -249,6 +293,8 @@ static int tps65218_probe(struct i2c_client *client,
  
- 	apb@20a00000 {
+ 	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
+ 
++	tps65218_options(tps);
++
+ 	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
+ 			      ARRAY_SIZE(tps65218_cells), NULL, 0,
+ 			      regmap_irq_get_domain(tps->irq_data));
 -- 
-2.17.1
+2.7.4
