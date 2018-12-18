@@ -1,79 +1,43 @@
-From: Jayant Shekhar <jshekhar@codeaurora.org>
-Subject: [v1] drm/msm/dpu: Cleanup dpu plane interface
-Date: Tue, 18 Dec 2018 18:50:38 +0530
-Message-ID: <1545139238-8395-1-git-send-email-jshekhar@codeaurora.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
+Date: Tue, 18 Dec 2018 14:41:30 +0100
+Message-ID: <20181218144130.3f1a75de@xps13>
+References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
+        <20181212102142.16053-4-miquel.raynal@bootlin.com>
+        <20181214014701.373b220b@nic.cz>
+        <20181214015712.31f749ea@nic.cz>
+        <20181217170724.58421a29@xps13>
+        <20181217223430.182d01d8@nic.cz>
+        <20181218091817.4a8a5d42@xps13>
+        <20181218092314.725af970@xps13>
+        <20181218140920.6935db39@nic.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, Jayant Shekhar <jshekhar@codeaurora.org>, seanpaul@chromium.org, hoegsberg@chromium.org, chandanu@codeaurora.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181218140920.6935db39@nic.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Behun <marek.behun@nic.cz>
+Cc: Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-UmVtb3ZlIHVudXNlZCBmdW5jdGlvbnMgZnJvbSBkcHUgcGxhbmUgaW50ZXJmYWNlCmFuZCB1bnVz
-ZWQgdmFyaWFibGVzIGZyb20gZHB1IHBsYW5lIHN0YXRlIHN0cnVjdHVyZS4KClNpZ25lZC1vZmYt
-Ynk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJz
-L2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcGxhbmUuaCB8IDI3IC0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLQogMSBmaWxlIGNoYW5nZWQsIDI3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9wbGFuZS5oIGIvZHJpdmVycy9ncHUv
-ZHJtL21zbS9kaXNwL2RwdTEvZHB1X3BsYW5lLmgKaW5kZXggN2ZlZDBiNi4uMGU2MDYzYSAxMDA2
-NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X3BsYW5lLmgKKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X3BsYW5lLmgKQEAgLTI4LDIzICsyOCwx
-OCBAQAogLyoqCiAgKiBzdHJ1Y3QgZHB1X3BsYW5lX3N0YXRlOiBEZWZpbmUgZHB1IGV4dGVuc2lv
-biBvZiBkcm0gcGxhbmUgc3RhdGUgb2JqZWN0CiAgKiBAYmFzZToJYmFzZSBkcm0gcGxhbmUgc3Rh
-dGUgb2JqZWN0Ci0gKiBAcHJvcGVydHlfc3RhdGU6IExvY2FsIHN0b3JhZ2UgZm9yIG1zbV9wcm9w
-IHByb3BlcnRpZXMKLSAqIEBwcm9wZXJ0eV92YWx1ZXM6CWNhY2hlZCBwbGFuZSBwcm9wZXJ0eSB2
-YWx1ZXMKICAqIEBhc3BhY2U6CXBvaW50ZXIgdG8gYWRkcmVzcyBzcGFjZSBmb3IgaW5wdXQvb3V0
-cHV0IGJ1ZmZlcnMKLSAqIEBpbnB1dF9mZW5jZToJZGVyZWZlcmVuY2VkIGlucHV0IGZlbmNlIHBv
-aW50ZXIKICAqIEBzdGFnZToJYXNzaWduZWQgYnkgY3J0YyBibGVuZGVyCiAgKiBAbXVsdGlyZWN0
-X2luZGV4OiBpbmRleCBvZiB0aGUgcmVjdGFuZ2xlIG9mIFNTUFAKICAqIEBtdWx0aXJlY3RfbW9k
-ZTogcGFyYWxsZWwgb3IgdGltZSBtdWx0aXBsZXggbXVsdGlyZWN0IG1vZGUKICAqIEBwZW5kaW5n
-Ogl3aGV0aGVyIHRoZSBjdXJyZW50IHVwZGF0ZSBpcyBzdGlsbCBwZW5kaW5nCiAgKiBAc2NhbGVy
-M19jZmc6IGNvbmZpZ3VyYXRpb24gZGF0YSBmb3Igc2NhbGVyMwogICogQHBpeGVsX2V4dDogY29u
-ZmlndXJhdGlvbiBkYXRhIGZvciBwaXhlbCBleHRlbnNpb25zCi0gKiBAc2NhbGVyX2NoZWNrX3N0
-YXRlOiBpbmRpY2F0ZXMgc3RhdHVzIG9mIHVzZXIgcHJvdmlkZWQgcGl4ZWwgZXh0ZW5zaW9uIGRh
-dGEKICAqIEBjZHBfY2ZnOglDRFAgY29uZmlndXJhdGlvbgogICovCiBzdHJ1Y3QgZHB1X3BsYW5l
-X3N0YXRlIHsKIAlzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlIGJhc2U7CiAJc3RydWN0IG1zbV9nZW1f
-YWRkcmVzc19zcGFjZSAqYXNwYWNlOwotCXZvaWQgKmlucHV0X2ZlbmNlOwogCWVudW0gZHB1X3N0
-YWdlIHN0YWdlOwogCXVpbnQzMl90IG11bHRpcmVjdF9pbmRleDsKIAl1aW50MzJfdCBtdWx0aXJl
-Y3RfbW9kZTsKQEAgLTEwNywxMiArMTAyLDYgQEAgdm9pZCBkcHVfcGxhbmVfZ2V0X2N0bF9mbHVz
-aChzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSwgc3RydWN0IGRwdV9od19jdGwgKmN0bCwKIHZvaWQg
-ZHB1X3BsYW5lX2ZsdXNoKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lKTsKIAogLyoqCi0gKiBkcHVf
-cGxhbmVfa2lja29mZiAtIGZpbmFsIHBsYW5lIG9wZXJhdGlvbnMgYmVmb3JlIGNvbW1pdCBraWNr
-b2ZmCi0gKiBAcGxhbmU6IFBvaW50ZXIgdG8gZHJtIHBsYW5lIHN0cnVjdHVyZQotICovCi12b2lk
-IGRwdV9wbGFuZV9raWNrb2ZmKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lKTsKLQotLyoqCiAgKiBk
-cHVfcGxhbmVfc2V0X2Vycm9yOiBlbmFibGUvZGlzYWJsZSBlcnJvciBjb25kaXRpb24KICAqIEBw
-bGFuZTogcG9pbnRlciB0byBkcm1fcGxhbmUgc3RydWN0dXJlCiAgKi8KQEAgLTE0NywxNCArMTM2
-LDYgQEAgc3RydWN0IGRybV9wbGFuZSAqZHB1X3BsYW5lX2luaXQoc3RydWN0IGRybV9kZXZpY2Ug
-KmRldiwKIHZvaWQgZHB1X3BsYW5lX2NsZWFyX211bHRpcmVjdChjb25zdCBzdHJ1Y3QgZHJtX3Bs
-YW5lX3N0YXRlICpkcm1fc3RhdGUpOwogCiAvKioKLSAqIGRwdV9wbGFuZV93YWl0X2lucHV0X2Zl
-bmNlIC0gd2FpdCBmb3IgaW5wdXQgZmVuY2Ugb2JqZWN0Ci0gKiBAcGxhbmU6ICAgUG9pbnRlciB0
-byBEUk0gcGxhbmUgb2JqZWN0Ci0gKiBAd2FpdF9tczogV2FpdCB0aW1lb3V0IHZhbHVlCi0gKiBS
-ZXR1cm5zOiBaZXJvIG9uIHN1Y2Nlc3MKLSAqLwotaW50IGRwdV9wbGFuZV93YWl0X2lucHV0X2Zl
-bmNlKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lLCB1aW50MzJfdCB3YWl0X21zKTsKLQotLyoqCiAg
-KiBkcHVfcGxhbmVfY29sb3JfZmlsbCAtIGVuYWJsZXMgY29sb3IgZmlsbCBvbiBwbGFuZQogICog
-QHBsYW5lOiAgUG9pbnRlciB0byBEUk0gcGxhbmUgb2JqZWN0CiAgKiBAY29sb3I6ICBSR0IgZmls
-bCBjb2xvciB2YWx1ZSwgWzIzLi4xNl0gQmx1ZSwgWzE1Li44XSBHcmVlbiwgWzcuLjBdIFJlZApA
-QCAtMTY0LDEyICsxNDUsNCBAQCBzdHJ1Y3QgZHJtX3BsYW5lICpkcHVfcGxhbmVfaW5pdChzdHJ1
-Y3QgZHJtX2RldmljZSAqZGV2LAogaW50IGRwdV9wbGFuZV9jb2xvcl9maWxsKHN0cnVjdCBkcm1f
-cGxhbmUgKnBsYW5lLAogCQl1aW50MzJfdCBjb2xvciwgdWludDMyX3QgYWxwaGEpOwogCi0vKioK
-LSAqIGRwdV9wbGFuZV9zZXRfcmV2YWxpZGF0ZSAtIHNldHMgcmV2YWxpZGF0ZSBmbGFnIHdoaWNo
-IGZvcmNlcyBhIGZ1bGwKLSAqCXZhbGlkYXRpb24gb2YgdGhlIHBsYW5lIHByb3BlcnRpZXMgaW4g
-dGhlIG5leHQgYXRvbWljIGNoZWNrCi0gKiBAcGxhbmU6IFBvaW50ZXIgdG8gRFJNIHBsYW5lIG9i
-amVjdAotICogQGVuYWJsZTogQm9vbGVhbiB0byBzZXQvdW5zZXQgdGhlIGZsYWcKLSAqLwotdm9p
-ZCBkcHVfcGxhbmVfc2V0X3JldmFsaWRhdGUoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsIGJvb2wg
-ZW5hYmxlKTsKLQogI2VuZGlmIC8qIF9EUFVfUExBTkVfSF8gKi8KLS0gClRoZSBRdWFsY29tbSBJ
-bm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBvZiB0aGUgQ29kZSBBdXJvcmEgRm9y
-dW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZlIFByb2plY3QKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Marek,
+
+Marek Behun <marek.behun@nic.cz> wrote on Tue, 18 Dec 2018 14:09:20
++0100:
+
+> > [2]
+> > https://github.com/ARM-software/arm-trusted-firmware/blob/master/drivers/marvell/comphy/phy-comphy-3700.c  
+> 
+> Yes, I used mainline atf (it did not work out of the box with 18.09
+> atf-marvell of course). But there is no _power_off function for SGMII,
+> nor a digital_reset function like in cp110 implementation.
+
+Indeed, but why would you need one? Just use the helpers from the core
+and if there is no implementation, nothing should happen and the helper
+should exit without error. Just call phy_set_mode()/phy_power_on() an
+you should be good.
+
+
+Thanks,
+Miquèl
