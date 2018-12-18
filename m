@@ -1,46 +1,65 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
-Date: Tue, 18 Dec 2018 10:14:26 -0800
-Message-ID: <CAHQ1cqEw47XSfNnohg=VJdQJ+fF-F-nucNm=Qqu5Tt-tZt2-PA@mail.gmail.com>
-References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
- <20181218040702.29231-4-andrew.smirnov@gmail.com> <8149d09e665c4a4efb85a9d60f266d478bee02d8.camel@nxp.com>
+From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v7 0/6] arm64: dts: Add sdm845 GPU/GMU and SMMU
+Date: Tue, 18 Dec 2018 11:32:35 -0700
+Message-ID: <20181218183241.12830-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8149d09e665c4a4efb85a9d60f266d478bee02d8.camel@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Richard Zhu <hongxing.zhu@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Cc: nm-l0cyMroinI0@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 1:34 AM Leonard Crestez <leonard.crestez@nxp.com> wrote:
->
-> On Mon, 2018-12-17 at 20:07 -0800, Andrey Smirnov wrote:
-> > Add code needed to support i.MX8MQ variant.
->
-> >  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
-> >  {
-> > +
-> > +
-> Remove empty lines?
->
-
-Sure, will do.
-
-> > +     unsigned int mask, val, offset;
-> > +
-> > +     mask = IMX6Q_GPR12_DEVICE_TYPE;
-> > +     val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT);
->
-> ... snip ...
->
-> > -     regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
-> > -                     IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
-> > +     regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
->
-> Maybe setting port type should be a separate function from init_phy?
-
-Sure, will change in v4.
-
-Thanks,
-Andrey Smirnov
+Tm93IHRoYXQgbW9yZSBvZiB0aGUgc2RtODQ1IGJpbmRpbmdzIGFyZSBoZWFkZWQgdXBzdHJlYW0g
+dGhpcyBhIHJlZnJlc2ggb2YKb2YgaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3Nl
+cmllcy8zOTMwOC8gdG8gYWRkIGJpbmRpbmdzIGFuZCBub2Rlcwpmb3IgdGhlIEdQVS9HTVUgYW5k
+IEdQVSBTTU1VIGZvciBzZG04NDUuIHY3IG9mIHRoaXMgcGF0Y2hzZXQgYWxzbyByZW1vdmVzCmlu
+dGVycnVwdC1uYW1lcyBmcm9tIHRoZSBkcml2ZXIgYW5kIHRoZSBleGlzdGluZyBEVCBjaGFuZ2Vz
+IHBlciBmZWVkYmFjayBmcm9tClJvYiBIZXJyaW5nLgoKVGhpcyBpcyBiYXNlZCBvbiA6CmdpdDov
+L2dpdC5rZXJuZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9hZ3Jvc3MvbGludXguZ2l0
+IGZvci1uZXh0Cgp3aXRoOgpodHRwczovL2xvcmUua2VybmVsLm9yZy9wYXRjaHdvcmsvcGF0Y2gv
+MTAxODM2NS8KClRoaXMgY2hhbmdlIHJlcXVpcmVzIHRoZSBmb2xsb3dpbmcgZGVwZW5kZW5jaWVz
+OgoKaW5jbHVkZS9kdC1iaW5kaW5ncy9wb3dlci9xY29tLXJwbXBkLmg6Cmh0dHBzOi8vcGF0Y2h3
+b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3MTExMTkvCgpxY29tLHNtbXUtdjIgYmluZGluZzoKaHR0
+cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDU4MTkxMS8KCnY3OiBBZGQgcGF0Y2hl
+cyB0byByZW1vdmUgaW50ZXJydXB0LW5hbWVzLCBhZGQgdmVyc2lvbiBzcGVjaWZpYyBjb21wYXRp
+YmxlCiAgICBzdHJpbmcgZm9yIGdtdQp2NjogVXBkYXRlIEdQVSBiaW5kaW5ncyBmb3IgYTZ4eCBh
+bmQgbWFrZSB0aGUgZXhhbXBsZXMgbWF0Y2ggdGhlIG5vZGVzIGFuZCB2aWNlCiB2ZXJzYS4gIENs
+ZWFuIHVwIHR5cGVzIGFuZCByZWJhc2Ugb24KIGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNo
+d29yay9wYXRjaC8xMDE4MzY1LyB0byBoZWxwIGZhY2lsaXRhdGUgbWVyZ2luZy4KdjU6IFVzZSBz
+eW1ib2xpYyBuYW1lcyBmb3IgdGhlIFJQTUggcG93ZXIgbGV2ZWxzIGRlZmluZWQgaW4gT1BQIHRh
+YmxlLAogbW92ZSB0aGUgb3BwIHRhYmxlcyBhcyBjaGlsZHJlbiBvZiB0aGVpciByZXNwZWN0aXZl
+IG5vZGVzIGFuZCByZW5hbWUKIHRoZSBpb21tdSBkZXZpY2UuCnY0OiBSZWJhc2UKdjM6IFNwbGl0
+IEdNVSBQREMgcmVnaW9uIGludG8gdHdvIEdQVSBzcGVjaWZpYyBzZWN0aW9ucywgZml4IGluZGVu
+dGF0aW9uLAogIHJlYWxseSB1c2UgcWNvbSxnbXUgZm9yIHRoZSBwaGFuZGxlIG5hbWUKdjI6IGNo
+YW5nZWQgcWNvbSxhcmMtbGV2ZWwgdG8gcWNvbSxsZXZlbCBmb2xsb3dpbmcgZGlzY3Vzc2lvbiB3
+aXRoIFZpcmVzaDsKICBjaGFuZ2UgZ211IHBoYW5kbGUgdG8gcWNvbSxnbXUgcGVyIFJvYgoKSm9y
+ZGFuIENyb3VzZSAoNik6CiAgZHJtL21zbS9ncHU6IFJlbW92ZSBoYXJkY29kZWQgaW50ZXJydXB0
+IG5hbWUKICBkcm0vbXNtOiBkcm9wIGludGVycnVwdC1uYW1lcwogIEFSTTogZHRzOiBxY29tOiBS
+ZW1vdmVkIHVudXNlZCBpbnRlcnJ1cHQtbmFtZXMgZnJvbSBHUFUgbm9kZQogIGFybTY0OiBkdHM6
+IHFjb206IG1zbTg5MTY6IFJlbW92ZSB1bnVzZWQgaW50ZXJydXB0LW5hbWVzIGZyb20gR1BVCiAg
+ZHQtYmluZGluZ3M6IGRybS9tc20vYTZ4eDogRG9jdW1lbnQgR01VIGFuZCB1cGRhdGUgR1BVIGJp
+bmRpbmdzCiAgYXJtNjQ6IGR0czogc2RtODQ1OiBBZGQgZ3B1IGFuZCBnbXUgZGV2aWNlIG5vZGVz
+CgogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dCAgIHwgIDU5ICsr
+KysrKysrKwogLi4uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCAgIHwg
+IDQzICsrKysrLQogYXJjaC9hcm0vYm9vdC9kdHMvcWNvbS1hcHE4MDY0LmR0c2kgICAgICAgICAg
+IHwgICAxIC0KIGFyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9tc204OTE2LmR0c2kgICAgICAgICB8
+ICAgMSAtCiBhcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgICAgICAgICAgfCAx
+MjIgKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2FkcmVuby9hZHJlbm9f
+Z3B1LmMgICAgICAgfCAgIDEgLQogZHJpdmVycy9ncHUvZHJtL21zbS9tc21fZ3B1LmMgICAgICAg
+ICAgICAgICAgIHwgICAyICstCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9ncHUuaCAgICAgICAg
+ICAgICAgICAgfCAgIDEgLQogOCBmaWxlcyBjaGFuZ2VkLCAyMjEgaW5zZXJ0aW9ucygrKSwgOSBk
+ZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9tc20vZ211LnR4dAoKLS0gCjIuMTguMAoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApG
+cmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Au
+b3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
