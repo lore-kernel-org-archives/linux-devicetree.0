@@ -1,70 +1,38 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Mon, 17 Dec 2018 16:34:31 -0800
-Message-ID: <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181212211848.26768-3-jcrouse@codeaurora.org>
- <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
- <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
- <20181217070647.xtvfgsixggua5yod@vireshk-i7>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v3] clk: qcom: smd: Add support for MSM8998 rpm clocks
+Date: Mon, 17 Dec 2018 17:57:33 -0700
+Message-ID: <83f726d7-97c9-8fe3-229a-d68f59fb347a@codeaurora.org>
+References: <1545092467-31485-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181217070647.xtvfgsixggua5yod@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545092467-31485-1-git-send-email-jhugo@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBTdW4sIERlYyAxNiwgMjAxOCBhdCAxMTowNiBQTSBWaXJlc2ggS3VtYXIgPHZpcmVz
-aC5rdW1hckBsaW5hcm8ub3JnPiB3cm90ZToKPgo+ICtSb2IgK1N0ZXBoZW4sCj4KPiBPbiAxNC0x
-Mi0xOCwgMDk6MDQsIERvdWcgQW5kZXJzb24gd3JvdGU6Cj4gPiBIaSwKPiA+Cj4gPiBPbiBUaHUs
-IERlYyAxMywgMjAxOCBhdCA4OjQxIFBNIFZpcmVzaCBLdW1hciA8dmlyZXNoLmt1bWFyQGxpbmFy
-by5vcmc+IHdyb3RlOgo+ID4gPgo+ID4gPiBPbiAxMi0xMi0xOCwgMTQ6MTgsIEpvcmRhbiBDcm91
-c2Ugd3JvdGU6Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgIGdwdV9vcHBfdGFibGU6IG9w
-cC10YWJsZSB7Cj4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJs
-ZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiOwo+ID4gPgo+ID4gPiBJIHRoaW5r
-IHlvdSBuZWVkIHRvIG1lbnRpb24gIm9wZXJhdGluZy1wb2ludHMtdjIiIGFzIHdlbGwgaGVyZS4K
-PiA+Cj4gPiBBcmUgeW91IHNheWluZyB0aGUgYWJvdmUgc2hvdWxkIGJlOgo+ID4gICBjb21wYXRp
-YmxlID0gIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCIsICJvcGVyYXRpbmctcG9pbnRz
-LXYyIjsKPiA+Cj4gPiBJZiBzbyBJJ20gbm90IHN1cmUgSSBhZ3JlZS4KPgo+IFdlbGwgSSBoYXZl
-IG15IGRvdWJ0cyBhcyB3ZWxsIG9uIHRoaXMuIFRoaXMgaXMgd2hlcmUgdGhlIG9yZGVyaW5nIHdh
-cyBkaXNjdXNzZWQKPiBlYXJsaWVyOgo+Cj4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8x
-NTIzMjg5Nzk4OTcuMTgwMjc2LjE1OTYzOTI1ODc3NDQyNjU3MTU4QHN3Ym95ZC5tdHYuY29ycC5n
-b29nbGUuY29tLwo+Cj4gQFJvYi9TdGVwaGVuOiBTaG91bGQgdGhlIG9wcC10YWJsZSBub2RlIGFi
-b3ZlIGFsc28gaGF2ZSAib3BlcmF0aW5nLXBvaW50cy12MiIKPiBzdHJpbmcgaW4gdGhlIGNvbXBh
-dGlibGUgcHJvcGVydHkgPwo+Cj4gPiBJdCdzIF9ub3RfIHJlYWxseSBjb21wYXRpYmxlIHdpdGgg
-dGhlCj4gPiAib3BlcmF0aW5nLXBvaW50cy12MiIgYmluZGluZy4gIElmIHlvdSBoYWQgYSBkcml2
-ZXIgdGhhdCBoYWQgbmV2ZXIKPiA+IGhlYXJkIG9mICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20t
-bGV2ZWwiIGFuZCBoYWQgb25seSBoZWFyZCBvZgo+ID4gIm9wZXJhdGluZy1wb2ludHMtdjIiIGFu
-ZCBpdCB0b29rIGEgbG9vayBhdCB0aGlzIG5vZGUgaXQgd291bGQgaGF2ZSBubwo+ID4gaWRlYSB3
-aGF0IHRvIGRvIHdpdGggaXQuCj4KPiBXZWxsIGl0IHdpbGwgcGFyc2UgZXZlcnl0aGluZyBhcGFy
-dCBmcm9tIHRoZSBxY29tLGxldmVsIHRoaW5nLCBzbyBpdCBjYW4KPiBhY3R1YWxseSBwYXJzZSBz
-dHVmZiBoZXJlLgo+Cj4gPiBJJ2xsIGFsc28gbm90ZSB0aGF0IG90aGVyIGluc3RhbmNlcyBwb3N0
-ZWQgdG8gdGhlIGxpc3QgZG9uJ3QgbGlzdCBib3RoOgo+ID4KPiA+IGh0dHBzOi8vcGF0Y2h3b3Jr
-Lmtlcm5lbC5vcmcvcGF0Y2gvMTA3MjU4MDEvIC0gUlBNIC8gUlBNSCBQRCBiaW5kaW5ncwo+ID4g
-aHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDcyNTc5My8gLSBSUE1IIFBEIGRl
-dmljZSB0cmVlIGZvciBzZG04NDUKPiA+Cj4gPiBUaGUgYmluZGluZ3MgcGF0Y2ggYWxzbyBtYWtl
-cyBubyBtZW50aW9uIG9mIG5lZWRpbmcKPiA+ICJvcGVyYXRpbmctcG9pbnRzLXYyIi4gIEkgdGhp
-bmsgdGhlIGNvbW1vbiBjYXNlIHdoZW4gYSBmYWxsYmFjayBpcwo+ID4gcmVxdWlyZWQgaXQgaXMg
-ZXhwbGljaXRseSBjYWxsZWQgb3V0IGluIHRoZSBiaW5kaW5nczoKPiA+Cj4gPiBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzI1ODAzLyAtIHFjb20tb3BwIGJpbmRpbmdzCj4K
-PiBTdXJlLCBtYXliZSBJIGFtIHdyb25nIGJ1dCBpdHMgYmV0dGVyIHRvIGdldCBzb21lIGNsYXJp
-dHkgb24gaXQgZnJvbSBSb2IvU3RlcGhlbi4KCkluIGNhc2UgaXQgaGVscHM6CgpodHRwczovL2xr
-bWwua2VybmVsLm9yZy9yLzIwMTgxMjE3MjEwODQ5LkdBMTU0OTBAYm9ndXMKCi4uLnNob3dzIFJv
-YiBnaXZpbmcgYSBSZXZpZXdlZC1ieSB3aXRoIGp1c3QKCiAgY29tcGF0aWJsZSA9ICJvcGVyYXRp
-bmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiOwoKLi4uYW5kIG5vdDoKCiAgY29tcGF0aWJsZSA9ICJv
-cGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiLCAib3BlcmF0aW5nLXBvaW50cy12MiI7CgoK
-LURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJl
-ZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On 12/17/2018 5:21 PM, Jeffrey Hugo wrote:
+> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
+> for clients to vote on.
+> 
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+> v3
+> -Ensure Marc's hang was addressed by GCC fixes
+> -Renamed the bb clks to ln_bb to match the schematics
+> 
+> v2
+> -fix compatible ordering nits per Stephen
+> 
+
+Sorry, I missed a build error.  Ignore this.  Will spin a v4.
+
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
