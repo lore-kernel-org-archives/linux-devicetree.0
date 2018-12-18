@@ -1,38 +1,418 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v3] clk: qcom: smd: Add support for MSM8998 rpm clocks
-Date: Mon, 17 Dec 2018 17:57:33 -0700
-Message-ID: <83f726d7-97c9-8fe3-229a-d68f59fb347a@codeaurora.org>
-References: <1545092467-31485-1-git-send-email-jhugo@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Subject: [PATCH] clk: qcom: Add CLK_SET_RATE_PARENT for 8998 branch clocks
+Date: Mon, 17 Dec 2018 19:12:14 -0700
+Message-ID: <1545099134-26471-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545092467-31485-1-git-send-email-jhugo@codeaurora.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/17/2018 5:21 PM, Jeffrey Hugo wrote:
-> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
-> for clients to vote on.
-> 
-> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-> ---
-> v3
-> -Ensure Marc's hang was addressed by GCC fixes
-> -Renamed the bb clks to ln_bb to match the schematics
-> 
-> v2
-> -fix compatible ordering nits per Stephen
-> 
+A branch clock is basically a clock that can be gated for power savings,
+but is also what devices/drivers consume.  Configuring a branch clock's
+rate needs to be done at the source, so for all branch clocks which have
+a defined parent, set CLK_SET_RATE_PARENT so that clk_set_rate() calls on
+branch clocks can do what is expected.  This is important as most drivers
+do not check the resulting clock rate after a successful clk_set_rate()
+call, thus the driver may get out of sync with the actual hardware state
+and weird issues might crop up.  This has been observed with issues
+getting SDHCI to reliably support "fast" cards such as SDR104.
 
-Sorry, I missed a build error.  Ignore this.  Will spin a v4.
+Fixes: 4807c71cc688 (arm64: dts: Add msm8998 SoC and MTP board support)
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/clk/qcom/gcc-msm8998.c | 48 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 48 insertions(+)
 
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index 1b77939..b618bbf 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1189,6 +1189,7 @@ enum {
+ 				"ufs_axi_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1206,6 +1207,7 @@ enum {
+ 				"usb30_master_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1288,6 +1290,7 @@ enum {
+ 				"blsp1_qup1_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1305,6 +1308,7 @@ enum {
+ 				"blsp1_qup1_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1322,6 +1326,7 @@ enum {
+ 				"blsp1_qup2_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1339,6 +1344,7 @@ enum {
+ 				"blsp1_qup2_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1356,6 +1362,7 @@ enum {
+ 				"blsp1_qup3_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1373,6 +1380,7 @@ enum {
+ 				"blsp1_qup3_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1390,6 +1398,7 @@ enum {
+ 				"blsp1_qup4_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1407,6 +1416,7 @@ enum {
+ 				"blsp1_qup4_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1424,6 +1434,7 @@ enum {
+ 				"blsp1_qup5_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1441,6 +1452,7 @@ enum {
+ 				"blsp1_qup5_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1458,6 +1470,7 @@ enum {
+ 				"blsp1_qup6_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1475,6 +1488,7 @@ enum {
+ 				"blsp1_qup6_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1505,6 +1519,7 @@ enum {
+ 				"blsp1_uart1_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1522,6 +1537,7 @@ enum {
+ 				"blsp1_uart2_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1539,6 +1555,7 @@ enum {
+ 				"blsp1_uart3_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1569,6 +1586,7 @@ enum {
+ 				"blsp2_qup1_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1586,6 +1604,7 @@ enum {
+ 				"blsp2_qup1_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1603,6 +1622,7 @@ enum {
+ 				"blsp2_qup2_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1620,6 +1640,7 @@ enum {
+ 				"blsp2_qup2_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1637,6 +1658,7 @@ enum {
+ 				"blsp2_qup3_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1654,6 +1676,7 @@ enum {
+ 				"blsp2_qup3_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1671,6 +1694,7 @@ enum {
+ 				"blsp2_qup4_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1688,6 +1712,7 @@ enum {
+ 				"blsp2_qup4_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1705,6 +1730,7 @@ enum {
+ 				"blsp2_qup5_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1722,6 +1748,7 @@ enum {
+ 				"blsp2_qup5_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1739,6 +1766,7 @@ enum {
+ 				"blsp2_qup6_i2c_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1756,6 +1784,7 @@ enum {
+ 				"blsp2_qup6_spi_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1786,6 +1815,7 @@ enum {
+ 				"blsp2_uart1_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1803,6 +1833,7 @@ enum {
+ 				"blsp2_uart2_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1820,6 +1851,7 @@ enum {
+ 				"blsp2_uart3_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1837,6 +1869,7 @@ enum {
+ 				"usb30_master_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1854,6 +1887,7 @@ enum {
+ 				"gp1_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1871,6 +1905,7 @@ enum {
+ 				"gp2_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1888,6 +1923,7 @@ enum {
+ 				"gp3_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1957,6 +1993,7 @@ enum {
+ 				"hmss_ahb_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -1987,6 +2024,7 @@ enum {
+ 				"hmss_rbcpr_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2088,6 +2126,7 @@ enum {
+ 				"pcie_aux_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2157,6 +2196,7 @@ enum {
+ 				"pcie_aux_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2174,6 +2214,7 @@ enum {
+ 				"pdm2_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2243,6 +2284,7 @@ enum {
+ 				"sdcc2_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2273,6 +2315,7 @@ enum {
+ 				"sdcc4_apps_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2316,6 +2359,7 @@ enum {
+ 				"tsif_ref_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2346,6 +2390,7 @@ enum {
+ 				"ufs_axi_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2441,6 +2486,7 @@ enum {
+ 				"usb30_master_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2458,6 +2504,7 @@ enum {
+ 				"usb30_mock_utmi_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
+@@ -2488,6 +2535,7 @@ enum {
+ 				"usb3_phy_aux_clk_src",
+ 			},
+ 			.num_parents = 1,
++			.flags = CLK_SET_RATE_PARENT,
+ 			.ops = &clk_branch2_ops,
+ 		},
+ 	},
 -- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
 Code Aurora Forum, a Linux Foundation Collaborative Project.
