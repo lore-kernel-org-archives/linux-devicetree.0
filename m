@@ -1,76 +1,33 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
-Date: Tue, 18 Dec 2018 17:51:12 +0200
-Message-ID: <5C191770.9090804@ti.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-6-git-send-email-rogerq@ti.com>
- <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
- <5BFFBCAC.9000004@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: mmc: sdhci-of-arasan: Add deprecated
+ message for am65
+Date: Tue, 18 Dec 2018 09:54:28 -0600
+Message-ID: <20181218155428.GA7670@bogus>
+References: <20181207081119.29162-1-faiz_abbas@ti.com>
+ <20181207081119.29162-3-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5BFFBCAC.9000004@ti.com>
+Content-Disposition: inline
+In-Reply-To: <20181207081119.29162-3-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org, Mark Brown <broonie@kernel.org>
-Cc: tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org, ulf.hansson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, adrian.hunter@intel.com, michal.simek@xilinx.com, kishon@ti.com, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-+Mark
-
-David,
-
-On 29/11/18 12:17, Roger Quadros wrote:
-> On 27/11/18 00:37, David Lechner wrote:
->> On 11/26/18 1:52 AM, Roger Quadros wrote:
->>> From: Suman Anna <s-anna@ti.com>
->>>
->>> The remoteproc core creates certain standard debugfs entries,
->>> that does not give a whole lot of useful information for the
->>> PRUs. The PRU remoteproc driver is enhanced to add additional
->>> debugfs entries for PRU. These will be auto-cleaned up when
->>> the parent rproc debug directory is removed.
->>>
->>> The enhanced debugfs support adds two new entries: 'regs' and
->>> 'single_step'. The 'regs' dumps out the useful CTRL sub-module
->>> registers as well as each of the 32 GPREGs and CT_REGs registers.
->>> The GPREGs and CT_REGs though are printed only when the PRU is
->>> halted and accessible as per the IP design.
->>>
->>
->> If the driver used regmap to access the CTRL I/O memory, then
->> 'regs' wouldn't be needed since regmap already does debugfs.
->>
+On Fri, 7 Dec 2018 13:41:18 +0530, Faiz Abbas wrote:
+> Commit 26a4f38d1316 ("dt-bindings: mmc: sdhci-of-arasan: Add new
+> compatible for AM654 MMC PHY") added a new compatible for supporting
+> controllers on TI's AM65x SOCs. It turns out that the controller is
+> not compatible with the arasan driver's phy and consumer model as it
+> requires some phy registers for core sdhci functionality. This calls
+> for the binding to branch out to a new driver.
 > 
-> ok, we could split out CTRL from this and use regmap.
+> Therefore, add a deprecated message for the ti,am654-sdhci-5.1 binding.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  Documentation/devicetree/bindings/mmc/arasan,sdhci.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 > 
 
-I was thinking of using regmap for both control and debug
-but regmap_mmio only supports one iomap even though it supports
-multiple ranges.
-
-What can we do here?
-
-The control and debug regions even though separate are right
-next to each other
-
-reg = <0x34000 0x3000>,
-	<0x22000 0x400>,
-	<0x22400 0x100>;
-reg-names = "iram", "control", "debug";
-
-We could combine control and debug into one iomap and use
-2 regmap ranges. But this is really working around the
-regmap_mmio limitation of not being able to use more than one ioremaps.
-
-Mark, any suggestions?
-
-Is it meaningful to support __devm_regmap_init_mmio_clk()
-with separate iomem regions for the ranges?
-
-cheers,
--roger
-
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Reviewed-by: Rob Herring <robh@kernel.org>
