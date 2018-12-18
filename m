@@ -1,51 +1,52 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: [PATCH v9 02/12] Documentation: ioctl: Add ioctl numbers for PECI subsystem
-Date: Tue, 18 Dec 2018 13:04:07 -0800
-Message-ID: <20181218210417.30140-3-jae.hyun.yoo@linux.intel.com>
-References: <20181218210417.30140-1-jae.hyun.yoo@linux.intel.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
+Date: Tue, 18 Dec 2018 15:10:43 -0600
+Message-ID: <CAL_JsqJb24ZpM7qQfy_F7RUVEGyceBAXOndbZcTMh3a__k38UQ@mail.gmail.com>
+References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
+ <20181218040702.29231-4-andrew.smirnov@gmail.com> <20181218151533.GA2922@bogus>
+ <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218210417.30140-1-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <dav>
-Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+To: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit updates ioctl-number.txt to reflect ioctl numbers used
-by the PECI subsystem.
+On Tue, Dec 18, 2018 at 12:09 PM Leonard Crestez
+<leonard.crestez@nxp.com> wrote:
+>
+> On 12/18/2018 5:15 PM, Rob Herring wrote:
+> > On Mon, Dec 17, 2018 at 08:07:02PM -0800, Andrey Smirnov wrote:
+> >> Add code needed to support i.MX8MQ variant.
+> >>
+> >> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> >> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+>
+> >> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> >> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> >>
+> >> +Additional required properties for imx8mq-pcie:
+> >> +- fsl,controller-id: Logical ID of a given PCIE controller. PCIE1 is 0, PCIE2 is 1;
+> >> +
+> >
+> > Remove this.
+> >
+> > If GPR register offset is what you need, then put that into DT.
+> > Typically, we'd have a property with iomuxc phandle and offset.
+>
+> This series initially added explicit offsets but I suggested a single
+> "controller-id" because:
+>   * There are multiple bit and byte offsets
+>   * Other imx8 SOCs also have 2x pcie with other bit/byte offsets
+>
+> Hiding this behind a compatible string and single "controller-id" seem
+> preferable to elaborating register maps in dt bindings. It also makes
+> upgrades simpler: if features are added which use other bits there is no
+> need to describe them in DT and deal with compatibility headaches.
 
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-Cc: Darrick J. Wong <darrick.wong@oracle.com>
-Cc: Tomohiro Kusumi <kusumi.tomohiro@gmail.com>
-Cc: Eric Sandeen <sandeen@redhat.com>
-Cc: Frederic Barrat <fbarrat@linux.vnet.ibm.com>
-Cc: Bryant G. Ly <bryantly@linux.vnet.ibm.com>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: James Feist <james.feist@linux.intel.com>
-Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-Cc: Vernon Mauery <vernon.mauery@linux.intel.com>
-Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
----
- Documentation/ioctl/ioctl-number.txt | 2 ++
- 1 file changed, 2 insertions(+)
+You already have an id for the controllers: the address. Use that if
+you don't want to put the register offsets in DT.
 
-diff --git a/Documentation/ioctl/ioctl-number.txt b/Documentation/ioctl/ioctl-number.txt
-index af6f6ba1fe80..aaf0006a7113 100644
---- a/Documentation/ioctl/ioctl-number.txt
-+++ b/Documentation/ioctl/ioctl-number.txt
-@@ -326,6 +326,8 @@ Code  Seq#(hex)	Include File		Comments
- 0xB4	00-0F	linux/gpio.h		<mailto:linux-gpio@vger.kernel.org>
- 0xB5	00-0F	uapi/linux/rpmsg.h	<mailto:linux-remoteproc@vger.kernel.org>
- 0xB6	all	linux/fpga-dfl.h
-+0xB7	00-0F	uapi/linux/peci-ioctl.h	PECI subsystem
-+					<mailto:jae.hyun.yoo@linux.intel.com>
- 0xC0	00-0F	linux/usb/iowarrior.h
- 0xCA	00-0F	uapi/misc/cxl.h
- 0xCA	10-2F	uapi/misc/ocxl.h
--- 
-2.19.1
+Rob
