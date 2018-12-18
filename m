@@ -1,25 +1,53 @@
-From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Subject: [PATCH 0/2] Add input voltage configuration for TPS65218
-Date: Tue, 18 Dec 2018 09:05:54 +0100
-Message-ID: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v6 07/11] ARM: dts: rda8810pl: Add timer support
+Date: Tue, 18 Dec 2018 13:35:23 +0530
+Message-ID: <20181218080527.10801-8-manivannan.sadhasivam@linaro.org>
+References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
+Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to configure input-voltage settings
-of the TPS65218 regulator via device tree.
+Add timer support for RDA Micro RDA8810PL SoC.
 
-Christian Hohnstaedt (2):
-  dt-bindings: regulator: extend tps65218 bindings
-  mfd: tps65218.c: Add input voltage options
+Signed-off-by: Andreas Färber <afaerber@suse.de>
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ arch/arm/boot/dts/rda8810pl.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
- .../devicetree/bindings/regulator/tps65218.txt     | 10 +++++
- drivers/mfd/tps65218.c                             | 46 ++++++++++++++++++++++
- 2 files changed, 56 insertions(+)
-
+diff --git a/arch/arm/boot/dts/rda8810pl.dtsi b/arch/arm/boot/dts/rda8810pl.dtsi
+index 15547b138977..84baa4c0a14c 100644
+--- a/arch/arm/boot/dts/rda8810pl.dtsi
++++ b/arch/arm/boot/dts/rda8810pl.dtsi
+@@ -6,6 +6,8 @@
+  * Copyright (c) 2018 Manivannan Sadhasivam
+  */
+ 
++#include <dt-bindings/interrupt-controller/irq.h>
++
+ / {
+ 	compatible = "rda,8810pl";
+ 	interrupt-parent = <&intc>;
+@@ -50,6 +52,14 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <1>;
+ 		ranges = <0x0 0x20900000 0x100000>;
++
++		timer@10000 {
++			compatible = "rda,8810pl-timer";
++			reg = <0x10000 0x1000>;
++			interrupts = <16 IRQ_TYPE_LEVEL_HIGH>,
++				     <17 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hwtimer", "ostimer";
++		};
+ 	};
+ 
+ 	apb@20a00000 {
 -- 
-2.7.4
+2.17.1
