@@ -1,98 +1,25 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v6 06/11] ARM: dts: Add devicetree for OrangePi i96 board
-Date: Tue, 18 Dec 2018 13:35:22 +0530
-Message-ID: <20181218080527.10801-7-manivannan.sadhasivam@linaro.org>
-References: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
+From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Subject: [PATCH 0/2] Add input voltage configuration for TPS65218
+Date: Tue, 18 Dec 2018 09:05:54 +0100
+Message-ID: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218080527.10801-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: olof@lixom.net, arnd@arndb.de, robh+dt@kernel.org, gregkh@linuxfoundation.org, jslaby@suse.com
-Cc: linux-unisoc@lists.infradead.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-serial@vger.kernel.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, zhao_steven@263.net, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add initial devicetree for Orange Pi i96 board from Xunlong. It
-is one of the 96Boards IoT Edition board.
+This patch allows to configure input-voltage settings
+of the TPS65218 regulator via device tree.
 
-Signed-off-by: Andreas Färber <afaerber@suse.de>
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- arch/arm/boot/dts/Makefile                   |  3 +-
- arch/arm/boot/dts/rda8810pl-orangepi-i96.dts | 50 ++++++++++++++++++++
- 2 files changed, 52 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
+Christian Hohnstaedt (2):
+  dt-bindings: regulator: extend tps65218 bindings
+  mfd: tps65218.c: Add input voltage options
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index a0fdad8f10dd..cfb08ea33872 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -807,7 +807,8 @@ dtb-$(CONFIG_ARCH_QCOM) += \
- 	qcom-msm8974-sony-xperia-honami.dtb \
- 	qcom-mdm9615-wp8548-mangoh-green.dtb
- dtb-$(CONFIG_ARCH_RDA) += \
--	rda8810pl-orangepi-2g-iot.dtb
-+	rda8810pl-orangepi-2g-iot.dtb \
-+	rda8810pl-orangepi-i96.dtb
- dtb-$(CONFIG_ARCH_REALVIEW) += \
- 	arm-realview-pb1176.dtb \
- 	arm-realview-pb11mp.dtb \
-diff --git a/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts b/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
-new file mode 100644
-index 000000000000..728f76931b99
---- /dev/null
-+++ b/arch/arm/boot/dts/rda8810pl-orangepi-i96.dts
-@@ -0,0 +1,50 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Copyright (c) 2017 Andreas Färber
-+ * Copyright (c) 2018 Manivannan Sadhasivam
-+ */
-+
-+/dts-v1/;
-+
-+#include "rda8810pl.dtsi"
-+
-+/ {
-+	compatible = "xunlong,orangepi-i96", "rda,8810pl";
-+	model = "Orange Pi i96";
-+
-+	aliases {
-+		serial0 = &uart2;
-+		serial1 = &uart1;
-+		serial2 = &uart3;
-+	};
-+
-+	chosen {
-+		stdout-path = "serial2:921600n8";
-+	};
-+
-+	memory@80000000 {
-+		device_type = "memory";
-+		reg = <0x80000000 0x10000000>;
-+	};
-+
-+	uart_clk: uart-clk {
-+		compatible = "fixed-clock";
-+		clock-frequency = <921600>;
-+		#clock-cells = <0>;
-+	};
-+};
-+
-+&uart1 {
-+	status = "okay";
-+	clocks = <&uart_clk>;
-+};
-+
-+&uart2 {
-+	status = "okay";
-+	clocks = <&uart_clk>;
-+};
-+
-+&uart3 {
-+	status = "okay";
-+	clocks = <&uart_clk>;
-+};
+ .../devicetree/bindings/regulator/tps65218.txt     | 10 +++++
+ drivers/mfd/tps65218.c                             | 46 ++++++++++++++++++++++
+ 2 files changed, 56 insertions(+)
+
 -- 
-2.17.1
+2.7.4
