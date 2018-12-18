@@ -1,56 +1,139 @@
-From: Sasha Levin <sashal-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 0/7] v4.19-stable randconfig fixes
-Date: Mon, 17 Dec 2018 19:20:28 -0500
-Message-ID: <20181218002028.GX2746@sasha-vm>
-References: <20181214221023.3878670-1-arnd@arndb.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20181214221023.3878670-1-arnd-r2nGTMty4D4@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-aspeed-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Peter Zijlstra <peterz-wEGCiKHe2LqWVfeAwA7xHQ@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Srinivas Kandagatla <srinivas.kandagatla-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-i2c-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "James E.J. Bottomley" <jejb-23VcF4HTsmIX0ybBhKVfKdBPR1lH4CV8@public.gmane.org>, Daniel Drake <dsd-2X9k7bc8m7Mdnm+yROfE0A@public.gmane.org>, linux-scsi-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Jens Frederich <jfrederich-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, openbmc-uLR06cmDAlY/bJ5BZ2RsiQ@public.gmane.org, Ingo Molnar <mingo-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lubomir Rintel <lkundrak-NGH9Lh4a5iE@public.gmane.org>, dou_liyang-9Onoh4P/yGk@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bp-Gina5bIWoIWzQB+pC5nmwQ@public.gmane.org, Vincent Guittot <vincent.guittot-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, "Martin K. Petersen" <martin.petersen-QHcLZuEGTsvQT0dZR+AlfA@public.gmane.org>, Andrew Jeffery <andrew-zrmu5oMJ5Fs@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, stabl
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v3] clk: qcom: smd: Add support for MSM8998 rpm clocks
+Date: Mon, 17 Dec 2018 17:21:07 -0700
+Message-ID: <1545092467-31485-1-git-send-email-jhugo@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: mturquette@baylibre.com, sboyd@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMTQsIDIwMTggYXQgMTE6MTA6MDVQTSArMDEwMCwgQXJuZCBCZXJnbWFubiB3
-cm90ZToKPkhpIEdyZWcsCj4KPkkgZGlkIHNvbWUgcmFuZGNvbmZpZyB0ZXN0aW5nIG9uIGxpbnV4
-LTQuMTkgYXJtL2FybTY0L3g4Ni4gU28gZmFyIEkgbmVlZGVkCj4yNyBwYXRjaGVzLCBtb3N0IG9m
-IHdoaWNoIGFyZSBhbHNvIHN0aWxsIG5lZWRlZCBpbiBtYWlubGluZSBMaW51eC4gSQo+aGFkIHN1
-Ym1pdHRlZCBzb21lIGJlZm9yZSwgYW5kIG90aGVycyB3ZXJlIG5vdCBzdWJtaXR0ZWQgcHJldmlv
-dXNseQo+Zm9yIHNvbWUgcmVhc29uLiBJJ2xsIHRyeSB0byBnZXQgdGhvc2UgZml4ZWQgaW4gbWFp
-bmxpbmUgYW5kIHRoZW4KPm1ha2Ugc3VyZSB3ZSBnZXQgdGhlbSBpbnRvIDQuMTkgYXMgd2VsbC4K
-Pgo+VGhpcyBzZXJpZXMgZm9yIG5vdyBjb250YWlucyBmb3VyIHBhdGNoZXMgdGhhdCBkaWQgbWFr
-ZSBpdCBpbnRvIG1haW5saW5lOgo+Cj4yZTZhZTExZGQwZDEgKCJzbGltYnVzOiBuZ2Q6IG1hcmsg
-UE0gZnVuY3Rpb25zIGFzIF9fbWF5YmVfdW51c2VkIikKPjMzZjQ5NTcxZDc1MCAoInN0YWdpbmc6
-IG9scGNfZGNvbjogYWRkIGEgbWlzc2luZyBkZXBlbmRlbmN5IikKPjBlZWVjMDE0ODhkYSAoInNj
-c2k6IHJhaWRfYXR0cnM6IGZpeCB1bnVzZWQgdmFyaWFibGUgd2FybmluZyIpCj4xMWQ0YWZkNGZm
-NjYgKCJzY2hlZC9wZWx0OiBGaXggd2FybmluZyBhbmQgY2xlYW4gdXAgSVJRIFBFTFQgY29uZmln
-IikKPgo+RmVlbCBmcmVlIHRvIGVpdGhlciBjaGVycnktcGljayB0aG9zZSBmcm9tIG1haW5saW5l
-IG9yIGFwcGx5IHRoZQo+cGF0Y2ggZnJvbSB0aGlzIHNlcmllcywgd2hpY2hldmVyIHdvcmtzIGJl
-c3QgZm9yIHlvdS4KPgo+VGhlIG90aGVyIHRocmVlIHBhdGNoZXMgYXJlIGZvciB3YXJuaW5ncyBp
-biBjb2RlIHRoYXQgZ290IHJlbW92ZWQgaW4KPm1haW5saW5lIGtlcm5lbHM6Cj4KPjNlOWVmYzMy
-OTlkZCAoImkyYzogYXNwZWVkOiBIYW5kbGUgbWFzdGVyL3NsYXZlIGNvbWJpbmVkIGlycSBldmVu
-dHMgcHJvcGVybHkiKQo+OTcyOTEwOTQ4ZmI2ICgiQVJNOiBkdHM6IHFjb206IFJlbW92ZSBBcnJv
-dyBTRDYwMCBldmFsIGJvYXJkIikKPmVmZmVjODc0NzkyZiAoImRybS9tc20vZHB1OiBSZW1vdmUg
-ZHB1X2RiZyIpCj4KPk15IGZlZWxpbmcgd2FzIHRoYXQgaXQncyBzYWZlciB0byBqdXN0IGFkZHJl
-c3MgdGhlIHdhcm5pbmcgYnkgZml4aW5nCj50aGUgY29kZSBjb3JyZWN0bHkgaW4gZWFjaCBvZiB0
-aGVzZSBjYXNlcywgYnV0IGlmIHlvdSBkaXNhZ3JlZSwKPmFwcGx5aW5nIHRoZSBtYWlubGluZSBj
-aGFuZ2Ugc2hvdWxkIHdvcmsgZXF1YWxseSB3ZWxsLCBzbyBkZWNpZGUKPmZvciB5b3Vyc2VsZi4K
-ClRoYW5rcyBBcm5kLCBJIHRvb2sgdGhlIHNlcmllcyBhcyBpcy4KCldlIHJlYWxseSBuZWVkIHRv
-IGRpc2N1c3MgaG93IC1zdGFibGUgZGVhbHMgd2l0aCByZW1vdmVkIGNvZGUgdXBzdHJlYW0uCkZv
-ciBzb21lIGNhc2VzLCB3ZSBzaG91bGQgcHJvYmFibHkgZm9sbG93IHN1aXQgYW5kIHJlbW92ZSBp
-dCBmcm9tCi1zdGFibGUgYXMgd2VsbCAoSSdtIG1vc3RseSB0aGlua2luZyBkb2RneSBjb2RlIHdp
-dGggcG90ZW50aWFsIHNlY3VyaXR5Cmlzc3VlcykuCgotLQpUaGFua3MsClNhc2hhCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5n
-IGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVk
-ZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
+for clients to vote on.
+
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+v3
+-Ensure Marc's hang was addressed by GCC fixes
+-Renamed the bb clks to ln_bb to match the schematics
+
+v2
+-fix compatible ordering nits per Stephen
+
+ .../devicetree/bindings/clock/qcom,rpmcc.txt       |  1 +
+ drivers/clk/qcom/clk-smd-rpm.c                     | 63 ++++++++++++++++++++++
+ include/dt-bindings/clock/qcom,rpmcc.h             |  8 +++
+ 3 files changed, 72 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+index 87b4949..944719b 100644
+--- a/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
++++ b/Documentation/devicetree/bindings/clock/qcom,rpmcc.txt
+@@ -16,6 +16,7 @@ Required properties :
+ 			"qcom,rpmcc-msm8974", "qcom,rpmcc"
+ 			"qcom,rpmcc-apq8064", "qcom,rpmcc"
+ 			"qcom,rpmcc-msm8996", "qcom,rpmcc"
++			"qcom,rpmcc-msm8998", "qcom,rpmcc"
+ 			"qcom,rpmcc-qcs404", "qcom,rpmcc"
+ 
+ - #clock-cells : shall contain 1
+diff --git a/drivers/clk/qcom/clk-smd-rpm.c b/drivers/clk/qcom/clk-smd-rpm.c
+index d3aadae..4e3fd73 100644
+--- a/drivers/clk/qcom/clk-smd-rpm.c
++++ b/drivers/clk/qcom/clk-smd-rpm.c
+@@ -655,10 +655,73 @@ static int clk_smd_rpm_enable_scaling(struct qcom_smd_rpm *rpm)
+ 	.num_clks = ARRAY_SIZE(qcs404_clks),
+ };
+ 
++/* msm8998 */
++DEFINE_CLK_SMD_RPM(msm8998, snoc_clk, snoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 1);
++DEFINE_CLK_SMD_RPM(msm8998, cnoc_clk, cnoc_a_clk, QCOM_SMD_RPM_BUS_CLK, 2);
++DEFINE_CLK_SMD_RPM(msm8998, ce1_clk, ce1_a_clk, QCOM_SMD_RPM_CE_CLK, 0);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, div_clk1, div_clk1_a, 0xb);
++DEFINE_CLK_SMD_RPM(msm8998, ipa_clk, ipa_a_clk, QCOM_SMD_RPM_IPA_CLK, 0);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, ln_bb_clk1, bb_clk1_a, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, ln_bb_clk2, bb_clk2_a, 2);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, ln_bb_clk3_pin, ln_bb_clk3_a_pin,
++				     3);
++DEFINE_CLK_SMD_RPM(msm8998, mmssnoc_axi_rpm_clk, mmssnoc_axi_rpm_a_clk,
++		   QCOM_SMD_RPM_MMAXI_CLK, 0);
++DEFINE_CLK_SMD_RPM(msm8998, aggre1_noc_clk, aggre1_noc_a_clk,
++		   QCOM_SMD_RPM_AGGR_CLK, 1);
++DEFINE_CLK_SMD_RPM(msm8998, aggre2_noc_clk, aggre2_noc_a_clk,
++		   QCOM_SMD_RPM_AGGR_CLK, 2);
++DEFINE_CLK_SMD_RPM_QDSS(msm8998, qdss_clk, qdss_a_clk,
++			QCOM_SMD_RPM_MISC_CLK, 1);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk1, rf_clk1_a, 4);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk2_pin, rf_clk2_a_pin, 5);
++DEFINE_CLK_SMD_RPM_XO_BUFFER(msm8998, rf_clk3, rf_clk3_a, 6);
++DEFINE_CLK_SMD_RPM_XO_BUFFER_PINCTRL(msm8998, rf_clk3_pin, rf_clk3_a_pin, 6);
++static struct clk_smd_rpm *msm8998_clks[] = {
++	[RPM_SMD_SNOC_CLK] = &msm8998_snoc_clk,
++	[RPM_SMD_SNOC_A_CLK] = &msm8998_snoc_a_clk,
++	[RPM_SMD_CNOC_CLK] = &msm8998_cnoc_clk,
++	[RPM_SMD_CNOC_A_CLK] = &msm8998_cnoc_a_clk,
++	[RPM_SMD_CE1_CLK] = &msm8998_ce1_clk,
++	[RPM_SMD_CE1_A_CLK] = &msm8998_ce1_a_clk,
++	[RPM_SMD_DIV_CLK1] = &msm8998_div_clk1,
++	[RPM_SMD_DIV_A_CLK1] = &msm8998_div_clk1_a,
++	[RPM_SMD_IPA_CLK] = &msm8998_ipa_clk,
++	[RPM_SMD_IPA_A_CLK] = &msm8998_ipa_a_clk,
++	[RPM_SMD_LN_BB_CLK1] = &msm8998_ln_bb_clk1,
++	[RPM_SMD_LN_BB_CLK1_A] = &msm8998_ln_bb_clk1_a,
++	[RPM_SMD_LN_BB_CLK2] = &msm8998_ln_bb_clk2,
++	[RPM_SMD_LN_BB_CLK2_A] = &msm8998_ln_bb_clk2_a,
++	[RPM_SMD_LN_BB_CLK3_PIN] = &msm8998_ln_bb_clk3_pin,
++	[RPM_SMD_LN_BB_CLK3_A_PIN] = &msm8998_ln_bb_clk3_a_pin,
++	[RPM_SMD_MMAXI_CLK] = &msm8998_mmssnoc_axi_rpm_clk,
++	[RPM_SMD_MMAXI_A_CLK] = &msm8998_mmssnoc_axi_rpm_a_clk,
++	[RPM_SMD_AGGR1_NOC_CLK] = &msm8998_aggre1_noc_clk,
++	[RPM_SMD_AGGR1_NOC_A_CLK] = &msm8998_aggre1_noc_a_clk,
++	[RPM_SMD_AGGR2_NOC_CLK] = &msm8998_aggre2_noc_clk,
++	[RPM_SMD_AGGR2_NOC_A_CLK] = &msm8998_aggre2_noc_a_clk,
++	[RPM_SMD_QDSS_CLK] = &msm8998_qdss_clk,
++	[RPM_SMD_QDSS_A_CLK] = &msm8998_qdss_a_clk,
++	[RPM_SMD_RF_CLK1] = &msm8998_rf_clk1,
++	[RPM_SMD_RF_CLK1_A] = &msm8998_rf_clk1_a,
++	[RPM_SMD_RF_CLK2_PIN] = &msm8998_rf_clk2_pin,
++	[RPM_SMD_RF_CLK2_A_PIN] = &msm8998_rf_clk2_a_pin,
++	[RPM_SMD_RF_CLK3] = &msm8998_rf_clk3,
++	[RPM_SMD_RF_CLK3_A] = &msm8998_rf_clk3_a,
++	[RPM_SMD_RF_CLK3_PIN] = &msm8998_rf_clk3_pin,
++	[RPM_SMD_RF_CLK3_A_PIN] = &msm8998_rf_clk3_a_pin,
++};
++
++static const struct rpm_smd_clk_desc rpm_clk_msm8998 = {
++	.clks = msm8998_clks,
++	.num_clks = ARRAY_SIZE(msm8998_clks),
++};
++
+ static const struct of_device_id rpm_smd_clk_match_table[] = {
+ 	{ .compatible = "qcom,rpmcc-msm8916", .data = &rpm_clk_msm8916 },
+ 	{ .compatible = "qcom,rpmcc-msm8974", .data = &rpm_clk_msm8974 },
+ 	{ .compatible = "qcom,rpmcc-msm8996", .data = &rpm_clk_msm8996 },
++	{ .compatible = "qcom,rpmcc-msm8998", .data = &rpm_clk_msm8998 },
+ 	{ .compatible = "qcom,rpmcc-qcs404",  .data = &rpm_clk_qcs404  },
+ 	{ }
+ };
+diff --git a/include/dt-bindings/clock/qcom,rpmcc.h b/include/dt-bindings/clock/qcom,rpmcc.h
+index 3658b0c..1526df4 100644
+--- a/include/dt-bindings/clock/qcom,rpmcc.h
++++ b/include/dt-bindings/clock/qcom,rpmcc.h
+@@ -127,5 +127,13 @@
+ #define RPM_SMD_BIMC_GPU_A_CLK			77
+ #define RPM_SMD_QPIC_CLK			78
+ #define RPM_SMD_QPIC_CLK_A			79
++#define RPM_SMD_LN_BB_CLK2			80
++#define RPM_SMD_LN_BB_A_CLK2			81
++#define RPM_SMD_LN_BB_CLK3_PIN			82
++#define RPM_SMD_LN_BB_A_CLK3_PIN		83
++#define RPM_SMD_RF_CLK3				84
++#define RPM_SMD_RF_CLK3_A			85
++#define RPM_SMD_RF_CLK3_PIN			86
++#define RPM_SMD_RF_CLK3_A_PIN			87
+ 
+ #endif
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
