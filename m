@@ -1,63 +1,288 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: drm/msm/a6xx: Document
- interconnect properties for GPU
-Date: Tue, 18 Dec 2018 15:01:05 -0600
-Message-ID: <CAL_JsqL+8g4uCH+YYNJnACc4mJkK+Ogn0pHLva+6XPynWTrqLw@mail.gmail.com>
-References: <20181214221640.25354-1-jcrouse@codeaurora.org>
- <20181214221640.25354-2-jcrouse@codeaurora.org> <20181218172201.GA16590@bogus>
- <20181218180747.GD18380@jcrouse-lnx.qualcomm.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: [PATCH v9 00/12] PECI device driver introduction
+Date: Tue, 18 Dec 2018 13:04:05 -0800
+Message-ID: <20181218210417.30140-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181218180747.GD18380-9PYrDHPZ2Orvke4nUoYGnHL1okKdlPRT@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <dav>
+Cc: linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMTI6MDcgUE0gSm9yZGFuIENyb3VzZSA8amNyb3VzZUBj
-b2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBPbiBUdWUsIERlYyAxOCwgMjAxOCBhdCAxMToyMjow
-MUFNIC0wNjAwLCBSb2IgSGVycmluZyB3cm90ZToKPiA+IE9uIEZyaSwgRGVjIDE0LCAyMDE4IGF0
-IDAzOjE2OjM5UE0gLTA3MDAsIEpvcmRhbiBDcm91c2Ugd3JvdGU6Cj4gPiA+IEFkZCBkb2N1bWVu
-dGF0aW9uIGZvciB0aGUgaW50ZXJjb25uZWN0IGFuZCBpbnRlcmNvbm5lY3QtbmFtZXMgYmluZGlu
-Z3MKPiA+ID4gZm9yIHRoZSBHUFUgbm9kZSBhcyBkZXRhaWxlZCBieSBiaW5kaW5ncy9pbnRlcmNv
-bm5lY3QvaW50ZXJjb25uZWN0LnR4dC4KPiA+ID4KPiA+ID4gU2lnbmVkLW9mZi1ieTogSm9yZGFu
-IENyb3VzZSA8amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4KPiA+ID4gLS0tCj4gPiA+ICBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4dCB8IDYgKysrKysr
-Cj4gPiA+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspCj4gPiA+Cj4gPiA+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1
-LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9ncHUu
-dHh0Cj4gPiA+IGluZGV4IDhkOTQxNTE4MGMyMi4uMTliNWFlNDU5ZmRiIDEwMDY0NAo+ID4gPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZ3B1LnR4
-dAo+ID4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9t
-c20vZ3B1LnR4dAo+ID4gPiBAQCAtMTksNiArMTksOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+
-ID4gPiAgICAqICJtZW1faWZhY2UiCj4gPiA+ICAtIGlvbW11czogb3B0aW9uYWwgcGhhbmRsZSB0
-byBhbiBhZHJlbm8gaW9tbXUgaW5zdGFuY2UKPiA+ID4gIC0gb3BlcmF0aW5nLXBvaW50cy12Mjog
-b3B0aW9uYWwgcGhhbmRsZSB0byB0aGUgT1BQIG9wZXJhdGluZyBwb2ludHMKPiA+ID4gKy0gaW50
-ZXJjb25uZWN0OiBvcHRpb25hbCBwaGFuZGxlIHRvIGEgaW50ZXJjb25uZWN0IHByb3ZpZGVyLiAg
-U2VlCj4gPiA+ICsgIC4uL2ludGVyY29ubmVjdC9pbnRlcmNvbm5lY3QudHh0IGZvciBkZXRhaWxz
-Lgo+ID4gPiArLSBpbnRlcmNvbm5lY3QtbmFtZXM6IE5hbWUgc3RyaW5nIGZvciB0aGUgaW50ZXJj
-b25uZWN0cy4KPiA+ID4gIC0gcWNvbSxnbXU6IEZvciBhNnh4IGFuZCBuZXdlciB0YXJnZXRzIGEg
-cGhhbmRsZSB0byB0aGUgR01VIGRldmljZSB0aGF0IHdpbGwKPiA+ID4gICAgY29udHJvbCB0aGUg
-cG93ZXIgZm9yIHRoZSBHUFUKPiA+ID4KPiA+ID4gQEAgLTY4LDYgKzcxLDkgQEAgRXhhbXBsZSBh
-Nnh4ICh3aXRoIEdNVSk6Cj4gPiA+Cj4gPiA+ICAgICAgICAgICAgIG9wZXJhdGluZy1wb2ludHMt
-djIgPSA8JmdwdV9vcHBfdGFibGU+Owo+ID4gPgo+ID4gPiArICAgICAgICAgICBpbnRlcmNvbm5l
-Y3RzID0gPCZyc2NfaGxvcyBNQVNURVJfR0ZYM0QgJnJzY19obG9zIFNMQVZFX0VCSTE+Owo+ID4g
-PiArICAgICAgICAgICBpbnRlcmNvbm5lY3QtbmFtZXMgPSAiZ2Z4LW1lbSI7Cj4gPgo+ID4gVGhl
-cmUncyBub3QgcmVhbGx5IGFueSBwb2ludCB0byBoYXZpbmcgKi1uYW1lcyB3aGVuIHRoZXJlIGlz
-IG9ubHkgMQo+ID4gdmFsdWUuCj4KPiBGb3IgdGhlIG1vbWVudCB3ZSBjYW4gb25seSBsb29rIHVw
-IHRoZSBwYXRoIGZyb20gdGhlIERUIGJ5IG5hbWUuIEkgZ3Vlc3Mgd2UKPiBjb3VsZCBhZGQgYW4g
-bG9va3VwIGJ5IGluZGV4IGJ1dCBJJ20gbm90IHN1cmUgaWYgdGhhdCBoYWQgYWxyZWFkeSBiZWVu
-Cj4gY29uc2lkZXJlZCBhbmQgcmVqZWN0ZWQuCgpZb3UgZG9uJ3QgaGF2ZSB0byBzdXBwb3J0IGxv
-b2t1cCBieSBpbmRleCwganVzdCBzdXBwb3J0IGEgTlVMTCBuYW1lLgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
-c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Introduction of the Platform Environment Control Interface (PECI) bus
+device driver. PECI is a one-wire bus interface that provides a
+communication channel from Intel processors and chipset components to
+external monitoring or control devices. PECI is designed to support the
+following sideband functions:
+
+* Processor and DRAM thermal management
+  - Processor fan speed control is managed by comparing Digital Thermal
+    Sensor (DTS) thermal readings acquired via PECI against the
+    processor-specific fan speed control reference point, or TCONTROL. Both
+    TCONTROL and DTS thermal readings are accessible via the processor PECI
+    client. These variables are referenced to a common temperature, the TCC
+    activation point, and are both defined as negative offsets from that
+    reference.
+  - PECI based access to the processor package configuration space provides
+    a means for Baseboard Management Controllers (BMC) or other platform
+    management devices to actively manage the processor and memory power
+    and thermal features.
+
+* Platform Manageability
+  - Platform manageability functions including thermal, power, and error
+    monitoring. Note that platform 'power' management includes monitoring
+    and control for both the processor and DRAM subsystem to assist with
+    data center power limiting.
+  - PECI allows read access to certain error registers in the processor MSR
+    space and status monitoring registers in the PCI configuration space
+    within the processor and downstream devices.
+  - PECI permits writes to certain registers in the processor PCI
+    configuration space.
+
+* Processor Interface Tuning and Diagnostics
+  - Processor interface tuning and diagnostics capabilities
+    (Intel Interconnect BIST). The processors Intel Interconnect Built In
+    Self Test (Intel IBIST) allows for infield diagnostic capabilities in
+    the Intel UPI and memory controller interfaces. PECI provides a port to
+    execute these diagnostics via its PCI Configuration read and write
+    capabilities.
+
+* Failure Analysis
+  - Output the state of the processor after a failure for analysis via
+    Crashdump.
+
+PECI uses a single wire for self-clocking and data transfer. The bus
+requires no additional control lines. The physical layer is a self-clocked
+one-wire bus that begins each bit with a driven, rising edge from an idle
+level near zero volts. The duration of the signal driven high depends on
+whether the bit value is a logic '0' or logic '1'. PECI also includes
+variable data transfer rate established with every message. In this way, it
+is highly flexible even though underlying logic is simple.
+
+The interface design was optimized for interfacing between an Intel
+processor and chipset components in both single processor and multiple
+processor environments. The single wire interface provides low board
+routing overhead for the multiple load connections in the congested routing
+area near the processor and chipset components. Bus speed, error checking,
+and low protocol overhead provides adequate link bandwidth and reliability
+to transfer critical device operating conditions and configuration
+information.
+
+This implementation provides the basic framework to add PECI extensions to
+the Linux bus and device models. A hardware specific 'Adapter' driver can
+be attached to the PECI bus to provide sideband functions described above.
+It is also possible to access all devices on an adapter from userspace
+through the /dev interface. A device specific 'Client' driver also can be
+attached to the PECI bus so each processor client's features can be
+supported by the 'Client' driver through an adapter connection in the bus.
+This patch set includes Aspeed 24xx/25xx PECI driver and PECI
+cputemp/dimmtemp drivers as the first implementation for both adapter and
+client drivers on the PECI bus framework.
+
+Please review.
+
+Thanks,
+
+Jae
+
+Changes since v8:
+- Refined descriptions in PECI device tree documents.
+- Fixed checking logic of supportable PECI commands using full revision
+  number.
+- Fixed DIB data size to u64 to make that can contain 8-bytes of information.
+- Changed PECI cdev names from pecix to peci-x where x is bus number.
+- Refined intel-peci-client driver and moved hwmon relating codes to
+  peci-hwmon.h.
+- Added missing core label strings into peci-cputemp driver.
+- Added kerneldoc comments.
+
+Changes since v7:
+- Fixed a typo in the MFD_INTEL_PECI_CLIENT description.
+- Made peci_unregister_device() NULL-aware.
+- Converted to using %pOF instead of node full name in peci-core.
+- Removed OF tables from peci-cputemp and peci-dimmtemp.
+- Removed of_compatible strings from intel-peci-client.
+- Added an access_ok() check into peci_ioctl in peci-core.
+- Changed the DT node name of peci simple-bus from 'peci' to 'bus'.
+
+Changes since v6:
+- Dropped off unnecessary examples from dt-bindings document.
+- Fixed a bug in DIMM index mask building logic.
+- Modified DIMM temp label strings to match with the way in BIOS.
+- Changed PECI ioctl base number from B6 to B7 to avoid conflict with
+  fpga-dfl.
+- Separated the PECI section in MAINTAINERS into two parts - PECI subsystem
+  and ASPEED PECI driver.
+
+Changes since v5:
+- Added more detailed descriptions for PECI client MFD documents.
+- Changed PECI client MFD souce file names.
+- Fixed DT example of PECI client MFD.
+- Removed unnecessary debug printings.
+- Moved the asm/intel-family.h inclusion place.
+
+Changes since v4:
+- Fixed an incorrect endianness handling in peci-aspeed.
+- Added a comment to explain about the asm/intel-family.h inclusion.
+- Added an MFD module to support multi-function PECI client devices.
+
+Changes since v3:
+- Made code more simple and compact.
+- Removed unused header file inclusion.
+- Fixed incorrect error return values and messages.
+- Removed DTS margin temperature from the peci-cputemp.
+- Made some magic numbers use defines.
+- Moved peci_get_cpu_id() into peci-core as a common function.
+- Replaced the cancel_delayed_work() call with a cancel_delayed_work_sync().
+- Replaced AST and Aspeed uses with ASPEED.
+- Simplified peci command timeout checking logic using
+  regmap_read_poll_timeout().
+- Simplified endian swap codes using endian handling macros.
+- Dropped regmap read/write error checking except for the first access.
+- Added a PECI reset setting in the device tree node.
+- Removed unnecessary sleep from the probe context.
+- Removed IRQF_SHARED flag from irq request code in the ASPEED PECI driver.
+- Fixed typos in documents.
+- Combined peci-bus.txt, peci-adapter.txt and peci-client.txt into peci.txt.
+- Fixed and swept documents to drop some incorrect or unnecessary
+  descriptions.
+- Fixed device tree to make unit-address format use reg contents.
+- Simplified bit manipulations using <linux/bitfield.h>.
+- Made client CPU model checking use <asm/intel-family.h> if available.
+- Modified adapter heap allocation method to use kobject reference count
+  based.
+- Added the low-level PECI xfer IOCTL again to support the Redfish
+  requirement.
+- Added PM domain attach/detach code.
+- Added logic for device instantiation through sysfs.
+- Fix a bug of interrupt status checking code in peci-aspeed driver.
+
+Changes since v2:
+- Divided peci-hwmon driver into two drivers, peci-cputemp and
+  peci-dimmtemp.
+- Added generic dt binding documents for PECI bus, adapter and client.
+- Removed in_atomic() call from the PECI core driver.
+- Improved PECI commands masking logic.
+- Added permission check logic for PECI ioctls.
+- Removed unnecessary type casts.
+- Fixed some invalid error return codes.
+- Added the mark_updated() function to improve update interval checking
+  logic.
+- Fixed a bug in populated DIMM checking function.
+- Fixed some typo, grammar and style issues in documents.
+- Rewrote hwmon drivers to use devm_hwmon_device_register_with_info API.
+- Made peci_match_id() function as a static.
+- Replaced a deprecated create_singlethread_workqueue() call with an
+  alloc_ordered_workqueue() call.
+- Reordered local variable definitions in reversed xmas tree notation.
+- Listed up client CPUs that can be supported by peci-cputemp and
+  peci-dimmtemp hwmon drivers.
+- Added CPU generation detection logic which checks CPUID signature through
+  PECI connection.
+- Improved interrupt handling logic in the Aspeed PECI adapter driver.
+- Fixed SPDX license identifier style in header files.
+- Changed some macros in peci.h to static inline functions.
+- Dropped sleepable context checking code in peci-core.
+- Adjusted rt_mutex protection scope in peci-core.
+- Moved adapter->xfer() checking code into peci_register_adapter().
+- Improved PECI command retry checking logic.
+- Changed ioctl base from 'P' to 0xb6 to avoid confiliction and updated
+  ioctl-number.txt to reflect the ioctl number of PECI subsystem.
+- Added a comment to describe PECI retry action.
+- Simplified return code handling of peci_ioctl_ping().
+- Changed type of peci_ioctl_fn[] to static const.
+- Fixed range checking code for valid PECI commands.
+- Fixed the error return code on invalid PECI commands.
+- Fixed incorrect definitions of PECI ioctl and its handling logic.
+
+Changes since v1:
+- Additionally implemented a core driver to support PECI linux bus driver
+  model.
+- Modified Aspeed PECI driver to make that to be an adapter driver in PECI
+  bus.
+- Modified PECI hwmon driver to make that to be a client driver in PECI
+  bus.
+- Simplified hwmon driver attribute labels and removed redundant strings.
+- Removed core_nums from device tree setting of hwmon driver and modified
+  core number detection logic to check the resolved_core register in client
+  CPU's local PCI configuration area.
+- Removed dimm_nums from device tree setting of hwmon driver and added
+  populated DIMM detection logic to support dynamic creation.
+- Removed indexing gap on core temperature and DIMM temperature attributes.
+- Improved hwmon registration and dynamic attribute creation logic.
+- Fixed structure definitions in PECI uapi header to make that use __u8,
+  __u16 and etc.
+- Modified wait_for_completion_interruptible_timeout error handling logic
+  in Aspeed PECI driver to deliver errors correctly.
+- Removed low-level xfer command from ioctl and kept only high-level PECI
+  command suite as ioctls.
+- Fixed I/O timeout logic in Aspeed PECI driver using ktime.
+- Added a function into hwmon driver to simplify update delay checking.
+- Added a function into hwmon driver to convert 10.6 to millidegree.
+- Dropped non-standard attributes in hwmon driver.
+- Fixed OF table for hwmon to make it indicate as a PECI client of Intel
+  CPU target.
+- Added a maintainer of PECI subsystem into MAINTAINERS document.
+
+Jae Hyun Yoo (12):
+  dt-bindings: Add a document of PECI subsystem
+  Documentation: ioctl: Add ioctl numbers for PECI subsystem
+  peci: Add support for PECI bus driver core
+  dt-bindings: Add a document of PECI adapter driver for ASPEED
+    AST24xx/25xx SoCs
+  ARM: dts: aspeed: peci: Add PECI node
+  peci: Add a PECI adapter driver for Aspeed AST24xx/AST25xx
+  dt-bindings: mfd: Add a document for PECI client MFD
+  mfd: intel-peci-client: Add PECI client MFD driver
+  Documentation: hwmon: Add documents for PECI hwmon client drivers
+  hwmon: Add PECI cputemp driver
+  hwmon: Add PECI dimmtemp driver
+  Add maintainers for the PECI subsystem
+
+ .../bindings/mfd/intel-peci-client.txt        |   34 +
+ .../devicetree/bindings/peci/peci-aspeed.txt  |   55 +
+ .../devicetree/bindings/peci/peci.txt         |   43 +
+ Documentation/hwmon/peci-cputemp              |   78 +
+ Documentation/hwmon/peci-dimmtemp             |   50 +
+ Documentation/ioctl/ioctl-number.txt          |    2 +
+ MAINTAINERS                                   |   22 +
+ arch/arm/boot/dts/aspeed-g4.dtsi              |   26 +
+ arch/arm/boot/dts/aspeed-g5.dtsi              |   26 +
+ drivers/Kconfig                               |    2 +
+ drivers/Makefile                              |    1 +
+ drivers/hwmon/Kconfig                         |   28 +
+ drivers/hwmon/Makefile                        |    2 +
+ drivers/hwmon/peci-cputemp.c                  |  394 +++++
+ drivers/hwmon/peci-dimmtemp.c                 |  284 +++
+ drivers/hwmon/peci-hwmon.h                    |   49 +
+ drivers/mfd/Kconfig                           |   14 +
+ drivers/mfd/Makefile                          |    1 +
+ drivers/mfd/intel-peci-client.c               |  150 ++
+ drivers/peci/Kconfig                          |   39 +
+ drivers/peci/Makefile                         |    9 +
+ drivers/peci/peci-aspeed.c                    |  505 ++++++
+ drivers/peci/peci-core.c                      | 1527 +++++++++++++++++
+ include/linux/mfd/intel-peci-client.h         |  110 ++
+ include/linux/peci.h                          |  142 ++
+ include/uapi/linux/peci-ioctl.h               |  403 +++++
+ 26 files changed, 3996 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/mfd/intel-peci-client.txt
+ create mode 100644 Documentation/devicetree/bindings/peci/peci-aspeed.txt
+ create mode 100644 Documentation/devicetree/bindings/peci/peci.txt
+ create mode 100644 Documentation/hwmon/peci-cputemp
+ create mode 100644 Documentation/hwmon/peci-dimmtemp
+ create mode 100644 drivers/hwmon/peci-cputemp.c
+ create mode 100644 drivers/hwmon/peci-dimmtemp.c
+ create mode 100644 drivers/hwmon/peci-hwmon.h
+ create mode 100644 drivers/mfd/intel-peci-client.c
+ create mode 100644 drivers/peci/Kconfig
+ create mode 100644 drivers/peci/Makefile
+ create mode 100644 drivers/peci/peci-aspeed.c
+ create mode 100644 drivers/peci/peci-core.c
+ create mode 100644 include/linux/mfd/intel-peci-client.h
+ create mode 100644 include/linux/peci.h
+ create mode 100644 include/uapi/linux/peci-ioctl.h
+
+-- 
+2.19.1
