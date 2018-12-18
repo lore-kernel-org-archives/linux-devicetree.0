@@ -1,39 +1,54 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 0/2] of: phandle_cache, fix refcounts, remove stale entry
-Date: Tue, 18 Dec 2018 09:43:07 -0600
-Message-ID: <CAL_JsqKZ=g16jZ_SZX2qi-ecE-hvQ+-UfUw40=+ztiM-Zpsq9A@mail.gmail.com>
-References: <1545033396-24485-1-git-send-email-frowand.list@gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v4 3/6] media: sun6i: Update default CSI_SCLK for A64
+Date: Tue, 18 Dec 2018 21:08:17 +0530
+Message-ID: <CAMty3ZCS+QT_YqbJueR-qeityaDxNbQ7p_d3D6bNATSJLQpRnQ@mail.gmail.com>
+References: <20181218113320.4856-1-jagan@amarulasolutions.com>
+ <20181218113320.4856-4-jagan@amarulasolutions.com> <20181218152318.duynff7f5m2gxtv4@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545033396-24485-1-git-send-email-frowand.list@gmail.com>
+In-Reply-To: <20181218152318.duynff7f5m2gxtv4@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Frank Rowand <frowand.list@gmail.com>
-Cc: mwb@linux.vnet.ibm.com, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Michael Ellerman <mpe@ellerman.id.au>, Tyrel Datwyler <tyreld@linux.vnet.ibm.com>, tlfalcon@linux.vnet.ibm.com, minkim@us.ibm.com, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 17, 2018 at 1:56 AM <frowand.list@gmail.com> wrote:
+On Tue, Dec 18, 2018 at 8:53 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> From: Frank Rowand <frank.rowand@sony.com>
+> On Tue, Dec 18, 2018 at 05:03:17PM +0530, Jagan Teki wrote:
+> > Unfortunately A64 CSI cannot work with default CSI_SCLK rate.
+> >
+> > A64 BSP is using 300MHz clock rate as default csi clock,
+> > so sun6i_csi require explicit change to update CSI_SCLK
+> > rate to 300MHZ for A64 SoC's.
+> >
+> > So, set the clk_mod to 300MHz only for A64.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > index 9ff61896e4bb..91470edf7581 100644
+> > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > @@ -822,6 +822,11 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+> >               return PTR_ERR(sdev->clk_mod);
+> >       }
+> >
+> > +     /* A64 require 300MHz mod clock to operate properly */
+> > +     if (of_device_is_compatible(pdev->dev.of_node,
+> > +                                 "allwinner,sun50i-a64-csi"))
+> > +             clk_set_rate_exclusive(sdev->clk_mod, 300000000);
+> > +
 >
-> Non-overlay dynamic devicetree node removal may leave the node in
-> the phandle cache.  Subsequent calls to of_find_node_by_phandle()
-> will incorrectly find the stale entry.  This bug exposed the foloowing
-> phandle cache refcount bug.
+> If you're using clk_set_rate_exclusive, you need to put back the
+> "exclusive" reference once you're not using the clock.
 >
-> The refcount of phandle_cache entries is not incremented while in
-> the cache, allowing use after free error after kfree() of the
-> cached entry.
->
-> Changes since v1:
->   - make __of_free_phandle_cache() static
->   - add WARN_ON(1) for unexpected condition in of_find_node_by_phandle()
->
-> Frank Rowand (2):
->   of: of_node_get()/of_node_put() nodes held in phandle cache
->   of: __of_detach_node() - remove node from phandle cache
+> Doing it here is not really optimal either, since you'll put a
+> constraint on the system (maintaining that clock at 300MHz), while
+> it's not in use.
 
-I'll send this to Linus this week if I get a tested by. Otherwise, it
-will go in for 4.21.
-
-Rob
+I think we can handle via clk_rate_exclusive_put for those errors
+cases? If I'm not wrong
