@@ -1,66 +1,169 @@
 From: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
-Subject: [PATCH v5 0/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy core
-Date: Tue, 18 Dec 2018 19:15:31 +0530
-Message-ID: <1545140733-20689-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Subject: [PATCH v5 1/2] phy: zynqmp: Add dt bindings for ZynqMP phy
+Date: Tue, 18 Dec 2018 19:15:32 +0530
+Message-ID: <1545140733-20689-2-git-send-email-anurag.kumar.vulisha@xilinx.com>
+References: <1545140733-20689-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545140733-20689-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: kishon@ti.com, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, vivek.gautam@codeaurora.org
 Cc: Michal Simek <michals@xilinx.com>, v.anuragkumar@gmail.com, sundeep subbaraya <sundeep.lkml@gmail.com>, apandey@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-ZynqMP serial input output unit (SIOU) is a high-speed serial interface block
-that acts as a phy interface for the PCIe, USB 3.0, DisplayPort, SATA, and
-Ethernet controllers. These controllers use any one among the available four
-multigigabit transceivers for high-speed communication with their link partners
-outside the SOC
+This patch adds the document describing dt bindings for ZynqMP
+phy. ZynqMP SOC has a High Speed Processing System Gigabit
+Transceiver which provides PHY capabilties to USB, SATA,
+PCIE, Display Port and Ehernet SGMII controllers.
 
-ZynqMP SIOU supports multiple protocols working at different reference clock
-frequencies to operate simultaneously. Each of the four lanes will be having
-a dedicated PLL associated which generates the desired frequency required by
-the protocol configured based on the reference clock input given. Using this
-driver, user can select the desired reference clock frequency for each of
-lane 0, lane 1, lane 2, and lane 3 respectively. Each lane can be programmed
-to have its own reference clock or can share reference clock from its
-neighboring lane, this is called as "Clock Sharing". This driver supports
-the above mentioned clock sharing aswell.
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+---
+ Changes in v5:
+	1. None
 
-These set of patches add support SIOU support by adding zynqmp-phy driver to
-linux.
-
-This patch series is based on the initial work done by "Subbaraya Sundeep"
-https://lore.kernel.org/patchwork/patch/635317/
-
-Changes in v5:
-	1. No functional changes. Added missing Author name
-
-Changes in v4:
+ Changes in v4:
 	1. Fixed the changes in phy-zynqmp.txt as suggested by "Rob Herring"
-	2. Moved the dt-bindings patch from 2nd to 1st
+	2. Moved changes from include/dt-bindings/phy/phy.h into Patch 2 to 1
 
-Changes in v3:
+ Changes in v3:
 	1. Corrected the Documentation as suggested by "Vivek Gautam"
 
-Changes in v2:
-	1. Fixed the compilation error when compiled phy-zynqmp.c as a module
-	2. Added CONFIG_PM macro in phy-zynqmp.c driver
-
-
-Anurag Kumar Vulisha (2):
-  phy: zynqmp: Add dt bindings for ZynqMP phy
-  phy: zynqmp: Add phy driver for xilinx zynqmp phy core
-
- .../devicetree/bindings/phy/phy-zynqmp.txt         |  109 ++
- drivers/phy/Kconfig                                |    8 +
- drivers/phy/Makefile                               |    1 +
- drivers/phy/phy-zynqmp.c                           | 1582 ++++++++++++++++++++
- include/dt-bindings/phy/phy.h                      |    2 +
- include/linux/phy/phy-zynqmp.h                     |   52 +
- 6 files changed, 1754 insertions(+)
+ Changes in v2:
+	1. None
+---
+ .../devicetree/bindings/phy/phy-zynqmp.txt         | 109 +++++++++++++++++++++
+ include/dt-bindings/phy/phy.h                      |   2 +
+ 2 files changed, 111 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/phy/phy-zynqmp.txt
- create mode 100644 drivers/phy/phy-zynqmp.c
- create mode 100644 include/linux/phy/phy-zynqmp.h
 
+diff --git a/Documentation/devicetree/bindings/phy/phy-zynqmp.txt b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+new file mode 100644
+index 0000000..3605c5c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-zynqmp.txt
+@@ -0,0 +1,109 @@
++Xilinx ZynqMP PHY binding
++
++This binding describes a ZynqMP PHY device that is used to control ZynqMP
++High Speed Gigabit Transceiver(GT). ZynqMP PS GTR provides four lanes
++and are used by USB, SATA, PCIE, Display port and Ethernet SGMMI controllers.
++
++Phy provider node
++=================
++
++Required properties:
++- compatible	: Can be "xlnx,zynqmp-psgtr-v1.1" or "xlnx,zynqmp-psgtr"
++
++- reg           : Address and length of register sets for each device in
++                  "reg-names"
++
++- reg-names     : The names of the register addresses corresponding to the
++		  registers filled in "reg":
++			- serdes: SERDES block register set
++			- siou: SIOU block register set
++
++Optional properties:
++- xlnx,tx-termination-fix : Include this for fixing functional issue with the
++		  TX termination resistance in GT, which can be out of spec for
++		  the XCZU9EG silicon version. This property is not required for
++		  "xlnx,zynqmp-psgtr-v1.1"
++
++Required nodes	:  A sub-node is required for each lane the controller
++		   provides.
++
++Phy sub-nodes
++=============
++
++Required properties:
++lane@0:
++- #phy-cells	: Should be 4
++
++lane@1:
++- #phy-cells	: Should be 4
++
++lane@2:
++- #phy-cells	: Should be 4
++
++lane@3:
++- #phy-cells	: Should be 4
++
++Example:
++	zynqmp_phy: phy@fd400000 {
++		compatible = "xlnx,zynqmp-psgtr-v1.1";
++		status = "okay";
++		reg = <0x0 0xfd400000 0x0 0x40000>, <0x0 0xfd3d0000 0x0 0x1000>;
++		reg-names = "serdes", "siou";
++
++		lane0: lane@0 {
++			#phy-cells = <4>;
++		};
++		lane1: lane@1 {
++			#phy-cells = <4>;
++		};
++		lane2: lane@2 {
++			#phy-cells = <4>;
++		};
++		lane3: lane@3 {
++			#phy-cells = <4>;
++		};
++	};
++
++Specifying phy control of devices
++=================================
++
++Device nodes should specify the configuration required in their "phys"
++property, containing a phandle to the phy port node and a device type.
++
++phys = <PHANDLE CONTROLLER_TYPE CONTROLLER_INSTANCE LANE_REF_CLK LANE_FREQ>;
++
++PHANDLE                 = &lane0 or &lane1 or &lane2 or &lane3
++CONTROLLER_TYPE         = PHY_TYPE_PCIE or PHY_TYPE_SATA or PHY_TYPE_USB
++			  or PHY_TYPE_DP or PHY_TYPE_SGMII
++CONTROLLER_INSTANCE     = Depends on controller type used, can be any of
++				PHY_TYPE_PCIE : 0 or 1 or 2 or 3
++				PHY_TYPE_SATA : 0 or 1
++				PHY_TYPE_USB  : 0 or 1
++				PHY_TYPE_DP   : 0 or 1
++				PHY_TYPE_SGMII: 0 or 1 or 2 or 3
++LANE_REF_CLK            = Depends on which lane clock is used as ref clk, can be
++			  0 or 1 or 2 or 3
++LANE_FREQ               = Frequency of the reference clock, can be any of the
++			  below mentioned based on the phy type used
++- PHY_TYPE_PCIE         = 100Mhz
++- PHY_TYPE_SGMII        = 125Mhz
++- PHY_TYPE_SATA         = 125Mhz, 150Mhz
++- PHY_TYPE_USB          = 26Mhz, 52Mhz, 100Mhz
++- PHY_TYPE_DP           = 27Mhz, 108Mhz, 135Mhz
++
++Example:
++
++#include <dt-bindings/phy/phy.h>
++
++	usb@fe200000 {
++		...
++		phys = <&lane2 PHY_TYPE_USB3 0 2 2600000>;
++		...
++	};
++
++	zynqmp-display@fd4a0000 {
++		...
++		phys = <&lane1 PHY_TYPE_DP 0 1 27000000>,
++		       <&lane0 PHY_TYPE_DP 1 1 27000000>;
++		...
++	};
+diff --git a/include/dt-bindings/phy/phy.h b/include/dt-bindings/phy/phy.h
+index d16e875..09cc0a6 100644
+--- a/include/dt-bindings/phy/phy.h
++++ b/include/dt-bindings/phy/phy.h
+@@ -16,5 +16,7 @@
+ #define PHY_TYPE_USB2		3
+ #define PHY_TYPE_USB3		4
+ #define PHY_TYPE_UFS		5
++#define PHY_TYPE_DP		6
++#define PHY_TYPE_SGMII		7
+ 
+ #endif /* _DT_BINDINGS_PHY */
 -- 
 2.1.1
