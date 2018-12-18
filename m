@@ -1,81 +1,48 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Tue, 18 Dec 2018 10:40:00 -0800
-Message-ID: <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181212211848.26768-3-jcrouse@codeaurora.org>
- <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
- <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
- <20181217070647.xtvfgsixggua5yod@vireshk-i7>
- <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+From: Jayant Shekhar <jshekhar@codeaurora.org>
+Subject: [v1] drm/msm/dpu: Remove unused enum and comment from dpu mdss
+Date: Wed, 19 Dec 2018 00:23:53 +0530
+Message-ID: <1545159233-21580-1-git-send-email-jshekhar@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Jayant Shekhar <jshekhar@codeaurora.org>, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBEb3VnIEFuZGVyc29uICgyMDE4LTEyLTE3IDE2OjM0OjMxKQo+IEhpLAo+IAo+IE9u
-IFN1biwgRGVjIDE2LCAyMDE4IGF0IDExOjA2IFBNIFZpcmVzaCBLdW1hciA8dmlyZXNoLmt1bWFy
-QGxpbmFyby5vcmc+IHdyb3RlOgo+ID4KPiA+ICtSb2IgK1N0ZXBoZW4sCj4gPgo+ID4gT24gMTQt
-MTItMTgsIDA5OjA0LCBEb3VnIEFuZGVyc29uIHdyb3RlOgo+ID4gPiBIaSwKPiA+ID4KPiA+ID4g
-T24gVGh1LCBEZWMgMTMsIDIwMTggYXQgODo0MSBQTSBWaXJlc2ggS3VtYXIgPHZpcmVzaC5rdW1h
-ckBsaW5hcm8ub3JnPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IE9uIDEyLTEyLTE4LCAxNDoxOCwg
-Sm9yZGFuIENyb3VzZSB3cm90ZToKPiA+ID4gPiA+ICsgICAgICAgICAgICAgICAgICAgICBncHVf
-b3BwX3RhYmxlOiBvcHAtdGFibGUgewo+ID4gPiA+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiOwo+ID4g
-PiA+Cj4gPiA+ID4gSSB0aGluayB5b3UgbmVlZCB0byBtZW50aW9uICJvcGVyYXRpbmctcG9pbnRz
-LXYyIiBhcyB3ZWxsIGhlcmUuCj4gPiA+Cj4gPiA+IEFyZSB5b3Ugc2F5aW5nIHRoZSBhYm92ZSBz
-aG91bGQgYmU6Cj4gPiA+ICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20t
-bGV2ZWwiLCAib3BlcmF0aW5nLXBvaW50cy12MiI7Cj4gPiA+Cj4gPiA+IElmIHNvIEknbSBub3Qg
-c3VyZSBJIGFncmVlLgo+ID4KPiA+IFdlbGwgSSBoYXZlIG15IGRvdWJ0cyBhcyB3ZWxsIG9uIHRo
-aXMuIFRoaXMgaXMgd2hlcmUgdGhlIG9yZGVyaW5nIHdhcyBkaXNjdXNzZWQKPiA+IGVhcmxpZXI6
-Cj4gPgo+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8xNTIzMjg5Nzk4OTcuMTgwMjc2
-LjE1OTYzOTI1ODc3NDQyNjU3MTU4QHN3Ym95ZC5tdHYuY29ycC5nb29nbGUuY29tLwo+ID4KPiA+
-IEBSb2IvU3RlcGhlbjogU2hvdWxkIHRoZSBvcHAtdGFibGUgbm9kZSBhYm92ZSBhbHNvIGhhdmUg
-Im9wZXJhdGluZy1wb2ludHMtdjIiCj4gPiBzdHJpbmcgaW4gdGhlIGNvbXBhdGlibGUgcHJvcGVy
-dHkgPwo+ID4KPiA+ID4gSXQncyBfbm90XyByZWFsbHkgY29tcGF0aWJsZSB3aXRoIHRoZQo+ID4g
-PiAib3BlcmF0aW5nLXBvaW50cy12MiIgYmluZGluZy4gIElmIHlvdSBoYWQgYSBkcml2ZXIgdGhh
-dCBoYWQgbmV2ZXIKPiA+ID4gaGVhcmQgb2YgIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZl
-bCIgYW5kIGhhZCBvbmx5IGhlYXJkIG9mCj4gPiA+ICJvcGVyYXRpbmctcG9pbnRzLXYyIiBhbmQg
-aXQgdG9vayBhIGxvb2sgYXQgdGhpcyBub2RlIGl0IHdvdWxkIGhhdmUgbm8KPiA+ID4gaWRlYSB3
-aGF0IHRvIGRvIHdpdGggaXQuCj4gPgo+ID4gV2VsbCBpdCB3aWxsIHBhcnNlIGV2ZXJ5dGhpbmcg
-YXBhcnQgZnJvbSB0aGUgcWNvbSxsZXZlbCB0aGluZywgc28gaXQgY2FuCj4gPiBhY3R1YWxseSBw
-YXJzZSBzdHVmZiBoZXJlLgo+ID4KPiA+ID4gSSdsbCBhbHNvIG5vdGUgdGhhdCBvdGhlciBpbnN0
-YW5jZXMgcG9zdGVkIHRvIHRoZSBsaXN0IGRvbid0IGxpc3QgYm90aDoKPiA+ID4KPiA+ID4gaHR0
-cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDcyNTgwMS8gLSBSUE0gLyBSUE1IIFBE
-IGJpbmRpbmdzCj4gPiA+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3MjU3
-OTMvIC0gUlBNSCBQRCBkZXZpY2UgdHJlZSBmb3Igc2RtODQ1Cj4gPiA+Cj4gPiA+IFRoZSBiaW5k
-aW5ncyBwYXRjaCBhbHNvIG1ha2VzIG5vIG1lbnRpb24gb2YgbmVlZGluZwo+ID4gPiAib3BlcmF0
-aW5nLXBvaW50cy12MiIuICBJIHRoaW5rIHRoZSBjb21tb24gY2FzZSB3aGVuIGEgZmFsbGJhY2sg
-aXMKPiA+ID4gcmVxdWlyZWQgaXQgaXMgZXhwbGljaXRseSBjYWxsZWQgb3V0IGluIHRoZSBiaW5k
-aW5nczoKPiA+ID4KPiA+ID4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDcy
-NTgwMy8gLSBxY29tLW9wcCBiaW5kaW5ncwo+ID4KPiA+IFN1cmUsIG1heWJlIEkgYW0gd3Jvbmcg
-YnV0IGl0cyBiZXR0ZXIgdG8gZ2V0IHNvbWUgY2xhcml0eSBvbiBpdCBmcm9tIFJvYi9TdGVwaGVu
-Lgo+IAo+IEluIGNhc2UgaXQgaGVscHM6Cj4gCj4gaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8y
-MDE4MTIxNzIxMDg0OS5HQTE1NDkwQGJvZ3VzCj4gCj4gLi4uc2hvd3MgUm9iIGdpdmluZyBhIFJl
-dmlld2VkLWJ5IHdpdGgganVzdAo+IAo+ICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRz
-LXYyLXFjb20tbGV2ZWwiOwo+IAo+IC4uLmFuZCBub3Q6Cj4gCj4gICBjb21wYXRpYmxlID0gIm9w
-ZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCIsICJvcGVyYXRpbmctcG9pbnRzLXYyIjsKPiAK
-CkkgZG9uJ3Qgc2VlIGEgcHJvYmxlbSBpZiBib3RoIGNvbXBhdGlibGUgc3RyaW5ncyBhcmUgdGhl
-cmUuIERvZXMgdGhhdApjaGFuZ2UgYW55dGhpbmc/IEkgc3VwcG9zZSB0aGUgcGxhdGZvcm0gYnVz
-IHBvcHVsYXRlIGNvZGUgd29uJ3QgY3JlYXRlIGEKZGV2aWNlIGZvciB0aGUgc3Vibm9kZSBpZiBp
-dCBoYXMgJ29wZXJhdGluZy1wb2ludHMtdjInLCBzbyBtYXliZSB0aGUKZmFsbGJhY2sgY29tcGF0
-aWJsZSBzdHJpbmcgc2hvdWxkIGJlIHRoZXJlPyBBbmQgdGhlbiB0aGUgZ2VuZXJpYyBPUFAKY29k
-ZSBjYW4gcGFyc2Ugb3V0IHRoZSBmcmVxdWVuY3kgYXQgbGVhc3Qgd2l0aG91dCBoYXZpbmcgdG8g
-a25vdyB0aGF0Cml0J3MgYSBxY29tIHNwZWNpZmljIE9QUCB0YWJsZS4KCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QK
-RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Remove enum dpu_iommu_domain from dpu mdss as its unused.
+
+Remove unnecessary comment for variable which is already
+removed.
+
+Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+---
+ drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+index 68c54d2..1ab8d4a 100644
+--- a/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
++++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_hw_mdss.h
+@@ -258,12 +258,6 @@ enum dpu_vbif {
+ 	VBIF_NRT = VBIF_1
+ };
+ 
+-enum dpu_iommu_domain {
+-	DPU_IOMMU_DOMAIN_UNSECURE,
+-	DPU_IOMMU_DOMAIN_SECURE,
+-	DPU_IOMMU_DOMAIN_MAX
+-};
+-
+ /**
+  * DPU HW,Component order color map
+  */
+@@ -358,7 +352,6 @@ enum dpu_3d_blend_mode {
+  * @alpha_enable: whether the format has an alpha channel
+  * @num_planes: number of planes (including meta data planes)
+  * @fetch_mode: linear, tiled, or ubwc hw fetch behavior
+- * @is_yuv: is format a yuv variant
+  * @flag: usage bit flags
+  * @tile_width: format tile width
+  * @tile_height: format tile height
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
