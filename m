@@ -1,65 +1,94 @@
-From: Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Subject: Re: [PATCH v2 03/12] PCI: aardvark: Add PHY support
-Date: Wed, 19 Dec 2018 16:28:35 +0100
-Message-ID: <20181219162835.5ff9c33c@dellmb.labs.office.nic.cz>
-References: <20181212102142.16053-1-miquel.raynal@bootlin.com>
-        <20181212102142.16053-4-miquel.raynal@bootlin.com>
-        <20181214014701.373b220b@nic.cz>
-        <20181214015712.31f749ea@nic.cz>
-        <20181217170724.58421a29@xps13>
-        <20181217223430.182d01d8@nic.cz>
-        <20181218091817.4a8a5d42@xps13>
-        <20181218092314.725af970@xps13>
-        <20181218140920.6935db39@nic.cz>
-        <20181218144130.3f1a75de@xps13>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v4 0/6] media/sun6i: Allwinner A64 CSI support
+Date: Wed, 19 Dec 2018 16:39:36 +0100
+Message-ID: <20181219153936.pxu6nwf2conp4b3m@flea>
+References: <20181218113320.4856-1-jagan@amarulasolutions.com>
+ <20181218152122.4zj6wgbukhrl6ly6@flea>
+ <CAMty3ZA4xXVLKx-yj+2_iJ700+yTLesjEAgS8Wu2i8otPScpaw@mail.gmail.com>
+ <20181219102450.picswsg3yevba23j@flea>
+ <CAMty3ZB04E46kMKVvo-QxpVQBus74at3uKJC_QzS788UiCAeeg@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218144130.3f1a75de@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Nadav Haklai <nadavh@marvell.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="42s4xmtnspqvogyw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBQ6M5HQAKGQE7HOCKSY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZB04E46kMKVvo-QxpVQBus74at3uKJC_QzS788UiCAeeg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-One thing for which I would like to be able to disable comphy is that
-each consumes about 100mW of power. On Turris Mox we configure the
-comphys to SGMII1, PCIe and USB3 modes. If there is no USB device
-plugged, the USB3 phy can be disabled, and save 100mW of power. If the
-PCIe extension module is not present, the PCIe can too be disabled, and
-if there is no switch nor SFP module present, so can SGMII1.
+--42s4xmtnspqvogyw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-The other reason is this: if the SGMII phy is set to 1G mode, and then
-powered on second time in 2.5G mode, will it work? I would like to
-patch mvneta driver to power on/off the comphy, if the device node is
-present in device tree. But then the system can request such a change
-(SGMII to 2500BASE-X or back).
+65;5402;1c
+On Wed, Dec 19, 2018 at 04:11:50PM +0530, Jagan Teki wrote:
+> On Wed, Dec 19, 2018 at 3:55 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Tue, Dec 18, 2018 at 08:58:22PM +0530, Jagan Teki wrote:
+> > > On Tue, Dec 18, 2018 at 8:51 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > On Tue, Dec 18, 2018 at 05:03:14PM +0530, Jagan Teki wrote:
+> > > > > This series support CSI on Allwinner A64.
+> > > > >
+> > > > > Tested 640x480, 320x240, 720p, 1080p resolutions UYVY8_2X8 format.
+> > > > >
+> > > > > Changes for v4:
+> > > > > - update the compatible string order
+> > > > > - add proper commit message
+> > > > > - included BPI-M64 patch
+> > > > > - skipped amarula-a64 patch
+> > > > > Changes for v3:
+> > > > > - update dt-bindings for A64
+> > > > > - set mod clock via csi driver
+> > > > > - remove assign clocks from dtsi
+> > > > > - remove i2c-gpio opendrian
+> > > > > - fix avdd and dovdd supplies
+> > > > > - remove vcc-csi pin group supply
+> > > > >
+> > > > > Note: This series created on top of H3 changes [1]
+> > > > >
+> > > > > [1] https://patchwork.kernel.org/cover/10705905/
+> > > >
+> > > > You had memory corruption before, how was this fixed?
+> > >
+> > > Memory corruption observed with default 600MHz on 1080p. It worked
+> > > fine on BPI-M64 (with 300MHz)
+> >
+> > I don't get it. In the previous version of those patches, you were
+> > mentionning you were still having this issue, even though you had the
+> > clock running at 300MHz, and then you tried to convince us to merge
+> > the patches nonetheless.
+> >
+> > Why would you say that then if that issue was fixed?
+> 
+> Previous version has A64-Relic board, which has some xclk issue on
+> sensor side wrt 1080p. I have tried 300MHz on the same hardware, it's
+> failing to capture on 30fps and so I tried 600MHz(which is default) on
+> the same configuration but it encounter memory corruption.
+> 
+> So, for checking whether there is an issue with hardware on A64-Relic
+> I moved with BPI-M64 dev board. which is working 1080p with 300MHz, ie
+> reason I have not included A64-Relic on this version and included
+> BPI-M64. We processed A64-Relic to hardware team to figure out the
+> clock and once ie fixed I'm planning to send DTS patch for that.
+> 
+> This is overall summary, hope you understand.
 
-Marek
+Ok, great, thanks!
+Maxime
 
-On Tue, 18 Dec 2018 14:41:30 +0100
-Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> Hi Marek,
->=20
-> Marek Behun <marek.behun@nic.cz> wrote on Tue, 18 Dec 2018 14:09:20
-> +0100:
->=20
-> > > [2]
-> > > https://github.com/ARM-software/arm-trusted-firmware/blob/master/driv=
-ers/marvell/comphy/phy-comphy-3700.c   =20
-> >=20
-> > Yes, I used mainline atf (it did not work out of the box with 18.09
-> > atf-marvell of course). But there is no _power_off function for
-> > SGMII, nor a digital_reset function like in cp110 implementation. =20
->=20
-> Indeed, but why would you need one? Just use the helpers from the core
-> and if there is no implementation, nothing should happen and the
-> helper should exit without error. Just call
-> phy_set_mode()/phy_power_on() an you should be good.
->=20
->=20
-> Thanks,
-> Miqu=C3=A8l
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--42s4xmtnspqvogyw--
