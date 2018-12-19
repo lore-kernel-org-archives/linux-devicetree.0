@@ -1,53 +1,57 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCHv3 4/4] misc: pci_endpoint_test: Add the layerscape EP
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: RE: [PATCHv3 4/4] misc: pci_endpoint_test: Add the layerscape EP
  device support
-Date: Wed, 19 Dec 2018 10:21:04 +0100
-Message-ID: <20181219092104.GA7356@kroah.com>
+Date: Wed, 19 Dec 2018 09:30:15 +0000
+Message-ID: <AM5PR04MB32997D5B5962BE9E21C77638F5BE0@AM5PR04MB3299.eurprd04.prod.outlook.com>
 References: <20181203103505.46885-1-xiaowei.bao@nxp.com>
  <20181203103505.46885-4-xiaowei.bao@nxp.com>
+ <20181219092104.GA7356@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203103505.46885-4-xiaowei.bao@nxp.com>
+In-Reply-To: <20181219092104.GA7356@kroah.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Xiaowei Bao <xiaowei.bao@nxp.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+To: Greg KH <gregkh@linuxfoundation.org>
+Cc: "bhelgaas@google.com" <bhelgaas@google.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Leo Li <leoyang.li@nxp.com>, "kishon@ti.com" <kishon@ti.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "arnd@arndb.de" <arnd@arndb.de>, "M.h. Lian" <minghuan.lian@nxp.com>, Mingkai Hu <mingkai.hu@nxp.com>, Roy Zang <roy.zang@nxp.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "pombredanne@nexb.com" <pombredanne@nexb.com>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.or>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 06:35:05PM +0800, Xiaowei Bao wrote:
-> Add the layerscape EP device support in pci_endpoint_test driver.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - no change
-> v3:
->  - no change
-> 
->  drivers/misc/pci_endpoint_test.c |    2 ++
->  1 files changed, 2 insertions(+), 0 deletions(-)
-> 
-> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
-> index 896e2df..744d10c 100644
-> --- a/drivers/misc/pci_endpoint_test.c
-> +++ b/drivers/misc/pci_endpoint_test.c
-> @@ -788,6 +788,8 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
->  static const struct pci_device_id pci_endpoint_test_tbl[] = {
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
->  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
-> +	/* 0x81c0: The device id of ls1046a in NXP. */
-
-There is no need for a comment, just this line is fine:
-
-> +	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
-
-If you note, no other lines have comments.
-
-If you want to say that this is a specific device, then use a #define
-with that device name and then use that define here, like the
-PCI_DEVICE_ID_TI_DRA72x was done.
-
-thanks,
-
-greg k-h
+DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBHcmVnIEtIIDxncmVna2hAbGlu
+dXhmb3VuZGF0aW9uLm9yZz4gDQpTZW50OiAyMDE4xOoxMtTCMTnI1SAxNzoyMQ0KVG86IFhpYW93
+ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29tPg0KQ2M6IGJoZWxnYWFzQGdvb2dsZS5jb207IHJv
+YmgrZHRAa2VybmVsLm9yZzsgbWFyay5ydXRsYW5kQGFybS5jb207IHNoYXduZ3VvQGtlcm5lbC5v
+cmc7IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsga2lzaG9uQHRpLmNvbTsgbG9yZW56by5w
+aWVyYWxpc2lAYXJtLmNvbTsgYXJuZEBhcm5kYi5kZTsgTS5oLiBMaWFuIDxtaW5naHVhbi5saWFu
+QG54cC5jb20+OyBNaW5na2FpIEh1IDxtaW5na2FpLmh1QG54cC5jb20+OyBSb3kgWmFuZyA8cm95
+LnphbmdAbnhwLmNvbT47IGtzdGV3YXJ0QGxpbnV4Zm91bmRhdGlvbi5vcmc7IGN5cmlsbGUucGl0
+Y2hlbkBmcmVlLWVsZWN0cm9ucy5jb207IHBvbWJyZWRhbm5lQG5leGIuY29tOyBzaGF3bi5saW5A
+cm9jay1jaGlwcy5jb207IG5pa2xhcy5jYXNzZWxAYXhpcy5jb207IGxpbnV4LXBjaUB2Z2VyLmtl
+cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxAdmdlci5r
+ZXJuZWwub3JnOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7IGxpbnV4cHBj
+LWRldkBsaXN0cy5vemxhYnMub3JnDQpTdWJqZWN0OiBSZTogW1BBVENIdjMgNC80XSBtaXNjOiBw
+Y2lfZW5kcG9pbnRfdGVzdDogQWRkIHRoZSBsYXllcnNjYXBlIEVQIGRldmljZSBzdXBwb3J0DQoN
+Ck9uIE1vbiwgRGVjIDAzLCAyMDE4IGF0IDA2OjM1OjA1UE0gKzA4MDAsIFhpYW93ZWkgQmFvIHdy
+b3RlOg0KPiBBZGQgdGhlIGxheWVyc2NhcGUgRVAgZGV2aWNlIHN1cHBvcnQgaW4gcGNpX2VuZHBv
+aW50X3Rlc3QgZHJpdmVyLg0KPiANCj4gU2lnbmVkLW9mZi1ieTogWGlhb3dlaSBCYW8gPHhpYW93
+ZWkuYmFvQG54cC5jb20+DQo+IC0tLQ0KPiB2MjoNCj4gIC0gbm8gY2hhbmdlDQo+IHYzOg0KPiAg
+LSBubyBjaGFuZ2UNCj4gDQo+ICBkcml2ZXJzL21pc2MvcGNpX2VuZHBvaW50X3Rlc3QuYyB8ICAg
+IDIgKysNCj4gIDEgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspLCAwIGRlbGV0aW9ucygt
+KQ0KPiANCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWlzYy9wY2lfZW5kcG9pbnRfdGVzdC5jIA0K
+PiBiL2RyaXZlcnMvbWlzYy9wY2lfZW5kcG9pbnRfdGVzdC5jDQo+IGluZGV4IDg5NmUyZGYuLjc0
+NGQxMGMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbWlzYy9wY2lfZW5kcG9pbnRfdGVzdC5jDQo+
+ICsrKyBiL2RyaXZlcnMvbWlzYy9wY2lfZW5kcG9pbnRfdGVzdC5jDQo+IEBAIC03ODgsNiArNzg4
+LDggQEAgc3RhdGljIHZvaWQgcGNpX2VuZHBvaW50X3Rlc3RfcmVtb3ZlKHN0cnVjdCANCj4gcGNp
+X2RldiAqcGRldikgIHN0YXRpYyBjb25zdCBzdHJ1Y3QgcGNpX2RldmljZV9pZCBwY2lfZW5kcG9p
+bnRfdGVzdF90YmxbXSA9IHsNCj4gIAl7IFBDSV9ERVZJQ0UoUENJX1ZFTkRPUl9JRF9USSwgUENJ
+X0RFVklDRV9JRF9USV9EUkE3NHgpIH0sDQo+ICAJeyBQQ0lfREVWSUNFKFBDSV9WRU5ET1JfSURf
+VEksIFBDSV9ERVZJQ0VfSURfVElfRFJBNzJ4KSB9LA0KPiArCS8qIDB4ODFjMDogVGhlIGRldmlj
+ZSBpZCBvZiBsczEwNDZhIGluIE5YUC4gKi8NCg0KVGhlcmUgaXMgbm8gbmVlZCBmb3IgYSBjb21t
+ZW50LCBqdXN0IHRoaXMgbGluZSBpcyBmaW5lOg0KDQo+ICsJeyBQQ0lfREVWSUNFKFBDSV9WRU5E
+T1JfSURfRlJFRVNDQUxFLCAweDgxYzApIH0sDQoNCklmIHlvdSBub3RlLCBubyBvdGhlciBsaW5l
+cyBoYXZlIGNvbW1lbnRzLg0KDQpJZiB5b3Ugd2FudCB0byBzYXkgdGhhdCB0aGlzIGlzIGEgc3Bl
+Y2lmaWMgZGV2aWNlLCB0aGVuIHVzZSBhICNkZWZpbmUgd2l0aCB0aGF0IGRldmljZSBuYW1lIGFu
+ZCB0aGVuIHVzZSB0aGF0IGRlZmluZSBoZXJlLCBsaWtlIHRoZSBQQ0lfREVWSUNFX0lEX1RJX0RS
+QTcyeCB3YXMgZG9uZS4NCg0KdGhhbmtzLA0KDQpncmVnIGstaA0KW1hpYW93ZWkgQmFvXSBIaSBH
+cmVnLCBPSywgSSBjYW4gcmVtb3ZlIHRoZSBjb21tZW50cyBpbiB0aGUgbmV4dCB2ZXJzaW9uIHBh
+dGNoLg0K
