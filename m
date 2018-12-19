@@ -1,16 +1,17 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v4 0/6] media/sun6i: Allwinner A64 CSI support
-Date: Wed, 19 Dec 2018 16:11:50 +0530
-Message-ID: <CAMty3ZB04E46kMKVvo-QxpVQBus74at3uKJC_QzS788UiCAeeg@mail.gmail.com>
+Subject: Re: [PATCH v4 3/6] media: sun6i: Update default
+ CSI_SCLK for A64
+Date: Wed, 19 Dec 2018 16:12:38 +0530
+Message-ID: <CAMty3ZDm0jPTigzX_jnNcOKRp6MbTFuwHpaTUmxnnkW8AQZRng@mail.gmail.com>
 References: <20181218113320.4856-1-jagan@amarulasolutions.com>
- <20181218152122.4zj6wgbukhrl6ly6@flea> <CAMty3ZA4xXVLKx-yj+2_iJ700+yTLesjEAgS8Wu2i8otPScpaw@mail.gmail.com>
- <20181219102450.picswsg3yevba23j@flea>
+ <20181218113320.4856-4-jagan@amarulasolutions.com> <20181218152318.duynff7f5m2gxtv4@flea>
+ <CAMty3ZCS+QT_YqbJueR-qeityaDxNbQ7p_d3D6bNATSJLQpRnQ@mail.gmail.com> <20181219100738.iakvqigi7z3k2coa@flea>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBB66A5DQAKGQE3326X5I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBKWB5DQAKGQEVPORQTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181219102450.picswsg3yevba23j@flea>
+In-Reply-To: <20181219100738.iakvqigi7z3k2coa@flea>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -21,54 +22,50 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2018 at 3:55 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+On Wed, Dec 19, 2018 at 3:37 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 >
-> On Tue, Dec 18, 2018 at 08:58:22PM +0530, Jagan Teki wrote:
-> > On Tue, Dec 18, 2018 at 8:51 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> On Tue, Dec 18, 2018 at 09:08:17PM +0530, Jagan Teki wrote:
+> > On Tue, Dec 18, 2018 at 8:53 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
 > > >
-> > > On Tue, Dec 18, 2018 at 05:03:14PM +0530, Jagan Teki wrote:
-> > > > This series support CSI on Allwinner A64.
+> > > On Tue, Dec 18, 2018 at 05:03:17PM +0530, Jagan Teki wrote:
+> > > > Unfortunately A64 CSI cannot work with default CSI_SCLK rate.
 > > > >
-> > > > Tested 640x480, 320x240, 720p, 1080p resolutions UYVY8_2X8 format.
+> > > > A64 BSP is using 300MHz clock rate as default csi clock,
+> > > > so sun6i_csi require explicit change to update CSI_SCLK
+> > > > rate to 300MHZ for A64 SoC's.
 > > > >
-> > > > Changes for v4:
-> > > > - update the compatible string order
-> > > > - add proper commit message
-> > > > - included BPI-M64 patch
-> > > > - skipped amarula-a64 patch
-> > > > Changes for v3:
-> > > > - update dt-bindings for A64
-> > > > - set mod clock via csi driver
-> > > > - remove assign clocks from dtsi
-> > > > - remove i2c-gpio opendrian
-> > > > - fix avdd and dovdd supplies
-> > > > - remove vcc-csi pin group supply
+> > > > So, set the clk_mod to 300MHz only for A64.
 > > > >
-> > > > Note: This series created on top of H3 changes [1]
+> > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > ---
+> > > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 5 +++++
+> > > >  1 file changed, 5 insertions(+)
 > > > >
-> > > > [1] https://patchwork.kernel.org/cover/10705905/
+> > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > > index 9ff61896e4bb..91470edf7581 100644
+> > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > > @@ -822,6 +822,11 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+> > > >               return PTR_ERR(sdev->clk_mod);
+> > > >       }
+> > > >
+> > > > +     /* A64 require 300MHz mod clock to operate properly */
+> > > > +     if (of_device_is_compatible(pdev->dev.of_node,
+> > > > +                                 "allwinner,sun50i-a64-csi"))
+> > > > +             clk_set_rate_exclusive(sdev->clk_mod, 300000000);
+> > > > +
 > > >
-> > > You had memory corruption before, how was this fixed?
+> > > If you're using clk_set_rate_exclusive, you need to put back the
+> > > "exclusive" reference once you're not using the clock.
+> > >
+> > > Doing it here is not really optimal either, since you'll put a
+> > > constraint on the system (maintaining that clock at 300MHz), while
+> > > it's not in use.
 > >
-> > Memory corruption observed with default 600MHz on 1080p. It worked
-> > fine on BPI-M64 (with 300MHz)
+> > I think we can handle via clk_rate_exclusive_put for those errors
+> > cases? If I'm not wrong
 >
-> I don't get it. In the previous version of those patches, you were
-> mentionning you were still having this issue, even though you had the
-> clock running at 300MHz, and then you tried to convince us to merge
-> the patches nonetheless.
->
-> Why would you say that then if that issue was fixed?
+> Yes, but it's not only for the error case, it's also for the inactive
+> case.
 
-Previous version has A64-Relic board, which has some xclk issue on
-sensor side wrt 1080p. I have tried 300MHz on the same hardware, it's
-failing to capture on 30fps and so I tried 600MHz(which is default) on
-the same configuration but it encounter memory corruption.
-
-So, for checking whether there is an issue with hardware on A64-Relic
-I moved with BPI-M64 dev board. which is working 1080p with 300MHz, ie
-reason I have not included A64-Relic on this version and included
-BPI-M64. We processed A64-Relic to hardware team to figure out the
-clock and once ie fixed I'm planning to send DTS patch for that.
-
-This is overall summary, hope you understand.
+Yes, I will try to add this next version.
