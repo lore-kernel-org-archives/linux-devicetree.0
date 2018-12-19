@@ -1,49 +1,71 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: gpu: samsung-rotator: Document s5pv210
- support
-Date: Wed, 19 Dec 2018 17:22:51 +0100
-Message-ID: <CAJKOXPfHHNUzQZu62btspC+6SwgoGPdAzusfSixXM7U9u3QP7A@mail.gmail.com>
-References: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
- <20181219155704.15264-3-pawel.mikolaj.chmiel@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] ASoC: xlnx: change license header format
+	style
+Date: Wed, 19 Dec 2018 16:24:34 +0000
+Message-ID: <20181219162434.GE8130@sirena.org.uk>
+References: <1545212440-109949-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+ <20181219151704.GA5040@infradead.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181219155704.15264-3-pawel.mikolaj.chmiel@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/mixed; boundary="===============1310711738924159632=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20181219151704.GA5040@infradead.org>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Christoph Hellwig <hch@infradead.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>, Vishal Sagar <vsagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxOSBEZWMgMjAxOCBhdCAxNzowNCwgUGF3ZcWCIENobWllbAo8cGF3ZWwubWlrb2xh
-ai5jaG1pZWxAZ21haWwuY29tPiB3cm90ZToKPgo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBuZXcg
-Y29tcGF0aWJsZSBmb3IgczVwdjIxMCBzb2MsCj4gd2hpY2ggd2lsbCBiZSBhbHNvIHN1cHBvcnRl
-ZCBieSB0aGlzIGRyaXZlci4KPgo+IFNpZ25lZC1vZmYtYnk6IFBhd2XFgiBDaG1pZWwgPHBhd2Vs
-Lm1pa29sYWouY2htaWVsQGdtYWlsLmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXJvdGF0b3IudHh0IHwgMSArCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
-dHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dAo+IGluZGV4IDgyY2QxZWQw
-YmU5My4uNzg2NThkZWM2OTQxIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dAo+IEBAIC01LDYgKzUs
-NyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICAgICAgKGEpICJzYW1zdW5nLGV4eW5vczQy
-MTAtcm90YXRvciIgZm9yIFJvdGF0b3IgSVAgaW4gRXh5bm9zNDIxMAo+ICAgICAgICAgKGIpICJz
-YW1zdW5nLGV4eW5vczQyMTItcm90YXRvciIgZm9yIFJvdGF0b3IgSVAgaW4gRXh5bm9zNDIxMi80
-NDEyCj4gICAgICAgICAoYykgInNhbXN1bmcsZXh5bm9zNTI1MC1yb3RhdG9yIiBmb3IgUm90YXRv
-ciBJUCBpbiBFeHlub3M1MjUwCj4gKyAgICAgICAoZCkgInNhbXN1bmcsczVwdjIxMC1yb3RhdG9y
-IiBmb3IgUm90YXRvciBJUCBpbiBTNVBWMjEwCgpIb3cgYWJvdXQgcHV0dGluZyBpdCBhdCBiZWdp
-bm5pbmcgYXMgdGhlIG9sZGVzdCBjaGlwc2V0PyBUaGlzIHdvdWxkCnJlcXVpcmUgcmVvcmRlcmlu
-ZyB0aGUgbGlzdCBzbyBtYXliZSBsZXQncyByZW1vdmUgdGhlIGEvYi9jIGxpc3QKZW51bWVyYXRp
-b25zPyBUaGV5IGFyZSBraW5kIG9mIHVzZWxlc3MuCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgpf
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
-bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
-cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+
+--===============1310711738924159632==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="orO6xySwJI16pVnm"
+Content-Disposition: inline
+
+
+--orO6xySwJI16pVnm
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Wed, Dec 19, 2018 at 07:17:04AM -0800, Christoph Hellwig wrote:
+> On Wed, Dec 19, 2018 at 03:10:40PM +0530, Maruthi Srinivas Bayyavarapu wrote:
+> > Changed License header from C to C++ style comment block.
+
+> Why this completely pointless uglification that goes counter to
+> the common style all over the kernel?
+
+I asked for it, when you end up with a C++ comment immediately adjacent
+to a C comment block it doesn't exactly look clean and intentional
+either.
+
+--orO6xySwJI16pVnm
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwacMEACgkQJNaLcl1U
+h9BXJggAgDnUwbPAA4QfJoHhG2/p1leWGoIKiP4Fr4dYKmHefRmCIpCH27hX39HY
+Py4SFoThSWx7Q+DVQLAmSGBIUpIC4yZtiHmmJFDuS2gyJV5u935ZckVV/5e+AfKV
+zAqjANpHoBpJDAiJOYNkuHUH8g0sQ8GFe7Rodd7H909t0KzdwUd/Tnv57BWUdD7k
+6GpVSqF/93i0qVZVeG2bcNgD8gYGPACkmoXDeLn9HogzbVBGW3zUOfc/R38HU4Rs
+/isIDR8v3EF9+YGssN3yz37KvAjVwXP8WtVogzXlOXjzGpEkvQINQL9mE/qSCj70
+rWoj+/j2bf6Km6ksAAe8w+yrEg0N2g==
+=msUA
+-----END PGP SIGNATURE-----
+
+--orO6xySwJI16pVnm--
+
+--===============1310711738924159632==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============1310711738924159632==--
