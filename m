@@ -1,35 +1,89 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [v2, PATCH 0/2] add ethernet binding and modify ethernet
- driver for mt2712
-Date: Tue, 18 Dec 2018 21:43:44 -0800 (PST)
-Message-ID: <20181218.214344.703245035605109815.davem@davemloft.net>
-References: <1545112096-22737-1-git-send-email-biao.huang@mediatek.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v12 2/2] cpufreq: qcom-hw: Add support for QCOM cpufreq
+ HW driver
+Date: Wed, 19 Dec 2018 11:14:42 +0530
+Message-ID: <20181219054442.ffkyv6bcmrlkgcga@vireshk-i7>
+References: <1544687394-331-1-git-send-email-tdas@codeaurora.org>
+ <1544687394-331-3-git-send-email-tdas@codeaurora.org>
+ <154469510700.19322.7762676027024031719@swboyd.mtv.corp.google.com>
+ <20181213100506.sy3haqjbxtmkthvt@vireshk-i7>
+ <154469596755.19322.16319349046735344084@swboyd.mtv.corp.google.com>
+ <20181218054545.k77jh5lxvmj2zott@vireshk-i7>
+ <154516038159.238328.2917665370794230521@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545112096-22737-1-git-send-email-biao.huang@mediatek.com>
+Content-Disposition: inline
+In-Reply-To: <154516038159.238328.2917665370794230521@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: biao.huang@mediatek.com
-Cc: robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Taniya Das <tdas@codeaurora.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, evgreen@google.com, Matthias Kaehlcke <mka@chromium.org>, vincent.guittot@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
-Date: Tue, 18 Dec 2018 13:48:14 +0800
+On 18-12-18, 11:13, Stephen Boyd wrote:
+> I don't see any failure returned from cpufreq_dt's cpufreq_init()
+> function. Maybe put a static int counter = 0 and then fail
+> cpufreq_init() the second time that it's called for the same policy
+> pointer? I have a system with two policies, so I made it fail and return
+> -EINVAL when the counter == 2 and I see the lockdep splat.
 
-> changes in v2 as comments from Sean:
-> 1. fix typo.
-> 2. use capital letters for RMII/MII/RGMII in driver and bindings.
-> 
-> v1:
-> This new series is the result of discussion in:
-> http://lkml.org/lkml/2018/12/13/1007
-> http://lkml.org/lkml/2018/12/14/53
-> 
-> 1. ethernet binding file move to this series.
-> 2. remove fine tune property in device tree
-> 3. remove fine tune flow in ethernet driver
-> 4. set rgmii timing according to the value in device tree,
-> and don't care whether phy insert internal delay  or not.
+Yuck. You were so clear on this earlier, how can I forget it. :(
 
-This series doesn't apply cleanly to the net-next tree.
+Here is the additional diff. And I do get this print message on my screen while
+I try to online CPU4.
+
+diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+index 639feca22d27..b836e93fd87d 100644
+--- a/drivers/cpufreq/cpufreq-dt.c
++++ b/drivers/cpufreq/cpufreq-dt.c
+@@ -151,6 +151,11 @@ static int cpufreq_init(struct cpufreq_policy *policy)
+        const char *name;
+        int ret;
+ 
++       if (policy->count++) {
++               pr_info("%s: %d\n", __func__, __LINE__);
++               return -EINVAL;
++       }
++
+        cpu_dev = get_cpu_device(policy->cpu);
+        if (!cpu_dev) {
+                pr_err("failed to get cpu%d device\n", policy->cpu);
+diff --git a/include/linux/cpufreq.h b/include/linux/cpufreq.h
+index 882a9b9e34bc..643141a2013f 100644
+--- a/include/linux/cpufreq.h
++++ b/include/linux/cpufreq.h
+@@ -151,6 +151,7 @@ struct cpufreq_policy {
+ 
+        /* For cpufreq driver's internal use */
+        void                    *driver_data;
++       int                     count;
+ };
+
+> I did the following:
+> 
+>   grep . /sys/devices/system/cpu/cpufreq/*/* >/dev/null
+>   echo 0 > /sys/devices/system/cpu/cpu4/online 
+>   echo 0 > /sys/devices/system/cpu/cpu5/online 
+>   echo 0 > /sys/devices/system/cpu/cpu6/online 
+>   echo 0 > /sys/devices/system/cpu/cpu7/online 
+>   echo 1 > /sys/devices/system/cpu/cpu4/online 
+>   dmesg
+> 
+> And boom, lockdep splat.
+
+  502  grep . /sys/devices/system/cpu/cpufreq/*/*
+  503  echo 0 > /sys/devices/system/cpu/cpu4/online
+  504  echo 0 > /sys/devices/system/cpu/cpu5/online
+  505  echo 0 > /sys/devices/system/cpu/cpu6/online
+  506  echo 0 > /sys/devices/system/cpu/cpu7/online
+  507  grep . /sys/devices/system/cpu/cpufreq/*/*
+  508  echo 1 > /sys/devices/system/cpu/cpu4/online
+  509  dmesg 
+
+
+But still no lockdep :(
+
+Can you try that on mainline as well ?
+
+-- 
+viresh
