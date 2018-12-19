@@ -1,71 +1,69 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] media: sun6i: Update default
- CSI_SCLK for A64
-Date: Wed, 19 Dec 2018 16:12:38 +0530
-Message-ID: <CAMty3ZDm0jPTigzX_jnNcOKRp6MbTFuwHpaTUmxnnkW8AQZRng@mail.gmail.com>
-References: <20181218113320.4856-1-jagan@amarulasolutions.com>
- <20181218113320.4856-4-jagan@amarulasolutions.com> <20181218152318.duynff7f5m2gxtv4@flea>
- <CAMty3ZCS+QT_YqbJueR-qeityaDxNbQ7p_d3D6bNATSJLQpRnQ@mail.gmail.com> <20181219100738.iakvqigi7z3k2coa@flea>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Hanjie Lin <hanjie.lin@amlogic.com>
+Subject: Re: [PATCH v8 1/2] dt-bindings: PCI: meson: add DT bindings for
+ Amlogic Meson PCIe controller
+Date: Wed, 19 Dec 2018 18:57:48 +0800
+Message-ID: <e3cce5d7-354c-4042-bf76-c22f3893d72c@amlogic.com>
+References: <1545120286-129258-1-git-send-email-hanjie.lin@amlogic.com>
+ <1545120286-129258-2-git-send-email-hanjie.lin@amlogic.com>
+ <CAFBinCD1x7jcJJx78yNx87MOmKQ2HuSBeRpDRQE0hyNCwm1JAg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBKWB5DQAKGQEVPORQTQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181219100738.iakvqigi7z3k2coa@flea>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCD1x7jcJJx78yNx87MOmKQ2HuSBeRpDRQE0hyNCwm1JAg@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Rob Herring <robh@kernel.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Yixun Lan <yixun.lan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Shawn Lin <shawn.lin@rock-chips.com>, Philippe Ombredanne <pombredanne@nexb.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Yue Wang <yue.wang@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2018 at 3:37 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
->
-> On Tue, Dec 18, 2018 at 09:08:17PM +0530, Jagan Teki wrote:
-> > On Tue, Dec 18, 2018 at 8:53 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >
-> > > On Tue, Dec 18, 2018 at 05:03:17PM +0530, Jagan Teki wrote:
-> > > > Unfortunately A64 CSI cannot work with default CSI_SCLK rate.
-> > > >
-> > > > A64 BSP is using 300MHz clock rate as default csi clock,
-> > > > so sun6i_csi require explicit change to update CSI_SCLK
-> > > > rate to 300MHZ for A64 SoC's.
-> > > >
-> > > > So, set the clk_mod to 300MHz only for A64.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > ---
-> > > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 5 +++++
-> > > >  1 file changed, 5 insertions(+)
-> > > >
-> > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > index 9ff61896e4bb..91470edf7581 100644
-> > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > @@ -822,6 +822,11 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> > > >               return PTR_ERR(sdev->clk_mod);
-> > > >       }
-> > > >
-> > > > +     /* A64 require 300MHz mod clock to operate properly */
-> > > > +     if (of_device_is_compatible(pdev->dev.of_node,
-> > > > +                                 "allwinner,sun50i-a64-csi"))
-> > > > +             clk_set_rate_exclusive(sdev->clk_mod, 300000000);
-> > > > +
-> > >
-> > > If you're using clk_set_rate_exclusive, you need to put back the
-> > > "exclusive" reference once you're not using the clock.
-> > >
-> > > Doing it here is not really optimal either, since you'll put a
-> > > constraint on the system (maintaining that clock at 300MHz), while
-> > > it's not in use.
-> >
-> > I think we can handle via clk_rate_exclusive_put for those errors
-> > cases? If I'm not wrong
->
-> Yes, but it's not only for the error case, it's also for the inactive
-> case.
 
-Yes, I will try to add this next version.
+
+On 2018/12/19 7:14, Martin Blumenstingl wrote:
+> Hi Rob, Hi Hanjie,
+> 
+> (sorry for being late with my question)
+> 
+> On Tue, Dec 18, 2018 at 9:05 AM Hanjie Lin <hanjie.lin@amlogic.com> wrote:
+> [...]
+>> +- reg-names: Must be
+>> +       - "elbi"        External local bus interface registers
+>> +       - "cfg"         Meson specific registers
+>> +       - "phy"         Meson PCIE PHY registers
+> I have learned that there are two PHY register designs:
+> - AXG only has a PCIe PHY
+> - G12A has a PHY which supports PCIe and USB 3.0. The PCIe part of
+> this PHY design is compatible with AXG, but this design also supports
+> a USB 3.0 port (it's an exclusive choice: either PCIe *or* USB 3.0)
+> 
+> The PCIe controller itself is identical on both, AXG and G12A.
+> This patch adds support for the AXG PCIe controller and PHY within one
+> device-tree node.
+> 
+> For G12A I propose to add a separate "phys" property with a phandle to
+> the "combo" PCIe and USB3.0 PHY - this can be part of a separate patch
+> though.
+> I would like to know whether it's OK that for AXG the PCIe PHY is
+> described in the same device-tree node as the PCIe controller (in
+> other words: we're not using a "phys" property here)?
+> 
+> 
+> Kind Regards
+> Martin
+> 
+> .
+> 
+
+hi matrin,
+
+We do had a dedicated PHY driver for a time at the begining
+of this patch series, but we decided to remove it and integrate
+into the controller driver after series reviews and disscussions,
+and the main reason is it's too overkill to have a dedicated 
+PHY driver which only do the RESET job.
+
+Of course we can consider the dedicated PHY driver for G12A upstream
+in future.
+
+thanks
+hanjie
