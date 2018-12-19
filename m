@@ -1,62 +1,49 @@
-From: Peter Korsgaard <peter@korsgaard.com>
-Subject: Re: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
-Date: Wed, 19 Dec 2018 17:13:39 +0100
-Message-ID: <877eg51olo.fsf@dell.be.48ers.dk>
-References: <20181219002620.12138-1-khilman@baylibre.com>
- <20181219002620.12138-2-khilman@baylibre.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/3] dt-bindings: gpu: samsung-rotator: Document s5pv210
+ support
+Date: Wed, 19 Dec 2018 17:22:51 +0100
+Message-ID: <CAJKOXPfHHNUzQZu62btspC+6SwgoGPdAzusfSixXM7U9u3QP7A@mail.gmail.com>
+References: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
+ <20181219155704.15264-3-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181219002620.12138-2-khilman@baylibre.com> (Kevin Hilman's
- message of "Tue, 18 Dec 2018 16:26:20 -0800")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181219155704.15264-3-pawel.mikolaj.chmiel@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
->>>>> "Kevin" == Kevin Hilman <khilman@baylibre.com> writes:
-
- > Add the G12a (S905X2) based X96 Max board[1].
- > There is no branding for the manufacturer anywhere on the product, so it
- > took some digging to find the manufacturer.  But since there's nothing
- > about the maker on the product I've left it out of the DT name because
- > 1) nobody will no that name and 2) keeps the DT filename shorter.
-
-s/no/know/
-
-
- > [1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
-
- > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
- > Signed-off-by: Kevin Hilman <khilman@baylibre.com>
- > ---
- > Special thanks to Martin Blumenstingl for extra digging for the manufacturer
-
- >  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
- >  1 file changed, 28 insertions(+)
- >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-
- > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
- > b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
- > new file mode 100644
- > index 000000000000..fe94765b671e
- > --- /dev/null
- > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
- > @@ -0,0 +1,28 @@
- > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
- > +/*
- > + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-
-Amlogic? Shouldn't that be Baylibre?
-
--- 
-Bye, Peter Korsgaard
+T24gV2VkLCAxOSBEZWMgMjAxOCBhdCAxNzowNCwgUGF3ZcWCIENobWllbAo8cGF3ZWwubWlrb2xh
+ai5jaG1pZWxAZ21haWwuY29tPiB3cm90ZToKPgo+IFRoaXMgY29tbWl0IGRvY3VtZW50cyBuZXcg
+Y29tcGF0aWJsZSBmb3IgczVwdjIxMCBzb2MsCj4gd2hpY2ggd2lsbCBiZSBhbHNvIHN1cHBvcnRl
+ZCBieSB0aGlzIGRyaXZlci4KPgo+IFNpZ25lZC1vZmYtYnk6IFBhd2XFgiBDaG1pZWwgPHBhd2Vs
+Lm1pa29sYWouY2htaWVsQGdtYWlsLmNvbT4KPiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
+cmVlL2JpbmRpbmdzL2dwdS9zYW1zdW5nLXJvdGF0b3IudHh0IHwgMSArCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAxIGluc2VydGlvbigrKQo+Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNl
+dHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dAo+IGluZGV4IDgyY2QxZWQw
+YmU5My4uNzg2NThkZWM2OTQxIDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dAo+ICsrKyBiL0RvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9ncHUvc2Ftc3VuZy1yb3RhdG9yLnR4dAo+IEBAIC01LDYgKzUs
+NyBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICAgICAgICAgKGEpICJzYW1zdW5nLGV4eW5vczQy
+MTAtcm90YXRvciIgZm9yIFJvdGF0b3IgSVAgaW4gRXh5bm9zNDIxMAo+ICAgICAgICAgKGIpICJz
+YW1zdW5nLGV4eW5vczQyMTItcm90YXRvciIgZm9yIFJvdGF0b3IgSVAgaW4gRXh5bm9zNDIxMi80
+NDEyCj4gICAgICAgICAoYykgInNhbXN1bmcsZXh5bm9zNTI1MC1yb3RhdG9yIiBmb3IgUm90YXRv
+ciBJUCBpbiBFeHlub3M1MjUwCj4gKyAgICAgICAoZCkgInNhbXN1bmcsczVwdjIxMC1yb3RhdG9y
+IiBmb3IgUm90YXRvciBJUCBpbiBTNVBWMjEwCgpIb3cgYWJvdXQgcHV0dGluZyBpdCBhdCBiZWdp
+bm5pbmcgYXMgdGhlIG9sZGVzdCBjaGlwc2V0PyBUaGlzIHdvdWxkCnJlcXVpcmUgcmVvcmRlcmlu
+ZyB0aGUgbGlzdCBzbyBtYXliZSBsZXQncyByZW1vdmUgdGhlIGEvYi9jIGxpc3QKZW51bWVyYXRp
+b25zPyBUaGV5IGFyZSBraW5kIG9mIHVzZWxlc3MuCgpCZXN0IHJlZ2FyZHMsCktyenlzenRvZgpf
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwg
+bWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0
+cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
