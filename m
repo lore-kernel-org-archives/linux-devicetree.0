@@ -1,59 +1,56 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH V4 2/4] rtc: add i.MX system controller RTC support
-Date: Wed, 19 Dec 2018 09:54:29 +0100
-Message-ID: <20181219085429.GJ19816@piout.net>
-References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
- <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: lvds-transmitter: add
+ pwdn-gpios
+Date: Wed, 19 Dec 2018 10:12:56 +0100
+Message-ID: <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com>
+References: <20181218231850.3572-1-peda@axentia.se>
+        <CGME20181218231950epcas3p4d5bc243137aa464b0424365dfde9d238@epcas3p4.samsung.com>
+        <20181218231850.3572-3-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20181218231850.3572-3-peda@axentia.se>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng DONG <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, shawnguo@kernel.
+To: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On 29/11/2018 01:50:11+0000, Anson Huang wrote:
-> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-> inside, the system controller is in charge of controlling power,
-> clock and secure rtc etc..
-> 
-> This patch adds i.MX system controller RTC driver support,
-> Linux kernel has to communicate with system controller via MU
-> (message unit) IPC to set/get RTC time and other alarm functions,
-> since the RTC set time needs to be done in secure EL3 mode (required
-> by system controller firmware) and alarm functions needs to be done
-> with general MU IRQ handle, these depend on other components which
-> are NOT ready, so this patch ONLY enables the RTC time read.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+On 19.12.2018 00:19, Peter Rosin wrote:
+> Add optional property to specify a power-down GPIO.
+> The pwdn-gpios name is already in use by the thine,thc63lvdm83d
+> binding, so go with that.
+>
+> Signed-off-by: Peter Rosin <peda@axentia.se>
 > ---
-> ChangeLog:
-> V3->V4:
->   *remove unnecessary headfile included;
->   *fix potential memory currpution for the message responce;
->   *update the compatible string name to start with "fsl" instead of "nxp".
->  drivers/rtc/Kconfig      |  6 +++
->  drivers/rtc/Makefile     |  1 +
->  drivers/rtc/rtc-imx-sc.c | 98 ++++++++++++++++++++++++++++++++++++++++++++++++
->  3 files changed, 105 insertions(+)
->  create mode 100644 drivers/rtc/rtc-imx-sc.c
-> 
-
-I applied it on my test branch and this makes sparc64-allyesconfig fail
-with:
-
-   drivers/rtc/rtc-imx-sc.o: In function `imx_sc_rtc_read_time':
-   rtc-imx-sc.c:(.text+0x34): undefined reference to `imx_scu_call_rpc'
-   drivers/rtc/rtc-imx-sc.o: In function `imx_sc_rtc_probe':
-   rtc-imx-sc.c:(.text+0x90): undefined reference to `imx_scu_get_handle'
+>  Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt | 3 +++
+>  1 file changed, 3 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> index f9e7dd666f58..47941d39f92f 100644
+> --- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> @@ -31,6 +31,9 @@ Required properties:
+>    device-specific version corresponding to the device first
+>    followed by the generic version.
+>  
+> +Optional properties:
+> +- pwdn-gpios: Power-down control GPIO
+> +
 
 
+Since naming is not enforced by any datasheet I would propose something
+more popular with less twisted logic. Maybe:
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+- enable-gpios: ... (active high).
+
+
+Regards
+
+Andrzej
+
+
+>  Required nodes:
+>  
+>  This device has two video ports. Their connections are modeled using the OF
