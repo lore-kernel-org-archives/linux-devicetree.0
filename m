@@ -1,83 +1,94 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v4 3/6] media: sun6i: Update default
- CSI_SCLK for A64
-Date: Wed, 19 Dec 2018 11:07:38 +0100
-Message-ID: <20181219100738.iakvqigi7z3k2coa@flea>
-References: <20181218113320.4856-1-jagan@amarulasolutions.com>
- <20181218113320.4856-4-jagan@amarulasolutions.com>
- <20181218152318.duynff7f5m2gxtv4@flea>
- <CAMty3ZCS+QT_YqbJueR-qeityaDxNbQ7p_d3D6bNATSJLQpRnQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH] ARM: dts: da850-lcdk: Correct the audio codec regulators
+Date: Wed, 19 Dec 2018 12:13:05 +0200
+Message-ID: <20181219101305.20832-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="msm72pnkaxdbd2lg"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB5VQ5DQAKGQEX3IUOWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCS+QT_YqbJueR-qeityaDxNbQ7p_d3D6bNATSJLQpRnQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com, linux@armlinux.org.uk, nsekhar@ti.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
+Add the board level fixed regulators for 3.3V and 1.8V which is used to
+power - among other things - the tlv320aic3106 codec.
 
---msm72pnkaxdbd2lg
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
+Apart from removing the following warning during boot:
+tlv320aic3x-codec 0-0018: Invalid supply voltage(s) AVDD: -22, DVDD: -22
 
-On Tue, Dec 18, 2018 at 09:08:17PM +0530, Jagan Teki wrote:
-> On Tue, Dec 18, 2018 at 8:53 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Tue, Dec 18, 2018 at 05:03:17PM +0530, Jagan Teki wrote:
-> > > Unfortunately A64 CSI cannot work with default CSI_SCLK rate.
-> > >
-> > > A64 BSP is using 300MHz clock rate as default csi clock,
-> > > so sun6i_csi require explicit change to update CSI_SCLK
-> > > rate to 300MHZ for A64 SoC's.
-> > >
-> > > So, set the clk_mod to 300MHz only for A64.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > ---
-> > >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 5 +++++
-> > >  1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > index 9ff61896e4bb..91470edf7581 100644
-> > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > @@ -822,6 +822,11 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> > >               return PTR_ERR(sdev->clk_mod);
-> > >       }
-> > >
-> > > +     /* A64 require 300MHz mod clock to operate properly */
-> > > +     if (of_device_is_compatible(pdev->dev.of_node,
-> > > +                                 "allwinner,sun50i-a64-csi"))
-> > > +             clk_set_rate_exclusive(sdev->clk_mod, 300000000);
-> > > +
-> >
-> > If you're using clk_set_rate_exclusive, you need to put back the
-> > "exclusive" reference once you're not using the clock.
-> >
-> > Doing it here is not really optimal either, since you'll put a
-> > constraint on the system (maintaining that clock at 300MHz), while
-> > it's not in use.
-> 
-> I think we can handle via clk_rate_exclusive_put for those errors
-> cases? If I'm not wrong
+With the correct voltages the driver can select correct OCMV value to
+reduce pop noise.
 
-Yes, but it's not only for the error case, it's also for the inactive
-case.
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+---
+ arch/arm/boot/dts/da850-lcdk.dts | 36 ++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-Maxime
-
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index 0177e3ed20fe..c196e37606c4 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -39,6 +39,36 @@
+ 		};
+ 	};
+ 
++	vcc_5vd: fixedregulator-vcc_5vd {
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_5vd";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		regulator-boot-on;
++	};
++
++	vcc_3v3d: fixedregulator-vcc_3v3d {
++		/* TPS650250 - VDCDC1 */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_3v3d";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vcc_5vd>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	vcc_1v8d: fixedregulator-vcc_1v8d {
++		/* TPS650250 - VDCDC2 */
++		compatible = "regulator-fixed";
++		regulator-name = "vcc_1v8d";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vcc_5vd>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	sound {
+ 		compatible = "simple-audio-card";
+ 		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
+@@ -221,6 +251,12 @@
+ 		compatible = "ti,tlv320aic3106";
+ 		reg = <0x18>;
+ 		status = "okay";
++
++		/* Regulators */
++		IOVDD-supply = <&vcc_3v3d>;
++		AVDD-supply = <&vcc_3v3d>;
++		DRVDD-supply = <&vcc_3v3d>;
++		DVDD-supply = <&vcc_1v8d>;
+ 	};
+ };
+ 
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---msm72pnkaxdbd2lg--
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
