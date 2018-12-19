@@ -1,111 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] ARM: mxs: =?iso-8859-1?Q?c?=
- =?iso-8859-1?Q?fa10036=3A_Fixup_OLED=A0display?= reset polarity
-Date: Wed, 19 Dec 2018 11:29:49 -0600
-Message-ID: <20181219172949.GA7680@bogus>
-References: <1543935806-94880-1-git-send-email-michal.vokac@ysoft.com>
- <1543935806-94880-5-git-send-email-michal.vokac@ysoft.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH v3 2/2] dt-bindings: net: dsa: ksz9477: add sample of
+ switch bindings managed in i2c mode
+Date: Wed, 19 Dec 2018 10:26:43 -0800
+Message-ID: <538b1829-422a-bf15-b024-e0bf933c930a@gmail.com>
+References: <20181217204423.14271-1-sergio.paracuellos@gmail.com>
+ <20181218151044.GA26992@bogus>
+ <CAMhs-H9VAae3STnYw72M9hma=rhkzUHU_9fNNFEdS0YPqrTbdw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1543935806-94880-5-git-send-email-michal.vokac@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMhs-H9VAae3STnYw72M9hma=rhkzUHU_9fNNFEdS0YPqrTbdw@mail.gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Sergio Paracuellos <sergio.paracuellos@gmail.com>, Rob Herring <robh@kernel.org>
+Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, vivien.didelot@savoirfairelinux.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 04, 2018 at 03:03:40PM +0000, Vokáč Michal wrote:
-> There was a bug in reset signal generation in ssd1307fb OLED driver.
-> The display needs an active-low reset signal but the driver produced
-> the correct sequence only if the GPIO used for reset was specified as
-> GPIO_ACTIVE_HIGH.
+On 12/18/18 10:23 PM, Sergio Paracuellos wrote:
+> Hi Rob,
 > 
-> Now as the OLED driver is fixed it is also necessarry to implement
-> a fixup for all current users of the old DT ABI. There is only one
-> in-tree user and that is the Crystalfontz CFA-10036 board. In case
-> this board is booting and GPIO_ACTIVE_HIGH is used for reset we
-> override it to GPIO_ACTIVE_LOW.
+> On Tue, Dec 18, 2018 at 4:10 PM Rob Herring <robh@kernel.org> wrote:
+>>
+>> On Mon, Dec 17, 2018 at 09:44:23PM +0100, Sergio Paracuellos wrote:
+>>> Add device-tree binding example of the ksz9477 switch managed in i2c mode.
+>>>
+>>> Cc: devicetree@vger.kernel.org
+>>> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+>>> ---
+>>> Changes v3:
+>>>     - No changes. Just resent patches together.
+>>>
+>>> Changes v2:
+>>>     - Use generic name for label of the switch and make sure reg and @X
+>>>       have the same value.
+>>>
+>>>  .../devicetree/bindings/net/dsa/ksz.txt       | 50 +++++++++++++++++++
+>>>  1 file changed, 50 insertions(+)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+>>> index 0f407fb371ce..d3c4b9d4f416 100644
+>>> --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
+>>> +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+>>> @@ -74,3 +74,53 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
+>>>                                                               };
+>>>                                               };
+>>>                               };
+>>> +
+>>> +Ethernet switch connected via I2C to the host, CPU port wired to eth0:
+>>> +
+>>> +                             eth0: ethernet@10001000 {
+>>
+>> Why do we have all this indentation? Please remove. And use tab chars,
+>> not spaces.
 > 
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
-> ---
->  arch/arm/mach-mxs/mach-mxs.c | 45 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 45 insertions(+)
-> 
-> diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
-> index 1c6062d..23c260c 100644
-> --- a/arch/arm/mach-mxs/mach-mxs.c
-> +++ b/arch/arm/mach-mxs/mach-mxs.c
-> @@ -21,6 +21,7 @@
->  #include <linux/reboot.h>
->  #include <linux/micrel_phy.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/of_platform.h>
->  #include <linux/phy.h>
->  #include <linux/pinctrl/consumer.h>
-> @@ -268,9 +269,53 @@ static void __init apx4devkit_init(void)
->  					   apx4devkit_phy_fixup);
->  }
->  
-> +#define OLED_RESET_GPIO_LEN	3
-> +#define OLED_RESET_GPIO_SIZE	(OLED_RESET_GPIO_LEN * sizeof(u32))
-> +
-> +static void __init crystalfontz_oled_reset_fixup(void)
-> +{
-> +	struct property *newgpio;
-> +	struct device_node *np;
-> +	u32 *gpiospec;
-> +	int i, ret;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "solomon,ssd1306fb-i2c");
-> +	if (!np)
-> +		return;
-> +
-> +	newgpio = kzalloc(sizeof(*newgpio) + OLED_RESET_GPIO_SIZE, GFP_KERNEL);
-> +	if (!newgpio)
-> +		return;
-> +
-> +	newgpio->value = newgpio + 1;
-> +	newgpio->length = OLED_RESET_GPIO_SIZE;
-> +	newgpio->name = kstrdup("reset-gpios", GFP_KERNEL);
-> +	if (!newgpio->name) {
-> +		kfree(newgpio);
-> +		return;
-> +	}
-> +
-> +	gpiospec = newgpio->value;
-> +	for (i = 0; i < OLED_RESET_GPIO_LEN; i++) {
-> +		ret = of_property_read_u32_index(np, "reset-gpios", i,
-> +						 &gpiospec[i]);
+> The original file format is using all of this indentation. So I think
+> we would need a patch to change de format of the original file and
+> another with this new changes properly formatted.
 
-Don't we have a helper to read the whole array?
+The original formatting should be fixed, but your changes should adopt
+the correct style from the first time they are submitted. Do you mind
+resubmitting with only one tab? We can fix the original examples as a
+follow-up patch.
 
-Otherwise, for the series:
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +		if (ret) {
-> +			kfree(newgpio);
-> +			return;
-> +		}
-> +	}
-> +
-> +	if (!(gpiospec[2] & OF_GPIO_ACTIVE_LOW)) {
-> +		gpiospec[2] |= OF_GPIO_ACTIVE_LOW;
-> +		cpu_to_be32_array(gpiospec, gpiospec, OLED_RESET_GPIO_LEN);
-> +		of_update_property(np, newgpio);
-> +	}
-> +}
-> +
->  static void __init crystalfontz_init(void)
->  {
->  	update_fec_mac_prop(OUI_CRYSTALFONTZ);
-> +	crystalfontz_oled_reset_fixup();
->  }
->  
->  static void __init duckbill_init(void)
-> -- 
-> 2.1.4
-> 
+Thanks!
+-- 
+Florian
