@@ -1,100 +1,144 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Wed, 19 Dec 2018 14:41:04 -0600
-Message-ID: <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
- <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v4 3/8] drm/msm/dsi: 28nm PHY: Get ref clock from the DT
+Date: Wed, 19 Dec 2018 12:57:04 -0800
+Message-ID: <20181219205704.GE109358@google.com>
+References: <20181204224234.62619-1-mka@chromium.org>
+ <20181204224234.62619-4-mka@chromium.org>
+ <20181212220717.GA16710@centauri.lan>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219201047.GA23448@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181212220717.GA16710@centauri.lan>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Pavel
+Hi Niklas,
 
-On 12/19/2018 02:10 PM, Pavel Machek wrote:
-> On Wed 2018-12-19 13:41:18, Dan Murphy wrote:
->> Pavel
->>
->> Thanks for the review.
->>
->> On 12/19/2018 01:34 PM, Pavel Machek wrote:
->>> Hi!
->>>
->>>> +static DEVICE_ATTR_WO(ctrl_bank_a_mix);
->>>> +static DEVICE_ATTR_WO(ctrl_bank_b_mix);
->>>> +static DEVICE_ATTR_WO(ctrl_bank_c_mix);
->>>> +
->>>> +static struct attribute *lp5024_ctrl_bank_attrs[] = {
->>>> +	&dev_attr_ctrl_bank_a_mix.attr,
->>>> +	&dev_attr_ctrl_bank_b_mix.attr,
->>>> +	&dev_attr_ctrl_bank_c_mix.attr,
->>>> +	NULL
->>>> +};
->>>> +ATTRIBUTE_GROUPS(lp5024_ctrl_bank);
->>>
->>> ...
->>>> +
->>>> +static DEVICE_ATTR_WO(led1_mix);
->>>> +static DEVICE_ATTR_WO(led2_mix);
->>>> +static DEVICE_ATTR_WO(led3_mix);
->>>> +
->>>> +static struct attribute *lp5024_led_independent_attrs[] = {
->>>> +	&dev_attr_led1_mix.attr,
->>>> +	&dev_attr_led2_mix.attr,
->>>> +	&dev_attr_led3_mix.attr,
->>>> +	NULL
->>>> +};
->>>> +ATTRIBUTE_GROUPS(lp5024_led_independent);
->>>
->>> Ok, so you are adding new sysfs files. Are they _really_ neccessary?
->>> We'd like to have uniform interfaces for the leds.
->>
->> Yes I am adding these for this driver.
->> They adjust the individual brightness of each LED connected (what the HW guys called mixing).
->>
->> The standard brightness sysfs adjusts all 3 LEDs simultaneously so that all 3 LEDs brightness are
->> uniform.
+On Wed, Dec 12, 2018 at 11:07:17PM +0100, Niklas Cassel wrote:
+> On Tue, Dec 04, 2018 at 02:42:29PM -0800, Matthias Kaehlcke wrote:
+> > Get the ref clock of the PHY from the device tree instead of
+> > hardcoding its name and rate.
+> > 
+> > Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> > ---
+> > Changes in v4:
+> > - always use parent rate in dsi_pll_28nm_clk_set_rate() and
+> >    dsi_pll_28nm_clk_recalc_rate()
+> > - pass name of VCO ref clock to pll_28nm_register() instead of
+> >   storing it in a struct field
+> > - updated commit message
+> > 
+> > Changes in v3:
+> > - use default name and rate if the ref clock is not specified
+> >   in the DT
+> > - store vco_ref_clk_name instead of vco_ref_clk
+> > - dsi_pll_28nm_clk_set_rate: changed data type of ref_clk_rate to
+> >   unsigned long
+> > - fixed check for EPROBE_DEFER
+> > - renamed VCO_REF_CLK_RATE to VCO_REF_CLK_DEFAULT_RATE
+> > 
+> > Changes in v2:
+> > - patch added to the series
+> > ---
+> >  drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c | 36 +++++++++++++++-------
+> >  1 file changed, 25 insertions(+), 11 deletions(-)
+> > 
+> > diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c
+> > index 26e3a01a99c2b..7777340b03e8d 100644
+> > --- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c
+> > +++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_28nm.c
+> > @@ -40,7 +40,6 @@
+> >  
+> >  #define NUM_PROVIDED_CLKS		2
+> >  
+> > -#define VCO_REF_CLK_RATE		19200000
+> >  #define VCO_MIN_RATE			350000000
+> >  #define VCO_MAX_RATE			750000000
+> >  
+> > @@ -166,17 +165,17 @@ static int dsi_pll_28nm_clk_set_rate(struct clk_hw *hw, unsigned long rate,
+> >  	pll_write(base + REG_DSI_28nm_PHY_PLL_LPFC1_CFG, 0x70);
+> >  	pll_write(base + REG_DSI_28nm_PHY_PLL_LPFC2_CFG, 0x15);
+> >  
+> > -	rem = rate % VCO_REF_CLK_RATE;
+> > +	rem = rate % parent_rate;
+> >  	if (rem) {
+> >  		refclk_cfg = DSI_28nm_PHY_PLL_REFCLK_CFG_DBLR;
+> >  		frac_n_mode = 1;
+> > -		div_fbx1000 = rate / (VCO_REF_CLK_RATE / 500);
+> > -		gen_vco_clk = div_fbx1000 * (VCO_REF_CLK_RATE / 500);
+> > +		div_fbx1000 = rate / (parent_rate / 500);
+> > +		gen_vco_clk = div_fbx1000 * (parent_rate / 500);
+> >  	} else {
+> >  		refclk_cfg = 0x0;
+> >  		frac_n_mode = 0;
+> > -		div_fbx1000 = rate / (VCO_REF_CLK_RATE / 1000);
+> > -		gen_vco_clk = div_fbx1000 * (VCO_REF_CLK_RATE / 1000);
+> > +		div_fbx1000 = rate / (parent_rate / 1000);
+> > +		gen_vco_clk = div_fbx1000 * (parent_rate / 1000);
+> >  	}
+> >  
+> >  	DBG("refclk_cfg = %d", refclk_cfg);
+> > @@ -265,7 +264,7 @@ static unsigned long dsi_pll_28nm_clk_recalc_rate(struct clk_hw *hw,
+> >  	void __iomem *base = pll_28nm->mmio;
+> >  	u32 sdm0, doubler, sdm_byp_div;
+> >  	u32 sdm_dc_off, sdm_freq_seed, sdm2, sdm3;
+> > -	u32 ref_clk = VCO_REF_CLK_RATE;
+> > +	u32 ref_clk = parent_rate;
+> >  	unsigned long vco_rate;
+> >  
+> >  	VERB("parent_rate=%lu", parent_rate);
+> > @@ -273,7 +272,7 @@ static unsigned long dsi_pll_28nm_clk_recalc_rate(struct clk_hw *hw,
+> >  	/* Check to see if the ref clk doubler is enabled */
+> >  	doubler = pll_read(base + REG_DSI_28nm_PHY_PLL_REFCLK_CFG) &
+> >  			DSI_28nm_PHY_PLL_REFCLK_CFG_DBLR;
+> > -	ref_clk += (doubler * VCO_REF_CLK_RATE);
+> > +	ref_clk += (doubler * ref_clk);
+> >  
+> >  	/* see if it is integer mode or sdm mode */
+> >  	sdm0 = pll_read(base + REG_DSI_28nm_PHY_PLL_SDM_CFG0);
+> > @@ -514,11 +513,12 @@ static void dsi_pll_28nm_destroy(struct msm_dsi_pll *pll)
+> >  	pll_28nm->clk_data.clk_num = 0;
+> >  }
+> >  
+> > -static int pll_28nm_register(struct dsi_pll_28nm *pll_28nm)
+> > +static int pll_28nm_register(struct dsi_pll_28nm *pll_28nm,
+> > +			     const char *ref_clk_name)
+> >  {
+> >  	char clk_name[32], parent1[32], parent2[32], vco_name[32];
+> >  	struct clk_init_data vco_init = {
+> > -		.parent_names = (const char *[]){ "xo" },
+> > +		.parent_names = &ref_clk_name,
+> >  		.num_parents = 1,
+> >  		.name = vco_name,
+> >  		.flags = CLK_IGNORE_UNUSED,
+> > @@ -593,6 +593,8 @@ struct msm_dsi_pll *msm_dsi_pll_28nm_init(struct platform_device *pdev,
+> >  {
+> >  	struct dsi_pll_28nm *pll_28nm;
+> >  	struct msm_dsi_pll *pll;
+> > +	struct clk *vco_ref_clk;
+> > +	const char *vco_ref_clk_name;
+> >  	int ret;
+> >  
+> >  	if (!pdev)
+> > @@ -605,6 +607,18 @@ struct msm_dsi_pll *msm_dsi_pll_28nm_init(struct platform_device *pdev,
+> >  	pll_28nm->pdev = pdev;
+> >  	pll_28nm->id = id;
+> >  
+> > +	vco_ref_clk = devm_clk_get(&pdev->dev, "ref");
+> > +	if (!IS_ERR(vco_ref_clk)) {
+> > +		vco_ref_clk_name = __clk_get_name(vco_ref_clk);
+> > +	} else {
+> > +		ret = PTR_ERR(vco_ref_clk);
+> > +		if (ret == -EPROBE_DEFER)
+> > +			ERR_PTR(ret);
 > 
-> 1 LED, 1 brightness file... that's what we do. Why should this one be different?
-> 
+> It looks like you are missing the return keyword here.
 
-Yes I understand this and 1 DT child node per LED out but...
+Indeed, thanks for pointing that out!
 
-This device has a single register to control 3 LEDs brightness as a group and individual brightness
-registers to control the LEDs independently to mix the LEDs to a specific color.
+Cheers
 
-There needs to be a way to control both so that developers can mix and adjust the individual RGB and
-then control the brightness of the group during run time without touching the "mixing" value.
-
-I don't think a user needs nor would want to have 24 different LED nodes with 24 different brightness files.
-Or with the LP5036 that would have 36 LED nodes.
-
-Table 1 in the data sheet shows how the outputs map to the control banks to the LED registers.
-
-Dan
-
-
->> I did not think these belonged in the dt as they should be user space configurable
->>
->>>
->>> If they are neccessary, we need documentation for them.
->>
->> Sure I have no problem documenting them but where do I do that?
->> I am assuming Documentation/leds/leds-lp5024.txt
-> 
-> Documentation/abi/...
-> 
-> 									Pavel
-> 
-
-
--- 
-------------------
-Dan Murphy
+Matthias
