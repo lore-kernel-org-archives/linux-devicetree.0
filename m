@@ -1,66 +1,41 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/5] arm64: dts: allwinner: a64-amarula-relic: Add OV5640
- camera node
-Date: Wed, 19 Dec 2018 09:58:19 -0600
-Message-ID: <20181219155819.GA22708@bogus>
+Subject: Re: [PATCH 2/5] dt-bindings: media: sun6i: Add vcc-csi supply
+ property
+Date: Wed, 19 Dec 2018 10:01:20 -0600
+Message-ID: <20181219160120.GB22708@bogus>
 References: <20181203100747.16442-1-jagan@amarulasolutions.com>
- <20181203100747.16442-6-jagan@amarulasolutions.com>
- <CAGb2v6441wV7PM6q=vF2cpJtP9BGdYjQQqNU54rqELNJ5YcmdQ@mail.gmail.com>
- <CAMty3ZBBcum5CF1xQ_ePNUkcMoBPXngbiwf2V7hWHrH7-k3xuQ@mail.gmail.com>
+ <20181203100747.16442-3-jagan@amarulasolutions.com>
+ <CAGb2v66pG0kes1_xBNUj4z85fjunjP_Fe5_pPiRja=nDSOS01A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAMty3ZBBcum5CF1xQ_ePNUkcMoBPXngbiwf2V7hWHrH7-k3xuQ@mail.gmail.com>
+In-Reply-To: <CAGb2v66pG0kes1_xBNUj4z85fjunjP_Fe5_pPiRja=nDSOS01A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Jagan Teki <jagan@amarulasolutions.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 06, 2018 at 04:43:33PM +0530, Jagan Teki wrote:
-> On Mon, Dec 3, 2018 at 3:55 PM Chen-Yu Tsai <wens@csie.org> wrote:
+On Mon, Dec 03, 2018 at 06:11:35PM +0800, Chen-Yu Tsai wrote:
+> On Mon, Dec 3, 2018 at 6:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 > >
-> > On Mon, Dec 3, 2018 at 6:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> > >
-> > > Amarula A64-Relic board by default bound with OV5640 camera,
-> > > so add support for it with below pin information.
-> > >
-> > > - PE13, PE12 via i2c-gpio bitbanging
-> > > - CLK_CSI_MCLK as external clock
-> > > - PE1 as external clock pin muxing
-> > > - DLDO3 as vcc-csi supply
-> > > - DLDO3 as AVDD supply
-> > > - ALDO1 as DOVDD supply
-> > > - ELDO3 as DVDD supply
-> > > - PE14 gpio for reset pin
-> > > - PE15 gpio for powerdown pin
-> > >
-> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > ---
-> > >  .../allwinner/sun50i-a64-amarula-relic.dts    | 54 +++++++++++++++++++
-> > >  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |  5 ++
-> > >  2 files changed, 59 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > index 6cb2b7f0c817..9ac6d773188b 100644
-> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > > @@ -22,6 +22,41 @@
-> > >                 stdout-path = "serial0:115200n8";
-> > >         };
-> > >
-> > > +       i2c-csi {
-> > > +               compatible = "i2c-gpio";
-> > > +               sda-gpios = <&pio 4 13 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
-> > > +               scl-gpios = <&pio 4 12 (GPIO_ACTIVE_HIGH|GPIO_OPEN_DRAIN)>;
+> > Most of the Allwinner A64 CSI controllers are supply with
+> > VCC-PE pin. which need to supply for some of the boards to
+> > trigger the power.
 > >
-> > FYI our hardware doesn't do open drain.
+> > So, document the supply property as vcc-csi so-that the required
+> > board can eable it via device tree.
+> >
+> > Used vcc-csi instead of vcc-pe to have better naming convention
+> > wrt other controller pin supplies.
 > 
-> True, but the kernel is enforcing it seems, from the change from [1].
-> does that mean Linux use open drain even though hardware doens't have?
-> or did I miss anything?
+> This is not related to the CSI controller. It belongs in the pin
+> controller, but that has its own set of problems like possible
+> circular dependencies.
 
-It's forced because you can't do I2C without open drain. Things like the 
-slave doing clock stretching won't work.
+That might be a better choice, but I think most platforms put the supply 
+in the module node. But that wouldn't work well if the module is not 
+used and you want to use the pins for GPIO or some other function. Maybe 
+we don't hit that property because most I/O supplies are always on.
 
 Rob
