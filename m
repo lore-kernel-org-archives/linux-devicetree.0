@@ -1,104 +1,33 @@
-Return-Path: <SRS0=0VMp=OX=bp.renesas.com=fabrizio.castro@kernel.org>
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 03/17] arm64: dts: renesas: r8a774c0: Add IPMMU device nodes
-Date: Fri, 14 Dec 2018 09:37:26 +0000
-Message-Id: <1544780260-27590-4-git-send-email-fabrizio.castro@bp.renesas.com>
-In-Reply-To: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1544780260-27590-1-git-send-email-fabrizio.castro@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>
+Return-Path: <SRS0=NxzU=O4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.51]:26101 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728292AbeLSKWU (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 19 Dec 2018 05:22:20 -0500
+Date: Wed, 19 Dec 2018 11:22:16 +0100 (CET)
+From: Ulrich Hecht <uli@fpond.eu>
+Message-ID: <1461491265.557750.1545214936287@webmail.strato.com>
+In-Reply-To: <20181218170555.121673-3-chris.brandt@renesas.com>
+References: <20181218170555.121673-1-chris.brandt@renesas.com>
+ <20181218170555.121673-3-chris.brandt@renesas.com>
+Subject: Re: [PATCH v4 2/2] ARM: dts: r7s9210-rza2mevb: Add support for
+ RZ/A2M EVB
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Chris Brandt <chris.brandt@renesas.com>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add r8a774c0 IPMMU nodes.
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
----
- arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 73 +++++++++++++++++++++++++++++++
- 1 file changed, 73 insertions(+)
+> On December 18, 2018 at 6:05 PM Chris Brandt <chris.brandt@renesas.com> wrote:
+> 
+> 
+> Add support for Renesas RZ/A2M evaluation board.
+> 
+> Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
 
-diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-index bf08aba..042e26d 100644
---- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-+++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-@@ -604,6 +604,79 @@
- 			dma-channels = <16>;
- 		};
- 
-+		ipmmu_ds0: mmu@e6740000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xe6740000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 0>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_ds1: mmu@e7740000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xe7740000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 1>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_hc: mmu@e6570000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xe6570000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 2>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_mm: mmu@e67b0000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xe67b0000 0 0x1000>;
-+			interrupts = <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_mp: mmu@ec670000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xec670000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 4>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_pv0: mmu@fd800000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xfd800000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 6>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vc0: mmu@fe6b0000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xfe6b0000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 12>;
-+			power-domains = <&sysc R8A774C0_PD_A3VC>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vi0: mmu@febd0000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xfebd0000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 14>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
-+		ipmmu_vp0: mmu@fe990000 {
-+			compatible = "renesas,ipmmu-r8a774c0";
-+			reg = <0 0xfe990000 0 0x1000>;
-+			renesas,ipmmu-main = <&ipmmu_mm 16>;
-+			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
-+			#iommu-cells = <1>;
-+		};
-+
- 		avb: ethernet@e6800000 {
- 			compatible = "renesas,etheravb-r8a774c0",
- 				     "renesas,etheravb-rcar-gen3";
--- 
-2.7.4
+Reviewed-by: Ulrich Hecht <uli+renesas@fpond.eu>
+
+CU
+Uli
