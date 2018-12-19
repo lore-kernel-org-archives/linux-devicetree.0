@@ -1,64 +1,35 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6sl: correct PWM ipg clock source
-Date: Wed, 19 Dec 2018 05:41:31 +0000
-Message-ID: <1545197799-9082-1-git-send-email-Anson.Huang@nxp.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [v2, PATCH 0/2] add ethernet binding and modify ethernet
+ driver for mt2712
+Date: Tue, 18 Dec 2018 21:43:44 -0800 (PST)
+Message-ID: <20181218.214344.703245035605109815.davem@davemloft.net>
+References: <1545112096-22737-1-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <1545112096-22737-1-git-send-email-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: biao.huang@mediatek.com
+Cc: robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
->From i.MX6SL Reference Manual, the PWMx's ipg clock
-for registers access is from perclk, correct them.
+From: Biao Huang <biao.huang@mediatek.com>
+Date: Tue, 18 Dec 2018 13:48:14 +0800
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
----
- arch/arm/boot/dts/imx6sl.dtsi | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+> changes in v2 as comments from Sean:
+> 1. fix typo.
+> 2. use capital letters for RMII/MII/RGMII in driver and bindings.
+> 
+> v1:
+> This new series is the result of discussion in:
+> http://lkml.org/lkml/2018/12/13/1007
+> http://lkml.org/lkml/2018/12/14/53
+> 
+> 1. ethernet binding file move to this series.
+> 2. remove fine tune property in device tree
+> 3. remove fine tune flow in ethernet driver
+> 4. set rgmii timing according to the value in device tree,
+> and don't care whether phy insert internal delay  or not.
 
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index e7524e7..4b4813f 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -338,7 +338,7 @@
- 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg =3D <0x02080000 0x4000>;
- 				interrupts =3D <0 83 IRQ_TYPE_LEVEL_HIGH>;
--				clocks =3D <&clks IMX6SL_CLK_PWM1>,
-+				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
- 					 <&clks IMX6SL_CLK_PWM1>;
- 				clock-names =3D "ipg", "per";
- 			};
-@@ -348,7 +348,7 @@
- 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg =3D <0x02084000 0x4000>;
- 				interrupts =3D <0 84 IRQ_TYPE_LEVEL_HIGH>;
--				clocks =3D <&clks IMX6SL_CLK_PWM2>,
-+				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
- 					 <&clks IMX6SL_CLK_PWM2>;
- 				clock-names =3D "ipg", "per";
- 			};
-@@ -358,7 +358,7 @@
- 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg =3D <0x02088000 0x4000>;
- 				interrupts =3D <0 85 IRQ_TYPE_LEVEL_HIGH>;
--				clocks =3D <&clks IMX6SL_CLK_PWM3>,
-+				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
- 					 <&clks IMX6SL_CLK_PWM3>;
- 				clock-names =3D "ipg", "per";
- 			};
-@@ -368,7 +368,7 @@
- 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
- 				reg =3D <0x0208c000 0x4000>;
- 				interrupts =3D <0 86 IRQ_TYPE_LEVEL_HIGH>;
--				clocks =3D <&clks IMX6SL_CLK_PWM4>,
-+				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
- 					 <&clks IMX6SL_CLK_PWM4>;
- 				clock-names =3D "ipg", "per";
- 			};
---=20
-2.7.4
+This series doesn't apply cleanly to the net-next tree.
