@@ -1,45 +1,103 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 19 Dec 2018 14:08:52 -0600
-Message-ID: <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q@mail.gmail.com>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181212211848.26768-3-jcrouse@codeaurora.org>
- <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
- <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
- <20181217070647.xtvfgsixggua5yod@vireshk-i7>
- <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
- <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
- <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
- <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Wed, 19 Dec 2018 21:10:47 +0100
+Message-ID: <20181219201047.GA23448@amd>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-3-dmurphy@ti.com>
+ <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="OgqxwSJOaUobr8KG"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMTA6NDkgUE0gVmlyZXNoIEt1bWFyIDx2aXJlc2gua3Vt
-YXJAbGluYXJvLm9yZz4gd3JvdGU6Cj4KPiBPbiAxOC0xMi0xOCwgMTE6MDUsIERvdWcgQW5kZXJz
-b24gd3JvdGU6Cj4gPiBPSywgaXQncyBmaW5lIHdpdGggbWUgdG8gaGF2ZSB0aGUgZmFsbGJhY2ss
-IGJ1dCBpZiB3ZSBkbyB3ZSBzaG91bGQgYmUKPiA+IGNvbnNpc3RlbnQgYWJvdXQgaXQgYW5kIG1h
-a2Ugc3VyZSBpdCdzIGluIGFsbCB0aGUgYmluZGluZ3MgYW5kIGRldmljZQo+ID4gdHJlZSBmaWxl
-cy4uLgo+Cj4gU3VyZS4KPgo+IEkgYW0gbm90IHN1cmUgd2hhdCdzIHRoZSByaWdodCB3YXkgdG8g
-ZG8gaXQgaXMsIGkuZS4gc2hvdWxkIHdlIGtlZXAgdGhlCj4gIm9wZXJhdGluZy1wb2ludHMtdjIi
-IHN0cmluZyBvciBub3QuCgpEb2VzIGhhdmluZyBpdCBidXkgeW91IGFueXRoaW5nPyBHaXZlbiB0
-aGUgUUNvbSBvbmUgZG9lc24ndCBoYXZlIGFueQpmcmVxdWVuY3kgb3Igdm9sdGFnZSwgSSBkb24n
-dCBzZWUgaG93IGl0IHdvdWxkIGJlIHVzZWZ1bCB0byBoYXZlIGl0LgoKUm9iCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxp
-c3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+
+--OgqxwSJOaUobr8KG
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed 2018-12-19 13:41:18, Dan Murphy wrote:
+> Pavel
+>=20
+> Thanks for the review.
+>=20
+> On 12/19/2018 01:34 PM, Pavel Machek wrote:
+> > Hi!
+> >=20
+> >> +static DEVICE_ATTR_WO(ctrl_bank_a_mix);
+> >> +static DEVICE_ATTR_WO(ctrl_bank_b_mix);
+> >> +static DEVICE_ATTR_WO(ctrl_bank_c_mix);
+> >> +
+> >> +static struct attribute *lp5024_ctrl_bank_attrs[] =3D {
+> >> +	&dev_attr_ctrl_bank_a_mix.attr,
+> >> +	&dev_attr_ctrl_bank_b_mix.attr,
+> >> +	&dev_attr_ctrl_bank_c_mix.attr,
+> >> +	NULL
+> >> +};
+> >> +ATTRIBUTE_GROUPS(lp5024_ctrl_bank);
+> >=20
+> > ...
+> >> +
+> >> +static DEVICE_ATTR_WO(led1_mix);
+> >> +static DEVICE_ATTR_WO(led2_mix);
+> >> +static DEVICE_ATTR_WO(led3_mix);
+> >> +
+> >> +static struct attribute *lp5024_led_independent_attrs[] =3D {
+> >> +	&dev_attr_led1_mix.attr,
+> >> +	&dev_attr_led2_mix.attr,
+> >> +	&dev_attr_led3_mix.attr,
+> >> +	NULL
+> >> +};
+> >> +ATTRIBUTE_GROUPS(lp5024_led_independent);
+> >=20
+> > Ok, so you are adding new sysfs files. Are they _really_ neccessary?
+> > We'd like to have uniform interfaces for the leds.
+>=20
+> Yes I am adding these for this driver.
+> They adjust the individual brightness of each LED connected (what the HW =
+guys called mixing).
+>=20
+> The standard brightness sysfs adjusts all 3 LEDs simultaneously so that a=
+ll 3 LEDs brightness are
+> uniform.
+
+1 LED, 1 brightness file... that's what we do. Why should this one be diffe=
+rent?
+
+> I did not think these belonged in the dt as they should be user space con=
+figurable
+>=20
+> >=20
+> > If they are neccessary, we need documentation for them.
+>=20
+> Sure I have no problem documenting them but where do I do that?
+> I am assuming Documentation/leds/leds-lp5024.txt
+
+Documentation/abi/...
+
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--OgqxwSJOaUobr8KG
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwapccACgkQMOfwapXb+vKbmACfdrR6iMX5b7SewUD8Q44amTHK
+TQUAnieGmLLgxm7S3o05Eg8KzrAOxw5j
+=mBmG
+-----END PGP SIGNATURE-----
+
+--OgqxwSJOaUobr8KG--
