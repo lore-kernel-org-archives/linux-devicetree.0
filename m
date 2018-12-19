@@ -1,48 +1,64 @@
-From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 19 Dec 2018 10:19:01 +0530
-Message-ID: <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181212211848.26768-3-jcrouse@codeaurora.org>
- <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
- <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
- <20181217070647.xtvfgsixggua5yod@vireshk-i7>
- <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
- <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
- <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH] ARM: dts: imx6sl: correct PWM ipg clock source
+Date: Wed, 19 Dec 2018 05:41:31 +0000
+Message-ID: <1545197799-9082-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMTgtMTItMTgsIDExOjA1LCBEb3VnIEFuZGVyc29uIHdyb3RlOgo+IE9LLCBpdCdzIGZpbmUg
-d2l0aCBtZSB0byBoYXZlIHRoZSBmYWxsYmFjaywgYnV0IGlmIHdlIGRvIHdlIHNob3VsZCBiZQo+
-IGNvbnNpc3RlbnQgYWJvdXQgaXQgYW5kIG1ha2Ugc3VyZSBpdCdzIGluIGFsbCB0aGUgYmluZGlu
-Z3MgYW5kIGRldmljZQo+IHRyZWUgZmlsZXMuLi4KClN1cmUuCgpJIGFtIG5vdCBzdXJlIHdoYXQn
-cyB0aGUgcmlnaHQgd2F5IHRvIGRvIGl0IGlzLCBpLmUuIHNob3VsZCB3ZSBrZWVwIHRoZQoib3Bl
-cmF0aW5nLXBvaW50cy12MiIgc3RyaW5nIG9yIG5vdC4gQW5vdGhlciBleGFtcGxlIEkgc2VlIGlz
-ICh3aGljaCBjYW4gYmUKY29tcGFyZWQgaGVyZSkgaXMgdGhlIGJvYXJkIHNwZWNpZmljIERUIGZp
-bGVzLiBOb3JtYWxseSB0aGUgcm9vdCBub2RlJ3MKY29tcGF0aWJsZSBpcyBhIGxvbmcgbGlzdCBv
-ZiBzdHJpbmdzIGxpa2U6Cgpjb21wYXRpYmxlID0gIm52aWRpYSxwMjM3MS0yMTgwIiwgIm52aWRp
-YSxwMjE4MCIsICJudmlkaWEsdGVncmEyMTAiOwoKd2hpY2ggc3RhcnRzIGZyb20gcGxhdGZvcm0t
-c3BlY2lmaWMgc3RyaW5nLCB0aGVuIG1hY2gsIHRoZW4gYm9hcmQsIGV0Yy4uCgpXZSBkbyBrZWVw
-IGFsbCBvZiB0aGVtIGluIHRob3NlIGNhc2VzIGFuZCB0aGF0IG1ha2VzIG1lIHdvbmRlciB3aHkg
-dGhlIHNhbWUKc2hvdWxkbid0IGJlIGRvbmUgZm9yIE9QUCBiaW5kaW5ncy4KCi0tIAp2aXJlc2gK
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
-IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+>From i.MX6SL Reference Manual, the PWMx's ipg clock
+for registers access is from perclk, correct them.
+
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ arch/arm/boot/dts/imx6sl.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
+index e7524e7..4b4813f 100644
+--- a/arch/arm/boot/dts/imx6sl.dtsi
++++ b/arch/arm/boot/dts/imx6sl.dtsi
+@@ -338,7 +338,7 @@
+ 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x02080000 0x4000>;
+ 				interrupts =3D <0 83 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_PWM1>,
++				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
+ 					 <&clks IMX6SL_CLK_PWM1>;
+ 				clock-names =3D "ipg", "per";
+ 			};
+@@ -348,7 +348,7 @@
+ 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x02084000 0x4000>;
+ 				interrupts =3D <0 84 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_PWM2>,
++				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
+ 					 <&clks IMX6SL_CLK_PWM2>;
+ 				clock-names =3D "ipg", "per";
+ 			};
+@@ -358,7 +358,7 @@
+ 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x02088000 0x4000>;
+ 				interrupts =3D <0 85 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_PWM3>,
++				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
+ 					 <&clks IMX6SL_CLK_PWM3>;
+ 				clock-names =3D "ipg", "per";
+ 			};
+@@ -368,7 +368,7 @@
+ 				compatible =3D "fsl,imx6sl-pwm", "fsl,imx27-pwm";
+ 				reg =3D <0x0208c000 0x4000>;
+ 				interrupts =3D <0 86 IRQ_TYPE_LEVEL_HIGH>;
+-				clocks =3D <&clks IMX6SL_CLK_PWM4>,
++				clocks =3D <&clks IMX6SL_CLK_PERCLK>,
+ 					 <&clks IMX6SL_CLK_PWM4>;
+ 				clock-names =3D "ipg", "per";
+ 			};
+--=20
+2.7.4
