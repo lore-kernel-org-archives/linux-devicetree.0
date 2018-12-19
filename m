@@ -1,94 +1,101 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: da850-lcdk: Correct the audio codec regulators
-Date: Wed, 19 Dec 2018 12:13:05 +0200
-Message-ID: <20181219101305.20832-1-peter.ujfalusi@ti.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v6 0/7] spi: add support for octal mode
+Date: Wed, 19 Dec 2018 10:11:43 +0000
+Message-ID: <1545214186-16987-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, linux@armlinux.org.uk, nsekhar@ti.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the board level fixed regulators for 3.3V and 1.8V which is used to
-power - among other things - the tlv320aic3106 codec.
+Add support for octal mode IO data transfer.
+Micron flash, mt35xu512aba, supports octal mode data transfer and
+NXP FlexSPI controller supports 8 data lines for data transfer (Rx/Tx).
 
-Apart from removing the following warning during boot:
-tlv320aic3x-codec 0-0018: Invalid supply voltage(s) AVDD: -22, DVDD: -22
+Patch series
+* Add support for octal mode flags and parsing of same in spi driver.
+* Add parsing logic for spi-mem framework and m25p80.c device file.
+* Add opcodes for octal I/O commands in spi-nor framework, Read and Write p=
+roto for (1-1-8/1-8-8) mode.
+  Opcodes are added as per octal data IO commands required for mt35xu512aba=
+ [1] flash.
+* Add mode bit required for octal mode in nxp-fspi driver [2].
+* Define binding property 'spi-rx/tx-bus-width' for LX2160ARDB target [2].
 
-With the correct voltages the driver can select correct OCMV value to
-reduce pop noise.
+Tested on LX2160ARDB target with nxp-fspi driver, below are
+Read performance number of 1-1-1 and 1-1-8 read protocol.
 
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- arch/arm/boot/dts/da850-lcdk.dts | 36 ++++++++++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
+ root@lxxx:~# cat /proc/mtd
+ dev:    size   erasesize  name
+ mtd0: 04000000 00001000 "spi0.0"
+ mtd1: 04000000 00001000 "spi0.1"
+ root@lxxx:~# time mtd_debug read /dev/mtd0 0x0 0x1000000 0read
+ Copied 16777216 bytes from address 0x00000000 in flash to 0read
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index 0177e3ed20fe..c196e37606c4 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -39,6 +39,36 @@
- 		};
- 	};
- 
-+	vcc_5vd: fixedregulator-vcc_5vd {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_5vd";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		regulator-boot-on;
-+	};
-+
-+	vcc_3v3d: fixedregulator-vcc_3v3d {
-+		/* TPS650250 - VDCDC1 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_3v3d";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vcc_5vd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vcc_1v8d: fixedregulator-vcc_1v8d {
-+		/* TPS650250 - VDCDC2 */
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc_1v8d";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vcc_5vd>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
-@@ -221,6 +251,12 @@
- 		compatible = "ti,tlv320aic3106";
- 		reg = <0x18>;
- 		status = "okay";
-+
-+		/* Regulators */
-+		IOVDD-supply = <&vcc_3v3d>;
-+		AVDD-supply = <&vcc_3v3d>;
-+		DRVDD-supply = <&vcc_3v3d>;
-+		DVDD-supply = <&vcc_1v8d>;
- 	};
- };
- 
--- 
-Peter
+ real    0m2.792s
+ user    0m0.000s
+ sys     0m2.790s
+ root@lxxx:~# time mtd_debug read /dev/mtd1 0x0 0x1000000 0read
+ Copied 16777216 bytes from address 0x00000000 in flash to 0read
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+ real    0m0.441s
+ user    0m0.000s
+ sys     0m0.440s
+ root@ls1012ardb:~#
+
+
+ Flash device MTD0 configured in 1-1-1 protocol.
+ Flash device MTD1 configured in 1-1-8 protocol.
+
+[1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D70384&sta=
+te=3D*
+[2] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D76402
+
+Yogesh Gaur (7):
+  spi: add support for octal mode I/O data transfer
+  spi: spi-mem: add support for octal mode I/O data transfer
+  mtd: spi-nor: add opcodes for octal Read/Write commands
+  mtd: spi-nor: add octal read flag for flash mt35xu512aba
+  mtd: m25p80: add support of octal mode I/O transfer
+  spi: nxp-fspi: add octal mode flag bit for octal support
+  arm64: dts: lx2160a: update fspi node
+
+Changes for v6:
+- Correct S-o-b tag with full author name as 'Yogesh Narayan Gaur'.
+- Rebase on top of v4.20-rc5.
+Changes for v5:
+- Modified string 'octo' as 'octal' in all patches.
+Changes for v4:
+- Rebase on top of v4.20-rc2.
+- Modify octo entries enum value in spi.h.
+Changes for v3:
+- Add octo mode support in spi_setup().
+- Rename all patches with 'octal' string modified as 'octo'.
+Changes for v2:
+- Incorporated review comments of Boris and Vignesh.
+
+Yogesh Gaur (7):
+  spi: add support for octal mode I/O data transfer
+  spi: spi-mem: add support for octal mode I/O data transfer
+  mtd: spi-nor: add opcodes for octal Read/Write commands
+  mtd: spi-nor: add octal read flag for flash mt35xu512aba
+  mtd: m25p80: add support of octal mode I/O transfer
+  spi: nxp-fspi: add octal mode flag bit for octal support
+  arm64: dts: lx2160a: update fspi node
+
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
+ drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
+ drivers/mtd/spi-nor/spi-nor.c                     | 19 ++++++++++++++++---
+ drivers/spi/spi-mem.c                             |  9 ++++++++-
+ drivers/spi/spi-nxp-fspi.c                        |  4 ++--
+ drivers/spi/spi.c                                 | 12 ++++++++++--
+ include/linux/mtd/spi-nor.h                       | 16 ++++++++++++----
+ include/linux/spi/spi.h                           |  4 +++-
+ 8 files changed, 63 insertions(+), 14 deletions(-)
+
+--=20
+2.7.4
