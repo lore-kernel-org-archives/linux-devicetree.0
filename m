@@ -1,71 +1,58 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: RE: [PATCH v2] dt-bindings: serial: sh-sci: Document r8a774c0
- bindings
-Date: Wed, 19 Dec 2018 09:46:21 +0000
-Message-ID: <TY1PR01MB1770FBD1239180359B0C09F3C0BE0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-References: <1545134590-22510-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <20181219072535.GA28473@kroah.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V4 2/4] rtc: add i.MX system controller RTC support
+Date: Wed, 19 Dec 2018 09:48:25 +0000
+Message-ID: <AM0PR04MB42119CF2FB98AEDE02DC0FB980BE0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
+ <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
+ <20181219085429.GJ19816@piout.net>
+ <DB3PR0402MB39167296BD1302130B537FD7F5BE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219072535.GA28473@kroah.com>
+In-Reply-To: <DB3PR0402MB39167296BD1302130B537FD7F5BE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
+To: Anson Huang <anson.huang@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rt
 List-Id: devicetree@vger.kernel.org
 
-Hello Greg,
-
-> From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Sent: 19 December 2018 07:26
-> To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Subject: Re: [PATCH v2] dt-bindings: serial: sh-sci: Document r8a774c0 bi=
-ndings
->
-> On Tue, Dec 18, 2018 at 12:03:10PM +0000, Fabrizio Castro wrote:
-> > RZ/G2E (R8A774C0) SoC also has the R-Car Gen3 compatible SCIF and
-> > HSCIF ports, so document the SoC specific bindings.
+[...]
 > >
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
-> > ---
-> > v1->v2:
-> > * Fixed title according to Geert's comment
+> > I applied it on my test branch and this makes sparc64-allyesconfig
+> > fail
+> > with:
 > >
-> > This patch depends on:
-> > https://patchwork.kernel.org/patch/10565543/
->
-> I don't have that patch in my tree, so can you please resend all of the
-> pending patches that you need applied so that I can?  Including this one
-> too.
+> >    drivers/rtc/rtc-imx-sc.o: In function `imx_sc_rtc_read_time':
+> >    rtc-imx-sc.c:(.text+0x34): undefined reference to `imx_scu_call_rpc'
+> >    drivers/rtc/rtc-imx-sc.o: In function `imx_sc_rtc_probe':
+> >    rtc-imx-sc.c:(.text+0x90): undefined reference to `imx_scu_get_handl=
+e'
+>=20
+> Maybe there are some changes on basic support of imx scu driver, I will r=
+esend
+> a patch set later, thanks.
+>=20
 
-No problems, I'll resend both, and I'll prepend "dt-bindings:" to the title=
- of the other patch as well.
+This driver should depend on IMX_SCU which seems not got compiled.
 
-Thanks,
-Fab
+Regards
+Dong Aisheng
 
->
-> thanks,
->
-> greg k-h
-
-
-[https://www2.renesas.eu/media/email/unicef.jpg]
-
-This Christmas, instead of sending out cards, Renesas Electronics Europe ha=
-ve decided to support Unicef with a donation. For further details click her=
-e<https://www.unicef.org/> to find out about the valuable work they do, hel=
-ping children all over the world.
-We would like to take this opportunity to wish you a Merry Christmas and a =
-prosperous New Year.
-
-
-
-Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
-uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
- No. 04586709.
+> Anson.
+>=20
+> >
+> >
+> >
+> > --
+> > Alexandre Belloni, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://emea01.safelinks.protection.outlook.com/?url=3Dhttps%3A%2F%2Fbo=
+o
+> > tl
+> in.com&amp;data=3D02%7C01%7Canson.huang%40nxp.com%7C72b147643a3f
+> >
+> 44c258c208d6658f9cce%7C686ea1d3bc2b4c6fa92cd99c5c301635%7C0%7C0
+> > %7C636808064818797711&amp;sdata=3D%2Bl5jGXX6wBYbOg5Zalg4CyxyZKj
+> Ue
+> > uzRSQEKO9TJnRI%3D&amp;reserved=3D0
