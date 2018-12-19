@@ -1,77 +1,146 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V2] dt-bindings: timer: gpt: update binding doc
-Date: Wed, 19 Dec 2018 07:11:42 +0000
-Message-ID: <DB3PR0402MB391611FFEFC910394D671E43F5BE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1544598889-2995-1-git-send-email-Anson.Huang@nxp.com>
- <20181218171150.GA21403@bogus>
+From: Biao Huang <biao.huang@mediatek.com>
+Subject: [v3, PATCH 2/2] net-next: stmmac: dwmac-mediatek: remove fine-tune property
+Date: Wed, 19 Dec 2018 15:22:41 +0800
+Message-ID: <1545204161-15742-3-git-send-email-biao.huang@mediatek.com>
+References: <1545204161-15742-1-git-send-email-biao.huang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218171150.GA21403@bogus>
-Content-Language: en-US
+In-Reply-To: <1545204161-15742-1-git-send-email-biao.huang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: davem@davemloft.net, robh+dt@kernel.org
+Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, biao.huang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
 List-Id: devicetree@vger.kernel.org
 
-SGksIFJvYg0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3JpZ2luYWwg
-TWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3Jn
-XQ0KPiBTZW50OiAyMDE4xOoxMtTCMTnI1SAxOjEyDQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24u
-aHVhbmdAbnhwLmNvbT4NCj4gQ2M6IGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc7IHRnbHhAbGlu
-dXRyb25peC5kZTsgbWFyay5ydXRsYW5kQGFybS5jb207DQo+IGxpbnV4LWtlcm5lbEB2Z2VyLmtl
-cm5lbC5vcmc7IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxp
-bnV4LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFYyXSBkdC1iaW5kaW5nczog
-dGltZXI6IGdwdDogdXBkYXRlIGJpbmRpbmcgZG9jDQo+IA0KPiBPbiBXZWQsIERlYyAxMiwgMjAx
-OCBhdCAwNzoyMDo0NEFNICswMDAwLCBBbnNvbiBIdWFuZyB3cm90ZToNCj4gPiBUaGUgaS5NWCBH
-UFQgdGltZXIgZHJpdmVyIGJpbmRpbmcgZG9jIGlzIG91dCBvZiBkYXRlLCB1cGRhdGUgaXQNCj4g
-PiBhY2NvcmRpbmcgdG8gY3VycmVudCBHUFQgdGltZXIgZHJpdmVyLg0KPiA+DQo+ID4gU2lnbmVk
-LW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4g
-IC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2ZzbCxpbXhncHQudHh0ICAgICAgIHwgMjgN
-Cj4gKysrKysrKysrKysrKysrKystLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgMjIgaW5zZXJ0
-aW9ucygrKSwgNiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdGltZXIvZnNsLGlteGdwdC50eHQNCj4gPiBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9mc2wsaW14Z3B0LnR4dA0KPiA+IGlu
-ZGV4IDk4MDliMTEuLjJlZDg0YWQgMTAwNjQ0DQo+ID4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3RpbWVyL2ZzbCxpbXhncHQudHh0DQo+ID4gKysrIGIvRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3RpbWVyL2ZzbCxpbXhncHQudHh0DQo+ID4gQEAgLTIs
-MTcgKzIsMzMgQEAgRnJlZXNjYWxlIGkuTVggR2VuZXJhbCBQdXJwb3NlIFRpbWVyIChHUFQpDQo+
-ID4NCj4gPiAgUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPg0KPiA+IC0tIGNvbXBhdGlibGUgOiBz
-aG91bGQgYmUgImZzbCw8c29jPi1ncHQiDQo+ID4gLS0gcmVnIDogU3BlY2lmaWVzIGJhc2UgcGh5
-c2ljYWwgYWRkcmVzcyBhbmQgc2l6ZSBvZiB0aGUgcmVnaXN0ZXJzLg0KPiA+IC0tIGludGVycnVw
-dHMgOiBBIGxpc3Qgb2YgNCBpbnRlcnJ1cHRzOyBvbmUgcGVyIHRpbWVyIGNoYW5uZWwuDQo+ID4g
-LS0gY2xvY2tzIDogVGhlIGNsb2NrcyBwcm92aWRlZCBieSB0aGUgU29DIHRvIGRyaXZlIHRoZSB0
-aW1lci4NCj4gPiArLSBjb21wYXRpYmxlIDogbXVzdCBiZSBvbmUgb2YgZm9sbG93aW5nOg0KPiA+
-ICsgIC0gImZzbCxpbXgxLWdwdCIsDQo+ID4gKyAgLSAiZnNsLGlteDIxLWdwdCIsDQo+ID4gKyAg
-LSAiZnNsLGlteDI3LWdwdCIsDQo+ID4gKyAgLSAiZnNsLGlteDMxLWdwdCIsDQo+ID4gKyAgLSAi
-ZnNsLGlteDI1LWdwdCIsDQo+ID4gKyAgLSAiZnNsLGlteDUwLWdwdCIsDQo+ID4gKyAgLSAiZnNs
-LGlteDUxLWdwdCIsDQo+ID4gKyAgLSAiZnNsLGlteDUzLWdwdCIsDQo+ID4gKyAgLSAiZnNsLGlt
-eDZxLWdwdCIsDQo+ID4gKyAgLSAiZnNsLGlteDZkbC1ncHQiLA0KPiA+ICsgIC0gImZzbCxpbXg2
-c2wtZ3B0IiwNCj4gPiArICAtICJmc2wsaW14NnN4LWdwdCIuDQo+IA0KPiBZb3UgbmVlZCB0byBs
-aXN0IGZhbGwtYmFja3MgaGVyZS4gSU9XLCB3aGF0IGFyZSB0aGUgdmFsaWQgY29tYmluYXRpb25z
-Pw0KDQpJIGxpc3RlZCB0aGUgY29tYmluYXRpb25zIGluIFYzIHBhdGNoOw0KDQo+IA0KPiA+ICst
-IHJlZyA6IHNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUgb2YgdGhlIHJl
-Z2lzdGVycy4NCj4gPiArLSBpbnRlcnJ1cHRzIDogc2hvdWxkIGJlIHRoZSBjbG9jayBldmVudCBk
-ZXZpY2UgaW50ZXJydXB0Lg0KPiANCj4gJ2Nsb2NrIGV2ZW50JyBpcyBhIExpbnV4IHRoaW5nIGFu
-ZCBzaG91bGRuJ3QgYmUgcGFydCBvZiB0aGUgYmluZGluZy4NCj4gDQo+IFdoYXQgaGFwcGVuZWQg
-dG8gdGhlIDQgaW50ZXJydXB0cz8NCg0KWWVzLCB1c2luZyAiZ3B0IGludGVycnVwdCIgaXMgYmV0
-dGVyIHRoYW4gImNsb2NrIGV2ZW50IiwgYW5kIGxvb2tzIGxpa2UgdGhlIGkuTVggR1BUDQpkcml2
-ZXIgZG9lcyBOT1Qgc3VwcG9ydCA0IGludGVycnVwdHMgYXQgYWxsLCBPTkxZIDEgZ2VuZXJhbCBH
-UFQgaW50ZXJydXB0IGlzIG5lZWRlZCwNCnNvIEkgdXBkYXRlZCBpdDsNCg0KPiANCj4gPiArLSBj
-bG9ja3MgOiB0aGUgY2xvY2tzIHByb3ZpZGVkIGJ5IHRoZSBTb0MgdG8gZHJpdmUgdGhlIHRpbWVy
-LCBtdXN0IGNvbnRhaW4NCj4gPiArICAgICAgICAgICBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeSBp
-biBjbG9jay1uYW1lcy4NCj4gPiArLSBjbG9jay1uYW1lcyA6IG11c3QgaW5jbHVkZSAiaXBnIiBl
-bnRyeSBmaXJzdCwgdGhlbiAicGVyIiBlbnRyeSwgIm9zY19wZXIiDQo+ID4gKyAgICAgICAgICAg
-ICAgICBjYW4gYmUgYSBzdWJzdGl0dXRlIG9mICJwZXIiIGVudHJ5IG9uIHNvbWUgU29Dcy4NCj4g
-DQo+IHBlciBvciBvc2NfcGVyIHNob3VsZCBiZSBkZXByZWNhdGVkIHNvIG9ubHkgb25lIGlzIHVz
-ZWQgZ29pbmcgZm9yd2FyZC4NCg0Kb3NjX3BlciBpcyBqdXN0IGEgc3BlY2lhbCBjYXNlIGZvciBp
-Lk1YNlEsIHNvIEkgcmVtb3ZlIGl0LCBqdXN0IG1lbnRpb24gdGhlIGlwZyBhbmQgcGVyIGNsb2Nr
-Lg0KUGxlYXNlIGhlbHAgcmV2aWV3IFYzLCB0aGFua3MuDQoNCkFuc29uLg0KDQo+IA0KPiA+DQo+
-ID4gIEV4YW1wbGU6DQo+ID4NCj4gPiAgZ3B0MTogdGltZXJAMTAwMDMwMDAgew0KPiA+IC0JY29t
-cGF0aWJsZSA9ICJmc2wsaW14MjctZ3B0IiwgImZzbCxpbXgxLWdwdCI7DQo+ID4gKwljb21wYXRp
-YmxlID0gImZzbCxpbXgyNy1ncHQiLCAiZnNsLGlteDIxLWdwdCI7DQo+ID4gIAlyZWcgPSA8MHgx
-MDAwMzAwMCAweDEwMDA+Ow0KPiA+ICAJaW50ZXJydXB0cyA9IDwyNj47DQo+ID4gLQljbG9ja3Mg
-PSA8JmNsa3MgNDY+LCA8JmNsa3MgNjE+Ow0KPiA+ICsJY2xvY2tzID0gPCZjbGtzIElNWDI3X0NM
-S19HUFQxX0lQR19HQVRFPiwNCj4gPiArCQkgPCZjbGtzIElNWDI3X0NMS19QRVIxX0dBVEU+Ow0K
-PiA+ICAJY2xvY2stbmFtZXMgPSAiaXBnIiwgInBlciI7DQo+ID4gIH07DQo+ID4gLS0NCj4gPiAy
-LjcuNA0KPiA+DQo=
+1. remove fine-tune property and related setting to simplify
+the timing adjustment flow.
+2. set timing value according to the value from device tree,
+and will not care whether PHY insert internal delay.
+
+Signed-off-by: Biao Huang <biao.huang@mediatek.com>
+---
+ .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |   71 +++++++-------------
+ 1 file changed, 24 insertions(+), 47 deletions(-)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+index e400cbd..bf25629 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-mediatek.c
+@@ -44,7 +44,6 @@ struct mac_delay_struct {
+ 	u32 rx_delay;
+ 	bool tx_inv;
+ 	bool rx_inv;
+-	bool fine_tune;
+ };
+ 
+ struct mediatek_dwmac_plat_data {
+@@ -105,16 +104,28 @@ static int mt2712_set_interface(struct mediatek_dwmac_plat_data *plat)
+ 	return 0;
+ }
+ 
+-static void mt2712_delay_ps2stage(struct mac_delay_struct *mac_delay)
++static void mt2712_delay_ps2stage(struct mediatek_dwmac_plat_data *plat)
+ {
+-	if (mac_delay->fine_tune) {
+-		/* 170ps per stage for fine tune delay macro circuit*/
+-		mac_delay->tx_delay /= 170;
+-		mac_delay->rx_delay /= 170;
+-	} else {
+-		/* 550ps per stage for coarse tune delay macro circuit*/
++	struct mac_delay_struct *mac_delay = &plat->mac_delay;
++
++	switch (plat->phy_mode) {
++	case PHY_INTERFACE_MODE_MII:
++	case PHY_INTERFACE_MODE_RMII:
++		/* 550ps per stage for MII/RMII */
+ 		mac_delay->tx_delay /= 550;
+ 		mac_delay->rx_delay /= 550;
++		break;
++	case PHY_INTERFACE_MODE_RGMII:
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++		/* 170ps per stage for RGMII */
++		mac_delay->tx_delay /= 170;
++		mac_delay->rx_delay /= 170;
++		break;
++	default:
++		dev_err(plat->dev, "phy interface not supported\n");
++		break;
+ 	}
+ }
+ 
+@@ -123,7 +134,7 @@ static int mt2712_set_delay(struct mediatek_dwmac_plat_data *plat)
+ 	struct mac_delay_struct *mac_delay = &plat->mac_delay;
+ 	u32 delay_val = 0, fine_val = 0;
+ 
+-	mt2712_delay_ps2stage(mac_delay);
++	mt2712_delay_ps2stage(plat);
+ 
+ 	switch (plat->phy_mode) {
+ 	case PHY_INTERFACE_MODE_MII:
+@@ -167,13 +178,10 @@ static int mt2712_set_delay(struct mediatek_dwmac_plat_data *plat)
+ 			fine_val = ETH_RMII_DLY_TX_INV;
+ 		break;
+ 	case PHY_INTERFACE_MODE_RGMII:
+-		/* the PHY is not responsible for inserting any internal
+-		 * delay by itself in PHY_INTERFACE_MODE_RGMII case,
+-		 * so Ethernet MAC will insert delays for both transmit
+-		 * and receive path here.
+-		 */
+-		if (mac_delay->fine_tune)
+-			fine_val = ETH_FINE_DLY_GTXC | ETH_FINE_DLY_RXC;
++	case PHY_INTERFACE_MODE_RGMII_TXID:
++	case PHY_INTERFACE_MODE_RGMII_RXID:
++	case PHY_INTERFACE_MODE_RGMII_ID:
++		fine_val = ETH_FINE_DLY_GTXC | ETH_FINE_DLY_RXC;
+ 
+ 		delay_val |= FIELD_PREP(ETH_DLY_GTXC_ENABLE, !!mac_delay->tx_delay);
+ 		delay_val |= FIELD_PREP(ETH_DLY_GTXC_STAGES, mac_delay->tx_delay);
+@@ -183,36 +191,6 @@ static int mt2712_set_delay(struct mediatek_dwmac_plat_data *plat)
+ 		delay_val |= FIELD_PREP(ETH_DLY_RXC_STAGES, mac_delay->rx_delay);
+ 		delay_val |= FIELD_PREP(ETH_DLY_RXC_INV, mac_delay->rx_inv);
+ 		break;
+-	case PHY_INTERFACE_MODE_RGMII_TXID:
+-		/* the PHY should insert an internal delay for the transmit
+-		 * path in PHY_INTERFACE_MODE_RGMII_TXID case,
+-		 * so Ethernet MAC will insert the delay for receive path here.
+-		 */
+-		if (mac_delay->fine_tune)
+-			fine_val = ETH_FINE_DLY_RXC;
+-
+-		delay_val |= FIELD_PREP(ETH_DLY_RXC_ENABLE, !!mac_delay->rx_delay);
+-		delay_val |= FIELD_PREP(ETH_DLY_RXC_STAGES, mac_delay->rx_delay);
+-		delay_val |= FIELD_PREP(ETH_DLY_RXC_INV, mac_delay->rx_inv);
+-		break;
+-	case PHY_INTERFACE_MODE_RGMII_RXID:
+-		/* the PHY should insert an internal delay for the receive
+-		 * path in PHY_INTERFACE_MODE_RGMII_RXID case,
+-		 * so Ethernet MAC will insert the delay for transmit path here.
+-		 */
+-		if (mac_delay->fine_tune)
+-			fine_val = ETH_FINE_DLY_GTXC;
+-
+-		delay_val |= FIELD_PREP(ETH_DLY_GTXC_ENABLE, !!mac_delay->tx_delay);
+-		delay_val |= FIELD_PREP(ETH_DLY_GTXC_STAGES, mac_delay->tx_delay);
+-		delay_val |= FIELD_PREP(ETH_DLY_GTXC_INV, mac_delay->tx_inv);
+-		break;
+-	case PHY_INTERFACE_MODE_RGMII_ID:
+-		/* the PHY should insert internal delays for both transmit
+-		 * and receive path in PHY_INTERFACE_MODE_RGMII_RXID case,
+-		 * so Ethernet MAC will NOT insert any delay here.
+-		 */
+-		break;
+ 	default:
+ 		dev_err(plat->dev, "phy interface not supported\n");
+ 		return -EINVAL;
+@@ -270,7 +248,6 @@ static int mediatek_dwmac_config_dt(struct mediatek_dwmac_plat_data *plat)
+ 
+ 	mac_delay->tx_inv = of_property_read_bool(plat->np, "mediatek,txc-inverse");
+ 	mac_delay->rx_inv = of_property_read_bool(plat->np, "mediatek,rxc-inverse");
+-	mac_delay->fine_tune = of_property_read_bool(plat->np, "mediatek,fine-tune");
+ 	plat->rmii_rxc = of_property_read_bool(plat->np, "mediatek,rmii-rxc");
+ 
+ 	return 0;
+-- 
+1.7.9.5
