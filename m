@@ -1,69 +1,46 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH 7/9] dt-bindings: input: touchscreen:
- goodix: Add GT5663 compatible
-Date: Wed, 19 Dec 2018 11:15:53 -0600
-Message-ID: <20181219171553.GA4469@bogus>
-References: <20181203101547.16835-1-jagan@amarulasolutions.com>
- <20181203101547.16835-7-jagan@amarulasolutions.com>
-Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
+Date: Wed, 19 Dec 2018 09:18:16 -0800
+Message-ID: <20181219171816.GE6707@atomide.com>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-6-git-send-email-rogerq@ti.com>
+ <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
+ <5BFFBCAC.9000004@ti.com>
+ <5C191770.9090804@ti.com>
+ <20181219123812.GC8130@sirena.org.uk>
+ <5C1A670E.9020904@ti.com>
+ <6ebcd7a6-6c85-0312-0651-fb4fbfc25e55@lechnology.com>
+ <20181219170725.GH8130@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDJIP47K7MERBS7Z5HQAKGQEBSYY73Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181203101547.16835-7-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Dmitry Torokhov <dmitry.torokhov-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, linux-input-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20181219170725.GH8130@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <david@lechnology.com>, Roger Quadros <rogerq@ti.com>, ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 03:45:45PM +0530, Jagan Teki wrote:
-> GT5663 is capacitive touch controller with customized smart wakeup gestures,
-> the existing goodix driver will work by phandle vcc-supply regulator.
+* Mark Brown <broonie@kernel.org> [181219 17:07]:
+> On Wed, Dec 19, 2018 at 04:48:52PM +0100, David Lechner wrote:
+> > On 12/19/18 4:43 PM, Roger Quadros wrote:
 > 
-> So, document compatible and example node for the same.
+> > > Did I do something wrong or we just need to enhance regmap_debugfs.c?
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  .../bindings/input/touchscreen/goodix.txt           | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
+> > Do you assign the name field in pru_regmap_config and
+> > pru_debug_regmap_config?
 > 
-> diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> index 604766e347ce..1898d3dde8e1 100644
-> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> @@ -3,6 +3,7 @@ Device tree bindings for Goodix GT9xx series touchscreen controller
->  Required properties:
->  
->   - compatible		: Should be "goodix,gt1151"
-> +				 or "goodix,gt5663"
->  				 or "goodix,gt911"
->  				 or "goodix,gt9110"
->  				 or "goodix,gt912"
-> @@ -42,3 +43,15 @@ Example:
->  
->  		/* ... */
->  	};
-> +
-> +	touchscreen@5d {
-> +		compatible = "goodix,gt5663";
+> Yeah, you'll at least need to override the name since the default is to
+> use the name of the device and that'll result in two duplicates.
 
-Just a new compatible doesn't warrant a new example.
+Also combining IO regions often has a serious issue that the
+separate IO regions may not be in the same device (or same
+interconnect target module).
 
-> +		reg = <0x5d>;
-> +		vcc-supply = <&reg_ldo_io0>;
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <7 4 IRQ_TYPE_EDGE_FALLING>;
-> +		irq-gpios = <&pio 7 4 GPIO_ACTIVE_HIGH>;	/* CTP-INT: PH4 */
-> +		reset-gpios = <&pio 7 8 GPIO_ACTIVE_HIGH>;	/* CTP-RST: PH8 */
-> +		touchscreen-inverted-x;
-> +		touchscreen-inverted-y;
-> +	};
-> -- 
-> 2.18.0.321.gffc6fa0e3
-> 
+This means that flushing a posted write with a read-back for
+an IO region will only flush it for a single device and not
+the other(s). And this leads into hard to find bugs :)
+
+Regards,
+
+Tony
