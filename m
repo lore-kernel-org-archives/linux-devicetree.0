@@ -1,67 +1,55 @@
-From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v3 3/3] dt-bindings: msm/disp: Introduce
- interconnect bindings for MDSS on SDM845
-Date: Wed, 19 Dec 2018 16:43:33 +0200
-Message-ID: <bce2abad-061f-e179-2d24-d6df7903db80@linaro.org>
-References: <20181122090653.3523-1-skolluku@codeaurora.org>
- <20181122090653.3523-4-skolluku@codeaurora.org>
+From: Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH v3 0/3] Make STM32 interrupt controller use hwspinlock
+Date: Wed, 19 Dec 2018 16:00:23 +0100
+Message-ID: <fc6eb663-8694-662d-c4c2-705c7bc57700@st.com>
+References: <20181217142215.17493-1-benjamin.gaignard@st.com>
+ <297d3207-7302-674e-5acd-30dc7b2df408@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181122090653.3523-4-skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <297d3207-7302-674e-5acd-30dc7b2df408@arm.com>
 Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marc Zyngier <marc.zyngier@arm.com>, Benjamin Gaignard <benjamin.gaignard@st.com>, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgU3JhdmFudGhpLAoKVGhhbmtzIGZvciB0aGUgcGF0Y2ghCgpPbiAxMS8yMi8xOCAxMTowNiwg
-U3JhdmFudGhpIEtvbGx1a3VkdXJ1IHdyb3RlOgo+IEFkZCBpbnRlcmNvbm5lY3QgcHJvcGVydGll
-cyBzdWNoIGFzIGludGVyY29ubmVjdCBwcm92aWRlciBzcGVjaWZpZXIKPiAsIHRoZSBlZGdlIHNv
-dXJjZSBhbmQgZGVzdGluYXRpb24gcG9ydHMgd2hpY2ggYXJlIHJlcXVpcmVkIGJ5IHRoZQo+IGlu
-dGVyY29ubmVjdCBBUEkgdG8gY29uZmlndXJlIGludGVyY29ubmVjdCBwYXRoIGZvciBNRFNTLgo+
-IAo+IENoYW5nZXMgaW4gdjI6Cj4gCS0gbm9uZQo+IAo+IENoYW5nZXMgaW4gdjM6Cj4gCS0gUmVt
-b3ZlIGNvbW1vbiBwcm9wZXJ0eSBkZWZpbml0aW9ucyAoUm9iIEhlcnJpbmcpCj4gCj4gU2lnbmVk
-LW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4K
-PiAtLS0KPiAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2Rw
-dS50eHQgfCA5ICsrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgOSBpbnNlcnRpb25zKCspCj4g
-Cj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L21zbS9kcHUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-bXNtL2RwdS50eHQKPiBpbmRleCBhZDJlODgzMDMyNGUuLmQ3NWI0MzYwYTRiZSAxMDA2NDQKPiAt
-LS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHB1LnR4
-dAo+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9k
-cHUudHh0Cj4gQEAgLTI4LDYgKzI4LDExIEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIC0gI2Fk
-ZHJlc3MtY2VsbHM6IG51bWJlciBvZiBhZGRyZXNzIGNlbGxzIGZvciB0aGUgTURTUyBjaGlsZHJl
-bi4gU2hvdWxkIGJlIDEuCj4gIC0gI3NpemUtY2VsbHM6IFNob3VsZCBiZSAxLgo+ICAtIHJhbmdl
-czogcGFyZW50IGJ1cyBhZGRyZXNzIHNwYWNlIGlzIHRoZSBzYW1lIGFzIHRoZSBjaGlsZCBidXMg
-YWRkcmVzcyBzcGFjZS4KPiArLSBpbnRlcmNvbm5lY3RzIDogaW50ZXJjb25uZWN0IHBhdGggc3Bl
-Y2lmaWVyIGZvciBNRFNTIGFjY29yZGluZyB0bwo+ICsgIERvY3VtZW50YXRpb24vZGV2aWNldHJl
-ZS9iaW5kaW5ncy9pbnRlcmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dC4gU2hvdWxkIGJlCj4gKyAg
-MiBwYXRocyBjb3JyZXNwb25kaW5nIHRvIDIgQVhJIHBvcnRzLgo+ICstIGludGVyY29ubmVjdC1u
-YW1lcyA6IE1EU1Mgd2lsbCBoYXZlIDIgcG9ydCBuYW1lcyB0byBkaWZmZXJlbnRpYXRlIGJldHdl
-ZW4gdGhlCj4gKyAgMiBpbnRlcmNvbm5lY3QgcGF0aHMgZGVmaW5lZCB3aXRoIGludGVyY29ubmVj
-dCBzcGVjaWZpZXIuCj4gIAo+ICBPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICAtIGFzc2lnbmVkLWNs
-b2NrczogbGlzdCBvZiBjbG9jayBzcGVjaWZpZXJzIGZvciBjbG9ja3MgbmVlZGluZyByYXRlIGFz
-c2lnbm1lbnQKPiBAQCAtODYsNiArOTEsMTAgQEAgRXhhbXBsZToKPiAgCQlpbnRlcnJ1cHQtY29u
-dHJvbGxlcjsKPiAgCQkjaW50ZXJydXB0LWNlbGxzID0gPDE+Owo+ICAKPiArCQlpbnRlcmNvbm5l
-Y3RzID0gPCZxbm9jIDM4ICZxbm9jIDUxMj4sCj4gKwkJCQk8JnFub2MgMzkgJnFub2MgNTEyPjsK
-ClBsZWFzZSB1c2Ugc3RyaW5nIG5hbWVzIGluc3RlYWQgb2YgaGFyZC1jb2RlZCBpbnRlZ2Vycy4K
-CglpbnRlcmNvbm5lY3RzID0gPCZyc2NfaGxvcyBNQVNURVJfTURQMCAmcnNjX2hsb3MgU0xBVkVf
-RUJJMT4sCgkJCTwmcnNjX2hsb3MgTUFTVEVSX01EUDEgJnJzY19obG9zIFNMQVZFX0VCSTE+OwoK
-PiArCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAicG9ydDAiLCAicG9ydDEiOwoKV2UgYXJlIHRyeWlu
-ZyB0byBiZSBtb3JlIGRlc2NyaXB0aXZlIGFuZCBpbmNsdWRlIGJvdGggdGhlIHNvdXJjZSBhbmQg
-dGhlCmRlc3RpbmF0aW9uIGxpa2U6ICJtZHAwLW1lbSIsICJtZHAxLW1lbSIKCj4gKwo+ICAJCWlv
-bW11cyA9IDwmYXBwc19pb21tdSAwPjsKPiAgCj4gIAkJI2FkZHJlc3MtY2VsbHMgPSA8Mj47CgpP
-dGhlcndpc2UgbG9va3MgZ29vZC4KClRoYW5rcywKR2VvcmdpCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRy
-ZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Hi Marc,
+
+On 12/18/18 4:39 PM, Marc Zyngier wrote:
+> On 17/12/2018 14:22, Benjamin Gaignard wrote:
+>> This series allow to protect STM32 interrupt controller configuration registers
+>> with a hwspinlock to avoid conflicting accesses between processors.
+>>
+>> version 3:
+>> - with bindings patch
+>>
+>> version 2:
+>> - rework hwspinlock locking sequence in stm32 irqchip to take care of the
+>>    cases where hwspinlock node is disabled or not yet probed
+>>
+>> Benjamin Gaignard (3):
+>>    dt-bindings: interrupt-controller: stm32: Document hwlock properties
+>>    irqchip: stm32: protect configuration registers with hwspinlock
+>>    ARM: dts: stm32: Add hwlock for irqchip on stm32mp157
+>>
+>>   .../interrupt-controller/st,stm32-exti.txt         |   4 +
+>>   arch/arm/boot/dts/stm32mp157c.dtsi                 |   1 +
+>>   drivers/irqchip/irq-stm32-exti.c                   | 116 ++++++++++++++++++---
+>>   3 files changed, 105 insertions(+), 16 deletions(-)
+>>
+> 
+> I've taken the first two patches. Please route the DTS patch to the
+> appropriate tree.
+> 
+
+I'll take DTS patch in stm32-next branch.
+
+Regards
+Alex
+
+> Thanks,
+> 
+> 	M.
+> 
