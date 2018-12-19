@@ -1,68 +1,37 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: lvds-transmitter: add
- pwdn-gpios
-Date: Wed, 19 Dec 2018 12:54:12 +0000
-Message-ID: <4d5ca987-fdf4-6ebb-281f-29a8f3277329@axentia.se>
-References: <20181218231850.3572-1-peda@axentia.se>
- <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com>
- <7c2f1268-43a3-1dc2-bb2d-6da9d74a5a43@axentia.se> <2541072.bfOLpEHFeN@avalon>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Peter Rosin <peda@lysator.liu.se>
+Subject: [PATCH v2 2/3] dt-bindings: display: bridge: lvds-transmitter: cleanup example
+Date: Wed, 19 Dec 2018 14:04:48 +0100
+Message-ID: <20181219130449.31641-3-peda@lysator.liu.se>
+References: <20181219130449.31641-1-peda@lysator.liu.se>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2541072.bfOLpEHFeN@avalon>
-Content-Language: en-US
-Content-ID: <A32DE31E6DE542498F0068ED39894A15@eurprd02.prod.outlook.com>
+In-Reply-To: <20181219130449.31641-1-peda@lysator.liu.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Andrzej Hajda <a.hajda@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMi0xOSAxMjozOCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToNCj4gSGVsbG8sDQo+
-IA0KPiBPbiBXZWRuZXNkYXksIDE5IERlY2VtYmVyIDIwMTggMTE6NTc6MzIgRUVUIFBldGVyIFJv
-c2luIHdyb3RlOg0KPj4gT24gMjAxOC0xMi0xOSAxMDoxMiwgQW5kcnplaiBIYWpkYSB3cm90ZToN
-Cj4+PiBPbiAxOS4xMi4yMDE4IDAwOjE5LCBQZXRlciBSb3NpbiB3cm90ZToNCj4+Pj4gQWRkIG9w
-dGlvbmFsIHByb3BlcnR5IHRvIHNwZWNpZnkgYSBwb3dlci1kb3duIEdQSU8uDQo+Pj4+IFRoZSBw
-d2RuLWdwaW9zIG5hbWUgaXMgYWxyZWFkeSBpbiB1c2UgYnkgdGhlIHRoaW5lLHRoYzYzbHZkbTgz
-ZA0KPj4+PiBiaW5kaW5nLCBzbyBnbyB3aXRoIHRoYXQuDQo+Pj4+DQo+Pj4+IFNpZ25lZC1vZmYt
-Ynk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQo+Pj4+IC0tLQ0KPj4+Pg0KPj4+PiAg
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJh
-bnNtaXR0ZXIudHh0IHwNCj4+Pj4gIDMgKysrIA0KPj4+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
-ZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0DQo+Pj4+IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0DQo+
-Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2
-ZHMtdHJhbnNtaXR0ZXIudHh0DQo+Pj4+IGluZGV4IGY5ZTdkZDY2NmY1OC4uNDc5NDFkMzlmOTJm
-IDEwMDY0NA0KPj4+PiAtLS0NCj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQNCj4+Pj4gKysrDQo+Pj4+IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJh
-bnNtaXR0ZXIudHh0DQo+Pj4+IEBAIC0zMSw2ICszMSw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
-DQo+Pj4+ICAgIGRldmljZS1zcGVjaWZpYyB2ZXJzaW9uIGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRl
-dmljZSBmaXJzdA0KPj4+PiAgICBmb2xsb3dlZCBieSB0aGUgZ2VuZXJpYyB2ZXJzaW9uLg0KPj4+
-Pg0KPj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4+Pj4gKy0gcHdkbi1ncGlvczogUG93ZXIt
-ZG93biBjb250cm9sIEdQSU8NCj4+Pj4gKw0KPj4+DQo+Pj4gU2luY2UgbmFtaW5nIGlzIG5vdCBl
-bmZvcmNlZCBieSBhbnkgZGF0YXNoZWV0IEkgd291bGQgcHJvcG9zZSBzb21ldGhpbmcNCj4+PiBt
-b3JlIHBvcHVsYXIgd2l0aCBsZXNzIHR3aXN0ZWQgbG9naWMuIE1heWJlOg0KPj4+DQo+Pj4gLSBl
-bmFibGUtZ3Bpb3M6IC4uLiAoYWN0aXZlIGhpZ2gpLg0KPj4NCj4+IFRoYXQgd2FzIG15IG9yaWdp
-bmFsIHRob3VnaHQgdG9vLCBidXQgdGhlIGRyaXZlciBpbXBsZW1lbnRpbmcgdGhlDQo+PiBsdmRz
-LWVuY29kZXIgYmluZGluZ3MgYWxzbyBoYW5kbGVzIHRoZSBtZW50aW9uZWQgdGhpbmUsdGhjNjNs
-dmRtODNkDQo+PiBsdmRzIGVuY29kZXIsIGFuZCB0aGF0IGJpbmRpbmcgaGFzIHRoZSAicHdkbiIg
-bmFtaW5nLiBTbywgZm9yIGRyaXZlcg0KPj4gaW1wbGVtZW50YXRpb24gc2ltcGxpY2l0eSBJIHdl
-bnQgd2l0aCB3aGF0IHdhcyBhbHJlYWR5IHRoZXJlLCB0aHVzDQo+PiBhbGxvd2luZyBhZGRpbmcg
-c3VwcG9ydCBmb3IgYm90aCBiaW5kaW5ncyB3aXRoIG9uZSBpbXBsZW1lbnRhdGlvbg0KPj4gKGlu
-IHBhdGNoIDMvMykuDQo+Pg0KPj4gQWRkaW5nIGNvZGUganVzdCB0byBoYW5kbGUgbXVsdGlwbGUg
-bmFtZXMgZm9yIHRoZSBzYW1lIHRoaW5nIGRvZXMNCj4+IG5vdCBzb3VuZHMgdG9vIGFwcGVhbGlu
-Zy4NCj4gDQo+IEknbSBhZnJhaWQgSSB0aGluayB3ZSBzaG91bGRuJ3QgYWRkIHB3ZG4tZ3Bpb3Mg
-c3VwcG9ydCB0byB0aGUgbHZkcyBlbmNvZGVyIERUIA0KPiBiaW5kaW5ncy4gVGhlIHJlYXNvbiBp
-cyB0aGF0IGNvbnRyb2wgR1BJT3MgKGFuZCByZWd1bGF0b3JzKSBjb21lIHdpdGggZGV2aWNlLQ0K
-PiBzcGVjaWZpYyBzZW1hbnRpY3MuIElmIHdlIGFkZCBwd2RuLWdwaW9zIG5vdywgd2UnbGwgdGhl
-biBhZGQgcmVzZXQtZ3Bpb3MsIGFuZCANCj4gcG93ZXIgc3VwcGxpZXMsIGFuZCBhbGwgb2YgYSBz
-dWRkZW4gd2UnbGwgZW5kIHVwIGhhdmluZyB0byBlbmNvZGUgc2VxdWVuY2luZyANCj4gb2YgR1BJ
-T3MgYW5kIHBvd2VyIHN1cHBsaWVzIGluIERULiBUaGF0IHBhdGggaGFzIGJlZW4gdHJpZWQgaW4g
-dGhlIHBhc3QsIHdpdGggDQo+IG5vIGdvb2QgcmVzdWx0cy4NCj4gDQo+IEkgd291bGQgaW5zdGVh
-ZCBjcmVhdGUgZGV2aWNlLXNwZWNpZmljIGJpbmRpbmdzLCBsaWtlIGRvbmUgZm9yIA0KPiB0aGlu
-ZSx0aGM2M2x2ZG04M2QuIEl0J3MgZmluZSB0byB0aGVuIGFkZCBzdXBwb3J0IGZvciB0aGUgcHdk
-bi1ncGlvcyBwcm9wZXJ0eSANCj4gaW4gdGhlIGx2ZHMtZW5jb2RlciBkcml2ZXIsIGFzIGxvbmcg
-YXMgdGhlIG1lYW5pbmcgb2YgdGhlIHByb3BlcnR5IGNvbWVzIGZyb20gDQo+IHNwZWNpZmljIERU
-IGJpbmRpbmdzLCBub3QgZnJvbSB0aGUgZ2VuZXJpYyBvbmVzLg0KDQpSaWdodCwgSSdsbCBmb3Jr
-IG91dCB0aGUgYmluZGluZ3MgZm9yIHRoZSB0ZXhhcyBjaGlwcy4gdjIgY29taW5nIHVwLg0KDQpD
-aGVlcnMsDQpQZXRlcg0K
+From: Peter Rosin <peda@axentia.se>
+
+Drop #address-cells and #size-cells from the root node in the
+example, they are unused.
+
+Signed-off-by: Peter Rosin <peda@axentia.se>
+---
+ Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt | 2 --
+ 1 file changed, 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+index fd39ad34c383..36ce07c8d8e6 100644
+--- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
++++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+@@ -38,8 +38,6 @@ Example
+ 
+ lvds-encoder {
+ 	compatible = "lvds-encoder";
+-	#address-cells = <1>;
+-	#size-cells = <0>;
+ 
+ 	ports {
+ 		#address-cells = <1>;
+-- 
+2.11.0
