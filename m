@@ -1,154 +1,67 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v10 06/27] of: base: Add of_get_cpu_state_node() to get
- idle states for a CPU node
-Date: Wed, 19 Dec 2018 12:05:56 +0100
-Message-ID: <65605bbd-ceda-2266-615e-20b9d3491bed@linaro.org>
-References: <20181129174700.16585-1-ulf.hansson@linaro.org>
- <20181129174700.16585-7-ulf.hansson@linaro.org>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: Re: [PATCH] ARM: dts: da850-lcdk: Correct the audio codec regulators
+Date: Wed, 19 Dec 2018 13:37:54 +0200
+Message-ID: <d38cf58e-0bff-532b-a99c-e0e54b7bf810@ti.com>
+References: <20181219101305.20832-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181129174700.16585-7-ulf.hansson@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181219101305.20832-1-peter.ujfalusi@ti.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ulf Hansson <ulf.hansson@linaro.org>, "Rafael J . Wysocki" <rjw@rjwysocki.net>, Sudeep Holla <sudeep.holla@arm.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, linux-pm@vger.kernel.org
-Cc: "Raju P . L . S . S . S . N" <rplsssn@codeaurora.org>, Stephen Boyd <sboyd@kernel.org>, Tony Lindgren <tony@atomide.com>, Kevin Hilman <khilman@kernel.org>, Lina Iyer <ilina@codeaurora.org>, Viresh Kumar <viresh.kumar@linaro.org>, Vincent Guittot <vincent.guittot@linaro.org>, Geert Uytterhoeven <geert+renesas@glider.be>, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: tony@atomide.com, linux@armlinux.org.uk, nsekhar@ti.com
+Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-On 29/11/2018 18:46, Ulf Hansson wrote:
-> The CPU's idle state nodes are currently parsed at the common cpuidle DT
-> library, but also when initializing back-end data for the arch specific CPU
-> operations, as in the PSCI driver case.
-> 
-> To avoid open-coding, let's introduce of_get_cpu_state_node(), which takes
-> the device node for the CPU and the index to the requested idle state node,
-> as in-parameters. In case a corresponding idle state node is found, it
-> returns the node with the refcount incremented for it, else it returns
-> NULL.
-> 
-> Moreover, for ARM, there are two generic methods, to describe the CPU's
-> idle states, either via the flattened description through the
-> "cpu-idle-states" binding [1] or via the hierarchical layout, using the
-> "power-domains" and the "domain-idle-states" bindings [2]. Hence, let's
-> take both options into account.
-> 
-> [1]
-> Documentation/devicetree/bindings/arm/idle-states.txt
-> [2]
-> Documentation/devicetree/bindings/arm/psci.txt
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Lina Iyer <ilina@codeaurora.org>
-> Suggested-by: Sudeep Holla <sudeep.holla@arm.com>
-> Co-developed-by: Lina Iyer <lina.iyer@linaro.org>
-> Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-
-Nitpicking some kerneldoc formatting below.
-
-Other than that:
-
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
-
-> ---
-> 
-> Changes in v10:
-> 	- None.
-> 
-> ---
->  drivers/of/base.c  | 35 +++++++++++++++++++++++++++++++++++
->  include/linux/of.h |  8 ++++++++
->  2 files changed, 43 insertions(+)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 09692c9b32a7..8f6974a22006 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -429,6 +429,41 @@ int of_cpu_node_to_id(struct device_node *cpu_node)
->  }
->  EXPORT_SYMBOL(of_cpu_node_to_id);
->  
-> +/**
-> + * of_get_cpu_state_node - Get CPU's idle state node at the given index
-> + *
-> + * @cpu_node: The device node for the CPU
-> + * @index: The index in the list of the idle states
-> + *
-> + * Two generic methods can be used to describe a CPU's idle states, either via
-> + * a flattened description through the "cpu-idle-states" binding or via the
-> + * hierarchical layout, using the "power-domains" and the "domain-idle-states"
-> + * bindings. This function check for both and returns the idle state node for
-> + * the requested index.
-> + *
-> + * In case and idle state node is found at index, the refcount incremented for
-
-s/and/an/
-
-s/index/@index/
-
-
-> + * it, so call of_node_put() on it when done. Returns NULL if not found.
-
-The Return description must be in a separate section.
-
-> + */
-> +struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-> +					  int index)
-> +{
-> +	struct of_phandle_args args;
-> +	int err;
-> +
-> +	err = of_parse_phandle_with_args(cpu_node, "power-domains",
-> +					"#power-domain-cells", 0, &args);
-> +	if (!err) {
-> +		struct device_node *state_node =
-> +			of_parse_phandle(args.np, "domain-idle-states", index);
-> +
-> +		of_node_put(args.np);
-> +		return state_node;
-> +	}
-> +
-> +	return of_parse_phandle(cpu_node, "cpu-idle-states", index);
-> +}
-> +EXPORT_SYMBOL(of_get_cpu_state_node);
-> +
->  /**
->   * __of_device_is_compatible() - Check if the node matches given constraints
->   * @device: pointer to node
-> diff --git a/include/linux/of.h b/include/linux/of.h
-> index a5aee3c438ad..f9f0c65c095c 100644
-> --- a/include/linux/of.h
-> +++ b/include/linux/of.h
-> @@ -348,6 +348,8 @@ extern const void *of_get_property(const struct device_node *node,
->  				int *lenp);
->  extern struct device_node *of_get_cpu_node(int cpu, unsigned int *thread);
->  extern struct device_node *of_get_next_cpu_node(struct device_node *prev);
-> +extern struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-> +						 int index);
->  
->  #define for_each_property_of_node(dn, pp) \
->  	for (pp = dn->properties; pp != NULL; pp = pp->next)
-> @@ -762,6 +764,12 @@ static inline struct device_node *of_get_next_cpu_node(struct device_node *prev)
->  	return NULL;
->  }
->  
-> +static inline struct device_node *of_get_cpu_state_node(struct device_node *cpu_node,
-> +					int index)
-> +{
-> +	return NULL;
-> +}
-> +
->  static inline int of_n_addr_cells(struct device_node *np)
->  {
->  	return 0;
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+CgpPbiAxOS8xMi8yMDE4IDEyLjEzLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiBBZGQgdGhlIGJv
+YXJkIGxldmVsIGZpeGVkIHJlZ3VsYXRvcnMgZm9yIDMuM1YgYW5kIDEuOFYgd2hpY2ggaXMgdXNl
+ZCB0bwo+IHBvd2VyIC0gYW1vbmcgb3RoZXIgdGhpbmdzIC0gdGhlIHRsdjMyMGFpYzMxMDYgY29k
+ZWMuCj4gCj4gQXBhcnQgZnJvbSByZW1vdmluZyB0aGUgZm9sbG93aW5nIHdhcm5pbmcgZHVyaW5n
+IGJvb3Q6Cj4gdGx2MzIwYWljM3gtY29kZWMgMC0wMDE4OiBJbnZhbGlkIHN1cHBseSB2b2x0YWdl
+KHMpIEFWREQ6IC0yMiwgRFZERDogLTIyCj4gCj4gV2l0aCB0aGUgY29ycmVjdCB2b2x0YWdlcyB0
+aGUgZHJpdmVyIGNhbiBzZWxlY3QgY29ycmVjdCBPQ01WIHZhbHVlIHRvCj4gcmVkdWNlIHBvcCBu
+b2lzZS4KClBsZWFzZSBpZ25vcmUgdGhpcywgSSdsbCBzZW5kIGFuIHVwZGF0ZS4KCj4gCj4gU2ln
+bmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRpLmNvbT4KPiAtLS0K
+PiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMgfCAzNiArKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMzYgaW5zZXJ0aW9ucygrKQo+IAo+
+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cyBiL2FyY2gvYXJt
+L2Jvb3QvZHRzL2RhODUwLWxjZGsuZHRzCj4gaW5kZXggMDE3N2UzZWQyMGZlLi5jMTk2ZTM3NjA2
+YzQgMTAwNjQ0Cj4gLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtbGNkay5kdHMKPiArKysg
+Yi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1sY2RrLmR0cwo+IEBAIC0zOSw2ICszOSwzNiBAQAo+
+ICAJCX07Cj4gIAl9Owo+ICAKPiArCXZjY181dmQ6IGZpeGVkcmVndWxhdG9yLXZjY181dmQgewo+
+ICsJCWNvbXBhdGlibGUgPSAicmVndWxhdG9yLWZpeGVkIjsKPiArCQlyZWd1bGF0b3ItbmFtZSA9
+ICJ2Y2NfNXZkIjsKPiArCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDw1MDAwMDAwPjsKPiAr
+CQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDw1MDAwMDAwPjsKPiArCQlyZWd1bGF0b3ItYm9v
+dC1vbjsKPiArCX07Cj4gKwo+ICsJdmNjXzN2M2Q6IGZpeGVkcmVndWxhdG9yLXZjY18zdjNkIHsK
+PiArCQkvKiBUUFM2NTAyNTAgLSBWRENEQzEgKi8KPiArCQljb21wYXRpYmxlID0gInJlZ3VsYXRv
+ci1maXhlZCI7Cj4gKwkJcmVndWxhdG9yLW5hbWUgPSAidmNjXzN2M2QiOwo+ICsJCXJlZ3VsYXRv
+ci1taW4tbWljcm92b2x0ID0gPDMzMDAwMDA+Owo+ICsJCXJlZ3VsYXRvci1tYXgtbWljcm92b2x0
+ID0gPDMzMDAwMDA+Owo+ICsJCXZpbi1zdXBwbHkgPSA8JnZjY181dmQ+Owo+ICsJCXJlZ3VsYXRv
+ci1hbHdheXMtb247Cj4gKwkJcmVndWxhdG9yLWJvb3Qtb247Cj4gKwl9Owo+ICsKPiArCXZjY18x
+djhkOiBmaXhlZHJlZ3VsYXRvci12Y2NfMXY4ZCB7Cj4gKwkJLyogVFBTNjUwMjUwIC0gVkRDREMy
+ICovCj4gKwkJY29tcGF0aWJsZSA9ICJyZWd1bGF0b3ItZml4ZWQiOwo+ICsJCXJlZ3VsYXRvci1u
+YW1lID0gInZjY18xdjhkIjsKPiArCQlyZWd1bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAw
+PjsKPiArCQlyZWd1bGF0b3ItbWF4LW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKPiArCQl2aW4tc3Vw
+cGx5ID0gPCZ2Y2NfNXZkPjsKPiArCQlyZWd1bGF0b3ItYWx3YXlzLW9uOwo+ICsJCXJlZ3VsYXRv
+ci1ib290LW9uOwo+ICsJfTsKPiArCj4gIAlzb3VuZCB7Cj4gIAkJY29tcGF0aWJsZSA9ICJzaW1w
+bGUtYXVkaW8tY2FyZCI7Cj4gIAkJc2ltcGxlLWF1ZGlvLWNhcmQsbmFtZSA9ICJEQTg1MC9PTUFQ
+LUwxMzggTENESyI7Cj4gQEAgLTIyMSw2ICsyNTEsMTIgQEAKPiAgCQljb21wYXRpYmxlID0gInRp
+LHRsdjMyMGFpYzMxMDYiOwo+ICAJCXJlZyA9IDwweDE4PjsKPiAgCQlzdGF0dXMgPSAib2theSI7
+Cj4gKwo+ICsJCS8qIFJlZ3VsYXRvcnMgKi8KPiArCQlJT1ZERC1zdXBwbHkgPSA8JnZjY18zdjNk
+PjsKPiArCQlBVkRELXN1cHBseSA9IDwmdmNjXzN2M2Q+Owo+ICsJCURSVkRELXN1cHBseSA9IDwm
+dmNjXzN2M2Q+Owo+ICsJCURWREQtc3VwcGx5ID0gPCZ2Y2NfMXY4ZD47Cj4gIAl9Owo+ICB9Owo+
+ICAKPiAKCi0gUMOpdGVyCgpUZXhhcyBJbnN0cnVtZW50cyBGaW5sYW5kIE95LCBQb3Jra2FsYW5r
+YXR1IDIyLCAwMDE4MCBIZWxzaW5raS4KWS10dW5udXMvQnVzaW5lc3MgSUQ6IDA2MTU1MjEtNC4g
+S290aXBhaWtrYS9Eb21pY2lsZTogSGVsc2lua2kKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
