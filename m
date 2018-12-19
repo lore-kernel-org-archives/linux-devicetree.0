@@ -1,75 +1,62 @@
-From: Govind Singh <govinds@codeaurora.org>
-Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on
- sdm845
-Date: Wed, 19 Dec 2018 21:11:25 +0530
-Message-ID: <9f8bbfaa232c02bb33594207fa1f8821@codeaurora.org>
-References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
- <87d0r55ews.fsf@codeaurora.org>
- <6e831363962be4e28d7551e360ed4d46@codeaurora.org>
- <874lcg55at.fsf@codeaurora.org>
+From: Roger Quadros <rogerq@ti.com>
+Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
+Date: Wed, 19 Dec 2018 17:43:10 +0200
+Message-ID: <5C1A670E.9020904@ti.com>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-6-git-send-email-rogerq@ti.com>
+ <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
+ <5BFFBCAC.9000004@ti.com> <5C191770.9090804@ti.com>
+ <20181219123812.GC8130@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <874lcg55at.fsf@codeaurora.org>
+In-Reply-To: <20181219123812.GC8130@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kalle Valo <kvalo@codeaurora.org>
-Cc: briannorris@chromium.org, andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kalle,
-
-On 2018-11-17 16:39, Kalle Valo wrote:
-> Govind Singh <govinds@codeaurora.org> writes:
+On 19/12/18 14:38, Mark Brown wrote:
+> On Tue, Dec 18, 2018 at 05:51:12PM +0200, Roger Quadros wrote:
 > 
->> On 2018-11-16 18:59, Kalle Valo wrote:
->>> Govind Singh <govinds@codeaurora.org> writes:
->>> 
->>>> This series enables ath10k wifi driver support for WCN3990 target
->>>> on sdm845 SOC. This series also updates the missing dt binding
->>>> documentation
->>>> and adds optional iommu property.
->>>> 
->>>> Changes since v3:
->>>>     Moved interrupt/reg/reg-name to required property.
->>>>     Removed unused clocks.
->>>>     Corrected interrupt no's.
->>>> 
->>>> Changes since v2:
->>>>     dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990
->>>> wifi module
->>>>     device node patch from the series as dependent patch is not yet
->>>> merged.
->>>>     Enabled status flag from sdm845-mtp.dts.
->>>> 
->>>> Changes since v1:
->>>>     Listed no of interrupts/clocks for each set of compatible.
->>>>     Added missing 'wifi' label to sdm845.dtsi.
->>>> 
->>>> Govind Singh (3):
->>>>   dt: bindings: add missing dt properties for WCN3990 wifi node
->>>>   dts: arm64/sdm845: Add WCN3990 WLAN module device node
->>>>   dt: bindings: add bindings for wifi iommu node
->>>> 
->>>>  .../bindings/net/wireless/qcom,ath10k.txt          | 62
->>>> ++++++++++++++--------
->>>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
->>>>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
->>>>  3 files changed, 74 insertions(+), 22 deletions(-)
->>> 
->>> Via which tree are these patches going? That's not clear for me.
->> 
->> I guess sdm845 dtsi change should be going to
->> git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git.
->> I need to send v5 to address one comment from Brian.
+>> We could combine control and debug into one iomap and use
+>> 2 regmap ranges. But this is really working around the
+>> regmap_mmio limitation of not being able to use more than one ioremaps.
 > 
-> Ok, I'll then drop these from my queue.
+>> Mark, any suggestions?
+> 
+> If they're separate regions why not create separate regmaps for them?
+> 
 
-Can you pls apply below changes to ath10k tree, i will send sdm845 dtsi 
-change as separate patch after rebase.
->>>>   dt: bindings: add missing dt properties for WCN3990 wifi node
->>>>   dt: bindings: add bindings for wifi iommu node
+I tried that but only the first regmap shows up in debugfs.
 
-BR,
-Govind
+e.g.
+
++
++       pru->ctrl_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_CTRL].va,
++                                                &pru_regmap_config);
++       if (IS_ERR(pru->ctrl_regmap)) {
++               ret = PTR_ERR(pru->ctrl_regmap);
++               dev_err(dev, "CTRL regmap init failed: %d\n", ret);
++               goto free_rproc;
++       }
++
++
++       pru->debug_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_DEBUG].va,
++                                                 &pru_debug_regmap_config);
++       if (IS_ERR(pru->debug_regmap)) {
++               ret = PTR_ERR(pru->debug_regmap);
++               dev_err(dev, "DEBUG regmap init failed: %d\n", ret);
++               goto free_rproc;
+        }
+
+
+Did I do something wrong or we just need to enhance regmap_debugfs.c?
+
+cheers,
+-roger
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
