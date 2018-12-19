@@ -1,64 +1,68 @@
-From: "Michael S. Tsirkin" <mst@redhat.com>
-Subject: Re: [PATCH v6 0/7] Add virtio-iommu driver
-Date: Wed, 19 Dec 2018 18:09:59 -0500
-Message-ID: <20181219180417-mutt-send-email-mst@kernel.org>
-References: <20181211182104.18241-1-jean-philippe.brucker@arm.com>
- <20181212103545.GV16835@8bytes.org>
- <9110873f-d344-b6b9-c722-9accfc329db2@arm.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
+Date: Wed, 19 Dec 2018 15:31:56 -0800
+Message-ID: <7himzpt7o3.fsf@baylibre.com>
+References: <20181219002620.12138-1-khilman@baylibre.com>
+ <20181219002620.12138-2-khilman@baylibre.com>
+ <877eg51olo.fsf@dell.be.48ers.dk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <virtio-dev-return-5202-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-Content-Disposition: inline
-In-Reply-To: <9110873f-d344-b6b9-c722-9accfc329db2@arm.com>
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: Joerg Roedel <joro@8bytes.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, "jasowang@redhat.com" <jasowang@redhat.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, "eric.auger@redhat.com" <eric.auger@redhat.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "kevin.tian@intel.com" <kevin.tian@intel.com>, Marc Zyngier <Marc.Zyngier@arm.com>, Robin Murphy <Robin.Murph>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <877eg51olo.fsf@dell.be.48ers.dk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Peter Korsgaard <peter@korsgaard.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 12:50:29PM +0000, Jean-Philippe Brucker wrote:
-> >> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.1
-> >>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9
-> > 
-> > Unfortunatly gitweb seems to be broken on linux-arm.org. What is missing
-> > in this patch-set to make this work on x86?
-> 
-> You should be able to access it here:
-> http://www.linux-arm.org/git?p=linux-jpb.git;a=shortlog;h=refs/heads/virtio-iommu/devel
-> 
-> That branch contains missing bits for x86 support:
-> 
-> * ACPI support. We have the code but it's waiting for an IORT spec
-> update, to reserve the IORT node ID. I expect it to take a while, given
-> that I'm alone requesting a change for something that's not upstream or
-> in hardware.
+Peter Korsgaard <peter@korsgaard.com> writes:
 
-Frankly I think you should take a hard look at just getting the data
-needed from the PCI device itself.  You don't need to depend on virtio,
-it can be a small driver that gets you that data from the device config
-space and then just goes away.
+>>>>>> "Kevin" == Kevin Hilman <khilman@baylibre.com> writes:
+>
+>  > Add the G12a (S905X2) based X96 Max board[1].
+>  > There is no branding for the manufacturer anywhere on the product, so it
+>  > took some digging to find the manufacturer.  But since there's nothing
+>  > about the maker on the product I've left it out of the DT name because
+>  > 1) nobody will no that name and 2) keeps the DT filename shorter.
+>
+> s/no/know/
 
-If you want help with writing such a small driver let me know.
+Thanks.
 
-If there's an advantage to virtio-iommu then that would be its
-portability, and it all goes out of the window because
-of dependencies on ACPI and DT and OF and the rest of the zoo.
+>  > [1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
+>
+>  > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+>  > Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+>  > ---
+>  > Special thanks to Martin Blumenstingl for extra digging for the manufacturer
+>
+>  >  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
+>  >  1 file changed, 28 insertions(+)
+>  >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>
+>  > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>  > b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>  > new file mode 100644
+>  > index 000000000000..fe94765b671e
+>  > --- /dev/null
+>  > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+>  > @@ -0,0 +1,28 @@
+>  > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+>  > +/*
+>  > + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+>
+> Amlogic? Shouldn't that be Baylibre?
 
+Yes.
 
-> * DMA ops for x86 (see "HACK" commit). I'd like to use dma-iommu but I'm
-> not sure how to implement the glue that sets dma_ops properly.
-> 
-> Thanks,
-> Jean
+Thanks for the review,
 
-OK so IIUC you are looking into Christoph's suggestions to fix that up?
-
-There's still a bit of time left before the merge window,
-maybe you can make above changes.
-
--- 
-MST
+Kevin
