@@ -1,128 +1,68 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v6 0/7] spi: add support for octal mode
-Date: Wed, 19 Dec 2018 18:13:42 +0530
-Message-ID: <10b25865-b93d-382a-aa4d-b21fbd9c3ba9@ti.com>
-References: <1545214186-16987-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: lvds-transmitter: add
+ pwdn-gpios
+Date: Wed, 19 Dec 2018 12:54:12 +0000
+Message-ID: <4d5ca987-fdf4-6ebb-281f-29a8f3277329@axentia.se>
+References: <20181218231850.3572-1-peda@axentia.se>
+ <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com>
+ <7c2f1268-43a3-1dc2-bb2d-6da9d74a5a43@axentia.se> <2541072.bfOLpEHFeN@avalon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545214186-16987-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+In-Reply-To: <2541072.bfOLpEHFeN@avalon>
 Content-Language: en-US
+Content-ID: <A32DE31E6DE542498F0068ED39894A15@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 19/12/18 3:41 PM, Yogesh Narayan Gaur wrote:
-> Add support for octal mode IO data transfer.
-> Micron flash, mt35xu512aba, supports octal mode data transfer and
-> NXP FlexSPI controller supports 8 data lines for data transfer (Rx/Tx).
-> 
-> Patch series
-> * Add support for octal mode flags and parsing of same in spi driver.
-> * Add parsing logic for spi-mem framework and m25p80.c device file.
-> * Add opcodes for octal I/O commands in spi-nor framework, Read and Write proto for (1-1-8/1-8-8) mode.
->   Opcodes are added as per octal data IO commands required for mt35xu512aba [1] flash.
-> * Add mode bit required for octal mode in nxp-fspi driver [2].
-> * Define binding property 'spi-rx/tx-bus-width' for LX2160ARDB target [2].
-> 
-> Tested on LX2160ARDB target with nxp-fspi driver, below are
-> Read performance number of 1-1-1 and 1-1-8 read protocol.
-> 
->  root@lxxx:~# cat /proc/mtd
->  dev:    size   erasesize  name
->  mtd0: 04000000 00001000 "spi0.0"
->  mtd1: 04000000 00001000 "spi0.1"
->  root@lxxx:~# time mtd_debug read /dev/mtd0 0x0 0x1000000 0read
->  Copied 16777216 bytes from address 0x00000000 in flash to 0read
-> 
->  real    0m2.792s
->  user    0m0.000s
->  sys     0m2.790s
->  root@lxxx:~# time mtd_debug read /dev/mtd1 0x0 0x1000000 0read
->  Copied 16777216 bytes from address 0x00000000 in flash to 0read
-> 
->  real    0m0.441s
->  user    0m0.000s
->  sys     0m0.440s
->  root@ls1012ardb:~#
-> 
-> 
->  Flash device MTD0 configured in 1-1-1 protocol.
->  Flash device MTD1 configured in 1-1-8 protocol.
-> 
-> [1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=70384&state=*
-> [2] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=76402
-> 
-> Yogesh Gaur (7):
->   spi: add support for octal mode I/O data transfer
->   spi: spi-mem: add support for octal mode I/O data transfer
-
-
-These two patches are already merged and is now part of linux-next[1].
-Its preferred to send patches based on top of latest linux-next so as to
-avoid resending patches that have already been picked up by the maintainer.
-
-[1]
-commit 6b03061f882de49b83ccf44beb3a12c920a2da1b
-Author: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Date:   Mon Dec 3 08:39:06 2018 +0000
-
-    spi: add support for octal mode I/O data transfer
-
-commit b12a084c8729ef423089bb9a5a143eed39cd94e7
-Author: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Date:   Mon Dec 3 08:39:12 2018 +0000
-
-    spi: spi-mem: add support for octal mode I/O data transfer
-
-
-Regards
-Vignesh
-
->   mtd: spi-nor: add opcodes for octal Read/Write commands
->   mtd: spi-nor: add octal read flag for flash mt35xu512aba
->   mtd: m25p80: add support of octal mode I/O transfer
->   spi: nxp-fspi: add octal mode flag bit for octal support
->   arm64: dts: lx2160a: update fspi node
-> 
-> Changes for v6:
-> - Correct S-o-b tag with full author name as 'Yogesh Narayan Gaur'.
-> - Rebase on top of v4.20-rc5.
-> Changes for v5:
-> - Modified string 'octo' as 'octal' in all patches.
-> Changes for v4:
-> - Rebase on top of v4.20-rc2.
-> - Modify octo entries enum value in spi.h.
-> Changes for v3:
-> - Add octo mode support in spi_setup().
-> - Rename all patches with 'octal' string modified as 'octo'.
-> Changes for v2:
-> - Incorporated review comments of Boris and Vignesh.
-> 
-> Yogesh Gaur (7):
->   spi: add support for octal mode I/O data transfer
->   spi: spi-mem: add support for octal mode I/O data transfer
->   mtd: spi-nor: add opcodes for octal Read/Write commands
->   mtd: spi-nor: add octal read flag for flash mt35xu512aba
->   mtd: m25p80: add support of octal mode I/O transfer
->   spi: nxp-fspi: add octal mode flag bit for octal support
->   arm64: dts: lx2160a: update fspi node
-> 
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
->  drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
->  drivers/mtd/spi-nor/spi-nor.c                     | 19 ++++++++++++++++---
->  drivers/spi/spi-mem.c                             |  9 ++++++++-
->  drivers/spi/spi-nxp-fspi.c                        |  4 ++--
->  drivers/spi/spi.c                                 | 12 ++++++++++--
->  include/linux/mtd/spi-nor.h                       | 16 ++++++++++++----
->  include/linux/spi/spi.h                           |  4 +++-
->  8 files changed, 63 insertions(+), 14 deletions(-)
-> 
-
--- 
-Regards
-Vignesh
+T24gMjAxOC0xMi0xOSAxMjozOCwgTGF1cmVudCBQaW5jaGFydCB3cm90ZToNCj4gSGVsbG8sDQo+
+IA0KPiBPbiBXZWRuZXNkYXksIDE5IERlY2VtYmVyIDIwMTggMTE6NTc6MzIgRUVUIFBldGVyIFJv
+c2luIHdyb3RlOg0KPj4gT24gMjAxOC0xMi0xOSAxMDoxMiwgQW5kcnplaiBIYWpkYSB3cm90ZToN
+Cj4+PiBPbiAxOS4xMi4yMDE4IDAwOjE5LCBQZXRlciBSb3NpbiB3cm90ZToNCj4+Pj4gQWRkIG9w
+dGlvbmFsIHByb3BlcnR5IHRvIHNwZWNpZnkgYSBwb3dlci1kb3duIEdQSU8uDQo+Pj4+IFRoZSBw
+d2RuLWdwaW9zIG5hbWUgaXMgYWxyZWFkeSBpbiB1c2UgYnkgdGhlIHRoaW5lLHRoYzYzbHZkbTgz
+ZA0KPj4+PiBiaW5kaW5nLCBzbyBnbyB3aXRoIHRoYXQuDQo+Pj4+DQo+Pj4+IFNpZ25lZC1vZmYt
+Ynk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+DQo+Pj4+IC0tLQ0KPj4+Pg0KPj4+PiAg
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJh
+bnNtaXR0ZXIudHh0IHwNCj4+Pj4gIDMgKysrIA0KPj4+PiAgMSBmaWxlIGNoYW5nZWQsIDMgaW5z
+ZXJ0aW9ucygrKQ0KPj4+Pg0KPj4+PiBkaWZmIC0tZ2l0DQo+Pj4+IGEvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0DQo+
+Pj4+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2
+ZHMtdHJhbnNtaXR0ZXIudHh0DQo+Pj4+IGluZGV4IGY5ZTdkZDY2NmY1OC4uNDc5NDFkMzlmOTJm
+IDEwMDY0NA0KPj4+PiAtLS0NCj4+Pj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQNCj4+Pj4gKysrDQo+Pj4+IGIv
+RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJh
+bnNtaXR0ZXIudHh0DQo+Pj4+IEBAIC0zMSw2ICszMSw5IEBAIFJlcXVpcmVkIHByb3BlcnRpZXM6
+DQo+Pj4+ICAgIGRldmljZS1zcGVjaWZpYyB2ZXJzaW9uIGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRl
+dmljZSBmaXJzdA0KPj4+PiAgICBmb2xsb3dlZCBieSB0aGUgZ2VuZXJpYyB2ZXJzaW9uLg0KPj4+
+Pg0KPj4+PiArT3B0aW9uYWwgcHJvcGVydGllczoNCj4+Pj4gKy0gcHdkbi1ncGlvczogUG93ZXIt
+ZG93biBjb250cm9sIEdQSU8NCj4+Pj4gKw0KPj4+DQo+Pj4gU2luY2UgbmFtaW5nIGlzIG5vdCBl
+bmZvcmNlZCBieSBhbnkgZGF0YXNoZWV0IEkgd291bGQgcHJvcG9zZSBzb21ldGhpbmcNCj4+PiBt
+b3JlIHBvcHVsYXIgd2l0aCBsZXNzIHR3aXN0ZWQgbG9naWMuIE1heWJlOg0KPj4+DQo+Pj4gLSBl
+bmFibGUtZ3Bpb3M6IC4uLiAoYWN0aXZlIGhpZ2gpLg0KPj4NCj4+IFRoYXQgd2FzIG15IG9yaWdp
+bmFsIHRob3VnaHQgdG9vLCBidXQgdGhlIGRyaXZlciBpbXBsZW1lbnRpbmcgdGhlDQo+PiBsdmRz
+LWVuY29kZXIgYmluZGluZ3MgYWxzbyBoYW5kbGVzIHRoZSBtZW50aW9uZWQgdGhpbmUsdGhjNjNs
+dmRtODNkDQo+PiBsdmRzIGVuY29kZXIsIGFuZCB0aGF0IGJpbmRpbmcgaGFzIHRoZSAicHdkbiIg
+bmFtaW5nLiBTbywgZm9yIGRyaXZlcg0KPj4gaW1wbGVtZW50YXRpb24gc2ltcGxpY2l0eSBJIHdl
+bnQgd2l0aCB3aGF0IHdhcyBhbHJlYWR5IHRoZXJlLCB0aHVzDQo+PiBhbGxvd2luZyBhZGRpbmcg
+c3VwcG9ydCBmb3IgYm90aCBiaW5kaW5ncyB3aXRoIG9uZSBpbXBsZW1lbnRhdGlvbg0KPj4gKGlu
+IHBhdGNoIDMvMykuDQo+Pg0KPj4gQWRkaW5nIGNvZGUganVzdCB0byBoYW5kbGUgbXVsdGlwbGUg
+bmFtZXMgZm9yIHRoZSBzYW1lIHRoaW5nIGRvZXMNCj4+IG5vdCBzb3VuZHMgdG9vIGFwcGVhbGlu
+Zy4NCj4gDQo+IEknbSBhZnJhaWQgSSB0aGluayB3ZSBzaG91bGRuJ3QgYWRkIHB3ZG4tZ3Bpb3Mg
+c3VwcG9ydCB0byB0aGUgbHZkcyBlbmNvZGVyIERUIA0KPiBiaW5kaW5ncy4gVGhlIHJlYXNvbiBp
+cyB0aGF0IGNvbnRyb2wgR1BJT3MgKGFuZCByZWd1bGF0b3JzKSBjb21lIHdpdGggZGV2aWNlLQ0K
+PiBzcGVjaWZpYyBzZW1hbnRpY3MuIElmIHdlIGFkZCBwd2RuLWdwaW9zIG5vdywgd2UnbGwgdGhl
+biBhZGQgcmVzZXQtZ3Bpb3MsIGFuZCANCj4gcG93ZXIgc3VwcGxpZXMsIGFuZCBhbGwgb2YgYSBz
+dWRkZW4gd2UnbGwgZW5kIHVwIGhhdmluZyB0byBlbmNvZGUgc2VxdWVuY2luZyANCj4gb2YgR1BJ
+T3MgYW5kIHBvd2VyIHN1cHBsaWVzIGluIERULiBUaGF0IHBhdGggaGFzIGJlZW4gdHJpZWQgaW4g
+dGhlIHBhc3QsIHdpdGggDQo+IG5vIGdvb2QgcmVzdWx0cy4NCj4gDQo+IEkgd291bGQgaW5zdGVh
+ZCBjcmVhdGUgZGV2aWNlLXNwZWNpZmljIGJpbmRpbmdzLCBsaWtlIGRvbmUgZm9yIA0KPiB0aGlu
+ZSx0aGM2M2x2ZG04M2QuIEl0J3MgZmluZSB0byB0aGVuIGFkZCBzdXBwb3J0IGZvciB0aGUgcHdk
+bi1ncGlvcyBwcm9wZXJ0eSANCj4gaW4gdGhlIGx2ZHMtZW5jb2RlciBkcml2ZXIsIGFzIGxvbmcg
+YXMgdGhlIG1lYW5pbmcgb2YgdGhlIHByb3BlcnR5IGNvbWVzIGZyb20gDQo+IHNwZWNpZmljIERU
+IGJpbmRpbmdzLCBub3QgZnJvbSB0aGUgZ2VuZXJpYyBvbmVzLg0KDQpSaWdodCwgSSdsbCBmb3Jr
+IG91dCB0aGUgYmluZGluZ3MgZm9yIHRoZSB0ZXhhcyBjaGlwcy4gdjIgY29taW5nIHVwLg0KDQpD
+aGVlcnMsDQpQZXRlcg0K
