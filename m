@@ -1,11 +1,13 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 0/5] ARM: dts: da850-evm/lcdk: Fixes for audio descriptions
-Date: Wed, 19 Dec 2018 13:47:22 +0200
-Message-ID: <20181219114727.6865-1-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 4/5] ARM: dts: da850-lcdk: Correct the sound card name
+Date: Wed, 19 Dec 2018 13:47:26 +0200
+Message-ID: <20181219114727.6865-5-peter.ujfalusi@ti.com>
+References: <20181219114727.6865-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181219114727.6865-1-peter.ujfalusi@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,29 +21,30 @@ To: nsekhar@ti.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+To avoid  the following error:
+asoc-simple-card sound: ASoC: Failed to create card debugfs directory
 
-Changes since v1s (regulator fixes):
-- Card name fixes
-- analog mic support for da850-lcdk
+Which is because the card name contains '/' character, which can not be
+used in file or directory names.
 
-The series fixes warnings regarding to regulator voltages and debugfs directory
-creation.
-
-Regards,
-Peter
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
-Peter Ujfalusi (5):
-  ARM: dts: da850-evm: Correct the audio codec regulators
-  ARM: dts: da850-evm: Correct the sound card name
-  ARM: dts: da850-lcdk: Correct the audio codec regulators
-  ARM: dts: da850-lcdk: Correct the sound card name
-  ARM: dts: da850-lcdk: Enable the analog mic input
+ arch/arm/boot/dts/da850-lcdk.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
- arch/arm/boot/dts/da850-evm.dts  | 31 +++++++++++++++++----
- arch/arm/boot/dts/da850-lcdk.dts | 48 ++++++++++++++++++++++++++++++--
- 2 files changed, 71 insertions(+), 8 deletions(-)
-
+diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
+index c196e37606c4..3a2fa6e035a3 100644
+--- a/arch/arm/boot/dts/da850-lcdk.dts
++++ b/arch/arm/boot/dts/da850-lcdk.dts
+@@ -71,7 +71,7 @@
+ 
+ 	sound {
+ 		compatible = "simple-audio-card";
+-		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
++		simple-audio-card,name = "DA850-OMAPL138 LCDK";
+ 		simple-audio-card,widgets =
+ 			"Line", "Line In",
+ 			"Line", "Line Out";
 -- 
 Peter
 
