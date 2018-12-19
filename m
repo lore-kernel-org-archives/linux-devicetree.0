@@ -1,215 +1,78 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 2/3] ARM: dts: sun8i: add FriendlyARM NanoPi Duo2
-Date: Wed, 19 Dec 2018 08:08:17 +0100
-Message-ID: <20181219070817.crt4xi2itaigrioy@flea>
-References: <20181218212457.30382-1-karlp@tweak.net.au>
- <20181218212457.30382-2-karlp@tweak.net.au>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V3] dt-bindings: timer: gpt: update binding doc
+Date: Wed, 19 Dec 2018 07:09:10 +0000
+Message-ID: <1545203073-10659-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181218212457.30382-2-karlp@tweak.net.au>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Karl Palsson <karlp@tweak.net.au>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, wens@csie.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+The i.MX GPT timer driver binding doc is out of date,
+update it according to current GPT timer driver.
 
-On Tue, Dec 18, 2018 at 09:24:56PM +0000, Karl Palsson wrote:
-> This is an Allwinner H3 based board, with 512MB ram, a USB OTG port,
-> microsd slot, an onboard AP6212A wifi/bluetooth module, and a CSI
-> connector.
-> 
-> Full details and schematic available from vendor:
-> http://wiki.friendlyarm.com/wiki/index.php/NanoPi_Duo2
-> 
-> Signed-off-by: Karl Palsson <karlp@tweak.net.au>
-> ---
->  arch/arm/boot/dts/Makefile                 |   1 +
->  arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts | 148 +++++++++++++++++++++++++++++
->  2 files changed, 149 insertions(+)
->  create mode 100644 arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts
-> 
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 78551c4375d5..7f296bfea94a 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -1063,6 +1063,7 @@ dtb-$(CONFIG_MACH_SUN8I) += \
->  	sun8i-h3-beelink-x2.dtb \
->  	sun8i-h3-libretech-all-h3-cc.dtb \
->  	sun8i-h3-mapleboard-mp130.dtb \
-> +	sun8i-h3-nanopi-duo2.dtb \
->  	sun8i-h3-nanopi-m1.dtb	\
->  	sun8i-h3-nanopi-m1-plus.dtb \
->  	sun8i-h3-nanopi-neo.dtb \
-> diff --git a/arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts b/arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts
-> new file mode 100644
-> index 000000000000..07d2f1bebd56
-> --- /dev/null
-> +++ b/arch/arm/boot/dts/sun8i-h3-nanopi-duo2.dts
-> @@ -0,0 +1,148 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (C) 2018 Karl Palsson <karlp@tweak.net.au>
-> + */
-> +
-> +/dts-v1/;
-> +#include "sun8i-h3.dtsi"
-> +#include "sunxi-common-regulators.dtsi"
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include <dt-bindings/input/input.h>
-> +
-> +/ {
-> +	model = "FriendlyARM NanoPi Duo2";
-> +	compatible = "friendlyarm,nanopi-duo2", "allwinner,sun8i-h3";
-> +
-> +	aliases {
-> +		serial0 = &uart0;
-> +	};
-> +
-> +	chosen {
-> +		stdout-path = "serial0:115200n8";
-> +	};
-> +
-> +	leds {
-> +		compatible = "gpio-leds";
-> +
-> +		status {
-> +			label = "nanopi:green:status";
-> +			gpios = <&pio 0 10 GPIO_ACTIVE_HIGH>;
-> +			linux,default-trigger = "heartbeat";
-> +		};
-> +
-> +		pwr {
-> +			label = "nanopi:red:pwr";
-> +			gpios = <&r_pio 0 10 GPIO_ACTIVE_HIGH>;
-> +			default-state = "on";
-> +		};
-> +	};
-> +
-> +	r_gpio_keys {
-> +		compatible = "gpio-keys";
-> +		pinctrl-names = "default";
-> +		pinctrl-0 = <&sw_r_npi>;
-> +
-> +		k1 {
-> +			label = "k1";
-> +			linux,code = <BTN_0>;
-> +			gpios = <&r_pio 0 3 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +
-> +	reg_vdd_cpux: vdd-cpux-regulator {
-> +		compatible = "regulator-gpio";
-> +		regulator-name = "vdd-cpux";
-> +		regulator-boot-on;
-> +		regulator-always-on;
-> +		regulator-min-microvolt = <1100000>;
-> +		regulator-max-microvolt = <1300000>;
-> +		regulator-ramp-delay = <50>; /* 4ms */
-> +
-> +		gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-> +		enable-active-high;
-> +		gpios-states = <0x1>;
-> +		states = <1100000 0x0
-> +			  1300000 0x1>;
-> +	};
-> +
-> +	wifi_pwrseq: wifi_pwrseq {
-> +		compatible = "mmc-pwrseq-simple";
-> +		reset-gpios = <&r_pio 0 7 GPIO_ACTIVE_LOW>; /* PL7 */
-> +	};
-> +
-> +};
-> +
-> +&cpu0 {
-> +	cpu-supply = <&reg_vdd_cpux>;
-> +};
-> +
-> +&usb_otg {
-> +	status = "okay";
-> +	dr_mode = "otg";
-> +};
-> +
-> +&ehci0 {
-> +	status = "okay";
-> +};
-> +
-> +&ohci0 {
-> +	status = "okay";
-> +};
-> +
-> +&reg_usb0_vbus {
-> +	gpio = <&r_pio 0 2 GPIO_ACTIVE_HIGH>; /* PL2 */
-> +	status = "okay";
-> +};
-> +
-> +&r_pio {
-> +	sw_r_npi: key_pins {
-> +		pins = "PL3";
-> +		function = "gpio_in";
-> +	};
-> +};
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/timer/fsl,imxgpt.txt       | 35 ++++++++++++++++++=
+----
+ 1 file changed, 29 insertions(+), 6 deletions(-)
 
-This node isn't needed you can just remove it
-
-> +&usbphy {
-> +	usb0_id_det-gpios = <&pio 6 12 GPIO_ACTIVE_HIGH>; /* PG12 */
-> +	usb0_vbus-supply = <&reg_usb0_vbus>;
-> +	status = "okay";
-> +};
-> +
-> +&mmc0 {
-> +	bus-width = <4>;
-> +	cd-gpios = <&pio 5 6 GPIO_ACTIVE_LOW>;
-> +	status = "okay";
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +};
-> +
-> +&mmc1 {
-> +	vmmc-supply = <&reg_vcc3v3>;
-> +	vqmmc-supply = <&reg_vcc3v3>;
-> +	mmc-pwrseq = <&wifi_pwrseq>;
-> +	bus-width = <4>;
-> +	non-removable;
-> +	status = "okay";
-> +
-> +	sdio_wifi: sdio_wifi@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +		interrupt-parent = <&pio>;
-> +		interrupts = <6 10 IRQ_TYPE_LEVEL_LOW>; /* PG10 / EINT10 */
-> +		interrupt-names = "host-wake";
-> +	};
-> +};
-> +
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_pins_a>;
-> +	status = "okay";
-> +};
-> +
-> +&uart2 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart2_pins>, <&uart2_rts_cts_pins>;
-> +	uart-has-rtscts;
-> +	status = "okay";
-> +
-> +	/* bluetooth goes here */
-
-The patches for the bluetooth support using serdev by Chen-Yu just got
-in:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2018-December/621207.html
-
-Ideally, you should put a dt node for the bluetooth part here.
-
-Thanks!
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+diff --git a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt b/Docum=
+entation/devicetree/bindings/timer/fsl,imxgpt.txt
+index 9809b11..a7f23a6 100644
+--- a/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
++++ b/Documentation/devicetree/bindings/timer/fsl,imxgpt.txt
+@@ -2,17 +2,40 @@ Freescale i.MX General Purpose Timer (GPT)
+=20
+ Required properties:
+=20
+-- compatible : should be "fsl,<soc>-gpt"
+-- reg : Specifies base physical address and size of the registers.
+-- interrupts : A list of 4 interrupts; one per timer channel.
+-- clocks : The clocks provided by the SoC to drive the timer.
++- compatible : should be one of following:
++
++  should be "fsl,imx1-gpt" for i.MX1;
++
++  should be one of following for i.MX21/i.MX27:
++  - "fsl,imx21-gpt",
++  - "fsl,imx27-gpt",
++
++  should be one of following for i.MX31/i.MX25/i.MX50/i.MX51/i.MX53/i.MX6Q=
+:
++  - "fsl,imx31-gpt",
++  - "fsl,imx25-gpt",
++  - "fsl,imx50-gpt",
++  - "fsl,imx51-gpt",
++  - "fsl,imx53-gpt",
++  - "fsl,imx6q-gpt",
++
++  should be one of following for i.MX6DL/i.MX6SL/i.MX6SX:
++  - "fsl,imx6dl-gpt",
++  - "fsl,imx6sl-gpt",
++  - "fsl,imx6sx-gpt".
++
++- reg : specifies base physical address and size of the registers.
++- interrupts : should be the gpt interrupt.
++- clocks : the clocks provided by the SoC to drive the timer, must contain
++           an entry for each entry in clock-names.
++- clock-names : must include "ipg" entry first, then "per" entry.
+=20
+ Example:
+=20
+ gpt1: timer@10003000 {
+-	compatible =3D "fsl,imx27-gpt", "fsl,imx1-gpt";
++	compatible =3D "fsl,imx27-gpt", "fsl,imx21-gpt";
+ 	reg =3D <0x10003000 0x1000>;
+ 	interrupts =3D <26>;
+-	clocks =3D <&clks 46>, <&clks 61>;
++	clocks =3D <&clks IMX27_CLK_GPT1_IPG_GATE>,
++		 <&clks IMX27_CLK_PER1_GATE>;
+ 	clock-names =3D "ipg", "per";
+ };
+--=20
+2.7.4
