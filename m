@@ -1,27 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/5] media: dt-bindings: si470x: Document new reset-gpios
- property
-Date: Wed, 19 Dec 2018 14:37:56 -0600
-Message-ID: <20181219203756.GA29877@bogus>
-References: <20181205154750.17996-1-pawel.mikolaj.chmiel@gmail.com>
- <20181205154750.17996-6-pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: PCI: Add support for MT7629
+Date: Wed, 19 Dec 2018 14:38:50 -0600
+Message-ID: <20181219203850.GA31173@bogus>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+ <1544058553-10936-2-git-send-email-jianjun.wang@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181205154750.17996-6-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <1544058553-10936-2-git-send-email-jianjun.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hverkuil@xs4all.nl, fischerdouglasc@gmail.com, keescook@chromium.org, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: ryder.lee@mediatek.com, bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com, Jianjun Wang <jianjun.wang@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  5 Dec 2018 16:47:50 +0100, =?UTF-8?q?Pawe=C5=82=20Chmiel?= wrote:
-> Add information about new reset-gpios property to driver documentation
+On Thu, 6 Dec 2018 09:09:12 +0800, Jianjun Wang wrote:
+> MT7629 is an arm platform Soc which has the same PCIe IP with MT7622.
 > 
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> Signed-off-by: Jianjun Wang <jianjun.wang@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/media/si470x.txt | 2 ++
->  1 file changed, 2 insertions(+)
+>  Documentation/devicetree/bindings/pci/mediatek-pcie.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
