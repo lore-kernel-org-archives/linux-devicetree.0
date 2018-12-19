@@ -1,52 +1,204 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: RE: [PATCH v5 3/7] mtd: spi-nor: add opcodes for octal Read/Write
- commands
-Date: Wed, 19 Dec 2018 10:15:00 +0000
-Message-ID: <VI1PR04MB5726FBFD2CBEB7A3F0454A5999BE0@VI1PR04MB5726.eurprd04.prod.outlook.com>
-References: <1543826226-30898-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1543826226-30898-4-git-send-email-yogeshnarayan.gaur@nxp.com>
- <ac569071-3c69-ebc8-2c18-ea1399210549@microchip.com>
- <VI1PR04MB57264CBB25E2984DF221ED2E99A60@VI1PR04MB5726.eurprd04.prod.outlook.com>
- <141c6d79-ae7a-60aa-865a-f6b6997f8da9@microchip.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V4 2/4] rtc: add i.MX system controller RTC support
+Date: Wed, 19 Dec 2018 10:12:12 +0000
+Message-ID: <AM0PR04MB4211498611A15A70D41A492E80BE0__31377.9510361657$1545214382$gmane$org@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
+ <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <141c6d79-ae7a-60aa-865a-f6b6997f8da9@microchip.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anson Huang <anson.huang@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, linux-rtc@vger.kernel.o
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgVHVkb3IsDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogVHVkb3Iu
-QW1iYXJ1c0BtaWNyb2NoaXAuY29tIFttYWlsdG86VHVkb3IuQW1iYXJ1c0BtaWNyb2NoaXAuY29t
-XQ0KPiBTZW50OiBUdWVzZGF5LCBEZWNlbWJlciAxMSwgMjAxOCAxOjQwIFBNDQo+IFRvOiBZb2dl
-c2ggTmFyYXlhbiBHYXVyIDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT47IGxpbnV4LQ0KPiBt
-dGRAbGlzdHMuaW5mcmFkZWFkLm9yZzsgYm9yaXMuYnJlemlsbG9uQGJvb3RsaW4uY29tOyBicm9v
-bmllQGtlcm5lbC5vcmc7DQo+IG1hcmVrLnZhc3V0QGdtYWlsLmNvbTsgdmlnbmVzaHJAdGkuY29t
-OyBsaW51eC1zcGlAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9y
-Zw0KPiBDYzogcm9iaEBrZXJuZWwub3JnOyBtYXJrLnJ1dGxhbmRAYXJtLmNvbTsgc2hhd25ndW9A
-a2VybmVsLm9yZzsgbGludXgtDQo+IGFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgY29t
-cHV0ZXJzZm9ycGVhY2VAZ21haWwuY29tOw0KPiBmcmllZGVyLnNjaHJlbXBmQGV4Y2VldC5kZTsg
-bGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIHY1IDMv
-N10gbXRkOiBzcGktbm9yOiBhZGQgb3Bjb2RlcyBmb3Igb2N0YWwgUmVhZC9Xcml0ZQ0KPiBjb21t
-YW5kcw0KPiANCj4gSGksDQo+IA0KPiBPbiAxMi8xMS8yMDE4IDA2OjU1IEFNLCBZb2dlc2ggTmFy
-YXlhbiBHYXVyIHdyb3RlOg0KPiA+IFRodXMgd291bGQgZ29pbmcgdG8gbW9kaWZ5IHRoZSBjb25k
-aXRpb24gY2hlY2sgYXMgYmVsb3csIHNvIHRoYXQgU0ZEUA0KPiBwYXJzaW5nIHdvdWxkIGFsc28g
-YmUgcGVyZm9ybWVkIHdoZW4gU1BJX05PUl9PQ1RBTF9SRUFEIGlzIHNldC4gQ29ycmVjdD8NCj4g
-Pg0KPiA+ICAgICAgICAgaWYgKChpbmZvLT5mbGFncyAmIChTUElfTk9SX0RVQUxfUkVBRCB8IFNQ
-SV9OT1JfUVVBRF9SRUFEIHwNCj4gPiAgICAgICAgICAgICAgU1BJX05PUl9PQ1RBTF9SRUFEKSkg
-JiYgIShpbmZvLT5mbGFncyAmDQo+ID4gU1BJX05PUl9TS0lQX1NGRFApKSB7DQo+IA0KPiBZZXMs
-IHRoaXMgaXMgd2hhdCBJIHdhcyBzdWdnZXN0aW5nLiBPbiBhIHNlY29uZCB0aG91Z2h0LCB3ZSBo
-YXZlbid0IGFkZGVkIHlldA0KPiBzdXBwb3J0IGZvciBwYXJzaW5nIHNmZHAgdG8gZ2V0IHRoZSBv
-Y3RhbCBtb2RlIGluZm8sIHNvIHRoZSBwYXJzaW5nIHdpbGwgYmUgZG9uZQ0KPiBncmF0dWl0b3Vz
-bHkuIExldCdzIGRyb3AgdGhpcyBjaGFuZ2UgYW5kIGFkZCBpdCB3aGVuIGFkZGluZyBzdXBwb3J0
-IGZvciBwYXJzaW5nDQo+IG9jdGFsIG1vZGUgaW5mbyBmcm9tIHNmZHAuIEknbGwgcHJlcGFyZSBh
-IHBhdGNoIGZvciB0aGlzLg0KPiANCj4gUGxlYXNlIHJlYmFzZSBvbiB0b3Agb2Ygc3BpLW5vci9u
-ZXh0LCBzL29jdG8vb2N0YWwgaW4gc3BpLW5vci5oIGFuZCBjb3JyZWN0IHlvdXINCj4gUy1vLWIg
-dGFnIGFuZCB5b3UnbGwgaGF2ZSBteSBSLWIgdGFnLg0KPiANCk5leHQgdmVyc2lvbiwgdjYsIHNl
-bnQgZm9yIHJldmlld1sxXS4NClNvcnJ5IGZvciBsYXRlIHJlcGx5LCB3YXMgb24gbGVhdmUuDQoN
-Ci0tDQpSZWdhcmRzDQpZb2dlc2ggR2F1cg0KDQpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsub3psYWJz
-Lm9yZy9wcm9qZWN0L2xpbnV4LW10ZC9saXN0Lz9zZXJpZXM9ODI4MTUNCg0KPiBUaGFua3MgWW9n
-ZXNoLA0KPiB0YQ0K
+> -----Original Message-----
+> From: Anson Huang
+> Sent: Thursday, November 29, 2018 9:50 AM
+[...]
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller inside,
+> the system controller is in charge of controlling power, clock and secure rtc
+> etc..
+> 
+> This patch adds i.MX system controller RTC driver support, Linux kernel has to
+> communicate with system controller via MU (message unit) IPC to set/get RTC
+> time and other alarm functions, since the RTC set time needs to be done in
+> secure EL3 mode (required by system controller firmware) and alarm functions
+> needs to be done with general MU IRQ handle, these depend on other
+> components which are NOT ready, so this patch ONLY enables the RTC time
+> read.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> ChangeLog:
+> V3->V4:
+>   *remove unnecessary headfile included;
+>   *fix potential memory currpution for the message responce;
+>   *update the compatible string name to start with "fsl" instead of "nxp".
+>  drivers/rtc/Kconfig      |  6 +++
+>  drivers/rtc/Makefile     |  1 +
+>  drivers/rtc/rtc-imx-sc.c | 98
+> ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 105 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-imx-sc.c
+> 
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig index a819ef0..3b9642e
+> 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1677,6 +1677,12 @@ config RTC_DRV_SNVS
+>  	   This driver can also be built as a module, if so, the module
+>  	   will be called "rtc-snvs".
+> 
+> +config RTC_DRV_IMX_SC
+> +	tristate "NXP i.MX System Controller RTC support"
+
+This should depend on IMX_SCU
+
+> +	help
+> +	   If you say yes here you get support for the NXP i.MX System
+> +	   Controller RTC module.
+> +
+>  config RTC_DRV_SIRFSOC
+>  	tristate "SiRFSOC RTC"
+>  	depends on ARCH_SIRF
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile index 290c173..f97c05e
+> 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_RTC_DRV_GOLDFISH)	+= rtc-goldfish.o
+>  obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) += rtc-hid-sensor-time.o
+>  obj-$(CONFIG_RTC_DRV_HYM8563)	+= rtc-hym8563.o
+>  obj-$(CONFIG_RTC_DRV_IMXDI)	+= rtc-imxdi.o
+> +obj-$(CONFIG_RTC_DRV_IMX_SC)	+= rtc-imx-sc.o
+>  obj-$(CONFIG_RTC_DRV_ISL12022)	+= rtc-isl12022.o
+>  obj-$(CONFIG_RTC_DRV_ISL12026)	+= rtc-isl12026.o
+>  obj-$(CONFIG_RTC_DRV_ISL1208)	+= rtc-isl1208.o
+> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c new file mode
+> 100644 index 0000000..5976a2e
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-imx-sc.c
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP.
+> + */
+> +
+> +#include <linux/firmware/imx/sci.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
+> +#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
+> +
+> +static struct imx_sc_ipc *rtc_ipc_handle; static struct rtc_device
+> +*imx_sc_rtc;
+> +
+> +struct imx_sc_msg_timer_get_rtc_time {
+> +	struct imx_sc_rpc_msg hdr;
+> +	u32 time;
+> +} __packed;
+> +
+> +static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time
+> +*tm) {
+> +	struct imx_sc_msg_timer_get_rtc_time msg;
+> +	struct imx_sc_rpc_msg *hdr = &msg.hdr;
+> +	int ret;
+> +
+> +	hdr->ver = IMX_SC_RPC_VERSION;
+> +	hdr->svc = IMX_SC_RPC_SVC_TIMER;
+> +	hdr->func = IMX_SC_TIMER_FUNC_GET_RTC_SEC1970;
+> +	hdr->size = 1;
+> +
+> +	ret = imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
+> +	if (ret) {
+> +		pr_err("read rtc time failed, ret %d\n", ret);
+
+Nitpick: 
+better to use dev_err?
+
+> +		return ret;
+> +	}
+> +
+> +	rtc_time_to_tm(msg.time, tm);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct rtc_class_ops imx_sc_rtc_ops = {
+> +	.read_time = imx_sc_rtc_read_time,
+> +};
+> +
+> +static int imx_sc_rtc_probe(struct platform_device *pdev) {
+> +	int ret;
+> +
+> +	ret = imx_scu_get_handle(&rtc_ipc_handle);
+> +	if (ret) {
+> +		if (ret == -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		dev_err(&pdev->dev, "failed to get ipc handle: %d!\n", ret);
+> +		return ret;
+> +	}
+
+You don't have to handle different error cases as API has already enclosed it.
+
+> +
+> +	imx_sc_rtc = devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(imx_sc_rtc)) {
+> +		ret = PTR_ERR(imx_sc_rtc);
+> +		return ret;
+
+Return PTR_ERR(imx_sc_rtc)
+
+Regards
+Dong Aisheng
+
+> +	}
+> +
+> +	imx_sc_rtc->ops = &imx_sc_rtc_ops;
+> +	imx_sc_rtc->range_min = 0;
+> +	imx_sc_rtc->range_max = U32_MAX;
+> +
+> +	ret = rtc_register_device(imx_sc_rtc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_sc_dt_ids[] = {
+> +	{ .compatible = "fsl,imx8qxp-sc-rtc", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
+> +
+> +static struct platform_driver imx_sc_rtc_driver = {
+> +	.driver = {
+> +		.name	= "imx-sc-rtc",
+> +		.of_match_table = imx_sc_dt_ids,
+> +	},
+> +	.probe		= imx_sc_rtc_probe,
+> +};
+> +module_platform_driver(imx_sc_rtc_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("NXP i.MX System Controller RTC Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.7.4
