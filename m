@@ -1,29 +1,106 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC PATCH 07/10] dt-bindigs: sound: Add Allwinner suniv F1C100s
- Audio Codec
-Date: Wed, 19 Dec 2018 08:04:39 -0600
-Message-ID: <20181219140439.GA6820@bogus>
-References: <cover.1543782328.git.mesihkilinc@gmail.com>
- <d0ce4b1f2a89a319d6becb5f88d7ca4184aa5595.1543782328.git.mesihkilinc@gmail.com>
+Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
+ controller on HiSilicon SoCs
+Date: Wed, 19 Dec 2018 08:09:54 -0600
+Message-ID: <20181219140953.GA9910@bogus>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-2-chenyu56@huawei.com>
+ <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
+ <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
+ <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
+ <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <d0ce4b1f2a89a319d6becb5f88d7ca4184aa5595.1543782328.git.mesihkilinc@gmail.com>
+In-Reply-To: <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mesih Kilinc <mesihkilinc@gmail.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-sunxi@googlegroups.com, Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+To: Chen Yu <chenyu56@huawei.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 12:23:14AM +0300, Mesih Kilinc wrote:
-> Add compatible string for Allwinner suniv F1C100s audio codec.
-
-Typo in the subject. Otherwise,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
+On Mon, Dec 03, 2018 at 05:28:56PM +0800, Chen Yu wrote:
+> Hi,
 > 
-> Signed-off-by: Mesih Kilinc <mesihkilinc@gmail.com>
-> ---
->  Documentation/devicetree/bindings/sound/sun4i-codec.txt | 5 +++++
->  1 file changed, 5 insertions(+)
+> On 2018/12/3 16:59, Sergei Shtylyov wrote:
+> > On 03.12.2018 11:51, Chen Yu wrote:
+> > 
+> >>>> This patch adds binding descriptions to support the dwc3 controller
+> >>>> on HiSilicon SoCs and boards like the HiKey960.
+> >>>>
+> >>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> >>>> Cc: Rob Herring <robh+dt@kernel.org>
+> >>>> Cc: Mark Rutland <mark.rutland@arm.com>
+> >>>> Cc: John Stultz <john.stultz@linaro.org>
+> >>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+> >>>> ---
+> >>>>    .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
+> >>>>    1 file changed, 67 insertions(+)
+> >>>>    create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> >>>>
+> >>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> >>>> new file mode 100644
+> >>>> index 000000000000..d32d2299a0a1
+> >>>> --- /dev/null
+> >>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+> >>>> @@ -0,0 +1,67 @@
+> >>>> +HiSilicon DWC3 USB SoC controller
+> >>>> +
+> >>>> +This file documents the parameters for the dwc3-hisi driver.
+> >>>> +
+> >>>> +Required properties:
+> >>>> +- compatible:    should be "hisilicon,hi3660-dwc3"
+> >>>> +- clocks:    A list of phandle + clock-specifier pairs for the
+> >>>> +        clocks listed in clock-names
+> >>>> +- clock-names:    Specify clock names
+> >>>> +- resets:    list of phandle and reset specifier pairs.
+> >>>> +
+> >>>> +Sub-nodes:
+> >>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+> >>>> +example below. The DT binding details of dwc3 can be found in:
+> >>>> +Documentation/devicetree/bindings/usb/dwc3.txt
+> >>>> +
+> >>>> +Example:
+> >>>> +    usb3: hisi_dwc3 {
+> >>>> +        compatible = "hisilicon,hi3660-dwc3";
+> >>>> +        #address-cells = <2>;
+> >>>> +        #size-cells = <2>;
+> >>>> +        ranges;
+> >>>> +
+> >>>> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+> >>>> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> >>>> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+> >>>> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+> >>>> +        assigned-clock-rates = <229000000>;
+> >>>> +        resets = <&crg_rst 0x90 8>,
+> >>>> +             <&crg_rst 0x90 7>,
+> >>>> +             <&crg_rst 0x90 6>,
+> >>>> +             <&crg_rst 0x90 5>;
+> >>>> +
+> >>>> +        dwc3: dwc3@ff100000 {
+
+Please combine these into a single node. Unless you have a wrapper with 
+registers, you don't need these 2 nodes. Clocks and reset can go in the 
+dwc3 node.
+
+> >>>
+> >>>      According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
+> >>>
+> >>
+> >> Do you mean it should be usb@ff100000: dwc3@ff100000 ?
+> > 
+> >     dwc3: usb@ff100000
+> > 
+> >    "dwc3:" is a label, not name.
+> 
+> I use the node name "dwc3@ff100000" according to Documentation/devicetree/bindings/usb/dwc3.txt
+> and documentations of vendor drivers, i.e. qcom,dwc3.txt, rockchip,dwc3.txt.
+> 
+> In these documentations, the dwc3 sub-node name uses "dwc3@xxxxxxxx".
+> 
+> I think it is better to be same as the other vendor's dwc3 drivers.
+
+It's not. The other bindings are wrong. Follow the DT Spec.
+
+Rob
