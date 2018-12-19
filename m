@@ -1,79 +1,81 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
- for Q6V5
-Date: Wed, 19 Dec 2018 12:34:55 +0530
-Message-ID: <365dfd8e7160c0c3e5a113dbaa88be68@codeaurora.org>
-References: <20181217100724.4593-1-sibis@codeaurora.org>
- <20181217100724.4593-2-sibis@codeaurora.org> <20181218172709.GA19660@bogus>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: Re: [PATCH V3 01/20] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Wed, 19 Dec 2018 15:04:49 +0800
+Message-ID: <4e0cc6a8-02cf-0590-ec5c-d11412168219@nvidia.com>
+References: <20181218091232.23532-1-josephl@nvidia.com>
+ <20181218091232.23532-2-josephl@nvidia.com> <20181218151934.GA10127@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218172709.GA19660@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181218151934.GA10127@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, linux-remoteproc-owner@vger.kernel.org
+Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the review!
-
-On 2018-12-18 22:57, Rob Herring wrote:
-> On Mon, Dec 17, 2018 at 03:37:19PM +0530, Sibi Sankar wrote:
->> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+On 12/18/18 11:19 PM, Rob Herring wrote:
+> On Tue, Dec 18, 2018 at 05:12:13PM +0800, Joseph Lo wrote:
+>> From: Peter De Schrijver <pdeschrijver@nvidia.com>
+>>
+>> Add new properties to configure the DFLL PWM regulator support.
+>>
+>> Cc: devicetree@vger.kernel.org
+>> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
 >> ---
->>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt       | 10 
->> +++++++---
->>  1 file changed, 7 insertions(+), 3 deletions(-)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt 
->> b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> index 9ff5b0309417..780adc043b37 100644
->> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
->>  - clocks:
->>  	Usage: required
->>  	Value type: <phandle>
->> -	Definition: reference to the iface, bus and mem clocks to be held on
->> -		    behalf of the booting of the Hexagon core
->> +	Definition: reference to the list of 4 clocks for the modem 
->> sub-system
->> +		    reference to the list of 8 clocks for the modem sub-system
->> +		    on SDM845 SoCs
->> 
->>  - clock-names:
->>  	Usage: required
->>  	Value type: <stringlist>
->> -	Definition: must be "iface", "bus", "mem"
->> +	Definition: must be "iface", "bus", "mem", "xo" for the modem 
->> sub-system
->> +		    must be "iface", "bus", "mem", "gpll0_mss", "snoc_axi",
->> +		    "mnoc_axi", "prng", "xo" for the modem sub-system on SDM845
->> +		    SoCs
+>> *V3:
+>>   - no change
+>> *V2:
+>>   - update the binding strings and descriptions for
+>>   nvidia,pwm-tristate-microvolts
+>>   nvidia,pwm-min-microvolts
+>>   nvidia,pwm-voltage-step-microvolts
+>> ---
+>>   .../bindings/clock/nvidia,tegra124-dfll.txt   | 79 ++++++++++++++++++-
+>>   1 file changed, 77 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>> index dff236f524a7..38e8cc8c70a8 100644
+>> --- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>> +++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+>> @@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+>>   oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+>>   control module that will automatically adjust the VDD_CPU voltage by
+>>   communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+>> -Currently only the I2C mode is supported by these bindings.
+>>   
+>>   Required properties:
+>>   - compatible : should be "nvidia,tegra124-dfll"
+>> @@ -45,10 +44,31 @@ Required properties for the control loop parameters:
+>>   Optional properties for the control loop parameters:
+>>   - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
+>>   
+>> +Optional properties for mode selection:
+>> +- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
+>> +
+>>   Required properties for I2C mode:
+>>   - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
+>>   
+>> -Example:
+>> +Required properties for PWM mode:
+>> +- nvidia,pwm-period: period of PWM square wave in microseconds.
 > 
-> This seems to me a list of all clocks you need enabled, not what clocks
-> actually go to the modem. Specifically, shouldn't the *noc_axi clocks 
-> be
-> managed by the interconnect driver?
-
-clocks = ...,
-        <&gcc GCC_MSS_SNOC_AXI_CLK>,
-        <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-          ...;
-clock-names = ..., "snoc_axi", "mnoc_axi",...;
-
-snoc_axi and mnoc_axi maps to above GCC clks and
-both of them fall under the MSS functional group
-
+> Needs unit suffix.
 > 
-> Rob
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Hi Rob,
+
+Thanks for reviewing these DT binding patches, will fix it.
+
+Joseph
