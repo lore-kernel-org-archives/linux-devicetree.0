@@ -1,41 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/5] dt-bindings: media: sun6i: Add vcc-csi supply
- property
-Date: Wed, 19 Dec 2018 10:01:20 -0600
-Message-ID: <20181219160120.GB22708@bogus>
-References: <20181203100747.16442-1-jagan@amarulasolutions.com>
- <20181203100747.16442-3-jagan@amarulasolutions.com>
- <CAGb2v66pG0kes1_xBNUj4z85fjunjP_Fe5_pPiRja=nDSOS01A@mail.gmail.com>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 0/3] drm/exynos: rotator: Add support for s5pv210
+Date: Wed, 19 Dec 2018 16:57:01 +0100
+Message-ID: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAGb2v66pG0kes1_xBNUj4z85fjunjP_Fe5_pPiRja=nDSOS01A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: inki.dae@samsung.com, krzk@kernel.org, airlied@linux.ie
+Cc: jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 06:11:35PM +0800, Chen-Yu Tsai wrote:
-> On Mon, Dec 3, 2018 at 6:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
-> >
-> > Most of the Allwinner A64 CSI controllers are supply with
-> > VCC-PE pin. which need to supply for some of the boards to
-> > trigger the power.
-> >
-> > So, document the supply property as vcc-csi so-that the required
-> > board can eable it via device tree.
-> >
-> > Used vcc-csi instead of vcc-pe to have better naming convention
-> > wrt other controller pin supplies.
-> 
-> This is not related to the CSI controller. It belongs in the pin
-> controller, but that has its own set of problems like possible
-> circular dependencies.
+This patchset adds support for s5pv210 soc, into 
+Samsung DRM Rotator driver. Currently only NV12 and XRGB8888 formats
+ are supported.
 
-That might be a better choice, but I think most platforms put the supply 
-in the module node. But that wouldn't work well if the module is not 
-used and you want to use the pins for GPIO or some other function. Maybe 
-we don't hit that property because most I/O supplies are always on.
+It was tested by using simple tool from 
+https://www.spinics.net/lists/linux-samsung-soc/msg60498.html
 
-Rob
+Paweł Chmiel (3):
+  drm/exynos: rotator: Add support for s5pv210
+  dt-bindings: gpu: samsung-rotator: Document s5pv210 support
+  ARM: dts: s5pv210: Add node for exynos-rotator
+
+ .../bindings/gpu/samsung-rotator.txt          |  1 +
+ arch/arm/boot/dts/s5pv210.dtsi                |  9 ++++++++
+ drivers/gpu/drm/exynos/exynos_drm_rotator.c   | 23 +++++++++++++++++++
+ 3 files changed, 33 insertions(+)
+
+-- 
+2.17.1
