@@ -1,87 +1,66 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH] ARM: dts: da850-evm: Correct the audio codec regulators
-Date: Wed, 19 Dec 2018 12:12:58 +0200
-Message-ID: <20181219101258.20763-1-peter.ujfalusi@ti.com>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v6 2/7] spi: spi-mem: add support for octal mode I/O data
+ transfer
+Date: Wed, 19 Dec 2018 10:11:55 +0000
+Message-ID: <1545214186-16987-3-git-send-email-yogeshnarayan.gaur@nxp.com>
+References: <1545214186-16987-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, linux@armlinux.org.uk, nsekhar@ti.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545214186-16987-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the board level fixed regulators for 3.3V and 1.8V which is used to
-power - among other things - the tlv320aic3106 codec.
+Add support for octal mode I/O data transfer in spi-mem framework.
 
-Apart from removing the following warning during boot:
-tlv320aic3x-codec 0-0018: Too high supply voltage(s) AVDD: 5000000, DVDD: 5000000
-
-With the correct voltages the driver can select correct OCMV value to
-reduce pop noise.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
 ---
- arch/arm/boot/dts/da850-evm.dts | 29 +++++++++++++++++++++++++----
- 1 file changed, 25 insertions(+), 4 deletions(-)
+Changes for v6:
+- Correct S-o-b tag with full author name as 'Yogesh Narayan Gaur'.
+Changes for v5:
+- Modified string 'octo' with 'octal'.
+Changes for v4:
+- None
+Changes for v3:
+- Modified string 'octal' with 'octo'.
+Changes for v2:
+- Patch added in v2 version.
 
-diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-index f9a5a8212c84..997bede2a48f 100644
---- a/arch/arm/boot/dts/da850-evm.dts
-+++ b/arch/arm/boot/dts/da850-evm.dts
-@@ -94,6 +94,28 @@
- 		regulator-boot-on;
- 	};
- 
-+	baseboard_3v3: fixedregulator-3v3 {
-+		/* TPS73701DCQ */
-+		compatible = "regulator-fixed";
-+		regulator-name = "baseboard_3v3";
-+		regulator-min-microvolt = <3300000>;
-+		regulator-max-microvolt = <3300000>;
-+		vin-supply = <&vbat>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	baseboard_1v8: fixedregulator-1v8 {
-+		/* TPS73701DCQ */
-+		compatible = "regulator-fixed";
-+		regulator-name = "baseboard_1v8";
-+		regulator-min-microvolt = <1800000>;
-+		regulator-max-microvolt = <1800000>;
-+		vin-supply = <&vbat>;
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
- 	backlight_lcd: backlight-regulator {
- 		compatible = "regulator-fixed";
- 		regulator-name = "lcd_backlight_pwr";
-@@ -210,10 +232,9 @@
- 
- 		/* Regulators */
- 		IOVDD-supply = <&vdcdc2_reg>;
--		/* Derived from VBAT: Baseboard 3.3V / 1.8V */
--		AVDD-supply = <&vbat>;
--		DRVDD-supply = <&vbat>;
--		DVDD-supply = <&vbat>;
-+		AVDD-supply = <&baseboard_3v3>;
-+		DRVDD-supply = <&baseboard_3v3>;
-+		DVDD-supply = <&baseboard_1v8>;
- 	};
- 	tca6416: gpio@20 {
- 		compatible = "ti,tca6416";
--- 
-Peter
+ drivers/spi/spi-mem.c | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+diff --git a/drivers/spi/spi-mem.c b/drivers/spi/spi-mem.c
+index 62a7b80..5e15d62 100644
+--- a/drivers/spi/spi-mem.c
++++ b/drivers/spi/spi-mem.c
+@@ -12,7 +12,7 @@
+=20
+ #include "internals.h"
+=20
+-#define SPI_MEM_MAX_BUSWIDTH		4
++#define SPI_MEM_MAX_BUSWIDTH		8
+=20
+ /**
+  * spi_controller_dma_map_mem_op_data() - DMA-map the buffer attached to a
+@@ -121,6 +121,13 @@ static int spi_check_buswidth_req(struct spi_mem *mem,=
+ u8 buswidth, bool tx)
+=20
+ 		break;
+=20
++	case 8:
++		if ((tx && (mode & SPI_TX_OCTAL)) ||
++		    (!tx && (mode & SPI_RX_OCTAL)))
++			return 0;
++
++		break;
++
+ 	default:
+ 		break;
+ 	}
+--=20
+2.7.4
