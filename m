@@ -1,52 +1,100 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 19 Dec 2018 12:40:39 -0800
-Message-ID: <CAD=FV=VMMYKoW4RU_TTjLdyrNcWZU-Gyou9b6qynKFX9wDn5Mw@mail.gmail.com>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181212211848.26768-3-jcrouse@codeaurora.org>
- <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
- <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
- <20181217070647.xtvfgsixggua5yod@vireshk-i7>
- <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
- <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
- <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
- <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
- <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q@mail.gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Wed, 19 Dec 2018 14:41:04 -0600
+Message-ID: <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181219201047.GA23448@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, jacek.anaszewski@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIERlYyAxOSwgMjAxOCBhdCAxMjowOSBQTSBSb2IgSGVycmluZyA8cm9iaEBr
-ZXJuZWwub3JnPiB3cm90ZToKPgo+IE9uIFR1ZSwgRGVjIDE4LCAyMDE4IGF0IDEwOjQ5IFBNIFZp
-cmVzaCBLdW1hciA8dmlyZXNoLmt1bWFyQGxpbmFyby5vcmc+IHdyb3RlOgo+ID4KPiA+IE9uIDE4
-LTEyLTE4LCAxMTowNSwgRG91ZyBBbmRlcnNvbiB3cm90ZToKPiA+ID4gT0ssIGl0J3MgZmluZSB3
-aXRoIG1lIHRvIGhhdmUgdGhlIGZhbGxiYWNrLCBidXQgaWYgd2UgZG8gd2Ugc2hvdWxkIGJlCj4g
-PiA+IGNvbnNpc3RlbnQgYWJvdXQgaXQgYW5kIG1ha2Ugc3VyZSBpdCdzIGluIGFsbCB0aGUgYmlu
-ZGluZ3MgYW5kIGRldmljZQo+ID4gPiB0cmVlIGZpbGVzLi4uCj4gPgo+ID4gU3VyZS4KPiA+Cj4g
-PiBJIGFtIG5vdCBzdXJlIHdoYXQncyB0aGUgcmlnaHQgd2F5IHRvIGRvIGl0IGlzLCBpLmUuIHNo
-b3VsZCB3ZSBrZWVwIHRoZQo+ID4gIm9wZXJhdGluZy1wb2ludHMtdjIiIHN0cmluZyBvciBub3Qu
-Cj4KPiBEb2VzIGhhdmluZyBpdCBidXkgeW91IGFueXRoaW5nPyBHaXZlbiB0aGUgUUNvbSBvbmUg
-ZG9lc24ndCBoYXZlIGFueQo+IGZyZXF1ZW5jeSBvciB2b2x0YWdlLCBJIGRvbid0IHNlZSBob3cg
-aXQgd291bGQgYmUgdXNlZnVsIHRvIGhhdmUgaXQuCgouLi5idXQgaXQgZG9lcyBoYXZlIGEgZnJl
-cXVlbmN5LCBkb2Vzbid0IGl0PwoKKyAgIGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12
-Mi1xY29tLWxldmVsIjsKKworICAgb3BwLTcxMDAwMDAwMCB7CisgICAgIG9wcC1oeiA9IC9iaXRz
-LyA2NCA8NzEwMDAwMDAwPjsKKyAgICAgcWNvbSxsZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZF
-TF9UVVJCT19MMT47CisgICB9OwoKLURvdWcKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMu
-ZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlz
-dGluZm8vZnJlZWRyZW5vCg==
+Pavel
+
+On 12/19/2018 02:10 PM, Pavel Machek wrote:
+> On Wed 2018-12-19 13:41:18, Dan Murphy wrote:
+>> Pavel
+>>
+>> Thanks for the review.
+>>
+>> On 12/19/2018 01:34 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> +static DEVICE_ATTR_WO(ctrl_bank_a_mix);
+>>>> +static DEVICE_ATTR_WO(ctrl_bank_b_mix);
+>>>> +static DEVICE_ATTR_WO(ctrl_bank_c_mix);
+>>>> +
+>>>> +static struct attribute *lp5024_ctrl_bank_attrs[] = {
+>>>> +	&dev_attr_ctrl_bank_a_mix.attr,
+>>>> +	&dev_attr_ctrl_bank_b_mix.attr,
+>>>> +	&dev_attr_ctrl_bank_c_mix.attr,
+>>>> +	NULL
+>>>> +};
+>>>> +ATTRIBUTE_GROUPS(lp5024_ctrl_bank);
+>>>
+>>> ...
+>>>> +
+>>>> +static DEVICE_ATTR_WO(led1_mix);
+>>>> +static DEVICE_ATTR_WO(led2_mix);
+>>>> +static DEVICE_ATTR_WO(led3_mix);
+>>>> +
+>>>> +static struct attribute *lp5024_led_independent_attrs[] = {
+>>>> +	&dev_attr_led1_mix.attr,
+>>>> +	&dev_attr_led2_mix.attr,
+>>>> +	&dev_attr_led3_mix.attr,
+>>>> +	NULL
+>>>> +};
+>>>> +ATTRIBUTE_GROUPS(lp5024_led_independent);
+>>>
+>>> Ok, so you are adding new sysfs files. Are they _really_ neccessary?
+>>> We'd like to have uniform interfaces for the leds.
+>>
+>> Yes I am adding these for this driver.
+>> They adjust the individual brightness of each LED connected (what the HW guys called mixing).
+>>
+>> The standard brightness sysfs adjusts all 3 LEDs simultaneously so that all 3 LEDs brightness are
+>> uniform.
+> 
+> 1 LED, 1 brightness file... that's what we do. Why should this one be different?
+> 
+
+Yes I understand this and 1 DT child node per LED out but...
+
+This device has a single register to control 3 LEDs brightness as a group and individual brightness
+registers to control the LEDs independently to mix the LEDs to a specific color.
+
+There needs to be a way to control both so that developers can mix and adjust the individual RGB and
+then control the brightness of the group during run time without touching the "mixing" value.
+
+I don't think a user needs nor would want to have 24 different LED nodes with 24 different brightness files.
+Or with the LP5036 that would have 36 LED nodes.
+
+Table 1 in the data sheet shows how the outputs map to the control banks to the LED registers.
+
+Dan
+
+
+>> I did not think these belonged in the dt as they should be user space configurable
+>>
+>>>
+>>> If they are neccessary, we need documentation for them.
+>>
+>> Sure I have no problem documenting them but where do I do that?
+>> I am assuming Documentation/leds/leds-lp5024.txt
+> 
+> Documentation/abi/...
+> 
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
