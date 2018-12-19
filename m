@@ -1,40 +1,38 @@
-From: Biao Huang <biao.huang@mediatek.com>
-Subject: [v3, PATCH 0/2] add ethernet binding and modify ethernet driver for mt2712
-Date: Wed, 19 Dec 2018 15:22:39 +0800
-Message-ID: <1545204161-15742-1-git-send-email-biao.huang@mediatek.com>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v2] dt-bindings: serial: sh-sci: Document r8a774c0
+ bindings
+Date: Wed, 19 Dec 2018 08:25:35 +0100
+Message-ID: <20181219072535.GA28473@kroah.com>
+References: <1545134590-22510-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1545134590-22510-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: davem@davemloft.net, robh+dt@kernel.org
-Cc: honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, biao.huang@mediatek.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-changes in v3:
-resend this series base on the latest net-next tree.
+On Tue, Dec 18, 2018 at 12:03:10PM +0000, Fabrizio Castro wrote:
+> RZ/G2E (R8A774C0) SoC also has the R-Car Gen3 compatible SCIF and
+> HSCIF ports, so document the SoC specific bindings.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> ---
+> v1->v2:
+> * Fixed title according to Geert's comment
+> 
+> This patch depends on:
+> https://patchwork.kernel.org/patch/10565543/
 
-changes in v2 as comments from Sean:
-1. fix typo.
-2. use capital letters for RMII/MII/RGMII in driver and bindings.
+I don't have that patch in my tree, so can you please resend all of the
+pending patches that you need applied so that I can?  Including this one
+too.
 
-v1:
-This new series is the result of discussion in:
-http://lkml.org/lkml/2018/12/13/1007
-http://lkml.org/lkml/2018/12/14/53
+thanks,
 
-1. ethernet binding file move to this series.
-2. remove fine tune property in device tree
-3. remove fine tune flow in ethernet driver
-4. set rgmii timing according to the value in device tree,
-and don't care whether phy insert internal delay  or not.
-
-Biao Huang (2):
-  net-next: dt-binding: dwmac-mediatek: remove fine-tune property
-  net-next: stmmac: dwmac-mediatek: remove fine-tune property
-
- .../devicetree/bindings/net/mediatek-dwmac.txt     |   31 +++------
- .../net/ethernet/stmicro/stmmac/dwmac-mediatek.c   |   71 +++++++-------------
- 2 files changed, 35 insertions(+), 67 deletions(-)
-
--- 
-1.7.9.5
+greg k-h
