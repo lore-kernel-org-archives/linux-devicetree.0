@@ -1,56 +1,53 @@
-From: Andrzej Hajda <a.hajda@samsung.com>
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: lvds-transmitter: add
- pwdn-gpios
-Date: Wed, 19 Dec 2018 10:12:56 +0100
-Message-ID: <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com>
-References: <20181218231850.3572-1-peda@axentia.se>
-        <CGME20181218231950epcas3p4d5bc243137aa464b0424365dfde9d238@epcas3p4.samsung.com>
-        <20181218231850.3572-3-peda@axentia.se>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCHv3 4/4] misc: pci_endpoint_test: Add the layerscape EP
+ device support
+Date: Wed, 19 Dec 2018 10:21:04 +0100
+Message-ID: <20181219092104.GA7356@kroah.com>
+References: <20181203103505.46885-1-xiaowei.bao@nxp.com>
+ <20181203103505.46885-4-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218231850.3572-3-peda@axentia.se>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181203103505.46885-4-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>
+Cc: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On 19.12.2018 00:19, Peter Rosin wrote:
-> Add optional property to specify a power-down GPIO.
-> The pwdn-gpios name is already in use by the thine,thc63lvdm83d
-> binding, so go with that.
->
-> Signed-off-by: Peter Rosin <peda@axentia.se>
+On Mon, Dec 03, 2018 at 06:35:05PM +0800, Xiaowei Bao wrote:
+> Add the layerscape EP device support in pci_endpoint_test driver.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 > ---
->  Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> index f9e7dd666f58..47941d39f92f 100644
-> --- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> +++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-> @@ -31,6 +31,9 @@ Required properties:
->    device-specific version corresponding to the device first
->    followed by the generic version.
->  
-> +Optional properties:
-> +- pwdn-gpios: Power-down control GPIO
-> +
+> v2:
+>  - no change
+> v3:
+>  - no change
+> 
+>  drivers/misc/pci_endpoint_test.c |    2 ++
+>  1 files changed, 2 insertions(+), 0 deletions(-)
+> 
+> diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+> index 896e2df..744d10c 100644
+> --- a/drivers/misc/pci_endpoint_test.c
+> +++ b/drivers/misc/pci_endpoint_test.c
+> @@ -788,6 +788,8 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+>  static const struct pci_device_id pci_endpoint_test_tbl[] = {
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+>  	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
+> +	/* 0x81c0: The device id of ls1046a in NXP. */
 
+There is no need for a comment, just this line is fine:
 
-Since naming is not enforced by any datasheet I would propose something
-more popular with less twisted logic. Maybe:
+> +	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
 
-- enable-gpios: ... (active high).
+If you note, no other lines have comments.
 
+If you want to say that this is a specific device, then use a #define
+with that device name and then use that define here, like the
+PCI_DEVICE_ID_TI_DRA72x was done.
 
-Regards
+thanks,
 
-Andrzej
-
-
->  Required nodes:
->  
->  This device has two video ports. Their connections are modeled using the OF
+greg k-h
