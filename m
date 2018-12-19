@@ -1,73 +1,97 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 02/12] dt-bindings: phy: Add support for HiSilicon's
- hi3660 USB PHY
-Date: Wed, 19 Dec 2018 08:14:19 -0600
-Message-ID: <20181219141419.GA17302@bogus>
+Subject: Re: [PATCH v1 03/12] dt-bindings: misc: Add bindings for HiSilicon
+ usb hub and data role switch functionality on HiKey960
+Date: Wed, 19 Dec 2018 08:21:18 -0600
+Message-ID: <20181219142118.GA24144@bogus>
 References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-3-chenyu56@huawei.com>
+ <20181203034515.91412-4-chenyu56@huawei.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181203034515.91412-3-chenyu56@huawei.com>
+In-Reply-To: <20181203034515.91412-4-chenyu56@huawei.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Yu Chen <chenyu56@huawei.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 11:45:05AM +0800, Yu Chen wrote:
-> This patch adds binding documentation for supporting the hi3660 usb
-> phy on boards like the HiKey960.
+On Mon, Dec 03, 2018 at 11:45:06AM +0800, Yu Chen wrote:
+> This patch adds binding documentation to support usb hub and usb
+> data role switch of Hisilicon HiKey&HiKey960 Board.
 > 
+> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 > Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: Mark Rutland <mark.rutland@arm.com>
 > Cc: John Stultz <john.stultz@linaro.org>
 > Cc: Binghui Wang <wangbinghui@hisilicon.com>
 > Signed-off-by: Yu Chen <chenyu56@huawei.com>
 > --
-> v1: Fix some format error as suggested by Rob.
+> v1:
+> 1) Fix some format errors as suggested by Sergei.
+> 2) Modify gpio description to use gpiod API.
 > --
 > ---
->  .../devicetree/bindings/phy/phy-hi3660-usb3.txt     | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>  .../bindings/misc/hisilicon-hikey-usb.txt          | 36 ++++++++++++++++++++++
+>  1 file changed, 36 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
 > new file mode 100644
-> index 000000000000..8ea52d51aa13
+> index 000000000000..f3413d851e18
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
-> @@ -0,0 +1,21 @@
-> +Hisilicon hi3660 usb PHY
+> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
+> @@ -0,0 +1,36 @@
+> +Support usb hub and usb data role switch of Hisilicon HiKey&HiKey960 Board.
 
-s/usb/USB/
+s/&/ & /
 
-> +-----------------------
+Some trivial comments below, but this all needs to use the USB connector 
+binding for the OTG and host ports and then we need to figure out how 
+the switching fits into that.
+
+> +
+> +-----------------------------
 > +
 > +Required properties:
-> +- compatible: should be "hisilicon,hi3660-usb-phy"
-> +- #phy-cells: must be 0
-> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
-> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
-> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
-> +- hisilicon,eye-diagram-param: parameter set for phy
-> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
+> +- typc-vbus-int-gpio: gpio to control the vbus of typeC port
+> +- typc-vbus-enable-val: gpio value that enable the vbus of typeC port
 
-Doesn't a phy need some clocks?
+HiKey at least doesn't have a TypeC port.
 
+> +- otg-gpio: gpio to switch DP&DM between the hub and typeC port
+> +- hub-vdd33-en-gpio: gpio to enable the power of hub
+
+-gpios for all these.
+
+> +- pinctrl-0: pinctrl config
 > +
-> +Example:
-> +	usb-phy {
-> +		compatible = "hisilicon,hi3660-usb-phy";
-> +		#phy-cells = <0>;
-> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
-> +		hisilicon,pctrl-syscon = <&pctrl>;
-> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
+> +Example
+> +-----
+> +
+> +	hisi_hikey_usb: hisi_hikey_usb {
+> +		compatible = "hisilicon,hikey960-usb";
+> +		typec-vbus-gpios = <&gpio25 2 0>;
+> +		typc-vbus-enable-val = <1>;
+> +		otg-switch-gpios = <&gpio25 6 0>;
+> +		hub-vdd33-en-gpios = <&gpio5 6 0>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&usbhub5734_pmx_func>;
+> +
+> +		port {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			hikey_usb_ep: endpoint@0 {
+> +				reg = <0>;
+> +				device_type = "usb-role-switch";
 
-Is one of these the "main" registers for the phy? If so, then make this 
-a child of that syscon node.
+Drop device_type.
 
-> +		hisilicon,eye-diagram-param = <0x22466e4>;
+> +				remote-endpoint = <&dwc3_role_switch_notify>;
+> +			};
+> +		};
+> +
 > +	};
 > -- 
 > 2.15.0-rc2
