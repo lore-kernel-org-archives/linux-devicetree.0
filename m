@@ -1,51 +1,28 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: lvds-transmitter: add
- pwdn-gpios
-Date: Wed, 19 Dec 2018 09:57:32 +0000
-Message-ID: <7c2f1268-43a3-1dc2-bb2d-6da9d74a5a43@axentia.se>
-References: <20181218231850.3572-1-peda@axentia.se>
- <CGME20181218231950epcas3p4d5bc243137aa464b0424365dfde9d238@epcas3p4.samsung.com>
- <20181218231850.3572-3-peda@axentia.se>
- <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: [PATCH v2 resend 0/2] RZ/G2[EM] SCIF and HSCIF documentation
+Date: Wed, 19 Dec 2018 10:06:23 +0000
+Message-ID: <1545213985-30341-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com>
-Content-Language: en-US
-Content-ID: <A3CF27CBDAB3534BA175C21212034A13@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrzej Hajda <a.hajda@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMjAxOC0xMi0xOSAxMDoxMiwgQW5kcnplaiBIYWpkYSB3cm90ZToNCj4gT24gMTkuMTIuMjAx
-OCAwMDoxOSwgUGV0ZXIgUm9zaW4gd3JvdGU6DQo+PiBBZGQgb3B0aW9uYWwgcHJvcGVydHkgdG8g
-c3BlY2lmeSBhIHBvd2VyLWRvd24gR1BJTy4NCj4+IFRoZSBwd2RuLWdwaW9zIG5hbWUgaXMgYWxy
-ZWFkeSBpbiB1c2UgYnkgdGhlIHRoaW5lLHRoYzYzbHZkbTgzZA0KPj4gYmluZGluZywgc28gZ28g
-d2l0aCB0aGF0Lg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IFBldGVyIFJvc2luIDxwZWRhQGF4ZW50
-aWEuc2U+DQo+PiAtLS0NCj4+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQgfCAzICsrKw0KPj4gIDEgZmlsZSBjaGFu
-Z2VkLCAzIGluc2VydGlvbnMoKykNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0IGIv
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJh
-bnNtaXR0ZXIudHh0DQo+PiBpbmRleCBmOWU3ZGQ2NjZmNTguLjQ3OTQxZDM5ZjkyZiAxMDA2NDQN
-Cj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
-ZS9sdmRzLXRyYW5zbWl0dGVyLnR4dA0KPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0DQo+PiBAQCAtMzEs
-NiArMzEsOSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4gICAgZGV2aWNlLXNwZWNpZmljIHZl
-cnNpb24gY29ycmVzcG9uZGluZyB0byB0aGUgZGV2aWNlIGZpcnN0DQo+PiAgICBmb2xsb3dlZCBi
-eSB0aGUgZ2VuZXJpYyB2ZXJzaW9uLg0KPj4gIA0KPj4gK09wdGlvbmFsIHByb3BlcnRpZXM6DQo+
-PiArLSBwd2RuLWdwaW9zOiBQb3dlci1kb3duIGNvbnRyb2wgR1BJTw0KPj4gKw0KPiANCj4gDQo+
-IFNpbmNlIG5hbWluZyBpcyBub3QgZW5mb3JjZWQgYnkgYW55IGRhdGFzaGVldCBJIHdvdWxkIHBy
-b3Bvc2Ugc29tZXRoaW5nDQo+IG1vcmUgcG9wdWxhciB3aXRoIGxlc3MgdHdpc3RlZCBsb2dpYy4g
-TWF5YmU6DQo+IA0KPiAtIGVuYWJsZS1ncGlvczogLi4uIChhY3RpdmUgaGlnaCkuDQoNClRoYXQg
-d2FzIG15IG9yaWdpbmFsIHRob3VnaHQgdG9vLCBidXQgdGhlIGRyaXZlciBpbXBsZW1lbnRpbmcg
-dGhlDQpsdmRzLWVuY29kZXIgYmluZGluZ3MgYWxzbyBoYW5kbGVzIHRoZSBtZW50aW9uZWQgdGhp
-bmUsdGhjNjNsdmRtODNkDQpsdmRzIGVuY29kZXIsIGFuZCB0aGF0IGJpbmRpbmcgaGFzIHRoZSAi
-cHdkbiIgbmFtaW5nLiBTbywgZm9yIGRyaXZlcg0KaW1wbGVtZW50YXRpb24gc2ltcGxpY2l0eSBJ
-IHdlbnQgd2l0aCB3aGF0IHdhcyBhbHJlYWR5IHRoZXJlLCB0aHVzDQphbGxvd2luZyBhZGRpbmcg
-c3VwcG9ydCBmb3IgYm90aCBiaW5kaW5ncyB3aXRoIG9uZSBpbXBsZW1lbnRhdGlvbg0KKGluIHBh
-dGNoIDMvMykuDQoNCkFkZGluZyBjb2RlIGp1c3QgdG8gaGFuZGxlIG11bHRpcGxlIG5hbWVzIGZv
-ciB0aGUgc2FtZSB0aGluZyBkb2VzDQpub3Qgc291bmRzIHRvbyBhcHBlYWxpbmcuDQoNCkNoZWVy
-cywNClBldGVyDQo=
+Hello Greg,
+
+as promised I am resending the SCIF and HSCIF dt-bindings related
+patches for the RZ/G2M and RZ/G2E.
+This series applies on top of next-20181219.
+
+Thanks,
+Fab
+
+Fabrizio Castro (2):
+  dt-bindings: serial: sh-sci: Document r8a774a1 bindings
+  dt-bindings: serial: sh-sci: Document r8a774c0 bindings
+
+ .../devicetree/bindings/serial/renesas,sci-serial.txt    | 16 ++++++++++------
+ 1 file changed, 10 insertions(+), 6 deletions(-)
+
+-- 
+2.7.4
