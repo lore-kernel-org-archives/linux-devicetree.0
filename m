@@ -1,24 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: mrvl,intc: fix a trivial typo
-Date: Wed, 19 Dec 2018 11:18:20 -0600
-Message-ID: <20181219171820.GA31587@bogus>
-References: <20181203114710.636840-1-lkundrak@v3.sk>
+From: Maruthi Srinivas Bayyavarapu
+        <maruthi.srinivas.bayyavarapu@xilinx.com>
+Subject: [PATCH 0/3] add Xilinx audio formatter driver
+Date: Wed, 19 Dec 2018 22:49:06 +0530
+Message-ID: <1545239949-112845-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203114710.636840-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Jiri Kosina <trivial@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 12:47:10PM +0100, Lubomir Rintel wrote:
-> s/whold/whole/.
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> ---
->  .../devicetree/bindings/interrupt-controller/mrvl,intc.txt      | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
+Audio formatter IP supports two streaming interfaces - MM2S for playback
+and S2MM for capture. The driver enables DMA functionality for both the interfaces.
+Patchset includes devicetree bindings documentation, driver and build enablement.
 
-Applied, thanks.
+Maruthi Srinivas Bayyavarapu (3):
+  dt-bindings: ASoC: xlnx,audio-formatter: Document audio formatter
+    bindings
+  ASoC: xlnx: add pcm formatter platform driver
+  ASoC: xlnx: enable audio formatter driver build
+
+ .../bindings/sound/xlnx,audio-formatter.txt        |  29 ++
+ sound/soc/xilinx/Kconfig                           |   7 +
+ sound/soc/xilinx/Makefile                          |   2 +
+ sound/soc/xilinx/xlnx_formatter_pcm.c              | 561 +++++++++++++++++++++
+ 4 files changed, 599 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,audio-formatter.txt
+ create mode 100644 sound/soc/xilinx/xlnx_formatter_pcm.c
+
+-- 
+2.7.4
