@@ -1,75 +1,59 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Wed, 19 Dec 2018 16:08:57 -0600
-Message-ID: <a3214ab3-9281-19d6-7fcc-5abae9a60ebd@ti.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
- <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
- <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
- <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com> <20181219220326.GA28244@amd>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+Date: Wed, 19 Dec 2018 15:11:02 -0700
+Message-ID: <20181219221105.3004-5-ilina@codeaurora.org>
+References: <20181219221105.3004-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219220326.GA28244@amd>
-Content-Language: en-US
+In-Reply-To: <20181219221105.3004-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: sboyd@kernel.org, evgreen@chromium.org, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/19/2018 04:03 PM, Pavel Machek wrote:
-> Hi!
-> 
->>> I don't think a user needs nor would want to have 24 different LED nodes with 24 different brightness files.
->>> Or with the LP5036 that would have 36 LED nodes.
->>>
->>> Table 1 in the data sheet shows how the outputs map to the control banks to the LED registers.
->>
->> Some time ago we had discussion with Vesa Jääskeläinen about possible
->> approaches to RGB LEDs [0]. What seemed to be the most suitable
->> variation of the discussed out-of-tree approach was the "color" property
->> and array of color triplets defined in Device Tree per each color.
->>
->> Please refer to [0] for the details.
->>
->> [0] https://lkml.org/lkml/2018/11/9/938
-> 
-> Yes, plus I also have the set of HSV patches somewhere... and they
-> work, but I found out that HSV->RGB conversion results in loss of precision.
-> 
-> We may want to do something like that.
-> 
-> But we need to do it once, in a driver core. We obviously don't want
-> each driver having different version of RGB support.
+SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+routed to the PDC as interrupts that can be used to wake the system up
+from deep low power modes and suspend.
 
-True.  But the RGB driver really should not be defining the color palette.
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-Maybe a "color capability" reported to user space so that the user space can make the decision.
-
-It can report
-
-For GPIO or constant current situations
-static red
-static blue
-static green 
-
-For adjustable configurations it can report:
-variable red
-variable blue
-variable green
-
-or even simpler "static" or "dynamic" as a return to report the RGB configuration.
-The LED driver would just need to set the variable.
-
-Dan
-
-> 
-> Best regards,
-> 									Pavel
-> 
-
-
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+index 665aadb5ea28..a522ca46667d 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -29,6 +29,11 @@ SDM845 platform.
+ 	Definition: must be 2. Specifying the pin number and flags, as defined
+ 		    in <dt-bindings/interrupt-controller/irq.h>
+ 
++- wakeup-parent:
++	Usage: optional
++	Value type: <phandle>
++	Definition: A phandle to the wakeup interrupt controller for the SoC.
++
+ - gpio-controller:
+ 	Usage: required
+ 	Value type: <none>
+@@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
+ mux function to select on those pin(s)/group(s), and various pin configuration
+ parameters, such as pull-up, drive strength, etc.
+ 
+-
+ PIN CONFIGURATION NODES:
+ 
+ The name of each subnode is not important; all subnodes should be enumerated
+@@ -160,6 +164,7 @@ Example:
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		wakeup-parent = <&pdc>;
+ 
+ 		qup9_active: qup9-active {
+ 			mux {
 -- 
-------------------
-Dan Murphy
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
