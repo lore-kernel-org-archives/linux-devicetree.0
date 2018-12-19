@@ -1,132 +1,160 @@
-Return-Path: <SRS0=0JaT=O6=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V5 0/4] Microchip mcp25xxfd can controller driver
-Date: Fri, 21 Dec 2018 09:29:46 +0000
-Message-Id: <20181221092950.14192-1-kernel@martin.sperl.org>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 19 Dec 2018 14:27:34 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/4] dt-bindings: sc16is7xx: Add alternative
+ clock-frequence property
+Message-ID: <20181219202734.GA31178@bogus>
+References: <20181205141133.9305-1-andriy.shevchenko@linux.intel.com>
+ <ff94d003-6636-169b-7a89-fdc4bf9c39b5@mentor.com>
+ <20181207134844.GH10650@smile.fi.intel.com>
+ <720a0834-c0a5-6fe6-3907-8811b2f0d315@mentor.com>
+ <20181207170956.GP10650@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>, Wilhelm Leichtfried <Wilhelm.Leichtfried@microchip.com>, Thomas Kopp <Thomas.Kopp@microchip.com>, Enrico Scholz <enrico.scholz@sigma-chemnitz.de>, Brad Hanson <Brad.Hanson@arity.com>, Teemu Keskinarkaus <teemu.keskinarkaus@crosscontrol.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181207170956.GP10650@smile.fi.intel.com>
+To: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: Vladimir Zapolskiy <vladimir_zapolskiy@mentor.com>, linux-acpi@vger.kernel.org, "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, linux-serial@vger.kernel.org, Georgii Staroselskii <georgii.staroselskii@emlid.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+On Fri, Dec 07, 2018 at 07:09:56PM +0200, Andy Shevchenko wrote:
+> (Cc: Rafael and linux-acpi. Rafael, a short context for you, there is a device
+>  connected externally to the IoT ACPI-enabled x86-board via I2C bus. The driver
+>  needs a clock frequency used inside that device to perform correctly, since
+>  ACPI has not yet concept of clock provider I proposed to add a property widely
+>  used for other IPs in a similar way, but DT people strongly reject my
+>  approach. If you may have a chance to look and maybe suggest the approach
+>  which satisfies both sides, it would be really nice!)
 
-This patchset adds a driver for the mcp25xxfd CanFD controller.
+One person does not equate to 'DT people'.
 
-Most of the features of the controller are supported by this driver
-release.
+Actually, I'm fine with this change. I don't think we should necessarily 
+require using the clock binding in simple cases just needing to know 
+what a particular clock frequency is.
 
-The controller includes a few features that the current core Can(FD)
-implementation does not support: * Transmit Bandwidth Sharing bits
-  - this waits for a configurable number of syncronization bits before
-    atempting to transmit the next frame - for the moment controllable
-    via a module parameter
-* SID11 with CanFD frames
-  - at this moment not supported by driver
-* 3 transmit attempts in addition to ONE_SHOT
-* transmitter delay compensation configurations
-* micro second exact transmission and reception timestamps
-  - used internally by driver
-* variable number of tx-fifos
-  - exposed via module parameter at this moment
+However, ACPI not having a clock provider is not an argument for DT 
+bindings. The whole notion of sharing them in the first place is flawed.
 
-The driver has not been heavily optimized yet so there are a few
-"low hanging fruit" that have been left out from earlier versions
-of the patch set for sake of simplicity.
+Rob
 
-These optimizations shall be added as extra patches in a later cycle.
-
-Still the driver is able to handle reception of 99.95% of all CAN frames
-of a 100% saturated 1MHz Can2.0 Bus with Frames with standard IDs and
-DLC=0 on a Raspberry Pi 3. Note that this statistics is without injection
-into the network stack, which then drops about 60% of all frames.
-
-At this time the SPI bus is utilized 75% (when counting CS asserted)
-and 60% from a SPI-Clock perspective.
-
-On the Rasberry pi 3 in such a situation we are using 100% of one
-CPU for the interrupt thread (as the spi driver is using polling for
-short transfers) and this has exposed a performance inefficiency in the
-spi framework that shows as the the spi-worker thread also consuming
-CPU cycles (30% of one CPU in this test case) unnecessarily.
-
-The driver also allows to use the INT pins as GPIOs.
-It also exposes lots of internal data/statistics via debugfs.
-
-On the HW side some errata related to SRAM access have been found
-during the development of the patchsets. Since then an errata for
-the controller has been shared by microchip.
-All of mitigations that we could think (including the use of SPI-CRC
-transfers) or special ordering of transfers are not effective in avoiding
-the SERR issue. That is why we are only able to reach 99.95% rate, because
-when this issue occurres then there is the need to reconfigure the
-controller and that takes some time which can not get used to process
-frames. Fortunately this only happens on highly congested systems, but it
-is more likely to occur on low end systems.
-
-Version 5 of the patchset is a big reorganization of the patchset
-into different components (basic controller management, GPIO and CAN)
-and has split out each of those compüonents/functions into separate
-source files for the sake of readability.
-
-So as an example almost everything related to can-transmission can get
-found in mcp25xxfd_can_tx.c. mcp25xxfd_can_rx.c is responsible for
-can-reception and mcp25xxfd_can_int.c for interrupt handling.
-
-This also reduces the size of the individual patches to below 128k
-so that the linux-can mailing-list should accepts the patch.
-
-Changelog:
-  V1 -> V2: new more generic name based on feedback from microchip
-            cleanup of code (checkpatch)
-            address all feedback on code
-            handle (HW) systemerrors in a much better/reliable way
-            cleanup of dt custom properties removing (most) gpio
-              related properties
-            implemented GPIOLIB support as per feedback
-  V2 -> V3: added vendor-prefix for gpio-opendrain to dt-binding
-            added gpio-controller to dt-binding
-	    added feedback by Rob Herring
-	    waited for other feedback regarding the code
-  V3 -> V4: resend
-            Patch-1 (dt) added: Reviewed-by: Rob Herring <robh@kernel.org>
-  V4 -> V5: reorganisation of the patchset into smaller patches
-            review of the whole driver code for better modularization
-
-Martin Sperl (4):
-  dt-binding: can: mcp25xxfd: document device tree bindings
-  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver basics
-  can: mcp25xxfd: add gpiolib support for GPIO0/1 (aka. INT0/INT1)
-  can: mcp25xxfd: Add Microchip mcp25xxfd CAN FD driver
-
- .../bindings/net/can/microchip,mcp25xxfd.txt       |   32 +
- drivers/net/can/spi/Kconfig                        |    2 +
- drivers/net/can/spi/Makefile                       |    2 +
- drivers/net/can/spi/mcp25xxfd/Kconfig              |    5 +
- drivers/net/can/spi/mcp25xxfd/Makefile             |   11 +
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd.h          |  279 +++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c     | 1204 ++++++++++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c      |  803 +++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h      |  760 ++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c |  479 ++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c  |  723 ++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c   |  208 ++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c   |  824 ++++++++++++++
- drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.c     |  199 ++++
- 14 files changed, 5531 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
- create mode 100644 drivers/net/can/spi/mcp25xxfd/Kconfig
- create mode 100644 drivers/net/can/spi/mcp25xxfd/Makefile
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_base.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can.h
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_fifo.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_int.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_rx.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_can_tx.c
- create mode 100644 drivers/net/can/spi/mcp25xxfd/mcp25xxfd_gpio.c
-
---
-2.11.0
+> 
+> On Fri, Dec 07, 2018 at 06:05:14PM +0200, Vladimir Zapolskiy wrote:
+> > On 12/07/2018 03:48 PM, Andy Shevchenko wrote:
+> > > On Fri, Dec 07, 2018 at 10:18:26AM +0200, Vladimir Zapolskiy wrote:
+> > >> On 12/05/2018 04:11 PM, Andy Shevchenko wrote:
+> > >>> For the platforms which have no clock provider for the sc16is7xx type of UART,
+> > >>> introduce an alternative clock-frequency property which would be used instead.
+> > >>
+> > >> the subject has a typo in 'clock-frequence', then can you please tell me more,
+> > >> how is it possible that an SC16IS7xx IC has no clock provider connected to it?
+> > > 
+> > > I better ask Grigorii about this, since I have no hardware at my possession.
+> > > 
+> > >> And if there is one, then please just describe it in device tree as well.
+> > > 
+> > > Tell me how to do this for ACPI?
+> > > 
+> > 
+> > I didn't grasp the connection between your update of IC device tree bindings
+> > and ACPI, please elaborate in the context of updating device tree bindings
+> > documentation and supported properties.
+> 
+> OK.
+> 
+> > I do care about purity of device tree bindings of SC16IS7xx IC, which is
+> > found on some of my boards with description in DTB, that's why I object to
+> > this series.
+> 
+> I also support the purity of many drivers and modules in the software (Linux
+> kernel), but because of existing hardware and customers I can't reject their
+> needs. That's why, unfortunately, the drivers' code is full of quirks.
+> 
+> If I would object on each of those cases, I would end up with the OS which
+> supports almost nothing.
+> 
+> > >>> +- clock-frequency: The source clock frequency for the IC.
+> > >>>  
+> > >>
+> > >> I strongly dislike this change, I'm inclined to cast a NAK to the series.
+> > > 
+> > > To be productive, please propose the alternative, otherwise your NAK is nothing
+> > > to do with a real hardware and approach I proposed.
+> > 
+> > As I've said 'clock-frequency' property is not a hardware property of SC16IS7xx
+> > IC, it is a hardware property of some external hardware component, it may
+> > provide a volatile clock rate, which you miss, and it should be described
+> > separately in DT.
+> 
+> I disagree with you.
+> 
+> Crystal or PLL or another clock source, even being external component, still is
+> internal to the blackbox called UART-I2C adapter.
+> 
+> > The current approach with 'clocks' property addresses all cases perfectly,
+> > even if your change is an attempt to solve some actual problem, you haven't
+> > managed to describe it in the commit message.
+> 
+> I will fix the commit message. I agree it's not perfect.
+> 
+> > NAK for the added property, which makes obtaining of the clock supplier
+> > frequency equivocal.
+> 
+> Your NAK is nothing w/o proposed alternative which would work in a case of ACPI
+> enabled platform.
+> 
+> > >> 1. 'clock-frequency' is a very specific device tree property, in my opinion
+> > >>     its presence is justified on sort of clock provider devices only (like I2C
+> > >>     controllers), unfortunately the property was added to a number of device
+> > >>     tree bindings improperly, mainly it was done before introduction of
+> > >>     "assigned-clocks" and "assigned-clock-parents" properties in CCF, and then
+> > >>     it was blindly copied.
+> > > 
+> > > OK, I will wait for your patch to remove such from, for example, 8250_dw.c
+> > > where same problem had been targeted in the same way.
+> > 
+> > I'm not interested to fix legacy device tree binding issues added in 2011,
+> > equally I'm not going to close my eyes on right the same issues, when someone
+> > attempts to spread them further today.
+> 
+> Any proposal, be constructive, please.
+> 
+> > >> 2. SC16IS7xx type of UARTs is a regular clock consumer, ICs always have a valid
+> > >>    clock provider connected to XTAL1 (and XTAL2 in case of a connected
+> > >>    crystal oscillator), thus, if needed, the driver can get input clock rate
+> > >>    by calling standard clk_get_rate(), so the presence of the required 'clocks'
+> > >>    property is sufficient.
+> > > 
+> > > So what?
+> > > There is a hardware, there is a clock provider hidden in it. How you would
+> > > describe it? Platform data? Why?
+> > > 
+> > 
+> > What do you mean by 'hardware'? PCB, SC16IS7xx IC or something else?
+> > 
+> > What do you mean by 'a clock provider hidden in it'?
+> > 
+> > Please find the hidden clock provided and describe it in a proper way, for DTS
+> > changes please reference to Documentation/devicetree/bindings/clock contents.
+> 
+> Again, try to think about the world not being just arm + dts.
+> 
+> > >> 3. In some very specific corner cases it might be needed to add another
+> > >>    "assigned-clocks" and "assigned-clock-parents" properties to a particular
+> > >>    device node on a particular board, but their explicit description in device
+> > >>    tree bindings is not needed.
+> > > 
+> > > Can DT people once in life think outside the box?!
+> > > 
+> > 
+> > The rhetorical question doesn't sound like a nice supporting argument of
+> > your change.
+> > 
+> > Please don't slip into arrogance, and please concentrate on technical aspects.
+> 
+> Please, read your sentence above and tell me what the alternative I have?
+> 
+> -- 
+> With Best Regards,
+> Andy Shevchenko
+> 
+> 
