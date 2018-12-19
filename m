@@ -1,148 +1,77 @@
-From: Marcel Holtmann <marcel@holtmann.org>
-Subject: Re: [PATCH v3 00/15] ARM: sunxi: Enable Broadcom-based Bluetooth
- controllers
-Date: Wed, 19 Dec 2018 00:50:13 +0100
-Message-ID: <ADDC30F6-9C86-4D59-A28E-A3007C9D478D@holtmann.org>
-References: <20181217040449.31437-1-wens@csie.org>
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Content-Type: text/plain;
-        charset=us-ascii
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
+Date: Tue, 18 Dec 2018 16:26:20 -0800
+Message-ID: <20181219002620.12138-2-khilman@baylibre.com>
+References: <20181219002620.12138-1-khilman@baylibre.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217040449.31437-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Johan Hedberg <johan.hedberg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Loic Poulain <loic.poulain@gmail.com>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181219002620.12138-1-khilman@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-amlogic@lists.infradead.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Chen-Yu,
+Add the G12a (S905X2) based X96 Max board[1].
 
-> This is v3 of my Broadcom-based Bluetooth controllers on Allwinner SoC-
-> based SBCs series. v2 was sent on 11/15, with a follow up ping on 11/28.
-> No response from either Bluetooth maintainer. Would the maintainers
-> acknowledge or provide feedback so we can move forward? WiFi for the
-> Broadcom chips has been supported and enabled for many years. Bluetooth
-> on the other hand has required userspace trickery to get it working.
-> With serdev support, this now requires minimal interaction from
-> users to get working.
-> 
-> 
-> Changes since v2:
-> 
->  - Collected tags from Ondrej for applicable patches
-> 
-> Changes since v1:
-> 
->  - Collected tags
->  - Re-organize dt binding clocks and clock-names properties
->  - Simplify check for deferred probe when getting clocks
->  - Add explanation of Cubietruck's clk_out_a pinmux setting placement
->    to commit message.
->  - Add missing "uart-has-rtscts" property to Cubietruck device tree
-> 
-> Original cover letter follows.
-> 
-> 
-> On many Allwinner SBCs / developer boards, there is a WiFi+BT combo
-> module from AMPAK. Inside is either one or two Broadcom chips, depending
-> on the model. This series enables the Bluetooth controllers for AMPAK
-> AP6210, AP6212, and AP6330 found on several boards. More will come later
-> as other SoCs require changes to some other parts. I did not cover the
-> SCO PCM connections from the controller to the SoC's I2S interface. It
-> seems no one is actually doing this, so I was not sure how to proceed.
-> Any suggestions?
-> 
-> I deliberately left out the netdev mailing list and Dave Miller, as the
-> only thing that is under net is the binding document. Maybe we should
-> move that out of Documentation/devicetree/bindings/net/ ?
-> 
-> Also, I'm not subscribed to the linux-bluetooth ML, so please CC me for
-> any discussions.
-> 
-> Patches 1 through 4 are device tree binding changes:
-> 
-> 1 - Make the external clock name unambiguous, and add a second entry for
->    the LPO clock.
-> 
-> 2 - Add regulator supply properties for the VBAT and VDDIO power pins.
-> 
-> 3 - Add a compatible string for BCM20702A1.
-> 
-> 4 - Add a compatible string for BCM4330.
-> 
-> Patches 5 through 13 are changes to the driver, either improvements,
-> or updates to handle the updated device tree binding.
-> 
-> 5 - Make the driver handle deferred probing for the external clock.
-> 
-> 6 - Simplify clock error checking for subsequent clk API calls.
-> 
-> 7 - Handle clock-names for the main external clock.
-> 
-> 8 - Support a new external clock, the LPO.
-> 
-> 9 - Support regulator supplies.
-> 
-> 10 - Wait a small amount of time after toggling the GPIO for the device
->     to settle.
-> 
-> 11 - Add support for BCM20702A1, including its default address.
-> 
-> 12 - Add BCM4330 compatible string to the driver.
-> 
-> 13 - Handle default address for BCM43430A0.
-> 
-> 14 - Enable Broadcom-based serdev Bluetooth for multiple Allwinner ARMv7
->     boards.
-> 
-> 15 - Enable Broadcom-based serdev Bluetooth for the Bananapi M64.
-> 
-> checkpatch reports an error for both patch 11 and patch 13:
-> 
->    ERROR: space required after that close brace '}'
-> 
-> I followed the existing code's style. If this is undesirable, I can send
-> a follow-up patch fixing the entire code block.
-> 
-> The first 13 patches should go through the Bluetooth tree, while we, the
-> sunxi maintainers, will take the last 2.
-> 
-> 
-> Thanks
-> ChenYu
-> 
-> Chen-Yu Tsai (14):
->  dt-bindings: net: broadcom-bluetooth: Fix external clock names
->  dt-bindings: net: broadcom-bluetooth: Add VBAT and VDDIO supplies
->  dt-bindings: net: broadcom-bluetooth: Add BCM20702A1 compatible string
->  dt-bindings: net: broadcom-bluetooth: Add BCM4330 compatible string
->  Bluetooth: hci_bcm: Handle deferred probing for the clock supply
->  Bluetooth: hci_bcm: Simplify clk_get error handling
->  Bluetooth: hci_bcm: Use "txco" and "extclk" to get clock reference
->  Bluetooth: hci_bcm: Add support for LPO clock
->  Bluetooth: hci_bcm: Add support for regulator supplies
->  Bluetooth: hci_bcm: Wait for device to come out of reset after power
->    on
->  Bluetooth: hci_bcm: Add compatible string for BCM4330
->  Bluetooth: btbcm: Add default address for BCM43430A0
->  ARM: dts: sunxi: Enable Broadcom-based Bluetooth for multiple boards
->  arm64: dts: allwinner: a64: bananapi-m64: Add Bluetooth device node
-> 
-> Maxime Ripard (1):
->  Bluetooth: hci_bcm: Add BCM20702A1 variant
-> 
-> .../bindings/net/broadcom-bluetooth.txt       |  11 +-
-> arch/arm/boot/dts/sun7i-a20-cubietruck.dts    |  25 ++++
-> arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |  18 +++
-> .../boot/dts/sun8i-a83t-cubietruck-plus.dts   |  18 +++
-> arch/arm/boot/dts/sun8i-r16-bananapi-m2m.dts  |  14 +++
-> .../dts/allwinner/sun50i-a64-bananapi-m64.dts |  14 +++
-> drivers/bluetooth/btbcm.c                     |  13 +-
-> drivers/bluetooth/hci_bcm.c                   | 112 +++++++++++++++---
-> 8 files changed, 208 insertions(+), 17 deletions(-)
+There is no branding for the manufacturer anywhere on the product, so it
+took some digging to find the manufacturer.  But since there's nothing
+about the maker on the product I've left it out of the DT name because
+1) nobody will no that name and 2) keeps the DT filename shorter.
 
-patches 1-13 have been applied to bluetooth-next tree.
+[1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
 
-Regards
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+---
+Special thanks to Martin Blumenstingl for extra digging for the manufacturer
 
-Marcel
+ .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+new file mode 100644
+index 000000000000..fe94765b671e
+--- /dev/null
++++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+@@ -0,0 +1,28 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
++ */
++
++/dts-v1/;
++
++#include "meson-g12a.dtsi"
++
++/ {
++	compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
++	model = "Shenzhen Amediatech Technology Co., Ltd X96 Max";
++
++	aliases {
++		serial0 = &uart_AO;
++	};
++	chosen {
++		stdout-path = "serial0:115200n8";
++	};
++	memory@0 {
++		device_type = "memory";
++		reg = <0x0 0x0 0x0 0x40000000>;
++	};
++};
++
++&uart_AO {
++	status = "okay";
++};
+-- 
+2.19.2
