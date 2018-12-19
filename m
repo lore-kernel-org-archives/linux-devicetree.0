@@ -1,66 +1,78 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: Re: [PATCH] ARM: dts: da850-evm: Correct the audio codec regulators
-Date: Wed, 19 Dec 2018 13:37:44 +0200
-Message-ID: <b82d43d5-8bb7-e9a7-5367-07589b8ebaee@ti.com>
-References: <20181219101258.20763-1-peter.ujfalusi@ti.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH 2/3] dt-bindings: display: bridge: lvds-transmitter: add pwdn-gpios
+Date: Wed, 19 Dec 2018 13:38:57 +0200
+Message-ID: <2541072.bfOLpEHFeN@avalon>
+References: <20181218231850.3572-1-peda@axentia.se> <f0686eeb-14af-6525-6c55-9cc8bdc5730e@samsung.com> <7c2f1268-43a3-1dc2-bb2d-6da9d74a5a43@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181219101258.20763-1-peter.ujfalusi@ti.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: tony@atomide.com, linux@armlinux.org.uk, nsekhar@ti.com
-Cc: devicetree@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, bcousson@baylibre.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7Bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7c2f1268-43a3-1dc2-bb2d-6da9d74a5a43@axentia.se>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Peter Rosin <peda@axentia.se>
+Cc: Andrzej Hajda <a.hajda@samsung.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiAxOS8xMi8yMDE4IDEyLjEyLCBQZXRlciBVamZhbHVzaSB3cm90ZToKPiBBZGQgdGhl
-IGJvYXJkIGxldmVsIGZpeGVkIHJlZ3VsYXRvcnMgZm9yIDMuM1YgYW5kIDEuOFYgd2hpY2ggaXMg
-dXNlZCB0bwo+IHBvd2VyIC0gYW1vbmcgb3RoZXIgdGhpbmdzIC0gdGhlIHRsdjMyMGFpYzMxMDYg
-Y29kZWMuCj4gCj4gQXBhcnQgZnJvbSByZW1vdmluZyB0aGUgZm9sbG93aW5nIHdhcm5pbmcgZHVy
-aW5nIGJvb3Q6Cj4gdGx2MzIwYWljM3gtY29kZWMgMC0wMDE4OiBUb28gaGlnaCBzdXBwbHkgdm9s
-dGFnZShzKSBBVkREOiA1MDAwMDAwLCBEVkREOiA1MDAwMDAwCj4gCj4gV2l0aCB0aGUgY29ycmVj
-dCB2b2x0YWdlcyB0aGUgZHJpdmVyIGNhbiBzZWxlY3QgY29ycmVjdCBPQ01WIHZhbHVlIHRvCj4g
-cmVkdWNlIHBvcCBub2lzZS4KClBsZWFzZSBpZ25vcmUgdGhpcywgSSdsbCBzZW5kIGFuIHVwZGF0
-ZS4KCj4gCj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgVWpmYWx1c2kgPHBldGVyLnVqZmFsdXNpQHRp
-LmNvbT4KPiAtLS0KPiAgYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cyB8IDI5ICsrKysr
-KysrKysrKysrKysrKysrKysrKystLS0tCj4gIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25z
-KCspLCA0IGRlbGV0aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9k
-YTg1MC1ldm0uZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvZGE4NTAtZXZtLmR0cwo+IGluZGV4IGY5
-YTVhODIxMmM4NC4uOTk3YmVkZTJhNDhmIDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2RhODUwLWV2bS5kdHMKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9kYTg1MC1ldm0uZHRzCj4g
-QEAgLTk0LDYgKzk0LDI4IEBACj4gIAkJcmVndWxhdG9yLWJvb3Qtb247Cj4gIAl9Owo+ICAKPiAr
-CWJhc2Vib2FyZF8zdjM6IGZpeGVkcmVndWxhdG9yLTN2MyB7Cj4gKwkJLyogVFBTNzM3MDFEQ1Eg
-Ki8KPiArCQljb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4gKwkJcmVndWxhdG9yLW5h
-bWUgPSAiYmFzZWJvYXJkXzN2MyI7Cj4gKwkJcmVndWxhdG9yLW1pbi1taWNyb3ZvbHQgPSA8MzMw
-MDAwMD47Cj4gKwkJcmVndWxhdG9yLW1heC1taWNyb3ZvbHQgPSA8MzMwMDAwMD47Cj4gKwkJdmlu
-LXN1cHBseSA9IDwmdmJhdD47Cj4gKwkJcmVndWxhdG9yLWFsd2F5cy1vbjsKPiArCQlyZWd1bGF0
-b3ItYm9vdC1vbjsKPiArCX07Cj4gKwo+ICsJYmFzZWJvYXJkXzF2ODogZml4ZWRyZWd1bGF0b3It
-MXY4IHsKPiArCQkvKiBUUFM3MzcwMURDUSAqLwo+ICsJCWNvbXBhdGlibGUgPSAicmVndWxhdG9y
-LWZpeGVkIjsKPiArCQlyZWd1bGF0b3ItbmFtZSA9ICJiYXNlYm9hcmRfMXY4IjsKPiArCQlyZWd1
-bGF0b3ItbWluLW1pY3Jvdm9sdCA9IDwxODAwMDAwPjsKPiArCQlyZWd1bGF0b3ItbWF4LW1pY3Jv
-dm9sdCA9IDwxODAwMDAwPjsKPiArCQl2aW4tc3VwcGx5ID0gPCZ2YmF0PjsKPiArCQlyZWd1bGF0
-b3ItYWx3YXlzLW9uOwo+ICsJCXJlZ3VsYXRvci1ib290LW9uOwo+ICsJfTsKPiArCj4gIAliYWNr
-bGlnaHRfbGNkOiBiYWNrbGlnaHQtcmVndWxhdG9yIHsKPiAgCQljb21wYXRpYmxlID0gInJlZ3Vs
-YXRvci1maXhlZCI7Cj4gIAkJcmVndWxhdG9yLW5hbWUgPSAibGNkX2JhY2tsaWdodF9wd3IiOwo+
-IEBAIC0yMTAsMTAgKzIzMiw5IEBACj4gIAo+ICAJCS8qIFJlZ3VsYXRvcnMgKi8KPiAgCQlJT1ZE
-RC1zdXBwbHkgPSA8JnZkY2RjMl9yZWc+Owo+IC0JCS8qIERlcml2ZWQgZnJvbSBWQkFUOiBCYXNl
-Ym9hcmQgMy4zViAvIDEuOFYgKi8KPiAtCQlBVkRELXN1cHBseSA9IDwmdmJhdD47Cj4gLQkJRFJW
-REQtc3VwcGx5ID0gPCZ2YmF0PjsKPiAtCQlEVkRELXN1cHBseSA9IDwmdmJhdD47Cj4gKwkJQVZE
-RC1zdXBwbHkgPSA8JmJhc2Vib2FyZF8zdjM+Owo+ICsJCURSVkRELXN1cHBseSA9IDwmYmFzZWJv
-YXJkXzN2Mz47Cj4gKwkJRFZERC1zdXBwbHkgPSA8JmJhc2Vib2FyZF8xdjg+Owo+ICAJfTsKPiAg
-CXRjYTY0MTY6IGdwaW9AMjAgewo+ICAJCWNvbXBhdGlibGUgPSAidGksdGNhNjQxNiI7Cj4gCgot
-IFDDqXRlcgoKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwg
-MDAxODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlr
-a2EvRG9taWNpbGU6IEhlbHNpbmtpCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2Vy
-bmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1h
-bi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+Hello,
+
+On Wednesday, 19 December 2018 11:57:32 EET Peter Rosin wrote:
+> On 2018-12-19 10:12, Andrzej Hajda wrote:
+> > On 19.12.2018 00:19, Peter Rosin wrote:
+> >> Add optional property to specify a power-down GPIO.
+> >> The pwdn-gpios name is already in use by the thine,thc63lvdm83d
+> >> binding, so go with that.
+> >>
+> >> Signed-off-by: Peter Rosin <peda@axentia.se>
+> >> ---
+> >> 
+> >>  Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt |
+> >>  3 +++ 
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git
+> >> a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> >> b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> >> index f9e7dd666f58..47941d39f92f 100644
+> >> ---
+> >> a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> >> +++
+> >> b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
+> >> @@ -31,6 +31,9 @@ Required properties:
+> >>    device-specific version corresponding to the device first
+> >>    followed by the generic version.
+> >> 
+> >> +Optional properties:
+> >> +- pwdn-gpios: Power-down control GPIO
+> >> +
+> > 
+> > Since naming is not enforced by any datasheet I would propose something
+> > more popular with less twisted logic. Maybe:
+> > 
+> > - enable-gpios: ... (active high).
+> 
+> That was my original thought too, but the driver implementing the
+> lvds-encoder bindings also handles the mentioned thine,thc63lvdm83d
+> lvds encoder, and that binding has the "pwdn" naming. So, for driver
+> implementation simplicity I went with what was already there, thus
+> allowing adding support for both bindings with one implementation
+> (in patch 3/3).
+> 
+> Adding code just to handle multiple names for the same thing does
+> not sounds too appealing.
+
+I'm afraid I think we shouldn't add pwdn-gpios support to the lvds encoder DT 
+bindings. The reason is that control GPIOs (and regulators) come with device-
+specific semantics. If we add pwdn-gpios now, we'll then add reset-gpios, and 
+power supplies, and all of a sudden we'll end up having to encode sequencing 
+of GPIOs and power supplies in DT. That path has been tried in the past, with 
+no good results.
+
+I would instead create device-specific bindings, like done for 
+thine,thc63lvdm83d. It's fine to then add support for the pwdn-gpios property 
+in the lvds-encoder driver, as long as the meaning of the property comes from 
+specific DT bindings, not from the generic ones.
+
+-- 
+Regards,
+
+Laurent Pinchart
