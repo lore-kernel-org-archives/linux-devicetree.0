@@ -1,45 +1,33 @@
-From: Maruthi Srinivas Bayyavarapu
-        <maruthi.srinivas.bayyavarapu@xilinx.com>
-Subject: [PATCH] ASoC: xlnx: change license header format style
-Date: Wed, 19 Dec 2018 15:10:40 +0530
-Message-ID: <1545212440-109949-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH 2/2] arm: dts: ls1021a: Add incr-burst-byte-adjustment property to USB3 node
+Date: Wed, 19 Dec 2018 17:41:09 +0800
+Message-ID: <20181219094109.3836-2-ran.wang_1@nxp.com>
+References: <20181219094109.3836-1-ran.wang_1@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181219094109.3836-1-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Changed License header from C to C++ style comment block.
+Add this property to improve USB read write performance.
 
-Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
 ---
- sound/soc/xilinx/xlnx_i2s.c | 15 +++++++--------
- 1 file changed, 7 insertions(+), 8 deletions(-)
+ arch/arm/boot/dts/ls1021a.dtsi |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/sound/soc/xilinx/xlnx_i2s.c b/sound/soc/xilinx/xlnx_i2s.c
-index d4ae9ef..8b35316 100644
---- a/sound/soc/xilinx/xlnx_i2s.c
-+++ b/sound/soc/xilinx/xlnx_i2s.c
-@@ -1,12 +1,11 @@
- // SPDX-License-Identifier: GPL-2.0
--/*
-- * Xilinx ASoC I2S audio support
-- *
-- * Copyright (C) 2018 Xilinx, Inc.
-- *
-- * Author: Praveen Vuppala <praveenv@xilinx.com>
-- * Author: Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>
-- */
-+//
-+// Xilinx ASoC I2S audio support
-+//
-+// Copyright (C) 2018 Xilinx, Inc.
-+//
-+// Author: Praveen Vuppala <praveenv@xilinx.com>
-+// Author: Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index bdd6e66..f788a89 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -713,6 +713,7 @@
+ 			dr_mode = "host";
+ 			snps,quirk-frame-length-adjustment = <0x20>;
+ 			snps,dis_rxdet_inp3_quirk;
++			snps,incr-burst-type-adjustment = <1>, <4>, <8>, <16>;
+ 		};
  
- #include <linux/io.h>
- #include <linux/module.h>
+ 		pcie@3400000 {
 -- 
-2.7.4
+1.7.1
