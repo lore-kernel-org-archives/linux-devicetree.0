@@ -1,88 +1,115 @@
-From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v5 2/8] drm/msm/dsi: 28nm 8960 PHY: Get ref
- clock from the DT
-Date: Wed, 19 Dec 2018 15:55:22 -0800
-Message-ID: <20181219235528.114830-3-mka@chromium.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH v5 4/8] drm/msm/dsi: 14nm PHY: Get ref clock from the DT
+Date: Wed, 19 Dec 2018 15:55:24 -0800
+Message-ID: <20181219235528.114830-5-mka@chromium.org>
 References: <20181219235528.114830-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181219235528.114830-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181219235528.114830-1-mka@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-R2V0IHRoZSByZWYgY2xvY2sgb2YgdGhlIFBIWSBmcm9tIHRoZSBkZXZpY2UgdHJlZSBpbnN0ZWFk
-IG9mCmhhcmRjb2RpbmcgaXRzIG5hbWUgYW5kIHJhdGUuCgpTaWduZWQtb2ZmLWJ5OiBNYXR0aGlh
-cyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KUmV2aWV3ZWQtYnk6IFN0ZXBoZW4gQm95ZCA8
-c3dib3lkQGNocm9taXVtLm9yZz4KLS0tCkNoYW5nZXMgaW4gdjU6Ci0gYWRkZWQgIlJldmlld2Vk
-LWJ5OiBTdGVwaGVuIEJveWQgPHN3Ym95ZEBjaHJvbWl1bS5vcmc+IiB0YWcKCkNoYW5nZXMgaW4g
-djQ6Ci0gYWx3YXlzIHVzZSBwYXJlbnQgcmF0ZSBpbiBkc2lfcGxsXzI4bm1fY2xrX3NldF9yYXRl
-KCkKLSBwYXNzIG5hbWUgb2YgVkNPIHJlZiBjbG9jayB0byBwbGxfMjhubV9yZWdpc3RlcigpIGlu
-c3RlYWQgb2YKICBzdG9yaW5nIGl0IGluIGEgc3RydWN0IGZpZWxkCi0gdXBkYXRlZCBjb21taXQg
-bWVzc2FnZQoKQ2hhbmdlcyBpbiB2MzoKLSB1c2UgZGVmYXVsdCBuYW1lIGFuZCByYXRlIGlmIHRo
-ZSByZWYgY2xvY2sgaXMgbm90IHNwZWNpZmllZAogIGluIHRoZSBEVAotIHN0b3JlIHZjb19yZWZf
-Y2xrX25hbWUgaW5zdGVhZCBvZiB2Y29fcmVmX2NsawotIGZpeGVkIGNoZWNrIGZvciBFUFJPQkVf
-REVGRVIKLSByZW5hbWVkIFZDT19SRUZfQ0xLX1JBVEUgdG8gVkNPX1JFRl9DTEtfREVGQVVMVF9S
-QVRFCgpDaGFuZ2VzIGluIHYyOgotIHBhdGNoIGFkZGVkIHRvIHRoZSBzZXJpZXMKLS0tCiAuLi4v
-Z3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzI4bm1fODk2MC5jICAgfCAyNCArKysrKysrKysr
-KysrKystLS0tCiAxIGZpbGUgY2hhbmdlZCwgMTkgaW5zZXJ0aW9ucygrKSwgNSBkZWxldGlvbnMo
-LSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8yOG5t
-Xzg5NjAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzI4bm1fODk2MC5j
-CmluZGV4IDQ5MDA4NDUxMDg1YjguLjc2ZTUxODgxNjliOTEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMv
-Z3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzI4bm1fODk2MC5jCisrKyBiL2RyaXZlcnMvZ3B1
-L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzI4bm1fODk2MC5jCkBAIC00Nyw3ICs0Nyw2IEBACiAK
-ICNkZWZpbmUgTlVNX1BST1ZJREVEX0NMS1MJMgogCi0jZGVmaW5lIFZDT19SRUZfQ0xLX1JBVEUJ
-MjcwMDAwMDAKICNkZWZpbmUgVkNPX01JTl9SQVRFCQk2MDAwMDAwMDAKICNkZWZpbmUgVkNPX01B
-WF9SQVRFCQkxMjAwMDAwMDAwCiAKQEAgLTEyNSw3ICsxMjQsNyBAQCBzdGF0aWMgaW50IGRzaV9w
-bGxfMjhubV9jbGtfc2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0
-ZSwKIAlEQkcoInJhdGU9JWx1LCBwYXJlbnQncz0lbHUiLCByYXRlLCBwYXJlbnRfcmF0ZSk7CiAK
-IAl0ZW1wID0gcmF0ZSAvIDEwOwotCXZhbCA9IFZDT19SRUZfQ0xLX1JBVEUgLyAxMDsKKwl2YWwg
-PSBwYXJlbnRfcmF0ZSAvIDEwOwogCWZiX2RpdmlkZXIgPSAodGVtcCAqIFZDT19QUkVGX0RJVl9S
-QVRJTykgLyB2YWw7CiAJZmJfZGl2aWRlciA9IGZiX2RpdmlkZXIgLyAyIC0gMTsKIAlwbGxfd3Jp
-dGUoYmFzZSArIFJFR19EU0lfMjhubV84OTYwX1BIWV9QTExfQ1RSTF8xLApAQCAtNDA2LDExICs0
-MDUsMTIgQEAgc3RhdGljIHZvaWQgZHNpX3BsbF8yOG5tX2Rlc3Ryb3koc3RydWN0IG1zbV9kc2lf
-cGxsICpwbGwpCiAJCQkJCXBsbF8yOG5tLT5jbGtzLCBwbGxfMjhubS0+bnVtX2Nsa3MpOwogfQog
-Ci1zdGF0aWMgaW50IHBsbF8yOG5tX3JlZ2lzdGVyKHN0cnVjdCBkc2lfcGxsXzI4bm0gKnBsbF8y
-OG5tKQorc3RhdGljIGludCBwbGxfMjhubV9yZWdpc3RlcihzdHJ1Y3QgZHNpX3BsbF8yOG5tICpw
-bGxfMjhubSwKKwkJCSAgICAgY29uc3QgY2hhciAqcmVmX2Nsa19uYW1lKQogewogCWNoYXIgKmNs
-a19uYW1lLCAqcGFyZW50X25hbWUsICp2Y29fbmFtZTsKIAlzdHJ1Y3QgY2xrX2luaXRfZGF0YSB2
-Y29faW5pdCA9IHsKLQkJLnBhcmVudF9uYW1lcyA9IChjb25zdCBjaGFyICpbXSl7ICJweG8iIH0s
-CisJCS5wYXJlbnRfbmFtZXMgPSAmcmVmX2Nsa19uYW1lLAogCQkubnVtX3BhcmVudHMgPSAxLAog
-CQkuZmxhZ3MgPSBDTEtfSUdOT1JFX1VOVVNFRCwKIAkJLm9wcyA9ICZjbGtfb3BzX2RzaV9wbGxf
-MjhubV92Y28sCkBAIC00OTQsNiArNDk0LDggQEAgc3RydWN0IG1zbV9kc2lfcGxsICptc21fZHNp
-X3BsbF8yOG5tXzg5NjBfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAogewogCXN0
-cnVjdCBkc2lfcGxsXzI4bm0gKnBsbF8yOG5tOwogCXN0cnVjdCBtc21fZHNpX3BsbCAqcGxsOwor
-CXN0cnVjdCBjbGsgKnZjb19yZWZfY2xrOworCWNvbnN0IGNoYXIgKnZjb19yZWZfY2xrX25hbWU7
-CiAJaW50IHJldDsKIAogCWlmICghcGRldikKQEAgLTUwNiw2ICs1MDgsMTggQEAgc3RydWN0IG1z
-bV9kc2lfcGxsICptc21fZHNpX3BsbF8yOG5tXzg5NjBfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2LAogCXBsbF8yOG5tLT5wZGV2ID0gcGRldjsKIAlwbGxfMjhubS0+aWQgPSBpZCAr
-IDE7CiAKKwl2Y29fcmVmX2NsayA9IGRldm1fY2xrX2dldCgmcGRldi0+ZGV2LCAicmVmIik7CisJ
-aWYgKCFJU19FUlIodmNvX3JlZl9jbGspKSB7CisJCXZjb19yZWZfY2xrX25hbWUgPSBfX2Nsa19n
-ZXRfbmFtZSh2Y29fcmVmX2Nsayk7CisJfSBlbHNlIHsKKwkJcmV0ID0gUFRSX0VSUih2Y29fcmVm
-X2Nsayk7CisJCWlmIChyZXQgPT0gLUVQUk9CRV9ERUZFUikKKwkJCXJldHVybiBFUlJfUFRSKHJl
-dCk7CisKKwkJZGV2X3dhcm4oJnBkZXYtPmRldiwgIidyZWYnIGNsb2NrIGlzIG5vdCBzcGVjaWZp
-ZWQsIHVzaW5nIGRlZmF1bHQgbmFtZVxuIik7CisJCXZjb19yZWZfY2xrX25hbWUgPSAicHhvIjsK
-Kwl9CisKIAlwbGxfMjhubS0+bW1pbyA9IG1zbV9pb3JlbWFwKHBkZXYsICJkc2lfcGxsIiwgIkRT
-SV9QTEwiKTsKIAlpZiAoSVNfRVJSX09SX05VTEwocGxsXzI4bm0tPm1taW8pKSB7CiAJCWRldl9l
-cnIoJnBkZXYtPmRldiwgIiVzOiBmYWlsZWQgdG8gbWFwIHBsbCBiYXNlXG4iLCBfX2Z1bmNfXyk7
-CkBAIC01MjQsNyArNTM4LDcgQEAgc3RydWN0IG1zbV9kc2lfcGxsICptc21fZHNpX3BsbF8yOG5t
-Xzg5NjBfaW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2LAogCXBsbC0+ZW5fc2VxX2Nu
-dCA9IDE7CiAJcGxsLT5lbmFibGVfc2Vxc1swXSA9IGRzaV9wbGxfMjhubV9lbmFibGVfc2VxOwog
-Ci0JcmV0ID0gcGxsXzI4bm1fcmVnaXN0ZXIocGxsXzI4bm0pOworCXJldCA9IHBsbF8yOG5tX3Jl
-Z2lzdGVyKHBsbF8yOG5tLCB2Y29fcmVmX2Nsa19uYW1lKTsKIAlpZiAocmV0KSB7CiAJCWRldl9l
-cnIoJnBkZXYtPmRldiwgImZhaWxlZCB0byByZWdpc3RlciBQTEw6ICVkXG4iLCByZXQpOwogCQly
-ZXR1cm4gRVJSX1BUUihyZXQpOwotLSAKMi4yMC4xLjQxNS5nNjUzNjEzYzcyMy1nb29nCgpfX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFp
-bGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5m
-cmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+Get the ref clock of the PHY from the device tree instead of
+hardcoding its name and rate.
+
+Note: This change could break old out-of-tree DTS files that
+use the 14nm PHY.
+
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+---
+Changes in v5:
+- pass the ref clock name to _register() instead of storing a point
+  to the clk object in the PLL data structure
+
+Changes in v4:
+- none
+
+Changes in v3:
+- fixed check for EPROBE_DEFER
+- added note to commit message about breaking old DTS files
+- added 'Reviewed-by: Douglas Anderson <dianders@chromium.org>' tag
+
+Changes in v2:
+- patch added to the series
+---
+ drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c | 23 +++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c
+index 71fe60e5f01f1..9a647d93a7e0b 100644
+--- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c
++++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_14nm.c
+@@ -40,7 +40,6 @@
+ 
+ #define NUM_PROVIDED_CLKS		2
+ 
+-#define VCO_REF_CLK_RATE		19200000
+ #define VCO_MIN_RATE			1300000000UL
+ #define VCO_MAX_RATE			2600000000UL
+ 
+@@ -591,7 +590,7 @@ static int dsi_pll_14nm_vco_set_rate(struct clk_hw *hw, unsigned long rate,
+ 	    parent_rate);
+ 
+ 	pll_14nm->vco_current_rate = rate;
+-	pll_14nm->vco_ref_clk_rate = VCO_REF_CLK_RATE;
++	pll_14nm->vco_ref_clk_rate = parent_rate;
+ 
+ 	dsi_pll_14nm_input_init(pll_14nm);
+ 
+@@ -947,11 +946,12 @@ static struct clk_hw *pll_14nm_postdiv_register(struct dsi_pll_14nm *pll_14nm,
+ 	return &pll_postdiv->hw;
+ }
+ 
+-static int pll_14nm_register(struct dsi_pll_14nm *pll_14nm)
++static int pll_14nm_register(struct dsi_pll_14nm *pll_14nm,
++			     const char *ref_clk_name)
+ {
+ 	char clk_name[32], parent[32], vco_name[32];
+ 	struct clk_init_data vco_init = {
+-		.parent_names = (const char *[]){ "xo" },
++		.parent_names = &ref_clk_name,
+ 		.num_parents = 1,
+ 		.name = vco_name,
+ 		.flags = CLK_IGNORE_UNUSED,
+@@ -1050,6 +1050,8 @@ struct msm_dsi_pll *msm_dsi_pll_14nm_init(struct platform_device *pdev, int id)
+ {
+ 	struct dsi_pll_14nm *pll_14nm;
+ 	struct msm_dsi_pll *pll;
++	struct clk *vco_ref_clk;
++	const char *vco_ref_clk_name;
+ 	int ret;
+ 
+ 	if (!pdev)
+@@ -1065,6 +1067,17 @@ struct msm_dsi_pll *msm_dsi_pll_14nm_init(struct platform_device *pdev, int id)
+ 	pll_14nm->id = id;
+ 	pll_14nm_list[id] = pll_14nm;
+ 
++	vco_ref_clk = devm_clk_get(&pdev->dev, "ref");
++	if (IS_ERR(vco_ref_clk)) {
++		ret = PTR_ERR(vco_ref_clk);
++		if (ret != -EPROBE_DEFER)
++			dev_err(&pdev->dev, "couldn't get 'ref' clock: %d\n",
++				ret);
++		return ERR_PTR(ret);
++	}
++
++	vco_ref_clk_name = __clk_get_name(vco_ref_clk);
++
+ 	pll_14nm->phy_cmn_mmio = msm_ioremap(pdev, "dsi_phy", "DSI_PHY");
+ 	if (IS_ERR_OR_NULL(pll_14nm->phy_cmn_mmio)) {
+ 		dev_err(&pdev->dev, "failed to map CMN PHY base\n");
+@@ -1094,7 +1107,7 @@ struct msm_dsi_pll *msm_dsi_pll_14nm_init(struct platform_device *pdev, int id)
+ 	pll->en_seq_cnt = 1;
+ 	pll->enable_seqs[0] = dsi_pll_14nm_enable_seq;
+ 
+-	ret = pll_14nm_register(pll_14nm);
++	ret = pll_14nm_register(pll_14nm, vco_ref_clk_name);
+ 	if (ret) {
+ 		dev_err(&pdev->dev, "failed to register PLL: %d\n", ret);
+ 		return ERR_PTR(ret);
+-- 
+2.20.1.415.g653613c723-goog
