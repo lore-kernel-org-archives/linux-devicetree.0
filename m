@@ -1,76 +1,214 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: dsa: ksz9477: add sample of
- switch bindings managed in i2c mode
-Date: Wed, 19 Dec 2018 20:49:19 +0100
-Message-ID: <CAMhs-H8LMLquPEBa4w84OTWOdZGJwAaoMV9=psN2hNR+oeO46Q@mail.gmail.com>
-References: <20181217204423.14271-1-sergio.paracuellos@gmail.com>
- <20181218151044.GA26992@bogus> <CAMhs-H9VAae3STnYw72M9hma=rhkzUHU_9fNNFEdS0YPqrTbdw@mail.gmail.com>
- <538b1829-422a-bf15-b024-e0bf933c930a@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <538b1829-422a-bf15-b024-e0bf933c930a@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Rob Herring <robh@kernel.org>, Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, vivien.didelot@savoirfairelinux.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH] arm64: dts: qcom: msm8998: Enumerate i2c controllers
+Date: Wed, 19 Dec 2018 12:52:39 -0700
+Message-ID: <1545249159-18628-1-git-send-email-jhugo@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, bjorn.andersson@linaro.org, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2018 at 7:26 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
->
-> On 12/18/18 10:23 PM, Sergio Paracuellos wrote:
-> > Hi Rob,
-> >
-> > On Tue, Dec 18, 2018 at 4:10 PM Rob Herring <robh@kernel.org> wrote:
-> >>
-> >> On Mon, Dec 17, 2018 at 09:44:23PM +0100, Sergio Paracuellos wrote:
-> >>> Add device-tree binding example of the ksz9477 switch managed in i2c mode.
-> >>>
-> >>> Cc: devicetree@vger.kernel.org
-> >>> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> >>> ---
-> >>> Changes v3:
-> >>>     - No changes. Just resent patches together.
-> >>>
-> >>> Changes v2:
-> >>>     - Use generic name for label of the switch and make sure reg and @X
-> >>>       have the same value.
-> >>>
-> >>>  .../devicetree/bindings/net/dsa/ksz.txt       | 50 +++++++++++++++++++
-> >>>  1 file changed, 50 insertions(+)
-> >>>
-> >>> diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> >>> index 0f407fb371ce..d3c4b9d4f416 100644
-> >>> --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> >>> +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> >>> @@ -74,3 +74,53 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
-> >>>                                                               };
-> >>>                                               };
-> >>>                               };
-> >>> +
-> >>> +Ethernet switch connected via I2C to the host, CPU port wired to eth0:
-> >>> +
-> >>> +                             eth0: ethernet@10001000 {
-> >>
-> >> Why do we have all this indentation? Please remove. And use tab chars,
-> >> not spaces.
-> >
-> > The original file format is using all of this indentation. So I think
-> > we would need a patch to change de format of the original file and
-> > another with this new changes properly formatted.
->
-> The original formatting should be fixed, but your changes should adopt
-> the correct style from the first time they are submitted. Do you mind
-> resubmitting with only one tab? We can fix the original examples as a
-> follow-up patch.
+msm8998 has a dozen i2c controllers which can be used to connect to board
+specific peripherals.  Enumerate the controllers so that boards can wire
+up as needed.
 
-I see. Thanks for let me know. I'll be more careful from now.
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/msm8998.dtsi | 180 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 180 insertions(+)
 
-v4 actually sent with changes proposed here.
-
->
-> Thanks!
-> --
-> Florian
-
-Best regards,
-    Sergio Paracuellos
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 8d41b69..720bce6 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -624,6 +624,186 @@
+ 			status = "disabled";
+ 		};
+ 
++		i2c1: i2c@c175000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc175000 0x600>;
++			interrupts = <GIC_SPI 95 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP1_QUP1_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c2: i2c@c176000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc176000 0x600>;
++			interrupts = <GIC_SPI 96 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP1_QUP2_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c3: i2c@c177000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc177000 0x600>;
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP1_QUP3_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c4: i2c@c178000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc178000 0x600>;
++			interrupts = <GIC_SPI 98 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP1_QUP4_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c5: i2c@c179000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc179000 0x600>;
++			interrupts = <GIC_SPI 99 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP1_QUP5_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c6: i2c@c17a000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc17a000 0x600>;
++			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP1_QUP6_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c7: i2c@c1b5000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc1b5000 0x600>;
++			interrupts = <GIC_SPI 101 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP2_QUP1_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c8: i2c@c1b6000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc1b6000 0x600>;
++			interrupts = <GIC_SPI 102 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP2_QUP2_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c9: i2c@c1b7000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc1b7000 0x600>;
++			interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP2_QUP3_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c10: i2c@c1b8000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc1b8000 0x600>;
++			interrupts = <GIC_SPI 104 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP2_QUP4_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c11: i2c@c1b9000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc1b9000 0x600>;
++			interrupts = <GIC_SPI 105 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP2_QUP5_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
++		i2c12: i2c@c1ba000 {
++			compatible = "qcom,i2c-qup-v2.2.1";
++			reg = <0xc175000 0x600>;
++			interrupts = <GIC_SPI 106 IRQ_TYPE_LEVEL_HIGH>;
++
++			clocks = <&gcc GCC_BLSP2_QUP6_I2C_APPS_CLK>,
++				 <&gcc GCC_BLSP1_AHB_CLK>;
++			clock-names = "core", "iface";
++			clock-frequency = <400000>;
++
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++
+ 		blsp2_uart1: serial@c1b0000 {
+ 			compatible = "qcom,msm-uartdm-v1.4", "qcom,msm-uartdm";
+ 			reg = <0xc1b0000 0x1000>;
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
