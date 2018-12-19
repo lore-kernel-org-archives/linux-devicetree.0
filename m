@@ -1,48 +1,40 @@
-From: Maruthi Srinivas Bayyavarapu
-        <maruthi.srinivas.bayyavarapu@xilinx.com>
-Subject: [PATCH 3/3] ASoC: xlnx: enable audio formatter driver build
-Date: Wed, 19 Dec 2018 22:49:09 +0530
-Message-ID: <1545239949-112845-4-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
-References: <1545239949-112845-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: marvell,mmp2: fix a typo in bindings doc
+Date: Wed, 19 Dec 2018 11:19:45 -0600
+Message-ID: <20181219171945.GA32656@bogus>
+References: <20181203114748.637314-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545239949-112845-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+Content-Disposition: inline
+In-Reply-To: <20181203114748.637314-1-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Jiri Kosina <trivial@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable audio formatter driver build.
+On Mon, Dec 03, 2018 at 12:47:48PM +0100, Lubomir Rintel wrote:
+> A trivial one, but it's annoying that copy & paste of the link
+> doesn't work.
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> ---
+>  Documentation/devicetree/bindings/clock/marvell,mmp2.txt | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2.txt b/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+> index af376a01f2b7..b0447d9896bc 100644
+> --- a/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+> +++ b/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+> @@ -18,4 +18,4 @@ Required Properties:
+>  Each clock is assigned an identifier and client nodes use this identifier
+>  to specify the clock which they consume.
+>  
+> -All these identifier could be found in <dt-bindings/clock/marvell-mmp2.h>.
+> +All these identifier could be found in <dt-bindings/clock/marvell,mmp2.h>.
 
-Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
----
- sound/soc/xilinx/Kconfig  | 7 +++++++
- sound/soc/xilinx/Makefile | 2 ++
- 2 files changed, 9 insertions(+)
+Really, should be: identifiers can be
 
-diff --git a/sound/soc/xilinx/Kconfig b/sound/soc/xilinx/Kconfig
-index 723a583..ac48d6a 100644
---- a/sound/soc/xilinx/Kconfig
-+++ b/sound/soc/xilinx/Kconfig
-@@ -6,3 +6,10 @@ config SND_SOC_XILINX_I2S
- 	  mode, IP receives audio in AES format, extracts PCM and sends
- 	  PCM data. In receiver mode, IP receives PCM audio and
- 	  encapsulates PCM in AES format and sends AES data.
-+
-+config SND_SOC_XILINX_AUDIO_FORMATTER
-+        tristate "Audio support for the the Xilinx audio formatter"
-+        help
-+          Select this option to enable Xilinx audio formatter
-+          support. This provides DMA platform device support for
-+          audio functionality.
-diff --git a/sound/soc/xilinx/Makefile b/sound/soc/xilinx/Makefile
-index 6c1209b..432693b 100644
---- a/sound/soc/xilinx/Makefile
-+++ b/sound/soc/xilinx/Makefile
-@@ -1,2 +1,4 @@
- snd-soc-xlnx-i2s-objs      := xlnx_i2s.o
- obj-$(CONFIG_SND_SOC_XILINX_I2S) += snd-soc-xlnx-i2s.o
-+snd-soc-xlnx-formatter-pcm-objs := xlnx_formatter_pcm.o
-+obj-$(CONFIG_SND_SOC_XILINX_AUDIO_FORMATTER) += snd-soc-xlnx-formatter-pcm.o
--- 
-2.7.4
+> -- 
+> 2.19.1
+> 
