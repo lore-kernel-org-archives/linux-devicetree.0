@@ -1,77 +1,62 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v5 0/2] Add new UniPhier PCIe host driver
-Date: Wed, 19 Dec 2018 15:48:49 +0000
-Message-ID: <20181219154849.GB25410@e107981-ln.cambridge.arm.com>
-References: <1544143992-16385-1-git-send-email-hayashi.kunihiko@socionext.com>
+From: David Lechner <david@lechnology.com>
+Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
+Date: Wed, 19 Dec 2018 16:48:52 +0100
+Message-ID: <6ebcd7a6-6c85-0312-0651-fb4fbfc25e55@lechnology.com>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-6-git-send-email-rogerq@ti.com>
+ <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
+ <5BFFBCAC.9000004@ti.com> <5C191770.9090804@ti.com>
+ <20181219123812.GC8130@sirena.org.uk> <5C1A670E.9020904@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544143992-16385-1-git-send-email-hayashi.kunihiko@socionext.com>
+In-Reply-To: <5C1A670E.9020904@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
-Cc: Bjorn Helgaas <bhelgaas@google.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>
+To: Roger Quadros <rogerq@ti.com>, Mark Brown <broonie@kernel.org>
+Cc: ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 07, 2018 at 09:53:10AM +0900, Kunihiko Hayashi wrote:
-> This series adds PCIe host controller driver for Socionext UniPhier SoCs.
-> This controller is based on the DesignWare PCIe core. This driver
-> supports LD20 and PXs3 SoCs.
-> 
-> v4: https://www.spinics.net/lists/linux-pci/msg78278.html
-> 
-> About legacy IRQ, it might be necessary to share common view from
-> keystone driver that have been cleaned up[1].
-> 
-> [1] https://lore.kernel.org/patchwork/patch/989541/
-> 
-> Changes since v4:
-> - fix an issue of using the wrong value to mask IRQ mask register
-> 
-> Changes since v3:
-> - dt-bindings: fix INTX numbering of legacy interrupt map
-> - change interrupts to level ones
-> - remove .xlate function
-> - merge uniphier_pcie_ltssm_disable() into uniphier_pcie_ltssm_enable()
-> - remove an error message on uniphier_pcie_establish_link()
-> - change the order between irq_domain_add_liniear() and
->   irq_set_chained_handler_and_data()
-> - replace dummy_irq_chip with uniphier_pcie_irq_chip and its functions
-> - add dependency on CONFIG_HAS_IOMEM
-> - MAINTAINERS: add pcie-uniphier entry
-> 
-> Changes since v2:
-> - dt-bindings: remove a comment that the node name isn't important
-> - dt-bindings: remove "intx" interrupt
-> - dt-bindings: define 'legacy-interrupt-controller' node and its properties
-> - return an error value when link up fails
-> - remove devm_request_irq() and a handler for MSI IRQ
-> - use chained interrupt instead of devm_request_irq() for legacy IRQ
-> - add unipher_pcie_config_legacy_irq() to get legacy IRQ from
->   'legacy-interrupt controller' node
-> - replace 4 statments to handle INTX with for_each_set_bit()
-> - remove initialization of pp->root_bus_nr
-> - remove indivisual interrupt enable bit definitions
-> - rename 'irq_domain' member to 'legacy_irq_domain' in private structure
-> - use pci_irqd_intx_xlate() for irq_domain_ops.xlate function
-> 
-> Changes since v1:
-> - follow capitalization conventions in the descriptions
-> - use C style comments except for the SPDX line
-> 
-> Kunihiko Hayashi (2):
->   dt-bindings: PCI: Add UniPhier PCIe host controller description
->   PCI: uniphier: Add UniPhier PCIe host controller support
-> 
->  .../devicetree/bindings/pci/uniphier-pcie.txt      |  81 ++++
->  MAINTAINERS                                        |   7 +
->  drivers/pci/controller/dwc/Kconfig                 |  10 +
->  drivers/pci/controller/dwc/Makefile                |   1 +
->  drivers/pci/controller/dwc/pcie-uniphier.c         | 471 +++++++++++++++++++++
->  5 files changed, 570 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/pci/uniphier-pcie.txt
->  create mode 100644 drivers/pci/controller/dwc/pcie-uniphier.c
 
-Applied to pci/uniphier, aiming for v4.21, thanks.
 
-Lorenzo
+On 12/19/18 4:43 PM, Roger Quadros wrote:
+> On 19/12/18 14:38, Mark Brown wrote:
+>> On Tue, Dec 18, 2018 at 05:51:12PM +0200, Roger Quadros wrote:
+>>
+>>> We could combine control and debug into one iomap and use
+>>> 2 regmap ranges. But this is really working around the
+>>> regmap_mmio limitation of not being able to use more than one ioremaps.
+>>
+>>> Mark, any suggestions?
+>>
+>> If they're separate regions why not create separate regmaps for them?
+>>
+> 
+> I tried that but only the first regmap shows up in debugfs.
+> 
+> e.g.
+> 
+> +
+> +       pru->ctrl_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_CTRL].va,
+> +                                                &pru_regmap_config);
+> +       if (IS_ERR(pru->ctrl_regmap)) {
+> +               ret = PTR_ERR(pru->ctrl_regmap);
+> +               dev_err(dev, "CTRL regmap init failed: %d\n", ret);
+> +               goto free_rproc;
+> +       }
+> +
+> +
+> +       pru->debug_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_DEBUG].va,
+> +                                                 &pru_debug_regmap_config);
+> +       if (IS_ERR(pru->debug_regmap)) {
+> +               ret = PTR_ERR(pru->debug_regmap);
+> +               dev_err(dev, "DEBUG regmap init failed: %d\n", ret);
+> +               goto free_rproc;
+>          }
+> 
+> 
+> Did I do something wrong or we just need to enhance regmap_debugfs.c?
+
+Do you assign the name field in pru_regmap_config and 
+pru_debug_regmap_config?
