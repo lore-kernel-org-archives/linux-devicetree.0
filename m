@@ -1,62 +1,110 @@
-From: David Lechner <david@lechnology.com>
-Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
-Date: Wed, 19 Dec 2018 16:48:52 +0100
-Message-ID: <6ebcd7a6-6c85-0312-0651-fb4fbfc25e55@lechnology.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-6-git-send-email-rogerq@ti.com>
- <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
- <5BFFBCAC.9000004@ti.com> <5C191770.9090804@ti.com>
- <20181219123812.GC8130@sirena.org.uk> <5C1A670E.9020904@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v1 1/2] dt-binding: mtd: add NPCM FIU controller
+Date: Wed, 19 Dec 2018 09:54:10 -0600
+Message-ID: <20181219155410.GA3925@bogus>
+References: <20181203091456.454030-1-tmaimon77@gmail.com>
+ <20181203091456.454030-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C1A670E.9020904@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181203091456.454030-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Mark Brown <broonie@kernel.org>
-Cc: ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: dwmw2@infradead.org, computersforpeace@gmail.com, boris.brezillon@bootlin.com, marek.vasut@gmail.com, richard@nod.at, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-mtd@lists.infradead.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 12/19/18 4:43 PM, Roger Quadros wrote:
-> On 19/12/18 14:38, Mark Brown wrote:
->> On Tue, Dec 18, 2018 at 05:51:12PM +0200, Roger Quadros wrote:
->>
->>> We could combine control and debug into one iomap and use
->>> 2 regmap ranges. But this is really working around the
->>> regmap_mmio limitation of not being able to use more than one ioremaps.
->>
->>> Mark, any suggestions?
->>
->> If they're separate regions why not create separate regmaps for them?
->>
+On Mon, Dec 03, 2018 at 11:14:55AM +0200, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Flash Interface Unit(FIU) SPI-NOR controller.
 > 
-> I tried that but only the first regmap shows up in debugfs.
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/mtd/npcm-fiu.txt | 64 ++++++++++++++++++++++
+>  1 file changed, 64 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/npcm-fiu.txt
 > 
-> e.g.
-> 
+> diff --git a/Documentation/devicetree/bindings/mtd/npcm-fiu.txt b/Documentation/devicetree/bindings/mtd/npcm-fiu.txt
+> new file mode 100644
+> index 000000000000..9746cb5b1ced
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/npcm-fiu.txt
+> @@ -0,0 +1,64 @@
+> +* Nuvoton FLASH Interface Unit (FIU) SPI Controller
 > +
-> +       pru->ctrl_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_CTRL].va,
-> +                                                &pru_regmap_config);
-> +       if (IS_ERR(pru->ctrl_regmap)) {
-> +               ret = PTR_ERR(pru->ctrl_regmap);
-> +               dev_err(dev, "CTRL regmap init failed: %d\n", ret);
-> +               goto free_rproc;
-> +       }
+> +NPCM FIU supports single, dual and quad communication interface.
 > +
+> +The NPCM7XX supports three FIU modules,
+> +FIU0 and FIUx supports two chip selects,
+> +FIU3 support four chip select.
 > +
-> +       pru->debug_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_DEBUG].va,
-> +                                                 &pru_debug_regmap_config);
-> +       if (IS_ERR(pru->debug_regmap)) {
-> +               ret = PTR_ERR(pru->debug_regmap);
-> +               dev_err(dev, "DEBUG regmap init failed: %d\n", ret);
-> +               goto free_rproc;
->          }
-> 
-> 
-> Did I do something wrong or we just need to enhance regmap_debugfs.c?
+> +Required properties:
+> +  - compatible : "nuvoton,npcm750-fiu" for the NPCM7XX BMC
+> +  - #address-cells : should be 1.
+> +  - #size-cells : should be 0.
+> +  - reg : the first contains the register location and length,
+> +          the second contains the memory mapping address and length
+> +  - reg-names: Should contain the reg names "control" and "memory"
+> +  - clocks : phandle of F reference clock.
+> +
+> +Required properties in case the pins can be muxed:
+> +  - pinctrl-names : a pinctrl state named "default" must be defined.
+> +  - pinctrl-0 : phandle referencing pin configuration of the device.
+> +
+> +Optional property:
+> +  - spix-mode: enable spix-mode for an expansion bus to an ASIC or CPLD.
 
-Do you assign the name field in pru_regmap_config and 
-pru_debug_regmap_config?
+Needs a vendor prefix. Unless this is some standard SPI thing (which 
+I've never heard of).
+
+> +
+> +The SPI device must be a child of the FIU node and must have a
+> +compatible property as specified in bindings/mtd/jedec,spi-nor.txt
+> +
+> +Required property:
+> +- reg: chip select number.
+> +
+> +Optional property:
+> +- spi-rx-bus-width: see ../spi/spi-bus.txt for the description.
+> +
+> +Aliases:
+> +- All the FIU controller nodes should be represented in the aliases node using
+> +  the following format 'fiu{n}' where n is a unique number for the alias.
+> +  In the NPCM7XX BMC:
+> +  		fiu0 represent fiu 0 controller
+> +  		fiu1 represent fiu 3 controller
+> +  		fiu2 represent fiu x controller
+
+Please don't make up your own aliases. Use 'spiX' if anything, but 
+really, why do you need aliases in the first place?
+
+> +
+> +Example:
+> +fiu3: fiu@c00000000 {
+
+spi@...
+
+> +	compatible = "nuvoton,npcm750-fiu";
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	reg = <0xfb000000 0x1000>, <0x80000000 0x10000000>;
+> +	reg-names = "control", "memory";
+> +	clocks = <&clk NPCM7XX_CLK_AHB>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&spi3_pins>;
+> +	spi-nor@0 {
+> +		compatible = "jedec,spi-nor";
+> +		spi-rx-bus-width = <2>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0>;
+> +		partition@0 {
+> +			label = "flash_data";
+> +			reg = <0x0 0x800000>;
+> +		};
+> +	};
+> +};
+> +
+> -- 
+> 2.14.1
+> 
