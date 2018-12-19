@@ -1,45 +1,62 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 3/3] ARM: dts: s5pv210: Add node for exynos-rotator
-Date: Wed, 19 Dec 2018 16:57:04 +0100
-Message-ID: <20181219155704.15264-4-pawel.mikolaj.chmiel@gmail.com>
-References: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
+From: Peter Korsgaard <peter@korsgaard.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
+Date: Wed, 19 Dec 2018 17:13:39 +0100
+Message-ID: <877eg51olo.fsf@dell.be.48ers.dk>
+References: <20181219002620.12138-1-khilman@baylibre.com>
+ <20181219002620.12138-2-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: inki.dae@samsung.com, krzk@kernel.org, airlied@linux.ie
-Cc: jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181219002620.12138-2-khilman@baylibre.com> (Kevin Hilman's
+ message of "Tue, 18 Dec 2018 16:26:20 -0800")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds node for Exynos Rorator device,
-so it can be used on all s5pv210 based devices.
+>>>>> "Kevin" == Kevin Hilman <khilman@baylibre.com> writes:
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- arch/arm/boot/dts/s5pv210.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ > Add the G12a (S905X2) based X96 Max board[1].
+ > There is no branding for the manufacturer anywhere on the product, so it
+ > took some digging to find the manufacturer.  But since there's nothing
+ > about the maker on the product I've left it out of the DT name because
+ > 1) nobody will no that name and 2) keeps the DT filename shorter.
 
-diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-index 75f454a210d6..a5463003c7f6 100644
---- a/arch/arm/boot/dts/s5pv210.dtsi
-+++ b/arch/arm/boot/dts/s5pv210.dtsi
-@@ -542,6 +542,15 @@
- 			#dma-requests = <1>;
- 		};
- 
-+		rotator: rotator@fa300000 {
-+			compatible = "samsung,s5pv210-rotator";
-+			reg = <0xfa300000 0x1000>;
-+			interrupt-parent = <&vic2>;
-+			interrupts = <4>;
-+			clocks = <&clocks CLK_ROTATOR>;
-+			clock-names = "rotator";
-+		};
-+
- 		i2c1: i2c@fab00000 {
- 			compatible = "samsung,s3c2440-i2c";
- 			reg = <0xfab00000 0x1000>;
+s/no/know/
+
+
+ > [1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
+
+ > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+ > Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+ > ---
+ > Special thanks to Martin Blumenstingl for extra digging for the manufacturer
+
+ >  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
+ >  1 file changed, 28 insertions(+)
+ >  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+
+ > diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+ > b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+ > new file mode 100644
+ > index 000000000000..fe94765b671e
+ > --- /dev/null
+ > +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
+ > @@ -0,0 +1,28 @@
+ > +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+ > +/*
+ > + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
+
+Amlogic? Shouldn't that be Baylibre?
+
 -- 
-2.17.1
+Bye, Peter Korsgaard
