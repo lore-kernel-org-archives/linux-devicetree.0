@@ -1,62 +1,74 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
-Date: Wed, 19 Dec 2018 17:43:10 +0200
-Message-ID: <5C1A670E.9020904@ti.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-6-git-send-email-rogerq@ti.com>
- <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
- <5BFFBCAC.9000004@ti.com> <5C191770.9090804@ti.com>
- <20181219123812.GC8130@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Add PMU node
+Date: Wed, 19 Dec 2018 16:47:24 +0100
+Message-ID: <20181219154724.5vgnchh4q6e37rek@flea>
+References: <20181219154017.6104-1-harald@ccbib.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219123812.GC8130@sirena.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============7028820018772895156=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181219154017.6104-1-harald@ccbib.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Harald Geyer <harald@ccbib.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/18 14:38, Mark Brown wrote:
-> On Tue, Dec 18, 2018 at 05:51:12PM +0200, Roger Quadros wrote:
-> 
->> We could combine control and debug into one iomap and use
->> 2 regmap ranges. But this is really working around the
->> regmap_mmio limitation of not being able to use more than one ioremaps.
-> 
->> Mark, any suggestions?
-> 
-> If they're separate regions why not create separate regmaps for them?
-> 
 
-I tried that but only the first regmap shows up in debugfs.
-
-e.g.
-
-+
-+       pru->ctrl_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_CTRL].va,
-+                                                &pru_regmap_config);
-+       if (IS_ERR(pru->ctrl_regmap)) {
-+               ret = PTR_ERR(pru->ctrl_regmap);
-+               dev_err(dev, "CTRL regmap init failed: %d\n", ret);
-+               goto free_rproc;
-+       }
-+
-+
-+       pru->debug_regmap = devm_regmap_init_mmio(dev, pru->iomem_regions[PRU_IOMEM_DEBUG].va,
-+                                                 &pru_debug_regmap_config);
-+       if (IS_ERR(pru->debug_regmap)) {
-+               ret = PTR_ERR(pru->debug_regmap);
-+               dev_err(dev, "DEBUG regmap init failed: %d\n", ret);
-+               goto free_rproc;
-        }
+--===============7028820018772895156==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mxebwxi4mpovw2u2"
+Content-Disposition: inline
 
 
-Did I do something wrong or we just need to enhance regmap_debugfs.c?
+--mxebwxi4mpovw2u2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-cheers,
--roger
+On Wed, Dec 19, 2018 at 03:40:17PM +0000, Harald Geyer wrote:
+> This is necessary to use 'perf' for cache profiling etc.
+> Tested on Teres I Laptop.
+>=20
+> Signed-off-by: Harald Geyer <harald@ccbib.org>
 
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+QUeued for 4.22, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mxebwxi4mpovw2u2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXBpoDAAKCRDj7w1vZxhR
+xT8OAP4hKj9yhCNIH9y0VtKzlsBc0JcJjZ9B/2bkdJjxMb/4GgEApvCEQ4zZmIMd
+aTplaa6WSM7W3XzvimeNVRSbswW5kg4=
+=36KO
+-----END PGP SIGNATURE-----
+
+--mxebwxi4mpovw2u2--
+
+
+--===============7028820018772895156==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7028820018772895156==--
