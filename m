@@ -1,68 +1,69 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: dsa: ksz9477: add sample of
- switch bindings managed in i2c mode
-Date: Wed, 19 Dec 2018 10:26:43 -0800
-Message-ID: <538b1829-422a-bf15-b024-e0bf933c930a@gmail.com>
-References: <20181217204423.14271-1-sergio.paracuellos@gmail.com>
- <20181218151044.GA26992@bogus>
- <CAMhs-H9VAae3STnYw72M9hma=rhkzUHU_9fNNFEdS0YPqrTbdw@mail.gmail.com>
+From: Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v5 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
+ driver
+Date: Wed, 19 Dec 2018 10:49:38 -0800
+Message-ID: <20181219184938.GC1997@jackp-linux.qualcomm.com>
+References: <20181127100722.9993-1-shawn.guo@linaro.org>
+ <20181127100722.9993-3-shawn.guo@linaro.org>
+ <b0d02b1c-cc44-69fe-0765-84caf76eaea1@ti.com>
+ <20181204060104.GA11391@dragon>
+ <20181217003434.GA7208@dragon>
+ <c5ccf173-d0f3-70f4-f8e3-777fd3339b68@ti.com>
+ <20181219010733.GA13489@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <CAMhs-H9VAae3STnYw72M9hma=rhkzUHU_9fNNFEdS0YPqrTbdw@mail.gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>, Rob Herring <robh@kernel.org>
-Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, vivien.didelot@savoirfairelinux.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181219010733.GA13489@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Manu Gautam <mgautam@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/18/18 10:23 PM, Sergio Paracuellos wrote:
-> Hi Rob,
-> 
-> On Tue, Dec 18, 2018 at 4:10 PM Rob Herring <robh@kernel.org> wrote:
->>
->> On Mon, Dec 17, 2018 at 09:44:23PM +0100, Sergio Paracuellos wrote:
->>> Add device-tree binding example of the ksz9477 switch managed in i2c mode.
->>>
->>> Cc: devicetree@vger.kernel.org
->>> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
->>> ---
->>> Changes v3:
->>>     - No changes. Just resent patches together.
->>>
->>> Changes v2:
->>>     - Use generic name for label of the switch and make sure reg and @X
->>>       have the same value.
->>>
->>>  .../devicetree/bindings/net/dsa/ksz.txt       | 50 +++++++++++++++++++
->>>  1 file changed, 50 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
->>> index 0f407fb371ce..d3c4b9d4f416 100644
->>> --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
->>> +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
->>> @@ -74,3 +74,53 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
->>>                                                               };
->>>                                               };
->>>                               };
->>> +
->>> +Ethernet switch connected via I2C to the host, CPU port wired to eth0:
->>> +
->>> +                             eth0: ethernet@10001000 {
->>
->> Why do we have all this indentation? Please remove. And use tab chars,
->> not spaces.
-> 
-> The original file format is using all of this indentation. So I think
-> we would need a patch to change de format of the original file and
-> another with this new changes properly formatted.
+Hi Shawn, Kishon,
 
-The original formatting should be fixed, but your changes should adopt
-the correct style from the first time they are submitted. Do you mind
-resubmitting with only one tab? We can fix the original examples as a
-follow-up patch.
+On Wed, Dec 19, 2018 at 09:07:36AM +0800, Shawn Guo wrote:
+> On Tue, Dec 18, 2018 at 07:46:13PM +0530, Kishon Vijay Abraham I wrote:
+> > 
+> > 
+> > On 17/12/18 6:04 AM, Shawn Guo wrote:
+> > > On Tue, Dec 04, 2018 at 02:01:07PM +0800, Shawn Guo wrote:
+> > >> Hi Kishon,
+> > >>
+> > >> On Tue, Dec 04, 2018 at 10:38:19AM +0530, Kishon Vijay Abraham I wrote:
+> > >>> Hi,
+> > >>>
+> > >>> On 27/11/18 3:37 PM, Shawn Guo wrote:
+> > >>>> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
+> > >>>> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
+> > >>>
+> > >>> Is this Synopsys PHY specific to Qualcomm or could it be used by other vendors
+> > >>> (with just changing tuning parameters)? If it could be used by other vendors
+> > >>> then it would make sense to add this PHY driver in synopsys directory.
+> > >>
+> > >> My knowledge is that this Synopsys PHY is specific to Qualcomm SoCs.
+> > >> @Sriharsha, correct me if I'm wrong.
+> > > 
+> > > Kishon,
+> > > 
+> > > Do you have any further comments on the patches?  We are close the 4.21
+> > > merge window, and I really hope they can hit mainline with 4.21 release.
+> > > Thanks.
+> > 
+> > Aren't we waiting for feedback from Sriharsha?
+> 
+> I think no correction means that I'm right :)
 
-Thanks!
+I'm sorry Sriharsha has not yet responded but I can confirm that this
+PHY driver would only be specific to Qualcomm SoCs simply because of our
+custom register mapping used to control and initialize it. These are
+only defined as as HW signals by the Synopsys IP, which have been
+synthesized to map to our own IO register space. So really it can be
+treated as just a "Qualcomm USB PHY" with acknowledgement that the core
+design is licensed from SNPS.
+
+Thanks,
+Jack
 -- 
-Florian
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
