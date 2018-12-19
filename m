@@ -1,93 +1,48 @@
-From: Richard Cochran <richardcochran@gmail.com>
-Subject: Re: [PATCH v2 net-next 08/10] net: eth: altera: add support for ptp
- and timestamping
-Date: Tue, 18 Dec 2018 20:27:57 -0800
-Message-ID: <20181219042757.vhetz2zsrpsz6p3u@localhost>
-References: <20181213175252.21143-1-dalon.westergreen@linux.intel.com>
- <20181213175252.21143-9-dalon.westergreen@linux.intel.com>
+From: Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Wed, 19 Dec 2018 10:19:01 +0530
+Message-ID: <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+ <20181212211848.26768-3-jcrouse@codeaurora.org>
+ <20181214044057.wybv6wqg75qdnmic@vireshk-i7>
+ <CAD=FV=VQEtQtnPJyo6vLm7ndPjowZ35FY-cibJyN_imZMoVU3w@mail.gmail.com>
+ <20181217070647.xtvfgsixggua5yod@vireshk-i7>
+ <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
+ <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
+ <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20181213175252.21143-9-dalon.westergreen@linux.intel.com>
-Sender: netdev-owner@vger.kernel.org
-To: dwesterg@gmail.com
-Cc: netdev@vger.kernel.org, dinguyen@kernel.org, thor.thayer@linux.intel.com, davem@davemloft.net, vbridger@opensource.altera.com, robh+dt@kernel.org, devicetree@vger.kernel.org, hean.loong.ong@intel.com, Dalon Westergreen <dalon.westergreen@intel.com>
+In-Reply-To: <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 09:52:50AM -0800, dwesterg@gmail.com wrote:
-> Changes from V1:
->  -> Remove debugfs for tod manipulation
->  -> Reorder variable declarations in functions to order
->     by length of declaration, largest to smallest
->  -> Rename altera_ptp to intel_fpga_tod
->  -> Rename functions in intel_fpga_tod so that they are not
->     generic
->  -> Use imply instead of select in Kconfig
->  -> Re-write adjust time function to remove while loop with
->     64 bit divide.
-
-Overall this is looking better.  A few more comments follow...
-
-> +static int tse_get_ts_info(struct net_device *dev,
-> +			   struct ethtool_ts_info *info)
-> +{
-> +	struct altera_tse_private *priv = netdev_priv(dev);
-> +
-> +	if (priv->ptp_enable) {
-> +		if (priv->ptp_priv.ptp_clock)
-> +			info->phc_index =
-> +				ptp_clock_index(priv->ptp_priv.ptp_clock);
-
-else
-info->phc_index = -1;
-
-> +		info->so_timestamping = SOF_TIMESTAMPING_TX_HARDWARE |
-> +					SOF_TIMESTAMPING_RX_HARDWARE |
-> +					SOF_TIMESTAMPING_RAW_HARDWARE;
-> +
-> +		info->tx_types = (1 << HWTSTAMP_TX_OFF) |
-> +						 (1 << HWTSTAMP_TX_ON);
-
-This fits on one line ^^^
-
-> +		info->rx_filters = (1 << HWTSTAMP_FILTER_NONE) |
-> +						   (1 << HWTSTAMP_FILTER_ALL);
-
-Funky indentation here.  One extra level is enough:
-
-		info->rx_filters = (1 << HWTSTAMP_FILTER_NONE) |
-			(1 << HWTSTAMP_FILTER_ALL);
-
-> +		return 0;
-> +	} else {
-> +		return ethtool_op_get_ts_info(dev, info);
-> +	}
-> +}
-> +
-
-...
-
-> @@ -609,7 +613,14 @@ static netdev_tx_t tse_start_xmit(struct sk_buff *skb, struct net_device *dev)
->  	if (ret)
->  		goto out;
->  
-> -	skb_tx_timestamp(skb);
-> +	/* Provide a hardware time stamp if requested.
-> +	 */
-> +	if (unlikely((skb_shinfo(skb)->tx_flags & SKBTX_HW_TSTAMP) &&
-> +		     priv->hwts_tx_en))
-> +		/* declare that device is doing timestamping */
-
-Please drop those two comments.  They are redundant because they only
-restate what the code does.
-
-> +		skb_shinfo(skb)->tx_flags |= SKBTX_IN_PROGRESS;
-> +	else
-> +		skb_tx_timestamp(skb);
->  
->  	priv->tx_prod++;
->  	dev->stats.tx_bytes += skb->len;
-
-Thanks,
-Richard
+T24gMTgtMTItMTgsIDExOjA1LCBEb3VnIEFuZGVyc29uIHdyb3RlOgo+IE9LLCBpdCdzIGZpbmUg
+d2l0aCBtZSB0byBoYXZlIHRoZSBmYWxsYmFjaywgYnV0IGlmIHdlIGRvIHdlIHNob3VsZCBiZQo+
+IGNvbnNpc3RlbnQgYWJvdXQgaXQgYW5kIG1ha2Ugc3VyZSBpdCdzIGluIGFsbCB0aGUgYmluZGlu
+Z3MgYW5kIGRldmljZQo+IHRyZWUgZmlsZXMuLi4KClN1cmUuCgpJIGFtIG5vdCBzdXJlIHdoYXQn
+cyB0aGUgcmlnaHQgd2F5IHRvIGRvIGl0IGlzLCBpLmUuIHNob3VsZCB3ZSBrZWVwIHRoZQoib3Bl
+cmF0aW5nLXBvaW50cy12MiIgc3RyaW5nIG9yIG5vdC4gQW5vdGhlciBleGFtcGxlIEkgc2VlIGlz
+ICh3aGljaCBjYW4gYmUKY29tcGFyZWQgaGVyZSkgaXMgdGhlIGJvYXJkIHNwZWNpZmljIERUIGZp
+bGVzLiBOb3JtYWxseSB0aGUgcm9vdCBub2RlJ3MKY29tcGF0aWJsZSBpcyBhIGxvbmcgbGlzdCBv
+ZiBzdHJpbmdzIGxpa2U6Cgpjb21wYXRpYmxlID0gIm52aWRpYSxwMjM3MS0yMTgwIiwgIm52aWRp
+YSxwMjE4MCIsICJudmlkaWEsdGVncmEyMTAiOwoKd2hpY2ggc3RhcnRzIGZyb20gcGxhdGZvcm0t
+c3BlY2lmaWMgc3RyaW5nLCB0aGVuIG1hY2gsIHRoZW4gYm9hcmQsIGV0Yy4uCgpXZSBkbyBrZWVw
+IGFsbCBvZiB0aGVtIGluIHRob3NlIGNhc2VzIGFuZCB0aGF0IG1ha2VzIG1lIHdvbmRlciB3aHkg
+dGhlIHNhbWUKc2hvdWxkbid0IGJlIGRvbmUgZm9yIE9QUCBiaW5kaW5ncy4KCi0tIAp2aXJlc2gK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5v
+IG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
