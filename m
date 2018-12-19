@@ -1,43 +1,51 @@
-From: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH v2 9/9] MAINTAINERS: Add maintainer for arm komeda driver
-Date: Wed, 19 Dec 2018 12:35:06 +0000
-Message-ID: <20181219123147.16090-10-james.qian.wang@arm.com>
-References: <20181219123147.16090-1-james.qian.wang@arm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
+Date: Wed, 19 Dec 2018 12:38:12 +0000
+Message-ID: <20181219123812.GC8130@sirena.org.uk>
+References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
+ <1543218769-5507-6-git-send-email-rogerq@ti.com>
+ <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
+ <5BFFBCAC.9000004@ti.com>
+ <5C191770.9090804@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181219123147.16090-1-james.qian.wang@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "Tiannan Zhu (Arm
- Technology China)" <Tiannan.Zhu@arm.com>, "corbet@lwn.net" <corbet@lwn.net>, "airlied@linux.ie" <airlied@linux.ie>, "malidp@foss.arm.com" <malidp@foss.arm.com>, "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>, Ayan Halder <Ayan.Halder@arm.com>, devicetree
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="adJ1OR3c6QgCpb/j"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <5C191770.9090804@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org, tony@atomide.com, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-djI6IEFkanVzdGVkIHRoZSBwb3NpdGlvbiBvZiBLT01FREEgYnkgYWxwaGFiZXRpY2FsIG9yZGVy
-CgpTaWduZWQtb2ZmLWJ5OiBKYW1lcyAoUWlhbikgV2FuZyA8amFtZXMucWlhbi53YW5nQGFybS5j
-b20+Ci0tLQogTUFJTlRBSU5FUlMgfCA5ICsrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDkgaW5z
-ZXJ0aW9ucygrKQoKZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRBSU5FUlMKaW5kZXgg
-MjU0YjdiMjY3NzMxLi5lNDhjMmU1ZmQyOWYgMTAwNjQ0Ci0tLSBhL01BSU5UQUlORVJTCisrKyBi
-L01BSU5UQUlORVJTCkBAIC0xMTI0LDYgKzExMjQsMTUgQEAgUzoJU3VwcG9ydGVkCiBGOglkcml2
-ZXJzL2dwdS9kcm0vYXJtL2hkbGNkXyoKIEY6CURvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L2FybSxoZGxjZC50eHQKIAorQVJNIEtPTUVEQSBEUk0tS01TIERSSVZFUgor
-TToJSmFtZXMgKFFpYW4pIFdhbmcgPGphbWVzLnFpYW4ud2FuZ0Bhcm0uY29tPgorTToJTWFsaSBE
-UCBNYWludGFpbmVycyA8bWFsaWRwQGZvc3MuYXJtLmNvbT4KK1M6CVN1cHBvcnRlZAorRjoJZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2luY2x1ZGUvCitGOglkcml2ZXJzL2dwdS9kcm0vYXJt
-L2Rpc3BsYXkva29tZWRhLworRjoJRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvYXJtL2FybSxrb21lZGEudHh0CitGOglEb2N1bWVudGF0aW9uL2dwdS9rb21lZGEta21z
-LnJzdAorCiBBUk0gTUFMSS1EUCBEUk0gRFJJVkVSCiBNOglMaXZpdSBEdWRhdSA8bGl2aXUuZHVk
-YXVAYXJtLmNvbT4KIE06CUJyaWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4KLS0g
-CjIuMTcuMQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
-ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
-dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--adJ1OR3c6QgCpb/j
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Tue, Dec 18, 2018 at 05:51:12PM +0200, Roger Quadros wrote:
+
+> We could combine control and debug into one iomap and use
+> 2 regmap ranges. But this is really working around the
+> regmap_mmio limitation of not being able to use more than one ioremaps.
+
+> Mark, any suggestions?
+
+If they're separate regions why not create separate regmaps for them?
+
+--adJ1OR3c6QgCpb/j
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwaO7MACgkQJNaLcl1U
+h9CPAAf+JAJfMczZd9xWyVAVv7Y2r8nFraMHd9wq/ySUeg1xb21Z/SQVmCUslHh7
+9UU6yn6+/XyROW73zqXbP7zzT+3+mzquT+7KktzazB8xsFkBlnCAm+xZEhycxms8
+NKpf41WNkJPsZW6WURLTP8m7A+7pCsPbvNBn2Q7WboKBQBO83+rcv0gO6h2w0wMd
+7igarIg4CEWqgCKtEh1kJjbEOxvJEWe9GUuYIvEpbY4c4EZifMyOTjwUxmS5t6zZ
+gf6t6SJ7JJZbCUn27apsktUSnCJEvuG7gZyHfhALtpJG3cTC5hd38qwD0iSH7AP9
+Y8eIQLz2+hpUjd+K7BLhCF0VDv1O2A==
+=ZgHj
+-----END PGP SIGNATURE-----
+
+--adJ1OR3c6QgCpb/j--
