@@ -1,72 +1,45 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: RE: [PATCH V4 2/4] rtc: add i.MX system controller RTC support
-Date: Wed, 19 Dec 2018 09:37:44 +0000
-Message-ID: <DB3PR0402MB39167296BD1302130B537FD7F5BE0@DB3PR0402MB3916.eurprd04.prod.outlook.com>
-References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
- <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
- <20181219085429.GJ19816@piout.net>
+From: Maruthi Srinivas Bayyavarapu
+        <maruthi.srinivas.bayyavarapu@xilinx.com>
+Subject: [PATCH] ASoC: xlnx: change license header format style
+Date: Wed, 19 Dec 2018 15:10:40 +0530
+Message-ID: <1545212440-109949-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219085429.GJ19816@piout.net>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: "a.zummo@towertech.it" <a.zummo@towertech.it>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, shawnguo@kernel.
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIEFsZXhhbmRyZQ0KDQpCZXN0IFJlZ2FyZHMhDQpBbnNvbiBIdWFuZw0KDQo+IC0tLS0tT3Jp
-Z2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IEFsZXhhbmRyZSBCZWxsb25pIFttYWlsdG86YWxl
-eGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb21dDQo+IFNlbnQ6IDIwMTjE6jEy1MIxOcjVIDE2OjU0
-DQo+IFRvOiBBbnNvbiBIdWFuZyA8YW5zb24uaHVhbmdAbnhwLmNvbT4NCj4gQ2M6IGEuenVtbW9A
-dG93ZXJ0ZWNoLml0OyByb2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOw0K
-PiBjYXRhbGluLm1hcmluYXNAYXJtLmNvbTsgd2lsbC5kZWFjb25AYXJtLmNvbTsgQWlzaGVuZyBE
-b25nDQo+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IEFuZHkgR3Jvc3MgPGFuZHkuZ3Jvc3NAbGlu
-YXJvLm9yZz47DQo+IGFybmRAYXJuZGIuZGU7IGhvcm1zK3JlbmVzYXNAdmVyZ2UubmV0LmF1OyBo
-ZWlrb0BzbnRlY2guZGU7DQo+IGJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnOyBlbnJpYy5iYWxs
-ZXRib0Bjb2xsYWJvcmEuY29tOw0KPiBhbWl0Lmt1Y2hlcmlhQGxpbmFyby5vcmc7IGV6ZXF1aWVs
-QGNvbGxhYm9yYS5jb207IG9sb2ZAbGl4b20ubmV0Ow0KPiBMV0BLQVJPLWVsZWN0cm9uaWNzLmRl
-OyBzaGF3bmd1b0BrZXJuZWwub3JnOyBsaW51eC1ydGNAdmdlci5rZXJuZWwub3JnOw0KPiBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsNCj4g
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkbC1saW51eC1pbXggPGxpbnV4
-LWlteEBueHAuY29tPg0KPiBTdWJqZWN0OiBSZTogW1BBVENIIFY0IDIvNF0gcnRjOiBhZGQgaS5N
-WCBzeXN0ZW0gY29udHJvbGxlciBSVEMgc3VwcG9ydA0KPiANCj4gSGVsbG8sDQo+IA0KPiBPbiAy
-OS8xMS8yMDE4IDAxOjUwOjExKzAwMDAsIEFuc29uIEh1YW5nIHdyb3RlOg0KPiA+IGkuTVg4UVhQ
-IGlzIGFuIEFSTXY4IFNvQyB3aGljaCBoYXMgYSBDb3J0ZXgtTTQgc3lzdGVtIGNvbnRyb2xsZXIN
-Cj4gPiBpbnNpZGUsIHRoZSBzeXN0ZW0gY29udHJvbGxlciBpcyBpbiBjaGFyZ2Ugb2YgY29udHJv
-bGxpbmcgcG93ZXIsIGNsb2NrDQo+ID4gYW5kIHNlY3VyZSBydGMgZXRjLi4NCj4gPg0KPiA+IFRo
-aXMgcGF0Y2ggYWRkcyBpLk1YIHN5c3RlbSBjb250cm9sbGVyIFJUQyBkcml2ZXIgc3VwcG9ydCwg
-TGludXgNCj4gPiBrZXJuZWwgaGFzIHRvIGNvbW11bmljYXRlIHdpdGggc3lzdGVtIGNvbnRyb2xs
-ZXIgdmlhIE1VIChtZXNzYWdlIHVuaXQpDQo+ID4gSVBDIHRvIHNldC9nZXQgUlRDIHRpbWUgYW5k
-IG90aGVyIGFsYXJtIGZ1bmN0aW9ucywgc2luY2UgdGhlIFJUQyBzZXQNCj4gPiB0aW1lIG5lZWRz
-IHRvIGJlIGRvbmUgaW4gc2VjdXJlIEVMMyBtb2RlIChyZXF1aXJlZCBieSBzeXN0ZW0NCj4gPiBj
-b250cm9sbGVyIGZpcm13YXJlKSBhbmQgYWxhcm0gZnVuY3Rpb25zIG5lZWRzIHRvIGJlIGRvbmUg
-d2l0aCBnZW5lcmFsDQo+ID4gTVUgSVJRIGhhbmRsZSwgdGhlc2UgZGVwZW5kIG9uIG90aGVyIGNv
-bXBvbmVudHMgd2hpY2ggYXJlIE5PVCByZWFkeSwNCj4gPiBzbyB0aGlzIHBhdGNoIE9OTFkgZW5h
-YmxlcyB0aGUgUlRDIHRpbWUgcmVhZC4NCj4gPg0KPiA+IFNpZ25lZC1vZmYtYnk6IEFuc29uIEh1
-YW5nIDxBbnNvbi5IdWFuZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IENoYW5nZUxvZzoNCj4gPiBW
-My0+VjQ6DQo+ID4gICAqcmVtb3ZlIHVubmVjZXNzYXJ5IGhlYWRmaWxlIGluY2x1ZGVkOw0KPiA+
-ICAgKmZpeCBwb3RlbnRpYWwgbWVtb3J5IGN1cnJwdXRpb24gZm9yIHRoZSBtZXNzYWdlIHJlc3Bv
-bmNlOw0KPiA+ICAgKnVwZGF0ZSB0aGUgY29tcGF0aWJsZSBzdHJpbmcgbmFtZSB0byBzdGFydCB3
-aXRoICJmc2wiIGluc3RlYWQgb2YgIm54cCIuDQo+ID4gIGRyaXZlcnMvcnRjL0tjb25maWcgICAg
-ICB8ICA2ICsrKw0KPiA+ICBkcml2ZXJzL3J0Yy9NYWtlZmlsZSAgICAgfCAgMSArDQo+ID4gIGRy
-aXZlcnMvcnRjL3J0Yy1pbXgtc2MuYyB8IDk4DQo+ID4gKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDMgZmlsZXMgY2hhbmdlZCwgMTA1IGluc2Vy
-dGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvcnRjL3J0Yy1pbXgtc2Mu
-Yw0KPiA+DQo+IA0KPiBJIGFwcGxpZWQgaXQgb24gbXkgdGVzdCBicmFuY2ggYW5kIHRoaXMgbWFr
-ZXMgc3BhcmM2NC1hbGx5ZXNjb25maWcgZmFpbA0KPiB3aXRoOg0KPiANCj4gICAgZHJpdmVycy9y
-dGMvcnRjLWlteC1zYy5vOiBJbiBmdW5jdGlvbiBgaW14X3NjX3J0Y19yZWFkX3RpbWUnOg0KPiAg
-ICBydGMtaW14LXNjLmM6KC50ZXh0KzB4MzQpOiB1bmRlZmluZWQgcmVmZXJlbmNlIHRvIGBpbXhf
-c2N1X2NhbGxfcnBjJw0KPiAgICBkcml2ZXJzL3J0Yy9ydGMtaW14LXNjLm86IEluIGZ1bmN0aW9u
-IGBpbXhfc2NfcnRjX3Byb2JlJzoNCj4gICAgcnRjLWlteC1zYy5jOigudGV4dCsweDkwKTogdW5k
-ZWZpbmVkIHJlZmVyZW5jZSB0byBgaW14X3NjdV9nZXRfaGFuZGxlJw0KDQpNYXliZSB0aGVyZSBh
-cmUgc29tZSBjaGFuZ2VzIG9uIGJhc2ljIHN1cHBvcnQgb2YgaW14IHNjdSBkcml2ZXIsIEkgd2ls
-bCByZXNlbmQNCmEgcGF0Y2ggc2V0IGxhdGVyLCB0aGFua3MuDQoNCkFuc29uLg0KDQo+IA0KPiAN
-Cj4gDQo+IC0tDQo+IEFsZXhhbmRyZSBCZWxsb25pLCBCb290bGluDQo+IEVtYmVkZGVkIExpbnV4
-IGFuZCBLZXJuZWwgZW5naW5lZXJpbmcNCj4gaHR0cHM6Ly9lbWVhMDEuc2FmZWxpbmtzLnByb3Rl
-Y3Rpb24ub3V0bG9vay5jb20vP3VybD1odHRwcyUzQSUyRiUyRmJvb3RsDQo+IGluLmNvbSZhbXA7
-ZGF0YT0wMiU3QzAxJTdDYW5zb24uaHVhbmclNDBueHAuY29tJTdDNzJiMTQ3NjQzYTNmDQo+IDQ0
-YzI1OGMyMDhkNjY1OGY5Y2NlJTdDNjg2ZWExZDNiYzJiNGM2ZmE5MmNkOTljNWMzMDE2MzUlN0Mw
-JTdDMA0KPiAlN0M2MzY4MDgwNjQ4MTg3OTc3MTEmYW1wO3NkYXRhPSUyQmw1akdYWDZ3QlliT2c1
-WmFsZzRDeXh5WktqVWUNCj4gdXpSU1FFS085VEpuUkklM0QmYW1wO3Jlc2VydmVkPTANCg==
+Changed License header from C to C++ style comment block.
+
+Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+---
+ sound/soc/xilinx/xlnx_i2s.c | 15 +++++++--------
+ 1 file changed, 7 insertions(+), 8 deletions(-)
+
+diff --git a/sound/soc/xilinx/xlnx_i2s.c b/sound/soc/xilinx/xlnx_i2s.c
+index d4ae9ef..8b35316 100644
+--- a/sound/soc/xilinx/xlnx_i2s.c
++++ b/sound/soc/xilinx/xlnx_i2s.c
+@@ -1,12 +1,11 @@
+ // SPDX-License-Identifier: GPL-2.0
+-/*
+- * Xilinx ASoC I2S audio support
+- *
+- * Copyright (C) 2018 Xilinx, Inc.
+- *
+- * Author: Praveen Vuppala <praveenv@xilinx.com>
+- * Author: Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>
+- */
++//
++// Xilinx ASoC I2S audio support
++//
++// Copyright (C) 2018 Xilinx, Inc.
++//
++// Author: Praveen Vuppala <praveenv@xilinx.com>
++// Author: Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>
+ 
+ #include <linux/io.h>
+ #include <linux/module.h>
+-- 
+2.7.4
