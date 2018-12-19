@@ -1,7 +1,7 @@
 From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH v2 4/5] ARM: dts: da850-lcdk: Correct the sound card name
-Date: Wed, 19 Dec 2018 13:47:26 +0200
-Message-ID: <20181219114727.6865-5-peter.ujfalusi@ti.com>
+Subject: [PATCH v2 1/5] ARM: dts: da850-evm: Correct the audio codec regulators
+Date: Wed, 19 Dec 2018 13:47:23 +0200
+Message-ID: <20181219114727.6865-2-peter.ujfalusi@ti.com>
 References: <20181219114727.6865-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,30 +21,67 @@ To: nsekhar@ti.com
 Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-To avoid  the following error:
-asoc-simple-card sound: ASoC: Failed to create card debugfs directory
+Add the board level fixed regulators for 3.3V and 1.8V which is used to
+power - among other things - the tlv320aic3106 codec.
 
-Which is because the card name contains '/' character, which can not be
-used in file or directory names.
+Apart from removing the following warning during boot:
+tlv320aic3x-codec 0-0018: Too high supply voltage(s) AVDD: 5000000, DVDD: 5000000
+
+With the correct voltages the driver can select correct OCMV value to
+reduce pop noise.
 
 Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
 ---
- arch/arm/boot/dts/da850-lcdk.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/da850-evm.dts | 29 +++++++++++++++++++++++++----
+ 1 file changed, 25 insertions(+), 4 deletions(-)
 
-diff --git a/arch/arm/boot/dts/da850-lcdk.dts b/arch/arm/boot/dts/da850-lcdk.dts
-index c196e37606c4..3a2fa6e035a3 100644
---- a/arch/arm/boot/dts/da850-lcdk.dts
-+++ b/arch/arm/boot/dts/da850-lcdk.dts
-@@ -71,7 +71,7 @@
+diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
+index f9a5a8212c84..997bede2a48f 100644
+--- a/arch/arm/boot/dts/da850-evm.dts
++++ b/arch/arm/boot/dts/da850-evm.dts
+@@ -94,6 +94,28 @@
+ 		regulator-boot-on;
+ 	};
  
- 	sound {
- 		compatible = "simple-audio-card";
--		simple-audio-card,name = "DA850/OMAP-L138 LCDK";
-+		simple-audio-card,name = "DA850-OMAPL138 LCDK";
- 		simple-audio-card,widgets =
- 			"Line", "Line In",
- 			"Line", "Line Out";
++	baseboard_3v3: fixedregulator-3v3 {
++		/* TPS73701DCQ */
++		compatible = "regulator-fixed";
++		regulator-name = "baseboard_3v3";
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++		vin-supply = <&vbat>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
++	baseboard_1v8: fixedregulator-1v8 {
++		/* TPS73701DCQ */
++		compatible = "regulator-fixed";
++		regulator-name = "baseboard_1v8";
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++		vin-supply = <&vbat>;
++		regulator-always-on;
++		regulator-boot-on;
++	};
++
+ 	backlight_lcd: backlight-regulator {
+ 		compatible = "regulator-fixed";
+ 		regulator-name = "lcd_backlight_pwr";
+@@ -210,10 +232,9 @@
+ 
+ 		/* Regulators */
+ 		IOVDD-supply = <&vdcdc2_reg>;
+-		/* Derived from VBAT: Baseboard 3.3V / 1.8V */
+-		AVDD-supply = <&vbat>;
+-		DRVDD-supply = <&vbat>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&baseboard_3v3>;
++		DRVDD-supply = <&baseboard_3v3>;
++		DVDD-supply = <&baseboard_1v8>;
+ 	};
+ 	tca6416: gpio@20 {
+ 		compatible = "ti,tca6416";
 -- 
 Peter
 
