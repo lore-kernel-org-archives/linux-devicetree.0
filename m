@@ -1,107 +1,79 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: Re: [PATCH v3 2/2] dt-bindings: net: dsa: ksz9477: add sample of
- switch bindings managed in i2c mode
-Date: Wed, 19 Dec 2018 07:23:28 +0100
-Message-ID: <CAMhs-H9VAae3STnYw72M9hma=rhkzUHU_9fNNFEdS0YPqrTbdw@mail.gmail.com>
-References: <20181217204423.14271-1-sergio.paracuellos@gmail.com> <20181218151044.GA26992@bogus>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 2/7] dt-bindings: remoteproc: qcom: Add clock bindings
+ for Q6V5
+Date: Wed, 19 Dec 2018 12:34:55 +0530
+Message-ID: <365dfd8e7160c0c3e5a113dbaa88be68@codeaurora.org>
+References: <20181217100724.4593-1-sibis@codeaurora.org>
+ <20181217100724.4593-2-sibis@codeaurora.org> <20181218172709.GA19660@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181218151044.GA26992@bogus>
-Sender: netdev-owner@vger.kernel.org
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181218172709.GA19660@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, Andrew Lunn <andrew@lunn.ch>, vivien.didelot@savoirfairelinux.com, Florian Fainelli <f.fainelli@gmail.com>, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, linux-remoteproc-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
+Thanks for the review!
 
-On Tue, Dec 18, 2018 at 4:10 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Mon, Dec 17, 2018 at 09:44:23PM +0100, Sergio Paracuellos wrote:
-> > Add device-tree binding example of the ksz9477 switch managed in i2c mode.
-> >
-> > Cc: devicetree@vger.kernel.org
-> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > ---
-> > Changes v3:
-> >     - No changes. Just resent patches together.
-> >
-> > Changes v2:
-> >     - Use generic name for label of the switch and make sure reg and @X
-> >       have the same value.
-> >
-> >  .../devicetree/bindings/net/dsa/ksz.txt       | 50 +++++++++++++++++++
-> >  1 file changed, 50 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> > index 0f407fb371ce..d3c4b9d4f416 100644
-> > --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> > +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> > @@ -74,3 +74,53 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
-> >                                                               };
-> >                                               };
-> >                               };
-> > +
-> > +Ethernet switch connected via I2C to the host, CPU port wired to eth0:
-> > +
-> > +                             eth0: ethernet@10001000 {
->
-> Why do we have all this indentation? Please remove. And use tab chars,
-> not spaces.
+On 2018-12-18 22:57, Rob Herring wrote:
+> On Mon, Dec 17, 2018 at 03:37:19PM +0530, Sibi Sankar wrote:
+>> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+>> 
+>> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+>> ---
+>>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt       | 10 
+>> +++++++---
+>>  1 file changed, 7 insertions(+), 3 deletions(-)
+>> 
+>> diff --git 
+>> a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt 
+>> b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> index 9ff5b0309417..780adc043b37 100644
+>> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+>> @@ -39,13 +39,17 @@ on the Qualcomm Hexagon core.
+>>  - clocks:
+>>  	Usage: required
+>>  	Value type: <phandle>
+>> -	Definition: reference to the iface, bus and mem clocks to be held on
+>> -		    behalf of the booting of the Hexagon core
+>> +	Definition: reference to the list of 4 clocks for the modem 
+>> sub-system
+>> +		    reference to the list of 8 clocks for the modem sub-system
+>> +		    on SDM845 SoCs
+>> 
+>>  - clock-names:
+>>  	Usage: required
+>>  	Value type: <stringlist>
+>> -	Definition: must be "iface", "bus", "mem"
+>> +	Definition: must be "iface", "bus", "mem", "xo" for the modem 
+>> sub-system
+>> +		    must be "iface", "bus", "mem", "gpll0_mss", "snoc_axi",
+>> +		    "mnoc_axi", "prng", "xo" for the modem sub-system on SDM845
+>> +		    SoCs
+> 
+> This seems to me a list of all clocks you need enabled, not what clocks
+> actually go to the modem. Specifically, shouldn't the *noc_axi clocks 
+> be
+> managed by the interconnect driver?
 
-The original file format is using all of this indentation. So I think
-we would need a patch to change de format of the original file and
-another with this new changes properly formatted.
+clocks = ...,
+        <&gcc GCC_MSS_SNOC_AXI_CLK>,
+        <&gcc GCC_MSS_MFAB_AXIS_CLK>,
+          ...;
+clock-names = ..., "snoc_axi", "mnoc_axi",...;
 
->
-> > +                                             fixed-link {
-> > +                                                             speed = <1000>;
-> > +                                                             full-duplex;
-> > +                                             };
-> > +                             };
-> > +
-> > +                             i2c0: i2c@f8008000 {
-> > +                                             switch: ksz9897@5f {
-> > +                                                             compatible = "microchip,ksz9897";
-> > +                                                             reg = <5f>;
-> > +
-> > +                                                             ports {
-> > +                                                                             #address-cells = <1>;
-> > +                                                                             #size-cells = <0>;
-> > +                                                                             port@0 {
-> > +                                                                                             reg = <0>;
-> > +                                                                                             label = "lan1";
-> > +                                                                             };
-> > +                                                                             port@1 {
-> > +                                                                                             reg = <1>;
-> > +                                                                                             label = "lan2";
-> > +                                                                             };
-> > +                                                                             port@2 {
-> > +                                                                                             reg = <2>;
-> > +                                                                                             label = "lan3";
-> > +                                                                             };
-> > +                                                                             port@3 {
-> > +                                                                                             reg = <3>;
-> > +                                                                                             label = "lan4";
-> > +                                                                             };
-> > +                                                                             port@4 {
-> > +                                                                                             reg = <4>;
-> > +                                                                                             label = "lan5";
-> > +                                                                             };
-> > +                                                                             port@6 {
-> > +                                                                                             reg = <6>;
-> > +                                                                                             label = "cpu";
-> > +                                                                                             ethernet = <&eth0>;
-> > +                                                                                             fixed-link {
-> > +                                                                                                             speed = <1000>;
-> > +                                                                                                             full-duplex;
-> > +                                                                                             };
-> > +                                                                             };
-> > +                                                             };
-> > +                                             };
-> > +                             };
-> > --
-> > 2.19.1
-> >
-Best regards,
-    Sergio Paracuellos
+snoc_axi and mnoc_axi maps to above GCC clks and
+both of them fall under the MSS functional group
+
+> 
+> Rob
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
