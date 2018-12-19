@@ -1,102 +1,112 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH v5 5/8] drm/msm/dsi: 10nm PHY: Get ref clock from the DT
-Date: Wed, 19 Dec 2018 15:55:25 -0800
-Message-ID: <20181219235528.114830-6-mka@chromium.org>
+From: Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: [PATCH v5 3/8] drm/msm/dsi: 28nm PHY: Get ref clock
+ from the DT
+Date: Wed, 19 Dec 2018 15:55:23 -0800
+Message-ID: <20181219235528.114830-4-mka@chromium.org>
 References: <20181219235528.114830-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219235528.114830-1-mka@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Clark <robdclark@gmail.com>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, dri-devel@lists.freedesktop.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Archit Taneja <architt@codeaurora.org>, Sean Paul <seanpaul@chromium.org>, Rajesh Yadav <ryadav@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, Jeykumar Sankaran <jsanka@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181219235528.114830-1-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Get the ref clock of the PHY from the device tree instead of
-hardcoding its name and rate.
-
-Note: This change could break old out-of-tree DTS files that
-use the 10nm PHY
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-Changes in v5:
-- pass the ref clock name to _register() instead of storing a point
-  to the clk object in the PLL data structure
-
-Changes in v4:
-- none
-
-Changes in v3:
-- fixed check for EPROBE_DEFER
-- added note to commit message about breaking old DTS files
-- added 'Reviewed-by: Douglas Anderson <dianders@chromium.org>' tag
-
-Changes in v2:
-- remove anonymous array in clk_init_data assignment
-- log error code if devm_clk_get() fails
-- don't log devm_clk_get() failures for -EPROBE_DEFER
-- updated commit message
----
- drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c | 20 +++++++++++++++++---
- 1 file changed, 17 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-index 4c03f0b7343ed..adbe5395f4f38 100644
---- a/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-+++ b/drivers/gpu/drm/msm/dsi/pll/dsi_pll_10nm.c
-@@ -625,12 +625,14 @@ static void dsi_pll_10nm_destroy(struct msm_dsi_pll *pll)
-  * state to follow the master PLL's divider/mux state. Therefore, we don't
-  * require special clock ops that also configure the slave PLL registers
-  */
--static int pll_10nm_register(struct dsi_pll_10nm *pll_10nm)
-+static int pll_10nm_register(struct dsi_pll_10nm *pll_10nm,
-+			     const char *ref_clk_name)
- {
- 	char clk_name[32], parent[32], vco_name[32];
- 	char parent2[32], parent3[32], parent4[32];
-+
- 	struct clk_init_data vco_init = {
--		.parent_names = (const char *[]){ "xo" },
-+		.parent_names = &ref_clk_name,
- 		.num_parents = 1,
- 		.name = vco_name,
- 		.flags = CLK_IGNORE_UNUSED,
-@@ -771,6 +773,8 @@ struct msm_dsi_pll *msm_dsi_pll_10nm_init(struct platform_device *pdev, int id)
- {
- 	struct dsi_pll_10nm *pll_10nm;
- 	struct msm_dsi_pll *pll;
-+	struct clk *vco_ref_clk;
-+	const char *vco_ref_clk_name;
- 	int ret;
- 
- 	if (!pdev)
-@@ -786,6 +790,16 @@ struct msm_dsi_pll *msm_dsi_pll_10nm_init(struct platform_device *pdev, int id)
- 	pll_10nm->id = id;
- 	pll_10nm_list[id] = pll_10nm;
- 
-+	vco_ref_clk = devm_clk_get(&pdev->dev, "ref");
-+	if (IS_ERR(vco_ref_clk)) {
-+		ret = PTR_ERR(vco_ref_clk);
-+		if (ret != -EPROBE_DEFER)
-+			dev_err(&pdev->dev, "couldn't get 'ref' clock: %d\n",
-+				ret);
-+		return ERR_PTR(ret);
-+	}
-+	vco_ref_clk_name = __clk_get_name(vco_ref_clk);
-+
- 	pll_10nm->phy_cmn_mmio = msm_ioremap(pdev, "dsi_phy", "DSI_PHY");
- 	if (IS_ERR_OR_NULL(pll_10nm->phy_cmn_mmio)) {
- 		dev_err(&pdev->dev, "failed to map CMN PHY base\n");
-@@ -811,7 +825,7 @@ struct msm_dsi_pll *msm_dsi_pll_10nm_init(struct platform_device *pdev, int id)
- 
- 	pll_10nm->vco_delay = 1;
- 
--	ret = pll_10nm_register(pll_10nm);
-+	ret = pll_10nm_register(pll_10nm, vco_ref_clk_name);
- 	if (ret) {
- 		dev_err(&pdev->dev, "failed to register PLL: %d\n", ret);
- 		return ERR_PTR(ret);
--- 
-2.20.1.415.g653613c723-goog
+R2V0IHRoZSByZWYgY2xvY2sgb2YgdGhlIFBIWSBmcm9tIHRoZSBkZXZpY2UgdHJlZSBpbnN0ZWFk
+IG9mCmhhcmRjb2RpbmcgaXRzIG5hbWUgYW5kIHJhdGUuCgpTaWduZWQtb2ZmLWJ5OiBNYXR0aGlh
+cyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4KUmV2aWV3ZWQtYnk6IFN0ZXBoZW4gQm95ZCA8
+c3dib3lkQGNocm9taXVtLm9yZz4gdGFnCi0tLQpDaGFuZ2VzIGluIHY1OgotIGFkZGVkIG1pc3Np
+bmcgcmV0dXJuIGtleXdvcmQgaW4gbXNtX2RzaV9wbGxfMjhubV9pbml0KCkKLSBhZGRlZCAiUmV2
+aWV3ZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c3dib3lkQGNocm9taXVtLm9yZz4iIHRhZwoKQ2hhbmdl
+cyBpbiB2NDoKLSBhbHdheXMgdXNlIHBhcmVudCByYXRlIGluIGRzaV9wbGxfMjhubV9jbGtfc2V0
+X3JhdGUoKSBhbmQKICAgZHNpX3BsbF8yOG5tX2Nsa19yZWNhbGNfcmF0ZSgpCi0gcGFzcyBuYW1l
+IG9mIFZDTyByZWYgY2xvY2sgdG8gcGxsXzI4bm1fcmVnaXN0ZXIoKSBpbnN0ZWFkIG9mCiAgc3Rv
+cmluZyBpdCBpbiBhIHN0cnVjdCBmaWVsZAotIHVwZGF0ZWQgY29tbWl0IG1lc3NhZ2UKCkNoYW5n
+ZXMgaW4gdjM6Ci0gdXNlIGRlZmF1bHQgbmFtZSBhbmQgcmF0ZSBpZiB0aGUgcmVmIGNsb2NrIGlz
+IG5vdCBzcGVjaWZpZWQKICBpbiB0aGUgRFQKLSBzdG9yZSB2Y29fcmVmX2Nsa19uYW1lIGluc3Rl
+YWQgb2YgdmNvX3JlZl9jbGsKLSBkc2lfcGxsXzI4bm1fY2xrX3NldF9yYXRlOiBjaGFuZ2VkIGRh
+dGEgdHlwZSBvZiByZWZfY2xrX3JhdGUgdG8KICB1bnNpZ25lZCBsb25nCi0gZml4ZWQgY2hlY2sg
+Zm9yIEVQUk9CRV9ERUZFUgotIHJlbmFtZWQgVkNPX1JFRl9DTEtfUkFURSB0byBWQ09fUkVGX0NM
+S19ERUZBVUxUX1JBVEUKCkNoYW5nZXMgaW4gdjI6Ci0gcGF0Y2ggYWRkZWQgdG8gdGhlIHNlcmll
+cwotLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZHNpL3BsbC9kc2lfcGxsXzI4bm0uYyB8IDM2ICsr
+KysrKysrKysrKysrKy0tLS0tLS0KIDEgZmlsZSBjaGFuZ2VkLCAyNSBpbnNlcnRpb25zKCspLCAx
+MSBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwv
+ZHNpX3BsbF8yOG5tLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2RzaS9wbGwvZHNpX3BsbF8yOG5t
+LmMKaW5kZXggMjZlM2EwMWE5OWMyYi4uYzgzOTQ2NDc0MTkyNyAxMDA2NDQKLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL21zbS9kc2kvcGxsL2RzaV9wbGxfMjhubS5jCisrKyBiL2RyaXZlcnMvZ3B1L2Ry
+bS9tc20vZHNpL3BsbC9kc2lfcGxsXzI4bm0uYwpAQCAtNDAsNyArNDAsNiBAQAogCiAjZGVmaW5l
+IE5VTV9QUk9WSURFRF9DTEtTCQkyCiAKLSNkZWZpbmUgVkNPX1JFRl9DTEtfUkFURQkJMTkyMDAw
+MDAKICNkZWZpbmUgVkNPX01JTl9SQVRFCQkJMzUwMDAwMDAwCiAjZGVmaW5lIFZDT19NQVhfUkFU
+RQkJCTc1MDAwMDAwMAogCkBAIC0xNjYsMTcgKzE2NSwxNyBAQCBzdGF0aWMgaW50IGRzaV9wbGxf
+MjhubV9jbGtfc2V0X3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2lnbmVkIGxvbmcgcmF0ZSwK
+IAlwbGxfd3JpdGUoYmFzZSArIFJFR19EU0lfMjhubV9QSFlfUExMX0xQRkMxX0NGRywgMHg3MCk7
+CiAJcGxsX3dyaXRlKGJhc2UgKyBSRUdfRFNJXzI4bm1fUEhZX1BMTF9MUEZDMl9DRkcsIDB4MTUp
+OwogCi0JcmVtID0gcmF0ZSAlIFZDT19SRUZfQ0xLX1JBVEU7CisJcmVtID0gcmF0ZSAlIHBhcmVu
+dF9yYXRlOwogCWlmIChyZW0pIHsKIAkJcmVmY2xrX2NmZyA9IERTSV8yOG5tX1BIWV9QTExfUkVG
+Q0xLX0NGR19EQkxSOwogCQlmcmFjX25fbW9kZSA9IDE7Ci0JCWRpdl9mYngxMDAwID0gcmF0ZSAv
+IChWQ09fUkVGX0NMS19SQVRFIC8gNTAwKTsKLQkJZ2VuX3Zjb19jbGsgPSBkaXZfZmJ4MTAwMCAq
+IChWQ09fUkVGX0NMS19SQVRFIC8gNTAwKTsKKwkJZGl2X2ZieDEwMDAgPSByYXRlIC8gKHBhcmVu
+dF9yYXRlIC8gNTAwKTsKKwkJZ2VuX3Zjb19jbGsgPSBkaXZfZmJ4MTAwMCAqIChwYXJlbnRfcmF0
+ZSAvIDUwMCk7CiAJfSBlbHNlIHsKIAkJcmVmY2xrX2NmZyA9IDB4MDsKIAkJZnJhY19uX21vZGUg
+PSAwOwotCQlkaXZfZmJ4MTAwMCA9IHJhdGUgLyAoVkNPX1JFRl9DTEtfUkFURSAvIDEwMDApOwot
+CQlnZW5fdmNvX2NsayA9IGRpdl9mYngxMDAwICogKFZDT19SRUZfQ0xLX1JBVEUgLyAxMDAwKTsK
+KwkJZGl2X2ZieDEwMDAgPSByYXRlIC8gKHBhcmVudF9yYXRlIC8gMTAwMCk7CisJCWdlbl92Y29f
+Y2xrID0gZGl2X2ZieDEwMDAgKiAocGFyZW50X3JhdGUgLyAxMDAwKTsKIAl9CiAKIAlEQkcoInJl
+ZmNsa19jZmcgPSAlZCIsIHJlZmNsa19jZmcpOwpAQCAtMjY1LDcgKzI2NCw3IEBAIHN0YXRpYyB1
+bnNpZ25lZCBsb25nIGRzaV9wbGxfMjhubV9jbGtfcmVjYWxjX3JhdGUoc3RydWN0IGNsa19odyAq
+aHcsCiAJdm9pZCBfX2lvbWVtICpiYXNlID0gcGxsXzI4bm0tPm1taW87CiAJdTMyIHNkbTAsIGRv
+dWJsZXIsIHNkbV9ieXBfZGl2OwogCXUzMiBzZG1fZGNfb2ZmLCBzZG1fZnJlcV9zZWVkLCBzZG0y
+LCBzZG0zOwotCXUzMiByZWZfY2xrID0gVkNPX1JFRl9DTEtfUkFURTsKKwl1MzIgcmVmX2NsayA9
+IHBhcmVudF9yYXRlOwogCXVuc2lnbmVkIGxvbmcgdmNvX3JhdGU7CiAKIAlWRVJCKCJwYXJlbnRf
+cmF0ZT0lbHUiLCBwYXJlbnRfcmF0ZSk7CkBAIC0yNzMsNyArMjcyLDcgQEAgc3RhdGljIHVuc2ln
+bmVkIGxvbmcgZHNpX3BsbF8yOG5tX2Nsa19yZWNhbGNfcmF0ZShzdHJ1Y3QgY2xrX2h3ICpodywK
+IAkvKiBDaGVjayB0byBzZWUgaWYgdGhlIHJlZiBjbGsgZG91YmxlciBpcyBlbmFibGVkICovCiAJ
+ZG91YmxlciA9IHBsbF9yZWFkKGJhc2UgKyBSRUdfRFNJXzI4bm1fUEhZX1BMTF9SRUZDTEtfQ0ZH
+KSAmCiAJCQlEU0lfMjhubV9QSFlfUExMX1JFRkNMS19DRkdfREJMUjsKLQlyZWZfY2xrICs9IChk
+b3VibGVyICogVkNPX1JFRl9DTEtfUkFURSk7CisJcmVmX2NsayArPSAoZG91YmxlciAqIHJlZl9j
+bGspOwogCiAJLyogc2VlIGlmIGl0IGlzIGludGVnZXIgbW9kZSBvciBzZG0gbW9kZSAqLwogCXNk
+bTAgPSBwbGxfcmVhZChiYXNlICsgUkVHX0RTSV8yOG5tX1BIWV9QTExfU0RNX0NGRzApOwpAQCAt
+NTE0LDExICs1MTMsMTIgQEAgc3RhdGljIHZvaWQgZHNpX3BsbF8yOG5tX2Rlc3Ryb3koc3RydWN0
+IG1zbV9kc2lfcGxsICpwbGwpCiAJcGxsXzI4bm0tPmNsa19kYXRhLmNsa19udW0gPSAwOwogfQog
+Ci1zdGF0aWMgaW50IHBsbF8yOG5tX3JlZ2lzdGVyKHN0cnVjdCBkc2lfcGxsXzI4bm0gKnBsbF8y
+OG5tKQorc3RhdGljIGludCBwbGxfMjhubV9yZWdpc3RlcihzdHJ1Y3QgZHNpX3BsbF8yOG5tICpw
+bGxfMjhubSwKKwkJCSAgICAgY29uc3QgY2hhciAqcmVmX2Nsa19uYW1lKQogewogCWNoYXIgY2xr
+X25hbWVbMzJdLCBwYXJlbnQxWzMyXSwgcGFyZW50MlszMl0sIHZjb19uYW1lWzMyXTsKIAlzdHJ1
+Y3QgY2xrX2luaXRfZGF0YSB2Y29faW5pdCA9IHsKLQkJLnBhcmVudF9uYW1lcyA9IChjb25zdCBj
+aGFyICpbXSl7ICJ4byIgfSwKKwkJLnBhcmVudF9uYW1lcyA9ICZyZWZfY2xrX25hbWUsCiAJCS5u
+dW1fcGFyZW50cyA9IDEsCiAJCS5uYW1lID0gdmNvX25hbWUsCiAJCS5mbGFncyA9IENMS19JR05P
+UkVfVU5VU0VELApAQCAtNTkzLDYgKzU5Myw4IEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2Rz
+aV9wbGxfMjhubV9pbml0KHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYsCiB7CiAJc3RydWN0
+IGRzaV9wbGxfMjhubSAqcGxsXzI4bm07CiAJc3RydWN0IG1zbV9kc2lfcGxsICpwbGw7CisJc3Ry
+dWN0IGNsayAqdmNvX3JlZl9jbGs7CisJY29uc3QgY2hhciAqdmNvX3JlZl9jbGtfbmFtZTsKIAlp
+bnQgcmV0OwogCiAJaWYgKCFwZGV2KQpAQCAtNjA1LDYgKzYwNywxOCBAQCBzdHJ1Y3QgbXNtX2Rz
+aV9wbGwgKm1zbV9kc2lfcGxsXzI4bm1faW5pdChzdHJ1Y3QgcGxhdGZvcm1fZGV2aWNlICpwZGV2
+LAogCXBsbF8yOG5tLT5wZGV2ID0gcGRldjsKIAlwbGxfMjhubS0+aWQgPSBpZDsKIAorCXZjb19y
+ZWZfY2xrID0gZGV2bV9jbGtfZ2V0KCZwZGV2LT5kZXYsICJyZWYiKTsKKwlpZiAoIUlTX0VSUih2
+Y29fcmVmX2NsaykpIHsKKwkJdmNvX3JlZl9jbGtfbmFtZSA9IF9fY2xrX2dldF9uYW1lKHZjb19y
+ZWZfY2xrKTsKKwl9IGVsc2UgeworCQlyZXQgPSBQVFJfRVJSKHZjb19yZWZfY2xrKTsKKwkJaWYg
+KHJldCA9PSAtRVBST0JFX0RFRkVSKQorCQkJcmV0dXJuIEVSUl9QVFIocmV0KTsKKworCQlkZXZf
+d2FybigmcGRldi0+ZGV2LCAiJ3JlZicgY2xvY2sgaXMgbm90IHNwZWNpZmllZCwgdXNpbmcgZGVm
+YXVsdCBuYW1lXG4iKTsKKwkJdmNvX3JlZl9jbGtfbmFtZSA9ICJ4byI7CisJfQorCiAJcGxsXzI4
+bm0tPm1taW8gPSBtc21faW9yZW1hcChwZGV2LCAiZHNpX3BsbCIsICJEU0lfUExMIik7CiAJaWYg
+KElTX0VSUl9PUl9OVUxMKHBsbF8yOG5tLT5tbWlvKSkgewogCQlkZXZfZXJyKCZwZGV2LT5kZXYs
+ICIlczogZmFpbGVkIHRvIG1hcCBwbGwgYmFzZVxuIiwgX19mdW5jX18pOwpAQCAtNjM3LDcgKzY1
+MSw3IEBAIHN0cnVjdCBtc21fZHNpX3BsbCAqbXNtX2RzaV9wbGxfMjhubV9pbml0KHN0cnVjdCBw
+bGF0Zm9ybV9kZXZpY2UgKnBkZXYsCiAJCXJldHVybiBFUlJfUFRSKC1FSU5WQUwpOwogCX0KIAot
+CXJldCA9IHBsbF8yOG5tX3JlZ2lzdGVyKHBsbF8yOG5tKTsKKwlyZXQgPSBwbGxfMjhubV9yZWdp
+c3RlcihwbGxfMjhubSwgdmNvX3JlZl9jbGtfbmFtZSk7CiAJaWYgKHJldCkgewogCQlkZXZfZXJy
+KCZwZGV2LT5kZXYsICJmYWlsZWQgdG8gcmVnaXN0ZXIgUExMOiAlZFxuIiwgcmV0KTsKIAkJcmV0
+dXJuIEVSUl9QVFIocmV0KTsKLS0gCjIuMjAuMS40MTUuZzY1MzYxM2M3MjMtZ29vZwoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
+bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
