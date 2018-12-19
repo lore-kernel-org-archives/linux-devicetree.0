@@ -1,50 +1,211 @@
-Return-Path: <SRS0=oElv=O2=gmail.com=ykaneko0929@kernel.org>
-From: Yoshihiro Kaneko <ykaneko0929@gmail.com>
-Subject: [PATCH/RFT v2 1/2] dt-bindings: thermal: rcar-thermal: add R8A77990 support
-Date: Mon, 17 Dec 2018 23:50:20 +0900
-Message-Id: <1545058221-22529-2-git-send-email-ykaneko0929@gmail.com>
-In-Reply-To: <1545058221-22529-1-git-send-email-ykaneko0929@gmail.com>
-References: <1545058221-22529-1-git-send-email-ykaneko0929@gmail.com>
-To: linux-pm@vger.kernel.org
-Cc: Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Rob Herring <robh+dt@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org
+Return-Path: <SRS0=NxzU=O4=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr60085.outbound.protection.outlook.com ([40.107.6.85]:5931
+        "EHLO EUR04-DB3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728714AbeLSKMS (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 19 Dec 2018 05:12:18 -0500
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V4 2/4] rtc: add i.MX system controller RTC support
+Date: Wed, 19 Dec 2018 10:12:12 +0000
+Message-ID: <AM0PR04MB4211498611A15A70D41A492E80BE0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1543455856-18021-1-git-send-email-Anson.Huang@nxp.com>
+ <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1543455856-18021-3-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "LW@KARO-electronics.de" <LW@KARO-electronics.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car E3 (R8A77990) SoC bindings.
+> -----Original Message-----
+> From: Anson Huang
+> Sent: Thursday, November 29, 2018 9:50 AM
+[...]
+> i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller inside,
+> the system controller is in charge of controlling power, clock and secure=
+ rtc
+> etc..
+>=20
+> This patch adds i.MX system controller RTC driver support, Linux kernel h=
+as to
+> communicate with system controller via MU (message unit) IPC to set/get R=
+TC
+> time and other alarm functions, since the RTC set time needs to be done i=
+n
+> secure EL3 mode (required by system controller firmware) and alarm functi=
+ons
+> needs to be done with general MU IRQ handle, these depend on other
+> components which are NOT ready, so this patch ONLY enables the RTC time
+> read.
+>=20
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> ChangeLog:
+> V3->V4:
+>   *remove unnecessary headfile included;
+>   *fix potential memory currpution for the message responce;
+>   *update the compatible string name to start with "fsl" instead of "nxp"=
+.
+>  drivers/rtc/Kconfig      |  6 +++
+>  drivers/rtc/Makefile     |  1 +
+>  drivers/rtc/rtc-imx-sc.c | 98
+> ++++++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 105 insertions(+)
+>  create mode 100644 drivers/rtc/rtc-imx-sc.c
+>=20
+> diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig index a819ef0..3b9=
+642e
+> 100644
+> --- a/drivers/rtc/Kconfig
+> +++ b/drivers/rtc/Kconfig
+> @@ -1677,6 +1677,12 @@ config RTC_DRV_SNVS
+>  	   This driver can also be built as a module, if so, the module
+>  	   will be called "rtc-snvs".
+>=20
+> +config RTC_DRV_IMX_SC
+> +	tristate "NXP i.MX System Controller RTC support"
 
-Signed-off-by: Yoshihiro Kaneko <ykaneko0929@gmail.com>
----
- Documentation/devicetree/bindings/thermal/rcar-thermal.txt | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+This should depend on IMX_SCU
 
-diff --git a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-index 73e1613..0520c18 100644
---- a/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-+++ b/Documentation/devicetree/bindings/thermal/rcar-thermal.txt
-@@ -4,7 +4,7 @@ Required properties:
- - compatible		: "renesas,thermal-<soctype>",
- 			   "renesas,rcar-gen2-thermal" (with thermal-zone) or
- 			   "renesas,rcar-thermal" (without thermal-zone) as
--                           fallback except R-Car V3M/D3.
-+                           fallback except R-Car V3M/E3/D3.
- 			  Examples with soctypes are:
- 			    - "renesas,thermal-r8a73a4" (R-Mobile APE6)
- 			    - "renesas,thermal-r8a7743" (RZ/G1M)
-@@ -15,6 +15,7 @@ Required properties:
- 			    - "renesas,thermal-r8a7792" (R-Car V2H)
- 			    - "renesas,thermal-r8a7793" (R-Car M2-N)
- 			    - "renesas,thermal-r8a77970" (R-Car V3M)
-+			    - "renesas,thermal-r8a77990" (R-Car E3)
- 			    - "renesas,thermal-r8a77995" (R-Car D3)
- - reg			: Address range of the thermal registers.
- 			  The 1st reg will be recognized as common register
-@@ -23,7 +24,7 @@ Required properties:
- Option properties:
- 
- - interrupts		: If present should contain 3 interrupts for
--                          R-Car V3M/D3 or 1 interrupt otherwise.
-+                          R-Car V3M/E3/D3 or 1 interrupt otherwise.
- 
- Example (non interrupt support):
- 
--- 
-1.9.1
+> +	help
+> +	   If you say yes here you get support for the NXP i.MX System
+> +	   Controller RTC module.
+> +
+>  config RTC_DRV_SIRFSOC
+>  	tristate "SiRFSOC RTC"
+>  	depends on ARCH_SIRF
+> diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile index 290c173..f=
+97c05e
+> 100644
+> --- a/drivers/rtc/Makefile
+> +++ b/drivers/rtc/Makefile
+> @@ -75,6 +75,7 @@ obj-$(CONFIG_RTC_DRV_GOLDFISH)	+=3D rtc-goldfish.o
+>  obj-$(CONFIG_RTC_DRV_HID_SENSOR_TIME) +=3D rtc-hid-sensor-time.o
+>  obj-$(CONFIG_RTC_DRV_HYM8563)	+=3D rtc-hym8563.o
+>  obj-$(CONFIG_RTC_DRV_IMXDI)	+=3D rtc-imxdi.o
+> +obj-$(CONFIG_RTC_DRV_IMX_SC)	+=3D rtc-imx-sc.o
+>  obj-$(CONFIG_RTC_DRV_ISL12022)	+=3D rtc-isl12022.o
+>  obj-$(CONFIG_RTC_DRV_ISL12026)	+=3D rtc-isl12026.o
+>  obj-$(CONFIG_RTC_DRV_ISL1208)	+=3D rtc-isl1208.o
+> diff --git a/drivers/rtc/rtc-imx-sc.c b/drivers/rtc/rtc-imx-sc.c new file=
+ mode
+> 100644 index 0000000..5976a2e
+> --- /dev/null
+> +++ b/drivers/rtc/rtc-imx-sc.c
+> @@ -0,0 +1,98 @@
+> +// SPDX-License-Identifier: GPL-2.0+
+> +/*
+> + * Copyright 2018 NXP.
+> + */
+> +
+> +#include <linux/firmware/imx/sci.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/rtc.h>
+> +
+> +#define IMX_SC_TIMER_FUNC_GET_RTC_SEC1970	9
+> +#define IMX_SC_TIMER_FUNC_SET_RTC_TIME		6
+> +
+> +static struct imx_sc_ipc *rtc_ipc_handle; static struct rtc_device
+> +*imx_sc_rtc;
+> +
+> +struct imx_sc_msg_timer_get_rtc_time {
+> +	struct imx_sc_rpc_msg hdr;
+> +	u32 time;
+> +} __packed;
+> +
+> +static int imx_sc_rtc_read_time(struct device *dev, struct rtc_time
+> +*tm) {
+> +	struct imx_sc_msg_timer_get_rtc_time msg;
+> +	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
+> +	int ret;
+> +
+> +	hdr->ver =3D IMX_SC_RPC_VERSION;
+> +	hdr->svc =3D IMX_SC_RPC_SVC_TIMER;
+> +	hdr->func =3D IMX_SC_TIMER_FUNC_GET_RTC_SEC1970;
+> +	hdr->size =3D 1;
+> +
+> +	ret =3D imx_scu_call_rpc(rtc_ipc_handle, &msg, true);
+> +	if (ret) {
+> +		pr_err("read rtc time failed, ret %d\n", ret);
+
+Nitpick:=20
+better to use dev_err?
+
+> +		return ret;
+> +	}
+> +
+> +	rtc_time_to_tm(msg.time, tm);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct rtc_class_ops imx_sc_rtc_ops =3D {
+> +	.read_time =3D imx_sc_rtc_read_time,
+> +};
+> +
+> +static int imx_sc_rtc_probe(struct platform_device *pdev) {
+> +	int ret;
+> +
+> +	ret =3D imx_scu_get_handle(&rtc_ipc_handle);
+> +	if (ret) {
+> +		if (ret =3D=3D -EPROBE_DEFER)
+> +			return ret;
+> +
+> +		dev_err(&pdev->dev, "failed to get ipc handle: %d!\n", ret);
+> +		return ret;
+> +	}
+
+You don't have to handle different error cases as API has already enclosed =
+it.
+
+> +
+> +	imx_sc_rtc =3D devm_rtc_allocate_device(&pdev->dev);
+> +	if (IS_ERR(imx_sc_rtc)) {
+> +		ret =3D PTR_ERR(imx_sc_rtc);
+> +		return ret;
+
+Return PTR_ERR(imx_sc_rtc)
+
+Regards
+Dong Aisheng
+
+> +	}
+> +
+> +	imx_sc_rtc->ops =3D &imx_sc_rtc_ops;
+> +	imx_sc_rtc->range_min =3D 0;
+> +	imx_sc_rtc->range_max =3D U32_MAX;
+> +
+> +	ret =3D rtc_register_device(imx_sc_rtc);
+> +	if (ret) {
+> +		dev_err(&pdev->dev, "failed to register rtc: %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id imx_sc_dt_ids[] =3D {
+> +	{ .compatible =3D "fsl,imx8qxp-sc-rtc", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, imx_sc_dt_ids);
+> +
+> +static struct platform_driver imx_sc_rtc_driver =3D {
+> +	.driver =3D {
+> +		.name	=3D "imx-sc-rtc",
+> +		.of_match_table =3D imx_sc_dt_ids,
+> +	},
+> +	.probe		=3D imx_sc_rtc_probe,
+> +};
+> +module_platform_driver(imx_sc_rtc_driver);
+> +
+> +MODULE_AUTHOR("Anson Huang <Anson.Huang@nxp.com>");
+> +MODULE_DESCRIPTION("NXP i.MX System Controller RTC Driver");
+> +MODULE_LICENSE("GPL");
+> --
+> 2.7.4
