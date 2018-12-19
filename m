@@ -1,36 +1,36 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: s5pv210: Add node for exynos-rotator
-Date: Wed, 19 Dec 2018 17:24:45 +0100
-Message-ID: <CAJKOXPdFSqsKswPHUFCRZ436yWX9evFzyAo75DNkU=fznppCAQ@mail.gmail.com>
-References: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
- <20181219155704.15264-4-pawel.mikolaj.chmiel@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: [PATCH 0/2] LP5024/18 LED introduction
+Date: Wed, 19 Dec 2018 10:26:24 -0600
+Message-ID: <20181219162626.12297-1-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181219155704.15264-4-pawel.mikolaj.chmiel@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, airlied@linux.ie, Seung Woo Kim <sw0312.kim@samsung.com>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, kyungmin.park@samsung.com, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, jacek.anaszewski@gmail.com, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, Dan Murphy <dmurphy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAxOSBEZWMgMjAxOCBhdCAxNzowNCwgUGF3ZcWCIENobWllbAo8cGF3ZWwubWlrb2xh
-ai5jaG1pZWxAZ21haWwuY29tPiB3cm90ZToKPgo+IFRoaXMgY29tbWl0IGFkZHMgbm9kZSBmb3Ig
-RXh5bm9zIFJvcmF0b3IgZGV2aWNlLAo+IHNvIGl0IGNhbiBiZSB1c2VkIG9uIGFsbCBzNXB2MjEw
-IGJhc2VkIGRldmljZXMuCj4KPiBTaWduZWQtb2ZmLWJ5OiBQYXdlxYIgQ2htaWVsIDxwYXdlbC5t
-aWtvbGFqLmNobWllbEBnbWFpbC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3M1cHYy
-MTAuZHRzaSB8IDkgKysrKysrKysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKykK
-ClBhdGNoIGxvb2tzIGdvb2QgYnV0IGl0IGlzIHRvbyBjbG9zZSB0byBtZXJnZSB3aW5kb3cgc28g
-SSB3b24ndCBiZQphYmxlIHRvIHNlbmQgaXQgZnVydGhlci4gSSdsbCBwaWNrIGl0IHVwIGZvciBu
-ZXh0IGN5Y2xlLCBhZnRlciB0aGlzCm1lcmdlIHdpbmRvdy4KCkJlc3QgcmVnYXJkcywKS3J6eXN6
-dG9mCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1k
-ZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hello
+
+I am introducing the newest of the TI RGB parts the LP5024 and the LP5018.
+Now I understand that there is a patchset in the works that changes the way
+the LED labeling is created but I wanted to post these patches for comments and
+let the maintainers decide whether to pull this in prior to that patchset being
+committed.
+
+Dan
+
+Dan Murphy (2):
+  dt: bindings: lp5024: Introduce the lp5024 and lp5018 RGB driver
+  leds: lp5024: Add the LP5024/18 RGB LED driver
+
+ .../devicetree/bindings/leds/leds-lp5024.txt  |  63 ++
+ drivers/leds/Kconfig                          |   7 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-lp5024.c                    | 610 ++++++++++++++++++
+ 4 files changed, 681 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-lp5024.txt
+ create mode 100644 drivers/leds/leds-lp5024.c
+
+-- 
+2.20.0.rc2.7.g965798d1f2
