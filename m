@@ -1,113 +1,33 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/9] dt/bindings: drm/komeda: Add DT bindings for ARM
- display processor D71
-Date: Wed, 19 Dec 2018 07:55:44 -0600
-Message-ID: <CAL_JsqLsQ__dpu0Xh5zmLbOx_B8t0t0kJzoh-nOf=nuZSppAYg@mail.gmail.com>
-References: <20181219123147.16090-1-james.qian.wang@arm.com>
- <20181219123147.16090-3-james.qian.wang@arm.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [RFC PATCH 03/10] dt-bindings: dmaengine: Add
+ Allwinner suniv F1C100s DMA
+Date: Wed, 19 Dec 2018 08:03:22 -0600
+Message-ID: <20181219140322.GA6620@bogus>
+References: <cover.1543782328.git.mesihkilinc@gmail.com>
+ <7322bdfcd38cdcd8ccec56fea25492e4945d498f.1543782328.git.mesihkilinc@gmail.com>
+Reply-To: robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181219123147.16090-3-james.qian.wang@arm.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: james.qian.wang@arm.com
-Cc: Mark Rutland <Mark.Rutland@arm.com>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, Jonathan.Chai@arm.com, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, Yiqi.Kang@arm.com, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Tiannan.Zhu@arm.com, Jonathan Corbet <corbet@lwn.net>, David Airlie <airlied@linux.ie>, Mali DP Maintainers <malidp@foss.arm.com>, thomas.Sun@arm.com, Ayan.Halder@arm.com, devicetree@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>, Jin.Gao@arm.comnd@arm.com, Sean Paul <sean@poorly.run>, Lowry.Li@arm.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Randy Dunlap <rdunlap@infradead.org>, linux-kernel@vger.kernel
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDJIP47K7MERBLM75HQAKGQETVFRAOI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <7322bdfcd38cdcd8ccec56fea25492e4945d498f.1543782328.git.mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+Cc: dmaengine-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, alsa-devel-K7yf7f+aM1XWsZ/bQMPhNw@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Vinod Koul <vkoul-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jaroslav Kysela <perex-/Fr2/VpizcU@public.gmane.org>, Takashi Iwai <tiwai-IBi9RG/b67k@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMTksIDIwMTggYXQgNjozMyBBTSBqYW1lcyBxaWFuIHdhbmcgKEFybSBUZWNo
-bm9sb2d5IENoaW5hKQo8amFtZXMucWlhbi53YW5nQGFybS5jb20+IHdyb3RlOgo+Cj4gQWRkIERU
-IGJpbmRpbmdzIGRvY3VtZW50YXRpb24gZm9yIHRoZSBBUk0gZGlzcGxheSBwcm9jZXNzb3IgRDcx
-IGFuZCBsYXRlcgo+IElQcy4KPgo+IFNpZ25lZC1vZmYtYnk6IEphbWVzIChRaWFuKSBXYW5nIDxq
-YW1lcy5xaWFuLndhbmdAYXJtLmNvbT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvYXJt
-L2FybSxrb21lZGEudHh0ICAgICAgIHwgODcgKysrKysrKysrKysrKysrKysrKwo+ICAxIGZpbGUg
-Y2hhbmdlZCwgODcgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
-dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtL2FybSxrb21lZGEudHh0Cj4KPiBk
-aWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJt
-L2FybSxrb21lZGEudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYXJtL2FybSxrb21lZGEudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAwMDAw
-MDAwMDAwMDAuLmQ0YjUzYzExYjJhMgo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm0vYXJtLGtvbWVkYS50eHQKPiBAQCAt
-MCwwICsxLDg3IEBACj4gK0RldmljZSBUcmVlIGJpbmRpbmdzIGZvciBBUk0gS29tZWRhIGRpc3Bs
-YXkgZHJpdmVyCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICstIGNvbXBhdGlibGU6IFNo
-b3VsZCBiZSAiYXJtLG1hbGktZDcxIgo+ICstIHJlZzogUGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFu
-ZCBsZW5ndGggb2YgdGhlIHJlZ2lzdGVycyBpbiB0aGUgc3lzdGVtCj4gKy0gaW50ZXJydXB0czog
-dGhlIGludGVycnVwdCBsaW5lIG51bWJlcnMgb2YgdGhlIGRldmljZSBpbiB0aGUgc3lzdGVtCgpI
-b3cgbWFueT8KCj4gKy0gaW50ZXJydXB0LW5hbWVzOiBjb250YWlucyB0aGUgbmFtZXMgb2YgdGhl
-IElSUXMgaW4gdGhlIG9yZGVyIHRoZXkgd2VyZQo+ICsgICAgcHJvdmlkZWQgaW4gdGhlICJpbnRl
-cnJ1cHRzIiBwcm9wZXJ0eS4gTXVzdCBjb250YWluOiAiRFBVIi4KClRoZXJlJ3Mgbm8gcG9pbnQg
-aW4gKi1uYW1lcyB3aGVuIHRoZXJlIGlzIG9ubHkgb25lIGVudHJ5LgoKPiArLSBjbG9ja3M6IEEg
-bGlzdCBvZiBwaGFuZGxlICsgY2xvY2stc3BlY2lmaWVyIHBhaXJzLCBvbmUgZm9yIGVhY2ggZW50
-cnkKPiArICAgIGluICdjbG9jay1uYW1lcycKPiArLSBjbG9jay1uYW1lczogQSBsaXN0IG9mIGNs
-b2NrIG5hbWVzLiBJdCBzaG91bGQgY29udGFpbjoKPiArICAgICAgLSAicGNsayI6IGZvciB0aGUg
-QVBCIGludGVyZmFjZSBjbG9jawo+ICsgICAgICAtICJtY2xrIjogZm9yIHRoZSBtYWluIHByb2Nl
-c3NvciBjbG9jawoKVGhlIG9yZGVyIGhlcmUgZG9lc24ndCBtYXRjaCB0aGUgZXhhbXBsZS4KCj4g
-Ky0gI2FkZHJlc3MtY2VsbHM6IE11c3QgYmUgMQo+ICstICNzaXplLWNlbGxzOiBNdXN0IGJlIDAK
-PiArCj4gK1JlcXVpcmVkIHByb3BlcnRpZXMgZm9yIHN1Yi1ub2RlOiBwaXBlbGluZUBucQo+ICtF
-YWNoIGRldmljZSBjb250YWlucyBvbmUgb3IgdHdvIHBpcGVsaW5lIHN1Yi1ub2RlcyAoYXQgbGVh
-c3Qgb25lKSwgZWFjaAo+ICtwaXBlbGluZSBub2RlIHNob3VsZCBwcm92aWRlIHByb3BlcnRpZXM6
-Cj4gKy0gcmVnOiBaZXJvLWluZGV4ZWQgaWRlbnRpZmllciBmb3IgdGhlIHBpcGVsaW5lCj4gKy0g
-Y2xvY2tzOiBBIGxpc3Qgb2YgcGhhbmRsZSArIGNsb2NrLXNwZWNpZmllciBwYWlycywgb25lIGZv
-ciBlYWNoIGVudHJ5Cj4gKyAgICBpbiAnY2xvY2stbmFtZXMnCj4gKy0gY2xvY2stbmFtZXM6IHNo
-b3VsZCBjb250YWluOgo+ICsgICAgICAtICJhY2xrIjogQVhJIGludGVyZmFjZSBjbG9jawo+ICsg
-ICAgICAtICJweGNsayI6IHBpeGVsIGNsb2NrCgpUaGUgb3JkZXIgaGVyZSBkb2Vzbid0IG1hdGNo
-IHRoZSBleGFtcGxlLgoKPiArCj4gKy0gcG9ydDogZWFjaCBwaXBlbGluZSBjb25uZWN0IHRvIGFu
-IGVuY29kZXIgaW5wdXQgcG9ydC4gVGhlIGNvbm5lY3Rpb24gaXMKPiArICAgIG1vZGVsbGVkIHVz
-aW5nIHRoZSBPRiBncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4KCm1vZGVsZWQKCj4gKyAgICBE
-b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Cj4gKwo+ICtPcHRpb25h
-bCBwcm9wZXJ0aWVzOgo+ICsgIC0gbWVtb3J5LXJlZ2lvbjogcGhhbmRsZSB0byBhIG5vZGUgZGVz
-Y3JpYmluZyBtZW1vcnkgKHNlZQo+ICsgICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRp
-bmdzL3Jlc2VydmVkLW1lbW9yeS9yZXNlcnZlZC1tZW1vcnkudHh0KQo+ICsgICAgdG8gYmUgdXNl
-ZCBmb3IgdGhlIGZyYW1lYnVmZmVyOyBpZiBub3QgcHJlc2VudCwgdGhlIGZyYW1lYnVmZmVyIG1h
-eQo+ICsgICAgYmUgbG9jYXRlZCBhbnl3aGVyZSBpbiBtZW1vcnkuCj4gKwo+ICtFeGFtcGxlOgo+
-ICsvIHsKPiArICAgICAgIC4uLgo+ICsKPiArICAgICAgIGRwMDogZGlzcGxheUBjMDAwMDAgewo+
-ICsgICAgICAgICAgICAgICAjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArICAgICAgICAgICAgICAg
-I3NpemUtY2VsbHMgPSA8MD47Cj4gKyAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAiYXJtLG1h
-bGktZDcxIjsKPiArICAgICAgICAgICAgICAgcmVnID0gPDB4YzAwMDAwIDB4MjAwMDA+Owo+ICsg
-ICAgICAgICAgICAgICBpbnRlcnJ1cHRzID0gPDAgMTY4IDQ+Owo+ICsgICAgICAgICAgICAgICBp
-bnRlcnJ1cHQtbmFtZXMgPSAiRFBVIjsKPiArICAgICAgICAgICAgICAgY2xvY2tzID0gPCZkcHVf
-bWNsaz4sIDwmZHB1X2FjbGs+Owo+ICsgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJtY2xr
-IiwgInBjbGsiOwo+ICsKPiArICAgICAgICAgICAgICAgcGwwOiBwaXBlbGluZUAwIHsKPiArICAg
-ICAgICAgICAgICAgICAgICAgICBjbG9ja3MgPSA8JmZwZ2Fvc2MyPiwgPCZkcHVfYWNsaz47Cj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgY2xvY2stbmFtZXMgPSAicHhjbGsiLCAiYWNsayI7Cj4g
-KyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+OwoKSXMgdGhlcmUgYSByZWdpc3RlciBy
-YW5nZSBmb3IgZWFjaCBwaXBlbGluZT8gSWYgc28sIHVzaW5nIHRoYXQgaGVyZQp3b3VsZCBiZSBi
-ZXR0ZXIgdGhhbiBpbmRleC4KCj4gKwo+ICsgICAgICAgICAgICAgICAgICAgICAgIHBvcnRzIHsK
-PiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICNhZGRyZXNzLWNlbGxzID0gPDE+Owo+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI3NpemUtY2VsbHMgPSA8MD47Cj4gKwo+
-ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcG9ydEAwIHsKPiArICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDA+OwoKWW91IGNhbiBkcm9wICdwb3J0
-cycgbW92aW5nIHBvcnQgdXAgYSBsZXZlbC4gQW5kIGZvciBhIHNpbmdsZSBwb3J0LAp5b3UgZG9u
-J3QgbmVlZCByZWcuCgo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBk
-cDBfcGwwX291dDogZW5kcG9pbnQgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgIHJlbW90ZS1lbmRwb2ludCA9IDwmZGJfZHZpMF9pbj47Cj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICB9Owo+ICsgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAgICAgICAg
-ICAgICAgIH07Cj4gKyAgICAgICAgICAgICAgIHBsMTogcGlwZWxpbmVAMSB7Cj4gKyAgICAgICAg
-ICAgICAgICAgICAgICAgY2xvY2tzID0gPCZmcGdhb3NjMj4sIDwmZHB1X2FjbGs+Owo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gInB4Y2xrIiwgImFjbGsiOwo+ICsgICAg
-ICAgICAgICAgICAgICAgICAgIHJlZyA9IDwxPjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgcG9ydHMgewo+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI2FkZHJlc3MtY2Vs
-bHMgPSA8MT47Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAjc2l6ZS1jZWxscyA9
-IDwwPjsKPiArCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0QDAgewo+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MD47Cj4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGRwMF9wbDFfb3V0OiBlbmRwb2ludCB7
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgcmVtb3Rl
-LWVuZHBvaW50ID0gPCZkYl9kdmkxX2luPjsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gKyAg
-ICAgICAgICAgICAgICAgICAgICAgfTsKPiArICAgICAgICAgICAgICAgfTsKPiArICAgICAgIH07
-Cj4gKyAgICAgICAuLi4KPiArfTsKPiAtLQo+IDIuMTcuMQo+Cj4gX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBkcmktZGV2ZWwgbWFpbGluZyBsaXN0Cj4g
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Mon,  3 Dec 2018 00:23:10 +0300, Mesih Kilinc wrote:
+> Add compatible string for Allwinner suniv F1C100s DMA.
+> 
+> Signed-off-by: Mesih Kilinc <mesihkilinc-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
+> ---
+>  Documentation/devicetree/bindings/dma/sun4i-dma.txt | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
