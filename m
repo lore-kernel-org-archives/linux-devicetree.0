@@ -1,55 +1,53 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: [PATCH 1/2] dt-bindings: arm: amlogic: add amediatech x96-max bindings
-Date: Tue, 18 Dec 2018 16:26:19 -0800
-Message-ID: <20181219002620.12138-1-khilman@baylibre.com>
+From: Shawn Guo <shawn.guo@linaro.org>
+Subject: Re: [PATCH v5 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
+ driver
+Date: Wed, 19 Dec 2018 09:07:36 +0800
+Message-ID: <20181219010733.GA13489@dragon>
+References: <20181127100722.9993-1-shawn.guo@linaro.org>
+ <20181127100722.9993-3-shawn.guo@linaro.org>
+ <b0d02b1c-cc44-69fe-0765-84caf76eaea1@ti.com>
+ <20181204060104.GA11391@dragon>
+ <20181217003434.GA7208@dragon>
+ <c5ccf173-d0f3-70f4-f8e3-777fd3339b68@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <c5ccf173-d0f3-70f4-f8e3-777fd3339b68@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add new vendor for amediatech, and initial board: x96-max
+On Tue, Dec 18, 2018 at 07:46:13PM +0530, Kishon Vijay Abraham I wrote:
+> 
+> 
+> On 17/12/18 6:04 AM, Shawn Guo wrote:
+> > On Tue, Dec 04, 2018 at 02:01:07PM +0800, Shawn Guo wrote:
+> >> Hi Kishon,
+> >>
+> >> On Tue, Dec 04, 2018 at 10:38:19AM +0530, Kishon Vijay Abraham I wrote:
+> >>> Hi,
+> >>>
+> >>> On 27/11/18 3:37 PM, Shawn Guo wrote:
+> >>>> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
+> >>>> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
+> >>>
+> >>> Is this Synopsys PHY specific to Qualcomm or could it be used by other vendors
+> >>> (with just changing tuning parameters)? If it could be used by other vendors
+> >>> then it would make sense to add this PHY driver in synopsys directory.
+> >>
+> >> My knowledge is that this Synopsys PHY is specific to Qualcomm SoCs.
+> >> @Sriharsha, correct me if I'm wrong.
+> > 
+> > Kishon,
+> > 
+> > Do you have any further comments on the patches?  We are close the 4.21
+> > merge window, and I really hope they can hit mainline with 4.21 release.
+> > Thanks.
+> 
+> Aren't we waiting for feedback from Sriharsha?
 
-Signed-off-by: Kevin Hilman <khilman@baylibre.com>
----
- Documentation/devicetree/bindings/arm/amlogic.txt     | 1 +
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 2 files changed, 2 insertions(+)
+I think no correction means that I'm right :)
 
-diff --git a/Documentation/devicetree/bindings/arm/amlogic.txt b/Documentation/devicetree/bindings/arm/amlogic.txt
-index 8dbc259081e4..c50b084b6c59 100644
---- a/Documentation/devicetree/bindings/arm/amlogic.txt
-+++ b/Documentation/devicetree/bindings/arm/amlogic.txt
-@@ -99,6 +99,7 @@ Board compatible values (alphabetically, grouped by SoC):
-   - "amlogic,p281" (Meson gxl s905w)
-   - "oranth,tx3-mini" (Meson gxl s905w)
- 
-+  - "amediatech,x96-max" (Meson gxm s912)
-   - "amlogic,q200" (Meson gxm s912)
-   - "amlogic,q201" (Meson gxm s912)
-   - "khadas,vim2" (Meson gxm s912)
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 8c413d8cc2a5..c1bb0c220429 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -24,6 +24,7 @@ amarula	Amarula Solutions
- amazon	Amazon.com, Inc.
- amcc	Applied Micro Circuits Corporation (APM, formally AMCC)
- amd	Advanced Micro Devices (AMD), Inc.
-+amediatech	Shenzhen Amediatech Technology Co., Ltd
- amlogic	Amlogic, Inc.
- ampire	Ampire Co., Ltd.
- ams	AMS AG
--- 
-2.19.2
+Shawn
