@@ -1,33 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 04/13] dt-bindings: mailbox: qcom: Add clock-name
- optional property
-Date: Thu, 20 Dec 2018 15:37:14 -0600
-Message-ID: <20181220213714.GA8965@bogus>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 01/15] clk: rockchip: add clock ids for dphy rx and tx
+ channels on rk3368
+Date: Thu, 20 Dec 2018 15:37:35 -0600
+Message-ID: <20181220213735.GA9546@bogus>
+References: <20181217123650.6773-1-heiko@sntech.de>
+ <20181217123650.6773-2-heiko@sntech.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <20181217123650.6773-2-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Cc: linux-rockchip@lists.infradead.org, hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, linux-clk@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2018 10:46:21 +0100, Jorge Ramirez-Ortiz wrote:
-> When the APCS clock is registered (platform dependent), it retrieves
-> its parent names from hardcoded values in the driver.
+On Mon, 17 Dec 2018 13:36:36 +0100, Heiko Stuebner wrote:
+> Add the clock ids so that they can be exported from the clock driver
+> and referenced in the rk3368 devicetree.
 > 
-> The following commit allows the DT node to provide such clock names to
-> the platform data based clock driver therefore avoiding having to
-> explicitly embed those names in the clock driver source code.
-> 
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 > ---
->  .../bindings/mailbox/qcom,apcs-kpss-global.txt      | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
+>  include/dt-bindings/clock/rk3368-cru.h | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
