@@ -1,93 +1,106 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Thu, 20 Dec 2018 12:20:43 -0600
-Message-ID: <20181220182043.GC183878@google.com>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
- <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
- <20181213145517.GB4701@google.com>
- <1545034779.8528.8.camel@mhfsdcap03>
- <20181217143247.GK20725@google.com>
- <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
- <1545124764.25199.3.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Taniya Das <tdas@codeaurora.org>
+Subject: [PATCH] arm64: dts: sdm845: Add cpufreq device node
+Date: Fri, 21 Dec 2018 00:48:50 +0530
+Message-ID: <1545333530-30151-1-git-send-email-tdas@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545124764.25199.3.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: Andy Gross <andy.gross@linaro.org>
+Cc: linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Matthias Kaehlcke <mka@google.com>, amit.kucheria@linaro.org, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
-> On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
-> > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
-> > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
-> > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
-> > > > > > calculated as 4GB in arm64 but bogus alignment values at
-> > > > > > arm32, the pcie device and devices behind this bridge will
-> > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
-> > > > > > the pcie devices will be enabled correctly.
-> > > > > 
-> > > > > So this is a hardware erratum?  Per spec, a memory BAR has
-> > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
-> > > > > 0.
-> > > > 
-> > > > Yes, it only works properly on 64bit platform.
-> > > 
-> > > I don't understand.  BARs are supposed to work the same
-> > > regardless of whether it's a 32- or 64-bit platform.  If this is
-> > > a workaround for a hardware defect, please just say that
-> > > explicitly.
-> > 
-> > I do not understand this either. First thing to do is to describe
-> > the problem properly so that we can actually find a solution to
-> > it.
-> 
-> This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
-> is 0xffff_ffff_0000_0000 and it could not be changed except by
-> config write operation.
+This change adds the cpufreq node as per the bindings example for SDM845.
 
-If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
-is out of spec because the low-order 4 bits of a 64-bit memory BAR
-cannot all be zero.
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
-the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
-contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
-one at 0x10) are read-only, and in this case should contain the value
-0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
-the BAR is 64 bits (bits 2:1 == 10).
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 23a253b..5db4fcc 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -99,6 +99,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x0>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			next-level-cache = <&L2_0>;
+ 			L2_0: l2-cache {
+ 				compatible = "cache";
+@@ -114,6 +115,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x100>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			next-level-cache = <&L2_100>;
+ 			L2_100: l2-cache {
+ 				compatible = "cache";
+@@ -126,6 +128,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x200>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			next-level-cache = <&L2_200>;
+ 			L2_200: l2-cache {
+ 				compatible = "cache";
+@@ -138,6 +141,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x300>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 0>;
+ 			next-level-cache = <&L2_300>;
+ 			L2_300: l2-cache {
+ 				compatible = "cache";
+@@ -150,6 +154,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x400>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			next-level-cache = <&L2_400>;
+ 			L2_400: l2-cache {
+ 				compatible = "cache";
+@@ -162,6 +167,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x500>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			next-level-cache = <&L2_500>;
+ 			L2_500: l2-cache {
+ 				compatible = "cache";
+@@ -174,6 +180,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x600>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			next-level-cache = <&L2_600>;
+ 			L2_600: l2-cache {
+ 				compatible = "cache";
+@@ -186,6 +193,7 @@
+ 			compatible = "qcom,kryo385";
+ 			reg = <0x0 0x700>;
+ 			enable-method = "psci";
++			qcom,freq-domain = <&cpufreq_hw 1>;
+ 			next-level-cache = <&L2_700>;
+ 			L2_700: l2-cache {
+ 				compatible = "cache";
+@@ -341,6 +349,17 @@
+ 			#power-domain-cells = <1>;
+ 		};
 
-> The calculated BAR size will be 0 in 32-bit platform since the
-> phys_addr_t is a 32bit value in 32-bit platform.
-
-Either (1) this is a hardware defect that feeds incorrect data to the
-BAR size calculation, or (2) there's a problem in the BAR size
-calculation code.  We need to figure out which one and work around or
-fix it correctly.
-
-> Actually MediaTek's HW does not using this BAR0, just omit it when
-> assign resource is totally fine.
-
-It's totally fine to work around hardware defects, but we have to
-clearly understand the problem so we do it correctly.  For example, we
-probably can't just clear out the BAR0 resource in the pci_dev,
-because the BAR in the hardware device still contains a value, and if
-we enable memory decoding for the device, it will still respond to the
-region described by the BAR.
-
-> When assign the resource for each device, software will check the
-> resource alignment first, and the resource of length zero will be
-> regarded as a bogus alignment resource, it will be ignored and won't
-> claim a resource parent for it.
-> 
-> When drivers try to enable the PCIe devices, the software will enable
-> it's resources, but it will return an error number when found a
-> unclaimed resource, in that case, the flow of enable devices will be
-> interrupted and PCIe devices won't work properly.
-> 
-> Thanks.
-> 
++		cpufreq_hw: cpufreq@17d43000 {
++			compatible = "qcom,cpufreq-hw";
++			reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
++			reg-names = "freq-domain0", "freq-domain1";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
++			clock-names = "xo", "alternate";
++
++			#freq-domain-cells = <1>;
++		};
++
+ 		qfprom@784000 {
+ 			compatible = "qcom,qfprom";
+ 			reg = <0x784000 0x8ff>;
+--
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
