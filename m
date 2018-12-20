@@ -1,118 +1,87 @@
 From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
- controller on HiSilicon SoCs
-Date: Thu, 20 Dec 2018 09:33:13 +0800
-Message-ID: <3d9727c4-e3c7-6eb0-cecd-e16af2fa6b66@huawei.com>
+Subject: Re: [PATCH v1 02/12] dt-bindings: phy: Add support for HiSilicon's
+ hi3660 USB PHY
+Date: Thu, 20 Dec 2018 09:52:02 +0800
+Message-ID: <3b7cef2e-b39a-b410-dfb5-395da6f24efd@huawei.com>
 References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-2-chenyu56@huawei.com>
- <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
- <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
- <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
- <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com>
- <20181219140953.GA9910@bogus>
+ <20181203034515.91412-3-chenyu56@huawei.com> <20181219141419.GA17302@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219140953.GA9910@bogus>
+In-Reply-To: <20181219141419.GA17302@bogus>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: liuyu712@hisilicon.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
+Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 2018/12/19 22:09, Rob Herring wrote:
-> On Mon, Dec 03, 2018 at 05:28:56PM +0800, Chen Yu wrote:
->> Hi,
+On 2018/12/19 22:14, Rob Herring wrote:
+> On Mon, Dec 03, 2018 at 11:45:05AM +0800, Yu Chen wrote:
+>> This patch adds binding documentation for supporting the hi3660 usb
+>> phy on boards like the HiKey960.
 >>
->> On 2018/12/3 16:59, Sergei Shtylyov wrote:
->>> On 03.12.2018 11:51, Chen Yu wrote:
->>>
->>>>>> This patch adds binding descriptions to support the dwc3 controller
->>>>>> on HiSilicon SoCs and boards like the HiKey960.
->>>>>>
->>>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->>>>>> Cc: Rob Herring <robh+dt@kernel.org>
->>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
->>>>>> Cc: John Stultz <john.stultz@linaro.org>
->>>>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->>>>>> ---
->>>>>>    .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
->>>>>>    1 file changed, 67 insertions(+)
->>>>>>    create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>>>> new file mode 100644
->>>>>> index 000000000000..d32d2299a0a1
->>>>>> --- /dev/null
->>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
->>>>>> @@ -0,0 +1,67 @@
->>>>>> +HiSilicon DWC3 USB SoC controller
->>>>>> +
->>>>>> +This file documents the parameters for the dwc3-hisi driver.
->>>>>> +
->>>>>> +Required properties:
->>>>>> +- compatible:    should be "hisilicon,hi3660-dwc3"
->>>>>> +- clocks:    A list of phandle + clock-specifier pairs for the
->>>>>> +        clocks listed in clock-names
->>>>>> +- clock-names:    Specify clock names
->>>>>> +- resets:    list of phandle and reset specifier pairs.
->>>>>> +
->>>>>> +Sub-nodes:
->>>>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
->>>>>> +example below. The DT binding details of dwc3 can be found in:
->>>>>> +Documentation/devicetree/bindings/usb/dwc3.txt
->>>>>> +
->>>>>> +Example:
->>>>>> +    usb3: hisi_dwc3 {
->>>>>> +        compatible = "hisilicon,hi3660-dwc3";
->>>>>> +        #address-cells = <2>;
->>>>>> +        #size-cells = <2>;
->>>>>> +        ranges;
->>>>>> +
->>>>>> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
->>>>>> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->>>>>> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
->>>>>> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
->>>>>> +        assigned-clock-rates = <229000000>;
->>>>>> +        resets = <&crg_rst 0x90 8>,
->>>>>> +             <&crg_rst 0x90 7>,
->>>>>> +             <&crg_rst 0x90 6>,
->>>>>> +             <&crg_rst 0x90 5>;
->>>>>> +
->>>>>> +        dwc3: dwc3@ff100000 {
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: John Stultz <john.stultz@linaro.org>
+>> Cc: Binghui Wang <wangbinghui@hisilicon.com>
+>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>> --
+>> v1: Fix some format error as suggested by Rob.
+>> --
+>> ---
+>>  .../devicetree/bindings/phy/phy-hi3660-usb3.txt     | 21 +++++++++++++++++++++
+>>  1 file changed, 21 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>> new file mode 100644
+>> index 000000000000..8ea52d51aa13
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/phy/phy-hi3660-usb3.txt
+>> @@ -0,0 +1,21 @@
+>> +Hisilicon hi3660 usb PHY
 > 
-> Please combine these into a single node. Unless you have a wrapper with 
-> registers, you don't need these 2 nodes. Clocks and reset can go in the 
-> dwc3 node.
+> s/usb/USB/
 
-Yes, clocks can go in the dwc3 node, but there are four resets need to be
-deasserted for dwc3 usb of Hi3660 Soc and there is only one reset handled
-in dwc3 driver.
+OK.
+> 
+>> +-----------------------
+>> +
+>> +Required properties:
+>> +- compatible: should be "hisilicon,hi3660-usb-phy"
+>> +- #phy-cells: must be 0
+>> +- hisilicon,pericrg-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,pctrl-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,usb3-otg-bc-syscon: phandle of syscon used to control phy.
+>> +- hisilicon,eye-diagram-param: parameter set for phy
+>> +Refer to phy/phy-bindings.txt for the generic PHY binding properties
+> 
+> Doesn't a phy need some clocks?
+> 
+Yes, the clocks of USB phy currently is enabled by config the
+pctrl-syscon registers and pericrg-syscon.
+>> +
+>> +Example:
+>> +	usb-phy {
+>> +		compatible = "hisilicon,hi3660-usb-phy";
+>> +		#phy-cells = <0>;
+>> +		hisilicon,pericrg-syscon = <&crg_ctrl>;
+>> +		hisilicon,pctrl-syscon = <&pctrl>;
+>> +		hisilicon,usb3-otg-bc-syscon = <&usb3_otg_bc>;
+> 
+> Is one of these the "main" registers for the phy? If so, then make this 
+> a child of that syscon node.
+> 
+Ok, the usb3-otg-bc-syscon is the "main" registers for the phy.
 
-> 
->>>>>
->>>>>      According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
->>>>>
->>>>
->>>> Do you mean it should be usb@ff100000: dwc3@ff100000 ?
->>>
->>>     dwc3: usb@ff100000
->>>
->>>    "dwc3:" is a label, not name.
+>> +		hisilicon,eye-diagram-param = <0x22466e4>;
+>> +	};
+>> -- 
+>> 2.15.0-rc2
 >>
->> I use the node name "dwc3@ff100000" according to Documentation/devicetree/bindings/usb/dwc3.txt
->> and documentations of vendor drivers, i.e. qcom,dwc3.txt, rockchip,dwc3.txt.
->>
->> In these documentations, the dwc3 sub-node name uses "dwc3@xxxxxxxx".
->>
->> I think it is better to be same as the other vendor's dwc3 drivers.
-> 
-> It's not. The other bindings are wrong. Follow the DT Spec.
-> 
-> Rob
 > 
 > .
 > 
