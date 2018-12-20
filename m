@@ -1,136 +1,118 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v4 8/8] ARM: dts: Add stmpe-adc DT node to Toradex T30
- modules
-Date: Thu, 20 Dec 2018 15:34:16 +0300
-Message-ID: <9c380fe2-2db8-8bc6-15b6-d112f982b70a@gmail.com>
-References: <20181212130649.15146-1-dev@pschenker.ch>
- <20181212130649.15146-8-dev@pschenker.ch>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 4/4] ARM: mxs: cfa10036: Fixup OLED display reset
+ polarity
+Date: Thu, 20 Dec 2018 13:35:05 +0100
+Message-ID: <20181220123505.GH2188@piout.net>
+References: <1545308005-51559-1-git-send-email-michal.vokac@ysoft.com>
+ <1545308005-51559-5-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181212130649.15146-8-dev@pschenker.ch>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1545308005-51559-5-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <dev@pschenker.ch>, jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch
-Cc: thierry.reding@gmail.com, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, Jonathan Hunter <jonathanh@nvidia.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-tegra@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Philippe,
-
-Please CC all the patches in the series to every recipient.
-
-On 12.12.2018 16:06, Philippe Schenker wrote:
-> Add the stmpe-adc DT node as found on Toradex T30 modules
+On 20/12/2018 12:13:57+0000, Vokáč Michal wrote:
+> There was a bug in reset signal generation in ssd1307fb OLED driver.
+> The display needs an active-low reset signal but the driver produced
+> the correct sequence only if the GPIO used for reset was specified as
+> GPIO_ACTIVE_HIGH.
 > 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> Now as the OLED driver is fixed it is also necessarry to implement
+> a fixup for all current users of the old DT ABI. There is only one
+> in-tree user and that is the Crystalfontz CFA-10036 board. In case
+> this board is booting and GPIO_ACTIVE_HIGH is used for reset we
+> override it to GPIO_ACTIVE_LOW.
+> 
+
+Honestly, the platform has been discontinued and I don't really think
+it is worth having that fixup in the tree forever.
+
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 > ---
+> Changes from v1:
+>  - Add R-by from Rob
+>  - Use of_property_read_variable_u32_array to read the GPIO specifier
+>    array instead of reading it manualy in for cycle. (Rob)
 > 
-> Changes in v4:
->  - New separate commit to hold T30 devicetree changes
+>  arch/arm/mach-mxs/mach-mxs.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
 > 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  arch/arm/boot/dts/tegra30-apalis.dtsi  | 22 ++++++++++++++--------
->  arch/arm/boot/dts/tegra30-colibri.dtsi | 22 ++++++++++++++--------
->  2 files changed, 28 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/tegra30-apalis.dtsi b/arch/arm/boot/dts/tegra30-apalis.dtsi
-> index 7f112f192fe9..850b0d13549a 100644
-> --- a/arch/arm/boot/dts/tegra30-apalis.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-apalis.dtsi
-> @@ -976,11 +976,18 @@
->  			id = <0>;
->  			blocks = <0x5>;
->  			irq-trigger = <0x1>;
-> +			/* 3.25 MHz ADC clock speed */
-> +			st,adc-freq = <1>;
-> +			/* 12-bit ADC */
-> +			st,mod-12b = <1>;
-> +			/* internal ADC reference */
-> +			st,ref-sel = <0>;
-> +			/* ADC converstion time: 80 clocks */
-> +			st,sample-time = <4>;
-> +			/* forbid to use ADC channels 3-0 (touch) */>  			stmpe_touchscreen {
->  				compatible = "st,stmpe-ts";
-> -				/* 3.25 MHz ADC clock speed */
-> -				st,adc-freq = <1>;
->  				/* 8 sample average control */
->  				st,ave-ctrl = <3>;
->  				/* 7 length fractional part in z */
-> @@ -990,17 +997,16 @@
->  				 * current limit value
->  				 */
->  				st,i-drive = <1>;
-> -				/* 12-bit ADC */
-> -				st,mod-12b = <1>;
-> -				/* internal ADC reference */
-> -				st,ref-sel = <0>;
-> -				/* ADC converstion time: 80 clocks */
-> -				st,sample-time = <4>;
-
-Does this change depend on some other patch in the series? Is this a backwards-compatible change? Please explain.
-
->  				/* 1 ms panel driver settling time */
->  				st,settling = <3>;
->  				/* 5 ms touch detect interrupt delay */
->  				st,touch-det-delay = <5>;
->  			};
+> diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
+> index 1c6062d..50038d6 100644
+> --- a/arch/arm/mach-mxs/mach-mxs.c
+> +++ b/arch/arm/mach-mxs/mach-mxs.c
+> @@ -21,6 +21,7 @@
+>  #include <linux/reboot.h>
+>  #include <linux/micrel_phy.h>
+>  #include <linux/of_address.h>
+> +#include <linux/of_gpio.h>
+>  #include <linux/of_platform.h>
+>  #include <linux/phy.h>
+>  #include <linux/pinctrl/consumer.h>
+> @@ -268,9 +269,52 @@ static void __init apx4devkit_init(void)
+>  					   apx4devkit_phy_fixup);
+>  }
+>  
+> +#define OLED_RESET_GPIO_LEN	3
+> +#define OLED_RESET_GPIO_SIZE	(OLED_RESET_GPIO_LEN * sizeof(u32))
 > +
-> +			stmpe_adc {
-> +				compatible = "st,stmpe-adc";
-> +				st,norequest-mask = <0x0F>;
-> +			};
->  		};
->  
->  		/*
-> diff --git a/arch/arm/boot/dts/tegra30-colibri.dtsi b/arch/arm/boot/dts/tegra30-colibri.dtsi
-> index 35af03ca9e90..1f9198bb24ff 100644
-> --- a/arch/arm/boot/dts/tegra30-colibri.dtsi
-> +++ b/arch/arm/boot/dts/tegra30-colibri.dtsi
-> @@ -845,11 +845,18 @@
->  			id = <0>;
->  			blocks = <0x5>;
->  			irq-trigger = <0x1>;
-> +			/* 3.25 MHz ADC clock speed */
-> +			st,adc-freq = <1>;
-> +			/* 12-bit ADC */
-> +			st,mod-12b = <1>;
-> +			/* internal ADC reference */
-> +			st,ref-sel = <0>;
-> +			/* ADC converstion time: 80 clocks */
-> +			st,sample-time = <4>;
-> +			/* forbid to use ADC channels 3-0 (touch) */
->  
->  			stmpe_touchscreen {
->  				compatible = "st,stmpe-ts";
-> -				/* 3.25 MHz ADC clock speed */
-> -				st,adc-freq = <1>;
->  				/* 8 sample average control */
->  				st,ave-ctrl = <3>;
->  				/* 7 length fractional part in z */
-> @@ -859,17 +866,16 @@
->  				 * current limit value
->  				 */
->  				st,i-drive = <1>;
-> -				/* 12-bit ADC */
-> -				st,mod-12b = <1>;
-> -				/* internal ADC reference */
-> -				st,ref-sel = <0>;
-> -				/* ADC converstion time: 80 clocks */
-> -				st,sample-time = <4>;
->  				/* 1 ms panel driver settling time */
->  				st,settling = <3>;
->  				/* 5 ms touch detect interrupt delay */
->  				st,touch-det-delay = <5>;
->  			};
+> +static void __init crystalfontz_oled_reset_fixup(void)
+> +{
+> +	struct property *newgpio;
+> +	struct device_node *np;
+> +	u32 *gpiospec;
+> +	int ret;
 > +
-> +			stmpe_adc {
-> +				compatible = "st,stmpe-adc";
-> +				st,norequest-mask = <0x0F>;
-> +			};
->  		};
+> +	np = of_find_compatible_node(NULL, NULL, "solomon,ssd1306fb-i2c");
+> +	if (!np)
+> +		return;
+> +
+> +	newgpio = kzalloc(sizeof(*newgpio) + OLED_RESET_GPIO_SIZE, GFP_KERNEL);
+> +	if (!newgpio)
+> +		return;
+> +
+> +	newgpio->value = newgpio + 1;
+> +	newgpio->length = OLED_RESET_GPIO_SIZE;
+> +	newgpio->name = kstrdup("reset-gpios", GFP_KERNEL);
+> +	if (!newgpio->name) {
+> +		kfree(newgpio);
+> +		return;
+> +	}
+> +
+> +	gpiospec = newgpio->value;
+> +	ret = of_property_read_variable_u32_array(np, "reset-gpios", gpiospec,
+> +						  OLED_RESET_GPIO_LEN, 0);
+> +
+> +	if (ret < 0) {
+> +		kfree(newgpio);
+> +		return;
+> +	}
+> +
+> +	if (!(gpiospec[2] & OF_GPIO_ACTIVE_LOW)) {
+> +		gpiospec[2] |= OF_GPIO_ACTIVE_LOW;
+> +		cpu_to_be32_array(gpiospec, gpiospec, OLED_RESET_GPIO_LEN);
+> +		of_update_property(np, newgpio);
+> +	}
+> +}
+> +
+>  static void __init crystalfontz_init(void)
+>  {
+>  	update_fec_mac_prop(OUI_CRYSTALFONTZ);
+> +	crystalfontz_oled_reset_fixup();
+>  }
 >  
->  		/*
+>  static void __init duckbill_init(void)
+> -- 
+> 2.1.4
 > 
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
