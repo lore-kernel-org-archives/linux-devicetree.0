@@ -1,88 +1,45 @@
-From: Kalle Valo <kvalo@codeaurora.org>
-Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on sdm845
-Date: Thu, 20 Dec 2018 13:58:53 +0200
-Message-ID: <87y38ktnnm.fsf@kamboji.qca.qualcomm.com>
-References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
-        <87d0r55ews.fsf@codeaurora.org>
-        <6e831363962be4e28d7551e360ed4d46@codeaurora.org>
-        <874lcg55at.fsf@codeaurora.org>
-        <9f8bbfaa232c02bb33594207fa1f8821@codeaurora.org>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: [PATCH v2 0/4] Fix ssd1307fb OLED driver reset
+Date: Thu, 20 Dec 2018 12:13:53 +0000
+Message-ID: <1545308005-51559-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f8bbfaa232c02bb33594207fa1f8821@codeaurora.org> (Govind Singh's
-        message of "Wed, 19 Dec 2018 21:11:25 +0530")
+Content-Language: en-US
+Content-ID: <BE9F8F3C2D7E084EA058249DA01044F1@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Govind Singh <govinds@codeaurora.org>
-Cc: briannorris@chromium.org, andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-Govind Singh <govinds@codeaurora.org> writes:
-
-> Hi Kalle,
->
-> On 2018-11-17 16:39, Kalle Valo wrote:
->> Govind Singh <govinds@codeaurora.org> writes:
->>
->>> On 2018-11-16 18:59, Kalle Valo wrote:
->>>> Govind Singh <govinds@codeaurora.org> writes:
->>>>
->>>>> This series enables ath10k wifi driver support for WCN3990 target
->>>>> on sdm845 SOC. This series also updates the missing dt binding
->>>>> documentation
->>>>> and adds optional iommu property.
->>>>>
->>>>> Changes since v3:
->>>>>     Moved interrupt/reg/reg-name to required property.
->>>>>     Removed unused clocks.
->>>>>     Corrected interrupt no's.
->>>>>
->>>>> Changes since v2:
->>>>>     dropped [v2,4/4] dts: arm64/sdm845: Enable iommu for WCN3990
->>>>> wifi module
->>>>>     device node patch from the series as dependent patch is not yet
->>>>> merged.
->>>>>     Enabled status flag from sdm845-mtp.dts.
->>>>>
->>>>> Changes since v1:
->>>>>     Listed no of interrupts/clocks for each set of compatible.
->>>>>     Added missing 'wifi' label to sdm845.dtsi.
->>>>>
->>>>> Govind Singh (3):
->>>>>   dt: bindings: add missing dt properties for WCN3990 wifi node
->>>>>   dts: arm64/sdm845: Add WCN3990 WLAN module device node
->>>>>   dt: bindings: add bindings for wifi iommu node
->>>>>
->>>>>  .../bindings/net/wireless/qcom,ath10k.txt          | 62
->>>>> ++++++++++++++--------
->>>>>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts            |  8 +++
->>>>>  arch/arm64/boot/dts/qcom/sdm845.dtsi               | 26 +++++++++
->>>>>  3 files changed, 74 insertions(+), 22 deletions(-)
->>>>
->>>> Via which tree are these patches going? That's not clear for me.
->>>
->>> I guess sdm845 dtsi change should be going to
->>> git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git.
->>> I need to send v5 to address one comment from Brian.
->>
->> Ok, I'll then drop these from my queue.
->
-> Can you pls apply below changes to ath10k tree, i will send sdm845
-> dtsi change as separate patch after rebase.
->
->>>>>   dt: bindings: add missing dt properties for WCN3990 wifi node
->>>>>   dt: bindings: add bindings for wifi iommu node
-
-Ok, these two are back in my queue:
-
-https://patchwork.kernel.org/patch/10668237/
-
-https://patchwork.kernel.org/patch/10668245/
-
-I'll just modify the titles to use ath10k prefix to make it more clear
-these are for ath10k:
-
-   dt: bindings: ath10k: .....
-
--- 
-Kalle Valo
+SGkgYWxsLA0KDQp0aGlzIGlzIG15IHRoaXJkIGF0dGVtcHQgdG8gZml4IHRoZSBzc2QxMzA3ZmIg
+T0xFRCBkcml2ZXIgcmVzZXQuIEluIHRoZQ0Kc2Vjb25kIGF0dGVtcHQgWzFdIFJvYiBzdWdnZXN0
+ZWQgdG8gdGFrZSBkaWZmZXJlbnQgYXByb2FjaC4gVGhhdCBpcyB0bw0KYXBwbHkgd2hhdCB3YXMg
+b3JpZ2luYWx5IHBhcnQgb2YgdGhlIGZpcnN0IHJvdW5kIGFuZCBldmVudHVhbGx5IG1lcmdlZA0K
+YnV0IHJldmVydGVkIGxhdGVyIG9uIFsyXVszXS4NCg0KTmV4dCBzdGVwIGlzIHRvIGFwcGx5IGEg
+Zml4dXAgZm9yIHRoZSBzaW5nbGUgdXNlciAoaW4tdHJlZSkgdGhhdCB1c2VzDQp0aGlzIE9MRUQu
+IEFzIFJvYiBzdWdnZXN0ZWQsIHRoZSBmaXh1cCBtYXkgYmUgYXBwbGllZCBvbmx5IGFmdGVyDQpz
+b21lb25lIGNvbXBsYWlucyB0aGVpciBkaXNwbGF5IGJyb2tlLg0KDQpJIGFtIG5vdCByZWFsbHkg
+c3VyZSB3aGF0IGlzIHRoZSBwcm9wcGVyIHdheSB0byBoYW5kbGUgdGhpcyBzbyB0aGUNCnNlcmll
+cyBjb250YWlucyB0aGUgb3JpZ2luYWwgcGF0Y2hlcyArIGEgbWlub3IgZml4IGluIHRoZSBkb2Nz
+IGFuZA0KdGhlIGZpeHVwIGFzIHRoZSBsYXN0IHBhdGNoLg0KDQpBZGRpbmcgQWxleGFuZHJlIGFu
+ZCBNYXhpbWUgZnJvbSBCb290bGluIHRvIHRoZSBDYyBsaXN0IGFzIHlvdSBzZWVtDQp0byBiZSB0
+aGUgbGFzdCBvbmVzIHdobyB0b3VjaGVkIHRoZSBDcnlzdGFsZm9udHogcGxhdGZvcm0uIFlvdXIg
+Y29tZW50DQpyZWdhcmRpbmcgdGhlIHN0YXR1cyBvZiB0aGUgcGxhdGZvcm0gYW5kIHdoZXRoZXIg
+dGhlIGZpeHVwIHNob3VsZCBiZQ0KYXBwbGllZCBzdHJhaWdodCBhd2F5IG9yIG5vdCBhdCBhbGwg
+d2lsbCBiZSBhcHByZWNpYXRlZC4NCg0KVGhhbmsgeW91LA0KTWljaGFsDQoNClsxXSBodHRwczov
+L3BhdGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNjY1NTk3LyMyMjMyNzIyNw0KWzJdIGh0dHBz
+Oi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA2MTc3MjkvDQpbM10gaHR0cHM6Ly9wYXRj
+aHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDYxNzczMS8jMjIyNTcxNzUNCg0KTWljaGFsIFZva8Oh
+xI0gKDQpOg0KICBkdC1iaW5kaW5nczogZGlzcGxheTogc3NkMTMwN2ZiOiBSZW1vdmUgcmVzZXQt
+YWN0aXZlLWxvdyBmcm9tIGV4YW1wbGVzDQogIHZpZGVvOiBzc2QxMzA3ZmI6IERvIG5vdCBoYXJk
+IGNvZGUgYWN0aXZlLWxvdyByZXNldCBzZXF1ZW5jZQ0KICBBUk06IGR0czogaW14MjgtY2ZhMTAw
+MzY6IEZpeCB0aGUgcmVzZXQgZ3BpbyBzaWduYWwgcG9sYXJpdHkNCiAgQVJNOiBteHM6IGNmYTEw
+MDM2OiBGaXh1cCBPTEVEwqBkaXNwbGF5IHJlc2V0IHBvbGFyaXR5DQoNCiAuLi4vZGV2aWNldHJl
+ZS9iaW5kaW5ncy9kaXNwbGF5L3NzZDEzMDdmYi50eHQgICAgICB8ICAyIC0NCiBhcmNoL2FybS9i
+b290L2R0cy9pbXgyOC1jZmExMDAzNi5kdHMgICAgICAgICAgICAgICB8ICAzICstDQogYXJjaC9h
+cm0vbWFjaC1teHMvbWFjaC1teHMuYyAgICAgICAgICAgICAgICAgICAgICAgfCA0NCArKysrKysr
+KysrKysrKysrKysrKysrDQogZHJpdmVycy92aWRlby9mYmRldi9zc2QxMzA3ZmIuYyAgICAgICAg
+ICAgICAgICAgICAgfCAgNCArLQ0KIDQgZmlsZXMgY2hhbmdlZCwgNDggaW5zZXJ0aW9ucygrKSwg
+NSBkZWxldGlvbnMoLSkNCg0KLS0gDQoyLjEuNA0KDQo=
