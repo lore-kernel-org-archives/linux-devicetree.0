@@ -1,52 +1,118 @@
-From: Trent Piepho <tpiepho@impinj.com>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
-Date: Thu, 20 Dec 2018 01:22:51 +0000
-Message-ID: <1545268969.22930.77.camel@impinj.com>
-References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
-         <20181218040702.29231-4-andrew.smirnov@gmail.com>
-         <20181218151533.GA2922@bogus>
-         <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
-         <CAL_JsqJb24ZpM7qQfy_F7RUVEGyceBAXOndbZcTMh3a__k38UQ@mail.gmail.com>
-         <CAHQ1cqEMxxo9JGN5be4XQWAtPz7nC2JyLCr3qasnD5QK7_hOYQ@mail.gmail.com>
+From: Chen Yu <chenyu56@huawei.com>
+Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3
+ controller on HiSilicon SoCs
+Date: Thu, 20 Dec 2018 09:33:13 +0800
+Message-ID: <3d9727c4-e3c7-6eb0-cecd-e16af2fa6b66@huawei.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com>
+ <20181203034515.91412-2-chenyu56@huawei.com>
+ <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com>
+ <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com>
+ <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com>
+ <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com>
+ <20181219140953.GA9910@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHQ1cqEMxxo9JGN5be4XQWAtPz7nC2JyLCr3qasnD5QK7_hOYQ@mail.gmail.com>
+In-Reply-To: <20181219140953.GA9910@bogus>
 Content-Language: en-US
-Content-ID: <F57C2BFF224B7843B60ABC715CD776CA@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>
-Cc: "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "hongxing.zhu@nxp.com" <hongxing.zhu@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: liuyu712@hisilicon.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAyMDE4LTEyLTE5IGF0IDE2OjQ3IC0wODAwLCBBbmRyZXkgU21pcm5vdiB3cm90ZToN
-Cj4gDQo+ID4gPiBUaGlzIHNlcmllcyBpbml0aWFsbHkgYWRkZWQgZXhwbGljaXQgb2Zmc2V0cyBi
-dXQgSSBzdWdnZXN0ZWQgYSBzaW5nbGUNCj4gPiA+ICJjb250cm9sbGVyLWlkIiBiZWNhdXNlOg0K
-PiA+ID4gICAqIFRoZXJlIGFyZSBtdWx0aXBsZSBiaXQgYW5kIGJ5dGUgb2Zmc2V0cw0KPiA+ID4g
-ICAqIE90aGVyIGlteDggU09DcyBhbHNvIGhhdmUgMnggcGNpZSB3aXRoIG90aGVyIGJpdC9ieXRl
-IG9mZnNldHMNCj4gPiA+IA0KPiA+ID4gSGlkaW5nIHRoaXMgYmVoaW5kIGEgY29tcGF0aWJsZSBz
-dHJpbmcgYW5kIHNpbmdsZSAiY29udHJvbGxlci1pZCIgc2VlbQ0KPiA+ID4gcHJlZmVyYWJsZSB0
-byBlbGFib3JhdGluZyByZWdpc3RlciBtYXBzIGluIGR0IGJpbmRpbmdzLiBJdCBhbHNvIG1ha2Vz
-DQo+ID4gPiB1cGdyYWRlcyBzaW1wbGVyOiBpZiBmZWF0dXJlcyBhcmUgYWRkZWQgd2hpY2ggdXNl
-IG90aGVyIGJpdHMgdGhlcmUgaXMgbm8NCj4gPiA+IG5lZWQgdG8gZGVzY3JpYmUgdGhlbSBpbiBE
-VCBhbmQgZGVhbCB3aXRoIGNvbXBhdGliaWxpdHkgaGVhZGFjaGVzLg0KPiA+IA0KPiA+IFlvdSBh
-bHJlYWR5IGhhdmUgYW4gaWQgZm9yIHRoZSBjb250cm9sbGVyczogdGhlIGFkZHJlc3MuIFVzZSB0
-aGF0IGlmDQo+ID4geW91IGRvbid0IHdhbnQgdG8gcHV0IHRoZSByZWdpc3RlciBvZmZzZXRzIGlu
-IERULg0KPiA+IA0KPiANCj4gTHVjYXMsIGFyZSB5b3Ugb24gYm9hcmQgd2l0aCB0aGlzPw0KDQpE
-b2VzIGFkZHJlc3MgaGVyZSBtZWFuIHRoZSBhZGRyZXNzIGZyb20gdGhlIGNvbnRyb2xsZXIncyBy
-ZWcgcHJvcGVydHk/DQogDQpIb3cgZG8geW91IG1hcCB0aGF0IGFkZHJlc3MgdG8gdGhlIGNvbnRy
-b2xsZXIncyBpbmRleD8gIEEgZ2lhbnQgdGFibGUNCm9mIGV2ZXJ5IHNvYyBzbyB0aGUgc29jIHR5
-cGUgcGx1cyBjb250cm9sbGVyIHJlZ2lzdGVyIGFkZHJlc3MgcGFpciB0aGFuDQpjYW4gYmUgbG9v
-a2VkIHVwIGluIHRoZSBkcml2ZXI/DQoNCkkuZS4sIG9uIGlNWDhNUSB0aGUgY29udHJvbGxlciBh
-dCAweDMzODAwMDAwIGlzIGNvbnRyb2xsZXIgMCBhbmQgc28gb24NCmZvciBldmVyeSBwb3NzaWJs
-ZSBTb0MgYWRkcmVzcyBjb21iaW5hdGlvbj8NCg0KTm90IHJlYWxseSBhIGZhbiBvZiB0aGF0Lg0K
-DQpUaGUgc2l0dWF0aW9uIGhlcmUgaXMgdGhhdCBzb21lIHJlZ2lzdGVycyBmb3IgdGhlc2UgY29u
-dHJvbGxlcnMgYXJlDQppbnRlcmxlYXZlZCwgcmlnaHQ/ICBJLmUuLCB0aGVyZSdzIG9uZSByZWdp
-c3RlciBzb21ld2hlcmUgd2hlcmUgYml0IDANCm1lYW5zIGVuYWJsZSBjb250cm9sbGVyIDAgYW5k
-IGJpdCAxIG1lYW5zIGVuYWJsZSBjb250cm9sbGVyIDEgYW5kIHNvDQpvbi4NCg0KSXNuJ3QgY2Vs
-bC1pbmRleCBhbHJlYWR5IHRoZSBzdGFuZGFyZCBkZXZpY2UgdHJlZSBwcm9wZXJ0eSBmb3IgdGhp
-cw0Ka2luZCBvZiBzZXR1cD8NCg0KSSBrbm93IGNlbGwtaW5kZXggd2FzIGhpc3RvcmljYWxseSBh
-bHNvIChhYil1c2VkIGluIGFuIGF0dGVtcHQgdG8NCnByb3ZpZGUgYSBmaXhlZCBrZXJuZWwgZGV2
-aWNlIGVudW1lcmF0aW9uIG9yZGVyLCBzb21ldGhpbmcgbm93IGhhbmRsZWQNCmJldHRlciBieSBj
-aG9zZW4gbm9kZSBhbGlhc2VzLg0KDQoNCg==
+Hi,
+
+On 2018/12/19 22:09, Rob Herring wrote:
+> On Mon, Dec 03, 2018 at 05:28:56PM +0800, Chen Yu wrote:
+>> Hi,
+>>
+>> On 2018/12/3 16:59, Sergei Shtylyov wrote:
+>>> On 03.12.2018 11:51, Chen Yu wrote:
+>>>
+>>>>>> This patch adds binding descriptions to support the dwc3 controller
+>>>>>> on HiSilicon SoCs and boards like the HiKey960.
+>>>>>>
+>>>>>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>>>>>> Cc: Rob Herring <robh+dt@kernel.org>
+>>>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>>>>> Cc: John Stultz <john.stultz@linaro.org>
+>>>>>> Signed-off-by: Yu Chen <chenyu56@huawei.com>
+>>>>>> ---
+>>>>>>    .../devicetree/bindings/usb/dwc3-hisi.txt          | 67 ++++++++++++++++++++++
+>>>>>>    1 file changed, 67 insertions(+)
+>>>>>>    create mode 100644 Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>>>>
+>>>>>> diff --git a/Documentation/devicetree/bindings/usb/dwc3-hisi.txt b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>>>> new file mode 100644
+>>>>>> index 000000000000..d32d2299a0a1
+>>>>>> --- /dev/null
+>>>>>> +++ b/Documentation/devicetree/bindings/usb/dwc3-hisi.txt
+>>>>>> @@ -0,0 +1,67 @@
+>>>>>> +HiSilicon DWC3 USB SoC controller
+>>>>>> +
+>>>>>> +This file documents the parameters for the dwc3-hisi driver.
+>>>>>> +
+>>>>>> +Required properties:
+>>>>>> +- compatible:    should be "hisilicon,hi3660-dwc3"
+>>>>>> +- clocks:    A list of phandle + clock-specifier pairs for the
+>>>>>> +        clocks listed in clock-names
+>>>>>> +- clock-names:    Specify clock names
+>>>>>> +- resets:    list of phandle and reset specifier pairs.
+>>>>>> +
+>>>>>> +Sub-nodes:
+>>>>>> +The dwc3 core should be added as subnode to HiSilicon DWC3 as shown in the
+>>>>>> +example below. The DT binding details of dwc3 can be found in:
+>>>>>> +Documentation/devicetree/bindings/usb/dwc3.txt
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +    usb3: hisi_dwc3 {
+>>>>>> +        compatible = "hisilicon,hi3660-dwc3";
+>>>>>> +        #address-cells = <2>;
+>>>>>> +        #size-cells = <2>;
+>>>>>> +        ranges;
+>>>>>> +
+>>>>>> +        clocks = <&crg_ctrl HI3660_CLK_ABB_USB>,
+>>>>>> +             <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>>>>>> +        clock-names = "clk_usb3phy_ref", "aclk_usb3otg";
+>>>>>> +        assigned-clocks = <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>>>>>> +        assigned-clock-rates = <229000000>;
+>>>>>> +        resets = <&crg_rst 0x90 8>,
+>>>>>> +             <&crg_rst 0x90 7>,
+>>>>>> +             <&crg_rst 0x90 6>,
+>>>>>> +             <&crg_rst 0x90 5>;
+>>>>>> +
+>>>>>> +        dwc3: dwc3@ff100000 {
+> 
+> Please combine these into a single node. Unless you have a wrapper with 
+> registers, you don't need these 2 nodes. Clocks and reset can go in the 
+> dwc3 node.
+
+Yes, clocks can go in the dwc3 node, but there are four resets need to be
+deasserted for dwc3 usb of Hi3660 Soc and there is only one reset handled
+in dwc3 driver.
+
+> 
+>>>>>
+>>>>>      According to the DT spec, the node names should be generic, not chip specific, i.e. usb@ff100000 in this case.
+>>>>>
+>>>>
+>>>> Do you mean it should be usb@ff100000: dwc3@ff100000 ?
+>>>
+>>>     dwc3: usb@ff100000
+>>>
+>>>    "dwc3:" is a label, not name.
+>>
+>> I use the node name "dwc3@ff100000" according to Documentation/devicetree/bindings/usb/dwc3.txt
+>> and documentations of vendor drivers, i.e. qcom,dwc3.txt, rockchip,dwc3.txt.
+>>
+>> In these documentations, the dwc3 sub-node name uses "dwc3@xxxxxxxx".
+>>
+>> I think it is better to be same as the other vendor's dwc3 drivers.
+> 
+> It's not. The other bindings are wrong. Follow the DT Spec.
+> 
+> Rob
+> 
+> .
+> 
