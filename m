@@ -1,28 +1,25 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] Documentation: dt: Add binding info for jz4740-musb
- driver
-Date: Thu, 20 Dec 2018 14:33:27 -0600
-Message-ID: <20181220203327.GA14186@bogus>
-References: <20181213144555.24031-1-paul@crapouillou.net>
+Subject: Re: [PATCH] dt-bindings: irqchip: renesas-irqc: Document r8a774c0
+ support
+Date: Thu, 20 Dec 2018 14:34:46 -0600
+Message-ID: <20181220203446.GA16133@bogus>
+References: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181213144555.24031-1-paul@crapouillou.net>
+In-Reply-To: <1544732284-5951-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Bin Liu <b-liu@ti.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me, Paul Cercueil <paul@crapouillou.net>
+Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 13 Dec 2018 15:45:52 +0100, Paul Cercueil wrote:
-> This commit adds documentation for the device-tree bindings of the
-> jz4740-musb driver, which provides support for the USB gadget mode
-> of the JZ4740 and similar SoCs from Ingenic.
+On Thu, 13 Dec 2018 20:18:04 +0000, Fabrizio Castro wrote:
+> Document RZ/G2E (R8A774C0) SoC bindings.
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 > ---
->  .../bindings/usb/ingenic,jz4740-musb.txt           | 24 ++++++++++++++++++++++
->  1 file changed, 24 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+>  Documentation/devicetree/bindings/interrupt-controller/renesas,irqc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
