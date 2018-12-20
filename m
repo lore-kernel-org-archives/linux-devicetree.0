@@ -1,24 +1,25 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY bindings
-Date: Thu, 20 Dec 2018 12:25:10 -0800
-Message-ID: <154533751009.79149.13940391507897650993@swboyd.mtv.corp.google.com>
-References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1544176558-7946-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: define vendor prefix for whwave, Inc.
+Date: Thu, 20 Dec 2018 14:25:42 -0600
+Message-ID: <20181220202542.GA2826@bogus>
+References: <1544696030-17159-1-git-send-email-long17.cool@163.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544176558-7946-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1544696030-17159-1-git-send-email-long17.cool@163.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jorge.ramirez-ortiz@linaro.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org
+Cc: robh@kernel.org, alexandre.belloni@bootlin.com, a.zummo@towertech.it, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Dianlong Li <long17.cool@163.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2018-12-07 01:55:57)
-> +
-> +- qcom,vdd-voltage-level:
-> +    Value type: <prop-array>
-> +    Definition: This is a list of three integer values <no min max> where
-> +                each value corresponding to voltage corner in uV.
+On Thu, 13 Dec 2018 18:13:48 +0800, Dianlong Li wrote:
+> Introduce vendor prefix for whwave, Inc.
+> for SD3078 rtc device.
+> 
+> Signed-off-by: Dianlong Li <long17.cool@163.com>
+> ---
+>  .../devicetree/bindings/vendor-prefixes.txt        |    1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-As far as I'm aware, this isn't how qcom's voltage corners are handled
-or are going to be handled. Can't you hardcode it in the driver for now?
+Reviewed-by: Rob Herring <robh@kernel.org>
