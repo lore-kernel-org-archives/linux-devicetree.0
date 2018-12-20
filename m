@@ -1,38 +1,59 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [v3, PATCH 0/2] add ethernet binding and modify ethernet
- driver for mt2712
-Date: Wed, 19 Dec 2018 16:25:12 -0800 (PST)
-Message-ID: <20181219.162512.2128297455575722871.davem@davemloft.net>
-References: <1545204161-15742-1-git-send-email-biao.huang@mediatek.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
+Date: Wed, 19 Dec 2018 16:47:25 -0800
+Message-ID: <CAHQ1cqEMxxo9JGN5be4XQWAtPz7nC2JyLCr3qasnD5QK7_hOYQ@mail.gmail.com>
+References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
+ <20181218040702.29231-4-andrew.smirnov@gmail.com> <20181218151533.GA2922@bogus>
+ <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
+ <CAL_JsqJb24ZpM7qQfy_F7RUVEGyceBAXOndbZcTMh3a__k38UQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545204161-15742-1-git-send-email-biao.huang@mediatek.com>
+In-Reply-To: <CAL_JsqJb24ZpM7qQfy_F7RUVEGyceBAXOndbZcTMh3a__k38UQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: biao.huang@mediatek.com
-Cc: robh+dt@kernel.org, honghui.zhang@mediatek.com, yt.shen@mediatek.com, liguo.zhang@mediatek.com, mark.rutland@arm.com, nelson.chang@mediatek.com, matthias.bgg@gmail.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, joabreu@synopsys.com, andrew@lunn.ch
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>, Rob Herring <robh@kernel.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Biao Huang <biao.huang@mediatek.com>
-Date: Wed, 19 Dec 2018 15:22:39 +0800
+On Tue, Dec 18, 2018 at 1:10 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Dec 18, 2018 at 12:09 PM Leonard Crestez
+> <leonard.crestez@nxp.com> wrote:
+> >
+> > On 12/18/2018 5:15 PM, Rob Herring wrote:
+> > > On Mon, Dec 17, 2018 at 08:07:02PM -0800, Andrey Smirnov wrote:
+> > >> Add code needed to support i.MX8MQ variant.
+> > >>
+> > >> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> > >> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+> >
+> > >> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > >> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> > >>
+> > >> +Additional required properties for imx8mq-pcie:
+> > >> +- fsl,controller-id: Logical ID of a given PCIE controller. PCIE1 is 0, PCIE2 is 1;
+> > >> +
+> > >
+> > > Remove this.
+> > >
+> > > If GPR register offset is what you need, then put that into DT.
+> > > Typically, we'd have a property with iomuxc phandle and offset.
+> >
+> > This series initially added explicit offsets but I suggested a single
+> > "controller-id" because:
+> >   * There are multiple bit and byte offsets
+> >   * Other imx8 SOCs also have 2x pcie with other bit/byte offsets
+> >
+> > Hiding this behind a compatible string and single "controller-id" seem
+> > preferable to elaborating register maps in dt bindings. It also makes
+> > upgrades simpler: if features are added which use other bits there is no
+> > need to describe them in DT and deal with compatibility headaches.
+>
+> You already have an id for the controllers: the address. Use that if
+> you don't want to put the register offsets in DT.
+>
 
-> changes in v3:
-> resend this series base on the latest net-next tree.
-> 
-> changes in v2 as comments from Sean:
-> 1. fix typo.
-> 2. use capital letters for RMII/MII/RGMII in driver and bindings.
-> 
-> v1:
-> This new series is the result of discussion in:
-> http://lkml.org/lkml/2018/12/13/1007
-> http://lkml.org/lkml/2018/12/14/53
-> 
-> 1. ethernet binding file move to this series.
-> 2. remove fine tune property in device tree
-> 3. remove fine tune flow in ethernet driver
-> 4. set rgmii timing according to the value in device tree,
-> and don't care whether phy insert internal delay  or not.
+Lucas, are you on board with this?
 
-Series applied.
+Thanks,
+Andrey Smirnov
