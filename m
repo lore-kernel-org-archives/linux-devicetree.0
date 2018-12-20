@@ -1,48 +1,91 @@
-Return-Path: <SRS0=JDpP=O5=nxp.com=anson.huang@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 0/4] Add i.MX System Controller thermal driver support
-Date: Thu, 20 Dec 2018 09:08:14 +0000
-Message-ID: <1545296609-20477-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Date: Thu, 20 Dec 2018 09:19:28 -0600
+References: <cover.1544235317.git.thinhn@synopsys.com>
+	<a156d9779fe56ea7b5cc628c90b52d0162b5ae68.1544235317.git.thinhn@synopsys.com>
+	<20181218164128.GA14552@bogus>
+	<87sgysu1uc.fsf@linux.intel.com>
+In-Reply-To: <87sgysu1uc.fsf@linux.intel.com>
+Message-ID: <CAL_JsqKVfRM1n4OqM+==ZBtNOcDr8dz4yYC8h56HfmYZHBjk-w@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] usb: dwc3: Add property snps,enable-refclk-sof
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: Felipe Balbi <balbi@kernel.org>
+Cc: Thinh Nguyen <thinh.nguyen@synopsys.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, John Youn <john.youn@synopsys.com>
 List-ID: <devicetree@vger.kernel.org>
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and thermal sensors etc..
+On Thu, Dec 20, 2018 at 12:52 AM Felipe Balbi <balbi@kernel.org> wrote:
+>
+>
+> Hi,
+>
+> Rob Herring <robh@kernel.org> writes:
+> > On Fri, Dec 07, 2018 at 06:27:43PM -0800, Thinh Nguyen wrote:
+> >> This patch adds a property to enable the controller to track the
+> >> frame number based on the reference clock.
+> >>
+> >> When operating in USB 2.0 mode, the peripheral controller uses the USB2
+> >> PHY clocks to track the frame number. This prevents the controller from
+> >> suspending the USB2 PHY when the device goes into low power. Version
+> >> 1.80a of the DWC_usb31 peripheral controller introduces a way to track
+> >> frame number based on the reference clock instead. This feature allows
+> >> the controller to suspend the USB2 PHY when the device goes into low
+> >> power. This improves power saving for devices that have isochronous
+> >> endpoints.
+> >>
+> >> Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
+> >> ---
+> >> Changes in v2:
+> >> - Revise property description
+> >> - Rename property from snps,enable-refclk-lpm to snps,enable-refclk-sof
+> >>
+> >>  Documentation/devicetree/bindings/usb/dwc3.txt | 3 +++
+> >>  1 file changed, 3 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >> index b7e67edff9b2..01b948fff0eb 100644
+> >> --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> >> +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> >> @@ -101,6 +101,9 @@ Optional properties:
+> >>                      enable periodic ESS TX threshold.
+> >>   - snps,refclk-period-ns: if set, this value informs the controller of the
+> >>                      reference clock period in nanoseconds.
+> >> + - snps,enable-refclk-sof: set to enable reference clock based frame number
+> >> +                    tracking while in low power, allowing the controller to
+> >> +                    suspend the PHY during low power states.
+> >
+> > This should be implied by the compatible string.
+>
+> Two problems with this:
+>
+> 1) Won't work for PCI-based systems
 
-This patch adds i.MX system controller thermal driver support,
-Linux kernel has to communicate with system controller via MU
-(message unit) IPC to get each thermal sensor's temperature,
-it supports multiple sensors which are passed from device tree,
-please see the binding doc for details.
+For PCI, you would decide this based on VID/PID, wouldn't you?
+Compatible is basically equivalent to that.
 
-Note that this patch set is based on [V5,4/4] ARM64: dts: imx: add i.MX8QXP=
- system controller RTC support,
-https://patchwork.kernel.org/patch/10738681/
+> 2) If we start having many users of this we will end up with:
+>
+>         if (of_device_is_compatible("a") ||
+>                 of_device_is_compatible("b") ||
+>                 of_device_is_compatible("c") ||
+>                 of_device_is_compatible("d") ||
+>                 ...)
+>                 foo();
+>
+> Conversely, if we just pass a flag, this branch will never change. We
+> won't need changes to the kernel because a new platform needing refclk
+> based frame number tracking is, now, supported upstream.
 
-Anson Huang (4):
-  dt-bindings: thermal: add binding doc for i.MX system controller
-    thermal driver
-  thermal: imx_sc: add i.MX system controller thermal support
-  defconfig: arm64: add i.MX system controller thermal support
-  ARM64: dts: imx: add i.MX8QXP thermal support
+Things are implied based on compatible frequently and this is not how
+the code ends up looking like. Normally, match data would have the
+flag setting and that variable will get passed to whatever needs it.
 
- .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
- arch/arm64/configs/defconfig                       |   1 +
- drivers/thermal/Kconfig                            |  11 ++
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++=
-++++
- 6 files changed, 274 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
-l.txt
- create mode 100644 drivers/thermal/imx_sc_thermal.c
+USB blocks and their integration quirks are complicated enough that
+I'm not really worried about needing to update the kernel for a new
+platform. If a new platform is so similar to an existing one, then a
+fallback compatible can be used and the kernel doesn't need a change.
 
---=20
-2.7.4
+A property like this makes more sense when it is board-specific, not
+SoC specific. I may be wrong, but this looked more like a SoC
+integration decision than board level.
+
+Rob
