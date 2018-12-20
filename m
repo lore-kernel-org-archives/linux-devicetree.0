@@ -1,138 +1,68 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [DO NOT MERGE] [PATCH v5 6/6] arm64: dts: allwinner:
- bananapi-m64: Add HDF5640 camera module
-Date: Thu, 20 Dec 2018 18:24:38 +0530
-Message-ID: <20181220125438.11700-7-jagan@amarulasolutions.com>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Kalle Valo <kvalo@codeaurora.org>
+Subject: Re: [PATCH v4 0/3] Enable ath10k wcn3990 wifi driver support on sdm845
+Date: Thu, 20 Dec 2018 15:18:15 +0200
+Message-ID: <87imzo72w8.fsf@purkki.adurom.net>
+References: <1541423318-19312-1-git-send-email-govinds@codeaurora.org>
+        <87d0r55ews.fsf@codeaurora.org>
+        <6e831363962be4e28d7551e360ed4d46@codeaurora.org>
+        <874lcg55at.fsf@codeaurora.org>
+        <9f8bbfaa232c02bb33594207fa1f8821@codeaurora.org>
+        <87y38ktnnm.fsf@kamboji.qca.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBI5C53QAKGQECZ52MAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20181220125438.11700-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <87y38ktnnm.fsf@kamboji.qca.qualcomm.com> (Kalle Valo's message
+        of "Thu, 20 Dec 2018 13:58:53 +0200")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Govind Singh <govinds@codeaurora.org>
+Cc: briannorris@chromium.org, andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Bananapi M64 comes with an optional sensor based on the ov5640,
-add support for it with below pin information.
+Kalle Valo <kvalo@codeaurora.org> writes:
 
-- PE13, PE12 via i2c-gpio bitbanging
-- CLK_CSI_MCLK as external clock
-- PE1 as external clock pin muxing
-- DLDO3 as AVDD supply
-- ALDO1 as DOVDD supply
-- ELDO3 as DVDD supply
-- PE16 gpio for reset pin
-- PE17 gpio for powerdown pin
+> Govind Singh <govinds@codeaurora.org> writes:
+>
+>> Hi Kalle,
+>>
+>> On 2018-11-17 16:39, Kalle Valo wrote:
+>>> Govind Singh <govinds@codeaurora.org> writes:
+>>>
+>>>> On 2018-11-16 18:59, Kalle Valo wrote:
+>>>>>
+>>>>> Via which tree are these patches going? That's not clear for me.
+>>>>
+>>>> I guess sdm845 dtsi change should be going to
+>>>> git://git.kernel.org/pub/scm/linux/kernel/git/agross/linux.git.
+>>>> I need to send v5 to address one comment from Brian.
+>>>
+>>> Ok, I'll then drop these from my queue.
+>>
+>> Can you pls apply below changes to ath10k tree, i will send sdm845
+>> dtsi change as separate patch after rebase.
+>>
+>>>>>>   dt: bindings: add missing dt properties for WCN3990 wifi node
+>>>>>>   dt: bindings: add bindings for wifi iommu node
+>
+> Ok, these two are back in my queue:
+>
+> https://patchwork.kernel.org/patch/10668237/
+>
+> https://patchwork.kernel.org/patch/10668245/
+>
+> I'll just modify the titles to use ath10k prefix to make it more clear
+> these are for ath10k:
+>
+>    dt: bindings: ath10k: .....
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
+There were conflicts with this commit:
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 83e30e0afe5b..c185ceec8c81 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -60,6 +60,41 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	i2c-csi {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&pio 4 13 GPIO_ACTIVE_HIGH>; /* CSI0-SDA: PE13 */
-+		scl-gpios = <&pio 4 12 GPIO_ACTIVE_HIGH>; /* CSI0-SCK: PE12 */
-+		i2c-gpio,delay-us = <5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ov5640: camera@3c {
-+			compatible = "ovti,ov5640";
-+			reg = <0x3c>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&csi_mclk_pin>;
-+			clocks = <&ccu CLK_CSI_MCLK>;
-+			clock-names = "xclk";
-+
-+			AVDD-supply = <&reg_dldo3>;
-+			DOVDD-supply = <&reg_aldo1>;
-+			DVDD-supply = <&reg_eldo3>;
-+			reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* CSI0-RST: PE16 */
-+			powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* CSI0-PWDN: PE17 */
-+
-+			port {
-+				ov5640_ep: endpoint {
-+					remote-endpoint = <&csi_ep>;
-+					bus-width = <8>;
-+					hsync-active = <1>; /* Active high */
-+					vsync-active = <0>; /* Active low */
-+					data-active = <1>;  /* Active high */
-+					pclk-sample = <1>;  /* Rising */
-+				};
-+			};
-+		};
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -106,6 +141,24 @@
- 	status = "okay";
- };
- 
-+&csi {
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		csi_ep: endpoint {
-+			remote-endpoint = <&ov5640_ep>;
-+			bus-width = <8>;
-+			hsync-active = <1>; /* Active high */
-+			vsync-active = <0>; /* Active low */
-+			data-active = <1>;  /* Active high */
-+			pclk-sample = <1>;  /* Rising */
-+		};
-+	};
-+};
-+
- &dai {
- 	status = "okay";
- };
-@@ -296,6 +349,12 @@
- 	regulator-name = "vcc-wifi";
- };
- 
-+&reg_dldo3 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "avdd-csi";
-+};
-+
- &reg_dldo4 {
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <3300000>;
-@@ -313,6 +372,12 @@
- 	regulator-name = "cpvdd";
- };
- 
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "dvdd-csi";
-+};
-+
- &reg_fldo1 {
- 	regulator-min-microvolt = <1200000>;
- 	regulator-max-microvolt = <1200000>;
+2b741a8aaa34 dt: bindings: add bindings for msa memory region
+
+I fixed them in the pending branch, please double check carefully:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=5bb88d4d49783c75ac083e4ea19b7527bc115857
+
+https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/ath.git/commit/?h=pending&id=a6d53e207670eacd72a74277658bac1ab346fabd
+
 -- 
-2.18.0.321.gffc6fa0e3
+Kalle Valo
