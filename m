@@ -1,107 +1,65 @@
-From: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Thu, 20 Dec 2018 14:40:51 +0200
-Message-ID: <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
- <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
- <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
- <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
- <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v5 0/6] media/sun6i: Allwinner A64 CSI support
+Date: Thu, 20 Dec 2018 18:24:32 +0530
+Message-ID: <20181220125438.11700-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBGNC53QAKGQEYSXTBEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,
+This series support CSI on Allwinner A64.
 
-On 19/12/2018 23.50, Dan Murphy wrote:
-> On 12/19/2018 03:36 PM, Jacek Anaszewski wrote:
->> Hi Dan and Pavel,
->> Some time ago we had discussion with Vesa Jääskeläinen about possible
->> approaches to RGB LEDs [0]. What seemed to be the most suitable
->> variation of the discussed out-of-tree approach was the "color" property
->> and array of color triplets defined in Device Tree per each color.
->>
-> 
-> Why does Device tree define the color?
-> 
-> Rob indicated that Device tree is supposed to define the hardware.
-> This thread seems to be defining the operation.
-> 
-> Shouldn't the color be done via user space and not dt?
-> 
-> Especially if they want to change the color real time?
-> 
-> Dan
-> 
->> Please refer to [0] for the details.
->>
->> [0] https://lkml.org/lkml/2018/11/9/938
->>
+Tested 640x480, 320x240, 720p, 1080p resolutions UYVY8_2X8 format.
 
-Idea was to define preset colors in device tree as an example when you 
-are dealing with multi-color LEDs without PWM. In that case you only 
-have GPIOs to control and then have a problem what does those GPIO's mean.
+Changes for v5:
+- Add mod_rate quirk for better handling clk_set code
+Changes for v4:
+- update the compatible string order
+- add proper commit message
+- included BPI-M64 patch
+- skipped amarula-a64 patch
+Changes for v3:
+- update dt-bindings for A64
+- set mod clock via csi driver
+- remove assign clocks from dtsi
+- remove i2c-gpio opendrian
+- fix avdd and dovdd supplies
+- remove vcc-csi pin group supply
 
-With preset definitions one can use color names to act as a shortcut to 
-configure GPIO's to proper state for that particular color.
+Note:
+- This series created on top of H3 changes [1]
+- Tested on top of Maxim's ov5640 changes[2] along with
+  the change I praposed wrt 15fps change on this patch[3]
+- Here is the test log[4], for anyone's information.
 
-For more flexible setups where you have PWM or such control you have 
-larger space of available colors. In this case you need to somehow 
-define also meaning of those controls.
+[4] https://paste.ubuntu.com/p/pC9ZQKNzQf/
+[3] https://patchwork.kernel.org/patch/10708931/
+[2] https://patchwork.kernel.org/cover/10708911/
+[1] https://patchwork.kernel.org/cover/10705905/
 
-Also we may not have LED with only red, green and blue elements. There 
-might in example be amber, ultraviolet, white elements.
+Jagan Teki (6):
+  dt-bindings: media: sun6i: Add A64 CSI compatible
+  media: sun6i: Add mod_rate quirk
+  media: sun6i: Add A64 CSI block support
+  arm64: dts: allwinner: a64: Add A64 CSI controller
+  arm64: dts: allwinner: a64: Add pinmux setting for CSI MCLK on PE1
+  [DO NOT MERGE] arm64: dts: allwinner: bananapi-m64: Add HDF5640 camera module
 
-This is where device tree is concerned. It helps us craft the logical 
-definition for LED so that we can control it from user space in common way.
+ .../devicetree/bindings/media/sun6i-csi.txt   |  1 +
+ .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 65 +++++++++++++++++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 25 +++++++
+ .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 39 +++++++++--
+ 4 files changed, 124 insertions(+), 6 deletions(-)
 
-Now the next problem then is how does user space work then.
-
-For multi-color LEDs it it important to change the color atomically so 
-that no wrong colors are being shown as user space got interrupted when 
-controlling it.
-
-Also we have brightness setting that would be useful for PWM controlled 
-LEDs.
-
-Setting color is easy when you use preset names then you only need to 
-deal with brightness value (eg. RGB -> HSV * brightness -> RGB). Of 
-course here additional problem is other color elements are they then 
-scaled according to brightness value?.
-
-Setting color as "raw" values is then next problem. In order to do it 
-atomically it needs to be one atomic activation and could be eg. one 
-write to "color" sysfs entry with combination of all color elements and 
-perhaps additionally also brightness value. Next question is then what 
-is the format for such entry then? What are the value ranges? In here we 
-can utilize device tree definition to help define what kind of LED we do 
-have and what kind of capabilities it does have.
-
-Additional problem risen also in discussion was non-linearity of some 
-control mechanisms vs. perceived color. So there might be a need for 
-curve mapping similarly what is with backlight control and that would be 
-defined either in device tree and possibly in user space if there is a 
-need for that. I suppose golden curve definition in device tree should 
-be good enough.
-
-Then there was additional discussion about possible animation support 
-but I would leave that for future design as that would then be utilizing 
-the same framework.
-
-I suppose color space handling and that kind of stuff should be in some 
-led core functionality and then raw control should be part of physical 
-led driver.
-
-I was planning to play with it during holiday season but lets see how it 
-goes. Feel free to also experiment with the idea.
-
-Thanks,
-Vesa Jääskeläinen
+-- 
+2.18.0.321.gffc6fa0e3
