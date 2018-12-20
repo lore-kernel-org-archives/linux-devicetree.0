@@ -1,41 +1,51 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: dt-bindings: watchdog: renesas-wdt: Document r8a774c0 support
-Date: Wed, 19 Dec 2018 18:37:28 -0800
-Message-ID: <20181220023728.GA10247@roeck-us.net>
-References: <1544732333-6086-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Andy Tang <andy.tang@nxp.com>
+Subject: RE: [PATCH] arm64: dts: nxp: ls208xa: add more thermal zone support
+Date: Thu, 20 Dec 2018 03:12:20 +0000
+Message-ID: <VI1PR04MB4333CAADFE46B52CA090F4B7F3BF0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+References: <20181031044742.26327-1-andy.tang@nxp.com>
+ <VI1PR04MB433351E63826CC2128153943F3BD0@VI1PR04MB4333.eurprd04.prod.outlook.com>
+ <20181219040820.GA13728@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1544732333-6086-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20181219040820.GA13728@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 13, 2018 at 08:18:53PM +0000, Fabrizio Castro wrote:
-> RZ/G2E (R8A774C0) watchdog implementation is compatible with R-Car
-> Gen3, therefore add relevant documentation.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-
-> ---
->  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> index a8ee29f..ef2b97b 100644
-> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
-> @@ -9,6 +9,7 @@ Required properties:
->  		 - "renesas,r8a7744-wdt" (RZ/G1N)
->  		 - "renesas,r8a7745-wdt" (RZ/G1E)
->  		 - "renesas,r8a774a1-wdt" (RZ/G2M)
-> +		 - "renesas,r8a774c0-wdt" (RZ/G2E)
->  	         - "renesas,r8a7790-wdt" (R-Car H2)
->  	         - "renesas,r8a7791-wdt" (R-Car M2-W)
->  	         - "renesas,r8a7792-wdt" (R-Car V2H)
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
+bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE45bm0MTLmnIgxOeaXpSAxMjowOA0KPiBUbzog
+QW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29t
+OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gZGFuaWVsLmxlemNhbm9AbGluYXJvLm9y
+ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54
+cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IHJ1aS56aGFuZ0BpbnRlbC5jb207DQo+IGxpbnV4
+LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBh
+cm02NDogZHRzOiBueHA6IGxzMjA4eGE6IGFkZCBtb3JlIHRoZXJtYWwgem9uZSBzdXBwb3J0DQo+
+IA0KPiBPbiBUdWUsIERlYyAxOCwgMjAxOCBhdCAwNzowMTozMkFNICswMDAwLCBBbmR5IFRhbmcg
+d3JvdGU6DQo+ID4gSGksDQo+ID4NCj4gPiBQSU5HLg0KPiA+DQo+ID4gQlIsDQo+ID4gQW5keQ0K
+PiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogWXVhbnRp
+YW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gPiBTZW50OiAyMDE45bm0MTDmnIgzMeaX
+pSAxMjo0OA0KPiA+ID4gVG86IHNoYXduZ3VvQGtlcm5lbC5vcmcNCj4gPiA+IENjOiBMZW8gTGkg
+PGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gPiA+IG1hcmsucnV0
+bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4g
+PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
+ZzsNCj4gPiA+IHJ1aS56aGFuZ0BpbnRlbC5jb207IGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc7
+IEFuZHkgVGFuZw0KPiA+ID4gPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+ID4gU3ViamVjdDogW1BB
+VENIXSBhcm02NDogZHRzOiBueHA6IGxzMjA4eGE6IGFkZCBtb3JlIHRoZXJtYWwgem9uZQ0KPiA+
+ID4gc3VwcG9ydA0KPiA+ID4NCj4gPiA+IExzMjA4eGEgaGFzIHNldmVyYWwgdGhlcm1hbCBzZW5z
+b3JzLiBBZGQgYWxsIHRoZSBzZW5zb3IgaWQgdG8gZHRzIHRvDQo+ID4gPiBlbmFibGUgdGhlbS4N
+Cj4gPiA+DQo+ID4gPiBUbyBtYWtlIHRoZSBkdHMgY2xlYW5lciwgcmUtb3JnYW5pemUgdGhlIG5v
+ZGVzIHRvIHNwbGl0IG91dCB0aGUNCj4gPiA+IGNvbW1vbiBwYXJ0IHNvIHRoYXQgaXQgY2FuIGJl
+IHNoYXJlZCB3aXRoIG90aGVyIFNvQ3MuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogWXVh
+bnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IA0KPiBQbGVhc2UgdGFrZSBhIGxvb2sg
+YXQgcGF0Y2ggYmVsb3cuDQo+IA0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlv
+bi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Y2gNCj4gd29yay5rZXJuZWwub3Jn
+JTJGcGF0Y2glMkYxMDY4NTgxNSUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5keS50YW5nDQo+ICU0
+MG54cC5jb20lN0M0NDBkNjA3ZmVlZGU0NTA2OGRjNjA4ZDY2NTY3Yzk3OCU3QzY4NmVhMWQzYmMy
+YjRjNmZhDQo+IDkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2ODA3ODkzNzY1OTM2OTgzJmFt
+cDtzZGF0YT1RQyUyQnk5Zg0KPiBtdkk0MnQ5ZVMzTFM0WUdEMjNLcXE2RVVEMEVwSUduREVEaHJB
+JTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KVGhhbmtzLCB3aWxsIHJlYmFzZSBteSBwYXRjaC4NCg0K
+QlIsDQpBbmR5DQo+IFNoYXduDQo=
