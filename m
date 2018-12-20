@@ -1,133 +1,54 @@
-Return-Path: <SRS0=4vs0=O2=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v3 2/2] ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
-Date: Mon, 17 Dec 2018 09:43:24 -0500
-Message-Id: <20181217144324.99422-3-chris.brandt@renesas.com>
-In-Reply-To: <20181217144324.99422-1-chris.brandt@renesas.com>
-References: <20181217144324.99422-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=kndj=O5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40067.outbound.protection.outlook.com ([40.107.4.67]:59904
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbeLTI4E (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Thu, 20 Dec 2018 03:56:04 -0500
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V5 0/4] Add i.MX system controller RTC driver
+Date: Thu, 20 Dec 2018 08:55:59 +0000
+Message-ID: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+Sender: devicetree-owner@vger.kernel.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add support for Renesas RZ/A2M evaluation board.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and secure RTC etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to do RTC operation.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v3:
- * Removed QSPI partition (because half baked at the moment)
-v2:
- * Removed patch for shmobile.txt
- * Added SPDX
- * Removed earlycon from bootargs
- * Fixed address in memory node name
- * Removed un-needed "okay" from leds node
- * Added green LED node
- * Dropped this blank line in pinctrl node
----
- arch/arm/boot/dts/Makefile             |  1 +
- arch/arm/boot/dts/r7s9210-rza2mevb.dts | 82 ++++++++++++++++++++++++++++++++++
- 2 files changed, 83 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
+Since the RTC set time MUST to be done in secure EL3 mode (required
+by system controller firmware) and ALARM functions needs to be done
+with general MU IRQ handle, these are NOT ready NOW, so this patch
+ONLY supports RTC read time for now.
 
-diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-index 1ef2133a18c2..9665694b6494 100644
---- a/arch/arm/boot/dts/Makefile
-+++ b/arch/arm/boot/dts/Makefile
-@@ -824,6 +824,7 @@ dtb-$(CONFIG_ARCH_RENESAS) += \
- 	r7s72100-genmai.dtb \
- 	r7s72100-gr-peach.dtb \
- 	r7s72100-rskrza1.dtb \
-+	r7s9210-rza2mevb.dtb \
- 	r8a73a4-ape6evm.dtb \
- 	r8a7740-armadillo800eva.dtb \
- 	r8a7743-iwg20d-q7.dtb \
-diff --git a/arch/arm/boot/dts/r7s9210-rza2mevb.dts b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-new file mode 100644
-index 000000000000..991e09de1219
---- /dev/null
-+++ b/arch/arm/boot/dts/r7s9210-rza2mevb.dts
-@@ -0,0 +1,82 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the RZA2MEVB board
-+ *
-+ * Copyright (C) 2018 Renesas Electronics
-+ *
-+ */
-+
-+/dts-v1/;
-+#include "r7s9210.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pinctrl/r7s9210-pinctrl.h>
-+
-+/ {
-+	model = "RZA2MEVB";
-+	compatible = "renesas,rza2mevb", "renesas,r7s9210";
-+
-+	aliases {
-+		serial0 = &scif4;
-+	};
-+
-+	chosen {
-+		bootargs = "ignore_loglevel";
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@40000000 {
-+		device_type = "memory";
-+		reg = <0x40000000 0x00800000>;	 /* HyperRAM */
-+	};
-+
-+	lbsc {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+	};
-+
-+	leds {
-+		compatible = "gpio-leds";
-+
-+		red {
-+			gpios = <&pinctrl RZA2_PIN(PORT6, 0) GPIO_ACTIVE_HIGH>;
-+		};
-+		green {
-+			gpios = <&pinctrl RZA2_PIN(PORTC, 1) GPIO_ACTIVE_HIGH>;
-+		};
-+	};
-+};
-+
-+/* EXTAL */
-+&extal_clk {
-+	clock-frequency = <24000000>;	/* 24MHz */
-+};
-+
-+/* RTC_X1 */
-+&rtc_x1_clk {
-+	clock-frequency = <32768>;
-+};
-+
-+&pinctrl {
-+	/* Serial Console */
-+	scif4_pins: serial4 {
-+		pinmux = <RZA2_PINMUX(PORT9, 0, 4)>,	/* TxD4 */
-+			 <RZA2_PINMUX(PORT9, 1, 4)>;	/* RxD4 */
-+	};
-+};
-+
-+/* High resolution System tick timers */
-+&ostm0 {
-+	status = "okay";
-+};
-+
-+&ostm1 {
-+	status = "okay";
-+};
-+
-+/* Serial Console */
-+&scif4 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&scif4_pins>;
-+
-+	status = "okay";
-+};
--- 
-2.16.1
+Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp=
+ support,
+https://patchwork.kernel.org/patch/10677315/
+
+Anson Huang (4):
+  rtc: add i.MX system controller RTC support
+  dt-bindings: rtc: add binding doc for i.MX system controller RTC
+    driver
+  defconfig: arm64: add i.MX system controller RTC support
+  ARM64: dts: imx: add i.MX8QXP system controller RTC support
+
+ .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/rtc/Kconfig                                |   6 ++
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-imx-sc.c                           | 104 +++++++++++++++++=
+++++
+ 6 files changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+ create mode 100644 drivers/rtc/rtc-imx-sc.c
+
+--=20
+2.7.4
