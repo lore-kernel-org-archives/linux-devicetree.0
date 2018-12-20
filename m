@@ -1,7 +1,7 @@
 From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH 1/2] arm64: dts: qcom: sdm845: Add ADSP reserve-memory nodes
-Date: Thu, 20 Dec 2018 19:09:33 +0530
-Message-ID: <1545313174-13481-2-git-send-email-rohitkr@codeaurora.org>
+Subject: [PATCH 2/2] arm64: dts: qcom: sdm845: Add Q6V5 ADSP node
+Date: Thu, 20 Dec 2018 19:09:34 +0530
+Message-ID: <1545313174-13481-3-git-send-email-rohitkr@codeaurora.org>
 References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
@@ -10,29 +10,127 @@ To: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+d
 Cc: Rohit kumar <rohitkr@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add memory nodes required for remoteproc q6v5_adsp pil.
+This patch adds Q6V5 ADSP remoteproc node for SDM845 SoCs.
 
 Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 96 +++++++++++++++++++++++++++++++++++-
+ 1 file changed, 95 insertions(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 23a253b..c0a012f 100644
+index c0a012f..dfeb3cf 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -88,6 +88,11 @@
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
-+
-+		pil_adsp_mem: memory@8b100000 {
-+			reg = <0 0x8b100000 0 0x1a00000>;
-+			no-map;
-+		};
- 	};
+@@ -13,6 +13,9 @@
+ #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+ #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+ #include <dt-bindings/clock/qcom,gcc-sdm845.h>
++#include <dt-bindings/soc/qcom,apr.h>
++#include <dt-bindings/sound/qcom,q6afe.h>
++#include <dt-bindings/sound/qcom,q6asm.h>
  
- 	cpus {
+ / {
+ 	interrupt-parent = <&intc>;
+@@ -1691,7 +1694,98 @@
+ 				status = "disabled";
+ 			};
+ 		};
+-	};
++
++		adsp_pil: remoteproc@17300000 {
++			compatible = "qcom,sdm845-adsp-pil";
++
++			reg = <0x17300000 0x410>;
++			reg-names = "qdsp6ss";
++
++			interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack";
++
++			clocks = <&rpmhcc RPMH_CXO_CLK>,
++				 <&gcc GCC_LPASS_SWAY_CLK>,
++				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
++				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
++				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
++				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
++				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
++
++			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
++				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
++				      "qdsp6ss_sleep", "qdsp6ss_core";
++
++			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
++				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
++			reset-names = "pdc_sync", "cc_lpass";
++
++			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
++
++			memory-region = <&pil_adsp_mem>;
++
++			qcom,smem-states = <&adsp_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			glink-edge {
++				compatible = "qcom,glink-smem";
++				interrupts = <0 156 IRQ_TYPE_EDGE_RISING>;
++
++				label = "lpass";
++				qcom,remote-pid = <2>;
++				mboxes = <&apss_shared 8>;
++				mbox-names = "adsp_smem";
++				#address-cells = <1>;
++				#size-cells = <0>;
++				apr@4 {
++					compatible = "qcom,apr-v2";
++					qcom,glink-channels = "apr_audio_svc";
++					reg = <APR_DOMAIN_ADSP>;
++					#address-cells = <1>;
++					#size-cells = <0>;
++					q6core {
++						compatible = "qcom,q6core";
++						reg = <APR_SVC_ADSP_CORE>;
++					};
++
++					q6afe {
++						compatible = "qcom,q6afe";
++						reg = <APR_SVC_AFE>;
++						q6afedai: afedais {
++							compatible = "qcom,q6afe-dais";
++							#sound-dai-cells = <1>;
++							#address-cells = <1>;
++							#size-cells = <0>;
++						};
++					};
++
++					q6asm {
++						compatible = "qcom,q6asm";
++						reg = <APR_SVC_ASM>;
++						q6asmdai: asmdai{
++							compatible = "qcom,q6asm-dais";
++							iommus = <&apps_smmu 0x1821 0x0>;
++							#sound-dai-cells = <1>;
++						};
++					};
++
++					q6adm {
++						compatible = "qcom,q6adm";
++						reg = <APR_SVC_ADM>;
++						q6routing: routing {
++							compatible = "qcom,q6adm-routing";
++							#sound-dai-cells = <0>;
++						};
++					};
++				};
++			};
++			status = "disabled";
++		};
+ 
+ 	thermal-zones {
+ 		cpu0-thermal {
 -- 
 Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
 is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
