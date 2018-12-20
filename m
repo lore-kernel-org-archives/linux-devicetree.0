@@ -1,53 +1,55 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 05/16] remoteproc/pru: Add pru-specific debugfs support
-Date: Thu, 20 Dec 2018 10:45:20 +0200
-Message-ID: <5C1B56A0.7050801@ti.com>
-References: <1543218769-5507-1-git-send-email-rogerq@ti.com>
- <1543218769-5507-6-git-send-email-rogerq@ti.com>
- <d0e227e3-39dc-dfc8-b94c-3d9d072f6562@lechnology.com>
- <5BFFBCAC.9000004@ti.com> <5C191770.9090804@ti.com>
- <20181219123812.GC8130@sirena.org.uk> <5C1A670E.9020904@ti.com>
- <6ebcd7a6-6c85-0312-0651-fb4fbfc25e55@lechnology.com>
- <20181219170725.GH8130@sirena.org.uk> <20181219171816.GE6707@atomide.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V5 0/4] Add i.MX system controller RTC driver
+Date: Thu, 20 Dec 2018 08:55:59 +0000
+Message-ID: <1545295872-20169-1-git-send-email-Anson.Huang__43640.5657827438$1545296066$gmane$org@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219171816.GE6707@atomide.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>, Mark Brown <broonie@kernel.org>
-Cc: David Lechner <david@lechnology.com>, ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, bcousson@baylibre.com, ssantosh@kernel.org, s-anna@ti.com, nsekhar@ti.com, t-kristo@ti.com, nsaulnier@ti.com, jreeder@ti.com, m-karicheri2@ti.com, woods.technical@gmail.com, linux-omap@vger.kernel.org, linux-remoteproc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, devicetree@vger.kerne
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 19/12/18 19:18, Tony Lindgren wrote:
-> * Mark Brown <broonie@kernel.org> [181219 17:07]:
->> On Wed, Dec 19, 2018 at 04:48:52PM +0100, David Lechner wrote:
->>> On 12/19/18 4:43 PM, Roger Quadros wrote:
->>
->>>> Did I do something wrong or we just need to enhance regmap_debugfs.c?
->>
->>> Do you assign the name field in pru_regmap_config and
->>> pru_debug_regmap_config?
->>
->> Yeah, you'll at least need to override the name since the default is to
->> use the name of the device and that'll result in two duplicates.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and secure RTC etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to do RTC operation.
 
-I hadn't set the name field and this was the issue. It is resolved now.
-Thanks :)
+Since the RTC set time MUST to be done in secure EL3 mode (required
+by system controller firmware) and ALARM functions needs to be done
+with general MU IRQ handle, these are NOT ready NOW, so this patch
+ONLY supports RTC read time for now.
 
-> 
-> Also combining IO regions often has a serious issue that the
-> separate IO regions may not be in the same device (or same
-> interconnect target module).
-> 
-> This means that flushing a posted write with a read-back for
-> an IO region will only flush it for a single device and not
-> the other(s). And this leads into hard to find bugs :)
+Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp support,
+https://patchwork.kernel.org/patch/10677315/
 
-Agree.
+Anson Huang (4):
+  rtc: add i.MX system controller RTC support
+  dt-bindings: rtc: add binding doc for i.MX system controller RTC
+    driver
+  defconfig: arm64: add i.MX system controller RTC support
+  ARM64: dts: imx: add i.MX8QXP system controller RTC support
 
-cheers,
--roger
+ .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/rtc/Kconfig                                |   6 ++
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-imx-sc.c                           | 104 +++++++++++++++++++++
+ 6 files changed, 126 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
+ create mode 100644 drivers/rtc/rtc-imx-sc.c
+
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+2.7.4
