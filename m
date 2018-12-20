@@ -1,73 +1,75 @@
-Return-Path: <SRS0=dIfH=OV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:1845 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726514AbeLLTbk (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Wed, 12 Dec 2018 14:31:40 -0500
-From: Timo Alho <talho@nvidia.com>
-Subject: [PATCH 4/4] dt-bindings: firmware: Add bindings for Tegra210 BPMP
-Date: Wed, 12 Dec 2018 21:31:28 +0200
-Message-ID: <1544643088-17678-5-git-send-email-talho@nvidia.com>
-In-Reply-To: <1544643088-17678-1-git-send-email-talho@nvidia.com>
-References: <1544643088-17678-1-git-send-email-talho@nvidia.com>
+Return-Path: <SRS0=KdAq=O5=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V5 1/4] dt-bindings: fsl: scu: add rtc binding
+Date: Thu, 20 Dec 2018 08:56:07 +0000
+Message-ID: <1545295872-20169-2-git-send-email-Anson.Huang@nxp.com>
+References: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
 MIME-Version: 1.0
-Content-Type: text/plain
-Sender: devicetree-owner@vger.kernel.org
-To: treding@nvidia.com, sivaramn@nvidia.com
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Timo Alho <talho@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The BPMP is a specific processor in Tegra210 chip, which is designed
-for boot process handling, assisting in entering deep low power states
-(suspend to ram), and offloading DRAM memory clock scaling on some
-platforms.
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and secure RTC etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to do RTC operation, this patch adds binding doc for i.MX
+system controller RTC driver.
 
-Signed-off-by: Timo Alho <talho@nvidia.com>
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/firmware/nvidia,tegra210-bpmp.txt     | 36 ++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra210-bpmp.txt
+No change since V4.
+---
+ Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra210-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra210-bpmp.txt
-new file mode 100644
-index 0000000..de1fb62
---- /dev/null
-+++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra210-bpmp.txt
-@@ -0,0 +1,36 @@
-+NVIDIA Tegra210 Boot and Power Management Processor (BPMP)
-+
-+The Boot and Power Management Processor (BPMP) is a co-processor found
-+in Tegra210 SoC. It is designed to handle the early stages of the boot
-+process as well as to assisting in entering deep low power state
-+(suspend to ram), and also offloading DRAM memory clock scaling on
-+some platforms. The binding document defines the resources that would
-+be used by the BPMP T210 firmware driver, which can create the
-+interprocessor communication (IPC) between the CPU and BPMP.
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index c20f38e..3f3d697 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -106,6 +106,12 @@ Required properties for Pinctrl sub nodes:
+ [2] Documentation/devicetree/bindings/power/power_domain.txt
+ [3] Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt
+ 
++RTC bindings based on SCU Message Protocol
++------------------------------------------------------------
 +
 +Required properties:
-+- name : Should be bpmp
-+- compatible
-+    Array of strings
-+    One of:
-+    - "nvidia,tegra210-bpmp"
-+- reg: physicall base address and length for HW synchornization primitives
-+       1) base address and length to Tegra 'atomics' hardware
-+       2) base address and length to Tegra 'semaphore' hardware
-+- interrupts: specifies the interrupt number for receiving messages ("rx")
-+              and for triggering messages ("tx")
++- compatible: should be "fsl,imx8qxp-sc-rtc";
 +
-+Optional properties:
-+- #clock-cells : Should be 1 for platforms where DRAM clock control is
-+                 offloaded to bpmp.
+ Example (imx8qxp):
+ -------------
+ lsio_mu1: mailbox@5d1c0000 {
+@@ -148,6 +154,10 @@ firmware {
+ 			compatible = "fsl,imx8qxp-scu-pd";
+ 			#power-domain-cells = <1>;
+ 		};
 +
-+Example:
-+
-+bpmp {
-+	compatible = "nvidia,tegra210-bpmp";
-+	reg = <0x0 0x70016000 0x0 0x2000
-+	       0x0 0x60001000 0x0 0x1000>;
-+	interrupts = <0 6 IRQ_TYPE_NONE>,
-+		     <0 4 IRQ_TYPE_EDGE_RISING>;
-+	interrupt-names = "tx", "rx";
-+};
++		rtc: rtc {
++			compatible = "fsl,imx8qxp-sc-rtc";
++		};
+ 	};
+ };
+ 
 -- 
 2.7.4
+
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
