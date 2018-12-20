@@ -1,28 +1,36 @@
-From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+From: Kalle Valo <kvalo@codeaurora.org>
 Subject: Re: [PATCH v4 1/3] dt-bindings: net: ath10k: fix node name and device
  type in qcom ath10k example
 Date: Thu, 20 Dec 2018 17:10:50 +0000 (UTC)
-Message-ID: <20181220171050.27DC0602CB@smtp.codeaurora.org>
+Message-ID: <20181220171050.13D7E6074E@smtp.codeaurora.org>
 References: <1544544804-4039-2-git-send-email-bperumal@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
-In-Reply-To: <1544544804-4039-2-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Return-path: <ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1544544804-4039-2-git-send-email-bperumal@codeaurora.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/ath10k/>
+List-Post: <mailto:ath10k@lists.infradead.org>
+List-Help: <mailto:ath10k-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/ath10k>,
+ <mailto:ath10k-request@lists.infradead.org?subject=subscribe>
+Sender: "ath10k" <ath10k-bounces@lists.infradead.org>
+Errors-To: ath10k-bounces+gldad-ath10k=m.gmane.org@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-wireless@vger.kernel.org, Bhagavathi Perumal S <bperumal@codeaurora.org>, ath10k@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
+Bhagavathi Perumal S <bperumal@codeaurora.org> wrote:
 
 > In qcom,ath10k documentation, ath10k is used as node name in the example of
 > pci based device. Normally, node name should be class of device and not the
 > model name, so fix it to node name "wifi". And remove the property device_type
 > pci since only pci bridges should have this property.
 > 
-> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> Signed-off-by: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Signed-off-by: Bhagavathi Perumal S <bperumal@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
 3 patches applied to ath-next branch of ath.git, thanks.
 
