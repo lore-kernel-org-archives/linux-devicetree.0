@@ -1,26 +1,24 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/7] dt-bindings: riscv: cpus: add E51 cores to the list
- of documented CPUs
-Date: Thu, 20 Dec 2018 15:01:41 -0600
-Message-ID: <20181220210141.GA17198@bogus>
+Subject: Re: [PATCH 6/7] dt-binding: riscv: sifive: add documentation for
+ FU540-based boards
+Date: Thu, 20 Dec 2018 15:04:52 -0600
+Message-ID: <20181220210452.GA26977@bogus>
 References: <20181215052154.24347-1-paul.walmsley@sifive.com>
- <20181215052154.24347-4-paul.walmsley@sifive.com>
+ <20181215052154.24347-7-paul.walmsley@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181215052154.24347-4-paul.walmsley@sifive.com>
+In-Reply-To: <20181215052154.24347-7-paul.walmsley@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Paul Walmsley <paul.walmsley@sifive.com>, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 09:21:50PM -0800, Paul Walmsley wrote:
-> Add compatible strings for the SiFive E51 family of CPU cores to the
-> RISC-V CPU compatible string documentation.  The E51 CPU core is
-> described in:
+On Fri, 14 Dec 2018 21:21:53 -0800, Paul Walmsley wrote:
+> Add DT binding documentation for boards based on the SiFive FU540 SoC.
+> The first board, the HiFive Unleashed A00 (FU540), is described here:
 > 
-> https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+> https://static.dev.sifive.com/HiFive-Unleashed-Getting-Started-Guide-v1p1.pdf
 > 
 > Cc: Rob Herring <robh+dt@kernel.org>
 > Cc: Mark Rutland <mark.rutland@arm.com>
@@ -32,25 +30,8 @@ On Fri, Dec 14, 2018 at 09:21:50PM -0800, Paul Walmsley wrote:
 > Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
 > Signed-off-by: Paul Walmsley <paul@pwsan.com>
 > ---
->  Documentation/devicetree/bindings/riscv/cpus.txt | 5 +++--
->  1 file changed, 3 insertions(+), 2 deletions(-)
+>  .../devicetree/bindings/riscv/sifive/fu540.txt         | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
-> index adf7b7af5dc3..fb9d4f86f41f 100644
-> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
-> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
-> @@ -68,8 +68,9 @@ described below.
->          - compatible:
->                  Usage: required
->                  Value type: <stringlist>
-> -                Definition: must contain "riscv", may contain one of
-> -                            "sifive,rocket0"
-> +                Definition: must contain "riscv", may contain one or
-> +			    more of "sifive,rocket0", "sifive,e51",
-> +			    "sifive,e5"
 
-I can't really tell what are valid combinations from this. It reads that 
-I could list every string here and that would be valid. It is basically 
-'riscv' plus any other combinations of strings.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
