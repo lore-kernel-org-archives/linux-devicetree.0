@@ -1,60 +1,98 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
-Date: Thu, 20 Dec 2018 13:49:38 +0000
-Message-ID: <VI1PR04MB553399573A1D360C62C17E61EEBF0@VI1PR04MB5533.eurprd04.prod.outlook.com>
-References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
- <20181218040702.29231-4-andrew.smirnov@gmail.com>
- <20181218151533.GA2922@bogus>
- <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
- <CAL_JsqJb24ZpM7qQfy_F7RUVEGyceBAXOndbZcTMh3a__k38UQ@mail.gmail.com>
- <CAHQ1cqEMxxo9JGN5be4XQWAtPz7nC2JyLCr3qasnD5QK7_hOYQ@mail.gmail.com>
- <1545268969.22930.77.camel@impinj.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Thu, 20 Dec 2018 07:56:07 -0600
+Message-ID: <74cc0ef0-20f8-c422-9a15-af74d0fc0fba@ti.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
+ <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Trent Piepho <tpiepho@impinj.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "robh@kernel.org" <robh@kernel.org>
-Cc: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
+To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/2018 3:22 AM, Trent Piepho wrote:=0A=
-> On Wed, 2018-12-19 at 16:47 -0800, Andrey Smirnov wrote:=0A=
-=0A=
->>>> This series initially added explicit offsets but I suggested a single=
-=0A=
->>>> "controller-id" because:=0A=
->>>>    * There are multiple bit and byte offsets=0A=
->>>>    * Other imx8 SOCs also have 2x pcie with other bit/byte offsets=0A=
->>>>=0A=
->>>> Hiding this behind a compatible string and single "controller-id" seem=
-=0A=
->>>> preferable to elaborating register maps in dt bindings. It also makes=
-=0A=
->>>> upgrades simpler: if features are added which use other bits there is =
-no=0A=
->>>> need to describe them in DT and deal with compatibility headaches.=0A=
->>>=0A=
->>> You already have an id for the controllers: the address. Use that if=0A=
->>> you don't want to put the register offsets in DT.=0A=
->>=0A=
->> Lucas, are you on board with this?=0A=
-> =0A=
-> Does address here mean the address from the controller's reg property?=0A=
->   =0A=
-> How do you map that address to the controller's index?=0A=
-=0A=
-I guess you could have a constant for the address of the first =0A=
-controller and then substract. But hardcoding any sort of physical =0A=
-address feels wrong with DT.=0A=
-> The situation here is that some registers for these controllers are=0A=
-> interleaved, right?  I.e., there's one register somewhere where bit 0=0A=
-> means enable controller 0 and bit 1 means enable controller 1 and so=0A=
-> on.=0A=
-> =0A=
-> Isn't cell-index already the standard device tree property for this=0A=
-> kind of setup?=0A=
-=0A=
-Look at how this cell-index property is documented in other bindings it =0A=
-seems to be an excellent fit: just rename controller-id to cell-index.=0A=
+Vesa
+
+On 12/20/2018 06:40 AM, Vesa Jääskeläinen wrote:
+> Hi All,
+> 
+> On 19/12/2018 23.50, Dan Murphy wrote:
+>> On 12/19/2018 03:36 PM, Jacek Anaszewski wrote:
+>>> Hi Dan and Pavel,
+>>> Some time ago we had discussion with Vesa Jääskeläinen about possible
+>>> approaches to RGB LEDs [0]. What seemed to be the most suitable
+>>> variation of the discussed out-of-tree approach was the "color" property
+>>> and array of color triplets defined in Device Tree per each color.
+>>>
+>>
+>> Why does Device tree define the color?
+>>
+>> Rob indicated that Device tree is supposed to define the hardware.
+>> This thread seems to be defining the operation.
+>>
+>> Shouldn't the color be done via user space and not dt?
+>>
+>> Especially if they want to change the color real time?
+>>
+>> Dan
+>>
+>>> Please refer to [0] for the details.
+>>>
+>>> [0] https://lkml.org/lkml/2018/11/9/938
+>>>
+> 
+> Idea was to define preset colors in device tree as an example when you are dealing with multi-color LEDs without PWM. In that case you only have GPIOs to control and then have a problem what does those GPIO's mean.
+> 
+> With preset definitions one can use color names to act as a shortcut to configure GPIO's to proper state for that particular color.
+> 
+> For more flexible setups where you have PWM or such control you have larger space of available colors. In this case you need to somehow define also meaning of those controls.
+> 
+> Also we may not have LED with only red, green and blue elements. There might in example be amber, ultraviolet, white elements.
+> 
+> This is where device tree is concerned. It helps us craft the logical definition for LED so that we can control it from user space in common way.
+> 
+> Now the next problem then is how does user space work then.
+> 
+> For multi-color LEDs it it important to change the color atomically so that no wrong colors are being shown as user space got interrupted when controlling it.
+> 
+> Also we have brightness setting that would be useful for PWM controlled LEDs.
+> 
+> Setting color is easy when you use preset names then you only need to deal with brightness value (eg. RGB -> HSV * brightness -> RGB). Of course here additional problem is other color elements are they then scaled according to brightness value?.
+> 
+> Setting color as "raw" values is then next problem. In order to do it atomically it needs to be one atomic activation and could be eg. one write to "color" sysfs entry with combination of all color elements and perhaps additionally also brightness value. Next question is then what is the format for such entry then? What are the value ranges? In here we can utilize device tree definition to help define what kind of LED we do have and what kind of capabilities it does have.
+> 
+> Additional problem risen also in discussion was non-linearity of some control mechanisms vs. perceived color. So there might be a need for curve mapping similarly what is with backlight control and that would be defined either in device tree and possibly in user space if there is a need for that. I suppose golden curve definition in device tree should be good enough.
+> 
+> Then there was additional discussion about possible animation support but I would leave that for future design as that would then be utilizing the same framework.
+> 
+> I suppose color space handling and that kind of stuff should be in some led core functionality and then raw control should be part of physical led driver.
+> 
+> I was planning to play with it during holiday season but lets see how it goes. Feel free to also experiment with the idea.
+> 
+
+Again I don't think device tree should be used to set color policy.
+This is to restricting it may be good for GPIO fixed current RGB LEDs but for variable RGB LEDs it would be very restricting.
+
+I believe this needs to be part of the LED framework and leave the device tree to define the HW and not define the product.
+
+Maybe a new devm_rgb_register call that exposes the color palette and can consolidate the 3 LEDs into a single sysfs node.
+
+Dan
+
+
+> Thanks,
+> Vesa Jääskeläinen
+
+
+-- 
+------------------
+Dan Murphy
