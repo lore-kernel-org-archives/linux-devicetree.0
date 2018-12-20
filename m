@@ -1,53 +1,61 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: qcom: Add firmware bindings
- for Q6V5 MSS
-Date: Thu, 20 Dec 2018 14:10:02 -0600
-Message-ID: <20181220201002.GA8831@bogus>
-References: <20181212124456.3164-1-sibis@codeaurora.org>
- <20181212124456.3164-2-sibis@codeaurora.org>
+Subject: Re: [PATCH 1/2] Documentation: can: flexcan: add PE clock source
+ property to device tree
+Date: Thu, 20 Dec 2018 14:22:47 -0600
+Message-ID: <20181220202247.GA26362@bogus>
+References: <20181213070537.25095-1-qiangqing.zhang@nxp.com>
+ <20181213070537.25095-2-qiangqing.zhang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181212124456.3164-2-sibis@codeaurora.org>
+In-Reply-To: <20181213070537.25095-2-qiangqing.zhang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, andy.gross@linaro.org, briannorris@chromium.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+To: Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 06:14:55PM +0530, Sibi Sankar wrote:
-> Add optional firmware bindings for Q6V5 MSS. It lists the two relative
-> firmware paths which are used for booting and authenticating the Hexagon
-> core.
+On Thu, Dec 13, 2018 at 07:07:57AM +0000, Joakim Zhang wrote:
+> From: Dong Aisheng <aisheng.dong@nxp.com>
 > 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> The FlexCAN controller can parse clock source property from DTS file to
+> select PE clock source.
+> 
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
 > ---
->  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 7 +++++++
->  1 file changed, 7 insertions(+)
+>  Documentation/devicetree/bindings/net/can/fsl-flexcan.txt | 8 ++++++++
+>  1 file changed, 8 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> index 9ff5b0309417..1f6988a60636 100644
-> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-> @@ -36,6 +36,13 @@ on the Qualcomm Hexagon core.
->  	Value type: <stringlist>
->  	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+> diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> index bc77477c6878..a04168605998 100644
+> --- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> +++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> @@ -32,6 +32,13 @@ Optional properties:
+>  		 ack_gpr is the gpr register offset of CAN stop acknowledge.
+>  		 ack_bit is the bit offset of CAN stop acknowledge.
 >  
-> +- qcom,firmware:
+> +- fsl,clk-source: Select the clock source to the CAN Protocol Engine (PE).
+> +		  It's SoC Implementation dependent. Refer to RM for detailed
 
-We already have a standard name 'firmware-name'. Use that. I'm fine with 
-allowing it to be more than 1 string.
+If SoC dependent, then it should be implied by the SoC specific 
+compatible. Also, seems like you should add clock binding support here 
+if you need more clock control.
 
-> +	Usage: optional
-> +	Value type: <stringlist>
-> +	Definition: must list the 2 relative firmware paths (mba and modem
-> +		    metadata respectively) which are used for booting and
-> +		    authenticating the Hexagon core.
+> +		  definition. If this property is not set in device tree node
+> +		  then driver selects clock source 1 by default.
+> +		  0: clock source 0 (oscillator clock)
+> +		  1: clock source 1 (peripheral clock)
 > +
->  - clocks:
->  	Usage: required
->  	Value type: <phandle>
+>  Example:
+>  
+>  	can@1c000 {
+> @@ -40,4 +47,5 @@ Example:
+>  		interrupts = <48 0x2>;
+>  		interrupt-parent = <&mpic>;
+>  		clock-frequency = <200000000>; // filled in by bootloader
+> +		fsl,clk-source = <0>; // select clock source 0 for PE
+>  	};
 > -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+> 2.17.1
 > 
