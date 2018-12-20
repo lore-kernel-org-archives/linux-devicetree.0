@@ -1,51 +1,175 @@
-From: Andy Tang <andy.tang@nxp.com>
-Subject: RE: [PATCH] arm64: dts: nxp: ls208xa: add more thermal zone support
-Date: Thu, 20 Dec 2018 03:12:20 +0000
-Message-ID: <VI1PR04MB4333CAADFE46B52CA090F4B7F3BF0@VI1PR04MB4333.eurprd04.prod.outlook.com>
-References: <20181031044742.26327-1-andy.tang@nxp.com>
- <VI1PR04MB433351E63826CC2128153943F3BD0@VI1PR04MB4333.eurprd04.prod.outlook.com>
- <20181219040820.GA13728@dragon>
+From: mgautam@codeaurora.org
+Subject: Re: [PATCH v6 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
+ driver
+Date: Thu, 20 Dec 2018 09:33:43 +0530
+Message-ID: <f106782b6d8e26ebf851f00563c68948@codeaurora.org>
+References: <20181220010112.16824-1-shawn.guo@linaro.org>
+ <20181220010112.16824-3-shawn.guo@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219040820.GA13728@dragon>
-Content-Language: en-US
+In-Reply-To: <20181220010112.16824-3-shawn.guo@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Jack Pham <jackp@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogU2hhd24gR3VvIDxzaGF3
-bmd1b0BrZXJuZWwub3JnPg0KPiBTZW50OiAyMDE45bm0MTLmnIgxOeaXpSAxMjowOA0KPiBUbzog
-QW5keSBUYW5nIDxhbmR5LnRhbmdAbnhwLmNvbT4NCj4gQ2M6IG1hcmsucnV0bGFuZEBhcm0uY29t
-OyBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsNCj4gZGFuaWVsLmxlemNhbm9AbGluYXJvLm9y
-ZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsgTGVvIExpDQo+IDxsZW95YW5nLmxpQG54
-cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7IHJ1aS56aGFuZ0BpbnRlbC5jb207DQo+IGxpbnV4
-LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIXSBh
-cm02NDogZHRzOiBueHA6IGxzMjA4eGE6IGFkZCBtb3JlIHRoZXJtYWwgem9uZSBzdXBwb3J0DQo+
-IA0KPiBPbiBUdWUsIERlYyAxOCwgMjAxOCBhdCAwNzowMTozMkFNICswMDAwLCBBbmR5IFRhbmcg
-d3JvdGU6DQo+ID4gSGksDQo+ID4NCj4gPiBQSU5HLg0KPiA+DQo+ID4gQlIsDQo+ID4gQW5keQ0K
-PiA+DQo+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gRnJvbTogWXVhbnRp
-YW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+ID4gPiBTZW50OiAyMDE45bm0MTDmnIgzMeaX
-pSAxMjo0OA0KPiA+ID4gVG86IHNoYXduZ3VvQGtlcm5lbC5vcmcNCj4gPiA+IENjOiBMZW8gTGkg
-PGxlb3lhbmcubGlAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsNCj4gPiA+IG1hcmsucnV0
-bGFuZEBhcm0uY29tOyBsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmc7DQo+ID4g
-PiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9y
-ZzsNCj4gPiA+IHJ1aS56aGFuZ0BpbnRlbC5jb207IGRhbmllbC5sZXpjYW5vQGxpbmFyby5vcmc7
-IEFuZHkgVGFuZw0KPiA+ID4gPGFuZHkudGFuZ0BueHAuY29tPg0KPiA+ID4gU3ViamVjdDogW1BB
-VENIXSBhcm02NDogZHRzOiBueHA6IGxzMjA4eGE6IGFkZCBtb3JlIHRoZXJtYWwgem9uZQ0KPiA+
-ID4gc3VwcG9ydA0KPiA+ID4NCj4gPiA+IExzMjA4eGEgaGFzIHNldmVyYWwgdGhlcm1hbCBzZW5z
-b3JzLiBBZGQgYWxsIHRoZSBzZW5zb3IgaWQgdG8gZHRzIHRvDQo+ID4gPiBlbmFibGUgdGhlbS4N
-Cj4gPiA+DQo+ID4gPiBUbyBtYWtlIHRoZSBkdHMgY2xlYW5lciwgcmUtb3JnYW5pemUgdGhlIG5v
-ZGVzIHRvIHNwbGl0IG91dCB0aGUNCj4gPiA+IGNvbW1vbiBwYXJ0IHNvIHRoYXQgaXQgY2FuIGJl
-IHNoYXJlZCB3aXRoIG90aGVyIFNvQ3MuDQo+ID4gPg0KPiA+ID4gU2lnbmVkLW9mZi1ieTogWXVh
-bnRpYW4gVGFuZyA8YW5keS50YW5nQG54cC5jb20+DQo+IA0KPiBQbGVhc2UgdGFrZSBhIGxvb2sg
-YXQgcGF0Y2ggYmVsb3cuDQo+IA0KPiBodHRwczovL2VtZWEwMS5zYWZlbGlua3MucHJvdGVjdGlv
-bi5vdXRsb29rLmNvbS8/dXJsPWh0dHBzJTNBJTJGJTJGcGF0Y2gNCj4gd29yay5rZXJuZWwub3Jn
-JTJGcGF0Y2glMkYxMDY4NTgxNSUyRiZhbXA7ZGF0YT0wMiU3QzAxJTdDYW5keS50YW5nDQo+ICU0
-MG54cC5jb20lN0M0NDBkNjA3ZmVlZGU0NTA2OGRjNjA4ZDY2NTY3Yzk3OCU3QzY4NmVhMWQzYmMy
-YjRjNmZhDQo+IDkyY2Q5OWM1YzMwMTYzNSU3QzAlN0MwJTdDNjM2ODA3ODkzNzY1OTM2OTgzJmFt
-cDtzZGF0YT1RQyUyQnk5Zg0KPiBtdkk0MnQ5ZVMzTFM0WUdEMjNLcXE2RVVEMEVwSUduREVEaHJB
-JTNEJmFtcDtyZXNlcnZlZD0wDQo+IA0KVGhhbmtzLCB3aWxsIHJlYmFzZSBteSBwYXRjaC4NCg0K
-QlIsDQpBbmR5DQo+IFNoYXduDQo=
+Hi Shawn,
+
+On 2018-12-20 06:31, Shawn Guo wrote:
+> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
+> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
+> 
+> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+> ---
+....
+
+> +
+> +/* PHY register and bit definitions */
+> +#define PHY_CTRL_COMMON0		0x078
+> +#define SIDDQ				BIT(2)
+> +#define PHY_IRQ_CMD			0x0d0
+> +#define PHY_INTR_MASK0			0x0d4
+> +#define PHY_INTR_CLEAR0			0x0dc
+> +#define DPDM_MASK			0x1e
+> +#define DP_1_0				BIT(4)
+> +#define DP_0_1				BIT(3)
+> +#define DM_1_0				BIT(2)
+> +#define DM_0_1				BIT(1)
+
+Can we rename these to something more readable? e.g.:
+#define DP_FALL_INT_EN    BIT(4)
+#define DP_RISE_INT_EN    BIT(3)
+...
+
+> +
+> +enum hsphy_voltage {
+> +	VOL_NONE,
+> +	VOL_MIN,
+> +	VOL_MAX,
+> +	VOL_NUM,
+> +};
+> +
+> +enum hsphy_vreg {
+> +	VDD,
+> +	VDDA_1P8,
+> +	VDDA_3P3,
+> +	VREG_NUM,
+> +};
+> +
+> +struct hsphy_init_seq {
+> +	int offset;
+> +	int val;
+> +	int delay;
+> +};
+> +
+> +struct hsphy_data {
+> +	const struct hsphy_init_seq *init_seq;
+> +	unsigned int init_seq_num;
+> +};
+> +
+> +struct hsphy_priv {
+nit-pick - indentation for following structure members?
+
+> +	void __iomem *base;
+> +	struct clk_bulk_data *clks;
+> +	int num_clks;
+> +	struct reset_control *phy_reset;
+> +	struct reset_control *por_reset;
+> +	struct regulator_bulk_data vregs[VREG_NUM];
+> +	unsigned int voltages[VREG_NUM][VOL_NUM];
+> +	const struct hsphy_data *data;
+> +	bool cable_connected;
+
+You can get cable-connected state from "enum phy_mode mode" which
+is present in this driver.
+E.g. cable_connected is false if mode is neither HOST nor DEVICE.
+
+
+> +	struct extcon_dev *vbus_edev;
+> +	struct notifier_block vbus_notify;
+
+extcons not needed if you use "mode" for the same purpose.
+
+
+> +	enum phy_mode mode;
+> +};
+> +
+
+
+> +
+> +static int qcom_snps_hsphy_vbus_notifier(struct notifier_block *nb,
+> +					 unsigned long event, void *ptr)
+> +{
+> +	struct hsphy_priv *priv = container_of(nb, struct hsphy_priv,
+> +						    vbus_notify);
+> +	priv->cable_connected = !!event;
+> +	return 0;
+> +}
+> +
+> +static int qcom_snps_hsphy_power_on(struct phy *phy)
+
+Can you instead merge this power_on function with phy_init?
+
+> +{
+> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
+> +	int ret;
+> +
+> +	if (priv->cable_connected) {
+
+Why distinguish between cable connected vs not-connected?
+
+
+> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+> +		if (ret)
+> +			return ret;
+> +		qcom_snps_hsphy_disable_hv_interrupts(priv);
+> +	} else {
+> +		ret = qcom_snps_hsphy_enable_regulators(priv);
+> +		if (ret)
+> +			return ret;
+> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+> +		if (ret)
+> +			return ret;
+> +		qcom_snps_hsphy_exit_retention(priv);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qcom_snps_hsphy_power_off(struct phy *phy)
+> +{
+> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
+> +
+> +	if (priv->cable_connected) {
+> +		qcom_snps_hsphy_enable_hv_interrupts(priv);
+> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+> +	} else {
+> +		qcom_snps_hsphy_enter_retention(priv);
+> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+> +		qcom_snps_hsphy_disable_regulators(priv);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+
+
+..
+> +static const struct phy_ops qcom_snps_hsphy_ops = {
+> +	.init = qcom_snps_hsphy_init,
+> +	.power_on = qcom_snps_hsphy_power_on,
+> +	.power_off = qcom_snps_hsphy_power_off,
+> +	.set_mode = qcom_snps_hsphy_set_mode,
+
+.phy_exit()?
+I believe that is needed as dwc3 core driver performs
+phy_exit/phy_init across pm_suspend/resume.
+
+
+> +	.owner = THIS_MODULE,
+> +};
+> +
