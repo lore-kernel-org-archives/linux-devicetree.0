@@ -1,28 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] gpio-omap.txt: add reg and interrupts properties
-Date: Thu, 20 Dec 2018 14:46:16 -0600
-Message-ID: <20181220204616.GA31850@bogus>
-References: <20181214194822.lvavgczxq4cy7v64@arbad>
+Subject: Re: [PATCH 1/2] dt-bindings: vendor-prefixes: Add Novtech Vendor
+ Prefix
+Date: Thu, 20 Dec 2018 14:46:42 -0600
+Message-ID: <20181220204642.GA1821@bogus>
+References: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
+ <20181215030152.4386-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181214194822.lvavgczxq4cy7v64@arbad>
+In-Reply-To: <20181215030152.4386-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Klinger <ak@it-klinger.de>
-Cc: grygorii.strashko@ti.com, ssantosh@kernel.org, khilman@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, mark.rutland@arm.com, linux-omap@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, amit.kucheria@linaro.org, yossi@novtech.com, nazik@novtech.com, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 08:48:25PM +0100, Andreas Klinger wrote:
-> Document properties reg and interrupts for OMAP GPIO controller bindings
+On Sat, 15 Dec 2018 08:31:51 +0530, Manivannan Sadhasivam wrote:
+> Add vendor prefix for NovTech, Inc.
 > 
-> Also add unit address in node name of the example
-> 
-> Signed-off-by: Andreas Klinger <ak@it-klinger.de>
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-omap.txt | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Applied.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
