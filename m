@@ -1,112 +1,41 @@
-From: Chen Yu <chenyu56@huawei.com>
-Subject: Re: [PATCH v1 03/12] dt-bindings: misc: Add bindings for HiSilicon
- usb hub and data role switch functionality on HiKey960
-Date: Thu, 20 Dec 2018 10:02:58 +0800
-Message-ID: <f0f570a9-74cb-2554-58e6-1271e69344ff@huawei.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-4-chenyu56@huawei.com> <20181219142118.GA24144@bogus>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: dt-bindings: watchdog: renesas-wdt: Document r8a774c0 support
+Date: Wed, 19 Dec 2018 18:37:28 -0800
+Message-ID: <20181220023728.GA10247@roeck-us.net>
+References: <1544732333-6086-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219142118.GA24144@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1544732333-6086-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: liuyu712@hisilicon.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>, Binghui Wang <wangbinghui@hisilicon.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wim Van Sebroeck <wim@linux-watchdog.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-watchdog@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Dec 13, 2018 at 08:18:53PM +0000, Fabrizio Castro wrote:
+> RZ/G2E (R8A774C0) watchdog implementation is compatible with R-Car
+> Gen3, therefore add relevant documentation.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-On 2018/12/19 22:21, Rob Herring wrote:
-> On Mon, Dec 03, 2018 at 11:45:06AM +0800, Yu Chen wrote:
->> This patch adds binding documentation to support usb hub and usb
->> data role switch of Hisilicon HiKey&HiKey960 Board.
->>
->> Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
->> Cc: Rob Herring <robh+dt@kernel.org>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: John Stultz <john.stultz@linaro.org>
->> Cc: Binghui Wang <wangbinghui@hisilicon.com>
->> Signed-off-by: Yu Chen <chenyu56@huawei.com>
->> --
->> v1:
->> 1) Fix some format errors as suggested by Sergei.
->> 2) Modify gpio description to use gpiod API.
->> --
->> ---
->>  .../bindings/misc/hisilicon-hikey-usb.txt          | 36 ++++++++++++++++++++++
->>  1 file changed, 36 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->>
->> diff --git a/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->> new file mode 100644
->> index 000000000000..f3413d851e18
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/hisilicon-hikey-usb.txt
->> @@ -0,0 +1,36 @@
->> +Support usb hub and usb data role switch of Hisilicon HiKey&HiKey960 Board.
+> ---
+>  Documentation/devicetree/bindings/watchdog/renesas-wdt.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> s/&/ & /
-> 
-OK.
-> Some trivial comments below, but this all needs to use the USB connector 
-> binding for the OTG and host ports and then we need to figure out how 
-> the switching fits into that.
-> 
->> +
->> +-----------------------------
->> +
->> +Required properties:
->> +- compatible: "hisilicon,gpio-hubv1","hisilicon,hikey960-usb"
->> +- typc-vbus-int-gpio: gpio to control the vbus of typeC port
->> +- typc-vbus-enable-val: gpio value that enable the vbus of typeC port
-> 
-> HiKey at least doesn't have a TypeC port.
->Yes. I will re-check the driver for Hikey.
->> +- otg-gpio: gpio to switch DP&DM between the hub and typeC port
->> +- hub-vdd33-en-gpio: gpio to enable the power of hub
-> 
-> -gpios for all these.
-
-OK.
-> 
->> +- pinctrl-0: pinctrl config
->> +
->> +Example
->> +-----
->> +
->> +	hisi_hikey_usb: hisi_hikey_usb {
->> +		compatible = "hisilicon,hikey960-usb";
->> +		typec-vbus-gpios = <&gpio25 2 0>;
->> +		typc-vbus-enable-val = <1>;
->> +		otg-switch-gpios = <&gpio25 6 0>;
->> +		hub-vdd33-en-gpios = <&gpio5 6 0>;
->> +		pinctrl-names = "default";
->> +		pinctrl-0 = <&usbhub5734_pmx_func>;
->> +
->> +		port {
->> +			#address-cells = <1>;
->> +			#size-cells = <0>;
->> +
->> +			hikey_usb_ep: endpoint@0 {
->> +				reg = <0>;
->> +				device_type = "usb-role-switch";
-> 
-> Drop device_type.
-
-Currently the device_type is used for usb-role-switch match, but it
-will be removed after Heikki Krogerus's patch.
-> 
->> +				remote-endpoint = <&dwc3_role_switch_notify>;
->> +			};
->> +		};
->> +
->> +	};
->> -- 
->> 2.15.0-rc2
->>
-> 
-> .
-> 
-Thanks!
+> diff --git a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> index a8ee29f..ef2b97b 100644
+> --- a/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> +++ b/Documentation/devicetree/bindings/watchdog/renesas-wdt.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>  		 - "renesas,r8a7744-wdt" (RZ/G1N)
+>  		 - "renesas,r8a7745-wdt" (RZ/G1E)
+>  		 - "renesas,r8a774a1-wdt" (RZ/G2M)
+> +		 - "renesas,r8a774c0-wdt" (RZ/G2E)
+>  	         - "renesas,r8a7790-wdt" (R-Car H2)
+>  	         - "renesas,r8a7791-wdt" (R-Car M2-W)
+>  	         - "renesas,r8a7792-wdt" (R-Car V2H)
