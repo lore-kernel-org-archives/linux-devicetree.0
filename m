@@ -1,136 +1,99 @@
-From: Rohit kumar <rohitkr@codeaurora.org>
-Subject: [PATCH 2/2] arm64: dts: qcom: sdm845: Add Q6V5 ADSP node
-Date: Thu, 20 Dec 2018 19:09:34 +0530
-Message-ID: <1545313174-13481-3-git-send-email-rohitkr@codeaurora.org>
-References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
+From: Boris Brezillon <boris.brezillon@bootlin.com>
+Subject: Re: [PATCH v4 1/3] dt-bindings: mtd: stm32_fmc2: add STM32 FMC2
+ NAND controller documentation
+Date: Thu, 20 Dec 2018 14:42:01 +0100
+Message-ID: <20181220144201.54f182e1@bbrezillon>
+References: <1544781488-18723-1-git-send-email-christophe.kerello@st.com>
+        <1544781488-18723-2-git-send-email-christophe.kerello@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
+In-Reply-To: <1544781488-18723-2-git-send-email-christophe.kerello@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org, bjorn.andersson@linaro.org
-Cc: Rohit kumar <rohitkr@codeaurora.org>
+To: Christophe Kerello <christophe.kerello@st.com>
+Cc: miquel.raynal@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Q6V5 ADSP remoteproc node for SDM845 SoCs.
+On Fri, 14 Dec 2018 10:58:06 +0100
+Christophe Kerello <christophe.kerello@st.com> wrote:
 
-Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 96 +++++++++++++++++++++++++++++++++++-
- 1 file changed, 95 insertions(+), 1 deletion(-)
+> This patch adds the documentation of the device tree bindings for the STM32
+> FMC2 NAND controller.
+> 
+> Signed-off-by: Christophe Kerello <christophe.kerello@st.com>
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c0a012f..dfeb3cf 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -13,6 +13,9 @@
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+#include <dt-bindings/soc/qcom,apr.h>
-+#include <dt-bindings/sound/qcom,q6afe.h>
-+#include <dt-bindings/sound/qcom,q6asm.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -1691,7 +1694,98 @@
- 				status = "disabled";
- 			};
- 		};
--	};
-+
-+		adsp_pil: remoteproc@17300000 {
-+			compatible = "qcom,sdm845-adsp-pil";
-+
-+			reg = <0x17300000 0x410>;
-+			reg-names = "qdsp6ss";
-+
-+			interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>,
-+				 <&gcc GCC_LPASS_SWAY_CLK>,
-+				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
-+				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
-+				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
-+
-+			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
-+				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
-+				      "qdsp6ss_sleep", "qdsp6ss_core";
-+
-+			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
-+				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
-+			reset-names = "pdc_sync", "cc_lpass";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
-+
-+			memory-region = <&pil_adsp_mem>;
-+
-+			qcom,smem-states = <&adsp_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			glink-edge {
-+				compatible = "qcom,glink-smem";
-+				interrupts = <0 156 IRQ_TYPE_EDGE_RISING>;
-+
-+				label = "lpass";
-+				qcom,remote-pid = <2>;
-+				mboxes = <&apss_shared 8>;
-+				mbox-names = "adsp_smem";
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				apr@4 {
-+					compatible = "qcom,apr-v2";
-+					qcom,glink-channels = "apr_audio_svc";
-+					reg = <APR_DOMAIN_ADSP>;
-+					#address-cells = <1>;
-+					#size-cells = <0>;
-+					q6core {
-+						compatible = "qcom,q6core";
-+						reg = <APR_SVC_ADSP_CORE>;
-+					};
-+
-+					q6afe {
-+						compatible = "qcom,q6afe";
-+						reg = <APR_SVC_AFE>;
-+						q6afedai: afedais {
-+							compatible = "qcom,q6afe-dais";
-+							#sound-dai-cells = <1>;
-+							#address-cells = <1>;
-+							#size-cells = <0>;
-+						};
-+					};
-+
-+					q6asm {
-+						compatible = "qcom,q6asm";
-+						reg = <APR_SVC_ASM>;
-+						q6asmdai: asmdai{
-+							compatible = "qcom,q6asm-dais";
-+							iommus = <&apps_smmu 0x1821 0x0>;
-+							#sound-dai-cells = <1>;
-+						};
-+					};
-+
-+					q6adm {
-+						compatible = "qcom,q6adm";
-+						reg = <APR_SVC_ADM>;
-+						q6routing: routing {
-+							compatible = "qcom,q6adm-routing";
-+							#sound-dai-cells = <0>;
-+						};
-+					};
-+				};
-+			};
-+			status = "disabled";
-+		};
- 
- 	thermal-zones {
- 		cpu0-thermal {
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
-is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+Reviewed-by: Boris Brezillon <boris.brezillon@bootlin.com>
+
+> ---
+>  .../devicetree/bindings/mtd/stm32-fmc2-nand.txt    | 61 ++++++++++++++++++++++
+>  1 file changed, 61 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> new file mode 100644
+> index 0000000..ad2bef8
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/mtd/stm32-fmc2-nand.txt
+> @@ -0,0 +1,61 @@
+> +STMicroelectronics Flexible Memory Controller 2 (FMC2)
+> +NAND Interface
+> +
+> +Required properties:
+> +- compatible: Should be one of:
+> +              * st,stm32mp15-fmc2
+> +- reg: NAND flash controller memory areas.
+> +       First region contains the register location.
+> +       Regions 2 to 4 respectively contain the data, command,
+> +       and address space for CS0.
+> +       Regions 5 to 7 contain the same areas for CS1.
+> +- interrupts: The interrupt number
+> +- pinctrl-0: Standard Pinctrl phandle (see: pinctrl/pinctrl-bindings.txt)
+> +- clocks: The clock needed by the NAND flash controller
+> +
+> +Optional properties:
+> +- resets: Reference to a reset controller asserting the FMC controller
+> +- dmas: DMA specifiers (see: dma/stm32-mdma.txt)
+> +- dma-names: Must be "tx", "rx" and "ecc"
+> +
+> +* NAND device bindings:
+> +
+> +Required properties:
+> +- reg: describes the CS lines assigned to the NAND device.
+> +
+> +Optional properties:
+> +- nand-on-flash-bbt: see nand.txt
+> +- nand-ecc-strength: see nand.txt
+> +- nand-ecc-step-size: see nand.txt
+> +
+> +The following ECC strength and step size are currently supported:
+> + - nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Hamming)
+> + - nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+> + - nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8) (default)
+> +
+> +Example:
+> +
+> +	fmc: nand-controller@58002000 {
+> +		compatible = "st,stm32mp15-fmc2";
+> +		reg = <0x58002000 0x1000>,
+> +		      <0x80000000 0x1000>,
+> +		      <0x88010000 0x1000>,
+> +		      <0x88020000 0x1000>,
+> +		      <0x81000000 0x1000>,
+> +		      <0x89010000 0x1000>,
+> +		      <0x89020000 0x1000>;
+> +		interrupts = <GIC_SPI 48 IRQ_TYPE_LEVEL_HIGH>;
+> +		clocks = <&rcc FMC_K>;
+> +		resets = <&rcc FMC_R>;
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&fmc_pins_a>;
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		nand@0 {
+> +			reg = <0>;
+> +			nand-on-flash-bbt;
+> +			#address-cells = <1>;
+> +			#size-cells = <1>;
+> +		};
+> +	};
