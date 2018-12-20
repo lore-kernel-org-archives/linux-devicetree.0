@@ -1,117 +1,76 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add cpufreq device node
-Date: Thu, 20 Dec 2018 11:50:55 -0800
-Message-ID: <20181220195055.GB261387@google.com>
-References: <1545333530-30151-1-git-send-email-tdas@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: meson: add specific simplefb bindings
+Date: Thu, 20 Dec 2018 13:52:28 -0600
+Message-ID: <20181220195228.GA17561@bogus>
+References: <20181210090640.4495-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545333530-30151-1-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20181210090640.4495-1-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, amit.kucheria@linaro.org
+To: Maxime Jourdan <mjourdan@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Taniya,
-
-On Fri, Dec 21, 2018 at 12:48:50AM +0530, Taniya Das wrote:
-> This change adds the cpufreq node as per the bindings example for SDM845.
+On Mon, Dec 10, 2018 at 10:06:39AM +0100, Maxime Jourdan wrote:
+> Similar to simple-framebuffer-sunxi, we support different display pipelines
+> that the firmware is free to choose from.
 > 
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> This documents the "amlogic,simple-framebuffer" compatible and the
+> "amlogic,pipeline" extension.
+> 
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 > ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 19 +++++++++++++++++++
->  1 file changed, 19 insertions(+)
+>  .../display/simple-framebuffer-meson.txt      | 33 +++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 23a253b..5db4fcc 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -99,6 +99,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
->  				compatible = "cache";
-> @@ -114,6 +115,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			next-level-cache = <&L2_100>;
->  			L2_100: l2-cache {
->  				compatible = "cache";
-> @@ -126,6 +128,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x200>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			next-level-cache = <&L2_200>;
->  			L2_200: l2-cache {
->  				compatible = "cache";
-> @@ -138,6 +141,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x300>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 0>;
->  			next-level-cache = <&L2_300>;
->  			L2_300: l2-cache {
->  				compatible = "cache";
-> @@ -150,6 +154,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x400>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
->  			next-level-cache = <&L2_400>;
->  			L2_400: l2-cache {
->  				compatible = "cache";
-> @@ -162,6 +167,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x500>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
->  			next-level-cache = <&L2_500>;
->  			L2_500: l2-cache {
->  				compatible = "cache";
-> @@ -174,6 +180,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x600>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
->  			next-level-cache = <&L2_600>;
->  			L2_600: l2-cache {
->  				compatible = "cache";
-> @@ -186,6 +193,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x700>;
->  			enable-method = "psci";
-> +			qcom,freq-domain = <&cpufreq_hw 1>;
->  			next-level-cache = <&L2_700>;
->  			L2_700: l2-cache {
->  				compatible = "cache";
-> @@ -341,6 +349,17 @@
->  			#power-domain-cells = <1>;
->  		};
+> diff --git a/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
+> new file mode 100644
+> index 000000000000..122a5c005cd9
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/display/simple-framebuffer-meson.txt
+> @@ -0,0 +1,33 @@
+> +Meson specific Simple Framebuffer bindings
+> +
+> +This binding documents meson specific extensions to the simple-framebuffer
+> +bindings. The meson simplefb u-boot code relies on the devicetree containing
+> +pre-populated simplefb nodes.
+> +
+> +These extensions are intended so that u-boot can select the right node based
+> +on which pipeline is being used. As such they are solely intended for
+> +firmware / bootloader use, and the OS should ignore them.
+> +
+> +Required properties:
+> +- compatible: "amlogic,simple-framebuffer"
+
+And a fallback?
+
+> +- amlogic,pipeline, one of:
+> +  "vpu-cvbs"
+> +  "vpu-hdmi"
+> +
+> +Example:
+> +
+> +chosen {
+> +	#address-cells = <2>;
+> +	#size-cells = <2>;
+> +	ranges;
+> +
+> +	framebuffer@0 {
+
+Without 'reg', you shouldn't have a unit-address.
+
+> +		compatible = "amlogic,simple-framebuffer",
+> +			     "simple-framebuffer";
+> +		amlogic,pipeline = "vpu-hdmi";
+> +		clocks = <&clkc CLKID_HDMI_PCLK>,
+> +			 <&clkc CLKID_CLK81>,
+> +			 <&clkc CLKID_GCLK_VENCI_INT0>;
+> +		power-domains = <&pwrc_vpu>;
+> +	};
+> +};
+> -- 
+> 2.19.2
 > 
-> +		cpufreq_hw: cpufreq@17d43000 {
-> +			compatible = "qcom,cpufreq-hw";
-> +			reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
-> +			reg-names = "freq-domain0", "freq-domain1";
-> +
-> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-> +			clock-names = "xo", "alternate";
-> +
-> +			#freq-domain-cells = <1>;
-> +		};
-> +
->  		qfprom@784000 {
->  			compatible = "qcom,qfprom";
->  			reg = <0x784000 0x8ff>;
-
-My understanding is that the entries in the SDM845 DT are sorted by
-address. The address of the cpufreq node is 0x17d43000, hence it
-should be the last entry of the 'soc' node, after 'timer@17c90000'.
-
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
