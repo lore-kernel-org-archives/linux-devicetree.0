@@ -1,96 +1,25 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Applied "ASoC: cs4341: Add DT bindings documentation
-	for CS4341 DAC" to the asoc tree
-Date: Thu, 20 Dec 2018 16:00:08 +0000 (GMT)
-Message-ID: <20181220160008.EF0AF1121B87@debutante.sirena.org.uk>
-References: <20181220073708.12014-1-shc_work@mail.ru>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/2] arm64: dts: meson: libretech-cc: emmc update
+Date: Thu, 20 Dec 2018 17:10:35 +0100
+Message-ID: <20181220161037.23756-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181220073708.12014-1-shc_work@mail.ru>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: Alexander Shiyan <shc_work@mail.ru>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, Liam Girdwood <lgirdwood@gmail.com>, Brian Austin <brian.austin@cirrus.com>, Paul Handrigan <Paul.Handrigan@cirrus.com>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Brown <broonie@kernel.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The patch
+This patchset provides a couple of update for the eMMC on the libretech-cc
+It should remove some error message for those who don't have an eMMC
+module and improve the performance for those who do have one.
 
-   ASoC: cs4341: Add DT bindings documentation for CS4341 DAC
+Jerome Brunet (2):
+  arm64: dts: meson: libretech-cc: set eMMC as removable
+  arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
 
-has been applied to the asoc tree at
+ .../boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts  | 10 +++++-----
+ 1 file changed, 5 insertions(+), 5 deletions(-)
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
-
-All being well this means that it will be integrated into the linux-next
-tree (usually sometime in the next 24 hours) and sent to Linus during
-the next merge window (or sooner if it is a bug fix), however if
-problems are discovered then the patch may be dropped or reverted.  
-
-You may get further e-mails resulting from automated or manual testing
-and review of the tree, please engage with people reporting problems and
-send followup patches addressing any issues that are reported if needed.
-
-If any updates are required or you are submitting further changes they
-should be sent as incremental updates against current git, existing
-patches will not be replaced.
-
-Please add any relevant lists and maintainers to the CCs when replying
-to this mail.
-
-Thanks,
-Mark
-
->From 8cbfce88b09295534225e0ecd74d60bf8d47e474 Mon Sep 17 00:00:00 2001
-From: Alexander Shiyan <shc_work@mail.ru>
-Date: Thu, 20 Dec 2018 10:37:08 +0300
-Subject: [PATCH] ASoC: cs4341: Add DT bindings documentation for CS4341 DAC
-
-This patch adds DT bindings documentation for Cirrus Logic
-CS4341 DAC.
-
-Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
-Signed-off-by: Mark Brown <broonie@kernel.org>
----
- .../devicetree/bindings/sound/cs4341.txt      | 22 +++++++++++++++++++
- 1 file changed, 22 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/cs4341.txt
-
-diff --git a/Documentation/devicetree/bindings/sound/cs4341.txt b/Documentation/devicetree/bindings/sound/cs4341.txt
-new file mode 100644
-index 000000000000..12b4aa8ef0db
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/cs4341.txt
-@@ -0,0 +1,22 @@
-+Cirrus Logic CS4341 audio DAC
-+
-+This device supports both I2C and SPI (configured with pin strapping
-+on the board).
-+
-+Required properties:
-+  - compatible: "cirrus,cs4341a"
-+  - reg : the I2C address of the device for I2C, the chip select
-+          number for SPI.
-+
-+For required properties on I2C-bus, please consult
-+Documentation/devicetree/bindings/i2c/i2c.txt
-+For required properties on SPI-bus, please consult
-+Documentation/devicetree/bindings/spi/spi-bus.txt
-+
-+Example:
-+	codec: cs4341@0 {
-+		#sound-dai-cells = <0>;
-+		compatible = "cirrus,cs4341a";
-+		reg = <0>;
-+		spi-max-frequency = <6000000>;
-+	};
 -- 
-2.20.1
+2.19.2
