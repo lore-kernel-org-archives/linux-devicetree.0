@@ -1,106 +1,36 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH] arm64: dts: sdm845: Add cpufreq device node
-Date: Fri, 21 Dec 2018 00:48:50 +0530
-Message-ID: <1545333530-30151-1-git-send-email-tdas@codeaurora.org>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 2/3] dt-bindings: drm/msm/a6xx: Document interconnect
+ properties for GPU
+Date: Thu, 20 Dec 2018 11:30:25 -0800
+Message-ID: <CAD=FV=X4ZxZJt1+RbP1v_XXcVx3xNux1+K7MUWWwtc_TwuX0RQ@mail.gmail.com>
+References: <20181220173026.3857-1-jcrouse@codeaurora.org> <20181220173026.3857-3-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181220173026.3857-3-jcrouse@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, Matthias Kaehlcke <mka@google.com>, amit.kucheria@linaro.org, Taniya Das <tdas@codeaurora.org>
+To: Jordan Crouse <jcrouse@codeaurora.org>, Georgi Djakov <georgi.djakov@linaro.org>, Rob Clark <robdclark@gmail.com>
+Cc: freedreno <freedreno@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-This change adds the cpufreq node as per the bindings example for SDM845.
+Hi,
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+On Thu, Dec 20, 2018 at 9:30 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
+>
+> Add documentation for the interconnect and interconnect-names bindings
+> for the GPU node as detailed by bindings/interconnect/interconnect.txt.
+>
+> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> ---
+>
+>  Documentation/devicetree/bindings/display/msm/gpu.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 23a253b..5db4fcc 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -99,6 +99,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 				compatible = "cache";
-@@ -114,6 +115,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_100>;
- 			L2_100: l2-cache {
- 				compatible = "cache";
-@@ -126,6 +128,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_200>;
- 			L2_200: l2-cache {
- 				compatible = "cache";
-@@ -138,6 +141,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_300>;
- 			L2_300: l2-cache {
- 				compatible = "cache";
-@@ -150,6 +154,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_400>;
- 			L2_400: l2-cache {
- 				compatible = "cache";
-@@ -162,6 +167,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_500>;
- 			L2_500: l2-cache {
- 				compatible = "cache";
-@@ -174,6 +180,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_600>;
- 			L2_600: l2-cache {
- 				compatible = "cache";
-@@ -186,6 +193,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_700>;
- 			L2_700: l2-cache {
- 				compatible = "cache";
-@@ -341,6 +349,17 @@
- 			#power-domain-cells = <1>;
- 		};
+I would have been fine if you had kept my tag (even though 50% of the
+patch changed!).  ...but here it is again:
 
-+		cpufreq_hw: cpufreq@17d43000 {
-+			compatible = "qcom,cpufreq-hw";
-+			reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
-+			reg-names = "freq-domain0", "freq-domain1";
-+
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+			clock-names = "xo", "alternate";
-+
-+			#freq-domain-cells = <1>;
-+		};
-+
- 		qfprom@784000 {
- 			compatible = "qcom,qfprom";
- 			reg = <0x784000 0x8ff>;
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
+
+I assume this will be going through Georgi's tree w/ the previous patch.
+
+-Doug
