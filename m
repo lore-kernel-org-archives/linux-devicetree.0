@@ -1,26 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [resend PATCH v1 1/2] dt-bindings: clock: add clock for MT2712
-Date: Thu, 20 Dec 2018 14:43:59 -0600
-Message-ID: <20181220204359.GA30122@bogus>
-References: <20181214020417.2871-1-weiyi.lu@mediatek.com>
- <20181214020417.2871-3-weiyi.lu@mediatek.com>
+Subject: Re: [PATCH 2/2] dt-bindings: nvmem: imx-ocotp: add compatible string
+ for  i.MX7ULP
+Date: Thu, 20 Dec 2018 14:44:31 -0600
+Message-ID: <20181220204431.GA31062@bogus>
+References: <1544777136-9195-1-git-send-email-Anson.Huang@nxp.com>
+ <1544777136-9195-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181214020417.2871-3-weiyi.lu@mediatek.com>
+In-Reply-To: <1544777136-9195-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Stephen Boyd <sboyd@codeaurora.org>, James Liao <jamesjj.liao@mediatek.com>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-clk@vger.kernel.org, srv_heupstream@mediatek.com, Weiyi Lu <weiyi.lu@mediatek.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "srinivas.kandagatla@linaro.org" <srinivas.kandagatla@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 14 Dec 2018 10:04:16 +0800, Weiyi Lu wrote:
-> Add new clock according to 3rd ECO design change.
-> It's the parent clock of audio clock mux.
+On Fri, 14 Dec 2018 08:51:37 +0000, Anson Huang wrote:
+> Add new compatible string for i.MX7ULP SOC.
 > 
-> Signed-off-by: Weiyi Lu <weiyi.lu@mediatek.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  include/dt-bindings/clock/mt2712-clk.h | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
