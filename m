@@ -1,28 +1,53 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: iio: adc: Add binding for ADC on
- pms405 PMIC
-Date: Thu, 20 Dec 2018 14:05:53 -0600
-Message-ID: <20181220200553.GA8681@bogus>
-References: <cover.1544599950.git.amit.kucheria@linaro.org>
- <3aac8c4cd7648589d0eef994376357509e284030.1544599950.git.amit.kucheria@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: qcom: Add firmware bindings
+ for Q6V5 MSS
+Date: Thu, 20 Dec 2018 14:10:02 -0600
+Message-ID: <20181220201002.GA8831@bogus>
+References: <20181212124456.3164-1-sibis@codeaurora.org>
+ <20181212124456.3164-2-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <3aac8c4cd7648589d0eef994376357509e284030.1544599950.git.amit.kucheria@linaro.org>
+In-Reply-To: <20181212124456.3164-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, mka@chromium.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Douglas Anderson <dianders@chromium.org>, Siddartha Mohanadoss <smohanad@codeaurora.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, andy.gross@linaro.org, briannorris@chromium.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Dec 2018 15:47:54 +0530, Amit Kucheria wrote:
-> PMS405 contains a variant of the spmi-adc-rev2 ADC. Create a new
-> compatible inorder to handle any differences.
+On Wed, Dec 12, 2018 at 06:14:55PM +0530, Sibi Sankar wrote:
+> Add optional firmware bindings for Q6V5 MSS. It lists the two relative
+> firmware paths which are used for booting and authenticating the Hexagon
+> core.
 > 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> index 9ff5b0309417..1f6988a60636 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> @@ -36,6 +36,13 @@ on the Qualcomm Hexagon core.
+>  	Value type: <stringlist>
+>  	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+>  
+> +- qcom,firmware:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+We already have a standard name 'firmware-name'. Use that. I'm fine with 
+allowing it to be more than 1 string.
+
+> +	Usage: optional
+> +	Value type: <stringlist>
+> +	Definition: must list the 2 relative firmware paths (mba and modem
+> +		    metadata respectively) which are used for booting and
+> +		    authenticating the Hexagon core.
+> +
+>  - clocks:
+>  	Usage: required
+>  	Value type: <phandle>
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
