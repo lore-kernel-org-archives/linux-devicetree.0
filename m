@@ -1,8 +1,8 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 3/4] defconfig: arm64: add i.MX system controller RTC
+Subject: [PATCH V5 4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC
  support
-Date: Thu, 20 Dec 2018 08:56:25 +0000
-Message-ID: <1545295872-20169-4-git-send-email-Anson.Huang__33454.0891847157$1545296105$gmane$org@nxp.com>
+Date: Thu, 20 Dec 2018 08:56:33 +0000
+Message-ID: <1545295872-20169-5-git-send-email-Anson.Huang__14228.0826032676$1545296136$gmane$org@nxp.com>
 References: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,26 +23,29 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch enables CONFIG_RTC_DRV_IMX_SC as module by default.
+Add i.MX8QXP system controller RTC support.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
 No change since V4.
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index d3aa3f7..abd80c5 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -572,6 +572,7 @@ CONFIG_RTC_DRV_PL031=y
- CONFIG_RTC_DRV_SUN6I=y
- CONFIG_RTC_DRV_ARMADA38X=y
- CONFIG_RTC_DRV_TEGRA=y
-+CONFIG_RTC_DRV_IMX_SC=m
- CONFIG_RTC_DRV_XGENE=y
- CONFIG_DMADEVICES=y
- CONFIG_DMA_BCM2835=m
+diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+index da99b6f..9b08688 100644
+--- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
+@@ -83,6 +83,10 @@
+ 			compatible = "fsl,imx8qxp-scu-pd";
+ 			#power-domain-cells = <1>;
+ 		};
++
++		rtc: rtc {
++			compatible = "fsl,imx8qxp-sc-rtc";
++		};
+ 	};
+ 
+ 	adma_subsys: bus@59000000 {
 -- 
 2.7.4
