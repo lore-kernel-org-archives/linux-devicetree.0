@@ -1,125 +1,129 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] phy: qualcomm: usb: Add Super-Speed PHY driver
-Date: Thu, 20 Dec 2018 12:29:53 -0800
-Message-ID: <154533779333.79149.17234544366247143930@swboyd.mtv.corp.google.com>
-References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1544176558-7946-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Thu, 20 Dec 2018 21:31:00 +0100
+Message-ID: <71d3ac12-5beb-0a26-71e1-5eae798e7b9f@gmail.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
+ <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544176558-7946-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
+In-Reply-To: <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org, jorge.ramirez-ortiz@linaro.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org
+To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez-Ortiz (2018-12-07 01:55:58)
-> From: Shawn Guo <shawn.guo@linaro.org>
->=20
-> Driver to control the Synopsys SS PHY 1.0.0 implemeneted in QCS404
->=20
-> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original code.
->=20
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+On 12/19/18 10:50 PM, Dan Murphy wrote:
+> On 12/19/2018 03:36 PM, Jacek Anaszewski wrote:
+>> Hi Dan and Pavel,
+>>
+>> On 12/19/18 9:41 PM, Dan Murphy wrote:
+>>> Pavel
+>>>
+>>> On 12/19/2018 02:10 PM, Pavel Machek wrote:
+>>>> On Wed 2018-12-19 13:41:18, Dan Murphy wrote:
+>>>>> Pavel
+>>>>>
+>>>>> Thanks for the review.
+>>>>>
+>>>>> On 12/19/2018 01:34 PM, Pavel Machek wrote:
+>>>>>> Hi!
+>>>>>>
+>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_a_mix);
+>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_b_mix);
+>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_c_mix);
+>>>>>>> +
+>>>>>>> +static struct attribute *lp5024_ctrl_bank_attrs[] = {
+>>>>>>> +    &dev_attr_ctrl_bank_a_mix.attr,
+>>>>>>> +    &dev_attr_ctrl_bank_b_mix.attr,
+>>>>>>> +    &dev_attr_ctrl_bank_c_mix.attr,
+>>>>>>> +    NULL
+>>>>>>> +};
+>>>>>>> +ATTRIBUTE_GROUPS(lp5024_ctrl_bank);
+>>>>>>
+>>>>>> ...
+>>>>>>> +
+>>>>>>> +static DEVICE_ATTR_WO(led1_mix);
+>>>>>>> +static DEVICE_ATTR_WO(led2_mix);
+>>>>>>> +static DEVICE_ATTR_WO(led3_mix);
+>>>>>>> +
+>>>>>>> +static struct attribute *lp5024_led_independent_attrs[] = {
+>>>>>>> +    &dev_attr_led1_mix.attr,
+>>>>>>> +    &dev_attr_led2_mix.attr,
+>>>>>>> +    &dev_attr_led3_mix.attr,
+>>>>>>> +    NULL
+>>>>>>> +};
+>>>>>>> +ATTRIBUTE_GROUPS(lp5024_led_independent);
+>>>>>>
+>>>>>> Ok, so you are adding new sysfs files. Are they _really_ neccessary?
+>>>>>> We'd like to have uniform interfaces for the leds.
+>>>>>
+>>>>> Yes I am adding these for this driver.
+>>>>> They adjust the individual brightness of each LED connected (what the HW guys called mixing).
+>>>>>
+>>>>> The standard brightness sysfs adjusts all 3 LEDs simultaneously so that all 3 LEDs brightness are
+>>>>> uniform.
+>>>>
+>>>> 1 LED, 1 brightness file... that's what we do. Why should this one be different?
+>>>>
+>>>
+>>> Yes I understand this and 1 DT child node per LED out but...
+>>>
+>>> This device has a single register to control 3 LEDs brightness as a group and individual brightness
+>>> registers to control the LEDs independently to mix the LEDs to a specific color.
+>>>
+>>> There needs to be a way to control both so that developers can mix and adjust the individual RGB and
+>>> then control the brightness of the group during run time without touching the "mixing" value.
+>>>
+>>> I don't think a user needs nor would want to have 24 different LED nodes with 24 different brightness files.
+>>> Or with the LP5036 that would have 36 LED nodes.
+>>>
+>>> Table 1 in the data sheet shows how the outputs map to the control banks to the LED registers.
+>>
+>> Some time ago we had discussion with Vesa Jääskeläinen about possible
+>> approaches to RGB LEDs [0]. What seemed to be the most suitable
+>> variation of the discussed out-of-tree approach was the "color" property
+>> and array of color triplets defined in Device Tree per each color.
+>>
+> 
+> Why does Device tree define the color?
+> 
+> Rob indicated that Device tree is supposed to define the hardware.
+> This thread seems to be defining the operation.
 
-chain should be swapped?
+Perceived colors produced by LEDs from different manufacturers may
+differ and this alone should be deemed a sufficient argument for having
+board specific color definitions.
 
-> Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> ---
-> diff --git a/drivers/phy/qualcomm/phy-qcom-usb-ss.c b/drivers/phy/qualcom=
-m/phy-qcom-usb-ss.c
-> new file mode 100644
-> index 0000000..7b6a55e
-> --- /dev/null
-> +++ b/drivers/phy/qualcomm/phy-qcom-usb-ss.c
-> +
-> +struct ssphy_priv {
-> +       void __iomem *base;
-> +       struct device *dev;
-> +       struct reset_control *reset_com;
-> +       struct reset_control *reset_phy;
-> +       struct clk *clk_ref;
-> +       struct clk *clk_phy;
-> +       struct clk *clk_pipe;
+> Shouldn't the color be done via user space and not dt?
 
-Use bulk clk APIs? And just get and enable all the clks?
+I think that we should keep the userspace interface as simple
+as possible and backwards compatible with monochrome LEDs.
 
-> +       struct regulator *vdda1p8;
-> +       struct regulator *vbus;
-> +       struct regulator *vdd;
-> +       unsigned int vdd_levels[LEVEL_NUM];
-> +};
-> +
-> +static inline void qcom_ssphy_updatel(void __iomem *addr, u32 mask, u32 =
-val)
-> +{
-> +       writel((readl(addr) & ~mask) | val, addr);
-> +}
-> +
-> +static int qcom_ssphy_config_vdd(struct ssphy_priv *priv,
-> +                                enum phy_vdd_level level)
-> +{
-> +       return regulator_set_voltage(priv->vdd,
-> +                                    priv->vdd_levels[level],
-> +                                    priv->vdd_levels[LEVEL_MAX]);
+I also propose to avoid the introduction of a color sysfs
+property in favor of creating separate LED class devices
+for different "color ranges". The devices would drive the same
+LED but using different preset color levels.
 
-regulator_set_voltage(reg, 0, max) is very suspicious. It's voltage
-corners where the voltages are known?
+We don't have to expose all device knobs to the userspace,
+but instead provide some predefined configurations. It would
+improve user experience by keeping LED class devices simple
+in use. It would be Device Tree designer's responsibility to
+provide color definitions that make sense for given RGB LED
+controller and RGB LED element configuration.
 
-> +}
-> +
-> +static int qcom_ssphy_ldo_enable(struct ssphy_priv *priv)
-> +{
-> +       int ret;
-> +
-> +       ret =3D regulator_set_load(priv->vdda1p8, 23000);
+Registering color palette with devm_rgb_register() you proposed
+is also an option, but with one LED class device per color palette
+it would mean allowing for creation/destruction of LED class
+devices by any user having access to given LED's sysfs interface,
+which is really bad solution.
 
-Do you need to do this? Why can't the regulator be in high power mode
-all the time and then go low power when it's disabled?
-
-> +       if (ret < 0) {
-> +               dev_err(priv->dev, "Failed to set regulator1p8 load\n");
-> +               return ret;
-> +       }
-> +
-> +       ret =3D regulator_set_voltage(priv->vdda1p8, 1800000, 1800000);
-
-This looks unnecessary. The 1.8V regulator sounds like it better be 1.8V
-so board constraints should enforce that. All that should be here is
-enabling the regulator.
-
-> +       if (ret) {
-> +               dev_err(priv->dev, "Failed to set regulator1p8 voltage\n"=
-);
-> +               goto put_vdda1p8_lpm;
-> +       }
-> +
-> +       ret =3D regulator_enable(priv->vdda1p8);
-> +       if (ret) {
-> +               dev_err(priv->dev, "Failed to enable regulator1p8\n");
-> +               goto unset_vdda1p8;
-> +       }
-> +
-> +       return ret;
-> +
-> +       /* rollback regulator changes */
-> +
-> +unset_vdda1p8:
-> +       regulator_set_voltage(priv->vdda1p8, 0, 1800000);
-> +
-> +put_vdda1p8_lpm:
-> +       regulator_set_load(priv->vdda1p8, 0);
-> +
-> +       return ret;
-> +}
-> +
-> +static void qcom_ssphy_ldo_disable(struct ssphy_priv *priv)
-> +{
-> +       regulator_disable(priv->vdda1p8);
-> +       regulator_set_voltage(priv->vdda1p8, 0, 1800000);
-
-Urgh why?
-
-> +       regulator_set_load(priv->vdda1p8, 0);
-> +}
+-- 
+Best regards,
+Jacek Anaszewski
