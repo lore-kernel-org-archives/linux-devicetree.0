@@ -1,52 +1,28 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v2] arm64: dts: sdm845: Add PSCI cpuidle low power states
-Date: Thu, 20 Dec 2018 13:40:44 -0800
-Message-ID: <CAD=FV=XWftL_aFb7rNPMW1AE+1y+Zh3W+qqtfSKHRPN+Qe_w2A@mail.gmail.com>
-References: <1540920209-28954-1-git-send-email-rplsssn@codeaurora.org> <20181130154145.GK18262@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 07/15] drm/rockchip: dw-mipi-dsi: add support for
+ rk3368-variant
+Date: Thu, 20 Dec 2018 15:42:00 -0600
+Message-ID: <20181220214200.GA15833@bogus>
+References: <20181217123650.6773-1-heiko@sntech.de>
+ <20181217123650.6773-8-heiko@sntech.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181130154145.GK18262@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20181217123650.6773-8-heiko@sntech.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Matthias Kaehlcke <mka@chromium.org>
+Cc: linux-rockchip@lists.infradead.org, hjc@rock-chips.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, linux-clk@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Mon, 17 Dec 2018 13:36:42 +0100, Heiko Stuebner wrote:
+> Add the compatible and grf values and allow the driver to also
+> not select a specific crtc input on systems with only one vop.
+> 
+> Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+> ---
+>  .../display/rockchip/dw_mipi_dsi_rockchip.txt |  1 +
+>  .../gpu/drm/rockchip/dw-mipi-dsi-rockchip.c   | 25 +++++++++++++++++--
+>  2 files changed, 24 insertions(+), 2 deletions(-)
+> 
 
-On Fri, Nov 30, 2018 at 7:41 AM Lina Iyer <ilina@codeaurora.org> wrote:
->
-> On Tue, Oct 30 2018 at 11:23 -0600, Raju P.L.S.S.S.N wrote:
-> >Add device bindings for cpuidle states for cpu devices.
-> >
-> >Cc: <devicetree@vger.kernel.org>
-> >Signed-off-by: Raju P.L.S.S.S.N <rplsssn@codeaurora.org>
-> >---
-> >Changes in v2
-> > - Address comments from Doug
-> >---
-> >---
-> > arch/arm64/boot/dts/qcom/sdm845.dtsi | 62 ++++++++++++++++++++++++++++++++++++
-> > 1 file changed, 62 insertions(+)
-> >
-> >diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >index 0c9a2aa..3a8381e 100644
-> >--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >@@ -96,6 +96,7 @@
-> >                       reg = <0x0 0x0>;
-> >                       enable-method = "psci";
-> >                       next-level-cache = <&L2_0>;
-> >+                      cpu-idle-states = <&C0_CPU_PD &C0_CPU_RPD &CLUSTER_PD>;
-> I think it might be better to use
-> <&C0_CPU_PD>, <&C0_CPU_RPD>, <&CLUSTER_PD>
-
-I disagree.  All existing examples in both bindings and other device
-trees use the syntax that Raju uses.  It doesn't matter
-functionality-wise, but I'd much rather match everyone else.  We
-should land what Raju has posted and if someone feels super strongly
-that the examples in the bindings are wrong then they should attempt
-to convince Rob Herring to Ack a change to the examples in the
-bindings.  Doesn't seem like a good use of time to me, though.
-
--Doug
+Reviewed-by: Rob Herring <robh@kernel.org>
