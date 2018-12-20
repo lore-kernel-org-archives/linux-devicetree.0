@@ -1,11 +1,13 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 0/4] Add i.MX System Controller thermal driver support
-Date: Thu, 20 Dec 2018 09:08:14 +0000
-Message-ID: <1545296609-20477-1-git-send-email-Anson.Huang__7243.18980142034$1545296790$gmane$org@nxp.com>
+Subject: [PATCH V5 1/4] dt-bindings: fsl: scu: add thermal binding
+Date: Thu, 20 Dec 2018 09:08:23 +0000
+Message-ID: <1545296609-20477-2-git-send-email-Anson.Huang__1360.95842249251$1545296809$gmane$org@nxp.com>
+References: <1545296609-20477-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545296609-20477-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -20,35 +22,54 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
-inside, the system controller is in charge of controlling power,
-clock and thermal sensors etc..
+NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
+system controller, the system controller is in charge of system
+power, clock and thermal sensors etc. management, Linux kernel
+has to communicate with system controller via MU (message unit)
+IPC to get temperature from thermal sensors, this patch adds
+binding doc for i.MX system controller thermal driver.
 
-This patch adds i.MX system controller thermal driver support,
-Linux kernel has to communicate with system controller via MU
-(message unit) IPC to get each thermal sensor's temperature,
-it supports multiple sensors which are passed from device tree,
-please see the binding doc for details.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+No change since V4.
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt        | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
-Note that this patch set is based on [V5,4/4] ARM64: dts: imx: add i.MX8QXP system controller RTC support,
-https://patchwork.kernel.org/patch/10738681/
-
-Anson Huang (4):
-  dt-bindings: thermal: add binding doc for i.MX system controller
-    thermal driver
-  thermal: imx_sc: add i.MX system controller thermal support
-  defconfig: arm64: add i.MX system controller thermal support
-  ARM64: dts: imx: add i.MX8QXP thermal support
-
- .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
- arch/arm64/configs/defconfig                       |   1 +
- drivers/thermal/Kconfig                            |  11 ++
- drivers/thermal/Makefile                           |   1 +
- drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++++++
- 6 files changed, 274 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-thermal.txt
- create mode 100644 drivers/thermal/imx_sc_thermal.c
-
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index 3f3d697..b77ec29 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -112,6 +112,16 @@ RTC bindings based on SCU Message Protocol
+ Required properties:
+ - compatible: should be "fsl,imx8qxp-sc-rtc";
+ 
++Thermal bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible : Must be "fsl,imx8qxp-sc-thermal";
++- tsens-num : Total number of thermal sensors supported;
++- #thermal-sensor-cells : Should be 1. See
++			  Documentation/devicetree/bindings/thermal/thermal.txt
++			  for a description.
++
+ Example (imx8qxp):
+ -------------
+ lsio_mu1: mailbox@5d1c0000 {
+@@ -158,6 +168,12 @@ firmware {
+ 		rtc: rtc {
+ 			compatible = "fsl,imx8qxp-sc-rtc";
+ 		};
++
++		tsens: thermal-sensor {
++			compatible = "fsl,imx8qxp-sc-thermal";
++			tsens-num = <1>;
++			#thermal-sensor-cells = <1>;
++		};
+ 	};
+ };
+ 
 -- 
 2.7.4
