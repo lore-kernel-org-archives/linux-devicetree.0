@@ -1,59 +1,113 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
-Date: Thu, 20 Dec 2018 09:04:58 -0600
-Message-ID: <CAL_JsqLcMb+RG8CJxzCRx0D8TdfZBFOtcx768ejHeNHtSSp5Wg@mail.gmail.com>
-References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
- <20181218040702.29231-4-andrew.smirnov@gmail.com> <20181218151533.GA2922@bogus>
- <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 2/3] ASoC: xlnx: add pcm formatter platform
+	driver
+Date: Thu, 20 Dec 2018 15:06:56 +0000
+Message-ID: <20181220150656.GB9325@sirena.org.uk>
+References: <1545239949-112845-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+ <1545239949-112845-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Dong Aisheng <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0425014690054138336=="
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1545239949-112845-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Michal Simek <michal.simek@xilinx.com>, Vishal Sagar <vsagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 12:09 PM Leonard Crestez
-<leonard.crestez@nxp.com> wrote:
->
-> On 12/18/2018 5:15 PM, Rob Herring wrote:
-> > On Mon, Dec 17, 2018 at 08:07:02PM -0800, Andrey Smirnov wrote:
-> >> Add code needed to support i.MX8MQ variant.
-> >>
-> >> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> >> Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
->
-> >> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> >> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> >>
-> >> +Additional required properties for imx8mq-pcie:
-> >> +- fsl,controller-id: Logical ID of a given PCIE controller. PCIE1 is 0, PCIE2 is 1;
-> >> +
-> >
-> > Remove this.
-> >
-> > If GPR register offset is what you need, then put that into DT.
-> > Typically, we'd have a property with iomuxc phandle and offset.
->
-> This series initially added explicit offsets but I suggested a single
-> "controller-id" because:
->   * There are multiple bit and byte offsets
->   * Other imx8 SOCs also have 2x pcie with other bit/byte offsets
->
-> Hiding this behind a compatible string and single "controller-id" seem
-> preferable to elaborating register maps in dt bindings. It also makes
-> upgrades simpler: if features are added which use other bits there is no
-> need to describe them in DT and deal with compatibility headaches.
 
-You don't have to describe all bit and byte offsets. Once you know 1,
-you can derive all the others. In fact, it doesn't have to be a
-register field at all, just provide whatever identifier you need:
+--===============0425014690054138336==
+Content-Type: multipart/signed; micalg=pgp-sha512;
+	protocol="application/pgp-signature"; boundary="E39vaYmALEf/7YXx"
+Content-Disposition: inline
 
-<$syscon 0>
 
-and
+--E39vaYmALEf/7YXx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-<&syscon 1>
+On Wed, Dec 19, 2018 at 10:49:08PM +0530, Maruthi Srinivas Bayyavarapu wrote:
 
-Rob
+This looks mostly good, a few small things but all pretty trivial:
+
+> +	switch (bits_per_sample) {
+> +	case 8:
+> +		val |= (BIT_DEPTH_8 << AUD_CTRL_DATA_WIDTH_SHIFT);
+> +		break;
+> +	case 16:
+> +		val |= (BIT_DEPTH_16 << AUD_CTRL_DATA_WIDTH_SHIFT);
+> +		break;
+> +	case 20:
+> +		val |= (BIT_DEPTH_20 << AUD_CTRL_DATA_WIDTH_SHIFT);
+> +		break;
+> +	case 24:
+> +		val |= (BIT_DEPTH_24 << AUD_CTRL_DATA_WIDTH_SHIFT);
+> +		break;
+> +	case 32:
+> +		val |= (BIT_DEPTH_32 << AUD_CTRL_DATA_WIDTH_SHIFT);
+> +		break;
+> +	}
+
+It'd be better to have a default case returning an error for unsupported
+sample sizes.
+
+> +		ret = devm_request_irq(dev, aud_drv_data->mm2s_irq,
+> +				       xlnx_mm2s_irq_handler, 0,
+> +				       "xlnx_formatter_pcm_mm2s_irq", dev);
+> +		if (ret) {
+> +			dev_err(dev, "xlnx audio mm2s irq request failed\n");
+> +			goto clk_err;
+> +		}
+> +		ret = xlnx_formatter_pcm_reset(aud_drv_data->mmio +
+> +					       XLNX_MM2S_OFFSET);
+> +		if (ret) {
+> +			dev_err(dev, "audio formatter reset failed\n");
+> +			goto clk_err;
+> +		}
+> +		xlnx_formatter_disable_irqs(aud_drv_data->mmio +
+> +					    XLNX_MM2S_OFFSET,
+> +					    SNDRV_PCM_STREAM_PLAYBACK);
+
+This requests the interrupt before we've reset and quiesced the hardware
+meaning the interrupt could fire immediately on request with the
+hardware in an unknown state; it'd be better to reset the hardware first
+then request the interrupt to minimize the risk that something goes
+wrong with the handler.
+
+> +	dev_info(dev, "pcm platform device registered\n");
+> +	return 0;
+
+This is just adding noise to the log.
+
+--E39vaYmALEf/7YXx
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwbsBAACgkQJNaLcl1U
+h9Cpegf/WpTeT0YeDGH0yu/OmjEIpOjD5J8UooYjuzyLJCdKXLgfQy+I8gCQhe2M
+Y+gOMrV1HtL2EayxfPee5P00+H/4RfTZ63nDEJY/SAQTRS7CA93lmYVqMAwPSm6/
+mzeQmaawJJMPSK2dZFDwU9mafYaJzEiItW/eKFpUPbQSdqhCLHu41yaLGdxouvNv
+ZaUOeOkI/y0w//PUWnJFlO2ddPjhC6PcdtkOstzxKzSTVu6tYrHZE0R4nBiAh4+S
+SEdqbixMoAnuq9g2MfKzs1jopzMOpNjmcBpEE858EbZyOzG9b1gcHyxu21ldu2VQ
+cPdurnYOp1tr986M/Y9yTc8PhxJoAg==
+=sW2Y
+-----END PGP SIGNATURE-----
+
+--E39vaYmALEf/7YXx--
+
+--===============0425014690054138336==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+
+--===============0425014690054138336==--
