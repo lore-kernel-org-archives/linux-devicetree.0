@@ -1,114 +1,112 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v6 0/7] spi: add support for octal mode
-Date: Thu, 20 Dec 2018 12:03:12 +0530
-Message-ID: <d513cf77-b308-a089-71cf-4598bfd2f085@ti.com>
-References: <1545214186-16987-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <10b25865-b93d-382a-aa4d-b21fbd9c3ba9@ti.com>
- <VI1PR04MB5726D65958C532965E12EE4F99BF0@VI1PR04MB5726.eurprd04.prod.outlook.com>
+From: Felipe Balbi <felipe.balbi@linux.intel.com>
+Subject: Re: [PATCH v1 01/12] dt-bindings: usb: add support for dwc3 controller on HiSilicon SoCs
+Date: Thu, 20 Dec 2018 08:46:28 +0200
+Message-ID: <87y38ku24b.fsf@linux.intel.com>
+References: <20181203034515.91412-1-chenyu56@huawei.com> <20181203034515.91412-2-chenyu56@huawei.com> <fde4d37b-0c4d-055b-a0ba-4e9fe87717ad@cogentembedded.com> <33cda716-d09c-28e7-d4b4-26f246786f5e@huawei.com> <680c5b9f-e2c7-926d-7d10-4ce2cd091282@cogentembedded.com> <bbe390f0-2fa6-515b-42c5-ede620b2b8c7@huawei.com> <20181219140953.GA9910@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5726D65958C532965E12EE4F99BF0@VI1PR04MB5726.eurprd04.prod.outlook.com>
-Content-Language: en-US
+In-Reply-To: <20181219140953.GA9910@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>, Chen Yu <chenyu56@huawei.com>
+Cc: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, wangbinghui@hisilicon.com, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
+
+--=-=-=
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
 
 Hi,
 
-On 20/12/18 11:02 AM, Yogesh Narayan Gaur wrote:
-[...]
->>> Yogesh Gaur (7):
->>>   spi: add support for octal mode I/O data transfer
->>>   spi: spi-mem: add support for octal mode I/O data transfer
->>
->>
->> These two patches are already merged and is now part of linux-next[1].
->> Its preferred to send patches based on top of latest linux-next so as to avoid
->> resending patches that have already been picked up by the maintainer.
->>
->> [1]
->> commit 6b03061f882de49b83ccf44beb3a12c920a2da1b
->> Author: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
->> Date:   Mon Dec 3 08:39:06 2018 +0000
->>
->>     spi: add support for octal mode I/O data transfer
->>
->> commit b12a084c8729ef423089bb9a5a143eed39cd94e7
->> Author: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
->> Date:   Mon Dec 3 08:39:12 2018 +0000
->>
->>     spi: spi-mem: add support for octal mode I/O data transfer
->>
->>
-> I have checked on repo "git://git.infradead.org/linux-mtd.git" on branch "spi-nor/next" and in that kernel version is 4.20.-rc5.
-> In this repo above 2 patches are not present and hence has send the patches by moving to top of this repo.
-> 
+Rob Herring <robh@kernel.org> writes:
+>> >>>> +Example:
+>> >>>> +=C2=A0=C2=A0=C2=A0 usb3: hisi_dwc3 {
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 compatible =3D "hisilic=
+on,hi3660-dwc3";
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #address-cells =3D <2>;
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 #size-cells =3D <2>;
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 ranges;
+>> >>>> +
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clocks =3D <&crg_ctrl H=
+I3660_CLK_ABB_USB>,
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 <&crg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 clock-names =3D "clk_us=
+b3phy_ref", "aclk_usb3otg";
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 assigned-clocks =3D <&c=
+rg_ctrl HI3660_ACLK_GATE_USB3OTG>;
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 assigned-clock-rates =
+=3D <229000000>;
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 resets =3D <&crg_rst 0x=
+90 8>,
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 <&crg_rst 0x90 7>,
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 <&crg_rst 0x90 6>,
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=
+=C2=A0 <&crg_rst 0x90 5>;
+>> >>>> +
+>> >>>> +=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0=C2=A0 dwc3: dwc3@ff100000 {
+>
+> Please combine these into a single node. Unless you have a wrapper with=20
+> registers, you don't need these 2 nodes. Clocks and reset can go in the=20
+> dwc3 node.
+>
+>> >>>
+>> >>> =C2=A0=C2=A0=C2=A0=C2=A0 According to the DT spec, the node names sh=
+ould be generic, not chip specific, i.e. usb@ff100000 in this case.
+>> >>>
+>> >>
+>> >> Do you mean it should be usb@ff100000: dwc3@ff100000 ?
+>> >=20
+>> > =C2=A0=C2=A0=C2=A0=C2=A0dwc3: usb@ff100000
+>> >=20
+>> > =C2=A0=C2=A0 "dwc3:" is a label, not name.
+>>=20
+>> I use the node name "dwc3@ff100000" according to Documentation/devicetre=
+e/bindings/usb/dwc3.txt
+>> and documentations of vendor drivers, i.e. qcom,dwc3.txt, rockchip,dwc3.=
+txt.
+>>=20
+>> In these documentations, the dwc3 sub-node name uses "dwc3@xxxxxxxx".
+>>=20
+>> I think it is better to be same as the other vendor's dwc3 drivers.
+>
+> It's not. The other bindings are wrong. Follow the DT Spec.
 
-Those patches are applied to spi tree:
-https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/log/?h=for-next
+what's wrong about them? They clearly describe the HW:
 
-> Can you please let me know the repo of linux-next and branch to use.
-> 
+1) a company-specific glue/adaptation/integration IP
+2) a generic licensed IP inside it
 
-The linux-next tree is the holding area for patches aimed at
-the next kernel merge window. This tree includes spi-nor/next as part of mtd/next
-as well as many other subsystem specific -next trees:
-https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git branch: master
+dwc3.ko is compatible with Synopsys' documentation and there's only one
+incarnation of dwc3. Everything that can be detected in runtime, we do
+so. Everything that can't, we use quirk flags. Keep in mind dwc3.ko is
+also used as is by non-DT systems where we can't simply change a
+compatible flag.
 
+=2D-=20
+balbi
 
-Regards
-Vignesh
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> --
-> Regards
-> Yogesh Gaur
-> 
->> Regards
->> Vignesh
->>
->>>   mtd: spi-nor: add opcodes for octal Read/Write commands
->>>   mtd: spi-nor: add octal read flag for flash mt35xu512aba
->>>   mtd: m25p80: add support of octal mode I/O transfer
->>>   spi: nxp-fspi: add octal mode flag bit for octal support
->>>   arm64: dts: lx2160a: update fspi node
->>>
->>> Changes for v6:
->>> - Correct S-o-b tag with full author name as 'Yogesh Narayan Gaur'.
->>> - Rebase on top of v4.20-rc5.
->>> Changes for v5:
->>> - Modified string 'octo' as 'octal' in all patches.
->>> Changes for v4:
->>> - Rebase on top of v4.20-rc2.
->>> - Modify octo entries enum value in spi.h.
->>> Changes for v3:
->>> - Add octo mode support in spi_setup().
->>> - Rename all patches with 'octal' string modified as 'octo'.
->>> Changes for v2:
->>> - Incorporated review comments of Boris and Vignesh.
->>>
->>> Yogesh Gaur (7):
->>>   spi: add support for octal mode I/O data transfer
->>>   spi: spi-mem: add support for octal mode I/O data transfer
->>>   mtd: spi-nor: add opcodes for octal Read/Write commands
->>>   mtd: spi-nor: add octal read flag for flash mt35xu512aba
->>>   mtd: m25p80: add support of octal mode I/O transfer
->>>   spi: nxp-fspi: add octal mode flag bit for octal support
->>>   arm64: dts: lx2160a: update fspi node
->>>
->>>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |  4 ++++
->>>  drivers/mtd/devices/m25p80.c                      |  9 ++++++++-
->>>  drivers/mtd/spi-nor/spi-nor.c                     | 19 ++++++++++++++++---
->>>  drivers/spi/spi-mem.c                             |  9 ++++++++-
->>>  drivers/spi/spi-nxp-fspi.c                        |  4 ++--
->>>  drivers/spi/spi.c                                 | 12 ++++++++++--
->>>  include/linux/mtd/spi-nor.h                       | 16 ++++++++++++----
->>>  include/linux/spi/spi.h                           |  4 +++-
->>>  8 files changed, 63 insertions(+), 14 deletions(-)
->>>
->>
->> --
->> Regards
->> Vignesh
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlwbOsQACgkQzL64meEa
+mQZqzA/+ITNgTBpmza3VxnL5gCiMChBdxoeu1WVEtels+3jSFqLvfB3rBXu3/FaE
+kXEXQinzNrtD/oUXVamxaXfxY0cZA5Ohzy+rLQgv+MCP6hr3s2Pd8uHZjKE1asQB
+UbI1+CMinSyRl++xHVyaeThWM+nAUUnx8OqZBN0ZTss2uoZZvIZEeFTAASKUfPBo
+kAgHvF7pX5kOysREmTi0NaqA8N7IYCZ1lg4jQwv/KGmAHzVbHnMFoldB7Iyppo4k
+WIZ1qvfWav2/uYO+LbpMPcMLTr9oCV2YIgTfA8MH4NXe8PTl/KniauZA/HoI98/6
+8hCWvwhvVJMqQCe4vk53E890sqedpFWGMFbizN54PwoQ4jNhtqDAua3beohH512i
+uY+cubq5VRUjw6MQ7fMWQhzItZx7nUQeUWrpe+xU83tGvweF8ru4r0D9BvNVJMGh
+MZ4h5ay+ee/bC3oFv1zI/Pw/1UongcOYAZuTpL6Q7WkO36oZr6wvQ4pFBNwCUVte
+qRZrCDVpAbQBvdoQgLZd7TeDr78IgDkNpRQI+ylWhR4u2MOEEuYhcrp4wUL3faZV
+zRyeMK5E+9wFNxBmiwtMt7wT0ooYIdoNM0IU7CAC2jAtUG/zRJxgMAt7jzpNZYq6
+yrC5QBfYMGkZFPLK8iLMfuW80LFyOAtOxG9JcT3rT1vRNj84v5A=
+=QiRC
+-----END PGP SIGNATURE-----
+--=-=-=--
