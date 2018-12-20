@@ -1,42 +1,34 @@
-Return-Path: <SRS0=Mr4q=O4=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH 1/2] dt-bindings: usb: usb251xb: add documentation for data lane swapping
-Date: Wed, 19 Dec 2018 15:59:40 +0100
-Message-Id: <20181219145941.5173-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=PTrr=O5=codeaurora.org=kvalo@kernel.org>
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: richard.leitner@skidata.com, robh@kernel.org, fancer.lancer@gmail.com
-Cc: kernel@pengutronix.de, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH v4 1/3] dt: bindings: add missing dt properties for
+ WCN3990 wifi node
+From: Kalle Valo <kvalo@codeaurora.org>
+In-Reply-To: <1541423318-19312-2-git-send-email-govinds@codeaurora.org>
+References: <1541423318-19312-2-git-send-email-govinds@codeaurora.org>
+Message-Id: <20181220170805.BEC5560736@smtp.codeaurora.org>
+Date: Thu, 20 Dec 2018 17:08:05 +0000 (UTC)
+To: Govind Singh <govinds@codeaurora.org>
+Cc: briannorris@chromium.org, andy.gross@linaro.org, ath10k@lists.infradead.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, linux-wireless@vger.kernel.org, robh+dt@kernel.org, sboyd@kernel.org, dianders@chromium.org, linux-kernel@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add optional binding to allow USB differential-pair (D+/D-) data lane
-swapping. The swapping can be specified for each port separately,
-default is no swapping.
+Govind Singh <govinds@codeaurora.org> wrote:
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- Documentation/devicetree/bindings/usb/usb251xb.txt | 4 ++++
- 1 file changed, 4 insertions(+)
+> Add missing optional properties in WCN3990 wifi node.
+> 
+> Signed-off-by: Govind Singh <govinds@codeaurora.org>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> Reviewed-by: Brian Norris <briannorris@chromium.org>
+> Tested-by: Brian Norris <briannorris@chromium.org>
+> Signed-off-by: Kalle Valo <kvalo@codeaurora.org>
 
-diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 168ff819e827..aec93a92870d 100644
---- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-+++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -64,6 +64,8 @@ Optional properties :
-  - power-on-time-ms : Specifies the time it takes from the time the host
- 	initiates the power-on sequence to a port until the port has adequate
- 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
-+ - sw-dx-lanes-ports : Specifies the ports which will swap the differential-pair
-+	(D+/D-), default is not-swapped.
- 
- Examples:
- 	usb2512b@2c {
-@@ -81,4 +83,6 @@ Examples:
- 		manufacturer = "Foo";
- 		product = "Foo-Bar";
- 		serial = "1234567890A";
-+		/* correct misplaced usb connectors on port 1,2 */
-+		sw-dx-lanes-ports = <1 2>;
- 	};
+2 patches applied to ath-next branch of ath.git, thanks.
+
+5fac78aac91d dt: bindings: ath10k: add missing dt properties for WCN3990 wifi node
+a3542d0c73ce dt: bindings: ath10k: add bindings for wifi iommu node
+
 -- 
-2.19.1
+https://patchwork.kernel.org/patch/10668237/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
