@@ -1,60 +1,48 @@
-Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:37613 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725846AbeLVRN3 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:29 -0500
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 10/12] media: mt9m001: support log_status ioctl and event interface
-Date: Sun, 23 Dec 2018 02:12:52 +0900
-Message-Id: <1545498774-11754-11-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
-References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <SRS0=JDpP=O5=nxp.com=anson.huang@kernel.org>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V5 0/4] Add i.MX System Controller thermal driver support
+Date: Thu, 20 Dec 2018 09:08:14 +0000
+Message-ID: <1545296609-20477-1-git-send-email-Anson.Huang@nxp.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "rui.zhang@intel.com" <rui.zhang@intel.com>, "edubezval@gmail.com" <edubezval@gmail.com>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, Aisheng Dong <aisheng.dong@nxp.com>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Andy Gross <andy.gross@linaro.org>, "arnd@arndb.de" <arnd@arndb.de>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This adds log_status ioctl and event interface for mt9m001's v4l2 controls.
+i.MX8QXP is an ARMv8 SoC which has a Cortex-M4 system controller
+inside, the system controller is in charge of controlling power,
+clock and thermal sensors etc..
 
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
- drivers/media/i2c/mt9m001.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+This patch adds i.MX system controller thermal driver support,
+Linux kernel has to communicate with system controller via MU
+(message unit) IPC to get each thermal sensor's temperature,
+it supports multiple sensors which are passed from device tree,
+please see the binding doc for details.
 
-diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
-index b4deec3..a5b94d7 100644
---- a/drivers/media/i2c/mt9m001.c
-+++ b/drivers/media/i2c/mt9m001.c
-@@ -18,6 +18,7 @@
- #include <media/v4l2-subdev.h>
- #include <media/v4l2-ctrls.h>
- #include <media/v4l2-device.h>
-+#include <media/v4l2-event.h>
- 
- /*
-  * mt9m001 i2c address 0x5d
-@@ -628,6 +629,9 @@ static const struct v4l2_ctrl_ops mt9m001_ctrl_ops = {
- };
- 
- static const struct v4l2_subdev_core_ops mt9m001_subdev_core_ops = {
-+	.log_status = v4l2_ctrl_subdev_log_status,
-+	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
-+	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
- #ifdef CONFIG_VIDEO_ADV_DEBUG
- 	.g_register	= mt9m001_g_register,
- 	.s_register	= mt9m001_s_register,
-@@ -716,7 +720,8 @@ static int mt9m001_probe(struct i2c_client *client,
- 		return PTR_ERR(mt9m001->reset_gpio);
- 
- 	v4l2_i2c_subdev_init(&mt9m001->subdev, client, &mt9m001_subdev_ops);
--	mt9m001->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
-+	mt9m001->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE |
-+				V4L2_SUBDEV_FL_HAS_EVENTS;
- 	v4l2_ctrl_handler_init(&mt9m001->hdl, 4);
- 	v4l2_ctrl_new_std(&mt9m001->hdl, &mt9m001_ctrl_ops,
- 			V4L2_CID_VFLIP, 0, 1, 1, 0);
--- 
+Note that this patch set is based on [V5,4/4] ARM64: dts: imx: add i.MX8QXP=
+ system controller RTC support,
+https://patchwork.kernel.org/patch/10738681/
+
+Anson Huang (4):
+  dt-bindings: thermal: add binding doc for i.MX system controller
+    thermal driver
+  thermal: imx_sc: add i.MX system controller thermal support
+  defconfig: arm64: add i.MX system controller thermal support
+  ARM64: dts: imx: add i.MX8QXP thermal support
+
+ .../devicetree/bindings/thermal/imx-sc-thermal.txt |  33 ++++
+ arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |  27 +++
+ arch/arm64/configs/defconfig                       |   1 +
+ drivers/thermal/Kconfig                            |  11 ++
+ drivers/thermal/Makefile                           |   1 +
+ drivers/thermal/imx_sc_thermal.c                   | 201 +++++++++++++++++=
+++++
+ 6 files changed, 274 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/thermal/imx-sc-therma=
+l.txt
+ create mode 100644 drivers/thermal/imx_sc_thermal.c
+
+--=20
 2.7.4
