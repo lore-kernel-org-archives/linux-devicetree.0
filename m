@@ -1,114 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 7/7] riscv: dts: add initial board data for the SiFive
- HiFive Unleashed
-Date: Thu, 20 Dec 2018 15:31:20 -0600
-Message-ID: <20181220212618.GA27359@bogus>
-References: <20181215052154.24347-1-paul.walmsley@sifive.com>
- <20181215052154.24347-8-paul.walmsley@sifive.com>
+Subject: Re: [PATCH 04/13] dt-bindings: mailbox: qcom: Add clock-name
+ optional property
+Date: Thu, 20 Dec 2018 15:37:14 -0600
+Message-ID: <20181220213714.GA8965@bogus>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181215052154.24347-8-paul.walmsley@sifive.com>
+In-Reply-To: <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Walmsley <paul.walmsley@sifive.com>
-Cc: linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Palmer Dabbelt <palmer@sifive.com>, Albert Ou <aou@eecs.berkeley.edu>, devicetree@vger.kernel.org, Paul Walmsley <paul@pwsan.com>
+Cc: jorge.ramirez-ortiz@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 09:21:54PM -0800, Paul Walmsley wrote:
-> Add initial board data for the SiFive HiFive Unleashed A00.
+On Mon, 17 Dec 2018 10:46:21 +0100, Jorge Ramirez-Ortiz wrote:
+> When the APCS clock is registered (platform dependent), it retrieves
+> its parent names from hardcoded values in the driver.
 > 
-> Currently the data populated in this DT file describes the board
-> DRAM configuration and the external clock sources that supply the
-> PRCI.
+> The following commit allows the DT node to provide such clock names to
+> the platform data based clock driver therefore avoiding having to
+> explicitly embed those names in the clock driver source code.
 > 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Palmer Dabbelt <palmer@sifive.com>
-> Cc: Albert Ou <aou@eecs.berkeley.edu>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-riscv@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Paul Walmsley <paul.walmsley@sifive.com>
-> Signed-off-by: Paul Walmsley <paul@pwsan.com>
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > ---
->  arch/riscv/boot/dts/Makefile                  |  2 +
->  arch/riscv/boot/dts/sifive/Makefile           |  4 ++
->  .../dts/sifive/hifive-unleashed-a00-fu540.dts | 39 +++++++++++++++++++
->  3 files changed, 45 insertions(+)
->  create mode 100644 arch/riscv/boot/dts/Makefile
->  create mode 100644 arch/riscv/boot/dts/sifive/Makefile
->  create mode 100644 arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
+>  .../bindings/mailbox/qcom,apcs-kpss-global.txt      | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> diff --git a/arch/riscv/boot/dts/Makefile b/arch/riscv/boot/dts/Makefile
-> new file mode 100644
-> index 000000000000..dcc3ada78455
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/Makefile
-> @@ -0,0 +1,2 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +subdir-y += sifive
-> diff --git a/arch/riscv/boot/dts/sifive/Makefile b/arch/riscv/boot/dts/sifive/Makefile
-> new file mode 100644
-> index 000000000000..e120ccf5649c
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sifive/Makefile
-> @@ -0,0 +1,4 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +dtb-$(CONFIG_ARCH_SIFIVE) += hifive-unleashed-a00-fu540.dtb
-> +
-> +
-> diff --git a/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> new file mode 100644
-> index 000000000000..0c6afabe69e3
-> --- /dev/null
-> +++ b/arch/riscv/boot/dts/sifive/hifive-unleashed-a00-fu540.dts
-> @@ -0,0 +1,39 @@
-> +// SPDX-License-Identifier: Apache-2.0
-> +// SPDX-License-Identifier: GPL-2.0-or-later
 
-This should be a single line with: (Apache-2.0 OR GPL-2.0+)
-
-> +/* Copyright (c) 2018 SiFive, Inc */
-> +/* See the file LICENSE for further information */
-> +
-> +/dts-v1/;
-> +
-> +#include "fu540-c000.dtsi"
-> +
-> +/ {
-> +	#address-cells = <2>;
-> +	#size-cells = <2>;
-> +	model = "SiFive HiFive Unleashed A00 (FU540-C000)"
-> +	compatible = "sifive,hifive-unleashed-a00-fu540",
-> +		"sifive,hifive-unleashed-fu540";
-
-SoC compatible should be here too.
-
-> +
-> +	chosen {
-> +	};
-> +
-> +	memory@80000000 {
-> +		device_type = "memory";
-> +		reg = <0x0 0x80000000 0x1f 0x80000000>;
-> +	};
-> +
-> +	soc {
-> +		hfclk: hfclk {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <33333333>;
-> +			clock-output-names = "hfclk";
-> +		};
-> +		rtcclk: rtcclk {
-> +			#clock-cells = <0>;
-> +			compatible = "fixed-clock";
-> +			clock-frequency = <1000000>;
-> +			clock-output-names = "rtcclk";
-> +		};
-
-Are these the clock inputs to the SoC or dummy clocks until you write a 
-proper clock driver? If the former, they should be at the top level. 
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
