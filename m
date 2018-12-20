@@ -1,118 +1,97 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 4/4] ARM: mxs: cfa10036: Fixup OLED display reset
- polarity
-Date: Thu, 20 Dec 2018 13:35:05 +0100
-Message-ID: <20181220123505.GH2188@piout.net>
-References: <1545308005-51559-1-git-send-email-michal.vokac@ysoft.com>
- <1545308005-51559-5-git-send-email-michal.vokac@ysoft.com>
+From: Adrian Hunter <adrian.hunter@intel.com>
+Subject: Re: [PATCH V4 2/4] mmc: cqhci: DMA Configuration prior to CQE
+Date: Thu, 20 Dec 2018 14:37:46 +0200
+Message-ID: <b6789159-c4ce-cc28-e7f5-33ab1e95175f@intel.com>
+References: <1545262938-20636-1-git-send-email-skomatineni@nvidia.com>
+ <1545262938-20636-3-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545308005-51559-5-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <1545262938-20636-3-git-send-email-skomatineni@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Sowjanya Komatineni <skomatineni@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/12/2018 12:13:57+0000, Vokáč Michal wrote:
-> There was a bug in reset signal generation in ssd1307fb OLED driver.
-> The display needs an active-low reset signal but the driver produced
-> the correct sequence only if the GPIO used for reset was specified as
-> GPIO_ACTIVE_HIGH.
-> 
-> Now as the OLED driver is fixed it is also necessarry to implement
-> a fixup for all current users of the old DT ABI. There is only one
-> in-tree user and that is the Crystalfontz CFA-10036 board. In case
-> this board is booting and GPIO_ACTIVE_HIGH is used for reset we
-> override it to GPIO_ACTIVE_LOW.
-> 
+On 20/12/18 1:42 AM, Sowjanya Komatineni wrote:
+> eMMC-5.1 JESD84-B51 Spec (Section 6.6.39.1), mentions "Prior to
+> enabling command queuing, the block size shall be set to 512 B.
+> Device may respond with an error to CMD46/CMD47 if block size
+> is not 512 B".
 
-Honestly, the platform has been discontinued and I don't really think
-it is worth having that fixup in the tree forever.
+This doesn't seem to relate to the host controller implementation.  "The
+device" means the eMMC.
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+We don't want to disable and re-enable in the request function, so that
+change is not good for controllers that don't have your problem.  Another
+thing to consider is that the block size register may not need to be changed
+- for example when cqhci is halted to allow a manual discard, the block size
+register is not updated, so I would expect its value to be unchanged.
+
+There are ways you can solve this in your driver.  You could look at using
+SDHCI I/O accessors, and/or implement your own ->enable() instead of calling
+sdhci_cqe_enable() directly.  Would that be feasible?
+
+> 
+> This patch fixes the sequence to follow exact as per the spec.
+> 
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
-> Changes from v1:
->  - Add R-by from Rob
->  - Use of_property_read_variable_u32_array to read the GPIO specifier
->    array instead of reading it manualy in for cycle. (Rob)
+>  drivers/mmc/host/cqhci.c | 18 +++++++++++++++---
+>  1 file changed, 15 insertions(+), 3 deletions(-)
 > 
->  arch/arm/mach-mxs/mach-mxs.c | 44 ++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm/mach-mxs/mach-mxs.c b/arch/arm/mach-mxs/mach-mxs.c
-> index 1c6062d..50038d6 100644
-> --- a/arch/arm/mach-mxs/mach-mxs.c
-> +++ b/arch/arm/mach-mxs/mach-mxs.c
-> @@ -21,6 +21,7 @@
->  #include <linux/reboot.h>
->  #include <linux/micrel_phy.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_gpio.h>
->  #include <linux/of_platform.h>
->  #include <linux/phy.h>
->  #include <linux/pinctrl/consumer.h>
-> @@ -268,9 +269,52 @@ static void __init apx4devkit_init(void)
->  					   apx4devkit_phy_fixup);
->  }
+> diff --git a/drivers/mmc/host/cqhci.c b/drivers/mmc/host/cqhci.c
+> index 159270e947cf..f701342e7212 100644
+> --- a/drivers/mmc/host/cqhci.c
+> +++ b/drivers/mmc/host/cqhci.c
+> @@ -248,6 +248,9 @@ static void __cqhci_enable(struct cqhci_host *cq_host)
+>  		cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
+>  	}
 >  
-> +#define OLED_RESET_GPIO_LEN	3
-> +#define OLED_RESET_GPIO_SIZE	(OLED_RESET_GPIO_LEN * sizeof(u32))
+> +	if (cq_host->ops->enable)
+> +		cq_host->ops->enable(mmc);
 > +
-> +static void __init crystalfontz_oled_reset_fixup(void)
-> +{
-> +	struct property *newgpio;
-> +	struct device_node *np;
-> +	u32 *gpiospec;
-> +	int ret;
-> +
-> +	np = of_find_compatible_node(NULL, NULL, "solomon,ssd1306fb-i2c");
-> +	if (!np)
-> +		return;
-> +
-> +	newgpio = kzalloc(sizeof(*newgpio) + OLED_RESET_GPIO_SIZE, GFP_KERNEL);
-> +	if (!newgpio)
-> +		return;
-> +
-> +	newgpio->value = newgpio + 1;
-> +	newgpio->length = OLED_RESET_GPIO_SIZE;
-> +	newgpio->name = kstrdup("reset-gpios", GFP_KERNEL);
-> +	if (!newgpio->name) {
-> +		kfree(newgpio);
-> +		return;
-> +	}
-> +
-> +	gpiospec = newgpio->value;
-> +	ret = of_property_read_variable_u32_array(np, "reset-gpios", gpiospec,
-> +						  OLED_RESET_GPIO_LEN, 0);
-> +
-> +	if (ret < 0) {
-> +		kfree(newgpio);
-> +		return;
-> +	}
-> +
-> +	if (!(gpiospec[2] & OF_GPIO_ACTIVE_LOW)) {
-> +		gpiospec[2] |= OF_GPIO_ACTIVE_LOW;
-> +		cpu_to_be32_array(gpiospec, gpiospec, OLED_RESET_GPIO_LEN);
-> +		of_update_property(np, newgpio);
-> +	}
-> +}
-> +
->  static void __init crystalfontz_init(void)
->  {
->  	update_fec_mac_prop(OUI_CRYSTALFONTZ);
-> +	crystalfontz_oled_reset_fixup();
->  }
+>  	cqcfg &= ~(CQHCI_DCMD | CQHCI_TASK_DESC_SZ);
 >  
->  static void __init duckbill_init(void)
-> -- 
-> 2.1.4
+>  	if (mmc->caps2 & MMC_CAP2_CQE_DCMD)
+> @@ -273,9 +276,6 @@ static void __cqhci_enable(struct cqhci_host *cq_host)
+>  
+>  	mmc->cqe_on = true;
+>  
+> -	if (cq_host->ops->enable)
+> -		cq_host->ops->enable(mmc);
+> -
+>  	/* Ensure all writes are done before interrupts are enabled */
+>  	wmb();
+>  
+> @@ -561,6 +561,7 @@ static int cqhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  	int tag = cqhci_tag(mrq);
+>  	struct cqhci_host *cq_host = mmc->cqe_private;
+>  	unsigned long flags;
+> +	u32 cqcfg = 0;
+>  
+>  	if (!cq_host->enabled) {
+>  		pr_err("%s: cqhci: not enabled\n", mmc_hostname(mmc));
+> @@ -579,8 +580,19 @@ static int cqhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
+>  			pr_err("%s: cqhci: CQE failed to exit halt state\n",
+>  			       mmc_hostname(mmc));
+>  		}
+> +		/* Configuration must not be changed while enabled */
+> +		cqcfg = cqhci_readl(cq_host, CQHCI_CFG);
+> +		if (cqcfg & CQHCI_ENABLE) {
+> +			cqcfg &= ~CQHCI_ENABLE;
+> +			cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
+> +		}
+> +
+>  		if (cq_host->ops->enable)
+>  			cq_host->ops->enable(mmc);
+> +
+> +		cqcfg |= CQHCI_ENABLE;
+> +		cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
+> +
+>  	}
+>  
+>  	if (mrq->data) {
 > 
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
