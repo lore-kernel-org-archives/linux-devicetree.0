@@ -1,36 +1,36 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v3 2/3] dt-bindings: drm/msm/a6xx: Document interconnect
- properties for GPU
-Date: Thu, 20 Dec 2018 11:30:25 -0800
-Message-ID: <CAD=FV=X4ZxZJt1+RbP1v_XXcVx3xNux1+K7MUWWwtc_TwuX0RQ@mail.gmail.com>
-References: <20181220173026.3857-1-jcrouse@codeaurora.org> <20181220173026.3857-3-jcrouse@codeaurora.org>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v3 3/3] arm64: dts: sdm845: Add interconnect
+ for GPU
+Date: Thu, 20 Dec 2018 11:31:20 -0800
+Message-ID: <CAD=FV=Wk8md2QwPJKc4AxT2W+wtAZ6uyFteP+GEAMGwp4-pK=A@mail.gmail.com>
+References: <20181220173026.3857-1-jcrouse@codeaurora.org>
+ <20181220173026.3857-4-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181220173026.3857-3-jcrouse@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jordan Crouse <jcrouse@codeaurora.org>, Georgi Djakov <georgi.djakov@linaro.org>, Rob Clark <robdclark@gmail.com>
-Cc: freedreno <freedreno@lists.freedesktop.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181220173026.3857-4-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Dec 20, 2018 at 9:30 AM Jordan Crouse <jcrouse@codeaurora.org> wrote:
->
-> Add documentation for the interconnect and interconnect-names bindings
-> for the GPU node as detailed by bindings/interconnect/interconnect.txt.
->
-> Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
-> ---
->
->  Documentation/devicetree/bindings/display/msm/gpu.txt | 4 ++++
->  1 file changed, 4 insertions(+)
-
-I would have been fine if you had kept my tag (even though 50% of the
-patch changed!).  ...but here it is again:
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-I assume this will be going through Georgi's tree w/ the previous patch.
-
--Doug
+SGksCgpPbiBUaHUsIERlYyAyMCwgMjAxOCBhdCA5OjMwIEFNIEpvcmRhbiBDcm91c2UgPGpjcm91
+c2VAY29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gRGVmaW5lIGFuIGludGVyY29ubmVjdCBwb3J0
+IGZvciB0aGUgR1BVIHRvIHNldCBidXMKPiBjYXBhYmlsaXRpZXMuCj4KPiBTaWduZWQtb2ZmLWJ5
+OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+Cj4gIGFyY2gv
+YXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSB8IDIgKysKPiAgMSBmaWxlIGNoYW5nZWQs
+IDIgaW5zZXJ0aW9ucygrKQoKRm9yIGdvaW5nIHRocm91Z2ggQW5keSdzIHRyZWUgb25jZSB0aGUg
+YmluZGluZ3MgbGFuZCAocHJlc3VtYWJseSBpbgpHZW9yZ2kncyB0cmVlKS4KClJldmlld2VkLWJ5
+OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QK
+RnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
