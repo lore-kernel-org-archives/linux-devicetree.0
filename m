@@ -1,184 +1,52 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v4 3/3] reset: imx7: Add support for i.MX8MQ IP block variant
-Date: Wed, 19 Dec 2018 17:07:00 -0800
-Message-ID: <20181220010700.8598-4-andrew.smirnov@gmail.com>
-References: <20181220010700.8598-1-andrew.smirnov@gmail.com>
+From: Trent Piepho <tpiepho@impinj.com>
+Subject: Re: [PATCH v3 3/3] PCI: imx6: Add support for i.MX8MQ
+Date: Thu, 20 Dec 2018 01:22:51 +0000
+Message-ID: <1545268969.22930.77.camel@impinj.com>
+References: <20181218040702.29231-1-andrew.smirnov@gmail.com>
+         <20181218040702.29231-4-andrew.smirnov@gmail.com>
+         <20181218151533.GA2922@bogus>
+         <VI1PR04MB5533533242C036C5CF6352BAEEBD0@VI1PR04MB5533.eurprd04.prod.outlook.com>
+         <CAL_JsqJb24ZpM7qQfy_F7RUVEGyceBAXOndbZcTMh3a__k38UQ@mail.gmail.com>
+         <CAHQ1cqEMxxo9JGN5be4XQWAtPz7nC2JyLCr3qasnD5QK7_hOYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181220010700.8598-1-andrew.smirnov@gmail.com>
+In-Reply-To: <CAHQ1cqEMxxo9JGN5be4XQWAtPz7nC2JyLCr3qasnD5QK7_hOYQ@mail.gmail.com>
+Content-Language: en-US
+Content-ID: <F57C2BFF224B7843B60ABC715CD776CA@namprd06.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>
+Cc: "aisheng.dong@nxp.com" <aisheng.dong@nxp.com>, "hongxing.zhu@nxp.com" <hongxing.zhu@nxp.com>, "cphealy@gmail.com" <cphealy@gmail.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "leonard.crestez@nxp.com" <leonard.crestez@nxp.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add bits and pieces needed to support IP block variant found on
-i.MX8MQ SoCs.
-
-Cc: p.zabel@pengutronix.de
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: cphealy@gmail.com
-Cc: l.stach@pengutronix.de
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-imx@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- drivers/reset/Kconfig      |   4 +-
- drivers/reset/reset-imx7.c | 106 +++++++++++++++++++++++++++++++++++++
- 2 files changed, 108 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-index c21da9fe51ec..add84b523be1 100644
---- a/drivers/reset/Kconfig
-+++ b/drivers/reset/Kconfig
-@@ -48,9 +48,9 @@ config RESET_HSDK
- 	  This enables the reset controller driver for HSDK board.
- 
- config RESET_IMX7
--	bool "i.MX7 Reset Driver" if COMPILE_TEST
-+	bool "i.MX7/8 Reset Driver" if COMPILE_TEST
- 	depends on HAS_IOMEM
--	default SOC_IMX7D
-+	default SOC_IMX7D || (ARM64 && ARCH_MXC)
- 	select MFD_SYSCON
- 	help
- 	  This enables the reset controller driver for i.MX7 SoCs.
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-index 3a36d5863891..bb826935db6d 100644
---- a/drivers/reset/reset-imx7.c
-+++ b/drivers/reset/reset-imx7.c
-@@ -22,6 +22,7 @@
- #include <linux/reset-controller.h>
- #include <linux/regmap.h>
- #include <dt-bindings/reset/imx7-reset.h>
-+#include <dt-bindings/reset/imx8mq-reset.h>
- 
- struct imx7_src_signal {
- 	unsigned int offset, bit;
-@@ -113,6 +114,110 @@ static const struct imx7_src_variant variant_imx7 = {
- 	.prepare = imx7_src_prepare,
- };
- 
-+enum imx8mq_src_registers {
-+	SRC_A53RCR0		= 0x0004,
-+	SRC_HDMI_RCR		= 0x0030,
-+	SRC_DISP_RCR		= 0x0034,
-+	SRC_GPU_RCR		= 0x0040,
-+	SRC_VPU_RCR		= 0x0044,
-+	SRC_PCIE2_RCR		= 0x0048,
-+	SRC_MIPIPHY1_RCR	= 0x004c,
-+	SRC_MIPIPHY2_RCR	= 0x0050,
-+	SRC_DDRC2_RCR		= 0x1004,
-+};
-+
-+static const struct imx7_src_signal imx8mq_src_signals[IMX8MQ_RESET_NUM] = {
-+	[IMX8MQ_RESET_A53_CORE_POR_RESET0]	= { SRC_A53RCR0, BIT(0) },
-+	[IMX8MQ_RESET_A53_CORE_POR_RESET1]	= { SRC_A53RCR0, BIT(1) },
-+	[IMX8MQ_RESET_A53_CORE_POR_RESET2]	= { SRC_A53RCR0, BIT(2) },
-+	[IMX8MQ_RESET_A53_CORE_POR_RESET3]	= { SRC_A53RCR0, BIT(3) },
-+	[IMX8MQ_RESET_A53_CORE_RESET0]		= { SRC_A53RCR0, BIT(4) },
-+	[IMX8MQ_RESET_A53_CORE_RESET1]		= { SRC_A53RCR0, BIT(5) },
-+	[IMX8MQ_RESET_A53_CORE_RESET2]		= { SRC_A53RCR0, BIT(6) },
-+	[IMX8MQ_RESET_A53_CORE_RESET3]		= { SRC_A53RCR0, BIT(7) },
-+	[IMX8MQ_RESET_A53_DBG_RESET0]		= { SRC_A53RCR0, BIT(8) },
-+	[IMX8MQ_RESET_A53_DBG_RESET1]		= { SRC_A53RCR0, BIT(9) },
-+	[IMX8MQ_RESET_A53_DBG_RESET2]		= { SRC_A53RCR0, BIT(10) },
-+	[IMX8MQ_RESET_A53_DBG_RESET3]		= { SRC_A53RCR0, BIT(11) },
-+	[IMX8MQ_RESET_A53_ETM_RESET0]		= { SRC_A53RCR0, BIT(12) },
-+	[IMX8MQ_RESET_A53_ETM_RESET1]		= { SRC_A53RCR0, BIT(13) },
-+	[IMX8MQ_RESET_A53_ETM_RESET2]		= { SRC_A53RCR0, BIT(14) },
-+	[IMX8MQ_RESET_A53_ETM_RESET3]		= { SRC_A53RCR0, BIT(15) },
-+	[IMX8MQ_RESET_A53_SOC_DBG_RESET]	= { SRC_A53RCR0, BIT(20) },
-+	[IMX8MQ_RESET_A53_L2RESET]		= { SRC_A53RCR0, BIT(21) },
-+	[IMX8MQ_RESET_SW_NON_SCLR_M4C_RST]	= { SRC_M4RCR, BIT(0) },
-+	[IMX8MQ_RESET_OTG1_PHY_RESET]		= { SRC_USBOPHY1_RCR, BIT(0) },
-+	[IMX8MQ_RESET_OTG2_PHY_RESET]		= { SRC_USBOPHY2_RCR, BIT(0) },
-+	[IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N]	= { SRC_MIPIPHY_RCR, BIT(1) },
-+	[IMX8MQ_RESET_MIPI_DSI_RESET_N]		= { SRC_MIPIPHY_RCR, BIT(2) },
-+	[IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(3) },
-+	[IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(4) },
-+	[IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N]	= { SRC_MIPIPHY_RCR, BIT(5) },
-+	[IMX8MQ_RESET_PCIEPHY]			= { SRC_PCIEPHY_RCR,
-+						    BIT(2) | BIT(1) },
-+	[IMX8MQ_RESET_PCIEPHY_PERST]		= { SRC_PCIEPHY_RCR, BIT(3) },
-+	[IMX8MQ_RESET_PCIE_CTRL_APPS_EN]	= { SRC_PCIEPHY_RCR, BIT(6) },
-+	[IMX8MQ_RESET_PCIE_CTRL_APPS_TURNOFF]	= { SRC_PCIEPHY_RCR, BIT(11) },
-+	[IMX8MQ_RESET_HDMI_PHY_APB_RESET]	= { SRC_HDMI_RCR, BIT(0) },
-+	[IMX8MQ_RESET_DISP_RESET]		= { SRC_DISP_RCR, BIT(0) },
-+	[IMX8MQ_RESET_GPU_RESET]		= { SRC_GPU_RCR, BIT(0) },
-+	[IMX8MQ_RESET_VPU_RESET]		= { SRC_VPU_RCR, BIT(0) },
-+	[IMX8MQ_RESET_PCIEPHY2]			= { SRC_PCIE2_RCR,
-+						    BIT(2) | BIT(1) },
-+	[IMX8MQ_RESET_PCIEPHY2_PERST]		= { SRC_PCIE2_RCR, BIT(3) },
-+	[IMX8MQ_RESET_PCIE2_CTRL_APPS_EN]	= { SRC_PCIE2_RCR, BIT(6) },
-+	[IMX8MQ_RESET_PCIE2_CTRL_APPS_TURNOFF]	= { SRC_PCIE2_RCR, BIT(11) },
-+	[IMX8MQ_RESET_MIPI_CSI1_CORE_RESET]	= { SRC_MIPIPHY1_RCR, BIT(0) },
-+	[IMX8MQ_RESET_MIPI_CSI1_PHY_REF_RESET]	= { SRC_MIPIPHY1_RCR, BIT(1) },
-+	[IMX8MQ_RESET_MIPI_CSI1_ESC_RESET]	= { SRC_MIPIPHY1_RCR, BIT(2) },
-+	[IMX8MQ_RESET_MIPI_CSI2_CORE_RESET]	= { SRC_MIPIPHY2_RCR, BIT(0) },
-+	[IMX8MQ_RESET_MIPI_CSI2_PHY_REF_RESET]	= { SRC_MIPIPHY2_RCR, BIT(1) },
-+	[IMX8MQ_RESET_MIPI_CSI2_ESC_RESET]	= { SRC_MIPIPHY2_RCR, BIT(2) },
-+	[IMX8MQ_RESET_DDRC1_PRST]		= { SRC_DDRC_RCR, BIT(0) },
-+	[IMX8MQ_RESET_DDRC1_CORE_RESET]		= { SRC_DDRC_RCR, BIT(1) },
-+	[IMX8MQ_RESET_DDRC1_PHY_RESET]		= { SRC_DDRC_RCR, BIT(2) },
-+	[IMX8MQ_RESET_DDRC2_PHY_RESET]		= { SRC_DDRC2_RCR, BIT(0) },
-+	[IMX8MQ_RESET_DDRC2_CORE_RESET]		= { SRC_DDRC2_RCR, BIT(1) },
-+	[IMX8MQ_RESET_DDRC2_PRST]		= { SRC_DDRC2_RCR, BIT(2) },
-+};
-+
-+static unsigned int
-+imx8mq_src_prepare(struct imx7_src *imx7src, unsigned long id, bool assert)
-+{
-+	const unsigned int bit = imx7src->variant->signals[id].bit;
-+	unsigned int value = assert ? bit : 0;
-+
-+	switch (id) {
-+	case IMX8MQ_RESET_PCIEPHY:
-+	case IMX8MQ_RESET_PCIEPHY2: /* fallthrough */
-+		/*
-+		 * wait for more than 10us to release phy g_rst and
-+		 * btnrst
-+		 */
-+		if (!assert)
-+			udelay(10);
-+		break;
-+
-+	case IMX8MQ_RESET_PCIE_CTRL_APPS_EN:
-+	case IMX8MQ_RESET_PCIE2_CTRL_APPS_EN:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DIS_PCLK_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DIS_ESC_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DIS_DPI_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DSI_RESET_N:	/* fallthrough */
-+	case IMX8MQ_RESET_MIPI_DSI_RESET_BYTE_N:	/* fallthrough */
-+		value = assert ? 0 : bit;
-+		break;
-+	}
-+
-+	return value;
-+}
-+
-+static const struct imx7_src_variant variant_imx8mq = {
-+	.signals = imx8mq_src_signals,
-+	.signals_num = ARRAY_SIZE(imx8mq_src_signals),
-+	.prepare = imx8mq_src_prepare,
-+};
-+
- static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
- {
- 	return container_of(rcdev, struct imx7_src, rcdev);
-@@ -175,6 +280,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
- 
- static const struct of_device_id imx7_reset_dt_ids[] = {
- 	{ .compatible = "fsl,imx7d-src", .data = &variant_imx7 },
-+	{ .compatible = "fsl,imx8mq-src", .data = &variant_imx8mq },
- 	{ /* sentinel */ },
- };
- 
--- 
-2.19.1
+T24gV2VkLCAyMDE4LTEyLTE5IGF0IDE2OjQ3IC0wODAwLCBBbmRyZXkgU21pcm5vdiB3cm90ZToN
+Cj4gDQo+ID4gPiBUaGlzIHNlcmllcyBpbml0aWFsbHkgYWRkZWQgZXhwbGljaXQgb2Zmc2V0cyBi
+dXQgSSBzdWdnZXN0ZWQgYSBzaW5nbGUNCj4gPiA+ICJjb250cm9sbGVyLWlkIiBiZWNhdXNlOg0K
+PiA+ID4gICAqIFRoZXJlIGFyZSBtdWx0aXBsZSBiaXQgYW5kIGJ5dGUgb2Zmc2V0cw0KPiA+ID4g
+ICAqIE90aGVyIGlteDggU09DcyBhbHNvIGhhdmUgMnggcGNpZSB3aXRoIG90aGVyIGJpdC9ieXRl
+IG9mZnNldHMNCj4gPiA+IA0KPiA+ID4gSGlkaW5nIHRoaXMgYmVoaW5kIGEgY29tcGF0aWJsZSBz
+dHJpbmcgYW5kIHNpbmdsZSAiY29udHJvbGxlci1pZCIgc2VlbQ0KPiA+ID4gcHJlZmVyYWJsZSB0
+byBlbGFib3JhdGluZyByZWdpc3RlciBtYXBzIGluIGR0IGJpbmRpbmdzLiBJdCBhbHNvIG1ha2Vz
+DQo+ID4gPiB1cGdyYWRlcyBzaW1wbGVyOiBpZiBmZWF0dXJlcyBhcmUgYWRkZWQgd2hpY2ggdXNl
+IG90aGVyIGJpdHMgdGhlcmUgaXMgbm8NCj4gPiA+IG5lZWQgdG8gZGVzY3JpYmUgdGhlbSBpbiBE
+VCBhbmQgZGVhbCB3aXRoIGNvbXBhdGliaWxpdHkgaGVhZGFjaGVzLg0KPiA+IA0KPiA+IFlvdSBh
+bHJlYWR5IGhhdmUgYW4gaWQgZm9yIHRoZSBjb250cm9sbGVyczogdGhlIGFkZHJlc3MuIFVzZSB0
+aGF0IGlmDQo+ID4geW91IGRvbid0IHdhbnQgdG8gcHV0IHRoZSByZWdpc3RlciBvZmZzZXRzIGlu
+IERULg0KPiA+IA0KPiANCj4gTHVjYXMsIGFyZSB5b3Ugb24gYm9hcmQgd2l0aCB0aGlzPw0KDQpE
+b2VzIGFkZHJlc3MgaGVyZSBtZWFuIHRoZSBhZGRyZXNzIGZyb20gdGhlIGNvbnRyb2xsZXIncyBy
+ZWcgcHJvcGVydHk/DQogDQpIb3cgZG8geW91IG1hcCB0aGF0IGFkZHJlc3MgdG8gdGhlIGNvbnRy
+b2xsZXIncyBpbmRleD8gIEEgZ2lhbnQgdGFibGUNCm9mIGV2ZXJ5IHNvYyBzbyB0aGUgc29jIHR5
+cGUgcGx1cyBjb250cm9sbGVyIHJlZ2lzdGVyIGFkZHJlc3MgcGFpciB0aGFuDQpjYW4gYmUgbG9v
+a2VkIHVwIGluIHRoZSBkcml2ZXI/DQoNCkkuZS4sIG9uIGlNWDhNUSB0aGUgY29udHJvbGxlciBh
+dCAweDMzODAwMDAwIGlzIGNvbnRyb2xsZXIgMCBhbmQgc28gb24NCmZvciBldmVyeSBwb3NzaWJs
+ZSBTb0MgYWRkcmVzcyBjb21iaW5hdGlvbj8NCg0KTm90IHJlYWxseSBhIGZhbiBvZiB0aGF0Lg0K
+DQpUaGUgc2l0dWF0aW9uIGhlcmUgaXMgdGhhdCBzb21lIHJlZ2lzdGVycyBmb3IgdGhlc2UgY29u
+dHJvbGxlcnMgYXJlDQppbnRlcmxlYXZlZCwgcmlnaHQ/ICBJLmUuLCB0aGVyZSdzIG9uZSByZWdp
+c3RlciBzb21ld2hlcmUgd2hlcmUgYml0IDANCm1lYW5zIGVuYWJsZSBjb250cm9sbGVyIDAgYW5k
+IGJpdCAxIG1lYW5zIGVuYWJsZSBjb250cm9sbGVyIDEgYW5kIHNvDQpvbi4NCg0KSXNuJ3QgY2Vs
+bC1pbmRleCBhbHJlYWR5IHRoZSBzdGFuZGFyZCBkZXZpY2UgdHJlZSBwcm9wZXJ0eSBmb3IgdGhp
+cw0Ka2luZCBvZiBzZXR1cD8NCg0KSSBrbm93IGNlbGwtaW5kZXggd2FzIGhpc3RvcmljYWxseSBh
+bHNvIChhYil1c2VkIGluIGFuIGF0dGVtcHQgdG8NCnByb3ZpZGUgYSBmaXhlZCBrZXJuZWwgZGV2
+aWNlIGVudW1lcmF0aW9uIG9yZGVyLCBzb21ldGhpbmcgbm93IGhhbmRsZWQNCmJldHRlciBieSBj
+aG9zZW4gbm9kZSBhbGlhc2VzLg0KDQoNCg==
