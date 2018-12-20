@@ -1,26 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add vendor prefix for Catalyst
- Semiconductor
-Date: Thu, 20 Dec 2018 14:05:07 -0600
-Message-ID: <20181220200507.GA7484@bogus>
-References: <20181211194251.12988-1-martyn.welch@collabora.com>
+Subject: Re: [PATCH v1 1/2] dt-bindings: iio: adc: Add binding for ADC on
+ pms405 PMIC
+Date: Thu, 20 Dec 2018 14:05:53 -0600
+Message-ID: <20181220200553.GA8681@bogus>
+References: <cover.1544599950.git.amit.kucheria@linaro.org>
+ <3aac8c4cd7648589d0eef994376357509e284030.1544599950.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181211194251.12988-1-martyn.welch@collabora.com>
+In-Reply-To: <3aac8c4cd7648589d0eef994376357509e284030.1544599950.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Martyn Welch <martyn.welch@collabora.com>, Thierry Reding <treding@nvidia.com>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, linux-kernel@vger.kernel.org, David Lechner <david@lechnology.com>, Lukasz Majewski <lukma@denx.de>, Johan Hovold <johan@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Michal Simek <monstr@monstr.eu>, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, mka@chromium.org, khasim.mohammed@linaro.org, devicetree@vger.kernel.org, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Douglas Anderson <dianders@chromium.org>, Siddartha Mohanadoss <smohanad@codeaurora.org>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 11 Dec 2018 19:42:50 +0000, Martyn Welch wrote:
-> Add vendor prefix "catalyst" for Catalyst Semiconductor which is
-> already in use but undocumented.
+On Wed, 12 Dec 2018 15:47:54 +0530, Amit Kucheria wrote:
+> PMS405 contains a variant of the spmi-adc-rev2 ADC. Create a new
+> compatible inorder to handle any differences.
 > 
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
 > ---
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  Documentation/devicetree/bindings/iio/adc/qcom,spmi-vadc.txt | 1 +
 >  1 file changed, 1 insertion(+)
 > 
 
