@@ -1,30 +1,36 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 8/8] Input: dt-bindings: tm2-touchkey: Add support for
- aries touchkey
-Date: Thu, 20 Dec 2018 11:10:31 -0600
-Message-ID: <20181220171031.GA22292@bogus>
-References: <20181207105811.1831-1-pawel.mikolaj.chmiel@gmail.com>
- <20181207105811.1831-9-pawel.mikolaj.chmiel@gmail.com>
+From: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v4 1/3] dt-bindings: net: ath10k: fix node name and device
+ type in qcom ath10k example
+Date: Thu, 20 Dec 2018 17:10:50 +0000 (UTC)
+Message-ID: <20181220171050.27DC0602CB@smtp.codeaurora.org>
+References: <1544544804-4039-2-git-send-email-bperumal@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181207105811.1831-9-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, simon@lineageos.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>
+In-Reply-To: <1544544804-4039-2-git-send-email-bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Sender: linux-wireless-owner-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ath10k-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-wireless-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri,  7 Dec 2018 11:58:11 +0100, =?UTF-8?q?Pawe=C5=82=20Chmiel?= wrote:
-> From: Jonathan Bakker <xc-racer2@live.ca>
-> 
-> Document compatible for aries touchkey.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  Documentation/devicetree/bindings/input/cypress,tm2-touchkey.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org> wrote:
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+> In qcom,ath10k documentation, ath10k is used as node name in the example of
+> pci based device. Normally, node name should be class of device and not the
+> model name, so fix it to node name "wifi". And remove the property device_type
+> pci since only pci bridges should have this property.
+> 
+> Signed-off-by: Bhagavathi Perumal S <bperumal-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> Signed-off-by: Kalle Valo <kvalo-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+
+3 patches applied to ath-next branch of ath.git, thanks.
+
+e5404969a335 dt-bindings: net: ath10k: fix node name and device type in qcom ath10k example
+f3f587995c5a dt-bindings: net: ath10k: add new dt entry to identify external FEM
+84758d4d43e9 ath10k: add support to configure BB timing over wmi
+
+-- 
+https://patchwork.kernel.org/patch/10724123/
+
+https://wireless.wiki.kernel.org/en/developers/documentation/submittingpatches
