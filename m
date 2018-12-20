@@ -1,11 +1,13 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 0/4] Add i.MX system controller RTC driver
-Date: Thu, 20 Dec 2018 08:55:59 +0000
-Message-ID: <1545295872-20169-1-git-send-email-Anson.Huang__43640.5657827438$1545296066$gmane$org@nxp.com>
+Subject: [PATCH V5 1/4] dt-bindings: fsl: scu: add rtc binding
+Date: Thu, 20 Dec 2018 08:56:07 +0000
+Message-ID: <1545295872-20169-2-git-send-email-Anson.Huang__14778.9719551385$1545296078$gmane$org@nxp.com>
+References: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -24,32 +26,44 @@ NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
 system controller, the system controller is in charge of system
 power, clock and secure RTC etc. management, Linux kernel
 has to communicate with system controller via MU (message unit)
-IPC to do RTC operation.
+IPC to do RTC operation, this patch adds binding doc for i.MX
+system controller RTC driver.
 
-Since the RTC set time MUST to be done in secure EL3 mode (required
-by system controller firmware) and ALARM functions needs to be done
-with general MU IRQ handle, these are NOT ready NOW, so this patch
-ONLY supports RTC read time for now.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+No change since V4.
+---
+ Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Note that this patch set is based on [V4,5/5] defconfig: arm64: add imx8qxp support,
-https://patchwork.kernel.org/patch/10677315/
-
-Anson Huang (4):
-  rtc: add i.MX system controller RTC support
-  dt-bindings: rtc: add binding doc for i.MX system controller RTC
-    driver
-  defconfig: arm64: add i.MX system controller RTC support
-  ARM64: dts: imx: add i.MX8QXP system controller RTC support
-
- .../devicetree/bindings/rtc/rtc-imx-sc.txt         |  10 ++
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi         |   4 +
- arch/arm64/configs/defconfig                       |   1 +
- drivers/rtc/Kconfig                                |   6 ++
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-imx-sc.c                           | 104 +++++++++++++++++++++
- 6 files changed, 126 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/rtc/rtc-imx-sc.txt
- create mode 100644 drivers/rtc/rtc-imx-sc.c
-
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index c20f38e..3f3d697 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -106,6 +106,12 @@ Required properties for Pinctrl sub nodes:
+ [2] Documentation/devicetree/bindings/power/power_domain.txt
+ [3] Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt
+ 
++RTC bindings based on SCU Message Protocol
++------------------------------------------------------------
++
++Required properties:
++- compatible: should be "fsl,imx8qxp-sc-rtc";
++
+ Example (imx8qxp):
+ -------------
+ lsio_mu1: mailbox@5d1c0000 {
+@@ -148,6 +154,10 @@ firmware {
+ 			compatible = "fsl,imx8qxp-scu-pd";
+ 			#power-domain-cells = <1>;
+ 		};
++
++		rtc: rtc {
++			compatible = "fsl,imx8qxp-sc-rtc";
++		};
+ 	};
+ };
+ 
 -- 
 2.7.4
