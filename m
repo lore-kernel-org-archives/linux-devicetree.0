@@ -1,61 +1,135 @@
-From: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Subject: [PATCH v2 1/1] arm64: dts: marvell: armada-ap806: reserve PSCI area
-Date: Fri, 21 Dec 2018 17:45:03 +0100
-Message-ID: <20181221164503.5128-1-xypron.glpk@gmx.de>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v4 02/18] iommu/mediatek: Use a struct as the platform
+ data
+Date: Fri, 21 Dec 2018 18:44:55 +0100
+Message-ID: <be32c912-359e-73c9-ca24-d0cbface47d3@gmail.com>
+References: <1544258371-4600-1-git-send-email-yong.wu@mediatek.com>
+ <1544258371-4600-3-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Gregory Clement <gregory.clement@bootlin.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1544258371-4600-3-git-send-email-yong.wu@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Yong Wu <yong.wu@mediatek.com>, Joerg Roedel <joro@8bytes.org>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Nicolas Boichat <drinkcat@chromium.org>, Arvind Yadav <arvind.yadav.cs@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
-attempt to access it from Linux leads to an immediate crash.
 
-So let's make the same memory reservation as the vendor kernel.
 
-Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
----
-v2
-	Move the change from armada-8040-mcbin.dts to armada-ap806.dtsi.
-	I only have a MACCHIATObin for testing but
-	https://github.com/MarvellEmbeddedProcessors/linux-marvell
-	has the reservation in that file.
----
- arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 08/12/2018 09:39, Yong Wu wrote:
+> Use a struct as the platform special data instead of the enumeration.
+> This is a prepare patch for adding mt8183 iommu support.
+> 
+> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
+> ---
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-index 7d94c1fa592a..f8dafef83db0 100644
---- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-@@ -28,6 +28,17 @@
- 		method = "smc";
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		psci-area@4000000 {
-+			reg = <0x0 0x4000000 0x0 0x200000>;
-+			no-map;
-+		};
-+	};
-+
- 	ap806 {
- 		#address-cells = <2>;
- 		#size-cells = <2>;
--- 
-2.19.2
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
+
+>  drivers/iommu/mtk_iommu.c | 24 ++++++++++++++++--------
+>  drivers/iommu/mtk_iommu.h |  6 +++++-
+>  2 files changed, 21 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 44bd5b9..9a2225b 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -54,7 +54,7 @@
+>  #define REG_MMU_CTRL_REG			0x110
+>  #define F_MMU_PREFETCH_RT_REPLACE_MOD		BIT(4)
+>  #define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
+> -	((data)->m4u_plat == M4U_MT2712 ? 4 : 5)
+> +	((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
+>  /* It's named by F_MMU_TF_PROT_SEL in mt2712. */
+>  #define F_MMU_TF_PROTECT_SEL(prot, data) \
+>  	(((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
+> @@ -517,7 +517,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  	}
+>  
+>  	regval = F_MMU_TF_PROTECT_SEL(2, data);
+> -	if (data->m4u_plat == M4U_MT8173)
+> +	if (data->plat_data->m4u_plat == M4U_MT8173)
+>  		regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
+>  	writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+>  
+> @@ -538,14 +538,14 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  		F_INT_PRETETCH_TRANSATION_FIFO_FAULT;
+>  	writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
+>  
+> -	if (data->m4u_plat == M4U_MT8173)
+> +	if (data->plat_data->m4u_plat == M4U_MT8173)
+>  		regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
+>  	else
+>  		regval = lower_32_bits(data->protect_base) |
+>  			 upper_32_bits(data->protect_base);
+>  	writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
+>  
+> -	if (data->enable_4GB && data->m4u_plat != M4U_MT8173) {
+> +	if (data->enable_4GB && data->plat_data->m4u_plat != M4U_MT8173) {
+>  		/*
+>  		 * If 4GB mode is enabled, the validate PA range is from
+>  		 * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> @@ -556,7 +556,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+>  	writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+>  
+>  	/* It's MISC control register whose default value is ok except mt8173.*/
+> -	if (data->m4u_plat == M4U_MT8173)
+> +	if (data->plat_data->m4u_plat == M4U_MT8173)
+>  		writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+>  
+>  	if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
+> @@ -589,7 +589,7 @@ static int mtk_iommu_probe(struct platform_device *pdev)
+>  	if (!data)
+>  		return -ENOMEM;
+>  	data->dev = dev;
+> -	data->m4u_plat = (enum mtk_iommu_plat)of_device_get_match_data(dev);
+> +	data->plat_data = of_device_get_match_data(dev);
+>  
+>  	/* Protect memory. HW will access here while translation fault.*/
+>  	protect = devm_kzalloc(dev, MTK_PROTECT_PA_ALIGN * 2, GFP_KERNEL);
+> @@ -733,9 +733,17 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>  	SET_NOIRQ_SYSTEM_SLEEP_PM_OPS(mtk_iommu_suspend, mtk_iommu_resume)
+>  };
+>  
+> +static const struct mtk_iommu_plat_data mt2712_data = {
+> +	.m4u_plat     = M4U_MT2712,
+> +};
+> +
+> +static const struct mtk_iommu_plat_data mt8173_data = {
+> +	.m4u_plat     = M4U_MT8173,
+> +};
+> +
+>  static const struct of_device_id mtk_iommu_of_ids[] = {
+> -	{ .compatible = "mediatek,mt2712-m4u", .data = (void *)M4U_MT2712},
+> -	{ .compatible = "mediatek,mt8173-m4u", .data = (void *)M4U_MT8173},
+> +	{ .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
+> +	{ .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
+>  	{}
+>  };
+>  
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index 778498b..333a0ef 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -41,6 +41,10 @@ enum mtk_iommu_plat {
+>  	M4U_MT8173,
+>  };
+>  
+> +struct mtk_iommu_plat_data {
+> +	enum mtk_iommu_plat m4u_plat;
+> +};
+> +
+>  struct mtk_iommu_domain;
+>  
+>  struct mtk_iommu_data {
+> @@ -57,7 +61,7 @@ struct mtk_iommu_data {
+>  	bool				tlb_flush_active;
+>  
+>  	struct iommu_device		iommu;
+> -	enum mtk_iommu_plat		m4u_plat;
+> +	const struct mtk_iommu_plat_data *plat_data;
+>  
+>  	struct list_head		list;
+>  };
+> 
