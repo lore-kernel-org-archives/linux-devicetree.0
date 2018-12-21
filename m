@@ -1,73 +1,101 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 1/3] dt-bindings: ufs: Add HI3670 UFS controller binding
-Date: Fri, 21 Dec 2018 07:54:44 +0530
-Message-ID: <20181221022444.GA3233@Mani-XPS-13-9360>
-References: <20181207175151.8969-1-manivannan.sadhasivam@linaro.org>
- <20181207175151.8969-2-manivannan.sadhasivam@linaro.org>
- <20181220171244.GA22403@bogus>
+Subject: Re: [PATCH v3 7/7] arm64: dts: qcom: apq8016-sbc: Standardize LED
+ labels
+Date: Fri, 21 Dec 2018 08:05:57 +0530
+Message-ID: <20181221023554.GB3233@Mani-XPS-13-9360>
+References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
+ <20181029094245.7886-8-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181220171244.GA22403@bogus>
+In-Reply-To: <20181029094245.7886-8-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, liwei213@huawei.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org
+To: andy.gross@linaro.org
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-
-On Thu, Dec 20, 2018 at 11:12:44AM -0600, Rob Herring wrote:
-> On Fri, Dec 07, 2018 at 11:21:49PM +0530, Manivannan Sadhasivam wrote:
-> > Add devicetree binding for HI3670 UFS controller. HI3760 SoC is very
-> > similar to HI3660 SoC with almost same IPs. Only major difference interms
+On Mon, Oct 29, 2018 at 03:12:45PM +0530, Manivannan Sadhasivam wrote:
+> For all 96Boards, the following standard is used for onboard LEDs.
 > 
-> s/interms/in terms/
+> green:user1  default-trigger: heartbeat
+> green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
+> green:user3  default-trigger: mmc1 (SD-card)
+> green:user4  default-trigger: none, panic-indicator
+> yellow:wlan  default-trigger: phy0tx
+> blue:bt      default-trigger: hci0-power
 > 
+> So lets adopt the same for APQ8016 SBC (Dragonboard410c), which is
+> one of the 96Boards CE platform.
+>
 
-Ack.
+Hello,
 
-> > of UFS is the PHY. HI3670 has 10nm PHY.
-> > 
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 4 +++-
-> >  1 file changed, 3 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
-> > index a48c44817367..a327c1e24365 100644
-> > --- a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
-> > +++ b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
-> > @@ -6,7 +6,9 @@ Each UFS Host Controller should have its own node.
-> >  Required properties:
-> >  - compatible        : compatible list, contains one of the following -
-> >  					"hisilicon,hi3660-ufs", "jedec,ufs-1.1" for hisi ufs
-> > -					host controller present on Hi36xx chipset.
-> > +					host controller present on Hi3660 chipset.
-> > +					"hisilicon,hi3670-ufs", "jedec,ufs-2.1" for hisi ufs
-> > +					host controller present on Hi3670 chipset.
-> 
-> From the description, sounds like having "hisilicon,hi3660-ufs" as a 
-> fallback would be appropriate?
-> 
+Any update on this patch?
 
-I don't think so. As per my understanding, fallback should be only used
-when it can make the device functional. But in this case,
-"hisilicon,hi3660-ufs" will not make the HI3670 UFS functional. So, I
-will stick to "hisilicon,hi3670-ufs" only.
-
-> >  - reg               : should contain UFS register address space & UFS SYS CTRL register address,
-> >  - interrupt-parent  : interrupt device
-> 
-> Don't document interrupt-parent. It is implied.
-> 
-
-Ack.
-
-Thanks,
+Regards,
 Mani
 
-> >  - interrupts        : interrupt number
-> > -- 
-> > 2.17.1
-> > 
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Acked-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> index 46feedf7c989..35f95154316b 100644
+> --- a/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/apq8016-sbc.dtsi
+> @@ -300,28 +300,28 @@
+>  			compatible = "gpio-leds";
+>  
+>  			led@1 {
+> -				label = "apq8016-sbc:green:user1";
+> +				label = "green:user1";
+>  				gpios = <&msmgpio 21 GPIO_ACTIVE_HIGH>;
+>  				linux,default-trigger = "heartbeat";
+>  				default-state = "off";
+>  			};
+>  
+>  			led@2 {
+> -				label = "apq8016-sbc:green:user2";
+> +				label = "green:user2";
+>  				gpios = <&msmgpio 120 GPIO_ACTIVE_HIGH>;
+>  				linux,default-trigger = "mmc0";
+>  				default-state = "off";
+>  			};
+>  
+>  			led@3 {
+> -				label = "apq8016-sbc:green:user3";
+> +				label = "green:user3";
+>  				gpios = <&pm8916_gpios 1 GPIO_ACTIVE_HIGH>;
+>  				linux,default-trigger = "mmc1";
+>  				default-state = "off";
+>  			};
+>  
+>  			led@4 {
+> -				label = "apq8016-sbc:green:user4";
+> +				label = "green:user4";
+>  				gpios = <&pm8916_gpios 2 GPIO_ACTIVE_HIGH>;
+>  				linux,default-trigger = "none";
+>  				panic-indicator;
+> @@ -329,14 +329,14 @@
+>  			};
+>  
+>  			led@5 {
+> -				label = "apq8016-sbc:yellow:wlan";
+> +				label = "yellow:wlan";
+>  				gpios = <&pm8916_mpps 2 GPIO_ACTIVE_HIGH>;
+>  				linux,default-trigger = "phy0tx";
+>  				default-state = "off";
+>  			};
+>  
+>  			led@6 {
+> -				label = "apq8016-sbc:blue:bt";
+> +				label = "blue:bt";
+>  				gpios = <&pm8916_mpps 3 GPIO_ACTIVE_HIGH>;
+>  				linux,default-trigger = "bluetooth-power";
+>  				default-state = "off";
+> -- 
+> 2.17.1
+> 
