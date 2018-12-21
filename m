@@ -1,173 +1,81 @@
-From: Manu Gautam <mgautam@codeaurora.org>
-Subject: Re: [PATCH v6 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
- driver
-Date: Fri, 21 Dec 2018 13:43:09 +0530
-Message-ID: <f5981b24-b769-2f48-7f93-10fb4f61caec@codeaurora.org>
-References: <20181220010112.16824-1-shawn.guo@linaro.org>
- <20181220010112.16824-3-shawn.guo@linaro.org>
- <f106782b6d8e26ebf851f00563c68948@codeaurora.org>
- <20181220110956.GA17416@dragon>
+From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/8] mfd: axp20x: name voltage ramping
+ define properly
+Date: Fri, 21 Dec 2018 08:39:27 +0000
+Message-ID: <20181221083927.GQ4497@dell>
+References: <cover.923997dd7d7396bb4d71f8967698b58ca956b929.1544512919.git-series.plaes@plaes.org>
+ <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544512919.git-series.plaes@plaes.org>
+Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181220110956.GA17416@dragon>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawn.guo@linaro.org>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Jack Pham <jackp@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBBQWN6LQAKGQEQ7UTSAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544512919.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Liam Girdwood <lgirdwood-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Mark Brown <broonie-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Tue, 11 Dec 2018, Priit Laes wrote:
 
-On 12/20/2018 4:39 PM, Shawn Guo wrote:
-> Hi Manu,
->
-> On Thu, Dec 20, 2018 at 09:33:43AM +0530, mgautam@codeaurora.org wrote:
->> Hi Shawn,
->>
->> On 2018-12-20 06:31, Shawn Guo wrote:
->>> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
->>> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
->>>
->>> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
->>> ---
->>
-...
->>> +struct hsphy_priv {
->> nit-pick - indentation for following structure members?
-> Hmm, my personal taste says no, because I found that it's hard to keep
-> the indentation when adding new members later.
-ok
->
->>> +	void __iomem *base;
->>> +	struct clk_bulk_data *clks;
->>> +	int num_clks;
->>> +	struct reset_control *phy_reset;
->>> +	struct reset_control *por_reset;
->>> +	struct regulator_bulk_data vregs[VREG_NUM];
->>> +	unsigned int voltages[VREG_NUM][VOL_NUM];
->>> +	const struct hsphy_data *data;
->>> +	bool cable_connected;
->> You can get cable-connected state from "enum phy_mode mode" which
->> is present in this driver.
->> E.g. cable_connected is false if mode is neither HOST nor DEVICE.
->>
->>
->>> +	struct extcon_dev *vbus_edev;
->>> +	struct notifier_block vbus_notify;
->> extcons not needed if you use "mode" for the same purpose.
-> The extcon is there for indicating cable connection status.  I'm not
-> sure that phy_mode can be used for that purpose.  For example, what
-> value would phy core set phy_mode to, if we disconnect the cable from
-> phy_mode being HOST or DEVICE?
+> From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+>=20
+> The current axp20x names the ramping register 'scal' which probably
+> means scaling. Since the register really has nothing to do with
+> scaling, but really is the voltage ramp we rename it appropriately.
+>=20
+> Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
+> Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+> ---
+>  include/linux/mfd/axp20x.h | 4 ++--
+>  1 file changed, 2 insertions(+), 2 deletions(-)
 
-it depends how it is used. Looks like it is used to decide whether to turn-off
-regulators or not. Unless you plan to add low power support as part of
-runtime-suspend of PHY during host mode, there is no reason to not turn-off
-regulators on pm_suspend(). Please refer to my comments below.
+I've lost track of what's happening with this set now.
 
->
->>
->>> +	enum phy_mode mode;
->>> +};
->>> +
->>
->>> +
->>> +static int qcom_snps_hsphy_vbus_notifier(struct notifier_block *nb,
->>> +					 unsigned long event, void *ptr)
->>> +{
->>> +	struct hsphy_priv *priv = container_of(nb, struct hsphy_priv,
->>> +						    vbus_notify);
->>> +	priv->cable_connected = !!event;
->>> +	return 0;
->>> +}
->>> +
->>> +static int qcom_snps_hsphy_power_on(struct phy *phy)
->> Can you instead merge this power_on function with phy_init?
-> I can do that, but what's the gain/advantage from doing that?
+Mark,
 
-dwc3 core calls phy_init() before power_on(). AFAIK, PHY regulators
-need to be ON before initializing it.
+Did you take this patch in the end?
 
->
->>> +{
->>> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
->>> +	int ret;
->>> +
->>> +	if (priv->cable_connected) {
->> Why distinguish between cable connected vs not-connected?
-> This is based on the vendor driver implementation.  It does a more
-> aggressive low power management in case that cable is not connected,
-> i.e. turning off regulator and entering retention mode.
+> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
+> index 2302b62..a353cd2 100644
+> --- a/include/linux/mfd/axp20x.h
+> +++ b/include/linux/mfd/axp20x.h
+> @@ -35,7 +35,7 @@ enum axp20x_variants {
+>  #define AXP152_ALDO_OP_MODE		0x13
+>  #define AXP152_LDO0_CTRL		0x15
+>  #define AXP152_DCDC2_V_OUT		0x23
+> -#define AXP152_DCDC2_V_SCAL		0x25
+> +#define AXP152_DCDC2_V_RAMP		0x25
+>  #define AXP152_DCDC1_V_OUT		0x26
+>  #define AXP152_DCDC3_V_OUT		0x27
+>  #define AXP152_ALDO12_V_OUT		0x28
+> @@ -53,7 +53,7 @@ enum axp20x_variants {
+>  #define AXP20X_USB_OTG_STATUS		0x02
+>  #define AXP20X_PWR_OUT_CTRL		0x12
+>  #define AXP20X_DCDC2_V_OUT		0x23
+> -#define AXP20X_DCDC2_LDO3_V_SCAL	0x25
+> +#define AXP20X_DCDC2_LDO3_V_RAMP	0x25
+>  #define AXP20X_DCDC3_V_OUT		0x27
+>  #define AXP20X_LDO24_V_OUT		0x28
+>  #define AXP20X_LDO3_V_OUT		0x29
 
-I believe 'aggressive low power management' will be triggered on
-pm_suspend?
-And dwc3 core will in any case perform phy_exit()->phy_init() across
-pm_suspend/resume which will reset PHYs. Hence, there is no need to check
-for cable connected state here.
+--=20
+Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
+Linaro Services Technical Lead
+Linaro.org =E2=94=82 Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
 
-
->
->>> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
->>> +		if (ret)
->>> +			return ret;
->>> +		qcom_snps_hsphy_disable_hv_interrupts(priv);
->>> +	} else {
->>> +		ret = qcom_snps_hsphy_enable_regulators(priv);
->>> +		if (ret)
->>> +			return ret;
->>> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
->>> +		if (ret)
->>> +			return ret;
->>> +		qcom_snps_hsphy_exit_retention(priv);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>> +static int qcom_snps_hsphy_power_off(struct phy *phy)
->>> +{
->>> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
->>> +
->>> +	if (priv->cable_connected) {
->>> +		qcom_snps_hsphy_enable_hv_interrupts(priv);
->>> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
->>> +	} else {
->>> +		qcom_snps_hsphy_enter_retention(priv);
->>> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
->>> +		qcom_snps_hsphy_disable_regulators(priv);
->>> +	}
->>> +
->>> +	return 0;
->>> +}
->>> +
->>
->>
->> ..
->>> +static const struct phy_ops qcom_snps_hsphy_ops = {
->>> +	.init = qcom_snps_hsphy_init,
->>> +	.power_on = qcom_snps_hsphy_power_on,
->>> +	.power_off = qcom_snps_hsphy_power_off,
->>> +	.set_mode = qcom_snps_hsphy_set_mode,
->> .phy_exit()?
->> I believe that is needed as dwc3 core driver performs
->> phy_exit/phy_init across pm_suspend/resume.
-> I just do not see anything that we should be doing in .exit hook right
-> now.
-
-After you merge power_on() with phy_init() as per my previous comment,
-you can rely on phy_exit() to take care of putting PHY in low power state
-and turn off regulators as well.
-
->
-> Shawn
->
->>
->>> +	.owner = THIS_MODULE,
->>> +};
->>> +
-
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
