@@ -1,41 +1,45 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [v1] arm64: dts: sdm845: add interconnect DT entries
- for MDSS on SDM845
-Date: Fri, 21 Dec 2018 11:59:08 +0530
-Message-ID: <1545373748-1416-1-git-send-email-jshekhar@codeaurora.org>
+From: Michal Simek <michal.simek@xilinx.com>
+Subject: Re: [PATCH v3 6/7] arm64: dts: xilinx: ultra96: Standardize LED
+ labels and triggers
+Date: Fri, 21 Dec 2018 07:50:29 +0100
+Message-ID: <9f4f05cb-f326-a4e3-e306-cfbf64b629b4@xilinx.com>
+References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
+ <20181029094245.7886-7-manivannan.sadhasivam@linaro.org>
+ <20181221023708.GC3233@Mani-XPS-13-9360>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181221023708.GC3233@Mani-XPS-13-9360>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, michal.simek@xilinx.com, Rob Herring <robh+dt@kernel.org>
+Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGludGVyY29ubmVjdCBwcm9wZXJ0aWVzIHN1Y2ggYXMgdGhlIHNvdXJjZSBhbmQgdGhlIGRl
-c3RpbmF0aW9uCnBvcnRzIGZvciBNRFNTIG9uIFNETTg0NS4KClNpZ25lZC1vZmYtYnk6IEpheWFu
-dCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9yZz4KLS0tCiBhcmNoL2FybTY0L2Jvb3Qv
-ZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCA1ICsrKysrCiAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRp
-b25zKCspCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNp
-IGIvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCmluZGV4IDBkZWQ2OGMuLmJh
-OTc1NDcgMTAwNjQ0Ci0tLSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQor
-KysgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKQEAgLTIxMjAsNiArMjEy
-MCwxMSBAQAogCQkJaW50ZXJydXB0LWNvbnRyb2xsZXI7CiAJCQkjaW50ZXJydXB0LWNlbGxzID0g
-PDE+OwogCisJCQlpbnRlcmNvbm5lY3RzID0gPCZyc2NfaGxvcyBNQVNURVJfTURQMCAmcnNjX2hs
-b3MgU0xBVkVfRUJJMT4sCisJCQkJCTwmcnNjX2hsb3MgTUFTVEVSX01EUDEgJnJzY19obG9zIFNM
-QVZFX0VCSTE+OworCisJCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAibWRwMC1tZW0iLCAibWRwMS1t
-ZW0iOworCiAJCQlpb21tdXMgPSA8JmFwcHNfc21tdSAweDg4MCAweDg+LAogCQkJICAgICAgICAg
-PCZhcHBzX3NtbXUgMHhjODAgMHg4PjsKIAotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2Vu
-dGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBG
-b3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9A
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On 21. 12. 18 3:37, Manivannan Sadhasivam wrote:
+> On Mon, Oct 29, 2018 at 03:12:44PM +0530, Manivannan Sadhasivam wrote:
+>> For all 96Boards, the following standard is used for onboard LEDs.
+>>
+>> green:user1  default-trigger: heartbeat
+>> green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
+>> green:user3  default-trigger: mmc1 (SD-card)
+>> green:user4  default-trigger: none, panic-indicator
+>> yellow:wlan  default-trigger: phy0tx
+>> blue:bt      default-trigger: hci0-power
+>>
+>> So lets adopt the same for Ultra96, which is one of the 96Boards
+>> CE and AI platform. Since the WLAN and BT LEDs are hardwired onboard,
+>> consolidate only User LEDs.
+>>
+> 
+> Hello,
+> 
+> Any update on this patch?
+
+I am still waiting for reaction from Rob.
+We are keep trying to keep backward compatibility and this patch is
+breaking it that's why I want to know DT guys reaction on this change.
+
+Thanks,
+Michal
