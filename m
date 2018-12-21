@@ -1,84 +1,154 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
-Date: Fri, 21 Dec 2018 14:00:25 +0100
-Message-ID: <20181221130025.lbvw7yvy74brf3jn@flea>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
- <20181220125438.11700-3-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Fri, 21 Dec 2018 07:05:18 -0600
+Message-ID: <45ce01f0-af6e-1cc6-5126-fb557c7d2a82@ti.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
+ <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <71d3ac12-5beb-0a26-71e1-5eae798e7b9f@gmail.com>
+ <2bca210b-76ad-d5a9-906c-4151695050c3@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB26H6PQAKGQEWMEVYGI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20181220125438.11700-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <2bca210b-76ad-d5a9-906c-4151695050c3@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
-> Unfortunately default CSI_SCLK rate cannot work properly to
-> drive the connected sensor interface, particularly on few
-> Allwinner SoC's like A64.
+On 12/21/2018 01:32 AM, Jacek Anaszewski wrote:
+> On 12/20/18 9:31 PM, Jacek Anaszewski wrote:
+>> On 12/19/18 10:50 PM, Dan Murphy wrote:
+>>> On 12/19/2018 03:36 PM, Jacek Anaszewski wrote:
+>>>> Hi Dan and Pavel,
+>>>>
+>>>> On 12/19/18 9:41 PM, Dan Murphy wrote:
+>>>>> Pavel
+>>>>>
+>>>>> On 12/19/2018 02:10 PM, Pavel Machek wrote:
+>>>>>> On Wed 2018-12-19 13:41:18, Dan Murphy wrote:
+>>>>>>> Pavel
+>>>>>>>
+>>>>>>> Thanks for the review.
+>>>>>>>
+>>>>>>> On 12/19/2018 01:34 PM, Pavel Machek wrote:
+>>>>>>>> Hi!
+>>>>>>>>
+>>>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_a_mix);
+>>>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_b_mix);
+>>>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_c_mix);
+>>>>>>>>> +
+>>>>>>>>> +static struct attribute *lp5024_ctrl_bank_attrs[] = {
+>>>>>>>>> +    &dev_attr_ctrl_bank_a_mix.attr,
+>>>>>>>>> +    &dev_attr_ctrl_bank_b_mix.attr,
+>>>>>>>>> +    &dev_attr_ctrl_bank_c_mix.attr,
+>>>>>>>>> +    NULL
+>>>>>>>>> +};
+>>>>>>>>> +ATTRIBUTE_GROUPS(lp5024_ctrl_bank);
+>>>>>>>>
+>>>>>>>> ...
+>>>>>>>>> +
+>>>>>>>>> +static DEVICE_ATTR_WO(led1_mix);
+>>>>>>>>> +static DEVICE_ATTR_WO(led2_mix);
+>>>>>>>>> +static DEVICE_ATTR_WO(led3_mix);
+>>>>>>>>> +
+>>>>>>>>> +static struct attribute *lp5024_led_independent_attrs[] = {
+>>>>>>>>> +    &dev_attr_led1_mix.attr,
+>>>>>>>>> +    &dev_attr_led2_mix.attr,
+>>>>>>>>> +    &dev_attr_led3_mix.attr,
+>>>>>>>>> +    NULL
+>>>>>>>>> +};
+>>>>>>>>> +ATTRIBUTE_GROUPS(lp5024_led_independent);
+>>>>>>>>
+>>>>>>>> Ok, so you are adding new sysfs files. Are they _really_ neccessary?
+>>>>>>>> We'd like to have uniform interfaces for the leds.
+>>>>>>>
+>>>>>>> Yes I am adding these for this driver.
+>>>>>>> They adjust the individual brightness of each LED connected (what the HW guys called mixing).
+>>>>>>>
+>>>>>>> The standard brightness sysfs adjusts all 3 LEDs simultaneously so that all 3 LEDs brightness are
+>>>>>>> uniform.
+>>>>>>
+>>>>>> 1 LED, 1 brightness file... that's what we do. Why should this one be different?
+>>>>>>
+>>>>>
+>>>>> Yes I understand this and 1 DT child node per LED out but...
+>>>>>
+>>>>> This device has a single register to control 3 LEDs brightness as a group and individual brightness
+>>>>> registers to control the LEDs independently to mix the LEDs to a specific color.
+>>>>>
+>>>>> There needs to be a way to control both so that developers can mix and adjust the individual RGB and
+>>>>> then control the brightness of the group during run time without touching the "mixing" value.
+>>>>>
+>>>>> I don't think a user needs nor would want to have 24 different LED nodes with 24 different brightness files.
+>>>>> Or with the LP5036 that would have 36 LED nodes.
+>>>>>
+>>>>> Table 1 in the data sheet shows how the outputs map to the control banks to the LED registers.
+>>>>
+>>>> Some time ago we had discussion with Vesa Jääskeläinen about possible
+>>>> approaches to RGB LEDs [0]. What seemed to be the most suitable
+>>>> variation of the discussed out-of-tree approach was the "color" property
+>>>> and array of color triplets defined in Device Tree per each color.
+>>>>
+>>>
+>>> Why does Device tree define the color?
+>>>
+>>> Rob indicated that Device tree is supposed to define the hardware.
+>>> This thread seems to be defining the operation.
+>>
+>> Perceived colors produced by LEDs from different manufacturers may
+>> differ and this alone should be deemed a sufficient argument for having
+>> board specific color definitions.
+>>
+>>> Shouldn't the color be done via user space and not dt?
+>>
+>> I think that we should keep the userspace interface as simple
+>> as possible and backwards compatible with monochrome LEDs.
+>>
+>> I also propose to avoid the introduction of a color sysfs
+>> property in favor of creating separate LED class devices
+>> for different "color ranges". The devices would drive the same
+>> LED but using different preset color levels.
 > 
-> So, add mod_rate quirk via driver data so-that the respective
-> SoC's which require to alter the default mod clock rate can assign
-> the operating clock rate.
+> On the other hand, scattering the control over the hardware
+> among multiple LED class devices would complicate extension
+> of pattern trigger with the support for RGB LEDs.
 > 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> ---
->  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
->  1 file changed, 28 insertions(+), 6 deletions(-)
+> I looks like we will need the "color" sysfs file  anyway.
 > 
-> diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> index ee882b66a5ea..fe002beae09c 100644
-> --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> @@ -15,6 +15,7 @@
->  #include <linux/ioctl.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/pm_runtime.h>
->  #include <linux/regmap.h>
-> @@ -28,8 +29,13 @@
->  
->  #define MODULE_NAME	"sun6i-csi"
->  
-> +struct sun6i_csi_variant {
-> +	unsigned long			mod_rate;
-> +};
-> +
->  struct sun6i_csi_dev {
->  	struct sun6i_csi		csi;
-> +	const struct sun6i_csi_variant	*variant;
->  	struct device			*dev;
->  
->  	struct regmap			*regmap;
-> @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
->  		return PTR_ERR(sdev->clk_mod);
->  	}
->  
-> +	if (sdev->variant->mod_rate)
-> +		clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
-> +
+>> We don't have to expose all device knobs to the userspace,
+>> but instead provide some predefined configurations. It would
+>> improve user experience by keeping LED class devices simple
+>> in use. It would be Device Tree designer's responsibility to
+>> provide color definitions that make sense for given RGB LED
+>> controller and RGB LED element configuration.
+>>
+>> Registering color palette with devm_rgb_register() you proposed
+>> is also an option, but with one LED class device per color palette
+>> it would mean allowing for creation/destruction of LED class
+>> devices by any user having access to given LED's sysfs interface,
+>> which is really bad solution.
+> 
+> With the "color" sysfs file it will make more sense to allow for user
+> defined color palettes.
+> 
 
-It still doesn't make any sense to do it in the probe function...
+I think defining these values in the device tree or acpi severely limits the devices
+capabilities.  Especially in development phases.  If the knobs were exposed then the user space
+can create new experiences.  The color definition should be an absolute color defined in the dt and
+either the framework or user space needs to mix these appropriately.  IMO user space should set the policy
+of the user experience and the dt/acpi needs to set the capabilities.
 
-We discussed this in the previous iteration already.
+I do like Pavels idea on defining the more standard binding pattern to "group" leds into a single group.
 
-What we didn't discuss is the variant function that you introduce,
-while the previous approach was enough.
+Maybe the framework could take these groups and combine/group them into a single node with the groups colors.
 
-Maxime
-
+Dan
 -- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+------------------
+Dan Murphy
