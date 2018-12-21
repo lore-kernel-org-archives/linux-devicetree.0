@@ -1,137 +1,173 @@
-From: Yong Wu <yong.wu@mediatek.com>
-Subject: Re: [PATCH v4 13/18] memory: mtk-smi: Add bus_sel for mt8183
-Date: Fri, 21 Dec 2018 16:02:47 +0800
-Message-ID: <1545379367.29587.53.camel@mhfsdcap03>
-References: <1544258371-4600-1-git-send-email-yong.wu@mediatek.com>
-         <1544258371-4600-14-git-send-email-yong.wu@mediatek.com>
-         <CANMq1KA4GLZHcDH31=W==8BTBZOVbRX9HBTJrpPFNQ3rWaM4xg@mail.gmail.com>
+From: Manu Gautam <mgautam@codeaurora.org>
+Subject: Re: [PATCH v6 2/2] phy: qualcomm: Add Synopsys High-Speed USB PHY
+ driver
+Date: Fri, 21 Dec 2018 13:43:09 +0530
+Message-ID: <f5981b24-b769-2f48-7f93-10fb4f61caec@codeaurora.org>
+References: <20181220010112.16824-1-shawn.guo@linaro.org>
+ <20181220010112.16824-3-shawn.guo@linaro.org>
+ <f106782b6d8e26ebf851f00563c68948@codeaurora.org>
+ <20181220110956.GA17416@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANMq1KA4GLZHcDH31=W==8BTBZOVbRX9HBTJrpPFNQ3rWaM4xg@mail.gmail.com>
+In-Reply-To: <20181220110956.GA17416@dragon>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
+To: Shawn Guo <shawn.guo@linaro.org>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Sriharsha Allenki <sallenki@codeaurora.org>, Anu Ramanathan <anur@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Jack Pham <jackp@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-12-21 at 12:47 +0800, Nicolas Boichat wrote:
-> On Sat, Dec 8, 2018 at 4:43 PM Yong Wu <yong.wu@mediatek.com> wrote:
-> >
-> > There are 2 mmu cells in a M4U HW. we could adjust some larbs entering
-> > mmu0 or mmu1 to balance the bandwidth via the smi-common register
-> > SMI_BUS_SEL(0x220)(Each larb occupy 2 bits).
-> >
-> > In mt8183, For better performance, we switch larb1/2/5/7 to enter
-> > mmu1 while the others still keep enter mmu0.
-> >
-> > In mt8173 and mt2712, we don't get the performance issue,
-> > Keep its default value(0x0), that means all the larbs enter mmu0.
-> >
-> > Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> > ---
-> >  drivers/memory/mtk-smi.c | 22 ++++++++++++++++++++--
-> >  1 file changed, 20 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> > index ee6165e..88eb61a 100644
-> > --- a/drivers/memory/mtk-smi.c
-> > +++ b/drivers/memory/mtk-smi.c
-> > @@ -49,6 +49,12 @@
-> >  #define SMI_LARB_NONSEC_CON(id)        (0x380 + ((id) * 4))
-> >  #define F_MMU_EN               BIT(0)
-> >
-> > +/* SMI COMMON */
-> > +#define SMI_BUS_SEL                    0x220
-> > +#define SMI_BUS_LARB_SHIFT(larbid)     ((larbid) << 1)
-> > +/* All are MMU0 defaultly. Only specialize mmu1 here. */
-> > +#define F_MMU1_LARB(larbid)            (0x1 << SMI_BUS_LARB_SHIFT(larbid))
-> > +
-> >  enum mtk_smi_gen {
-> >         MTK_SMI_GEN1,
-> >         MTK_SMI_GEN2
-> > @@ -57,6 +63,7 @@ enum mtk_smi_gen {
-> >  struct mtk_smi_common_plat {
-> >         enum mtk_smi_gen gen;
-> >         bool             has_gals;
-> > +       u32              bus_sel; /* Balance some larbs to enter mmu0 or mmu1 */
-> >  };
-> >
-> >  struct mtk_smi_larb_gen {
-> > @@ -72,8 +79,8 @@ struct mtk_smi {
-> >         struct clk                      *clk_apb, *clk_smi;
-> >         struct clk                      *clk_gals0, *clk_gals1;
-> >         struct clk                      *clk_async; /*only needed by mt2701*/
-> > -       void __iomem                    *smi_ao_base;
-> > -
-> > +       void __iomem                    *smi_ao_base; /* only for gen1 */
-> > +       void __iomem                    *base;        /* only for gen2 */
-> >         const struct mtk_smi_common_plat *plat;
-> >  };
-> >
-> > @@ -409,6 +416,8 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
-> >  static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
-> >         .gen      = MTK_SMI_GEN2,
-> >         .has_gals = true,
-> > +       .bus_sel  = F_MMU1_LARB(1) | F_MMU1_LARB(2) | F_MMU1_LARB(5) |
-> > +                   F_MMU1_LARB(7),
-> 
-> Maybe it's ok for now, but I wonder if this is something that should
-> be specified in device tree? Maybe different applications will want
-> different larb split between MMU0 and MMU1?
+Hi,
 
-Good question. Many Thanks. This value is recommended from the HW DE. In
-some SoCs, It may be different in different scenarios. and in some SoCs
-like mt8183, the bus_sel always use a fixed value.
+On 12/20/2018 4:39 PM, Shawn Guo wrote:
+> Hi Manu,
+>
+> On Thu, Dec 20, 2018 at 09:33:43AM +0530, mgautam@codeaurora.org wrote:
+>> Hi Shawn,
+>>
+>> On 2018-12-20 06:31, Shawn Guo wrote:
+>>> It adds Synopsys 28nm Femto High-Speed USB PHY driver support, which
+>>> is usually paired with Synopsys DWC3 USB controllers on Qualcomm SoCs.
+>>>
+>>> Signed-off-by: Shawn Guo <shawn.guo@linaro.org>
+>>> ---
+>>
+...
+>>> +struct hsphy_priv {
+>> nit-pick - indentation for following structure members?
+> Hmm, my personal taste says no, because I found that it's hard to keep
+> the indentation when adding new members later.
+ok
+>
+>>> +	void __iomem *base;
+>>> +	struct clk_bulk_data *clks;
+>>> +	int num_clks;
+>>> +	struct reset_control *phy_reset;
+>>> +	struct reset_control *por_reset;
+>>> +	struct regulator_bulk_data vregs[VREG_NUM];
+>>> +	unsigned int voltages[VREG_NUM][VOL_NUM];
+>>> +	const struct hsphy_data *data;
+>>> +	bool cable_connected;
+>> You can get cable-connected state from "enum phy_mode mode" which
+>> is present in this driver.
+>> E.g. cable_connected is false if mode is neither HOST nor DEVICE.
+>>
+>>
+>>> +	struct extcon_dev *vbus_edev;
+>>> +	struct notifier_block vbus_notify;
+>> extcons not needed if you use "mode" for the same purpose.
+> The extcon is there for indicating cable connection status.  I'm not
+> sure that phy_mode can be used for that purpose.  For example, what
+> value would phy core set phy_mode to, if we disconnect the cable from
+> phy_mode being HOST or DEVICE?
 
-I guess it should not be in device tree if it may be changed in
-different applications.
+it depends how it is used. Looks like it is used to decide whether to turn-off
+regulators or not. Unless you plan to add low power support as part of
+runtime-suspend of PHY during host mode, there is no reason to not turn-off
+regulators on pm_suspend(). Please refer to my comments below.
 
-BTW, Is there some existed IOCTL command or the similar interface that
-can tell the kernel driver(SMI here) which scenario it is currently,
-like it is playing video or the camera is running. 
+>
+>>
+>>> +	enum phy_mode mode;
+>>> +};
+>>> +
+>>
+>>> +
+>>> +static int qcom_snps_hsphy_vbus_notifier(struct notifier_block *nb,
+>>> +					 unsigned long event, void *ptr)
+>>> +{
+>>> +	struct hsphy_priv *priv = container_of(nb, struct hsphy_priv,
+>>> +						    vbus_notify);
+>>> +	priv->cable_connected = !!event;
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int qcom_snps_hsphy_power_on(struct phy *phy)
+>> Can you instead merge this power_on function with phy_init?
+> I can do that, but what's the gain/advantage from doing that?
 
-Currently the SMI driver is so simple, it doesn't know which application
-it is. All use the HW default value. of course, the default also is ok,
-only the bandwidth may be not so good.
+dwc3 core calls phy_init() before power_on(). AFAIK, PHY regulators
+need to be ON before initializing it.
 
-For the bus_sel of mt8183, I think it is ok right now. Sure, it can be
-improved if we can change it dynamically.
+>
+>>> +{
+>>> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
+>>> +	int ret;
+>>> +
+>>> +	if (priv->cable_connected) {
+>> Why distinguish between cable connected vs not-connected?
+> This is based on the vendor driver implementation.  It does a more
+> aggressive low power management in case that cable is not connected,
+> i.e. turning off regulator and entering retention mode.
 
-> 
-> >  };
-> >
-> >  static const struct of_device_id mtk_smi_common_of_ids[] = {
-> > @@ -481,6 +490,11 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
-> >                 ret = clk_prepare_enable(common->clk_async);
-> >                 if (ret)
-> >                         return ret;
-> > +       } else {
-> > +               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +               common->base = devm_ioremap_resource(dev, res);
-> > +               if (IS_ERR(common->base))
-> > +                       return PTR_ERR(common->base);
-> >         }
-> >         pm_runtime_enable(dev);
-> >         platform_set_drvdata(pdev, common);
-> > @@ -496,6 +510,7 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
-> >  static int __maybe_unused mtk_smi_common_resume(struct device *dev)
-> >  {
-> >         struct mtk_smi *common = dev_get_drvdata(dev);
-> > +       u32 bus_sel = common->plat->bus_sel;
-> >         int ret;
-> >
-> >         ret = mtk_smi_clk_enable(common);
-> > @@ -503,6 +518,9 @@ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
-> >                 dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
-> >                 return ret;
-> >         }
-> > +
-> > +       if (common->plat->gen == MTK_SMI_GEN2 && bus_sel)
-> > +               writel(bus_sel, common->base + SMI_BUS_SEL);
-> >         return 0;
-> >  }
-> >
-> > --
-> > 1.9.1
-> >
+I believe 'aggressive low power management' will be triggered on
+pm_suspend?
+And dwc3 core will in any case perform phy_exit()->phy_init() across
+pm_suspend/resume which will reset PHYs. Hence, there is no need to check
+for cable connected state here.
+
+
+>
+>>> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		qcom_snps_hsphy_disable_hv_interrupts(priv);
+>>> +	} else {
+>>> +		ret = qcom_snps_hsphy_enable_regulators(priv);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		ret = clk_bulk_prepare_enable(priv->num_clks, priv->clks);
+>>> +		if (ret)
+>>> +			return ret;
+>>> +		qcom_snps_hsphy_exit_retention(priv);
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>> +static int qcom_snps_hsphy_power_off(struct phy *phy)
+>>> +{
+>>> +	struct hsphy_priv *priv = phy_get_drvdata(phy);
+>>> +
+>>> +	if (priv->cable_connected) {
+>>> +		qcom_snps_hsphy_enable_hv_interrupts(priv);
+>>> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+>>> +	} else {
+>>> +		qcom_snps_hsphy_enter_retention(priv);
+>>> +		clk_bulk_disable_unprepare(priv->num_clks, priv->clks);
+>>> +		qcom_snps_hsphy_disable_regulators(priv);
+>>> +	}
+>>> +
+>>> +	return 0;
+>>> +}
+>>> +
+>>
+>>
+>> ..
+>>> +static const struct phy_ops qcom_snps_hsphy_ops = {
+>>> +	.init = qcom_snps_hsphy_init,
+>>> +	.power_on = qcom_snps_hsphy_power_on,
+>>> +	.power_off = qcom_snps_hsphy_power_off,
+>>> +	.set_mode = qcom_snps_hsphy_set_mode,
+>> .phy_exit()?
+>> I believe that is needed as dwc3 core driver performs
+>> phy_exit/phy_init across pm_suspend/resume.
+> I just do not see anything that we should be doing in .exit hook right
+> now.
+
+After you merge power_on() with phy_init() as per my previous comment,
+you can rely on phy_exit() to take care of putting PHY in low power state
+and turn off regulators as well.
+
+>
+> Shawn
+>
+>>
+>>> +	.owner = THIS_MODULE,
+>>> +};
+>>> +
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
