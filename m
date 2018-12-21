@@ -1,29 +1,43 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v3 2/2] gpio: Add Cadence GPIO driver
-Date: Fri, 21 Dec 2018 11:41:27 +0100
-Message-ID: <CACRpkdat7h2xWXm-1Hr46rYywy5Bdd751qu4yKk3i7f72nG9xA@mail.gmail.com>
-References: <20181218161042.16366-1-jank@cadence.com> <20181218161042.16366-3-jank@cadence.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH v4 1/8] dt-bindings: stmpe: reformatting parameter list
+ and use tabs only
+Date: Fri, 21 Dec 2018 10:42:24 +0000
+Message-ID: <20181221104224.GL13248@dell>
+References: <20181212130649.15146-1-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218161042.16366-3-jank@cadence.com>
+Content-Disposition: inline
+In-Reply-To: <20181212130649.15146-1-dev@pschenker.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Philippe Schenker <dev@pschenker.ch>
+Cc: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch, thierry.reding@gmail.com, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, Max Krummenacher <max.krummenacher@toradex.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 5:11 PM Jan Kotas <jank@cadence.com> wrote:
+On Wed, 12 Dec 2018, Philippe Schenker wrote:
 
-> This patch adds a driver for Cadence GPIO controller.
->
-> It can be enabled with GPIO_CADENCE Kconfig option.
-> It uses generic GPIO infrastructure and works
-> as an interrupt controller.
-> At the moment it only supports level sensitive irqs.
->
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> This patch reformats the parameter list for stmpe device in a
+> table-style so it is more clear to read.
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+> ---
+> 
+> Changes in v4:
+>  - New separate precursor patch for holding reformatting
+> 
+> Changes in v3: None
+> Changes in v2: None
+> 
+>  .../bindings/input/touchscreen/stmpe.txt      | 52 ++++++++++++-------
+>  .../devicetree/bindings/mfd/stmpe.txt         | 14 ++---
+>  2 files changed, 41 insertions(+), 25 deletions(-)
 
-Pulled out the v2 and applied this v3 instead.
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-Yours,
-Linus Walleij
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
