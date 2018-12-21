@@ -1,49 +1,73 @@
-Return-Path: <SRS0=5gDw=OO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder from du node
-Date: Wed,  5 Dec 2018 09:06:54 +0000
-Message-Id: <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
-References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=0JaT=O6=martin.sperl.org=kernel@kernel.org>
+From: kernel@martin.sperl.org
+Subject: [PATCH V5 1/4] dt-binding: can: mcp25xxfd: document device tree bindings
+Date: Fri, 21 Dec 2018 09:29:47 +0000
+Message-Id: <20181221092950.14192-2-kernel@martin.sperl.org>
+In-Reply-To: <20181221092950.14192-1-kernel@martin.sperl.org>
+References: <20181221092950.14192-1-kernel@martin.sperl.org>
+To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Martin Sperl <kernel@martin.sperl.org>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>, Wilhelm Leichtfried <Wilhelm.Leichtfried@microchip.com>, Thomas Kopp <Thomas.Kopp@microchip.com>, Enrico Scholz <enrico.scholz@sigma-chemnitz.de>, Brad Hanson <Brad.Hanson@arity.com>, Teemu Keskinarkaus <teemu.keskinarkaus@crosscontrol.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The internal LVDS encoder now has DT bindings separate from the DU.
-So remove it from du node.
+From: Martin Sperl <kernel@martin.sperl.org>
 
-Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
+Add device-tree bindings for Microcip CanFD Controller mcp2517fd
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+--
+Changelog:
+  V1 -> V2: new more generic name based on feedback from microchip
+            cleanup of dt custom properties removing (most) gpio functions
+  V2 -> V3: added vendor-prefix for gpio-opendrain
+            s/_/-/
+            added gpio-controller
+  V3 -> V4: resend
+            added: Reviewed-by: Rob Herring <robh@kernel.org>
+  V4 -> V5: resend
+            driver refactored, but no DTS changes
 ---
-V1-->V2
-	* Removed LVDS encoder definition from DU node.
----
- arch/arm/boot/dts/r8a7743.dtsi | 9 +++------
- 1 file changed, 3 insertions(+), 6 deletions(-)
+ .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
+ 1 file changed, 32 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 3cc33f7..3ad1efc 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -1681,15 +1681,12 @@
- 
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a7743";
--			reg = <0 0xfeb00000 0 0x40000>,
--			      <0 0xfeb90000 0 0x1c>;
--			reg-names = "du", "lvds.0";
-+			reg = <0 0xfeb00000 0 0x40000>;
- 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 724>,
--				 <&cpg CPG_MOD 723>,
--				 <&cpg CPG_MOD 726>;
--			clock-names = "du.0", "du.1", "lvds.0";
-+				 <&cpg CPG_MOD 723>;
-+			clock-names = "du.0", "du.1";
- 			status = "disabled";
- 
- 			ports {
--- 
-2.7.4
+diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+new file mode 100644
+index 000000000000..b388b3eb3905
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+@@ -0,0 +1,32 @@
++* Microchip MCP2517 stand-alone CAN controller device tree bindings
++
++Required properties:
++ - compatible: Should be one of the following:
++   - "microchip,mcp2517fd" for MCP2517fd.
++ - reg: SPI chip select.
++ - clocks: The clock feeding the CAN controller.
++ - interrupt-parent: The parent interrupt controller.
++ - interrupts: Should contain IRQ line for the CAN controller.
++ - gpio-controller: Marks the device node as a GPIO controller
++
++Optional properties:
++ - vdd-supply: Regulator that powers the CAN controller.
++ - xceiver-supply: Regulator that powers the CAN transceiver.
++ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
++					   0 = Start of Frame output
++					   default: 10
++ - microchip,clock-div2: bool: divide the internal clock by 2
++ - microchip,gpio-open-drain: bool: enable open-drain for all pins
++                                    (except cantx)
++
++Example:
++	can0: can@1 {
++		compatible = "microchip,mcp2517fd";
++		reg = <1>;
++		clocks = <&clk24m>;
++		interrupt-parent = <&gpio4>;
++		interrupts = <13 0x8>;
++		vdd-supply = <&reg5v0>;
++		xceiver-supply = <&reg5v0>;
++		gpio-controller;
++	};
+--
+2.11.0
