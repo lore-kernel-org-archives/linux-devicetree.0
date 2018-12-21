@@ -1,7 +1,7 @@
 From: Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2 platforms
-Date: Fri, 21 Dec 2018 15:31:09 +0000
-Message-ID: <1545406240-3061-2-git-send-email-ioana.ciornei@nxp.com>
+Subject: [PATCH 2/3] Documentation: DT: Add entry for DPAA2 console
+Date: Fri, 21 Dec 2018 15:31:11 +0000
+Message-ID: <1545406240-3061-3-git-send-email-ioana.ciornei@nxp.com>
 References: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -14,48 +14,47 @@ To: Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-a
 Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Roy Pledge <roy.pledge@nxp.com>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the dpaa2-console device tree node for the following
-DPAA2 based platforms: LS1088A, LS2080A and LS2088A.
+This patch adds a devicetree binding documentation for
+FSL's DPAA2 console.
 
 Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 5 +++++
- arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi | 5 +++++
- 2 files changed, 10 insertions(+)
+ Documentation/devicetree/bindings/misc/dpaa2-console.txt | 11 +++++++++++
+ MAINTAINERS                                              |  1 +
+ 2 files changed, 12 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/dpaa2-console.tx=
+t
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls1088a.dtsi
-index e73e55f..664e337 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
-@@ -569,6 +569,11 @@
- 			clock-names =3D "apb_pclk", "wdog_clk";
- 		};
-=20
-+		dpaa2-console@0x08340020 {
-+			compatible =3D "dpaa2-console";
-+			reg =3D <0x00000000 0x08340020 0 0x2>;
-+		};
+diff --git a/Documentation/devicetree/bindings/misc/dpaa2-console.txt b/Doc=
+umentation/devicetree/bindings/misc/dpaa2-console.txt
+new file mode 100644
+index 0000000..f4e16b1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/misc/dpaa2-console.txt
+@@ -0,0 +1,11 @@
++DPAA2 console support
 +
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible =3D "fsl,qoriq-mc";
- 			reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi b/arch/arm64/bo=
-ot/dts/freescale/fsl-ls208xa.dtsi
-index d188774..6db6ea4 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi
-@@ -333,6 +333,11 @@
- 			};
- 		};
-=20
-+		dpaa2-console@0x08340020 {
-+			compatible =3D "dpaa2-console";
-+			reg =3D <0x00000000 0x08340020 0 0x2>;
-+		};
++Required properties:
 +
- 		fsl_mc: fsl-mc@80c000000 {
- 			compatible =3D "fsl,qoriq-mc";
- 			reg =3D <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
++    - compatible
++        Value type: <string>
++        Definition: Must be "dpaa2-console".
++    - reg
++        Value type: <prop-encoded-array>
++        Definition: A standard property.  Specifies the region where the M=
+CFBA
++                    (MC firmware base address) register can be found.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 7b76a80..229d4fb 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5969,6 +5969,7 @@ M:	Li Yang <leoyang.li@nxp.com>
+ L:	linuxppc-dev@lists.ozlabs.org
+ L:	linux-arm-kernel@lists.infradead.org
+ S:	Maintained
++F:	Documentation/devicetree/bindings/misc/dpaa2-console.txt
+ F:	Documentation/devicetree/bindings/soc/fsl/
+ F:	drivers/soc/fsl/
+ F:	include/linux/fsl/
 --=20
 1.9.1
