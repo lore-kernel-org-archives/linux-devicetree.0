@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 6/6] arm64: dts: stratix10: New System Manager compatible
-Date: Thu, 20 Dec 2018 18:23:22 -0600
-Message-ID: <1545351802-4354-7-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv2 5/6] net: stmmac: socfpga: Use shared System Manager driver
+Date: Thu, 20 Dec 2018 18:23:21 -0600
+Message-ID: <1545351802-4354-6-git-send-email-thor.thayer@linux.intel.com>
 References: <1545351802-4354-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1545351802-4354-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,29 +12,42 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Use the new compatible string defined for the Stratix10
-System Manager. Remove syscon since it is not correct
-on this platform.
+The ARM64 System Manager requires a different method of reading
+the System Manager than ARM32. A new System Manager driver was
+created to steer ARM32 System Manager calls to regmap_mmio and
+ARM64 System Manager calls to the new access method.
+
+Convert from syscon to the shared System Manager driver so that
+both ARM64 and ARM32 are supported.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
-v2  New. Use new Stratix10 System Manager compatible
+v2  No change to code. Update commit message.
 ---
- arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-index 8253a1a9e985..ad9615241b64 100644
---- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-+++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
-@@ -340,7 +340,7 @@
- 		};
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+index 5b3b06a0a3bf..743c7f471edb 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
+@@ -15,6 +15,7 @@
+  * Adopted from dwmac-sti.c
+  */
  
- 		sysmgr: sysmgr@ffd12000 {
--			compatible = "altr,sys-mgr", "syscon";
-+			compatible = "altr,sys-mgr-s10";
- 			reg = <0xffd12000 0x228>;
- 		};
++#include <linux/mfd/altera-sysmgr.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/of.h>
+ #include <linux/of_address.h>
+@@ -114,7 +115,8 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
  
+ 	dwmac->interface = of_get_phy_mode(np);
+ 
+-	sys_mgr_base_addr = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
++	sys_mgr_base_addr =
++		altr_sysmgr_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
+ 	if (IS_ERR(sys_mgr_base_addr)) {
+ 		dev_info(dev, "No sysmgr-syscon node found\n");
+ 		return PTR_ERR(sys_mgr_base_addr);
 -- 
 2.7.4
