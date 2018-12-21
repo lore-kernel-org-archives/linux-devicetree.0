@@ -1,103 +1,119 @@
 From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 01/13] clk: qcom: gcc: limit GPLL0_AO_OUT operating
- frequency
-Date: Fri, 21 Dec 2018 23:28:49 +0530
-Message-ID: <874ce15d-67f5-8e55-8b62-73071fe6ae06@codeaurora.org>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <e97d9050-effc-56d7-0f9b-768df90dd73a@codeaurora.org>
- <6814777f-1e5f-bd99-db63-a0050dcdd930@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Subject: [PATCH v1] cpufreq: qcom: Read voltage LUT and populate OPP
+Date: Fri, 21 Dec 2018 23:36:48 +0530
+Message-ID: <1545415608-15163-1-git-send-email-tdas@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6814777f-1e5f-bd99-db63-a0050dcdd930@linaro.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com
-Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, evgreen@google.com, Taniya Das <tdas@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add support to read the voltage look up table and populate OPP for all
+corresponding CPUS.
 
-On 12/21/2018 6:06 PM, Jorge Ramirez wrote:
-> On 12/21/18 12:19, Taniya Das wrote:
->>
->>
->> On 12/17/2018 3:16 PM, Jorge Ramirez-Ortiz wrote:
->>> Limit the GPLL0_AO_OUT_MAIN operating frequency as per its hardware
->>> specifications.
->>>
->>> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
->>> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
->>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->>> ---
->>>   drivers/clk/qcom/gcc-qcs404.c | 6 ++++++
->>>   1 file changed, 6 insertions(+)
->>>
->>> diff --git a/drivers/clk/qcom/gcc-qcs404.c 
->>> b/drivers/clk/qcom/gcc-qcs404.c
->>> index 64da032..833436a 100644
->>> --- a/drivers/clk/qcom/gcc-qcs404.c
->>> +++ b/drivers/clk/qcom/gcc-qcs404.c
->>> @@ -304,10 +304,16 @@ static struct clk_alpha_pll gpll0_out_main = {
->>>       },
->>>   };
->>>   +static const struct pll_vco gpll0_ao_out_vco[] = {
->>> +    { 800000000, 800000000, 0 },
->>> +};
->>> +
->>>   static struct clk_alpha_pll gpll0_ao_out_main = {
->>>       .offset = 0x21000,
->>>       .regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->>>       .flags = SUPPORTS_FSM_MODE,
->>> +    .vco_table = gpll0_ao_out_vco,
->>> +    .num_vco = ARRAY_SIZE(gpll0_ao_out_vco),
->>
->> Could you please help as to why this is required? This is a fixed PLL 
->> and we do not require a VCO table for it.
-> 
-> Hi Taniya,
-> 
-> this patch - the additional information that it provides about the 
-> hardware - helps to select the right parent clock for a given frequency.
-> 
-> On the qcs404 this clock is one of the two parent clocks of the apcs 
-> clock controller (the other one being the high frequency pll)
-> When cpufreq sets a target frequency, there is an iteration through the 
-> list of parents to select the one that delivers the best match.
-> 
-> When attempting to set the clock for an alpha_pll, the operation does a 
-> sanity check to validate that the requested frequency is in fact 
-> reachable using the vco range: trying to set a value that is not in 
-> range will fail.
-> 
-> This patch makes sure that its range is explicitly defined.
-> 
-> It also helps making sure there are no rounding issues when setting its 
-> value: without it the clock was being read at 799MHz
-> 
-> 
+Signed-off-by: Taniya Das <tdas@codeaurora.org>
+---
+ drivers/cpufreq/qcom-cpufreq-hw.c | 32 ++++++++++++++++++++++++++++++--
+ 1 file changed, 30 insertions(+), 2 deletions(-)
 
-If the PLL is being read as 799MHz it would because not all the 40 bits 
-of the ALPHA_VAL being programmed by the bootloaders(which are the 
-original owners of this PLL). So we should go with the way they are 
-being set by bootloaders and read by HLOS driver.
+diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
+index d83939a..7559b87 100644
+--- a/drivers/cpufreq/qcom-cpufreq-hw.c
++++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+@@ -10,18 +10,21 @@
+ #include <linux/module.h>
+ #include <linux/of_address.h>
+ #include <linux/of_platform.h>
++#include <linux/pm_opp.h>
+ #include <linux/slab.h>
 
-And a VCO range you have considered is wrong from a PLL perspective. As 
-these are fixed PLLs and VCO range really does not matter here, so 
-please drop this change.
+ #define LUT_MAX_ENTRIES			40U
+ #define LUT_SRC				GENMASK(31, 30)
+ #define LUT_L_VAL			GENMASK(7, 0)
+ #define LUT_CORE_COUNT			GENMASK(18, 16)
++#define LUT_VOLT			GENMASK(11, 0)
+ #define LUT_ROW_SIZE			32
+ #define CLK_HW_DIV			2
 
->>
->>>       .clkr = {
->>>           .enable_reg = 0x45000,
->>>           .enable_mask = BIT(0),
->>>
->>
-> 
+ /* Register offsets */
+ #define REG_ENABLE			0x0
+-#define REG_LUT_TABLE			0x110
++#define REG_FREQ_LUT_TABLE		0x110
++#define REG_VOLT_LUT_TABLE		0x114
+ #define REG_PERF_STATE			0x920
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
+ static unsigned long cpu_hw_rate, xo_rate;
+@@ -75,19 +78,26 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+ 				    void __iomem *base)
+ {
+ 	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
++	u32 volt;
+ 	unsigned int max_cores = cpumask_weight(policy->cpus);
+ 	struct cpufreq_frequency_table	*table;
++	unsigned long cpu_r;
 
+ 	table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+ 	if (!table)
+ 		return -ENOMEM;
+
+ 	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
+-		data = readl_relaxed(base + REG_LUT_TABLE + i * LUT_ROW_SIZE);
++		data = readl_relaxed(base + REG_FREQ_LUT_TABLE +
++				      i * LUT_ROW_SIZE);
+ 		src = FIELD_GET(LUT_SRC, data);
+ 		lval = FIELD_GET(LUT_L_VAL, data);
+ 		core_count = FIELD_GET(LUT_CORE_COUNT, data);
+
++		data = readl_relaxed(base + REG_VOLT_LUT_TABLE +
++				      i * LUT_ROW_SIZE);
++		volt = FIELD_GET(LUT_VOLT, data) * 1000;
++
+ 		if (src)
+ 			freq = xo_rate * lval / 1000;
+ 		else
+@@ -123,6 +133,10 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+
+ 		prev_cc = core_count;
+ 		prev_freq = freq;
++
++		freq *= 1000;
++		for_each_cpu(cpu_r, policy->cpus)
++			dev_pm_opp_add(get_cpu_device(cpu_r), freq, volt);
+ 	}
+
+ 	table[i].frequency = CPUFREQ_TABLE_END;
+@@ -159,10 +173,18 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+ 	struct device *dev = &global_pdev->dev;
+ 	struct of_phandle_args args;
+ 	struct device_node *cpu_np;
++	struct device *cpu_dev;
+ 	struct resource *res;
+ 	void __iomem *base;
+ 	int ret, index;
+
++	cpu_dev = get_cpu_device(policy->cpu);
++	if (!cpu_dev) {
++		pr_err("%s: failed to get cpu%d device\n", __func__,
++		       policy->cpu);
++		return -ENODEV;
++	}
++
+ 	cpu_np = of_cpu_device_node_get(policy->cpu);
+ 	if (!cpu_np)
+ 		return -EINVAL;
+@@ -205,6 +227,12 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+ 		goto error;
+ 	}
+
++	ret = dev_pm_opp_get_opp_count(cpu_dev);
++	if (ret <= 0) {
++		dev_err(cpu_dev, "OPP table is not ready\n");
++		goto error;
++	}
++
+ 	policy->fast_switch_possible = true;
+
+ 	return 0;
 --
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the  Linux Foundation.
