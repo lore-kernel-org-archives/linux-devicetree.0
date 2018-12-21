@@ -1,45 +1,50 @@
-From: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH v3 9/9] MAINTAINERS: Add maintainer for arm komeda driver
-Date: Fri, 21 Dec 2018 10:01:06 +0000
-Message-ID: <20181221095757.15510-10-james.qian.wang@arm.com>
-References: <20181221095757.15510-1-james.qian.wang@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 04/24] dt-bindings: leds: Add function and color properties
+Date: Fri, 21 Dec 2018 11:12:53 +0100
+Message-ID: <CACRpkdakp666YykdTqt=CGiqzkz-jBLbh=sSDuS7_M8Rw_8Y3w@mail.gmail.com>
+References: <1541542052-10081-1-git-send-email-jacek.anaszewski@gmail.com>
+ <1541542052-10081-5-git-send-email-jacek.anaszewski@gmail.com>
+ <5bea0eb8.1c69fb81.6b921.80e6@mx.google.com> <dfb5bd23-bcb9-7501-a608-969cb0464168@gmail.com>
+ <0a0b176c-4eb4-4b0e-6c3c-b3c6c8f5fff5@gmail.com> <CAL_JsqKEpbJjExkQKSXwYma9wPPO+8E0QMTyWTPs1nkGSd49_g@mail.gmail.com>
+ <20181130210814.GA5756@amd> <CAL_JsqK4oaUTBemXiTZzLeOKOndQ_GZp2F7mJ0VzGEKVGHY20Q@mail.gmail.com>
+ <fa5add90-e1b7-d527-374f-175abdf88455@gmail.com> <CAL_Jsq+EsTXghh-bEtBmQ3oXEW45RJZJEJ2Zn1z-LfhvhNiXnQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221095757.15510-1-james.qian.wang@arm.com>
-Content-Language: en-US
+In-Reply-To: <CAL_Jsq+EsTXghh-bEtBmQ3oXEW45RJZJEJ2Zn1z-LfhvhNiXnQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Brian Starkey <Brian.Starkey@arm.com>, "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>, "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>, Ayan Halder <Ayan.Halder@arm.com>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>, "Jin Gao (Arm Technology China)" <Jin.Gao@arm.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, nd <nd@arm.com>, "malidp@foss.arm.com" <malidp@foss.arm.com>, "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "sean@poorly.run" <sean@poorly.run>, corbet
+To: Rob Herring <robh@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Linux LED Subsystem <linux-leds@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Baolin Wang <baolin.wang@linaro.org>, Daniel Mack <daniel@zonque.org>, Dan Murphy <dmurphy@ti.com>, Oleh Kravchenko <oleg@kaa.org.ua>, Sakari Ailus <sakari.ailus@linux.intel.com>, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-v2: Adjusted the position of KOMEDA by alphabetical order
+On Tue, Dec 11, 2018 at 6:27 PM Rob Herring <robh@kernel.org> wrote:
+> On Sat, Dec 1, 2018 at 3:17 PM Jacek Anaszewski
+> <jacek.anaszewski@gmail.com> wrote:
 
-Signed-off-by: James (Qian) Wang <james.qian.wang@arm.com>
----
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> > This is not true in case of associations where LED controller is
+> > an independent device, as in Pavel's example [0].
+>
+> I'm not really following how the HDD example is different. The parent
+> of an LED would be the controller. The link to the led node would be
+> in the disk controller node. Though maybe if things get complicated
+> enough, we'd want to describe the drives or drive bays in DT.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 254b7b267731..e48c2e5fd29f 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1124,6 +1124,15 @@ S:	Supported
- F:	drivers/gpu/drm/arm/hdlcd_*
- F:	Documentation/devicetree/bindings/display/arm,hdlcd.txt
-=20
-+ARM KOMEDA DRM-KMS DRIVER
-+M:	James (Qian) Wang <james.qian.wang@arm.com>
-+M:	Mali DP Maintainers <malidp@foss.arm.com>
-+S:	Supported
-+F:	drivers/gpu/drm/arm/display/include/
-+F:	drivers/gpu/drm/arm/display/komeda/
-+F:	Documentation/devicetree/bindings/display/arm/arm,komeda.txt
-+F:	Documentation/gpu/komeda-kms.rst
-+
- ARM MALI-DP DRM DRIVER
- M:	Liviu Dudau <liviu.dudau@arm.com>
- M:	Brian Starkey <brian.starkey@arm.com>
---=20
-2.17.1
+Not talking about this in specific, but I will need to add DT bindings
+for ATA master/slave, in order to add a temperature zone
+for each drive (one sensor in each drive) in my in-progress
+hwmon-over-SCSI-emulation-ATA-sensors such that:
+
+ata-controller {
+      ata-master {
+      };
+      ata-slave {
+      };
+};
+
+I haven't looked closer at this topology yet, but we definatelt
+need nodes for each physical connector out of an ATA
+master, somehow, so they can act as a sensor/temperature
+zone.
+
+Yours,
+Linus Walleij
