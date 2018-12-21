@@ -1,37 +1,72 @@
 From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
 Subject: Re: [PATCH 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY
  bindings
-Date: Fri, 21 Dec 2018 08:37:56 +0100
-Message-ID: <14fc8e2e-f3c9-ef87-ec8f-51bdaea90470@linaro.org>
+Date: Fri, 21 Dec 2018 08:40:29 +0100
+Message-ID: <3107e7b1-7d5f-8a67-34ec-e2d6f31cb28f@linaro.org>
 References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
  <1544176558-7946-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <154533751009.79149.13940391507897650993@swboyd.mtv.corp.google.com>
+ <20181220170531.GA19862@bogus>
+ <20181220173633.GA19912@jackp-linux.qualcomm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154533751009.79149.13940391507897650993@swboyd.mtv.corp.google.com>
+In-Reply-To: <20181220173633.GA19912@jackp-linux.qualcomm.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, gregkh@linuxfoundation.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org
+To: Jack Pham <jackp@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org, Manu Gautam <mgautam@codeaurora.org>, Sriharsha Allenki <sallenki@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/20/18 21:25, Stephen Boyd wrote:
-> Quoting Jorge Ramirez-Ortiz (2018-12-07 01:55:57)
->> +
->> +- qcom,vdd-voltage-level:
->> +    Value type: <prop-array>
->> +    Definition: This is a list of three integer values <no min max> where
->> +                each value corresponding to voltage corner in uV.
-> As far as I'm aware, this isn't how qcom's voltage corners are handled
-> or are going to be handled. Can't you hardcode it in the driver for now?
+On 12/20/18 18:37, Jack Pham wrote:
+> Hi Rob, Jorge,
 >
+> On Thu, Dec 20, 2018 at 11:05:31AM -0600, Rob Herring wrote:
+>> On Fri, Dec 07, 2018 at 10:55:57AM +0100, Jorge Ramirez-Ortiz wrote:
+>>> Binding description for Qualcomm's Synopsys 1.0.0 super-speed PHY
+>>> controller embedded in QCS404.
+>>>
+>>> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+>>> definitions.
+>>>
+>>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>>> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+>>> ---
+>>>   .../devicetree/bindings/usb/qcom,usb-ssphy.txt     | 78 ++++++++++++++++++++++
+>>>   1 file changed, 78 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>> new file mode 100644
+>>> index 0000000..fcf4e01
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>> @@ -0,0 +1,78 @@
+>>> +Qualcomm Synopsys 1.0.0 SS phy controller
+>>> +===========================================
+>>> +
+>>> +Synopsys 1.0.0 ss phy controller supports SS usb connectivity on Qualcomm
+>>> +chipsets
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible:
+>>> +    Value type: <string>
+>>> +    Definition: Should contain "qcom,usb-ssphy".
+>> What is "qcom,dwc3-ss-usb-phy" which already exists then?
+> Uh, apparently only the bindings doc is there but the driver never
+> landed. I guess it fell through the cracks nearly 4 years ago.
 >
+> https://lore.kernel.org/patchwork/patch/499502/
+>
+> Jorge, does Andy's version of this driver at all resemble what can be
+> used for QCS404?
 
-ok so you mean use a regulator to control the supply (with 
-regulator-min-microvolt and max-microvolt properties instead?
-I'll look into that
+the drivers seem quite different but I'll give it a go as well and 
+compare (it is my understanding that the controller is the same - I will 
+have access to the hardware documentation soon to compare)
 
-I guess we should pull back on this one as well?
-https://lore.kernel.org/patchwork/patch/1026641/
+but I'll come back to you on this.
+
+>
+> Jack
