@@ -1,89 +1,98 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 6/7] arm64: dts: xilinx: ultra96: Standardize LED
- labels and triggers
-Date: Fri, 21 Dec 2018 08:07:08 +0530
-Message-ID: <20181221023708.GC3233@Mani-XPS-13-9360>
-References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
- <20181029094245.7886-7-manivannan.sadhasivam@linaro.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 1/2] Documentation: can: flexcan: add PE clock source
+ property to device tree
+Date: Fri, 21 Dec 2018 03:34:16 +0000
+Message-ID: <AM0PR04MB42113435FFFF1C01330A35D180B80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <20181213070537.25095-1-qiangqing.zhang@nxp.com>
+ <20181213070537.25095-2-qiangqing.zhang@nxp.com>
+ <20181220202247.GA26362@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181029094245.7886-7-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <20181220202247.GA26362@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: michal.simek@xilinx.com
-Cc: linux-leds@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, daniel.thompson@linaro.org, amit.kucheria@linaro.org, linus.walleij@linaro.org, koen.kooi@linaro.org, nicolas.dechesne@linaro.org
+To: Rob Herring <robh@kernel.org>, Joakim Zhang <qiangqing.zhang@nxp.com>
+Cc: "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Oct 29, 2018 at 03:12:44PM +0530, Manivannan Sadhasivam wrote:
-> For all 96Boards, the following standard is used for onboard LEDs.
-> 
-> green:user1  default-trigger: heartbeat
-> green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
-> green:user3  default-trigger: mmc1 (SD-card)
-> green:user4  default-trigger: none, panic-indicator
-> yellow:wlan  default-trigger: phy0tx
-> blue:bt      default-trigger: hci0-power
-> 
-> So lets adopt the same for Ultra96, which is one of the 96Boards
-> CE and AI platform. Since the WLAN and BT LEDs are hardwired onboard,
-> consolidate only User LEDs.
-> 
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Friday, December 21, 2018 4:23 AM
+>=20
+> On Thu, Dec 13, 2018 at 07:07:57AM +0000, Joakim Zhang wrote:
+> > From: Dong Aisheng <aisheng.dong@nxp.com>
+> >
+> > The FlexCAN controller can parse clock source property from DTS file
+> > to select PE clock source.
+> >
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > Signed-off-by: Joakim Zhang <qiangqing.zhang@nxp.com>
+> > ---
+> >  Documentation/devicetree/bindings/net/can/fsl-flexcan.txt | 8
+> > ++++++++
+> >  1 file changed, 8 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> > b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> > index bc77477c6878..a04168605998 100644
+> > --- a/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> > +++ b/Documentation/devicetree/bindings/net/can/fsl-flexcan.txt
+> > @@ -32,6 +32,13 @@ Optional properties:
+> >  		 ack_gpr is the gpr register offset of CAN stop acknowledge.
+> >  		 ack_bit is the bit offset of CAN stop acknowledge.
+> >
+> > +- fsl,clk-source: Select the clock source to the CAN Protocol Engine (=
+PE).
+> > +		  It's SoC Implementation dependent. Refer to RM for detailed
+>=20
+> If SoC dependent, then it should be implied by the SoC specific compatibl=
+e.
+> Also, seems like you should add clock binding support here if you need mo=
+re
+> clock control.
 
-Hello,
+The clock source selection is done by a register bit inside the IP block:
+BIT13 CLKSRC CAN Engine Clock Source
+0b - The CAN engine clock source is the oscillator clock.=20
+1b - The CAN engine clock source is the peripheral clock.
 
-Any update on this patch?
+Currently it's written 1 by default during driver initialization.
+drivers/net/can/flexcan.c
+/* select "bus clock", chip must be disabled */
+reg =3D priv->read(&regs->ctrl);
+reg |=3D FLEXCAN_CTRL_CLK_SRC;
+priv->write(reg, &regs->ctrl);
 
-Regards,
-Mani
+I'm not sure if it's a typical case to abstract CLKSRC bit into a common cl=
+ock mux.
+(Is there any similar case in kernel?)
+But I think we can also use SoC specific compatible to write 0 for those sp=
+ecial
+Ones (currently only imx8qxp). Then this patch may not be needed.
 
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
->  arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts | 15 ++++++++-------
->  1 file changed, 8 insertions(+), 7 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> index eb5e8bddb610..c08a8753215b 100644
-> --- a/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> +++ b/arch/arm64/boot/dts/xilinx/zynqmp-zcu100-revC.dts
-> @@ -57,29 +57,30 @@
->  	leds {
->  		compatible = "gpio-leds";
->  		ds2 {
-> -			label = "ds2";
-> +			label = "green:user1";
->  			gpios = <&gpio 20 GPIO_ACTIVE_HIGH>;
->  			linux,default-trigger = "heartbeat";
->  		};
->  
->  		ds3 {
-> -			label = "ds3";
-> +			label = "green:user2";
->  			gpios = <&gpio 19 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "phy0tx"; /* WLAN tx */
-> +			linux,default-trigger = "mmc0";
->  			default-state = "off";
->  		};
->  
->  		ds4 {
-> -			label = "ds4";
-> +			label = "green:user3";
->  			gpios = <&gpio 18 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "phy0rx"; /* WLAN rx */
-> +			linux,default-trigger = "mmc1";
->  			default-state = "off";
->  		};
->  
->  		ds5 {
-> -			label = "ds5";
-> +			label = "green:user4";
->  			gpios = <&gpio 17 GPIO_ACTIVE_HIGH>;
-> -			linux,default-trigger = "bluetooth-power";
-> +			linux,default-trigger = "none";
-> +			panic-indicator;
->  		};
->  
->  		vbus_det { /* U5 USB5744 VBUS detection via MIO25 */
-> -- 
-> 2.17.1
-> 
+Marc,
+Please let us know if you have a different idea.
+
+Regards
+Dong Aisheng
+
+>=20
+> > +		  definition. If this property is not set in device tree node
+> > +		  then driver selects clock source 1 by default.
+> > +		  0: clock source 0 (oscillator clock)
+> > +		  1: clock source 1 (peripheral clock)
+> > +
+> >  Example:
+> >
+> >  	can@1c000 {
+> > @@ -40,4 +47,5 @@ Example:
+> >  		interrupts =3D <48 0x2>;
+> >  		interrupt-parent =3D <&mpic>;
+> >  		clock-frequency =3D <200000000>; // filled in by bootloader
+> > +		fsl,clk-source =3D <0>; // select clock source 0 for PE
+> >  	};
+> > --
+> > 2.17.1
+> >
