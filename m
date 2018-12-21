@@ -1,85 +1,31 @@
-From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Fri, 21 Dec 2018 10:22:34 +0530
-Message-ID: <7e310416-78d3-b7e5-5013-0bcc8bfd0351@codeaurora.org>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181217070647.xtvfgsixggua5yod@vireshk-i7>
- <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
- <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
- <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
- <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
- <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q@mail.gmail.com>
- <CAD=FV=VMMYKoW4RU_TTjLdyrNcWZU-Gyou9b6qynKFX9wDn5Mw@mail.gmail.com>
- <CAD=FV=Utko6B6OycYpef3OQAF1v-rthcdgAKMm0GLxRM4=ummg@mail.gmail.com>
- <CAL_Jsq+U8Vj4+w6jA+B3_CyG8N==ABbw31nm+LE=6pwXEopApw@mail.gmail.com>
- <154534136449.79149.14097954220921296509@swboyd.mtv.corp.google.com>
+From: Baruch Siach <baruch@tkos.co.il>
+Subject: Re: [PATCH v1 2/3] dt-bindings: mailbox: Document armada-37xx-rwtm-mailbox binding
+Date: Fri, 21 Dec 2018 07:13:43 +0200
+Message-ID: <8736qr8nso.fsf@tkos.co.il>
+References: <20181217153706.25873-1-marek.behun@nic.cz> <20181217153706.25873-2-marek.behun@nic.cz> <20181220214447.GA18008@bogus> <20181220230821.3f21163a@nic.cz>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; Format="flowed"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <154534136449.79149.14097954220921296509-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-reply-to: <20181220230821.3f21163a@nic.cz>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Marek Behun <marek.behun@nic.cz>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDEyLzIxLzIwMTggMjo1OSBBTSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgUm9i
-IEhlcnJpbmcgKDIwMTgtMTItMTkgMTU6NDc6MjUpCj4+IE9uIFdlZCwgRGVjIDE5LCAyMDE4IGF0
-IDQ6NDAgUE0gRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+
-IE9uIFdlZCwgRGVjIDE5LCAyMDE4IGF0IDEyOjQwIFBNIERvdWcgQW5kZXJzb24gPGRpYW5kZXJz
-QGNocm9taXVtLm9yZz4gd3JvdGU6Cj4+Pj4gT24gV2VkLCBEZWMgMTksIDIwMTggYXQgMTI6MDkg
-UE0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+Pj4gLi4uYnV0IGl0IGRv
-ZXMgaGF2ZSBhIGZyZXF1ZW5jeSwgZG9lc24ndCBpdD8KPj4+Pgo+Pj4+ICsgICBjb21wYXRpYmxl
-ID0gIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCI7Cj4+Pj4gKwo+Pj4+ICsgICBvcHAt
-NzEwMDAwMDAwIHsKPj4+PiArICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDcxMDAwMDAwMD47Cj4+
-Pj4gKyAgICAgcWNvbSxsZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZFTF9UVVJCT19MMT47Cj4+
-Pj4gKyAgIH07Cj4+Pgo+Pj4gQWgsIEkgcGVyaGFwcyBzZWUgdGhlIGNvbmZ1c2lvbi4gIFNvIFJh
-amVuZHJhJ3MgdXNhZ2Ugb2YKPj4+ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiIFsx
-XSBkb2Vzbid0IGhhdmUgYSBmcmVxdWVuY3kgYnV0Cj4+PiBKb3JkYW4ncyBkby4gIFNvIEkgZ3Vl
-c3MgaXQgbWFrZXMgc2Vuc2UgdGhhdCBKb3JkYW4ncyBoYXZlIHRoZQo+Pj4gZmFsbGJhY2sgY29t
-cGF0aWJsZSBidXQgUmFqZW5kcmEncyBkb24ndD8KPj4KPj4gSXMgaGF2aW5nIGl0IHVzZWZ1bCB0
-byBzL3cgdGhhdCBkb2Vzbid0IHVuZGVyc3RhbmQKPj4gIm9wZXJhdGluZy1wb2ludHMtdjItcWNv
-bS1sZXZlbCI/IElmIHNvLCB0aGVuIGFkZAo+PiAib3BlcmF0aW5nLXBvaW50cy12MiIuIElmIG5v
-dCwgdGhlbiBkb24ndC4KPiAKPiBUaGUgb25seSBiZW5lZml0IEkgc2VlIGluIGhhdmluZyAib3Bl
-cmF0aW5nLXBvaW50cy12MiIgaXMgdGhhdCB3ZSBkb24ndAo+IG5lZWQgdG8gdXBkYXRlIHRoZSBv
-Zl9za2lwcGVkX25vZGVfdGFibGVbXSBpbiBkcml2ZXJzL3BsYXRmb3JtL29mLmMgdG8KPiBoYXZl
-IGFsbCB0aGUgdmFyaWFudHMgb2Ygb3BlcmF0aW5nLXBvaW50cy12Mi0qIHdoZW4gdGhleSBkZWNp
-ZGUgdG8gbm90Cj4gdXNlIGFueXRoaW5nIGZyb20gdGhlICJiYXNlIiBiaW5kaW5nLgo+IAo+IElm
-IHRoYXQgZmFpbHMgdG8gd29yayBiZWNhdXNlIG9wcC1oeiBpcyByZXF1aXJlZCBmb3IgdGhlCj4g
-Im9wZXJhdGluZy1wb2ludHMtdjIiIGJpbmRpbmcgYnV0IHNvbWV0aW1lcwo+IG9wZXJhdGluZy1w
-b2ludHMtdjItcWNvbS1sZXZlbCBkb2Vzbid0IHJlcXVpcmUgaXQgSSBndWVzcyB3ZSBuZWVkIHRv
-Cj4gdXBkYXRlIHRoZSBza2lwIHRhYmxlIG9yIG1ha2Ugc29tZSBnZW5lcmljIHByb3BlcnR5IGxp
-a2UKPiAndGhpcy1pcy1ub3QtYS1kZXZpY2UnIHRoYXQgdGhlc2UgdmFyaW91cyBkYXRhIHRhYmxl
-cyBpbiBEVCBjYW4gYmUKPiBtYXJrZWQgd2l0aCBzbyB3ZSBkb24ndCBtYWtlIHBsYXRmb3JtIGRl
-dmljZXMgZm9yIHRoZW0uCj4gCj4gUmVnYXJkbGVzcyBvZiB0aGUgYWJvdmUsIHdlIHNob3VsZCB1
-cGRhdGUgdGhlIGJpbmRpbmcgZm9yCj4gb3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIHRv
-IHNheSB0aGF0IG9wcC1oeiBpc24ndCBhbHdheXMgcmVxdWlyZWQKPiB3aGVuIHRoZSBxY29tLWxl
-dmVsIGNvbXBhdGlibGUgaXMgcHJlc2VudC4gSXQgbG9va3MgbGlrZSBpdCBqdXN0IHNheXMKPiB0
-aGF0IGl0IGJ1aWxkcyBvbiB0b3Agb2YgdGhlIG9wcCBiaW5kaW5nIHNvIHRoYXQncyBub3Qgb2J2
-aW91cy4KClN1cmUsIEkgY2FuIHJlc3BpbiB3aXRoIHRob3NlIGRldGFpbHMgYWRkZWQgaW4uClNv
-IEkgYW0gZ3Vlc3NpbmcgdGhlIGNvbmNsdXNpb24gaXMgdG8gdXNlIGEgZmFsbGJhY2sgIm9wZXJh
-dGluZy1wb2ludHMtdjIiCmNvbXBhdGlibGUgKm9ubHkqIHdoZW4gd2UgZG8gaGF2ZSBvcHAtaHog
-YWxvbmcgd2l0aCBxY29tLGxldmVsIChhcyBpbiB0aGUKY2FzZSB3aXRoIGdwdSkgYW5kIG5vdCBo
-YXZlIGEgZmFsbGJhY2sgY29tcGF0aWJsZSBpbiBjYXNlcyB3aGVuIHdlIGRvbid0CmhhdmUgb3Bw
-LWh6IChhcyBpbiB0aGUgY2FzZSBvZiBycG0gcG93ZXIgZG9tYWlucyk/ClRoYXQgc2VlbXMgYSBs
-aXR0bGUgaW5jb25zaXN0ZW50LCBhbmQgZ2l2ZW4gUm9iIHNhaWQgZWl0aGVyIHdheSBpcyBmaW5l
-LApqdXN0IGRvIG9uZSB3YXkgb3IgdGhlIG90aGVyIGFuZCBub3QgYm90aCwgSSBhbSBpbmNsaW5l
-ZCB0byB0aGluayB3ZSBzaG91bGQKanVzdCBoYXZlIGEgIm9wZXJhdGluZy1wb2ludHMtdjItcWNv
-bS1sZXZlbCIgYW5kIG5vIGZhbGxiYWNrIGNvbXBhdGlibGUuCkRvZXMgdGhhdCBtYWtlIHNlbnNl
-PwoKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
-YWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
-ZWVkcmVubwo=
+Hi Marek,
+
+Marek Behun writes:
+>> > +- compatible :	must be "marvell,armada-37xx-rwtm-mailbox"  
+>> 
+>> Don't use wildcards in compatible strings.
+>
+> You mean that "mailbox" shouldn't be there?
+
+You should use '3700' instead of '37xx'.
+
+baruch
+
+-- 
+     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
+=}------------------------------------------------ooO--U--Ooo------------{=
+   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
