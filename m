@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 4/6] arm64: defconfig: Enable CONFIG_MTD_ALTERA_SYSMGR
-Date: Thu, 20 Dec 2018 18:23:20 -0600
-Message-ID: <1545351802-4354-5-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv2 6/6] arm64: dts: stratix10: New System Manager compatible
+Date: Thu, 20 Dec 2018 18:23:22 -0600
+Message-ID: <1545351802-4354-7-git-send-email-thor.thayer@linux.intel.com>
 References: <1545351802-4354-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <1545351802-4354-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,26 +12,29 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Enable the Stratix10 System Manager by default.
+Use the new compatible string defined for the Stratix10
+System Manager. Remove syscon since it is not correct
+on this platform.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
-v2  No change
+v2  New. Use new Stratix10 System Manager compatible
 ---
- arch/arm64/configs/defconfig | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
-index c9a57d11330b..873d807bb82b 100644
---- a/arch/arm64/configs/defconfig
-+++ b/arch/arm64/configs/defconfig
-@@ -392,6 +392,7 @@ CONFIG_MESON_WATCHDOG=m
- CONFIG_RENESAS_WDT=y
- CONFIG_UNIPHIER_WATCHDOG=y
- CONFIG_BCM2835_WDT=y
-+CONFIG_MFD_ALTERA_SYSMGR=y
- CONFIG_MFD_BD9571MWV=y
- CONFIG_MFD_AXP20X_RSB=y
- CONFIG_MFD_CROS_EC=y
+diff --git a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+index 8253a1a9e985..ad9615241b64 100644
+--- a/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
++++ b/arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi
+@@ -340,7 +340,7 @@
+ 		};
+ 
+ 		sysmgr: sysmgr@ffd12000 {
+-			compatible = "altr,sys-mgr", "syscon";
++			compatible = "altr,sys-mgr-s10";
+ 			reg = <0xffd12000 0x228>;
+ 		};
+ 
 -- 
 2.7.4
