@@ -1,65 +1,35 @@
-From: MyungJoo Ham <myungjoo.ham@samsung.com>
-Subject: RE: Re: [PATCH v3 4/5] drivers: power: suspend: call devfreq
- suspend/resume
-Date: Fri, 21 Dec 2018 09:33:05 +0900
-Message-ID: <20181221003305epcms1p756d76191d5f233c6e3238400d233b3c6@epcms1p7>
-References: <ce1d415d-2a00-ef0e-6b58-23d16cffee4a@partner.samsung.com>
-        <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
-        <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
-        <CGME20181205110623eucas1p120f9d8b38822bf856a5b7d427d00e49f@epcms1p7>
-Reply-To: myungjoo.ham@samsung.com
+From: Stephen Boyd <swboyd-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 5/8] drm/msm/dsi: 10nm PHY: Get ref clock
+ from the DT
+Date: Thu, 20 Dec 2018 16:53:03 -0800
+Message-ID: <154535358322.13075.15370567255941355044@swboyd.mtv.corp.google.com>
+References: <20181219235528.114830-1-mka@chromium.org>
+ <20181219235528.114830-6-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ce1d415d-2a00-ef0e-6b58-23d16cffee4a@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "len.brown@intel.com" <len.brown@intel.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "keescook@chromium.org" <keescook@chromium.org>, "anton@enomsg.org" <anton@enomsg.org>, "ccross@android.com" <ccross@android.com>, "tony.luck@intel.com" <tony.luck@intel.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "kgene@kernel.org" <kgene@kernel.org>, "krzk@kernel.org" <krzk@kernel.org>, Marek Szyprowski <m.szyprowski@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181219235528.114830-6-mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Archit Taneja <architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rajesh Yadav <ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Douglas Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Matthias Kaehlcke <mka-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
->On 2018-12-05 12:05, Lukasz Luba wrote:
->> Devfreq framework supports suspend of its devices.
->> Call the the devfreq interface and allow devfreq devices preserve/restore
->> their states during suspend/resume.
->>
->> Suggested-by: Tobias Jakobi <tjakobi@math.uni-bielefeld.de>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-
-This looks all good to me.
-
-Acked-by: MyungJoo Ham <myungjoo.ham@samsung.com>
-
->> ---
->>  drivers/base/power/main.c | 3 +++
->>  1 file changed, 3 insertions(+)
->>
->> diff --git a/drivers/base/power/main.c b/drivers/base/power/main.c
->> index a690fd4..0992e67 100644
->> --- a/drivers/base/power/main.c
->> +++ b/drivers/base/power/main.c
->> @@ -32,6 +32,7 @@
->>  #include <trace/events/power.h>
->>  #include <linux/cpufreq.h>
->>  #include <linux/cpuidle.h>
->> +#include <linux/devfreq.h>
->>  #include <linux/timer.h>
->>  
->>  #include "../base.h"
->> @@ -1078,6 +1079,7 @@ void dpm_resume(pm_message_t state)
->>  	dpm_show_time(starttime, state, 0, NULL);
->>  
->>  	cpufreq_resume();
->> +	devfreq_resume();
->>  	trace_suspend_resume(TPS("dpm_resume"), state.event, false);
->>  }
->>  
->> @@ -1852,6 +1854,7 @@ int dpm_suspend(pm_message_t state)
->>  	trace_suspend_resume(TPS("dpm_suspend"), state.event, true);
->>  	might_sleep();
->>  
->> +	devfreq_suspend();
->>  	cpufreq_suspend();
->>  
->>  	mutex_lock(&dpm_list_mtx);
+UXVvdGluZyBNYXR0aGlhcyBLYWVobGNrZSAoMjAxOC0xMi0xOSAxNTo1NToyNSkKPiBHZXQgdGhl
+IHJlZiBjbG9jayBvZiB0aGUgUEhZIGZyb20gdGhlIGRldmljZSB0cmVlIGluc3RlYWQgb2YKPiBo
+YXJkY29kaW5nIGl0cyBuYW1lIGFuZCByYXRlLgo+IAo+IE5vdGU6IFRoaXMgY2hhbmdlIGNvdWxk
+IGJyZWFrIG9sZCBvdXQtb2YtdHJlZSBEVFMgZmlsZXMgdGhhdAo+IHVzZSB0aGUgMTBubSBQSFkK
+PiAKPiBTaWduZWQtb2ZmLWJ5OiBNYXR0aGlhcyBLYWVobGNrZSA8bWthQGNocm9taXVtLm9yZz4K
+PiBSZXZpZXdlZC1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPgo+
+IC0tLQoKUmV2aWV3ZWQtYnk6IFN0ZXBoZW4gQm95ZCA8c3dib3lkQGNocm9taXVtLm9yZz4KCl9f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBt
+YWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
+LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
