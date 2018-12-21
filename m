@@ -1,46 +1,59 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: stmpe: reformatting parameter list
- and use tabs only
-Date: Fri, 21 Dec 2018 10:44:34 +0000
-Message-ID: <20181221104434.GN13248@dell>
-References: <20181212130649.15146-1-dev@pschenker.ch>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH fixes 4.20] dt-bindings: pinctrl: bcm4708-pinmux: rework
+ binding to use syscon
+Date: Fri, 21 Dec 2018 11:45:13 +0100
+Message-ID: <CACRpkdYoZtZci3BJ=-2AGr4vz7-OVJ9UwppYviMAiotBn2EU6Q@mail.gmail.com>
+References: <20181218155744.19409-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181212130649.15146-1-dev@pschenker.ch>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philippe Schenker <dev@pschenker.ch>
-Cc: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch, thierry.reding@gmail.com, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, Max Krummenacher <max.krummenacher@toradex.com>, Alexandre Torgue <alexandre.torgue@st.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181218155744.19409-1-zajec5@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 12 Dec 2018, Philippe Schenker wrote:
-
-> This patch reformats the parameter list for stmpe device in a
-> table-style so it is more clear to read.
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-> ---
-> 
-> Changes in v4:
->  - New separate precursor patch for holding reformatting
-> 
-> Changes in v3: None
-> Changes in v2: None
-> 
->  .../bindings/input/touchscreen/stmpe.txt      | 52 ++++++++++++-------
->  .../devicetree/bindings/mfd/stmpe.txt         | 14 ++---
->  2 files changed, 41 insertions(+), 25 deletions(-)
-
-Set looks okay.
-
-Please submit a [RESEND] with all the Acks you've collected.
-
-And next time, please make sure you author a 0th (cover-letter) patch.
-
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgNDo1OCBQTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
+bWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2ku
+cGw+Cj4KPiBBcyBwb2ludGVkIGJ5IFJvYiwgQ1JVIGlzIGEga2luZCBvZiBibG9jayB0aGF0IGNh
+bid0IGJlIGd1YXJhbnRlZWQgdG8KPiBoYXZlIGV2ZXJ5dGhpbmcgZXhwb3NlZCBhcyBzdWJub2Rl
+cy4gSXQncyBhIHNldCBvZiB2YXJpb3VzIHJlZ2lzdGVycwo+IHRoYXQgYXJlbid0IHRpZWQgdG8g
+YW55IHNpbmdsZSBkZXZpY2UuIEl0IGNvdWxkIGJlIGRlc2NyaWJlZCBtdWNoIG1vcmUKPiBhY2N1
+cmF0ZWx5IGFzIE1GRCAoTXVsdGktRnVuY3Rpb24gRGV2aWNlKS4KPgo+IFNvbWUgaGFyZHdhcmUg
+YmxvY2tzIG1heSBpbmRlZWQgd2FudCB0byBhY2Nlc3MgYSByZWdpc3RlciBvciB0d28gb2YgdGhl
+Cj4gQ1JVIHdoaWNoIHJlcXVpcmVzIGRlc2NyaWJpbmcgaXQgYXMgdGhlICJzeXNjb24iLgo+Cj4g
+V2hpbGUgYXQgaXQgcmVwbGFjZSBleG1wbGUgbm9kZSBuYW1lIHdpdGggdGhlIHN0YW5kYXJkICJw
+aW5jdHJsIiAoYWxzbwo+IHBvaW50ZWQgb3V0IGJ5IFJvYikuCj4KPiBTaWduZWQtb2ZmLWJ5OiBS
+YWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2kucGw+Cj4gLS0tCj4gSGkgTGludXMsCj4KPiBB
+ZnRlciBiZWluZyBwaW5nZWQgYWJvdXQgdGhlIHBpbmN0cmwgZHJpdmVyIEkgcmVhbGl6ZWQgSSBu
+ZXZlciBhZGRyZXNzZWQKPiBSb2IncyBjb21tZW50cyBmcm9tIHRoZSBlLW1haWwgdGhyZWFkOgo+
+Cj4gW1BBVENIXSBkdC1iaW5kaW5nczogcGluY3RybDogYmNtNDcwOC1waW5tdXg6IGltcHJvdmUg
+ZXhhbXBsZSBiaW5kaW5nCj4gaHR0cHM6Ly93d3cuc3Bpbmljcy5uZXQvbGlzdHMvYXJtLWtlcm5l
+bC9tc2c2ODI4MzguaHRtbAo+IGh0dHBzOi8vcGF0Y2h3b3JrLm96bGFicy5vcmcvcGF0Y2gvOTg0
+MDI0Lwo+Cj4gUm9iIGhhcyBwb2ludGVkIGNvcnJlY3RseSAoYXMgYWx3YXlzKSB0aGF0IGRlc2Ny
+aWJpbmcgQ1JVIHVzaW5nCj4gInNpbXBsZS1idXMiIGhhcyBpdHMgaW1wbGljYXRpb25zIGFuZCBt
+YXkgaHVudCB1cyBiYWNrIGlmIHdlIGV2ZXIKPiByZWFsaXplIHdlIHdpbGwgd2FudCB0byByZWZl
+cmVuY2UgaXQgYXMgInN5c2NvbiIuIFRoYXQgaXMgcHJldHR5IGxpa2VseQo+IGFjdHVhbGx5Lgo+
+Cj4gVG8gZml4IHRoYXQgd2hpbGUgc3RpbGwgcG9zc2libGUgKGJlZm9yZSBoYXZpbmcgdGhhdCBE
+b2N1bWVudGF0aW9uIGluCj4gYW55IHN0YWJsZSByZWxlYXNlKSBJJ2QgbGlrZSB5b3UgdG8gY29u
+c2lkZXIgdGFraW5nIHRoaXMgcGF0Y2ggZm9yIHRoZQo+IDQuMjAgcmVsZWFzZSBpZiB5b3UgZmlu
+ZCBpdCBwb3NzaWJsZS4KPgo+IEknbSB3ZWxsIGF3YXJlIGl0J3MgZGFtbiBsYXRlLiBJJ20gYXdh
+cmUgSSd2ZSBzY3Jld2VkIHVwLiBJJ20gc29ycnkuCj4KPiBJJ20gYWZyYWlkIEkgY2Fubm90IGZp
+eCBpdCBhbnlob3cuIEp1c3QgdGFrZSBhIGxvb2sgYXQgdGhhdCBwYXRjaCBhbmQKPiBmZWVsIGZy
+ZWUgdG8gc2F5IEknbSBjcmF6eSBjb21pbmcgd2l0aCBpdCBzbyBsYXRlLgoKSSBqdXN0IGFwcGxp
+ZWQgaXQuIEl0J3Mgbm90IGxpa2UgaXQncyBldGNoZWQgaW4gc3RvbmUgdGhvdWdoIHNvbWUKcGVv
+cGxlIG1heSBoYXZlIHRoYXQgbWVudGFsIG1vZGVsLgoKSWYgdGhlIERUIG1haW50YWluZXJzIGhh
+dmUgZnVydGhlciBjb25jZXJucyB3ZSBjYW4gcGF0Y2ggaXQKYWdhaW4uCgpSb3VnaCBjb25zZW5z
+dXMgYW5kIHJ1bm5pbmcgY29kZS4KCllvdXJzLApMaW51cyBXYWxsZWlqCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
