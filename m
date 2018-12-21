@@ -1,11 +1,11 @@
 From: Sudeep Holla <sudeep.holla@arm.com>
-Subject: [PATCH] ARM: dts: zynqmp: replace gpio-key,
+Subject: [PATCH -next] ARM: dts: am437x: replace linux,
  wakeup with wakeup-source property
-Date: Fri, 21 Dec 2018 18:12:13 +0000
-Message-ID: <20181221181213.6812-1-sudeep.holla@arm.com>
+Date: Fri, 21 Dec 2018 18:12:20 +0000
+Message-ID: <20181221181220.6877-1-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -17,45 +17,29 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Michal Simek <michal.simek@xilinx.com>, Sudeep Holla <sudeep.holla@arm.com>
+Cc: Tony Lindgren <tony@atomide.com>, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, Sudeep Holla <sudeep.holla@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Most of the legacy "gpio-key,wakeup" boolean property is already
-replaced with "wakeup-source". However few occurrences of old property
-has popped up again, probably from the remnants in downstream trees.
-
-Replace the legacy properties with the unified "wakeup-source"
-property introduced in the commit 700a38b27eef ("Input: gpio_keys -
-switch to using generic device properties")
-
-Cc: Michal Simek <michal.simek@xilinx.com>
-Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
----
- arch/arm/boot/dts/zynq-zturn.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-Hi Michal,
-
-Olof requested to slipt the patch and send it via platform maintainers.
-I totally forgot to follow up on this. You had acked this previously but
-please pick this up and submit via your tree to ARM SoC. Sorry for the
-confusion.
-
-Regards,
-Sudeep
-
-diff --git a/arch/arm/boot/dts/zynq-zturn.dts b/arch/arm/boot/dts/zynq-zturn.dts
-index b38704657960..5ec616ebca08 100644
---- a/arch/arm/boot/dts/zynq-zturn.dts
-+++ b/arch/arm/boot/dts/zynq-zturn.dts
-@@ -54,7 +54,7 @@
- 			label = "K1";
- 			gpios = <&gpio0 0x32 0x1>;
- 			linux,code = <0x66>;
--			gpio-key,wakeup;
-+			wakeup-source;
- 			autorepeat;
- 		};
- 	};
---
-2.17.1
+TW9zdCBvZiB0aGUgbGVnYWN5ICJsaW51eCx3YWtldXAiIGJvb2xlYW4gcHJvcGVydHkgaXMgYWxy
+ZWFkeSByZXBsYWNlZAp3aXRoICJ3YWtldXAtc291cmNlIi4gSG93ZXZlciBmZXcgb2NjdXJyZW5j
+ZXMgb2Ygb2xkIHByb3BlcnR5IGhhcyBwb3BwZWQKdXAgYWdhaW4sIHByb2JhYmx5IGZyb20gdGhl
+IHJlbW5hbnRzIGluIGRvd25zdHJlYW0gdHJlZXMuCgpSZXBsYWNlIHRoZSBsZWdhY3kgcHJvcGVy
+dGllcyB3aXRoIHRoZSB1bmlmaWVkICJ3YWtldXAtc291cmNlIiBwcm9wZXJ0eQppbnRyb2R1Y2Vk
+IGluIHRoZSBjb21taXQgYWVkYTUwMDNkMGI5ICgiSW5wdXQ6IG1hdHJpeF9rZXlwYWQgLSBjaGFu
+Z2UKbmFtZSBvZiB3YWtldXAgcHJvcGVydHkgdG8gIndha2V1cC1zb3VyY2UiIikKCkNjOiAiQmVu
+b8OudCBDb3Vzc29uIiA8YmNvdXNzb25AYmF5bGlicmUuY29tPgpDYzogVG9ueSBMaW5kZ3JlbiA8
+dG9ueUBhdG9taWRlLmNvbT4KQ2M6IGxpbnV4LW9tYXBAdmdlci5rZXJuZWwub3JnClNpZ25lZC1v
+ZmYtYnk6IFN1ZGVlcCBIb2xsYSA8c3VkZWVwLmhvbGxhQGFybS5jb20+Ci0tLQogYXJjaC9hcm0v
+Ym9vdC9kdHMvYW00Mzd4LWdwLWV2bS5kdHMgfCAyICstCiAxIGZpbGUgY2hhbmdlZCwgMSBpbnNl
+cnRpb24oKyksIDEgZGVsZXRpb24oLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9h
+bTQzN3gtZ3AtZXZtLmR0cyBiL2FyY2gvYXJtL2Jvb3QvZHRzL2FtNDM3eC1ncC1ldm0uZHRzCmlu
+ZGV4IGY0YTIwY2FkZTgwOC4uNGM2ZWUzN2VhNTczIDEwMDY0NAotLS0gYS9hcmNoL2FybS9ib290
+L2R0cy9hbTQzN3gtZ3AtZXZtLmR0cworKysgYi9hcmNoL2FybS9ib290L2R0cy9hbTQzN3gtZ3At
+ZXZtLmR0cwpAQCAtNzEsNyArNzEsNyBAQAogCQlwaW5jdHJsLTAgPSA8Jm1hdHJpeF9rZXlwYWRf
+ZGVmYXVsdD47CiAJCXBpbmN0cmwtMSA9IDwmbWF0cml4X2tleXBhZF9zbGVlcD47CgotCQlsaW51
+eCx3YWtldXA7CisJCXdha2V1cC1zb3VyY2U7CgogCQlyb3ctZ3Bpb3MgPSA8JmdwaW8wIDMgR1BJ
+T19BQ1RJVkVfSElHSCAvKiBCYW5rMCwgcGluMyAqLwogCQkJCSZncGlvNCAzIEdQSU9fQUNUSVZF
+X0hJR0ggLyogQmFuazQsIHBpbjMgKi8KLS0KMi4xNy4xCgoKX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QK
+bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRl
+YWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
