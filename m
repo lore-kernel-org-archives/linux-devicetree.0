@@ -1,18 +1,18 @@
 From: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/8] mfd: axp20x: name voltage ramping
- define properly
-Date: Fri, 21 Dec 2018 08:39:27 +0000
-Message-ID: <20181221083927.GQ4497@dell>
+Subject: Re: [PATCH v2 5/8] dt-bindings: mfd: axp20x: Add
+ software based soft_start for AXP209 LDO3
+Date: Fri, 21 Dec 2018 08:40:10 +0000
+Message-ID: <20181221084010.GR4497@dell>
 References: <cover.923997dd7d7396bb4d71f8967698b58ca956b929.1544512919.git-series.plaes@plaes.org>
- <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544512919.git-series.plaes@plaes.org>
+ <25e67fe9b5397aa5f11bdd7026e4ae6be51dd18b.1544512919.git-series.plaes@plaes.org>
 Reply-To: lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-sunxi+bncBDA7X7F2WUEBBQWN6LQAKGQEQ7UTSAQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDA7X7F2WUEBB3WN6LQAKGQEC2EWOHQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <01367c4f4f1e174fefbef9aac645f6792bda07e5.1544512919.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+In-Reply-To: <25e67fe9b5397aa5f11bdd7026e4ae6be51dd18b.1544512919.git-series.plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -27,45 +27,38 @@ On Tue, 11 Dec 2018, Priit Laes wrote:
 
 > From: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 >=20
-> The current axp20x names the ramping register 'scal' which probably
-> means scaling. Since the register really has nothing to do with
-> scaling, but really is the voltage ramp we rename it appropriately.
+> In the past, there have been words on various lists that if LDO3 is
+> disabled in u-boot, but enabled in the DTS, the axp209 driver would
+> fail to continue/hang. Several enable/disable patches have been
+> issues to devicetree's in both the kernel and u-boot to address
+> this issue.
+>=20
+> What really happened however, was that the AXP209 shuts down without
+> a notice and without setting an interrupt. This is caused when LDO3
+> gets overloaded, for example with large capacitors on the LDO3 output.
+>=20
+> Normally, we would expect that AXP209 would source 200 mA as per
+> datasheet and set and trigger an interrupt when being overloaded.
+> For some reason however, this does not happen.
+>=20
+> As a work-around, implement software-based 'regulator-soft-start'
+> property for AXP209 LDO3 regulator, which is used to first bring up
+> the LDO3 to the lowest possible voltage and then enable the LDO.
+>=20
+> After that, we can set the requested voltage as usual.
+>=20
+> Combining this setting with the regulator-ramp-delay allows LDO3 to
+> come up slowly and staggered, potentially reducing overall inrush current=
+.
 >=20
 > Signed-off-by: Olliver Schinagl <oliver-dxLnbx3+1qmEVqv0pETR8A@public.gmane.org>
 > Signed-off-by: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
-> Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 > ---
->  include/linux/mfd/axp20x.h | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
+>  Documentation/devicetree/bindings/mfd/axp20x.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 
-I've lost track of what's happening with this set now.
-
-Mark,
-
-Did you take this patch in the end?
-
-> diff --git a/include/linux/mfd/axp20x.h b/include/linux/mfd/axp20x.h
-> index 2302b62..a353cd2 100644
-> --- a/include/linux/mfd/axp20x.h
-> +++ b/include/linux/mfd/axp20x.h
-> @@ -35,7 +35,7 @@ enum axp20x_variants {
->  #define AXP152_ALDO_OP_MODE		0x13
->  #define AXP152_LDO0_CTRL		0x15
->  #define AXP152_DCDC2_V_OUT		0x23
-> -#define AXP152_DCDC2_V_SCAL		0x25
-> +#define AXP152_DCDC2_V_RAMP		0x25
->  #define AXP152_DCDC1_V_OUT		0x26
->  #define AXP152_DCDC3_V_OUT		0x27
->  #define AXP152_ALDO12_V_OUT		0x28
-> @@ -53,7 +53,7 @@ enum axp20x_variants {
->  #define AXP20X_USB_OTG_STATUS		0x02
->  #define AXP20X_PWR_OUT_CTRL		0x12
->  #define AXP20X_DCDC2_V_OUT		0x23
-> -#define AXP20X_DCDC2_LDO3_V_SCAL	0x25
-> +#define AXP20X_DCDC2_LDO3_V_RAMP	0x25
->  #define AXP20X_DCDC3_V_OUT		0x27
->  #define AXP20X_LDO24_V_OUT		0x28
->  #define AXP20X_LDO3_V_OUT		0x29
+For my own reference:
+  Acked-for-MFD-by: Lee Jones <lee.jones-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
 
 --=20
 Lee Jones [=E6=9D=8E=E7=90=BC=E6=96=AF]
