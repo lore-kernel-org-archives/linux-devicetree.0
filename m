@@ -1,107 +1,629 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: [PATCH v2] arm64: dts: sdm845: Add cpufreq device node
-Date: Fri, 21 Dec 2018 23:44:23 +0530
-Message-ID: <1545416063-22552-1-git-send-email-tdas@codeaurora.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: xlnx: add pcm formatter platform driver" to the asoc tree
+Date: Fri, 21 Dec 2018 18:15:24 +0000 (GMT)
+Message-ID: <20181221181524.F217B1121B93@debutante.sirena.org.uk>
+References: <1545382649-181411-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545382649-181411-3-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>
-Cc: linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, Taniya Das <tdas@codeaurora.org>
+To: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-This change adds the cpufreq node as per the bindings example for SDM845.
+The patch
 
-Signed-off-by: Taniya Das <tdas@codeaurora.org>
-Tested-by: Matthias Kaehlcke <mka@chromium.org>
+   ASoC: xlnx: add pcm formatter platform driver
+
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 796175a94a7f128c696b793a90f9088005df774b Mon Sep 17 00:00:00 2001
+From: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Date: Fri, 21 Dec 2018 14:27:28 +0530
+Subject: [PATCH] ASoC: xlnx: add pcm formatter platform driver
+
+The audio formatter PL IP supports DMA of two streams -
+mm2s and s2mm for playback and capture respectively. Apart from
+DMA, IP also does conversions like PCM to AES and viceversa.
+This patch adds DMA component driver for the IP.
+
+Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+ sound/soc/xilinx/xlnx_formatter_pcm.c | 565 ++++++++++++++++++++++++++
+ 1 file changed, 565 insertions(+)
+ create mode 100644 sound/soc/xilinx/xlnx_formatter_pcm.c
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 23a253b..a69a21e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -99,6 +99,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
- 				compatible = "cache";
-@@ -114,6 +115,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_100>;
- 			L2_100: l2-cache {
- 				compatible = "cache";
-@@ -126,6 +128,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_200>;
- 			L2_200: l2-cache {
- 				compatible = "cache";
-@@ -138,6 +141,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_300>;
- 			L2_300: l2-cache {
- 				compatible = "cache";
-@@ -150,6 +154,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_400>;
- 			L2_400: l2-cache {
- 				compatible = "cache";
-@@ -162,6 +167,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_500>;
- 			L2_500: l2-cache {
- 				compatible = "cache";
-@@ -174,6 +180,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_600>;
- 			L2_600: l2-cache {
- 				compatible = "cache";
-@@ -186,6 +193,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_700>;
- 			L2_700: l2-cache {
- 				compatible = "cache";
-@@ -1686,6 +1694,17 @@
- 				status = "disabled";
- 			};
- 		};
+diff --git a/sound/soc/xilinx/xlnx_formatter_pcm.c b/sound/soc/xilinx/xlnx_formatter_pcm.c
+new file mode 100644
+index 000000000000..f7235f7664d7
+--- /dev/null
++++ b/sound/soc/xilinx/xlnx_formatter_pcm.c
+@@ -0,0 +1,565 @@
++// SPDX-License-Identifier: GPL-2.0
++//
++// Xilinx ASoC audio formatter support
++//
++// Copyright (C) 2018 Xilinx, Inc.
++//
++// Author: Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>
 +
-+		cpufreq_hw: cpufreq@17d43000 {
-+			compatible = "qcom,cpufreq-hw";
-+			reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
-+			reg-names = "freq-domain0", "freq-domain1";
++#include <linux/clk.h>
++#include <linux/io.h>
++#include <linux/module.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
++#include <linux/sizes.h>
 +
-+			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
-+			clock-names = "xo", "alternate";
++#include <sound/soc.h>
++#include <sound/pcm_params.h>
 +
-+			#freq-domain-cells = <1>;
-+		};
- 	};
-
- 	thermal-zones {
---
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the  Linux Foundation.
++#define DRV_NAME "xlnx_formatter_pcm"
++
++#define XLNX_S2MM_OFFSET	0
++#define XLNX_MM2S_OFFSET	0x100
++
++#define XLNX_AUD_CORE_CONFIG	0x4
++#define XLNX_AUD_CTRL		0x10
++#define XLNX_AUD_STS		0x14
++
++#define AUD_CTRL_RESET_MASK	BIT(1)
++#define AUD_CFG_MM2S_MASK	BIT(15)
++#define AUD_CFG_S2MM_MASK	BIT(31)
++
++#define XLNX_AUD_FS_MULTIPLIER	0x18
++#define XLNX_AUD_PERIOD_CONFIG	0x1C
++#define XLNX_AUD_BUFF_ADDR_LSB	0x20
++#define XLNX_AUD_BUFF_ADDR_MSB	0x24
++#define XLNX_AUD_XFER_COUNT	0x28
++#define XLNX_AUD_CH_STS_START	0x2C
++#define XLNX_BYTES_PER_CH	0x44
++
++#define AUD_STS_IOC_IRQ_MASK	BIT(31)
++#define AUD_STS_CH_STS_MASK	BIT(29)
++#define AUD_CTRL_IOC_IRQ_MASK	BIT(13)
++#define AUD_CTRL_TOUT_IRQ_MASK	BIT(14)
++#define AUD_CTRL_DMA_EN_MASK	BIT(0)
++
++#define CFG_MM2S_CH_MASK	GENMASK(11, 8)
++#define CFG_MM2S_CH_SHIFT	8
++#define CFG_MM2S_XFER_MASK	GENMASK(14, 13)
++#define CFG_MM2S_XFER_SHIFT	13
++#define CFG_MM2S_PKG_MASK	BIT(12)
++
++#define CFG_S2MM_CH_MASK	GENMASK(27, 24)
++#define CFG_S2MM_CH_SHIFT	24
++#define CFG_S2MM_XFER_MASK	GENMASK(30, 29)
++#define CFG_S2MM_XFER_SHIFT	29
++#define CFG_S2MM_PKG_MASK	BIT(28)
++
++#define AUD_CTRL_DATA_WIDTH_SHIFT	16
++#define AUD_CTRL_ACTIVE_CH_SHIFT	19
++#define PERIOD_CFG_PERIODS_SHIFT	16
++
++#define PERIODS_MIN		2
++#define PERIODS_MAX		6
++#define PERIOD_BYTES_MIN	192
++#define PERIOD_BYTES_MAX	(50 * 1024)
++
++enum bit_depth {
++	BIT_DEPTH_8,
++	BIT_DEPTH_16,
++	BIT_DEPTH_20,
++	BIT_DEPTH_24,
++	BIT_DEPTH_32,
++};
++
++struct xlnx_pcm_drv_data {
++	void __iomem *mmio;
++	bool s2mm_presence;
++	bool mm2s_presence;
++	unsigned int s2mm_irq;
++	unsigned int mm2s_irq;
++	struct snd_pcm_substream *play_stream;
++	struct snd_pcm_substream *capture_stream;
++	struct clk *axi_clk;
++};
++
++/*
++ * struct xlnx_pcm_stream_param - stream configuration
++ * @mmio: base address offset
++ * @interleaved: audio channels arrangement in buffer
++ * @xfer_mode: data formatting mode during transfer
++ * @ch_limit: Maximum channels supported
++ * @buffer_size: stream ring buffer size
++ */
++struct xlnx_pcm_stream_param {
++	void __iomem *mmio;
++	bool interleaved;
++	u32 xfer_mode;
++	u32 ch_limit;
++	u64 buffer_size;
++};
++
++static const struct snd_pcm_hardware xlnx_pcm_hardware = {
++	.info = SNDRV_PCM_INFO_INTERLEAVED | SNDRV_PCM_INFO_BLOCK_TRANSFER |
++		SNDRV_PCM_INFO_BATCH | SNDRV_PCM_INFO_PAUSE |
++		SNDRV_PCM_INFO_RESUME,
++	.formats = SNDRV_PCM_FMTBIT_S8 | SNDRV_PCM_FMTBIT_S16_LE |
++		   SNDRV_PCM_FMTBIT_S24_LE,
++	.channels_min = 2,
++	.channels_max = 2,
++	.rates = SNDRV_PCM_RATE_8000_192000,
++	.rate_min = 8000,
++	.rate_max = 192000,
++	.buffer_bytes_max = PERIODS_MAX * PERIOD_BYTES_MAX,
++	.period_bytes_min = PERIOD_BYTES_MIN,
++	.period_bytes_max = PERIOD_BYTES_MAX,
++	.periods_min = PERIODS_MIN,
++	.periods_max = PERIODS_MAX,
++};
++
++static int xlnx_formatter_pcm_reset(void __iomem *mmio_base)
++{
++	u32 val, retries = 0;
++
++	val = readl(mmio_base + XLNX_AUD_CTRL);
++	val |= AUD_CTRL_RESET_MASK;
++	writel(val, mmio_base + XLNX_AUD_CTRL);
++
++	val = readl(mmio_base + XLNX_AUD_CTRL);
++	/* Poll for maximum timeout of approximately 100ms (1 * 100)*/
++	while ((val & AUD_CTRL_RESET_MASK) && (retries < 100)) {
++		mdelay(1);
++		retries++;
++		val = readl(mmio_base + XLNX_AUD_CTRL);
++	}
++	if (val & AUD_CTRL_RESET_MASK)
++		return -ENODEV;
++
++	return 0;
++}
++
++static void xlnx_formatter_disable_irqs(void __iomem *mmio_base, int stream)
++{
++	u32 val;
++
++	val = readl(mmio_base + XLNX_AUD_CTRL);
++	val &= ~AUD_CTRL_IOC_IRQ_MASK;
++	if (stream == SNDRV_PCM_STREAM_CAPTURE)
++		val &= ~AUD_CTRL_TOUT_IRQ_MASK;
++
++	writel(val, mmio_base + XLNX_AUD_CTRL);
++}
++
++static irqreturn_t xlnx_mm2s_irq_handler(int irq, void *arg)
++{
++	u32 val;
++	void __iomem *reg;
++	struct device *dev = arg;
++	struct xlnx_pcm_drv_data *adata = dev_get_drvdata(dev);
++
++	reg = adata->mmio + XLNX_MM2S_OFFSET + XLNX_AUD_STS;
++	val = readl(reg);
++	if (val & AUD_STS_IOC_IRQ_MASK) {
++		writel(val & AUD_STS_IOC_IRQ_MASK, reg);
++		if (adata->play_stream)
++			snd_pcm_period_elapsed(adata->play_stream);
++		return IRQ_HANDLED;
++	}
++
++	return IRQ_NONE;
++}
++
++static irqreturn_t xlnx_s2mm_irq_handler(int irq, void *arg)
++{
++	u32 val;
++	void __iomem *reg;
++	struct device *dev = arg;
++	struct xlnx_pcm_drv_data *adata = dev_get_drvdata(dev);
++
++	reg = adata->mmio + XLNX_S2MM_OFFSET + XLNX_AUD_STS;
++	val = readl(reg);
++	if (val & AUD_STS_IOC_IRQ_MASK) {
++		writel(val & AUD_STS_IOC_IRQ_MASK, reg);
++		if (adata->capture_stream)
++			snd_pcm_period_elapsed(adata->capture_stream);
++		return IRQ_HANDLED;
++	}
++
++	return IRQ_NONE;
++}
++
++static int xlnx_formatter_pcm_open(struct snd_pcm_substream *substream)
++{
++	int err;
++	u32 val, data_format_mode;
++	u32 ch_count_mask, ch_count_shift, data_xfer_mode, data_xfer_shift;
++	struct xlnx_pcm_stream_param *stream_data;
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct snd_soc_pcm_runtime *prtd = substream->private_data;
++	struct snd_soc_component *component = snd_soc_rtdcom_lookup(prtd,
++								    DRV_NAME);
++	struct xlnx_pcm_drv_data *adata = dev_get_drvdata(component->dev);
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK &&
++	    !adata->mm2s_presence)
++		return -ENODEV;
++	else if (substream->stream == SNDRV_PCM_STREAM_CAPTURE &&
++		 !adata->s2mm_presence)
++		return -ENODEV;
++
++	stream_data = kzalloc(sizeof(*stream_data), GFP_KERNEL);
++	if (!stream_data)
++		return -ENOMEM;
++
++	if (substream->stream == SNDRV_PCM_STREAM_PLAYBACK) {
++		ch_count_mask = CFG_MM2S_CH_MASK;
++		ch_count_shift = CFG_MM2S_CH_SHIFT;
++		data_xfer_mode = CFG_MM2S_XFER_MASK;
++		data_xfer_shift = CFG_MM2S_XFER_SHIFT;
++		data_format_mode = CFG_MM2S_PKG_MASK;
++		stream_data->mmio = adata->mmio + XLNX_MM2S_OFFSET;
++		adata->play_stream = substream;
++
++	} else {
++		ch_count_mask = CFG_S2MM_CH_MASK;
++		ch_count_shift = CFG_S2MM_CH_SHIFT;
++		data_xfer_mode = CFG_S2MM_XFER_MASK;
++		data_xfer_shift = CFG_S2MM_XFER_SHIFT;
++		data_format_mode = CFG_S2MM_PKG_MASK;
++		stream_data->mmio = adata->mmio + XLNX_S2MM_OFFSET;
++		adata->capture_stream = substream;
++	}
++
++	val = readl(adata->mmio + XLNX_AUD_CORE_CONFIG);
++
++	if (!(val & data_format_mode))
++		stream_data->interleaved = true;
++
++	stream_data->xfer_mode = (val & data_xfer_mode) >> data_xfer_shift;
++	stream_data->ch_limit = (val & ch_count_mask) >> ch_count_shift;
++	dev_info(component->dev,
++		 "stream %d : format = %d mode = %d ch_limit = %d\n",
++		 substream->stream, stream_data->interleaved,
++		 stream_data->xfer_mode, stream_data->ch_limit);
++
++	snd_soc_set_runtime_hwparams(substream, &xlnx_pcm_hardware);
++	runtime->private_data = stream_data;
++
++	/* Resize the period size divisible by 64 */
++	err = snd_pcm_hw_constraint_step(runtime, 0,
++					 SNDRV_PCM_HW_PARAM_PERIOD_BYTES, 64);
++	if (err) {
++		dev_err(component->dev,
++			"unable to set constraint on period bytes\n");
++		return err;
++	}
++
++	/* enable DMA IOC irq */
++	val = readl(stream_data->mmio + XLNX_AUD_CTRL);
++	val |= AUD_CTRL_IOC_IRQ_MASK;
++	writel(val, stream_data->mmio + XLNX_AUD_CTRL);
++
++	return 0;
++}
++
++static int xlnx_formatter_pcm_close(struct snd_pcm_substream *substream)
++{
++	int ret;
++	struct xlnx_pcm_stream_param *stream_data =
++			substream->runtime->private_data;
++	struct snd_soc_pcm_runtime *prtd = substream->private_data;
++	struct snd_soc_component *component = snd_soc_rtdcom_lookup(prtd,
++								    DRV_NAME);
++
++	ret = xlnx_formatter_pcm_reset(stream_data->mmio);
++	if (ret) {
++		dev_err(component->dev, "audio formatter reset failed\n");
++		goto err_reset;
++	}
++	xlnx_formatter_disable_irqs(stream_data->mmio, substream->stream);
++
++err_reset:
++	kfree(stream_data);
++	return 0;
++}
++
++static snd_pcm_uframes_t
++xlnx_formatter_pcm_pointer(struct snd_pcm_substream *substream)
++{
++	u32 pos;
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct xlnx_pcm_stream_param *stream_data = runtime->private_data;
++
++	pos = readl(stream_data->mmio + XLNX_AUD_XFER_COUNT);
++
++	if (pos >= stream_data->buffer_size)
++		pos = 0;
++
++	return bytes_to_frames(runtime, pos);
++}
++
++static int xlnx_formatter_pcm_hw_params(struct snd_pcm_substream *substream,
++					struct snd_pcm_hw_params *params)
++{
++	u32 low, high, active_ch, val, bytes_per_ch, bits_per_sample;
++	int status;
++	u64 size;
++	struct snd_pcm_runtime *runtime = substream->runtime;
++	struct xlnx_pcm_stream_param *stream_data = runtime->private_data;
++
++	active_ch = params_channels(params);
++	if (active_ch > stream_data->ch_limit)
++		return -EINVAL;
++
++	size = params_buffer_bytes(params);
++	status = snd_pcm_lib_malloc_pages(substream, size);
++	if (status < 0)
++		return status;
++
++	stream_data->buffer_size = size;
++
++	low = lower_32_bits(substream->dma_buffer.addr);
++	high = upper_32_bits(substream->dma_buffer.addr);
++	writel(low, stream_data->mmio + XLNX_AUD_BUFF_ADDR_LSB);
++	writel(high, stream_data->mmio + XLNX_AUD_BUFF_ADDR_MSB);
++
++	val = readl(stream_data->mmio + XLNX_AUD_CTRL);
++	bits_per_sample = params_width(params);
++	switch (bits_per_sample) {
++	case 8:
++		val |= (BIT_DEPTH_8 << AUD_CTRL_DATA_WIDTH_SHIFT);
++		break;
++	case 16:
++		val |= (BIT_DEPTH_16 << AUD_CTRL_DATA_WIDTH_SHIFT);
++		break;
++	case 20:
++		val |= (BIT_DEPTH_20 << AUD_CTRL_DATA_WIDTH_SHIFT);
++		break;
++	case 24:
++		val |= (BIT_DEPTH_24 << AUD_CTRL_DATA_WIDTH_SHIFT);
++		break;
++	case 32:
++		val |= (BIT_DEPTH_32 << AUD_CTRL_DATA_WIDTH_SHIFT);
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	val |= active_ch << AUD_CTRL_ACTIVE_CH_SHIFT;
++	writel(val, stream_data->mmio + XLNX_AUD_CTRL);
++
++	val = (params_periods(params) << PERIOD_CFG_PERIODS_SHIFT)
++		| params_period_bytes(params);
++	writel(val, stream_data->mmio + XLNX_AUD_PERIOD_CONFIG);
++	bytes_per_ch = DIV_ROUND_UP(params_period_bytes(params), active_ch);
++	writel(bytes_per_ch, stream_data->mmio + XLNX_BYTES_PER_CH);
++
++	return 0;
++}
++
++static int xlnx_formatter_pcm_hw_free(struct snd_pcm_substream *substream)
++{
++	return snd_pcm_lib_free_pages(substream);
++}
++
++static int xlnx_formatter_pcm_trigger(struct snd_pcm_substream *substream,
++				      int cmd)
++{
++	u32 val;
++	struct xlnx_pcm_stream_param *stream_data =
++			substream->runtime->private_data;
++
++	switch (cmd) {
++	case SNDRV_PCM_TRIGGER_START:
++	case SNDRV_PCM_TRIGGER_PAUSE_RELEASE:
++	case SNDRV_PCM_TRIGGER_RESUME:
++		val = readl(stream_data->mmio + XLNX_AUD_CTRL);
++		val |= AUD_CTRL_DMA_EN_MASK;
++		writel(val, stream_data->mmio + XLNX_AUD_CTRL);
++		break;
++	case SNDRV_PCM_TRIGGER_STOP:
++	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
++	case SNDRV_PCM_TRIGGER_SUSPEND:
++		val = readl(stream_data->mmio + XLNX_AUD_CTRL);
++		val &= ~AUD_CTRL_DMA_EN_MASK;
++		writel(val, stream_data->mmio + XLNX_AUD_CTRL);
++		break;
++	}
++
++	return 0;
++}
++
++static int xlnx_formatter_pcm_new(struct snd_soc_pcm_runtime *rtd)
++{
++	struct snd_soc_component *component = snd_soc_rtdcom_lookup(rtd,
++								    DRV_NAME);
++	return snd_pcm_lib_preallocate_pages_for_all(rtd->pcm,
++			SNDRV_DMA_TYPE_DEV, component->dev,
++			xlnx_pcm_hardware.buffer_bytes_max,
++			xlnx_pcm_hardware.buffer_bytes_max);
++}
++
++static const struct snd_pcm_ops xlnx_formatter_pcm_ops = {
++	.open = xlnx_formatter_pcm_open,
++	.close = xlnx_formatter_pcm_close,
++	.ioctl = snd_pcm_lib_ioctl,
++	.hw_params = xlnx_formatter_pcm_hw_params,
++	.hw_free = xlnx_formatter_pcm_hw_free,
++	.trigger = xlnx_formatter_pcm_trigger,
++	.pointer = xlnx_formatter_pcm_pointer,
++};
++
++static const struct snd_soc_component_driver xlnx_asoc_component = {
++	.name = DRV_NAME,
++	.ops = &xlnx_formatter_pcm_ops,
++	.pcm_new = xlnx_formatter_pcm_new,
++};
++
++static int xlnx_formatter_pcm_probe(struct platform_device *pdev)
++{
++	int ret;
++	u32 val;
++	struct xlnx_pcm_drv_data *aud_drv_data;
++	struct resource *res;
++	struct device *dev = &pdev->dev;
++
++	aud_drv_data = devm_kzalloc(dev, sizeof(*aud_drv_data), GFP_KERNEL);
++	if (!aud_drv_data)
++		return -ENOMEM;
++
++	aud_drv_data->axi_clk = devm_clk_get(dev, "s_axi_lite_aclk");
++	if (IS_ERR(aud_drv_data->axi_clk)) {
++		ret = PTR_ERR(aud_drv_data->axi_clk);
++		dev_err(dev, "failed to get s_axi_lite_aclk(%d)\n", ret);
++		return ret;
++	}
++	ret = clk_prepare_enable(aud_drv_data->axi_clk);
++	if (ret) {
++		dev_err(dev,
++			"failed to enable s_axi_lite_aclk(%d)\n", ret);
++		return ret;
++	}
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!res) {
++		dev_err(dev, "audio formatter node:addr to resource failed\n");
++		ret = -ENXIO;
++		goto clk_err;
++	}
++	aud_drv_data->mmio = devm_ioremap_resource(dev, res);
++	if (IS_ERR(aud_drv_data->mmio)) {
++		dev_err(dev, "audio formatter ioremap failed\n");
++		ret = PTR_ERR(aud_drv_data->mmio);
++		goto clk_err;
++	}
++
++	val = readl(aud_drv_data->mmio + XLNX_AUD_CORE_CONFIG);
++	if (val & AUD_CFG_MM2S_MASK) {
++		aud_drv_data->mm2s_presence = true;
++		ret = xlnx_formatter_pcm_reset(aud_drv_data->mmio +
++					       XLNX_MM2S_OFFSET);
++		if (ret) {
++			dev_err(dev, "audio formatter reset failed\n");
++			goto clk_err;
++		}
++		xlnx_formatter_disable_irqs(aud_drv_data->mmio +
++					    XLNX_MM2S_OFFSET,
++					    SNDRV_PCM_STREAM_PLAYBACK);
++
++		aud_drv_data->mm2s_irq = platform_get_irq_byname(pdev,
++								 "irq_mm2s");
++		if (aud_drv_data->mm2s_irq < 0) {
++			dev_err(dev, "xlnx audio mm2s irq resource failed\n");
++			ret = aud_drv_data->mm2s_irq;
++			goto clk_err;
++		}
++		ret = devm_request_irq(dev, aud_drv_data->mm2s_irq,
++				       xlnx_mm2s_irq_handler, 0,
++				       "xlnx_formatter_pcm_mm2s_irq", dev);
++		if (ret) {
++			dev_err(dev, "xlnx audio mm2s irq request failed\n");
++			goto clk_err;
++		}
++	}
++	if (val & AUD_CFG_S2MM_MASK) {
++		aud_drv_data->s2mm_presence = true;
++		ret = xlnx_formatter_pcm_reset(aud_drv_data->mmio +
++					       XLNX_S2MM_OFFSET);
++		if (ret) {
++			dev_err(dev, "audio formatter reset failed\n");
++			goto clk_err;
++		}
++		xlnx_formatter_disable_irqs(aud_drv_data->mmio +
++					    XLNX_S2MM_OFFSET,
++					    SNDRV_PCM_STREAM_CAPTURE);
++
++		aud_drv_data->s2mm_irq = platform_get_irq_byname(pdev,
++								 "irq_s2mm");
++		if (aud_drv_data->s2mm_irq < 0) {
++			dev_err(dev, "xlnx audio s2mm irq resource failed\n");
++			ret = aud_drv_data->s2mm_irq;
++			goto clk_err;
++		}
++		ret = devm_request_irq(dev, aud_drv_data->s2mm_irq,
++				       xlnx_s2mm_irq_handler, 0,
++				       "xlnx_formatter_pcm_s2mm_irq",
++				       dev);
++		if (ret) {
++			dev_err(dev, "xlnx audio s2mm irq request failed\n");
++			goto clk_err;
++		}
++	}
++
++	dev_set_drvdata(dev, aud_drv_data);
++
++	ret = devm_snd_soc_register_component(dev, &xlnx_asoc_component,
++					      NULL, 0);
++	if (ret) {
++		dev_err(dev, "pcm platform device register failed\n");
++		goto clk_err;
++	}
++
++	return 0;
++
++clk_err:
++	clk_disable_unprepare(aud_drv_data->axi_clk);
++	return ret;
++}
++
++static int xlnx_formatter_pcm_remove(struct platform_device *pdev)
++{
++	int ret = 0;
++	struct xlnx_pcm_drv_data *adata = dev_get_drvdata(&pdev->dev);
++
++	if (adata->s2mm_presence)
++		ret = xlnx_formatter_pcm_reset(adata->mmio + XLNX_S2MM_OFFSET);
++
++	/* Try MM2S reset, even if S2MM  reset fails */
++	if (adata->mm2s_presence)
++		ret = xlnx_formatter_pcm_reset(adata->mmio + XLNX_MM2S_OFFSET);
++
++	if (ret)
++		dev_err(&pdev->dev, "audio formatter reset failed\n");
++
++	clk_disable_unprepare(adata->axi_clk);
++	return ret;
++}
++
++static const struct of_device_id xlnx_formatter_pcm_of_match[] = {
++	{ .compatible = "xlnx,audio-formatter-1.0"},
++	{},
++};
++MODULE_DEVICE_TABLE(of, xlnx_formatter_pcm_of_match);
++
++static struct platform_driver xlnx_formatter_pcm_driver = {
++	.probe	= xlnx_formatter_pcm_probe,
++	.remove	= xlnx_formatter_pcm_remove,
++	.driver	= {
++		.name	= DRV_NAME,
++		.of_match_table	= xlnx_formatter_pcm_of_match,
++	},
++};
++
++module_platform_driver(xlnx_formatter_pcm_driver);
++MODULE_AUTHOR("Maruthi Srinivas Bayyavarapu <maruthis@xilinx.com>");
++MODULE_LICENSE("GPL v2");
+-- 
+2.20.1
