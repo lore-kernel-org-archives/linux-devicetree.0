@@ -1,43 +1,73 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: [PATCH V5 1/3] mmc: sdhci: Fix sdhci_do_enable_v4_mode
-Date: Thu, 20 Dec 2018 17:25:07 -0800
-Message-ID: <1545355509-6914-2-git-send-email-skomatineni@nvidia.com>
-References: <1545355509-6914-1-git-send-email-skomatineni@nvidia.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 1/3] dt-bindings: ufs: Add HI3670 UFS controller binding
+Date: Fri, 21 Dec 2018 07:54:44 +0530
+Message-ID: <20181221022444.GA3233@Mani-XPS-13-9360>
+References: <20181207175151.8969-1-manivannan.sadhasivam@linaro.org>
+ <20181207175151.8969-2-manivannan.sadhasivam@linaro.org>
+ <20181220171244.GA22403@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545355509-6914-1-git-send-email-skomatineni@nvidia.com>
+Content-Disposition: inline
+In-Reply-To: <20181220171244.GA22403@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
+To: Rob Herring <robh@kernel.org>
+Cc: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, liwei213@huawei.com, linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-V4_MODE is Bit-15 of SDHCI_HOST_CONTROL2 register.
-Need to perform word access to this register.
+Hi Rob,
 
-Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
----
- drivers/mmc/host/sdhci.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+On Thu, Dec 20, 2018 at 11:12:44AM -0600, Rob Herring wrote:
+> On Fri, Dec 07, 2018 at 11:21:49PM +0530, Manivannan Sadhasivam wrote:
+> > Add devicetree binding for HI3670 UFS controller. HI3760 SoC is very
+> > similar to HI3660 SoC with almost same IPs. Only major difference interms
+> 
+> s/interms/in terms/
+> 
 
-diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-index 99bdae53fa2e..fde984d10619 100644
---- a/drivers/mmc/host/sdhci.c
-+++ b/drivers/mmc/host/sdhci.c
-@@ -127,12 +127,12 @@ static void sdhci_do_enable_v4_mode(struct sdhci_host *host)
- {
- 	u16 ctrl2;
- 
--	ctrl2 = sdhci_readb(host, SDHCI_HOST_CONTROL2);
-+	ctrl2 = sdhci_readw(host, SDHCI_HOST_CONTROL2);
- 	if (ctrl2 & SDHCI_CTRL_V4_MODE)
- 		return;
- 
- 	ctrl2 |= SDHCI_CTRL_V4_MODE;
--	sdhci_writeb(host, ctrl2, SDHCI_HOST_CONTROL);
-+	sdhci_writew(host, ctrl2, SDHCI_HOST_CONTROL2);
- }
- 
- /*
--- 
-2.7.4
+Ack.
+
+> > of UFS is the PHY. HI3670 has 10nm PHY.
+> > 
+> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 4 +++-
+> >  1 file changed, 3 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+> > index a48c44817367..a327c1e24365 100644
+> > --- a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+> > +++ b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+> > @@ -6,7 +6,9 @@ Each UFS Host Controller should have its own node.
+> >  Required properties:
+> >  - compatible        : compatible list, contains one of the following -
+> >  					"hisilicon,hi3660-ufs", "jedec,ufs-1.1" for hisi ufs
+> > -					host controller present on Hi36xx chipset.
+> > +					host controller present on Hi3660 chipset.
+> > +					"hisilicon,hi3670-ufs", "jedec,ufs-2.1" for hisi ufs
+> > +					host controller present on Hi3670 chipset.
+> 
+> From the description, sounds like having "hisilicon,hi3660-ufs" as a 
+> fallback would be appropriate?
+> 
+
+I don't think so. As per my understanding, fallback should be only used
+when it can make the device functional. But in this case,
+"hisilicon,hi3660-ufs" will not make the HI3670 UFS functional. So, I
+will stick to "hisilicon,hi3670-ufs" only.
+
+> >  - reg               : should contain UFS register address space & UFS SYS CTRL register address,
+> >  - interrupt-parent  : interrupt device
+> 
+> Don't document interrupt-parent. It is implied.
+> 
+
+Ack.
+
+Thanks,
+Mani
+
+> >  - interrupts        : interrupt number
+> > -- 
+> > 2.17.1
+> > 
