@@ -1,138 +1,55 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
-Date: Fri, 21 Dec 2018 11:01:28 +0000
-Message-ID: <20181221110128.GO13248@dell>
-References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Subject: [PATCH 1/1] arm64: dts: marvell: mcbin: reserve PSCI area
+Date: Fri, 21 Dec 2018 12:02:33 +0100
+Message-ID: <20181221110233.6074-1-xypron.glpk@gmx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Russell King <linux@armlinux.org.uk>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, devicetree@vger.kernel.org, Heinrich Schuchardt <xypron.glpk@gmx.de>, Gregory Clement <gregory.clement@bootlin.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Dec 2018, Christian Hohnstaedt wrote:
+The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
+attempt to access it from Linux leads to an immediate crash.
 
-> These options apply to all regulators in this chip.
-> 
-> strict-supply-voltage:
->   Set STRICT flag in CONFIG1
-> under-voltage-limit:
->   Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
-> under-voltage-hysteresis:
->   Select 200mV or 400mV UVLOHYS in CONFIG2
-> 
-> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-> ---
->  drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 46 insertions(+)
+So let's make the same memory reservation as the vendor kernel.
 
-This needs a close review by Tony and any of the other OMAP guys.
+Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+---
+ arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-At the very least, please put '\n's between the if() statements.  You
-also need to return after an error print, else I suggest it's not an
-error.
-
-It would also look tidier if you changed the if()s to one liners to
-assign to different variables, then dealt with them separately later
-on.  The way it's done here looks messy to say the least.
-
-> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
-> index 8bcdecf..f5e559b 100644
-> --- a/drivers/mfd/tps65218.c
-> +++ b/drivers/mfd/tps65218.c
-> @@ -211,6 +211,50 @@ static const struct of_device_id of_tps65218_match_table[] = {
->  };
->  MODULE_DEVICE_TABLE(of, of_tps65218_match_table);
->  
-> +static void tps65218_options(struct tps65218 *tps)
-> +{
-> +	struct device *dev = tps->dev;
-> +	struct device_node *np = dev->of_node;
-> +	u32 pval;
-
-What does pval mean?  I suggest just val is more common.
-
-> +	if (!of_property_read_u32(np, "strict-supply-voltage", &pval)) {
-> +		tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
-> +			TPS65218_CONFIG1_STRICT,
-> +			pval ? TPS65218_CONFIG1_STRICT : 0,
-> +			TPS65218_PROTECT_L1);
-> +		dev_dbg(dev, "tps65218 strict-supply-voltage: %d\n", pval);
-> +	}
-> +	if (!of_property_read_u32(np, "under-voltage-hysteresis", &pval)) {
-> +		if (pval != 400000 && pval != 200000) {
-> +			dev_err(dev,
-> +				 "under-voltage-hysteresis must be %d or %d\n",
-> +				 200000, 400000);
-> +		} else {
-> +			tps65218_update_bits(tps, TPS65218_REG_CONFIG2,
-> +				TPS65218_CONFIG2_UVLOHYS,
-> +				pval == 400000 ? TPS65218_CONFIG2_UVLOHYS : 0,
-> +				TPS65218_PROTECT_L1);
-> +		}
-> +		dev_dbg(dev, "tps65218 under-voltage-hysteresis: %d\n", pval);
-> +	}
-> +	if (!of_property_read_u32(np, "under-voltage-limit", &pval)) {
-> +		int i, vals[] = { 275, 295, 325, 335 };
-> +
-> +		for (i = 0; i < ARRAY_SIZE(vals); i++) {
-> +			if (pval == vals[i] * 10000)
-
-Just use the full value in 'vals'.
-
-> +				break;
-> +		}
-
-It took me a few seconds to realise what you're doing here.
-
-I think a switch() statement would be cleaner.
-
-You should also #define the values.
-
-TPS65218_UNDER_VOLT_LIM_2750000 0
-
-Etc.
-
-> +		if (i < ARRAY_SIZE(vals)) {
-> +			tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
-> +				TPS65218_CONFIG1_UVLO_MASK, i,
-> +				TPS65218_PROTECT_L1);
-> +		} else {
-> +			dev_err(dev, "Invalid under-voltage-limit: %d\n", pval);
-
-This could go in the default: section.
-
-> +		}
-> +		dev_dbg(dev, "tps65218 under-voltage-limit: %d=%d\n", pval, i);
-
-I suggest considering removing these.
-
-> +	}
-> +}
-> +
->  static int tps65218_probe(struct i2c_client *client,
->  				const struct i2c_device_id *ids)
->  {
-> @@ -249,6 +293,8 @@ static int tps65218_probe(struct i2c_client *client,
->  
->  	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
->  
-> +	tps65218_options(tps);
-
-Options is not good nomenclature as it doesn't really tell us
-anything.  Looks like all the values are voltage related to me?
-
->  	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
->  			      ARRAY_SIZE(tps65218_cells), NULL, 0,
->  			      regmap_irq_get_domain(tps->irq_data));
-
+diff --git a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+index 56fa44860909..18df1a321b52 100644
+--- a/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
++++ b/arch/arm64/boot/dts/marvell/armada-8040-mcbin.dts
+@@ -23,6 +23,17 @@
+ 		reg = <0x0 0x0 0x0 0x80000000>;
+ 	};
+ 
++	reserved-memory {
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++
++		psci_reserved: psci-area@4000000 {
++		reg = <0x0 0x4000000 0x0 0x200000>;
++		no-map;
++		};
++	};
++
+ 	aliases {
+ 		ethernet0 = &cp0_eth0;
+ 		ethernet1 = &cp1_eth0;
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+2.19.2
