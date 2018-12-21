@@ -1,107 +1,116 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: RE: [PATCH 4/5] clk: imx8qxp: make the name of clock ID generic
-Date: Fri, 21 Dec 2018 11:00:54 -0800
-Message-ID: <154541885475.13075.16994932864140896829@swboyd.mtv.corp.google.com>
-References: <1545232888-9302-1-git-send-email-aisheng.dong@nxp.com>
- <1545232888-9302-5-git-send-email-aisheng.dong@nxp.com>
- <CAOMZO5DzMpMp-Tf74iM3SuHoFpji8z-dxM-UsC13GeDx2bZYgA@mail.gmail.com>
- <VI1PR04MB4222ABD43B82BD3C0B73404780BF0@VI1PR04MB4222.eurprd04.prod.outlook.com>
- <154533484105.79149.16225192496445475758@swboyd.mtv.corp.google.com>
- <AM0PR04MB4211F8786714DD6CCBB55F0A80B80@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2] arm64: dts: sdm845: Add cpufreq device node
+Date: Fri, 21 Dec 2018 11:18:51 -0800
+Message-ID: <20181221191851.GC261387@google.com>
+References: <1545416063-22552-1-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211F8786714DD6CCBB55F0A80B80@AM0PR04MB4211.eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, Fabio Estevam <festevam@gmail.com>
-Cc: "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1545416063-22552-1-git-send-email-tdas@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org, amit.kucheria@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Aisheng Dong (2018-12-20 17:44:28)
-> > -----Original Message-----
-> > From: Stephen Boyd [mailto:sboyd@kernel.org]
-> > Quoting Aisheng Dong (2018-12-19 22:26:50)
-> > > > -----Original Message-----
-> > > > From: Fabio Estevam [mailto:festevam@gmail.com] Hi Aisheng,
-> > > >
-> > > > On Wed, Dec 19, 2018 at 1:29 PM Aisheng Dong
-> > <aisheng.dong@nxp.com>
-> > > > wrote:
-> > > > >
-> > > > > SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
-> > > > > Let's make the name of clock ID generic to allow other SoCs to
-> > > > > reuse the common part.
-> > > > >
-> > > > > This patch only changes the clock id name and file name, so no
-> > > > > functional change.
-> > > > >
-> > > > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > > > > Cc: Sascha Hauer <kernel@pengutronix.de>
-> > > > > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > > > > Cc: Stephen Boyd <sboyd@kernel.org>
-> > > > > Cc: Michael Turquette <mturquette@baylibre.com>
-> > > > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > > > > ---
-> > > > >  drivers/clk/imx/clk-imx8qxp-lpcg.c        | 146 +++++++--------
-> > > > >  drivers/clk/imx/clk-imx8qxp.c             | 152 ++++++++--------
-> > > > >  include/dt-bindings/clock/imx8-clock.h    | 289
-> > > > ++++++++++++++++++++++++++++++
-> > > > >  include/dt-bindings/clock/imx8qxp-clock.h | 289
-> > > > > ------------------------------
-> > > > >  4 files changed, 438 insertions(+), 438 deletions(-)
-> > > >
-> > > > This seems like unneeded churn. Just keep the existing naming and
-> > > > other SoCs can reuse it without problem.
-> > >
-> > > There's a reason.
-> > > We still need add some clock IDs which exist on MX8QM only (probably
-> > > more on future SoCs) Having them prefixed with 'IMX8QXP' may look
-> > strange.
-> > >
-> > > Besides that, as those clock IDs will also be used in devicetree, make
-> > > the name generic for different SoCs seems still better and less confusing.
-> > >
-> > 
-> > This looks like an integration problem. Is anyone using the defines that are
-> > merged through clk tree now? A grep of linux-next says no, but how can I be
-> > sure?
+On Fri, Dec 21, 2018 at 11:44:23PM +0530, Taniya Das wrote:
+> This change adds the cpufreq node as per the bindings example for SDM845.
 > 
-> I'm sure no one is using it now.
-> The only user DTS (imx8qxp mek) is waiting for merge after 4.21-rc1 is out.
-> So it's a chance to update it. 
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> Tested-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 > 
-> > 
-> > So can you leave around the header file with the deprecated define names and
-> > introduce another one that's a copy of the header file but with the non-SoC
-> > specific names?  Then you can wait for a release cycle and delete the old
-> > header file that nobody should be using in DT anymore.
-> > Unless you plan to make sure that nobody uses the deprecated defines
-> > somehow?
-> > 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 23a253b..a69a21e 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -99,6 +99,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+> @@ -114,6 +115,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+> @@ -126,6 +128,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+> @@ -138,6 +141,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 0>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+> @@ -150,6 +154,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+> @@ -162,6 +167,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+> @@ -174,6 +180,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+> @@ -186,6 +193,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+> +			qcom,freq-domain = <&cpufreq_hw 1>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+> @@ -1686,6 +1694,17 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		cpufreq_hw: cpufreq@17d43000 {
+> +			compatible = "qcom,cpufreq-hw";
+> +			reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
+> +			reg-names = "freq-domain0", "freq-domain1";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
+> +			clock-names = "xo", "alternate";
+> +
+> +			#freq-domain-cells = <1>;
+> +		};
+>  	};
 > 
-> Yes, the plan is to make sure nobody uses that.
-> Otherwise, it may be hard to send DTS patches using new CLK ID name through
-> different tree later.
-> 
+>  	thermal-zones {
 
-I've already tagged and prepared to send out clk tree for the next merge
-window. It's getting difficult to change this before -rc1 too because
-I'm traveling for the holidays in the US. I'm fine with changing the
-world if it doesn't break anything, but I'm not interested in making the
-pull request wait another few days for this particular topic, so I'd
-rather send this as part of a follow-on fixes PR during the merge window
-next week.
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
 
-Can you resend with just the things that need to be changed for the next
-release (v4.21 or v5.0)? And Cc the relevant people/lists and try to
-collect acks and reviewed-by tags before next Wednesday? I can send a
-fixes PR on Friday next week then.
+Thanks
+
+Matthias
