@@ -1,154 +1,329 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Fri, 21 Dec 2018 07:05:18 -0600
-Message-ID: <45ce01f0-af6e-1cc6-5126-fb557c7d2a82@ti.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
- <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
- <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
- <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
- <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
- <71d3ac12-5beb-0a26-71e1-5eae798e7b9f@gmail.com>
- <2bca210b-76ad-d5a9-906c-4151695050c3@gmail.com>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Fri, 21 Dec 2018 21:13:31 +0800
+Message-ID: <1545398011.25199.43.camel@mhfsdcap03>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
+         <20181217143247.GK20725@google.com>
+         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+         <1545124764.25199.3.camel@mhfsdcap03>
+         <20181218153232.GA6715@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2bca210b-76ad-d5a9-906c-4151695050c3@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181218153232.GA6715@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 12/21/2018 01:32 AM, Jacek Anaszewski wrote:
-> On 12/20/18 9:31 PM, Jacek Anaszewski wrote:
->> On 12/19/18 10:50 PM, Dan Murphy wrote:
->>> On 12/19/2018 03:36 PM, Jacek Anaszewski wrote:
->>>> Hi Dan and Pavel,
->>>>
->>>> On 12/19/18 9:41 PM, Dan Murphy wrote:
->>>>> Pavel
->>>>>
->>>>> On 12/19/2018 02:10 PM, Pavel Machek wrote:
->>>>>> On Wed 2018-12-19 13:41:18, Dan Murphy wrote:
->>>>>>> Pavel
->>>>>>>
->>>>>>> Thanks for the review.
->>>>>>>
->>>>>>> On 12/19/2018 01:34 PM, Pavel Machek wrote:
->>>>>>>> Hi!
->>>>>>>>
->>>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_a_mix);
->>>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_b_mix);
->>>>>>>>> +static DEVICE_ATTR_WO(ctrl_bank_c_mix);
->>>>>>>>> +
->>>>>>>>> +static struct attribute *lp5024_ctrl_bank_attrs[] = {
->>>>>>>>> +    &dev_attr_ctrl_bank_a_mix.attr,
->>>>>>>>> +    &dev_attr_ctrl_bank_b_mix.attr,
->>>>>>>>> +    &dev_attr_ctrl_bank_c_mix.attr,
->>>>>>>>> +    NULL
->>>>>>>>> +};
->>>>>>>>> +ATTRIBUTE_GROUPS(lp5024_ctrl_bank);
->>>>>>>>
->>>>>>>> ...
->>>>>>>>> +
->>>>>>>>> +static DEVICE_ATTR_WO(led1_mix);
->>>>>>>>> +static DEVICE_ATTR_WO(led2_mix);
->>>>>>>>> +static DEVICE_ATTR_WO(led3_mix);
->>>>>>>>> +
->>>>>>>>> +static struct attribute *lp5024_led_independent_attrs[] = {
->>>>>>>>> +    &dev_attr_led1_mix.attr,
->>>>>>>>> +    &dev_attr_led2_mix.attr,
->>>>>>>>> +    &dev_attr_led3_mix.attr,
->>>>>>>>> +    NULL
->>>>>>>>> +};
->>>>>>>>> +ATTRIBUTE_GROUPS(lp5024_led_independent);
->>>>>>>>
->>>>>>>> Ok, so you are adding new sysfs files. Are they _really_ neccessary?
->>>>>>>> We'd like to have uniform interfaces for the leds.
->>>>>>>
->>>>>>> Yes I am adding these for this driver.
->>>>>>> They adjust the individual brightness of each LED connected (what the HW guys called mixing).
->>>>>>>
->>>>>>> The standard brightness sysfs adjusts all 3 LEDs simultaneously so that all 3 LEDs brightness are
->>>>>>> uniform.
->>>>>>
->>>>>> 1 LED, 1 brightness file... that's what we do. Why should this one be different?
->>>>>>
->>>>>
->>>>> Yes I understand this and 1 DT child node per LED out but...
->>>>>
->>>>> This device has a single register to control 3 LEDs brightness as a group and individual brightness
->>>>> registers to control the LEDs independently to mix the LEDs to a specific color.
->>>>>
->>>>> There needs to be a way to control both so that developers can mix and adjust the individual RGB and
->>>>> then control the brightness of the group during run time without touching the "mixing" value.
->>>>>
->>>>> I don't think a user needs nor would want to have 24 different LED nodes with 24 different brightness files.
->>>>> Or with the LP5036 that would have 36 LED nodes.
->>>>>
->>>>> Table 1 in the data sheet shows how the outputs map to the control banks to the LED registers.
->>>>
->>>> Some time ago we had discussion with Vesa Jääskeläinen about possible
->>>> approaches to RGB LEDs [0]. What seemed to be the most suitable
->>>> variation of the discussed out-of-tree approach was the "color" property
->>>> and array of color triplets defined in Device Tree per each color.
->>>>
->>>
->>> Why does Device tree define the color?
->>>
->>> Rob indicated that Device tree is supposed to define the hardware.
->>> This thread seems to be defining the operation.
->>
->> Perceived colors produced by LEDs from different manufacturers may
->> differ and this alone should be deemed a sufficient argument for having
->> board specific color definitions.
->>
->>> Shouldn't the color be done via user space and not dt?
->>
->> I think that we should keep the userspace interface as simple
->> as possible and backwards compatible with monochrome LEDs.
->>
->> I also propose to avoid the introduction of a color sysfs
->> property in favor of creating separate LED class devices
->> for different "color ranges". The devices would drive the same
->> LED but using different preset color levels.
+On Tue, 2018-12-18 at 15:32 +0000, Lorenzo Pieralisi wrote:
+> On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
+> > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
+> > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
+> > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
+> > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
+> > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
+> > > > > > > in arm64 but bogus alignment values at arm32, the pcie device and devices
+> > > > > > > behind this bridge will not be enabled. Fix it's BAR0 resource size to
+> > > > > > > guarantee the pcie devices will be enabled correctly.
+> > > > > > 
+> > > > > > So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
+> > > > > > to 0, and an IO BAR has bit 1 hardwired to 0.
+> > > > > 
+> > > > > Yes, it only works properly on 64bit platform.
+> > > > 
+> > > > I don't understand.  BARs are supposed to work the same regardless of
+> > > > whether it's a 32- or 64-bit platform.  If this is a workaround for a
+> > > > hardware defect, please just say that explicitly.
+> > > 
+> > > I do not understand this either. First thing to do is to describe the
+> > > problem properly so that we can actually find a solution to it.
+> > > 
+> > > Lorenzo
+> > 
+> > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR is
+> > 0xffff_ffff_0000_0000 and it could not be changed except by config write
+> > operation.
+> > 
+> > The calculated BAR size will be 0 in 32-bit platform since the
+> > phys_addr_t is a 32bit value in 32-bit platform.
+> > 
+> > Actually MediaTek's HW does not using this BAR0, just omit it when
+> > assign resource is totally fine.
+> > 
+> > When assign the resource for each device, software will check the
+> > resource alignment first, and the resource of length zero will be
+> > regarded as a bogus alignment resource, it will be ignored and won't
+> > claim a resource parent for it.
+> > 
+> > When drivers try to enable the PCIe devices, the software will enable
+> > it's resources, but it will return an error number when found a
+> > unclaimed resource, in that case, the flow of enable devices will be
+> > interrupted and PCIe devices won't work properly.
 > 
-> On the other hand, scattering the control over the hardware
-> among multiple LED class devices would complicate extension
-> of pattern trigger with the support for RGB LEDs.
+> As a starting point, please provide kernel logs for both 64-bit and
+> 32-bit platforms (without this patch applied) and also a:
 > 
-> I looks like we will need the "color" sysfs file  anyway.
+> cat /proc/iomem
 > 
->> We don't have to expose all device knobs to the userspace,
->> but instead provide some predefined configurations. It would
->> improve user experience by keeping LED class devices simple
->> in use. It would be Device Tree designer's responsibility to
->> provide color definitions that make sense for given RGB LED
->> controller and RGB LED element configuration.
->>
->> Registering color palette with devm_rgb_register() you proposed
->> is also an option, but with one LED class device per color palette
->> it would mean allowing for creation/destruction of LED class
->> devices by any user having access to given LED's sysfs interface,
->> which is really bad solution.
+> and
 > 
-> With the "color" sysfs file it will make more sense to allow for user
-> defined color palettes.
+> lspci
 > 
+> output for both configurations.
+> 
+> Thanks,
+> Lorenzo
 
-I think defining these values in the device tree or acpi severely limits the devices
-capabilities.  Especially in development phases.  If the knobs were exposed then the user space
-can create new experiences.  The color definition should be an absolute color defined in the dt and
-either the framework or user space needs to mix these appropriately.  IMO user space should set the policy
-of the user experience and the dt/acpi needs to set the capabilities.
+I compared with the mt2712 platform, which is an arm64 platform, and the
+EP deivce is an Intel e1000e NIC. Compiled these drivers to modules
+(without this patch applied both), and insert them separately after
+system startup.
 
-I do like Pavels idea on defining the more standard binding pattern to "group" leds into a single group.
+After insert these modules, there will be an Ethernet device on both
+platform, and the 64-bit platform works properly, but the 32-bit
+platform doesn't.
 
-Maybe the framework could take these groups and combine/group them into a single node with the groups colors.
+1.The following logs is from the 64-bit platform (mt2712):
 
-Dan
--- 
-------------------
-Dan Murphy
+1.1. insmod pcie-mediatek.ko:
+mtk-pcie 11700000.pcie: host bridge /pcie@11700000 ranges:
+mtk-pcie 11700000.pcie:   MEM 0x20000000..0x2fffffff -> 0x20000000
+mtk-pcie 11700000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [mem 0x20000000-0x2fffffff]
+pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
+reconfiguring
+pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5
+GT/s x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8 GT/s x1
+link)
+pci 0000:00:00.0: BAR 0: no space for [mem size 0x100000000 64bit pref]
+pci 0000:00:00.0: BAR 0: failed to assign [mem size 0x100000000 64bit
+pref]
+pci 0000:00:00.0: BAR 8: assigned [mem 0x20000000-0x200fffff]
+pci 0000:01:00.0: BAR 1: assigned [mem 0x20000000-0x2007ffff]
+pci 0000:01:00.0: BAR 6: assigned [mem 0x20080000-0x200bffff pref]
+pci 0000:01:00.0: BAR 0: assigned [mem 0x200c0000-0x200dffff]
+pci 0000:01:00.0: BAR 3: assigned [mem 0x200e0000-0x200e3fff]
+pci 0000:01:00.0: BAR 2: no space for [io  size 0x0020]
+pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0020]
+pci 0000:00:00.0: PCI bridge to [bus 01]
+pci 0000:00:00.0:   bridge window [mem 0x20000000-0x200fffff]
+
+1.2. insmod e1000e.ko:
+e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
+e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+pci 0000:00:00.0: enabling device (0000 -> 0002)
+e1000e 0000:01:00.0: enabling device (0000 -> 0002)
+e1000e 0000:01:00.0: Interrupt Throttling Rate (ints/sec) set to dynamic
+conservative mode
+e1000e 0000:01:00.0 0000:01:00.0 (uninitialized): registered PHC clock
+e1000e 0000:01:00.0 eth0: (PCI Express:2.5GT/s:Width x1)
+2c:53:4a:03:89:e9
+e1000e 0000:01:00.0 eth0: Intel(R) PRO/1000 Network Connection
+e1000e 0000:01:00.0 eth0: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
+
+1.3. lspci -xxx
+00:00.0 Class 0604: Device 14c3:2712
+00: c3 14 12 27 06 00 10 00 00 01 04 06 00 00 01 00
+10: 0c 00 00 00 00 00 00 00 00 01 01 40 00 00 20 04
+20: 00 20 00 20 00 00 00 00 00 00 00 00 00 00 00 00
+30: 00 00 00 00 50 00 00 00 00 00 00 00 00 01 00 00
+40: 00 00 00 00 60 61 12 02 00 00 00 00 00 00 00 00
+50: 05 78 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+60: 00 00 00 00 00 00 00 00 11 78 00 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 01 80 c3 01 08 00 00 00
+80: 10 00 42 01 41 83 00 00 10 28 20 00 12 8c 60 01
+90: 08 00 11 10 00 00 04 00 00 00 00 00 00 00 00 00
+a0: 00 00 00 00 00 08 00 00 00 00 00 00 00 00 00 00
+b0: 02 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+01:00.0 Class 0200: Device 8086:10d3
+00: 86 80 d3 10 06 04 18 00 00 00 00 02 10 00 00 00
+10: 00 00 0c 20 00 00 00 20 01 00 00 00 00 00 0e 20
+20: 00 00 00 00 00 00 00 00 00 00 00 00 1a 1d 00 00
+30: 00 00 00 00 c8 00 00 00 00 00 00 00 f3 01 00 00
+40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+a0: 11 00 04 80 03 00 00 00 03 20 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 01 d0 22 c8 00 20 00 14
+d0: 05 e0 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 10 a0 01 00 c1 8c 00 00 10 28 10 00 11 1c 03 01
+f0: 00 00 11 10 00 00 00 00 00 00 00 00 00 00 00 00
+
+1.4 lspci -v
+00:00.0 Class 0604: Device 14c3:2712 (prog-if 01)
+	Flags: bus master, fast devsel, latency 0
+	Memory at <unassigned> (64-bit, prefetchable)
+	Bus: primary=00, secondary=01, subordinate=01, sec-latency=64
+	I/O behind bridge: 00000000-00000fff [size=4K]
+	Memory behind bridge: 20000000-200fffff [size=1M]
+	Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+	Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+	Capabilities: [78] Power Management version 3
+	Capabilities: [80] Express Root Port (Slot+), MSI 00
+	Capabilities: [100] Virtual Channel
+	Capabilities: [400] L1 PM Substates
+	Capabilities: [600] Latency Tolerance Reporting
+
+01:00.0 Class 0200: Device 8086:10d3
+	Subsystem: Device 1d1a:0000
+	Flags: bus master, fast devsel, latency 0, IRQ 243
+	Memory at 200c0000 (32-bit, non-prefetchable) [size=128K]
+	Memory at 20000000 (32-bit, non-prefetchable) [size=512K]
+	I/O ports at <unassigned> [disabled]
+	Memory at 200e0000 (32-bit, non-prefetchable) [size=16K]
+	[virtual] Expansion ROM at 20080000 [disabled] [size=256K]
+	Capabilities: [c8] Power Management version 2
+	Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
+	Capabilities: [e0] Express Endpoint, MSI 00
+	Capabilities: [a0] MSI-X: Enable+ Count=5 Masked-
+	Capabilities: [100] Advanced Error Reporting
+	Capabilities: [140] Device Serial Number 2c-53-4a-ff-ff-03-89-e9
+	Kernel driver in use: e1000e
+
+1.5. cat /proc/iomem
+20000000-2fffffff : pcie@11700000
+  20000000-200fffff : PCI Bus 0000:01
+    20000000-2007ffff : 0000:01:00.0
+      20000000-2007ffff : e1000e
+    20080000-200bffff : 0000:01:00.0
+    200c0000-200dffff : 0000:01:00.0
+      200c0000-200dffff : e1000e
+    200e0000-200e3fff : 0000:01:00.0
+      200e0000-200e3fff : e1000e
+
+2. The following logs is from the 32-bit platform (mt7629):
+
+2.1. insmod pcie-mediatek.ko
+mtk-pcie 1a140000.pcie: host bridge /pcie@1a140000 ranges:
+mtk-pcie 1a140000.pcie:   MEM 0x20000000..0x2fffffff -> 0x20000000
+mtk-pcie 1a140000.pcie: PCI host bridge to bus 0000:00
+pci_bus 0000:00: root bus resource [bus 00-ff]
+pci_bus 0000:00: root bus resource [mem 0x20000000-0x2fffffff]
+PCI: bus0: Fast back to back transfers disabled
+pci 0000:00:01.0: bridge configuration invalid ([bus 00-00]),
+reconfiguring
+pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5
+GT/s x1 link at 0000:00:01.0 (capable of 7.876 Gb/s with 8 GT/s x1
+link)
+PCI: bus1: Fast back to back transfers disabled
+pci 0000:00:01.0: BAR 0: [mem 0x00000000-0xffffffff 64bit pref] has
+bogus alignment
+pci 0000:00:01.0: BAR 8: assigned [mem 0x20000000-0x200fffff]
+pci 0000:01:00.0: BAR 1: assigned [mem 0x20000000-0x2007ffff]
+pci 0000:01:00.0: BAR 6: assigned [mem 0x20080000-0x200bffff pref]
+pci 0000:01:00.0: BAR 0: assigned [mem 0x200c0000-0x200dffff]
+pci 0000:01:00.0: BAR 3: assigned [mem 0x200e0000-0x200e3fff]
+pci 0000:01:00.0: BAR 2: no space for [io  size 0x0020]
+pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0020]
+pci 0000:00:01.0: PCI bridge to [bus 01]
+pci 0000:00:01.0:   bridge window [mem 0x20000000-0x200fffff]
+
+2.2. insmod e1000e.ko
+e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
+e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
+pci 0000:00:01.0: can't enable device: BAR 0 [mem 0x00000000-0xffffffff
+64bit pref] not claimed
+pci 0000:00:01.0: Error enabling bridge (-22), continuing
+e1000e 0000:01:00.0: enabling device (0140 -> 0142)
+e1000e 0000:01:00.0: Interrupt Throttling Rate (ints/sec) set to dynamic
+conservative mode
+e1000e 0000:01:00.0 eth0: (PCI Express:2.5GT/s:Width x1)
+2c:53:4a:03:89:e9
+e1000e 0000:01:00.0 eth0: Intel(R) PRO/1000 Network Connection
+e1000e 0000:01:00.0 eth0: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
+
+2.3. lspci -xxx
+00:01.0 Class 0604: Device 14c3:7629
+00: c3 14 29 76 40 01 10 00 00 01 04 06 10 00 01 00
+10: 0c 00 00 00 00 00 00 00 00 01 01 40 00 00 20 04
+20: 00 20 00 20 00 00 00 00 00 00 00 00 00 00 00 00
+30: 00 00 00 00 50 00 00 00 00 00 00 00 00 01 01 00
+40: 00 00 00 00 60 61 12 02 00 00 00 00 00 00 00 00
+50: 05 78 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+60: 00 00 00 00 00 00 00 00 11 78 00 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 01 80 c3 01 08 00 00 00
+80: 10 00 42 01 41 83 00 00 10 28 20 00 22 8c 60 01
+90: 08 00 11 10 00 00 04 00 00 00 00 00 00 00 00 00
+a0: 00 00 00 00 00 08 00 00 00 00 00 00 00 00 00 00
+b0: 02 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+
+01:00.0 Class 0200: Device 8086:10d3
+00: 86 80 d3 10 40 01 10 00 00 00 00 02 10 00 00 00
+10: 00 00 0c 20 00 00 00 20 01 00 00 00 00 00 0e 20
+20: 00 00 00 00 00 00 00 00 00 00 00 00 1a 1d 00 00
+30: 00 00 00 00 c8 00 00 00 00 00 00 00 00 01 00 00
+40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+a0: 11 00 04 00 03 00 00 00 03 20 00 00 00 00 00 00
+b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+c0: 00 00 00 00 00 00 00 00 01 d0 22 c8 00 20 00 14
+d0: 05 e0 80 00 00 00 00 00 00 00 00 00 00 00 00 00
+e0: 10 a0 01 00 c1 8c 00 00 10 28 10 00 11 1c 03 01
+f0: 00 00 11 10 00 00 00 00 00 00 00 00 00 00 00 00
+
+2.4. lspci -v
+00:01.0 Class 0604: Device 14c3:7629 (prog-if 01)
+	Flags: bus master, fast devsel, latency 0
+	Memory at <unassigned> (64-bit, prefetchable) [disabled] [size=4G]
+	Bus: primary=00, secondary=01, subordinate=01, sec-latency=64
+	I/O behind bridge: 00000000-00000fff [size=4K]
+	Memory behind bridge: 20000000-200fffff [size=1M]
+	Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
+	Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
+	Capabilities: [78] Power Management version 3
+	Capabilities: [80] Express Root Port (Slot+), MSI 00
+	Capabilities: [100] Virtual Channel
+	Capabilities: [400] L1 PM Substates
+	Capabilities: [600] Latency Tolerance Reporting
+
+01:00.0 Class 0200: Device 8086:10d3
+	Subsystem: Device 1d1a:0000
+	Flags: bus master, fast devsel, latency 0, IRQ 110
+	Memory at 200c0000 (32-bit, non-prefetchable) [size=128K]
+	Memory at 20000000 (32-bit, non-prefetchable) [size=512K]
+	I/O ports at <unassigned> [disabled]
+	Memory at 200e0000 (32-bit, non-prefetchable) [size=16K]
+	[virtual] Expansion ROM at 20080000 [disabled] [size=256K]
+	Capabilities: [c8] Power Management version 2
+	Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
+	Capabilities: [e0] Express Endpoint, MSI 00
+	Capabilities: [a0] MSI-X: Enable+ Count=5 Masked-
+	Capabilities: [100] Advanced Error Reporting
+	Capabilities: [140] Device Serial Number 2c-53-4a-ff-ff-03-89-e9
+	Kernel driver in use: e1000e
+
+2.5. cat /proc/iomem
+20000000-2fffffff : pcie@1a140000
+  20000000-200fffff : PCI Bus 0000:01
+    20000000-2007ffff : 0000:01:00.0
+      20000000-2007ffff : e1000e
+    20080000-200bffff : 0000:01:00.0
+    200c0000-200dffff : 0000:01:00.0
+      200c0000-200dffff : e1000e
+    200e0000-200e3fff : 0000:01:00.0
+      200e0000-200e3fff : e1000e
+
+Thanks.
