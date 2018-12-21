@@ -1,31 +1,60 @@
-From: Baruch Siach <baruch@tkos.co.il>
-Subject: Re: [PATCH v1 2/3] dt-bindings: mailbox: Document armada-37xx-rwtm-mailbox binding
-Date: Fri, 21 Dec 2018 07:13:43 +0200
-Message-ID: <8736qr8nso.fsf@tkos.co.il>
-References: <20181217153706.25873-1-marek.behun@nic.cz> <20181217153706.25873-2-marek.behun@nic.cz> <20181220214447.GA18008@bogus> <20181220230821.3f21163a@nic.cz>
+From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [PATCH v4 0/3] Use interconnect API in MDSS on SDM845
+Date: Fri, 21 Dec 2018 11:50:22 +0530
+Message-ID: <1545373225-32046-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-reply-to: <20181220230821.3f21163a@nic.cz>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Behun <marek.behun@nic.cz>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Gregory CLEMENT <gregory.clement@bootlin.com>, Jassi Brar <jassisinghbrar@gmail.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marek,
-
-Marek Behun writes:
->> > +- compatible :	must be "marvell,armada-37xx-rwtm-mailbox"  
->> 
->> Don't use wildcards in compatible strings.
->
-> You mean that "mailbox" shouldn't be there?
-
-You should use '3700' instead of '37xx'.
-
-baruch
-
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+VGhlIGludGVyY29ubmVjdCBBUEkgcHJvdmlkZXMgYW4gaW50ZXJmYWNlIGZvciBjb25zdW1lciBk
+cml2ZXJzIHRvIGV4cHJlc3MKdGhlaXIgYmFuZHdpZHRoIG5lZWRzIGluIHRoZSBTb0MuIFRoaXMg
+ZGF0YSBpcyBhZ2dyZWdhdGVkIGFuZCB0aGUgb24tY2hpcAppbnRlcmNvbm5lY3QgaGFyZHdhcmUg
+aXMgY29uZmlndXJlZCB0byB0aGUgYXBwcm9wcmlhdGUgcG93ZXIvcGVyZm9ybWFuY2UKcHJvZmls
+ZS4KCk1EU1MgaXMgb25lIG9mIHRoZSBpbnRlcmNvbm5lY3QgY29uc3VtZXJzIHdoaWNoIHVzZXMg
+dGhlIGludGVyY29ubmVjdCBBUElzCnRvIGdldCB0aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBh
+bmQgc2V0IGl0cyBiYW5kd2lkdGggcmVxdWlyZW1lbnRzCmZvciB0aGUgZ2l2ZW4gaW50ZXJjb25u
+ZWN0ZWQgcGF0aC4KClN1YnNlcXVlbnRseSwgdGhlcmUgaXMgYSBjbGVhbiB1cCBwYXRjaCB0byBy
+ZW1vdmUgYWxsIHRoZSByZWZlcmVuY2VzCm9mIHRoZSBEUFUgY3VzdG9tIGJ1cyBzY2FsaW5nLgoK
+VGhlcmUgaXMgY29ycmVzcG9uZGluZyBEVCBwYXRjaCB3aXRoIHRoZSBzb3VyY2UgYW5kIGRlc3Rp
+bmF0aW9uIHBvcnRzCmRlZmluZWQgZm9yIGRpc3BsYXkgZHJpdmVyIHdoaWNoIHdpbGwgYmUgc2Vu
+dCBzZXBhcmF0ZWx5LgoKQ2hhbmdlcyBpbiB2MjoKCS0gUmVtb3ZlIGVycm9yIGxvZyBhbmQgdW5u
+ZWNlc3NhcnkgY2hlY2sgKEpvcmRhbiBDcm91c2UpCgktIEZpeGVkIGJ1aWxkIGVycm9yIGR1ZSB0
+byBwYXJ0aWFsIGNsZWFuIHVwCgpDaGFuZ2VzIGluIHYzOgoJLSBSZW1vdmUgY29tbW9uIHByb3Bl
+cnR5IGRlZmluaXRpb25zIChSb2IgSGVycmluZykKCS0gQ29kZSBjbGVhbiB1cCBpbnZvbHZpbmcg
+dmFyaWFibGUgbmFtZSBjaGFuZ2UsIHJlbW92YWwKCSAgb2YgZXh0cmEgcGFyYW50aGVzaXMgYW5k
+IHZhcmlhYmxlcyAoTWF0dGhpYXMgS2FlaGxja2UpCgktIENvbmRlbnNlIG11bHRpcGxlIGxpbmVz
+IGludG8gYSBzaW5nbGUgbGluZSAoU2VhbiBQYXVsKQoKQ2hhbmdlcyBpbiB2NDoKCS0gQWRkIGNv
+bW1lbnRzLCBzcGFjaW5ncywgdGFicywgcHJvcGVyIHBvcnQgbmFtZSBhbmQgaWNjIG1hY3JvCgkt
+IFVzZSBwb3J0IG1hY3JvcyBhbmQgY2hhbmdlIHBvcnQgc3RyaW5nIG5hbWVzIChHZW9yZ2kgRGph
+a292KQoKU3JhdmFudGhpIEtvbGx1a3VkdXJ1ICgzKToKICBkcm0vbXNtL2RwdTogY2xlYW4gdXAg
+cmVmZXJlbmNlcyBvZiBEUFUgY3VzdG9tIGJ1cyBzY2FsaW5nCiAgZHJtL21zbS9kcHU6IEludGVn
+cmF0ZSBpbnRlcmNvbm5lY3QgQVBJIGluIE1EU1MKICBkdC1iaW5kaW5nczogbXNtL2Rpc3A6IElu
+dHJvZHVjZSBpbnRlcmNvbm5lY3QgYmluZGluZ3MgZm9yIE1EU1Mgb24KICAgIFNETTg0NQoKIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQgICAgICAgIHwgIDEwICsr
+CiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY29yZV9wZXJmLmMgICAgICB8IDE3
+NCArKysrKysrKy0tLS0tLS0tLS0tLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2Rw
+dV9jb3JlX3BlcmYuaCAgICAgIHwgICA0ICstCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1
+MS9kcHVfY3J0Yy5jICAgICAgICAgICB8ICAxMyArLQogZHJpdmVycy9ncHUvZHJtL21zbS9kaXNw
+L2RwdTEvZHB1X21kc3MuYyAgICAgICAgICAgfCAgNDkgKysrKystCiBkcml2ZXJzL2dwdS9kcm0v
+bXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmMgICB8ICA0NyArKy0tLS0KIGRyaXZlcnMv
+Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9wb3dlcl9oYW5kbGUuaCAgIHwgIDY4IC0tLS0tLS0t
+CiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfdHJhY2UuaCAgICAgICAgICB8ICAy
+MiArLS0KIDggZmlsZXMgY2hhbmdlZCwgMTQ0IGluc2VydGlvbnMoKyksIDI0MyBkZWxldGlvbnMo
+LSkKCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBDZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIg
+b2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2
+ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
