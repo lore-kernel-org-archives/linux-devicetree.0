@@ -1,41 +1,40 @@
-From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: Re: [PATCH v5 7/8] clk: lochnagar: Add support for the Cirrus Logic
- Lochnagar
-Date: Fri, 21 Dec 2018 15:28:55 +0000
-Message-ID: <20181221152855.GI16508@imbe.wolfsonmicro.main>
-References: <20181120141631.18949-1-ckeepax@opensource.cirrus.com>
- <20181120141631.18949-7-ckeepax@opensource.cirrus.com>
- <154356443157.88331.15749597863624143993@swboyd.mtv.corp.google.com>
- <20181221135037.GH16508@imbe.wolfsonmicro.main>
+From: Ioana Ciornei <ioana.ciornei@nxp.com>
+Subject: [PATCH 0/3] soc: fsl: add DPAA2 log console support
+Date: Fri, 21 Dec 2018 15:31:07 +0000
+Message-ID: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181221135037.GH16508@imbe.wolfsonmicro.main>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: broonie@kernel.org, lee.jones@linaro.org, linus.walleij@linaro.org, mturquette@baylibre.com, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patches@opensource.cirrus.com, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org
+To: Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Roy Pledge <roy.pledge@nxp.com>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ioana Ciornei <ioana.ciornei@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 21, 2018 at 01:50:37PM +0000, Charles Keepax wrote:
-> On Thu, Nov 29, 2018 at 11:53:51PM -0800, Stephen Boyd wrote:
-> > Quoting Charles Keepax (2018-11-20 06:16:30)
-> > > +MODULE_AUTHOR("Charles Keepax <ckeepax@opensource.cirrus.com>");
-> > > +MODULE_DESCRIPTION("Clock driver for Cirrus Logic Lochnagar Board");
-> > > +MODULE_LICENSE("GPL v2");
-> > > +MODULE_ALIAS("platform:lochnagar-clk");
-> > 
-> > I think MODULE_ALIAS is not needed if it's this simple?
-> > 
-> 
-> Not actually sure on this one, to be honest its mostly cargo
-> culted from other drivers. I will investigate and see what I dig
-> up but if has any pointers I would greatly appreciate it.
-> 
+This patch set adds support for exporting DPAA2 firmware console
+logs to userspace.
 
->From what I can find out it looks like MODULE_ALIAS is indeed
-redundant on DT only drivers, which these are at the moment so
-will remove and give it a test.
+The first two patches add the needed device tree node and its documentation
+while the third one adds the actual platform driver.
 
-Thanks,
-Charles
+Ioana Ciornei (3):
+  arm64: dts: add dpaa2-console node for DPAA2 platforms
+  Documentation: DT: Add entry for DPAA2 console
+  soc: fsl: add DPAA2 console support
+
+ .../devicetree/bindings/misc/dpaa2-console.txt     |  11 +
+ MAINTAINERS                                        |   1 +
+ arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi     |   5 +
+ arch/arm64/boot/dts/freescale/fsl-ls208xa.dtsi     |   5 +
+ drivers/soc/fsl/Kconfig                            |  10 +
+ drivers/soc/fsl/Makefile                           |   1 +
+ drivers/soc/fsl/dpaa2-console.c                    | 306 +++++++++++++++++=
+++++
+ 7 files changed, 339 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/dpaa2-console.tx=
+t
+ create mode 100644 drivers/soc/fsl/dpaa2-console.c
+
+--=20
+1.9.1
