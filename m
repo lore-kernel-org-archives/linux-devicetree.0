@@ -1,114 +1,85 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v4 13/18] memory: mtk-smi: Add bus_sel for mt8183
-Date: Fri, 21 Dec 2018 12:47:08 +0800
-Message-ID: <CANMq1KA4GLZHcDH31=W==8BTBZOVbRX9HBTJrpPFNQ3rWaM4xg@mail.gmail.com>
-References: <1544258371-4600-1-git-send-email-yong.wu@mediatek.com> <1544258371-4600-14-git-send-email-yong.wu@mediatek.com>
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Fri, 21 Dec 2018 10:22:34 +0530
+Message-ID: <7e310416-78d3-b7e5-5013-0bcc8bfd0351@codeaurora.org>
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+ <20181217070647.xtvfgsixggua5yod@vireshk-i7>
+ <CAD=FV=WKfKyZe6sc4drfa9kLQVbG1b9nCe6qbPmUPQGNEKAh=Q@mail.gmail.com>
+ <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
+ <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
+ <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
+ <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q@mail.gmail.com>
+ <CAD=FV=VMMYKoW4RU_TTjLdyrNcWZU-Gyou9b6qynKFX9wDn5Mw@mail.gmail.com>
+ <CAD=FV=Utko6B6OycYpef3OQAF1v-rthcdgAKMm0GLxRM4=ummg@mail.gmail.com>
+ <CAL_Jsq+U8Vj4+w6jA+B3_CyG8N==ABbw31nm+LE=6pwXEopApw@mail.gmail.com>
+ <154534136449.79149.14097954220921296509@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544258371-4600-14-git-send-email-yong.wu@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <154534136449.79149.14097954220921296509-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 8, 2018 at 4:43 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> There are 2 mmu cells in a M4U HW. we could adjust some larbs entering
-> mmu0 or mmu1 to balance the bandwidth via the smi-common register
-> SMI_BUS_SEL(0x220)(Each larb occupy 2 bits).
->
-> In mt8183, For better performance, we switch larb1/2/5/7 to enter
-> mmu1 while the others still keep enter mmu0.
->
-> In mt8173 and mt2712, we don't get the performance issue,
-> Keep its default value(0x0), that means all the larbs enter mmu0.
->
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/memory/mtk-smi.c | 22 ++++++++++++++++++++--
->  1 file changed, 20 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
-> index ee6165e..88eb61a 100644
-> --- a/drivers/memory/mtk-smi.c
-> +++ b/drivers/memory/mtk-smi.c
-> @@ -49,6 +49,12 @@
->  #define SMI_LARB_NONSEC_CON(id)        (0x380 + ((id) * 4))
->  #define F_MMU_EN               BIT(0)
->
-> +/* SMI COMMON */
-> +#define SMI_BUS_SEL                    0x220
-> +#define SMI_BUS_LARB_SHIFT(larbid)     ((larbid) << 1)
-> +/* All are MMU0 defaultly. Only specialize mmu1 here. */
-> +#define F_MMU1_LARB(larbid)            (0x1 << SMI_BUS_LARB_SHIFT(larbid))
-> +
->  enum mtk_smi_gen {
->         MTK_SMI_GEN1,
->         MTK_SMI_GEN2
-> @@ -57,6 +63,7 @@ enum mtk_smi_gen {
->  struct mtk_smi_common_plat {
->         enum mtk_smi_gen gen;
->         bool             has_gals;
-> +       u32              bus_sel; /* Balance some larbs to enter mmu0 or mmu1 */
->  };
->
->  struct mtk_smi_larb_gen {
-> @@ -72,8 +79,8 @@ struct mtk_smi {
->         struct clk                      *clk_apb, *clk_smi;
->         struct clk                      *clk_gals0, *clk_gals1;
->         struct clk                      *clk_async; /*only needed by mt2701*/
-> -       void __iomem                    *smi_ao_base;
-> -
-> +       void __iomem                    *smi_ao_base; /* only for gen1 */
-> +       void __iomem                    *base;        /* only for gen2 */
->         const struct mtk_smi_common_plat *plat;
->  };
->
-> @@ -409,6 +416,8 @@ static int __maybe_unused mtk_smi_larb_suspend(struct device *dev)
->  static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
->         .gen      = MTK_SMI_GEN2,
->         .has_gals = true,
-> +       .bus_sel  = F_MMU1_LARB(1) | F_MMU1_LARB(2) | F_MMU1_LARB(5) |
-> +                   F_MMU1_LARB(7),
-
-Maybe it's ok for now, but I wonder if this is something that should
-be specified in device tree? Maybe different applications will want
-different larb split between MMU0 and MMU1?
-
->  };
->
->  static const struct of_device_id mtk_smi_common_of_ids[] = {
-> @@ -481,6 +490,11 @@ static int mtk_smi_common_probe(struct platform_device *pdev)
->                 ret = clk_prepare_enable(common->clk_async);
->                 if (ret)
->                         return ret;
-> +       } else {
-> +               res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +               common->base = devm_ioremap_resource(dev, res);
-> +               if (IS_ERR(common->base))
-> +                       return PTR_ERR(common->base);
->         }
->         pm_runtime_enable(dev);
->         platform_set_drvdata(pdev, common);
-> @@ -496,6 +510,7 @@ static int mtk_smi_common_remove(struct platform_device *pdev)
->  static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->  {
->         struct mtk_smi *common = dev_get_drvdata(dev);
-> +       u32 bus_sel = common->plat->bus_sel;
->         int ret;
->
->         ret = mtk_smi_clk_enable(common);
-> @@ -503,6 +518,9 @@ static int __maybe_unused mtk_smi_common_resume(struct device *dev)
->                 dev_err(common->dev, "Failed to enable clock(%d).\n", ret);
->                 return ret;
->         }
-> +
-> +       if (common->plat->gen == MTK_SMI_GEN2 && bus_sel)
-> +               writel(bus_sel, common->base + SMI_BUS_SEL);
->         return 0;
->  }
->
-> --
-> 1.9.1
->
+Ck9uIDEyLzIxLzIwMTggMjo1OSBBTSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+IFF1b3RpbmcgUm9i
+IEhlcnJpbmcgKDIwMTgtMTItMTkgMTU6NDc6MjUpCj4+IE9uIFdlZCwgRGVjIDE5LCAyMDE4IGF0
+IDQ6NDAgUE0gRG91ZyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3JnPiB3cm90ZToKPj4+
+IE9uIFdlZCwgRGVjIDE5LCAyMDE4IGF0IDEyOjQwIFBNIERvdWcgQW5kZXJzb24gPGRpYW5kZXJz
+QGNocm9taXVtLm9yZz4gd3JvdGU6Cj4+Pj4gT24gV2VkLCBEZWMgMTksIDIwMTggYXQgMTI6MDkg
+UE0gUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4+Pj4gLi4uYnV0IGl0IGRv
+ZXMgaGF2ZSBhIGZyZXF1ZW5jeSwgZG9lc24ndCBpdD8KPj4+Pgo+Pj4+ICsgICBjb21wYXRpYmxl
+ID0gIm9wZXJhdGluZy1wb2ludHMtdjItcWNvbS1sZXZlbCI7Cj4+Pj4gKwo+Pj4+ICsgICBvcHAt
+NzEwMDAwMDAwIHsKPj4+PiArICAgICBvcHAtaHogPSAvYml0cy8gNjQgPDcxMDAwMDAwMD47Cj4+
+Pj4gKyAgICAgcWNvbSxsZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZFTF9UVVJCT19MMT47Cj4+
+Pj4gKyAgIH07Cj4+Pgo+Pj4gQWgsIEkgcGVyaGFwcyBzZWUgdGhlIGNvbmZ1c2lvbi4gIFNvIFJh
+amVuZHJhJ3MgdXNhZ2Ugb2YKPj4+ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiIFsx
+XSBkb2Vzbid0IGhhdmUgYSBmcmVxdWVuY3kgYnV0Cj4+PiBKb3JkYW4ncyBkby4gIFNvIEkgZ3Vl
+c3MgaXQgbWFrZXMgc2Vuc2UgdGhhdCBKb3JkYW4ncyBoYXZlIHRoZQo+Pj4gZmFsbGJhY2sgY29t
+cGF0aWJsZSBidXQgUmFqZW5kcmEncyBkb24ndD8KPj4KPj4gSXMgaGF2aW5nIGl0IHVzZWZ1bCB0
+byBzL3cgdGhhdCBkb2Vzbid0IHVuZGVyc3RhbmQKPj4gIm9wZXJhdGluZy1wb2ludHMtdjItcWNv
+bS1sZXZlbCI/IElmIHNvLCB0aGVuIGFkZAo+PiAib3BlcmF0aW5nLXBvaW50cy12MiIuIElmIG5v
+dCwgdGhlbiBkb24ndC4KPiAKPiBUaGUgb25seSBiZW5lZml0IEkgc2VlIGluIGhhdmluZyAib3Bl
+cmF0aW5nLXBvaW50cy12MiIgaXMgdGhhdCB3ZSBkb24ndAo+IG5lZWQgdG8gdXBkYXRlIHRoZSBv
+Zl9za2lwcGVkX25vZGVfdGFibGVbXSBpbiBkcml2ZXJzL3BsYXRmb3JtL29mLmMgdG8KPiBoYXZl
+IGFsbCB0aGUgdmFyaWFudHMgb2Ygb3BlcmF0aW5nLXBvaW50cy12Mi0qIHdoZW4gdGhleSBkZWNp
+ZGUgdG8gbm90Cj4gdXNlIGFueXRoaW5nIGZyb20gdGhlICJiYXNlIiBiaW5kaW5nLgo+IAo+IElm
+IHRoYXQgZmFpbHMgdG8gd29yayBiZWNhdXNlIG9wcC1oeiBpcyByZXF1aXJlZCBmb3IgdGhlCj4g
+Im9wZXJhdGluZy1wb2ludHMtdjIiIGJpbmRpbmcgYnV0IHNvbWV0aW1lcwo+IG9wZXJhdGluZy1w
+b2ludHMtdjItcWNvbS1sZXZlbCBkb2Vzbid0IHJlcXVpcmUgaXQgSSBndWVzcyB3ZSBuZWVkIHRv
+Cj4gdXBkYXRlIHRoZSBza2lwIHRhYmxlIG9yIG1ha2Ugc29tZSBnZW5lcmljIHByb3BlcnR5IGxp
+a2UKPiAndGhpcy1pcy1ub3QtYS1kZXZpY2UnIHRoYXQgdGhlc2UgdmFyaW91cyBkYXRhIHRhYmxl
+cyBpbiBEVCBjYW4gYmUKPiBtYXJrZWQgd2l0aCBzbyB3ZSBkb24ndCBtYWtlIHBsYXRmb3JtIGRl
+dmljZXMgZm9yIHRoZW0uCj4gCj4gUmVnYXJkbGVzcyBvZiB0aGUgYWJvdmUsIHdlIHNob3VsZCB1
+cGRhdGUgdGhlIGJpbmRpbmcgZm9yCj4gb3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIHRv
+IHNheSB0aGF0IG9wcC1oeiBpc24ndCBhbHdheXMgcmVxdWlyZWQKPiB3aGVuIHRoZSBxY29tLWxl
+dmVsIGNvbXBhdGlibGUgaXMgcHJlc2VudC4gSXQgbG9va3MgbGlrZSBpdCBqdXN0IHNheXMKPiB0
+aGF0IGl0IGJ1aWxkcyBvbiB0b3Agb2YgdGhlIG9wcCBiaW5kaW5nIHNvIHRoYXQncyBub3Qgb2J2
+aW91cy4KClN1cmUsIEkgY2FuIHJlc3BpbiB3aXRoIHRob3NlIGRldGFpbHMgYWRkZWQgaW4uClNv
+IEkgYW0gZ3Vlc3NpbmcgdGhlIGNvbmNsdXNpb24gaXMgdG8gdXNlIGEgZmFsbGJhY2sgIm9wZXJh
+dGluZy1wb2ludHMtdjIiCmNvbXBhdGlibGUgKm9ubHkqIHdoZW4gd2UgZG8gaGF2ZSBvcHAtaHog
+YWxvbmcgd2l0aCBxY29tLGxldmVsIChhcyBpbiB0aGUKY2FzZSB3aXRoIGdwdSkgYW5kIG5vdCBo
+YXZlIGEgZmFsbGJhY2sgY29tcGF0aWJsZSBpbiBjYXNlcyB3aGVuIHdlIGRvbid0CmhhdmUgb3Bw
+LWh6IChhcyBpbiB0aGUgY2FzZSBvZiBycG0gcG93ZXIgZG9tYWlucyk/ClRoYXQgc2VlbXMgYSBs
+aXR0bGUgaW5jb25zaXN0ZW50LCBhbmQgZ2l2ZW4gUm9iIHNhaWQgZWl0aGVyIHdheSBpcyBmaW5l
+LApqdXN0IGRvIG9uZSB3YXkgb3IgdGhlIG90aGVyIGFuZCBub3QgYm90aCwgSSBhbSBpbmNsaW5l
+ZCB0byB0aGluayB3ZSBzaG91bGQKanVzdCBoYXZlIGEgIm9wZXJhdGluZy1wb2ludHMtdjItcWNv
+bS1sZXZlbCIgYW5kIG5vIGZhbGxiYWNrIGNvbXBhdGlibGUuCkRvZXMgdGhhdCBtYWtlIHNlbnNl
+PwoKPiBfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwo+IGxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cj4gbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZy
+YWRlYWQub3JnCj4gaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
+aW51eC1hcm0ta2VybmVsCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
+ZWVkcmVubwo=
