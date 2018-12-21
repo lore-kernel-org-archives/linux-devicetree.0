@@ -1,77 +1,29 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v8 10/10] soc: qcom: rpmhpd: Mark mx as a parent for cx
-Date: Fri, 21 Dec 2018 11:33:03 +0100
-Message-ID: <CAPDyKFqFW-UmdBf00Rt5F=40QBys98f6WLRKMzYXGpiLYhwW4A@mail.gmail.com>
-References: <20181221085622.25573-1-rnayak@codeaurora.org> <20181221085622.25573-11-rnayak@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v2 2/2] gpio: Add Cadence GPIO driver
+Date: Fri, 21 Dec 2018 11:34:54 +0100
+Message-ID: <CACRpkdbw9sQoE0R9=KBkkEfZgmLnS7mLGsthRZ98AqJjGhgvzw@mail.gmail.com>
+References: <20181217153652.20056-1-jank@cadence.com> <20181217153652.20056-3-jank@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221085622.25573-11-rnayak@codeaurora.org>
+In-Reply-To: <20181217153652.20056-3-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, DTML <devicetree@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Jan Kotas <jank@cadence.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Dec 2018 at 09:57, Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> Specify the active + sleep and active-only MX power domains as
-> the parents of the corresponding CX power domains. This will ensure that
-> performance state requests on CX automatically generate equivalent requests
-> on MX power domains.
->
-> This is used to enforce a requirement that exists for various
-> hardware blocks on SDM845 that MX performance state >= CX performance
-> state for a given operating frequency.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+On Mon, Dec 17, 2018 at 4:37 PM Jan Kotas <jank@cadence.com> wrote:
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> This patch adds a driver for Cadence GPIO controller.
+>
+> It can be enabled with GPIO_CADENCE Kconfig option.
+> It uses generic GPIO infrastructure and works
+> as an interrupt controller.
+> At the moment it only supports level sensitive irqs.
+>
+> Signed-off-by: Jan Kotas <jank@cadence.com>
 
-Kind regards
-Uffe
+Patch applied.
 
-> ---
->  drivers/soc/qcom/rpmhpd.c | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-> index f7fbe57f31ae..71d693c31e3b 100644
-> --- a/drivers/soc/qcom/rpmhpd.c
-> +++ b/drivers/soc/qcom/rpmhpd.c
-> @@ -97,12 +97,14 @@ static struct rpmhpd sdm845_cx_ao;
->  static struct rpmhpd sdm845_cx = {
->         .pd = { .name = "cx", },
->         .peer = &sdm845_cx_ao,
-> +       .parent = &sdm845_mx.pd,
->         .res_name = "cx.lvl",
->  };
->
->  static struct rpmhpd sdm845_cx_ao = {
->         .pd = { .name = "cx_ao", },
->         .peer = &sdm845_cx,
-> +       .parent = &sdm845_mx_ao.pd,
->         .res_name = "cx.lvl",
->  };
->
-> @@ -372,6 +374,15 @@ static int rpmhpd_probe(struct platform_device *pdev)
->                 data->domains[i] = &rpmhpds[i]->pd;
->         }
->
-> +       /* Add subdomains */
-> +       for (i = 0; i < num_pds; i++) {
-> +               if (!rpmhpds[i])
-> +                       continue;
-> +               if (rpmhpds[i]->parent)
-> +                       pm_genpd_add_subdomain(rpmhpds[i]->parent,
-> +                                              &rpmhpds[i]->pd);
-> +       }
-> +
->         return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
->  }
->
-> --
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
->
+Yours,
+Linus Walleij
