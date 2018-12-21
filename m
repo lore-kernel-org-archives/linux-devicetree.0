@@ -1,55 +1,252 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V4 2/4] mmc: cqhci: DMA Configuration prior to CQE
-Date: Fri, 21 Dec 2018 09:41:22 +0200
-Message-ID: <d0d38418-ddd4-b9ab-2951-10207540856b@intel.com>
-References: <1545262938-20636-1-git-send-email-skomatineni@nvidia.com>
- <1545262938-20636-3-git-send-email-skomatineni@nvidia.com>
- <b6789159-c4ce-cc28-e7f5-33ab1e95175f@intel.com>
- <BN7PR12MB2836A1467A21CAE50125727AC2BF0@BN7PR12MB2836.namprd12.prod.outlook.com>
+From: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Subject: Re: [PATCH v4 10/18] iommu/mediatek: Add mt8183 IOMMU support
+Date: Fri, 21 Dec 2018 16:02:38 +0800
+Message-ID: <1545379358.29587.51.camel@mhfsdcap03>
+References: <1544258371-4600-1-git-send-email-yong.wu@mediatek.com>
+	<1544258371-4600-11-git-send-email-yong.wu@mediatek.com>
+	<CANMq1KBMWM8BhMDJo1paVbToibsZGYVOCWBOua81w7fnTCO-bw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BN7PR12MB2836A1467A21CAE50125727AC2BF0@BN7PR12MB2836.namprd12.prod.outlook.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <CANMq1KBMWM8BhMDJo1paVbToibsZGYVOCWBOua81w7fnTCO-bw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, arnd-r2nGTMty4D4@public.gmane.org, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Arvind Yadav <arvind.yadav.cs-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On 20/12/18 11:01 PM, Sowjanya Komatineni wrote:
-> Hi Adrian,
+On Fri, 2018-12-21 at 12:43 +0800, Nicolas Boichat wrote:
+> On Sat, Dec 8, 2018 at 4:42 PM Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
+> >
+> > The M4U IP blocks in mt8183 is MediaTek's generation2 M4U which use
+> > the ARM Short-descriptor like mt8173, and most of the HW registers
+> > are the same.
+> >
+> > Here list main differences between mt8183 and mt8173/mt2712:
+> > 1) mt8183 has only one M4U HW like mt8173 while mt2712 has two.
+> > 2) mt8183 don't have the "bclk" clock, it use the EMI clock instead.
+> > 3) mt8183 can support the dram over 4GB, but it doesn't call this "4GB
+> > mode".
+> > 4) mt8183 pgtable base register(0x0) extend bit[1:0] which represent
+> > the bit[33:32] in the physical address of the pgtable base, But the
+> > standard ttbr0[1] means the S bit which is enabled defaultly, Hence,
+> > we add a mask.
+> > 5) mt8183 HW has a GALS modules, SMI should enable "has_gals" support.
+> > 6) the larb-id in smi-common is remapped. M4U should enable
+> > larbid_remapped support.
+> >
+> > Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+> > ---
+> >  drivers/iommu/mtk_iommu.c | 31 ++++++++++++++++++++++---------
+> >  drivers/iommu/mtk_iommu.h |  1 +
+> >  drivers/memory/mtk-smi.c  | 19 +++++++++++++++++++
+> >  3 files changed, 42 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> > index 8ab3b69..d91a554 100644
+> > --- a/drivers/iommu/mtk_iommu.c
+> > +++ b/drivers/iommu/mtk_iommu.c
+> > @@ -36,6 +36,7 @@
+> >  #include "mtk_iommu.h"
+> >
+> >  #define REG_MMU_PT_BASE_ADDR                   0x000
+> > +#define MMU_PT_ADDR_MASK                       GENMASK(31, 7)
+> >
+> >  #define REG_MMU_INVALIDATE                     0x020
+> >  #define F_ALL_INVLD                            0x2
+> > @@ -54,7 +55,7 @@
+> >  #define REG_MMU_CTRL_REG                       0x110
+> >  #define F_MMU_PREFETCH_RT_REPLACE_MOD          BIT(4)
+> >  #define F_MMU_TF_PROTECT_SEL_SHIFT(data) \
+> > -       ((data)->plat_data->m4u_plat == M4U_MT2712 ? 4 : 5)
+> > +       ((data)->plat_data->m4u_plat == M4U_MT8173 ? 5 : 4)
 > 
-> Thank you for the feedback.
-> 
->> This doesn't seem to relate to the host controller implementation.  
->> "The device" means the eMMC.
-> 
-> Yes, setting block size of 512B before enabling command queue is a device specific 
-> requirement not host specific. So thought to update in cqhci driver to follow this 
-> device specific sequence requirement. This also serves tegra sdhci host strictly
-> following this device specific requirement.
+> Should the shift value be a member of plat_data instead?
 
-Not sure what you mean.  The eMMC block size is set by CMD16.  In fact CMD16
-is not used because 512B is the default so it never needs to be changed.
+It's also ok.
+This TF_PROTECT_SEL MACRO looks a bit complex. I can use a new patch to
+refactor it.
 
 > 
->> We don't want to disable and re-enable in the request function,
->> so that change is not good for controllers that don't have your problem.
->> Another thing to consider is that the block size register may not need to be changed
->> - for example when cqhci is halted to allow a manual discard, the block size register is
->> not updated, so I would expect its value to be unchanged.
+> >  /* It's named by F_MMU_TF_PROT_SEL in mt2712. */
+> >  #define F_MMU_TF_PROTECT_SEL(prot, data) \
+> >         (((prot) & 0x3) << F_MMU_TF_PROTECT_SEL_SHIFT(data))
+> > @@ -347,7 +348,7 @@ static int mtk_iommu_attach_device(struct iommu_domain *domain,
+> >         /* Update the pgtable base address register of the M4U HW */
+> >         if (!data->m4u_dom) {
+> >                 data->m4u_dom = dom;
+> > -               writel(dom->cfg.arm_v7s_cfg.ttbr[0],
+> > +               writel(dom->cfg.arm_v7s_cfg.ttbr[0] & MMU_PT_ADDR_MASK,
+> >                        data->base + REG_MMU_PT_BASE_ADDR);
+> >         }
+> >
+> > @@ -510,6 +511,7 @@ static int mtk_iommu_of_xlate(struct device *dev, struct of_phandle_args *args)
+> >
+> >  static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+> >  {
+> > +       enum mtk_iommu_plat m4u_plat = data->plat_data->m4u_plat;
+> >         u32 regval;
+> >         int ret;
+> >
+> > @@ -520,7 +522,7 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+> >         }
+> >
+> >         regval = F_MMU_TF_PROTECT_SEL(2, data);
+> > -       if (data->plat_data->m4u_plat == M4U_MT8173)
+> > +       if (m4u_plat == M4U_MT8173)
+> >                 regval |= F_MMU_PREFETCH_RT_REPLACE_MOD;
+> >         writel_relaxed(regval, data->base + REG_MMU_CTRL_REG);
+> >
+> > @@ -541,14 +543,14 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+> >                 F_INT_PRETETCH_TRANSATION_FIFO_FAULT;
+> >         writel_relaxed(regval, data->base + REG_MMU_INT_MAIN_CONTROL);
+> >
+> > -       if (data->plat_data->m4u_plat == M4U_MT8173)
+> > +       if (m4u_plat == M4U_MT8173)
+> >                 regval = (data->protect_base >> 1) | (data->enable_4GB << 31);
+> >         else
+> >                 regval = lower_32_bits(data->protect_base) |
+> >                          upper_32_bits(data->protect_base);
+> >         writel_relaxed(regval, data->base + REG_MMU_IVRP_PADDR);
+> >
+> > -       if (data->enable_4GB && data->plat_data->m4u_plat != M4U_MT8173) {
+> > +       if (data->enable_4GB && m4u_plat == M4U_MT2712) {
+> >                 /*
+> >                  * If 4GB mode is enabled, the validate PA range is from
+> >                  * 0x1_0000_0000 to 0x1_ffff_ffff. here record bit[32:30].
+> > @@ -558,8 +560,11 @@ static int mtk_iommu_hw_init(const struct mtk_iommu_data *data)
+> >         }
+> >         writel_relaxed(0, data->base + REG_MMU_DCM_DIS);
+> >
+> > -       /* It's MISC control register whose default value is ok except mt8173.*/
+> > -       if (data->plat_data->m4u_plat == M4U_MT8173)
+> > +       /*
+> > +        * It's MISC control register whose default value is ok
+> > +        * except mt8173 and mt8183.
+> > +        */
+> > +       if (m4u_plat == M4U_MT8173 || m4u_plat == M4U_MT8183)
 > 
-> Once block size is set prior to enabling CQE, it stays same till command queue is 
-> disabled and I don’t think it needs reconfiguration.
+> Again, should this be a field in plat_data?
+
+In mt8173 and mt8183, 0x48 is REG_MMU_STANDARD_AXI_MODE while it's
+MMU_MISC_CTRL which contain this STANDARD_AXI_MODE bit and some other
+bits in the other SoCs.
+
+The register name and meaning are not the same. I guess I can not use a
+value like reg_0x48 in plat_data. I'd like to keep the current way. is
+it ok?
+
 > 
->> There are ways you can solve this in your driver.  
->> You could look at using SDHCI I/O accessors, and/or implement your own ->enable() 
->> instead of calling sdhci_cqe_enable() directly.  Would that be feasible?
-> 
-> Sure, will provide updated patch that takes care of this inside tegra sdhci host once you 
-> confirm that we don’t plan to fix this device specific sequence requirement in cqhci driver.
-> 
-> -Sowjanya
->  
-> 
+> >                 writel_relaxed(0, data->base + REG_MMU_STANDARD_AXI_MODE);
+> >
+> >         if (devm_request_irq(data->dev, data->irq, mtk_iommu_isr, 0,
+> > @@ -713,6 +718,7 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+> >  {
+> >         struct mtk_iommu_data *data = dev_get_drvdata(dev);
+> >         struct mtk_iommu_suspend_reg *reg = &data->reg;
+> > +       struct mtk_iommu_domain *m4u_dom = data->m4u_dom;
+> >         void __iomem *base = data->base;
+> >         int ret;
+> >
+> > @@ -728,8 +734,8 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+> >         writel_relaxed(reg->int_control0, base + REG_MMU_INT_CONTROL0);
+> >         writel_relaxed(reg->int_main_control, base + REG_MMU_INT_MAIN_CONTROL);
+> >         writel_relaxed(reg->ivrp_paddr, base + REG_MMU_IVRP_PADDR);
+> > -       if (data->m4u_dom)
+> > -               writel(data->m4u_dom->cfg.arm_v7s_cfg.ttbr[0],
+> > +       if (m4u_dom)
+> > +               writel(m4u_dom->cfg.arm_v7s_cfg.ttbr[0] & MMU_PT_ADDR_MASK,
+> >                        base + REG_MMU_PT_BASE_ADDR);
+> >         return 0;
+> >  }
+> > @@ -750,9 +756,16 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+> >         .has_bclk     = true,
+> >  };
+> >
+> > +static const struct mtk_iommu_plat_data mt8183_data = {
+> > +       .m4u_plat            = M4U_MT8183,
+> > +       .larbid_remap_enable = true,
+> > +       .larbid_remapped     = {0, 4, 5, 6, 7, 2, 3, 1},
+> > +};
+> > +
+> >  static const struct of_device_id mtk_iommu_of_ids[] = {
+> >         { .compatible = "mediatek,mt2712-m4u", .data = &mt2712_data},
+> >         { .compatible = "mediatek,mt8173-m4u", .data = &mt8173_data},
+> > +       { .compatible = "mediatek,mt8183-m4u", .data = &mt8183_data},
+> >         {}
+> >  };
+> >
+> > diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> > index 3877050..6385dec 100644
+> > --- a/drivers/iommu/mtk_iommu.h
+> > +++ b/drivers/iommu/mtk_iommu.h
+> > @@ -39,6 +39,7 @@ enum mtk_iommu_plat {
+> >         M4U_MT2701,
+> >         M4U_MT2712,
+> >         M4U_MT8173,
+> > +       M4U_MT8183,
+> >  };
+> >
+> >  struct mtk_iommu_plat_data {
+> > diff --git a/drivers/memory/mtk-smi.c b/drivers/memory/mtk-smi.c
+> > index 3720c77..bced778 100644
+> > --- a/drivers/memory/mtk-smi.c
+> > +++ b/drivers/memory/mtk-smi.c
+> > @@ -285,6 +285,12 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
+> >         .larb_special_mask = BIT(8) | BIT(9),          /* bdpsys */
+> >  };
+> >
+> > +static const struct mtk_smi_larb_gen mtk_smi_larb_mt8183 = {
+> > +       .has_gals          = true,
+> > +       .config_port       = mtk_smi_larb_config_port_gen2_general,
+> > +       .larb_special_mask = BIT(2) | BIT(3) | BIT(7), /* IPU0 | IPU1 | CCU */
+> > +};
+> > +
+> >  static const struct of_device_id mtk_smi_larb_of_ids[] = {
+> >         {
+> >                 .compatible = "mediatek,mt8173-smi-larb",
+> > @@ -298,6 +304,10 @@ static void mtk_smi_larb_config_port_gen1(struct device *dev)
+> >                 .compatible = "mediatek,mt2712-smi-larb",
+> >                 .data = &mtk_smi_larb_mt2712
+> >         },
+> > +       {
+> > +               .compatible = "mediatek,mt8183-smi-larb",
+> > +               .data = &mtk_smi_larb_mt8183
+> > +       },
+> >         {}
+> >  };
+> >
+> > @@ -391,6 +401,11 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
+> >         .gen = MTK_SMI_GEN2,
+> >  };
+> >
+> > +static const struct mtk_smi_common_plat mtk_smi_common_mt8183 = {
+> > +       .gen      = MTK_SMI_GEN2,
+> > +       .has_gals = true,
+> > +};
+> > +
+> >  static const struct of_device_id mtk_smi_common_of_ids[] = {
+> >         {
+> >                 .compatible = "mediatek,mt8173-smi-common",
+> > @@ -404,6 +419,10 @@ static int mtk_smi_larb_remove(struct platform_device *pdev)
+> >                 .compatible = "mediatek,mt2712-smi-common",
+> >                 .data = &mtk_smi_common_gen2,
+> >         },
+> > +       {
+> > +               .compatible = "mediatek,mt8183-smi-common",
+> > +               .data = &mtk_smi_common_mt8183,
+> > +       },
+> >         {}
+> >  };
+> >
+> > --
+> > 1.9.1
+> >
