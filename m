@@ -1,47 +1,46 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 01/13] clk: qcom: gcc: limit GPLL0_AO_OUT operating frequency
-Date: Fri, 21 Dec 2018 13:51:24 -0800
-Message-ID: <154542908449.13075.11379256415955338261@swboyd.mtv.corp.google.com>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1545039990-19984-2-git-send-email-jorge.ramirez-ortiz@linaro.org> <e97d9050-effc-56d7-0f9b-768df90dd73a@codeaurora.org> <6814777f-1e5f-bd99-db63-a0050dcdd930@linaro.org> <874ce15d-67f5-8e55-8b62-73071fe6ae06@codeaurora.org> <20181221192823.GA9704@minitux> <94b12f58-b586-6b4b-6c0c-b4adad80d7b0@linaro.org> <154542841268.13075.13095552962351570142@swboyd.mtv.corp.google.com> <914bd56c-4470-4f78-75ac-f7bedd83d7c0@linaro.org>
+From: Chris Moore <moore@free.fr>
+Subject: Re: [PATCH v2 1/2] dt-bindings: arm: amlogic: add amediatech x96-max
+ bindings
+Date: Fri, 21 Dec 2018 23:12:40 +0100
+Message-ID: <dc14926f-4433-fa7b-311f-cb275a7e7aee@free.fr>
+References: <20181219233519.35287-1-khilman@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <914bd56c-4470-4f78-75ac-f7bedd83d7c0@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Taniya Das <tdas@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181219233519.35287-1-khilman@baylibre.com>
+Content-Language: fr
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez (2018-12-21 13:45:41)
-> On 12/21/18 22:40, Stephen Boyd wrote:
-> > Quoting Jorge Ramirez (2018-12-21 11:45:28)
-> >> On 12/21/18 20:28, Bjorn Andersson wrote:
-> >>> Perhaps there's a better way to define that this particular clock
-> >>> hardware can change rate, but in this implementation it must not?
-> >> the initialization for this particular PLL on this particular platform
-> >> is wrong
-> >> as the interface does not apply to the platform needs even though it i=
-s an
-> >> alpha_pll
-> >>
-> >> if the VCO is not an option -even though it reflects the platform
-> >> constrains-
-> >> I would suggest nullifying the alpha_pll_ops that do not apply to this
-> >> platform:
-> >> ie: set_rate, round_rate set to null in the probe.
-> >>
-> >> allowing the interface calls (ops) to go through to later on make them=
- fail
-> >> based on some setting would be fundamentally wrong IMO
-> >>
-> > We have clk_alpha_pll_postdiv_ro_ops so maybe just add another set of
-> > those for the alpha_pll itself?
-> >
-> >
->=20
-> something like=20
-> clk_alpha_pll_fixed_ops?
-
-Either way works. We're not consistent in naming now that we have
-clk_alpha_pll_fixed_fabia_ops.
+SGksCgpTb3JyeSBmb3IgdGhlIHJlcGVhdCA6IEkgcmVwbGllZCBwcmV2aW91c2x5IHRvIHYxIGFz
+IEkgaGFkbid0IG5vdGljZWQgCnRoYXQgdGhlcmUgd2FzIGFscmVhZHkgYSB2Mi4KCkxlIDIwLzEy
+LzIwMTggw6AgMDA6MzUsIEtldmluIEhpbG1hbiBhIMOpY3JpdMKgOgo+IEFkZCBuZXcgdmVuZG9y
+IGZvciBhbWVkaWF0ZWNoLCBhbmQgaW5pdGlhbCBib2FyZDogeDk2LW1heAo+Cj4gU2lnbmVkLW9m
+Zi1ieTogS2V2aW4gSGlsbWFuIDxraGlsbWFuQGJheWxpYnJlLmNvbT4KPiAtLS0KPiAgIERvY3Vt
+ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYW1sb2dpYy50eHQgICAgIHwgMSArCj4g
+ICBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvdmVuZG9yLXByZWZpeGVzLnR4dCB8
+IDEgKwo+ICAgMiBmaWxlcyBjaGFuZ2VkLCAyIGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQg
+YS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2FtbG9naWMudHh0IGIvRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9hbWxvZ2ljLnR4dAo+IGluZGV4IDhk
+YmMyNTkwODFlNC4uYzUwYjA4NGI2YzU5IDEwMDY0NAo+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2
+aWNldHJlZS9iaW5kaW5ncy9hcm0vYW1sb2dpYy50eHQKPiArKysgYi9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvYXJtL2FtbG9naWMudHh0Cj4gQEAgLTk5LDYgKzk5LDcgQEAgQm9h
+cmQgY29tcGF0aWJsZSB2YWx1ZXMgKGFscGhhYmV0aWNhbGx5LCBncm91cGVkIGJ5IFNvQyk6Cj4g
+ICAgIC0gImFtbG9naWMscDI4MSIgKE1lc29uIGd4bCBzOTA1dykKPiAgICAgLSAib3JhbnRoLHR4
+My1taW5pIiAoTWVzb24gZ3hsIHM5MDV3KQo+ICAgCj4gKyAgLSAiYW1lZGlhdGVjaCx4OTYtbWF4
+IiAoTWVzb24gZ3htIHM5MTIpCgpTaG91bGRuJ3QgdGhhdCBiZSBNZXNvbiBnMTJhIHM5MDV4MiA/
+CgpDaGVlcnMsCkNocmlzCgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
