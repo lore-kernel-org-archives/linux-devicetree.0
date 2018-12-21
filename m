@@ -1,83 +1,65 @@
-From: Nicolas Boichat <drinkcat@chromium.org>
-Subject: Re: [PATCH v4 08/18] iommu/mediatek: Add larb-id remapped support
-Date: Fri, 21 Dec 2018 11:35:51 +0800
-Message-ID: <CANMq1KDHTPbYHXVsf+_=ER3HYjfFPjv6LTTZMvmM7WChiFDyZQ@mail.gmail.com>
-References: <1544258371-4600-1-git-send-email-yong.wu@mediatek.com> <1544258371-4600-9-git-send-email-yong.wu@mediatek.com>
+From: Joakim Zhang <qiangqing.zhang@nxp.com>
+Subject: RE: [PATCH 1/2] Documentation: can: flexcan: add PE clock source
+ property to device tree
+Date: Fri, 21 Dec 2018 04:28:16 +0000
+Message-ID: <DB7PR04MB46185ACEDA227BEFCED6971DE6B80@DB7PR04MB4618.eurprd04.prod.outlook.com>
+References: <20181213070537.25095-1-qiangqing.zhang@nxp.com>
+ <20181213070537.25095-2-qiangqing.zhang@nxp.com>
+ <20181220202247.GA26362@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544258371-4600-9-git-send-email-yong.wu@mediatek.com>
+In-Reply-To: <20181220202247.GA26362@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yong Wu <yong.wu@mediatek.com>
-Cc: Joerg Roedel <joro@8bytes.org>, Matthias Brugger <matthias.bgg@gmail.com>, Robin Murphy <robin.murphy@arm.com>, Rob Herring <robh+dt@kernel.org>, Tomasz Figa <tfiga@google.com>, Will Deacon <will.deacon@arm.com>, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, devicetree@vger.kernel.org, lkml <linux-kernel@vger.kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, iommu@lists.linux-foundation.org, arnd@arndb.de, yingjoe.chen@mediatek.com, youlin.pei@mediatek.com, Arvind Yadav <arvind.yadav.cs@gmail.com>
+To: Rob Herring <robh@kernel.org>
+Cc: "mkl@pengutronix.de" <mkl@pengutronix.de>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 8, 2018 at 4:42 PM Yong Wu <yong.wu@mediatek.com> wrote:
->
-> The larb-id may be remapped in the smi-common, this means the
-> larb-id reported in the mtk_iommu_isr isn't the real larb-id,
->
-> Take mt8183 as a example:
->                        M4U
->                         |
-> ---------------------------------------------
-> |               SMI common                  |
-> -0-----7-----5-----6-----1-----2------3-----4- <- Id remapped
->  |     |     |     |     |     |      |     |
-> larb0 larb1 IPU0  IPU1 larb4 larb5  larb6  CCU
-> disp  vdec  img   cam   venc  img    cam
-> As above, larb0 connects with the id 0 in smi-common.
->           larb1 connects with the id 7 in smi-common.
->           ...
-> If the larb-id reported in the isr is 7, actually it's larb1(vdec).
-> In order to output the right larb-id in the isr, we add a larb-id
-> remapping relationship in this patch.
->
-> This also is a preparing patch for mt8183.
->
-> Signed-off-by: Yong Wu <yong.wu@mediatek.com>
-> ---
->  drivers/iommu/mtk_iommu.c | 3 +++
->  drivers/iommu/mtk_iommu.h | 4 ++++
->  2 files changed, 7 insertions(+)
->
-> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
-> index eda062a..8ab3b69 100644
-> --- a/drivers/iommu/mtk_iommu.c
-> +++ b/drivers/iommu/mtk_iommu.c
-> @@ -220,6 +220,9 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
->         fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
->         fault_port = F_MMU0_INT_ID_PORT_ID(regval);
->
-> +       if (data->plat_data->larbid_remap_enable)
-> +               fault_larb = data->plat_data->larbid_remapped[fault_larb];
-> +
->         if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
->                                write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
->                 dev_err_ratelimited(
-> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
-> index b8749ac..3877050 100644
-> --- a/drivers/iommu/mtk_iommu.h
-> +++ b/drivers/iommu/mtk_iommu.h
-> @@ -47,6 +47,10 @@ struct mtk_iommu_plat_data {
->
->         /* HW will use the EMI clock if there isn't the "bclk". */
->         bool                has_bclk;
-> +
-> +       /* The larb-id may be remapped in the smi-common. */
-> +       bool                larbid_remap_enable;
-> +       unsigned int        larbid_remapped[MTK_LARB_NR_MAX];
-
-Wouldn't it be a little simpler if you just had
-larbid_remap[MTK_LARB_NR_MAX] (no larbid_remap_enable), and just set
-it to {0, 1, 2, 3, 4, 5, 6, 7} in platforms that don't need
-complicated remapping?
-
-Also, unsigned char/u8 array would be enough.
-
->  };
->
->  struct mtk_iommu_domain;
-> --
-> 1.9.1
->
+DQo+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+IEZyb206IFJvYiBIZXJyaW5nIDxyb2Jo
+QGtlcm5lbC5vcmc+DQo+IFNlbnQ6IDIwMTjE6jEy1MIyMcjVIDQ6MjMNCj4gVG86IEpvYWtpbSBa
+aGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQo+IENjOiBta2xAcGVuZ3V0cm9uaXguZGU7
+IGxpbnV4LWNhbkB2Z2VyLmtlcm5lbC5vcmc7DQo+IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+OyBsaW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnOyBkbC1saW51eC1pbXgNCj4gPGxpbnV4LWlt
+eEBueHAuY29tPjsgQWlzaGVuZyBEb25nIDxhaXNoZW5nLmRvbmdAbnhwLmNvbT4NCj4gU3ViamVj
+dDogUmU6IFtQQVRDSCAxLzJdIERvY3VtZW50YXRpb246IGNhbjogZmxleGNhbjogYWRkIFBFIGNs
+b2NrIHNvdXJjZQ0KPiBwcm9wZXJ0eSB0byBkZXZpY2UgdHJlZQ0KPiANCj4gT24gVGh1LCBEZWMg
+MTMsIDIwMTggYXQgMDc6MDc6NTdBTSArMDAwMCwgSm9ha2ltIFpoYW5nIHdyb3RlOg0KPiA+IEZy
+b206IERvbmcgQWlzaGVuZyA8YWlzaGVuZy5kb25nQG54cC5jb20+DQo+ID4NCj4gPiBUaGUgRmxl
+eENBTiBjb250cm9sbGVyIGNhbiBwYXJzZSBjbG9jayBzb3VyY2UgcHJvcGVydHkgZnJvbSBEVFMg
+ZmlsZQ0KPiA+IHRvIHNlbGVjdCBQRSBjbG9jayBzb3VyY2UuDQo+ID4NCj4gPiBTaWduZWQtb2Zm
+LWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+IFNpZ25lZC1vZmYt
+Ynk6IEpvYWtpbSBaaGFuZyA8cWlhbmdxaW5nLnpoYW5nQG54cC5jb20+DQo+ID4gLS0tDQo+ID4g
+IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvY2FuL2ZzbC1mbGV4Y2FuLnR4
+dCB8IDgNCj4gPiArKysrKysrKw0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCsp
+DQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L25ldC9jYW4vZnNsLWZsZXhjYW4udHh0DQo+ID4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbmV0L2Nhbi9mc2wtZmxleGNhbi50eHQNCj4gPiBpbmRleCBiYzc3NDc3YzY4Nzgu
+LmEwNDE2ODYwNTk5OCAxMDA2NDQNCj4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvbmV0L2Nhbi9mc2wtZmxleGNhbi50eHQNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbmV0L2Nhbi9mc2wtZmxleGNhbi50eHQNCj4gPiBAQCAtMzIs
+NiArMzIsMTMgQEAgT3B0aW9uYWwgcHJvcGVydGllczoNCj4gPiAgCQkgYWNrX2dwciBpcyB0aGUg
+Z3ByIHJlZ2lzdGVyIG9mZnNldCBvZiBDQU4gc3RvcCBhY2tub3dsZWRnZS4NCj4gPiAgCQkgYWNr
+X2JpdCBpcyB0aGUgYml0IG9mZnNldCBvZiBDQU4gc3RvcCBhY2tub3dsZWRnZS4NCj4gPg0KPiA+
+ICstIGZzbCxjbGstc291cmNlOiBTZWxlY3QgdGhlIGNsb2NrIHNvdXJjZSB0byB0aGUgQ0FOIFBy
+b3RvY29sIEVuZ2luZSAoUEUpLg0KPiA+ICsJCSAgSXQncyBTb0MgSW1wbGVtZW50YXRpb24gZGVw
+ZW5kZW50LiBSZWZlciB0byBSTSBmb3IgZGV0YWlsZWQNCj4gDQo+IElmIFNvQyBkZXBlbmRlbnQs
+IHRoZW4gaXQgc2hvdWxkIGJlIGltcGxpZWQgYnkgdGhlIFNvQyBzcGVjaWZpYyBjb21wYXRpYmxl
+Lg0KPiBBbHNvLCBzZWVtcyBsaWtlIHlvdSBzaG91bGQgYWRkIGNsb2NrIGJpbmRpbmcgc3VwcG9y
+dCBoZXJlIGlmIHlvdSBuZWVkIG1vcmUNCj4gY2xvY2sgY29udHJvbC4NCg0KSGksDQoNCk15IGV4
+cHJlc3Npb24gaGVyZSBtaWdodCBub3QgYmUgdmVyeSBhY2N1cmF0ZSwgdGhpcyBwcm9wZXJ0eSBq
+dXN0IGhlbHAgdG8gc2VsZWN0IHRoZSBjbG9jayBzb3VyY2UgZm9yDQpQcm90b2NvbCBFbmdpbmUg
+KFBFKS4gRmxleENBTiBpcCBzdXBwb3J0IHR3byBQRSBjbG9jayBzb3VyY2VzLCBzbyB3ZSBoYXZl
+IHRvIGFkZCB0aGlzIHByb3BlcnR5IHRvDQpsZXQgZHJpdmVyIGtub3cgdGhhdCBTb0MgaGFzIHNl
+bGVjdGVkIHdoaWNoIG9uZS4NCg0KQmVzdCBSZWdhcmRzLA0KSm9ha2ltIFpoYW5nDQoNCj4gPiAr
+CQkgIGRlZmluaXRpb24uIElmIHRoaXMgcHJvcGVydHkgaXMgbm90IHNldCBpbiBkZXZpY2UgdHJl
+ZSBub2RlDQo+ID4gKwkJICB0aGVuIGRyaXZlciBzZWxlY3RzIGNsb2NrIHNvdXJjZSAxIGJ5IGRl
+ZmF1bHQuDQo+ID4gKwkJICAwOiBjbG9jayBzb3VyY2UgMCAob3NjaWxsYXRvciBjbG9jaykNCj4g
+PiArCQkgIDE6IGNsb2NrIHNvdXJjZSAxIChwZXJpcGhlcmFsIGNsb2NrKQ0KPiA+ICsNCj4gPiAg
+RXhhbXBsZToNCj4gPg0KPiA+ICAJY2FuQDFjMDAwIHsNCj4gPiBAQCAtNDAsNCArNDcsNSBAQCBF
+eGFtcGxlOg0KPiA+ICAJCWludGVycnVwdHMgPSA8NDggMHgyPjsNCj4gPiAgCQlpbnRlcnJ1cHQt
+cGFyZW50ID0gPCZtcGljPjsNCj4gPiAgCQljbG9jay1mcmVxdWVuY3kgPSA8MjAwMDAwMDAwPjsg
+Ly8gZmlsbGVkIGluIGJ5IGJvb3Rsb2FkZXINCj4gPiArCQlmc2wsY2xrLXNvdXJjZSA9IDwwPjsg
+Ly8gc2VsZWN0IGNsb2NrIHNvdXJjZSAwIGZvciBQRQ0KPiA+ICAJfTsNCj4gPiAtLQ0KPiA+IDIu
+MTcuMQ0KPiA+DQo=
