@@ -1,63 +1,42 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 0/5] clk: imx8qm: prepare for imx8qm clock support
-Date: Fri, 21 Dec 2018 01:51:44 +0000
-Message-ID: <AM0PR04MB421151E86936A1FAB5CD34D380B80@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1545232888-9302-1-git-send-email-aisheng.dong@nxp.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V5 0/3] HW Command Queue support for Tegra SDMMC
+Date: Thu, 20 Dec 2018 17:25:06 -0800
+Message-ID: <1545355509-6914-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545232888-9302-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-The patch set is missed to CC Devicetree maintainers.
-Copy Rob and Devicetree maillist.
+This patch series is for HW Command Queue support for Tegra SDMMC.
 
-Regards
-Dong Aisheng
+Patch[3] adds HW Command Queue support for Tegra SDMMC and has
+dependencies on other patches in this series as explained below.
 
-> -----Original Message-----
-> From: Aisheng Dong
-> Sent: Wednesday, December 19, 2018 11:27 PM
-> To: linux-clk@vger.kernel.org
-> Cc: linux-arm-kernel@lists.infradead.org; sboyd@kernel.org;
-> mturquette@baylibre.com; shawnguo@kernel.org; Fabio Estevam
-> <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>;
-> kernel@pengutronix.de; Aisheng Dong <aisheng.dong@nxp.com>
-> Subject: [PATCH 0/5] clk: imx8qm: prepare for imx8qm clock support
-> 
-> After a bit more investigation on IMX8QM, it seemed SCU clock can be used in
-> a similar way as IMX8QXP. So update the binding and driver to be a bit generic
-> for easily extension of IMX8QM support later.
-> 
-> Dong Aisheng (5):
->   dt-bindings: fsl: scu: add fallback compatible string for clock
->   dt-bindings: fsl: scu: add imx8qm scu clock support
->   clk: imx: scu: add fallback compatible string support
->   clk: imx8qxp: make the name of clock ID generic
->   dt-bindings: imx8-clock: add a53 and a72 clock id
-> 
->  .../devicetree/bindings/arm/freescale/fsl,scu.txt  |   7 +-
->  drivers/clk/imx/clk-imx8qxp-lpcg.c                 | 146 +++++------
->  drivers/clk/imx/clk-imx8qxp.c                      | 153 +++++------
->  include/dt-bindings/clock/imx8-clock.h             | 291
-> +++++++++++++++++++++
->  include/dt-bindings/clock/imx8qxp-clock.h          | 289 --------------------
->  5 files changed, 446 insertions(+), 440 deletions(-)  create mode 100644
-> include/dt-bindings/clock/imx8-clock.h
->  delete mode 100644 include/dt-bindings/clock/imx8qxp-clock.h
-> 
-> --
-> 2.7.4
+Patch[2] SDMMC address range:
+This patch defines exact register space for all the SDMMC
+Controllers. Controllers supporting command queue are having
+CQHCI register space from offset 0xF000.
+Patch[3] uses address range of sdmmc controllers to identify command
+queue supported controllers
+
+Patch[1] Fix V4 Mode enable:
+V4 Mode need to be enabled to select Host Version 4.0 mode for HW Command
+queue support with Tegra SDHCI.
+
+Sowjanya Komatineni (3):
+  mmc: sdhci: Fix sdhci_do_enable_v4_mode
+  arm64: dtsi: Fix SDMMC address range
+  mmc: tegra: HW Command Queue Support for Tegra SDMMC
+
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi |   6 +-
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi |   4 +-
+ drivers/mmc/host/Kconfig                 |   1 +
+ drivers/mmc/host/sdhci-tegra.c           | 138 ++++++++++++++++++++++++++++++-
+ drivers/mmc/host/sdhci.c                 |   4 +-
+ 5 files changed, 145 insertions(+), 8 deletions(-)
+
+-- 
+2.7.4
