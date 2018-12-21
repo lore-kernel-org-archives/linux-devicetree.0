@@ -1,35 +1,138 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH] pinctrl: bcm: ns: support updated DT binding as syscon
- subnode
-Date: Fri, 21 Dec 2018 11:46:12 +0100
-Message-ID: <CACRpkdbw1Oy2bX6BV-gtYgncx4_wVpXvU98iU9Q71vkGnjC9mQ@mail.gmail.com>
-References: <20181218155808.19517-1-zajec5@gmail.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
+Date: Fri, 21 Dec 2018 11:01:28 +0000
+Message-ID: <20181221110128.GO13248@dell>
+References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+ <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181218155808.19517-1-zajec5@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list <bcm-kernel-feedback-list@broadcom.com>, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgNDo1OCBQTSBSYWZhxYIgTWnFgmVja2kgPHphamVjNUBn
-bWFpbC5jb20+IHdyb3RlOgoKPiBGcm9tOiBSYWZhxYIgTWnFgmVja2kgPHJhZmFsQG1pbGVja2ku
-cGw+Cj4KPiBEb2N1bWVudGF0aW9uIGhhcyBiZWVuIHJlY2VudGx5IHVwZGF0ZWQgc3BlY2lmeWlu
-ZyB0aGF0IHBpbmN0cmwgc2hvdWxkCj4gYmUgc3Vibm9kZSBvZiB0aGUgQ1JVICJzeXNjb24iLiBT
-dXBwb3J0IHRoYXQgYnkgdXNpbmcgcGFyZW50IG5vZGUgZm9yCj4gcmVnbWFwIGFuZCByZWFkaW5n
-ICJvZmZzZXQiIHByb3BlcnR5IGZyb20gdGhlIERULgo+Cj4gU2lnbmVkLW9mZi1ieTogUmFmYcWC
-IE1pxYJlY2tpIDxyYWZhbEBtaWxlY2tpLnBsPgoKUGF0Y2ggYXBwbGllZC4KCllvdXJzLApMaW51
-cyBXYWxsZWlqCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-XwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmlu
-ZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9s
-aW51eC1hcm0ta2VybmVsCg==
+On Tue, 18 Dec 2018, Christian Hohnstaedt wrote:
+
+> These options apply to all regulators in this chip.
+> 
+> strict-supply-voltage:
+>   Set STRICT flag in CONFIG1
+> under-voltage-limit:
+>   Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
+> under-voltage-hysteresis:
+>   Select 200mV or 400mV UVLOHYS in CONFIG2
+> 
+> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+> ---
+>  drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 46 insertions(+)
+
+This needs a close review by Tony and any of the other OMAP guys.
+
+At the very least, please put '\n's between the if() statements.  You
+also need to return after an error print, else I suggest it's not an
+error.
+
+It would also look tidier if you changed the if()s to one liners to
+assign to different variables, then dealt with them separately later
+on.  The way it's done here looks messy to say the least.
+
+> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+> index 8bcdecf..f5e559b 100644
+> --- a/drivers/mfd/tps65218.c
+> +++ b/drivers/mfd/tps65218.c
+> @@ -211,6 +211,50 @@ static const struct of_device_id of_tps65218_match_table[] = {
+>  };
+>  MODULE_DEVICE_TABLE(of, of_tps65218_match_table);
+>  
+> +static void tps65218_options(struct tps65218 *tps)
+> +{
+> +	struct device *dev = tps->dev;
+> +	struct device_node *np = dev->of_node;
+> +	u32 pval;
+
+What does pval mean?  I suggest just val is more common.
+
+> +	if (!of_property_read_u32(np, "strict-supply-voltage", &pval)) {
+> +		tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
+> +			TPS65218_CONFIG1_STRICT,
+> +			pval ? TPS65218_CONFIG1_STRICT : 0,
+> +			TPS65218_PROTECT_L1);
+> +		dev_dbg(dev, "tps65218 strict-supply-voltage: %d\n", pval);
+> +	}
+> +	if (!of_property_read_u32(np, "under-voltage-hysteresis", &pval)) {
+> +		if (pval != 400000 && pval != 200000) {
+> +			dev_err(dev,
+> +				 "under-voltage-hysteresis must be %d or %d\n",
+> +				 200000, 400000);
+> +		} else {
+> +			tps65218_update_bits(tps, TPS65218_REG_CONFIG2,
+> +				TPS65218_CONFIG2_UVLOHYS,
+> +				pval == 400000 ? TPS65218_CONFIG2_UVLOHYS : 0,
+> +				TPS65218_PROTECT_L1);
+> +		}
+> +		dev_dbg(dev, "tps65218 under-voltage-hysteresis: %d\n", pval);
+> +	}
+> +	if (!of_property_read_u32(np, "under-voltage-limit", &pval)) {
+> +		int i, vals[] = { 275, 295, 325, 335 };
+> +
+> +		for (i = 0; i < ARRAY_SIZE(vals); i++) {
+> +			if (pval == vals[i] * 10000)
+
+Just use the full value in 'vals'.
+
+> +				break;
+> +		}
+
+It took me a few seconds to realise what you're doing here.
+
+I think a switch() statement would be cleaner.
+
+You should also #define the values.
+
+TPS65218_UNDER_VOLT_LIM_2750000 0
+
+Etc.
+
+> +		if (i < ARRAY_SIZE(vals)) {
+> +			tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
+> +				TPS65218_CONFIG1_UVLO_MASK, i,
+> +				TPS65218_PROTECT_L1);
+> +		} else {
+> +			dev_err(dev, "Invalid under-voltage-limit: %d\n", pval);
+
+This could go in the default: section.
+
+> +		}
+> +		dev_dbg(dev, "tps65218 under-voltage-limit: %d=%d\n", pval, i);
+
+I suggest considering removing these.
+
+> +	}
+> +}
+> +
+>  static int tps65218_probe(struct i2c_client *client,
+>  				const struct i2c_device_id *ids)
+>  {
+> @@ -249,6 +293,8 @@ static int tps65218_probe(struct i2c_client *client,
+>  
+>  	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
+>  
+> +	tps65218_options(tps);
+
+Options is not good nomenclature as it doesn't really tell us
+anything.  Looks like all the values are voltage related to me?
+
+>  	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
+>  			      ARRAY_SIZE(tps65218_cells), NULL, 0,
+>  			      regmap_irq_get_domain(tps->irq_data));
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
