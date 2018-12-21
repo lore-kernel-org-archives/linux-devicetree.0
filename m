@@ -1,63 +1,33 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH 01/13] clk: qcom: gcc: limit GPLL0_AO_OUT operating
- frequency
-Date: Fri, 21 Dec 2018 16:49:30 +0530
-Message-ID: <e97d9050-effc-56d7-0f9b-768df90dd73a@codeaurora.org>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: imx8mq: add GPC power domains
+Date: Fri, 21 Dec 2018 09:20:56 -0200
+Message-ID: <CAOMZO5Ac0_1QgOUOaVsEUwwZpMUROs-rQPKfasQGCk=MaApWmg@mail.gmail.com>
+References: <20181214105510.1174-1-l.stach@pengutronix.de>
+ <20181214105510.1174-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545039990-19984-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com
-Cc: bjorn.andersson@linaro.org, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181214105510.1174-2-l.stach@pengutronix.de>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lucas,
 
+On Fri, Dec 14, 2018 at 8:56 AM Lucas Stach <l.stach@pengutronix.de> wrote:
 
-On 12/17/2018 3:16 PM, Jorge Ramirez-Ortiz wrote:
-> Limit the GPLL0_AO_OUT_MAIN operating frequency as per its hardware
-> specifications.
-> 
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->   drivers/clk/qcom/gcc-qcs404.c | 6 ++++++
->   1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
-> index 64da032..833436a 100644
-> --- a/drivers/clk/qcom/gcc-qcs404.c
-> +++ b/drivers/clk/qcom/gcc-qcs404.c
-> @@ -304,10 +304,16 @@ static struct clk_alpha_pll gpll0_out_main = {
->   	},
->   };
->   
-> +static const struct pll_vco gpll0_ao_out_vco[] = {
-> +	{ 800000000, 800000000, 0 },
-> +};
-> +
->   static struct clk_alpha_pll gpll0_ao_out_main = {
->   	.offset = 0x21000,
->   	.regs = clk_alpha_pll_regs[CLK_ALPHA_PLL_TYPE_DEFAULT],
->   	.flags = SUPPORTS_FSM_MODE,
-> +	.vco_table = gpll0_ao_out_vco,
-> +	.num_vco = ARRAY_SIZE(gpll0_ao_out_vco),
+> +                                       pgc_pcie2: pgc-power-domain@10 {
+> +                                               #power-domain-cells = <0>;
+> +                                               reg = <IMX8M_POWER_DOMAIN_PCIE2>;
 
-Could you please help as to why this is required? This is a fixed PLL 
-and we do not require a VCO table for it.
-
->   	.clkr = {
->   		.enable_reg = 0x45000,
->   		.enable_mask = BIT(0),
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+The address after the @ is in hex, so this one should be @a.
