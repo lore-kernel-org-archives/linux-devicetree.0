@@ -1,329 +1,143 @@
-From: Jianjun Wang <jianjun.wang@mediatek.com>
-Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
-Date: Fri, 21 Dec 2018 21:13:31 +0800
-Message-ID: <1545398011.25199.43.camel@mhfsdcap03>
-References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
-         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
-         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
-         <20181217143247.GK20725@google.com>
-         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
-         <1545124764.25199.3.camel@mhfsdcap03>
-         <20181218153232.GA6715@e107981-ln.cambridge.arm.com>
+From: Philippe Schenker <dev@pschenker.ch>
+Subject: [PATCH v5 1/8] dt-bindings: stmpe: reformatting parameter list and use tabs only
+Date: Fri, 21 Dec 2018 14:46:30 +0100
+Message-ID: <20181221134638.20600-2-dev@pschenker.ch>
+References: <20181221134638.20600-1-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181218153232.GA6715@e107981-ln.cambridge.arm.com>
+In-Reply-To: <20181221134638.20600-1-dev@pschenker.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
+To: jic23@kernel.org, marcel.ziswiler@toradex.com, stefan@agner.ch
+Cc: robh@kernel.org, alexandre.torgue@st.com, shawnguo@kernel.org, dmitry.torokhov@gmail.com, thierry.reding@gmail.com, digetx@gmail.com, lee.jones@linaro.org, coquelin.stm32@gmail.com, Philippe Schenker <philippe.schenker@toradex.com>, devicetree@vger.kernel.org, Max Krummenacher <max.krummenacher@toradex.com>, Jonathan Cameron <Jonathan.Cameron@huawei.com>, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2018-12-18 at 15:32 +0000, Lorenzo Pieralisi wrote:
-> On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
-> > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
-> > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
-> > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
-> > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
-> > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
-> > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be calculated as 4GB
-> > > > > > > in arm64 but bogus alignment values at arm32, the pcie device and devices
-> > > > > > > behind this bridge will not be enabled. Fix it's BAR0 resource size to
-> > > > > > > guarantee the pcie devices will be enabled correctly.
-> > > > > > 
-> > > > > > So this is a hardware erratum?  Per spec, a memory BAR has bit 0 hardwired
-> > > > > > to 0, and an IO BAR has bit 1 hardwired to 0.
-> > > > > 
-> > > > > Yes, it only works properly on 64bit platform.
-> > > > 
-> > > > I don't understand.  BARs are supposed to work the same regardless of
-> > > > whether it's a 32- or 64-bit platform.  If this is a workaround for a
-> > > > hardware defect, please just say that explicitly.
-> > > 
-> > > I do not understand this either. First thing to do is to describe the
-> > > problem properly so that we can actually find a solution to it.
-> > > 
-> > > Lorenzo
-> > 
-> > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR is
-> > 0xffff_ffff_0000_0000 and it could not be changed except by config write
-> > operation.
-> > 
-> > The calculated BAR size will be 0 in 32-bit platform since the
-> > phys_addr_t is a 32bit value in 32-bit platform.
-> > 
-> > Actually MediaTek's HW does not using this BAR0, just omit it when
-> > assign resource is totally fine.
-> > 
-> > When assign the resource for each device, software will check the
-> > resource alignment first, and the resource of length zero will be
-> > regarded as a bogus alignment resource, it will be ignored and won't
-> > claim a resource parent for it.
-> > 
-> > When drivers try to enable the PCIe devices, the software will enable
-> > it's resources, but it will return an error number when found a
-> > unclaimed resource, in that case, the flow of enable devices will be
-> > interrupted and PCIe devices won't work properly.
-> 
-> As a starting point, please provide kernel logs for both 64-bit and
-> 32-bit platforms (without this patch applied) and also a:
-> 
-> cat /proc/iomem
-> 
-> and
-> 
-> lspci
-> 
-> output for both configurations.
-> 
-> Thanks,
-> Lorenzo
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
-I compared with the mt2712 platform, which is an arm64 platform, and the
-EP deivce is an Intel e1000e NIC. Compiled these drivers to modules
-(without this patch applied both), and insert them separately after
-system startup.
+This patch reformats the parameter list for stmpe device in a
+table-style so it is more clear to read.
 
-After insert these modules, there will be an Ethernet device on both
-platform, and the 64-bit platform works properly, but the 32-bit
-platform doesn't.
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
+Acked-for-MFD-by: Lee Jones <lee.jones@linaro.org>
 
-1.The following logs is from the 64-bit platform (mt2712):
+---
 
-1.1. insmod pcie-mediatek.ko:
-mtk-pcie 11700000.pcie: host bridge /pcie@11700000 ranges:
-mtk-pcie 11700000.pcie:   MEM 0x20000000..0x2fffffff -> 0x20000000
-mtk-pcie 11700000.pcie: PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci_bus 0000:00: root bus resource [mem 0x20000000-0x2fffffff]
-pci 0000:00:00.0: bridge configuration invalid ([bus 00-00]),
-reconfiguring
-pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5
-GT/s x1 link at 0000:00:00.0 (capable of 7.876 Gb/s with 8 GT/s x1
-link)
-pci 0000:00:00.0: BAR 0: no space for [mem size 0x100000000 64bit pref]
-pci 0000:00:00.0: BAR 0: failed to assign [mem size 0x100000000 64bit
-pref]
-pci 0000:00:00.0: BAR 8: assigned [mem 0x20000000-0x200fffff]
-pci 0000:01:00.0: BAR 1: assigned [mem 0x20000000-0x2007ffff]
-pci 0000:01:00.0: BAR 6: assigned [mem 0x20080000-0x200bffff pref]
-pci 0000:01:00.0: BAR 0: assigned [mem 0x200c0000-0x200dffff]
-pci 0000:01:00.0: BAR 3: assigned [mem 0x200e0000-0x200e3fff]
-pci 0000:01:00.0: BAR 2: no space for [io  size 0x0020]
-pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0020]
-pci 0000:00:00.0: PCI bridge to [bus 01]
-pci 0000:00:00.0:   bridge window [mem 0x20000000-0x200fffff]
+Changes in v5:
+ - Made a one column list
+ - Added lee's Acked-for-MFD
+ - Changed author of commit to use correct email.
 
-1.2. insmod e1000e.ko:
-e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
-e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-pci 0000:00:00.0: enabling device (0000 -> 0002)
-e1000e 0000:01:00.0: enabling device (0000 -> 0002)
-e1000e 0000:01:00.0: Interrupt Throttling Rate (ints/sec) set to dynamic
-conservative mode
-e1000e 0000:01:00.0 0000:01:00.0 (uninitialized): registered PHC clock
-e1000e 0000:01:00.0 eth0: (PCI Express:2.5GT/s:Width x1)
-2c:53:4a:03:89:e9
-e1000e 0000:01:00.0 eth0: Intel(R) PRO/1000 Network Connection
-e1000e 0000:01:00.0 eth0: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
+Changes in v4:
+ - New separate precursor patch for holding reformatting
 
-1.3. lspci -xxx
-00:00.0 Class 0604: Device 14c3:2712
-00: c3 14 12 27 06 00 10 00 00 01 04 06 00 00 01 00
-10: 0c 00 00 00 00 00 00 00 00 01 01 40 00 00 20 04
-20: 00 20 00 20 00 00 00 00 00 00 00 00 00 00 00 00
-30: 00 00 00 00 50 00 00 00 00 00 00 00 00 01 00 00
-40: 00 00 00 00 60 61 12 02 00 00 00 00 00 00 00 00
-50: 05 78 80 00 00 00 00 00 00 00 00 00 00 00 00 00
-60: 00 00 00 00 00 00 00 00 11 78 00 00 00 00 00 00
-70: 00 00 00 00 00 00 00 00 01 80 c3 01 08 00 00 00
-80: 10 00 42 01 41 83 00 00 10 28 20 00 12 8c 60 01
-90: 08 00 11 10 00 00 04 00 00 00 00 00 00 00 00 00
-a0: 00 00 00 00 00 08 00 00 00 00 00 00 00 00 00 00
-b0: 02 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+Changes in v3: None
+Changes in v2: None
 
-01:00.0 Class 0200: Device 8086:10d3
-00: 86 80 d3 10 06 04 18 00 00 00 00 02 10 00 00 00
-10: 00 00 0c 20 00 00 00 20 01 00 00 00 00 00 0e 20
-20: 00 00 00 00 00 00 00 00 00 00 00 00 1a 1d 00 00
-30: 00 00 00 00 c8 00 00 00 00 00 00 00 f3 01 00 00
-40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-a0: 11 00 04 80 03 00 00 00 03 20 00 00 00 00 00 00
-b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 01 d0 22 c8 00 20 00 14
-d0: 05 e0 80 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 10 a0 01 00 c1 8c 00 00 10 28 10 00 11 1c 03 01
-f0: 00 00 11 10 00 00 00 00 00 00 00 00 00 00 00 00
+ .../bindings/input/touchscreen/stmpe.txt      | 64 +++++++++++++------
+ .../devicetree/bindings/mfd/stmpe.txt         | 14 ++--
+ 2 files changed, 53 insertions(+), 25 deletions(-)
 
-1.4 lspci -v
-00:00.0 Class 0604: Device 14c3:2712 (prog-if 01)
-	Flags: bus master, fast devsel, latency 0
-	Memory at <unassigned> (64-bit, prefetchable)
-	Bus: primary=00, secondary=01, subordinate=01, sec-latency=64
-	I/O behind bridge: 00000000-00000fff [size=4K]
-	Memory behind bridge: 20000000-200fffff [size=1M]
-	Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
-	Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
-	Capabilities: [78] Power Management version 3
-	Capabilities: [80] Express Root Port (Slot+), MSI 00
-	Capabilities: [100] Virtual Channel
-	Capabilities: [400] L1 PM Substates
-	Capabilities: [600] Latency Tolerance Reporting
-
-01:00.0 Class 0200: Device 8086:10d3
-	Subsystem: Device 1d1a:0000
-	Flags: bus master, fast devsel, latency 0, IRQ 243
-	Memory at 200c0000 (32-bit, non-prefetchable) [size=128K]
-	Memory at 20000000 (32-bit, non-prefetchable) [size=512K]
-	I/O ports at <unassigned> [disabled]
-	Memory at 200e0000 (32-bit, non-prefetchable) [size=16K]
-	[virtual] Expansion ROM at 20080000 [disabled] [size=256K]
-	Capabilities: [c8] Power Management version 2
-	Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
-	Capabilities: [e0] Express Endpoint, MSI 00
-	Capabilities: [a0] MSI-X: Enable+ Count=5 Masked-
-	Capabilities: [100] Advanced Error Reporting
-	Capabilities: [140] Device Serial Number 2c-53-4a-ff-ff-03-89-e9
-	Kernel driver in use: e1000e
-
-1.5. cat /proc/iomem
-20000000-2fffffff : pcie@11700000
-  20000000-200fffff : PCI Bus 0000:01
-    20000000-2007ffff : 0000:01:00.0
-      20000000-2007ffff : e1000e
-    20080000-200bffff : 0000:01:00.0
-    200c0000-200dffff : 0000:01:00.0
-      200c0000-200dffff : e1000e
-    200e0000-200e3fff : 0000:01:00.0
-      200e0000-200e3fff : e1000e
-
-2. The following logs is from the 32-bit platform (mt7629):
-
-2.1. insmod pcie-mediatek.ko
-mtk-pcie 1a140000.pcie: host bridge /pcie@1a140000 ranges:
-mtk-pcie 1a140000.pcie:   MEM 0x20000000..0x2fffffff -> 0x20000000
-mtk-pcie 1a140000.pcie: PCI host bridge to bus 0000:00
-pci_bus 0000:00: root bus resource [bus 00-ff]
-pci_bus 0000:00: root bus resource [mem 0x20000000-0x2fffffff]
-PCI: bus0: Fast back to back transfers disabled
-pci 0000:00:01.0: bridge configuration invalid ([bus 00-00]),
-reconfiguring
-pci 0000:01:00.0: 2.000 Gb/s available PCIe bandwidth, limited by 2.5
-GT/s x1 link at 0000:00:01.0 (capable of 7.876 Gb/s with 8 GT/s x1
-link)
-PCI: bus1: Fast back to back transfers disabled
-pci 0000:00:01.0: BAR 0: [mem 0x00000000-0xffffffff 64bit pref] has
-bogus alignment
-pci 0000:00:01.0: BAR 8: assigned [mem 0x20000000-0x200fffff]
-pci 0000:01:00.0: BAR 1: assigned [mem 0x20000000-0x2007ffff]
-pci 0000:01:00.0: BAR 6: assigned [mem 0x20080000-0x200bffff pref]
-pci 0000:01:00.0: BAR 0: assigned [mem 0x200c0000-0x200dffff]
-pci 0000:01:00.0: BAR 3: assigned [mem 0x200e0000-0x200e3fff]
-pci 0000:01:00.0: BAR 2: no space for [io  size 0x0020]
-pci 0000:01:00.0: BAR 2: failed to assign [io  size 0x0020]
-pci 0000:00:01.0: PCI bridge to [bus 01]
-pci 0000:00:01.0:   bridge window [mem 0x20000000-0x200fffff]
-
-2.2. insmod e1000e.ko
-e1000e: Intel(R) PRO/1000 Network Driver - 3.2.6-k
-e1000e: Copyright(c) 1999 - 2015 Intel Corporation.
-pci 0000:00:01.0: can't enable device: BAR 0 [mem 0x00000000-0xffffffff
-64bit pref] not claimed
-pci 0000:00:01.0: Error enabling bridge (-22), continuing
-e1000e 0000:01:00.0: enabling device (0140 -> 0142)
-e1000e 0000:01:00.0: Interrupt Throttling Rate (ints/sec) set to dynamic
-conservative mode
-e1000e 0000:01:00.0 eth0: (PCI Express:2.5GT/s:Width x1)
-2c:53:4a:03:89:e9
-e1000e 0000:01:00.0 eth0: Intel(R) PRO/1000 Network Connection
-e1000e 0000:01:00.0 eth0: MAC: 3, PHY: 8, PBA No: FFFFFF-0FF
-
-2.3. lspci -xxx
-00:01.0 Class 0604: Device 14c3:7629
-00: c3 14 29 76 40 01 10 00 00 01 04 06 10 00 01 00
-10: 0c 00 00 00 00 00 00 00 00 01 01 40 00 00 20 04
-20: 00 20 00 20 00 00 00 00 00 00 00 00 00 00 00 00
-30: 00 00 00 00 50 00 00 00 00 00 00 00 00 01 01 00
-40: 00 00 00 00 60 61 12 02 00 00 00 00 00 00 00 00
-50: 05 78 80 00 00 00 00 00 00 00 00 00 00 00 00 00
-60: 00 00 00 00 00 00 00 00 11 78 00 00 00 00 00 00
-70: 00 00 00 00 00 00 00 00 01 80 c3 01 08 00 00 00
-80: 10 00 42 01 41 83 00 00 10 28 20 00 22 8c 60 01
-90: 08 00 11 10 00 00 04 00 00 00 00 00 00 00 00 00
-a0: 00 00 00 00 00 08 00 00 00 00 00 00 00 00 00 00
-b0: 02 00 01 00 00 00 00 00 00 00 00 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-d0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-f0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-
-01:00.0 Class 0200: Device 8086:10d3
-00: 86 80 d3 10 40 01 10 00 00 00 00 02 10 00 00 00
-10: 00 00 0c 20 00 00 00 20 01 00 00 00 00 00 0e 20
-20: 00 00 00 00 00 00 00 00 00 00 00 00 1a 1d 00 00
-30: 00 00 00 00 c8 00 00 00 00 00 00 00 00 01 00 00
-40: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-50: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-60: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-70: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-80: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-90: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-a0: 11 00 04 00 03 00 00 00 03 20 00 00 00 00 00 00
-b0: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-c0: 00 00 00 00 00 00 00 00 01 d0 22 c8 00 20 00 14
-d0: 05 e0 80 00 00 00 00 00 00 00 00 00 00 00 00 00
-e0: 10 a0 01 00 c1 8c 00 00 10 28 10 00 11 1c 03 01
-f0: 00 00 11 10 00 00 00 00 00 00 00 00 00 00 00 00
-
-2.4. lspci -v
-00:01.0 Class 0604: Device 14c3:7629 (prog-if 01)
-	Flags: bus master, fast devsel, latency 0
-	Memory at <unassigned> (64-bit, prefetchable) [disabled] [size=4G]
-	Bus: primary=00, secondary=01, subordinate=01, sec-latency=64
-	I/O behind bridge: 00000000-00000fff [size=4K]
-	Memory behind bridge: 20000000-200fffff [size=1M]
-	Prefetchable memory behind bridge: 00000000-000fffff [size=1M]
-	Capabilities: [50] MSI: Enable- Count=1/1 Maskable- 64bit+
-	Capabilities: [78] Power Management version 3
-	Capabilities: [80] Express Root Port (Slot+), MSI 00
-	Capabilities: [100] Virtual Channel
-	Capabilities: [400] L1 PM Substates
-	Capabilities: [600] Latency Tolerance Reporting
-
-01:00.0 Class 0200: Device 8086:10d3
-	Subsystem: Device 1d1a:0000
-	Flags: bus master, fast devsel, latency 0, IRQ 110
-	Memory at 200c0000 (32-bit, non-prefetchable) [size=128K]
-	Memory at 20000000 (32-bit, non-prefetchable) [size=512K]
-	I/O ports at <unassigned> [disabled]
-	Memory at 200e0000 (32-bit, non-prefetchable) [size=16K]
-	[virtual] Expansion ROM at 20080000 [disabled] [size=256K]
-	Capabilities: [c8] Power Management version 2
-	Capabilities: [d0] MSI: Enable- Count=1/1 Maskable- 64bit+
-	Capabilities: [e0] Express Endpoint, MSI 00
-	Capabilities: [a0] MSI-X: Enable+ Count=5 Masked-
-	Capabilities: [100] Advanced Error Reporting
-	Capabilities: [140] Device Serial Number 2c-53-4a-ff-ff-03-89-e9
-	Kernel driver in use: e1000e
-
-2.5. cat /proc/iomem
-20000000-2fffffff : pcie@1a140000
-  20000000-200fffff : PCI Bus 0000:01
-    20000000-2007ffff : 0000:01:00.0
-      20000000-2007ffff : e1000e
-    20080000-200bffff : 0000:01:00.0
-    200c0000-200dffff : 0000:01:00.0
-      200c0000-200dffff : e1000e
-    200e0000-200e3fff : 0000:01:00.0
-      200e0000-200e3fff : e1000e
-
-Thanks.
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+index 127baa31a77a..bf66a55a7de5 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/stmpe.txt
+@@ -5,24 +5,52 @@ Required properties:
+  - compatible: "st,stmpe-ts"
+ 
+ Optional properties:
+-- st,sample-time: ADC converstion time in number of clock.  (0 -> 36 clocks, 1 ->
+-  44 clocks, 2 -> 56 clocks, 3 -> 64 clocks, 4 -> 80 clocks, 5 -> 96 clocks, 6
+-  -> 144 clocks), recommended is 4.
+-- st,mod-12b: ADC Bit mode (0 -> 10bit ADC, 1 -> 12bit ADC)
+-- st,ref-sel: ADC reference source (0 -> internal reference, 1 -> external
+-  reference)
+-- st,adc-freq: ADC Clock speed (0 -> 1.625 MHz, 1 -> 3.25 MHz, 2 || 3 -> 6.5 MHz)
+-- st,ave-ctrl: Sample average control (0 -> 1 sample, 1 -> 2 samples, 2 -> 4
+-  samples, 3 -> 8 samples)
+-- st,touch-det-delay: Touch detect interrupt delay (0 -> 10 us, 1 -> 50 us, 2 ->
+-  100 us, 3 -> 500 us, 4-> 1 ms, 5 -> 5 ms, 6 -> 10 ms, 7 -> 50 ms) recommended
+-  is 3
+-- st,settling: Panel driver settling time (0 -> 10 us, 1 -> 100 us, 2 -> 500 us, 3
+-  -> 1 ms, 4 -> 5 ms, 5 -> 10 ms, 6 for 50 ms, 7 -> 100 ms) recommended is 2
+-- st,fraction-z: Length of the fractional part in z (fraction-z ([0..7]) = Count of
+-  the fractional part) recommended is 7
+-- st,i-drive: current limit value of the touchscreen drivers (0 -> 20 mA typical 35
+-  mA max, 1 -> 50 mA typical 80 mA max)
++- st,sample-time	: ADC conversion time in number of clock.
++				0 -> 36 clocks
++				1 -> 44 clocks
++				2 -> 56 clocks
++				3 -> 64 clocks
++				4 -> 80 clocks (recommended)
++				5 -> 96 clocks
++				6 -> 144 clocks
++- st,mod-12b		: ADC Bit mode
++				0 -> 10bit ADC
++				1 -> 12bit ADC
++- st,ref-sel		: ADC reference source
++				0 -> internal
++				1 -> external
++- st,adc-freq		: ADC Clock speed
++				0 -> 1.625 MHz
++				1 -> 3.25 MHz
++				2 || 3 -> 6.5 MHz
++- st,ave-ctrl		: Sample average control
++				0 -> 1 sample
++				1 -> 2 samples
++				2 -> 4 samples
++				3 -> 8 samples
++- st,touch-det-delay	: Touch detect interrupt delay (recommended is 3)
++				0 -> 10 us
++				1 -> 50 us
++				2 -> 100 us
++				3 -> 500 us
++				4 -> 1 ms
++				5 -> 5 ms
++				6 -> 10 ms
++				7 -> 50 ms
++- st,settling		: Panel driver settling time (recommended is 2)
++				0 -> 10 us
++				1 -> 100 us
++				2 -> 500 us
++				3 -> 1 ms
++				4 -> 5 ms
++				5 -> 10 ms
++				6 -> 50 ms
++				7 -> 100 ms
++- st,fraction-z		: Length of the fractional part in z (recommended is 7)
++			  (fraction-z ([0..7]) = Count of the fractional part)
++- st,i-drive		: current limit value of the touchscreen drivers
++				0 -> 20 mA (typical 35mA max)
++				1 -> 50 mA (typical 80 mA max)
+ 
+ Node name must be stmpe_touchscreen and should be child node of stmpe node to
+ which it belongs.
+diff --git a/Documentation/devicetree/bindings/mfd/stmpe.txt b/Documentation/devicetree/bindings/mfd/stmpe.txt
+index c797c05cd3c2..a46e7177195d 100644
+--- a/Documentation/devicetree/bindings/mfd/stmpe.txt
++++ b/Documentation/devicetree/bindings/mfd/stmpe.txt
+@@ -4,15 +4,15 @@ STMPE is an MFD device which may expose the following inbuilt devices: gpio,
+ keypad, touchscreen, adc, pwm, rotator.
+ 
+ Required properties:
+- - compatible                   : "st,stmpe[610|801|811|1600|1601|2401|2403]"
+- - reg                          : I2C/SPI address of the device
++ - compatible			: "st,stmpe[610|801|811|1600|1601|2401|2403]"
++ - reg				: I2C/SPI address of the device
+ 
+ Optional properties:
+- - interrupts                   : The interrupt outputs from the controller
+- - interrupt-controller         : Marks the device node as an interrupt controller
+- - wakeup-source                : Marks the input device as wakable
+- - st,autosleep-timeout         : Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
+- - irq-gpio                     : If present, which GPIO to use for event IRQ
++ - interrupts			: The interrupt outputs from the controller
++ - interrupt-controller		: Marks the device node as an interrupt controller
++ - wakeup-source		: Marks the input device as wakable
++ - st,autosleep-timeout		: Valid entries (ms); 4, 16, 32, 64, 128, 256, 512 and 1024
++ - irq-gpio			: If present, which GPIO to use for event IRQ
+ 
+ Example:
+ 
+-- 
+2.19.2
