@@ -1,75 +1,49 @@
-Return-Path: <SRS0=KdAq=O5=lists.infradead.org=linux-arm-kernel-bounces+robh=kernel.org@kernel.org>
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V5 1/4] dt-bindings: fsl: scu: add rtc binding
-Date: Thu, 20 Dec 2018 08:56:07 +0000
-Message-ID: <1545295872-20169-2-git-send-email-Anson.Huang@nxp.com>
-References: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
-In-Reply-To: <1545295872-20169-1-git-send-email-Anson.Huang@nxp.com>
-Content-Language: en-US
-MIME-Version: 1.0
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+robh=kernel.org@lists.infradead.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, Aisheng Dong <aisheng.dong@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, Andy Gross <andy.gross@linaro.org>, "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>, "heiko@sntech.de" <heiko@sntech.de>, "arnd@arndb.de" <arnd@arndb.de>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>, "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>, "amit.kucheria@linaro.org" <amit.kucheria@linaro.org>, "ezequiel@collabora.com" <ezequiel@collabora.com>, "olof@lixom.net" <olof@lixom.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:41251 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390366AbeLVRNQ (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:16 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 04/12] media: mt9m001: add of_match_table
+Date: Sun, 23 Dec 2018 02:12:46 +0900
+Message-Id: <1545498774-11754-5-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-NXP i.MX8QXP is an ARMv8 SoC with a Cortex-M4 core inside as
-system controller, the system controller is in charge of system
-power, clock and secure RTC etc. management, Linux kernel
-has to communicate with system controller via MU (message unit)
-IPC to do RTC operation, this patch adds binding doc for i.MX
-system controller RTC driver.
+Add of_match_table for the MT9M001 CMOS image sensor.
 
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-No change since V4.
----
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/media/i2c/mt9m001.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index c20f38e..3f3d697 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -106,6 +106,12 @@ Required properties for Pinctrl sub nodes:
- [2] Documentation/devicetree/bindings/power/power_domain.txt
- [3] Documentation/devicetree/bindings/pinctrl/fsl,imx-pinctrl.txt
- 
-+RTC bindings based on SCU Message Protocol
-+------------------------------------------------------------
-+
-+Required properties:
-+- compatible: should be "fsl,imx8qxp-sc-rtc";
-+
- Example (imx8qxp):
- -------------
- lsio_mu1: mailbox@5d1c0000 {
-@@ -148,6 +154,10 @@ firmware {
- 			compatible = "fsl,imx8qxp-scu-pd";
- 			#power-domain-cells = <1>;
- 		};
-+
-+		rtc: rtc {
-+			compatible = "fsl,imx8qxp-sc-rtc";
-+		};
- 	};
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index 65ff59d..2d800ca 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -738,9 +738,16 @@ static const struct i2c_device_id mt9m001_id[] = {
  };
+ MODULE_DEVICE_TABLE(i2c, mt9m001_id);
  
++static const struct of_device_id mt9m001_of_match[] = {
++	{ .compatible = "onnn,mt9m001", },
++	{ /* sentinel */ },
++};
++MODULE_DEVICE_TABLE(of, mt9m001_of_match);
++
+ static struct i2c_driver mt9m001_i2c_driver = {
+ 	.driver = {
+ 		.name = "mt9m001",
++		.of_match_table = mt9m001_of_match,
+ 	},
+ 	.probe		= mt9m001_probe,
+ 	.remove		= mt9m001_remove,
 -- 
 2.7.4
-
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
