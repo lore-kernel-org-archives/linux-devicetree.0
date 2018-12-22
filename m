@@ -1,40 +1,89 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V5 1/2] dt-bindings: iio: magnetometer: add dt-bindings
- for freescale mag3110
-Date: Sat, 22 Dec 2018 17:05:45 +0000
-Message-ID: <20181222170545.4aed8c61@archlinux>
-References: <1545021679-4025-1-git-send-email-Anson.Huang@nxp.com>
-        <CAL_Jsq+NKtKcV9xzSd11vZPfQWUVJMSQx8BB-5UX6O_4ptV44A@mail.gmail.com>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v8 03/26] dt-bindings: Add doc for the Ingenic TCU drivers
+Date: Sat, 22 Dec 2018 12:09:32 +0100
+Message-ID: <1545476972.2113.1@crapouillou.net>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+        <20181212220922.18759-4-paul@crapouillou.net> <20181217210531.GA29770@bogus>
+        <1545084222.1958.0@smtp.crapouillou.net>
+        <CAL_JsqLhnitSM7-S1hq8M7S-7BHO5oYByXQ8QD2JkUY3jb63fQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=iso-8859-1; format=flowed
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+NKtKcV9xzSd11vZPfQWUVJMSQx8BB-5UX6O_4ptV44A@mail.gmail.com>
+In-Reply-To: <CAL_JsqLhnitSM7-S1hq8M7S-7BHO5oYByXQ8QD2JkUY3jb63fQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Anson Huang <anson.huang@nxp.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, olivier moysan <olivier.moysan@st.com>, Brian Masney <masneyb@onstation.org>, Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Phil Reid <preid@electromag.com.au>, NXP Linux Team <linux-imx@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 17 Dec 2018 08:55:53 -0600
-Rob Herring <robh+dt@kernel.org> wrote:
 
-> On Sun, Dec 16, 2018 at 10:47 PM Anson Huang <anson.huang@nxp.com> wrote:
-> >
-> > Add Freescale MAG3110 dt-bindings and remove it from trivial-devices
-> > dt-bingding doc.
-> >
-> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> > ---
-> >  .../bindings/iio/magnetometer/mag3110.txt          | 27 ++++++++++++++++++++++
-> >  .../devicetree/bindings/trivial-devices.txt        |  1 -
-> >  2 files changed, 27 insertions(+), 1 deletion(-)
-> >  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/mag3110.txt  
-> 
-> trivial-devices.txt is gone now as it's converted to json-schema. I
-> can take this patch thru my tree and fix it up.
-> 
+
+Le mar. 18 d=E9c. 2018 =E0 17:36, Rob Herring <robh@kernel.org> a =E9crit :
+> On Mon, Dec 17, 2018 at 4:04 PM Paul Cercueil <paul@crapouillou.net>=20
+> wrote:
+>>=20
+>>  Hi Rob,
+>>=20
+>>  Le lun. 17 d=E9c. 2018 =E0 22:05, Rob Herring <robh@kernel.org> a=20
+>> =E9crit :
+>>  > On Wed, Dec 12, 2018 at 11:08:58PM +0100, Paul Cercueil wrote:
+>>  >>  Add documentation about how to properly use the Ingenic TCU
+>>  >>  (Timer/Counter Unit) drivers from devicetree.
+>>  >>
+>>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>>  >>  ---
+>>  >>
+>>  >>  Notes:
+>>  >>       v4: New patch in this series. Corresponds to V2 patches=20
+>> 3-4-5
+>>  >> with
+>>  >>           added content.
+>>  >>
+>>  >>       v5: - Edited PWM/watchdog DT bindings documentation to=20
+>> point
+>>  >> to the new
+>>  >>             document.
+>>  >>           - Moved main document to
+>>  >>            =20
+>> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
+>>  >>           - Updated documentation to reflect the new devicetree
+>>  >> bindings.
+>>  >>
+>>  >>       v6: - Removed PWM/watchdog documentation files as asked by
+>>  >> upstream
+>>  >>           - Removed doc about properties that should be implicit
+>>  >>           - Removed doc about ingenic,timer-channel /
+>>  >>             ingenic,clocksource-channel as they are gone
+>>  >>           - Fix WDT clock name in the binding doc
+>>  >>           - Fix lengths of register areas in watchdog/pwm nodes
+>>  >>
+>>  >>       v7: No change
+>>  >>
+>>  >>       v8: - Fix address of the PWM node
+>>  >>           - Added doc about system timer and clocksource children
+>>  >> nodes
+>>  >
+>>  > I thought we'd sorted this out...
+>>=20
+>>  Yeah, well I just can't please everybody. V6/V7 didn't have the
+>>  system timer or clocksource in devicetree, which was good for
+>>  you, but then the driver nearly doubled in size and complexity,
+>>  and Thierry rightfully refused it. Now I'm at the point where
+>=20
+> You mean Daniel?
+
+Oops - I meant Daniel yes.
+
+>>  I'm trying alternative ways of encoding the information in
+>>  devicetree, as suggested by various people, just so that you
+>>  accept it. Because I don't see any other option.
+>=20
+> Does the problem boil down to needing to reserve channel x to use PWMx
+> pin? If so, just do a mask property of reserved for PWM channels.
+
+Yes, that's exactly the problem. I will go with a property then. Thanks!
+
+> Sorry this is going in circles.
+>=20
 > Rob
-
-That would be great. Thanks. I'll pick up patch 2.
-
-Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
+=
