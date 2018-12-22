@@ -1,255 +1,62 @@
-Return-Path: <SRS0=fHqI=O3=renesas.com=chris.brandt@kernel.org>
-From: Chris Brandt <chris.brandt@renesas.com>
-Subject: [PATCH v4 1/2] ARM: dts: r7s9210: Initial SoC device tree
-Date: Tue, 18 Dec 2018 12:05:54 -0500
-Message-Id: <20181218170555.121673-2-chris.brandt@renesas.com>
-In-Reply-To: <20181218170555.121673-1-chris.brandt@renesas.com>
-References: <20181218170555.121673-1-chris.brandt@renesas.com>
-To: Simon Horman <horms@verge.net.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Chris Brandt <chris.brandt@renesas.com>
+Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-it1-f195.google.com ([209.85.166.195]:51377 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387436AbeLVS0K (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 13:26:10 -0500
+MIME-Version: 1.0
+References: <20181128095421.20573-1-thierry.reding@gmail.com>
+In-Reply-To: <20181128095421.20573-1-thierry.reding@gmail.com>
+From: Jassi Brar <jassisinghbrar@gmail.com>
+Date: Fri, 21 Dec 2018 23:13:41 -0600
+Message-ID: <CABb+yY2xO38kMSxTFE40v0rZ_tMp6di9QWU=fJdC00wWbofFGw@mail.gmail.com>
+Subject: Re: [PATCH v3 00/12] serial: Add Tegra Combined UART driver
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mikko Perttunen <mperttunen@nvidia.com>, Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, Pekka Pessi <ppessi@nvidia.com>, Mika Liljeberg <mliljeberg@nvidia.com>, linux-tegra@vger.kernel.org, linux-serial@vger.kernel.org, Devicetree List <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Basic support for the RZ/A2 (R7S9210) SoC.
+On Wed, Nov 28, 2018 at 3:54 AM Thierry Reding <thierry.reding@gmail.com> wrote:
+>
+> From: Thierry Reding <treding@nvidia.com>
+>
+> Hi everyone,
+>
+> this is a reworked version of Mikko's earlier proposal[0]. I've reworked
+> the TCU driver itself so that it relies less on global variables as well
+> as added a Kconfig option to allow the console support to be selected. I
+> also fixed a couple of issues that manifested themselves as I was moving
+> towards the IRQ driven mode (TCU was passing a pointer to a local
+> variable which was getting stored in the mailbox's ring buffer and the
+> data pointed at was becoming stale by the time the mailbox got around to
+> dequeue it).
+>
+> The biggest bulk of the changes is in the mailbox driver. This series
+> addresses all of Jassi's comments from back at the time. One notable
+> additional change is that shared mailboxes are now interrupt driven,
+> which removes the need for polling mode.
+>
+> Unfortunately there is still an issue because the TCU uses the mailbox
+> in atomic context for both TTY and console modes, so we get a sleeping-
+> while-atomic BUG when using mbox_client->tx_block = true in order to
+> rate-limit mbox_send_message(). In order to work around this, I added a
+> new mbox_flush() API that will allow flushing the mailbox in atomic
+> context by using the mailbox controller's implementation of ->flush().
+> For Tegra HSP shared mailboxes this is done by spinning on the shared
+> mailbox register until the receiver has marked the mailbox as empty. I
+> have been running this locally for a couple of days now and it works
+> perfectly.
+>
+> Furthermore this series incorporates Mikko's work in progress on
+> splitting up the mailbox controllers and allowing multiple controllers
+> to match on the same device tree node during mbox_request_channel().
+>
+> The new mbox_flush() API introduces a build-time dependency between the
+> TCU driver and the mailbox framework, so patches 1-9 would need to go
+> through one tree. Patch 9 was already acked by Greg, so I would suggest
+> that Jassi pick up the first 9 patches and I pick up patches 10-12 into
+> the Tegra tree.
+>
+Picked the first 8. The patch-9 is tcu serial driver and should go via tty.
 
-Signed-off-by: Chris Brandt <chris.brandt@renesas.com>
----
-v3:
- * Put all peripherals under soc "simple-bus" node
- * Sorted all nodes by physical addresses
-v2:
- * Fixed cpg node name to match reg address
- * Removed the clocks subnode
- * SCIF register range 18 to 0x18
- * Removed 'reset-cells' from cpg because resets not supported (yet?)
- * Sorted nodes by address (per group of device
----
- arch/arm/boot/dts/r7s9210.dtsi | 218 +++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 218 insertions(+)
- create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
-
-diff --git a/arch/arm/boot/dts/r7s9210.dtsi b/arch/arm/boot/dts/r7s9210.dtsi
-new file mode 100644
-index 000000000000..22baa96f5974
---- /dev/null
-+++ b/arch/arm/boot/dts/r7s9210.dtsi
-@@ -0,0 +1,218 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Device Tree Source for the R7S9210 SoC
-+ *
-+ * Copyright (C) 2018 Renesas Electronics Corporation
-+ *
-+ */
-+
-+#include <dt-bindings/interrupt-controller/arm-gic.h>
-+#include <dt-bindings/clock/r7s9210-cpg-mssr.h>
-+
-+/ {
-+	compatible = "renesas,r7s9210";
-+	interrupt-parent = <&gic>;
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+
-+	/* External clocks */
-+	extal_clk: extal {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		/* Value must be set by board */
-+		clock-frequency = <0>;
-+	};
-+
-+	rtc_x1_clk: rtc_x1 {
-+		#clock-cells = <0>;
-+		compatible = "fixed-clock";
-+		/* If clk present, value (32678) must be set by board */
-+		clock-frequency = <0>;
-+	};
-+
-+	cpus {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		cpu@0 {
-+			device_type = "cpu";
-+			compatible = "arm,cortex-a9";
-+			reg = <0>;
-+			clock-frequency = <528000000>;
-+			next-level-cache = <&L2>;
-+		};
-+	};
-+
-+	soc {
-+		compatible = "simple-bus";
-+		interrupt-parent = <&gic>;
-+
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		L2: cache-controller@1f003000 {
-+			compatible = "arm,pl310-cache";
-+			reg = <0x1f003000 0x1000>;
-+			interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
-+			arm,early-bresp-disable;
-+			arm,full-line-zero-disable;
-+			cache-unified;
-+			cache-level = <2>;
-+		};
-+
-+		scif0: serial@e8007000 {
-+			compatible = "renesas,scif-r7s9210";
-+			reg = <0xe8007000 0x18>;
-+			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 266 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 267 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi",
-+					  "bri", "dri", "tei";
-+			clocks = <&cpg CPG_MOD 47>;
-+			clock-names = "fck";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		scif1: serial@e8007800 {
-+			compatible = "renesas,scif-r7s9210";
-+			reg = <0xe8007800 0x18>;
-+			interrupts = <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 272 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 273 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 271 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 274 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi",
-+					  "bri", "dri", "tei";
-+			clocks = <&cpg CPG_MOD 46>;
-+			clock-names = "fck";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		scif2: serial@e8008000 {
-+			compatible = "renesas,scif-r7s9210";
-+			reg = <0xe8008000 0x18>;
-+			interrupts = <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 278 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 279 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 277 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 280 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi",
-+					  "bri", "dri", "tei";
-+			clocks = <&cpg CPG_MOD 45>;
-+			clock-names = "fck";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		scif3: serial@e8008800 {
-+			compatible = "renesas,scif-r7s9210";
-+			reg = <0xe8008800 0x18>;
-+			interrupts = <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 284 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 285 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 283 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 286 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi",
-+					  "bri", "dri", "tei";
-+			clocks = <&cpg CPG_MOD 44>;
-+			clock-names = "fck";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		scif4: serial@e8009000 {
-+			compatible = "renesas,scif-r7s9210";
-+			reg = <0xe8009000 0x18>;
-+			interrupts = <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 290 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 291 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 289 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 292 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "eri", "rxi", "txi",
-+					  "bri", "dri", "tei";
-+			clocks = <&cpg CPG_MOD 43>;
-+			clock-names = "fck";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ostm0: timer@e803b000 {
-+			compatible = "renesas,r7s9210-ostm", "renesas,ostm";
-+			reg = <0xe803b000 0x30>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&cpg CPG_MOD 36>;
-+			clock-names = "ostm0";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ostm1: timer@e803c000 {
-+			compatible = "renesas,r7s9210-ostm", "renesas,ostm";
-+			reg = <0xe803c000 0x30>;
-+			interrupts = <GIC_SPI 57 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&cpg CPG_MOD 35>;
-+			clock-names = "ostm1";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		ostm2: timer@e803d000 {
-+			compatible = "renesas,r7s9210-ostm", "renesas,ostm";
-+			reg = <0xe803d000 0x30>;
-+			interrupts = <GIC_SPI 58 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&cpg CPG_MOD 34>;
-+			clock-names = "ostm2";
-+			power-domains = <&cpg>;
-+			status = "disabled";
-+		};
-+
-+		gic: interrupt-controller@e8221000 {
-+			compatible = "arm,gic-400";
-+			#interrupt-cells = <3>;
-+			#address-cells = <0>;
-+			interrupt-controller;
-+			reg = <0xe8221000 0x1000>,
-+			      <0xe8222000 0x1000>;
-+		};
-+
-+		cpg: clock-controller@fcfe0010 {
-+			compatible = "renesas,r7s9210-cpg-mssr";
-+			reg = <0xfcfe0010 0x455>;
-+			clocks = <&extal_clk>;
-+			clock-names = "extal";
-+			#clock-cells = <2>;
-+			#power-domain-cells = <0>;
-+		};
-+
-+		wdt: watchdog@fcfe7000 {
-+			compatible = "renesas,r7s9210-wdt", "renesas,rza-wdt";
-+			reg = <0xfcfe7000 0x26>;
-+			interrupts = <GIC_SPI 61 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_CORE R7S9210_CLK_P0>;
-+		};
-+
-+		bsid: chipid@fcfe8004 {
-+			compatible = "renesas,bsid";
-+			reg = <0xfcfe8004 4>;
-+		};
-+
-+		pinctrl: pin-controller@fcffe000 {
-+			compatible = "renesas,r7s9210-pinctrl";
-+			reg = <0xfcffe000 0x1000>;
-+
-+			gpio-controller;
-+			#gpio-cells = <2>;
-+			gpio-ranges = <&pinctrl 0 0 176>;
-+		};
-+	};
-+};
--- 
-2.16.1
+-Jassi
