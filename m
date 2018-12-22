@@ -1,73 +1,60 @@
-Return-Path: <SRS0=0JaT=O6=martin.sperl.org=kernel@kernel.org>
-From: kernel@martin.sperl.org
-Subject: [PATCH V5 1/4] dt-binding: can: mcp25xxfd: document device tree bindings
-Date: Fri, 21 Dec 2018 09:29:47 +0000
-Message-Id: <20181221092950.14192-2-kernel@martin.sperl.org>
-In-Reply-To: <20181221092950.14192-1-kernel@martin.sperl.org>
-References: <20181221092950.14192-1-kernel@martin.sperl.org>
-To: linux-can@vger.kernel.org, devicetree@vger.kernel.org, Wolfgang Grandegger <wg@grandegger.com>, Mark Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Martin Sperl <kernel@martin.sperl.org>, Sukkin Pang <skp@skpang.co.uk>, Gerhard Bertelsmann <info@gerhard-bertelsmann.de>, Wilhelm Leichtfried <Wilhelm.Leichtfried@microchip.com>, Thomas Kopp <Thomas.Kopp@microchip.com>, Enrico Scholz <enrico.scholz@sigma-chemnitz.de>, Brad Hanson <Brad.Hanson@arity.com>, Teemu Keskinarkaus <teemu.keskinarkaus@crosscontrol.com>
+Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37613 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbeLVRN3 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:29 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 10/12] media: mt9m001: support log_status ioctl and event interface
+Date: Sun, 23 Dec 2018 02:12:52 +0900
+Message-Id: <1545498774-11754-11-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Sperl <kernel@martin.sperl.org>
+This adds log_status ioctl and event interface for mt9m001's v4l2 controls.
 
-Add device-tree bindings for Microcip CanFD Controller mcp2517fd
-
-Signed-off-by: Martin Sperl <kernel@martin.sperl.org>
-Reviewed-by: Rob Herring <robh@kernel.org>
---
-Changelog:
-  V1 -> V2: new more generic name based on feedback from microchip
-            cleanup of dt custom properties removing (most) gpio functions
-  V2 -> V3: added vendor-prefix for gpio-opendrain
-            s/_/-/
-            added gpio-controller
-  V3 -> V4: resend
-            added: Reviewed-by: Rob Herring <robh@kernel.org>
-  V4 -> V5: resend
-            driver refactored, but no DTS changes
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- .../bindings/net/can/microchip,mcp25xxfd.txt       | 32 ++++++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
+ drivers/media/i2c/mt9m001.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-new file mode 100644
-index 000000000000..b388b3eb3905
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/can/microchip,mcp25xxfd.txt
-@@ -0,0 +1,32 @@
-+* Microchip MCP2517 stand-alone CAN controller device tree bindings
-+
-+Required properties:
-+ - compatible: Should be one of the following:
-+   - "microchip,mcp2517fd" for MCP2517fd.
-+ - reg: SPI chip select.
-+ - clocks: The clock feeding the CAN controller.
-+ - interrupt-parent: The parent interrupt controller.
-+ - interrupts: Should contain IRQ line for the CAN controller.
-+ - gpio-controller: Marks the device node as a GPIO controller
-+
-+Optional properties:
-+ - vdd-supply: Regulator that powers the CAN controller.
-+ - xceiver-supply: Regulator that powers the CAN transceiver.
-+ - microchip,clock-out-div = <0|1|2|4|10>: Clock output pin divider
-+					   0 = Start of Frame output
-+					   default: 10
-+ - microchip,clock-div2: bool: divide the internal clock by 2
-+ - microchip,gpio-open-drain: bool: enable open-drain for all pins
-+                                    (except cantx)
-+
-+Example:
-+	can0: can@1 {
-+		compatible = "microchip,mcp2517fd";
-+		reg = <1>;
-+		clocks = <&clk24m>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <13 0x8>;
-+		vdd-supply = <&reg5v0>;
-+		xceiver-supply = <&reg5v0>;
-+		gpio-controller;
-+	};
---
-2.11.0
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index b4deec3..a5b94d7 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -18,6 +18,7 @@
+ #include <media/v4l2-subdev.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-event.h>
+ 
+ /*
+  * mt9m001 i2c address 0x5d
+@@ -628,6 +629,9 @@ static const struct v4l2_ctrl_ops mt9m001_ctrl_ops = {
+ };
+ 
+ static const struct v4l2_subdev_core_ops mt9m001_subdev_core_ops = {
++	.log_status = v4l2_ctrl_subdev_log_status,
++	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+ #ifdef CONFIG_VIDEO_ADV_DEBUG
+ 	.g_register	= mt9m001_g_register,
+ 	.s_register	= mt9m001_s_register,
+@@ -716,7 +720,8 @@ static int mt9m001_probe(struct i2c_client *client,
+ 		return PTR_ERR(mt9m001->reset_gpio);
+ 
+ 	v4l2_i2c_subdev_init(&mt9m001->subdev, client, &mt9m001_subdev_ops);
+-	mt9m001->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE;
++	mt9m001->subdev.flags = V4L2_SUBDEV_FL_HAS_DEVNODE |
++				V4L2_SUBDEV_FL_HAS_EVENTS;
+ 	v4l2_ctrl_handler_init(&mt9m001->hdl, 4);
+ 	v4l2_ctrl_new_std(&mt9m001->hdl, &mt9m001_ctrl_ops,
+ 			V4L2_CID_VFLIP, 0, 1, 1, 0);
+-- 
+2.7.4
