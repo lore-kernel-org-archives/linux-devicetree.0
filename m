@@ -1,53 +1,40 @@
-Return-Path: <SRS0=IqaF=OU=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:37198 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726651AbeLKPRo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 11 Dec 2018 10:17:44 -0500
-Received: by mail-lf1-f68.google.com with SMTP id p17so11077200lfh.4
-        for <devicetree@vger.kernel.org>; Tue, 11 Dec 2018 07:17:43 -0800 (PST)
-From: Matt Ranostay <matt.ranostay@konsulko.com>
-Subject: [PATCH v4 1/2] media: dt-bindings: media: video-i2c: add melexis mlx90640 documentation
-Date: Tue, 11 Dec 2018 07:17:00 -0800
-Message-Id: <20181211151701.10002-2-matt.ranostay@konsulko.com>
-In-Reply-To: <20181211151701.10002-1-matt.ranostay@konsulko.com>
-References: <20181211151701.10002-1-matt.ranostay@konsulko.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Matt Ranostay <matt.ranostay@konsulko.com>, devicetree@vger.kernel.org
+Return-Path: <SRS0=Q9PW=O7=mail.ru=shc_work@kernel.org>
+From: Alexander Shiyan <shc_work@mail.ru>
+Subject: [PATCH 2/2] dt-bindings: input: Update documentation for clps711x-keypad
+Date: Sat, 22 Dec 2018 18:55:20 +0300
+Message-Id: <20181222155520.8156-1-shc_work@mail.ru>
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Alexander Shiyan <shc_work@mail.ru>
 List-ID: <devicetree@vger.kernel.org>
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
----
- .../bindings/media/i2c/melexis,mlx90640.txt   | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
+Since the driver switched to using the syscon_regmap_lookup_by_phandle()
+function, we need to specify the phandle for the driver. This patch
+updates the driver binding documentation for these changes.
 
-diff --git a/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
-new file mode 100644
-index 000000000000..060d2b7a5893
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
-@@ -0,0 +1,20 @@
-+* Melexis MLX90640 FIR Sensor
-+
-+Melexis MLX90640 FIR sensor support which allows recording of thermal data
-+with 32x24 resolution excluding 2 lines of coefficient data that is used by
-+userspace to render processed frames.
-+
-+Required Properties:
-+ - compatible : Must be "melexis,mlx90640"
-+ - reg : i2c address of the device
-+
-+Example:
-+
-+	i2c0@1c22000 {
-+		...
-+		mlx90640@33 {
-+			compatible = "melexis,mlx90640";
-+			reg = <0x33>;
-+		};
-+		...
-+	};
+Signed-off-by: Alexander Shiyan <shc_work@mail.ru>
+---
+ Documentation/devicetree/bindings/input/clps711x-keypad.txt | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/input/clps711x-keypad.txt b/Documentation/devicetree/bindings/input/clps711x-keypad.txt
+index 3eed881..aebedc3 100644
+--- a/Documentation/devicetree/bindings/input/clps711x-keypad.txt
++++ b/Documentation/devicetree/bindings/input/clps711x-keypad.txt
+@@ -6,6 +6,7 @@ Required Properties:
+ - poll-interval: Poll interval time in milliseconds.
+ - linux,keymap:  The definition can be found at
+                  bindings/input/matrix-keymap.txt.
++- syscon:        Phandle that points to the CPU syscon1 node.
+ 
+ Optional Properties:
+ - autorepeat:    Enable autorepeat feature.
+@@ -17,6 +18,7 @@ Example:
+ 		poll-interval = <120>;
+ 		row-gpios = <&porta 0 0>,
+ 			    <&porta 1 0>;
++		syscon = <&syscon1>;
+ 
+ 		linux,keymap = <
+ 			MATRIX_KEY(0, 0, KEY_UP)
 -- 
-2.17.1
+2.10.2
