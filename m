@@ -1,41 +1,56 @@
-Return-Path: <SRS0=bLD3=O7=gmail.com=akinobu.mita@kernel.org>
+Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:42168 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbeLVRNd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:33 -0500
 From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH 00/12] media: mt9m001: switch soc_mt9m001 to a standard subdev sensor driver
-Date: Sun, 23 Dec 2018 02:12:42 +0900
-Message-Id: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+Subject: [PATCH 12/12] media: mt9m001: set all mbus format field when G_FMT and S_FMT ioctls
+Date: Sun, 23 Dec 2018 02:12:54 +0900
+Message-Id: <1545498774-11754-13-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-This patchset converts soc_camera mt9m001 driver to a standard subdev
-sensor driver.
+This driver doesn't set all members of mbus format field when the
+VIDIOC_SUBDEV_{S,G}_FMT ioctls are called.
 
-Akinobu Mita (12):
-  media: i2c: mt9m001: copy mt9m001 soc_camera sensor driver
-  media: i2c: mt9m001: dt: add binding for mt9m001
-  media: mt9m001: convert to SPDX license identifer
-  media: mt9m001: add of_match_table
-  media: mt9m001: introduce multi_reg_write()
-  media: mt9m001: switch s_power callback to runtime PM
-  media: mt9m001: remove remaining soc_camera specific code
-  media: mt9m001: add media controller support
-  media: mt9m001: register to V4L2 asynchronous subdevice framework
-  media: mt9m001: support log_status ioctl and event interface
-  media: mt9m001: make VIDIOC_SUBDEV_G_FMT ioctl work with
-    V4L2_SUBDEV_FORMAT_TRY
-  media: mt9m001: set all mbus format field when G_FMT and S_FMT ioctls
+This is detected by v4l2-compliance.
 
- .../devicetree/bindings/media/i2c/mt9m001.txt      |  37 +
- drivers/media/i2c/Kconfig                          |   9 +
- drivers/media/i2c/Makefile                         |   1 +
- drivers/media/i2c/mt9m001.c                        | 900 +++++++++++++++++++++
- 4 files changed, 947 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9m001.txt
- create mode 100644 drivers/media/i2c/mt9m001.c
-
-Cc: Rob Herring <robh@kernel.org>
 Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
 Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
 Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+ drivers/media/i2c/mt9m001.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
+
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index f4afbc9..82b89d5 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -342,6 +342,9 @@ static int mt9m001_get_fmt(struct v4l2_subdev *sd,
+ 	mf->code	= mt9m001->fmt->code;
+ 	mf->colorspace	= mt9m001->fmt->colorspace;
+ 	mf->field	= V4L2_FIELD_NONE;
++	mf->ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT;
++	mf->quantization = V4L2_QUANTIZATION_DEFAULT;
++	mf->xfer_func	= V4L2_XFER_FUNC_DEFAULT;
+ 
+ 	return 0;
+ }
+@@ -402,6 +405,10 @@ static int mt9m001_set_fmt(struct v4l2_subdev *sd,
+ 	}
+ 
+ 	mf->colorspace	= fmt->colorspace;
++	mf->field	= V4L2_FIELD_NONE;
++	mf->ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT;
++	mf->quantization = V4L2_QUANTIZATION_DEFAULT;
++	mf->xfer_func	= V4L2_XFER_FUNC_DEFAULT;
+ 
+ 	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
+ 		return mt9m001_s_fmt(sd, fmt, mf);
 -- 
 2.7.4
