@@ -1,53 +1,68 @@
-Return-Path: <SRS0=5gDw=OO=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v2 3/5] ARM: dts: r8a7744: Add DU support
-Date: Wed,  5 Dec 2018 09:06:53 +0000
-Message-Id: <1544000815-28069-4-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
-References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=bLD3=O7=gmail.com=akinobu.mita@kernel.org>
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 02/12] media: i2c: mt9m001: dt: add binding for mt9m001
+Date: Sun, 23 Dec 2018 02:12:44 +0900
+Message-Id: <1545498774-11754-3-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Rob Herring <robh@kernel.org>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add du node to r8a7744 SoC DT. Boards that want to enable the DU
-need to specify the output topology.
+Add device tree binding documentation for the MT9M001 CMOS image sensor.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Cc: Rob Herring <robh@kernel.org>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
-V1-->V2
-	* Removed LVDS encoder definition from DU node.
----
- arch/arm/boot/dts/r8a7744.dtsi | 11 ++++++++---
- 1 file changed, 8 insertions(+), 3 deletions(-)
+ .../devicetree/bindings/media/i2c/mt9m001.txt      | 37 ++++++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9m001.txt
 
-diff --git a/arch/arm/boot/dts/r8a7744.dtsi b/arch/arm/boot/dts/r8a7744.dtsi
-index 04148d6..6a51b16 100644
---- a/arch/arm/boot/dts/r8a7744.dtsi
-+++ b/arch/arm/boot/dts/r8a7744.dtsi
-@@ -1645,8 +1645,14 @@
- 		};
- 
- 		du: display@feb00000 {
--			reg = <0 0xfeb00000 0 0x40000>,
--			      <0 0xfeb90000 0 0x1c>;
-+			compatible = "renesas,du-r8a7744";
-+			reg = <0 0xfeb00000 0 0x40000>;
-+			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&cpg CPG_MOD 724>,
-+				 <&cpg CPG_MOD 723>;
-+			clock-names = "du.0", "du.1";
-+			status = "disabled";
- 
- 			ports {
- 				#address-cells = <1>;
-@@ -1663,7 +1669,6 @@
- 					};
- 				};
- 			};
--			/* placeholder */
- 		};
- 
- 		prr: chipid@ff000044 {
+diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m001.txt b/Documentation/devicetree/bindings/media/i2c/mt9m001.txt
+new file mode 100644
+index 0000000..794b787
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/mt9m001.txt
+@@ -0,0 +1,37 @@
++MT9M001: 1/2-Inch Megapixel Digital Image Sensor
++
++The MT9M001 is an SXGA-format with a 1/2-inch CMOS active-pixel digital
++image sensor. It is programmable through a simple two-wire serial
++interface.
++
++Required Properties:
++
++- compatible: shall be "onnn,mt9m001".
++- clocks: reference to the master clock into sensor
++
++Optional Properties:
++
++- reset-gpios: GPIO handle which is connected to the reset pin of the chip.
++  Active low.
++- standby-gpios: GPIO handle which is connected to the standby pin of the chip.
++  Active high.
++
++For further reading on port node refer to
++Documentation/devicetree/bindings/media/video-interfaces.txt.
++
++Example:
++
++	&i2c1 {
++		mt9m001@5d {
++			compatible = "onnn,mt9m001";
++			reg = <0x5d>;
++			reset-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
++			standby-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
++			clocks = <&camera_clk>;
++			port {
++				mt9m001_out: endpoint {
++					remote-endpoint = <&vcap_in>;
++				};
++			};
++		};
++	};
 -- 
 2.7.4
