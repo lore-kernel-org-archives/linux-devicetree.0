@@ -1,107 +1,109 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
-Date: Sat, 22 Dec 2018 17:57:42 +0100
-Message-ID: <CAFBinCCbPbSQZeF1mzfBfLt+cJ0P=ajHznZM2prn600NO7G3sA@mail.gmail.com>
-References: <20181219002620.12138-1-khilman@baylibre.com>
- <20181219002620.12138-2-khilman@baylibre.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH RFC 3/5] dt-bindings: Add PDC timer bindings for Qualcomm SoCs
+Date: Fri, 21 Dec 2018 23:39:49 -0800
+Message-ID: <154546438942.179992.14851496143150245966@swboyd.mtv.corp.google.com>
+References: <20181221115946.10095-1-rplsssn@codeaurora.org> <20181221115946.10095-4-rplsssn@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181219002620.12138-2-khilman@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181221115946.10095-4-rplsssn@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Quoting Raju P.L.S.S.S.N (2018-12-21 03:59:44)
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt b/Do=
+cumentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> index 9b86d1eff219..f24afb45d0d9 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/rpmh-rsc.txt
+> @@ -30,6 +30,12 @@ will be an aggregate of the sleep votes from each of t=
+hose subsystems. Clients
+>  may request a sleep value for their shared resources in addition to the =
+active
+>  mode requests.
+> =20
+> +When the processor enters deepest low power mode, the next wake-up timer=
+ value
+> +needs to be programmed to PDC (Power Domain Controller) through RSC regi=
+sters
+> +dedicated for this purpose. PDC timer is specified as child node of RSC =
+with
+> +register offets to program timer match value.
 
-On Wed, Dec 19, 2018 at 1:26 AM Kevin Hilman <khilman@baylibre.com> wrote:
->
-> Add the G12a (S905X2) based X96 Max board[1].
->
-> There is no branding for the manufacturer anywhere on the product, so it
-> took some digging to find the manufacturer.  But since there's nothing
-> about the maker on the product I've left it out of the DT name because
-> 1) nobody will no that name and 2) keeps the DT filename shorter.
-based on the cnx-soft article and my own board I would add the
-following section:
------
-There are three variants of this device:
-- 2GB LPDDR4, 16GB flash, 2.4G WiFi, 100M Ethernet
-- 4GB LPDDR4, 32GB flash, dual band AC WiFi, Bluetooth 4.x, Gigabit Ethernet
-- 4GB LPDDR4, 64GB flash, dual band  AC WiFi, Bluetooth 4.x, Gigabit Ethernet
+That's great info, but I have no idea why it's in the DT binding
+document.
 
-Presumably the 4GB variants are identical except for the eMMC chip.
-
-This patch is tested on the 4GB LPDDR4 32GB eMMC variant.
-The WiFi / Bluetooth chip is an AP6356S. The Ethernet PHY is a Realtek RTL8211F.
------
-
-While writing this a question came up:
-should we rename the board if there's a variant using the internal 100M PHY?
-for example: "meson-g12a-x96-max-gbit"
-this will allow us to add a "meson-g12a-x96-max-100m" (or any better
-name) later on
-
-> [1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
->
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-(with the Makefile adjustments, see below)
-
-> ---
-> Special thanks to Martin Blumenstingl for extra digging for the manufacturer
->
->  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
->  1 file changed, 28 insertions(+)
-it doesn't build the .dtb for me without adding the board to
-arch/arm64/boot/dts/amlogic/Makefile
-
->  create mode 100644 arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> new file mode 100644
-> index 000000000000..fe94765b671e
-> --- /dev/null
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a-x96-max.dts
-> @@ -0,0 +1,28 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Copyright (c) 2018 Amlogic, Inc. All rights reserved.
-> + */
 > +
-> +/dts-v1/;
 > +
-> +#include "meson-g12a.dtsi"
+>  Properties:
+> =20
+>  - compatible:
+> @@ -86,6 +92,20 @@ Properties:
+>  Drivers that want to use the RSC to communicate with RPMH must specify t=
+heir
+>  bindings as child nodes of the RSC controllers they wish to communicate =
+with.
+> =20
+> +If an RSC needs to program next wake-up in the PDC timer, it must specif=
+y the
+> +binding as child node with the following properties:
 > +
-> +/ {
-> +       compatible = "amediatech,x96-max", "amlogic,u200", "amlogic,g12a";
-did you leave the u200 compatible in there on purpose?
-
-> +       model = "Shenzhen Amediatech Technology Co., Ltd X96 Max";
+> +Properties:
+> +- compatible:
+> +    Usage: required
+> +       Value type: <string>
+> +       Definition: must be "qcom,pdc-timer".
 > +
-> +       aliases {
-> +               serial0 = &uart_AO;
-> +       };
-> +       chosen {
-> +               stdout-path = "serial0:115200n8";
-> +       };
-> +       memory@0 {
-> +               device_type = "memory";
-> +               reg = <0x0 0x0 0x0 0x40000000>;
-according to that cnx-soft report the smalles RAM size is 2GiB
-however the bootloader will update it anyways so I believe this is fine
+> +- reg:
+> +    Usage: required
+> +       Value type: <prop-encoded-array>
+> +       Definition: Specifies the offset of the control register.
+> +
+>  Example 1:
+> =20
+>  For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of =
+2, the
+> @@ -103,6 +123,9 @@ TCS-OFFSET: 0xD00
+>                       <0x179d0000 0x10000>,
+>                       <0x179e0000 0x10000>;
+>                 reg-names =3D "drv-0", "drv-1", "drv-2";
+> +               #address-cells =3D <1>;
+> +               #size-cells =3D <1>;
+> +               ranges;
+>                 interrupts =3D <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
+>                              <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
+>                              <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
+> @@ -112,6 +135,12 @@ TCS-OFFSET: 0xD00
+>                                   <SLEEP_TCS   3>,
+>                                   <WAKE_TCS    3>,
+>                                   <CONTROL_TCS 1>;
+> +
+> +               pdc_timer@38 {
+> +                       compatible =3D "qcom,pdc-timer";
+> +                       reg =3D <0x38 0x1>,
+> +                             <0x40 0x1>;
 
+I don't understand this whole binding. Why can't the pdc timer be
+programmed within the rpmh driver? This looks like a node is being added
+as a child just to make a platform driver and device match up in the
+linux kernel. And that in turn causes a regmap to need to be created?
+Sorry, it just looks really bad.
 
-Regards
-Martin
+At least for the regulators we have a semi-good reason to have a subnode
+because of the pmic-id property that we need to match up to the right
+pmic. The argument for the rpmh clock node is unclear to me so we should
+probably get rid of that node entirely. I can't figure out why that
+wasn't just a #clock-cells at the toplevel rsc node. The same goes for
+the interconnect and rpmhpd bindings. It's all sub-nodes to placate
+linux device driver model.
+
+And now that I've had to look at the rpmh binding again I'm disappointed
+that we have SoC data stored in there with the qcom,tcs-offset and
+qcom,tcs-config properties. Just make an SoC compatible like
+qcom,rpmh-rsc-sdm845" and figure these things out that way. And please
+tell hardware folks to stop moving the register regions around in the
+future so that there doesn't have to be so many variants in the driver
+and compatible string space.
