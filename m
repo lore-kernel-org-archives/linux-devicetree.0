@@ -1,89 +1,205 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 03/26] dt-bindings: Add doc for the Ingenic TCU drivers
-Date: Sat, 22 Dec 2018 12:09:32 +0100
-Message-ID: <1545476972.2113.1@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <20181212220922.18759-4-paul@crapouillou.net> <20181217210531.GA29770@bogus>
-        <1545084222.1958.0@smtp.crapouillou.net>
-        <CAL_JsqLhnitSM7-S1hq8M7S-7BHO5oYByXQ8QD2JkUY3jb63fQ@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V5 2/2] iio: magnetometer: mag3110: add vdd/vddio
+ regulator operation support
+Date: Sat, 22 Dec 2018 17:10:02 +0000
+Message-ID: <20181222171002.2261bc97@archlinux>
+References: <1545021679-4025-1-git-send-email-Anson.Huang@nxp.com>
+        <1545021679-4025-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLhnitSM7-S1hq8M7S-7BHO5oYByXQ8QD2JkUY3jb63fQ@mail.gmail.com>
+In-Reply-To: <1545021679-4025-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mathieu Malaterre <malat@debian.org>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, Linux PWM List <linux-pwm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, LINUX-WATCHDOG <linux-watchdog@vger.kernel.org>, linux-mips@vger.kernel.org, Linux Doc Mailing List <linux-doc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>, od@zcrc.me
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "olivier.moysan@st.com" <olivier.moysan@st.com>, "masneyb@onstation.org" <masneyb@onstation.org>, "broonie@kernel.org" <broonie@kernel.org>, "peda@axentia.se" <peda@axentia.se>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "festevam@gmail.com" <festevam@gmail.com>, "preid@electromag.com.au" <preid@electromag.com.au>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, 17 Dec 2018 04:47:49 +0000
+Anson Huang <anson.huang@nxp.com> wrote:
 
+> The magnetometer's power supplies could be controllable on some platforms,
+> such as i.MX6Q-SABRESD board, the mag3110's power supplies are controlled
+> by a GPIO fixed regulator, need to make sure the regulators are enabled
+> before any communication with mag3110, this patch adds vdd/vddio regulator
+> operation support.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> ChangeLog since V4:
+>     -  using devm_regulator_get() instead of devm_regulator_get_optional() since the regulator is
+>        there always, if dtb does NOT specify one, regulator framework will assign dummy regulator for it
+> ---
+>  drivers/iio/magnetometer/mag3110.c | 92 ++++++++++++++++++++++++++++++++++----
+>  1 file changed, 84 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/iio/magnetometer/mag3110.c b/drivers/iio/magnetometer/mag3110.c
+> index f063355..32660ce 100644
+> --- a/drivers/iio/magnetometer/mag3110.c
+> +++ b/drivers/iio/magnetometer/mag3110.c
+> @@ -20,6 +20,7 @@
+>  #include <linux/iio/buffer.h>
+>  #include <linux/iio/triggered_buffer.h>
+>  #include <linux/delay.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #define MAG3110_STATUS 0x00
+>  #define MAG3110_OUT_X 0x01 /* MSB first */
+> @@ -56,6 +57,8 @@ struct mag3110_data {
+>  	struct mutex lock;
+>  	u8 ctrl_reg1;
+>  	int sleep_val;
+> +	struct regulator *vdd_reg;
+> +	struct regulator *vddio_reg;
+>  };
+>  
+>  static int mag3110_request(struct mag3110_data *data)
+> @@ -469,17 +472,48 @@ static int mag3110_probe(struct i2c_client *client,
+>  	struct iio_dev *indio_dev;
+>  	int ret;
+>  
+> -	ret = i2c_smbus_read_byte_data(client, MAG3110_WHO_AM_I);
+> -	if (ret < 0)
+> -		return ret;
+> -	if (ret != MAG3110_DEVICE_ID)
+> -		return -ENODEV;
+> -
+>  	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
+>  	if (!indio_dev)
+>  		return -ENOMEM;
+>  
+>  	data = iio_priv(indio_dev);
+> +
+> +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> +	if (IS_ERR(data->vdd_reg)) {
+> +		ret = PTR_ERR(data->vdd_reg);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&client->dev, "failed to get VDD regulator!\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable VDD regulator!\n");
+> +		return ret;
+> +	}
 
-Le mar. 18 d=E9c. 2018 =E0 17:36, Rob Herring <robh@kernel.org> a =E9crit :
-> On Mon, Dec 17, 2018 at 4:04 PM Paul Cercueil <paul@crapouillou.net>=20
-> wrote:
->>=20
->>  Hi Rob,
->>=20
->>  Le lun. 17 d=E9c. 2018 =E0 22:05, Rob Herring <robh@kernel.org> a=20
->> =E9crit :
->>  > On Wed, Dec 12, 2018 at 11:08:58PM +0100, Paul Cercueil wrote:
->>  >>  Add documentation about how to properly use the Ingenic TCU
->>  >>  (Timer/Counter Unit) drivers from devicetree.
->>  >>
->>  >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  >>  ---
->>  >>
->>  >>  Notes:
->>  >>       v4: New patch in this series. Corresponds to V2 patches=20
->> 3-4-5
->>  >> with
->>  >>           added content.
->>  >>
->>  >>       v5: - Edited PWM/watchdog DT bindings documentation to=20
->> point
->>  >> to the new
->>  >>             document.
->>  >>           - Moved main document to
->>  >>            =20
->> Documentation/devicetree/bindings/timer/ingenic,tcu.txt
->>  >>           - Updated documentation to reflect the new devicetree
->>  >> bindings.
->>  >>
->>  >>       v6: - Removed PWM/watchdog documentation files as asked by
->>  >> upstream
->>  >>           - Removed doc about properties that should be implicit
->>  >>           - Removed doc about ingenic,timer-channel /
->>  >>             ingenic,clocksource-channel as they are gone
->>  >>           - Fix WDT clock name in the binding doc
->>  >>           - Fix lengths of register areas in watchdog/pwm nodes
->>  >>
->>  >>       v7: No change
->>  >>
->>  >>       v8: - Fix address of the PWM node
->>  >>           - Added doc about system timer and clocksource children
->>  >> nodes
->>  >
->>  > I thought we'd sorted this out...
->>=20
->>  Yeah, well I just can't please everybody. V6/V7 didn't have the
->>  system timer or clocksource in devicetree, which was good for
->>  you, but then the driver nearly doubled in size and complexity,
->>  and Thierry rightfully refused it. Now I'm at the point where
->=20
-> You mean Daniel?
+Please don't mix managed unwinding (devm) with the manual version.
+It makes it harder to reason about any races.  Here there aren't any
+but in general please don't do it.
 
-Oops - I meant Daniel yes.
+The easy solution here is to reorder so both regulators are acquired
+before either is turned on.
 
->>  I'm trying alternative ways of encoding the information in
->>  devicetree, as suggested by various people, just so that you
->>  accept it. Because I don't see any other option.
->=20
-> Does the problem boil down to needing to reserve channel x to use PWMx
-> pin? If so, just do a mask property of reserved for PWM channels.
+Jonathan
 
-Yes, that's exactly the problem. I will go with a property then. Thanks!
-
-> Sorry this is going in circles.
->=20
-> Rob
-=
+> +
+> +	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
+> +	if (IS_ERR(data->vddio_reg)) {
+> +		ret = PTR_ERR(data->vddio_reg);
+> +		if (ret != -EPROBE_DEFER)
+> +			dev_err(&client->dev, "failed to get VDDIO regulator!\n");
+> +		goto disable_regulator_vdd;
+> +	}
+> +
+> +	ret = regulator_enable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable VDDIO regulator!\n");
+> +		goto disable_regulator_vdd;
+> +	}
+> +
+> +	ret = i2c_smbus_read_byte_data(client, MAG3110_WHO_AM_I);
+> +	if (ret < 0)
+> +		goto disable_regulators;
+> +	if (ret != MAG3110_DEVICE_ID) {
+> +		ret = -ENODEV;
+> +		goto disable_regulators;
+> +	}
+> +
+>  	data->client = client;
+>  	mutex_init(&data->lock);
+>  
+> @@ -499,7 +533,7 @@ static int mag3110_probe(struct i2c_client *client,
+>  
+>  	ret = mag3110_change_config(data, MAG3110_CTRL_REG1, data->ctrl_reg1);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	ret = i2c_smbus_write_byte_data(client, MAG3110_CTRL_REG2,
+>  		MAG3110_CTRL_AUTO_MRST_EN);
+> @@ -520,16 +554,24 @@ static int mag3110_probe(struct i2c_client *client,
+>  	iio_triggered_buffer_cleanup(indio_dev);
+>  standby_on_error:
+>  	mag3110_standby(iio_priv(indio_dev));
+> +disable_regulators:
+> +	regulator_disable(data->vddio_reg);
+> +disable_regulator_vdd:
+> +	regulator_disable(data->vdd_reg);
+> +
+>  	return ret;
+>  }
+>  
+>  static int mag3110_remove(struct i2c_client *client)
+>  {
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct mag3110_data *data = iio_priv(indio_dev);
+>  
+>  	iio_device_unregister(indio_dev);
+>  	iio_triggered_buffer_cleanup(indio_dev);
+>  	mag3110_standby(iio_priv(indio_dev));
+> +	regulator_disable(data->vddio_reg);
+> +	regulator_disable(data->vdd_reg);
+>  
+>  	return 0;
+>  }
+> @@ -537,14 +579,48 @@ static int mag3110_remove(struct i2c_client *client)
+>  #ifdef CONFIG_PM_SLEEP
+>  static int mag3110_suspend(struct device *dev)
+>  {
+> -	return mag3110_standby(iio_priv(i2c_get_clientdata(
+> +	struct mag3110_data *data = iio_priv(i2c_get_clientdata(
+> +		to_i2c_client(dev)));
+> +	int ret;
+> +
+> +	ret = mag3110_standby(iio_priv(i2c_get_clientdata(
+>  		to_i2c_client(dev))));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = regulator_disable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable VDDIO regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_disable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable VDD regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+>  }
+>  
+>  static int mag3110_resume(struct device *dev)
+>  {
+>  	struct mag3110_data *data = iio_priv(i2c_get_clientdata(
+>  		to_i2c_client(dev)));
+> +	int ret;
+> +
+> +	ret = regulator_enable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDD regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDDIO regulator\n");
+> +		regulator_disable(data->vdd_reg);
+> +		return ret;
+> +	}
+>  
+>  	return i2c_smbus_write_byte_data(data->client, MAG3110_CTRL_REG1,
+>  		data->ctrl_reg1);
