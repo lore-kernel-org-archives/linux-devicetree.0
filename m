@@ -1,181 +1,158 @@
-Return-Path: <SRS0=6bsq=OQ=brainfault.org=anup@kernel.org>
-MIME-Version: 1.0
-References: <1543870651-16669-5-git-send-email-atish.patra@wdc.com> <mhng-4a071ea7-ddf5-4204-8343-790f9bbb3a09@palmer-si-x1c4>
-In-Reply-To: <mhng-4a071ea7-ddf5-4204-8343-790f9bbb3a09@palmer-si-x1c4>
-From: Anup Patel <anup@brainfault.org>
-Date: Fri, 7 Dec 2018 22:50:57 +0530
-Message-ID: <CAAhSdy1gNB0sMAq4mtGSNJ96BND4tMxHShq==3B1hzL9ebs=oQ@mail.gmail.com>
-Subject: Re: [PATCH 4/4] RISC-V: Fix non-smp kernel boot on SMP systems
-Content-Type: multipart/alternative; boundary="000000000000572ee4057c71d76e"
-To: Palmer Dabbelt <palmer@sifive.com>
-Cc: Atish Patra <atish.patra@wdc.com>, "linux-kernel@vger.kernel.org List" <linux-kernel@vger.kernel.org>, aou@eecs.berkeley.edu, daniel.lezcano@linaro.org, devicetree@vger.kernel.org, dmitriy@oss-tech.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, tglx@linutronix.de, Damien.LeMoal@wdc.com
+Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:46533 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2390366AbeLVRNS (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:18 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 05/12] media: mt9m001: introduce multi_reg_write()
+Date: Sun, 23 Dec 2018 02:12:47 +0900
+Message-Id: <1545498774-11754-6-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
---000000000000572ee4057c71d76e
-Content-Type: text/plain; charset="UTF-8"
+Introduce multi_reg_write() to write multiple registers to the device and
+use it where possible.
 
-On Fri, 7 Dec, 2018, 10:30 PM Palmer Dabbelt <palmer@sifive.com wrote:
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+ drivers/media/i2c/mt9m001.c | 88 +++++++++++++++++++++++++++++----------------
+ 1 file changed, 57 insertions(+), 31 deletions(-)
 
-> On Mon, 03 Dec 2018 12:57:31 PST (-0800), atish.patra@wdc.com wrote:
-> > Currently, clocksource registration happens for an invalid cpu
-> > for non-smp kernels. This lead to kernel panic as cpu hotplug
-> > registration will fail for those cpus.
-> >
-> > Do not proceed if hartid is invalid. Take this opprtunity to
-> > print appropriate error strings for different failure cases.
-> >
-> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > ---
-> >  drivers/clocksource/riscv_timer.c | 13 ++++++++++---
-> >  1 file changed, 10 insertions(+), 3 deletions(-)
-> >
-> > diff --git a/drivers/clocksource/riscv_timer.c
-> b/drivers/clocksource/riscv_timer.c
-> > index 39de6e49..4af4af47 100644
-> > --- a/drivers/clocksource/riscv_timer.c
-> > +++ b/drivers/clocksource/riscv_timer.c
-> > @@ -108,6 +108,8 @@ static int __init riscv_timer_init_dt(struct
-> device_node *n)
-> >       int cpuid, hartid, error;
-> >
-> >       hartid = riscv_of_processor_hartid(n);
-> > +     if (hartid < 0)
-> > +             return hartid;
->
-> This seems like it's just hiding a bug somewhere else.  We should at least
-> put
-> out a WARN here, as I'm not sure the error will propagate anywhere useful.
->
-
-We need separate DT node for riscv_timer. The riscv_timer is nothing but
-SOC timer accessed via rdtime and SBI calls. It can be viewed as one
-device. In fact, this is how it's done in ARM/ARM64.
-
-
-> >       cpuid = riscv_hartid_to_cpuid(hartid);
-> >
-> >       if (cpuid != smp_processor_id())
-> > @@ -115,14 +117,19 @@ static int __init riscv_timer_init_dt(struct
-> device_node *n)
-> >
-> >       /* This should be called only for boot cpu */
-> >       riscv_timebase = riscv_timebase_frequency(n);
-> > -     clocksource_register_hz(&riscv_clocksource, riscv_timebase);
-> > +     error = clocksource_register_hz(&riscv_clocksource,
-> riscv_timebase);
-> >
-> > +     if (error) {
-> > +             pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
-> > +                    error, cpuid);
-> > +             return error;
-> > +     }
-> >       error = cpuhp_setup_state(CPUHP_AP_RISCV_TIMER_STARTING,
-> >                        "clockevents/riscv/timer:starting",
-> >                        riscv_timer_starting_cpu, riscv_timer_dying_cpu);
-> >       if (error)
-> > -             pr_err("RISCV timer register failed [%d] for cpu = [%d]\n",
-> > -                    error, cpuid);
-> > +             pr_err("cpu hp setup state failed for RISCV timer [%d]\n",
-> > +                    error);
-> >       return error;
-> >  }
->
-
-Regards,
-Anup
-
->
-
---000000000000572ee4057c71d76e
-Content-Type: text/html; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-<div dir=3D"auto"><div><br><br><div class=3D"gmail_quote"><div dir=3D"ltr">=
-On Fri, 7 Dec, 2018, 10:30 PM Palmer Dabbelt &lt;<a href=3D"mailto:palmer@s=
-ifive.com">palmer@sifive.com</a> wrote:<br></div><blockquote class=3D"gmail=
-_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding-left:=
-1ex">On Mon, 03 Dec 2018 12:57:31 PST (-0800), <a href=3D"mailto:atish.patr=
-a@wdc.com" target=3D"_blank" rel=3D"noreferrer">atish.patra@wdc.com</a> wro=
-te:<br>
-&gt; Currently, clocksource registration happens for an invalid cpu<br>
-&gt; for non-smp kernels. This lead to kernel panic as cpu hotplug<br>
-&gt; registration will fail for those cpus.<br>
-&gt;<br>
-&gt; Do not proceed if hartid is invalid. Take this opprtunity to<br>
-&gt; print appropriate error strings for different failure cases.<br>
-&gt;<br>
-&gt; Signed-off-by: Atish Patra &lt;<a href=3D"mailto:atish.patra@wdc.com" =
-target=3D"_blank" rel=3D"noreferrer">atish.patra@wdc.com</a>&gt;<br>
-&gt; ---<br>
-&gt;=C2=A0 drivers/clocksource/riscv_timer.c | 13 ++++++++++---<br>
-&gt;=C2=A0 1 file changed, 10 insertions(+), 3 deletions(-)<br>
-&gt;<br>
-&gt; diff --git a/drivers/clocksource/riscv_timer.c b/drivers/clocksource/r=
-iscv_timer.c<br>
-&gt; index 39de6e49..4af4af47 100644<br>
-&gt; --- a/drivers/clocksource/riscv_timer.c<br>
-&gt; +++ b/drivers/clocksource/riscv_timer.c<br>
-&gt; @@ -108,6 +108,8 @@ static int __init riscv_timer_init_dt(struct devic=
-e_node *n)<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0int cpuid, hartid, error;<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0hartid =3D riscv_of_processor_hartid(n);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (hartid &lt; 0)<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return hartid;<br>
-<br>
-This seems like it&#39;s just hiding a bug somewhere else.=C2=A0 We should =
-at least put <br>
-out a WARN here, as I&#39;m not sure the error will propagate anywhere usef=
-ul.<br></blockquote></div></div><div dir=3D"auto"><br></div><div dir=3D"aut=
-o">We need separate DT node for riscv_timer. The riscv_timer is nothing but=
- SOC timer accessed via rdtime and SBI calls. It can be viewed as one devic=
-e. In fact, this is how it&#39;s done in ARM/ARM64.</div><div dir=3D"auto">=
-<br></div><div dir=3D"auto"><div class=3D"gmail_quote"><blockquote class=3D=
-"gmail_quote" style=3D"margin:0 0 0 .8ex;border-left:1px #ccc solid;padding=
--left:1ex">
-<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0cpuid =3D riscv_hartid_to_cpuid(hartid);<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0if (cpuid !=3D smp_processor_id())<br>
-&gt; @@ -115,14 +117,19 @@ static int __init riscv_timer_init_dt(struct dev=
-ice_node *n)<br>
-&gt;<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0/* This should be called only for boot cpu *=
-/<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0riscv_timebase =3D riscv_timebase_frequency(=
-n);<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0clocksource_register_hz(&amp;riscv_clocksource, r=
-iscv_timebase);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0error =3D clocksource_register_hz(&amp;riscv_cloc=
-ksource, riscv_timebase);<br>
-&gt;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0if (error) {<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_err(&quot;RISCV ti=
-mer register failed [%d] for cpu =3D [%d]\n&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- error, cpuid);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0return error;<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0}<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0error =3D cpuhp_setup_state(CPUHP_AP_RISCV_T=
-IMER_STARTING,<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 &quot;clockevents/riscv/timer:starting&quot;,<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =
-=C2=A0 =C2=A0 riscv_timer_starting_cpu, riscv_timer_dying_cpu);<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0if (error)<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_err(&quot;RISCV ti=
-mer register failed [%d] for cpu =3D [%d]\n&quot;,<br>
-&gt; -=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- error, cpuid);<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0pr_err(&quot;cpu hp s=
-etup state failed for RISCV timer [%d]\n&quot;,<br>
-&gt; +=C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0 =C2=A0=
- error);<br>
-&gt;=C2=A0 =C2=A0 =C2=A0 =C2=A0return error;<br>
-&gt;=C2=A0 }<br></blockquote></div></div><div dir=3D"auto"><br></div><div d=
-ir=3D"auto">Regards,</div><div dir=3D"auto">Anup</div><div dir=3D"auto"><di=
-v class=3D"gmail_quote"><blockquote class=3D"gmail_quote" style=3D"margin:0=
- 0 0 .8ex;border-left:1px #ccc solid;padding-left:1ex">
-</blockquote></div></div></div>
-
---000000000000572ee4057c71d76e--
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index 2d800ca..c0180fdc 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -47,6 +47,8 @@
+ #define MT9M001_MIN_HEIGHT		32
+ #define MT9M001_COLUMN_SKIP		20
+ #define MT9M001_ROW_SKIP		12
++#define MT9M001_DEFAULT_HBLANK		9
++#define MT9M001_DEFAULT_VBLANK		25
+ 
+ /* MT9M001 has only one fixed colorspace per pixelcode */
+ struct mt9m001_datafmt {
+@@ -137,25 +139,65 @@ static int reg_clear(struct i2c_client *client, const u8 reg,
+ 	return reg_write(client, reg, ret & ~data);
+ }
+ 
++struct mt9m001_reg {
++	u8 reg;
++	u16 data;
++};
++
++static int multi_reg_write(struct i2c_client *client,
++			   const struct mt9m001_reg *regs, int num)
++{
++	int i;
++
++	for (i = 0; i < num; i++) {
++		int ret = reg_write(client, regs[i].reg, regs[i].data);
++
++		if (ret)
++			return ret;
++	}
++
++	return 0;
++}
++
+ static int mt9m001_init(struct i2c_client *client)
+ {
+-	int ret;
++	const struct mt9m001_reg init_regs[] = {
++		/*
++		 * Issue a soft reset. This returns all registers to their
++		 * default values.
++		 */
++		{ MT9M001_RESET, 1 },
++		{ MT9M001_RESET, 0 },
++		/* Disable chip, synchronous option update */
++		{ MT9M001_OUTPUT_CONTROL, 0 }
++	};
+ 
+ 	dev_dbg(&client->dev, "%s\n", __func__);
+ 
+-	/*
+-	 * We don't know, whether platform provides reset, issue a soft reset
+-	 * too. This returns all registers to their default values.
+-	 */
+-	ret = reg_write(client, MT9M001_RESET, 1);
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_RESET, 0);
++	return multi_reg_write(client, init_regs, ARRAY_SIZE(init_regs));
++}
+ 
+-	/* Disable chip, synchronous option update */
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_OUTPUT_CONTROL, 0);
++static int mt9m001_apply_selection(struct v4l2_subdev *sd,
++				    struct v4l2_rect *rect)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(sd);
++	struct mt9m001 *mt9m001 = to_mt9m001(client);
++	const struct mt9m001_reg regs[] = {
++		/* Blanking and start values - default... */
++		{ MT9M001_HORIZONTAL_BLANKING, MT9M001_DEFAULT_HBLANK },
++		{ MT9M001_VERTICAL_BLANKING, MT9M001_DEFAULT_VBLANK },
++		/*
++		 * The caller provides a supported format, as verified per
++		 * call to .set_fmt(FORMAT_TRY).
++		 */
++		{ MT9M001_COLUMN_START, rect->left },
++		{ MT9M001_ROW_START, rect->top },
++		{ MT9M001_WINDOW_WIDTH, rect->width - 1 },
++		{ MT9M001_WINDOW_HEIGHT,
++			rect->height + mt9m001->y_skip_top - 1 },
++	};
+ 
+-	return ret;
++	return multi_reg_write(client, regs, ARRAY_SIZE(regs));
+ }
+ 
+ static int mt9m001_s_stream(struct v4l2_subdev *sd, int enable)
+@@ -175,7 +217,6 @@ static int mt9m001_set_selection(struct v4l2_subdev *sd,
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct mt9m001 *mt9m001 = to_mt9m001(client);
+ 	struct v4l2_rect rect = sel->r;
+-	const u16 hblank = 9, vblank = 25;
+ 	int ret;
+ 
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+@@ -199,26 +240,11 @@ static int mt9m001_set_selection(struct v4l2_subdev *sd,
+ 	soc_camera_limit_side(&rect.top, &rect.height,
+ 		     MT9M001_ROW_SKIP, MT9M001_MIN_HEIGHT, MT9M001_MAX_HEIGHT);
+ 
+-	mt9m001->total_h = rect.height + mt9m001->y_skip_top + vblank;
++	mt9m001->total_h = rect.height + mt9m001->y_skip_top +
++			   MT9M001_DEFAULT_VBLANK;
+ 
+-	/* Blanking and start values - default... */
+-	ret = reg_write(client, MT9M001_HORIZONTAL_BLANKING, hblank);
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_VERTICAL_BLANKING, vblank);
+ 
+-	/*
+-	 * The caller provides a supported format, as verified per
+-	 * call to .set_fmt(FORMAT_TRY).
+-	 */
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_COLUMN_START, rect.left);
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_ROW_START, rect.top);
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_WINDOW_WIDTH, rect.width - 1);
+-	if (!ret)
+-		ret = reg_write(client, MT9M001_WINDOW_HEIGHT,
+-				rect.height + mt9m001->y_skip_top - 1);
++	ret = mt9m001_apply_selection(sd, &rect);
+ 	if (!ret && v4l2_ctrl_g_ctrl(mt9m001->autoexposure) == V4L2_EXPOSURE_AUTO)
+ 		ret = reg_write(client, MT9M001_SHUTTER_WIDTH, mt9m001->total_h);
+ 
+-- 
+2.7.4
