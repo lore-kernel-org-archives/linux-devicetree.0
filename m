@@ -1,44 +1,82 @@
-Return-Path: <SRS0=so6l=OM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from laurent.telenet-ops.be ([195.130.137.89]:34502 "EHLO
-        laurent.telenet-ops.be" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbeLCPE7 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 3 Dec 2018 10:04:59 -0500
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [PATCH] ARM: dts: r8a7743: Remove legacy "renesas,rcar-thermal" compatibility
-Date: Mon,  3 Dec 2018 16:04:47 +0100
-Message-Id: <20181203150447.25316-1-geert+renesas@glider.be>
+Return-Path: <SRS0=BUHn=O7=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37616 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725846AbeLVRNa (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Sat, 22 Dec 2018 12:13:30 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH 11/12] media: mt9m001: make VIDIOC_SUBDEV_G_FMT ioctl work with V4L2_SUBDEV_FORMAT_TRY
+Date: Sun, 23 Dec 2018 02:12:53 +0900
+Message-Id: <1545498774-11754-12-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
+References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Biju Das <biju.das@bp.renesas.com>
-Cc: Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
 List-ID: <devicetree@vger.kernel.org>
 
-The thermal hardware description for the RZ/G1M SoC was added to its DTS
-after the introduction of support for thermal zones, and included a
-thermal-zones node from the beginning.
+The VIDIOC_SUBDEV_G_FMT ioctl for this driver doesn't recognize
+V4L2_SUBDEV_FORMAT_TRY and always works as if V4L2_SUBDEV_FORMAT_ACTIVE
+is specified.
 
-Hence there is no need to claim compatibility with
-"renesas,rcar-thermal", which would be needed only for backwards
-compatibility with kernels predating thermal zone support.
-
-Fixes: 6c76b4f7d89e89f0 ("ARM: dts: r8a7743: Add thermal device to DT")
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
 ---
- arch/arm/boot/dts/r8a7743.dtsi | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/media/i2c/mt9m001.c | 27 +++++++++++++++++++++++++++
+ 1 file changed, 27 insertions(+)
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 24715f74ae08c7c2..3cc33f7ff7febae7 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -348,8 +348,7 @@
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index a5b94d7..f4afbc9 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -331,6 +331,12 @@ static int mt9m001_get_fmt(struct v4l2_subdev *sd,
+ 	if (format->pad)
+ 		return -EINVAL;
  
- 		thermal: thermal@e61f0000 {
- 			compatible = "renesas,thermal-r8a7743",
--				     "renesas,rcar-gen2-thermal",
--				     "renesas,rcar-thermal";
-+				     "renesas,rcar-gen2-thermal";
- 			reg = <0 0xe61f0000 0 0x10>, <0 0xe61f0100 0 0x38>;
- 			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 522>;
++	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
++		mf = v4l2_subdev_get_try_format(sd, cfg, 0);
++		format->format = *mf;
++		return 0;
++	}
++
+ 	mf->width	= mt9m001->rect.width;
+ 	mf->height	= mt9m001->rect.height;
+ 	mf->code	= mt9m001->fmt->code;
+@@ -638,6 +644,26 @@ static const struct v4l2_subdev_core_ops mt9m001_subdev_core_ops = {
+ #endif
+ };
+ 
++static int mt9m001_init_cfg(struct v4l2_subdev *sd,
++			    struct v4l2_subdev_pad_config *cfg)
++{
++	struct i2c_client *client = v4l2_get_subdevdata(sd);
++	struct mt9m001 *mt9m001 = to_mt9m001(client);
++	struct v4l2_mbus_framefmt *try_fmt =
++		v4l2_subdev_get_try_format(sd, cfg, 0);
++
++	try_fmt->width		= mt9m001->rect.width;
++	try_fmt->height		= mt9m001->rect.height;
++	try_fmt->code		= mt9m001->fmt->code;
++	try_fmt->colorspace	= mt9m001->fmt->colorspace;
++	try_fmt->field		= V4L2_FIELD_NONE;
++	try_fmt->ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT;
++	try_fmt->quantization	= V4L2_QUANTIZATION_DEFAULT;
++	try_fmt->xfer_func	= V4L2_XFER_FUNC_DEFAULT;
++
++	return 0;
++}
++
+ static int mt9m001_enum_mbus_code(struct v4l2_subdev *sd,
+ 		struct v4l2_subdev_pad_config *cfg,
+ 		struct v4l2_subdev_mbus_code_enum *code)
+@@ -674,6 +700,7 @@ static const struct v4l2_subdev_sensor_ops mt9m001_subdev_sensor_ops = {
+ };
+ 
+ static const struct v4l2_subdev_pad_ops mt9m001_subdev_pad_ops = {
++	.init_cfg	= mt9m001_init_cfg,
+ 	.enum_mbus_code = mt9m001_enum_mbus_code,
+ 	.get_selection	= mt9m001_get_selection,
+ 	.set_selection	= mt9m001_set_selection,
 -- 
-2.17.1
+2.7.4
