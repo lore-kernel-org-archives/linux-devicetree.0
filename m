@@ -1,51 +1,40 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
-Date: Sat, 22 Dec 2018 18:01:18 +0100
-Message-ID: <CAFBinCBQkpLxUZYp2NQoXEA=8t_XCJMHauM+DwTz-p0FA57CrA@mail.gmail.com>
-References: <20181220161037.23756-1-jbrunet@baylibre.com> <20181220161037.23756-3-jbrunet@baylibre.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH V5 1/2] dt-bindings: iio: magnetometer: add dt-bindings
+ for freescale mag3110
+Date: Sat, 22 Dec 2018 17:05:45 +0000
+Message-ID: <20181222170545.4aed8c61@archlinux>
+References: <1545021679-4025-1-git-send-email-Anson.Huang@nxp.com>
+        <CAL_Jsq+NKtKcV9xzSd11vZPfQWUVJMSQx8BB-5UX6O_4ptV44A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181220161037.23756-3-jbrunet@baylibre.com>
+In-Reply-To: <CAL_Jsq+NKtKcV9xzSd11vZPfQWUVJMSQx8BB-5UX6O_4ptV44A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Anson Huang <anson.huang@nxp.com>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, olivier moysan <olivier.moysan@st.com>, Brian Masney <masneyb@onstation.org>, Mark Brown <broonie@kernel.org>, Peter Rosin <peda@axentia.se>, rtresidd@electromag.com.au, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Fabio Estevam <festevam@gmail.com>, Phil Reid <preid@electromag.com.au>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jerome,
+On Mon, 17 Dec 2018 08:55:53 -0600
+Rob Herring <robh+dt@kernel.org> wrote:
 
-On Thu, Dec 20, 2018 at 5:11 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> While some 3.3v eMMC 4.0 are available from libretech, the default
-> option for the aml-s905x-cc seems to 1.8v 5.0 modules.
-nit-pick:
-can you please state which module (storage size) you used for testing?
-you probably still remember that we had some confusion on Odroid-C2
-which eMMC module works and which doesn't, so let's be explicit here
+> On Sun, Dec 16, 2018 at 10:47 PM Anson Huang <anson.huang@nxp.com> wrote:
+> >
+> > Add Freescale MAG3110 dt-bindings and remove it from trivial-devices
+> > dt-bingding doc.
+> >
+> > Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> > ---
+> >  .../bindings/iio/magnetometer/mag3110.txt          | 27 ++++++++++++++++++++++
+> >  .../devicetree/bindings/trivial-devices.txt        |  1 -
+> >  2 files changed, 27 insertions(+), 1 deletion(-)
+> >  create mode 100644 Documentation/devicetree/bindings/iio/magnetometer/mag3110.txt  
+> 
+> trivial-devices.txt is gone now as it's converted to json-schema. I
+> can take this patch thru my tree and fix it up.
+> 
+> Rob
 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->  .../boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts    | 9 +++++----
->  1 file changed, 5 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> index daad007fac1f..d0d202cf7161 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> @@ -118,8 +118,8 @@
->         vddio_boot: regulator-vddio_boot {
->                 compatible = "regulator-fixed";
->                 regulator-name = "VDDIO_BOOT";
-> -               regulator-min-microvolt = <3300000>;
-> -               regulator-max-microvolt = <3300000>;
-> +               regulator-min-microvolt = <1800000>;
-> +               regulator-max-microvolt = <1800000>;
-is there a 3.3V -> 1.8V regulator on the eMMC module?
-I'm not sure about the schematics but it seems to be that the board
-itself supplies only 3.3V to the eMMC connector, so I'm not sure where
-1.8V come from in this case
-can you please add a comment to the .dts about this?
+That would be great. Thanks. I'll pick up patch 2.
 
-
-Regards
-Martin
+Acked-by: Jonathan Cameron <Jonathan.Cameron@huawei.com>
