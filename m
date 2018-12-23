@@ -1,26 +1,42 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] dt-bindings: net: dsa: ksz9477: fix indentation for
- switch spi bindings
-Date: Sun, 23 Dec 2018 14:16:05 -0800
-Message-ID: <ae2c199a-4a12-ede4-a3a2-649b26835d69@gmail.com>
-References: <20181222073909.23900-1-sergio.paracuellos@gmail.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH V2 1/1] clk: imx8qxp: make the name of clock ID generic
+Date: Sun, 23 Dec 2018 21:05:59 -0200
+Message-ID: <CAOMZO5A9kL=seU5+tc5sobwNuAL4JHm_7n=Kf7-zon2FjyBGSQ@mail.gmail.com>
+References: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20181222073909.23900-1-sergio.paracuellos@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>, Woojung.Huh@microchip.com
-Cc: UNGLinuxDriver@microchip.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Le 12/21/18 à 11:39 PM, Sergio Paracuellos a écrit :
-> Switch bindings for spi managed mode are using spaces instead of tabs.
-> Fix them to get a file with a proper kernel indentation style.
-> 
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+On Sun, Dec 23, 2018 at 2:20 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+>
+> SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
+> Let's make the name of clock ID generic to allow other SoCs to reuse
+> the common part.
+>
+> This patch only changes the clock id name and file name, so no
+> functional change.
+>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 
-Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
--- 
-Florian
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
