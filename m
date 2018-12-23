@@ -1,7 +1,7 @@
 From: Pawel Laszczak <pawell@cadence.com>
-Subject: [PATCH v2 1/5] dt-bindings: add binding for USBSS-DRD controller.
-Date: Sun, 23 Dec 2018 15:13:08 +0000
-Message-ID: <1545577992-4013-2-git-send-email-pawell@cadence.com>
+Subject: [PATCH v2 4/5] usb:common Simplify usb_decode_get_set_descriptor function.
+Date: Sun, 23 Dec 2018 15:13:11 +0000
+Message-ID: <1545577992-4013-5-git-send-email-pawell@cadence.com>
 References: <1545577992-4013-1-git-send-email-pawell@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,50 +12,137 @@ To: devicetree@vger.kernel.org
 Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com, Pawel Laszczak <pawell@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch aim at documenting USB related dt-bindings for the
-Cadence USBSS-DRD controller.
+Patch moves switch responsible for decoding descriptor type
+outside snprintf. It's little improves code readability.
 
 Signed-off-by: Pawel Laszczak <pawell@cadence.com>
 ---
- .../devicetree/bindings/usb/cdns3-usb.txt     | 30 +++++++++++++++++++
- 1 file changed, 30 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/cdns3-usb.txt
+ drivers/usb/common/debug.c | 111 +++++++++++++++++++------------------
+ 1 file changed, 57 insertions(+), 54 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/cdns3-usb.txt b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
-new file mode 100644
-index 000000000000..cf93bd0de5cb
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/cdns3-usb.txt
-@@ -0,0 +1,30 @@
-+Binding for the Cadence USBSS-DRD controller
+diff --git a/drivers/usb/common/debug.c b/drivers/usb/common/debug.c
+index 77e565a38f29..c15fa066339c 100644
+--- a/drivers/usb/common/debug.c
++++ b/drivers/usb/common/debug.c
+@@ -104,62 +104,65 @@ static void usb_decode_get_set_descriptor(__u8 bRequestType, __u8 bRequest,
+ 					  __u16 wValue, __u16 wIndex,
+ 					  __u16 wLength, char *str)
+ {
++	char *s;
 +
-+Required properties:
-+  - reg: Physical base address and size of the controller's register areas.
-+	 Controller has 3 different regions:
-+	 region 1 - HOST registers area
-+	 region 2 - DEVICE registers area
-+	 region 3 - OTG/DRD registers area
-+  - compatible: Should contain: "cdns,usb3-1.0.0" or "cdns,usb3-1.0.1"
-+  - interrupts: Interrupt specifier. Refer to interrupt bindings.
-+		Driver supports only single interrupt line.
-+                This single interrupt is shared between Device,
-+		host and OTG/DRD part of driver.
++	switch (wValue >> 8) {
++	case USB_DT_DEVICE:
++		s = "Device";
++		break;
++	case USB_DT_CONFIG:
++		s = "Configuration";
++		break;
++	case USB_DT_STRING:
++		s = "String";
++		break;
++	case USB_DT_INTERFACE:
++		s = "Interface";
++		break;
++	case USB_DT_ENDPOINT:
++		s = "Endpoint";
++		break;
++	case USB_DT_DEVICE_QUALIFIER:
++		s = "Device Qualifier";
++		break;
++	case USB_DT_OTHER_SPEED_CONFIG:
++		s = "Other Speed Config";
++		break;
++	case USB_DT_INTERFACE_POWER:
++		s = "Interface Power";
++		break;
++	case USB_DT_OTG:
++		s = "OTG";
++		break;
++	case USB_DT_DEBUG:
++		s = "Debug";
++		break;
++	case USB_DT_INTERFACE_ASSOCIATION:
++		s = "Interface Association";
++		break;
++	case USB_DT_BOS:
++		s = "BOS";
++		break;
++	case USB_DT_DEVICE_CAPABILITY:
++		s = "Device Capability";
++		break;
++	case USB_DT_PIPE_USAGE:
++		s = "Pipe Usage";
++		break;
++	case USB_DT_SS_ENDPOINT_COMP:
++		s = "SS Endpoint Companion";
++		break;
++	case USB_DT_SSP_ISOC_ENDPOINT_COMP:
++		s = "SSP Isochronous Endpoint Companion";
++		break;
++	default:
++		s = "UNKNOWN";
++		break;
++	}
 +
-+Optional properties:
-+ - maximum-speed : valid arguments are "super-speed", "high-speed" and
-+                   "full-speed"; refer to usb/generic.txt
-+ - dr_mode: Should be one of "host", "peripheral" or "otg".
-+ - phys: reference to the USB PHY
-+ - phy-names: name of the USB PHY, should be "cdns3,usbphy"
-+
-+
-+Example:
-+	usb@f3000000 {
-+		compatible = "cdns,usb3";
-+		interrupts = <USB_IRQ  7 IRQ_TYPE_LEVEL_HIGH>;
-+		reg = <0xf3000000 0x10000	/* memory area for HOST registers */
-+			0xf3010000 0x10000	/* memory area for DEVICE registers */
-+			0xf3020000 0x10000>;	/* memory area for OTG/DRD registers */
-+	};
+ 	sprintf(str, "%s %s Descriptor(Index = %d, Length = %d)",
+ 		bRequest == USB_REQ_GET_DESCRIPTOR ? "Get" : "Set",
+-		({ char *s;
+-			switch (wValue >> 8) {
+-			case USB_DT_DEVICE:
+-				s = "Device";
+-				break;
+-			case USB_DT_CONFIG:
+-				s = "Configuration";
+-				break;
+-			case USB_DT_STRING:
+-				s = "String";
+-				break;
+-			case USB_DT_INTERFACE:
+-				s = "Interface";
+-				break;
+-			case USB_DT_ENDPOINT:
+-				s = "Endpoint";
+-				break;
+-			case USB_DT_DEVICE_QUALIFIER:
+-				s = "Device Qualifier";
+-				break;
+-			case USB_DT_OTHER_SPEED_CONFIG:
+-				s = "Other Speed Config";
+-				break;
+-			case USB_DT_INTERFACE_POWER:
+-				s = "Interface Power";
+-				break;
+-			case USB_DT_OTG:
+-				s = "OTG";
+-				break;
+-			case USB_DT_DEBUG:
+-				s = "Debug";
+-				break;
+-			case USB_DT_INTERFACE_ASSOCIATION:
+-				s = "Interface Association";
+-				break;
+-			case USB_DT_BOS:
+-				s = "BOS";
+-				break;
+-			case USB_DT_DEVICE_CAPABILITY:
+-				s = "Device Capability";
+-				break;
+-			case USB_DT_PIPE_USAGE:
+-				s = "Pipe Usage";
+-				break;
+-			case USB_DT_SS_ENDPOINT_COMP:
+-				s = "SS Endpoint Companion";
+-				break;
+-			case USB_DT_SSP_ISOC_ENDPOINT_COMP:
+-				s = "SSP Isochronous Endpoint Companion";
+-				break;
+-			default:
+-				s = "UNKNOWN";
+-				break;
+-			} s; }), wValue & 0xff, wLength);
++		s, wValue & 0xff, wLength);
+ }
+ 
+ static void usb_decode_get_configuration(__u16 wLength, char *str)
 -- 
 2.17.1
