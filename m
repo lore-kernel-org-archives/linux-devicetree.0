@@ -1,87 +1,90 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH v2 5/5] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Sun, 23 Dec 2018 09:19:35 -0800
-Message-ID: <9b55eb76-70d8-a53a-b7d2-985dfe7d6fed@infradead.org>
-References: <1545577992-4013-1-git-send-email-pawell@cadence.com>
- <1545577992-4013-6-git-send-email-pawell@cadence.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: [PATCH] ARM: OMAP: DTS: N950/N9: fix onenand timings
+Date: Sun, 23 Dec 2018 20:24:13 +0200
+Message-ID: <20181223182413.29123-1-aaro.koskinen@iki.fi>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545577992-4013-6-git-send-email-pawell@cadence.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>, devicetree@vger.kernel.org
-Cc: gregkh@linuxfoundation.org, mark.rutland@arm.com, linux-usb@vger.kernel.org, hdegoede@redhat.com, heikki.krogerus@linux.intel.com, andy.shevchenko@gmail.com, robh+dt@kernel.org, rogerq@ti.com, linux-kernel@vger.kernel.org, adouglas@cadence.com, jbergsagel@ti.com, nsekhar@ti.com, nm@ti.com, sureshp@cadence.com, peter.chen@nxp.com, pjez@cadence.com, kurahul@cadence.com
+To: Tony Lindgren <tony@atomide.com>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-omap@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Aaro Koskinen <aaro.koskinen@iki.fi>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Commit a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+started using DT specified timings for GPMC, and as a result the
+OneNAND stopped working on N950/N9 as we had wrong values in the DT.
+Fix by updating the values to bootloader timings that have been tested
+to be working on both Nokia N950 and N9.
 
-Here are a few Kconfig text corrections.
+Fixes: a758f50f10cf ("mtd: onenand: omap2: Configure driver from DT")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+---
+ arch/arm/boot/dts/omap3-n950-n9.dtsi | 42 ++++++++++++++++++----------
+ 1 file changed, 28 insertions(+), 14 deletions(-)
 
-
-On 12/23/18 7:13 AM, Pawel Laszczak wrote:
-> diff --git a/drivers/usb/cdns3/Kconfig b/drivers/usb/cdns3/Kconfig
-> new file mode 100644
-> index 000000000000..4adfd87811e8
-> --- /dev/null
-> +++ b/drivers/usb/cdns3/Kconfig
-> @@ -0,0 +1,44 @@
-> +config USB_CDNS3
-> +	tristate "Cadence USB3 Dual-Role Controller"
-> +	depends on USB_SUPPORT && (USB || USB_GADGET) && HAS_DMA
-> +	help
-> +	  Say Y here if your system has a cadence USB3 dual-role controller.
-> +	  It supports: dual-role switch, Host-only, and Peripheral-only.
-> +
-> +	  If you choose to build this driver is a dynamically linked
-
-	                                     as
-
-> +	  module, the module will be called cdns3.ko.
-> +
-> +if USB_CDNS3
-> +
-> +config USB_CDNS3_GADGET
-> +        bool "Cadence USB3 device controller"
-> +        depends on USB_GADGET
-> +        help
-> +          Say Y here to enable device controller functionality of the
-> +          cadence USBSS-DEV driver.
-> +
-> +          This controller supports FF, HS and SS mode. It doesn't support
-> +          LS and SSP mode
-
-	                mode.
-
-> +
-> +config USB_CDNS3_HOST
-> +        bool "Cadence USB3 host controller"
-> +        depends on USB_XHCI_HCD
-> +        help
-> +          Say Y here to enable host controller functionality of the
-> +          cadence driver.
-> +
-> +          Host controller is compliance with XHCI so it will use
-
-	                        compliant
-
-> +          standard XHCI driver.
-> +
-> +config USB_CDNS3_PCI_WRAP
-> +	tristate "Cadence USB3 support on PCIe-based platforms"
-> +	depends on USB_PCI && ACPI
-> +	default USB_CDNS3
-> +	help
-> +	  If you're using the USBSS Core IP with a PCIe, please say
-> +	  'Y' or 'M' here.
-> +
-> +	  If you choose to build this driver as module it will
-> +	  be dynamically linked and module will be called cdns3-pci.ko
-> +
-> +endif
-
-
-g'day.
+diff --git a/arch/arm/boot/dts/omap3-n950-n9.dtsi b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+index 0d9b85317529..e142e6c70a59 100644
+--- a/arch/arm/boot/dts/omap3-n950-n9.dtsi
++++ b/arch/arm/boot/dts/omap3-n950-n9.dtsi
+@@ -370,6 +370,19 @@
+ 		compatible = "ti,omap2-onenand";
+ 		reg = <0 0 0x20000>;	/* CS0, offset 0, IO size 128K */
+ 
++		/*
++		 * These timings are based on CONFIG_OMAP_GPMC_DEBUG=y reported
++		 * bootloader set values when booted with v4.19 using both N950
++		 * and N9 devices (OneNAND Manufacturer: Samsung):
++		 *
++		 *   gpmc cs0 before gpmc_cs_program_settings:
++		 *   cs0 GPMC_CS_CONFIG1: 0xfd001202
++		 *   cs0 GPMC_CS_CONFIG2: 0x00181800
++		 *   cs0 GPMC_CS_CONFIG3: 0x00030300
++		 *   cs0 GPMC_CS_CONFIG4: 0x18001804
++		 *   cs0 GPMC_CS_CONFIG5: 0x03171d1d
++		 *   cs0 GPMC_CS_CONFIG6: 0x97080000
++		 */
+ 		gpmc,sync-read;
+ 		gpmc,sync-write;
+ 		gpmc,burst-length = <16>;
+@@ -379,26 +392,27 @@
+ 		gpmc,device-width = <2>;
+ 		gpmc,mux-add-data = <2>;
+ 		gpmc,cs-on-ns = <0>;
+-		gpmc,cs-rd-off-ns = <87>;
+-		gpmc,cs-wr-off-ns = <87>;
++		gpmc,cs-rd-off-ns = <122>;
++		gpmc,cs-wr-off-ns = <122>;
+ 		gpmc,adv-on-ns = <0>;
+-		gpmc,adv-rd-off-ns = <10>;
+-		gpmc,adv-wr-off-ns = <10>;
+-		gpmc,oe-on-ns = <15>;
+-		gpmc,oe-off-ns = <87>;
++		gpmc,adv-rd-off-ns = <15>;
++		gpmc,adv-wr-off-ns = <15>;
++		gpmc,oe-on-ns = <20>;
++		gpmc,oe-off-ns = <122>;
+ 		gpmc,we-on-ns = <0>;
+-		gpmc,we-off-ns = <87>;
+-		gpmc,rd-cycle-ns = <112>;
+-		gpmc,wr-cycle-ns = <112>;
+-		gpmc,access-ns = <81>;
++		gpmc,we-off-ns = <122>;
++		gpmc,rd-cycle-ns = <148>;
++		gpmc,wr-cycle-ns = <148>;
++		gpmc,access-ns = <117>;
+ 		gpmc,page-burst-access-ns = <15>;
+ 		gpmc,bus-turnaround-ns = <0>;
+ 		gpmc,cycle2cycle-delay-ns = <0>;
+ 		gpmc,wait-monitoring-ns = <0>;
+-		gpmc,clk-activation-ns = <5>;
+-		gpmc,wr-data-mux-bus-ns = <30>;
+-		gpmc,wr-access-ns = <81>;
+-		gpmc,sync-clk-ps = <15000>;
++		gpmc,clk-activation-ns = <10>;
++		gpmc,wr-data-mux-bus-ns = <40>;
++		gpmc,wr-access-ns = <117>;
++
++		gpmc,sync-clk-ps = <15000>; /* TBC; Where this value came? */
+ 
+ 		/*
+ 		 * MTD partition table corresponding to Nokia's MeeGo 1.2
 -- 
-~Randy
+2.17.0
