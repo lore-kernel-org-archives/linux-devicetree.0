@@ -1,42 +1,50 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2 1/1] clk: imx8qxp: make the name of clock ID generic
-Date: Sun, 23 Dec 2018 21:05:59 -0200
-Message-ID: <CAOMZO5A9kL=seU5+tc5sobwNuAL4JHm_7n=Kf7-zon2FjyBGSQ@mail.gmail.com>
-References: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
+Date: Mon, 24 Dec 2018 06:32:41 +0000
+Message-ID: <20181224063241.GB4846@dell>
+References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+ <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
+ <20181221110128.GO13248@dell>
+ <20181223164030.GQ6707@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181223164030.GQ6707@atomide.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Keerthy <j-keerthy@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 23, 2018 at 2:20 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
-> Let's make the name of clock ID generic to allow other SoCs to reuse
-> the common part.
->
-> This patch only changes the clock id name and file name, so no
-> functional change.
->
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+On Sun, 23 Dec 2018, Tony Lindgren wrote:
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+> * Lee Jones <lee.jones@linaro.org> [181221 11:01]:
+> > On Tue, 18 Dec 2018, Christian Hohnstaedt wrote:
+> > 
+> > > These options apply to all regulators in this chip.
+> > > 
+> > > strict-supply-voltage:
+> > >   Set STRICT flag in CONFIG1
+> > > under-voltage-limit:
+> > >   Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
+> > > under-voltage-hysteresis:
+> > >   Select 200mV or 400mV UVLOHYS in CONFIG2
+> > > 
+> > > Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+> > > ---
+> > >  drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+> > >  1 file changed, 46 insertions(+)
+> > 
+> > This needs a close review by Tony and any of the other OMAP guys.
+> 
+> Adding Keerthy to Cc, he's probably the best person to review these
+> changes.
+
+But you've dropped the patch, so all he has it a commit log to review?
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
