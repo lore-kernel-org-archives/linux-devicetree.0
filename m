@@ -1,50 +1,91 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
-Date: Mon, 24 Dec 2018 06:32:41 +0000
-Message-ID: <20181224063241.GB4846@dell>
-References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
- <20181221110128.GO13248@dell>
- <20181223164030.GQ6707@atomide.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v2 1/4] dt-bindings: remoteproc: qcom: Introduce shutdown-ack irq for Q6V5
+Date: Mon, 24 Dec 2018 14:18:21 +0530
+Message-ID: <20181224084824.25193-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181223164030.GQ6707@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tony Lindgren <tony@atomide.com>
-Cc: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org, Keerthy <j-keerthy@ti.com>
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, ohad@wizery.com, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Dec 2018, Tony Lindgren wrote:
+Introduce shutdown-irq binding required for sysmon shutdown for Q6V5 MSS
+on SDM845/MSM8996 SoCs and for WCSS Q6V5 on QCS404 SoC.
 
-> * Lee Jones <lee.jones@linaro.org> [181221 11:01]:
-> > On Tue, 18 Dec 2018, Christian Hohnstaedt wrote:
-> > 
-> > > These options apply to all regulators in this chip.
-> > > 
-> > > strict-supply-voltage:
-> > >   Set STRICT flag in CONFIG1
-> > > under-voltage-limit:
-> > >   Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
-> > > under-voltage-hysteresis:
-> > >   Select 200mV or 400mV UVLOHYS in CONFIG2
-> > > 
-> > > Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-> > > ---
-> > >  drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
-> > >  1 file changed, 46 insertions(+)
-> > 
-> > This needs a close review by Tony and any of the other OMAP guys.
-> 
-> Adding Keerthy to Cc, he's probably the best person to review these
-> changes.
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+---
 
-But you've dropped the patch, so all he has it a commit log to review?
+v2:
+  Make shutdown-ack mandatory for MSS on SDM845/MSM8996 and
+  for WCSS on QCS404 (Dropping Rob's reviewed-by due to this)
 
+ .../bindings/remoteproc/qcom,adsp.txt           | 17 ++++++++++++++---
+ .../bindings/remoteproc/qcom,q6v5.txt           | 15 ++++++++++++---
+ 2 files changed, 26 insertions(+), 6 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+index 9c0cff3a5ed8..50df9936763b 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+@@ -19,13 +19,24 @@ on the Qualcomm ADSP Hexagon core.
+ - interrupts-extended:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+-	Definition: must list the watchdog, fatal IRQs ready, handover and
+-		    stop-ack IRQs
++	Definition: reference to the interrupts that match interrupt-names
+ 
+ - interrupt-names:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
++	Definition: The interrupts needed depends on the compatible
++		    string:
++	qcom,msm8974-adsp-pil:
++	qcom,msm8996-adsp-pil:
++	qcom,msm8996-slpi-pil:
++	qcom,qcs404-adsp-pas:
++	qcom,qcs404-cdsp-pas:
++	qcom,sdm845-adsp-pas:
++	qcom,sdm845-cdsp-pas:
++		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
++	qcom,qcs404-wcss-pas:
++		    must be "wdog", "fatal", "ready", "handover", "stop-ack",
++		    "shutdown-ack"
+ 
+ - clocks:
+ 	Usage: required
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+index 5d0b2975387e..cacbdd368fe1 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -28,13 +28,22 @@ on the Qualcomm Hexagon core.
+ - interrupts-extended:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+-	Definition: must list the watchdog, fatal IRQs ready, handover and
+-		    stop-ack IRQs
++	Definition: reference to the interrupts that match interrupt-names
+ 
+ - interrupt-names:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
++	Definition: The interrupts needed depends on the the compatible
++		    string:
++	qcom,q6v5-pil:
++	qcom,ipq8074-wcss-pil:
++	qcom,msm8916-mss-pil:
++	qcom,msm8974-mss-pil:
++		    must be "wdog", "fatal", "ready", "handover", "stop-ack"
++	qcom,msm8996-mss-pil:
++	qcom,sdm845-mss-pil:
++		    must be "wdog", "fatal", "ready", "handover", "stop-ack",
++		    "shutdown-ack"
+ 
+ - clocks:
+ 	Usage: required
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
