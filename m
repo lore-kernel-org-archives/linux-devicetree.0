@@ -1,400 +1,164 @@
 From: Liviu Dudau <Liviu.Dudau@arm.com>
-Subject: Re: [PATCH v3 5/9] drm/komeda: Add komeda_format_caps for format
- handling
-Date: Mon, 24 Dec 2018 12:05:19 +0000
-Message-ID: <20181224120519.GG22341@e110455-lin.cambridge.arm.com>
+Subject: Re: [PATCH v3 6/9] drm/komeda: Add komeda_framebuffer
+Date: Mon, 24 Dec 2018 12:15:23 +0000
+Message-ID: <20181224121523.GH22341@e110455-lin.cambridge.arm.com>
 References: <20181221095757.15510-1-james.qian.wang@arm.com>
- <20181221095757.15510-6-james.qian.wang@arm.com>
+ <20181221095757.15510-7-james.qian.wang@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20181221095757.15510-6-james.qian.wang@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+In-Reply-To: <20181221095757.15510-7-james.qian.wang@arm.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc: "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Brian Starkey <Brian.Starkey@arm.com>, "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>, "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>, Ayan Halder <Ayan.Halder@arm.com>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>, "Jin Gao (Arm Technology China)" <Jin.Gao@arm.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, nd <nd@arm.com>, "malidp@foss.arm.com" <malidp@foss.arm.com>, "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "sean@poorly.run" <sean@poorly.run>, corbet
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>, "corbet@lwn.net" <corbet@lwn.net>, "airlied@linux.ie" <airlied@linux.ie>, "malidp@foss.arm.com" <malidp@foss.arm.com>, "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>, Ayan Halder <Ayan.Halder@arm.com>, devicetree
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 21, 2018 at 10:00:01AM +0000, james qian wang (Arm Technology China) wrote:
-> komeda_format_caps is for describing ARM display specific features and
-> limitations of a specific format, and format_caps will be linked into
-> &komeda_framebuffer like a extension of &drm_format_info.
-> And komed_format_caps_table will be initialized before the enum_resources,
-> since the layer features description depend on this format_caps table, so
-> we'd better initialize the table first.
-> 
-> Changes in v3:
-> - Fixed style problem found by checkpatch.pl --strict.
-> 
-> Signed-off-by: James (Qian) Wang <james.qian.wang@arm.com>
-
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
-> ---
->  drivers/gpu/drm/arm/display/komeda/Makefile   |  1 +
->  .../gpu/drm/arm/display/komeda/d71/d71_dev.c  | 78 ++++++++++++++++
->  .../gpu/drm/arm/display/komeda/komeda_dev.c   |  2 +
->  .../gpu/drm/arm/display/komeda/komeda_dev.h   | 11 ++-
->  .../arm/display/komeda/komeda_format_caps.c   | 75 ++++++++++++++++
->  .../arm/display/komeda/komeda_format_caps.h   | 89 +++++++++++++++++++
->  .../drm/arm/display/komeda/komeda_pipeline.h  |  1 +
->  7 files changed, 256 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c
->  create mode 100644 drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> 
-> diff --git a/drivers/gpu/drm/arm/display/komeda/Makefile b/drivers/gpu/drm/arm/display/komeda/Makefile
-> index c03d6876ef75..394fc2aa434a 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/Makefile
-> +++ b/drivers/gpu/drm/arm/display/komeda/Makefile
-> @@ -7,6 +7,7 @@ ccflags-y := \
->  komeda-y := \
->  	komeda_drv.o \
->  	komeda_dev.o \
-> +	komeda_format_caps.o \
->  	komeda_pipeline.o
->  
->  komeda-y += \
-> diff --git a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> index af3dabb499cd..edbf9daa1545 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/d71/d71_dev.c
-> @@ -13,7 +13,85 @@ static int d71_enum_resources(struct komeda_dev *mdev)
->  	return -1;
->  }
->  
-> +#define __HW_ID(__group, __format) \
-> +	((((__group) & 0x7) << 3) | ((__format) & 0x7))
-> +
-> +#define RICH		KOMEDA_FMT_RICH_LAYER
-> +#define SIMPLE		KOMEDA_FMT_SIMPLE_LAYER
-> +#define RICH_SIMPLE	(KOMEDA_FMT_RICH_LAYER | KOMEDA_FMT_SIMPLE_LAYER)
-> +#define RICH_WB		(KOMEDA_FMT_RICH_LAYER | KOMEDA_FMT_WB_LAYER)
-> +#define RICH_SIMPLE_WB	(RICH_SIMPLE | KOMEDA_FMT_WB_LAYER)
-> +
-> +#define Rot_0		DRM_MODE_ROTATE_0
-> +#define Flip_H_V	(DRM_MODE_REFLECT_X | DRM_MODE_REFLECT_Y | Rot_0)
-> +#define Rot_ALL_H_V	(DRM_MODE_ROTATE_MASK | Flip_H_V)
-> +
-> +#define LYT_NM		BIT(AFBC_FORMAT_MOD_BLOCK_SIZE_16x16)
-> +#define LYT_WB		BIT(AFBC_FORMAT_MOD_BLOCK_SIZE_32x8)
-> +#define LYT_NM_WB	(LYT_NM | LYT_WB)
-> +
-> +#define AFB_TH		AFBC(_TILED | _SPARSE)
-> +#define AFB_TH_SC_YTR	AFBC(_TILED | _SC | _SPARSE | _YTR)
-> +#define AFB_TH_SC_YTR_BS AFBC(_TILED | _SC | _SPARSE | _YTR | _SPLIT)
-> +
-> +static struct komeda_format_caps d71_format_caps_table[] = {
-> +	/*   HW_ID    |        fourcc        | tile_sz |   layer_types |   rots    | afbc_layouts | afbc_features */
-> +	/* ABGR_2101010*/
-> +	{__HW_ID(0, 0),	DRM_FORMAT_ARGB2101010,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(0, 1),	DRM_FORMAT_ABGR2101010,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(0, 1),	DRM_FORMAT_ABGR2101010,	1,	RICH_SIMPLE,	Rot_ALL_H_V,	LYT_NM_WB, AFB_TH_SC_YTR_BS}, /* afbc */
-> +	{__HW_ID(0, 2),	DRM_FORMAT_RGBA1010102,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(0, 3),	DRM_FORMAT_BGRA1010102,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	/* ABGR_8888*/
-> +	{__HW_ID(1, 0),	DRM_FORMAT_ARGB8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(1, 1),	DRM_FORMAT_ABGR8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(1, 1),	DRM_FORMAT_ABGR8888,	1,	RICH_SIMPLE,	Rot_ALL_H_V,	LYT_NM_WB, AFB_TH_SC_YTR_BS}, /* afbc */
-> +	{__HW_ID(1, 2),	DRM_FORMAT_RGBA8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(1, 3),	DRM_FORMAT_BGRA8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	/* XBGB_8888 */
-> +	{__HW_ID(2, 0),	DRM_FORMAT_XRGB8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(2, 1),	DRM_FORMAT_XBGR8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(2, 2),	DRM_FORMAT_RGBX8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	{__HW_ID(2, 3),	DRM_FORMAT_BGRX8888,	1,	RICH_SIMPLE_WB,	Flip_H_V,		0, 0},
-> +	/* BGR_888 */ /* none-afbc RGB888 doesn't support rotation and flip */
-> +	{__HW_ID(3, 0),	DRM_FORMAT_RGB888,	1,	RICH_SIMPLE_WB,	Rot_0,			0, 0},
-> +	{__HW_ID(3, 1),	DRM_FORMAT_BGR888,	1,	RICH_SIMPLE_WB,	Rot_0,			0, 0},
-> +	{__HW_ID(3, 1),	DRM_FORMAT_BGR888,	1,	RICH_SIMPLE,	Rot_ALL_H_V,	LYT_NM_WB, AFB_TH_SC_YTR_BS}, /* afbc */
-> +	/* BGR 16bpp */
-> +	{__HW_ID(4, 0),	DRM_FORMAT_RGBA5551,	1,	RICH_SIMPLE,	Flip_H_V,		0, 0},
-> +	{__HW_ID(4, 1),	DRM_FORMAT_ABGR1555,	1,	RICH_SIMPLE,	Flip_H_V,		0, 0},
-> +	{__HW_ID(4, 1),	DRM_FORMAT_ABGR1555,	1,	RICH_SIMPLE,	Rot_ALL_H_V,	LYT_NM_WB, AFB_TH_SC_YTR}, /* afbc */
-> +	{__HW_ID(4, 2),	DRM_FORMAT_RGB565,	1,	RICH_SIMPLE,	Flip_H_V,		0, 0},
-> +	{__HW_ID(4, 3),	DRM_FORMAT_BGR565,	1,	RICH_SIMPLE,	Flip_H_V,		0, 0},
-> +	{__HW_ID(4, 3),	DRM_FORMAT_BGR565,	1,	RICH_SIMPLE,	Rot_ALL_H_V,	LYT_NM_WB, AFB_TH_SC_YTR}, /* afbc */
-> +	{__HW_ID(4, 4), DRM_FORMAT_R8,		1,	SIMPLE,		Rot_0,			0, 0},
-> +	/* YUV 444/422/420 8bit  */
-> +	{__HW_ID(5, 0),	0 /*XYUV8888*/,		1,	0,		0,			0, 0},
-> +	/* XYUV unsupported*/
-> +	{__HW_ID(5, 1),	DRM_FORMAT_YUYV,	1,	RICH,		Rot_ALL_H_V,	LYT_NM, AFB_TH}, /* afbc */
-> +	{__HW_ID(5, 2),	DRM_FORMAT_YUYV,	1,	RICH,		Flip_H_V,		0, 0},
-> +	{__HW_ID(5, 3),	DRM_FORMAT_UYVY,	1,	RICH,		Flip_H_V,		0, 0},
-> +	{__HW_ID(5, 4),	0, /*X0L0 */		2,		0,			0, 0}, /* Y0L0 unsupported */
-> +	{__HW_ID(5, 6),	DRM_FORMAT_NV12,	1,	RICH,		Flip_H_V,		0, 0},
-> +	{__HW_ID(5, 6),	0/*DRM_FORMAT_YUV420_8BIT*/,	1,	RICH,	Rot_ALL_H_V,	LYT_NM, AFB_TH}, /* afbc */
-> +	{__HW_ID(5, 7),	DRM_FORMAT_YUV420,	1,	RICH,		Flip_H_V,		0, 0},
-> +	/* YUV 10bit*/
-> +	{__HW_ID(6, 0),	0,/*XVYU2101010*/	1,	0,		0,			0, 0},/* VYV30 unsupported */
-> +	{__HW_ID(6, 6),	0/*DRM_FORMAT_X0L2*/,	2,	RICH,		Flip_H_V,		0, 0},
-> +	{__HW_ID(6, 7),	0/*DRM_FORMAT_P010*/,	1,	RICH,		Flip_H_V,		0, 0},
-> +	{__HW_ID(6, 7),	0/*DRM_FORMAT_YUV420_10BIT*/, 1,	RICH,	Rot_ALL_H_V,	LYT_NM, AFB_TH},
-> +};
-> +
-> +static void d71_init_fmt_tbl(struct komeda_dev *mdev)
-> +{
-> +	struct komeda_format_caps_table *table = &mdev->fmt_tbl;
-> +
-> +	table->format_caps = d71_format_caps_table;
-> +	table->n_formats = ARRAY_SIZE(d71_format_caps_table);
-> +}
-> +
->  static struct komeda_dev_funcs d71_chip_funcs = {
-> +	.init_format_table = d71_init_fmt_tbl,
->  	.enum_resources	= d71_enum_resources,
->  	.cleanup	= NULL,
->  };
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> index d0cc4f758077..2f8f4685eb62 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.c
-> @@ -138,6 +138,8 @@ struct komeda_dev *komeda_dev_create(struct device *dev)
->  		 MALIDP_CORE_ID_MAJOR(mdev->chip.core_id),
->  		 MALIDP_CORE_ID_MINOR(mdev->chip.core_id));
->  
-> +	mdev->funcs->init_format_table(mdev);
-> +
->  	err = mdev->funcs->enum_resources(mdev);
->  	if (err) {
->  		DRM_ERROR("enumerate display resource failed.\n");
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> index 4a27a44e2ec6..555510be66f1 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_dev.h
-> @@ -11,6 +11,7 @@
->  #include <linux/interrupt.h>
->  #include "komeda_pipeline.h"
->  #include "malidp_product.h"
-> +#include "komeda_format_caps.h"
->  
->  /* malidp device id */
->  enum {
-> @@ -44,6 +45,13 @@ struct komeda_dev;
->   * Supplied by chip level and returned by the chip entry function xxx_identify,
->   */
->  struct komeda_dev_funcs {
-> +	/**
-> +	 * @init_format_table:
-> +	 *
-> +	 * initialize &komeda_dev->format_table, this function should be called
-> +	 * before the &enum_resource
-> +	 */
-> +	void (*init_format_table)(struct komeda_dev *mdev);
->  	/**
->  	 * @enum_resources:
->  	 *
-> @@ -66,7 +74,8 @@ struct komeda_dev {
->  	u32 __iomem   *reg_base;
->  
->  	struct komeda_chip_info chip;
-> -
-> +	/** @fmt_tbl: initialized by &komeda_dev_funcs->init_format_table */
-> +	struct komeda_format_caps_table fmt_tbl;
->  	/** @pclk: APB clock for register access */
->  	struct clk *pclk;
->  	/** @mck: HW main engine clk */
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c
-> new file mode 100644
-> index 000000000000..1e17bd6107a4
-> --- /dev/null
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.c
-> @@ -0,0 +1,75 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * (C) COPYRIGHT 2018 ARM Limited. All rights reserved.
-> + * Author: James.Qian.Wang <james.qian.wang@arm.com>
-> + *
-> + */
-> +
-> +#include <linux/slab.h>
-> +#include "komeda_format_caps.h"
-> +#include "malidp_utils.h"
-> +
-> +const struct komeda_format_caps *
-> +komeda_get_format_caps(struct komeda_format_caps_table *table,
-> +		       u32 fourcc, u64 modifier)
-> +{
-> +	const struct komeda_format_caps *caps;
-> +	u64 afbc_features = modifier & ~(AFBC_FORMAT_MOD_BLOCK_SIZE_MASK);
-> +	u32 afbc_layout = modifier & AFBC_FORMAT_MOD_BLOCK_SIZE_MASK;
-> +	int id;
-> +
-> +	for (id = 0; id < table->n_formats; id++) {
-> +		caps = &table->format_caps[id];
-> +
-> +		if (fourcc != caps->fourcc)
-> +			continue;
-> +
-> +		if ((modifier == 0ULL) && (caps->supported_afbc_layouts == 0))
-> +			return caps;
-> +
-> +		if (has_bits(afbc_features, caps->supported_afbc_features) &&
-> +		    has_bit(afbc_layout, caps->supported_afbc_layouts))
-> +			return caps;
-> +	}
-> +
-> +	return NULL;
-> +}
-> +
-> +u32 *komeda_get_layer_fourcc_list(struct komeda_format_caps_table *table,
-> +				  u32 layer_type, u32 *n_fmts)
-> +{
-> +	const struct komeda_format_caps *cap;
-> +	u32 *fmts;
-> +	int i, j, n = 0;
-> +
-> +	fmts = kcalloc(table->n_formats, sizeof(u32), GFP_KERNEL);
-> +	if (!fmts)
-> +		return NULL;
-> +
-> +	for (i = 0; i < table->n_formats; i++) {
-> +		cap = &table->format_caps[i];
-> +		if (!(layer_type & cap->supported_layer_types) ||
-> +		    (cap->fourcc == 0))
-> +			continue;
-> +
-> +		/* one fourcc may has two caps items in table (afbc/none-afbc),
-> +		 * so check the existing list to avoid adding a duplicated one.
-> +		 */
-> +		for (j = n - 1; j >= 0; j--)
-> +			if (fmts[j] == cap->fourcc)
-> +				break;
-> +
-> +		if (j < 0)
-> +			fmts[n++] = cap->fourcc;
-> +	}
-> +
-> +	if (n_fmts)
-> +		*n_fmts = n;
-> +
-> +	return fmts;
-> +}
-> +
-> +void komeda_put_fourcc_list(u32 *fourcc_list)
-> +{
-> +	kfree(fourcc_list);
-> +}
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> new file mode 100644
-> index 000000000000..60f39e77b098
-> --- /dev/null
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_format_caps.h
-> @@ -0,0 +1,89 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * (C) COPYRIGHT 2018 ARM Limited. All rights reserved.
-> + * Author: James.Qian.Wang <james.qian.wang@arm.com>
-> + *
-> + */
-> +
-> +#ifndef _KOMEDA_FORMAT_CAPS_H_
-> +#define _KOMEDA_FORMAT_CAPS_H_
-> +
-> +#include <linux/types.h>
-> +#include <uapi/drm/drm_fourcc.h>
-> +#include <drm/drm_fourcc.h>
-> +
-> +#define AFBC(x)		DRM_FORMAT_MOD_ARM_AFBC(x)
-> +
-> +/* afbc layerout */
-> +#define AFBC_16x16(x)	AFBC(AFBC_FORMAT_MOD_BLOCK_SIZE_16x16 | (x))
-> +#define AFBC_32x8(x)	AFBC(AFBC_FORMAT_MOD_BLOCK_SIZE_32x8 | (x))
-> +
-> +/* afbc features */
-> +#define _YTR		AFBC_FORMAT_MOD_YTR
-> +#define _SPLIT		AFBC_FORMAT_MOD_SPLIT
-> +#define _SPARSE		AFBC_FORMAT_MOD_SPARSE
-> +#define _CBR		AFBC_FORMAT_MOD_CBR
-> +#define _TILED		AFBC_FORMAT_MOD_TILED
-> +#define _SC		AFBC_FORMAT_MOD_SC
-> +
-> +/* layer_type */
-> +#define KOMEDA_FMT_RICH_LAYER		BIT(0)
-> +#define KOMEDA_FMT_SIMPLE_LAYER		BIT(1)
-> +#define KOMEDA_FMT_WB_LAYER		BIT(2)
-> +
-> +#define AFBC_TH_LAYOUT_ALIGNMENT	8
-> +#define AFBC_HEADER_SIZE		16
-> +#define AFBC_SUPERBLK_ALIGNMENT		128
-> +#define AFBC_SUPERBLK_PIXELS		256
-> +#define AFBC_BODY_START_ALIGNMENT	1024
-> +#define AFBC_TH_BODY_START_ALIGNMENT	4096
-> +
-> +/**
-> + * struct komeda_format_caps
-> + *
-> + * komeda_format_caps is for describing ARM display specific features and
-> + * limitations for a specific format, and format_caps will be linked into
-> + * &komeda_framebuffer like a extension of &drm_format_info.
-> + *
-> + * NOTE: one fourcc may has two different format_caps items for fourcc and
-> + * fourcc+modifier
-> + *
-> + * @hw_id: hw format id, hw specific value.
-> + * @fourcc: drm fourcc format.
-> + * @tile_size: format tiled size, used by ARM format X0L0/X0L2
-> + * @supported_layer_types: indicate which layer supports this format
-> + * @supported_rots: allowed rotations for this format
-> + * @supported_afbc_layouts: supported afbc layerout
-> + * @supported_afbc_features: supported afbc features
-> + */
-> +struct komeda_format_caps {
-> +	u32 hw_id;
-> +	u32 fourcc;
-> +	u32 tile_size;
-> +	u32 supported_layer_types;
-> +	u32 supported_rots;
-> +	u32 supported_afbc_layouts;
-> +	u64 supported_afbc_features;
-> +};
-> +
-> +/**
-> + * struct komeda_format_caps_table - format_caps mananger
-> + *
-> + * @n_formats: the size of format_caps list.
-> + * @format_caps: format_caps list.
-> + */
-> +struct komeda_format_caps_table {
-> +	u32 n_formats;
-> +	const struct komeda_format_caps *format_caps;
-> +};
-> +
-> +const struct komeda_format_caps *
-> +komeda_get_format_caps(struct komeda_format_caps_table *table,
-> +		       u32 fourcc, u64 modifier);
-> +
-> +u32 *komeda_get_layer_fourcc_list(struct komeda_format_caps_table *table,
-> +				  u32 layer_type, u32 *n_fmts);
-> +
-> +void komeda_put_fourcc_list(u32 *fourcc_list);
-> +
-> +#endif
-> diff --git a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> index d1e0c1140273..2d68ffeae25d 100644
-> --- a/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> +++ b/drivers/gpu/drm/arm/display/komeda/komeda_pipeline.h
-> @@ -213,6 +213,7 @@ static inline u16 component_changed_inputs(struct komeda_component_state *st)
->  struct komeda_layer {
->  	struct komeda_component base;
->  	/* layer specific features and caps */
-> +	int layer_type; /* RICH, SIMPLE or WB */
->  };
->  
->  struct komeda_layer_state {
-> -- 
-> 2.17.1
-> 
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+T24gRnJpLCBEZWMgMjEsIDIwMTggYXQgMTA6MDA6MTdBTSArMDAwMCwgamFtZXMgcWlhbiB3YW5n
+IChBcm0gVGVjaG5vbG9neSBDaGluYSkgd3JvdGU6Cj4ga29tZWRhX2ZyYW1lYnVmZmVyIGlzIGZv
+ciBleHRlbmRpbmcgZHJtX2ZyYW1lYnVmZmVyIHRvIGFkZCBrb21lZGEgb3duCj4gYXR0cmlidXRl
+cyBhbmQga29tZWRhIHNwZWNpZmljIGZiIGhhbmRsaW5nLgo+IAo+IENoYW5nZXMgaW4gdjM6Cj4g
+LSBGaXhlZCBzdHlsZSBwcm9ibGVtIGZvdW5kIGJ5IGNoZWNrcGF0Y2gucGwgLS1zdHJpY3QuCj4g
+Cj4gU2lnbmVkLW9mZi1ieTogSmFtZXMgKFFpYW4pIFdhbmcgPGphbWVzLnFpYW4ud2FuZ0Bhcm0u
+Y29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL01ha2VmaWxl
+ICAgfCAgIDMgKy0KPiAgLi4uL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIu
+YyAgIHwgMTY1ICsrKysrKysrKysrKysrKysrKwo+ICAuLi4vYXJtL2Rpc3BsYXkva29tZWRhL2tv
+bWVkYV9mcmFtZWJ1ZmZlci5oICAgfCAgMzEgKysrKwo+ICAzIGZpbGVzIGNoYW5nZWQsIDE5OCBp
+bnNlcnRpb25zKCspLCAxIGRlbGV0aW9uKC0pCj4gIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5jCj4gIGNyZWF0
+ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9m
+cmFtZWJ1ZmZlci5oCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEvTWFrZWZpbGUgYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL01h
+a2VmaWxlCj4gaW5kZXggMzk0ZmMyYWE0MzRhLi4yNWJlYWU5MDBlZDIgMTAwNjQ0Cj4gLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9NYWtlZmlsZQo+ICsrKyBiL2RyaXZl
+cnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvTWFrZWZpbGUKPiBAQCAtOCw3ICs4LDggQEAg
+a29tZWRhLXkgOj0gXAo+ICAJa29tZWRhX2Rydi5vIFwKPiAgCWtvbWVkYV9kZXYubyBcCj4gIAlr
+b21lZGFfZm9ybWF0X2NhcHMubyBcCj4gLQlrb21lZGFfcGlwZWxpbmUubwo+ICsJa29tZWRhX3Bp
+cGVsaW5lLm8gXAo+ICsJa29tZWRhX2ZyYW1lYnVmZmVyLm8KPiAgCj4gIGtvbWVkYS15ICs9IFwK
+PiAgCWQ3MS9kNzFfZGV2Lm8KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNw
+bGF5L2tvbWVkYS9rb21lZGFfZnJhbWVidWZmZXIuYyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlz
+cGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmMKPiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+
+IGluZGV4IDAwMDAwMDAwMDAwMC4uNGRkZDUzMTRjYTIzCj4gLS0tIC9kZXYvbnVsbAo+ICsrKyBi
+L2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmMK
+PiBAQCAtMCwwICsxLDE2NSBAQAo+ICsvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIu
+MAo+ICsvKgo+ICsgKiAoQykgQ09QWVJJR0hUIDIwMTggQVJNIExpbWl0ZWQuIEFsbCByaWdodHMg
+cmVzZXJ2ZWQuCj4gKyAqIEF1dGhvcjogSmFtZXMuUWlhbi5XYW5nIDxqYW1lcy5xaWFuLndhbmdA
+YXJtLmNvbT4KPiArICoKPiArICovCj4gKyNpbmNsdWRlIDxkcm0vZHJtX2dlbS5oPgo+ICsjaW5j
+bHVkZSA8ZHJtL2RybV9nZW1fZnJhbWVidWZmZXJfaGVscGVyLmg+Cj4gKyNpbmNsdWRlIDxkcm0v
+ZHJtX2ZiX2NtYV9oZWxwZXIuaD4KPiArI2luY2x1ZGUgPGRybS9kcm1fZ2VtX2NtYV9oZWxwZXIu
+aD4KPiArI2luY2x1ZGUgImtvbWVkYV9mcmFtZWJ1ZmZlci5oIgo+ICsjaW5jbHVkZSAia29tZWRh
+X2Rldi5oIgo+ICsKPiArc3RhdGljIHZvaWQga29tZWRhX2ZiX2Rlc3Ryb3koc3RydWN0IGRybV9m
+cmFtZWJ1ZmZlciAqZmIpCj4gK3sKPiArCXN0cnVjdCBrb21lZGFfZmIgKmtmYiA9IHRvX2tmYihm
+Yik7Cj4gKwl1MzIgaTsKPiArCj4gKwlmb3IgKGkgPSAwOyBpIDwgZmItPmZvcm1hdC0+bnVtX3Bs
+YW5lczsgaSsrKQo+ICsJCWRybV9nZW1fb2JqZWN0X3B1dF91bmxvY2tlZChmYi0+b2JqW2ldKTsK
+PiArCj4gKwlkcm1fZnJhbWVidWZmZXJfY2xlYW51cChmYik7Cj4gKwlrZnJlZShrZmIpOwo+ICt9
+Cj4gKwo+ICtzdGF0aWMgaW50IGtvbWVkYV9mYl9jcmVhdGVfaGFuZGxlKHN0cnVjdCBkcm1fZnJh
+bWVidWZmZXIgKmZiLAo+ICsJCQkJICAgc3RydWN0IGRybV9maWxlICpmaWxlLCB1MzIgKmhhbmRs
+ZSkKPiArewo+ICsJcmV0dXJuIGRybV9nZW1faGFuZGxlX2NyZWF0ZShmaWxlLCBmYi0+b2JqWzBd
+LCBoYW5kbGUpOwo+ICt9Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGRybV9mcmFtZWJ1ZmZl
+cl9mdW5jcyBrb21lZGFfZmJfZnVuY3MgPSB7Cj4gKwkuZGVzdHJveQk9IGtvbWVkYV9mYl9kZXN0
+cm95LAo+ICsJLmNyZWF0ZV9oYW5kbGUJPSBrb21lZGFfZmJfY3JlYXRlX2hhbmRsZSwKPiArfTsK
+PiArCj4gK3N0YXRpYyBpbnQKPiAra29tZWRhX2ZiX25vbmVfYWZiY19zaXplX2NoZWNrKHN0cnVj
+dCBrb21lZGFfZGV2ICptZGV2LCBzdHJ1Y3Qga29tZWRhX2ZiICprZmIsCj4gKwkJCSAgICAgICBz
+dHJ1Y3QgZHJtX2ZpbGUgKmZpbGUsCj4gKwkJCSAgICAgICBjb25zdCBzdHJ1Y3QgZHJtX21vZGVf
+ZmJfY21kMiAqbW9kZV9jbWQpCgpOb3Qgc3VyZSB3aGF0IF9ub25lIHN0YW5kcyBmb3IgaGVyZSwg
+YnV0IG90aGVyd2lzZToKCkFja2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNv
+bT4KCkJlc3QgcmVnYXJkcywKTGl2aXUKCj4gK3sKPiArCXN0cnVjdCBkcm1fZnJhbWVidWZmZXIg
+KmZiID0gJmtmYi0+YmFzZTsKPiArCXN0cnVjdCBkcm1fZ2VtX29iamVjdCAqb2JqOwo+ICsJdTMy
+IG1pbl9zaXplID0gMDsKPiArCXUzMiBpOwo+ICsKPiArCWZvciAoaSA9IDA7IGkgPCBmYi0+Zm9y
+bWF0LT5udW1fcGxhbmVzOyBpKyspIHsKPiArCQlvYmogPSBkcm1fZ2VtX29iamVjdF9sb29rdXAo
+ZmlsZSwgbW9kZV9jbWQtPmhhbmRsZXNbaV0pOwo+ICsJCWlmICghb2JqKSB7Cj4gKwkJCURSTV9E
+RUJVR19LTVMoIkZhaWxlZCB0byBsb29rdXAgR0VNIG9iamVjdFxuIik7Cj4gKwkJCWZiLT5vYmpb
+aV0gPSBOVUxMOwo+ICsKPiArCQkJcmV0dXJuIC1FTk9FTlQ7Cj4gKwkJfQo+ICsKPiArCQlrZmIt
+PmFsaWduZWRfdyA9IGZiLT53aWR0aCAvIChpID8gZmItPmZvcm1hdC0+aHN1YiA6IDEpOwo+ICsJ
+CWtmYi0+YWxpZ25lZF9oID0gZmItPmhlaWdodCAvIChpID8gZmItPmZvcm1hdC0+dnN1YiA6IDEp
+Owo+ICsKPiArCQlpZiAoZmItPnBpdGNoZXNbaV0gJSBtZGV2LT5jaGlwLmJ1c193aWR0aCkgewo+
+ICsJCQlEUk1fREVCVUdfS01TKCJQaXRjaFslZF06IDB4JXggZG9lc24ndCBhbGlnbiB0byAweCV4
+XG4iLAo+ICsJCQkJICAgICAgaSwgZmItPnBpdGNoZXNbaV0sIG1kZXYtPmNoaXAuYnVzX3dpZHRo
+KTsKPiArCQkJZHJtX2dlbV9vYmplY3RfcHV0X3VubG9ja2VkKG9iaik7Cj4gKwkJCWZiLT5vYmpb
+aV0gPSBOVUxMOwo+ICsKPiArCQkJcmV0dXJuIC1FSU5WQUw7Cj4gKwkJfQo+ICsKPiArCQltaW5f
+c2l6ZSA9ICgoa2ZiLT5hbGlnbmVkX2ggLyBrZmItPmZvcm1hdF9jYXBzLT50aWxlX3NpemUgLSAx
+KQo+ICsJCQkgICAgKiBmYi0+cGl0Y2hlc1tpXSkKPiArCQkJICAgICsgKGtmYi0+YWxpZ25lZF93
+ICogZmItPmZvcm1hdC0+Y3BwW2ldCj4gKwkJCSAgICAgICAqIGtmYi0+Zm9ybWF0X2NhcHMtPnRp
+bGVfc2l6ZSkKPiArCQkJICAgICsgZmItPm9mZnNldHNbaV07Cj4gKwo+ICsJCWlmIChvYmotPnNp
+emUgPCBtaW5fc2l6ZSkgewo+ICsJCQlEUk1fREVCVUdfS01TKCJGYWlsIHRvIGNoZWNrIG5vbmUg
+YWZiYyBmYiBzaXplLlxuIik7Cj4gKwkJCWRybV9nZW1fb2JqZWN0X3B1dF91bmxvY2tlZChvYmop
+Owo+ICsJCQlmYi0+b2JqW2ldID0gTlVMTDsKPiArCj4gKwkJCXJldHVybiAtRUlOVkFMOwo+ICsJ
+CX0KPiArCj4gKwkJZmItPm9ialtpXSA9IG9iajsKPiArCX0KPiArCj4gKwlpZiAoZmItPmZvcm1h
+dC0+bnVtX3BsYW5lcyA9PSAzKSB7Cj4gKwkJaWYgKGZiLT5waXRjaGVzWzFdICE9IGZiLT5waXRj
+aGVzWzJdKSB7Cj4gKwkJCURSTV9ERUJVR19LTVMoIlRoZSBwaXRjaFsxXSBhbmQgWzJdIGFyZSBu
+b3Qgc2FtZVxuIik7Cj4gKwkJCXJldHVybiAtRUlOVkFMOwo+ICsJCX0KPiArCX0KPiArCj4gKwly
+ZXR1cm4gMDsKPiArfQo+ICsKPiArc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqCj4gK2tvbWVkYV9m
+Yl9jcmVhdGUoc3RydWN0IGRybV9kZXZpY2UgKmRldiwgc3RydWN0IGRybV9maWxlICpmaWxlLAo+
+ICsJCSBjb25zdCBzdHJ1Y3QgZHJtX21vZGVfZmJfY21kMiAqbW9kZV9jbWQpCj4gK3sKPiArCXN0
+cnVjdCBrb21lZGFfZGV2ICptZGV2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKPiArCXN0cnVjdCBrb21l
+ZGFfZmIgKmtmYjsKPiArCWludCByZXQgPSAwLCBpOwo+ICsKPiArCWtmYiA9IGt6YWxsb2Moc2l6
+ZW9mKCprZmIpLCBHRlBfS0VSTkVMKTsKPiArCWlmICgha2ZiKQo+ICsJCXJldHVybiBFUlJfUFRS
+KC1FTk9NRU0pOwo+ICsKPiArCWtmYi0+Zm9ybWF0X2NhcHMgPSBrb21lZGFfZ2V0X2Zvcm1hdF9j
+YXBzKCZtZGV2LT5mbXRfdGJsLAo+ICsJCQkJCQkgIG1vZGVfY21kLT5waXhlbF9mb3JtYXQsCj4g
+KwkJCQkJCSAgbW9kZV9jbWQtPm1vZGlmaWVyWzBdKTsKPiArCWlmICgha2ZiLT5mb3JtYXRfY2Fw
+cykgewo+ICsJCURSTV9ERUJVR19LTVMoIkZNVCAleCBpcyBub3Qgc3VwcG9ydGVkLlxuIiwKPiAr
+CQkJICAgICAgbW9kZV9jbWQtPnBpeGVsX2Zvcm1hdCk7Cj4gKwkJa2ZyZWUoa2ZiKTsKPiArCQly
+ZXR1cm4gRVJSX1BUUigtRUlOVkFMKTsKPiArCX0KPiArCj4gKwlkcm1faGVscGVyX21vZGVfZmls
+bF9mYl9zdHJ1Y3QoZGV2LCAma2ZiLT5iYXNlLCBtb2RlX2NtZCk7Cj4gKwo+ICsJcmV0ID0ga29t
+ZWRhX2ZiX25vbmVfYWZiY19zaXplX2NoZWNrKG1kZXYsIGtmYiwgZmlsZSwgbW9kZV9jbWQpOwo+
+ICsJaWYgKHJldCA8IDApCj4gKwkJZ290byBlcnJfY2xlYW51cDsKPiArCj4gKwlyZXQgPSBkcm1f
+ZnJhbWVidWZmZXJfaW5pdChkZXYsICZrZmItPmJhc2UsICZrb21lZGFfZmJfZnVuY3MpOwo+ICsJ
+aWYgKHJldCA8IDApIHsKPiArCQlEUk1fREVCVUdfS01TKCJmYWlsZWQgdG8gaW5pdGlhbGl6ZSBm
+YlxuIik7Cj4gKwo+ICsJCWdvdG8gZXJyX2NsZWFudXA7Cj4gKwl9Cj4gKwo+ICsJcmV0dXJuICZr
+ZmItPmJhc2U7Cj4gKwo+ICtlcnJfY2xlYW51cDoKPiArCWZvciAoaSA9IDA7IGkgPCBrZmItPmJh
+c2UuZm9ybWF0LT5udW1fcGxhbmVzOyBpKyspCj4gKwkJZHJtX2dlbV9vYmplY3RfcHV0X3VubG9j
+a2VkKGtmYi0+YmFzZS5vYmpbaV0pOwo+ICsKPiArCWtmcmVlKGtmYik7Cj4gKwlyZXR1cm4gRVJS
+X1BUUihyZXQpOwo+ICt9Cj4gKwo+ICtkbWFfYWRkcl90Cj4gK2tvbWVkYV9mYl9nZXRfcGl4ZWxf
+YWRkcihzdHJ1Y3Qga29tZWRhX2ZiICprZmIsIGludCB4LCBpbnQgeSwgaW50IHBsYW5lKQo+ICt7
+Cj4gKwlzdHJ1Y3QgZHJtX2ZyYW1lYnVmZmVyICpmYiA9ICZrZmItPmJhc2U7Cj4gKwljb25zdCBz
+dHJ1Y3QgZHJtX2dlbV9jbWFfb2JqZWN0ICpvYmo7Cj4gKwl1MzIgcGxhbmVfeCwgcGxhbmVfeSwg
+Y3BwLCBwaXRjaCwgb2Zmc2V0Owo+ICsKPiArCWlmIChwbGFuZSA+IGZiLT5mb3JtYXQtPm51bV9w
+bGFuZXMpIHsKPiArCQlEUk1fREVCVUdfS01TKCJPdXQgb2YgbWF4IHBsYW5lIG51bS5cbiIpOwo+
+ICsJCXJldHVybiAtRUlOVkFMOwo+ICsJfQo+ICsKPiArCW9iaiA9IGRybV9mYl9jbWFfZ2V0X2dl
+bV9vYmooZmIsIHBsYW5lKTsKPiArCj4gKwlvZmZzZXQgPSBmYi0+b2Zmc2V0c1twbGFuZV07Cj4g
+KwlpZiAoIWZiLT5tb2RpZmllcikgewo+ICsJCXBsYW5lX3ggPSB4IC8gKHBsYW5lID8gZmItPmZv
+cm1hdC0+aHN1YiA6IDEpOwo+ICsJCXBsYW5lX3kgPSB5IC8gKHBsYW5lID8gZmItPmZvcm1hdC0+
+dnN1YiA6IDEpOwo+ICsJCWNwcCA9IGZiLT5mb3JtYXQtPmNwcFtwbGFuZV07Cj4gKwkJcGl0Y2gg
+PSBmYi0+cGl0Y2hlc1twbGFuZV07Cj4gKwkJb2Zmc2V0ICs9IHBsYW5lX3ggKiBjcHAgKiAga2Zi
+LT5mb3JtYXRfY2Fwcy0+dGlsZV9zaXplICsKPiArCQkJCShwbGFuZV95ICogcGl0Y2gpIC8ga2Zi
+LT5mb3JtYXRfY2Fwcy0+dGlsZV9zaXplOwo+ICsJfQo+ICsKPiArCXJldHVybiBvYmotPnBhZGRy
+ICsgb2Zmc2V0Owo+ICt9Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxh
+eS9rb21lZGEva29tZWRhX2ZyYW1lYnVmZmVyLmggYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3Bs
+YXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5oCj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBp
+bmRleCAwMDAwMDAwMDAwMDAuLjM4Mzc4MDAxM2JiOQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9k
+cml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9mcmFtZWJ1ZmZlci5oCj4g
+QEAgLTAsMCArMSwzMSBAQAo+ICsvKiBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMCAq
+Lwo+ICsvKgo+ICsgKiAoQykgQ09QWVJJR0hUIDIwMTggQVJNIExpbWl0ZWQuIEFsbCByaWdodHMg
+cmVzZXJ2ZWQuCj4gKyAqIEF1dGhvcjogSmFtZXMuUWlhbi5XYW5nIDxqYW1lcy5xaWFuLndhbmdA
+YXJtLmNvbT4KPiArICoKPiArICovCj4gKyNpZm5kZWYgX0tPTUVEQV9GUkFNRUJVRkZFUl9IXwo+
+ICsjZGVmaW5lIF9LT01FREFfRlJBTUVCVUZGRVJfSF8KPiArCj4gKy8qKiBzdHJ1Y3Qga29tZWRh
+X2ZiIC0gZW50ZW5kIGRybV9mcmFtZWJ1ZmZlciB3aXRoIGtvbWVkYSBhdHRyaWJ1dGUgKi8KPiAr
+c3RydWN0IGtvbWVkYV9mYiB7Cj4gKwkvKiogQGJhc2U6ICZkcm1fZnJhbWVidWZmZXIgKi8KPiAr
+CXN0cnVjdCBkcm1fZnJhbWVidWZmZXIgYmFzZTsKPiArCS8qIEBmb3JtYXRfY2FwczogJmtvbWVk
+YV9mb3JtYXRfY2FwcyAqLwo+ICsJY29uc3Qgc3RydWN0IGtvbWVkYV9mb3JtYXRfY2FwcyAqZm9y
+bWF0X2NhcHM7Cj4gKwkvKiogQGFsaWduZWRfdzogYWxpZ25lZCBmcmFtZSBidWZmZXIgd2lkdGgg
+Ki8KPiArCXUzMiBhbGlnbmVkX3c7Cj4gKwkvKiogQGFsaWduZWRfaDogYWxpZ25lZCBmcmFtZSBi
+dWZmZXIgaGVpZ2h0ICovCj4gKwl1MzIgYWxpZ25lZF9oOwo+ICt9Owo+ICsKPiArI2RlZmluZSB0
+b19rZmIoZGZiKQljb250YWluZXJfb2YoZGZiLCBzdHJ1Y3Qga29tZWRhX2ZiLCBiYXNlKQo+ICsK
+PiArc3RydWN0IGRybV9mcmFtZWJ1ZmZlciAqCj4gK2tvbWVkYV9mYl9jcmVhdGUoc3RydWN0IGRy
+bV9kZXZpY2UgKmRldiwgc3RydWN0IGRybV9maWxlICpmaWxlLAo+ICsJCSBjb25zdCBzdHJ1Y3Qg
+ZHJtX21vZGVfZmJfY21kMiAqbW9kZV9jbWQpOwo+ICtkbWFfYWRkcl90Cj4gK2tvbWVkYV9mYl9n
+ZXRfcGl4ZWxfYWRkcihzdHJ1Y3Qga29tZWRhX2ZiICprZmIsIGludCB4LCBpbnQgeSwgaW50IHBs
+YW5lKTsKPiArYm9vbCBrb21lZGFfZmJfaXNfbGF5ZXJfc3VwcG9ydGVkKHN0cnVjdCBrb21lZGFf
+ZmIgKmtmYiwgdTMyIGxheWVyX3R5cGUpOwo+ICsKPiArI2VuZGlmCj4gLS0gCj4gMi4xNy4xCj4g
+CgotLSAKPT09PT09PT09PT09PT09PT09PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUg
+d29ybGQsICB8CnwgYnV0IHRoZXkncmUgbm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3Vy
+Y2UgY29kZSEgIC8KICAtLS0tLS0tLS0tLS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
+bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
