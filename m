@@ -1,37 +1,26 @@
-From: cezary.gapinski@gmail.com
-Subject: [PATCH v2 06/14] spi: stm32: remove SPI LOOP mode
-Date: Mon, 24 Dec 2018 23:00:32 +0100
-Message-ID: <1545688840-23992-7-git-send-email-cezary.gapinski@gmail.com>
-References: <1545688840-23992-1-git-send-email-cezary.gapinski@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545688840-23992-1-git-send-email-cezary.gapinski@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
-Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mark Rutland <mark.rutland@arm.com>, Cezary Gapinski <cezary.gapinski@gmail.com>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH] dt-bindings: net: dsa: ksz9477: fix indentation for
+ switch spi bindings
+Date: Mon, 24 Dec 2018 14:15:11 -0800 (PST)
+Message-ID: <20181224.141511.1399133540508249248.davem@davemloft.net>
+References: <20181222073909.23900-1-sergio.paracuellos@gmail.com>
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20181222073909.23900-1-sergio.paracuellos@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: sergio.paracuellos@gmail.com
+Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, driverdev-devel@linuxdriverproject.org, netdev@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Cezary Gapinski <cezary.gapinski@gmail.com>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Date: Sat, 22 Dec 2018 08:39:09 +0100
 
-This driver does not support SPI LOOP mode by configuration
-in registers.
+> Switch bindings for spi managed mode are using spaces instead of tabs.
+> Fix them to get a file with a proper kernel indentation style.
+> 
+> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 
-Signed-off-by: Cezary Gapinski <cezary.gapinski@gmail.com>
----
- drivers/spi/spi-stm32.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/spi/spi-stm32.c b/drivers/spi/spi-stm32.c
-index f7056b7..b639be7 100644
---- a/drivers/spi/spi-stm32.c
-+++ b/drivers/spi/spi-stm32.c
-@@ -1143,7 +1143,7 @@ static int stm32_spi_probe(struct platform_device *pdev)
- 	master->auto_runtime_pm = true;
- 	master->bus_num = pdev->id;
- 	master->mode_bits = SPI_CPHA | SPI_CPOL | SPI_CS_HIGH | SPI_LSB_FIRST |
--			    SPI_3WIRE | SPI_LOOP;
-+			    SPI_3WIRE;
- 	master->bits_per_word_mask = stm32_spi_get_bpw_mask(spi);
- 	master->max_speed_hz = spi->clk_rate / SPI_MBR_DIV_MIN;
- 	master->min_speed_hz = spi->clk_rate / SPI_MBR_DIV_MAX;
--- 
-2.7.4
+This doesn't apply to any of my trees so I'm going to assume this was
+targetting the devicetree GIT tree or something like that.
