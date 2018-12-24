@@ -1,80 +1,31 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
-Date: Mon, 24 Dec 2018 20:57:48 +0530
-Message-ID: <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
- <20181220125438.11700-3-jagan@amarulasolutions.com> <20181221130025.lbvw7yvy74brf3jn@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Tomer Maimon <tmaimon77@gmail.com>
+Subject: [PATCH v1 0/2] iio: adc: npcm: add NPCm ADC driver
+Date: Mon, 24 Dec 2018 18:47:53 +0200
+Message-ID: <20181224164755.286932-1-tmaimon77@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221130025.lbvw7yvy74brf3jn@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
+Cc: linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
-> > Unfortunately default CSI_SCLK rate cannot work properly to
-> > drive the connected sensor interface, particularly on few
-> > Allwinner SoC's like A64.
-> >
-> > So, add mod_rate quirk via driver data so-that the respective
-> > SoC's which require to alter the default mod clock rate can assign
-> > the operating clock rate.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
-> >  1 file changed, 28 insertions(+), 6 deletions(-)
-> >
-> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > index ee882b66a5ea..fe002beae09c 100644
-> > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/ioctl.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/regmap.h>
-> > @@ -28,8 +29,13 @@
-> >
-> >  #define MODULE_NAME  "sun6i-csi"
-> >
-> > +struct sun6i_csi_variant {
-> > +     unsigned long                   mod_rate;
-> > +};
-> > +
-> >  struct sun6i_csi_dev {
-> >       struct sun6i_csi                csi;
-> > +     const struct sun6i_csi_variant  *variant;
-> >       struct device                   *dev;
-> >
-> >       struct regmap                   *regmap;
-> > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> >               return PTR_ERR(sdev->clk_mod);
-> >       }
-> >
-> > +     if (sdev->variant->mod_rate)
-> > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
-> > +
->
-> It still doesn't make any sense to do it in the probe function...
+This patch set adds Analog-to-Digital Converter (ADC) support 
+for the Nuvoton NPCM Baseboard Management Controller (BMC).
 
-I'm not sure we discussed about the context wrt probe, we discussed
-about exclusive put clock. Since clocks were enabling in set_power and
-clock rate can be set during probe in single time instead of setting
-it in set_power for every power enablement. anything wrong with that.
+The NPCM ADC is a 10-bit converter for eight channel inputs.
 
->
-> We discussed this in the previous iteration already.
->
-> What we didn't discuss is the variant function that you introduce,
-> while the previous approach was enough.
+The NPCM ADC driver tested on NPCM750 evaluation board.
 
-We discussed about clk_rate_exclusive_put, and that even handle it in
-.remove right? so I have variant to handle it in sun6i_csi_remove.
+Tomer Maimon (2):
+  dt-binding: iio: add NPCM ADC documentation
+  iio: adc: add NPCM ADC driver
+
+ .../bindings/iio/adc/nuvoton,npcm-adc.txt          |  35 +++
+ drivers/iio/adc/Kconfig                            |  10 +
+ drivers/iio/adc/Makefile                           |   1 +
+ drivers/iio/adc/npcm_adc.c                         | 336 +++++++++++++++++++++
+ 4 files changed, 382 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+ create mode 100644 drivers/iio/adc/npcm_adc.c
+
+-- 
+2.14.1
