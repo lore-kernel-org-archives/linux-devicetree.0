@@ -1,129 +1,114 @@
-From: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Subject: [PATCH 16/18] drm/mediatek: add function mtk_ddp_comp_get_type
-Date: Mon, 24 Dec 2018 16:08:49 +0800
-Message-ID: <1545638931-24938-17-git-send-email-yongqiang.niu@mediatek.com>
-References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+From: Jianjun Wang <jianjun.wang@mediatek.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Mon, 24 Dec 2018 19:40:28 +0800
+Message-ID: <1545651628.5634.57.camel@mhfsdcap03>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+         <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+         <20181213145517.GB4701@google.com> <1545034779.8528.8.camel@mhfsdcap03>
+         <20181217143247.GK20725@google.com>
+         <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+         <1545124764.25199.3.camel@mhfsdcap03> <20181220182043.GC183878@google.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1941044096=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181220182043.GC183878@google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Helgaas <helgaas@kernel.org>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org, jianjun.wang@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
---===============1941044096==
-Content-Type: multipart/related;
-	boundary="__=_Part_Boundary_002_1272544278.330249791"
+On Thu, 2018-12-20 at 12:20 -0600, Bjorn Helgaas wrote:
+> On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
+> > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
+> > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
+> > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
+> > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
+> > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
+> > > > > > > calculated as 4GB in arm64 but bogus alignment values at
+> > > > > > > arm32, the pcie device and devices behind this bridge will
+> > > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
+> > > > > > > the pcie devices will be enabled correctly.
+> > > > > > 
+> > > > > > So this is a hardware erratum?  Per spec, a memory BAR has
+> > > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
+> > > > > > 0.
+> > > > > 
+> > > > > Yes, it only works properly on 64bit platform.
+> > > > 
+> > > > I don't understand.  BARs are supposed to work the same
+> > > > regardless of whether it's a 32- or 64-bit platform.  If this is
+> > > > a workaround for a hardware defect, please just say that
+> > > > explicitly.
+> > > 
+> > > I do not understand this either. First thing to do is to describe
+> > > the problem properly so that we can actually find a solution to
+> > > it.
+> > 
+> > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
+> > is 0xffff_ffff_0000_0000 and it could not be changed except by
+> > config write operation.
+> 
+> If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
+> is out of spec because the low-order 4 bits of a 64-bit memory BAR
+> cannot all be zero.
+> 
+> A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
+> the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
+> contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
+> one at 0x10) are read-only, and in this case should contain the value
+> 0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
+> the BAR is 64 bits (bits 2:1 == 10).
 
---__=_Part_Boundary_002_1272544278.330249791
-Content-Transfer-Encoding: base64
-Content-Type: multipart/alternative;
-	boundary="__=_Part_Boundary_003_1820177.1300378706"
+Sorry, I have confused the HW default value and the read value of BAR
+size. The hardware default value is 0xffff_ffff_0000_000c, it's a 64-bit
+BAR with prefetchable range.
 
---__=_Part_Boundary_003_1820177.1300378706
-Content-Type: text/html
-Content-Transfer-Encoding: base64
+When we start to decoding the BAR, the read value of BAR0 at 0x10 is
+0x0c, and the value at 0x14 is 0xffff_ffff, so the read value of BAR
+size is 0xffff_ffff_0000_0000, which will be decoded to 0xffff_ffff, and
+it will be set to the end value of BAR0 resource in the pci_dev.
+> 
+> > The calculated BAR size will be 0 in 32-bit platform since the
+> > phys_addr_t is a 32bit value in 32-bit platform.
+> 
+> Either (1) this is a hardware defect that feeds incorrect data to the
+> BAR size calculation, or (2) there's a problem in the BAR size
+> calculation code.  We need to figure out which one and work around or
+> fix it correctly.
 
-PHByZT4NClRoaXMgcGF0Y2ggYWRkIGZ1bmN0aW9uIG10a19kZHBfY29tcF9nZXRfdHlwZQ0KDQpT
-aWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1ICZsdDt5b25ncWlhbmcubml1QG1lZGlhdGVrLmNv
-bSZndDsNCi0tLQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMg
-fCAxMCArKysrKysrKysrDQogZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2Nv
-bXAuaCB8ICAxICsNCiAyIGZpbGVzIGNoYW5nZWQsIDExIGluc2VydGlvbnMoKykNCg0KZGlmZiAt
-LWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQppbmRleCAxYzBmOWNjLi43
-MWI1NjVjIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-X2NvbXAuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAu
-Yw0KQEAgLTM1MCw2ICszNTAsMTYgQEAgaW50IG10a19kZHBfY29tcF9nZXRfaWQoc3RydWN0IGRl
-dmljZV9ub2RlICpub2RlLA0KIAlyZXR1cm4gLUVJTlZBTDsNCiB9DQogDQorZW51bSBtdGtfZGRw
-X2NvbXBfdHlwZSBtdGtfZGRwX2NvbXBfZ2V0X3R5cGUoZW51bSBtdGtfZGRwX2NvbXBfaWQgY29t
-cF9pZCkNCit7DQorCWVudW0gbXRrX2RkcF9jb21wX3R5cGUgY29tcF90eXBlID0gTVRLX0REUF9D
-T01QX1RZUEVfTUFYOw0KKw0KKwlpZiAoY29tcF9pZCAmbHQ7IEREUF9DT01QT05FTlRfSURfTUFY
-KQ0KKwkJY29tcF90eXBlID0gbXRrX2RkcF9tYXRjaGVzW2NvbXBfaWRdLnR5cGU7DQorDQorCXJl
-dHVybiBjb21wX3R5cGU7DQorfQ0KKw0KIGludCBtdGtfZGRwX2NvbXBfaW5pdChzdHJ1Y3QgZGV2
-aWNlICpkZXYsIHN0cnVjdCBkZXZpY2Vfbm9kZSAqbm9kZSwNCiAJCSAgICAgIHN0cnVjdCBtdGtf
-ZGRwX2NvbXAgKmNvbXAsIGVudW0gbXRrX2RkcF9jb21wX2lkIGNvbXBfaWQsDQogCQkgICAgICBj
-b25zdCBzdHJ1Y3QgbXRrX2RkcF9jb21wX2Z1bmNzICpmdW5jcykNCmRpZmYgLS1naXQgYS9kcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIGIvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KaW5kZXggYjkwODE3Mi4uNTk5ZTI5MyAxMDA2
-NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCisr
-KyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgNCkBAIC0xOTgs
-NSArMTk4LDYgQEAgdm9pZCBtdGtfZGRwX3dyaXRlX21hc2sodW5zaWduZWQgaW50IHZhbHVlLA0K
-IAkJCXN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsDQogCQkJdW5zaWduZWQgaW50IG9mZnNldCwN
-CiAJCQl1bnNpZ25lZCBpbnQgbWFzayk7DQorZW51bSBtdGtfZGRwX2NvbXBfdHlwZSBtdGtfZGRw
-X2NvbXBfZ2V0X3R5cGUoZW51bSBtdGtfZGRwX2NvbXBfaWQgY29tcF9pZCk7DQogDQogI2VuZGlm
-IC8qIE1US19EUk1fRERQX0NPTVBfSCAqLw0KLS0gDQoxLjguMS4xLmRpcnR5DQoNCjwvcHJlPjwh
-LS10eXBlOnRleHQtLT48IS0tey0tPjxwcmU+KioqKioqKioqKioqKiBFbWFpbCBDb25maWRlbnRp
-YWxpdHkgTm90aWNlDQogKioqKioqKioqKioqKioqKioqKioNClRoZSBpbmZvcm1hdGlvbiBjb250
-YWluZWQgaW4gdGhpcyBlLW1haWwgbWVzc2FnZSAoaW5jbHVkaW5nIGFueSANCmF0dGFjaG1lbnRz
-KSBtYXkgYmUgY29uZmlkZW50aWFsLCBwcm9wcmlldGFyeSwgcHJpdmlsZWdlZCwgb3Igb3RoZXJ3
-aXNlDQpleGVtcHQgZnJvbSBkaXNjbG9zdXJlIHVuZGVyIGFwcGxpY2FibGUgbGF3cy4gSXQgaXMg
-aW50ZW5kZWQgdG8gYmUgDQpjb252ZXllZCBvbmx5IHRvIHRoZSBkZXNpZ25hdGVkIHJlY2lwaWVu
-dChzKS4gQW55IHVzZSwgZGlzc2VtaW5hdGlvbiwgDQpkaXN0cmlidXRpb24sIHByaW50aW5nLCBy
-ZXRhaW5pbmcgb3IgY29weWluZyBvZiB0aGlzIGUtbWFpbCAoaW5jbHVkaW5nIGl0cyANCmF0dGFj
-aG1lbnRzKSBieSB1bmludGVuZGVkIHJlY2lwaWVudChzKSBpcyBzdHJpY3RseSBwcm9oaWJpdGVk
-IGFuZCBtYXkgDQpiZSB1bmxhd2Z1bC4gSWYgeW91IGFyZSBub3QgYW4gaW50ZW5kZWQgcmVjaXBp
-ZW50IG9mIHRoaXMgZS1tYWlsLCBvciBiZWxpZXZlDQogDQp0aGF0IHlvdSBoYXZlIHJlY2VpdmVk
-IHRoaXMgZS1tYWlsIGluIGVycm9yLCBwbGVhc2Ugbm90aWZ5IHRoZSBzZW5kZXIgDQppbW1lZGlh
-dGVseSAoYnkgcmVwbHlpbmcgdG8gdGhpcyBlLW1haWwpLCBkZWxldGUgYW55IGFuZCBhbGwgY29w
-aWVzIG9mIA0KdGhpcyBlLW1haWwgKGluY2x1ZGluZyBhbnkgYXR0YWNobWVudHMpIGZyb20geW91
-ciBzeXN0ZW0sIGFuZCBkbyBub3QNCmRpc2Nsb3NlIHRoZSBjb250ZW50IG9mIHRoaXMgZS1tYWls
-IHRvIGFueSBvdGhlciBwZXJzb24uIFRoYW5rDQogeW91ITwvcHJlPjwhLS19LS0+
+The BAR size is calculated by the code (res->end - res->start + 1) is
+fine, I think it's a hardware defect because that we can not change the
+hardware default value or just disable it since we don't using it.
 
---__=_Part_Boundary_003_1820177.1300378706
-Content-Type: text/plain
-Content-Transfer-Encoding: base64
+> 
+> > Actually MediaTek's HW does not using this BAR0, just omit it when
+> > assign resource is totally fine.
+> 
+> It's totally fine to work around hardware defects, but we have to
+> clearly understand the problem so we do it correctly.  For example, we
+> probably can't just clear out the BAR0 resource in the pci_dev,
+> because the BAR in the hardware device still contains a value, and if
+> we enable memory decoding for the device, it will still respond to the
+> region described by the BAR.
 
-VGhpcyBwYXRjaCBhZGQgZnVuY3Rpb24gbXRrX2RkcF9jb21wX2dldF90eXBlDQoNClNpZ25lZC1v
-ZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KLS0tDQog
-ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDEwICsrKysrKysr
-KysNCiBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIHwgIDEgKw0K
-IDIgZmlsZXMgY2hhbmdlZCwgMTEgaW5zZXJ0aW9ucygrKQ0KDQpkaWZmIC0tZ2l0IGEvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyBiL2RyaXZlcnMvZ3B1L2RybS9t
-ZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMNCmluZGV4IDFjMGY5Y2MuLjcxYjU2NWMgMTAwNjQ0
-DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQorKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jDQpAQCAtMzUwLDYg
-KzM1MCwxNiBAQCBpbnQgbXRrX2RkcF9jb21wX2dldF9pZChzdHJ1Y3QgZGV2aWNlX25vZGUgKm5v
-ZGUsDQogCXJldHVybiAtRUlOVkFMOw0KIH0NCiANCitlbnVtIG10a19kZHBfY29tcF90eXBlIG10
-a19kZHBfY29tcF9nZXRfdHlwZShlbnVtIG10a19kZHBfY29tcF9pZCBjb21wX2lkKQ0KK3sNCisJ
-ZW51bSBtdGtfZGRwX2NvbXBfdHlwZSBjb21wX3R5cGUgPSBNVEtfRERQX0NPTVBfVFlQRV9NQVg7
-DQorDQorCWlmIChjb21wX2lkIDwgRERQX0NPTVBPTkVOVF9JRF9NQVgpDQorCQljb21wX3R5cGUg
-PSBtdGtfZGRwX21hdGNoZXNbY29tcF9pZF0udHlwZTsNCisNCisJcmV0dXJuIGNvbXBfdHlwZTsN
-Cit9DQorDQogaW50IG10a19kZHBfY29tcF9pbml0KHN0cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0
-IGRldmljZV9ub2RlICpub2RlLA0KIAkJICAgICAgc3RydWN0IG10a19kZHBfY29tcCAqY29tcCwg
-ZW51bSBtdGtfZGRwX2NvbXBfaWQgY29tcF9pZCwNCiAJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtf
-ZGRwX2NvbXBfZnVuY3MgKmZ1bmNzKQ0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2RkcF9jb21wLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHBfY29tcC5oDQppbmRleCBiOTA4MTcyLi41OTllMjkzIDEwMDY0NA0KLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KKysrIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaA0KQEAgLTE5OCw1ICsxOTgsNiBAQCB2b2lk
-IG10a19kZHBfd3JpdGVfbWFzayh1bnNpZ25lZCBpbnQgdmFsdWUsDQogCQkJc3RydWN0IG10a19k
-ZHBfY29tcCAqY29tcCwNCiAJCQl1bnNpZ25lZCBpbnQgb2Zmc2V0LA0KIAkJCXVuc2lnbmVkIGlu
-dCBtYXNrKTsNCitlbnVtIG10a19kZHBfY29tcF90eXBlIG10a19kZHBfY29tcF9nZXRfdHlwZShl
-bnVtIG10a19kZHBfY29tcF9pZCBjb21wX2lkKTsNCiANCiAjZW5kaWYgLyogTVRLX0RSTV9ERFBf
-Q09NUF9IICovDQotLSANCjEuOC4xLjEuZGlydHkNCg==
+The BAR0 resource value in the pci_dev is depend on the hardware value,
+it can be cleared out after all devices have been scanned, but we should
+set it's size bigger than MMIO space, so the software will think it's a
+invalid resource and won't assign a resource for it.
 
---__=_Part_Boundary_003_1820177.1300378706--
-
---__=_Part_Boundary_002_1272544278.330249791--
-
-
---===============1941044096==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1941044096==--
+Thanks.
+> 
+> > When assign the resource for each device, software will check the
+> > resource alignment first, and the resource of length zero will be
+> > regarded as a bogus alignment resource, it will be ignored and won't
+> > claim a resource parent for it.
+> > 
+> > When drivers try to enable the PCIe devices, the software will enable
+> > it's resources, but it will return an error number when found a
+> > unclaimed resource, in that case, the flow of enable devices will be
+> > interrupted and PCIe devices won't work properly.
+> > 
+> > Thanks.
+> > 
