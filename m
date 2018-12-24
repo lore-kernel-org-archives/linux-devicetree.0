@@ -1,145 +1,57 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v2 4/4] remoteproc: qcom: Enable shutdown-ack irq on Q6V5
-Date: Mon, 24 Dec 2018 14:18:25 +0530
-Message-ID: <20181224084824.25193-4-sibis@codeaurora.org>
-References: <20181224084824.25193-1-sibis@codeaurora.org>
+From: "J, KEERTHY" <j-keerthy@ti.com>
+Subject: Re: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
+Date: Mon, 24 Dec 2018 14:31:24 +0530
+Message-ID: <c2ea051b-072e-51e0-ec60-aa1ca9f63ab6@ti.com>
+References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+ <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
+ <20181221110128.GO13248@dell> <20181223164030.GQ6707@atomide.com>
+ <20181224063241.GB4846@dell>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181224084824.25193-1-sibis@codeaurora.org>
+In-Reply-To: <20181224063241.GB4846@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, ohad@wizery.com, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
+To: Lee Jones <lee.jones@linaro.org>, Tony Lindgren <tony@atomide.com>
+Cc: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Enable shutdown-ack irq handling for MSS Q6V5 on SDM845/MSM8996
-SoCs and for WCSS Q6V5 on QCS404 SoC.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
----
- drivers/remoteproc/qcom_q6v5_mss.c | 11 ++++++++---
- drivers/remoteproc/qcom_q6v5_pas.c |  9 +++++++--
- 2 files changed, 15 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 3bc2dec85928..fdb18d1ea177 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -134,6 +134,7 @@ struct rproc_hexagon_res {
- 	int version;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
-+	u8 has_shutdown_irq;
- };
- 
- struct q6v5 {
-@@ -1252,6 +1253,7 @@ static int q6v5_probe(struct platform_device *pdev)
- {
- 	const struct rproc_hexagon_res *desc;
- 	struct q6v5 *qproc;
-+	struct qcom_q6v5 *q6v5;
- 	struct rproc *rproc;
- 	int ret;
- 
-@@ -1273,6 +1275,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qproc->dev = &pdev->dev;
- 	qproc->rproc = rproc;
- 	platform_set_drvdata(pdev, qproc);
-+	q6v5 = &qproc->q6v5;
- 
- 	ret = q6v5_init_mem(qproc, pdev);
- 	if (ret)
-@@ -1330,7 +1333,8 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qproc->version = desc->version;
- 	qproc->need_mem_protection = desc->need_mem_protection;
- 
--	ret = qcom_q6v5_init(&qproc->q6v5, pdev, rproc, MPSS_CRASH_REASON_SMEM,
-+	q6v5->has_shutdown_irq = desc->has_shutdown_irq;
-+	ret = qcom_q6v5_init(q6v5, pdev, rproc, MPSS_CRASH_REASON_SMEM,
- 			     qcom_msa_handover);
- 	if (ret)
- 		goto free_rproc;
-@@ -1340,8 +1344,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	qcom_add_glink_subdev(rproc, &qproc->glink_subdev);
- 	qcom_add_smd_subdev(rproc, &qproc->smd_subdev);
- 	qcom_add_ssr_subdev(rproc, &qproc->ssr_subdev, "mpss");
--	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12,
--					       &qproc->q6v5);
-+	qproc->sysmon = qcom_add_sysmon_subdev(rproc, "modem", 0x12, q6v5);
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
-@@ -1391,6 +1394,7 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = true,
-+	.has_shutdown_irq = true,
- 	.version = MSS_SDM845,
- };
- 
-@@ -1410,6 +1414,7 @@ static const struct rproc_hexagon_res msm8996_mss = {
- 	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = false,
-+	.has_shutdown_irq = true,
- 	.version = MSS_MSM8996,
- };
- 
-diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
-index 920a39ea6609..2d6ff59575cd 100644
---- a/drivers/remoteproc/qcom_q6v5_pas.c
-+++ b/drivers/remoteproc/qcom_q6v5_pas.c
-@@ -43,6 +43,7 @@ struct adsp_data {
- 	const char *ssr_name;
- 	const char *sysmon_name;
- 	int ssctl_id;
-+	u8 has_shutdown_irq;
- };
- 
- struct qcom_adsp {
-@@ -257,6 +258,7 @@ static int adsp_probe(struct platform_device *pdev)
- {
- 	const struct adsp_data *desc;
- 	struct qcom_adsp *adsp;
-+	struct qcom_q6v5 *q6v5;
- 	struct rproc *rproc;
- 	int ret;
- 
-@@ -280,6 +282,7 @@ static int adsp_probe(struct platform_device *pdev)
- 	adsp->pas_id = desc->pas_id;
- 	adsp->has_aggre2_clk = desc->has_aggre2_clk;
- 	platform_set_drvdata(pdev, adsp);
-+	q6v5 = &adsp->q6v5;
- 
- 	ret = adsp_alloc_memory_region(adsp);
- 	if (ret)
-@@ -293,7 +296,8 @@ static int adsp_probe(struct platform_device *pdev)
- 	if (ret)
- 		goto free_rproc;
- 
--	ret = qcom_q6v5_init(&adsp->q6v5, pdev, rproc, desc->crash_reason_smem,
-+	q6v5->has_shutdown_irq = desc->has_shutdown_irq;
-+	ret = qcom_q6v5_init(q6v5, pdev, rproc, desc->crash_reason_smem,
- 			     qcom_pas_handover);
- 	if (ret)
- 		goto free_rproc;
-@@ -304,7 +308,7 @@ static int adsp_probe(struct platform_device *pdev)
- 	adsp->sysmon = qcom_add_sysmon_subdev(rproc,
- 					      desc->sysmon_name,
- 					      desc->ssctl_id,
--					      &adsp->q6v5);
-+					      q6v5);
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
-@@ -366,6 +370,7 @@ static const struct adsp_data slpi_resource_init = {
- static const struct adsp_data wcss_resource_init = {
- 	.crash_reason_smem = 421,
- 	.firmware_name = "wcnss.mdt",
-+	.has_shutdown_irq = true,
- 	.pas_id = 6,
- 	.ssr_name = "mpss",
- 	.sysmon_name = "wcnss",
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+On 12/24/2018 12:02 PM, Lee Jones wrote:
+> On Sun, 23 Dec 2018, Tony Lindgren wrote:
+> 
+>> * Lee Jones <lee.jones@linaro.org> [181221 11:01]:
+>>> On Tue, 18 Dec 2018, Christian Hohnstaedt wrote:
+>>>
+>>>> These options apply to all regulators in this chip.
+>>>>
+>>>> strict-supply-voltage:
+>>>>    Set STRICT flag in CONFIG1
+>>>> under-voltage-limit:
+>>>>    Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
+>>>> under-voltage-hysteresis:
+>>>>    Select 200mV or 400mV UVLOHYS in CONFIG2
+>>>>
+>>>> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+>>>> ---
+>>>>   drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
+>>>>   1 file changed, 46 insertions(+)
+>>>
+>>> This needs a close review by Tony and any of the other OMAP guys.
+>>
+>> Adding Keerthy to Cc, he's probably the best person to review these
+>> changes.
+
+Thanks Tony.
+
+> 
+> But you've dropped the patch, so all he has it a commit log to review?
+> 
+Lee Jones,
+
+I am subscribed to linux-omap so i have the patch. I will review them.
+
+Thanks,
+Keerthy
