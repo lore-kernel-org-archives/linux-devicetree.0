@@ -1,64 +1,60 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v1 1/2] dt-binding: iio: add NPCM ADC documentation
-Date: Mon, 24 Dec 2018 18:47:54 +0200
-Message-ID: <20181224164755.286932-2-tmaimon77@gmail.com>
-References: <20181224164755.286932-1-tmaimon77@gmail.com>
+From: cezary.gapinski@gmail.com
+Subject: [PATCH v2 00/14] Add support for STM32F4 SPI
+Date: Mon, 24 Dec 2018 23:00:26 +0100
+Message-ID: <1545688840-23992-1-git-send-email-cezary.gapinski@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181224164755.286932-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc: linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+To: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>
+Cc: Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mark Rutland <mark.rutland@arm.com>, Cezary Gapinski <cezary.gapinski@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Added device tree binding documentation for Nuvoton BMC
-NPCM Analog-to-Digital Converter(ADC).
+From: Cezary Gapinski <cezary.gapinski@gmail.com>
 
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
----
- .../bindings/iio/adc/nuvoton,npcm-adc.txt          | 35 ++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+This series of patches adds support for first generation of SPI
+interface for STM32F4 family.
 
-diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-new file mode 100644
-index 000000000000..6f0843d837cc
---- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-@@ -0,0 +1,35 @@
-+Nuvoton NPCM Analog to Digital Converter (ADC)
-+
-+The NPCM ADC is a 10-bit converter for eight channel inputs.
-+
-+Required properties:
-+- compatible	: "nuvoton,npcm750-adc" for the NPCM7XX BMC.
-+- reg			: specifies physical base address and size of the registers.
-+- interrupts	: Contain the ADC interrupt with flags for falling edge.
-+
-+Optional properties:
-+- clocks		: phandle of ADC reference clock, in case the clock is not
-+				  added the ADC will use the default ADC sample rate.
-+- vref-supply	: The regulator supply ADC reference voltage, in case the
-+				  vref-supply is not added the ADC will use internal voltage
-+				  reference.
-+
-+Required Node in the NPCM7xx BMC:
-+An additional register is present in the NPCM7xx SOC which is
-+assumed to be in the same device tree, with and marked as
-+compatible with "nuvoton,npcm750-rst".
-+
-+Example:
-+
-+adc: adc@f000c000 {
-+	compatible = "nuvoton,npcm750-adc";
-+	reg = <0xf000c000 0x8>;
-+	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks = <&clk NPCM7XX_CLK_ADC>;
-+};
-+
-+rst: rst@f0801000 {
-+	compatible = "nuvoton,npcm750-rst", "syscon",
-+	"simple-mfd";
-+	reg = <0xf0801000 0x6C>;
-+};
+This version of driver is mostly different to STM32H7 one. Based on
+linux kernel I2C drivers for STM32 where drivers were splited into
+STM32F4 and STM32F7 family the same approach seems to be sufficient for
+SPI STM32 drivers. Therefore STM32H7 driver was moved to spi-stm32h7.c
+file and register and functions were renamed to be more specific to
+STM32H7.
+
+For current version master mode with full-duplex and 8/16 bit data
+frame format are supported. There is no TX and RX FIFOs like
+in STM32H7. DMA capabilility is supported for messages longer than
+arbitrary number of bytes (that is set already to 16 bytes) when TX
+and RX channels are set at the same time.
+
+v2:
+Based on Amelie Delaunay recommendation only one common file
+spi-stm32.c is used. Before adding support for STM32F4 driver, first six
+patches adds some improvements to actual driver.
+Next patches rearrange driver to be more useful for new STM32F4 SPI
+and adding support for this family.
+This version also supports simplex-tx and 3wire-tx modes.
+
+Cezary Gapinski (14):
+  spi: stm32: switch to SPDX identifier
+  spi: stm32: use NULL pointer instead of plain integer
+  spi: stm32: fix DMA configuration with only one channel
+  spi: fix typo in SPI_STM32 help text
+  spi: stm32: use explicit CPOL and CPHA mode bits
+  spi: stm32: remove SPI LOOP mode
+  spi: stm32: rename STM32 SPI registers to STM32H7
+  spi: stm32: rename interrupt function
+  spi: stm32: split transfer one setup function
+  spi: stm32: add start dma transfer function
+  spi: stm32: introduce compatible data cfg
+  spi: stm32: add support for STM32F4
+  ARM: dts: stm32: add SPI support on STM32F429 SoC
+  spi: stm32: add description about STM32F4 bindings
+
+ .../devicetree/bindings/spi/spi-stm32.txt          |    9 +-
+ arch/arm/boot/dts/stm32f429.dtsi                   |   60 +
+ drivers/spi/Kconfig                                |    2 +-
+ drivers/spi/spi-stm32.c                            | 1403 +++++++++++++++-----
+ 4 files changed, 1139 insertions(+), 335 deletions(-)
+
 -- 
-2.14.1
+2.7.4
