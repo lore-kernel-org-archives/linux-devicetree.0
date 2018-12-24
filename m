@@ -1,80 +1,80 @@
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH v3 9/9] MAINTAINERS: Add maintainer for arm komeda driver
-Date: Mon, 24 Dec 2018 14:05:43 +0100
-Message-ID: <CAKMK7uGt63=_KuECQc2ivuSZb8gMD1=6n0=Q2bcvzCEPo84uFw@mail.gmail.com>
-References: <20181221095757.15510-1-james.qian.wang@arm.com>
- <20181221095757.15510-10-james.qian.wang@arm.com> <20181224123314.GK22341@e110455-lin.cambridge.arm.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
+Date: Mon, 24 Dec 2018 20:57:48 +0530
+Message-ID: <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
+References: <20181220125438.11700-1-jagan@amarulasolutions.com>
+ <20181220125438.11700-3-jagan@amarulasolutions.com> <20181221130025.lbvw7yvy74brf3jn@flea>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181224123314.GK22341@e110455-lin.cambridge.arm.com>
+In-Reply-To: <20181221130025.lbvw7yvy74brf3jn@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liviu Dudau <Liviu.Dudau@arm.com>
-Cc: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>, "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Brian Starkey <Brian.Starkey@arm.com>, "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>, "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>, Ayan Halder <Ayan.Halder@arm.com>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>, "Jin Gao (Arm Technology China)" <Jin.Gao@arm.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, nd <nd@arm.com>, "malidp@foss.arm.com" <malidp@foss.arm.com>, "maarten.lankhorst@linux.intel.com" <maarten.lankhorst@linux.intel.com>, "maxime.ripard@bootlin.com" <maxime.ripar>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 24, 2018 at 1:33 PM Liviu Dudau <Liviu.Dudau@arm.com> wrote:
+On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
 >
-> On Fri, Dec 21, 2018 at 10:01:06AM +0000, james qian wang (Arm Technology=
- China) wrote:
-> > v2: Adjusted the position of KOMEDA by alphabetical order
+> On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
+> > Unfortunately default CSI_SCLK rate cannot work properly to
+> > drive the connected sensor interface, particularly on few
+> > Allwinner SoC's like A64.
 > >
-> > Signed-off-by: James (Qian) Wang <james.qian.wang@arm.com>
->
-> Acked-by: Liviu Dudau <liviu.dudau@arm.com>
->
-> Best regards,
-> Liviu
->
+> > So, add mod_rate quirk via driver data so-that the respective
+> > SoC's which require to alter the default mod clock rate can assign
+> > the operating clock rate.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 > > ---
-> >  MAINTAINERS | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
+> >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
+> >  1 file changed, 28 insertions(+), 6 deletions(-)
 > >
-> > diff --git a/MAINTAINERS b/MAINTAINERS
-> > index 254b7b267731..e48c2e5fd29f 100644
-> > --- a/MAINTAINERS
-> > +++ b/MAINTAINERS
-> > @@ -1124,6 +1124,15 @@ S:     Supported
-> >  F:   drivers/gpu/drm/arm/hdlcd_*
-> >  F:   Documentation/devicetree/bindings/display/arm,hdlcd.txt
+> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > index ee882b66a5ea..fe002beae09c 100644
+> > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > @@ -15,6 +15,7 @@
+> >  #include <linux/ioctl.h>
+> >  #include <linux/module.h>
+> >  #include <linux/of.h>
+> > +#include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_runtime.h>
+> >  #include <linux/regmap.h>
+> > @@ -28,8 +29,13 @@
 > >
-> > +ARM KOMEDA DRM-KMS DRIVER
-> > +M:   James (Qian) Wang <james.qian.wang@arm.com>
-> > +M:   Mali DP Maintainers <malidp@foss.arm.com>
-> > +S:   Supported
-> > +F:   drivers/gpu/drm/arm/display/include/
-> > +F:   drivers/gpu/drm/arm/display/komeda/
-> > +F:   Documentation/devicetree/bindings/display/arm/arm,komeda.txt
-> > +F:   Documentation/gpu/komeda-kms.rst
-
-Mentioning the git tree would be good. And I guess you'll do some kind
-of group maintainership? Probably still good if you send out a
-dedicated/topic pull request for this new driver, but from then on
-it's all in the same git repo.
--Daniel
-
+> >  #define MODULE_NAME  "sun6i-csi"
+> >
+> > +struct sun6i_csi_variant {
+> > +     unsigned long                   mod_rate;
+> > +};
 > > +
-> >  ARM MALI-DP DRM DRIVER
-> >  M:   Liviu Dudau <liviu.dudau@arm.com>
-> >  M:   Brian Starkey <brian.starkey@arm.com>
-> > --
-> > 2.17.1
+> >  struct sun6i_csi_dev {
+> >       struct sun6i_csi                csi;
+> > +     const struct sun6i_csi_variant  *variant;
+> >       struct device                   *dev;
 > >
+> >       struct regmap                   *regmap;
+> > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+> >               return PTR_ERR(sdev->clk_mod);
+> >       }
+> >
+> > +     if (sdev->variant->mod_rate)
+> > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
+> > +
 >
-> --
-> =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     =C2=AF\_(=E3=83=84)_/=C2=AF
+> It still doesn't make any sense to do it in the probe function...
 
+I'm not sure we discussed about the context wrt probe, we discussed
+about exclusive put clock. Since clocks were enabling in set_power and
+clock rate can be set during probe in single time instead of setting
+it in set_power for every power enablement. anything wrong with that.
 
+>
+> We discussed this in the previous iteration already.
+>
+> What we didn't discuss is the variant function that you introduce,
+> while the previous approach was enough.
 
---=20
-Daniel Vetter
-Software Engineer, Intel Corporation
-+41 (0) 79 365 57 48 - http://blog.ffwll.ch
+We discussed about clk_rate_exclusive_put, and that even handle it in
+.remove right? so I have variant to handle it in sun6i_csi_remove.
