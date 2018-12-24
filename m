@@ -1,145 +1,151 @@
-From: "J, KEERTHY" <j-keerthy@ti.com>
-Subject: Re: [PATCH 2/2] mfd: tps65218.c: Add input voltage options
-Date: Mon, 24 Dec 2018 15:08:57 +0530
-Message-ID: <16dc864e-1952-5d9c-2939-2804872c7814@ti.com>
-References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1545120356-7749-3-git-send-email-Christian.Hohnstaedt@wago.com>
- <20181221110128.GO13248@dell>
+From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Subject: [PATCH 03/18] drm/mediatek: redefine mtk_ddp_sout_sel
+Date: Mon, 24 Dec 2018 16:08:36 +0800
+Message-ID: <1545638931-24938-4-git-send-email-yongqiang.niu@mediatek.com>
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221110128.GO13248@dell>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>, Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: multipart/mixed; boundary="===============0328486505=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-mediatek@lists.infradead.org, Yongqiang Niu <yongqiang.niu@mediatek.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+--===============0328486505==
+Content-Type: multipart/related;
+	boundary="__=_Part_Boundary_008_879363958.197278538"
+
+--__=_Part_Boundary_008_879363958.197278538
+Content-Transfer-Encoding: base64
+Content-Type: multipart/alternative;
+	boundary="__=_Part_Boundary_009_924159022.322818011"
+
+--__=_Part_Boundary_009_924159022.322818011
+Content-Type: text/html
+Content-Transfer-Encoding: base64
+
+PHByZT4NClRoaXMgcGF0Y2ggcmVkZWZpbmUgbXRrX2RkcF9zb3V0X3NlbA0KDQpTaWduZWQtb2Zm
+LWJ5OiBZb25ncWlhbmcgTml1ICZsdDt5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbSZndDsNCi0t
+LQ0KIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5jIHwgMzIgKysrKysrKysr
+KysrKysrKysrKystLS0tLS0tLS0tLS0NCiAxIGZpbGUgY2hhbmdlZCwgMjAgaW5zZXJ0aW9ucygr
+KSwgMTIgZGVsZXRpb25zKC0pDQoNCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0
+ZWsvbXRrX2RybV9kZHAuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5j
+DQppbmRleCBhZGIzN2U0Li41OTJmODUyIDEwMDY0NA0KLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
+ZHJtX2RkcC5jDQpAQCAtNDA1LDIxICs0MDUsMjcgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtf
+ZGRwX3NlbF9pbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsDQogCXJldHVybiB2YWx1ZTsNCiB9
+DQogDQotc3RhdGljIHZvaWQgbXRrX2RkcF9zb3V0X3NlbCh2b2lkIF9faW9tZW0gKmNvbmZpZ19y
+ZWdzLA0KLQkJCSAgICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLA0KLQkJCSAgICAgZW51bSBt
+dGtfZGRwX2NvbXBfaWQgbmV4dCkNCitzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc291dF9z
+ZWwodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywNCisJCQkJICAgICBlbnVtIG10a19kZHBfY29t
+cF9pZCBjdXIsDQorCQkJCSAgICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgbmV4dCwNCisJCQkJICAg
+ICB1bnNpZ25lZCBpbnQgKmFkZHIpDQogew0KKwl1bnNpZ25lZCBpbnQgdmFsdWU7DQorDQogCWlm
+IChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJmFtcDsmYW1wOyBuZXh0ID09IEREUF9DT01QT05F
+TlRfRFNJMCkgew0KLQkJd3JpdGVsX3JlbGF4ZWQoQkxTX1RPX0RTSV9SRE1BMV9UT19EUEkxLA0K
+LQkJCSAgICAgICBjb25maWdfcmVncyArIERJU1BfUkVHX0NPTkZJR19PVVRfU0VMKTsNCisJCSph
+ZGRyID0gRElTUF9SRUdfQ09ORklHX09VVF9TRUw7DQorCQl2YWx1ZSA9IEJMU19UT19EU0lfUkRN
+QTFfVE9fRFBJMTsNCiAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJmFtcDsm
+YW1wOyBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgew0KLQkJd3JpdGVsX3JlbGF4ZWQoQkxT
+X1RPX0RQSV9SRE1BMV9UT19EU0ksDQotCQkJICAgICAgIGNvbmZpZ19yZWdzICsgRElTUF9SRUdf
+Q09ORklHX09VVF9TRUwpOw0KLQkJd3JpdGVsX3JlbGF4ZWQoRFNJX1NFTF9JTl9SRE1BLA0KLQkJ
+CSAgICAgICBjb25maWdfcmVncyArIERJU1BfUkVHX0NPTkZJR19EU0lfU0VMKTsNCi0JCXdyaXRl
+bF9yZWxheGVkKERQSV9TRUxfSU5fQkxTLA0KLQkJCSAgICAgICBjb25maWdfcmVncyArIERJU1Bf
+UkVHX0NPTkZJR19EUElfU0VMKTsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX09VVF9TRUw7
+DQorCQl2YWx1ZSA9IEJMU19UT19EUElfUkRNQTFfVE9fRFNJOw0KKwl9IGVsc2UgaWYgKGN1ciA9
+PSBERFBfQ09NUE9ORU5UX1JETUExICZhbXA7JmFtcDsgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RT
+STApIHsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSV9TRUw7DQorCQl2YWx1ZSA9IERT
+SV9TRUxfSU5fUkRNQTsNCisJfSBlbHNlIHsNCisJCXZhbHVlID0gMDsNCiAJfQ0KKw0KKwlyZXR1
+cm4gdmFsdWU7DQogfQ0KIA0KIHZvaWQgbXRrX2RkcF9hZGRfY29tcF90b19wYXRoKHZvaWQgX19p
+b21lbSAqY29uZmlnX3JlZ3MsDQpAQCAtNDM0LDcgKzQ0MCw5IEBAIHZvaWQgbXRrX2RkcF9hZGRf
+Y29tcF90b19wYXRoKHZvaWQgX19pb21lbSAqY29uZmlnX3JlZ3MsDQogCQl3cml0ZWxfcmVsYXhl
+ZChyZWcsIGNvbmZpZ19yZWdzICsgYWRkcik7DQogCX0NCiANCi0JbXRrX2RkcF9zb3V0X3NlbChj
+b25maWdfcmVncywgY3VyLCBuZXh0KTsNCisJdmFsdWUgPSBtdGtfZGRwX3NvdXRfc2VsKGN1ciwg
+bmV4dCwgJmFtcDthZGRyKTsNCisJaWYgKHZhbHVlKQ0KKwkJd3JpdGVsX3JlbGF4ZWQodmFsdWUs
+IGNvbmZpZ19yZWdzICsgYWRkcik7DQogDQogCXZhbHVlID0gbXRrX2RkcF9zZWxfaW4oY3VyLCBu
+ZXh0LCAmYW1wO2FkZHIpOw0KIAlpZiAodmFsdWUpIHsNCi0tIA0KMS44LjEuMS5kaXJ0eQ0KDQo8
+L3ByZT48IS0tdHlwZTp0ZXh0LS0+PCEtLXstLT48cHJlPioqKioqKioqKioqKiogRW1haWwgQ29u
+ZmlkZW50aWFsaXR5IE5vdGljZQ0KICoqKioqKioqKioqKioqKioqKioqDQpUaGUgaW5mb3JtYXRp
+b24gY29udGFpbmVkIGluIHRoaXMgZS1tYWlsIG1lc3NhZ2UgKGluY2x1ZGluZyBhbnkgDQphdHRh
+Y2htZW50cykgbWF5IGJlIGNvbmZpZGVudGlhbCwgcHJvcHJpZXRhcnksIHByaXZpbGVnZWQsIG9y
+IG90aGVyd2lzZQ0KZXhlbXB0IGZyb20gZGlzY2xvc3VyZSB1bmRlciBhcHBsaWNhYmxlIGxhd3Mu
+IEl0IGlzIGludGVuZGVkIHRvIGJlIA0KY29udmV5ZWQgb25seSB0byB0aGUgZGVzaWduYXRlZCBy
+ZWNpcGllbnQocykuIEFueSB1c2UsIGRpc3NlbWluYXRpb24sIA0KZGlzdHJpYnV0aW9uLCBwcmlu
+dGluZywgcmV0YWluaW5nIG9yIGNvcHlpbmcgb2YgdGhpcyBlLW1haWwgKGluY2x1ZGluZyBpdHMg
+DQphdHRhY2htZW50cykgYnkgdW5pbnRlbmRlZCByZWNpcGllbnQocykgaXMgc3RyaWN0bHkgcHJv
+aGliaXRlZCBhbmQgbWF5IA0KYmUgdW5sYXdmdWwuIElmIHlvdSBhcmUgbm90IGFuIGludGVuZGVk
+IHJlY2lwaWVudCBvZiB0aGlzIGUtbWFpbCwgb3IgYmVsaWV2ZQ0KIA0KdGhhdCB5b3UgaGF2ZSBy
+ZWNlaXZlZCB0aGlzIGUtbWFpbCBpbiBlcnJvciwgcGxlYXNlIG5vdGlmeSB0aGUgc2VuZGVyIA0K
+aW1tZWRpYXRlbHkgKGJ5IHJlcGx5aW5nIHRvIHRoaXMgZS1tYWlsKSwgZGVsZXRlIGFueSBhbmQg
+YWxsIGNvcGllcyBvZiANCnRoaXMgZS1tYWlsIChpbmNsdWRpbmcgYW55IGF0dGFjaG1lbnRzKSBm
+cm9tIHlvdXIgc3lzdGVtLCBhbmQgZG8gbm90DQpkaXNjbG9zZSB0aGUgY29udGVudCBvZiB0aGlz
+IGUtbWFpbCB0byBhbnkgb3RoZXIgcGVyc29uLiBUaGFuaw0KIHlvdSE8L3ByZT48IS0tfS0tPg==
+
+--__=_Part_Boundary_009_924159022.322818011
+Content-Type: text/plain
+Content-Transfer-Encoding: base64
+
+VGhpcyBwYXRjaCByZWRlZmluZSBtdGtfZGRwX3NvdXRfc2VsDQoNClNpZ25lZC1vZmYtYnk6IFlv
+bmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPg0KLS0tDQogZHJpdmVycy9n
+cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgfCAzMiArKysrKysrKysrKysrKysrKysrKy0t
+LS0tLS0tLS0tLQ0KIDEgZmlsZSBjaGFuZ2VkLCAyMCBpbnNlcnRpb25zKCspLCAxMiBkZWxldGlv
+bnMoLSkNCg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rk
+cC5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCmluZGV4IGFkYjM3
+ZTQuLjU5MmY4NTIgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
+bV9kZHAuYw0KKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMNCkBA
+IC00MDUsMjEgKzQwNSwyNyBAQCBzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc2VsX2luKGVu
+dW0gbXRrX2RkcF9jb21wX2lkIGN1ciwNCiAJcmV0dXJuIHZhbHVlOw0KIH0NCiANCi1zdGF0aWMg
+dm9pZCBtdGtfZGRwX3NvdXRfc2VsKHZvaWQgX19pb21lbSAqY29uZmlnX3JlZ3MsDQotCQkJICAg
+ICBlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsDQotCQkJICAgICBlbnVtIG10a19kZHBfY29tcF9p
+ZCBuZXh0KQ0KK3N0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zb3V0X3NlbCh2b2lkIF9faW9t
+ZW0gKmNvbmZpZ19yZWdzLA0KKwkJCQkgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwNCisJ
+CQkJICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0LA0KKwkJCQkgICAgIHVuc2lnbmVkIGlu
+dCAqYWRkcikNCiB7DQorCXVuc2lnbmVkIGludCB2YWx1ZTsNCisNCiAJaWYgKGN1ciA9PSBERFBf
+Q09NUE9ORU5UX0JMUyAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMCkgew0KLQkJd3JpdGVs
+X3JlbGF4ZWQoQkxTX1RPX0RTSV9SRE1BMV9UT19EUEkxLA0KLQkJCSAgICAgICBjb25maWdfcmVn
+cyArIERJU1BfUkVHX0NPTkZJR19PVVRfU0VMKTsNCisJCSphZGRyID0gRElTUF9SRUdfQ09ORklH
+X09VVF9TRUw7DQorCQl2YWx1ZSA9IEJMU19UT19EU0lfUkRNQTFfVE9fRFBJMTsNCiAJfSBlbHNl
+IGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9CTFMgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQ
+STApIHsNCi0JCXdyaXRlbF9yZWxheGVkKEJMU19UT19EUElfUkRNQTFfVE9fRFNJLA0KLQkJCSAg
+ICAgICBjb25maWdfcmVncyArIERJU1BfUkVHX0NPTkZJR19PVVRfU0VMKTsNCi0JCXdyaXRlbF9y
+ZWxheGVkKERTSV9TRUxfSU5fUkRNQSwNCi0JCQkgICAgICAgY29uZmlnX3JlZ3MgKyBESVNQX1JF
+R19DT05GSUdfRFNJX1NFTCk7DQotCQl3cml0ZWxfcmVsYXhlZChEUElfU0VMX0lOX0JMUywNCi0J
+CQkgICAgICAgY29uZmlnX3JlZ3MgKyBESVNQX1JFR19DT05GSUdfRFBJX1NFTCk7DQorCQkqYWRk
+ciA9IERJU1BfUkVHX0NPTkZJR19PVVRfU0VMOw0KKwkJdmFsdWUgPSBCTFNfVE9fRFBJX1JETUEx
+X1RPX0RTSTsNCisJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0
+ID09IEREUF9DT01QT05FTlRfRFNJMCkgew0KKwkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRFNJ
+X1NFTDsNCisJCXZhbHVlID0gRFNJX1NFTF9JTl9SRE1BOw0KKwl9IGVsc2Ugew0KKwkJdmFsdWUg
+PSAwOw0KIAl9DQorDQorCXJldHVybiB2YWx1ZTsNCiB9DQogDQogdm9pZCBtdGtfZGRwX2FkZF9j
+b21wX3RvX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywNCkBAIC00MzQsNyArNDQwLDkg
+QEAgdm9pZCBtdGtfZGRwX2FkZF9jb21wX3RvX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVn
+cywNCiAJCXdyaXRlbF9yZWxheGVkKHJlZywgY29uZmlnX3JlZ3MgKyBhZGRyKTsNCiAJfQ0KIA0K
+LQltdGtfZGRwX3NvdXRfc2VsKGNvbmZpZ19yZWdzLCBjdXIsIG5leHQpOw0KKwl2YWx1ZSA9IG10
+a19kZHBfc291dF9zZWwoY3VyLCBuZXh0LCAmYWRkcik7DQorCWlmICh2YWx1ZSkNCisJCXdyaXRl
+bF9yZWxheGVkKHZhbHVlLCBjb25maWdfcmVncyArIGFkZHIpOw0KIA0KIAl2YWx1ZSA9IG10a19k
+ZHBfc2VsX2luKGN1ciwgbmV4dCwgJmFkZHIpOw0KIAlpZiAodmFsdWUpIHsNCi0tIA0KMS44LjEu
+MS5kaXJ0eQ0K
+
+--__=_Part_Boundary_009_924159022.322818011--
+
+--__=_Part_Boundary_008_879363958.197278538--
 
 
-On 12/21/2018 4:31 PM, Lee Jones wrote:
-> On Tue, 18 Dec 2018, Christian Hohnstaedt wrote:
-> 
->> These options apply to all regulators in this chip.
->>
->> strict-supply-voltage:
->>    Set STRICT flag in CONFIG1
->> under-voltage-limit:
->>    Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
->> under-voltage-hysteresis:
->>    Select 200mV or 400mV UVLOHYS in CONFIG2
->>
->> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
->> ---
->>   drivers/mfd/tps65218.c | 46 ++++++++++++++++++++++++++++++++++++++++++++++
->>   1 file changed, 46 insertions(+)
-> 
-> This needs a close review by Tony and any of the other OMAP guys.
-> 
-> At the very least, please put '\n's between the if() statements.  You
-> also need to return after an error print, else I suggest it's not an
-> error.
-> 
-> It would also look tidier if you changed the if()s to one liners to
-> assign to different variables, then dealt with them separately later
-> on.  The way it's done here looks messy to say the least.
-> 
->> diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
->> index 8bcdecf..f5e559b 100644
->> --- a/drivers/mfd/tps65218.c
->> +++ b/drivers/mfd/tps65218.c
->> @@ -211,6 +211,50 @@ static const struct of_device_id of_tps65218_match_table[] = {
->>   };
->>   MODULE_DEVICE_TABLE(of, of_tps65218_match_table);
->>   
->> +static void tps65218_options(struct tps65218 *tps)
->> +{
->> +	struct device *dev = tps->dev;
->> +	struct device_node *np = dev->of_node;
->> +	u32 pval;
-> 
-> What does pval mean?  I suggest just val is more common.
-> 
->> +	if (!of_property_read_u32(np, "strict-supply-voltage", &pval)) {
->> +		tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
->> +			TPS65218_CONFIG1_STRICT,
->> +			pval ? TPS65218_CONFIG1_STRICT : 0,
->> +			TPS65218_PROTECT_L1);
->> +		dev_dbg(dev, "tps65218 strict-supply-voltage: %d\n", pval);
->> +	}
->> +	if (!of_property_read_u32(np, "under-voltage-hysteresis", &pval)) {
->> +		if (pval != 400000 && pval != 200000) {
->> +			dev_err(dev,
->> +				 "under-voltage-hysteresis must be %d or %d\n",
->> +				 200000, 400000);
->> +		} else {
->> +			tps65218_update_bits(tps, TPS65218_REG_CONFIG2,
->> +				TPS65218_CONFIG2_UVLOHYS,
->> +				pval == 400000 ? TPS65218_CONFIG2_UVLOHYS : 0,
->> +				TPS65218_PROTECT_L1);
->> +		}
->> +		dev_dbg(dev, "tps65218 under-voltage-hysteresis: %d\n", pval);
->> +	}
->> +	if (!of_property_read_u32(np, "under-voltage-limit", &pval)) {
->> +		int i, vals[] = { 275, 295, 325, 335 };
->> +
->> +		for (i = 0; i < ARRAY_SIZE(vals); i++) {
->> +			if (pval == vals[i] * 10000)
-> 
-> Just use the full value in 'vals'.
-> 
->> +				break;
->> +		}
-> 
-> It took me a few seconds to realise what you're doing here.
-> 
-> I think a switch() statement would be cleaner.
-> 
-> You should also #define the values.
-> 
-> TPS65218_UNDER_VOLT_LIM_2750000 0
-> 
-> Etc.
-> 
->> +		if (i < ARRAY_SIZE(vals)) {
->> +			tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
->> +				TPS65218_CONFIG1_UVLO_MASK, i,
->> +				TPS65218_PROTECT_L1);
->> +		} else {
->> +			dev_err(dev, "Invalid under-voltage-limit: %d\n", pval);
-> 
-> This could go in the default: section.
-> 
->> +		}
->> +		dev_dbg(dev, "tps65218 under-voltage-limit: %d=%d\n", pval, i);
-> 
-> I suggest considering removing these.
-> 
->> +	}
->> +}
->> +
->>   static int tps65218_probe(struct i2c_client *client,
->>   				const struct i2c_device_id *ids)
->>   {
->> @@ -249,6 +293,8 @@ static int tps65218_probe(struct i2c_client *client,
->>   
->>   	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
->>   
->> +	tps65218_options(tps);
-> 
-> Options is not good nomenclature as it doesn't really tell us
-> anything.  Looks like all the values are voltage related to me?
+--===============0328486505==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
 
-Can we simply call them tps65218_voltage_set_strict, 
-tps65218_voltage_set_uvlo, tps65218_voltage_set_uv_hyst?
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
 
-or if you want them under one function then i would suggest 
-tps65218_set_voltage_quirks or something like that.
-
-- Keerthy
-> 
->>   	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
->>   			      ARRAY_SIZE(tps65218_cells), NULL, 0,
->>   			      regmap_irq_get_domain(tps->irq_data));
-> 
+--===============0328486505==--
