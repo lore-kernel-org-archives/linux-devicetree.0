@@ -1,11 +1,13 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V4 0/3] ARM: dts: add Raspberry Pi 3 A+
-Date: Wed, 26 Dec 2018 00:20:05 +0100
-Message-ID: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V4 2/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Wed, 26 Dec 2018 00:20:07 +0100
+Message-ID: <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
+References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,38 +21,211 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Flori
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for the brand new Raspberry Pi 3 A+ .
-Since there is no official DTS file yet, this one bases on a procfs dump and
-the dt-blob of the firmware [1].
+The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
+1 USB 2.0 port and no Ethernet.
 
-[1] - https://github.com/raspberrypi/firmware/blob/master/extra/dt-blob.dts
+Compared to the Raspberry Pi 3 B it isn't possible to control BT_ON and
+WL_ON separately.
 
-Changes in V4:
-- address Phil's comment by dropping BT_ON and rename WL_ON to BT_WL_ON
-- drop Wifi and BT reset control and add explaining comment
-- add missing gpio line names
-- add Rob's Reviewed-by 
-
-Changes in V3:
-- add Eric's Reviewed-by
-- fix wifi reset GPIO polarity
-
-Changes in V2:
-- add missing Makefile change for arm64
-
-Stefan Wahren (3):
-  dt-bindings: bcm: Add Raspberry Pi 3 A+
-  ARM: dts: add Raspberry Pi 3 A+
-  arm64: dts: broadcom: Add reference to RPi 3 A+
-
- .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |   4 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts         | 175 +++++++++++++++++++++
- arch/arm64/boot/dts/broadcom/Makefile              |   3 +-
- .../boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts     |   2 +
- 5 files changed, 184 insertions(+), 1 deletion(-)
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ arch/arm/boot/dts/Makefile                 |   1 +
+ arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 175 +++++++++++++++++++++++++++++
+ 2 files changed, 176 insertions(+)
  create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
- create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
 
+diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+index 78551c4..764fe91 100644
+--- a/arch/arm/boot/dts/Makefile
++++ b/arch/arm/boot/dts/Makefile
+@@ -79,6 +79,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+ 	bcm2835-rpi-a-plus.dtb \
+ 	bcm2835-rpi-cm1-io1.dtb \
+ 	bcm2836-rpi-2-b.dtb \
++	bcm2837-rpi-3-a-plus.dtb \
+ 	bcm2837-rpi-3-b.dtb \
+ 	bcm2837-rpi-3-b-plus.dtb \
+ 	bcm2837-rpi-cm3-io3.dtb \
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+new file mode 100644
+index 0000000..61f4e4d
+--- /dev/null
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+@@ -0,0 +1,175 @@
++// SPDX-License-Identifier: GPL-2.0
++/dts-v1/;
++#include "bcm2837.dtsi"
++#include "bcm2836-rpi.dtsi"
++#include "bcm283x-rpi-usb-host.dtsi"
++
++/ {
++	compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
++	model = "Raspberry Pi 3 Model A+";
++
++	chosen {
++		/* 8250 auxiliary UART instead of pl011 */
++		stdout-path = "serial1:115200n8";
++	};
++
++	memory {
++		reg = <0 0x20000000>;
++	};
++
++	leds {
++		act {
++			gpios = <&gpio 29 GPIO_ACTIVE_HIGH>;
++		};
++
++		pwr {
++			label = "PWR";
++			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
++		};
++	};
++};
++
++&gpio {
++	/*
++	 * This is mostly based on the official GPU firmware DT blob.
++	 *
++	 * Legend:
++	 * "NC" = not connected (no rail from the SoC)
++	 * "FOO" = GPIO line named "FOO" on the schematic
++	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
++	 */
++	gpio-line-names = "ID_SDA",
++			  "ID_SCL",
++			  "SDA1",
++			  "SCL1",
++			  "GPIO_GCLK",
++			  "GPIO5",
++			  "GPIO6",
++			  "SPI_CE1_N",
++			  "SPI_CE0_N",
++			  "SPI_MISO",
++			  "SPI_MOSI",
++			  "SPI_SCLK",
++			  "GPIO12",
++			  "GPIO13",
++			  /* Serial port */
++			  "TXD1",
++			  "RXD1",
++			  "GPIO16",
++			  "GPIO17",
++			  "GPIO18",
++			  "GPIO19",
++			  "GPIO20",
++			  "GPIO21",
++			  "GPIO22",
++			  "GPIO23",
++			  "GPIO24",
++			  "GPIO25",
++			  "GPIO26",
++			  "GPIO27",
++			  "HDMI_HPD_N",
++			  "STATUS_LED",
++			  /* Used by BT module */
++			  "CTS0",
++			  "RTS0",
++			  "TXD0",
++			  "RXD0",
++			  /* Used by Wifi */
++			  "SD1_CLK",
++			  "SD1_CMD",
++			  "SD1_DATA0",
++			  "SD1_DATA1",
++			  "SD1_DATA2",
++			  "SD1_DATA3",
++			  "PWM0_OUT",
++			  "PWM1_OUT",
++			  "NC", /* GPIO42 */
++			  "WIFI_CLK",
++			  "SDA0",
++			  "SCL0",
++			  "SMPS_SCL",
++			  "SMPS_SDA",
++			  /* Used by SD Card */
++			  "SD_CLK_R",
++			  "SD_CMD_R",
++			  "SD_DATA0_R",
++			  "SD_DATA1_R",
++			  "SD_DATA2_R",
++			  "SD_DATA3_R";
++};
++
++&firmware {
++	expgpio: gpio {
++		compatible = "raspberrypi,firmware-gpio";
++		gpio-controller;
++		#gpio-cells = <2>;
++		gpio-line-names = "",
++				  "BT_WL_ON",
++				  "STATUS_LED",
++				  "",
++				  "",
++				  "CAM_GPIO0",
++				  "CAM_GPIO1",
++				  "";
++		status = "okay";
++	};
++};
++
++&hdmi {
++	hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
++};
++
++&pwm {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
++	status = "okay";
++};
++
++/*
++ * SDHCI is used to control the SDIO for wireless
++ *
++ * WL_REG_ON and BT_REG_ON of the CYW43455 Wifi/BT module are driven
++ * by a single GPIO. We can't give GPIO control to one of the drivers,
++ * otherwise the other part would get unexpectedly disturbed.
++ */
++&sdhci {
++	#address-cells = <1>;
++	#size-cells = <0>;
++	pinctrl-names = "default";
++	pinctrl-0 = <&emmc_gpio34>;
++	status = "okay";
++	bus-width = <4>;
++	non-removable;
++
++	brcmf: wifi@1 {
++		reg = <1>;
++		compatible = "brcm,bcm4329-fmac";
++	};
++};
++
++/* SDHOST is used to drive the SD card */
++&sdhost {
++	pinctrl-names = "default";
++	pinctrl-0 = <&sdhost_gpio48>;
++	status = "okay";
++	bus-width = <4>;
++};
++
++/* uart0 communicates with the BT module */
++&uart0 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
++	status = "okay";
++
++	bluetooth {
++		compatible = "brcm,bcm43438-bt";
++		max-speed = <2000000>;
++	};
++};
++
++/* uart1 is mapped to the pin header */
++&uart1 {
++	pinctrl-names = "default";
++	pinctrl-0 = <&uart1_gpio14>;
++	status = "okay";
++};
 -- 
 2.7.4
