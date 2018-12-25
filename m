@@ -1,44 +1,66 @@
-From: Andrew Lunn <andrew@lunn.ch>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
 Subject: Re: [PATCH] dt-bindings: net: dsa: ksz9477: fix indentation for
  switch spi bindings
-Date: Tue, 25 Dec 2018 13:38:54 +0100
-Message-ID: <20181225123854.GA27955@lunn.ch>
+Date: Tue, 25 Dec 2018 19:41:30 +0100
+Message-ID: <CAMhs-H9Eb6C+C0z9JgDHt-N7kk8cVDeyAHs8hMOxEnseL4bADw@mail.gmail.com>
 References: <20181222073909.23900-1-sergio.paracuellos@gmail.com>
  <20181224.141511.1399133540508249248.davem@davemloft.net>
  <CAMhs-H9o6z6YcnVTwHEnbr4vknEnHbSFvoobbscsx3isG5+G4A@mail.gmail.com>
+ <20181225123854.GA27955@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMhs-H9o6z6YcnVTwHEnbr4vknEnHbSFvoobbscsx3isG5+G4A@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: David Miller <davem@davemloft.net>, Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, vivien.didelot@savoirfairelinux.com, Florian Fainelli <f.fainelli@gmail.com>, driverdev-devel@linuxdriverproject.org, netdev@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20181225123854.GA27955@lunn.ch>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: Woojung.Huh@microchip.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 25, 2018 at 12:45:11PM +0100, Sergio Paracuellos wrote:
-> Hi David,
-> 
-> On Mon, Dec 24, 2018 at 11:15 PM David Miller <davem@davemloft.net> wrote:
+On Tue, Dec 25, 2018 at 1:39 PM Andrew Lunn <andrew@lunn.ch> wrote:
+>
+> On Tue, Dec 25, 2018 at 12:45:11PM +0100, Sergio Paracuellos wrote:
+> > Hi David,
 > >
-> > From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> > Date: Sat, 22 Dec 2018 08:39:09 +0100
-> >
-> > > Switch bindings for spi managed mode are using spaces instead of tabs.
-> > > Fix them to get a file with a proper kernel indentation style.
+> > On Mon, Dec 24, 2018 at 11:15 PM David Miller <davem@davemloft.net> wrote:
 > > >
-> > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > > From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > > Date: Sat, 22 Dec 2018 08:39:09 +0100
+> > >
+> > > > Switch bindings for spi managed mode are using spaces instead of tabs.
+> > > > Fix them to get a file with a proper kernel indentation style.
+> > > >
+> > > > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > >
+> > > This doesn't apply to any of my trees so I'm going to assume this was
+> > > targetting the devicetree GIT tree or something like that.
 > >
-> > This doesn't apply to any of my trees so I'm going to assume this was
-> > targetting the devicetree GIT tree or something like that.
-> 
-> Actually, this was rebased onto linux-next. Which tree do you want me
-> to rebase onto?
+> > Actually, this was rebased onto linux-next. Which tree do you want me
+> > to rebase onto?
+>
+> Hi Sergio
+>
+> It should be based on net-next. However, that is closed now, so please
+> wait until it reopens in about two weeks time.
 
-Hi Sergio
+Hi Andrew,
 
-It should be based on net-next. However, that is closed now, so please
-wait until it reopens in about two weeks time.
+Ok, I'll resend v2 rebased onto net-next when merge window is close in
+about two weeks.
 
-     Thanks
-	Andrew
+Thanks for let me know.
+
+>
+>      Thanks
+>         Andrew
+
+Best regards,
+    Sergio Paracuellos
