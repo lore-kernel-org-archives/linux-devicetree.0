@@ -1,7 +1,7 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V4 3/3] arm64: dts: broadcom: Add reference to RPi 3 A+
-Date: Wed, 26 Dec 2018 00:20:08 +0100
-Message-ID: <1545780008-22271-4-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH V4 1/3] dt-bindings: bcm: Add Raspberry Pi 3 A+
+Date: Wed, 26 Dec 2018 00:20:06 +0100
+Message-ID: <1545780008-22271-2-git-send-email-stefan.wahren@i2se.com>
 References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,36 +21,29 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Flori
 Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds a reference to the dts of the Raspberry Pi 3 A+,
-so we don't need to maintain the content in arm64.
+This adds the root properties for the Raspberry Pi 3 A+ .
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 Reviewed-by: Eric Anholt <eric@anholt.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/broadcom/Makefile                 | 3 ++-
- arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts | 2 ++
- 2 files changed, 4 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
+ Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/broadcom/Makefile b/arch/arm64/boot/dts/broadcom/Makefile
-index 667ca98..d1d31cc 100644
---- a/arch/arm64/boot/dts/broadcom/Makefile
-+++ b/arch/arm64/boot/dts/broadcom/Makefile
-@@ -1,5 +1,6 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-b.dtb \
-+dtb-$(CONFIG_ARCH_BCM2835) += bcm2837-rpi-3-a-plus.dtb \
-+			      bcm2837-rpi-3-b.dtb \
- 			      bcm2837-rpi-3-b-plus.dtb \
- 			      bcm2837-rpi-cm3-io3.dtb
+diff --git a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+index 0dcc3ea..245328f 100644
+--- a/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
++++ b/Documentation/devicetree/bindings/arm/bcm/brcm,bcm2835.txt
+@@ -30,6 +30,10 @@ Raspberry Pi 2 Model B
+ Required root node properties:
+ compatible = "raspberrypi,2-model-b", "brcm,bcm2836";
  
-diff --git a/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
-new file mode 100644
-index 0000000..f0ec56a
---- /dev/null
-+++ b/arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
-@@ -0,0 +1,2 @@
-+// SPDX-License-Identifier: GPL-2.0
-+#include "arm/bcm2837-rpi-3-a-plus.dts"
++Raspberry Pi 3 Model A+
++Required root node properties:
++compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
++
+ Raspberry Pi 3 Model B
+ Required root node properties:
+ compatible = "raspberrypi,3-model-b", "brcm,bcm2837";
 -- 
 2.7.4
