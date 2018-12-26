@@ -1,85 +1,65 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 2/3] soc: qcom: Add AOSS QMP communication driver
-Date: Wed, 26 Dec 2018 12:28:30 -0800
-Message-ID: <20181226202830.GE9704@minitux>
+Subject: Re: [PATCH 3/3] soc: qcom: Add AOSS QMP genpd provider
+Date: Wed, 26 Dec 2018 12:30:33 -0800
+Message-ID: <20181226203032.GF9704@minitux>
 References: <20181112080557.22698-1-bjorn.andersson@linaro.org>
- <20181112080557.22698-3-bjorn.andersson@linaro.org>
- <ce0d4d55-464c-1502-9dc1-b3a495c86aee@codeaurora.org>
+ <20181112080557.22698-4-bjorn.andersson@linaro.org>
+ <dfd0096c-d1f1-da0e-7c4c-3da916d521dc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ce0d4d55-464c-1502-9dc1-b3a495c86aee@codeaurora.org>
+In-Reply-To: <dfd0096c-d1f1-da0e-7c4c-3da916d521dc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Arun Kumar Neelakantam <aneela@codeaurora.org>
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue 20 Nov 04:22 PST 2018, Arun Kumar Neelakantam wrote:
+On Mon 26 Nov 19:31 PST 2018, Sai Prakash Ranjan wrote:
 
-Thanks for the review Arun.
+> Hi Bjorn,
+> 
+
+Thanks for your review Sai!
 
 > On 11/12/2018 1:35 PM, Bjorn Andersson wrote:
 [..]
-> > +int qmp_send(struct qmp *qmp, const void *data, size_t len)
+> > +static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
 > > +{
-> > +	int ret;
+> > +	char buf[96];
+> > +	size_t n;
 > > +
-> > +	if (WARN_ON(len + sizeof(u32) > qmp->size)) {
-> > +		dev_err(qmp->dev, "message too long\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	if (WARN_ON(len % sizeof(u32))) {
-> > +		dev_err(qmp->dev, "message not 32-bit aligned\n");
-> > +		return -EINVAL;
-> > +	}
-> > +
-> > +	mutex_lock(&qmp->tx_lock);
-> > +
-> > +	if (!qmp_message_empty(qmp)) {
-> > +		dev_err(qmp->dev, "mailbox left busy\n");
-> > +		ret = -EINVAL;
-> should it be -EBUSY ?
-
-That makes more sense.
-
-> And qmp_messge_empty will be done either by remote if it process the data
-> else by this driver in TIMEOUT case, so does we need this check for every TX
-> ? I think we can just reset to Zero once in open time.
-
-Didn't think about that, should we really make the QMP link ready again
-when we get a timeout? Can we expect that the firmware of the remote
-side is ready to serve future messages?
-
-
-Should we keep this check and remove the writel() below?
-
-> > +		goto out_unlock;
-> > +	}
-> > +
-> > +	/* The message RAM only implements 32-bit accesses */
-> > +	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
-> > +			 data, len / sizeof(u32));
-> > +	writel(len, qmp->msgram + qmp->offset);
-> > +	qmp_kick(qmp);
-> > +
-> > +	ret = wait_event_interruptible_timeout(qmp->event,
-> > +					       qmp_message_empty(qmp), HZ);
-> > +	if (!ret) {
-> > +		dev_err(qmp->dev, "ucore did not ack channel\n");
-> > +		ret = -ETIMEDOUT;
-> > +
-> > +		writel(0, qmp->msgram + qmp->offset);
-> > +	} else {
-> > +		ret = 0;
-> > +	}
-> > +
-> > +out_unlock:
-> > +	mutex_unlock(&qmp->tx_lock);
-> > +
-> > +	return ret;
+> > +	n = snprintf(buf, sizeof(buf), "{class: clock, res: %s, val: %d}",
+> > +		     res->name, !!enable);
+> > +	return qmp_send(res->qmp, buf, n);
 > > +}
+> > +
+> 
+> I was trying to get QDSS working with these patches and found one issue
+> in qmp_send of qmp_pd_clock_toggle.
+> 
+> The third return value should be sizeof(buf) instead of n because n just
+> returns len as 33 and the below check in qmp send will always fail and
+> trigger WARN_ON's.
+> 
+>          if (WARN_ON(len % sizeof(u32))) {
+>                  dev_err(qmp->dev, "message not 32-bit aligned\n");
+>                  return -EINVAL;
+>          }
+> 
+> Also I observed that multiple "ucore will not ack channel" messages with
+> len being returned n instead of buf size.
+> 
+
+I must have been "lucky" when I did my final pass of cleanups and
+retests, thanks for spotting this!
+
+> One more thing is do we really require *WARN_ON and dev_err* both because it
+> just spams the kernel logs, I think dev_err message is clear
+> enough to be able to understand the error condition.
+> 
+
+No, that's just unnecessary.
 
 Regards,
 Bjorn
