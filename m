@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 7/8] dt-bindings: remoteproc: qcom: Add power-domain bindings for Q6V5
-Date: Wed, 26 Dec 2018 18:22:28 +0530
-Message-ID: <20181226125229.20149-7-sibis@codeaurora.org>
+Subject: [PATCH v3 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+Date: Wed, 26 Dec 2018 18:22:29 +0530
+Message-ID: <20181226125229.20149-8-sibis@codeaurora.org>
 References: <20181226125229.20149-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,53 +12,103 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add power-domain bindings for Q6V5 MSS on MSM8996 and SDM845 SoCs.
+This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
 
 v3:
-  * Fixup dt-binding documentation as suggested by Doug
-  * Dropping Rob's Reviewed-by due to documentation style
-    change
+  * with shutdown-ack irq redesign make it mandatory,
+    merge multiple patches into a single one
 
 v2:
-  * Add load_state power-domain
-  * List cx and mx power-domains for MSM8996
+  * Fixed style changes
+  * Added missing clocks in the dt-bindings
+  * Split mss remoteproc node into a number of patches
 
- .../bindings/remoteproc/qcom,q6v5.txt         | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
+This patch depends on the following bindings:
+https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
+https://patchwork.kernel.org/patch/10657325/ - pdc reset node
+https://patchwork.kernel.org/patch/10740127/ - rpmhpd dt bindings
+https://patchwork.kernel.org/patch/10740109/ - rpmhpd dt node
+https://patchwork.kernel.org/patch/10678301/ - AOP QMP dt bindings
+https://patchwork.kernel.org/patch/10742083/ - shutdown-irq binding
 
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 65713de70be5..17ecaae5e5e0 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -106,6 +106,25 @@ For the compatible string below the following supplies are required:
- 	Definition: reference to the regulators to be held on behalf of the
- 		    booting of the Hexagon core
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 60 ++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 5da9fa1feb8a..db17216a5bce 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1366,6 +1366,66 @@
+ 			};
+ 		};
  
-+- power-domains:
-+	Usage: required
-+	Value type: <phandle>
-+	Definition: reference to power-domains that match power-domain-names
++		remoteproc@4080000 {
++			compatible = "qcom,sdm845-mss-pil";
++			reg = <0x04080000 0x408>, <0x04180000 0x48>;
++			reg-names = "qdsp6", "rmb";
 +
-+- power-domain-names:
-+	Usage: required
-+	Value type: <stringlist>
-+	Definition: The power-domains needed depend on the compatible string:
-+	qcom,q6v5-pil:
-+	qcom,ipq8074-wcss-pil:
-+	qcom,msm8916-mss-pil:
-+	qcom,msm8974-mss-pil:
-+		    no power-domain names required
-+	qcom,msm8996-mss-pil:
-+		    must be "cx", "mx"
-+	qcom,sdm845-mss-pil:
-+		    must be "cx", "mx", "mss", "load_state"
++			interrupts-extended =
++				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack",
++					  "shutdown-ack";
 +
- - qcom,smem-states:
- 	Usage: required
- 	Value type: <phandle>
++			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
++				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
++				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
++				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
++				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
++				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++				 <&gcc GCC_PRNG_AHB_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bus", "mem", "gpll0_mss",
++				      "snoc_axi", "mnoc_axi", "prng", "xo";
++
++			qcom,smem-states = <&modem_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
++
++			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
++				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
++			reset-names = "mss_restart", "pdc_reset";
++
++			qcom,halt-regs = <&tcsr_mutex_regs
++						0x23000 0x25000 0x24000>;
++
++			power-domains = <&aoss_qmp_pd AOSS_QMP_LS_MODEM>,
++					<&rpmhpd SDM845_CX>,
++					<&rpmhpd SDM845_MX>,
++					<&rpmhpd SDM845_MSS>;
++			power-domain-names = "load_state", "cx", "mx", "mss";
++
++			mba {
++				memory-region = <&mba_region>;
++			};
++
++			mpss {
++				memory-region = <&mpss_region>;
++			};
++
++			glink-edge {
++				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
++				label = "modem";
++				qcom,remote-pid = <1>;
++				mboxes = <&apss_shared 12>;
++				mbox-names = "mpss_smem";
++			};
++		};
++
+ 		usb_1_hsphy: phy@88e2000 {
+ 			compatible = "qcom,sdm845-qusb2-phy";
+ 			reg = <0x88e2000 0x400>;
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
