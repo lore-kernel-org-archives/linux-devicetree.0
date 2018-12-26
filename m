@@ -1,91 +1,46 @@
-From: Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH v7 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
- support
-Date: Wed, 26 Dec 2018 18:18:54 +0800
-Message-ID: <1545819534.28871.93.camel@mhfsdcap03>
-References: <1545701209-6884-1-git-send-email-long.cheng@mediatek.com>
-         <1545701209-6884-2-git-send-email-long.cheng@mediatek.com>
-         <CANMq1KA1ywLnQDzXRbLcuu-afXuj_yrprRBC4kejF4-20ztXyA@mail.gmail.com>
-         <1545739611.28871.77.camel@mhfsdcap03>
-         <CANMq1KDtUgOUFRy-TyQK0EmbpXGtLEVo9Mqg1Hvs0JoL9NrFyQ@mail.gmail.com>
-         <1545806121.28871.88.camel@mhfsdcap03>
-         <CANMq1KDKqtKwSw1mJyR0TgBwY1YRfvY52vWyogqWweF3xAgiKA@mail.gmail.com>
+From: =?UTF-8?Q?=27Ond=C5=99ej_Jirman=27_via_linux=2Dsunxi?= <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Subject: Re: [PATCH v12 0/2] Initial Allwinner V3s CSI Support
+Date: Wed, 26 Dec 2018 11:29:36 +0100
+Message-ID: <20181226102936.2xxu7lii4kcg7656@core.my.home>
+References: <1540886988-27696-1-git-send-email-yong.deng@magewell.com>
+Reply-To: megous-5qf/QAjKc83QT0dZR+AlfA@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANMq1KDKqtKwSw1mJyR0TgBwY1YRfvY52vWyogqWweF3xAgiKA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Boichat <drinkcat@chromium.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Z
+Return-path: <linux-sunxi+bncBDXLF6FR5INBBE5QRXQQKGQE3VZGQRI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1540886988-27696-1-git-send-email-yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, "David S. Miller" <davem-fT/PcQaiUtIeIZ0/mPfg9Q@public.gmane.org>, Andrew Morton <akpm-de/tnXTf+JLsfHDXvbKv3WD2FQJk+8+b@public.gmane.org>, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, Hans Verkuil <hans.verkuil-FYB4Gu1CFyUAvxtiuMwx3w@public.gmane.org>, Laurent Pinchart <laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org>, Geert Uytterhoeven <geert-Td1EMuHUCqxL1ZNQvxDV9g@public.gmane.org>, Neil Armstrong <narmstrong-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Philipp Zabel <p.zabel-bIcnvbaLZ9MEGnE8C9+IrQ@public.gmane.org>, Jacopo Mondi <jacopo+renesas-AW8dsiIh9cEdnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Todor Tomov <todor.tomov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Sakari Ailus <sakari.ailus-VuQAYsv1560@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-12-26 at 17:28 +0800, Nicolas Boichat wrote:
+Hello,
 
-......
-
-> > > > > > +static int mtk_uart_apdma_device_pause(struct dma_chan *chan)
-> > > > > > +{
-> > > > > > +       /* just for check caps pass */
-> > > > > > +       return 0;
-> > > > > > +}
-> > > > > > +
-> > > > > > +static int mtk_uart_apdma_device_resume(struct dma_chan *chan)
-> > > > > > +{
-> > > > > > +       /* just for check caps pass */
-> > > > > > +       return 0;
-> > > > > > +}
-> > >
-> > > Why do you need these? Seems wrong to advertise device_pause/resume
-> > > (and the caps) if we don't actually support that?
-> > >
-> >
-> > in serial 8250_dma.c file, when request DMA, will calll
-> > 'dma_get_slave_caps' to get the caps. and the will check caps.cmd_pause.
-> > the pause is device_pause.  our device can't support the functions. but
-> > to check pass, need add the fake function. or you can give better
-> > comments. thanks.
+On Tue, Oct 30, 2018 at 04:09:48PM +0800, Yong Deng wrote:
+> I can't make v4l2-compliance always happy.
+> The V3s CSI support many pixformats. But they are not always available.
+> It's dependent on the input bus format (MEDIA_BUS_FMT_*). 
+> Example:
+> V4L2_PIX_FMT_SBGGR8: MEDIA_BUS_FMT_SBGGR8_1X8
+> V4L2_PIX_FMT_YUYV: MEDIA_BUS_FMT_YUYV8_2X8
+> But I can't get the subdev's format code before starting stream as the
+> subdev may change it. So I can't know which pixformats are available.
+> So I exports all the pixformats supported by SoC.
+> The result is the app (v4l2-compliance) is likely to fail on streamon.
 > 
-> Well, then I guess this is a hack... I'm not too familiar with
-> 8250_dma.c, but I guess that if it requires pause/resume to be
-> implemented, then we should implement them, not just stub them out...
-> 
-> Is this something that can be implemented with 8250_mtk DMA?
-> 
+> This patchset add initial support for Allwinner V3s CSI.
 
-the HW can't support it.
+I've tested your patches on A83T and CSI works on that SoC too. I'll send
+DTS patches later.
 
-> Also, I don't see where you need resume, so maybe implementing pause is enough?
-> 
+One thing I noticed is that, when you cat the regmap registers file in debugfs
+while streaming, the kernel locks up hard. I was not able to extract any logs.
 
-yes. pause is enough. for symmetry, add resume function.
-anyway, the pause function need to keep.
 
-> > > > > > +
-> > > > > > +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
-> > > > > > +{
-> > > > > > +       while (list_empty(&mtkd->ddev.channels) == 0) {
-> > > > > > +               struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
-> > > > > > +                       struct mtk_chan, vc.chan.device_node);
-> > > > > > +
-> > > > > > +               list_del(&c->vc.chan.device_node);
-> > > > > > +               tasklet_kill(&c->vc.task);
-> > > > > > +       }
-> > > > > > +}
-> > > > > > +
-> > > > > > +static const struct of_device_id mtk_uart_apdma_match[] = {
-> > > > > > +       { .compatible = "mediatek,mt6577-uart-dma", },
-> > > > > > +       { /* sentinel */ },
-> > > > > > +};
-> > > > > > +MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
-> > > > > > +
-> > > > > > +static int mtk_uart_apdma_probe(struct platform_device *pdev)
-> > > > > > +{
-> > > > > > +       struct mtk_uart_apdmadev *mtkd;
-> > > > > > +       struct resource *res;
-> > > > > > +       struct mtk_chan *c;
-> > > > > > +       unsigned int i;
-> > > > > > +       int rc;
-> > > > > > +
-
-......
+regards,
+  Ondrej
