@@ -1,91 +1,118 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 09/18] drm/mediatek: add component DITHER
-Date: Wed, 26 Dec 2018 17:13:19 +0800
-Message-ID: <1545815599.20265.3.camel@mtksdaap41>
-References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
- <1545638931-24938-10-git-send-email-yongqiang.niu@mediatek.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names
+ from DT
+Date: Wed, 26 Dec 2018 10:20:07 +0100
+Message-ID: <72bc192f-b60a-1209-7818-78a2fed07831@linaro.org>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
+ <20181218143503.GA32562@centauri.ideon.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1545638931-24938-10-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181218143503.GA32562@centauri.ideon.se>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Niklas Cassel <niklas.cassel@linaro.org>, Stephen Boyd <sboyd@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, bjorn.andersson@linaro.org, vkoul@kernel.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIE1vbiwgMjAxOC0xMi0yNCBhdCAxNjowOCArMDgwMCwgWW9uZ3Fp
-YW5nIE5pdSB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZCBjb21wb25lbnQgRElUSEVSCj4gCgpSZXZp
-ZXdlZC1ieTogQ0sgSHUgPGNrLmh1QG1lZGlhdGVrLmNvbT4KCj4gU2lnbmVkLW9mZi1ieTogWW9u
-Z3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMv
-Z3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgfCAzMiArKysrKysrKysrKysrKysr
-KysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29t
-cC5oIHwgIDIgKysKPiAgMiBmaWxlcyBjaGFuZ2VkLCAzNCBpbnNlcnRpb25zKCspCj4gCj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gaW5kZXggNjNmNGIx
-ZS4uYTk3ZTI3YiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9kZHBfY29tcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRw
-X2NvbXAuYwo+IEBAIC00Nyw2ICs0NywxMiBAQAo+ICAjZGVmaW5lIENDT1JSX1JFTEFZX01PREUJ
-CQlCSVQoMCkKPiAgI2RlZmluZSBESVNQX0NDT1JSX1NJWkUJCQkJMHgwMDMwCj4gIAo+ICsjZGVm
-aW5lIERJU1BfRElUSEVSX0VOCQkJCTB4MDAwMAo+ICsjZGVmaW5lIERJVEhFUl9FTgkJCQlCSVQo
-MCkKPiArI2RlZmluZSBESVNQX0RJVEhFUl9DRkcgICAgICAgICAgICAgICAgICAgICAgICAweDAw
-MjAKPiArI2RlZmluZSBESVRIRVJfUkVMQVlfTU9ERQkJCUJJVCgwKQo+ICsjZGVmaW5lIERJU1Bf
-RElUSEVSX1NJWkUJCQkweDAwMzAKPiArCj4gICNkZWZpbmUgRElTUF9HQU1NQV9FTgkJCQkweDAw
-MDAKPiAgI2RlZmluZSBESVNQX0dBTU1BX0NGRwkJCQkweDAwMjAKPiAgI2RlZmluZSBESVNQX0dB
-TU1BX1NJWkUJCQkJMHgwMDMwCj4gQEAgLTE1NSw2ICsxNjEsMjQgQEAgc3RhdGljIHZvaWQgbXRr
-X2Njb3JyX3N0b3Aoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkKPiAgCXdyaXRlbF9yZWxheGVk
-KDB4MCwgY29tcC0+cmVncyArIERJU1BfQ0NPUlJfRU4pOwo+ICB9Cj4gIAo+ICtzdGF0aWMgdm9p
-ZCBtdGtfZGl0aGVyX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBp
-bnQgdywKPiArCQkJICAgICAgdW5zaWduZWQgaW50IGgsIHVuc2lnbmVkIGludCB2cmVmcmVzaCwK
-PiArCQkJICAgICAgdW5zaWduZWQgaW50IGJwYykKPiArewo+ICsJd3JpdGVsKGggPDwgMTYgfCB3
-LCBjb21wLT5yZWdzICsgRElTUF9ESVRIRVJfU0laRSk7Cj4gKwl3cml0ZWwoRElUSEVSX1JFTEFZ
-X01PREUsIGNvbXAtPnJlZ3MgKyBESVNQX0RJVEhFUl9DRkcpOwo+ICt9Cj4gKwo+ICtzdGF0aWMg
-dm9pZCBtdGtfZGl0aGVyX3N0YXJ0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXApCj4gK3sKPiAr
-CXdyaXRlbChESVRIRVJfRU4sIGNvbXAtPnJlZ3MgKyBESVNQX0RJVEhFUl9FTik7Cj4gK30KPiAr
-Cj4gK3N0YXRpYyB2b2lkIG10a19kaXRoZXJfc3RvcChzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21w
-KQo+ICt7Cj4gKwl3cml0ZWxfcmVsYXhlZCgweDAsIGNvbXAtPnJlZ3MgKyBESVNQX0RJVEhFUl9F
-Tik7Cj4gK30KPiArCj4gIHN0YXRpYyB2b2lkIG10a19nYW1tYV9jb25maWcoc3RydWN0IG10a19k
-ZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHcsCj4gIAkJCSAgICAgdW5zaWduZWQgaW50IGgs
-IHVuc2lnbmVkIGludCB2cmVmcmVzaCwKPiAgCQkJICAgICB1bnNpZ25lZCBpbnQgYnBjKQo+IEBA
-IC0yMDksNiArMjMzLDEyIEBAIHN0YXRpYyB2b2lkIG10a19nYW1tYV9zZXQoc3RydWN0IG10a19k
-ZHBfY29tcCAqY29tcCwKPiAgCS5zdG9wID0gbXRrX2Njb3JyX3N0b3AsCj4gIH07Cj4gIAo+ICtz
-dGF0aWMgY29uc3Qgc3RydWN0IG10a19kZHBfY29tcF9mdW5jcyBkZHBfZGl0aGVyID0gewo+ICsJ
-LmNvbmZpZyA9IG10a19kaXRoZXJfY29uZmlnLAo+ICsJLnN0YXJ0ID0gbXRrX2RpdGhlcl9zdGFy
-dCwKPiArCS5zdG9wID0gbXRrX2RpdGhlcl9zdG9wLAo+ICt9Owo+ICsKPiAgc3RhdGljIGNvbnN0
-IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgZGRwX2dhbW1hID0gewo+ICAJLmdhbW1hX3NldCA9
-IG10a19nYW1tYV9zZXQsCj4gIAkuY29uZmlnID0gbXRrX2dhbW1hX2NvbmZpZywKPiBAQCAtMjMz
-LDYgKzI2Myw3IEBAIHN0YXRpYyB2b2lkIG10a19nYW1tYV9zZXQoc3RydWN0IG10a19kZHBfY29t
-cCAqY29tcCwKPiAgCVtNVEtfRElTUF9DQ09SUl0gPSAiY2NvcnIiLAo+ICAJW01US19ESVNQX0FB
-TF0gPSAiYWFsIiwKPiAgCVtNVEtfRElTUF9HQU1NQV0gPSAiZ2FtbWEiLAo+ICsJW01US19ESVNQ
-X0RJVEhFUl0gPSAiZGl0aGVyIiwKPiAgCVtNVEtfRElTUF9VRk9FXSA9ICJ1Zm9lIiwKPiAgCVtN
-VEtfRFNJXSA9ICJkc2kiLAo+ICAJW01US19EUEldID0gImRwaSIsCj4gQEAgLTI1NSw2ICsyODYs
-NyBAQCBzdHJ1Y3QgbXRrX2RkcF9jb21wX21hdGNoIHsKPiAgCVtERFBfQ09NUE9ORU5UX0NDT1JS
-XQk9IHsgTVRLX0RJU1BfQ0NPUlIsCTAsICZkZHBfY2NvcnIgfSwKPiAgCVtERFBfQ09NUE9ORU5U
-X0NPTE9SMF0JPSB7IE1US19ESVNQX0NPTE9SLAkwLCBOVUxMIH0sCj4gIAlbRERQX0NPTVBPTkVO
-VF9DT0xPUjFdCT0geyBNVEtfRElTUF9DT0xPUiwJMSwgTlVMTCB9LAo+ICsJW0REUF9DT01QT05F
-TlRfRElUSEVSXQk9IHsgTVRLX0RJU1BfRElUSEVSLAkwLCAmZGRwX2RpdGhlciB9LAo+ICAJW0RE
-UF9DT01QT05FTlRfRFBJMF0JPSB7IE1US19EUEksCQkwLCBOVUxMIH0sCj4gIAlbRERQX0NPTVBP
-TkVOVF9EUEkxXQk9IHsgTVRLX0RQSSwJCTEsIE5VTEwgfSwKPiAgCVtERFBfQ09NUE9ORU5UX0RT
-STBdCT0geyBNVEtfRFNJLAkJMCwgTlVMTCB9LAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9k
-cm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
-L210a19kcm1fZGRwX2NvbXAuaAo+IGluZGV4IDY5MDU2NDcuLmIwMDY0YzUyIDEwMDY0NAo+IC0t
-LSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmgKPiArKysgYi9k
-cml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oCj4gQEAgLTI5LDYgKzI5
-LDcgQEAgZW51bSBtdGtfZGRwX2NvbXBfdHlwZSB7Cj4gIAlNVEtfRElTUF9XRE1BLAo+ICAJTVRL
-X0RJU1BfQ09MT1IsCj4gIAlNVEtfRElTUF9DQ09SUiwKPiArCU1US19ESVNQX0RJVEhFUiwKPiAg
-CU1US19ESVNQX0FBTCwKPiAgCU1US19ESVNQX0dBTU1BLAo+ICAJTVRLX0RJU1BfVUZPRSwKPiBA
-QCAtNDgsNiArNDksNyBAQCBlbnVtIG10a19kZHBfY29tcF9pZCB7Cj4gIAlERFBfQ09NUE9ORU5U
-X0NDT1JSLAo+ICAJRERQX0NPTVBPTkVOVF9DT0xPUjAsCj4gIAlERFBfQ09NUE9ORU5UX0NPTE9S
-MSwKPiArCUREUF9DT01QT05FTlRfRElUSEVSLAo+ICAJRERQX0NPTVBPTkVOVF9EUEkwLAo+ICAJ
-RERQX0NPTVBPTkVOVF9EUEkxLAo+ICAJRERQX0NPTVBPTkVOVF9EU0kwLAoKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxp
-c3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNr
-dG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 12/18/18 15:35, Niklas Cassel wrote:
+> On Mon, Dec 17, 2018 at 03:37:43PM -0800, Stephen Boyd wrote:
+>> Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:22)
+>>> Allow accessing the parent clock names required for the driver
+>>> operation by using the device tree node.
+>>>
+>>> This permits extending the driver to other platforms without having to
+>>> modify its source code.
+>>>
+>>> For backwards compatibility leave previous values as default.
+>>
+>> Why do we need to maintain backwards compatibility? Isn't is required
+>> that the nodes have clocks properties?
+>>
+> 
+> Hello Stephen,
+> 
+> 
+> This is the existing DT nodes for msm8916:
+> 
+>                 a53pll: clock@b016000 {
+>                          compatible = "qcom,msm8916-a53pll";
+>                          reg = <0xb016000 0x40>;
+>                          #clock-cells = <0>;
+>                  };
+> 
+>                  apcs: mailbox@b011000 {
+>                          compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+>                          reg = <0xb011000 0x1000>;
+>                          #mbox-cells = <1>;
+>                          clocks = <&a53pll>;
+>                          #clock-cells = <0>;
+>                  };
+> 
+> 
+> This is the (suggested) DT nodes for qcs404:
+> 
+>                  apcs_hfpll: clock-controller@0b016000 {
+>                          compatible = "qcom,hfpll";
+>                          reg = <0x0b016000 0x30>;
+>                          #clock-cells = <0>;
+>                          clock-output-names = "apcs_hfpll";
+>                          clocks = <&xo_board>;
+>                          clock-names = "xo";
+>                  };
+> 
+>                  apcs_glb: mailbox@b011000 {
+>                          compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+>                          reg = <0x0b011000 0x1000>;
+>                          #mbox-cells = <1>;
+>                          clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
+>                          clock-names = "aux", "pll";
+>                          #clock-cells = <0>;
+>                  };
+> 
+> qcs404 specifies two clocks, with an accompanied clock-name for each clock.
+> 
+> msm8916 specifies a single clock, without an accompanied clock-name.
+> 
+> It is possible to append clock-names = "pll" for the existing clock,
+> as well as to define the aux clock in the apcs node in the msm8916 DT:
+> clocks = <&gcc GPLL0_VOTE>;
+> clock-names = "aux";
+> 
+> However, since the DT is treated as an ABI, the existing DT for msm8916 must
+> still work, so I don't think that it is possible to ignore having backwards
+> compability in the apcs clock driver.
+
+
+so where are we with this?
+
+do we remove backwards compatibility (see below] for v2 or is the DT 
+really an ABI and therefore the patch under review is good as is?
+
+
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi 
+b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index c5348c3..729c117 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -425,7 +425,8 @@
+                         compatible = "qcom,msm8916-apcs-kpss-global", 
+"syscon";
+                         reg = <0xb011000 0x1000>;
+                         #mbox-cells = <1>;
+-                   clocks = <&a53pll>;
++                 clocks = <&gcc GPLL0_VOTE>, <&a53pll>;
++                 clock-names = "aux", "pll";
+                         #clock-cells = <0>;
+                 };
+
+
+
+> 
+> 
+> Kind regards,
+> Niklas
+> 
