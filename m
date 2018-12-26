@@ -1,279 +1,967 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 06/18] drm/mediatek: add mmsys private data for ddp path
- config
-Date: Wed, 26 Dec 2018 14:01:29 +0800
-Message-ID: <1545804089.14496.30.camel@mtksdaap41>
-References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
- <1545638931-24938-7-git-send-email-yongqiang.niu@mediatek.com>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: Re: [PATCH v7 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
+ support
+Date: Wed, 26 Dec 2018 14:35:21 +0800
+Message-ID: <1545806121.28871.88.camel@mhfsdcap03>
+References: <1545701209-6884-1-git-send-email-long.cheng@mediatek.com>
+         <1545701209-6884-2-git-send-email-long.cheng@mediatek.com>
+         <CANMq1KA1ywLnQDzXRbLcuu-afXuj_yrprRBC4kejF4-20ztXyA@mail.gmail.com>
+         <1545739611.28871.77.camel@mhfsdcap03>
+         <CANMq1KDtUgOUFRy-TyQK0EmbpXGtLEVo9Mqg1Hvs0JoL9NrFyQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1545638931-24938-7-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANMq1KDtUgOUFRy-TyQK0EmbpXGtLEVo9Mqg1Hvs0JoL9NrFyQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Z
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIE1vbiwgMjAxOC0xMi0yNCBhdCAxNjowOCArMDgwMCwgWW9uZ3Fp
-YW5nIE5pdSB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZCBtbXN5cyBwcml2YXRlIGRhdGEgZm9yIGRk
-cCBwYXRoIGNvbmZpZwoKRGVzY3JpYmUgV0hZIGRvIHRoaXMuCgo+IAo+IFNpZ25lZC1vZmYtYnk6
-IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFuZy5uaXVAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2
-ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMgfCAgIDQgKysKPiAgZHJpdmVycy9n
-cHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMgIHwgMTAyICsrKysrKysrKysrKysrKysrKysr
-KysrKysrLS0tLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5oICB8
-ICAxMCArKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jICB8ICAx
-MSArKysrCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5oICB8ICAgNCAr
-Kwo+ICA1IGZpbGVzIGNoYW5nZWQsIDExMiBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkK
-PiAKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5j
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fY3J0Yy5jCj4gaW5kZXggOTJlY2I5
-Yi4uYTVhZjRiZSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Ry
-bV9jcnRjLmMKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9jcnRjLmMK
-PiBAQCAtNTAsNiArNTAsNyBAQCBzdHJ1Y3QgbXRrX2RybV9jcnRjIHsKPiAgCWJvb2wJCQkJcGVu
-ZGluZ19wbGFuZXM7Cj4gIAo+ICAJdm9pZCBfX2lvbWVtCQkJKmNvbmZpZ19yZWdzOwo+ICsJY29u
-c3Qgc3RydWN0IG10a19tbXN5c19yZWdfZGF0YSAqbW1zeXNfcmVnX2RhdGE7Cj4gIAlzdHJ1Y3Qg
-bXRrX2Rpc3BfbXV0ZXgJCSptdXRleDsKPiAgCXVuc2lnbmVkIGludAkJCWRkcF9jb21wX25yOwo+
-ICAJc3RydWN0IG10a19kZHBfY29tcAkJKipkZHBfY29tcDsKPiBAQCAtMjcxLDYgKzI3Miw3IEBA
-IHN0YXRpYyBpbnQgbXRrX2NydGNfZGRwX2h3X2luaXQoc3RydWN0IG10a19kcm1fY3J0YyAqbXRr
-X2NydGMpCj4gIAlEUk1fREVCVUdfRFJJVkVSKCJtZWRpYXRla19kZHBfZGRwX3BhdGhfc2V0dXBc
-biIpOwo+ICAJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9uciAtIDE7IGkrKykg
-ewo+ICAJCW10a19kZHBfYWRkX2NvbXBfdG9fcGF0aChtdGtfY3J0Yy0+Y29uZmlnX3JlZ3MsCj4g
-KwkJCQkJIG10a19jcnRjLT5tbXN5c19yZWdfZGF0YSwKPiAgCQkJCQkgbXRrX2NydGMtPmRkcF9j
-b21wW2ldLT5pZCwKPiAgCQkJCQkgbXRrX2NydGMtPmRkcF9jb21wW2kgKyAxXS0+aWQpOwo+ICAJ
-CW10a19kaXNwX211dGV4X2FkZF9jb21wKG10a19jcnRjLT5tdXRleCwKPiBAQCAtMzE5LDYgKzMy
-MSw3IEBAIHN0YXRpYyB2b2lkIG10a19jcnRjX2RkcF9od19maW5pKHN0cnVjdCBtdGtfZHJtX2Ny
-dGMgKm10a19jcnRjKQo+ICAJbXRrX2Rpc3BfbXV0ZXhfZGlzYWJsZShtdGtfY3J0Yy0+bXV0ZXgp
-Owo+ICAJZm9yIChpID0gMDsgaSA8IG10a19jcnRjLT5kZHBfY29tcF9uciAtIDE7IGkrKykgewo+
-ICAJCW10a19kZHBfcmVtb3ZlX2NvbXBfZnJvbV9wYXRoKG10a19jcnRjLT5jb25maWdfcmVncywK
-PiArCQkJCQkgICAgICBtdGtfY3J0Yy0+bW1zeXNfcmVnX2RhdGEsCj4gIAkJCQkJICAgICAgbXRr
-X2NydGMtPmRkcF9jb21wW2ldLT5pZCwKPiAgCQkJCQkgICAgICBtdGtfY3J0Yy0+ZGRwX2NvbXBb
-aSArIDFdLT5pZCk7Cj4gIAkJbXRrX2Rpc3BfbXV0ZXhfcmVtb3ZlX2NvbXAobXRrX2NydGMtPm11
-dGV4LAo+IEBAIC01NjEsNiArNTY0LDcgQEAgaW50IG10a19kcm1fY3J0Y19jcmVhdGUoc3RydWN0
-IGRybV9kZXZpY2UgKmRybV9kZXYsCj4gIAkJcmV0dXJuIC1FTk9NRU07Cj4gIAo+ICAJbXRrX2Ny
-dGMtPmNvbmZpZ19yZWdzID0gcHJpdi0+Y29uZmlnX3JlZ3M7Cj4gKwltdGtfY3J0Yy0+bW1zeXNf
-cmVnX2RhdGEgPSBwcml2LT5yZWdfZGF0YTsKPiAgCW10a19jcnRjLT5kZHBfY29tcF9uciA9IHBh
-dGhfbGVuOwo+ICAJbXRrX2NydGMtPmRkcF9jb21wID0gZGV2bV9rbWFsbG9jX2FycmF5KGRldiwg
-bXRrX2NydGMtPmRkcF9jb21wX25yLAo+ICAJCQkJCQlzaXplb2YoKm10a19jcnRjLT5kZHBfY29t
-cCksCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcC5j
-IGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBpbmRleCA2MGNmZGU3
-Li40YmUzYzExIDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2RkcC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwLmMKPiBA
-QCAtMTQ1LDYgKzE0NSwxNyBAQAo+ICAjZGVmaW5lIERQSV9TRUxfSU5fQkxTCQkJMHgwCj4gICNk
-ZWZpbmUgRFNJX1NFTF9JTl9SRE1BCQkJMHgxCj4gIAo+ICsjZGVmaW5lIERJU1BfUkVHX09WTDBf
-TU9VVF9FTihkYXRhKQkJKChkYXRhKS0+b3ZsMF9tb3V0X2VuKQo+ICsjZGVmaW5lIERJU1BfUkVH
-X0RQSTBfU0VMX0lOKGRhdGEpCQkoKGRhdGEpLT5kcGkwX3NlbF9pbikKPiArI2RlZmluZSBESVNQ
-X1JFR19EUEkwX1NFTF9JTl9SRE1BMShkYXRhKQkoKGRhdGEpLT5kcGkwX3NlbF9pbl9yZG1hMSkK
-PiArI2RlZmluZSBESVNQX1JFR19EU0kwX1NFTF9JTihkYXRhKQkJKChkYXRhKS0+ZHNpMF9zZWxf
-aW4pCj4gKyNkZWZpbmUgRElTUF9SRUdfRFNJMF9TRUxfSU5fUkRNQTEoZGF0YSkJKChkYXRhKS0+
-ZHNpMF9zZWxfaW5fcmRtYTEpCj4gKyNkZWZpbmUgRElTUF9SRUdfUkRNQTBfU09VVF9TRUxfSU4o
-ZGF0YSkJKChkYXRhKS0+cmRtYTBfc291dF9zZWxfaW4pCj4gKyNkZWZpbmUgRElTUF9SRUdfUkRN
-QTBfU09VVF9DT0xPUjAoZGF0YSkJKChkYXRhKS0+cmRtYTBfc291dF9jb2xvcjApCj4gKyNkZWZp
-bmUgRElTUF9SRUdfUkRNQTFfU09VVF9TRUxfSU4oZGF0YSkJKChkYXRhKS0+cmRtYTFfc291dF9z
-ZWxfaW4pCj4gKyNkZWZpbmUgRElTUF9SRUdfUkRNQTFfU09VVF9EUEkwKGRhdGEpCQkoKGRhdGEp
-LT5yZG1hMV9zb3V0X2RwaTApCj4gKyNkZWZpbmUgRElTUF9SRUdfUkRNQTFfU09VVF9EU0kwKGRh
-dGEpCQkoKGRhdGEpLT5yZG1hMV9zb3V0X2RzaTApCj4gKwo+ICBzdHJ1Y3QgbXRrX2Rpc3BfbXV0
-ZXggewo+ICAJaW50IGlkOwo+ICAJYm9vbCBjbGFpbWVkOwo+IEBAIC0xNzYsNiArMTg3LDE5IEBA
-IHN0cnVjdCBtdGtfZGRwIHsKPiAgCWNvbnN0IHN0cnVjdCBtdGtfZGRwX2RhdGEJKmRhdGE7Cj4g
-IH07Cj4gIAo+ICtzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhIHsKPiArCXVuc2lnbmVkIGludCBv
-dmwwX21vdXRfZW47Cj4gKwl1bnNpZ25lZCBpbnQgcmRtYTBfc291dF9zZWxfaW47Cj4gKwl1bnNp
-Z25lZCBpbnQgcmRtYTBfc291dF9jb2xvcjA7Cj4gKwl1bnNpZ25lZCBpbnQgcmRtYTFfc291dF9z
-ZWxfaW47Cj4gKwl1bnNpZ25lZCBpbnQgcmRtYTFfc291dF9kcGkwOwo+ICsJdW5zaWduZWQgaW50
-IHJkbWExX3NvdXRfZHNpMDsKPiArCXVuc2lnbmVkIGludCBkcGkwX3NlbF9pbjsKPiArCXVuc2ln
-bmVkIGludCBkcGkwX3NlbF9pbl9yZG1hMTsKPiArCXVuc2lnbmVkIGludCBkc2kwX3NlbF9pbjsK
-PiArCXVuc2lnbmVkIGludCBkc2kwX3NlbF9pbl9yZG1hMTsKCkkgd291bGQgbGlrZSB1c2UgJ3Uz
-MicgZm9yIHRoZXNlIHZhcmlhYmxlcy4KCj4gK307Cj4gKwo+ICBzdGF0aWMgY29uc3QgdW5zaWdu
-ZWQgaW50IG10MjcwMV9tdXRleF9tb2RbRERQX0NPTVBPTkVOVF9JRF9NQVhdID0gewo+ICAJW0RE
-UF9DT01QT05FTlRfQkxTXSA9IE1UMjcwMV9NVVRFWF9NT0RfRElTUF9CTFMsCj4gIAlbRERQX0NP
-TVBPTkVOVF9DT0xPUjBdID0gTVQyNzAxX01VVEVYX01PRF9ESVNQX0NPTE9SLAo+IEBAIC0yNjgs
-MTcgKzI5MiwzNCBAQCBzdHJ1Y3QgbXRrX2RkcCB7Cj4gIAkubXV0ZXhfc29mX3JlZyA9IE1UMjcw
-MV9ESVNQX01VVEVYMF9TT0YwLAo+ICB9Owo+ICAKPiAtc3RhdGljIHVuc2lnbmVkIGludCBtdGtf
-ZGRwX21vdXRfZW4oZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAo+ICtjb25zdCBzdHJ1Y3QgbXRr
-X21tc3lzX3JlZ19kYXRhIG10MjcwMV9tbXN5c19yZWdfZGF0YSA9IHsKPiArCS5vdmwwX21vdXRf
-ZW4gPSBESVNQX1JFR19DT05GSUdfRElTUF9PVkxfTU9VVF9FTiwKPiArCS5kc2kwX3NlbF9pbiA9
-IERJU1BfUkVHX0NPTkZJR19EU0lfU0VMLAo+ICsJLmRzaTBfc2VsX2luX3JkbWExID0gRFNJX1NF
-TF9JTl9SRE1BLAo+ICt9Owo+ICsKPiArY29uc3Qgc3RydWN0IG10a19tbXN5c19yZWdfZGF0YSBt
-dDgxNzNfbW1zeXNfcmVnX2RhdGEgPSB7Cj4gKwkub3ZsMF9tb3V0X2VuID0gRElTUF9SRUdfQ09O
-RklHX0RJU1BfT1ZMMF9NT1VUX0VOLAo+ICsJLnJkbWExX3NvdXRfc2VsX2luID0gRElTUF9SRUdf
-Q09ORklHX0RJU1BfUkRNQTFfU09VVF9FTiwKPiArCS5yZG1hMV9zb3V0X2RwaTAgPSBSRE1BMV9T
-T1VUX0RQSTAsCj4gKwkuZHBpMF9zZWxfaW4gPSBESVNQX1JFR19DT05GSUdfRFBJX1NFTF9JTiwK
-PiArCS5kcGkwX3NlbF9pbl9yZG1hMSA9IERQSTBfU0VMX0lOX1JETUExLAo+ICsJLmRzaTBfc2Vs
-X2luID0gRElTUF9SRUdfQ09ORklHX0RTSUVfU0VMX0lOLAo+ICsJLmRzaTBfc2VsX2luX3JkbWEx
-ID0gRFNJMF9TRUxfSU5fUkRNQTEsCj4gK307Cj4gKwo+ICtzdGF0aWMgdW5zaWduZWQgaW50IG10
-a19kZHBfbW91dF9lbihjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpkYXRhLAo+ICsJ
-CQkJICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAgCQkJCSAgICBlbnVtIG10a19kZHBf
-Y29tcF9pZCBuZXh0LAo+ICAJCQkJICAgIHVuc2lnbmVkIGludCAqYWRkcikKPiAgewo+ICAJdW5z
-aWduZWQgaW50IHZhbHVlOwo+ICAKPiAgCWlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9PVkwwICYm
-IG5leHQgPT0gRERQX0NPTVBPTkVOVF9DT0xPUjApIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NP
-TkZJR19ESVNQX09WTDBfTU9VVF9FTjsKPiArCQkqYWRkciA9IERJU1BfUkVHX09WTDBfTU9VVF9F
-TihkYXRhKTsKPiAgCQl2YWx1ZSA9IE9WTDBfTU9VVF9FTl9DT0xPUjA7Cj4gIAl9IGVsc2UgaWYg
-KGN1ciA9PSBERFBfQ09NUE9ORU5UX09WTDAgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX1JETUEw
-KSB7Cj4gLQkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9PVkxfTU9VVF9FTjsKPiArCQkq
-YWRkciA9IERJU1BfUkVHX09WTDBfTU9VVF9FTihkYXRhKTsKPiAgCQl2YWx1ZSA9IE9WTF9NT1VU
-X0VOX1JETUE7Cj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX09EMCAmJiBuZXh0
-ID09IEREUF9DT01QT05FTlRfUkRNQTApIHsKPiAgCQkqYWRkciA9IERJU1BfUkVHX0NPTkZJR19E
-SVNQX09EX01PVVRfRU47Cj4gQEAgLTMwMiw3ICszNDMsOCBAQCBzdGF0aWMgdW5zaWduZWQgaW50
-IG10a19kZHBfbW91dF9lbihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gIAlyZXR1cm4gdmFs
-dWU7Cj4gIH0KPiAgCj4gLXN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBt
-dGtfZGRwX2NvbXBfaWQgY3VyLAo+ICtzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc2VsX2lu
-KGNvbnN0IHN0cnVjdCBtdGtfbW1zeXNfcmVnX2RhdGEgKmRhdGEsCj4gKwkJCQkgICBlbnVtIG10
-a19kZHBfY29tcF9pZCBjdXIsCj4gIAkJCQkgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0LAo+
-ICAJCQkJICAgdW5zaWduZWQgaW50ICphZGRyKQo+ICB7Cj4gQEAgLTMxMiwxNCArMzU0LDE0IEBA
-IHN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zZWxfaW4oZW51bSBtdGtfZGRwX2NvbXBfaWQg
-Y3VyLAo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfQ09MT1IwX1NFTF9JTjsKPiAg
-CQl2YWx1ZSA9IENPTE9SMF9TRUxfSU5fT1ZMMDsKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9D
-T01QT05FTlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RQSTApIHsKPiAtCQkqYWRk
-ciA9IERJU1BfUkVHX0NPTkZJR19EUElfU0VMX0lOOwo+IC0JCXZhbHVlID0gRFBJMF9TRUxfSU5f
-UkRNQTE7Cj4gKwkJKmFkZHIgPSBESVNQX1JFR19EUEkwX1NFTF9JTihkYXRhKTsKPiArCQl2YWx1
-ZSA9IERJU1BfUkVHX0RQSTBfU0VMX0lOX1JETUExKGRhdGEpOwo+ICAJfSBlbHNlIGlmIChjdXIg
-PT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMSkgewo+
-ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RQSV9TRUxfSU47Cj4gIAkJdmFsdWUgPSBEUEkx
-X1NFTF9JTl9SRE1BMTsKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfUkRNQTEg
-JiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTApIHsKPiAtCQkqYWRkciA9IERJU1BfUkVHX0NP
-TkZJR19EU0lFX1NFTF9JTjsKPiAtCQl2YWx1ZSA9IERTSTBfU0VMX0lOX1JETUExOwo+ICsJCSph
-ZGRyID0gRElTUF9SRUdfRFNJMF9TRUxfSU4oZGF0YSk7Cj4gKwkJdmFsdWUgPSBESVNQX1JFR19E
-U0kwX1NFTF9JTl9SRE1BMShkYXRhKTsKPiAgCX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05F
-TlRfUkRNQTEgJiYgbmV4dCA9PSBERFBfQ09NUE9ORU5UX0RTSTEpIHsKPiAgCQkqYWRkciA9IERJ
-U1BfUkVHX0NPTkZJR19EU0lPX1NFTF9JTjsKPiAgCQl2YWx1ZSA9IERTSTFfU0VMX0lOX1JETUEx
-Owo+IEBAIC0zNjAsNyArNDAyLDcgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX3NlbF9p
-bihlbnVtIG10a19kZHBfY29tcF9pZCBjdXIsCj4gIAlyZXR1cm4gdmFsdWU7Cj4gIH0KPiAgCj4g
-LXN0YXRpYyB1bnNpZ25lZCBpbnQgbXRrX2RkcF9zb3V0X3NlbCh2b2lkIF9faW9tZW0gKmNvbmZp
-Z19yZWdzLAo+ICtzdGF0aWMgdW5zaWduZWQgaW50IG10a19kZHBfc291dF9zZWwoY29uc3Qgc3Ry
-dWN0IG10a19tbXN5c19yZWdfZGF0YSAqZGF0YSwKPiAgCQkJCSAgICAgZW51bSBtdGtfZGRwX2Nv
-bXBfaWQgY3VyLAo+ICAJCQkJICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBuZXh0LAo+ICAJCQkJ
-ICAgICB1bnNpZ25lZCBpbnQgKmFkZHIpCj4gQEAgLTM3Myw5ICs0MTUsNiBAQCBzdGF0aWMgdW5z
-aWduZWQgaW50IG10a19kZHBfc291dF9zZWwodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywKPiAg
-CX0gZWxzZSBpZiAoY3VyID09IEREUF9DT01QT05FTlRfQkxTICYmIG5leHQgPT0gRERQX0NPTVBP
-TkVOVF9EUEkwKSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfT1VUX1NFTDsKPiAgCQl2
-YWx1ZSA9IEJMU19UT19EUElfUkRNQTFfVE9fRFNJOwo+IC0JfSBlbHNlIGlmIChjdXIgPT0gRERQ
-X0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFNJMCkgewo+IC0JCSph
-ZGRyID0gRElTUF9SRUdfQ09ORklHX0RTSV9TRUw7Cj4gLQkJdmFsdWUgPSBEU0lfU0VMX0lOX1JE
-TUE7Cj4gIAl9IGVsc2UgaWYgKGN1ciA9PSBERFBfQ09NUE9ORU5UX1JETUEwICYmIG5leHQgPT0g
-RERQX0NPTVBPTkVOVF9EUEkwKSB7Cj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9S
-RE1BMF9TT1VUX0VOOwo+ICAJCXZhbHVlID0gUkRNQTBfU09VVF9EUEkwOwo+IEBAIC00MDEsOCAr
-NDQwLDggQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX3NvdXRfc2VsKHZvaWQgX19pb21l
-bSAqY29uZmlnX3JlZ3MsCj4gIAkJKmFkZHIgPSBESVNQX1JFR19DT05GSUdfRElTUF9SRE1BMV9T
-T1VUX0VOOwo+ICAJCXZhbHVlID0gUkRNQTFfU09VVF9EU0kzOwo+ICAJfSBlbHNlIGlmIChjdXIg
-PT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9DT01QT05FTlRfRFBJMCkgewo+
-IC0JCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFfU09VVF9FTjsKPiAtCQl2YWx1
-ZSA9IFJETUExX1NPVVRfRFBJMDsKPiArCQkqYWRkciA9IERJU1BfUkVHX1JETUExX1NPVVRfU0VM
-X0lOKGRhdGEpOwo+ICsJCXZhbHVlID0gRElTUF9SRUdfUkRNQTFfU09VVF9EUEkwKGRhdGEpOwo+
-ICAJfSBlbHNlIGlmIChjdXIgPT0gRERQX0NPTVBPTkVOVF9SRE1BMSAmJiBuZXh0ID09IEREUF9D
-T01QT05FTlRfRFBJMSkgewo+ICAJCSphZGRyID0gRElTUF9SRUdfQ09ORklHX0RJU1BfUkRNQTFf
-U09VVF9FTjsKPiAgCQl2YWx1ZSA9IFJETUExX1NPVVRfRFBJMTsKPiBAQCAtNDI5LDIyICs0Njgs
-MjMgQEAgc3RhdGljIHVuc2lnbmVkIGludCBtdGtfZGRwX3NvdXRfc2VsKHZvaWQgX19pb21lbSAq
-Y29uZmlnX3JlZ3MsCj4gIH0KPiAgCj4gIHZvaWQgbXRrX2RkcF9hZGRfY29tcF90b19wYXRoKHZv
-aWQgX19pb21lbSAqY29uZmlnX3JlZ3MsCj4gKwkJCSAgICAgIGNvbnN0IHN0cnVjdCBtdGtfbW1z
-eXNfcmVnX2RhdGEgKnJlZ19kYXRhLAo+ICAJCQkgICAgICBlbnVtIG10a19kZHBfY29tcF9pZCBj
-dXIsCj4gIAkJCSAgICAgIGVudW0gbXRrX2RkcF9jb21wX2lkIG5leHQpCj4gIHsKPiAgCXVuc2ln
-bmVkIGludCBhZGRyLCB2YWx1ZSwgcmVnOwo+ICAKPiAtCXZhbHVlID0gbXRrX2RkcF9tb3V0X2Vu
-KGN1ciwgbmV4dCwgJmFkZHIpOwo+ICsJdmFsdWUgPSBtdGtfZGRwX21vdXRfZW4ocmVnX2RhdGEs
-IGN1ciwgbmV4dCwgJmFkZHIpOwo+ICAJaWYgKHZhbHVlKSB7Cj4gIAkJcmVnID0gcmVhZGxfcmVs
-YXhlZChjb25maWdfcmVncyArIGFkZHIpIHwgdmFsdWU7Cj4gIAkJd3JpdGVsX3JlbGF4ZWQocmVn
-LCBjb25maWdfcmVncyArIGFkZHIpOwo+ICAJfQo+ICAKPiAtCXZhbHVlID0gbXRrX2RkcF9zb3V0
-X3NlbChjdXIsIG5leHQsICZhZGRyKTsKPiArCXZhbHVlID0gbXRrX2RkcF9zb3V0X3NlbChyZWdf
-ZGF0YSwgY3VyLCBuZXh0LCAmYWRkcik7Cj4gIAlpZiAodmFsdWUpCj4gIAkJd3JpdGVsX3JlbGF4
-ZWQodmFsdWUsIGNvbmZpZ19yZWdzICsgYWRkcik7Cj4gIAo+IC0JdmFsdWUgPSBtdGtfZGRwX3Nl
-bF9pbihjdXIsIG5leHQsICZhZGRyKTsKPiArCXZhbHVlID0gbXRrX2RkcF9zZWxfaW4ocmVnX2Rh
-dGEsIGN1ciwgbmV4dCwgJmFkZHIpOwo+ICAJaWYgKHZhbHVlKSB7Cj4gIAkJcmVnID0gcmVhZGxf
-cmVsYXhlZChjb25maWdfcmVncyArIGFkZHIpIHwgdmFsdWU7Cj4gIAkJd3JpdGVsX3JlbGF4ZWQo
-cmVnLCBjb25maWdfcmVncyArIGFkZHIpOwo+IEBAIC00NTIsMjQgKzQ5Miw0OCBAQCB2b2lkIG10
-a19kZHBfYWRkX2NvbXBfdG9fcGF0aCh2b2lkIF9faW9tZW0gKmNvbmZpZ19yZWdzLAo+ICB9Cj4g
-IAo+ICB2b2lkIG10a19kZHBfcmVtb3ZlX2NvbXBfZnJvbV9wYXRoKHZvaWQgX19pb21lbSAqY29u
-ZmlnX3JlZ3MsCj4gKwkJCQkgICBjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpyZWdf
-ZGF0YSwKPiAgCQkJCSAgIGVudW0gbXRrX2RkcF9jb21wX2lkIGN1ciwKPiAgCQkJCSAgIGVudW0g
-bXRrX2RkcF9jb21wX2lkIG5leHQpCj4gIHsKPiAgCXVuc2lnbmVkIGludCBhZGRyLCB2YWx1ZSwg
-cmVnOwo+ICAKPiAtCXZhbHVlID0gbXRrX2RkcF9tb3V0X2VuKGN1ciwgbmV4dCwgJmFkZHIpOwo+
-ICsJdmFsdWUgPSBtdGtfZGRwX21vdXRfZW4ocmVnX2RhdGEsIGN1ciwgbmV4dCwgJmFkZHIpOwo+
-ICAJaWYgKHZhbHVlKSB7Cj4gIAkJcmVnID0gcmVhZGxfcmVsYXhlZChjb25maWdfcmVncyArIGFk
-ZHIpICYgfnZhbHVlOwo+ICAJCXdyaXRlbF9yZWxheGVkKHJlZywgY29uZmlnX3JlZ3MgKyBhZGRy
-KTsKPiAgCX0KPiAgCj4gLQl2YWx1ZSA9IG10a19kZHBfc2VsX2luKGN1ciwgbmV4dCwgJmFkZHIp
-Owo+ICsJdmFsdWUgPSBtdGtfZGRwX3NlbF9pbihyZWdfZGF0YSwgY3VyLCBuZXh0LCAmYWRkcik7
-Cj4gIAlpZiAodmFsdWUpIHsKPiAgCQlyZWcgPSByZWFkbF9yZWxheGVkKGNvbmZpZ19yZWdzICsg
-YWRkcikgJiB+dmFsdWU7Cj4gIAkJd3JpdGVsX3JlbGF4ZWQocmVnLCBjb25maWdfcmVncyArIGFk
-ZHIpOwo+ICAJfQo+ICB9Cj4gIAo+ICtjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpt
-dGtfZGRwX2dldF9tbXN5c19kYXRhKGVudW0gbXRrX21tc3lzX2lkIGlkKQo+ICt7Cj4gKwljb25z
-dCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICpkYXRhID0gTlVMTDsKPiArCj4gKwlzd2l0Y2gg
-KGlkKSB7Cj4gKwljYXNlIE1NU1lTX01UMjcwMToKPiArCQlkYXRhID0gJm10MjcwMV9tbXN5c19y
-ZWdfZGF0YTsKPiArCQlicmVhazsKPiArCWNhc2UgTU1TWVNfTVQyNzEyOgo+ICsJCWRhdGEgPSAm
-bXQ4MTczX21tc3lzX3JlZ19kYXRhOwo+ICsJCWJyZWFrOwo+ICsJY2FzZSBNTVNZU19NVDgxNzM6
-Cj4gKwkJZGF0YSA9ICZtdDgxNzNfbW1zeXNfcmVnX2RhdGE7Cj4gKwkJYnJlYWs7Cj4gKwlkZWZh
-dWx0Ogo+ICsJCXByX2luZm8oIm10ayBkcm0gbm90IHN1cHBvcnQgbW1zeXMgaWQgJWRcbiIsCj4g
-KwkJCWlkKTsKPiArCQlicmVhazsKPiArCX0KPiArCj4gKwlyZXR1cm4gZGF0YTsKPiArfQo+ICsK
-PiAgc3RydWN0IG10a19kaXNwX211dGV4ICptdGtfZGlzcF9tdXRleF9nZXQoc3RydWN0IGRldmlj
-ZSAqZGV2LCB1bnNpZ25lZCBpbnQgaWQpCj4gIHsKPiAgCXN0cnVjdCBtdGtfZGRwICpkZHAgPSBk
-ZXZfZ2V0X2RydmRhdGEoZGV2KTsKPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21lZGlh
-dGVrL210a19kcm1fZGRwLmggYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHAu
-aAo+IGluZGV4IGY5YTc5OTEuLmVkMmI3MDIgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L21lZGlhdGVrL210a19kcm1fZGRwLmgKPiArKysgYi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kZHAuaAo+IEBAIC0xOSwxMSArMTksMjEgQEAKPiAgc3RydWN0IHJlZ21hcDsKPiAg
-c3RydWN0IGRldmljZTsKPiAgc3RydWN0IG10a19kaXNwX211dGV4Owo+ICtzdHJ1Y3QgbXRrX21t
-c3lzX3JlZ19kYXRhOwo+ICtlbnVtIG10a19tbXN5c19pZCB7Cj4gKwlNTVNZU19NVDI3MDEsCj4g
-KwlNTVNZU19NVDI3MTIsCj4gKwlNTVNZU19NVDgxNzMsCj4gKwlNTVNZU19NQVgsCj4gK307Cj4g
-IAo+ICtjb25zdCBzdHJ1Y3QgbXRrX21tc3lzX3JlZ19kYXRhICptdGtfZGRwX2dldF9tbXN5c19k
-YXRhKGVudW0gbXRrX21tc3lzX2lkIGlkKTsKPiAgdm9pZCBtdGtfZGRwX2FkZF9jb21wX3RvX3Bh
-dGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywKPiArCQkJICAgICAgY29uc3Qgc3RydWN0IG10
-a19tbXN5c19yZWdfZGF0YSAqcmVnX2RhdGEsCj4gIAkJCSAgICAgIGVudW0gbXRrX2RkcF9jb21w
-X2lkIGN1ciwKPiAgCQkJICAgICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgbmV4dCk7Cj4gIHZvaWQg
-bXRrX2RkcF9yZW1vdmVfY29tcF9mcm9tX3BhdGgodm9pZCBfX2lvbWVtICpjb25maWdfcmVncywK
-PiArCQkJCSAgIGNvbnN0IHN0cnVjdCBtdGtfbW1zeXNfcmVnX2RhdGEgKnJlZ19kYXRhLAo+ICAJ
-CQkJICAgZW51bSBtdGtfZGRwX2NvbXBfaWQgY3VyLAo+ICAJCQkJICAgZW51bSBtdGtfZGRwX2Nv
-bXBfaWQgbmV4dCk7Cj4gIAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsv
-bXRrX2RybV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2Rydi5jCj4g
-aW5kZXggNjQyMmU5OS4uYmU2YjE0MiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVk
-aWF0ZWsvbXRrX2RybV9kcnYuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtf
-ZHJtX2Rydi5jCj4gQEAgLTE5Niw2ICsxOTYsNyBAQCBzdGF0aWMgaW50IG10a19hdG9taWNfY29t
-bWl0KHN0cnVjdCBkcm1fZGV2aWNlICpkcm0sCj4gIAkubWFpbl9sZW4gPSBBUlJBWV9TSVpFKG10
-MjcwMV9tdGtfZGRwX21haW4pLAo+ICAJLmV4dF9wYXRoID0gbXQyNzAxX210a19kZHBfZXh0LAo+
-ICAJLmV4dF9sZW4gPSBBUlJBWV9TSVpFKG10MjcwMV9tdGtfZGRwX2V4dCksCj4gKwkubW1zeXNf
-aWQgPSBNTVNZU19NVDI3MDEsCj4gIAkuc2hhZG93X3JlZ2lzdGVyID0gdHJ1ZSwKPiAgfTsKPiAg
-Cj4gQEAgLTIwNiw2ICsyMDcsNyBAQCBzdGF0aWMgaW50IG10a19hdG9taWNfY29tbWl0KHN0cnVj
-dCBkcm1fZGV2aWNlICpkcm0sCj4gIAkuZXh0X2xlbiA9IEFSUkFZX1NJWkUobXQyNzEyX210a19k
-ZHBfZXh0KSwKPiAgCS50aGlyZF9wYXRoID0gbXQyNzEyX210a19kZHBfdGhpcmQsCj4gIAkudGhp
-cmRfbGVuID0gQVJSQVlfU0laRShtdDI3MTJfbXRrX2RkcF90aGlyZCksCj4gKwkubW1zeXNfaWQg
-PSBNTVNZU19NVDI3MTIsCj4gIH07Cj4gIAo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG10a19tbXN5
-c19kcml2ZXJfZGF0YSBtdDgxNzNfbW1zeXNfZHJpdmVyX2RhdGEgPSB7Cj4gQEAgLTIxMyw2ICsy
-MTUsNyBAQCBzdGF0aWMgaW50IG10a19hdG9taWNfY29tbWl0KHN0cnVjdCBkcm1fZGV2aWNlICpk
-cm0sCj4gIAkubWFpbl9sZW4gPSBBUlJBWV9TSVpFKG10ODE3M19tdGtfZGRwX21haW4pLAo+ICAJ
-LmV4dF9wYXRoID0gbXQ4MTczX210a19kZHBfZXh0LAo+ICAJLmV4dF9sZW4gPSBBUlJBWV9TSVpF
-KG10ODE3M19tdGtfZGRwX2V4dCksCj4gKwkubW1zeXNfaWQgPSBNTVNZU19NVDgxNzMsCj4gIH07
-Cj4gIAo+ICBzdGF0aWMgaW50IG10a19kcm1fa21zX2luaXQoc3RydWN0IGRybV9kZXZpY2UgKmRy
-bSkKPiBAQCAtNDYxLDYgKzQ2NCwxNCBAQCBzdGF0aWMgaW50IG10a19kcm1fcHJvYmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgCUlOSVRfV09SSygmcHJpdmF0ZS0+Y29tbWl0Lndv
-cmssIG10a19hdG9taWNfd29yayk7Cj4gIAlwcml2YXRlLT5kYXRhID0gb2ZfZGV2aWNlX2dldF9t
-YXRjaF9kYXRhKGRldik7Cj4gIAo+ICsJcHJpdmF0ZS0+cmVnX2RhdGEgPSBtdGtfZGRwX2dldF9t
-bXN5c19kYXRhKHByaXZhdGUtPmRhdGEtPm1tc3lzX2lkKTsKPiArCWlmIChJU19FUlIocHJpdmF0
-ZS0+cmVnX2RhdGEpKSB7Cj4gKwkJcmV0ID0gUFRSX0VSUihwcml2YXRlLT5jb25maWdfcmVncyk7
-Cj4gKwkJcHJfaW5mbygiRmFpbGVkIHRvIGdldCBtbXN5cyByZWdpc3RlciBkYXRhOiAlZFxuIiwK
-PiArCQkJcmV0KTsKPiArCQlyZXR1cm4gcmV0Owo+ICsJfQo+ICsKPiAgCW1lbSA9IHBsYXRmb3Jt
-X2dldF9yZXNvdXJjZShwZGV2LCBJT1JFU09VUkNFX01FTSwgMCk7Cj4gIAlwcml2YXRlLT5jb25m
-aWdfcmVncyA9IGRldm1faW9yZW1hcF9yZXNvdXJjZShkZXYsIG1lbSk7Cj4gIAlpZiAoSVNfRVJS
-KHByaXZhdGUtPmNvbmZpZ19yZWdzKSkgewo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0v
-bWVkaWF0ZWsvbXRrX2RybV9kcnYuaCBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJt
-X2Rydi5oCj4gaW5kZXggZWNjMDBjYS4uMTFkZTdmOCAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kcnYuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRp
-YXRlay9tdGtfZHJtX2Rydi5oCj4gQEAgLTE1LDYgKzE1LDcgQEAKPiAgI2RlZmluZSBNVEtfRFJN
-X0RSVl9ICj4gIAo+ICAjaW5jbHVkZSA8bGludXgvaW8uaD4KPiArI2luY2x1ZGUgIm10a19kcm1f
-ZGRwLmgiCj4gICNpbmNsdWRlICJtdGtfZHJtX2RkcF9jb21wLmgiCj4gIAo+ICAjZGVmaW5lIE1B
-WF9DUlRDCTMKPiBAQCAtMzYsNiArMzcsOCBAQCBzdHJ1Y3QgbXRrX21tc3lzX2RyaXZlcl9kYXRh
-IHsKPiAgCWNvbnN0IGVudW0gbXRrX2RkcF9jb21wX2lkICp0aGlyZF9wYXRoOwo+ICAJdW5zaWdu
-ZWQgaW50IHRoaXJkX2xlbjsKPiAgCj4gKwllbnVtIG10a19tbXN5c19pZCBtbXN5c19pZDsKPiAr
-Cj4gIAlib29sIHNoYWRvd19yZWdpc3RlcjsKPiAgfTsKPiAgCj4gQEAgLTQ4LDYgKzUxLDcgQEAg
-c3RydWN0IG10a19kcm1fcHJpdmF0ZSB7Cj4gIAlzdHJ1Y3QgZGV2aWNlX25vZGUgKm11dGV4X25v
-ZGU7Cj4gIAlzdHJ1Y3QgZGV2aWNlICptdXRleF9kZXY7Cj4gIAl2b2lkIF9faW9tZW0gKmNvbmZp
-Z19yZWdzOwo+ICsJY29uc3Qgc3RydWN0IG10a19tbXN5c19yZWdfZGF0YSAqcmVnX2RhdGE7CgpX
-aHkgbm90IG1vdmUgcmVnX2RhdGEgaW50byBkYXRhPyBCb3RoIGNvdWxkIGJlIGdvdCBieQpvZl9k
-ZXZpY2VfZ2V0X21hdGNoX2RhdGEoKS4KClJlZ2FyZHMsCkNLCgo+ICAJc3RydWN0IGRldmljZV9u
-b2RlICpjb21wX25vZGVbRERQX0NPTVBPTkVOVF9JRF9NQVhdOwo+ICAJc3RydWN0IG10a19kZHBf
-Y29tcCAqZGRwX2NvbXBbRERQX0NPTVBPTkVOVF9JRF9NQVhdOwo+ICAJY29uc3Qgc3RydWN0IG10
-a19tbXN5c19kcml2ZXJfZGF0YSAqZGF0YTsKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0
-cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9kcmktZGV2ZWwK
+On Wed, 2018-12-26 at 08:05 +0800, Nicolas Boichat wrote:
+
+thanks. 
+
+> On Tue, Dec 25, 2018 at 8:06 PM Long Cheng <long.cheng@mediatek.com> wrote:
+> >
+> > Thanks for your comments.
+> >
+> > On Tue, 2018-12-25 at 15:16 +0800, Nicolas Boichat wrote:
+> > > Not a full review, a few comments below.
+> > >
+> > > Thanks,
+> > >
+> >
+> > would you like help to full review at this version patch?  and then i
+> > can modify these at next version patch. thanks.
+> 
+> Added a few more comments ,-)
+> 
+> > > On Tue, Dec 25, 2018 at 9:27 AM Long Cheng <long.cheng@mediatek.com> wrote:
+> > > >
+> > > > In DMA engine framework, add 8250 uart dma to support MediaTek uart.
+> > > > If MediaTek uart enabled(SERIAL_8250_MT6577), and want to improve
+> > > > the performance, can enable the function.
+> > > >
+> > > > Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> > > > ---
+> > > >  drivers/dma/mediatek/8250_mtk_dma.c |  694 +++++++++++++++++++++++++++++++++++
+> > > >  drivers/dma/mediatek/Kconfig        |   11 +
+> > > >  drivers/dma/mediatek/Makefile       |    1 +
+> > > >  3 files changed, 706 insertions(+)
+> > > >  create mode 100644 drivers/dma/mediatek/8250_mtk_dma.c
+> > > >
+> > > > diff --git a/drivers/dma/mediatek/8250_mtk_dma.c b/drivers/dma/mediatek/8250_mtk_dma.c
+> > > > new file mode 100644
+> > > > index 0000000..c4090f2
+> > > > --- /dev/null
+> > > > +++ b/drivers/dma/mediatek/8250_mtk_dma.c
+> > > > @@ -0,0 +1,694 @@
+> > > > +// SPDX-License-Identifier: GPL-2.0
+> > > > +/*
+> > > > + * MediaTek 8250 DMA driver.
+> > > > + *
+> > > > + * Copyright (c) 2018 MediaTek Inc.
+> > > > + * Author: Long Cheng <long.cheng@mediatek.com>
+> > > > + */
+> > > > +
+> > > > +#include <linux/clk.h>
+> > > > +#include <linux/dmaengine.h>
+> > > > +#include <linux/dma-mapping.h>
+> > > > +#include <linux/err.h>
+> > > > +#include <linux/init.h>
+> > > > +#include <linux/interrupt.h>
+> > > > +#include <linux/list.h>
+> > > > +#include <linux/kernel.h>
+> > > > +#include <linux/module.h>
+> > > > +#include <linux/of_dma.h>
+> > > > +#include <linux/of_device.h>
+> > > > +#include <linux/platform_device.h>
+> > > > +#include <linux/slab.h>
+> > > > +#include <linux/spinlock.h>
+> > > > +#include <linux/pm_runtime.h>
+> > > > +#include <linux/iopoll.h>
+> > >
+> > > Alphabetical order.
+> >
+> > ok, i will order.
+> >
+> > >
+> > > > +
+> > > > +#include "../virt-dma.h"
+> > > > +
+> > > > +#define MTK_UART_APDMA_CHANNELS                (CONFIG_SERIAL_8250_NR_UARTS * 2)
+> > > > +
+> > > > +#define VFF_EN_B               BIT(0)
+> > > > +#define VFF_STOP_B             BIT(0)
+> > > > +#define VFF_FLUSH_B            BIT(0)
+> > > > +#define VFF_4G_SUPPORT_B       BIT(0)
+> > > > +#define VFF_RX_INT_EN0_B       BIT(0)  /*rx valid size >=  vff thre*/
+> > > > +#define VFF_RX_INT_EN1_B       BIT(1)
+> > > > +#define VFF_TX_INT_EN_B                BIT(0)  /*tx left size >= vff thre*/
+> > > > +#define VFF_WARM_RST_B         BIT(0)
+> > > > +#define VFF_RX_INT_FLAG_CLR_B  (BIT(0) | BIT(1))
+> > > > +#define VFF_TX_INT_FLAG_CLR_B  0
+> > > > +#define VFF_STOP_CLR_B         0
+> > > > +#define VFF_FLUSH_CLR_B                0
+> > > > +#define VFF_INT_EN_CLR_B       0
+> > > > +#define VFF_4G_SUPPORT_CLR_B   0
+> > > > +
+> > > > +/* interrupt trigger level for tx */
+> > > > +#define VFF_TX_THRE(n)         ((n) * 7 / 8)
+> > > > +/* interrupt trigger level for rx */
+> > > > +#define VFF_RX_THRE(n)         ((n) * 3 / 4)
+> > > > +
+> > > > +#define MTK_UART_APDMA_RING_SIZE       0xffffU
+> > > > +/* invert this bit when wrap ring head again*/
+> > > > +#define MTK_UART_APDMA_RING_WRAP       0x10000U
+> > > > +
+> > > > +#define VFF_INT_FLAG           0x00
+> > > > +#define VFF_INT_EN             0x04
+> > > > +#define VFF_EN                 0x08
+> > > > +#define VFF_RST                        0x0c
+> > > > +#define VFF_STOP               0x10
+> > > > +#define VFF_FLUSH              0x14
+> > > > +#define VFF_ADDR               0x1c
+> > > > +#define VFF_LEN                        0x24
+> > > > +#define VFF_THRE               0x28
+> > > > +#define VFF_WPT                        0x2c
+> > > > +#define VFF_RPT                        0x30
+> > > > +/*TX: the buffer size HW can read. RX: the buffer size SW can read.*/
+> > > > +#define VFF_VALID_SIZE         0x3c
+> > > > +/*TX: the buffer size SW can write. RX: the buffer size HW can write.*/
+> > > > +#define VFF_LEFT_SIZE          0x40
+> > > > +#define VFF_DEBUG_STATUS       0x50
+> > > > +#define VFF_4G_SUPPORT         0x54
+> > > > +
+> > > > +struct mtk_uart_apdmadev {
+> > > > +       struct dma_device ddev;
+> > > > +       struct clk *clk;
+> > > > +       bool support_33bits;
+> > > > +       unsigned int dma_irq[MTK_UART_APDMA_CHANNELS];
+> > > > +};
+> > > > +
+> > > > +struct mtk_uart_apdma_desc {
+> > > > +       struct virt_dma_desc vd;
+> > > > +
+> > > > +       unsigned int avail_len;
+> > > > +};
+> > > > +
+> > > > +struct mtk_chan {
+> > > > +       struct virt_dma_chan vc;
+> > > > +       struct dma_slave_config cfg;
+> > > > +       void __iomem *base;
+> > > > +       struct mtk_uart_apdma_desc *desc;
+> > > > +
+> > > > +       bool requested;
+> > > > +
+> > > > +       unsigned int rx_status;
+> > > > +};
+> > > > +
+> > > > +static inline struct mtk_uart_apdmadev *
+> > > > +to_mtk_uart_apdma_dev(struct dma_device *d)
+> > > > +{
+> > > > +       return container_of(d, struct mtk_uart_apdmadev, ddev);
+> > > > +}
+> > > > +
+> > > > +static inline struct mtk_chan *to_mtk_uart_apdma_chan(struct dma_chan *c)
+> > > > +{
+> > > > +       return container_of(c, struct mtk_chan, vc.chan);
+> > > > +}
+> > > > +
+> > > > +static inline struct mtk_uart_apdma_desc *to_mtk_uart_apdma_desc
+> > > > +       (struct dma_async_tx_descriptor *t)
+> > > > +{
+> > > > +       return container_of(t, struct mtk_uart_apdma_desc, vd.tx);
+> > > > +}
+> > > > +
+> > > > +static void mtk_uart_apdma_chan_write(struct mtk_chan *c,
+> > > > +                              unsigned int reg, unsigned int val)
+> > > > +{
+> > > > +       writel(val, c->base + reg);
+> > > > +}
+> > > > +
+> > > > +static unsigned int
+> > > > +mtk_uart_apdma_chan_read(struct mtk_chan *c, unsigned int reg)
+> > > > +{
+> > > > +       return readl(c->base + reg);
+> > > > +}
+> > > > +
+> > > > +static void mtk_uart_apdma_desc_free(struct virt_dma_desc *vd)
+> > > > +{
+> > > > +       struct dma_chan *chan = vd->tx.chan;
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +
+> > > > +       kfree(c->desc);
+> > > > +       c->desc = NULL;
+> > >
+> > > Why? I'm afraid this may mask double-free.
+> > >
+> >
+> > i will remove it.
+> >
+> > > > +}
+> > > > +
+> > > > +static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
+> > > > +{
+> > > > +       unsigned int txcount = c->desc->avail_len;
+> > >
+> > > Variable name is confusing... I'd rather have a boolean `transmitted`
+> > > (or something), set to 0 here, and set to 1 in the loop (but again,
+> > > maybe this is not necessary at all, see below).
+> >
+> > ok, i modify the function and remove it.
+> >
+> > >
+> > > > +       unsigned int len, send, left, wpt, wrap;
+> > > > +
+> > > > +       if (mtk_uart_apdma_chan_read(c, VFF_LEFT_SIZE) == 0U) {
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > >
+> > > I'd add a "return;" here and de-indent the rest of the function (that
+> > > should help to make it more readable).
+> >
+> > add
+> >
+> > >
+> > > > +       } else {
+> > > > +               len = mtk_uart_apdma_chan_read(c, VFF_LEN);
+> > >
+> > > You make an assumption below that len is always a power of 2. I wonder
+> > > if we want to validate that with some BUG/WARN call.
+> > >
+> > > Also, I assume VFF_LEN is constant? Maybe we can read it once only in
+> > > the probe function?
+> > >
+> >
+> > no, the value of VFF_LEN isn't constant.
+> >
+> > > > +
+> > > > +               while (((left = mtk_uart_apdma_chan_read(c,
+> > > > +                                       VFF_LEFT_SIZE)) > 0U)
+> > > > +                               && (c->desc->avail_len != 0U)) {
+> > >
+> > > Why do we need a while loop here? LEFT_SIZE will always be smaller
+> > > than LEN, right? Shouldn't we load as much as we can, then let an
+> > > interrupt happen and reload the FIFO at that stage? Or does this help
+> > > gain a bit of extra performance?
+> >
+> > i will remove while, use 'if' instead of.
+> > >
+> > > > +                       send = min_t(unsigned int, left, c->desc->avail_len);
+> > > > +                       wpt = mtk_uart_apdma_chan_read(c, VFF_WPT);
+> > > > +                       wrap = wpt & MTK_UART_APDMA_RING_WRAP ?
+> > >
+> > > wrap = wrp ^ MTK_UART_APDMA_RING_WRAP ?
+> > >
+> >
+> > wrap = wpt & MTK_UART_APDMA_RING_WRAP ?
+> > i had test it.
+> 
+> Sorry, I got it wrong (and my question mark is confusing), what I mean is this:
+> 
+> wrap = (wrp ^ MTK_UART_APDMA_RING_WRAP) & MTK_UART_APDMA_RING_WRAP;
+> 
+> But then it's marginally shorter than your solution, so maybe keep
+> yours, it's a little simpler to understand.
+> 
+
+i will rename 'MTK_UART_APDMA_RING_WRAP' to 'VFF_RING_WRAP'. let code
+shorter. i will keep the code.
+
+> > > > +                                       0U : MTK_UART_APDMA_RING_WRAP;
+> > > > +
+> > > > +                       if ((wpt & (len - 1U)) + send < len)
+> 
+> Is it possible for wpt > len? If not, then wpt + send < len should be enough.
+> 
+> Also, wpt + send is used a few times now, so maybe have it a separate variable?
+> 
+> Something like this might be nicer:
+> 
+> next_wpt = wpt + send;
+> if ((wpt & (len - 1U)) + send >= len) {
+>    next_wpt = next_wpt & (len - 1U);
+>    if (!(wpt & MTK_UART_APDMA_RING_WRAP))
+>       next_wpt |= MTK_UART_APDMA_RING_WRAP;
+> }
+> mtk_uart_apdma_chan_write(c, VFF_WPT, next_wpt);
+> 
+> Or if the assumption than wpt < len holds:
+> if (next_wpt >= len) {
+>    next_wpt = next_wpt - len;
+> ...
+> 
+
+i will modify it like your comments,
+next_wpt = wpt + send;
+> if ((wpt & (len - 1U)) + send >= len) {
+>    next_wpt = next_wpt & (len - 1U);
+>    if (!(wpt & MTK_UART_APDMA_RING_WRAP))
+>       next_wpt |= MTK_UART_APDMA_RING_WRAP;
+> 
+i think that it's better.
+
+> > > > +                               mtk_uart_apdma_chan_write(c,
+> > > > +                                               VFF_WPT, wpt + send);
+> > > > +                       else
+> > > > +                               mtk_uart_apdma_chan_write(c, VFF_WPT,
+> > > > +                                                  ((wpt + send) & (len - 1U))
+> > > > +                                                  | wrap);
+> > > > +
+> > > > +                       c->desc->avail_len -= send;
+> > > > +               }
+> > > > +
+> > > > +               if (txcount != c->desc->avail_len) {
+> > >
+> > > We know mtk_uart_apdma_chan_read(c, VFF_LEFT_SIZE) > 0 at least once,
+> > > so this test should always be true.
+> > >
+> > > Unless we have c->desc->avail_len == 0, but then we won't even call
+> > > this function... So this is always true.
+> > >
+> >
+> > yes. you are right. i will remove it.
+> >
+> > > > +                       mtk_uart_apdma_chan_write(c,
+> > > > +                                       VFF_INT_EN, VFF_TX_INT_EN_B);
+> > > > +                       if (mtk_uart_apdma_chan_read(c,
+> > > > +                                               VFF_FLUSH) == 0U)
+> > > > +                               mtk_uart_apdma_chan_write(c,
+> > > > +                                               VFF_FLUSH, VFF_FLUSH_B);
+> > > > +               }
+> > > > +       }
+> > > > +}
+> > > > +
+> > > > +static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
+> > > > +{
+> > > > +       struct mtk_uart_apdma_desc *d = c->desc;
+> > > > +       unsigned int rx_len, wg, rg, count;
+> > > > +
+> > > > +       if (mtk_uart_apdma_chan_read(c, VFF_VALID_SIZE) == 0U)
+> > > > +               return;
+> > > > +
+> > > > +       if (d && vchan_next_desc(&c->vc)) {
+> 
+> I'd negate the test to de-indent the rest of the code:
+> if (!d || !vchan_next_desc(&c->vc))
+>    return;
+> 
+
+ok. i will modify it like 
+if ((mtk_uart_apdma_chan_read(c, VFF_VALID_SIZE) == 0U) ||
+    !d || !vchan_next_desc(&c->vc))
+    return;
+
+> > > > +               rx_len = mtk_uart_apdma_chan_read(c, VFF_LEN);
+> > > > +               rg = mtk_uart_apdma_chan_read(c, VFF_RPT);
+> > > > +               wg = mtk_uart_apdma_chan_read(c, VFF_WPT);
+> > > > +               count = ((rg ^ wg) & MTK_UART_APDMA_RING_WRAP) ?
+> > > > +                               ((wg & MTK_UART_APDMA_RING_SIZE) +
+> > > > +                               rx_len - (rg & MTK_UART_APDMA_RING_SIZE)) :
+> > > > +                               ((wg & MTK_UART_APDMA_RING_SIZE) -
+> > > > +                               (rg & MTK_UART_APDMA_RING_SIZE));
+> > >
+> > > This is hard to read, please use a if/else.
+> > >
+> >
+> > ok.
+> >
+> > > > +
+> > > > +               c->rx_status = count;
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_RPT, wg);
+> > > > +
+> > > > +               list_del(&d->vd.node);
+> > > > +               vchan_cookie_complete(&d->vd);
+> > > > +       }
+> > > > +}
+> > > > +
+> > > > +static irqreturn_t mtk_uart_apdma_irq_handler(int irq, void *dev_id)
+> > > > +{
+> > > > +       struct dma_chan *chan = (struct dma_chan *)dev_id;
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       struct mtk_uart_apdma_desc *d;
+> > > > +       unsigned long flags;
+> > > > +
+> > > > +       spin_lock_irqsave(&c->vc.lock, flags);
+> > > > +       switch (c->cfg.direction) {
+> > > > +       case DMA_DEV_TO_MEM:
+> > >
+> > > You use an if/else below in a similar case, please be consistent (IMHO
+> > > if/else is a bit more compact, so I'd use that here).
+> > >
+> > sean wang had review it. the link
+> > http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016292.html
+> >
+
+ok, i will use if/else
+
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_FLAG, VFF_RX_INT_FLAG_CLR_B);
+> > > > +               mtk_uart_apdma_start_rx(c);
+> > > > +               break;
+> > > > +       case DMA_MEM_TO_DEV:
+> > > > +               d = c->desc;
+> > > > +
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_FLAG, VFF_TX_INT_FLAG_CLR_B);
+> > > > +
+> > > > +               if (d->avail_len != 0U) {
+> > > > +                       mtk_uart_apdma_start_tx(c);
+> > > > +               } else {
+> > > > +                       list_del(&d->vd.node);
+> > > > +                       vchan_cookie_complete(&d->vd);
+> > > > +               }
+> > > > +               break;
+> > > > +       default:
+> > > > +               break;
+> > > > +       }
+> > > > +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> > > > +
+> > > > +       return IRQ_HANDLED;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
+> > > > +{
+> > > > +       struct mtk_uart_apdmadev *mtkd = to_mtk_uart_apdma_dev(chan->device);
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       u32 status;
+> > > > +       int ret = -EBUSY;
+> 
+> No need to init ret.
+> 
+
+ok.
+
+> > > > +
+> > > > +       pm_runtime_get_sync(mtkd->ddev.dev);
+> > > > +
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_ADDR, 0);
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_THRE, 0);
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_LEN, 0);
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_RST, VFF_WARM_RST_B);
+> > > > +
+> > > > +       ret = readx_poll_timeout(readl,
+> > > > +                                c->base + VFF_EN,
+> > > > +                                status, status == 0, 10, 100);
+> > > > +       if (ret) {
+> > > > +               dev_err(c->vc.chan.device->dev,
+> > > > +                               "dma reset: fail, timeout\n");
+> > > > +               goto exit;
+> 
+> Just return ret, since you don't do any cleanup in exit:.
+> 
+
+ok.
+
+> > > > +       }
+> > > > +
+> > > > +       if (!c->requested) {
+> > > > +               c->requested = true;
+> > > > +               ret = request_irq(mtkd->dma_irq[chan->chan_id],
+> > > > +                                 mtk_uart_apdma_irq_handler,
+> > > > +                                 IRQF_TRIGGER_NONE,
+> > > > +                                 KBUILD_MODNAME, chan);
+> > > > +               if (ret < 0) {
+> > > > +                       dev_err(chan->device->dev, "Can't request dma IRQ\n");
+> > > > +                       return -EINVAL;
+> > > > +               }
+> > > > +       }
+> > > > +
+> > > > +       if (mtkd->support_33bits)
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_4G_SUPPORT, VFF_4G_SUPPORT_CLR_B);
+> > > > +
+> > > > +exit:
+> > > > +       return ret;
+> > > > +}
+> > > > +
+> > > > +static void mtk_uart_apdma_free_chan_resources(struct dma_chan *chan)
+> > > > +{
+> > > > +       struct mtk_uart_apdmadev *mtkd = to_mtk_uart_apdma_dev(chan->device);
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +
+> > > > +       if (c->requested) {
+> > > > +               c->requested = false;
+> > > > +               free_irq(mtkd->dma_irq[chan->chan_id], chan);
+> > > > +       }
+> > > > +
+> > > > +       tasklet_kill(&c->vc.task);
+> > > > +
+> > > > +       vchan_free_chan_resources(&c->vc);
+> > > > +
+> > > > +       pm_runtime_put_sync(mtkd->ddev.dev);
+> > > > +}
+> > > > +
+> > > > +static enum dma_status mtk_uart_apdma_tx_status(struct dma_chan *chan,
+> > > > +                                        dma_cookie_t cookie,
+> > > > +                                        struct dma_tx_state *txstate)
+> > > > +{
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       enum dma_status ret;
+> > > > +       unsigned long flags;
+> > > > +
+> > > > +       if (!txstate)
+> > > > +               return DMA_ERROR;
+> > > > +
+> > > > +       ret = dma_cookie_status(chan, cookie, txstate);
+> > > > +       spin_lock_irqsave(&c->vc.lock, flags);
+> > > > +       if (ret == DMA_IN_PROGRESS) {
+> > > > +               c->rx_status = mtk_uart_apdma_chan_read(c, VFF_RPT)
+> > > > +                            & MTK_UART_APDMA_RING_SIZE;
+> > > > +               dma_set_residue(txstate, c->rx_status);
+> > > > +       } else if (ret == DMA_COMPLETE && c->cfg.direction == DMA_DEV_TO_MEM) {
+> > > > +               dma_set_residue(txstate, c->rx_status);
+> > > > +       } else {
+> > > > +               dma_set_residue(txstate, 0);
+> > > > +       }
+> > > > +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> > > > +
+> > > > +       return ret;
+> > > > +}
+> > > > +
+> > > > +/*
+> > > > + * dmaengine_prep_slave_single will call the function. and sglen is 1.
+> > > > + * 8250 uart using one ring buffer, and deal with one sg.
+> > > > + */
+> > > > +static struct dma_async_tx_descriptor *mtk_uart_apdma_prep_slave_sg
+> > > > +       (struct dma_chan *chan, struct scatterlist *sgl,
+> > > > +       unsigned int sglen,     enum dma_transfer_direction dir,
+> 
+> Too many spaces (or a tab?) between `sglen,` and `enum`
+> 
+
+ok. i will modify it
+
+> > > > +       unsigned long tx_flags, void *context)
+> > > > +{
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       struct mtk_uart_apdma_desc *d;
+> > > > +
+> > > > +       if ((dir != DMA_DEV_TO_MEM) &&
+> > > > +               (dir != DMA_MEM_TO_DEV)) {
+> > > > +               dev_err(chan->device->dev, "bad direction\n");
+> > > > +               return NULL;
+> > > > +       }
+> > > > +
+> > > > +       /* Now allocate and setup the descriptor */
+> > > > +       d = kzalloc(sizeof(*d), GFP_ATOMIC);
+> > > > +       if (!d)
+> > > > +               return NULL;
+> > > > +
+> > > > +       /* sglen is 1 */
+> > > > +       d->avail_len = sg_dma_len(sgl);
+> > > > +
+> > > > +       return vchan_tx_prep(&c->vc, &d->vd, tx_flags);
+> > > > +}
+> > > > +
+> > > > +static void mtk_uart_apdma_issue_pending(struct dma_chan *chan)
+> > > > +{
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       struct virt_dma_desc *vd;
+> > > > +       unsigned long flags;
+> > > > +
+> > > > +       spin_lock_irqsave(&c->vc.lock, flags);
+> > > > +       if (c->cfg.direction == DMA_DEV_TO_MEM) {
+> > > > +               if (vchan_issue_pending(&c->vc) && !c->desc) {
+> > > > +                       vd = vchan_next_desc(&c->vc);
+> > > > +                       c->desc = to_mtk_uart_apdma_desc(&vd->tx);
+> > > > +                       mtk_uart_apdma_start_rx(c);
+> > > > +               }
+> > > > +       } else if (c->cfg.direction == DMA_MEM_TO_DEV) {
+> > > > +               if (vchan_issue_pending(&c->vc) && !c->desc) {
+> > > > +                       vd = vchan_next_desc(&c->vc);
+> > > > +                       c->desc = to_mtk_uart_apdma_desc(&vd->tx);
+> > > > +                       mtk_uart_apdma_start_tx(c);
+> > > > +               }
+> > > > +       }
+> > > > +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_slave_config(struct dma_chan *chan,
+> > > > +                               struct dma_slave_config *cfg)
+> > > > +{
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       struct mtk_uart_apdmadev *mtkd =
+> > > > +                               to_mtk_uart_apdma_dev(c->vc.chan.device);
+> > > > +
+> > > > +       c->cfg = *cfg;
+> > > > +
+> > > > +       if (cfg->direction == DMA_DEV_TO_MEM) {
+> > > > +               unsigned int rx_len = cfg->src_addr_width * 1024;
+> > > > +
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_ADDR, cfg->src_addr);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_LEN, rx_len);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_THRE, VFF_RX_THRE(rx_len));
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_EN, VFF_RX_INT_EN0_B
+> > > > +                               | VFF_RX_INT_EN1_B);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_RPT, 0);
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_FLAG, VFF_RX_INT_FLAG_CLR_B);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_EN, VFF_EN_B);
+> > > > +       } else if (cfg->direction == DMA_MEM_TO_DEV)    {
+> > > > +               unsigned int tx_len = cfg->dst_addr_width * 1024;
+> > > > +
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_ADDR, cfg->dst_addr);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_LEN, tx_len);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_THRE, VFF_TX_THRE(tx_len));
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_WPT, 0);
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_FLAG, VFF_TX_INT_FLAG_CLR_B);
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_EN, VFF_EN_B);
+> > > > +       }
+> > > > +
+> > > > +       if (mtkd->support_33bits)
+> > > > +               mtk_uart_apdma_chan_write(c, VFF_4G_SUPPORT, VFF_4G_SUPPORT_B);
+> > > > +
+> > > > +       if (mtk_uart_apdma_chan_read(c, VFF_EN) != VFF_EN_B) {
+> > > > +               dev_err(chan->device->dev,
+> > > > +                       "config dma dir[%d] fail\n", cfg->direction);
+> > > > +               return -EINVAL;
+> > > > +       }
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_terminate_all(struct dma_chan *chan)
+> > > > +{
+> > > > +       struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > > +       unsigned long flags;
+> > > > +       u32 status;
+> > > > +       int ret;
+> > > > +
+> > > > +       spin_lock_irqsave(&c->vc.lock, flags);
+> > > > +
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_FLUSH, VFF_FLUSH_CLR_B);
+> > > > +       /* Wait for flush */
+> > > > +       ret = readx_poll_timeout(readl,
+> > > > +                                c->base + VFF_FLUSH,
+> > > > +                                status,
+> > > > +                                (status & VFF_FLUSH_B) != VFF_FLUSH_B,
+> > > > +                                10, 100);
+> > > > +       if (ret)
+> > > > +               dev_err(c->vc.chan.device->dev,
+> > > > +                       "dma stop: polling FLUSH fail, DEBUG=0x%x\n",
+> > > > +                       mtk_uart_apdma_chan_read(c, VFF_DEBUG_STATUS));
+> > > > +
+> > > > +       /*set stop as 1 -> wait until en is 0 -> set stop as 0*/
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_STOP, VFF_STOP_B);
+> > > > +       ret = readx_poll_timeout(readl,
+> > > > +                                c->base + VFF_EN,
+> > > > +                                status, status == 0, 10, 100);
+> > > > +       if (ret)
+> > > > +               dev_err(c->vc.chan.device->dev,
+> > > > +                       "dma stop: polling VFF_EN fail, DEBUG=0x%x\n",
+> > > > +                       mtk_uart_apdma_chan_read(c, VFF_DEBUG_STATUS));
+> > > > +
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_STOP, VFF_STOP_CLR_B);
+> > > > +       mtk_uart_apdma_chan_write(c, VFF_INT_EN, VFF_INT_EN_CLR_B);
+> > > > +
+> > > > +       switch (c->cfg.direction) {
+> > > > +       case DMA_DEV_TO_MEM:
+> > >
+> > > Ditto, if/else?
+> > >
+> > ditto.
+> > http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016292.html
+> 
+> Well, I disagree, especially in this case: We turn 4 lines of code into 10...
+> 
+
+i see, i will using if/else
+
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_FLAG, VFF_RX_INT_FLAG_CLR_B);
+> > > > +               break;
+> > > > +       case DMA_MEM_TO_DEV:
+> > > > +               mtk_uart_apdma_chan_write(c,
+> > > > +                               VFF_INT_FLAG, VFF_TX_INT_FLAG_CLR_B);
+> > > > +               break;
+> > > > +       default:
+> > > > +               break;
+> > > > +       }
+> > > > +
+> > > > +       spin_unlock_irqrestore(&c->vc.lock, flags);
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_device_pause(struct dma_chan *chan)
+> > > > +{
+> > > > +       /* just for check caps pass */
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_device_resume(struct dma_chan *chan)
+> > > > +{
+> > > > +       /* just for check caps pass */
+> > > > +       return 0;
+> > > > +}
+> 
+> Why do you need these? Seems wrong to advertise device_pause/resume
+> (and the caps) if we don't actually support that?
+> 
+
+in serial 8250_dma.c file, when request DMA, will calll
+'dma_get_slave_caps' to get the caps. and the will check caps.cmd_pause.
+the pause is device_pause.  our device can't support the functions. but
+to check pass, need add the fake function. or you can give better
+comments. thanks.
+
+> > > > +
+> > > > +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+> > > > +{
+> > > > +       while (list_empty(&mtkd->ddev.channels) == 0) {
+> > > > +               struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
+> > > > +                       struct mtk_chan, vc.chan.device_node);
+> > > > +
+> > > > +               list_del(&c->vc.chan.device_node);
+> > > > +               tasklet_kill(&c->vc.task);
+> > > > +       }
+> > > > +}
+> > > > +
+> > > > +static const struct of_device_id mtk_uart_apdma_match[] = {
+> > > > +       { .compatible = "mediatek,mt6577-uart-dma", },
+> > > > +       { /* sentinel */ },
+> > > > +};
+> > > > +MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
+> > > > +
+> > > > +static int mtk_uart_apdma_probe(struct platform_device *pdev)
+> > > > +{
+> > > > +       struct mtk_uart_apdmadev *mtkd;
+> > > > +       struct resource *res;
+> > > > +       struct mtk_chan *c;
+> > > > +       unsigned int i;
+> > > > +       int rc;
+> > > > +
+> > > > +       mtkd = devm_kzalloc(&pdev->dev, sizeof(*mtkd), GFP_KERNEL);
+> > > > +       if (!mtkd)
+> > > > +               return -ENOMEM;
+> > > > +
+> > > > +       mtkd->clk = devm_clk_get(&pdev->dev, NULL);
+> > > > +       if (IS_ERR(mtkd->clk)) {
+> > > > +               dev_err(&pdev->dev, "No clock specified\n");
+> > > > +               rc = PTR_ERR(mtkd->clk);
+> > > > +               goto err_no_dma;
+> > > > +       }
+> > > > +
+> > > > +       if (of_property_read_bool(pdev->dev.of_node, "dma-33bits")) {
+> > > > +               dev_info(&pdev->dev, "Support dma 33bits\n");
+> > >
+> > > Drop this, a bit verbose.
+> > >
+> > > > +               mtkd->support_33bits = true;
+> > > > +       }
+> > > > +
+> > > > +       rc = dma_set_mask_and_coherent(&pdev->dev,
+> > > > +                               DMA_BIT_MASK(32 | mtkd->support_33bits));
+> > > > +       if (rc)
+> > > > +               goto err_no_dma;
+> > > > +
+> > > > +       dma_cap_set(DMA_SLAVE, mtkd->ddev.cap_mask);
+> > > > +       mtkd->ddev.device_alloc_chan_resources =
+> > > > +                               mtk_uart_apdma_alloc_chan_resources;
+> > > > +       mtkd->ddev.device_free_chan_resources =
+> > > > +                               mtk_uart_apdma_free_chan_resources;
+> > > > +       mtkd->ddev.device_tx_status = mtk_uart_apdma_tx_status;
+> > > > +       mtkd->ddev.device_issue_pending = mtk_uart_apdma_issue_pending;
+> > > > +       mtkd->ddev.device_prep_slave_sg = mtk_uart_apdma_prep_slave_sg;
+> > > > +       mtkd->ddev.device_config = mtk_uart_apdma_slave_config;
+> > > > +       mtkd->ddev.device_pause = mtk_uart_apdma_device_pause;
+> > > > +       mtkd->ddev.device_resume = mtk_uart_apdma_device_resume;
+> > > > +       mtkd->ddev.device_terminate_all = mtk_uart_apdma_terminate_all;
+> > > > +       mtkd->ddev.src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> > > > +       mtkd->ddev.dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> > > > +       mtkd->ddev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> > > > +       mtkd->ddev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> > > > +       mtkd->ddev.dev = &pdev->dev;
+> > > > +       INIT_LIST_HEAD(&mtkd->ddev.channels);
+> > > > +
+> > > > +       for (i = 0; i < MTK_UART_APDMA_CHANNELS; i++) {
+> > > > +               c = devm_kzalloc(mtkd->ddev.dev, sizeof(*c), GFP_KERNEL);
+> > > > +               if (!c) {
+> > > > +                       rc = -ENODEV;
+> > > > +                       goto err_no_dma;
+> > > > +               }
+> > > > +
+> > > > +               res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> > > > +               if (!res) {
+> > > > +                       rc = -ENODEV;
+> > > > +                       goto err_no_dma;
+> > > > +               }
+> > > > +
+> > > > +               c->base = devm_ioremap_resource(&pdev->dev, res);
+> > > > +               if (IS_ERR(c->base)) {
+> > > > +                       rc = PTR_ERR(c->base);
+> > > > +                       goto err_no_dma;
+> > > > +               }
+> > > > +               c->requested = false;
+> > > > +               c->vc.desc_free = mtk_uart_apdma_desc_free;
+> > > > +               vchan_init(&c->vc, &mtkd->ddev);
+> > > > +
+> > > > +               mtkd->dma_irq[i] = platform_get_irq(pdev, i);
+> > > > +               if ((int)mtkd->dma_irq[i] < 0) {
+> > > > +                       dev_err(&pdev->dev, "failed to get IRQ[%d]\n", i);
+> > > > +                       rc = -EINVAL;
+> > > > +                       goto err_no_dma;
+> > > > +               }
+> > > > +       }
+> > > > +
+> > > > +       pm_runtime_enable(&pdev->dev);
+> > > > +       pm_runtime_set_active(&pdev->dev);
+> > > > +
+> > > > +       rc = dma_async_device_register(&mtkd->ddev);
+> > > > +       if (rc)
+> > > > +               goto rpm_disable;
+> > > > +
+> > > > +       platform_set_drvdata(pdev, mtkd);
+> > > > +
+> > > > +       if (pdev->dev.of_node) {
+> > > > +               /* Device-tree DMA controller registration */
+> > > > +               rc = of_dma_controller_register(pdev->dev.of_node,
+> > > > +                                               of_dma_xlate_by_chan_id,
+> > > > +                                               mtkd);
+> > > > +               if (rc)
+> > > > +                       goto dma_remove;
+> > > > +       }
+> > > > +
+> > > > +       return rc;
+> > > > +
+> > > > +dma_remove:
+> > > > +       dma_async_device_unregister(&mtkd->ddev);
+> > > > +rpm_disable:
+> > > > +       pm_runtime_disable(&pdev->dev);
+> > > > +err_no_dma:
+> > > > +       mtk_uart_apdma_free(mtkd);
+> 
+> It's not very correct to call this before
+> INIT_LIST_HEAD(&mtkd->ddev.channels);
+> 
+> I'd just call `return rc;` directly for all instances before that line.
+> 
+
+ok, i will modify it.
+
+> > > > +       return rc;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_remove(struct platform_device *pdev)
+> > > > +{
+> > > > +       struct mtk_uart_apdmadev *mtkd = platform_get_drvdata(pdev);
+> > > > +
+> > > > +       if (pdev->dev.of_node)
+> > > > +               of_dma_controller_free(pdev->dev.of_node);
+> > > > +
+> > > > +       pm_runtime_disable(&pdev->dev);
+> > > > +       pm_runtime_put_noidle(&pdev->dev);
+> > > > +
+> > > > +       dma_async_device_unregister(&mtkd->ddev);
+> > > > +       mtk_uart_apdma_free(mtkd);
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +#ifdef CONFIG_PM_SLEEP
+> > > > +static int mtk_uart_apdma_suspend(struct device *dev)
+> > > > +{
+> > > > +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> > > > +
+> > > > +       if (!pm_runtime_suspended(dev))
+> > > > +               clk_disable_unprepare(mtkd->clk);
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_resume(struct device *dev)
+> > > > +{
+> > > > +       int ret;
+> > > > +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> > > > +
+> > > > +       if (!pm_runtime_suspended(dev)) {
+> > > > +               ret = clk_prepare_enable(mtkd->clk);
+> > > > +               if (ret)
+> > > > +                       return ret;
+> > > > +       }
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +#endif /* CONFIG_PM_SLEEP */
+> > > > +
+> > > > +#ifdef CONFIG_PM
+> > > > +static int mtk_uart_apdma_runtime_suspend(struct device *dev)
+> > > > +{
+> > > > +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> > > > +
+> > > > +       clk_disable_unprepare(mtkd->clk);
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +
+> > > > +static int mtk_uart_apdma_runtime_resume(struct device *dev)
+> > > > +{
+> > > > +       int ret;
+> > > > +       struct mtk_uart_apdmadev *mtkd = dev_get_drvdata(dev);
+> > > > +
+> > > > +       ret = clk_prepare_enable(mtkd->clk);
+> > > > +       if (ret)
+> > > > +               return ret;
+> > > > +
+> > > > +       return 0;
+> > > > +}
+> > > > +#endif /* CONFIG_PM */
+> > > > +
+> > > > +static const struct dev_pm_ops mtk_uart_apdma_pm_ops = {
+> > > > +       SET_SYSTEM_SLEEP_PM_OPS(mtk_uart_apdma_suspend, mtk_uart_apdma_resume)
+> > > > +       SET_RUNTIME_PM_OPS(mtk_uart_apdma_runtime_suspend,
+> > > > +                          mtk_uart_apdma_runtime_resume, NULL)
+> > > > +};
+> > > > +
+> > > > +static struct platform_driver mtk_uart_apdma_driver = {
+> > > > +       .probe  = mtk_uart_apdma_probe,
+> > > > +       .remove = mtk_uart_apdma_remove,
+> > > > +       .driver = {
+> > > > +               .name           = KBUILD_MODNAME,
+> > > > +               .pm             = &mtk_uart_apdma_pm_ops,
+> > > > +               .of_match_table = of_match_ptr(mtk_uart_apdma_match),
+> > > > +       },
+> > > > +};
+> > > > +
+> > > > +module_platform_driver(mtk_uart_apdma_driver);
+> > > > +
+> > > > +MODULE_DESCRIPTION("MediaTek UART APDMA Controller Driver");
+> > > > +MODULE_AUTHOR("Long Cheng <long.cheng@mediatek.com>");
+> > > > +MODULE_LICENSE("GPL v2");
+> > > > +
+> > > > diff --git a/drivers/dma/mediatek/Kconfig b/drivers/dma/mediatek/Kconfig
+> > > > index 27bac0b..1a523c87 100644
+> > > > --- a/drivers/dma/mediatek/Kconfig
+> > > > +++ b/drivers/dma/mediatek/Kconfig
+> > > > @@ -1,4 +1,15 @@
+> > > >
+> > > > +config DMA_MTK_UART
+> > > > +       tristate "MediaTek SoCs APDMA support for UART"
+> > > > +       depends on OF && SERIAL_8250_MT6577
+> > > > +       select DMA_ENGINE
+> > > > +       select DMA_VIRTUAL_CHANNELS
+> > > > +       help
+> > > > +         Support for the UART DMA engine found on MediaTek MTK SoCs.
+> > > > +         when SERIAL_8250_MT6577 is enabled, and if you want to use DMA,
+> > > > +         you can enable the config. the DMA engine can only be used
+> > > > +         with MediaTek SoCs.
+> > > > +
+> > > >  config MTK_HSDMA
+> > > >         tristate "MediaTek High-Speed DMA controller support"
+> > > >         depends on ARCH_MEDIATEK || COMPILE_TEST
+> > > > diff --git a/drivers/dma/mediatek/Makefile b/drivers/dma/mediatek/Makefile
+> > > > index 6e778f8..2f2efd9 100644
+> > > > --- a/drivers/dma/mediatek/Makefile
+> > > > +++ b/drivers/dma/mediatek/Makefile
+> > > > @@ -1 +1,2 @@
+> > > > +obj-$(CONFIG_DMA_MTK_UART) += 8250_mtk_dma.o
+> > > >  obj-$(CONFIG_MTK_HSDMA) += mtk-hsdma.o
+> > > > --
+> > > > 1.7.9.5
+> > > >
+> >
+> >
