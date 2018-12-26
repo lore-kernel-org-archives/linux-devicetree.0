@@ -1,51 +1,85 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
-Date: Wed, 26 Dec 2018 10:35:27 +0900
-Message-ID: <9fba4689-b20f-c18a-ea11-d961de497ea3@socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com>
- <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 01/18] drm/mediatek: update dt-bindings for mt8183
+Date: Wed, 26 Dec 2018 09:49:13 +0800
+Message-ID: <1545788953.14496.6.camel@mtksdaap41>
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+         <1545638931-24938-2-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <1545638931-24938-2-git-send-email-yongqiang.niu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi
+Hi, Yongqiang:
 
-On 2018/11/30 17:31, Stephen Boyd wrote:
->> +       init.num_parents = parents;
->> +       init.parent_names = parent_names;
->> +
->> +       mcm->cname = clk_name;
->> +       mcm->parent = 0;
->> +       mcm->hw.init = &init;
->> +
->> +       clk = clk_register(NULL, &mcm->hw);
->> +       if (IS_ERR(clk))
->> +               goto err_clk;
->> +
->> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
->> +       return;
->> +
->> +err_clk:
->> +       kfree(mcm);
->> +err_mcm:
->> +       kfree(parent_names);
->> +}
->> +CLK_OF_DECLARE(m10v_clk_mux, "socionext,milbeaut-m10v-clk-mux",
->> +                       m10v_clk_mux_setup);
+I would like you to add 'dt-bindings' in title.
+
+On Mon, 2018-12-24 at 16:08 +0800, Yongqiang Niu wrote:
+> Update device tree binding documention for the display subsystem for
+> Mediatek MT8183 SOCs
 > 
-> Any chance you can use a platform driver?
+> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> ---
+>  .../devicetree/bindings/display/mediatek/mediatek,disp.txt    | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
 > 
+> diff --git a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> index 8469de5..1c66f39 100644
+> --- a/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> +++ b/Documentation/devicetree/bindings/display/mediatek/mediatek,disp.txt
+> @@ -28,9 +28,12 @@ Documentation/devicetree/bindings/display/mediatek/mediatek,dpi.txt.
+>  Required properties (all function blocks):
+>  - compatible: "mediatek,<chip>-disp-<function>", one of
+>  	"mediatek,<chip>-disp-ovl"   - overlay (4 layers, blending, csc)
+> +	"mediatek,<chip>-disp-ovl-2l"   - overlay (2 layers, blending, csc)
 
-Excuse me to re-ask you.
-Why do you recommend to use a platform driver? Is that current fad?
+Other '-' is aliened, so do this one.
 
-Thanks
-Sugaya Taichi
+>  	"mediatek,<chip>-disp-rdma"  - read DMA / line buffer
+>  	"mediatek,<chip>-disp-wdma"  - write DMA
+> +	"mediatek,<chip>-disp-ccorr" - color correction
+>  	"mediatek,<chip>-disp-color" - color processor
+> +	"mediatek,<chip>-disp-dither" - dither
+
+Ditto.
+
+>  	"mediatek,<chip>-disp-aal"   - adaptive ambient light controller
+>  	"mediatek,<chip>-disp-gamma" - gamma correction
+>  	"mediatek,<chip>-disp-merge" - merge streams from two RDMA sources
+> @@ -40,7 +43,7 @@ Required properties (all function blocks):
+>  	"mediatek,<chip>-dpi"        - DPI controller, see mediatek,dpi.txt
+>  	"mediatek,<chip>-disp-mutex" - display mutex
+>  	"mediatek,<chip>-disp-od"    - overdrive
+> -  the supported chips are mt2701, mt2712 and mt8173.
+> +  the supported chips are mt2701, mt2712, mt8173 and mt8183.
+>  - reg: Physical base address and length of the function block register space
+>  - interrupts: The interrupt signal from the function block (required, except for
+>    merge and split function blocks).
+> @@ -71,6 +74,12 @@ mmsys: clock-controller@14000000 {
+>  	#clock-cells = <1>;
+>  };
+>  
+> +display_components: dispsys@14000000 {
+> +		compatible = "mediatek,mt8183-display";
+
+"mediatek,mt8183-display" is undefined. I think this should be
+"mediatek,mt8183-mmsys" and you have met the same problem in [1]. You
+may depend on that series to develop your patches.
+
+[1]
+http://lists.infradead.org/pipermail/linux-mediatek/2018-November/015860.html
+
+Regards,
+CK
+
+> +		reg = <0 0x14000000 0 0x1000>;
+> +		power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
+> +};
+> +
+>  ovl0: ovl@1400c000 {
+>  	compatible = "mediatek,mt8173-disp-ovl";
+>  	reg = <0 0x1400c000 0 0x1000>;
