@@ -1,76 +1,91 @@
-From: Raju P L S S S N <rplsssn@codeaurora.org>
-Subject: Re: [PATCH RFC 3/5] dt-bindings: Add PDC timer bindings for Qualcomm
- SoCs
-Date: Wed, 26 Dec 2018 15:14:43 +0530
-Message-ID: <504cae51-0f35-beb8-496b-a335863a9071@codeaurora.org>
-References: <20181221115946.10095-1-rplsssn@codeaurora.org>
- <20181221115946.10095-4-rplsssn@codeaurora.org>
- <154546438942.179992.14851496143150245966@swboyd.mtv.corp.google.com>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: Re: [PATCH v7 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
+ support
+Date: Wed, 26 Dec 2018 18:18:54 +0800
+Message-ID: <1545819534.28871.93.camel@mhfsdcap03>
+References: <1545701209-6884-1-git-send-email-long.cheng@mediatek.com>
+         <1545701209-6884-2-git-send-email-long.cheng@mediatek.com>
+         <CANMq1KA1ywLnQDzXRbLcuu-afXuj_yrprRBC4kejF4-20ztXyA@mail.gmail.com>
+         <1545739611.28871.77.camel@mhfsdcap03>
+         <CANMq1KDtUgOUFRy-TyQK0EmbpXGtLEVo9Mqg1Hvs0JoL9NrFyQ@mail.gmail.com>
+         <1545806121.28871.88.camel@mhfsdcap03>
+         <CANMq1KDKqtKwSw1mJyR0TgBwY1YRfvY52vWyogqWweF3xAgiKA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154546438942.179992.14851496143150245966@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+In-Reply-To: <CANMq1KDKqtKwSw1mJyR0TgBwY1YRfvY52vWyogqWweF3xAgiKA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Z
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 2018-12-26 at 17:28 +0800, Nicolas Boichat wrote:
 
+......
 
-On 12/22/2018 1:09 PM, Stephen Boyd wrote:
->> +If an RSC needs to program next wake-up in the PDC timer, it must specify the
->> +binding as child node with the following properties:
->> +
->> +Properties:
->> +- compatible:
->> +    Usage: required
->> +       Value type: <string>
->> +       Definition: must be "qcom,pdc-timer".
->> +
->> +- reg:
->> +    Usage: required
->> +       Value type: <prop-encoded-array>
->> +       Definition: Specifies the offset of the control register.
->> +
->>   Example 1:
->>   
->>   For a TCS whose RSC base address is is 0x179C0000 and is at a DRV id of 2, the
->> @@ -103,6 +123,9 @@ TCS-OFFSET: 0xD00
->>                        <0x179d0000 0x10000>,
->>                        <0x179e0000 0x10000>;
->>                  reg-names = "drv-0", "drv-1", "drv-2";
->> +               #address-cells = <1>;
->> +               #size-cells = <1>;
->> +               ranges;
->>                  interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
->>                               <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
->>                               <GIC_SPI 5 IRQ_TYPE_LEVEL_HIGH>;
->> @@ -112,6 +135,12 @@ TCS-OFFSET: 0xD00
->>                                    <SLEEP_TCS   3>,
->>                                    <WAKE_TCS    3>,
->>                                    <CONTROL_TCS 1>;
->> +
->> +               pdc_timer@38 {
->> +                       compatible = "qcom,pdc-timer";
->> +                       reg = <0x38 0x1>,
->> +                             <0x40 0x1>;
-> I don't understand this whole binding. Why can't the pdc timer be
-> programmed within the rpmh driver? This looks like a node is being added
-> as a child just to make a platform driver and device match up in the
-> linux kernel. And that in turn causes a regmap to need to be created?
-> Sorry, it just looks really bad.
+> > > > > > +static int mtk_uart_apdma_device_pause(struct dma_chan *chan)
+> > > > > > +{
+> > > > > > +       /* just for check caps pass */
+> > > > > > +       return 0;
+> > > > > > +}
+> > > > > > +
+> > > > > > +static int mtk_uart_apdma_device_resume(struct dma_chan *chan)
+> > > > > > +{
+> > > > > > +       /* just for check caps pass */
+> > > > > > +       return 0;
+> > > > > > +}
+> > >
+> > > Why do you need these? Seems wrong to advertise device_pause/resume
+> > > (and the caps) if we don't actually support that?
+> > >
+> >
+> > in serial 8250_dma.c file, when request DMA, will calll
+> > 'dma_get_slave_caps' to get the caps. and the will check caps.cmd_pause.
+> > the pause is device_pause.  our device can't support the functions. but
+> > to check pass, need add the fake function. or you can give better
+> > comments. thanks.
+> 
+> Well, then I guess this is a hack... I'm not too familiar with
+> 8250_dma.c, but I guess that if it requires pause/resume to be
+> implemented, then we should implement them, not just stub them out...
+> 
+> Is this something that can be implemented with 8250_mtk DMA?
+> 
 
+the HW can't support it.
 
-There are two RSC devices in SoC one for application processor subsystem 
-& other display subsystem. Both RSC contain registers for PDC timers 
-(one for each subsystem). But only for application processor the PDC 
-timer needs to be programmed when application processor enters 
-sleep/suspend. As the driver is common between both RSC devices, this 
-approach is taken. Do you have any other suggestions to distinguish 
-between the two? Perhaps, by additional compatible string?
+> Also, I don't see where you need resume, so maybe implementing pause is enough?
+> 
 
-Thanks for the review.
+yes. pause is enough. for symmetry, add resume function.
+anyway, the pause function need to keep.
 
-- Raju
+> > > > > > +
+> > > > > > +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+> > > > > > +{
+> > > > > > +       while (list_empty(&mtkd->ddev.channels) == 0) {
+> > > > > > +               struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
+> > > > > > +                       struct mtk_chan, vc.chan.device_node);
+> > > > > > +
+> > > > > > +               list_del(&c->vc.chan.device_node);
+> > > > > > +               tasklet_kill(&c->vc.task);
+> > > > > > +       }
+> > > > > > +}
+> > > > > > +
+> > > > > > +static const struct of_device_id mtk_uart_apdma_match[] = {
+> > > > > > +       { .compatible = "mediatek,mt6577-uart-dma", },
+> > > > > > +       { /* sentinel */ },
+> > > > > > +};
+> > > > > > +MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
+> > > > > > +
+> > > > > > +static int mtk_uart_apdma_probe(struct platform_device *pdev)
+> > > > > > +{
+> > > > > > +       struct mtk_uart_apdmadev *mtkd;
+> > > > > > +       struct resource *res;
+> > > > > > +       struct mtk_chan *c;
+> > > > > > +       unsigned int i;
+> > > > > > +       int rc;
+> > > > > > +
+
+......
