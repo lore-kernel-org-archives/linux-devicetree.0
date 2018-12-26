@@ -1,73 +1,54 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [RFC,0/5] Add support for mt8183 SCP.
-Date: Wed, 26 Dec 2018 15:53:08 +0800
-Message-ID: <20181226075330.82462-1-pihsun@chromium.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 07/18] drm/mediatek: add commponent OVL0_2L
+Date: Wed, 26 Dec 2018 17:09:31 +0800
+Message-ID: <1545815371.20265.2.camel@mtksdaap41>
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1545638931-24938-8-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Nicolas Boichat <drinkcat@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Eddie Huang <eddie.huang@mediatek.com>, Erin Lo <erin.lo@mediatek.com>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, "open list:REMOTE PROCESSOR
-        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1545638931-24938-8-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for controlling and communicating with mt8183's system
-control processor (SCP), using the remoteproc & rpmsg framework.
-And also add a cros_ec driver for CrOS EC host command over rpmsg.
-
-The overall structure of the series is:
-* remoteproc/mtk_scp.c: Control the start / stop of SCP (Patch 2).
-* remoteproc/mtk_scp_ipi.c: Communicates to SCP using inter-processor
-  interrupt (IPI) and shared memory (Patch 2, 3).
-* rpmsg/mtk_rpmsg.c: Wrapper to wrap the IPI communication into a rpmsg
-  device. Supports name service for SCP firmware to
-  announce channels (Patch 4).
-* platform/chrome/cros_ec_rpmsg.c: Communicates with the SCP over the
-  rpmsg framework (like what platform/chrome/cros_ec_{i2c,spi}.c does)
-  (Patch 5).
-
-Since I'm not familiar with the remoteproc / rpmsg framework, and there
-are not much other custom rpmsg driver for reference, would like some
-review / comments on the overall structure of the driver.
-
-
-Erin Lo (2):
-  dt-bindings: Add a binding for Mediatek SCP
-  remoteproc/mediatek: add SCP support for mt8183
-
-Pi-Hsun Shih (3):
-  remoteproc: move IPI interface into separate file.
-  rpmsg: add rpmsg support for mt8183 SCP.
-  mfd: cros_ec: add EC host command support using rpmsg.
-
- .../bindings/remoteproc/mtk,scp.txt           |  10 +
- drivers/mfd/cros_ec_dev.c                     |  10 +
- drivers/platform/chrome/Kconfig               |   8 +
- drivers/platform/chrome/Makefile              |   1 +
- drivers/platform/chrome/cros_ec_rpmsg.c       | 164 +++++++
- drivers/remoteproc/Kconfig                    |   9 +
- drivers/remoteproc/Makefile                   |   1 +
- drivers/remoteproc/mtk_common.h               |  76 +++
- drivers/remoteproc/mtk_scp.c                  | 441 ++++++++++++++++++
- drivers/remoteproc/mtk_scp_ipi.c              | 109 +++++
- drivers/rpmsg/Kconfig                         |   5 +
- drivers/rpmsg/Makefile                        |   1 +
- drivers/rpmsg/mtk_rpmsg.c                     | 341 ++++++++++++++
- include/linux/mfd/cros_ec.h                   |   1 +
- include/linux/mfd/cros_ec_commands.h          |   2 +
- include/linux/platform_data/mtk_scp.h         | 143 ++++++
- include/linux/rpmsg/mtk_rpmsg.h               |  34 ++
- 17 files changed, 1356 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
- create mode 100644 drivers/platform/chrome/cros_ec_rpmsg.c
- create mode 100644 drivers/remoteproc/mtk_common.h
- create mode 100644 drivers/remoteproc/mtk_scp.c
- create mode 100644 drivers/remoteproc/mtk_scp_ipi.c
- create mode 100644 drivers/rpmsg/mtk_rpmsg.c
- create mode 100644 include/linux/platform_data/mtk_scp.h
- create mode 100644 include/linux/rpmsg/mtk_rpmsg.h
-
--- 
-2.20.1.415.g653613c723-goog
+SGksIFlvbmdxaWFuZzoKCk9uIE1vbiwgMjAxOC0xMi0yNCBhdCAxNjowOCArMDgwMCwgWW9uZ3Fp
+YW5nIE5pdSB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZCBjb21tcG9uZW50IE9WTDBfMkwKPiAKPiBT
+aWduZWQtb2ZmLWJ5OiBZb25ncWlhbmcgTml1IDx5b25ncWlhbmcubml1QG1lZGlhdGVrLmNvbT4K
+PiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYyB8IDEg
+Kwo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5oIHwgMSArCj4g
+IDIgZmlsZXMgY2hhbmdlZCwgMiBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZl
+cnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZHJtX2RkcF9jb21wLmMgYi9kcml2ZXJzL2dwdS9kcm0v
+bWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4gaW5kZXggMzEwYzBiOS4uMWIyZDllOSAxMDA2
+NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9kZHBfY29tcC5jCj4g
+KysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuYwo+IEBAIC0y
+NjYsNiArMjY2LDcgQEAgc3RydWN0IG10a19kZHBfY29tcF9tYXRjaCB7Cj4gIAlbRERQX0NPTVBP
+TkVOVF9PRDFdCT0geyBNVEtfRElTUF9PRCwJMSwgJmRkcF9vZCB9LAo+ICAJW0REUF9DT01QT05F
+TlRfT1ZMMF0JPSB7IE1US19ESVNQX09WTCwJMCwgTlVMTCB9LAo+ICAJW0REUF9DT01QT05FTlRf
+T1ZMMV0JPSB7IE1US19ESVNQX09WTCwJMSwgTlVMTCB9LAo+ICsJW0REUF9DT01QT05FTlRfT1ZM
+MF8yTF0JPSB7IE1US19ESVNQX09WTCwJMiwgTlVMTCB9LAoKSWYgb3ZsXzJsIGlzIGRpZmZlcmVu
+dCB0aGFuIG92bCwgSSB0aGluayBpdCdzIGJldHRlciB0byBhZGQgbmV3IHR5cGUgZm9yCm92bF8y
+bC4KClJlZ2FyZHMsCkNLCgo+ICAJW0REUF9DT01QT05FTlRfUFdNMF0JPSB7IE1US19ESVNQX1BX
+TSwJMCwgTlVMTCB9LAo+ICAJW0REUF9DT01QT05FTlRfUFdNMV0JPSB7IE1US19ESVNQX1BXTSwJ
+MSwgTlVMTCB9LAo+ICAJW0REUF9DT01QT05FTlRfUFdNMl0JPSB7IE1US19ESVNQX1BXTSwJMiwg
+TlVMTCB9LAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2RybV9k
+ZHBfY29tcC5oIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAo+
+IGluZGV4IDg3ZWYyOTAuLjNjNzRiNjMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21l
+ZGlhdGVrL210a19kcm1fZGRwX2NvbXAuaAo+ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRl
+ay9tdGtfZHJtX2RkcF9jb21wLmgKPiBAQCAtNTgsNiArNTgsNyBAQCBlbnVtIG10a19kZHBfY29t
+cF9pZCB7Cj4gIAlERFBfQ09NUE9ORU5UX09EMCwKPiAgCUREUF9DT01QT05FTlRfT0QxLAo+ICAJ
+RERQX0NPTVBPTkVOVF9PVkwwLAo+ICsJRERQX0NPTVBPTkVOVF9PVkwwXzJMLAo+ICAJRERQX0NP
+TVBPTkVOVF9PVkwxLAo+ICAJRERQX0NPTVBPTkVOVF9QV00wLAo+ICAJRERQX0NPTVBPTkVOVF9Q
+V00xLAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRy
+aS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRw
+czovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
