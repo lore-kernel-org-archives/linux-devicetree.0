@@ -1,54 +1,52 @@
 From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 01/97] ARM: dts: sun8i: a83t: bananapi-m3: increase vcc-pd voltage to 3.3V
-Date: Wed, 26 Dec 2018 17:34:21 -0500
-Message-ID: <20181226223557.149329-1-sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.19 03/97] arm64: dts: mt7622: fix no more console output on rfb1
+Date: Wed, 26 Dec 2018 17:34:23 -0500
+Message-ID: <20181226223557.149329-3-sashal@kernel.org>
+References: <20181226223557.149329-1-sashal@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181226223557.149329-1-sashal@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Corentin Labbe <clabbe@baylibre.com>, Chen-Yu Tsai <wens@csie.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Corentin Labbe <clabbe@baylibre.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-[ Upstream commit 5f8208f557065163f9a8089ea2ea7888f9d96922 ]
+[ Upstream commit 6c05946e349d92f527d98644fbc9c41f06312c00 ]
 
-Since commit d7c5f6863550 ("ARM: dts: sun8i: a83t: bananapi-m3: Add
-AXP813 regulator nodes") my BPIM3 no longer works at gigabit speed.
+No default serial console on boot.
+Fix this by using a 'stdout-path' property that points to the device.
 
-With the default setting, dldo3 is regulated at 2.9v which seems
-sufficient for the PHY but the aforementioned commit drops it to 2.5V
-which is insufficient. Note that this behaviour is random for all BPIM3.
-Some work with 2.5V, but some don't.
-
-Finnaly, someone from Bananapi confirmed that this regulator must be set
-to 3.3V.
-
-Fixes: d7c5f6863550 ("ARM: dts: sun8i: a83t: bananapi-m3: Add AXP813
-		      regulator nodes")
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
-[wens@csie.org: Reworked commit message]
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+Fixes: c0d9f9ad4f76 ("arm64: dts: mt7622: add earlycon to mt7622-rfb1 board")
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+[mb: Fix commit message]
+Signed-off-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-index c7ce4158d6c8..f250b20af493 100644
---- a/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-+++ b/arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts
-@@ -309,8 +309,8 @@
+diff --git a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+index a747b7bf132d..387be39d40cd 100644
+--- a/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
++++ b/arch/arm64/boot/dts/mediatek/mt7622-rfb1.dts
+@@ -17,8 +17,13 @@
+ 	model = "MediaTek MT7622 RFB1 board";
+ 	compatible = "mediatek,mt7622-rfb1", "mediatek,mt7622";
  
- &reg_dldo3 {
- 	regulator-always-on;
--	regulator-min-microvolt = <2500000>;
--	regulator-max-microvolt = <2500000>;
-+	regulator-min-microvolt = <3300000>;
-+	regulator-max-microvolt = <3300000>;
- 	regulator-name = "vcc-pd";
- };
++	aliases {
++		serial0 = &uart0;
++	};
++
+ 	chosen {
+-		bootargs = "earlycon=uart8250,mmio32,0x11002000 console=ttyS0,115200n1 swiotlb=512";
++		stdout-path = "serial0:115200n8";
++		bootargs = "earlycon=uart8250,mmio32,0x11002000 swiotlb=512";
+ 	};
  
+ 	cpus {
 -- 
 2.19.1
