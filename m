@@ -1,47 +1,60 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 1/8] dt-bindings: soc: qcom: Add remote-pid binding for GLINK SMEM
-Date: Wed, 26 Dec 2018 18:22:22 +0530
-Message-ID: <20181226125229.20149-1-sibis@codeaurora.org>
+Subject: [PATCH v3 2/8] dt-bindings: remoteproc: qcom: Add missing clocks for SDM845
+Date: Wed, 26 Dec 2018 18:22:23 +0530
+Message-ID: <20181226125229.20149-2-sibis@codeaurora.org>
+References: <20181226125229.20149-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181226125229.20149-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing qcom,remote-pid dt binding required for GLINK SMEM
-which specifies the remote endpoint of the GLINK edge.
+Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
 
-Fixes: 2b41d6c8e696 ("dt-bindings: soc: qcom: Extend GLINK to cover
-SMEM")
+Fixes: fb22022ff63d ("dt-bindings: remoteproc: Add Q6v5 Modem PIL
+binding for SDM845")
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Doug Anderson <dianders@chromium.org>
 ---
 
 v3:
-  * Fixed typo
+  * Fixup dt-binding documentation as suggested by Doug
 
- Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-index 0b8cc533ca83..587bb1ddc8cc 100644
---- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
-@@ -21,6 +21,11 @@ edge.
- 	Definition: should specify the IRQ used by the remote processor to
- 		    signal this processor about communication related events
+diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+index 9ff5b0309417..20dd19f9ed99 100644
+--- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
++++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+@@ -39,13 +39,21 @@ on the Qualcomm Hexagon core.
+ - clocks:
+ 	Usage: required
+ 	Value type: <phandle>
+-	Definition: reference to the iface, bus and mem clocks to be held on
+-		    behalf of the booting of the Hexagon core
++	Definition: reference to the clocks that match clock-names
  
-+- qcom,remote-pid:
-+	Usage: required for glink-smem
-+	Value type: <u32>
-+	Definition: specifies the identifier of the remote endpoint of this edge
-+
- - qcom,rpm-msg-ram:
- 	Usage: required for glink-rpm
- 	Value type: <prop-encoded-array>
+ - clock-names:
+ 	Usage: required
+ 	Value type: <stringlist>
+-	Definition: must be "iface", "bus", "mem"
++	Definition: The clocks needed depend on the compatible string:
++	qcom,ipq8074-wcss-pil:
++		    no clock names required
++	qcom,q6v5-pil:
++	qcom,msm8916-mss-pil:
++	qcom,msm8974-mss-pil:
++		    must be "iface", "bus", "mem", "xo"
++	qcom,sdm845-mss-pil:
++		    must be "xo", "prng", "iface", "bus", "mem", "gpll0_mss",
++		    "snoc_axi", "mnoc_axi"
+ 
+ - resets:
+ 	Usage: required
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
