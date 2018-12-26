@@ -1,114 +1,100 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v3 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Wed, 26 Dec 2018 18:22:29 +0530
-Message-ID: <20181226125229.20149-8-sibis@codeaurora.org>
-References: <20181226125229.20149-1-sibis@codeaurora.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v2 1/1] arm64: dts: marvell: armada-ap806: reserve PSCI area
+Date: Wed, 26 Dec 2018 17:16:37 +0100
+Message-ID: <87h8f09sbe.fsf@bootlin.com>
+References: <20181221164503.5128-1-xypron.glpk@gmx.de>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181226125229.20149-1-sibis@codeaurora.org>
+In-Reply-To: <20181221164503.5128-1-xypron.glpk@gmx.de> (Heinrich Schuchardt's
+        message of "Fri, 21 Dec 2018 17:45:03 +0100")
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+To: Heinrich Schuchardt <xypron.glpk@gmx.de>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
-
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-
-v3:
-  * with shutdown-ack irq redesign make it mandatory,
-    merge multiple patches into a single one
-
-v2:
-  * Fixed style changes
-  * Added missing clocks in the dt-bindings
-  * Split mss remoteproc node into a number of patches
-
-This patch depends on the following bindings:
-https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
-https://patchwork.kernel.org/patch/10657325/ - pdc reset node
-https://patchwork.kernel.org/patch/10740127/ - rpmhpd dt bindings
-https://patchwork.kernel.org/patch/10740109/ - rpmhpd dt node
-https://patchwork.kernel.org/patch/10678301/ - AOP QMP dt bindings
-https://patchwork.kernel.org/patch/10742083/ - shutdown-irq binding
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 60 ++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 5da9fa1feb8a..db17216a5bce 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1366,6 +1366,66 @@
- 			};
- 		};
+Hi Heinrich,
  
-+		remoteproc@4080000 {
-+			compatible = "qcom,sdm845-mss-pil";
-+			reg = <0x04080000 0x408>, <0x04180000 0x48>;
-+			reg-names = "qdsp6", "rmb";
-+
-+			interrupts-extended =
-+				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack",
-+					  "shutdown-ack";
-+
-+			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-+				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-+				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-+				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-+				 <&gcc GCC_PRNG_AHB_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "iface", "bus", "mem", "gpll0_mss",
-+				      "snoc_axi", "mnoc_axi", "prng", "xo";
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-+				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-+			reset-names = "mss_restart", "pdc_reset";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs
-+						0x23000 0x25000 0x24000>;
-+
-+			power-domains = <&aoss_qmp_pd AOSS_QMP_LS_MODEM>,
-+					<&rpmhpd SDM845_CX>,
-+					<&rpmhpd SDM845_MX>,
-+					<&rpmhpd SDM845_MSS>;
-+			power-domain-names = "load_state", "cx", "mx", "mss";
-+
-+			mba {
-+				memory-region = <&mba_region>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_region>;
-+			};
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-+				label = "modem";
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apss_shared 12>;
-+				mbox-names = "mpss_smem";
-+			};
-+		};
-+
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
- 			reg = <0x88e2000 0x400>;
+ On ven., déc. 21 2018, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
+
+> The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
+> attempt to access it from Linux leads to an immediate crash.
+>
+> So let's make the same memory reservation as the vendor kernel.
+>
+> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
+
+We got a similar patch one month ago and Russell King pointed that it
+didn't match waht he saw on his MACCHIATObin:
+http://lists.infradead.org/pipermail/linux-arm-kernel/2018-November/612360.html
+
+on mine under U-Boot I got:
+
+Marvell>> md 0x4000000
+04000000: 00000000 00000007 00000005 00000040    ............@...
+04000010: 00000001 00001000 00000007 00000001    ................
+04000020: 00000008 00000000 00000009 00000000    ................
+04000030: 0000000a 00000000 ffffffff ffffffff    ................
+04000040: ffffffff ffffffff ffffffff ffffffff    ................
+04000050: ffffffff ffffffff ffffffff ffffffff    ................
+04000060: ffffffff ffffffff ffffffff ffffffff    ................
+04000070: ffffffff ffffffff ffffffff ffffffff    ................
+04000080: ffffffff ffffffff ffffffff ffffffff    ................
+04000090: ffffffff ffffffff ffffffff ffffffff    ................
+040000a0: ffffffff ffffffff ffffffff ffffffff    ................
+040000b0: ffffffff ffffffff ffffffff ffffffff    ................
+040000c0: ffffffff ffffffff ffffffff ffffffff    ................
+040000d0: ffffffff ffffffff ffffffff ffffffff    ................
+040000e0: ffffffff ffffffff ffffffff ffffffff    ................
+040000f0: ffffffff ffffffff ffffffff ffffffff    ................
+
+In my case I have an old ATF, however this kind of setting should be
+done by the bootloader.
+
+I am interested by your claim about causing an immediate crash when
+accessing this region. How did you trigger it?
+
+Gregory
+
+
+> ---
+> v2
+> 	Move the change from armada-8040-mcbin.dts to armada-ap806.dtsi.
+> 	I only have a MACCHIATObin for testing but
+> 	https://github.com/MarvellEmbeddedProcessors/linux-marvell
+> 	has the reservation in that file.
+> ---
+>  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> index 7d94c1fa592a..f8dafef83db0 100644
+> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
+> @@ -28,6 +28,17 @@
+>  		method = "smc";
+>  	};
+>  
+> +	reserved-memory {
+> +		#address-cells = <2>;
+> +		#size-cells = <2>;
+> +		ranges;
+> +
+> +		psci-area@4000000 {
+> +			reg = <0x0 0x4000000 0x0 0x200000>;
+> +			no-map;
+> +		};
+> +	};
+> +
+>  	ap806 {
+>  		#address-cells = <2>;
+>  		#size-cells = <2>;
+> -- 
+> 2.19.2
+>
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
