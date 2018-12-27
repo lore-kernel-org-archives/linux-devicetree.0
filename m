@@ -1,271 +1,69 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V5 3/3] mmc: tegra: HW Command Queue Support for Tegra
- SDMMC
-Date: Thu, 27 Dec 2018 11:05:44 +0200
-Message-ID: <2e016ee1-3604-2909-dab9-7ca6abc2f097@intel.com>
-References: <1545355509-6914-1-git-send-email-skomatineni@nvidia.com>
- <1545355509-6914-4-git-send-email-skomatineni@nvidia.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v2 5/5] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Thu, 27 Dec 2018 09:36:40 +0000
+Message-ID: <BYAPR07MB4709F8A00A13390235BA4BE1DDB60@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1545577992-4013-1-git-send-email-pawell@cadence.com>
+ <1545577992-4013-6-git-send-email-pawell@cadence.com>
+ <CAL411-rj0mRMfPCZOHw04q3s-9oJx7Os9Jz83bO=RgPZKLrB1g@mail.gmail.com>
+ <CAL411-omVL2rwoQP6GwKZa9f_1TLBbEAkyLdxNkJZqaQu9cvsA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545355509-6914-4-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <CAL411-omVL2rwoQP6GwKZa9f_1TLBbEAkyLdxNkJZqaQu9cvsA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, ulf.hansson@linaro.org
-Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Peter Chen <hzpeterchen@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On 21/12/18 3:25 AM, Sowjanya Komatineni wrote:
-> This patch adds HW Command Queue for supported Tegra SDMMC
-> controllers.
-> 
-> Tegra SDHCI with Quirk SDHCI_QUIRK2_BROKEN_64_BIT_DMA disables the
-> use of 64_BIT DMA to disable 64-bit addressing mode access to the
-> system memory and sdhci_cqe_enable using flag SDHCI_USE_64_BIT_DMA
-> for ADMA32/ADMA2 Vs ADMA64/ADMA3 DMA selection.
-> 
-> CQE need to use ADMA3 as it need to fetch task descriptor along
-> with transfer descriptor, so this patch forces DMA Select to be
-> ADMA3 for CQE.
-> 
-> Tegra SDMMC Host design prevents write access to BLOCK_COUNT
-> register when CQE is enabled to prevent SW from updating block
-> size during Command Queue mode. As per eMMC5.1 device spec, block
-> size of 512 B need to be set prior to enabling Command Queue.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
-
-Just a couple of minor comments below.
-
-> ---
->  drivers/mmc/host/Kconfig       |   1 +
->  drivers/mmc/host/sdhci-tegra.c | 138 ++++++++++++++++++++++++++++++++++++++++-
->  2 files changed, 138 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index 1b58739d9744..5aa2de2c7609 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -250,6 +250,7 @@ config MMC_SDHCI_TEGRA
->  	depends on ARCH_TEGRA
->  	depends on MMC_SDHCI_PLTFM
->  	select MMC_SDHCI_IO_ACCESSORS
-> +	select MMC_CQHCI
->  	help
->  	  This selects the Tegra SD/MMC controller. If you have a Tegra
->  	  platform with SD or MMC devices, say Y or M here.
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index 7b95d088fdef..68b328df05ed 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -33,6 +33,7 @@
->  #include <linux/ktime.h>
->  
->  #include "sdhci-pltfm.h"
-> +#include "cqhci.h"
->  
->  /* Tegra SDHOST controller vendor register definitions */
->  #define SDHCI_TEGRA_VENDOR_CLOCK_CTRL			0x100
-> @@ -89,6 +90,9 @@
->  #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
->  #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
->  
-> +/* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
-> +#define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
-> +
->  struct sdhci_tegra_soc_data {
->  	const struct sdhci_pltfm_data *pdata;
->  	u32 nvquirks;
-> @@ -128,6 +132,7 @@ struct sdhci_tegra {
->  	u32 default_tap;
->  	u32 default_trim;
->  	u32 dqs_trim;
-> +	bool enable_hwcq;
->  };
->  
->  static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
-> @@ -836,6 +841,80 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
->  		tegra_host->pad_calib_required = true;
->  }
->  
-> +static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
-> +{
-> +	struct sdhci_host *host = mmc_priv(mmc);
-> +	struct cqhci_host *cq_host = mmc->cqe_private;
-> +	unsigned long flags;
-> +	u8 ctrl;
-> +	u32 cqcfg = 0;
-> +
-> +	spin_lock_irqsave(&host->lock, flags);
-> +
-> +	ctrl = sdhci_readb(host, SDHCI_HOST_CONTROL);
-> +	ctrl &= ~SDHCI_CTRL_DMA_MASK;
-> +	if ((host->flags & SDHCI_USE_64_BIT_DMA) ||
-> +			(host->quirks2 & SDHCI_QUIRK2_BROKEN_64_BIT_DMA))
-
-You are selecting 64-bit DMA if 64-bit DMA is broken.  Is that intended?
-Maybe add a comment.
-
-> +		ctrl |= SDHCI_CTRL_ADMA64;
-> +	else
-> +		ctrl |= SDHCI_CTRL_ADMA32;
-> +	sdhci_writeb(host, ctrl, SDHCI_HOST_CONTROL);
-> +
-> +	/* Tegra SDMMC Controller design prevents write access to BLOCK_COUNT
-> +	 * registers when CQE is enabled.
-> +	 */
-> +	cqcfg = cqhci_readl(cq_host, CQHCI_CFG);
-> +	if (cqcfg & CQHCI_ENABLE)
-> +		cqhci_writel(cq_host, (cqcfg & ~CQHCI_ENABLE), CQHCI_CFG);
-> +
-> +	sdhci_writew(host, SDHCI_MAKE_BLKSZ(host->sdma_boundary, 512),
-> +		     SDHCI_BLOCK_SIZE);
-> +
-> +	if (cqcfg & CQHCI_ENABLE)
-> +		cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
-> +
-> +	/* Set maximum timeout */
-> +	sdhci_writeb(host, 0xE, SDHCI_TIMEOUT_CONTROL);
-> +
-> +	host->ier = host->cqe_ier;
-> +
-> +	sdhci_writel(host, host->ier, SDHCI_INT_ENABLE);
-> +	sdhci_writel(host, host->ier, SDHCI_SIGNAL_ENABLE);
-> +
-> +	host->cqe_on = true;
-> +
-> +	pr_debug("%s: sdhci: CQE on, IRQ mask %#x, IRQ status %#x\n",
-> +		 mmc_hostname(mmc), host->ier,
-> +		 sdhci_readl(host, SDHCI_INT_STATUS));
-> +
-> +	mmiowb();
-> +	spin_unlock_irqrestore(&host->lock, flags);
-
-Most of this is the same as sdhci_cqe_enable().  Did you consider
-rearranging things and calling sdhci_cqe_enable()?
-
-> +}
-> +
-> +static void sdhci_tegra_dumpregs(struct mmc_host *mmc)
-> +{
-> +	sdhci_dumpregs(mmc_priv(mmc));
-> +}
-> +
-> +static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
-> +{
-> +	int cmd_error = 0;
-> +	int data_error = 0;
-> +
-> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-> +		return intmask;
-> +
-> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
-> +	.enable	= sdhci_tegra_cqe_enable,
-> +	.disable = sdhci_cqe_disable,
-> +	.dumpregs = sdhci_tegra_dumpregs,
-> +};
-> +
->  static const struct sdhci_ops tegra_sdhci_ops = {
->  	.get_ro     = tegra_sdhci_get_ro,
->  	.read_w     = tegra_sdhci_readw,
-> @@ -989,6 +1068,7 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
->  	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
->  	.voltage_switch = tegra_sdhci_voltage_switch,
->  	.get_max_clock = tegra_sdhci_get_max_clock,
-> +	.irq = sdhci_tegra_cqhci_irq,
->  };
->  
->  static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
-> @@ -1030,6 +1110,55 @@ static const struct of_device_id sdhci_tegra_dt_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, sdhci_tegra_dt_match);
->  
-> +static int sdhci_tegra_add_host(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> +	struct cqhci_host *cq_host;
-> +	bool dma64;
-> +	int ret;
-> +
-> +	if (!tegra_host->enable_hwcq)
-> +		return sdhci_add_host(host);
-> +
-> +	host->v4_mode = true;
-> +
-> +	ret = sdhci_setup_host(host);
-> +	if (ret)
-> +		return ret;
-> +
-> +	host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-> +
-> +	cq_host = devm_kzalloc(host->mmc->parent,
-> +				sizeof(*cq_host), GFP_KERNEL);
-> +	if (!cq_host) {
-> +		ret = -ENOMEM;
-> +		goto cleanup;
-> +	}
-> +
-> +	cq_host->mmio = host->ioaddr + SDHCI_TEGRA_CQE_BASE_ADDR;
-> +	cq_host->ops = &sdhci_tegra_cqhci_ops;
-> +
-> +	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
-> +	if (dma64)
-> +		cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-> +
-> +	ret = cqhci_init(cq_host, host->mmc, dma64);
-> +	if (ret)
-> +		goto cleanup;
-> +
-> +	ret = __sdhci_add_host(host);
-> +	if (ret)
-> +		goto cleanup;
-> +
-> +	return 0;
-> +
-> +cleanup:
-> +	sdhci_cleanup_host(host);
-> +	return ret;
-> +
-> +}
-> +
->  static int sdhci_tegra_probe(struct platform_device *pdev)
->  {
->  	const struct of_device_id *match;
-> @@ -1039,6 +1168,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  	struct sdhci_tegra *tegra_host;
->  	struct clk *clk;
->  	int rc;
-> +	struct resource *iomem;
->  
->  	match = of_match_device(sdhci_tegra_dt_match, &pdev->dev);
->  	if (!match)
-> @@ -1056,6 +1186,12 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  	tegra_host->pad_control_available = false;
->  	tegra_host->soc_data = soc_data;
->  
-> +	iomem = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (resource_size(iomem) > SDHCI_TEGRA_CQE_BASE_ADDR)
-> +		tegra_host->enable_hwcq = true;
-> +	else
-> +		tegra_host->enable_hwcq = false;
-> +
->  	if (soc_data->nvquirks & NVQUIRK_NEEDS_PAD_CONTROL) {
->  		rc = tegra_sdhci_init_pinctrl_info(&pdev->dev, tegra_host);
->  		if (rc == 0)
-> @@ -1117,7 +1253,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  
->  	usleep_range(2000, 4000);
->  
-> -	rc = sdhci_add_host(host);
-> +	rc = sdhci_tegra_add_host(host);
->  	if (rc)
->  		goto err_add_host;
->  
-> 
+SGksDQoNCj4+ID4gKw0KPj4gPiArICAgICAgIGlmIChyZXQpDQo+PiA+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gcmV0Ow0KPj4gPiArDQo+PiA+ICsgICAgICAgc3RhdGUgPSByZWFkbCgmY2Rucy0+
+b3RnX3JlZ3MtPnN0cyk7DQo+PiA+ICsgICAgICAgaWYgKE9UR1NUU19PVEdfTlJEWShzdGF0ZSkg
+IT0gMCkgew0KPj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihjZG5zLT5kZXYsICJDYWRlbmNl
+IFVTQjMgT1RHIGRldmljZSBub3QgcmVhZHlcbiIpOw0KPj4gPiArICAgICAgICAgICAgICAgcmV0
+dXJuIC1FTk9ERVY7DQo+PiA+ICsgICAgICAgfQ0KPj4gPiArDQo+PiA+ICsgICAgICAgcmV0ID0g
+Y2RuczNfZHJkX3VwZGF0ZV9tb2RlKGNkbnMpOw0KPj4gPiArDQo+Pg0KPj4gQ2FsbGluZyB0aGlz
+IGZ1bmN0aW9uLCBpdCBpcyB0aW1lb3V0IGZvciB3YWl0aW5nIE9UR1NUU19YSENJX1JFQURZIGF0
+IG90Z3N0cywNCj4+IGRvIHlvdSBrbm93IHBvc3NpYmxlIHJlYXNvbnM/ICBBZnRlciBjb21tZW50
+aW5nIG91dCB0aGlzIGZ1bmN0aW9uLCBteQ0KPj4geEhDSSBmdW5jdGlvbg0KPj4gd29ya3MuDQo+
+Pg0KPg0KPlBhd2VsLCBzaW5jZSBPVEcgY29tcGxpYW5jZSAoS25vd24gYXMgSE5QL1NSUCkgIGhh
+cyBub3QgYmVlbiB1c2VkDQo+d2lkZWx5LCBMaW51eCBrZXJuZWwgZG9lcyBub3QNCj5tYWludGFp
+biBpdCBmcm9tIHNvbWUgdGltZSBhZ28gKG1heWJlIDEtMiB5ZWFycykuIEluIHNvZnR3YXJlIGRl
+c2lnbiwNCj53ZSBkbyBub3QgbmVlZCB0byBjb25zaWRlciBpdCBmcm9tDQo+aGFyZHdhcmUgcG9p
+bnQsIGVnLCBraW5kcyBvZiBPVEcgdGltZXIuIEZvciBkdWFsLXJvbGUgc3dpdGNoIG9uIHRoZQ0K
+PmZseSwgIHRocm91Z2ggL3N5cyBpcyBlbm91Z2guDQo+DQo+VGhyb3VnaCB0aGUgZGVidWcsIHdl
+IGZpbmQgaXQgbmVlZHMgdG8gd2FpdCAxcyBhZnRlciBzZXR0aW5nIGRlLXNlbGVjdA0KPnRoZSBo
+b3N0IG9yIGdhZGdldCBiZWZvcmUgcmVxdWVzdA0KPlhIQ0kgYXQgb3RnX3JlZ3MtPmNtZCwgYW5k
+IGVuYWJsZSBmYXN0IHNpbXVsYXRlIGNhbiByZWR1Y2UgZGVsYXkgdG8NCj4yLTNtcy4gV291bGQg
+eW91IHBsZWFzZSBoZWxwDQo+dG8gY2hlY2sgd2l0aCB5b3VyIGhhcmR3YXJlIHRlYW0gdGhpcyBi
+ZWhhdmlvci4gV2l0aCBiZWxvdyBjaGFuZ2VzLCBJDQo+Y2FuIGdldCBPVEdTVFNfWEhDSV9SRUFE
+WSBhdCBvdGdzdHMuDQo+DQo+QEAgLTE0MSw2ICsxNDMsNyBAQCBzdGF0aWMgaW50IGNkbnMzX2Ry
+ZF9zd2l0Y2hfaG9zdChzdHJ1Y3QgY2RuczMgKmNkbnMsIGludCBvbikNCj4gICAgICAgICAgICAg
+ICAgd3JpdGVsKE9UR0NNRF9IT1NUX0JVU19EUk9QIHwgT1RHQ01EX0RFVl9CVVNfRFJPUCB8DQo+
+ICAgICAgICAgICAgICAgICAgICAgICBPVEdDTURfREVWX1BPV0VSX09GRiB8IE9UR0NNRF9IT1NU
+X1BPV0VSX09GRiwNCj4gICAgICAgICAgICAgICAgICAgICAgICZjZG5zLT5vdGdfcmVncy0+Y21k
+KTsNCj4rICAgICAgICAgICAgICAgdXNsZWVwX3JhbmdlKDMwMDAsIDQwMDApOw0KPiAgICAgICAg
+fQ0KPg0KPiAgICAgICAgcmV0dXJuIDA7DQo+QEAgLTE3OCw2ICsxODEsNyBAQCBzdGF0aWMgaW50
+IGNkbnMzX2RyZF9zd2l0Y2hfZ2FkZ2V0KHN0cnVjdCBjZG5zMw0KPipjZG5zLCBpbnQgb24pDQo+
+ICAgICAgICAgICAgICAgIHdyaXRlbChPVEdDTURfSE9TVF9CVVNfRFJPUCB8IE9UR0NNRF9ERVZf
+QlVTX0RST1AgfA0KPiAgICAgICAgICAgICAgICAgICAgICAgT1RHQ01EX0RFVl9QT1dFUl9PRkYg
+fCBPVEdDTURfSE9TVF9QT1dFUl9PRkYsDQo+ICAgICAgICAgICAgICAgICAgICAgICAmY2Rucy0+
+b3RnX3JlZ3MtPmNtZCk7DQo+KyAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgzMDAwLCA0MDAw
+KTsNCj4gICAgICAgIH0NCj4NCj5AQCAtMjk5LDYgKzMwNiw3IEBAIGludCBjZG5zM19kcmRfaW5p
+dChzdHJ1Y3QgY2RuczMgKmNkbnMpDQo+ICAgICAgICAgICAgICAgIGNkbnMtPnZlcnNpb24gID0g
+Q0ROUzNfQ09OVFJPTExFUl9WMDsNCj4gICAgICAgICAgICAgICAgY2Rucy0+b3RnX3YxX3JlZ3Mg
+PSBOVUxMOw0KPiAgICAgICAgICAgICAgICBjZG5zLT5vdGdfcmVncyA9IHJlZ3M7DQo+KyAgICAg
+ICAgICAgICAgIHdyaXRlbCgweDEsICZjZG5zLT5vdGdfdjBfcmVncy0+c2ltdWxhdGUpOw0KPiAg
+ICAgICAgICAgICAgICBkZXZfaW5mbyhjZG5zLT5kZXYsICJEUkQgdmVyc2lvbiB2MCAoJTA4eClc
+biIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlYWRsKCZjZG5zLT5vdGdfdjBfcmVncy0+
+dmVyc2lvbikpOw0KPiAgICAgICAgfSBlbHNlIHsNCg0KSSBoYXZlIGNvbmZpcm1hdGlvbiBmcm9t
+IEhXIHRlYW0gdGhhdCB0aW1lIHRoYXQgZHJpdmVyIHNob3VsZCB3YWl0IGFmdGVyIGRlLXNlbGVj
+dGluZyBtb2RlIA0KaXMgMi0zbXMgZm9yIHNpbXVsYXRlIG1vZGUuIEl0J3MgdGltZSB3aGVuIEZT
+TSBpcyBpbiBEUkRfSF9XQUlUX1ZCVVNfRkFJTC4gDQpEcml2ZXIgY2Fubm90IHJlLWVuYWJsZSB0
+aGUgaG9zdC9kZXZpY2UgbW9kZSBiZWZvcmUgdGhpcyB0aW1lIGhhcyBlbGFwc2VkLiANCg0KMyBt
+cyBpcyB0aGUgbWF4aW11bSB0aW1lLiBBZGRpdGlvbmFsbHksIHlvdSBjYW4gY29uZmlybSB0aGUg
+Y3VycmVudCBGU00gc3RhdGUgYnkgcmVhZGluZyB0aGUNCmhvc3Rfb3RnX3N0YXRlIChiaXQgNToz
+KSBvciBkZXZfb3RnX3N0YXRlICgyOjApICBmcm9tIE9UR1NUQVRFIHJlZ2lzdGVyLiANCg0KSWYg
+Yml0IDAgaW4gc2ltdWxhdGUgcmVnaXN0ZXIgaXMgY2xlYXJlZCB0aGUgdGltZSBpcyBleGFjdGx5
+IDFzLg0KDQpDaGVlcnMsDQpQYXdlbA0KDQo=
