@@ -1,104 +1,52 @@
 Return-Path: <SRS0=S6uY=PE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from esa6.microchip.iphmx.com ([216.71.154.253]:50074 "EHLO
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:60124 "EHLO
         esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbeL0Kbd (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Dec 2018 05:31:33 -0500
+        with ESMTP id S1727771AbeL0KSI (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Dec 2018 05:18:08 -0500
 From: <Lars.Povlsen@microchip.com>
-Subject: Re: [PATCH] mips: gpio: mscc_sgpio: Add DT bindings documentation
-Date: Thu, 27 Dec 2018 10:31:29 +0000
-Message-ID: <BYAPR11MB31090494F6DC3D1AEE64075782B60@BYAPR11MB3109.namprd11.prod.outlook.com>
+Subject: RE: [PATCH] mips: gpio: mscc_sgpio: Add DT bindings documentation
+Date: Thu, 27 Dec 2018 10:18:05 +0000
+Message-ID: <BYAPR11MB3109F6B6539759DDE3DB7A4A82B60@BYAPR11MB3109.namprd11.prod.outlook.com>
+References: <87r2f83uww.fsf@soft-dev15.microsemi.net>
+ <CACRpkdZ47tELuJR3DG-d8tsvz4ez_j6TxCYiiGT3L01CJ1LSTA@mail.gmail.com>
+ <CAL_JsqKCY7ZwYhSXW=-vS_hYji31Ez0ZJsD_tsFUGTiBK22bAw@mail.gmail.com>
+In-Reply-To: <CAL_JsqKCY7ZwYhSXW=-vS_hYji31Ez0ZJsD_tsFUGTiBK22bAw@mail.gmail.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: linus.walleij@linaro.org, devicetree@vger.kernel.org
-Cc: gregory.clement@bootlin.com
+To: robh@kernel.org, linus.walleij@linaro.org
+Cc: devicetree@vger.kernel.org, gregory.clement@bootlin.com
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Linus!
-
-Thank you very much for your feedback - and sorry about the delay in=20
-getting back to you.
-
-I will send you a v2 updated version addressing you comments. Thank you!
-
-See below for comments
-
----Lars
-
-> From: Linus Walleij <linus.walleij@linaro.org>
-> Date: Fri, 7 Dec 2018 10:43:38 +0100
-> Message-ID: <CACRpkdZ47tELuJR3DG-
-> d8tsvz4ez_j6TxCYiiGT3L01CJ1LSTA@mail.gmail.com>
-> Subject: Re: [PATCH] mips: gpio: mscc_sgpio: Add DT bindings
-> documentation
-> To: lars.povlsen@microchip.com
-> Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
-> <devicetree@vger.kernel.org>,
-> 	Gregory Clement <gregory.clement@bootlin.com>
->=20
-> Hi Lars,
->=20
-> thanks for your patch!
->=20
-> On Mon, Nov 26, 2018 at 1:22 PM Lars Povlsen
-> <lars.povlsen@microchip.com> wrote:
->=20
-> > +MSCC Serial GPIO driver
->=20
-> Expand the acronym please, if IIUC this is
-> "Microsemi Corporation (MSCC) Serial GPIO driver"
-
-Will do.
-
->=20
-> > +- mscc,sgpio-frequency: The frequency at which the serial bitstream
-> is
-> > +  generated and sampled. Default: 12500000 (Hz).
->=20
-> Uhm what is a serial bitstream in this context, I am lost.
-> Please elaborate.
-
-I added some background details to the description.
-
->=20
-> > +- mscc,sgpio-bitcount: The number of bits enabled per
-> > +  port. (1-4). Default: 2.
->=20
-> Can't you just use the standard "ngpios" property for this?
-> See
-> Documentation/devicetree/bindings/gpio/gpio.txt
->=20
-
-I dropped this property in favor of deriving from gpio-ranges and
-(optionally) ngpios as proposed.
-
-> Why is this a global setting for all ports and not per-port?
->=20
-> > +- mscc,sgpio-ports: A bitmask (32 bits) of which ports are enabled in
-> > +  the serialized gpio stream. Default: 0xFFFFFFFF.
->=20
-> I don't understand this either. Are there up to 32 ports?
-> (Also referred to as "banks") with 1-4 GPIOs each?
-
-Yes each port represent 1-4 GPIOs. Changed to:
-
-- mscc,sgpio-ports: A bitmask (32 bits) of which ports are enabled in
-  the serialized gpio stream. One 'port' will transport from 1 to 4
-  gpio bits. Default: 0xFFFFFFFF.
-
-
-Again, thank you very much for your comments - they are highly appreciated.
-
----Lars
-
->=20
-> Yours,
-> Linus Walleij
-> -------------------- End of forwarded message --------------------
->=20
-> --
-> Gregory Clement, Bootlin
-> Embedded Linux and Kernel engineering
-> http://bootlin.com
+SGkgUm9iIQ0KDQpTb3JyeSBhYm91dCB0aGUgZGVsYXkgaW4gcmVzcG9uc2UsIHRoZSBtYWlsIGdv
+dCBsb3N0IGluIHRoZSBzaGVlciB2b2x1bWUNCm9mIHRoZSBkZXZpY2V0cmVlIGxpc3QuDQoNCkkg
+YXBwcmVjaWF0ZSB5b3VyIHJlc3BvbnNlLCBzZWUgYmVsb3cuDQoNCi0tLUxhcnMNCg0KPiAtLS0t
+LU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwu
+b3JnPg0KPiBTZW50OiBGcmlkYXksIERlY2VtYmVyIDcsIDIwMTggMTQ6NTQNCj4gVG86IExpbnVz
+IFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz47IExhcnMgUG92bHNlbiAtIE0zMTY3
+NQ0KPiA8TGFycy5Qb3Zsc2VuQG1pY3JvY2hpcC5jb20+DQo+IENjOiBkZXZpY2V0cmVlQHZnZXIu
+a2VybmVsLm9yZzsgR3JlZ29yeSBDTEVNRU5UDQo+IDxncmVnb3J5LmNsZW1lbnRAYm9vdGxpbi5j
+b20+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIG1pcHM6IGdwaW86IG1zY2Nfc2dwaW86IEFkZCBE
+VCBiaW5kaW5ncw0KPiBkb2N1bWVudGF0aW9uDQo+IA0KPiBPbiBGcmksIERlYyA3LCAyMDE4IGF0
+IDM6NDMgQU0gTGludXMgV2FsbGVpaiA8bGludXMud2FsbGVpakBsaW5hcm8ub3JnPg0KPiB3cm90
+ZToNCj4gPg0KPiA+IEhpIExhcnMsDQo+ID4NCj4gPiB0aGFua3MgZm9yIHlvdXIgcGF0Y2ghDQo+
+ID4NCj4gPiBPbiBNb24sIE5vdiAyNiwgMjAxOCBhdCAxOjIyIFBNIExhcnMgUG92bHNlbg0KPiA8
+bGFycy5wb3Zsc2VuQG1pY3JvY2hpcC5jb20+IHdyb3RlOg0KPiA+DQo+ID4gPiArTVNDQyBTZXJp
+YWwgR1BJTyBkcml2ZXINCj4gPg0KPiA+IEV4cGFuZCB0aGUgYWNyb255bSBwbGVhc2UsIGlmIElJ
+VUMgdGhpcyBpcw0KPiA+ICJNaWNyb3NlbWkgQ29ycG9yYXRpb24gKE1TQ0MpIFNlcmlhbCBHUElP
+IGRyaXZlciINCj4gPg0KPiA+ID4gKy0gbXNjYyxzZ3Bpby1mcmVxdWVuY3k6IFRoZSBmcmVxdWVu
+Y3kgYXQgd2hpY2ggdGhlIHNlcmlhbCBiaXRzdHJlYW0NCj4gaXMNCj4gPiA+ICsgIGdlbmVyYXRl
+ZCBhbmQgc2FtcGxlZC4gRGVmYXVsdDogMTI1MDAwMDAgKEh6KS4NCj4gPg0KPiA+IFVobSB3aGF0
+IGlzIGEgc2VyaWFsIGJpdHN0cmVhbSBpbiB0aGlzIGNvbnRleHQsIEkgYW0gbG9zdC4NCj4gPiBQ
+bGVhc2UgZWxhYm9yYXRlLg0KPiANCj4gSXMgdGhpcyBTR1BJTyBhcyBpbiB0aGlzWzFdPyBJZiBz
+bywgdGhlbiBJIGRvbid0IHRoaW5rIHVzaW5nIHRoZSBHUElPDQo+IGJpbmRpbmcgaXMgYXBwcm9w
+cmlhdGUgaGVyZS4gU0dQSU8gaXMgcHJldHR5IGZpeGVkIHVzZS4gVGhlcmUgaXMgYQ0KPiBiaXRi
+YW5nZWQgU0dQSU8gaW1wbGVtZW50YXRpb24gaW4gdGhlIENhbHhlZGEgU0FUQSBkcml2ZXIgQlRX
+Lg0KPiANCg0KSSB3YXMgbm90IGF3YXJlIG9mIHRoaXMgWzFdIGludGVyZmFjZSBmb3IgSEREIGF0
+dGFjaG1lbnQuIFRoZXJlIGlzIHNvbWUgc2ltaWxhcml0eQ0KaW4gdGhlIGVsZWN0cmljYWwgaW50
+ZXJmYWNlLCBidXQgdGhpcyBkZXZpY2UgaXMgc3BlY2lmaWNhbGx5IGZvciBleHRlbmRpbmcgR1BJ
+Tw0KY2FwYWNpdHkgb24gYSBTT0Mgd2hpY2ggaXMgcGluLWxpbWl0ZWQuIFNvIEkgaW5zaXN0IHRo
+YXQgdGhlIEdQSU8gYmluZGluZyBpcyBoaWdobHkNCmFwcHJvcHJpYXRlIGhlcmUuDQoNCj4gUm9i
+DQo+IA0KPiBbMV0gaHR0cHM6Ly9lbi53aWtpcGVkaWEub3JnL3dpa2kvU0dQSU8NCg==
