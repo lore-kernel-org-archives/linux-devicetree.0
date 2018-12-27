@@ -1,69 +1,310 @@
-From: CK Hu <ck.hu@mediatek.com>
-Subject: Re: [PATCH 14/18] drm/mediatek: add connect function for ovl
-Date: Thu, 27 Dec 2018 12:56:13 +0800
-Message-ID: <1545886573.31506.13.camel@mtksdaap41>
-References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
- <1545638931-24938-15-git-send-email-yongqiang.niu@mediatek.com>
+From: Shun-Chih.Yu <shun-chih.yu@mediatek.com>
+Subject: Re: [PATCH 2/2] dmaengine: mediatek: Add MediaTek Command-Queue DMA
+ controller for MT6765 SoC
+Date: Thu, 27 Dec 2018 13:06:06 +0800
+Message-ID: <1545887166.25257.19.camel@mtkswgap22>
+References: <1539848951-14798-1-git-send-email-shun-chih.yu@mediatek.com>
+ <1539848951-14798-3-git-send-email-shun-chih.yu@mediatek.com>
+ <20181111101911.GF12092@vkoul-mobl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1545638931-24938-15-git-send-email-yongqiang.niu@mediatek.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Yongqiang Niu <yongqiang.niu@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181111101911.GF12092@vkoul-mobl>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "srv_wsdupstream@mediatek.com" <srv_wsdupstream@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "dmaengine@vger.kernel.org" <dmaengine@vger.kernel.org>, Dan Williams <dan.j.williams@intel.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksIFlvbmdxaWFuZzoKCk9uIE1vbiwgMjAxOC0xMi0yNCBhdCAxNjowOCArMDgwMCwgWW9uZ3Fp
-YW5nIE5pdSB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZCBjb25uZWN0IGZ1bmN0aW9uIGZvciBvdmwK
-CkNvdWxkIHlvdSBkZXNjcmliZSBtb3JlIGFib3V0IGhvdyBvdmwtMmwgd29ya3M/IEkgZ3Vlc3Mg
-dGhhdCBvdmwtMmwgaXMgYQpvdmwgaGFyZHdhcmUgd2hpY2ggaGFzIDMgbGF5ZXIsIHRoZSBib3R0
-b20gdHdvIGxheWVyIGlzIGZyb20gRFJBTSBhbmQKdGhlIHRvcCBsYXllciBpcyBmcm9tIGFub3Ro
-ZXIgaGFyZHdhcmUgKG1heWJlIHRoZSBvdmwpLiBJZiBteSBndWVzcyBpcwpjb3JyZWN0LCB3aHkg
-bm90IGp1c3QgaW1wbGVtZW50IHRoaXMgZnVuY3Rpb24gaW4gbXRrX292bF9sYXllcl9vbigpPyBJ
-bgptdGtfb3ZsX2xheWVyX29uKCksIHlvdSBjb3VsZCBkbyBhcwoKaWYgKGlkeCA9PSBvdmwtPmRh
-dGEtPmxheWVyX25yKSB7CgltdGtfZGRwX3dyaXRlX21hc2soKDEgPDwgMiksIGNvbXAsCgkJCURJ
-U1BfUkVHX09WTF9EQVRBUEFUSF9DT04sIE9WTF9CR0NMUl9TRUxfSU4pOwoKCXJldHVybjsKfQoK
-U28gZG9lcyBtdGtfb3ZsX2xheWVyX29mZigpLgoKUmVnYXJkcywKQ0sKCj4gCj4gU2lnbmVkLW9m
-Zi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRpYXRlay5jb20+Cj4gLS0tCj4g
-IGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYyB8IDE2ICsrKysrKysrKysr
-KysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0
-IGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jIGIvZHJpdmVycy9ncHUv
-ZHJtL21lZGlhdGVrL210a19kaXNwX292bC5jCj4gaW5kZXggYTBhYjc2MC4uM2IyY2U3NyAxMDA2
-NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMKPiArKysg
-Yi9kcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3Bfb3ZsLmMKPiBAQCAtMjcsNiArMjcs
-OCBAQAo+ICAjZGVmaW5lIERJU1BfUkVHX09WTF9FTgkJCQkweDAwMGMKPiAgI2RlZmluZSBESVNQ
-X1JFR19PVkxfUlNUCQkJMHgwMDE0Cj4gICNkZWZpbmUgRElTUF9SRUdfT1ZMX1JPSV9TSVpFCQkJ
-MHgwMDIwCj4gKyNkZWZpbmUgRElTUF9SRUdfT1ZMX0RBVEFQQVRIX0NPTgkJMHgwMDI0Cj4gKyNk
-ZWZpbmUgT1ZMX0JHQ0xSX1NFTF9JTiAgICAgICAgICAgICAgICAgICAgICAgIEJJVCgyKQo+ICAj
-ZGVmaW5lIERJU1BfUkVHX09WTF9ST0lfQkdDTFIJCQkweDAwMjgKPiAgI2RlZmluZSBESVNQX1JF
-R19PVkxfU1JDX0NPTgkJCTB4MDAyYwo+ICAjZGVmaW5lIERJU1BfUkVHX09WTF9DT04obikJCQko
-MHgwMDMwICsgMHgyMCAqIChuKSkKPiBAQCAtMjQ1LDYgKzI0NywxOSBAQCBzdGF0aWMgdm9pZCBt
-dGtfb3ZsX2xheWVyX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25lZCBp
-bnQgaWR4LAo+ICAJCW10a19vdmxfbGF5ZXJfb24oY29tcCwgaWR4KTsKPiAgfQo+ICAKPiArc3Rh
-dGljIHZvaWQgbXRrX292bF9jb25uZWN0KHN0cnVjdCBtdGtfZGRwX2NvbXAgKmNvbXAsCj4gKwkJ
-CSAgICBlbnVtIG10a19kZHBfY29tcF9pZCBwcmV2KQo+ICt7Cj4gKwlpbnQgaXNfb3ZsID0gMDsK
-PiArCj4gKwlpZiAocHJldiA9PSBERFBfQ09NUE9ORU5UX09WTDAgfHwgcHJldiA9PSBERFBfQ09N
-UE9ORU5UX09WTDEgfHwKPiArCSAgICBwcmV2ID09IEREUF9DT01QT05FTlRfT1ZMMF8yTCB8fCBw
-cmV2ID09IEREUF9DT01QT05FTlRfT1ZMMV8yTCkKPiArCQlpc19vdmwgPSAxOwo+ICsKPiArCW10
-a19kZHBfd3JpdGVfbWFzaygoaXNfb3ZsIDw8IDIpLCBjb21wLAo+ICsJCQkgICBESVNQX1JFR19P
-VkxfREFUQVBBVEhfQ09OLCBPVkxfQkdDTFJfU0VMX0lOKTsKPiArfQo+ICsKPiAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBtdGtfZGRwX2NvbXBfZnVuY3MgbXRrX2Rpc3Bfb3ZsX2Z1bmNzID0gewo+ICAJ
-LmNvbmZpZyA9IG10a19vdmxfY29uZmlnLAo+ICAJLnN0YXJ0ID0gbXRrX292bF9zdGFydCwKPiBA
-QCAtMjU1LDYgKzI3MCw3IEBAIHN0YXRpYyB2b2lkIG10a19vdmxfbGF5ZXJfY29uZmlnKHN0cnVj
-dCBtdGtfZGRwX2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCBpZHgsCj4gIAkubGF5ZXJfb24gPSBt
-dGtfb3ZsX2xheWVyX29uLAo+ICAJLmxheWVyX29mZiA9IG10a19vdmxfbGF5ZXJfb2ZmLAo+ICAJ
-LmxheWVyX2NvbmZpZyA9IG10a19vdmxfbGF5ZXJfY29uZmlnLAo+ICsJLmNvbm5lY3QgPSBtdGtf
-b3ZsX2Nvbm5lY3QsCj4gIH07Cj4gIAo+ICBzdGF0aWMgaW50IG10a19kaXNwX292bF9iaW5kKHN0
-cnVjdCBkZXZpY2UgKmRldiwgc3RydWN0IGRldmljZSAqbWFzdGVyLAoKCl9fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
-ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On Sun, 2018-11-11 at 18:19 +0800, Vinod Koul wrote:
+> On 18-10-18, 15:49, shun-chih.yu@mediatek.com wrote:
+> > From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+> > 
+> > MediaTek Command-Queue DMA controller (CQDMA) on MT6765 SoC is dedicated
+> > to memory-to-memory transfer through queue based descriptor management.
+> > 
+> > There are only 3 physical channels inside CQDMA, while the driver is
+> > extended to support 32 virtual channels for multiple dma users to issue
+> > dma requests onto the CQDMA simultaneously.
+> 
+> I see some warns in the driver when I compile with C=1 please do fix
+> those in next rev
+
+Sure, warnings with W=1 would be fixed in the next rev.
+
+> > +struct mtk_cqdma_vdesc {
+> > +	struct virt_dma_desc vd;
+> > +	size_t len;
+> > +	size_t residue;
+> 
+> why should you store residue in descriptor, it will get stale very soon!
+I would remove this in the next rev.
+
+> > +	dma_addr_t dest;
+> > +	dma_addr_t src;
+> > +	struct dma_chan *ch;
+> > +
+> > +	struct list_head node;
+> 
+> why do you need your own list, vd has a list for descriptors!
+This node is to build a linked-list of mtk_cqdma_vdesc (CVD), which is a
+queue of submitted descriptors for a physical dma channel. On a transfer
+completion, we would pick the next CVD from the queue and start the
+transaction based on the src/dest/len information stored in the CVD.
+The reason we could not leverage the list in vd is that we need the
+src/dest/len information for the subsequent dma transactions.
+
+
+> > +struct mtk_cqdma_pchan {
+> > +	struct list_head queue;
+> > +	void __iomem *base;
+> > +	u32 irq;
+> > +
+> > +	refcount_t refcnt;
+> 
+> Can you submit more than one descriptor at any point of time?
+Yes, multiple users could submit descriptors simultaneously to a single physical dma channel.
+
+> > +struct mtk_cqdma_vchan {
+> > +	struct virt_dma_chan vc;
+> > +	struct mtk_cqdma_pchan *pc;
+> > +	struct completion issue_completion;
+> > +	bool issue_synchronize;
+> 
+> what lock protects this?
+using the vc.lock
+
+> > +static void mtk_cqdma_start(struct mtk_cqdma_pchan *pc,
+> > +			    struct mtk_cqdma_vdesc *cvd)
+> > +{
+> > +	/* wait for the previous transaction done */
+> > +	if (mtk_cqdma_poll_engine_done(pc, true) < 0)
+> > +		dev_err(cqdma2dev(to_cqdma_dev(cvd->ch)), "cqdma wait transaction timeout\n");
+> 
+> Please split this to 2 lines to adhere to 80 chars limit
+> 
+> Also no bailout of error?
+I would fix this in the next rev.
+
+> > +static struct mtk_cqdma_vdesc
+> > +*mtk_cqdma_consume_work_queue(struct mtk_cqdma_pchan *pc)
+> > +{
+> > +	struct mtk_cqdma_vchan *cvc;
+> > +	struct mtk_cqdma_vdesc *cvd, *ret = NULL;
+> 
+> ret initialization seems superfluous
+ret would be removed in the next rev.
+
+> > +static void mtk_cqdma_tasklet_cb(unsigned long data)
+> > +{
+> > +	struct mtk_cqdma_pchan *pc = (struct mtk_cqdma_pchan *)data;
+> > +	struct mtk_cqdma_vdesc *cvd = NULL;
+> > +	unsigned long flags;
+> > +
+> > +	spin_lock_irqsave(&pc->lock, flags);
+> > +	/* consume the queue */
+> > +	cvd = mtk_cqdma_consume_work_queue(pc);
+> 
+> why not do this from ISR, DMA should be submitted as fast as possible!
+I would remove this in the next rev.
+
+> > +static int mtk_cqdma_alloc_chan_resources(struct dma_chan *c)
+> > +{
+> > +	struct mtk_cqdma_device *cqdma = to_cqdma_dev(c);
+> > +	struct mtk_cqdma_vchan *vc = to_cqdma_vchan(c);
+> > +	struct mtk_cqdma_pchan *pc = NULL;
+> > +	u32 i, min_refcnt = U32_MAX, refcnt;
+> > +	unsigned long flags;
+> > +
+> > +	/* allocate PC with the minimun refcount */
+>                                 ^^^^^^^
+> typo 
+I would fix this in the next rev.
+
+> > +static int mtk_cqdma_probe(struct platform_device *pdev)
+> > +{
+> > +	struct mtk_cqdma_device *cqdma;
+> > +	struct mtk_cqdma_vchan *vc;
+> > +	struct dma_device *dd;
+> > +	struct resource *res;
+> > +	int err;
+> > +	u32 i;
+> > +
+> > +	cqdma = devm_kzalloc(&pdev->dev, sizeof(*cqdma), GFP_KERNEL);
+> > +	if (!cqdma)
+> > +		return -ENOMEM;
+> > +
+> > +	dd = &cqdma->ddev;
+> > +
+> > +	cqdma->clk = devm_clk_get(&pdev->dev, "cqdma");
+> > +	if (IS_ERR(cqdma->clk)) {
+> > +		dev_err(&pdev->dev, "No clock for %s\n",
+> > +			dev_name(&pdev->dev));
+> > +		return PTR_ERR(cqdma->clk);
+> > +	}
+> > +
+> > +	dma_cap_set(DMA_MEMCPY, dd->cap_mask);
+> > +
+> > +	dd->copy_align = MTK_CQDMA_ALIGN_SIZE;
+> > +	dd->device_alloc_chan_resources = mtk_cqdma_alloc_chan_resources;
+> > +	dd->device_free_chan_resources = mtk_cqdma_free_chan_resources;
+> > +	dd->device_tx_status = mtk_cqdma_tx_status;
+> > +	dd->device_issue_pending = mtk_cqdma_issue_pending;
+> > +	dd->device_prep_dma_memcpy = mtk_cqdma_prep_dma_memcpy;
+> > +	dd->device_terminate_all = mtk_cqdma_terminate_all;
+> > +	dd->src_addr_widths = MTK_CQDMA_DMA_BUSWIDTHS;
+> > +	dd->dst_addr_widths = MTK_CQDMA_DMA_BUSWIDTHS;
+> > +	dd->directions = BIT(DMA_MEM_TO_MEM);
+> > +	dd->residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> > +	dd->dev = &pdev->dev;
+> > +	INIT_LIST_HEAD(&dd->channels);
+> > +
+> > +	if (pdev->dev.of_node && of_property_read_u32(pdev->dev.of_node,
+> > +						      "dma-requests",
+> > +						      &cqdma->dma_requests)) {
+> > +		dev_info(&pdev->dev,
+> > +			 "Using %u as missing dma-requests property\n",
+> > +			 MTK_CQDMA_NR_VCHANS);
+> > +
+> > +		cqdma->dma_requests = MTK_CQDMA_NR_VCHANS;
+> > +	}
+> > +
+> > +	if (pdev->dev.of_node && of_property_read_u32(pdev->dev.of_node,
+> > +						      "dma-channels",
+> > +						      &cqdma->dma_channels)) {
+> > +		dev_info(&pdev->dev,
+> > +			 "Using %u as missing dma-channels property\n",
+> > +			 MTK_CQDMA_NR_PCHANS);
+> > +
+> > +		cqdma->dma_channels = MTK_CQDMA_NR_PCHANS;
+> > +	}
+> > +
+> > +	cqdma->pc = devm_kcalloc(&pdev->dev, cqdma->dma_channels,
+> > +				 sizeof(*cqdma->pc), GFP_KERNEL);
+> > +	if (!cqdma->pc)
+> > +		return -ENOMEM;
+> > +
+> > +	/* initialization for PCs */
+> > +	for (i = 0; i < cqdma->dma_channels; ++i) {
+> > +		cqdma->pc[i] = devm_kcalloc(&pdev->dev, 1,
+> > +					    sizeof(**cqdma->pc), GFP_KERNEL);
+> > +		if (!cqdma->pc[i])
+> > +			return -ENOMEM;
+> > +
+> > +		INIT_LIST_HEAD(&cqdma->pc[i]->queue);
+> > +		spin_lock_init(&cqdma->pc[i]->lock);
+> > +		refcount_set(&cqdma->pc[i]->refcnt, 0);
+> > +
+> > +		res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> > +		if (!res) {
+> > +			dev_err(&pdev->dev, "No mem resource for %s\n",
+> > +				dev_name(&pdev->dev));
+> > +			return -EINVAL;
+> > +		}
+> > +
+> > +		cqdma->pc[i]->base = devm_ioremap_resource(&pdev->dev, res);
+> > +		if (IS_ERR(cqdma->pc[i]->base))
+> > +			return PTR_ERR(cqdma->pc[i]->base);
+> > +
+> > +		/* allocate IRQ resource */
+> > +		res = platform_get_resource(pdev, IORESOURCE_IRQ, i);
+> > +		if (!res) {
+> > +			dev_err(&pdev->dev, "No irq resource for %s\n",
+> > +				dev_name(&pdev->dev));
+> > +			return -EINVAL;
+> > +		}
+> > +		cqdma->pc[i]->irq = res->start;
+> > +
+> > +		err = devm_request_irq(&pdev->dev, cqdma->pc[i]->irq,
+> > +				       mtk_cqdma_irq, 0, dev_name(&pdev->dev),
+> > +				       cqdma);
+> > +		if (err) {
+> > +			dev_err(&pdev->dev,
+> > +				"request_irq failed with err %d\n", err);
+> > +			return -EINVAL;
+> > +		}
+> > +	}
+> > +
+> > +	/* allocate resource for VCs */
+> > +	cqdma->vc = devm_kcalloc(&pdev->dev, cqdma->dma_requests,
+> > +				 sizeof(*cqdma->vc), GFP_KERNEL);
+> > +	if (!cqdma->vc)
+> > +		return -ENOMEM;
+> > +
+> > +	for (i = 0; i < cqdma->dma_requests; i++) {
+> > +		vc = &cqdma->vc[i];
+> > +		vc->vc.desc_free = mtk_cqdma_vdesc_free;
+> > +		vchan_init(&vc->vc, dd);
+> > +		init_completion(&vc->issue_completion);
+> > +	}
+> > +
+> > +	err = dma_async_device_register(dd);
+> > +	if (err)
+> > +		return err;
+> > +
+> > +	err = of_dma_controller_register(pdev->dev.of_node,
+> > +					 of_dma_xlate_by_chan_id, cqdma);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev,
+> > +			"MediaTek CQDMA OF registration failed %d\n", err);
+> > +		goto err_unregister;
+> > +	}
+> > +
+> > +	err = mtk_cqdma_hw_init(cqdma);
+> > +	if (err) {
+> > +		dev_err(&pdev->dev,
+> > +			"MediaTek CQDMA HW initialization failed %d\n", err);
+> > +		goto err_unregister;
+> > +	}
+> > +
+> > +	platform_set_drvdata(pdev, cqdma);
+> > +
+> > +	/* initialize tasklet for each PC */
+> > +	for (i = 0; i < cqdma->dma_channels; ++i)
+> > +		tasklet_init(&cqdma->pc[i]->tasklet, mtk_cqdma_tasklet_cb,
+> > +			     (unsigned long)cqdma->pc[i]);
+> > +
+> > +	dev_info(&pdev->dev, "MediaTek CQDMA driver registered\n");
+> 
+> debug log please
+I would fix this in the next rev.
+
+> > +static int mtk_cqdma_remove(struct platform_device *pdev)
+> > +{
+> > +	struct mtk_cqdma_device *cqdma = platform_get_drvdata(pdev);
+> > +	struct mtk_cqdma_vchan *vc;
+> > +	unsigned long flags;
+> > +	int i;
+> > +
+> > +	/* kill VC task */
+> > +	for (i = 0; i < cqdma->dma_requests; i++) {
+> > +		vc = &cqdma->vc[i];
+> > +
+> > +		list_del(&vc->vc.chan.device_node);
+> > +		tasklet_kill(&vc->vc.task);
+> > +	}
+> > +
+> > +	/* disable interrupt */
+> > +	for (i = 0; i < cqdma->dma_channels; i++) {
+> > +		spin_lock_irqsave(&cqdma->pc[i]->lock, flags);
+> > +		mtk_dma_clr(cqdma->pc[i], MTK_CQDMA_INT_EN,
+> > +			    MTK_CQDMA_INT_EN_BIT);
+> > +		spin_unlock_irqrestore(&cqdma->pc[i]->lock, flags);
+> > +
+> > +		/* Waits for any pending IRQ handlers to complete */
+> > +		synchronize_irq(cqdma->pc[i]->irq);
+> > +
+> > +		tasklet_kill(&cqdma->pc[i]->tasklet);
+> > +	}
+> 
+> please kill VC tasks after this, they can still be fired while you are
+> disabling interrupt, so interrupt first and then tasklets
+tasklets would be removed in the next rev.
