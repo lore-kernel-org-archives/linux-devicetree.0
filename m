@@ -1,60 +1,30 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/3] dt-bindings: mmc: tegra: Add pinctrl for pad
- drive strength config
-Date: Thu, 27 Dec 2018 15:33:53 -0600
-Message-ID: <20181227213353.GA8110@bogus>
-References: <1545260153-11338-1-git-send-email-skomatineni@nvidia.com>
+Subject: Re: [PATCHv2 2/6] Documentation: dt: socfpga: Add S10 System Manager
+ binding
+Date: Thu, 27 Dec 2018 15:42:41 -0600
+Message-ID: <20181227214241.GA25008@bogus>
+References: <1545351802-4354-1-git-send-email-thor.thayer@linux.intel.com>
+ <1545351802-4354-3-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545260153-11338-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <1545351802-4354-3-git-send-email-thor.thayer@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, pchandru@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, dinguyen@kernel.org, arnd@arndb.de, linux@armlinux.org.uk, catalin.marinas@arm.com, will.deacon@arm.com, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, davem@davemloft.net, mcoquelin.stm32@gmail.com, mchehab+samsung@kernel.org, bjorn.andersson@linaro.org, olof@lixom.net, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, netdev@vger.kernel.org, Thor Thayer <thor.thayer@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2018 at 02:55:51PM -0800, Sowjanya Komatineni wrote:
-> Add pinctrl for 3V3 and 1V8 pad drive strength configuration for
-> Tegra210 sdmmc which has pad configuration registers in the pinmux
-> reigster domain.
-
-typo
-
+On Thu, 20 Dec 2018 18:23:18 -0600, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
 > 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Add the device tree bindings for the Stratix10 System Manager.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 > ---
->  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+> v2  New compatible string and usage for Stratix10
+> ---
+>  .../devicetree/bindings/arm/altera/socfpga-system.txt        | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> index 32b4b4e41923..2cecdc71d94c 100644
-> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> @@ -39,12 +39,16 @@ sdhci@c8000200 {
->  	bus-width = <8>;
->  };
->  
-> -Optional properties for Tegra210 and Tegra186:
-> +Optional properties for Tegra210, Tegra186 and Tegra194:
 
-Adding Tegra194, but this patch concerns Tegra210...
-
->  - pinctrl-names, pinctrl-0, pinctrl-1 : Specify pad voltage
->    configurations. Valid pinctrl-names are "sdmmc-3v3" and "sdmmc-1v8"
->    for controllers supporting multiple voltage levels. The order of names
->    should correspond to the pin configuration states in pinctrl-0 and
->    pinctrl-1.
-> +- pinctrl-names : "sdmmc-3v3-drv" and "sdmmc-1v8-drv" are applicable for
-
-These are in addition to the previous values?
-
-> +  Tegra210 where pad config registers are in the pinmux register domain
-> +  for pull-up-strength and pull-down-strength values configuration when
-> +  using pads at 3V3 and 1V8 levels.
->  - nvidia,only-1-8-v : The presence of this property indicates that the
->    controller operates at a 1.8 V fixed I/O voltage.
->  - nvidia,pad-autocal-pull-up-offset-3v3,
-> -- 
-> 2.7.4
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
