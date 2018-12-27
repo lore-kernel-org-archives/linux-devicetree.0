@@ -1,66 +1,39 @@
 From: <shun-chih.yu@mediatek.com>
-Subject: [PATCH 1/2] dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller bindings
-Date: Thu, 27 Dec 2018 21:10:57 +0800
-Message-ID: <1545916258-18218-2-git-send-email-shun-chih.yu@mediatek.com>
-References: <1545916258-18218-1-git-send-email-shun-chih.yu@mediatek.com>
+Subject: [PATCH v4] add support for Mediatek Command-Queue DMA controller on MT6765 SoC
+Date: Thu, 27 Dec 2018 21:10:56 +0800
+Message-ID: <1545916258-18218-1-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545916258-18218-1-git-send-email-shun-chih.yu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>
-Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, Shun-Chih Yu <shun-chih.yu@mediatek.com>
+Cc: dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+Changes since v3:
+- simplify the ISR and management on descriptors by removing tasklet and ASYNC_TX_ENABLE_CHANNEL_SWITCH
+- remove useless field in mtk_cqdma_vdesc structure
+- change dev_info to dev_dbg
+- fix typos
 
-Document the devicetree bindings for MediaTek Command-Queue DMA controller
-which could be found on MT6765 SoC or other similar Mediatek SoCs.
+Changes since v2:
+- fix build warning for kernel with DMA address in 32-bit
 
-Change-Id: I9736c8cac9be160358feeab935fabaffc5730519
-Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 ++++++++++++++++++++
- 1 file changed, 31 insertions(+)
+Changes since v1:
+- remove unused macros, typos
+- leverage ASYNC_TX_ENABLE_CHANNEL_SWITCH to maintain DMA descriptor list
+
+
+Shun-Chih Yu (2):
+  dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller
+    bindings
+  dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for
+    MT6765 SoC
+
+ .../devicetree/bindings/dma/mtk-cqdma.txt     |  31 +
+ drivers/dma/mediatek/Kconfig                  |  12 +
+ drivers/dma/mediatek/Makefile                 |   1 +
+ drivers/dma/mediatek/mtk-cqdma.c              | 867 ++++++++++++++++++
+ 4 files changed, 911 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-
-diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.txt b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-new file mode 100644
-index 0000000..fb12927
---- /dev/null
-+++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-@@ -0,0 +1,31 @@
-+MediaTek Command-Queue DMA Controller
-+==================================
-+
-+Required properties:
-+
-+- compatible:	Must be "mediatek,mt6765-cqdma" for MT6765.
-+- reg:		Should contain the base address and length for each channel.
-+- interrupts:	Should contain references to the interrupts for each channel.
-+- clocks:	Should be the clock specifiers corresponding to the entry in
-+		clock-names property.
-+- clock-names:	Should contain "cqdma" entries.
-+- dma-channels: The number of DMA channels supported by the controller.
-+- dma-requests: The number of DMA request supported by the controller.
-+- #dma-cells: 	The length of the DMA specifier, must be <1>. This one cell
-+		in dmas property of a client device represents the channel
-+		number.
-+Example:
-+
-+        cqdma: dma-controller@10212000 {
-+		compatible = "mediatek,mt6765-cqdma";
-+		reg = <0 0x10212000 0 0x1000>;
-+		interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
-+			<GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
-+		clocks = <&infracfg CLK_IFR_CQ_DMA>;
-+		clock-names = "cqdma";
-+		dma-channels = <2>;
-+		dma-requests = <32>;
-+		#dma-cells = <1>;
-+	};
-+
-+DMA clients must use the format described in dma/dma.txt file.
--- 
-1.7.9.5
+ create mode 100644 drivers/dma/mediatek/mtk-cqdma.c
