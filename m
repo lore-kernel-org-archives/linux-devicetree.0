@@ -1,33 +1,36 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 14/14] spi: stm32: add description about STM32F4
- bindings
-Date: Thu, 27 Dec 2018 15:09:52 -0600
-Message-ID: <20181227210952.GA26671@bogus>
-References: <1545688840-23992-1-git-send-email-cezary.gapinski@gmail.com>
- <1545688840-23992-15-git-send-email-cezary.gapinski@gmail.com>
+Subject: Re: [PATCH v3 7/8] dt-bindings: remoteproc: qcom: Add power-domain
+ bindings for Q6V5
+Date: Thu, 27 Dec 2018 15:11:29 -0600
+Message-ID: <20181227211129.GA27911@bogus>
+References: <20181226125229.20149-1-sibis@codeaurora.org>
+ <20181226125229.20149-7-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545688840-23992-15-git-send-email-cezary.gapinski@gmail.com>
+In-Reply-To: <20181226125229.20149-7-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Amelie Delaunay <amelie.delaunay@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Alexandre Torgue <alexandre.torgue@st.com>, Mark Rutland <mark.rutland@arm.com>, Cezary Gapinski <cezary.gapinski@gmail.com>
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Dec 2018 23:00:40 +0100, cezary.gapinski@gmail.com wrote:
-> From: Cezary Gapinski <cezary.gapinski@gmail.com>
+On Wed, Dec 26, 2018 at 06:22:28PM +0530, Sibi Sankar wrote:
+> Add power-domain bindings for Q6V5 MSS on MSM8996 and SDM845 SoCs.
 > 
-> Add description that STM32F4 can be used in compatible property.
-> Master Inter-Data Idleness optional property cannot be used in STM32F4.
-> 
-> Signed-off-by: Cezary Gapinski <cezary.gapinski@gmail.com>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/spi/spi-stm32.txt | 9 ++++++---
->  1 file changed, 6 insertions(+), 3 deletions(-)
 > 
+> v3:
+>   * Fixup dt-binding documentation as suggested by Doug
+>   * Dropping Rob's Reviewed-by due to documentation style
+>     change
+> 
+> v2:
+>   * Add load_state power-domain
+>   * List cx and mx power-domains for MSM8996
+> 
+>  .../bindings/remoteproc/qcom,q6v5.txt         | 19 +++++++++++++++++++
+>  1 file changed, 19 insertions(+)
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
