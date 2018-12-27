@@ -1,90 +1,57 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 07/97] ARM: dts: imx7d-pico: Describe the Wifi clock
-Date: Wed, 26 Dec 2018 17:34:27 -0500
-Message-ID: <20181226223557.149329-7-sashal@kernel.org>
-References: <20181226223557.149329-1-sashal@kernel.org>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 11/18] drm/medaitek: add layer_nr for ovl private data
+Date: Thu, 27 Dec 2018 09:16:39 +0800
+Message-ID: <1545873399.31506.2.camel@mtksdaap41>
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1545638931-24938-12-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181226223557.149329-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: stable@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1545638931-24938-12-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Fabio Estevam <festevam@gmail.com>
-
-[ Upstream commit c3b9ab5db11d8098ca7674175f12ab21cdce1bbb ]
-
-The Wifi chip should be clocked by a 32kHz clock coming from i.MX7D
-CLKO2 output pin, so describe the pinmux and clock hierarchy in the
-device tree to allow the Wifi chip to be properly clocked.
-
-Managed to successfully test Wifi with such change. Used the standard
-nvram.txt file provided by TechNexion, which selects an external 32kHz
-clock for the Wifi chip by default.
-
-Fixes: 99a52450c707 ("ARM: dts: imx7d-pico: Add Wifi support")
-Suggested-by: Arend van Spriel <arend.vanspriel@broadcom.com>
-Tested-by: Otavio Salvador <otavio@ossystems.com.br>
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
-Signed-off-by: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/arm/boot/dts/imx7d-pico.dtsi | 22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/imx7d-pico.dtsi b/arch/arm/boot/dts/imx7d-pico.dtsi
-index 21973eb55671..f27b3849d3ff 100644
---- a/arch/arm/boot/dts/imx7d-pico.dtsi
-+++ b/arch/arm/boot/dts/imx7d-pico.dtsi
-@@ -100,6 +100,19 @@
- 		regulator-min-microvolt = <1800000>;
- 		regulator-max-microvolt = <1800000>;
- 	};
-+
-+	usdhc2_pwrseq: usdhc2_pwrseq {
-+		compatible = "mmc-pwrseq-simple";
-+		clocks = <&clks IMX7D_CLKO2_ROOT_DIV>;
-+		clock-names = "ext_clock";
-+	};
-+};
-+
-+&clks {
-+	assigned-clocks = <&clks IMX7D_CLKO2_ROOT_SRC>,
-+			  <&clks IMX7D_CLKO2_ROOT_DIV>;
-+	assigned-clock-parents = <&clks IMX7D_CKIL>;
-+	assigned-clock-rates = <0>, <32768>;
- };
- 
- &i2c4 {
-@@ -199,12 +212,13 @@
- 
- &usdhc2 { /* Wifi SDIO */
- 	pinctrl-names = "default";
--	pinctrl-0 = <&pinctrl_usdhc2>;
-+	pinctrl-0 = <&pinctrl_usdhc2 &pinctrl_wifi_clk>;
- 	no-1-8-v;
- 	non-removable;
- 	keep-power-in-suspend;
- 	wakeup-source;
- 	vmmc-supply = <&reg_ap6212>;
-+	mmc-pwrseq = <&usdhc2_pwrseq>;
- 	status = "okay";
- };
- 
-@@ -301,6 +315,12 @@
- };
- 
- &iomuxc_lpsr {
-+	pinctrl_wifi_clk: wificlkgrp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__CCM_CLKO2	0x7d
-+		>;
-+	};
-+
- 	pinctrl_wdog: wdoggrp {
- 		fsl,pins = <
- 			MX7D_PAD_LPSR_GPIO1_IO00__WDOG1_WDOG_B	0x74
--- 
-2.19.1
+SGksIFlvbmdxaWFuZzoKCk9uIE1vbiwgMjAxOC0xMi0yNCBhdCAxNjowOCArMDgwMCwgWW9uZ3Fp
+YW5nIE5pdSB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZCBsYXllcl9uciBmb3Igb3ZsIHByaXZhdGUg
+ZGF0YQo+IAoKSSB0aGluayB5b3UgZG8gdGhpcyBiZWNhdXNlIG92bC0ybCBhbmQgb3ZsIHNoYXJl
+IHRoZSBzYW1lIGRyaXZlciBhbmQgdGhlCm92bCBsYXllciBpcyBkaWZmZXJlbnQsIHNvIHRoaXMg
+cGF0Y2ggaXMgYSBwcmVwYXJhdGlvbiBmb3Igb3ZsLTJsIGFuZApvdmwgc2hhcmUgdGhlIHNhbWUg
+ZHJpdmVyLiBEZXNjcmliZSBtb3JlIGluZm9ybWF0aW9uIGZvciB0aGlzIHBhdGNoLgoKUmVnYXJk
+cywKQ0sKCj4gU2lnbmVkLW9mZi1ieTogWW9uZ3FpYW5nIE5pdSA8eW9uZ3FpYW5nLm5pdUBtZWRp
+YXRlay5jb20+Cj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwu
+YyB8IDcgKysrKysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgNiBpbnNlcnRpb25zKCspLCAxIGRlbGV0
+aW9uKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlz
+cF9vdmwuYyBiL2RyaXZlcnMvZ3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9vdmwuYwo+IGluZGV4
+IGFmYjMxM2MuLmEwYWI3NjAgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kaXNwX292bC5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNw
+X292bC5jCj4gQEAgLTYwLDYgKzYwLDcgQEAKPiAgc3RydWN0IG10a19kaXNwX292bF9kYXRhIHsK
+PiAgCXVuc2lnbmVkIGludCBhZGRyOwo+ICAJdW5zaWduZWQgaW50IGdtY19iaXRzOwo+ICsJdW5z
+aWduZWQgaW50IGxheWVyX25yOwo+ICAJYm9vbCBmbXRfcmdiNTY1X2lzXzA7Cj4gIH07Cj4gIAo+
+IEBAIC0xMzcsNyArMTM4LDkgQEAgc3RhdGljIHZvaWQgbXRrX292bF9jb25maWcoc3RydWN0IG10
+a19kZHBfY29tcCAqY29tcCwgdW5zaWduZWQgaW50IHcsCj4gIAo+ICBzdGF0aWMgdW5zaWduZWQg
+aW50IG10a19vdmxfbGF5ZXJfbnIoc3RydWN0IG10a19kZHBfY29tcCAqY29tcCkKPiAgewo+IC0J
+cmV0dXJuIDQ7Cj4gKwlzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsICpvdmwgPSBjb21wX3RvX292bChjb21w
+KTsKPiArCj4gKwlyZXR1cm4gb3ZsLT5kYXRhLT5sYXllcl9ucjsKPiAgfQo+ICAKPiAgc3RhdGlj
+IHZvaWQgbXRrX292bF9sYXllcl9vbihzdHJ1Y3QgbXRrX2RkcF9jb21wICpjb21wLCB1bnNpZ25l
+ZCBpbnQgaWR4KQo+IEBAIC0zNDIsMTIgKzM0NSwxNCBAQCBzdGF0aWMgaW50IG10a19kaXNwX292
+bF9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikKPiAgc3RhdGljIGNvbnN0IHN0
+cnVjdCBtdGtfZGlzcF9vdmxfZGF0YSBtdDI3MDFfb3ZsX2RyaXZlcl9kYXRhID0gewo+ICAJLmFk
+ZHIgPSBESVNQX1JFR19PVkxfQUREUl9NVDI3MDEsCj4gIAkuZ21jX2JpdHMgPSA4LAo+ICsJLmxh
+eWVyX25yID0gNCwKPiAgCS5mbXRfcmdiNTY1X2lzXzAgPSBmYWxzZSwKPiAgfTsKPiAgCj4gIHN0
+YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2Rpc3Bfb3ZsX2RhdGEgbXQ4MTczX292bF9kcml2ZXJfZGF0
+YSA9IHsKPiAgCS5hZGRyID0gRElTUF9SRUdfT1ZMX0FERFJfTVQ4MTczLAo+ICAJLmdtY19iaXRz
+ID0gOCwKPiArCS5sYXllcl9uciA9IDQsCj4gIAkuZm10X3JnYjU2NV9pc18wID0gdHJ1ZSwKPiAg
+fTsKPiAgCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18K
+ZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0
+dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
