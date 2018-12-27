@@ -1,90 +1,91 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: edac: Aspeed AST2500
-Date: Thu, 27 Dec 2018 16:09:06 -0600
-Message-ID: <20181227220906.GA14320@bogus>
-References: <1545026517-64069-1-git-send-email-schaecsn@gmx.net>
- <1545026517-64069-3-git-send-email-schaecsn@gmx.net>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH v2 1/3] dt-bindings: display: bridge: fork out ti,ds90c185
+ from lvds-transmitter
+Date: Thu, 27 Dec 2018 22:53:55 +0000
+Message-ID: <35e85643-b23c-4958-bb8c-f9536bc8d864@axentia.se>
+References: <20181219130449.31641-1-peda@lysator.liu.se>
+ <20181219130449.31641-2-peda@lysator.liu.se> <20181227212727.GA26893@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545026517-64069-3-git-send-email-schaecsn@gmx.net>
+In-Reply-To: <20181227212727.GA26893@bogus>
+Content-Language: en-US
+Content-ID: <AED14BB4E84D4E40877A4233FD6C16C7@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Schaeckeler <schaecsn@gmx.net>
-Cc: Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-edac@vger.kernel.org, Stefan M Schaeckeler <sschaeck@cisco.com>
+To: Rob Herring <robh@kernel.org>, Peter Rosin <peda@lysator.liu.se>
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, David Airlie <airlied@linux.ie>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 16, 2018 at 10:01:57PM -0800, Stefan Schaeckeler wrote:
-> From: Stefan M Schaeckeler <sschaeck@cisco.com>
-> 
-> Add support for the Aspeed AST2500 SoC EDAC driver.
-> 
-> Signed-off-by: Stefan M Schaeckeler <sschaeck@cisco.com>
-> ---
->  .../bindings/edac/aspeed-sdram-edac.txt       | 34 +++++++++++++++++++
->  1 file changed, 34 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt b/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> new file mode 100644
-> index 000000000000..57ba852883c7
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> @@ -0,0 +1,34 @@
-> +Aspeed AST2500 SoC EDAC device driver
-
-Bindings are for h/w, not drivers
-
-> +
-> +The Aspeed AST2500 SoC supports DDR3 and DDR4 memory with and without ECC (error
-> +correction check).
-> +
-> +The memory controller supports SECDED (single bit error correction, double bit
-> +error detection) and single bit error auto scrubbing by reserving 8 bits for
-> +every 64 bit word (effectively reducing available memory to 8/9).
-> +
-> +First, ECC must be configured in u-boot. Then, this driver will expose error
-> +counters via the edac kernel framework.
-
-Please reword this to not be u-boot or kernel specific.
-
-Maybe this node is enabled in the bootloader or the OS can just read the 
-registers to see if ECC is enabled. The latter is more future proof if 
-you need to access the DDR ctrl registers for other reasons.
-
-> +
-> +A note on memory organization in ECC mode: every 512 bytes are followed by 64
-> +bytes of ECC codes. 
-
-That sounds strange. Normally, the memory would be 72-bits wide to hold 
-the ECC byte for each 64-bit chunk. It would be inefficient to access 
-the ECC byte in a discontiguous location. In any case, none of this is 
-really important for the binding.
-
-> The address remapping is done in hardware and is fully
-> +transparent to firmware and software. Because of this, ECC mode must be
-> +configured in u-boot as part of the memory initialization as one can not switch
-> +from one mode to another when executing in memory.
-> +
-> +
-> +
-> +Required properties:
-> +- compatible: should be "aspeed,ast2500-sdram-edac"
-> +- reg:        sdram controller register set should be <0x1e6e0000 0x174>
-> +- interrupts: should be AVIC interrupt #0
-> +
-> +
-> +Example:
-> +
-> +	edac: sdram@1e6e0000 {
-> +		compatible = "aspeed,ast2500-sdram-edac";
-> +		reg = <0x1e6e0000 0x174>;
-> +		interrupts = <0>;
-> +		status = "okay";
-
-Don't show status in examples.
-
-> +	};
-> -- 
-> 2.19.1
-> 
+T24gMjAxOC0xMi0yNyAyMjoyNywgUm9iIEhlcnJpbmcgd3JvdGU6DQo+IE9uIFdlZCwgRGVjIDE5
+LCAyMDE4IGF0IDAyOjA0OjQ3UE0gKzAxMDAsIFBldGVyIFJvc2luIHdyb3RlOg0KPj4gRnJvbTog
+UGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4NCj4+DQo+PiBEUzkwQzE4NSBoYXMgYSBzaHV0
+ZG93biBwaW4gd2hpY2ggZG9lcyBub3QgZml0IGluIHRoZSBsdmRzLXRyYW5zbWl0dGVyDQo+PiBi
+aW5kaW5nLCB3aGljaCBpcyBtZWFudCB0byBiZSBnZW5lcmljLg0KPj4NCj4+IFRoZSBzaXN0ZXIg
+Y2hpcCBEUzkwQzE4NyBpcyBzaW1pbGFyIHRvIERTOTBDMTg1LCBkZXNjcmliZSBpdCBoZXJlIGFz
+IHdlbGwuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5z
+ZT4NCj4+IC0tLQ0KPj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0
+dGVyLnR4dCAgIHwgIDggKy0tLQ0KPj4gIC4uLi9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxk
+czkwYzE4NS50eHQgICAgICAgIHwgNTUgKysrKysrKysrKysrKysrKysrKysrKw0KPj4gIDIgZmls
+ZXMgY2hhbmdlZCwgNTYgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCj4+ICBjcmVhdGUg
+bW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJp
+ZGdlL3RpLGRzOTBjMTg1LnR4dA0KPj4NCj4+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rl
+dmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQgYi9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFu
+c21pdHRlci50eHQNCj4+IGluZGV4IDUwMjIwMTkwYzIwMy4uZmQzOWFkMzRjMzgzIDEwMDY0NA0K
+Pj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L2x2ZHMtdHJhbnNtaXR0ZXIudHh0DQo+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
+YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvbHZkcy10cmFuc21pdHRlci50eHQNCj4+IEBAIC0yMiwx
+MyArMjIsNyBAQCBhbW9uZyBvdGhlcnMuDQo+PiAgDQo+PiAgUmVxdWlyZWQgcHJvcGVydGllczoN
+Cj4+ICANCj4+IC0tIGNvbXBhdGlibGU6IE11c3QgYmUgb25lIG9yIG1vcmUgb2YgdGhlIGZvbGxv
+d2luZw0KPj4gLSAgLSAidGksZHM5MGMxODUiIGZvciB0aGUgVEkgRFM5MEMxODUgRlBELUxpbmsg
+U2VyaWFsaXplcg0KPj4gLSAgLSAibHZkcy1lbmNvZGVyIiBmb3IgYSBnZW5lcmljIExWRFMgZW5j
+b2RlciBkZXZpY2UNCj4+IC0NCj4+IC0gIFdoZW4gY29tcGF0aWJsZSB3aXRoIHRoZSBnZW5lcmlj
+IHZlcnNpb24sIG5vZGVzIG11c3QgbGlzdCB0aGUNCj4+IC0gIGRldmljZS1zcGVjaWZpYyB2ZXJz
+aW9uIGNvcnJlc3BvbmRpbmcgdG8gdGhlIGRldmljZSBmaXJzdA0KPj4gLSAgZm9sbG93ZWQgYnkg
+dGhlIGdlbmVyaWMgdmVyc2lvbi4NCj4+ICstIGNvbXBhdGlibGU6IE11c3QgYmUgImx2ZHMtZW5j
+b2RlciINCj4+ICANCj4+ICBSZXF1aXJlZCBub2RlczoNCj4+ICANCj4+IGRpZmYgLS1naXQgYS9E
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksZHM5MGMx
+ODUudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L3RpLGRzOTBjMTg1LnR4dA0KPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQNCj4+IGluZGV4IDAwMDAw
+MDAwMDAwMC4uYTEzZTc3ODUwM2U2DQo+PiAtLS0gL2Rldi9udWxsDQo+PiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksZHM5MGMxODUudHh0
+DQo+PiBAQCAtMCwwICsxLDU1IEBADQo+PiArVGV4YXMgSW5zdHJ1bWVudHMgRlBELUxpbmsgKExW
+RFMpIFNlcmlhbGl6ZXINCj4+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLQ0KPj4gKw0KPj4gK1RoZSBEUzkwQzE4NSBhbmQgRFM5MEMxODcgYXJlIGxvdy1wb3dl
+ciBzZXJpYWxpemVycyBmb3IgcG9ydGFibGUNCj4+ICtiYXR0ZXJ5LXBvd2VyZWQgYXBwbGljYXRp
+b25zIHRoYXQgcmVkdWNlcyB0aGUgc2l6ZSBvZiB0aGUgUkdCDQo+PiAraW50ZXJmYWNlIGJldHdl
+ZW4gdGhlIGhvc3QgR1BVIGFuZCB0aGUgZGlzcGxheS4NCj4+ICsNCj4+ICtSZXF1aXJlZCBwcm9w
+ZXJ0aWVzOg0KPj4gKw0KPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlDQo+PiArICAidGksZHM5
+MGMxODUiLCAibHZkcy1lbmNvZGVyIiAgZm9yIHRoZSBUSSBEUzkwQzE4NSBGUEQtTGluayBTZXJp
+YWxpemVyDQo+PiArICAidGksZHM5MGMxODciLCAibHZkcy1lbmNvZGVyIiAgZm9yIHRoZSBUSSBE
+UzkwQzE4NyBGUEQtTGluayBTZXJpYWxpemVyDQo+PiArDQo+PiArT3B0aW9uYWwgcHJvcGVydGll
+czoNCj4+ICsNCj4+ICstIHB3ZG4tZ3Bpb3M6IFBvd2VyIGRvd24gY29udHJvbCBHUElPICh0aGUg
+UERCIHBpbiwgYWN0aXZlLWxvdykNCj4gDQo+IHBvd2VyZG93bi1ncGlvcyBpcyB0aGUgc3RhbmRh
+cmQgbmFtZS4NCg0KVGhlIGx2ZHMtZW5jb2RlciBkcml2ZXIgaGFuZGxlcyB0aGlzIGJpbmRpbmcs
+IGFuZCB0aGF0IGRyaXZlciBpbmNpZGVudGFsbHkNCmFsc28gaW1wbGVtZW50cyB0aGUgdGhpbmUs
+dGhjNjNsdmRtODNkIGJpbmRpbmcgd2hpY2ggYWxyZWFkeSBoYXMgYQ0KcHdkbi1ncGlvcyBwcm9w
+ZXJ0eS4gU2hvdWxkIHRoZSB0aGluZSx0aGM2M2x2ZG04M2QgYmluZGluZyBiZSB1cGRhdGVkIGFu
+ZA0KdGhlIGRyaXZlciBiZSBtYWRlIHRvIHN1cHBvcnQgYm90aCBwcm9wZXJ0aWVzPw0KDQpTaW5j
+ZSB0aGUgbHZkcy1lbmNvZGVyIGRyaXZlciBuZXZlciBoYWQgc3VwcG9ydCBmb3IgdGhlIHB3ZG4t
+Z3Bpb3MgKGF0IGxlYXN0DQpub3QgdXBzdHJlYW0pIEkgc3VwcG9zZSB0aGVyZSBpcyBhbHNvIHRo
+ZSBvcHRpb24gdG8gc2ltcGx5IGdvIHdpdGgNCnBvd2VyZG93bi1ncGlvcyBhcyB5b3Ugc3VnZ2Vz
+dCBhbmQgbm90IGJvdGhlciB3aXRoIHN1cHBvcnQgZm9yIHRoZQ0KcHdkbi1ncGlvcyBwcm9wZXJ0
+eS4NCg0KSSdtIHF1aXRlIHdpbGxpbmcgdG8gc2VuZCBhbiB1cGRhdGVkIHNlcmllcywgYnV0IEkg
+ZG9uJ3Qga25vdyB3aGF0IGlzDQpwcmVmZXJyZWQsIGFuZCBhbSBpbiBuZWVkIG9mIGd1aWRhbmNl
+Lg0KDQpDaGVlcnMsDQpQZXRlcg0KDQo+PiArDQo+PiArUmVxdWlyZWQgbm9kZXM6DQo+PiArDQo+
+PiArVGhlIGRldmljZXMgaGF2ZSB0d28gdmlkZW8gcG9ydHMuIFRoZWlyIGNvbm5lY3Rpb25zIGFy
+ZSBtb2RlbGVkIHVzaW5nIHRoZSBPRg0KPj4gK2dyYXBoIGJpbmRpbmdzIHNwZWNpZmllZCBpbiBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZ3JhcGgudHh0Lg0KPj4gKw0KPj4gKy0g
+VmlkZW8gcG9ydCAwIGZvciBwYXJhbGxlbCBpbnB1dA0KPj4gKy0gVmlkZW8gcG9ydCAxIGZvciBM
+VkRTIG91dHB1dA0KPj4gKw0KPj4gKw0KPj4gK0V4YW1wbGUNCj4+ICstLS0tLS0tDQo+PiArDQo+
+PiArbHZkcy1lbmNvZGVyIHsNCj4+ICsJY29tcGF0aWJsZSA9ICJ0aSxkczkwYzE4NSIsICJsdmRz
+LWVuY29kZXIiOw0KPj4gKw0KPj4gKwlwd2RuLWdwaW9zID0gPCZncGlvIDE3IEdQSU9fQUNUSVZF
+X0xPVz47DQo+PiArDQo+PiArCXBvcnRzIHsNCj4+ICsJCSNhZGRyZXNzLWNlbGxzID0gPDE+Ow0K
+Pj4gKwkJI3NpemUtY2VsbHMgPSA8MD47DQo+PiArDQo+PiArCQlwb3J0QDAgew0KPj4gKwkJCXJl
+ZyA9IDwwPjsNCj4+ICsNCj4+ICsJCQlsdmRzX2VuY19pbjogZW5kcG9pbnQgew0KPj4gKwkJCQly
+ZW1vdGUtZW5kcG9pbnQgPSA8JmxjZGNfb3V0X3JnYj47DQo+PiArCQkJfTsNCj4+ICsJCX07DQo+
+PiArDQo+PiArCQlwb3J0QDEgew0KPj4gKwkJCXJlZyA9IDwxPjsNCj4+ICsNCj4+ICsJCQlsdmRz
+X2VuY19vdXQ6IGVuZHBvaW50IHsNCj4+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZsdmRzX3Bh
+bmVsX2luPjsNCj4+ICsJCQl9Ow0KPj4gKwkJfTsNCj4+ICsJfTsNCj4+ICt9Ow0KPj4gLS0gDQo+
+PiAyLjExLjANCj4+DQoNCg==
