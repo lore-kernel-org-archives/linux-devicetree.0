@@ -1,7 +1,7 @@
 From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH 2/2] devicetree: hwmon: Add bindings documentation for HIH6130
-Date: Thu, 27 Dec 2018 16:13:49 +0100
-Message-ID: <20181227151349.29753-3-andreas@kemnade.info>
+Subject: [PATCH 1/2] hwmon: (hih6130) add dtb compatibility tables
+Date: Thu, 27 Dec 2018 16:13:48 +0100
+Message-ID: <20181227151349.29753-2-andreas@kemnade.info>
 References: <20181227151349.29753-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181227151349.29753-1-andreas@kemnade.info>
@@ -10,31 +10,36 @@ To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.
 Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for HIH6130 driver.
+This allows the hih6130 to be used in devicetree files and auto-probed
+that way.
 
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- Documentation/devicetree/bindings/hwmon/hih6130.txt | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/hwmon/hih6130.txt
+ drivers/hwmon/hih6130.c | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/hwmon/hih6130.txt b/Documentation/devicetree/bindings/hwmon/hih6130.txt
-new file mode 100644
-index 000000000000..2c43837af4c2
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/hih6130.txt
-@@ -0,0 +1,12 @@
-+Honeywell Humidicon HIH-6130 humidity/temperature sensor
-+--------------------------------------------------------
+diff --git a/drivers/hwmon/hih6130.c b/drivers/hwmon/hih6130.c
+index 0ae1ee1dbf76..de1b50ddc740 100644
+--- a/drivers/hwmon/hih6130.c
++++ b/drivers/hwmon/hih6130.c
+@@ -254,8 +254,17 @@ static const struct i2c_device_id hih6130_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, hih6130_id);
+ 
++static const struct of_device_id hih6130_of_match[] = {
++	{ .compatible = "honeywell,hih6130", },
++	{ }
++};
++MODULE_DEVICE_TABLE(of, hih6130_of_match);
 +
-+Requires node properties:
-+- compatible : "honeywell,hi6130"
-+- reg : the I2C address of the device. This is 0x27.
-+
-+Example:
-+	hih6130@27 {
-+		compatible = "honeywell,hih6130";
-+		reg = <0x27>;
-+	};
+ static struct i2c_driver hih6130_driver = {
+-	.driver.name = "hih6130",
++	.driver = {
++		.name = "hih6130",
++		.of_match_table = of_match_ptr(hih6130_of_match),
++	},
+ 	.probe       = hih6130_probe,
+ 	.id_table    = hih6130_id,
+ };
 -- 
 2.11.0
