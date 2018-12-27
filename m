@@ -1,85 +1,167 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v4 04/13] firmware: ti_sci: Add RM mapping table for am654
-Date: Thu, 27 Dec 2018 11:43:04 +0530
-Message-ID: <20181227061313.5451-4-lokeshvutla@ti.com>
+Subject: [PATCH v4 01/13] firmware: ti_sci: Add support to get TISCI handle using of_phandle
+Date: Thu, 27 Dec 2018 11:43:01 +0530
+Message-ID: <20181227061313.5451-1-lokeshvutla@ti.com>
 References: <20181227060829.5080-1-lokeshvutla@ti.com>
- <20181227061313.5451-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181227061313.5451-1-lokeshvutla@ti.com>
+In-Reply-To: <20181227060829.5080-1-lokeshvutla@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net
 Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+From: Grygorii Strashko <grygorii.strashko@ti.com>
 
-Add the resource mapping table for AM654 SoC as defined
-in http://downloads.ti.com/tisci/esd/latest/5_soc_doc/am6x/resasg_types.html
-Introduce a new compatible for AM654 "ti,am654-sci" for using
-this resource map table.
+TISCI has been updated to have support for Resource management(likes
+interrupts etc..). And there can be multiple device instances of a
+resource type in a SoC. So every driver corresponding to a resource type
+should get a TISCI handle so that it can make TISCI calls. And each
+DT node corresponding to a device should exist under its corresponding
+bus node as per the SoC architecture.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+But existing apis in TISCI library assumes that all TISCI users are
+child nodes of TISCI. Which is not true in the above case. So introduce
+(devm_)ti_sci_get_by_phandle() apis that can be used by TISCI users
+to get TISCI handle using of phandle property.
+
+Signed-off-by: Grygorii Strashko <grygorii.strashko@ti.com>
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- .../bindings/arm/keystone/ti,sci.txt          |  3 ++-
- drivers/firmware/ti_sci.c                     | 23 +++++++++++++++++++
- 2 files changed, 25 insertions(+), 1 deletion(-)
+ drivers/firmware/ti_sci.c              | 83 ++++++++++++++++++++++++++
+ include/linux/soc/ti/ti_sci_protocol.h | 17 ++++++
+ 2 files changed, 100 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-index b56a02c10ae6..6f0cd31c1520 100644
---- a/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-+++ b/Documentation/devicetree/bindings/arm/keystone/ti,sci.txt
-@@ -24,7 +24,8 @@ relationship between the TI-SCI parent node to the child node.
- 
- Required properties:
- -------------------
--- compatible: should be "ti,k2g-sci"
-+- compatible:	should be "ti,k2g-sci" for TI 66AK2G SoC
-+		should be "ti,am654-sci" for for TI AM654 SoC
- - mbox-names:
- 	"rx" - Mailbox corresponding to receive path
- 	"tx" - Mailbox corresponding to transmit path
 diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index 987bfb29475c..c2f0815edab6 100644
+index 69ed1464175c..f0cafa8a2ee9 100644
 --- a/drivers/firmware/ti_sci.c
 +++ b/drivers/firmware/ti_sci.c
-@@ -2500,10 +2500,33 @@ static const struct ti_sci_desc ti_sci_pmmc_k2g_desc = {
- 	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
- 	.max_msgs = 20,
- 	.max_msg_size = 64,
-+	.rm_type_map = NULL,
-+};
-+
-+static struct ti_sci_rm_type_map ti_sci_am654_rm_type_map[] = {
-+	{.dev_id = 56, .type = 0x00b}, /* GIC_IRQ */
-+	{.dev_id = 179, .type = 0x000}, /* MAIN_NAV_UDMASS_IA0 */
-+	{.dev_id = 187, .type = 0x009}, /* MAIN_NAV_RA */
-+	{.dev_id = 188, .type = 0x006}, /* MAIN_NAV_UDMAP */
-+	{.dev_id = 194, .type = 0x007}, /* MCU_NAV_UDMAP */
-+	{.dev_id = 195, .type = 0x00a}, /* MCU_NAV_RA */
-+	{.dev_id = 0, .type = 0x000}, /* end of table */
-+};
-+
-+/* Description for AM654 */
-+static const struct ti_sci_desc ti_sci_pmmc_am654_desc = {
-+	.default_host_id = 12,
-+	/* Conservative duration */
-+	.max_rx_timeout_ms = 10000,
-+	/* Limited by MBOX_TX_QUEUE_LEN. K2G can handle upto 128 messages! */
-+	.max_msgs = 20,
-+	.max_msg_size = 60,
-+	.rm_type_map = ti_sci_am654_rm_type_map,
- };
+@@ -1781,6 +1781,89 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(devm_ti_sci_get_handle);
  
- static const struct of_device_id ti_sci_of_match[] = {
- 	{.compatible = "ti,k2g-sci", .data = &ti_sci_pmmc_k2g_desc},
-+	{.compatible = "ti,am654-sci", .data = &ti_sci_pmmc_am654_desc},
- 	{ /* Sentinel */ },
- };
- MODULE_DEVICE_TABLE(of, ti_sci_of_match);
++/**
++ * ti_sci_get_by_phandle() - Get the TI SCI handle using DT phandle
++ * @np:		device node
++ * @propname:	property name containing phandle on TISCI node
++ *
++ * NOTE: The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ * ti_sci_put_handle must be balanced with successful ti_sci_get_by_phandle
++ * Return: pointer to handle if successful, else:
++ * -EPROBE_DEFER if the instance is not ready
++ * -ENODEV if the required node handler is missing
++ * -EINVAL if invalid conditions are encountered.
++ */
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	struct ti_sci_handle *handle = NULL;
++	struct device_node *ti_sci_np;
++	struct ti_sci_info *info;
++	struct list_head *p;
++
++	if (!np) {
++		pr_err("I need a device pointer\n");
++		return ERR_PTR(-EINVAL);
++	}
++
++	ti_sci_np = of_parse_phandle(np, property, 0);
++	if (!ti_sci_np)
++		return ERR_PTR(-ENODEV);
++
++	mutex_lock(&ti_sci_list_mutex);
++	list_for_each(p, &ti_sci_list) {
++		info = list_entry(p, struct ti_sci_info, node);
++		if (ti_sci_np == info->dev->of_node) {
++			handle = &info->handle;
++			info->users++;
++			break;
++		}
++	}
++	mutex_unlock(&ti_sci_list_mutex);
++	of_node_put(ti_sci_np);
++
++	if (!handle)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(ti_sci_get_by_phandle);
++
++/**
++ * devm_ti_sci_get_by_phandle() - Managed get handle using phandle
++ * @dev:	Device pointer requesting TISCI handle
++ * @propname:	property name containing phandle on TISCI node
++ *
++ * NOTE: This releases the handle once the device resources are
++ * no longer needed. MUST NOT BE released with ti_sci_put_handle.
++ * The function does not track individual clients of the framework
++ * and is expected to be maintained by caller of TI SCI protocol library.
++ *
++ * Return: 0 if all went fine, else corresponding error.
++ */
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	const struct ti_sci_handle *handle;
++	const struct ti_sci_handle **ptr;
++
++	ptr = devres_alloc(devm_ti_sci_release, sizeof(*ptr), GFP_KERNEL);
++	if (!ptr)
++		return ERR_PTR(-ENOMEM);
++	handle = ti_sci_get_by_phandle(dev_of_node(dev), property);
++
++	if (!IS_ERR(handle)) {
++		*ptr = handle;
++		devres_add(dev, ptr);
++	} else {
++		devres_free(ptr);
++	}
++
++	return handle;
++}
++EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
++
+ static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
+ 				void *cmd)
+ {
+diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
+index 18435e5c6364..515587e9d373 100644
+--- a/include/linux/soc/ti/ti_sci_protocol.h
++++ b/include/linux/soc/ti/ti_sci_protocol.h
+@@ -217,6 +217,10 @@ struct ti_sci_handle {
+ const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
+ int ti_sci_put_handle(const struct ti_sci_handle *handle);
+ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev);
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property);
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property);
+ 
+ #else	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+@@ -236,6 +240,19 @@ const struct ti_sci_handle *devm_ti_sci_get_handle(struct device *dev)
+ 	return ERR_PTR(-EINVAL);
+ }
+ 
++static inline
++const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
++						  const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
++
++static inline
++const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
++						       const char *property)
++{
++	return ERR_PTR(-EINVAL);
++}
+ #endif	/* CONFIG_TI_SCI_PROTOCOL */
+ 
+ #endif	/* __TISCI_PROTOCOL_H */
 -- 
 2.19.2
