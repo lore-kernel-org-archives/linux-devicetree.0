@@ -1,60 +1,32 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/1] clk: imx8qxp: make the name of clock ID generic
-Date: Thu, 27 Dec 2018 15:54:47 -0600
-Message-ID: <20181227215447.GA12514@bogus>
-References: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: remoteproc: qcom: Introduce
+ shutdown-ack irq for Q6V5
+Date: Thu, 27 Dec 2018 15:55:29 -0600
+Message-ID: <20181227215529.GA13758@bogus>
+References: <20181224084824.25193-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20181224084824.25193-1-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, ohad@wizery.com, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Dec 2018 16:20:02 +0000, Aisheng Dong wrote:
-> SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
-> Let's make the name of clock ID generic to allow other SoCs to reuse
-> the common part.
+On Mon, 24 Dec 2018 14:18:21 +0530, Sibi Sankar wrote:
+> Introduce shutdown-irq binding required for sysmon shutdown for Q6V5 MSS
+> on SDM845/MSM8996 SoCs and for WCSS Q6V5 on QCS404 SoC.
 > 
-> This patch only changes the clock id name and file name, so no
-> functional change.
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
 > 
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
-> According to Stephen's suggestion[1], resend the needed changes
-> for 4.21 separately, then we can pick it up and send it as part
-> of a follow-on fixes PR during the merge window next week.
-> As there's still no users in kernel and the plan is also to avoid
-> any using of it, so please help review at an early time.
-> v1->v2:
->  * resend Patch [4/5] which needs to change for v4.21.
->  * update headfile name accordingly
-> [1] https://patchwork.kernel.org/patch/10737463/
-> ---
->  drivers/clk/imx/clk-imx8qxp-lpcg.c        | 148 +++++++--------
->  drivers/clk/imx/clk-imx8qxp.c             | 154 ++++++++--------
->  include/dt-bindings/clock/imx8-clock.h    | 289 ++++++++++++++++++++++++++++++
->  include/dt-bindings/clock/imx8qxp-clock.h | 289 ------------------------------
->  4 files changed, 440 insertions(+), 440 deletions(-)
->  create mode 100644 include/dt-bindings/clock/imx8-clock.h
->  delete mode 100644 include/dt-bindings/clock/imx8qxp-clock.h
+> v2:
+>   Make shutdown-ack mandatory for MSS on SDM845/MSM8996 and
+>   for WCSS on QCS404 (Dropping Rob's reviewed-by due to this)
+> 
+>  .../bindings/remoteproc/qcom,adsp.txt           | 17 ++++++++++++++---
+>  .../bindings/remoteproc/qcom,q6v5.txt           | 15 ++++++++++++---
+>  2 files changed, 26 insertions(+), 6 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
