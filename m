@@ -1,59 +1,37 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v9 06/27] MAINTAINERS: Add myself as maintainer for Ingenic TCU drivers
-Date: Thu, 27 Dec 2018 19:12:58 +0100
-Message-ID: <20181227181319.31095-7-paul@crapouillou.net>
-References: <20181227181319.31095-1-paul@crapouillou.net>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v4 2/5] leds: Add helper for getting default pattern from
+ Device Tree
+Date: Thu, 27 Dec 2018 20:29:33 +0100
+Message-ID: <2efcaaa2-61ef-c967-dacc-8aff51c17840@gmail.com>
+References: <1545146852-32207-1-git-send-email-krzk@kernel.org>
+ <1545146852-32207-3-git-send-email-krzk@kernel.org>
+ <CAJKOXPew1Ufq8vOE2=dqh-=zCQpB8H-X+CEK456MqgcEsNi+5A@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181227181319.31095-1-paul@crapouillou.net>
+In-Reply-To: <CAJKOXPew1Ufq8vOE2=dqh-=zCQpB8H-X+CEK456MqgcEsNi+5A@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, =?UTF-8?q?Uwe=20Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Krzysztof Kozlowski <krzk@kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Raphael Teysseyre <rteysseyre@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add myself as maintainer for the ingenic-timer and ingenic-ost drivers.
+On 12/27/18 9:47 AM, Krzysztof Kozlowski wrote:
+> On Tue, 18 Dec 2018 at 16:27, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>>
+>> Multiple LED triggers might need to access default pattern so add a
+>> helper for that.
+>>
+>> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+>> ---
+>>   drivers/leds/led-class.c | 42 ++++++++++++++++++++++++++++++++++++++++++
+> 
+> As pointed out by 0day-ci this has to be in leds-core.c.
+> 
+> I'll fix it.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Right, please also remove "classdev" from the new API name.
 
-Notes:
-     v2: No change
-    
-     v3: No change
-    
-     v4: No change
-    
-     v5: Update with new files
-    
-     v6: No change
-    
-     v7: No change
-
-     v8: No change
-
-     v9: No change
-
- MAINTAINERS | 9 +++++++++
- 1 file changed, 9 insertions(+)
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index f3a5c97e3419..da08c2b9f261 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -7401,6 +7401,15 @@ L:	linux-mtd@lists.infradead.org
- S:	Maintained
- F:	drivers/mtd/nand/raw/jz4780_*
- 
-+INGENIC TCU driver
-+M:	Paul Cercueil <paul@crapouillou.net>
-+S:	Maintained
-+F:	drivers/clocksource/ingenic-ost.c
-+F:	drivers/clocksource/ingenic-timer.c
-+F:	drivers/clocksource/ingenic-timer.h
-+F:	include/linux/mfd/ingenic-tcu.h
-+F:	include/dt-bindings/clock/ingenic,tcu.h
-+
- INOTIFY
- M:	Jan Kara <jack@suse.cz>
- R:	Amir Goldstein <amir73il@gmail.com>
 -- 
-2.11.0
+Best regards,
+Jacek Anaszewski
