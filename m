@@ -1,7 +1,7 @@
 From: Lokesh Vutla <lokeshvutla@ti.com>
-Subject: [PATCH v4 05/13] firmware: ti_sci: Add helper apis to manage resources
-Date: Thu, 27 Dec 2018 11:43:05 +0530
-Message-ID: <20181227061313.5451-5-lokeshvutla@ti.com>
+Subject: [RFC PATCH v4 08/13] genirq/msi: Add support for allocating single MSI for a device
+Date: Thu, 27 Dec 2018 11:43:08 +0530
+Message-ID: <20181227061313.5451-8-lokeshvutla@ti.com>
 References: <20181227060829.5080-1-lokeshvutla@ti.com>
  <20181227061313.5451-1-lokeshvutla@ti.com>
 Mime-Version: 1.0
@@ -14,227 +14,138 @@ To: marc.zyngier@arm.com, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantos
 Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Each resource with in the device can be uniquely identified
-by a type and subtype as defined by TISCI. Since this is generic
-across the devices, resource allocation also can be made generic
-instead of each client driver handling the resource. So add helper
-apis to manage the resource.
+Previously all msi for a device are allocated in one go
+by calling msi_domain_alloc_irq() from a bus layer. This might
+not be the case when a device is trying to allocate interrupts
+dynamically based on a request to it.
+
+So introduce msi_domain_alloc/free_irq() apis to allocate a single
+msi. prepare and activate operations to be handled by bus layer
+calling msi_domain_alloc/free_irq() apis.
 
 Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 ---
- drivers/firmware/ti_sci.c              | 126 +++++++++++++++++++++++++
- include/linux/soc/ti/ti_sci_protocol.h |  48 ++++++++++
- 2 files changed, 174 insertions(+)
+ include/linux/msi.h |  3 +++
+ kernel/irq/msi.c    | 62 +++++++++++++++++++++++++++++----------------
+ 2 files changed, 43 insertions(+), 22 deletions(-)
 
-diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-index c2f0815edab6..b6804c214be9 100644
---- a/drivers/firmware/ti_sci.c
-+++ b/drivers/firmware/ti_sci.c
-@@ -2480,6 +2480,132 @@ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
- }
- EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
+diff --git a/include/linux/msi.h b/include/linux/msi.h
+index 784fb52b9900..474490826f8c 100644
+--- a/include/linux/msi.h
++++ b/include/linux/msi.h
+@@ -301,8 +301,11 @@ int msi_domain_set_affinity(struct irq_data *data, const struct cpumask *mask,
+ struct irq_domain *msi_create_irq_domain(struct fwnode_handle *fwnode,
+ 					 struct msi_domain_info *info,
+ 					 struct irq_domain *parent);
++int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
++			 struct msi_desc *desc,  msi_alloc_info_t *arg);
+ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+ 			  int nvec);
++void msi_domain_free_irq(struct msi_desc *desc);
+ void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev);
+ struct msi_domain_info *msi_get_domain_info(struct irq_domain *domain);
  
-+/*
-+ * ti_sci_get_free_resource() - Get a free resource from TISCI resource.
-+ * @res:	Pointer to the TISCI resource
-+ *
-+ * Return: resource num if all went ok else TI_SCI_RESOURCE_NULL.
-+ */
-+u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
+diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+index ad26fbcfbfc8..eb7459324113 100644
+--- a/kernel/irq/msi.c
++++ b/kernel/irq/msi.c
+@@ -387,6 +387,35 @@ static bool msi_check_reservation_mode(struct irq_domain *domain,
+ 	return desc->msi_attrib.is_msix || desc->msi_attrib.maskbit;
+ }
+ 
++int msi_domain_alloc_irq(struct irq_domain *domain, struct device *dev,
++			 struct msi_desc *desc,  msi_alloc_info_t *arg)
 +{
-+	unsigned long flags;
-+	u16 set, free_bit;
++	struct msi_domain_info *info = domain->host_data;
++	struct msi_domain_ops *ops = info->ops;
++	int i, ret, virq;
 +
-+	raw_spin_lock_irqsave(&res->lock, flags);
-+	for (set = 0; set < res->sets; set++) {
-+		free_bit = find_first_zero_bit(res->desc[set].res_map,
-+					       res->desc[set].num);
-+		if (free_bit != res->desc[set].num) {
-+			set_bit(free_bit, res->desc[set].res_map);
-+			raw_spin_unlock_irqrestore(&res->lock, flags);
-+			return res->desc[set].start + free_bit;
-+		}
++	ops->set_desc(arg, desc);
++
++	virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
++				       dev_to_node(dev), arg, false,
++				       desc->affinity);
++	if (virq < 0) {
++		ret = -ENOSPC;
++		if (ops->handle_error)
++			ret = ops->handle_error(domain, desc, ret);
++		if (ops->msi_finish)
++			ops->msi_finish(arg, ret);
++		return ret;
 +	}
-+	raw_spin_unlock_irqrestore(&res->lock, flags);
 +
-+	return TI_SCI_RESOURCE_NULL;
++	for (i = 0; i < desc->nvec_used; i++) {
++		irq_set_msi_desc_off(virq, i, desc);
++		irq_debugfs_copy_devname(virq + i, dev);
++	}
++
++	return 0;
 +}
-+EXPORT_SYMBOL_GPL(ti_sci_get_free_resource);
 +
-+/**
-+ * ti_sci_release_resource() - Release a resource from TISCI resource.
-+ * @res:	Pointer to the TISCI resource
-+ */
-+void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
-+{
-+	unsigned long flags;
-+	u16 set;
-+
-+	raw_spin_lock_irqsave(&res->lock, flags);
-+	for (set = 0; set < res->sets; set++) {
-+		if (res->desc[set].start <= id &&
-+		    (res->desc[set].num + res->desc[set].start) > id)
-+			clear_bit(id - res->desc[set].start,
-+				  res->desc[set].res_map);
-+	}
-+	raw_spin_unlock_irqrestore(&res->lock, flags);
-+}
-+EXPORT_SYMBOL_GPL(ti_sci_release_resource);
-+
-+/**
-+ * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
-+ * @handle:	TISCI handle
-+ * @dev:	Device pointer to which the resource is assigned
-+ * @of_prop:	property name by which the resource are represented
-+ *
-+ * Note: This function expects of_prop to be in the form of tuples
-+ *	<type, subtype>. Allocates and initializes ti_sci_resource structure
-+ *	for each of_prop. Client driver can directly call
-+ *	ti_sci_(get_free, release)_resource apis for handling the resource.
-+ *
-+ * Return: Pointer to ti_sci_resource if all went well else appropriate
-+ *	   error pointer.
-+ */
-+struct ti_sci_resource *
-+devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-+			    struct device *dev, u32 dev_id, char *of_prop)
-+{
-+	struct ti_sci_resource *res;
-+	u32 resource_subtype;
-+	u16 resource_type;
-+	int i, ret;
-+
-+	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return ERR_PTR(-ENOMEM);
-+
-+	res->sets = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
-+						    sizeof(u32));
-+	if (res->sets < 0) {
-+		dev_err(dev, "%s resource type ids not available\n", of_prop);
-+		return ERR_PTR(res->sets);
-+	}
-+
-+	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
-+				 GFP_KERNEL);
-+	if (!res->desc)
-+		return ERR_PTR(-ENOMEM);
-+
-+	ret = ti_sci_get_resource_type(handle_to_ti_sci_info(handle), dev_id,
-+				       &resource_type);
-+	if (ret) {
-+		dev_err(dev, "No valid resource type for %u\n", dev_id);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	for (i = 0; i < res->sets; i++) {
-+		ret = of_property_read_u32_index(dev_of_node(dev), of_prop, i,
-+						 &resource_subtype);
+ /**
+  * msi_domain_alloc_irqs - Allocate interrupts from a MSI interrupt domain
+  * @domain:	The domain to allocate from
+@@ -404,7 +433,7 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+ 	struct irq_data *irq_data;
+ 	struct msi_desc *desc;
+ 	msi_alloc_info_t arg;
+-	int i, ret, virq;
++	int ret, virq;
+ 	bool can_reserve;
+ 
+ 	ret = msi_domain_prepare_irqs(domain, dev, nvec, &arg);
+@@ -412,24 +441,9 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+ 		return ret;
+ 
+ 	for_each_msi_entry(desc, dev) {
+-		ops->set_desc(&arg, desc);
+-
+-		virq = __irq_domain_alloc_irqs(domain, -1, desc->nvec_used,
+-					       dev_to_node(dev), &arg, false,
+-					       desc->affinity);
+-		if (virq < 0) {
+-			ret = -ENOSPC;
+-			if (ops->handle_error)
+-				ret = ops->handle_error(domain, desc, ret);
+-			if (ops->msi_finish)
+-				ops->msi_finish(&arg, ret);
++		ret = msi_domain_alloc_irq(domain, dev, desc, &arg);
 +		if (ret)
-+			return ERR_PTR(-EINVAL);
-+
-+		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
-+							resource_subtype,
-+							&res->desc[i].start,
-+							&res->desc[i].num);
-+		if (ret) {
-+			dev_err(dev, "type %d subtype %d not allocated for host %d\n",
-+				resource_type, resource_subtype,
-+				handle_to_ti_sci_info(handle)->host_id);
-+			return ERR_PTR(ret);
-+		}
-+
-+		dev_dbg(dev, "res type = %d, subtype = %d, start = %d, num = %d\n",
-+			resource_type, resource_subtype, res->desc[i].start,
-+			res->desc[i].num);
-+
-+		res->desc[i].res_map =
-+			devm_kzalloc(dev, BITS_TO_LONGS(res->desc[i].num) *
-+				     sizeof(*res->desc[i].res_map), GFP_KERNEL);
-+		if (!res->desc[i].res_map)
-+			return ERR_PTR(-ENOMEM);
-+	}
-+	raw_spin_lock_init(&res->lock);
-+
-+	return res;
-+}
-+EXPORT_SYMBOL_GPL(devm_ti_sci_get_of_resource);
-+
- static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
- 				void *cmd)
- {
-diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-index 6d17580839dc..2a1a41a17295 100644
---- a/include/linux/soc/ti/ti_sci_protocol.h
-+++ b/include/linux/soc/ti/ti_sci_protocol.h
-@@ -317,6 +317,33 @@ struct ti_sci_handle {
- 	struct ti_sci_ops ops;
- };
+ 			return ret;
+-		}
+-
+-		for (i = 0; i < desc->nvec_used; i++) {
+-			irq_set_msi_desc_off(virq, i, desc);
+-			irq_debugfs_copy_devname(virq + i, dev);
+-		}
+ 	}
  
-+#define TI_SCI_RESOURCE_NULL	0xffff
-+
-+/**
-+ * struct ti_sci_resource_desc - Description of TI SCI resource instance range.
-+ * @start:	Start index of the resource.
-+ * @num:	Number of resources.
-+ * @res_map:	Bitmap to manage the allocation of these resources.
-+ */
-+struct ti_sci_resource_desc {
-+	u16 start;
-+	u16 num;
-+	unsigned long *res_map;
-+};
-+
-+/**
-+ * struct ti_sci_resource - Structure representing a resource assigned
-+ *			    to a device.
-+ * @sets:	Number of sets available from this resource type
-+ * @lock:	Lock to guard the res map in each set.
-+ * @desc:	Array of resource descriptors.
-+ */
-+struct ti_sci_resource {
-+	u16 sets;
-+	raw_spinlock_t lock;
-+	struct ti_sci_resource_desc *desc;
-+};
-+
- #if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
- const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
- int ti_sci_put_handle(const struct ti_sci_handle *handle);
-@@ -325,6 +352,11 @@ const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
- 						  const char *property);
- const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
- 						       const char *property);
-+u16 ti_sci_get_free_resource(struct ti_sci_resource *res);
-+void ti_sci_release_resource(struct ti_sci_resource *res, u16 id);
-+struct ti_sci_resource *
-+devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-+			    struct device *dev, u32 dev_id, char *of_prop);
- 
- #else	/* CONFIG_TI_SCI_PROTOCOL */
- 
-@@ -357,6 +389,22 @@ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
- {
- 	return ERR_PTR(-EINVAL);
+ 	if (ops->msi_finish)
+@@ -487,6 +501,12 @@ int msi_domain_alloc_irqs(struct irq_domain *domain, struct device *dev,
+ 	return ret;
  }
-+
-+static inline u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
-+{
-+	return TI_SCI_RESOURCE_NULL;
-+}
-+
-+static inline void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
-+{
-+}
-+
-+static inline struct ti_sci_resource *
-+devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-+			    struct device *dev, u32 dev_id, char *of_prop)
-+{
-+	return ERR_PTR(-EINVAL);
-+}
- #endif	/* CONFIG_TI_SCI_PROTOCOL */
  
- #endif	/* __TISCI_PROTOCOL_H */
++void msi_domain_free_irq(struct msi_desc *desc)
++{
++	irq_domain_free_irqs(desc->irq, desc->nvec_used);
++	desc->irq = 0;
++}
++
+ /**
+  * msi_domain_free_irqs - Free interrupts from a MSI interrupt @domain associated tp @dev
+  * @domain:	The domain to managing the interrupts
+@@ -503,10 +523,8 @@ void msi_domain_free_irqs(struct irq_domain *domain, struct device *dev)
+ 		 * enough that there is no IRQ associated to this
+ 		 * entry. If that's the case, don't do anything.
+ 		 */
+-		if (desc->irq) {
+-			irq_domain_free_irqs(desc->irq, desc->nvec_used);
+-			desc->irq = 0;
+-		}
++		if (desc->irq)
++			msi_domain_free_irq(desc);
+ 	}
+ }
+ 
 -- 
 2.19.2
