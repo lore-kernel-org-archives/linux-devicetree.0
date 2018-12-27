@@ -1,69 +1,43 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v2 5/5] usb:cdns3 Add Cadence USB3 DRD Driver
-Date: Thu, 27 Dec 2018 09:36:40 +0000
-Message-ID: <BYAPR07MB4709F8A00A13390235BA4BE1DDB60@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1545577992-4013-1-git-send-email-pawell@cadence.com>
- <1545577992-4013-6-git-send-email-pawell@cadence.com>
- <CAL411-rj0mRMfPCZOHw04q3s-9oJx7Os9Jz83bO=RgPZKLrB1g@mail.gmail.com>
- <CAL411-omVL2rwoQP6GwKZa9f_1TLBbEAkyLdxNkJZqaQu9cvsA@mail.gmail.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl-scu: add imx8qm pinctrl support
+Date: Thu, 27 Dec 2018 10:42:44 +0100
+Message-ID: <CACRpkdZU7toMYYP3UGRorCW6WhqukeWXCZMpe=_f9EWcWsRw6w@mail.gmail.com>
+References: <1545146239-30993-1-git-send-email-aisheng.dong@nxp.com>
+ <1545146239-30993-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL411-omVL2rwoQP6GwKZa9f_1TLBbEAkyLdxNkJZqaQu9cvsA@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <hzpeterchen@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545146239-30993-2-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksDQoNCj4+ID4gKw0KPj4gPiArICAgICAgIGlmIChyZXQpDQo+PiA+ICsgICAgICAgICAgICAg
-ICByZXR1cm4gcmV0Ow0KPj4gPiArDQo+PiA+ICsgICAgICAgc3RhdGUgPSByZWFkbCgmY2Rucy0+
-b3RnX3JlZ3MtPnN0cyk7DQo+PiA+ICsgICAgICAgaWYgKE9UR1NUU19PVEdfTlJEWShzdGF0ZSkg
-IT0gMCkgew0KPj4gPiArICAgICAgICAgICAgICAgZGV2X2VycihjZG5zLT5kZXYsICJDYWRlbmNl
-IFVTQjMgT1RHIGRldmljZSBub3QgcmVhZHlcbiIpOw0KPj4gPiArICAgICAgICAgICAgICAgcmV0
-dXJuIC1FTk9ERVY7DQo+PiA+ICsgICAgICAgfQ0KPj4gPiArDQo+PiA+ICsgICAgICAgcmV0ID0g
-Y2RuczNfZHJkX3VwZGF0ZV9tb2RlKGNkbnMpOw0KPj4gPiArDQo+Pg0KPj4gQ2FsbGluZyB0aGlz
-IGZ1bmN0aW9uLCBpdCBpcyB0aW1lb3V0IGZvciB3YWl0aW5nIE9UR1NUU19YSENJX1JFQURZIGF0
-IG90Z3N0cywNCj4+IGRvIHlvdSBrbm93IHBvc3NpYmxlIHJlYXNvbnM/ICBBZnRlciBjb21tZW50
-aW5nIG91dCB0aGlzIGZ1bmN0aW9uLCBteQ0KPj4geEhDSSBmdW5jdGlvbg0KPj4gd29ya3MuDQo+
-Pg0KPg0KPlBhd2VsLCBzaW5jZSBPVEcgY29tcGxpYW5jZSAoS25vd24gYXMgSE5QL1NSUCkgIGhh
-cyBub3QgYmVlbiB1c2VkDQo+d2lkZWx5LCBMaW51eCBrZXJuZWwgZG9lcyBub3QNCj5tYWludGFp
-biBpdCBmcm9tIHNvbWUgdGltZSBhZ28gKG1heWJlIDEtMiB5ZWFycykuIEluIHNvZnR3YXJlIGRl
-c2lnbiwNCj53ZSBkbyBub3QgbmVlZCB0byBjb25zaWRlciBpdCBmcm9tDQo+aGFyZHdhcmUgcG9p
-bnQsIGVnLCBraW5kcyBvZiBPVEcgdGltZXIuIEZvciBkdWFsLXJvbGUgc3dpdGNoIG9uIHRoZQ0K
-PmZseSwgIHRocm91Z2ggL3N5cyBpcyBlbm91Z2guDQo+DQo+VGhyb3VnaCB0aGUgZGVidWcsIHdl
-IGZpbmQgaXQgbmVlZHMgdG8gd2FpdCAxcyBhZnRlciBzZXR0aW5nIGRlLXNlbGVjdA0KPnRoZSBo
-b3N0IG9yIGdhZGdldCBiZWZvcmUgcmVxdWVzdA0KPlhIQ0kgYXQgb3RnX3JlZ3MtPmNtZCwgYW5k
-IGVuYWJsZSBmYXN0IHNpbXVsYXRlIGNhbiByZWR1Y2UgZGVsYXkgdG8NCj4yLTNtcy4gV291bGQg
-eW91IHBsZWFzZSBoZWxwDQo+dG8gY2hlY2sgd2l0aCB5b3VyIGhhcmR3YXJlIHRlYW0gdGhpcyBi
-ZWhhdmlvci4gV2l0aCBiZWxvdyBjaGFuZ2VzLCBJDQo+Y2FuIGdldCBPVEdTVFNfWEhDSV9SRUFE
-WSBhdCBvdGdzdHMuDQo+DQo+QEAgLTE0MSw2ICsxNDMsNyBAQCBzdGF0aWMgaW50IGNkbnMzX2Ry
-ZF9zd2l0Y2hfaG9zdChzdHJ1Y3QgY2RuczMgKmNkbnMsIGludCBvbikNCj4gICAgICAgICAgICAg
-ICAgd3JpdGVsKE9UR0NNRF9IT1NUX0JVU19EUk9QIHwgT1RHQ01EX0RFVl9CVVNfRFJPUCB8DQo+
-ICAgICAgICAgICAgICAgICAgICAgICBPVEdDTURfREVWX1BPV0VSX09GRiB8IE9UR0NNRF9IT1NU
-X1BPV0VSX09GRiwNCj4gICAgICAgICAgICAgICAgICAgICAgICZjZG5zLT5vdGdfcmVncy0+Y21k
-KTsNCj4rICAgICAgICAgICAgICAgdXNsZWVwX3JhbmdlKDMwMDAsIDQwMDApOw0KPiAgICAgICAg
-fQ0KPg0KPiAgICAgICAgcmV0dXJuIDA7DQo+QEAgLTE3OCw2ICsxODEsNyBAQCBzdGF0aWMgaW50
-IGNkbnMzX2RyZF9zd2l0Y2hfZ2FkZ2V0KHN0cnVjdCBjZG5zMw0KPipjZG5zLCBpbnQgb24pDQo+
-ICAgICAgICAgICAgICAgIHdyaXRlbChPVEdDTURfSE9TVF9CVVNfRFJPUCB8IE9UR0NNRF9ERVZf
-QlVTX0RST1AgfA0KPiAgICAgICAgICAgICAgICAgICAgICAgT1RHQ01EX0RFVl9QT1dFUl9PRkYg
-fCBPVEdDTURfSE9TVF9QT1dFUl9PRkYsDQo+ICAgICAgICAgICAgICAgICAgICAgICAmY2Rucy0+
-b3RnX3JlZ3MtPmNtZCk7DQo+KyAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgzMDAwLCA0MDAw
-KTsNCj4gICAgICAgIH0NCj4NCj5AQCAtMjk5LDYgKzMwNiw3IEBAIGludCBjZG5zM19kcmRfaW5p
-dChzdHJ1Y3QgY2RuczMgKmNkbnMpDQo+ICAgICAgICAgICAgICAgIGNkbnMtPnZlcnNpb24gID0g
-Q0ROUzNfQ09OVFJPTExFUl9WMDsNCj4gICAgICAgICAgICAgICAgY2Rucy0+b3RnX3YxX3JlZ3Mg
-PSBOVUxMOw0KPiAgICAgICAgICAgICAgICBjZG5zLT5vdGdfcmVncyA9IHJlZ3M7DQo+KyAgICAg
-ICAgICAgICAgIHdyaXRlbCgweDEsICZjZG5zLT5vdGdfdjBfcmVncy0+c2ltdWxhdGUpOw0KPiAg
-ICAgICAgICAgICAgICBkZXZfaW5mbyhjZG5zLT5kZXYsICJEUkQgdmVyc2lvbiB2MCAoJTA4eClc
-biIsDQo+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlYWRsKCZjZG5zLT5vdGdfdjBfcmVncy0+
-dmVyc2lvbikpOw0KPiAgICAgICAgfSBlbHNlIHsNCg0KSSBoYXZlIGNvbmZpcm1hdGlvbiBmcm9t
-IEhXIHRlYW0gdGhhdCB0aW1lIHRoYXQgZHJpdmVyIHNob3VsZCB3YWl0IGFmdGVyIGRlLXNlbGVj
-dGluZyBtb2RlIA0KaXMgMi0zbXMgZm9yIHNpbXVsYXRlIG1vZGUuIEl0J3MgdGltZSB3aGVuIEZT
-TSBpcyBpbiBEUkRfSF9XQUlUX1ZCVVNfRkFJTC4gDQpEcml2ZXIgY2Fubm90IHJlLWVuYWJsZSB0
-aGUgaG9zdC9kZXZpY2UgbW9kZSBiZWZvcmUgdGhpcyB0aW1lIGhhcyBlbGFwc2VkLiANCg0KMyBt
-cyBpcyB0aGUgbWF4aW11bSB0aW1lLiBBZGRpdGlvbmFsbHksIHlvdSBjYW4gY29uZmlybSB0aGUg
-Y3VycmVudCBGU00gc3RhdGUgYnkgcmVhZGluZyB0aGUNCmhvc3Rfb3RnX3N0YXRlIChiaXQgNToz
-KSBvciBkZXZfb3RnX3N0YXRlICgyOjApICBmcm9tIE9UR1NUQVRFIHJlZ2lzdGVyLiANCg0KSWYg
-Yml0IDAgaW4gc2ltdWxhdGUgcmVnaXN0ZXIgaXMgY2xlYXJlZCB0aGUgdGltZSBpcyBleGFjdGx5
-IDFzLg0KDQpDaGVlcnMsDQpQYXdlbA0KDQo=
+On Tue, Dec 18, 2018 at 4:22 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
+
+> Update binding doc to support imx8qm pinctrl.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Linus Walleij <linus.walleij@linaro.org>
+> Cc: Stefan Agner <stefan@agner.ch>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: devicetree@vger.kernel.org
+> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+
+Patch applied.
+
+Yours,
+Linus Walleij
