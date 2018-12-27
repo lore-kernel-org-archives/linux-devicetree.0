@@ -1,17 +1,17 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v4 05/13] firmware: ti_sci: Add helper apis to manage
- resources
-Date: Thu, 27 Dec 2018 10:15:23 -0600
-Message-ID: <20181227161523.sycifwwnqy6nahnt@akan>
-References: <20181227060829.5080-1-lokeshvutla@ti.com>
- <20181227061313.5451-1-lokeshvutla@ti.com>
- <20181227061313.5451-5-lokeshvutla@ti.com>
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH 1/3] ARM: dts: Add wlcore wakeirq for omap3-evm
+Date: Thu, 27 Dec 2018 08:58:12 -0800
+Message-ID: <20181227165812.GS6707@atomide.com>
+References: <20181213230411.5009-1-tony@atomide.com>
+ <CAHCN7xJmde1RJOMMqexR0uNiVEYjztTV4qXvkcjqb+w7R1vmpA@mail.gmail.com>
+ <20181223163040.GO6707@atomide.com>
+ <CAHCN7xJKyjXb6br-f+_q_dQxkqWHFxFfA+X_yYG4eh8w7RW8SQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181227061313.5451-5-lokeshvutla@ti.com>
+In-Reply-To: <CAHCN7xJKyjXb6br-f+_q_dQxkqWHFxFfA+X_yYG4eh8w7RW8SQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,246 +21,51 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Lokesh Vutla <lokeshvutla@ti.com>
-Cc: Device Tree Mailing List <devicetree@vger.kernel.org>, jason@lakedaemon.net, Peter Ujfalusi <peter.ujfalusi@ti.com>, marc.zyngier@arm.com, Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Rob Herring <robh+dt@kernel.org>, Santosh Shilimkar <ssantosh@kernel.org>, tglx@linutronix.de, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>
+To: Adam Ford <aford173@gmail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, arm-soc <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11:43-20181227, Lokesh Vutla wrote:
-> Each resource with in the device can be uniquely identified
-> by a type and subtype as defined by TISCI. Since this is generic
-> across the devices, resource allocation also can be made generic
-> instead of each client driver handling the resource. So add helper
-> apis to manage the resource.
+* Adam Ford <aford173@gmail.com> [181227 14:33]:
+> On Sun, Dec 23, 2018 at 10:30 AM Tony Lindgren <tony@atomide.com> wrote:
+> >
+> > * Adam Ford <aford173@gmail.com> [181222 20:54]:
+> > > I noticed for your patch, I noticed you listed both the IRQ, gpio 149
+> > > as well as uart1_rts.  Looking at the device tree, I see that
+> > > uart1_rts is configured as gpio 149.
+> >
+> > The uart1_rts is just the pad name used in the TRM, so it should
+> > probably say uart1_rts.gpio_149 meaning pad uart1_rts is muxed to
+> > gpio_149.
+> >
+> > Would that clear the issue for you?
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
->  drivers/firmware/ti_sci.c              | 126 +++++++++++++++++++++++++
->  include/linux/soc/ti/ti_sci_protocol.h |  48 ++++++++++
->  2 files changed, 174 insertions(+)
+> That part I understand.  I poorly phrased my question.  What was
+> mostly confusing to me is why both irq and wakeup interrupts are
+> needed since it seems like
 > 
-> diff --git a/drivers/firmware/ti_sci.c b/drivers/firmware/ti_sci.c
-> index c2f0815edab6..b6804c214be9 100644
-> --- a/drivers/firmware/ti_sci.c
-> +++ b/drivers/firmware/ti_sci.c
-> @@ -2480,6 +2480,132 @@ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
->  }
->  EXPORT_SYMBOL_GPL(devm_ti_sci_get_by_phandle);
->  
-> +/*
-> + * ti_sci_get_free_resource() - Get a free resource from TISCI resource.
-> + * @res:	Pointer to the TISCI resource
-> + *
-> + * Return: resource num if all went ok else TI_SCI_RESOURCE_NULL.
-> + */
-> +u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
-> +{
-> +	unsigned long flags;
-> +	u16 set, free_bit;
-> +
-> +	raw_spin_lock_irqsave(&res->lock, flags);
-> +	for (set = 0; set < res->sets; set++) {
-> +		free_bit = find_first_zero_bit(res->desc[set].res_map,
-> +					       res->desc[set].num);
-> +		if (free_bit != res->desc[set].num) {
-> +			set_bit(free_bit, res->desc[set].res_map);
-> +			raw_spin_unlock_irqrestore(&res->lock, flags);
-> +			return res->desc[set].start + free_bit;
-> +		}
-> +	}
-> +	raw_spin_unlock_irqrestore(&res->lock, flags);
-> +
-> +	return TI_SCI_RESOURCE_NULL;
-> +}
-> +EXPORT_SYMBOL_GPL(ti_sci_get_free_resource);
-> +
-> +/**
-> + * ti_sci_release_resource() - Release a resource from TISCI resource.
-> + * @res:	Pointer to the TISCI resource
-> + */
-> +void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
-> +{
-> +	unsigned long flags;
-> +	u16 set;
-> +
-> +	raw_spin_lock_irqsave(&res->lock, flags);
-> +	for (set = 0; set < res->sets; set++) {
-> +		if (res->desc[set].start <= id &&
-> +		    (res->desc[set].num + res->desc[set].start) > id)
-> +			clear_bit(id - res->desc[set].start,
-> +				  res->desc[set].res_map);
-> +	}
-> +	raw_spin_unlock_irqrestore(&res->lock, flags);
-> +}
-> +EXPORT_SYMBOL_GPL(ti_sci_release_resource);
-> +
-> +/**
-> + * devm_ti_sci_get_of_resource() - Get a TISCI resource assigned to a device
-> + * @handle:	TISCI handle
-> + * @dev:	Device pointer to which the resource is assigned
-> + * @of_prop:	property name by which the resource are represented
-> + *
-> + * Note: This function expects of_prop to be in the form of tuples
-> + *	<type, subtype>. Allocates and initializes ti_sci_resource structure
-> + *	for each of_prop. Client driver can directly call
-> + *	ti_sci_(get_free, release)_resource apis for handling the resource.
-> + *
-> + * Return: Pointer to ti_sci_resource if all went well else appropriate
-> + *	   error pointer.
-> + */
-> +struct ti_sci_resource *
-> +devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-> +			    struct device *dev, u32 dev_id, char *of_prop)
-> +{
-> +	struct ti_sci_resource *res;
-> +	u32 resource_subtype;
-> +	u16 resource_type;
-> +	int i, ret;
-> +
-> +	res = devm_kzalloc(dev, sizeof(*res), GFP_KERNEL);
-> +	if (!res)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	res->sets = of_property_count_elems_of_size(dev_of_node(dev), of_prop,
-> +						    sizeof(u32));
-> +	if (res->sets < 0) {
-> +		dev_err(dev, "%s resource type ids not available\n", of_prop);
-> +		return ERR_PTR(res->sets);
-> +	}
-> +
-> +	res->desc = devm_kcalloc(dev, res->sets, sizeof(*res->desc),
-> +				 GFP_KERNEL);
-> +	if (!res->desc)
-> +		return ERR_PTR(-ENOMEM);
-> +
-> +	ret = ti_sci_get_resource_type(handle_to_ti_sci_info(handle), dev_id,
-> +				       &resource_type);
-> +	if (ret) {
-> +		dev_err(dev, "No valid resource type for %u\n", dev_id);
-> +		return ERR_PTR(-EINVAL);
-> +	}
-> +
-> +	for (i = 0; i < res->sets; i++) {
-> +		ret = of_property_read_u32_index(dev_of_node(dev), of_prop, i,
-> +						 &resource_subtype);
-> +		if (ret)
-> +			return ERR_PTR(-EINVAL);
-> +
-> +		ret = handle->ops.rm_core_ops.get_range(handle, dev_id,
-> +							resource_subtype,
-> +							&res->desc[i].start,
-> +							&res->desc[i].num);
-> +		if (ret) {
-> +			dev_err(dev, "type %d subtype %d not allocated for host %d\n",
-> +				resource_type, resource_subtype,
-> +				handle_to_ti_sci_info(handle)->host_id);
-> +			return ERR_PTR(ret);
-> +		}
-> +
-> +		dev_dbg(dev, "res type = %d, subtype = %d, start = %d, num = %d\n",
-> +			resource_type, resource_subtype, res->desc[i].start,
-> +			res->desc[i].num);
-> +
-> +		res->desc[i].res_map =
-> +			devm_kzalloc(dev, BITS_TO_LONGS(res->desc[i].num) *
-> +				     sizeof(*res->desc[i].res_map), GFP_KERNEL);
-> +		if (!res->desc[i].res_map)
-> +			return ERR_PTR(-ENOMEM);
-> +	}
-> +	raw_spin_lock_init(&res->lock);
-
-Again - ofparse, I'd rather keep out of this unless directly used by
-tisci layer. There are'nt too many of these parse needs and they can
-easily be incorporated as part of corresponding drivers such as irqchip
-or ra drivers, no?
-
-the pain here is that without an approved set of binding, and valid
-users, the entire series will make no sense to incorporate.
-
-> +
-> +	return res;
-> +}
-> +EXPORT_SYMBOL_GPL(devm_ti_sci_get_of_resource);
-> +
->  static int tisci_reboot_handler(struct notifier_block *nb, unsigned long mode,
->  				void *cmd)
->  {
-> diff --git a/include/linux/soc/ti/ti_sci_protocol.h b/include/linux/soc/ti/ti_sci_protocol.h
-> index 6d17580839dc..2a1a41a17295 100644
-> --- a/include/linux/soc/ti/ti_sci_protocol.h
-> +++ b/include/linux/soc/ti/ti_sci_protocol.h
-> @@ -317,6 +317,33 @@ struct ti_sci_handle {
->  	struct ti_sci_ops ops;
->  };
->  
-> +#define TI_SCI_RESOURCE_NULL	0xffff
-> +
-> +/**
-> + * struct ti_sci_resource_desc - Description of TI SCI resource instance range.
-> + * @start:	Start index of the resource.
-> + * @num:	Number of resources.
-> + * @res_map:	Bitmap to manage the allocation of these resources.
-> + */
-> +struct ti_sci_resource_desc {
-> +	u16 start;
-> +	u16 num;
-> +	unsigned long *res_map;
-> +};
-> +
-> +/**
-> + * struct ti_sci_resource - Structure representing a resource assigned
-> + *			    to a device.
-> + * @sets:	Number of sets available from this resource type
-> + * @lock:	Lock to guard the res map in each set.
-> + * @desc:	Array of resource descriptors.
-> + */
-> +struct ti_sci_resource {
-> +	u16 sets;
-> +	raw_spinlock_t lock;
-> +	struct ti_sci_resource_desc *desc;
-> +};
-> +
->  #if IS_ENABLED(CONFIG_TI_SCI_PROTOCOL)
->  const struct ti_sci_handle *ti_sci_get_handle(struct device *dev);
->  int ti_sci_put_handle(const struct ti_sci_handle *handle);
-> @@ -325,6 +352,11 @@ const struct ti_sci_handle *ti_sci_get_by_phandle(struct device_node *np,
->  						  const char *property);
->  const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
->  						       const char *property);
-> +u16 ti_sci_get_free_resource(struct ti_sci_resource *res);
-> +void ti_sci_release_resource(struct ti_sci_resource *res, u16 id);
-> +struct ti_sci_resource *
-> +devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-> +			    struct device *dev, u32 dev_id, char *of_prop);
->  
->  #else	/* CONFIG_TI_SCI_PROTOCOL */
->  
-> @@ -357,6 +389,22 @@ const struct ti_sci_handle *devm_ti_sci_get_by_phandle(struct device *dev,
->  {
->  	return ERR_PTR(-EINVAL);
->  }
-> +
-> +static inline u16 ti_sci_get_free_resource(struct ti_sci_resource *res)
-> +{
-> +	return TI_SCI_RESOURCE_NULL;
-> +}
-> +
-> +static inline void ti_sci_release_resource(struct ti_sci_resource *res, u16 id)
-> +{
-> +}
-> +
-> +static inline struct ti_sci_resource *
-> +devm_ti_sci_get_of_resource(const struct ti_sci_handle *handle,
-> +			    struct device *dev, u32 dev_id, char *of_prop)
-> +{
-> +	return ERR_PTR(-EINVAL);
-> +}
->  #endif	/* CONFIG_TI_SCI_PROTOCOL */
->  
->  #endif	/* __TISCI_PROTOCOL_H */
-> -- 
-> 2.19.2
+> <&gpio5 21 IRQ_TYPE_EDGE_RISING>,
 > 
+> and
+> <&omap3_pmx_core 0x14e>;
+> point to the same pin.  Or did I mis-interpret the datasheet again?  :-)
 
--- 
+Ah OK. Yes the same pin can trigger interrupts at two different
+controllers. During runtime a proper GPIO is triggered, and then
+in deeper idle states only the padconf interrupt is triggered as
+the GPIO can be powered off. So the padconf interrupt is there
+to provide wake-up events if configured. This allows the device
+to enter off-mode during idle with things like ping and ssh
+working with some extra latency :)
+
+The padconf interrupt can also be something other than a GPIO pin,
+such as UART RX pin, and the padconf device is separate from the
+GPIO device. So they're treated as two separate interrupt
+controllers. They can be both active the same time although that
+is undesired for the extra overhead.
+
+Eventually we should be able to make the GPIO interrupts work
+in a transparent way with the padconf interrupts.
+
 Regards,
-Nishanth Menon
+
+Tony
