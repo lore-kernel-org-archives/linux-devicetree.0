@@ -1,83 +1,104 @@
 Return-Path: <SRS0=S6uY=PE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr690089.outbound.protection.outlook.com ([40.107.69.89]:57120
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726996AbeL0N17 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 27 Dec 2018 08:27:59 -0500
-From: Lars Povlsen <lars.povlsen@microchip.com>
-Subject: [PATCH v2] mips: gpio: mscc_sgpio: Add DT bindings documentation
-In-Reply-To: <87r2f83uww.fsf@soft-dev15.microsemi.net>
-Date: Thu, 27 Dec 2018 14:11:51 +0100
-Message-ID: <87zhsr2jxk.fsf@soft-dev15.microsemi.net>
+Received: from esa6.microchip.iphmx.com ([216.71.154.253]:50074 "EHLO
+        esa6.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbeL0Kbd (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 27 Dec 2018 05:31:33 -0500
+From: <Lars.Povlsen@microchip.com>
+Subject: Re: [PATCH] mips: gpio: mscc_sgpio: Add DT bindings documentation
+Date: Thu, 27 Dec 2018 10:31:29 +0000
+Message-ID: <BYAPR11MB31090494F6DC3D1AEE64075782B60@BYAPR11MB3109.namprd11.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain
 Sender: devicetree-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Device Tree <devicetree@vger.kernel.org>, Gregory Clement <gregory.clement@bootlin.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Lars Povlsen <lars.povlsen@microchip.com>
+To: linus.walleij@linaro.org, devicetree@vger.kernel.org
+Cc: gregory.clement@bootlin.com
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Linus!
 
-    mips: mscc_sgpio: Add DT bindings documentation
-    
-    This add device tree binding documentation for the MSCC serial GPIO
-    driver.
-    
-v2 changes:
- - Added more device background info
- - Dropped "mscc,sgpio-bitcount" in favour of "ngpios" and "gpio-ranges".
- - Elaborated "mscc,sgpio-ports" explanation
+Thank you very much for your feedback - and sorry about the delay in=20
+getting back to you.
+
+I will send you a v2 updated version addressing you comments. Thank you!
+
+See below for comments
+
+---Lars
+
+> From: Linus Walleij <linus.walleij@linaro.org>
+> Date: Fri, 7 Dec 2018 10:43:38 +0100
+> Message-ID: <CACRpkdZ47tELuJR3DG-
+> d8tsvz4ez_j6TxCYiiGT3L01CJ1LSTA@mail.gmail.com>
+> Subject: Re: [PATCH] mips: gpio: mscc_sgpio: Add DT bindings
+> documentation
+> To: lars.povlsen@microchip.com
+> Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS"
+> <devicetree@vger.kernel.org>,
+> 	Gregory Clement <gregory.clement@bootlin.com>
+>=20
+> Hi Lars,
+>=20
+> thanks for your patch!
+>=20
+> On Mon, Nov 26, 2018 at 1:22 PM Lars Povlsen
+> <lars.povlsen@microchip.com> wrote:
+>=20
+> > +MSCC Serial GPIO driver
+>=20
+> Expand the acronym please, if IIUC this is
+> "Microsemi Corporation (MSCC) Serial GPIO driver"
+
+Will do.
+
+>=20
+> > +- mscc,sgpio-frequency: The frequency at which the serial bitstream
+> is
+> > +  generated and sampled. Default: 12500000 (Hz).
+>=20
+> Uhm what is a serial bitstream in this context, I am lost.
+> Please elaborate.
+
+I added some background details to the description.
+
+>=20
+> > +- mscc,sgpio-bitcount: The number of bits enabled per
+> > +  port. (1-4). Default: 2.
+>=20
+> Can't you just use the standard "ngpios" property for this?
+> See
+> Documentation/devicetree/bindings/gpio/gpio.txt
+>=20
+
+I dropped this property in favor of deriving from gpio-ranges and
+(optionally) ngpios as proposed.
+
+> Why is this a global setting for all ports and not per-port?
+>=20
+> > +- mscc,sgpio-ports: A bitmask (32 bits) of which ports are enabled in
+> > +  the serialized gpio stream. Default: 0xFFFFFFFF.
+>=20
+> I don't understand this either. Are there up to 32 ports?
+> (Also referred to as "banks") with 1-4 GPIOs each?
+
+Yes each port represent 1-4 GPIOs. Changed to:
+
+- mscc,sgpio-ports: A bitmask (32 bits) of which ports are enabled in
+  the serialized gpio stream. One 'port' will transport from 1 to 4
+  gpio bits. Default: 0xFFFFFFFF.
 
 
-    Signed-off-by: Lars Povlsen <lars.povlsen@microsemi.com>
+Again, thank you very much for your comments - they are highly appreciated.
 
-diff --git a/doc/device-tree-bindings/gpio/mscc_sgpio.txt b/doc/device-tree-bindings/gpio/mscc_sgpio.txt
-new file mode 100644
-index 0000000000..2db2d277a5
---- /dev/null
-+++ b/doc/device-tree-bindings/gpio/mscc_sgpio.txt
-@@ -0,0 +1,45 @@
-+Microsemi Corporation (MSCC) Serial GPIO driver
-+
-+The MSCC serial GPIO extends the number or GPIO's on the system by
-+means of 4 dedicated pins: one input, one output, one clock and one
-+strobe pin. By attaching a number of (external) shift registers, the
-+effective GPIO count can be extended by up to 128 GPIO's per
-+controller.
-+
-+Required properties:
-+- compatible : "mscc,luton-sgpio" or "mscc,ocelot-sgpio"
-+- clock: Reference clock used to generate clock divider setting. See
-+  mscc,sgpio-frequency property.
-+- reg : Physical base address and length of the controller's registers.
-+- #gpio-cells : Should be two. The first cell is the pin number and the
-+  second cell is used to specify optional parameters:
-+  - bit 0 specifies polarity (0 for normal, 1 for inverted)
-+- gpio-controller : Marks the device node as a GPIO controller.
-+- gpio-ranges: Standard gpio range(s): phandle, gpio base, pinctrl base
-+  and count.
-+
-+Optional properties:
-+- ngpios: Set the number of GPIO's actually used.
-+- mscc,sgpio-frequency: The frequency at which the serial bitstream is
-+  generated and sampled. Default: 12500000 (Hz).
-+- mscc,sgpio-ports: A bitmask (32 bits) of which ports are enabled in
-+  the serialized gpio stream. One 'port' will transport from 1 to 4
-+  gpio bits. Default: 0xFFFFFFFF.
-+
-+Typically the pinctrl-0 and pinctrl-names properties will also be
-+present to enable the use of the SIO CLK, LD, DI and DO for some
-+regular GPIO pins.
-+
-+Example:
-+
-+sgpio: gpio@10700f8 {
-+       compatible = "mscc,ocelot-sgpio";
-+       pinctrl-0 = <&sgpio_pins>;
-+       pinctrl-names = "default";
-+       reg = <0x10700f8 0x100>;
-+       gpio-controller;
-+       #gpio-cells = <2>;
-+       gpio-ranges = <&sgpio 0 0 64>;
-+       mscc,sgpio-frequency = <12500>;
-+       mscc,sgpio-ports = <0x000FFFFF>;
-+};
+---Lars
+
+>=20
+> Yours,
+> Linus Walleij
+> -------------------- End of forwarded message --------------------
+>=20
+> --
+> Gregory Clement, Bootlin
+> Embedded Linux and Kernel engineering
+> http://bootlin.com
