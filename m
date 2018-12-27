@@ -1,41 +1,34 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-bindings: add binding for USBSS-DRD controller.
-Date: Thu, 27 Dec 2018 15:01:39 -0600
-Message-ID: <CAL_JsqLQ83f74kMRsRX=Bo+xwP05v+2dLQaPLVV3EU7k=QwvSQ@mail.gmail.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
- <1544445555-17325-2-git-send-email-pawell@cadence.com> <20181220200111.GA27998@bogus>
- <BYAPR07MB4709910A6EE4B54BA455E713DDB90@BYAPR07MB4709.namprd07.prod.outlook.com>
+Subject: Re: [PATCH V6 1/2] dt-bindings: iio: accel: mma8452: add power
+ supplies  property
+Date: Thu, 27 Dec 2018 15:09:19 -0600
+Message-ID: <20181227210919.GA25796@bogus>
+References: <1545555462-16121-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <BYAPR07MB4709910A6EE4B54BA455E713DDB90@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1545555462-16121-1-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pawel Laszczak <pawell@cadence.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "balbi@kernel.org" <balbi@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 22, 2018 at 4:24 PM Pawel Laszczak <pawell@cadence.com> wrote:
->
-> Hi Rob,
->
-> >On Mon, Dec 10, 2018 at 12:39:14PM +0000, Pawel Laszczak wrote:
-> >> This patch aim at documenting USB related dt-bindings for the
-> >> Cadence USBSS-DRD controller.
-> >>
-> >> Signed-off-by: Pawel Laszczak <pawell@cadence.com>
+On Sun, 23 Dec 2018 09:02:27 +0000, Anson Huang wrote:
+> The accelerometer's power supplies could be controllable on some
+> platforms, add property "vdd/vddio" power supply to let device tree
+> to pass phandles to the regulators to driver.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+> No change since V5.
+> ---
+>  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 4 ++++
+>  1 file changed, 4 insertions(+)
+> 
 
-[...]
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
 
-> >> + - phys: reference to the USB PHY
-> >> + - phy-names: name of the USB PHY, should be "cdns3,usbphy"
-> >
-> >Don't need -names when there is only one.
->
-> But in the future probably we will need to add next phy version.
-> So maybe it's better to leave this name ?
-
-'-names' are for when there is more than one phy connected, not
-different phy versions. For example, if you had separate phys for HS
-and SS.
-
-Rob
+If a tag was not added on purpose, please state why and what changed.
