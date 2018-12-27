@@ -1,96 +1,80 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 2/3] mmc: sdhci-esdhc-imx: add SD clock limitation for
- imx6ull
-Date: Thu, 27 Dec 2018 10:01:24 +0200
-Message-ID: <cff15a85-3f72-a8ea-2e5f-731963175fde@intel.com>
-References: <1545292612-14471-1-git-send-email-haibo.chen@nxp.com>
- <1545292612-14471-2-git-send-email-haibo.chen@nxp.com>
+From: CK Hu <ck.hu@mediatek.com>
+Subject: Re: [PATCH 15/18] drm/mediatek: add RDMA1 fifo size into RDMA
+ private data
+Date: Thu, 27 Dec 2018 16:08:56 +0800
+Message-ID: <1545898136.19450.5.camel@mtksdaap41>
+References: <1545638931-24938-1-git-send-email-yongqiang.niu@mediatek.com>
+ <1545638931-24938-16-git-send-email-yongqiang.niu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545292612-14471-2-git-send-email-haibo.chen@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: BOUGH CHEN <haibo.chen@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <1545638931-24938-16-git-send-email-yongqiang.niu@mediatek.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Yongqiang Niu <yongqiang.niu@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 20/12/18 9:49 AM, BOUGH CHEN wrote:
-> i.MX6ULL has errata ERR010450, point out that due to SOC I/O
-> timing limitation, for eMMC HS200 and SD/SDIO 3.0 SDR104, the
-> clock rate can't exceed 150MHz. And for eMMC DDR52 and SD/SDIO
-> DDR50 mode, the clock rate can't exceed 45MHz.
-> 
-> This patch add this limit for imx6ull.
-> 
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-
-Apart from the kbuild test robot complaints (do they need to be fixed?):
-
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
-
-> ---
->  drivers/mmc/host/sdhci-esdhc-imx.c | 19 ++++++++++++++++++-
->  1 file changed, 18 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index d0d3193..75a2484 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -138,7 +138,11 @@
->  #define ESDHC_FLAG_HS200		BIT(8)
->  /* The IP supports HS400 mode */
->  #define ESDHC_FLAG_HS400		BIT(9)
-> -
-> +/* The IP has errata ERR010450
-> + * uSDHC: Due to the I/O timing limit, for SDR mode, SD card clock can't
-> + * exceed 150MHz, for DDR mode, SD card clock can't exceed 45MHz.
-> + */
-> +#define ESDHC_FLAG_ERR010450           BIT(10)
->  /* A clock frequency higher than this rate requires strobe dll control */
->  #define ESDHC_STROBE_DLL_CLK_FREQ	100000000
->  
-> @@ -177,6 +181,12 @@ struct esdhc_soc_data {
->  			| ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200,
->  };
->  
-> +static struct esdhc_soc_data usdhc_imx6ull_data = {
-> +	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
-> +			| ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> +			| ESDHC_FLAG_ERR010450,
-> +};
-> +
->  static struct esdhc_soc_data usdhc_imx7d_data = {
->  	.flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
->  			| ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> @@ -227,6 +237,7 @@ struct pltfm_imx_data {
->  	{ .compatible = "fsl,imx6sx-usdhc", .data = &usdhc_imx6sx_data, },
->  	{ .compatible = "fsl,imx6sl-usdhc", .data = &usdhc_imx6sl_data, },
->  	{ .compatible = "fsl,imx6q-usdhc", .data = &usdhc_imx6q_data, },
-> +	{ .compatible = "fsl,imx6ull-usdhc", .data = &usdhc_imx6ull_data, },
->  	{ .compatible = "fsl,imx7d-usdhc", .data = &usdhc_imx7d_data, },
->  	{ /* sentinel */ }
->  };
-> @@ -733,6 +744,12 @@ static inline void esdhc_pltfm_set_clock(struct sdhci_host *host,
->  		| ESDHC_CLOCK_MASK);
->  	sdhci_writel(host, temp, ESDHC_SYSTEM_CONTROL);
->  
-> +	if (imx_data->socdata->flags & ESDHC_FLAG_ERR010450) {
-> +		if (imx_data->is_ddr)
-> +			clock = clock > 45000000 ? 45000000 : clock;
-> +		else
-> +			clock = clock > 150000000 ? 150000000 : clock;
-> +
->  	while (host_clock / (16 * pre_div * ddr_pre_div) > clock &&
->  			pre_div < 256)
->  		pre_div *= 2;
-> 
+SGksIFlvbmdxaWFuZzoKCk9uIE1vbiwgMjAxOC0xMi0yNCBhdCAxNjowOCArMDgwMCwgWW9uZ3Fp
+YW5nIE5pdSB3cm90ZToKPiBUaGlzIHBhdGNoIGFkZCBSRE1BMSBmaWZvIHNpemUgaW50byBSRE1B
+IHByaXZhdGUgZGF0YQo+IAo+IFNpZ25lZC1vZmYtYnk6IFlvbmdxaWFuZyBOaXUgPHlvbmdxaWFu
+Zy5uaXVAbWVkaWF0ZWsuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2dwdS9kcm0vbWVkaWF0ZWsvbXRr
+X2Rpc3BfcmRtYS5jIHwgMTYgKysrKysrKysrKysrKysrLQo+ICAxIGZpbGUgY2hhbmdlZCwgMTUg
+aW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQo+IAo+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dw
+dS9kcm0vbWVkaWF0ZWsvbXRrX2Rpc3BfcmRtYS5jIGIvZHJpdmVycy9ncHUvZHJtL21lZGlhdGVr
+L210a19kaXNwX3JkbWEuYwo+IGluZGV4IGIwYTVjZmYuLjNmOWI0ZDQgMTAwNjQ0Cj4gLS0tIGEv
+ZHJpdmVycy9ncHUvZHJtL21lZGlhdGVrL210a19kaXNwX3JkbWEuYwo+ICsrKyBiL2RyaXZlcnMv
+Z3B1L2RybS9tZWRpYXRlay9tdGtfZGlzcF9yZG1hLmMKPiBAQCAtNTMsMTIgKzUzLDE0IEBACj4g
+ICNkZWZpbmUgUkRNQV9GSUZPX1BTRVVET19TSVpFKGJ5dGVzKQkJCSgoKGJ5dGVzKSAvIDE2KSA8
+PCAxNikKPiAgI2RlZmluZSBSRE1BX09VVFBVVF9WQUxJRF9GSUZPX1RIUkVTSE9MRChieXRlcykJ
+CSgoYnl0ZXMpIC8gMTYpCj4gICNkZWZpbmUgUkRNQV9GSUZPX1NJWkUocmRtYSkJCQkoKHJkbWEp
+LT5kYXRhLT5maWZvX3NpemUpCj4gKyNkZWZpbmUgUkRNQV9GSUZPX1NJWkUxKHJkbWEpCQkJKChy
+ZG1hKS0+ZGF0YS0+Zmlmb19zaXplMSkKPiAgI2RlZmluZSBESVNQX1JETUFfTUVNX1NUQVJUX0FE
+RFIJCTB4MGYwMAo+ICAKPiAgI2RlZmluZSBSRE1BX01FTV9HTUMJCQkJMHg0MDQwMjAyMAo+ICAK
+PiAgc3RydWN0IG10a19kaXNwX3JkbWFfZGF0YSB7Cj4gIAl1bnNpZ25lZCBpbnQgZmlmb19zaXpl
+Owo+ICsJdW5zaWduZWQgaW50IGZpZm9fc2l6ZTE7Cj4gIH07Cj4gIAo+ICAvKioKPiBAQCAtMTM3
+LDExICsxMzksMTcgQEAgc3RhdGljIHZvaWQgbXRrX3JkbWFfY29uZmlnKHN0cnVjdCBtdGtfZGRw
+X2NvbXAgKmNvbXAsIHVuc2lnbmVkIGludCB3aWR0aCwKPiAgewo+ICAJdW5zaWduZWQgaW50IHRo
+cmVzaG9sZDsKPiAgCXVuc2lnbmVkIGludCByZWc7Cj4gKwl1bnNpZ25lZCBpbnQgcmRtYV9maWZv
+X3NpemU7Cj4gIAlzdHJ1Y3QgbXRrX2Rpc3BfcmRtYSAqcmRtYSA9IGNvbXBfdG9fcmRtYShjb21w
+KTsKPiAgCj4gIAlyZG1hX3VwZGF0ZV9iaXRzKGNvbXAsIERJU1BfUkVHX1JETUFfU0laRV9DT05f
+MCwgMHhmZmYsIHdpZHRoKTsKPiAgCXJkbWFfdXBkYXRlX2JpdHMoY29tcCwgRElTUF9SRUdfUkRN
+QV9TSVpFX0NPTl8xLCAweGZmZmZmLCBoZWlnaHQpOwo+ICAKPiArCWlmIChjb21wLT5pZCA9PSBE
+RFBfQ09NUE9ORU5UX1JETUExKQo+ICsJCXJkbWFfZmlmb19zaXplID0gUkRNQV9GSUZPX1NJWkUx
+KHJkbWEpOwo+ICsJZWxzZQo+ICsJCXJkbWFfZmlmb19zaXplID0gUkRNQV9GSUZPX1NJWkUocmRt
+YSk7Cj4gKwoKSXQgbG9va3MgbGlrZSB0aGF0IG10ODE4MzAtcmRtYTAgYW5kIG10ODE4My1yZG1h
+MSBhcmUgZGlmZmVyZW50IGluCmhhcmR3YXJlLCBzbyBJIHRoaW5rIGZpZm9fc2l6ZSBzaG91bGQg
+YmUgZGVjaWRlZCBieSBzb21ldGhpbmcgZnJvbQpkZXZpY2UgdHJlZSByYXRoZXIgdGhhbiBmcm9t
+IGl0cyBuYW1lLiBNYXliZSBhZGQgYSBwcm9wZXJ0eSAnRklGT19TSVpFJwppbiByZG1hIGRldmlj
+ZSBub2RlIG9yIGNyZWF0ZSBhbiBhZGRpdGlvbmFsIGNvbXBhdGlibGUgc3RyaW5nIGZvcgptdDgx
+ODMtcmRtYTEuCgpSZWdhcmRzLApDSwoKPiAgCS8qCj4gIAkgKiBFbmFibGUgRklGTyB1bmRlcmZs
+b3cgc2luY2UgRFNJIGFuZCBEUEkgY2FuJ3QgYmUgYmxvY2tlZC4KPiAgCSAqIEtlZXAgdGhlIEZJ
+Rk8gcHNldWRvIHNpemUgcmVzZXQgZGVmYXVsdCBvZiA4IEtpQi4gU2V0IHRoZQo+IEBAIC0xNDks
+OCArMTU3LDEyIEBAIHN0YXRpYyB2b2lkIG10a19yZG1hX2NvbmZpZyhzdHJ1Y3QgbXRrX2RkcF9j
+b21wICpjb21wLCB1bnNpZ25lZCBpbnQgd2lkdGgsCj4gIAkgKiBhY2NvdW50IGZvciBibGFua2lu
+ZywgYW5kIHdpdGggYSBwaXhlbCBkZXB0aCBvZiA0IGJ5dGVzOgo+ICAJICovCj4gIAl0aHJlc2hv
+bGQgPSB3aWR0aCAqIGhlaWdodCAqIHZyZWZyZXNoICogNCAqIDcgLyAxMDAwMDAwOwo+ICsKPiAr
+CWlmICh0aHJlc2hvbGQgPiByZG1hX2ZpZm9fc2l6ZSkKPiArCQl0aHJlc2hvbGQgPSByZG1hX2Zp
+Zm9fc2l6ZTsKPiArCj4gIAlyZWcgPSBSRE1BX0ZJRk9fVU5ERVJGTE9XX0VOIHwKPiAtCSAgICAg
+IFJETUFfRklGT19QU0VVRE9fU0laRShSRE1BX0ZJRk9fU0laRShyZG1hKSkgfAo+ICsJICAgICAg
+UkRNQV9GSUZPX1BTRVVET19TSVpFKHJkbWFfZmlmb19zaXplKSB8Cj4gIAkgICAgICBSRE1BX09V
+VFBVVF9WQUxJRF9GSUZPX1RIUkVTSE9MRCh0aHJlc2hvbGQpOwo+ICAJd3JpdGVsKHJlZywgY29t
+cC0+cmVncyArIERJU1BfUkVHX1JETUFfRklGT19DT04pOwo+ICB9Cj4gQEAgLTMzMCwxMCArMzQy
+LDEyIEBAIHN0YXRpYyBpbnQgbXRrX2Rpc3BfcmRtYV9yZW1vdmUoc3RydWN0IHBsYXRmb3JtX2Rl
+dmljZSAqcGRldikKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX2Rpc3BfcmRtYV9kYXRh
+IG10MjcwMV9yZG1hX2RyaXZlcl9kYXRhID0gewo+ICAJLmZpZm9fc2l6ZSA9IFNaXzRLLAo+ICsJ
+LmZpZm9fc2l6ZTEgPSBTWl80SywKPiAgfTsKPiAgCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3QgbXRr
+X2Rpc3BfcmRtYV9kYXRhIG10ODE3M19yZG1hX2RyaXZlcl9kYXRhID0gewo+ICAJLmZpZm9fc2l6
+ZSA9IFNaXzhLLAo+ICsJLmZpZm9fc2l6ZTEgPSBTWl84SywKPiAgfTsKPiAgCj4gIHN0YXRpYyBj
+b25zdCBzdHJ1Y3Qgb2ZfZGV2aWNlX2lkIG10a19kaXNwX3JkbWFfZHJpdmVyX2R0X21hdGNoW10g
+PSB7CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
