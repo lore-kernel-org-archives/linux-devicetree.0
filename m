@@ -1,43 +1,46 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/2] dt-bindings: arm: fsl-scu: add imx8qm pinctrl support
-Date: Thu, 27 Dec 2018 10:42:44 +0100
-Message-ID: <CACRpkdZU7toMYYP3UGRorCW6WhqukeWXCZMpe=_f9EWcWsRw6w@mail.gmail.com>
-References: <1545146239-30993-1-git-send-email-aisheng.dong@nxp.com>
- <1545146239-30993-2-git-send-email-aisheng.dong@nxp.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 2/3] dt-bindings: gpu: samsung-rotator: Document s5pv210 support
+Date: Thu, 27 Dec 2018 12:57:35 +0100
+Message-ID: <4331572.iOIAVLAcOa@acerlaptop>
+References: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com> <20181219155704.15264-3-pawel.mikolaj.chmiel@gmail.com> <CAJKOXPfHHNUzQZu62btspC+6SwgoGPdAzusfSixXM7U9u3QP7A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545146239-30993-2-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "stefan@agner.ch" <stefan@agner.ch>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAJKOXPfHHNUzQZu62btspC+6SwgoGPdAzusfSixXM7U9u3QP7A@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Inki Dae <inki.dae@samsung.com>, airlied@linux.ie, jy0922.shim@samsung.com, Seung Woo Kim <sw0312.kim@samsung.com>, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 4:22 PM Aisheng Dong <aisheng.dong@nxp.com> wrote:
-
-> Update binding doc to support imx8qm pinctrl.
->
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Linus Walleij <linus.walleij@linaro.org>
-> Cc: Stefan Agner <stefan@agner.ch>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Cc: Pengutronix Kernel Team <kernel@pengutronix.de>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-
-Patch applied.
-
-Yours,
-Linus Walleij
+Dnia =C5=9Broda, 19 grudnia 2018 17:22:51 CET Krzysztof Kozlowski pisze:
+> On Wed, 19 Dec 2018 at 17:04, Pawe=C5=82 Chmiel
+> <pawel.mikolaj.chmiel@gmail.com> wrote:
+> >
+> > This commit documents new compatible for s5pv210 soc,
+> > which will be also supported by this driver.
+> >
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> >  Documentation/devicetree/bindings/gpu/samsung-rotator.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt =
+b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+> > index 82cd1ed0be93..78658dec6941 100644
+> > --- a/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+> > +++ b/Documentation/devicetree/bindings/gpu/samsung-rotator.txt
+> > @@ -5,6 +5,7 @@ Required properties:
+> >         (a) "samsung,exynos4210-rotator" for Rotator IP in Exynos4210
+> >         (b) "samsung,exynos4212-rotator" for Rotator IP in Exynos4212/4=
+412
+> >         (c) "samsung,exynos5250-rotator" for Rotator IP in Exynos5250
+> > +       (d) "samsung,s5pv210-rotator" for Rotator IP in S5PV210
+>=20
+> How about putting it at beginning as the oldest chipset? This would
+> require reordering the list so maybe let's remove the a/b/c list
+> enumerations? They are kind of useless.
+Ok, i'll send v2 of patchset with this change.
+>=20
+> Best regards,
+> Krzysztof
