@@ -1,88 +1,32 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: display: bridge: fork out ti, ds90c185
- from lvds-transmitter
-Date: Fri, 28 Dec 2018 11:40:47 -0600
-Message-ID: <CAL_JsqJgJ-+NpOJkEAYhjF-3_vaX+y1fO6Q5CPQRe9ptzfuMQA@mail.gmail.com>
-References: <20181219130449.31641-1-peda@lysator.liu.se>
- <20181219130449.31641-2-peda@lysator.liu.se>
- <20181227212727.GA26893@bogus>
- <35e85643-b23c-4958-bb8c-f9536bc8d864@axentia.se>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: fsl-imx-esdhc: add imx6ull
+ compatible string
+Date: Fri, 28 Dec 2018 16:09:53 -0200
+Message-ID: <CAOMZO5BeUA2YwzH2Vme4xmpwiciX5xRmCqxA_-=VAV7zPmeQdw@mail.gmail.com>
+References: <20181228033323.32308-1-haibo.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <35e85643-b23c-4958-bb8c-f9536bc8d864@axentia.se>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Peter Rosin <peda@axentia.se>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, Peter Rosin <peda@lysator.liu.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181228033323.32308-1-haibo.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: BOUGH CHEN <haibo.chen@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMjcsIDIwMTggYXQgNDo1NCBQTSBQZXRlciBSb3NpbiA8cGVkYUBheGVudGlh
-LnNlPiB3cm90ZToKPgo+IE9uIDIwMTgtMTItMjcgMjI6MjcsIFJvYiBIZXJyaW5nIHdyb3RlOgo+
-ID4gT24gV2VkLCBEZWMgMTksIDIwMTggYXQgMDI6MDQ6NDdQTSArMDEwMCwgUGV0ZXIgUm9zaW4g
-d3JvdGU6Cj4gPj4gRnJvbTogUGV0ZXIgUm9zaW4gPHBlZGFAYXhlbnRpYS5zZT4KPiA+Pgo+ID4+
-IERTOTBDMTg1IGhhcyBhIHNodXRkb3duIHBpbiB3aGljaCBkb2VzIG5vdCBmaXQgaW4gdGhlIGx2
-ZHMtdHJhbnNtaXR0ZXIKPiA+PiBiaW5kaW5nLCB3aGljaCBpcyBtZWFudCB0byBiZSBnZW5lcmlj
-Lgo+ID4+Cj4gPj4gVGhlIHNpc3RlciBjaGlwIERTOTBDMTg3IGlzIHNpbWlsYXIgdG8gRFM5MEMx
-ODUsIGRlc2NyaWJlIGl0IGhlcmUgYXMgd2VsbC4KPiA+Pgo+ID4+IFNpZ25lZC1vZmYtYnk6IFBl
-dGVyIFJvc2luIDxwZWRhQGF4ZW50aWEuc2U+Cj4gPj4gLS0tCj4gPj4gIC4uLi9iaW5kaW5ncy9k
-aXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dCAgIHwgIDggKy0tLQo+ID4+ICAuLi4v
-YmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksZHM5MGMxODUudHh0ICAgICAgICB8IDU1ICsrKysr
-KysrKysrKysrKysrKysrKysKPiA+PiAgMiBmaWxlcyBjaGFuZ2VkLCA1NiBpbnNlcnRpb25zKCsp
-LCA3IGRlbGV0aW9ucygtKQo+ID4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLGRzOTBjMTg1LnR4dAo+ID4+Cj4g
-Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5
-L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dAo+ID4+IGluZGV4IDUw
-MjIwMTkwYzIwMy4uZmQzOWFkMzRjMzgzIDEwMDY0NAo+ID4+IC0tLSBhL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS9sdmRzLXRyYW5zbWl0dGVyLnR4dAo+
-ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRn
-ZS9sdmRzLXRyYW5zbWl0dGVyLnR4dAo+ID4+IEBAIC0yMiwxMyArMjIsNyBAQCBhbW9uZyBvdGhl
-cnMuCj4gPj4KPiA+PiAgUmVxdWlyZWQgcHJvcGVydGllczoKPiA+Pgo+ID4+IC0tIGNvbXBhdGli
-bGU6IE11c3QgYmUgb25lIG9yIG1vcmUgb2YgdGhlIGZvbGxvd2luZwo+ID4+IC0gIC0gInRpLGRz
-OTBjMTg1IiBmb3IgdGhlIFRJIERTOTBDMTg1IEZQRC1MaW5rIFNlcmlhbGl6ZXIKPiA+PiAtICAt
-ICJsdmRzLWVuY29kZXIiIGZvciBhIGdlbmVyaWMgTFZEUyBlbmNvZGVyIGRldmljZQo+ID4+IC0K
-PiA+PiAtICBXaGVuIGNvbXBhdGlibGUgd2l0aCB0aGUgZ2VuZXJpYyB2ZXJzaW9uLCBub2RlcyBt
-dXN0IGxpc3QgdGhlCj4gPj4gLSAgZGV2aWNlLXNwZWNpZmljIHZlcnNpb24gY29ycmVzcG9uZGlu
-ZyB0byB0aGUgZGV2aWNlIGZpcnN0Cj4gPj4gLSAgZm9sbG93ZWQgYnkgdGhlIGdlbmVyaWMgdmVy
-c2lvbi4KPiA+PiArLSBjb21wYXRpYmxlOiBNdXN0IGJlICJsdmRzLWVuY29kZXIiCj4gPj4KPiA+
-PiAgUmVxdWlyZWQgbm9kZXM6Cj4gPj4KPiA+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9k
-ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL3RpLGRzOTBjMTg1LnR4dCBiL0RvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxkczkwYzE4NS50
-eHQKPiA+PiBuZXcgZmlsZSBtb2RlIDEwMDY0NAo+ID4+IGluZGV4IDAwMDAwMDAwMDAwMC4uYTEz
-ZTc3ODUwM2U2Cj4gPj4gLS0tIC9kZXYvbnVsbAo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxkczkwYzE4NS50eHQKPiA+PiBAQCAt
-MCwwICsxLDU1IEBACj4gPj4gK1RleGFzIEluc3RydW1lbnRzIEZQRC1MaW5rIChMVkRTKSBTZXJp
-YWxpemVyCj4gPj4gKy0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-Cj4gPj4gKwo+ID4+ICtUaGUgRFM5MEMxODUgYW5kIERTOTBDMTg3IGFyZSBsb3ctcG93ZXIgc2Vy
-aWFsaXplcnMgZm9yIHBvcnRhYmxlCj4gPj4gK2JhdHRlcnktcG93ZXJlZCBhcHBsaWNhdGlvbnMg
-dGhhdCByZWR1Y2VzIHRoZSBzaXplIG9mIHRoZSBSR0IKPiA+PiAraW50ZXJmYWNlIGJldHdlZW4g
-dGhlIGhvc3QgR1BVIGFuZCB0aGUgZGlzcGxheS4KPiA+PiArCj4gPj4gK1JlcXVpcmVkIHByb3Bl
-cnRpZXM6Cj4gPj4gKwo+ID4+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZQo+ID4+ICsgICJ0aSxk
-czkwYzE4NSIsICJsdmRzLWVuY29kZXIiICBmb3IgdGhlIFRJIERTOTBDMTg1IEZQRC1MaW5rIFNl
-cmlhbGl6ZXIKPiA+PiArICAidGksZHM5MGMxODciLCAibHZkcy1lbmNvZGVyIiAgZm9yIHRoZSBU
-SSBEUzkwQzE4NyBGUEQtTGluayBTZXJpYWxpemVyCj4gPj4gKwo+ID4+ICtPcHRpb25hbCBwcm9w
-ZXJ0aWVzOgo+ID4+ICsKPiA+PiArLSBwd2RuLWdwaW9zOiBQb3dlciBkb3duIGNvbnRyb2wgR1BJ
-TyAodGhlIFBEQiBwaW4sIGFjdGl2ZS1sb3cpCj4gPgo+ID4gcG93ZXJkb3duLWdwaW9zIGlzIHRo
-ZSBzdGFuZGFyZCBuYW1lLgo+Cj4gVGhlIGx2ZHMtZW5jb2RlciBkcml2ZXIgaGFuZGxlcyB0aGlz
-IGJpbmRpbmcsIGFuZCB0aGF0IGRyaXZlciBpbmNpZGVudGFsbHkKPiBhbHNvIGltcGxlbWVudHMg
-dGhlIHRoaW5lLHRoYzYzbHZkbTgzZCBiaW5kaW5nIHdoaWNoIGFscmVhZHkgaGFzIGEKPiBwd2Ru
-LWdwaW9zIHByb3BlcnR5LiBTaG91bGQgdGhlIHRoaW5lLHRoYzYzbHZkbTgzZCBiaW5kaW5nIGJl
-IHVwZGF0ZWQgYW5kCj4gdGhlIGRyaXZlciBiZSBtYWRlIHRvIHN1cHBvcnQgYm90aCBwcm9wZXJ0
-aWVzPwo+Cj4gU2luY2UgdGhlIGx2ZHMtZW5jb2RlciBkcml2ZXIgbmV2ZXIgaGFkIHN1cHBvcnQg
-Zm9yIHRoZSBwd2RuLWdwaW9zIChhdCBsZWFzdAo+IG5vdCB1cHN0cmVhbSkgSSBzdXBwb3NlIHRo
-ZXJlIGlzIGFsc28gdGhlIG9wdGlvbiB0byBzaW1wbHkgZ28gd2l0aAo+IHBvd2VyZG93bi1ncGlv
-cyBhcyB5b3Ugc3VnZ2VzdCBhbmQgbm90IGJvdGhlciB3aXRoIHN1cHBvcnQgZm9yIHRoZQo+IHB3
-ZG4tZ3Bpb3MgcHJvcGVydHkuCgpJdCBpcyBwcm9iYWJseSBzYWZlIHRvIGp1c3QgY2hhbmdlIGl0
-IGdpdmVuIGl0IGlzIG5vdCB1c2VkIGluIGFueSBkdHMKbm9yIHN1cHBvcnRlZCBpbiB0aGUgZHJp
-dmVyLgoKUm9iCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Bough,
+
+On Fri, Dec 28, 2018 at 1:26 AM BOUGH CHEN <haibo.chen@nxp.com> wrote:
+>
+> Add imx6ull compatible string
+
+Please explain the reason, like you did in the other commit log that
+explains the need for handling erratum ERR010450 on i.MX6ULL.
