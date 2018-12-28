@@ -1,58 +1,43 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: regulator: extend tps65218 bindings
-Date: Fri, 28 Dec 2018 16:51:23 -0600
-Message-ID: <20181228225123.GA10598@bogus>
-References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1545120356-7749-2-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v2 5/7] Input: dt-bindings: tm2-touchkey: Document new
+ keycodes property
+Date: Fri, 28 Dec 2018 14:52:12 -0800
+Message-ID: <CAKdAkRQ6iO5bSUkSuPOUXMy46W1kENqg3ev=i+75459wfWAhfw@mail.gmail.com>
+References: <20181228154609.14846-1-pawel.mikolaj.chmiel@gmail.com>
+ <20181228154609.14846-6-pawel.mikolaj.chmiel@gmail.com> <20181228224707.GA7218@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545120356-7749-2-git-send-email-Christian.Hohnstaedt@wago.com>
+In-Reply-To: <20181228224707.GA7218@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, xc-racer2@live.ca, Simon Shields <simon@lineageos.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 09:05:55AM +0100, Christian Hohnstaedt wrote:
-> Add input voltage configuration options
-> 
-> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-> ---
->  Documentation/devicetree/bindings/regulator/tps65218.txt | 10 ++++++++++
->  1 file changed, 10 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/regulator/tps65218.txt b/Documentation/devicetree/bindings/regulator/tps65218.txt
-> index 02f0e9b..a9ee377 100644
-> --- a/Documentation/devicetree/bindings/regulator/tps65218.txt
-> +++ b/Documentation/devicetree/bindings/regulator/tps65218.txt
-> @@ -16,12 +16,22 @@ Required properties:
->    regulator-dcdc5, regulator-dcdc6, regulator-ldo1, regulator-ls3.
->    Each regulator is defined using the standard binding for regulators.
->  
-> +Optional properties:
-> +  If any of these properties is absent, the setting will not be touched.
-> +- strict-supply-voltage: <1|0> Set/Reset STRICT flag in CONFIG1
-> +- under-voltage-limit: Select 2.75, 2.95, 3.25 or 3.35V as UVLO in CONFIG1
-> +- under-voltage-hysteresis: Select 200mV or 400mV UVLOHYS in CONFIG2
+On Fri, Dec 28, 2018 at 2:47 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Fri, 28 Dec 2018 16:46:07 +0100, =3D?UTF-8?q?Pawe=3DC5=3D82=3D20Chmiel=
+?=3D wrote:
+> > From: Jonathan Bakker <xc-racer2@live.ca>
+> >
+> > Document new optional property for setting custom keycodes.
+> >
+> > Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> > ---
+> > Changes from v1:
+> >   - Because key codes could be bigger than 255, use ints for keycodes
+> > ---
+> >  .../devicetree/bindings/input/cypress,tm2-touchkey.txt        | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-These need vendor prefixes and unit suffixes (as defined in 
-property-units.txt).
+Shouldn't this be "linux,keycodes" though?
 
-> +
->  Example:
->  tps65218: tps65218@24 {
->  	reg = <0x24>;
->  	compatible = "ti,tps65218";
->  	interrupts = <GIC_SPI 7 IRQ_TYPE_NONE>; /* NMIn */
->  	interrupt-controller;
-> +	strict-supply-voltage = <1>;
-> +	under-voltage-hysteresis = <400000>;
-> +	under-voltage-limit = <3350000>;
-> +
->  	#interrupt-cells = <2>;
->  
->  	dcdc1: regulator-dcdc1 {
-> -- 
-> 2.7.4
-> 
+Thanks.
+
+--=20
+Dmitry
