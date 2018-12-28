@@ -1,62 +1,36 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH V5 0/3] ARM: dts: add Raspberry Pi 3 A+
-Date: Fri, 28 Dec 2018 23:09:24 +0100
-Message-ID: <1546034967-2427-1-git-send-email-stefan.wahren@i2se.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 2/8] dt-bindings: remoteproc: qcom: Add missing clocks
+ for SDM845
+Date: Fri, 28 Dec 2018 16:13:21 -0600
+Message-ID: <20181228221321.GA16248@bogus>
+References: <20181228185307.25645-1-sibis@codeaurora.org>
+ <20181228185307.25645-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20181228185307.25645-2-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch series adds support for the brand new Raspberry Pi 3 A+ .
-Since there is no official DTS file yet, this one bases on a procfs dump and
-the dt-blob of the firmware [1].
+On Sat, 29 Dec 2018 00:23:01 +0530, Sibi Sankar wrote:
+> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+> 
+> Fixes: fb22022ff63d ("dt-bindings: remoteproc: Add Q6v5 Modem PIL
+> binding for SDM845")
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+> 
+> v4:
+>   * Re-order clocks for consistency as suggested by Rob
+> 
+> v3:
+>   * Fixup dt-binding documentation as suggested by Doug
+> 
+>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 14 +++++++++++---
+>  1 file changed, 11 insertions(+), 3 deletions(-)
+> 
 
-[1] - https://github.com/raspberrypi/firmware/blob/master/extra/dt-blob.dts
-
-Changes in V5:
-- fix reference order of &gpio and &firmware as commented by Peter Robinson
-- change GPIO42 label from "NC" to ""
-- use GPIO label for LEDs from RPi 3 B+ schematics 
-- add Eric's Acked-by
-
-Changes in V4:
-- address Phil's comment by dropping BT_ON and rename WL_ON to BT_WL_ON
-- drop Wifi and BT reset control and add explaining comment
-- add missing gpio line names
-- add Rob's Reviewed-by 
-
-Changes in V3:
-- add Eric's Reviewed-by
-- fix wifi reset GPIO polarity
-
-Changes in V2:
-- add missing Makefile change for arm64
-
-Stefan Wahren (3):
-  dt-bindings: bcm: Add Raspberry Pi 3 A+
-  ARM: dts: add Raspberry Pi 3 A+
-  arm64: dts: broadcom: Add reference to RPi 3 A+
-
- .../devicetree/bindings/arm/bcm/brcm,bcm2835.txt   |   4 +
- arch/arm/boot/dts/Makefile                         |   1 +
- arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts         | 175 +++++++++++++++++++++
- arch/arm64/boot/dts/broadcom/Makefile              |   3 +-
- .../boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts     |   2 +
- 5 files changed, 184 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
- create mode 100644 arch/arm64/boot/dts/broadcom/bcm2837-rpi-3-a-plus.dts
-
--- 
-2.7.4
+Reviewed-by: Rob Herring <robh@kernel.org>
