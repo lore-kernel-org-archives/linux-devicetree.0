@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 3/8] dt-bindings: remoteproc: qcom: Add missing clocks for MSM8996
-Date: Sat, 29 Dec 2018 00:23:02 +0530
-Message-ID: <20181228185307.25645-3-sibis@codeaurora.org>
+Subject: [PATCH v4 4/8] remoteproc: qcom: q6v5-mss: Add missing clocks for MSM8996
+Date: Sat, 29 Dec 2018 00:23:03 +0530
+Message-ID: <20181228185307.25645-4-sibis@codeaurora.org>
 References: <20181228185307.25645-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,7 +12,10 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing clock bindings for Q6V5 MSS on MSM8996 SoCs.
+Proxy vote for QDSS clock and remove vote on handover interrupt
+to provide MSS PBL with access to STM hardware registers during
+boot. Add "snoc_axi" and "mnoc_axi" to the active clock list.
+Rename "gpll0_mss_clk" to "gpll0_mss" for consistency across SoCs.
 
 Fixes: 9f058fa2efb1 ("remoteproc: qcom: Add support for mss remoteproc
 on msm8996")
@@ -21,28 +24,34 @@ Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
 
 v4:
-  * Re-order clocks for consistency as suggested by Rob
+  * Rename "gpll0_mss_clk" to "gpll0_mss" for consistency across
+    SoCs
 
-v3:
-  * Fixup dt-binding documentation as suggested by Doug
+ drivers/remoteproc/qcom_q6v5_mss.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
- Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
- 1 file changed, 3 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index d645c8db29fd..bba3d6be71c0 100644
---- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-+++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -51,6 +51,9 @@ on the Qualcomm Hexagon core.
- 	qcom,msm8916-mss-pil:
- 	qcom,msm8974-mss-pil:
- 		    must be "iface", "bus", "mem", "xo"
-+	qcom,msm8996-mss-pil:
-+		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
-+		    "snoc_axi", "mnoc_axi", "pnoc", "qdss"
- 	qcom,sdm845-mss-pil:
- 		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
- 		    "snoc_axi", "mnoc_axi", "prng"
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index 01be7314e176..cb5f0d3ac6a3 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -1398,13 +1398,16 @@ static const struct rproc_hexagon_res msm8996_mss = {
+ 	.proxy_clk_names = (char*[]){
+ 			"xo",
+ 			"pnoc",
++			"qdss",
+ 			NULL
+ 	},
+ 	.active_clk_names = (char*[]){
+ 			"iface",
+ 			"bus",
+ 			"mem",
+-			"gpll0_mss_clk",
++			"gpll0_mss",
++			"snoc_axi",
++			"mnoc_axi",
+ 			NULL
+ 	},
+ 	.need_mem_protection = true,
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
