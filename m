@@ -1,42 +1,48 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH V2 1/1] clk: imx8qxp: make the name of clock ID generic
-Date: Fri, 28 Dec 2018 10:44:16 -0800
-Message-ID: <154602265626.179992.3181140733519451401@swboyd.mtv.corp.google.com>
-References: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v4 1/8] dt-bindings: soc: qcom: Add remote-pid binding for GLINK SMEM
+Date: Sat, 29 Dec 2018 00:23:00 +0530
+Message-ID: <20181228185307.25645-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545581665-15446-1-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Aisheng Dong (2018-12-23 08:20:02)
-> SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
-> Let's make the name of clock ID generic to allow other SoCs to reuse
-> the common part.
-> 
-> This patch only changes the clock id name and file name, so no
-> functional change.
-> 
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
+Add missing qcom,remote-pid dt binding required for GLINK SMEM
+which specifies the remote endpoint of the GLINK edge.
 
-Applied to clk-next
+Fixes: 2b41d6c8e696 ("dt-bindings: soc: qcom: Extend GLINK to cover
+SMEM")
+
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Doug Anderson <dianders@chromium.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+
+v3:
+  * Fixed typo
+
+ Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+index 0b8cc533ca83..587bb1ddc8cc 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
+@@ -21,6 +21,11 @@ edge.
+ 	Definition: should specify the IRQ used by the remote processor to
+ 		    signal this processor about communication related events
+ 
++- qcom,remote-pid:
++	Usage: required for glink-smem
++	Value type: <u32>
++	Definition: specifies the identifier of the remote endpoint of this edge
++
+ - qcom,rpm-msg-ram:
+ 	Usage: required for glink-rpm
+ 	Value type: <prop-encoded-array>
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
