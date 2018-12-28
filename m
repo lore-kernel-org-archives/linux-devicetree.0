@@ -1,15 +1,16 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH 0/3] firmware: imx: scu-pd: add fallback compatible string
- support
-Date: Fri, 28 Dec 2018 14:24:27 +0100
-Message-ID: <CAPDyKFokg+Rg9cBDF2WM6udx-T3GiNRTkXsn=u=JO9LP=0F55A@mail.gmail.com>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
- <AM0PR04MB4211FB9C3BA2CBBDB58F03FC80B70@AM0PR04MB4211.eurprd04.prod.outlook.com>
+From: Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Fri, 28 Dec 2018 13:25:57 +0000
+Message-ID: <20181228132557.GA12018@e107155-lin>
+References: <20181221181149.6708-1-sudeep.holla@arm.com>
+ <c22dacbe-ddc9-04c7-cda8-100dcbe0e70b@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <AM0PR04MB4211FB9C3BA2CBBDB58F03FC80B70@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <c22dacbe-ddc9-04c7-cda8-100dcbe0e70b@axentia.se>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,49 +20,38 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandre Belloni <alexandre.belloni@bootlin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Dec 2018 at 03:38, Aisheng Dong <aisheng.dong@nxp.com> wrote:
->
-> Sorry, missed DT guys.
->
-> Hi Rob & Ulf,
->
-> Would you help review this patch series?
-
-This is DT changes, so I didn't look until now.
-
->
-> Regards
-> Dong Aisheng
->
-> > -----Original Message-----
-> > From: Aisheng Dong
-> > Sent: Wednesday, December 19, 2018 12:01 AM
+On Fri, Dec 21, 2018 at 06:46:12PM +0000, Peter Rosin wrote:
+> On 2018-12-21 19:11, Sudeep Holla wrote:
+> > Most of the legacy "gpio-key,wakeup" property are already replaced
+> > with "wakeup-source". However few occurrences of old property has
+> > popped up again, probably from the remnants in downstream trees.
+> > Almost all of those were remove couple of years back.
 > >
-> > SCU power domain can be used in the same way by IMX8QXP and IMX8QM
-> > SoCs.
-> > Let's add a "fsl,scu-pd" fallback compatible string to allow other SoCs to reuse
-> > the common part.
+> > Replace the legacy properties with the unified "wakeup-source"
+> > property introduced in the commit 700a38b27eef ("Input: gpio_keys -
+> > switch to using generic device properties")
 > >
-> > Dong Aisheng (3):
-> >   dt-bindings: fsl: scu: add fallback compatible string for power domain
-> >   dt-bindings: fsl: scu: add imx8qm scu power domain support
-> >   firmware: imx: scu-pd: add fallback compatible string support
-> >
-> >  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 8 ++++++--
-> >  drivers/firmware/imx/scu-pd.c                               | 1 +
-> >  2 files changed, 7 insertions(+), 2 deletions(-)
-> >
-> > --
-> > 2.7.4
+> > Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> > Cc: Peter Rosin <peda@axentia.se>
+> > Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> > Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+>
+> Why is this not v3?
+> Why did you drop all the tags you already got?
 >
 
-For series, feel free to add:
+Sorry for that, I intentionally dropped Acks from maintainer who would
+merge and add their sign-offs, but I dropped yours accidentally.
 
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
+> Acked-by: Peter Rosin <peda@axentia.se>
+>
 
-Kind regards
-Uffe
+Thanks.
+
+--
+Regards,
+Sudeep
