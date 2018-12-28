@@ -1,73 +1,53 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: qcom: Add firmware bindings
- for Q6V5 MSS
-Date: Fri, 28 Dec 2018 10:17:28 +0530
-Message-ID: <bbae159b2349b7681f922d46d02305db@codeaurora.org>
-References: <20181212124456.3164-1-sibis@codeaurora.org>
- <20181212124456.3164-2-sibis@codeaurora.org> <20181220201002.GA8831@bogus>
+Subject: [PATCH v2 0/2] Add firmware bindings for Q6V5 MSS/PAS
+Date: Fri, 28 Dec 2018 10:18:17 +0530
+Message-ID: <20181228044819.5697-1-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181220201002.GA8831@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, andy.gross@linaro.org, briannorris@chromium.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+To: bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org
+Cc: briannorris@chromium.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
-Thanks for the review :)
+Q6V5 MSS on certain SoCs like SDM845 are capable of operating under
+completely different configuration (like Non-Modem WLAN configuration)
+depending on the firmware loaded without any change in boot sequence
+of the Hexagon core. The patch series is ultimately aimed to avoid
+multiple compatibles per SoC to just specify different upstreamed firmware
+locations. This is achieved by using "firmware-name" binding to store
+the relative path of mba/modem/pas firmware images.
 
-On 2018-12-21 01:40, Rob Herring wrote:
-> On Wed, Dec 12, 2018 at 06:14:55PM +0530, Sibi Sankar wrote:
->> Add optional firmware bindings for Q6V5 MSS. It lists the two relative
->> firmware paths which are used for booting and authenticating the 
->> Hexagon
->> core.
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 7 
->> +++++++
->>  1 file changed, 7 insertions(+)
->> 
->> diff --git 
->> a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt 
->> b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> index 9ff5b0309417..1f6988a60636 100644
->> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> @@ -36,6 +36,13 @@ on the Qualcomm Hexagon core.
->>  	Value type: <stringlist>
->>  	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
->> 
->> +- qcom,firmware:
-> 
-> We already have a standard name 'firmware-name'. Use that. I'm fine 
-> with
-> allowing it to be more than 1 string.
+remoteproc@4080000 { 
+	...
+	firmware-name = "qcom/sdm845/mss/mba.mbn",
+			"qcom/sdm845/mss/modem.mdt";
+	...
+}
 
-sure will replace "qcom,firmware" with "firmware-name" in the next 
-re-spin
+remoteproc@17300000 {
+	...
+	firmware-name = "qcom/sdm845/lpass/adsp.mdt";
+	...
+}
 
-> 
->> +	Usage: optional
->> +	Value type: <stringlist>
->> +	Definition: must list the 2 relative firmware paths (mba and modem
->> +		    metadata respectively) which are used for booting and
->> +		    authenticating the Hexagon core.
->> +
->>  - clocks:
->>  	Usage: required
->>  	Value type: <phandle>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
+Suggested-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+v2:
+  * Replace "qcom,firmware" with "firmware-name" as suggested
+    by Rob
+  * Include dt-bindings/parsing logic for PAS based remoteprocs 
+
+Sibi Sankar (2):
+  dt-bindings: remoteproc: qcom: Add firmware bindings for Q6V5
+  remoteproc: qcom: Add support for parsing fw dt bindings
+
+ .../bindings/remoteproc/qcom,adsp.txt         |  6 +++
+ .../bindings/remoteproc/qcom,q6v5.txt         |  7 +++
+ drivers/remoteproc/qcom_q6v5_mss.c            | 46 +++++++++++++++----
+ drivers/remoteproc/qcom_q6v5_pas.c            | 11 ++++-
+ 4 files changed, 59 insertions(+), 11 deletions(-)
 
 -- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
