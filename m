@@ -1,43 +1,473 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 5/7] Input: dt-bindings: tm2-touchkey: Document new
- keycodes property
-Date: Fri, 28 Dec 2018 14:52:12 -0800
-Message-ID: <CAKdAkRQ6iO5bSUkSuPOUXMy46W1kENqg3ev=i+75459wfWAhfw@mail.gmail.com>
-References: <20181228154609.14846-1-pawel.mikolaj.chmiel@gmail.com>
- <20181228154609.14846-6-pawel.mikolaj.chmiel@gmail.com> <20181228224707.GA7218@bogus>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
+ boards
+Date: Fri, 28 Dec 2018 17:25:56 -0600
+Message-ID: <20181228232556.GA14277@bogus>
+References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181228224707.GA7218@bogus>
+Content-Disposition: inline
+In-Reply-To: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, xc-racer2@live.ca, Simon Shields <simon@lineageos.org>
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 28, 2018 at 2:47 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, 28 Dec 2018 16:46:07 +0100, =3D?UTF-8?q?Pawe=3DC5=3D82=3D20Chmiel=
-?=3D wrote:
-> > From: Jonathan Bakker <xc-racer2@live.ca>
-> >
-> > Document new optional property for setting custom keycodes.
-> >
-> > Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > ---
-> > Changes from v1:
-> >   - Because key codes could be bigger than 255, use ints for keycodes
-> > ---
-> >  .../devicetree/bindings/input/cypress,tm2-touchkey.txt        | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
->
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Tue, Dec 18, 2018 at 02:42:11PM +0000, Vokáč Michal wrote:
+> These are i.MX6S/DL based SBCs embedded in various Y Soft products.
+> All share the same board design but have slightly different HW
+> configuration.
+> 
+> Ursa
+> - i.MX6S SoC, 512MB RAM DDR3, 4GB eMMC, microSD
+> - parallel WVGA 7" LCD with touch panel
+> - 1x Eth (QCA8334 switch)
+> - USB OTG
+> - USB host (micro-B)
+> 
+> Draco
+> - i.MX6S SoC, 512MB RAM DDR3, 4GB eMMC, microSD
+> - parallel WVGA 7" LCD with touch panel
+> - 2x Eth (QCA8334 switch)
+> - USB OTG
+> - USB host (micro-B)
+> - RGB LED (I2C LP5562)
+> - 3.5mm audio jack + codec (LM49350)
+> 
+> Hydra
+> - i.MX6DL SoC, 2GB RAM DDR3, 4GB eMMC, microSD
+> - I2C OLED display, capacitive matrix keys
+> - 2x Eth (QCA8334 switch)
+> - USB OTG
+> - RGB LED (I2C LP5562)
+> - 3.5mm audio jack + codec (LM49350)
+> - HDMI
+> - miniPCIe slot
+> 
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> ---
+> Changes since v1:
+>  - Enable HDMI on Hydra board.
+>  - Move regulators to the root node and remove simple-bus property. (Rob)
+>  - Remove reg and unit-address property from regulators. (Rob)
+>  - Use correct names for led-controller and pmic node. (Rob)
+>  - Use wakeup-source instead of deprecated enable-sdio-wakeup. (Shawn)
+> 
+> Link to v1: http://patchwork.ozlabs.org/patch/991975/
+> 
+> No change regarding the documentation and split of the dtsi files as
+> I did not get answers to my questions and was not sure how to proceed.
+> Andrew pointed me to the Kirkwood Synology platform. That boards use
+> the same concept to organize the "disabled" and "okay" nodes.
+> 
+> Thanks,
+> Michal
+> 
+>  arch/arm/boot/dts/Makefile                 |   3 +
+>  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 595 +++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/imx6dl-yapp4-draco.dts   |  61 +++
+>  arch/arm/boot/dts/imx6dl-yapp4-hydra.dts   |  49 +++
+>  arch/arm/boot/dts/imx6dl-yapp4-ursa.dts    |  57 +++
+>  5 files changed, 765 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+>  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-draco.dts
+>  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
+>  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
+> 
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index b0e966d..9bdf394 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -443,6 +443,9 @@ dtb-$(CONFIG_SOC_IMX6Q) += \
+>  	imx6dl-wandboard.dtb \
+>  	imx6dl-wandboard-revb1.dtb \
+>  	imx6dl-wandboard-revd1.dtb \
+> +	imx6dl-yapp4-draco.dtb \
+> +	imx6dl-yapp4-hydra.dtb \
+> +	imx6dl-yapp4-ursa.dtb \
+>  	imx6q-apalis-eval.dtb \
+>  	imx6q-apalis-ixora.dtb \
+>  	imx6q-apalis-ixora-v1.1.dtb \
+> diff --git a/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+> new file mode 100644
+> index 0000000..7eb6427
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
+> @@ -0,0 +1,595 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2015-2018 Y Soft Corporation, a.s.
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include <dt-bindings/interrupt-controller/irq.h>
+> +#include <dt-bindings/pwm/pwm.h>
+> +
+> +/ {
+> +	backlight: backlight {
+> +		compatible = "pwm-backlight";
+> +		pwms = <&pwm1 0 500000 PWM_POLARITY_INVERTED>;
+> +		brightness-levels = <0 32 64 128 255>;
+> +		default-brightness-level = <32>;
+> +		num-interpolated-steps = <8>;
+> +		power-supply = <&sw2_reg>;
+> +		status = "disabled";
+> +	};
+> +
+> +	lcd_display: display {
+> +		compatible = "fsl,imx-parallel-display";
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +		interface-pix-fmt = "rgb24";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_ipu1>;
+> +		status = "disabled";
+> +
+> +		port@0 {
+> +			reg = <0>;
+> +
+> +			lcd_display_in: endpoint {
+> +				remote-endpoint = <&ipu1_di0_disp0>;
+> +			};
+> +		};
+> +
+> +		port@1 {
+> +			reg = <1>;
+> +
+> +			lcd_display_out: endpoint {
+> +				remote-endpoint = <&lcd_panel_in>;
+> +			};
+> +		};
+> +	};
+> +
+> +	panel: panel {
+> +		compatible = "dataimage,scf0700c48ggu18";
+> +		power-supply = <&sw2_reg>;
+> +		status = "disabled";
+> +
+> +		port {
+> +			lcd_panel_in: endpoint {
+> +				remote-endpoint = <&lcd_display_out>;
+> +			};
+> +		};
+> +	};
+> +
+> +	reg_usb_h1_vbus: reg_usb_h1_vbus {
 
-Shouldn't this be "linux,keycodes" though?
+Use '-' rather than '_' in node names.
 
-Thanks.
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usbh1_vbus>;
+> +		regulator-name = "usb_h1_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio1 29 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		status = "disabled";
+> +	};
+> +
+> +	reg_usb_otg_vbus: reg_usb_otg_vbus {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_usbotg_vbus>;
+> +		regulator-name = "usb_otg_vbus";
+> +		regulator-min-microvolt = <5000000>;
+> +		regulator-max-microvolt = <5000000>;
+> +		gpio = <&gpio3 22 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		status = "okay";
+> +	};
+> +
+> +	reg_pcie: reg_pcie {
+> +		compatible = "regulator-fixed";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pcie_reg>;
+> +		regulator-name = "MPCIE_3V3";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio3 19 GPIO_ACTIVE_HIGH>;
+> +		enable-active-high;
+> +		status = "disabled";
+> +	};
+> +};
+> +
+> +&fec {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_enet>;
+> +	phy-mode = "rgmii-id";
+> +	phy-reset-gpios = <&gpio1 25 GPIO_ACTIVE_HIGH>;
+> +	phy-reset-duration = <20>;
+> +	phy-supply = <&sw2_reg>;
+> +	phy-handle = <&ethphy0>;
+> +	status = "okay";
+> +
+> +	mdio {
+> +		#address-cells = <1>;
+> +		#size-cells = <0>;
+> +
+> +		phy_port2: phy@1 {
+> +			reg = <1>;
+> +		};
+> +
+> +		phy_port3: phy@2 {
+> +			reg = <2>;
+> +		};
+> +
+> +		switch@0 {
+> +			compatible = "qca,qca8334";
+> +			reg = <0>;
+> +
+> +			switch_ports: ports {
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +
+> +				ethphy0: port@0 {
+> +					reg = <0>;
+> +					label = "cpu";
+> +					phy-mode = "rgmii";
+> +					ethernet = <&fec>;
+> +					fixed-link {
+> +						speed = <1000>;
+> +						full-duplex;
+> +					};
+> +				};
+> +
+> +				port@2 {
+> +					reg = <2>;
+> +					label = "eth2";
+> +					phy-handle = <&phy_port2>;
+> +				};
+> +
+> +				port@3 {
+> +					reg = <3>;
+> +					label = "eth1";
+> +					phy-handle = <&phy_port3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> +
+> +&hdmi {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_hdmi_cec>;
+> +	ddc-i2c-bus = <&i2c2>;
+> +	status = "disabled";
+> +};
+> +
+> +&i2c2 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c2>;
+> +	status = "okay";
+> +
+> +	eeprom@57 {
+> +		compatible = "atmel,24c128";
+> +		reg = <0x57>;
+> +		pagesize = <64>;
+> +		status = "okay";
+> +	};
+> +
+> +	leds: led-controller@30 {
+> +		compatible = "ti,lp5562";
+> +		label = "lp5562_leds";
 
---=20
-Dmitry
+label should be for a specific led. The use here doesn't seem that 
+useful.
+
+> +		reg = <0x30>;
+> +		clock-mode = /bits/ 8 <1>;
+> +		status = "disabled";
+> +
+> +		chan0 {
+> +			chan-name = "R";
+> +			led-cur = /bits/ 8 <0x20>;
+> +			max-cur = /bits/ 8 <0x60>;
+> +		};
+> +
+> +		chan1 {
+> +			chan-name = "G";
+> +			led-cur = /bits/ 8 <0x20>;
+> +			max-cur = /bits/ 8 <0x60>;
+> +		};
+> +
+> +		chan2 {
+> +			chan-name = "B";
+> +			led-cur = /bits/ 8 <0x20>;
+> +			max-cur = /bits/ 8 <0x60>;
+> +		};
+> +
+> +		chan3 {
+> +			chan-name = "W";
+> +			led-cur = /bits/ 8 <0x0>;
+> +			max-cur = /bits/ 8 <0x0>;
+> +		};
+> +	};
+> +
+> +	pmic@8 {
+> +		compatible = "fsl,pfuze200";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&pinctrl_pmic>;
+> +		reg = <0x8>;
+> +
+> +		regulators {
+> +			sw1a_reg: sw1ab {
+> +				regulator-min-microvolt = <300000>;
+> +				regulator-max-microvolt = <1875000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +				regulator-ramp-delay = <6250>;
+> +			};
+> +
+> +			sw2_reg: sw2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3a_reg: sw3a {
+> +				regulator-min-microvolt = <400000>;
+> +				regulator-max-microvolt = <1975000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			sw3b_reg: sw3b {
+> +				regulator-min-microvolt = <400000>;
+> +				regulator-max-microvolt = <1975000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			swbst_reg: swbst {
+> +				regulator-min-microvolt = <5000000>;
+> +				regulator-max-microvolt = <5150000>;
+> +			};
+> +
+> +			snvs_reg: vsnvs {
+> +				regulator-min-microvolt = <1000000>;
+> +				regulator-max-microvolt = <3000000>;
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vref_reg: vrefddr {
+> +				regulator-boot-on;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen1_reg: vgen1 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +			};
+> +
+> +			vgen2_reg: vgen2 {
+> +				regulator-min-microvolt = <800000>;
+> +				regulator-max-microvolt = <1550000>;
+> +			};
+> +
+> +			vgen3_reg: vgen3 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen4_reg: vgen4 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen5_reg: vgen5 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +
+> +			vgen6_reg: vgen6 {
+> +				regulator-min-microvolt = <1800000>;
+> +				regulator-max-microvolt = <3300000>;
+> +				regulator-always-on;
+> +			};
+> +		};
+> +	};
+> +
+> +	touchscreen: touchscreen@5c {
+> +		compatible = "pixcir,pixcir_tangoc";
+> +		reg = <0x5c>;
+> +		pinctrl-0 = <&pinctrl_touch>;
+> +		interrupt-parent = <&gpio4>;
+> +		interrupts = <5 IRQ_TYPE_EDGE_FALLING>;
+> +		attb-gpio = <&gpio4 5 GPIO_ACTIVE_HIGH>;
+> +		reset-gpio = <&gpio1 2 GPIO_ACTIVE_HIGH>;
+> +		touchscreen-size-x = <800>;
+> +		touchscreen-size-y = <480>;
+> +		status = "disabled";
+> +	};
+> +};
+> +
+> +&i2c3 {
+> +	clock-frequency = <100000>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pinctrl_i2c3>;
+> +	status = "disabled";
+> +
+> +	gpio_oled: gpio@41 {
+> +		compatible = "nxp,pca9536";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		reg = <0x41>;
+> +		vcc-supply = <&sw2_reg>;
+> +		status = "disabled";
+> +	};
+> +
+> +	oled: oled@3d {
+> +		compatible = "solomon,ssd1305fb-i2c";
+
+Not documented.
+
+> +		reg = <0x3d>;
+> +		solomon,height = <64>;
+> +		solomon,width = <128>;
+> +		solomon,page-offset = <0>;
+> +		solomon,prechargep2 = <15>;
+> +		reset-gpios = <&gpio_oled 1 GPIO_ACTIVE_LOW>;
+> +		vbat-supply = <&sw2_reg>;
+> +		status = "disabled";
+> +	};
+
+[...]
+
+> diff --git a/arch/arm/boot/dts/imx6dl-yapp4-draco.dts b/arch/arm/boot/dts/imx6dl-yapp4-draco.dts
+> new file mode 100644
+> index 0000000..2b9a7ad
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/imx6dl-yapp4-draco.dts
+> @@ -0,0 +1,61 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2015-2018 Y Soft Corporation, a.s.
+> +
+> +/dts-v1/;
+> +
+> +#include "imx6dl.dtsi"
+> +#include "imx6dl-yapp4-common.dtsi"
+> +
+> +/ {
+> +	model = "Y Soft IOTA Draco i.MX6Solo board";
+> +	compatible = "ysoft,imx6dl-yapp4-draco", "fsl,imx6dl";
+
+All compatible strings should be documented, not just SoC vendor boards.
+
+> +
+> +	cpus {
+> +		/delete-node/ cpu@1;
+
+Seems like this is a chip property, not a board specific property. IOW, 
+you need an imx6solo.dtsi file.
+
+> +	};
