@@ -1,45 +1,40 @@
 From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v2 3/3] ARM: dts: s5pv210: Add node for exynos-rotator
-Date: Fri, 28 Dec 2018 16:19:04 +0100
-Message-ID: <20181228151904.12079-4-pawel.mikolaj.chmiel@gmail.com>
-References: <20181228151904.12079-1-pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v2 0/7] Input: tm2-touchkey: Add support for Aries and Midas
+Date: Fri, 28 Dec 2018 16:46:02 +0100
+Message-ID: <20181228154609.14846-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181228151904.12079-1-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: inki.dae@samsung.com, krzk@kernel.org, airlied@linux.ie
-Cc: jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+To: dmitry.torokhov@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, simon@lineageos.org
 List-Id: devicetree@vger.kernel.org
 
-This commit adds node for Exynos Rorator device,
-so it can be used on all s5pv210 based devices.
+This patches adds support for Aries (Samsung i9000) and Midsa (Samsung S3)
+based devices to TM2 Touchkey driver.
 
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- arch/arm/boot/dts/s5pv210.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+Changes from v1:
+  - Added Reviewed-by to some patches
+  - Use ints for keycodes (they could be bigger than 255)
+  - Droped separate name changes
+  - Added missing const in few places
+  - Removed redundant cast
 
-diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-index 75f454a210d6..a5463003c7f6 100644
---- a/arch/arm/boot/dts/s5pv210.dtsi
-+++ b/arch/arm/boot/dts/s5pv210.dtsi
-@@ -542,6 +542,15 @@
- 			#dma-requests = <1>;
- 		};
- 
-+		rotator: rotator@fa300000 {
-+			compatible = "samsung,s5pv210-rotator";
-+			reg = <0xfa300000 0x1000>;
-+			interrupt-parent = <&vic2>;
-+			interrupts = <4>;
-+			clocks = <&clocks CLK_ROTATOR>;
-+			clock-names = "rotator";
-+		};
-+
- 		i2c1: i2c@fab00000 {
- 			compatible = "samsung,s3c2440-i2c";
- 			reg = <0xfab00000 0x1000>;
+Jonathan Bakker (5):
+  Input: tm2-touchkey: Correct initial brightness
+  Input: tm2-touchkey: Allow specifying custom keycodes
+  Input: dt-bindings: tm2-touchkey: Document new keycodes property
+  Input: tm2-touchkey: Add support for aries touchkey variant
+  Input: dt-bindings: tm2-touchkey: Add support for aries touchkey
+
+Simon Shields (2):
+  Input: tm2-touchkey: Add support for midas touchkey
+  Input: dt-bindings: tm2-touchkey: Add support for midas touchkey
+
+ .../bindings/input/cypress,tm2-touchkey.txt   |   9 +-
+ drivers/input/keyboard/tm2-touchkey.c         | 132 +++++++++++++-----
+ 2 files changed, 108 insertions(+), 33 deletions(-)
+
 -- 
 2.17.1
