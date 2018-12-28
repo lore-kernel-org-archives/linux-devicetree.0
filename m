@@ -1,64 +1,56 @@
-From: h00249924 <hutenghui@huawei.com>
-Subject: [PATCH 1/2] arm64: dts: hi3660: Add i2s & sound device
-Date: Fri, 28 Dec 2018 14:30:45 +0800
-Message-ID: <1545978646-124051-1-git-send-email-hutenghui@huawei.com>
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+Subject: [PATCH 2/3] arm64: dts: Using standard CCF interface to set vcodec clk
+Date: Fri, 28 Dec 2018 14:33:04 +0800
+Message-ID: <1545978785-31375-2-git-send-email-yunfei.dong@mediatek.com>
+References: <1545978785-31375-1-git-send-email-yunfei.dong@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545978785-31375-1-git-send-email-yunfei.dong@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org
-Cc: suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liyuequan@hisilicon.com, cash.qianli@hisilicon.com, huangli295@hisilicon.com, hantanglei@huawei.com, wangyoulin1@hisilicon.com, ninggaoyu@hisilicon.com, Youlin Wang <wwx575822@notesmail.huawei.com>, John Stultz <john.stultz@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Youlin Wang <wwx575822@notesmail.huawei.com>
+Using standard CCF interface to set vdec/venc parent clk
+and clk rate.
 
-Signed-off-by: John Stultz <john.stultz@linaro.org>
-Signed-off-by: Youlin Wang <wwx575822@notesmail.huawei.com>
-Signed-off-by: Tanglei Han <hantanglei@huawei.com>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 28 ++++++++++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ arch/arm64/boot/dts/mediatek/mt8173.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 5223e36..ae535da 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -1136,5 +1136,33 @@
- 			interrupt-names = "asp_dma_irq";
- 			status = "ok";
+diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+index abd2f15a544b..bbc282aae412 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
+@@ -1295,6 +1295,15 @@
+ 				      "vencpll",
+ 				      "venc_lt_sel",
+ 				      "vdec_bus_clk_src";
++			assigned-clocks = <&topckgen CLK_TOP_VENC_LT_SEL>,
++					  <&topckgen CLK_TOP_CCI400_SEL>,
++					  <&topckgen CLK_TOP_VDEC_SEL>,
++					  <&apmixedsys CLK_APMIXED_VCODECPLL>,
++					  <&apmixedsys CLK_APMIXED_VENCPLL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL_370P5>,
++						 <&topckgen CLK_TOP_UNIVPLL_D2>,
++						 <&topckgen CLK_TOP_VCODECPLL>;
++			assigned-clock-rates = <0>, <0>, <0>, <1482000000>, <800000000>;
  		};
-+
-+		i2s2: hisi_i2s {
-+			compatible = "hisilicon,hisi-i2s";
-+			reg = <0x0 0xe804f800 0x0 0x400>,
-+			      <0x0 0xe804e000 0x0 0x400>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&i2s2_pmx_func &i2s2_cfg_func>;
-+			dmas = <&asp_dmac 18 &asp_dmac 19>;
-+			dma-names = "rx", "tx";
-+			#sound-dai-cells = <0>;
-+		};
-+
-+		sound {
-+			compatible = "simple-audio-card";
-+			simple-audio-card,name = "hikey-hdmi";
-+			simple-audio-card,format = "i2s";
-+
-+			simple-audio-card,bitclock-master = <&sound_master>;
-+			simple-audio-card,frame-master = <&sound_master>;
-+
-+			sound_master: simple-audio-card,cpu {
-+				sound-dai = <&i2s2>;
-+			};
-+
-+			simple-audio-card,codec {
-+				sound-dai = <&adv7533>;
-+			};
-+		};
- 	};
- };
+ 
+ 		larb1: larb@16010000 {
+@@ -1360,6 +1369,10 @@
+ 				      "venc_sel",
+ 				      "venc_lt_sel_src",
+ 				      "venc_lt_sel";
++			assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
++					  <&topckgen CLK_TOP_VENC_LT_SEL>;
++			assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
++						 <&topckgen CLK_TOP_UNIVPLL1_D2>;
+ 		};
+ 
+ 		vencltsys: clock-controller@19000000 {
 -- 
-1.9.1
+2.19.1
