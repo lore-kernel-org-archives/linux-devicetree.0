@@ -1,124 +1,68 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v2 1/7] Input: tm2-touchkey: Add support for midas touchkey
-Date: Fri, 28 Dec 2018 16:46:03 +0100
-Message-ID: <20181228154609.14846-2-pawel.mikolaj.chmiel@gmail.com>
-References: <20181228154609.14846-1-pawel.mikolaj.chmiel@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 1/5] dt-bindings: nvmem: add binding for Raspberry Pi OTP
+Date: Fri, 28 Dec 2018 16:46:39 +0100 (CET)
+Message-ID: <812144724.382117.1546011999351@email.ionos.de>
+References: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
+ <1542805904-6446-2-git-send-email-stefan.wahren@i2se.com>
+ <20181206234941.GA6340@bogus>
+ <894cfae3-43f4-f201-9b54-41114ce8107e@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181228154609.14846-1-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, simon@lineageos.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <894cfae3-43f4-f201-9b54-41114ce8107e@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-From: Simon Shields <simon@lineageos.org>
-
-The touchkey on midas boards is almost identical.
-The only real difference is that it uses the same register for both
-keycode and base.
-
-Signed-off-by: Simon Shields <simon@lineageos.org>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
-Changes from v1:
-  - Droped separate name changes
-  - Added missing const in few places
-  - Removed redundant cast
----
- drivers/input/keyboard/tm2-touchkey.c | 34 +++++++++++++++++++++++----
- 1 file changed, 29 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
-index abc266e40e17..5a1fe08bdd76 100644
---- a/drivers/input/keyboard/tm2-touchkey.c
-+++ b/drivers/input/keyboard/tm2-touchkey.c
-@@ -22,12 +22,12 @@
- #include <linux/leds.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/pm.h>
- #include <linux/regulator/consumer.h>
- 
- #define TM2_TOUCHKEY_DEV_NAME		"tm2-touchkey"
--#define TM2_TOUCHKEY_KEYCODE_REG	0x03
--#define TM2_TOUCHKEY_BASE_REG		0x00
-+
- #define TM2_TOUCHKEY_CMD_LED_ON		0x10
- #define TM2_TOUCHKEY_CMD_LED_OFF	0x20
- #define TM2_TOUCHKEY_BIT_PRESS_EV	BIT(3)
-@@ -40,12 +40,28 @@ enum {
- 	TM2_TOUCHKEY_KEY_BACK,
- };
- 
-+struct touchkey_variant {
-+	u8 keycode_reg;
-+	u8 base_reg;
-+};
-+
- struct tm2_touchkey_data {
- 	struct i2c_client *client;
- 	struct input_dev *input_dev;
- 	struct led_classdev led_dev;
- 	struct regulator *vdd;
- 	struct regulator_bulk_data regulators[2];
-+	const struct touchkey_variant *variant;
-+};
-+
-+static const struct touchkey_variant tm2_touchkey_variant = {
-+	.keycode_reg = 0x03,
-+	.base_reg = 0x00,
-+};
-+
-+static const struct touchkey_variant midas_touchkey_variant = {
-+	.keycode_reg = 0x00,
-+	.base_reg = 0x00,
- };
- 
- static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
-@@ -66,7 +82,7 @@ static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
- 
- 	regulator_set_voltage(touchkey->vdd, volt, volt);
- 	i2c_smbus_write_byte_data(touchkey->client,
--				  TM2_TOUCHKEY_BASE_REG, data);
-+				  touchkey->variant->base_reg, data);
- }
- 
- static int tm2_touchkey_power_enable(struct tm2_touchkey_data *touchkey)
-@@ -99,7 +115,7 @@ static irqreturn_t tm2_touchkey_irq_handler(int irq, void *devid)
- 	int key;
- 
- 	data = i2c_smbus_read_byte_data(touchkey->client,
--					TM2_TOUCHKEY_KEYCODE_REG);
-+					touchkey->variant->keycode_reg);
- 	if (data < 0) {
- 		dev_err(&touchkey->client->dev,
- 			"failed to read i2c data: %d\n", data);
-@@ -153,6 +169,8 @@ static int tm2_touchkey_probe(struct i2c_client *client,
- 	touchkey->client = client;
- 	i2c_set_clientdata(client, touchkey);
- 
-+	touchkey->variant = of_device_get_match_data(&client->dev);
-+
- 	touchkey->regulators[0].supply = "vcc";
- 	touchkey->regulators[1].supply = "vdd";
- 	error = devm_regulator_bulk_get(&client->dev,
-@@ -262,7 +280,13 @@ static const struct i2c_device_id tm2_touchkey_id_table[] = {
- MODULE_DEVICE_TABLE(i2c, tm2_touchkey_id_table);
- 
- static const struct of_device_id tm2_touchkey_of_match[] = {
--	{ .compatible = "cypress,tm2-touchkey", },
-+	{
-+		.compatible = "cypress,tm2-touchkey",
-+		.data = &tm2_touchkey_variant,
-+	}, {
-+		.compatible = "cypress,midas-touchkey",
-+		.data = &midas_touchkey_variant,
-+	},
- 	{ },
- };
- MODULE_DEVICE_TABLE(of, tm2_touchkey_of_match);
--- 
-2.17.1
+SGkgUm9iLAoKPiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPiBoYXQgYW0g
+Ny4gRGV6ZW1iZXIgMjAxOCB1bSAwOToxMCBnZXNjaHJpZWJlbjoKPiAKPiAKPiBIaSBSb2IsCj4g
+Cj4gQW0gMDcuMTIuMTggdW0gMDA6NDkgc2NocmllYiBSb2IgSGVycmluZzoKPiA+IE9uIFdlZCwg
+Tm92IDIxLCAyMDE4IGF0IDAyOjExOjQwUE0gKzAxMDAsIFN0ZWZhbiBXYWhyZW4gd3JvdGU6Cj4g
+Pj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIFJhc3BiZXJyeSBQ
+aSBjdXN0b21lciBPVFAKPiA+PiBkcml2ZXIuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBTdGVm
+YW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4+IC0tLQo+ID4+ICAuLi4vbnZt
+ZW0vcmFzcGJlcnJ5cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0ICAgICB8IDIyICsrKysrKysr
+KysrKysrKysrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKPiA+
+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9u
+dm1lbS9yYXNwYmVycnlwaSxiY20yODM1LWN1c3RvbWVyLW90cC50eHQKPiA+Pgo+ID4+IGRpZmYg
+LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vcmFzcGJlcnJ5
+cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL252bWVtL3Jhc3BiZXJyeXBpLGJjbTI4MzUtY3VzdG9tZXItb3RwLnR4dAo+ID4+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAwMDAwMC4uMDQxZmYxNwo+ID4+IC0tLSAv
+ZGV2L251bGwKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZt
+ZW0vcmFzcGJlcnJ5cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0Cj4gPj4gQEAgLTAsMCArMSwy
+MiBAQAo+ID4+ICtDdXN0b21lciBPVFAgTWVtb3J5IGZvciBSYXNwYmVycnkgUGkKPiA+PiArCj4g
+Pj4gK1RoZSBWQzQgZmlybXdhcmUgZXhwb3NlcyBhIG1haWxib3ggaW50ZXJmYWNlIHRoYXQgYWxs
+b3dzIHRoZSBBUk0gY29yZQo+ID4+ICt0byBhY2Nlc3MgdGhlIGN1c3RvbWVyIHBhcnQgb2YgdGhl
+IE9UUCBtZW1vcnkuCj4gPj4gKwo+ID4+ICtUaGUgT1RQIG5vZGUgbXVzdCBiZSBhIGNoaWxkIG5v
+ZGUgb2YgdGhlIFJhc3BiZXJyeSBQaSBmaXJtd2FyZSBub2RlLgo+ID4+ICsKPiA+PiArUmVxdWly
+ZWQgcHJvcGVydGllcyA6Cj4gPj4gKy0gY29tcGF0aWJsZSAgICAgOiBTaG91bGQgYmUgInJhc3Bi
+ZXJyeXBpLGJjbTI4MzUtY3VzdG9tZXItb3RwIgo+ID4gV2h5IGRvIHdlIG5lZWQgdGhpcyBjaGls
+ZCBub2RlPyBDYW4ndCB0aGUgcGFyZW50IGluc3RhbnRpYXRlIHRoaXM/Cj4gPgo+ID4gQXJlIHRo
+ZXJlIE9UUCBmaWVsZHMgeW91IHdhbnQgdG8gZXhwb3NlIGluIERUPwo+IAo+IHRoZSBjdXN0b21l
+ciBwYXJ0IG9mIHRoZSBPVFAgaXMgcmVzZXJ2ZWQgKGluaXRpYWxpemVkIHdpdGggemVybykgZm9y
+Cj4gdXNlciB3aG8gd2FudHMgdG8gdXNlIHRoZSBSYXNwYmVycnkgUGkgKG1vc3RseSB0aGUgQ29t
+cHV0ZSBNb2R1bGUpIGluCj4gdGhlaXIgY3VzdG9tIGRlc2lnbnMuIFNvIGkgY2Fubm90IHByb3Zp
+ZGUgYW55IG52bWVtIGNlbGxzIHlldCBiZWNhdXNlIGl0Cj4gaXMgdXAgdG8gdGhlIHVzZXIgdG8g
+ZGVmaW5lIHRoZW0gKGUuZy4gaGFyZHdhcmUgcmVsYXRlZCB2YWx1ZXMgbGlrZQo+IHNlcmlhbCBu
+dW1iZXJzLCBNQUMgYWRkcmVzc2VzIGZvciBhZGRpdGlvbmFsIG5ldHdvcmsgaW50ZXJmYWNlcyBv
+cgo+IGNhbGlicmF0aW9uIHZhbHVlcykuIEJ1dCB5ZXMgaSBjb25zaWRlciB0aGUgYmluZGluZyBh
+bmQgdGhlIGFiaWxpdHkgdG8KPiBkZWZpbmUgbnZtZW0gY2VsbHMgdmlhIGRldmljZXRyZWUgYXMg
+YSBncmVhdCBmZWF0dXJlLgo+IAo+IEN1cnJlbnRseSB0aGUgRm91bmRhdGlvbiBzdWdnZXN0cyB0
+byB1c2UgdGhlIG1haWxib3ggaW50ZXJmYWNlIGZyb20KPiB1c2Vyc3BhY2UgWzFdLCBidXQgaSBw
+cmVmZXIgYSBtb3JlIGNvbW1vbiB3YXkgbGlrZSBudm1lbS4KPiAKPiBbMV0gLcKgCj4gaHR0cHM6
+Ly93d3cucmFzcGJlcnJ5cGkub3JnL2RvY3VtZW50YXRpb24vaGFyZHdhcmUvaW5kdXN0cmlhbC9S
+RUFETUUubWQKPgoKZGlkIGl0IGFuc3dlciB5b3VyIHF1ZXN0aW9ucz8KClN0ZWZhbgoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
