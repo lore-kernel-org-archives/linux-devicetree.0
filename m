@@ -1,83 +1,84 @@
-From: Daniel Vetter <daniel.vetter@ffwll.ch>
-Subject: Re: [PATCH v3 9/9] MAINTAINERS: Add maintainer for arm komeda driver
-Date: Fri, 28 Dec 2018 12:56:27 +0100
-Message-ID: <CAKMK7uFaGnjznux9E9gzmppW-+Pbx6UoFHEYjtWvBJWh3ro-nA@mail.gmail.com>
-References: <20181221095757.15510-1-james.qian.wang@arm.com>
- <20181221095757.15510-10-james.qian.wang@arm.com>
- <20181224123314.GK22341@e110455-lin.cambridge.arm.com>
- <CAKMK7uGt63=_KuECQc2ivuSZb8gMD1=6n0=Q2bcvzCEPo84uFw@mail.gmail.com>
- <20181228111534.GA19025@james-ThinkStation-P300>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY
+ bindings
+Date: Fri, 28 Dec 2018 13:38:59 +0100
+Message-ID: <2a007a91-e709-c9f1-f634-ddcf707e954d@linaro.org>
+References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1544176558-7946-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20181220170531.GA19862@bogus>
+ <20181220173633.GA19912@jackp-linux.qualcomm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181228111534.GA19025@james-ThinkStation-P300>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, Liviu Dudau <Liviu.Dudau@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>, "corbet@lwn.net" <corbet@lwn.net>, "airlied@linux.ie" <airlied@linux.ie>, "malidp@foss.arm.com" <malidp@foss.arm.com>, "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>, Ayan
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181220173633.GA19912@jackp-linux.qualcomm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jack Pham <jackp@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org, Manu Gautam <mgautam@codeaurora.org>, Sriharsha Allenki <sallenki@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBEZWMgMjgsIDIwMTggYXQgMTI6MTUgUE0gamFtZXMgcWlhbiB3YW5nIChBcm0gVGVj
-aG5vbG9neQpDaGluYSkgPGphbWVzLnFpYW4ud2FuZ0Bhcm0uY29tPiB3cm90ZToKPgo+IE9uIE1v
-biwgRGVjIDI0LCAyMDE4IGF0IDAyOjA1OjQzUE0gKzAxMDAsIERhbmllbCBWZXR0ZXIgd3JvdGU6
-Cj4gPiBPbiBNb24sIERlYyAyNCwgMjAxOCBhdCAxOjMzIFBNIExpdml1IER1ZGF1IDxMaXZpdS5E
-dWRhdUBhcm0uY29tPiB3cm90ZToKPiA+ID4KPiA+ID4gT24gRnJpLCBEZWMgMjEsIDIwMTggYXQg
-MTA6MDE6MDZBTSArMDAwMCwgamFtZXMgcWlhbiB3YW5nIChBcm0gVGVjaG5vbG9neSBDaGluYSkg
-d3JvdGU6Cj4gPiA+ID4gdjI6IEFkanVzdGVkIHRoZSBwb3NpdGlvbiBvZiBLT01FREEgYnkgYWxw
-aGFiZXRpY2FsIG9yZGVyCj4gPiA+ID4KPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBKYW1lcyAoUWlh
-bikgV2FuZyA8amFtZXMucWlhbi53YW5nQGFybS5jb20+Cj4gPiA+Cj4gPiA+IEFja2VkLWJ5OiBM
-aXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KPiA+ID4KPiA+ID4gQmVzdCByZWdhcmRz
-LAo+ID4gPiBMaXZpdQo+ID4gPgo+ID4gPiA+IC0tLQo+ID4gPiA+ICBNQUlOVEFJTkVSUyB8IDkg
-KysrKysrKysrCj4gPiA+ID4gIDEgZmlsZSBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKykKPiA+ID4g
-Pgo+ID4gPiA+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gPiA+ID4g
-aW5kZXggMjU0YjdiMjY3NzMxLi5lNDhjMmU1ZmQyOWYgMTAwNjQ0Cj4gPiA+ID4gLS0tIGEvTUFJ
-TlRBSU5FUlMKPiA+ID4gPiArKysgYi9NQUlOVEFJTkVSUwo+ID4gPiA+IEBAIC0xMTI0LDYgKzEx
-MjQsMTUgQEAgUzogICAgIFN1cHBvcnRlZAo+ID4gPiA+ICBGOiAgIGRyaXZlcnMvZ3B1L2RybS9h
-cm0vaGRsY2RfKgo+ID4gPiA+ICBGOiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L2FybSxoZGxjZC50eHQKPiA+ID4gPgo+ID4gPiA+ICtBUk0gS09NRURBIERSTS1L
-TVMgRFJJVkVSCj4gPiA+ID4gK006ICAgSmFtZXMgKFFpYW4pIFdhbmcgPGphbWVzLnFpYW4ud2Fu
-Z0Bhcm0uY29tPgo+ID4gPiA+ICtNOiAgIE1hbGkgRFAgTWFpbnRhaW5lcnMgPG1hbGlkcEBmb3Nz
-LmFybS5jb20+Cj4gPiA+ID4gK1M6ICAgU3VwcG9ydGVkCj4gPiA+ID4gK0Y6ICAgZHJpdmVycy9n
-cHUvZHJtL2FybS9kaXNwbGF5L2luY2x1ZGUvCj4gPiA+ID4gK0Y6ICAgZHJpdmVycy9ncHUvZHJt
-L2FybS9kaXNwbGF5L2tvbWVkYS8KPiA+ID4gPiArRjogICBEb2N1bWVudGF0aW9uL2RldmljZXRy
-ZWUvYmluZGluZ3MvZGlzcGxheS9hcm0vYXJtLGtvbWVkYS50eHQKPiA+ID4gPiArRjogICBEb2N1
-bWVudGF0aW9uL2dwdS9rb21lZGEta21zLnJzdAo+ID4KPiA+IE1lbnRpb25pbmcgdGhlIGdpdCB0
-cmVlIHdvdWxkIGJlIGdvb2QuIEFuZCBJIGd1ZXNzIHlvdSdsbCBkbyBzb21lIGtpbmQKPiA+IG9m
-IGdyb3VwIG1haW50YWluZXJzaGlwPyBQcm9iYWJseSBzdGlsbCBnb29kIGlmIHlvdSBzZW5kIG91
-dCBhCj4gPiBkZWRpY2F0ZWQvdG9waWMgcHVsbCByZXF1ZXN0IGZvciB0aGlzIG5ldyBkcml2ZXIs
-IGJ1dCBmcm9tIHRoZW4gb24KPiA+IGl0J3MgYWxsIGluIHRoZSBzYW1lIGdpdCByZXBvLgo+ID4g
-LURhbmllbAo+Cj4gSGkgRGFuaWVsOgo+Cj4gVGhlIGtvbWVkYSBkcml2ZXIgd2lsbCB1c2UgYW4g
-QXJtLWhvc3RlZCB0cmVlOgo+Cj4gZ2l0IGdpdDovL2xpbnV4LWFybS5vcmcvbGludXgtbGQuZ2l0
-IGZvci11cHN0cmVhbS9tYWxpLWRwCj4KPiBTYW1lIGFzIG90aGVyIGFybSBkaXNwbGF5IGRyaXZl
-cnMuIEFuZCBMaXZpdSBEdWRhdSB3aWxsIGhlbHAgdG8gc2VuZCB0aGUgcHVsbAo+IHJlcXVlc3Qg
-dG8gbWVyZ2UgdGhpcyB0b3BpYyBpbnRvIGRybS1uZXh0Lgo+Cj4gQW5kIHdlIGFyZSBwbGFubmlu
-ZyB0byBhZG9wdCBhIGdyb3VwIG1haW50YWluZXJzaGlwIGFuZCBtaWdyYXRlIHRvd2FyZHMgZHJt
-LW1pc2MtbmV4dCwKPiBidXQgd2UganVzdCBuZWVkIHRvIGhhdmUgZW5vdWdoIHBlb3BsZSBhbmQg
-ZW5vdWdoIGV4cGVyaWVuY2Ugd2l0aCB3b3JraW5nIHdpdGggdXBzdHJlYW0KPiBiZWZvcmUgd2Ug
-anVtcCBhbGwgaW4uCgphcm0gZHJpdmVycyBhcmUgcHJvYmFibHkgYSBiaXQgdG9vIGJpZyBmb3Ig
-ZHJtLW1pc2MsIGJ1dCB5b3UgY291bGQgdXNlCnRoZSBzYW1lIHRvb2xpbmcgdG8gbWFpbnRhaW4g
-YSBkcm0tYXJtIHRyZWUuIEkgZ3Vlc3MgdGhhdCdzIHRoZSBpZGVhPwotRGFuaWVsCgo+IExhc3Qg
-YSBUOiBlbnRyeSB3aWxsIGJlIGFkZGVkIGluIHRoZSBuZXh0IHZlcnNpb24uCj4KPiBUOiAgICAg
-IGdpdCBnaXQ6Ly9saW51eC1hcm0ub3JnL2xpbnV4LWxkLmdpdCBmb3ItdXBzdHJlYW0vbWFsaS1k
-cAo+Cj4gSmFtZXMKPgo+ID4gPiA+ICsKPiA+ID4gPiAgQVJNIE1BTEktRFAgRFJNIERSSVZFUgo+
-ID4gPiA+ICBNOiAgIExpdml1IER1ZGF1IDxsaXZpdS5kdWRhdUBhcm0uY29tPgo+ID4gPiA+ICBN
-OiAgIEJyaWFuIFN0YXJrZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4KPiA+ID4gPiAtLQo+ID4g
-PiA+IDIuMTcuMQo+ID4gPiA+Cj4gPiA+Cj4gPiA+IC0tCj4gPiA+ID09PT09PT09PT09PT09PT09
-PT09Cj4gPiA+IHwgSSB3b3VsZCBsaWtlIHRvIHwKPiA+ID4gfCBmaXggdGhlIHdvcmxkLCAgfAo+
-ID4gPiB8IGJ1dCB0aGV5J3JlIG5vdCB8Cj4gPiA+IHwgZ2l2aW5nIG1lIHRoZSAgIHwKPiA+ID4g
-IFwgc291cmNlIGNvZGUhICAvCj4gPiA+ICAgLS0tLS0tLS0tLS0tLS0tCj4gPiA+ICAgICDCr1xf
-KOODhClfL8KvCj4gPgo+ID4KPiA+Cj4gPiAtLQo+ID4gRGFuaWVsIFZldHRlcgo+ID4gU29mdHdh
-cmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0aW9uCj4gPiArNDEgKDApIDc5IDM2NSA1NyA0OCAt
-IGh0dHA6Ly9ibG9nLmZmd2xsLmNoCgoKCi0tIApEYW5pZWwgVmV0dGVyClNvZnR3YXJlIEVuZ2lu
-ZWVyLCBJbnRlbCBDb3Jwb3JhdGlvbgorNDEgKDApIDc5IDM2NSA1NyA0OCAtIGh0dHA6Ly9ibG9n
-LmZmd2xsLmNoCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+On 12/20/18 18:37, Jack Pham wrote:
+> Hi Rob, Jorge,
+> 
+> On Thu, Dec 20, 2018 at 11:05:31AM -0600, Rob Herring wrote:
+>> On Fri, Dec 07, 2018 at 10:55:57AM +0100, Jorge Ramirez-Ortiz wrote:
+>>> Binding description for Qualcomm's Synopsys 1.0.0 super-speed PHY
+>>> controller embedded in QCS404.
+>>>
+>>> Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
+>>> definitions.
+>>>
+>>> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+>>> Reviewed-by: Vinod Koul <vkoul@kernel.org>
+>>> ---
+>>>   .../devicetree/bindings/usb/qcom,usb-ssphy.txt     | 78 ++++++++++++++++++++++
+>>>   1 file changed, 78 insertions(+)
+>>>   create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>> new file mode 100644
+>>> index 0000000..fcf4e01
+>>> --- /dev/null
+>>> +++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
+>>> @@ -0,0 +1,78 @@
+>>> +Qualcomm Synopsys 1.0.0 SS phy controller
+>>> +===========================================
+>>> +
+>>> +Synopsys 1.0.0 ss phy controller supports SS usb connectivity on Qualcomm
+>>> +chipsets
+>>> +
+>>> +Required properties:
+>>> +
+>>> +- compatible:
+>>> +    Value type: <string>
+>>> +    Definition: Should contain "qcom,usb-ssphy".
+>>
+>> What is "qcom,dwc3-ss-usb-phy" which already exists then?
+> 
+> Uh, apparently only the bindings doc is there but the driver never
+> landed. I guess it fell through the cracks nearly 4 years ago.
+> 
+> https://lore.kernel.org/patchwork/patch/499502/
+> 
+> Jorge, does Andy's version of this driver at all resemble what can be
+> used for QCS404?
+
+on close inspection I cant see any similitudes between the drivers. 
+Unfortunately I don't have access to documentation yet but the control 
+register offsets and the control bits in the drivers do not match.
+
+because of the above I'd like to go ahead with our separate drivers 
+-already tested and validated- for HS (Shawn's) and SS (mine).
+
+if that is acceptable, should we reuse the upstream bindings for  our 
+implementation? or perhaps Shawn Guo will do for his HS version of the 
+driver and I go ahead and create a new one? what would you suggest?
+
+
+
+
+
+> 
+> Jack
+> 
