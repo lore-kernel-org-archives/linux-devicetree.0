@@ -1,70 +1,74 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
-Date: Thu, 27 Dec 2018 16:39:26 -0800
-Message-ID: <154595756614.179992.794211301759568891@swboyd.mtv.corp.google.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com> <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com> <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com> <9fba4689-b20f-c18a-ea11-d961de497ea3@socionext.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH V4 2/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Thu, 27 Dec 2018 16:51:54 -0800
+Message-ID: <87wonulbh1.fsf@anholt.net>
+References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
+ <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9fba4689-b20f-c18a-ea11-d961de497ea3@socionext.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
-Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-Type: multipart/mixed; boundary="===============5664278743474050857=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Sugaya, Taichi (2018-12-25 17:35:27)
-> Hi
->=20
-> On 2018/11/30 17:31, Stephen Boyd wrote:
-> >> +       init.num_parents =3D parents;
-> >> +       init.parent_names =3D parent_names;
-> >> +
-> >> +       mcm->cname =3D clk_name;
-> >> +       mcm->parent =3D 0;
-> >> +       mcm->hw.init =3D &init;
-> >> +
-> >> +       clk =3D clk_register(NULL, &mcm->hw);
-> >> +       if (IS_ERR(clk))
-> >> +               goto err_clk;
-> >> +
-> >> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
-> >> +       return;
-> >> +
-> >> +err_clk:
-> >> +       kfree(mcm);
-> >> +err_mcm:
-> >> +       kfree(parent_names);
-> >> +}
-> >> +CLK_OF_DECLARE(m10v_clk_mux, "socionext,milbeaut-m10v-clk-mux",
-> >> +                       m10v_clk_mux_setup);
-> >=20
-> > Any chance you can use a platform driver?
-> >=20
->=20
-> Excuse me to re-ask you.
-> Why do you recommend to use a platform driver? Is that current fad?
+--===============5664278743474050857==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-Not exactly a fad. We've been doing it for some time now. From an older
-email on the list:
+--=-=-=
+Content-Type: text/plain
 
-Reasons (in no particular order):
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-  1. We get a dev pointer to use with clk_hw_register()
+> The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
+> 1 USB 2.0 port and no Ethernet.
+>
+> Compared to the Raspberry Pi 3 B it isn't possible to control BT_ON and
+> WL_ON separately.
 
-  2. We can handle probe defer if some resource is not available
+Acked-by: Eric Anholt <eric@anholt.net>
 
-  3. Using device model gets us a hook into power management frameworks
-     like runtime PM and system PM for things like suspend and hibernate
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-  4. It encourages a single DT node clk controller style binding
-     instead of a single node per clk style binding
+-----BEGIN PGP SIGNATURE-----
 
-  5. We can use non-DT specific functions like devm_ioremap_resource() to m=
-ap
-     registers and acquire other resources, leading to more portable and
-     generic code
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlwlc6oACgkQtdYpNtH8
+nujEpw/+OSvYCHuNDF4JtRArp9tmrKbu0q/srr/KksmBLsVDr9VUhY6TBgv2CkFP
+2l7ONPb9fnP746Y6MUxvw+9s+lyS8gYLcymxYSBcYiaaQQp2w/g6CBBwcMLUyzX3
+JvWoslX9DxHAbi7ISwWi3GJERnIzZ/rchU9vCYRuyk9FyhwUymVG+I+ExhFDOxBU
+MRm11nRVr2cGBRbB4WSylQF14agNYZHuF1BUtHIizosZF05SNqdqYAAtgWofhb+7
+dWOPkSM7Nis3PQ6g8r9pkZtB9UNEokKX08PdF4jfEGtOH528SIOIDcUVK8Bi45jW
+CQBOMHHdNsp6oCaTuf01I17hkjdHYCx10BluvOkYy4cWuqL9+Q35wbYLcefTr583
+Ni7QrJtOJPVJyPpqCrSvLo4qV1X43bp3mfLYUwZPDvftW2AoQLaITSDRG5ewaHDY
+/tjhP7jj15W3mtzRf2wI/iHU46aLltiLICLUgfM+At1DG1iCWsT0O6zkoPnMO8Cf
+NgS8ChS221vTVu4Xa0nuk9WoIAeGClp7fwqiU3r8zo6o9Rkm5eBTY7gwqk1jgv3z
+PzaPpIRmciOjlwlTTvEucJ7QAMxnHKIjNrEex6CARwXAgdx6DQM6rErGWthDgg2n
+7Q+CnNZp4By+IB+o7vWF+PPOszsyrZXne1e27Gnvwuf8b6zbYk0=
+=6Pd0
+-----END PGP SIGNATURE-----
+--=-=-=--
 
-  6. We may be able to make the device driver a module, which will
-     make distros happy if we don't have to compile in all
-     these clk drivers to the resulting vmlinux
+
+--===============5664278743474050857==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============5664278743474050857==--
