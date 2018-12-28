@@ -1,75 +1,70 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 01/12] of: Add bindings of thermtrip for Tegra soctherm
-Date: Thu, 27 Dec 2018 17:06:30 -0600
-Message-ID: <20181227230630.GA3659@bogus>
-References: <1545118484-23641-1-git-send-email-wni@nvidia.com>
- <1545118484-23641-3-git-send-email-wni@nvidia.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 07/14] clock: milbeaut: Add Milbeaut M10V clock control
+Date: Thu, 27 Dec 2018 16:39:26 -0800
+Message-ID: <154595756614.179992.794211301759568891@swboyd.mtv.corp.google.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com> <1542589274-13878-8-git-send-email-sugaya.taichi@socionext.com> <154356669840.88331.4455990896653868594@swboyd.mtv.corp.google.com> <9fba4689-b20f-c18a-ea11-d961de497ea3@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545118484-23641-3-git-send-email-wni@nvidia.com>
+In-Reply-To: <9fba4689-b20f-c18a-ea11-d961de497ea3@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Wei Ni <wni@nvidia.com>
-Cc: thierry.reding@gmail.com, daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org, rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 18, 2018 at 03:34:33PM +0800, Wei Ni wrote:
-> Add optional property "nvidia,thermtrips".
-> If present, these trips will be used as HW shutdown trips,
-> and critical trips will be used as SW shutdown trips.
-> 
-> Signed-off-by: Wei Ni <wni@nvidia.com>
-> ---
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt    | 20 +++++++++++++++++---
->  1 file changed, 17 insertions(+), 3 deletions(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> index b6c0ae53d4dc..ab66d6feab4b 100644
-> --- a/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> +++ b/Documentation/devicetree/bindings/thermal/nvidia,tegra124-soctherm.txt
-> @@ -55,10 +55,21 @@ Required properties :
->        - #cooling-cells: Should be 1. This cooling device only support on/off state.
->          See ./thermal.txt for a description of this property.
->  
-> +Optional properties:
-> +- nvidia,thermtrips : When present, this property specifies the temperature at
-> +  which the soctherm hardware will assert the thermal trigger signal to the
-> +  Power Management IC, which can be configured to reset or shutdown the device.
-> +  It is an array of pairs where each pair represents a tsensor id followed by a
-> +  temperature in milli Celcius. In the absence of this property the critical
-> +  trip point will be used for thermtrip temperature.
-> +
->  Note:
-> -- the "critical" type trip points will be set to SOC_THERM hardware as the
-> -shut down temperature. Once the temperature of this thermal zone is higher
-> -than it, the system will be shutdown or reset by hardware.
-> +- the "critical" type trip points will be used to set the temperature at which
-> +the SOC_THERM hardware will assert a thermal trigger if the "nvidia,thermtrips"
-> +property is missing. When the thermtrips property is present, the breach of a
-> +critical trip point is reported back to the thermal framework to implement
-> +software shutdown.
+Quoting Sugaya, Taichi (2018-12-25 17:35:27)
+> Hi
+>=20
+> On 2018/11/30 17:31, Stephen Boyd wrote:
+> >> +       init.num_parents =3D parents;
+> >> +       init.parent_names =3D parent_names;
+> >> +
+> >> +       mcm->cname =3D clk_name;
+> >> +       mcm->parent =3D 0;
+> >> +       mcm->hw.init =3D &init;
+> >> +
+> >> +       clk =3D clk_register(NULL, &mcm->hw);
+> >> +       if (IS_ERR(clk))
+> >> +               goto err_clk;
+> >> +
+> >> +       of_clk_add_provider(node, of_clk_src_simple_get, clk);
+> >> +       return;
+> >> +
+> >> +err_clk:
+> >> +       kfree(mcm);
+> >> +err_mcm:
+> >> +       kfree(parent_names);
+> >> +}
+> >> +CLK_OF_DECLARE(m10v_clk_mux, "socionext,milbeaut-m10v-clk-mux",
+> >> +                       m10v_clk_mux_setup);
+> >=20
+> > Any chance you can use a platform driver?
+> >=20
+>=20
+> Excuse me to re-ask you.
+> Why do you recommend to use a platform driver? Is that current fad?
 
-This hardly seems like a NVidia specific concept. A h/w shutdown 
-temperature... Come up with something common.
+Not exactly a fad. We've been doing it for some time now. From an older
+email on the list:
 
-Also, we already have a temperature table. Why do we need temperatures 
-in 2 places.
+Reasons (in no particular order):
 
-> +
->  - the "hot" type trip points will be set to SOC_THERM hardware as the throttle
->  temperature. Once the the temperature of this thermal zone is higher
->  than it, it will trigger the HW throttle event.
-> @@ -79,6 +90,9 @@ Example :
->  
->  		#thermal-sensor-cells = <1>;
->  
-> +		nvidia,thermtrips = <TEGRA124_SOCTHERM_SENSOR_CPU 102500
-> +				     TEGRA124_SOCTHERM_SENSOR_GPU 103000>;
-> +
->  		throttle-cfgs {
->  			/*
->  			 * When the "heavy" cooling device triggered,
-> -- 
-> 2.7.4
-> 
+  1. We get a dev pointer to use with clk_hw_register()
+
+  2. We can handle probe defer if some resource is not available
+
+  3. Using device model gets us a hook into power management frameworks
+     like runtime PM and system PM for things like suspend and hibernate
+
+  4. It encourages a single DT node clk controller style binding
+     instead of a single node per clk style binding
+
+  5. We can use non-DT specific functions like devm_ioremap_resource() to m=
+ap
+     registers and acquire other resources, leading to more portable and
+     generic code
+
+  6. We may be able to make the device driver a module, which will
+     make distros happy if we don't have to compile in all
+     these clk drivers to the resulting vmlinux
