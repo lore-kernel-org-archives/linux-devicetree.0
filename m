@@ -1,74 +1,41 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH V4 2/3] ARM: dts: add Raspberry Pi 3 A+
-Date: Thu, 27 Dec 2018 16:51:54 -0800
-Message-ID: <87wonulbh1.fsf@anholt.net>
-References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
- <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v2 5/5] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Fri, 28 Dec 2018 01:31:27 +0000
+Message-ID: <VI1PR04MB53274270615A700AB36967F78BB70@VI1PR04MB5327.eurprd04.prod.outlook.com>
+References: <1545577992-4013-1-git-send-email-pawell@cadence.com>
+ <1545577992-4013-6-git-send-email-pawell@cadence.com>
+ <CAL411-rj0mRMfPCZOHw04q3s-9oJx7Os9Jz83bO=RgPZKLrB1g@mail.gmail.com>
+ <CAL411-omVL2rwoQP6GwKZa9f_1TLBbEAkyLdxNkJZqaQu9cvsA@mail.gmail.com>
+ <BYAPR07MB4709F8A00A13390235BA4BE1DDB60@BYAPR07MB4709.namprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============5664278743474050857=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <BYAPR07MB4709F8A00A13390235BA4BE1DDB60@BYAPR07MB4709.namprd07.prod.outlook.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pawel Laszczak <pawell@cadence.com>, Peter Chen <hzpeterchen@gmail.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, Heikki Krogerus <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, lkml <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
---===============5664278743474050857==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
-
---=-=-=
-Content-Type: text/plain
-
-Stefan Wahren <stefan.wahren@i2se.com> writes:
-
-> The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
-> 1 USB 2.0 port and no Ethernet.
->
-> Compared to the Raspberry Pi 3 B it isn't possible to control BT_ON and
-> WL_ON separately.
-
-Acked-by: Eric Anholt <eric@anholt.net>
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlwlc6oACgkQtdYpNtH8
-nujEpw/+OSvYCHuNDF4JtRArp9tmrKbu0q/srr/KksmBLsVDr9VUhY6TBgv2CkFP
-2l7ONPb9fnP746Y6MUxvw+9s+lyS8gYLcymxYSBcYiaaQQp2w/g6CBBwcMLUyzX3
-JvWoslX9DxHAbi7ISwWi3GJERnIzZ/rchU9vCYRuyk9FyhwUymVG+I+ExhFDOxBU
-MRm11nRVr2cGBRbB4WSylQF14agNYZHuF1BUtHIizosZF05SNqdqYAAtgWofhb+7
-dWOPkSM7Nis3PQ6g8r9pkZtB9UNEokKX08PdF4jfEGtOH528SIOIDcUVK8Bi45jW
-CQBOMHHdNsp6oCaTuf01I17hkjdHYCx10BluvOkYy4cWuqL9+Q35wbYLcefTr583
-Ni7QrJtOJPVJyPpqCrSvLo4qV1X43bp3mfLYUwZPDvftW2AoQLaITSDRG5ewaHDY
-/tjhP7jj15W3mtzRf2wI/iHU46aLltiLICLUgfM+At1DG1iCWsT0O6zkoPnMO8Cf
-NgS8ChS221vTVu4Xa0nuk9WoIAeGClp7fwqiU3r8zo6o9Rkm5eBTY7gwqk1jgv3z
-PzaPpIRmciOjlwlTTvEucJ7QAMxnHKIjNrEex6CARwXAgdx6DQM6rErGWthDgg2n
-7Q+CnNZp4By+IB+o7vWF+PPOszsyrZXne1e27Gnvwuf8b6zbYk0=
-=6Pd0
------END PGP SIGNATURE-----
---=-=-=--
-
-
---===============5664278743474050857==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============5664278743474050857==--
+IA0KPiA+DQo+ID5AQCAtMjk5LDYgKzMwNiw3IEBAIGludCBjZG5zM19kcmRfaW5pdChzdHJ1Y3Qg
+Y2RuczMgKmNkbnMpDQo+ID4gICAgICAgICAgICAgICAgY2Rucy0+dmVyc2lvbiAgPSBDRE5TM19D
+T05UUk9MTEVSX1YwOw0KPiA+ICAgICAgICAgICAgICAgIGNkbnMtPm90Z192MV9yZWdzID0gTlVM
+TDsNCj4gPiAgICAgICAgICAgICAgICBjZG5zLT5vdGdfcmVncyA9IHJlZ3M7DQo+ID4rICAgICAg
+ICAgICAgICAgd3JpdGVsKDB4MSwgJmNkbnMtPm90Z192MF9yZWdzLT5zaW11bGF0ZSk7DQo+ID4g
+ICAgICAgICAgICAgICAgZGV2X2luZm8oY2Rucy0+ZGV2LCAiRFJEIHZlcnNpb24gdjAgKCUwOHgp
+XG4iLA0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHJlYWRsKCZjZG5zLT5vdGdfdjBfcmVn
+cy0+dmVyc2lvbikpOw0KPiA+ICAgICAgICB9IGVsc2Ugew0KPiANCj4gSSBoYXZlIGNvbmZpcm1h
+dGlvbiBmcm9tIEhXIHRlYW0gdGhhdCB0aW1lIHRoYXQgZHJpdmVyIHNob3VsZCB3YWl0IGFmdGVy
+IGRlLQ0KPiBzZWxlY3RpbmcgbW9kZSBpcyAyLTNtcyBmb3Igc2ltdWxhdGUgbW9kZS4gSXQncyB0
+aW1lIHdoZW4gRlNNIGlzIGluDQo+IERSRF9IX1dBSVRfVkJVU19GQUlMLg0KPiBEcml2ZXIgY2Fu
+bm90IHJlLWVuYWJsZSB0aGUgaG9zdC9kZXZpY2UgbW9kZSBiZWZvcmUgdGhpcyB0aW1lIGhhcyBl
+bGFwc2VkLg0KPiANCj4gMyBtcyBpcyB0aGUgbWF4aW11bSB0aW1lLiBBZGRpdGlvbmFsbHksIHlv
+dSBjYW4gY29uZmlybSB0aGUgY3VycmVudCBGU00gc3RhdGUgYnkNCj4gcmVhZGluZyB0aGUgaG9z
+dF9vdGdfc3RhdGUgKGJpdCA1OjMpIG9yIGRldl9vdGdfc3RhdGUgKDI6MCkgIGZyb20gT1RHU1RB
+VEUNCj4gcmVnaXN0ZXIuDQo+IA0KPiBJZiBiaXQgMCBpbiBzaW11bGF0ZSByZWdpc3RlciBpcyBj
+bGVhcmVkIHRoZSB0aW1lIGlzIGV4YWN0bHkgMXMuDQo+IA0KDQpUaGFua3MsIFBhd2VsLg0KDQpX
+b3VsZCB5b3UgcGxlYXNlIGFkZCBiZWxvdyBjaGFuZ2VzIGluIHlvdXIgbmV4dCByZXZpc2lvbj8N
+Ci0gU2V0IGJpdCAwIGluIHNpbXVsYXRlIHJlZ2lzdGVyDQotIHRpbWVvdXQgbG9naWMgZm9yIHdh
+aXRpbmcgaG9zdF9vdGdfc3RhdGUgb3IgZGV2X290Z19zdGF0ZSBhdCBPVEdTVEFURQ0Kd2hlbiBz
+d2l0Y2ggdG8gaG9zdCBvciBkZXZpY2UuDQoNClBldGVyDQoNCg==
