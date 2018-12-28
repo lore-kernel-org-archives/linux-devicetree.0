@@ -1,76 +1,71 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 2/8] dt-bindings: remoteproc: qcom: Add missing clocks
- for SDM845
-Date: Fri, 28 Dec 2018 10:15:48 +0530
-Message-ID: <0af3f1d295fa5edd8a9cfc8101b36b33@codeaurora.org>
-References: <20181226125229.20149-1-sibis@codeaurora.org>
- <20181226125229.20149-2-sibis@codeaurora.org> <20181227212105.GA19897@bogus>
+Subject: Re: [PATCH 1/2] dt-bindings: remoteproc: qcom: Add firmware bindings
+ for Q6V5 MSS
+Date: Fri, 28 Dec 2018 10:17:28 +0530
+Message-ID: <bbae159b2349b7681f922d46d02305db@codeaurora.org>
+References: <20181212124456.3164-1-sibis@codeaurora.org>
+ <20181212124456.3164-2-sibis@codeaurora.org> <20181220201002.GA8831@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII;
  format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181227212105.GA19897@bogus>
+In-Reply-To: <20181220201002.GA8831@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org
+Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, mark.rutland@arm.com, andy.gross@linaro.org, briannorris@chromium.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Hi Rob,
-Thanks for the review!
+Thanks for the review :)
 
-On 2018-12-28 02:51, Rob Herring wrote:
-> On Wed, Dec 26, 2018 at 06:22:23PM +0530, Sibi Sankar wrote:
->> Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
->> 
->> Fixes: fb22022ff63d ("dt-bindings: remoteproc: Add Q6v5 Modem PIL
->> binding for SDM845")
+On 2018-12-21 01:40, Rob Herring wrote:
+> On Wed, Dec 12, 2018 at 06:14:55PM +0530, Sibi Sankar wrote:
+>> Add optional firmware bindings for Q6V5 MSS. It lists the two relative
+>> firmware paths which are used for booting and authenticating the 
+>> Hexagon
+>> core.
 >> 
 >> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 >> ---
->> 
->> v3:
->>   * Fixup dt-binding documentation as suggested by Doug
->> 
->>  .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 14 
->> +++++++++++---
->>  1 file changed, 11 insertions(+), 3 deletions(-)
+>>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 7 
+>> +++++++
+>>  1 file changed, 7 insertions(+)
 >> 
 >> diff --git 
 >> a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt 
 >> b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> index 9ff5b0309417..20dd19f9ed99 100644
+>> index 9ff5b0309417..1f6988a60636 100644
 >> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 >> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
->> @@ -39,13 +39,21 @@ on the Qualcomm Hexagon core.
+>> @@ -36,6 +36,13 @@ on the Qualcomm Hexagon core.
+>>  	Value type: <stringlist>
+>>  	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+>> 
+>> +- qcom,firmware:
+> 
+> We already have a standard name 'firmware-name'. Use that. I'm fine 
+> with
+> allowing it to be more than 1 string.
+
+sure will replace "qcom,firmware" with "firmware-name" in the next 
+re-spin
+
+> 
+>> +	Usage: optional
+>> +	Value type: <stringlist>
+>> +	Definition: must list the 2 relative firmware paths (mba and modem
+>> +		    metadata respectively) which are used for booting and
+>> +		    authenticating the Hexagon core.
+>> +
 >>  - clocks:
 >>  	Usage: required
 >>  	Value type: <phandle>
->> -	Definition: reference to the iface, bus and mem clocks to be held on
->> -		    behalf of the booting of the Hexagon core
->> +	Definition: reference to the clocks that match clock-names
+>> --
+>> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+>> Forum,
+>> a Linux Foundation Collaborative Project
 >> 
->>  - clock-names:
->>  	Usage: required
->>  	Value type: <stringlist>
->> -	Definition: must be "iface", "bus", "mem"
->> +	Definition: The clocks needed depend on the compatible string:
->> +	qcom,ipq8074-wcss-pil:
->> +		    no clock names required
->> +	qcom,q6v5-pil:
->> +	qcom,msm8916-mss-pil:
->> +	qcom,msm8974-mss-pil:
->> +		    must be "iface", "bus", "mem", "xo"
->> +	qcom,sdm845-mss-pil:
->> +		    must be "xo", "prng", "iface", "bus", "mem", "gpll0_mss",
->> +		    "snoc_axi", "mnoc_axi"
-> 
-> Please keep the same order for the 4 clocks which are the same.
-
-Will re-order them in the next re-spin.
-
-> 
-> Rob
 
 -- 
 -- Sibi Sankar --
