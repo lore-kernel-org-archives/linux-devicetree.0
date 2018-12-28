@@ -1,7 +1,7 @@
 From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v4 2/8] dt-bindings: remoteproc: qcom: Add missing clocks for SDM845
-Date: Sat, 29 Dec 2018 00:23:01 +0530
-Message-ID: <20181228185307.25645-2-sibis@codeaurora.org>
+Subject: [PATCH v4 3/8] dt-bindings: remoteproc: qcom: Add missing clocks for MSM8996
+Date: Sat, 29 Dec 2018 00:23:02 +0530
+Message-ID: <20181228185307.25645-3-sibis@codeaurora.org>
 References: <20181228185307.25645-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,10 +12,10 @@ To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david
 Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add missing clock bindings for Q6V5 MSS on SDM845 SoCs.
+Add missing clock bindings for Q6V5 MSS on MSM8996 SoCs.
 
-Fixes: fb22022ff63d ("dt-bindings: remoteproc: Add Q6v5 Modem PIL
-binding for SDM845")
+Fixes: 9f058fa2efb1 ("remoteproc: qcom: Add support for mss remoteproc
+on msm8996")
 
 Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
@@ -26,38 +26,23 @@ v4:
 v3:
   * Fixup dt-binding documentation as suggested by Doug
 
- .../devicetree/bindings/remoteproc/qcom,q6v5.txt   | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+ Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-index 9ff5b0309417..d645c8db29fd 100644
+index d645c8db29fd..bba3d6be71c0 100644
 --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
 +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
-@@ -39,13 +39,21 @@ on the Qualcomm Hexagon core.
- - clocks:
- 	Usage: required
- 	Value type: <phandle>
--	Definition: reference to the iface, bus and mem clocks to be held on
--		    behalf of the booting of the Hexagon core
-+	Definition: reference to the clocks that match clock-names
- 
- - clock-names:
- 	Usage: required
- 	Value type: <stringlist>
--	Definition: must be "iface", "bus", "mem"
-+	Definition: The clocks needed depend on the compatible string:
-+	qcom,ipq8074-wcss-pil:
-+		    no clock names required
-+	qcom,q6v5-pil:
-+	qcom,msm8916-mss-pil:
-+	qcom,msm8974-mss-pil:
-+		    must be "iface", "bus", "mem", "xo"
-+	qcom,sdm845-mss-pil:
+@@ -51,6 +51,9 @@ on the Qualcomm Hexagon core.
+ 	qcom,msm8916-mss-pil:
+ 	qcom,msm8974-mss-pil:
+ 		    must be "iface", "bus", "mem", "xo"
++	qcom,msm8996-mss-pil:
 +		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
-+		    "snoc_axi", "mnoc_axi", "prng"
- 
- - resets:
- 	Usage: required
++		    "snoc_axi", "mnoc_axi", "pnoc", "qdss"
+ 	qcom,sdm845-mss-pil:
+ 		    must be "iface", "bus", "mem", "xo", "gpll0_mss",
+ 		    "snoc_axi", "mnoc_axi", "prng"
 -- 
 The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
 a Linux Foundation Collaborative Project
