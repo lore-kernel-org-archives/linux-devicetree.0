@@ -1,35 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: fsl-imx-esdhc: add imx6ull
- compatible string
-Date: Fri, 28 Dec 2018 16:15:15 -0600
-Message-ID: <20181228221515.GA19572@bogus>
-References: <20181228033323.32308-1-haibo.chen@nxp.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: qcom: Add firmware
+ bindings for Q6V5
+Date: Fri, 28 Dec 2018 16:17:06 -0600
+Message-ID: <20181228221706.GA22610@bogus>
+References: <20181228044819.5697-1-sibis@codeaurora.org>
+ <20181228044819.5697-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181228033323.32308-1-haibo.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: BOUGH CHEN <haibo.chen@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20181228044819.5697-2-sibis@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, briannorris@chromium.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Dec 2018 03:26:04 +0000, BOUGH CHEN wrote:
-> Add imx6ull compatible string
+On Fri, 28 Dec 2018 10:18:18 +0530, Sibi Sankar wrote:
+> Add optional "firmware-name" bindings for Q6V5 MSS and PAS based
+> remoteprocs. For Q6V5 MSS/PAS the two/one relative firmware
+> paths/path are to be listed respectively. Fallback to the default
+> images for mba/modem for Q6V5 MSS or the default Hexagon image
+> for Q6V5 PAS if the "firmware-name" binding is not present.
 > 
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt | 6 ++++++
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 7 +++++++
+>  2 files changed, 13 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
