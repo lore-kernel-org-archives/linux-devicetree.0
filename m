@@ -1,68 +1,47 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: Re: [PATCH 1/5] dt-bindings: nvmem: add binding for Raspberry Pi OTP
-Date: Fri, 28 Dec 2018 16:46:39 +0100 (CET)
-Message-ID: <812144724.382117.1546011999351@email.ionos.de>
-References: <1542805904-6446-1-git-send-email-stefan.wahren@i2se.com>
- <1542805904-6446-2-git-send-email-stefan.wahren@i2se.com>
- <20181206234941.GA6340@bogus>
- <894cfae3-43f4-f201-9b54-41114ce8107e@i2se.com>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 0/6] ARM: dts: s5pv210: aries: Enable more drivers present on Samsung Aries based devices
+Date: Fri, 28 Dec 2018 17:18:13 +0100
+Message-ID: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <894cfae3-43f4-f201-9b54-41114ce8107e@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Arnd Bergmann <arnd@arndb.de>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Eric Anholt <eric@anholt.net>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, linux-rpi-kernel@lists.infradead.org, gregkh@linuxfoundation.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: krzk@kernel.org
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKPiBTdGVmYW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPiBoYXQgYW0g
-Ny4gRGV6ZW1iZXIgMjAxOCB1bSAwOToxMCBnZXNjaHJpZWJlbjoKPiAKPiAKPiBIaSBSb2IsCj4g
-Cj4gQW0gMDcuMTIuMTggdW0gMDA6NDkgc2NocmllYiBSb2IgSGVycmluZzoKPiA+IE9uIFdlZCwg
-Tm92IDIxLCAyMDE4IGF0IDAyOjExOjQwUE0gKzAxMDAsIFN0ZWZhbiBXYWhyZW4gd3JvdGU6Cj4g
-Pj4gVGhpcyBwYXRjaCBhZGRzIHRoZSBkZXZpY2V0cmVlIGJpbmRpbmcgZm9yIFJhc3BiZXJyeSBQ
-aSBjdXN0b21lciBPVFAKPiA+PiBkcml2ZXIuCj4gPj4KPiA+PiBTaWduZWQtb2ZmLWJ5OiBTdGVm
-YW4gV2FocmVuIDxzdGVmYW4ud2FocmVuQGkyc2UuY29tPgo+ID4+IC0tLQo+ID4+ICAuLi4vbnZt
-ZW0vcmFzcGJlcnJ5cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0ICAgICB8IDIyICsrKysrKysr
-KysrKysrKysrKysrKysKPiA+PiAgMSBmaWxlIGNoYW5nZWQsIDIyIGluc2VydGlvbnMoKykKPiA+
-PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9u
-dm1lbS9yYXNwYmVycnlwaSxiY20yODM1LWN1c3RvbWVyLW90cC50eHQKPiA+Pgo+ID4+IGRpZmYg
-LS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZtZW0vcmFzcGJlcnJ5
-cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL252bWVtL3Jhc3BiZXJyeXBpLGJjbTI4MzUtY3VzdG9tZXItb3RwLnR4dAo+ID4+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPj4gaW5kZXggMDAwMDAwMC4uMDQxZmYxNwo+ID4+IC0tLSAv
-ZGV2L251bGwKPiA+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbnZt
-ZW0vcmFzcGJlcnJ5cGksYmNtMjgzNS1jdXN0b21lci1vdHAudHh0Cj4gPj4gQEAgLTAsMCArMSwy
-MiBAQAo+ID4+ICtDdXN0b21lciBPVFAgTWVtb3J5IGZvciBSYXNwYmVycnkgUGkKPiA+PiArCj4g
-Pj4gK1RoZSBWQzQgZmlybXdhcmUgZXhwb3NlcyBhIG1haWxib3ggaW50ZXJmYWNlIHRoYXQgYWxs
-b3dzIHRoZSBBUk0gY29yZQo+ID4+ICt0byBhY2Nlc3MgdGhlIGN1c3RvbWVyIHBhcnQgb2YgdGhl
-IE9UUCBtZW1vcnkuCj4gPj4gKwo+ID4+ICtUaGUgT1RQIG5vZGUgbXVzdCBiZSBhIGNoaWxkIG5v
-ZGUgb2YgdGhlIFJhc3BiZXJyeSBQaSBmaXJtd2FyZSBub2RlLgo+ID4+ICsKPiA+PiArUmVxdWly
-ZWQgcHJvcGVydGllcyA6Cj4gPj4gKy0gY29tcGF0aWJsZSAgICAgOiBTaG91bGQgYmUgInJhc3Bi
-ZXJyeXBpLGJjbTI4MzUtY3VzdG9tZXItb3RwIgo+ID4gV2h5IGRvIHdlIG5lZWQgdGhpcyBjaGls
-ZCBub2RlPyBDYW4ndCB0aGUgcGFyZW50IGluc3RhbnRpYXRlIHRoaXM/Cj4gPgo+ID4gQXJlIHRo
-ZXJlIE9UUCBmaWVsZHMgeW91IHdhbnQgdG8gZXhwb3NlIGluIERUPwo+IAo+IHRoZSBjdXN0b21l
-ciBwYXJ0IG9mIHRoZSBPVFAgaXMgcmVzZXJ2ZWQgKGluaXRpYWxpemVkIHdpdGggemVybykgZm9y
-Cj4gdXNlciB3aG8gd2FudHMgdG8gdXNlIHRoZSBSYXNwYmVycnkgUGkgKG1vc3RseSB0aGUgQ29t
-cHV0ZSBNb2R1bGUpIGluCj4gdGhlaXIgY3VzdG9tIGRlc2lnbnMuIFNvIGkgY2Fubm90IHByb3Zp
-ZGUgYW55IG52bWVtIGNlbGxzIHlldCBiZWNhdXNlIGl0Cj4gaXMgdXAgdG8gdGhlIHVzZXIgdG8g
-ZGVmaW5lIHRoZW0gKGUuZy4gaGFyZHdhcmUgcmVsYXRlZCB2YWx1ZXMgbGlrZQo+IHNlcmlhbCBu
-dW1iZXJzLCBNQUMgYWRkcmVzc2VzIGZvciBhZGRpdGlvbmFsIG5ldHdvcmsgaW50ZXJmYWNlcyBv
-cgo+IGNhbGlicmF0aW9uIHZhbHVlcykuIEJ1dCB5ZXMgaSBjb25zaWRlciB0aGUgYmluZGluZyBh
-bmQgdGhlIGFiaWxpdHkgdG8KPiBkZWZpbmUgbnZtZW0gY2VsbHMgdmlhIGRldmljZXRyZWUgYXMg
-YSBncmVhdCBmZWF0dXJlLgo+IAo+IEN1cnJlbnRseSB0aGUgRm91bmRhdGlvbiBzdWdnZXN0cyB0
-byB1c2UgdGhlIG1haWxib3ggaW50ZXJmYWNlIGZyb20KPiB1c2Vyc3BhY2UgWzFdLCBidXQgaSBw
-cmVmZXIgYSBtb3JlIGNvbW1vbiB3YXkgbGlrZSBudm1lbS4KPiAKPiBbMV0gLcKgCj4gaHR0cHM6
-Ly93d3cucmFzcGJlcnJ5cGkub3JnL2RvY3VtZW50YXRpb24vaGFyZHdhcmUvaW5kdXN0cmlhbC9S
-RUFETUUubWQKPgoKZGlkIGl0IGFuc3dlciB5b3VyIHF1ZXN0aW9ucz8KClN0ZWZhbgoKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
-bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
-Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+This patchset enables more drivers for devices present on
+ Samsung Aries based devices.
+
+First patch switches fimd to correct variant, which wasn't
+ present at moment of adding aries dts.
+
+Next two patches removes hardcoded bootargs from dts files
+ for galaxys and fascinate4g, because now we have working bootloader
+ which can pass those values.
+
+One of the patches also reserves memory for Samsung S5P MFC
+ video codec, so it's possible to use it.
+
+Last two patches adds and enables more drivers.
+
+Jonathan Bakker (1):
+  ARM: dts: s5pv210: aries: Support for more devices present on Aries
+
+Paweł Chmiel (5):
+  ARM: dts: s5pv210: Use correct fimd variant
+  ARM: dts: s5pv210: galaxys: Remove hardcoded bootargs
+  ARM: dts: s5pv210: fascinate4g: Remove hardcoded bootargs
+  ARM: dts: s5pv210: aries: Add reserved memory for mfc
+  ARM: defconfig: s5pv210: Enable more drivers present on Samsung Aries
+
+ arch/arm/boot/dts/s5pv210-aries.dtsi      | 90 +++++++++++++++++++++++
+ arch/arm/boot/dts/s5pv210-fascinate4g.dts |  7 --
+ arch/arm/boot/dts/s5pv210-galaxys.dts     |  7 --
+ arch/arm/boot/dts/s5pv210.dtsi            |  2 +-
+ arch/arm/configs/s5pv210_defconfig        | 41 ++++++++---
+ 5 files changed, 121 insertions(+), 26 deletions(-)
+
+-- 
+2.17.1
