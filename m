@@ -1,36 +1,35 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 3/8] dt-bindings: remoteproc: qcom: Add missing clocks
- for MSM8996
-Date: Fri, 28 Dec 2018 16:13:33 -0600
-Message-ID: <20181228221333.GA16672@bogus>
-References: <20181228185307.25645-1-sibis@codeaurora.org>
- <20181228185307.25645-3-sibis@codeaurora.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: fsl-imx-esdhc: add imx6ull
+ compatible string
+Date: Fri, 28 Dec 2018 16:15:15 -0600
+Message-ID: <20181228221515.GA19572@bogus>
+References: <20181228033323.32308-1-haibo.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181228185307.25645-3-sibis@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-Cc: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+In-Reply-To: <20181228033323.32308-1-haibo.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: BOUGH CHEN <haibo.chen@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 29 Dec 2018 00:23:02 +0530, Sibi Sankar wrote:
-> Add missing clock bindings for Q6V5 MSS on MSM8996 SoCs.
+On Fri, 28 Dec 2018 03:26:04 +0000, BOUGH CHEN wrote:
+> Add imx6ull compatible string
 > 
-> Fixes: 9f058fa2efb1 ("remoteproc: qcom: Add support for mss remoteproc
-> on msm8996")
-> 
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 > ---
-> 
-> v4:
->   * Re-order clocks for consistency as suggested by Rob
-> 
-> v3:
->   * Fixup dt-binding documentation as suggested by Doug
-> 
->  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 3 +++
->  1 file changed, 3 insertions(+)
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
