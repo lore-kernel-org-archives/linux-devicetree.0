@@ -1,42 +1,92 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dt-bindings: fsl: scu: add imx8qm scu power domain
- support
-Date: Fri, 28 Dec 2018 17:28:36 -0600
-Message-ID: <20181228232836.GA11339@bogus>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
- <1545148524-658-3-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [RFC PATCH] ASoC: fsl: Add Audio Mixer CPU DAI driver
+Date: Fri, 28 Dec 2018 17:32:26 -0600
+Message-ID: <20181228233226.GA11728@bogus>
+References: <1545150569-14897-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545148524-658-3-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <1545150569-14897-1-git-send-email-viorel.suman@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 18 Dec 2018 16:01:25 +0000, Aisheng Dong wrote:
-> Add imx8qm scu power domain support
+On Tue, Dec 18, 2018 at 04:30:01PM +0000, Viorel Suman wrote:
+> This patch implements Audio Mixer CPU DAI driver for NXP iMX8 SOCs.
+> The Audio Mixer is a on-chip functional module that allows mixing of
+> two audio streams into a single audio stream.
 > 
-> Cc: Ulf Hansson <ulf.hansson@linaro.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Audio Mixer datasheet is available here:
+> https://www.nxp.com/docs/en/reference-manual/IMX8DQXPRM.pdf
+> 
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
 > ---
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
+>  .../devicetree/bindings/sound/fsl,amix.txt         |  45 ++
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+This should be a separate patch.
+
+>  sound/soc/fsl/Kconfig                              |   7 +
+>  sound/soc/fsl/Makefile                             |   3 +
+>  sound/soc/fsl/fsl_amix.c                           | 554 +++++++++++++++++++++
+>  sound/soc/fsl/fsl_amix.h                           | 101 ++++
+>  5 files changed, 710 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,amix.txt
+>  create mode 100644 sound/soc/fsl/fsl_amix.c
+>  create mode 100644 sound/soc/fsl/fsl_amix.h
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,amix.txt b/Documentation/devicetree/bindings/sound/fsl,amix.txt
+> new file mode 100644
+> index 0000000..049144f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,amix.txt
+> @@ -0,0 +1,45 @@
+> +NXP Audio Mixer (AMIX).
+> +
+> +The Audio Mixer is a on-chip functional module that allows mixing of two
+> +audio streams into a single audio stream. Audio Mixer has two input serial
+> +audio interfaces. These are driven by two Synchronous Audio interface
+> +modules (SAI). Each input serial interface carries 8 audio channels in its
+> +frame in TDM manner. Mixer mixes audio samples of corresponding channels
+> +from two interfaces into a single sample. Before mixing, audio samples of
+> +two inputs can be attenuated based on configuration. The output of the
+> +Audio Mixer is also a serial audio interface. Like input interfaces it has
+> +the same TDM frame format. This output is used to drive the serial DAC TDM
+> +interface of audio codec and also sent to the external pins along with the
+> +receive path of normal audio SAI module for readback by the CPU.
+> +
+> +The output of Audio mixer can be selected from any of the three streams
+> + - serial audio input 1
+> + - serial audio input 2
+> + - Mixed audio
+> +
+> +Mixing operation is independent of audio sample rate but the two audio
+> +input streams must have same audio sample rate with same number of channels
+> +in TDM frame to be eligible for mixing.
+> +
+> +Device driver required properties:
+> +=================================
+> +  - compatible		: Compatible list, contains "fsl,imx8qm-amix"
+> +
+> +  - reg			: Offset and length of the register set for the device.
+> +
+> +  - clocks		: Must contain an entry for each entry in clock-names.
+> +
+> +  - clock-names		: Must include the "ipg" for register access.
+
+Humm, no audio related clocks? 
+
+> +
+> +  - power-domains	: Must contain the phandle to the AMIX power domain node
+> +
+> +Device driver configuration example:
+> +======================================
+> +  amix: amix@59840000 {
+> +    compatible = "fsl,imx8qm-amix";
+> +    reg = <0x0 0x59840000 0x0 0x10000>;
+> +    clocks = <&clk IMX8QXP_AUD_AMIX_IPG>;
+> +    clock-names = "ipg";
+> +    power-domains = <&pd_amix>;
+> +  };
+> +
