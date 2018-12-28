@@ -1,66 +1,92 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 4/6] ARM: dts: s5pv210: aries: Add reserved memory for mfc
-Date: Fri, 28 Dec 2018 17:18:17 +0100
-Message-ID: <20181228161819.18931-5-pawel.mikolaj.chmiel@gmail.com>
-References: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com>
+From: Liviu Dudau <Liviu.Dudau@arm.com>
+Subject: Re: [PATCH v3 9/9] MAINTAINERS: Add maintainer for arm komeda driver
+Date: Fri, 28 Dec 2018 16:34:36 +0000
+Message-ID: <20181228163436.GP22341@e110455-lin.cambridge.arm.com>
+References: <20181221095757.15510-1-james.qian.wang@arm.com>
+ <20181221095757.15510-10-james.qian.wang@arm.com>
+ <20181224123314.GK22341@e110455-lin.cambridge.arm.com>
+ <CAKMK7uGt63=_KuECQc2ivuSZb8gMD1=6n0=Q2bcvzCEPo84uFw@mail.gmail.com>
+ <20181228111534.GA19025@james-ThinkStation-P300>
+ <CAKMK7uFaGnjznux9E9gzmppW-+Pbx6UoFHEYjtWvBJWh3ro-nA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: krzk@kernel.org
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <CAKMK7uFaGnjznux9E9gzmppW-+Pbx6UoFHEYjtWvBJWh3ro-nA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel.vetter@ffwll.ch>
+Cc: Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>, "corbet@lwn.net" <corbet@lwn.net>, "airlied@linux.ie" <airlied@linux.ie>, "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>, "malidp@foss.arm.com" <malidp@foss.arm.com>, Ayan Halder <Ayan.Halder@arm.com>d
 List-Id: devicetree@vger.kernel.org
 
-This commit adds memory reservation required by MFC to run.
-On S5PV210 both regions needs to be on separate memory banks.
-Size of both regions is taken from stock sources.
-
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
----
- arch/arm/boot/dts/s5pv210-aries.dtsi | 22 ++++++++++++++++++++++
- 1 file changed, 22 insertions(+)
-
-diff --git a/arch/arm/boot/dts/s5pv210-aries.dtsi b/arch/arm/boot/dts/s5pv210-aries.dtsi
-index 575094ea7024..35ba009a1a33 100644
---- a/arch/arm/boot/dts/s5pv210-aries.dtsi
-+++ b/arch/arm/boot/dts/s5pv210-aries.dtsi
-@@ -23,6 +23,24 @@
- 			0x50000000 0x08000000>;
- 	};
- 
-+	reserved-memory {
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		ranges;
-+
-+		mfc_left: region_mfc_left@43000000 {
-+			compatible = "shared-dma-pool";
-+			no-map;
-+			reg = <0x43000000 0x2000000>;
-+		};
-+
-+		mfc_right: region_mfc_right@51000000 {
-+			compatible = "shared-dma-pool";
-+			no-map;
-+			reg = <0x51000000 0x2000000>;
-+		};
-+	};
-+
- 	wifi_pwrseq: wifi-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
- 		reset-gpios = <&gpg1 2 GPIO_ACTIVE_LOW>;
-@@ -329,6 +347,10 @@
- 	status = "okay";
- };
- 
-+&mfc {
-+	memory-region = <&mfc_left>, <&mfc_right>;
-+};
-+
- &pinctrl0 {
- 	wlan_bt_en: wlan-bt-en {
- 		samsung,pins = "gpb-5";
--- 
-2.17.1
+T24gRnJpLCBEZWMgMjgsIDIwMTggYXQgMTI6NTY6MjdQTSArMDEwMCwgRGFuaWVsIFZldHRlciB3
+cm90ZToKPiBPbiBGcmksIERlYyAyOCwgMjAxOCBhdCAxMjoxNSBQTSBqYW1lcyBxaWFuIHdhbmcg
+KEFybSBUZWNobm9sb2d5Cj4gQ2hpbmEpIDxqYW1lcy5xaWFuLndhbmdAYXJtLmNvbT4gd3JvdGU6
+Cj4gPgo+ID4gT24gTW9uLCBEZWMgMjQsIDIwMTggYXQgMDI6MDU6NDNQTSArMDEwMCwgRGFuaWVs
+IFZldHRlciB3cm90ZToKPiA+ID4gT24gTW9uLCBEZWMgMjQsIDIwMTggYXQgMTozMyBQTSBMaXZp
+dSBEdWRhdSA8TGl2aXUuRHVkYXVAYXJtLmNvbT4gd3JvdGU6Cj4gPiA+ID4KPiA+ID4gPiBPbiBG
+cmksIERlYyAyMSwgMjAxOCBhdCAxMDowMTowNkFNICswMDAwLCBqYW1lcyBxaWFuIHdhbmcgKEFy
+bSBUZWNobm9sb2d5IENoaW5hKSB3cm90ZToKPiA+ID4gPiA+IHYyOiBBZGp1c3RlZCB0aGUgcG9z
+aXRpb24gb2YgS09NRURBIGJ5IGFscGhhYmV0aWNhbCBvcmRlcgo+ID4gPiA+ID4KPiA+ID4gPiA+
+IFNpZ25lZC1vZmYtYnk6IEphbWVzIChRaWFuKSBXYW5nIDxqYW1lcy5xaWFuLndhbmdAYXJtLmNv
+bT4KPiA+ID4gPgo+ID4gPiA+IEFja2VkLWJ5OiBMaXZpdSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJt
+LmNvbT4KPiA+ID4gPgo+ID4gPiA+IEJlc3QgcmVnYXJkcywKPiA+ID4gPiBMaXZpdQo+ID4gPiA+
+Cj4gPiA+ID4gPiAtLS0KPiA+ID4gPiA+ICBNQUlOVEFJTkVSUyB8IDkgKysrKysrKysrCj4gPiA+
+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDkgaW5zZXJ0aW9ucygrKQo+ID4gPiA+ID4KPiA+ID4gPiA+
+IGRpZmYgLS1naXQgYS9NQUlOVEFJTkVSUyBiL01BSU5UQUlORVJTCj4gPiA+ID4gPiBpbmRleCAy
+NTRiN2IyNjc3MzEuLmU0OGMyZTVmZDI5ZiAxMDA2NDQKPiA+ID4gPiA+IC0tLSBhL01BSU5UQUlO
+RVJTCj4gPiA+ID4gPiArKysgYi9NQUlOVEFJTkVSUwo+ID4gPiA+ID4gQEAgLTExMjQsNiArMTEy
+NCwxNSBAQCBTOiAgICAgU3VwcG9ydGVkCj4gPiA+ID4gPiAgRjogICBkcml2ZXJzL2dwdS9kcm0v
+YXJtL2hkbGNkXyoKPiA+ID4gPiA+ICBGOiAgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9kaXNwbGF5L2FybSxoZGxjZC50eHQKPiA+ID4gPiA+Cj4gPiA+ID4gPiArQVJNIEtPTUVE
+QSBEUk0tS01TIERSSVZFUgo+ID4gPiA+ID4gK006ICAgSmFtZXMgKFFpYW4pIFdhbmcgPGphbWVz
+LnFpYW4ud2FuZ0Bhcm0uY29tPgo+ID4gPiA+ID4gK006ICAgTWFsaSBEUCBNYWludGFpbmVycyA8
+bWFsaWRwQGZvc3MuYXJtLmNvbT4KPiA+ID4gPiA+ICtTOiAgIFN1cHBvcnRlZAo+ID4gPiA+ID4g
+K0Y6ICAgZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2luY2x1ZGUvCj4gPiA+ID4gPiArRjog
+ICBkcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhLwo+ID4gPiA+ID4gK0Y6ICAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYXJtL2FybSxrb21lZGEudHh0
+Cj4gPiA+ID4gPiArRjogICBEb2N1bWVudGF0aW9uL2dwdS9rb21lZGEta21zLnJzdAo+ID4gPgo+
+ID4gPiBNZW50aW9uaW5nIHRoZSBnaXQgdHJlZSB3b3VsZCBiZSBnb29kLiBBbmQgSSBndWVzcyB5
+b3UnbGwgZG8gc29tZSBraW5kCj4gPiA+IG9mIGdyb3VwIG1haW50YWluZXJzaGlwPyBQcm9iYWJs
+eSBzdGlsbCBnb29kIGlmIHlvdSBzZW5kIG91dCBhCj4gPiA+IGRlZGljYXRlZC90b3BpYyBwdWxs
+IHJlcXVlc3QgZm9yIHRoaXMgbmV3IGRyaXZlciwgYnV0IGZyb20gdGhlbiBvbgo+ID4gPiBpdCdz
+IGFsbCBpbiB0aGUgc2FtZSBnaXQgcmVwby4KPiA+ID4gLURhbmllbAo+ID4KPiA+IEhpIERhbmll
+bDoKPiA+Cj4gPiBUaGUga29tZWRhIGRyaXZlciB3aWxsIHVzZSBhbiBBcm0taG9zdGVkIHRyZWU6
+Cj4gPgo+ID4gZ2l0IGdpdDovL2xpbnV4LWFybS5vcmcvbGludXgtbGQuZ2l0IGZvci11cHN0cmVh
+bS9tYWxpLWRwCj4gPgo+ID4gU2FtZSBhcyBvdGhlciBhcm0gZGlzcGxheSBkcml2ZXJzLiBBbmQg
+TGl2aXUgRHVkYXUgd2lsbCBoZWxwIHRvIHNlbmQgdGhlIHB1bGwKPiA+IHJlcXVlc3QgdG8gbWVy
+Z2UgdGhpcyB0b3BpYyBpbnRvIGRybS1uZXh0Lgo+ID4KPiA+IEFuZCB3ZSBhcmUgcGxhbm5pbmcg
+dG8gYWRvcHQgYSBncm91cCBtYWludGFpbmVyc2hpcCBhbmQgbWlncmF0ZSB0b3dhcmRzIGRybS1t
+aXNjLW5leHQsCj4gPiBidXQgd2UganVzdCBuZWVkIHRvIGhhdmUgZW5vdWdoIHBlb3BsZSBhbmQg
+ZW5vdWdoIGV4cGVyaWVuY2Ugd2l0aCB3b3JraW5nIHdpdGggdXBzdHJlYW0KPiA+IGJlZm9yZSB3
+ZSBqdW1wIGFsbCBpbi4KPiAKPiBhcm0gZHJpdmVycyBhcmUgcHJvYmFibHkgYSBiaXQgdG9vIGJp
+ZyBmb3IgZHJtLW1pc2MsIGJ1dCB5b3UgY291bGQgdXNlCj4gdGhlIHNhbWUgdG9vbGluZyB0byBt
+YWludGFpbiBhIGRybS1hcm0gdHJlZS4gSSBndWVzcyB0aGF0J3MgdGhlIGlkZWE/CgpZZXMsIHRo
+ZSBsb25nIHRlcm0gcGxhbiBpcyB0byBoYXZlIHRoZSBzYW1lIHByb2Nlc3MuIFdlJ3JlIGp1c3Qg
+YXQgdGhlCmVhcmx5IHN0ZXBzIHJpZ2h0IG5vdywgd2hlcmUgd2UncmUgZ2V0dGluZyB3ZWVuZWQg
+b2ZmIGludGVybmFsIHRvb2xzIGhhZApiYWQgaGFiaXRzIDopCgpCZXN0IHJlZ2FyZHMsCkxpdml1
+Cgo+IC1EYW5pZWwKPiAKPiA+IExhc3QgYSBUOiBlbnRyeSB3aWxsIGJlIGFkZGVkIGluIHRoZSBu
+ZXh0IHZlcnNpb24uCj4gPgo+ID4gVDogICAgICBnaXQgZ2l0Oi8vbGludXgtYXJtLm9yZy9saW51
+eC1sZC5naXQgZm9yLXVwc3RyZWFtL21hbGktZHAKPiA+Cj4gPiBKYW1lcwo+ID4KPiA+ID4gPiA+
+ICsKPiA+ID4gPiA+ICBBUk0gTUFMSS1EUCBEUk0gRFJJVkVSCj4gPiA+ID4gPiAgTTogICBMaXZp
+dSBEdWRhdSA8bGl2aXUuZHVkYXVAYXJtLmNvbT4KPiA+ID4gPiA+ICBNOiAgIEJyaWFuIFN0YXJr
+ZXkgPGJyaWFuLnN0YXJrZXlAYXJtLmNvbT4KPiA+ID4gPiA+IC0tCj4gPiA+ID4gPiAyLjE3LjEK
+PiA+ID4gPiA+Cj4gPiA+ID4KPiA+ID4KPiA+ID4gLS0KPiA+ID4gRGFuaWVsIFZldHRlcgo+ID4g
+PiBTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KPiA+ID4gKzQxICgwKSA3OSAz
+NjUgNTcgNDggLSBodHRwOi8vYmxvZy5mZndsbC5jaAo+IAo+IAo+IAo+IC0tIAo+IERhbmllbCBW
+ZXR0ZXIKPiBTb2Z0d2FyZSBFbmdpbmVlciwgSW50ZWwgQ29ycG9yYXRpb24KPiArNDEgKDApIDc5
+IDM2NSA1NyA0OCAtIGh0dHA6Ly9ibG9nLmZmd2xsLmNoCgotLSAKPT09PT09PT09PT09PT09PT09
+PT0KfCBJIHdvdWxkIGxpa2UgdG8gfAp8IGZpeCB0aGUgd29ybGQsICB8CnwgYnV0IHRoZXkncmUg
+bm90IHwKfCBnaXZpbmcgbWUgdGhlICAgfAogXCBzb3VyY2UgY29kZSEgIC8KICAtLS0tLS0tLS0t
+LS0tLS0KICAgIMKvXF8o44OEKV8vwq8KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJl
+ZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGlu
+Zm8vZHJpLWRldmVsCg==
