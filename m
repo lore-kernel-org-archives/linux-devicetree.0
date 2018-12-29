@@ -1,79 +1,70 @@
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: RE: [PATCH V2 1/3] dt-bindings: mmc: tegra: Add pinctrl for pad drive
- strength config
-Date: Sat, 29 Dec 2018 00:08:02 +0000
-Message-ID: <BN7PR12MB2836C77E851E7AC4BCD38BF0C2B00@BN7PR12MB2836.namprd12.prod.outlook.com>
-References: <1545260153-11338-1-git-send-email-skomatineni@nvidia.com>
- <20181227213353.GA8110@bogus>
+From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Subject: Re: [PATCH v2 2/2] arm: dts: meson: Fix IRQ trigger type for macirq
+Date: Sat, 29 Dec 2018 01:17:54 +0100
+Message-ID: <CAFBinCAbOdPnsH4TLLBmMnR5tS+jHfHagWudVLjaH6X89vtgDQ@mail.gmail.com>
+References: <20181207105231.25593-1-ccaione@baylibre.com>
+ <20181207105231.25593-3-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181227213353.GA8110@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Preetham Chandru <pchandru@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181207105231.25593-3-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, khilman@baylibre.com, robh+dt@kernel.org, ingrassia@epigenesys.com, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Hi Carlo,
 
->> Add pinctrl for 3V3 and 1V8 pad drive strength configuration for
->> Tegra210 sdmmc which has pad configuration registers in the pinmux=20
->> reigster domain.
+On Fri, Dec 7, 2018 at 11:52 AM Carlo Caione <ccaione@baylibre.com> wrote:
 >
-> typo
+> A long running stress test on a custom board shipping an AXG SoCs and a
+> Realtek RTL8211F PHY revealed that after a few hours the connection
+> speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
+> the 'macirq' (eth0) IRQ would stop being triggered at all and as
+> consequence the GMAC IRQs never ACKed.
 >
->>=20
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 6=20
->> +++++-
->>  1 file changed, 5 insertions(+), 1 deletion(-)
->>=20
->> diff --git=20
->> a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt=20
->> b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> index 32b4b4e41923..2cecdc71d94c 100644
->> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> @@ -39,12 +39,16 @@ sdhci@c8000200 {
->>  	bus-width =3D <8>;
->>  };
->> =20
->> -Optional properties for Tegra210 and Tegra186:
->> +Optional properties for Tegra210, Tegra186 and Tegra194:
+> After a painful investigation the problem seemed to be due to a wrong
+> defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
+> EDGE_RISING.
 >
->Adding Tegra194, but this patch concerns Tegra210...
-Yes this is mainly part of Tegra210 Patch but pinctrls sdmmc-1v8 and sdmmc-=
-3v3
-also applies for Tegra194 and since it was not mentioned, added Tegra194 as=
- well.
-Does adding Tegra194 in this should come as separate patch?
->
->>  - pinctrl-names, pinctrl-0, pinctrl-1 : Specify pad voltage
->>    configurations. Valid pinctrl-names are "sdmmc-3v3" and "sdmmc-1v8"
->>    for controllers supporting multiple voltage levels. The order of name=
-s
->>    should correspond to the pin configuration states in pinctrl-0 and
->>    pinctrl-1.
->> +- pinctrl-names : "sdmmc-3v3-drv" and "sdmmc-1v8-drv" are applicable=20
->> +for
->
->These are in addition to the previous values?
-Yes these are additional pinctrl states for pad drive settings which are in=
- pinmux
-Domain and are applicable during calibration process.
->
->> +  Tegra210 where pad config registers are in the pinmux register=20
->> + domain  for pull-up-strength and pull-down-strength values=20
->> + configuration when  using pads at 3V3 and 1V8 levels.
->>  - nvidia,only-1-8-v : The presence of this property indicates that the
->>    controller operates at a 1.8 V fixed I/O voltage.
->>  - nvidia,pad-autocal-pull-up-offset-3v3,
->> --
->> 2.7.4
->>=20
+> The change in the macirq IRQ type also solved another long standing
+> issue affecting this SoC/PHY where EEE was causing the network
+> connection to die after stressing it with iperf3 (even though much
+> sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
+> well.
+(disclaimer: I was not able to reproduce this bug without your
+patches, but I didn't run iperf3 for more than a couple of minutes)
+I did test your patch with and without my "Meson8b RGMII Ethernet pin
+cleanup" from [0] which shows that there's another performance related
+problem:
+1) before and after your patch receive speeds were fine (above
+700Mbit/s and no transmit errors / retries in iperf3) but the transmit
+speed was bad (<200Mbit/s and >1500 retries in perf3)
+2) transmit errors (when Odroid-C1 is sending) are not occurring
+anymore after my patch from [0]
 
-Thanks & Regards,
-sowjanya
+thus I believe your patch is fine, especially since we already have
+IRQ_TYPE_LEVEL_HIGH for the dwc2 controllers
+
+> Fixes: 9c15795a4f96 ("ARM: dts: meson8b-odroidc1: ethernet support")
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+
+I wonder if Kevin can send this as a fix for v4.20
+
+
+Regards
+Martin
+
+
+[0] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009665.html
