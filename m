@@ -1,96 +1,119 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v3 5/5] drm/bridge: lvds-encoder: add powerdown-gpios support
-Date: Sat, 29 Dec 2018 07:07:43 +0000
-Message-ID: <20181229070649.21308-6-peda@axentia.se>
-References: <20181229070649.21308-1-peda@axentia.se>
+From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH v4] dt-bindings: net: dsa: ksz9477: add sample of switch
+ bindings managed in i2c mode
+Date: Sat, 29 Dec 2018 08:26:56 +0100
+Message-ID: <CAMhs-H-=Www=A5GMqknboxDH-xYrDJvyX--=yRZ3qaQtkTBdLA@mail.gmail.com>
+References: <20181219194626.25732-1-sergio.paracuellos@gmail.com>
+ <20181229000337.GA23263@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181229070649.21308-1-peda@axentia.se>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
+In-Reply-To: <20181229000337.GA23263@bogus>
+List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
+List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
+List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
+List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
+List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
+ <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
+Errors-To: driverdev-devel-bounces@linuxdriverproject.org
+Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Woojung.Huh@microchip.com, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@savoirfairelinux.com, netdev@vger.kernel.org, driverdev-devel@linuxdriverproject.org, UNGLinuxDriver@microchip.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, David Miller <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Optionally power down the LVDS-encoder when it is not in use.
+On Sat, Dec 29, 2018 at 1:03 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Wed, Dec 19, 2018 at 08:46:26PM +0100, Sergio Paracuellos wrote:
+> > Add device-tree binding example of the ksz9477 switch managed in i2c mode.
+> >
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> > ---
+> > Changes v4:
+> >     - Use one tab formatting properly the binding sample.
+> >
+> > Changes v3:
+> >     - No changes. Just resent patches together.
+> >
+> > Changes v2:
+> >     - Use generic name for label of the switch and make sure reg and @X
+> >       have the same value.
+> >  .../devicetree/bindings/net/dsa/ksz.txt       | 51 +++++++++++++++++++
+> >  1 file changed, 51 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+> > index 0f407fb371ce..2f276aa42f0b 100644
+> > --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
+> > +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
+> > @@ -74,3 +74,54 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
+> >                                                               };
+> >                                               };
+> >                               };
+> > +
+> > +Ethernet switch connected via I2C to the host, CPU port wired to eth0:
+> > +
+> > +     eth0: ethernet@10001000 {
+> > +             fixed-link {
+> > +                     speed = <1000>;
+> > +                     full-duplex;
+> > +             };
+> > +     };
+> > +
+> > +     i2c0: i2c@f8008000 {
+> > +             switch: ksz9897@5f {
+> > +                     compatible = "microchip,ksz9897";
+> > +                     reg = <5f>;
+> > +
+>
+> I should have said this earlier, but this example doesn't really show
+> anything other than differences in reg and bus-specific properties which
+> are pretty well understood. So I don't really think it is worth adding
+> the example.
 
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- drivers/gpu/drm/bridge/lvds-encoder.c | 34 +++++++++++++++++++++++++++++++=
-+++
- 1 file changed, 34 insertions(+)
+Fair enough. No problem at all for me. Thanks for let me know.
 
-diff --git a/drivers/gpu/drm/bridge/lvds-encoder.c b/drivers/gpu/drm/bridge=
-/lvds-encoder.c
-index f6770e83d49d..36d8557bc097 100644
---- a/drivers/gpu/drm/bridge/lvds-encoder.c
-+++ b/drivers/gpu/drm/bridge/lvds-encoder.c
-@@ -11,11 +11,13 @@
- #include <drm/drm_bridge.h>
- #include <drm/drm_panel.h>
-=20
-+#include <linux/gpio/consumer.h>
- #include <linux/of_graph.h>
-=20
- struct lvds_encoder {
- 	struct drm_bridge bridge;
- 	struct drm_bridge *panel_bridge;
-+	struct gpio_desc *powerdown_gpio;
- };
-=20
- static int lvds_encoder_attach(struct drm_bridge *bridge)
-@@ -28,8 +30,30 @@ static int lvds_encoder_attach(struct drm_bridge *bridge=
-)
- 				 bridge);
- }
-=20
-+static void lvds_encoder_enable(struct drm_bridge *bridge)
-+{
-+	struct lvds_encoder *lvds_encoder =3D container_of(bridge,
-+							 struct lvds_encoder,
-+							 bridge);
-+
-+	if (lvds_encoder->powerdown_gpio)
-+		gpiod_set_value_cansleep(lvds_encoder->powerdown_gpio, 0);
-+}
-+
-+static void lvds_encoder_disable(struct drm_bridge *bridge)
-+{
-+	struct lvds_encoder *lvds_encoder =3D container_of(bridge,
-+							 struct lvds_encoder,
-+							 bridge);
-+
-+	if (lvds_encoder->powerdown_gpio)
-+		gpiod_set_value_cansleep(lvds_encoder->powerdown_gpio, 1);
-+}
-+
- static struct drm_bridge_funcs funcs =3D {
- 	.attach =3D lvds_encoder_attach,
-+	.enable =3D lvds_encoder_enable,
-+	.disable =3D lvds_encoder_disable,
- };
-=20
- static int lvds_encoder_probe(struct platform_device *pdev)
-@@ -45,6 +69,16 @@ static int lvds_encoder_probe(struct platform_device *pd=
-ev)
- 	if (!lvds_encoder)
- 		return -ENOMEM;
-=20
-+	lvds_encoder->powerdown_gpio =3D devm_gpiod_get_optional(dev, "powerdown"=
-,
-+							       GPIOD_OUT_HIGH);
-+	if (IS_ERR(lvds_encoder->powerdown_gpio)) {
-+		int err =3D PTR_ERR(lvds_encoder->powerdown_gpio);
-+
-+		if (err !=3D -EPROBE_DEFER)
-+			dev_err(dev, "powerdown GPIO failure: %d\n", err);
-+		return err;
-+	}
-+
- 	/* Locate the panel DT node. */
- 	port =3D of_graph_get_port_by_id(dev->of_node, 1);
- 	if (!port) {
---=20
-2.11.0
+>
+> > +                     ports {
+> > +                             #address-cells = <1>;
+> > +                             #size-cells = <0>;
+> > +
+> > +                             port@0 {
+> > +                                     reg = <0>;
+> > +                                     label = "lan1";
+> > +                             };
+> > +                             port@1 {
+> > +                                     reg = <1>;
+> > +                                     label = "lan2";
+> > +                             };
+> > +                             port@2 {
+> > +                                     reg = <2>;
+> > +                                     label = "lan3";
+> > +                             };
+> > +                             port@3 {
+> > +                                     reg = <3>;
+> > +                                     label = "lan4";
+> > +                             };
+> > +                             port@4 {
+> > +                                     reg = <4>;
+> > +                                     label = "lan5";
+> > +                             };
+> > +                             port@6 {
+> > +                                     reg = <6>;
+> > +                                     label = "cpu";
+> > +                                     ethernet = <&eth0>;
+> > +                                     fixed-link {
+> > +                                             speed = <1000>;
+> > +                                             full-duplex;
+> > +                                     };
+> > +                             };
+> > +                     };
+> > +             };
+> > +     };
+> > --
+> > 2.19.1
+> >
+
+Best regards,
+    Sergio Paracuellos
