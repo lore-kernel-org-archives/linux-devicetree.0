@@ -1,7 +1,7 @@
 From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v2 7/7] ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
-Date: Sat, 29 Dec 2018 14:33:18 +0100
-Message-ID: <20181229133318.18128-8-jbx6244@gmail.com>
+Subject: [PATCH v2 6/7] ARM: dts: rockchip: add rk3066 hdmi nodes
+Date: Sat, 29 Dec 2018 14:33:17 +0100
+Message-ID: <20181229133318.18128-7-jbx6244@gmail.com>
 References: <20181229133318.18128-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181229133318.18128-1-jbx6244@gmail.com>
@@ -10,43 +10,84 @@ To: heiko@sntech.de
 Cc: hjc@rock-chips.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch enables the vop0 and hdmi nodes
-for a MK808 with rk3066 processor.
+From: Zheng Yang <zhengyang@rock-chips.com>
 
+This patch adds the hdmi nodes to rk3066.
+
+Signed-off-by: Zheng Yang <zhengyang@rock-chips.com>
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- arch/arm/boot/dts/rk3066a-mk808.dts | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ arch/arm/boot/dts/rk3066a.dtsi | 44 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-diff --git a/arch/arm/boot/dts/rk3066a-mk808.dts b/arch/arm/boot/dts/rk3066a-mk808.dts
-index b6a8a82d2..14a560598 100644
---- a/arch/arm/boot/dts/rk3066a-mk808.dts
-+++ b/arch/arm/boot/dts/rk3066a-mk808.dts
-@@ -91,6 +91,14 @@
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 653127a37..f95ce9881 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -80,6 +80,10 @@
+ 		vop0_out: port {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			vop0_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_vop0>;
++			};
+ 		};
  	};
- };
  
-+&hdmi {
-+	status = "okay";
-+};
+@@ -101,6 +105,36 @@
+ 		vop1_out: port {
+ 			#address-cells = <1>;
+ 			#size-cells = <0>;
++			vop1_out_hdmi: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&hdmi_in_vop1>;
++			};
++		};
++	};
 +
-+&hdmi_in_vop1 {
-+	status = "disabled";
-+};
++	hdmi: hdmi@10116000 {
++		compatible = "rockchip,rk3066-hdmi";
++		reg = <0x10116000 0x2000>;
++		interrupts = <GIC_SPI 64 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru HCLK_HDMI>;
++		clock-names = "hclk";
++		power-domains = <&power RK3066_PD_VIO>;
++		rockchip,grf = <&grf>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&hdmii2c_xfer>, <&hdmi_hpd>;
++		status = "disabled";
 +
- &mmc0 {
- 	bus-width = <4>;
- 	cap-mmc-highspeed;
-@@ -151,6 +159,10 @@
- 	status = "okay";
- };
++		hdmi_in: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++			hdmi_in_vop0: endpoint@0 {
++				reg = <0>;
++				remote-endpoint = <&vop0_out_hdmi>;
++			};
++			hdmi_in_vop1: endpoint@1 {
++				reg = <1>;
++				remote-endpoint = <&vop1_out_hdmi>;
++			};
+ 		};
+ 	};
  
-+&vop0 {
-+	status = "okay";
-+};
+@@ -415,6 +449,16 @@
+ 			};
+ 		};
+ 
++		hdmi {
++			hdmi_hpd: hdmi-hpd {
++				rockchip,pins = <0 RK_PA0 1 &pcfg_pull_default>;
++			};
++			hdmii2c_xfer: hdmii2c-xfer {
++				rockchip,pins = <0 RK_PA1 1 &pcfg_pull_none>,
++						<0 RK_PA2 1 &pcfg_pull_none>;
++			};
++		};
 +
- &wdt {
- 	status = "okay";
- };
+ 		pwm0 {
+ 			pwm0_out: pwm0-out {
+ 				rockchip,pins = <RK_GPIO0 3 RK_FUNC_1 &pcfg_pull_none>;
 -- 
 2.11.0
