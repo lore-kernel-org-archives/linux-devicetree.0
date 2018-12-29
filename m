@@ -1,7 +1,7 @@
 From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v2 2/7] clk: rockchip: rk3188: add CLK_SET_RATE_PARENT for lcdc dclk
-Date: Sat, 29 Dec 2018 14:33:13 +0100
-Message-ID: <20181229133318.18128-3-jbx6244@gmail.com>
+Subject: [PATCH v2 5/7] ARM: dts: rockchip: add rk3066 vop display nodes
+Date: Sat, 29 Dec 2018 14:33:16 +0100
+Message-ID: <20181229133318.18128-6-jbx6244@gmail.com>
 References: <20181229133318.18128-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20181229133318.18128-1-jbx6244@gmail.com>
@@ -10,34 +10,80 @@ To: heiko@sntech.de
 Cc: hjc@rock-chips.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Finley Xiao <finley.xiao@rock-chips.com>
+From: Mark Yao <mark.yao@rock-chips.com>
 
-Add CLK_SET_RATE_PARENT for lcdc dclk.
+This patch adds the core display subsystem and vop nodes to rk3066.
 
-Signed-off-by: Finley Xiao <finley.xiao@rock-chips.com>
+Signed-off-by: Mark Yao <mark.yao@rock-chips.com>
 Signed-off-by: Johan Jonker <jbx6244@gmail.com>
 ---
- drivers/clk/rockchip/clk-rk3188.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/rk3066a.dtsi | 47 ++++++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 47 insertions(+)
 
-diff --git a/drivers/clk/rockchip/clk-rk3188.c b/drivers/clk/rockchip/clk-rk3188.c
-index 7ea20341e..5ecf28854 100644
---- a/drivers/clk/rockchip/clk-rk3188.c
-+++ b/drivers/clk/rockchip/clk-rk3188.c
-@@ -586,12 +586,12 @@ static struct rockchip_clk_branch rk3066a_clk_branches[] __initdata = {
- 	COMPOSITE(0, "dclk_lcdc0_src", mux_pll_src_cpll_gpll_p, 0,
- 			RK2928_CLKSEL_CON(27), 0, 1, MFLAGS, 8, 8, DFLAGS,
- 			RK2928_CLKGATE_CON(3), 1, GFLAGS),
--	MUX(DCLK_LCDC0, "dclk_lcdc0", mux_rk3066_lcdc0_p, 0,
-+	MUX(DCLK_LCDC0, "dclk_lcdc0", mux_rk3066_lcdc0_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(27), 4, 1, MFLAGS),
- 	COMPOSITE(0, "dclk_lcdc1_src", mux_pll_src_cpll_gpll_p, 0,
- 			RK2928_CLKSEL_CON(28), 0, 1, MFLAGS, 8, 8, DFLAGS,
- 			RK2928_CLKGATE_CON(3), 2, GFLAGS),
--	MUX(DCLK_LCDC1, "dclk_lcdc1", mux_rk3066_lcdc1_p, 0,
-+	MUX(DCLK_LCDC1, "dclk_lcdc1", mux_rk3066_lcdc1_p, CLK_SET_RATE_PARENT,
- 			RK2928_CLKSEL_CON(28), 4, 1, MFLAGS),
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index b6b3a77da..653127a37 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -44,6 +44,11 @@
+ 		};
+ 	};
  
- 	COMPOSITE_NOMUX(0, "cif1_pre", "cif_src", 0,
++	display-subsystem {
++		compatible = "rockchip,display-subsystem";
++		ports = <&vop0_out>, <&vop1_out>;
++	};
++
+ 	sram: sram@10080000 {
+ 		compatible = "mmio-sram";
+ 		reg = <0x10080000 0x10000>;
+@@ -57,6 +62,48 @@
+ 		};
+ 	};
+ 
++	vop0: vop@1010c000 {
++		compatible = "rockchip,rk3066-vop";
++		reg = <0x1010c000 0x19c>;
++		interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_LCDC0>,
++			 <&cru DCLK_LCDC0>,
++			 <&cru HCLK_LCDC0>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		power-domains = <&power RK3066_PD_VIO>;
++		resets = <&cru SRST_LCDC0_AXI>,
++			 <&cru SRST_LCDC0_AHB>,
++			 <&cru SRST_LCDC0_DCLK>;
++		reset-names = "axi", "ahb", "dclk";
++		status = "disabled";
++
++		vop0_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
++	vop1: vop@1010e000 {
++		compatible = "rockchip,rk3066-vop";
++		reg = <0x1010e000 0x19c>;
++		interrupts = <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>;
++		clocks = <&cru ACLK_LCDC1>,
++			 <&cru DCLK_LCDC1>,
++			 <&cru HCLK_LCDC1>;
++		clock-names = "aclk_vop", "dclk_vop", "hclk_vop";
++		power-domains = <&power RK3066_PD_VIO>;
++		resets = <&cru SRST_LCDC1_AXI>,
++			 <&cru SRST_LCDC1_AHB>,
++			 <&cru SRST_LCDC1_DCLK>;
++		reset-names = "axi", "ahb", "dclk";
++		status = "disabled";
++
++		vop1_out: port {
++			#address-cells = <1>;
++			#size-cells = <0>;
++		};
++	};
++
+ 	i2s0: i2s@10118000 {
+ 		compatible = "rockchip,rk3066-i2s";
+ 		reg = <0x10118000 0x2000>;
 -- 
 2.11.0
