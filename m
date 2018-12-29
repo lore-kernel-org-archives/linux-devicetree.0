@@ -1,102 +1,68 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4] dt-bindings: net: dsa: ksz9477: add sample of switch
- bindings managed in i2c mode
-Date: Fri, 28 Dec 2018 18:03:37 -0600
-Message-ID: <20181229000337.GA23263@bogus>
-References: <20181219194626.25732-1-sergio.paracuellos@gmail.com>
+Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt
+ parent for GPIO
+Date: Fri, 28 Dec 2018 18:07:14 -0600
+Message-ID: <20181229000714.GA3654@bogus>
+References: <20181219221105.3004-1-ilina@codeaurora.org>
+ <20181219221105.3004-5-ilina@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181219194626.25732-1-sergio.paracuellos@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, andrew@lunn.ch, vivien.didelot@savoirfairelinux.com, f.fainelli@gmail.com, driverdev-devel@linuxdriverproject.org, davem@davemloft.net, netdev@vger.kernel.org, devicetree@vger.kernel.org
+In-Reply-To: <20181219221105.3004-5-ilina@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: sboyd@kernel.org, evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2018 at 08:46:26PM +0100, Sergio Paracuellos wrote:
-> Add device-tree binding example of the ksz9477 switch managed in i2c mode.
+On Wed, Dec 19, 2018 at 03:11:02PM -0700, Lina Iyer wrote:
+> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+> routed to the PDC as interrupts that can be used to wake the system up
+> from deep low power modes and suspend.
 > 
 > Cc: devicetree@vger.kernel.org
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
+> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
 > ---
-> Changes v4:
->     - Use one tab formatting properly the binding sample.
+>  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
 > 
-> Changes v3:
->     - No changes. Just resent patches together.
-> 
-> Changes v2:
->     - Use generic name for label of the switch and make sure reg and @X
->       have the same value.
->  .../devicetree/bindings/net/dsa/ksz.txt       | 51 +++++++++++++++++++
->  1 file changed, 51 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/dsa/ksz.txt b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> index 0f407fb371ce..2f276aa42f0b 100644
-> --- a/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> +++ b/Documentation/devicetree/bindings/net/dsa/ksz.txt
-> @@ -74,3 +74,54 @@ Ethernet switch connected via SPI to the host, CPU port wired to eth0:
->                                                               };
->                                               };
->                               };
-> +
-> +Ethernet switch connected via I2C to the host, CPU port wired to eth0:
-> +
-> +	eth0: ethernet@10001000 {
-> +		fixed-link {
-> +			speed = <1000>;
-> +			full-duplex;
-> +		};
-> +	};
-> +
-> +	i2c0: i2c@f8008000 {
-> +		switch: ksz9897@5f {
-> +			compatible = "microchip,ksz9897";
-> +			reg = <5f>;
-> +
+> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> index 665aadb5ea28..a522ca46667d 100644
+> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> @@ -29,6 +29,11 @@ SDM845 platform.
+>  	Definition: must be 2. Specifying the pin number and flags, as defined
+>  		    in <dt-bindings/interrupt-controller/irq.h>
+>  
+> +- wakeup-parent:
+> +	Usage: optional
+> +	Value type: <phandle>
+> +	Definition: A phandle to the wakeup interrupt controller for the SoC.
 
-I should have said this earlier, but this example doesn't really show 
-anything other than differences in reg and bus-specific properties which 
-are pretty well understood. So I don't really think it is worth adding 
-the example.
+Is this really necessary? Is there more than one possible wakeup-parent 
+node?
 
-> +			ports {
-> +				#address-cells = <1>;
-> +				#size-cells = <0>;
 > +
-> +				port@0 {
-> +					reg = <0>;
-> +					label = "lan1";
-> +				};
-> +				port@1 {
-> +					reg = <1>;
-> +					label = "lan2";
-> +				};
-> +				port@2 {
-> +					reg = <2>;
-> +					label = "lan3";
-> +				};
-> +				port@3 {
-> +					reg = <3>;
-> +					label = "lan4";
-> +				};
-> +				port@4 {
-> +					reg = <4>;
-> +					label = "lan5";
-> +				};
-> +				port@6 {
-> +					reg = <6>;
-> +					label = "cpu";
-> +					ethernet = <&eth0>;
-> +					fixed-link {
-> +						speed = <1000>;
-> +						full-duplex;
-> +					};
-> +				};
-> +			};
-> +		};
-> +	};
+>  - gpio-controller:
+>  	Usage: required
+>  	Value type: <none>
+> @@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
+>  mux function to select on those pin(s)/group(s), and various pin configuration
+>  parameters, such as pull-up, drive strength, etc.
+>  
+> -
+>  PIN CONFIGURATION NODES:
+>  
+>  The name of each subnode is not important; all subnodes should be enumerated
+> @@ -160,6 +164,7 @@ Example:
+>  		#gpio-cells = <2>;
+>  		interrupt-controller;
+>  		#interrupt-cells = <2>;
+> +		wakeup-parent = <&pdc>;
+>  
+>  		qup9_active: qup9-active {
+>  			mux {
 > -- 
-> 2.19.1
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
