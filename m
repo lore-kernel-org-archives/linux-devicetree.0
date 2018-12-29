@@ -1,24 +1,59 @@
-From: pr-tracker-bot@kernel.org
-Subject: Re: [GIT PULL] DeviceTree updates for v4.21
-Date: Sat, 29 Dec 2018 05:35:05 +0000
-Message-ID: <20181229053505.9301.85357.pr-tracker-bot@pdx-korg-gitolite-1.ci.codeaurora.org>
-References: <CAL_JsqLeKebs8yL1y0XUjBKYQiqVtkgZ4+1Sfwxx1_rPtDwdUQ@mail.gmail.com>
+From: Peter Rosin <peda@axentia.se>
+Subject: [PATCH v3 0/5] drm/bridge: various small lvds-encoder things
+Date: Sat, 29 Dec 2018 07:07:09 +0000
+Message-ID: <20181229070649.21308-1-peda@axentia.se>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLeKebs8yL1y0XUjBKYQiqVtkgZ4+1Sfwxx1_rPtDwdUQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robherring2@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>, Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The pull request you sent on Thu, 27 Dec 2018 13:44:21 -0600:
+Hi!
 
-> git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git devicetree-for-4.21
+I'm not sure if I should have added the texas chips to the lvds_encoder_mat=
+ch
+list in the driver, right next to the thine,thc63lvdm83d entry, but ended
+up not doing that. That can always be added later, if needed...
 
-has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/030672aea826adf3dee9100ee8ac303b62c8fe7f
+Changes since v2:
+- changed from pwdn-gpios to powerdown-gpios after discussion with Rob with
+  new patch 3/5 updating the thine,thc63lvdm83d binding as well as a
+  consequence
+- added patch 4/5 which helps keep lines shorter in the lvds-encoder driver
+- added tag from Rob on patch 2/5
 
-Thank you!
+Changes since v1:
+- fork out the bindings for the texas chips into their own file in order
+  to avoid clutter in the generic lvds-transmitter binding.
+- added a patch to remove some surplus stuff in the generic lvds-transmitte=
+r
+  binding.
 
--- 
-Deet-doot-dot, I am a bot.
-https://korg.wiki.kernel.org/userdoc/prtracker
+Cheers,
+Peter
+
+Peter Rosin (5):
+  dt-bindings: display: bridge: fork out ti,ds90c185 from
+    lvds-transmitter
+  dt-bindings: display: bridge: lvds-transmitter: cleanup example
+  dt-bindings: display: bridge: thc63lvdm83d: use standard
+    powerdown-gpios
+  drm/bridge: lvds-encoder: add dev helper variable in .probe()
+  drm/bridge: lvds-encoder: add powerdown-gpios support
+
+ .../bindings/display/bridge/lvds-transmitter.txt   | 10 +---
+ .../bindings/display/bridge/thine,thc63lvdm83d.txt |  2 +-
+ .../bindings/display/bridge/ti,ds90c185.txt        | 55 ++++++++++++++++++=
+++++
+ drivers/gpu/drm/bridge/lvds-encoder.c              | 53 +++++++++++++++++-=
+---
+ 4 files changed, 100 insertions(+), 20 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds9=
+0c185.txt
+
+--=20
+2.11.0
