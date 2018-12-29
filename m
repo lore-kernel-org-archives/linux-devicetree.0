@@ -1,73 +1,39 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH] usb: devio: update max count of DPs per interval for ISOC
-Date: Sat, 29 Dec 2018 13:49:21 +0100
-Message-ID: <20181229124921.GA5959@kroah.com>
-References: <1545992864-9530-1-git-send-email-chunfeng.yun@mediatek.com>
- <20181228105148.GA22073@kroah.com>
- <1546051720.32173.139.camel@mhfsdcap03>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Johan Jonker <jbx6244@gmail.com>
+Subject: [PATCH v2 1/7] ARM: dts: rockchip: rk3066: add HCLK_HDMI to pmu node
+Date: Sat, 29 Dec 2018 14:33:12 +0100
+Message-ID: <20181229133318.18128-2-jbx6244@gmail.com>
+References: <20181229133318.18128-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1546051720.32173.139.camel@mhfsdcap03>
+In-Reply-To: <20181229133318.18128-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: heiko@sntech.de
+Cc: hjc@rock-chips.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 29, 2018 at 10:48:40AM +0800, Chunfeng Yun wrote:
-> Hi,
-> On Fri, 2018-12-28 at 11:51 +0100, Greg Kroah-Hartman wrote:
-> > On Fri, Dec 28, 2018 at 06:27:44PM +0800, Chunfeng Yun wrote:
-> > > The host shall be able to accept and send up to 96 DPs for
-> > > devices operating at Gen 2 speed.
-> > 
-> > Why?  What is this keeping from working properly today?
-> 
-> The failure happened when I tried to send up to 96DPs per an interval
-> for SSP ISOC transations by libusb, this is used to verify SSP ISOC
-> function of USB3 GEN2 controller. Maybe for normal scenarios they
-> needn't transfer greater than 48 DPs in an ISOC interval.
-> (refer usb3.1r1.0 section 8.12.6 Isochronous Transactions)
+A MK808 TV stick with rk3066 processor
+boots normal with logo and console,
+but after booting the monitor remains black.
+This patch fixes a vblank wait time out
+by adding HCLK_HDMI to the pmu node.
+The HCLK_HDMI clock is now part of the logic
+that enables the RK3066_PD_VIO power domain.
 
-Ok, please add this information in the changelog text please.
+Signed-off-by: Johan Jonker <jbx6244@gmail.com>
+---
+ arch/arm/boot/dts/rk3066a.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-> > 
-> > I need a much better changelog text here in order to be able to accept
-> > this patch.
-> I'll make the change in next version
-> > 
-> > > 
-> > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
-> > > ---
-> > >  drivers/usb/core/devio.c | 8 +++-----
-> > >  1 file changed, 3 insertions(+), 5 deletions(-)
-> > > 
-> > > diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-> > > index a75bc0b8a50f..82c16210e34c 100644
-> > > --- a/drivers/usb/core/devio.c
-> > > +++ b/drivers/usb/core/devio.c
-> > > @@ -1564,12 +1564,10 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
-> > >  		}
-> > >  		for (totlen = u = 0; u < number_of_packets; u++) {
-> > >  			/*
-> > > -			 * arbitrary limit need for USB 3.0
-> > > -			 * bMaxBurst (0~15 allowed, 1~16 packets)
-> > > -			 * bmAttributes (bit 1:0, mult 0~2, 1~3 packets)
-> > > -			 * sizemax: 1024 * 16 * 3 = 49152
-> > > +			 * arbitrary limit need for USB 3.1 Gen2
-> > > +			 * sizemax: 96 DPs at SSP, 96 * 1024 = 98304
-> > >  			 */
-> > > -			if (isopkt[u].length > 49152) {
-> > > +			if (isopkt[u].length > 98304) {
-> > 
-> > Are we going to have to keep bumping this up as speeds get faster and
-> > faster?
-> Or remove the check of data length? I'm not sure which way is better
-
-No, we added that check for a good reason, please see the git log for
-the details :)
-
-thanks,
-
-greg k-h
+diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
+index 30dc8af0b..b6b3a77da 100644
+--- a/arch/arm/boot/dts/rk3066a.dtsi
++++ b/arch/arm/boot/dts/rk3066a.dtsi
+@@ -669,6 +669,7 @@
+ 				 <&cru SCLK_CIF0>,
+ 				 <&cru ACLK_CIF0>,
+ 				 <&cru HCLK_CIF0>,
++				 <&cru HCLK_HDMI>,
+ 				 <&cru ACLK_IPP>,
+ 				 <&cru HCLK_IPP>,
+ 				 <&cru ACLK_RGA>,
+-- 
+2.11.0
