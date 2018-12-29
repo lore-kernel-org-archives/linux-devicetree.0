@@ -1,40 +1,127 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH] ARM: dts: imx6sx: correct backward compatible of gpt
-Date: Sat, 29 Dec 2018 10:01:18 +0000
-Message-ID: <1546077384-5343-1-git-send-email-Anson.Huang@nxp.com>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: [PATCH v8 2/2] arm: dts: mt2712: add uart APDMA to device tree
+Date: Sat, 29 Dec 2018 18:30:23 +0800
+Message-ID: <1546079423-8361-3-git-send-email-long.cheng@mediatek.com>
+References: <1546079423-8361-1-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <1546079423-8361-1-git-send-email-long.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.liu@mediatek.com>, Long Cheng <long.cheng@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-i.MX6SX has same GPT type as i.MX6DL, in GPT driver, it uses
-below TIMER_OF_DECLARE, so the backward compatible should be
-"fsl,imx6dl-gpt", correct it.
+1. add uart APDMA controller device node
+2. add uart 0/1/2/3/4/5 DMA function
 
-TIMER_OF_DECLARE(imx6sx_timer, "fsl,imx6sx-gpt", imx6dl_timer_init_dt);
-
-Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+Signed-off-by: Long Cheng <long.cheng@mediatek.com>
 ---
- arch/arm/boot/dts/imx6sx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/mediatek/mt2712e.dtsi |   50 +++++++++++++++++++++++++++++
+ 1 file changed, 50 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 272ff61..d1375d3 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -467,7 +467,7 @@
- 			};
-=20
- 			gpt: gpt@2098000 {
--				compatible =3D "fsl,imx6sx-gpt", "fsl,imx31-gpt";
-+				compatible =3D "fsl,imx6sx-gpt", "fsl,imx6dl-gpt";
- 				reg =3D <0x02098000 0x4000>;
- 				interrupts =3D <GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks =3D <&clks IMX6SX_CLK_GPT_BUS>,
---=20
-2.7.4
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+index 976d92a..be1a22a 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt2712e.dtsi
+@@ -300,6 +300,9 @@
+ 		interrupts = <GIC_SPI 127 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&baud_clk>, <&sys_clk>;
+ 		clock-names = "baud", "bus";
++		dmas = <&apdma 10
++			&apdma 11>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -369,6 +372,38 @@
+ 			 (GIC_CPU_MASK_RAW(0x13) | IRQ_TYPE_LEVEL_HIGH)>;
+ 	};
+ 
++	apdma: dma-controller@11000400 {
++		compatible = "mediatek,mt2712-uart-dma",
++			     "mediatek,mt6577-uart-dma";
++		reg = <0 0x11000400 0 0x80>,
++		      <0 0x11000480 0 0x80>,
++		      <0 0x11000500 0 0x80>,
++		      <0 0x11000580 0 0x80>,
++		      <0 0x11000600 0 0x80>,
++		      <0 0x11000680 0 0x80>,
++		      <0 0x11000700 0 0x80>,
++		      <0 0x11000780 0 0x80>,
++		      <0 0x11000800 0 0x80>,
++		      <0 0x11000880 0 0x80>,
++		      <0 0x11000900 0 0x80>,
++		      <0 0x11000980 0 0x80>;
++		interrupts = <GIC_SPI 103 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 104 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 105 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 106 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 110 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 111 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 112 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
++			     <GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
++		clocks = <&pericfg CLK_PERI_AP_DMA>;
++		clock-names = "apdma";
++		#dma-cells = <1>;
++	};
++
+ 	auxadc: adc@11001000 {
+ 		compatible = "mediatek,mt2712-auxadc";
+ 		reg = <0 0x11001000 0 0x1000>;
+@@ -385,6 +420,9 @@
+ 		interrupts = <GIC_SPI 91 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&baud_clk>, <&sys_clk>;
+ 		clock-names = "baud", "bus";
++		dmas = <&apdma 0
++			&apdma 1>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -395,6 +433,9 @@
+ 		interrupts = <GIC_SPI 92 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&baud_clk>, <&sys_clk>;
+ 		clock-names = "baud", "bus";
++		dmas = <&apdma 2
++			&apdma 3>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -405,6 +446,9 @@
+ 		interrupts = <GIC_SPI 93 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&baud_clk>, <&sys_clk>;
+ 		clock-names = "baud", "bus";
++		dmas = <&apdma 4
++			&apdma 5>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -415,6 +459,9 @@
+ 		interrupts = <GIC_SPI 94 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&baud_clk>, <&sys_clk>;
+ 		clock-names = "baud", "bus";
++		dmas = <&apdma 6
++			&apdma 7>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+@@ -629,6 +676,9 @@
+ 		interrupts = <GIC_SPI 126 IRQ_TYPE_LEVEL_LOW>;
+ 		clocks = <&baud_clk>, <&sys_clk>;
+ 		clock-names = "baud", "bus";
++		dmas = <&apdma 8
++			&apdma 9>;
++		dma-names = "tx", "rx";
+ 		status = "disabled";
+ 	};
+ 
+-- 
+1.7.9.5
