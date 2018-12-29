@@ -1,168 +1,87 @@
-From: schaecsn <schaecsn@gmx.net>
-Subject: Re: [PATCH 2/2] dt-bindings: edac: Aspeed AST2500
-Date: Sat, 29 Dec 2018 10:30:35 -0800 (PST)
-Message-ID: <20181229183035.EA5A26E85603@corona.crabdance.com>
-References: <1545026517-64069-1-git-send-email-schaecsn@gmx.net>
- <1545026517-64069-3-git-send-email-schaecsn@gmx.net>
- <20181227220906.GA14320@bogus>
-Reply-To: schaecsn@gmx.net
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Sat, 29 Dec 2018 20:07:26 +0100
+Message-ID: <20181229190726.GA29851@amd>
+References: <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
+ <20181219201047.GA23448@amd>
+ <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <71d3ac12-5beb-0a26-71e1-5eae798e7b9f@gmail.com>
+ <2bca210b-76ad-d5a9-906c-4151695050c3@gmail.com>
+ <45ce01f0-af6e-1cc6-5126-fb557c7d2a82@ti.com>
+ <b7c69135-1641-48cb-1770-c4c77a989efe@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20181227220906.GA14320@bogus> (message from Rob Herring on Thu,
- 27 Dec 2018 16:09:06 -0600)
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh@kernel.org
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, linux-kernel@vger.kernel.org, bp@alien8.de, joel@jms.id.au, sschaeck@cisco.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="Dxnq1zWXvFF0Q93v"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <b7c69135-1641-48cb-1770-c4c77a989efe@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Rob,
 
-> From: Rob Herring <robh@kernel.org>
-> 
-> On Sun, Dec 16, 2018 at 10:01:57PM -0800, Stefan Schaeckeler wrote:
-> > From: Stefan M Schaeckeler <sschaeck@cisco.com>
-> > 
-> > Add support for the Aspeed AST2500 SoC EDAC driver.
-> > 
-> > Signed-off-by: Stefan M Schaeckeler <sschaeck@cisco.com>
-> > ---
-> >  .../bindings/edac/aspeed-sdram-edac.txt       | 34 +++++++++++++++++++
-> >  1 file changed, 34 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt b/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> > new file mode 100644
-> > index 000000000000..57ba852883c7
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> > @@ -0,0 +1,34 @@
-> > +Aspeed AST2500 SoC EDAC device driver
-> 
-> Bindings are for h/w, not drivers
+--Dxnq1zWXvFF0Q93v
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Changed "device driver" to "node".
+Hi!
 
-I will also change the commit message to perhaps "Add support for EDAC on the
-Aspeed AST2500 SoC."
+> >>With the "color" sysfs file it will make more sense to allow for user
+> >>defined color palettes.
+> >>
+> >
+> >I think defining these values in the device tree or acpi severely limits=
+ the devices
+> >capabilities.  Especially in development phases.  If the knobs were expo=
+sed then the user space
+> >can create new experiences.  The color definition should be an absolute =
+color defined in the dt and
+> >either the framework or user space needs to mix these appropriately.  IM=
+O user space should set the policy
+> >of the user experience and the dt/acpi needs to set the capabilities.
+> >
+> >I do like Pavels idea on defining the more standard binding pattern to "=
+group" leds into a single group.
+> >
+> >Maybe the framework could take these groups and combine/group them into =
+a single node with the groups colors.
+>=20
+> There is still HSV approach [0] in store. One problem with proposed
+> implementation is fixed algorithm of RGB <-> HSV color space conversion.
+> Maybe allowing for some board specific adjustments in DT would add
+> more flexibility.
+>=20
+> [0] https://lkml.org/lkml/2017/8/31/255
 
+Yes we could do HSV. Problem is that that we do not really have RGB
+available. We do have integers for red, green and blue, but they do
+not correspond to RGB colorspace.
 
-> > +The Aspeed AST2500 SoC supports DDR3 and DDR4 memory with and without ECC (error
-> > +correction check).
-> > +
-> > +The memory controller supports SECDED (single bit error correction, double bit
-> > +error detection) and single bit error auto scrubbing by reserving 8 bits for
-> > +every 64 bit word (effectively reducing available memory to 8/9).
-> > +
-> > +First, ECC must be configured in u-boot. Then, this driver will expose error
-> > +counters via the edac kernel framework.
-> 
-> Please reword this to not be u-boot or kernel specific.
+Anyway, this should not be driver specific; all drivers should use one
+interface.
 
-The previous paragraph is now: Note, the bootloader must configure ECC mode in
-the memory controller.
+Best regards,
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
- 
-> Maybe this node is enabled in the bootloader or the OS can just read the 
-> registers to see if ECC is enabled. The latter is more future proof if 
-> you need to access the DDR ctrl registers for other reasons.
+--Dxnq1zWXvFF0Q93v
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
-The driver's probe function has a sanity check. It consults the memory
-controller for enabled ECC mode:
- 
-        /* bail out if ECC mode is not configured */
-        regmap_read(aspeed_edac_regmap, ASPEED_MCR_CONF, &reg04);
-        if (!(reg04 & ASPEED_MCR_CONF_ECC)) {
-                dev_err(&pdev->dev, "ECC mode is not configured in u-boot\n");
-                return -EPERM;
-        }
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
+iEYEARECAAYFAlwnxe4ACgkQMOfwapXb+vLLuQCgsyA/q+pXpxpRmzHx11NczCI6
+Lg8AnRKIDTsN4WEaM0y3R9pl1m6AeVpJ
+=BqLo
+-----END PGP SIGNATURE-----
 
-> > +A note on memory organization in ECC mode: every 512 bytes are followed by 64
-> > +bytes of ECC codes. 
-> 
-> That sounds strange. Normally, the memory would be 72-bits wide to hold 
-> the ECC byte for each 64-bit chunk. It would be inefficient to access 
-> the ECC byte in a discontiguous location.
-
-When a word is loaded from memory, the corresponding ECC word needs to be
-loaded as well (both words can and will be cached). Performance relies on
-temporal and spatial locality. That can fire back, of course.
-
-
-> In any case, none of this is really important for the binding.
-
-I will move above and below paragraph into Kconfig.
-
-
-> > The address remapping is done in hardware and is fully
-> > +transparent to firmware and software. Because of this, ECC mode must be
-> > +configured in u-boot as part of the memory initialization as one can not switch
-> > +from one mode to another when executing in memory.
-> > +
-> > +
-> > +
-> > +Required properties:
-> > +- compatible: should be "aspeed,ast2500-sdram-edac"
-> > +- reg:        sdram controller register set should be <0x1e6e0000 0x174>
-> > +- interrupts: should be AVIC interrupt #0
-> > +
-> > +
-> > +Example:
-> > +
-> > +	edac: sdram@1e6e0000 {
-> > +		compatible = "aspeed,ast2500-sdram-edac";
-> > +		reg = <0x1e6e0000 0x174>;
-> > +		interrupts = <0>;
-> > +		status = "okay";
-> 
-> Don't show status in examples.
-
-Removed.
-
-> 
-> > +	};
-> > -- 
-> > 2.19.1
-
-
-To wrap it up, for the next patchset, I will generate a diff for below text
-
-- - - snip - - -
-Aspeed AST2500 SoC EDAC node
-
-The Aspeed AST2500 SoC supports DDR3 and DDR4 memory with and without ECC (error
-correction check).
-
-The memory controller supports SECDED (single bit error correction, double bit
-error detection) and single bit error auto scrubbing by reserving 8 bits for
-every 64 bit word (effectively reducing available memory to 8/9).
-
-Note, the bootloader must configure ECC mode in the memory controller.
-
-
-Required properties:
-- compatible: should be "aspeed,ast2500-sdram-edac"
-- reg:        sdram controller register set should be <0x1e6e0000 0x174>
-- interrupts: should be AVIC interrupt #0
-
-
-Example:
-
-        edac: sdram@1e6e0000 {
-                compatible = "aspeed,ast2500-sdram-edac";
-                reg = <0x1e6e0000 0x174>;
-                interrupts = <0>;
-        };
-- - - snip - - -
-
- Stefan
+--Dxnq1zWXvFF0Q93v--
