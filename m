@@ -1,68 +1,79 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Fri, 28 Dec 2018 18:07:14 -0600
-Message-ID: <20181229000714.GA3654@bogus>
-References: <20181219221105.3004-1-ilina@codeaurora.org>
- <20181219221105.3004-5-ilina@codeaurora.org>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: RE: [PATCH V2 1/3] dt-bindings: mmc: tegra: Add pinctrl for pad drive
+ strength config
+Date: Sat, 29 Dec 2018 00:08:02 +0000
+Message-ID: <BN7PR12MB2836C77E851E7AC4BCD38BF0C2B00@BN7PR12MB2836.namprd12.prod.outlook.com>
+References: <1545260153-11338-1-git-send-email-skomatineni@nvidia.com>
+ <20181227213353.GA8110@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181219221105.3004-5-ilina@codeaurora.org>
+In-Reply-To: <20181227213353.GA8110@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: sboyd@kernel.org, evgreen@chromium.org, marc.zyngier@arm.com, linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Preetham Chandru <pchandru@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 19, 2018 at 03:11:02PM -0700, Lina Iyer wrote:
-> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-> routed to the PDC as interrupts that can be used to wake the system up
-> from deep low power modes and suspend.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> ---
->  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> index 665aadb5ea28..a522ca46667d 100644
-> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> @@ -29,6 +29,11 @@ SDM845 platform.
->  	Definition: must be 2. Specifying the pin number and flags, as defined
->  		    in <dt-bindings/interrupt-controller/irq.h>
->  
-> +- wakeup-parent:
-> +	Usage: optional
-> +	Value type: <phandle>
-> +	Definition: A phandle to the wakeup interrupt controller for the SoC.
+Hi Rob,
 
-Is this really necessary? Is there more than one possible wakeup-parent 
-node?
+>> Add pinctrl for 3V3 and 1V8 pad drive strength configuration for
+>> Tegra210 sdmmc which has pad configuration registers in the pinmux=20
+>> reigster domain.
+>
+> typo
+>
+>>=20
+>> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+>> ---
+>>  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 6=20
+>> +++++-
+>>  1 file changed, 5 insertions(+), 1 deletion(-)
+>>=20
+>> diff --git=20
+>> a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt=20
+>> b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+>> index 32b4b4e41923..2cecdc71d94c 100644
+>> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+>> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
+>> @@ -39,12 +39,16 @@ sdhci@c8000200 {
+>>  	bus-width =3D <8>;
+>>  };
+>> =20
+>> -Optional properties for Tegra210 and Tegra186:
+>> +Optional properties for Tegra210, Tegra186 and Tegra194:
+>
+>Adding Tegra194, but this patch concerns Tegra210...
+Yes this is mainly part of Tegra210 Patch but pinctrls sdmmc-1v8 and sdmmc-=
+3v3
+also applies for Tegra194 and since it was not mentioned, added Tegra194 as=
+ well.
+Does adding Tegra194 in this should come as separate patch?
+>
+>>  - pinctrl-names, pinctrl-0, pinctrl-1 : Specify pad voltage
+>>    configurations. Valid pinctrl-names are "sdmmc-3v3" and "sdmmc-1v8"
+>>    for controllers supporting multiple voltage levels. The order of name=
+s
+>>    should correspond to the pin configuration states in pinctrl-0 and
+>>    pinctrl-1.
+>> +- pinctrl-names : "sdmmc-3v3-drv" and "sdmmc-1v8-drv" are applicable=20
+>> +for
+>
+>These are in addition to the previous values?
+Yes these are additional pinctrl states for pad drive settings which are in=
+ pinmux
+Domain and are applicable during calibration process.
+>
+>> +  Tegra210 where pad config registers are in the pinmux register=20
+>> + domain  for pull-up-strength and pull-down-strength values=20
+>> + configuration when  using pads at 3V3 and 1V8 levels.
+>>  - nvidia,only-1-8-v : The presence of this property indicates that the
+>>    controller operates at a 1.8 V fixed I/O voltage.
+>>  - nvidia,pad-autocal-pull-up-offset-3v3,
+>> --
+>> 2.7.4
+>>=20
 
-> +
->  - gpio-controller:
->  	Usage: required
->  	Value type: <none>
-> @@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
->  mux function to select on those pin(s)/group(s), and various pin configuration
->  parameters, such as pull-up, drive strength, etc.
->  
-> -
->  PIN CONFIGURATION NODES:
->  
->  The name of each subnode is not important; all subnodes should be enumerated
-> @@ -160,6 +164,7 @@ Example:
->  		#gpio-cells = <2>;
->  		interrupt-controller;
->  		#interrupt-cells = <2>;
-> +		wakeup-parent = <&pdc>;
->  
->  		qup9_active: qup9-active {
->  			mux {
-> -- 
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
-> 
+Thanks & Regards,
+sowjanya
