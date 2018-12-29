@@ -1,36 +1,73 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 3/3] ARM: dts: qcom: msm8974: add interrupt properties
-Date: Sat, 29 Dec 2018 06:47:55 -0500
-Message-ID: <20181229114755.8711-4-masneyb@onstation.org>
-References: <20181229114755.8711-1-masneyb@onstation.org>
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] usb: devio: update max count of DPs per interval for ISOC
+Date: Sat, 29 Dec 2018 13:49:21 +0100
+Message-ID: <20181229124921.GA5959@kroah.com>
+References: <1545992864-9530-1-git-send-email-chunfeng.yun@mediatek.com>
+ <20181228105148.GA22073@kroah.com>
+ <1546051720.32173.139.camel@mhfsdcap03>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181229114755.8711-1-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <1546051720.32173.139.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org
-Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt properties now that spmi-gpio is a proper hierarchical IRQ
-chip.
+On Sat, Dec 29, 2018 at 10:48:40AM +0800, Chunfeng Yun wrote:
+> Hi,
+> On Fri, 2018-12-28 at 11:51 +0100, Greg Kroah-Hartman wrote:
+> > On Fri, Dec 28, 2018 at 06:27:44PM +0800, Chunfeng Yun wrote:
+> > > The host shall be able to accept and send up to 96 DPs for
+> > > devices operating at Gen 2 speed.
+> > 
+> > Why?  What is this keeping from working properly today?
+> 
+> The failure happened when I tried to send up to 96DPs per an interval
+> for SSP ISOC transations by libusb, this is used to verify SSP ISOC
+> function of USB3 GEN2 controller. Maybe for normal scenarios they
+> needn't transfer greater than 48 DPs in an ISOC interval.
+> (refer usb3.1r1.0 section 8.12.6 Isochronous Transactions)
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
- arch/arm/boot/dts/qcom-pm8941.dtsi | 3 +++
- 1 file changed, 3 insertions(+)
+Ok, please add this information in the changelog text please.
 
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index 9a91b758f7aa..d0b7f0eff288 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -65,6 +65,9 @@
- 			gpio-controller;
- 			gpio-ranges = <&pm8941_gpios 0 0 36>;
- 			#gpio-cells = <2>;
-+			interrupt-parent = <&spmi_bus>;
-+			interrupt-controller;
-+			#interrupt-cells = <4>;
- 			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
- 				     <0 0xc1 0 IRQ_TYPE_NONE>,
- 				     <0 0xc2 0 IRQ_TYPE_NONE>,
--- 
-2.17.2
+> > 
+> > I need a much better changelog text here in order to be able to accept
+> > this patch.
+> I'll make the change in next version
+> > 
+> > > 
+> > > Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> > > ---
+> > >  drivers/usb/core/devio.c | 8 +++-----
+> > >  1 file changed, 3 insertions(+), 5 deletions(-)
+> > > 
+> > > diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
+> > > index a75bc0b8a50f..82c16210e34c 100644
+> > > --- a/drivers/usb/core/devio.c
+> > > +++ b/drivers/usb/core/devio.c
+> > > @@ -1564,12 +1564,10 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
+> > >  		}
+> > >  		for (totlen = u = 0; u < number_of_packets; u++) {
+> > >  			/*
+> > > -			 * arbitrary limit need for USB 3.0
+> > > -			 * bMaxBurst (0~15 allowed, 1~16 packets)
+> > > -			 * bmAttributes (bit 1:0, mult 0~2, 1~3 packets)
+> > > -			 * sizemax: 1024 * 16 * 3 = 49152
+> > > +			 * arbitrary limit need for USB 3.1 Gen2
+> > > +			 * sizemax: 96 DPs at SSP, 96 * 1024 = 98304
+> > >  			 */
+> > > -			if (isopkt[u].length > 49152) {
+> > > +			if (isopkt[u].length > 98304) {
+> > 
+> > Are we going to have to keep bumping this up as speeds get faster and
+> > faster?
+> Or remove the check of data length? I'm not sure which way is better
+
+No, we added that check for a good reason, please see the git log for
+the details :)
+
+thanks,
+
+greg k-h
