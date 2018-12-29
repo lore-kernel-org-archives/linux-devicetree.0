@@ -1,39 +1,93 @@
 From: Johan Jonker <jbx6244@gmail.com>
-Subject: [PATCH v2 1/7] ARM: dts: rockchip: rk3066: add HCLK_HDMI to pmu node
-Date: Sat, 29 Dec 2018 14:33:12 +0100
-Message-ID: <20181229133318.18128-2-jbx6244@gmail.com>
-References: <20181229133318.18128-1-jbx6244@gmail.com>
+Subject: [PATCH v2 0/7] Enable rk3066 VOP and HDMI for MK808
+Date: Sat, 29 Dec 2018 14:33:11 +0100
+Message-ID: <20181229133318.18128-1-jbx6244@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181229133318.18128-1-jbx6244@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: heiko@sntech.de
 Cc: hjc@rock-chips.com, airlied@linux.ie, robh+dt@kernel.org, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-A MK808 TV stick with rk3066 processor
-boots normal with logo and console,
-but after booting the monitor remains black.
-This patch fixes a vblank wait time out
-by adding HCLK_HDMI to the pmu node.
-The HCLK_HDMI clock is now part of the logic
-that enables the RK3066_PD_VIO power domain.
+DISCLAIMER: Use at your own risk.
+For testing only!
 
-Signed-off-by: Johan Jonker <jbx6244@gmail.com>
----
- arch/arm/boot/dts/rk3066a.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Version: V2
 
-diff --git a/arch/arm/boot/dts/rk3066a.dtsi b/arch/arm/boot/dts/rk3066a.dtsi
-index 30dc8af0b..b6b3a77da 100644
---- a/arch/arm/boot/dts/rk3066a.dtsi
-+++ b/arch/arm/boot/dts/rk3066a.dtsi
-@@ -669,6 +669,7 @@
- 				 <&cru SCLK_CIF0>,
- 				 <&cru ACLK_CIF0>,
- 				 <&cru HCLK_CIF0>,
-+				 <&cru HCLK_HDMI>,
- 				 <&cru ACLK_IPP>,
- 				 <&cru HCLK_IPP>,
- 				 <&cru ACLK_RGA>,
+Title: Enable rk3066 VOP and HDMI for MK808.
+
+This patch serie only works in combination with a MK808 TV stick and
+a rk3066 processor. Other boxes and tablets with a rk3066
+need extra software for power management and lcd's.
+
+What does it do:
+
+With these 7 kernel patches a MK808 can show 2 penquins and a console
+on a DVI-D monitor in combination with a framebuffer.
+
+Not tested:
+
+HDMI TV
+DRM
+Xorg
+Display managers
+Android
+etc.
+
+Problems:
+
+Fixed screen size for DVI-D.
+HDMI sound not included.
+etc.
+
+///////////////////////////////////////////
+
+# How to make rkfs.cpio
+
+find . | cpio -o --format=newc > ../rkfs.cpio
+
+# How to compile/flash
+
+make menuconfig  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+make -j4  ARCH=arm CROSS_COMPILE=/usr/bin/arm-linux-gnueabi-
+
+cp ./arch/arm/boot/zImage ../zImage-dtb
+cat ./arch/arm/boot/dts/rk3066a-mk808.dtb >> ../zImage-dtb
+../tools/rkcrc -k ../zImage-dtb ../mk808.img
+sudo ../tools/rkflashtool w 0x4000 0x8000 < ../mk808.img
+sudo ../tools/rkflashtool b
+
+///////////////////////////////////////////
+
+Finley Xiao (1):
+  clk: rockchip: rk3188: add CLK_SET_RATE_PARENT for lcdc dclk
+
+Johan Jonker (2):
+  ARM: dts: rockchip: rk3066: add HCLK_HDMI to pmu node
+  ARM: dts: rockchip: rk3066a-mk808: enable vop0 and hdmi nodes
+
+Mark Yao (2):
+  drm: rockchip: vop: add rk3066 vop definitions
+  ARM: dts: rockchip: add rk3066 vop display nodes
+
+Zheng Yang (2):
+  drm: rockchip: introduce rk3066 hdmi
+  ARM: dts: rockchip: add rk3066 hdmi nodes
+
+ .../bindings/display/rockchip/rockchip-vop.txt     |   1 +
+ arch/arm/boot/dts/rk3066a-mk808.dts                |  12 +
+ arch/arm/boot/dts/rk3066a.dtsi                     |  92 ++
+ drivers/clk/rockchip/clk-rk3188.c                  |   4 +-
+ drivers/gpu/drm/rockchip/Kconfig                   |   8 +
+ drivers/gpu/drm/rockchip/Makefile                  |   1 +
+ drivers/gpu/drm/rockchip/rk3066_hdmi.c             | 928 +++++++++++++++++++++
+ drivers/gpu/drm/rockchip/rk3066_hdmi.h             | 235 ++++++
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.c        |   2 +
+ drivers/gpu/drm/rockchip/rockchip_drm_drv.h        |   1 +
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.c        | 110 +++
+ drivers/gpu/drm/rockchip/rockchip_vop_reg.h        |  53 ++
+ 12 files changed, 1445 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.c
+ create mode 100644 drivers/gpu/drm/rockchip/rk3066_hdmi.h
+
 -- 
 2.11.0
