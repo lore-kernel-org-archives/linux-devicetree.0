@@ -1,51 +1,91 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 3/7] drm: rockchip: vop: add rk3066 vop definitions
-Date: Sun, 30 Dec 2018 18:22:00 +0100
-Message-ID: <154632658.xpTMZOjgxT@phil>
-References: <20181229133318.18128-1-jbx6244@gmail.com>
- <20181229133318.18128-4-jbx6244@gmail.com>
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v2 3/3] sh_eth: add R8A77980 support
+Date: Sun, 30 Dec 2018 20:24:02 +0300
+Message-ID: <1a075eb3-0575-5df9-c49d-7642930360c1@cogentembedded.com>
+References: <f30c98ff-f6da-9e7f-c637-49076a428885@cogentembedded.com>
+ <a0dec765-3196-c09d-b41c-c1eb3025a8ad@cogentembedded.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181229133318.18128-4-jbx6244@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, airlied@linux.ie, mturquette@baylibre.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <a0dec765-3196-c09d-b41c-c1eb3025a8ad@cogentembedded.com>
+Content-Language: en-MW
+Sender: netdev-owner@vger.kernel.org
+To: netdev@vger.kernel.org, devicetree@vger.kernel.org, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-renesas-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSm9oYW4sCgpBbSBTYW1zdGFnLCAyOS4gRGV6ZW1iZXIgMjAxOCwgMTQ6MzM6MTQgQ0VUIHNj
-aHJpZWIgSm9oYW4gSm9ua2VyOgo+IEZyb206IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBz
-LmNvbT4KPiAKPiBUaGlzIHBhdGNoIGFkZHMgdGhlIHJrMzA2NiBWT1AgZGVmaW5pdGlvbnMuCj4g
-Cj4gVGhlIFZPUCBvciBMQ0QgQ29udHJvbGxlciBzZXJ2ZXMgYXMgaW50ZXJmYWNlIGJldHdlZW4K
-PiBmcmFtZWJ1ZmZlciBtZW1vcnkgYW5kIGEgZGlzcGxheSBkZXZpY2UgKExDRCBwYW5lbCBvciBU
-ViBzZXQpLgo+IAo+IFRoaXMgU09DIGhhcyB0d28gc3ltbWV0cmljYWwgTENEQydzIGZvciBhIGR1
-YWwgcGFuZWwgYXBwbGljYXRpb24uCj4gCj4gQSBMQ0RDIGhhcyA1IGRpc3BsYXkgbGF5ZXJzLgo+
-IE9ubHkgMyBhcmUgdXNlZCBoZXJlLgo+IAo+IC0gVmlkZW8gbGF5ZXIgMCAoV2luMCkKPiAtIFZp
-ZGVvIGxheWVyIDEgKFdpbjEpCj4gLSBPU0QgbGF5ZXIgICAgIChXaW4yKQoKUGF0Y2ggaXRzZWxm
-IGxvb2tzIGdvb2QsIHdlJ2xsIG5lZWQgdG8gd2FpdCBhIGJpdCB0byBnaXZlIFJvYiBhIGNoYW5j
-ZQp0byBsb29rIGF0IHRoZSAoc2ltcGxlKSBkdC1iaW5kaW5nIGNoYW5nZSBhbmQgSSdsbCBkcm9w
-IHRoZSBwYXJhZ3JhcGgKYWJvdXQgdGhlIGRpc3BsYXkgbGF5ZXJzIHdoZW4gYXBwbHlpbmcuCgpM
-b29raW5nIGF0IHRoZSByazMwNjYtbWFudWFsLCB0aGUgbGNkY3MgcmVhbGx5IG9ubHkgaGF2ZSAz
-IGZ1bGx5IHVzYWJsZQpsYXllcnMgKyB0aGUgc3BlY2lhbCBjdXJzb3IgbGF5ZXIgd2hpY2ggaXMg
-cmlnaHQgbm93IG5vdCByZWFsbHkgdXNhYmxlIGluCmEgZHJtIGNvbnRleHQsIHNvIHRoZSBhYm92
-ZSBwYXJhZ3JhcGggaXMgbWlzbGVhZGluZywgc28gSSdsbCBqdXN0IGRyb3AgaXQuCgpIZWlrbwoK
-Cj4gV2luMCBhbmQgV2luMSBhcmUgZXhjaGFuZ2VhYmxlLgo+IE1heGltdW0gcmVzb2x1dGlvbiBp
-cyAxOTIweDEwODAuCj4gCj4gVGhlIExDREMwIG91dHB1dCBpcyBjb25uZWN0ZWQgdG86Cj4gLSBM
-Q0RDMCBJTyAod2l0aG91dCBJT01VWCkKPiAtIEhETUkgVFggdmlkZW8gaW5wdXQKPiAKPiBUaGUg
-TENEQzEgb3V0cHV0IGlzIGNvbm5lY3RlZCB0bzoKPiAtIExDREMxIElPICh3aXRoIElPTVVYKQo+
-IC0gSERNSSBUWCB2aWRlbyBpbnB1dAo+IAo+IFRoZSBIRE1JIFRYIGlucHV0IGNhbiBzd2l0Y2gg
-YmV0d2VlbiBMQ0RDMCBhbmQgTENEQzEuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFyayBZYW8gPG1h
-cmsueWFvQHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEpvaGFuIEpvbmtlciA8amJ4
-NjI0NEBnbWFpbC5jb20+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On 05/18/2018 09:32 PM, Sergei Shtylyov wrote:
+
+> Finally, add support for the DT probing of the R-Car V3H (AKA R8A77980) --
+> it's the only R-Car gen3 SoC having the GEther controller -- others have
+> only EtherAVB...
+> 
+> Based on the original (and large) patch by Vladimir Barinov.
+> 
+> Signed-off-by: Vladimir Barinov <vladimir.barinov@cogentembedded.com>
+> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+> 
+[...]
+> Index: net-next/drivers/net/ethernet/renesas/sh_eth.c
+> ===================================================================
+> --- net-next.orig/drivers/net/ethernet/renesas/sh_eth.c
+> +++ net-next/drivers/net/ethernet/renesas/sh_eth.c
+> @@ -753,6 +753,49 @@ static struct sh_eth_cpu_data rcar_gen2_
+>  	.rmiimode	= 1,
+>  	.magic		= 1,
+>  };
+> +
+> +/* R8A77980 */
+> +static struct sh_eth_cpu_data r8a77980_data = {
+> +	.soft_reset	= sh_eth_soft_reset_gether,
+> +
+> +	.set_duplex	= sh_eth_set_duplex,
+> +	.set_rate	= sh_eth_set_rate_gether,
+> +
+> +	.register_type  = SH_ETH_REG_GIGABIT,
+> +
+> +	.edtrr_trns	= EDTRR_TRNS_GETHER,
+> +	.ecsr_value	= ECSR_PSRTO | ECSR_LCHNG | ECSR_ICD | ECSR_MPD,
+> +	.ecsipr_value	= ECSIPR_PSRTOIP | ECSIPR_LCHNGIP | ECSIPR_ICDIP |
+> +			  ECSIPR_MPDIP,
+> +	.eesipr_value	= EESIPR_RFCOFIP | EESIPR_ECIIP |
+> +			  EESIPR_FTCIP | EESIPR_TDEIP | EESIPR_TFUFIP |
+> +			  EESIPR_FRIP | EESIPR_RDEIP | EESIPR_RFOFIP |
+> +			  EESIPR_RMAFIP | EESIPR_RRFIP |
+> +			  EESIPR_RTLFIP | EESIPR_RTSFIP |
+> +			  EESIPR_PREIP | EESIPR_CERFIP,
+> +
+> +	.tx_check       = EESR_FTC | EESR_CD | EESR_RTO,
+> +	.eesr_err_check = EESR_TWB1 | EESR_TWB | EESR_TABT | EESR_RABT |
+> +			  EESR_RFE | EESR_RDE | EESR_RFRMER |
+> +			  EESR_TFE | EESR_TDE | EESR_ECI,
+> +	.fdr_value	= 0x0000070f,
+> +
+> +	.apr		= 1,
+> +	.mpr		= 1,
+> +	.tpauser	= 1,
+> +	.bculr		= 1,
+> +	.hw_swap	= 1,
+> +	.nbst		= 1,
+> +	.rpadir		= 1,
+> +	.rpadir_value   = 2 << 16,
+> +	.no_trimd	= 1,
+> +	.no_ade		= 1,
+> +	.xdfar_rw	= 1,
+> +	.hw_checksum	= 1,
+
+   Ugh, the "intelligent" checksum is not actually supported, just a simplistic
+checksum (from byte 14). I'll send a fix.
+
+> +	.select_mii	= 1,
+> +	.magic		= 1,
+> +	.cexcr		= 1,
+> +};
+>  #endif /* CONFIG_OF */
+>  
+>  static void sh_eth_set_rate_sh7724(struct net_device *ndev)
+[...]
+
+MBR, Sergei
