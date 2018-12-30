@@ -1,162 +1,97 @@
-Return-Path: <SRS0=3D2p=PF=labundy.com=jeff@kernel.org>
-From: Jeff LaBundy <jeff@labundy.com>
-Subject: [PATCH v4 1/2] dt-bindings: input: touchscreen: iqs5xx: Add bindings
-Date: Fri, 28 Dec 2018 17:54:44 -0600
-Message-Id: <1546041285-24846-1-git-send-email-jeff@labundy.com>
-To: dmitry.torokhov@gmail.com, jikos@jikos.cz, devicetree@vger.kernel.org
-Cc: linux-input@vger.kernel.org, rydberg@bitmath.org, robh+dt@kernel.org, mark.rutland@arm.com, Jeff LaBundy <jeff@labundy.com>
+Return-Path: <SRS0=1pG6=PH=denx.de=marex@kernel.org>
+Subject: Re: [PATCH V2 01/10] input: touchscreen: ili210x: Add DT binding
+ document
+References: <20181220204305.28807-1-marex@denx.de>
+ <20181220204305.28807-2-marex@denx.de> <20181227214146.GA13210@bogus>
+From: Marek Vasut <marex@denx.de>
+Message-ID: <f614d695-9df9-14b9-0e94-7de177da732e@denx.de>
+Date: Sun, 30 Dec 2018 17:01:36 +0100
+MIME-Version: 1.0
+In-Reply-To: <20181227214146.GA13210@bogus>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch adds binding documentation for the Azoteq IQS550/572/525
-family of trackpad/touchscreen controllers.
+On 12/27/18 10:41 PM, Rob Herring wrote:
+> On Thu, Dec 20, 2018 at 09:42:56PM +0100, Marek Vasut wrote:
+>> Add DT binding document for the Ilitek ILI210x and ILI251x
+>> touchscreen controllers.
+>>
+>> Signed-off-by: Marek Vasut <marex@denx.de>
+>> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>> Cc: Henrik Rydberg <rydberg@bitmath.org>
+>> Cc: Olivier Sobrie <olivier@sobrie.be>
+>> Cc: Philipp Puschmann <pp@emlix.com>
+>> Cc: Rob Herring <robh+dt@kernel.org>
+>> Cc: devicetree@vger.kernel.org
+>> To: linux-input@vger.kernel.org
+>> ---
+>> V2: New patch
+>> ---
+>>  .../bindings/input/ilitek,ili2xxx.txt         | 25 +++++++++++++++++++
+>>  1 file changed, 25 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+>> new file mode 100644
+>> index 000000000000..bc256557ae8c
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+>> @@ -0,0 +1,25 @@
+>> +Ilitek ILI210x/ILI251x touchscreen controller
+>> +
+>> +Required properties:
+>> +- compatible:
+>> +    ilitek,ili210x for ILI210x
+>> +    ilitek,ili251x for ILI251x
+> 
+> Generally, we don't have wildcards in compatible strings. What's the 'x' 
+> signify? I couldn't find much info on these parts.
 
-Signed-off-by: Jeff LaBundy <jeff@labundy.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes in v4:
-  - None
+Presumably there are other parts in that family of chips. I don't have
+the datasheet for any of the chips either, I extracted the necessary
+driver adjustments from the ilitek kernel driver (6500 kLoC , where C
+probably doesn't stand for Code, but something else ...).
 
-Changes in v3:
-  - Added Reviewed-by trailer
+In my case, the chip itself is attached to the panel assembly, which is
+covered in thick aluminum casing, so I'm unable to visually check the
+chip markings ; if there are any on it.
 
-Changes in v2:
-  - Separated each valid "compatible" property with a line break
-  - Specified the polarity of the RDY and NRST pins
-  - Replaced duplicate definitions of common touchscreen properties with a
-    reference to touchscreen.txt
-  - Specified the example node as "touchscreen@74"
+As for the older ili210x, that's at least what some DTs might've matched
+on as an i2c simple device. However, there's no in-tree DT that uses it.
 
- .../bindings/input/touchscreen/iqs5xx.txt          | 109 +++++++++++++++++++++
- .../devicetree/bindings/vendor-prefixes.txt        |   1 +
- 2 files changed, 110 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
+>> +
+>> +- reg: The I2C address of the device
+>> +
+>> +- interrupts: The sink for the touchscreen's IRQ output
+>> +    See ../interrupt-controller/interrupts.txt
+>> +
+>> +Optional properties for main touchpad device:
+>> +
+>> +- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
+>> +
+>> +Example:
+>> +
+>> +	touch@41 {
+> 
+> touchscreen@41
 
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-new file mode 100644
-index 0000000..25ee2a0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/touchscreen/iqs5xx.txt
-@@ -0,0 +1,109 @@
-+Azoteq IQS550/572/525 Trackpad/Touchscreen Controller
-+
-+Required properties:
-+
-+- compatible			: Must be equal to one of the following:
-+				  "azoteq,iqs550"
-+				  "azoteq,iqs572"
-+				  "azoteq,iqs525"
-+
-+- reg				: I2C slave address for the device.
-+
-+- interrupts			: GPIO to which the device's active-high RDY
-+				  output is connected (see [0]).
-+
-+- reset-gpios			: GPIO to which the device's active-low NRST
-+				  input is connected (see [1]). Hardware reset
-+				  access is required in order to to facilitate
-+				  in-system firmware replacement.
-+
-+Optional properties:
-+
-+- azoteq,exp-ver-major		: Major field of the export file version number
-+				  (0 through 255 inclusive). This property must
-+				  be specified as a '/bits/ 8' value.
-+
-+- azoteq,exp-ver-minor		: Minor field of the export file version number
-+				  (0 through 255 inclusive). This property must
-+				  be specified as a '/bits/ 8' value.
-+
-+				  The export file version number is a customer-
-+				  assigned parameter embedded in the device's
-+				  firmware at the time it is exported from the
-+				  manufacturer's PC-based configuration tool.
-+
-+				  If the export file version number stored in
-+				  the device's nonvolatile memory does not match
-+				  the number specified here, the driver replaces
-+				  the firmware on the device with that which is
-+				  stored on the local filesystem (for which the
-+				  export file version number must match).
-+
-+				  If both major and minor fields are omitted or
-+				  specified as zero, the driver does not query
-+				  the device's export file version number.
-+
-+- touchscreen-min-x		: See [2].
-+
-+- touchscreen-min-y		: See [2].
-+
-+- touchscreen-size-x		: See [2]. If this property is omitted, the
-+				  maximum x-coordinate is specified by the
-+				  device's "X Resolution" register.
-+
-+- touchscreen-size-y		: See [2]. If this property is omitted, the
-+				  maximum y-coordinate is specified by the
-+				  device's "Y Resolution" register.
-+
-+- touchscreen-max-pressure	: See [2]. Pressure is expressed as the sum of
-+				  the deltas across all channels impacted by a
-+				  touch event. A channel's delta is calculated
-+				  as its count value minus a reference, where
-+				  the count value is inversely proportional to
-+				  the channel's capacitance.
-+
-+- touchscreen-fuzz-x		: See [2].
-+
-+- touchscreen-fuzz-y		: See [2].
-+
-+- touchscreen-fuzz-pressure	: See [2].
-+
-+- touchscreen-inverted-x	: See [2]. Inversion is applied relative to that
-+				  which may already be specified by the device's
-+				  FLIP_X and FLIP_Y register fields.
-+
-+- touchscreen-inverted-y	: See [2]. Inversion is applied relative to that
-+				  which may already be specified by the device's
-+				  FLIP_X and FLIP_Y register fields.
-+
-+- touchscreen-swapped-x-y	: See [2]. Swapping is applied relative to that
-+				  which may already be specified by the device's
-+				  SWITCH_XY_AXIS register fields.
-+
-+[0]: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-+[1]: Documentation/devicetree/bindings/gpio/gpio.txt
-+[2]: Documentation/devicetree/bindings/input/touchscreen/touchscreen.txt
-+
-+Example:
-+
-+	&i2c1 {
-+		/* ... */
-+
-+		touchscreen@74 {
-+			compatible = "azoteq,iqs550";
-+			reg = <0x74>;
-+			interrupt-parent = <&gpio>;
-+			interrupts = <17 1>;
-+			reset-gpios = <&gpio 27 0>;
-+
-+			azoteq,exp-ver-major = /bits/ 8 <1>;
-+			azoteq,exp-ver-minor = /bits/ 8 <0>;
-+
-+			touchscreen-size-x = <640>;
-+			touchscreen-size-y = <480>;
-+
-+			touchscreen-max-pressure = <16000>;
-+		};
-+
-+		/* ... */
-+	};
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index a38d8bf..d2ed740 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -49,6 +49,7 @@ avia	avia semiconductor
- avic	Shanghai AVIC Optoelectronics Co., Ltd.
- axentia	Axentia Technologies AB
- axis	Axis Communications AB
-+azoteq	Azoteq (Pty) Ltd
- bananapi BIPAI KEJI LIMITED
- bhf	Beckhoff Automation GmbH & Co. KG
- boe	BOE Technology Group Co., Ltd.
---
-2.7.4
+Fixed
+
+>> +		compatible = "ilitek,ili251x";
+>> +		reg = <0x41>;
+>> +		interrupt-parent = <&gpio4>;
+>> +		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
+>> +		reset-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
+>> +	};
+>> -- 
+>> 2.19.2
+>>
+
+
+-- 
+Best regards,
+Marek Vasut
