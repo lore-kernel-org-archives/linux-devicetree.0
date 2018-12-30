@@ -1,15 +1,14 @@
 From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 2/7] clk: rockchip: rk3188: add CLK_SET_RATE_PARENT for
- lcdc dclk
-Date: Sun, 30 Dec 2018 18:05:00 +0100
-Message-ID: <4934072.iLo9ia0RBU@phil>
+Subject: Re: [PATCH v2 3/7] drm: rockchip: vop: add rk3066 vop definitions
+Date: Sun, 30 Dec 2018 18:22:00 +0100
+Message-ID: <154632658.xpTMZOjgxT@phil>
 References: <20181229133318.18128-1-jbx6244@gmail.com>
- <20181229133318.18128-3-jbx6244@gmail.com>
+ <20181229133318.18128-4-jbx6244@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181229133318.18128-3-jbx6244@gmail.com>
+In-Reply-To: <20181229133318.18128-4-jbx6244@gmail.com>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -23,12 +22,30 @@ To: Johan Jonker <jbx6244@gmail.com>
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, airlied@linux.ie, mturquette@baylibre.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gU2Ftc3RhZywgMjkuIERlemVtYmVyIDIwMTgsIDE0OjMzOjEzIENFVCBzY2hyaWViIEpvaGFu
-IEpvbmtlcjoKPiBGcm9tOiBGaW5sZXkgWGlhbyA8ZmlubGV5LnhpYW9Acm9jay1jaGlwcy5jb20+
-Cj4gCj4gQWRkIENMS19TRVRfUkFURV9QQVJFTlQgZm9yIGxjZGMgZGNsay4KPiAKPiBTaWduZWQt
-b2ZmLWJ5OiBGaW5sZXkgWGlhbyA8ZmlubGV5LnhpYW9Acm9jay1jaGlwcy5jb20+Cj4gU2lnbmVk
-LW9mZi1ieTogSm9oYW4gSm9ua2VyIDxqYng2MjQ0QGdtYWlsLmNvbT4KCmFwcGxpZWQgZm9yIDQu
-MjIKClRoYW5rcwpIZWlrbwoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+SGkgSm9oYW4sCgpBbSBTYW1zdGFnLCAyOS4gRGV6ZW1iZXIgMjAxOCwgMTQ6MzM6MTQgQ0VUIHNj
+aHJpZWIgSm9oYW4gSm9ua2VyOgo+IEZyb206IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNoaXBz
+LmNvbT4KPiAKPiBUaGlzIHBhdGNoIGFkZHMgdGhlIHJrMzA2NiBWT1AgZGVmaW5pdGlvbnMuCj4g
+Cj4gVGhlIFZPUCBvciBMQ0QgQ29udHJvbGxlciBzZXJ2ZXMgYXMgaW50ZXJmYWNlIGJldHdlZW4K
+PiBmcmFtZWJ1ZmZlciBtZW1vcnkgYW5kIGEgZGlzcGxheSBkZXZpY2UgKExDRCBwYW5lbCBvciBU
+ViBzZXQpLgo+IAo+IFRoaXMgU09DIGhhcyB0d28gc3ltbWV0cmljYWwgTENEQydzIGZvciBhIGR1
+YWwgcGFuZWwgYXBwbGljYXRpb24uCj4gCj4gQSBMQ0RDIGhhcyA1IGRpc3BsYXkgbGF5ZXJzLgo+
+IE9ubHkgMyBhcmUgdXNlZCBoZXJlLgo+IAo+IC0gVmlkZW8gbGF5ZXIgMCAoV2luMCkKPiAtIFZp
+ZGVvIGxheWVyIDEgKFdpbjEpCj4gLSBPU0QgbGF5ZXIgICAgIChXaW4yKQoKUGF0Y2ggaXRzZWxm
+IGxvb2tzIGdvb2QsIHdlJ2xsIG5lZWQgdG8gd2FpdCBhIGJpdCB0byBnaXZlIFJvYiBhIGNoYW5j
+ZQp0byBsb29rIGF0IHRoZSAoc2ltcGxlKSBkdC1iaW5kaW5nIGNoYW5nZSBhbmQgSSdsbCBkcm9w
+IHRoZSBwYXJhZ3JhcGgKYWJvdXQgdGhlIGRpc3BsYXkgbGF5ZXJzIHdoZW4gYXBwbHlpbmcuCgpM
+b29raW5nIGF0IHRoZSByazMwNjYtbWFudWFsLCB0aGUgbGNkY3MgcmVhbGx5IG9ubHkgaGF2ZSAz
+IGZ1bGx5IHVzYWJsZQpsYXllcnMgKyB0aGUgc3BlY2lhbCBjdXJzb3IgbGF5ZXIgd2hpY2ggaXMg
+cmlnaHQgbm93IG5vdCByZWFsbHkgdXNhYmxlIGluCmEgZHJtIGNvbnRleHQsIHNvIHRoZSBhYm92
+ZSBwYXJhZ3JhcGggaXMgbWlzbGVhZGluZywgc28gSSdsbCBqdXN0IGRyb3AgaXQuCgpIZWlrbwoK
+Cj4gV2luMCBhbmQgV2luMSBhcmUgZXhjaGFuZ2VhYmxlLgo+IE1heGltdW0gcmVzb2x1dGlvbiBp
+cyAxOTIweDEwODAuCj4gCj4gVGhlIExDREMwIG91dHB1dCBpcyBjb25uZWN0ZWQgdG86Cj4gLSBM
+Q0RDMCBJTyAod2l0aG91dCBJT01VWCkKPiAtIEhETUkgVFggdmlkZW8gaW5wdXQKPiAKPiBUaGUg
+TENEQzEgb3V0cHV0IGlzIGNvbm5lY3RlZCB0bzoKPiAtIExDREMxIElPICh3aXRoIElPTVVYKQo+
+IC0gSERNSSBUWCB2aWRlbyBpbnB1dAo+IAo+IFRoZSBIRE1JIFRYIGlucHV0IGNhbiBzd2l0Y2gg
+YmV0d2VlbiBMQ0RDMCBhbmQgTENEQzEuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFyayBZYW8gPG1h
+cmsueWFvQHJvY2stY2hpcHMuY29tPgo+IFNpZ25lZC1vZmYtYnk6IEpvaGFuIEpvbmtlciA8amJ4
+NjI0NEBnbWFpbC5jb20+CgoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
 X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
 dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
 aS1kZXZlbAo=
