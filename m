@@ -1,34 +1,118 @@
-From: Pawel Laszczak <pawell@cadence.com>
-Subject: RE: [PATCH v1 1/2] dt-bindings: add binding for USBSS-DRD controller.
-Date: Mon, 31 Dec 2018 05:35:10 +0000
-Message-ID: <BYAPR07MB470979D3175F510A552CC015DDB20@BYAPR07MB4709.namprd07.prod.outlook.com>
-References: <1544445555-17325-1-git-send-email-pawell@cadence.com>
- <1544445555-17325-2-git-send-email-pawell@cadence.com>
- <20181220200111.GA27998@bogus>
- <BYAPR07MB4709910A6EE4B54BA455E713DDB90@BYAPR07MB4709.namprd07.prod.outlook.com>
- <CAL_JsqLQ83f74kMRsRX=Bo+xwP05v+2dLQaPLVV3EU7k=QwvSQ@mail.gmail.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names
+ from DT
+Date: Mon, 31 Dec 2018 09:42:33 +0100
+Message-ID: <45a9e033-16e8-e0f9-36cf-3b892af1bd8f@linaro.org>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
+ <20181218143503.GA32562@centauri.ideon.se>
+ <72bc192f-b60a-1209-7818-78a2fed07831@linaro.org>
+ <154603613437.179992.1170701312259011363@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqLQ83f74kMRsRX=Bo+xwP05v+2dLQaPLVV3EU7k=QwvSQ@mail.gmail.com>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <154603613437.179992.1170701312259011363@swboyd.mtv.corp.google.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "balbi@kernel.org" <balbi@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <peter.chen@nxp.com>, Pawel Jez <pjez@cadence.com>, Rahul Kumar <kurahul@cadence.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stephen Boyd <sboyd@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>
+Cc: mark.rutland@arm.com, heiko@sntech.de, mturquette@baylibre.com, will.deacon@arm.com, bjorn.andersson@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, jassisinghbrar@gmail.com, sibis@codeaurora.org, andy.gross@linaro.org, jagan@amarulasolutions.com, devicetree@vger.kernel.org, arnd@arndb.de, olof@lixom.net, robh+dt@kernel.org, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, vkoul@kernel.org, enric.balletbo@collabora.com, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQm9iLA0KPj4NCj4+ID5PbiBNb24sIERlYyAxMCwgMjAxOCBhdCAxMjozOToxNFBNICswMDAw
-LCBQYXdlbCBMYXN6Y3phayB3cm90ZToNCj4+ID4+IFRoaXMgcGF0Y2ggYWltIGF0IGRvY3VtZW50
-aW5nIFVTQiByZWxhdGVkIGR0LWJpbmRpbmdzIGZvciB0aGUNCj4+ID4+IENhZGVuY2UgVVNCU1Mt
-RFJEIGNvbnRyb2xsZXIuDQo+PiA+Pg0KPj4gPj4gU2lnbmVkLW9mZi1ieTogUGF3ZWwgTGFzemN6
-YWsgPHBhd2VsbEBjYWRlbmNlLmNvbT4NCj4NCj5bLi4uXQ0KPg0KPj4gPj4gKyAtIHBoeXM6IHJl
-ZmVyZW5jZSB0byB0aGUgVVNCIFBIWQ0KPj4gPj4gKyAtIHBoeS1uYW1lczogbmFtZSBvZiB0aGUg
-VVNCIFBIWSwgc2hvdWxkIGJlICJjZG5zMyx1c2JwaHkiDQo+PiA+DQo+PiA+RG9uJ3QgbmVlZCAt
-bmFtZXMgd2hlbiB0aGVyZSBpcyBvbmx5IG9uZS4NCj4+DQo+PiBCdXQgaW4gdGhlIGZ1dHVyZSBw
-cm9iYWJseSB3ZSB3aWxsIG5lZWQgdG8gYWRkIG5leHQgcGh5IHZlcnNpb24uDQo+PiBTbyBtYXli
-ZSBpdCdzIGJldHRlciB0byBsZWF2ZSB0aGlzIG5hbWUgPw0KPg0KPictbmFtZXMnIGFyZSBmb3Ig
-d2hlbiB0aGVyZSBpcyBtb3JlIHRoYW4gb25lIHBoeSBjb25uZWN0ZWQsIG5vdA0KPmRpZmZlcmVu
-dCBwaHkgdmVyc2lvbnMuIEZvciBleGFtcGxlLCBpZiB5b3UgaGFkIHNlcGFyYXRlIHBoeXMgZm9y
-IEhTDQo+YW5kIFNTLg0KPg0KDQpUaGFua3MgZm9yIHRoZSBjbGFyaWZpY2F0aW9uLg0KSSB3aWxs
-IHJlbW92ZSAgIi1uYW1lcyIgDQoNCkNoZWVycywNClBhd2VsDQo=
+On 12/28/18 23:28, Stephen Boyd wrote:
+> Quoting Jorge Ramirez (2018-12-26 01:20:07)
+>> On 12/18/18 15:35, Niklas Cassel wrote:
+>>> On Mon, Dec 17, 2018 at 03:37:43PM -0800, Stephen Boyd wrote:
+>>>> Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:22)
+>>>>> Allow accessing the parent clock names required for the driver
+>>>>> operation by using the device tree node.
+>>>>>
+>>>>> This permits extending the driver to other platforms without having to
+>>>>> modify its source code.
+>>>>>
+>>>>> For backwards compatibility leave previous values as default.
+>>>>
+>>>> Why do we need to maintain backwards compatibility? Isn't is required
+>>>> that the nodes have clocks properties?
+>>>>
+>>>
+>>> Hello Stephen,
+>>>
+>>>
+>>> This is the existing DT nodes for msm8916:
+>>>
+>>>                  a53pll: clock@b016000 {
+>>>                           compatible = "qcom,msm8916-a53pll";
+>>>                           reg = <0xb016000 0x40>;
+>>>                           #clock-cells = <0>;
+>>>                   };
+>>>
+>>>                   apcs: mailbox@b011000 {
+>>>                           compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
+>>>                           reg = <0xb011000 0x1000>;
+>>>                           #mbox-cells = <1>;
+>>>                           clocks = <&a53pll>;
+>>>                           #clock-cells = <0>;
+>>>                   };
+>>>
+>>>
+>>> This is the (suggested) DT nodes for qcs404:
+>>>
+>>>                   apcs_hfpll: clock-controller@0b016000 {
+>>>                           compatible = "qcom,hfpll";
+>>>                           reg = <0x0b016000 0x30>;
+>>>                           #clock-cells = <0>;
+>>>                           clock-output-names = "apcs_hfpll";
+>>>                           clocks = <&xo_board>;
+>>>                           clock-names = "xo";
+>>>                   };
+>>>
+>>>                   apcs_glb: mailbox@b011000 {
+>>>                           compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+>>>                           reg = <0x0b011000 0x1000>;
+>>>                           #mbox-cells = <1>;
+>>>                           clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
+>>>                           clock-names = "aux", "pll";
+>>>                           #clock-cells = <0>;
+>>>                   };
+>>>
+>>> qcs404 specifies two clocks, with an accompanied clock-name for each clock.
+>>>
+>>> msm8916 specifies a single clock, without an accompanied clock-name.
+>>>
+>>> It is possible to append clock-names = "pll" for the existing clock,
+>>> as well as to define the aux clock in the apcs node in the msm8916 DT:
+>>> clocks = <&gcc GPLL0_VOTE>;
+>>> clock-names = "aux";
+>>>
+>>> However, since the DT is treated as an ABI, the existing DT for msm8916 must
+>>> still work, so I don't think that it is possible to ignore having backwards
+>>> compability in the apcs clock driver.
+>>
+>>
+>> so where are we with this?
+>>
+>> do we remove backwards compatibility (see below] for v2 or is the DT
+>> really an ABI and therefore the patch under review is good as is?
+>>
+> 
+> Breaking compatibility is up to the platform maintainers. If anything, I
+> would make the DTS and driver changes in parallel and then remove the
+> driver's backwards compatibility logic later on.
+> 
+> 
+
+I am not completely sure of what you mean. are you saying that the 
+original patch is good and we should just provide another patch (not 
+part of the current patch series) to remove the compatibility?
+
+TIA
