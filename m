@@ -1,52 +1,121 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH 0/6] Add clock support for Actions Semi S500 SoC
-Date: Tue,  1 Jan 2019 00:25:11 +0530
-Message-ID: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 1/6] clk: actions: Add configurable PLL delay
+Date: Tue,  1 Jan 2019 00:25:12 +0530
+Message-ID: <20181231185517.18517-2-manivannan.sadhasivam@linaro.org>
+References: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@kernel.org, mturquette@baylibre.com, afaerber@suse.de, robh+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+S500 SoC requires configurable delay for different PLLs. Hence, add
+a separate macro for declaring a PLL with configurable delay and also
+modify the existing OWL_PLL_NO_PARENT macro to use default delay so
+that no need to modify the existing S700/S900 drivers.
 
-This patchset adds common clock support for Actions Semi S500 SoC of
-the Owl family SoCs. This series is based on the initial work done
-by Edgar Bernardi Righi. https://patchwork.kernel.org/cover/10587527/
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ drivers/clk/actions/owl-pll.c |  2 +-
+ drivers/clk/actions/owl-pll.h | 30 ++++++++++++++++++++++++------
+ 2 files changed, 25 insertions(+), 7 deletions(-)
 
-Since there isn't any update from him for long time, I took the liberty
-to modify his patches, address review comments and send to list for review.
-
-This series has been tested on Allo Sparky SBC.
-
-Thanks,
-Mani
-
-Edgar Bernardi Righi (1):
-  dt-bindings: clock: Add DT bindings for Actions Semi S500 CMU
-
-Manivannan Sadhasivam (5):
-  clk: actions: Add configurable PLL delay
-  ARM: dts: Add CMU support for Actions Semi Owl S500 SoC
-  ARM: dts: Remove fake UART clock for S500 based SBCs
-  clk: actions: Add clock driver for S500 SoC
-  MAINTAINERS: Add linux-actions mailing list for Actions Semi
-
- .../bindings/clock/actions,owl-cmu.txt        |   7 +-
- MAINTAINERS                                   |   1 +
- arch/arm/boot/dts/owl-s500-cubieboard6.dts    |   7 -
- .../arm/boot/dts/owl-s500-guitar-bb-rev-b.dts |   7 -
- arch/arm/boot/dts/owl-s500-sparky.dts         |   7 -
- arch/arm/boot/dts/owl-s500.dtsi               |  22 +
- drivers/clk/actions/Kconfig                   |   5 +
- drivers/clk/actions/Makefile                  |   1 +
- drivers/clk/actions/owl-pll.c                 |   2 +-
- drivers/clk/actions/owl-pll.h                 |  30 +-
- drivers/clk/actions/owl-s500.c                | 524 ++++++++++++++++++
- include/dt-bindings/clock/actions,s500-cmu.h  |  78 +++
- 12 files changed, 660 insertions(+), 31 deletions(-)
- create mode 100644 drivers/clk/actions/owl-s500.c
- create mode 100644 include/dt-bindings/clock/actions,s500-cmu.h
-
+diff --git a/drivers/clk/actions/owl-pll.c b/drivers/clk/actions/owl-pll.c
+index 058e06d7099f..02437bdedf4d 100644
+--- a/drivers/clk/actions/owl-pll.c
++++ b/drivers/clk/actions/owl-pll.c
+@@ -179,7 +179,7 @@ static int owl_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+ 
+ 	regmap_write(common->regmap, pll_hw->reg, reg);
+ 
+-	udelay(PLL_STABILITY_WAIT_US);
++	udelay(pll_hw->delay);
+ 
+ 	return 0;
+ }
+diff --git a/drivers/clk/actions/owl-pll.h b/drivers/clk/actions/owl-pll.h
+index 0aae30abd5dc..6fb0d45bb088 100644
+--- a/drivers/clk/actions/owl-pll.h
++++ b/drivers/clk/actions/owl-pll.h
+@@ -13,6 +13,8 @@
+ 
+ #include "owl-common.h"
+ 
++#define OWL_PLL_DEF_DELAY	50
++
+ /* last entry should have rate = 0 */
+ struct clk_pll_table {
+ 	unsigned int		val;
+@@ -27,6 +29,7 @@ struct owl_pll_hw {
+ 	u8			width;
+ 	u8			min_mul;
+ 	u8			max_mul;
++	u8			delay;
+ 	const struct clk_pll_table *table;
+ };
+ 
+@@ -36,7 +39,7 @@ struct owl_pll {
+ };
+ 
+ #define OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,			\
+-		   _width, _min_mul, _max_mul, _table)			\
++		   _width, _min_mul, _max_mul, _delay, _table)		\
+ 	{								\
+ 		.reg		= _reg,					\
+ 		.bfreq		= _bfreq,				\
+@@ -45,6 +48,7 @@ struct owl_pll {
+ 		.width		= _width,				\
+ 		.min_mul	= _min_mul,				\
+ 		.max_mul	= _max_mul,				\
++		.delay		= _delay,				\
+ 		.table		= _table,				\
+ 	}
+ 
+@@ -52,8 +56,8 @@ struct owl_pll {
+ 		_shift, _width, _min_mul, _max_mul, _table, _flags)	\
+ 	struct owl_pll _struct = {					\
+ 		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
+-				     _width, _min_mul,			\
+-				     _max_mul, _table),			\
++				     _width, _min_mul, _max_mul,	\
++				     OWL_PLL_DEF_DELAY,	_table),	\
+ 		.common = {						\
+ 			.regmap = NULL,					\
+ 			.hw.init = CLK_HW_INIT(_name,			\
+@@ -67,8 +71,23 @@ struct owl_pll {
+ 		_shift, _width, _min_mul, _max_mul, _table, _flags)	\
+ 	struct owl_pll _struct = {					\
+ 		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
+-				     _width, _min_mul,			\
+-				     _max_mul, _table),			\
++				     _width, _min_mul, _max_mul,	\
++				     OWL_PLL_DEF_DELAY,	_table),	\
++		.common = {						\
++			.regmap = NULL,					\
++			.hw.init = CLK_HW_INIT_NO_PARENT(_name,		\
++					       &owl_pll_ops,		\
++					       _flags),			\
++		},							\
++	}
++
++#define OWL_PLL_NO_PARENT_DELAY(_struct, _name, _reg, _bfreq, _bit_idx,	\
++		_shift, _width, _min_mul, _max_mul, _delay, _table,	\
++		_flags)							\
++	struct owl_pll _struct = {					\
++		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
++				     _width, _min_mul,  _max_mul,	\
++				     _delay, _table),			\
+ 		.common = {						\
+ 			.regmap = NULL,					\
+ 			.hw.init = CLK_HW_INIT_NO_PARENT(_name,		\
+@@ -78,7 +97,6 @@ struct owl_pll {
+ 	}
+ 
+ #define mul_mask(m)		((1 << ((m)->width)) - 1)
+-#define PLL_STABILITY_WAIT_US	(50)
+ 
+ static inline struct owl_pll *hw_to_owl_pll(const struct clk_hw *hw)
+ {
 -- 
 2.17.1
