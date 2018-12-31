@@ -1,94 +1,24 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 5/6] ARM: dts: s5pv210: aries: Support for more devices
- present on Aries
-Date: Mon, 31 Dec 2018 14:35:55 +0100
-Message-ID: <CAJKOXPf3Z9=mjq_UWyD1oVEapvnNR71cDfyJP1Y_VLkXkFcyew@mail.gmail.com>
-References: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com>
- <20181228161819.18931-6-pawel.mikolaj.chmiel@gmail.com>
+From: Boris Petkov <bp@alien8.de>
+Subject: Re: [PATCH 1/2] EDAC: Add Aspeed AST2500 EDAC driver
+Date: Mon, 31 Dec 2018 15:53:20 +0200
+Message-ID: <107B9625-83E8-4791-AE21-F7D089DA6D97@alien8.de>
+References: <1545026517-64069-1-git-send-email-schaecsn@gmx.net> <1545026517-64069-2-git-send-email-schaecsn@gmx.net> <20181231132000.3894E6E85603@corona.crabdance.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181228161819.18931-6-pawel.mikolaj.chmiel@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, xc-racer2@live.ca, linux@armlinux.org.uk, robh+dt@kernel.org, linux-kernel@vger.kernel.org, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain;
+ charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181231132000.3894E6E85603@corona.crabdance.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: schaecsn@gmx.netStefan Schaeckeler <schaecsn@gmx.net>, robh+dt@kernel.org, mark.rutland@arm.com, joel@jms.id.au, andrew@aj.id.au, mchehab@kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-edac@vger.kernel.org, sschaeck@cisco.com
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCAyOCBEZWMgMjAxOCBhdCAxNzoxOCwgUGF3ZcWCIENobWllbAo8cGF3ZWwubWlrb2xh
-ai5jaG1pZWxAZ21haWwuY29tPiB3cm90ZToKPgo+IEZyb206IEpvbmF0aGFuIEJha2tlciA8eGMt
-cmFjZXIyQGxpdmUuY2E+Cj4KPiBUaGlzIGNvbW1pdCBlbmFibGVzIGZvbGxvd2luZyBkZXZpY2Vz
-IHByZXNlbnQgb24gQXJpZXMgYmFzZWQgcGhvbmVzOgo+IC0gcHdtLXZpYnJhdG9yIGF0dGFjaGVk
-IHRvIFBXTSAxCj4gLSBwb3dlcm9mZiBzdXBwb3J0Cj4gLSBBdG1lbCBtYVhUb3VjaCB0b3VjaHNj
-cmVlbi4gSXQncyBjb25uZWN0ZWQgdG8gaTJjMgo+IC0gQnJvYWRjb20gQkNNNDMyOSBibHVldG9v
-dGggb3ZlciB1YXJ0MAo+Cj4gU2lnbmVkLW9mZi1ieTogSm9uYXRoYW4gQmFra2VyIDx4Yy1yYWNl
-cjJAbGl2ZS5jYT4KPiBTaWduZWQtb2ZmLWJ5OiBQYXdlxYIgQ2htaWVsIDxwYXdlbC5taWtvbGFq
-LmNobWllbEBnbWFpbC5jb20+Cj4gLS0tCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3M1cHYyMTAtYXJp
-ZXMuZHRzaSB8IDY4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5n
-ZWQsIDY4IGluc2VydGlvbnMoKykKPgo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9z
-NXB2MjEwLWFyaWVzLmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9zNXB2MjEwLWFyaWVzLmR0c2kK
-PiBpbmRleCAzNWJhMDA5YTFhMzMuLmI3MjQ2Zjg3OTY0OCAxMDA2NDQKPiAtLS0gYS9hcmNoL2Fy
-bS9ib290L2R0cy9zNXB2MjEwLWFyaWVzLmR0c2kKPiArKysgYi9hcmNoL2FybS9ib290L2R0cy9z
-NXB2MjEwLWFyaWVzLmR0c2kKPiBAQCAtNDEsNiArNDEsMTMgQEAKPiAgICAgICAgICAgICAgICAg
-fTsKPiAgICAgICAgIH07Cj4KPiArICAgICAgIHZpYnJhdG9yX3B3cjogcmVndWxhdG9yLWZpeGVk
-LTAgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlZ3VsYXRvci1maXhlZCI7Cj4g
-KyAgICAgICAgICAgICAgIHJlZ3VsYXRvci1uYW1lID0gInZpYnJhdG9yLWVuIjsKPiArICAgICAg
-ICAgICAgICAgZW5hYmxlLWFjdGl2ZS1oaWdoOwo+ICsgICAgICAgICAgICAgICBncGlvID0gPCZn
-cGoxIDEgR1BJT19BQ1RJVkVfSElHSD47Cj4gKyAgICAgICB9Owo+ICsKPiAgICAgICAgIHdpZmlf
-cHdyc2VxOiB3aWZpLXB3cnNlcSB7Cj4gICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibW1j
-LXB3cnNlcS1zaW1wbGUiOwo+ICAgICAgICAgICAgICAgICByZXNldC1ncGlvcyA9IDwmZ3BnMSAy
-IEdQSU9fQUNUSVZFX0xPVz47Cj4gQEAgLTMxNCw2ICszMjEsMjIgQEAKPiAgICAgICAgICAgICAg
-ICAgICAgICAgICByZWcgPSA8MHgzNj47Cj4gICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICB9
-Owo+ICsKPiArICAgICAgIHZpYnJhdG9yOiBwd20tdmlicmF0b3Igewo+ICsgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gInB3bS12aWJyYXRvciI7Cj4gKyAgICAgICAgICAgICAgIHB3bXMgPSA8
-JnB3bSAxIDQ0NjQyIDA+Owo+ICsgICAgICAgICAgICAgICBwd20tbmFtZXMgPSAiZW5hYmxlIjsK
-PiArICAgICAgICAgICAgICAgdmNjLXN1cHBseSA9IDwmdmlicmF0b3JfcHdyPjsKPiArICAgICAg
-ICAgICAgICAgcGluY3RybC1uYW1lcyA9ICJkZWZhdWx0IjsKPiArICAgICAgICAgICAgICAgcGlu
-Y3RybC0wID0gPCZwd20xX291dD47Cj4gKyAgICAgICB9Owo+ICsKPiArICAgICAgIHBvd2Vyb2Zm
-OiBzeXNjb24tcG93ZXJvZmYgewo+ICsgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInN5c2Nv
-bi1wb3dlcm9mZiI7Cj4gKyAgICAgICAgICAgICAgIHJlZ21hcCA9IDwmcG11X3N5c2Nvbj47Cj4g
-KyAgICAgICAgICAgICAgIG9mZnNldCA9IDwweDY4MWM+OyAvKiBQU19IT0xEX0NPTlRST0wgKi8K
-PiArICAgICAgICAgICAgICAgdmFsdWUgPSA8MHg1MjAwPjsKPiArICAgICAgIH07Cj4gIH07Cj4K
-PiAgJmZpbWQgewo+IEBAIC0zNDcsNiArMzcwLDIzIEBACj4gICAgICAgICBzdGF0dXMgPSAib2th
-eSI7Cj4gIH07Cj4KPiArJmkyYzIgewo+ICsgICAgICAgc2Ftc3VuZyxpMmMtc2RhLWRlbGF5ID0g
-PDEwMD47Cj4gKyAgICAgICBzYW1zdW5nLGkyYy1tYXgtYnVzLWZyZXEgPSA8NDAwMDAwPjsKPiAr
-ICAgICAgIHNhbXN1bmcsaTJjLXNsYXZlLWFkZHIgPSA8MHgxMD47Cj4gKyAgICAgICBzdGF0dXMg
-PSAib2theSI7Cj4gKwo+ICsgICAgICAgdG91Y2hzY3JlZW5ANGEgewo+ICsgICAgICAgICAgICAg
-ICBjb21wYXRpYmxlID0gImF0bWVsLG1heHRvdWNoIjsKPiArICAgICAgICAgICAgICAgcmVnID0g
-PDB4NGE+Owo+ICsgICAgICAgICAgICAgICBpbnRlcnJ1cHQtcGFyZW50ID0gPCZncGowPjsKPiAr
-ICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw1IElSUV9UWVBFX0xFVkVMX0xPVz47Cj4gKyAg
-ICAgICAgICAgICAgIHBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Cj4gKyAgICAgICAgICAgICAg
-IHBpbmN0cmwtMCA9IDwmdHNfaXJxPjsKPiArICAgICAgICAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8
-JmdwajEgMyBHUElPX0FDVElWRV9ISUdIPjsKPiArICAgICAgIH07Cj4gK307Cj4gKwo+ICAmbWZj
-IHsKPiAgICAgICAgIG1lbW9yeS1yZWdpb24gPSA8Jm1mY19sZWZ0PiwgPCZtZmNfcmlnaHQ+Owo+
-ICB9Owo+IEBAIC0zNzIsNiArNDEyLDEzIEBACj4gICAgICAgICAgICAgICAgIHNhbXN1bmcscGlu
-LWRydiA9IDxFWFlOT1M0X1BJTl9EUlZfTFYxPjsKPiAgICAgICAgIH07Cj4KPiArICAgICAgIGJ0
-X2hvc3Rfd2FrZTogYnQtaG9zdC13YWtlIHsKPiArICAgICAgICAgICAgICAgc2Ftc3VuZyxwaW5z
-ID0gImdwaDItNSI7Cj4gKyAgICAgICAgICAgICAgIHNhbXN1bmcscGluLWZ1bmN0aW9uID0gPEVY
-WU5PU19QSU5fRlVOQ19JTlBVVD47Cj4gKyAgICAgICAgICAgICAgIHNhbXN1bmcscGluLXB1ZCA9
-IDxTM0M2NFhYX1BJTl9QVUxMX0RPV04+Owo+ICsgICAgICAgICAgICAgICBzYW1zdW5nLHBpbi1k
-cnYgPSA8RVhZTk9TNF9QSU5fRFJWX0xWMT47Cj4gKyAgICAgICB9Owo+ICsKPiAgICAgICAgIHRm
-X2RldGVjdDogdGYtZGV0ZWN0IHsKPiAgICAgICAgICAgICAgICAgc2Ftc3VuZyxwaW5zID0gImdw
-aDMtNCI7Cj4gICAgICAgICAgICAgICAgIHNhbXN1bmcscGluLWZ1bmN0aW9uID0gPEVYWU5PU19Q
-SU5fRlVOQ19JTlBVVD47Cj4gQEAgLTM4NCw2ICs0MzEsMTcgQEAKPiAgICAgICAgICAgICAgICAg
-c2Ftc3VuZyxwaW4tZnVuY3Rpb24gPSA8RVhZTk9TX1BJTl9GVU5DX09VVFBVVD47Cj4gICAgICAg
-ICAgICAgICAgIHNhbXN1bmcscGluLXB1ZCA9IDxTM0M2NFhYX1BJTl9QVUxMX05PTkU+Owo+ICAg
-ICAgICAgfTsKPiArCj4gKyAgICAgICB0c19pcnE6IHRzLWlycSB7Cj4gKyAgICAgICAgICAgICAg
-IHNhbXN1bmcscGlucyA9ICJncGowLTUiOwo+ICsgICAgICAgICAgICAgICBzYW1zdW5nLHBpbi1m
-dW5jdGlvbiA9IDxFWFlOT1NfUElOX0ZVTkNfSU5QVVQ+Owo+ICsgICAgICAgICAgICAgICBzYW1z
-dW5nLHBpbi1wdWQgPSA8UzNDNjRYWF9QSU5fUFVMTF9VUD47CgpJdCBzZWVtcyB0aGVyZSBpcyBh
-IGRpZmZlcmVuY2UgaGVyZSBiZXR3ZWVuIEFyaWVzIGFuZCBGYXNjaW5hdGUuIEF0CmxlYXN0IGlu
-IHZlbmRvciBrZXJuZWwuIE9uZSBkaXNhYmxlcyBwdWxsIGFuZCBzZWNvbmQgcHVsbHMgZG93bi4K
-QW55d2F5IG5laXRoZXIgb2YgdGhlbSBwdWxscyBpdCB1cC4KCkJlc3QgcmVnYXJkcywKS3J6eXN6
-dG9mCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51
-eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVh
-ZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1h
-cm0ta2VybmVsCg==
+On December 31, 2018 3:20:00 PM GMT+02:00, Stefan Schaeckeler <schaecsn@gmx=
+=2Enet> wrote:
+>Let me start with reviewing my own driver=2E Perhaps someone could review
+>it as well, please?
+
+Someone will review it when the merge window and vacations are over=2E
+
+--=20
+Sent from a small device: formatting sux and brevity is inevitable=2E 
