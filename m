@@ -1,116 +1,66 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Mon, 31 Dec 2018 17:28:28 +0100
-Message-ID: <20181231162828.GA8846@amd>
-References: <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
- <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
- <71d3ac12-5beb-0a26-71e1-5eae798e7b9f@gmail.com>
- <2bca210b-76ad-d5a9-906c-4151695050c3@gmail.com>
- <45ce01f0-af6e-1cc6-5126-fb557c7d2a82@ti.com>
- <b7c69135-1641-48cb-1770-c4c77a989efe@gmail.com>
- <20181229190726.GA29851@amd>
- <4b5a89ed-0c0b-3103-ca57-a0f97aa5ace9@gmail.com>
- <20181230173505.GA19593@amd>
- <7763a3ae-343c-0fbe-da88-afce8459e4c2@gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH v3 lora-next 5/5] net: lora: sx125x sx1301: allow radio
+ to register as a clk provider
+Date: Mon, 31 Dec 2018 17:50:34 +0000
+Message-ID: <20181231175034.GI1846@sirena.org.uk>
+References: <1539361567-3602-1-git-send-email-ben.whitten@lairdtech.com>
+ <1539361567-3602-6-git-send-email-ben.whitten@lairdtech.com>
+ <a89c7974-672f-e5d0-8022-d2c2f9ffeac0@suse.de>
+ <d22f1f18-0c93-a537-a439-07363174a03b@suse.de>
+ <491d1a46-c112-1106-9f25-14149f0dcbd0@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="xHFwDpU9dbj6ez1V"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="nEsDIrWrg+hrB7l1"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7763a3ae-343c-0fbe-da88-afce8459e4c2@gmail.com>
+In-Reply-To: <491d1a46-c112-1106-9f25-14149f0dcbd0@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
+Cc: Ben Whitten <ben.whitten@gmail.com>, devicetree <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-lpwan@lists.infradead.org" <linux-lpwan@lists.infradead.org>, linux-kernel@vger.kernel.org, starnight@g.ncu.edu.tw, linux-clk <linux-clk@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
 
---xHFwDpU9dbj6ez1V
-Content-Type: text/plain; charset=us-ascii
+--nEsDIrWrg+hrB7l1
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi!
+On Sun, Dec 30, 2018 at 11:55:46AM +0100, Andreas F=E4rber wrote:
+> + linux-spi, LAKML
 
-> >>>>There is still HSV approach [0] in store. One problem with proposed
-> >>>>implementation is fixed algorithm of RGB <-> HSV color space conversi=
-on.
-> >>>>Maybe allowing for some board specific adjustments in DT would add
-> >>>>more flexibility.
-> >>>>
-> >>>>[0] https://lkml.org/lkml/2017/8/31/255
-> >>>
-> >>>Yes we could do HSV. Problem is that that we do not really have RGB
-> >>>available. We do have integers for red, green and blue, but they do
-> >>>not correspond to RGB colorspace.
-> >>
-> >>OK, so conversion from HSV to RGB would only increase the aberration.
-> >>So, let's stick to RGB - we've got to have some stable ground and this
-> >>is something that the hardware at least pretends to be compliant
-> >>with.
-> >
-> >I'm not saying that we should stick to RGB. I'm just saying that
-> >problem is complex.
-> >
-> >And no, hardware does not even pretend to be compliant with RGB color
-> >model ( https://en.wikipedia.org/wiki/RGB_color_model ). In
-> >particular, in RGB there is non-linear brightness curve.
->=20
-> Quotation from the wiki page you referred to:
->=20
-> "RGB is a device-dependent color model: different devices detect or
-> reproduce a given RGB value differently, since the color elements (such
-> as phosphors or dyes) and their response to the individual R, G, and B
-> levels vary from manufacturer to manufacturer, or even in the same
-> device over time. Thus an RGB value does not define the same color
-> across devices without some kind of color management"
->=20
-> This claim alone leaves much room for the manufacturers to pretend that
-> their devices are compliant with RGB model.
+> Given that observed symptoms were CPU stalls, workqueue hangs and RCU
+> problems, requiring a power-cycle to recover, I wonder whether we are
+> running into some atomic/locking issue with clk_enable()? Is it valid at
+> all to use SPI/regmap for clk_enable()? If it is, is there a known issue
+> specific to spi-sun6i (A64) in 4.20.0?
+> I already tried setting .disable_locking =3D true in both regmap_configs.
+> Any suggestions how to further debug?
 
-Much room, but everyone agrees that R=3DG=3DB=3D255 should be some kind of
-white, and what other colors "approximately" mean.=20
+You can't use SPI for clk_enable(), clk_enable() needs to be doable in
+atomic context since we need to wait for the bus operations to complete
+(you can start SPI transfers in atomic context but you still need to
+wait for them to complete).  Any clocks that are only accessible via a
+slow bus like I2C or SPI need to do the enable/disable in the
+prepare/unprepare operations which aren't done in atomic context.
 
-I have two monitors, and no, colors don't match.
+regmap can be used in atomic contexts, though you need to configure it
+to use spinlocks instead of mutexes and ensure that no register cache
+allocations happen during I/O (eg, by providing defaults for all
+registers or by not using a cache).
 
-Do you have access to RGB led? Try to compare two monitors, and then
-RGB led with monitor. RGB led will be _way_ off.
-
-This chart makes sense:
-
-https://www.rapidtables.com/web/color/RGB_Color.html
-
-Try it on your LED device...
-
-> >I believe problem to start with is the "white" problem. Setting
-> >R=3DG=3DB=3D255 will _not_ result in anything close to white light on
-> >hardware I have.
->=20
-> RGBW LED controllers solve this problem. For the devices without
-> white/amber we cannot do more than the hardware allows for.
-
-But the hardware can do some kind of white. It is just that R=3DG=3DB=3D255
-will result in green-ish-blue and something like R=3D255, G=3D50, B=3D10 is
-neccessary to get approximation of white.
-
-IMO good start would be to specify what kind of intensities are
-neccessary to approximate white. And then try converting from RGB to
-led intensities, and see if it somehow works.
-									Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---xHFwDpU9dbj6ez1V
+--nEsDIrWrg+hrB7l1
 Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
 
-iEYEARECAAYFAlwqQ6wACgkQMOfwapXb+vJNZwCghwg2SD5PmRNKA//menJsT9pL
-5WkAn21UrJAaED3VNBEzYGp+E3OIfzEq
-=+Bi5
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlwqVuoACgkQJNaLcl1U
+h9B/iwf7BlSQzbOQ0KksQFHM3Zo+w60UAruaEM3FZHfuKjMa19b2GVVEYt6jfcrh
+tpvudfBIi3vlkx4Z0adtfhOb5oGv8Y3owUOBMWWpS4Bn/ZHOBvZOdh2EWHw85Jvb
+6YijmsoqAj1fNooCPEXFD6SCEAGfyRjVz3hANVIZmiBQYKrU2KT32/hNQ/WC6XK2
+AG6ZlNDFZJHyuP6dQ9hOhH3fUyYZSYEB7xopOje8ZTCrdO5htJNA17P4C+zojRR8
+5KO2RrumYLTaEdeXCIq+qvFaErgsYAg30mJwGVZLb14KPy0z4w8SFriJDNKG/0K3
+fcTWnePlEZ7GfuI2t+b9vyV0xJgKxQ==
+=OefZ
 -----END PGP SIGNATURE-----
 
---xHFwDpU9dbj6ez1V--
+--nEsDIrWrg+hrB7l1--
