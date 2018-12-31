@@ -1,121 +1,52 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] dt: bindings: lp5024: Introduce the lp5024 and lp5018
- RGB driver
-Date: Mon, 31 Dec 2018 12:54:21 -0600
-Message-ID: <79f94c3b-046f-13d6-c304-85849e2324d4@ti.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-2-dmurphy@ti.com> <20181228235333.GA13949@bogus>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH 0/6] Add clock support for Actions Semi S500 SoC
+Date: Tue,  1 Jan 2019 00:25:11 +0530
+Message-ID: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181228235333.GA13949@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: jacek.anaszewski@gmail.com, pavel@ucw.cz, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: sboyd@kernel.org, mturquette@baylibre.com, afaerber@suse.de, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Rob
+Hello,
 
-On 12/28/18 5:53 PM, Rob Herring wrote:
-> On Wed, Dec 19, 2018 at 10:26:25AM -0600, Dan Murphy wrote:
->> Introduce the bindings for the Texas Instruments LP5024 and the LP5018
->> RGB LED device driver.  The LP5024/18 can control RGB LEDs individually
->> or as part of a control bank group.  These devices have the ability
->> to adjust the mixing control for the RGB LEDs to obtain different colors
->> independent of the overall brightness of the LED grouping.
->>
->> Datasheet:
->> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>
->> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->> ---
->>  .../devicetree/bindings/leds/leds-lp5024.txt  | 63 +++++++++++++++++++
->>  1 file changed, 63 insertions(+)
->>  create mode 100644 Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>
->> diff --git a/Documentation/devicetree/bindings/leds/leds-lp5024.txt b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
->> new file mode 100644
->> index 000000000000..9567aa6f7813
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
->> @@ -0,0 +1,63 @@
->> +* Texas Instruments - LP5024/18 RGB LED driver
->> +
->> +The LM3692x is an ultra-compact, highly efficient,
->> +white-LED driver designed for LCD display backlighting.
-> 
-> Leftover copy-n-paste?
-> 
+This patchset adds common clock support for Actions Semi S500 SoC of
+the Owl family SoCs. This series is based on the initial work done
+by Edgar Bernardi Righi. https://patchwork.kernel.org/cover/10587527/
 
-ACK
-I have this updated for v2.
+Since there isn't any update from him for long time, I took the liberty
+to modify his patches, address review comments and send to list for review.
 
->> +
->> +The main difference between the LP5024 and L5018 is the number of
->> +RGB LEDs they support.  The LP5024 supports twenty four strings while the
->> +LP5018 supports eighteen strings.
->> +
->> +Required properties:
->> +	- compatible:
->> +		"ti,lp5018"
->> +		"ti,lp5024"
->> +	- reg :  I2C slave address
->> +	- #address-cells : 1
->> +	- #size-cells : 0
->> +
->> +Optional properties:
->> +	- enable-gpios : gpio pin to enable/disable the device.
->> +	- vled-supply : LED supply
->> +
->> +Required child properties:
->> +	- reg : Is the child node iteration.
->> +	- led-sources : LP5024 - 0 - 7
->> +			LP5018 - 0 - 5
->> +			Declares the LED string or strings that the child node
->> +			will control.  If ti,control-bank is set then this
->> +			property will contain multiple LED IDs.
->> +
->> +Optional child properties:
->> +	- label : see Documentation/devicetree/bindings/leds/common.txt
->> +	- linux,default-trigger :
->> +	   see Documentation/devicetree/bindings/leds/common.txt
->> +	- ti,control-bank : Indicates that the LED strings declared in the
->> +			    led-sources property are grouped within a control
->> +			    bank for brightness and mixing control.
->> +
->> +Example:
->> +
->> +led-controller@28 {
->> +	compatible = "ti,lp5024";
->> +	reg = <0x28>;
->> +	#address-cells = <1>;
->> +	#size-cells = <0>;
->> +
->> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->> +	vled-supply = <&vbatt>;
->> +
->> +	led@0 {
->> +		reg = <0>;
->> +		led-sources = <1>;
->> +	};
->> +
->> +	led@1 {
->> +		reg = <1>;
->> +		led-sources = <0 6>;
->> +		ti,control-bank;
->> +	};
->> +
->> +}
->> +
->> +For more product information please see the link below:
->> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
->> -- 
->> 2.20.0.rc2.7.g965798d1f2
->>
+This series has been tested on Allo Sparky SBC.
 
+Thanks,
+Mani
+
+Edgar Bernardi Righi (1):
+  dt-bindings: clock: Add DT bindings for Actions Semi S500 CMU
+
+Manivannan Sadhasivam (5):
+  clk: actions: Add configurable PLL delay
+  ARM: dts: Add CMU support for Actions Semi Owl S500 SoC
+  ARM: dts: Remove fake UART clock for S500 based SBCs
+  clk: actions: Add clock driver for S500 SoC
+  MAINTAINERS: Add linux-actions mailing list for Actions Semi
+
+ .../bindings/clock/actions,owl-cmu.txt        |   7 +-
+ MAINTAINERS                                   |   1 +
+ arch/arm/boot/dts/owl-s500-cubieboard6.dts    |   7 -
+ .../arm/boot/dts/owl-s500-guitar-bb-rev-b.dts |   7 -
+ arch/arm/boot/dts/owl-s500-sparky.dts         |   7 -
+ arch/arm/boot/dts/owl-s500.dtsi               |  22 +
+ drivers/clk/actions/Kconfig                   |   5 +
+ drivers/clk/actions/Makefile                  |   1 +
+ drivers/clk/actions/owl-pll.c                 |   2 +-
+ drivers/clk/actions/owl-pll.h                 |  30 +-
+ drivers/clk/actions/owl-s500.c                | 524 ++++++++++++++++++
+ include/dt-bindings/clock/actions,s500-cmu.h  |  78 +++
+ 12 files changed, 660 insertions(+), 31 deletions(-)
+ create mode 100644 drivers/clk/actions/owl-s500.c
+ create mode 100644 include/dt-bindings/clock/actions,s500-cmu.h
 
 -- 
-------------------
-Dan Murphy
+2.17.1
