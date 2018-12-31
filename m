@@ -1,118 +1,283 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 05/13] clk: qcom: apcs-msm8916: get parent clock names
- from DT
-Date: Mon, 31 Dec 2018 09:42:33 +0100
-Message-ID: <45a9e033-16e8-e0f9-36cf-3b892af1bd8f@linaro.org>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-6-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <154508986359.19322.1555129141976726505@swboyd.mtv.corp.google.com>
- <20181218143503.GA32562@centauri.ideon.se>
- <72bc192f-b60a-1209-7818-78a2fed07831@linaro.org>
- <154603613437.179992.1170701312259011363@swboyd.mtv.corp.google.com>
+From: Pawel Laszczak <pawell@cadence.com>
+Subject: RE: [PATCH v2 5/5] usb:cdns3 Add Cadence USB3 DRD Driver
+Date: Mon, 31 Dec 2018 09:42:55 +0000
+Message-ID: <BYAPR07MB4709D1D286EAD3A794987E51DDB20@BYAPR07MB4709.namprd07.prod.outlook.com>
+References: <1545577992-4013-6-git-send-email-pawell@cadence.com>
+ <201812240317.VglTVDie%fengguang.wu@intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <154603613437.179992.1170701312259011363@swboyd.mtv.corp.google.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <201812240317.VglTVDie%fengguang.wu@intel.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stephen Boyd <sboyd@kernel.org>, Niklas Cassel <niklas.cassel@linaro.org>
-Cc: mark.rutland@arm.com, heiko@sntech.de, mturquette@baylibre.com, will.deacon@arm.com, bjorn.andersson@linaro.org, david.brown@linaro.org, linux-clk@vger.kernel.org, jassisinghbrar@gmail.com, sibis@codeaurora.org, andy.gross@linaro.org, jagan@amarulasolutions.com, devicetree@vger.kernel.org, arnd@arndb.de, olof@lixom.net, robh+dt@kernel.org, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, vkoul@kernel.org, enric.balletbo@collabora.com, georgi.djakov@linaro.org
+Sender: linux-kernel-owner@vger.kernel.org
+To: kbuild test robot <lkp@intel.com>
+Cc: "kbuild-all@01.org" <kbuild-all@01.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "hdegoede@redhat.com" <hdegoede@redhat.com>, "heikki.krogerus@linux.intel.com" <heikki.krogerus@linux.intel.com>, "andy.shevchenko@gmail.com" <andy.shevchenko@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "rogerq@ti.com" <rogerq@ti.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Alan Douglas <adouglas@cadence.com>, "jbergsagel@ti.com" <jbergsagel@ti.com>, "nsekhar@ti.com" <nsekhar@ti.com>, "nm@ti.com" <nm@ti.com>, Suresh Punnoose <sureshp@cadence.com>, "peter.chen@nxp.com" <pete>
 List-Id: devicetree@vger.kernel.org
 
-On 12/28/18 23:28, Stephen Boyd wrote:
-> Quoting Jorge Ramirez (2018-12-26 01:20:07)
->> On 12/18/18 15:35, Niklas Cassel wrote:
->>> On Mon, Dec 17, 2018 at 03:37:43PM -0800, Stephen Boyd wrote:
->>>> Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:22)
->>>>> Allow accessing the parent clock names required for the driver
->>>>> operation by using the device tree node.
->>>>>
->>>>> This permits extending the driver to other platforms without having to
->>>>> modify its source code.
->>>>>
->>>>> For backwards compatibility leave previous values as default.
->>>>
->>>> Why do we need to maintain backwards compatibility? Isn't is required
->>>> that the nodes have clocks properties?
->>>>
->>>
->>> Hello Stephen,
->>>
->>>
->>> This is the existing DT nodes for msm8916:
->>>
->>>                  a53pll: clock@b016000 {
->>>                           compatible = "qcom,msm8916-a53pll";
->>>                           reg = <0xb016000 0x40>;
->>>                           #clock-cells = <0>;
->>>                   };
->>>
->>>                   apcs: mailbox@b011000 {
->>>                           compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
->>>                           reg = <0xb011000 0x1000>;
->>>                           #mbox-cells = <1>;
->>>                           clocks = <&a53pll>;
->>>                           #clock-cells = <0>;
->>>                   };
->>>
->>>
->>> This is the (suggested) DT nodes for qcs404:
->>>
->>>                   apcs_hfpll: clock-controller@0b016000 {
->>>                           compatible = "qcom,hfpll";
->>>                           reg = <0x0b016000 0x30>;
->>>                           #clock-cells = <0>;
->>>                           clock-output-names = "apcs_hfpll";
->>>                           clocks = <&xo_board>;
->>>                           clock-names = "xo";
->>>                   };
->>>
->>>                   apcs_glb: mailbox@b011000 {
->>>                           compatible = "qcom,qcs404-apcs-apps-global", "syscon";
->>>                           reg = <0x0b011000 0x1000>;
->>>                           #mbox-cells = <1>;
->>>                           clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
->>>                           clock-names = "aux", "pll";
->>>                           #clock-cells = <0>;
->>>                   };
->>>
->>> qcs404 specifies two clocks, with an accompanied clock-name for each clock.
->>>
->>> msm8916 specifies a single clock, without an accompanied clock-name.
->>>
->>> It is possible to append clock-names = "pll" for the existing clock,
->>> as well as to define the aux clock in the apcs node in the msm8916 DT:
->>> clocks = <&gcc GPLL0_VOTE>;
->>> clock-names = "aux";
->>>
->>> However, since the DT is treated as an ABI, the existing DT for msm8916 must
->>> still work, so I don't think that it is possible to ignore having backwards
->>> compability in the apcs clock driver.
->>
->>
->> so where are we with this?
->>
->> do we remove backwards compatibility (see below] for v2 or is the DT
->> really an ABI and therefore the patch under review is good as is?
->>
-> 
-> Breaking compatibility is up to the platform maintainers. If anything, I
-> would make the DTS and driver changes in parallel and then remove the
-> driver's backwards compatibility logic later on.
-> 
-> 
+Hi
 
-I am not completely sure of what you mean. are you saying that the 
-original patch is good and we should just provide another patch (not 
-part of the current patch series) to remove the compatibility?
+I can't recreate these issue on my environment. I use  gcc (Ubuntu 7.3.0-27=
+ubuntu1~18.04) 7.3.0.  Maybe there are some differenct between these two co=
+mpilers.=20
 
-TIA
+Do you have any idea how I should change this fragment of code:
+		sprintf(str, "%02x %02x %02x %02x %02x %02x %02x %02x",
+			bRequestType, bRequest,
+			cpu_to_le16(wValue) & 0xff,
+			cpu_to_le16(wValue) >> 8,
+			cpu_to_le16(wIndex) & 0xff,
+			cpu_to_le16(wIndex) >> 8,
+			cpu_to_le16(wLength) & 0xff,
+			cpu_to_le16(wLength) >> 8);
+
+to remove "restricted __le16 degrades to integer" warnings ?
+
+Maybe I should cast all to u8. Then this code will look like:
+		sprintf(str, "%02x %02x %02x %02x %02x %02x %02x %02x",
+			bRequestType, bRequest,
+			(u8)(cpu_to_le16(wValue) & 0xff),
+			(u8)(cpu_to_le16(wValue) >> 8),
+			(u8)(cpu_to_le16(wIndex) & 0xff),
+			(u8)(cpu_to_le16(wIndex) >> 8),
+			(u8)(cpu_to_le16(wLength) & 0xff),
+			(u8)(cpu_to_le16(wLength) >> 8));
+
+Should it Fix these warnings ?
+
+Cheers,
+Pawel
+
+>Thank you for the patch! Perhaps something to improve:
+>
+>
+>
+>[auto build test WARNING on usb/usb-testing]
+>
+>[also build test WARNING on v4.20-rc7 next-20181221]
+>
+>[if your patch is applied to the wrong git tree, please drop us a note to =
+help improve the system]
+>
+>
+>
+>url:    https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__github.com_=
+0day-2Dci_linux_commits_Pawel-2DLaszczak_Introduced-
+>2Dnew-2DCadence-2DUSBSS-2DDRD-2DDriver_20181223-2D231813&d=3DDwIBAg&c=3DaU=
+q983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-
+>_haXqY&r=3De1OgxfvkL0qo9XO6fX1gscva-w03uSYC1nIyxl89-rI&m=3DJS8MUBEUPN46-me=
+57xUY-
+>7hoBbSrlgd2SCB9ahNjK4s&s=3DbhpHqRyEtMdMbWdGoBqQ9Pz9wq7pRA7-OohrGik3BpM&e=
+=3D
+>
+>base:   https://urldefense.proofpoint.com/v2/url?u=3Dhttps-
+>3A__git.kernel.org_pub_scm_linux_kernel_git_gregkh_usb.git&d=3DDwIBAg&c=3D=
+aUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-
+>_haXqY&r=3De1OgxfvkL0qo9XO6fX1gscva-w03uSYC1nIyxl89-rI&m=3DJS8MUBEUPN46-me=
+57xUY-
+>7hoBbSrlgd2SCB9ahNjK4s&s=3DVf__lGpV27zdf1egowm9p8YBJjz9aMmgbi8nW_Z_DLk&e=
+=3D usb-testing
+>
+>config: x86_64-allmodconfig (attached as .config)
+>
+>compiler: gcc-7 (Debian 7.3.0-1) 7.3.0
+>
+>reproduce:
+>
+>        # save the attached .config to linux build tree
+>
+>        make ARCH=3Dx86_64
+>
+>
+>
+>All warnings (new ones prefixed by >>):
+>
+>
+>
+>>> drivers/usb/common/debug.c:253:25: warning: restricted __le16 degrades =
+to integer
+>
+>   drivers/usb/common/debug.c:254:25: warning: restricted __le16 degrades =
+to integer
+>
+>   drivers/usb/common/debug.c:255:25: warning: restricted __le16 degrades =
+to integer
+>
+>   drivers/usb/common/debug.c:256:25: warning: restricted __le16 degrades =
+to integer
+>
+>   drivers/usb/common/debug.c:257:25: warning: restricted __le16 degrades =
+to integer
+>
+>   drivers/usb/common/debug.c:258:25: warning: restricted __le16 degrades =
+to integer
+>
+>
+>
+>vim +253 drivers/usb/common/debug.c
+>
+>
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  205
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  206  /**
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  207   * usb_decode_ctrl - returns a st=
+ring representation of ctrl request
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  208   */
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  209  const char *usb_decode_ctrl(char =
+*str, __u8 bRequestType, __u8 bRequest,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  210  			    __u16 wValue,  __u16 wInde=
+x, __u16 wLength)
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  211  {
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  212  	switch (bRequest) {
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  213  	case USB_REQ_GET_STATUS:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  214  		usb_decode_get_status(bRequestT=
+ype, wIndex, wLength, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  215  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  216  	case USB_REQ_CLEAR_FEATURE:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  217  	case USB_REQ_SET_FEATURE:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  218  		usb_decode_set_clear_feature(bR=
+equestType, bRequest, wValue,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  219  					     wIndex, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  220  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  221  	case USB_REQ_SET_ADDRESS:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  222  		usb_decode_set_address(wValue, =
+str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  223  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  224  	case USB_REQ_GET_DESCRIPTOR:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  225  	case USB_REQ_SET_DESCRIPTOR:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  226  		usb_decode_get_set_descriptor(b=
+RequestType, bRequest, wValue,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  227  					      wIndex, wLength, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  228  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  229  	case USB_REQ_GET_CONFIGURATION:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  230  		usb_decode_get_configuration(wL=
+ength, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  231  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  232  	case USB_REQ_SET_CONFIGURATION:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  233  		usb_decode_set_configuration(wV=
+alue, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  234  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  235  	case USB_REQ_GET_INTERFACE:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  236  		usb_decode_get_intf(wIndex, wLe=
+ngth, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  237  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  238  	case USB_REQ_SET_INTERFACE:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  239  		usb_decode_set_intf(wValue, wIn=
+dex, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  240  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  241  	case USB_REQ_SYNCH_FRAME:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  242  		usb_decode_synch_frame(wIndex, =
+wLength, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  243  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  244  	case USB_REQ_SET_SEL:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  245  		usb_decode_set_sel(wLength, str=
+);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  246  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  247  	case USB_REQ_SET_ISOCH_DELAY:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  248  		usb_decode_set_isoch_delay(wVal=
+ue, str);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  249  		break;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  250  	default:
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  251  		sprintf(str, "%02x %02x %02x %0=
+2x %02x %02x %02x %02x",
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  252  			bRequestType, bRequest,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23 @253  			cpu_to_le16(wValue) & 0xff,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  254  			cpu_to_le16(wValue) >> 8,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  255  			cpu_to_le16(wIndex) & 0xff,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  256  			cpu_to_le16(wIndex) >> 8,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  257  			cpu_to_le16(wLength) & 0xff,
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  258  			cpu_to_le16(wLength) >> 8);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  259  	}
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  260
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  261  	return str;
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  262  }
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  263  EXPORT_SYMBOL_GPL(usb_decode_ctrl=
+);
+>
+>cefb8b21 Pawel Laszczak 2018-12-23  264
+>
+>
+>
+>:::::: The code at line 253 was first introduced by commit
+>
+>:::::: cefb8b2176410ef0aacc22411a64f8a157612f14 usb:common Separated decod=
+ing functions from dwc3 driver.
+>
+>
+>
+>:::::: TO: Pawel Laszczak <pawell@cadence.com>
+>
+>:::::: CC: 0day robot <lkp@intel.com>
+>
+>
+>
+>---
+>
+>0-DAY kernel test infrastructure                Open Source Technology Cen=
+ter
+>
+>https://urldefense.proofpoint.com/v2/url?u=3Dhttps-3A__lists.01.org_piperm=
+ail_kbuild-
+>2Dall&d=3DDwIBAg&c=3DaUq983L2pue2FqKFoP6PGHMJQyoJ7kl3s3GZ-_haXqY&r=3De1Ogx=
+fvkL0qo9XO6fX1gscva-w03uSYC1nIyxl89-
+>rI&m=3DJS8MUBEUPN46-me57xUY-7hoBbSrlgd2SCB9ahNjK4s&s=3D7vN3rhLkFNcUQ6jriRP=
+_jESizA-Wm6VxtiGb8qhTKqU&e=3D                   Intel
+>Corporation
