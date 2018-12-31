@@ -1,163 +1,113 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH 6/6] ARM: defconfig: s5pv210: Enable more drivers present
- on Samsung Aries
-Date: Mon, 31 Dec 2018 14:22:16 +0100
-Message-ID: <CAJKOXPcksbbOLpRBpbq33e5FtOOBZXNZCa0wA=TCn5vCSfQH3w@mail.gmail.com>
-References: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com> <20181228161819.18931-7-pawel.mikolaj.chmiel@gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 lora-next 5/5] net: lora: sx125x sx1301: allow radio to
+ register as a clk provider
+Date: Mon, 31 Dec 2018 14:27:06 +0100
+Message-ID: <a5fd0ea3-c2d1-add2-87bc-b0fd9bbc926b@suse.de>
+References: <1539361567-3602-1-git-send-email-ben.whitten@lairdtech.com>
+ <1539361567-3602-6-git-send-email-ben.whitten@lairdtech.com>
+ <a89c7974-672f-e5d0-8022-d2c2f9ffeac0@suse.de>
+ <d22f1f18-0c93-a537-a439-07363174a03b@suse.de>
+ <491d1a46-c112-1106-9f25-14149f0dcbd0@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181228161819.18931-7-pawel.mikolaj.chmiel@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, xc-racer2@live.ca, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <491d1a46-c112-1106-9f25-14149f0dcbd0@suse.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ben Whitten <ben.whitten@gmail.com>, linux-clk <linux-clk@vger.kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-lpwan@lists.infradead.org" <linux-lpwan@lists.infradead.org>, linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>, Russell King <linux@armlinux.org.uk>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Dec 2018 at 17:18, Pawe=C5=82 Chmiel
-<pawel.mikolaj.chmiel@gmail.com> wrote:
->
-> This commit enables following drivers:
-> - i2c support (using s3c2410 driver)
-> - s5p-jpeg
-> - s5p-mfc
-> - exynos drm rotator
-> - pwm support
-> - pwm vibrator
-> - fixed regulator
-> - syscon poweroff
-> - Atmel maXTouch touchscreen
-> - Broadcom BCM4329 bluetooth over uart0
-> - dma devices (so we can use pl330 dma driver)
->
-> Disable DEBUG_LL. It's currently set to uart1, but if we want to use
->  it on Aries, we would need to switch uart2, to get any logs.
->
-> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> ---
->  arch/arm/configs/s5pv210_defconfig | 41 ++++++++++++++++++++++--------
->  1 file changed, 30 insertions(+), 11 deletions(-)
->
-> diff --git a/arch/arm/configs/s5pv210_defconfig b/arch/arm/configs/s5pv21=
-0_defconfig
-> index a077597369f1..951196bdf008 100644
-> --- a/arch/arm/configs/s5pv210_defconfig
-> +++ b/arch/arm/configs/s5pv210_defconfig
-> @@ -1,24 +1,24 @@
->  CONFIG_SYSVIPC=3Dy
->  CONFIG_NO_HZ=3Dy
->  CONFIG_HIGH_RES_TIMERS=3Dy
-> +CONFIG_PREEMPT=3Dy
-
-This and few other look like effect of savedefconfig. Please split
-such change to separate commit, before adding new features.
-
-Best regards,
-Krzysztof
-
->  CONFIG_CGROUPS=3Dy
->  CONFIG_SYSFS_DEPRECATED=3Dy
->  CONFIG_SYSFS_DEPRECATED_V2=3Dy
->  CONFIG_BLK_DEV_INITRD=3Dy
->  CONFIG_KALLSYMS_ALL=3Dy
-> -CONFIG_MODULES=3Dy
-> -CONFIG_MODULE_UNLOAD=3Dy
-> -# CONFIG_BLK_DEV_BSG is not set
-> -CONFIG_PARTITION_ADVANCED=3Dy
-> -CONFIG_BSD_DISKLABEL=3Dy
-> -CONFIG_SOLARIS_X86_PARTITION=3Dy
->  CONFIG_ARCH_S5PV210=3Dy
->  CONFIG_VMSPLIT_2G=3Dy
-> -CONFIG_PREEMPT=3Dy
->  CONFIG_ARM_APPENDED_DTB=3Dy
->  CONFIG_CMDLINE=3D"root=3D/dev/ram0 rw ramdisk=3D8192 initrd=3D0x20800000=
-,8M console=3DttySAC1,115200 init=3D/linuxrc"
->  CONFIG_VFP=3Dy
->  CONFIG_NEON=3Dy
-> +CONFIG_MODULES=3Dy
-> +CONFIG_MODULE_UNLOAD=3Dy
-> +# CONFIG_BLK_DEV_BSG is not set
-> +CONFIG_PARTITION_ADVANCED=3Dy
-> +CONFIG_BSD_DISKLABEL=3Dy
-> +CONFIG_SOLARIS_X86_PARTITION=3Dy
->  CONFIG_NET=3Dy
->  CONFIG_PACKET=3Dy
->  CONFIG_UNIX=3Dy
-> @@ -27,6 +27,11 @@ CONFIG_IP_PNP=3Dy
->  CONFIG_IP_PNP_DHCP=3Dy
->  CONFIG_IP_PNP_BOOTP=3Dy
->  CONFIG_IP_PNP_RARP=3Dy
-> +CONFIG_BT=3Dm
-> +CONFIG_BT_RFCOMM=3Dy
-> +CONFIG_BT_BNEP=3Dy
-> +CONFIG_BT_HCIUART=3Dm
-> +CONFIG_BT_HCIUART_BCM=3Dy
->  CONFIG_CFG80211=3Dm
->  CONFIG_MAC80211=3Dm
->  CONFIG_UEVENT_HELPER_PATH=3D"/sbin/hotplug"
-> @@ -44,21 +49,35 @@ CONFIG_INPUT_EVDEV=3Dy
->  CONFIG_KEYBOARD_GPIO=3Dy
->  # CONFIG_INPUT_MOUSE is not set
->  CONFIG_INPUT_TOUCHSCREEN=3Dy
-> +CONFIG_TOUCHSCREEN_ATMEL_MXT=3Dm
-> +CONFIG_INPUT_MISC=3Dy
-> +CONFIG_INPUT_PWM_VIBRA=3Dm
->  CONFIG_SERIAL_8250=3Dy
->  CONFIG_SERIAL_SAMSUNG=3Dy
->  CONFIG_SERIAL_SAMSUNG_CONSOLE=3Dy
-> +CONFIG_SERIAL_DEV_BUS=3Dy
->  CONFIG_HW_RANDOM=3Dy
->  CONFIG_I2C_GPIO=3Dy
-> +CONFIG_I2C_S3C2410=3Dy
-> +CONFIG_POWER_RESET=3Dy
-> +CONFIG_POWER_RESET_SYSCON_POWEROFF=3Dy
->  CONFIG_POWER_SUPPLY=3Dy
->  CONFIG_BATTERY_MAX17040=3Dy
->  # CONFIG_HWMON is not set
->  CONFIG_MFD_MAX8998=3Dy
->  CONFIG_REGULATOR=3Dy
-> +CONFIG_REGULATOR_FIXED_VOLTAGE=3Dy
->  CONFIG_REGULATOR_MAX8998=3Dy
-> +CONFIG_MEDIA_SUPPORT=3Dm
-> +CONFIG_MEDIA_CAMERA_SUPPORT=3Dy
-> +CONFIG_V4L_MEM2MEM_DRIVERS=3Dy
-> +CONFIG_VIDEO_SAMSUNG_S5P_JPEG=3Dm
-> +CONFIG_VIDEO_SAMSUNG_S5P_MFC=3Dm
->  CONFIG_DRM=3Dy
->  CONFIG_DRM_EXYNOS=3Dy
->  CONFIG_DRM_EXYNOS_FIMD=3Dy
->  CONFIG_DRM_EXYNOS_DPI=3Dy
-> +CONFIG_DRM_EXYNOS_ROTATOR=3Dy
->  CONFIG_USB=3Dy
->  CONFIG_USB_OTG=3Dy
->  CONFIG_USB_EHCI_HCD=3Dy
-> @@ -72,6 +91,9 @@ CONFIG_MMC_SDHCI_S3C=3Dy
->  CONFIG_MMC_SDHCI_S3C_DMA=3Dy
->  CONFIG_RTC_CLASS=3Dy
->  CONFIG_RTC_DRV_MAX8998=3Dm
-> +CONFIG_DMADEVICES=3Dy
-> +CONFIG_PWM=3Dy
-> +CONFIG_PWM_SAMSUNG=3Dy
->  CONFIG_PHY_SAMSUNG_USB2=3Dm
->  CONFIG_PHY_S5PV210_USB2=3Dy
->  CONFIG_EXT2_FS=3Dy
-> @@ -87,6 +109,7 @@ CONFIG_NLS_CODEPAGE_437=3Dy
->  CONFIG_NLS_ASCII=3Dy
->  CONFIG_NLS_ISO8859_1=3Dy
->  CONFIG_NLS_UTF8=3Dy
-> +CONFIG_CRC_CCITT=3Dy
->  CONFIG_DEBUG_INFO=3Dy
->  CONFIG_MAGIC_SYSRQ=3Dy
->  CONFIG_DEBUG_KERNEL=3Dy
-> @@ -96,7 +119,3 @@ CONFIG_DEBUG_SPINLOCK=3Dy
->  CONFIG_DEBUG_MUTEXES=3Dy
->  CONFIG_DEBUG_ATOMIC_SLEEP=3Dy
->  CONFIG_DEBUG_USER=3Dy
-> -CONFIG_DEBUG_LL=3Dy
-> -CONFIG_DEBUG_S3C_UART1=3Dy
-> -CONFIG_EARLY_PRINTK=3Dy
-> -CONFIG_CRC_CCITT=3Dy
-> --
-> 2.17.1
->
+QW0gMzAuMTIuMTggdW0gMTE6NTUgc2NocmllYiBBbmRyZWFzIEbDpHJiZXI6Cj4gQW0gMjkuMTIu
+MTggdW0gMjE6MTYgc2NocmllYiBBbmRyZWFzIEbDpHJiZXI6Cj4+IGBzdWRvIGlwIGxpbmsgc2V0
+IGxvcmEyIHVwYCBmcm96ZSBteSBzeXN0ZW0sIHdpdGggYm90aAo+PiBsb3JhMSBhbmQgbG9yYTIg
+YmVpbmcgc3gxMzAxLiBbLi4uXQo+Pgo+PiBJbnZlc3RpZ2F0aW5nLi4uCj4gCj4gSSd2ZSBiaXNl
+Y3RlZCBhbmQgY29uZmlybWVkIHRoYXQgaXQgd2FzIGluZGVlZCB0aGlzIHBhdGNoIHRoYXQgcmVn
+cmVzc2VzCj4gZm9yIG9uZSBvZiBteSBTWDEzMDEgY29uY2VudHJhdG9ycy4KWy4uLl0KPiBXZSBu
+ZXZlciByZXR1cm4gZnJvbSB0aGUgc3gxMjV4X2Nsa291dF9lbmFibGUoKSBwZXJmb3JtaW5nIHRo
+ZQo+IHJlZ21hcF9maWVsZF93cml0ZSgpIG9uIG91ciByZWdtYXBfYnVzLCB3aGljaCBpbiB0dXJu
+IHVzZXMgYSBTUEkgcmVnbWFwCj4gaW4gc3gxMzAxX3JlZ21hcF9idXNfcmVhZCgpLgo+IAo+IEEg
+bm90YWJsZSBkaWZmZXJlbmNlIGJldHdlZW4gbXkgdHdvIGNvbmNlbnRyYXRvcnMgaXMgdGhhdCB0
+aGUgd29ya2luZwo+IG9uZSBpcyB1c2luZyBzcGktZ3BpbyBkcml2ZXIsIHRoZSByZWdyZXNzaW5n
+IG9uZSBzcGktc3VuNmkuCj4gCj4gVHdvIHRoaW5ncyBzdG9vZCBvdXQgaW4gc3BpLXN1bjZpOiBJ
+dCB1c2VzIGEgY29tcGxldGlvbiAoSSBkbyBub3QgcnVuCj4gaW50byBpdHMgdGltZW91dCB3YXJu
+aW5nISksIGFuZCBpdCB1c2VzIGNsa197Z2V0LHNldH1fcmF0ZSgpLgo+IAo+IEdpdmVuIHRoYXQg
+b2JzZXJ2ZWQgc3ltcHRvbXMgd2VyZSBDUFUgc3RhbGxzLCB3b3JrcXVldWUgW2ZyZWV6ZXNdIGFu
+ZCBSQ1UKPiBwcm9ibGVtcywgcmVxdWlyaW5nIGEgcG93ZXItY3ljbGUgdG8gcmVjb3ZlciwgSSB3
+b25kZXIgd2hldGhlciB3ZSBhcmUKPiBydW5uaW5nIGludG8gc29tZSBhdG9taWMvbG9ja2luZyBp
+c3N1ZSB3aXRoIGNsa19lbmFibGUoKT8gSXMgaXQgdmFsaWQgYXQKPiBhbGwgdG8gdXNlIFNQSS9y
+ZWdtYXAgZm9yIGNsa19lbmFibGUoKT8gSWYgaXQgaXMsIGlzIHRoZXJlIGEga25vd24gaXNzdWUK
+PiBzcGVjaWZpYyB0byBzcGktc3VuNmkgKEE2NCkgaW4gNC4yMC4wPwoKSSd2ZSBub3cgaGFja2Vk
+IHRvZ2V0aGVyIGEgdGVzdCBjYXNlOiBkZWxheWluZyB0aGUgcmVnbWFwIG9wZXJhdGlvbiB0byBh
+CndvcmsgcXVldWUgKHZpb2xhdGluZyB0aGUgLmVuYWJsZSBjb250cmFjdCBvZiBhIHN0YWJsZSBj
+bGsgb24gcmV0dXJuISkKYW5kIGhhdmluZyBvdXIgY2FsbGVyIHBvbGwgYWZ0ZXJ3YXJkcyBmb3Ig
+dGhlIG9wZXJhdGlvbiB0byBmaW5pc2guIEd1ZXNzCndoYXQsIGJlbG93IGdyb3NzIGhhY2sgbWFr
+ZXMgaXQgd29yayBhZ2FpbiBvbiBib3RoIGNhcmRzLi4uIDovCgpJcyB0aGlzIGhpbnRpbmcgYXQg
+YW4gaXNzdWUgd2l0aCBzcGktc3VuNmkgY2xrX2dldF9yYXRlKCkncyBwcmVwYXJlX2xvY2sKdnMu
+IG91ciBjbGtfZW5hYmxlKCkncyBlbmFibGVfbG9jaz8gSSBncmVwJ2VkIGFyb3VuZCBhbmQgc3Bp
+LXN1bjZpIGlzCm5vdCB0aGUgb25seSBTUEkgZHJpdmVyIHVzaW5nIGNsa19nZXRfcmF0ZSgpIGlu
+IHRyYW5zZmVyX29uZS4uLgoKVGhhbmtzIGZvciBhbnkgaGludHMsCgpBbmRyZWFzCgoKZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvbmV0L2xvcmEvc3gxMjV4LmMgYi9kcml2ZXJzL25ldC9sb3JhL3N4MTI1
+eC5jCmluZGV4IDU5N2I4ODIzNzlhYy4uMDk1Y2E0MGU1ZGU3IDEwMDY0NAotLS0gYS9kcml2ZXJz
+L25ldC9sb3JhL3N4MTI1eC5jCisrKyBiL2RyaXZlcnMvbmV0L2xvcmEvc3gxMjV4LmMKQEAgLTEx
+LDYgKzExLDcgQEAKCiAjaW5jbHVkZSA8bGludXgvY2xrLmg+CiAjaW5jbHVkZSA8bGludXgvY2xr
+LXByb3ZpZGVyLmg+CisjaW5jbHVkZSA8bGludXgvZGVsYXkuaD4KICNpbmNsdWRlIDxsaW51eC9t
+b2R1bGUuaD4KICNpbmNsdWRlIDxsaW51eC9vZi5oPgogI2luY2x1ZGUgPGxpbnV4L29mX2Rldmlj
+ZS5oPgpAQCAtNDksNiArNTAsOSBAQCBzdHJ1Y3Qgc3gxMjV4X3ByaXYgewogICAgICAgIHN0cnVj
+dCBkZXZpY2UgICAgICAgICAgICpkZXY7CiAgICAgICAgc3RydWN0IHJlZ21hcCAgICAgICAgICAg
+KnJlZ21hcDsKICAgICAgICBzdHJ1Y3QgcmVnbWFwX2ZpZWxkCipyZWdtYXBfZmllbGRzW0FSUkFZ
+X1NJWkUoc3gxMjV4X3JlZ21hcF9maWVsZHMpXTsKKworICAgICAgIHN0cnVjdCB3b3JrcXVldWVf
+c3RydWN0ICpjbGtfd3E7CisgICAgICAgc3RydWN0IHdvcmtfc3RydWN0ICAgICAgY2xrX291dF9l
+bmFibGVfd29yazsKIH07CgogI2RlZmluZSB0b19jbGtvdXQoX2h3KSBjb250YWluZXJfb2YoX2h3
+LCBzdHJ1Y3Qgc3gxMjV4X3ByaXYsIGNsa291dF9odykKQEAgLTgxLDggKzg1LDE3IEBAIHN0YXRp
+YyBpbnQgc3gxMjV4X2Nsa291dF9lbmFibGUoc3RydWN0IGNsa19odyAqaHcpCiB7CiAgICAgICAg
+c3RydWN0IHN4MTI1eF9wcml2ICpwcml2ID0gdG9fY2xrb3V0KGh3KTsKCisgICAgICAgZGV2X2lu
+Zm8ocHJpdi0+ZGV2LCAiZW5hYmxpbmcgY2xrb3V0Li4uXG4iKTsKKyAgICAgICBxdWV1ZV93b3Jr
+KHByaXYtPmNsa193cSwgJnByaXYtPmNsa19vdXRfZW5hYmxlX3dvcmspOworICAgICAgIHJldHVy
+biAwOworfQorCitzdGF0aWMgdm9pZCBzeDEyNXhfY2xrX291dF9lbmFibGVfd29ya19oYW5kbGVy
+KHN0cnVjdCB3b3JrX3N0cnVjdCAqd3MpCit7CisgICAgICAgc3RydWN0IHN4MTI1eF9wcml2ICpw
+cml2ID0gY29udGFpbmVyX29mKHdzLCBzdHJ1Y3Qgc3gxMjV4X3ByaXYsCmNsa19vdXRfZW5hYmxl
+X3dvcmspOworCiAgICAgICAgZGV2X2luZm8ocHJpdi0+ZGV2LCAiZW5hYmxpbmcgY2xrb3V0XG4i
+KTsKLSAgICAgICByZXR1cm4gc3gxMjV4X2ZpZWxkX3dyaXRlKHByaXYsIEZfQ0xLX09VVCwgMSk7
+CisgICAgICAgc3gxMjV4X2ZpZWxkX3dyaXRlKHByaXYsIEZfQ0xLX09VVCwgMSk7CiB9Cgogc3Rh
+dGljIHZvaWQgc3gxMjV4X2Nsa291dF9kaXNhYmxlKHN0cnVjdCBjbGtfaHcgKmh3KQpAQCAtMjMw
+LDYgKzI0Myw5IEBAIHN0YXRpYyBpbnQgX19tYXliZV91bnVzZWQgc3gxMjV4X3JlZ21hcF9wcm9i
+ZShzdHJ1Y3QKZGV2aWNlICpkZXYsIHN0cnVjdCByZWdtYXAKICAgICAgICAgICAgICAgIH0KICAg
+ICAgICB9CgorICAgICAgIHByaXYtPmNsa193cSA9IGFsbG9jX3dvcmtxdWV1ZSgic3gxMjd4X3dx
+IiwgV1FfRlJFRVpBQkxFIHwKV1FfTUVNX1JFQ0xBSU0sIDApOworICAgICAgIElOSVRfV09SSygm
+cHJpdi0+Y2xrX291dF9lbmFibGVfd29yaywKc3gxMjV4X2Nsa19vdXRfZW5hYmxlX3dvcmtfaGFu
+ZGxlcik7CisKICAgICAgICBkZXZfaW5mbyhkZXYsICJTWDEyNXggbW9kdWxlIHByb2JlZFxuIik7
+CgogICAgICAgIHJldHVybiAwOwpAQCAtMjM3LDYgKzI1MywxMCBAQCBzdGF0aWMgaW50IF9fbWF5
+YmVfdW51c2VkCnN4MTI1eF9yZWdtYXBfcHJvYmUoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3Qg
+cmVnbWFwCgogc3RhdGljIGludCBfX21heWJlX3VudXNlZCBzeDEyNXhfcmVnbWFwX3JlbW92ZShz
+dHJ1Y3QgZGV2aWNlICpkZXYpCiB7CisgICAgICAgc3RydWN0IHN4MTI1eF9wcml2ICpwcml2ID0g
+ZGV2X2dldF9kcnZkYXRhKGRldik7CisKKyAgICAgICBkZXN0cm95X3dvcmtxdWV1ZShwcml2LT5j
+bGtfd3EpOworCiAgICAgICAgZGV2X2luZm8oZGV2LCAiU1gxMjV4IG1vZHVsZSByZW1vdmVkXG4i
+KTsKCiAgICAgICAgcmV0dXJuIDA7CmRpZmYgLS1naXQgYS9kcml2ZXJzL25ldC9sb3JhL3N4MTMw
+eC5jIGIvZHJpdmVycy9uZXQvbG9yYS9zeDEzMHguYwppbmRleCA3YWM3ZGU5ZWRhNDYuLjRhZTY2
+OTlkMzhhZCAxMDA2NDQKLS0tIGEvZHJpdmVycy9uZXQvbG9yYS9zeDEzMHguYworKysgYi9kcml2
+ZXJzL25ldC9sb3JhL3N4MTMweC5jCkBAIC0xMSw2ICsxMSw3IEBACgogI2luY2x1ZGUgPGxpbnV4
+L2JpdG9wcy5oPgogI2luY2x1ZGUgPGxpbnV4L2Nsay5oPgorI2luY2x1ZGUgPGxpbnV4L2Nsay1w
+cm92aWRlci5oPgogI2luY2x1ZGUgPGxpbnV4L2RlbGF5Lmg+CiAjaW5jbHVkZSA8bGludXgvZmly
+bXdhcmUuaD4KICNpbmNsdWRlIDxsaW51eC9sb3JhLmg+CkBAIC0zOTEsNiArMzkyLDEwIEBAIHN0
+YXRpYyBpbnQgc3gxMzB4X2xvcmFkZXZfb3BlbihzdHJ1Y3QgbmV0X2RldmljZQoqbmV0ZGV2KQog
+ICAgICAgICAgICAgICAgZ290byBlcnJfY2xrX2VuYWJsZTsKICAgICAgICB9CgorICAgICAgIGRv
+IHsKKyAgICAgICAgICAgICAgIHVzbGVlcF9yYW5nZSgxMDAsIDEwMDApOworICAgICAgIH0gd2hp
+bGUgKCFfX2Nsa19pc19lbmFibGVkKHByaXYtPmNsazMybSkpOworCiAgICAgICAgcmV0ID0gc3gx
+MzB4X2ZpZWxkX3dyaXRlKHByaXYsIEZfR0xPQkFMX0VOLCAxKTsKICAgICAgICBpZiAocmV0KSB7
+CiAgICAgICAgICAgICAgICBkZXZfZXJyKHByaXYtPmRldiwgImVuYWJsZSBnbG9iYWwgY2xvY2tz
+IGZhaWxlZCAoJWQpXG4iLApyZXQpOwoKCi0tIApTVVNFIExpbnV4IEdtYkgsIE1heGZlbGRzdHIu
+IDUsIDkwNDA5IE7DvHJuYmVyZywgR2VybWFueQpHRjogRmVsaXggSW1lbmTDtnJmZmVyLCBKYW5l
+IFNtaXRoYXJkLCBHcmFoYW0gTm9ydG9uCkhSQiAyMTI4NCAoQUcgTsO8cm5iZXJnKQoKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5l
+bCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6
+Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
