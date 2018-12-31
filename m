@@ -1,64 +1,92 @@
-Return-Path: <SRS0=WIKQ=O5=denx.de=marex@kernel.org>
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH V2 01/10] input: touchscreen: ili210x: Add DT binding document
-Date: Thu, 20 Dec 2018 21:42:56 +0100
-Message-Id: <20181220204305.28807-2-marex@denx.de>
-In-Reply-To: <20181220204305.28807-1-marex@denx.de>
-References: <20181220204305.28807-1-marex@denx.de>
+Return-Path: <SRS0=GxWL=PI=linaro.org=sumit.garg@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-input@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+References: <1545908831-25910-1-git-send-email-sumit.garg@linaro.org>
+ <1545908831-25910-3-git-send-email-sumit.garg@linaro.org> <CAKv+Gu9ShfrBhfCuRK_L_ZtZ3KnN7Jb-4hcX9nSO7AYbT8V8LQ@mail.gmail.com>
+ <CAFA6WYN5+NWKpPhnGHRnh_ZOF9A8K=MvbbSQ9uvc2Tv1expXcA@mail.gmail.com>
+ <CAKv+Gu-Go=GwsO=_WvmTr-OZb4WMGGQrMb2joxX1Kzfhza3JiA@mail.gmail.com>
+ <CAFA6WYPm3_SZ59vOxceZkn0uzcJw3ECQZs5R_Ypz0ejpzTgAbQ@mail.gmail.com>
+ <20181228144610.GA21561@jax.urgonet> <79744651-991d-ff44-2238-96721ff9bc18@gmail.com>
+In-Reply-To: <79744651-991d-ff44-2238-96721ff9bc18@gmail.com>
+From: Sumit Garg <sumit.garg@linaro.org>
+Date: Mon, 31 Dec 2018 16:05:52 +0530
+Message-ID: <CAFA6WYN958Odx7HfB7-zDAt5hpXw8bCLsfQgJT+sjf_L4BmguQ@mail.gmail.com>
+Subject: Re: [PATCH v1 2/2] hwrng: add OP-TEE based rng driver
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
+Cc: Jens Wiklander <jens.wiklander@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, mpm@selenic.com, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, tee-dev@lists.linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT binding document for the Ilitek ILI210x and ILI251x
-touchscreen controllers.
+On Sun, 30 Dec 2018 at 20:29, Vesa J=C3=A4=C3=A4skel=C3=A4inen <dachaac@gma=
+il.com> wrote:
+>
+> Hi All,
+>
+> On 28/12/2018 16.46, Jens Wiklander wrote:
+> > Hi Sumit,
+> >
+> > On Fri, Dec 28, 2018 at 06:33:22PM +0530, Sumit Garg wrote:
+> >> On Fri, 28 Dec 2018 at 16:08, Ard Biesheuvel <ard.biesheuvel@linaro.or=
+g> wrote:
+> >> Jens,
+> >>
+> >> Is there any particular reason to wait indefinitely in
+> >> "optee_supp_thrd_req" if there is no supplicant running? I think we
+> >> should probably return as follows from "optee_supp_thrd_req" API in
+> >> case no supplicant is available:
+> >>
+> >> --- a/drivers/tee/optee/supp.c
+> >> +++ b/drivers/tee/optee/supp.c
+> >> @@ -88,10 +88,15 @@ u32 optee_supp_thrd_req(struct tee_context *ctx,
+> >> u32 func, size_t num_params,
+> >>   {
+> >>          struct optee *optee =3D tee_get_drvdata(ctx->teedev);
+> >>          struct optee_supp *supp =3D &optee->supp;
+> >> -       struct optee_supp_req *req =3D kzalloc(sizeof(*req), GFP_KERNE=
+L);
+> >> +       struct optee_supp_req *req;
+> >>          bool interruptable;
+> >>          u32 ret;
+> >>
+> >> +       /* Return in case there is no supplicant available */
+> >> +       if (!supp->ctx)
+> >> +               return TEEC_ERROR_COMMUNICATION;
+> >> +
+> >> +       req =3D kzalloc(sizeof(*req), GFP_KERNEL);
+> >>          if (!req)
+> >>                  return TEEC_ERROR_OUT_OF_MEMORY;
+> >
+> >  From a user space point of view it has been more useful to just wait
+> > until the supplicant starts to serve requests than polling the interfac=
+e
+> > until the call succeeds. For this new use case it makes more sense to b=
+e
+> > able to return an error instead.
+> >
+> > The proposed change is a user space API change, so we will need to do a
+> > bit more than that.
+>
+> There are parts of kernel that need randomness before user space is ready=
+.
+>
+> Can't we move necessary logic for this to in kernel now that there is
+> kernel service requiring TEE services?
+>
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Cc: Olivier Sobrie <olivier@sobrie.be>
-Cc: Philipp Puschmann <pp@emlix.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-To: linux-input@vger.kernel.org
----
-V2: New patch
----
- .../bindings/input/ilitek,ili2xxx.txt         | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+Yes it is exactly what this optee-rng kernel module is trying to achieve.
 
-diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-new file mode 100644
-index 000000000000..bc256557ae8c
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-@@ -0,0 +1,25 @@
-+Ilitek ILI210x/ILI251x touchscreen controller
-+
-+Required properties:
-+- compatible:
-+    ilitek,ili210x for ILI210x
-+    ilitek,ili251x for ILI251x
-+
-+- reg: The I2C address of the device
-+
-+- interrupts: The sink for the touchscreen's IRQ output
-+    See ../interrupt-controller/interrupts.txt
-+
-+Optional properties for main touchpad device:
-+
-+- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
-+
-+Example:
-+
-+	touch@41 {
-+		compatible = "ilitek,ili251x";
-+		reg = <0x41>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
-+	};
--- 
-2.19.2
+> I suppose there are even more services that would be better to be only
+> optee<->kernel interface and not exposed as such to user space. One
+> example of such would be mass storage encryption key or hardware rooted
+> encryption for Linux keyring. Eg. replacement for TPM chip when TEE
+> environment is available.
+>
+
+Agree, for such use-cases we are working on adding TEE bus support so
+that kernel drivers would be able to communicate with TEE based
+devices.
+
+-Sumit
+
+> Thanks,
+> Vesa J=C3=A4=C3=A4skel=C3=A4inen
