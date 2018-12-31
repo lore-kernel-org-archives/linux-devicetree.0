@@ -1,87 +1,71 @@
-From: Florian Fainelli <florian.fainelli@broadcom.com>
-Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
-Date: Mon, 31 Dec 2018 14:15:56 -0800
-Message-ID: <3c05a1f1-5041-ebb7-27e5-0a2321314b0a@broadcom.com>
-References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
- <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com>
- <CABe79T4mpnbkaTCerYegmc1+uY4idOVOxCVDqHramk3fYipiCA@mail.gmail.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH v3 lora-next 5/5] net: lora: sx125x sx1301: allow radio to
+ register as a clk provider
+Date: Mon, 31 Dec 2018 23:56:40 +0100
+Message-ID: <ae7dd20c-777e-e043-127c-819fa0ae4792@suse.de>
+References: <1539361567-3602-1-git-send-email-ben.whitten@lairdtech.com>
+ <1539361567-3602-6-git-send-email-ben.whitten@lairdtech.com>
+ <a89c7974-672f-e5d0-8022-d2c2f9ffeac0@suse.de>
+ <d22f1f18-0c93-a537-a439-07363174a03b@suse.de>
+ <491d1a46-c112-1106-9f25-14149f0dcbd0@suse.de>
+ <20181231175034.GI1846@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=windows-1252
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CABe79T4mpnbkaTCerYegmc1+uY4idOVOxCVDqHramk3fYipiCA@mail.gmail.com>
+In-Reply-To: <20181231175034.GI1846@sirena.org.uk>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Srinath Mannam <srinath.mannam@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Ben Whitten <ben.whitten@gmail.com>, devicetree <devicetree@vger.kernel.org>, "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-lpwan@lists.infradead.org" <linux-lpwan@lists.infradead.org>, linux-kernel@vger.kernel.org, starnight@g.ncu.edu.tw, linux-clk <linux-clk@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Russell King <linux@armlinux.org.uk>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 04/12/2018 19:17, Srinath Mannam wrote:
-> Hi,
+Am 31.12.18 um 18:50 schrieb Mark Brown:
+> On Sun, Dec 30, 2018 at 11:55:46AM +0100, Andreas Färber wrote:
+>> Given that observed symptoms were CPU stalls, workqueue hangs and RCU
+>> problems, requiring a power-cycle to recover, I wonder whether we are
+>> running into some atomic/locking issue with clk_enable()? Is it valid at
+>> all to use SPI/regmap for clk_enable()? If it is, is there a known issue
+>> specific to spi-sun6i (A64) in 4.20.0?
+>> I already tried setting .disable_locking = true in both regmap_configs.
+>> Any suggestions how to further debug?
 > 
-> Could you please provide your feedback to this patch series?
-
-Rui or Eduardo can we get either one of you to review the thermal driver
-parts of this patch series? Why do we constantly have to chase people to
-respond in this specific subsystem?
-
+> You can't use SPI for clk_enable(), clk_enable() needs to be doable in
+> atomic context since we need to wait for the bus operations to complete
+> (you can start SPI transfers in atomic context but you still need to
+> wait for them to complete).  Any clocks that are only accessible via a
+> slow bus like I2C or SPI need to do the enable/disable in the
+> prepare/unprepare operations which aren't done in atomic context.
 > 
-> Regards,
-> Srinath.
-> On Thu, Nov 8, 2018 at 3:45 AM Florian Fainelli <f.fainelli@gmail.com> wrote:
->>
->>
->>
->> On 10/16/2018 8:11 AM, Srinath Mannam wrote:
->>> These patches adds the stingray thermal driver and its
->>> corresponding DT nodes with documentation.
->>
->> Can we get feedback from the thermal maintains whether this is
->> acceptable or not?
->>
->>>
->>> Changes from v4
->>>   - Addressed Rob Herring comments on DT parameters and
->>>     thermal driver architecture.
->>>   - Removed brcm,max-crit-temp DT parameter
->>>   - Changed driver to thermal sensor registration model.
->>>   - Added trip DT properties.
->>>
->>> Changes from v3
->>>   - Addressed Daniel lezcano comments.
->>>   - Elaborated commit description of thermal driver patch.
->>>   - Added brcm,max-crit-temp DT parameter.
->>>
->>> Changes from v2:
->>>   - All stingray TMON DT nodes are combine together into single.
->>>     Temperature registers are combined into one mem resource.
->>>     brcm,tmon-mask parameter has available TMONs mask value.
->>>   - All available TMONs are initialized together in single
->>>     instance of driver probe call.
->>>
->>> Changes from v1:
->>>   - Fixed auto build sparce warning.
->>>
->>> Pramod Kumar (3):
->>>   dt-bindings: thermal: Add binding document for SR thermal
->>>   thermal: broadcom: Add Stingray thermal driver
->>>   arm64: dts: stingray: Add Stingray Thermal DT support.
->>>
->>>  .../bindings/thermal/brcm,sr-thermal.txt           | 105 ++++++++++++++++
->>>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89 +++++++++++++
->>>  drivers/thermal/Kconfig                            |   3 +-
->>>  drivers/thermal/broadcom/Kconfig                   |   9 ++
->>>  drivers/thermal/broadcom/Makefile                  |   1 +
->>>  drivers/thermal/broadcom/sr-thermal.c              | 138 +++++++++++++++++++++
->>>  6 files changed, 344 insertions(+), 1 deletion(-)
->>>  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
->>>  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
->>>
->>
->> --
->> Florian
+> regmap can be used in atomic contexts, though you need to configure it
+> to use spinlocks instead of mutexes and ensure that no register cache
+> allocations happen during I/O (eg, by providing defaults for all
+> registers or by not using a cache).
+
+We have .cache_type = REGCACHE_NONE on both bus and spi regmap_configs.
+
+I moved the regmap_field_write() from .enable to .prepare and set
+.fast_io = true on both regmap_configs to force using spinlocks, but
+same hang as in .enable before...
+
+And same if I set .disable_locking = true on both.
+
+Given that it works with one SPI driver and not with the other,
+independent of the locking options applied, I assume my symptoms are not
+a regmap-layer issue.
+
+Is it allowed during a .prepare operation to call the mentioned
+clk_get_rate(), which ends up calling clk_prepare_lock()?
+
+According to my debug output in spi-sun6i.c our hanging
+regmap_field_write() ends up calling sun6i_transfer_one() three times,
+the first two look okay, but the third one doesn't make it past the
+clk_get_rate() or following if block. [But for now some fireworks...]
+
+Regards,
+Andreas
 
 -- 
-Florian
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
