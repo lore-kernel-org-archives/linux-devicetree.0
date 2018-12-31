@@ -1,46 +1,69 @@
-Return-Path: <SRS0=Q85b=OR=synopsys.com=thinh.nguyen@kernel.org>
-Date: Fri, 7 Dec 2018 18:27:30 -0800
-Message-ID: <83adc98adc1760a0fad87d81d171e1dac783e7e5.1544235317.git.thinhn@synopsys.com>
-In-Reply-To: <cover.1544235317.git.thinhn@synopsys.com>
-References: <cover.1544235317.git.thinhn@synopsys.com>
-From: Thinh Nguyen <thinh.nguyen@synopsys.com>
-Subject: [PATCH v2 1/4] usb: dwc3: Add property snps,refclk-period-ns
+Return-Path: <SRS0=gCe4=PI=pengutronix.de=mfe@kernel.org>
+Date: Mon, 31 Dec 2018 12:05:14 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH 1/2] dt-bindings: usb: usb251xb: add documentation for
+ data lane swapping
+Message-ID: <20181231110514.e3lrninzybg5vhvw@pengutronix.de>
+References: <20181219145941.5173-1-m.felsch@pengutronix.de>
+ <20181228234525.GA30428@bogus>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: Felipe Balbi <balbi@kernel.org>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: John Youn <john.youn@synopsys.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181228234525.GA30428@bogus>
+To: Rob Herring <robh@kernel.org>
+Cc: richard.leitner@skidata.com, fancer.lancer@gmail.com, kernel@pengutronix.de, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-This patch introduces property "snps,refclk-period-ns" to inform the
-controller of the reference clock period. If the reference clock period
-is different from the default Core Consultant setting, then this
-property can be set to the reference clock period.
+Hi,
 
-This property does not control the reference clock rate. The controller
-uses this value to perform internal timing calculations that are based
-on the reference clock.
+On 18-12-28 17:45, Rob Herring wrote:
+> On Wed, Dec 19, 2018 at 03:59:40PM +0100, Marco Felsch wrote:
+> > Add optional binding to allow USB differential-pair (D+/D-) data lane
+> > swapping. The swapping can be specified for each port separately,
+> > default is no swapping.
+> > 
+> > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > ---
+> >  Documentation/devicetree/bindings/usb/usb251xb.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > index 168ff819e827..aec93a92870d 100644
+> > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > @@ -64,6 +64,8 @@ Optional properties :
+> >   - power-on-time-ms : Specifies the time it takes from the time the host
+> >  	initiates the power-on sequence to a port until the port has adequate
+> >  	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+> > + - sw-dx-lanes-ports : Specifies the ports which will swap the differential-pair
+> > +	(D+/D-), default is not-swapped.
+> 
+> Perhaps 'swap-dx-ports' would be a more obvious name.
 
-Signed-off-by: Thinh Nguyen <thinhn@synopsys.com>
----
-Changes in v2:
-- Split from "usb: dwc3: Add reference clock properties"
-- Revise commit message and property description
+What you think about 'swap-dx-lanes' since it has nothing to do with
+port swapping, it's rather swapping port properties internally.
 
- Documentation/devicetree/bindings/usb/dwc3.txt | 2 ++
- 1 file changed, 2 insertions(+)
+Regards,
+Marco
 
-diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt b/Documentation/devicetree/bindings/usb/dwc3.txt
-index 8e5265e9f658..b7e67edff9b2 100644
---- a/Documentation/devicetree/bindings/usb/dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-@@ -99,6 +99,8 @@ Optional properties:
- 			this and tx-thr-num-pkt-prd to a valid, non-zero value
- 			1-16 (DWC_usb31 programming guide section 1.2.3) to
- 			enable periodic ESS TX threshold.
-+ - snps,refclk-period-ns: if set, this value informs the controller of the
-+			reference clock period in nanoseconds.
- 
-  - <DEPRECATED> tx-fifo-resize: determines if the FIFO *has* to be reallocated.
-  - snps,incr-burst-type-adjustment: Value for INCR burst type of GSBUSCFG0
+> 
+> >  
+> >  Examples:
+> >  	usb2512b@2c {
+> > @@ -81,4 +83,6 @@ Examples:
+> >  		manufacturer = "Foo";
+> >  		product = "Foo-Bar";
+> >  		serial = "1234567890A";
+> > +		/* correct misplaced usb connectors on port 1,2 */
+> > +		sw-dx-lanes-ports = <1 2>;
+> >  	};
+> > -- 
+> > 2.19.1
+> > 
+> 
+
 -- 
-2.11.0
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
