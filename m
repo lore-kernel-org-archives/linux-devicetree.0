@@ -1,16 +1,17 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v7 00/11] Add initial RDA8810PL SoC and Orange Pi boards
- support
-Date: Tue, 1 Jan 2019 08:32:47 +0530
-Message-ID: <20190101030247.GB2736@Mani-XPS-13-9360>
-References: <20181218150238.23010-1-manivannan.sadhasivam@linaro.org>
- <20181231211342.ulg4jytermffqi34@localhost>
+Subject: Re: [PATCH 6/6] MAINTAINERS: Add linux-actions mailing list for
+ Actions Semi
+Date: Tue, 1 Jan 2019 08:56:22 +0530
+Message-ID: <20190101032622.GC2736@Mani-XPS-13-9360>
+References: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
+ <20181231185517.18517-7-manivannan.sadhasivam@linaro.org>
+ <2a7f53c58896e2a9c3115a8630040b98497e5877.camel@perches.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181231211342.ulg4jytermffqi34@localhost>
+In-Reply-To: <2a7f53c58896e2a9c3115a8630040b98497e5877.camel@perches.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,51 +21,59 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Olof Johansson <olof@lixom.net>
-Cc: devicetree@vger.kernel.org, arm@kernel.org, arnd@arndb.de, gregkh@linuxfoundation.org, linus.walleij@linaro.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, linux-unisoc@lists.infradead.org, robh+dt@kernel.org, linux-serial@vger.kernel.org, jslaby@suse.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, zhao_steven@263.net
+To: Joe Perches <joe@perches.com>
+Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, robh+dt@kernel.org, afaerber@suse.de, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Olof,
+Hi Joe,
 
-On Mon, Dec 31, 2018 at 01:13:42PM -0800, Olof Johansson wrote:
-> On Tue, Dec 18, 2018 at 08:32:27PM +0530, Manivannan Sadhasivam wrote:
-> > Hello Maintainers,
-> > 
-> > This patch series adds initial RDA8810PL SoC and Orange Pi boards (2G IoT and
-> > i96) support. RDA8810PL is an ARM Cortex A5 based SoC with Vivante's GC860
-> > GPU. The SoC has been added as a new ARM sub architecture with myself as the
-> > maintainer.
-> > 
-> > More information about the boards can be found in below links:
-> > 
-> > 1. Orange Pi 2G-IoT - http://www.orangepi.org/OrangePi2GIOT/
-> > 2. Orange Pi i96 - https://www.96boards.org/product/orangepi-i96/
-> > 
-> > All patches are reviewed by the corresponding subsystem maintainers. The
-> > clocksource and irqchip patches are reviewed and merged while the serial
-> > driver got review from Greg but I'm not sure who will apply it.
-> > 
-> > So as per my discussion with Arnd, sending the individual patches instead
-> > of a Pull request so that the rest of the patches can go through the
-> > ARM SoC tree.
-> > 
-> > Please consider applying it.
-> 
-> Hi,
-> 
-> I've applied this series to our next/late branch. It's a branch we'll try to
-> get merged by the end of the merge window, but it's not a guarantee that we'll
-> be able to get it done. If not, the material will be moved to the next release
-> instead.
->
+On Mon, Dec 31, 2018 at 11:12:18AM -0800, Joe Perches wrote:
+> On Tue, 2019-01-01 at 00:25 +0530, Manivannan Sadhasivam wrote:
+> > Add the linux-actions mailing list for Actions Semi SoC architecture.
+> =
 
-Okay, thanks for the update!
+> Unrelated to adding this L: entry
+> =
+
+> > diff --git a/MAINTAINERS b/MAINTAINERS
+> []
+> > @@ -1240,6 +1240,7 @@ ARM/ACTIONS SEMI ARCHITECTURE
+> >  M:	Andreas F=E4rber <afaerber@suse.de>
+> >  R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> >  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
+> > +L:	linux-actions@lists.infradead.org (moderated for non-subscribers)
+> >  S:	Maintained
+> >  N:	owl
+> =
+
+> The N: entry matches too many non-owl entries like:
+> =
+
+> Documentation/parport-lowlevel.txt
+> drivers/misc/ibmasm/lowlevel.c
+> drivers/misc/ibmasm/lowlevel.h
+> fs/udf/lowle
+> vel.c
+> net/ipv6/ip6_flowlabel.c
+> sound/soc/samsung/lowland.c
+> =
+
+> Maybe there should be two entries
+> =
+
+> N:	/owl
+> N:	-owl
+> =
+
+
+Thanks for letting us know. Yes, we need to change it. How about below?
+
+N: owl-
+N: -owl
+
+Will do it as a follow-up patch if agreed!
 
 Regards,
 Mani
 
-> 
-> Thanks!
-> 
-> 
-> -Olof
+> =
