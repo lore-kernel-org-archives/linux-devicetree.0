@@ -1,126 +1,112 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 6/6] MAINTAINERS: Add linux-actions mailing list for
- Actions Semi
-Date: Wed, 2 Jan 2019 07:48:05 +0530
-Message-ID: <20190102021805.GA3955@Mani-XPS-13-9360>
-References: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
- <20181231185517.18517-7-manivannan.sadhasivam@linaro.org>
- <2a7f53c58896e2a9c3115a8630040b98497e5877.camel@perches.com>
- <20190101032622.GC2736@Mani-XPS-13-9360>
- <a935ceb348e5b4efb754484da745425afa1e7713.camel@perches.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
+Date: Wed, 2 Jan 2019 10:02:43 +0530
+Message-ID: <CABe79T7FiAiCELmgK9xUiSaW8g=Vx6mBzan7+=8zx4uZ2jh1Rw@mail.gmail.com>
+References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
+ <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com> <CABe79T4mpnbkaTCerYegmc1+uY4idOVOxCVDqHramk3fYipiCA@mail.gmail.com>
+ <3c05a1f1-5041-ebb7-27e5-0a2321314b0a@broadcom.com> <1546351479.2077.1.camel@intel.com>
+ <20190101160733.GB3306@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <a935ceb348e5b4efb754484da745425afa1e7713.camel@perches.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Joe Perches <joe@perches.com>, afaerber@suse.de
-Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-actions@lists.infradead.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190101160733.GB3306@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Eduardo Valentin <edubezval@gmail.com>
+Cc: Zhang Rui <rui.zhang@intel.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Joe,
+Hi Rui, Eduardo,
 
-On Tue, Jan 01, 2019 at 08:56:49AM -0800, Joe Perches wrote:
-> On Tue, 2019-01-01 at 08:56 +0530, Manivannan Sadhasivam wrote:
-> > Hi Joe,
-> =
+Wish you very happy new year and Thank you very much for your response.
 
-> Hi Manivannan.
-> =
+Regards,
+Srinath.
 
-> > On Mon, Dec 31, 2018 at 11:12:18AM -0800, Joe Perches wrote:
-> > > On Tue, 2019-01-01 at 00:25 +0530, Manivannan Sadhasivam wrote:
-> > > > Add the linux-actions mailing list for Actions Semi SoC architectur=
-e.
-> > > =
-
-> > > Unrelated to adding this L: entry
-> > > =
-
-> > > > diff --git a/MAINTAINERS b/MAINTAINERS
-> > > []
-> > > > @@ -1240,6 +1240,7 @@ ARM/ACTIONS SEMI ARCHITECTURE
-> > > >  M:	Andreas F=E4rber <afaerber@suse.de>
-> > > >  R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > >  L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscri=
-bers)
-> > > > +L:	linux-actions@lists.infradead.org (moderated for non-subscriber=
-s)
-> > > >  S:	Maintained
-> > > >  N:	owl
-> > > =
-
-> > > The N: entry matches too many non-owl entries like:
-> > > =
-
-> > > Documentation/parport-lowlevel.txt
-> > > drivers/misc/ibmasm/lowlevel.c
-> > > drivers/misc/ibmasm/lowlevel.h
-> > > fs/udf/lowlevel.c
-> > > net/ipv6/ip6_flowlabel.c
-> > > sound/soc/samsung/lowland.c
-> > > =
-
-> > > Maybe there should be two entries
-> > > =
-
-> > > N:	/owl
-> > > N:	-owl
-> > > =
-
-> > =
-
-> > Thanks for letting us know. Yes, we need to change it. How about below?
-> > =
-
-> > N: owl-
-> > N: -owl
-> > =
-
-> > Will do it as a follow-up patch if agreed!
-> =
-
-> from MAINTAINERS:
-> =
-
-> 	   scripts/get_maintainer.pl has different behavior for files that
-> 	   match F: pattern and matches of N: patterns.  By default,
-> 	   get_maintainer will not look at git log history when an F: pattern
-> 	   match occurs.  When an N: match occurs, git log history is used
-> 	   to also notify the people that have git commit signatures.
-> =
-
-> F: entries are preferred to N: entries because the
-> get_maintainer.pl script does not assume that the
-> N: entries are exclusively maintained.  Maybe use a
-> more comprehensive F: list like:
-> =
-
-> F:	Documentation/devicetree/bindings/*/*owl-*
-> F:	arch/arm/boot/dts/owl-*
-> F:	drivers/*/owl-*
-> F:	drivers/*/*-owl*
-> F:	drivers/*/*/owl-*
-> F:	drivers/*/*/*-owl*
-> F:	include/dt-bindings/power/owl-*
-> F:	include/linux/soc/actions/owl-sps.h
-> =
-
-
-Makes sense!
-
-Andreas: What is your opinion on above entries?
-
-Thanks,
-Mani
-
-> =
+On Tue, Jan 1, 2019 at 9:37 PM Eduardo Valentin <edubezval@gmail.com> wrote=
+:
+>
+> On Tue, Jan 01, 2019 at 10:04:39PM +0800, Zhang Rui wrote:
+> > On =E4=B8=80, 2018-12-31 at 14:15 -0800, Florian Fainelli wrote:
+> > >
+> > > On 04/12/2018 19:17, Srinath Mannam wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > Could you please provide your feedback to this patch series?
+> > > Rui or Eduardo can we get either one of you to review the thermal
+> > > driver
+> > > parts of this patch series? Why do we constantly have to chase people
+> > > to
+> > > respond in this specific subsystem?
+> > >
+> > Eduardo, can you please take a look at this patch series?
+>
+> Yup, I will take a look.
+>
+> >
+> > thanks,
+> > rui
+> > > >
+> > > >
+> > > > Regards,
+> > > > Srinath.
+> > > > On Thu, Nov 8, 2018 at 3:45 AM Florian Fainelli <f.fainelli@gmail.c
+> > > > om> wrote:
+> > > > >
+> > > > >
+> > > > >
+> > > > >
+> > > > > On 10/16/2018 8:11 AM, Srinath Mannam wrote:
+> > > > > >
+> > > > > > These patches adds the stingray thermal driver and its
+> > > > > > corresponding DT nodes with documentation.
+> > > > > Can we get feedback from the thermal maintains whether this is
+> > > > > acceptable or not?
+> > > > >
+> > > > > >
+> > > > > >
+> > > > > > Changes from v4
+> > > > > >   - Addressed Rob Herring comments on DT parameters and
+> > > > > >     thermal driver architecture.
+> > > > > >   - Removed brcm,max-crit-temp DT parameter
+> > > > > >   - Changed driver to thermal sensor registration model.
+> > > > > >   - Added trip DT properties.
+> > > > > >
+> > > > > > Changes from v3
+> > > > > >   - Addressed Daniel lezcano comments.
+> > > > > >   - Elaborated commit description of thermal driver patch.
+> > > > > >   - Added brcm,max-crit-temp DT parameter.
+> > > > > >
+> > > > > > Changes from v2:
+> > > > > >   - All stingray TMON DT nodes are combine together into
+> > > > > > single.
+> > > > > >     Temperature registers are combined into one mem resource.
+> > > > > >     brcm,tmon-mask parameter has available TMONs mask value.
+> > > > > >   - All available TMONs are initialized together in single
+> > > > > >     instance of driver probe call.
+> > > > > >
+> > > > > > Changes from v1:
+> > > > > >   - Fixed auto build sparce warning.
+> > > > > >
+> > > > > > Pramod Kumar (3):
+> > > > > >   dt-bindings: thermal: Add binding document for SR thermal
+> > > > > >   thermal: broadcom: Add Stingray thermal driver
+> > > > > >   arm64: dts: stingray: Add Stingray Thermal DT support.
+> > > > > >
+> > > > > >  .../bindings/thermal/brcm,sr-thermal.txt           | 105
+> > > > > > ++++++++++++++++
+> > > > > >  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89
+> > > > > > +++++++++++++
+> > > > > >  drivers/thermal/Kconfig                            |   3 +-
+> > > > > >  drivers/thermal/broadcom/Kconfig                   |   9 ++
+> > > > > >  drivers/thermal/broadcom/Makefile                  |   1 +
+> > > > > >  drivers/thermal/broadcom/sr-thermal.c              | 138
+> > > > > > +++++++++++++++++++++
+> > > > > >  6 files changed, 344 insertions(+), 1 deletion(-)
+> > > > > >  create mode 100644
+> > > > > > Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> > > > > >  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
+> > > > > >
+> > > > > --
+> > > > > Florian
