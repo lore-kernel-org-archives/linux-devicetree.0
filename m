@@ -1,74 +1,125 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v9 07/12] dt-bindings: mfd: Add a document for PECI client
- MFD
-Date: Wed, 2 Jan 2019 10:29:26 -0800
-Message-ID: <fa605dae-977f-452a-cd86-2c0db9237892@linux.intel.com>
-References: <20181218210417.30140-1-jae.hyun.yoo@linux.intel.com>
- <20181218210417.30140-8-jae.hyun.yoo@linux.intel.com>
- <20181221144754.GS13248@dell>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v5 2/5] leds: Add helper for getting default pattern from
+ Device Tree
+Date: Wed, 2 Jan 2019 20:16:52 +0100
+Message-ID: <913204f7-93e7-95f1-c477-85359ea1d73c@gmail.com>
+References: <20190101140717.13564-1-krzk@kernel.org>
+ <20190101140717.13564-3-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221144754.GS13248@dell>
+In-Reply-To: <20190101140717.13564-3-krzk@kernel.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+To: Krzysztof Kozlowski <krzk@kernel.org>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Raphael Teysseyre <rteysseyre@gmail.com>, Baolin Wang <baolin.wang@linaro.org>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lee,
+Hi Krzysztof,
 
-On 12/21/2018 6:47 AM, Lee Jones wrote:
-> On Tue, 18 Dec 2018, Jae Hyun Yoo wrote:
+You mentioned change of helper name in the cover
+letter, but it still has "classdev" part.
+
+On 1/1/19 3:07 PM, Krzysztof Kozlowski wrote:
+> Multiple LED triggers might need to access default pattern so add a
+> helper for that.
 > 
->> This commit adds a dt-bindings document for PECI client MFD.
->>
->> +* Intel PECI client bindings
-
-<snip>
-
->> +PECI (Platform Environment Control Interface) is a one-wire bus interface that
->> +provides a communication channel from PECI clients in Intel processors and
->> +chipset components to external monitoring or control devices. PECI is designed
->> +to support the following sideband functions:
->> +
->> +- Processor and DRAM thermal management
->> +- Platform Manageability
->> +- Processor Interface Tuning and Diagnostics
->> +- Failure Analysis
->> +
->> +Required properties:
->> +- compatible : Should be "intel,peci-client".
->> +- reg        : Should contain address of a client CPU. According to the PECI
->> +	       specification, client addresses start from 0x30.
->> +
->> +Example:
->> +	peci-bus@0 {
->> +		compatible = "vendor,soc-peci";
->> +		reg = <0x0 0x1000>;
->> +		#address-cells = <1>;
->> +		#size-cells = <0>;
->> +
->> +		peci-client@30 {
->> +			compatible = "intel,peci-client";
->> +			reg = <0x30>;
->> +		};
->> +
->> +		peci-client@31 {
->> +			compatible = "intel,peci-client";
->> +			reg = <0x31>;
->> +		};
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+> ---
+>   drivers/leds/led-core.c | 43 +++++++++++++++++++++++++++++++++++++++++
+>   include/linux/leds.h    |  3 +++
+>   2 files changed, 46 insertions(+)
 > 
-> The PECI Client driver (masquerading as an MFD driver in this set)
-> doesn't actually do anything special.  Instead of detailing it here,
-> register the child devices directly instead.
+> diff --git a/drivers/leds/led-core.c b/drivers/leds/led-core.c
+> index ede4fa0ac2cc..e4b6da73bc12 100644
+> --- a/drivers/leds/led-core.c
+> +++ b/drivers/leds/led-core.c
+> @@ -16,7 +16,9 @@
+>   #include <linux/list.h>
+>   #include <linux/module.h>
+>   #include <linux/mutex.h>
+> +#include <linux/of.h>
+>   #include <linux/rwsem.h>
+> +#include <linux/slab.h>
+>   #include "leds.h"
+>   
+>   DECLARE_RWSEM(leds_list_lock);
+> @@ -310,6 +312,47 @@ int led_update_brightness(struct led_classdev *led_cdev)
+>   }
+>   EXPORT_SYMBOL_GPL(led_update_brightness);
+>   
+> +/**
+> + * led_classdev_get_default_pattern - return default pattern
+
+s/led_classdev/led/
+
+> + *
+> + * @led_cdev: the led_classdev structure for this device
+> + * @size:     pointer for storing the number of elements in returned array,
+> + *            modified only if return != NULL
+> + *
+> + * Return:    Allocated array of integers with default pattern from DeviceTree
+> + *            or NULL.  Caller is responsible for kfree().
+> + */
+> +u32 *led_classdev_get_default_pattern(struct led_classdev *led_cdev,
+> +				      unsigned int *size)
+
+Ditto.
+
+> +{
+> +	struct device_node *np = dev_of_node(led_cdev->dev);
+> +	u32 *pattern;
+> +	int count;
+> +
+> +	if (!np)
+> +		return NULL;
+> +
+> +	count = of_property_count_u32_elems(np, "led-pattern");
+> +	if (count < 0)
+> +		return NULL;
+> +
+> +	pattern = kcalloc(count, sizeof(*pattern), GFP_KERNEL);
+> +	if (!pattern)
+> +		return NULL;
+> +
+> +	if (of_property_read_u32_array(np, "led-pattern", pattern, count))
+> +		goto err;
+> +
+> +	*size = count;
+> +
+> +	return pattern;
+> +
+> +err:
+> +	kfree(pattern);
+> +	return NULL;
+> +}
+> +EXPORT_SYMBOL_GPL(led_classdev_get_default_pattern);
+
+Ditto.
+
+> +
+>   /* Caller must ensure led_cdev->led_access held */
+>   void led_sysfs_disable(struct led_classdev *led_cdev)
+>   {
+> diff --git a/include/linux/leds.h b/include/linux/leds.h
+> index 5263f87e1d2c..70edf574ba81 100644
+> --- a/include/linux/leds.h
+> +++ b/include/linux/leds.h
+> @@ -129,6 +129,9 @@ struct led_classdev {
+>   	struct mutex		led_access;
+>   };
+>   
+> +extern u32 *led_classdev_get_default_pattern(struct led_classdev *led_cdev,
+> +					     unsigned int *size);
+> +
+
+Ditto.
+
+>   extern int of_led_classdev_register(struct device *parent,
+>   				    struct device_node *np,
+>   				    struct led_classdev *led_cdev);
 > 
 
-Main purpose of the PECI client driver is providing 'reg' value to its
-child devices. If I add the child nodes directly, compiler will make
-warnings while building dtb because the child nodes are using the same
-unit address.
-
-Thanks,
-Jae
+-- 
+Best regards,
+Jacek Anaszewski
