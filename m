@@ -1,224 +1,78 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH 2/2] reset: Add Broadcom STB SW_INIT reset controller
- driver
-Date: Wed, 02 Jan 2019 11:44:55 +0100
-Message-ID: <1546425895.3457.1.camel@pengutronix.de>
-References: <20181221013409.14324-1-f.fainelli@gmail.com>
-         <20181221013409.14324-3-f.fainelli@gmail.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
+Date: Wed, 02 Jan 2019 11:51:19 +0100
+Message-ID: <f4fa4226a508d563d1a77eaafa5590fd84577c15.camel@baylibre.com>
+References: <20181220161037.23756-1-jbrunet@baylibre.com>
+         <20181220161037.23756-3-jbrunet@baylibre.com>
+         <CAFBinCBQkpLxUZYp2NQoXEA=8t_XCJMHauM+DwTz-p0FA57CrA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221013409.14324-3-f.fainelli@gmail.com>
+In-Reply-To: <CAFBinCBQkpLxUZYp2NQoXEA=8t_XCJMHauM+DwTz-p0FA57CrA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Florian,
-
-On Thu, 2018-12-20 at 17:34 -0800, Florian Fainelli wrote:
-> Add support for resetting blocks through the Linux reset controller
-> subsystem when reset lines are provided through a SW_INIT-style reset
-> controller on Broadcom STB SoCs.
+On Sat, 2018-12-22 at 18:01 +0100, Martin Blumenstingl wrote:
+> Hi Jerome,
 > 
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-
-Thank you, this looks mostly good to me. I just have a few small
-nitpicks and I'm curious about the mdelays, see below.
-
-> ---
->  drivers/reset/Kconfig         |   7 ++
->  drivers/reset/Makefile        |   1 +
->  drivers/reset/reset-brcmstb.c | 121 ++++++++++++++++++++++++++++++++++
->  3 files changed, 129 insertions(+)
->  create mode 100644 drivers/reset/reset-brcmstb.c
+> On Thu, Dec 20, 2018 at 5:11 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > While some 3.3v eMMC 4.0 are available from libretech, the default
+> > option for the aml-s905x-cc seems to 1.8v 5.0 modules.
+> nit-pick:
+> can you please state which module (storage size) you used for testing?
+> you probably still remember that we had some confusion on Odroid-C2
+> which eMMC module works and which doesn't, so let's be explicit here
 > 
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 2e01bd833ffd..1ca03c57e049 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -40,6 +40,13 @@ config RESET_BERLIN
->  	help
->  	  This enables the reset controller driver for Marvell Berlin SoCs.
->  
-> +config RESET_BRCMSTB
-> +	bool "Broadcom STB reset controller" if COMPILE_TEST
-> +	default ARCH_BRCMSTB
-> +	help
-> +	  This enables the reset controller driver for Broadcom STB SoCs using
-> +	  a SUN_TOP_CTRL_SW_INIT style controller.
-> +
->  config RESET_HSDK
->  	bool "Synopsys HSDK Reset Driver"
->  	depends on HAS_IOMEM
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index dc7874df78d9..7395db2cb1dd 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
->  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
->  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-> +obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
->  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
->  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
-> diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
-> new file mode 100644
-> index 000000000000..17a0bcdd6c9a
-> --- /dev/null
-> +++ b/drivers/reset/reset-brcmstb.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Broadcom STB generic reset controller for SW_INIT style reset controller
-> + *
-> + * Copyright (C) 2018 Broadcom
-> + *
-> + */
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/types.h>
-> +
-> +struct brcmstb_reset {
-> +	void __iomem *base;
+> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+> > ---
+> >  .../boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts    | 9 +++++----
+> >  1 file changed, 5 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> > b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> > index daad007fac1f..d0d202cf7161 100644
+> > --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> > @@ -118,8 +118,8 @@
+> >         vddio_boot: regulator-vddio_boot {
+> >                 compatible = "regulator-fixed";
+> >                 regulator-name = "VDDIO_BOOT";
+> > -               regulator-min-microvolt = <3300000>;
+> > -               regulator-max-microvolt = <3300000>;
+> > +               regulator-min-microvolt = <1800000>;
+> > +               regulator-max-microvolt = <1800000>;
+> is there a 3.3V -> 1.8V regulator on the eMMC module?
+> I'm not sure about the schematics but it seems to be that the board
+> itself supplies only 3.3V to the eMMC connector, so I'm not sure where
+> 1.8V come from in this case
 
-> +	unsigned int n_words;
-> +	struct device *dev;
+The module is indeed fed by 3.3v only but it has embedded LDOs add will feed
+back the supply of the BOOT gpio bank.
 
-These two variables are not used anywhere.
+I tried the following modules:
+* 8 GB samsung - v1.0-170420
+* 32 GB toshiba - v1.0-170421
 
-> +	struct reset_controller_dev rcdev;
-> +};
-> +
-> +#define SW_INIT_SET		0x00
-> +#define SW_INIT_CLEAR		0x04
-> +#define SW_INIT_STATUS		0x08
-> +
-> +#define SW_INIT_BIT(id)		BIT((id) & 0x1f)
-> +#define SW_INIT_BANK(id)	(id >> 5)
+I think you can't get them here [0].
 
-Checkpatch suggests to use ((id) >> 5) here.
+In theory, these 4.x modules [1] could also work. They don't have the LDOs and
+are directly feeding back the 3.3v to the BOOT bank. Since the modules are
+advertised as being compatible with the Allwinner boards only, and not the AML
+ones, it should not be the default option.
 
-> +
-> +#define SW_INIT_BANK_SIZE	0x18
-> +
-> +static inline
-> +struct brcmstb_reset *to_brcmstb(struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct brcmstb_reset, rcdev);
-> +}
-> +
-> +static int brcmstb_reset_assert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
-> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
-> +
-> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_SET);
-> +	msleep(10);
+[0] : 
+https://www.loverpi.com/collections/libre-computer-project/products/libre-computer-board-emmc-5-x-module?variant=4173557729
+[1] : 
+https://www.loverpi.com/collections/libre-computer-project/products/libre-computer-board-emmc-4-x-module?variant=761282232333
 
-What is the purpose of the msleep(10)? Is it guaranteed that the writel
-takes effect before the msleep, or could it be lingering in some store
-buffer for (a part of) the duration? Also, checkpatch warns about this
-being < 20 ms. You could increase the delay or use usleep_range.
+> can you please add a comment to the .dts about this?
 
-> +	return 0;
-> +}
-> +
-> +static int brcmstb_reset_deassert(struct reset_controller_dev *rcdev,
-> +				  unsigned long id)
-> +{
-> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
-> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
-> +
-> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_CLEAR);
-> +	msleep(10);
+Sure
 
-Same as above, what has to be delayed for 10 ms after deasserting the
-reset? Is this the same for all reset lines handled by this controller?
-
-> +
-> +	return 0;
-> +}
-> +
-> +static int brcmstb_reset_status(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
-> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
-> +
-> +	return readl_relaxed(priv->base + off + SW_INIT_STATUS);
-
-Should this be
-
-+	return readl_relaxed(priv->base + off + SW_INIT_STATUS) &
-+	       SW_INIT_BANK(id);
-
-i.e. do the SW_INIT_STATUS registers contain 32 status bits, one for
-each reset line?
-
-> +}
-> +
-> +static const struct reset_control_ops brcmstb_reset_ops = {
-> +	.assert	= brcmstb_reset_assert,
-> +	.deassert = brcmstb_reset_deassert,
-> +	.status = brcmstb_reset_status,
-> +};
-> +
-> +static int brcmstb_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct device *kdev = &pdev->dev;
-> +	struct brcmstb_reset *priv;
-> +	struct resource *res;
-> +
-> +	priv = devm_kzalloc(kdev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	priv->base = devm_ioremap_resource(kdev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	dev_set_drvdata(kdev, priv);
-> +
-> +	priv->rcdev.owner = THIS_MODULE;
-> +	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
-> +	priv->rcdev.ops = &brcmstb_reset_ops;
-> +	priv->rcdev.of_node = kdev->of_node;
-> +	/* Use defaults: 1 cell and simple xlate function */
-> +	priv->dev = kdev;
-
-priv->dev could be removed.
-
-> +
-> +	return devm_reset_controller_register(kdev, &priv->rcdev);
-> +}
-> +
-> +static const struct of_device_id brcmstb_reset_of_match[] = {
-> +	{ .compatible = "brcm,brcmstb-reset" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver brcmstb_reset_driver = {
-> +	.probe	= brcmstb_reset_probe,
-> +	.driver	= {
-> +		.name = "brcmstb-reset",
-> +		.of_match_table = brcmstb_reset_of_match,
-> +	},
-> +};
-> +module_platform_driver(brcmstb_reset_driver);
-> +
-> +MODULE_AUTHOR("Broadcom");
-> +MODULE_DESCRIPTION("Broadcom STB reset controller");
-> +MODULE_LICENSE("GPL");
-
-regards
-Philipp
+> 
+> 
+> Regards
+> Martin
