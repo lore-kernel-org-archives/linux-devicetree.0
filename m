@@ -1,43 +1,212 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: reset: Add document for Broadcom STB
- reset controller
-Date: Wed, 2 Jan 2019 12:38:58 -0800
-Message-ID: <a5bc2d16-0b69-b3b2-c7d2-1ebeeb3f8989@gmail.com>
-References: <20181221013409.14324-1-f.fainelli@gmail.com>
- <20181221013409.14324-2-f.fainelli@gmail.com>
- <67d797f6-fc3a-535c-d336-edcdc70c332e@broadcom.com>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V3 3/3] mmc: tegra: SDMMC pads auto-calibration
+Date: Wed, 2 Jan 2019 12:57:54 -0800
+Message-ID: <1546462674-22856-3-git-send-email-skomatineni@nvidia.com>
+References: <1546462674-22856-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <67d797f6-fc3a-535c-d336-edcdc70c332e@broadcom.com>
-Content-Language: en-US
+In-Reply-To: <1546462674-22856-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Branden <scott.branden@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc: devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/31/18 3:13 PM, Scott Branden wrote:
-> 
-> On 2018-12-20 5:34 p.m., Florian Fainelli wrote:
->> Add a binding document for the Broadcom STB reset controller, also known
->> as SW_INIT-style reset controller.
->>
->> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->> ---
->>   .../devicetree/bindings/reset/brcm,reset.txt  | 27 +++++++++++++++++++
->>   1 file changed, 27 insertions(+)
->>   create mode 100644
->> Documentation/devicetree/bindings/reset/brcm,reset.txt
->>
->> diff --git a/Documentation/devicetree/bindings/reset/brcm,reset.txt
->> b/Documentation/devicetree/bindings/reset/brcm,reset.txt
->> new file mode 100644
->> index 000000000000..6e5341b4f891
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/reset/brcm,reset.txt
-> This is brcmstb-reset specific.  File should be brcm, brcmstb-reset.txt
+Programs initial drive code offsets which will be used by auto
+calibration process.
 
-Indeed, thanks!
+Programs fixed drive strengths for SDMMC pads when auto cal
+timeouts. Fixed settings are based on Pre-SI analysis of the
+pad design.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+---
+ drivers/mmc/host/sdhci-tegra.c | 107 +++++++++++++++++++++++++++++++----------
+ 1 file changed, 81 insertions(+), 26 deletions(-)
+
+diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
+index 7b95d088fdef..f8361249cf57 100644
+--- a/drivers/mmc/host/sdhci-tegra.c
++++ b/drivers/mmc/host/sdhci-tegra.c
+@@ -75,6 +75,7 @@
+ #define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_MASK	0x0000000f
+ #define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_VREF_SEL_VAL	0x7
+ #define SDHCI_TEGRA_SDMEM_COMP_PADCTRL_E_INPUT_E_PWRD	BIT(31)
++#define SDHCI_COMP_PADCTRL_DRVUPDN_OFFSET_MASK		0x07FFF000
+ 
+ #define SDHCI_TEGRA_AUTO_CAL_STATUS			0x1ec
+ #define SDHCI_TEGRA_AUTO_CAL_ACTIVE			BIT(31)
+@@ -121,6 +122,8 @@ struct sdhci_tegra {
+ 	struct pinctrl *pinctrl_sdmmc;
+ 	struct pinctrl_state *pinctrl_state_3v3;
+ 	struct pinctrl_state *pinctrl_state_1v8;
++	struct pinctrl_state *pinctrl_state_3v3_drv;
++	struct pinctrl_state *pinctrl_state_1v8_drv;
+ 
+ 	struct sdhci_tegra_autocal_offsets autocal_offsets;
+ 	ktime_t last_calib;
+@@ -130,6 +133,9 @@ struct sdhci_tegra {
+ 	u32 dqs_trim;
+ };
+ 
++static int tegra_sdhci_set_padctrl(struct sdhci_host *host, int voltage,
++							bool state_drvupdn);
++
+ static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+@@ -437,6 +443,7 @@ static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
+ 			pdpu = offsets.pull_down_3v3 << 8 | offsets.pull_up_3v3;
+ 	}
+ 
++	/* Set initial offset before auto-calibration */
+ 	tegra_sdhci_set_pad_autocal_offset(host, pdpu);
+ 
+ 	card_clk_enabled = tegra_sdhci_configure_card_clk(host, false);
+@@ -460,19 +467,15 @@ static void tegra_sdhci_pad_autocalib(struct sdhci_host *host)
+ 	if (ret) {
+ 		dev_err(mmc_dev(host->mmc), "Pad autocal timed out\n");
+ 
+-		if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_180)
+-			pdpu = offsets.pull_down_1v8_timeout << 8 |
+-			       offsets.pull_up_1v8_timeout;
+-		else
+-			pdpu = offsets.pull_down_3v3_timeout << 8 |
+-			       offsets.pull_up_3v3_timeout;
+-
+-		/* Disable automatic calibration and use fixed offsets */
++		/* Disable automatic cal and use fixed Drive Strengths */
+ 		reg = sdhci_readl(host, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+ 		reg &= ~SDHCI_AUTO_CAL_ENABLE;
+ 		sdhci_writel(host, reg, SDHCI_TEGRA_AUTO_CAL_CONFIG);
+ 
+-		tegra_sdhci_set_pad_autocal_offset(host, pdpu);
++		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage, false);
++		if (ret < 0)
++			dev_err(mmc_dev(host->mmc),
++			"Setting drive strengths failed %d\n", PTR_ERR(ret));
+ 	}
+ }
+ 
+@@ -743,27 +746,73 @@ static int tegra_sdhci_execute_tuning(struct sdhci_host *host, u32 opcode)
+ 	return mmc_send_tuning(host->mmc, opcode, NULL);
+ }
+ 
+-static int tegra_sdhci_set_padctrl(struct sdhci_host *host, int voltage)
++static int tegra_sdhci_set_padctrl(struct sdhci_host *host, int voltage,
++							bool state_drvupdn)
+ {
+ 	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
+ 	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
+-	int ret;
++	struct sdhci_tegra_autocal_offsets offsets =
++					tegra_host->autocal_offsets;
++	struct pinctrl_state *pinctrl_drvupdn = NULL;
++	int ret = 0;
++	u8 drvup = 0, drvdn = 0;
++	u32 reg;
+ 
+-	if (!tegra_host->pad_control_available)
+-		return 0;
++	if (!state_drvupdn) {
++		/* PADS Drive Strength */
++		if (voltage == MMC_SIGNAL_VOLTAGE_180) {
++			if (!IS_ERR(tegra_host->pinctrl_state_1v8_drv) &&
++				(tegra_host->pinctrl_state_1v8_drv != NULL)) {
++				pinctrl_drvupdn =
++					tegra_host->pinctrl_state_1v8_drv;
++			} else {
++				drvup = offsets.pull_up_1v8_timeout;
++				drvdn = offsets.pull_down_1v8_timeout;
++			}
++		} else {
++			if (!IS_ERR(tegra_host->pinctrl_state_3v3_drv) &&
++				(tegra_host->pinctrl_state_3v3_drv != NULL)) {
++				pinctrl_drvupdn =
++					tegra_host->pinctrl_state_3v3_drv;
++			} else {
++				drvup = offsets.pull_up_3v3_timeout;
++				drvdn = offsets.pull_down_3v3_timeout;
++			}
++		}
++
++		if (pinctrl_drvupdn != NULL) {
++			ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
++							pinctrl_drvupdn);
++			if (ret < 0)
++				dev_err(mmc_dev(host->mmc),
++					"failed pads drvupdn, ret: %d\n", ret);
++		} else if ((drvup) || (drvdn)) {
++			reg = sdhci_readl(host,
++					SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
++			reg &= ~SDHCI_COMP_PADCTRL_DRVUPDN_OFFSET_MASK;
++			reg |= (drvup << 20) | (drvdn << 12);
++			sdhci_writel(host, reg,
++					SDHCI_TEGRA_SDMEM_COMP_PADCTRL);
++		}
+ 
+-	if (voltage == MMC_SIGNAL_VOLTAGE_180) {
+-		ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
+-					   tegra_host->pinctrl_state_1v8);
+-		if (ret < 0)
+-			dev_err(mmc_dev(host->mmc),
+-				"setting 1.8V failed, ret: %d\n", ret);
+ 	} else {
+-		ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
+-					   tegra_host->pinctrl_state_3v3);
+-		if (ret < 0)
+-			dev_err(mmc_dev(host->mmc),
+-				"setting 3.3V failed, ret: %d\n", ret);
++		/* Dual Voltage PADS Voltage selection */
++		if (!tegra_host->pad_control_available)
++			return 0;
++
++		if (voltage == MMC_SIGNAL_VOLTAGE_180) {
++			ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
++						tegra_host->pinctrl_state_1v8);
++			if (ret < 0)
++				dev_err(mmc_dev(host->mmc),
++					"setting 1.8V failed, ret: %d\n", ret);
++		} else {
++			ret = pinctrl_select_state(tegra_host->pinctrl_sdmmc,
++						tegra_host->pinctrl_state_3v3);
++			if (ret < 0)
++				dev_err(mmc_dev(host->mmc),
++					"setting 3.3V failed, ret: %d\n", ret);
++		}
+ 	}
+ 
+ 	return ret;
+@@ -778,7 +827,7 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
+ 	int ret = 0;
+ 
+ 	if (ios->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+-		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage);
++		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage, true);
+ 		if (ret < 0)
+ 			return ret;
+ 		ret = sdhci_start_signal_voltage_switch(mmc, ios);
+@@ -786,7 +835,7 @@ static int sdhci_tegra_start_signal_voltage_switch(struct mmc_host *mmc,
+ 		ret = sdhci_start_signal_voltage_switch(mmc, ios);
+ 		if (ret < 0)
+ 			return ret;
+-		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage);
++		ret = tegra_sdhci_set_padctrl(host, ios->signal_voltage, true);
+ 	}
+ 
+ 	if (tegra_host->pad_calib_required)
+@@ -805,6 +854,12 @@ static int tegra_sdhci_init_pinctrl_info(struct device *dev,
+ 		return -1;
+ 	}
+ 
++	tegra_host->pinctrl_state_1v8_drv = pinctrl_lookup_state(
++				tegra_host->pinctrl_sdmmc, "sdmmc-1v8-drv");
++
++	tegra_host->pinctrl_state_3v3_drv = pinctrl_lookup_state(
++				tegra_host->pinctrl_sdmmc, "sdmmc-3v3-drv");
++
+ 	tegra_host->pinctrl_state_3v3 =
+ 		pinctrl_lookup_state(tegra_host->pinctrl_sdmmc, "sdmmc-3v3");
+ 	if (IS_ERR(tegra_host->pinctrl_state_3v3)) {
 -- 
-Florian
+2.7.4
