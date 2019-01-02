@@ -1,4 +1,4 @@
-Return-Path: <SRS0=D81b=PK=linaro.org=sumit.garg@kernel.org>
+Return-Path: <SRS0=Zgn8=PK=redhat.com=bhsharma@kernel.org>
 MIME-Version: 1.0
 References: <1545908831-25910-1-git-send-email-sumit.garg@linaro.org>
  <1545908831-25910-3-git-send-email-sumit.garg@linaro.org> <CAKv+Gu9ShfrBhfCuRK_L_ZtZ3KnN7Jb-4hcX9nSO7AYbT8V8LQ@mail.gmail.com>
@@ -8,16 +8,18 @@ References: <1545908831-25910-1-git-send-email-sumit.garg@linaro.org>
  <20181228144610.GA21561@jax.urgonet> <CAFA6WYMC8_VHyXft_jKJOaZ3RDQMm5Djq+wLC4rVSiduGtjiLA@mail.gmail.com>
  <CAHUa44Go8zrxcRiCLmtKqVJZTSQue1Lo4ZdFFadxDVnT2EB++w@mail.gmail.com>
 In-Reply-To: <CAHUa44Go8zrxcRiCLmtKqVJZTSQue1Lo4ZdFFadxDVnT2EB++w@mail.gmail.com>
-From: Sumit Garg <sumit.garg@linaro.org>
-Date: Wed, 2 Jan 2019 15:42:08 +0530
-Message-ID: <CAFA6WYOJ25zvvaU+vc+wd9fOeLAAXMMueHKh9BJEP9pR4Vvxyg@mail.gmail.com>
+From: Bhupesh Sharma <bhsharma@redhat.com>
+Date: Wed, 2 Jan 2019 13:56:12 +0530
+Message-ID: <CACi5LpMp=E0Z2Bp+OvFudLogTTq4G6BgsWzr7CL40MCUcup-Ww@mail.gmail.com>
 Subject: Re: [PATCH v1 2/2] hwrng: add OP-TEE based rng driver
 Content-Type: text/plain; charset="UTF-8"
 To: Jens Wiklander <jens.wiklander@linaro.org>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, mpm@selenic.com, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, tee-dev@lists.linaro.org
+Cc: Sumit Garg <sumit.garg@linaro.org>, Ard Biesheuvel <ard.biesheuvel@linaro.org>, "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, mpm@selenic.com, Herbert Xu <herbert@gondor.apana.org.au>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Thompson <daniel.thompson@linaro.org>, tee-dev@lists.linaro.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Wed, 2 Jan 2019 at 13:34, Jens Wiklander <jens.wiklander@linaro.org> wrote:
+Hi Sumit, Jens,
+
+On Wed, Jan 2, 2019 at 1:34 PM Jens Wiklander <jens.wiklander@linaro.org> wrote:
 >
 > On Mon, Dec 31, 2018 at 11:24 AM Sumit Garg <sumit.garg@linaro.org> wrote:
 > >
@@ -149,15 +151,6 @@ On Wed, 2 Jan 2019 at 13:34, Jens Wiklander <jens.wiklander@linaro.org> wrote:
 > window has to be closed in some way and that's what we've done with
 > the current design.
 >
-
-Thanks Jens for further clarification on this over chat.
-
-It seems that current tee-supplicant when run with "-d" option (daemon
-mode added recently) shouldn't be an issue for this API change
-(non-blocking with return error code). But to be backwards compatible
-where tee-supplicant is usually started as background process (using
-"&"), we need blocking mode as well.
-
 > As I said in my previous mail, we need a way for the caller to tell if
 > it should be blocked or get an error if tee-supplicant isn't
 > available. This has to be done by extending the API instead of making
@@ -165,15 +158,22 @@ where tee-supplicant is usually started as background process (using
 >
 > It is tempting to add a flag to struct tee_context (caller specific
 > struct) which would indicate if tee-supplicant communication is
-> allowed or not. However, it's a bit ugly and also I'm not sure it will
+> allowed or not.
+
++1 . Adding a flag to specify a NONBLOCK'ing (call from the caller)
+[similar to the getrandom() user space call - see
+<http://man7.org/linux/man-pages/man2/getrandom.2.html> for details),
+would be helpful - specially when we look to integrate these
+user-space TEE applications with a 'systemd' like framework so that
+they can be launched appropriately (in the right order) while loading
+the initramfs.
+
+Regards,
+Bhupesh
+
+> However, it's a bit ugly and also I'm not sure it will
 > cover all cases we'll need.
 >
-
-So will add a flag to "struct tee_context" which is default set to
-blocking mode for tee-supplicant.
-
--Sumit
-
 > -Jens
 >
 > >
