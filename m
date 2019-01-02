@@ -1,46 +1,48 @@
-From: Chunfeng Yun <chunfeng.yun@mediatek.com>
-Subject: [PATCH v2] usb: devio: update max count of DPs per interval for ISOC
-Date: Wed, 2 Jan 2019 09:33:56 +0800
-Message-ID: <1546392836-7087-1-git-send-email-chunfeng.yun@mediatek.com>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: [PATCH v9 0/2] add uart DMA function
+Date: Wed, 2 Jan 2019 10:12:56 +0800
+Message-ID: <1546395178-8880-1-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Felipe Balbi <felipe.balbi@linux.intel.com>, Matthias Brugger <matthias.bgg@gmail.com>, Chunfeng Yun <chunfeng.yun@mediatek.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>
+Cc: Zhenbao Liu <zhenbao.liu@mediatek.com>, devicetree@vger.kernel.org, YT Shen <yt.shen@mediatek.com>, srv_heupstream@mediatek.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, Long Cheng <long.cheng@mediatek.com>, linux-mediatek@lists.infradead.org, linux-serial@vger.kernel.org, Jiri Slaby <jslaby@suse.com>, Matthias Brugger <matthias.bgg@gmail.com>, Yingjoe Chen <yingjoe.chen@mediatek.com>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The failure happened when I tried to send up to 96DPs per an interval
-for SSP ISOC transations by libusb, this is used to verify SSP ISOC
-function of USB3 GEN2 controller, so update it as 96DPs.
-(refer usb3.1r1.0 section 8.12.6 Isochronous Transactions)
+In Mediatek SOCs, the uart can support DMA function.
+Base on DMA engine formwork, we add the DMA code to support uart. And put the code under drivers/dma.
 
-Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
----
-v2: update changelog text suggested by Greg
----
- drivers/usb/core/devio.c | 8 +++-----
- 1 file changed, 3 insertions(+), 5 deletions(-)
+This series contains document bindings, Kconfig to control the function enable or not,
+device tree including interrupt and dma device node, the code of UART DMA
 
-diff --git a/drivers/usb/core/devio.c b/drivers/usb/core/devio.c
-index a75bc0b8a50f..82c16210e34c 100644
---- a/drivers/usb/core/devio.c
-+++ b/drivers/usb/core/devio.c
-@@ -1564,12 +1564,10 @@ static int proc_do_submiturb(struct usb_dev_state *ps, struct usbdevfs_urb *uurb
- 		}
- 		for (totlen = u = 0; u < number_of_packets; u++) {
- 			/*
--			 * arbitrary limit need for USB 3.0
--			 * bMaxBurst (0~15 allowed, 1~16 packets)
--			 * bmAttributes (bit 1:0, mult 0~2, 1~3 packets)
--			 * sizemax: 1024 * 16 * 3 = 49152
-+			 * arbitrary limit need for USB 3.1 Gen2
-+			 * sizemax: 96 DPs at SSP, 96 * 1024 = 98304
- 			 */
--			if (isopkt[u].length > 49152) {
-+			if (isopkt[u].length > 98304) {
- 				ret = -EINVAL;
- 				goto error;
- 			}
--- 
-2.19.1
+Changes compared to v8
+-revise missing items
+Changes compared to v7:
+-modify apdma uart tx
+Changes compared to v6:
+-Correct spelling
+Changes compared to v5:
+-move 'requst irqs' to alloc channel
+-remove tasklet.
+Changes compared to v4:
+-modify Kconfig depends on.
+Changes compared to v3:
+-fix CONFIG_PM, will cause build fail
+Changes compared to v2:
+-remove unimportant parameters
+-instead of cookie, use APIs of virtual channel.
+-use of_dma_xlate_by_chan_id.
+Changes compared to v1:
+-mian revised file, 8250_mtk_dma.c
+--parameters renamed for standard
+--remove atomic operation
