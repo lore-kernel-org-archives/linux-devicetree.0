@@ -1,129 +1,224 @@
-From: Tony Xie <tony.xie@rock-chips.com>
-Subject: [PATCH v7 6/6] clk: RK808: add RK809 and RK817 support.
-Date: Wed,  2 Jan 2019 05:23:55 -0500
-Message-ID: <20190102102355.29377-1-tony.xie@rock-chips.com>
-References: <20190102102002.29245-1-tony.xie@rock-chips.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH 2/2] reset: Add Broadcom STB SW_INIT reset controller
+ driver
+Date: Wed, 02 Jan 2019 11:44:55 +0100
+Message-ID: <1546425895.3457.1.camel@pengutronix.de>
+References: <20181221013409.14324-1-f.fainelli@gmail.com>
+         <20181221013409.14324-3-f.fainelli@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190102102002.29245-1-tony.xie@rock-chips.com>
+In-Reply-To: <20181221013409.14324-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: heiko@sntech.de
-Cc: broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-rtc@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, chenjh@rock-chips.com, xsf@rock-chips.com, zhangqing@rock-chips.com, huangtao@rock-chips.com, tony.xie@rock-chips.com
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-RK809 and RK817 are power management IC chips for multimedia products.
-most of their functions and registers are same, including the clkout
-funciton.
+Hi Florian,
 
-Signed-off-by: Tony Xie <tony.xie@rock-chips.com>
-Acked-by: Stephen Boyd <sboyd@kernel.org>
----
- drivers/clk/Kconfig     |  9 +++---
- drivers/clk/clk-rk808.c | 64 ++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 67 insertions(+), 6 deletions(-)
+On Thu, 2018-12-20 at 17:34 -0800, Florian Fainelli wrote:
+> Add support for resetting blocks through the Linux reset controller
+> subsystem when reset lines are provided through a SW_INIT-style reset
+> controller on Broadcom STB SoCs.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index e5b2fe80eab4..532ab112fa8a 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -52,13 +52,12 @@ config COMMON_CLK_MAX9485
- 	  This driver supports Maxim 9485 Programmable Audio Clock Generator
- 
- config COMMON_CLK_RK808
--	tristate "Clock driver for RK805/RK808/RK818"
-+	tristate "Clock driver for RK805/RK808/RK809/RK817/RK818"
- 	depends on MFD_RK808
- 	---help---
--	  This driver supports RK805, RK808 and RK818 crystal oscillator clock. These
--	  multi-function devices have two fixed-rate oscillators,
--	  clocked at 32KHz each. Clkout1 is always on, Clkout2 can off
--	  by control register.
-+	  This driver supports RK805, RK809 and RK817, RK808 and RK818 crystal oscillator clock.
-+	  These multi-function devices have two fixed-rate oscillators, clocked at 32KHz each.
-+	  Clkout1 is always on, Clkout2 can off by control register.
- 
- config COMMON_CLK_HI655X
- 	tristate "Clock driver for Hi655x" if EXPERT
-diff --git a/drivers/clk/clk-rk808.c b/drivers/clk/clk-rk808.c
-index 8d90bdf5b946..75f2cf0dfc9f 100644
---- a/drivers/clk/clk-rk808.c
-+++ b/drivers/clk/clk-rk808.c
-@@ -96,6 +96,68 @@ of_clk_rk808_get(struct of_phandle_args *clkspec, void *data)
- 	return idx ? &rk808_clkout->clkout2_hw : &rk808_clkout->clkout1_hw;
- }
- 
-+static int rk817_clkout2_enable(struct clk_hw *hw, bool enable)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+
-+	return regmap_update_bits(rk808->regmap, RK817_SYS_CFG(1),
-+				  RK817_CLK32KOUT2_EN,
-+				  enable ? RK817_CLK32KOUT2_EN : 0);
-+}
-+
-+static int rk817_clkout2_prepare(struct clk_hw *hw)
-+{
-+	return rk817_clkout2_enable(hw, true);
-+}
-+
-+static void rk817_clkout2_unprepare(struct clk_hw *hw)
-+{
-+	rk817_clkout2_enable(hw, false);
-+}
-+
-+static int rk817_clkout2_is_prepared(struct clk_hw *hw)
-+{
-+	struct rk808_clkout *rk808_clkout = container_of(hw,
-+							 struct rk808_clkout,
-+							 clkout2_hw);
-+	struct rk808 *rk808 = rk808_clkout->rk808;
-+	unsigned int val;
-+
-+	int ret = regmap_read(rk808->regmap, RK817_SYS_CFG(1), &val);
-+
-+	if (ret < 0)
-+		return 0;
-+
-+	return (val & RK817_CLK32KOUT2_EN) ? 1 : 0;
-+}
-+
-+static const struct clk_ops rk817_clkout2_ops = {
-+	.prepare = rk817_clkout2_prepare,
-+	.unprepare = rk817_clkout2_unprepare,
-+	.is_prepared = rk817_clkout2_is_prepared,
-+	.recalc_rate = rk808_clkout_recalc_rate,
-+};
-+
-+static const struct clk_ops *rkpmic_get_ops(long variant)
-+{
-+	switch (variant) {
-+	case RK809_ID:
-+	case RK817_ID:
-+		return &rk817_clkout2_ops;
-+	/*
-+	 * For the default case, it match the following PMIC type.
-+	 * RK805_ID
-+	 * RK808_ID
-+	 * RK818_ID
-+	 */
-+	default:
-+		return &rk808_clkout2_ops;
-+	}
-+}
-+
- static int rk808_clkout_probe(struct platform_device *pdev)
- {
- 	struct rk808 *rk808 = dev_get_drvdata(pdev->dev.parent);
-@@ -127,7 +189,7 @@ static int rk808_clkout_probe(struct platform_device *pdev)
- 		return ret;
- 
- 	init.name = "rk808-clkout2";
--	init.ops = &rk808_clkout2_ops;
-+	init.ops = rkpmic_get_ops(rk808->variant);
- 	rk808_clkout->clkout2_hw.init = &init;
- 
- 	/* optional override of the clockname */
--- 
-2.17.1
+Thank you, this looks mostly good to me. I just have a few small
+nitpicks and I'm curious about the mdelays, see below.
+
+> ---
+>  drivers/reset/Kconfig         |   7 ++
+>  drivers/reset/Makefile        |   1 +
+>  drivers/reset/reset-brcmstb.c | 121 ++++++++++++++++++++++++++++++++++
+>  3 files changed, 129 insertions(+)
+>  create mode 100644 drivers/reset/reset-brcmstb.c
+> 
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 2e01bd833ffd..1ca03c57e049 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -40,6 +40,13 @@ config RESET_BERLIN
+>  	help
+>  	  This enables the reset controller driver for Marvell Berlin SoCs.
+>  
+> +config RESET_BRCMSTB
+> +	bool "Broadcom STB reset controller" if COMPILE_TEST
+> +	default ARCH_BRCMSTB
+> +	help
+> +	  This enables the reset controller driver for Broadcom STB SoCs using
+> +	  a SUN_TOP_CTRL_SW_INIT style controller.
+> +
+>  config RESET_HSDK
+>  	bool "Synopsys HSDK Reset Driver"
+>  	depends on HAS_IOMEM
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index dc7874df78d9..7395db2cb1dd 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>  obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>  obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+>  obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> +obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+>  obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>  obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>  obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+> diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
+> new file mode 100644
+> index 000000000000..17a0bcdd6c9a
+> --- /dev/null
+> +++ b/drivers/reset/reset-brcmstb.c
+> @@ -0,0 +1,121 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Broadcom STB generic reset controller for SW_INIT style reset controller
+> + *
+> + * Copyright (C) 2018 Broadcom
+> + *
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/types.h>
+> +
+> +struct brcmstb_reset {
+> +	void __iomem *base;
+
+> +	unsigned int n_words;
+> +	struct device *dev;
+
+These two variables are not used anywhere.
+
+> +	struct reset_controller_dev rcdev;
+> +};
+> +
+> +#define SW_INIT_SET		0x00
+> +#define SW_INIT_CLEAR		0x04
+> +#define SW_INIT_STATUS		0x08
+> +
+> +#define SW_INIT_BIT(id)		BIT((id) & 0x1f)
+> +#define SW_INIT_BANK(id)	(id >> 5)
+
+Checkpatch suggests to use ((id) >> 5) here.
+
+> +
+> +#define SW_INIT_BANK_SIZE	0x18
+> +
+> +static inline
+> +struct brcmstb_reset *to_brcmstb(struct reset_controller_dev *rcdev)
+> +{
+> +	return container_of(rcdev, struct brcmstb_reset, rcdev);
+> +}
+> +
+> +static int brcmstb_reset_assert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
+> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
+> +
+> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_SET);
+> +	msleep(10);
+
+What is the purpose of the msleep(10)? Is it guaranteed that the writel
+takes effect before the msleep, or could it be lingering in some store
+buffer for (a part of) the duration? Also, checkpatch warns about this
+being < 20 ms. You could increase the delay or use usleep_range.
+
+> +	return 0;
+> +}
+> +
+> +static int brcmstb_reset_deassert(struct reset_controller_dev *rcdev,
+> +				  unsigned long id)
+> +{
+> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
+> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
+> +
+> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_CLEAR);
+> +	msleep(10);
+
+Same as above, what has to be delayed for 10 ms after deasserting the
+reset? Is this the same for all reset lines handled by this controller?
+
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcmstb_reset_status(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
+> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
+> +
+> +	return readl_relaxed(priv->base + off + SW_INIT_STATUS);
+
+Should this be
+
++	return readl_relaxed(priv->base + off + SW_INIT_STATUS) &
++	       SW_INIT_BANK(id);
+
+i.e. do the SW_INIT_STATUS registers contain 32 status bits, one for
+each reset line?
+
+> +}
+> +
+> +static const struct reset_control_ops brcmstb_reset_ops = {
+> +	.assert	= brcmstb_reset_assert,
+> +	.deassert = brcmstb_reset_deassert,
+> +	.status = brcmstb_reset_status,
+> +};
+> +
+> +static int brcmstb_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct device *kdev = &pdev->dev;
+> +	struct brcmstb_reset *priv;
+> +	struct resource *res;
+> +
+> +	priv = devm_kzalloc(kdev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	priv->base = devm_ioremap_resource(kdev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	dev_set_drvdata(kdev, priv);
+> +
+> +	priv->rcdev.owner = THIS_MODULE;
+> +	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
+> +	priv->rcdev.ops = &brcmstb_reset_ops;
+> +	priv->rcdev.of_node = kdev->of_node;
+> +	/* Use defaults: 1 cell and simple xlate function */
+> +	priv->dev = kdev;
+
+priv->dev could be removed.
+
+> +
+> +	return devm_reset_controller_register(kdev, &priv->rcdev);
+> +}
+> +
+> +static const struct of_device_id brcmstb_reset_of_match[] = {
+> +	{ .compatible = "brcm,brcmstb-reset" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver brcmstb_reset_driver = {
+> +	.probe	= brcmstb_reset_probe,
+> +	.driver	= {
+> +		.name = "brcmstb-reset",
+> +		.of_match_table = brcmstb_reset_of_match,
+> +	},
+> +};
+> +module_platform_driver(brcmstb_reset_driver);
+> +
+> +MODULE_AUTHOR("Broadcom");
+> +MODULE_DESCRIPTION("Broadcom STB reset controller");
+> +MODULE_LICENSE("GPL");
+
+regards
+Philipp
