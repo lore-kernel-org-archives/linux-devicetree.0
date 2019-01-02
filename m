@@ -1,70 +1,146 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 2/3] dmaengine: Extend the k3dma driver binding
-Date: Wed, 2 Jan 2019 10:00:15 -0800
-Message-ID: <CALAqxLW_eGX25sZKVCpGwoq94QdYj9K2nJg6buh=FAZZt_Cuhg@mail.gmail.com>
-References: <1545978983-124360-1-git-send-email-hutenghui@huawei.com> <1545978983-124360-2-git-send-email-hutenghui@huawei.com>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v9 08/12] mfd: intel-peci-client: Add PECI client MFD
+ driver
+Date: Wed, 2 Jan 2019 10:22:18 -0800
+Message-ID: <8e4bcf7d-aa43-6745-2ade-9123c8d182ef@linux.intel.com>
+References: <20181218210417.30140-1-jae.hyun.yoo@linux.intel.com>
+ <20181218210417.30140-9-jae.hyun.yoo@linux.intel.com>
+ <20181221144603.GR13248@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545978983-124360-2-git-send-email-hutenghui@huawei.com>
+In-Reply-To: <20181221144603.GR13248@dell>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: h00249924 <hutenghui@huawei.com>
-Cc: dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, wwx575822@notesmail.huawei.com, hanxiaolong3@hisilicon.com, Zhuangluan Su <suzhuangluan@hisilicon.com>, Hantanglei <hantanglei@huawei.com>, Kongfei <kongfei@hisilicon.com>, ninggaoyu <ninggaoyu@hisilicon.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Liyuequan <liyuequan@hisilicon.com>, "huangli (I)" <huangli295@hisilicon.com>, wangyoulin <wangyoulin1@hisilicon.com>, "Qianli (A)" <cash.qianli@hisilicon.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 27, 2018 at 10:39 PM h00249924 <hutenghui@huawei.com> wrote:
->
-> From: Youlin Wang <wwx575822@notesmail.huawei.com>
->
-> Extend the k3dma driver binding to support hisi-asp hardware variants.
->
-> Signed-off-by: Youlin Wang <wwx575822@notesmail.huawei.com>
-> Signed-off-by: Tanglei Han <hantanglei@huawei.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  Documentation/devicetree/bindings/dma/k3dma.txt | 33 ++++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
->
-> diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> index 4945aea..cd21b82 100644
-> --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> @@ -3,7 +3,9 @@
->  See dma.txt first
->
->  Required properties:
-> -- compatible: Should be "hisilicon,k3-dma-1.0"
-> +- compatible: Must be one of
-> +-              "hisilicon,k3-dma-1.0"
-> +-              "hisilicon,hisi-pcm-asp-dma-1.0"
->  - reg: Should contain DMA registers location and length.
->  - interrupts: Should contain one interrupt shared by all channel
->  - #dma-cells: see dma.txt, should be 1, para number
-> @@ -43,3 +45,32 @@ For example, i2c0 read channel request line is 18, while write channel use 19
->                         dma-names = "rx", "tx";
->                 };
->
-> +
-> +
-> +
-> +Controller:
-> +               asp_dmac: asp_dmac@E804B000 {
-> +                       compatible = "hisilicon,hisi-pcm-asp-dma-1.0";
-> +                       reg = <0x0 0xe804b000 0x0 0x1000>;
-> +                       #dma-cells = <1>;
-> +                       dma-channels = <16>;
-> +                       dma-requests = <32>;
-> +                       dma-min-chan = <0>;
-> +                       dma-used-chans = <0xFFFE>;
-> +                       dma-share;
+Hi Lee,
 
-Thanks for sending this out!
+On 12/21/2018 6:46 AM, Lee Jones wrote:
+> On Tue, 18 Dec 2018, Jae Hyun Yoo wrote:
+> 
+>> This commit adds PECI client MFD driver.
+>>
 
-So min-chan, used-chans and dma-share aren't in the existing binding
-document. So they probably should be removed from this example, or the
-binding document needs to be updated first.
+<snip>
 
-thanks
--john
+>>   
+>> +config MFD_INTEL_PECI_CLIENT
+>> +	bool "Intel PECI client"
+>> +	depends on (PECI || COMPILE_TEST)
+>> +	select MFD_CORE
+>> +	help
+>> +	  If you say yes to this option, support will be included for the
+>> +	  Intel PECI (Platform Environment Control Interface) client. PECI is a
+>> +	  one-wire bus interface that provides a communication channel from PECI
+>> +	  clients in Intel processors and chipset components to external
+>> +	  monitoring or control devices.
+> 
+> This driver doesn't appear to actually do anything that can't be done
+> in a header file i.e. match some static data with a CPU ID.  The child
+> devices can be registered by whatever registers this device.
+> 
+> It seems superfluous.  Why do you need it?
+>
+
+The main reason I added it is to provide a way for sharing the same unit
+address from multiple side-band function drivers that read 'reg'
+property setting from the parent node (this driver's node). The 'reg'
+property reading code is not in this driver but it will be performed in
+peci-core when this driver is registered using
+module_peci_driver(peci_client_driver), and then it will provides
+client->addr information for all its child node drivers.
+
+<snip>
+
+>> +#include <linux/bitfield.h>
+>> +#include <linux/mfd/core.h>
+>> +#include <linux/mfd/intel-peci-client.h>
+>> +#include <linux/module.h>
+>> +#include <linux/peci.h>
+>> +#include <linux/of_device.h>
+> 
+> Alphabetical.
+> 
+
+Will fix it. Thanks!
+
+<snip>
+
+>> +enum cpu_gens {
+>> +	CPU_GEN_HSX = 0, /* Haswell Xeon */
+>> +	CPU_GEN_BRX,     /* Broadwell Xeon */
+>> +	CPU_GEN_SKX,     /* Skylake Xeon */
+>> +};
+> 
+> This is unused.
+> 
+
+This is being used in 8 lines below but actually the static array can be
+initialized without using this enum type. Will remove it.
+
+>> +static struct mfd_cell peci_functions[] = {
+>> +	{ .name = "peci-cputemp", },
+>> +	{ .name = "peci-dimmtemp", },
+>> +	/* TODO: Add additional PECI sideband functions into here */
+>> +};
+>> +
+>> +static const struct cpu_gen_info cpu_gen_info_table[] = {
+>> +	[CPU_GEN_HSX] = {
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_HASWELL_X,
+>> +		.core_max      = CORE_MAX_ON_HSX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_HSX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_HSX },
+>> +	[CPU_GEN_BRX] = {
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_BROADWELL_X,
+>> +		.core_max      = CORE_MAX_ON_BDX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_BDX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_BDX },
+>> +	[CPU_GEN_SKX] = {
+>> +		.family        = 6, /* Family code */
+>> +		.model         = INTEL_FAM6_SKYLAKE_X,
+>> +		.core_max      = CORE_MAX_ON_SKX,
+>> +		.chan_rank_max = CHAN_RANK_MAX_ON_SKX,
+>> +		.dimm_idx_max  = DIMM_IDX_MAX_ON_SKX },
+>> +};
+>> +
+>> +static int peci_client_get_cpu_gen_info(struct peci_client_manager *priv)
+>> +{
+>> +	u32 cpu_id;
+>> +	u16 family;
+>> +	u8 model;
+>> +	int rc;
+> 
+> ret is almost ubiquitous in the kernel.  Please use it instead.
+> 
+
+Okay. Will change rc to ret.
+
+<snip>
+
+>> +static int peci_client_probe(struct peci_client *client)
+>> +{
+>> +	struct device *dev = &client->dev;
+>> +	struct peci_client_manager *priv;
+>> +	uint cpu_no;
+>> +	int ret;
+>> +
+>> +	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
+>> +	if (!priv)
+>> +		return -ENOMEM;
+>> +
+>> +	dev_set_drvdata(dev, priv);
+>> +	priv->client = client;
+>> +	priv->dev = dev;
+> 
+> If you have client (Which contains dev, you don't need dev).
+> 
+
+Makes sense. Will remove the 'dev' member.
+
+<snip>
