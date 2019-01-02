@@ -1,29 +1,50 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 1/7] dt-bindings: net: Add Qualcomm ethqos binding
-Date: Wed, 2 Jan 2019 15:07:31 +0100
-Message-ID: <20190102140731.GI22737@lunn.ch>
-References: <20190102091729.18582-1-vkoul@kernel.org>
- <20190102091729.18582-2-vkoul@kernel.org>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: [RFC RESEND PATCH 5/7] soc: mediatek: add header for mediatek SIP interface
+Date: Wed, 2 Jan 2019 22:09:56 +0800
+Message-ID: <1546438198-1677-6-git-send-email-henryc.chen@mediatek.com>
+References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190102091729.18582-2-vkoul@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-> +	mdio {
-> +		#address-cells = <0x1>;
-> +		#size-cells = <0x0>;
-> +		compatible = "snps,dwmac-mdio";
-> +		phy1: phy@1 {
+Add a header to collect SIPs and add one SIP call to initialize power
+management hardware for the SIP interface defined to access the SPM
+handling vcore voltage and ddr rate changes on mt8183 (and most likely
+later socs).
 
-phy@4 since reg = 0x4
+Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+---
+ include/soc/mediatek/mtk_sip.h | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+ create mode 100644 include/soc/mediatek/mtk_sip.h
 
-> +			device_type = "ethernet-phy";
-> +			reg = <0x4>;
-
-Thanks,
-	Andrew
+diff --git a/include/soc/mediatek/mtk_sip.h b/include/soc/mediatek/mtk_sip.h
+new file mode 100644
+index 0000000..5394ff4
+--- /dev/null
++++ b/include/soc/mediatek/mtk_sip.h
+@@ -0,0 +1,17 @@
++/* SPDX-License-Identifier: GPL-2.0
++ *
++ * Copyright (c) 2018 MediaTek Inc.
++ */
++#ifndef __SOC_MTK_SIP_H
++#define __SOC_MTK_SIP_H
++
++#ifdef CONFIG_ARM64
++#define MTK_SIP_SMC_AARCH_BIT		0x40000000
++#else
++#define MTK_SIP_SMC_AARCH_BIT		0x00000000
++#endif
++
++#define MTK_SIP_SPM			(0x82000220 | MTK_SIP_SMC_AARCH_BIT)
++#define MTK_SIP_SPM_DVFSRC_INIT		0x00
++
++#endif
+-- 
+1.9.1
