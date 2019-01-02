@@ -1,112 +1,105 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v5 0/3] Stingray thermal driver support
-Date: Wed, 2 Jan 2019 10:02:43 +0530
-Message-ID: <CABe79T7FiAiCELmgK9xUiSaW8g=Vx6mBzan7+=8zx4uZ2jh1Rw@mail.gmail.com>
-References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
- <b6e02875-784f-4908-a985-5ee7e3df3ac6@gmail.com> <CABe79T4mpnbkaTCerYegmc1+uY4idOVOxCVDqHramk3fYipiCA@mail.gmail.com>
- <3c05a1f1-5041-ebb7-27e5-0a2321314b0a@broadcom.com> <1546351479.2077.1.camel@intel.com>
- <20190101160733.GB3306@localhost.localdomain>
+From: Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v5 08/20] iommu/mediatek: Add larb-id remapped support
+Date: Wed, 2 Jan 2019 14:15:15 +0800
+Message-ID: <CANMq1KCz9mkrou2+C_FTKWsaa3+riofn5VXHdE==Ux3vLJf=zA@mail.gmail.com>
+References: <1546314952-15990-1-git-send-email-yong.wu@mediatek.com>
+	<1546314952-15990-9-git-send-email-yong.wu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190101160733.GB3306@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Zhang Rui <rui.zhang@intel.com>, Florian Fainelli <florian.fainelli@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+In-Reply-To: <1546314952-15990-9-git-send-email-yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
+List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
+List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
+	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
+Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
+To: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+Cc: youlin.pei-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Arnd Bergmann <arnd-r2nGTMty4D4@public.gmane.org>, srv_heupstream-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, lkml <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Tomasz Figa <tfiga-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org>, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Yingjoe Chen <yingjoe.chen-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>, Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>, linux-arm Mailing List <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui, Eduardo,
-
-Wish you very happy new year and Thank you very much for your response.
-
-Regards,
-Srinath.
-
-On Tue, Jan 1, 2019 at 9:37 PM Eduardo Valentin <edubezval@gmail.com> wrote=
-:
+On Tue, Jan 1, 2019 at 11:58 AM Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org> wrote:
 >
-> On Tue, Jan 01, 2019 at 10:04:39PM +0800, Zhang Rui wrote:
-> > On =E4=B8=80, 2018-12-31 at 14:15 -0800, Florian Fainelli wrote:
-> > >
-> > > On 04/12/2018 19:17, Srinath Mannam wrote:
-> > > >
-> > > > Hi,
-> > > >
-> > > > Could you please provide your feedback to this patch series?
-> > > Rui or Eduardo can we get either one of you to review the thermal
-> > > driver
-> > > parts of this patch series? Why do we constantly have to chase people
-> > > to
-> > > respond in this specific subsystem?
-> > >
-> > Eduardo, can you please take a look at this patch series?
+> The larb-id may be remapped in the smi-common, this means the
+> larb-id reported in the mtk_iommu_isr isn't the real larb-id,
 >
-> Yup, I will take a look.
+> Take mt8183 as a example:
+>                        M4U
+>                         |
+> ---------------------------------------------
+> |               SMI common                  |
+> -0-----7-----5-----6-----1-----2------3-----4- <- Id remapped
+>  |     |     |     |     |     |      |     |
+> larb0 larb1 IPU0  IPU1 larb4 larb5  larb6  CCU
+> disp  vdec  img   cam   venc  img    cam
+> As above, larb0 connects with the id 0 in smi-common.
+>           larb1 connects with the id 7 in smi-common.
+>           ...
+> If the larb-id reported in the isr is 7, actually it's larb1(vdec).
+> In order to output the right larb-id in the isr, we add a larb-id
+> remapping relationship in this patch.
 >
-> >
-> > thanks,
-> > rui
-> > > >
-> > > >
-> > > > Regards,
-> > > > Srinath.
-> > > > On Thu, Nov 8, 2018 at 3:45 AM Florian Fainelli <f.fainelli@gmail.c
-> > > > om> wrote:
-> > > > >
-> > > > >
-> > > > >
-> > > > >
-> > > > > On 10/16/2018 8:11 AM, Srinath Mannam wrote:
-> > > > > >
-> > > > > > These patches adds the stingray thermal driver and its
-> > > > > > corresponding DT nodes with documentation.
-> > > > > Can we get feedback from the thermal maintains whether this is
-> > > > > acceptable or not?
-> > > > >
-> > > > > >
-> > > > > >
-> > > > > > Changes from v4
-> > > > > >   - Addressed Rob Herring comments on DT parameters and
-> > > > > >     thermal driver architecture.
-> > > > > >   - Removed brcm,max-crit-temp DT parameter
-> > > > > >   - Changed driver to thermal sensor registration model.
-> > > > > >   - Added trip DT properties.
-> > > > > >
-> > > > > > Changes from v3
-> > > > > >   - Addressed Daniel lezcano comments.
-> > > > > >   - Elaborated commit description of thermal driver patch.
-> > > > > >   - Added brcm,max-crit-temp DT parameter.
-> > > > > >
-> > > > > > Changes from v2:
-> > > > > >   - All stingray TMON DT nodes are combine together into
-> > > > > > single.
-> > > > > >     Temperature registers are combined into one mem resource.
-> > > > > >     brcm,tmon-mask parameter has available TMONs mask value.
-> > > > > >   - All available TMONs are initialized together in single
-> > > > > >     instance of driver probe call.
-> > > > > >
-> > > > > > Changes from v1:
-> > > > > >   - Fixed auto build sparce warning.
-> > > > > >
-> > > > > > Pramod Kumar (3):
-> > > > > >   dt-bindings: thermal: Add binding document for SR thermal
-> > > > > >   thermal: broadcom: Add Stingray thermal driver
-> > > > > >   arm64: dts: stingray: Add Stingray Thermal DT support.
-> > > > > >
-> > > > > >  .../bindings/thermal/brcm,sr-thermal.txt           | 105
-> > > > > > ++++++++++++++++
-> > > > > >  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  89
-> > > > > > +++++++++++++
-> > > > > >  drivers/thermal/Kconfig                            |   3 +-
-> > > > > >  drivers/thermal/broadcom/Kconfig                   |   9 ++
-> > > > > >  drivers/thermal/broadcom/Makefile                  |   1 +
-> > > > > >  drivers/thermal/broadcom/sr-thermal.c              | 138
-> > > > > > +++++++++++++++++++++
-> > > > > >  6 files changed, 344 insertions(+), 1 deletion(-)
-> > > > > >  create mode 100644
-> > > > > > Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> > > > > >  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
-> > > > > >
-> > > > > --
-> > > > > Florian
+> If there is no this larb-id remapping in some SoCs, use the linear
+> mapping array instead.
+>
+> This also is a preparing patch for mt8183.
+>
+> Signed-off-by: Yong Wu <yong.wu-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
+
+I think it's a little cleaner this way, thanks.
+
+Reviewed-by: Nicolas Boichat <drinkcat-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+
+> ---
+>  drivers/iommu/mtk_iommu.c | 4 ++++
+>  drivers/iommu/mtk_iommu.h | 2 ++
+>  2 files changed, 6 insertions(+)
+>
+> diff --git a/drivers/iommu/mtk_iommu.c b/drivers/iommu/mtk_iommu.c
+> index 847082c..eca1536 100644
+> --- a/drivers/iommu/mtk_iommu.c
+> +++ b/drivers/iommu/mtk_iommu.c
+> @@ -220,6 +220,8 @@ static irqreturn_t mtk_iommu_isr(int irq, void *dev_id)
+>         fault_larb = F_MMU0_INT_ID_LARB_ID(regval);
+>         fault_port = F_MMU0_INT_ID_PORT_ID(regval);
+>
+> +       fault_larb = data->plat_data->larbid_remap[fault_larb];
+> +
+>         if (report_iommu_fault(&dom->domain, data->dev, fault_iova,
+>                                write ? IOMMU_FAULT_WRITE : IOMMU_FAULT_READ)) {
+>                 dev_err_ratelimited(
+> @@ -742,12 +744,14 @@ static int __maybe_unused mtk_iommu_resume(struct device *dev)
+>         .m4u_plat     = M4U_MT2712,
+>         .has_4gb_mode = true,
+>         .has_bclk     = true,
+> +       .larbid_remap = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9},
+>  };
+>
+>  static const struct mtk_iommu_plat_data mt8173_data = {
+>         .m4u_plat     = M4U_MT8173,
+>         .has_4gb_mode = true,
+>         .has_bclk     = true,
+> +       .larbid_remap = {0, 1, 2, 3, 4, 5}, /* Linear mapping. */
+>  };
+>
+>  static const struct of_device_id mtk_iommu_of_ids[] = {
+> diff --git a/drivers/iommu/mtk_iommu.h b/drivers/iommu/mtk_iommu.h
+> index b8749ac..eec19a6 100644
+> --- a/drivers/iommu/mtk_iommu.h
+> +++ b/drivers/iommu/mtk_iommu.h
+> @@ -47,6 +47,8 @@ struct mtk_iommu_plat_data {
+>
+>         /* HW will use the EMI clock if there isn't the "bclk". */
+>         bool                has_bclk;
+> +
+> +       unsigned char       larbid_remap[MTK_LARB_NR_MAX];
+>  };
+>
+>  struct mtk_iommu_domain;
+> --
+> 1.9.1
+>
