@@ -1,82 +1,30 @@
-From: Henry Chen <henryc.chen@mediatek.com>
-Subject: [RFC RESEND PATCH 1/7] dt-bindings: soc: Add DVFSRC driver bindings
-Date: Wed, 2 Jan 2019 22:09:52 +0800
-Message-ID: <1546438198-1677-2-git-send-email-henryc.chen@mediatek.com>
-References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 1/7] dt-bindings: net: Add Qualcomm ethqos binding
+Date: Wed, 2 Jan 2019 20:07:07 +0530
+Message-ID: <20190102143707.GN7581@vkoul-mobl>
+References: <20190102091729.18582-1-vkoul@kernel.org>
+ <20190102091729.18582-2-vkoul@kernel.org>
+ <20190102140731.GI22737@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, Henry Chen <henryc.chen@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190102140731.GI22737@lunn.ch>
+Sender: netdev-owner@vger.kernel.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the binding for enabling DVFSRC on MediaTek SoC.
+On 02-01-19, 15:07, Andrew Lunn wrote:
+> > +	mdio {
+> > +		#address-cells = <0x1>;
+> > +		#size-cells = <0x0>;
+> > +		compatible = "snps,dwmac-mdio";
+> > +		phy1: phy@1 {
+> 
+> phy@4 since reg = 0x4
 
-Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
----
- .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 26 ++++++++++++++++++++++
- include/dt-bindings/soc/mtk,dvfsrc.h               | 18 +++++++++++++++
- 2 files changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
- create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
+Right, will fix this
 
-diff --git a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-new file mode 100644
-index 0000000..402c885
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-@@ -0,0 +1,26 @@
-+MediaTek DVFSRC Driver
-+
-+The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
-+HW module which is used to collect all the requests from both software and
-+hardware and turn into the decision of minimum operating voltage and minimum
-+DRAM frequency to fulfill those requests.
-+
-+Required Properties:
-+- compatible: Should be one of the following
-+	- "mediatek,mt8183-dvfsrc": For MT8183 SoC
-+- reg: Address range of the DVFSRC unit
-+- dram_type: Refer to <include/dt-bindings/soc/mtk,dvfsrc.h> for the
-+	different dram type support.
-+- clock-names: Must include the following entries:
-+	"dvfsrc": DVFSRC module clock
-+- clocks: Must contain an entry for each entry in clock-names.
-+
-+Example:
-+
-+	dvfsrc_top@10012000 {
-+		compatible = "mediatek,mt8183-dvfsrc";
-+		reg = <0 0x10012000 0 0x1000>;
-+		clocks = <&infracfg CLK_INFRA_DVFSRC>;
-+		clock-names = "dvfsrc";
-+		dram_type = <MT8183_DVFSRC_OPP_LP4>;
-+	};
-diff --git a/include/dt-bindings/soc/mtk,dvfsrc.h b/include/dt-bindings/soc/mtk,dvfsrc.h
-new file mode 100644
-index 0000000..60b3497
---- /dev/null
-+++ b/include/dt-bindings/soc/mtk,dvfsrc.h
-@@ -0,0 +1,18 @@
-+/* SPDX-License-Identifier: GPL-2.0
-+ *
-+ * Copyright (c) 2018 MediaTek Inc.
-+ */
-+
-+#ifndef _DT_BINDINGS_POWER_MTK_DVFSRC_H
-+#define _DT_BINDINGS_POWER_MTK_DVFSRC_H
-+
-+#define MT8183_DVFSRC_OPP_LP4	0
-+#define MT8183_DVFSRC_OPP_LP4X	1
-+#define MT8183_DVFSRC_OPP_LP3	2
-+
-+#define MT8183_DVFSRC_LEVEL_1	1
-+#define MT8183_DVFSRC_LEVEL_2	2
-+#define MT8183_DVFSRC_LEVEL_3	3
-+#define MT8183_DVFSRC_LEVEL_4	4
-+
-+#endif /* _DT_BINDINGS_POWER_MTK_DVFSRC_H */
 -- 
-1.9.1
+~Vinod
