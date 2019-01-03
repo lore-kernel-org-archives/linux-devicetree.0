@@ -1,8 +1,7 @@
 From: Liming Sun <lsun@mellanox.com>
-Subject: [PATCH v7 3/9] dt-bindings: soc: Add TmFifo binding for Mellanox
- BlueField SoC
-Date: Thu,  3 Jan 2019 14:17:16 -0500
-Message-ID: <1546543042-156044-3-git-send-email-lsun@mellanox.com>
+Subject: [PATCH v7 4/9] MAINTAINERS: Add entry for Mellanox Bluefield Soc
+Date: Thu,  3 Jan 2019 14:17:17 -0500
+Message-ID: <1546543042-156044-4-git-send-email-lsun@mellanox.com>
 References: <1546543042-156044-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -24,45 +23,32 @@ To: Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods 
 Cc: devicetree@vger.kernel.org, Liming Sun <lsun@mellanox.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree bindings for the TmFifo which is found on Mellanox
-BlueField SoCs.
+Add maintainer information for Mellanox BlueField SoC.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
 Reviewed-by: David Woods <dwoods@mellanox.com>
 Signed-off-by: Liming Sun <lsun@mellanox.com>
 ---
- .../devicetree/bindings/soc/mellanox/tmfifo.txt    | 23 ++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+ MAINTAINERS | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-new file mode 100644
-index 0000000..8a13fa6
---- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-@@ -0,0 +1,23 @@
-+* Mellanox BlueField SoC TmFifo
+diff --git a/MAINTAINERS b/MAINTAINERS
+index f063443..bb2ea86 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -1759,6 +1759,14 @@ S:	Maintained
+ F:	drivers/phy/mediatek/
+ F:	Documentation/devicetree/bindings/phy/phy-mtk-*
+ 
++ARM/Mellanox BlueField SoC support
++M:	David Woods <dwoods@mellanox.com>
++M:	Liming Sun <lsun@mellanox.com>
++L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
++S:	Maintained
++F:	drivers/soc/mellanox/*
++F:	Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
 +
-+BlueField TmFifo provides a shared FIFO between the target and the
-+external host machine, which can be accessed by external host via
-+USB or PCIe. In the current tmfifo driver, this FIFO has been demuxed
-+to implement virtual console and network interface based on the virtio
-+framework.
-+
-+Required properties:
-+
-+- compatible:	Should be "mellanox,bf-tmfifo"
-+- reg:		Physical base address and length of Rx/Tx block
-+- interrupts:	The interrupt number of Rx low water mark, Rx high water mark
-+		Tx low water mark, Tx high water mark respectively.
-+
-+Example:
-+
-+tmfifo@800a20 {
-+	compatible = "mellanox,bf-tmfifo";
-+	reg = <0x00800a20 0x00000018
-+	       0x00800a40 0x00000018>;
-+	interrupts = <41, 42, 43, 44>;
-+};
+ ARM/MICREL KS8695 ARCHITECTURE
+ M:	Greg Ungerer <gerg@uclinux.org>
+ L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
 -- 
 1.8.3.1
