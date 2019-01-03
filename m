@@ -1,78 +1,85 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 2/2] phy: qualcomm: usb: Add Super-Speed PHY driver
-Date: Thu, 03 Jan 2019 15:30:06 -0800
-Message-ID: <154655820653.15366.12989225525562032193@swboyd.mtv.corp.google.com>
-References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1544176558-7946-3-git-send-email-jorge.ramirez-ortiz@linaro.org> <154533779333.79149.17234544366247143930@swboyd.mtv.corp.google.com> <2f38642e-27a0-0fd7-928e-8e782d0bc7c6@linaro.org>
+From: Brian Norris <briannorris@chromium.org>
+Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: qcom: Add firmware
+ bindings for Q6V5
+Date: Thu, 3 Jan 2019 15:30:15 -0800
+Message-ID: <20190103233014.GA181833@google.com>
+References: <20181228044819.5697-1-sibis@codeaurora.org>
+ <20181228044819.5697-2-sibis@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <2f38642e-27a0-0fd7-928e-8e782d0bc7c6@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20181228044819.5697-2-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, gregkh@linuxfoundation.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org
+To: Sibi Sankar <sibis@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez (2018-12-26 09:53:08)
-> On 12/20/18 21:29, Stephen Boyd wrote:
-> > Quoting Jorge Ramirez-Ortiz (2018-12-07 01:55:58)
-> >=20
-> >> +       struct regulator *vdda1p8;
-> >> +       struct regulator *vbus;
-> >> +       struct regulator *vdd;
-> >> +       unsigned int vdd_levels[LEVEL_NUM];
-> >> +};
-> >> +
-> >> +static inline void qcom_ssphy_updatel(void __iomem *addr, u32 mask, u=
-32 val)
-> >> +{
-> >> +       writel((readl(addr) & ~mask) | val, addr);
-> >> +}
-> >> +
-> >> +static int qcom_ssphy_config_vdd(struct ssphy_priv *priv,
-> >> +                                enum phy_vdd_level level)
-> >> +{
-> >> +       return regulator_set_voltage(priv->vdd,
-> >> +                                    priv->vdd_levels[level],
-> >> +                                    priv->vdd_levels[LEVEL_MAX]);
-> >=20
-> > regulator_set_voltage(reg, 0, max) is very suspicious. It's voltage
-> > corners where the voltages are known?
->=20
-> sorry I dont understand the question
->=20
-> this regulator on the ss phy wold be
-> vreg_l3_1p05: l3 {
->                 regulator-min-microvolt =3D <976000>;
->                 regulator-max-microvolt =3D <1160000>;
+Hi Sibi,
 
-Is this also the CX or MX voltage for the SoC? There would be a pin like
-VDDCX or VDDMX on the SoC part that is connected to this regulator if
-that's the case. Because you have "LEVEL" in the code it makes it sounds
-like it's voltage corners here so I suspect this is mapping into the
-voltage corner stuff that qcom has.
+On Fri, Dec 28, 2018 at 10:18:18AM +0530, Sibi Sankar wrote:
+> Add optional "firmware-name" bindings for Q6V5 MSS and PAS based
+> remoteprocs. For Q6V5 MSS/PAS the two/one relative firmware
+> paths/path are to be listed respectively. Fallback to the default
+> images for mba/modem for Q6V5 MSS or the default Hexagon image
+> for Q6V5 PAS if the "firmware-name" binding is not present.
+> 
+> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt | 6 ++++++
+>  Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt | 7 +++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> index 9c0cff3a5ed8..60ee0f73071a 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,adsp.txt
+> @@ -27,6 +27,12 @@ on the Qualcomm ADSP Hexagon core.
+>  	Value type: <stringlist>
+>  	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+>  
+> +- firmware-name:
+> +	Usage: optional
+> +	Value type: <string>
+> +	Definition: must list the relative firmware image path for the
+> +		    Hexagon Core.
 
-> };
-> >=20
-> >> +}
-> >> +
-> >> +static int qcom_ssphy_ldo_enable(struct ssphy_priv *priv)
-> >> +{
-> >> +       int ret;
-> >> +
-> >> +       ret =3D regulator_set_load(priv->vdda1p8, 23000);
-> >=20
-> > Do you need to do this? Why can't the regulator be in high power mode
-> > all the time and then go low power when it's disabled?
->=20
-> this regulator is shared with the usb hs phy and each (ss/hs) have=20
-> different load requirements. why would it be wrong for the ss phy to=20
-> announce its needs (which will differ from those of the hs phy)?
+Relative to what? I still think it's a terrible idea that your driver
+looks for files at the top-level /lib/firmware/ directory, but now
+you're leaking this into the device tree. This should at a bare minimum
+be namespaced to something like the qcom/ sub-directory. But ideally,
+the driver would automatically be deriving a further sub-directory of
+qcom/ based on the chipset or something, and then the only thing you'd
+describe here is some kind of variant string -- something akin to
+ath10k's qcom,ath10k-calibration-variant (see
+Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt), which
+doesn't require a full path-name or any hierarchy.
 
-Yes they have different load requirements, but in the end I would guess
-they always push the regulator into high power mode when the device is
-active and drop the load requirement when it's inactive. If it matches
-the enable state of the regulator then there isn't much need for setting
-a load explicitly besides stating that when the regulator is on it
-should be in high power mode and when it's off it should be in low power
-mode and off.
+Brian
+
+> +
+>  - clocks:
+>  	Usage: required
+>  	Value type: <prop-encoded-array>
+> diff --git a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> index 9ff5b0309417..3a99e7379d8c 100644
+> --- a/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> +++ b/Documentation/devicetree/bindings/remoteproc/qcom,q6v5.txt
+> @@ -36,6 +36,13 @@ on the Qualcomm Hexagon core.
+>  	Value type: <stringlist>
+>  	Definition: must be "wdog", "fatal", "ready", "handover", "stop-ack"
+>  
+> +- firmware-name:
+> +	Usage: optional
+> +	Value type: <stringlist>
+> +	Definition: must list the relative firmware image paths for mba and
+> +		    modem. They are used for booting and authenticating the
+> +		    Hexagon core.
+> +
+>  - clocks:
+>  	Usage: required
+>  	Value type: <phandle>
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
