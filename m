@@ -1,135 +1,93 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v6 1/9] soc: Add TmFifo driver for Mellanox BlueField Soc
-Date: Thu, 3 Jan 2019 19:20:26 +0000
-Message-ID: <DB6PR05MB3223FDA372C153FEF4E34D90A18D0@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1541089431-175572-1-git-send-email-lsun@mellanox.com>
- <23fff14b-0e44-651c-1dfd-8f8e07c7eaee@gmail.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [RFC PATCH] ASoC: fsl: Add Audio Mixer CPU DAI driver
+Date: Thu, 3 Jan 2019 12:03:19 -0800
+Message-ID: <20190103200319.GA2586@Asurada-Nvidia.nvidia.com>
+References: <1545150569-14897-1-git-send-email-viorel.suman@nxp.com>
+ <CAGoOwPQvc5w05NOVsp6Qw-Ee3CJJCcaU2Dtzwbf+7bUe_kFEbA@mail.gmail.com>
+ <1546531006.14398.83.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <23fff14b-0e44-651c-1dfd-8f8e07c7eaee@gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>, "y@bu-lab53.mtbu.labs.mlnx" <y@bu-lab53.mtbu.labs.mlnx>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <arm@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mbrugger@suse.com >> Matthias Brugger" <mbrugger@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1546531006.14398.83.camel@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Matthias for the comments and sorry for the holiday delay.
-The recommended changes have been posted in patch v7 1/9.
+Hi,
 
-Thanks,
-Liming
+On Thu, Jan 03, 2019 at 03:56:46PM +0000, Viorel Suman wrote:
+> > >  sound/soc/fsl/fsl_amix.c                           | 554
+> > > +++++++++++++++++++++
+> > >  sound/soc/fsl/fsl_amix.h                           | 101 ++++
+> > I aimn't against the naming here, but it seems to be AUDMIX in RM?
+> > 
+> > Would it be better to align with that? It's your decision though.
+> 
+> To me "AUDMIX" sounds more like some RTL high level integration module,
+> I would prefer to keep it as it is if there is no strong reason to 
+> rename it.
 
-> -----Original Message-----
-> From: Matthias Brugger <matthias.bgg@gmail.com>
-> Sent: Wednesday, December 12, 2018 6:08 PM
-> To: Liming Sun <lsun@mellanox.com>; y@bu-lab53.mtbu.labs.mlnx; Olof Johansson <olof@lixom.net>; Arnd Bergmann <arnd@arndb.de>;
-> David Woods <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-soc <arm@kernel.org>
-> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; mbrugger@suse.com >> Matthias Brugger <mbrugger@suse.com>
-> Subject: Re: [PATCH v6 1/9] soc: Add TmFifo driver for Mellanox BlueField Soc
+We had AUDMUX, so "AUDMIX" doesn't sound bad to me at all. The only
+reason that we are discussing this is because RM uses more "AUDMIX"s
+over "amix"s. I'd have chosen AUDMIX if I were you, yet not strongly
+as I said. And it looks like Rob is asking you to use AUDMIX in DT
+binding doc.
+
+> > > +Device driver configuration example:
+> > > +======================================
+> > > +  amix: amix@59840000 {
+> > > +    compatible = "fsl,imx8qm-amix";
+> > > +    reg = <0x0 0x59840000 0x0 0x10000>;
+> > > +    clocks = <&clk IMX8QXP_AUD_AMIX_IPG>;
+> > > +    clock-names = "ipg";
+> > > +    power-domains = <&pd_amix>;
+> > > +  };
+> > From the description of DT and RM, I don't see how it connects to
+> > SAIs.
+> > 
+> > Are they fixed to SAI0 and SAI1 in imx8qm? Wondering if it'd be
+> > better to have such information in the doc.
 > 
+> Please check chapter "16.1.2.2 Audio Mixer" in RM: it has two dedicated
+> SAI interfaces, SAI4 and SAI5. Audio Mixer operates on bit clock of one
+> of these interfaces.
+
+OK. I am actually more wondering how you connect it with SAI on
+the software level: for imx8qm, SAI4/5 are used, but later SoCs
+might use other SAI blocks. So it might be necessary to indicate
+the connections in DT.
+
+> > > +static int fsl_amix_dai_set_fmt(struct snd_soc_dai *dai, unsigned
+> > > int fmt)
+> > > +{
+> > > +       /* For playback the AMIX is slave, and for record is master
+> > > */
+> > > +       switch (fmt & SND_SOC_DAIFMT_MASTER_MASK) {
+> > > +       case SND_SOC_DAIFMT_CBM_CFM:
+> > > +       case SND_SOC_DAIFMT_CBS_CFS:
+> > So it's used either for playback or capture only, not both at same
+> > time?
 > 
-> 
-> On 01/11/2018 17:23, Liming Sun wrote:> This commit adds the TmFifo driver for
-> Mellanox BlueField Soc.
-> > TmFifo is a shared FIFO which enables external host machine to
-> > exchange data with the SoC via USB or PCIe. The driver is based on
-> > virtio framework and has console and network access enabled.
-> >
-> > Reviewed-by: David Woods <dwoods@mellanox.com>
-> > Signed-off-by: Liming Sun <lsun@mellanox.com>
-> > ---
-> >  drivers/soc/Kconfig                |    1 +
-> >  drivers/soc/Makefile               |    1 +
-> >  drivers/soc/mellanox/Kconfig       |   18 +
-> >  drivers/soc/mellanox/Makefile      |    5 +
-> >  drivers/soc/mellanox/tmfifo.c      | 1236 ++++++++++++++++++++++++++++++++++++
-> >  drivers/soc/mellanox/tmfifo_regs.h |   76 +++
-> >  6 files changed, 1337 insertions(+)
-> >  create mode 100644 drivers/soc/mellanox/Kconfig
-> >  create mode 100644 drivers/soc/mellanox/Makefile
-> >  create mode 100644 drivers/soc/mellanox/tmfifo.c
-> >  create mode 100644 drivers/soc/mellanox/tmfifo_regs.h
-> >
-> 
-> [...]
-> 
-> > +
-> > +/* Interrupt handler. */
-> > +static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id)
-> > +{
-> > +	int i = (uintptr_t)dev_id % sizeof(void *);
-> > +	struct tmfifo *fifo = dev_id - i;
-> > +
-> > +	if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
-> > +		schedule_work(&fifo->work);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> [...]
-> > +
-> > +/* Probe the TMFIFO. */
-> > +static int tmfifo_probe(struct platform_device *pdev)
-> > +{
-> > +	u64 ctl;
-> > +	struct tmfifo *fifo;
-> > +	struct resource *rx_res, *tx_res;
-> > +	struct virtio_net_config net_config;
-> > +	int i, ret;
-> > +
-> > +	/* Get the resource of the Rx & Tx FIFO. */
-> > +	rx_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +	tx_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
-> > +	if (!rx_res || !tx_res) {
-> > +		ret = -EINVAL;
-> > +		goto err;
-> > +	}
-> > +
-> > +	if (request_mem_region(rx_res->start,
-> > +			       resource_size(rx_res), "bf-tmfifo") == NULL) {
-> > +		ret = -EBUSY;
-> > +		goto early_err;
-> > +	}
-> > +
-> > +	if (request_mem_region(tx_res->start,
-> > +			       resource_size(tx_res), "bf-tmfifo") == NULL) {
-> > +		release_mem_region(rx_res->start, resource_size(rx_res));
-> > +		ret = -EBUSY;
-> > +		goto early_err;
-> > +	}
-> > +
-> > +	ret = -ENOMEM;
-> > +	fifo = kzalloc(sizeof(struct tmfifo), GFP_KERNEL);
-> > +	if (!fifo)
-> > +		goto err;
-> > +
-> > +	fifo->pdev = pdev;
-> > +	platform_set_drvdata(pdev, fifo);
-> > +
-> > +	spin_lock_init(&fifo->spin_lock);
-> > +	INIT_WORK(&fifo->work, tmfifo_work_handler);
-> > +
-> > +	timer_setup(&fifo->timer, tmfifo_timer, 0);
-> > +	fifo->timer.function = tmfifo_timer;
-> > +
-> > +	for (i = 0; i < TM_IRQ_CNT; i++) {
-> > +		fifo->irq[i] = platform_get_irq(pdev, i);
-> > +		ret = request_irq(fifo->irq[i], tmfifo_irq_handler, 0,
-> > +				  "tmfifo", (u8 *)fifo + i);
-> 
-> I think it would be better if you create a struct that passes a pointer to fifo
-> and the ID instead of "hiding" the ID inside the address.
-> 
-> Regards,
-> Matthias
+> From IP functional perspective AMIX capture is the result of AMIX
+> playback - AMIX output represents the resulting mixed audio stream
+> routed to SAI4 RX signals (bit & frame clocks and data). So once we
+> have playback on either SAI4 or SAI5 (or both) - we can capture the
+> AMIX output on SAI4.
+
+Ah, it sounds like a looping block then, receiving bclk from SAI4
+-- slave, and routing the bclk back to SAI4 -- master; SAI4 works
+at ASYNC mode?
+
+> I guess it would be nice to send the machine driver as part of this
+> patchset also - it defines two input SAI interfaces as frontends and
+> AMIX - as backend. Userspace sees only two SAI interfaces exposed, both
+> of them having playback enabled, and only SAI4 having capture enabled.
+
+DPCM? So you are having the links in the sound DT nodes, i.e. the
+machine driver?
+
+Thanks
+Nicolin
