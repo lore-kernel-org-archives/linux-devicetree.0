@@ -1,112 +1,46 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Thu, 3 Jan 2019 16:14:14 -0600
-Message-ID: <20190103221414.GA14639@bogus>
-References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
- <1545896066-897-2-git-send-email-min.guo@mediatek.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [RFC RESEND PATCH 0/7] Add driver for dvfsrc and add support for active state of scpsys on mt8183
+Date: Thu, 03 Jan 2019 14:53:51 -0800
+Message-ID: <154655603153.15366.7761694381359713995@swboyd.mtv.corp.google.com>
+References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545896066-897-2-git-send-email-min.guo@mediatek.com>
+In-Reply-To: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: min.guo@mediatek.com
-Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Henry Chen <henryc.chen@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <vireshk@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 27, 2018 at 03:34:23PM +0800, min.guo@mediatek.com wrote:
-> From: Min Guo <min.guo@mediatek.com>
-> 
-> This adds support for MediaTek musb controller in
-> host, peripheral and otg mode
-> 
-> Signed-off-by: Min Guo <min.guo@mediatek.com>
-> ---
->  .../devicetree/bindings/usb/mediatek,musb.txt      | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> new file mode 100644
-> index 0000000..e899c9b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> @@ -0,0 +1,49 @@
-> +MediaTek musb DRC/OTG controller
-> +-------------------------------------------
-> +
-> +Required properties:
-> + - compatible      : should be "mediatek,<soc-model>-musb",
-> +   "mediatek,mtk-musb", soc-model is the name of SoC, such as
-> +   mt2701, when using "mediatek,mtk-musb" compatible string, you
-> +   need SoC specific ones in addition, one of:
-> +   - "mediatek,mt2701-musb"
+Quoting Henry Chen (2019-01-02 06:09:51)
+> The patchsets add support for MediaTek hardware module named DVFSRC
+> (dynamic voltage and frequency scaling resource collector). The DVFSRC is
+> a HW module which is used to collect all the requests from both software
+> and hardware and turn into the decision of minimum operating voltage and
+> minimum DRAM frequency to fulfill those requests.
+>=20
+> So, This series is to implement the dvfsrc driver to collect all the
+> requests of operating voltage or DRAM bandwidth from other device drivers
+> likes GPU/Camera through 2 frameworks basically:
+>=20
+> 1. PM_QOS_MEMORY_BANDWIDTH from PM QOS: to aggregate the bandwidth
+>    requirements from different clients
 
-This isn't very clear. Just drop the <soc-model and enumerate the SoCs:
+Have you looked at using the interconnect framework for this instead of
+using PM_QOS_MEMORY_BANDWIDTH? Qcom is pushing an interconnect framework
+to do DRAM bandwidth requirement aggregation.
 
-compatible: should be one of:
-    "mediatek,mt2701-musb"
-    ...
-  followed by "mediatek,mtk-musb"
+> 2. Active state management of power domains[1]: to handle the operating
+>    voltage opp requirement from different power domains
 
-> + - reg             : specifies physical base address and size of
-> +   the registers
-> + - interrupts      : interrupt used by musb controller
-> + - interrupt-names : must be "mc"
-
--names is pointless when there is only one.
-
-> + - phys            : PHY specifier for the OTG phy
-> + - phy-names       : should be "usb2-phy"
-
-Same here.
-
-> + - dr_mode         : should be one of "host", "peripheral" or "otg",
-> +   refer to usb/generic.txt
-> + - clocks          : a list of phandle + clock-specifier pairs, one for
-> +   each entry in clock-names
-> + - clock-names     : must contain "main","mcu","univpll"
-
-space needed after each comma.
-
-> +   for clocks of controller
-> +
-> +Optional properties:
-> + - extcon : external connector for VBUS and IDPIN changes detection,
-> +   needed when supports dual-role mode.
-
-Don't use extcon for new bindings. The usb-connector binding should be 
-used instead.
-
-> + - vbus-supply : reference to the VBUS regulator, needed when supports
-> +   dual-role mode.
-
-The controller is powered from Vbus? Probably not. This belongs in the 
-connector or maybe the phy (if the phy is powered from Vbus).
-
-> + - power-domains   : a phandle to USB power domain node to control USB's
-> +   MTCMOS
-> +
-> +Example:
-> +
-> +usb2: usb@11200000 {
-> +	compatible = "mediatek,mt2701-musb";
-> +		"mediatek,mtk-musb";
-> +	reg = <0 0x11200000 0 0x1000>;
-> +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-> +	interrupt-names = "mc";
-> +	phys = <&u2port2 PHY_TYPE_USB2>;
-> +	phy-names = "usb2-phy";
-> +	vbus-supply = <&usb_vbus>;
-> +	extcon = <&extcon_usb>;
-> +	dr_mode = "otg";
-> +	clocks = <&pericfg CLK_PERI_USB0>,
-> +		 <&pericfg CLK_PERI_USB0_MCU>,
-> +		 <&pericfg CLK_PERI_USB_SLV>;
-> +	clock-names = "main","mcu","univpll";
-> +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> +};
-> -- 
-> 1.9.1
-> 
+Do you have any devices that aren't "OPP-ish" in how they use
+frequencies and voltages? What I mean is devices such as i2c, SPI, UART
+controllers that don't use the OPP library to set a frequency but want
+to affect some voltage of their power domain when clk frequencies
+change. The existing code works well for devices that naturally use the
+OPP rate changing API, typically multimedia devices that churn through
+data like a CPU and don't care about the frequency of their main clk
+because it doesn't match physical link bit rates, etc. I haven't seen
+any good solution for devices that don't fit well with the OPP API
+though so I'm curious if Mediatek needs to solve that problem.=20
