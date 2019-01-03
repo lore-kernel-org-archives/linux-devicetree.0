@@ -1,49 +1,165 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: qcom: Add firmware
- bindings for Q6V5
-Date: Thu, 3 Jan 2019 15:50:45 -0800
-Message-ID: <20190103235043.GA195759@google.com>
-References: <20181228044819.5697-1-sibis@codeaurora.org>
- <20181228044819.5697-2-sibis@codeaurora.org>
- <20190103233014.GA181833@google.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sdm845: Add Q6V5 ADSP node
+Date: Thu, 3 Jan 2019 15:50:02 -0800
+Message-ID: <20190103235002.GI31596@builder>
+References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
+ <1545313174-13481-3-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190103233014.GA181833@google.com>
+In-Reply-To: <1545313174-13481-3-git-send-email-rohitkr@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: bjorn.andersson@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org
+To: Rohit kumar <rohitkr@codeaurora.org>
+Cc: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 03, 2019 at 03:30:14PM -0800, Brian Norris wrote:
-> On Fri, Dec 28, 2018 at 10:18:18AM +0530, Sibi Sankar wrote:
-> > +- firmware-name:
-> > +	Usage: optional
-> > +	Value type: <string>
-> > +	Definition: must list the relative firmware image path for the
-> > +		    Hexagon Core.
+On Thu 20 Dec 05:39 PST 2018, Rohit kumar wrote:
+
+> This patch adds Q6V5 ADSP remoteproc node for SDM845 SoCs.
 > 
-> Relative to what? I still think it's a terrible idea that your driver
-> looks for files at the top-level /lib/firmware/ directory, but now
-> you're leaking this into the device tree. This should at a bare minimum
-> be namespaced to something like the qcom/ sub-directory. But ideally,
-> the driver would automatically be deriving a further sub-directory of
-> qcom/ based on the chipset or something, and then the only thing you'd
-> describe here is some kind of variant string -- something akin to
-> ath10k's qcom,ath10k-calibration-variant (see
-> Documentation/devicetree/bindings/net/wireless/qcom,ath10k.txt), which
-> doesn't require a full path-name or any hierarchy.
 
-Oh, I see Rob actually recommended this binding in v1, and it's (sort
-of) in use by a few other drivers. Is it really expected that we put
-arbitrary pathnames in device tree? None of the binding documentation
-seems very specific to me, and their implementations *do* allow
-arbitrary text. As it stands today, this is a great recipe for name
-collision -- e.g., how the driver today suggests "modem.XYZ" names; is
-Qualcomm really the only one out there making modems? :D
+Thanks Rohit, nice to see these things on the list!
 
-So my natural instinct is to avoid this. But if that's what everybody
-wants...
+> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 96 +++++++++++++++++++++++++++++++++++-
+>  1 file changed, 95 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index c0a012f..dfeb3cf 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -13,6 +13,9 @@
+>  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +#include <dt-bindings/soc/qcom,apr.h>
+> +#include <dt-bindings/sound/qcom,q6afe.h>
+> +#include <dt-bindings/sound/qcom,q6asm.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -1691,7 +1694,98 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> -	};
+> +
+> +		adsp_pil: remoteproc@17300000 {
 
-Brian
+Please sort nodes by address, then name.
+
+> +			compatible = "qcom,sdm845-adsp-pil";
+> +
+> +			reg = <0x17300000 0x410>;
+> +			reg-names = "qdsp6ss";
+
+reg-names was dropped from the binding (iirc), please omit it here.
+
+> +
+> +			interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
+
+s/0/GIC_SPI/
+
+> +				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +			interrupt-names = "wdog", "fatal", "ready",
+> +					  "handover", "stop-ack";
+> +
+> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+> +				 <&gcc GCC_LPASS_SWAY_CLK>,
+> +				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
+> +				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
+> +				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
+> +				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
+> +				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
+> +
+> +			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
+> +				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
+> +				      "qdsp6ss_sleep", "qdsp6ss_core";
+> +
+> +			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
+> +				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
+> +			reset-names = "pdc_sync", "cc_lpass";
+> +
+> +			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
+> +
+> +			memory-region = <&pil_adsp_mem>;
+> +
+> +			qcom,smem-states = <&adsp_smp2p_out 0>;
+> +			qcom,smem-state-names = "stop";
+> +
+> +			glink-edge {
+
+So we will end up duplicating these between the PAS based and non-PAS
+based remoteprocs. I don't have a better idea right now, but this
+deserves some thought.
+
+> +				compatible = "qcom,glink-smem";
+> +				interrupts = <0 156 IRQ_TYPE_EDGE_RISING>;
+
+s/0/GIC_SPI/
+
+> +
+> +				label = "lpass";
+> +				qcom,remote-pid = <2>;
+> +				mboxes = <&apss_shared 8>;
+> +				mbox-names = "adsp_smem";
+
+mbox-names is not a documented property, please omit it.
+
+> +				#address-cells = <1>;
+> +				#size-cells = <0>;
+> +				apr@4 {
+> +					compatible = "qcom,apr-v2";
+> +					qcom,glink-channels = "apr_audio_svc";
+> +					reg = <APR_DOMAIN_ADSP>;
+> +					#address-cells = <1>;
+> +					#size-cells = <0>;
+> +					q6core {
+> +						compatible = "qcom,q6core";
+> +						reg = <APR_SVC_ADSP_CORE>;
+> +					};
+> +
+> +					q6afe {
+> +						compatible = "qcom,q6afe";
+> +						reg = <APR_SVC_AFE>;
+> +						q6afedai: afedais {
+> +							compatible = "qcom,q6afe-dais";
+> +							#sound-dai-cells = <1>;
+> +							#address-cells = <1>;
+> +							#size-cells = <0>;
+> +						};
+> +					};
+> +
+> +					q6asm {
+> +						compatible = "qcom,q6asm";
+> +						reg = <APR_SVC_ASM>;
+> +						q6asmdai: asmdai{
+> +							compatible = "qcom,q6asm-dais";
+> +							iommus = <&apps_smmu 0x1821 0x0>;
+> +							#sound-dai-cells = <1>;
+> +						};
+> +					};
+> +
+> +					q6adm {
+> +						compatible = "qcom,q6adm";
+> +						reg = <APR_SVC_ADM>;
+> +						q6routing: routing {
+> +							compatible = "qcom,q6adm-routing";
+> +							#sound-dai-cells = <0>;
+> +						};
+> +					};
+> +				};
+> +			};
+> +			status = "disabled";
+
+Properties must come before subnodes.
+
+> +		};
+
+Regards,
+Bjorn
