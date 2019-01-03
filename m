@@ -1,27 +1,41 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 5/6] dt-bindings: i2c: Add Mediatek MT8183 i2c binding
-Date: Thu, 3 Jan 2019 13:23:09 -0600
-Message-ID: <20190103192309.GA18564@bogus>
-References: <1545397111-24183-1-git-send-email-qii.wang@mediatek.com>
- <1545397111-24183-6-git-send-email-qii.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH] arm64: dts: hikey: Add DMA entries for Bluetooth UART
+Date: Thu,  3 Jan 2019 11:24:07 -0800
+Message-ID: <1546543447-825-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545397111-24183-6-git-send-email-qii.wang@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, srv_heupstream@mediatek.com, leilk.liu@mediatek.com, qii.wang@mediatek.com, ryder.lee@mediatek.com
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 21 Dec 2018 20:58:30 +0800, qii wang wrote:
-> Add MT8183 i2c binding to binding file. Compare to 2712 i2c
-> controller, MT8183 has different registers, offsets, clock,
-> and multi-user function.
-> 
-> Signed-off-by: qii wang <qii.wang@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/i2c/i2c-mtk.txt |    6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
+Add dma0 references for bluetooth uart to enable dma
+for bt transfers.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ryan Grachek <ryan@edited.us>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+Change-Id: I85d36cc492a5f392cde214b144b19469e951585a
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index aec9e37..fa15a08 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -319,6 +319,8 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart1_pmx_func &uart1_cfg_func1 &uart1_cfg_func2>;
++			dmas = <&dma0 8 &dma0 9>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+ 
+-- 
+2.7.4
