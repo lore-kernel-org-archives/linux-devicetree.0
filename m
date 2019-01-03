@@ -1,109 +1,135 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] dt-bindings: reset: Add document for Broadcom STB
- reset controller
-Date: Thu, 3 Jan 2019 11:31:22 -0800
-Message-ID: <bcfe4df0-8928-90e2-6460-1391320af9be@gmail.com>
-References: <20181221013409.14324-1-f.fainelli@gmail.com>
- <20181221013409.14324-2-f.fainelli@gmail.com> <20190103174117.GA6613@bogus>
- <2a54c2cf-5595-ade5-fb29-40e8b6d3133e@gmail.com>
- <20190103191915.GB6613@bogus>
+From: Liming Sun <lsun@mellanox.com>
+Subject: RE: [PATCH v6 1/9] soc: Add TmFifo driver for Mellanox BlueField Soc
+Date: Thu, 3 Jan 2019 19:20:26 +0000
+Message-ID: <DB6PR05MB3223FDA372C153FEF4E34D90A18D0@DB6PR05MB3223.eurprd05.prod.outlook.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1541089431-175572-1-git-send-email-lsun@mellanox.com>
+ <23fff14b-0e44-651c-1dfd-8f8e07c7eaee@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103191915.GB6613@bogus>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <23fff14b-0e44-651c-1dfd-8f8e07c7eaee@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
-Cc: p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Matthias Brugger <matthias.bgg@gmail.com>, "y@bu-lab53.mtbu.labs.mlnx" <y@bu-lab53.mtbu.labs.mlnx>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Robin Murphy <robin.murphy@arm.com>, arm-soc <arm@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mbrugger@suse.com >> Matthias Brugger" <mbrugger@suse.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/3/19 11:19 AM, Rob Herring wrote:
-> On Thu, Jan 03, 2019 at 10:53:25AM -0800, Florian Fainelli wrote:
->> On 1/3/19 9:41 AM, Rob Herring wrote:
->>> On Thu, Dec 20, 2018 at 05:34:08PM -0800, Florian Fainelli wrote:
->>>> Add a binding document for the Broadcom STB reset controller, also known
->>>> as SW_INIT-style reset controller.
->>>>
->>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
->>>> ---
->>>>  .../devicetree/bindings/reset/brcm,reset.txt  | 27 +++++++++++++++++++
->>>>  1 file changed, 27 insertions(+)
->>>>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,reset.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/reset/brcm,reset.txt b/Documentation/devicetree/bindings/reset/brcm,reset.txt
->>>> new file mode 100644
->>>> index 000000000000..6e5341b4f891
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/reset/brcm,reset.txt
->>>> @@ -0,0 +1,27 @@
->>>> +Broadcom STB SW_INIT-style reset controller
->>>> +===========================================
->>>> +
->>>> +Broadcom STB SoCs have a SW_INIT-style reset controller with separate
->>>> +SET/CLEAR/STATUS registers and possibly multiple banks, each of 32 bit
->>>> +reset lines.
->>>> +
->>>> +Please also refer to reset.txt in this directory for common reset
->>>> +controller binding usage.
->>>> +
->>>> +Required properties:
->>>> +- compatible: should be brcm,brcmstb-reset
->>>> +- reg: register base and length
->>>> +- #reset-cells: must be set to 1
->>>> +
->>>> +Example:
->>>> +
->>>> +	reset: reset-controller@8404318 {
->>>> +		compatible = "brcm,brcmstb-reset";
->>>> +		reg = <0x8404318 0x30>;
->>>
->>> Based on this address, should this be a sub-node of something else? Or 
->>> not even a sub-node and just make the parent be a reset provider?
->>
->> The reset controller is part of a larger "sundry" node which has a
->> collection of functionality, from pinmux/pinctrl, reset controller,
->> spare bits, chicken bits, anything the designers forgot to put somewhere
->> else and decided to put there.
->>
->> If there is one thing consistent though is that given a set of 32-bit
->> register groups, they have a self contained functionality such that you
->> can break up the larger "sundry" space into smaller sub-blocks which
->> have one an only one functionality. Do you think this warrants a
->> different representation in Device Tree?
+Thanks Matthias for the comments and sorry for the holiday delay.
+The recommended changes have been posted in patch v7 1/9.
+
+Thanks,
+Liming
+
+> -----Original Message-----
+> From: Matthias Brugger <matthias.bgg@gmail.com>
+> Sent: Wednesday, December 12, 2018 6:08 PM
+> To: Liming Sun <lsun@mellanox.com>; y@bu-lab53.mtbu.labs.mlnx; Olof Johansson <olof@lixom.net>; Arnd Bergmann <arnd@arndb.de>;
+> David Woods <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-soc <arm@kernel.org>
+> Cc: devicetree@vger.kernel.org; linux-arm-kernel@lists.infradead.org; mbrugger@suse.com >> Matthias Brugger <mbrugger@suse.com>
+> Subject: Re: [PATCH v6 1/9] soc: Add TmFifo driver for Mellanox BlueField Soc
 > 
-> With pinctrl in the mix, you're going to need sub-nodes anyways. So just 
-> define what this is a sub-node of.
-
-pinctrl is not necessarily something I want the kernel to control, since
-we have a high level scripting language without our bootloader that
-makes sure pinctrl is properly configured from early boot on all the way
-to the kernel, and preserved across suspend/resume states.
-pinctrl-single does work, and was occasionally used. Everything else is
-typically muxes that the kernel does not need to touch/see/be aware of.
-
 > 
-> Also, I'd prefer to have complete example for the "sundry" node and 
-> child nodes than partial examples spread across the tree.
-
-I am afraid I can't provide that example because the sundry node is
-really changing from chip to chip, and there is a gazillion of things in
-there that the kernel typically does not even touch, like
-pinmuxing/pinctrl, various mux selections etc. I could provide the
-following example if that is what you are requesting?:
-
-
-sun-top-ctrl: simple-bus@8404000 {
-	compatible = "brcm,brcmstb-sun-top-ctrl", "simple-bus";
-	reg = <0x8404000 0x708>;
-
-	reset: reset-controller@318 {
-		compatible = "brcm,brcmstb-reset";
-		reg = <0x318 0x30>;
-		#reset-cells = <1>;
-	};
-};
-
-Would that be what you expect to see?
--- 
-Florian
+> 
+> On 01/11/2018 17:23, Liming Sun wrote:> This commit adds the TmFifo driver for
+> Mellanox BlueField Soc.
+> > TmFifo is a shared FIFO which enables external host machine to
+> > exchange data with the SoC via USB or PCIe. The driver is based on
+> > virtio framework and has console and network access enabled.
+> >
+> > Reviewed-by: David Woods <dwoods@mellanox.com>
+> > Signed-off-by: Liming Sun <lsun@mellanox.com>
+> > ---
+> >  drivers/soc/Kconfig                |    1 +
+> >  drivers/soc/Makefile               |    1 +
+> >  drivers/soc/mellanox/Kconfig       |   18 +
+> >  drivers/soc/mellanox/Makefile      |    5 +
+> >  drivers/soc/mellanox/tmfifo.c      | 1236 ++++++++++++++++++++++++++++++++++++
+> >  drivers/soc/mellanox/tmfifo_regs.h |   76 +++
+> >  6 files changed, 1337 insertions(+)
+> >  create mode 100644 drivers/soc/mellanox/Kconfig
+> >  create mode 100644 drivers/soc/mellanox/Makefile
+> >  create mode 100644 drivers/soc/mellanox/tmfifo.c
+> >  create mode 100644 drivers/soc/mellanox/tmfifo_regs.h
+> >
+> 
+> [...]
+> 
+> > +
+> > +/* Interrupt handler. */
+> > +static irqreturn_t tmfifo_irq_handler(int irq, void *dev_id)
+> > +{
+> > +	int i = (uintptr_t)dev_id % sizeof(void *);
+> > +	struct tmfifo *fifo = dev_id - i;
+> > +
+> > +	if (i < TM_IRQ_CNT && !test_and_set_bit(i, &fifo->pend_events))
+> > +		schedule_work(&fifo->work);
+> > +
+> > +	return IRQ_HANDLED;
+> > +}
+> > +
+> [...]
+> > +
+> > +/* Probe the TMFIFO. */
+> > +static int tmfifo_probe(struct platform_device *pdev)
+> > +{
+> > +	u64 ctl;
+> > +	struct tmfifo *fifo;
+> > +	struct resource *rx_res, *tx_res;
+> > +	struct virtio_net_config net_config;
+> > +	int i, ret;
+> > +
+> > +	/* Get the resource of the Rx & Tx FIFO. */
+> > +	rx_res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +	tx_res = platform_get_resource(pdev, IORESOURCE_MEM, 1);
+> > +	if (!rx_res || !tx_res) {
+> > +		ret = -EINVAL;
+> > +		goto err;
+> > +	}
+> > +
+> > +	if (request_mem_region(rx_res->start,
+> > +			       resource_size(rx_res), "bf-tmfifo") == NULL) {
+> > +		ret = -EBUSY;
+> > +		goto early_err;
+> > +	}
+> > +
+> > +	if (request_mem_region(tx_res->start,
+> > +			       resource_size(tx_res), "bf-tmfifo") == NULL) {
+> > +		release_mem_region(rx_res->start, resource_size(rx_res));
+> > +		ret = -EBUSY;
+> > +		goto early_err;
+> > +	}
+> > +
+> > +	ret = -ENOMEM;
+> > +	fifo = kzalloc(sizeof(struct tmfifo), GFP_KERNEL);
+> > +	if (!fifo)
+> > +		goto err;
+> > +
+> > +	fifo->pdev = pdev;
+> > +	platform_set_drvdata(pdev, fifo);
+> > +
+> > +	spin_lock_init(&fifo->spin_lock);
+> > +	INIT_WORK(&fifo->work, tmfifo_work_handler);
+> > +
+> > +	timer_setup(&fifo->timer, tmfifo_timer, 0);
+> > +	fifo->timer.function = tmfifo_timer;
+> > +
+> > +	for (i = 0; i < TM_IRQ_CNT; i++) {
+> > +		fifo->irq[i] = platform_get_irq(pdev, i);
+> > +		ret = request_irq(fifo->irq[i], tmfifo_irq_handler, 0,
+> > +				  "tmfifo", (u8 *)fifo + i);
+> 
+> I think it would be better if you create a struct that passes a pointer to fifo
+> and the ID instead of "hiding" the ID inside the address.
+> 
+> Regards,
+> Matthias
