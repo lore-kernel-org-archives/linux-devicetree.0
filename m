@@ -1,234 +1,177 @@
-From: Peter Ujfalusi <peter.ujfalusi@ti.com>
-Subject: [PATCH 3/3] ASoC: ti: davinci-mcasp: Add support for GPIO mode of the pins
-Date: Thu, 3 Jan 2019 16:05:52 +0200
-Message-ID: <20190103140552.29809-4-peter.ujfalusi@ti.com>
-References: <20190103140552.29809-1-peter.ujfalusi@ti.com>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: Re: [RFC PATCH 3/7] soc: mediatek: add support for the performance
+ state
+Date: Thu, 3 Jan 2019 22:16:28 +0800
+Message-ID: <1546524988.6818.54.camel@mtksdaap41>
+References: <1546436644-19234-1-git-send-email-henryc.chen@mediatek.com>
+ <1546436644-19234-4-git-send-email-henryc.chen@mediatek.com>
+ <CANMq1KCNSRv36L7mFNDEwFEdHm+q8cYz7GmfQZJQSGboe36vKQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103140552.29809-1-peter.ujfalusi@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: broonie@kernel.org, lgirdwood@gmail.com
-Cc: alsa-devel@alsa-project.org, misael.lopez@ti.com, jsarha@ti.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CANMq1KCNSRv36L7mFNDEwFEdHm+q8cYz7GmfQZJQSGboe36vKQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, James Liao <jamesjj.liao@mediatek.com>, Ulf Hansson <ulf.hansson@linaro.org>, Kees Cook <keescook@chromium.org>, Weiyi Lu <weiyi.lu@mediatek.com>, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <vireshk@kernel.org>, lkml <linux-kernel@vger.kernel.org>, Fan Chen <fan.chen@mediatek.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-All McASP pin can be configured as GPIO.
-Add gpiochip support for McASP and only enable it when the
-gpio-controller is present in the DT node.
-
-Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
----
- sound/soc/ti/davinci-mcasp.c | 159 ++++++++++++++++++++++++++++++++++-
- 1 file changed, 156 insertions(+), 3 deletions(-)
-
-diff --git a/sound/soc/ti/davinci-mcasp.c b/sound/soc/ti/davinci-mcasp.c
-index a6a470a76900..a3a67a8f0f54 100644
---- a/sound/soc/ti/davinci-mcasp.c
-+++ b/sound/soc/ti/davinci-mcasp.c
-@@ -29,6 +29,7 @@
- #include <linux/platform_data/davinci_asp.h>
- #include <linux/math64.h>
- #include <linux/bitmap.h>
-+#include <linux/gpio/driver.h>
- 
- #include <sound/asoundef.h>
- #include <sound/core.h>
-@@ -54,6 +55,7 @@ static u32 context_regs[] = {
- 	DAVINCI_MCASP_AHCLKXCTL_REG,
- 	DAVINCI_MCASP_AHCLKRCTL_REG,
- 	DAVINCI_MCASP_PDIR_REG,
-+	DAVINCI_MCASP_PFUNC_REG,
- 	DAVINCI_MCASP_RXMASK_REG,
- 	DAVINCI_MCASP_TXMASK_REG,
- 	DAVINCI_MCASP_RXTDM_REG,
-@@ -108,6 +110,10 @@ struct davinci_mcasp {
- 	/* Used for comstraint setting on the second stream */
- 	u32	channels;
- 
-+#ifdef CONFIG_GPIOLIB
-+	struct gpio_chip gpio_chip;
-+#endif
-+
- #ifdef CONFIG_PM
- 	struct davinci_mcasp_context context;
- #endif
-@@ -818,9 +824,6 @@ static int mcasp_common_hw_param(struct davinci_mcasp *mcasp, int stream,
- 	if (mcasp->version < MCASP_VERSION_3)
- 		mcasp_set_bits(mcasp, DAVINCI_MCASP_PWREMUMGT_REG, MCASP_SOFT);
- 
--	/* All PINS as McASP */
--	mcasp_set_reg(mcasp, DAVINCI_MCASP_PFUNC_REG, 0x00000000);
--
- 	if (stream == SNDRV_PCM_STREAM_PLAYBACK) {
- 		mcasp_set_reg(mcasp, DAVINCI_MCASP_TXSTAT_REG, 0xFFFFFFFF);
- 		mcasp_clr_bits(mcasp, DAVINCI_MCASP_XEVTCTL_REG, TXDATADMADIS);
-@@ -1845,6 +1848,147 @@ static u32 davinci_mcasp_rxdma_offset(struct davinci_mcasp_pdata *pdata)
- 	return offset;
- }
- 
-+#ifdef CONFIG_GPIOLIB
-+static int davinci_mcasp_gpio_request(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+
-+	if (mcasp->num_serializer && offset < mcasp->num_serializer &&
-+	    mcasp->serial_dir[offset] != INACTIVE_MODE) {
-+		dev_err(mcasp->dev, "AXR%u pin is  used for audio\n", offset);
-+		return -EBUSY;
-+	}
-+
-+	/* Do not change the PIN yet */
-+
-+	return pm_runtime_get_sync(mcasp->dev);
-+}
-+
-+static void davinci_mcasp_gpio_free(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+
-+	/* Set the direction to input */
-+	mcasp_clr_bits(mcasp, DAVINCI_MCASP_PDIR_REG, BIT(offset));
-+
-+	/* Set the pin as McASP pin */
-+	mcasp_clr_bits(mcasp, DAVINCI_MCASP_PFUNC_REG, BIT(offset));
-+
-+	pm_runtime_put_sync(mcasp->dev);
-+}
-+
-+static int davinci_mcasp_gpio_direction_out(struct gpio_chip *chip,
-+					    unsigned offset, int value)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+	u32 val;
-+
-+	if (value)
-+		mcasp_set_bits(mcasp, DAVINCI_MCASP_PDOUT_REG, BIT(offset));
-+	else
-+		mcasp_clr_bits(mcasp, DAVINCI_MCASP_PDOUT_REG, BIT(offset));
-+
-+	val = mcasp_get_reg(mcasp, DAVINCI_MCASP_PFUNC_REG);
-+	if (!(val & BIT(offset))) {
-+		/* Set the pin as GPIO pin */
-+		mcasp_set_bits(mcasp, DAVINCI_MCASP_PFUNC_REG, BIT(offset));
-+
-+		/* Set the direction to output */
-+		mcasp_set_bits(mcasp, DAVINCI_MCASP_PDIR_REG, BIT(offset));
-+	}
-+
-+	return 0;
-+}
-+
-+static void davinci_mcasp_gpio_set(struct gpio_chip *chip, unsigned offset,
-+				  int value)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+
-+	if (value)
-+		mcasp_set_bits(mcasp, DAVINCI_MCASP_PDOUT_REG, BIT(offset));
-+	else
-+		mcasp_clr_bits(mcasp, DAVINCI_MCASP_PDOUT_REG, BIT(offset));
-+}
-+
-+static int davinci_mcasp_gpio_direction_in(struct gpio_chip *chip,
-+					   unsigned offset)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+	u32 val;
-+
-+	val = mcasp_get_reg(mcasp, DAVINCI_MCASP_PFUNC_REG);
-+	if (!(val & BIT(offset))) {
-+		/* Set the direction to input */
-+		mcasp_clr_bits(mcasp, DAVINCI_MCASP_PDIR_REG, BIT(offset));
-+
-+		/* Set the pin as GPIO pin */
-+		mcasp_set_bits(mcasp, DAVINCI_MCASP_PFUNC_REG, BIT(offset));
-+	}
-+
-+	return 0;
-+}
-+
-+static int davinci_mcasp_gpio_get(struct gpio_chip *chip, unsigned offset)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+	u32 val;
-+
-+	val = mcasp_get_reg(mcasp, DAVINCI_MCASP_PDSET_REG);
-+	if (val & BIT(offset))
-+		return 1;
-+
-+	return 0;
-+}
-+
-+static int davinci_mcasp_gpio_get_direction(struct gpio_chip *chip,
-+					    unsigned offset)
-+{
-+	struct davinci_mcasp *mcasp = gpiochip_get_data(chip);
-+	u32 val;
-+
-+	val = mcasp_get_reg(mcasp, DAVINCI_MCASP_PDIR_REG);
-+	if (val & BIT(offset))
-+		return 0;
-+
-+	return 1;
-+}
-+
-+static const struct gpio_chip davinci_mcasp_template_chip = {
-+	.owner			= THIS_MODULE,
-+	.request		= davinci_mcasp_gpio_request,
-+	.free			= davinci_mcasp_gpio_free,
-+	.direction_output	= davinci_mcasp_gpio_direction_out,
-+	.set			= davinci_mcasp_gpio_set,
-+	.direction_input	= davinci_mcasp_gpio_direction_in,
-+	.get			= davinci_mcasp_gpio_get,
-+	.get_direction		= davinci_mcasp_gpio_get_direction,
-+	.base			= -1,
-+	.ngpio			= 32,
-+};
-+
-+static int davinci_mcasp_init_gpiochip(struct davinci_mcasp *mcasp)
-+{
-+	if (!of_property_read_bool(mcasp->dev->of_node, "gpio-controller"))
-+		return 0;
-+
-+	mcasp->gpio_chip = davinci_mcasp_template_chip;
-+	mcasp->gpio_chip.label = dev_name(mcasp->dev);
-+	mcasp->gpio_chip.parent = mcasp->dev;
-+#ifdef CONFIG_OF_GPIO
-+	mcasp->gpio_chip.of_node = mcasp->dev->of_node;
-+#endif
-+
-+	return devm_gpiochip_add_data(mcasp->dev, &mcasp->gpio_chip, mcasp);
-+}
-+
-+#else /* CONFIG_GPIOLIB */
-+static inline int davinci_mcasp_init_gpiochip(struct davinci_mcasp *mcasp)
-+{
-+	return 0;
-+}
-+#endif /* CONFIG_GPIOLIB */
-+
- static int davinci_mcasp_probe(struct platform_device *pdev)
- {
- 	struct snd_dmaengine_dai_dma_data *dma_data;
-@@ -2069,6 +2213,15 @@ static int davinci_mcasp_probe(struct platform_device *pdev)
- 
- 	mcasp_reparent_fck(pdev);
- 
-+	/* All PINS as McASP */
-+	pm_runtime_get_sync(mcasp->dev);
-+	mcasp_set_reg(mcasp, DAVINCI_MCASP_PFUNC_REG, 0x00000000);
-+	pm_runtime_put(mcasp->dev);
-+
-+	ret = davinci_mcasp_init_gpiochip(mcasp);
-+	if (ret)
-+		goto err;
-+
- 	ret = devm_snd_soc_register_component(&pdev->dev,
- 					&davinci_mcasp_component,
- 					&davinci_mcasp_dai[pdata->op_mode], 1);
--- 
-Peter
-
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+On Thu, 2019-01-03 at 09:48 +0800, Nicolas Boichat wrote:
+> On Wed, Jan 2, 2019 at 10:01 PM Henry Chen <henryc.chen@mediatek.com> wrote:
+> >
+> > Support power domain performance state, add header file for scp event.
+> >
+> > Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> > ---
+> >  drivers/soc/mediatek/mtk-scpsys.c | 60 +++++++++++++++++++++++++++++++++++++++
+> >  drivers/soc/mediatek/mtk-scpsys.h | 22 ++++++++++++++
+> >  2 files changed, 82 insertions(+)
+> >  create mode 100644 drivers/soc/mediatek/mtk-scpsys.h
+> >
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.c b/drivers/soc/mediatek/mtk-scpsys.c
+> > index 58d84fe..90102ae 100644
+> > --- a/drivers/soc/mediatek/mtk-scpsys.c
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.c
+> > @@ -11,7 +11,9 @@
+> >  #include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/pm_domain.h>
+> > +#include <linux/pm_opp.h>
+> >  #include <linux/regulator/consumer.h>
+> > +#include <linux/slab.h>
+> >  #include <linux/soc/mediatek/infracfg.h>
+> >  #include <linux/soc/mediatek/scpsys-ext.h>
+> >
+> > @@ -22,6 +24,7 @@
+> >  #include <dt-bindings/power/mt7623a-power.h>
+> >  #include <dt-bindings/power/mt8173-power.h>
+> >  #include <dt-bindings/power/mt8183-power.h>
+> > +#include "mtk-scpsys.h"
+> >
+> >  #define MTK_POLL_DELAY_US   10
+> >  #define MTK_POLL_TIMEOUT    (jiffies_to_usecs(HZ))
+> > @@ -187,6 +190,18 @@ struct scp_soc_data {
+> >         bool bus_prot_reg_update;
+> >  };
+> >
+> > +BLOCKING_NOTIFIER_HEAD(scpsys_notifier_list);
+> > +
+> > +int register_scpsys_notifier(struct notifier_block *nb)
+> > +{
+> > +       return blocking_notifier_chain_register(&scpsys_notifier_list, nb);
+> > +}
+> > +
+> > +int unregister_scpsys_notifier(struct notifier_block *nb)
+> > +{
+> > +       return blocking_notifier_chain_unregister(&scpsys_notifier_list, nb);
+> > +}
+> > +
+> >  static int scpsys_domain_is_on(struct scp_domain *scpd)
+> >  {
+> >         struct scp *scp = scpd->scp;
+> > @@ -536,6 +551,48 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
+> >                 clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
+> >  }
+> >
+> > +static int mtk_pd_set_performance(struct generic_pm_domain *genpd,
+> > +                                 unsigned int state)
+> > +{
+> > +       int i;
+> > +       struct scp_domain *scpd =
+> > +               container_of(genpd, struct scp_domain, genpd);
+> 
+> nit: This (just) fits in 80 chars.
+Try again and get 81 chars :)
+> 
+> > +       struct scp_event_data scpe;
+> > +       struct scp *scp = scpd->scp;
+> > +       struct genpd_onecell_data *pd_data = &scp->pd_data;
+> > +
+> > +       for (i = 0; i < pd_data->num_domains; i++) {
+> > +               if (genpd == pd_data->domains[i]) {
+> > +                       dev_dbg(scp->dev, "%d. %s = %d\n",
+> > +                               i, genpd->name, state);
+> > +                       break;
+> > +               }
+> > +       }
+> 
+> Do we need a sanity check here, if i == pd_data->num_domains?
+Oops. It needed, thanks for remind.
+> 
+> > +
+> > +       scpe.event_type = MTK_SCPSYS_PSTATE;
+> > +       scpe.genpd = genpd;
+> > +       scpe.domain_id = i;
+> > +       blocking_notifier_call_chain(&scpsys_notifier_list, state, &scpe);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static unsigned int mtk_pd_get_performance(struct generic_pm_domain *genpd,
+> > +                                          struct dev_pm_opp *opp)
+> > +{
+> > +       struct device_node *np;
+> > +       unsigned int state;
+> > +
+> > +       np = dev_pm_opp_get_of_node(opp);
+> > +
+> > +       if (of_property_read_u32(np, "mtk,level", &state))
+> > +               return 0;
+> > +
+> > +       of_node_put(np);
+> > +
+> > +       return state;
+> > +}
+> > +
+> >  static struct scp *init_scp(struct platform_device *pdev,
+> >                         const struct scp_domain_data *scp_domain_data, int num,
+> >                         const struct scp_ctrl_reg *scp_ctrl_reg,
+> > @@ -659,6 +716,9 @@ static struct scp *init_scp(struct platform_device *pdev,
+> >                 genpd->power_on = scpsys_power_on;
+> >                 if (MTK_SCPD_CAPS(scpd, MTK_SCPD_ACTIVE_WAKEUP))
+> >                         genpd->flags |= GENPD_FLAG_ACTIVE_WAKEUP;
+> > +
+> > +               genpd->set_performance_state = mtk_pd_set_performance;
+> > +               genpd->opp_to_performance_state = mtk_pd_get_performance;
+> >         }
+> >
+> >         return scp;
+> > diff --git a/drivers/soc/mediatek/mtk-scpsys.h b/drivers/soc/mediatek/mtk-scpsys.h
+> > new file mode 100644
+> > index 0000000..c1e8325
+> > --- /dev/null
+> > +++ b/drivers/soc/mediatek/mtk-scpsys.h
+> > @@ -0,0 +1,22 @@
+> > +/* SPDX-License-Identifier: GPL-2.0
+> > + *
+> > + * Copyright (c) 2018 MediaTek Inc.
+> > + */
+> > +
+> > +#ifndef __MTK_SCPSYS_H__
+> > +#define __MTK_SCPSYS_H__
+> > +
+> > +struct scp_event_data {
+> > +       int event_type;
+> > +       int domain_id;
+> > +       struct generic_pm_domain *genpd;
+> > +};
+> > +
+> > +enum scp_event_type {
+> > +       MTK_SCPSYS_PSTATE,
+> > +};
+> > +
+> > +int register_scpsys_notifier(struct notifier_block *nb);
+> > +int unregister_scpsys_notifier(struct notifier_block *nb);
+> > +
+> > +#endif /* __MTK_SCPSYS_H__ */
+> > --
+> > 1.9.1
+> >
