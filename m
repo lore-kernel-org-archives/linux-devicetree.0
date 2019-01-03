@@ -1,73 +1,48 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: iio: add NPCM ADC documentation
-Date: Thu, 3 Jan 2019 15:14:47 -0600
-Message-ID: <20190103211447.GA4618@bogus>
-References: <20181224164755.286932-1-tmaimon77@gmail.com>
- <20181224164755.286932-2-tmaimon77@gmail.com>
+Subject: Re: [RFC,1/5] dt-bindings: Add a binding for Mediatek SCP
+Date: Thu, 3 Jan 2019 15:19:26 -0600
+Message-ID: <20190103211926.GA7622@bogus>
+References: <20181226075330.82462-1-pihsun@chromium.org>
+ <20181226075330.82462-2-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181224164755.286932-2-tmaimon77@gmail.com>
+In-Reply-To: <20181226075330.82462-2-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Pi-Hsun Shih <pihsun@chromium.org>
+Cc: Nicolas Boichat <drinkcat@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 24, 2018 at 06:47:54PM +0200, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM Analog-to-Digital Converter(ADC).
+On Wed, Dec 26, 2018 at 03:53:09PM +0800, Pi-Hsun Shih wrote:
+> From: Erin Lo <erin.lo@mediatek.com>
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Add a DT binding documentation of SCP for the
+> MT8183 SoC from Mediatek.
+> 
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
->  .../bindings/iio/adc/nuvoton,npcm-adc.txt          | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+>  .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+> diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 > new file mode 100644
-> index 000000000000..6f0843d837cc
+> index 0000000000000..b07e5c4ca9af1
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-> @@ -0,0 +1,35 @@
-> +Nuvoton NPCM Analog to Digital Converter (ADC)
+> +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> @@ -0,0 +1,9 @@
+> +Mediatek SCP Bindings
+> +----------------------------------------
 > +
-> +The NPCM ADC is a 10-bit converter for eight channel inputs.
+> +This binding provides support for ARM Cortex M4 Co-processor found on some
+> +Mediatek SoCs.
 > +
 > +Required properties:
-> +- compatible	: "nuvoton,npcm750-adc" for the NPCM7XX BMC.
-> +- reg			: specifies physical base address and size of the registers.
-> +- interrupts	: Contain the ADC interrupt with flags for falling edge.
-> +
-> +Optional properties:
-> +- clocks		: phandle of ADC reference clock, in case the clock is not
-> +				  added the ADC will use the default ADC sample rate.
-> +- vref-supply	: The regulator supply ADC reference voltage, in case the
-> +				  vref-supply is not added the ADC will use internal voltage
-> +				  reference.
-> +
-> +Required Node in the NPCM7xx BMC:
-> +An additional register is present in the NPCM7xx SOC which is
-> +assumed to be in the same device tree, with and marked as
-> +compatible with "nuvoton,npcm750-rst".
-> +
-> +Example:
-> +
-> +adc: adc@f000c000 {
-> +	compatible = "nuvoton,npcm750-adc";
-> +	reg = <0xf000c000 0x8>;
-> +	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&clk NPCM7XX_CLK_ADC>;
-> +};
-> +
-> +rst: rst@f0801000 {
+> +- compatible		Should be "mediatek,mt8183-scp"
+> +- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
 
-Why is this node here?
+Seems like this is going to be incomplete considering this used for the 
+CrOS EC.
 
-> +	compatible = "nuvoton,npcm750-rst", "syscon",
-> +	"simple-mfd";
-> +	reg = <0xf0801000 0x6C>;
-> +};
-> -- 
-> 2.14.1
-> 
+Rob
