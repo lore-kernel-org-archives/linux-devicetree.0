@@ -1,168 +1,74 @@
-Return-Path: <SRS0=zDJw=QF=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:54305 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726996AbfA2QIX (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 29 Jan 2019 11:08:23 -0500
+Return-Path: <SRS0=TXGq=PL=pengutronix.de=mfe@kernel.org>
+Date: Thu, 3 Jan 2019 14:58:33 +0100
 From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v4 3/7] media: dt-bindings: tvp5150: Add input port connectors DT bindings
-Date: Tue, 29 Jan 2019 17:07:53 +0100
-Message-Id: <20190129160757.2314-4-m.felsch@pengutronix.de>
-In-Reply-To: <20190129160757.2314-1-m.felsch@pengutronix.de>
-References: <20190129160757.2314-1-m.felsch@pengutronix.de>
+Subject: Re: [PATCH 1/2] dt-bindings: usb: usb251xb: add documentation for
+ data lane swapping
+Message-ID: <20190103135833.sisj55ibyxuh53sj@pengutronix.de>
+References: <20181219145941.5173-1-m.felsch@pengutronix.de>
+ <20181228234525.GA30428@bogus>
+ <20181231110514.e3lrninzybg5vhvw@pengutronix.de>
+ <dfcbf6ae-be39-ec8c-9018-05221372098c@skidata.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com
-Cc: devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, afshin.nasser@gmail.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, kernel@pengutronix.de, Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <dfcbf6ae-be39-ec8c-9018-05221372098c@skidata.com>
+To: Richard Leitner <richard.leitner@skidata.com>
+Cc: Rob Herring <robh@kernel.org>, fancer.lancer@gmail.com, kernel@pengutronix.de, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The TVP5150/1 decoders support different video input sources to their
-AIP1A/B pins.
+Hi,
 
-Possible configurations are as follows:
-  - Analog Composite signal connected to AIP1A.
-  - Analog Composite signal connected to AIP1B.
-  - Analog S-Video Y (luminance) and C (chrominance)
-    signals connected to AIP1A and AIP1B respectively.
+On 19-01-02 06:44, Richard Leitner wrote:
+> Hi,
+> 
+> On 31/12/2018 12:05, Marco Felsch wrote:
+> > Hi,
+> > 
+> > On 18-12-28 17:45, Rob Herring wrote:
+> > > On Wed, Dec 19, 2018 at 03:59:40PM +0100, Marco Felsch wrote:
+> > > > Add optional binding to allow USB differential-pair (D+/D-) data lane
+> > > > swapping. The swapping can be specified for each port separately,
+> > > > default is no swapping.
+> > > > 
+> > > > Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+> > > > ---
+> > > >   Documentation/devicetree/bindings/usb/usb251xb.txt | 4 ++++
+> > > >   1 file changed, 4 insertions(+)
+> > > > 
+> > > > diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > > > index 168ff819e827..aec93a92870d 100644
+> > > > --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > > > +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
+> > > > @@ -64,6 +64,8 @@ Optional properties :
+> > > >    - power-on-time-ms : Specifies the time it takes from the time the host
+> > > >   	initiates the power-on sequence to a port until the port has adequate
+> > > >   	power. The value is given in ms in a 0 - 510 range (default is 100ms).
+> > > > + - sw-dx-lanes-ports : Specifies the ports which will swap the differential-pair
+> > > > +	(D+/D-), default is not-swapped.
+> > > 
+> > > Perhaps 'swap-dx-ports' would be a more obvious name.
+> > 
+> > What you think about 'swap-dx-lanes' since it has nothing to do with
+> > port swapping, it's rather swapping port properties internally.
+> 
+> I'd also prefer 'swap-dx-lanes'. For me it's short and clear.
+> 
+> The only downside is that the feature is called "PORT SWAP" in the
+> datasheet. Therefore you should maybe mention it in a comment somewhere
+> in the code so people know what to look for in the datasheet?
 
-This patch extends the device tree bindings documentation to describe
-how the input connectors for these devices should be defined in a DT.
+Okay, I can do this. Should I place the comment into the driver code or
+into the bindings description? Both places seems to be correct for me.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changelog:
+Regards,
+Marco
 
-v3:
-- remove examples for one and two inputs
-- replace space by tabs
+> 
+> regards;Richard.L
+> 
 
-v2:
-- adapt port layout in accordance with
-  https://www.spinics.net/lists/linux-media/msg138546.html with the
-  svideo-connector deviation (use only one endpoint)
-
- .../devicetree/bindings/media/i2c/tvp5150.txt | 92 +++++++++++++++++--
- 1 file changed, 85 insertions(+), 7 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-index 8c0fc1a26bf0..bdd273d8b44d 100644
---- a/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-+++ b/Documentation/devicetree/bindings/media/i2c/tvp5150.txt
-@@ -12,11 +12,31 @@ Optional Properties:
- - pdn-gpios: phandle for the GPIO connected to the PDN pin, if any.
- - reset-gpios: phandle for the GPIO connected to the RESETB pin, if any.
- 
--The device node must contain one 'port' child node for its digital output
--video port, in accordance with the video interface bindings defined in
--Documentation/devicetree/bindings/media/video-interfaces.txt.
-+The device node must contain one 'port' child node per device physical input
-+and output port, in accordance with the video interface bindings defined in
-+Documentation/devicetree/bindings/media/video-interfaces.txt. The port nodes
-+are numbered as follows
- 
--Required Endpoint Properties for parallel synchronization:
-+	  Name		Type		Port
-+	--------------------------------------
-+	  AIP1A		sink		0
-+	  AIP1B		sink		1
-+	  Y-OUT		src		2
-+
-+The device node must contain at least one sink port and the src port. Each input
-+port must be linked to an endpoint defined in
-+Documentation/devicetree/bindings/display/connector/analog-tv-connector.txt. The
-+port/connector layout is as follows
-+
-+tvp-5150 port@0 (AIP1A)
-+	endpoint@0 -----------> Comp0-Con  port
-+	endpoint@1 -----------> Svideo-Con port
-+tvp-5150 port@1 (AIP1B)
-+	endpoint   -----------> Comp1-Con  port
-+tvp-5150 port@2
-+	endpoint (video bitstream output at YOUT[0-7] parallel bus)
-+
-+Required Endpoint Properties for parallel synchronization on output port:
- 
- - hsync-active: active state of the HSYNC signal. Must be <1> (HIGH).
- - vsync-active: active state of the VSYNC signal. Must be <1> (HIGH).
-@@ -26,17 +46,75 @@ Required Endpoint Properties for parallel synchronization:
- If none of hsync-active, vsync-active and field-even-active is specified,
- the endpoint is assumed to use embedded BT.656 synchronization.
- 
--Example:
-+Example - three input sources:
-+
-+comp_connector_0 {
-+	compatible = "composite-video-connector";
-+	label = "Composite0";
-+
-+	port {
-+		composite0_to_tvp5150: endpoint {
-+			remote-endpoint = <&tvp5150_to_composite0>;
-+		};
-+	};
-+};
-+
-+comp_connector_1 {
-+	compatible = "composite-video-connector";
-+	label = "Composite1";
-+
-+	port {
-+		composite1_to_tvp5150: endpoint {
-+			remote-endpoint = <&tvp5150_to_composite1>;
-+		};
-+	};
-+};
-+
-+svid_connector {
-+	compatible = "svideo-connector";
-+	label = "S-Video";
-+
-+	port {
-+		svideo_to_tvp5150: endpoint {
-+			remote-endpoint = <&tvp5150_to_svideo>;
-+		};
-+	};
-+};
- 
- &i2c2 {
--	...
- 	tvp5150@5c {
- 		compatible = "ti,tvp5150";
- 		reg = <0x5c>;
- 		pdn-gpios = <&gpio4 30 GPIO_ACTIVE_LOW>;
- 		reset-gpios = <&gpio6 7 GPIO_ACTIVE_LOW>;
- 
--		port {
-+		port@0 {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+			reg = <0>;
-+
-+			tvp5150_to_composite0: endpoint@0 {
-+				reg = <0>;
-+				remote-endpoint = <&composite0_to_tvp5150>;
-+			};
-+
-+			tvp5150_to_svideo: endpoint@1 {
-+				reg = <1>;
-+				remote-endpoint = <&svideo_to_tvp5150>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg = <1>;
-+
-+			tvp5150_to_composite1: endpoint {
-+                                remote-endpoint = <&composite1_to_tvp5150>;
-+			};
-+		};
-+
-+		port@2 {
-+			reg = <2>;
-+
- 			tvp5150_1: endpoint {
- 				remote-endpoint = <&ccdc_ep>;
- 			};
 -- 
-2.20.1
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
