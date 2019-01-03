@@ -1,102 +1,151 @@
-From: Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [RFC PATCH] ASoC: fsl: Add Audio Mixer CPU DAI
-	driver
-Date: Thu, 3 Jan 2019 13:47:16 +0000
-Message-ID: <1546523057.6408.8.camel@nxp.com>
-References: <1545150569-14897-1-git-send-email-viorel.suman@nxp.com>
- <20181228233226.GA11728@bogus>
+From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+Subject: [PATCH v2 2/2] mfd: tps65218.c: Add input voltage options
+Date: Thu, 3 Jan 2019 14:47:06 +0100
+Message-ID: <1546523226-358-3-git-send-email-Christian.Hohnstaedt@wago.com>
+References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20181228233226.GA11728@bogus>
-Content-Language: en-US
-Content-ID: <B3716895533B6048A3EAA9A6C014E973@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "robh@kernel.org" <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@kernel.org" <timur@kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "tiwai@suse.com" <tiwai@suse.com>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "J, KEERTHY" <j-keerthy@ti.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiBWaSwgMjAxOC0xMi0yOCBhdCAxNzozMiAtMDYwMCwgUm9iIEhlcnJpbmcg
-d3JvdGU6DQo+IE9uIFR1ZSwgRGVjIDE4LCAyMDE4IGF0IDA0OjMwOjAxUE0gKzAwMDAsIFZpb3Jl
-bCBTdW1hbiB3cm90ZToNCj4gPiANCj4gPiBUaGlzIHBhdGNoIGltcGxlbWVudHMgQXVkaW8gTWl4
-ZXIgQ1BVIERBSSBkcml2ZXIgZm9yIE5YUCBpTVg4IFNPQ3MuDQo+ID4gVGhlIEF1ZGlvIE1peGVy
-IGlzIGEgb24tY2hpcCBmdW5jdGlvbmFsIG1vZHVsZSB0aGF0IGFsbG93cyBtaXhpbmcNCj4gPiBv
-Zg0KPiA+IHR3byBhdWRpbyBzdHJlYW1zIGludG8gYSBzaW5nbGUgYXVkaW8gc3RyZWFtLg0KPiA+
-IA0KPiA+IEF1ZGlvIE1peGVyIGRhdGFzaGVldCBpcyBhdmFpbGFibGUgaGVyZToNCj4gPiBodHRw
-czovL3d3dy5ueHAuY29tL2RvY3MvZW4vcmVmZXJlbmNlLW1hbnVhbC9JTVg4RFFYUFJNLnBkZg0K
-PiA+IA0KPiA+IFNpZ25lZC1vZmYtYnk6IFZpb3JlbCBTdW1hbiA8dmlvcmVsLnN1bWFuQG54cC5j
-b20+DQo+ID4gLS0tDQo+ID4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2wsYW1p
-eC50eHTCoMKgwqDCoMKgwqDCoMKgwqB8wqDCoDQ1ICsrDQo+IFRoaXMgc2hvdWxkIGJlIGEgc2Vw
-YXJhdGUgcGF0Y2guDQoNCk9rLCB0aGFuayB5b3UsIHdpbGwgc3BsaXQgdGhpcyBpbnRvIHNldmVy
-YWwgcGF0Y2hlcy4NCg0KPiANCj4gPiANCj4gPiDCoHNvdW5kL3NvYy9mc2wvS2NvbmZpZ8KgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHzC
-oMKgwqA3ICsNCj4gPiDCoHNvdW5kL3NvYy9mc2wvTWFrZWZpbGXCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqDCoDMgKw0KPiA+IMKg
-c291bmQvc29jL2ZzbC9mc2xfYW1peC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgfCA1NTQNCj4gPiArKysrKysrKysrKysrKysrKysrKysNCj4g
-PiDCoHNvdW5kL3NvYy9mc2wvZnNsX2FtaXguaMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoHwgMTAxICsrKysNCj4gPiDCoDUgZmlsZXMgY2hhbmdl
-ZCwgNzEwIGluc2VydGlvbnMoKykNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiA+IERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9zb3VuZC9mc2wsYW1peC50eHQNCj4gPiDCoGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2MvZnNsL2ZzbF9hbWl4LmMNCj4gPiDCoGNyZWF0ZSBt
-b2RlIDEwMDY0NCBzb3VuZC9zb2MvZnNsL2ZzbF9hbWl4LmgNCj4gPiANCj4gPiBkaWZmIC0tZ2l0
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2ZzbCxhbWl4LnR4dA0K
-PiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3NvdW5kL2ZzbCxhbWl4LnR4
-dA0KPiA+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0DQo+ID4gaW5kZXggMDAwMDAwMC4uMDQ5MTQ0Zg0K
-PiA+IC0tLSAvZGV2L251bGwNCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc291bmQvZnNsLGFtaXgudHh0DQo+ID4gQEAgLTAsMCArMSw0NSBAQA0KPiA+ICtOWFAg
-QXVkaW8gTWl4ZXIgKEFNSVgpLg0KPiA+ICsNCj4gPiArVGhlIEF1ZGlvIE1peGVyIGlzIGEgb24t
-Y2hpcCBmdW5jdGlvbmFsIG1vZHVsZSB0aGF0IGFsbG93cyBtaXhpbmcNCj4gPiBvZiB0d28NCj4g
-PiArYXVkaW8gc3RyZWFtcyBpbnRvIGEgc2luZ2xlIGF1ZGlvIHN0cmVhbS4gQXVkaW8gTWl4ZXIg
-aGFzIHR3bw0KPiA+IGlucHV0IHNlcmlhbA0KPiA+ICthdWRpbyBpbnRlcmZhY2VzLiBUaGVzZSBh
-cmUgZHJpdmVuIGJ5IHR3byBTeW5jaHJvbm91cyBBdWRpbw0KPiA+IGludGVyZmFjZQ0KPiA+ICtt
-b2R1bGVzIChTQUkpLiBFYWNoIGlucHV0IHNlcmlhbCBpbnRlcmZhY2UgY2FycmllcyA4IGF1ZGlv
-DQo+ID4gY2hhbm5lbHMgaW4gaXRzDQo+ID4gK2ZyYW1lIGluIFRETSBtYW5uZXIuIE1peGVyIG1p
-eGVzIGF1ZGlvIHNhbXBsZXMgb2YgY29ycmVzcG9uZGluZw0KPiA+IGNoYW5uZWxzDQo+ID4gK2Zy
-b20gdHdvIGludGVyZmFjZXMgaW50byBhIHNpbmdsZSBzYW1wbGUuIEJlZm9yZSBtaXhpbmcsIGF1
-ZGlvDQo+ID4gc2FtcGxlcyBvZg0KPiA+ICt0d28gaW5wdXRzIGNhbiBiZSBhdHRlbnVhdGVkIGJh
-c2VkIG9uIGNvbmZpZ3VyYXRpb24uIFRoZSBvdXRwdXQgb2YNCj4gPiB0aGUNCj4gPiArQXVkaW8g
-TWl4ZXIgaXMgYWxzbyBhIHNlcmlhbCBhdWRpbyBpbnRlcmZhY2UuIExpa2UgaW5wdXQNCj4gPiBp
-bnRlcmZhY2VzIGl0IGhhcw0KPiA+ICt0aGUgc2FtZSBURE0gZnJhbWUgZm9ybWF0LiBUaGlzIG91
-dHB1dCBpcyB1c2VkIHRvIGRyaXZlIHRoZSBzZXJpYWwNCj4gPiBEQUMgVERNDQo+ID4gK2ludGVy
-ZmFjZSBvZiBhdWRpbyBjb2RlYyBhbmQgYWxzbyBzZW50IHRvIHRoZSBleHRlcm5hbCBwaW5zIGFs
-b25nDQo+ID4gd2l0aCB0aGUNCj4gPiArcmVjZWl2ZSBwYXRoIG9mIG5vcm1hbCBhdWRpbyBTQUkg
-bW9kdWxlIGZvciByZWFkYmFjayBieSB0aGUgQ1BVLg0KPiA+ICsNCj4gPiArVGhlIG91dHB1dCBv
-ZiBBdWRpbyBtaXhlciBjYW4gYmUgc2VsZWN0ZWQgZnJvbSBhbnkgb2YgdGhlIHRocmVlDQo+ID4g
-c3RyZWFtcw0KPiA+ICsgLSBzZXJpYWwgYXVkaW8gaW5wdXQgMQ0KPiA+ICsgLSBzZXJpYWwgYXVk
-aW8gaW5wdXQgMg0KPiA+ICsgLSBNaXhlZCBhdWRpbw0KPiA+ICsNCj4gPiArTWl4aW5nIG9wZXJh
-dGlvbiBpcyBpbmRlcGVuZGVudCBvZiBhdWRpbyBzYW1wbGUgcmF0ZSBidXQgdGhlIHR3bw0KPiA+
-IGF1ZGlvDQo+ID4gK2lucHV0IHN0cmVhbXMgbXVzdCBoYXZlIHNhbWUgYXVkaW8gc2FtcGxlIHJh
-dGUgd2l0aCBzYW1lIG51bWJlciBvZg0KPiA+IGNoYW5uZWxzDQo+ID4gK2luIFRETSBmcmFtZSB0
-byBiZSBlbGlnaWJsZSBmb3IgbWl4aW5nLg0KPiA+ICsNCj4gPiArRGV2aWNlIGRyaXZlciByZXF1
-aXJlZCBwcm9wZXJ0aWVzOg0KPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0N
-Cj4gPiArwqDCoC0gY29tcGF0aWJsZQkJOiBDb21wYXRpYmxlIGxpc3QsIGNvbnRhaW5zDQo+ID4g
-ImZzbCxpbXg4cW0tYW1peCINCj4gPiArDQo+ID4gK8KgwqAtIHJlZwkJCTogT2Zmc2V0IGFuZCBs
-ZW5ndGggb2YgdGhlIHJlZ2lzdGVyDQo+ID4gc2V0IGZvciB0aGUgZGV2aWNlLg0KPiA+ICsNCj4g
-PiArwqDCoC0gY2xvY2tzCQk6IE11c3QgY29udGFpbiBhbiBlbnRyeSBmb3IgZWFjaCBlbnRyeQ0K
-PiA+IGluIGNsb2NrLW5hbWVzLg0KPiA+ICsNCj4gPiArwqDCoC0gY2xvY2stbmFtZXMJCTogTXVz
-dCBpbmNsdWRlIHRoZSAiaXBnIiBmb3INCj4gPiByZWdpc3RlciBhY2Nlc3MuDQo+IEh1bW0sIG5v
-IGF1ZGlvIHJlbGF0ZWQgY2xvY2tzPw0KDQpSaWdodCwgbm8gYXVkaW8gcmVsYXRlZCBjbG9ja3Mg
-LSBBdWRpbyBNaXhlciBvcGVyYXRlcyBvbiB0aGUgY2xvY2tzDQpzdXBwbGllZCBieSBpbnB1dCBT
-eW5jaHJvbm91cyBBdWRpbyBJbnRlcmZhY2VzLg0KDQo+IMKgDQo+IA0KPiA+IA0KPiA+ICsNCj4g
-PiArwqDCoC0gcG93ZXItZG9tYWlucwk6IE11c3QgY29udGFpbiB0aGUgcGhhbmRsZSB0byB0aGUg
-QU1JWA0KPiA+IHBvd2VyIGRvbWFpbiBub2RlDQo+ID4gKw0KPiA+ICtEZXZpY2UgZHJpdmVyIGNv
-bmZpZ3VyYXRpb24gZXhhbXBsZToNCj4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
-PT09PT09PT0NCj4gPiArwqDCoGFtaXg6IGFtaXhANTk4NDAwMDAgew0KPiA+ICvCoMKgwqDCoGNv
-bXBhdGlibGUgPSAiZnNsLGlteDhxbS1hbWl4IjsNCj4gPiArwqDCoMKgwqByZWcgPSA8MHgwIDB4
-NTk4NDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ICvCoMKgwqDCoGNsb2NrcyA9IDwmY2xrIElNWDhR
-WFBfQVVEX0FNSVhfSVBHPjsNCj4gPiArwqDCoMKgwqBjbG9jay1uYW1lcyA9ICJpcGciOw0KPiA+
-ICvCoMKgwqDCoHBvd2VyLWRvbWFpbnMgPSA8JnBkX2FtaXg+Ow0KPiA+ICvCoMKgfTsNCj4gPiAr
-DQoNClJlZ2FyZHMsDQpWaW9yZWwNCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCkFsc2EtZGV2ZWwgbWFpbGluZyBsaXN0CkFsc2EtZGV2ZWxAYWxzYS1wcm9q
-ZWN0Lm9yZwpodHRwOi8vbWFpbG1hbi5hbHNhLXByb2plY3Qub3JnL21haWxtYW4vbGlzdGluZm8v
-YWxzYS1kZXZlbAo=
+These options apply to all regulators in this chip.
+
+ti,strict-supply-voltage-supervision:
+  Set STRICT flag in CONFIG1
+ti,under-voltage-limit-microvolt:
+  Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
+ti,under-voltage-hyst-microvolt:
+  Select 200mV or 400mV UVLOHYS in CONFIG2
+
+Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
+---
+ drivers/mfd/tps65218.c       | 87 ++++++++++++++++++++++++++++++++++++++++++++
+ include/linux/mfd/tps65218.h |  4 ++
+ 2 files changed, 91 insertions(+)
+
+diff --git a/drivers/mfd/tps65218.c b/drivers/mfd/tps65218.c
+index 8bcdecf..b5e0f3a 100644
+--- a/drivers/mfd/tps65218.c
++++ b/drivers/mfd/tps65218.c
+@@ -211,6 +211,81 @@ static const struct of_device_id of_tps65218_match_table[] = {
+ };
+ MODULE_DEVICE_TABLE(of, of_tps65218_match_table);
+ 
++static int tps65218_voltage_set_strict(struct tps65218 *tps)
++{
++	u32 strict;
++
++	if (of_property_read_u32(tps->dev->of_node,
++			"ti,strict-supply-voltage-supervision", &strict))
++		return 0;
++
++	if (strict != 0 && strict != 1) {
++		dev_err(tps->dev,
++			"Invalid ti,strict-supply-voltage-supervision value\n");
++		return -EINVAL;
++	}
++
++	tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
++		TPS65218_CONFIG1_STRICT,
++		strict ? TPS65218_CONFIG1_STRICT : 0, TPS65218_PROTECT_L1);
++	return 0;
++}
++
++static int tps65218_voltage_set_uv_hyst(struct tps65218 *tps)
++{
++	u32 hyst;
++
++	if (of_property_read_u32(tps->dev->of_node,
++			"ti,under-voltage-hyst-microvolt", &hyst))
++		return 0;
++
++	if (hyst != 400000 && hyst != 200000) {
++		dev_err(tps->dev,
++			"Invalid ti,under-voltage-hyst-microvolt value\n");
++		return -EINVAL;
++	}
++
++	tps65218_update_bits(tps, TPS65218_REG_CONFIG2,
++		TPS65218_CONFIG2_UVLOHYS,
++		hyst == 400000 ? TPS65218_CONFIG2_UVLOHYS : 0,
++		TPS65218_PROTECT_L1);
++	return 0;
++}
++
++static int tps65218_voltage_set_uvlo(struct tps65218 *tps)
++{
++	u32 uvlo;
++	int uvloval;
++
++	if (of_property_read_u32(tps->dev->of_node,
++			 "ti,under-voltage-limit-microvolt", &uvlo))
++		return 0;
++
++	switch (uvlo) {
++	case 2750000:
++		uvloval = TPS65218_CONFIG1_UVLO_2750000;
++		break;
++	case 2950000:
++		uvloval = TPS65218_CONFIG1_UVLO_2950000;
++		break;
++	case 3250000:
++		uvloval = TPS65218_CONFIG1_UVLO_3250000;
++		break;
++	case 3350000:
++		uvloval = TPS65218_CONFIG1_UVLO_3350000;
++		break;
++	default:
++		dev_err(tps->dev,
++			"Invalid ti,under-voltage-limit-microvolt value\n");
++		return -EINVAL;
++	}
++
++	tps65218_update_bits(tps, TPS65218_REG_CONFIG1,
++		TPS65218_CONFIG1_UVLO_MASK, uvloval,
++		TPS65218_PROTECT_L1);
++	return 0;
++}
++
+ static int tps65218_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *ids)
+ {
+@@ -249,6 +324,18 @@ static int tps65218_probe(struct i2c_client *client,
+ 
+ 	tps->rev = chipid & TPS65218_CHIPID_REV_MASK;
+ 
++	ret = tps65218_voltage_set_strict(tps);
++	if (ret)
++		return ret;
++
++	ret = tps65218_voltage_set_uvlo(tps);
++	if (ret)
++		return ret;
++
++	ret = tps65218_voltage_set_uv_hyst(tps);
++	if (ret)
++		return ret;
++
+ 	ret = mfd_add_devices(tps->dev, PLATFORM_DEVID_AUTO, tps65218_cells,
+ 			      ARRAY_SIZE(tps65218_cells), NULL, 0,
+ 			      regmap_irq_get_domain(tps->irq_data));
+diff --git a/include/linux/mfd/tps65218.h b/include/linux/mfd/tps65218.h
+index c204d9a..3cbe103 100644
+--- a/include/linux/mfd/tps65218.h
++++ b/include/linux/mfd/tps65218.h
+@@ -137,6 +137,10 @@
+ #define TPS65218_CONFIG1_PGDLY_MASK	0x18
+ #define TPS65218_CONFIG1_STRICT		BIT(2)
+ #define TPS65218_CONFIG1_UVLO_MASK	0x3
++#define TPS65218_CONFIG1_UVLO_2750000	0x0
++#define TPS65218_CONFIG1_UVLO_2950000	0x1
++#define TPS65218_CONFIG1_UVLO_3250000	0x2
++#define TPS65218_CONFIG1_UVLO_3350000	0x3
+ 
+ #define TPS65218_CONFIG2_DC12_RST	BIT(7)
+ #define TPS65218_CONFIG2_UVLOHYS	BIT(6)
+-- 
+2.7.4
