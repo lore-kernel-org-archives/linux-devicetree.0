@@ -1,253 +1,55 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v5 2/3] thermal: broadcom: Add Stingray thermal driver
-Date: Thu, 3 Jan 2019 11:58:26 +0530
-Message-ID: <CABe79T5XrzF4ZLHT7a2FB=h_e=y-dzRi+8=xkSBJdqvPtfmTrg@mail.gmail.com>
-References: <1539702680-3746-1-git-send-email-srinath.mannam@broadcom.com>
- <1539702680-3746-3-git-send-email-srinath.mannam@broadcom.com> <20190102200306.GB2024@localhost.localdomain>
+From: Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Thu, 3 Jan 2019 14:15:53 +0530
+Message-ID: <dcb3e046-d0bd-af68-e42d-1db0db3bf2df@codeaurora.org>
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+ <154515840025.238328.5075439774176447808@swboyd.mtv.corp.google.com>
+ <CAD=FV=XeFYmOJx9Wxy7hLQwSq1GoF84eQ93Y4KgrO1JM-g9ZiA@mail.gmail.com>
+ <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
+ <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q@mail.gmail.com>
+ <CAD=FV=VMMYKoW4RU_TTjLdyrNcWZU-Gyou9b6qynKFX9wDn5Mw@mail.gmail.com>
+ <CAD=FV=Utko6B6OycYpef3OQAF1v-rthcdgAKMm0GLxRM4=ummg@mail.gmail.com>
+ <CAL_Jsq+U8Vj4+w6jA+B3_CyG8N==ABbw31nm+LE=6pwXEopApw@mail.gmail.com>
+ <154534136449.79149.14097954220921296509@swboyd.mtv.corp.google.com>
+ <7e310416-78d3-b7e5-5013-0bcc8bfd0351@codeaurora.org>
+ <154604698217.179992.9966831118584978893@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190102200306.GB2024@localhost.localdomain>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Eduardo Valentin <edubezval@gmail.com>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <154604698217.179992.9966831118584978893-n1Xw8LXHxjTHt/MElyovVYaSKrA+ACpX0E9HWUfgJXw@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo Valentin,
-
-Thank you for the review. I will address your comments in next patchset.
-Please find my comments in lined.
-
-On Thu, Jan 3, 2019 at 1:33 AM Eduardo Valentin <edubezval@gmail.com> wrote:
->
-> On Tue, Oct 16, 2018 at 08:41:19PM +0530, Srinath Mannam wrote:
-> > From: Pramod Kumar <pramod.kumar@broadcom.com>
-> >
-> > Stingray SoC has six temperature sensor and those are
-> > configured, controlled and accessed to read temperature
-> > and update in DDR memory using m0 firmware.
-> > All six sensors has been given 4 bytes of memory in DDR
-> > to write temperature in millivolts.
-> >
-> > This thermal driver read temperature values from DDR
-> > because no direct access to sensors.
-> > Like this all temparature sensors are monitored and
-> > trips at critical temperature.
-> >
-> > If driver can't handle thermal runaways because of
-> > any unknown reason, then firmware in m0 Processor
-> > will handle.
-> >
-> > Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > Reviewed-by: Vikram Prakash <vikram.prakash@broadcom.com>
-> > ---
-> >  drivers/thermal/Kconfig               |   3 +-
-> >  drivers/thermal/broadcom/Kconfig      |   9 +++
-> >  drivers/thermal/broadcom/Makefile     |   1 +
-> >  drivers/thermal/broadcom/sr-thermal.c | 138 ++++++++++++++++++++++++++++++++++
-> >  4 files changed, 150 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/thermal/broadcom/sr-thermal.c
-> >
-> > diff --git a/drivers/thermal/Kconfig b/drivers/thermal/Kconfig
-> > index 0e69edc..5f9f070 100644
-> > --- a/drivers/thermal/Kconfig
-> > +++ b/drivers/thermal/Kconfig
-> > @@ -416,7 +416,8 @@ config MTK_THERMAL
-> >         controller present in Mediatek SoCs
-> >
-> >  menu "Broadcom thermal drivers"
-> > -depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || COMPILE_TEST
-> > +depends on ARCH_BCM || ARCH_BRCMSTB || ARCH_BCM2835 || ARCH_BCM_IPROC || \
-> > +             COMPILE_TEST
-> >  source "drivers/thermal/broadcom/Kconfig"
-> >  endmenu
-> >
-> > diff --git a/drivers/thermal/broadcom/Kconfig b/drivers/thermal/broadcom/Kconfig
-> > index c106a15..dc9a9bd 100644
-> > --- a/drivers/thermal/broadcom/Kconfig
-> > +++ b/drivers/thermal/broadcom/Kconfig
-> > @@ -22,3 +22,12 @@ config BCM_NS_THERMAL
-> >         BCM4708, BCM4709, BCM5301x, BCM95852X, etc). It contains DMU (Device
-> >         Management Unit) block with a thermal sensor that allows checking CPU
-> >         temperature.
-> > +
-> > +config BCM_SR_THERMAL
-> > +     tristate "Stingray thermal driver"
-> > +     depends on ARCH_BCM_IPROC || COMPILE_TEST
-> > +     default ARCH_BCM_IPROC
-> > +     help
-> > +       Support for the Stingray family of SoCs. Its different blocks like
-> > +       iHost, CRMU and NITRO has thermal sensor that allows checking its
-> > +       temperature.
-> > diff --git a/drivers/thermal/broadcom/Makefile b/drivers/thermal/broadcom/Makefile
-> > index fae10ec..79df69e 100644
-> > --- a/drivers/thermal/broadcom/Makefile
-> > +++ b/drivers/thermal/broadcom/Makefile
-> > @@ -1,3 +1,4 @@
-> >  obj-$(CONFIG_BCM2835_THERMAL)                += bcm2835_thermal.o
-> >  obj-$(CONFIG_BRCMSTB_THERMAL)                += brcmstb_thermal.o
-> >  obj-$(CONFIG_BCM_NS_THERMAL)         += ns-thermal.o
-> > +obj-$(CONFIG_BCM_SR_THERMAL)         += sr-thermal.o
-> > diff --git a/drivers/thermal/broadcom/sr-thermal.c b/drivers/thermal/broadcom/sr-thermal.c
-> > new file mode 100644
-> > index 0000000..f45e12e
-> > --- /dev/null
-> > +++ b/drivers/thermal/broadcom/sr-thermal.c
-> > @@ -0,0 +1,138 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (C) 2018 Broadcom
-> > + */
-> > +
-> > +#include <linux/acpi.h>
-> > +#include <linux/module.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/thermal.h>
-> > +
-> > +/*
-> > + * In stingray thermal IO memory,
-> > + * Total Number of available TMONs MASK is at offset 0
-> > + * temperature registers BASE is at 4 byte offset.
-> > + * Each TMON temperature register size is 4.
-> > + */
-> > +#define SR_TMON_TEMP_BASE(id)   ((id) * 0x4)
-> > +
-> > +#define SR_TMON_MAX_LIST        6
-> > +
-> > +struct sr_tmon {
-> > +     struct thermal_zone_device *tz;
-> > +     unsigned int crit_temp;
-> > +     unsigned int tmon_id;
-> > +     struct sr_thermal *priv;
-> > +};
-> > +
-> > +struct sr_thermal {
-> > +     void __iomem *regs;
-> > +     unsigned int max_crit_temp;
-> > +     struct sr_tmon tmon[SR_TMON_MAX_LIST];
-> > +};
-> > +
-> > +static int sr_get_temp(void *data, int *temp)
-> > +{
-> > +     struct sr_tmon *tmon = data;
-> > +     struct sr_thermal *sr_thermal = tmon->priv;
-> > +
-> > +     *temp = readl(sr_thermal->regs + SR_TMON_TEMP_BASE(tmon->tmon_id));
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct thermal_zone_of_device_ops sr_tz_ops = {
-> > +     .get_temp = sr_get_temp,
-> > +};
-> > +
-> > +static int sr_thermal_probe(struct platform_device *pdev)
-> > +{
-> > +     struct device *dev = &pdev->dev;
-> > +     struct sr_thermal *sr_thermal;
-> > +     struct sr_tmon *tmon;
-> > +     struct resource *res;
-> > +     uint32_t sr_tmon_list = 0;
-> > +     unsigned int i;
-> > +     int ret;
-> > +
-> > +     sr_thermal = devm_kzalloc(dev, sizeof(*sr_thermal), GFP_KERNEL);
-> > +     if (!sr_thermal)
-> > +             return -ENOMEM;
-> > +
-> > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +     sr_thermal->regs = (void __iomem *)devm_memremap(&pdev->dev, res->start,
-> > +                                                      resource_size(res),
-> > +                                                      MEMREMAP_WB);
-> > +     if (IS_ERR(sr_thermal->regs)) {
-> > +             dev_err(dev, "failed to get io address\n");
-> > +             return PTR_ERR(sr_thermal->regs);
-> > +     }
-> > +
-> > +     ret = device_property_read_u32(dev, "brcm,tmon-mask", &sr_tmon_list);
-> > +     if (ret)
-> > +             return ret;
-> > +
-> > +     tmon = sr_thermal->tmon;
-> > +     for (i = 0; i < SR_TMON_MAX_LIST; i++, tmon++) {
-> > +
-> > +             if (!(sr_tmon_list & BIT(i)))
-> > +                     continue;
-> > +
-> > +             /* Flush temperature registers */
-> > +             writel(0, sr_thermal->regs + SR_TMON_TEMP_BASE(i));
-> > +             tmon->tmon_id = i;
-> > +             tmon->priv = sr_thermal;
-> > +             tmon->tz = devm_thermal_zone_of_sensor_register(dev, i, tmon,
-> > +                                                             &sr_tz_ops);
-> > +             if (IS_ERR(tmon->tz))
-> > +                     return PTR_ERR(tmon->tz);
-> > +
-> > +             dev_info(dev, "thermal sensor %d registered\n", i);
-> >
->
-> Does this really need to be dev_info() level? Usually just pollutes boot
-> message logs..
-I will change dev_info to dev_dbg.
->
-> +       }
-> > +     platform_set_drvdata(pdev, sr_thermal);
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static int sr_thermal_remove(struct platform_device *pdev)
-> > +{
-> > +     struct sr_thermal *sr_thermal = platform_get_drvdata(pdev);
-> > +     unsigned int i;
-> > +     struct sr_tmon *tmon;
-> > +
-> > +     tmon = sr_thermal->tmon;
-> > +     for (i = 0; i < SR_TMON_MAX_LIST; i++, tmon++)
-> > +             if (tmon->tz)
-> > +                     devm_thermal_zone_of_sensor_unregister(&pdev->dev,
-> > +                                                            tmon->tz);
->
-> Why did you need to explicitly call devm_.*unregister()?
-Yes, this call is not required I will remove sr_thermal_remove
-function completely.
->
-> > +
-> > +     return 0;
-> > +}
-> > +
-> > +static const struct of_device_id sr_thermal_of_match[] = {
-> > +     { .compatible = "brcm,sr-thermal", },
-> > +     {},
-> > +};
-> > +MODULE_DEVICE_TABLE(of, sr_thermal_of_match);
-> > +
-> > +static const struct acpi_device_id sr_thermal_acpi_ids[] = {
-> > +     { .id = "BRCM0500" },
-> > +     { /* sentinel */ }
-> > +};
-> > +MODULE_DEVICE_TABLE(acpi, sr_thermal_acpi_ids);
-> > +
-> > +static struct platform_driver sr_thermal_driver = {
-> > +     .probe          = sr_thermal_probe,
-> > +     .remove         = sr_thermal_remove,
-> > +     .driver = {
-> > +             .name = "sr-thermal",
-> > +             .of_match_table = sr_thermal_of_match,
-> > +             .acpi_match_table = ACPI_PTR(sr_thermal_acpi_ids),
-> > +     },
-> > +};
-> > +module_platform_driver(sr_thermal_driver);
-> > +
-> > +MODULE_AUTHOR("Pramod Kumar <pramod.kumar@broadcom.com>");
-> > +MODULE_DESCRIPTION("Stingray thermal driver");
-> > +MODULE_LICENSE("GPL v2");
-> > --
-> > 2.7.4
-> >
-Regards,
-Srinath.
+Ck9uIDEyLzI5LzIwMTggNjo1OSBBTSwgU3RlcGhlbiBCb3lkIHdyb3RlOgo+PiBTbyBJIGFtIGd1
+ZXNzaW5nIHRoZSBjb25jbHVzaW9uIGlzIHRvIHVzZSBhIGZhbGxiYWNrICJvcGVyYXRpbmctcG9p
+bnRzLXYyIgo+PiBjb21wYXRpYmxlKm9ubHkqICB3aGVuIHdlIGRvIGhhdmUgb3BwLWh6IGFsb25n
+IHdpdGggcWNvbSxsZXZlbCAoYXMgaW4gdGhlCj4+IGNhc2Ugd2l0aCBncHUpIGFuZCBub3QgaGF2
+ZSBhIGZhbGxiYWNrIGNvbXBhdGlibGUgaW4gY2FzZXMgd2hlbiB3ZSBkb24ndAo+PiBoYXZlIG9w
+cC1oeiAoYXMgaW4gdGhlIGNhc2Ugb2YgcnBtIHBvd2VyIGRvbWFpbnMpPwo+PiBUaGF0IHNlZW1z
+IGEgbGl0dGxlIGluY29uc2lzdGVudCwgYW5kIGdpdmVuIFJvYiBzYWlkIGVpdGhlciB3YXkgaXMg
+ZmluZSwKPj4ganVzdCBkbyBvbmUgd2F5IG9yIHRoZSBvdGhlciBhbmQgbm90IGJvdGgsIEkgYW0g
+aW5jbGluZWQgdG8gdGhpbmsgd2Ugc2hvdWxkCj4+IGp1c3QgaGF2ZSBhICJvcGVyYXRpbmctcG9p
+bnRzLXYyLXFjb20tbGV2ZWwiIGFuZCBubyBmYWxsYmFjayBjb21wYXRpYmxlLgo+PiBEb2VzIHRo
+YXQgbWFrZSBzZW5zZT8KPj4KPiBBcmUgeW91IGdvaW5nIHRvIHVwZGF0ZSB0aGUgc2tpcCB0YWJs
+ZSB0byBub3QgY3JlYXRlIHBsYXRmb3JtIGRldmljZXM/Cj4gT3IgaW50cm9kdWNlIHNvbWUgZ2Vu
+ZXJpYyBwcm9wZXJ0eSB0byBpbmRpY2F0ZSB0aGF0IHRoaXMgaXMganVzdCBkYXRhCj4gYW5kIG5v
+dCBhIGRldmljZSBub2RlPwoKSXMgYW55IG9mIGl0IHJlYWxseSBuZWVkZWQsIGdpdmVuIHRoZSBi
+aW5kaW5ncyBzcGVjaWZ5IHRoYXQgdGhlIE9QUCB0YWJsZQpzaG91bGQgYWN0dWFsbHkgYmUgYSBj
+aGlsZCBub2RlIG9mIHRoZSBkZXZpY2UvcG93ZXIgZG9tYWluIHN1cHBvcnRpbmcKaXQ/IEkgZG9u
+J3Qgc2VlIHdobyB3b3VsZCBlbmQgdXAgY3JlYXRpbmcgcGxhdGZvcm0gZGV2aWNlcyBmb3IgdGhl
+bS4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
