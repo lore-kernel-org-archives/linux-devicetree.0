@@ -1,84 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/3] dmaengine: Extend the k3dma driver binding
-Date: Thu, 3 Jan 2019 17:21:44 -0600
-Message-ID: <20190103232144.GA17431@bogus>
-References: <1545978983-124360-1-git-send-email-hutenghui@huawei.com>
- <1545978983-124360-2-git-send-email-hutenghui@huawei.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 2/2] phy: qualcomm: usb: Add Super-Speed PHY driver
+Date: Thu, 03 Jan 2019 15:30:06 -0800
+Message-ID: <154655820653.15366.12989225525562032193@swboyd.mtv.corp.google.com>
+References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1544176558-7946-3-git-send-email-jorge.ramirez-ortiz@linaro.org> <154533779333.79149.17234544366247143930@swboyd.mtv.corp.google.com> <2f38642e-27a0-0fd7-928e-8e782d0bc7c6@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1545978983-124360-2-git-send-email-hutenghui@huawei.com>
+In-Reply-To: <2f38642e-27a0-0fd7-928e-8e782d0bc7c6@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: h00249924 <hutenghui@huawei.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, suzhuangluan@hisilicon.com, kongfei@hisilicon.com, liyuequan@hisilicon.com, cash.qianli@hisilicon.com, huangli295@hisilicon.com, hantanglei@huawei.com, wangyoulin1@hisilicon.com, ninggaoyu@hisilicon.com, hanxiaolong3@hisilicon.com, Youlin Wang <wwx575822@notesmail.huawei.com>, Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, gregkh@linuxfoundation.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 28, 2018 at 02:36:22PM +0800, h00249924 wrote:
-> From: Youlin Wang <wwx575822@notesmail.huawei.com>
-> 
-> Extend the k3dma driver binding to support hisi-asp hardware variants.
-> 
-> Signed-off-by: Youlin Wang <wwx575822@notesmail.huawei.com>
-> Signed-off-by: Tanglei Han <hantanglei@huawei.com>
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> ---
->  Documentation/devicetree/bindings/dma/k3dma.txt | 33 ++++++++++++++++++++++++-
->  1 file changed, 32 insertions(+), 1 deletion(-)
-> 
-> diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> index 4945aea..cd21b82 100644
-> --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> @@ -3,7 +3,9 @@
->  See dma.txt first
->  
->  Required properties:
-> -- compatible: Should be "hisilicon,k3-dma-1.0"
-> +- compatible: Must be one of
-> +-		"hisilicon,k3-dma-1.0"
-> +-		"hisilicon,hisi-pcm-asp-dma-1.0"
->  - reg: Should contain DMA registers location and length.
->  - interrupts: Should contain one interrupt shared by all channel
->  - #dma-cells: see dma.txt, should be 1, para number
-> @@ -43,3 +45,32 @@ For example, i2c0 read channel request line is 18, while write channel use 19
->  			dma-names = "rx", "tx";
->  		};
->  
-> +
-> +
-> +
-> +Controller:
+Quoting Jorge Ramirez (2018-12-26 09:53:08)
+> On 12/20/18 21:29, Stephen Boyd wrote:
+> > Quoting Jorge Ramirez-Ortiz (2018-12-07 01:55:58)
+> >=20
+> >> +       struct regulator *vdda1p8;
+> >> +       struct regulator *vbus;
+> >> +       struct regulator *vdd;
+> >> +       unsigned int vdd_levels[LEVEL_NUM];
+> >> +};
+> >> +
+> >> +static inline void qcom_ssphy_updatel(void __iomem *addr, u32 mask, u=
+32 val)
+> >> +{
+> >> +       writel((readl(addr) & ~mask) | val, addr);
+> >> +}
+> >> +
+> >> +static int qcom_ssphy_config_vdd(struct ssphy_priv *priv,
+> >> +                                enum phy_vdd_level level)
+> >> +{
+> >> +       return regulator_set_voltage(priv->vdd,
+> >> +                                    priv->vdd_levels[level],
+> >> +                                    priv->vdd_levels[LEVEL_MAX]);
+> >=20
+> > regulator_set_voltage(reg, 0, max) is very suspicious. It's voltage
+> > corners where the voltages are known?
+>=20
+> sorry I dont understand the question
+>=20
+> this regulator on the ss phy wold be
+> vreg_l3_1p05: l3 {
+>                 regulator-min-microvolt =3D <976000>;
+>                 regulator-max-microvolt =3D <1160000>;
 
-Why is a new example needed just for a new compatible string?
+Is this also the CX or MX voltage for the SoC? There would be a pin like
+VDDCX or VDDMX on the SoC part that is connected to this regulator if
+that's the case. Because you have "LEVEL" in the code it makes it sounds
+like it's voltage corners here so I suspect this is mapping into the
+voltage corner stuff that qcom has.
 
-> +		asp_dmac: asp_dmac@E804B000 {
-> +			compatible = "hisilicon,hisi-pcm-asp-dma-1.0";
-> +			reg = <0x0 0xe804b000 0x0 0x1000>;
-> +			#dma-cells = <1>;
-> +			dma-channels = <16>;
-> +			dma-requests = <32>;
-> +			dma-min-chan = <0>;
-> +			dma-used-chans = <0xFFFE>;
-> +			dma-share;
-> +			interrupts = <0 216 4>;
-> +			interrupt-names = "asp_dma_irq";
-> +			status = "ok";
-> +		};
-> +
-> +Client:
-> +		i2s2: hisi_i2s {
-> +			compatible = "hisilicon,hisi-i2s";
-> +			reg = <0x0 0xe804f800 0x0 0x400>,
-> +				<0x0 0xe804e000 0x0 0x400>;
-> +			pinctrl-names = "default";
-> +			pinctrl-0 = <&i2s2_pmx_func &i2s2_cfg_func>;
-> +			dmas = <&asp_dmac 18 &asp_dmac 19>;
-> +			dma-names = "rx", "tx";
-> +			#sound-dai-cells = <0>;
-> +		};
-> -- 
-> 1.9.1
-> 
+> };
+> >=20
+> >> +}
+> >> +
+> >> +static int qcom_ssphy_ldo_enable(struct ssphy_priv *priv)
+> >> +{
+> >> +       int ret;
+> >> +
+> >> +       ret =3D regulator_set_load(priv->vdda1p8, 23000);
+> >=20
+> > Do you need to do this? Why can't the regulator be in high power mode
+> > all the time and then go low power when it's disabled?
+>=20
+> this regulator is shared with the usb hs phy and each (ss/hs) have=20
+> different load requirements. why would it be wrong for the ss phy to=20
+> announce its needs (which will differ from those of the hs phy)?
+
+Yes they have different load requirements, but in the end I would guess
+they always push the regulator into high power mode when the device is
+active and drop the load requirement when it's inactive. If it matches
+the enable state of the regulator then there isn't much need for setting
+a load explicitly besides stating that when the regulator is on it
+should be in high power mode and when it's off it should be in low power
+mode and off.
