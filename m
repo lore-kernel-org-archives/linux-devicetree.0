@@ -1,35 +1,38 @@
-From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Subject: [PATCH v2 0/2] Add input voltage configuration for TPS65218
-Date: Thu, 3 Jan 2019 14:47:04 +0100
-Message-ID: <1546523226-358-1-git-send-email-Christian.Hohnstaedt@wago.com>
-References: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Subject: [PATCH 0/3] ASoC: ti: davinci-mcasp: GPIO mode support for pins
+Date: Thu, 3 Jan 2019 16:05:49 +0200
+Message-ID: <20190103140552.29809-1-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545120356-7749-1-git-send-email-Christian.Hohnstaedt@wago.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "J, KEERTHY" <j-keerthy@ti.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: broonie@kernel.org, lgirdwood@gmail.com
+Cc: alsa-devel@alsa-project.org, misael.lopez@ti.com, jsarha@ti.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch allows to configure input-voltage settings
-of the TPS65218 regulator via device tree.
+Hi,
 
-Changes for v2:
- - handle the different options in separate functions
- - add "ti," prefix and "-microvolt" postfix
- - remove debug prints
- - abort with an error in case of invalid values.
- - extend documentation of the options (taken from the datasheet)
+Each McASP pins can be configured individually to be used as McASP or GPIO pin.
 
-Christian Hohnstaedt (2):
-  dt-bindings: regulator: extend tps65218 bindings
-  mfd: tps65218.c: Add input voltage options
+This series will allow client drivers to use pins as GPIO (optional) in case the
+board wired up them to be used in this mode.
 
- .../devicetree/bindings/regulator/tps65218.txt     | 22 ++++++
- drivers/mfd/tps65218.c                             | 87 ++++++++++++++++++++++
- include/linux/mfd/tps65218.h                       |  4 +
- 3 files changed, 113 insertions(+)
+Regards,
+Peter
+---
+Peter Ujfalusi (3):
+  ASoC: ti: davinci-mcasp: Move context save/restore to runtime_pm
+    callbacks
+  bindings: sound: davinci-mcasp: Document GPIO support
+  ASoC: ti: davinci-mcasp: Add support for GPIO mode of the pins
+
+ .../bindings/sound/davinci-mcasp-audio.txt    |  17 +
+ sound/soc/ti/davinci-mcasp.c                  | 295 +++++++++++++-----
+ 2 files changed, 237 insertions(+), 75 deletions(-)
 
 -- 
-2.7.4
+Peter
+
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
