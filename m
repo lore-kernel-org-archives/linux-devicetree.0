@@ -1,88 +1,67 @@
-From: Arun Kumar Neelakantam <aneela@codeaurora.org>
-Subject: Re: [PATCH 2/3] soc: qcom: Add AOSS QMP communication driver
-Date: Thu, 3 Jan 2019 23:18:39 +0530
-Message-ID: <49070dc1-2201-1ea7-b9b6-f98663e2cfd2@codeaurora.org>
-References: <20181112080557.22698-1-bjorn.andersson@linaro.org>
- <20181112080557.22698-3-bjorn.andersson@linaro.org>
- <ce0d4d55-464c-1502-9dc1-b3a495c86aee@codeaurora.org>
- <20181226202830.GE9704@minitux>
+From: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Subject: [PATCH 1/3] dt-bindings: ASoC: xlnx,
+	spdif: Document spdif bindings
+Date: Thu, 3 Jan 2019 23:39:51 +0530
+Message-ID: <1546538993-55473-2-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+References: <1546538993-55473-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181226202830.GE9704@minitux>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <1546538993-55473-1-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+Added documentation for SPDIF IP DT bindings.
 
-On 12/27/2018 1:58 AM, Bjorn Andersson wrote:
-> On Tue 20 Nov 04:22 PST 2018, Arun Kumar Neelakantam wrote:
->
-> Thanks for the review Arun.
->
->> On 11/12/2018 1:35 PM, Bjorn Andersson wrote:
-> [..]
->>> +int qmp_send(struct qmp *qmp, const void *data, size_t len)
->>> +{
->>> +	int ret;
->>> +
->>> +	if (WARN_ON(len + sizeof(u32) > qmp->size)) {
->>> +		dev_err(qmp->dev, "message too long\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	if (WARN_ON(len % sizeof(u32))) {
->>> +		dev_err(qmp->dev, "message not 32-bit aligned\n");
->>> +		return -EINVAL;
->>> +	}
->>> +
->>> +	mutex_lock(&qmp->tx_lock);
->>> +
->>> +	if (!qmp_message_empty(qmp)) {
->>> +		dev_err(qmp->dev, "mailbox left busy\n");
->>> +		ret = -EINVAL;
->> should it be -EBUSY ?
-> That makes more sense.
->
->> And qmp_messge_empty will be done either by remote if it process the data
->> else by this driver in TIMEOUT case, so does we need this check for every TX
->> ? I think we can just reset to Zero once in open time.
-> Didn't think about that, should we really make the QMP link ready again
-> when we get a timeout? Can we expect that the firmware of the remote
-> side is ready to serve future messages?
->
->
-> Should we keep this check and remove the writel() below?
-I prefer we can just remove this check and keep writel() below same as 
-down stream.
->
->>> +		goto out_unlock;
->>> +	}
->>> +
->>> +	/* The message RAM only implements 32-bit accesses */
->>> +	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
->>> +			 data, len / sizeof(u32));
->>> +	writel(len, qmp->msgram + qmp->offset);
->>> +	qmp_kick(qmp);
->>> +
->>> +	ret = wait_event_interruptible_timeout(qmp->event,
->>> +					       qmp_message_empty(qmp), HZ);
->>> +	if (!ret) {
->>> +		dev_err(qmp->dev, "ucore did not ack channel\n");
->>> +		ret = -ETIMEDOUT;
->>> +
->>> +		writel(0, qmp->msgram + qmp->offset);
->>> +	} else {
->>> +		ret = 0;
->>> +	}
->>> +
->>> +out_unlock:
->>> +	mutex_unlock(&qmp->tx_lock);
->>> +
->>> +	return ret;
->>> +}
-> Regards,
-> Bjorn
+Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+---
+ .../devicetree/bindings/sound/xlnx,spdif.txt       | 28 ++++++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/xlnx,spdif.txt
+
+diff --git a/Documentation/devicetree/bindings/sound/xlnx,spdif.txt b/Documentation/devicetree/bindings/sound/xlnx,spdif.txt
+new file mode 100644
+index 0000000..15c2d64
+--- /dev/null
++++ b/Documentation/devicetree/bindings/sound/xlnx,spdif.txt
+@@ -0,0 +1,28 @@
++Device-Tree bindings for Xilinx SPDIF IP
++
++The IP supports playback and capture of SPDIF audio
++
++Required properties:
++ - compatible: "xlnx,spdif-2.0"
++ - clock-names: List of input clocks.
++   Required elements: "s_axi_aclk", "aud_clk_i"
++ - clocks: Input clock specifier. Refer to common clock bindings.
++ - reg: Base address and address length of the IP core instance.
++ - interrupts-parent: Phandle for interrupt controller.
++ - interrupts: List of Interrupt numbers.
++ - xlnx,spdif-mode: 0 :- receiver mode
++		    1 :- transmitter mode
++ - xlnx,aud_clk_i: input audio clock value.
++
++Example:
++	spdif_0: spdif@80010000 {
++		clock-names = "aud_clk_i", "s_axi_aclk";
++		clocks = <&misc_clk_0>, <&clk 71>;
++		compatible = "xlnx,spdif-2.0";
++		interrupt-names = "spdif_interrupt";
++		interrupt-parent = <&gic>;
++		interrupts = <0 91 4>;
++		reg = <0x0 0x80010000 0x0 0x10000>;
++		xlnx,spdif-mode = <1>;
++		xlnx,aud_clk_i = <49152913>;
++	};
+-- 
+2.7.4
