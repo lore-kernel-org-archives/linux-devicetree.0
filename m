@@ -1,110 +1,321 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH RFC 3/5] dt-bindings: Add PDC timer bindings for Qualcomm SoCs
-Date: Thu, 03 Jan 2019 13:19:32 -0800
-Message-ID: <154655037205.15366.7302521016277534390@swboyd.mtv.corp.google.com>
-References: <20181221115946.10095-1-rplsssn@codeaurora.org> <20181221115946.10095-4-rplsssn@codeaurora.org> <154546438942.179992.14851496143150245966@swboyd.mtv.corp.google.com> <504cae51-0f35-beb8-496b-a335863a9071@codeaurora.org> <154603310752.179992.9262815873457262616@swboyd.mtv.corp.google.com> <b97937a0-68ff-ded7-d63b-680981818114@codeaurora.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Thu, 3 Jan 2019 23:05:42 +0100
+Message-ID: <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-3-dmurphy@ti.com> <20181219193455.GA21159@amd>
+ <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com> <20181219201047.GA23448@amd>
+ <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
+ <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b97937a0-68ff-ded7-d63b-680981818114@codeaurora.org>
+In-Reply-To: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raju P L S S S N <rplsssn@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Raju P L S S S N (2019-01-03 04:22:58)
->=20
-> On 12/29/2018 3:08 AM, Stephen Boyd wrote:
-> > Quoting Raju P L S S S N (2018-12-26 01:44:43)
-> >>
-> >> There are two RSC devices in SoC one for application processor subsyst=
-em
-> >> & other display subsystem. Both RSC contain registers for PDC timers
-> >> (one for each subsystem).
-> >=20
-> > When is the timer programmed on the display subsystem's RSC? It's hard
-> > to give advice without all the information.
->=20
-> For display subsystem RSC, hardware sleep solver takes care of timer=20
-> programming for wakeup when the subsystem goes to Power collapse.
+Hi Vesa,
 
-So the display subsystem doesn't need to program their PDC in their RSC
-from software?
+Thank you for sharing your ideas.
 
-> >=20
-> > I would think that it would make sense for the application processor's
-> > RSC timer to be programmed from the broadcast timer mechanism in the
-> > kernel so that timers during idle work and suspend turns off the timer
-> > appropriately with a shutdown hook. I guess the PDC can't tell you the
-> > time though? It looks like a shadow (and limited) version of the ARM
-> > architected MMIO timer that we already program for the broadcast timer
-> > mechanism. Is that because even the MMIO timer can't wakeup the system
-> > in deep idle?  Assuming that's true, it means the ARM MMIO timer can't
-> > always be used as the system wide broadcast mechanism because we need to
-> > augment it with the PDC timer to get the actual wakeup.
-> >=20
->=20
-> Yes. this is correct.
->=20
-> > Maybe we should be adding hooks into the broadcast timer mechanism to
-> > program this wakeup event hardware in addition to the ARM MMIO timer. Or
-> > we should stop using the ARM MMIO timer on these systems and read the
-> > system register based physical time in the RSC timer driver and register
-> > this 64-bit PDC register as the broadcast timer. So the time reading
-> > would be through sysreg and the wakeup programming would be done by
-> > writing the PDC timer. The assumption would be that we have access to
-> > the physical time registers (which sounds like the assumption we have to
-> > make).
->=20
-> There are no physical timer registers available in RSC for this purpose.
->=20
-> >=20
-> > Do we get an interrupt somewhere from the RSC hardware when the timer
-> > fires? Or does that just cause a system wakeup event without any pending
-> > irq and then another irq (like the ARM architected timer) just happens
-> > to be pending around the same time? If we get an interrupt somehow then
-> > I would prefer to drop the ARM MMIO timer and do this hybrid broadcast
-> > timer approach.
->=20
-> There is no interrupt for PDC timeout. It just causes system wakeup=20
-> without a pending irq. ARM MMIO is necessary for irq.
+Please find my comment below.
 
-Does that system wakeup cause the CPUs to be enabled? So the sysreg
-based timer in the CPU would start working? Or does it only make the
-system come out of a deep enough idle state to make an always on domain
-work that only contains the MMIO based ARM architected timer?
+On 1/1/19 2:45 PM, Vesa Jääskeläinen wrote:
+> Hi All,
+> 
+> On 20/12/2018 14.40, Vesa Jääskeläinen wrote:
+>> Idea was to define preset colors in device tree as an example when you 
+>> are dealing with multi-color LEDs without PWM. In that case you only 
+>> have GPIOs to control and then have a problem what does those GPIO's 
+>> mean.
+>>
+>> With preset definitions one can use color names to act as a shortcut 
+>> to configure GPIO's to proper state for that particular color.
+>>
+>> For more flexible setups where you have PWM or such control you have 
+>> larger space of available colors. In this case you need to somehow 
+>> define also meaning of those controls.
+>>
+>> Also we may not have LED with only red, green and blue elements. There 
+>> might in example be amber, ultraviolet, white elements.
+>>
+>> This is where device tree is concerned. It helps us craft the logical 
+>> definition for LED so that we can control it from user space in common 
+>> way.
+>>
+>> Now the next problem then is how does user space work then.
+>>
+>> For multi-color LEDs it it important to change the color atomically so 
+>> that no wrong colors are being shown as user space got interrupted 
+>> when controlling it.
+>>
+>> Also we have brightness setting that would be useful for PWM 
+>> controlled LEDs.
+>>
+>> Setting color is easy when you use preset names then you only need to 
+>> deal with brightness value (eg. RGB -> HSV * brightness -> RGB). Of 
+>> course here additional problem is other color elements are they then 
+>> scaled according to brightness value?.
+>>
+>> Setting color as "raw" values is then next problem. In order to do it 
+>> atomically it needs to be one atomic activation and could be eg. one 
+>> write to "color" sysfs entry with combination of all color elements 
+>> and perhaps additionally also brightness value. Next question is then 
+>> what is the format for such entry then? What are the value ranges? In 
+>> here we can utilize device tree definition to help define what kind of 
+>> LED we do have and what kind of capabilities it does have.
+>>
+>> Additional problem risen also in discussion was non-linearity of some 
+>> control mechanisms vs. perceived color. So there might be a need for 
+>> curve mapping similarly what is with backlight control and that would 
+>> be defined either in device tree and possibly in user space if there 
+>> is a need for that. I suppose golden curve definition in device tree 
+>> should be good enough.
+>>
+>> Then there was additional discussion about possible animation support 
+>> but I would leave that for future design as that would then be 
+>> utilizing the same framework.
+>>
+>> I suppose color space handling and that kind of stuff should be in 
+>> some led core functionality and then raw control should be part of 
+>> physical led driver.
+>>
+>> I was planning to play with it during holiday season but lets see how 
+>> it goes. Feel free to also experiment with the idea.
+> 
+> I was playing with this and got some results with PWM LED driver. I 
+> would like to get feedback now even thou it is not yet ready for patch 
+> sending.
+> 
+> They still need more work but the idea can be seen here:
+> https://github.com/vesajaaskelainen/linux/tree/wip-multi-color-led
+> 
+> This branch is now based on Linux kernel 4.20 release.
+> 
+> Consider that branch as volatile as I will forcibly update it when there 
+> are updates.
+> 
+>  From there specifically in commits (while they last):
+> 
+> drivers: leds: Add core support for multi color element LEDs
+> https://github.com/vesajaaskelainen/linux/commit/55d553906d0a158591435bb6323a318462079d59 
+> 
+> 
+> WIP: drivers: leds: leds-pwm: Add multi color element LED support.
+> https://github.com/vesajaaskelainen/linux/commit/efccef08cbf3b2e1e49b95b69ff81cd380519fe3 
+> 
+> 
+> What is there now:
+> 
+> - led-core supports color elements
+> - led-class supports users space configuration
+> - both led-core and led-class are driver agnostic so they should be 
+> treated as generic code.
+> - leds-pwm: my testing code with PWM led.
+> - no HSV support for brightness as there could be multiple color 
+> elements out from traditional red-green-blue space or odd combinations 
+> of colors and they are a bit hard to map to HSV formula (and it needs 
+> fixed point math).
+> - no color presets that could be optionally be selected
+> - when I configure led trigger to heartbeat it actually blinks with 
+> color specified -- thou trigger gets zeroed out with one sets new color 
+> or brightness as that was previous functionality with brightness.
+> - some documentation added
+> - code should pass checkpatch
+> 
+> What I was planning to do next:
+> 
+> - cleanup PWM LED driver so that it works with and without 
+> LED_MULTI_COLOR_LED being defined.
+> - improve documentation
+> - try out how my other device behaves which have dual color element LED 
+> controlled with GPIO's and see how it would integrate to gpio-led driver.
+> 
+> I would like to get feedback on:
+> - Device tree idea
+> - Internal logic
+> - Should the trigger be really reseted when one changes value of 
+> brightness? I would think it should function like setting brightness 
+> entry from sysfs would set current brightness for trigger when it is 
+> lit. Setting color should change color and brightness and it should be 
+> active from there one until trigger is disabled from trigger sysfs node.
+> 
+> My testing device has RGB LED with all color elements controlled with 
+> individual PWM channels from TI's AM335x's integrated PWM controller.
+> 
+> In device tree I have following:
+> 
+>      multi-color-leds {
+>          compatible = "pwm-leds";
+> 
+>          status-led {
+>              label = "status";
+> 
+>              element-red {
+>                  pwms = <&ehrpwm0 0 100000 0>;
+>              };
+>              element-green {
+>                  pwms = <&ehrpwm1 0 100000 0>;
+>              };
+>              element-blue {
+>                  pwms = <&ehrpwm1 1 100000 0>;
+>              };
+>          };
+>      };
+> 
+> For my second test device I was planning to replace "pwms" with "gpios" 
+> or such entries.
+> 
+> In user space one can use it like:
+> 
+> # --- start of snippet ---
+> 
+> hostname ~ # cd /sys/class/leds/
+> hostname leds # ls
+> status
+> hostname leds # cd status
+> hostname status # ls
+> brightness      color           device          max_brightness 
+> max_color       power           subsystem       trigger         uevent
+> hostname status # cat color
+> brightness=0 red=0 green=0 blue=0
 
-I'd hope that each RSC's PDC timer wakes up the owner of the RSC so that
-we can use the sysreg based timers and ignore the MMIO based timers
-here. This isn't a very important distinction to make though, so if you
-have to use the MMIO timers then it just means some extra DT things need
-to be done to relate the MMIO timers with the RSC that has the timer
-that needs to be programmed too.
+This breaks one-value-per-file sysfs rule.
 
-Either way we would need a way to either hook the ARM architected timer
-driver in the kernel, or reimplement the bit of code needed to implement
-the clockevent based on the ARM architected timer that programs the ARM
-timer and the PDC timer together.
+Regarding led_scale_color_elements() - I checked it in GIMP and
+the results are not satisfactory when increasing brightness.
+Even if we managed to fix it, the result would not be guaranteed
+to be the same across all devices.
 
->=20
-> >=20
-> > How the RSC is used in general by other devices, like display, is not
-> > clear to me. We don't have a "wakeup event" framework in the kernel that
-> > device drivers like the display driver can grab a reference to and
-> > program some system wide wakeup for. That sounds like something new that
-> > could be handled entirely in the display driver with direct register
-> > writes, or it could be some qcom specific API/framework that eventually
-> > calls down into the same RSC driver that knows what offsets to write
-> > into in the display RSC's register space, or it could be an entirely
-> > generic framework like clk or regulator frameworks that could be used by
-> > anything. BTW, are we using the display RSC yet?
-> >=20
->=20
-> Only display subsystem RSC is programmed along with CPU RSC in Linux.=20
-> display RSC instance is not present in upstream but it is present in=20
-> downstream and used for resource communication purpose only.
+This is still the same problem.
 
->From the comment above it sounds like the display RSC handles the wakeup
-programming in hardware? So there isn't a need to add a 'wakeup event'
-framework or anything like that. Please correct me if I'm wrong.
+I have another proposal, being a mix of what has been discussed so far:
+
+    RGB LED class will expose following files:
+    a) available by default:
+      - red, green, blue
+        Writing any of these file will result in writing corresponding
+        device register.
+      - color_space: it would accept color space, e,g. "hsv", that would
+                     have to be supported by LED RGB core; setting color
+                     space would create relevant files, e.g. for hsv
+                     hue. saturation, brightness, and remove default ones
+                     other "color spaces" could be defined in DT as
+                     proposed by Vesa; reading this file would print
+                     available color spaces
+
+    b) available conditionally:
+      - brightness
+       It will be exposed by devices that have hardware support for
+       changing color brightness, like lp5024, or it will be made
+       available after setting relevant color space, like "hsv", or
+       other color presets defined in DT
+
+I think it will be flexible enough to meet everyone's needs.
+
+Current triggers would work only when brightness file is available.
+
+This is ad hoc design so it can have some logical flaws.
+
+Best regards,
+Jacek Anaszewski
+
+> 
+> # some notes about color value here.
+> # - red, green, and blue are directly coming from device tree
+> # definition. if one would add eg. element-white or element-uv entries
+> # then they would appear here as well.
+> # - brightness is hardcoded entry
+> 
+> hostname status # cat max_color
+> brightness=255 red=255 green=255 blue=255
+> hostname status # cat brightness
+> 0
+> hostname status # cat max_brightness
+> 255
+> 
+> # Set color and brightness to maximum values eg. "white"
+> hostname status # cat max_color > color
+> 
+> # Zero out red and green elements to make color blue
+> hostname status # echo "red=0 green=0" > color
+> 
+> # Configure individual color elements
+> hostname status # echo "red=55 green=22 blue=11" > color
+> 
+> # Start with max brightness and then dim it with each step
+> hostname status # echo 255 > brightness
+> hostname status # echo 128 > brightness
+> hostname status # echo 32 > brightness
+> 
+> # And finally with brightness=0 LED is OFF
+> hostname status # echo 0 > brightness
+> 
+> # --- end of snippet ---
+> 
+> About color presets...
+> 
+> I believe the optional color preset thing could work like:
+> 
+>      multi-color-leds {
+>          compatible = "pwm-leds";
+> 
+>          status-led {
+>              label = "status";
+> 
+>              element-red {
+>                  pwms = <&ehrpwm0 0 100000 0>;
+>              };
+>              element-green {
+>                  pwms = <&ehrpwm1 0 100000 0>;
+>              };
+>              element-blue {
+>                  pwms = <&ehrpwm1 1 100000 0>;
+>              };
+> 
+>              color-orange = 255,128,0;
+>          };
+>      };
+> 
+> Then in user space:
+> 
+> hostname status # echo "orange" > color
+> 
+> or with combined brightness:
+> 
+> hostname status # echo "brightness=255 orange" > color
+> 
+> But then again -- I am a bit unsure here myself is it a good idea. I 
+> need to try out how the dual color element GPIO LED variant works first. 
+> My current hunch is that we might not need the color presets as one can 
+> now set all color elements in one go. It just changes a bit logic how it 
+> is used.
+> 
+> With dual color element LED with GPIO control it might as well be:
+> 
+> # for orange:
+> echo "brightness=255 red=255 green=128" > color
+> # or max value as GPIO led doesn't really care:
+> echo "brightness=255 red=255 green=255" > color
+> 
+> # for red:
+> echo "brightness=255 red=255 green=0" > color
+> 
+> # for green:
+> echo "brightness=255 red=0 green=255" > color
+> 
+> # for off:
+> echo "brightness=0" > color
+> # or
+> echo 0 > brightness
+> 
+> Thanks,
+> Vesa Jääskeläinen
+> 
