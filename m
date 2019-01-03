@@ -1,70 +1,69 @@
-Return-Path: <SRS0=FTfk=PL=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410113.outbound.protection.outlook.com ([40.107.141.113]:26240
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727436AbfACOeo (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Thu, 3 Jan 2019 09:34:44 -0500
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder from du
- node
-Date: Thu, 3 Jan 2019 14:34:39 +0000
-Message-ID: <OSBPR01MB2103C5C4C2A5B276E80D047AB88D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
- <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdW+qVJxu0fjC+j8w-neHU8FOHmJqRbHAtp1JvKYJ+RrXQ@mail.gmail.com>
-In-Reply-To: <CAMuHMdW+qVJxu0fjC+j8w-neHU8FOHmJqRbHAtp1JvKYJ+RrXQ@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=4w2F=PL=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
+References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com> <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 3 Jan 2019 14:47:08 +0100
+Message-ID: <CAMuHMdW+qVJxu0fjC+j8w-neHU8FOHmJqRbHAtp1JvKYJ+RrXQ@mail.gmail.com>
+Subject: Re: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder from du node
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLg0KDQo+IFN1YmplY3Q6IFJlOiBb
-UEFUQ0ggdjIgNC81XSBBUk06IGR0czogcjhhNzc0MzogUmVtb3ZlIExWRFMgZW5jb2RlciBmcm9t
-DQo+IGR1IG5vZGUNCj4NCj4gSGkgQmlqdSwNCj4NCj4gT24gV2VkLCBEZWMgNSwgMjAxOCBhdCAx
-MDoxNSBBTSBCaWp1IERhcyA8YmlqdS5kYXNAYnAucmVuZXNhcy5jb20+DQo+IHdyb3RlOg0KPiA+
-IFRoZSBpbnRlcm5hbCBMVkRTIGVuY29kZXIgbm93IGhhcyBEVCBiaW5kaW5ncyBzZXBhcmF0ZSBm
-cm9tIHRoZSBEVS4NCj4gPiBTbyByZW1vdmUgaXQgZnJvbSBkdSBub2RlLg0KPiA+DQo+ID4gRml4
-ZXM6IGM2YTI3ZmE0MWZhYiAoImRybTogcmNhci1kdTogQ29udmVydCBMVkRTIGVuY29kZXIgY29k
-ZSB0bw0KPiA+IGJyaWRnZSBkcml2ZXIiKQ0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTogQmlqdSBE
-YXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPg0KPiBUaGFua3MgZm9yIHlvdXIgcGF0Y2gh
-DQo+DQo+ID4gLS0tDQo+ID4gVjEtLT5WMg0KPiA+ICAgICAgICAgKiBSZW1vdmVkIExWRFMgZW5j
-b2RlciBkZWZpbml0aW9uIGZyb20gRFUgbm9kZS4NCj4NCj4gU2hvdWxkbid0IHlvdSBhZGQgYSBu
-ZXcgbm9kZSBmb3IgdGhlIExWRFMgZW5jb2Rlcj8NCg0KWWVzIGZvciBTb2MgRHRzaSAsIEkgd2ls
-bCBhZGQgdGhlIG5ldyBub2RlIGZvciBMVkRTIGVuY29kZXIuDQoNClJlZ2FyZHMsDQpCaWp1DQo+
-ID4gLS0tDQo+ID4gIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMuZHRzaSB8IDkgKysrLS0tLS0t
-DQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKyksIDYgZGVsZXRpb25zKC0pDQo+
-ID4NCj4gPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0My5kdHNpDQo+ID4g
-Yi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLmR0c2kgaW5kZXggM2NjMzNmNy4uM2FkMWVmYyAx
-MDA2NDQNCj4gPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLmR0c2kNCj4gPiArKysg
-Yi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQzLmR0c2kNCj4gPiBAQCAtMTY4MSwxNSArMTY4MSwx
-MiBAQA0KPiA+DQo+ID4gICAgICAgICAgICAgICAgIGR1OiBkaXNwbGF5QGZlYjAwMDAwIHsNCj4g
-PiAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhhNzc0
-MyI7DQo+ID4gLSAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDAgMHhmZWIwMDAwMCAwIDB4
-NDAwMDA+LA0KPiA+IC0gICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwwIDB4ZmViOTAwMDAg
-MCAweDFjPjsNCj4gPiAtICAgICAgICAgICAgICAgICAgICAgICByZWctbmFtZXMgPSAiZHUiLCAi
-bHZkcy4wIjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MCAweGZlYjAwMDAw
-IDAgMHg0MDAwMD47DQo+ID4gICAgICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDxH
-SUNfU1BJIDI1NiBJUlFfVFlQRV9MRVZFTF9ISUdIPiwNCj4gPiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgPEdJQ19TUEkgMjY4IElSUV9UWVBFX0xFVkVMX0hJR0g+Ow0KPiA+
-ICAgICAgICAgICAgICAgICAgICAgICAgIGNsb2NrcyA9IDwmY3BnIENQR19NT0QgNzI0PiwNCj4g
-PiAtICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JmNwZyBDUEdfTU9EIDcyMz4sDQo+
-ID4gLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZjcGcgQ1BHX01PRCA3MjY+Ow0K
-PiA+IC0gICAgICAgICAgICAgICAgICAgICAgIGNsb2NrLW5hbWVzID0gImR1LjAiLCAiZHUuMSIs
-ICJsdmRzLjAiOw0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIDwmY3BnIENQ
-R19NT0QgNzIzPjsNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBjbG9jay1uYW1lcyA9ICJk
-dS4wIiwgImR1LjEiOw0KPiA+ICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9ICJkaXNh
-YmxlZCI7DQo+ID4NCj4gPiAgICAgICAgICAgICAgICAgICAgICAgICBwb3J0cyB7DQo+DQo+IEdy
-e29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0K
-PiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9u
-ZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LQ0KPiBtNjhrLm9yZw0KPg0KPiBJbiBwZXJzb25hbCBjb252
-ZXJzYXRpb25zIHdpdGggdGVjaG5pY2FsIHBlb3BsZSwgSSBjYWxsIG15c2VsZiBhIGhhY2tlci4g
-QnV0DQo+IHdoZW4gSSdtIHRhbGtpbmcgdG8gam91cm5hbGlzdHMgSSBqdXN0IHNheSAicHJvZ3Jh
-bW1lciIgb3Igc29tZXRoaW5nIGxpa2UgdGhhdC4NCj4gICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAtLSBMaW51cyBUb3J2YWxkcw0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJv
-cGUgTHRkLCBEdWtlcyBNZWFkb3csIE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5n
-aGFtc2hpcmUsIFNMOCA1RkgsIFVLLiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRl
-ciBSZWdpc3RlcmVkIE5vLiAwNDU4NjcwOS4NCg==
+Hi Biju,
+
+On Wed, Dec 5, 2018 at 10:15 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> The internal LVDS encoder now has DT bindings separate from the DU.
+> So remove it from du node.
+>
+> Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+
+Thanks for your patch!
+
+> ---
+> V1-->V2
+>         * Removed LVDS encoder definition from DU node.
+
+Shouldn't you add a new node for the LVDS encoder?
+
+> ---
+>  arch/arm/boot/dts/r8a7743.dtsi | 9 +++------
+>  1 file changed, 3 insertions(+), 6 deletions(-)
+>
+> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
+> index 3cc33f7..3ad1efc 100644
+> --- a/arch/arm/boot/dts/r8a7743.dtsi
+> +++ b/arch/arm/boot/dts/r8a7743.dtsi
+> @@ -1681,15 +1681,12 @@
+>
+>                 du: display@feb00000 {
+>                         compatible = "renesas,du-r8a7743";
+> -                       reg = <0 0xfeb00000 0 0x40000>,
+> -                             <0 0xfeb90000 0 0x1c>;
+> -                       reg-names = "du", "lvds.0";
+> +                       reg = <0 0xfeb00000 0 0x40000>;
+>                         interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
+>                                      <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
+>                         clocks = <&cpg CPG_MOD 724>,
+> -                                <&cpg CPG_MOD 723>,
+> -                                <&cpg CPG_MOD 726>;
+> -                       clock-names = "du.0", "du.1", "lvds.0";
+> +                                <&cpg CPG_MOD 723>;
+> +                       clock-names = "du.0", "du.1";
+>                         status = "disabled";
+>
+>                         ports {
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
