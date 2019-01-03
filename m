@@ -1,59 +1,79 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [RFC RESEND PATCH 2/7] dt-bindings: soc: Add opp table on scpsys bindings
-Date: Thu, 3 Jan 2019 12:45:54 -0600
-Message-ID: <CAL_JsqJXFAEdSaexA3p62u8f3RsVA1vfNsOLu4aetB-iLb9qFg@mail.gmail.com>
-References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com> <1546438198-1677-3-git-send-email-henryc.chen@mediatek.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: reset: Add document for Broadcom STB
+ reset controller
+Date: Thu, 3 Jan 2019 10:53:25 -0800
+Message-ID: <2a54c2cf-5595-ade5-fb29-40e8b6d3133e@gmail.com>
+References: <20181221013409.14324-1-f.fainelli@gmail.com>
+ <20181221013409.14324-2-f.fainelli@gmail.com> <20190103174117.GA6613@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546438198-1677-3-git-send-email-henryc.chen@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190103174117.GA6613@bogus>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, p.zabel@pengutronix.de, linux-kernel@vger.kernel.org, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, Gregory Fong <gregory.0xf0@gmail.com>, Brian Norris <computersforpeace@gmail.com>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 2, 2019 at 8:10 AM Henry Chen <henryc.chen@mediatek.com> wrote:
->
-> Add opp table on scpsys dt-bindings for Mediatek SoC.
->
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
-> ---
->  Documentation/devicetree/bindings/opp/mtk-opp.txt  | 24 +++++++++++++
->  .../devicetree/bindings/soc/mediatek/scpsys.txt    | 42 ++++++++++++++++++++++
->  2 files changed, 66 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/mtk-opp.txt
->
-> diff --git a/Documentation/devicetree/bindings/opp/mtk-opp.txt b/Documentation/devicetree/bindings/opp/mtk-opp.txt
-> new file mode 100644
-> index 0000000..036be1c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/mtk-opp.txt
-> @@ -0,0 +1,24 @@
-> +Mediatek OPP bindings to descibe OPP nodes with level values
-> +
-> +OPP tables for devices on Mediatek platforms require an additional
-> +platform specific level value to be specified.
-> +This value is passed on to the mediatek Power Management Unit by the
-> +CPU, which then takes the necessary actions to set a voltage rail
-> +to an appropriate voltage based on the value passed.
-> +
-> +The bindings are based on top of the operating-points-v2 bindings
-> +described in Documentation/devicetree/bindings/opp/opp.txt
-> +Additional properties are described below.
-> +
-> +* OPP Table Node
-> +
-> +Required properties:
-> +- compatible: Allow OPPs to express their compatibility. It should be:
-> +  "operating-points-v2-mtk-level"
-> +
-> +* OPP Node
-> +
-> +Required properties:
-> +- mtk,level: On Mediatek platforms an OPP node can describe a positive value
-> +representing a level that's communicated with a our power management hardware
-> +which then translates it into a certain voltage on a voltage rail.
+On 1/3/19 9:41 AM, Rob Herring wrote:
+> On Thu, Dec 20, 2018 at 05:34:08PM -0800, Florian Fainelli wrote:
+>> Add a binding document for the Broadcom STB reset controller, also known
+>> as SW_INIT-style reset controller.
+>>
+>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+>> ---
+>>  .../devicetree/bindings/reset/brcm,reset.txt  | 27 +++++++++++++++++++
+>>  1 file changed, 27 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/reset/brcm,reset.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/reset/brcm,reset.txt b/Documentation/devicetree/bindings/reset/brcm,reset.txt
+>> new file mode 100644
+>> index 000000000000..6e5341b4f891
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/reset/brcm,reset.txt
+>> @@ -0,0 +1,27 @@
+>> +Broadcom STB SW_INIT-style reset controller
+>> +===========================================
+>> +
+>> +Broadcom STB SoCs have a SW_INIT-style reset controller with separate
+>> +SET/CLEAR/STATUS registers and possibly multiple banks, each of 32 bit
+>> +reset lines.
+>> +
+>> +Please also refer to reset.txt in this directory for common reset
+>> +controller binding usage.
+>> +
+>> +Required properties:
+>> +- compatible: should be brcm,brcmstb-reset
+>> +- reg: register base and length
+>> +- #reset-cells: must be set to 1
+>> +
+>> +Example:
+>> +
+>> +	reset: reset-controller@8404318 {
+>> +		compatible = "brcm,brcmstb-reset";
+>> +		reg = <0x8404318 0x30>;
+> 
+> Based on this address, should this be a sub-node of something else? Or 
+> not even a sub-node and just make the parent be a reset provider?
 
-Work with the Qcom folks and create a common level property.
+The reset controller is part of a larger "sundry" node which has a
+collection of functionality, from pinmux/pinctrl, reset controller,
+spare bits, chicken bits, anything the designers forgot to put somewhere
+else and decided to put there.
 
-Rob
+If there is one thing consistent though is that given a set of 32-bit
+register groups, they have a self contained functionality such that you
+can break up the larger "sundry" space into smaller sub-blocks which
+have one an only one functionality. Do you think this warrants a
+different representation in Device Tree?
+-- 
+Florian
