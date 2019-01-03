@@ -1,62 +1,89 @@
+Return-Path: <SRS0=TXGq=PL=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH 3/5] Input: edt-ft5x06 - Add support to update ev-ft5726 registers
+Date: Thu,  3 Jan 2019 20:23:25 +0100
+Message-Id: <20190103192327.6170-4-m.felsch@pengutronix.de>
+In-Reply-To: <20190103192327.6170-1-m.felsch@pengutronix.de>
+References: <20190103192327.6170-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Date: Thu, 3 Jan 2019 10:20:08 -0600
-References: <1545908831-25910-1-git-send-email-sumit.garg@linaro.org>
-	<1545908831-25910-2-git-send-email-sumit.garg@linaro.org>
-	<CAKv+Gu8o_6Mu8_2vNHXEy46mZ6xrSPekcwPH7BvxR8nec37Ktw@mail.gmail.com>
-In-Reply-To: <CAKv+Gu8o_6Mu8_2vNHXEy46mZ6xrSPekcwPH7BvxR8nec37Ktw@mail.gmail.com>
-Message-ID: <CAL_JsqKWLb1fYC6yT-w8eHFvsfYnVEK5EA85OhJ0dmGx5SaemA@mail.gmail.com>
-Subject: Re: [PATCH v1 1/2] dt/bindings: add bindings for optional optee
- rng-uuid property
-From: Rob Herring <robh+dt@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-To: Ard Biesheuvel <ard.biesheuvel@linaro.org>, Sumit Garg <sumit.garg@linaro.org>
-Cc: "open list:HARDWARE RANDOM NUMBER GENERATOR CORE" <linux-crypto@vger.kernel.org>, Devicetree List <devicetree@vger.kernel.org>, Matt Mackall <mpm@selenic.com>, Herbert Xu <herbert@gondor.apana.org.au>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jens Wiklander <jens.wiklander@linaro.org>, Daniel Thompson <daniel.thompson@linaro.org>, Bhupesh Sharma <bhsharma@redhat.com>, tee-dev@lists.linaro.org
+Content-Transfer-Encoding: 8bit
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, hdegoede@redhat.com, simon.budig@kernelconcepts.de
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Dec 27, 2018 at 7:40 AM Ard Biesheuvel
-<ard.biesheuvel@linaro.org> wrote:
->
-> On Thu, 27 Dec 2018 at 12:08, Sumit Garg <sumit.garg@linaro.org> wrote:
-> >
-> > Add bindings for OP-TEE based optional hardware random number
-> > generator identifier property. It could be used on ARM based devices
-> > where entropy source is not accessible to normal world (linux in this
-> > case).
-> >
-> > Signed-off-by: Sumit Garg <sumit.garg@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt | 4 ++++
-> >  1 file changed, 4 insertions(+)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-> > index d38834c..e3a4c35 100644
-> > --- a/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-> > +++ b/Documentation/devicetree/bindings/arm/firmware/linaro,optee-tz.txt
-> > @@ -20,6 +20,9 @@ the reference implementation maintained by Linaro.
-> >                     "hvc" : HVC #0, with the register assignments specified
-> >                            in drivers/tee/optee/optee_smc.h
-> >
-> > +- rng-uuid       : Optional OP-TEE based RNG service identifier in case
-> > +                   hardware entropy source is not accesible to normal world
-> > +                   (Linux).
-> >
-> >
-> >  Example:
-> > @@ -27,5 +30,6 @@ Example:
-> >                 optee {
-> >                         compatible = "linaro,optee-tz";
-> >                         method = "smc";
-> > +                       rng-uuid = "ab7a617c-b8e7-4d8f-8301-d09b61036b64";
->
-> If OP-TEE is going to expose devices in this way, it should be modeled
-> more like a bus driver, i.e., sub-nodes that represent the devices,
-> with compatible strings, and perhaps even 'reg' properties for the
-> UUIDs.
+Currently only the threshold and gain parameters can be read.
 
-Please, no. We have DT for things that are not discoverable. Make
-OP-TEE services/devices discoverable. We only need the OP-TEE node in
-the first place because sub-functions of the SMC-CC itself isn't
-discoverable. I suppose there could be some need to expose providers
-to consumer nodes in DT, but that's not the case here.
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+---
+ drivers/input/touchscreen/edt-ft5x06.c | 20 +++++++++++++++-----
+ 1 file changed, 15 insertions(+), 5 deletions(-)
 
-Rob
+diff --git a/drivers/input/touchscreen/edt-ft5x06.c b/drivers/input/touchscreen/edt-ft5x06.c
+index 1cd5b804a456..a67915535b47 100644
+--- a/drivers/input/touchscreen/edt-ft5x06.c
++++ b/drivers/input/touchscreen/edt-ft5x06.c
+@@ -353,9 +353,10 @@ struct edt_ft5x06_attribute {
+ 	u8 limit_high;
+ 	u8 addr_m06;
+ 	u8 addr_m09;
++	u8 addr_ev;
+ };
+ 
+-#define EDT_ATTR(_field, _mode, _addr_m06, _addr_m09,			\
++#define EDT_ATTR(_field, _mode, _addr_m06, _addr_m09, _addr_ev,		\
+ 		_limit_low, _limit_high)				\
+ 	struct edt_ft5x06_attribute edt_ft5x06_attr_##_field = {	\
+ 		.dattr = __ATTR(_field, _mode,				\
+@@ -364,6 +365,7 @@ struct edt_ft5x06_attribute {
+ 		.field_offset = offsetof(struct edt_ft5x06_ts_data, _field), \
+ 		.addr_m06 = _addr_m06,					\
+ 		.addr_m09 = _addr_m09,					\
++		.addr_ev  = _addr_ev,					\
+ 		.limit_low = _limit_low,				\
+ 		.limit_high = _limit_high,				\
+ 	}
+@@ -400,6 +402,10 @@ static ssize_t edt_ft5x06_setting_show(struct device *dev,
+ 		addr = attr->addr_m09;
+ 		break;
+ 
++	case EV_FT:
++		addr = attr->addr_ev;
++		break;
++
+ 	default:
+ 		error = -ENODEV;
+ 		goto out;
+@@ -471,6 +477,10 @@ static ssize_t edt_ft5x06_setting_store(struct device *dev,
+ 		addr = attr->addr_m09;
+ 		break;
+ 
++	case EV_FT:
++		addr = attr->addr_ev;
++		break;
++
+ 	default:
+ 		error = -ENODEV;
+ 		goto out;
+@@ -494,16 +504,16 @@ static ssize_t edt_ft5x06_setting_store(struct device *dev,
+ 
+ /* m06, m09: range 0-31, m12: range 0-5 */
+ static EDT_ATTR(gain, S_IWUSR | S_IRUGO, WORK_REGISTER_GAIN,
+-		M09_REGISTER_GAIN, 0, 31);
++		M09_REGISTER_GAIN, EV_REGISTER_GAIN, 0, 31);
+ /* m06, m09: range 0-31, m12: range 0-16 */
+ static EDT_ATTR(offset, S_IWUSR | S_IRUGO, WORK_REGISTER_OFFSET,
+-		M09_REGISTER_OFFSET, 0, 31);
++		M09_REGISTER_OFFSET, NO_REGISTER, 0, 31);
+ /* m06: range 20 to 80, m09: range 0 to 30, m12: range 1 to 255... */
+ static EDT_ATTR(threshold, S_IWUSR | S_IRUGO, WORK_REGISTER_THRESHOLD,
+-		M09_REGISTER_THRESHOLD, 0, 255);
++		M09_REGISTER_THRESHOLD, EV_REGISTER_THRESHOLD, 0, 255);
+ /* m06: range 3 to 14, m12: (0x64: 100Hz) */
+ static EDT_ATTR(report_rate, S_IWUSR | S_IRUGO, WORK_REGISTER_REPORT_RATE,
+-		NO_REGISTER, 0, 255);
++		NO_REGISTER, NO_REGISTER, 0, 255);
+ 
+ static struct attribute *edt_ft5x06_attrs[] = {
+ 	&edt_ft5x06_attr_gain.dattr.attr,
+-- 
+2.19.1
