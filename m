@@ -1,30 +1,60 @@
-From: "Rafael J. Wysocki" <rafael@kernel.org>
-Subject: Re: [PATCH v3 4/5] drivers: power: suspend: call devfreq suspend/resume
+From: Richard Leitner <richard.leitner@skidata.com>
+Subject: Re: [RESEND PATCH v2 0/8] Input: sx8654 - reset-gpio, sx865[056]
+ support, etc.
 Date: Thu, 3 Jan 2019 11:08:22 +0100
-Message-ID: <CAJZ5v0jAkCP62Vj_G_Eq3wG=ZfdO_NtM1vdAO-HQNovnLSMTMQ@mail.gmail.com>
-References: <ce1d415d-2a00-ef0e-6b58-23d16cffee4a@partner.samsung.com>
- <1544007956-28889-1-git-send-email-l.luba@partner.samsung.com>
- <1544007956-28889-5-git-send-email-l.luba@partner.samsung.com>
- <CGME20181205110623eucas1p120f9d8b38822bf856a5b7d427d00e49f@epcms1p7>
- <20181221003305epcms1p756d76191d5f233c6e3238400d233b3c6@epcms1p7> <eda2b1f2-ed6f-b75f-f582-761c2a48c0cd@partner.samsung.com>
+Message-ID: <a412888c-f1b6-1590-4ecf-5a1b239c5a6b@skidata.com>
+References: <20181218083606.25795-1-richard.leitner@skidata.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <eda2b1f2-ed6f-b75f-f582-761c2a48c0cd@partner.samsung.com>
+In-Reply-To: <20181218083606.25795-1-richard.leitner@skidata.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Myungjoo Ham <myungjoo.ham@samsung.com>, "tjakobi@math.uni-bielefeld.de" <tjakobi@math.uni-bielefeld.de>, Kyungmin Park <kyungmin.park@samsung.com>, Chanwoo Choi <cw00.choi@samsung.com>, "len.brown@intel.com" <len.brown@intel.com>, "pavel@ucw.cz" <pavel@ucw.cz>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "keescook@chromium.org" <keescook@chromium.org>, "anton@enomsg.org" <anton>
+To: dmitry.torokhov@gmail.com, mark.rutland@arm.com
+Cc: robh+dt@kernel.org, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 2, 2019 at 4:08 PM Lukasz Luba <l.luba@partner.samsung.com> wrote:
->
-> Hi Rafael,
->
-> Gentle ping...
-> Please take this patch, it got ACK.
-> The other patches have been taken through MyungJoo's
-> tree, but this one is actually enabling the feature.
+Hi,
+another 3 weeks and still no response :-(
 
-Applied now and sorry for missing it.
+The last comment on this patchset was in October by Dimitry/Rob. In the
+meantime I did a "ping" and a resend...
 
-Thanks!
+So what's up? I'm perfectly fine with a "we don't want this is mainline
+because XXX" or "I have no time and will come back to it in XXX"...
+
+But please give at least some kind of response... Thanks!
+
+regards;Richard.L
+
+On 18/12/2018 09:35, Richard Leitner wrote:
+> Add reset-gpio, sx8654[056] and common of_touchscreen functions support
+> for the sx8654 driver.
+> 
+> Changes RESEND v2:
+> 	- added "Reviewed-by: Rob Herring <robh@kernel.org>" tags
+> 
+> Changes v2:
+> 	- use devm_gpiod_get_optional in probe instead of in #ifdef CONFIG_OF
+> 	- convert flags to BIT() in a separate patch
+> 	- replace hrtimer with "regular" timer
+> 	- use of_device_get_match_data instead of of_match_device
+> 	- add driver data to i2c_device_id table for non-DT fallback
+> 	- fix sequence of common touchscreen initialization
+> 	- div. minor stlye changes
+> 
+> Richard Leitner (8):
+>    dt-bindings: input: touchscreen: sx8654: add reset-gpio property
+>    Input: sx8654 - add reset-gpio support
+>    dt-bindings: input: touchscreen: sx8654: add compatible models
+>    Input: sx8654 - add sx8655 and sx8656 to compatibles
+>    dt-bindings: input: touchscreen: sx8654: add sx8650 to comatibles
+>    Input: sx8654 - add sx8650 support
+>    Input: sx8654 - use common of_touchscreen functions
+>    Input: sx8654 - convert #defined flags to BIT(x)
+> 
+>   .../bindings/input/touchscreen/sx8654.txt          |  10 +-
+>   drivers/input/touchscreen/sx8654.c                 | 245 ++++++++++++++++++---
+>   2 files changed, 229 insertions(+), 26 deletions(-)
+> 
