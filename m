@@ -1,46 +1,159 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v1 5/6] usb: dwc3: qcom: Add support for MSM8998
-Date: Fri,  4 Jan 2019 09:51:02 -0700
-Message-ID: <1546620662-2504-1-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH v1 6/6] arm64: dts: qcom: msm8998: Add USB-related nodes
+Date: Fri,  4 Jan 2019 09:51:29 -0700
+Message-ID: <1546620689-2578-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, balbi@kernel.org
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: andy.gross@linaro.org, david.brown@linaro.org
+Cc: bjorn.andersson@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add a MSM8998 specific DT compatible so that we can properly bind to the
-device and enable the USB controller.
+Add nodes for USB and related PHYs.
 
 Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 1 +
- drivers/usb/dwc3/dwc3-qcom.c                        | 1 +
- 2 files changed, 2 insertions(+)
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 22 ++++++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi     | 90 +++++++++++++++++++++++++++++++
+ 2 files changed, 112 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-index 95afdcf..cb695aa 100644
---- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-+++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible:		Compatible list, contains
- 			"qcom,dwc3"
- 			"qcom,msm8996-dwc3" for msm8996 SOC.
-+			"qcom,msm8998-dwc3" for msm8998 SOC.
- 			"qcom,sdm845-dwc3" for sdm845 SOC.
- - reg:			Offset and length of register set for QSCRATCH wrapper
- - power-domains:	specifies a phandle to PM domain provider node
-diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
-index a6d0203..184df4d 100644
---- a/drivers/usb/dwc3/dwc3-qcom.c
-+++ b/drivers/usb/dwc3/dwc3-qcom.c
-@@ -595,6 +595,7 @@ static int __maybe_unused dwc3_qcom_runtime_resume(struct device *dev)
- static const struct of_device_id dwc3_qcom_of_match[] = {
- 	{ .compatible = "qcom,dwc3" },
- 	{ .compatible = "qcom,msm8996-dwc3" },
-+	{ .compatible = "qcom,msm8998-dwc3" },
- 	{ .compatible = "qcom,sdm845-dwc3" },
- 	{ }
+diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+index 50e9033..dc703fc 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
+@@ -257,3 +257,25 @@
+ 	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
+ 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
  };
++
++&usb1 {
++	status = "okay";
++};
++
++&usb1_dwc3 {
++	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
++};
++
++&usb1_hsphy {
++	status = "okay";
++
++	vdda-pll-supply = <&vreg_l12a_1p8>;
++	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
++};
++
++&usb1_qmpphy {
++	status = "okay";
++
++	vdda-phy-supply = <&vreg_l1a_0p875>;
++	vdda-pll-supply = <&vreg_l2a_1p2>;
++};
+diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+index 8d41b69..7c31c97 100644
+--- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
+@@ -540,6 +540,11 @@
+ 			reg = <0x780000 0x621c>;
+ 			#address-cells = <1>;
+ 			#size-cells = <1>;
++
++			qusb2_hstx_trim: hstx-trim@423a {
++				reg = <0x423a 0x1>;
++				bits = <0 4>;
++			};
+ 		};
+ 
+ 		gcc: clock-controller@100000 {
+@@ -607,6 +612,91 @@
+ 			#mbox-cells = <1>;
+ 		};
+ 
++		usb1: usb@a8f8800 {
++			compatible = "qcom,msm8998-dwc3", "qcom,dwc3";
++			reg = <0xa8f8800 0x400>;
++			status = "disabled";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clocks = <&gcc GCC_CFG_NOC_USB3_AXI_CLK>,
++				 <&gcc GCC_USB30_MASTER_CLK>,
++				 <&gcc GCC_AGGRE1_USB3_AXI_CLK>,
++				 <&gcc GCC_USB30_MOCK_UTMI_CLK>,
++				 <&gcc GCC_USB30_SLEEP_CLK>;
++			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
++				      "sleep";
++
++			assigned-clocks = <&gcc GCC_USB30_MOCK_UTMI_CLK>,
++					  <&gcc GCC_USB30_MASTER_CLK>;
++			assigned-clock-rates = <19200000>, <120000000>;
++
++			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
++				     <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "hs_phy_irq", "ss_phy_irq";
++
++			power-domains = <&gcc USB_30_GDSC>;
++
++			resets = <&gcc GCC_USB_30_BCR>;
++
++			usb1_dwc3: dwc3@a800000 {
++				compatible = "snps,dwc3";
++				reg = <0xa800000 0xcd00>;
++				interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
++				snps,dis_u2_susphy_quirk;
++				snps,dis_enblslpm_quirk;
++				phys = <&usb1_hsphy>, <&usb1_ssphy>;
++				phy-names = "usb2-phy", "usb3-phy";
++				snps,has-lpm-erratum;
++				snps,hird-threshold = /bits/ 8 <0x10>;
++			};
++		};
++
++		usb1_qmpphy: phy@c010000 {
++			compatible = "qcom,msm8998-qmp-usb3-phy";
++			reg = <0xc010000 0x18c>;
++			status = "disabled";
++			#clock-cells = <1>;
++			#address-cells = <1>;
++			#size-cells = <1>;
++			ranges;
++
++			clocks = <&gcc GCC_USB3_PHY_AUX_CLK>,
++				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&gcc GCC_USB3_CLKREF_CLK>;
++			clock-names = "aux", "cfg_ahb", "ref";
++
++			resets = <&gcc GCC_USB3_PHY_BCR>,
++				 <&gcc GCC_USB3PHY_PHY_BCR>;
++			reset-names = "phy", "common";
++
++			usb1_ssphy: lane@c010200 {
++				reg = <0xc010200 0x128>,
++				      <0xc010400 0x200>,
++				      <0xc010c00 0x20c>;
++				#phy-cells = <0>;
++				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
++				clock-names = "pipe0";
++				clock-output-names = "usb3_phy_pipe_clk_src";
++			};
++		};
++
++		usb1_hsphy: phy@c012000 {
++			compatible = "qcom,msm8998-qusb2-phy";
++			reg = <0xc012000 0x2a8>;
++			status = "disabled";
++			#phy-cells = <0>;
++
++			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
++				 <&gcc GCC_RX1_USB2_CLKREF_CLK>;
++			clock-names = "cfg_ahb", "ref";
++
++			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
++
++			nvmem-cells = <&qusb2_hstx_trim>;
++		};
++
+ 		sdhc2: sdhci@c0a4900 {
+ 			compatible = "qcom,sdhci-msm-v4";
+ 			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
 -- 
 Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
