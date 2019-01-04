@@ -1,55 +1,50 @@
-Return-Path: <SRS0=xVyo=PN=gmail.com=groeck7@kernel.org>
-Sender: Guenter Roeck <groeck7@gmail.com>
-Date: Sat, 5 Jan 2019 09:05:18 -0800
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/4] dt-bindings: power supply: Document dps650ab
-Message-ID: <20190105170518.GA1879@roeck-us.net>
+Return-Path: <SRS0=Ow74=PM=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mx01.hxt-semitech.com ([223.203.96.7]:46768 "EHLO
+        barracuda.hxt-semitech.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726053AbfADJAl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 4 Jan 2019 04:00:41 -0500
+From: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+Subject: [PATCH 2/4] dt-bindings: power supply: Document dps650ab
+Date: Fri, 4 Jan 2019 17:00:30 +0800
+Message-ID: <8540dfc96a75a6aa4bd1a7d5f24db7d36a71282c.1546591275.git.xiaoting.liu@hxt-semitech.com>
+In-Reply-To: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
 References: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
- <8540dfc96a75a6aa4bd1a7d5f24db7d36a71282c.1546591275.git.xiaoting.liu@hxt-semitech.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <8540dfc96a75a6aa4bd1a7d5f24db7d36a71282c.1546591275.git.xiaoting.liu@hxt-semitech.com>
-To: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, openbmc@lists.ozlabs.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, shunyong.yang@hxt-semitech.com, dongsheng.wang@hxt-semitech.com
+Content-Type: text/plain
+Content-Transfer-Encoding: 8BIT
+Sender: devicetree-owner@vger.kernel.org
+To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: openbmc@lists.ozlabs.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, shunyong.yang@hxt-semitech.com, dongsheng.wang@hxt-semitech.com, Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jan 04, 2019 at 05:00:30PM +0800, Xiaoting Liu wrote:
-> Bindings for DPS650AB power, voltage, temperature, and fan monitering.
-> 
+Bindings for DPS650AB power, voltage, temperature, and fan monitering.
 
-Misleading subject. While the DPS650AB may ber a power supply,
-it is a PMBus hwmon driver, and should be marked accordingly in the subject.
+Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+---
+ Documentation/devicetree/bindings/hwmon/dps650ab.txt | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-Guenter
+diff --git a/Documentation/devicetree/bindings/hwmon/dps650ab.txt b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+new file mode 100644
+index 000000000000..bbd601100e66
+--- /dev/null
++++ b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+@@ -0,0 +1,11 @@
++Bindings for DPS650AB power, voltage, temperature, and fan monitering
++
++Required properties:
++- compatible : "dps650ab"
++- reg        : I2C address, one of 0x58, 0x59.
++
++Example:
++       dps650ab@58 {
++                   compatible = "dps650ab";
++                   reg = <0x58>;
++       };
+--
+1.8.3.1
 
-> Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
-> ---
->  Documentation/devicetree/bindings/hwmon/dps650ab.txt | 11 +++++++++++
->  1 file changed, 11 insertions(+)
-> 
-> --
-> 1.8.3.1
-> 
-> 
-> 
-> 
-> This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/dps650ab.txt b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
-> new file mode 100644
-> index 000000000000..bbd601100e66
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
-> @@ -0,0 +1,11 @@
-> +Bindings for DPS650AB power, voltage, temperature, and fan monitering
-> +
-> +Required properties:
-> +- compatible : "dps650ab"
-> +- reg        : I2C address, one of 0x58, 0x59.
-> +
-> +Example:
-> +       dps650ab@58 {
-> +                   compatible = "dps650ab";
-> +                   reg = <0x58>;
-> +       };
+
+
+
+This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
