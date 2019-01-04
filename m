@@ -1,46 +1,78 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 3/3] ARM: dts: qcom: msm8974: add interrupt properties
-Date: Thu, 03 Jan 2019 16:29:37 -0800
-Message-ID: <154656177748.15366.4715288412613717364@swboyd.mtv.corp.google.com>
-References: <20181229114755.8711-1-masneyb@onstation.org> <20181229114755.8711-4-masneyb@onstation.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+From: Palmer Dabbelt <palmer@sifive.com>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Correct RISC-V's timebase-frequency
+Date: Thu, 03 Jan 2019 16:36:22 -0800 (PST)
+Message-ID: <mhng-9767f556-9f5a-4366-931f-131222d3253b@palmer-si-x1c4>
+References: <5d652370-4782-23b2-9896-b9666b3cc1e7@linaro.org>
+Mime-Version: 1.0 (MHng)
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181229114755.8711-4-masneyb@onstation.org>
+In-Reply-To: <5d652370-4782-23b2-9896-b9666b3cc1e7@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: daniel.lezcano@linaro.org
+Cc: atish.patra@wdc.com, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>, aou@eecs.berkeley.edu, devicetree@vger.kernel.org, dmitriy@oss-tech.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, tglx@linutronix.de, anup@brainfault.org, Damien.LeMoal@wdc.com, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2018-12-29 03:47:55)
-> Add interrupt properties now that spmi-gpio is a proper hierarchical IRQ
-> chip.
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  arch/arm/boot/dts/qcom-pm8941.dtsi | 3 +++
->  1 file changed, 3 insertions(+)
->=20
-> diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-=
-pm8941.dtsi
-> index 9a91b758f7aa..d0b7f0eff288 100644
-> --- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-> +++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> @@ -65,6 +65,9 @@
->                         gpio-controller;
->                         gpio-ranges =3D <&pm8941_gpios 0 0 36>;
->                         #gpio-cells =3D <2>;
-> +                       interrupt-parent =3D <&spmi_bus>;
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <4>;
->                         interrupts =3D <0 0xc0 0 IRQ_TYPE_NONE>,
->                                      <0 0xc1 0 IRQ_TYPE_NONE>,
->                                      <0 0xc2 0 IRQ_TYPE_NONE>,
+On Fri, 14 Dec 2018 01:17:24 PST (-0800), daniel.lezcano@linaro.org wrote:
+> On 14/12/2018 00:14, Atish Patra wrote:
+>> From: Palmer Dabbelt <palmer@sifive.com>
+>>
+>> In RISC-V systems, timebase-frequency is per cpu instead of one
+>> instance for entire SOC as there is a individual timer per each CPU.
+>> Fix the DT binding accordingly.
+>
+> Why not use a fixed-clock instead of this timebase property which forces
+> to declare a global variable to be exported from arch/riscv to
+> drivers/clocksource ?
 
-Shouldn't we remove the interrupts property here then? Although we use
-it to count the number of gpios that are supported so I guess we'll have
-to specify it all the time now just to know how many pins there are.
-Alternatively we change the driver to know about all the different
-compatibles and use the right number of gpios for each compatible string
-that we see.
+That makes sense to me.  I've always disliked this global variable and a big 
+part of why my original version got delayed forever is that I'd hoped to get 
+rid of it.
+
+Given that this is all a mess anyway I'm OK breaking backwards compatibility 
+here.
+
+Is there an example of how to do this?
+
+> In addition, please add the 'Fixes' tag
+>
+>> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>> [Atish: Update the commit text]
+>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> ---
+>>  Documentation/devicetree/bindings/riscv/cpus.txt | 4 +++-
+>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt b/Documentation/devicetree/bindings/riscv/cpus.txt
+>> index adf7b7af..b0b038d6 100644
+>> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
+>> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+>> @@ -93,9 +93,9 @@ Linux is allowed to run on.
+>>          cpus {
+>>                  #address-cells = <1>;
+>>                  #size-cells = <0>;
+>> -                timebase-frequency = <1000000>;
+>>                  cpu@0 {
+>>                          clock-frequency = <1600000000>;
+>> +                        timebase-frequency = <1000000>;
+>>                          compatible = "sifive,rocket0", "riscv";
+>>                          device_type = "cpu";
+>>                          i-cache-block-size = <64>;
+>> @@ -113,6 +113,7 @@ Linux is allowed to run on.
+>>                  };
+>>                  cpu@1 {
+>>                          clock-frequency = <1600000000>;
+>> +                        timebase-frequency = <1000000>;
+>>                          compatible = "sifive,rocket0", "riscv";
+>>                          d-cache-block-size = <64>;
+>>                          d-cache-sets = <64>;
+>> @@ -145,6 +146,7 @@ Example: Spike ISA Simulator with 1 Hart
+>>  This device tree matches the Spike ISA golden model as run with `spike -p1`.
+>>
+>>          cpus {
+>> +                timebase-frequency = <1000000>;
+>>                  cpu@0 {
+>>                          device_type = "cpu";
+>>                          reg = <0x00000000>;
