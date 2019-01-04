@@ -1,188 +1,66 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH v5 5/6] dt-bindings: pinctrl: mt8183: add binding document
-Date: Fri, 4 Jan 2019 01:14:33 -0800
-Message-ID: <CAGp9LzoAyZqC53eo4JKcouu=pNgsGm9FFm1GaxbH1Jc1OD8Bvw@mail.gmail.com>
-References: <1545984581-25843-1-git-send-email-erin.lo@mediatek.com>
- <1545984581-25843-6-git-send-email-erin.lo@mediatek.com> <20181228220405.GA8739@bogus>
- <1546585723.21915.7.camel@mhfsdcap03>
+From: Cosmin Samoila <cosmin.samoila@nxp.com>
+Subject: [PATCH v2 0/2] Add MICFIL DAI support
+Date: Fri, 4 Jan 2019 09:17:36 +0000
+Message-ID: <1546593445-10509-1-git-send-email-cosmin.samoila@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546585723.21915.7.camel@mhfsdcap03>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Jason Cooper <jason@lakedaemon.net>, srv_heupstream <srv_heupstream@mediatek.com>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, =?UTF-8?B?RXJpbiBMbyAo576F6ZuF6b2hKQ==?= <erin.lo@mediatek.com>, Stephen Boyd <sboyd@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, =?UTF-8?B?TWFycyBDaGVuZyAo6YSt5qOu5Y+LKQ==?= <Mars.Cheng@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, =?UTF-8?B?WWluZ2pvZSBDaGVuICjpmbPoi7HmtLIp?= <Yingj>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+Content-Language: en-US
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "broonie@kernel.org" <broonie@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "gabrielcsmo@gmail.com" <gabrielcsmo@gmail.com>
+Cc: Cosmin Samoila <cosmin.samoila@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 3, 2019 at 11:09 PM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
->
-> On Sat, 2018-12-29 at 06:04 +0800, Rob Herring wrote:
-> > On Fri, Dec 28, 2018 at 04:09:40PM +0800, Erin Lo wrote:
-> > > From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > >
-> > > The commit adds mt8183 compatible node in binding document.
-> > >
-> > > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > > ---
-> > >  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 110 +++++++++++++++++++++
-> > >  1 file changed, 110 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > > new file mode 100644
-> > > index 0000000..7b5285e
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
-> > > @@ -0,0 +1,110 @@
-> > > +* Mediatek MT8183 Pin Controller
-> > > +
-> > > +The Mediatek's Pin controller is used to control SoC pins.
-> > > +
-> > > +Required properties:
-> > > +- compatible: value should be one of the following.
-> > > +   "mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
-> > > +- gpio-controller : Marks the device node as a gpio controller.
-> > > +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
-> > > +  binding is used, the amount of cells must be specified as 2. See the below
-> > > +  mentioned gpio binding representation for description of particular cells.
-> > > +- gpio-ranges : gpio valid number range.
-> > > +
-> > > +   Eg: <&pio 6 0>
-> > > +   <[phandle of the gpio controller node]
-> > > +   [line number within the gpio controller]
-> > > +   [flags]>
-> > > +
-> > > +   Values for gpio specifier:
-> > > +   - Line number: is a value between 0 to 202.
-> > > +   - Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
-> > > +            Only the following flags are supported:
-> > > +            0 - GPIO_ACTIVE_HIGH
-> > > +            1 - GPIO_ACTIVE_LOW
-> > > +
-> > > +Optional properties:
-> > > +- reg: physicall address base for gpio base registers.
-> >
-> > s/physicall/physical/
-> >
-> > reg should never be optional.
-> >
-> > Need to say how many reg entries.
->
-> ==> Thanks for your suggestion. We will change 'reg' to Required
-> properties and add the reg entries in next version.
-> >
-> > > +- reg-names: gpio base registers name.
-> >
-> > Need to say what are the names. However, I don't find the names in the
-> > example all that useful, so I'd just drop it.
->
-> ==> we will add the reg-names in next version.
-> They are used in the sample code, such as:
-> > +             reg-names = "iocfg0", "iocfg1", "iocfg2",
-> > > +                       "iocfg3", "iocfg4", "iocfg5",
-> > > +                       "iocfg6", "iocfg7", "iocfg8";
->
-> >
-> > > +- interrupt-controller: Marks the device node as an interrupt controller
-> > > +- #interrupt-cells: Should be two.
-> > > +- interrupts : The interrupt outputs from the controller.
-> > > +
-> > > +Please refer to pinctrl-bindings.txt in this directory for details of the
-> > > +common pinctrl bindings used by client devices.
-> > > +
-> > > +Subnode format
-> > > +A pinctrl node should contain at least one subnodes representing the
-> > > +pinctrl groups available on the machine. Each subnode will list the
-> > > +pins it needs, and how they should be configured, with regard to muxer
-> > > +configuration, pullups, drive strength, input enable/disable and input schmitt.
-> > > +
-> > > +    node {
-> > > +   pinmux = <PIN_NUMBER_PINMUX>;
-> > > +   GENERIC_PINCONFIG;
-> > > +    };
-> > > +
-> > > +Required properties:
-> > > +- pinmux: integer array, represents gpio pin number and mux setting.
-> > > +    Supported pin number and mux varies for different SoCs, and are defined
-> > > +    as macros in boot/dts/<soc>-pinfunc.h directly.
-> > > +
-> > > +Optional properties:
-> > > +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
-> > > +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
-> > > +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
-> > > +
-> > > +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
-> > > +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
-> > > +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
-> > > +    it support arguments for those special pins.
-> > > +
-> > > +    When config drive-strength, it can support some arguments, such as
-> > > +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
-> > > +
+PDM is a popular way to deliver audio from microphones to the processor
+in several applications, such as mobile telephones. However, current
+digital-audio systems use multibit audio signal (also known as multibit
+PCM) to represent the signal. For this purpose a set of FIR, CIC or/and
+Half Band filters are usually implemented on DSPs or software. This block
+implements the required digital interface to provide a 16-bit audio signal
+from a PDM microphone bitstream in a configurable output sampling rate.
+The implementation of this digital interface is based on the application
+of digital signal processing techniques in hardware. The PDM Microphone
+Interface architecture was designed to gate saving and minimal power
+consumption. It implements a bunch of filters to transform a 1-bit PDM
+bitstream to a 16-bit PCM signal in the audio band. To avoid aliasing
+frequencies in passband, the overall filter has 80 dB stopband attenuation
+and passband ripple less than 0.2dB.
+The whole module is implemented to work in a multichannel mode. All
+channels have the same configuration but each input channel could be turned
+on/off independently.
 
-One point we can fix more is the drive-strength already is supported
-as the generic one, not need to depend on a dedicated header file.
 
-> > > +Examples:
-> > > +
-> > > +#include "mt8183-pinfunc.h"
-> > > +
-> > > +...
-> > > +{
-> > > +   pio: pinctrl@10005000 {
-> > > +           compatible = "mediatek,mt8183-pinctrl";
-> > > +           reg = <0 0x10005000 0 0x1000>,
-> > > +                 <0 0x11F20000 0 0x1000>,
-> > > +                 <0 0x11E80000 0 0x1000>,
-> > > +                 <0 0x11E70000 0 0x1000>,
-> > > +                 <0 0x11E90000 0 0x1000>,
-> > > +                 <0 0x11D30000 0 0x1000>,
-> > > +                 <0 0x11D20000 0 0x1000>,
-> > > +                 <0 0x11C50000 0 0x1000>,
-> > > +                 <0 0x11F30000 0 0x1000>;
-> > > +           reg-names = "iocfg0", "iocfg1", "iocfg2",
-> > > +                       "iocfg3", "iocfg4", "iocfg5",
-> > > +                       "iocfg6", "iocfg7", "iocfg8";
-> > > +           gpio-controller;
-> > > +           #gpio-cells = <2>;
-> > > +           gpio-ranges = <&pio 0 0 192>;
-> > > +           interrupt-controller;
-> > > +           interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
-> > > +           interrupt-parent = <&gic>;
-> > > +           #interrupt-cells = <2>;
-> > > +
-> > > +           i2c0_pins_a: i2c0@0 {
-> >
-> > unit-address without reg property is not valid.
->
-> ==> we will change "i2c0_pins_a: i2c0@0" to "i2c0_pins_a: i2c0" in the
-> next version.
-> >
-> > > +                   pins1 {
-> > > +                           pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
-> > > +                                    <PINMUX_GPIO49__FUNC_SDA5>;
-> > > +                           mediatek,pull-up-adv = <11>;
-> > > +                   };
-> > > +           };
-> > > +
-> > > +           i2c1_pins_a: i2c1@0 {
-> > > +                   pins {
-> > > +                           pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
-> > > +                                    <PINMUX_GPIO51__FUNC_SDA3>;
-> > > +                           mediatek,pull-down-adv = <10>;
-> > > +                   };
-> > > +           };
-> > > +           ...
-> > > +   };
-> > > +};
-> > > --
-> > > 1.9.1
-> > >
->
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Changes since v1:
+- removed the hwvad support from patches since it is a separate functionality
+and it needs some design rework. Will address HWVAD in later series of patches
+after analyzing comunity feedback and design guildlines.
+- removed clock source choice for clock driver and use the AudioPLL1 as clock
+source. Having only one clock source it is sufficient for basic functionality.
+- removed dma-names and status from dt-bindings
+- changed volume control names and type to S_VALUE
+
+Cosmin-Gabriel Samoila (2):
+  ASoC: micfil: Add bindings for MICFIL DAI
+  ASoC: Add MICFIL SoC Digital Audio Interface driver.
+
+ .../devicetree/bindings/sound/fsl,micfil.txt       |  32 +
+ sound/soc/fsl/Kconfig                              |   9 +
+ sound/soc/fsl/Makefile                             |   2 +
+ sound/soc/fsl/fsl_micfil.c                         | 895 +++++++++++++++++++++
+ sound/soc/fsl/fsl_micfil.h                         | 283 +++++++
+ 5 files changed, 1221 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/sound/fsl,micfil.txt
+ create mode 100644 sound/soc/fsl/fsl_micfil.c
+ create mode 100644 sound/soc/fsl/fsl_micfil.h
+
+-- 
+2.7.4
