@@ -1,16 +1,16 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 2/3] dt-bindings: drm/panel: simple: add Evervision
- VGG804821
-Date: Fri, 4 Jan 2019 17:38:31 +0100
-Message-ID: <20190104163831.GA10538@ravnborg.org>
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add Evervision VGG804821 pannel
+ support
+Date: Fri, 4 Jan 2019 17:40:38 +0100
+Message-ID: <20190104164038.GB10538@ravnborg.org>
 References: <20190103182658.16377-1-m.felsch@pengutronix.de>
- <20190103182658.16377-3-m.felsch@pengutronix.de>
+ <20190103182658.16377-4-m.felsch@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <20190103182658.16377-3-m.felsch@pengutronix.de>
+In-Reply-To: <20190103182658.16377-4-m.felsch@pengutronix.de>
 List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
  <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
 List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
@@ -24,31 +24,9 @@ To: Marco Felsch <m.felsch@pengutronix.de>
 Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY28uCgpPbiBUaHUsIEphbiAwMywgMjAxOSBhdCAwNzoyNjo1N1BNICswMTAwLCBNYXJj
-byBGZWxzY2ggd3JvdGU6Cj4gQWRkIHN1cHBvcnQgZm9yIHRoZSBFdmVydmlzaW9uIFZHODA0ODIx
-IDgwMHg0ODAgNS4wIiBMQ0QgVEZUIHBhcmFsbGVsCj4gcGFuZWwgdG8gRFJNIHNpbXBsZSBwYW5l
-bCBkcml2ZXIuCj4gCj4gU2lnbmVkLW9mZi1ieTogTWFyY28gRmVsc2NoIDxtLmZlbHNjaEBwZW5n
-dXRyb25peC5kZT4KPiAtLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZXZlcnZpc2lv
-bix2Z2c4MDQ4MjEudHh0ICB8IDEyICsrKysrKysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgMTIg
-aW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvZXZlcnZpc2lvbix2Z2c4MDQ4MjEudHh0Cj4gCj4g
-ZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3Bh
-bmVsL2V2ZXJ2aXNpb24sdmdnODA0ODIxLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy9kaXNwbGF5L3BhbmVsL2V2ZXJ2aXNpb24sdmdnODA0ODIxLnR4dAo+IG5ldyBmaWxl
-IG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi44MmQyMmUxOTFhYzMKPiAtLS0gL2Rl
-di9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvZXZlcnZpc2lvbix2Z2c4MDQ4MjEudHh0Cj4gQEAgLTAsMCArMSwxMiBAQAo+ICtFdmVy
-dmlzaW9uIEVsZWN0cm9uaWNzIENvLiBMdGQuIFZHRzgwNDgyMSA1LjAiIFdWR0EgVEZUIExDRCBQ
-YW5lbAo+ICsKPiArUmVxdWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQg
-YmUgImV2ZXJ2aXNpb24sdmdnODA0ODIxIgo+ICstIHBvd2VyLXN1cHBseTogU2VlIHNpbXBsZS1w
-YW5lbC50eHQKPiArCj4gK09wdGlvbmFsIHByb3BlcnRpZXM6Cj4gKy0gYmFja2xpZ2h0OiBTZWUg
-c2ltcGxlLXBhbmVsLnR4dAo+ICstIGVuYWJsZS1ncGlvczogU2VlIHNpbXBsZS1wYW5lbC50eHQK
-PiArCj4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBi
-aW5kaW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPiAraW4gc2ltcGxlLXBhbmVsLnR4dCBpbiB0aGlz
-IGRpcmVjdG9yeS4KCk90aGVyIGJpbmRpbmdzIGp1c3QgaGF2ZSB0aGUgY29tcGF0aWJsZSBsaXN0
-ZWQgYW5kIHRoZSBhYm92ZSB0d28gbGluZXMgYW5kCmRvIG5vdCByZXBlYXQgdGhlIHJlcXVpcmVk
-L29wdGlvbmFsIHByb3BlcnRpZXMuCklmIHRoZXJlIGlzIG5vdCBzcGVjaWFsIHJlYXNvbiB0byBh
-ZGQgdGhlc2UgdGhleSBJIHN1Z2dlc3QgdG8gc2ltcGxpZnkgdGhlIGJpbmRpbmcuCgoJU2FtCl9f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBt
-YWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3Rz
-LmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+SGkgTWFyY28uCgpJbiAkc3ViamVjdCBwYW5uZWwgPT4gcGFuZWwKCk90aGVyIHRoYW4gdGhhdCwg
+Ym9udXMgcG9pbnRzIGZvciBzcGVjaWZ5aW5nCmFsbCBvZiAuZmxhZ3MsIC5idXNfZm9ybWF0IGFu
+ZCAuYnVzX2ZsYWdzCgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
