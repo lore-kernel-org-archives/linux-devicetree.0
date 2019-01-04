@@ -1,54 +1,98 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH 2/2] remoteproc: q6v5_adsp: Remove voting for lpass_aon
- clock
-Date: Fri, 4 Jan 2019 10:06:24 +0530
-Message-ID: <f6f9b4a2-6205-0ba5-9a3a-b34bd814d303@codeaurora.org>
-References: <1543562950-23997-1-git-send-email-rohitkr@codeaurora.org>
- <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [RFC v2 1/2] pwm: sifive: Add DT documentation for SiFive PWM Controller
+Date: Fri, 4 Jan 2019 10:33:36 +0530
+Message-ID: <CAJ2_jOEy-0DmkzoOwezUf3+gHV3CTu04CqG1tiw5=iX-AO8xZg@mail.gmail.com>
+References: <1544768442-12530-1-git-send-email-yash.shah@sifive.com>
+ <1544768442-12530-2-git-send-email-yash.shah@sifive.com> <20181218172031.GA7272@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20181218172031.GA7272@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org
+To: Rob Herring <robh@kernel.org>
+Cc: Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, Thierry Reding <thierry.reding@gmail.com>, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Paul Walmsley <paul.walmsley@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello Bjorn,
-
-Can you please review this patch series too.
-
-LPASS_AON clock support is already removed from lpass clock driver.
-
-
-Thanks,
-
-Rohit
-
-On 11/30/2018 12:59 PM, Rohit kumar wrote:
-> Lpass_aon clock is on by default. Remove it from lpass
-> clock list to avoid voting for it.
+On Tue, Dec 18, 2018 at 10:50 PM Rob Herring <robh@kernel.org> wrote:
 >
-> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
-> ---
->   drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
+> On Fri, Dec 14, 2018 at 11:50:41AM +0530, Yash Shah wrote:
+> > DT documentation for PWM controller added with updated compatible
+> > string.
+> >
+> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > [Atish: Compatible string update]
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+> >  .../devicetree/bindings/pwm/pwm-sifive.txt         | 44 ++++++++++++++++++++++
+> >  1 file changed, 44 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > new file mode 100644
+> > index 0000000..250d8ee
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> > @@ -0,0 +1,44 @@
+> > +SiFive PWM controller
+> > +
+> > +Unlike most other PWM controllers, the SiFive PWM controller currently only
+> > +supports one period for all channels in the PWM. This is set globally in DTS.
+> > +The period also has significant restrictions on the values it can achieve,
+> > +which the driver rounds to the nearest achievable frequency.
+> > +
+> > +Required properties:
+> > +- compatible: should be something similar to "sifive,<chip>-pwm" for
+> > +           the PWM as integrated on a particular chip, and
+> > +           "sifive,pwm<version>" for the general PWM IP block
+> > +           programming model. Supported compatible strings are:
+> > +           "sifive,fu540-c000-pwm" for the SiFive PWM v0 as
+> > +           integrated onto the SiFive FU540 chip, and "sifive,pwm0"
+> > +           for the SiFive PWM v0 IP block with no chip integration
+> > +           tweaks.
 >
-> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
-> index 79374d1..4829173 100644
-> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
-> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
-> @@ -48,7 +48,7 @@
->   
->   /* list of clocks required by ADSP PIL */
->   static const char * const adsp_clk_id[] = {
-> -	"sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
-> +	"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
->   	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
->   };
->   
+> This should reference the common doc Paul has written and not re-explain
+> the versioning scheme again.
 
--- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+Ok sure.
+
+>
+> > +- reg: physical base address and length of the controller's registers
+> > +- clocks: The frequency the controller runs at
+> > +- #pwm-cells: Should be 2.
+> > +  The first cell is the PWM channel number
+> > +  The second cell is the PWM polarity
+> > +- sifive,approx-period: the driver will get as close to this period as it can
+>
+> Needs a unit suffix as defined in property-units.txt
+
+Will be done.
+
+>
+> > +- interrupts: one interrupt per PWM channel
+> > +
+> > +PWM RTL that corresponds to the IP block version numbers can be found
+> > +here:
+> > +
+> > +https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
+> > +
+> > +Further information on the format of the IP
+> > +block-specific version numbers can be found in
+> > +Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+> > +
+> > +Examples:
+> > +
+> > +pwm:  pwm@10020000 {
+> > +     compatible = "sifive,fu540-c000-pwm","sifive,pwm0";
+> > +     reg = <0x0 0x10020000 0x0 0x1000>;
+> > +     clocks = <&tlclk>;
+> > +     interrupt-parent = <&plic>;
+> > +     interrupts = <42 43 44 45>;
+> > +     #pwm-cells = <2>;
+> > +     sifive,approx-period = <1000000>;
+> > +};
+> > --
+> > 1.9.1
+> >
+
+Thanks for the comments!
