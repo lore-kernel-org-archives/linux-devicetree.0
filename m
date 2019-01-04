@@ -1,37 +1,34 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v1 0/6] MSM8998 basic USB support
-Date: Fri,  4 Jan 2019 09:49:12 -0700
-Message-ID: <1546620552-2312-1-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH v1 1/6] clk: qcom: Add missing freq for usb30_master_clk on 8998
+Date: Fri,  4 Jan 2019 09:49:46 -0700
+Message-ID: <1546620586-2352-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: mturquette@baylibre.com, sboyd@kernel.org
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This series provides basic USB support for MSM8998.  Currently missing is
-wiring up the Type-C detection logic so that the controller can correctly
-switch between host and peripheral modes.  Work to implement that is
-ongoing, and expected to appear soon in followup patches.
+The usb30_master_clk supports a 60Mhz frequency, but that is missing from
+the table of supported frequencies.  Add it.
 
-Jeffrey Hugo (6):
-  clk: qcom: Add missing freq for usb30_master_clk on 8998
-  clk: qcom: Skip halt checks on gcc_usb3_phy_pipe_clk for 8998
-  phy: qcom-qusb2: Add QUSB2 PHY support for msm8998
-  phy: qcom-qmp: Add QMP V3 USB3 PHY support for msm8998
-  usb: dwc3: qcom: Add support for MSM8998
-  arm64: dts: qcom: msm8998: Add USB-related nodes
+Fixes: b5f5f525c547 (clk: qcom: Add MSM8998 Global Clock Control (GCC) driver)
+Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+---
+ drivers/clk/qcom/gcc-msm8998.c | 1 +
+ 1 file changed, 1 insertion(+)
 
- .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   5 +
- .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   1 +
- .../devicetree/bindings/usb/qcom,dwc3.txt          |   1 +
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi          |  22 ++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi              |  90 +++++++++++++
- drivers/clk/qcom/gcc-msm8998.c                     |   3 +-
- drivers/phy/qualcomm/phy-qcom-qmp.c                | 142 +++++++++++++++++++++
- drivers/phy/qualcomm/phy-qcom-qmp.h                |   4 +
- drivers/phy/qualcomm/phy-qcom-qusb2.c              |  41 ++++++
- drivers/usb/dwc3/dwc3-qcom.c                       |   1 +
- 10 files changed, 309 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/clk/qcom/gcc-msm8998.c b/drivers/clk/qcom/gcc-msm8998.c
+index 1b77939..42de947 100644
+--- a/drivers/clk/qcom/gcc-msm8998.c
++++ b/drivers/clk/qcom/gcc-msm8998.c
+@@ -1112,6 +1112,7 @@ enum {
+ 
+ static const struct freq_tbl ftbl_usb30_master_clk_src[] = {
+ 	F(19200000, P_XO, 1, 0, 0),
++	F(60000000, P_GPLL0_OUT_MAIN, 10, 0, 0),
+ 	F(120000000, P_GPLL0_OUT_MAIN, 5, 0, 0),
+ 	F(150000000, P_GPLL0_OUT_MAIN, 4, 0, 0),
+ 	{ }
 -- 
 Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
