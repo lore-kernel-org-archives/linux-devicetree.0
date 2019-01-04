@@ -1,75 +1,69 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [RFC PATCH 01/10] dma-engine: sun4i: Add a quirk to support
- different chips
-Date: Fri, 4 Jan 2019 21:08:15 +0530
-Message-ID: <20190104153815.GN13372@vkoul-mobl.Dlink>
-References: <cover.1543782328.git.mesihkilinc@gmail.com>
- <864e28404a31ba24094f74fd060d11c16562e965.1543782328.git.mesihkilinc@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/4] dt-bindings: usb: musb: Add support for MediaTek musb controller
+Date: Fri, 4 Jan 2019 10:10:09 -0600
+Message-ID: <CAL_JsqK5x8=b6gXfBStZwHbq4zvuCuHCLAwsSqFEMJtSffC3BQ@mail.gmail.com>
+References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
+ <1545896066-897-2-git-send-email-min.guo@mediatek.com> <20190103221414.GA14639@bogus>
+ <1546570807.585.31.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <864e28404a31ba24094f74fd060d11c16562e965.1543782328.git.mesihkilinc@gmail.com>
+In-Reply-To: <1546570807.585.31.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mesih Kilinc <mesihkilinc@gmail.com>
-Cc: dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
+To: Min Guo <min.guo@mediatek.com>
+Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 03-12-18, 00:23, Mesih Kilinc wrote:
-> Allwinner suniv F1C100s has similar DMA engine to sun4i. Several
-> registers has different addresses. Total dma channels, endpoint counts
-> and max burst counts are also different.
+On Thu, Jan 3, 2019 at 9:00 PM Min Guo <min.guo@mediatek.com> wrote:
+>
+> On Thu, 2019-01-03 at 16:14 -0600, Rob Herring wrote:
+> > On Thu, Dec 27, 2018 at 03:34:23PM +0800, min.guo@mediatek.com wrote:
+> > > From: Min Guo <min.guo@mediatek.com>
+> > >
+> > > This adds support for MediaTek musb controller in
+> > > host, peripheral and otg mode
 
-So if register layout is the only diff, have you thought about using
-regmap_field so that you dont care about the layout
+[...]
 
-> +struct sun4i_dma_config {
-> +	u32 ndma_nr_max_channels;
-> +	u32 ndma_nr_max_vchans;
-> +
-> +	u32 ddma_nr_max_channels;
-> +	u32 ddma_nr_max_vchans;
-> +
-> +	u32 dma_nr_max_channels;
-> +
-> +        void (*set_dst_data_width)(u32 *p_cfg, s8 data_width);
-> +        void (*set_src_data_width)(u32 *p_cfg, s8 data_width);
+> > > + - interrupts      : interrupt used by musb controller
+> > > + - interrupt-names : must be "mc"
+> >
+> > -names is pointless when there is only one.
+> The MUSB core driver has two interrupts, one is for MAC, another for DMA,
+> but on MTK platform, there is only a MAC interrupt, here following the binding
+> of MUSB core driver.
 
-aligned please, checkpatch should warn about this stuff
+You should probably be listing the same interrupt number twice if 2
+interrupts are combined.
 
->  struct sun4i_dma_dev {
-> -	DECLARE_BITMAP(pchans_used, SUN4I_DMA_NR_MAX_CHANNELS);
-> +	unsigned long *pchans_used;
+> > > +Optional properties:
+> > > + - extcon : external connector for VBUS and IDPIN changes detection,
+> > > +   needed when supports dual-role mode.
+> >
+> > Don't use extcon for new bindings. The usb-connector binding should be
+> > used instead.
+> This is used to detect the changes of the IDPIN and VBUS, the change
+> events are provided by other drivers, such as extcon-usb-gpio.c, and
+> then switch MUSB controller to host or device mode, but the
+> usb-connector can't detect these changes.
 
-why not bitmap?
+To repeat, do not use extcon binding for new bindings. It is poorly
+designed as it reflects extcon driver needs, not a description of the
+hardware. If you have ID on GPIO, then that belongs in a usb-connector
+node because that GPIO goes to the connector. For Vbus, you should
+have a vbus-supply in the connector and use a gpio-regulator if it is
+GPIO controlled.
 
-> +static struct sun4i_dma_config sun4i_a10_dma_cfg = {
-> +	.ndma_nr_max_channels	= SUN4I_NDMA_NR_MAX_CHANNELS,
-> +	.ndma_nr_max_vchans	= SUN4I_NDMA_NR_MAX_VCHANS,
-> +
-> +	.ddma_nr_max_channels	= SUN4I_DDMA_NR_MAX_CHANNELS,
-> +	.ddma_nr_max_vchans	= SUN4I_DDMA_NR_MAX_VCHANS,
-> +
-> +	.dma_nr_max_channels	= SUN4I_NDMA_NR_MAX_CHANNELS + 
-> +		SUN4I_DDMA_NR_MAX_CHANNELS,
-> +
-> +	.set_dst_data_width	= set_dst_data_width_a10,
-> +	.set_src_data_width	= set_src_data_width_a10,
-> +	.convert_burst		= convert_burst_a10,
-> +
-> +	.ndma_drq_sdram		= SUN4I_NDMA_DRQ_TYPE_SDRAM,
-> +	.ddma_drq_sdram		= SUN4I_DDMA_DRQ_TYPE_SDRAM,
-> +
-> +	.max_burst		= SUN4I_MAX_BURST,
-> +};
-> +
->  static const struct of_device_id sun4i_dma_match[] = {
-> -	{ .compatible = "allwinner,sun4i-a10-dma" },
-> +	{ .compatible = "allwinner,sun4i-a10-dma", .data = &sun4i_a10_dma_cfg },
+> > > + - vbus-supply : reference to the VBUS regulator, needed when supports
+> > > +   dual-role mode.
+> >
+> > The controller is powered from Vbus? Probably not. This belongs in the
+> > connector or maybe the phy (if the phy is powered from Vbus).
+> The Vbus is used to provide 5V voltage to the connected device when the
+> controller works as host mode.
 
-I would prefer this to be split into two patches, first one does the
-refactoring of driver (better if we split things logically) and then
-addition of new one..
+I know what Vbus is. Unless Vbus is providing power to the host
+controller, putting the Vbus supply in the controller node is not a
+accurate representation of the hardware.
 
--- 
-~Vinod
+Rob
