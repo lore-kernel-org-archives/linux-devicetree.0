@@ -1,51 +1,54 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH 2/2] devicetree: hwmon: Add bindings documentation for
- HIH6130
-Date: Thu, 3 Jan 2019 20:26:36 -0800
-Message-ID: <20190104042636.GA22831@roeck-us.net>
-References: <20181227151349.29753-1-andreas@kemnade.info>
- <20181227151349.29753-3-andreas@kemnade.info>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH 2/2] remoteproc: q6v5_adsp: Remove voting for lpass_aon
+ clock
+Date: Fri, 4 Jan 2019 10:06:24 +0530
+Message-ID: <f6f9b4a2-6205-0ba5-9a3a-b34bd814d303@codeaurora.org>
+References: <1543562950-23997-1-git-send-email-rohitkr@codeaurora.org>
+ <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181227151349.29753-3-andreas@kemnade.info>
+In-Reply-To: <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: ohad@wizery.com, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Dec 27, 2018 at 04:13:49PM +0100, Andreas Kemnade wrote:
-> Add bindings documentation for HIH6130 driver.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+Hello Bjorn,
 
-Applied to hwmon-next.
+Can you please review this patch series too.
+
+LPASS_AON clock support is already removed from lpass clock driver.
+
 
 Thanks,
-Guenter
 
+Rohit
+
+On 11/30/2018 12:59 PM, Rohit kumar wrote:
+> Lpass_aon clock is on by default. Remove it from lpass
+> clock list to avoid voting for it.
+>
+> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
 > ---
->  Documentation/devicetree/bindings/hwmon/hih6130.txt | 12 ++++++++++++
->  1 file changed, 12 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/hwmon/hih6130.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/hih6130.txt b/Documentation/devicetree/bindings/hwmon/hih6130.txt
-> new file mode 100644
-> index 000000000000..2c43837af4c2
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/hwmon/hih6130.txt
-> @@ -0,0 +1,12 @@
-> +Honeywell Humidicon HIH-6130 humidity/temperature sensor
-> +--------------------------------------------------------
-> +
-> +Requires node properties:
-> +- compatible : "honeywell,hi6130"
-> +- reg : the I2C address of the device. This is 0x27.
-> +
-> +Example:
-> +	hih6130@27 {
-> +		compatible = "honeywell,hih6130";
-> +		reg = <0x27>;
-> +	};
+>   drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> index 79374d1..4829173 100644
+> --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> @@ -48,7 +48,7 @@
+>   
+>   /* list of clocks required by ADSP PIL */
+>   static const char * const adsp_clk_id[] = {
+> -	"sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
+> +	"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
+>   	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
+>   };
+>   
+
+-- 
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
