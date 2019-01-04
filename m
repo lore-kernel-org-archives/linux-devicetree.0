@@ -1,55 +1,46 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 0/8 v2] k3dma patches to add support for hi3660/HiKey960
-Date: Fri,  4 Jan 2019 12:56:20 -0800
-Message-ID: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
+Subject: [PATCH 2/8 v2] Documentation: bindings: k3dma: Add binding for dma-avail-chan
+Date: Fri,  4 Jan 2019 12:56:22 -0800
+Message-ID: <1546635388-13795-3-git-send-email-john.stultz@linaro.org>
+References: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lkml <linux-kernel@vger.kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: John Stultz <john.stultz@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch series is based on recent work by Tanglei Han, and
-adds support for hi3660 SoCs as found on the HiKey960 board,
-along with a few patches I've been carrying.
+Some dma channels can be reserved for secure mode or other
+hardware on the SoC, so provide a binding for a bitmask
+listing the available channels for the kernel to use.
 
-Review and feedback would be greatly appreciated!
-
-thanks
--john
-
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Tanglei Han <hantanglei@huawei.com>
 Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: Vinod Koul <vkoul@kernel.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Guodong Xu <guodong.xu@linaro.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: Ryan Grachek <ryan@edited.us>
-CC: devicetree@vger.kernel.org
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 Cc: dmaengine@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-John Stultz (3):
-  Documentation: bindings: k3dma: Add binding for dma-avail-chan
-  arm64: dts: hi3660: Add dma to uart nodes
-  arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-avail-chan
-
-Li Yu (2):
-  dma: k3dma: Delete axi_config
-  dma: k3dma: Add support to dma_avail_chan
-
-Youlin Wang (3):
-  Documentation: bindings: k3dma: Extend the k3dma driver binding to
-    support hisi-asp
-  dma: k3dma: Upgrade k3dma driver to support hisi_asp_dma hardware
-  arm64: dts: hi3660: Add hisi asp dma device
-
- Documentation/devicetree/bindings/dma/k3dma.txt |  7 ++-
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi       | 22 ++++++++-
- drivers/dma/k3dma.c                             | 60 +++++++++++++++++++++----
- 3 files changed, 78 insertions(+), 11 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
+index 10a2f15..1c466c1 100644
+--- a/Documentation/devicetree/bindings/dma/k3dma.txt
++++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+@@ -14,6 +14,9 @@ Required properties:
+ 		have specific request line
+ - clocks: clock required
+ 
++Optional properties:
++- dma-avail-chan: Bitmask of available physical channels
++
+ Example:
+ 
+ Controller:
 -- 
 2.7.4
