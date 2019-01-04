@@ -1,59 +1,62 @@
-From: Stephen Boyd <sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v6 2/2] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Fri, 04 Jan 2019 12:59:02 -0800
-Message-ID: <154663554289.15366.16011609839106849298@swboyd.mtv.corp.google.com>
-References: <20181212211848.26768-1-jcrouse@codeaurora.org>
- <20181219044901.x76bd5vdsznhhrmz@vireshk-i7>
- <CAL_JsqLs69=nr=2J_48N3VtD0qNRnxAgDU8uMRwY_Qqp6Dzs_Q@mail.gmail.com>
- <CAD=FV=VMMYKoW4RU_TTjLdyrNcWZU-Gyou9b6qynKFX9wDn5Mw@mail.gmail.com>
- <CAD=FV=Utko6B6OycYpef3OQAF1v-rthcdgAKMm0GLxRM4=ummg@mail.gmail.com>
- <CAL_Jsq+U8Vj4+w6jA+B3_CyG8N==ABbw31nm+LE=6pwXEopApw@mail.gmail.com>
- <154534136449.79149.14097954220921296509@swboyd.mtv.corp.google.com>
- <7e310416-78d3-b7e5-5013-0bcc8bfd0351@codeaurora.org>
- <154604698217.179992.9966831118584978893@swboyd.mtv.corp.google.com>
- <dcb3e046-d0bd-af68-e42d-1db0db3bf2df@codeaurora.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Fri, 4 Jan 2019 22:37:58 +0100
+Message-ID: <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
+References: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
+ <20181219201047.GA23448@amd> <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
+ <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <dcb3e046-d0bd-af68-e42d-1db0db3bf2df-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, "open list:THERMAL" <linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Viresh Kumar <viresh.kumar-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Viresh Kumar <vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190104201256.GA2931@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UXVvdGluZyBSYWplbmRyYSBOYXlhayAoMjAxOS0wMS0wMyAwMDo0NTo1MykKPiAKPiBPbiAxMi8y
-OS8yMDE4IDY6NTkgQU0sIFN0ZXBoZW4gQm95ZCB3cm90ZToKPiA+PiBTbyBJIGFtIGd1ZXNzaW5n
-IHRoZSBjb25jbHVzaW9uIGlzIHRvIHVzZSBhIGZhbGxiYWNrICJvcGVyYXRpbmctcG9pbnRzLXYy
-Igo+ID4+IGNvbXBhdGlibGUqb25seSogIHdoZW4gd2UgZG8gaGF2ZSBvcHAtaHogYWxvbmcgd2l0
-aCBxY29tLGxldmVsIChhcyBpbiB0aGUKPiA+PiBjYXNlIHdpdGggZ3B1KSBhbmQgbm90IGhhdmUg
-YSBmYWxsYmFjayBjb21wYXRpYmxlIGluIGNhc2VzIHdoZW4gd2UgZG9uJ3QKPiA+PiBoYXZlIG9w
-cC1oeiAoYXMgaW4gdGhlIGNhc2Ugb2YgcnBtIHBvd2VyIGRvbWFpbnMpPwo+ID4+IFRoYXQgc2Vl
-bXMgYSBsaXR0bGUgaW5jb25zaXN0ZW50LCBhbmQgZ2l2ZW4gUm9iIHNhaWQgZWl0aGVyIHdheSBp
-cyBmaW5lLAo+ID4+IGp1c3QgZG8gb25lIHdheSBvciB0aGUgb3RoZXIgYW5kIG5vdCBib3RoLCBJ
-IGFtIGluY2xpbmVkIHRvIHRoaW5rIHdlIHNob3VsZAo+ID4+IGp1c3QgaGF2ZSBhICJvcGVyYXRp
-bmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiIGFuZCBubyBmYWxsYmFjayBjb21wYXRpYmxlLgo+ID4+
-IERvZXMgdGhhdCBtYWtlIHNlbnNlPwo+ID4+Cj4gPiBBcmUgeW91IGdvaW5nIHRvIHVwZGF0ZSB0
-aGUgc2tpcCB0YWJsZSB0byBub3QgY3JlYXRlIHBsYXRmb3JtIGRldmljZXM/Cj4gPiBPciBpbnRy
-b2R1Y2Ugc29tZSBnZW5lcmljIHByb3BlcnR5IHRvIGluZGljYXRlIHRoYXQgdGhpcyBpcyBqdXN0
-IGRhdGEKPiA+IGFuZCBub3QgYSBkZXZpY2Ugbm9kZT8KPiAKPiBJcyBhbnkgb2YgaXQgcmVhbGx5
-IG5lZWRlZCwgZ2l2ZW4gdGhlIGJpbmRpbmdzIHNwZWNpZnkgdGhhdCB0aGUgT1BQIHRhYmxlCj4g
-c2hvdWxkIGFjdHVhbGx5IGJlIGEgY2hpbGQgbm9kZSBvZiB0aGUgZGV2aWNlL3Bvd2VyIGRvbWFp
-biBzdXBwb3J0aW5nCj4gaXQ/IEkgZG9uJ3Qgc2VlIHdobyB3b3VsZCBlbmQgdXAgY3JlYXRpbmcg
-cGxhdGZvcm0gZGV2aWNlcyBmb3IgdGhlbS4KPiAKCkdvb2QgcG9pbnQuIElmIGl0J3MgYSBjaGls
-ZCBub2RlIHRoZW4gYWxtb3N0IGFsbCB0aGUgdGltZSB3ZSB3b24ndCBiZQp0cnlpbmcgdG8gcG9w
-dWxhdGUgdGhlIE9QUCBub2RlIGFzIGFub3RoZXIgcGxhdGZvcm0gZGV2aWNlIHNvIHRoaXMgaXNu
-J3QKcmVhbGx5IGltcG9ydGFudCB0byBoYW5kbGUgdW50aWwgdGhhdCBoYXBwZW5zLCB3aGljaCBp
-cyBwcm9iYWJseSBuZXZlci4KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Zy
-ZWVkcmVubwo=
+On 1/4/19 9:12 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>> I suppose if one would just make it an array of values (separated by
+>>> space) and then one file with string array of color element names and on
+>>> file with maximum value array it could be within those words.
+>>>
+>>> The it would be something like:
+>>>
+>>> $ echo "23 54 32" > color
+>>
+>> Go ahead, but first convince Pavel, and then Greg :-)
+>>
+>> I'd personally would not have much against, especially that the
+>> list of values will not grow for that one like in case of old patch set
+>> [0] where Pavel and Greg thwarted my similar attempt.
+> 
+> Oh, you can get this past Pavel (and probably Greg) -- if you have a
+> good reason. Performance is _not_ a good reason. You don't need to
+> change LED color 50000 times a second.
+
+We would need to do some profiling here to check if the problem exists.
+
+But, aside from that hypothetic issue, we need a solution for
+LEDn_BRIGHTNESS feature of lp5024, i.e. setting color intensity
+via a single register write. How would you propose to address that?
+
+> If you can demonstrate a reasonable design, where user selects color
+> from well-known RGB pallete and either kernel or library+kernel acts
+> to set that color on the LED, we can talk.
+> 
+> When user asks for white, it has to be white. Exact color temperature
+> does not matter. When user asks for pink, it has to be pink. Again,
+> exact color does not matter; different monitors display slightly
+> different colors, too
+-- 
+Best regards,
+Jacek Anaszewski
