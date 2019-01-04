@@ -1,305 +1,105 @@
-From: Zhiyong Tao <zhiyong.tao@mediatek.com>
-Subject: Re: [PATCH] pinctrl: add drive for I2C related pins on MT8183
-Date: Fri, 4 Jan 2019 16:48:06 +0800
-Message-ID: <1546591686.21915.12.camel@mhfsdcap03>
-References: <20181211080123.1397-1-zhiyong.tao@mediatek.com>
- <20181211080123.1397-2-zhiyong.tao@mediatek.com>
- <CAGp9Lzo89syaHWDgtS2JpDzSS-_AAbHENFmXrxttUqcQhMj04g@mail.gmail.com>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: Re: [RFC PATCH] ASoC: fsl: Add Audio Mixer CPU DAI
+	driver
+Date: Fri, 4 Jan 2019 08:52:10 +0000
+Message-ID: <1546591930.30300.13.camel@nxp.com>
+References: <1545150569-14897-1-git-send-email-viorel.suman@nxp.com>
+ <CAGoOwPQvc5w05NOVsp6Qw-Ee3CJJCcaU2Dtzwbf+7bUe_kFEbA@mail.gmail.com>
+ <1546531006.14398.83.camel@nxp.com>
+ <20190103200319.GA2586@Asurada-Nvidia.nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAGp9Lzo89syaHWDgtS2JpDzSS-_AAbHENFmXrxttUqcQhMj04g@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sean Wang <sean.wang@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Hongkun Cao =?UTF-8?Q?=28=E6=9B=B9=E6=B4=AA=E5=9D=A4=29?= <Hongkun.Cao@mediatek.com>, srv_heupstream <srv_heupstream@mediatek.com>, Chuanjia Liu =?UTF-8?Q?=28=E6=9F=B3=E4=BC=A0=E5=98=89=29?= <Chuanjia.Liu@mediatek.com>, Biao Huang =?UTF-8?Q?=28=E9=BB=84=E5=BD=AA=29?= <Biao.Huang@mediatek.com>, Linus Walleij <linus.walleij@linaro.org>, Liguo Zhang =?UTF-8?Q?=28=E5=BC=A0=E7=AB=8B=E5=9B=BD=29?= <Liguo.Zhang@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Hongzhou Yang <hongzhou.yang@mediatek.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Eddie
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190103200319.GA2586@Asurada-Nvidia.nvidia.com>
+Content-Language: en-US
+Content-ID: <0422201DECF07843838F431D469F3788@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@kernel.org" <timur@kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "tiwai@suse.com" <tiwai@suse.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-12-12 at 04:51 +0800, Sean Wang wrote:
-> The subject should be refined to be close to the content
-> 
-> On Tue, Dec 11, 2018 at 12:02 AM Zhiyong Tao <zhiyong.tao@mediatek.com> wrote:
-> >
-> > This patch provides the advanced drive for I2C used pins on MT8183.
-> >
-> 
-> Additionally, you should state more how much strength in mA given on
-> each step E1, E0 move forward. This way would help to reuse the scheme
-> on the similar SoCs.
-
-==> 
-Hi sean,
-Thanks for your suggestion. 
-when E1=0/E0=0, the strength is 0.125mA;
-when E1=0/E0=1, the strength is 0.25mA;
-when E1=1/E0=0, the strength is 0.5mA;
-when E1=1/E0=1, the strength is 1mA;
-we will add it in the commit message in the next version.
-
-Thanks.
-> 
-> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
-> > ---
-> >  drivers/pinctrl/mediatek/pinctrl-mt8183.c        | 50 ++++++++++++++++++++++++
-> >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c | 45 +++++++++++++++++++++
-> >  drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h | 13 ++++++
-> >  drivers/pinctrl/mediatek/pinctrl-paris.c         | 20 ++++++++++
-> >  4 files changed, 128 insertions(+)
-> >
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mt8183.c b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> > index 6262fd3678ea..5244e1b27b1d 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mt8183.c
-> > @@ -472,6 +472,51 @@ static const struct mtk_pin_field_calc mt8183_pin_r1_range[] = {
-> >         PIN_FIELD_BASE(133, 133, 8, 0x0D0, 0x10, 13, 1),
-> >  };
-> >
-> > +static const struct mtk_pin_field_calc mt8183_pin_drv_en_dis_range[] = {
-> 
-> I'd prefer using the word mt8183_pin_e1e0en_range to keep people away from
-> be confused the relationship with the existing mt8183_pin_drv_range.
-> 
-> > +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 20, 1),
-> > +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 15, 1),
-> > +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 12, 1),
-> > +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 7, 1),
-> > +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 12, 1),
-> > +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 9, 1),
-> > +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 19, 1),
-> > +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 22, 1),
-> > +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 24, 1),
-> > +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 14, 1),
-> > +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 27, 1),
-> > +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 17, 1),
-> > +};
-> > +
-> > +static const struct mtk_pin_field_calc mt8183_pin_drv_e0_range[] = {
-> 
-> Ditto, I'd prefer using the word mt8183_pin_e0_range
-> 
-> > +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 21, 1),
-> > +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 16, 1),
-> > +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 13, 1),
-> > +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 8, 1),
-> > +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 13, 1),
-> > +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 10, 1),
-> > +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 20, 1),
-> > +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 23, 1),
-> > +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 25, 1),
-> > +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 15, 1),
-> > +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 28, 1),
-> > +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 18, 1),
-> > +};
-> > +
-> > +static const struct mtk_pin_field_calc mt8183_pin_drv_e1_range[] = {
-> 
-> Ditto, I'd prefer using the word mt8183_pin_e1_range
-> 
-> > +       PIN_FIELD_BASE(48, 48, 3, 0x0F0, 0x10, 22, 1),
-> > +       PIN_FIELD_BASE(49, 49, 3, 0x0F0, 0x10, 17, 1),
-> > +       PIN_FIELD_BASE(50, 50, 4, 0x0F0, 0x10, 14, 1),
-> > +       PIN_FIELD_BASE(51, 51, 4, 0x0F0, 0x10, 9, 1),
-> > +       PIN_FIELD_BASE(81, 81, 5, 0x0F0, 0x10, 14, 1),
-> > +       PIN_FIELD_BASE(82, 82, 5, 0x0F0, 0x10, 11, 1),
-> > +       PIN_FIELD_BASE(83, 83, 5, 0x0F0, 0x10, 21, 1),
-> > +       PIN_FIELD_BASE(84, 84, 5, 0x0F0, 0x10, 24, 1),
-> > +       PIN_FIELD_BASE(103, 103, 6, 0x0F0, 0x10, 26, 1),
-> > +       PIN_FIELD_BASE(104, 104, 6, 0x0F0, 0x10, 16, 1),
-> > +       PIN_FIELD_BASE(105, 105, 6, 0x0F0, 0x10, 29, 1),
-> > +       PIN_FIELD_BASE(106, 106, 6, 0x0F0, 0x10, 19, 1),
-> > +};
-> > +
-> >  static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
-> >         [PINCTRL_PIN_REG_MODE] = MTK_RANGE(mt8183_pin_mode_range),
-> >         [PINCTRL_PIN_REG_DIR] = MTK_RANGE(mt8183_pin_dir_range),
-> > @@ -485,6 +530,9 @@ static const struct mtk_pin_reg_calc mt8183_reg_cals[PINCTRL_PIN_REG_MAX] = {
-> >         [PINCTRL_PIN_REG_PUPD] = MTK_RANGE(mt8183_pin_pupd_range),
-> >         [PINCTRL_PIN_REG_R0] = MTK_RANGE(mt8183_pin_r0_range),
-> >         [PINCTRL_PIN_REG_R1] = MTK_RANGE(mt8183_pin_r1_range),
-> > +       [PINCTRL_PIN_REG_DRV_EN_DIS] = MTK_RANGE(mt8183_pin_drv_en_dis_range),
-> > +       [PINCTRL_PIN_REG_DRV_E0] = MTK_RANGE(mt8183_pin_drv_e0_range),
-> > +       [PINCTRL_PIN_REG_DRV_E1] = MTK_RANGE(mt8183_pin_drv_e1_range),
-> >  };
-> >
-> >  static const char * const mt8183_pinctrl_register_base_names[] = {
-> > @@ -517,6 +565,8 @@ static const struct mtk_pin_soc mt8183_data = {
-> >         .drive_get = mtk_pinconf_drive_get_rev1,
-> >         .adv_pull_get = mtk_pinconf_adv_pull_get,
-> >         .adv_pull_set = mtk_pinconf_adv_pull_set,
-> > +       .adv_drive_get = mtk_pinconf_adv_drive_get,
-> > +       .adv_drive_set = mtk_pinconf_adv_drive_set,
-> 
-> DT property drive-strength is generic enough to all SoCs so we don't
-> need to create extra callbacks to serve the extra property about the
-> driving adjustment.
-> 
-> And DRV register working for i2c pins 48-51, 81-84 and 103-106 implies
-> that E1 and E0 work like more an extra fine adjustment related to DRV
-> register have done to give more accurate strength than only DRV
-> register can support. Thus, DRV, E0, and E1 should be more
-> consolidated to in the same function instead of making them apart.
-> 
-> If we know how much driving strength on each step of e1, e0, it would
-> be easy to add E1 and E0 support into current driving adjustment
-> procedure mtk_pinconf_drive_set_rev1 and mtk_pinconf_drive_get_rev1.
-> 
-> >  };
-> >
-> >  static const struct of_device_id mt8183_pinctrl_of_match[] = {
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > index 4a9e0d4c2bbc..da024279ec59 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.c
-> > @@ -668,3 +668,48 @@ int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
-> >
-> >         return 0;
-> >  }
-> > +
-> > +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> > +                             const struct mtk_pin_desc *desc, bool enable,
-> > +                             u32 arg)
-> > +{
-> > +       int err;
-> > +
-> > +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E0, arg & 1);
-> > +       if (err)
-> > +               return 0;
-> > +
-> > +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_E1,
-> > +                              !!(arg & 2));
-> > +       if (err)
-> > +               return 0;
-> > +
-> > +       arg = enable ? 1 : 0;
-> > +
-> > +       err = mtk_hw_set_value(hw, desc, PINCTRL_PIN_REG_DRV_EN_DIS, arg);
-> > +
-> > +       return err;
-> > +}
-> > +
-> > +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> > +                             const struct mtk_pin_desc *desc, u32 *val)
-> > +{
-> > +       u32 en, e0, e1;
-> > +       int err;
-> > +
-> > +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_EN_DIS, &en);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E0, &e0);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       err = mtk_hw_get_value(hw, desc, PINCTRL_PIN_REG_DRV_E1, &e1);
-> > +       if (err)
-> > +               return err;
-> > +
-> > +       *val = (e0 | e1 << 1 | en << 2) & 0x7;
-> > +
-> > +       return 0;
-> > +}
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> > index 6d24522739d9..795a3b10d54e 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-mtk-common-v2.h
-> > @@ -63,6 +63,9 @@ enum {
-> >         PINCTRL_PIN_REG_IES,
-> >         PINCTRL_PIN_REG_PULLEN,
-> >         PINCTRL_PIN_REG_PULLSEL,
-> > +       PINCTRL_PIN_REG_DRV_EN_DIS,
-> > +       PINCTRL_PIN_REG_DRV_E0,
-> > +       PINCTRL_PIN_REG_DRV_E1,
-> >         PINCTRL_PIN_REG_MAX,
-> >  };
-> >
-> > @@ -224,6 +227,11 @@ struct mtk_pin_soc {
-> >         int (*adv_pull_get)(struct mtk_pinctrl *hw,
-> >                             const struct mtk_pin_desc *desc, bool pullup,
-> >                             u32 *val);
-> > +       int (*adv_drive_set)(struct mtk_pinctrl *hw,
-> > +                            const struct mtk_pin_desc *desc, bool enable,
-> > +                            u32 arg);
-> > +       int (*adv_drive_get)(struct mtk_pinctrl *hw,
-> > +                            const struct mtk_pin_desc *desc, u32 *val);
-> >
-> >         /* Specific driver data */
-> >         void                            *driver_data;
-> > @@ -287,5 +295,10 @@ int mtk_pinconf_adv_pull_set(struct mtk_pinctrl *hw,
-> >  int mtk_pinconf_adv_pull_get(struct mtk_pinctrl *hw,
-> >                              const struct mtk_pin_desc *desc, bool pullup,
-> >                              u32 *val);
-> > +int mtk_pinconf_adv_drive_set(struct mtk_pinctrl *hw,
-> > +                             const struct mtk_pin_desc *desc, bool enable,
-> > +                            u32 arg);
-> > +int mtk_pinconf_adv_drive_get(struct mtk_pinctrl *hw,
-> > +                             const struct mtk_pin_desc *desc, u32 *val);
-> >
-> >  #endif /* __PINCTRL_MTK_COMMON_V2_H */
-> > diff --git a/drivers/pinctrl/mediatek/pinctrl-paris.c b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> > index d2179028f134..ef4ccaa59e55 100644
-> > --- a/drivers/pinctrl/mediatek/pinctrl-paris.c
-> > +++ b/drivers/pinctrl/mediatek/pinctrl-paris.c
-> > @@ -20,12 +20,16 @@
-> >  #define MTK_PIN_CONFIG_RDSEL   (PIN_CONFIG_END + 2)
-> >  #define MTK_PIN_CONFIG_PU_ADV  (PIN_CONFIG_END + 3)
-> >  #define MTK_PIN_CONFIG_PD_ADV  (PIN_CONFIG_END + 4)
-> > +#define MTK_PIN_CONFIG_DRV_EN_ADV      (PIN_CONFIG_END + 5)
-> > +#define MTK_PIN_CONFIG_DRV_DIS_ADV     (PIN_CONFIG_END + 6)
-> >
-> >  static const struct pinconf_generic_params mtk_custom_bindings[] = {
-> >         {"mediatek,tdsel",      MTK_PIN_CONFIG_TDSEL,           0},
-> >         {"mediatek,rdsel",      MTK_PIN_CONFIG_RDSEL,           0},
-> >         {"mediatek,pull-up-adv", MTK_PIN_CONFIG_PU_ADV,         1},
-> >         {"mediatek,pull-down-adv", MTK_PIN_CONFIG_PD_ADV,       1},
-> > +       {"mediatek,drive-enable-adv", MTK_PIN_CONFIG_DRV_EN_ADV,        2},
-> > +       {"mediatek,drive-disable-adv", MTK_PIN_CONFIG_DRV_DIS_ADV,      2},
-> >  };
-> >
-> >  #ifdef CONFIG_DEBUG_FS
-> > @@ -34,6 +38,8 @@ static const struct pin_config_item mtk_conf_items[] = {
-> >         PCONFDUMP(MTK_PIN_CONFIG_RDSEL, "rdsel", NULL, true),
-> >         PCONFDUMP(MTK_PIN_CONFIG_PU_ADV, "pu-adv", NULL, true),
-> >         PCONFDUMP(MTK_PIN_CONFIG_PD_ADV, "pd-adv", NULL, true),
-> > +       PCONFDUMP(MTK_PIN_CONFIG_DRV_EN_ADV, "drive-enable-adv", NULL, true),
-> > +       PCONFDUMP(MTK_PIN_CONFIG_DRV_DIS_ADV, "drive-disable-adv", NULL, true),
-> >  };
-> >  #endif
-> >
-> > @@ -311,6 +317,20 @@ static int mtk_pinconf_set(struct pinctrl_dev *pctldev, unsigned int pin,
-> >                         return -ENOTSUPP;
-> >                 }
-> >                 break;
-> > +       case MTK_PIN_CONFIG_DRV_EN_ADV:
-> > +       case MTK_PIN_CONFIG_DRV_DIS_ADV:
-> > +               if (hw->soc->adv_drive_set) {
-> > +                       bool enable;
-> > +
-> > +                       enable = param == MTK_PIN_CONFIG_DRV_EN_ADV;
-> > +                       err = hw->soc->adv_drive_set(hw, desc, enable,
-> > +                                                   arg);
-> > +                       if (err)
-> > +                               return err;
-> > +               } else {
-> > +                       return -ENOTSUPP;
-> > +               }
-> > +               break;
-> >         default:
-> >                 err = -ENOTSUPP;
-> >         }
-> > --
-> > 2.12.5
-> >
-> >
-> > _______________________________________________
-> > Linux-mediatek mailing list
-> > Linux-mediatek@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+SGkgTmljb2xpbiwNCg0KT24gSm8sIDIwMTktMDEtMDMgYXQgMTI6MDMgLTA4MDAsIE5pY29saW4g
+Q2hlbiB3cm90ZToNCj4gSGksDQo+IA0KPiBPbiBUaHUsIEphbiAwMywgMjAxOSBhdCAwMzo1Njo0
+NlBNICswMDAwLCBWaW9yZWwgU3VtYW4gd3JvdGU6DQo+ID4gDQo+ID4gPiANCj4gPiA+ID4gDQo+
+ID4gPiA+IMKgc291bmQvc29jL2ZzbC9mc2xfYW1peC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfCA1NTQNCj4gPiA+ID4gKysrKysrKysrKysr
+KysrKysrKysrDQo+ID4gPiA+IMKgc291bmQvc29jL2ZzbC9mc2xfYW1peC5owqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfCAxMDEgKysrKw0KPiA+
+ID4gSSBhaW1uJ3QgYWdhaW5zdCB0aGUgbmFtaW5nIGhlcmUsIGJ1dCBpdCBzZWVtcyB0byBiZSBB
+VURNSVggaW4NCj4gPiA+IFJNPw0KPiA+ID4gDQo+ID4gPiBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8g
+YWxpZ24gd2l0aCB0aGF0PyBJdCdzIHlvdXIgZGVjaXNpb24gdGhvdWdoLg0KPiA+IFRvIG1lICJB
+VURNSVgiIHNvdW5kcyBtb3JlIGxpa2Ugc29tZSBSVEwgaGlnaCBsZXZlbCBpbnRlZ3JhdGlvbg0K
+PiA+IG1vZHVsZSwNCj4gPiBJIHdvdWxkIHByZWZlciB0byBrZWVwIGl0IGFzIGl0IGlzIGlmIHRo
+ZXJlIGlzIG5vIHN0cm9uZyByZWFzb24gdG/CoA0KPiA+IHJlbmFtZSBpdC4NCj4gV2UgaGFkIEFV
+RE1VWCwgc28gIkFVRE1JWCIgZG9lc24ndCBzb3VuZCBiYWQgdG8gbWUgYXQgYWxsLiBUaGUgb25s
+eQ0KPiByZWFzb24gdGhhdCB3ZSBhcmUgZGlzY3Vzc2luZyB0aGlzIGlzIGJlY2F1c2UgUk0gdXNl
+cyBtb3JlICJBVURNSVgicw0KPiBvdmVyICJhbWl4InMuIEknZCBoYXZlIGNob3NlbiBBVURNSVgg
+aWYgSSB3ZXJlIHlvdSwgeWV0IG5vdCBzdHJvbmdseQ0KPiBhcyBJIHNhaWQuIEFuZCBpdCBsb29r
+cyBsaWtlIFJvYiBpcyBhc2tpbmcgeW91IHRvIHVzZSBBVURNSVggaW4gRFQNCj4gYmluZGluZyBk
+b2MuDQoNCk9rLCBJJ2xsIGNoYW5nZSBpbiB0aGUgbmV4dCB2ZXJzaW9uIHRoZSBjb21wYXRpYmxl
+IHN0cmluZyB0byAiYXVkbWl4Ig0KYXMgUm9iIHJlcXVlc3RlZC4NCg0KPiANCj4gPiANCj4gPiA+
+IA0KPiA+ID4gPiANCj4gPiA+ID4gK0RldmljZSBkcml2ZXIgY29uZmlndXJhdGlvbiBleGFtcGxl
+Og0KPiA+ID4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiA+
+ID4gK8KgwqBhbWl4OiBhbWl4QDU5ODQwMDAwIHsNCj4gPiA+ID4gK8KgwqDCoMKgY29tcGF0aWJs
+ZSA9ICJmc2wsaW14OHFtLWFtaXgiOw0KPiA+ID4gPiArwqDCoMKgwqByZWcgPSA8MHgwIDB4NTk4
+NDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gPiArwqDCoMKgwqBjbG9ja3MgPSA8JmNsayBJTVg4
+UVhQX0FVRF9BTUlYX0lQRz47DQo+ID4gPiA+ICvCoMKgwqDCoGNsb2NrLW5hbWVzID0gImlwZyI7
+DQo+ID4gPiA+ICvCoMKgwqDCoHBvd2VyLWRvbWFpbnMgPSA8JnBkX2FtaXg+Ow0KPiA+ID4gPiAr
+wqDCoH07DQo+ID4gPiBGcm9tIHRoZSBkZXNjcmlwdGlvbiBvZiBEVCBhbmQgUk0sIEkgZG9uJ3Qg
+c2VlIGhvdyBpdCBjb25uZWN0cyB0bw0KPiA+ID4gU0FJcy4NCj4gPiA+IA0KPiA+ID4gQXJlIHRo
+ZXkgZml4ZWQgdG8gU0FJMCBhbmQgU0FJMSBpbiBpbXg4cW0/IFdvbmRlcmluZyBpZiBpdCdkIGJl
+DQo+ID4gPiBiZXR0ZXIgdG8gaGF2ZSBzdWNoIGluZm9ybWF0aW9uIGluIHRoZSBkb2MuDQo+ID4g
+UGxlYXNlIGNoZWNrIGNoYXB0ZXIgIjE2LjEuMi4yIEF1ZGlvIE1peGVyIiBpbiBSTTogaXQgaGFz
+IHR3bw0KPiA+IGRlZGljYXRlZA0KPiA+IFNBSSBpbnRlcmZhY2VzLCBTQUk0IGFuZCBTQUk1LiBB
+dWRpbyBNaXhlciBvcGVyYXRlcyBvbiBiaXQgY2xvY2sgb2YNCj4gPiBvbmUNCj4gPiBvZiB0aGVz
+ZSBpbnRlcmZhY2VzLg0KPiBPSy4gSSBhbSBhY3R1YWxseSBtb3JlIHdvbmRlcmluZyBob3cgeW91
+IGNvbm5lY3QgaXQgd2l0aCBTQUkgb24NCj4gdGhlIHNvZnR3YXJlIGxldmVsOiBmb3IgaW14OHFt
+LCBTQUk0LzUgYXJlIHVzZWQsIGJ1dCBsYXRlciBTb0NzDQo+IG1pZ2h0IHVzZSBvdGhlciBTQUkg
+YmxvY2tzLiBTbyBpdCBtaWdodCBiZSBuZWNlc3NhcnkgdG8gaW5kaWNhdGUNCj4gdGhlIGNvbm5l
+Y3Rpb25zIGluIERULg0KDQpTZWUgYmVsb3cuDQoNCj4gDQo+ID4gDQo+ID4gPiANCj4gPiA+ID4g
+DQo+ID4gPiA+ICtzdGF0aWMgaW50IGZzbF9hbWl4X2RhaV9zZXRfZm10KHN0cnVjdCBzbmRfc29j
+X2RhaSAqZGFpLA0KPiA+ID4gPiB1bnNpZ25lZA0KPiA+ID4gPiBpbnQgZm10KQ0KPiA+ID4gPiAr
+ew0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqAvKiBGb3IgcGxheWJhY2sgdGhlIEFNSVggaXMgc2xh
+dmUsIGFuZCBmb3IgcmVjb3JkIGlzDQo+ID4gPiA+IG1hc3Rlcg0KPiA+ID4gPiAqLw0KPiA+ID4g
+PiArwqDCoMKgwqDCoMKgwqBzd2l0Y2ggKGZtdCAmIFNORF9TT0NfREFJRk1UX01BU1RFUl9NQVNL
+KSB7DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgU05EX1NPQ19EQUlGTVRfQ0JNX0NGTToN
+Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgY2FzZSBTTkRfU09DX0RBSUZNVF9DQlNfQ0ZTOg0KPiA+
+ID4gU28gaXQncyB1c2VkIGVpdGhlciBmb3IgcGxheWJhY2sgb3IgY2FwdHVyZSBvbmx5LCBub3Qg
+Ym90aCBhdA0KPiA+ID4gc2FtZQ0KPiA+ID4gdGltZT8NCj4gPiBGcm9tIElQIGZ1bmN0aW9uYWwg
+cGVyc3BlY3RpdmUgQU1JWCBjYXB0dXJlIGlzIHRoZSByZXN1bHQgb2YgQU1JWA0KPiA+IHBsYXli
+YWNrIC0gQU1JWCBvdXRwdXQgcmVwcmVzZW50cyB0aGUgcmVzdWx0aW5nIG1peGVkIGF1ZGlvIHN0
+cmVhbQ0KPiA+IHJvdXRlZCB0byBTQUk0IFJYIHNpZ25hbHMgKGJpdCAmIGZyYW1lIGNsb2NrcyBh
+bmQgZGF0YSkuIFNvIG9uY2Ugd2UNCj4gPiBoYXZlIHBsYXliYWNrIG9uIGVpdGhlciBTQUk0IG9y
+IFNBSTUgKG9yIGJvdGgpIC0gd2UgY2FuIGNhcHR1cmUgdGhlDQo+ID4gQU1JWCBvdXRwdXQgb24g
+U0FJNC4NCj4gQWgsIGl0IHNvdW5kcyBsaWtlIGEgbG9vcGluZyBibG9jayB0aGVuLCByZWNlaXZp
+bmcgYmNsayBmcm9tIFNBSTQNCj4gLS0gc2xhdmUsIGFuZCByb3V0aW5nIHRoZSBiY2xrIGJhY2sg
+dG8gU0FJNCAtLSBtYXN0ZXI7IFNBSTQgd29ya3MNCj4gYXQgQVNZTkMgbW9kZT8NCg0KUmlnaHQu
+IEFuZCB5ZXMsIFNBSTQgd29ya3MgaW4gQVNZTkMgbW9kZS4NCg0KPiANCj4gPiANCj4gPiBJIGd1
+ZXNzIGl0IHdvdWxkIGJlIG5pY2UgdG8gc2VuZCB0aGUgbWFjaGluZSBkcml2ZXIgYXMgcGFydCBv
+ZiB0aGlzDQo+ID4gcGF0Y2hzZXQgYWxzbyAtIGl0IGRlZmluZXMgdHdvIGlucHV0IFNBSSBpbnRl
+cmZhY2VzIGFzIGZyb250ZW5kcw0KPiA+IGFuZA0KPiA+IEFNSVggLSBhcyBiYWNrZW5kLiBVc2Vy
+c3BhY2Ugc2VlcyBvbmx5IHR3byBTQUkgaW50ZXJmYWNlcyBleHBvc2VkLA0KPiA+IGJvdGgNCj4g
+PiBvZiB0aGVtIGhhdmluZyBwbGF5YmFjayBlbmFibGVkLCBhbmQgb25seSBTQUk0IGhhdmluZyBj
+YXB0dXJlDQo+ID4gZW5hYmxlZC4NCj4gRFBDTT8gU28geW91IGFyZSBoYXZpbmcgdGhlIGxpbmtz
+IGluIHRoZSBzb3VuZCBEVCBub2RlcywgaS5lLiB0aGUNCj4gbWFjaGluZSBkcml2ZXI/DQoNClRo
+ZSBtYWNoaW5lIGRyaXZlciBEVCBjb25maWd1cmF0aW9uIGxvb2tzIGxpa2U6DQo9PT09PT09PT09
+PT09PT09DQpzb3VuZC1hbWl4LXNhacKgew0KwqAgY29tcGF0aWJsZSA9ICJmc2wsaW14LWF1ZGlv
+LWFtaXgiOw0KwqAgbW9kZWwgPSAiYW1peC1hdWRpby1zYWkiOw0KwqAgZGFpcyA9IDwmc2FpND4s
+IDwmc2FpNT47DQrCoCBhbWl4LWNvbnRyb2xsZXIgPSA8JmFtaXg+Ow0KfTsNCg0KVGhlIG51bWJl
+ciBvZiBlbGVtZW50cyBpbiAiZGFpcyIgYXJyYXkgaXMgYXQgbGVhc3QgdHdvIGVsZW1lbnRzLCBE
+QVBNDQpyb3V0ZXMgYXJlIGdlbmVyYXRlZCBkeW5hbWljYWxseSBpbiBtYWNoaW5lIGRyaXZlciBh
+dCBwcm9iZSBhcyBmdW5jdGlvbg0Kb2YgbnVtYmVyIG9mIFNBSSBpbnN0YW5jZXMsIHRoZSBjYXB0
+dXJlIGlzIGVuYWJsZWQgb25seSBmb3IgdGhlIGZpcnN0DQpTQUkgaW5zdGFuY2UgaW4gdGhlIGxp
+c3QuDQoNCj4gDQo+IFRoYW5rcw0KPiBOaWNvbGluDQoNClJlZ2FyZHMsDQpWaW9yZWwKX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWls
+aW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2Et
+cHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
