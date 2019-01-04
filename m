@@ -1,93 +1,226 @@
-From: =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
-Subject: [PATCH RFC lora-next 0/5] net: lora: sx130x: USB CDC Picocell Gateway serdev driver via fake DT nodes
-Date: Fri,  4 Jan 2019 12:21:26 +0100
-Message-ID: <20190104112131.14451-1-afaerber@suse.de>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/2] dmaengine: mediatek: Add MediaTek Command-Queue DMA
+ controller for MT6765 SoC
+Date: Fri, 4 Jan 2019 18:08:36 +0530
+Message-ID: <20190104123836.GB13372@vkoul-mobl.Dlink>
+References: <1545916258-18218-1-git-send-email-shun-chih.yu@mediatek.com>
+ <1545916258-18218-3-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1545916258-18218-3-git-send-email-shun-chih.yu@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Frank Kunz <mailinglists@kunz-im-inter.net>, Oliver Neukum <oneukum@suse.com>, Andrew Lunn <andrew@lunn.ch>, Sebastian Reichel <sre@kernel.org>, netdev@vger.kernel.org
+To: shun-chih.yu@mediatek.com
+Cc: Sean Wang <sean.wang@mediatek.com>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Hello everyone,
+On 27-12-18, 21:10, shun-chih.yu@mediatek.com wrote:
+> From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+> 
 
-Following up on a discussion in August 2018 [1] and my ELCE 2018 talk [2, 3],
-I have been searching for an easy way to connect kernel network drivers to
-a family of cards/adapters that expose a /dev/ttyACMx device today and
-with the vendor's reference software would be accessed from userspace.
+This should be v4 of the patch series, why is it not tagged so?
 
-While a tty obviously works technically, it leaves us with per-vendor forks
-of userspace software without a real upstream community (rare code drops).
-It also doesn't allow code sharing with in-kernel protocol stacks or with
-the SPI and UART based drivers we've already been working on.
+> MediaTek Command-Queue DMA controller (CQDMA) on MT6765 SoC is dedicated
+> to memory-to-memory transfer through queue based descriptor management.
 
-One option suggested by Oliver was a line discipline - that would have the
-advantage that it could work with virtually any tty, but on the downside
-it would not work out-of-the-box and would require some userspace tool to
-manually switch the tty into the new mode. Scalability was another concern,
-as was duality of ldisc vs. serdev based implementations.
+Have you tested this with dmatest, if so can you provide results of the
+test as well.
 
-This patchset rather explores the use of Device Tree nodes to load a serdev
-driver on top of the cdc-acm driver. By loading a modified cdc-acm module
-plus this quickly hacked-together usb driver, I could play with it on 4.20
-on an arm based Turris Omnia router with n-fuse mPCIe card, for instance.
+> There are only 3 physical channels inside CQDMA, while the driver is
+> extended to support 32 virtual channels for multiple dma users to issue
+> dma requests onto the CQDMA simultaneously.
+> 
+> Change-Id: I1e8d116c5ecbbc49190ffc925cb59a0d035d886b
 
-I would hope that the shim approach taken here might also work for FTDI
-MPSSE based SPI, encountered by Frank. Not with serdev then, of course,
-but as pure USB interface/device driver piggy-backing on what exists.
+Please remove this from upstream, checkpatch would have warned that!
 
-An unsolved problem is that Semtech in version v0.2.1 switched away from
-their own VID/PID to a generic STM32 VID/PID (due to Windows drivers...),
-with the only distinction in iProduct string that usb_device_id does not
-consider for probing. Since I'm reusing the cdc-acm driver, I can't have
-it fail in probe, as it would then fail when called from my driver, too.
+> Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
+> Reviewed-by: Vinod Koul <vkoul@kernel.org>
 
-Various smaller issues are mentioned in the individual commit messages.
+This is _WRONG_ I have never provided such tag, can you explain why this
+was added without my approval?
 
-This patchset is based on my linux-lora.git lora-next staging branch.
-Please consider taking the small usb patch to aid in further evaluating
-serdev on cdc-acm and in resolving the remaining issues.
-The others are for testing on our staging tree and for discussion.
+>  	  This controller provides the channels which is dedicated to
+>  	  memory-to-memory transfer to offload from CPU through ring-
+>  	  based descriptor management.
+> +
+> +config MTK_CQDMA
+> +	tristate "MediaTek Command-Queue DMA controller support"
 
-Have a lot of fun!
+Am not sure if I asked this earlier but, what is difference with HSDMA?
 
-Cheers,
-Andreas
+> +/**
+> + * struct mtk_cqdma_pchan - The struct holding info describing physical
+> + *                         channel (PC)
+> + * @queue:                 Queue for the CVDs issued to this PC
+> + * @base:                  The mapped register I/O base of this PC
+> + * @irq:                   The IRQ that this PC are using
+> + * @refcnt:                Track how many VCs are using this PC
+> + * @lock:                 Lock protect agaisting multiple VCs access PC
 
-[1] https://marc.info/?l=linux-serial&m=153421371800416&w=2
-[2] https://www.youtube.com/watch?v=Jjel65sZO9M
-[3] https://events.linuxfoundation.org/wp-content/uploads/2017/12/ELCE2018_LoRa_final_Andreas-Farber.pdf
+Please maintain alignment!
 
-Cc: Johan Hovold <johan@kernel.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Frank Kunz <mailinglists@kunz-im-inter.net>
-Cc: Oliver Neukum <oneukum@suse.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Sebastian Reichel <sre@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-lpwan@lists.infradead.org
-Cc: linux-serial@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
-Cc: netdev@vger.kernel.org
+> + */
+> +struct mtk_cqdma_pchan {
+> +	struct list_head queue;
+> +	void __iomem *base;
+> +	u32 irq;
+> +	refcount_t refcnt;
+> +
+> +	/* lock to protect PC */
 
-Andreas Färber (5):
-  net: lora: sx130x: Factor out SPI specific parts
-  net: lora: sx130x: Prepare storing driver-specific data
-  net: lora: sx130x: Add PicoCell serdev driver
-  usb: cdc-acm: Enable serdev support
-  HACK: net: lora: sx130x: Add PicoCell gateway shim for cdc-acm
+This is not required, you already have above !
 
- drivers/net/lora/Makefile        |   4 +
- drivers/net/lora/picogw.c        | 337 ++++++++++++++++++++++++++++
- drivers/net/lora/sx130x.c        | 158 ++++++++-----
- drivers/net/lora/sx130x_picogw.c | 466 +++++++++++++++++++++++++++++++++++++++
- drivers/usb/class/cdc-acm.c      |   8 +-
- include/linux/lora/sx130x.h      |   9 +
- 6 files changed, 926 insertions(+), 56 deletions(-)
- create mode 100644 drivers/net/lora/picogw.c
- create mode 100644 drivers/net/lora/sx130x_picogw.c
+> +	spinlock_t lock;
+> +};
+> +
+> +/**
+> + * struct mtk_cqdma_vchan - The struct holding info describing virtual
+> + *                         channel (VC)
+> + * @vc:                    An instance for struct virt_dma_chan
+> + * @pc:                    The pointer to the underlying PC
+> + * @issue_completion:	   The wait for all issued descriptors completited
+
+typo completited , am not sure why you need this
+
+> +static void mtk_dma_write(struct mtk_cqdma_pchan *pc, u32 reg, u32 val)
+> +{
+> +	writel_relaxed(val, pc->base + reg);
+
+Why is it relaxed one?
+
+> +static void mtk_cqdma_consume_work_queue(struct mtk_cqdma_pchan *pc)
+> +{
+> +	struct mtk_cqdma_vchan *cvc;
+> +	struct mtk_cqdma_vdesc *cvd;
+> +	size_t tlen;
+> +
+> +	/* consume a CVD from PC's queue */
+> +	cvd = list_first_entry_or_null(&pc->queue,
+> +				       struct mtk_cqdma_vdesc, node);
+
+you can use vchan_next_desc() and also remove your own queue as
+virt-desc already implements that logic!
+
+> +	if (unlikely(!cvd))
+> +		return;
+> +
+> +	cvc = to_cqdma_vchan(cvd->ch);
+> +
+> +	tlen = (cvd->len < MTK_CQDMA_MAX_LEN) ? cvd->len : MTK_CQDMA_MAX_LEN;
+> +	cvd->len -= tlen;
+> +	cvd->src += tlen;
+> +	cvd->dest += tlen;
+> +
+> +	/* check whether the CVD completed */
+> +	if (!cvd->len) {
+> +		/* delete CVD from PC's queue */
+> +		list_del(&cvd->node);
+> +
+> +		spin_lock(&cvc->vc.lock);
+> +
+> +		/* add the VD into list desc_completed */
+> +		vchan_cookie_complete(&cvd->vd);
+> +
+> +		/* setup completion if this VC is under synchronization */
+> +		if (cvc->issue_synchronize && !mtk_cqdma_is_vchan_active(cvc)) {
+> +			complete(&cvc->issue_completion);
+> +			cvc->issue_synchronize = false;
+> +		}
+
+why do you need your own completion?
+
+> +
+> +		spin_unlock(&cvc->vc.lock);
+> +	}
+> +
+> +	/* iterate on the next CVD if the current CVD completed */
+> +	if (!cvd->len)
+> +		cvd = list_first_entry_or_null(&pc->queue,
+> +					       struct mtk_cqdma_vdesc, node);
+> +
+> +	/* start the next transaction */
+> +	if (cvd)
+> +		mtk_cqdma_start(pc, cvd);
+
+most of this logic looks reduandant to me. Virt-dma was designed to do
+exactly this, have N physical channels and share with M virt channels.
+Please reuse and remove code from this driver.
+
+> +static struct virt_dma_desc *mtk_cqdma_find_active_desc(struct dma_chan *c,
+> +							dma_cookie_t cookie)
+> +{
+> +	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+> +	struct virt_dma_desc *vd;
+> +	unsigned long flags;
+> +
+> +	spin_lock_irqsave(&cvc->pc->lock, flags);
+> +	list_for_each_entry(vd, &cvc->pc->queue, node)
+> +		if (vd->tx.cookie == cookie) {
+> +			spin_unlock_irqrestore(&cvc->pc->lock, flags);
+> +			return vd;
+> +		}
+> +	spin_unlock_irqrestore(&cvc->pc->lock, flags);
+> +
+> +	list_for_each_entry(vd, &cvc->vc.desc_issued, node)
+> +		if (vd->tx.cookie == cookie)
+> +			return vd;
+
+vchan_find_desc() ??
+
+> +static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
+> +					   dma_cookie_t cookie,
+> +					   struct dma_tx_state *txstate)
+> +{
+> +	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
+> +	struct mtk_cqdma_vdesc *cvd;
+> +	struct virt_dma_desc *vd;
+> +	enum dma_status ret;
+> +	unsigned long flags;
+> +	size_t bytes = 0;
+> +
+> +	ret = dma_cookie_status(c, cookie, txstate);
+> +	if (ret == DMA_COMPLETE || !txstate)
+> +		return ret;
+> +
+> +	spin_lock_irqsave(&cvc->vc.lock, flags);
+> +	vd = mtk_cqdma_find_active_desc(c, cookie);
+> +	spin_unlock_irqrestore(&cvc->vc.lock, flags);
+> +
+> +	if (vd) {
+> +		cvd = to_cqdma_vdesc(vd);
+> +		bytes = cvd->len;
+> +	}
+> +
+> +	dma_set_residue(txstate, bytes);
+
+Have you tested this and are able to report residue properly?
+
+> +static void mtk_cqdma_free_inactive_desc(struct dma_chan *c)
+> +{
+> +	struct virt_dma_chan *vc = to_virt_chan(c);
+> +	unsigned long flags;
+> +	LIST_HEAD(head);
+> +
+> +	/*
+> +	 * set desc_allocated, desc_submitted,
+> +	 * and desc_issued as the candicates to be freed
+> +	 */
+> +	spin_lock_irqsave(&vc->lock, flags);
+> +	list_splice_tail_init(&vc->desc_allocated, &head);
+> +	list_splice_tail_init(&vc->desc_submitted, &head);
+> +	list_splice_tail_init(&vc->desc_issued, &head);
+
+You missed completed and didnt use vchan_get_all_descriptors() ??
+
+
+Looking at the driver, I feel things have been complicated a bit, you
+can reuse more code and routines in vchan layer and remove driver
+handling and make things with less bugs (used more tested generic code)
+and simpler to review ..
+
+Please do so in next rev and tag version properly!
 
 -- 
-2.16.4
+~Vinod
