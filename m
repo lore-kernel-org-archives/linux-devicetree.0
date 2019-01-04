@@ -1,105 +1,58 @@
-From: Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [RFC PATCH] ASoC: fsl: Add Audio Mixer CPU DAI
-	driver
-Date: Fri, 4 Jan 2019 08:52:10 +0000
-Message-ID: <1546591930.30300.13.camel@nxp.com>
-References: <1545150569-14897-1-git-send-email-viorel.suman@nxp.com>
- <CAGoOwPQvc5w05NOVsp6Qw-Ee3CJJCcaU2Dtzwbf+7bUe_kFEbA@mail.gmail.com>
- <1546531006.14398.83.camel@nxp.com>
- <20190103200319.GA2586@Asurada-Nvidia.nvidia.com>
+From: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+Subject: [PATCH 3/4] dts: dps650ab: add dps650ab device tree
+Date: Fri, 4 Jan 2019 17:03:49 +0800
+Message-ID: <9d928198965a0de4207582d7008c8a9916543445.1546591275.git.xiaoting.liu@hxt-semitech.com>
+References: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <alsa-devel-bounces@alsa-project.org>
-In-Reply-To: <20190103200319.GA2586@Asurada-Nvidia.nvidia.com>
-Content-Language: en-US
-Content-ID: <0422201DECF07843838F431D469F3788@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
-List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
-List-Post: <mailto:alsa-devel@alsa-project.org>
-List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
-List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
- <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
-Errors-To: alsa-devel-bounces@alsa-project.org
-Sender: alsa-devel-bounces@alsa-project.org
-To: "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@kernel.org" <timur@kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "tiwai@suse.com" <tiwai@suse.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>, devicetree@vger.kernel.org, shunyong.yang@hxt-semitech.com, linux-aspeed@lists.ozlabs.org, dongsheng.wang@hxt-semitech.com, andrew@aj.id.au, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmljb2xpbiwNCg0KT24gSm8sIDIwMTktMDEtMDMgYXQgMTI6MDMgLTA4MDAsIE5pY29saW4g
-Q2hlbiB3cm90ZToNCj4gSGksDQo+IA0KPiBPbiBUaHUsIEphbiAwMywgMjAxOSBhdCAwMzo1Njo0
-NlBNICswMDAwLCBWaW9yZWwgU3VtYW4gd3JvdGU6DQo+ID4gDQo+ID4gPiANCj4gPiA+ID4gDQo+
-ID4gPiA+IMKgc291bmQvc29jL2ZzbC9mc2xfYW1peC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfCA1NTQNCj4gPiA+ID4gKysrKysrKysrKysr
-KysrKysrKysrDQo+ID4gPiA+IMKgc291bmQvc29jL2ZzbC9mc2xfYW1peC5owqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfCAxMDEgKysrKw0KPiA+
-ID4gSSBhaW1uJ3QgYWdhaW5zdCB0aGUgbmFtaW5nIGhlcmUsIGJ1dCBpdCBzZWVtcyB0byBiZSBB
-VURNSVggaW4NCj4gPiA+IFJNPw0KPiA+ID4gDQo+ID4gPiBXb3VsZCBpdCBiZSBiZXR0ZXIgdG8g
-YWxpZ24gd2l0aCB0aGF0PyBJdCdzIHlvdXIgZGVjaXNpb24gdGhvdWdoLg0KPiA+IFRvIG1lICJB
-VURNSVgiIHNvdW5kcyBtb3JlIGxpa2Ugc29tZSBSVEwgaGlnaCBsZXZlbCBpbnRlZ3JhdGlvbg0K
-PiA+IG1vZHVsZSwNCj4gPiBJIHdvdWxkIHByZWZlciB0byBrZWVwIGl0IGFzIGl0IGlzIGlmIHRo
-ZXJlIGlzIG5vIHN0cm9uZyByZWFzb24gdG/CoA0KPiA+IHJlbmFtZSBpdC4NCj4gV2UgaGFkIEFV
-RE1VWCwgc28gIkFVRE1JWCIgZG9lc24ndCBzb3VuZCBiYWQgdG8gbWUgYXQgYWxsLiBUaGUgb25s
-eQ0KPiByZWFzb24gdGhhdCB3ZSBhcmUgZGlzY3Vzc2luZyB0aGlzIGlzIGJlY2F1c2UgUk0gdXNl
-cyBtb3JlICJBVURNSVgicw0KPiBvdmVyICJhbWl4InMuIEknZCBoYXZlIGNob3NlbiBBVURNSVgg
-aWYgSSB3ZXJlIHlvdSwgeWV0IG5vdCBzdHJvbmdseQ0KPiBhcyBJIHNhaWQuIEFuZCBpdCBsb29r
-cyBsaWtlIFJvYiBpcyBhc2tpbmcgeW91IHRvIHVzZSBBVURNSVggaW4gRFQNCj4gYmluZGluZyBk
-b2MuDQoNCk9rLCBJJ2xsIGNoYW5nZSBpbiB0aGUgbmV4dCB2ZXJzaW9uIHRoZSBjb21wYXRpYmxl
-IHN0cmluZyB0byAiYXVkbWl4Ig0KYXMgUm9iIHJlcXVlc3RlZC4NCg0KPiANCj4gPiANCj4gPiA+
-IA0KPiA+ID4gPiANCj4gPiA+ID4gK0RldmljZSBkcml2ZXIgY29uZmlndXJhdGlvbiBleGFtcGxl
-Og0KPiA+ID4gPiArPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCj4gPiA+
-ID4gK8KgwqBhbWl4OiBhbWl4QDU5ODQwMDAwIHsNCj4gPiA+ID4gK8KgwqDCoMKgY29tcGF0aWJs
-ZSA9ICJmc2wsaW14OHFtLWFtaXgiOw0KPiA+ID4gPiArwqDCoMKgwqByZWcgPSA8MHgwIDB4NTk4
-NDAwMDAgMHgwIDB4MTAwMDA+Ow0KPiA+ID4gPiArwqDCoMKgwqBjbG9ja3MgPSA8JmNsayBJTVg4
-UVhQX0FVRF9BTUlYX0lQRz47DQo+ID4gPiA+ICvCoMKgwqDCoGNsb2NrLW5hbWVzID0gImlwZyI7
-DQo+ID4gPiA+ICvCoMKgwqDCoHBvd2VyLWRvbWFpbnMgPSA8JnBkX2FtaXg+Ow0KPiA+ID4gPiAr
-wqDCoH07DQo+ID4gPiBGcm9tIHRoZSBkZXNjcmlwdGlvbiBvZiBEVCBhbmQgUk0sIEkgZG9uJ3Qg
-c2VlIGhvdyBpdCBjb25uZWN0cyB0bw0KPiA+ID4gU0FJcy4NCj4gPiA+IA0KPiA+ID4gQXJlIHRo
-ZXkgZml4ZWQgdG8gU0FJMCBhbmQgU0FJMSBpbiBpbXg4cW0/IFdvbmRlcmluZyBpZiBpdCdkIGJl
-DQo+ID4gPiBiZXR0ZXIgdG8gaGF2ZSBzdWNoIGluZm9ybWF0aW9uIGluIHRoZSBkb2MuDQo+ID4g
-UGxlYXNlIGNoZWNrIGNoYXB0ZXIgIjE2LjEuMi4yIEF1ZGlvIE1peGVyIiBpbiBSTTogaXQgaGFz
-IHR3bw0KPiA+IGRlZGljYXRlZA0KPiA+IFNBSSBpbnRlcmZhY2VzLCBTQUk0IGFuZCBTQUk1LiBB
-dWRpbyBNaXhlciBvcGVyYXRlcyBvbiBiaXQgY2xvY2sgb2YNCj4gPiBvbmUNCj4gPiBvZiB0aGVz
-ZSBpbnRlcmZhY2VzLg0KPiBPSy4gSSBhbSBhY3R1YWxseSBtb3JlIHdvbmRlcmluZyBob3cgeW91
-IGNvbm5lY3QgaXQgd2l0aCBTQUkgb24NCj4gdGhlIHNvZnR3YXJlIGxldmVsOiBmb3IgaW14OHFt
-LCBTQUk0LzUgYXJlIHVzZWQsIGJ1dCBsYXRlciBTb0NzDQo+IG1pZ2h0IHVzZSBvdGhlciBTQUkg
-YmxvY2tzLiBTbyBpdCBtaWdodCBiZSBuZWNlc3NhcnkgdG8gaW5kaWNhdGUNCj4gdGhlIGNvbm5l
-Y3Rpb25zIGluIERULg0KDQpTZWUgYmVsb3cuDQoNCj4gDQo+ID4gDQo+ID4gPiANCj4gPiA+ID4g
-DQo+ID4gPiA+ICtzdGF0aWMgaW50IGZzbF9hbWl4X2RhaV9zZXRfZm10KHN0cnVjdCBzbmRfc29j
-X2RhaSAqZGFpLA0KPiA+ID4gPiB1bnNpZ25lZA0KPiA+ID4gPiBpbnQgZm10KQ0KPiA+ID4gPiAr
-ew0KPiA+ID4gPiArwqDCoMKgwqDCoMKgwqAvKiBGb3IgcGxheWJhY2sgdGhlIEFNSVggaXMgc2xh
-dmUsIGFuZCBmb3IgcmVjb3JkIGlzDQo+ID4gPiA+IG1hc3Rlcg0KPiA+ID4gPiAqLw0KPiA+ID4g
-PiArwqDCoMKgwqDCoMKgwqBzd2l0Y2ggKGZtdCAmIFNORF9TT0NfREFJRk1UX01BU1RFUl9NQVNL
-KSB7DQo+ID4gPiA+ICvCoMKgwqDCoMKgwqDCoGNhc2UgU05EX1NPQ19EQUlGTVRfQ0JNX0NGTToN
-Cj4gPiA+ID4gK8KgwqDCoMKgwqDCoMKgY2FzZSBTTkRfU09DX0RBSUZNVF9DQlNfQ0ZTOg0KPiA+
-ID4gU28gaXQncyB1c2VkIGVpdGhlciBmb3IgcGxheWJhY2sgb3IgY2FwdHVyZSBvbmx5LCBub3Qg
-Ym90aCBhdA0KPiA+ID4gc2FtZQ0KPiA+ID4gdGltZT8NCj4gPiBGcm9tIElQIGZ1bmN0aW9uYWwg
-cGVyc3BlY3RpdmUgQU1JWCBjYXB0dXJlIGlzIHRoZSByZXN1bHQgb2YgQU1JWA0KPiA+IHBsYXli
-YWNrIC0gQU1JWCBvdXRwdXQgcmVwcmVzZW50cyB0aGUgcmVzdWx0aW5nIG1peGVkIGF1ZGlvIHN0
-cmVhbQ0KPiA+IHJvdXRlZCB0byBTQUk0IFJYIHNpZ25hbHMgKGJpdCAmIGZyYW1lIGNsb2NrcyBh
-bmQgZGF0YSkuIFNvIG9uY2Ugd2UNCj4gPiBoYXZlIHBsYXliYWNrIG9uIGVpdGhlciBTQUk0IG9y
-IFNBSTUgKG9yIGJvdGgpIC0gd2UgY2FuIGNhcHR1cmUgdGhlDQo+ID4gQU1JWCBvdXRwdXQgb24g
-U0FJNC4NCj4gQWgsIGl0IHNvdW5kcyBsaWtlIGEgbG9vcGluZyBibG9jayB0aGVuLCByZWNlaXZp
-bmcgYmNsayBmcm9tIFNBSTQNCj4gLS0gc2xhdmUsIGFuZCByb3V0aW5nIHRoZSBiY2xrIGJhY2sg
-dG8gU0FJNCAtLSBtYXN0ZXI7IFNBSTQgd29ya3MNCj4gYXQgQVNZTkMgbW9kZT8NCg0KUmlnaHQu
-IEFuZCB5ZXMsIFNBSTQgd29ya3MgaW4gQVNZTkMgbW9kZS4NCg0KPiANCj4gPiANCj4gPiBJIGd1
-ZXNzIGl0IHdvdWxkIGJlIG5pY2UgdG8gc2VuZCB0aGUgbWFjaGluZSBkcml2ZXIgYXMgcGFydCBv
-ZiB0aGlzDQo+ID4gcGF0Y2hzZXQgYWxzbyAtIGl0IGRlZmluZXMgdHdvIGlucHV0IFNBSSBpbnRl
-cmZhY2VzIGFzIGZyb250ZW5kcw0KPiA+IGFuZA0KPiA+IEFNSVggLSBhcyBiYWNrZW5kLiBVc2Vy
-c3BhY2Ugc2VlcyBvbmx5IHR3byBTQUkgaW50ZXJmYWNlcyBleHBvc2VkLA0KPiA+IGJvdGgNCj4g
-PiBvZiB0aGVtIGhhdmluZyBwbGF5YmFjayBlbmFibGVkLCBhbmQgb25seSBTQUk0IGhhdmluZyBj
-YXB0dXJlDQo+ID4gZW5hYmxlZC4NCj4gRFBDTT8gU28geW91IGFyZSBoYXZpbmcgdGhlIGxpbmtz
-IGluIHRoZSBzb3VuZCBEVCBub2RlcywgaS5lLiB0aGUNCj4gbWFjaGluZSBkcml2ZXI/DQoNClRo
-ZSBtYWNoaW5lIGRyaXZlciBEVCBjb25maWd1cmF0aW9uIGxvb2tzIGxpa2U6DQo9PT09PT09PT09
-PT09PT09DQpzb3VuZC1hbWl4LXNhacKgew0KwqAgY29tcGF0aWJsZSA9ICJmc2wsaW14LWF1ZGlv
-LWFtaXgiOw0KwqAgbW9kZWwgPSAiYW1peC1hdWRpby1zYWkiOw0KwqAgZGFpcyA9IDwmc2FpND4s
-IDwmc2FpNT47DQrCoCBhbWl4LWNvbnRyb2xsZXIgPSA8JmFtaXg+Ow0KfTsNCg0KVGhlIG51bWJl
-ciBvZiBlbGVtZW50cyBpbiAiZGFpcyIgYXJyYXkgaXMgYXQgbGVhc3QgdHdvIGVsZW1lbnRzLCBE
-QVBNDQpyb3V0ZXMgYXJlIGdlbmVyYXRlZCBkeW5hbWljYWxseSBpbiBtYWNoaW5lIGRyaXZlciBh
-dCBwcm9iZSBhcyBmdW5jdGlvbg0Kb2YgbnVtYmVyIG9mIFNBSSBpbnN0YW5jZXMsIHRoZSBjYXB0
-dXJlIGlzIGVuYWJsZWQgb25seSBmb3IgdGhlIGZpcnN0DQpTQUkgaW5zdGFuY2UgaW4gdGhlIGxp
-c3QuDQoNCj4gDQo+IFRoYW5rcw0KPiBOaWNvbGluDQoNClJlZ2FyZHMsDQpWaW9yZWwKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KQWxzYS1kZXZlbCBtYWls
-aW5nIGxpc3QKQWxzYS1kZXZlbEBhbHNhLXByb2plY3Qub3JnCmh0dHA6Ly9tYWlsbWFuLmFsc2Et
-cHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby9hbHNhLWRldmVsCg==
+Add dps650ab device tree to support power supply dps650ab driver.
+
+Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+---
+ arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
+index bdfd8c9f3a7c..e7e59da6c9ae 100644
+--- a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
++++ b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
+@@ -173,6 +173,16 @@
+                        };
+                };
+        };
++
++       dps650ab@58 {
++               compatible = "dps650ab";
++               reg = <0x58>;
++       };
++
++       dps650ab@59 {
++               compatible = "dps650ab";
++               reg = <0x59>;
++       };
+ };
+
+ &i2c9 {
+--
+1.8.3.1
+
+
+
+
+This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
