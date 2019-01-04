@@ -1,126 +1,67 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH 1/4] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Fri, 4 Jan 2019 11:00:07 +0800
-Message-ID: <1546570807.585.31.camel@mhfsdcap03>
-References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
-         <1545896066-897-2-git-send-email-min.guo@mediatek.com>
-         <20190103221414.GA14639@bogus>
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+Subject: [PATCH v2,
+ 1/3] media: dt-bindings: media: add 'assigned-clocks' to vcodec
+ examples
+Date: Fri, 4 Jan 2019 11:05:59 +0800
+Message-ID: <1546571161-11470-1-git-send-email-yunfei.dong@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103221414.GA14639@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yunfei Dong <yunfei.dong@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-01-03 at 16:14 -0600, Rob Herring wrote:
-> On Thu, Dec 27, 2018 at 03:34:23PM +0800, min.guo@mediatek.com wrote:
-> > From: Min Guo <min.guo@mediatek.com>
-> > 
-> > This adds support for MediaTek musb controller in
-> > host, peripheral and otg mode
-> > 
-> > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > ---
-> >  .../devicetree/bindings/usb/mediatek,musb.txt      | 49 ++++++++++++++++++++++
-> >  1 file changed, 49 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > new file mode 100644
-> > index 0000000..e899c9b
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > @@ -0,0 +1,49 @@
-> > +MediaTek musb DRC/OTG controller
-> > +-------------------------------------------
-> > +
-> > +Required properties:
-> > + - compatible      : should be "mediatek,<soc-model>-musb",
-> > +   "mediatek,mtk-musb", soc-model is the name of SoC, such as
-> > +   mt2701, when using "mediatek,mtk-musb" compatible string, you
-> > +   need SoC specific ones in addition, one of:
-> > +   - "mediatek,mt2701-musb"
-> 
-> This isn't very clear. Just drop the <soc-model and enumerate the SoCs:
-> 
-> compatible: should be one of:
->     "mediatek,mt2701-musb"
->     ...
->   followed by "mediatek,mtk-musb"
-I will modify it in the next patch.
+Fix MTK binding document for MT8173 dtsi changed in order
+to use standard CCF interface.
+MT8173 SoC from Mediatek.
 
-> > + - reg             : specifies physical base address and size of
-> > +   the registers
-> > + - interrupts      : interrupt used by musb controller
-> > + - interrupt-names : must be "mc"
-> 
-> -names is pointless when there is only one.
-The MUSB core driver has two interrupts, one is for MAC, another for DMA,
-but on MTK platform, there is only a MAC interrupt, here following the binding
-of MUSB core driver.
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
+---
+change note:
+v2: modify subject
+---
+ .../devicetree/bindings/media/mediatek-vcodec.txt   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-> > + - phys            : PHY specifier for the OTG phy
-> > + - phy-names       : should be "usb2-phy"
-> 
-> Same here.
-I will modify it in the next patch.
-
-> > + - dr_mode         : should be one of "host", "peripheral" or "otg",
-> > +   refer to usb/generic.txt
-> > + - clocks          : a list of phandle + clock-specifier pairs, one for
-> > +   each entry in clock-names
-> > + - clock-names     : must contain "main","mcu","univpll"
-> 
-> space needed after each comma.
-I will modify it in the next patch.
-
-> > +   for clocks of controller
-> > +
-> > +Optional properties:
-> > + - extcon : external connector for VBUS and IDPIN changes detection,
-> > +   needed when supports dual-role mode.
-> 
-> Don't use extcon for new bindings. The usb-connector binding should be 
-> used instead.
-This is used to detect the changes of the IDPIN and VBUS, the change
-events are provided by other drivers, such as extcon-usb-gpio.c, and
-then switch MUSB controller to host or device mode, but the
-usb-connector can't detect these changes.
-
-> > + - vbus-supply : reference to the VBUS regulator, needed when supports
-> > +   dual-role mode.
-> 
-> The controller is powered from Vbus? Probably not. This belongs in the 
-> connector or maybe the phy (if the phy is powered from Vbus).
-The Vbus is used to provide 5V voltage to the connected device when the
-controller works as host mode.
-
-> > + - power-domains   : a phandle to USB power domain node to control USB's
-> > +   MTCMOS
-> > +
-> > +Example:
-> > +
-> > +usb2: usb@11200000 {
-> > +	compatible = "mediatek,mt2701-musb";
-> > +		"mediatek,mtk-musb";
-> > +	reg = <0 0x11200000 0 0x1000>;
-> > +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-> > +	interrupt-names = "mc";
-> > +	phys = <&u2port2 PHY_TYPE_USB2>;
-> > +	phy-names = "usb2-phy";
-> > +	vbus-supply = <&usb_vbus>;
-> > +	extcon = <&extcon_usb>;
-> > +	dr_mode = "otg";
-> > +	clocks = <&pericfg CLK_PERI_USB0>,
-> > +		 <&pericfg CLK_PERI_USB0_MCU>,
-> > +		 <&pericfg CLK_PERI_USB_SLV>;
-> > +	clock-names = "main","mcu","univpll";
-> > +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> > +};
-> > -- 
-> > 1.9.1
-> > 
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+index 2a615d84a682..b6b5dde6abd8 100644
+--- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
++++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+@@ -66,6 +66,15 @@ vcodec_dec: vcodec@16000000 {
+                   "vencpll",
+                   "venc_lt_sel",
+                   "vdec_bus_clk_src";
++    assigned-clocks = <&topckgen CLK_TOP_VENC_LT_SEL>,
++                      <&topckgen CLK_TOP_CCI400_SEL>,
++                      <&topckgen CLK_TOP_VDEC_SEL>,
++                      <&apmixedsys CLK_APMIXED_VCODECPLL>,
++                      <&apmixedsys CLK_APMIXED_VENCPLL>;
++    assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL_370P5>,
++                             <&topckgen CLK_TOP_UNIVPLL_D2>,
++                             <&topckgen CLK_TOP_VCODECPLL>;
++    assigned-clock-rates = <0>, <0>, <0>, <1482000000>, <800000000>;
+   };
+ 
+   vcodec_enc: vcodec@18002000 {
+@@ -105,4 +114,8 @@ vcodec_dec: vcodec@16000000 {
+                   "venc_sel",
+                   "venc_lt_sel_src",
+                   "venc_lt_sel";
++    assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
++                      <&topckgen CLK_TOP_VENC_LT_SEL>;
++    assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
++                             <&topckgen CLK_TOP_UNIVPLL1_D2>;
+   };
+-- 
+2.19.1
