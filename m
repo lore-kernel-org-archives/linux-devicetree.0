@@ -1,32 +1,38 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 3/3] drm/panel: simple: Add Evervision VGG804821 pannel
- support
-Date: Fri, 4 Jan 2019 17:40:38 +0100
-Message-ID: <20190104164038.GB10538@ravnborg.org>
-References: <20190103182658.16377-1-m.felsch@pengutronix.de>
- <20190103182658.16377-4-m.felsch@pengutronix.de>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190103182658.16377-4-m.felsch@pengutronix.de>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Marco Felsch <m.felsch@pengutronix.de>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, thierry.reding@gmail.com, kernel@pengutronix.de
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: [PATCH v1 0/6] MSM8998 basic USB support
+Date: Fri,  4 Jan 2019 09:49:12 -0700
+Message-ID: <1546620552-2312-1-git-send-email-jhugo@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWFyY28uCgpJbiAkc3ViamVjdCBwYW5uZWwgPT4gcGFuZWwKCk90aGVyIHRoYW4gdGhhdCwg
-Ym9udXMgcG9pbnRzIGZvciBzcGVjaWZ5aW5nCmFsbCBvZiAuZmxhZ3MsIC5idXNfZm9ybWF0IGFu
-ZCAuYnVzX2ZsYWdzCgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+This series provides basic USB support for MSM8998.  Currently missing is
+wiring up the Type-C detection logic so that the controller can correctly
+switch between host and peripheral modes.  Work to implement that is
+ongoing, and expected to appear soon in followup patches.
+
+Jeffrey Hugo (6):
+  clk: qcom: Add missing freq for usb30_master_clk on 8998
+  clk: qcom: Skip halt checks on gcc_usb3_phy_pipe_clk for 8998
+  phy: qcom-qusb2: Add QUSB2 PHY support for msm8998
+  phy: qcom-qmp: Add QMP V3 USB3 PHY support for msm8998
+  usb: dwc3: qcom: Add support for MSM8998
+  arm64: dts: qcom: msm8998: Add USB-related nodes
+
+ .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   5 +
+ .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |   1 +
+ .../devicetree/bindings/usb/qcom,dwc3.txt          |   1 +
+ arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi          |  22 ++++
+ arch/arm64/boot/dts/qcom/msm8998.dtsi              |  90 +++++++++++++
+ drivers/clk/qcom/gcc-msm8998.c                     |   3 +-
+ drivers/phy/qualcomm/phy-qcom-qmp.c                | 142 +++++++++++++++++++++
+ drivers/phy/qualcomm/phy-qcom-qmp.h                |   4 +
+ drivers/phy/qualcomm/phy-qcom-qusb2.c              |  41 ++++++
+ drivers/usb/dwc3/dwc3-qcom.c                       |   1 +
+ 10 files changed, 309 insertions(+), 1 deletion(-)
+
+-- 
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
