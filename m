@@ -1,69 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/4] dt-bindings: usb: musb: Add support for MediaTek musb controller
-Date: Fri, 4 Jan 2019 10:10:09 -0600
-Message-ID: <CAL_JsqK5x8=b6gXfBStZwHbq4zvuCuHCLAwsSqFEMJtSffC3BQ@mail.gmail.com>
-References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
- <1545896066-897-2-git-send-email-min.guo@mediatek.com> <20190103221414.GA14639@bogus>
- <1546570807.585.31.camel@mhfsdcap03>
+From: Daniel Baluta <daniel.baluta@nxp.com>
+Subject: [PATCH 0/2]  Add support for AK4497 codec
+Date: Fri, 4 Jan 2019 16:27:03 +0000
+Message-ID: <20190104162649.13103-1-daniel.baluta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546570807.585.31.camel@mhfsdcap03>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Min Guo <min.guo@mediatek.com>
-Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
+To: "broonie@kernel.org" <broonie@kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>
+Cc: Cosmin Samoila <cosmin.samoila@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "daniel.baluta@gmail.com" <daniel.baluta@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 3, 2019 at 9:00 PM Min Guo <min.guo@mediatek.com> wrote:
->
-> On Thu, 2019-01-03 at 16:14 -0600, Rob Herring wrote:
-> > On Thu, Dec 27, 2018 at 03:34:23PM +0800, min.guo@mediatek.com wrote:
-> > > From: Min Guo <min.guo@mediatek.com>
-> > >
-> > > This adds support for MediaTek musb controller in
-> > > host, peripheral and otg mode
+AK4497 is almost register compatible with AK4458. Almost means that
+AK4497 has an extra "debug" register that we currently do not use.
 
-[...]
+Daniel Baluta (2):
+  ASoC: ak4458: Add support for AK4497
+  ASoC: dt-bindings: Document support for ak4497
 
-> > > + - interrupts      : interrupt used by musb controller
-> > > + - interrupt-names : must be "mc"
-> >
-> > -names is pointless when there is only one.
-> The MUSB core driver has two interrupts, one is for MAC, another for DMA,
-> but on MTK platform, there is only a MAC interrupt, here following the binding
-> of MUSB core driver.
+ .../devicetree/bindings/sound/ak4458.txt      |  2 +-
+ sound/soc/codecs/ak4458.c                     | 79 ++++++++++++++++++-
+ 2 files changed, 77 insertions(+), 4 deletions(-)
 
-You should probably be listing the same interrupt number twice if 2
-interrupts are combined.
-
-> > > +Optional properties:
-> > > + - extcon : external connector for VBUS and IDPIN changes detection,
-> > > +   needed when supports dual-role mode.
-> >
-> > Don't use extcon for new bindings. The usb-connector binding should be
-> > used instead.
-> This is used to detect the changes of the IDPIN and VBUS, the change
-> events are provided by other drivers, such as extcon-usb-gpio.c, and
-> then switch MUSB controller to host or device mode, but the
-> usb-connector can't detect these changes.
-
-To repeat, do not use extcon binding for new bindings. It is poorly
-designed as it reflects extcon driver needs, not a description of the
-hardware. If you have ID on GPIO, then that belongs in a usb-connector
-node because that GPIO goes to the connector. For Vbus, you should
-have a vbus-supply in the connector and use a gpio-regulator if it is
-GPIO controlled.
-
-> > > + - vbus-supply : reference to the VBUS regulator, needed when supports
-> > > +   dual-role mode.
-> >
-> > The controller is powered from Vbus? Probably not. This belongs in the
-> > connector or maybe the phy (if the phy is powered from Vbus).
-> The Vbus is used to provide 5V voltage to the connected device when the
-> controller works as host mode.
-
-I know what Vbus is. Unless Vbus is providing power to the host
-controller, putting the Vbus supply in the controller node is not a
-accurate representation of the hardware.
-
-Rob
+--=20
+2.17.1
