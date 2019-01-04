@@ -1,98 +1,177 @@
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Subject: [PATCH v3 4/4] staging: mt7621-pci-phy: dt-bindings: add bindings for
- Mediatek MT7621 Pcie PHY
-Date: Fri,  4 Jan 2019 08:08:24 +0100
-Message-ID: <20190104070824.25210-5-sergio.paracuellos@gmail.com>
-References: <20190104070824.25210-1-sergio.paracuellos@gmail.com>
+From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+Subject: Re: [PATCH v5 5/6] dt-bindings: pinctrl: mt8183: add binding
+ document
+Date: Fri, 4 Jan 2019 15:08:43 +0800
+Message-ID: <1546585723.21915.7.camel@mhfsdcap03>
+References: <1545984581-25843-1-git-send-email-erin.lo@mediatek.com>
+         <1545984581-25843-6-git-send-email-erin.lo@mediatek.com>
+         <20181228220405.GA8739@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190104070824.25210-1-sergio.paracuellos@gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: gregkh@linuxfoundation.org
-Cc: neil@brown.name, Device Tree mailing list <devicetree@vger.kernel.org>, driverdev-devel@linuxdriverproject.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181228220405.GA8739@bogus>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Erin Lo =?UTF-8?Q?=28=E7=BE=85=E9=9B=85=E9=BD=A1=29?= <erin.lo@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, srv_heupstream <srv_heupstream@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Yingjoe
 List-Id: devicetree@vger.kernel.org
 
-Add bindings documentation for PCie PHY of Mediatek MT7621.
-This file will be moved into its appropiate documentation bindings'place
-when this driver is mainlined.
+On Sat, 2018-12-29 at 06:04 +0800, Rob Herring wrote:
+> On Fri, Dec 28, 2018 at 04:09:40PM +0800, Erin Lo wrote:
+> > From: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > 
+> > The commit adds mt8183 compatible node in binding document.
+> > 
+> > Signed-off-by: Zhiyong Tao <zhiyong.tao@mediatek.com>
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt | 110 +++++++++++++++++++++
+> >  1 file changed, 110 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > new file mode 100644
+> > index 0000000..7b5285e
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+> > @@ -0,0 +1,110 @@
+> > +* Mediatek MT8183 Pin Controller
+> > +
+> > +The Mediatek's Pin controller is used to control SoC pins.
+> > +
+> > +Required properties:
+> > +- compatible: value should be one of the following.
+> > +	"mediatek,mt8183-pinctrl", compatible with mt8183 pinctrl.
+> > +- gpio-controller : Marks the device node as a gpio controller.
+> > +- #gpio-cells: number of cells in GPIO specifier. Since the generic GPIO
+> > +  binding is used, the amount of cells must be specified as 2. See the below
+> > +  mentioned gpio binding representation for description of particular cells.
+> > +- gpio-ranges : gpio valid number range.
+> > +
+> > +	Eg: <&pio 6 0>
+> > +	<[phandle of the gpio controller node]
+> > +	[line number within the gpio controller]
+> > +	[flags]>
+> > +
+> > +	Values for gpio specifier:
+> > +	- Line number: is a value between 0 to 202.
+> > +	- Flags:  bit field of flags, as defined in <dt-bindings/gpio/gpio.h>.
+> > +            Only the following flags are supported:
+> > +            0 - GPIO_ACTIVE_HIGH
+> > +            1 - GPIO_ACTIVE_LOW
+> > +
+> > +Optional properties:
+> > +- reg: physicall address base for gpio base registers.
+> 
+> s/physicall/physical/
+> 
+> reg should never be optional. 
+> 
+> Need to say how many reg entries.
 
-CC: Device Tree mailing list <devicetree@vger.kernel.org>
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
----
- .../mediatek,mt7621-pci-phy.txt               | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt
+==> Thanks for your suggestion. We will change 'reg' to Required
+properties and add the reg entries in next version.
+> 
+> > +- reg-names: gpio base registers name.
+> 
+> Need to say what are the names. However, I don't find the names in the 
+> example all that useful, so I'd just drop it.
 
-diff --git a/drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt b/drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt
-new file mode 100644
-index 000000000000..33a8a698bdd0
---- /dev/null
-+++ b/drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt
-@@ -0,0 +1,54 @@
-+Mediatek Mt7621 PCIe PHY
-+
-+Required properties:
-+- compatible: must be "mediatek,mt7621-pci-phy"
-+- reg: base address and length of the PCIe PHY block
-+- #address-cells: must be 1
-+- #size-cells: must be 0
-+
-+Each PCIe PHY should be represented by a child node
-+
-+Required properties For the child node:
-+- reg: the PHY ID
-+0 - PCIe RC 0
-+1 - PCIe RC 1
-+- #phy-cells: must be 0
-+
-+Example:
-+	pcie0_phy: pcie-phy@1a149000 {
-+		compatible = "mediatek,mt7621-pci-phy";
-+		reg = <0x1a149000 0x0700>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pcie0_port: pcie-phy@0 {
-+			reg = <0>;
-+			#phy-cells = <0>;
-+		};
-+
-+		pcie1_port: pcie-phy@1 {
-+			reg = <1>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	pcie1_phy: pcie-phy@1a14a000 {
-+		compatible = "mediatek,mt7621-pci-phy";
-+		reg = <0x1a14a000 0x0700>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pcie2_port: pcie-phy@0 {
-+			reg = <0>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	/* users of the PCIe phy */
-+
-+	pcie: pcie@1e140000 {
-+		...
-+		...
-+		phys = <&pcie0_port>, <&pcie1_port>, <&pcie2_port>;
-+		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-+	};
-\ No newline at end of file
--- 
-2.19.1
+==> we will add the reg-names in next version.
+They are used in the sample code, such as:
+> +		reg-names = "iocfg0", "iocfg1", "iocfg2",
+> > +			    "iocfg3", "iocfg4", "iocfg5",
+> > +			    "iocfg6", "iocfg7", "iocfg8";
+
+> 
+> > +- interrupt-controller: Marks the device node as an interrupt controller
+> > +- #interrupt-cells: Should be two.
+> > +- interrupts : The interrupt outputs from the controller.
+> > +
+> > +Please refer to pinctrl-bindings.txt in this directory for details of the
+> > +common pinctrl bindings used by client devices.
+> > +
+> > +Subnode format
+> > +A pinctrl node should contain at least one subnodes representing the
+> > +pinctrl groups available on the machine. Each subnode will list the
+> > +pins it needs, and how they should be configured, with regard to muxer
+> > +configuration, pullups, drive strength, input enable/disable and input schmitt.
+> > +
+> > +    node {
+> > +	pinmux = <PIN_NUMBER_PINMUX>;
+> > +	GENERIC_PINCONFIG;
+> > +    };
+> > +
+> > +Required properties:
+> > +- pinmux: integer array, represents gpio pin number and mux setting.
+> > +    Supported pin number and mux varies for different SoCs, and are defined
+> > +    as macros in boot/dts/<soc>-pinfunc.h directly.
+> > +
+> > +Optional properties:
+> > +- GENERIC_PINCONFIG: is the generic pinconfig options to use, bias-disable,
+> > +    bias-pull-down, bias-pull-up, input-enable, input-disable, output-low, output-high,
+> > +    input-schmitt-enable, input-schmitt-disable and drive-strength are valid.
+> > +
+> > +    Some special pins have extra pull up strength, there are R0 and R1 pull-up
+> > +    resistors available, but for user, it's only need to set R1R0 as 00, 01, 10 or 11.
+> > +    So when config mediatek,pull-up-adv or mediatek,pull-down-adv,
+> > +    it support arguments for those special pins.
+> > +
+> > +    When config drive-strength, it can support some arguments, such as
+> > +    MTK_DRIVE_4mA, MTK_DRIVE_6mA, etc. See dt-bindings/pinctrl/mt65xx.h.
+> > +
+> > +Examples:
+> > +
+> > +#include "mt8183-pinfunc.h"
+> > +
+> > +...
+> > +{
+> > +	pio: pinctrl@10005000 {
+> > +		compatible = "mediatek,mt8183-pinctrl";
+> > +		reg = <0 0x10005000 0 0x1000>,
+> > +		      <0 0x11F20000 0 0x1000>,
+> > +		      <0 0x11E80000 0 0x1000>,
+> > +		      <0 0x11E70000 0 0x1000>,
+> > +		      <0 0x11E90000 0 0x1000>,
+> > +		      <0 0x11D30000 0 0x1000>,
+> > +		      <0 0x11D20000 0 0x1000>,
+> > +		      <0 0x11C50000 0 0x1000>,
+> > +		      <0 0x11F30000 0 0x1000>;
+> > +		reg-names = "iocfg0", "iocfg1", "iocfg2",
+> > +			    "iocfg3", "iocfg4", "iocfg5",
+> > +			    "iocfg6", "iocfg7", "iocfg8";
+> > +		gpio-controller;
+> > +		#gpio-cells = <2>;
+> > +		gpio-ranges = <&pio 0 0 192>;
+> > +		interrupt-controller;
+> > +		interrupts = <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>;
+> > +		interrupt-parent = <&gic>;
+> > +		#interrupt-cells = <2>;
+> > +
+> > +		i2c0_pins_a: i2c0@0 {
+> 
+> unit-address without reg property is not valid.
+
+==> we will change "i2c0_pins_a: i2c0@0" to "i2c0_pins_a: i2c0" in the
+next version.
+> 
+> > +			pins1 {
+> > +				pinmux = <PINMUX_GPIO48__FUNC_SCL5>,
+> > +					 <PINMUX_GPIO49__FUNC_SDA5>;
+> > +				mediatek,pull-up-adv = <11>;
+> > +			};
+> > +		};
+> > +
+> > +		i2c1_pins_a: i2c1@0 {
+> > +			pins {
+> > +				pinmux = <PINMUX_GPIO50__FUNC_SCL3>,
+> > +					 <PINMUX_GPIO51__FUNC_SDA3>;
+> > +				mediatek,pull-down-adv = <10>;
+> > +			};
+> > +		};
+> > +		...
+> > +	};
+> > +};
+> > -- 
+> > 1.9.1
+> > 
