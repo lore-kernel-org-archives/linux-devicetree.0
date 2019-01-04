@@ -1,62 +1,114 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Fri, 4 Jan 2019 22:37:58 +0100
-Message-ID: <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
-References: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
- <20181219201047.GA23448@amd> <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
- <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
- <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
- <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
- <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v2 1/4] dt-bindings: power: Add ZynqMP power domain bindings
+Date: Fri, 4 Jan 2019 13:56:19 -0800
+Message-ID: <1546638982-12954-2-git-send-email-jollys@xilinx.com>
+References: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190104201256.GA2931@amd>
-Content-Language: en-US
+In-Reply-To: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/4/19 9:12 PM, Pavel Machek wrote:
-> Hi!
-> 
->>> I suppose if one would just make it an array of values (separated by
->>> space) and then one file with string array of color element names and on
->>> file with maximum value array it could be within those words.
->>>
->>> The it would be something like:
->>>
->>> $ echo "23 54 32" > color
->>
->> Go ahead, but first convince Pavel, and then Greg :-)
->>
->> I'd personally would not have much against, especially that the
->> list of values will not grow for that one like in case of old patch set
->> [0] where Pavel and Greg thwarted my similar attempt.
-> 
-> Oh, you can get this past Pavel (and probably Greg) -- if you have a
-> good reason. Performance is _not_ a good reason. You don't need to
-> change LED color 50000 times a second.
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-We would need to do some profiling here to check if the problem exists.
+Add documentation to describe ZynqMP power domain bindings.
 
-But, aside from that hypothetic issue, we need a solution for
-LEDn_BRIGHTNESS feature of lp5024, i.e. setting color intensity
-via a single register write. How would you propose to address that?
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ .../bindings/power/xlnx,zynqmp-genpd.txt           | 34 +++++++++++++++++++
+ include/dt-bindings/power/xlnx-zynqmp-power.h      | 39 ++++++++++++++++++++++
+ 2 files changed, 73 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+ create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
 
-> If you can demonstrate a reasonable design, where user selects color
-> from well-known RGB pallete and either kernel or library+kernel acts
-> to set that color on the LED, we can talk.
-> 
-> When user asks for white, it has to be white. Exact color temperature
-> does not matter. When user asks for pink, it has to be pink. Again,
-> exact color does not matter; different monitors display slightly
-> different colors, too
+diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+new file mode 100644
+index 0000000..3c7f237
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+@@ -0,0 +1,34 @@
++-----------------------------------------------------------
++Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
++-----------------------------------------------------------
++The binding for zynqmp-power-controller follow the common
++generic PM domain binding[1].
++
++[1] Documentation/devicetree/bindings/power/power_domain.txt
++
++== Zynq MPSoC Generic PM Domain Node ==
++
++Required property:
++ - Below property should be in zynqmp-firmware node.
++ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
++
++Power domain ID indexes are mentioned in
++include/dt-bindings/power/xlnx-zynqmp-power.h.
++
++-------
++Example
++-------
++
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		...
++		#power-domain-cells = <1>;
++		...
++	};
++};
++
++sata {
++	...
++	power-domains = <&zynqmp_firmware 2>;
++	...
++};
+diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
+new file mode 100644
+index 0000000..1bc9636
+--- /dev/null
++++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
+@@ -0,0 +1,39 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (C) 2018 Xilinx, Inc.
++ */
++
++#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
++#define _DT_BINDINGS_ZYNQMP_POWER_H
++
++#define		PD_USB_0	0
++#define		PD_USB_1	1
++#define		PD_SATA		2
++#define		PD_SPI_0	3
++#define		PD_SPI_1	4
++#define		PD_UART_0	5
++#define		PD_UART_1	6
++#define		PD_ETH_0	7
++#define		PD_ETH_1	8
++#define		PD_ETH_2	9
++#define		PD_ETH_3	10
++#define		PD_I2C_0	11
++#define		PD_I2C_1	12
++#define		PD_DP		13
++#define		PD_GDMA		14
++#define		PD_ADMA		15
++#define		PD_TTC_0	16
++#define		PD_TTC_1	17
++#define		PD_TTC_2	18
++#define		PD_TTC_3	19
++#define		PD_SD_0		20
++#define		PD_SD_1		21
++#define		PD_NAND		22
++#define		PD_QSPI		23
++#define		PD_GPIO		24
++#define		PD_CAN_0	25
++#define		PD_CAN_1	26
++#define		PD_PCIE		27
++#define		PD_GPU		28
++
++#endif
 -- 
-Best regards,
-Jacek Anaszewski
+2.7.4
