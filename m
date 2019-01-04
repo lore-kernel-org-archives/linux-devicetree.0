@@ -1,85 +1,59 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v2 0/4] dt-bindings: Firmware node binding for ZynqMP core
-Date: Fri, 4 Jan 2019 13:56:18 -0800
-Message-ID: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
+Subject: [PATCH v2 2/4] dt-bindings: soc: Add ZynqMP PM bindings
+Date: Fri, 4 Jan 2019 13:56:20 -0800
+Message-ID: <1546638982-12954-3-git-send-email-jollys@xilinx.com>
+References: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Base firmware node and clock child node binding are part of mainline kernel. This patchset adds documentation to describe rest of the firmware child node bindings. 
-Complete firmware DT node example is shown below for ease of understanding:
+From: Rajan Vaja <rajan.vaja@xilinx.com>
 
-firmware {
-	zynqmp_firmware: zynqmp-firmware {
-		compatible = "xlnx,zynqmp-firmware";
-		method = "smc";
-		#power-domain-cells = <1>;
-		#reset-cells = <1>;
+Add documentation to describe Xilinx ZynqMP power management
+bindings.
 
-		zynqmp_clk: clock-controller {
-			#clock-cells = <1>;
-			compatible = "xlnx,zynqmp-clk";
-			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
-			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
-		};
-
-		zynqmp_power: zynqmp-power {
-			compatible = "xlnx,zynqmp-power";
-			interrupts = <0 35 4>;
-		};
-		
-		pinctrl0: pinctrl@ff180000 {
-			compatible = "xlnx,zynqmp-pinctrl";
-
-			pinctrl_uart1_default: uart1-default {
-				mux {
-					groups = "uart0_4_grp";
-					function = "uart0";
-				};
-	
-				conf {
-					groups = "uart0_4_grp";
-					slew-rate = <SLEW_RATE_SLOW>;
-					io-standard = <IO_STANDARD_LVCMOS18>;
-				};
-	
-				conf-rx {
-					pins = "MIO18";
-					bias-high-impedance;
-				};
-	
-				conf-tx {
-					pins = "MIO19";
-					bias-disable;
-					schmitt-cmos = <PIN_INPUT_TYPE_CMOS>;
-				};
-			};
-		};
-	};
-};
-Nava kishore Manne (1):
-  dt-bindings: reset: Add bindings for ZynqMP reset driver
-
-Rajan Vaja (3):
-  dt-bindings: power: Add ZynqMP power domain bindings
-  dt-bindings: soc: Add ZynqMP PM bindings
-  dt-bindings: pinctrl: Add ZynqMP pin controller bindings
-
- .../bindings/pinctrl/xlnx,zynqmp-pinctrl.txt       | 275 +++++++++++++++++++++
- .../bindings/power/reset/xlnx,zynqmp-power.txt     |  25 ++
- .../bindings/power/xlnx,zynqmp-genpd.txt           |  34 +++
- .../bindings/reset/xlnx,zynqmp-reset.txt           | 148 +++++++++++
- include/dt-bindings/power/xlnx-zynqmp-power.h      |  39 +++
- 5 files changed, 521 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.txt
+Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+---
+ .../bindings/power/reset/xlnx,zynqmp-power.txt     | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
 
+diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+new file mode 100644
+index 0000000..d366f1e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+@@ -0,0 +1,25 @@
++--------------------------------------------------------------------
++Device Tree Bindings for the Xilinx Zynq MPSoC Power Management
++--------------------------------------------------------------------
++The zynqmp-power node describes the power management configurations.
++It will control remote suspend/shutdown interfaces.
++
++Required properties:
++ - compatible:		Must contain:	"xlnx,zynqmp-power"
++ - interrupts:		Interrupt specifier
++
++-------
++Example
++-------
++
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		compatible = "xlnx,zynqmp-firmware";
++		method = "smc";
++
++		zynqmp_power: zynqmp-power {
++			compatible = "xlnx,zynqmp-power";
++			interrupts = <0 35 4>;
++		};
++	};
++};
 -- 
 2.7.4
