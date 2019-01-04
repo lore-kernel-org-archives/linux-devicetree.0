@@ -1,160 +1,288 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v1 6/6] arm64: dts: qcom: msm8998: Add USB-related nodes
-Date: Fri,  4 Jan 2019 09:51:29 -0700
-Message-ID: <1546620689-2578-1-git-send-email-jhugo@codeaurora.org>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v4 4/4] PCI: imx6: Add support for i.MX8MQ
+Date: Fri,  4 Jan 2019 08:53:35 -0800
+Message-ID: <20190104165335.13205-5-andrew.smirnov@gmail.com>
+References: <20190104165335.13205-1-andrew.smirnov@gmail.com>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190104165335.13205-1-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org
-Cc: bjorn.andersson@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for USB and related PHYs.
+Add code needed to support i.MX8MQ variant.
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: Leonard Crestez <leonard.crestez@nxp.com>
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+Cc: Richard Zhu <hongxing.zhu@nxp.com>
+Cc: Rob Herring <robh@kernel.org>,
+Cc: devicetree@vger.kernel.org,
+Cc: linux-imx@nxp.com
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 ---
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 22 ++++++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi     | 90 +++++++++++++++++++++++++++++++
- 2 files changed, 112 insertions(+)
+ .../bindings/pci/fsl,imx6q-pcie.txt           |  3 +-
+ drivers/pci/controller/dwc/Kconfig            |  4 +-
+ drivers/pci/controller/dwc/pci-imx6.c         | 77 ++++++++++++++++++-
+ 3 files changed, 79 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index 50e9033..dc703fc 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -257,3 +257,25 @@
- 	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
- 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
+diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+index d514c1f2365f..920ca93870a8 100644
+--- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
++++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+@@ -9,6 +9,7 @@ Required properties:
+ 	- "fsl,imx6sx-pcie",
+ 	- "fsl,imx6qp-pcie"
+ 	- "fsl,imx7d-pcie"
++	- "fsl,imx8mq-pcie"
+ - reg: base address and length of the PCIe controller
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
+@@ -45,7 +46,7 @@ Additional required properties for imx6sx-pcie:
+   PCIE_PHY power domains
+ - power-domain-names: Must be "pcie", "pcie_phy"
+ 
+-Additional required properties for imx7d-pcie:
++Additional required properties for imx7d-pcie and imx8mq-pcie:
+ - power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
+ - resets: Must contain phandles to PCIe-related reset lines exposed by SRC
+   IP block
+diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+index 6aafec3fad00..83ea318ad989 100644
+--- a/drivers/pci/controller/dwc/Kconfig
++++ b/drivers/pci/controller/dwc/Kconfig
+@@ -89,8 +89,8 @@ config PCI_EXYNOS
+ 	select PCIE_DW_HOST
+ 
+ config PCI_IMX6
+-	bool "Freescale i.MX6/7 PCIe controller"
+-	depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
++	bool "Freescale i.MX6/7/8 PCIe controller"
++	depends on SOC_IMX6Q || SOC_IMX7D || (ARM64 && ARCH_MXC) || ((ARM || ARM64) && COMPILE_TEST)
+ 	depends on PCI_MSI_IRQ_DOMAIN
+ 	select PCIE_DW_HOST
+ 
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 75ee0cd7af3b..dd9d8732f6ba 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -8,6 +8,7 @@
+  * Author: Sean Cross <xobs@kosagi.com>
+  */
+ 
++#include <linux/bitfield.h>
+ #include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/gpio.h>
+@@ -32,6 +33,12 @@
+ 
+ #include "pcie-designware.h"
+ 
++#define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
++#define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
++#define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
++#define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
++#define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
++
+ #define to_imx6_pcie(x)	dev_get_drvdata((x)->dev)
+ 
+ enum imx6_pcie_variants {
+@@ -39,6 +46,7 @@ enum imx6_pcie_variants {
+ 	IMX6SX,
+ 	IMX6QP,
+ 	IMX7D,
++	IMX8MQ,
  };
-+
-+&usb1 {
-+	status = "okay";
-+};
-+
-+&usb1_dwc3 {
-+	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
-+};
-+
-+&usb1_hsphy {
-+	status = "okay";
-+
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+};
-+
-+&usb1_qmpphy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l2a_1p2>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 8d41b69..7c31c97 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -540,6 +540,11 @@
- 			reg = <0x780000 0x621c>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+
-+			qusb2_hstx_trim: hstx-trim@423a {
-+				reg = <0x423a 0x1>;
-+				bits = <0 4>;
-+			};
- 		};
  
- 		gcc: clock-controller@100000 {
-@@ -607,6 +612,91 @@
- 			#mbox-cells = <1>;
- 		};
+ #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
+@@ -58,6 +66,7 @@ struct imx6_pcie {
+ 	struct clk		*pcie_inbound_axi;
+ 	struct clk		*pcie;
+ 	struct regmap		*iomuxc_gpr;
++	u32			controller_id;
+ 	struct reset_control	*pciephy_reset;
+ 	struct reset_control	*apps_reset;
+ 	struct reset_control	*turnoff_reset;
+@@ -276,6 +285,7 @@ static void imx6_pcie_reset_phy(struct imx6_pcie *imx6_pcie)
+ 	pcie_phy_write(imx6_pcie, PHY_RX_OVRD_IN_LO, tmp);
+ }
  
-+		usb1: usb@a8f8800 {
-+			compatible = "qcom,msm8998-dwc3", "qcom,dwc3";
-+			reg = <0xa8f8800 0x400>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
++#ifdef CONFIG_ARM
+ /*  Added for PCI abort handling */
+ static int imx6q_pcie_abort_handler(unsigned long addr,
+ 		unsigned int fsr, struct pt_regs *regs)
+@@ -309,6 +319,7 @@ static int imx6q_pcie_abort_handler(unsigned long addr,
+ 
+ 	return 1;
+ }
++#endif
+ 
+ static int imx6_pcie_attach_pd(struct device *dev)
+ {
+@@ -353,6 +364,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ 
+ 	switch (imx6_pcie->drvdata->variant) {
+ 	case IMX7D:
++	case IMX8MQ:
+ 		reset_control_assert(imx6_pcie->pciephy_reset);
+ 		reset_control_assert(imx6_pcie->apps_reset);
+ 		break;
+@@ -387,10 +399,17 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	}
+ }
+ 
++static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
++{
++	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ);
++	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
++}
 +
-+			clocks = <&gcc GCC_CFG_NOC_USB3_AXI_CLK>,
-+				 <&gcc GCC_USB30_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE1_USB3_AXI_CLK>,
-+				 <&gcc GCC_USB30_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_SLEEP_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep";
+ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ {
+ 	struct dw_pcie *pci = imx6_pcie->pci;
+ 	struct device *dev = pci->dev;
++	unsigned int offset;
+ 	int ret = 0;
+ 
+ 	switch (imx6_pcie->drvdata->variant) {
+@@ -421,6 +440,19 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ 		break;
+ 	case IMX7D:
+ 		break;
++	case IMX8MQ:
++		offset = imx6_pcie_grp_offset(imx6_pcie);
++		/*
++		 * Set the over ride low and enabled
++		 * make sure that REF_CLK is turned on.
++		 */
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
++				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE,
++				   0);
++		regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
++				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN,
++				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN);
++		break;
+ 	}
+ 
+ 	return ret;
+@@ -497,6 +529,9 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	}
+ 
+ 	switch (imx6_pcie->drvdata->variant) {
++	case IMX8MQ:
++		reset_control_deassert(imx6_pcie->pciephy_reset);
++		break;
+ 	case IMX7D:
+ 		reset_control_deassert(imx6_pcie->pciephy_reset);
+ 		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
+@@ -532,9 +567,37 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+ 	}
+ }
+ 
++static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
++{
++	unsigned int mask, val;
 +
-+			assigned-clocks = <&gcc GCC_USB30_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <120000000>;
++	if (imx6_pcie->drvdata->variant == IMX8MQ &&
++	    imx6_pcie->controller_id == 1) {
++		mask   = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE;
++		val    = FIELD_PREP(IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
++				    PCI_EXP_TYPE_ROOT_PORT);
++	} else {
++		mask = IMX6Q_GPR12_DEVICE_TYPE;
++		val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE,
++				  PCI_EXP_TYPE_ROOT_PORT);
++	}
 +
-+			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq";
++	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
++}
 +
-+			power-domains = <&gcc USB_30_GDSC>;
+ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ {
+ 	switch (imx6_pcie->drvdata->variant) {
++	case IMX8MQ:
++		/*
++		 * TODO: Currently this code assumes external
++		 * oscillator is being used
++		 */
++		regmap_update_bits(imx6_pcie->iomuxc_gpr,
++				   imx6_pcie_grp_offset(imx6_pcie),
++				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
++				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
++		break;
+ 	case IMX7D:
+ 		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+ 				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
+@@ -570,8 +633,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+ 		break;
+ 	}
+ 
+-	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+-			IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
++	imx6_pcie_configure_type(imx6_pcie);
+ }
+ 
+ static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
+@@ -668,6 +730,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
+ 				   IMX6Q_GPR12_PCIE_CTL_2);
+ 		break;
+ 	case IMX7D:
++	case IMX8MQ:
+ 		reset_control_deassert(imx6_pcie->apps_reset);
+ 		break;
+ 	}
+@@ -1008,6 +1071,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+ 		}
+ 		break;
+ 	case IMX7D:
++	case IMX8MQ:
++		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
++			imx6_pcie->controller_id = 1;
 +
-+			resets = <&gcc GCC_USB_30_BCR>;
-+
-+			usb1_dwc3: dwc3@a800000 {
-+				compatible = "snps,dwc3";
-+				reg = <0xa800000 0xcd00>;
-+				interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&usb1_hsphy>, <&usb1_ssphy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+				snps,has-lpm-erratum;
-+				snps,hird-threshold = /bits/ 8 <0x10>;
-+			};
-+		};
-+
-+		usb1_qmpphy: phy@c010000 {
-+			compatible = "qcom,msm8998-qmp-usb3-phy";
-+			reg = <0xc010000 0x18c>;
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_USB3_CLKREF_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref";
-+
-+			resets = <&gcc GCC_USB3_PHY_BCR>,
-+				 <&gcc GCC_USB3PHY_PHY_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb1_ssphy: lane@c010200 {
-+				reg = <0xc010200 0x128>,
-+				      <0xc010400 0x200>,
-+				      <0xc010c00 0x20c>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		usb1_hsphy: phy@c012000 {
-+			compatible = "qcom,msm8998-qusb2-phy";
-+			reg = <0xc012000 0x2a8>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_RX1_USB2_CLKREF_CLK>;
-+			clock-names = "cfg_ahb", "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+
-+			nvmem-cells = <&qusb2_hstx_trim>;
-+		};
-+
- 		sdhc2: sdhci@c0a4900 {
- 			compatible = "qcom,sdhci-msm-v4";
- 			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
+ 		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev,
+ 									    "pciephy");
+ 		if (IS_ERR(imx6_pcie->pciephy_reset)) {
+@@ -1115,6 +1182,9 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+ 	[IMX7D] = {
+ 		.variant = IMX7D,
+ 	},
++	[IMX8MQ] = {
++		.variant = IMX8MQ,
++	},
+ };
+ 
+ static const struct of_device_id imx6_pcie_of_match[] = {
+@@ -1122,6 +1192,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+ 	{ .compatible = "fsl,imx6sx-pcie", .data = &drvdata[IMX6SX], },
+ 	{ .compatible = "fsl,imx6qp-pcie", .data = &drvdata[IMX6QP], },
+ 	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
++	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], } ,
+ 	{},
+ };
+ 
+@@ -1138,6 +1209,7 @@ static struct platform_driver imx6_pcie_driver = {
+ 
+ static int __init imx6_pcie_init(void)
+ {
++#ifdef CONFIG_ARM
+ 	/*
+ 	 * Since probe() can be deferred we need to make sure that
+ 	 * hook_fault_code is not called after __init memory is freed
+@@ -1147,6 +1219,7 @@ static int __init imx6_pcie_init(void)
+ 	 */
+ 	hook_fault_code(8, imx6q_pcie_abort_handler, SIGBUS, 0,
+ 			"external abort on non-linefetch");
++#endif
+ 
+ 	return platform_driver_register(&imx6_pcie_driver);
+ }
 -- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+2.20.1
