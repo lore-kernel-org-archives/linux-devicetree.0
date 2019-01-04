@@ -1,58 +1,44 @@
-From: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
-Subject: [PATCH 3/4] dts: dps650ab: add dps650ab device tree
-Date: Fri, 4 Jan 2019 17:03:49 +0800
-Message-ID: <9d928198965a0de4207582d7008c8a9916543445.1546591275.git.xiaoting.liu@hxt-semitech.com>
-References: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>, devicetree@vger.kernel.org, shunyong.yang@hxt-semitech.com, linux-aspeed@lists.ozlabs.org, dongsheng.wang@hxt-semitech.com, andrew@aj.id.au, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, joel@jms.id.au, linux-arm-kernel@lists.infradead.org
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
+ serdev/devicetree
+Date: Fri, 4 Jan 2019 10:07:34 +0100
+Message-ID: <B5CEA49A-0F54-40C5-BCEA-7875BE1358E3@holtmann.org>
+References: <20181110232034.17277-1-andreas@kemnade.info>
+ <20181111024648.7rt7rlhaqihtqecv@earth.universe>
+ <20181112215812.18ebca35@aktux>
+ <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
+ <20181112222726.73m2oca7hankvcjs@earth.universe>
+ <CABGGisxsdv+BTd5-HMzF8asEcWtL5F4CMzmkrBCwK=NibvqjLQ@mail.gmail.com>
+ <20181113170128.0f59ef0e@kemnade.info>
+ <86A3A2E6-FC89-42FE-8410-9C8273EC9CF7@holtmann.org>
+ <20181116204601.4e1aa0de@kemnade.info>
+ <09AFE47C-D188-4397-A2CD-C70FFAC3B677@holtmann.org>
+ <20190104064403.325771fd@kemnade.info>
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Content-Type: text/plain;
+        charset=us-ascii
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190104064403.325771fd@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Rob Herring <robh@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-Add dps650ab device tree to support power supply dps650ab driver.
+Hi Andreas,
 
-Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
----
- arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+>>>> Btw. I see nothing standing in the way of merging btuart.c driver and then go from there. Either I dig this out and submit or someone else does.
+>>>> 
+>>> Do you mean this?
+>>> https://patchwork.kernel.org/patch/10490651/  
+>> 
+>> yes, that one.
+>> 
+> Hmm, there seemed to be nothing in the pull requests regarding btuart.
+> Did you change plans?
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-index bdfd8c9f3a7c..e7e59da6c9ae 100644
---- a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-@@ -173,6 +173,16 @@
-                        };
-                };
-        };
-+
-+       dps650ab@58 {
-+               compatible = "dps650ab";
-+               reg = <0x58>;
-+       };
-+
-+       dps650ab@59 {
-+               compatible = "dps650ab";
-+               reg = <0x59>;
-+       };
- };
+because I only submitted it as RFC. We can easily merge that one upstream since it is rather trivial. The main problem is how you want to do the device matching. Do you have a DT entry for your really simple devices?
 
- &i2c9 {
---
-1.8.3.1
+Regards
 
-
-
-
-This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
+Marcel
