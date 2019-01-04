@@ -1,440 +1,152 @@
-From: Yunfei Dong <yunfei.dong@mediatek.com>
-Subject: [PATCH v2,3/3] media: mtk-vcodec: Using common interface to manage vdec/venc clock
-Date: Fri, 4 Jan 2019 11:06:01 +0800
-Message-ID: <1546571161-11470-3-git-send-email-yunfei.dong@mediatek.com>
-References: <1546571161-11470-1-git-send-email-yunfei.dong@mediatek.com>
+From: Joseph Lo <josephl@nvidia.com>
+Subject: [PATCH V4 01/20] dt-bindings: clock: tegra124-dfll: Update DFLL
+ binding for PWM regulator
+Date: Fri, 4 Jan 2019 11:06:43 +0800
+Message-ID: <20190104030702.8684-2-josephl@nvidia.com>
+References: <20190104030702.8684-1-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546571161-11470-1-git-send-email-yunfei.dong@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190104030702.8684-1-josephl@nvidia.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-Vdec: Using standard CCF interface to set parent clock and
-clock rate in dtsi and using common interface to open/close
-video decoder clock.
-Venc: Using standard CCF interface to set parent clock in dtsi
-and using common interface to open/close video encoder clock.
+From: Peter De Schrijver <pdeschrijver@nvidia.com>
 
-Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
-Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
----
-change note:
-v2: modify commit description
----
- .../platform/mtk-vcodec/mtk_vcodec_dec_pm.c   | 163 ++++++------------
- .../platform/mtk-vcodec/mtk_vcodec_drv.h      |  31 ++--
- .../platform/mtk-vcodec/mtk_vcodec_enc_pm.c   | 106 +++++++-----
- 3 files changed, 132 insertions(+), 168 deletions(-)
+Add new properties to configure the DFLL PWM regulator support.
 
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-index 79ca03ac449c..7884465afcd2 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_dec_pm.c
-@@ -27,11 +27,14 @@ int mtk_vcodec_init_dec_pm(struct mtk_vcodec_dev *mtkdev)
- 	struct device_node *node;
- 	struct platform_device *pdev;
- 	struct mtk_vcodec_pm *pm;
--	int ret = 0;
-+	struct mtk_vcodec_clk *dec_clk;
-+	struct mtk_vcodec_clk_info *clk_info;
-+	int i = 0, ret = 0;
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
+Signed-off-by: Joseph Lo <josephl@nvidia.com>
+Acked-by: Jon Hunter <jonathanh@nvidia.com>
+---
+*V4:
+ - s/nvidia,pwm-period/nvidia,pwm-period-nanoseconds/
+*V3:
+ - no change
+*V2:
+ - update the binding strings and descriptions for
+ nvidia,pwm-tristate-microvolts
+ nvidia,pwm-min-microvolts
+ nvidia,pwm-voltage-step-microvolts
+---
+ .../bindings/clock/nvidia,tegra124-dfll.txt   | 79 ++++++++++++++++++-
+ 1 file changed, 77 insertions(+), 2 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+index dff236f524a7..5558bb5fcf2c 100644
+--- a/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
++++ b/Documentation/devicetree/bindings/clock/nvidia,tegra124-dfll.txt
+@@ -8,7 +8,6 @@ the fast CPU cluster. It consists of a free-running voltage controlled
+ oscillator connected to the CPU voltage rail (VDD_CPU), and a closed loop
+ control module that will automatically adjust the VDD_CPU voltage by
+ communicating with an off-chip PMIC either via an I2C bus or via PWM signals.
+-Currently only the I2C mode is supported by these bindings.
  
- 	pdev = mtkdev->plat_dev;
- 	pm = &mtkdev->pm;
- 	pm->mtkdev = mtkdev;
-+	dec_clk = &pm->vdec_clk;
- 	node = of_parse_phandle(pdev->dev.of_node, "mediatek,larb", 0);
- 	if (!node) {
- 		mtk_v4l2_err("of_parse_phandle mediatek,larb fail!");
-@@ -47,52 +50,34 @@ int mtk_vcodec_init_dec_pm(struct mtk_vcodec_dev *mtkdev)
- 	pdev = mtkdev->plat_dev;
- 	pm->dev = &pdev->dev;
+ Required properties:
+ - compatible : should be "nvidia,tegra124-dfll"
+@@ -45,10 +44,31 @@ Required properties for the control loop parameters:
+ Optional properties for the control loop parameters:
+ - nvidia,cg-scale: Boolean value, see the field DFLL_PARAMS_CG_SCALE in the TRM.
  
--	pm->vcodecpll = devm_clk_get(&pdev->dev, "vcodecpll");
--	if (IS_ERR(pm->vcodecpll)) {
--		mtk_v4l2_err("devm_clk_get vcodecpll fail");
--		ret = PTR_ERR(pm->vcodecpll);
-+	dec_clk->clk_num =
-+		of_property_count_strings(pdev->dev.of_node, "clock-names");
-+	if (dec_clk->clk_num > 0) {
-+		dec_clk->clk_info = devm_kcalloc(&pdev->dev,
-+			dec_clk->clk_num, sizeof(*clk_info),
-+			GFP_KERNEL);
-+		if (!dec_clk->clk_info)
-+			return -ENOMEM;
-+	} else {
-+		mtk_v4l2_err("Failed to get vdec clock count");
-+		return -EINVAL;
- 	}
- 
--	pm->univpll_d2 = devm_clk_get(&pdev->dev, "univpll_d2");
--	if (IS_ERR(pm->univpll_d2)) {
--		mtk_v4l2_err("devm_clk_get univpll_d2 fail");
--		ret = PTR_ERR(pm->univpll_d2);
--	}
--
--	pm->clk_cci400_sel = devm_clk_get(&pdev->dev, "clk_cci400_sel");
--	if (IS_ERR(pm->clk_cci400_sel)) {
--		mtk_v4l2_err("devm_clk_get clk_cci400_sel fail");
--		ret = PTR_ERR(pm->clk_cci400_sel);
--	}
--
--	pm->vdec_sel = devm_clk_get(&pdev->dev, "vdec_sel");
--	if (IS_ERR(pm->vdec_sel)) {
--		mtk_v4l2_err("devm_clk_get vdec_sel fail");
--		ret = PTR_ERR(pm->vdec_sel);
--	}
--
--	pm->vdecpll = devm_clk_get(&pdev->dev, "vdecpll");
--	if (IS_ERR(pm->vdecpll)) {
--		mtk_v4l2_err("devm_clk_get vdecpll fail");
--		ret = PTR_ERR(pm->vdecpll);
--	}
--
--	pm->vencpll = devm_clk_get(&pdev->dev, "vencpll");
--	if (IS_ERR(pm->vencpll)) {
--		mtk_v4l2_err("devm_clk_get vencpll fail");
--		ret = PTR_ERR(pm->vencpll);
--	}
--
--	pm->venc_lt_sel = devm_clk_get(&pdev->dev, "venc_lt_sel");
--	if (IS_ERR(pm->venc_lt_sel)) {
--		mtk_v4l2_err("devm_clk_get venc_lt_sel fail");
--		ret = PTR_ERR(pm->venc_lt_sel);
--	}
--
--	pm->vdec_bus_clk_src = devm_clk_get(&pdev->dev, "vdec_bus_clk_src");
--	if (IS_ERR(pm->vdec_bus_clk_src)) {
--		mtk_v4l2_err("devm_clk_get vdec_bus_clk_src");
--		ret = PTR_ERR(pm->vdec_bus_clk_src);
-+	for (i = 0; i < dec_clk->clk_num; i++) {
-+		clk_info = &dec_clk->clk_info[i];
-+		ret = of_property_read_string_index(pdev->dev.of_node,
-+			"clock-names", i, &clk_info->clk_name);
-+		if (ret) {
-+			mtk_v4l2_err("Failed to get clock name id = %d", i);
-+			return ret;
-+		}
-+		clk_info->vcodec_clk = devm_clk_get(&pdev->dev,
-+			clk_info->clk_name);
-+		if (IS_ERR(clk_info->vcodec_clk)) {
-+			mtk_v4l2_err("devm_clk_get (%d)%s fail", i,
-+				clk_info->clk_name);
-+			return PTR_ERR(clk_info->vcodec_clk);
-+		}
- 	}
- 
- 	pm_runtime_enable(&pdev->dev);
-@@ -125,78 +110,36 @@ void mtk_vcodec_dec_pw_off(struct mtk_vcodec_pm *pm)
- 
- void mtk_vcodec_dec_clock_on(struct mtk_vcodec_pm *pm)
- {
--	int ret;
--
--	ret = clk_set_rate(pm->vcodecpll, 1482 * 1000000);
--	if (ret)
--		mtk_v4l2_err("clk_set_rate vcodecpll fail %d", ret);
--
--	ret = clk_set_rate(pm->vencpll, 800 * 1000000);
--	if (ret)
--		mtk_v4l2_err("clk_set_rate vencpll fail %d", ret);
--
--	ret = clk_prepare_enable(pm->vcodecpll);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable vcodecpll fail %d", ret);
--
--	ret = clk_prepare_enable(pm->vencpll);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable vencpll fail %d", ret);
--
--	ret = clk_prepare_enable(pm->vdec_bus_clk_src);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable vdec_bus_clk_src fail %d",
--				ret);
--
--	ret = clk_prepare_enable(pm->venc_lt_sel);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable venc_lt_sel fail %d", ret);
--
--	ret = clk_set_parent(pm->venc_lt_sel, pm->vdec_bus_clk_src);
--	if (ret)
--		mtk_v4l2_err("clk_set_parent venc_lt_sel vdec_bus_clk_src fail %d",
--				ret);
--
--	ret = clk_prepare_enable(pm->univpll_d2);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable univpll_d2 fail %d", ret);
--
--	ret = clk_prepare_enable(pm->clk_cci400_sel);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable clk_cci400_sel fail %d", ret);
--
--	ret = clk_set_parent(pm->clk_cci400_sel, pm->univpll_d2);
--	if (ret)
--		mtk_v4l2_err("clk_set_parent clk_cci400_sel univpll_d2 fail %d",
--				ret);
--
--	ret = clk_prepare_enable(pm->vdecpll);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable vdecpll fail %d", ret);
--
--	ret = clk_prepare_enable(pm->vdec_sel);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable vdec_sel fail %d", ret);
--
--	ret = clk_set_parent(pm->vdec_sel, pm->vdecpll);
--	if (ret)
--		mtk_v4l2_err("clk_set_parent vdec_sel vdecpll fail %d", ret);
-+	struct mtk_vcodec_clk *dec_clk = &pm->vdec_clk;
-+	int ret, i = 0;
++Optional properties for mode selection:
++- nvidia,pwm-to-pmic: Use PWM to control regulator rather then I2C.
 +
-+	for (i = 0; i < dec_clk->clk_num; i++) {
-+		ret = clk_prepare_enable(dec_clk->clk_info[i].vcodec_clk);
-+		if (ret) {
-+			mtk_v4l2_err("clk_prepare_enable %d %s fail %d", i,
-+				dec_clk->clk_info[i].clk_name, ret);
-+			goto error;
-+		}
-+	}
+ Required properties for I2C mode:
+ - nvidia,i2c-fs-rate: I2C transfer rate, if using full speed mode.
  
- 	ret = mtk_smi_larb_get(pm->larbvdec);
--	if (ret)
-+	if (ret) {
- 		mtk_v4l2_err("mtk_smi_larb_get larbvdec fail %d", ret);
-+		goto error;
-+	}
-+	return;
- 
-+error:
-+	for (i -= 1; i >= 0; i--)
-+		clk_disable_unprepare(dec_clk->clk_info[i].vcodec_clk);
- }
- 
- void mtk_vcodec_dec_clock_off(struct mtk_vcodec_pm *pm)
- {
-+	struct mtk_vcodec_clk *dec_clk = &pm->vdec_clk;
-+	int i = 0;
+-Example:
++Required properties for PWM mode:
++- nvidia,pwm-period-nanoseconds: period of PWM square wave in nanoseconds.
++- nvidia,pwm-tristate-microvolts: Regulator voltage in micro volts when PWM
++  control is disabled and the PWM output is tristated. Note that this voltage is
++  configured in hardware, typically via a resistor divider.
++- nvidia,pwm-min-microvolts: Regulator voltage in micro volts when PWM control
++  is enabled and PWM output is low. Hence, this is the minimum output voltage
++  that the regulator supports when PWM control is enabled.
++- nvidia,pwm-voltage-step-microvolts: Voltage increase in micro volts
++  corresponding to a 1/33th increase in duty cycle. Eg the voltage for 2/33th
++  duty cycle would be: nvidia,pwm-min-microvolts +
++  nvidia,pwm-voltage-step-microvolts * 2.
++- pinctrl-0: I/O pad configuration when PWM control is enabled.
++- pinctrl-1: I/O pad configuration when PWM control is disabled.
++- pinctrl-names: must include the following entries:
++  - dvfs_pwm_enable: I/O pad configuration when PWM control is enabled.
++  - dvfs_pwm_disable: I/O pad configuration when PWM control is disabled.
 +
- 	mtk_smi_larb_put(pm->larbvdec);
--	clk_disable_unprepare(pm->vdec_sel);
--	clk_disable_unprepare(pm->vdecpll);
--	clk_disable_unprepare(pm->univpll_d2);
--	clk_disable_unprepare(pm->clk_cci400_sel);
--	clk_disable_unprepare(pm->venc_lt_sel);
--	clk_disable_unprepare(pm->vdec_bus_clk_src);
--	clk_disable_unprepare(pm->vencpll);
--	clk_disable_unprepare(pm->vcodecpll);
-+	for (i = dec_clk->clk_num - 1; i >= 0; i--)
-+		clk_disable_unprepare(dec_clk->clk_info[i].vcodec_clk);
- }
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-index 3cffb381ac8e..8aba69555b12 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_drv.h
-@@ -175,23 +175,30 @@ struct mtk_enc_params {
- 	unsigned int	force_intra;
++Example for I2C:
+ 
+ clock@70110000 {
+         compatible = "nvidia,tegra124-dfll";
+@@ -76,3 +96,58 @@ clock@70110000 {
+ 
+         nvidia,i2c-fs-rate = <400000>;
  };
- 
-+/**
-+ * struct mtk_vcodec_clk_info - Structure used to store clock name
-+ */
-+struct mtk_vcodec_clk_info {
-+	const char	*clk_name;
-+	struct clk	*vcodec_clk;
++
++Example for PWM:
++
++clock@70110000 {
++	compatible = "nvidia,tegra124-dfll";
++	reg = <0 0x70110000 0 0x100>, /* DFLL control */
++	      <0 0x70110000 0 0x100>, /* I2C output control */
++	      <0 0x70110100 0 0x100>, /* Integrated I2C controller */
++	      <0 0x70110200 0 0x100>; /* Look-up table RAM */
++	interrupts = <GIC_SPI 62 IRQ_TYPE_LEVEL_HIGH>;
++	clocks = <&tegra_car TEGRA210_CLK_DFLL_SOC>,
++	         <&tegra_car TEGRA210_CLK_DFLL_REF>,
++		 <&tegra_car TEGRA124_CLK_I2C5>;;
++	clock-names = "soc", "ref", "i2c";
++	resets = <&tegra_car TEGRA124_RST_DFLL_DVCO>;
++	reset-names = "dvco";
++	#clock-cells = <0>;
++	clock-output-names = "dfllCPU_out";
++
++	nvidia,sample-rate = <25000>;
++	nvidia,droop-ctrl = <0x00000f00>;
++	nvidia,force-mode = <1>;
++	nvidia,cf = <6>;
++	nvidia,ci = <0>;
++	nvidia,cg = <2>;
++
++	nvidia,pwm-min-microvolts = <708000>; /* 708mV */
++	nvidia,pwm-period-nanoseconds = <2500>; /* 2.5us */
++	nvidia,pwm-to-pmic;
++	nvidia,pwm-tristate-microvolts = <1000000>;
++	nvidia,pwm-voltage-step-microvolts = <19200>; /* 19.2mV */
++
++	pinctrl-names = "dvfs_pwm_enable", "dvfs_pwm_disable";
++	pinctrl-0 = <&dvfs_pwm_active_state>;
++	pinctrl-1 = <&dvfs_pwm_inactive_state>;
 +};
 +
-+/**
-+ * struct mtk_vcodec_clk - Structure used to store vcodec clock information
++/* pinmux nodes added for completeness. Binding doc can be found in:
++ * Documentation/devicetree/bindings/pinctrl/nvidia,tegra210-pinmux.txt
 + */
-+struct mtk_vcodec_clk {
-+	struct mtk_vcodec_clk_info	*clk_info;
-+	int	clk_num;
++
++pinmux: pinmux@700008d4 {
++	dvfs_pwm_active_state: dvfs_pwm_active {
++		dvfs_pwm_pbb1 {
++			nvidia,pins = "dvfs_pwm_pbb1";
++			nvidia,tristate = <TEGRA_PIN_DISABLE>;
++		};
++	};
++	dvfs_pwm_inactive_state: dvfs_pwm_inactive {
++		dvfs_pwm_pbb1 {
++			nvidia,pins = "dvfs_pwm_pbb1";
++			nvidia,tristate = <TEGRA_PIN_ENABLE>;
++		};
++	};
 +};
-+
- /**
-  * struct mtk_vcodec_pm - Power management data structure
-  */
- struct mtk_vcodec_pm {
--	struct clk	*vdec_bus_clk_src;
--	struct clk	*vencpll;
--
--	struct clk	*vcodecpll;
--	struct clk	*univpll_d2;
--	struct clk	*clk_cci400_sel;
--	struct clk	*vdecpll;
--	struct clk	*vdec_sel;
--	struct clk	*vencpll_d2;
--	struct clk	*venc_sel;
--	struct clk	*univpll1_d2;
--	struct clk	*venc_lt_sel;
-+	struct mtk_vcodec_clk	vdec_clk;
- 	struct device	*larbvdec;
-+
-+	struct mtk_vcodec_clk	venc_clk;
- 	struct device	*larbvenc;
- 	struct device	*larbvenclt;
- 	struct device	*dev;
-diff --git a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-index 3e73e9db781f..c8236e82adf1 100644
---- a/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-+++ b/drivers/media/platform/mtk-vcodec/mtk_vcodec_enc_pm.c
-@@ -22,14 +22,15 @@
- #include "mtk_vcodec_util.h"
- #include "mtk_vpu.h"
- 
--
- int mtk_vcodec_init_enc_pm(struct mtk_vcodec_dev *mtkdev)
- {
- 	struct device_node *node;
- 	struct platform_device *pdev;
--	struct device *dev;
- 	struct mtk_vcodec_pm *pm;
--	int ret = 0;
-+	struct mtk_vcodec_clk *enc_clk;
-+	struct mtk_vcodec_clk_info *clk_info;
-+	int ret = 0, i = 0;
-+	struct device *dev;
- 
- 	pdev = mtkdev->plat_dev;
- 	pm = &mtkdev->pm;
-@@ -37,6 +38,7 @@ int mtk_vcodec_init_enc_pm(struct mtk_vcodec_dev *mtkdev)
- 	pm->mtkdev = mtkdev;
- 	pm->dev = &pdev->dev;
- 	dev = &pdev->dev;
-+	enc_clk = &pm->venc_clk;
- 
- 	node = of_parse_phandle(dev->of_node, "mediatek,larb", 0);
- 	if (!node) {
-@@ -61,33 +63,38 @@ int mtk_vcodec_init_enc_pm(struct mtk_vcodec_dev *mtkdev)
- 		mtk_v4l2_err("no mediatek,larb device found");
- 		return -1;
- 	}
--
- 	pm->larbvenclt = &pdev->dev;
- 	pdev = mtkdev->plat_dev;
- 	pm->dev = &pdev->dev;
- 
--	pm->vencpll_d2 = devm_clk_get(&pdev->dev, "venc_sel_src");
--	if (IS_ERR(pm->vencpll_d2)) {
--		mtk_v4l2_err("devm_clk_get vencpll_d2 fail");
--		ret = PTR_ERR(pm->vencpll_d2);
-+	enc_clk->clk_num = of_property_count_strings(pdev->dev.of_node,
-+		"clock-names");
-+	if (enc_clk->clk_num > 0) {
-+		enc_clk->clk_info = devm_kcalloc(&pdev->dev,
-+			enc_clk->clk_num, sizeof(*clk_info),
-+			GFP_KERNEL);
-+		if (!enc_clk->clk_info)
-+			return -ENOMEM;
-+	} else {
-+		mtk_v4l2_err("Failed to get venc clock count");
-+		return -EINVAL;
- 	}
- 
--	pm->venc_sel = devm_clk_get(&pdev->dev, "venc_sel");
--	if (IS_ERR(pm->venc_sel)) {
--		mtk_v4l2_err("devm_clk_get venc_sel fail");
--		ret = PTR_ERR(pm->venc_sel);
--	}
--
--	pm->univpll1_d2 = devm_clk_get(&pdev->dev, "venc_lt_sel_src");
--	if (IS_ERR(pm->univpll1_d2)) {
--		mtk_v4l2_err("devm_clk_get univpll1_d2 fail");
--		ret = PTR_ERR(pm->univpll1_d2);
--	}
--
--	pm->venc_lt_sel = devm_clk_get(&pdev->dev, "venc_lt_sel");
--	if (IS_ERR(pm->venc_lt_sel)) {
--		mtk_v4l2_err("devm_clk_get venc_lt_sel fail");
--		ret = PTR_ERR(pm->venc_lt_sel);
-+	for (i = 0; i < enc_clk->clk_num; i++) {
-+		clk_info = &enc_clk->clk_info[i];
-+		ret = of_property_read_string_index(pdev->dev.of_node,
-+			"clock-names", i, &clk_info->clk_name);
-+		if (ret) {
-+			mtk_v4l2_err("venc failed to get clk name %d", i);
-+			return ret;
-+		}
-+		clk_info->vcodec_clk = devm_clk_get(&pdev->dev,
-+			clk_info->clk_name);
-+		if (IS_ERR(clk_info->vcodec_clk)) {
-+			mtk_v4l2_err("venc devm_clk_get (%d)%s fail", i,
-+				clk_info->clk_name);
-+			return PTR_ERR(clk_info->vcodec_clk);
-+		}
- 	}
- 
- 	return ret;
-@@ -100,38 +107,45 @@ void mtk_vcodec_release_enc_pm(struct mtk_vcodec_dev *mtkdev)
- 
- void mtk_vcodec_enc_clock_on(struct mtk_vcodec_pm *pm)
- {
--	int ret;
--
--	ret = clk_prepare_enable(pm->venc_sel);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable fail %d", ret);
--
--	ret = clk_set_parent(pm->venc_sel, pm->vencpll_d2);
--	if (ret)
--		mtk_v4l2_err("clk_set_parent fail %d", ret);
--
--	ret = clk_prepare_enable(pm->venc_lt_sel);
--	if (ret)
--		mtk_v4l2_err("clk_prepare_enable fail %d", ret);
--
--	ret = clk_set_parent(pm->venc_lt_sel, pm->univpll1_d2);
--	if (ret)
--		mtk_v4l2_err("clk_set_parent fail %d", ret);
-+	struct mtk_vcodec_clk *enc_clk = &pm->venc_clk;
-+	int ret, i = 0;
-+
-+	for (i = 0; i < enc_clk->clk_num; i++) {
-+		ret = clk_prepare_enable(enc_clk->clk_info[i].vcodec_clk);
-+		if (ret) {
-+			mtk_v4l2_err("venc clk_prepare_enable %d %s fail %d", i,
-+				enc_clk->clk_info[i].clk_name, ret);
-+			goto clkerr;
-+		}
-+	}
- 
- 	ret = mtk_smi_larb_get(pm->larbvenc);
--	if (ret)
-+	if (ret) {
- 		mtk_v4l2_err("mtk_smi_larb_get larb3 fail %d", ret);
--
-+		goto larbvencerr;
-+	}
- 	ret = mtk_smi_larb_get(pm->larbvenclt);
--	if (ret)
-+	if (ret) {
- 		mtk_v4l2_err("mtk_smi_larb_get larb4 fail %d", ret);
-+		goto larbvenclterr;
-+	}
-+	return;
- 
-+larbvenclterr:
-+	mtk_smi_larb_put(pm->larbvenc);
-+larbvencerr:
-+clkerr:
-+	for (i -= 1; i >= 0; i--)
-+		clk_disable_unprepare(enc_clk->clk_info[i].vcodec_clk);
- }
- 
- void mtk_vcodec_enc_clock_off(struct mtk_vcodec_pm *pm)
- {
-+	struct mtk_vcodec_clk *enc_clk = &pm->venc_clk;
-+	int i = 0;
-+
- 	mtk_smi_larb_put(pm->larbvenc);
- 	mtk_smi_larb_put(pm->larbvenclt);
--	clk_disable_unprepare(pm->venc_lt_sel);
--	clk_disable_unprepare(pm->venc_sel);
-+	for (i = enc_clk->clk_num - 1; i >= 0; i--)
-+		clk_disable_unprepare(enc_clk->clk_info[i].vcodec_clk);
- }
 -- 
-2.19.1
+2.20.1
