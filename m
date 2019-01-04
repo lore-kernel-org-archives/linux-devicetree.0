@@ -1,59 +1,39 @@
-From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v2 2/4] dt-bindings: soc: Add ZynqMP PM bindings
-Date: Fri, 4 Jan 2019 13:56:20 -0800
-Message-ID: <1546638982-12954-3-git-send-email-jollys@xilinx.com>
-References: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: [PATCH v2] dt-bindings: marvell,mmp2: fix typos in bindings doc
+Date: Fri,  4 Jan 2019 22:56:56 +0100
+Message-ID: <20190104215656.23002-1-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Jiri Kosina <trivial@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+A pair of rather trivial ones.
 
-Add documentation to describe Xilinx ZynqMP power management
-bindings.
+Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
-Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- .../bindings/power/reset/xlnx,zynqmp-power.txt     | 25 ++++++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+Changes since v1:
+- s/identifier/identifiers/ as suggested by Rob Herring
 
-diff --git a/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
-new file mode 100644
-index 0000000..d366f1e
---- /dev/null
-+++ b/Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
-@@ -0,0 +1,25 @@
-+--------------------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC Power Management
-+--------------------------------------------------------------------
-+The zynqmp-power node describes the power management configurations.
-+It will control remote suspend/shutdown interfaces.
-+
-+Required properties:
-+ - compatible:		Must contain:	"xlnx,zynqmp-power"
-+ - interrupts:		Interrupt specifier
-+
-+-------
-+Example
-+-------
-+
-+firmware {
-+	zynqmp_firmware: zynqmp-firmware {
-+		compatible = "xlnx,zynqmp-firmware";
-+		method = "smc";
-+
-+		zynqmp_power: zynqmp-power {
-+			compatible = "xlnx,zynqmp-power";
-+			interrupts = <0 35 4>;
-+		};
-+	};
-+};
--- 
-2.7.4
+ Documentation/devicetree/bindings/clock/marvell,mmp2.txt | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/clock/marvell,mmp2.txt b/D=
+ocumentation/devicetree/bindings/clock/marvell,mmp2.txt
+index af376a01f2b7..23b52dc02266 100644
+--- a/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
++++ b/Documentation/devicetree/bindings/clock/marvell,mmp2.txt
+@@ -18,4 +18,4 @@ Required Properties:
+ Each clock is assigned an identifier and client nodes use this identifie=
+r
+ to specify the clock which they consume.
+=20
+-All these identifier could be found in <dt-bindings/clock/marvell-mmp2.h=
+>.
++All these identifiers could be found in <dt-bindings/clock/marvell,mmp2.=
+h>.
+--=20
+2.19.2
