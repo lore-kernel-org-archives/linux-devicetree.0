@@ -1,98 +1,79 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [Letux-kernel] [PATCH RFC] bluetooth: add uart h4 devices via
- serdev/devicetree
-Date: Fri, 4 Jan 2019 20:57:10 +0100
-Message-ID: <20190104205600.3e6b31c9@aktux>
-References: <20181110232034.17277-1-andreas@kemnade.info>
-        <20181111024648.7rt7rlhaqihtqecv@earth.universe>
-        <20181112215812.18ebca35@aktux>
-        <2C74C837-A6D3-47C9-BE59-CCA594289B94@goldelico.com>
-        <20181112222726.73m2oca7hankvcjs@earth.universe>
-        <CABGGisxsdv+BTd5-HMzF8asEcWtL5F4CMzmkrBCwK=NibvqjLQ@mail.gmail.com>
-        <20181113170128.0f59ef0e@kemnade.info>
-        <86A3A2E6-FC89-42FE-8410-9C8273EC9CF7@holtmann.org>
-        <20181116204601.4e1aa0de@kemnade.info>
-        <09AFE47C-D188-4397-A2CD-C70FFAC3B677@holtmann.org>
-        <20190104064403.325771fd@kemnade.info>
-        <B5CEA49A-0F54-40C5-BCEA-7875BE1358E3@holtmann.org>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Fri, 4 Jan 2019 21:12:56 +0100
+Message-ID: <20190104201256.GA2931@amd>
+References: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
+ <20181219201047.GA23448@amd>
+ <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
+ <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/k.3xD97g07g2Scmu0iHJy5M"; protocol="application/pgp-signature"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <B5CEA49A-0F54-40C5-BCEA-7875BE1358E3@holtmann.org>
+Content-Disposition: inline
+In-Reply-To: <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marcel Holtmann <marcel@holtmann.org>
-Cc: Rob Herring <robh@kernel.org>, Sebastian Reichel <sebastian.reichel@collabora.com>, "H . Nikolaus Schaller" <hns@goldelico.com>, devicetree <devicetree@vger.kernel.org>, Johan Hedberg <johan.hedberg@gmail.com>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-bluetooth@vger.kernel.org, letux-kernel@openphoenux.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Vesa =?iso-8859-1?B?SuTkc2tlbORpbmVu?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/k.3xD97g07g2Scmu0iHJy5M
-Content-Type: text/plain; charset=UTF-8
+
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Content-Transfer-Encoding: quoted-printable
 
-Hi Marcel,
+Hi!
 
-On Fri, 4 Jan 2019 10:07:34 +0100
-Marcel Holtmann <marcel@holtmann.org> wrote:
-
-> Hi Andreas,
+> >I suppose if one would just make it an array of values (separated by
+> >space) and then one file with string array of color element names and on
+> >file with maximum value array it could be within those words.
+> >
+> >The it would be something like:
+> >
+> >$ echo "23 54 32" > color
 >=20
-> >>>> Btw. I see nothing standing in the way of merging btuart.c driver an=
-d then go from there. Either I dig this out and submit or someone else does.
-> >>>>  =20
-> >>> Do you mean this?
-> >>> https://patchwork.kernel.org/patch/10490651/   =20
-> >>=20
-> >> yes, that one.
-> >>  =20
-> > Hmm, there seemed to be nothing in the pull requests regarding btuart.
-> > Did you change plans? =20
+> Go ahead, but first convince Pavel, and then Greg :-)
 >=20
-> because I only submitted it as RFC. We can easily merge that one upstream=
- since it is rather trivial. The main problem is how you want to do the dev=
-ice matching. Do you have a DT entry for your really simple devices?
->=20
-Hmm, in that link it is non-rfc. So someone picked you rfc patch up and
-submitted it?
+> I'd personally would not have much against, especially that the
+> list of values will not grow for that one like in case of old patch set
+> [0] where Pavel and Greg thwarted my similar attempt.
 
-You might see what we are already doing here:
-http://git.goldelico.com/?p=3Dletux-kernel.git;a=3Dblobdiff;f=3Darch/arm/bo=
-ot/dts/omap3-gta04.dtsi;h=3D4d2bac4293938de4a15a59979616909cf8842524;hp=3Db=
-fced960d63ec40cf9db4901374b331737a9a168;hb=3Df78bf51754e35010de40518b9a8a14=
-8d0269bbc8;hpb=3Db6805813a9ab5b0d66b44cc54a0059eca4dd0a98
+Oh, you can get this past Pavel (and probably Greg) -- if you have a
+good reason. Performance is _not_ a good reason. You don't need to
+change LED color 50000 times a second.
 
-We are using compatible=C2=A0=3D=C2=A0"wi2wi,w2cbw003-bluetooth"
+If you can demonstrate a reasonable design, where user selects color
+=66rom well-known RGB pallete and either kernel or library+kernel acts
+to set that color on the LED, we can talk.
 
-But I think we should also add a generic device string like
-bluetooth,h4
-So if people dig out older hardware, they can just add that to their
-device trees and have bluetooth
+When user asks for white, it has to be white. Exact color temperature
+does not matter. When user asks for pink, it has to be pink. Again,
+exact color does not matter; different monitors display slightly
+different colors, too.
 
-The full patchset we are currently using is here:
-http://git.goldelico.com/?p=3Dletux-kernel.git;a=3Dshortlog;h=3Drefs/heads/=
-letux/bluetooth-h4-serdev
+									Pavel
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
 
-Regards,
-Andreas
-
---Sig_/k.3xD97g07g2Scmu0iHJy5M
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
 
 -----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
 
-iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlwvupYACgkQfb1qx03i
-kyQCMA//UcuhECwYbxbjrGLdMxqjvgo452MgX/hSy9bN/NTFmq2g09u1g5nv5MkV
-b76cfWGRkMw+Zn6Sui2dE7gJUgHNHpyrt7IfmLiHYGHGOnG3S9q89lStD7+XQyrR
-ox8sE4N/vpIfc2OFwu3QLDeTH33ZxsA1ICpDsnuCiikl7gAkRGh5FzFaOvAKprCC
-htWcq2BvpMp8HkoFcWAUi/ucjswO2qk7s66zVJW7ssfw4yhnrRJDrlLUnv1EF+K0
-J8/MT/TydjHRklISPA5gXG1HhMZa3m+gyMt9Kx85W7aLnbY/bEp44gtR+IKteKNO
-FnOR23XwwBK+/nG+GJ7R55R0Gg5vbR0JpF/caglux2gpEQM2tS4HM8kaW0Hvhuwd
-O8FBOQiVg1z0bNwd111H6/R2j0+REE1gYW80iLJjHVKqRzMYF5J7ayO/OT0sKYKD
-LVBlUcDsDTumjuwcyFWbJ/Zk6Z8F3u9RMOv+1GCL3JNJKthYDj3JN6MAMcEINA0n
-Y1JuGj++4jK1R5z2H0dd1a3TTuy/lVGoySxrVU6U5CgobwRuMxhN3YBdWHDMC9qo
-t9/RnAkI/xj8ScNeAsZEYJe9ZDwWgWZ3lygols7QvqApSMtQjB8h6Ci/yD5Vbzss
-KXKyrPayXyPO2HRrsFxBoLX/CRAscvGlwvKeN2uyNUWCG/Tt4Uo=
-=N5bk
+iEYEARECAAYFAlwvvkgACgkQMOfwapXb+vLC5gCeJzY/t2GKL7z2FxsIPH/gnKYJ
+obgAn0oHvXGS41dRhGdbciUlflxl8+Rr
+=ywxG
 -----END PGP SIGNATURE-----
 
---Sig_/k.3xD97g07g2Scmu0iHJy5M--
+--G4iJoqBmSsgzjUCe--
