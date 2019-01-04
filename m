@@ -1,73 +1,63 @@
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: RE: [PATCH 2/3] Documentation: DT: Add entry for DPAA2 console
-Date: Fri, 4 Jan 2019 17:50:37 +0000
-Message-ID: <VI1PR0402MB280090CC66E990AD6E82F52FE08E0@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-References: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
- <1545406240-3061-3-git-send-email-ioana.ciornei@nxp.com>
- <20190103203250.GA18731@bogus>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 0/4] Add driver for globaltop GNSS receivers
+Date: Fri, 4 Jan 2019 11:51:51 -0600
+Message-ID: <CAL_JsqLvSWF60eqLsXUcP5GL0ijgfE6XwvectiM1D1Y9LPpOkA@mail.gmail.com>
+References: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103203250.GA18731@bogus>
-Content-Language: en-US
+In-Reply-To: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Roy Pledge <roy.pledge@nxp.com>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-> Subject: Re: [PATCH 2/3] Documentation: DT: Add entry for DPAA2 console
->=20
-> On Fri, Dec 21, 2018 at 03:31:11PM +0000, Ioana Ciornei wrote:
-> > This patch adds a devicetree binding documentation for FSL's DPAA2
-> > console.
-> >
-> > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/misc/dpaa2-console.txt | 11
-> +++++++++++
-> >  MAINTAINERS                                              |  1 +
-> >  2 files changed, 12 insertions(+)
-> >  create mode 100644
-> > Documentation/devicetree/bindings/misc/dpaa2-console.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/misc/dpaa2-console.txt
-> > b/Documentation/devicetree/bindings/misc/dpaa2-console.txt
-> > new file mode 100644
-> > index 0000000..f4e16b1
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/dpaa2-console.txt
-> > @@ -0,0 +1,11 @@
-> > +DPAA2 console support
-> > +
-> > +Required properties:
-> > +
-> > +    - compatible
-> > +        Value type: <string>
-> > +        Definition: Must be "dpaa2-console".
-> > +    - reg
-> > +        Value type: <prop-encoded-array>
-> > +        Definition: A standard property.  Specifies the region where t=
-he MCFBA
-> > +                    (MC firmware base address) register can be found.
->=20
-> What's the relationship between MCFBA and the console?
+On Fri, Dec 28, 2018 at 4:51 AM Loys Ollivier <lollivier@baylibre.com> wrote:
+>
+> Hello !
+>
+> This patch series adds a new GNSS driver for the globaltop GNSS receivers.
+> These receivers transmits NMEA output sequence as soon as they have booted.
+> Power management can be done via the main supply and optional backup supply
+> as defined in the device tree.
+>
+> The driver has been tested using a GlobalTop pa6h chipset on a Libretech-cc
+> board using the expansion header. Changes made in the board device tree can
+> be found below for reference and testing.
+>
+> Loys
+>
+> Loys Ollivier (4):
+>   dt-bindings: Add vendor prefix for "GlobalTop Technology, Inc."
+>   dt-bindings: gnss: add gtop binding
+>   gnss: add gtop receiver type support
+>   gnss: add driver for globaltop receivers
+>
+>  Documentation/devicetree/bindings/gnss/gtop.txt    |  33 +++++
+>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>  drivers/gnss/Kconfig                               |  13 ++
+>  drivers/gnss/Makefile                              |   3 +
+>  drivers/gnss/core.c                                |   1 +
+>  drivers/gnss/gtop.c                                | 152 +++++++++++++++++++++
+>  include/linux/gnss.h                               |   1 +
+>  7 files changed, 204 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gnss/gtop.txt
+>  create mode 100644 drivers/gnss/gtop.c
+>
+> ---
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> index 90a56af967a7..3b3d4dcc47aa 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> @@ -17,6 +17,7 @@
+>
+>         aliases {
+>                 serial0 = &uart_AO;
+> +               serial1 = &uart_A;
 
-The console is basically a log buffer of the MC firmware, and is found at a=
- known offset compared to the firmware image's runtime base address.
+You should not need this as the UART is not used as a tty. It could be
+that the serial driver requires aliases, but that should be fixed.
+There should be some examples of fixing this in other serial drivers.
 
-> The binding should describe the h/w block or firmware interface not the f=
-eature you want to
-> implement. Are there other functions provided by the MC firmware?
-
-The MC firmware manages all hardware resources related to networking or any=
- other accelerators.
-Any interaction with the firmware is made through commands put in memory ma=
-pped regions.
-The fsl-mc bus driver is the one that already manages this interaction with=
- the MC.
-
-Ioana
-
->=20
-> Rob
+>                 ethernet0 = &ethmac;
+>         };
