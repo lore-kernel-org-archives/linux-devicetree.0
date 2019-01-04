@@ -1,57 +1,67 @@
-Return-Path: <SRS0=f1WY=PK=skidata.com=prvs=898d4ecf4=Richard.Leitner@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: usb: usb251xb: add documentation for
- data lane swapping
-References: <20181219145941.5173-1-m.felsch@pengutronix.de>
- <20181228234525.GA30428@bogus>
- <20181231110514.e3lrninzybg5vhvw@pengutronix.de>
-From: Richard Leitner <richard.leitner@skidata.com>
-Message-ID: <dfcbf6ae-be39-ec8c-9018-05221372098c@skidata.com>
-Date: Wed, 2 Jan 2019 06:44:51 +0100
+Return-Path: <SRS0=1U1q=PM=verge.net.au=horms@kernel.org>
+Date: Fri, 4 Jan 2019 14:14:09 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder from du
+ node
+Message-ID: <20190104131408.dytwgjhw3ikn7ik3@verge.net.au>
+References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com>
+ <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdW+qVJxu0fjC+j8w-neHU8FOHmJqRbHAtp1JvKYJ+RrXQ@mail.gmail.com>
+ <OSBPR01MB2103C5C4C2A5B276E80D047AB88D0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190104090517.bi5et5osmyxmfrwb@verge.net.au>
+ <OSBPR01MB2103D40FC38C4A75476EBC39B88E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-In-Reply-To: <20181231110514.e3lrninzybg5vhvw@pengutronix.de>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: Marco Felsch <m.felsch@pengutronix.de>, Rob Herring <robh@kernel.org>
-Cc: fancer.lancer@gmail.com, kernel@pengutronix.de, linux-usb@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <OSBPR01MB2103D40FC38C4A75476EBC39B88E0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
-
-On 31/12/2018 12:05, Marco Felsch wrote:
-> Hi,
+On Fri, Jan 04, 2019 at 10:02:02AM +0000, Biju Das wrote:
+> Hi Simon,
 > 
-> On 18-12-28 17:45, Rob Herring wrote:
->> On Wed, Dec 19, 2018 at 03:59:40PM +0100, Marco Felsch wrote:
->>> Add optional binding to allow USB differential-pair (D+/D-) data lane
->>> swapping. The swapping can be specified for each port separately,
->>> default is no swapping.
->>>
->>> Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
->>> ---
->>>   Documentation/devicetree/bindings/usb/usb251xb.txt | 4 ++++
->>>   1 file changed, 4 insertions(+)
->>>
->>> diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
->>> index 168ff819e827..aec93a92870d 100644
->>> --- a/Documentation/devicetree/bindings/usb/usb251xb.txt
->>> +++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
->>> @@ -64,6 +64,8 @@ Optional properties :
->>>    - power-on-time-ms : Specifies the time it takes from the time the host
->>>   	initiates the power-on sequence to a port until the port has adequate
->>>   	power. The value is given in ms in a 0 - 510 range (default is 100ms).
->>> + - sw-dx-lanes-ports : Specifies the ports which will swap the differential-pair
->>> +	(D+/D-), default is not-swapped.
->>
->> Perhaps 'swap-dx-ports' would be a more obvious name.
+> Thanks for the feedback.
 > 
-> What you think about 'swap-dx-lanes' since it has nothing to do with
-> port swapping, it's rather swapping port properties internally.
+> > Subject: Re: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder from
+> > du node
+> >
+> > On Thu, Jan 03, 2019 at 02:34:39PM +0000, Biju Das wrote:
+> > > Hi Geert,
+> > >
+> > > Thanks for the feedback.
+> > >
+> > > > Subject: Re: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder
+> > > > from du node
+> > > >
+> > > > Hi Biju,
+> > > >
+> > > > On Wed, Dec 5, 2018 at 10:15 AM Biju Das <biju.das@bp.renesas.com>
+> > > > wrote:
+> > > > > The internal LVDS encoder now has DT bindings separate from the DU.
+> > > > > So remove it from du node.
+> > > > >
+> > > > > Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to
+> > > > > bridge driver")
+> > > > >
+> > > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > >
+> > > > Thanks for your patch!
+> > > >
+> > > > > ---
+> > > > > V1-->V2
+> > > > >         * Removed LVDS encoder definition from DU node.
+> > > >
+> > > > Shouldn't you add a new node for the LVDS encoder?
+> > >
+> > > Yes for Soc Dtsi , I will add the new node for LVDS encoder.
+> >
+> > Can I clarify that I should wait for a fresh revision of this and the following
+> > patch?
+> 
+> My original plan was to submit LVDS encoder patch as separate one.
+> 
+> But now we are agreeing for adding  LVDS encoder node as part of the fix (Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
+> So I will send V3 with this change.
 
-I'd also prefer 'swap-dx-lanes'. For me it's short and clear.
-
-The only downside is that the feature is called "PORT SWAP" in the
-datasheet. Therefore you should maybe mention it in a comment somewhere
-in the code so people know what to look for in the datasheet?
-
-regards;Richard.L
+Great, thanks!
