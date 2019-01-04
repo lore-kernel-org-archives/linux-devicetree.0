@@ -1,68 +1,83 @@
-From: =?gb2312?B?WXVuZmVpIERvbmcgKLat1Ma3ySk=?=
-        <Yunfei.Dong@mediatek.com>
-Subject: =?gb2312?B?tPC4tDogW1BBVENIIDEvM10gbWVkaWE6IGR0LWJpbmRpbmdzOiBtZWRpYTog?=
- =?gb2312?Q?Fix_MTK_document_for_vcodec?=
-Date: Fri, 4 Jan 2019 03:13:47 +0000
-Message-ID: <6167c601b2c04e2a8b493a3cab35941e@MTKMBS31N1.mediatek.inc>
+From: yunfei.dong <yunfei.dong@mediatek.com>
+Subject: Re: [PATCH 1/3] media: dt-bindings: media: Fix MTK document for vcodec
+Date: Fri, 4 Jan 2019 11:32:27 +0800
+Message-ID: <1546572747.12334.3.camel@mhfsdcap03>
 References: <1545978785-31375-1-git-send-email-yunfei.dong@mediatek.com>
  <20190103231722.GA22018@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 In-Reply-To: <20190103231722.GA22018@bogus>
-Content-Language: zh-CN
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: =?gb2312?B?VGlmZmFueSBMaW4gKMHWu9vJuik=?= <tiffany.lin@mediatek.com>, =?gb2312?B?QW5kcmV3LUNUIENoZW4gKOqQ1se1zyk=?= <Andrew-CT.Chen@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, =?gb2312?B?UWlhbnFpYW4gWWFuICjR1tm72bsp?= <Qianqian.Yan@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Tiffany Lin <tiffany.lin@mediatek.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpUaGFua3MgZm9yIHlvdXIgYWR2aWNlLCBhbmQgSSBhbHJlYWR5IHNlbnQgdGhl
-IHNlY29uZCBwYXRjaC4NCg0KQ2hhbmdlIG5vdGU6DQoxOiBtb2RpZnkgdGhlIHN1YmplY3QgZm9y
-IDAwMDEqDQoyOiBtb2RpZnkgdGhlIGRlc2NyaXB0aW9uIGZvciAwMDAzKg0KDQpCZXN0IFJlZ2Fy
-ZHMsDQpZdW5mZWkgRG9uZyANCg0KLS0tLS3Tyrz+1K28/i0tLS0tDQq3orz+yMs6IFJvYiBIZXJy
-aW5nIFttYWlsdG86cm9iaEBrZXJuZWwub3JnXSANCreiy83KsbzkOiAyMDE5xOox1MI0yNUgNzox
-Nw0KytW8/sjLOiBZdW5mZWkgRG9uZyAotq3UxrfJKQ0Ks63LzTogVGlmZmFueSBMaW4gKMHWu9vJ
-uik7IEFuZHJldy1DVCBDaGVuICjqkNbHtc8pOyBNYXVybyBDYXJ2YWxobyBDaGVoYWI7IE1hcmsg
-UnV0bGFuZDsgTWF0dGhpYXMgQnJ1Z2dlcjsgbGludXgtbWVkaWFAdmdlci5rZXJuZWwub3JnOyBk
-ZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZzsg
-bGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBsaW51eC1tZWRpYXRla0BsaXN0
-cy5pbmZyYWRlYWQub3JnOyBRaWFucWlhbiBZYW4gKNHW2bvZuykNCtb3zOI6IFJlOiBbUEFUQ0gg
-MS8zXSBtZWRpYTogZHQtYmluZGluZ3M6IG1lZGlhOiBGaXggTVRLIGRvY3VtZW50IGZvciB2Y29k
-ZWMNCg0KT24gRnJpLCBEZWMgMjgsIDIwMTggYXQgMDI6MzM6MDNQTSArMDgwMCwgWXVuZmVpIERv
-bmcgd3JvdGU6DQo+IEZpeCBNVEsgYmluZGluZyBkb2N1bWVudCBmb3IgTVQ4MTczIGR0c2kgY2hh
-bmdlZCBpbiBvcmRlciB0byB1c2UgDQo+IHN0YW5kYXJkIENDRiBpbnRlcmZhY2UuDQo+IE1UODE3
-MyBTb0MgZnJvbSBNZWRpYXRlay4NCg0KQSBiZXR0ZXIgc3ViamVjdCB3b3VsZCBiZSAiYWRkICdh
-c3NpZ25lZC1jbG9ja3MnIHRvIHZjb2RlYyBleGFtcGxlcyIuDQoNCj4gDQo+IFNpZ25lZC1vZmYt
-Ynk6IFl1bmZlaSBEb25nIDx5dW5mZWkuZG9uZ0BtZWRpYXRlay5jb20+DQo+IFNpZ25lZC1vZmYt
-Ynk6IFFpYW5xaWFuIFlhbiA8cWlhbnFpYW4ueWFuQG1lZGlhdGVrLmNvbT4NCj4gLS0tDQo+ICAu
-Li4vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9tZWRpYXRlay12Y29kZWMudHh0ICAgfCAxMyAr
-KysrKysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiANCj4g
-ZGlmZiAtLWdpdCANCj4gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEv
-bWVkaWF0ZWstdmNvZGVjLnR4dCANCj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvbWVkaWEvbWVkaWF0ZWstdmNvZGVjLnR4dA0KPiBpbmRleCAyYTYxNWQ4NGE2ODIuLmI2YjVk
-ZGU2YWJkOCAxMDA2NDQNCj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L21lZGlhL21lZGlhdGVrLXZjb2RlYy50eHQNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0
-cmVlL2JpbmRpbmdzL21lZGlhL21lZGlhdGVrLXZjb2RlYy50eHQNCj4gQEAgLTY2LDYgKzY2LDE1
-IEBAIHZjb2RlY19kZWM6IHZjb2RlY0AxNjAwMDAwMCB7DQo+ICAgICAgICAgICAgICAgICAgICAi
-dmVuY3BsbCIsDQo+ICAgICAgICAgICAgICAgICAgICAidmVuY19sdF9zZWwiLA0KPiAgICAgICAg
-ICAgICAgICAgICAgInZkZWNfYnVzX2Nsa19zcmMiOw0KPiArICAgIGFzc2lnbmVkLWNsb2NrcyA9
-IDwmdG9wY2tnZW4gQ0xLX1RPUF9WRU5DX0xUX1NFTD4sDQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgPCZ0b3Bja2dlbiBDTEtfVE9QX0NDSTQwMF9TRUw+LA0KPiArICAgICAgICAgICAgICAgICAg
-ICAgIDwmdG9wY2tnZW4gQ0xLX1RPUF9WREVDX1NFTD4sDQo+ICsgICAgICAgICAgICAgICAgICAg
-ICAgPCZhcG1peGVkc3lzIENMS19BUE1JWEVEX1ZDT0RFQ1BMTD4sDQo+ICsgICAgICAgICAgICAg
-ICAgICAgICAgPCZhcG1peGVkc3lzIENMS19BUE1JWEVEX1ZFTkNQTEw+Ow0KPiArICAgIGFzc2ln
-bmVkLWNsb2NrLXBhcmVudHMgPSA8JnRvcGNrZ2VuIENMS19UT1BfVkNPREVDUExMXzM3MFA1PiwN
-Cj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgPCZ0b3Bja2dlbiBDTEtfVE9QX1VOSVZQ
-TExfRDI+LA0KPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICA8JnRvcGNrZ2VuIENMS19U
-T1BfVkNPREVDUExMPjsNCj4gKyAgICBhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDwwPiwgPDA+LCA8
-MD4sIDwxNDgyMDAwMDAwPiwgPDgwMDAwMDAwMD47DQo+ICAgIH07DQo+ICANCj4gICAgdmNvZGVj
-X2VuYzogdmNvZGVjQDE4MDAyMDAwIHsNCj4gQEAgLTEwNSw0ICsxMTQsOCBAQCB2Y29kZWNfZGVj
-OiB2Y29kZWNAMTYwMDAwMDAgew0KPiAgICAgICAgICAgICAgICAgICAgInZlbmNfc2VsIiwNCj4g
-ICAgICAgICAgICAgICAgICAgICJ2ZW5jX2x0X3NlbF9zcmMiLA0KPiAgICAgICAgICAgICAgICAg
-ICAgInZlbmNfbHRfc2VsIjsNCj4gKyAgICBhc3NpZ25lZC1jbG9ja3MgPSA8JnRvcGNrZ2VuIENM
-S19UT1BfVkVOQ19TRUw+LA0KPiArICAgICAgICAgICAgICAgICAgICAgIDwmdG9wY2tnZW4gQ0xL
-X1RPUF9WRU5DX0xUX1NFTD47DQo+ICsgICAgYXNzaWduZWQtY2xvY2stcGFyZW50cyA9IDwmdG9w
-Y2tnZW4gQ0xLX1RPUF9WRU5DUExMX0QyPiwNCj4gKyAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgPCZ0b3Bja2dlbiBDTEtfVE9QX1VOSVZQTEwxX0QyPjsNCj4gICAgfTsNCj4gLS0NCj4gMi4x
-OS4xDQo+IA0K
+Hi Rob,
+
+Thanks for your advice, I already sent the second patch.
+
+Change note:
+1: modify the subject for 0001*
+2: modify the description for 0003
+
+Best Regards,
+Yunfei Dong
+
+
+On Thu, 2019-01-03 at 17:17 -0600, Rob Herring wrote:
+> On Fri, Dec 28, 2018 at 02:33:03PM +0800, Yunfei Dong wrote:
+> > Fix MTK binding document for MT8173 dtsi changed in order
+> > to use standard CCF interface.
+> > MT8173 SoC from Mediatek.
+> 
+> A better subject would be "add 'assigned-clocks' to vcodec examples".
+> 
+> > 
+> > Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> > Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
+> > ---
+> >  .../devicetree/bindings/media/mediatek-vcodec.txt   | 13 +++++++++++++
+> >  1 file changed, 13 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > index 2a615d84a682..b6b5dde6abd8 100644
+> > --- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > +++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+> > @@ -66,6 +66,15 @@ vcodec_dec: vcodec@16000000 {
+> >                    "vencpll",
+> >                    "venc_lt_sel",
+> >                    "vdec_bus_clk_src";
+> > +    assigned-clocks = <&topckgen CLK_TOP_VENC_LT_SEL>,
+> > +                      <&topckgen CLK_TOP_CCI400_SEL>,
+> > +                      <&topckgen CLK_TOP_VDEC_SEL>,
+> > +                      <&apmixedsys CLK_APMIXED_VCODECPLL>,
+> > +                      <&apmixedsys CLK_APMIXED_VENCPLL>;
+> > +    assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL_370P5>,
+> > +                             <&topckgen CLK_TOP_UNIVPLL_D2>,
+> > +                             <&topckgen CLK_TOP_VCODECPLL>;
+> > +    assigned-clock-rates = <0>, <0>, <0>, <1482000000>, <800000000>;
+> >    };
+> >  
+> >    vcodec_enc: vcodec@18002000 {
+> > @@ -105,4 +114,8 @@ vcodec_dec: vcodec@16000000 {
+> >                    "venc_sel",
+> >                    "venc_lt_sel_src",
+> >                    "venc_lt_sel";
+> > +    assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
+> > +                      <&topckgen CLK_TOP_VENC_LT_SEL>;
+> > +    assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
+> > +                             <&topckgen CLK_TOP_UNIVPLL1_D2>;
+> >    };
+> > -- 
+> > 2.19.1
+> > 
