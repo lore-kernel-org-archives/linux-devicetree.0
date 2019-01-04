@@ -1,7 +1,7 @@
 From: Jolly Shah <jolly.shah@xilinx.com>
-Subject: [PATCH v2 1/4] dt-bindings: power: Add ZynqMP power domain bindings
-Date: Fri, 4 Jan 2019 13:56:19 -0800
-Message-ID: <1546638982-12954-2-git-send-email-jollys@xilinx.com>
+Subject: [PATCH v2 3/4] dt-bindings: reset: Add bindings for ZynqMP reset driver
+Date: Fri, 4 Jan 2019 13:56:21 -0800
+Message-ID: <1546638982-12954-4-git-send-email-jollys@xilinx.com>
 References: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -9,44 +9,163 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1546638982-12954-1-git-send-email-jollys@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rajan Vaja <rajan.vaja@xilinx.com>, Jolly Shah <jollys@xilinx.com>
+Cc: michal.simek@xilinx.com, rajanv@xilinx.com, nava.manne@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Rajan Vaja <rajan.vaja@xilinx.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
 
-Add documentation to describe ZynqMP power domain bindings.
+Add documentation to describe Xilinx ZynqMP reset driver
+bindings.
 
-Signed-off-by: Rajan Vaja <rajan.vaja@xilinx.com>
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 Signed-off-by: Jolly Shah <jollys@xilinx.com>
 ---
- .../bindings/power/xlnx,zynqmp-genpd.txt           | 34 +++++++++++++++++++
- include/dt-bindings/power/xlnx-zynqmp-power.h      | 39 ++++++++++++++++++++++
- 2 files changed, 73 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
- create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+ .../bindings/reset/xlnx,zynqmp-reset.txt           | 148 +++++++++++++++++++++
+ 1 file changed, 148 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
 
-diff --git a/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
 new file mode 100644
-index 0000000..3c7f237
+index 0000000..e9c1af8
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
-@@ -0,0 +1,34 @@
-+-----------------------------------------------------------
-+Device Tree Bindings for the Xilinx Zynq MPSoC PM domains
-+-----------------------------------------------------------
-+The binding for zynqmp-power-controller follow the common
-+generic PM domain binding[1].
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+@@ -0,0 +1,148 @@
++--------------------------------------------------------------------------
++ =  Zynq UltraScale+ MPSoC reset driver binding =
++--------------------------------------------------------------------------
++The Zynq UltraScale+ MPSoC has several different resets.
 +
-+[1] Documentation/devicetree/bindings/power/power_domain.txt
++See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
++about zynqmp resets.
 +
-+== Zynq MPSoC Generic PM Domain Node ==
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
 +
-+Required property:
-+ - Below property should be in zynqmp-firmware node.
-+ - #power-domain-cells:	Number of cells in a PM domain specifier. Must be 1.
++Required Properties:
++- #reset-cells:	Specifies the number of cells needed to encode reset
++		line, should be 1
 +
-+Power domain ID indexes are mentioned in
-+include/dt-bindings/power/xlnx-zynqmp-power.h.
++Reset outputs:
++	0   :PCIE config reset.
++	1   :PCIE bridge block level reset (AXI interface).
++	2   :PCIE control block level,reset.
++	3   :Display Port block level reset (includes DPDMA).
++	4   :FPD WDT reset.
++	5   :AF_FM5 block level reset.
++	6   :AF_FM4 block level reset.
++	7   :AF_FM3 block level reset.
++	8   :AF_FM2 block level reset.
++	9   :AF_FM1 block level reset.
++	10  :AF_FM0 block level reset.
++	11  :GDMA block level reset.
++	12  :Pixel Processor (GPU_PP1) block level reset.
++	13  :Pixel Processor (GPU_PP0) block level reset.
++	14  :GPU block level reset.
++	15  :GT block level reset.
++	16  :Sata block level reset.
++	17  :ACPU3 power on reset.
++	18  :ACPU2 power on reset.
++	19  :ACPU1 power on reset.
++	20  :ACPU0 power on reset.
++	21  :APU L2 reset.
++	22  :ACPU3 reset.
++	23  :ACPU2 reset.
++	24  :ACPU1 reset.
++	25  :ACPU0 reset.
++	26  :DDR block level reset inside of the DDR Sub System.
++	27  :APM block level reset inside of the DDR Sub System.
++	28  :soft reset.
++	29  :GEM 0 reset.
++	30  :GEM 1 reset.
++	31  :GEM 2 reset.
++	32  :GEM 3 reset.
++	33  :qspi reset.
++	34  :uart0 reset.
++	35  :uart1 reset.
++	36  :spi0 reset.
++	37  :spi1 reset.
++	38  :sdio0 reset.
++	39  :sdio1 reset.
++	40  :can0 reset.
++	41  :can1 reset.
++	42  :i2c0 reset.
++	43  :i2c1 reset.
++	44  :ttc0 reset.
++	45  :ttc1 reset.
++	46  :ttc2 reset.
++	47  :ttc3 reset.
++	48  :swdt reset.
++	49  :nand reset.
++	50  :adma reset.
++	51  :gpio reset.
++	52  :iou_cc reset.
++	53  :timestamp reset.
++	54  :rpu_r50 reset.
++	55  :rpu r51 reset.
++	56  :rpu_amba reset.
++	57  :ocm reset.
++	58  :rpu_pge reset.
++	59  :usb0_core reset.
++	60  :usb1_core reset.
++	61  :usb0_hiber reset.
++	62  :usb1_hiber reset.
++	63  :usb0_apb reset.
++	64  :usb1_apb reset.
++	65  :ipi reset.
++	66  :apm reset.
++	67  :rtc reset.
++	68  :sysmon reset.
++	69  :afi_fm6 reset.
++	70  :lpd_swdt reset.
++	71  :fpd_reset.
++	72  :rpu_dbg1 reset.
++	73  :rpu_dbg0 reset.
++	74  :dbg_lpd reset.
++	75  :dbg_fpd reset.
++	76  :apll reset.
++	77  :dpll reset.
++	78  :vpll reset.
++	79  :iopll reset.
++	80  :rpll reset.
++	81  :gpio_pl_0 reset.
++	82  :gpio_pl_1 reset.
++	83  :gpio_pl_2 reset.
++	84  :gpio_pl_3 reset.
++	85  :gpio_pl_4 reset.
++	86  :gpio_pl_5 reset.
++	87  :gpio_pl_6 reset.
++	88  :gpio_pl_7 reset.
++	89  :gpio_pl_8 reset.
++	90  :gpio_pl_9 reset.
++	91  :gpio_pl_10 reset.
++	92  :gpio_pl_11 reset.
++	93  :gpio_pl_12 reset.
++	94  :gpio_pl_13 reset.
++	95  :gpio_pl_14 reset.
++	96  :gpio_pl_15 reset.
++	97  :gpio_pl_16 reset.
++	98  :gpio_pl_17 reset.
++	99  :gpio_pl_18 reset.
++	100 :gpio_pl_19 reset.
++	101 :gpio_pl_20 reset.
++	102 :gpio_pl_21 reset.
++	103 :gpio_pl_22 reset.
++	104 :gpio_pl_23 reset.
++	105 :gpio_pl_24 reset.
++	106 :gpio_pl_25 reset.
++	107 :gpio_pl_26 reset.
++	108 :gpio_pl_27 reset.
++	109 :gpio_pl_28 reset.
++	110 :gpio_pl_29 reset.
++	111 :gpio_pl_30 reset.
++	112 :gpio_pl_31 reset.
++	113 :rpu_ls reset.
++	114 :ps_only reset.
++	115 :pl reset.
++	116 :ps_pl0 reset
++	117 :ps_pl1 reset
++	118 :ps_pl2 reset
++	119 :ps_pl3 reset
 +
 +-------
 +Example
@@ -55,60 +174,9 @@ index 0000000..3c7f237
 +firmware {
 +	zynqmp_firmware: zynqmp-firmware {
 +		...
-+		#power-domain-cells = <1>;
++		#reset-cells = <1>;
 +		...
 +	};
 +};
-+
-+sata {
-+	...
-+	power-domains = <&zynqmp_firmware 2>;
-+	...
-+};
-diff --git a/include/dt-bindings/power/xlnx-zynqmp-power.h b/include/dt-bindings/power/xlnx-zynqmp-power.h
-new file mode 100644
-index 0000000..1bc9636
---- /dev/null
-+++ b/include/dt-bindings/power/xlnx-zynqmp-power.h
-@@ -0,0 +1,39 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ *  Copyright (C) 2018 Xilinx, Inc.
-+ */
-+
-+#ifndef _DT_BINDINGS_ZYNQMP_POWER_H
-+#define _DT_BINDINGS_ZYNQMP_POWER_H
-+
-+#define		PD_USB_0	0
-+#define		PD_USB_1	1
-+#define		PD_SATA		2
-+#define		PD_SPI_0	3
-+#define		PD_SPI_1	4
-+#define		PD_UART_0	5
-+#define		PD_UART_1	6
-+#define		PD_ETH_0	7
-+#define		PD_ETH_1	8
-+#define		PD_ETH_2	9
-+#define		PD_ETH_3	10
-+#define		PD_I2C_0	11
-+#define		PD_I2C_1	12
-+#define		PD_DP		13
-+#define		PD_GDMA		14
-+#define		PD_ADMA		15
-+#define		PD_TTC_0	16
-+#define		PD_TTC_1	17
-+#define		PD_TTC_2	18
-+#define		PD_TTC_3	19
-+#define		PD_SD_0		20
-+#define		PD_SD_1		21
-+#define		PD_NAND		22
-+#define		PD_QSPI		23
-+#define		PD_GPIO		24
-+#define		PD_CAN_0	25
-+#define		PD_CAN_1	26
-+#define		PD_PCIE		27
-+#define		PD_GPU		28
-+
-+#endif
 -- 
 2.7.4
