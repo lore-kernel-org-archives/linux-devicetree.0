@@ -1,48 +1,38 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 1/3] spmi: pmic-arb: convert to v2 irq interfaces to
- support hierarchical IRQ chips
-Date: Fri, 4 Jan 2019 20:45:03 -0500
-Message-ID: <20190105014503.GA32383@basecamp>
-References: <20181229114755.8711-1-masneyb@onstation.org>
- <20181229114755.8711-2-masneyb@onstation.org>
- <154664792383.15366.9346249356552958882@swboyd.mtv.corp.google.com>
+From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Subject: Re: [PATCH lora-next 3/5] net: lora: sx130x: Add PicoCell serdev
+ driver
+Date: Sat, 5 Jan 2019 02:49:46 +0100
+Message-ID: <9e449443-d063-0175-dfd1-ee42d26d27c4@suse.de>
+References: <20190104112131.14451-1-afaerber@suse.de>
+ <20190104112131.14451-4-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154664792383.15366.9346249356552958882@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190104112131.14451-4-afaerber@suse.de>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: linux-lpwan@lists.infradead.org, Ben Whitten <ben.whitten@gmail.com>
+Cc: linux-serial@vger.kernel.org, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Mark Brown <broonie@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 04, 2019 at 04:25:23PM -0800, Stephen Boyd wrote:
-> > +       /*
-> > +        * Check to see if the hwirq is already associated with another virq on
-> > +        * this IRQ domain. If so, then disassociate it before associating the
-> > +        * hwirq with the new virq. IRQs are all initially setup without an IRQ
-> > +        * hierarchy when this driver is probed and when mfd/qcom-spmi-pmic.c is
-> > +        * probed. Later in the boot process, an IRQ hierarchy is requested by
-> > +        * pinctrl-spmi-gpio.c, and the same hwirq is now associated with a new
-> > +        * virq.
-> 
-> Is that because we count the irqs in the pmic gpio driver?
+Am 04.01.19 um 12:21 schrieb Andreas Färber:
+> Currently there's still some bugs to be investigated, with communication
+> stalling on one device and another reading the radio versions wrong
+> (07 / 1f instead of 21, also observed on spi once).
 
-Yes.
+Reproducable 100% on SPI by setting REGCACHE_RBTREE in sx130x.c.
 
-The call to devm_of_platform_populate() in drivers/mfd/qcom-spmi-pmic.c
-also triggers this condition. I'll experiment with this some more this
-weekend.
+Since this serdev driver was using REGCACHE_NONE still and I don't spot
+a register missing as volatile either, I guess it may be a timing issue?
 
-> Otherwise patch looks good to me. Thanks for working on this. Are you
-> going to convert the ssbi master and gpio chip too?
+My earlier locking patch is applied, to rule out any non-determinism in
+the register access order due to radio vs. concentrator interactions.
 
-Yes, I will do that work as well once this patch series is accepted.
-I currently don't have the hardware to test it, but I'm willing to pick
-up a cheap device on ebay. Any suggestions for something that boots a
-mainline kernel with the ssbi? It looks like the Sony Xperia Z phone is
-one of the supported devices.
+Regards,
+Andreas
 
-Thanks for your review on the other patches. It all makes sense.
-
-Brian
+-- 
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Jane Smithard, Graham Norton
+HRB 21284 (AG Nürnberg)
