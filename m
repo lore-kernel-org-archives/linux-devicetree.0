@@ -1,120 +1,58 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH 2/3] qcom: spmi-gpio: add support for hierarchical IRQ
- chip
-Date: Sat, 5 Jan 2019 07:08:44 -0500
-Message-ID: <20190105120844.GA2298@basecamp>
-References: <20181229114755.8711-1-masneyb@onstation.org>
- <20181229114755.8711-3-masneyb@onstation.org>
- <154656291378.15366.8661245319757182529@swboyd.mtv.corp.google.com>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Sat, 5 Jan 2019 13:16:11 +0100
+Message-ID: <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com>
+References: <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
+ <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
+ <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154656291378.15366.8661245319757182529@swboyd.mtv.corp.google.com>
+In-Reply-To: <20190104220726.GA12395@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 03, 2019 at 04:48:33PM -0800, Stephen Boyd wrote:
-> I'd think we want the interrupt-cells for the pmic gpio controller to be
-> 2 cells (pin and flags) instead of 4 like you have here to match the
-> parent interrupt specifier.
+Hi Pavel,
 
-I originally went with 4 interrupt cells for spmi-gpio to match the
-number of cells on the parent (spmi-arb). From qcom-msm8974.dtsi:
-
-spmi_bus: spmi@fc4cf000 {
-	compatible = "qcom,spmi-pmic-arb";
-	interrupt-controller;
-	#interrupt-cells = <4>;
-	...
-};
-
-I agree that we should go with 2 cells for spmi-gpio.
-
-> I also seem to recall that GPIO numbering starts from 1 instead of
-> 0, so please keep that in mind.
-
-I'm using the pinctrl numbering, which is zero based.
-
-/ # head /sys/kernel/debug/pinctrl/fc4cf000.spmi\:pm8941@0\:gpios@c000/pins 
-registered pins: 36
-pin 0 (gpio1) 
-pin 1 (gpio2) 
-pin 2 (gpio3) 
-pin 3 (gpio4) 
-pin 4 (gpio5) 
-pin 5 (gpio6) 
-pin 6 (gpio7) 
-pin 7 (gpio8) 
-pin 8 (gpio9) 
-
-> > +static int pmic_gpio_irq_activate(struct irq_domain *domain,
-> > +                                 struct irq_data *data, bool reserve)
-> > +{
-> > +       struct pmic_gpio_state *state = domain->host_data;
+On 1/4/19 11:07 PM, Pavel Machek wrote:
+> Hi!
 > 
-> How about just storing the gpiochip in the domain->host_data?
+>> But, aside from that hypothetic issue, we need a solution for
+>> LEDn_BRIGHTNESS feature of lp5024, i.e. setting color intensity
+>> via a single register write. How would you propose to address that?
 > 
-> > +
-> > +       return gpiochip_lock_as_irq(&state->chip, data->hwirq);
-> > +}
-> > +
-> > +static void pmic_gpio_irq_deactivate(struct irq_domain *domain,
-> > +                                    struct irq_data *data)
-> > +{
-> > +       struct pmic_gpio_state *state = domain->host_data;
-> > +
-> > +       gpiochip_unlock_as_irq(&state->chip, data->hwirq);
-> > +}
-> > +
+> So they have hardware feature that allows control of 3 LEDs at the
+> same time, right?
 > 
-> Then these could be generic gpiolib APIs?
-
-I tried this:
-
-static const struct irq_domain_ops pmic_gpio_domain_ops = {
-        .activate = gpiochip_lock_as_irq,
-        .alloc = pmic_gpio_domain_alloc,
-        .deactivate = gpiochip_unlock_as_irq,
-        .free = irq_domain_free_irqs_common,
-        .translate = pmic_gpio_domain_translate,
-};
-
-But get an incompatible pointer types compiler error.
-
-drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:1003:14: error: initialization of
-‘int (*)(struct irq_domain *, struct irq_data *, bool)’ {aka ‘int
-(*)(struct irq_domain *, struct irq_data *, _Bool)’} from incompatible
-pointer type ‘int (*)(struct gpio_chip *, unsigned int)’
-[-Werror=incompatible-pointer-types]
-
-
-> > +static int pmic_gpio_domain_alloc(struct irq_domain *domain, unsigned int virq,
-> > +                                 unsigned int nr_irqs, void *data)
-> > +{
-> > +       struct pmic_gpio_state *state = domain->host_data;
-> > +       struct irq_fwspec *fwspec = data;
-> > +       struct irq_fwspec parent_fwspec;
-> > +       irq_hw_number_t hwirq;
-> > +       unsigned int type;
-> > +       int ret, i;
-> > +
-> > +       ret = pmic_gpio_domain_translate(domain, fwspec, &hwirq, &type);
-> > +       if (ret)
-> > +               return ret;
-> > +
-> > +       for (i = 0; i < nr_irqs; i++)
-> > +               irq_domain_set_info(domain, virq + i, hwirq + i,
-> > +                                   &pmic_gpio_irq_chip, state,
-> > +                                   handle_level_irq, NULL, NULL);
+> Actually turris routers (IIRC) have similar feature, but shared for
+> all their LEDs.
 > 
-> Does almost nobody pass a name for that last parameter?
+> I'd suggest simply ignoring that feature for now :-).
 
-I see 26 callers to irq_domain_set_info() outside this patch set and
-only 3 of them actually set a name. I'm open to suggestions for what to
-put here.
+Why not use brightness file for that?
 
-Brian
+> We will need to solve RGB leds somehow, hopefully this is solved with
+> it.
+
+When? With this attitude we will procrastinate it forever.
+It's been almost 3 years since first HSV patches.
+
+I proposed rough design of LED RGB class interface in [0].
+If you find it totally flawed, then please spot the problems.
+If not, let's improve it and implement.
+
+[0] https://lkml.org/lkml/2019/1/3/550
+
+-- 
+Best regards,
+Jacek Anaszewski
