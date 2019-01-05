@@ -1,62 +1,126 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH v9 14/27] pwm: jz4740: Improve algorithm of clock
- calculation
-Date: Sat, 5 Jan 2019 22:27:11 +0100
-Message-ID: <20190105212711.s765knwwerceytvk@pengutronix.de>
-References: <20181227181319.31095-1-paul@crapouillou.net>
- <20181227181319.31095-15-paul@crapouillou.net>
- <20190105195725.cuxfge6zkpbt3cyk@pengutronix.de>
- <1546722339.30174.0@crapouillou.net>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
+ LP5024/18 RGB LED driver
+Date: Sat, 5 Jan 2019 23:12:54 +0100
+Message-ID: <20190105221254.GA22322@amd>
+References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com>
+ <20190104201256.GA2931@amd>
+ <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
+ <20190104220726.GA12395@amd>
+ <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com>
+ <20190105123146.GA16354@amd>
+ <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="ZGiS0Q5IWpPtfppv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1546722339.30174.0@crapouillou.net>
+In-Reply-To: <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: Vesa =?iso-8859-1?B?SuTkc2tlbORpbmVu?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Paul,
 
-On Sat, Jan 05, 2019 at 06:05:38PM -0300, Paul Cercueil wrote:
-> On Sat, Jan 5, 2019 at 4:57 PM, Uwe Kleine-König
-> <u.kleine-koenig@pengutronix.de> wrote:
-> > You are assuming stuff here about the parent clk which isn't guaranteed
-> > (AFAICT) by the clk framework: If you call clk_round_rate(clk, rate - 1)
-> > this might well return rate even if the clock could run slower than
-> > rate.
-> 
-> It may not be guaranteed by the clock framework itself, but it is guaranteed
-> to behave like that on this family of SoCs.
+--ZGiS0Q5IWpPtfppv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-You shouldn't rely on that. Experience shows that people will start
-copying code to machines where this is not guaranteed. Even if they
-don't copy and only learn from reading this is bad. Also how do you
-guarantee that this won't change in the future making the pwm code break
-without noticing?
+Hi!
 
-If you use an API better don't assume more things given than are
-guaranteed by the API.
+> >Grab yourself an RGB LED and play with it; you'll see what the
+> >problems are. It is hard to explain colors over email...
+>=20
+> Video [0] gives some overview of lp5024 capabilities.
+>=20
+> I don't see any problems in exposing separate red,green,blue
+> files and brightness for the devices with hardware support for
+> that.
 
-Having said that I would consider it sensible to introduce something
-like clk_roundup_rate() and clk_rounddown_rate() which would allow
-calculations like that.
+Well, that's what we do today, as three separate LEDs, right?
 
-> > Wouldn't it make sense to start iterating with rate = 0xffff * 1e9 /
-> > period? Otherwise you get bad configurations if rate is considerable
-> > slower than necessary.
-> 
-> The algorithm will start with 'rate' being the parent clock's rate, which
-> will always be the highest rate that the child clock will support.
+I don't have problem with that, either; other drivers already do
+that. He's free to use existing same interface.
 
-Ah right, I missed that bit.
- 
-Best regards
-Uwe
+But that is insufficient, as it does not allow simple stuff, such as
+turning led "white".
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+So... perhaps we should agree on requirements, first, and then we can
+discuss solutions?
+
+Requirements for RGB LED interface:
+
+1) Userspace should be able to set the white color
+
+2) Userspace should be able to arbitrary color from well known list
+and it should approximately match what would CRT, LCD or OLED monitor displ=
+ay
+
+    2a) LEDs probably slightly change color as they age. That's out of
+    scope, unless the variation is much greater than on monitors.
+
+    2b) Manufacturing differences cause small color variation. Again,
+    that's out of scope, unless the variation is much greater than on
+    monitors.
+
+Nice to have features:
+
+3) Full range of available colors/intensities should be available to
+userspace
+
+4) Interface should work well with existing triggers
+
+5) It would be nice if userland knew how many lumens are produced at
+each wavelength for each setting (again, minus aging and manufacturing
+variations).
+
+6) Complexity of math in kernel should be low, and preferably it
+should be integer or fixed point
+
+Problems:
+
+a) RGB LEDs are usually not balanced. Setting 100% PWM on
+red/green/blue channels will result in nothing close to white
+light. In fact, to get white light on N900, blue and green channel's
+PWM needs to be set pretty low, as in 5%.
+
+b) LED class does not define any relation between "brightness" in
+sysfs and ammount of light in lumens. Some drivers use close to linear
+relation, some use exponential relation. Human eyes percieve logarithm
+of lumens. RGB color model uses even more complex function.
+
+c) Except for white LEDs, LEDs are basically sources of single
+wavelength of light, while CRTs and LCDs produce broader
+spectrums.
+
+d) RG, RGBW and probably other LED combinations exist.
+
+e) Not all "red" LEDs will produce same wavelength. Similar
+differences will exist for other colors.
+
+f) We have existing RGB LEDs represented as three separate
+monochromatic LEDs in sysfs.
+
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--ZGiS0Q5IWpPtfppv
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwxK+YACgkQMOfwapXb+vILFgCgxOnOlQp18Z6SjAygRd9g2tSi
++T4An2pAO1RIQFE+zBc98noNikm5JT4S
+=CbTN
+-----END PGP SIGNATURE-----
+
+--ZGiS0Q5IWpPtfppv--
