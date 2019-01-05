@@ -1,120 +1,199 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [RFC lora-next 5/5] HACK: net: lora: sx130x: Add PicoCell gateway
- shim for cdc-acm
-Date: Sat, 5 Jan 2019 00:43:48 +0100
-Message-ID: <9d97fec5-31b0-8717-cd10-de4f36d1cf05@suse.de>
-References: <20190104112131.14451-1-afaerber@suse.de>
- <20190104112131.14451-6-afaerber@suse.de>
- <CAL_Jsq+BMOvRLEbD2Eo2D=n446vSubeXV3-FbkBSHjpfL=LYsg@mail.gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/3] spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips
+Date: Fri, 04 Jan 2019 16:25:23 -0800
+Message-ID: <154664792383.15366.9346249356552958882@swboyd.mtv.corp.google.com>
+References: <20181229114755.8711-1-masneyb@onstation.org> <20181229114755.8711-2-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+BMOvRLEbD2Eo2D=n446vSubeXV3-FbkBSHjpfL=LYsg@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <20181229114755.8711-2-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: linux-lpwan@lists.infradead.org, linux-serial <linux-serial@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Oliver Neukum <oneukum@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev <netdev@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
+Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+Quoting Brian Masney (2018-12-29 03:47:53)
+> Convert the spmi-pmic-arb IRQ code to use the version 2 IRQ interface
+> in order to support hierarchical IRQ chips. Code was tested on a LG
+> Nexus 5 (hammerhead) phone.
 
-Am 04.01.19 um 18:07 schrieb Rob Herring:
-> On Fri, Jan 4, 2019 at 5:21 AM Andreas Färber <afaerber@suse.de> wrote:
->>
->> Ignore our device in cdc-acm probing and add a new driver for it,
->> dispatching to cdc-acm for the actual implementation.
->>
->> WARNING: It is likely that this VID/PID is in use for unrelated devices.
->> Only the Product string hints what this really is in current v0.2.1.
->> Previous code v0.2.0 was using a Semtech VID/PID, but no card shipping
->> with such firmware is known to me.
->>
->> While this may seem unorthodox, no internals of the driver are accessed,
->> just the set of driver callbacks is duplicated as shim.
->>
->> Use this shim construct to fake DT nodes for serdev on probe.
->> For testing purposes these nodes do not have a parent yet.
->> This results in two "Error -2 creating of_node link" warnings on probe.
-> 
-> It looks like the DT is pretty static. Rather than creating the nodes
-> at run-time, can't you create a dts file and build that into your
-> module.
+Can you add the motivation for this change here? Why should we care?
 
-Heh, if that were the only issue with this patch... ;)
+>=20
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+>  drivers/spmi/spmi-pmic-arb.c | 91 +++++++++++++++++++++++++-----------
+>  1 file changed, 64 insertions(+), 27 deletions(-)
+>=20
+> diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+> index 360b8218f322..c651d19f0623 100644
+> --- a/drivers/spmi/spmi-pmic-arb.c
+> +++ b/drivers/spmi/spmi-pmic-arb.c
+> @@ -666,7 +666,8 @@ static int qpnpint_get_irqchip_state(struct irq_data =
+*d,
+>         return 0;
+>  }
+> =20
+> -static int qpnpint_irq_request_resources(struct irq_data *d)
+> +static int qpnpint_irq_domain_activate(struct irq_domain *domain,
+> +                                      struct irq_data *d, bool reserve)
+>  {
+>         struct spmi_pmic_arb *pmic_arb =3D irq_data_get_irq_chip_data(d);
+>         u16 periph =3D hwirq_to_per(d->hwirq);
+> @@ -692,36 +693,37 @@ static struct irq_chip pmic_arb_irqchip =3D {
+>         .irq_set_type   =3D qpnpint_irq_set_type,
+>         .irq_set_wake   =3D qpnpint_irq_set_wake,
+>         .irq_get_irqchip_state  =3D qpnpint_get_irqchip_state,
+> -       .irq_request_resources =3D qpnpint_irq_request_resources,
+>         .flags          =3D IRQCHIP_MASK_ON_SUSPEND,
+>  };
+> =20
+> -static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
+> -                                          struct device_node *controller,
+> -                                          const u32 *intspec,
+> -                                          unsigned int intsize,
+> -                                          unsigned long *out_hwirq,
+> -                                          unsigned int *out_type)
+> +static int qpnpint_irq_domain_translate(struct irq_domain *d,
+> +                                       struct irq_fwspec *fwspec,
+> +                                       unsigned long *out_hwirq,
+> +                                       unsigned int *out_type)
+>  {
+>         struct spmi_pmic_arb *pmic_arb =3D d->host_data;
+>         u16 apid, ppid;
+>         int rc;
+> =20
+> -       dev_dbg(&pmic_arb->spmic->dev, "intspec[0] 0x%1x intspec[1] 0x%02=
+x intspec[2] 0x%02x\n",
+> -               intspec[0], intspec[1], intspec[2]);
+> +       dev_dbg(&pmic_arb->spmic->dev,
+> +               "param[0] 0x%1x param[1] 0x%02x param[2] 0x%02x\n",
+> +               fwspec->param[0], fwspec->param[1], fwspec->param[2]);
+> =20
+> -       if (irq_domain_get_of_node(d) !=3D controller)
+> +       if (irq_domain_get_of_node(d) !=3D pmic_arb->spmic->dev.of_node)
+>                 return -EINVAL;
+> -       if (intsize !=3D 4)
+> +       if (fwspec->param_count !=3D 4)
+>                 return -EINVAL;
+> -       if (intspec[0] > 0xF || intspec[1] > 0xFF || intspec[2] > 0x7)
+> +       if (fwspec->param[0] > 0xF || fwspec->param[1] > 0xFF ||
+> +           fwspec->param[2] > 0x7)
+>                 return -EINVAL;
+> =20
+> -       ppid =3D intspec[0] << 8 | intspec[1];
+> +       ppid =3D fwspec->param[0] << 8 | fwspec->param[1];
+>         rc =3D pmic_arb->ver_ops->ppid_to_apid(pmic_arb, ppid);
+>         if (rc < 0) {
+> -               dev_err(&pmic_arb->spmic->dev, "failed to xlate sid =3D %=
+#x, periph =3D %#x, irq =3D %u rc =3D %d\n",
+> -               intspec[0], intspec[1], intspec[2], rc);
+> +               dev_err(&pmic_arb->spmic->dev,
+> +                       "failed to xlate sid =3D %#x, periph =3D %#x, irq=
+ =3D %u rc =3D %d\n",
+> +                       fwspec->param[0], fwspec->param[1], fwspec->param=
+[2],
 
-I had read about that possibility here [1], but it just appeared to give
-me a binary blob with no handy documentation on how to parse the
-__dtb_XXX_begin..__dtb_XXX_end blob afterwards for assignment to
-interface->dev.of_node. Two nodes and one compatible property were
-enough to get me started, so that was quickest, given lack of knowledge.
+Why not assign a u32 *intspec to fwspec->param and then not change many
+lines in this function? Reducing the diff is useful to avoid glossing
+over some mistake in variable renames.
 
-I intentionally left it static to keep error handling and cleanup
-manageable for now... Otherwise I'd need to kstrdup()/kzalloc() all
-properties so that I can consistently kfree() them again on release.
+> +                       rc);
+>                 return rc;
+>         }
+> =20
+> @@ -732,25 +734,58 @@ static int qpnpint_irq_domain_dt_translate(struct i=
+rq_domain *d,
+>         if (apid < pmic_arb->min_apid)
+>                 pmic_arb->min_apid =3D apid;
+> =20
+> -       *out_hwirq =3D spec_to_hwirq(intspec[0], intspec[1], intspec[2], =
+apid);
+> -       *out_type  =3D intspec[3] & IRQ_TYPE_SENSE_MASK;
+> +       *out_hwirq =3D spec_to_hwirq(fwspec->param[0], fwspec->param[1],
+> +                                  fwspec->param[2], apid);
+> +       *out_type  =3D fwspec->param[3] & IRQ_TYPE_SENSE_MASK;
+> =20
+>         dev_dbg(&pmic_arb->spmic->dev, "out_hwirq =3D %lu\n", *out_hwirq);
+> =20
+>         return 0;
+>  }
+> =20
+> -static int qpnpint_irq_domain_map(struct irq_domain *d,
+> -                                 unsigned int virq,
+> -                                 irq_hw_number_t hwirq)
+> +
+> +static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
+> +                                  struct irq_domain *domain, unsigned in=
+t virq,
+> +                                  irq_hw_number_t hwirq)
+>  {
+> -       struct spmi_pmic_arb *pmic_arb =3D d->host_data;
+> +       unsigned int old_virq;
+> =20
+>         dev_dbg(&pmic_arb->spmic->dev, "virq =3D %u, hwirq =3D %lu\n", vi=
+rq, hwirq);
+> =20
+> -       irq_set_chip_and_handler(virq, &pmic_arb_irqchip, handle_level_ir=
+q);
+> -       irq_set_chip_data(virq, d->host_data);
+> -       irq_set_noprobe(virq);
+> +       /*
+> +        * Check to see if the hwirq is already associated with another v=
+irq on
+> +        * this IRQ domain. If so, then disassociate it before associatin=
+g the
+> +        * hwirq with the new virq. IRQs are all initially setup without =
+an IRQ
+> +        * hierarchy when this driver is probed and when mfd/qcom-spmi-pm=
+ic.c is
+> +        * probed. Later in the boot process, an IRQ hierarchy is request=
+ed by
+> +        * pinctrl-spmi-gpio.c, and the same hwirq is now associated with=
+ a new
+> +        * virq.
 
-Note that this was just a PoC, so there are properties missing here:
+Is that because we count the irqs in the pmic gpio driver? It looks like
+we should remove that code from the driver then and use the compatible
+string to figure out how many gpios are present. It will make this
+comment and disassociate code unnecessary, but unfortunately it will
+mean we have to add all the compatible strings to the pmic gpio driver
+just so we know how many gpios are there.
 
-At least currently Ben's patch [2] (wrongly?) relies on the optional
-clock-output-names property if #clock-cells property is specified -
-which I did not in this patch. (Thus it'll disable clk_out, which would
-break opening the netdev if we wouldn't run into other errors first.)
+> +        */
+> +       old_virq =3D irq_find_mapping(domain, hwirq);
+> +       if (old_virq)
+> +               irq_domain_disassociate(domain, old_virq);
+> +
+> +       irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_=
+arb,
+> +                           handle_level_irq, NULL, NULL);
+> +}
+> +
+> +static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
+> +                                   unsigned int virq, unsigned int nr_ir=
+qs,
+> +                                   void *data)
+> +{
+> +       struct spmi_pmic_arb *pmic_arb =3D domain->host_data;
+> +       struct irq_fwspec *fwspec =3D data;
+> +       irq_hw_number_t hwirq;
+> +       unsigned int type;
+> +       int ret, i;
+> +
+> +       ret =3D qpnpint_irq_domain_translate(domain, fwspec, &hwirq, &typ=
+e);
+> +       if (ret)
+> +               return ret;
+> +
+> +       for (i =3D 0; i < nr_irqs; i++)
+> +               qpnpint_irq_domain_map(pmic_arb, domain, virq + i, hwirq =
++ i);
+> +
+>         return 0;
+>  }
+> =20
 
-Any comments on how to best deal with clk names on the driver side would
-be appreciated, so that we can just leave the property away here and get
-a sane default name. Otherwise we'd need to generate a unique name here.
-
-If #clock-cells were present, the driver would also rely on obtaining a
-parent clock, which may be easiest for me to fix in the driver; but
-assuming we need it, we'd need a clocks property pointing to phandles.
-Wouldn't phandles need to be unique globally in the kernel for lookup?
-phandles from a separate .dtb fragment wouldn't seem to tick that box.
-
-(For reference there's also a clk locking issue under discussion at [3],
-as well as multiple unresolved Kbuild reports about clk_hw not being
-applicable on sparc64 allyesconfigs and m68k allmodconfig that I'm
-unsure how to best resolve while keeping the driver broadly usable. Not
-using clk would solve above DT worries but would leave us with ugly
-driver dependencies across spi and a custom sx130x_radio bus.)
-
-Kconfig may also be a topic to consider for this USB driver - my x86_64
-host for instance doesn't have CONFIG_OF, so it might work to manually
-allocate such nodes, whereas using API or &of_fwnode_ops (needed?) may
-be a problem - although without CONFIG_OF the serdev code probably is
-unable to enumerate the nodes in the first place?
-
-And I assume on ACPI platforms hot-pluggable USB devices shouldn't need
-a user-overridden ACPI table either - have you thought about some
-serdev-specific lookup as fallback when OF and ACPI come up empty?
-
-Your drivers/tty/serdev/core.c:serdev_controller_add() has access to
-ctrl->dev->parent, so it could maintain a list of callbacks that drivers
-(e.g., cdc-acm) could register callbacks with and cast the device here
-to usb_interface; my module here would then only need to register such a
-callback against cdc-acm in its module init to allow cdc-acm to provide
-it with the usb_interface, where it could then check for the iProduct to
-determine whether that device should be serdev-controlled or not - say
-by returning 0 to bind, negative error to ignore - and loading/creating
-an internal of_node or whatever necessary. Just a rough idea for now...
-
-Even easier, serdev_device_driver could just get an optional callback!
-Then my driver in 3/5 could just determine itself which device it wants
-to bind against and still use the module_serdev_device_driver() macro.
-(serdev is built-in, so not as easy to tweak on random boards here...)
-
-Any comments on serdev in 4/5? I wonder whether that was an oversight
-(in which case it should get a Fixes line) or an intentional choice due
-to issues? You mentioned hangup and open/close mismatches before...
-
-Thanks,
-Andreas
-
-[1] https://elinux.org/Device_Tree_Linux#FDT_built_into_kernel_as_data
-[2] https://patchwork.ozlabs.org/patch/983173/
-[3]
-https://lists.infradead.org/pipermail/linux-lpwan/2019-January/000069.html
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+Otherwise patch looks good to me. Thanks for working on this. Are you
+going to convert the ssbi master and gpio chip too?
