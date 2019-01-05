@@ -1,266 +1,552 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 3/3] scsi: ufs: Add HI3670 SoC UFS driver support
-Date: Sat,  5 Jan 2019 12:58:59 +0530
-Message-ID: <20190105072859.9134-4-manivannan.sadhasivam@linaro.org>
-References: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, liwei213@huawei.com, robh+dt@kernel.org
-Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: Re: [PATCH lora-next 3/5] net: lora: sx130x: Add PicoCell serdev
+ driver
+Date: Sat, 5 Jan 2019 18:18:22 +0900
+Message-ID: <0e1aed6e-d076-d5b9-4d05-2a3fb3f5e8af@gmail.com>
+References: <20190104112131.14451-1-afaerber@suse.de>
+ <20190104112131.14451-4-afaerber@suse.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190104112131.14451-4-afaerber@suse.de>
+Content-Language: en-GB
+Sender: netdev-owner@vger.kernel.org
+To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-Add HI3670 SoC UFS driver support by extending the common ufs-hisi
-driver. One major difference between HI3660 ad HI3670 SoCs interms of
-UFS is the PHY. HI3670 has a 10nm variant PHY and hence this parameter is
-used to distinguish the configuration.
+Hi,
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- drivers/scsi/ufs/ufs-hisi.c | 127 +++++++++++++++++++++++++++++-------
- drivers/scsi/ufs/ufs-hisi.h |   4 ++
- 2 files changed, 109 insertions(+), 22 deletions(-)
+On 04/01/2019 20:21, Andreas Färber wrote:
+> The picoGW reference MCU firmware implements a USB CDC or UART interface
+> with a set of serial commands. It can be found on multiple mPCIe cards
+> as well as USB adapters.
+> 
+>    https://github.com/Lora-net/picoGW_mcu
+> 
+> That MCU design superseded earlier attempts of using FTDI chips (MPSSE)
+> for controlling the SPI based chip directly from the host.
+> 
+> This commit adds a serdev driver implementing another regmap_bus to
+> abstract the register access and reuses our existing regmap driver on top.
+> Thereby we have an early proof of concept that we can drive both types
+> of modules/cards with a single driver core!
+> 
+> It assumes there is only one SX130x (with its radios) accessible, whereas
+> some new cards reportedly also have an SX127x on-board. So the DT/driver
+> design may need to be reconsidered once such a card or documentation
+> becomes available.
+> It also assumes SX1255/1258 are fully compatible with "semtech,sx1257".
+> 
+> Currently there's still some bugs to be investigated, with communication
+> stalling on one device and another reading the radio versions wrong
+> (07 / 1f instead of 21, also observed on spi once).
+> 
+> Signed-off-by: Andreas Färber <afaerber@suse.de>
+> ---
+>   drivers/net/lora/Makefile        |   2 +
+>   drivers/net/lora/sx130x_picogw.c | 466 +++++++++++++++++++++++++++++++++++++++
 
-diff --git a/drivers/scsi/ufs/ufs-hisi.c b/drivers/scsi/ufs/ufs-hisi.c
-index 452e19f8fb47..f2d3df357a97 100644
---- a/drivers/scsi/ufs/ufs-hisi.c
-+++ b/drivers/scsi/ufs/ufs-hisi.c
-@@ -66,7 +66,7 @@ static int ufs_hisi_check_hibern8(struct ufs_hba *hba)
- 	return err;
- }
- 
--static void ufs_hi3660_clk_init(struct ufs_hba *hba)
-+static void ufs_hisi_clk_init(struct ufs_hba *hba)
- {
- 	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
- 
-@@ -80,7 +80,7 @@ static void ufs_hi3660_clk_init(struct ufs_hba *hba)
- 	ufs_sys_ctrl_set_bits(host, BIT_SYSCTRL_REF_CLOCK_EN, PHY_CLK_CTRL);
- }
- 
--static void ufs_hi3660_soc_init(struct ufs_hba *hba)
-+static void ufs_hisi_soc_init(struct ufs_hba *hba)
- {
- 	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
- 	u32 reg;
-@@ -139,6 +139,7 @@ static void ufs_hi3660_soc_init(struct ufs_hba *hba)
- 
- static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- {
-+	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
- 	int err;
- 	uint32_t value;
- 	uint32_t reg;
-@@ -153,6 +154,14 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8121, 0x0), 0x2D);
- 	/* MPHY CBOVRCTRL3 */
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8122, 0x0), 0x1);
-+
-+	if (host->caps & UFS_HISI_CAP_PHY10nm) {
-+		/* MPHY CBOVRCTRL4 */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8127, 0x0), 0x98);
-+		/* MPHY CBOVRCTRL5 */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8128, 0x0), 0x1);
-+	}
-+
- 	/* Unipro VS_MphyCfgUpdt */
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD085, 0x0), 0x1);
- 	/* MPHY RXOVRCTRL4 rx0 */
-@@ -173,10 +182,21 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x8113, 0x0), 0x1);
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xD085, 0x0), 0x1);
- 
--	/* Tactive RX */
--	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x4), 0x7);
--	/* Tactive RX */
--	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x5), 0x7);
-+	if (host->caps & UFS_HISI_CAP_PHY10nm) {
-+		/* RX_Hibern8Time_Capability*/
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x0092, 0x4), 0xA);
-+		/* RX_Hibern8Time_Capability*/
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x0092, 0x5), 0xA);
-+		/* RX_Min_ActivateTime */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008f, 0x4), 0xA);
-+		/* RX_Min_ActivateTime*/
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008f, 0x5), 0xA);
-+	} else {
-+		/* Tactive RX */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x4), 0x7);
-+		/* Tactive RX */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x008F, 0x5), 0x7);
-+	}
- 
- 	/* Gear3 Synclength */
- 	ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0x0095, 0x4), 0x4F);
-@@ -208,7 +228,8 @@ static int ufs_hisi_link_startup_pre_change(struct ufs_hba *hba)
- 	if (err)
- 		dev_err(hba->dev, "ufs_hisi_check_hibern8 error\n");
- 
--	ufshcd_writel(hba, UFS_HCLKDIV_NORMAL_VALUE, UFS_REG_HCLKDIV);
-+	if (!(host->caps & UFS_HISI_CAP_PHY10nm))
-+		ufshcd_writel(hba, UFS_HCLKDIV_NORMAL_VALUE, UFS_REG_HCLKDIV);
- 
- 	/* disable auto H8 */
- 	reg = ufshcd_readl(hba, REG_AUTO_HIBERNATE_IDLE_TIMER);
-@@ -253,7 +274,7 @@ static int ufs_hisi_link_startup_post_change(struct ufs_hba *hba)
- 	return 0;
- }
- 
--static int ufs_hi3660_link_startup_notify(struct ufs_hba *hba,
-+static int ufs_hisi_link_startup_notify(struct ufs_hba *hba,
- 					  enum ufs_notify_change_status status)
- {
- 	int err = 0;
-@@ -391,6 +412,28 @@ static void ufs_hisi_set_dev_cap(struct ufs_hisi_dev_params *hisi_param)
- 
- static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
- {
-+	struct ufs_hisi_host *host = ufshcd_get_variant(hba);
-+
-+	if (host->caps & UFS_HISI_CAP_PHY10nm) {
-+		/*
-+		 * Boston platform need to set SaveConfigTime to 0x13,
-+		 * and change sync length to maximum value
-+		 */
-+		/* VS_DebugSaveConfigTime */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0xD0A0), 0x13);
-+		/* g1 sync length */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x1552), 0x4f);
-+		/* g2 sync length */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x1554), 0x4f);
-+		/* g3 sync length */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x1556), 0x4f);
-+		/* PA_Hibern8Time */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x15a7), 0xA);
-+		/* PA_Tactivate */
-+		ufshcd_dme_set(hba, UIC_ARG_MIB((u32)0x15a8), 0xA);
-+		ufshcd_dme_set(hba, UIC_ARG_MIB_SEL(0xd085, 0x0), 0x01);
-+	}
-+
- 	if (hba->dev_quirks & UFS_DEVICE_QUIRK_HOST_VS_DEBUGSAVECONFIGTIME) {
- 		pr_info("ufs flash device must set VS_DebugSaveConfigTime 0x10\n");
- 		/* VS_DebugSaveConfigTime */
-@@ -429,7 +472,7 @@ static void ufs_hisi_pwr_change_pre_change(struct ufs_hba *hba)
- 	ufshcd_dme_set(hba, UIC_ARG_MIB(0xd046), 32767);
- }
- 
--static int ufs_hi3660_pwr_change_notify(struct ufs_hba *hba,
-+static int ufs_hisi_pwr_change_notify(struct ufs_hba *hba,
- 				       enum ufs_notify_change_status status,
- 				       struct ufs_pa_layer_attr *dev_max_params,
- 				       struct ufs_pa_layer_attr *dev_req_params)
-@@ -567,25 +610,72 @@ static int ufs_hi3660_init(struct ufs_hba *hba)
- 		return ret;
- 	}
- 
--	ufs_hi3660_clk_init(hba);
-+	ufs_hisi_clk_init(hba);
-+
-+	ufs_hisi_soc_init(hba);
-+
-+	return 0;
-+}
-+
-+static int ufs_hi3670_init(struct ufs_hba *hba)
-+{
-+	int ret = 0;
-+	struct device *dev = hba->dev;
-+	struct ufs_hisi_host *host;
-+
-+	ret = ufs_hisi_init_common(hba);
-+	if (ret) {
-+		dev_err(dev, "%s: ufs common init fail\n", __func__);
-+		return ret;
-+	}
-+
-+	ufs_hisi_clk_init(hba);
-+
-+	ufs_hisi_soc_init(hba);
- 
--	ufs_hi3660_soc_init(hba);
-+	/* Add cap for 10nm PHY variant on HI3670 SoC */
-+	host = ufshcd_get_variant(hba);
-+	host->caps |= UFS_HISI_CAP_PHY10nm;
- 
- 	return 0;
- }
- 
--static struct ufs_hba_variant_ops ufs_hba_hisi_vops = {
-+static struct ufs_hba_variant_ops ufs_hba_hi3660_vops = {
- 	.name = "hi3660",
- 	.init = ufs_hi3660_init,
--	.link_startup_notify = ufs_hi3660_link_startup_notify,
--	.pwr_change_notify = ufs_hi3660_pwr_change_notify,
-+	.link_startup_notify = ufs_hisi_link_startup_notify,
-+	.pwr_change_notify = ufs_hisi_pwr_change_notify,
- 	.suspend = ufs_hisi_suspend,
- 	.resume = ufs_hisi_resume,
- };
- 
-+static struct ufs_hba_variant_ops ufs_hba_hi3670_vops = {
-+	.name = "hi3670",
-+	.init = ufs_hi3670_init,
-+	.link_startup_notify = ufs_hisi_link_startup_notify,
-+	.pwr_change_notify = ufs_hisi_pwr_change_notify,
-+	.suspend = ufs_hisi_suspend,
-+	.resume = ufs_hisi_resume,
-+};
-+
-+static const struct of_device_id ufs_hisi_of_match[] = {
-+	{ .compatible = "hisilicon,hi3660-ufs", .data = &ufs_hba_hi3660_vops },
-+	{ .compatible = "hisilicon,hi3670-ufs", .data = &ufs_hba_hi3670_vops },
-+	{},
-+};
-+
-+MODULE_DEVICE_TABLE(of, ufs_hisi_of_match);
-+
- static int ufs_hisi_probe(struct platform_device *pdev)
- {
--	return ufshcd_pltfrm_init(pdev, &ufs_hba_hisi_vops);
-+	const struct of_device_id *of_id;
-+	struct ufs_hba_variant_ops *vops;
-+	struct device *dev = &pdev->dev;
-+
-+	of_id = of_match_node(ufs_hisi_of_match, dev->of_node);
-+	vops = (struct ufs_hba_variant_ops *)of_id->data;
-+
-+	return ufshcd_pltfrm_init(pdev, vops);
- }
- 
- static int ufs_hisi_remove(struct platform_device *pdev)
-@@ -596,13 +686,6 @@ static int ufs_hisi_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
--static const struct of_device_id ufs_hisi_of_match[] = {
--	{ .compatible = "hisilicon,hi3660-ufs" },
--	{},
--};
--
--MODULE_DEVICE_TABLE(of, ufs_hisi_of_match);
--
- static const struct dev_pm_ops ufs_hisi_pm_ops = {
- 	.suspend	= ufshcd_pltfrm_suspend,
- 	.resume		= ufshcd_pltfrm_resume,
-diff --git a/drivers/scsi/ufs/ufs-hisi.h b/drivers/scsi/ufs/ufs-hisi.h
-index 3df9cd7acc29..667dfe39b57e 100644
---- a/drivers/scsi/ufs/ufs-hisi.h
-+++ b/drivers/scsi/ufs/ufs-hisi.h
-@@ -91,6 +91,9 @@ enum {
- #define UFS_HISI_LIMIT_HS_RATE	PA_HS_MODE_B
- #define UFS_HISI_LIMIT_DESIRED_MODE	FAST
- 
-+#define UFS_HISI_CAP_RESERVED		BIT(0)
-+#define UFS_HISI_CAP_PHY10nm		BIT(1)
-+
- struct ufs_hisi_host {
- 	struct ufs_hba *hba;
- 	void __iomem *ufs_sys_ctrl;
-@@ -112,4 +115,5 @@ struct ufs_hisi_host {
- 	ufs_sys_ctrl_writel((host),                                            \
- 			    ((~(mask)) & (ufs_sys_ctrl_readl((host), (reg)))), \
- 			    (reg))
-+
- #endif /* UFS_HISI_H_ */
--- 
-2.17.1
+We are missing a Kconfig select or depend, compilation fails if 
+CONFIG_SERIAL_DEV_BUS is not selected.
+
+>   2 files changed, 468 insertions(+)
+>   create mode 100644 drivers/net/lora/sx130x_picogw.c
+> 
+> diff --git a/drivers/net/lora/Makefile b/drivers/net/lora/Makefile
+> index c6a0410f80ce..5fef38abf5ed 100644
+> --- a/drivers/net/lora/Makefile
+> +++ b/drivers/net/lora/Makefile
+> @@ -25,6 +25,8 @@ lora-sx127x-y := sx127x.o
+>   obj-$(CONFIG_LORA_SX130X) += lora-sx130x.o
+>   lora-sx130x-y := sx130x.o
+>   lora-sx130x-y += sx130x_radio.o
+> +obj-$(CONFIG_LORA_SX130X) += lora-sx130x-picogw.o
+> +lora-sx130x-picogw-y := sx130x_picogw.o
+>   
+>   obj-$(CONFIG_LORA_USI) += lora-usi.o
+>   lora-usi-y := usi.o
+> diff --git a/drivers/net/lora/sx130x_picogw.c b/drivers/net/lora/sx130x_picogw.c
+> new file mode 100644
+> index 000000000000..577f9fb71d46
+> --- /dev/null
+> +++ b/drivers/net/lora/sx130x_picogw.c
+> @@ -0,0 +1,466 @@
+> +// SPDX-License-Identifier: GPL-2.0-or-later
+> +/*
+> + * Semtech SX1301/1308 PicoCell gateway serial MCU interface
+> + *
+> + * Copyright (c) 2018-2019 Andreas Färber
+> + */
+> +#include <linux/completion.h>
+> +#include <linux/lora/sx130x.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/serdev.h>
+> +#include <linux/serial.h>
+> +#include <linux/slab.h>
+> +
+> +struct picogw_device {
+> +	struct serdev_device *serdev;
+> +
+> +	u8 rx_buf[1024];
+> +	int rx_len;
+> +
+> +	struct completion answer_comp;
+> +	struct completion answer_read_comp;
+> +};
+> +
+> +static inline struct picogw_device *picogw_get_drvdata(struct serdev_device *sdev)
+> +{
+> +	return sx130x_get_drvdata(&sdev->dev);
+> +}
+> +
+> +static bool picogw_valid_cmd(char ch)
+> +{
+> +	switch (ch) {
+> +	case 'k': /* invalid command error */
+> +	case 'r':
+> +	case 'w':
+> +	case 'l':
+> +		return true;
+> +	default:
+> +		return false;
+> +	}
+> +}
+> +
+> +static int picogw_send_cmd(struct picogw_device *picodev, char cmd,
+> +	u8 addr, const void *data, u16 data_len)
+> +{
+> +	struct serdev_device *sdev = picodev->serdev;
+> +	u8 buf[4];
+> +	int i, ret;
+> +
+> +	buf[0] = cmd;
+> +	buf[1] = (data_len >> 8) & 0xff;
+> +	buf[2] = (data_len >> 0) & 0xff;
+> +	buf[3] = addr;
+> +
+> +	dev_dbg(&sdev->dev, "%s: %c %02x %02x %02x\n", __func__, buf[0],
+> +		(unsigned int)buf[1], (unsigned int)buf[2], (unsigned int)buf[3]);
+> +	for (i = 0; i < data_len; i++) {
+> +		dev_dbg(&sdev->dev, "%s: data %02x\n", __func__, (unsigned int)((const u8*)data)[i]);
+> +	}
+> +
+> +	ret = serdev_device_write_buf(sdev, buf, 4);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret != 4)
+> +		return -EIO;
+> +
+> +	if (data_len) {
+> +		ret = serdev_device_write_buf(sdev, data, data_len);
+> +		if (ret < 0)
+> +			return ret;
+> +		if (ret != data_len)
+> +			return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int picogw_recv_answer(struct picogw_device *picodev,
+> +	char *cmd, bool *ack, void *buf, int buf_len,
+> +	unsigned long timeout)
+> +{
+> +	int len;
+> +
+> +	timeout = wait_for_completion_timeout(&picodev->answer_comp, timeout);
+> +	if (!timeout)
+> +		return -ETIMEDOUT;
+> +
+> +	if (cmd)
+> +		*cmd = picodev->rx_buf[0];
+> +
+> +	if (ack)
+> +		*ack = (picodev->rx_buf[3] == 1);
+> +
+> +	len = min(picodev->rx_len - 4, buf_len);
+> +	if (buf)
+> +		memcpy(buf, picodev->rx_buf + 4, len);
+> +
+> +	reinit_completion(&picodev->answer_comp);
+> +	complete(&picodev->answer_read_comp);
+> +
+> +	return len;
+> +}
+> +
+> +static int picogw_reg_read(struct picogw_device *picodev, u8 addr, u8 *val, unsigned long timeout)
+> +{
+> +	const u8 dummy = 0;
+> +	char cmd;
+> +	bool ack;
+> +	int ret;
+> +
+> +	ret = picogw_send_cmd(picodev, 'r', addr, &dummy, false ? 1 : 0);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = picogw_recv_answer(picodev, &cmd, &ack, val, 1, timeout);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (cmd != 'r')
+> +		return -EIO;
+> +	if (!ack || ret != 1)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int picogw_reg_write(struct picogw_device *picodev, u8 addr, u8 val, unsigned long timeout)
+> +{
+> +	char cmd;
+> +	bool ack;
+> +	int ret;
+> +
+> +	ret = picogw_send_cmd(picodev, 'w', addr, &val, 1);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = picogw_recv_answer(picodev, &cmd, &ack, NULL, 0, timeout);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (cmd != 'w')
+> +		return -EIO;
+> +	if (!ack || ret != 0)
+> +		return -EIO;
+> +
+> +	return 0;
+> +}
+> +
+> +static int picogw_mcu_fw_check(struct picogw_device *picodev,
+> +	u32 fw_version, u8 *id, unsigned long timeout)
+> +{
+> +	char cmd;
+> +	bool ack;
+> +	int ret;
+> +
+> +	fw_version = cpu_to_be32(fw_version);
+> +	ret = picogw_send_cmd(picodev, 'l', 0, &fw_version, sizeof(fw_version));
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = picogw_recv_answer(picodev, &cmd, &ack, id, id ? 8 : 0, timeout);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (cmd != 'l')
+> +		return -EIO;
+> +	if (id && ret != 8)
+> +		return -EIO;
+> +
+> +	return ack ? 0 : -ENOTSUPP;
+> +}
+> +
+> +static int picogw_regmap_gather_write(void *context,
+> +	const void *reg_buf, size_t reg_size, const void *val_buf, size_t val_size)
+> +{
+> +	struct picogw_device *picodev = context;
+> +	const u8 *addr_buf = reg_buf;
+> +	const u8 *val = val_buf;
+> +	u8 addr;
+> +	int ret;
+> +
+> +	//dev_dbg(&picodev->serdev->dev, "%s: 0x%x (reg_size %zu) 0x%x (val_size %zu)\n",
+> +	//	__func__, (unsigned int)addr_buf[0], reg_size, (unsigned int)val[0], val_size);
+> +
+> +	if (reg_size != 1 || val_size > 0xffff)
+> +		return -EINVAL;
+> +
+> +	addr = addr_buf[0] & ~BIT(7);
+> +	if (val_size == 1) {
+> +		ret = picogw_reg_write(picodev, addr, val[0], HZ);
+> +		if (ret)
+> +			return ret;
+> +		return 0;
+> +	} else {
+> +		/* TODO burst mode */
+> +		dev_err(&picodev->serdev->dev, "burst mode write not yet implemented\n");
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static int picogw_regmap_write(void *context,
+> +	const void *data_buf, size_t count)
+> +{
+> +	const u8 *data = data_buf;
+> +	if (count < 1)
+> +		return -EINVAL;
+> +
+> +	return picogw_regmap_gather_write(context, data, 1, data + 1, count - 1);
+> +}
+> +
+> +static int picogw_regmap_read(void *context,
+> +	const void *reg_buf, size_t reg_size, void *val_buf, size_t val_size)
+> +{
+> +	struct picogw_device *picodev = context;
+> +	const u8 *addr_buf = reg_buf;
+> +	u8 addr;
+> +	int ret;
+> +
+> +	//dev_dbg(&picodev->serdev->dev, "%s: 0x%x (reg_size %zu) (val_size %zu)\n", __func__, (unsigned int)addr_buf[0], reg_size, val_size);
+> +
+> +	if (reg_size != 1 || val_size > 0xffff)
+> +		return -EINVAL;
+> +
+> +	addr = addr_buf[0] & ~BIT(7);
+> +	if (val_size == 1) {
+> +		ret = picogw_reg_read(picodev, addr, val_buf, HZ);
+> +		if (ret)
+> +			return ret;
+> +		return 0;
+> +	} else {
+> +		/* TODO burst mode */
+> +		dev_err(&picodev->serdev->dev, "burst mode read not yet implemented\n");
+> +		return -ENOTSUPP;
+> +	}
+> +}
+> +
+> +static const struct regmap_bus picogw_regmap_bus = {
+> +	.write = picogw_regmap_write,
+> +	.gather_write = picogw_regmap_gather_write,
+> +	.read = picogw_regmap_read,
+> +
+> +	.max_raw_write = 0xffff,
+> +	.max_raw_read = 0xffff,
+> +};
+> +
+> +static int picogw_handle_answer(struct picogw_device *picodev)
+> +{
+> +	struct device *dev = &picodev->serdev->dev;
+> +	unsigned int data_len = ((u16)picodev->rx_buf[1] << 8) | picodev->rx_buf[2];
+> +	int cmd_len = 4 + data_len;
+> +	int i, ret;
+> +
+> +	if (picodev->rx_len < 4)
+> +		return 0;
+> +
+> +	if (cmd_len > sizeof(picodev->rx_buf)) {
+> +		dev_warn(dev, "answer too long (%u)\n", data_len);
+> +		return 0;
+> +	}
+> +
+> +	if (picodev->rx_len < cmd_len) {
+> +		dev_dbg(dev, "got %u, need %u bytes\n", picodev->rx_len, cmd_len);
+> +		return 0;
+> +	}
+> +
+> +	dev_dbg(dev, "Answer %c =%u %s (%u)\n", picodev->rx_buf[0],
+> +		(unsigned int)picodev->rx_buf[3],
+> +		(picodev->rx_buf[3] == 1) ? "OK" : "K0",
+> +		data_len);
+> +	for (i = 0; i < data_len; i++) {
+> +		//dev_dbg(dev, "%s: %02x\n", __func__, (unsigned int)picodev->rx_buf[4 + i]);
+> +	}
+> +
+> +	complete(&picodev->answer_comp);
+> +	ret = wait_for_completion_interruptible_timeout(&picodev->answer_read_comp, HZ / 2);
+> +	if (ret < 0)
+> +		return 0;
+> +
+> +	reinit_completion(&picodev->answer_read_comp);
+> +
+> +	return cmd_len;
+> +}
+> +
+> +static int picogw_receive_buf(struct serdev_device *sdev, const u8 *data, size_t count)
+> +{
+> +	struct picogw_device *picodev = picogw_get_drvdata(sdev);
+> +	size_t i;
+> +	int len = 0;
+> +
+> +	dev_dbg(&sdev->dev, "Receive (%zu)\n", count);
+> +
+> +	if (completion_done(&picodev->answer_comp)) {
+> +		dev_info(&sdev->dev, "RX waiting on completion\n");
+> +		return 0;
+> +	}
+> +	if (picodev->rx_len == sizeof(picodev->rx_buf)) {
+> +		dev_warn(&sdev->dev, "RX buffer full\n");
+> +		return 0;
+> +	}
+> +
+> +	i = min(count, sizeof(picodev->rx_buf) - picodev->rx_len);
+> +	if (i > 0) {
+> +		memcpy(&picodev->rx_buf[picodev->rx_len], data, i);
+> +		picodev->rx_len += i;
+> +		len += i;
+> +	}
+> +
+> +	while (picodev->rx_len > 0) {
+> +		/* search for valid beginning */
+> +		for (i = 0; i < picodev->rx_len; i++) {
+> +			if (picogw_valid_cmd(picodev->rx_buf[i]))
+> +				break;
+> +		}
+> +		if (i > 0) {
+> +			dev_dbg(&sdev->dev, "skipping %zu bytes of garbage\n", i);
+> +			if (i < picodev->rx_len) {
+> +				memmove(picodev->rx_buf, &picodev->rx_buf[i], picodev->rx_len - i);
+> +				picodev->rx_len -= i;
+> +			} else
+> +				picodev->rx_len = 0;
+> +		}
+> +
+> +		i = picogw_handle_answer(picodev);
+> +		if (i == 0)
+> +			break;
+> +
+> +		if (i % 64 == 0) {
+> +			dev_info(&sdev->dev, "skipping padding byte\n");
+> +			i++;
+> +		}
+> +		if (picodev->rx_len > i)
+> +			memmove(picodev->rx_buf, &picodev->rx_buf[i], picodev->rx_len - i);
+> +		if (picodev->rx_len >= i)
+> +			picodev->rx_len -= i;
+> +	}
+> +
+> +	return len;
+> +}
+> +
+> +static const struct serdev_device_ops picogw_serdev_client_ops = {
+> +	.receive_buf = picogw_receive_buf,
+> +	.write_wakeup = serdev_device_write_wakeup,
+> +};
+> +
+> +static int picogw_serdev_probe(struct serdev_device *sdev)
+> +{
+> +	struct picogw_device *picodev;
+> +	struct regmap *regmap;
+> +	u32 fw_version = 0x010a0006;
+
+Worth moving the version to a define?
+
+> +	u8 mac[8];here
+> +	int ret;
+> +
+> +	//dev_info(&sdev->dev, "Probing\n");
+> +
+> +	picodev = devm_kzalloc(&sdev->dev, sizeof(*picodev), GFP_KERNEL);
+> +	if (!picodev)
+> +		return -ENOMEM;
+> +
+> +	picodev->serdev = sdev;
+> +	init_completion(&picodev->answer_comp);
+> +	init_completion(&picodev->answer_read_comp);
+> +
+> +	ret = serdev_device_open(sdev);
+> +	if (ret) {
+> +		dev_err(&sdev->dev, "Failed to open (%d)\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	serdev_device_set_baudrate(sdev, 115200);
+> +	serdev_device_set_parity(sdev, SERDEV_PARITY_NONE);
+> +	serdev_device_set_flow_control(sdev, true);
+> +
+> +	regmap = devm_regmap_init(&sdev->dev, &picogw_regmap_bus, picodev, &sx130x_regmap_config);
+> +	if (IS_ERR(regmap)) {
+> +		ret = PTR_ERR(regmap);
+> +		dev_err(&sdev->dev, "error initializing regmap (%d)\n", ret);
+> +		serdev_device_close(sdev);
+> +		return ret;
+> +	}
+> +
+> +	ret = sx130x_early_probe(regmap, NULL);
+> +	if (ret) {
+> +		serdev_device_close(sdev);
+> +		return ret;
+> +	}
+> +
+> +	sx130x_set_drvdata(&sdev->dev, picodev);
+> +	serdev_device_set_client_ops(sdev, &picogw_serdev_client_ops);
+> +
+> +	//msleep(1000);
+> +	ret = picogw_mcu_fw_check(picodev, fw_version, mac, HZ);
+> +	if (!ret || ret == -ENOTSUPP)
+> +		dev_info(&sdev->dev, "ID = %02x%02x%02x%02x%02x%02x%02x%02x\n",
+> +			(unsigned int)mac[0],
+> +			(unsigned int)mac[1],
+> +			(unsigned int)mac[2],
+> +			(unsigned int)mac[3],
+> +			(unsigned int)mac[4],
+> +			(unsigned int)mac[5],
+> +			(unsigned int)mac[6],
+> +			(unsigned int)mac[7]);
+> +	while (ret == -ENOTSUPP && ((fw_version & 0xff) > 4)) {
+> +		ret = picogw_mcu_fw_check(picodev, --fw_version, NULL, HZ);
+> +	}
+> +	if (ret == -ENOTSUPP) {
+> +		dev_warn(&sdev->dev, "firmware check failed (%08x)\n", fw_version);
+> +	} else {
+> +		dev_err(&sdev->dev, "ID retrieval failed (%d)\n", ret);
+> +		serdev_device_close(sdev);
+> +		return ret;
+> +	}
+> +
+> +	ret = sx130x_probe(&sdev->dev);
+> +	if (ret) {
+> +		serdev_device_close(sdev);
+> +		return ret;
+> +	}
+> +
+> +	//dev_info(&sdev->dev, "Done.\n");
+> +
+> +	return 0;
+> +}
+> +
+> +static void picogw_serdev_remove(struct serdev_device *sdev)
+> +{
+> +	sx130x_remove(&sdev->dev);
+> +
+> +	serdev_device_close(sdev);
+> +
+> +	//dev_info(&sdev->dev, "Removed\n");
+> +}
+> +
+> +static const struct of_device_id picogw_serdev_of_match[] = {
+> +	{ .compatible = "semtech,lora-picocell" },
+
+lora-picocell or lora-picogw... picocell has mobile connotations, should 
+we match the module name?
+
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, picogw_serdev_of_match);
+> +
+> +static struct serdev_device_driver picogw_serdev_driver = {
+> +	.probe = picogw_serdev_probe,
+> +	.remove = picogw_serdev_remove,
+> +	.driver = {
+> +		.name = "lora-picogw",
+> +		.of_match_table = picogw_serdev_of_match,
+> +	},
+> +};
+> +
+> +static int __init picogw_serdev_init(void)
+> +{
+> +	int ret;
+> +
+> +	ret = serdev_device_driver_register(&picogw_serdev_driver);
+> +	if (ret) {
+> +		pr_err("serdev_device_driver_register failed (%d)", ret);
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +module_init(picogw_serdev_init);
+> +
+> +static void __exit picogw_serdev_exit(void)
+> +{
+> +	serdev_device_driver_unregister(&picogw_serdev_driver);
+> +}
+> +module_exit(picogw_serdev_exit);
+> +
+> +MODULE_LICENSE("GPL");
+> 
+
+Thanks,
+Ben Whitten
