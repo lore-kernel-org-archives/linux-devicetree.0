@@ -1,552 +1,120 @@
-From: Ben Whitten <ben.whitten@gmail.com>
-Subject: Re: [PATCH lora-next 3/5] net: lora: sx130x: Add PicoCell serdev
- driver
-Date: Sat, 5 Jan 2019 18:18:22 +0900
-Message-ID: <0e1aed6e-d076-d5b9-4d05-2a3fb3f5e8af@gmail.com>
-References: <20190104112131.14451-1-afaerber@suse.de>
- <20190104112131.14451-4-afaerber@suse.de>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH 2/3] qcom: spmi-gpio: add support for hierarchical IRQ
+ chip
+Date: Sat, 5 Jan 2019 07:08:44 -0500
+Message-ID: <20190105120844.GA2298@basecamp>
+References: <20181229114755.8711-1-masneyb@onstation.org>
+ <20181229114755.8711-3-masneyb@onstation.org>
+ <154656291378.15366.8661245319757182529@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190104112131.14451-4-afaerber@suse.de>
-Content-Language: en-GB
-Sender: netdev-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, netdev@vger.kernel.org, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <154656291378.15366.8661245319757182529@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Thu, Jan 03, 2019 at 04:48:33PM -0800, Stephen Boyd wrote:
+> I'd think we want the interrupt-cells for the pmic gpio controller to be
+> 2 cells (pin and flags) instead of 4 like you have here to match the
+> parent interrupt specifier.
 
-On 04/01/2019 20:21, Andreas Färber wrote:
-> The picoGW reference MCU firmware implements a USB CDC or UART interface
-> with a set of serial commands. It can be found on multiple mPCIe cards
-> as well as USB adapters.
-> 
->    https://github.com/Lora-net/picoGW_mcu
-> 
-> That MCU design superseded earlier attempts of using FTDI chips (MPSSE)
-> for controlling the SPI based chip directly from the host.
-> 
-> This commit adds a serdev driver implementing another regmap_bus to
-> abstract the register access and reuses our existing regmap driver on top.
-> Thereby we have an early proof of concept that we can drive both types
-> of modules/cards with a single driver core!
-> 
-> It assumes there is only one SX130x (with its radios) accessible, whereas
-> some new cards reportedly also have an SX127x on-board. So the DT/driver
-> design may need to be reconsidered once such a card or documentation
-> becomes available.
-> It also assumes SX1255/1258 are fully compatible with "semtech,sx1257".
-> 
-> Currently there's still some bugs to be investigated, with communication
-> stalling on one device and another reading the radio versions wrong
-> (07 / 1f instead of 21, also observed on spi once).
-> 
-> Signed-off-by: Andreas Färber <afaerber@suse.de>
-> ---
->   drivers/net/lora/Makefile        |   2 +
->   drivers/net/lora/sx130x_picogw.c | 466 +++++++++++++++++++++++++++++++++++++++
+I originally went with 4 interrupt cells for spmi-gpio to match the
+number of cells on the parent (spmi-arb). From qcom-msm8974.dtsi:
 
-We are missing a Kconfig select or depend, compilation fails if 
-CONFIG_SERIAL_DEV_BUS is not selected.
+spmi_bus: spmi@fc4cf000 {
+	compatible = "qcom,spmi-pmic-arb";
+	interrupt-controller;
+	#interrupt-cells = <4>;
+	...
+};
 
->   2 files changed, 468 insertions(+)
->   create mode 100644 drivers/net/lora/sx130x_picogw.c
+I agree that we should go with 2 cells for spmi-gpio.
+
+> I also seem to recall that GPIO numbering starts from 1 instead of
+> 0, so please keep that in mind.
+
+I'm using the pinctrl numbering, which is zero based.
+
+/ # head /sys/kernel/debug/pinctrl/fc4cf000.spmi\:pm8941@0\:gpios@c000/pins 
+registered pins: 36
+pin 0 (gpio1) 
+pin 1 (gpio2) 
+pin 2 (gpio3) 
+pin 3 (gpio4) 
+pin 4 (gpio5) 
+pin 5 (gpio6) 
+pin 6 (gpio7) 
+pin 7 (gpio8) 
+pin 8 (gpio9) 
+
+> > +static int pmic_gpio_irq_activate(struct irq_domain *domain,
+> > +                                 struct irq_data *data, bool reserve)
+> > +{
+> > +       struct pmic_gpio_state *state = domain->host_data;
 > 
-> diff --git a/drivers/net/lora/Makefile b/drivers/net/lora/Makefile
-> index c6a0410f80ce..5fef38abf5ed 100644
-> --- a/drivers/net/lora/Makefile
-> +++ b/drivers/net/lora/Makefile
-> @@ -25,6 +25,8 @@ lora-sx127x-y := sx127x.o
->   obj-$(CONFIG_LORA_SX130X) += lora-sx130x.o
->   lora-sx130x-y := sx130x.o
->   lora-sx130x-y += sx130x_radio.o
-> +obj-$(CONFIG_LORA_SX130X) += lora-sx130x-picogw.o
-> +lora-sx130x-picogw-y := sx130x_picogw.o
->   
->   obj-$(CONFIG_LORA_USI) += lora-usi.o
->   lora-usi-y := usi.o
-> diff --git a/drivers/net/lora/sx130x_picogw.c b/drivers/net/lora/sx130x_picogw.c
-> new file mode 100644
-> index 000000000000..577f9fb71d46
-> --- /dev/null
-> +++ b/drivers/net/lora/sx130x_picogw.c
-> @@ -0,0 +1,466 @@
-> +// SPDX-License-Identifier: GPL-2.0-or-later
-> +/*
-> + * Semtech SX1301/1308 PicoCell gateway serial MCU interface
-> + *
-> + * Copyright (c) 2018-2019 Andreas Färber
-> + */
-> +#include <linux/completion.h>
-> +#include <linux/lora/sx130x.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
-> +#include <linux/serdev.h>
-> +#include <linux/serial.h>
-> +#include <linux/slab.h>
-> +
-> +struct picogw_device {
-> +	struct serdev_device *serdev;
-> +
-> +	u8 rx_buf[1024];
-> +	int rx_len;
-> +
-> +	struct completion answer_comp;
-> +	struct completion answer_read_comp;
-> +};
-> +
-> +static inline struct picogw_device *picogw_get_drvdata(struct serdev_device *sdev)
-> +{
-> +	return sx130x_get_drvdata(&sdev->dev);
-> +}
-> +
-> +static bool picogw_valid_cmd(char ch)
-> +{
-> +	switch (ch) {
-> +	case 'k': /* invalid command error */
-> +	case 'r':
-> +	case 'w':
-> +	case 'l':
-> +		return true;
-> +	default:
-> +		return false;
-> +	}
-> +}
-> +
-> +static int picogw_send_cmd(struct picogw_device *picodev, char cmd,
-> +	u8 addr, const void *data, u16 data_len)
-> +{
-> +	struct serdev_device *sdev = picodev->serdev;
-> +	u8 buf[4];
-> +	int i, ret;
-> +
-> +	buf[0] = cmd;
-> +	buf[1] = (data_len >> 8) & 0xff;
-> +	buf[2] = (data_len >> 0) & 0xff;
-> +	buf[3] = addr;
-> +
-> +	dev_dbg(&sdev->dev, "%s: %c %02x %02x %02x\n", __func__, buf[0],
-> +		(unsigned int)buf[1], (unsigned int)buf[2], (unsigned int)buf[3]);
-> +	for (i = 0; i < data_len; i++) {
-> +		dev_dbg(&sdev->dev, "%s: data %02x\n", __func__, (unsigned int)((const u8*)data)[i]);
-> +	}
-> +
-> +	ret = serdev_device_write_buf(sdev, buf, 4);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 4)
-> +		return -EIO;
-> +
-> +	if (data_len) {
-> +		ret = serdev_device_write_buf(sdev, data, data_len);
-> +		if (ret < 0)
-> +			return ret;
-> +		if (ret != data_len)
-> +			return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int picogw_recv_answer(struct picogw_device *picodev,
-> +	char *cmd, bool *ack, void *buf, int buf_len,
-> +	unsigned long timeout)
-> +{
-> +	int len;
-> +
-> +	timeout = wait_for_completion_timeout(&picodev->answer_comp, timeout);
-> +	if (!timeout)
-> +		return -ETIMEDOUT;
-> +
-> +	if (cmd)
-> +		*cmd = picodev->rx_buf[0];
-> +
-> +	if (ack)
-> +		*ack = (picodev->rx_buf[3] == 1);
-> +
-> +	len = min(picodev->rx_len - 4, buf_len);
-> +	if (buf)
-> +		memcpy(buf, picodev->rx_buf + 4, len);
-> +
-> +	reinit_completion(&picodev->answer_comp);
-> +	complete(&picodev->answer_read_comp);
-> +
-> +	return len;
-> +}
-> +
-> +static int picogw_reg_read(struct picogw_device *picodev, u8 addr, u8 *val, unsigned long timeout)
-> +{
-> +	const u8 dummy = 0;
-> +	char cmd;
-> +	bool ack;
-> +	int ret;
-> +
-> +	ret = picogw_send_cmd(picodev, 'r', addr, &dummy, false ? 1 : 0);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = picogw_recv_answer(picodev, &cmd, &ack, val, 1, timeout);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (cmd != 'r')
-> +		return -EIO;
-> +	if (!ack || ret != 1)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int picogw_reg_write(struct picogw_device *picodev, u8 addr, u8 val, unsigned long timeout)
-> +{
-> +	char cmd;
-> +	bool ack;
-> +	int ret;
-> +
-> +	ret = picogw_send_cmd(picodev, 'w', addr, &val, 1);
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = picogw_recv_answer(picodev, &cmd, &ack, NULL, 0, timeout);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (cmd != 'w')
-> +		return -EIO;
-> +	if (!ack || ret != 0)
-> +		return -EIO;
-> +
-> +	return 0;
-> +}
-> +
-> +static int picogw_mcu_fw_check(struct picogw_device *picodev,
-> +	u32 fw_version, u8 *id, unsigned long timeout)
-> +{
-> +	char cmd;
-> +	bool ack;
-> +	int ret;
-> +
-> +	fw_version = cpu_to_be32(fw_version);
-> +	ret = picogw_send_cmd(picodev, 'l', 0, &fw_version, sizeof(fw_version));
-> +	if (ret)
-> +		return ret;
-> +
-> +	ret = picogw_recv_answer(picodev, &cmd, &ack, id, id ? 8 : 0, timeout);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (cmd != 'l')
-> +		return -EIO;
-> +	if (id && ret != 8)
-> +		return -EIO;
-> +
-> +	return ack ? 0 : -ENOTSUPP;
-> +}
-> +
-> +static int picogw_regmap_gather_write(void *context,
-> +	const void *reg_buf, size_t reg_size, const void *val_buf, size_t val_size)
-> +{
-> +	struct picogw_device *picodev = context;
-> +	const u8 *addr_buf = reg_buf;
-> +	const u8 *val = val_buf;
-> +	u8 addr;
-> +	int ret;
-> +
-> +	//dev_dbg(&picodev->serdev->dev, "%s: 0x%x (reg_size %zu) 0x%x (val_size %zu)\n",
-> +	//	__func__, (unsigned int)addr_buf[0], reg_size, (unsigned int)val[0], val_size);
-> +
-> +	if (reg_size != 1 || val_size > 0xffff)
-> +		return -EINVAL;
-> +
-> +	addr = addr_buf[0] & ~BIT(7);
-> +	if (val_size == 1) {
-> +		ret = picogw_reg_write(picodev, addr, val[0], HZ);
-> +		if (ret)
-> +			return ret;
-> +		return 0;
-> +	} else {
-> +		/* TODO burst mode */
-> +		dev_err(&picodev->serdev->dev, "burst mode write not yet implemented\n");
-> +		return -ENOTSUPP;
-> +	}
-> +}
-> +
-> +static int picogw_regmap_write(void *context,
-> +	const void *data_buf, size_t count)
-> +{
-> +	const u8 *data = data_buf;
-> +	if (count < 1)
-> +		return -EINVAL;
-> +
-> +	return picogw_regmap_gather_write(context, data, 1, data + 1, count - 1);
-> +}
-> +
-> +static int picogw_regmap_read(void *context,
-> +	const void *reg_buf, size_t reg_size, void *val_buf, size_t val_size)
-> +{
-> +	struct picogw_device *picodev = context;
-> +	const u8 *addr_buf = reg_buf;
-> +	u8 addr;
-> +	int ret;
-> +
-> +	//dev_dbg(&picodev->serdev->dev, "%s: 0x%x (reg_size %zu) (val_size %zu)\n", __func__, (unsigned int)addr_buf[0], reg_size, val_size);
-> +
-> +	if (reg_size != 1 || val_size > 0xffff)
-> +		return -EINVAL;
-> +
-> +	addr = addr_buf[0] & ~BIT(7);
-> +	if (val_size == 1) {
-> +		ret = picogw_reg_read(picodev, addr, val_buf, HZ);
-> +		if (ret)
-> +			return ret;
-> +		return 0;
-> +	} else {
-> +		/* TODO burst mode */
-> +		dev_err(&picodev->serdev->dev, "burst mode read not yet implemented\n");
-> +		return -ENOTSUPP;
-> +	}
-> +}
-> +
-> +static const struct regmap_bus picogw_regmap_bus = {
-> +	.write = picogw_regmap_write,
-> +	.gather_write = picogw_regmap_gather_write,
-> +	.read = picogw_regmap_read,
-> +
-> +	.max_raw_write = 0xffff,
-> +	.max_raw_read = 0xffff,
-> +};
-> +
-> +static int picogw_handle_answer(struct picogw_device *picodev)
-> +{
-> +	struct device *dev = &picodev->serdev->dev;
-> +	unsigned int data_len = ((u16)picodev->rx_buf[1] << 8) | picodev->rx_buf[2];
-> +	int cmd_len = 4 + data_len;
-> +	int i, ret;
-> +
-> +	if (picodev->rx_len < 4)
-> +		return 0;
-> +
-> +	if (cmd_len > sizeof(picodev->rx_buf)) {
-> +		dev_warn(dev, "answer too long (%u)\n", data_len);
-> +		return 0;
-> +	}
-> +
-> +	if (picodev->rx_len < cmd_len) {
-> +		dev_dbg(dev, "got %u, need %u bytes\n", picodev->rx_len, cmd_len);
-> +		return 0;
-> +	}
-> +
-> +	dev_dbg(dev, "Answer %c =%u %s (%u)\n", picodev->rx_buf[0],
-> +		(unsigned int)picodev->rx_buf[3],
-> +		(picodev->rx_buf[3] == 1) ? "OK" : "K0",
-> +		data_len);
-> +	for (i = 0; i < data_len; i++) {
-> +		//dev_dbg(dev, "%s: %02x\n", __func__, (unsigned int)picodev->rx_buf[4 + i]);
-> +	}
-> +
-> +	complete(&picodev->answer_comp);
-> +	ret = wait_for_completion_interruptible_timeout(&picodev->answer_read_comp, HZ / 2);
-> +	if (ret < 0)
-> +		return 0;
-> +
-> +	reinit_completion(&picodev->answer_read_comp);
-> +
-> +	return cmd_len;
-> +}
-> +
-> +static int picogw_receive_buf(struct serdev_device *sdev, const u8 *data, size_t count)
-> +{
-> +	struct picogw_device *picodev = picogw_get_drvdata(sdev);
-> +	size_t i;
-> +	int len = 0;
-> +
-> +	dev_dbg(&sdev->dev, "Receive (%zu)\n", count);
-> +
-> +	if (completion_done(&picodev->answer_comp)) {
-> +		dev_info(&sdev->dev, "RX waiting on completion\n");
-> +		return 0;
-> +	}
-> +	if (picodev->rx_len == sizeof(picodev->rx_buf)) {
-> +		dev_warn(&sdev->dev, "RX buffer full\n");
-> +		return 0;
-> +	}
-> +
-> +	i = min(count, sizeof(picodev->rx_buf) - picodev->rx_len);
-> +	if (i > 0) {
-> +		memcpy(&picodev->rx_buf[picodev->rx_len], data, i);
-> +		picodev->rx_len += i;
-> +		len += i;
-> +	}
-> +
-> +	while (picodev->rx_len > 0) {
-> +		/* search for valid beginning */
-> +		for (i = 0; i < picodev->rx_len; i++) {
-> +			if (picogw_valid_cmd(picodev->rx_buf[i]))
-> +				break;
-> +		}
-> +		if (i > 0) {
-> +			dev_dbg(&sdev->dev, "skipping %zu bytes of garbage\n", i);
-> +			if (i < picodev->rx_len) {
-> +				memmove(picodev->rx_buf, &picodev->rx_buf[i], picodev->rx_len - i);
-> +				picodev->rx_len -= i;
-> +			} else
-> +				picodev->rx_len = 0;
-> +		}
-> +
-> +		i = picogw_handle_answer(picodev);
-> +		if (i == 0)
-> +			break;
-> +
-> +		if (i % 64 == 0) {
-> +			dev_info(&sdev->dev, "skipping padding byte\n");
-> +			i++;
-> +		}
-> +		if (picodev->rx_len > i)
-> +			memmove(picodev->rx_buf, &picodev->rx_buf[i], picodev->rx_len - i);
-> +		if (picodev->rx_len >= i)
-> +			picodev->rx_len -= i;
-> +	}
-> +
-> +	return len;
-> +}
-> +
-> +static const struct serdev_device_ops picogw_serdev_client_ops = {
-> +	.receive_buf = picogw_receive_buf,
-> +	.write_wakeup = serdev_device_write_wakeup,
-> +};
-> +
-> +static int picogw_serdev_probe(struct serdev_device *sdev)
-> +{
-> +	struct picogw_device *picodev;
-> +	struct regmap *regmap;
-> +	u32 fw_version = 0x010a0006;
-
-Worth moving the version to a define?
-
-> +	u8 mac[8];here
-> +	int ret;
-> +
-> +	//dev_info(&sdev->dev, "Probing\n");
-> +
-> +	picodev = devm_kzalloc(&sdev->dev, sizeof(*picodev), GFP_KERNEL);
-> +	if (!picodev)
-> +		return -ENOMEM;
-> +
-> +	picodev->serdev = sdev;
-> +	init_completion(&picodev->answer_comp);
-> +	init_completion(&picodev->answer_read_comp);
-> +
-> +	ret = serdev_device_open(sdev);
-> +	if (ret) {
-> +		dev_err(&sdev->dev, "Failed to open (%d)\n", ret);
-> +		return ret;
-> +	}
-> +
-> +	serdev_device_set_baudrate(sdev, 115200);
-> +	serdev_device_set_parity(sdev, SERDEV_PARITY_NONE);
-> +	serdev_device_set_flow_control(sdev, true);
-> +
-> +	regmap = devm_regmap_init(&sdev->dev, &picogw_regmap_bus, picodev, &sx130x_regmap_config);
-> +	if (IS_ERR(regmap)) {
-> +		ret = PTR_ERR(regmap);
-> +		dev_err(&sdev->dev, "error initializing regmap (%d)\n", ret);
-> +		serdev_device_close(sdev);
-> +		return ret;
-> +	}
-> +
-> +	ret = sx130x_early_probe(regmap, NULL);
-> +	if (ret) {
-> +		serdev_device_close(sdev);
-> +		return ret;
-> +	}
-> +
-> +	sx130x_set_drvdata(&sdev->dev, picodev);
-> +	serdev_device_set_client_ops(sdev, &picogw_serdev_client_ops);
-> +
-> +	//msleep(1000);
-> +	ret = picogw_mcu_fw_check(picodev, fw_version, mac, HZ);
-> +	if (!ret || ret == -ENOTSUPP)
-> +		dev_info(&sdev->dev, "ID = %02x%02x%02x%02x%02x%02x%02x%02x\n",
-> +			(unsigned int)mac[0],
-> +			(unsigned int)mac[1],
-> +			(unsigned int)mac[2],
-> +			(unsigned int)mac[3],
-> +			(unsigned int)mac[4],
-> +			(unsigned int)mac[5],
-> +			(unsigned int)mac[6],
-> +			(unsigned int)mac[7]);
-> +	while (ret == -ENOTSUPP && ((fw_version & 0xff) > 4)) {
-> +		ret = picogw_mcu_fw_check(picodev, --fw_version, NULL, HZ);
-> +	}
-> +	if (ret == -ENOTSUPP) {
-> +		dev_warn(&sdev->dev, "firmware check failed (%08x)\n", fw_version);
-> +	} else {
-> +		dev_err(&sdev->dev, "ID retrieval failed (%d)\n", ret);
-> +		serdev_device_close(sdev);
-> +		return ret;
-> +	}
-> +
-> +	ret = sx130x_probe(&sdev->dev);
-> +	if (ret) {
-> +		serdev_device_close(sdev);
-> +		return ret;
-> +	}
-> +
-> +	//dev_info(&sdev->dev, "Done.\n");
-> +
-> +	return 0;
-> +}
-> +
-> +static void picogw_serdev_remove(struct serdev_device *sdev)
-> +{
-> +	sx130x_remove(&sdev->dev);
-> +
-> +	serdev_device_close(sdev);
-> +
-> +	//dev_info(&sdev->dev, "Removed\n");
-> +}
-> +
-> +static const struct of_device_id picogw_serdev_of_match[] = {
-> +	{ .compatible = "semtech,lora-picocell" },
-
-lora-picocell or lora-picogw... picocell has mobile connotations, should 
-we match the module name?
-
-> +	{}
-> +};
-> +MODULE_DEVICE_TABLE(of, picogw_serdev_of_match);
-> +
-> +static struct serdev_device_driver picogw_serdev_driver = {
-> +	.probe = picogw_serdev_probe,
-> +	.remove = picogw_serdev_remove,
-> +	.driver = {
-> +		.name = "lora-picogw",
-> +		.of_match_table = picogw_serdev_of_match,
-> +	},
-> +};
-> +
-> +static int __init picogw_serdev_init(void)
-> +{
-> +	int ret;
-> +
-> +	ret = serdev_device_driver_register(&picogw_serdev_driver);
-> +	if (ret) {
-> +		pr_err("serdev_device_driver_register failed (%d)", ret);
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +module_init(picogw_serdev_init);
-> +
-> +static void __exit picogw_serdev_exit(void)
-> +{
-> +	serdev_device_driver_unregister(&picogw_serdev_driver);
-> +}
-> +module_exit(picogw_serdev_exit);
-> +
-> +MODULE_LICENSE("GPL");
+> How about just storing the gpiochip in the domain->host_data?
 > 
+> > +
+> > +       return gpiochip_lock_as_irq(&state->chip, data->hwirq);
+> > +}
+> > +
+> > +static void pmic_gpio_irq_deactivate(struct irq_domain *domain,
+> > +                                    struct irq_data *data)
+> > +{
+> > +       struct pmic_gpio_state *state = domain->host_data;
+> > +
+> > +       gpiochip_unlock_as_irq(&state->chip, data->hwirq);
+> > +}
+> > +
+> 
+> Then these could be generic gpiolib APIs?
 
-Thanks,
-Ben Whitten
+I tried this:
+
+static const struct irq_domain_ops pmic_gpio_domain_ops = {
+        .activate = gpiochip_lock_as_irq,
+        .alloc = pmic_gpio_domain_alloc,
+        .deactivate = gpiochip_unlock_as_irq,
+        .free = irq_domain_free_irqs_common,
+        .translate = pmic_gpio_domain_translate,
+};
+
+But get an incompatible pointer types compiler error.
+
+drivers/pinctrl/qcom/pinctrl-spmi-gpio.c:1003:14: error: initialization of
+‘int (*)(struct irq_domain *, struct irq_data *, bool)’ {aka ‘int
+(*)(struct irq_domain *, struct irq_data *, _Bool)’} from incompatible
+pointer type ‘int (*)(struct gpio_chip *, unsigned int)’
+[-Werror=incompatible-pointer-types]
+
+
+> > +static int pmic_gpio_domain_alloc(struct irq_domain *domain, unsigned int virq,
+> > +                                 unsigned int nr_irqs, void *data)
+> > +{
+> > +       struct pmic_gpio_state *state = domain->host_data;
+> > +       struct irq_fwspec *fwspec = data;
+> > +       struct irq_fwspec parent_fwspec;
+> > +       irq_hw_number_t hwirq;
+> > +       unsigned int type;
+> > +       int ret, i;
+> > +
+> > +       ret = pmic_gpio_domain_translate(domain, fwspec, &hwirq, &type);
+> > +       if (ret)
+> > +               return ret;
+> > +
+> > +       for (i = 0; i < nr_irqs; i++)
+> > +               irq_domain_set_info(domain, virq + i, hwirq + i,
+> > +                                   &pmic_gpio_irq_chip, state,
+> > +                                   handle_level_irq, NULL, NULL);
+> 
+> Does almost nobody pass a name for that last parameter?
+
+I see 26 callers to irq_domain_set_info() outside this patch set and
+only 3 of them actually set a name. I'm open to suggestions for what to
+put here.
+
+Brian
