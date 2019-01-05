@@ -1,199 +1,135 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/3] spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips
-Date: Fri, 04 Jan 2019 16:25:23 -0800
-Message-ID: <154664792383.15366.9346249356552958882@swboyd.mtv.corp.google.com>
-References: <20181229114755.8711-1-masneyb@onstation.org> <20181229114755.8711-2-masneyb@onstation.org>
+From: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Sat, 5 Jan 2019 02:39:43 +0200
+Message-ID: <90a2ed79-b437-af14-4538-430d8723cc6b@gmail.com>
+References: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
+ <20181219201047.GA23448@amd> <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
+ <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
+ <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181229114755.8711-2-masneyb@onstation.org>
+In-Reply-To: <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2018-12-29 03:47:53)
-> Convert the spmi-pmic-arb IRQ code to use the version 2 IRQ interface
-> in order to support hierarchical IRQ chips. Code was tested on a LG
-> Nexus 5 (hammerhead) phone.
+Hi Jacek,
 
-Can you add the motivation for this change here? Why should we care?
+On 04/01/2019 23.37, Jacek Anaszewski wrote:
+> But, aside from that hypothetic issue, we need a solution for
+> LEDn_BRIGHTNESS feature of lp5024, i.e. setting color intensity
+> via a single register write. How would you propose to address that?
 
->=20
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> ---
->  drivers/spmi/spmi-pmic-arb.c | 91 +++++++++++++++++++++++++-----------
->  1 file changed, 64 insertions(+), 27 deletions(-)
->=20
-> diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-> index 360b8218f322..c651d19f0623 100644
-> --- a/drivers/spmi/spmi-pmic-arb.c
-> +++ b/drivers/spmi/spmi-pmic-arb.c
-> @@ -666,7 +666,8 @@ static int qpnpint_get_irqchip_state(struct irq_data =
-*d,
->         return 0;
->  }
-> =20
-> -static int qpnpint_irq_request_resources(struct irq_data *d)
-> +static int qpnpint_irq_domain_activate(struct irq_domain *domain,
-> +                                      struct irq_data *d, bool reserve)
->  {
->         struct spmi_pmic_arb *pmic_arb =3D irq_data_get_irq_chip_data(d);
->         u16 periph =3D hwirq_to_per(d->hwirq);
-> @@ -692,36 +693,37 @@ static struct irq_chip pmic_arb_irqchip =3D {
->         .irq_set_type   =3D qpnpint_irq_set_type,
->         .irq_set_wake   =3D qpnpint_irq_set_wake,
->         .irq_get_irqchip_state  =3D qpnpint_get_irqchip_state,
-> -       .irq_request_resources =3D qpnpint_irq_request_resources,
->         .flags          =3D IRQCHIP_MASK_ON_SUSPEND,
->  };
-> =20
-> -static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
-> -                                          struct device_node *controller,
-> -                                          const u32 *intspec,
-> -                                          unsigned int intsize,
-> -                                          unsigned long *out_hwirq,
-> -                                          unsigned int *out_type)
-> +static int qpnpint_irq_domain_translate(struct irq_domain *d,
-> +                                       struct irq_fwspec *fwspec,
-> +                                       unsigned long *out_hwirq,
-> +                                       unsigned int *out_type)
->  {
->         struct spmi_pmic_arb *pmic_arb =3D d->host_data;
->         u16 apid, ppid;
->         int rc;
-> =20
-> -       dev_dbg(&pmic_arb->spmic->dev, "intspec[0] 0x%1x intspec[1] 0x%02=
-x intspec[2] 0x%02x\n",
-> -               intspec[0], intspec[1], intspec[2]);
-> +       dev_dbg(&pmic_arb->spmic->dev,
-> +               "param[0] 0x%1x param[1] 0x%02x param[2] 0x%02x\n",
-> +               fwspec->param[0], fwspec->param[1], fwspec->param[2]);
-> =20
-> -       if (irq_domain_get_of_node(d) !=3D controller)
-> +       if (irq_domain_get_of_node(d) !=3D pmic_arb->spmic->dev.of_node)
->                 return -EINVAL;
-> -       if (intsize !=3D 4)
-> +       if (fwspec->param_count !=3D 4)
->                 return -EINVAL;
-> -       if (intspec[0] > 0xF || intspec[1] > 0xFF || intspec[2] > 0x7)
-> +       if (fwspec->param[0] > 0xF || fwspec->param[1] > 0xFF ||
-> +           fwspec->param[2] > 0x7)
->                 return -EINVAL;
-> =20
-> -       ppid =3D intspec[0] << 8 | intspec[1];
-> +       ppid =3D fwspec->param[0] << 8 | fwspec->param[1];
->         rc =3D pmic_arb->ver_ops->ppid_to_apid(pmic_arb, ppid);
->         if (rc < 0) {
-> -               dev_err(&pmic_arb->spmic->dev, "failed to xlate sid =3D %=
-#x, periph =3D %#x, irq =3D %u rc =3D %d\n",
-> -               intspec[0], intspec[1], intspec[2], rc);
-> +               dev_err(&pmic_arb->spmic->dev,
-> +                       "failed to xlate sid =3D %#x, periph =3D %#x, irq=
- =3D %u rc =3D %d\n",
-> +                       fwspec->param[0], fwspec->param[1], fwspec->param=
-[2],
+You could model it to something like this in device tree:
 
-Why not assign a u32 *intspec to fwspec->param and then not change many
-lines in this function? Reducing the diff is useful to avoid glossing
-over some mistake in variable renames.
+led-module @ <i2c-address> {
+	compatible = "lp5024";
 
-> +                       rc);
->                 return rc;
->         }
-> =20
-> @@ -732,25 +734,58 @@ static int qpnpint_irq_domain_dt_translate(struct i=
-rq_domain *d,
->         if (apid < pmic_arb->min_apid)
->                 pmic_arb->min_apid =3D apid;
-> =20
-> -       *out_hwirq =3D spec_to_hwirq(intspec[0], intspec[1], intspec[2], =
-apid);
-> -       *out_type  =3D intspec[3] & IRQ_TYPE_SENSE_MASK;
-> +       *out_hwirq =3D spec_to_hwirq(fwspec->param[0], fwspec->param[1],
-> +                                  fwspec->param[2], apid);
-> +       *out_type  =3D fwspec->param[3] & IRQ_TYPE_SENSE_MASK;
-> =20
->         dev_dbg(&pmic_arb->spmic->dev, "out_hwirq =3D %lu\n", *out_hwirq);
-> =20
->         return 0;
->  }
-> =20
-> -static int qpnpint_irq_domain_map(struct irq_domain *d,
-> -                                 unsigned int virq,
-> -                                 irq_hw_number_t hwirq)
-> +
-> +static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
-> +                                  struct irq_domain *domain, unsigned in=
-t virq,
-> +                                  irq_hw_number_t hwirq)
->  {
-> -       struct spmi_pmic_arb *pmic_arb =3D d->host_data;
-> +       unsigned int old_virq;
-> =20
->         dev_dbg(&pmic_arb->spmic->dev, "virq =3D %u, hwirq =3D %lu\n", vi=
-rq, hwirq);
-> =20
-> -       irq_set_chip_and_handler(virq, &pmic_arb_irqchip, handle_level_ir=
-q);
-> -       irq_set_chip_data(virq, d->host_data);
-> -       irq_set_noprobe(virq);
-> +       /*
-> +        * Check to see if the hwirq is already associated with another v=
-irq on
-> +        * this IRQ domain. If so, then disassociate it before associatin=
-g the
-> +        * hwirq with the new virq. IRQs are all initially setup without =
-an IRQ
-> +        * hierarchy when this driver is probed and when mfd/qcom-spmi-pm=
-ic.c is
-> +        * probed. Later in the boot process, an IRQ hierarchy is request=
-ed by
-> +        * pinctrl-spmi-gpio.c, and the same hwirq is now associated with=
- a new
-> +        * virq.
+	// There is in hardware setup to use either linear or
+	// logarithmic scaling:
+	//enable-logarithmic-brightness;
 
-Is that because we count the irqs in the pmic gpio driver? It looks like
-we should remove that code from the driver then and use the compatible
-string to figure out how many gpios are present. It will make this
-comment and disassociate code unnecessary, but unfortunately it will
-mean we have to add all the compatible strings to the pmic gpio driver
-just so we know how many gpios are there.
+	led0 {
+		// this will create led instance for LED0 in lp5024
+		label = "lp-led0";
+		
+		// This specifies LED number within lp5024
+		led-index = <0>;   // set output-base as 0*3 == 0
+		
+		element-red {
+			// refers to OUT0
+			output-offset = <0>;
+		};
+		
+		element-green {
+			// refers to OUT1
+			output-offset = <1>;
+		};
+		
+		element-blue {
+			// refers to OUT2
+			output-offset = <2>;
+		};
+		
+	};	
 
-> +        */
-> +       old_virq =3D irq_find_mapping(domain, hwirq);
-> +       if (old_virq)
-> +               irq_domain_disassociate(domain, old_virq);
-> +
-> +       irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_=
-arb,
-> +                           handle_level_irq, NULL, NULL);
-> +}
-> +
-> +static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
-> +                                   unsigned int virq, unsigned int nr_ir=
-qs,
-> +                                   void *data)
-> +{
-> +       struct spmi_pmic_arb *pmic_arb =3D domain->host_data;
-> +       struct irq_fwspec *fwspec =3D data;
-> +       irq_hw_number_t hwirq;
-> +       unsigned int type;
-> +       int ret, i;
-> +
-> +       ret =3D qpnpint_irq_domain_translate(domain, fwspec, &hwirq, &typ=
-e);
-> +       if (ret)
-> +               return ret;
-> +
-> +       for (i =3D 0; i < nr_irqs; i++)
-> +               qpnpint_irq_domain_map(pmic_arb, domain, virq + i, hwirq =
-+ i);
-> +
->         return 0;
->  }
-> =20
+	led1 {
+		// this will create led instance for LED1 in lp5024
+		label = "lp-led1";
+		
+		// This specifies LED number within lp5024
+		led-index = <1>;   // set output-base as 1*3 == 3
 
-Otherwise patch looks good to me. Thanks for working on this. Are you
-going to convert the ssbi master and gpio chip too?
+		element-red {
+			// refers to OUT3
+			output-offset = <0>;
+		};
+		
+		element-green {
+			// refers to OUT4
+			output-offset = <1>;
+		};
+		
+		element-blue {
+			// refers to OUT5
+			output-offset = <2>;
+		};
+		
+	};
+
+	bank-led {
+		// this will create led instance for bank leds in lp5024
+		label = "lp-bank-led";
+
+		// configured bank led configuration
+		led-index = <2 3 4 5 6 7>;
+		// As here is list of led-indices this entry is
+		// assumed to be bank configuration. Bank mode is enable
+		// for the indices.
+
+		// set output-base as BANK A
+
+		element-red {
+			// refers to BANK A
+			output-offset = <0>;
+		};
+		
+		element-green {
+			// refers to BANK B
+			output-offset = <1>;
+		};
+		
+		element-blue {
+			// refers to BANK C
+			output-offset = <2>;
+		};
+	};	
+};
+
+This would then create three led instances and each led instance has 
+brightness setting and that goes straight to hardware.
+
+If one would want to override hardware control for brightness then I 
+suppose you would define in led node something like:
+
+	brightness-model = "hsl"
+
+This would then pick red, green and blue elements for hsl calculations 
+and others color elements for linear. LED specific hardware brightness 
+would then be either 0 or 0xFF depending if all of LED color elements 
+are zero or not.
+
+Would that kind of model work?
+
+Thanks,
+Vesa Jääskeläinen
