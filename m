@@ -1,111 +1,42 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 2/8 v2] Documentation: bindings: k3dma: Add binding for
- dma-avail-chan
-Date: Sat, 5 Jan 2019 19:38:26 +0530
-Message-ID: <20190105140826.GA28029@Mani-XPS-13-9360>
-References: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
- <1546635388-13795-3-git-send-email-john.stultz@linaro.org>
- <20190105040030.GF2477@Mani-XPS-13-9360>
- <CALAqxLUZ=6_tELtZPEjYwV+BNNBcZj4Z=dq9UyrRXuPhs_uGUw@mail.gmail.com>
- <20190105045320.GA3761@Mani-XPS-13-9360>
- <20190105134610.GX13372@vkoul-mobl.Dlink>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: iio: adc: meson-saradc: update
+ temperature sensor support
+Date: Sat, 5 Jan 2019 16:39:56 +0000
+Message-ID: <20190105163956.195752d6@archlinux>
+References: <20181227215020.9803-1-martin.blumenstingl@googlemail.com>
+        <20181227215020.9803-2-martin.blumenstingl@googlemail.com>
+        <20190103230209.GA21801@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190105134610.GX13372@vkoul-mobl.Dlink>
+In-Reply-To: <20190103230209.GA21801@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, balbes-150@yandex.ru, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Vinod,
+On Thu, 3 Jan 2019 17:02:09 -0600
+Rob Herring <robh@kernel.org> wrote:
 
-On Sat, Jan 05, 2019 at 07:16:10PM +0530, Vinod Koul wrote:
-> On 05-01-19, 10:23, Manivannan Sadhasivam wrote:
-> > On Fri, Jan 04, 2019 at 08:39:34PM -0800, John Stultz wrote:
-> > > On Fri, Jan 4, 2019 at 8:00 PM Manivannan Sadhasivam
-> > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > >
-> > > > Hi John,
-> > > >
-> > > > On Fri, Jan 04, 2019 at 12:56:22PM -0800, John Stultz wrote:
-> > > > > Some dma channels can be reserved for secure mode or other
-> > > > > hardware on the SoC, so provide a binding for a bitmask
-> > > > > listing the available channels for the kernel to use.
-> > > > >
-> > > > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > > Cc: Tanglei Han <hantanglei@huawei.com>
-> > > > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-> > > > > Cc: Ryan Grachek <ryan@edited.us>
-> > > > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > Cc: dmaengine@vger.kernel.org
-> > > > > Cc: devicetree@vger.kernel.org
-> > > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
-> > > > >  1 file changed, 3 insertions(+)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > > > index 10a2f15..1c466c1 100644
-> > > > > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > > > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > > > @@ -14,6 +14,9 @@ Required properties:
-> > > > >               have specific request line
-> > > > >  - clocks: clock required
-> > > > >
-> > > > > +Optional properties:
-> > > > > +- dma-avail-chan: Bitmask of available physical channels
-> > > > > +
-> > > >
-> > > > This property looks too generic. Since this is specific to HiSi SoCs,
-> > > > this could be "hisi-dma-avail-chan"?
-> > > 
-> > > I'm fine to change it, but I'm not sure I fully understand the
-> > > rational. Can you help me understand?
-> > > Are device node-binding names supposed to have global scope? I assumed
-> > > the node property names are basically scoped to the entry?
+> On Thu, 27 Dec 2018 22:50:19 +0100, Martin Blumenstingl wrote:
+> > Meson8b and Meson8m2 use a 5-bit wide TSC (temperature sensor
+> > coefficient). The SAR ADC registers however can only store (the lower)
+> > 4 bits. The fifth (upper-most) bit is stored inside the
+> > MESON_HHI_DPLL_TOP_0[9] register from the HHI register area.
+> > This adds a syscon property to the HHI register area so a driver can
+> > fetch the HHI register map and store the fifth TSC bit in there.
 > > 
-> > IIUC properties documented in subsystem binding (dma.txt in this case)
-> > will have global scope. Those which are not documented in this binding
-> > are specific to vendor IPs and should be prefixed with the vendor
-> > prefix (hisi in this case).
-> > 
-> > > Further, having some dma channels be reserved doesn't seem to be too
-> > > unique a concept, so I'm not sure what we gain long term by prefixing
-> > > it?
-> > > 
-> > 
-> > Right, but this brings up the point of having this functionality in
-> > generic DMA engine so that the DMA controller drivers need not handle.
-> > So either we should move this available channel check to DMA Engine
-> > and document the property in dma.txt so that other IPs can also use it
-> > or keep the functionality in K3 driver and use HiSi prefix for the
-> > property.
-> > 
-> > But I'd like to hear Vinod/Rob's opinion on this!
+> > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > ---
+> >  .../devicetree/bindings/iio/adc/amlogic,meson-saradc.txt      | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >   
 > 
-> So there are two parts, first is if this new property of using 'some'
-> channels of controller is generic enough, the answer is unfortunately
-> yes, so we should move this to dma.txt as a generic property
-> 
-> But I don't agree the dmaengine core should handle it, we may add
-> helpers, but controllers registers N channels and they would do so, core
-> should not do filtering
-> 
-
-Okay. But won't it create ambiguity? What if a new driver developer
-assmes that he can use this property to filter the channels for his own
-DMA controller? Since we are _explicitly_ stating that these channels
-should be filtered, why the dmaengine core can't handle it?
-
-If the property is generic, then it makes sense to keep the
-functionality also generic.
+> Reviewed-by: Rob Herring <robh@kernel.org>
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
-Mani
 
-> -- 
-> ~Vinod
+Jonathan
