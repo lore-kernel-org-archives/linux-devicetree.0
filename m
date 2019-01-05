@@ -1,8 +1,8 @@
 From: Jonathan Cameron <jic23@kernel.org>
 Subject: Re: [PATCH 2/2] iio: adc: meson-saradc: enable the temperature
  sensor two more SoCs
-Date: Sat, 5 Jan 2019 16:41:17 +0000
-Message-ID: <20190105164117.125fbba8@archlinux>
+Date: Sat, 5 Jan 2019 16:44:27 +0000
+Message-ID: <20190105164427.03e2a013@archlinux>
 References: <20181227215020.9803-1-martin.blumenstingl@googlemail.com>
         <20181227215020.9803-3-martin.blumenstingl@googlemail.com>
 Mime-Version: 1.0
@@ -36,8 +36,8 @@ Martin Blumenstingl <martin.blumenstingl@googlemail.com> wrote:
 > calculation logic.
 > 
 > Signed-off-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Applied to the togreg branch of iio.git and pushed out as testing for the
-autobuilders to play with it.
+Applied to the togreg branch of iio.git and pushed out as testing for
+the autobuilders to play with it.
 
 Thanks,
 
