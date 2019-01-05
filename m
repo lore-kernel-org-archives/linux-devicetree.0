@@ -1,101 +1,50 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v3 4/4] arm64: dts: actions: s700-cubieboard7: Enable
- I2C0 and I2C1
-Date: Sat, 5 Jan 2019 23:29:04 +0530
-Message-ID: <20190105175904.GB32306@Mani-XPS-13-9360>
-References: <20181211080448.24007-1-pn@denx.de>
- <20181211080448.24007-5-pn@denx.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v9 12/27] pwm: jz4740: Use regmap from TCU driver
+Date: Sat, 5 Jan 2019 20:42:26 +0100
+Message-ID: <20190105194226.pe4huzynz4civ3lm@pengutronix.de>
+References: <20181227181319.31095-1-paul@crapouillou.net>
+ <20181227181319.31095-13-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181211080448.24007-5-pn@denx.de>
+In-Reply-To: <20181227181319.31095-13-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Parthiban Nallathambi <pn@denx.de>
-Cc: afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 11, 2018 at 09:04:48AM +0100, Parthiban Nallathambi wrote:
-> Add pinctrl definitions for Actions Semiconductor S700 I2C controllers.
-> Pinctrl definitions are only available for I2C0, I2C1 and I2C2.
-> Enable I2C0 (PMIC), I2C1 (gyro, touchscreen) in cubieboard7.
+On Thu, Dec 27, 2018 at 07:13:04PM +0100, Paul Cercueil wrote:
+> The ingenic-timer "TCU" driver provides us with a regmap, that we can
+> use to safely access the TCU registers.
 > 
-> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> While this driver is devicetree-compatible, it is never (as of now)
+> probed from devicetree, so this change does not introduce a ABI problem
+> with current devicetree files.
 
-Applied to dt-next branch where I have been collecting patches for
-Andreas.
+Does it change behaviour? If so, how?
 
-Thanks,
-Mani
-
-> ---
->  .../boot/dts/actions/s700-cubieboard7.dts     | 53 +++++++++++++++++++
->  1 file changed, 53 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> index 28f3f4a0f7f0..63e375cd9eb4 100644
-> --- a/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> +++ b/arch/arm64/boot/dts/actions/s700-cubieboard7.dts
-> @@ -30,6 +30,59 @@
->  	};
->  };
+> @@ -113,26 +117,37 @@ static int jz4740_pwm_apply(struct pwm_chip *chip, struct pwm_device *pwm,
 >  
-> +&i2c0 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c0_default>;
-> +};
-> +
-> +&i2c1 {
-> +	status = "okay";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c1_default>;
-> +};
-> +
-> +&i2c2 {
-> +	status = "disabled";
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&i2c2_default>;
-> +};
-> +
-> +&pinctrl {
-> +	i2c0_default: i2c0_default {
-> +		pinmux {
-> +			groups = "i2c0_mfp";
-> +			function = "i2c0";
-> +		};
-> +		pinconf {
-> +			pins = "i2c0_sclk", "i2c0_sdata";
-> +			bias-pull-up;
-> +		};
-> +	};
-> +
-> +	i2c1_default: i2c1_default {
-> +		pinmux {
-> +			groups = "i2c1_dummy";
-> +			function = "i2c1";
-> +		};
-> +		pinconf {
-> +			pins = "i2c1_sclk", "i2c1_sdata";
-> +			bias-pull-up;
-> +		};
-> +	};
-> +
-> +	i2c2_default: i2c2_default {
-> +		pinmux {
-> +			groups = "i2c2_dummy";
-> +			function = "i2c2";
-> +		};
-> +		pinconf {
-> +			pins = "i2c2_sclk", "i2c2_sdata";
-> +			bias-pull-up;
-> +		};
-> +	};
-> +};
-> +
->  &timer {
->  	clocks = <&hosc>;
->  };
-> -- 
-> 2.17.2
-> 
+>  	jz4740_pwm_disable(chip, pwm);
+>  
+> -	jz4740_timer_set_count(pwm->hwpwm, 0);
+> -	jz4740_timer_set_duty(pwm->hwpwm, duty);
+> -	jz4740_timer_set_period(pwm->hwpwm, period);
+> +	/* Set abrupt shutdown */
+> +	regmap_update_bits(jz4740->map, TCU_REG_TCSRc(pwm->hwpwm),
+> +			   TCU_TCSR_PWM_SD, TCU_TCSR_PWM_SD);
+
+I think I already pointed that out before: abrupt mode is wrong. If
+.apply is called with a new set of parameters the currently running
+period with the old values is expected to complete before the new values
+take effect.
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
