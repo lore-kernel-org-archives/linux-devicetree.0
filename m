@@ -1,272 +1,87 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH V6 2/2] iio: accell: mma8452: add vdd/vddio regulator
- operation support
-Date: Sat, 5 Jan 2019 17:29:42 +0000
-Message-ID: <20190105172942.2787d236@archlinux>
-References: <1545555462-16121-1-git-send-email-Anson.Huang@nxp.com>
-        <1545555462-16121-2-git-send-email-Anson.Huang@nxp.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v3 2/4] arm64: dts: actions: s700: Add I2C controller
+ nodes
+Date: Sat, 5 Jan 2019 23:28:43 +0530
+Message-ID: <20190105175843.GA32306@Mani-XPS-13-9360>
+References: <20181211080448.24007-1-pn@denx.de>
+ <20181211080448.24007-3-pn@denx.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545555462-16121-2-git-send-email-Anson.Huang@nxp.com>
+Content-Disposition: inline
+In-Reply-To: <20181211080448.24007-3-pn@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Parthiban Nallathambi <pn@denx.de>
+Cc: afaerber@suse.de, robh+dt@kernel.org, mark.rutland@arm.com, wsa@the-dreams.de, linux-arm-kernel@lists.infradead.org, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux@cubietech.com, thomas.liau@actions-semi.com, linux-actions@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 23 Dec 2018 09:02:32 +0000
-Anson Huang <anson.huang@nxp.com> wrote:
-
-> The accelerometer's power supply could be controllable on some
-> platforms, such as i.MX6Q-SABRESD board, the mma8451's power supplies
-> are controlled by a GPIO fixed regulator, need to make sure the
-> regulators are enabled before any communication with mma8451, this
-> patch adds vdd/vddio regulator operation support.
+On Tue, Dec 11, 2018 at 09:04:46AM +0100, Parthiban Nallathambi wrote:
+> Add I2C controller nodes for Actions Semiconductor S700 SoC.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Martin Kepplinger <martink@posteo.de>
+> Signed-off-by: Parthiban Nallathambi <pn@denx.de>
+> Reviewed-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-I'm fine with the general approach now, though I would like separate
-error handling for the two different regulators.
-
-Also, this has obviously changed a fair bit since Martin originally gave
-that Ack.  Martin, could you confirm you are still happy with the code?
+Applied to dt-next branch where I have been collecting patches for
+Andreas.
 
 Thanks,
-
-Jonathan
-
+Mani
 
 > ---
-> ChangeLog since V5:
->     - ONLY enable vdd/vddio regulators after both of them are aquired;
->     - Since the suspend/resume operations are same as runtime suspend/resume, so just use the
->       pm_runtime_force_suspend/resume for suspend/resuem callback to simply the code.
-> ---
->  drivers/iio/accel/mma8452.c | 99 +++++++++++++++++++++++++++++++++++----------
->  1 file changed, 77 insertions(+), 22 deletions(-)
+>  arch/arm64/boot/dts/actions/s700.dtsi | 40 +++++++++++++++++++++++++++
+>  1 file changed, 40 insertions(+)
 > 
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 421a0a8..7519ed5 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -31,6 +31,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
+> diff --git a/arch/arm64/boot/dts/actions/s700.dtsi b/arch/arm64/boot/dts/actions/s700.dtsi
+> index 192c7b39c8c1..35fddba2af1c 100644
+> --- a/arch/arm64/boot/dts/actions/s700.dtsi
+> +++ b/arch/arm64/boot/dts/actions/s700.dtsi
+> @@ -174,6 +174,46 @@
+>  			#clock-cells = <1>;
+>  		};
 >  
->  #define MMA8452_STATUS				0x00
->  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-> @@ -107,6 +108,8 @@ struct mma8452_data {
->  	u8 data_cfg;
->  	const struct mma_chip_info *chip_info;
->  	int sleep_val;
-> +	struct regulator *vdd_reg;
-> +	struct regulator *vddio_reg;
->  };
->  
->   /**
-> @@ -1534,9 +1537,33 @@ static int mma8452_probe(struct i2c_client *client,
->  	mutex_init(&data->lock);
->  	data->chip_info = match->data;
->  
-> +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
-> +	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
-> +	if (IS_ERR(data->vdd_reg) || IS_ERR(data->vddio_reg)) {
-> +		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER ||
-> +			PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
+> +		i2c0: i2c@e0170000 {
+> +			compatible = "actions,s700-i2c";
+> +			reg = <0 0xe0170000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C0>;
+> +			interrupts = <GIC_SPI 25 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
-> +		dev_err(&client->dev, "failed to get VDD/VDDIO regulator!\n");
-> +		return IS_ERR(data->vdd_reg) ?
-> +		       PTR_ERR(data->vdd_reg) : PTR_ERR(data->vddio_reg);
-
-This is overly complex.  It'll be more lines of code, but I'd prefer
-you handle the two separately as the result will be more readable / less
-fragile.
-
-> +	}
+> +		i2c1: i2c@e0174000 {
+> +			compatible = "actions,s700-i2c";
+> +			reg = <0 0xe0174000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C1>;
+> +			interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
-> +	ret = regulator_enable(data->vdd_reg);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to enable VDD regulator!\n");
-> +		return ret;
-> +	}
+> +		i2c2: i2c@e0178000 {
+> +			compatible = "actions,s700-i2c";
+> +			reg = <0 0xe0178000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C2>;
+> +			interrupts = <GIC_SPI 27 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
-> +	ret = regulator_enable(data->vddio_reg);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to enable VDDIO regulator!\n");
-> +		goto disable_regulator_vdd;
-> +	}
+> +		i2c3: i2c@e017c000 {
+> +			compatible = "actions,s700-i2c";
+> +			reg = <0 0xe017c000 0 0x1000>;
+> +			clocks = <&cmu CLK_I2C3>;
+> +			interrupts = <GIC_SPI 28 IRQ_TYPE_LEVEL_HIGH>;
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +			status = "disabled";
+> +		};
 > +
->  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	switch (ret) {
->  	case MMA8451_DEVICE_ID:
-> @@ -1549,7 +1576,8 @@ static int mma8452_probe(struct i2c_client *client,
->  			break;
->  		/* else: fall through */
->  	default:
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto disable_regulators;
->  	}
->  
->  	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
-> @@ -1566,13 +1594,13 @@ static int mma8452_probe(struct i2c_client *client,
->  
->  	ret = mma8452_reset(client);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	data->data_cfg = MMA8452_DATA_CFG_FS_2G;
->  	ret = i2c_smbus_write_byte_data(client, MMA8452_DATA_CFG,
->  					data->data_cfg);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	/*
->  	 * By default set transient threshold to max to avoid events if
-> @@ -1581,7 +1609,7 @@ static int mma8452_probe(struct i2c_client *client,
->  	ret = i2c_smbus_write_byte_data(client, MMA8452_TRANSIENT_THS,
->  					MMA8452_TRANSIENT_THS_MASK);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	if (client->irq) {
->  		int irq2;
-> @@ -1595,7 +1623,7 @@ static int mma8452_probe(struct i2c_client *client,
->  						MMA8452_CTRL_REG5,
->  						data->chip_info->all_events);
->  			if (ret < 0)
-> -				return ret;
-> +				goto disable_regulators;
->  
->  			dev_dbg(&client->dev, "using interrupt line INT1\n");
->  		}
-> @@ -1604,11 +1632,11 @@ static int mma8452_probe(struct i2c_client *client,
->  					MMA8452_CTRL_REG4,
->  					data->chip_info->enabled_events);
->  		if (ret < 0)
-> -			return ret;
-> +			goto disable_regulators;
->  
->  		ret = mma8452_trigger_setup(indio_dev);
->  		if (ret < 0)
-> -			return ret;
-> +			goto disable_regulators;
->  	}
->  
->  	data->ctrl_reg1 = MMA8452_CTRL_ACTIVE |
-> @@ -1661,12 +1689,19 @@ static int mma8452_probe(struct i2c_client *client,
->  trigger_cleanup:
->  	mma8452_trigger_cleanup(indio_dev);
->  
-> +disable_regulators:
-> +	regulator_disable(data->vddio_reg);
-> +
-> +disable_regulator_vdd:
-> +	regulator_disable(data->vdd_reg);
-> +
->  	return ret;
->  }
->  
->  static int mma8452_remove(struct i2c_client *client)
->  {
->  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +	struct mma8452_data *data = iio_priv(indio_dev);
->  
->  	iio_device_unregister(indio_dev);
->  
-> @@ -1678,6 +1713,9 @@ static int mma8452_remove(struct i2c_client *client)
->  	mma8452_trigger_cleanup(indio_dev);
->  	mma8452_standby(iio_priv(indio_dev));
->  
-> +	regulator_disable(data->vddio_reg);
-> +	regulator_disable(data->vdd_reg);
-> +
->  	return 0;
->  }
->  
-> @@ -1696,6 +1734,18 @@ static int mma8452_runtime_suspend(struct device *dev)
->  		return -EAGAIN;
->  	}
->  
-> +	ret = regulator_disable(data->vddio_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to disable VDDIO regulator\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_disable(data->vdd_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to disable VDD regulator\n");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1705,9 +1755,22 @@ static int mma8452_runtime_resume(struct device *dev)
->  	struct mma8452_data *data = iio_priv(indio_dev);
->  	int ret, sleep_val;
->  
-> +	ret = regulator_enable(data->vdd_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable VDD regulator\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_enable(data->vddio_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable VDDIO regulator\n");
-> +		regulator_disable(data->vdd_reg);
-> +		return ret;
-> +	}
-> +
->  	ret = mma8452_active(data);
->  	if (ret < 0)
-> -		return ret;
-> +		goto runtime_resume_failed;
->  
->  	ret = mma8452_get_odr_index(data);
->  	sleep_val = 1000 / mma8452_samp_freq[ret][0];
-> @@ -1717,25 +1780,17 @@ static int mma8452_runtime_resume(struct device *dev)
->  		msleep_interruptible(sleep_val);
->  
->  	return 0;
-> -}
-> -#endif
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int mma8452_suspend(struct device *dev)
-> -{
-> -	return mma8452_standby(iio_priv(i2c_get_clientdata(
-> -		to_i2c_client(dev))));
-> -}
-> +runtime_resume_failed:
-> +	regulator_disable(data->vddio_reg);
-> +	regulator_disable(data->vdd_reg);
->  
-> -static int mma8452_resume(struct device *dev)
-> -{
-> -	return mma8452_active(iio_priv(i2c_get_clientdata(
-> -		to_i2c_client(dev))));
-> +	return ret;
->  }
->  #endif
->  
->  static const struct dev_pm_ops mma8452_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(mma8452_suspend, mma8452_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
->  	SET_RUNTIME_PM_OPS(mma8452_runtime_suspend,
->  			   mma8452_runtime_resume, NULL)
->  };
+>  		sps: power-controller@e01b0100 {
+>  			compatible = "actions,s700-sps";
+>  			reg = <0x0 0xe01b0100 0x0 0x100>;
+> -- 
+> 2.17.2
+> 
