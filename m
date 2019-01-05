@@ -1,91 +1,42 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 6/8 v2] arm64: dts: hi3660: Add dma to uart nodes
-Date: Fri, 4 Jan 2019 21:37:23 -0800
-Message-ID: <CALAqxLUtCtEF1bck5WcfHFugrjS5b73MOMVz+9CiML0oG9ZzGA@mail.gmail.com>
-References: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
- <1546635388-13795-7-git-send-email-john.stultz@linaro.org>
- <20190105034904.GD2477@Mani-XPS-13-9360>
- <CALAqxLVGznbM8+rHHn8j_+m1P-E9+_jJNfRZKPVqF+pTQWG_Mg@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CALAqxLVGznbM8+rHHn8j_+m1P-E9+_jJNfRZKPVqF+pTQWG_Mg@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ryan Grachek <ryan@edited.us>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Tanglei Han <hantanglei@huawei.com>, lkml <linux-kernel@vger.kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 1/3] dt-bindings: ufs: Add HI3670 UFS controller binding
+Date: Sat,  5 Jan 2019 12:58:57 +0530
+Message-ID: <20190105072859.9134-2-manivannan.sadhasivam@linaro.org>
+References: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190105072859.9134-1-manivannan.sadhasivam@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, liwei213@huawei.com, robh+dt@kernel.org
+Cc: linux-scsi@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, john.stultz@linaro.org, amit.kucheria@linaro.org, guodong.xu@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 4, 2019 at 8:34 PM John Stultz <john.stultz@linaro.org> wrote:
->
-> On Fri, Jan 4, 2019 at 7:49 PM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > Hi John,
-> >
-> > On Fri, Jan 04, 2019 at 12:56:26PM -0800, John Stultz wrote:
-> > > Try to add DMA support to the uart nodes following
-> > > the assignments made in the dts from the victoria vendor kernel
-> > > here:
-> > > https://consumer.huawei.com/en/opensource/detail/?siteCode=worldwide&keywords=p10&fileType=openSourceSoftware&pageSize=10&curPage=1
-> > >
-> > > Cc: Tanglei Han <hantanglei@huawei.com>
-> > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-> > > Cc: Ryan Grachek <ryan@edited.us>
-> > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Cc: Wei Xu <xuwei5@hisilicon.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 10 ++++++++++
-> > >  1 file changed, 10 insertions(+)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> > > index 20ae40d..aaa2b04 100644
-> > > --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> > > +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-> > > @@ -466,6 +466,8 @@
-> > >                       compatible = "arm,pl011", "arm,primecell";
-> > >                       reg = <0x0 0xfdf02000 0x0 0x1000>;
-> > >                       interrupts = <GIC_SPI 74 IRQ_TYPE_LEVEL_HIGH>;
-> > > +                     dma-names = "rx", "tx";
-> > > +                     dmas =  <&dma0 0 &dma0 1>;
-> >
-> > Usage of DMA channel 0 contradicts with the description provided in
-> > patch, "dma: k3dma: Add support to dma_avail_chan".
->
-> Hrm. Good point.  I'll double check w/ Dr Su on this, I'm not sure if
-> that inconsistency is due to the the vendor kernel (where these came
-> from) having different reserved channels or just something overlooked
-> if the uart0 is not actually being used (as we find on hikey960 as
-> well).
+Add devicetree binding for HI3670 UFS controller. HI3760 SoC is very
+similar to HI3660 SoC with almost same IPs. Only major difference in terms
+of UFS is the PHY. HI3670 has 10nm PHY. But since the original driver
+(HI3660 UFS) cannot make HI3670 UFS functional, a separate compatible
+is added for HI3670 without any fallback.
 
-Hrm. So it seems like uart0 is mapped to the dma0 chan0, but the
-device specific files in the vendor tree overwite the dma values:
-                serial0: uart@fdf02000 {
-                        pinctrl-names = "default", "idle";
-                        pinctrl-0 = <&gpio053_pmx_func
-&gpio054_pmx_func &gpio053_cfg_func &gpio054_cfg_func>;
-                        pinctrl-1 = <&gpio053_pmx_idle
-&gpio054_pmx_idle &gpio053_cfg_idle &gpio054_cfg_idle>;
-                        dma-names = "", "";
-                        dmas = <>;
-                        clock-rate = <0 19200000>;
-                        status = "ok";
-                };
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ Documentation/devicetree/bindings/ufs/ufs-hisi.txt | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-But I went ahead and pulled the dma values on uart0.
-
-thaks
--john
+diff --git a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+index a48c44817367..0b83df1a5418 100644
+--- a/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
++++ b/Documentation/devicetree/bindings/ufs/ufs-hisi.txt
+@@ -6,9 +6,10 @@ Each UFS Host Controller should have its own node.
+ Required properties:
+ - compatible        : compatible list, contains one of the following -
+ 					"hisilicon,hi3660-ufs", "jedec,ufs-1.1" for hisi ufs
+-					host controller present on Hi36xx chipset.
++					host controller present on Hi3660 chipset.
++					"hisilicon,hi3670-ufs", "jedec,ufs-2.1" for hisi ufs
++					host controller present on Hi3670 chipset.
+ - reg               : should contain UFS register address space & UFS SYS CTRL register address,
+-- interrupt-parent  : interrupt device
+ - interrupts        : interrupt number
+ - clocks	        : List of phandle and clock specifier pairs
+ - clock-names       : List of clock input name strings sorted in the same
+-- 
+2.17.1
