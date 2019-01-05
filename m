@@ -1,71 +1,272 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v1 1/2] dt-binding: iio: add NPCM ADC documentation
-Date: Sat, 5 Jan 2019 16:57:15 +0000
-Message-ID: <20190105165715.1d4d270a@archlinux>
-References: <20181224164755.286932-1-tmaimon77@gmail.com>
-        <20181224164755.286932-2-tmaimon77@gmail.com>
+Subject: Re: [PATCH V6 2/2] iio: accell: mma8452: add vdd/vddio regulator
+ operation support
+Date: Sat, 5 Jan 2019 17:29:42 +0000
+Message-ID: <20190105172942.2787d236@archlinux>
+References: <1545555462-16121-1-git-send-email-Anson.Huang@nxp.com>
+        <1545555462-16121-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181224164755.286932-2-tmaimon77@gmail.com>
+In-Reply-To: <1545555462-16121-2-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tomer Maimon <tmaimon77@gmail.com>
-Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "martink@posteo.de" <martink@posteo.de>, Leonard Crestez <leonard.crestez@nxp.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 24 Dec 2018 18:47:54 +0200
-Tomer Maimon <tmaimon77@gmail.com> wrote:
+On Sun, 23 Dec 2018 09:02:32 +0000
+Anson Huang <anson.huang@nxp.com> wrote:
 
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM Analog-to-Digital Converter(ADC).
+> The accelerometer's power supply could be controllable on some
+> platforms, such as i.MX6Q-SABRESD board, the mma8451's power supplies
+> are controlled by a GPIO fixed regulator, need to make sure the
+> regulators are enabled before any communication with mma8451, this
+> patch adds vdd/vddio regulator operation support.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Martin Kepplinger <martink@posteo.de>
+
+I'm fine with the general approach now, though I would like separate
+error handling for the two different regulators.
+
+Also, this has obviously changed a fair bit since Martin originally gave
+that Ack.  Martin, could you confirm you are still happy with the code?
+
+Thanks,
+
+Jonathan
+
+
 > ---
->  .../bindings/iio/adc/nuvoton,npcm-adc.txt          | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+> ChangeLog since V5:
+>     - ONLY enable vdd/vddio regulators after both of them are aquired;
+>     - Since the suspend/resume operations are same as runtime suspend/resume, so just use the
+>       pm_runtime_force_suspend/resume for suspend/resuem callback to simply the code.
+> ---
+>  drivers/iio/accel/mma8452.c | 99 +++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 77 insertions(+), 22 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-> new file mode 100644
-> index 000000000000..6f0843d837cc
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
-> @@ -0,0 +1,35 @@
-> +Nuvoton NPCM Analog to Digital Converter (ADC)
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 421a0a8..7519ed5 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -107,6 +108,8 @@ struct mma8452_data {
+>  	u8 data_cfg;
+>  	const struct mma_chip_info *chip_info;
+>  	int sleep_val;
+> +	struct regulator *vdd_reg;
+> +	struct regulator *vddio_reg;
+>  };
+>  
+>   /**
+> @@ -1534,9 +1537,33 @@ static int mma8452_probe(struct i2c_client *client,
+>  	mutex_init(&data->lock);
+>  	data->chip_info = match->data;
+>  
+> +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> +	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
+> +	if (IS_ERR(data->vdd_reg) || IS_ERR(data->vddio_reg)) {
+> +		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER ||
+> +			PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
 > +
-> +The NPCM ADC is a 10-bit converter for eight channel inputs.
-> +
-> +Required properties:
-> +- compatible	: "nuvoton,npcm750-adc" for the NPCM7XX BMC.
-> +- reg			: specifies physical base address and size of the registers.
-Something a bit crazy with the indentation here!
+> +		dev_err(&client->dev, "failed to get VDD/VDDIO regulator!\n");
+> +		return IS_ERR(data->vdd_reg) ?
+> +		       PTR_ERR(data->vdd_reg) : PTR_ERR(data->vddio_reg);
 
-> +- interrupts	: Contain the ADC interrupt with flags for falling edge.
+This is overly complex.  It'll be more lines of code, but I'd prefer
+you handle the two separately as the result will be more readable / less
+fragile.
+
+> +	}
 > +
-> +Optional properties:
-> +- clocks		: phandle of ADC reference clock, in case the clock is not
-> +				  added the ADC will use the default ADC sample rate.
-> +- vref-supply	: The regulator supply ADC reference voltage, in case the
-> +				  vref-supply is not added the ADC will use internal voltage
-> +				  reference.
+> +	ret = regulator_enable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable VDD regulator!\n");
+> +		return ret;
+> +	}
 > +
-> +Required Node in the NPCM7xx BMC:
-> +An additional register is present in the NPCM7xx SOC which is
-> +assumed to be in the same device tree, with and marked as
-> +compatible with "nuvoton,npcm750-rst".
+> +	ret = regulator_enable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable VDDIO regulator!\n");
+> +		goto disable_regulator_vdd;
+> +	}
 > +
-> +Example:
+>  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	switch (ret) {
+>  	case MMA8451_DEVICE_ID:
+> @@ -1549,7 +1576,8 @@ static int mma8452_probe(struct i2c_client *client,
+>  			break;
+>  		/* else: fall through */
+>  	default:
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto disable_regulators;
+>  	}
+>  
+>  	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
+> @@ -1566,13 +1594,13 @@ static int mma8452_probe(struct i2c_client *client,
+>  
+>  	ret = mma8452_reset(client);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	data->data_cfg = MMA8452_DATA_CFG_FS_2G;
+>  	ret = i2c_smbus_write_byte_data(client, MMA8452_DATA_CFG,
+>  					data->data_cfg);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	/*
+>  	 * By default set transient threshold to max to avoid events if
+> @@ -1581,7 +1609,7 @@ static int mma8452_probe(struct i2c_client *client,
+>  	ret = i2c_smbus_write_byte_data(client, MMA8452_TRANSIENT_THS,
+>  					MMA8452_TRANSIENT_THS_MASK);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	if (client->irq) {
+>  		int irq2;
+> @@ -1595,7 +1623,7 @@ static int mma8452_probe(struct i2c_client *client,
+>  						MMA8452_CTRL_REG5,
+>  						data->chip_info->all_events);
+>  			if (ret < 0)
+> -				return ret;
+> +				goto disable_regulators;
+>  
+>  			dev_dbg(&client->dev, "using interrupt line INT1\n");
+>  		}
+> @@ -1604,11 +1632,11 @@ static int mma8452_probe(struct i2c_client *client,
+>  					MMA8452_CTRL_REG4,
+>  					data->chip_info->enabled_events);
+>  		if (ret < 0)
+> -			return ret;
+> +			goto disable_regulators;
+>  
+>  		ret = mma8452_trigger_setup(indio_dev);
+>  		if (ret < 0)
+> -			return ret;
+> +			goto disable_regulators;
+>  	}
+>  
+>  	data->ctrl_reg1 = MMA8452_CTRL_ACTIVE |
+> @@ -1661,12 +1689,19 @@ static int mma8452_probe(struct i2c_client *client,
+>  trigger_cleanup:
+>  	mma8452_trigger_cleanup(indio_dev);
+>  
+> +disable_regulators:
+> +	regulator_disable(data->vddio_reg);
 > +
-> +adc: adc@f000c000 {
-> +	compatible = "nuvoton,npcm750-adc";
-> +	reg = <0xf000c000 0x8>;
-> +	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
-> +	clocks = <&clk NPCM7XX_CLK_ADC>;
-> +};
+> +disable_regulator_vdd:
+> +	regulator_disable(data->vdd_reg);
 > +
-> +rst: rst@f0801000 {
-> +	compatible = "nuvoton,npcm750-rst", "syscon",
-> +	"simple-mfd";
-> +	reg = <0xf0801000 0x6C>;
-> +};
+>  	return ret;
+>  }
+>  
+>  static int mma8452_remove(struct i2c_client *client)
+>  {
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct mma8452_data *data = iio_priv(indio_dev);
+>  
+>  	iio_device_unregister(indio_dev);
+>  
+> @@ -1678,6 +1713,9 @@ static int mma8452_remove(struct i2c_client *client)
+>  	mma8452_trigger_cleanup(indio_dev);
+>  	mma8452_standby(iio_priv(indio_dev));
+>  
+> +	regulator_disable(data->vddio_reg);
+> +	regulator_disable(data->vdd_reg);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1696,6 +1734,18 @@ static int mma8452_runtime_suspend(struct device *dev)
+>  		return -EAGAIN;
+>  	}
+>  
+> +	ret = regulator_disable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable VDDIO regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_disable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable VDD regulator\n");
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1705,9 +1755,22 @@ static int mma8452_runtime_resume(struct device *dev)
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+>  	int ret, sleep_val;
+>  
+> +	ret = regulator_enable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDD regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDDIO regulator\n");
+> +		regulator_disable(data->vdd_reg);
+> +		return ret;
+> +	}
+> +
+>  	ret = mma8452_active(data);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto runtime_resume_failed;
+>  
+>  	ret = mma8452_get_odr_index(data);
+>  	sleep_val = 1000 / mma8452_samp_freq[ret][0];
+> @@ -1717,25 +1780,17 @@ static int mma8452_runtime_resume(struct device *dev)
+>  		msleep_interruptible(sleep_val);
+>  
+>  	return 0;
+> -}
+> -#endif
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mma8452_suspend(struct device *dev)
+> -{
+> -	return mma8452_standby(iio_priv(i2c_get_clientdata(
+> -		to_i2c_client(dev))));
+> -}
+> +runtime_resume_failed:
+> +	regulator_disable(data->vddio_reg);
+> +	regulator_disable(data->vdd_reg);
+>  
+> -static int mma8452_resume(struct device *dev)
+> -{
+> -	return mma8452_active(iio_priv(i2c_get_clientdata(
+> -		to_i2c_client(dev))));
+> +	return ret;
+>  }
+>  #endif
+>  
+>  static const struct dev_pm_ops mma8452_pm_ops = {
+> -	SET_SYSTEM_SLEEP_PM_OPS(mma8452_suspend, mma8452_resume)
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+>  	SET_RUNTIME_PM_OPS(mma8452_runtime_suspend,
+>  			   mma8452_runtime_resume, NULL)
+>  };
