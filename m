@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 1/7] dt-bindings: soc: qcom: Add AOSS QMP binding
-Date: Sun,  6 Jan 2019 00:09:09 -0800
-Message-ID: <20190106080915.4493-2-bjorn.andersson@linaro.org>
+Subject: [PATCH v2 2/7] soc: qcom: Add AOSS QMP communication driver
+Date: Sun,  6 Jan 2019 00:09:10 -0800
+Message-ID: <20190106080915.4493-3-bjorn.andersson@linaro.org>
 References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190106080915.4493-1-bjorn.andersson@linaro.org>
@@ -10,104 +10,396 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Ro
 Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding for the QMP based side-channel communication mechanism to
-the AOSS, which is used to control resources not exposed through the
-RPMh interface.
+The AOSS QMP driver is used to communicate with the AOSS for certain
+side-channel requests, that are not enabled through the RPMh interface.
+
+The communication is a very simple synchronous mechanism of messages
+being written in message RAM and a doorbell in the AOSS is rung. As the
+AOSS has processed the message length is cleared and an interrupt is
+fired by the AOSS as acknowledgment.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
 Changes since v1:
-- Don't describe power-domain as a separate child node
+- Skip check in send for empty TX buffer
+- Don't follow WARN_ON() with dev_err()
+- Register platform_device rather than populate based on of-children
 
- .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 57 +++++++++++++++++++
- include/dt-bindings/power/qcom-aoss-qmp.h     | 15 +++++
- 2 files changed, 72 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
- create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
+ drivers/soc/qcom/Kconfig          |   9 +
+ drivers/soc/qcom/Makefile         |   1 +
+ drivers/soc/qcom/aoss-qmp.c       | 313 ++++++++++++++++++++++++++++++
+ include/linux/soc/qcom/aoss-qmp.h |  12 ++
+ 4 files changed, 335 insertions(+)
+ create mode 100644 drivers/soc/qcom/aoss-qmp.c
+ create mode 100644 include/linux/soc/qcom/aoss-qmp.h
 
-diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+index a51458022d21..dda19471057f 100644
+--- a/drivers/soc/qcom/Kconfig
++++ b/drivers/soc/qcom/Kconfig
+@@ -3,6 +3,15 @@
+ #
+ menu "Qualcomm SoC drivers"
+ 
++config QCOM_AOSS_QMP
++	tristate "Qualcomm AOSS Messaging Driver"
++	depends on ARCH_QCOM || COMPILE_TEST
++	depends on MAILBOX
++	help
++	  This driver provides the means for communicating with the
++	  micro-controller in the AOSS, using QMP, to control certain resource
++	  that are not exposed through RPMh.
++
+ config QCOM_COMMAND_DB
+ 	bool "Qualcomm Command DB"
+ 	depends on ARCH_QCOM || COMPILE_TEST
+diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+index 67cb85d0373c..d0d7fdc94d9a 100644
+--- a/drivers/soc/qcom/Makefile
++++ b/drivers/soc/qcom/Makefile
+@@ -1,5 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ CFLAGS_rpmh-rsc.o := -I$(src)
++obj-$(CONFIG_QCOM_AOSS_QMP) +=	aoss-qmp.o
+ obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
+ obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
+ obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
+diff --git a/drivers/soc/qcom/aoss-qmp.c b/drivers/soc/qcom/aoss-qmp.c
 new file mode 100644
-index 000000000000..9b0d9785efe0
+index 000000000000..de52703b96b6
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-@@ -0,0 +1,57 @@
-+Qualcomm Always-On Subsystem side channel binding
++++ b/drivers/soc/qcom/aoss-qmp.c
+@@ -0,0 +1,313 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright (c) 2018, Linaro Ltd
++ */
++#include <linux/interrupt.h>
++#include <linux/io.h>
++#include <linux/mailbox_client.h>
++#include <linux/module.h>
++#include <linux/platform_device.h>
++#include <linux/soc/qcom/aoss-qmp.h>
 +
-+This binding describes the hardware component responsible for side channel
-+requests to the always-on subsystem (AOSS), used for certain power management
-+requests that is not handled by the standard RPMh interface. Each client in the
-+SoC has it's own block of message RAM and IRQ for communication with the AOSS.
-+The protocol used to communicate in the message RAM is known as QMP.
++#define QMP_DESC_MAGIC			0x0
++#define QMP_DESC_VERSION		0x4
++#define QMP_DESC_FEATURES		0x8
 +
-+The AOSS side channel exposes control over a set of resources, used to control
-+a set of debug related clocks and to affect the low power state of resources
-+related to the secondary subsystems. These resources are exposed as a set of
-+power-domains.
++#define QMP_DESC_UCORE_LINK_STATE	0xc
++#define QMP_DESC_UCORE_LINK_STATE_ACK	0x10
++#define QMP_DESC_UCORE_CH_STATE		0x14
++#define QMP_DESC_UCORE_CH_STATE_ACK	0x18
++#define QMP_DESC_UCORE_MBOX_SIZE	0x1c
++#define QMP_DESC_UCORE_MBOX_OFFSET	0x20
 +
-+- compatible:
-+	Usage: required
-+	Value type: <string>
-+	Definition: must be "qcom,sdm845-aoss-qmp"
++#define QMP_DESC_MCORE_LINK_STATE	0x24
++#define QMP_DESC_MCORE_LINK_STATE_ACK	0x28
++#define QMP_DESC_MCORE_CH_STATE		0x2c
++#define QMP_DESC_MCORE_CH_STATE_ACK	0x30
++#define QMP_DESC_MCORE_MBOX_SIZE	0x34
++#define QMP_DESC_MCORE_MBOX_OFFSET	0x38
 +
-+- reg:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: the base address and size of the message RAM for this
-+		    client's communication with the AOSS
++#define QMP_STATE_UP	0x0000ffff
++#define QMP_STATE_DOWN	0xffff0000
 +
-+- interrupts:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: should specify the AOSS message IRQ for this client
++#define QMP_MAGIC	0x4d41494c
++#define QMP_VERSION	1
 +
-+- mboxes:
-+	Usage: required
-+	Value type: <prop-encoded-array>
-+	Definition: reference to the mailbox representing the outgoing doorbell
-+		    in APCS for this client, as described in mailbox/mailbox.txt
++/**
++ * struct qmp - driver state for QMP implementation
++ * @msgram: iomem referencing the message RAM used for communication
++ * @dev: reference to QMP device
++ * @mbox_client: mailbox client used to ring the doorbell on transmit
++ * @mbox_chan: mailbox channel used to ring the doorbell on transmit
++ * @offset: offset within @msgram where messages should be written
++ * @size: maximum size of the messages to be transmitted
++ * @event: wait_queue for synchronization with the IRQ
++ * @tx_lock: provides syncrhonization between multiple callers of qmp_send()
++ * @pd_pdev: platform device for the power-domain child device
++ */
++struct qmp {
++	void __iomem *msgram;
++	struct device *dev;
 +
-+- #power-domain-cells:
-+	Usage: optional
-+	Value type: <u32>
-+	Definition: must be 1
-+		    The provided power-domains are:
-+		    QDSS clock-domain (0), CDSP state (1), LPASS state (2),
-+		    modem state (3), SLPI state (4), SPSS state (5) and Venus
-+		    state (6).
++	struct mbox_client mbox_client;
++	struct mbox_chan *mbox_chan;
 +
-+= EXAMPLE
++	size_t offset;
++	size_t size;
 +
-+The following example represents the AOSS side-channel message RAM and the
-+mechanism exposing the power-domains, as found in SDM845.
++	wait_queue_head_t event;
 +
-+  aoss_qmp: qmp@c300000 {
-+          compatible = "qcom,sdm845-aoss-qmp";
-+          reg = <0x0c300000 0x100000>;
-+          interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
-+          mboxes = <&apss_shared 0>;
++	struct mutex tx_lock;
 +
-+	  #power-domain-cells = <1>;
-+  };
-diff --git a/include/dt-bindings/power/qcom-aoss-qmp.h b/include/dt-bindings/power/qcom-aoss-qmp.h
++	struct platform_device *pd_pdev;
++};
++
++static void qmp_kick(struct qmp *qmp)
++{
++	mbox_send_message(qmp->mbox_chan, NULL);
++	mbox_client_txdone(qmp->mbox_chan, 0);
++}
++
++static bool qmp_magic_valid(struct qmp *qmp)
++{
++	return readl(qmp->msgram + QMP_DESC_MAGIC) == QMP_MAGIC;
++}
++
++static bool qmp_link_acked(struct qmp *qmp)
++{
++	return readl(qmp->msgram + QMP_DESC_MCORE_LINK_STATE_ACK) == QMP_STATE_UP;
++}
++
++static bool qmp_mcore_channel_acked(struct qmp *qmp)
++{
++	return readl(qmp->msgram + QMP_DESC_MCORE_CH_STATE_ACK) == QMP_STATE_UP;
++}
++
++static bool qmp_ucore_channel_up(struct qmp *qmp)
++{
++	return readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE) == QMP_STATE_UP;
++}
++
++static int qmp_open(struct qmp *qmp)
++{
++	int ret;
++	u32 val;
++
++	ret = wait_event_timeout(qmp->event, qmp_magic_valid(qmp), HZ);
++	if (!ret) {
++		dev_err(qmp->dev, "QMP magic doesn't match\n");
++		return -ETIMEDOUT;
++	}
++
++	val = readl(qmp->msgram + QMP_DESC_VERSION);
++	if (val != QMP_VERSION) {
++		dev_err(qmp->dev, "unsupported QMP version %d\n", val);
++		return -EINVAL;
++	}
++
++	qmp->offset = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_OFFSET);
++	qmp->size = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_SIZE);
++	if (!qmp->size) {
++		dev_err(qmp->dev, "invalid mailbox size 0x%zx\n", qmp->size);
++		return -EINVAL;
++	}
++
++	/* Ack remote core's link state */
++	val = readl(qmp->msgram + QMP_DESC_UCORE_LINK_STATE);
++	writel(val, qmp->msgram + QMP_DESC_UCORE_LINK_STATE_ACK);
++
++	/* Set local core's link state to up */
++	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
++
++	qmp_kick(qmp);
++
++	ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
++	if (!ret) {
++		dev_err(qmp->dev, "ucore didn't ack link\n");
++		goto timeout_close_link;
++	}
++
++	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
++
++	ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
++	if (!ret) {
++		dev_err(qmp->dev, "ucore didn't open channel\n");
++		goto timeout_close_channel;
++	}
++
++	/* Ack remote core's channel state */
++	val = readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE);
++	writel(val, qmp->msgram + QMP_DESC_UCORE_CH_STATE_ACK);
++
++	qmp_kick(qmp);
++
++	ret = wait_event_timeout(qmp->event, qmp_mcore_channel_acked(qmp), HZ);
++	if (!ret) {
++		dev_err(qmp->dev, "ucore didn't ack channel\n");
++		goto timeout_close_channel;
++	}
++
++	return 0;
++
++timeout_close_channel:
++	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
++
++timeout_close_link:
++	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
++	qmp_kick(qmp);
++
++	return -ETIMEDOUT;
++}
++
++static void qmp_close(struct qmp *qmp)
++{
++	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
++	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
++	qmp_kick(qmp);
++}
++
++static irqreturn_t qmp_intr(int irq, void *data)
++{
++	struct qmp *qmp = data;
++
++	wake_up_interruptible_all(&qmp->event);
++
++	return IRQ_HANDLED;
++}
++
++static bool qmp_message_empty(struct qmp *qmp)
++{
++	return readl(qmp->msgram + qmp->offset) == 0;
++}
++
++/**
++ * qmp_send() - send a message to the AOSS
++ * @qmp: qmp context
++ * @data: message to be sent
++ * @len: length of the message
++ *
++ * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
++ * @len must be a multiple of 4 and not longer than the mailbox size. Access is
++ * synchronized by this implementation.
++ *
++ * Return: 0 on success, negative errno on failure
++ */
++int qmp_send(struct qmp *qmp, const void *data, size_t len)
++{
++	int ret;
++
++	if (WARN_ON(len + sizeof(u32) > qmp->size))
++		return -EINVAL;
++
++	if (WARN_ON(len % sizeof(u32)))
++		return -EINVAL;
++
++	mutex_lock(&qmp->tx_lock);
++
++	/* The message RAM only implements 32-bit accesses */
++	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
++			 data, len / sizeof(u32));
++	writel(len, qmp->msgram + qmp->offset);
++	qmp_kick(qmp);
++
++	ret = wait_event_interruptible_timeout(qmp->event,
++					       qmp_message_empty(qmp), HZ);
++	if (!ret) {
++		dev_err(qmp->dev, "ucore did not ack channel\n");
++		ret = -ETIMEDOUT;
++
++		/* Clear message from buffer */
++		writel(0, qmp->msgram + qmp->offset);
++	} else {
++		ret = 0;
++	}
++
++	mutex_unlock(&qmp->tx_lock);
++
++	return ret;
++}
++EXPORT_SYMBOL(qmp_send);
++
++static int qmp_probe(struct platform_device *pdev)
++{
++	struct resource *res;
++	struct qmp *qmp;
++	int irq;
++	int ret;
++
++	qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
++	if (!qmp)
++		return -ENOMEM;
++
++	qmp->dev = &pdev->dev;
++	init_waitqueue_head(&qmp->event);
++	mutex_init(&qmp->tx_lock);
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
++	if (IS_ERR(qmp->msgram))
++		return PTR_ERR(qmp->msgram);
++
++	qmp->mbox_client.dev = &pdev->dev;
++	qmp->mbox_client.knows_txdone = true;
++	qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
++	if (IS_ERR(qmp->mbox_chan)) {
++		dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
++		return PTR_ERR(qmp->mbox_chan);
++	}
++
++	irq = platform_get_irq(pdev, 0);
++	ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
++			       "aoss-qmp", qmp);
++	if (ret < 0) {
++		dev_err(&pdev->dev, "failed to request interrupt\n");
++		return ret;
++	}
++
++	ret = qmp_open(qmp);
++	if (ret < 0)
++		return ret;
++
++	platform_set_drvdata(pdev, qmp);
++
++	if (of_property_read_bool(pdev->dev.of_node, "#power-domain-cells")) {
++		qmp->pd_pdev = platform_device_register_data(&pdev->dev,
++							     "aoss_qmp_pd",
++							     PLATFORM_DEVID_NONE,
++							     NULL, 0);
++		if (IS_ERR(qmp->pd_pdev))
++			dev_err(&pdev->dev, "failed to register AOSS PD\n");
++	}
++
++	return 0;
++}
++
++static int qmp_remove(struct platform_device *pdev)
++{
++	struct qmp *qmp = platform_get_drvdata(pdev);
++
++	platform_device_unregister(qmp->pd_pdev);
++
++	qmp_close(qmp);
++
++	return 0;
++}
++
++static const struct of_device_id qmp_dt_match[] = {
++	{ .compatible = "qcom,sdm845-aoss-qmp", },
++	{}
++};
++MODULE_DEVICE_TABLE(of, qmp_dt_match);
++
++static struct platform_driver qmp_driver = {
++	.driver = {
++		.name		= "aoss_qmp",
++		.of_match_table	= qmp_dt_match,
++	},
++	.probe = qmp_probe,
++	.remove	= qmp_remove,
++};
++module_platform_driver(qmp_driver);
++
++MODULE_DESCRIPTION("Qualcomm AOSS QMP driver");
++MODULE_LICENSE("GPL v2");
+diff --git a/include/linux/soc/qcom/aoss-qmp.h b/include/linux/soc/qcom/aoss-qmp.h
 new file mode 100644
-index 000000000000..7d8ac1a4f90c
+index 000000000000..32ccaa091a9f
 --- /dev/null
-+++ b/include/dt-bindings/power/qcom-aoss-qmp.h
-@@ -0,0 +1,15 @@
++++ b/include/linux/soc/qcom/aoss-qmp.h
+@@ -0,0 +1,12 @@
 +/* SPDX-License-Identifier: GPL-2.0 */
-+/* Copyright (c) 2018, Linaro Ltd. */
++/*
++ * Copyright (c) 2018, Linaro Ltd
++ */
++#ifndef __AOP_QMP_H__
++#define __AOP_QMP_H__
 +
-+#ifndef __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
-+#define __DT_BINDINGS_POWER_QCOM_AOSS_QMP_H
++struct qmp;
 +
-+#define AOSS_QMP_QDSS_CLK	0
-+#define AOSS_QMP_LS_CDSP		1
-+#define AOSS_QMP_LS_LPASS	2
-+#define AOSS_QMP_LS_MODEM	3
-+#define AOSS_QMP_LS_SLPI		4
-+#define AOSS_QMP_LS_SPSS		5
-+#define AOSS_QMP_LS_VENUS	6
++int qmp_send(struct qmp *qmp, const void *data, size_t len);
 +
 +#endif
 -- 
