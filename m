@@ -1,205 +1,166 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 3/7] soc: qcom: Add AOSS QMP genpd provider
-Date: Sun,  6 Jan 2019 00:09:11 -0800
-Message-ID: <20190106080915.4493-4-bjorn.andersson@linaro.org>
-References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
+ LP5024/18 RGB LED driver
+Date: Sun, 6 Jan 2019 16:52:26 +0100
+Message-ID: <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
+References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
+ <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
+ <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
+ <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190106080915.4493-1-bjorn.andersson@linaro.org>
+In-Reply-To: <20190105221254.GA22322@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The AOSS QMP genpd provider implements control over power-related
-resources related to low-power state associated with the remoteprocs in
-the system as well as control over a set of clocks related to debug
-hardware in the SoC.
+Hi Pavel,
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+On 1/5/19 11:12 PM, Pavel Machek wrote:
+> Hi!
+> 
+>>> Grab yourself an RGB LED and play with it; you'll see what the
+>>> problems are. It is hard to explain colors over email...
+>>
+>> Video [0] gives some overview of lp5024 capabilities.
+>>
+>> I don't see any problems in exposing separate red,green,blue
+>> files and brightness for the devices with hardware support for
+>> that.
+> 
+> Well, that's what we do today, as three separate LEDs, right?
 
-Changes since v1:
-- Drop compatible, as the QMP DT node is flattened
-- Correct size of send
+No. It doesn't allow for setting color intensity by having
+the color fixed beforehand. Below is relevant excerpt from
+the lp5024 documentation. This is not something that can be
+mapped to RGB color space, but rather to HSV/HSL, with the
+reservation that the hardware implementation uses PWM
+for setting color intensity.
 
- drivers/soc/qcom/Kconfig       |   9 +++
- drivers/soc/qcom/Makefile      |   1 +
- drivers/soc/qcom/aoss-qmp-pd.c | 135 +++++++++++++++++++++++++++++++++
- 3 files changed, 145 insertions(+)
- create mode 100644 drivers/soc/qcom/aoss-qmp-pd.c
+<quote>
+8.3.1.2 Independent Intensity Control Per RGB LED Module
 
-diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-index dda19471057f..d81256ef5055 100644
---- a/drivers/soc/qcom/Kconfig
-+++ b/drivers/soc/qcom/Kconfig
-@@ -12,6 +12,15 @@ config QCOM_AOSS_QMP
- 	  micro-controller in the AOSS, using QMP, to control certain resource
- 	  that are not exposed through RPMh.
- 
-+config QCOM_AOSS_QMP_PD
-+	tristate "Qualcomm AOSS Messaging Power Domain driver"
-+	depends on QCOM_AOSS_QMP
-+	select PM_GENERIC_DOMAINS
-+	help
-+	  This driver provides the means of controlling the AOSSs handling of
-+	  low-power state for resources related to the remoteproc subsystems as
-+	  well as controlling the debug clocks.
-+
- config QCOM_COMMAND_DB
- 	bool "Qualcomm Command DB"
- 	depends on ARCH_QCOM || COMPILE_TEST
-diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
-index d0d7fdc94d9a..ebfa414a5b77 100644
---- a/drivers/soc/qcom/Makefile
-+++ b/drivers/soc/qcom/Makefile
-@@ -1,6 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
- CFLAGS_rpmh-rsc.o := -I$(src)
- obj-$(CONFIG_QCOM_AOSS_QMP) +=	aoss-qmp.o
-+obj-$(CONFIG_QCOM_AOSS_QMP_PD) += aoss-qmp-pd.o
- obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
- obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
- obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
-diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-pd.c
-new file mode 100644
-index 000000000000..62b8fcb9d09e
---- /dev/null
-+++ b/drivers/soc/qcom/aoss-qmp-pd.c
-@@ -0,0 +1,135 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (c) 2018, Linaro Ltd
-+ */
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/soc/qcom/aoss-qmp.h>
-+#include <dt-bindings/power/qcom-aoss-qmp.h>
-+
-+struct qmp_pd {
-+	struct qmp *qmp;
-+
-+	struct generic_pm_domain pd;
-+
-+	const char *name;
-+};
-+
-+#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
-+
-+struct qmp_pd_resource {
-+	const char *name;
-+	int (*on)(struct generic_pm_domain *domain);
-+	int (*off)(struct generic_pm_domain *domain);
-+};
-+
-+static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
-+{
-+	char buf[96];
-+
-+	snprintf(buf, sizeof(buf), "{class: clock, res: %s, val: %d}",
-+		 res->name, !!enable);
-+	return qmp_send(res->qmp, buf, sizeof(buf));
-+}
-+
-+static int qmp_pd_clock_on(struct generic_pm_domain *domain)
-+{
-+	return qmp_pd_clock_toggle(to_qmp_pd_resource(domain), true);
-+}
-+
-+static int qmp_pd_clock_off(struct generic_pm_domain *domain)
-+{
-+	return qmp_pd_clock_toggle(to_qmp_pd_resource(domain), false);
-+}
-+
-+static int qmp_pd_image_toggle(struct qmp_pd *res, bool enable)
-+{
-+	char buf[96];
-+
-+	snprintf(buf, sizeof(buf),
-+		 "{class: image, res: load_state, name: %s, val: %s}",
-+		 res->name, enable ? "on" : "off");
-+	return qmp_send(res->qmp, buf, sizeof(buf));
-+}
-+
-+static int qmp_pd_image_on(struct generic_pm_domain *domain)
-+{
-+	return qmp_pd_image_toggle(to_qmp_pd_resource(domain), true);
-+}
-+
-+static int qmp_pd_image_off(struct generic_pm_domain *domain)
-+{
-+	return qmp_pd_image_toggle(to_qmp_pd_resource(domain), false);
-+}
-+
-+static const struct qmp_pd_resource sdm845_resources[] = {
-+	[AOSS_QMP_QDSS_CLK] = { "qdss", qmp_pd_clock_on, qmp_pd_clock_off },
-+	[AOSS_QMP_LS_CDSP] = { "cdsp", qmp_pd_image_on, qmp_pd_image_off },
-+	[AOSS_QMP_LS_LPASS] = { "adsp", qmp_pd_image_on, qmp_pd_image_off },
-+	[AOSS_QMP_LS_MODEM] = { "modem", qmp_pd_image_on, qmp_pd_image_off },
-+	[AOSS_QMP_LS_SLPI] = { "slpi", qmp_pd_image_on, qmp_pd_image_off },
-+	[AOSS_QMP_LS_SPSS] = { "spss", qmp_pd_image_on, qmp_pd_image_off },
-+	[AOSS_QMP_LS_VENUS] = { "venus", qmp_pd_image_on, qmp_pd_image_off },
-+};
-+
-+static int qmp_pd_probe(struct platform_device *pdev)
-+{
-+	struct genpd_onecell_data *data;
-+	struct device *parent = pdev->dev.parent;
-+	struct qmp_pd *res;
-+	struct qmp *qmp;
-+	size_t num = ARRAY_SIZE(sdm845_resources);
-+	int i;
-+
-+	qmp = dev_get_drvdata(pdev->dev.parent);
-+	if (!qmp)
-+		return -EINVAL;
-+
-+	res = devm_kcalloc(&pdev->dev, num, sizeof(*res), GFP_KERNEL);
-+	if (!res)
-+		return -ENOMEM;
-+
-+	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	data->domains = devm_kcalloc(&pdev->dev, num, sizeof(*data->domains),
-+				     GFP_KERNEL);
-+
-+	for (i = 0; i < num; i++) {
-+		pm_genpd_init(&res[i].pd, NULL, true);
-+		res[i].qmp = qmp;
-+		res[i].name = sdm845_resources[i].name;
-+
-+		res[i].pd.name = sdm845_resources[i].name;
-+		res[i].pd.power_on = sdm845_resources[i].on;
-+		res[i].pd.power_off = sdm845_resources[i].off;
-+
-+		data->domains[data->num_domains++] = &res[i].pd;
-+	}
-+
-+	return of_genpd_add_provider_onecell(parent->of_node, data);
-+}
-+
-+static int qmp_pd_remove(struct platform_device *pdev)
-+{
-+	struct device *parent = pdev->dev.parent;
-+
-+	of_genpd_del_provider(parent->of_node);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver qmp_pd_driver = {
-+	.driver = {
-+		.name		= "aoss_qmp_pd",
-+	},
-+	.probe = qmp_pd_probe,
-+	.remove = qmp_pd_remove,
-+};
-+module_platform_driver(qmp_pd_driver);
-+
-+MODULE_ALIAS("platform:aoss_qmp_pd");
-+MODULE_DESCRIPTION("Qualcomm AOSS QMP load-state driver");
-+MODULE_LICENSE("GPL v2");
+When color is fixed, the independent intensity-control is used to
+achieve accurate and flexible dimming control for every RGB LED module.
+
+8.3.1.2.1 Intensity-Control Register Configuration
+
+Every three consecutive output channels are assigned to their respective
+intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
+and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
+connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
+device allows 256-step intensity control for each RGB LED module, which
+helps achieve a smooth dimming effect.
+</quote>
+
+> I don't have problem with that, either; other drivers already do
+> that. He's free to use existing same interface.
+> 
+> But that is insufficient, as it does not allow simple stuff, such as
+> turning led "white".
+> 
+> So... perhaps we should agree on requirements, first, and then we can
+> discuss solutions?
+> 
+> Requirements for RGB LED interface:
+> 
+> 1) Userspace should be able to set the white color
+> 
+> 2) Userspace should be able to arbitrary color from well known list
+> and it should approximately match what would CRT, LCD or OLED monitor display
+
+The difference is that monitor display driver is pre-calibrated
+for given display by the manufacturer. With the LED controllers the
+manufacturer has no control over what LEDs will be connected to the
+iouts. Therefore it should be not surprising that colors produced
+by custom LEDs are not as user would expect when comparing to
+the RGB color displayed on the monitor display.
+
+TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
+that show how to produce various patterns with use of the reference
+board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
+
+Document [0] mentions also specific "Design considerations" in the
+chapter 2.2:
+
+<quote>
+Several considerations are taken into account for this particular design:
+• LED map (ring) for meeting the requirement of popular human-machine 
+interaction style.
+• LED size, numbers and the diffuse design for meeting lighting pattern 
+uniformity.
+• Analog dimming in the difference ambient light lux without losing 
+dimming resolution in lighting pattern.
+
+These considerations apply to most human-machine interaction end 
+equipment with day and night vision
+designs in some way, but the designer must decide the particular 
+considerations to take into account for a
+specific design.
+</quote>
+
+This renders your requirement 2) infeasible with use of custom LEDs
+any fixed algorithm, since the final effect will always heavily depend
+on the LED circuit design.
+
+> 
+>      2a) LEDs probably slightly change color as they age. That's out of
+>      scope, unless the variation is much greater than on monitors.
+> 
+>      2b) Manufacturing differences cause small color variation. Again,
+>      that's out of scope, unless the variation is much greater than on
+>      monitors.
+> 
+> Nice to have features:
+> 
+> 3) Full range of available colors/intensities should be available to
+> userspace
+> 
+> 4) Interface should work well with existing triggers
+> 
+> 5) It would be nice if userland knew how many lumens are produced at
+> each wavelength for each setting (again, minus aging and manufacturing
+> variations).
+> 
+> 6) Complexity of math in kernel should be low, and preferably it
+> should be integer or fixed point
+> 
+> Problems:
+> 
+> a) RGB LEDs are usually not balanced. Setting 100% PWM on
+> red/green/blue channels will result in nothing close to white
+> light. In fact, to get white light on N900, blue and green channel's
+> PWM needs to be set pretty low, as in 5%.
+> 
+> b) LED class does not define any relation between "brightness" in
+> sysfs and ammount of light in lumens. Some drivers use close to linear
+> relation, some use exponential relation. Human eyes percieve logarithm
+> of lumens. RGB color model uses even more complex function.
+> 
+> c) Except for white LEDs, LEDs are basically sources of single
+> wavelength of light, while CRTs and LCDs produce broader
+> spectrums.
+> 
+> d) RG, RGBW and probably other LED combinations exist.
+> 
+> e) Not all "red" LEDs will produce same wavelength. Similar
+> differences will exist for other colors.
+> 
+> f) We have existing RGB LEDs represented as three separate
+> monochromatic LEDs in sysfs.
+
+One general question: do you have any solutions in store?
+
+[0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
+[1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
+
 -- 
-2.18.0
+Best regards,
+Jacek Anaszewski
