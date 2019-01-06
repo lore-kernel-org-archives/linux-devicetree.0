@@ -1,166 +1,92 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
- LP5024/18 RGB LED driver
-Date: Sun, 6 Jan 2019 16:52:26 +0100
-Message-ID: <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
-References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
- <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
- <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
+Date: Sun, 6 Jan 2019 22:00:56 +0530
+Message-ID: <CAMty3ZBeopJTm7kUzqarSfqYAJup7B5eqVWPg4aRpgFJOWP7XA@mail.gmail.com>
+References: <20181220125438.11700-1-jagan@amarulasolutions.com>
+ <20181220125438.11700-3-jagan@amarulasolutions.com> <20181221130025.lbvw7yvy74brf3jn@flea>
+ <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190105221254.GA22322@amd>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBTG2ZDQQKGQEIGMK2AQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
+On Mon, Dec 24, 2018 at 8:57 PM Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org> wrote:
+>
+> On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
+> > > Unfortunately default CSI_SCLK rate cannot work properly to
+> > > drive the connected sensor interface, particularly on few
+> > > Allwinner SoC's like A64.
+> > >
+> > > So, add mod_rate quirk via driver data so-that the respective
+> > > SoC's which require to alter the default mod clock rate can assign
+> > > the operating clock rate.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > ---
+> > >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
+> > >  1 file changed, 28 insertions(+), 6 deletions(-)
+> > >
+> > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > index ee882b66a5ea..fe002beae09c 100644
+> > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > @@ -15,6 +15,7 @@
+> > >  #include <linux/ioctl.h>
+> > >  #include <linux/module.h>
+> > >  #include <linux/of.h>
+> > > +#include <linux/of_device.h>
+> > >  #include <linux/platform_device.h>
+> > >  #include <linux/pm_runtime.h>
+> > >  #include <linux/regmap.h>
+> > > @@ -28,8 +29,13 @@
+> > >
+> > >  #define MODULE_NAME  "sun6i-csi"
+> > >
+> > > +struct sun6i_csi_variant {
+> > > +     unsigned long                   mod_rate;
+> > > +};
+> > > +
+> > >  struct sun6i_csi_dev {
+> > >       struct sun6i_csi                csi;
+> > > +     const struct sun6i_csi_variant  *variant;
+> > >       struct device                   *dev;
+> > >
+> > >       struct regmap                   *regmap;
+> > > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+> > >               return PTR_ERR(sdev->clk_mod);
+> > >       }
+> > >
+> > > +     if (sdev->variant->mod_rate)
+> > > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
+> > > +
+> >
+> > It still doesn't make any sense to do it in the probe function...
+>
+> I'm not sure we discussed about the context wrt probe, we discussed
+> about exclusive put clock. Since clocks were enabling in set_power and
+> clock rate can be set during probe in single time instead of setting
+> it in set_power for every power enablement. anything wrong with that.
+>
+> >
+> > We discussed this in the previous iteration already.
+> >
+> > What we didn't discuss is the variant function that you introduce,
+> > while the previous approach was enough.
+>
+> We discussed about clk_rate_exclusive_put, and that even handle it in
+> .remove right? so I have variant to handle it in sun6i_csi_remove.
 
-On 1/5/19 11:12 PM, Pavel Machek wrote:
-> Hi!
-> 
->>> Grab yourself an RGB LED and play with it; you'll see what the
->>> problems are. It is hard to explain colors over email...
->>
->> Video [0] gives some overview of lp5024 capabilities.
->>
->> I don't see any problems in exposing separate red,green,blue
->> files and brightness for the devices with hardware support for
->> that.
-> 
-> Well, that's what we do today, as three separate LEDs, right?
-
-No. It doesn't allow for setting color intensity by having
-the color fixed beforehand. Below is relevant excerpt from
-the lp5024 documentation. This is not something that can be
-mapped to RGB color space, but rather to HSV/HSL, with the
-reservation that the hardware implementation uses PWM
-for setting color intensity.
-
-<quote>
-8.3.1.2 Independent Intensity Control Per RGB LED Module
-
-When color is fixed, the independent intensity-control is used to
-achieve accurate and flexible dimming control for every RGB LED module.
-
-8.3.1.2.1 Intensity-Control Register Configuration
-
-Every three consecutive output channels are assigned to their respective
-intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
-and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
-connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
-device allows 256-step intensity control for each RGB LED module, which
-helps achieve a smooth dimming effect.
-</quote>
-
-> I don't have problem with that, either; other drivers already do
-> that. He's free to use existing same interface.
-> 
-> But that is insufficient, as it does not allow simple stuff, such as
-> turning led "white".
-> 
-> So... perhaps we should agree on requirements, first, and then we can
-> discuss solutions?
-> 
-> Requirements for RGB LED interface:
-> 
-> 1) Userspace should be able to set the white color
-> 
-> 2) Userspace should be able to arbitrary color from well known list
-> and it should approximately match what would CRT, LCD or OLED monitor display
-
-The difference is that monitor display driver is pre-calibrated
-for given display by the manufacturer. With the LED controllers the
-manufacturer has no control over what LEDs will be connected to the
-iouts. Therefore it should be not surprising that colors produced
-by custom LEDs are not as user would expect when comparing to
-the RGB color displayed on the monitor display.
-
-TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
-that show how to produce various patterns with use of the reference
-board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
-
-Document [0] mentions also specific "Design considerations" in the
-chapter 2.2:
-
-<quote>
-Several considerations are taken into account for this particular design:
-• LED map (ring) for meeting the requirement of popular human-machine 
-interaction style.
-• LED size, numbers and the diffuse design for meeting lighting pattern 
-uniformity.
-• Analog dimming in the difference ambient light lux without losing 
-dimming resolution in lighting pattern.
-
-These considerations apply to most human-machine interaction end 
-equipment with day and night vision
-designs in some way, but the designer must decide the particular 
-considerations to take into account for a
-specific design.
-</quote>
-
-This renders your requirement 2) infeasible with use of custom LEDs
-any fixed algorithm, since the final effect will always heavily depend
-on the LED circuit design.
-
-> 
->      2a) LEDs probably slightly change color as they age. That's out of
->      scope, unless the variation is much greater than on monitors.
-> 
->      2b) Manufacturing differences cause small color variation. Again,
->      that's out of scope, unless the variation is much greater than on
->      monitors.
-> 
-> Nice to have features:
-> 
-> 3) Full range of available colors/intensities should be available to
-> userspace
-> 
-> 4) Interface should work well with existing triggers
-> 
-> 5) It would be nice if userland knew how many lumens are produced at
-> each wavelength for each setting (again, minus aging and manufacturing
-> variations).
-> 
-> 6) Complexity of math in kernel should be low, and preferably it
-> should be integer or fixed point
-> 
-> Problems:
-> 
-> a) RGB LEDs are usually not balanced. Setting 100% PWM on
-> red/green/blue channels will result in nothing close to white
-> light. In fact, to get white light on N900, blue and green channel's
-> PWM needs to be set pretty low, as in 5%.
-> 
-> b) LED class does not define any relation between "brightness" in
-> sysfs and ammount of light in lumens. Some drivers use close to linear
-> relation, some use exponential relation. Human eyes percieve logarithm
-> of lumens. RGB color model uses even more complex function.
-> 
-> c) Except for white LEDs, LEDs are basically sources of single
-> wavelength of light, while CRTs and LCDs produce broader
-> spectrums.
-> 
-> d) RG, RGBW and probably other LED combinations exist.
-> 
-> e) Not all "red" LEDs will produce same wavelength. Similar
-> differences will exist for other colors.
-> 
-> f) We have existing RGB LEDs represented as three separate
-> monochromatic LEDs in sysfs.
-
-One general question: do you have any solutions in store?
-
-[0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
-[1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
-
--- 
-Best regards,
-Jacek Anaszewski
+Any comments?
