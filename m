@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v2 4/7] remoteproc: q6v5-mss: Vote for rpmh power domains
-Date: Sun,  6 Jan 2019 00:09:12 -0800
-Message-ID: <20190106080915.4493-5-bjorn.andersson@linaro.org>
+Subject: [(RFC) PATCH v2 7/7] soc: qcom: aoss-qmp: Add cooling device support
+Date: Sun,  6 Jan 2019 00:09:15 -0800
+Message-ID: <20190106080915.4493-8-bjorn.andersson@linaro.org>
 References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190106080915.4493-1-bjorn.andersson@linaro.org>
@@ -10,251 +10,136 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Ro
 Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Rajendra Nayak <rnayak@codeaurora.org>
+The AOSS provides three cooling devices "cx", "mx" and "ebi" that must
+be enabled when temperature goes below a certain level to counter low
+temperature issues. Probe these devices, when described in DeviceTree.
 
-With rpmh ARC resources being modelled as power domains with performance
-state, we need to proxy vote on these for SDM845.
-Add support to vote on multiple of them, now that genpd supports
-associating mutliple power domains to a device.
-
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-[bjorn: Drop device link, improve error handling, name things "proxy"]
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 
-This is v3 of this patch, but updated to cover "loadstate". v2 can be found here:
-https://lore.kernel.org/lkml/20180904071046.8152-1-rnayak@codeaurora.org/
+We do not yet have the necessary support in the thermal framework to implement
+the cooling device associated with the QMP, so I've just included this patch as
+an RFC in this series.
 
-Changes since v2:
-- Drop device links, as we can do active and proxy votes using device links
-- Improved error handling, by unrolling some votes on failure
-- Rename things proxy, to follow naming of "proxy" and "active"
+ .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 18 ++++++++++
+ drivers/soc/qcom/aoss-qmp.c                   | 36 +++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
- drivers/remoteproc/qcom_q6v5_mss.c | 115 ++++++++++++++++++++++++++++-
- 1 file changed, 111 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
-index 01be7314e176..62cf16ddb7af 100644
---- a/drivers/remoteproc/qcom_q6v5_mss.c
-+++ b/drivers/remoteproc/qcom_q6v5_mss.c
-@@ -25,6 +25,8 @@
- #include <linux/of_address.h>
- #include <linux/of_device.h>
- #include <linux/platform_device.h>
-+#include <linux/pm_domain.h>
-+#include <linux/pm_runtime.h>
- #include <linux/regmap.h>
- #include <linux/regulator/consumer.h>
- #include <linux/remoteproc.h>
-@@ -131,6 +133,7 @@ struct rproc_hexagon_res {
- 	char **proxy_clk_names;
- 	char **reset_clk_names;
- 	char **active_clk_names;
-+	char **proxy_pd_names;
- 	int version;
- 	bool need_mem_protection;
- 	bool has_alt_reset;
-@@ -156,9 +159,11 @@ struct q6v5 {
- 	struct clk *active_clks[8];
- 	struct clk *reset_clks[4];
- 	struct clk *proxy_clks[4];
-+	struct device *proxy_pds[3];
- 	int active_clk_count;
- 	int reset_clk_count;
- 	int proxy_clk_count;
-+	int proxy_pd_count;
+diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+index 9b0d9785efe0..aae300f32421 100644
+--- a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
++++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
+@@ -42,6 +42,16 @@ power-domains.
+ 		    modem state (3), SLPI state (4), SPSS state (5) and Venus
+ 		    state (6).
  
- 	struct reg_info active_regs[1];
- 	struct reg_info proxy_regs[3];
-@@ -321,6 +326,41 @@ static void q6v5_clk_disable(struct device *dev,
- 		clk_disable_unprepare(clks[i]);
- }
++= SUBNODES
++The AOSS side channel also provides the controls for three cooling devices,
++these are expressed as subnodes of the QMP node. The name of the node is used
++to identify the resource and must therefor be "cx", "mx" or "ebi".
++
++- #cooling-cells:
++	Usage: optional
++	Value type: <u32>
++	Definition: must be 2
++
+ = EXAMPLE
  
-+static int q6v5_pds_enable(struct q6v5 *qproc, struct device **pds,
-+			   size_t pd_count)
-+{
-+	int ret;
-+	int i;
-+
-+	for (i = 0; i < pd_count; i++) {
-+		dev_pm_genpd_set_performance_state(pds[i], INT_MAX);
-+		ret = pm_runtime_get_sync(pds[i]);
-+		if (ret < 0)
-+			goto unroll_pd_votes;
-+	}
-+
-+	return 0;
-+
-+unroll_pd_votes:
-+	for (i--; i >= 0; i--) {
-+		dev_pm_genpd_set_performance_state(pds[i], 0);
-+		pm_runtime_put(pds[i]);
-+	}
-+
-+	return ret;
-+};
-+
-+static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
-+			     size_t pd_count)
-+{
-+	int i;
-+
-+	for (i = 0; i < pd_count; i++) {
-+		dev_pm_genpd_set_performance_state(pds[i], 0);
-+		pm_runtime_put(pds[i]);
-+	}
-+}
-+
- static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int *current_perm,
- 				   bool remote_owner, phys_addr_t addr,
- 				   size_t size)
-@@ -690,11 +730,17 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+ The following example represents the AOSS side-channel message RAM and the
+@@ -54,4 +64,12 @@ mechanism exposing the power-domains, as found in SDM845.
+           mboxes = <&apss_shared 0>;
  
- 	qcom_q6v5_prepare(&qproc->q6v5);
+ 	  #power-domain-cells = <1>;
++
++	  cx_cdev: cx {
++		#cooling-cells = <2>;
++	  };
++
++	  mx_cdev: mx {
++		#cooling-cells = <2>;
++	  };
+   };
+diff --git a/drivers/soc/qcom/aoss-qmp.c b/drivers/soc/qcom/aoss-qmp.c
+index de52703b96b6..6e9299e3b2bd 100644
+--- a/drivers/soc/qcom/aoss-qmp.c
++++ b/drivers/soc/qcom/aoss-qmp.c
+@@ -33,6 +33,8 @@
+ #define QMP_MAGIC	0x4d41494c
+ #define QMP_VERSION	1
  
-+	ret = q6v5_pds_enable(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
-+	if (ret < 0) {
-+		dev_err(qproc->dev, "failed to enable proxy power domains\n");
-+		goto disable_irqs;
-+	}
++#define QMP_MAX_COOLING_DEVICES		3
 +
- 	ret = q6v5_regulator_enable(qproc, qproc->proxy_regs,
- 				    qproc->proxy_reg_count);
- 	if (ret) {
- 		dev_err(qproc->dev, "failed to enable proxy supplies\n");
--		goto disable_irqs;
-+		goto disable_proxy_pds;
- 	}
+ /**
+  * struct qmp - driver state for QMP implementation
+  * @msgram: iomem referencing the message RAM used for communication
+@@ -44,6 +46,8 @@
+  * @event: wait_queue for synchronization with the IRQ
+  * @tx_lock: provides syncrhonization between multiple callers of qmp_send()
+  * @pd_pdev: platform device for the power-domain child device
++ * @cdev_pdevs: platform device for the cooling devices
++ * @cdev_count: number of valid @cdev_pdevs
+  */
+ struct qmp {
+ 	void __iomem *msgram;
+@@ -60,6 +64,9 @@ struct qmp {
+ 	struct mutex tx_lock;
  
- 	ret = q6v5_clk_enable(qproc->dev, qproc->proxy_clks,
-@@ -791,6 +837,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
- disable_proxy_reg:
- 	q6v5_regulator_disable(qproc, qproc->proxy_regs,
- 			       qproc->proxy_reg_count);
-+disable_proxy_pds:
-+	q6v5_pds_disable(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
- disable_irqs:
- 	qcom_q6v5_unprepare(&qproc->q6v5);
+ 	struct platform_device *pd_pdev;
++
++	struct platform_device *cdev_pdevs[QMP_MAX_COOLING_DEVICES];
++	size_t cdev_count;
+ };
  
-@@ -1121,6 +1169,7 @@ static void qcom_msa_handover(struct qcom_q6v5 *q6v5)
- 			 qproc->proxy_clk_count);
- 	q6v5_regulator_disable(qproc, qproc->proxy_regs,
- 			       qproc->proxy_reg_count);
-+	q6v5_pds_disable(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
- }
+ static void qmp_kick(struct qmp *qmp)
+@@ -230,6 +237,8 @@ EXPORT_SYMBOL(qmp_send);
  
- static int q6v5_init_mem(struct q6v5 *qproc, struct platform_device *pdev)
-@@ -1181,6 +1230,45 @@ static int q6v5_init_clocks(struct device *dev, struct clk **clks,
- 	return i;
- }
- 
-+static int q6v5_pds_attach(struct device *dev, struct device **devs,
-+			   char **pd_names)
-+{
-+	size_t num_pds = 0;
-+	int ret;
-+	int i;
-+
-+	if (!pd_names)
-+		return 0;
-+
-+	while (pd_names[num_pds])
-+		num_pds++;
-+
-+	for (i = 0; i < num_pds; i++) {
-+		devs[i] = dev_pm_domain_attach_by_name(dev, pd_names[i]);
-+		if (IS_ERR(devs[i])) {
-+			ret = PTR_ERR(devs[i]);
-+			goto unroll_attach;
-+		}
-+	}
-+
-+	return num_pds;
-+
-+unroll_attach:
-+	for (i--; i >= 0; i--)
-+		dev_pm_domain_detach(devs[i], false);
-+
-+	return ret;
-+};
-+
-+static void q6v5_pds_detach(struct q6v5 *qproc, struct device **pds,
-+			    size_t pd_count)
-+{
-+	int i;
-+
-+	for (i = 0; i < pd_count; i++)
-+		dev_pm_domain_detach(pds[i], false);
-+}
-+
- static int q6v5_init_reset(struct q6v5 *qproc)
+ static int qmp_probe(struct platform_device *pdev)
  {
- 	qproc->mss_restart = devm_reset_control_get_exclusive(qproc->dev,
-@@ -1322,10 +1410,18 @@ static int q6v5_probe(struct platform_device *pdev)
++	struct platform_device *cdev;
++	struct device_node *cdev_node;
+ 	struct resource *res;
+ 	struct qmp *qmp;
+ 	int irq;
+@@ -279,13 +288,40 @@ static int qmp_probe(struct platform_device *pdev)
+ 			dev_err(&pdev->dev, "failed to register AOSS PD\n");
  	}
- 	qproc->active_reg_count = ret;
  
-+	ret = q6v5_pds_attach(&pdev->dev, qproc->proxy_pds,
-+			      desc->proxy_pd_names);
-+	if (ret < 0) {
-+		dev_err(&pdev->dev, "Failed to init power domains\n");
-+		goto free_rproc;
++	for_each_available_child_of_node(pdev->dev.of_node, cdev_node) {
++		if (!of_property_read_bool(cdev_node, "#cooling-cells"))
++			continue;
++
++		/* Register cooling device, with its device_node as platform_data */
++		cdev = platform_device_register_data(&pdev->dev,
++						     "aoss_qmp_cdev",
++						     PLATFORM_DEVID_AUTO,
++						     of_node_get(cdev_node),
++						     sizeof(cdev_node));
++		if (IS_ERR(cdev)) {
++			dev_err(&pdev->dev,
++				"failed to register cooling device: %pOFn\n",
++				cdev_node);
++			continue;
++		}
++
++		qmp->cdev_pdevs[qmp->cdev_count++] = cdev;
 +	}
-+	qproc->proxy_pd_count = ret;
 +
- 	qproc->has_alt_reset = desc->has_alt_reset;
- 	ret = q6v5_init_reset(qproc);
- 	if (ret)
--		goto free_rproc;
-+		goto detach_proxy_pds;
- 
- 	qproc->version = desc->version;
- 	qproc->need_mem_protection = desc->need_mem_protection;
-@@ -1333,7 +1429,7 @@ static int q6v5_probe(struct platform_device *pdev)
- 	ret = qcom_q6v5_init(&qproc->q6v5, pdev, rproc, MPSS_CRASH_REASON_SMEM,
- 			     qcom_msa_handover);
- 	if (ret)
--		goto free_rproc;
-+		goto detach_proxy_pds;
- 
- 	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
- 	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
-@@ -1344,10 +1440,12 @@ static int q6v5_probe(struct platform_device *pdev)
- 
- 	ret = rproc_add(rproc);
- 	if (ret)
--		goto free_rproc;
-+		goto detach_proxy_pds;
- 
  	return 0;
+ }
  
-+detach_proxy_pds:
-+	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
- free_rproc:
- 	rproc_free(rproc);
+ static int qmp_remove(struct platform_device *pdev)
+ {
+ 	struct qmp *qmp = platform_get_drvdata(pdev);
++	struct device_node *np;
++	int i;
  
-@@ -1364,6 +1462,9 @@ static int q6v5_remove(struct platform_device *pdev)
- 	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
- 	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
- 	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
-+
-+	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
-+
- 	rproc_free(qproc->rproc);
++	for (i = 0; i < qmp->cdev_count; i++) {
++		np = dev_get_platdata(&qmp->cdev_pdevs[i]->dev);
++		platform_device_unregister(qmp->cdev_pdevs[i]);
++		of_node_put(np);
++	}
+ 	platform_device_unregister(qmp->pd_pdev);
  
- 	return 0;
-@@ -1388,6 +1489,12 @@ static const struct rproc_hexagon_res sdm845_mss = {
- 			"mnoc_axi",
- 			NULL
- 	},
-+	.proxy_pd_names = (char*[]){
-+			"cx",
-+			"mx",
-+			"mss",
-+			NULL
-+	},
- 	.need_mem_protection = true,
- 	.has_alt_reset = true,
- 	.version = MSS_SDM845,
+ 	qmp_close(qmp);
 -- 
 2.18.0
