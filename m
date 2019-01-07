@@ -1,82 +1,46 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v2 17/17] power: supply: olpc_battery: Add OLPC XO 1.75
- support
-Date: Mon, 07 Jan 2019 19:02:37 +0100
-Message-ID: <d541d82647338c07fa59b0f2ef63880610733505.camel@v3.sk>
-References: <20181116162403.49854-1-lkundrak@v3.sk>
-         <20181116162403.49854-18-lkundrak@v3.sk> <20181202233458.GE23087@wrath>
+From: Jack Pham <jackp@codeaurora.org>
+Subject: Re: [PATCH v1 3/6] phy: qcom-qusb2: Add QUSB2 PHY support for msm8998
+Date: Mon, 7 Jan 2019 10:18:04 -0800
+Message-ID: <20190107181749.GA23243@jackp-linux.qualcomm.com>
+References: <1546620629-2426-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181202233458.GE23087@wrath>
+Content-Disposition: inline
+In-Reply-To: <1546620629-2426-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Darren Hart <dvhart@infradead.org>
-Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: kishon@ti.com, robh+dt@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 2018-12-02 at 15:34 -0800, Darren Hart wrote:
-> On Fri, Nov 16, 2018 at 05:24:03PM +0100, Lubomir Rintel wrote:
-> > The battery and the protocol are essentially the same as OLPC XO 1.5,
-> > but the responses from the EC are LSB first.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > Acked-by: Pavel Machek <pavel@ucw.cz>
-> > 
-> > ---
-> > Changes since v1:
-> > - s/s16 ecword_to_cpu/u16 ecword_to_cpu/
-> > - s/u16 ec_byte/u16 ec_word/
-> > 
-> >  drivers/power/supply/olpc_battery.c | 23 ++++++++++++++++++-----
-> >  1 file changed, 18 insertions(+), 5 deletions(-)
-> > 
-> > diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
-> 
-> ...
-> 
-> > @@ -626,6 +635,10 @@ static int olpc_battery_probe(struct platform_device *pdev)
-> >  	if (ecver > 0x44) {
-> >  		/* XO 1 or 1.5 with a new EC firmware. */
-> >  		data->new_proto = 1;
-> > +	} else if (of_find_compatible_node(NULL, NULL, "olpc,xo1.75-ec")) {
-> 
-> This if/else blocks concerns me a bit, but I might just be missing some
-> context.
-> 
-> This tests both ecver as well as the OF compatible string, is this reliable? Do
-> we know that for all xo1.75-ec compatible nodes the ecver will be <= 0x44? Or,
-> is ecver undefined? If the latter, then perhaps this test should be performed
-> first?
-> 
-> if (of_find_compatible_node....x01.75-ec...)
-> 	...
-> else if (ecver > 0x44)
-> 	...
-> else
-> 	...
-> 
-> And what happens when ecver == 0x44? We test for > and < but not ==, <=,
-> or >= in this block
+Hi Jeff,
 
-You're right, the conditionals are not correct. On XO 1.75 the
-versioning is different (now at level 0x05) and uninteresting,
-therefore the XO 1.75 check needs to go first.
+Spotted a typo below:
 
-On XO 1 and XO 1.75, we don't support < 0x44. 0x44 is okay, though uses
-stays with an old protocol, and > 0x44 uses a new protocol.
-
-Will follow up with a new version of the patch soon.
-
+On Fri, Jan 04, 2019 at 09:50:29AM -0700, Jeffrey Hugo wrote:
+> MSM8998 contains one QUSB2 PHY which is very similar to the existing
+> sdm845 support.
 > 
-> > +		/* XO 1.75 */
-> > +		data->new_proto = 1;
-> > +		data->little_endian = 1;
-> >  	} else if (ecver < 0x44) {
-> >  		/*
-> >  		 * We've seen a number of EC protocol changes; this driver
-> > -- 
-> > 2.19.1
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  .../devicetree/bindings/phy/qcom-qusb2-phy.txt     |  1 +
+>  drivers/phy/qualcomm/phy-qcom-qusb2.c              | 41 ++++++++++++++++++++++
+>  2 files changed, 42 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> index 03025d9..3976847 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> @@ -6,6 +6,7 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+>  Required properties:
+>   - compatible: compatible list, contains
+>  	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
+> +	       "qcom,msm8998-qusb2-phy" for 10nm PHY on msm8996,
+                                                           ^^^^
+should be 8998.
 
-Thanks
-Lubo
+Thanks,
+Jack
+-- 
+The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project
