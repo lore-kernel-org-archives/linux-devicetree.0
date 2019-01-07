@@ -1,49 +1,29 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [Potential Spoof] Re: [PATCH v2 4/4] ARM: dts: aspeed: Add lpc
- ctrl for Facebook
-Date: Mon, 7 Jan 2019 19:18:06 +0000
-Message-ID: <87110C25-B836-4DD0-813E-41745EB909FA@fb.com>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/6] ARM: dts: s5pv210: galaxys: Remove hardcoded bootargs
+Date: Mon, 7 Jan 2019 20:20:26 +0100
+Message-ID: <20190107192026.GA3313@kozik-lap>
+References: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com>
+ <20181228161819.18931-3-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <A3CF9BDE5A2E8D49A7A02831FC01959A@namprd15.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <20181228161819.18931-3-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, xc-racer2@live.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-UGxlYXNlIG1lcmdlIHRoZXNlIHBhdGNoZXMgaW4gdXBzdHJlYW0ga2VybmVsLg0KDQpSZWdhcmRz
-DQotVmlqYXkNCg0K77u/T24gMTIvMjAvMTgsIDEwOjA2IEFNLCAiTGludXgtYXNwZWVkIG9uIGJl
-aGFsZiBvZiBWaWpheSBLaGVta2EiIDxsaW51eC1hc3BlZWQtYm91bmNlcyt2aWpheWtoZW1rYT1m
-Yi5jb21AbGlzdHMub3psYWJzLm9yZyBvbiBiZWhhbGYgb2YgdmlqYXlraGVta2FAZmIuY29tPiB3
-cm90ZToNCg0KICAgIEpvZWwsIENhbiB5b3UgcGxlYXNlIHRha2UgY2FyZSBvZiB0aGVzZSBwYXRj
-aGVzIG1lcmdlLg0KICAgIA0KICAgIE9uIDEyLzE3LzE4LCAxMjowNCBQTSwgIlZpamF5IEtoZW1r
-YSIgPHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQogICAgDQogICAgICAgIEFkZGVkIGxwYyBj
-dHJsIGRldmljZSB0byBlbmFibGUgTFBDIGNsb2NrIGluIEZhY2Vib29rDQogICAgICAgIFRpb2dh
-cGFzcyBkZXZpY2UgdHJlZS4NCiAgICAgICAgDQogICAgICAgIFNpZ25lZC1vZmYtYnk6IFZpamF5
-IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgICAgICAtLS0NCiAgICAgICAgIC4uLi9i
-b290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHMgIHwgMTcgKysrKysrKysr
-KysrKysrKysNCiAgICAgICAgIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspDQogICAg
-ICAgIA0KICAgICAgICBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1m
-YWNlYm9vay10aW9nYXBhc3MuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNl
-Ym9vay10aW9nYXBhc3MuZHRzDQogICAgICAgIGluZGV4IDczZTU4YTgyMTYxMy4uZWY3ODc1YjU0
-NTYyIDEwMDY0NA0KICAgICAgICAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZh
-Y2Vib29rLXRpb2dhcGFzcy5kdHMNCiAgICAgICAgKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNw
-ZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgICAgIEBAIC0yMiw2ICsyMiwxNyBA
-QA0KICAgICAgICAgCQlyZWcgPSA8MHg4MDAwMDAwMCAweDIwMDAwMDAwPjsNCiAgICAgICAgIAl9
-Ow0KICAgICAgICAgDQogICAgICAgICsJcmVzZXJ2ZWQtbWVtb3J5IHsNCiAgICAgICAgKwkJI2Fk
-ZHJlc3MtY2VsbHMgPSA8MT47DQogICAgICAgICsJCSNzaXplLWNlbGxzID0gPDE+Ow0KICAgICAg
-ICArCQlyYW5nZXM7DQogICAgICAgICsNCiAgICAgICAgKwkJZmxhc2hfbWVtb3J5OiByZWdpb25A
-OTgwMDAwMDAgew0KICAgICAgICArCQkJbm8tbWFwOw0KICAgICAgICArCQkJcmVnID0gPDB4OTgw
-MDAwMDAgMHgwMDAwMTAwMD47IC8qIDRLICovDQogICAgICAgICsJCX07DQogICAgICAgICsJfTsN
-CiAgICAgICAgKw0KICAgICAgICAgCWlpby1od21vbiB7DQogICAgICAgICAJCWNvbXBhdGlibGUg
-PSAiaWlvLWh3bW9uIjsNCiAgICAgICAgIAkJaW8tY2hhbm5lbHMgPSA8JmFkYyAwPiwgPCZhZGMg
-MT4sIDwmYWRjIDI+LCA8JmFkYyAzPiwNCiAgICAgICAgQEAgLTU0LDYgKzY1LDEyIEBADQogICAg
-ICAgICAJfTsNCiAgICAgICAgIH07DQogICAgICAgICANCiAgICAgICAgKyZscGNfY3RybCB7DQog
-ICAgICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICAgICArCW1lbW9yeS1yZWdpb24gPSA8JmZs
-YXNoX21lbW9yeT47DQogICAgICAgICsJZmxhc2ggPSA8JnNwaTE+Ow0KICAgICAgICArfTsNCiAg
-ICAgICAgKw0KICAgICAgICAgJnVhcnQxIHsNCiAgICAgICAgIAkvLyBIb3N0IENvbnNvbGUNCiAg
-ICAgICAgIAlzdGF0dXMgPSAib2theSI7DQogICAgICAgIC0tIA0KICAgICAgICAyLjE3LjENCiAg
-ICAgICAgDQogICAgICAgIA0KICAgIA0KICAgIA0KDQo=
+On Fri, Dec 28, 2018 at 05:18:15PM +0100, Paweł Chmiel wrote:
+> Since we have uboot (flashed in place of stock kernel),
+> it's not needed anymore to hardcode bootargs.
+> 
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  arch/arm/boot/dts/s5pv210-galaxys.dts | 7 -------
+
+Thanks, applied.
+
+Best regards,
+Krzysztof
