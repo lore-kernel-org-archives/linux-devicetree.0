@@ -1,82 +1,40 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH 0/5] Meson (32-bit): add support for the Mali GPU
-Date: Mon, 7 Jan 2019 15:36:17 +0100
-Message-ID: <13bd9d3a-3cbe-3952-03bb-ef5da6eec401@baylibre.com>
-References: <20181208171247.22238-1-martin.blumenstingl@googlemail.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH RFC 4/5] usb: cdc-acm: Enable serdev support
+Date: Mon, 7 Jan 2019 16:02:38 +0100
+Message-ID: <20190107150238.GB14782@localhost>
+References: <20190104112131.14451-1-afaerber@suse.de>
+ <20190104112131.14451-5-afaerber@suse.de>
+ <1546868906.3037.37.camel@suse.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181208171247.22238-1-martin.blumenstingl@googlemail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, jbrunet@baylibre.com, khilman@baylibre.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1546868906.3037.37.camel@suse.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oliver Neukum <oneukum@suse.com>
+Cc: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org, Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMDgvMTIvMjAxOCAxODoxMiwgTWFydGluIEJsdW1lbnN0aW5nbCB3cm90ZToKPiBUaGlzIHNl
-cmllcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBNYWxpLTQ1MCBHUFUgb24gTWVzb244IGFuZCBNZXNv
-bjhiLgo+IE1lc29uNiB1c2VzIGEgTWFsaS00MDAgR1BVIGJ1dCBzaW5jZSB3ZSBkb24ndCBoYXZl
-IGEgY2xvY2sgZHJpdmVyIChhbmQKPiBJIGRvbid0IGhhdmUgYSBkZXZpY2UgZm9yIHRlc3Rpbmcp
-IE1lc29uNiBpcyBsZWZ0IG91dCBpbiB0aGlzIHNlcmllcy4KPiAKPiBNZXNvbjggdXNlcyBhIE1h
-bGktNDUwIE1QNiB3aXRoIHNpeCBwaXhlbCBwcm9jZXNzb3JzLiBNZXNvbjhiIChhcwo+IGNvc3Qt
-cmVkdWNlZCBTb0MpIHVzZXMgYSBNYWxpLTQ1MCBNUDIgd2l0aCB0d28gcGl4ZWwgcHJvY2Vzc29y
-cy4KPiBJIHRlc3RlZCBib3RoIHVzaW5nIHRoZSBvcGVuIHNvdXJjZSBsaW1hIGRyaXZlciBhbmQg
-YSBwYXRjaGVkIG1lc2EKPiBmcm9tIHRoZSBsaW1hIHByb2plY3QgYXMgd2VsbC4gU2luY2Ugd2Ug
-ZG9uJ3QgaGF2ZSBkaXNwbGF5IHN1cHBvcnQKPiBvbiB0aGUgMzItYml0IFNvQ3MgSSB1c2VkIG9m
-Zi1zY3JlZW4gcmVuZGVyaW5nIGFzIGRlc2NyaWJlZCBpbiBbMF0uCj4gVGhlIHJlc3VsdCBpcyAo
-Zm9yIGV4YW1wbGUpOiBbMV0KPiAKPiBUaGUgYm9vdGxvYWRlciAoYXQgbGVhc3Qgb24gbXkgYm9h
-cmRzKSBsZWF2ZXMgdGhlIE1hbGkgY2xvY2sgZGlzYWJsZWQKPiBieSBkZWZhdWx0LiBUaGUgYm9h
-cmQgY3Jhc2hlcyB3aGVuIHRyeWluZyB0byBhY2Nlc3MgdGhlIE1hbGkgcmVnaXN0ZXJzCj4gd2l0
-aCB0aGUgImNvcmUiIGNsb2NrIGRpc2FibGVkLgo+IFRodXMgdGhpcyBzZXJpZXMgYWxzbyBpbXBs
-ZW1lbnRzIHRoZSByZXF1aXJlZCBjbG9jayBkcml2ZXIgY2hhbmdlcy4gVGhlCj4gTWFsaSBjbG9j
-ayB0cmVlIG9uIE1lc29uOGIgYW5kIE1lc29uOG0yIGlzIGFsbW9zdCBpZGVudGljYWwgdG8gdGhl
-IG9uZQo+IG9uIEdYQkIgKHNlZSB0aGUgZGVzY3JpcHRpb24gb2YgcGF0Y2ggIzMgZm9yIG1vcmUg
-ZGV0YWlscykuIE9ubHkgTWVzb244Cj4gaXMgc2xpZ2h0bHkgZGlmZmVyZW50IGFzIGl0IGRvZXNu
-J3QgaGF2ZSBhIGdsaXRjaC1mcmVlIG11eC4gUGF0Y2ggIzIKPiBwcmVwYXJlcyB0aGUgbWVzb244
-YiBjbG9jayBkcml2ZXIgc28gd2UgY2FuIGhhdmUgZGlmZmVyZW50IGNsb2NrcyBwZXIKPiBTb0Mu
-Cj4gCj4gRGVwZW5kZW5jaWVzOgo+IC0gdGhlIC5kdHMgY2hhbmdlcyBkZXBlbmQgb24gbXkgb3Ro
-ZXIgc2VyaWVzICJBUk06IGR0czogbWVzb246IGFkZCB0aGUKPiAgIEFQQi9BUEIyIGJ1c3NlcyIg
-ZnJvbSBbMl0KPiAtIHRoZSAuZHRzIGNoYW5nZXMgZnJvbSB0aGlzIHNlcmllcyBoYXZlIG5vIGNv
-bXBpbGUtdGltZSBkZXBlbmRlbmN5IG9uCj4gICB0aGUgY2xvY2sgZHJpdmVyIGNoYW5nZXMgYmVj
-YXVzZSBDTEtJRF9NQUxJIHdhcyBkZWZpbmVkIGluIHRoZQo+ICAgZHQtYmluZGluZ3Mgc2luY2Ug
-dGhlIGZpcnN0IHZlcnNpb24gb2YgdGhlIGNsb2NrIGRyaXZlciAoYnV0IGl0IHdhcwo+ICAgbm90
-IHVzZWQgdW50aWwgbm93KS4KPiAtIHRoZSAuZHRzIGNoYW5nZXMgZnJvbSB0aGlzIHNlcmllcyBo
-YXZlIGEgcnVudGltZSBkZXBlbmRlbmN5IG9uIHRoZQo+ICAgY2xvY2sgZHJpdmVyIGNoYW5nZXMg
-KGFsc28gZnJvbSB0aGlzIHNlcmllcykgaWYgeW91IGhhdmUgYSBrZXJuZWwKPiAgIHBhdGNoZWQg
-d2l0aCB0aGUgbGltYSBkcml2ZXIgKHdpdGhvdXQgdGhlIGxpbWEgZHJpdmVyIHRoZXJlJ3Mgbm8K
-PiAgIHJ1bnRpbWUgZGVwZW5kZW5jeSkKPiAKPiBPdGhlciBub3RlczoKPiBCeSBkZWZhdWx0IHRo
-ZSBHUFUgcnVucyBvZmYgdGhlIFhUQUwgY2xvY2sgKDI0TUh6KS4gVGhlIGxpbWEgZHJpdmVyCj4g
-Y3VycmVudGx5IGRvZXMgbm90IHVwZGF0ZSB0aGUgR1BVIGNsb2NrIHJhdGUuIERpZmZlcmVudCBm
-cmVxdWVuY2llcwo+IGhhdmUgdG8gYmUgcmVxdWVzdGVkIGJ5IGFkZGluZyB0aGUgZm9sbG93aW5n
-IHByb3BlcnRpZXMgdG8gdGhlIE1hbGkKPiBHUFUgbm9kZSAodG8gcnVuIGl0IGF0IDUxME1IeiBm
-b3IgZXhhbXBsZSk6Cj4gICBhc3NpZ25lZC1jbG9ja3MgPSA8JmNsa2MgQ0xLSURfTUFMST47Cj4g
-ICBhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw1MTAwMDAwMDA+Owo+IAo+IAo+IFswXSBodHRwczov
-L2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvbGltYS93ZWIvd2lraXMvaG9tZQo+IFsxXSBodHRwczov
-L2FibG9hZC5kZS9pbWcvZHVtcDBteWljMC5wbmcKPiBbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
-bmVsLm9yZy9jb3Zlci8xMDcxOTQ0NS8KPiAKPiAKPiBNYXJ0aW4gQmx1bWVuc3RpbmdsICg1KToK
-PiAgIGR0LWJpbmRpbmdzOiBncHU6IG1hbGktdXRnYXJkOiBhZGQgQW1sb2dpYyBNZXNvbjggYW5k
-IE1lc29uOGIKPiAgICAgY29tcGF0aWJsZQo+ICAgY2xrOiBtZXNvbjogbWVzb244YjogdXNlIGEg
-c2VwYXJhdGUgY2xvY2sgdGFibGUgZm9yIE1lc29uOAo+ICAgY2xrOiBtZXNvbjogbWVzb244Yjog
-YWRkIHRoZSBHUFUgY2xvY2sgdHJlZQo+ICAgQVJNOiBkdHM6IG1lc29uODogYWRkIHRoZSBNYWxp
-LTQ1MCBNUDYgR1BVCj4gICBBUk06IGR0czogbWVzb244YjogYWRkIHRoZSBNYWxpLTQ1MCBNUDIg
-R1BVCj4gCj4gIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJkLnR4dCAgICAgICAgICB8
-ICAgNiArCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL21lc29uOC5kdHNpICAgICAgICAgICAgICAgICB8
-ICA1OCArKysKPiAgYXJjaC9hcm0vYm9vdC9kdHMvbWVzb244Yi5kdHNpICAgICAgICAgICAgICAg
-IHwgIDQ2ICsrKwo+ICBkcml2ZXJzL2Nsay9tZXNvbi9tZXNvbjhiLmMgICAgICAgICAgICAgICAg
-ICAgfCAzNDkgKysrKysrKysrKysrKysrKystCj4gIGRyaXZlcnMvY2xrL21lc29uL21lc29uOGIu
-aCAgICAgICAgICAgICAgICAgICB8ICAgOSArLQo+ICA1IGZpbGVzIGNoYW5nZWQsIDQ2MSBpbnNl
-cnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAoKQXBwbGllZCBwYXRjaGVzIDIgJiAzIHRvIG5l
-eHQvZHJpdmVycyBmb3IgTGludXggNS4xCgpLZXZpbiwgaGF2ZSBmdW4gd2l0aCB0aGUgb3RoZXIg
-cGF0Y2hlcyAhCgpOZWlsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
-ZXZlbAo=
+On Mon, Jan 07, 2019 at 02:48:26PM +0100, Oliver Neukum wrote:
+> On Fr, 2019-01-04 at 12:21 +0100, Andreas Färber  wrote:
+> > Switch from tty_port_register_device() to tty_port_register_device_serdev()
+> > and from tty_unregister_device() to tty_port_unregister_device().
+> > 
+> > On removal of a serdev driver sometimes count mismatch warnings were seen:
+> > 
+> >   ttyACM ttyACM0: tty_hangup: tty->count(1) != (#fd's(0) + #kopen's(0))
+> >   ttyACM ttyACM0: tty_port_close_start: tty->count = 1 port count = 0
+> > 
+> > Note: The serdev drivers appear to probe asynchronously as soon as they
+> > are registered. Should the USB quirks in probe be moved before registration?
+> > No noticeable difference for the devices at hand.
+> 
+> That is quite drastic a change.
+> Johan, how complete in terms of features is serdev?
+
+serdev doesn't support hangups yet, and that's precisely why it's not
+enabled for hotpluggable buses. That would need to be fixed before
+accepting something like this.
+
+Johan
