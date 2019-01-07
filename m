@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v2 5/5] ARM: dts: qcom: msm8974: add interrupt controller properties
-Date: Sun,  6 Jan 2019 21:11:45 -0500
-Message-ID: <20190107021145.6370-6-masneyb@onstation.org>
+Subject: [PATCH v2 2/5] mfd: qcom-spmi-pmic: use devm_mfd_add_devices instead of devm_of_platform_populate
+Date: Sun,  6 Jan 2019 21:11:42 -0500
+Message-ID: <20190107021145.6370-3-masneyb@onstation.org>
 References: <20190107021145.6370-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190107021145.6370-1-masneyb@onstation.org>
@@ -10,68 +10,125 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt controller properties now that spmi-gpio is a proper
-hierarchical IRQ chip. The interrupts property is no longer needed so
-remove it.
+pmic_spmi_probe calls devm_of_platform_populate, which traverses all
+of the children in device tree from the parent down to the children,
+grandchildren, etc. of_irq_count is called on most of the nodes (via
+of_device_alloc) and this initializes all of the IRQs. Further along in
+the boot process, spmi-gpio is initialized as a hierarchical IRQ chip
+in a later patch (with spmi-arb as the parent IRQ domain), and the same
+hwirq is now associated with two Linux virqs and IRQs will not work as
+expected. Correct this issue by using devm_mfd_add_devices to initialize
+just the children so that IRQs are initialized on an as-needed basis.
+
+This patch also selects CONFIG_MFD_CORE since this is required by
+devm_mfd_add_devices.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
-Changes since v1:
-- Interrupts are now two cells instead of four cells.
-- Drop unnecessary interrupts property.
+ drivers/mfd/Kconfig          |  1 +
+ drivers/mfd/qcom-spmi-pmic.c | 61 ++++++++++++++++++++++++++++++++++--
+ 2 files changed, 60 insertions(+), 2 deletions(-)
 
- arch/arm/boot/dts/qcom-pm8941.dtsi | 39 +++---------------------------
- 1 file changed, 3 insertions(+), 36 deletions(-)
-
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index 2515c5c217ac..16e6b4272d16 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -64,42 +64,9 @@
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
--				     <0 0xc1 0 IRQ_TYPE_NONE>,
--				     <0 0xc2 0 IRQ_TYPE_NONE>,
--				     <0 0xc3 0 IRQ_TYPE_NONE>,
--				     <0 0xc4 0 IRQ_TYPE_NONE>,
--				     <0 0xc5 0 IRQ_TYPE_NONE>,
--				     <0 0xc6 0 IRQ_TYPE_NONE>,
--				     <0 0xc7 0 IRQ_TYPE_NONE>,
--				     <0 0xc8 0 IRQ_TYPE_NONE>,
--				     <0 0xc9 0 IRQ_TYPE_NONE>,
--				     <0 0xca 0 IRQ_TYPE_NONE>,
--				     <0 0xcb 0 IRQ_TYPE_NONE>,
--				     <0 0xcc 0 IRQ_TYPE_NONE>,
--				     <0 0xcd 0 IRQ_TYPE_NONE>,
--				     <0 0xce 0 IRQ_TYPE_NONE>,
--				     <0 0xcf 0 IRQ_TYPE_NONE>,
--				     <0 0xd0 0 IRQ_TYPE_NONE>,
--				     <0 0xd1 0 IRQ_TYPE_NONE>,
--				     <0 0xd2 0 IRQ_TYPE_NONE>,
--				     <0 0xd3 0 IRQ_TYPE_NONE>,
--				     <0 0xd4 0 IRQ_TYPE_NONE>,
--				     <0 0xd5 0 IRQ_TYPE_NONE>,
--				     <0 0xd6 0 IRQ_TYPE_NONE>,
--				     <0 0xd7 0 IRQ_TYPE_NONE>,
--				     <0 0xd8 0 IRQ_TYPE_NONE>,
--				     <0 0xd9 0 IRQ_TYPE_NONE>,
--				     <0 0xda 0 IRQ_TYPE_NONE>,
--				     <0 0xdb 0 IRQ_TYPE_NONE>,
--				     <0 0xdc 0 IRQ_TYPE_NONE>,
--				     <0 0xdd 0 IRQ_TYPE_NONE>,
--				     <0 0xde 0 IRQ_TYPE_NONE>,
--				     <0 0xdf 0 IRQ_TYPE_NONE>,
--				     <0 0xe0 0 IRQ_TYPE_NONE>,
--				     <0 0xe1 0 IRQ_TYPE_NONE>,
--				     <0 0xe2 0 IRQ_TYPE_NONE>,
--				     <0 0xe3 0 IRQ_TYPE_NONE>;
-+			interrupt-parent = <&spmi_bus>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
+diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+index f461460a2aeb..ef27b3927295 100644
+--- a/drivers/mfd/Kconfig
++++ b/drivers/mfd/Kconfig
+@@ -960,6 +960,7 @@ config MFD_SPMI_PMIC
+ 	depends on ARCH_QCOM || COMPILE_TEST
+ 	depends on OF
+ 	depends on SPMI
++	select MFD_CORE
+ 	select REGMAP_SPMI
+ 	help
+ 	  This enables support for the Qualcomm SPMI PMICs.
+diff --git a/drivers/mfd/qcom-spmi-pmic.c b/drivers/mfd/qcom-spmi-pmic.c
+index e2e95de649a4..21aa880e3503 100644
+--- a/drivers/mfd/qcom-spmi-pmic.c
++++ b/drivers/mfd/qcom-spmi-pmic.c
+@@ -12,10 +12,10 @@
+  */
  
- 			boost_bypass_n_pin: boost-bypass {
- 				pins = "gpio21";
+ #include <linux/kernel.h>
++#include <linux/mfd/core.h>
+ #include <linux/module.h>
+ #include <linux/spmi.h>
+ #include <linux/regmap.h>
+-#include <linux/of_platform.h>
+ 
+ #define PMIC_REV2		0x101
+ #define PMIC_REV3		0x102
+@@ -124,6 +124,61 @@ static const struct regmap_config spmi_regmap_config = {
+ 	.fast_io	= true,
+ };
+ 
++static const struct mfd_cell pmic_spmi_cells[] = {
++	{
++		.name = "spmi-mpp",
++		.of_compatible = "qcom,spmi-mpp",
++	},
++	{
++		.name = "spmi-temp-alarm",
++		.of_compatible = "qcom,spmi-temp-alarm",
++	},
++	{
++		.name = "pm8941-rtc",
++		.of_compatible = "qcom,pm8941-rtc",
++	},
++	{
++		.name = "pm8941-pwrkey",
++		.of_compatible = "qcom,pm8941-pwrkey",
++	},
++	{
++		.name = "pm8941-misc",
++		.of_compatible = "qcom,pm8941-misc",
++	},
++	{
++		.name = "pm8941-charger",
++		.of_compatible = "qcom,pm8941-charger",
++	},
++	{
++		.name = "spmi-gpio",
++		.of_compatible = "qcom,spmi-gpio",
++	},
++	{
++		.name = "spmi-mpp",
++		.of_compatible = "qcom,spmi-mpp",
++	},
++	{
++		.name = "spmi-vadc",
++		.of_compatible = "qcom,spmi-vadc",
++	},
++	{
++		.name = "spmi-iadc",
++		.of_compatible = "qcom,spmi-iadc",
++	},
++	{
++		.name = "pm8941-coincell",
++		.of_compatible = "qcom,pm8941-coincell",
++	},
++	{
++		.name = "pm8941-wled",
++		.of_compatible = "qcom,pm8941-wled",
++	},
++	{
++		.name = "pm8941-regulators",
++		.of_compatible = "qcom,pm8941-regulators",
++	},
++};
++
+ static int pmic_spmi_probe(struct spmi_device *sdev)
+ {
+ 	struct regmap *regmap;
+@@ -136,7 +191,9 @@ static int pmic_spmi_probe(struct spmi_device *sdev)
+ 	if (sdev->usid % 2 == 0)
+ 		pmic_spmi_show_revid(regmap, &sdev->dev);
+ 
+-	return devm_of_platform_populate(&sdev->dev);
++	return devm_mfd_add_devices(&sdev->dev, PLATFORM_DEVID_AUTO,
++				    pmic_spmi_cells,
++				    ARRAY_SIZE(pmic_spmi_cells), NULL, 0, NULL);
+ }
+ 
+ MODULE_DEVICE_TABLE(of, pmic_spmi_id_table);
 -- 
 2.17.2
