@@ -1,30 +1,35 @@
-From: Matthew Wilcox <willy@infradead.org>
+From: Rob Herring <robh@kernel.org>
 Subject: Re: Consistent capitalization of "device tree"?
-Date: Mon, 7 Jan 2019 10:44:23 -0800
-Message-ID: <20190107184423.GA6310@bombadil.infradead.org>
+Date: Mon, 7 Jan 2019 12:45:43 -0600
+Message-ID: <CAL_JsqKzs4WoJoe_uCzhS3NBGfHiTQ96GkfSRhtxeah0THoVyw@mail.gmail.com>
 References: <20190107183711.GA5671@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
 In-Reply-To: <20190107183711.GA5671@amd>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, corbet@lwn.net, linux-doc@vger.kernel.org
+Cc: devicetree@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2019 at 07:37:11PM +0100, Pavel Machek wrote:
+On Mon, Jan 7, 2019 at 12:37 PM Pavel Machek <pavel@ucw.cz> wrote:
+>
 > Is it "Device Tree" or "device tree"?
->     
+>
 >  pavel@duo:/data/l/k/Documentation$ grep -r "Device Tree"  | wc -l
 >  235
 >  pavel@duo:/data/l/k/Documentation$ grep -r "device tree"  | wc -l
 >  595
+>
+> I guess it would be nice to make it consistent. I guess "device tree"
+> is preffered?
 
-You missed ...
+Well, the spec uses "devicetree" with capital 'D' as needed (titles
+and start of sentences). I didn't check if we're 100% consistent
+there.
 
-$ git grep -r "Device tree" Documentation/ | wc -l
-84
+> Should we do something like this?
 
-although at least some of those are "Capitalise device because it's the
-start of a sentence".
+I'll take patches, but it wouldn't be at the top of my list.
+
+Rob
