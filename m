@@ -1,36 +1,66 @@
-From: Oliver Neukum <oneukum@suse.com>
-Subject: Re: [PATCH RFC 4/5] usb: cdc-acm: Enable serdev support
-Date: Mon, 07 Jan 2019 14:48:26 +0100
-Message-ID: <1546868906.3037.37.camel@suse.com>
-References: <20190104112131.14451-1-afaerber@suse.de>
-         <20190104112131.14451-5-afaerber@suse.de>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/4] dt-bindings: hwmon: add dps650ab documentation
+Date: Mon, 7 Jan 2019 05:58:07 -0800
+Message-ID: <568735a3-1de2-3880-5fe1-7be38a55f33f@roeck-us.net>
+References: <cover.1546851856.git.xiaoting.liu@hxt-semitech.com>
+ <0087d2d9c7cd7f38761f76c80d1c37cb2cea6ef2.1546851856.git.xiaoting.liu@hxt-semitech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190104112131.14451-5-afaerber@suse.de>
+In-Reply-To: <0087d2d9c7cd7f38761f76c80d1c37cb2cea6ef2.1546851856.git.xiaoting.liu@hxt-semitech.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
-Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
+To: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>, jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, openbmc@lists.ozlabs.org
+Cc: linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, shunyong.yang@hxt-semitech.com, dongsheng.wang@hxt-semitech.com
 List-Id: devicetree@vger.kernel.org
 
-On Fr, 2019-01-04 at 12:21 +0100, Andreas Färber  wrote:
-> Switch from tty_port_register_device() to tty_port_register_device_serdev()
-> and from tty_unregister_device() to tty_port_unregister_device().
+On 1/7/19 3:00 AM, Xiaoting Liu wrote:
+> Bindings for DPS650AB power, voltage, temperature, and fan monitering.
 > 
-> On removal of a serdev driver sometimes count mismatch warnings were seen:
+> Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+> ---
+> v2:
+>    Change the patch subject.
+> ---
+>   Documentation/devicetree/bindings/hwmon/dps650ab.txt | 11 +++++++++++
+>   1 file changed, 11 insertions(+)
 > 
->   ttyACM ttyACM0: tty_hangup: tty->count(1) != (#fd's(0) + #kopen's(0))
->   ttyACM ttyACM0: tty_port_close_start: tty->count = 1 port count = 0
+> diff --git a/Documentation/devicetree/bindings/hwmon/dps650ab.txt b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+> new file mode 100644
+> index 000000000000..6bbbff89f6d5
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+> @@ -0,0 +1,11 @@
+> +Bindings for DPS650AB power, voltage, temperature, and fan monitering
+> +
+
+Assuming this is the Delta Electronics DPS-650-AB power supply, I think
+you should mention that here.
+
+> +Required properties:
+> +- compatible : "dps650ab"
+
+Again, assuming this is the Delta Electronics power supply, this should
+probably be something like "delta,dps650ab".
+
+Thanks,
+Guenter
+
+> +- reg       : I2C address, one of 0x58, 0x59.
+> +
+> +Example:
+> +       dps650ab@58 {
+> +                   compatible = "dps650ab";
+> +                   reg = <0x58>;
+> +       };
+> --
+> 1.8.3.1
 > 
-> Note: The serdev drivers appear to probe asynchronously as soon as they
-> are registered. Should the USB quirks in probe be moved before registration?
-> No noticeable difference for the devices at hand.
-
-That is quite drastic a change.
-Johan, how complete in terms of features is serdev?
-
-Are you refering to CLEAR_HALT_CONDITIONS in terms of quirks?
-
-	Regards
-		Oliver
+> 
+> 
+> 
+> This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
+> 
+> 
+> 
