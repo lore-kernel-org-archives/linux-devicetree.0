@@ -1,136 +1,118 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH 2/2] phy: bcm-ns-usb2: support updated DT binding with the CRU syscon
-Date: Mon,  7 Jan 2019 09:25:45 +0100
-Message-ID: <20190107082545.5529-2-zajec5@gmail.com>
-References: <20190107082545.5529-1-zajec5@gmail.com>
+From: Daniel Lezcano <daniel.lezcano@linaro.org>
+Subject: Re: [PATCH v2 1/4] dt-bindings: Correct RISC-V's timebase-frequency
+Date: Mon, 7 Jan 2019 09:56:31 +0100
+Message-ID: <a3e05488-053d-ae3e-b342-0799e60b1abd@linaro.org>
+References: <mhng-9767f556-9f5a-4366-931f-131222d3253b@palmer-si-x1c4>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107082545.5529-1-zajec5@gmail.com>
+In-Reply-To: <mhng-9767f556-9f5a-4366-931f-131222d3253b@palmer-si-x1c4>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
+To: Palmer Dabbelt <palmer@sifive.com>
+Cc: atish.patra@wdc.com, linux-kernel@vger.kernel.org, Christoph Hellwig <hch@lst.de>, aou@eecs.berkeley.edu, devicetree@vger.kernel.org, dmitriy@oss-tech.org, linux-riscv@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, tglx@linutronix.de, anup@brainfault.org, Damien.LeMoal@wdc.com, Christoph Hellwig <hch@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Rafał Miłecki <rafal@milecki.pl>
+On 04/01/2019 01:36, Palmer Dabbelt wrote:
+> On Fri, 14 Dec 2018 01:17:24 PST (-0800), daniel.lezcano@linaro.org wrote:
+>> On 14/12/2018 00:14, Atish Patra wrote:
+>>> From: Palmer Dabbelt <palmer@sifive.com>
+>>>
+>>> In RISC-V systems, timebase-frequency is per cpu instead of one
+>>> instance for entire SOC as there is a individual timer per each CPU.
+>>> Fix the DT binding accordingly.
+>>
+>> Why not use a fixed-clock instead of this timebase property which forces
+>> to declare a global variable to be exported from arch/riscv to
+>> drivers/clocksource ?
+> 
+> That makes sense to me.  I've always disliked this global variable and a
+> big part of why my original version got delayed forever is that I'd
+> hoped to get rid of it.
+> 
+> Given that this is all a mess anyway I'm OK breaking backwards
+> compatibility here.
+> 
+> Is there an example of how to do this?
 
-This adds support for the "syscon-cru" DT property which simply requires
-using regmap to access CRU registers.
 
-The old binding has been deprecated and stays as a fallback method.
+Can you give some hardware details? Is the timebase frequency constant?
+If it is the case, a fixed-clock shared for each cpu can be used, no?
 
-Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
----
- drivers/phy/broadcom/phy-bcm-ns-usb2.c | 44 +++++++++++++++++++++++++++-------
- 1 file changed, 35 insertions(+), 9 deletions(-)
+    myclock: myclock {
+        compatible = "fixed-clock";
+        #clock-cells = <0>;
+        clock-frequency  = <1000000>;
+        clock-output-names = "mytimer";
+    };
 
-diff --git a/drivers/phy/broadcom/phy-bcm-ns-usb2.c b/drivers/phy/broadcom/phy-bcm-ns-usb2.c
-index 58dff80e9386..8dc6835b941c 100644
---- a/drivers/phy/broadcom/phy-bcm-ns-usb2.c
-+++ b/drivers/phy/broadcom/phy-bcm-ns-usb2.c
-@@ -13,17 +13,23 @@
- #include <linux/clk.h>
- #include <linux/delay.h>
- #include <linux/err.h>
-+#include <linux/mfd/syscon.h>
- #include <linux/module.h>
- #include <linux/of_address.h>
- #include <linux/of_platform.h>
-+#include <linux/regmap.h>
- #include <linux/phy/phy.h>
- #include <linux/platform_device.h>
- #include <linux/slab.h>
- 
-+#define CRU_USB2_CONTROL			0x64
-+#define CRU_CLKSET_KEY				0x80
-+
- struct bcm_ns_usb2 {
- 	struct device *dev;
- 	struct clk *ref_clk;
- 	struct phy *phy;
-+	struct regmap *cru;
- 	void __iomem *dmu;
- };
- 
-@@ -31,6 +37,7 @@ static int bcm_ns_usb2_phy_init(struct phy *phy)
- {
- 	struct bcm_ns_usb2 *usb2 = phy_get_drvdata(phy);
- 	struct device *dev = usb2->dev;
-+	struct regmap *cru = usb2->cru;
- 	void __iomem *dmu = usb2->dmu;
- 	u32 ref_clk_rate, usb2ctl, usb_pll_ndiv, usb_pll_pdiv;
- 	int err = 0;
-@@ -48,7 +55,10 @@ static int bcm_ns_usb2_phy_init(struct phy *phy)
- 		goto err_clk_off;
- 	}
- 
--	usb2ctl = readl(dmu + BCMA_DMU_CRU_USB2_CONTROL);
-+	if (cru)
-+		regmap_read(cru, CRU_USB2_CONTROL, &usb2ctl);
-+	else
-+		usb2ctl = readl(dmu + BCMA_DMU_CRU_USB2_CONTROL);
- 
- 	if (usb2ctl & BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_MASK) {
- 		usb_pll_pdiv = usb2ctl;
-@@ -62,15 +72,24 @@ static int bcm_ns_usb2_phy_init(struct phy *phy)
- 	usb_pll_ndiv = (1920000000 * usb_pll_pdiv) / ref_clk_rate;
- 
- 	/* Unlock DMU PLL settings with some magic value */
--	writel(0x0000ea68, dmu + BCMA_DMU_CRU_CLKSET_KEY);
-+	if (cru)
-+		regmap_write(cru, CRU_CLKSET_KEY, 0x0000ea68);
-+	else
-+		writel(0x0000ea68, dmu + BCMA_DMU_CRU_CLKSET_KEY);
- 
- 	/* Write USB 2.0 PLL control setting */
- 	usb2ctl &= ~BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_MASK;
- 	usb2ctl |= usb_pll_ndiv << BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_SHIFT;
--	writel(usb2ctl, dmu + BCMA_DMU_CRU_USB2_CONTROL);
-+	if (cru)
-+		regmap_write(cru, CRU_USB2_CONTROL, usb2ctl);
-+	else
-+		writel(usb2ctl, dmu + BCMA_DMU_CRU_USB2_CONTROL);
- 
- 	/* Lock DMU PLL settings */
--	writel(0x00000000, dmu + BCMA_DMU_CRU_CLKSET_KEY);
-+	if (cru)
-+		regmap_write(cru, CRU_CLKSET_KEY, 0x00000000);
-+	else
-+		writel(0x00000000, dmu + BCMA_DMU_CRU_CLKSET_KEY);
- 
- err_clk_off:
- 	clk_disable_unprepare(usb2->ref_clk);
-@@ -86,6 +105,7 @@ static const struct phy_ops ops = {
- static int bcm_ns_usb2_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-+	struct device_node *cru_np;
- 	struct bcm_ns_usb2 *usb2;
- 	struct resource *res;
- 	struct phy_provider *phy_provider;
-@@ -95,11 +115,17 @@ static int bcm_ns_usb2_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 	usb2->dev = dev;
- 
--	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmu");
--	usb2->dmu = devm_ioremap_resource(dev, res);
--	if (IS_ERR(usb2->dmu)) {
--		dev_err(dev, "Failed to map DMU regs\n");
--		return PTR_ERR(usb2->dmu);
-+	cru_np = of_parse_phandle(dev->of_node, "syscon-cru", 0);
-+	usb2->cru = syscon_node_to_regmap(cru_np);
-+	if (IS_ERR(usb2->cru)) {
-+		usb2->cru = NULL;
-+
-+		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmu");
-+		usb2->dmu = devm_ioremap_resource(dev, res);
-+		if (IS_ERR(usb2->dmu)) {
-+			dev_err(dev, "Failed to map DMU regs\n");
-+			return PTR_ERR(usb2->dmu);
-+		}
- 	}
- 
- 	usb2->ref_clk = devm_clk_get(dev, "phy-ref-clk");
+Alternatively, may be different output can be specified with the clock,
+one for each CPUs.
+
+Or if the timebase frequency is resulting from a clock divisor, it can
+be defined as:
+
+        clock {
+                compatible = "fixed-factor-clock";
+                clocks = <&parentclk>;
+                #clock-cells = <0>;
+                clock-div = <2>;
+                clock-mult = <1>;
+        };
+
+hardware details can help to narrow down the right description.
+
+
+>> In addition, please add the 'Fixes' tag
+>>
+>>> Signed-off-by: Palmer Dabbelt <palmer@sifive.com>
+>>> Signed-off-by: Christoph Hellwig <hch@lst.de>
+>>> [Atish: Update the commit text]
+>>> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+>>> Reviewed-by: Rob Herring <robh@kernel.org>
+>>> ---
+>>>  Documentation/devicetree/bindings/riscv/cpus.txt | 4 +++-
+>>>  1 file changed, 3 insertions(+), 1 deletion(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> b/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> index adf7b7af..b0b038d6 100644
+>>> --- a/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> +++ b/Documentation/devicetree/bindings/riscv/cpus.txt
+>>> @@ -93,9 +93,9 @@ Linux is allowed to run on.
+>>>          cpus {
+>>>                  #address-cells = <1>;
+>>>                  #size-cells = <0>;
+>>> -                timebase-frequency = <1000000>;
+>>>                  cpu@0 {
+>>>                          clock-frequency = <1600000000>;
+>>> +                        timebase-frequency = <1000000>;
+>>>                          compatible = "sifive,rocket0", "riscv";
+>>>                          device_type = "cpu";
+>>>                          i-cache-block-size = <64>;
+>>> @@ -113,6 +113,7 @@ Linux is allowed to run on.
+>>>                  };
+>>>                  cpu@1 {
+>>>                          clock-frequency = <1600000000>;
+>>> +                        timebase-frequency = <1000000>;
+>>>                          compatible = "sifive,rocket0", "riscv";
+>>>                          d-cache-block-size = <64>;
+>>>                          d-cache-sets = <64>;
+>>> @@ -145,6 +146,7 @@ Example: Spike ISA Simulator with 1 Hart
+>>>  This device tree matches the Spike ISA golden model as run with
+>>> `spike -p1`.
+>>>
+>>>          cpus {
+>>> +                timebase-frequency = <1000000>;
+>>>                  cpu@0 {
+>>>                          device_type = "cpu";
+>>>                          reg = <0x00000000>;
+
+
 -- 
-2.13.7
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
