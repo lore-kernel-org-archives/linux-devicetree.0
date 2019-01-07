@@ -1,8 +1,8 @@
 From: Mark Brown <broonie@kernel.org>
 Subject: Applied "ASoC: ti: davinci-mcasp: Add support for GPIO
 	mode of the pins" to the asoc tree
-Date: Mon,  7 Jan 2019 12:24:56 +0000 (GMT)
-Message-ID: <20190107122456.D529B1127490@debutante.sirena.org.uk>
+Date: Mon,  7 Jan 2019 12:25:51 +0000 (GMT)
+Message-ID: <20190107122551.424D31127490@debutante.sirena.org.uk>
 References: <20190103140552.29809-4-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
