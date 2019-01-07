@@ -1,150 +1,38 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
-Date: Mon, 7 Jan 2019 15:15:02 -0600
-Message-ID: <0982f9c3-b5df-7131-8d5a-761adefd389d@ti.com>
-References: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
- <20181219201047.GA23448@amd> <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
- <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
- <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
- <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
- <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
- <90a2ed79-b437-af14-4538-430d8723cc6b@gmail.com>
- <38daf022-e4e4-799d-4c75-ee851315290d@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 1/5] spmi: pmic-arb: hardcode IRQ counts
+Date: Mon, 07 Jan 2019 13:26:06 -0800
+Message-ID: <154689636697.15366.4175054145572492763@swboyd.mtv.corp.google.com>
+References: <20190107021145.6370-1-masneyb@onstation.org> <20190107021145.6370-2-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <38daf022-e4e4-799d-4c75-ee851315290d@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190107021145.6370-2-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org
+Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+Quoting Brian Masney (2019-01-06 18:11:41)
+> @@ -1062,19 +1076,6 @@ static int pmic_gpio_remove(struct platform_device=
+ *pdev)
+>         return 0;
+>  }
+> =20
+> -static const struct of_device_id pmic_gpio_of_match[] =3D {
+> -       { .compatible =3D "qcom,pm8916-gpio" },   /* 4 GPIO's */
+> -       { .compatible =3D "qcom,pm8941-gpio" },   /* 36 GPIO's */
+> -       { .compatible =3D "qcom,pm8994-gpio" },   /* 22 GPIO's */
+> -       { .compatible =3D "qcom,pmi8994-gpio" },  /* 10 GPIO's */
+> -       { .compatible =3D "qcom,pma8084-gpio" },  /* 22 GPIO's */
+> -       { .compatible =3D "qcom,pms405-gpio" },   /* 12 GPIO's, holes on =
+1 9 10 */
+> -       { .compatible =3D "qcom,spmi-gpio" }, /* Generic */
+> -       { },
+> -};
+> -
+> -MODULE_DEVICE_TABLE(of, pmic_gpio_of_match);
+> -
 
-On 1/7/19 3:13 PM, Jacek Anaszewski wrote:
-> Hi Vesa,
-> 
-> On 1/5/19 1:39 AM, Vesa Jääskeläinen wrote:
->> Hi Jacek,
->>
->> On 04/01/2019 23.37, Jacek Anaszewski wrote:
->>> But, aside from that hypothetic issue, we need a solution for
->>> LEDn_BRIGHTNESS feature of lp5024, i.e. setting color intensity
->>> via a single register write. How would you propose to address that?
->>
->> You could model it to something like this in device tree:
->>
->> led-module @ <i2c-address> {
->>      compatible = "lp5024";
->>
->>      // There is in hardware setup to use either linear or
->>      // logarithmic scaling:
->>      //enable-logarithmic-brightness;
->>
->>      led0 {
->>          // this will create led instance for LED0 in lp5024
->>          label = "lp-led0";
->>
->>          // This specifies LED number within lp5024
->>          led-index = <0>;   // set output-base as 0*3 == 0
->>
->>          element-red {
->>              // refers to OUT0
->>              output-offset = <0>;
->>          };
->>
->>          element-green {
->>              // refers to OUT1
->>              output-offset = <1>;
->>          };
->>
->>          element-blue {
->>              // refers to OUT2
->>              output-offset = <2>;
->>          };
->>
->>      };
->>
->>      led1 {
->>          // this will create led instance for LED1 in lp5024
->>          label = "lp-led1";
->>
->>          // This specifies LED number within lp5024
->>          led-index = <1>;   // set output-base as 1*3 == 3
->>
->>          element-red {
->>              // refers to OUT3
->>              output-offset = <0>;
->>          };
->>
->>          element-green {
->>              // refers to OUT4
->>              output-offset = <1>;
->>          };
->>
->>          element-blue {
->>              // refers to OUT5
->>              output-offset = <2>;
->>          };
->>
->>      };
->>
->>      bank-led {
->>          // this will create led instance for bank leds in lp5024
->>          label = "lp-bank-led";
->>
->>          // configured bank led configuration
->>          led-index = <2 3 4 5 6 7>;
->>          // As here is list of led-indices this entry is
->>          // assumed to be bank configuration. Bank mode is enable
->>          // for the indices.
->>
->>          // set output-base as BANK A
->>
->>          element-red {
->>              // refers to BANK A
->>              output-offset = <0>;
->>          };
->>
->>          element-green {
->>              // refers to BANK B
->>              output-offset = <1>;
->>          };
->>
->>          element-blue {
->>              // refers to BANK C
->>              output-offset = <2>;
->>          };
->>      };
->> };
->>
->> This would then create three led instances and each led instance has brightness setting and that goes straight to hardware.
->>
->> If one would want to override hardware control for brightness then I suppose you would define in led node something like:
->>
->>      brightness-model = "hsl"
->>
->> This would then pick red, green and blue elements for hsl calculations and others color elements for linear. LED specific hardware brightness would then be either 0 or 0xFF depending if all of LED color elements are zero or not.
->>
->> Would that kind of model work?
-> 
-> I'd prefer to have single RGB LED device. And your DT design
-> is unnecessarily complex and a bit confusing.
-
-+1 to that comment
-
-> 
-> Also, you provided scarce information about sysfs interface.
-> It would be nice to see the sequence of commands.
-> 
-
-
--- 
-------------------
-Dan Murphy
+Please don't move the array. It isn't necessary if you use
+device_get_match_data() instead of of_match_device().
