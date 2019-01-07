@@ -1,101 +1,29 @@
-From: Jack Pham <jackp@codeaurora.org>
-Subject: Re: [PATCH 1/2] dt-bindings: Add Qualcomm USB Super-Speed PHY
- bindings
-Date: Mon, 7 Jan 2019 12:26:06 -0800
-Message-ID: <20190107202606.GC23243@jackp-linux.qualcomm.com>
-References: <1544176558-7946-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1544176558-7946-2-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20181220170531.GA19862@bogus>
- <20181220173633.GA19912@jackp-linux.qualcomm.com>
- <2a007a91-e709-c9f1-f634-ddcf707e954d@linaro.org>
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 1/6] ARM: dts: s5pv210: Use correct fimd variant
+Date: Mon, 7 Jan 2019 21:28:48 +0100
+Message-ID: <20190107202848.GA21920@kozik-lap>
+References: <20181228161819.18931-1-pawel.mikolaj.chmiel@gmail.com>
+ <20181228161819.18931-2-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2a007a91-e709-c9f1-f634-ddcf707e954d@linaro.org>
+In-Reply-To: <20181228161819.18931-2-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: Rob Herring <robh@kernel.org>, Andy Gross <andy.gross@linaro.org>, gregkh@linuxfoundation.org, mark.rutland@arm.com, kishon@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, shawn.guo@linaro.org, vkoul@kernel.org, Manu Gautam <mgautam@codeaurora.org>, Sriharsha Allenki <sallenki@codeaurora.org>
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, xc-racer2@live.ca, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jorge,
-
-Sorry for the late reply as I was out during the holiday break.
-
-On Fri, Dec 28, 2018 at 01:38:59PM +0100, Jorge Ramirez wrote:
-> On 12/20/18 18:37, Jack Pham wrote:
-> >Hi Rob, Jorge,
-> >
-> >On Thu, Dec 20, 2018 at 11:05:31AM -0600, Rob Herring wrote:
-> >>On Fri, Dec 07, 2018 at 10:55:57AM +0100, Jorge Ramirez-Ortiz wrote:
-> >>>Binding description for Qualcomm's Synopsys 1.0.0 super-speed PHY
-> >>>controller embedded in QCS404.
-> >>>
-> >>>Based on Sriharsha Allenki's <sallenki@codeaurora.org> original
-> >>>definitions.
-> >>>
-> >>>Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> >>>Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> >>>---
-> >>>  .../devicetree/bindings/usb/qcom,usb-ssphy.txt     | 78 ++++++++++++++++++++++
-> >>>  1 file changed, 78 insertions(+)
-> >>>  create mode 100644 Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-> >>>
-> >>>diff --git a/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-> >>>new file mode 100644
-> >>>index 0000000..fcf4e01
-> >>>--- /dev/null
-> >>>+++ b/Documentation/devicetree/bindings/usb/qcom,usb-ssphy.txt
-> >>>@@ -0,0 +1,78 @@
-> >>>+Qualcomm Synopsys 1.0.0 SS phy controller
-> >>>+===========================================
-> >>>+
-> >>>+Synopsys 1.0.0 ss phy controller supports SS usb connectivity on Qualcomm
-> >>>+chipsets
-> >>>+
-> >>>+Required properties:
-> >>>+
-> >>>+- compatible:
-> >>>+    Value type: <string>
-> >>>+    Definition: Should contain "qcom,usb-ssphy".
-> >>
-> >>What is "qcom,dwc3-ss-usb-phy" which already exists then?
-> >
-> >Uh, apparently only the bindings doc is there but the driver never
-> >landed. I guess it fell through the cracks nearly 4 years ago.
-> >
-> >https://lore.kernel.org/patchwork/patch/499502/
-> >
-> >Jorge, does Andy's version of this driver at all resemble what can be
-> >used for QCS404?
+On Fri, Dec 28, 2018 at 05:18:14PM +0100, Paweł Chmiel wrote:
+> Since we have separate compatible for our SOC,
+> let's use it rather using one from exynos4210.
 > 
-> on close inspection I cant see any similitudes between the drivers.
-> Unfortunately I don't have access to documentation yet but the
-> control register offsets and the control bits in the drivers do not
-> match.
-> 
-> because of the above I'd like to go ahead with our separate drivers
-> -already tested and validated- for HS (Shawn's) and SS (mine).
-> 
-> if that is acceptable, should we reuse the upstream bindings for
-> our implementation? or perhaps Shawn Guo will do for his HS version
-> of the driver and I go ahead and create a new one? what would you
-> suggest?
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> ---
+>  arch/arm/boot/dts/s5pv210.dtsi | 2 +-
 
-I'm not really sure. My understanding of the driver Andy submitted
-were for some of the older MSM and IPQ SoCs that implemented the PHY
-controls as part of the DWC3 controller's "QScratch" registers, which is
-why the bindings doc and the compatible string reference "dwc3" in both
-the compatible and the docs filename. Is the SNPS PHY on QCS404
-architected similarly in this regard? Either way, the existing bindings
-doc for the non-existent driver looks incomplete for QCS404, so you'd
-have to update it anyway. My feeling is that there should just be one
-document describing all variants of SNPS PHYs on Qualcomm chips.
+Thanks, applied.
 
-Maybe we should also just delete the "qcom,dwc3-ss-usb-phy" binding
-unless there is a plan to resurrect Andy's driver.
-
-Jack
--- 
-The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project
+Best regards,
+Krzysztof
