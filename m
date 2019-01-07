@@ -1,72 +1,82 @@
-From: Malathi Gottam <mgottam@codeaurora.org>
-Subject: [PATCH v4] arm64: dts: sdm845: add video nodes
-Date: Mon,  7 Jan 2019 20:00:44 +0530
-Message-ID: <1546871444-13224-1-git-send-email-mgottam@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, stanimir.varbanov@linaro.org, vgarodia@codeaurora.org, mgottam@codeaurora.org
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH 0/5] Meson (32-bit): add support for the Mali GPU
+Date: Mon, 7 Jan 2019 15:36:17 +0100
+Message-ID: <13bd9d3a-3cbe-3952-03bb-ef5da6eec401@baylibre.com>
+References: <20181208171247.22238-1-martin.blumenstingl@googlemail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20181208171247.22238-1-martin.blumenstingl@googlemail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, jbrunet@baylibre.com, khilman@baylibre.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, sboyd@kernel.org, mturquette@baylibre.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This adds video nodes to sdm845 based on the examples
-in the bindings.
-
-Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
- 1 file changed, 35 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b72bdb0..df31d39 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -87,6 +87,11 @@
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
-+
-+		venus_region: memory@95800000 {
-+			reg = <0x0 0x95800000 0x0 0x600000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
-@@ -1403,5 +1408,35 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		video-codec@aa00000 {
-+			compatible = "qcom,sdm845-venus";
-+			reg = <0x0aa00000 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>;
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-+			clock-names = "core", "iface", "bus";
-+			iommus = <&apps_smmu 0x10a0 0x8>,
-+				 <&apps_smmu 0x10b0 0x0>;
-+			memory-region = <&venus_region>;
-+
-+			video-core0 {
-+				compatible = "venus-decoder";
-+				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+				clock-names = "core", "bus";
-+				power-domains = <&videocc VCODEC0_GDSC>;
-+			};
-+
-+			video-core1 {
-+				compatible = "venus-encoder";
-+				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-+					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-+				clock-names = "core", "bus";
-+				power-domains = <&videocc VCODEC1_GDSC>;
-+			};
-+		};
- 	};
- };
--- 
-1.9.1
+T24gMDgvMTIvMjAxOCAxODoxMiwgTWFydGluIEJsdW1lbnN0aW5nbCB3cm90ZToKPiBUaGlzIHNl
+cmllcyBhZGRzIHN1cHBvcnQgZm9yIHRoZSBNYWxpLTQ1MCBHUFUgb24gTWVzb244IGFuZCBNZXNv
+bjhiLgo+IE1lc29uNiB1c2VzIGEgTWFsaS00MDAgR1BVIGJ1dCBzaW5jZSB3ZSBkb24ndCBoYXZl
+IGEgY2xvY2sgZHJpdmVyIChhbmQKPiBJIGRvbid0IGhhdmUgYSBkZXZpY2UgZm9yIHRlc3Rpbmcp
+IE1lc29uNiBpcyBsZWZ0IG91dCBpbiB0aGlzIHNlcmllcy4KPiAKPiBNZXNvbjggdXNlcyBhIE1h
+bGktNDUwIE1QNiB3aXRoIHNpeCBwaXhlbCBwcm9jZXNzb3JzLiBNZXNvbjhiIChhcwo+IGNvc3Qt
+cmVkdWNlZCBTb0MpIHVzZXMgYSBNYWxpLTQ1MCBNUDIgd2l0aCB0d28gcGl4ZWwgcHJvY2Vzc29y
+cy4KPiBJIHRlc3RlZCBib3RoIHVzaW5nIHRoZSBvcGVuIHNvdXJjZSBsaW1hIGRyaXZlciBhbmQg
+YSBwYXRjaGVkIG1lc2EKPiBmcm9tIHRoZSBsaW1hIHByb2plY3QgYXMgd2VsbC4gU2luY2Ugd2Ug
+ZG9uJ3QgaGF2ZSBkaXNwbGF5IHN1cHBvcnQKPiBvbiB0aGUgMzItYml0IFNvQ3MgSSB1c2VkIG9m
+Zi1zY3JlZW4gcmVuZGVyaW5nIGFzIGRlc2NyaWJlZCBpbiBbMF0uCj4gVGhlIHJlc3VsdCBpcyAo
+Zm9yIGV4YW1wbGUpOiBbMV0KPiAKPiBUaGUgYm9vdGxvYWRlciAoYXQgbGVhc3Qgb24gbXkgYm9h
+cmRzKSBsZWF2ZXMgdGhlIE1hbGkgY2xvY2sgZGlzYWJsZWQKPiBieSBkZWZhdWx0LiBUaGUgYm9h
+cmQgY3Jhc2hlcyB3aGVuIHRyeWluZyB0byBhY2Nlc3MgdGhlIE1hbGkgcmVnaXN0ZXJzCj4gd2l0
+aCB0aGUgImNvcmUiIGNsb2NrIGRpc2FibGVkLgo+IFRodXMgdGhpcyBzZXJpZXMgYWxzbyBpbXBs
+ZW1lbnRzIHRoZSByZXF1aXJlZCBjbG9jayBkcml2ZXIgY2hhbmdlcy4gVGhlCj4gTWFsaSBjbG9j
+ayB0cmVlIG9uIE1lc29uOGIgYW5kIE1lc29uOG0yIGlzIGFsbW9zdCBpZGVudGljYWwgdG8gdGhl
+IG9uZQo+IG9uIEdYQkIgKHNlZSB0aGUgZGVzY3JpcHRpb24gb2YgcGF0Y2ggIzMgZm9yIG1vcmUg
+ZGV0YWlscykuIE9ubHkgTWVzb244Cj4gaXMgc2xpZ2h0bHkgZGlmZmVyZW50IGFzIGl0IGRvZXNu
+J3QgaGF2ZSBhIGdsaXRjaC1mcmVlIG11eC4gUGF0Y2ggIzIKPiBwcmVwYXJlcyB0aGUgbWVzb244
+YiBjbG9jayBkcml2ZXIgc28gd2UgY2FuIGhhdmUgZGlmZmVyZW50IGNsb2NrcyBwZXIKPiBTb0Mu
+Cj4gCj4gRGVwZW5kZW5jaWVzOgo+IC0gdGhlIC5kdHMgY2hhbmdlcyBkZXBlbmQgb24gbXkgb3Ro
+ZXIgc2VyaWVzICJBUk06IGR0czogbWVzb246IGFkZCB0aGUKPiAgIEFQQi9BUEIyIGJ1c3NlcyIg
+ZnJvbSBbMl0KPiAtIHRoZSAuZHRzIGNoYW5nZXMgZnJvbSB0aGlzIHNlcmllcyBoYXZlIG5vIGNv
+bXBpbGUtdGltZSBkZXBlbmRlbmN5IG9uCj4gICB0aGUgY2xvY2sgZHJpdmVyIGNoYW5nZXMgYmVj
+YXVzZSBDTEtJRF9NQUxJIHdhcyBkZWZpbmVkIGluIHRoZQo+ICAgZHQtYmluZGluZ3Mgc2luY2Ug
+dGhlIGZpcnN0IHZlcnNpb24gb2YgdGhlIGNsb2NrIGRyaXZlciAoYnV0IGl0IHdhcwo+ICAgbm90
+IHVzZWQgdW50aWwgbm93KS4KPiAtIHRoZSAuZHRzIGNoYW5nZXMgZnJvbSB0aGlzIHNlcmllcyBo
+YXZlIGEgcnVudGltZSBkZXBlbmRlbmN5IG9uIHRoZQo+ICAgY2xvY2sgZHJpdmVyIGNoYW5nZXMg
+KGFsc28gZnJvbSB0aGlzIHNlcmllcykgaWYgeW91IGhhdmUgYSBrZXJuZWwKPiAgIHBhdGNoZWQg
+d2l0aCB0aGUgbGltYSBkcml2ZXIgKHdpdGhvdXQgdGhlIGxpbWEgZHJpdmVyIHRoZXJlJ3Mgbm8K
+PiAgIHJ1bnRpbWUgZGVwZW5kZW5jeSkKPiAKPiBPdGhlciBub3RlczoKPiBCeSBkZWZhdWx0IHRo
+ZSBHUFUgcnVucyBvZmYgdGhlIFhUQUwgY2xvY2sgKDI0TUh6KS4gVGhlIGxpbWEgZHJpdmVyCj4g
+Y3VycmVudGx5IGRvZXMgbm90IHVwZGF0ZSB0aGUgR1BVIGNsb2NrIHJhdGUuIERpZmZlcmVudCBm
+cmVxdWVuY2llcwo+IGhhdmUgdG8gYmUgcmVxdWVzdGVkIGJ5IGFkZGluZyB0aGUgZm9sbG93aW5n
+IHByb3BlcnRpZXMgdG8gdGhlIE1hbGkKPiBHUFUgbm9kZSAodG8gcnVuIGl0IGF0IDUxME1IeiBm
+b3IgZXhhbXBsZSk6Cj4gICBhc3NpZ25lZC1jbG9ja3MgPSA8JmNsa2MgQ0xLSURfTUFMST47Cj4g
+ICBhc3NpZ25lZC1jbG9jay1yYXRlcyA9IDw1MTAwMDAwMDA+Owo+IAo+IAo+IFswXSBodHRwczov
+L2dpdGxhYi5mcmVlZGVza3RvcC5vcmcvbGltYS93ZWIvd2lraXMvaG9tZQo+IFsxXSBodHRwczov
+L2FibG9hZC5kZS9pbWcvZHVtcDBteWljMC5wbmcKPiBbMl0gaHR0cHM6Ly9wYXRjaHdvcmsua2Vy
+bmVsLm9yZy9jb3Zlci8xMDcxOTQ0NS8KPiAKPiAKPiBNYXJ0aW4gQmx1bWVuc3RpbmdsICg1KToK
+PiAgIGR0LWJpbmRpbmdzOiBncHU6IG1hbGktdXRnYXJkOiBhZGQgQW1sb2dpYyBNZXNvbjggYW5k
+IE1lc29uOGIKPiAgICAgY29tcGF0aWJsZQo+ICAgY2xrOiBtZXNvbjogbWVzb244YjogdXNlIGEg
+c2VwYXJhdGUgY2xvY2sgdGFibGUgZm9yIE1lc29uOAo+ICAgY2xrOiBtZXNvbjogbWVzb244Yjog
+YWRkIHRoZSBHUFUgY2xvY2sgdHJlZQo+ICAgQVJNOiBkdHM6IG1lc29uODogYWRkIHRoZSBNYWxp
+LTQ1MCBNUDYgR1BVCj4gICBBUk06IGR0czogbWVzb244YjogYWRkIHRoZSBNYWxpLTQ1MCBNUDIg
+R1BVCj4gCj4gIC4uLi9iaW5kaW5ncy9ncHUvYXJtLG1hbGktdXRnYXJkLnR4dCAgICAgICAgICB8
+ICAgNiArCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL21lc29uOC5kdHNpICAgICAgICAgICAgICAgICB8
+ICA1OCArKysKPiAgYXJjaC9hcm0vYm9vdC9kdHMvbWVzb244Yi5kdHNpICAgICAgICAgICAgICAg
+IHwgIDQ2ICsrKwo+ICBkcml2ZXJzL2Nsay9tZXNvbi9tZXNvbjhiLmMgICAgICAgICAgICAgICAg
+ICAgfCAzNDkgKysrKysrKysrKysrKysrKystCj4gIGRyaXZlcnMvY2xrL21lc29uL21lc29uOGIu
+aCAgICAgICAgICAgICAgICAgICB8ICAgOSArLQo+ICA1IGZpbGVzIGNoYW5nZWQsIDQ2MSBpbnNl
+cnRpb25zKCspLCA3IGRlbGV0aW9ucygtKQo+IAoKQXBwbGllZCBwYXRjaGVzIDIgJiAzIHRvIG5l
+eHQvZHJpdmVycyBmb3IgTGludXggNS4xCgpLZXZpbiwgaGF2ZSBmdW4gd2l0aCB0aGUgb3RoZXIg
+cGF0Y2hlcyAhCgpOZWlsCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1k
+ZXZlbAo=
