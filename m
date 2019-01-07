@@ -1,63 +1,71 @@
 From: Johan Hovold <johan@kernel.org>
-Subject: Re: [RFC lora-next 5/5] HACK: net: lora: sx130x: Add PicoCell
- gateway shim for cdc-acm
-Date: Mon, 7 Jan 2019 16:28:34 +0100
-Message-ID: <20190107152834.GC14782@localhost>
-References: <20190104112131.14451-1-afaerber@suse.de>
- <20190104112131.14451-6-afaerber@suse.de>
- <CAL_Jsq+BMOvRLEbD2Eo2D=n446vSubeXV3-FbkBSHjpfL=LYsg@mail.gmail.com>
- <9d97fec5-31b0-8717-cd10-de4f36d1cf05@suse.de>
+Subject: Re: [PATCH 1/3] iio: chemical: add support for Plantower PMS7003
+ sensor
+Date: Mon, 7 Jan 2019 16:35:42 +0100
+Message-ID: <20190107153542.GD14782@localhost>
+References: <20190106171614.12615-1-tduszyns@gmail.com>
+ <20190106171614.12615-2-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <9d97fec5-31b0-8717-cd10-de4f36d1cf05@suse.de>
+In-Reply-To: <20190106171614.12615-2-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>
-Cc: Rob Herring <robh@kernel.org>, linux-lpwan@lists.infradead.org, linux-serial <linux-serial@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Oliver Neukum <oneukum@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev <netdev@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 05, 2019 at 12:43:48AM +0100, Andreas Färber wrote:
-> Hi Rob,
+On Sun, Jan 06, 2019 at 06:16:12PM +0100, Tomasz Duszynski wrote:
+> Add support for Plantower PMS7003 particulate matter sensor.
 > 
-> Am 04.01.19 um 18:07 schrieb Rob Herring:
-> > On Fri, Jan 4, 2019 at 5:21 AM Andreas Färber <afaerber@suse.de> wrote:
-> >>
-> >> Ignore our device in cdc-acm probing and add a new driver for it,
-> >> dispatching to cdc-acm for the actual implementation.
-> >>
-> >> WARNING: It is likely that this VID/PID is in use for unrelated devices.
-> >> Only the Product string hints what this really is in current v0.2.1.
-> >> Previous code v0.2.0 was using a Semtech VID/PID, but no card shipping
-> >> with such firmware is known to me.
-> >>
-> >> While this may seem unorthodox, no internals of the driver are accessed,
-> >> just the set of driver callbacks is duplicated as shim.
-> >>
-> >> Use this shim construct to fake DT nodes for serdev on probe.
-> >> For testing purposes these nodes do not have a parent yet.
-> >> This results in two "Error -2 creating of_node link" warnings on probe.
-> > 
-> > It looks like the DT is pretty static. Rather than creating the nodes
-> > at run-time, can't you create a dts file and build that into your
-> > module.
-> 
-> Heh, if that were the only issue with this patch... ;)
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
 
-My thoughts exactly. ;)
+> +static int pms7003_do_cmd(struct pms7003_state *state, u8 cmd)
+> +{
+> +	/*
+> +	 * commands have following format:
+> +	 *
+> +	 * +------+------+-----+------+-----+-----------+-----------+
+> +	 * | 0x42 | 0x4d | cmd | 0x00 | arg | cksum msb | cksum lsb |
+> +	 * +------+------+-----+------+-----+-----------+-----------+
+> +	 */
+> +	u8 tmp[PMS7003_CMD_LENGTH] = { PMS7003_MAGIC_MSB, PMS7003_MAGIC_LSB };
+> +	int ret, n = 2;
+> +	u16 checksum;
+> +
+> +	switch (cmd) {
+> +	case CMD_WAKEUP:
+> +		tmp[n++] = 0xe4;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x01;
+> +		break;
+> +	case CMD_ENTER_PASSIVE_MODE:
+> +		tmp[n++] = 0xe1;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x00;
+> +		break;
+> +	case CMD_READ_PASSIVE:
+> +		tmp[n++] = 0xe2;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x00;
+> +		break;
+> +	case CMD_SLEEP:
+> +		tmp[n++] = 0xe4;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x00;
+> +		break;
+> +	}
+> +
+> +	checksum = pms7003_calc_checksum(tmp, n);
+> +	put_unaligned_be16(checksum, tmp + n);
+> +	n += PMS7003_CHECKSUM_LENGTH;
+> +
+> +	ret = serdev_device_write(state->serdev, tmp, n, PMS7003_TIMEOUT);
+> +	if (ret)
+> +		return ret;
 
-This clearly is too much of a hack, but maintaining serdev compatible
-information in the corresponding tty drivers is probably what we'll want
-to do.
-
-When the tty driver binds and registers its ports with tty core, we can
-could match again on the USB descriptors, but since the device has
-already been matched, we can just pass the equivalent of a compatible
-string, or more generally dt-fragment, instead.
-
-Without having had time to look into it myself yet, this sounds like
-something we should be using the new software nodes for (software
-generated fw nodes). That way, we don't depend on CONFIG_OF either.
+Beginning with 5.0, serdev_device_write() returns the number of bytes
+written before timeout (or being interrupted) so you need to check
+against < n here.
 
 Johan
