@@ -1,67 +1,76 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH 1/2] arm64: dts: qcom: sdm845: Add ADSP reserve-memory
- nodes
-Date: Mon, 7 Jan 2019 13:17:58 +0530
-Message-ID: <6b81869e-1d8b-510e-760a-9476ac08528f@codeaurora.org>
-References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
- <1545313174-13481-2-git-send-email-rohitkr@codeaurora.org>
- <20190103234249.GH31596@builder>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH 1/2] dt-bindings: bcm-ns-usb2-phy: rework binding to use CRU syscon
+Date: Mon,  7 Jan 2019 09:25:44 +0100
+Message-ID: <20190107082545.5529-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103234249.GH31596@builder>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Sibi Sankar <sibis@codeaurora.org>
-Cc: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Bjorn for review.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-On 1/4/2019 5:12 AM, Bjorn Andersson wrote:
-> On Thu 20 Dec 05:39 PST 2018, Rohit kumar wrote:
->
->> Add memory nodes required for remoteproc q6v5_adsp pil.
->>
-> This range doesn't match the documented memory map. I would prefer to
-> see a "Specify all PIL regions as defined in V10" or similar.
+USB 2.0 PHY is a hardware block that happens to use two registers from
+the CRU block to setup a single PLL. It's not part of the CRU or DMU
+and so its binding shouldn't cover the whole DMU.
 
-Yes,  Sibi will post it along with other PIL regions with update address 
-in next spin.
+The correct way of handling this is to reference CRU block node using a
+syscon. Document that & deprecate the old way.
 
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+ .../devicetree/bindings/phy/bcm-ns-usb2-phy.txt    | 27 ++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
->
-> Regards,
-> Bjorn
->
->> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
->>   1 file changed, 5 insertions(+)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index 23a253b..c0a012f 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -88,6 +88,11 @@
->>   			reg = <0 0x86200000 0 0x2d00000>;
->>   			no-map;
->>   		};
->> +
->> +		pil_adsp_mem: memory@8b100000 {
->> +			reg = <0 0x8b100000 0 0x1a00000>;
->> +			no-map;
->> +		};
->>   	};
->>   
->>   	cpus {
->> -- 
->> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
->> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
->>
-Regards,
-Rohit
+diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+index a7aee9ea8926..36b634d2f0ca 100644
+--- a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+@@ -2,19 +2,38 @@ Driver for Broadcom Northstar USB 2.0 PHY
+ 
+ Required properties:
+ - compatible: brcm,ns-usb2-phy
+-- reg: iomem address range of DMU (Device Management Unit)
+-- reg-names: "dmu", the only needed & supported reg right now
++- syscon-cru: phandle to the CRU (Central Resource Unit) syscon
+ - clocks: USB PHY reference clock
+ - clock-names: "phy-ref-clk", the only needed & supported clock right now
+ 
++Deprecated:
++
++PHY block should not claim the whole DMU so such a binding has been deprecated.
++It only requires to access few CRU (a DMU subblock) registers and that should be
++handled with a syscon since CRU is a MFD (Multi-Function Device).
++
++- reg: iomem address range of DMU (Device Management Unit)
++- reg-names: "dmu", the only needed & supported reg right now
++
+ To initialize USB 2.0 PHY driver needs to setup PLL correctly. To do this it
+ requires passing phandle to the USB PHY reference clock.
+ 
+ Example:
++	dmu@1800c000 {
++		compatible = "simple-bus";
++		ranges = <0 0x1800c000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		cru: cru@100 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x100 0x1a4>;
++		};
++	};
++
+ 	usb2-phy {
+ 		compatible = "brcm,ns-usb2-phy";
+-		reg = <0x1800c000 0x1000>;
+-		reg-names = "dmu";
++		syscon-cru = <&cru>;
+ 		#phy-cells = <0>;
+ 		clocks = <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
+ 		clock-names = "phy-ref-clk";
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+2.13.7
