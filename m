@@ -1,182 +1,64 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
- LP5024/18 RGB LED driver
-Date: Mon, 7 Jan 2019 13:36:20 -0600
-Message-ID: <b027299c-a24a-abeb-8f92-97c32c13290b@ti.com>
-References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
- <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
- <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
- <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
- <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH 2/4] usb: musb: jz4740: Add support for devicetree
+Date: Mon, 7 Jan 2019 13:47:25 -0600
+Message-ID: <20190107194725.GB25910@uda0271908>
+References: <20181213144555.24031-1-paul@crapouillou.net>
+ <20181213144555.24031-2-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181213144555.24031-2-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, od@zcrc.me
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+Hi,
 
-On 1/7/19 1:13 PM, Jacek Anaszewski wrote:
-> On 1/6/19 4:52 PM, Jacek Anaszewski wrote:
->> Hi Pavel,
->>
->> On 1/5/19 11:12 PM, Pavel Machek wrote:
->>> Hi!
->>>
->>>>> Grab yourself an RGB LED and play with it; you'll see what the
->>>>> problems are. It is hard to explain colors over email...
->>>>
->>>> Video [0] gives some overview of lp5024 capabilities.
->>>>
->>>> I don't see any problems in exposing separate red,green,blue
->>>> files and brightness for the devices with hardware support for
->>>> that.
->>>
->>> Well, that's what we do today, as three separate LEDs, right?
->>
->> No. It doesn't allow for setting color intensity by having
->> the color fixed beforehand. Below is relevant excerpt from
->> the lp5024 documentation. This is not something that can be
->> mapped to RGB color space, but rather to HSV/HSL, with the
->> reservation that the hardware implementation uses PWM
->> for setting color intensity.
->>
->> <quote>
->> 8.3.1.2 Independent Intensity Control Per RGB LED Module
->>
->> When color is fixed, the independent intensity-control is used to
->> achieve accurate and flexible dimming control for every RGB LED module.
->>
->> 8.3.1.2.1 Intensity-Control Register Configuration
->>
->> Every three consecutive output channels are assigned to their respective
->> intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
->> and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
->> connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
->> device allows 256-step intensity control for each RGB LED module, which
->> helps achieve a smooth dimming effect.
->> </quote>
->>
->>> I don't have problem with that, either; other drivers already do
->>> that. He's free to use existing same interface.
->>>
->>> But that is insufficient, as it does not allow simple stuff, such as
->>> turning led "white".
->>>
->>> So... perhaps we should agree on requirements, first, and then we can
->>> discuss solutions?
->>>
->>> Requirements for RGB LED interface:
->>>
->>> 1) Userspace should be able to set the white color
->>>
->>> 2) Userspace should be able to arbitrary color from well known list
->>> and it should approximately match what would CRT, LCD or OLED monitor display
->>
->> The difference is that monitor display driver is pre-calibrated
->> for given display by the manufacturer. With the LED controllers the
->> manufacturer has no control over what LEDs will be connected to the
->> iouts. Therefore it should be not surprising that colors produced
->> by custom LEDs are not as user would expect when comparing to
->> the RGB color displayed on the monitor display.
->>
->> TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
->> that show how to produce various patterns with use of the reference
->> board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
->>
->> Document [0] mentions also specific "Design considerations" in the
->> chapter 2.2:
->>
->> <quote>
->> Several considerations are taken into account for this particular design:
->> • LED map (ring) for meeting the requirement of popular human-machine interaction style.
->> • LED size, numbers and the diffuse design for meeting lighting pattern uniformity.
->> • Analog dimming in the difference ambient light lux without losing dimming resolution in lighting pattern.
->>
->> These considerations apply to most human-machine interaction end equipment with day and night vision
->> designs in some way, but the designer must decide the particular considerations to take into account for a
->> specific design.
->> </quote>
->>
->> This renders your requirement 2) infeasible with use of custom LEDs
->> any fixed algorithm, since the final effect will always heavily depend
+On Thu, Dec 13, 2018 at 03:45:53PM +0100, Paul Cercueil wrote:
+> Add support for probing the driver from devicetree.
 > 
-> Typo here: s/any fixed/and fixed/
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> ---
+>  drivers/usb/musb/jz4740.c | 7 +++++++
+>  1 file changed, 7 insertions(+)
 > 
->> on the LED circuit design.
->>
->>>
->>>      2a) LEDs probably slightly change color as they age. That's out of
->>>      scope, unless the variation is much greater than on monitors.
->>>
->>>      2b) Manufacturing differences cause small color variation. Again,
->>>      that's out of scope, unless the variation is much greater than on
->>>      monitors.
->>>
->>> Nice to have features:
->>>
->>> 3) Full range of available colors/intensities should be available to
->>> userspace
->>>
->>> 4) Interface should work well with existing triggers
->>>
->>> 5) It would be nice if userland knew how many lumens are produced at
->>> each wavelength for each setting (again, minus aging and manufacturing
->>> variations).
->>>
->>> 6) Complexity of math in kernel should be low, and preferably it
->>> should be integer or fixed point
->>>
->>> Problems:
->>>
->>> a) RGB LEDs are usually not balanced. Setting 100% PWM on
->>> red/green/blue channels will result in nothing close to white
->>> light. In fact, to get white light on N900, blue and green channel's
->>> PWM needs to be set pretty low, as in 5%.
->>>
->>> b) LED class does not define any relation between "brightness" in
->>> sysfs and ammount of light in lumens. Some drivers use close to linear
->>> relation, some use exponential relation. Human eyes percieve logarithm
->>> of lumens. RGB color model uses even more complex function.
->>>
->>> c) Except for white LEDs, LEDs are basically sources of single
->>> wavelength of light, while CRTs and LCDs produce broader
->>> spectrums.
->>>
->>> d) RG, RGBW and probably other LED combinations exist.
->>>
->>> e) Not all "red" LEDs will produce same wavelength. Similar
->>> differences will exist for other colors.
->>>
->>> f) We have existing RGB LEDs represented as three separate
->>> monochromatic LEDs in sysfs.
->>
->> One general question: do you have any solutions in store?
->>
->> [0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
->> [1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
->>
-> 
+> diff --git a/drivers/usb/musb/jz4740.c b/drivers/usb/musb/jz4740.c
+> index 04d8b2bc205a..9a2cebcac260 100644
+> --- a/drivers/usb/musb/jz4740.c
+> +++ b/drivers/usb/musb/jz4740.c
+> @@ -10,6 +10,7 @@
+>  #include <linux/errno.h>
+>  #include <linux/kernel.h>
+>  #include <linux/module.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/usb/usb_phy_generic.h>
+>  
+> @@ -188,11 +189,17 @@ static int jz4740_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static const struct of_device_id jz4740_musb_of_match[] = {
+> +	{ .compatible = "ingenic,jz4740-musb" },
+> +	{},
+> +};
 
-I just wanted to point out that there are 4 total devices right now that use the same mapping
+should be wrapped by '#ifdef CONFIG_OF'?
 
-LP5018, LP5024, LP5030 and the LP5036.
+miss MODULE_DEVICE_TABLE()
 
-I can implement what ever we would like to I just need to know what to design against.
+> +
+>  static struct platform_driver jz4740_driver = {
+>  	.probe		= jz4740_probe,
+>  	.remove		= jz4740_remove,
+>  	.driver		= {
+>  		.name	= "musb-jz4740",
+> +		.of_match_table = of_match_ptr(jz4740_musb_of_match),
+>  	},
+>  };
+>  
 
-But keep in mind I still need to invest my time in the other TI-lmu patches on my list to complete.
-
-Dan
-
--- 
-------------------
-Dan Murphy
+Regards,
+-Bin.
