@@ -1,173 +1,49 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
- LP5024/18 RGB LED driver
-Date: Mon, 7 Jan 2019 20:13:43 +0100
-Message-ID: <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
-References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
- <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
- <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
- <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
+From: Vijay Khemka <vijaykhemka@fb.com>
+Subject: Re: [Potential Spoof] Re: [PATCH v2 4/4] ARM: dts: aspeed: Add lpc
+ ctrl for Facebook
+Date: Mon, 7 Jan 2019 19:18:06 +0000
+Message-ID: <87110C25-B836-4DD0-813E-41745EB909FA@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
 Content-Language: en-US
+Content-ID: <A3CF9BDE5A2E8D49A7A02831FC01959A@namprd15.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/6/19 4:52 PM, Jacek Anaszewski wrote:
-> Hi Pavel,
-> 
-> On 1/5/19 11:12 PM, Pavel Machek wrote:
->> Hi!
->>
->>>> Grab yourself an RGB LED and play with it; you'll see what the
->>>> problems are. It is hard to explain colors over email...
->>>
->>> Video [0] gives some overview of lp5024 capabilities.
->>>
->>> I don't see any problems in exposing separate red,green,blue
->>> files and brightness for the devices with hardware support for
->>> that.
->>
->> Well, that's what we do today, as three separate LEDs, right?
-> 
-> No. It doesn't allow for setting color intensity by having
-> the color fixed beforehand. Below is relevant excerpt from
-> the lp5024 documentation. This is not something that can be
-> mapped to RGB color space, but rather to HSV/HSL, with the
-> reservation that the hardware implementation uses PWM
-> for setting color intensity.
-> 
-> <quote>
-> 8.3.1.2 Independent Intensity Control Per RGB LED Module
-> 
-> When color is fixed, the independent intensity-control is used to
-> achieve accurate and flexible dimming control for every RGB LED module.
-> 
-> 8.3.1.2.1 Intensity-Control Register Configuration
-> 
-> Every three consecutive output channels are assigned to their respective
-> intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
-> and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
-> connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
-> device allows 256-step intensity control for each RGB LED module, which
-> helps achieve a smooth dimming effect.
-> </quote>
-> 
->> I don't have problem with that, either; other drivers already do
->> that. He's free to use existing same interface.
->>
->> But that is insufficient, as it does not allow simple stuff, such as
->> turning led "white".
->>
->> So... perhaps we should agree on requirements, first, and then we can
->> discuss solutions?
->>
->> Requirements for RGB LED interface:
->>
->> 1) Userspace should be able to set the white color
->>
->> 2) Userspace should be able to arbitrary color from well known list
->> and it should approximately match what would CRT, LCD or OLED monitor 
->> display
-> 
-> The difference is that monitor display driver is pre-calibrated
-> for given display by the manufacturer. With the LED controllers the
-> manufacturer has no control over what LEDs will be connected to the
-> iouts. Therefore it should be not surprising that colors produced
-> by custom LEDs are not as user would expect when comparing to
-> the RGB color displayed on the monitor display.
-> 
-> TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
-> that show how to produce various patterns with use of the reference
-> board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
-> 
-> Document [0] mentions also specific "Design considerations" in the
-> chapter 2.2:
-> 
-> <quote>
-> Several considerations are taken into account for this particular design:
-> • LED map (ring) for meeting the requirement of popular human-machine 
-> interaction style.
-> • LED size, numbers and the diffuse design for meeting lighting pattern 
-> uniformity.
-> • Analog dimming in the difference ambient light lux without losing 
-> dimming resolution in lighting pattern.
-> 
-> These considerations apply to most human-machine interaction end 
-> equipment with day and night vision
-> designs in some way, but the designer must decide the particular 
-> considerations to take into account for a
-> specific design.
-> </quote>
-> 
-> This renders your requirement 2) infeasible with use of custom LEDs
-> any fixed algorithm, since the final effect will always heavily depend
-
-Typo here: s/any fixed/and fixed/
-
-> on the LED circuit design.
-> 
->>
->>      2a) LEDs probably slightly change color as they age. That's out of
->>      scope, unless the variation is much greater than on monitors.
->>
->>      2b) Manufacturing differences cause small color variation. Again,
->>      that's out of scope, unless the variation is much greater than on
->>      monitors.
->>
->> Nice to have features:
->>
->> 3) Full range of available colors/intensities should be available to
->> userspace
->>
->> 4) Interface should work well with existing triggers
->>
->> 5) It would be nice if userland knew how many lumens are produced at
->> each wavelength for each setting (again, minus aging and manufacturing
->> variations).
->>
->> 6) Complexity of math in kernel should be low, and preferably it
->> should be integer or fixed point
->>
->> Problems:
->>
->> a) RGB LEDs are usually not balanced. Setting 100% PWM on
->> red/green/blue channels will result in nothing close to white
->> light. In fact, to get white light on N900, blue and green channel's
->> PWM needs to be set pretty low, as in 5%.
->>
->> b) LED class does not define any relation between "brightness" in
->> sysfs and ammount of light in lumens. Some drivers use close to linear
->> relation, some use exponential relation. Human eyes percieve logarithm
->> of lumens. RGB color model uses even more complex function.
->>
->> c) Except for white LEDs, LEDs are basically sources of single
->> wavelength of light, while CRTs and LCDs produce broader
->> spectrums.
->>
->> d) RG, RGBW and probably other LED combinations exist.
->>
->> e) Not all "red" LEDs will produce same wavelength. Similar
->> differences will exist for other colors.
->>
->> f) We have existing RGB LEDs represented as three separate
->> monochromatic LEDs in sysfs.
-> 
-> One general question: do you have any solutions in store?
-> 
-> [0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
-> [1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
-> 
-
--- 
-Best regards,
-Jacek Anaszewski
+UGxlYXNlIG1lcmdlIHRoZXNlIHBhdGNoZXMgaW4gdXBzdHJlYW0ga2VybmVsLg0KDQpSZWdhcmRz
+DQotVmlqYXkNCg0K77u/T24gMTIvMjAvMTgsIDEwOjA2IEFNLCAiTGludXgtYXNwZWVkIG9uIGJl
+aGFsZiBvZiBWaWpheSBLaGVta2EiIDxsaW51eC1hc3BlZWQtYm91bmNlcyt2aWpheWtoZW1rYT1m
+Yi5jb21AbGlzdHMub3psYWJzLm9yZyBvbiBiZWhhbGYgb2YgdmlqYXlraGVta2FAZmIuY29tPiB3
+cm90ZToNCg0KICAgIEpvZWwsIENhbiB5b3UgcGxlYXNlIHRha2UgY2FyZSBvZiB0aGVzZSBwYXRj
+aGVzIG1lcmdlLg0KICAgIA0KICAgIE9uIDEyLzE3LzE4LCAxMjowNCBQTSwgIlZpamF5IEtoZW1r
+YSIgPHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQogICAgDQogICAgICAgIEFkZGVkIGxwYyBj
+dHJsIGRldmljZSB0byBlbmFibGUgTFBDIGNsb2NrIGluIEZhY2Vib29rDQogICAgICAgIFRpb2dh
+cGFzcyBkZXZpY2UgdHJlZS4NCiAgICAgICAgDQogICAgICAgIFNpZ25lZC1vZmYtYnk6IFZpamF5
+IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgICAgICAtLS0NCiAgICAgICAgIC4uLi9i
+b290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHMgIHwgMTcgKysrKysrKysr
+KysrKysrKysNCiAgICAgICAgIDEgZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspDQogICAg
+ICAgIA0KICAgICAgICBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1m
+YWNlYm9vay10aW9nYXBhc3MuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNl
+Ym9vay10aW9nYXBhc3MuZHRzDQogICAgICAgIGluZGV4IDczZTU4YTgyMTYxMy4uZWY3ODc1YjU0
+NTYyIDEwMDY0NA0KICAgICAgICAtLS0gYS9hcmNoL2FybS9ib290L2R0cy9hc3BlZWQtYm1jLWZh
+Y2Vib29rLXRpb2dhcGFzcy5kdHMNCiAgICAgICAgKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNw
+ZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgICAgIEBAIC0yMiw2ICsyMiwxNyBA
+QA0KICAgICAgICAgCQlyZWcgPSA8MHg4MDAwMDAwMCAweDIwMDAwMDAwPjsNCiAgICAgICAgIAl9
+Ow0KICAgICAgICAgDQogICAgICAgICsJcmVzZXJ2ZWQtbWVtb3J5IHsNCiAgICAgICAgKwkJI2Fk
+ZHJlc3MtY2VsbHMgPSA8MT47DQogICAgICAgICsJCSNzaXplLWNlbGxzID0gPDE+Ow0KICAgICAg
+ICArCQlyYW5nZXM7DQogICAgICAgICsNCiAgICAgICAgKwkJZmxhc2hfbWVtb3J5OiByZWdpb25A
+OTgwMDAwMDAgew0KICAgICAgICArCQkJbm8tbWFwOw0KICAgICAgICArCQkJcmVnID0gPDB4OTgw
+MDAwMDAgMHgwMDAwMTAwMD47IC8qIDRLICovDQogICAgICAgICsJCX07DQogICAgICAgICsJfTsN
+CiAgICAgICAgKw0KICAgICAgICAgCWlpby1od21vbiB7DQogICAgICAgICAJCWNvbXBhdGlibGUg
+PSAiaWlvLWh3bW9uIjsNCiAgICAgICAgIAkJaW8tY2hhbm5lbHMgPSA8JmFkYyAwPiwgPCZhZGMg
+MT4sIDwmYWRjIDI+LCA8JmFkYyAzPiwNCiAgICAgICAgQEAgLTU0LDYgKzY1LDEyIEBADQogICAg
+ICAgICAJfTsNCiAgICAgICAgIH07DQogICAgICAgICANCiAgICAgICAgKyZscGNfY3RybCB7DQog
+ICAgICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgICAgICArCW1lbW9yeS1yZWdpb24gPSA8JmZs
+YXNoX21lbW9yeT47DQogICAgICAgICsJZmxhc2ggPSA8JnNwaTE+Ow0KICAgICAgICArfTsNCiAg
+ICAgICAgKw0KICAgICAgICAgJnVhcnQxIHsNCiAgICAgICAgIAkvLyBIb3N0IENvbnNvbGUNCiAg
+ICAgICAgIAlzdGF0dXMgPSAib2theSI7DQogICAgICAgIC0tIA0KICAgICAgICAyLjE3LjENCiAg
+ICAgICAgDQogICAgICAgIA0KICAgIA0KICAgIA0KDQo=
