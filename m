@@ -1,79 +1,124 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH] dsa device tree bindings: fix typo and wrong example
-Date: Mon, 7 Jan 2019 10:53:52 -0800
-Message-ID: <a998e0a6-120a-a096-88ca-aaaa67e0a4a2@gmail.com>
-References: <20181115195111.GA9946@amd> <20181206130051.GA22343@amd>
- <20181206130513.GE22343@amd> <819595ee-9f3e-b7a2-6139-1ba265137f62@ysoft.com>
- <20190107184944.GA17979@amd>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH v3 1/7] Input: tm2-touchkey: Add support for midas touchkey
+Date: Mon,  7 Jan 2019 19:53:40 +0100
+Message-ID: <20190107185346.30184-2-pawel.mikolaj.chmiel@gmail.com>
+References: <20190107185346.30184-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107184944.GA17979@amd>
-Content-Language: en-US
+In-Reply-To: <20190107185346.30184-1-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, =?UTF-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>, trivial@kernel.org
-Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "vivien.didelot@savoirfairelinux.com" <vivien.didelot@savoirfairelinux.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "buytenh@marvell.com" <buytenh@marvell.com>, "buytenh@wantstofly.org" <buytenh@wantstofly.org>, "nico@marvell.com" <nico@marvell.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel list <linux-kernel@vger.kernel.org>
+To: dmitry.torokhov@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, simon@lineageos.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/7/19 10:49 AM, Pavel Machek wrote:
-> On Thu 2018-12-06 13:28:56, Vokáč Michal wrote:
->> On 6.12.2018 14:05, Pavel Machek wrote:
->>>      
->>> Fix typo and fix compatible value that is not actually permitted by the
->>> description in the example.
->>
->> Ahoj Pavle, I think the subject should be more like:
->>
->> 	"dt-bindings: net: dsa: ..."
-> 
-> Ahoj!
-> 
-> Well, retrying with different subject only makes sense if someone is
-> interested. Rob, Andrew -- can you take the patch?
-> 
-> Do you want me to edit the subject or can you just edit the subject
-> while applying?
+From: Simon Shields <simon@lineageos.org>
 
-The next steps would likely be for you to resubmit this patch with a
-re-subjected patch and I am fairly sure David can pick it up right away
-since this is not a functional change.
+The touchkey on midas boards is almost identical.
+The only real difference is that it uses the same register for both
+keycode and base.
 
-> 
-> Thanks,
-> 								Pavel
-> 
->> BR, Michal
->>
->>>     
->>> Signed-off-by: Pavel Machek <pavel@ucw.cz>
->>>
->>> diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Documentation/devicetree/bindings/net/dsa/marvell.txt
->>> index feb007af13cb..abf1be036ac5 100644
->>> --- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
->>> +++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
->>> @@ -41,7 +41,7 @@ Optional properties:
->>>   - mdio			: Container of PHY and devices on the switches MDIO
->>>   			  bus.
->>>   - mdio?		: Container of PHYs and devices on the external MDIO
->>> -			  bus. The node must contains a compatible string of
->>> +			  bus. The node must contain a compatible string of
->>>   			  "marvell,mv88e6xxx-mdio-external"
->>>   
->>>   Example:
->>> @@ -80,7 +80,7 @@ Example:
->>>   		#interrupt-cells = <2>;
->>>   
->>>   		switch0: switch@0 {
->>> -			compatible = "marvell,mv88e6390";
->>> +			compatible = "marvell,mv88e6190";
->>>   			reg = <0>;
->>>   			reset-gpios = <&gpio5 1 GPIO_ACTIVE_LOW>;
->>>   
->>>
->>>
-> 
+Signed-off-by: Simon Shields <simon@lineageos.org>
+Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+---
+Changes from v1:
+  - Droped separate name changes
+  - Added missing const in few places
+  - Removed redundant cast
+---
+ drivers/input/keyboard/tm2-touchkey.c | 34 +++++++++++++++++++++++----
+ 1 file changed, 29 insertions(+), 5 deletions(-)
 
-
+diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
+index abc266e40e17..5a1fe08bdd76 100644
+--- a/drivers/input/keyboard/tm2-touchkey.c
++++ b/drivers/input/keyboard/tm2-touchkey.c
+@@ -22,12 +22,12 @@
+ #include <linux/leds.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
++#include <linux/of_device.h>
+ #include <linux/pm.h>
+ #include <linux/regulator/consumer.h>
+ 
+ #define TM2_TOUCHKEY_DEV_NAME		"tm2-touchkey"
+-#define TM2_TOUCHKEY_KEYCODE_REG	0x03
+-#define TM2_TOUCHKEY_BASE_REG		0x00
++
+ #define TM2_TOUCHKEY_CMD_LED_ON		0x10
+ #define TM2_TOUCHKEY_CMD_LED_OFF	0x20
+ #define TM2_TOUCHKEY_BIT_PRESS_EV	BIT(3)
+@@ -40,12 +40,28 @@ enum {
+ 	TM2_TOUCHKEY_KEY_BACK,
+ };
+ 
++struct touchkey_variant {
++	u8 keycode_reg;
++	u8 base_reg;
++};
++
+ struct tm2_touchkey_data {
+ 	struct i2c_client *client;
+ 	struct input_dev *input_dev;
+ 	struct led_classdev led_dev;
+ 	struct regulator *vdd;
+ 	struct regulator_bulk_data regulators[2];
++	const struct touchkey_variant *variant;
++};
++
++static const struct touchkey_variant tm2_touchkey_variant = {
++	.keycode_reg = 0x03,
++	.base_reg = 0x00,
++};
++
++static const struct touchkey_variant midas_touchkey_variant = {
++	.keycode_reg = 0x00,
++	.base_reg = 0x00,
+ };
+ 
+ static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
+@@ -66,7 +82,7 @@ static void tm2_touchkey_led_brightness_set(struct led_classdev *led_dev,
+ 
+ 	regulator_set_voltage(touchkey->vdd, volt, volt);
+ 	i2c_smbus_write_byte_data(touchkey->client,
+-				  TM2_TOUCHKEY_BASE_REG, data);
++				  touchkey->variant->base_reg, data);
+ }
+ 
+ static int tm2_touchkey_power_enable(struct tm2_touchkey_data *touchkey)
+@@ -99,7 +115,7 @@ static irqreturn_t tm2_touchkey_irq_handler(int irq, void *devid)
+ 	int key;
+ 
+ 	data = i2c_smbus_read_byte_data(touchkey->client,
+-					TM2_TOUCHKEY_KEYCODE_REG);
++					touchkey->variant->keycode_reg);
+ 	if (data < 0) {
+ 		dev_err(&touchkey->client->dev,
+ 			"failed to read i2c data: %d\n", data);
+@@ -153,6 +169,8 @@ static int tm2_touchkey_probe(struct i2c_client *client,
+ 	touchkey->client = client;
+ 	i2c_set_clientdata(client, touchkey);
+ 
++	touchkey->variant = of_device_get_match_data(&client->dev);
++
+ 	touchkey->regulators[0].supply = "vcc";
+ 	touchkey->regulators[1].supply = "vdd";
+ 	error = devm_regulator_bulk_get(&client->dev,
+@@ -262,7 +280,13 @@ static const struct i2c_device_id tm2_touchkey_id_table[] = {
+ MODULE_DEVICE_TABLE(i2c, tm2_touchkey_id_table);
+ 
+ static const struct of_device_id tm2_touchkey_of_match[] = {
+-	{ .compatible = "cypress,tm2-touchkey", },
++	{
++		.compatible = "cypress,tm2-touchkey",
++		.data = &tm2_touchkey_variant,
++	}, {
++		.compatible = "cypress,midas-touchkey",
++		.data = &midas_touchkey_variant,
++	},
+ 	{ },
+ };
+ MODULE_DEVICE_TABLE(of, tm2_touchkey_of_match);
 -- 
-Florian
+2.17.1
