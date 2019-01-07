@@ -1,45 +1,116 @@
-From: Srinath Mannam <srinath.mannam@broadcom.com>
-Subject: Re: [PATCH v6 1/3] dt-bindings: thermal: Add binding document for SR thermal
-Date: Mon, 7 Jan 2019 10:11:21 +0530
-Message-ID: <CABe79T4Q=76NRx=uj1LQg9Wu54=Sj+F68Tk6S5nNX5-WHzCsNw@mail.gmail.com>
-References: <1546505734-24527-1-git-send-email-srinath.mannam@broadcom.com>
- <1546505734-24527-2-git-send-email-srinath.mannam@broadcom.com> <20190103170117.GA11469@bogus>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/8 v2] Documentation: bindings: k3dma: Add binding for
+ dma-avail-chan
+Date: Mon, 7 Jan 2019 11:54:27 +0530
+Message-ID: <20190107062427.GY13372@vkoul-mobl.Dlink>
+References: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
+ <1546635388-13795-3-git-send-email-john.stultz@linaro.org>
+ <20190105040030.GF2477@Mani-XPS-13-9360>
+ <CALAqxLUZ=6_tELtZPEjYwV+BNNBcZj4Z=dq9UyrRXuPhs_uGUw@mail.gmail.com>
+ <20190105045320.GA3761@Mani-XPS-13-9360>
+ <20190105134610.GX13372@vkoul-mobl.Dlink>
+ <20190105140826.GA28029@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103170117.GA11469@bogus>
+Content-Disposition: inline
+In-Reply-To: <20190105140826.GA28029@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On 05-01-19, 19:38, Manivannan Sadhasivam wrote:
+> Hi Vinod,
+> 
+> On Sat, Jan 05, 2019 at 07:16:10PM +0530, Vinod Koul wrote:
+> > On 05-01-19, 10:23, Manivannan Sadhasivam wrote:
+> > > On Fri, Jan 04, 2019 at 08:39:34PM -0800, John Stultz wrote:
+> > > > On Fri, Jan 4, 2019 at 8:00 PM Manivannan Sadhasivam
+> > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > >
+> > > > > Hi John,
+> > > > >
+> > > > > On Fri, Jan 04, 2019 at 12:56:22PM -0800, John Stultz wrote:
+> > > > > > Some dma channels can be reserved for secure mode or other
+> > > > > > hardware on the SoC, so provide a binding for a bitmask
+> > > > > > listing the available channels for the kernel to use.
+> > > > > >
+> > > > > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > > > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > > > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > > > > Cc: Tanglei Han <hantanglei@huawei.com>
+> > > > > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+> > > > > > Cc: Ryan Grachek <ryan@edited.us>
+> > > > > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > > Cc: dmaengine@vger.kernel.org
+> > > > > > Cc: devicetree@vger.kernel.org
+> > > > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
+> > > > > >  1 file changed, 3 insertions(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
+> > > > > > index 10a2f15..1c466c1 100644
+> > > > > > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+> > > > > > @@ -14,6 +14,9 @@ Required properties:
+> > > > > >               have specific request line
+> > > > > >  - clocks: clock required
+> > > > > >
+> > > > > > +Optional properties:
+> > > > > > +- dma-avail-chan: Bitmask of available physical channels
+> > > > > > +
+> > > > >
+> > > > > This property looks too generic. Since this is specific to HiSi SoCs,
+> > > > > this could be "hisi-dma-avail-chan"?
+> > > > 
+> > > > I'm fine to change it, but I'm not sure I fully understand the
+> > > > rational. Can you help me understand?
+> > > > Are device node-binding names supposed to have global scope? I assumed
+> > > > the node property names are basically scoped to the entry?
+> > > 
+> > > IIUC properties documented in subsystem binding (dma.txt in this case)
+> > > will have global scope. Those which are not documented in this binding
+> > > are specific to vendor IPs and should be prefixed with the vendor
+> > > prefix (hisi in this case).
+> > > 
+> > > > Further, having some dma channels be reserved doesn't seem to be too
+> > > > unique a concept, so I'm not sure what we gain long term by prefixing
+> > > > it?
+> > > > 
+> > > 
+> > > Right, but this brings up the point of having this functionality in
+> > > generic DMA engine so that the DMA controller drivers need not handle.
+> > > So either we should move this available channel check to DMA Engine
+> > > and document the property in dma.txt so that other IPs can also use it
+> > > or keep the functionality in K3 driver and use HiSi prefix for the
+> > > property.
+> > > 
+> > > But I'd like to hear Vinod/Rob's opinion on this!
+> > 
+> > So there are two parts, first is if this new property of using 'some'
+> > channels of controller is generic enough, the answer is unfortunately
+> > yes, so we should move this to dma.txt as a generic property
+> > 
+> > But I don't agree the dmaengine core should handle it, we may add
+> > helpers, but controllers registers N channels and they would do so, core
+> > should not do filtering
+> > 
+> 
+> Okay. But won't it create ambiguity? What if a new driver developer
+> assmes that he can use this property to filter the channels for his own
+> DMA controller? Since we are _explicitly_ stating that these channels
+> should be filtered, why the dmaengine core can't handle it?
+> 
+> If the property is generic, then it makes sense to keep the
+> functionality also generic.
 
-Thank you for the note. I will take care from next time onward.
+Core doesnt have a view of channels to be filtered, it looks at N
+channels getting registered and works on those.
 
-Thanks & Regards,
-Srinath.
+Till now folks do not create channels for 'filtered' ones and register
+the ones kernel can use..
 
-On Thu, Jan 3, 2019 at 10:31 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Thu,  3 Jan 2019 14:25:32 +0530, Srinath Mannam wrote:
-> > From: Pramod Kumar <pramod.kumar@broadcom.com>
-> >
-> > Add binding document for supported thermal implementation
-> > in Stingray.
-> >
-> > Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
-> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
-> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> > ---
-> >  .../bindings/thermal/brcm,sr-thermal.txt           | 105 +++++++++++++++++++++
-> >  1 file changed, 105 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
-> >
->
-> Please add Acked-by/Reviewed-by tags when posting new versions. However,
-> there's no need to repost patches *only* to add the tags. The upstream
-> maintainer will do that for acks received on the version they apply.
->
-> If a tag was not added on purpose, please state why and what changed.
+-- 
+~Vinod
