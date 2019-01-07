@@ -1,120 +1,36 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
-Date: Mon, 7 Jan 2019 14:29:29 +0100
-Message-ID: <20190107132929.ksyajmzn2gzr6oep@flea>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
- <20181220125438.11700-3-jagan@amarulasolutions.com>
- <20181221130025.lbvw7yvy74brf3jn@flea>
- <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH RFC 4/5] usb: cdc-acm: Enable serdev support
+Date: Mon, 07 Jan 2019 14:48:26 +0100
+Message-ID: <1546868906.3037.37.camel@suse.com>
+References: <20190104112131.14451-1-afaerber@suse.de>
+         <20190104112131.14451-5-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="5v667uexziqiuyca"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBO5IZXQQKGQEK4A4MKY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190104112131.14451-5-afaerber@suse.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
+Cc: Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---5v667uexziqiuyca
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Mon, Dec 24, 2018 at 08:57:48PM +0530, Jagan Teki wrote:
-> On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
-> > > Unfortunately default CSI_SCLK rate cannot work properly to
-> > > drive the connected sensor interface, particularly on few
-> > > Allwinner SoC's like A64.
-> > >
-> > > So, add mod_rate quirk via driver data so-that the respective
-> > > SoC's which require to alter the default mod clock rate can assign
-> > > the operating clock rate.
-> > >
-> > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > ---
-> > >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
-> > >  1 file changed, 28 insertions(+), 6 deletions(-)
-> > >
-> > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > index ee882b66a5ea..fe002beae09c 100644
-> > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > @@ -15,6 +15,7 @@
-> > >  #include <linux/ioctl.h>
-> > >  #include <linux/module.h>
-> > >  #include <linux/of.h>
-> > > +#include <linux/of_device.h>
-> > >  #include <linux/platform_device.h>
-> > >  #include <linux/pm_runtime.h>
-> > >  #include <linux/regmap.h>
-> > > @@ -28,8 +29,13 @@
-> > >
-> > >  #define MODULE_NAME  "sun6i-csi"
-> > >
-> > > +struct sun6i_csi_variant {
-> > > +     unsigned long                   mod_rate;
-> > > +};
-> > > +
-> > >  struct sun6i_csi_dev {
-> > >       struct sun6i_csi                csi;
-> > > +     const struct sun6i_csi_variant  *variant;
-> > >       struct device                   *dev;
-> > >
-> > >       struct regmap                   *regmap;
-> > > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> > >               return PTR_ERR(sdev->clk_mod);
-> > >       }
-> > >
-> > > +     if (sdev->variant->mod_rate)
-> > > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
-> > > +
-> >
-> > It still doesn't make any sense to do it in the probe function...
+On Fr, 2019-01-04 at 12:21 +0100, Andreas Färber  wrote:
+> Switch from tty_port_register_device() to tty_port_register_device_serdev()
+> and from tty_unregister_device() to tty_port_unregister_device().
 > 
-> I'm not sure we discussed about the context wrt probe, we discussed
-> about exclusive put clock.
-
-https://lkml.org/lkml/2018/12/18/584
-
-"Doing it here is not really optimal either, since you'll put a
-constraint on the system (maintaining that clock at 300MHz), while
-it's not in use."
-
-> Since clocks were enabling in set_power and clock rate can be set
-> during probe in single time instead of setting it in set_power for
-> every power enablement. anything wrong with that.
-
-See above.
-
-Plus, a clock running draws power. It doesn't really make sense to
-draw power for something that is unused.
-
-> > We discussed this in the previous iteration already.
-> >
-> > What we didn't discuss is the variant function that you introduce,
-> > while the previous approach was enough.
+> On removal of a serdev driver sometimes count mismatch warnings were seen:
 > 
-> We discussed about clk_rate_exclusive_put, and that even handle it in
-> .remove right? so I have variant to handle it in sun6i_csi_remove.
+>   ttyACM ttyACM0: tty_hangup: tty->count(1) != (#fd's(0) + #kopen's(0))
+>   ttyACM ttyACM0: tty_port_close_start: tty->count = 1 port count = 0
+> 
+> Note: The serdev drivers appear to probe asynchronously as soon as they
+> are registered. Should the USB quirks in probe be moved before registration?
+> No noticeable difference for the devices at hand.
 
-We indeed discussed the clk_rate_exclusive_put. However, you chose to
-implement it using a variant structure which really isn't needed.
+That is quite drastic a change.
+Johan, how complete in terms of features is serdev?
 
-Maxime
+Are you refering to CLEAR_HALT_CONDITIONS in terms of quirks?
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---5v667uexziqiuyca--
+	Regards
+		Oliver
