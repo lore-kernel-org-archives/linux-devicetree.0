@@ -1,92 +1,68 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH v3 14/16] power: supply: olpc_battery: Use devm_power_supply_register()
-Date: Mon,  7 Jan 2019 19:34:37 +0100
-Message-ID: <20190107183439.50626-15-lkundrak@v3.sk>
-References: <20190107183439.50626-1-lkundrak@v3.sk>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Consistent capitalization of "device tree"?
+Date: Mon, 7 Jan 2019 19:37:11 +0100
+Message-ID: <20190107183711.GA5671@amd>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="W/nzBZO5zC0uMSeA"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107183439.50626-1-lkundrak@v3.sk>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: James Cameron <quozl@laptop.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, x86@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>, Sebastian Reichel <sebastian.reichel@collabora.com>
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, corbet@lwn.net, linux-doc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This simplifies the error handling.
 
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-Reviewed-by: Sebastian Reichel <sebastian.reichel@collabora.com>
+--W/nzBZO5zC0uMSeA
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-Changes since v1:
-- This was split off the "power: supply: olpc_battery: Move priv data to
-  a struct" patch.
+Is it "Device Tree" or "device tree"?
+   =20
+ pavel@duo:/data/l/k/Documentation$ grep -r "Device Tree"  | wc -l
+ 235
+ pavel@duo:/data/l/k/Documentation$ grep -r "device tree"  | wc -l
+ 595
+   =20
+I guess it would be nice to make it consistent. I guess "device tree"
+is preffered?
 
- drivers/power/supply/olpc_battery.c | 19 +++++--------------
- 1 file changed, 5 insertions(+), 14 deletions(-)
+Should we do something like this?
+								Pavel
 
-diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/o=
-lpc_battery.c
-index c024aae01cb1..0c9f7ce6b26b 100644
---- a/drivers/power/supply/olpc_battery.c
-+++ b/drivers/power/supply/olpc_battery.c
-@@ -633,7 +633,7 @@ static int olpc_battery_probe(struct platform_device =
-*pdev)
- 	psy_cfg.of_node =3D pdev->dev.of_node;
- 	psy_cfg.drv_data =3D data;
+Signed-off-by: Pavel Machek <pavel@ucw.cz>
+   =20
+diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/dev=
+icetree/overlay-notes.txt
+index 725fb8d..cc5f507 100644
+--- a/Documentation/devicetree/overlay-notes.txt
++++ b/Documentation/devicetree/overlay-notes.txt
+@@ -8,7 +8,7 @@ companion document to Documentation/devicetree/dynamic-reso=
+lution-notes.txt[1]
+ How overlays work
+ -----------------
 =20
--	data->olpc_ac =3D power_supply_register(&pdev->dev, &olpc_ac_desc, &psy=
-_cfg);
-+	data->olpc_ac =3D devm_power_supply_register(&pdev->dev, &olpc_ac_desc,=
- &psy_cfg);
- 	if (IS_ERR(data->olpc_ac))
- 		return PTR_ERR(data->olpc_ac);
-=20
-@@ -648,15 +648,13 @@ static int olpc_battery_probe(struct platform_devic=
-e *pdev)
- 		olpc_bat_desc.num_properties =3D ARRAY_SIZE(olpc_xo1_bat_props);
- 	}
-=20
--	data->olpc_bat =3D power_supply_register(&pdev->dev, &olpc_bat_desc, &p=
-sy_cfg);
--	if (IS_ERR(olpc_bat)) {
--		ret =3D PTR_ERR(olpc_bat);
--		goto battery_failed;
--	}
-+	data->olpc_bat =3D devm_power_supply_register(&pdev->dev, &olpc_bat_des=
-c, &psy_cfg);
-+	if (IS_ERR(data->olpc_bat))
-+		return PTR_ERR(data->olpc_bat);
-=20
- 	ret =3D device_create_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
- 	if (ret)
--		goto eeprom_failed;
-+		return ret;
-=20
- 	ret =3D device_create_file(&data->olpc_bat->dev, &olpc_bat_error);
- 	if (ret)
-@@ -671,10 +669,6 @@ static int olpc_battery_probe(struct platform_device=
- *pdev)
-=20
- error_failed:
- 	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
--eeprom_failed:
--	power_supply_unregister(data->olpc_bat);
--battery_failed:
--	power_supply_unregister(data->olpc_ac);
- 	return ret;
- }
-=20
-@@ -684,9 +678,6 @@ static int olpc_battery_remove(struct platform_device=
- *pdev)
-=20
- 	device_remove_file(&data->olpc_bat->dev, &olpc_bat_error);
- 	device_remove_bin_file(&data->olpc_bat->dev, &olpc_bat_eeprom);
--	power_supply_unregister(data->olpc_bat);
--	power_supply_unregister(data->olpc_ac);
--
- 	return 0;
- }
-=20
+-A Device Tree's overlay purpose is to modify the kernel's live tree, and
++A device tree's overlay purpose is to modify the kernel's live tree, and
+ have the modification affecting the state of the kernel in a way that
+ is reflecting the changes.
+ Since the kernel mainly deals with devices, any new device node that result
+
 --=20
-2.20.1
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--W/nzBZO5zC0uMSeA
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwznFcACgkQMOfwapXb+vIgYwCfTmcj844BEmwus3pL2tHXVvih
+hKwAn3Q//DngNjgqZmiFNmNlFCYcuUey
+=aXsV
+-----END PGP SIGNATURE-----
+
+--W/nzBZO5zC0uMSeA--
