@@ -1,50 +1,102 @@
-From: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
-Subject: [PATCH v2 3/4] dts: dps650ab: add dps650ab device tree
-Date: Mon, 7 Jan 2019 19:05:02 +0800
-Message-ID: <081a2f0f05bc92e67771f8103032c42d5fb5ffbb.1546851856.git.xiaoting.liu@hxt-semitech.com>
-References: <cover.1546851856.git.xiaoting.liu@hxt-semitech.com>
+From: Henry Chen <henryc.chen@mediatek.com>
+Subject: Re: [RFC RESEND PATCH 3/7] soc: mediatek: add support for the
+ performance state
+Date: Mon, 7 Jan 2019 19:06:34 +0800
+Message-ID: <1546859194.6818.129.camel@mtksdaap41>
+References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
+         <1546438198-1677-4-git-send-email-henryc.chen@mediatek.com>
+         <154655622671.15366.9695869469694306752@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1546851856.git.xiaoting.liu@hxt-semitech.com>
+In-Reply-To: <154655622671.15366.9695869469694306752@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: openbmc@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, shunyong.yang@hxt-semitech.com, dongsheng.wang@hxt-semitech.com, Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add dps650ab device tree to support power supply dps650ab driver
+On Thu, 2019-01-03 at 14:57 -0800, Stephen Boyd wrote:
+> Quoting Henry Chen (2019-01-02 06:09:54)
+> > @@ -187,6 +190,18 @@ struct scp_soc_data {
+> >         bool bus_prot_reg_update;
+> >  };
+> >  
+> > +BLOCKING_NOTIFIER_HEAD(scpsys_notifier_list);
+> 
+> static?
+OK
+> 
+> > +
+> > +int register_scpsys_notifier(struct notifier_block *nb)
+> > +{
+> > +       return blocking_notifier_chain_register(&scpsys_notifier_list, nb);
+> > +}
+> > +
+> > +int unregister_scpsys_notifier(struct notifier_block *nb)
+> > +{
+> > +       return blocking_notifier_chain_unregister(&scpsys_notifier_list, nb);
+> > +}
+> 
+> What is the notifier for?
+It used to notifier the DVFSRC driver that performance stat was changed.
+> 
+> > +
+> >  static int scpsys_domain_is_on(struct scp_domain *scpd)
+> >  {
+> >         struct scp *scp = scpd->scp;
+> > @@ -536,6 +551,48 @@ static void init_clks(struct platform_device *pdev, struct clk **clk)
+> >                 clk[i] = devm_clk_get(&pdev->dev, clk_names[i]);
+> >  }
+> >  
+> > +static int mtk_pd_set_performance(struct generic_pm_domain *genpd,
+> > +                                 unsigned int state)
+> > +{
+> > +       int i;
+> > +       struct scp_domain *scpd =
+> > +               container_of(genpd, struct scp_domain, genpd);
+> > +       struct scp_event_data scpe;
+> > +       struct scp *scp = scpd->scp;
+> > +       struct genpd_onecell_data *pd_data = &scp->pd_data;
+> > +
+> > +       for (i = 0; i < pd_data->num_domains; i++) {
+> > +               if (genpd == pd_data->domains[i]) {
+> > +                       dev_dbg(scp->dev, "%d. %s = %d\n",
+> > +                               i, genpd->name, state);
+> > +                       break;
+> > +               }
+> > +       }
+> > +
+> > +       scpe.event_type = MTK_SCPSYS_PSTATE;
+> > +       scpe.genpd = genpd;
+> > +       scpe.domain_id = i;
+> > +       blocking_notifier_call_chain(&scpsys_notifier_list, state, &scpe);
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static unsigned int mtk_pd_get_performance(struct generic_pm_domain *genpd,
+> > +                                          struct dev_pm_opp *opp)
+> > +{
+> > +       struct device_node *np;
+> > +       unsigned int state;
+> > +
+> > +       np = dev_pm_opp_get_of_node(opp);
+> > +
+> > +       if (of_property_read_u32(np, "mtk,level", &state))
+> > +               return 0;
+> > +
+> > +       of_node_put(np);
+> 
+> The generic API that Rajendra is adding I guess will become even more
+> generic by assuming some sort of property like 'opp-level' or
+> 'performance-state' that is just some raw number.
+ok, I will follow the new property from Rajendra.
 
-Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
----
- arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
-
-diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-index bdfd8c9f3a7c..e7e59da6c9ae 100644
---- a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-@@ -173,6 +173,16 @@
-                        };
-                };
-        };
-+
-+       dps650ab@58 {
-+               compatible = "dps650ab";
-+               reg = <0x58>;
-+       };
-+
-+       dps650ab@59 {
-+               compatible = "dps650ab";
-+               reg = <0x59>;
-+       };
- };
-
- &i2c9 {
---
-1.8.3.1
-
-
-
-
-This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
+> > +
+> > +       return state;
+> > +}
+> > +
+> >  static struct scp *init_scp(struct platform_device *pdev,
+> >                         const struct scp_domain_data *scp_domain_data, int num,
+> >                         const struct scp_ctrl_reg *scp_ctrl_reg,
