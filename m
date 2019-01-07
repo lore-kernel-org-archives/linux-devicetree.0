@@ -1,41 +1,80 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH v3 3/7] Input: tm2-touchkey: Correct initial brightness
-Date: Mon,  7 Jan 2019 19:53:42 +0100
-Message-ID: <20190107185346.30184-4-pawel.mikolaj.chmiel@gmail.com>
-References: <20190107185346.30184-1-pawel.mikolaj.chmiel@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: xlnx: enable SPDIF driver build" to the asoc tree
+Date: Mon,  7 Jan 2019 18:57:43 +0000 (GMT)
+Message-ID: <20190107185743.B90241127491@debutante.sirena.org.uk>
+References: <1546538993-55473-4-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107185346.30184-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <1546538993-55473-4-git-send-email-maruthi.srinivas.bayyavarapu@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, pawel.mikolaj.chmiel@gmail.com, xc-racer2@live.ca, simon@lineageos.org
+To: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Cc: Mark Brown <broonie@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>Mark Brown <broonie@kernel.org>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Vishal Sagar <vsagar@xilinx.com>, Michal Simek <michal.simek@xilinx.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, alsa-devel@alsa-project.org, linux-arm-kernel@lists.infradead.orgalsa-devel@alsa-project.org
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+The patch
 
-Tm2-touchkey don't have brightness levels, but only on/off states,
-so replace LED_FULL with LED_ON.
+   ASoC: xlnx: enable SPDIF driver build
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+has been applied to the asoc tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+>From 47caf048a017ecc95cdd0802bc3b015a1559e601 Mon Sep 17 00:00:00 2001
+From: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Date: Thu, 3 Jan 2019 23:39:53 +0530
+Subject: [PATCH] ASoC: xlnx: enable SPDIF driver build
+
+Added SPDIF driver build related changes.
+
+Signed-off-by: Maruthi Srinivas Bayyavarapu <maruthi.srinivas.bayyavarapu@xilinx.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/input/keyboard/tm2-touchkey.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ sound/soc/xilinx/Kconfig  | 7 +++++++
+ sound/soc/xilinx/Makefile | 2 ++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/drivers/input/keyboard/tm2-touchkey.c b/drivers/input/keyboard/tm2-touchkey.c
-index 5a1fe08bdd76..0336789ab1bb 100644
---- a/drivers/input/keyboard/tm2-touchkey.c
-+++ b/drivers/input/keyboard/tm2-touchkey.c
-@@ -230,7 +230,7 @@ static int tm2_touchkey_probe(struct i2c_client *client,
- 
- 	/* led device */
- 	touchkey->led_dev.name = TM2_TOUCHKEY_DEV_NAME;
--	touchkey->led_dev.brightness = LED_FULL;
-+	touchkey->led_dev.brightness = LED_ON;
- 	touchkey->led_dev.max_brightness = LED_ON;
- 	touchkey->led_dev.brightness_set = tm2_touchkey_led_brightness_set;
- 
+diff --git a/sound/soc/xilinx/Kconfig b/sound/soc/xilinx/Kconfig
+index ac48d6a00c36..47f606b924e4 100644
+--- a/sound/soc/xilinx/Kconfig
++++ b/sound/soc/xilinx/Kconfig
+@@ -13,3 +13,10 @@ config SND_SOC_XILINX_AUDIO_FORMATTER
+           Select this option to enable Xilinx audio formatter
+           support. This provides DMA platform device support for
+           audio functionality.
++
++config SND_SOC_XILINX_SPDIF
++        tristate "Audio support for the the Xilinx SPDIF"
++        help
++          Select this option to enable Xilinx SPDIF Audio.
++          This provides playback and capture of SPDIF audio in
++          AES format.
+diff --git a/sound/soc/xilinx/Makefile b/sound/soc/xilinx/Makefile
+index 432693b1cc79..d79fd38b094b 100644
+--- a/sound/soc/xilinx/Makefile
++++ b/sound/soc/xilinx/Makefile
+@@ -2,3 +2,5 @@ snd-soc-xlnx-i2s-objs      := xlnx_i2s.o
+ obj-$(CONFIG_SND_SOC_XILINX_I2S) += snd-soc-xlnx-i2s.o
+ snd-soc-xlnx-formatter-pcm-objs := xlnx_formatter_pcm.o
+ obj-$(CONFIG_SND_SOC_XILINX_AUDIO_FORMATTER) += snd-soc-xlnx-formatter-pcm.o
++snd-soc-xlnx-spdif-objs := xlnx_spdif.o
++obj-$(CONFIG_SND_SOC_XILINX_SPDIF) += snd-soc-xlnx-spdif.o
 -- 
-2.17.1
+2.20.1
