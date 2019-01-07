@@ -1,116 +1,95 @@
-From: Oliver Neukum <oneukum@suse.com>
-Subject: Re: [PATCH lora-next 3/5] net: lora: sx130x: Add PicoCell serdev
- driver
-Date: Mon, 07 Jan 2019 13:11:15 +0100
-Message-ID: <1546863075.3037.33.camel@suse.com>
-References: <20190104112131.14451-1-afaerber@suse.de>
-         <20190104112131.14451-4-afaerber@suse.de>
+From: Mark Brown <broonie@kernel.org>
+Subject: Applied "ASoC: davinci-mcasp: Document GPIO support"
+	to the asoc tree
+Date: Mon,  7 Jan 2019 12:24:58 +0000 (GMT)
+Message-ID: <20190107122458.B0BA21127490@debutante.sirena.org.uk>
+References: <20190103140552.29809-3-peter.ujfalusi@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190104112131.14451-4-afaerber@suse.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
-Cc: "David S. Miller" <davem@davemloft.net>, Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190103140552.29809-3-peter.ujfalusi@ti.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Cc: devicetree@vger.kernel.org, alsa-devel@alsa-project.org, lgirdwood@gmail.com, jsarha@ti.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, broonie@kernel.org, misael.lopez@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Fr, 2019-01-04 at 12:21 +0100, Andreas Färber  wrote:
-> 
-> +struct picogw_device {
-> +	struct serdev_device *serdev;
-> +
-> +	u8 rx_buf[1024];
+The patch
 
-No, you cannot do that. AFAICT this buffer can be used for DMA.
-Thus putting it into another data structure violates the rules
-of DMA coherency. You must allocate it separately.
+   ASoC: davinci-mcasp: Document GPIO support
 
-> +static int picogw_send_cmd(struct picogw_device *picodev, char cmd,
-> +	u8 addr, const void *data, u16 data_len)
-> +{
-> +	struct serdev_device *sdev = picodev->serdev;
-> +	u8 buf[4];
-> +	int i, ret;
-> +
-> +	buf[0] = cmd;
-> +	buf[1] = (data_len >> 8) & 0xff;
-> +	buf[2] = (data_len >> 0) & 0xff;
+has been applied to the asoc tree at
 
-We have macros for converting endianness and unaligned access.
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git 
 
-> +	buf[3] = addr;
-> +
-> +	dev_dbg(&sdev->dev, "%s: %c %02x %02x %02x\n", __func__, buf[0],
-> +		(unsigned int)buf[1], (unsigned int)buf[2], (unsigned int)buf[3]);
-> +	for (i = 0; i < data_len; i++) {
-> +		dev_dbg(&sdev->dev, "%s: data %02x\n", __func__, (unsigned int)((const u8*)data)[i]);
-> +	}
-> +
-> +	ret = serdev_device_write_buf(sdev, buf, 4);
-> +	if (ret < 0)
-> +		return ret;
-> +	if (ret != 4)
-> +		return -EIO;
-> +
-> +	if (data_len) {
-> +		ret = serdev_device_write_buf(sdev, data, data_len);
-> +		if (ret < 0)
-> +			return ret;
-> +		if (ret != data_len)
-> +			return -EIO;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int picogw_recv_answer(struct picogw_device *picodev,
-> +	char *cmd, bool *ack, void *buf, int buf_len,
-> +	unsigned long timeout)
-> +{
-> +	int len;
-> +
-> +	timeout = wait_for_completion_timeout(&picodev->answer_comp, timeout);
-> +	if (!timeout)
-> +		return -ETIMEDOUT;
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
 
-And? The IO is still scheduled. Simply erroring out is problematic.
-If you see a timeout you need to kill the scheduled IO.
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
 
-> +static int picogw_handle_answer(struct picogw_device *picodev)
-> +{
-> +	struct device *dev = &picodev->serdev->dev;
-> +	unsigned int data_len = ((u16)picodev->rx_buf[1] << 8) | picodev->rx_buf[2];
-> +	int cmd_len = 4 + data_len;
-> +	int i, ret;
-> +
-> +	if (picodev->rx_len < 4)
-> +		return 0;
-> +
-> +	if (cmd_len > sizeof(picodev->rx_buf)) {
-> +		dev_warn(dev, "answer too long (%u)\n", data_len);
-> +		return 0;
-> +	}
-> +
-> +	if (picodev->rx_len < cmd_len) {
-> +		dev_dbg(dev, "got %u, need %u bytes\n", picodev->rx_len, cmd_len);
-> +		return 0;
-> +	}
-> +
-> +	dev_dbg(dev, "Answer %c =%u %s (%u)\n", picodev->rx_buf[0],
-> +		(unsigned int)picodev->rx_buf[3],
-> +		(picodev->rx_buf[3] == 1) ? "OK" : "K0",
-> +		data_len);
-> +	for (i = 0; i < data_len; i++) {
-> +		//dev_dbg(dev, "%s: %02x\n", __func__, (unsigned int)picodev->rx_buf[4 + i]);
-> +	}
-> +
-> +	complete(&picodev->answer_comp);
-> +	ret = wait_for_completion_interruptible_timeout(&picodev->answer_read_comp, HZ / 2);
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
 
-Problematic. You have no idea when that complete() will have an effect.
-You are operating with an undefined timeout here. Theoretically it
-could be negative.
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
 
-	Regards
-		Oliver
+Thanks,
+Mark
+
+>From 4664b94c98b4f9fdd3845da41d5c65288e59c66c Mon Sep 17 00:00:00 2001
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Date: Thu, 3 Jan 2019 16:05:51 +0200
+Subject: [PATCH] ASoC: davinci-mcasp: Document GPIO support
+
+McASP pins can be used as GPIO, add optional section to enable GPIO support
+for McASP.
+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ .../bindings/sound/davinci-mcasp-audio.txt      | 17 +++++++++++++++++
+ 1 file changed, 17 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+index b279b6072bd5..a58f79f5345c 100644
+--- a/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
++++ b/Documentation/devicetree/bindings/sound/davinci-mcasp-audio.txt
+@@ -45,6 +45,23 @@ Optional properties:
+ - fck_parent : Should contain a valid clock name which will be used as parent
+ 	       for the McASP fck
+ 
++Optional GPIO support:
++If any McASP pin need to be used as GPIO then the McASP node must have:
++...
++  gpio-controller
++  #gpio-cells = <2>;
++...
++
++When requesting a GPIO, the first parameter is the PIN index in McASP_P*
++registers.
++For example to request the AXR2 pin of mcasp8:
++function-gpios = <&mcasp8 2 0>;
++
++Or to request the ACLKR pin of mcasp8:
++function-gpios = <&mcasp8 29 0>;
++
++For generic gpio information, please refer to bindings/gpio/gpio.txt
++
+ Example:
+ 
+ mcasp0: mcasp0@1d00000 {
+-- 
+2.20.1
