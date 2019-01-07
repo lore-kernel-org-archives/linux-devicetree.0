@@ -1,44 +1,45 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [RESEND PATCH v2 3/3] ARM: dts: stm32: Add clock on stm32mp157c syscfg
-Date: Mon, 7 Jan 2019 11:07:45 +0100
-Message-ID: <1546855665-26218-4-git-send-email-fabrice.gasnier@st.com>
+Subject: [RESEND PATCH v2 1/3] dt-bindings: stm32: syscon: add clock support
+Date: Mon, 7 Jan 2019 11:07:43 +0100
+Message-ID: <1546855665-26218-2-git-send-email-fabrice.gasnier@st.com>
 References: <1546855665-26218-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1546855665-26218-1-git-send-email-fabrice.gasnier@st.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: lee.jones@linaro.org, alexandre.torgue@st.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, gabriel.fernandez@st.com, linux-arm-kernel@lists.infradead.org
+Cc: robh+dt@kernel.org, mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-STM32 syscfg needs a clock to access registers.
+STM32 system configuration controller registers needs to be clocked.
+Document clock support on stm32-syscon.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Changes in v2:
+- move clocks to specific bindings using syscon as per Rob's comment
+---
+ Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
-index 8bf1c17..61b2a70 100644
---- a/arch/arm/boot/dts/stm32mp157c.dtsi
-+++ b/arch/arm/boot/dts/stm32mp157c.dtsi
-@@ -820,6 +820,7 @@
- 		syscfg: syscon@50020000 {
- 			compatible = "st,stm32mp157-syscfg", "syscon";
- 			reg = <0x50020000 0x400>;
-+			clocks = <&rcc SYSCFG>;
- 		};
+diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt b/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
+index 99980ae..c92d411 100644
+--- a/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
++++ b/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
+@@ -5,10 +5,12 @@ Properties:
+                  - " st,stm32mp157-syscfg " - for stm32mp157 based SoCs,
+                  second value must be always "syscon".
+    - reg : offset and length of the register set.
++   - clocks: phandle to the syscfg clock
  
- 		lptimer2: timer@50021000 {
+  Example:
+          syscfg: syscon@50020000 {
+                  compatible = "st,stm32mp157-syscfg", "syscon";
+                  reg = <0x50020000 0x400>;
++                 clocks = <&rcc SYSCFG>;
+          };
+ 
 -- 
 1.9.1
