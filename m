@@ -1,7 +1,7 @@
 From: Fabrice Gasnier <fabrice.gasnier@st.com>
-Subject: [RESEND PATCH v2 1/3] dt-bindings: stm32: syscon: add clock support
-Date: Mon, 7 Jan 2019 11:07:43 +0100
-Message-ID: <1546855665-26218-2-git-send-email-fabrice.gasnier@st.com>
+Subject: [RESEND PATCH v2 2/3] mfd: syscon: Add optional clock support
+Date: Mon, 7 Jan 2019 11:07:44 +0100
+Message-ID: <1546855665-26218-3-git-send-email-fabrice.gasnier@st.com>
 References: <1546855665-26218-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,34 +12,64 @@ To: lee.jones@linaro.org, alexandre.torgue@st.com
 Cc: robh+dt@kernel.org, mcoquelin.stm32@gmail.com, arnd@arndb.de, mark.rutland@arm.com, gabriel.fernandez@st.com, fabrice.gasnier@st.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-STM32 system configuration controller registers needs to be clocked.
-Document clock support on stm32-syscon.
+Some system control registers need to be clocked, so the registers can
+be accessed. Add an optional clock and attach it to regmap.
 
 Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes in v2:
-- move clocks to specific bindings using syscon as per Rob's comment
----
- Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/mfd/syscon.c | 19 +++++++++++++++++++
+ 1 file changed, 19 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt b/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
-index 99980ae..c92d411 100644
---- a/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
-+++ b/Documentation/devicetree/bindings/arm/stm32/stm32-syscon.txt
-@@ -5,10 +5,12 @@ Properties:
-                  - " st,stm32mp157-syscfg " - for stm32mp157 based SoCs,
-                  second value must be always "syscon".
-    - reg : offset and length of the register set.
-+   - clocks: phandle to the syscfg clock
+diff --git a/drivers/mfd/syscon.c b/drivers/mfd/syscon.c
+index b6d05cd..a0ba4ff 100644
+--- a/drivers/mfd/syscon.c
++++ b/drivers/mfd/syscon.c
+@@ -12,6 +12,7 @@
+  * (at your option) any later version.
+  */
  
-  Example:
-          syscfg: syscon@50020000 {
-                  compatible = "st,stm32mp157-syscfg", "syscon";
-                  reg = <0x50020000 0x400>;
-+                 clocks = <&rcc SYSCFG>;
-          };
++#include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/hwspinlock.h>
+ #include <linux/io.h>
+@@ -45,6 +46,7 @@ struct syscon {
  
+ static struct syscon *of_syscon_register(struct device_node *np)
+ {
++	struct clk *clk;
+ 	struct syscon *syscon;
+ 	struct regmap *regmap;
+ 	void __iomem *base;
+@@ -119,6 +121,18 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 		goto err_regmap;
+ 	}
+ 
++	clk = of_clk_get(np, 0);
++	if (IS_ERR(clk)) {
++		ret = PTR_ERR(clk);
++		/* clock is optional */
++		if (ret != -ENOENT)
++			goto err_clk;
++	} else {
++		ret = regmap_mmio_attach_clk(regmap, clk);
++		if (ret)
++			goto err_attach;
++	}
++
+ 	syscon->regmap = regmap;
+ 	syscon->np = np;
+ 
+@@ -128,6 +142,11 @@ static struct syscon *of_syscon_register(struct device_node *np)
+ 
+ 	return syscon;
+ 
++err_attach:
++	if (!IS_ERR(clk))
++		clk_put(clk);
++err_clk:
++	regmap_exit(regmap);
+ err_regmap:
+ 	iounmap(base);
+ err_map:
 -- 
 1.9.1
