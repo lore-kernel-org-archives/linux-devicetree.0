@@ -1,67 +1,112 @@
-From: Bin Liu <b-liu-l0cyMroinI0@public.gmane.org>
-Subject: Re: [PATCH 1/4] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Mon, 7 Jan 2019 14:40:15 -0600
-Message-ID: <20190107204015.GF25910@uda0271908>
-References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
- <1545896066-897-2-git-send-email-min.guo@mediatek.com>
+From: Chandan Uddaraju <chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [DPU PATCH v2 0/3] List of patches for DP drivers on
+ SnapDragon
+Date: Mon,  7 Jan 2019 12:51:08 -0800
+Message-ID: <1546894271-25870-1-git-send-email-chandanu@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1545896066-897-2-git-send-email-min.guo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mediatek/>
-List-Post: <mailto:linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mediatek>,
- <mailto:linux-mediatek-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-mediatek" <linux-mediatek-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-mediatek-bounces+glpam-linux-mediatek=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: min.guo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Greg Kroah-Hartman <gregkh-hQyY1W1yCW8ekmWlsbkhG0B+6BGkLq7r@public.gmane.org>, linux-usb-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Matthias Brugger <matthias.bgg-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Alan Stern <stern-nwvwT67g6+6dFdvTe/nMLpVzexx5G7lz@public.gmane.org>, chunfeng.yun-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org, linux-mediatek-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org
+Cc: abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Chandan Uddaraju <chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Thu, Dec 27, 2018 at 03:34:23PM +0800, min.guo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org wrote:
-> From: Min Guo <min.guo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> 
-> This adds support for MediaTek musb controller in
-> host, peripheral and otg mode
-> 
-> Signed-off-by: Min Guo <min.guo-NuS5LvNUpcJWk0Htik3J/w@public.gmane.org>
-> ---
->  .../devicetree/bindings/usb/mediatek,musb.txt      | 49 ++++++++++++++++++++++
->  1 file changed, 49 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> new file mode 100644
-> index 0000000..e899c9b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> @@ -0,0 +1,49 @@
-> +MediaTek musb DRC/OTG controller
-
-s/DRC/DRD/
-
-> +-------------------------------------------
-> +
-> +Required properties:
-
-[snip]
-
-> +Example:
-> +
-> +usb2: usb@11200000 {
-> +	compatible = "mediatek,mt2701-musb";
-
-s/;/,/
-
-> +		"mediatek,mtk-musb";
-
-Regards,
--Bin.
+VGhlc2UgcGF0Y2hlcyBhcmUgdG8gZW5hYmxlIERpc3BsYXlQb3J0IGRyaXZlciBvbiBTYW5wRHJh
+Z29uLgoKVGhlc2UgcGF0Y2hlcyBoYXZlIGRlcGVuZGVuY3kgb24gY2xvY2sgZHJpdmVyIGNoYW5n
+ZXMgdGhhdApwcm92aWRlIERQIGNsb2NrIHN1cHBvcnQuCgpDaGFuZ2VzIGluIFYyOgogIENvcmUg
+RHAgZHJpdmVyOgogICAgIC0tIFVwZGF0ZSBjb3B5cmlnaHQgbWFya2luZ3Mgb24gYWxsIHJlbGV2
+YW50IGZpbGVzLgogICAgIC0tIENoYW5nZSBwcl9lcnIoKSB0byBEUk1fRVJST1IoKQogICAgIC0t
+IFVzZSBBUElzIGRpcmVjdGx5IGluc3RlYWQgb2YgZnVuY3Rpb24gcG9pbnRlcnMuCiAgICAgLS0g
+VXNlIGRybV9kaXNwbGF5X21vZGUgc3RydWN0dXJlIHRvIHN0b3JlIGxpbmsgcGFyYW1ldGVycyBp
+biB0aGUgZHJpdmVyLgogICAgIC0tIFVzZSBtYWNyb3MgZm9yIHJlZ2lzdGVyIGRlZmluaXRpb25z
+IGluc3RlYWQgb2YgaGFyZGNvZGVkIHZhbHVlcyBpbiBkcF9jYXRhbG9nLmMgZmlsZS4KICAgICAt
+LSBSZXBsYWNlIHdyaXRlbF9yZWxheGVkL3JlYWRsX3JlbGF4ZWQgd2l0aCB3cml0ZWwvcmVhZGwg
+YW5kIHJlbW92ZSBtZW1vcnkgYmFycmllcnMuCiAgICAgLS0gUmVtb3ZlIHVubmVjZXNzYXJ5IE5V
+TEwgY2hlY2tzLgogICAgIC0tIFVzZSBkcm0gaGVscGVyIGZ1bmN0aW9ucyBmb3IgZHBjZCByZWFk
+L3dyaXRlLgogICAgIC0tIFVzZSBEUk1fREVCVUdfRFAgZm9yIGRlYnVnIG1zZ3MuCiAgRFAgUExM
+IGRyaXZlcjoKICAgICAtLSBVcGRhdGUgY29weXJpZ2h0IG1hcmtpbmdzIG9uIGFsbCByZWxldmFu
+dCBmaWxlcy4KICAgICAtLSBVc2UgRFJNX0RFQlVHX0RQIGZvciBkZWJ1ZyBtc2dzLgoKCkNoYW5k
+YW4gVWRkYXJhanUgKDMpOgogIGR0LWJpbmRpbmdzOiBtc20vZHA6IGFkZCBiaW5kaW5ncyBvZiBE
+UC9EUC1QTEwgZHJpdmVyIGZvciBTbmFwZHJhZ29uCiAgICA4NDUKICBkcm0vbXNtL2RwOiBhZGQg
+ZGlzcGxheVBvcnQgZHJpdmVyIHN1cHBvcnQKICBkcm0vbXNtL2RwOiBhZGQgc3VwcG9ydCBmb3Ig
+RFAgUExMIGRyaXZlcgoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwLnR4
+dCAgICAgICAgIHwgIDI0OSArKysKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2RwdS50eHQgICAgICAgIHwgICAxNiArLQogZHJpdmVycy9ncHUvZHJtL21zbS9LY29uZmlnICAg
+ICAgICAgICAgICAgICAgICAgICAgfCAgIDI0ICsKIGRyaXZlcnMvZ3B1L2RybS9tc20vTWFrZWZp
+bGUgICAgICAgICAgICAgICAgICAgICAgIHwgICAxOCArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rp
+c3AvZHB1MS9kcHVfZW5jb2Rlci5jICAgICAgICB8ICAgMjAgKwogZHJpdmVycy9ncHUvZHJtL21z
+bS9kaXNwL2RwdTEvZHB1X2lvX3V0aWwuYyAgICAgICAgfCAgICAyICsKIGRyaXZlcnMvZ3B1L2Ry
+bS9tc20vZGlzcC9kcHUxL2RwdV9pb191dGlsLmggICAgICAgIHwgICAyNiArCiBkcml2ZXJzL2dw
+dS9kcm0vbXNtL2RwL2RwX2F1eC5jICAgICAgICAgICAgICAgICAgICB8ICA1NDggKysrKysrKwog
+ZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9hdXguaCAgICAgICAgICAgICAgICAgICAgfCAgIDM3
+ICsKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfY2F0YWxvZy5jICAgICAgICAgICAgICAgIHwg
+IDk5NiArKysrKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfY2F0YWxvZy5oICAg
+ICAgICAgICAgICAgIHwgIDEwOCArKwogZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9jdHJsLmMg
+ICAgICAgICAgICAgICAgICAgfCAxNjExICsrKysrKysrKysrKysrKysrKysrCiBkcml2ZXJzL2dw
+dS9kcm0vbXNtL2RwL2RwX2N0cmwuaCAgICAgICAgICAgICAgICAgICB8ICAgMzYgKwogZHJpdmVy
+cy9ncHUvZHJtL21zbS9kcC9kcF9kaXNwbGF5LmMgICAgICAgICAgICAgICAgfCAgOTkxICsrKysr
+KysrKysrKwogZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9kaXNwbGF5LmggICAgICAgICAgICAg
+ICAgfCAgIDMxICsKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfZHJtLmMgICAgICAgICAgICAg
+ICAgICAgIHwgIDE4OSArKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfZHJtLmggICAgICAg
+ICAgICAgICAgICAgIHwgICAyMCArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL2RwX2V4dGNvbi5j
+ICAgICAgICAgICAgICAgICB8ICAyMjggKysrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL2RwX2V4
+dGNvbi5oICAgICAgICAgICAgICAgICB8ICAgODUgKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAv
+ZHBfbGluay5jICAgICAgICAgICAgICAgICAgIHwgMTIxNiArKysrKysrKysrKysrKysKIGRyaXZl
+cnMvZ3B1L2RybS9tc20vZHAvZHBfbGluay5oICAgICAgICAgICAgICAgICAgIHwgIDEzMiArKwog
+ZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9wYW5lbC5jICAgICAgICAgICAgICAgICAgfCAgNTA0
+ICsrKysrKwogZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9wYW5lbC5oICAgICAgICAgICAgICAg
+ICAgfCAgIDkxICsrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL2RwX3BhcnNlci5jICAgICAgICAg
+ICAgICAgICB8ICA2MjEgKysrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfcGFyc2Vy
+LmggICAgICAgICAgICAgICAgIHwgIDE5OSArKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBf
+cG93ZXIuYyAgICAgICAgICAgICAgICAgIHwgIDczMyArKysrKysrKysKIGRyaXZlcnMvZ3B1L2Ry
+bS9tc20vZHAvZHBfcG93ZXIuaCAgICAgICAgICAgICAgICAgIHwgICA1MiArCiBkcml2ZXJzL2dw
+dS9kcm0vbXNtL2RwL2RwX3JlZy5oICAgICAgICAgICAgICAgICAgICB8ICA0NzUgKysrKysrCiBk
+cml2ZXJzL2dwdS9kcm0vbXNtL2RwL3BsbC9kcF9wbGwuYyAgICAgICAgICAgICAgICB8ICAxNDUg
+KysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvcGxsL2RwX3BsbC5oICAgICAgICAgICAgICAgIHwg
+ICA1NiArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL3BsbC9kcF9wbGxfMTBubS5jICAgICAgICAg
+ICB8ICAzOTMgKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvcGxsL2RwX3BsbF8xMG5tLmgg
+ICAgICAgICAgIHwgICA4NiArKwogZHJpdmVycy9ncHUvZHJtL21zbS9kcC9wbGwvZHBfcGxsXzEw
+bm1fdXRpbC5jICAgICAgfCAgNTIyICsrKysrKysKIGRyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Ry
+di5jICAgICAgICAgICAgICAgICAgICAgIHwgICAgMiArCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21z
+bV9kcnYuaCAgICAgICAgICAgICAgICAgICAgICB8ICAgNDEgKwogMzUgZmlsZXMgY2hhbmdlZCwg
+MTA0OTkgaW5zZXJ0aW9ucygrKSwgNCBkZWxldGlvbnMoLSkKIGNyZWF0ZSBtb2RlIDEwMDY0NCBE
+b2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9tc20vZHAudHh0CiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9hdXguYwogY3JlYXRlIG1v
+ZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfYXV4LmgKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL2RwX2NhdGFsb2cuYwogY3JlYXRlIG1vZGUgMTAw
+NjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfY2F0YWxvZy5oCiBjcmVhdGUgbW9kZSAxMDA2
+NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9jdHJsLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBk
+cml2ZXJzL2dwdS9kcm0vbXNtL2RwL2RwX2N0cmwuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZl
+cnMvZ3B1L2RybS9tc20vZHAvZHBfZGlzcGxheS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVy
+cy9ncHUvZHJtL21zbS9kcC9kcF9kaXNwbGF5LmgKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJz
+L2dwdS9kcm0vbXNtL2RwL2RwX2RybS5jCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUv
+ZHJtL21zbS9kcC9kcF9kcm0uaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9t
+c20vZHAvZHBfZXh0Y29uLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbXNt
+L2RwL2RwX2V4dGNvbi5oCiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9k
+cC9kcF9saW5rLmMKIGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL2Rw
+X2xpbmsuaAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfcGFu
+ZWwuYwogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfcGFuZWwu
+aAogY3JlYXRlIG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvZHBfcGFyc2VyLmMK
+IGNyZWF0ZSBtb2RlIDEwMDY0NCBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL2RwX3BhcnNlci5oCiBj
+cmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9wb3dlci5jCiBjcmVh
+dGUgbW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9wb3dlci5oCiBjcmVhdGUg
+bW9kZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9kcF9yZWcuaAogY3JlYXRlIG1vZGUg
+MTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvcGxsL2RwX3BsbC5jCiBjcmVhdGUgbW9kZSAx
+MDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9wbGwvZHBfcGxsLmgKIGNyZWF0ZSBtb2RlIDEw
+MDY0NCBkcml2ZXJzL2dwdS9kcm0vbXNtL2RwL3BsbC9kcF9wbGxfMTBubS5jCiBjcmVhdGUgbW9k
+ZSAxMDA2NDQgZHJpdmVycy9ncHUvZHJtL21zbS9kcC9wbGwvZHBfcGxsXzEwbm0uaAogY3JlYXRl
+IG1vZGUgMTAwNjQ0IGRyaXZlcnMvZ3B1L2RybS9tc20vZHAvcGxsL2RwX3BsbF8xMG5tX3V0aWwu
+YwoKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBv
+ZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZl
+IFByb2plY3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
