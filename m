@@ -1,8 +1,8 @@
 From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: [PATCH v8 6/7] ARM64: dts: ls1046a: Remove fsl,qspi-has-second-chip
- as it is not used
-Date: Mon, 7 Jan 2019 09:29:55 +0000
-Message-ID: <20190107092823.11188-7-frieder.schrempf@kontron.de>
+Subject: [PATCH v8 5/7] ARM: dts: ls1021a: Remove fsl,qspi-has-second-chip as
+ it is not used
+Date: Mon, 7 Jan 2019 09:29:54 +0000
+Message-ID: <20190107092823.11188-6-frieder.schrempf@kontron.de>
 References: <20190107092823.11188-1-frieder.schrempf@kontron.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -11,8 +11,8 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190107092823.11188-1-frieder.schrempf@kontron.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kerne
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
@@ -25,20 +25,20 @@ the chipselect.
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
 ---
- arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi | 1 -
+ arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 1 -
  1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-index 9a2106e60e19..b2996db5903c 100644
---- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-@@ -215,7 +215,6 @@
- 			clock-names = "qspi_en", "qspi";
- 			clocks = <&clockgen 4 1>, <&clockgen 4 1>;
- 			big-endian;
--			fsl,qspi-has-second-chip;
- 			status = "disabled";
- 		};
+diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+index 6a83f30029ea..d3a1a73ae97e 100644
+--- a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
++++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
+@@ -203,7 +203,6 @@
+ };
  
+ &qspi {
+-	fsl,qspi-has-second-chip;
+ 	status = "okay";
+ 
+ 	flash: flash@0 {
 -- 
 2.17.1
