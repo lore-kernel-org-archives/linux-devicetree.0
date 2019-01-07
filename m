@@ -1,33 +1,67 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v1] cpufreq: qcom: Read voltage LUT and populate OPP
-Date: Mon, 7 Jan 2019 13:07:16 +0530
-Message-ID: <10e458b8-e17f-0502-5b2a-84ca179656ea@codeaurora.org>
-References: <1545415608-15163-1-git-send-email-tdas@codeaurora.org>
- <154542875327.13075.3548703610883534822@swboyd.mtv.corp.google.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH 1/2] arm64: dts: qcom: sdm845: Add ADSP reserve-memory
+ nodes
+Date: Mon, 7 Jan 2019 13:17:58 +0530
+Message-ID: <6b81869e-1d8b-510e-760a-9476ac08528f@codeaurora.org>
+References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
+ <1545313174-13481-2-git-send-email-rohitkr@codeaurora.org>
+ <20190103234249.GH31596@builder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154542875327.13075.3548703610883534822@swboyd.mtv.corp.google.com>
+In-Reply-To: <20190103234249.GH31596@builder>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, evgreen@google.com
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Sibi Sankar <sibis@codeaurora.org>
+Cc: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Thanks Bjorn for review.
+
+On 1/4/2019 5:12 AM, Bjorn Andersson wrote:
+> On Thu 20 Dec 05:39 PST 2018, Rohit kumar wrote:
+>
+>> Add memory nodes required for remoteproc q6v5_adsp pil.
+>>
+> This range doesn't match the documented memory map. I would prefer to
+> see a "Specify all PIL regions as defined in V10" or similar.
+
+Yes,  Sibi will post it along with other PIL regions with update address 
+in next spin.
 
 
-On 12/22/2018 3:15 AM, Stephen Boyd wrote:
-> Quoting Taniya Das (2018-12-21 10:06:48)
->> Add support to read the voltage look up table and populate OPP for all
->> corresponding CPUS.
-> 
-> Yes, but why? Please specify the motivations in the commit text.
-> 
-Sure, would update in the next patch.
-
+>
+> Regards,
+> Bjorn
+>
+>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
+>>   1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index 23a253b..c0a012f 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -88,6 +88,11 @@
+>>   			reg = <0 0x86200000 0 0x2d00000>;
+>>   			no-map;
+>>   		};
+>> +
+>> +		pil_adsp_mem: memory@8b100000 {
+>> +			reg = <0 0x8b100000 0 0x1a00000>;
+>> +			no-map;
+>> +		};
+>>   	};
+>>   
+>>   	cpus {
+>> -- 
+>> Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center, Inc.,
+>> is a member of Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>
+Regards,
+Rohit
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
