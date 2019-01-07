@@ -1,152 +1,95 @@
-From: Ray Jui <ray.jui@broadcom.com>
-Subject: Re: [PATCH 2/2] phy: bcm-ns-usb2: support updated DT binding with the
- CRU syscon
-Date: Mon, 7 Jan 2019 10:47:35 -0800
-Message-ID: <1e1d2151-87b1-668a-f63d-162054a67a90@broadcom.com>
-References: <20190107082545.5529-1-zajec5@gmail.com>
- <20190107082545.5529-2-zajec5@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH] dsa device tree bindings: fix typo and wrong example
+Date: Mon, 7 Jan 2019 19:49:44 +0100
+Message-ID: <20190107184944.GA17979@amd>
+References: <20181115195111.GA9946@amd>
+ <20181206130051.GA22343@amd>
+ <20181206130513.GE22343@amd>
+ <819595ee-9f3e-b7a2-6139-1ba265137f62@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="G4iJoqBmSsgzjUCe"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107082545.5529-2-zajec5@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <819595ee-9f3e-b7a2-6139-1ba265137f62@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, trivial@kernel.org
+Cc: "andrew@lunn.ch" <andrew@lunn.ch>, "vivien.didelot@savoirfairelinux.com" <vivien.didelot@savoirfairelinux.com>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "f.fainelli@gmail.com" <f.fainelli@gmail.com>, "buytenh@marvell.com" <buytenh@marvell.com>, "buytenh@wantstofly.org" <buytenh@wantstofly.org>, "nico@marvell.com" <nico@marvell.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, kernel list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
 
+--G4iJoqBmSsgzjUCe
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 1/7/2019 12:25 AM, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
-> 
-> This adds support for the "syscon-cru" DT property which simply requires
-> using regmap to access CRU registers.
-> 
-> The old binding has been deprecated and stays as a fallback method.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
-> ---
->  drivers/phy/broadcom/phy-bcm-ns-usb2.c | 44 +++++++++++++++++++++++++++-------
->  1 file changed, 35 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/phy/broadcom/phy-bcm-ns-usb2.c b/drivers/phy/broadcom/phy-bcm-ns-usb2.c
-> index 58dff80e9386..8dc6835b941c 100644
-> --- a/drivers/phy/broadcom/phy-bcm-ns-usb2.c
-> +++ b/drivers/phy/broadcom/phy-bcm-ns-usb2.c
-> @@ -13,17 +13,23 @@
->  #include <linux/clk.h>
->  #include <linux/delay.h>
->  #include <linux/err.h>
-> +#include <linux/mfd/syscon.h>
->  #include <linux/module.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
-> +#include <linux/regmap.h>
+On Thu 2018-12-06 13:28:56, Vok=C3=A1=C4=8D Michal wrote:
+> On 6.12.2018 14:05, Pavel Machek wrote:
+> >     =20
+> > Fix typo and fix compatible value that is not actually permitted by the
+> > description in the example.
+>=20
+> Ahoj Pavle, I think the subject should be more like:
+>=20
+> 	"dt-bindings: net: dsa: ..."
 
-alphabetical order, so after platform_device.h
+Ahoj!
 
->  #include <linux/phy/phy.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  
-> +#define CRU_USB2_CONTROL			0x64
-> +#define CRU_CLKSET_KEY				0x80
-> +
->  struct bcm_ns_usb2 {
->  	struct device *dev;
->  	struct clk *ref_clk;
->  	struct phy *phy;
-> +	struct regmap *cru;
->  	void __iomem *dmu;
->  };
->  
-> @@ -31,6 +37,7 @@ static int bcm_ns_usb2_phy_init(struct phy *phy)
->  {
->  	struct bcm_ns_usb2 *usb2 = phy_get_drvdata(phy);
->  	struct device *dev = usb2->dev;
-> +	struct regmap *cru = usb2->cru;
->  	void __iomem *dmu = usb2->dmu;
->  	u32 ref_clk_rate, usb2ctl, usb_pll_ndiv, usb_pll_pdiv;
->  	int err = 0;
-> @@ -48,7 +55,10 @@ static int bcm_ns_usb2_phy_init(struct phy *phy)
->  		goto err_clk_off;
->  	}
->  
-> -	usb2ctl = readl(dmu + BCMA_DMU_CRU_USB2_CONTROL);
-> +	if (cru)
-> +		regmap_read(cru, CRU_USB2_CONTROL, &usb2ctl);
-> +	else
-> +		usb2ctl = readl(dmu + BCMA_DMU_CRU_USB2_CONTROL);
+Well, retrying with different subject only makes sense if someone is
+interested. Rob, Andrew -- can you take the patch?
 
-Do you think it's cleaner to use a read/write wrapper to handle both the
-syscon based case and the plain readl/writel? I thought that would make
-the code much more readable.
+Do you want me to edit the subject or can you just edit the subject
+while applying?
 
->  
->  	if (usb2ctl & BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_PDIV_MASK) {
->  		usb_pll_pdiv = usb2ctl;
-> @@ -62,15 +72,24 @@ static int bcm_ns_usb2_phy_init(struct phy *phy)
->  	usb_pll_ndiv = (1920000000 * usb_pll_pdiv) / ref_clk_rate;
->  
->  	/* Unlock DMU PLL settings with some magic value */
-> -	writel(0x0000ea68, dmu + BCMA_DMU_CRU_CLKSET_KEY);
-> +	if (cru)
-> +		regmap_write(cru, CRU_CLKSET_KEY, 0x0000ea68);
-> +	else
-> +		writel(0x0000ea68, dmu + BCMA_DMU_CRU_CLKSET_KEY);
->  
->  	/* Write USB 2.0 PLL control setting */
->  	usb2ctl &= ~BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_MASK;
->  	usb2ctl |= usb_pll_ndiv << BCMA_DMU_CRU_USB2_CONTROL_USB_PLL_NDIV_SHIFT;
-> -	writel(usb2ctl, dmu + BCMA_DMU_CRU_USB2_CONTROL);
-> +	if (cru)
-> +		regmap_write(cru, CRU_USB2_CONTROL, usb2ctl);
-> +	else
-> +		writel(usb2ctl, dmu + BCMA_DMU_CRU_USB2_CONTROL);
->  
->  	/* Lock DMU PLL settings */
-> -	writel(0x00000000, dmu + BCMA_DMU_CRU_CLKSET_KEY);
-> +	if (cru)
-> +		regmap_write(cru, CRU_CLKSET_KEY, 0x00000000);
-> +	else
-> +		writel(0x00000000, dmu + BCMA_DMU_CRU_CLKSET_KEY);
->  
->  err_clk_off:
->  	clk_disable_unprepare(usb2->ref_clk);
-> @@ -86,6 +105,7 @@ static const struct phy_ops ops = {
->  static int bcm_ns_usb2_probe(struct platform_device *pdev)
->  {
->  	struct device *dev = &pdev->dev;
-> +	struct device_node *cru_np;
->  	struct bcm_ns_usb2 *usb2;
->  	struct resource *res;
->  	struct phy_provider *phy_provider;
-> @@ -95,11 +115,17 @@ static int bcm_ns_usb2_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  	usb2->dev = dev;
->  
-> -	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmu");
-> -	usb2->dmu = devm_ioremap_resource(dev, res);
-> -	if (IS_ERR(usb2->dmu)) {
-> -		dev_err(dev, "Failed to map DMU regs\n");
-> -		return PTR_ERR(usb2->dmu);
-> +	cru_np = of_parse_phandle(dev->of_node, "syscon-cru", 0);
-> +	usb2->cru = syscon_node_to_regmap(cru_np);
+Thanks,
+								Pavel
 
-just use 'syscon_regmap_lookup_by_phandle'
+> BR, Michal
+>=20
+> >    =20
+> > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> >=20
+> > diff --git a/Documentation/devicetree/bindings/net/dsa/marvell.txt b/Do=
+cumentation/devicetree/bindings/net/dsa/marvell.txt
+> > index feb007af13cb..abf1be036ac5 100644
+> > --- a/Documentation/devicetree/bindings/net/dsa/marvell.txt
+> > +++ b/Documentation/devicetree/bindings/net/dsa/marvell.txt
+> > @@ -41,7 +41,7 @@ Optional properties:
+> >   - mdio			: Container of PHY and devices on the switches MDIO
+> >   			  bus.
+> >   - mdio?		: Container of PHYs and devices on the external MDIO
+> > -			  bus. The node must contains a compatible string of
+> > +			  bus. The node must contain a compatible string of
+> >   			  "marvell,mv88e6xxx-mdio-external"
+> >  =20
+> >   Example:
+> > @@ -80,7 +80,7 @@ Example:
+> >   		#interrupt-cells =3D <2>;
+> >  =20
+> >   		switch0: switch@0 {
+> > -			compatible =3D "marvell,mv88e6390";
+> > +			compatible =3D "marvell,mv88e6190";
+> >   			reg =3D <0>;
+> >   			reset-gpios =3D <&gpio5 1 GPIO_ACTIVE_LOW>;
+> >  =20
+> >=20
+> >=20
 
-> +	if (IS_ERR(usb2->cru)) {
-> +		usb2->cru = NULL;
-> +
-> +		res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "dmu");
-> +		usb2->dmu = devm_ioremap_resource(dev, res);
-> +		if (IS_ERR(usb2->dmu)) {
-> +			dev_err(dev, "Failed to map DMU regs\n");
-> +			return PTR_ERR(usb2->dmu);
-> +		}
->  	}
->  
->  	usb2->ref_clk = devm_clk_get(dev, "phy-ref-clk");
-> 
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--G4iJoqBmSsgzjUCe
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwzn0gACgkQMOfwapXb+vLdZQCfe7+ILyxxuTHSPAvxxrrhvXXr
+nHEAnjs7VuAlSiTCHmTvPp5YZ5zNVz5d
+=KMKg
+-----END PGP SIGNATURE-----
+
+--G4iJoqBmSsgzjUCe--
