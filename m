@@ -1,58 +1,88 @@
-From: Leonard Crestez <leonard.crestez@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: freescale: Use wilddt function
-Date: Mon, 7 Jan 2019 19:31:29 +0000
-Message-ID: <3678c8f380da308469d6cdcda9938ce79f94d3ed.1546888138.git.leonard.crestez@nxp.com>
-References: <cover.1546888138.git.leonard.crestez@nxp.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 2/2] leds: lp5024: Add the LP5024/18 RGB LED driver
+Date: Mon, 7 Jan 2019 13:34:39 -0600
+Message-ID: <d73aa021-509d-ad34-5871-76560e868d03@ti.com>
+References: <8740cfd6-a6b5-ad27-313b-984a9febf18a@ti.com>
+ <20181219201047.GA23448@amd> <fd624cc1-9997-1cd5-c5cc-62e6897997cf@ti.com>
+ <54f28115-0a7d-8e9c-3bec-6e91fb3981ec@gmail.com>
+ <cd90f179-6c16-823f-496f-27f141e9c322@ti.com>
+ <a72c11c0-949b-bdbc-df2c-4490e04a1065@gmail.com>
+ <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
+ <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com>
+ <90a2ed79-b437-af14-4538-430d8723cc6b@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1546888138.git.leonard.crestez@nxp.com>
+In-Reply-To: <90a2ed79-b437-af14-4538-430d8723cc6b@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>, Rob Herring <robh+dt@kernel.org>, Olof Johansson <olof@lixom.net>, Shawn Guo <shawnguo@kernel.org>
-Cc: Michal Marek <michal.lkml@markovi.net>, Fabio Estevam <fabio.estevam@nxp.com>, Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Leo Li <leoyang.li@nxp.com>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Use the wilddt function instead of listing dts files. This shrinks the
-makefile and avoids needing future changes when boards are added.
+Vesa
 
-Signed-off-by: Leonard Crestez <leonard.crestez@nxp.com>
----
- arch/arm64/boot/dts/freescale/Makefile | 25 ++++---------------------
- 1 file changed, 4 insertions(+), 21 deletions(-)
+On 1/4/19 6:39 PM, Vesa Jääskeläinen wrote:
+> Hi Jacek,
+> 
+> On 04/01/2019 23.37, Jacek Anaszewski wrote:
+>> But, aside from that hypothetic issue, we need a solution for
+>> LEDn_BRIGHTNESS feature of lp5024, i.e. setting color intensity
+>> via a single register write. How would you propose to address that?
+> 
+> You could model it to something like this in device tree:
+> 
+> led-module @ <i2c-address> {
+>     compatible = "lp5024";
+> 
+>     // There is in hardware setup to use either linear or
+>     // logarithmic scaling:
+>     //enable-logarithmic-brightness;
+> 
+>     led0 {
+>         // this will create led instance for LED0 in lp5024
+>         label = "lp-led0";
+>        
+>         // This specifies LED number within lp5024
+>         led-index = <0>;   // set output-base as 0*3 == 0
+>        
+>         element-red {
+>             // refers to OUT0
+>             output-offset = <0>;
+>         };
+>        
+>         element-green {
+>             // refers to OUT1
+>             output-offset = <1>;
+>         };
+>        
+>         element-blue {
+>             // refers to OUT2
+>             output-offset = <2>;
+>         };
+>        
+>     };   
+> 
+>     led1 {
+>         // this will create led instance for LED1 in lp5024
+>         label = "lp-led1";
+>        
+>         // This specifies LED number within lp5024
+>         led-index = <1>;   // set output-base as 1*3 == 3
+> 
 
-diff --git a/arch/arm64/boot/dts/freescale/Makefile b/arch/arm64/boot/dts/f=
-reescale/Makefile
-index f9be2426f83c..ab28e485179d 100644
---- a/arch/arm64/boot/dts/freescale/Makefile
-+++ b/arch/arm64/boot/dts/freescale/Makefile
-@@ -1,22 +1,5 @@
- # SPDX-License-Identifier: GPL-2.0
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1012a-frdm.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1012a-frwy.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1012a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1012a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1028a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1028a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1043a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1043a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1046a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1046a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1088a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls1088a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2080a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2080a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2080a-simu.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2088a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-ls2088a-rdb.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-lx2160a-qds.dtb
--dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D fsl-lx2160a-rdb.dtb
--
--dtb-$(CONFIG_ARCH_MXC) +=3D imx8mq-evk.dtb
-+dtb-$(CONFIG_ARCH_LAYERSCAPE) +=3D \
-+	$(call wilddt,fsl-ls*) \
-+	$(call wilddt,fsl-lx*)
-+dtb-$(CONFIG_ARCH_MXC) +=3D $(call wilddt,imx*)
---=20
-2.17.1
+Can we not use led-sources like I have done already?
+I really like to keep the DT nodes simple and re-use nodes that exist if possible.
+
+My code already maps and groups the outputs into the associated banks
+
+Dan
+<snip>
+
+-- 
+------------------
+Dan Murphy
