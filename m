@@ -1,52 +1,52 @@
-From: Donghoon Han <nazgul33@gmail.com>
-Subject: [PATCH V2 2/2] Input: rotaty-encoder - Add DT binding document
-Date: Tue,  8 Jan 2019 01:42:49 +0900
-Message-ID: <20190107164249.2342-3-nazgul33@gmail.com>
-References: <20190107164249.2342-1-nazgul33@gmail.com>
+From: Pavel Machek <pavel@ucw.cz>
+Subject: Re: [PATCH v6 1/5] dt-bindings: leds: Add pattern initialization
+ from Device Tree
+Date: Mon, 7 Jan 2019 18:47:28 +0100
+Message-ID: <20190107174727.GC933@amd>
+References: <1546596524-19863-1-git-send-email-krzk@kernel.org>
+ <1546596524-19863-2-git-send-email-krzk@kernel.org>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="p2kqVDKq5asng8Dg"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107164249.2342-1-nazgul33@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1546596524-19863-2-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-input@vger.kernel.org
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <daniel@caiaq.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add DT binding document for rotary-encoder, keycode options.
 
-Signed-off-by: Donghoon Han <nazgul33@gmail.com>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Daniel Mack <daniel@caiaq.de>
-Cc: devicetree@vger.kernel.org
-To: linux-input@vger.kernel.org
----
- .../devicetree/bindings/input/rotary-encoder.txt     | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+--p2kqVDKq5asng8Dg
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-index f99fe5cdeaec..9986ec2af2d4 100644
---- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
-+++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
-@@ -12,6 +12,10 @@ Optional properties:
- - rotary-encoder,relative-axis: register a relative axis rather than an
-   absolute one. Relative axis will only generate +1/-1 events on the input
-   device, hence no steps need to be passed.
-+- rotary-encoder,relative-keys : generate pair of key events. This setting
-+  behaves just like relative-axis, generating key events instead.
-+  (Keycodes[2] corresponds to -1/1 events.)
-+- rotary-encoder,relative-keycodes : keycodes for relative-keys
- - rotary-encoder,rollover: Automatic rollover when the rotary value becomes
-   greater than the specified steps or smaller than 0. For absolute axis only.
- - rotary-encoder,steps-per-period: Number of steps (stable states) per period.
-@@ -48,3 +52,11 @@ Example:
- 			rotary-encoder,encoding = "binary";
- 			rotary-encoder,rollover;
- 		};
-+
-+		rotary@2 {
-+			compatible = "rotary-encoder";
-+			gpios = <&gpio 21 0>, <&gpio 22 0>;
-+			rotary-encoder,relative-keys;
-+			rotary-encoder,relative-keycode = <103>, <108>;
-+			rotary-encoder,steps-per-period = <2>;
-+		};
--- 
-2.17.1
+On Fri 2019-01-04 11:08:40, Krzysztof Kozlowski wrote:
+> Document new led-pattern property for initialization of LED triggers.
+> The property format is trigger-specific (except being array of
+> integers).  For pattern trigger, the explanation of pattern format was
+> moved to a common file shared with sysfs ABI.
+>=20
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+
+Acked-by: Pavel Machek <pavel@ucw.cz>
+
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--p2kqVDKq5asng8Dg
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAlwzkK8ACgkQMOfwapXb+vL5pQCeO4MLUeeMzDKjRWC35yefPMHF
+9FwAnRtlHMrMObXpRTe6v+tAd/9mW9QF
+=Uqhn
+-----END PGP SIGNATURE-----
+
+--p2kqVDKq5asng8Dg--
