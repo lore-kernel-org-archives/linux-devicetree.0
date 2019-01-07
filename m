@@ -1,63 +1,72 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 0/5] clk: meson: axg: add 32k clock generation
-Date: Mon, 7 Jan 2019 15:16:23 +0100
-Message-ID: <bb5fef84-3bcd-d273-e8f8-0664e0828785@baylibre.com>
-References: <20181221160239.26265-1-jbrunet@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Malathi Gottam <mgottam@codeaurora.org>
+Subject: [PATCH v4] arm64: dts: sdm845: add video nodes
+Date: Mon,  7 Jan 2019 20:00:44 +0530
+Message-ID: <1546871444-13224-1-git-send-email-mgottam@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221160239.26265-1-jbrunet@baylibre.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>
-Cc: linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, stanimir.varbanov@linaro.org, vgarodia@codeaurora.org, mgottam@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/12/2018 17:02, Jerome Brunet wrote:
-> The goal of this patchset is to add the internal generation of the
-> 32768Hz clock within the axg AO clock controller.
-> 
-> This was initially added has the CEC clock on gxbb. To properly
-> integrate it on the axg, a simpler 'dual divider' driver is added.
-> Then gxbb AO clock controller is reworked to use it. Finally the 32k
-> clock tree is added to the AXG.
-> 
-> This patchset *no longer* requires depends on this CCF change [0].
-> There is a work around in place until a solution gets merged in
-> the framework.
-> 
-> Changes since v1: [1]
->  * Add work around for [0] in gxbb-aoclk
-> 
-> [0]: https://lkml.kernel.org/r/20181204163257.32085-1-jbrunet@baylibre.com
-> [1]: https://lkml.kernel.org/r/20181204165310.20806-1-jbrunet@baylibre.com
-> 
-> Jerome Brunet (5):
->   dt-bindings: clk: meson: add ao slow clock path ids
->   clk: meson: clean-up clock registration
->   clk: meson: add dual divider clock driver
->   clk: meson: gxbb-ao: replace cec-32k with the dual divider
->   clk: meson: axg-ao: add 32k generation subtree
-> 
->  drivers/clk/meson/Makefile              |   4 +-
->  drivers/clk/meson/axg-aoclk.c           | 175 +++++++++++++++--
->  drivers/clk/meson/axg-aoclk.h           |  13 +-
->  drivers/clk/meson/clk-dualdiv.c         | 130 ++++++++++++
->  drivers/clk/meson/clkc.h                |  19 ++
->  drivers/clk/meson/gxbb-aoclk-32k.c      | 193 ------------------
->  drivers/clk/meson/gxbb-aoclk.c          | 251 +++++++++++++++++++-----
->  drivers/clk/meson/gxbb-aoclk.h          |  20 +-
->  drivers/clk/meson/meson-aoclk.c         |  15 +-
->  include/dt-bindings/clock/axg-aoclkc.h  |   7 +-
->  include/dt-bindings/clock/gxbb-aoclkc.h |   7 +
->  11 files changed, 540 insertions(+), 294 deletions(-)
->  create mode 100644 drivers/clk/meson/clk-dualdiv.c
->  delete mode 100644 drivers/clk/meson/gxbb-aoclk-32k.c
-> 
+This adds video nodes to sdm845 based on the examples
+in the bindings.
 
-Acked-by: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 35 insertions(+)
 
-And applied to next/drivers for Linux 5.1
-
-Neil
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index b72bdb0..df31d39 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -87,6 +87,11 @@
+ 			reg = <0 0x86200000 0 0x2d00000>;
+ 			no-map;
+ 		};
++
++		venus_region: memory@95800000 {
++			reg = <0x0 0x95800000 0x0 0x600000>;
++			no-map;
++		};
+ 	};
+ 
+ 	cpus {
+@@ -1403,5 +1408,35 @@
+ 				status = "disabled";
+ 			};
+ 		};
++
++		video-codec@aa00000 {
++			compatible = "qcom,sdm845-venus";
++			reg = <0x0aa00000 0xff000>;
++			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
++			power-domains = <&videocc VENUS_GDSC>;
++			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
++				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
++				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
++			clock-names = "core", "iface", "bus";
++			iommus = <&apps_smmu 0x10a0 0x8>,
++				 <&apps_smmu 0x10b0 0x0>;
++			memory-region = <&venus_region>;
++
++			video-core0 {
++				compatible = "venus-decoder";
++				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
++					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
++				clock-names = "core", "bus";
++				power-domains = <&videocc VCODEC0_GDSC>;
++			};
++
++			video-core1 {
++				compatible = "venus-encoder";
++				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
++					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
++				clock-names = "core", "bus";
++				power-domains = <&videocc VCODEC1_GDSC>;
++			};
++		};
+ 	};
+ };
+-- 
+1.9.1
