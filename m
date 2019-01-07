@@ -1,110 +1,182 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v2 2/2] hwmon: (ina3221) Implement ti,single-shot DT
- property
-Date: Mon, 7 Jan 2019 11:35:55 -0800
-Message-ID: <20190107193555.GA13547@roeck-us.net>
-References: <20190105030636.533-1-nicoleotsuka@gmail.com>
- <20190105030636.533-3-nicoleotsuka@gmail.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
+ LP5024/18 RGB LED driver
+Date: Mon, 7 Jan 2019 13:36:20 -0600
+Message-ID: <b027299c-a24a-abeb-8f92-97c32c13290b@ti.com>
+References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
+ <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
+ <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
+ <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
+ <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
+ <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
+ <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
+ <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
+ <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190105030636.533-3-nicoleotsuka@gmail.com>
+In-Reply-To: <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 04, 2019 at 07:06:36PM -0800, Nicolin Chen wrote:
-> By default, ina3221, as a hardware monitor, continuously measures
-> the inputs and generates corresponding data. However, for battery
-> powered devices, this mode might be power consuming.
-> 
-> The DT binding doc is updated with a new boolean type property to
-> allow changing the default operating mode from consuming mode to
-> single-shot mode, which will measure input on demand and then shut
-> down to save power.
-> 
-> So this patch implements the DT property accordingly.
-> 
-> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
-> ---
-> Changelog
-> v1->v2:
->  * Replaced the useless mode defines with a boolean variable.
-> 
->  drivers/hwmon/ina3221.c | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
-> 
-> diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-> index e90ccac8bebb..4258a6ebe195 100644
-> --- a/drivers/hwmon/ina3221.c
-> +++ b/drivers/hwmon/ina3221.c
-> @@ -111,6 +111,7 @@ struct ina3221_input {
->   * @inputs: Array of channel input source specific structures
->   * @lock: mutex lock to serialize sysfs attribute accesses
->   * @reg_config: Register value of INA3221_CONFIG
-> + * @single_shot: running in single-shot operating mode
->   */
->  struct ina3221_data {
->  	struct device *pm_dev;
-> @@ -119,6 +120,8 @@ struct ina3221_data {
->  	struct ina3221_input inputs[INA3221_NUM_CHANNELS];
->  	struct mutex lock;
->  	u32 reg_config;
-> +
-> +	bool single_shot;
->  };
->  
->  static inline bool ina3221_is_enabled(struct ina3221_data *ina, int channel)
-> @@ -188,6 +191,11 @@ static int ina3221_read_in(struct device *dev, u32 attr, int channel, long *val)
->  		if (!ina3221_is_enabled(ina, channel))
->  			return -ENODATA;
->  
-> +		/* Write CONFIG register to trigger a single-shot measurement */
-> +		if (ina->single_shot)
-> +			regmap_write(ina->regmap, INA3221_CONFIG,
-> +				     ina->reg_config);
-> +
->  		ret = ina3221_wait_for_data(ina);
->  		if (ret)
->  			return ret;
-> @@ -232,6 +240,11 @@ static int ina3221_read_curr(struct device *dev, u32 attr,
->  		if (!ina3221_is_enabled(ina, channel))
->  			return -ENODATA;
->  
-> +		/* Write CONFIG register to trigger a single-shot measurement */
-> +		if (ina->single_shot)
-> +			regmap_write(ina->regmap, INA3221_CONFIG,
-> +				     ina->reg_config);
-> +
->  		ret = ina3221_wait_for_data(ina);
->  		if (ret)
->  			return ret;
-> @@ -617,6 +630,9 @@ static int ina3221_probe_from_dt(struct device *dev, struct ina3221_data *ina)
->  	if (!np)
->  		return 0;
->  
-> +	if (of_property_read_bool(np, "ti,single-shot"))
-> +		ina->single_shot = true;
-> +
-	ina->single_shot = of_property_read_bool(np, "ti,single-shot");
+Jacek
 
-No need to resend right now; let's wait for feedback from Rob.
+On 1/7/19 1:13 PM, Jacek Anaszewski wrote:
+> On 1/6/19 4:52 PM, Jacek Anaszewski wrote:
+>> Hi Pavel,
+>>
+>> On 1/5/19 11:12 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>>> Grab yourself an RGB LED and play with it; you'll see what the
+>>>>> problems are. It is hard to explain colors over email...
+>>>>
+>>>> Video [0] gives some overview of lp5024 capabilities.
+>>>>
+>>>> I don't see any problems in exposing separate red,green,blue
+>>>> files and brightness for the devices with hardware support for
+>>>> that.
+>>>
+>>> Well, that's what we do today, as three separate LEDs, right?
+>>
+>> No. It doesn't allow for setting color intensity by having
+>> the color fixed beforehand. Below is relevant excerpt from
+>> the lp5024 documentation. This is not something that can be
+>> mapped to RGB color space, but rather to HSV/HSL, with the
+>> reservation that the hardware implementation uses PWM
+>> for setting color intensity.
+>>
+>> <quote>
+>> 8.3.1.2 Independent Intensity Control Per RGB LED Module
+>>
+>> When color is fixed, the independent intensity-control is used to
+>> achieve accurate and flexible dimming control for every RGB LED module.
+>>
+>> 8.3.1.2.1 Intensity-Control Register Configuration
+>>
+>> Every three consecutive output channels are assigned to their respective
+>> intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
+>> and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
+>> connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
+>> device allows 256-step intensity control for each RGB LED module, which
+>> helps achieve a smooth dimming effect.
+>> </quote>
+>>
+>>> I don't have problem with that, either; other drivers already do
+>>> that. He's free to use existing same interface.
+>>>
+>>> But that is insufficient, as it does not allow simple stuff, such as
+>>> turning led "white".
+>>>
+>>> So... perhaps we should agree on requirements, first, and then we can
+>>> discuss solutions?
+>>>
+>>> Requirements for RGB LED interface:
+>>>
+>>> 1) Userspace should be able to set the white color
+>>>
+>>> 2) Userspace should be able to arbitrary color from well known list
+>>> and it should approximately match what would CRT, LCD or OLED monitor display
+>>
+>> The difference is that monitor display driver is pre-calibrated
+>> for given display by the manufacturer. With the LED controllers the
+>> manufacturer has no control over what LEDs will be connected to the
+>> iouts. Therefore it should be not surprising that colors produced
+>> by custom LEDs are not as user would expect when comparing to
+>> the RGB color displayed on the monitor display.
+>>
+>> TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
+>> that show how to produce various patterns with use of the reference
+>> board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
+>>
+>> Document [0] mentions also specific "Design considerations" in the
+>> chapter 2.2:
+>>
+>> <quote>
+>> Several considerations are taken into account for this particular design:
+>> • LED map (ring) for meeting the requirement of popular human-machine interaction style.
+>> • LED size, numbers and the diffuse design for meeting lighting pattern uniformity.
+>> • Analog dimming in the difference ambient light lux without losing dimming resolution in lighting pattern.
+>>
+>> These considerations apply to most human-machine interaction end equipment with day and night vision
+>> designs in some way, but the designer must decide the particular considerations to take into account for a
+>> specific design.
+>> </quote>
+>>
+>> This renders your requirement 2) infeasible with use of custom LEDs
+>> any fixed algorithm, since the final effect will always heavily depend
+> 
+> Typo here: s/any fixed/and fixed/
+> 
+>> on the LED circuit design.
+>>
+>>>
+>>>      2a) LEDs probably slightly change color as they age. That's out of
+>>>      scope, unless the variation is much greater than on monitors.
+>>>
+>>>      2b) Manufacturing differences cause small color variation. Again,
+>>>      that's out of scope, unless the variation is much greater than on
+>>>      monitors.
+>>>
+>>> Nice to have features:
+>>>
+>>> 3) Full range of available colors/intensities should be available to
+>>> userspace
+>>>
+>>> 4) Interface should work well with existing triggers
+>>>
+>>> 5) It would be nice if userland knew how many lumens are produced at
+>>> each wavelength for each setting (again, minus aging and manufacturing
+>>> variations).
+>>>
+>>> 6) Complexity of math in kernel should be low, and preferably it
+>>> should be integer or fixed point
+>>>
+>>> Problems:
+>>>
+>>> a) RGB LEDs are usually not balanced. Setting 100% PWM on
+>>> red/green/blue channels will result in nothing close to white
+>>> light. In fact, to get white light on N900, blue and green channel's
+>>> PWM needs to be set pretty low, as in 5%.
+>>>
+>>> b) LED class does not define any relation between "brightness" in
+>>> sysfs and ammount of light in lumens. Some drivers use close to linear
+>>> relation, some use exponential relation. Human eyes percieve logarithm
+>>> of lumens. RGB color model uses even more complex function.
+>>>
+>>> c) Except for white LEDs, LEDs are basically sources of single
+>>> wavelength of light, while CRTs and LCDs produce broader
+>>> spectrums.
+>>>
+>>> d) RG, RGBW and probably other LED combinations exist.
+>>>
+>>> e) Not all "red" LEDs will produce same wavelength. Similar
+>>> differences will exist for other colors.
+>>>
+>>> f) We have existing RGB LEDs represented as three separate
+>>> monochromatic LEDs in sysfs.
+>>
+>> One general question: do you have any solutions in store?
+>>
+>> [0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
+>> [1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
+>>
+> 
 
-Guenter
+I just wanted to point out that there are 4 total devices right now that use the same mapping
 
->  	for_each_child_of_node(np, child) {
->  		ret = ina3221_probe_child_from_dt(dev, child, ina);
->  		if (ret)
-> @@ -666,6 +682,10 @@ static int ina3221_probe(struct i2c_client *client,
->  	/* The driver will be reset, so use reset value */
->  	ina->reg_config = INA3221_CONFIG_DEFAULT;
->  
-> +	/* Clear continuous bit to use single-shot mode */
-> +	if (ina->single_shot)
-> +		ina->reg_config &= ~INA3221_CONFIG_MODE_CONTINUOUS;
-> +
->  	/* Disable channels if their inputs are disconnected */
->  	for (i = 0; i < INA3221_NUM_CHANNELS; i++) {
->  		if (ina->inputs[i].disconnected)
+LP5018, LP5024, LP5030 and the LP5036.
+
+I can implement what ever we would like to I just need to know what to design against.
+
+But keep in mind I still need to invest my time in the other TI-lmu patches on my list to complete.
+
+Dan
+
+-- 
+------------------
+Dan Murphy
