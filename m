@@ -1,96 +1,44 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH v2 2/2] arm64: dts: meson-gx: add support for simplefb
-Date: Mon,  7 Jan 2019 10:53:07 +0100
-Message-ID: <20190107095307.15233-3-mjourdan@baylibre.com>
-References: <20190107095307.15233-1-mjourdan@baylibre.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: [RESEND PATCH v2 3/3] ARM: dts: stm32: Add clock on stm32mp157c syscfg
+Date: Mon, 7 Jan 2019 11:07:45 +0100
+Message-ID: <1546855665-26218-4-git-send-email-fabrice.gasnier@st.com>
+References: <1546855665-26218-1-git-send-email-fabrice.gasnier@st.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107095307.15233-1-mjourdan@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1546855665-26218-1-git-send-email-fabrice.gasnier@st.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: lee.jones@linaro.org, alexandre.torgue@st.com
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com, robh+dt@kernel.org, mcoquelin.stm32@gmail.com, fabrice.gasnier@st.com, gabriel.fernandez@st.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SimpleFB allows transferring a framebuffer from the firmware/bootloader
-to the kernel, while making sure the related clocks and power supplies
-stay enabled.
+STM32 syscfg needs a clock to access registers.
 
-Add nodes for CVBS and HDMI Simple Framebuffers.
-
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 ---
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi   | 22 +++++++++++++++++++++
- arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi |  6 ++++++
- arch/arm64/boot/dts/amlogic/meson-gxl.dtsi  |  6 ++++++
- 3 files changed, 34 insertions(+)
+ arch/arm/boot/dts/stm32mp157c.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 44c5c51ff1fa..a6ffdbba37b9 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -50,6 +50,28 @@
+diff --git a/arch/arm/boot/dts/stm32mp157c.dtsi b/arch/arm/boot/dts/stm32mp157c.dtsi
+index 8bf1c17..61b2a70 100644
+--- a/arch/arm/boot/dts/stm32mp157c.dtsi
++++ b/arch/arm/boot/dts/stm32mp157c.dtsi
+@@ -820,6 +820,7 @@
+ 		syscfg: syscon@50020000 {
+ 			compatible = "st,stm32mp157-syscfg", "syscon";
+ 			reg = <0x50020000 0x400>;
++			clocks = <&rcc SYSCFG>;
  		};
- 	};
  
-+	chosen {
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+
-+		simplefb_cvbs: framebuffer-cvbs {
-+			compatible = "amlogic,simple-framebuffer",
-+				     "simple-framebuffer";
-+			amlogic,pipeline = "vpu-cvbs";
-+			power-domains = <&pwrc_vpu>;
-+			status = "disabled";
-+		};
-+
-+		simplefb_hdmi: framebuffer-hdmi {
-+			compatible = "amlogic,simple-framebuffer",
-+				     "simple-framebuffer";
-+			amlogic,pipeline = "vpu-hdmi";
-+			power-domains = <&pwrc_vpu>;
-+			status = "disabled";
-+		};
-+	};
-+
- 	cpus {
- 		#address-cells = <0x2>;
- 		#size-cells = <0x0>;
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-index a7b883ced0a8..a60d3652beee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb.dtsi
-@@ -784,6 +784,12 @@
- 	resets = <&reset RESET_SD_EMMC_C>;
- };
- 
-+&simplefb_hdmi {
-+	clocks = <&clkc CLKID_HDMI_PCLK>,
-+		 <&clkc CLKID_CLK81>,
-+		 <&clkc CLKID_GCLK_VENCI_INT0>;
-+};
-+
- &spicc {
- 	clocks = <&clkc CLKID_SPICC>;
- 	clock-names = "core";
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-index d5c3d78aafeb..3093ae421b17 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxl.dtsi
-@@ -787,6 +787,12 @@
- 	resets = <&reset RESET_SD_EMMC_C>;
- };
- 
-+&simplefb_hdmi {
-+	clocks = <&clkc CLKID_HDMI_PCLK>,
-+		 <&clkc CLKID_CLK81>,
-+		 <&clkc CLKID_GCLK_VENCI_INT0>;
-+};
-+
- &spicc {
- 	clocks = <&clkc CLKID_SPICC>;
- 	clock-names = "core";
+ 		lptimer2: timer@50021000 {
 -- 
-2.20.1
+1.9.1
