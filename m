@@ -1,45 +1,52 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH 0/4] Add driver for globaltop GNSS receivers
-Date: Mon, 7 Jan 2019 17:37:12 +0100
-Message-ID: <20190107163712.GF14782@localhost>
-References: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
- <86bm4x6830.fsf@baylibre.com>
- <20190104091937.GA4737@localhost>
- <86ftu41lqx.fsf@baylibre.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Donghoon Han <nazgul33@gmail.com>
+Subject: [PATCH V2 2/2] Input: rotaty-encoder - Add DT binding document
+Date: Tue,  8 Jan 2019 01:42:49 +0900
+Message-ID: <20190107164249.2342-3-nazgul33@gmail.com>
+References: <20190107164249.2342-1-nazgul33@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <86ftu41lqx.fsf@baylibre.com>
+In-Reply-To: <20190107164249.2342-1-nazgul33@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
+To: linux-input@vger.kernel.org
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Daniel Mack <daniel@caiaq.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2019 at 05:21:58PM +0100, Loys Ollivier wrote:
-> 
-> On Fri 04 Jan 2019 at 09:19, Johan Hovold wrote:
-> 
-> > On Thu, Jan 03, 2019 at 05:04:35PM +0100, Loys Ollivier wrote:
-> >> 
-> >> As suggested by Neil Armstrong - this GNSS device seems to behave like
-> >> most generic GNSS receivers.
-> >> I'll send a v2 with a generic driver that works for both GlobalTop and
-> >> u-blox.
-> >
-> > That doesn't sound right to me. Judging from a quick look, this device
-> > appears to be based on a mediatek chipset, so I suggest reworking
-> > (renaming) this as a Mediatek driver (gnss type would be MTK, reflecting
-> > the vendor protocol) even if it happens to look a lot like the current
-> > u-blox driver.
-> >
-> OK, agreed - will rename the driver as Mediatek.
-> Would you recommend keeping any reference to Globaltop ? Such as in the
-> devicetree gnss bindings.
-> Or only keep "mediatek,mt3339" for any solution based on that chipset.
+Add DT binding document for rotary-encoder, keycode options.
 
-Yes, I suggest keeping the globaltop compatible (cf. the sirf driver for
-devices based on sirf chipsets).
+Signed-off-by: Donghoon Han <nazgul33@gmail.com>
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Daniel Mack <daniel@caiaq.de>
+Cc: devicetree@vger.kernel.org
+To: linux-input@vger.kernel.org
+---
+ .../devicetree/bindings/input/rotary-encoder.txt     | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-Thanks,
-Johan
+diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+index f99fe5cdeaec..9986ec2af2d4 100644
+--- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
++++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+@@ -12,6 +12,10 @@ Optional properties:
+ - rotary-encoder,relative-axis: register a relative axis rather than an
+   absolute one. Relative axis will only generate +1/-1 events on the input
+   device, hence no steps need to be passed.
++- rotary-encoder,relative-keys : generate pair of key events. This setting
++  behaves just like relative-axis, generating key events instead.
++  (Keycodes[2] corresponds to -1/1 events.)
++- rotary-encoder,relative-keycodes : keycodes for relative-keys
+ - rotary-encoder,rollover: Automatic rollover when the rotary value becomes
+   greater than the specified steps or smaller than 0. For absolute axis only.
+ - rotary-encoder,steps-per-period: Number of steps (stable states) per period.
+@@ -48,3 +52,11 @@ Example:
+ 			rotary-encoder,encoding = "binary";
+ 			rotary-encoder,rollover;
+ 		};
++
++		rotary@2 {
++			compatible = "rotary-encoder";
++			gpios = <&gpio 21 0>, <&gpio 22 0>;
++			rotary-encoder,relative-keys;
++			rotary-encoder,relative-keycode = <103>, <108>;
++			rotary-encoder,steps-per-period = <2>;
++		};
+-- 
+2.17.1
