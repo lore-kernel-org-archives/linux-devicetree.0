@@ -1,82 +1,33 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH 1/4] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Mon, 7 Jan 2019 15:31:32 +0800
-Message-ID: <1546846292.4433.24.camel@mhfsdcap03>
-References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
-         <1545896066-897-2-git-send-email-min.guo@mediatek.com>
-         <20190103221414.GA14639@bogus> <1546570807.585.31.camel@mhfsdcap03>
-         <CAL_JsqK5x8=b6gXfBStZwHbq4zvuCuHCLAwsSqFEMJtSffC3BQ@mail.gmail.com>
+From: Taniya Das <tdas@codeaurora.org>
+Subject: Re: [PATCH v1] cpufreq: qcom: Read voltage LUT and populate OPP
+Date: Mon, 7 Jan 2019 13:07:16 +0530
+Message-ID: <10e458b8-e17f-0502-5b2a-84ca179656ea@codeaurora.org>
+References: <1545415608-15163-1-git-send-email-tdas@codeaurora.org>
+ <154542875327.13075.3548703610883534822@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqK5x8=b6gXfBStZwHbq4zvuCuHCLAwsSqFEMJtSffC3BQ@mail.gmail.com>
+In-Reply-To: <154542875327.13075.3548703610883534822@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Bin Liu <b-liu@ti.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Chunfeng Yun <chunfeng.yun@mediatek.com>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>
+To: Stephen Boyd <swboyd@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-01-04 at 10:10 -0600, Rob Herring wrote:
-> On Thu, Jan 3, 2019 at 9:00 PM Min Guo <min.guo@mediatek.com> wrote:
-> >
-> > On Thu, 2019-01-03 at 16:14 -0600, Rob Herring wrote:
-> > > On Thu, Dec 27, 2018 at 03:34:23PM +0800, min.guo@mediatek.com wrote:
-> > > > From: Min Guo <min.guo@mediatek.com>
-> > > >
-> > > > This adds support for MediaTek musb controller in
-> > > > host, peripheral and otg mode
+
+
+On 12/22/2018 3:15 AM, Stephen Boyd wrote:
+> Quoting Taniya Das (2018-12-21 10:06:48)
+>> Add support to read the voltage look up table and populate OPP for all
+>> corresponding CPUS.
 > 
-> [...]
+> Yes, but why? Please specify the motivations in the commit text.
 > 
-> > > > + - interrupts      : interrupt used by musb controller
-> > > > + - interrupt-names : must be "mc"
-> > >
-> > > -names is pointless when there is only one.
-> > The MUSB core driver has two interrupts, one is for MAC, another for DMA,
-> > but on MTK platform, there is only a MAC interrupt, here following the binding
-> > of MUSB core driver.
-> 
-> You should probably be listing the same interrupt number twice if 2
-> interrupts are combined.
+Sure, would update in the next patch.
 
-If only one interrupt is regisetred in driver, dose still need list the
-same interrupt number twice in dtsi?
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation.
 
-> > > > +Optional properties:
-> > > > + - extcon : external connector for VBUS and IDPIN changes detection,
-> > > > +   needed when supports dual-role mode.
-> > >
-> > > Don't use extcon for new bindings. The usb-connector binding should be
-> > > used instead.
-> > This is used to detect the changes of the IDPIN and VBUS, the change
-> > events are provided by other drivers, such as extcon-usb-gpio.c, and
-> > then switch MUSB controller to host or device mode, but the
-> > usb-connector can't detect these changes.
-> 
-> To repeat, do not use extcon binding for new bindings. It is poorly
-> designed as it reflects extcon driver needs, not a description of the
-> hardware. If you have ID on GPIO, then that belongs in a usb-connector
-> node because that GPIO goes to the connector. For Vbus, you should
-> have a vbus-supply in the connector and use a gpio-regulator if it is
-> GPIO controlled.
-
-Sorry, I didn't find a common driver describing the usb-connector. Is
-there any driver that I can refer to, specially the way to switch MUSB
-controller between host and device mode?
-
-> > > > + - vbus-supply : reference to the VBUS regulator, needed when supports
-> > > > +   dual-role mode.
-> > >
-> > > The controller is powered from Vbus? Probably not. This belongs in the
-> > > connector or maybe the phy (if the phy is powered from Vbus).
-> > The Vbus is used to provide 5V voltage to the connected device when the
-> > controller works as host mode.
-> 
-> I know what Vbus is. Unless Vbus is providing power to the host
-> controller, putting the Vbus supply in the controller node is not a
-> accurate representation of the hardware.
-
-I will put vbus-supply in usb-connector after implement it.
-
-> Rob
+--
