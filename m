@@ -1,28 +1,116 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: Re: [PATCH v2 2/5] mfd: qcom-spmi-pmic: use devm_mfd_add_devices
- instead of devm_of_platform_populate
-Date: Mon, 7 Jan 2019 06:30:07 -0500
-Message-ID: <20190107113007.GA1284@basecamp>
-References: <20190107021145.6370-1-masneyb@onstation.org>
- <20190107021145.6370-3-masneyb@onstation.org>
- <CACRpkdbLU_2JC1wT=M7EPsx6gPxL=poj2Ci8zTa++51K2qGZ4A@mail.gmail.com>
+From: Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH lora-next 3/5] net: lora: sx130x: Add PicoCell serdev
+ driver
+Date: Mon, 07 Jan 2019 13:11:15 +0100
+Message-ID: <1546863075.3037.33.camel@suse.com>
+References: <20190104112131.14451-1-afaerber@suse.de>
+         <20190104112131.14451-4-afaerber@suse.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CACRpkdbLU_2JC1wT=M7EPsx6gPxL=poj2Ci8zTa++51K2qGZ4A@mail.gmail.com>
+In-Reply-To: <20190104112131.14451-4-afaerber@suse.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Lee Jones <lee.jones@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Andreas =?ISO-8859-1?Q?F=E4rber?= <afaerber@suse.de>, linux-lpwan@lists.infradead.org, linux-serial@vger.kernel.org
+Cc: "David S. Miller" <davem@davemloft.net>, Johan Hovold <johan@kernel.org>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org, netdev@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2019 at 11:53:07AM +0100, Linus Walleij wrote:
-> I suppose Lee can merge this in orthogonal in the MFD tree,
-> the end result will be functional after the v5.1 merge window.
+On Fr, 2019-01-04 at 12:21 +0100, Andreas Färber  wrote:
+> 
+> +struct picogw_device {
+> +	struct serdev_device *serdev;
+> +
+> +	u8 rx_buf[1024];
 
-To keep git bisect happy, it would be nice if either all of the patches
-go in through the same tree (with the proper ACKs), or if the first four
-patches are applied during the v5.1 merge window, and the last patch is
-applied during the v5.2 merge window.
+No, you cannot do that. AFAICT this buffer can be used for DMA.
+Thus putting it into another data structure violates the rules
+of DMA coherency. You must allocate it separately.
 
-Brian
+> +static int picogw_send_cmd(struct picogw_device *picodev, char cmd,
+> +	u8 addr, const void *data, u16 data_len)
+> +{
+> +	struct serdev_device *sdev = picodev->serdev;
+> +	u8 buf[4];
+> +	int i, ret;
+> +
+> +	buf[0] = cmd;
+> +	buf[1] = (data_len >> 8) & 0xff;
+> +	buf[2] = (data_len >> 0) & 0xff;
+
+We have macros for converting endianness and unaligned access.
+
+> +	buf[3] = addr;
+> +
+> +	dev_dbg(&sdev->dev, "%s: %c %02x %02x %02x\n", __func__, buf[0],
+> +		(unsigned int)buf[1], (unsigned int)buf[2], (unsigned int)buf[3]);
+> +	for (i = 0; i < data_len; i++) {
+> +		dev_dbg(&sdev->dev, "%s: data %02x\n", __func__, (unsigned int)((const u8*)data)[i]);
+> +	}
+> +
+> +	ret = serdev_device_write_buf(sdev, buf, 4);
+> +	if (ret < 0)
+> +		return ret;
+> +	if (ret != 4)
+> +		return -EIO;
+> +
+> +	if (data_len) {
+> +		ret = serdev_device_write_buf(sdev, data, data_len);
+> +		if (ret < 0)
+> +			return ret;
+> +		if (ret != data_len)
+> +			return -EIO;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int picogw_recv_answer(struct picogw_device *picodev,
+> +	char *cmd, bool *ack, void *buf, int buf_len,
+> +	unsigned long timeout)
+> +{
+> +	int len;
+> +
+> +	timeout = wait_for_completion_timeout(&picodev->answer_comp, timeout);
+> +	if (!timeout)
+> +		return -ETIMEDOUT;
+
+And? The IO is still scheduled. Simply erroring out is problematic.
+If you see a timeout you need to kill the scheduled IO.
+
+> +static int picogw_handle_answer(struct picogw_device *picodev)
+> +{
+> +	struct device *dev = &picodev->serdev->dev;
+> +	unsigned int data_len = ((u16)picodev->rx_buf[1] << 8) | picodev->rx_buf[2];
+> +	int cmd_len = 4 + data_len;
+> +	int i, ret;
+> +
+> +	if (picodev->rx_len < 4)
+> +		return 0;
+> +
+> +	if (cmd_len > sizeof(picodev->rx_buf)) {
+> +		dev_warn(dev, "answer too long (%u)\n", data_len);
+> +		return 0;
+> +	}
+> +
+> +	if (picodev->rx_len < cmd_len) {
+> +		dev_dbg(dev, "got %u, need %u bytes\n", picodev->rx_len, cmd_len);
+> +		return 0;
+> +	}
+> +
+> +	dev_dbg(dev, "Answer %c =%u %s (%u)\n", picodev->rx_buf[0],
+> +		(unsigned int)picodev->rx_buf[3],
+> +		(picodev->rx_buf[3] == 1) ? "OK" : "K0",
+> +		data_len);
+> +	for (i = 0; i < data_len; i++) {
+> +		//dev_dbg(dev, "%s: %02x\n", __func__, (unsigned int)picodev->rx_buf[4 + i]);
+> +	}
+> +
+> +	complete(&picodev->answer_comp);
+> +	ret = wait_for_completion_interruptible_timeout(&picodev->answer_read_comp, HZ / 2);
+
+Problematic. You have no idea when that complete() will have an effect.
+You are operating with an undefined timeout here. Theoretically it
+could be negative.
+
+	Regards
+		Oliver
