@@ -1,22 +1,15 @@
 From: Stefan Agner <stefan@agner.ch>
-Subject: [PATCH 1/2] ARM: dts: imx6ul: add DMA properties for ECSPI
-Date: Mon,  7 Jan 2019 14:22:25 +0100
-Message-ID: <20190107132226.16216-1-stefan@agner.ch>
+Subject: [PATCH 2/2] ARM: dts: imx7: add DMA properties for ECSPI
+Date: Mon,  7 Jan 2019 14:22:26 +0100
+Message-ID: <20190107132226.16216-2-stefan@agner.ch>
+References: <20190107132226.16216-1-stefan@agner.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190107132226.16216-1-stefan@agner.ch>
+Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, s.hauer@pengutronix.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-arm-kernel@lists.infradead.org
+Cc: kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Stefan Agner <stefan@agner.ch>
 List-Id: devicetree@vger.kernel.org
 
 Allow to use DMA for SPI by adding the appropriate DMA properites
@@ -24,45 +17,45 @@ to the ecspi nodes.
 
 Signed-off-by: Stefan Agner <stefan@agner.ch>
 ---
- arch/arm/boot/dts/imx6ul.dtsi | 8 ++++++++
+ arch/arm/boot/dts/imx7s.dtsi | 8 ++++++++
  1 file changed, 8 insertions(+)
 
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 6dc0b569acdf..b0193abf7005 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -227,6 +227,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI1>,
- 						 <&clks IMX6UL_CLK_ECSPI1>;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index a052198f6e96..b9330176c3af 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -653,6 +653,8 @@
+ 				clocks = <&clks IMX7D_ECSPI4_ROOT_CLK>,
+ 					<&clks IMX7D_ECSPI4_ROOT_CLK>;
+ 				clock-names = "ipg", "per";
++				dmas = <&sdma 6 7 1>, <&sdma 7 7 2>;
++				dma-names = "rx", "tx";
+ 				status = "disabled";
+ 			};
+ 
+@@ -734,6 +736,8 @@
+ 					clocks = <&clks IMX7D_ECSPI1_ROOT_CLK>,
+ 						<&clks IMX7D_ECSPI1_ROOT_CLK>;
  					clock-names = "ipg", "per";
-+					dmas = <&sdma 3 7 1>, <&sdma 4 7 2>;
++					dmas = <&sdma 0 7 1>, <&sdma 1 7 2>;
 +					dma-names = "rx", "tx";
  					status = "disabled";
  				};
  
-@@ -239,6 +241,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI2>,
- 						 <&clks IMX6UL_CLK_ECSPI2>;
+@@ -746,6 +750,8 @@
+ 					clocks = <&clks IMX7D_ECSPI2_ROOT_CLK>,
+ 						<&clks IMX7D_ECSPI2_ROOT_CLK>;
  					clock-names = "ipg", "per";
-+					dmas = <&sdma 5 7 1>, <&sdma 6 7 2>;
++					dmas = <&sdma 2 7 1>, <&sdma 3 7 2>;
 +					dma-names = "rx", "tx";
  					status = "disabled";
  				};
  
-@@ -251,6 +255,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI3>,
- 						 <&clks IMX6UL_CLK_ECSPI3>;
+@@ -758,6 +764,8 @@
+ 					clocks = <&clks IMX7D_ECSPI3_ROOT_CLK>,
+ 						<&clks IMX7D_ECSPI3_ROOT_CLK>;
  					clock-names = "ipg", "per";
-+					dmas = <&sdma 7 7 1>, <&sdma 8 7 2>;
-+					dma-names = "rx", "tx";
- 					status = "disabled";
- 				};
- 
-@@ -263,6 +269,8 @@
- 					clocks = <&clks IMX6UL_CLK_ECSPI4>,
- 						 <&clks IMX6UL_CLK_ECSPI4>;
- 					clock-names = "ipg", "per";
-+					dmas = <&sdma 9 7 1>, <&sdma 10 7 2>;
++					dmas = <&sdma 4 7 1>, <&sdma 5 7 2>;
 +					dma-names = "rx", "tx";
  					status = "disabled";
  				};
