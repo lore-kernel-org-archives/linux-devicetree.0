@@ -1,50 +1,44 @@
-Return-Path: <SRS0=Ow74=PM=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mx01.hxt-semitech.com ([223.203.96.7]:46768 "EHLO
-        barracuda.hxt-semitech.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726053AbfADJAl (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 4 Jan 2019 04:00:41 -0500
-From: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
-Subject: [PATCH 2/4] dt-bindings: power supply: Document dps650ab
-Date: Fri, 4 Jan 2019 17:00:30 +0800
-Message-ID: <8540dfc96a75a6aa4bd1a7d5f24db7d36a71282c.1546591275.git.xiaoting.liu@hxt-semitech.com>
-In-Reply-To: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
-References: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
+Return-Path: <SRS0=9cDv=PP=baylibre.com=bgolaszewski@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8BIT
-Sender: devicetree-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: openbmc@lists.ozlabs.org, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, shunyong.yang@hxt-semitech.com, dongsheng.wang@hxt-semitech.com, Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+References: <20190103161329.15235-1-thomas.petazzoni@bootlin.com>
+In-Reply-To: <20190103161329.15235-1-thomas.petazzoni@bootlin.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date: Mon, 7 Jan 2019 10:54:46 +0100
+Message-ID: <CAMpxmJUMqdMca6Q=jOLc0GAUfDcY-+3cR8wija+19ALp2DwRBw@mail.gmail.com>
+Subject: Re: [PATCH 1/2] dt-bindings: gpio: pca953x: document the nxp,pcal6416
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Bindings for DPS650AB power, voltage, temperature, and fan monitering.
+czw., 3 sty 2019 o 17:13 Thomas Petazzoni
+<thomas.petazzoni@bootlin.com> napisa=C5=82(a):
+>
+> The NXP PCAL6416 is a variant of the PCA GPIO expander, with 16 GPIOs.
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> ---
+>  Documentation/devicetree/bindings/gpio/gpio-pca953x.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt b/Do=
+cumentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> index a3f95d7b6c55..2fb1bfec4f13 100644
+> --- a/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> +++ b/Documentation/devicetree/bindings/gpio/gpio-pca953x.txt
+> @@ -16,6 +16,7 @@ Required properties:
+>         nxp,pca9574
+>         nxp,pca9575
+>         nxp,pca9698
+> +       nxp,pcal6416
+>         nxp,pcal6524
+>         nxp,pcal9555a
+>         maxim,max7310
+> --
+> 2.20.1
+>
 
-Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
----
- Documentation/devicetree/bindings/hwmon/dps650ab.txt | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Queued for v5.1, thanks!
 
-diff --git a/Documentation/devicetree/bindings/hwmon/dps650ab.txt b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
-new file mode 100644
-index 000000000000..bbd601100e66
---- /dev/null
-+++ b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
-@@ -0,0 +1,11 @@
-+Bindings for DPS650AB power, voltage, temperature, and fan monitering
-+
-+Required properties:
-+- compatible : "dps650ab"
-+- reg        : I2C address, one of 0x58, 0x59.
-+
-+Example:
-+       dps650ab@58 {
-+                   compatible = "dps650ab";
-+                   reg = <0x58>;
-+       };
---
-1.8.3.1
-
-
-
-
-This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
+Bartosz
