@@ -1,8 +1,8 @@
 From: Schrempf Frieder <frieder.schrempf@kontron.de>
-Subject: [PATCH v8 5/7] ARM: dts: ls1021a: Remove fsl,qspi-has-second-chip as
- it is not used
-Date: Mon, 7 Jan 2019 09:29:54 +0000
-Message-ID: <20190107092823.11188-6-frieder.schrempf@kontron.de>
+Subject: [PATCH v8 3/7] dt-bindings: spi: Adjust the bindings for the FSL QSPI
+ driver
+Date: Mon, 7 Jan 2019 09:29:50 +0000
+Message-ID: <20190107092823.11188-4-frieder.schrempf@kontron.de>
 References: <20190107092823.11188-1-frieder.schrempf@kontron.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -11,34 +11,82 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190107092823.11188-1-frieder.schrempf@kontron.de>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, Schrempf Frieder <frieder.schrempf@kontron.de>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>
+Cc: "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>, "han.xu@nxp.com" <han.xu@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Schrempf Frieder <frieder.schrempf@kontron.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.or>
 List-Id: devicetree@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-After switching to the new FSL QSPI driver the property
-'fsl,qspi-has-second-chip' is not needed anymore.
+Adjust the documentation of the new SPI memory interface based
+driver to reflect the new drivers settings.
 
-The driver now uses the 'reg' property to determine the bus and
-the chipselect.
+The "old" driver was using the "fsl,qspi-has-second-chip" property to
+select one of two dual chip setups (two chips on one bus or two chips
+on separate buses). And it used the order in which the subnodes are
+defined in the dt to select the CS, the chip is connected to.
+
+Both methods are wrong and in fact the "reg" property should be used to
+determine which bus and CS a chip is connected to. This also enables us
+to use different setups than just single chip, or symmetric dual chip.
+
+So the porting of the driver from the MTD to the SPI framework actually
+enforces the use of the "reg" properties and makes
+"fsl,qspi-has-second-chip" superfluous.
+
+As all boards that have "fsl,qspi-has-second-chip" set, also have
+correct "reg" properties, the removal of this property shouldn't lead to
+any incompatibilities.
+
+The only compatibility issues I can see are with imx6sx-sdb.dts and
+imx6sx-sdb-reva.dts, which have their reg properties set incorrectly
+(see explanation here: [2]), all other boards should stay compatible.
+
+Also the "big-endian" flag was removed, as this setting is now selected
+by the driver, depending on which SoC is in use.
+
+[2] https://patchwork.ozlabs.org/patch/922817/#1925445
 
 Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts | 1 -
- 1 file changed, 1 deletion(-)
+ .../devicetree/bindings/spi/spi-fsl-qspi.txt      | 18 ++++++++----------
+ 1 file changed, 8 insertions(+), 10 deletions(-)
 
-diff --git a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-index 6a83f30029ea..d3a1a73ae97e 100644
---- a/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-+++ b/arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts
-@@ -203,7 +203,6 @@
+diff --git a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+index 483e9cfac1b1..e8f1d627d288 100644
+--- a/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
++++ b/Documentation/devicetree/bindings/spi/spi-fsl-qspi.txt
+@@ -14,15 +14,13 @@ Required properties:
+   - clocks : The clocks needed by the QuadSPI controller
+   - clock-names : Should contain the name of the clocks: "qspi_en" and "qspi".
+ 
+-Optional properties:
+-  - fsl,qspi-has-second-chip: The controller has two buses, bus A and bus B.
+-                              Each bus can be connected with two NOR flashes.
+-			      Most of the time, each bus only has one NOR flash
+-			      connected, this is the default case.
+-			      But if there are two NOR flashes connected to the
+-			      bus, you should enable this property.
+-			      (Please check the board's schematic.)
+-  - big-endian : That means the IP register is big endian
++Required SPI slave node properties:
++  - reg: There are two buses (A and B) with two chip selects each.
++	 This encodes to which bus and CS the flash is connected:
++		<0>: Bus A, CS 0
++		<1>: Bus A, CS 1
++		<2>: Bus B, CS 0
++		<3>: Bus B, CS 1
+ 
+ Example:
+ 
+@@ -40,7 +38,7 @@ qspi0: quadspi@40044000 {
+ 	};
  };
  
- &qspi {
--	fsl,qspi-has-second-chip;
- 	status = "okay";
+-Example showing the usage of two SPI NOR devices:
++Example showing the usage of two SPI NOR devices on bus A:
  
- 	flash: flash@0 {
+ &qspi2 {
+ 	pinctrl-names = "default";
 -- 
 2.17.1
