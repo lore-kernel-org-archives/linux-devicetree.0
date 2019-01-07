@@ -1,58 +1,45 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC RESEND PATCH 0/7] Add driver for dvfsrc and add support for
- active state of scpsys on mt8183
-Date: Mon, 7 Jan 2019 18:34:54 +0200
-Message-ID: <08d15fa8-7e53-518c-54bb-8050b0e4aabd@linaro.org>
-References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
- <154655603153.15366.7761694381359713995@swboyd.mtv.corp.google.com>
- <1546859080.6818.128.camel@mtksdaap41>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH 0/4] Add driver for globaltop GNSS receivers
+Date: Mon, 7 Jan 2019 17:37:12 +0100
+Message-ID: <20190107163712.GF14782@localhost>
+References: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
+ <86bm4x6830.fsf@baylibre.com>
+ <20190104091937.GA4737@localhost>
+ <86ftu41lqx.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546859080.6818.128.camel@mtksdaap41>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <86ftu41lqx.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>, Stephen Boyd <swboyd@chromium.org>
-Cc: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: Johan Hovold <johan@kernel.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Henry,
-
-On 1/7/19 13:04, Henry Chen wrote:
-> On Thu, 2019-01-03 at 14:53 -0800, Stephen Boyd wrote:
->> Quoting Henry Chen (2019-01-02 06:09:51)
->>> The patchsets add support for MediaTek hardware module named DVFSRC
->>> (dynamic voltage and frequency scaling resource collector). The DVFSRC is
->>> a HW module which is used to collect all the requests from both software
->>> and hardware and turn into the decision of minimum operating voltage and
->>> minimum DRAM frequency to fulfill those requests.
->>>
->>> So, This series is to implement the dvfsrc driver to collect all the
->>> requests of operating voltage or DRAM bandwidth from other device drivers
->>> likes GPU/Camera through 2 frameworks basically:
->>>
->>> 1. PM_QOS_MEMORY_BANDWIDTH from PM QOS: to aggregate the bandwidth
->>>    requirements from different clients
->>
->> Have you looked at using the interconnect framework for this instead of
->> using PM_QOS_MEMORY_BANDWIDTH? Qcom is pushing an interconnect framework
->> to do DRAM bandwidth requirement aggregation.
+On Mon, Jan 07, 2019 at 05:21:58PM +0100, Loys Ollivier wrote:
 > 
-> Sorry, I haven't heard that before. Do you mean is following series
-> patch?
-> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=53775
+> On Fri 04 Jan 2019 at 09:19, Johan Hovold wrote:
 > 
+> > On Thu, Jan 03, 2019 at 05:04:35PM +0100, Loys Ollivier wrote:
+> >> 
+> >> As suggested by Neil Armstrong - this GNSS device seems to behave like
+> >> most generic GNSS receivers.
+> >> I'll send a v2 with a generic driver that works for both GlobalTop and
+> >> u-blox.
+> >
+> > That doesn't sound right to me. Judging from a quick look, this device
+> > appears to be based on a mediatek chipset, so I suggest reworking
+> > (renaming) this as a Mediatek driver (gnss type would be MTK, reflecting
+> > the vendor protocol) even if it happens to look a lot like the current
+> > u-blox driver.
+> >
+> OK, agreed - will rename the driver as Mediatek.
+> Would you recommend keeping any reference to Globaltop ? Such as in the
+> devicetree gnss bindings.
+> Or only keep "mediatek,mt3339" for any solution based on that chipset.
 
-Yes, this one. The idea is that consumer drivers like GPU, camera, video
-encoder etc. report their bandwidth needs by using the interconnect API.
-The framework does the aggregation and configures the hardware. In order
-to use it you need to implement a platform-specific dvfsrc interconnect
-provider driver that understands the SoC topology and knows how to
-configure the hardware. I am not familiar with DVFSRC, but it seems to
-me that it can fit as interconnect provider.
-Does this HW module support any QoS priority/latency configuration or is
-it only bandwidth and voltage?
+Yes, I suggest keeping the globaltop compatible (cf. the sirf driver for
+devices based on sirf chipsets).
 
 Thanks,
-Georgi
+Johan
