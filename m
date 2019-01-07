@@ -1,212 +1,82 @@
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Subject: [RFC] device-tree: resets properties, reset topology, and shared resets
-Date: Mon,  7 Jan 2019 18:51:27 +0100
-Message-ID: <20190107175127.21240-1-geert+renesas@glider.be>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v2 17/17] power: supply: olpc_battery: Add OLPC XO 1.75
+ support
+Date: Mon, 07 Jan 2019 19:02:37 +0100
+Message-ID: <d541d82647338c07fa59b0f2ef63880610733505.camel@v3.sk>
+References: <20181116162403.49854-1-lkundrak@v3.sk>
+         <20181116162403.49854-18-lkundrak@v3.sk> <20181202233458.GE23087@wrath>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181202233458.GE23087@wrath>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-renesas-soc@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>
+To: Darren Hart <dvhart@infradead.org>
+Cc: Mark Brown <broonie@kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Andy Shevchenko <andy@infradead.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, James Cameron <quozl@laptop.org>, Sebastian Reichel <sre@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Eric Miao <eric.y.miao@gmail.com>, Haojian Zhuang <haojian.zhuang@gmail.com>, Daniel Mack <daniel@zonque.org>, Robert Jarzmik <robert.jarzmik@free.fr>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, platform-driver-x86@vger.kernel.org, devel@driverdev.osuosl.org, linux-pm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-	Hi Rob, Mark,
+On Sun, 2018-12-02 at 15:34 -0800, Darren Hart wrote:
+> On Fri, Nov 16, 2018 at 05:24:03PM +0100, Lubomir Rintel wrote:
+> > The battery and the protocol are essentially the same as OLPC XO 1.5,
+> > but the responses from the EC are LSB first.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > Acked-by: Pavel Machek <pavel@ucw.cz>
+> > 
+> > ---
+> > Changes since v1:
+> > - s/s16 ecword_to_cpu/u16 ecword_to_cpu/
+> > - s/u16 ec_byte/u16 ec_word/
+> > 
+> >  drivers/power/supply/olpc_battery.c | 23 ++++++++++++++++++-----
+> >  1 file changed, 18 insertions(+), 5 deletions(-)
+> > 
+> > diff --git a/drivers/power/supply/olpc_battery.c b/drivers/power/supply/olpc_battery.c
+> 
+> ...
+> 
+> > @@ -626,6 +635,10 @@ static int olpc_battery_probe(struct platform_device *pdev)
+> >  	if (ecver > 0x44) {
+> >  		/* XO 1 or 1.5 with a new EC firmware. */
+> >  		data->new_proto = 1;
+> > +	} else if (of_find_compatible_node(NULL, NULL, "olpc,xo1.75-ec")) {
+> 
+> This if/else blocks concerns me a bit, but I might just be missing some
+> context.
+> 
+> This tests both ecver as well as the OF compatible string, is this reliable? Do
+> we know that for all xo1.75-ec compatible nodes the ecver will be <= 0x44? Or,
+> is ecver undefined? If the latter, then perhaps this test should be performed
+> first?
+> 
+> if (of_find_compatible_node....x01.75-ec...)
+> 	...
+> else if (ecver > 0x44)
+> 	...
+> else
+> 	...
+> 
+> And what happens when ecver == 0x44? We test for > and < but not ==, <=,
+> or >= in this block
 
-Best Wishes for 2019!
+You're right, the conditionals are not correct. On XO 1.75 the
+versioning is different (now at level 0x05) and uninteresting,
+therefore the XO 1.75 check needs to go first.
 
-Can you please provide your opinion on parsing the whole device tree for
-"resets" phandle properties to find shared resets, cfr. patch [1] below?
+On XO 1 and XO 1.75, we don't support < 0x44. 0x44 is okay, though uses
+stays with an old protocol, and > 0x44 uses a new protocol.
 
-This is a prerequisite for safe generic reset handling for
-virtualization on DT-based platforms, cfr. patch [2].
+Will follow up with a new version of the patch soon.
 
-Many thanks in advance!
+> 
+> > +		/* XO 1.75 */
+> > +		data->new_proto = 1;
+> > +		data->little_endian = 1;
+> >  	} else if (ecver < 0x44) {
+> >  		/*
+> >  		 * We've seen a number of EC protocol changes; this driver
+> > -- 
+> > 2.19.1
 
-References:
-  1. [PATCH v3] reset: Exclusive resets must be dedicated to a single
-     hardware block
-     https://lore.kernel.org/lkml/20181113133520.20889-1-geert+renesas@glider.be/
-  2. [PATCH v5] vfio: platform: Add generic reset controller support
-     https://lore.kernel.org/lkml/20181113131508.18246-1-geert+renesas@glider.be/
-
->From 96418942472531d736dffd64ff5ae90d055d71b0 Mon Sep 17 00:00:00 2001
-From: Geert Uytterhoeven <geert+renesas@glider.be>
-Date: Mon, 17 Sep 2018 16:34:26 +0200
-Subject: [PATCH v3] reset: Exclusive resets must be dedicated to a single
- hardware block
-
-In some SoCs multiple hardware blocks may share a reset control.
-The reset control API for shared resets will only assert such a reset
-when the drivers for all hardware blocks agree.
-The exclusive reset control API still allows to assert such a reset, but
-that impacts all other hardware blocks sharing the reset.
-
-While the kernel doc comments clearly state that the API for shared
-resets applies to reset controls which are shared between hardware
-blocks, the exact meaning of exclusive resets is not documented.
-Fix the semantic ambiguity with respect to exclusive access vs.
-exclusive reset lines by:
-  1. Clarifying that exclusive resets really are intended for use with
-     reset controls which are dedicated to a single hardware block,
-  2. Ensuring that obtaining an exclusive reset control will fail if the
-     reset is shared by multiple hardware blocks, for both DT-based and
-     lookup-based reset controls.
-
-Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
----
-Question from Philipp for the DT maintainers:
-
-   "I'd still like to hear the device tree maintainers' opinion on
-    parsing the whole DT for "resets" phandle properties to find shared
-    resets like this."
-
-Thanks!
-
-v3:
-  - Make args parameter of __of_reset_is_exclusive() a pointer,
-  - Print a warning when detecting a shared reset,
-  - Rebase on top of of_node_put() move,
-
-v2:
-  - Fix wrong variable in __reset_is_dedicated() loop,
-  - Add missing of_node_put() in __of_reset_is_dedicated(),
-  - Document that exclusive reset controls imply they are dedicated to a
-    single hardware block,
-  - Drop new dedicated flag and new API reset_control_get_dedicated(),
-    as exclusive already implies dedicated,
-  - Rename {__of_,}reset_is_dedicated() to {__of_,}reset_is_exclusive(),
-  - Reword description.
-
-Note: Exclusive lookup-based reset controls were not tested.
----
- drivers/reset/core.c  | 67 +++++++++++++++++++++++++++++++++++++++++++
- include/linux/reset.h |  5 +++-
- 2 files changed, 71 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/reset/core.c b/drivers/reset/core.c
-index bce2d6aefef98131..022740cfab9f429e 100644
---- a/drivers/reset/core.c
-+++ b/drivers/reset/core.c
-@@ -459,6 +459,42 @@ static void __reset_control_put_internal(struct reset_control *rstc)
- 	kref_put(&rstc->refcnt, __reset_control_release);
- }
- 
-+static bool __of_reset_is_exclusive(const struct device_node *node,
-+				    const struct of_phandle_args *args,
-+				    const char *id)
-+{
-+	struct of_phandle_args args2;
-+	struct device_node *node2;
-+	int index, ret;
-+	bool eq;
-+
-+	for_each_node_with_property(node2, "resets") {
-+		if (node == node2)
-+			continue;
-+
-+		for (index = 0; ; index++) {
-+			ret = of_parse_phandle_with_args(node2, "resets",
-+							 "#reset-cells", index,
-+							 &args2);
-+			if (ret)
-+				break;
-+
-+			eq = (args2.np == args.np &&
-+			      args2.args_count == args.args_count &&
-+			      !memcmp(args2.args, args.args,
-+				      args.args_count * sizeof(args.args[0])));
-+			of_node_put(args2.np);
-+			if (eq) {
-+				pr_warn("%pOF requests exclusive control over reset %s shared with %pOF on %pOF\n",
-+					node, id, node2, args->np);
-+				return false;
-+			}
-+		}
-+	}
-+
-+	return true;
-+}
-+
- struct reset_control *__of_reset_control_get(struct device_node *node,
- 				     const char *id, int index, bool shared,
- 				     bool optional)
-@@ -513,6 +549,11 @@ struct reset_control *__of_reset_control_get(struct device_node *node,
- 		goto out;
- 	}
- 
-+	if (!shared && !__of_reset_is_exclusive(node, &args, id)) {
-+		rstc = ERR_PTR(-EINVAL);
-+		goto out;
-+	}
-+
- 	/* reset_list_mutex also protects the rcdev's reset_control list */
- 	rstc = __reset_control_get_internal(rcdev, rstc_id, shared);
- 
-@@ -542,6 +583,27 @@ __reset_controller_by_name(const char *name)
- 	return NULL;
- }
- 
-+static bool __reset_is_exclusive(const struct reset_control_lookup *lookup)
-+{
-+	const struct reset_control_lookup *lookup2;
-+
-+	list_for_each_entry(lookup2, &reset_lookup_list, list) {
-+		if (lookup2 == lookup)
-+			continue;
-+
-+		if (lookup2->provider == lookup->provider &&
-+		    lookup2->index == lookup->index) {
-+			pr_warn("%s/%s requests exclusive control over reset %s:%u shared with %s/%s",
-+				lookup->dev_id, lookup->con_id,
-+				lookup->provider, lookup->index,
-+				lookup2->dev_id, lookup2->con_id);
-+			return false;
-+		}
-+	}
-+
-+	return true;
-+}
-+
- static struct reset_control *
- __reset_control_get_from_lookup(struct device *dev, const char *con_id,
- 				bool shared, bool optional)
-@@ -563,6 +625,11 @@ __reset_control_get_from_lookup(struct device *dev, const char *con_id,
- 		if ((!con_id && !lookup->con_id) ||
- 		    ((con_id && lookup->con_id) &&
- 		     !strcmp(con_id, lookup->con_id))) {
-+			if (!shared && !__reset_is_exclusive(lookup)) {
-+				mutex_unlock(&reset_lookup_mutex);
-+				return ERR_PTR(-EINVAL);
-+			}
-+
- 			mutex_lock(&reset_list_mutex);
- 			rcdev = __reset_controller_by_name(lookup->provider);
- 			if (!rcdev) {
-diff --git a/include/linux/reset.h b/include/linux/reset.h
-index b7f3ad691ee9773e..2698b36bd1eb3e0c 100644
---- a/include/linux/reset.h
-+++ b/include/linux/reset.h
-@@ -123,8 +123,11 @@ static inline int device_reset_optional(struct device *dev)
-  * @id: reset line name
-  *
-  * Returns a struct reset_control or IS_ERR() condition containing errno.
-- * If this function is called more than once for the same reset_control it will
-+ * If this function is called more than once for the same reset control it will
-  * return -EBUSY.
-+ * This function is intended for use with reset controls which are dedicated
-+ * to a single hardware block.  If called for a reset control shared among
-+ * multiple hardware blocks, it will return -EINVAL.
-  *
-  * See reset_control_get_shared for details on shared references to
-  * reset-controls.
--- 
-2.17.1
-
-Gr{oetje,eeting}s,
-
-						Geert
-
---
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-							    -- Linus Torvalds
+Thanks
+Lubo
