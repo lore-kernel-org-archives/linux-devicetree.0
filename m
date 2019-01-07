@@ -1,40 +1,47 @@
-Return-Path: <SRS0=KnNE=PK=microchip.com=Lars.Povlsen@kernel.org>
-From: <Lars.Povlsen@microchip.com>
-Subject: RE: [PATCH v2] mips: gpio: mscc_sgpio: Add DT bindings documentation
-Date: Wed, 2 Jan 2019 07:44:06 +0000
-Message-ID: <BYAPR11MB31091DB38C077C0986B7B1EF828C0@BYAPR11MB3109.namprd11.prod.outlook.com>
-References: <87r2f83uww.fsf@soft-dev15.microsemi.net>
- <87zhsr2jxk.fsf@soft-dev15.microsemi.net>
- <CACRpkdaW5g2NpknVRz84oS-FWt-0vxKGsbaLv32aKmZtcfHjFg@mail.gmail.com>
-In-Reply-To: <CACRpkdaW5g2NpknVRz84oS-FWt-0vxKGsbaLv32aKmZtcfHjFg@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=9cDv=PP=baylibre.com=bgolaszewski@kernel.org>
 MIME-Version: 1.0
-To: linus.walleij@linaro.org
-Cc: devicetree@vger.kernel.org, gregory.clement@bootlin.com, robh+dt@kernel.org
+References: <20190103161329.15235-1-thomas.petazzoni@bootlin.com> <20190103161329.15235-2-thomas.petazzoni@bootlin.com>
+In-Reply-To: <20190103161329.15235-2-thomas.petazzoni@bootlin.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date: Mon, 7 Jan 2019 10:55:02 +0100
+Message-ID: <CAMpxmJU-ThnXJwj0mkyoELhdk8yJZbm+E5OZNFp_XTY6URfXAw@mail.gmail.com>
+Subject: Re: [PATCH 2/2] gpio: pca953x: add support for pcal6416 type
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Linus Walleij <linus.walleij@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgTGludXMhDQoNClRoYW5rIHlvdSBmb3IgeW91ciBpbnB1dCwgSSB3aWxsIHJlZmVyIHRvIGdw
-aW8udHh0DQppbiB0aGUgbmV4dCB2ZXJzaW9uLg0KDQpDaGVlcnMsDQoNCi0tLUxhcnMNCg0KPiAt
-LS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBMaW51cyBXYWxsZWlqIDxsaW51cy53
-YWxsZWlqQGxpbmFyby5vcmc+DQo+IFNlbnQ6IFN1bmRheSwgRGVjZW1iZXIgMzAsIDIwMTggMjE6
-MDANCj4gVG86IExhcnMgUG92bHNlbiAtIE0zMTY3NSA8TGFycy5Qb3Zsc2VuQG1pY3JvY2hpcC5j
-b20+DQo+IENjOiBEZXZpY2UgVHJlZSA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBHcmVn
-b3J5IENsZW1lbnQNCj4gPGdyZWdvcnkuY2xlbWVudEBib290bGluLmNvbT47IFJvYiBIZXJyaW5n
-IDxyb2JoK2R0QGtlcm5lbC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0ggdjJdIG1pcHM6IGdw
-aW86IG1zY2Nfc2dwaW86IEFkZCBEVCBiaW5kaW5ncw0KPiBkb2N1bWVudGF0aW9uDQo+IA0KPiBP
-biBUaHUsIERlYyAyNywgMjAxOCBhdCAyOjEyIFBNIExhcnMgUG92bHNlbg0KPiA8bGFycy5wb3Zs
-c2VuQG1pY3JvY2hpcC5jb20+IHdyb3RlOg0KPiANCj4gPiAgICAgbWlwczogbXNjY19zZ3Bpbzog
-QWRkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24NCj4gPg0KPiA+ICAgICBUaGlzIGFkZCBkZXZp
-Y2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gZm9yIHRoZSBNU0NDIHNlcmlhbA0KPiBHUElP
-DQo+ID4gICAgIGRyaXZlci4NCj4gPg0KPiA+IHYyIGNoYW5nZXM6DQo+ID4gIC0gQWRkZWQgbW9y
-ZSBkZXZpY2UgYmFja2dyb3VuZCBpbmZvDQo+ID4gIC0gRHJvcHBlZCAibXNjYyxzZ3Bpby1iaXRj
-b3VudCIgaW4gZmF2b3VyIG9mICJuZ3Bpb3MiIGFuZCAiZ3Bpby0NCj4gcmFuZ2VzIi4NCj4gPiAg
-LSBFbGFib3JhdGVkICJtc2NjLHNncGlvLXBvcnRzIiBleHBsYW5hdGlvbg0KPiA+DQo+ID4NCj4g
-PiAgICAgU2lnbmVkLW9mZi1ieTogTGFycyBQb3Zsc2VuIDxsYXJzLnBvdmxzZW5AbWljcm9zZW1p
-LmNvbT4NCj4gDQo+IE92ZXJhbGwgbG9va3MgZ29vZCB0byBtZSENCj4gQWNrZWQtYnk6IExpbnVz
-IFdhbGxlaWogPGxpbnVzLndhbGxlaWpAbGluYXJvLm9yZz4NCj4gDQo+ID4gK09wdGlvbmFsIHBy
-b3BlcnRpZXM6DQo+ID4gKy0gbmdwaW9zOiBTZXQgdGhlIG51bWJlciBvZiBHUElPJ3MgYWN0dWFs
-bHkgdXNlZC4NCj4gDQo+IEp1c3Qgc2F5IHNlZTogZ3Bpby50eHQNCj4gDQo+IFlvdXJzLA0KPiBM
-aW51cyBXYWxsZWlqDQo=
+czw., 3 sty 2019 o 17:13 Thomas Petazzoni
+<thomas.petazzoni@bootlin.com> napisa=C5=82(a):
+>
+> The NXP PCAL6416, documented at [1], is a variant of the PCA GPIO
+> expander with 16 GPIOs, and supporting an interrupt and the "extended"
+> features for interrupt, pull-up/pull-down configuration, etc.
+>
+> [1] https://www.nxp.com/docs/en/data-sheet/PCAL6416A.pdf
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+> ---
+>  drivers/gpio/gpio-pca953x.c | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/drivers/gpio/gpio-pca953x.c b/drivers/gpio/gpio-pca953x.c
+> index 83617fdc661d..82d69ab51976 100644
+> --- a/drivers/gpio/gpio-pca953x.c
+> +++ b/drivers/gpio/gpio-pca953x.c
+> @@ -88,6 +88,7 @@ static const struct i2c_device_id pca953x_id[] =3D {
+>         { "pca9575", 16 | PCA957X_TYPE | PCA_INT, },
+>         { "pca9698", 40 | PCA953X_TYPE, },
+>
+> +       { "pcal6416", 16 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+>         { "pcal6524", 24 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+>         { "pcal9555a", 16 | PCA953X_TYPE | PCA_INT | PCA_PCAL, },
+>
+> --
+> 2.20.1
+>
+
+Queued for v5.1, thanks!
+
+Bartosz
