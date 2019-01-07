@@ -1,116 +1,62 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/8 v2] Documentation: bindings: k3dma: Add binding for
- dma-avail-chan
-Date: Mon, 7 Jan 2019 11:54:27 +0530
-Message-ID: <20190107062427.GY13372@vkoul-mobl.Dlink>
-References: <1546635388-13795-1-git-send-email-john.stultz@linaro.org>
- <1546635388-13795-3-git-send-email-john.stultz@linaro.org>
- <20190105040030.GF2477@Mani-XPS-13-9360>
- <CALAqxLUZ=6_tELtZPEjYwV+BNNBcZj4Z=dq9UyrRXuPhs_uGUw@mail.gmail.com>
- <20190105045320.GA3761@Mani-XPS-13-9360>
- <20190105134610.GX13372@vkoul-mobl.Dlink>
- <20190105140826.GA28029@Mani-XPS-13-9360>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 2/2] remoteproc: q6v5_adsp: Remove voting for lpass_aon
+ clock
+Date: Sun, 6 Jan 2019 23:13:59 -0800
+Message-ID: <20190107071359.GK31596@builder>
+References: <1543562950-23997-1-git-send-email-rohitkr@codeaurora.org>
+ <1543562950-23997-3-git-send-email-rohitkr@codeaurora.org>
+ <f6f9b4a2-6205-0ba5-9a3a-b34bd814d303@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190105140826.GA28029@Mani-XPS-13-9360>
+In-Reply-To: <f6f9b4a2-6205-0ba5-9a3a-b34bd814d303@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: John Stultz <john.stultz@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, dmaengine@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Rohit Kumar <rohitkr@codeaurora.org>
+Cc: ohad@wizery.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 05-01-19, 19:38, Manivannan Sadhasivam wrote:
-> Hi Vinod,
-> 
-> On Sat, Jan 05, 2019 at 07:16:10PM +0530, Vinod Koul wrote:
-> > On 05-01-19, 10:23, Manivannan Sadhasivam wrote:
-> > > On Fri, Jan 04, 2019 at 08:39:34PM -0800, John Stultz wrote:
-> > > > On Fri, Jan 4, 2019 at 8:00 PM Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > Hi John,
-> > > > >
-> > > > > On Fri, Jan 04, 2019 at 12:56:22PM -0800, John Stultz wrote:
-> > > > > > Some dma channels can be reserved for secure mode or other
-> > > > > > hardware on the SoC, so provide a binding for a bitmask
-> > > > > > listing the available channels for the kernel to use.
-> > > > > >
-> > > > > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > > > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > > > Cc: Tanglei Han <hantanglei@huawei.com>
-> > > > > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-> > > > > > Cc: Ryan Grachek <ryan@edited.us>
-> > > > > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > > Cc: dmaengine@vger.kernel.org
-> > > > > > Cc: devicetree@vger.kernel.org
-> > > > > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > > > > ---
-> > > > > >  Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
-> > > > > >  1 file changed, 3 insertions(+)
-> > > > > >
-> > > > > > diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > > > > index 10a2f15..1c466c1 100644
-> > > > > > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > > > > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > > > > @@ -14,6 +14,9 @@ Required properties:
-> > > > > >               have specific request line
-> > > > > >  - clocks: clock required
-> > > > > >
-> > > > > > +Optional properties:
-> > > > > > +- dma-avail-chan: Bitmask of available physical channels
-> > > > > > +
-> > > > >
-> > > > > This property looks too generic. Since this is specific to HiSi SoCs,
-> > > > > this could be "hisi-dma-avail-chan"?
-> > > > 
-> > > > I'm fine to change it, but I'm not sure I fully understand the
-> > > > rational. Can you help me understand?
-> > > > Are device node-binding names supposed to have global scope? I assumed
-> > > > the node property names are basically scoped to the entry?
-> > > 
-> > > IIUC properties documented in subsystem binding (dma.txt in this case)
-> > > will have global scope. Those which are not documented in this binding
-> > > are specific to vendor IPs and should be prefixed with the vendor
-> > > prefix (hisi in this case).
-> > > 
-> > > > Further, having some dma channels be reserved doesn't seem to be too
-> > > > unique a concept, so I'm not sure what we gain long term by prefixing
-> > > > it?
-> > > > 
-> > > 
-> > > Right, but this brings up the point of having this functionality in
-> > > generic DMA engine so that the DMA controller drivers need not handle.
-> > > So either we should move this available channel check to DMA Engine
-> > > and document the property in dma.txt so that other IPs can also use it
-> > > or keep the functionality in K3 driver and use HiSi prefix for the
-> > > property.
-> > > 
-> > > But I'd like to hear Vinod/Rob's opinion on this!
-> > 
-> > So there are two parts, first is if this new property of using 'some'
-> > channels of controller is generic enough, the answer is unfortunately
-> > yes, so we should move this to dma.txt as a generic property
-> > 
-> > But I don't agree the dmaengine core should handle it, we may add
-> > helpers, but controllers registers N channels and they would do so, core
-> > should not do filtering
-> > 
-> 
-> Okay. But won't it create ambiguity? What if a new driver developer
-> assmes that he can use this property to filter the channels for his own
-> DMA controller? Since we are _explicitly_ stating that these channels
-> should be filtered, why the dmaengine core can't handle it?
-> 
-> If the property is generic, then it makes sense to keep the
-> functionality also generic.
+On Thu 03 Jan 20:36 PST 2019, Rohit Kumar wrote:
 
-Core doesnt have a view of channels to be filtered, it looks at N
-channels getting registered and works on those.
+> Hello Bjorn,
+> 
+> Can you please review this patch series too.
+> 
+> LPASS_AON clock support is already removed from lpass clock driver.
+> 
 
-Till now folks do not create channels for 'filtered' ones and register
-the ones kernel can use..
+Applied the two patches.
 
--- 
-~Vinod
+Thanks,
+Bjorn
+
+> 
+> Thanks,
+> 
+> Rohit
+> 
+> On 11/30/2018 12:59 PM, Rohit kumar wrote:
+> > Lpass_aon clock is on by default. Remove it from lpass
+> > clock list to avoid voting for it.
+> > 
+> > Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+> > ---
+> >   drivers/remoteproc/qcom_q6v5_adsp.c | 2 +-
+> >   1 file changed, 1 insertion(+), 1 deletion(-)
+> > 
+> > diff --git a/drivers/remoteproc/qcom_q6v5_adsp.c b/drivers/remoteproc/qcom_q6v5_adsp.c
+> > index 79374d1..4829173 100644
+> > --- a/drivers/remoteproc/qcom_q6v5_adsp.c
+> > +++ b/drivers/remoteproc/qcom_q6v5_adsp.c
+> > @@ -48,7 +48,7 @@
+> >   /* list of clocks required by ADSP PIL */
+> >   static const char * const adsp_clk_id[] = {
+> > -	"sway_cbcr", "lpass_aon", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
+> > +	"sway_cbcr", "lpass_ahbs_aon_cbcr", "lpass_ahbm_aon_cbcr",
+> >   	"qdsp6ss_xo", "qdsp6ss_sleep", "qdsp6ss_core",
+> >   };
+> 
+> -- 
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the Linux Foundation.
+> 
