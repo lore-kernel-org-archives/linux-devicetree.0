@@ -1,67 +1,45 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
-Date: Mon, 7 Jan 2019 11:28:05 +0800
-Message-ID: <20190107032810.13522-2-josephl@nvidia.com>
-References: <20190107032810.13522-1-josephl@nvidia.com>
+From: Srinath Mannam <srinath.mannam@broadcom.com>
+Subject: Re: [PATCH v6 1/3] dt-bindings: thermal: Add binding document for SR thermal
+Date: Mon, 7 Jan 2019 10:11:21 +0530
+Message-ID: <CABe79T4Q=76NRx=uj1LQg9Wu54=Sj+F68Tk6S5nNX5-WHzCsNw@mail.gmail.com>
+References: <1546505734-24527-1-git-send-email-srinath.mannam@broadcom.com>
+ <1546505734-24527-2-git-send-email-srinath.mannam@broadcom.com> <20190103170117.GA11469@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107032810.13522-1-josephl@nvidia.com>
+In-Reply-To: <20190103170117.GA11469@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>
-Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Daniel Lezcano <daniel.lezcano@linaro.org>, Zhang Rui <rui.zhang@intel.com>, Eduardo Valentin <edubezval@gmail.com>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>, Pramod Kumar <pramod.kumar@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
-timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
-from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
-(TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
-or watchdog interrupts.
+Hi Rob,
 
-Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-kernel@vger.kernel.org
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Joseph Lo <josephl@nvidia.com>
----
- .../bindings/timer/nvidia,tegra210-timer.txt  | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210=
--timer.txt
+Thank you for the note. I will take care from next time onward.
 
-diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.=
-txt b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
-new file mode 100644
-index 000000000000..ba511220a669
---- /dev/null
-+++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
-@@ -0,0 +1,25 @@
-+NVIDIA Tegra210 timer
-+
-+The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
-+timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
-+from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
-+(TMR10-TMR13). Each TMR can be programmed to generate one-shot, periodic,
-+or watchdog interrupts.
-+
-+Required properties:
-+- compatible : "nvidia,tegra210-timer".
-+- reg : Specifies base physical address and size of the registers.
-+- interrupts : A list of 4 interrupts; one per each of TMR10 through TMR13=
-.
-+- clocks : Must contain one entry, for the module clock.
-+  See ../clocks/clock-bindings.txt for details.
-+
-+timer@60005000 {
-+	compatible =3D "nvidia,tegra210-timer";
-+	reg =3D <0x0 0x60005000 0x0 0x400>;
-+	interrupts =3D <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>,
-+		     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>;
-+	clocks =3D <&tegra_car TEGRA210_CLK_TIMER>;
-+	clock-names =3D "timer";
-+};
---=20
-2.20.1
+Thanks & Regards,
+Srinath.
+
+On Thu, Jan 3, 2019 at 10:31 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Thu,  3 Jan 2019 14:25:32 +0530, Srinath Mannam wrote:
+> > From: Pramod Kumar <pramod.kumar@broadcom.com>
+> >
+> > Add binding document for supported thermal implementation
+> > in Stingray.
+> >
+> > Signed-off-by: Pramod Kumar <pramod.kumar@broadcom.com>
+> > Signed-off-by: Srinath Mannam <srinath.mannam@broadcom.com>
+> > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> > ---
+> >  .../bindings/thermal/brcm,sr-thermal.txt           | 105 +++++++++++++++++++++
+> >  1 file changed, 105 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/thermal/brcm,sr-thermal.txt
+> >
+>
+> Please add Acked-by/Reviewed-by tags when posting new versions. However,
+> there's no need to repost patches *only* to add the tags. The upstream
+> maintainer will do that for acks received on the version they apply.
+>
+> If a tag was not added on purpose, please state why and what changed.
