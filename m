@@ -1,64 +1,66 @@
 From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v9 01/10] dt-bindings: opp: Introduce opp-level bindings
-Date: Tue, 8 Jan 2019 10:19:58 +0530
-Message-ID: <20190108044958.katgnp4ozmpqien2@vireshk-i7>
+Subject: Re: [PATCH v9 08/10] OPP: Add a dev_pm_opp_of_get_level() helper
+Date: Tue, 8 Jan 2019 10:24:02 +0530
+Message-ID: <20190108045402.2jglb5y3bk76dems@vireshk-i7>
 References: <20190107100959.14528-1-rnayak@codeaurora.org>
- <20190107100959.14528-2-rnayak@codeaurora.org>
+ <20190107100959.14528-9-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190107100959.14528-2-rnayak@codeaurora.org>
+In-Reply-To: <20190107100959.14528-9-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rajendra Nayak <rnayak@codeaurora.org>
 Cc: andy.gross@linaro.org, robh@kernel.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
 On 07-01-19, 15:39, Rajendra Nayak wrote:
-> On some SoCs (especially from Qualcomm and MediaTek) an OPP
-> node needs to describe an additional level/corner value
-> that is then communicated to a remote microprocessor by the CPU, which
-> then takes some actions (like adjusting voltage values across various rails)
-> based on the value passed.
+> Now that we have atleast 2 genpd providers, both using a simple
+
+This kind of reasoning for this patch isn't required anymore. Make
+this patch the second one in the series, i.e. just after the bindings.
+
+> routine to read a performance state (opp-level) value from device
+> tree, in order to implement the .opp_to_performance_state
+> callback, add a dev_pm_opp_of_get_level() helper to do
+> it, so it can be resued across all such genpd providers which
+> just need to read the value from DT.
 > 
-> Describe these bindings in the opp-level bindings document.
-> 
+> Suggested-by: Stephen Boyd <sboyd@kernel.org>
 > Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
->  .../devicetree/bindings/opp/opp-level.txt     | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/opp/opp-level.txt
+>  drivers/opp/of.c       | 23 +++++++++++++++++++++++
+>  include/linux/pm_opp.h |  5 +++++
+>  2 files changed, 28 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/opp/opp-level.txt b/Documentation/devicetree/bindings/opp/opp-level.txt
-> new file mode 100644
-> index 000000000000..f9134ed08164
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/opp/opp-level.txt
-> @@ -0,0 +1,29 @@
-> +OPP level bindings to descibe OPP nodes with corner/level values
+> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+> index 06f0f632ec47..6fb383fee601 100644
+> --- a/drivers/opp/of.c
+> +++ b/drivers/opp/of.c
+> @@ -1029,6 +1029,29 @@ int of_get_required_opp_performance_state(struct device_node *np, int index)
+>  }
+>  EXPORT_SYMBOL_GPL(of_get_required_opp_performance_state);
+>  
+> +/**
+> + * dev_pm_opp_of_get_level() - Reads the opp-level value from Device Tree
+> + * @opp: opp for which 'opp-level' should be read and returned
+> + *
+> + * Returns the opp-level value read from Device Tree, if present, else 0
+> + *
+> + * Return: Zero or positive opp-level value read from Device tree
+> + */
+> +unsigned int dev_pm_opp_of_get_level(struct dev_pm_opp *opp)
+> +{
+> +	struct device_node *np;
+> +	unsigned int perf_state = 0;
 > +
-> +OPP tables for devices on some SoCs, especially from Qualcomm and
-> +MediaTek require an additional platform specific corner/level
-> +value to be specified.
-> +This value is passed on to a Power Manager by
-> +the CPU, which then takes the necessary actions to set a voltage
-> +rail to an appropriate voltage based on the value passed.
-> +
-> +The bindings are based on top of the operating-points-v2 bindings
-> +described in Documentation/devicetree/bindings/opp/opp.txt,
-> +with the exception that all of the properties are now optional,
-> +including the opp-hz property.
-> +
-> +Additional properties are described below.
-> +
-> +* OPP Table Node
-> +
-> +Required properties:
-> +- compatible: Allow OPPs to express their compatibility. It should be:
-> +  "operating-points-v2-level"
+> +	np = dev_pm_opp_get_of_node(opp);
+> +	if (of_property_read_u32(np, "opp-level", &perf_state))
+> +		pr_err("%s: missing 'opp-level' property\n", __func__);
 
-All this isn't required. Just define it as a regular property in
-opp.txt only, just like opp-hz or something else.
+Instead of this, add a field "level" in the opp structure in
+drivers/opp/opp.h and fill it while parsing the OPPs. And here you can
+just read the values then.
 
 -- 
 viresh
