@@ -1,83 +1,140 @@
-Return-Path: <SRS0=+YY4=PX=nvidia.com=skomatineni@kernel.org>
-From: Sowjanya Komatineni <skomatineni@nvidia.com>
-Subject: RE: [PATCH V8 1/3] dt-bindings: mmc: tegra: Add supports-cqe property
-Date: Tue, 15 Jan 2019 20:06:33 +0000
-Message-ID: <BN7PR12MB2836F9781A77332B1C813B04C2810@BN7PR12MB2836.namprd12.prod.outlook.com>
-References: <1547176135-2470-1-git-send-email-skomatineni@nvidia.com>
- <20190115200209.GA8473@bogus>
-In-Reply-To: <20190115200209.GA8473@bogus>
 MIME-Version: 1.0
-Content-Language: en-US
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, Mikko Perttunen <mperttunen@nvidia.com>, "chunyan.zhang@unisoc.com" <chunyan.zhang@unisoc.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Aniruddha Tvs Rao <anrao@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
+Date: Tue, 8 Jan 2019 13:43:46 -0600
+References: <20181212211848.26768-1-jcrouse@codeaurora.org>
+	<20181212211848.26768-2-jcrouse@codeaurora.org>
+	<20181217212010.GA22389@bogus>
+	<20181217220146.GA18380@jcrouse-lnx.qualcomm.com>
+In-Reply-To: <20181217220146.GA18380@jcrouse-lnx.qualcomm.com>
+Message-ID: <CAL_JsqLSsS2n4dpjhPu52czi6TuB6eoxJd-6ecEXb0g9D_MFwg@mail.gmail.com>
+Subject: Re: [PATCH v6 1/2] dt-bindings: drm/msm/a6xx: Document GMU and update
+ GPU bindings
+From: Rob Herring <robh@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+To: freedreno <freedreno@lists.freedesktop.org>, dri-devel <dri-devel@lists.freedesktop.org>, Nishanth Menon <nm@ti.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Doug Anderson <dianders@chromium.org>, Viresh Kumar <vireshk@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-ID: <devicetree@vger.kernel.org>
 
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-	t=1547582767; bh=8dI+2QAF0U3LjTqHgWZ1Gp4eGvtuhVGU38vlx4M4cSI=;
-	h=X-PGP-Universal:From:To:CC:Subject:Thread-Topic:Thread-Index:Date:
-	 Message-ID:References:In-Reply-To:Accept-Language:X-MS-Has-Attach:
-	 X-MS-TNEF-Correlator:authentication-results:x-originating-ip:
-	 x-ms-publictraffictype:x-microsoft-exchange-diagnostics:
-	 x-ms-exchange-antispam-srfa-diagnostics:
-	 x-forefront-antispam-report:
-	 x-ms-office365-filtering-correlation-id:x-microsoft-antispam:
-	 x-ms-traffictypediagnostic:x-microsoft-antispam-prvs:
-	 x-forefront-prvs:received-spf:x-ms-exchange-senderadcheck:
-	 x-microsoft-antispam-message-info:spamdiagnosticoutput:
-	 spamdiagnosticmetadata:MIME-Version:
-	 X-MS-Exchange-CrossTenant-Network-Message-Id:
-	 X-MS-Exchange-CrossTenant-originalarrivaltime:
-	 X-MS-Exchange-CrossTenant-fromentityheader:
-	 X-MS-Exchange-CrossTenant-id:
-	 X-MS-Exchange-Transport-CrossTenantHeadersStamped:X-OriginatorOrg:
-	 Content-Language:Content-Type:Content-Transfer-Encoding;
-	b=Y/I9QoalgPAZF7EC8J1YrU0VjmgUCINkyQW/clat+R0XYz/TLuq9NbuNGpfo0liIX
-	 8VWopR1BJ1noS8vRUL+ZgZFS6b1FDe346K/z3tgV0u/ZPUpSaAunmfKVVy0cLeHg/K
-	 IfxsTc7dQT38saLfI2E1eizM1RKGsmxiE8/ItGgTH54qGmBI/vqKlkqTWXtQ7KoyKC
-	 CQAp+Rxbs9/14Cj42/ouzXYiqTQwDQgKtFqzLjDzH6UAzKEc1jlV4Q4mJyqJAPpyNp
-	 7EyhDGK0abFNJsaP/qsYGxdAoI0+uFHPq/2hCz46T5tP6fZDxntjYZvDmT3J3TVpSI
-	 sFfSIkSnSIKVg==
 
 
->> Add supports-cqe optional property for Tegra SDMMC.
->>=20
->> Tegra186 and Tegra194 supports HW Command queue only on SDMMC4=20
->> controller. This property is used to identify command queue support=20
->> controller in the tegra sdhci driver.
->>=20
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 4=20
->> ++++
->>  1 file changed, 4 insertions(+)
->>=20
->> diff --git=20
->> a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt=20
->> b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> index 32b4b4e41923..fb14c2c8d7ee 100644
->> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
->> @@ -72,6 +72,10 @@ Optional properties for Tegra210 and Tegra186:
->>  - nvidia,default-trim : Specify the default outbound clock trimmer
->>    value.
->>  - nvidia,dqs-trim : Specify DQS trim value for HS400 timing
->> +- supports-cqe : The presence of this property indicates that the
->> +  corresponding controller supports HW command queue feature.
->> +  Tegra186 and Tegra194 has 4 SDMMC Controllers and only SDMMC4
->> +  controller supports HW Command Queue with eMMC device.
+On Mon, Dec 17, 2018 at 4:01 PM Jordan Crouse <jcrouse@codeaurora.org> wrote:
 >
->Don't SDHCI capability bits do this? If not, this should probably be commo=
-n.
+> On Mon, Dec 17, 2018 at 03:20:10PM -0600, Rob Herring wrote:
+> > On Wed, Dec 12, 2018 at 02:18:47PM -0700, Jordan Crouse wrote:
+> > > Update the GPU bindings and document the new bindings for the GMU
+> > > device found with Adreno a6xx targets.
+> > >
+> > > Signed-off-by: Jordan Crouse <jcrouse@codeaurora.org>
+> > > ---
+> > >  .../devicetree/bindings/display/msm/gmu.txt   | 56 +++++++++++++++++++
+> > >  .../devicetree/bindings/display/msm/gpu.txt   | 41 +++++++++++++-
+> > >  2 files changed, 94 insertions(+), 3 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/display/msm/gmu.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/display/msm/gmu.txt b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> > > new file mode 100644
+> > > index 000000000000..6152cb551d29
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/display/msm/gmu.txt
+> > > @@ -0,0 +1,56 @@
+> > > +Qualcomm adreno/snapdragon GMU (Graphics management unit)
+> > > +
+> > > +The GMU is a programmable power controller for the GPU. the CPU controls the
+> > > +GMU which in turn handles power controls for the GPU.
+> > > +
+> > > +Required properties:
+> > > +- compatible:
+> > > +  * "qcom,adreno-gmu"
+> >
+> > I probably asked before, but this needs a specific compatible unless you
+> > have reliable version/capability registers. If you do, please state that
+> > here.
 >
->Rob
-
-Tegra has 4 SDMMC controllers and HW Command queue is supported only on SDM=
-MC4.
-There is no bit field specific in SDMMC4 alone to indicate this. So added s=
-upports-cqe to
-identifying this thru Device tree.
-
-Thanks
-Sowjanya
+> Most of our decisions are made based on the type of GPU attached but it wouldn't
+> hurt to make this future proof.  I'll do it.
+>
+> > > +- reg: Physical base address and length of the GMU registers.
+> > > +- reg-names: Matching names for the register regions
+> > > +  * "gmu"
+> > > +  * "gmu_pdc"
+> > > +  * "gmu_pdc_seg"
+> > > +- interrupts: The interrupt signals from the GMU.
+> > > +- interrupt-names: Matching names for the interrupts
+> > > +  * "hfi"
+> > > +  * "gmu"
+> > > +- clocks: phandles to the device clocks
+> > > +- clock-names: Matching names for the clocks
+> > > +   * "gmu"
+> > > +   * "cxo"
+> > > +   * "axi"
+> > > +   * "mnoc"
+> > > +- power-domains: should be <&clock_gpucc GPU_CX_GDSC>
+> > > +- iommus: phandle to the adreno iommu
+> > > +- operating-points-v2: phandle to the OPP operating points
+> > > +
+> > > +Example:
+> > > +
+> > > +/ {
+> > > +   ...
+> > > +
+> > > +   gmu: gmu@506a000 {
+> > > +           compatible="qcom,adreno-gmu";
+> > > +
+> > > +           reg = <0x506a000 0x30000>,
+> > > +                   <0xb280000 0x10000>,
+> > > +                   <0xb480000 0x10000>;
+> > > +           reg-names = "gmu", "gmu_pdc", "gmu_pdc_seq";
+> > > +
+> > > +           interrupts = <GIC_SPI 304 IRQ_TYPE_LEVEL_HIGH>,
+> > > +                <GIC_SPI 305 IRQ_TYPE_LEVEL_HIGH>;
+> > > +           interrupt-names = "hfi", "gmu";
+> > > +
+> > > +           clocks = <&gpucc GPU_CC_CX_GMU_CLK>,
+> > > +                   <&gpucc GPU_CC_CXO_CLK>,
+> > > +                   <&gcc GCC_DDRSS_GPU_AXI_CLK>,
+> > > +                   <&gcc GCC_GPU_MEMNOC_GFX_CLK>;
+> > > +           clock-names = "gmu", "cxo", "axi", "memnoc";
+> > > +
+> > > +           power-domains = <&gpucc GPU_CX_GDSC>;
+> > > +           iommus = <&adreno_smmu 5>;
+> > > +
+> > > +           operating-points-v2 = <&gmu_opp_table>;
+> > > +   };
+> > > +};
+> > > diff --git a/Documentation/devicetree/bindings/display/msm/gpu.txt b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> > > index 43fac0fe09bb..8d9415180c22 100644
+> > > --- a/Documentation/devicetree/bindings/display/msm/gpu.txt
+> > > +++ b/Documentation/devicetree/bindings/display/msm/gpu.txt
+> > > @@ -8,14 +8,21 @@ Required properties:
+> > >    with the chip-id.
+> > >  - reg: Physical base address and length of the controller's registers.
+> > >  - interrupts: The interrupt signal from the gpu.
+> > > -- clocks: device clocks
+> > > +- interrupt-names: List of names for the interrupt signals. The following can be
+> > > +  provided:
+> > > +  * "kgsl_3d0_irq"
+> >
+> > I'm pretty sure 'kgsl' is not a hardware thing. You don't need *-names
+> > when there is only one of something.
+>
+> This has mainly existed just for compatibility issues.  We do only have the one
+> interrupt so lets zap the downstream name and never look back.
+>
+> > > +- clocks: device clocks (if applicable)
+> >
+> > What does this mean? They are now optional? If so, move to an "Optional"
+> > section. Likewise for the others.
+>
+> They are indeed optional now.
+>
+> > Really, you should add a new compatible so we can validate when clocks
+> > not being present is valid vs. an error in the DT.
+>
+> We could use the GPU revision for that, but our approach has been to make all
+> clocks optional for all targets.  Eventually when we go to power up if the GPU
+> core ends up needing a clock and it isn't defined we fail probe at that point.
+> I'm not sure if that is resilient enough for DT purposes though.
+>
+> Jordan
+>
+> --
+> The Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+> a Linux Foundation Collaborative Project
