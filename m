@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 10/15] dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
-Date: Tue,  8 Jan 2019 17:24:35 +0100
-Message-ID: <20190108162441.5278-11-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 03/15] PCI: aardvark: Add clock support
+Date: Tue,  8 Jan 2019 17:24:28 +0100
+Message-ID: <20190108162441.5278-4-miquel.raynal@bootlin.com>
 References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,40 +12,75 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-A line might be used by the PCIe IP to reset the endpoint card upon:
-  - platform reset,
-  - hot reset,
-  - link failure.
-
-Describe the properties needed in this case (optional).
+The IP relies on a gated clock. When we will add S2RAM support, this
+clock will need to be resumed before any PCIe registers are
+accessed. Add support for this clock.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- Documentation/devicetree/bindings/pci/aardvark-pci.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 29 +++++++++++++++++++++++++++
+ 1 file changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/aardvark-pci.txt b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-index a440f182ccf8..8b7f048705ec 100644
---- a/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-@@ -24,6 +24,9 @@ contain the following properties:
- The following are optional properties:
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 0f50163ae072..b1b8897d2d28 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -8,6 +8,7 @@
+  * Author: Hezi Shahmoon <hezi.shahmoon@marvell.com>
+  */
  
-  - phys: the PCIe PHY handle
-+ - pinctrl-names: must be "default".
-+ - pinctrl-0: pin control group to be used to mux the PCIe endpoint card
-+   reset line so that it will be automatically driven by the PCIe IP.
++#include <linux/clk.h>
+ #include <linux/delay.h>
+ #include <linux/interrupt.h>
+ #include <linux/irq.h>
+@@ -187,6 +188,7 @@
  
- In addition, the Device Tree describing an Aardvark PCIe controller
- must include a sub-node that describes the legacy interrupt controller
-@@ -55,6 +58,8 @@ Example:
- 				<0 0 0 3 &pcie_intc 2>,
- 				<0 0 0 4 &pcie_intc 3>;
- 		phys = <&comphy1 0>;
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pcie_card_reset_pins &pcie_clkreq_pins>;
- 		pcie_intc: interrupt-controller {
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
+ struct advk_pcie {
+ 	struct platform_device *pdev;
++	struct clk *clk;
+ 	void __iomem *base;
+ 	struct list_head resources;
+ 	struct irq_domain *irq_domain;
+@@ -973,6 +975,29 @@ static int advk_pcie_parse_request_of_pci_ranges(struct advk_pcie *pcie)
+ 	return err;
+ }
+ 
++static int advk_pcie_setup_clk(struct advk_pcie *pcie)
++{
++	struct device *dev = &pcie->pdev->dev;
++	int ret;
++
++	pcie->clk = devm_clk_get(dev, NULL);
++	if (IS_ERR(pcie->clk) && (PTR_ERR(pcie->clk) == -EPROBE_DEFER))
++		return PTR_ERR(pcie->clk);
++
++	/* Old bindings miss the clock handle */
++	if (IS_ERR(pcie->clk)) {
++		dev_warn(dev, "Clock unavailable (%ld)\n", PTR_ERR(pcie->clk));
++		pcie->clk = NULL;
++		return 0;
++	}
++
++	ret = clk_prepare_enable(pcie->clk);
++	if (ret)
++		dev_err(dev, "Clock initialization failed (%d)\n", ret);
++
++	return ret;
++}
++
+ static int advk_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1008,6 +1033,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	ret = advk_pcie_setup_clk(pcie);
++	if (ret)
++		return ret;
++
+ 	advk_pcie_setup_hw(pcie);
+ 
+ 	advk_sw_pci_bridge_init(pcie);
 -- 
 2.19.1
