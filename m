@@ -1,87 +1,42 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v4 1/8] dt-bindings: soc: qcom: Add remote-pid binding for
- GLINK SMEM
-Date: Tue, 08 Jan 2019 15:56:18 +0530
-Message-ID: <3e10e2c430d29879acf47e019d4c71a4@codeaurora.org>
-References: <20181228185307.25645-1-sibis@codeaurora.org>
- <20190103201720.GE31596@builder>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v2 2/5] mfd: qcom-spmi-pmic: use devm_mfd_add_devices
+ instead of devm_of_platform_populate
+Date: Tue, 8 Jan 2019 05:32:03 -0500
+Message-ID: <20190108103203.GA3643@basecamp>
+References: <20190107021145.6370-1-masneyb@onstation.org>
+ <20190107021145.6370-3-masneyb@onstation.org>
+ <154689729020.15366.16314952173889307636@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103201720.GE31596@builder>
+Content-Disposition: inline
+In-Reply-To: <154689729020.15366.16314952173889307636@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, linux-remoteproc-owner@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Bjorn,
-Thanks for the review!
+On Mon, Jan 07, 2019 at 01:41:30PM -0800, Stephen Boyd wrote:
+> Now this seems worse. We have gotten by without having to explicitly
+> list all the devices that are inside the PMIC as mfd cells. But now, to
+> avoid creating the irqs before the hierarchy is installed, we have to
+> undo all of that and rely on the difference in behavior of
+> of_platform_populate() and mfd_add_devices(). That's pretty obscure to
+> figure out.
+> 
+> I'd prefer we drop this patch and keep disassociating virqs and
+> reassociating them in the gpio driver. Then we can remove the interrupts
+> properties in all the DTS files and finally remove the disassociate and
+> reassociating code in the gpio driver when all the DT files are cleaned
+> up. It makes things less confusing that way and doesn't require updates
+> to this driver.
 
-On 2019-01-04 01:47, Bjorn Andersson wrote:
-> On Fri 28 Dec 10:53 PST 2018, Sibi Sankar wrote:
-> 
->> Add missing qcom,remote-pid dt binding required for GLINK SMEM
->> which specifies the remote endpoint of the GLINK edge.
->> 
->> Fixes: 2b41d6c8e696 ("dt-bindings: soc: qcom: Extend GLINK to cover
->> SMEM")
->> 
->> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
->> Reviewed-by: Doug Anderson <dianders@chromium.org>
->> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> Thanks for the updates Sibi!
-> 
-> @Andy, as this relates to rpmsg I'll take this (patch 1/8) through the
-> rpmsg tree.
-> 
-> And I'm picking 2-7 through the remoteproc tree.
-> 
-> 
-> PS. Please use a --cover-letter when sending a series of patches.
+You are right that we can get this working without this patch. The issue
+that I experienced was caused by the interrupts property on the
+spmi-gpio node. I thought that I tested this with that configuration but
+I obviously didn't.
 
-sure will do... this was never meant to be a
-series (started of as a single patch) :P
+qcom-pm8941.dtsi and qcom-pma8084.dtsi are the only two in-tree users of
+spmi-gpio. I'll include the fix for qcom-pma8084.dtsi as well.
 
-> 
-> Regards,
-> Bjorn
-> 
->> ---
->> 
->> v3:
->>   * Fixed typo
->> 
->>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 5 +++++
->>  1 file changed, 5 insertions(+)
->> 
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt 
->> b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
->> index 0b8cc533ca83..587bb1ddc8cc 100644
->> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt
->> @@ -21,6 +21,11 @@ edge.
->>  	Definition: should specify the IRQ used by the remote processor to
->>  		    signal this processor about communication related events
->> 
->> +- qcom,remote-pid:
->> +	Usage: required for glink-smem
->> +	Value type: <u32>
->> +	Definition: specifies the identifier of the remote endpoint of this 
->> edge
->> +
->>  - qcom,rpm-msg-ram:
->>  	Usage: required for glink-rpm
->>  	Value type: <prop-encoded-array>
->> --
->> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
->> Forum,
->> a Linux Foundation Collaborative Project
->> 
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Brian
