@@ -1,78 +1,41 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 10/97] of: overlay: add missing of_node_put() after add new node to changeset
-Date: Tue,  8 Jan 2019 14:28:19 -0500
-Message-ID: <20190108192949.122407-10-sashal@kernel.org>
-References: <20190108192949.122407-1-sashal@kernel.org>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 0/4] ARM: dts: s5pv210: Enable cpufreq support
+Date: Tue,  8 Jan 2019 21:05:05 +0100
+Message-ID: <20190108200509.30494-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108192949.122407-1-sashal@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Frank Rowand <frank.rowand@sony.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: kgene@kernel.org
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, linux-pm@vger.kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net, linux@armlinux.org.uk, krzk@kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
-
-[ Upstream commit 7c528e457d53c75107d5aa56892316d265c778de ]
-
-The refcount of a newly added overlay node decrements to one
-(instead of zero) when the overlay changeset is destroyed.  This
-change will cause the final decrement be to zero.
-
-After applying this patch, new validation warnings will be
-reported from the devicetree unittest during boot due to
-a pre-existing devicetree bug.  The warnings will be similar to:
-
-  OF: ERROR: memory leak before free overlay changeset,  /testcase-data/overlay-node/test-bus/test-unittest4
-
-This pre-existing devicetree bug will also trigger a WARN_ONCE() from
-refcount_sub_and_test_checked() when an overlay changeset is
-destroyed without having first been applied.  This scenario occurs
-when an error in the overlay is detected during the overlay changeset
-creation:
-
-  WARNING: CPU: 0 PID: 1 at lib/refcount.c:187 refcount_sub_and_test_checked+0xa8/0xbc
-  refcount_t: underflow; use-after-free.
-
-  (unwind_backtrace) from (show_stack+0x10/0x14)
-  (show_stack) from (dump_stack+0x6c/0x8c)
-  (dump_stack) from (__warn+0xdc/0x104)
-  (__warn) from (warn_slowpath_fmt+0x44/0x6c)
-  (warn_slowpath_fmt) from (refcount_sub_and_test_checked+0xa8/0xbc)
-  (refcount_sub_and_test_checked) from (kobject_put+0x24/0x208)
-  (kobject_put) from (of_changeset_destroy+0x2c/0xb4)
-  (of_changeset_destroy) from (free_overlay_changeset+0x1c/0x9c)
-  (free_overlay_changeset) from (of_overlay_remove+0x284/0x2cc)
-  (of_overlay_remove) from (of_unittest_apply_revert_overlay_check.constprop.4+0xf8/0x1e8)
-  (of_unittest_apply_revert_overlay_check.constprop.4) from (of_unittest_overlay+0x960/0xed8)
-  (of_unittest_overlay) from (of_unittest+0x1cc4/0x2138)
-  (of_unittest) from (do_one_initcall+0x4c/0x28c)
-  (do_one_initcall) from (kernel_init_freeable+0x29c/0x378)
-  (kernel_init_freeable) from (kernel_init+0x8/0x110)
-  (kernel_init) from (ret_from_fork+0x14/0x2c)
-
-Tested-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/of/overlay.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index eda57ef12fd0..baa9cee6fa2c 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -378,7 +378,9 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 		if (ret)
- 			return ret;
- 
--		return build_changeset_next_level(ovcs, tchild, node);
-+		ret = build_changeset_next_level(ovcs, tchild, node);
-+		of_node_put(tchild);
-+		return ret;
- 	}
- 
- 	if (node->phandle && tchild->phandle)
--- 
-2.19.1
+VGhpcyBwYXRjaHNldCBlbmFibGVzIGNwdWZyZXEgc3VwcG9ydCB1c2luZyBzNXB2MjEwLWNwdWZy
+ZXEgZHJpdmVyLgoKRmlyc3QgcGF0Y2ggYWRkcyBtaXNzaW5nIGRtYyBub2Rlcywgd2hpY2ggYXJl
+IHJlcXVpcmVkIGJ5IGRyaXZlci4KClNlY29uZCBwYXRjaCBpcyBjb3NtZXRpYywgaXQgc3RvcHMg
+ZHJpdmVyIGZyb20gZmxvb2Rpbmcga2VybmVsIGxvZyB3aXRoCiBtZXNzYWdlcywgYWZ0ZXIgZXZl
+cnkgY2hhbmdlIG9mIGZyZXEuCgpUaGlyZCBwYXRjaCBhZGRzIGRlZmVyIHByb2JlIHN1cHBvcnQg
+Zm9yIHJlZ3VsYXRvcnMsIG5lZWRlZCBieSBkcml2ZXIuCkl0IHdhcyBvYnNlcnZlZCwgdGhhdCB0
+aG9zZSByZWd1bGF0b3JzIGNhbiBiZSBubyB5ZXQgaW5pdGlhbGl6ZWQsIHdoZW4KIGRyaXZlciBp
+cyBwcm9iZWQsIHNvIHdlIHNob3VsZCB3YWl0IHRpbGwgd2UgY2FuIGdldCB0aGVtLgoKTGFzdCBw
+YXRjaCBlbmFibGVzIHJlcXVpcmVkIGtlcm5lbCBjb25maWcgb3B0aW9ucy4KClBhd2XFgiBDaG1p
+ZWwgKDQpOgogIEFSTTogZHRzOiBzNXB2MjEwOiBBZGQgZG1jIG5vZGVzCiAgY3B1ZnJlcTogczVw
+djIxMDogRG9uJ3QgZmxvb2Qga2VybmVsIGxvZyBhZnRlciBjcHVmcmVxIGNoYW5nZQogIGNwdWZy
+ZXE6IHM1cHYyMTA6IERlZmVyIHByb2JlIGlmIGdldHRpbmcgcmVndWxhdG9ycyBmYWlsCiAgQVJN
+OiBkZWZjb25maWc6IHM1cHYyMTA6IEFkZCBjcHVmcmVxIHN1cHBvcnQKCiBhcmNoL2FybS9ib290
+L2R0cy9zNXB2MjEwLmR0c2kgICAgIHwgMTIgKysrKysrKysrKwogYXJjaC9hcm0vY29uZmlncy9z
+NXB2MjEwX2RlZmNvbmZpZyB8ICA2ICsrKysrCiBkcml2ZXJzL2NwdWZyZXEvczVwdjIxMC1jcHVm
+cmVxLmMgIHwgMzUgKysrKysrKysrKysrKysrKysrLS0tLS0tLS0tLS0tCiAzIGZpbGVzIGNoYW5n
+ZWQsIDM5IGluc2VydGlvbnMoKyksIDE0IGRlbGV0aW9ucygtKQoKLS0gCjIuMTcuMQoKCl9fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRw
+Oi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
