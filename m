@@ -1,63 +1,265 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
- boards
-Date: Tue, 8 Jan 2019 11:40:51 +0000
-Message-ID: <f3a0e689-b0d5-e08c-b0b8-faf2a366dd93@ysoft.com>
-References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
- <CAOMZO5CuPr_BxMP_wjPuZNTCinHQ-cb08wPHr=Od_Qw_aafPTw@mail.gmail.com>
+From: Martin Kepplinger <martink@posteo.de>
+Subject: Re: [PATCH V7 2/2] iio: accell: mma8452: add vdd/vddio regulator
+ operation support
+Date: Tue, 8 Jan 2019 12:41:04 +0100
+Message-ID: <84c2971b-29d5-a0d0-c830-11504c381dd2@posteo.de>
+References: <1546938556-26969-1-git-send-email-Anson.Huang@nxp.com>
+ <1546938556-26969-2-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAOMZO5CuPr_BxMP_wjPuZNTCinHQ-cb08wPHr=Od_Qw_aafPTw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1546938556-26969-2-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-Content-ID: <14560E487B979C479F72CE2D5A9827B9@eurprd04.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gMjguMTIuMjAxOCAxOToyMCwgRmFiaW8gRXN0ZXZhbSB3cm90ZToNCj4gT24gVHVlLCBEZWMg
-MTgsIDIwMTggYXQgMTI6NDIgUE0gVm9rw6HEjSBNaWNoYWwgPE1pY2hhbC5Wb2thY0B5c29mdC5j
-b20+IHdyb3RlOg0KPiANCj4+ICsmZmVjIHsNCj4+ICsgICAgICAgcGluY3RybC1uYW1lcyA9ICJk
-ZWZhdWx0IjsNCj4+ICsgICAgICAgcGluY3RybC0wID0gPCZwaW5jdHJsX2VuZXQ+Ow0KPj4gKyAg
-ICAgICBwaHktbW9kZSA9ICJyZ21paS1pZCI7DQo+PiArICAgICAgIHBoeS1yZXNldC1ncGlvcyA9
-IDwmZ3BpbzEgMjUgR1BJT19BQ1RJVkVfSElHSD47DQo+IA0KPiBBcmUgeW91IHN1cmUgdGhpcyBp
-cyBhY3RpdmUgaGlnaD8NCj4gDQo+IFRoZSBGRUMgZHJpdmVyIGlnbm9yZXMgdGhlIHBvbGFyaXR5
-IG9mIHBoeS1yZXNldC1ncGlvcyBhbmQgaXQgYXNzdW1lcw0KPiB0aGUgR1BJTyByZXNldCBhcyBh
-Y3RpdmUgbG93Lg0KPiANCj4gSWYgaXQgcmVhbGx5IGlzIGFjdGl2ZSBoaWdoLCB0aGVuIHlvdSB3
-b3VsZCBuZWVkIHRvIHBhc3MgdGhlDQo+ICJwaHktcmVzZXQtYWN0aXZlLWhpZ2giIHByb3BlcnR5
-Lg0KDQpHb29kIGNhdGNoISBPcmlnaW5hbGx5IGl0IHdhcyBwaHktcmVzZXQtZ3Bpb3MgPSA8Jmdw
-aW8xIDI1IDA+IHdoaWNoIGlzDQphY3RpdmUgaGlnaCBhcyB3ZWxsLiBBbmQgYXMgeW91IHNheSwg
-dGhlIHBvbGFyaXR5IGlzIGlnbm9yZWQuIExhdGVyIG9uDQpJIGRlY2lkZWQgdG8gY2hhbmdlIGFs
-bCB0aGUgR1BJTyBzcGVjaWZpZXJzIHRvIHVzZSBkZWZpbmVzIGluc3RlYWQgb2YNCm51bWJlcnMu
-IEkganVzdCBzd2FwcGVkIDAgZm9yIEdQSU9fQUNUSVZFX0hJR0ggd2l0aG91dCB1c2luZyBicmFp
-biBjZWxscy4NCg0KSSB3aWxsIHVzZSBHUElPX0FDVElWRV9MT1cgdGhlcmUgdG8gYmUgY29ycmVj
-dCBldmVuIHRob3VnaCBpdCBpcyBpZ25vcmVkLg0KDQo+PiArLyB7DQo+PiArICAgICAgIG1vZGVs
-ID0gIlkgU29mdCBJT1RBIERyYWNvIGkuTVg2U29sbyBib2FyZCI7DQo+PiArICAgICAgIGNvbXBh
-dGlibGUgPSAieXNvZnQsaW14NmRsLXlhcHA0LWRyYWNvIiwgImZzbCxpbXg2ZGwiOw0KPj4gKw0K
-Pj4gKyAgICAgICBjcHVzIHsNCj4+ICsgICAgICAgICAgICAgICAvZGVsZXRlLW5vZGUvIGNwdUAx
-Ow0KPiANCj4gSXMgdGhpcyByZWFsbHkgbmVlZGVkPyBXZSBkb24ndCB1c3VhbGx5IGRvIHRoaXMg
-b24gaW14NnNvbG8gZHRzIGJvYXJkIGZpbGVzLg0KPiANCj4gT25seSBvbmUgQ1BVIHdpbGwgYmUg
-YnJvdWdodCB1cCBvbmxpbmUgb24gaW14NnNvbG8gYW55d2F5Lg0KDQpPSywgaXQgaXMgcmVhbGx5
-IG5vdCBuZWNlc3NhcnkuIEkgd2lsbCByZW1vdmUgaXQuDQoNCj4+ICsgICAgICAgfTsNCj4+ICsN
-Cj4+ICsgICAgICAgbWVtb3J5QDEwMDAwMDAwIHsNCj4gDQo+IE5lZWQgdG8gcGFzcyAiZGV2aWNl
-X3R5cGUgPSAibWVtb3J5IjsiDQoNCk9LLg0KDQo+PiArLyB7DQo+PiArICAgICAgIG1vZGVsID0g
-IlkgU29mdCBJT1RBIEh5ZHJhIGkuTVg2RHVhbExpdGUgYm9hcmQiOw0KPj4gKyAgICAgICBjb21w
-YXRpYmxlID0gInlzb2Z0LGlteDZkbC15YXBwNC1oeWRyYSIsICJmc2wsaW14NmRsIjsNCj4+ICsN
-Cj4+ICsgICAgICAgbWVtb3J5QDEwMDAwMDAwIHsNCj4gDQo+IE5lZWQgdG8gcGFzcyAiZGV2aWNl
-X3R5cGUgPSAibWVtb3J5IjsiDQoNCk9LLg0KDQo+PiArICAgICAgIG1lbW9yeUAxMDAwMDAwMCB7
-DQo+IA0KPiBOZWVkIHRvIHBhc3MgImRldmljZV90eXBlID0gIm1lbW9yeSI7Ig0KDQpPSy4NCg0K
-VGhhbmsgeW91IGZvciB0aGUgcmV2aWV3IEZhYmlvLg0KQWxsIHRoZSBiZXN0LA0KTWljaGFsDQoN
-Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
-bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
-ZXJuZWwK
+On 08.01.19 10:14, Anson Huang wrote:
+> The accelerometer's power supply could be controllable on some
+> platforms, such as i.MX6Q-SABRESD board, the mma8451's power supplies
+> are controlled by a GPIO fixed regulator, need to make sure the
+> regulators are enabled before any communication with mma8451, this
+> patch adds vdd/vddio regulator operation support.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Acked-by: Martin Kepplinger <martink@posteo.de>
+> ---
+> ChangeLog Since V6:
+>   - separate the error handling of regulators get to make code easy to read.
+> ---
+>  drivers/iio/accel/mma8452.c | 105 ++++++++++++++++++++++++++++++++++----------
+>  1 file changed, 83 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
+> index 421a0a8..3027811 100644
+> --- a/drivers/iio/accel/mma8452.c
+> +++ b/drivers/iio/accel/mma8452.c
+> @@ -31,6 +31,7 @@
+>  #include <linux/of_device.h>
+>  #include <linux/of_irq.h>
+>  #include <linux/pm_runtime.h>
+> +#include <linux/regulator/consumer.h>
+>  
+>  #define MMA8452_STATUS				0x00
+>  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
+> @@ -107,6 +108,8 @@ struct mma8452_data {
+>  	u8 data_cfg;
+>  	const struct mma_chip_info *chip_info;
+>  	int sleep_val;
+> +	struct regulator *vdd_reg;
+> +	struct regulator *vddio_reg;
+>  };
+>  
+>   /**
+> @@ -1534,9 +1537,39 @@ static int mma8452_probe(struct i2c_client *client,
+>  	mutex_init(&data->lock);
+>  	data->chip_info = match->data;
+>  
+> +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
+> +	if (IS_ERR(data->vdd_reg)) {
+> +		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		dev_err(&client->dev, "failed to get VDD regulator!\n");
+> +		return PTR_ERR(data->vdd_reg);
+> +	}
+> +
+> +	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
+> +	if (IS_ERR(data->vddio_reg)) {
+> +		if (PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
+> +			return -EPROBE_DEFER;
+> +
+> +		dev_err(&client->dev, "failed to get VDDIO regulator!\n");
+> +		return PTR_ERR(data->vddio_reg);
+> +	}
+> +
+> +	ret = regulator_enable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable VDD regulator!\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(&client->dev, "failed to enable VDDIO regulator!\n");
+> +		goto disable_regulator_vdd;
+> +	}
+> +
+>  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	switch (ret) {
+>  	case MMA8451_DEVICE_ID:
+> @@ -1549,7 +1582,8 @@ static int mma8452_probe(struct i2c_client *client,
+>  			break;
+>  		/* else: fall through */
+>  	default:
+> -		return -ENODEV;
+> +		ret = -ENODEV;
+> +		goto disable_regulators;
+>  	}
+>  
+>  	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
+> @@ -1566,13 +1600,13 @@ static int mma8452_probe(struct i2c_client *client,
+>  
+>  	ret = mma8452_reset(client);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	data->data_cfg = MMA8452_DATA_CFG_FS_2G;
+>  	ret = i2c_smbus_write_byte_data(client, MMA8452_DATA_CFG,
+>  					data->data_cfg);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	/*
+>  	 * By default set transient threshold to max to avoid events if
+> @@ -1581,7 +1615,7 @@ static int mma8452_probe(struct i2c_client *client,
+>  	ret = i2c_smbus_write_byte_data(client, MMA8452_TRANSIENT_THS,
+>  					MMA8452_TRANSIENT_THS_MASK);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto disable_regulators;
+>  
+>  	if (client->irq) {
+>  		int irq2;
+> @@ -1595,7 +1629,7 @@ static int mma8452_probe(struct i2c_client *client,
+>  						MMA8452_CTRL_REG5,
+>  						data->chip_info->all_events);
+>  			if (ret < 0)
+> -				return ret;
+> +				goto disable_regulators;
+>  
+>  			dev_dbg(&client->dev, "using interrupt line INT1\n");
+>  		}
+> @@ -1604,11 +1638,11 @@ static int mma8452_probe(struct i2c_client *client,
+>  					MMA8452_CTRL_REG4,
+>  					data->chip_info->enabled_events);
+>  		if (ret < 0)
+> -			return ret;
+> +			goto disable_regulators;
+>  
+>  		ret = mma8452_trigger_setup(indio_dev);
+>  		if (ret < 0)
+> -			return ret;
+> +			goto disable_regulators;
+>  	}
+>  
+>  	data->ctrl_reg1 = MMA8452_CTRL_ACTIVE |
+> @@ -1661,12 +1695,19 @@ static int mma8452_probe(struct i2c_client *client,
+>  trigger_cleanup:
+>  	mma8452_trigger_cleanup(indio_dev);
+>  
+> +disable_regulators:
+> +	regulator_disable(data->vddio_reg);
+> +
+> +disable_regulator_vdd:
+> +	regulator_disable(data->vdd_reg);
+> +
+>  	return ret;
+>  }
+>  
+>  static int mma8452_remove(struct i2c_client *client)
+>  {
+>  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
+> +	struct mma8452_data *data = iio_priv(indio_dev);
+>  
+>  	iio_device_unregister(indio_dev);
+>  
+> @@ -1678,6 +1719,9 @@ static int mma8452_remove(struct i2c_client *client)
+>  	mma8452_trigger_cleanup(indio_dev);
+>  	mma8452_standby(iio_priv(indio_dev));
+>  
+> +	regulator_disable(data->vddio_reg);
+> +	regulator_disable(data->vdd_reg);
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1696,6 +1740,18 @@ static int mma8452_runtime_suspend(struct device *dev)
+>  		return -EAGAIN;
+>  	}
+>  
+> +	ret = regulator_disable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable VDDIO regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_disable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to disable VDD regulator\n");
+> +		return ret;
+> +	}
+> +
+>  	return 0;
+>  }
+>  
+> @@ -1705,9 +1761,22 @@ static int mma8452_runtime_resume(struct device *dev)
+>  	struct mma8452_data *data = iio_priv(indio_dev);
+>  	int ret, sleep_val;
+>  
+> +	ret = regulator_enable(data->vdd_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDD regulator\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = regulator_enable(data->vddio_reg);
+> +	if (ret) {
+> +		dev_err(dev, "failed to enable VDDIO regulator\n");
+> +		regulator_disable(data->vdd_reg);
+> +		return ret;
+> +	}
+> +
+>  	ret = mma8452_active(data);
+>  	if (ret < 0)
+> -		return ret;
+> +		goto runtime_resume_failed;
+>  
+>  	ret = mma8452_get_odr_index(data);
+>  	sleep_val = 1000 / mma8452_samp_freq[ret][0];
+> @@ -1717,25 +1786,17 @@ static int mma8452_runtime_resume(struct device *dev)
+>  		msleep_interruptible(sleep_val);
+>  
+>  	return 0;
+> -}
+> -#endif
+>  
+> -#ifdef CONFIG_PM_SLEEP
+> -static int mma8452_suspend(struct device *dev)
+> -{
+> -	return mma8452_standby(iio_priv(i2c_get_clientdata(
+> -		to_i2c_client(dev))));
+> -}
+> +runtime_resume_failed:
+> +	regulator_disable(data->vddio_reg);
+> +	regulator_disable(data->vdd_reg);
+>  
+> -static int mma8452_resume(struct device *dev)
+> -{
+> -	return mma8452_active(iio_priv(i2c_get_clientdata(
+> -		to_i2c_client(dev))));
+> +	return ret;
+>  }
+>  #endif
+>  
+>  static const struct dev_pm_ops mma8452_pm_ops = {
+> -	SET_SYSTEM_SLEEP_PM_OPS(mma8452_suspend, mma8452_resume)
+> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+
+Just a quesion: Isn't it semantically a different change to replace
+mma8452_suspend() and mma8452_resume()? If not, why is it needed here?
+
+other than that, lgtm.
+
+>  	SET_RUNTIME_PM_OPS(mma8452_runtime_suspend,
+>  			   mma8452_runtime_resume, NULL)
+>  };
+> 
