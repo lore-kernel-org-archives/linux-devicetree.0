@@ -1,77 +1,45 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH 1/3] iio: chemical: add support for Plantower PMS7003
- sensor
-Date: Tue, 8 Jan 2019 20:07:57 +0100
-Message-ID: <20190108190756.GA25862@arch>
-References: <20190106171614.12615-1-tduszyns@gmail.com>
- <20190106171614.12615-2-tduszyns@gmail.com>
- <20190107153542.GD14782@localhost>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH] ARM: dts: sun8i: h3: Add ethernet0 alias to
+ Beelink X2
+Date: Tue,  8 Jan 2019 20:18:40 +0100
+Message-ID: <20190108191840.16007-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190107153542.GD14782@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBG7P2PQQKGQER276BCY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2019 at 04:35:42PM +0100, Johan Hovold wrote:
-> On Sun, Jan 06, 2019 at 06:16:12PM +0100, Tomasz Duszynski wrote:
-> > Add support for Plantower PMS7003 particulate matter sensor.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
->
-> > +static int pms7003_do_cmd(struct pms7003_state *state, u8 cmd)
-> > +{
-> > +	/*
-> > +	 * commands have following format:
-> > +	 *
-> > +	 * +------+------+-----+------+-----+-----------+-----------+
-> > +	 * | 0x42 | 0x4d | cmd | 0x00 | arg | cksum msb | cksum lsb |
-> > +	 * +------+------+-----+------+-----+-----------+-----------+
-> > +	 */
-> > +	u8 tmp[PMS7003_CMD_LENGTH] = { PMS7003_MAGIC_MSB, PMS7003_MAGIC_LSB };
-> > +	int ret, n = 2;
-> > +	u16 checksum;
-> > +
-> > +	switch (cmd) {
-> > +	case CMD_WAKEUP:
-> > +		tmp[n++] = 0xe4;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x01;
-> > +		break;
-> > +	case CMD_ENTER_PASSIVE_MODE:
-> > +		tmp[n++] = 0xe1;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x00;
-> > +		break;
-> > +	case CMD_READ_PASSIVE:
-> > +		tmp[n++] = 0xe2;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x00;
-> > +		break;
-> > +	case CMD_SLEEP:
-> > +		tmp[n++] = 0xe4;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x00;
-> > +		break;
-> > +	}
-> > +
-> > +	checksum = pms7003_calc_checksum(tmp, n);
-> > +	put_unaligned_be16(checksum, tmp + n);
-> > +	n += PMS7003_CHECKSUM_LENGTH;
-> > +
-> > +	ret = serdev_device_write(state->serdev, tmp, n, PMS7003_TIMEOUT);
-> > +	if (ret)
-> > +		return ret;
->
-> Beginning with 5.0, serdev_device_write() returns the number of bytes
-> written before timeout (or being interrupted) so you need to check
-> against < n here.
->
+Because "ethernet0" alias is missing, U-Boot doesn't generate board
+specific MAC address. Effect of this is random MAC address every boot
+and thus new IP address is assigned to the board.
 
-Right, on the second though that can be simplified by just ignoring
-return value I guess. Anyway, thanks for pointing this out.
+Fix this by adding alias.
 
-> Johan
+Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+---
+ arch/arm/boot/dts/sun8i-h3-beelink-x2.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+index 5d23667dc2d2..671600d6bb53 100644
+--- a/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
++++ b/arch/arm/boot/dts/sun8i-h3-beelink-x2.dts
+@@ -54,6 +54,7 @@
+ 	aliases {
+ 		serial0 = &uart0;
+ 		/* ethernet0 is the H3 emac, defined in sun8i-h3.dtsi */
++		ethernet0 = &emac;
+ 		ethernet1 = &sdiowifi;
+ 	};
+ 
+-- 
+2.20.1
