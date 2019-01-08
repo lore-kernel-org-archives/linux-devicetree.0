@@ -1,232 +1,56 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v9 1/4] clk: meson: add one based divider support for sclk divider
-Date: Tue, 8 Jan 2019 21:50:41 +0800
-Message-ID: <1546955444-7549-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1546955444-7549-1-git-send-email-jianxin.pan@amlogic.com>
+From: Camelia Alexandra Groza <camelia.groza@nxp.com>
+Subject: RE: [PATCH 2/3] powerpc/dts/fsl: t4240rdb: use the Cortina PHY driver
+ compatible
+Date: Tue, 8 Jan 2019 14:07:10 +0000
+Message-ID: <VI1PR04MB47996AC5BC20CC53F505880EF28A0@VI1PR04MB4799.eurprd04.prod.outlook.com>
+References: <cover.1531903211.git.camelia.groza@nxp.com>
+         <6fa5aa04d257525c5703b7c8ca833ec0ae0047c7.1531903211.git.camelia.groza@nxp.com>
+ <6a64c160360bae80a4908d3ca7a887d0c0cb35c9.camel@buserror.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546955444-7549-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <6a64c160360bae80a4908d3ca7a887d0c0cb35c9.camel@buserror.net>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <boris.brezillon@bootlin.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Yixun Lan <yixun.lan@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Qiufang Dai <qiufang.dai@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-clk@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Scott Wood <oss@buserror.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "paulus@samba.org" <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-When CLK_DIVIDER_ONE_BASED flag is set, the sclk divider will be:
-one based divider (div = val), and zero value gates the clock
-
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- drivers/clk/meson/Makefile     |  3 ++-
- drivers/clk/meson/clkc-audio.h |  8 ------
- drivers/clk/meson/clkc.h       | 10 ++++++-
- drivers/clk/meson/sclk-div.c   | 59 ++++++++++++++++++++++++++++--------------
- 4 files changed, 50 insertions(+), 30 deletions(-)
-
-diff --git a/drivers/clk/meson/Makefile b/drivers/clk/meson/Makefile
-index a849aa8..acd8694 100644
---- a/drivers/clk/meson/Makefile
-+++ b/drivers/clk/meson/Makefile
-@@ -4,7 +4,8 @@
- 
- obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-pll.o clk-mpll.o clk-phase.o vid-pll-div.o
- obj-$(CONFIG_COMMON_CLK_AMLOGIC) += clk-input.o
--obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO)	+= clk-triphase.o sclk-div.o
-+obj-$(CONFIG_COMMON_CLK_AMLOGIC) += sclk-div.o
-+obj-$(CONFIG_COMMON_CLK_AMLOGIC_AUDIO) += clk-triphase.o
- obj-$(CONFIG_COMMON_CLK_MESON_AO) += meson-aoclk.o
- obj-$(CONFIG_COMMON_CLK_MESON8B) += meson8b.o
- obj-$(CONFIG_COMMON_CLK_GXBB)	 += gxbb.o gxbb-aoclk.o gxbb-aoclk-32k.o
-diff --git a/drivers/clk/meson/clkc-audio.h b/drivers/clk/meson/clkc-audio.h
-index 0a7c157..286ff12 100644
---- a/drivers/clk/meson/clkc-audio.h
-+++ b/drivers/clk/meson/clkc-audio.h
-@@ -15,14 +15,6 @@ struct meson_clk_triphase_data {
- 	struct parm ph2;
- };
- 
--struct meson_sclk_div_data {
--	struct parm div;
--	struct parm hi;
--	unsigned int cached_div;
--	struct clk_duty cached_duty;
--};
--
- extern const struct clk_ops meson_clk_triphase_ops;
--extern const struct clk_ops meson_sclk_div_ops;
- 
- #endif /* __MESON_CLKC_AUDIO_H */
-diff --git a/drivers/clk/meson/clkc.h b/drivers/clk/meson/clkc.h
-index 6183b22..00b3320 100644
---- a/drivers/clk/meson/clkc.h
-+++ b/drivers/clk/meson/clkc.h
-@@ -27,6 +27,14 @@ struct parm {
- 	u8	width;
- };
- 
-+struct meson_sclk_div_data {
-+	struct parm div;
-+	struct parm hi;
-+	unsigned int cached_div;
-+	struct clk_duty cached_duty;
-+	u8 flags;
-+};
-+
- static inline unsigned int meson_parm_read(struct regmap *map, struct parm *p)
- {
- 	unsigned int val;
-@@ -118,10 +126,10 @@ struct clk_regmap _name = {						\
- extern const struct clk_ops meson_clk_mpll_ops;
- extern const struct clk_ops meson_clk_phase_ops;
- extern const struct clk_ops meson_vid_pll_div_ro_ops;
-+extern const struct clk_ops meson_sclk_div_ops;
- 
- struct clk_hw *meson_clk_hw_register_input(struct device *dev,
- 					   const char *of_name,
- 					   const char *clk_name,
- 					   unsigned long flags);
--
- #endif /* __CLKC_H */
-diff --git a/drivers/clk/meson/sclk-div.c b/drivers/clk/meson/sclk-div.c
-index bc64019..a6c425b 100644
---- a/drivers/clk/meson/sclk-div.c
-+++ b/drivers/clk/meson/sclk-div.c
-@@ -4,42 +4,60 @@
-  * Author: Jerome Brunet <jbrunet@baylibre.com>
-  *
-  * Sample clock generator divider:
-- * This HW divider gates with value 0 but is otherwise a zero based divider:
-+ * This HW divider gates with value 0
-  *
-  * val >= 1
-- * divider = val + 1
-+ * divider = val + 1 if ONE_BASED is not set, otherwise divider = val.
-  *
-  * The duty cycle may also be set for the LR clock variant. The duty cycle
-  * ratio is:
-  *
-  * hi = [0 - val]
-- * duty_cycle = (1 + hi) / (1 + val)
-+ * duty_cycle = (1 + hi) / (1 + val) if ONE_BASED is not set, otherwise:
-+ * duty_cycle = hi / (1 + val)
-  */
- 
--#include "clkc-audio.h"
-+#include "clkc.h"
- 
--static inline struct meson_sclk_div_data *
--meson_sclk_div_data(struct clk_regmap *clk)
-+static inline int get_reg(int val, unsigned char flag)
- {
--	return (struct meson_sclk_div_data *)clk->data;
-+	WARN_ON(val < 1);
-+	if ((flag & CLK_DIVIDER_ONE_BASED) || !val)
-+		return val;
-+	else
-+		return val - 1;
-+}
-+
-+static inline int get_value(int reg, unsigned char flag)
-+{
-+	if (flag & CLK_DIVIDER_ONE_BASED)
-+		return reg;
-+	else
-+		return reg + 1;
- }
- 
--static int sclk_div_maxval(struct meson_sclk_div_data *sclk)
-+static inline struct meson_sclk_div_data *
-+meson_sclk_div_data(struct clk_regmap *clk)
- {
--	return (1 << sclk->div.width) - 1;
-+	return (struct meson_sclk_div_data *)clk->data;
- }
- 
- static int sclk_div_maxdiv(struct meson_sclk_div_data *sclk)
- {
--	return sclk_div_maxval(sclk) + 1;
-+	unsigned int reg = clk_div_mask(sclk->div.width);
-+
-+	return get_value(reg, sclk->flags);
- }
- 
- static int sclk_div_getdiv(struct clk_hw *hw, unsigned long rate,
- 			   unsigned long prate, int maxdiv)
- {
- 	int div = DIV_ROUND_CLOSEST_ULL((u64)prate, rate);
-+	struct clk_regmap *clk = to_clk_regmap(hw);
-+	struct meson_sclk_div_data *sclk = meson_sclk_div_data(clk);
-+	int mindiv = get_value(1, sclk->flags);
- 
--	return clamp(div, 2, maxdiv);
-+	return clamp(div, mindiv, maxdiv);
- }
- 
- static int sclk_div_bestdiv(struct clk_hw *hw, unsigned long rate,
-@@ -47,7 +65,7 @@ static int sclk_div_bestdiv(struct clk_hw *hw, unsigned long rate,
- 			    struct meson_sclk_div_data *sclk)
- {
- 	struct clk_hw *parent = clk_hw_get_parent(hw);
--	int bestdiv = 0, i;
-+	int bestdiv = 0, i, mindiv;
- 	unsigned long maxdiv, now, parent_now;
- 	unsigned long best = 0, best_parent = 0;
- 
-@@ -64,8 +82,9 @@ static int sclk_div_bestdiv(struct clk_hw *hw, unsigned long rate,
- 	 * unsigned long in rate * i below
- 	 */
- 	maxdiv = min(ULONG_MAX / rate, maxdiv);
-+	mindiv = get_value(1, sclk->flags);
- 
--	for (i = 2; i <= maxdiv; i++) {
-+	for (i = mindiv; i <= maxdiv; i++) {
- 		/*
- 		 * It's the most ideal case if the requested rate can be
- 		 * divided from parent clock without needing to change
-@@ -111,10 +130,7 @@ static void sclk_apply_ratio(struct clk_regmap *clk,
- 					    sclk->cached_duty.num,
- 					    sclk->cached_duty.den);
- 
--	if (hi)
--		hi -= 1;
--
--	meson_parm_write(clk->map, &sclk->hi, hi);
-+	meson_parm_write(clk->map, &sclk->hi, get_reg(hi, sclk->flags));
- }
- 
- static int sclk_div_set_duty_cycle(struct clk_hw *hw,
-@@ -145,7 +161,7 @@ static int sclk_div_get_duty_cycle(struct clk_hw *hw,
- 	}
- 
- 	hi = meson_parm_read(clk->map, &sclk->hi);
--	duty->num = hi + 1;
-+	duty->num = get_value(hi, sclk->flags);
- 	duty->den = sclk->cached_div;
- 	return 0;
- }
-@@ -153,10 +169,13 @@ static int sclk_div_get_duty_cycle(struct clk_hw *hw,
- static void sclk_apply_divider(struct clk_regmap *clk,
- 			       struct meson_sclk_div_data *sclk)
- {
-+	unsigned int div;
-+
- 	if (MESON_PARM_APPLICABLE(&sclk->hi))
- 		sclk_apply_ratio(clk, sclk);
- 
--	meson_parm_write(clk->map, &sclk->div, sclk->cached_div - 1);
-+	div = get_reg(sclk->cached_div, sclk->flags);
-+	meson_parm_write(clk->map, &sclk->div, div);
- }
- 
- static int sclk_div_set_rate(struct clk_hw *hw, unsigned long rate,
-@@ -224,7 +243,7 @@ static void sclk_div_init(struct clk_hw *hw)
- 	if (!val)
- 		sclk->cached_div = sclk_div_maxdiv(sclk);
- 	else
--		sclk->cached_div = val + 1;
-+		sclk->cached_div = get_value(val, sclk->flags);
- 
- 	sclk_div_get_duty_cycle(hw, &sclk->cached_duty);
- }
--- 
-1.9.1
+PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290dCBXb29kIDxvc3NAYnVz
+ZXJyb3IubmV0Pg0KPiBTZW50OiBTYXR1cmRheSwgRGVjZW1iZXIgMjIsIDIwMTggMDY6MDcNCj4g
+VG86IENhbWVsaWEgQWxleGFuZHJhIEdyb3phIDxjYW1lbGlhLmdyb3phQG54cC5jb20+Ow0KPiBy
+b2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBiZW5oQGtlcm5lbC5jcmFz
+aGluZy5vcmcNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxA
+dmdlci5rZXJuZWwub3JnOw0KPiBwYXVsdXNAc2FtYmEub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMu
+b3psYWJzLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvM10gcG93ZXJwYy9kdHMvZnNsOiB0
+NDI0MHJkYjogdXNlIHRoZSBDb3J0aW5hIFBIWQ0KPiBkcml2ZXIgY29tcGF0aWJsZQ0KPiANCj4g
+T24gV2VkLCAyMDE4LTA3LTE4IGF0IDE0OjQ2ICswMzAwLCBDYW1lbGlhIEdyb3phIHdyb3RlOg0K
+PiA+IFRoZSBDb3J0aW5hIFBIWSByZXF1aXJlcyB0aGUgdXNlIG9mIHRoZSBkZWRpY2F0ZWQgQ29y
+dGluYSBQSFkgZHJpdmVyDQo+ID4gaW5zdGVhZCBvZiB0aGUgZ2VuZXJpYyBvbmUuDQo+ID4NCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBDYW1lbGlhIEdyb3phIDxjYW1lbGlhLmdyb3phQG54cC5jb20+DQo+
+ID4gLS0tDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDByZGIuZHRzIHwgOCAr
+KysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
+cygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQy
+NDByZGIuZHRzDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwcmRiLmR0cw0K
+PiA+IGluZGV4IDE1ZWIwYTMuLmE1NmE3MDUgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBj
+L2Jvb3QvZHRzL2ZzbC90NDI0MHJkYi5kdHMNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9k
+dHMvZnNsL3Q0MjQwcmRiLmR0cw0KPiA+IEBAIC0yNjcsMjIgKzI2NywyMiBAQA0KPiA+DQo+ID4g
+IAkJCW1kaW9AZmQwMDAgew0KPiA+ICAJCQkJeGZpcGh5MTogZXRoZXJuZXQtcGh5QDEwIHsNCj4g
+PiAtCQkJCQljb21wYXRpYmxlID0gImV0aGVybmV0LXBoeS0NCj4gaWVlZTgwMi4zLQ0KPiA+IGM0
+NSI7DQo+ID4gKwkJCQkJY29tcGF0aWJsZSA9ICJldGhlcm5ldC1waHktDQo+ID4gaWQxM2U1LjEw
+MDIiOw0KPiA+ICAJCQkJCXJlZyA9IDwweDEwPjsNCj4gPiAgCQkJCX07DQo+ID4NCj4gPiAgCQkJ
+CXhmaXBoeTI6IGV0aGVybmV0LXBoeUAxMSB7DQo+ID4gLQkJCQkJY29tcGF0aWJsZSA9ICJldGhl
+cm5ldC1waHktDQo+IGllZWU4MDIuMy0NCj4gPiBjNDUiOw0KPiA+ICsJCQkJCWNvbXBhdGlibGUg
+PSAiZXRoZXJuZXQtcGh5LQ0KPiA+IGlkMTNlNS4xMDAyIjsNCj4gPiAgCQkJCQlyZWcgPSA8MHgx
+MT47DQo+ID4gIAkJCQl9Ow0KPiA+DQo+ID4gIAkJCQl4ZmlwaHkzOiBldGhlcm5ldC1waHlAMTMg
+ew0KPiA+IC0JCQkJCWNvbXBhdGlibGUgPSAiZXRoZXJuZXQtcGh5LQ0KPiBpZWVlODAyLjMtDQo+
+ID4gYzQ1IjsNCj4gPiArCQkJCQljb21wYXRpYmxlID0gImV0aGVybmV0LXBoeS0NCj4gPiBpZDEz
+ZTUuMTAwMiI7DQo+ID4gIAkJCQkJcmVnID0gPDB4MTM+Ow0KPiA+ICAJCQkJfTsNCj4gPg0KPiA+
+ICAJCQkJeGZpcGh5NDogZXRoZXJuZXQtcGh5QDEyIHsNCj4gPiAtCQkJCQljb21wYXRpYmxlID0g
+ImV0aGVybmV0LXBoeS0NCj4gaWVlZTgwMi4zLQ0KPiA+IGM0NSI7DQo+ID4gKwkJCQkJY29tcGF0
+aWJsZSA9ICJldGhlcm5ldC1waHktDQo+ID4gaWQxM2U1LjEwMDIiOw0KPiA+ICAJCQkJCXJlZyA9
+IDwweDEyPjsNCj4gPiAgCQkJCX07DQo+ID4gIAkJCX07DQo+IA0KPiBJIGdldCBjcmFzaGVzIG9u
+IGJvb3Qgd2hlbiB1c2luZyBhIGR0YiB3aXRoIHRoaXMgY2hhbmdlOg0KDQpIaQ0KDQpTb3JyeSBm
+b3IgdGhlIGxhdGUgcmVwbGF5LiBJIHdhcyBvbiB2YWNhdGlvbi4gSSdtIGxvb2tpbmcgaW50byBp
+dC4NCg0KUmVnYXJkcywNCkNhbWVsaWENCg==
