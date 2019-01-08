@@ -1,69 +1,58 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCH v1] arm64: dts: qcom: msm8996: Disable USB2 PHY suspend by core
-Date: Tue, 8 Jan 2019 12:10:16 +0530
-Message-ID: <CAFp+6iGDz4WGHyMYP1W0XbSJnL7s-sGBdb1YZ4+iaO59tBqUuA@mail.gmail.com>
-References: <20190103103538.30970-1-mgautam@codeaurora.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 0/2] Add board support for Chameleon96 Board
+Date: Tue, 8 Jan 2019 12:13:21 +0530
+Message-ID: <20190108064321.GA6543@mani>
+References: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103103538.30970-1-mgautam@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manu Gautam <mgautam@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: dinguyen@kernel.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, amit.kucheria@linaro.org, yossi@novtech.com, nazik@novtech.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 3, 2019 at 6:18 PM Manu Gautam <mgautam@codeaurora.org> wrote:
->
-> QUSB2 PHY on msm8996 doesn't work well when autosuspend by
-> dwc3 core using USB2PHYCFG register is enabled. One of the
-> issue seen is that PHY driver reports PLL lock failure and
-> fails phy_init() if dwc3 core has USB2 PHY suspend enabled.
-> Fix this by using quirks to disable USB2 PHY LPM/suspend and
-> dwc3 core already takes care of explicitly suspending PHY
-> during suspend if quirks are specified.
->
-> Signed-off-by: Manu Gautam <mgautam@codeaurora.org>
-> ---
-
-This works well for db820c [1].
-Tested-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-
-[1] https://github.com/vivekgautam1/linux/commits/origin/v4.20-rc5/db820c
-
-Best regards
-Vivek
-
->  arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 ++++
->  1 file changed, 4 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index b29fe80d7288..1f14ca35afc2 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> @@ -911,6 +911,8 @@
->                                 interrupts = <0 138 IRQ_TYPE_LEVEL_HIGH>;
->                                 phys = <&hsusb_phy2>;
->                                 phy-names = "usb2-phy";
-> +                               snps,dis_u2_susphy_quirk;
-> +                               snps,dis_enblslpm_quirk;
->                         };
->                 };
->
-> @@ -940,6 +942,8 @@
->                                 interrupts = <0 131 IRQ_TYPE_LEVEL_HIGH>;
->                                 phys = <&hsusb_phy1>, <&ssusb_phy_0>;
->                                 phy-names = "usb2-phy", "usb3-phy";
-> +                               snps,dis_u2_susphy_quirk;
-> +                               snps,dis_enblslpm_quirk;
->                         };
->                 };
->
-> --
-> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-> a Linux Foundation Collaborative Project
+On Sat, Dec 15, 2018 at 08:31:50AM +0530, Manivannan Sadhasivam wrote:
+> Hello,
+> 
+> This patchset adds board support for Chameleon96 board from Novetech
+> based on Intel Cyclone V SoC FPGA. This board is one of the Consumer
+> Edition boards of the 96Boards family and has the following key features:
+>     
+> * SoC - Intel Cyclone V SoC FPGA
+> * GPU - Graphics based on Intel Video Suite for FPGA
+> * RAM - 512MB DDR3L
+> * USB - 2x USB2.0 Host, 1x USB2.0 OTG
+> * Wireless - Wifi, BT
+>     
+> More information about this board can be found in 96Boards product
+> page: https://www.96boards.org/product/chameleon96/
+> 
+> This patchset has been tested on Chameleon96 board and the board boots
+> into a distro on SD card with USB ports working.
 >
 
+Hi,
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+Ping on this series!
+
+Thanks,
+Mani
+ 
+> Thanks,
+> Mani
+> 
+> Manivannan Sadhasivam (2):
+>   dt-bindings: vendor-prefixes: Add Novtech Vendor Prefix
+>   ARM: dts: Add support for 96Boards Chameleon96 board
+> 
+>  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
+>  arch/arm/boot/dts/Makefile                    |   1 +
+>  .../boot/dts/socfpga_cyclone5_chameleon96.dts | 130 ++++++++++++++++++
+>  3 files changed, 132 insertions(+)
+>  create mode 100644 arch/arm/boot/dts/socfpga_cyclone5_chameleon96.dts
+> 
+> -- 
+> 2.17.1
+> 
