@@ -1,472 +1,190 @@
-From: Jan Kotas <jank@cadence.com>
-Subject: [PATCH 2/2] rtc: Add Cadence RTC driver
-Date: Tue, 8 Jan 2019 12:22:42 +0000
-Message-ID: <20190108122242.12411-3-jank@cadence.com>
-References: <20190108122242.12411-1-jank@cadence.com>
+From: Rohit Kumar <rohitkr@codeaurora.org>
+Subject: Re: [PATCH 2/2] arm64: dts: qcom: sdm845: Add Q6V5 ADSP node
+Date: Tue, 8 Jan 2019 18:04:39 +0530
+Message-ID: <80142100-35db-41d0-5340-dbdbc4c84113@codeaurora.org>
+References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
+ <1545313174-13481-3-git-send-email-rohitkr@codeaurora.org>
+ <20190103235002.GI31596@builder>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108122242.12411-1-jank@cadence.com>
+In-Reply-To: <20190103235002.GI31596@builder>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds a driver for Cadence RTC controller.
+Thanks Bjorn for review.
 
-It can be enabled with RTC_DRV_CADENCE Kconfig option.
-It supports waking system from sleep modes.
+On 1/4/2019 5:20 AM, Bjorn Andersson wrote:
+> On Thu 20 Dec 05:39 PST 2018, Rohit kumar wrote:
+>
+>> This patch adds Q6V5 ADSP remoteproc node for SDM845 SoCs.
+>>
+> Thanks Rohit, nice to see these things on the list!
+>
+>> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
+>> ---
+>>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 96 +++++++++++++++++++++++++++++++++++-
+>>   1 file changed, 95 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index c0a012f..dfeb3cf 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -13,6 +13,9 @@
+>>   #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+>>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>>   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+>> +#include <dt-bindings/soc/qcom,apr.h>
+>> +#include <dt-bindings/sound/qcom,q6afe.h>
+>> +#include <dt-bindings/sound/qcom,q6asm.h>
+>>   
+>>   / {
+>>   	interrupt-parent = <&intc>;
+>> @@ -1691,7 +1694,98 @@
+>>   				status = "disabled";
+>>   			};
+>>   		};
+>> -	};
+>> +
+>> +		adsp_pil: remoteproc@17300000 {
+> Please sort nodes by address, then name.
 
-Signed-off-by: Jan Kotas <jank@cadence.com>
----
- drivers/rtc/Kconfig       |  10 ++
- drivers/rtc/Makefile      |   1 +
- drivers/rtc/rtc-cadence.c | 404 ++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 415 insertions(+)
- create mode 100644 drivers/rtc/rtc-cadence.c
+Sure.
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 225b0b851..0aba341ad 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1508,6 +1508,16 @@ config RTC_DRV_ARMADA38X
- 	  This driver can also be built as a module. If so, the module
- 	  will be called armada38x-rtc.
- 
-+config RTC_DRV_CADENCE
-+	tristate "Cadence RTC driver"
-+	depends on OF && HAS_IOMEM
-+	help
-+	  If you say Y here you will get access to Cadence RTC IP
-+	  found on certain SOCs.
-+
-+	  To compile this driver as a module, choose M here: the
-+	  module will be called rtc-cadence.
-+
- config RTC_DRV_FTRTC010
- 	tristate "Faraday Technology FTRTC010 RTC"
- 	depends on HAS_IOMEM
-diff --git a/drivers/rtc/Makefile b/drivers/rtc/Makefile
-index df022d820..5adb41b45 100644
---- a/drivers/rtc/Makefile
-+++ b/drivers/rtc/Makefile
-@@ -39,6 +39,7 @@ obj-$(CONFIG_RTC_DRV_AU1XXX)	+= rtc-au1xxx.o
- obj-$(CONFIG_RTC_DRV_BQ32K)	+= rtc-bq32k.o
- obj-$(CONFIG_RTC_DRV_BQ4802)	+= rtc-bq4802.o
- obj-$(CONFIG_RTC_DRV_BRCMSTB)	+= rtc-brcmstb-waketimer.o
-+obj-$(CONFIG_RTC_DRV_CADENCE)	+= rtc-cadence.o
- obj-$(CONFIG_RTC_DRV_CMOS)	+= rtc-cmos.o
- obj-$(CONFIG_RTC_DRV_COH901331)	+= rtc-coh901331.o
- obj-$(CONFIG_RTC_DRV_CPCAP)	+= rtc-cpcap.o
-diff --git a/drivers/rtc/rtc-cadence.c b/drivers/rtc/rtc-cadence.c
-new file mode 100644
-index 000000000..18fc3f8e3
---- /dev/null
-+++ b/drivers/rtc/rtc-cadence.c
-@@ -0,0 +1,404 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+/*
-+ * Copyright 2019 Cadence
-+ *
-+ * Authors:
-+ *  Jan Kotas <jank@cadence.com>
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+#include <linux/io.h>
-+#include <linux/rtc.h>
-+#include <linux/clk.h>
-+#include <linux/bcd.h>
-+#include <linux/bitfield.h>
-+#include <linux/interrupt.h>
-+#include <linux/pm_wakeirq.h>
-+
-+/* Registers */
-+#define CDNS_RTC_CTLR		0x00
-+#define CDNS_RTC_HMR		0x04
-+#define CDNS_RTC_TIMR		0x08
-+#define CDNS_RTC_CALR		0x0C
-+#define CDNS_RTC_TIMAR		0x10
-+#define CDNS_RTC_CALAR		0x14
-+#define CDNS_RTC_AENR		0x18
-+#define CDNS_RTC_EFLR		0x1C
-+#define CDNS_RTC_IENR		0x20
-+#define CDNS_RTC_IDISR		0x24
-+#define CDNS_RTC_IMSKR		0x28
-+#define CDNS_RTC_STSR		0x2C
-+#define CDNS_RTC_KRTCR		0x30
-+
-+/* Control */
-+#define CDNS_RTC_CTLR_TIME	BIT(0)
-+#define CDNS_RTC_CTLR_CAL	BIT(1)
-+#define CDNS_RTC_CTLR_TIME_CAL	(CDNS_RTC_CTLR_TIME | CDNS_RTC_CTLR_CAL)
-+
-+/* Status */
-+#define CDNS_RTC_STSR_VT	BIT(0)
-+#define CDNS_RTC_STSR_VC	BIT(1)
-+#define CDNS_RTC_STSR_VTA	BIT(2)
-+#define CDNS_RTC_STSR_VCA	BIT(3)
-+#define CDNS_RTC_STSR_VT_VC	(CDNS_RTC_STSR_VT | CDNS_RTC_STSR_VC)
-+#define CDNS_RTC_STSR_VTA_VCA	(CDNS_RTC_STSR_VTA | CDNS_RTC_STSR_VCA)
-+
-+/* Keep RTC */
-+#define CDNS_RTC_KRTCR_KRTC	BIT(0)
-+
-+/* Alarm, Event, Interrupt */
-+#define CDNS_RTC_AEI_HOS	BIT(0)
-+#define CDNS_RTC_AEI_SEC	BIT(1)
-+#define CDNS_RTC_AEI_MIN	BIT(2)
-+#define CDNS_RTC_AEI_HOUR	BIT(3)
-+#define CDNS_RTC_AEI_DATE	BIT(4)
-+#define CDNS_RTC_AEI_MNTH	BIT(5)
-+#define CDNS_RTC_AEI_ALRM	BIT(6)
-+
-+/* Time */
-+#define CDNS_RTC_TIME_H		GENMASK(7, 0)
-+#define CDNS_RTC_TIME_S		GENMASK(14, 8)
-+#define CDNS_RTC_TIME_M		GENMASK(22, 16)
-+#define CDNS_RTC_TIME_HR	GENMASK(29, 24)
-+#define CDNS_RTC_TIME_PM	BIT(30)
-+#define CDNS_RTC_TIME_CH	BIT(31)
-+
-+/* Calendar */
-+#define CDNS_RTC_CAL_DAY	GENMASK(2, 0)
-+#define CDNS_RTC_CAL_M		GENMASK(7, 3)
-+#define CDNS_RTC_CAL_D		GENMASK(13, 8)
-+#define CDNS_RTC_CAL_Y		GENMASK(23, 16)
-+#define CDNS_RTC_CAL_C		GENMASK(29, 24)
-+#define CDNS_RTC_CAL_CH		BIT(31)
-+
-+#define CDNS_RTC_MAX_REGS_TRIES	3
-+
-+struct cdns_rtc {
-+	struct rtc_device *rtc_dev;
-+	struct clk *pclk;
-+	struct clk *ref_clk;
-+	void __iomem *regs;
-+	int irq;
-+};
-+
-+static void cdns_rtc_set_enabled(struct cdns_rtc *crtc, bool enabled)
-+{
-+	u32 reg = enabled ? 0x0 : CDNS_RTC_CTLR_TIME_CAL;
-+
-+	writel(reg, crtc->regs + CDNS_RTC_CTLR);
-+}
-+
-+static irqreturn_t cdns_rtc_irq_handler(int irq, void *id)
-+{
-+	struct device *dev = id;
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+
-+	/* Reading the register clears it */
-+	if (!(readl(crtc->regs + CDNS_RTC_EFLR) & CDNS_RTC_AEI_ALRM))
-+		return IRQ_NONE;
-+
-+	rtc_update_irq(crtc->rtc_dev, 1, RTC_IRQF | RTC_AF);
-+	return IRQ_HANDLED;
-+}
-+
-+static u32 cdns_rtc_time2reg(struct rtc_time *tm)
-+{
-+	return FIELD_PREP(CDNS_RTC_TIME_S,  bin2bcd(tm->tm_sec))
-+	     | FIELD_PREP(CDNS_RTC_TIME_M,  bin2bcd(tm->tm_min))
-+	     | FIELD_PREP(CDNS_RTC_TIME_HR, bin2bcd(tm->tm_hour));
-+}
-+
-+static void cdns_rtc_reg2time(u32 reg, struct rtc_time *tm)
-+{
-+	tm->tm_sec  = bcd2bin(FIELD_GET(CDNS_RTC_TIME_S, reg));
-+	tm->tm_min  = bcd2bin(FIELD_GET(CDNS_RTC_TIME_M, reg));
-+	tm->tm_hour = bcd2bin(FIELD_GET(CDNS_RTC_TIME_HR, reg));
-+}
-+
-+static int cdns_rtc_read_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+	u32 reg;
-+
-+	cdns_rtc_set_enabled(crtc, false);
-+
-+	reg = readl(crtc->regs + CDNS_RTC_TIMR);
-+	cdns_rtc_reg2time(reg, tm);
-+
-+	reg = readl(crtc->regs + CDNS_RTC_CALR);
-+	tm->tm_mday = bcd2bin(FIELD_GET(CDNS_RTC_CAL_D, reg));
-+	tm->tm_mon  = bcd2bin(FIELD_GET(CDNS_RTC_CAL_M, reg)) - 1;
-+	tm->tm_year = bcd2bin(FIELD_GET(CDNS_RTC_CAL_Y, reg))
-+		    + bcd2bin(FIELD_GET(CDNS_RTC_CAL_C, reg)) * 100 - 1900;
-+	tm->tm_wday = bcd2bin(FIELD_GET(CDNS_RTC_CAL_DAY, reg)) - 1;
-+
-+	cdns_rtc_set_enabled(crtc, true);
-+	return 0;
-+}
-+
-+static int cdns_rtc_set_time(struct device *dev, struct rtc_time *tm)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+	u32 timr, calr, stsr;
-+	int ret = -EIO;
-+	int year = tm->tm_year + 1900;
-+	int tries;
-+
-+	cdns_rtc_set_enabled(crtc, false);
-+
-+	timr = cdns_rtc_time2reg(tm);
-+
-+	calr = FIELD_PREP(CDNS_RTC_CAL_D, bin2bcd(tm->tm_mday))
-+	     | FIELD_PREP(CDNS_RTC_CAL_M, bin2bcd(tm->tm_mon + 1))
-+	     | FIELD_PREP(CDNS_RTC_CAL_Y, bin2bcd(year % 100))
-+	     | FIELD_PREP(CDNS_RTC_CAL_C, bin2bcd(year / 100))
-+	     | FIELD_PREP(CDNS_RTC_CAL_DAY, tm->tm_wday + 1);
-+
-+	/* Update registers, check valid flags */
-+	for (tries = 0; tries < CDNS_RTC_MAX_REGS_TRIES; tries++) {
-+		writel(timr, crtc->regs + CDNS_RTC_TIMR);
-+		writel(calr, crtc->regs + CDNS_RTC_CALR);
-+		stsr = readl(crtc->regs + CDNS_RTC_STSR);
-+
-+		if ((stsr & CDNS_RTC_STSR_VT_VC) == CDNS_RTC_STSR_VT_VC) {
-+			ret = 0;
-+			break;
-+		}
-+	}
-+
-+	cdns_rtc_set_enabled(crtc, true);
-+	return ret;
-+}
-+
-+static int cdns_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+
-+	if (enabled) {
-+		writel((CDNS_RTC_AEI_SEC | CDNS_RTC_AEI_MIN | CDNS_RTC_AEI_HOUR
-+			| CDNS_RTC_AEI_DATE | CDNS_RTC_AEI_SEC),
-+		       crtc->regs + CDNS_RTC_AENR);
-+		writel(CDNS_RTC_AEI_ALRM, crtc->regs + CDNS_RTC_IENR);
-+	} else {
-+		writel(0, crtc->regs + CDNS_RTC_AENR);
-+		writel(CDNS_RTC_AEI_ALRM, crtc->regs + CDNS_RTC_IDISR);
-+	}
-+
-+	return 0;
-+}
-+
-+static int cdns_rtc_read_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+	u32 reg;
-+
-+	reg = readl(crtc->regs + CDNS_RTC_TIMAR);
-+	cdns_rtc_reg2time(reg, &alarm->time);
-+
-+	reg = readl(crtc->regs + CDNS_RTC_CALAR);
-+	alarm->time.tm_mday = bcd2bin(FIELD_GET(CDNS_RTC_CAL_D, reg));
-+	alarm->time.tm_mon  = bcd2bin(FIELD_GET(CDNS_RTC_CAL_M, reg)) - 1;
-+
-+	return 0;
-+}
-+
-+static int cdns_rtc_set_alarm(struct device *dev, struct rtc_wkalrm *alarm)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+	int ret = -EIO;
-+	int tries;
-+	u32 timar, calar, stsr;
-+
-+	cdns_rtc_alarm_irq_enable(dev, 0);
-+
-+	timar = cdns_rtc_time2reg(&alarm->time);
-+	calar = FIELD_PREP(CDNS_RTC_CAL_D, bin2bcd(alarm->time.tm_mday))
-+	      | FIELD_PREP(CDNS_RTC_CAL_M, bin2bcd(alarm->time.tm_mon + 1));
-+
-+	/* Update registers, check valid alarm flags */
-+	for (tries = 0; tries < CDNS_RTC_MAX_REGS_TRIES; tries++) {
-+		writel(timar, crtc->regs + CDNS_RTC_TIMAR);
-+		writel(calar, crtc->regs + CDNS_RTC_CALAR);
-+		stsr = readl(crtc->regs + CDNS_RTC_STSR);
-+
-+		if ((stsr & CDNS_RTC_STSR_VTA_VCA) == CDNS_RTC_STSR_VTA_VCA) {
-+			ret = 0;
-+			break;
-+		}
-+	}
-+
-+	if (!ret)
-+		cdns_rtc_alarm_irq_enable(dev, alarm->enabled);
-+	return ret;
-+}
-+
-+static const struct rtc_class_ops cdns_rtc_ops = {
-+	.read_time	= cdns_rtc_read_time,
-+	.set_time	= cdns_rtc_set_time,
-+	.read_alarm	= cdns_rtc_read_alarm,
-+	.set_alarm	= cdns_rtc_set_alarm,
-+	.alarm_irq_enable = cdns_rtc_alarm_irq_enable,
-+};
-+
-+static int cdns_rtc_probe(struct platform_device *pdev)
-+{
-+	struct cdns_rtc *crtc;
-+	struct resource *res;
-+	int ret;
-+	unsigned long ref_clk_freq;
-+
-+	crtc = devm_kzalloc(&pdev->dev, sizeof(*crtc), GFP_KERNEL);
-+	if (!crtc)
-+		return -ENOMEM;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	crtc->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(crtc->regs))
-+		return PTR_ERR(crtc->regs);
-+
-+	crtc->irq = platform_get_irq(pdev, 0);
-+	if (crtc->irq < 0)
-+		return -EINVAL;
-+
-+	crtc->pclk = devm_clk_get(&pdev->dev, "pclk");
-+	if (IS_ERR(crtc->pclk)) {
-+		ret = PTR_ERR(crtc->pclk);
-+		dev_err(&pdev->dev,
-+			"Failed to retrieve the peripheral clock, %d\n", ret);
-+		return ret;
-+	}
-+
-+	crtc->ref_clk = devm_clk_get(&pdev->dev, "ref_clk");
-+	if (IS_ERR(crtc->ref_clk)) {
-+		ret = PTR_ERR(crtc->ref_clk);
-+		dev_err(&pdev->dev,
-+			"Failed to retrieve the reference clock, %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(crtc->pclk);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to enable the peripheral clock, %d\n", ret);
-+		return ret;
-+	}
-+
-+	ret = clk_prepare_enable(crtc->ref_clk);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Failed to enable the reference clock, %d\n", ret);
-+		goto err_disable_pclk;
-+	}
-+
-+	ref_clk_freq = clk_get_rate(crtc->ref_clk);
-+	if ((ref_clk_freq != 1) && (ref_clk_freq != 100)) {
-+		dev_err(&pdev->dev,
-+			"Invalid reference clock frequency %lu Hz.\n",
-+			ref_clk_freq);
-+		ret = -EINVAL;
-+		goto err_disable_ref_clk;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, crtc->irq,
-+			       cdns_rtc_irq_handler, 0,
-+			       dev_name(&pdev->dev), &pdev->dev);
-+	if (ret) {
-+		dev_err(&pdev->dev,
-+			"Unable to request interrupt for the device, %d\n",
-+			ret);
-+		goto err_disable_ref_clk;
-+	}
-+
-+	/* Always use 24-hour mode */
-+	writel(0, crtc->regs + CDNS_RTC_HMR);
-+
-+	device_init_wakeup(&pdev->dev, 1);
-+	platform_set_drvdata(pdev, crtc);
-+	cdns_rtc_set_enabled(crtc, true);
-+
-+	crtc->rtc_dev = devm_rtc_device_register(&pdev->dev,
-+						 dev_name(&pdev->dev),
-+						 &cdns_rtc_ops,
-+						 THIS_MODULE);
-+	if (IS_ERR(crtc->rtc_dev)) {
-+		ret = PTR_ERR(crtc->rtc_dev);
-+		dev_err(&pdev->dev, "Unable to register the rtc device, %d\n",
-+			ret);
-+		goto err_stop_rtc;
-+	}
-+
-+	return 0;
-+
-+err_stop_rtc:
-+	cdns_rtc_set_enabled(crtc, false);
-+
-+err_disable_ref_clk:
-+	clk_disable_unprepare(crtc->ref_clk);
-+
-+err_disable_pclk:
-+	clk_disable_unprepare(crtc->pclk);
-+
-+	return ret;
-+}
-+
-+static int cdns_rtc_remove(struct platform_device *pdev)
-+{
-+	struct cdns_rtc *crtc = platform_get_drvdata(pdev);
-+
-+	cdns_rtc_alarm_irq_enable(&pdev->dev, 0);
-+	device_init_wakeup(&pdev->dev, 0);
-+
-+	clk_disable_unprepare(crtc->pclk);
-+	clk_disable_unprepare(crtc->ref_clk);
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_PM_SLEEP
-+static int cdns_rtc_suspend(struct device *dev)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		enable_irq_wake(crtc->irq);
-+
-+	return 0;
-+}
-+
-+static int cdns_rtc_resume(struct device *dev)
-+{
-+	struct cdns_rtc *crtc = dev_get_drvdata(dev);
-+
-+	if (device_may_wakeup(dev))
-+		disable_irq_wake(crtc->irq);
-+
-+	return 0;
-+}
-+#endif
-+
-+static SIMPLE_DEV_PM_OPS(cdns_rtc_pm_ops, cdns_rtc_suspend, cdns_rtc_resume);
-+
-+static const struct of_device_id cdns_rtc_of_match[] = {
-+	{ .compatible = "cdns,rtc-r109v3" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, cdns_rtc_of_match);
-+
-+static struct platform_driver cdns_rtc_driver = {
-+	.driver = {
-+		.name = "cdns-rtc",
-+		.of_match_table = cdns_rtc_of_match,
-+		.pm = &cdns_rtc_pm_ops,
-+	},
-+	.probe = cdns_rtc_probe,
-+	.remove = cdns_rtc_remove,
-+};
-+module_platform_driver(cdns_rtc_driver);
-+
-+MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
-+MODULE_DESCRIPTION("Cadence RTC driver");
-+MODULE_LICENSE("GPL v2");
-+MODULE_ALIAS("platform:cdns-rtc");
+
+>
+>> +			compatible = "qcom,sdm845-adsp-pil";
+>> +
+>> +			reg = <0x17300000 0x410>;
+>> +			reg-names = "qdsp6ss";
+> reg-names was dropped from the binding (iirc), please omit it here.
+
+
+Yup. Will remove it in next spin.
+
+>
+>> +
+>> +			interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
+> s/0/GIC_SPI/
+okay.
+>
+>> +				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+>> +				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+>> +				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+>> +				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+>> +			interrupt-names = "wdog", "fatal", "ready",
+>> +					  "handover", "stop-ack";
+>> +
+>> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
+>> +				 <&gcc GCC_LPASS_SWAY_CLK>,
+>> +				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
+>> +				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
+>> +				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
+>> +				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
+>> +				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
+>> +
+>> +			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
+>> +				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
+>> +				      "qdsp6ss_sleep", "qdsp6ss_core";
+>> +
+>> +			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
+>> +				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
+>> +			reset-names = "pdc_sync", "cc_lpass";
+>> +
+>> +			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
+>> +
+>> +			memory-region = <&pil_adsp_mem>;
+>> +
+>> +			qcom,smem-states = <&adsp_smp2p_out 0>;
+>> +			qcom,smem-state-names = "stop";
+>> +
+>> +			glink-edge {
+> So we will end up duplicating these between the PAS based and non-PAS
+> based remoteprocs. I don't have a better idea right now, but this
+> deserves some thought.
+
+
+Yup. Will try to think if we can have some common node for glink-edge.
+
+>> +				compatible = "qcom,glink-smem";
+>> +				interrupts = <0 156 IRQ_TYPE_EDGE_RISING>;
+> s/0/GIC_SPI/
+
+sure
+
+
+>
+>> +
+>> +				label = "lpass";
+>> +				qcom,remote-pid = <2>;
+>> +				mboxes = <&apss_shared 8>;
+>> +				mbox-names = "adsp_smem";
+> mbox-names is not a documented property, please omit it.
+
+
+okay
+
+>
+>> +				#address-cells = <1>;
+>> +				#size-cells = <0>;
+>> +				apr@4 {
+>> +					compatible = "qcom,apr-v2";
+>> +					qcom,glink-channels = "apr_audio_svc";
+>> +					reg = <APR_DOMAIN_ADSP>;
+>> +					#address-cells = <1>;
+>> +					#size-cells = <0>;
+>> +					q6core {
+>> +						compatible = "qcom,q6core";
+>> +						reg = <APR_SVC_ADSP_CORE>;
+>> +					};
+>> +
+>> +					q6afe {
+>> +						compatible = "qcom,q6afe";
+>> +						reg = <APR_SVC_AFE>;
+>> +						q6afedai: afedais {
+>> +							compatible = "qcom,q6afe-dais";
+>> +							#sound-dai-cells = <1>;
+>> +							#address-cells = <1>;
+>> +							#size-cells = <0>;
+>> +						};
+>> +					};
+>> +
+>> +					q6asm {
+>> +						compatible = "qcom,q6asm";
+>> +						reg = <APR_SVC_ASM>;
+>> +						q6asmdai: asmdai{
+>> +							compatible = "qcom,q6asm-dais";
+>> +							iommus = <&apps_smmu 0x1821 0x0>;
+>> +							#sound-dai-cells = <1>;
+>> +						};
+>> +					};
+>> +
+>> +					q6adm {
+>> +						compatible = "qcom,q6adm";
+>> +						reg = <APR_SVC_ADM>;
+>> +						q6routing: routing {
+>> +							compatible = "qcom,q6adm-routing";
+>> +							#sound-dai-cells = <0>;
+>> +						};
+>> +					};
+>> +				};
+>> +			};
+>> +			status = "disabled";
+> Properties must come before subnodes.
+Yup, right. Will update in next spin.
+>
+>> +		};
+> Regards,
+> Bjorn
+
+Thanks,
+
+Rohit
+
 -- 
-2.15.0
+Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+of the Code Aurora Forum, hosted by the Linux Foundation.
