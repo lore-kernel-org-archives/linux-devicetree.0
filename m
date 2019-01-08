@@ -1,47 +1,32 @@
 From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: at91: replace gpio-key,wakeup with
- wakeup-source property
-Date: Tue, 8 Jan 2019 19:13:40 +0100
-Message-ID: <20190108181340.GD10218@piout.net>
-References: <20181221181149.6708-1-sudeep.holla@arm.com>
+Subject: Re: [PATCH 1/2] ARM: dts: at91: at91-sama5d27_som1: add QSPI1 + SPI
+ NOR memory nodes
+Date: Tue, 8 Jan 2019 19:14:15 +0100
+Message-ID: <20190108181415.GE10218@piout.net>
+References: <20181212163057.22183-1-tudor.ambarus@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181221181149.6708-1-sudeep.holla@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sudeep Holla <sudeep.holla@arm.com>
-Cc: devicetree@vger.kernel.org, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181212163057.22183-1-tudor.ambarus@microchip.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Tudor.Ambarus@microchip.com
+Cc: Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 21/12/2018 18:11:49+0000, Sudeep Holla wrote:
-> Most of the legacy "gpio-key,wakeup" property are already replaced
-> with "wakeup-source". However few occurrences of old property has
-> popped up again, probably from the remnants in downstream trees.
-> Almost all of those were remove couple of years back.
+On 12/12/2018 16:31:08+0000, Tudor.Ambarus@microchip.com wrote:
+> From: Claudiu Beznea <claudiu.beznea@microchip.com>
 > 
-> Replace the legacy properties with the unified "wakeup-source"
-> property introduced in the commit 700a38b27eef ("Input: gpio_keys -
-> switch to using generic device properties")
+> Configure the QSPI1 controller pin muxing and declare the
+> jedec,spi-nor memory (SST26VF064).
 > 
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Peter Rosin <peda@axentia.se>
-> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
-> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+> [tudor.ambarus@microchip.com: add spi-rx/tx-bus-width, drop partitions,
+> reword commit.]
+> Signed-off-by: Tudor Ambarus <tudor.ambarus@microchip.com>
 > ---
->  arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 2 +-
->  arch/arm/boot/dts/at91-wb45n.dts            | 2 +-
->  arch/arm/boot/dts/at91-wb50n.dts            | 4 ++--
->  3 files changed, 4 insertions(+), 4 deletions(-)
+>  arch/arm/boot/dts/at91-sama5d27_som1.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
 Applied, thanks.
 
