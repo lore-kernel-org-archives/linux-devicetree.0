@@ -1,83 +1,78 @@
-Return-Path: <robherring2@gmail.com>
-Date: Thu, 3 Jan 2019 15:12:40 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 02/12] media: i2c: mt9m001: dt: add binding for mt9m001
-Message-ID: <20190103211240.GA31467@bogus>
-References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
- <1545498774-11754-3-git-send-email-akinobu.mita@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1545498774-11754-3-git-send-email-akinobu.mita@gmail.com>
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+Return-Path: <SRS0=mSv1=PQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:37037 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfAHOwh (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 8 Jan 2019 09:52:37 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v2 09/13] media: mt9m001: add media controller support
+Date: Tue,  8 Jan 2019 23:51:46 +0900
+Message-Id: <1546959110-19445-10-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
+References: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Sun, Dec 23, 2018 at 02:12:44AM +0900, Akinobu Mita wrote:
-> Add device tree binding documentation for the MT9M001 CMOS image sensor.
-> 
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->  .../devicetree/bindings/media/i2c/mt9m001.txt      | 37 ++++++++++++++++++++++
->  1 file changed, 37 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/mt9m001.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/mt9m001.txt b/Documentation/devicetree/bindings/media/i2c/mt9m001.txt
-> new file mode 100644
-> index 0000000..794b787
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/mt9m001.txt
-> @@ -0,0 +1,37 @@
-> +MT9M001: 1/2-Inch Megapixel Digital Image Sensor
-> +
-> +The MT9M001 is an SXGA-format with a 1/2-inch CMOS active-pixel digital
-> +image sensor. It is programmable through a simple two-wire serial
-> +interface.
+Create a source pad and set the media controller type to the sensor.
 
-I2C?
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+* No changes from v1
 
-> +
-> +Required Properties:
-> +
-> +- compatible: shall be "onnn,mt9m001".
-> +- clocks: reference to the master clock into sensor
-> +
-> +Optional Properties:
-> +
-> +- reset-gpios: GPIO handle which is connected to the reset pin of the chip.
-> +  Active low.
-> +- standby-gpios: GPIO handle which is connected to the standby pin of the chip.
-> +  Active high.
-> +
-> +For further reading on port node refer to
-> +Documentation/devicetree/bindings/media/video-interfaces.txt.
+ drivers/media/i2c/Kconfig   | 2 ++
+ drivers/media/i2c/mt9m001.c | 9 +++++++++
+ 2 files changed, 11 insertions(+)
 
-You still need to state how many ports/endpoints and what they are.
-
-> +
-> +Example:
-> +
-> +	&i2c1 {
-> +		mt9m001@5d {
-
-camera-sensor@5d
-
-> +			compatible = "onnn,mt9m001";
-> +			reg = <0x5d>;
-> +			reset-gpios = <&gpio0 0 GPIO_ACTIVE_LOW>;
-> +			standby-gpios = <&gpio0 1 GPIO_ACTIVE_HIGH>;
-> +			clocks = <&camera_clk>;
-> +			port {
-> +				mt9m001_out: endpoint {
-> +					remote-endpoint = <&vcap_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> -- 
-> 2.7.4
-> 
+diff --git a/drivers/media/i2c/Kconfig b/drivers/media/i2c/Kconfig
+index bc248d9..2d13898 100644
+--- a/drivers/media/i2c/Kconfig
++++ b/drivers/media/i2c/Kconfig
+@@ -860,6 +860,8 @@ config VIDEO_VS6624
+ config VIDEO_MT9M001
+ 	tristate "mt9m001 support"
+ 	depends on I2C && VIDEO_V4L2
++	depends on MEDIA_CAMERA_SUPPORT
++	depends on MEDIA_CONTROLLER
+ 	help
+ 	  This driver supports MT9M001 cameras from Micron, monochrome
+ 	  and colour models.
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index 0f5e3f9..3b55aa85 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -103,6 +103,7 @@ struct mt9m001 {
+ 	int num_fmts;
+ 	unsigned int total_h;
+ 	unsigned short y_skip_top;	/* Lines to skip at the top */
++	struct media_pad pad;
+ };
+ 
+ static struct mt9m001 *to_mt9m001(const struct i2c_client *client)
+@@ -761,6 +762,12 @@ static int mt9m001_probe(struct i2c_client *client,
+ 	if (ret)
+ 		goto error_power_off;
+ 
++	mt9m001->pad.flags = MEDIA_PAD_FL_SOURCE;
++	mt9m001->subdev.entity.function = MEDIA_ENT_F_CAM_SENSOR;
++	ret = media_entity_pads_init(&mt9m001->subdev.entity, 1, &mt9m001->pad);
++	if (ret)
++		goto error_power_off;
++
+ 	pm_runtime_idle(&client->dev);
+ 
+ 	return 0;
+@@ -784,6 +791,8 @@ static int mt9m001_remove(struct i2c_client *client)
+ 	v4l2_device_unregister_subdev(&mt9m001->subdev);
+ 	pm_runtime_get_sync(&client->dev);
+ 
++	media_entity_cleanup(&mt9m001->subdev.entity);
++
+ 	pm_runtime_disable(&client->dev);
+ 	pm_runtime_set_suspended(&client->dev);
+ 	pm_runtime_put_noidle(&client->dev);
+-- 
+2.7.4
