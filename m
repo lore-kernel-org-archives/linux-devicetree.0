@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 13/15] ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
-Date: Tue,  8 Jan 2019 17:24:38 +0100
-Message-ID: <20190108162441.5278-14-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 12/15] ARM64: dts: marvell: armada-37xx: declare PCIe clock
+Date: Tue,  8 Jan 2019 17:24:37 +0100
+Message-ID: <20190108162441.5278-13-miquel.raynal@bootlin.com>
 References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,25 +12,24 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The PCIe node is wired to the second PHY of the COMPHY IP.
+The PCIe IP is fed by a gated clock.
 
-Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 1 +
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-index 094994a9c68e..c5c72902c647 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -46,6 +46,7 @@
- /* J9 */
- &pcie0 {
- 	status = "okay";
-+	phys = <&comphy1 0>;
- };
- 
- /* J6 */
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index 65bf774516ec..f6f8d2b3b2c1 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -414,6 +414,7 @@
+ 			#address-cells = <3>;
+ 			#size-cells = <2>;
+ 			bus-range = <0x00 0xff>;
++			clocks = <&sb_periph_clk 13>;
+ 			interrupts = <GIC_SPI 29 IRQ_TYPE_LEVEL_HIGH>;
+ 			#interrupt-cells = <1>;
+ 			msi-parent = <&pcie0>;
 -- 
 2.19.1
