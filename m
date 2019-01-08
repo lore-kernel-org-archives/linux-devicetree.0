@@ -1,71 +1,119 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v3 03/16] Revert "platform/olpc: Make ec explicitly
- non-modular"
-Date: Tue, 08 Jan 2019 09:29:07 +0100
-Message-ID: <04e606dd8551bdf71d3b79b12aed46d1ad5157b6.camel@v3.sk>
-References: <20190107183439.50626-1-lkundrak@v3.sk>
-         <20190107183439.50626-4-lkundrak@v3.sk>
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: [PATCH lora-next 1/4] dt-bindings: lora: sx130x: add basic documentation
+Date: Tue,  8 Jan 2019 17:41:29 +0900
+Message-ID: <20190108084132.10214-1-ben.whitten@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107183439.50626-4-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org
-Cc: James Cameron <quozl@laptop.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, x86@kernel.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-lpwan@lists.infradead.org, afaerber@suse.de
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-01-07 at 19:34 +0100, Lubomir Rintel wrote:
-> It doesn't make sense to always have this built-in, e.g. on ARM
-> multiplatform kernels.
-> 
-> A better way to address the problem the original commit aimed to solve is
-> to fix Kconfig. That is what the next commit in the series does.
-> 
-> This reverts commit f48d1496b8537d75776478c6942dd87f34d7f270.
+Add basic documentation in YAML format for the sx130x series concentrators
+from Semtech.
+Required is; the location on the SPI bus, the reset gpio and the node for
+downstream IQ radios, typically sx125x.
 
-The kBuild but figured out that this is not such a great idea.
+Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
+---
+ .../bindings/lora/semtech,sx130x.yaml         | 87 +++++++++++++++++++
+ 1 file changed, 87 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
 
-I'm going to follow-up with a new patch set; sorry for the noise.
-
-> 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> 
-> ---
-> Changes since v1:
-> - Sort it later in the patch set
-> 
->  drivers/platform/olpc/olpc-ec.c | 8 +++++---
->  1 file changed, 5 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/platform/olpc/olpc-ec.c b/drivers/platform/olpc/olpc-ec.c
-> index 981955dce926..35a21c66cd0d 100644
-> --- a/drivers/platform/olpc/olpc-ec.c
-> +++ b/drivers/platform/olpc/olpc-ec.c
-> @@ -1,8 +1,6 @@
->  /*
->   * Generic driver for the OLPC Embedded Controller.
->   *
-> - * Author: Andres Salomon <dilinger@queued.net>
-> - *
->   * Copyright (C) 2011-2012 One Laptop per Child Foundation.
->   *
->   * Licensed under the GPL v2 or later.
-> @@ -14,7 +12,7 @@
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
->  #include <linux/workqueue.h>
-> -#include <linux/init.h>
-> +#include <linux/module.h>
->  #include <linux/list.h>
->  #include <linux/olpc-ec.h>
->  
-> @@ -327,4 +325,8 @@ static int __init olpc_ec_init_module(void)
->  {
->  	return platform_driver_register(&olpc_ec_plat_driver);
->  }
-> +
->  arch_initcall(olpc_ec_init_module);
-> +
-> +MODULE_AUTHOR("Andres Salomon <dilinger@queued.net>");
-> +MODULE_LICENSE("GPL");
+diff --git a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
+new file mode 100644
+index 000000000000..ad263bc4e60d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
+@@ -0,0 +1,87 @@
++# SPDX-License-Identifier: GPL-2.0
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/lora/semtech,sx130x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech LoRa concentrator
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++  - Ben Whitten <ben.whitten@gmail.com>
++
++description: |
++  Semtech LoRa concentrator sx130x digital baseband chip is capable of
++  demodulating LoRa signals on 8 channels simultaneously.
++
++  It is typically paired with two sx125x IQ radios controlled over an
++  SPI directly from the concentrator.
++
++  The concentrator itself it controlled over SPI.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - semtech,sx1301
++        - semtech,sx1308
++
++  reg:
++    maxItems: 1
++    description: The chip select on the SPI bus.
++
++  reset-gpios:
++    maxItems: 1
++    description: A connection of the reset gpio line.
++
++  spi-max-frequency:
++    maximum: 10000000
++    default: 8000000
++    description: The frequency of the SPI communication to the concentrator,
++      in Hz. Maximum SPI frequency is 10MHz although 8MHz is typically used
++      on a number of cards.
++
++  radio-spi:
++    description: The concentrator has two radios connected which are contained
++      within the following node.
++
++    properties:
++      '#address-cells':
++        const: 1
++
++      '#size-cells':
++        const: 0
++
++    required:
++      - '#address-cells'
++      - '#size-cells'
++
++required:
++  - compatible
++  - reg
++  - reset-gpios
++  - radio-spi
++
++examples:
++  - |
++    concentrator0: lora@0 {
++      compatible = "semtech,sx1301";
++      reg = <0>;
++      reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
++      spi-max-frequency = <8000000>;
++
++      radio-spi {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        radio0: lora@0 {
++          compatible = "semtech,sx1257";
++          reg = <0>;
++        };
++
++        radio1: lora@1 {
++          compatible = "semtech,sx1257";
++          reg = <1>;
++        };
++      };
++    };
+-- 
+2.17.1
