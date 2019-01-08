@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 09/15] dt-bindings: PCI: aardvark: Describe the PHY property
-Date: Tue,  8 Jan 2019 17:24:34 +0100
-Message-ID: <20190108162441.5278-10-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 04/15] PCI: aardvark: Add PHY support
+Date: Tue,  8 Jan 2019 17:24:29 +0100
+Message-ID: <20190108162441.5278-5-miquel.raynal@bootlin.com>
 References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,36 +12,110 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Document the possibility to reference a PHY.
+The IP needs its PHY to be properly configured to work. While the PHY
+is usually already configured by the bootloader, we will need this
+feature when adding S2RAM support. Take care of registering and
+configuring the PHY from the driver itself.
 
+Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- Documentation/devicetree/bindings/pci/aardvark-pci.txt | 5 +++++
- 1 file changed, 5 insertions(+)
+ drivers/pci/controller/pci-aardvark.c | 62 +++++++++++++++++++++++++++
+ 1 file changed, 62 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pci/aardvark-pci.txt b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-index 9d19ebfea189..a440f182ccf8 100644
---- a/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
-@@ -21,6 +21,10 @@ contain the following properties:
-    define the mapping of the PCIe interface to interrupt numbers.
-  - bus-range: PCI bus numbers covered
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index b1b8897d2d28..27ec79defa57 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -17,6 +17,7 @@
+ #include <linux/pci.h>
+ #include <linux/init.h>
+ #include <linux/platform_device.h>
++#include <linux/phy/phy.h>
+ #include <linux/of_address.h>
+ #include <linux/of_pci.h>
  
-+The following are optional properties:
+@@ -203,6 +204,7 @@ struct advk_pcie {
+ 	u16 msi_msg;
+ 	int root_bus_nr;
+ 	struct pci_bridge_emul bridge;
++	struct phy *phy;
+ };
+ 
+ static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
+@@ -998,6 +1000,62 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
+ 	return ret;
+ }
+ 
++static void __maybe_unused advk_pcie_disable_phy(struct advk_pcie *pcie)
++{
++	phy_power_off(pcie->phy);
++	phy_exit(pcie->phy);
++}
 +
-+ - phys: the PCIe PHY handle
++static int advk_pcie_enable_phy(struct advk_pcie *pcie)
++{
++	int ret;
 +
- In addition, the Device Tree describing an Aardvark PCIe controller
- must include a sub-node that describes the legacy interrupt controller
- built into the PCIe controller. This sub-node must have the following
-@@ -50,6 +54,7 @@ Example:
- 				<0 0 0 2 &pcie_intc 1>,
- 				<0 0 0 3 &pcie_intc 2>,
- 				<0 0 0 4 &pcie_intc 3>;
-+		phys = <&comphy1 0>;
- 		pcie_intc: interrupt-controller {
- 			interrupt-controller;
- 			#interrupt-cells = <1>;
++	if (!pcie->phy)
++		return 0;
++
++	ret = phy_init(pcie->phy);
++	if (ret)
++		return ret;
++
++	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
++	if (ret) {
++		phy_exit(pcie->phy);
++		return ret;
++	}
++
++	ret = phy_power_on(pcie->phy);
++	if (ret) {
++		phy_exit(pcie->phy);
++		return ret;
++	}
++
++	return 0;
++}
++
++static int advk_pcie_setup_phy(struct advk_pcie *pcie)
++{
++	struct device *dev = &pcie->pdev->dev;
++	struct device_node *node = dev->of_node;
++	int ret = 0;
++
++	pcie->phy = devm_of_phy_get(dev, node, NULL);
++	if (IS_ERR(pcie->phy) && (PTR_ERR(pcie->phy) == -EPROBE_DEFER))
++		return PTR_ERR(pcie->phy);
++
++	/* Old bindings miss the PHY handle */
++	if (IS_ERR(pcie->phy)) {
++		dev_warn(dev, "PHY unavailable (%ld)\n", PTR_ERR(pcie->phy));
++		pcie->phy = NULL;
++		return 0;
++	}
++
++	ret = advk_pcie_enable_phy(pcie);
++	if (ret)
++		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
++
++	return ret;
++}
++
+ static int advk_pcie_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -1037,6 +1095,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	ret = advk_pcie_setup_phy(pcie);
++	if (ret)
++		return ret;
++
+ 	advk_pcie_setup_hw(pcie);
+ 
+ 	advk_sw_pci_bridge_init(pcie);
 -- 
 2.19.1
