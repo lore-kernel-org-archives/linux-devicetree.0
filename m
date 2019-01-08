@@ -1,73 +1,62 @@
-Return-Path: <SRS0=iARg=PP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga18.intel.com ([134.134.136.126]:55159 "EHLO mga18.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726879AbfAGLcu (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 7 Jan 2019 06:32:50 -0500
-Date: Mon, 7 Jan 2019 13:32:43 +0200
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 12/12] media: mt9m001: set all mbus format field when
- G_FMT and S_FMT ioctls
-Message-ID: <20190107113243.dte4yqioqy33cwe5@kekkonen.localdomain>
-References: <1545498774-11754-1-git-send-email-akinobu.mita@gmail.com>
- <1545498774-11754-13-git-send-email-akinobu.mita@gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1545498774-11754-13-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=mSv1=PQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:36435 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfAHOwm (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 8 Jan 2019 09:52:42 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v2 11/13] media: mt9m001: support log_status ioctl and event interface
+Date: Tue,  8 Jan 2019 23:51:48 +0900
+Message-Id: <1546959110-19445-12-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
+References: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
 Sender: devicetree-owner@vger.kernel.org
-To: Akinobu Mita <akinobu.mita@gmail.com>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Mauro Carvalho Chehab <mchehab@s-opensource.com>
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Mita-san,
+This adds log_status ioctl and event interface for mt9m001's v4l2 controls.
 
-On Sun, Dec 23, 2018 at 02:12:54AM +0900, Akinobu Mita wrote:
-> This driver doesn't set all members of mbus format field when the
-> VIDIOC_SUBDEV_{S,G}_FMT ioctls are called.
-> 
-> This is detected by v4l2-compliance.
-> 
-> Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-> Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-> Cc: Mauro Carvalho Chehab <mchehab@s-opensource.com>
-> Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
-> ---
->  drivers/media/i2c/mt9m001.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
-> index f4afbc9..82b89d5 100644
-> --- a/drivers/media/i2c/mt9m001.c
-> +++ b/drivers/media/i2c/mt9m001.c
-> @@ -342,6 +342,9 @@ static int mt9m001_get_fmt(struct v4l2_subdev *sd,
->  	mf->code	= mt9m001->fmt->code;
->  	mf->colorspace	= mt9m001->fmt->colorspace;
->  	mf->field	= V4L2_FIELD_NONE;
-> +	mf->ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT;
-> +	mf->quantization = V4L2_QUANTIZATION_DEFAULT;
-> +	mf->xfer_func	= V4L2_XFER_FUNC_DEFAULT;
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+* No changes from v1
 
-Instead of setting the fields individually, would it be feasible to just
-assign mt9m001->fmt to mf?
+ drivers/media/i2c/mt9m001.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
->  
->  	return 0;
->  }
-> @@ -402,6 +405,10 @@ static int mt9m001_set_fmt(struct v4l2_subdev *sd,
->  	}
->  
->  	mf->colorspace	= fmt->colorspace;
-> +	mf->field	= V4L2_FIELD_NONE;
-> +	mf->ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT;
-> +	mf->quantization = V4L2_QUANTIZATION_DEFAULT;
-> +	mf->xfer_func	= V4L2_XFER_FUNC_DEFAULT;
-
-Ditto.
-
->  
->  	if (format->which == V4L2_SUBDEV_FORMAT_ACTIVE)
->  		return mt9m001_s_fmt(sd, fmt, mf);
-
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index 5e93c7d..66a0928 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -17,6 +17,7 @@
+ 
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-device.h>
++#include <media/v4l2-event.h>
+ #include <media/v4l2-subdev.h>
+ 
+ /*
+@@ -632,6 +633,9 @@ static const struct v4l2_ctrl_ops mt9m001_ctrl_ops = {
+ };
+ 
+ static const struct v4l2_subdev_core_ops mt9m001_subdev_core_ops = {
++	.log_status = v4l2_ctrl_subdev_log_status,
++	.subscribe_event = v4l2_ctrl_subdev_subscribe_event,
++	.unsubscribe_event = v4l2_event_subdev_unsubscribe,
+ #ifdef CONFIG_VIDEO_ADV_DEBUG
+ 	.g_register	= mt9m001_g_register,
+ 	.s_register	= mt9m001_s_register,
+@@ -720,7 +724,8 @@ static int mt9m001_probe(struct i2c_client *client,
+ 		return PTR_ERR(mt9m001->reset_gpio);
+ 
+ 	v4l2_i2c_subdev_init(&mt9m001->subdev, client, &mt9m001_subdev_ops);
+-	mt9m001->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE;
++	mt9m001->subdev.flags |= V4L2_SUBDEV_FL_HAS_DEVNODE |
++				 V4L2_SUBDEV_FL_HAS_EVENTS;
+ 	v4l2_ctrl_handler_init(&mt9m001->hdl, 4);
+ 	v4l2_ctrl_new_std(&mt9m001->hdl, &mt9m001_ctrl_ops,
+ 			V4L2_CID_VFLIP, 0, 1, 1, 0);
 -- 
-Sakari Ailus
-sakari.ailus@linux.intel.com
+2.7.4
