@@ -1,121 +1,45 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v5 4/7] dt-bindings: phy: mvebu-comphy: extend the file to describe a3700 bindings
-Date: Tue,  8 Jan 2019 17:31:21 +0100
-Message-ID: <20190108163124.6409-5-miquel.raynal@bootlin.com>
-References: <20190108163124.6409-1-miquel.raynal@bootlin.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH v2 0/5] net: Add support for Qualcomm ethqos
+Date: Tue,  8 Jan 2019 21:59:21 +0530
+Message-ID: <20190108162926.17806-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108163124.6409-1-miquel.raynal@bootlin.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Return-path: <netdev-owner@vger.kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: David S Miller <davem@davemloft.net>
+Cc: netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
 List-Id: devicetree@vger.kernel.org
 
-Current file describe COMPHY bindings for the IP available on the
-CP110 of Armada 7k/8k. Bindings are very close (and serve the same
-purpose) as the new Armada 3700 COMPHY driver so update this file to
-describe both. Also add an example of how to use this second
-compatible (same as for the ESPRESSObin).
+Some Qualcomm SoCs sport a ethqos controller which use DW ip, so add
+the glue driver which uses stmmac driver along with DT bindings for
+this device.
 
-While doing so, enhance a bit the file by adding upper case where
-needed.
+This controller supports rgmii mode and doesn't work with existing
+phy drivers as they do not remove the phy delay delay in this mode,
+so fix the two phy drivers tested with this.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../bindings/phy/phy-mvebu-comphy.txt         | 65 +++++++++++++++----
- 1 file changed, 53 insertions(+), 12 deletions(-)
+Changes in v2:
+ - Fix the example in dt-binding
+ - Remove DT property for disable the delay and disable delay for RGMII mode
+   in AT803x and QCA8K PHY drivers
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
-index bfcf80341657..cf2cd86db267 100644
---- a/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
-+++ b/Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
-@@ -1,16 +1,27 @@
--mvebu comphy driver
---------------------
-+MVEBU comphy drivers
-+--------------------
- 
--A comphy controller can be found on Marvell Armada 7k/8k on the CP110. It
--provides a number of shared PHYs used by various interfaces (network, sata,
--usb, PCIe...).
-+COMPHY controllers can be found on the following Marvell MVEBU SoCs:
-+* Armada 7k/8k (on the CP110)
-+* Armada 3700
-+It provides a number of shared PHYs used by various interfaces (network, SATA,
-+USB, PCIe...).
- 
- Required properties:
- 
--- compatible: should be "marvell,comphy-cp110"
--- reg: should contain the comphy register location and length.
--- marvell,system-controller: should contain a phandle to the
--                             system controller node.
-+- compatible: should be one of:
-+  * "marvell,comphy-cp110" for Armada 7k/8k
-+  * "marvell,comphy-a3700" for Armada 3700
-+- reg: should contain the COMPHY register(s) location(s) and length(s).
-+  * 1 entry for Armada 7k/8k
-+  * 4 entries for Armada 3700 along with the corresponding reg-names
-+    properties, memory areas are:
-+    * Generic COMPHY registers
-+    * Lane 1 (PCIe/GbE)
-+    * Lane 0 (USB3/GbE)
-+    * Lane 2 (SATA/USB3)
-+- marvell,system-controller: should contain a phandle to the system
-+			     controller node (only for Armada 7k/8k)
- - #address-cells: should be 1.
- - #size-cells: should be 0.
- 
-@@ -18,11 +29,11 @@ A sub-node is required for each comphy lane provided by the comphy.
- 
- Required properties (child nodes):
- 
--- reg: comphy lane number.
--- #phy-cells : from the generic phy bindings, must be 1. Defines the
-+- reg: COMPHY lane number.
-+- #phy-cells : from the generic PHY bindings, must be 1. Defines the
-                input port to use for a given comphy lane.
- 
--Example:
-+Examples:
- 
- 	cpm_comphy: phy@120000 {
- 		compatible = "marvell,comphy-cp110";
-@@ -41,3 +52,33 @@ Example:
- 			#phy-cells = <1>;
- 		};
- 	};
-+
-+	comphy: phy@18300 {
-+		compatible = "marvell,comphy-a3700";
-+		reg = <0x18300 0x300>,
-+		<0x1F000 0x400>,
-+		<0x5C000 0x400>,
-+		<0xe0178 0x8>;
-+		reg-names = "comphy",
-+		"lane1_pcie_gbe",
-+		"lane0_usb3_gbe",
-+		"lane2_sata_usb3";
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+
-+		comphy0: phy@0 {
-+			reg = <0>;
-+			#phy-cells = <1>;
-+		};
-+
-+		comphy1: phy@1 {
-+			reg = <1>;
-+			#phy-cells = <1>;
-+		};
-+
-+		comphy2: phy@2 {
-+			reg = <2>;
-+			#phy-cells = <1>;
-+		};
-+	};
+Vinod Koul (5):
+  dt-bindings: net: Add Qualcomm ethqos binding
+  net: stmmac: Add driver for Qualcomm ethqos
+  MAINTAINER: Add entry for Qualcomm ETHQOS ethernet driver
+  net: phy: at803x: Disable phy delay for RGMII mode
+  net: dsa: qca8k: disable delay for RGMII mode
+
+ .../devicetree/bindings/net/qcom,dwmac.txt    | 129 +++++
+ MAINTAINERS                                   |   8 +
+ drivers/net/dsa/qca8k.c                       |  16 +-
+ drivers/net/ethernet/stmicro/stmmac/Kconfig   |  10 +
+ drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
+ .../stmicro/stmmac/dwmac-qcom-ethqos.c        | 545 ++++++++++++++++++
+ drivers/net/phy/at803x.c                      |  21 +
+ 7 files changed, 718 insertions(+), 12 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/net/qcom,dwmac.txt
+ create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
+
 -- 
-2.19.1
+2.20.1
