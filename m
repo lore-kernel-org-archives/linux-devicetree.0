@@ -1,15 +1,16 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
-Date: Tue, 8 Jan 2019 23:32:01 +0100
-Message-ID: <CAFBinCB393w2cBacB6c_79Xt22suWWfx5omEKmzBJx02vb3fKw@mail.gmail.com>
-References: <20181219002620.12138-1-khilman@baylibre.com>
- <20181219002620.12138-2-khilman@baylibre.com>
- <CAFBinCCbPbSQZeF1mzfBfLt+cJ0P=ajHznZM2prn600NO7G3sA@mail.gmail.com>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add DT for NanoPi M4
+Date: Tue, 8 Jan 2019 22:35:40 +0000
+Message-ID: <a9934783-7562-c872-fdcd-1f8e72e85881@arm.com>
+References: <cover.1546981251.git.robin.murphy@arm.com>
+ <324b75bbeef2552ddde62f4e1834ac908a45bebd.1546981251.git.robin.murphy@arm.com>
+ <1755553.je4OVlYtzY@phil>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCCbPbSQZeF1mzfBfLt+cJ0P=ajHznZM2prn600NO7G3sA@mail.gmail.com>
+In-Reply-To: <1755553.je4OVlYtzY@phil>
+Content-Language: en-GB
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,45 +20,77 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
+Hi Heiko,
 
-On Sat, Dec 22, 2018 at 5:57 PM Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Kevin,
->
-> On Wed, Dec 19, 2018 at 1:26 AM Kevin Hilman <khilman@baylibre.com> wrote:
-> >
-> > Add the G12a (S905X2) based X96 Max board[1].
-> >
-> > There is no branding for the manufacturer anywhere on the product, so it
-> > took some digging to find the manufacturer.  But since there's nothing
-> > about the maker on the product I've left it out of the DT name because
-> > 1) nobody will no that name and 2) keeps the DT filename shorter.
-> based on the cnx-soft article and my own board I would add the
-> following section:
-> -----
-> There are three variants of this device:
-I had a chat with Chris Moore (who replied on the dt-bindings patch).
+On 2019-01-08 10:15 pm, Heiko Stuebner wrote:
+> Hi Robin,
+> 
+> Am Dienstag, 8. Januar 2019, 22:57:24 CET schrieb Robin Murphy:
+>> There are a number of subtle differences between the nanopi4 variants,
+>> and where they disagree, the common DTSI currently follows the details
+>> of NanoPi M4. In order to improve matters even more, let's add a
+>> separate DTS for the M4 to which we can start splitting things out
+>> appropriately. The third variant, NanoPi NEO4, is a lot closer to the M4
+>> than either is to the larger T4, so arguably could get away with just
+>> sharing the M4 DT for now (plus I have neither of the smaller boards to
+>> actually test with).
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> I'm not sure if Rob actually checks the devicetree list or relies on
+> patches Cc'ed directly to him for binding review, so you might want
+> to add the 2 dt maintainers explicitly.
 
-> - 2GB LPDDR4, 16GB flash, 2.4G WiFi, 100M Ethernet
-> - 4GB LPDDR4, 32GB flash, dual band AC WiFi, Bluetooth 4.x, Gigabit Ethernet
-I have the 4GB LPDDR4, 32G flash variant which uses:
-RAM: SpecTek LPDDR4 (chip markings: PS082-062 BT / on the side it says R5JH)
-eMMC: Micron (chip markings: 8FAI8 SJJML / on the side it says JXML ->
-this might be "MTFC32GAKAECN-AIT")
-WiFi: Ampak AP6356S
+Er, that's embarassing... I somehow failed to register that my mindless 
+copy-paste job ends up adding a new binding that *isn't* the one Rob 
+already reviewed :(
 
-> - 4GB LPDDR4, 64GB flash, dual band  AC WiFi, Bluetooth 4.x, Gigabit Ethernet
-Chris has the 4GB LPDDR4, 64GB flash variant.
-RAM: same as on mine
-eMMC: Samsung KLMCG4JENB-B041
-WiFi: same as on mine
+>> ---
+>>   .../devicetree/bindings/arm/rockchip.yaml      |  5 +++++
+>>   arch/arm64/boot/dts/rockchip/Makefile          |  1 +
+>>   .../boot/dts/rockchip/rk3399-nanopi-m4.dts     | 18 ++++++++++++++++++
+>>   3 files changed, 24 insertions(+)
+>>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
+>>
+>> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> index bcc60c492a12..b4756e0cb7d0 100644
+>> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+>> @@ -92,6 +92,11 @@ properties:
+>>             - const: friendlyarm,nanopc-t4
+>>             - const: rockchip,rk3399
+>>   
+>> +      - description: FriendlyElec NanoPi M4
+>> +        items:
+>> +          - const: friendlyarm,nanopi-m4
+>> +          - const: rockchip,rk3399
+>> +
+> 
+> When we hashed out the Rockchip yaml thingy, there also
+> came up the possibility of grouping the similar boards together
+> into an enum, see the rk3399-firefly or the rk3288-evb-* for example.
+> 
+> So the binding for both could possibly become:
+> 
+>        - description: FriendlyElec NanoPi
+>          items:
+> 	  - enum:
+>            	- friendlyarm,nanopi-m4
+>            	- friendlyarm,nanopi-t4
+>            - const: rockchip,rk3399
+> 
+> We didn't come up with a hard rule for all cases, but the
+> Nano PI feels like it qualifies ;-)
 
+...but I completely agree with that idea anyway - as the commit log 
+alludes to, this was really just somewhere to move the existing nodes to 
+without much thought involved. I'll give it a day or two for any more 
+comments, then respin at least this patch and make sure the binding 
+update goes to the maintainers properly.
 
-Regards
-Martin
+Cheers,
+Robin.
