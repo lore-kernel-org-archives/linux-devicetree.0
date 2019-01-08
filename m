@@ -1,11 +1,13 @@
 From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH 0/5] NanoPC-T4 (and a bit of NanoPi M4) support
-Date: Tue,  8 Jan 2019 21:57:22 +0000
-Message-ID: <cover.1546981251.git.robin.murphy@arm.com>
+Subject: [PATCH 2/5] arm64: dts: rockchip: Add DT for NanoPi M4
+Date: Tue,  8 Jan 2019 21:57:24 +0000
+Message-ID: <324b75bbeef2552ddde62f4e1834ac908a45bebd.1546981251.git.robin.murphy@arm.com>
+References: <cover.1546981251.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <cover.1546981251.git.robin.murphy@arm.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,36 +21,74 @@ To: heiko@sntech.de
 Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi all,
+There are a number of subtle differences between the nanopi4 variants,
+and where they disagree, the common DTSI currently follows the details
+of NanoPi M4. In order to improve matters even more, let's add a
+separate DTS for the M4 to which we can start splitting things out
+appropriately. The third variant, NanoPi NEO4, is a lot closer to the M4
+than either is to the larger T4, so arguably could get away with just
+sharing the M4 DT for now (plus I have neither of the smaller boards to
+actually test with).
 
-Since I finally got to spend some quality time with my NanoPC-T4 over
-the holidays, I set to testing Tomeu's v4 patch, and ended up poring
-over the schematics of all 3 boards and doing a fair bit more hacking.
-I've taken the liberty of addressing the remaining review comments and
-posting it as v5 here so as to also start adding stuff on top. My
-current step is trying to get Wifi and Bluetooth working reliably...
-
-Robin.
-
-
-Robin Murphy (4):
-  arm64: dts: rockchip: Add DT for NanoPi M4
-  arm64: dts: rockchip: Refine nanopi4 differences
-  arm64: dts: rockchip: Add NanoPC-T4 IR receiver
-  arm64: dts: rockchip: Fix nanopi4 uSD card detect
-
-Tomeu Vizoso (1):
-  arm64: dts: rockchip: Add DT for NanoPC-T4
-
- .../devicetree/bindings/arm/rockchip.yaml     |  10 +
- arch/arm64/boot/dts/rockchip/Makefile         |   2 +
- .../boot/dts/rockchip/rk3399-nanopc-t4.dts    |  91 +++
- .../boot/dts/rockchip/rk3399-nanopi-m4.dts    |  66 ++
- .../boot/dts/rockchip/rk3399-nanopi4.dtsi     | 677 ++++++++++++++++++
- 5 files changed, 846 insertions(+)
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
+Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+---
+ .../devicetree/bindings/arm/rockchip.yaml      |  5 +++++
+ arch/arm64/boot/dts/rockchip/Makefile          |  1 +
+ .../boot/dts/rockchip/rk3399-nanopi-m4.dts     | 18 ++++++++++++++++++
+ 3 files changed, 24 insertions(+)
  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
- create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
 
+diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
+index bcc60c492a12..b4756e0cb7d0 100644
+--- a/Documentation/devicetree/bindings/arm/rockchip.yaml
++++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
+@@ -92,6 +92,11 @@ properties:
+           - const: friendlyarm,nanopc-t4
+           - const: rockchip,rk3399
+ 
++      - description: FriendlyElec NanoPi M4
++        items:
++          - const: friendlyarm,nanopi-m4
++          - const: rockchip,rk3399
++
+       - description: GeekBuying GeekBox
+         items:
+           - const: geekbuying,geekbox
+diff --git a/arch/arm64/boot/dts/rockchip/Makefile b/arch/arm64/boot/dts/rockchip/Makefile
+index 1c7406111dfd..91a669378605 100644
+--- a/arch/arm64/boot/dts/rockchip/Makefile
++++ b/arch/arm64/boot/dts/rockchip/Makefile
+@@ -17,6 +17,7 @@ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-kevin.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-inx.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-gru-scarlet-kd.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopc-t4.dtb
++dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-nanopi-m4.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-puma-haikou.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-roc-pc.dtb
+ dtb-$(CONFIG_ARCH_ROCKCHIP) += rk3399-rock960.dtb
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
+new file mode 100644
+index 000000000000..8d3f0ba29c72
+--- /dev/null
++++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
+@@ -0,0 +1,18 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * FriendlyElec NanoPi M4 board device tree source
++ *
++ * Copyright (c) 2018 FriendlyElec Computer Tech. Co., Ltd.
++ * (http://www.friendlyarm.com)
++ *
++ * Copyright (c) 2018 Collabora Ltd.
++ * Copyright (c) 2019 Arm Ltd.
++ */
++
++/dts-v1/;
++#include "rk3399-nanopi4.dtsi"
++
++/ {
++	model = "FriendlyElec NanoPi M4";
++	compatible = "friendlyarm,nanopi-m4", "rockchip,rk3399";
++};
 -- 
 2.17.1
