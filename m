@@ -1,115 +1,69 @@
-From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH lora-next 4/4] dt-bindings: lora: sx130x: add clock bindings
-Date: Tue,  8 Jan 2019 17:41:32 +0900
-Message-ID: <20190108084132.10214-4-ben.whitten@gmail.com>
-References: <20190108084132.10214-1-ben.whitten@gmail.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190108084132.10214-1-ben.whitten@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: linux-lpwan@lists.infradead.org, afaerber@suse.de
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
+From: "Liu, Xiaoting" <xiaoting.liu@hxt-semitech.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: hwmon: add dps650ab documentation
+Date: Tue, 8 Jan 2019 08:57:19 +0000
+Message-ID: <6d28f64bd2f441d09819d66b55537e0b@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <cover.1546851856.git.xiaoting.liu@hxt-semitech.com>
+ <0087d2d9c7cd7f38761f76c80d1c37cb2cea6ef2.1546851856.git.xiaoting.liu@hxt-semitech.com>
+ <568735a3-1de2-3880-5fe1-7be38a55f33f@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>, "jdelvare@suse.com" <jdelvare@suse.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>
+Cc: "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Yang, Shunyong" <shunyong.yang@hxt-semitech.com>, "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
 List-Id: devicetree@vger.kernel.org
 
-The sx130x family consumes two clocks, a 32MHz clock provided by a
-connected IQ transceiver, and a 133MHz high speed clock.
+On 2019/1/7 21:58, Guenter Roeck wrote:
+> On 1/7/19 3:00 AM, Xiaoting Liu wrote:
+>> Bindings for DPS650AB power, voltage, temperature, and fan monitering.
+>>
+>> Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+>> ---
+>> v2:
+>>    Change the patch subject.
+>> ---
+>>   Documentation/devicetree/bindings/hwmon/dps650ab.txt | 11 +++++++++++
+>>   1 file changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/dps650ab.txt b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+>> new file mode 100644
+>> index 000000000000..6bbbff89f6d5
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+>> @@ -0,0 +1,11 @@
+>> +Bindings for DPS650AB power, voltage, temperature, and fan monitering
+>> +
+> Assuming this is the Delta Electronics DPS-650-AB power supply, I think
+> you should mention that here.
+I will update commit message as mentioned.
+>
+>> +Required properties:
+>> +- compatible : "dps650ab"
+> Again, assuming this is the Delta Electronics power supply, this should
+> probably be something like "delta,dps650ab".
 
-In the example we connect the concentrator to output 0 of a fixed clock
-providing the 133MHz high speed clock, and we connect to output 0 of a
-connected transceiver 32MHz clock.
+OK, I will add delta to compatible property.
 
-The connected radios are both fed from output 0 of a fixed 32MHz clock,
-with only one being the clock source back with one output to the
-sx130x concentrator.
+Thanks,
 
-Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
----
- .../{ => net}/lora/semtech,sx130x.yaml        | 39 ++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
- rename Documentation/devicetree/bindings/{ => net}/lora/semtech,sx130x.yaml (62%)
+Xiaoting
 
-diff --git a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-similarity index 62%
-rename from Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-rename to Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-index ad263bc4e60d..23a096ca2912 100644
---- a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-+++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-@@ -15,7 +15,8 @@ description: |
-   demodulating LoRa signals on 8 channels simultaneously.
- 
-   It is typically paired with two sx125x IQ radios controlled over an
--  SPI directly from the concentrator.
-+  SPI directly from the concentrator. One of the radios will provide
-+  a 32MHz clock back into the concentrator.
- 
-   The concentrator itself it controlled over SPI.
- 
-@@ -41,6 +42,20 @@ properties:
-       in Hz. Maximum SPI frequency is 10MHz although 8MHz is typically used
-       on a number of cards.
- 
-+  clocks:
-+    maxItems: 2
-+    items:
-+      - description: 32MHz clock provider
-+      - description: 133MHz high speed clock provider
-+    description: The chip requires two clock inputs; A 32MHz clock at CMOS
-+      level which is provided from a connected radio.
-+      And a 133MHz high speed clock at CMOS level provided by an oscillator.
-+
-+  clock-names:
-+    items:
-+      - const: clk32m
-+      - const: clkhs
-+
-   radio-spi:
-     description: The concentrator has two radios connected which are contained
-       within the following node.
-@@ -64,11 +79,27 @@ required:
- 
- examples:
-   - |
-+    tcxo: dummy32m {
-+      compatible = "fixed-clock";
-+      clock-frequency = <32000000>;
-+      clock-output-names = "tcxo";
-+      #clock-cells = <0>;
-+    };
-+
-+    clkhs: dummy133m {
-+      compatible = "fixed-clock";
-+      clock-frequency = <133000000>;
-+      clock-output-names = "clkhs";
-+      #clock-cells = <0>;
-+    };
-+
-     concentrator0: lora@0 {
-       compatible = "semtech,sx1301";
-       reg = <0>;
-       reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
-       spi-max-frequency = <8000000>;
-+      clocks = <&radio1 0>, <&clkhs 0>;
-+      clock-names = "clk32m", "clkhs";
- 
-       radio-spi {
-         #address-cells = <1>;
-@@ -77,11 +108,17 @@ examples:
-         radio0: lora@0 {
-           compatible = "semtech,sx1257";
-           reg = <0>;
-+          clocks = <&tcxo 0>;
-+          clock-names = "tcxo";
-         };
- 
-         radio1: lora@1 {
-           compatible = "semtech,sx1257";
-           reg = <1>;
-+          clocks = <&tcxo 0>;
-+          clock-names = "tcxo";
-+          clock-output-names = "clk32m";
-+          #clock-cells = <0>;
-         };
-       };
-     };
--- 
-2.17.1
+>
+> Thanks,
+> Guenter
+>
+>> +- reg       : I2C address, one of 0x58, 0x59.
+>> +
+>> +Example:
+>> +       dps650ab@58 {
+>> +                   compatible = "dps650ab";
+>> +                   reg = <0x58>;
+>> +       };
+>> --
+>> 1.8.3.1
+>>
+>>
+>>
+>>
