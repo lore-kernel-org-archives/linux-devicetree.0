@@ -1,29 +1,56 @@
 From: Jan Kotas <jank@cadence.com>
-Subject: [PATCH 0/2] rtc: Add a driver for Cadence RTC
-Date: Tue, 8 Jan 2019 12:22:40 +0000
-Message-ID: <20190108122242.12411-1-jank@cadence.com>
+Subject: [PATCH 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
+Date: Tue, 8 Jan 2019 12:22:41 +0000
+Message-ID: <20190108122242.12411-2-jank@cadence.com>
+References: <20190108122242.12411-1-jank@cadence.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190108122242.12411-1-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
 Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-This patchset adds a driver support for Cadence RTC IP.
-It supports time, date and wakeups from sleep.
+This patch adds a DT binding documentation for
+Cadence RTC controller.
 
-Jan Kotas (2):
-  dt-bindings: rtc: Add bindings for Cadence RTC
-  rtc: Add Cadence RTC driver
-
- Documentation/devicetree/bindings/rtc/cdns,rtc.txt |  25 ++
- drivers/rtc/Kconfig                                |  10 +
- drivers/rtc/Makefile                               |   1 +
- drivers/rtc/rtc-cadence.c                          | 404 +++++++++++++++++++++
- 4 files changed, 440 insertions(+)
+Signed-off-by: Jan Kotas <jank@cadence.com>
+---
+ Documentation/devicetree/bindings/rtc/cdns,rtc.txt | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/rtc/cdns,rtc.txt
- create mode 100644 drivers/rtc/rtc-cadence.c
 
+diff --git a/Documentation/devicetree/bindings/rtc/cdns,rtc.txt b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+new file mode 100644
+index 000000000..40713bbbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+@@ -0,0 +1,25 @@
++Cadence Real Time Clock
++
++The Cadence RTC controller with date, time and alarm capabilities.
++The alarm may wake the system from low-power state.
++
++Required properties:
++- compatible: Should be "cdns,rtc-r109v3"
++- reg: Specifies base physical address and size of the register area.
++- interrupts: A single interrupt specifier.
++- clocks: Must contain two entries:
++	- pclk: APB registers clock
++	- ref_clk: reference 1Hz of 100Hz clock, depending on IP configuration
++	See ../clocks/clock-bindings.txt for details.
++
++Example:
++        rtc0: rtc@fd080000 {
++        	compatible = "cdns,rtc-r109v3";
++        	reg = <0xfd080000 0x1000>;
++
++        	clock-names = "pclk", "ref_clk";
++        	clocks = <&sysclock>, <&refclock>;
++
++        	interrupt-parent = <&gic>;
++        	interrupts = <0 6 IRQ_TYPE_LEVEL_HIGH>;
++        };
 -- 
 2.15.0
