@@ -1,77 +1,62 @@
-From: Benjamin Gaignard <benjamin.gaignard@linaro.org>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
 Subject: Re: New IIO/counter driver
-Date: Tue, 8 Jan 2019 11:57:13 +0100
-Message-ID: <CA+M3ks7wX6MxvapDi_5SQ0rkJWoV+BcmzmbvtiqHVBzrrwAp4g@mail.gmail.com>
+Date: Tue, 8 Jan 2019 12:01:57 +0100
+Message-ID: <8b2bb569-a6e0-25ec-740d-48083b30fe60@st.com>
 References: <CAKKE0ZHmODzhvjPNJFVgT2cF_F=f2kNKr5K_CGP+0XgA5XZokw@mail.gmail.com>
  <20190108004632.GA3247@icarus>
+ <CA+M3ks7wX6MxvapDi_5SQ0rkJWoV+BcmzmbvtiqHVBzrrwAp4g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108004632.GA3247@icarus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: William Breathitt Gray <vilhelm.gray@gmail.com>
-Cc: Patrick Havelange <patrick.havelange@essensium.com>, Jonathan Cameron <jic23@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, Fabrice Gasnier <fabrice.gasnier@st.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CA+M3ks7wX6MxvapDi_5SQ0rkJWoV+BcmzmbvtiqHVBzrrwAp4g@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Benjamin Gaignard <benjamin.gaignard@linaro.org>, William Breathitt Gray <vilhelm.gray@gmail.com>
+Cc: devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, Patrick Havelange <patrick.havelange@essensium.com>, Hartmut Knaack <knaack.h@gmx.de>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andrew Morton <akpm@linux-foundation.org>, Jonathan Cameron <jic23@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Le mar. 8 janv. 2019 =C3=A0 01:46, William Breathitt Gray
-<vilhelm.gray@gmail.com> a =C3=A9crit :
->
-> On Mon, Jan 07, 2019 at 02:45:37PM +0100, Patrick Havelange wrote:
-> > Hello,
-> >
-> > I'm in the process of adding a new IIO/counter driver, however I also s=
-aw
-> > that there was a work in progress to have a separate counter subsystem =
-(
-> > https://marc.info/?l=3Dlinux-iio&m=3D153974167727206 ). But it seems th=
-ere is
-> > no recent progress on it.
-> > What is the state of those patches ? Is it still interesting to develop=
- the
-> > driver as an IIO/counter , or should I use already that new subsystem ?
-> >
-> > Best Regards,
-> >
-> > Patrick Havelange.
->
-> Hello,
->
-> I am still open to merging this patchset and maintaining the Counter
-> subsystem. However, I took the lack of response for my latest
-> submission to indicate a loss of interest in this patchset's approach.
-> If there are still people who want this, I can rebase and resend this
-> patchset for submission; the past few versions have primarily been code
-> clarity and documentation changes so I believe the core design itself is
-> somewhat stable now.
->
-> Just let me know how best to proceed and I shall be happy to oblige --
-> whether to continue maintaining this patchset or to drop this design in
-> favor of improving the existing IIO Counter code in the kernel.
->
-> I'll CC those from the patchset submission to keep them in the loop.
-
-I confirm that I still interested to get those patches merged.
-
-Regards,
-Benjamin
->
-> Sincerely,
->
-> William Breathitt Gray
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-
-
---=20
-Benjamin Gaignard
-
-Graphic Study Group
-
-Linaro.org =E2=94=82 Open source software for ARM SoCs
-
-Follow Linaro: Facebook | Twitter | Blog
+T24gMS84LzE5IDExOjU3IEFNLCBCZW5qYW1pbiBHYWlnbmFyZCB3cm90ZToKPiBMZSBtYXIuIDgg
+amFudi4gMjAxOSDDoCAwMTo0NiwgV2lsbGlhbSBCcmVhdGhpdHQgR3JheQo+IDx2aWxoZWxtLmdy
+YXlAZ21haWwuY29tPiBhIMOpY3JpdCA6Cj4+Cj4+IE9uIE1vbiwgSmFuIDA3LCAyMDE5IGF0IDAy
+OjQ1OjM3UE0gKzAxMDAsIFBhdHJpY2sgSGF2ZWxhbmdlIHdyb3RlOgo+Pj4gSGVsbG8sCj4+Pgo+
+Pj4gSSdtIGluIHRoZSBwcm9jZXNzIG9mIGFkZGluZyBhIG5ldyBJSU8vY291bnRlciBkcml2ZXIs
+IGhvd2V2ZXIgSSBhbHNvIHNhdwo+Pj4gdGhhdCB0aGVyZSB3YXMgYSB3b3JrIGluIHByb2dyZXNz
+IHRvIGhhdmUgYSBzZXBhcmF0ZSBjb3VudGVyIHN1YnN5c3RlbSAoCj4+PiBodHRwczovL21hcmMu
+aW5mby8/bD1saW51eC1paW8mbT0xNTM5NzQxNjc3MjcyMDYgKS4gQnV0IGl0IHNlZW1zIHRoZXJl
+IGlzCj4+PiBubyByZWNlbnQgcHJvZ3Jlc3Mgb24gaXQuCj4+PiBXaGF0IGlzIHRoZSBzdGF0ZSBv
+ZiB0aG9zZSBwYXRjaGVzID8gSXMgaXQgc3RpbGwgaW50ZXJlc3RpbmcgdG8gZGV2ZWxvcCB0aGUK
+Pj4+IGRyaXZlciBhcyBhbiBJSU8vY291bnRlciAsIG9yIHNob3VsZCBJIHVzZSBhbHJlYWR5IHRo
+YXQgbmV3IHN1YnN5c3RlbSA/Cj4+Pgo+Pj4gQmVzdCBSZWdhcmRzLAo+Pj4KPj4+IFBhdHJpY2sg
+SGF2ZWxhbmdlLgo+Pgo+PiBIZWxsbywKPj4KPj4gSSBhbSBzdGlsbCBvcGVuIHRvIG1lcmdpbmcg
+dGhpcyBwYXRjaHNldCBhbmQgbWFpbnRhaW5pbmcgdGhlIENvdW50ZXIKPj4gc3Vic3lzdGVtLiBI
+b3dldmVyLCBJIHRvb2sgdGhlIGxhY2sgb2YgcmVzcG9uc2UgZm9yIG15IGxhdGVzdAo+PiBzdWJt
+aXNzaW9uIHRvIGluZGljYXRlIGEgbG9zcyBvZiBpbnRlcmVzdCBpbiB0aGlzIHBhdGNoc2V0J3Mg
+YXBwcm9hY2guCj4+IElmIHRoZXJlIGFyZSBzdGlsbCBwZW9wbGUgd2hvIHdhbnQgdGhpcywgSSBj
+YW4gcmViYXNlIGFuZCByZXNlbmQgdGhpcwo+PiBwYXRjaHNldCBmb3Igc3VibWlzc2lvbjsgdGhl
+IHBhc3QgZmV3IHZlcnNpb25zIGhhdmUgcHJpbWFyaWx5IGJlZW4gY29kZQo+PiBjbGFyaXR5IGFu
+ZCBkb2N1bWVudGF0aW9uIGNoYW5nZXMgc28gSSBiZWxpZXZlIHRoZSBjb3JlIGRlc2lnbiBpdHNl
+bGYgaXMKPj4gc29tZXdoYXQgc3RhYmxlIG5vdy4KPj4KPj4gSnVzdCBsZXQgbWUga25vdyBob3cg
+YmVzdCB0byBwcm9jZWVkIGFuZCBJIHNoYWxsIGJlIGhhcHB5IHRvIG9ibGlnZSAtLQo+PiB3aGV0
+aGVyIHRvIGNvbnRpbnVlIG1haW50YWluaW5nIHRoaXMgcGF0Y2hzZXQgb3IgdG8gZHJvcCB0aGlz
+IGRlc2lnbiBpbgo+PiBmYXZvciBvZiBpbXByb3ZpbmcgdGhlIGV4aXN0aW5nIElJTyBDb3VudGVy
+IGNvZGUgaW4gdGhlIGtlcm5lbC4KPj4KPj4gSSdsbCBDQyB0aG9zZSBmcm9tIHRoZSBwYXRjaHNl
+dCBzdWJtaXNzaW9uIHRvIGtlZXAgdGhlbSBpbiB0aGUgbG9vcC4KPiAKPiBJIGNvbmZpcm0gdGhh
+dCBJIHN0aWxsIGludGVyZXN0ZWQgdG8gZ2V0IHRob3NlIHBhdGNoZXMgbWVyZ2VkLgo+IAo+IFJl
+Z2FyZHMsCj4gQmVuamFtaW4KSGksCgpTYW1lIGZvciBtZSwKClJlZ2FyZHMsCkZhYnJpY2UKPj4K
+Pj4gU2luY2VyZWx5LAo+Pgo+PiBXaWxsaWFtIEJyZWF0aGl0dCBHcmF5Cj4+Cj4+IF9fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCj4+IGxpbnV4LWFybS1rZXJu
+ZWwgbWFpbGluZyBsaXN0Cj4+IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwo+
+PiBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwKPiAKPiAKPiAKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlz
+dHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3Rp
+bmZvL2xpbnV4LWFybS1rZXJuZWwK
