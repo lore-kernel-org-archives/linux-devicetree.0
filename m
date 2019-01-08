@@ -1,217 +1,292 @@
-From: "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
-Subject: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous error
- detection driver
-Date: Tue, 8 Jan 2019 08:10:45 +0000
-Message-ID: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v4 4/4] PCI: imx6: Add support for i.MX8MQ
+Date: Tue, 08 Jan 2019 09:23:21 +0100
+Message-ID: <1546935801.3580.22.camel@pengutronix.de>
+References: <20190104165335.13205-1-andrew.smirnov@gmail.com>
+         <20190104165335.13205-5-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
+In-Reply-To: <20190104165335.13205-5-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "bp@alien8.de" <bp@alien8.de>, "mchehab@kernel.org" <mchehab@kernel.org>"akpm@linux-foundation.org" <akpm@linux-foundation.org>"nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>"arnd@arndb.de" <arnd@arndb.de>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Andrey Smirnov <andrew.smirnov@gmail.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This driver adds support for L2 internal asynchronous error detection
-caused by L2 RAM double-bit ECC error or illegal writes to the
-Interrupt Controller memory-map region on the Cortex A15.
+Am Freitag, den 04.01.2019, 08:53 -0800 schrieb Andrey Smirnov:
+> Add code needed to support i.MX8MQ variant.
+> 
+> > Cc: Bjorn Helgaas <bhelgaas@google.com>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Chris Healy <cphealy@gmail.com>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: Rob Herring <robh@kernel.org>,
+> > Cc: devicetree@vger.kernel.org,
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-Signed-off-by: Wladislav Wiebe <wladislav.wiebe@nokia.com>
----
- MAINTAINERS                             |   1 +
- drivers/edac/Kconfig                    |  11 +++
- drivers/edac/Makefile                   |   1 +
- drivers/edac/cortex_a15_l2_async_edac.c | 134 ++++++++++++++++++++++++++++=
-++++
- 4 files changed, 147 insertions(+)
- create mode 100644 drivers/edac/cortex_a15_l2_async_edac.c
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0796ad6e6490..84dc501b2582 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1100,6 +1100,7 @@ L:	linux-edac@vger.kernel.org
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
- S:	Supported
- F:	Documentation/devicetree/bindings/edac/cortex_a15_l2_async_edac.txt
-+F:	drivers/edac/cortex_a15_l2_async_edac.c
-=20
- ARM INTEGRATOR, VERSATILE AND REALVIEW SUPPORT
- M:	Linus Walleij <linus.walleij@linaro.org>
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 41c9ccdd20d6..8722203948e0 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -475,4 +475,15 @@ config EDAC_QCOM
- 	  For debugging issues having to do with stability and overall system
- 	  health, you should probably say 'Y' here.
-=20
-+config EDAC_CORTEX_A15_L2_ASYNC
-+	tristate "Cortex A15 ASYNC L2 & illegal GIC write error detection"
-+	depends on ARM
-+	help
-+	  Support for L2 internal asynchronous error detection caused by L2 RAM
-+	  double-bit ECC error or illegal writes to the Interrupt Controller
-+	  memory-map region on the Cortex A15.
-+
-+	  This driver works in interrupt mode triggered by the nINTERRIRQ and
-+	  reports only uncorrectable errors.
-+
- endif # EDAC
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 716096d08ea0..12d15cf5ff4e 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -78,3 +78,4 @@ obj-$(CONFIG_EDAC_SYNOPSYS)		+=3D synopsys_edac.o
- obj-$(CONFIG_EDAC_XGENE)		+=3D xgene_edac.o
- obj-$(CONFIG_EDAC_TI)			+=3D ti_edac.o
- obj-$(CONFIG_EDAC_QCOM)			+=3D qcom_edac.o
-+obj-$(CONFIG_EDAC_CORTEX_A15_L2_ASYNC)	+=3D cortex_a15_l2_async_edac.o
-diff --git a/drivers/edac/cortex_a15_l2_async_edac.c b/drivers/edac/cortex_=
-a15_l2_async_edac.c
-new file mode 100644
-index 000000000000..26252568e961
---- /dev/null
-+++ b/drivers/edac/cortex_a15_l2_async_edac.c
-@@ -0,0 +1,134 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2018 Nokia Corporation
-+ *
-+ * This program is free software; you can redistribute it and/or modify it
-+ * under the terms and conditions of the GNU General Public License,
-+ * version 2, as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope it will be useful, but WITHOUT
-+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
-+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License f=
-or
-+ * more details.
-+ *
-+ * You should have received a copy of the GNU General Public License along=
- with
-+ * this program.  If not, see <http://www.gnu.org/licenses/>.
-+ */
-+
-+#include <linux/module.h>
-+#include <linux/interrupt.h>
-+#include <linux/platform_device.h>
-+#include <linux/of.h>
-+
-+#include "edac_module.h"
-+
-+#define DRIVER_NAME "cortex_a15_l2_async_edac"
-+
-+#define L2ECTLR_L2_ASYNC_ERR BIT(30)
-+
-+static irqreturn_t cortex_a15_l2_async_edac_err_handler(int irq, void *dev=
-_id)
-+{
-+	struct edac_device_ctl_info *dci =3D dev_id;
-+	u32 status =3D 0;
-+
-+	/*
-+	 * Read and clear L2ECTLR L2 ASYNC error bit caused by INTERRIRQ.
-+	 * Reason could be a L2 RAM double-bit ECC error or illegal writes
-+	 * to the Interrupt Controller memory-map region.
-+	 */
-+	asm("mrc p15, 1, %0, c9, c0, 3" : "=3Dr" (status));
-+	if (status & L2ECTLR_L2_ASYNC_ERR) {
-+		status &=3D ~L2ECTLR_L2_ASYNC_ERR;
-+		asm("mcr p15, 1, %0, c9, c0, 3" : : "r" (status));
-+		edac_printk(KERN_EMERG, DRIVER_NAME,
-+			    "L2 internal asynchronous error occurred!\n");
-+		edac_device_handle_ue(dci, 0, 0, dci->ctl_name);
-+
-+		return IRQ_HANDLED;
-+	}
-+
-+	return IRQ_NONE;
-+}
-+
-+static int cortex_a15_l2_async_edac_probe(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *dci;
-+	struct device_node *np =3D pdev->dev.of_node;
-+	char *ctl_name =3D (char *)np->name;
-+	int i =3D 0, ret =3D 0, err_irq =3D 0, irq_count =3D 0;
-+
-+	/* We can have multiple CPU clusters with one INTERRIRQ per cluster */
-+	irq_count =3D platform_irq_count(pdev);
-+	if (irq_count < 0) {
-+		edac_printk(KERN_ERR, DRIVER_NAME,
-+			    "No L2 ASYNC error IRQ found!\n");
-+		return -EINVAL;
-+	}
-+
-+	dci =3D edac_device_alloc_ctl_info(0, ctl_name, 1, ctl_name,
-+					 irq_count, 0, NULL, 0,
-+					 edac_device_alloc_index());
-+	if (!dci)
-+		return -ENOMEM;
-+
-+	dci->dev =3D &pdev->dev;
-+	dci->mod_name =3D DRIVER_NAME;
-+	dci->ctl_name =3D ctl_name;
-+	dci->dev_name =3D dev_name(&pdev->dev);
-+	platform_set_drvdata(pdev, dci);
-+
-+	if (edac_device_add_device(dci))
-+		goto err;
-+
-+	for (i =3D 0; i < irq_count; i++) {
-+		err_irq =3D platform_get_irq(pdev, i);
-+		ret =3D devm_request_irq(&pdev->dev, err_irq,
-+				       cortex_a15_l2_async_edac_err_handler, 0,
-+				       dev_name(&pdev->dev), dci);
-+
-+		if (ret < 0) {
-+			edac_printk(KERN_ERR, DRIVER_NAME,
-+				    "Failed to register L2 ASYNC error IRQ %d\n",
-+				     err_irq);
-+			goto err2;
-+		}
-+	}
-+
-+	return 0;
-+err2:
-+	edac_device_del_device(&pdev->dev);
-+err:
-+	edac_device_free_ctl_info(dci);
-+
-+	return ret;
-+}
-+
-+static int cortex_a15_l2_async_edac_remove(struct platform_device *pdev)
-+{
-+	struct edac_device_ctl_info *dci =3D platform_get_drvdata(pdev);
-+
-+	edac_device_del_device(&pdev->dev);
-+	edac_device_free_ctl_info(dci);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id cortex_a15_l2_async_edac_of_match[] =3D {
-+	{ .compatible =3D "arm,cortex-a15-l2-async-edac", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, cortex_a15_l2_async_edac_of_match);
-+
-+static struct platform_driver cortex_a15_l2_async_edac_driver =3D {
-+	.probe =3D cortex_a15_l2_async_edac_probe,
-+	.remove =3D cortex_a15_l2_async_edac_remove,
-+	.driver =3D {
-+		.name =3D DRIVER_NAME,
-+		.of_match_table =3D cortex_a15_l2_async_edac_of_match,
-+	},
-+};
-+module_platform_driver(cortex_a15_l2_async_edac_driver);
-+
-+MODULE_AUTHOR("Wladislav Wiebe <wladislav.wiebe@nokia.com>");
-+MODULE_DESCRIPTION("ARM Cortex A15 L2 internal asynchronous error detectio=
-n");
-+MODULE_LICENSE("GPL v2");
---=20
-2.16.1
+> ---
+>  .../bindings/pci/fsl,imx6q-pcie.txt           |  3 +-
+>  drivers/pci/controller/dwc/Kconfig            |  4 +-
+>  drivers/pci/controller/dwc/pci-imx6.c         | 77 ++++++++++++++++++-
+>  3 files changed, 79 insertions(+), 5 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> index d514c1f2365f..920ca93870a8 100644
+> --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
+> @@ -9,6 +9,7 @@ Required properties:
+> >  	- "fsl,imx6sx-pcie",
+> >  	- "fsl,imx6qp-pcie"
+> >  	- "fsl,imx7d-pcie"
+> > +	- "fsl,imx8mq-pcie"
+>  - reg: base address and length of the PCIe controller
+>  - interrupts: A list of interrupt outputs of the controller. Must contain an
+>    entry for each entry in the interrupt-names property.
+> @@ -45,7 +46,7 @@ Additional required properties for imx6sx-pcie:
+>    PCIE_PHY power domains
+>  - power-domain-names: Must be "pcie", "pcie_phy"
+>  
+> -Additional required properties for imx7d-pcie:
+> +Additional required properties for imx7d-pcie and imx8mq-pcie:
+>  - power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
+>  - resets: Must contain phandles to PCIe-related reset lines exposed by SRC
+>    IP block
+> diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
+> index 6aafec3fad00..83ea318ad989 100644
+> --- a/drivers/pci/controller/dwc/Kconfig
+> +++ b/drivers/pci/controller/dwc/Kconfig
+> @@ -89,8 +89,8 @@ config PCI_EXYNOS
+> >  	select PCIE_DW_HOST
+>  
+>  config PCI_IMX6
+> > -	bool "Freescale i.MX6/7 PCIe controller"
+> > -	depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
+> > +	bool "Freescale i.MX6/7/8 PCIe controller"
+> > +	depends on SOC_IMX6Q || SOC_IMX7D || (ARM64 && ARCH_MXC) || ((ARM || ARM64) && COMPILE_TEST)
+> >  	depends on PCI_MSI_IRQ_DOMAIN
+> >  	select PCIE_DW_HOST
+>  
+> diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+> index 75ee0cd7af3b..dd9d8732f6ba 100644
+> --- a/drivers/pci/controller/dwc/pci-imx6.c
+> +++ b/drivers/pci/controller/dwc/pci-imx6.c
+> @@ -8,6 +8,7 @@
+> >   * Author: Sean Cross <xobs@kosagi.com>
+>   */
+>  
+> +#include <linux/bitfield.h>
+>  #include <linux/clk.h>
+>  #include <linux/delay.h>
+>  #include <linux/gpio.h>
+> @@ -32,6 +33,12 @@
+>  
+>  #include "pcie-designware.h"
+>  
+> > +#define IMX8MQ_GPR_PCIE_REF_USE_PAD		BIT(9)
+> > +#define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN	BIT(10)
+> > +#define IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE	BIT(11)
+> > +#define IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE	GENMASK(11, 8)
+> > +#define IMX8MQ_PCIE2_BASE_ADDR			0x33c00000
+> +
+> >  #define to_imx6_pcie(x)	dev_get_drvdata((x)->dev)
+>  
+>  enum imx6_pcie_variants {
+> @@ -39,6 +46,7 @@ enum imx6_pcie_variants {
+> >  	IMX6SX,
+> >  	IMX6QP,
+> >  	IMX7D,
+> > +	IMX8MQ,
+>  };
+>  
+> >  #define IMX6_PCIE_FLAG_IMX6_PHY			BIT(0)
+> @@ -58,6 +66,7 @@ struct imx6_pcie {
+> > >  	struct clk		*pcie_inbound_axi;
+> > >  	struct clk		*pcie;
+> > >  	struct regmap		*iomuxc_gpr;
+> > > +	u32			controller_id;
+> > >  	struct reset_control	*pciephy_reset;
+> > >  	struct reset_control	*apps_reset;
+> > >  	struct reset_control	*turnoff_reset;
+> @@ -276,6 +285,7 @@ static void imx6_pcie_reset_phy(struct imx6_pcie *imx6_pcie)
+> >  	pcie_phy_write(imx6_pcie, PHY_RX_OVRD_IN_LO, tmp);
+>  }
+>  
+> +#ifdef CONFIG_ARM
+>  /*  Added for PCI abort handling */
+>  static int imx6q_pcie_abort_handler(unsigned long addr,
+> >  		unsigned int fsr, struct pt_regs *regs)
+> @@ -309,6 +319,7 @@ static int imx6q_pcie_abort_handler(unsigned long addr,
+>  
+> >  	return 1;
+>  }
+> +#endif
+>  
+>  static int imx6_pcie_attach_pd(struct device *dev)
+>  {
+> @@ -353,6 +364,7 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+>  
+> >  	switch (imx6_pcie->drvdata->variant) {
+> >  	case IMX7D:
+> > +	case IMX8MQ:
+> >  		reset_control_assert(imx6_pcie->pciephy_reset);
+> >  		reset_control_assert(imx6_pcie->apps_reset);
+> >  		break;
+> @@ -387,10 +399,17 @@ static void imx6_pcie_assert_core_reset(struct imx6_pcie *imx6_pcie)
+> >  	}
+>  }
+>  
+> +static unsigned int imx6_pcie_grp_offset(const struct imx6_pcie *imx6_pcie)
+> +{
+> > +	WARN_ON(imx6_pcie->drvdata->variant != IMX8MQ);
+> > +	return imx6_pcie->controller_id == 1 ? IOMUXC_GPR16 : IOMUXC_GPR14;
+> +}
+> +
+>  static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+>  {
+> >  	struct dw_pcie *pci = imx6_pcie->pci;
+> >  	struct device *dev = pci->dev;
+> > +	unsigned int offset;
+> >  	int ret = 0;
+>  
+> >  	switch (imx6_pcie->drvdata->variant) {
+> @@ -421,6 +440,19 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+> >  		break;
+> >  	case IMX7D:
+> >  		break;
+> > +	case IMX8MQ:
+> > +		offset = imx6_pcie_grp_offset(imx6_pcie);
+> > +		/*
+> > +		 * Set the over ride low and enabled
+> > +		 * make sure that REF_CLK is turned on.
+> > +		 */
+> > +		regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
+> > +				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE,
+> > +				   0);
+> > +		regmap_update_bits(imx6_pcie->iomuxc_gpr, offset,
+> > +				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN,
+> > +				   IMX8MQ_GPR_PCIE_CLK_REQ_OVERRIDE_EN);
+> > +		break;
+> >  	}
+>  
+> >  	return ret;
+> @@ -497,6 +529,9 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+> >  	}
+>  
+> >  	switch (imx6_pcie->drvdata->variant) {
+> > +	case IMX8MQ:
+> > +		reset_control_deassert(imx6_pcie->pciephy_reset);
+> > +		break;
+> >  	case IMX7D:
+> >  		reset_control_deassert(imx6_pcie->pciephy_reset);
+> >  		imx7d_pcie_wait_for_phy_pll_lock(imx6_pcie);
+> @@ -532,9 +567,37 @@ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
+> >  	}
+>  }
+>  
+> +static void imx6_pcie_configure_type(struct imx6_pcie *imx6_pcie)
+> +{
+> > +	unsigned int mask, val;
+> +
+> > +	if (imx6_pcie->drvdata->variant == IMX8MQ &&
+> > +	    imx6_pcie->controller_id == 1) {
+> > +		mask   = IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE;
+> > +		val    = FIELD_PREP(IMX8MQ_GPR12_PCIE2_CTRL_DEVICE_TYPE,
+> > +				    PCI_EXP_TYPE_ROOT_PORT);
+> > +	} else {
+> > +		mask = IMX6Q_GPR12_DEVICE_TYPE;
+> > +		val  = FIELD_PREP(IMX6Q_GPR12_DEVICE_TYPE,
+> > +				  PCI_EXP_TYPE_ROOT_PORT);
+> > +	}
+> +
+> > +	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12, mask, val);
+> +}
+> +
+>  static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+>  {
+> >  	switch (imx6_pcie->drvdata->variant) {
+> > +	case IMX8MQ:
+> > +		/*
+> > +		 * TODO: Currently this code assumes external
+> > +		 * oscillator is being used
+> > +		 */
+> > +		regmap_update_bits(imx6_pcie->iomuxc_gpr,
+> > +				   imx6_pcie_grp_offset(imx6_pcie),
+> > +				   IMX8MQ_GPR_PCIE_REF_USE_PAD,
+> > +				   IMX8MQ_GPR_PCIE_REF_USE_PAD);
+> > +		break;
+> >  	case IMX7D:
+> >  		regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> >  				   IMX7D_GPR12_PCIE_PHY_REFCLK_SEL, 0);
+> @@ -570,8 +633,7 @@ static void imx6_pcie_init_phy(struct imx6_pcie *imx6_pcie)
+> >  		break;
+> >  	}
+>  
+> > -	regmap_update_bits(imx6_pcie->iomuxc_gpr, IOMUXC_GPR12,
+> > -			IMX6Q_GPR12_DEVICE_TYPE, PCI_EXP_TYPE_ROOT_PORT << 12);
+> > +	imx6_pcie_configure_type(imx6_pcie);
+>  }
+>  
+>  static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
+> @@ -668,6 +730,7 @@ static void imx6_pcie_ltssm_enable(struct device *dev)
+> >  				   IMX6Q_GPR12_PCIE_CTL_2);
+> >  		break;
+> >  	case IMX7D:
+> > +	case IMX8MQ:
+> >  		reset_control_deassert(imx6_pcie->apps_reset);
+> >  		break;
+> >  	}
+> @@ -1008,6 +1071,10 @@ static int imx6_pcie_probe(struct platform_device *pdev)
+> >  		}
+> >  		break;
+> >  	case IMX7D:
+> > +	case IMX8MQ:
+> > +		if (dbi_base->start == IMX8MQ_PCIE2_BASE_ADDR)
+> > +			imx6_pcie->controller_id = 1;
+> +
+> >  		imx6_pcie->pciephy_reset = devm_reset_control_get_exclusive(dev,
+> >  									    "pciephy");
+> >  		if (IS_ERR(imx6_pcie->pciephy_reset)) {
+> @@ -1115,6 +1182,9 @@ static const struct imx6_pcie_drvdata drvdata[] = {
+> >  	[IMX7D] = {
+> >  		.variant = IMX7D,
+> >  	},
+> > +	[IMX8MQ] = {
+> > +		.variant = IMX8MQ,
+> > +	},
+>  };
+>  
+>  static const struct of_device_id imx6_pcie_of_match[] = {
+> @@ -1122,6 +1192,7 @@ static const struct of_device_id imx6_pcie_of_match[] = {
+> >  	{ .compatible = "fsl,imx6sx-pcie", .data = &drvdata[IMX6SX], },
+> >  	{ .compatible = "fsl,imx6qp-pcie", .data = &drvdata[IMX6QP], },
+> >  	{ .compatible = "fsl,imx7d-pcie",  .data = &drvdata[IMX7D],  },
+> > +	{ .compatible = "fsl,imx8mq-pcie", .data = &drvdata[IMX8MQ], } ,
+> >  	{},
+>  };
+>  
+> @@ -1138,6 +1209,7 @@ static struct platform_driver imx6_pcie_driver = {
+>  
+>  static int __init imx6_pcie_init(void)
+>  {
+> +#ifdef CONFIG_ARM
+> >  	/*
+> >  	 * Since probe() can be deferred we need to make sure that
+> >  	 * hook_fault_code is not called after __init memory is freed
+> @@ -1147,6 +1219,7 @@ static int __init imx6_pcie_init(void)
+> >  	 */
+> >  	hook_fault_code(8, imx6q_pcie_abort_handler, SIGBUS, 0,
+> >  			"external abort on non-linefetch");
+> +#endif
+>  
+> >  	return platform_driver_register(&imx6_pcie_driver);
+>  }
