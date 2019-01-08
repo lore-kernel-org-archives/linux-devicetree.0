@@ -1,56 +1,38 @@
-From: Camelia Alexandra Groza <camelia.groza@nxp.com>
-Subject: RE: [PATCH 2/3] powerpc/dts/fsl: t4240rdb: use the Cortina PHY driver
- compatible
-Date: Tue, 8 Jan 2019 14:07:10 +0000
-Message-ID: <VI1PR04MB47996AC5BC20CC53F505880EF28A0@VI1PR04MB4799.eurprd04.prod.outlook.com>
-References: <cover.1531903211.git.camelia.groza@nxp.com>
-         <6fa5aa04d257525c5703b7c8ca833ec0ae0047c7.1531903211.git.camelia.groza@nxp.com>
- <6a64c160360bae80a4908d3ca7a887d0c0cb35c9.camel@buserror.net>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
+ boards
+Date: Tue, 8 Jan 2019 14:25:34 +0000
+Message-ID: <353b8f62-e265-c3c1-e352-d33c204eb6dc@ysoft.com>
+References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
+ <20181228232556.GA14277@bogus>
+ <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6a64c160360bae80a4908d3ca7a887d0c0cb35c9.camel@buserror.net>
+In-Reply-To: <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
 Content-Language: en-US
+Content-ID: <48294F8A05AD6141BE26D1E98A837D31@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Scott Wood <oss@buserror.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "benh@kernel.crashing.org" <benh@kernel.crashing.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "paulus@samba.org" <paulus@samba.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-PiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiBGcm9tOiBTY290dCBXb29kIDxvc3NAYnVz
-ZXJyb3IubmV0Pg0KPiBTZW50OiBTYXR1cmRheSwgRGVjZW1iZXIgMjIsIDIwMTggMDY6MDcNCj4g
-VG86IENhbWVsaWEgQWxleGFuZHJhIEdyb3phIDxjYW1lbGlhLmdyb3phQG54cC5jb20+Ow0KPiBy
-b2JoK2R0QGtlcm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBiZW5oQGtlcm5lbC5jcmFz
-aGluZy5vcmcNCj4gQ2M6IGRldmljZXRyZWVAdmdlci5rZXJuZWwub3JnOyBsaW51eC1rZXJuZWxA
-dmdlci5rZXJuZWwub3JnOw0KPiBwYXVsdXNAc2FtYmEub3JnOyBsaW51eHBwYy1kZXZAbGlzdHMu
-b3psYWJzLm9yZw0KPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvM10gcG93ZXJwYy9kdHMvZnNsOiB0
-NDI0MHJkYjogdXNlIHRoZSBDb3J0aW5hIFBIWQ0KPiBkcml2ZXIgY29tcGF0aWJsZQ0KPiANCj4g
-T24gV2VkLCAyMDE4LTA3LTE4IGF0IDE0OjQ2ICswMzAwLCBDYW1lbGlhIEdyb3phIHdyb3RlOg0K
-PiA+IFRoZSBDb3J0aW5hIFBIWSByZXF1aXJlcyB0aGUgdXNlIG9mIHRoZSBkZWRpY2F0ZWQgQ29y
-dGluYSBQSFkgZHJpdmVyDQo+ID4gaW5zdGVhZCBvZiB0aGUgZ2VuZXJpYyBvbmUuDQo+ID4NCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBDYW1lbGlhIEdyb3phIDxjYW1lbGlhLmdyb3phQG54cC5jb20+DQo+
-ID4gLS0tDQo+ID4gIGFyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQyNDByZGIuZHRzIHwgOCAr
-KysrLS0tLQ0KPiA+ICAxIGZpbGUgY2hhbmdlZCwgNCBpbnNlcnRpb25zKCspLCA0IGRlbGV0aW9u
-cygtKQ0KPiA+DQo+ID4gZGlmZiAtLWdpdCBhL2FyY2gvcG93ZXJwYy9ib290L2R0cy9mc2wvdDQy
-NDByZGIuZHRzDQo+ID4gYi9hcmNoL3Bvd2VycGMvYm9vdC9kdHMvZnNsL3Q0MjQwcmRiLmR0cw0K
-PiA+IGluZGV4IDE1ZWIwYTMuLmE1NmE3MDUgMTAwNjQ0DQo+ID4gLS0tIGEvYXJjaC9wb3dlcnBj
-L2Jvb3QvZHRzL2ZzbC90NDI0MHJkYi5kdHMNCj4gPiArKysgYi9hcmNoL3Bvd2VycGMvYm9vdC9k
-dHMvZnNsL3Q0MjQwcmRiLmR0cw0KPiA+IEBAIC0yNjcsMjIgKzI2NywyMiBAQA0KPiA+DQo+ID4g
-IAkJCW1kaW9AZmQwMDAgew0KPiA+ICAJCQkJeGZpcGh5MTogZXRoZXJuZXQtcGh5QDEwIHsNCj4g
-PiAtCQkJCQljb21wYXRpYmxlID0gImV0aGVybmV0LXBoeS0NCj4gaWVlZTgwMi4zLQ0KPiA+IGM0
-NSI7DQo+ID4gKwkJCQkJY29tcGF0aWJsZSA9ICJldGhlcm5ldC1waHktDQo+ID4gaWQxM2U1LjEw
-MDIiOw0KPiA+ICAJCQkJCXJlZyA9IDwweDEwPjsNCj4gPiAgCQkJCX07DQo+ID4NCj4gPiAgCQkJ
-CXhmaXBoeTI6IGV0aGVybmV0LXBoeUAxMSB7DQo+ID4gLQkJCQkJY29tcGF0aWJsZSA9ICJldGhl
-cm5ldC1waHktDQo+IGllZWU4MDIuMy0NCj4gPiBjNDUiOw0KPiA+ICsJCQkJCWNvbXBhdGlibGUg
-PSAiZXRoZXJuZXQtcGh5LQ0KPiA+IGlkMTNlNS4xMDAyIjsNCj4gPiAgCQkJCQlyZWcgPSA8MHgx
-MT47DQo+ID4gIAkJCQl9Ow0KPiA+DQo+ID4gIAkJCQl4ZmlwaHkzOiBldGhlcm5ldC1waHlAMTMg
-ew0KPiA+IC0JCQkJCWNvbXBhdGlibGUgPSAiZXRoZXJuZXQtcGh5LQ0KPiBpZWVlODAyLjMtDQo+
-ID4gYzQ1IjsNCj4gPiArCQkJCQljb21wYXRpYmxlID0gImV0aGVybmV0LXBoeS0NCj4gPiBpZDEz
-ZTUuMTAwMiI7DQo+ID4gIAkJCQkJcmVnID0gPDB4MTM+Ow0KPiA+ICAJCQkJfTsNCj4gPg0KPiA+
-ICAJCQkJeGZpcGh5NDogZXRoZXJuZXQtcGh5QDEyIHsNCj4gPiAtCQkJCQljb21wYXRpYmxlID0g
-ImV0aGVybmV0LXBoeS0NCj4gaWVlZTgwMi4zLQ0KPiA+IGM0NSI7DQo+ID4gKwkJCQkJY29tcGF0
-aWJsZSA9ICJldGhlcm5ldC1waHktDQo+ID4gaWQxM2U1LjEwMDIiOw0KPiA+ICAJCQkJCXJlZyA9
-IDwweDEyPjsNCj4gPiAgCQkJCX07DQo+ID4gIAkJCX07DQo+IA0KPiBJIGdldCBjcmFzaGVzIG9u
-IGJvb3Qgd2hlbiB1c2luZyBhIGR0YiB3aXRoIHRoaXMgY2hhbmdlOg0KDQpIaQ0KDQpTb3JyeSBm
-b3IgdGhlIGxhdGUgcmVwbGF5LiBJIHdhcyBvbiB2YWNhdGlvbi4gSSdtIGxvb2tpbmcgaW50byBp
-dC4NCg0KUmVnYXJkcywNCkNhbWVsaWENCg==
+T24gOC4xLjIwMTkgMTI6NDMsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0KPiBPbiAyOS4xMi4yMDE4
+IDAwOjI1LCBSb2IgSGVycmluZyB3cm90ZToNCj4+IE9uIFR1ZSwgRGVjIDE4LCAyMDE4IGF0IDAy
+OjQyOjExUE0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0KWy4uLl0NCj4+PiArJmkyYzMg
+ew0KPj4+ICsJY2xvY2stZnJlcXVlbmN5ID0gPDEwMDAwMD47DQo+Pj4gKwlwaW5jdHJsLW5hbWVz
+ID0gImRlZmF1bHQiOw0KPj4+ICsJcGluY3RybC0wID0gPCZwaW5jdHJsX2kyYzM+Ow0KPj4+ICsJ
+c3RhdHVzID0gImRpc2FibGVkIjsNCj4+PiArDQo+Pj4gKwlncGlvX29sZWQ6IGdwaW9ANDEgew0K
+Pj4+ICsJCWNvbXBhdGlibGUgPSAibnhwLHBjYTk1MzYiOw0KPj4+ICsJCWdwaW8tY29udHJvbGxl
+cjsNCj4+PiArCQkjZ3Bpby1jZWxscyA9IDwyPjsNCj4+PiArCQlyZWcgPSA8MHg0MT47DQo+Pj4g
+KwkJdmNjLXN1cHBseSA9IDwmc3cyX3JlZz47DQo+Pj4gKwkJc3RhdHVzID0gImRpc2FibGVkIjsN
+Cj4+PiArCX07DQo+Pj4gKw0KPj4+ICsJb2xlZDogb2xlZEAzZCB7DQo+Pj4gKwkJY29tcGF0aWJs
+ZSA9ICJzb2xvbW9uLHNzZDEzMDVmYi1pMmMiOw0KPj4NCj4+IE5vdCBkb2N1bWVudGVkLg0KPiAN
+Cj4gT0ssIEkgd2lsbCBzZW5kIGEgc2VwYXJhdGUgcGF0Y2ggZm9yIHRoYXQuDQoNClJvYiwgSSBk
+b3VibGUgY2hlY2tlZCB0aGF0IGFuZCBpdCBhY3R1YWxseSBpcyBhbHJlYWR5IGRvY3VtZW50ZWQu
+DQpOb3QgaW4gYSB3YXkgdGhhdCB5b3Ugd291bGQgZmluZCB0aGUgd2hvbGUgY29tcGF0aWJsZSBz
+dHJpbmcgdGhvdWdoLi4NCg0KU2VlIGh0dHBzOi8vZWxpeGlyLmJvb3RsaW4uY29tL2xpbnV4L3Y1
+LjAtcmMxL3NvdXJjZS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9z
+c2QxMzA3ZmIudHh0I0w0DQoNCkFyZSB5b3UgT0sgd2l0aCB0aGF0IGFzIGl0IGlzPw0KDQpUaGFu
+a3MsDQpNaWNoYWwNCg==
