@@ -1,106 +1,89 @@
-From: Vinod Koul <vkoul@kernel.org>
-Subject: Re: [PATCH 2/2] dmaengine: mediatek: Add MediaTek Command-Queue DMA
- controller for MT6765 SoC
-Date: Tue, 8 Jan 2019 22:29:46 +0530
-Message-ID: <20190108165946.GQ13372@vkoul-mobl.Dlink>
-References: <1545916258-18218-1-git-send-email-shun-chih.yu@mediatek.com>
- <1545916258-18218-3-git-send-email-shun-chih.yu@mediatek.com>
- <20190104123836.GB13372@vkoul-mobl.Dlink>
- <1546949984.25257.96.camel@mtkswgap22>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH V2 1/2] dt-bindings: bcm-ns-usb2-phy: rework binding to
+ use CRU syscon
+Date: Tue, 8 Jan 2019 09:51:14 -0800
+Message-ID: <74b4fbf0-89ca-7d70-cb58-4b83300dc881@broadcom.com>
+References: <20190107082545.5529-1-zajec5@gmail.com>
+ <20190108123907.19816-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1546949984.25257.96.camel@mtkswgap22>
+In-Reply-To: <20190108123907.19816-1-zajec5@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Shun-Chih.Yu" <shun-chih.yu@mediatek.com>
-Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, dmaengine@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
+To: =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-On 08-01-19, 20:19, Shun-Chih.Yu wrote:
-> On Fri, 2019-01-04 at 18:08 +0530, Vinod Koul wrote:
-> > On 27-12-18, 21:10, shun-chih.yu@mediatek.com wrote:
-> > > From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
 
-> > Have you tested this with dmatest, if so can you provide results of the
-> > test as well.
-> Yes, I tested with dmatest in multi-thread version. 
-> The results shown below, and I would attach them in the next revision if needed.
+
+On 1/8/2019 4:39 AM, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
-> dmatest: dma0chan0-copy2: summary 5000 tests, 0 failures 3500 iops 28037
-> KB/s (0)
-> dmatest: dma0chan0-copy4: summary 5000 tests, 0 failures 3494 iops 27612
-> KB/s (0)
-> dmatest: dma0chan0-copy1: summary 5000 tests, 0 failures 3491 iops 27749
-> KB/s (0)
-> dmatest: dma0chan0-copy7: summary 5000 tests, 0 failures 3673 iops 29092
-> KB/s (0)
-> dmatest: dma0chan0-copy6: summary 5000 tests, 0 failures 3763 iops 30237
-> KB/s (0)
-> dmatest: dma0chan0-copy0: summary 5000 tests, 0 failures 3730 iops 30131
-> KB/s (0)
-> dmatest: dma0chan0-copy3: summary 5000 tests, 0 failures 3717 iops 29569
-> KB/s (0)
-> dmatest: dma0chan0-copy5: summary 5000 tests, 0 failures 3699 iops 29302
-> KB/s (0)
+> USB 2.0 PHY is a hardware block that happens to use two registers from
+> the CRU block to setup a single PLL. It's not part of the CRU or DMU
+> and so its binding shouldn't cover the whole DMU.
+> 
+> The correct way of handling this is to reference CRU block node using a
+> syscon. Document that & deprecate the old way.
+> 
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+> V2: use syscon@ in example (thanks Ray)
+> ---
+>  .../devicetree/bindings/phy/bcm-ns-usb2-phy.txt    | 27 ++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+> index a7aee9ea8926..2cafee6b4a8b 100644
+> --- a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+> @@ -2,19 +2,38 @@ Driver for Broadcom Northstar USB 2.0 PHY
+>  
+>  Required properties:
+>  - compatible: brcm,ns-usb2-phy
+> -- reg: iomem address range of DMU (Device Management Unit)
+> -- reg-names: "dmu", the only needed & supported reg right now
+> +- syscon-cru: phandle to the CRU (Central Resource Unit) syscon
+>  - clocks: USB PHY reference clock
+>  - clock-names: "phy-ref-clk", the only needed & supported clock right now
+>  
+> +Deprecated:
+> +
+> +PHY block should not claim the whole DMU so such a binding has been deprecated.
+> +It only requires to access few CRU (a DMU subblock) registers and that should be
+> +handled with a syscon since CRU is a MFD (Multi-Function Device).
+> +
+> +- reg: iomem address range of DMU (Device Management Unit)
+> +- reg-names: "dmu", the only needed & supported reg right now
+> +
+>  To initialize USB 2.0 PHY driver needs to setup PLL correctly. To do this it
+>  requires passing phandle to the USB PHY reference clock.
+>  
+>  Example:
+> +	dmu@1800c000 {
+> +		compatible = "simple-bus";
+> +		ranges = <0 0x1800c000 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		cru: syscon@100 {
+> +			compatible = "syscon", "simple-mfd";
+> +			reg = <0x100 0x1a4>;
+> +		};
+> +	};
+> +
+>  	usb2-phy {
+>  		compatible = "brcm,ns-usb2-phy";
+> -		reg = <0x1800c000 0x1000>;
+> -		reg-names = "dmu";
+> +		syscon-cru = <&cru>;
+>  		#phy-cells = <0>;
+>  		clocks = <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
+>  		clock-names = "phy-ref-clk";
+> 
 
-Having them in cover letter helps :)
+Looks good to me!
 
-> > > Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
-> > > Reviewed-by: Vinod Koul <vkoul@kernel.org>
-> > 
-> > This is _WRONG_ I have never provided such tag, can you explain why this
-> > was added without my approval?
-> So sorry about this, I misunderstood the usage of reviewed-by tag and I
-> would remove this. Thanks for pointing out this mistake.
-
-This tag should be added _only_ when someone replies with
-Reviewed-by: ..., same goes for Acked-by and Tested-by: ... etc
-
-> > > +static void mtk_dma_write(struct mtk_cqdma_pchan *pc, u32 reg, u32 val)
-> > > +{
-> > > +	writel_relaxed(val, pc->base + reg);
-> > 
-> > Why is it relaxed one?
-> Most of the operations to the CQDMA hardware could be relaxed, and the 
-
-looks like you missed the rest of sentence
-
-> > > +static enum dma_status mtk_cqdma_tx_status(struct dma_chan *c,
-> > > +					   dma_cookie_t cookie,
-> > > +					   struct dma_tx_state *txstate)
-> > > +{
-> > > +	struct mtk_cqdma_vchan *cvc = to_cqdma_vchan(c);
-> > > +	struct mtk_cqdma_vdesc *cvd;
-> > > +	struct virt_dma_desc *vd;
-> > > +	enum dma_status ret;
-> > > +	unsigned long flags;
-> > > +	size_t bytes = 0;
-> > > +
-> > > +	ret = dma_cookie_status(c, cookie, txstate);
-> > > +	if (ret == DMA_COMPLETE || !txstate)
-> > > +		return ret;
-> > > +
-> > > +	spin_lock_irqsave(&cvc->vc.lock, flags);
-> > > +	vd = mtk_cqdma_find_active_desc(c, cookie);
-> > > +	spin_unlock_irqrestore(&cvc->vc.lock, flags);
-> > > +
-> > > +	if (vd) {
-> > > +		cvd = to_cqdma_vdesc(vd);
-> > > +		bytes = cvd->len;
-> > > +	}
-> > > +
-> > > +	dma_set_residue(txstate, bytes);
-> > 
-> > Have you tested this and are able to report residue properly?
-> > 
-> I tested and thought the residue report properly. But after checking the
-> definition of residue in tx_status again, I found that should be always
-> return 0 in the driver instead, since there is no state DMA_IN_PROGRESS
-> or DMA_PAUSED in the driver. I would fix this in the next revision.
-
-So memcpy is quite fast :D, that's why. This is more helpful in
-slave-dma which is relatively slow :)
-
--- 
-~Vinod
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
