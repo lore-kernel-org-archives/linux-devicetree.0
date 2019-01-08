@@ -1,48 +1,46 @@
-From: William Breathitt Gray <vilhelm.gray@gmail.com>
-Subject: Re: New IIO/counter driver
-Date: Tue, 8 Jan 2019 09:46:32 +0900
-Message-ID: <20190108004632.GA3247@icarus>
-References: <CAKKE0ZHmODzhvjPNJFVgT2cF_F=f2kNKr5K_CGP+0XgA5XZokw@mail.gmail.com>
+From: Frank Rowand <frowand.list@gmail.com>
+Subject: Re: Consistent capitalization of "device tree"?
+Date: Mon, 7 Jan 2019 17:09:40 -0800
+Message-ID: <4d4cf1b1-0966-305d-9bf3-e9dc84d6e8c6@gmail.com>
+References: <20190107183711.GA5671@amd>
+ <CAL_JsqKzs4WoJoe_uCzhS3NBGfHiTQ96GkfSRhtxeah0THoVyw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAKKE0ZHmODzhvjPNJFVgT2cF_F=f2kNKr5K_CGP+0XgA5XZokw@mail.gmail.com>
+In-Reply-To: <CAL_JsqKzs4WoJoe_uCzhS3NBGfHiTQ96GkfSRhtxeah0THoVyw@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Patrick Havelange <patrick.havelange@essensium.com>, Jonathan Cameron <jic23@kernel.org>, gregkh@linuxfoundation.org
-Cc: linux-iio@vger.kernel.org, fabrice.gasnier@st.com, benjamin.gaignard@st.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, akpm@linux-foundation.org
+To: Rob Herring <robh@kernel.org>, Pavel Machek <pavel@ucw.cz>
+Cc: devicetree@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, Jonathan Corbet <corbet@lwn.net>, Linux Doc Mailing List <linux-doc@vger.kernel.org>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2019 at 02:45:37PM +0100, Patrick Havelange wrote:
-> Hello,
+On 1/7/19 10:45 AM, Rob Herring wrote:
+> On Mon, Jan 7, 2019 at 12:37 PM Pavel Machek <pavel@ucw.cz> wrote:
+>>
+>> Is it "Device Tree" or "device tree"?
+>>
+>>  pavel@duo:/data/l/k/Documentation$ grep -r "Device Tree"  | wc -l
+>>  235
+>>  pavel@duo:/data/l/k/Documentation$ grep -r "device tree"  | wc -l
+>>  595
+>>
+>> I guess it would be nice to make it consistent. I guess "device tree"
+>> is preffered?
 > 
-> I'm in the process of adding a new IIO/counter driver, however I also saw
-> that there was a work in progress to have a separate counter subsystem (
-> https://marc.info/?l=linux-iio&m=153974167727206 ). But it seems there is
-> no recent progress on it.
-> What is the state of those patches ? Is it still interesting to develop the
-> driver as an IIO/counter , or should I use already that new subsystem ?
+> Well, the spec uses "devicetree" with capital 'D' as needed (titles
+> and start of sentences). I didn't check if we're 100% consistent
+> there.
+
+For reference, the specification is at:
+
+https://www.devicetree.org/specifications/
+
+
 > 
-> Best Regards,
+>> Should we do something like this?
 > 
-> Patrick Havelange.
-
-Hello,
-
-I am still open to merging this patchset and maintaining the Counter
-subsystem. However, I took the lack of response for my latest
-submission to indicate a loss of interest in this patchset's approach.
-If there are still people who want this, I can rebase and resend this
-patchset for submission; the past few versions have primarily been code
-clarity and documentation changes so I believe the core design itself is
-somewhat stable now.
-
-Just let me know how best to proceed and I shall be happy to oblige --
-whether to continue maintaining this patchset or to drop this design in
-favor of improving the existing IIO Counter code in the kernel.
-
-I'll CC those from the patchset submission to keep them in the loop.
-
-Sincerely,
-
-William Breathitt Gray
+> I'll take patches, but it wouldn't be at the top of my list.
+> 
+> Rob
+> 
