@@ -1,71 +1,58 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Tue, 8 Jan 2019 08:49:16 -0600
-Message-ID: <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com>
-References: <20181219221105.3004-1-ilina@codeaurora.org> <20181219221105.3004-5-ilina@codeaurora.org>
- <20181229000714.GA3654@bogus> <20190107185113.GH14960@codeaurora.org>
+Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa boards
+Date: Tue, 8 Jan 2019 08:53:18 -0600
+Message-ID: <CAL_Jsq+k3BvjP=oY=yGRiHgvy+yXjnzfT6H8V9HjVGf8MOQAYA@mail.gmail.com>
+References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
+ <20181228232556.GA14277@bogus> <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
+ <353b8f62-e265-c3c1-e352-d33c204eb6dc@ysoft.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107185113.GH14960@codeaurora.org>
+In-Reply-To: <353b8f62-e265-c3c1-e352-d33c204eb6dc@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
+To: =?UTF-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 7, 2019 at 12:51 PM Lina Iyer <ilina@codeaurora.org> wrote:
+On Tue, Jan 8, 2019 at 8:25 AM Vok=C3=A1=C4=8D Michal <Michal.Vokac@ysoft.c=
+om> wrote:
 >
-> On Fri, Dec 28 2018 at 17:07 -0700, Rob Herring wrote:
-> >On Wed, Dec 19, 2018 at 03:11:02PM -0700, Lina Iyer wrote:
-> >> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-> >> routed to the PDC as interrupts that can be used to wake the system up
-> >> from deep low power modes and suspend.
+> On 8.1.2019 12:43, Vok=C3=A1=C4=8D Michal wrote:
+> > On 29.12.2018 00:25, Rob Herring wrote:
+> >> On Tue, Dec 18, 2018 at 02:42:11PM +0000, Vok=C3=A1=C4=8D Michal wrote=
+:
+> [...]
+> >>> +&i2c3 {
+> >>> +   clock-frequency =3D <100000>;
+> >>> +   pinctrl-names =3D "default";
+> >>> +   pinctrl-0 =3D <&pinctrl_i2c3>;
+> >>> +   status =3D "disabled";
+> >>> +
+> >>> +   gpio_oled: gpio@41 {
+> >>> +           compatible =3D "nxp,pca9536";
+> >>> +           gpio-controller;
+> >>> +           #gpio-cells =3D <2>;
+> >>> +           reg =3D <0x41>;
+> >>> +           vcc-supply =3D <&sw2_reg>;
+> >>> +           status =3D "disabled";
+> >>> +   };
+> >>> +
+> >>> +   oled: oled@3d {
+> >>> +           compatible =3D "solomon,ssd1305fb-i2c";
 > >>
-> >> Cc: devicetree@vger.kernel.org
-> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> >> ---
-> >>  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
-> >>  1 file changed, 6 insertions(+), 1 deletion(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> >> index 665aadb5ea28..a522ca46667d 100644
-> >> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> >> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> >> @@ -29,6 +29,11 @@ SDM845 platform.
-> >>      Definition: must be 2. Specifying the pin number and flags, as defined
-> >>                  in <dt-bindings/interrupt-controller/irq.h>
-> >>
-> >> +- wakeup-parent:
-> >> +    Usage: optional
-> >> +    Value type: <phandle>
-> >> +    Definition: A phandle to the wakeup interrupt controller for the SoC.
+> >> Not documented.
 > >
-> >Is this really necessary? Is there more than one possible wakeup-parent
-> >node?
-> >
-> No.  There is only one but depending on the architecture, the wakeup
-> interrupt controller could be different device like PDC on SDM845 or MPM
-> on SDM820.
+> > OK, I will send a separate patch for that.
 >
-> What do you have in mind? Let me know if you have a better idea than
-> referencing in DT.
+> Rob, I double checked that and it actually is already documented.
+> Not in a way that you would find the whole compatible string though..
+>
+> See https://elixir.bootlin.com/linux/v5.0-rc1/source/Documentation/device=
+tree/bindings/display/ssd1307fb.txt#L4
+>
+> Are you OK with that as it is?
 
-If there's only one possibility for a given platform, then you can
-just use of_find_compatible_node(). I don't think it matters that
-different platforms have a different device here. It's not going to be
-a large table and you may need to know the differences if there's not
-an abstracted interface to it (seems there is in your case).
-Alternatively, if the PDC/MPM code knows what interrupt controller it
-is associated with, then it could setup that relationship and the
-interrupt controller code could retrieve that. Maybe the stacked
-domain support doesn't work in that direction (I haven't looked at the
-irq code much since that was added).
-
-However, my main concern is documenting something genericish in a
-device specific binding. It looks like Tegra is trying to add the same
-thing, so this needs to be documented in a common place. One question
-is whether wakeup is the only use or if this should be more generally
-a secondary interrupt parent?
+Ah, okay. It's fine.
 
 Rob
