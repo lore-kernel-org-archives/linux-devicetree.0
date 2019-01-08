@@ -1,190 +1,80 @@
-From: Rohit Kumar <rohitkr@codeaurora.org>
-Subject: Re: [PATCH 2/2] arm64: dts: qcom: sdm845: Add Q6V5 ADSP node
-Date: Tue, 8 Jan 2019 18:04:39 +0530
-Message-ID: <80142100-35db-41d0-5340-dbdbc4c84113@codeaurora.org>
-References: <1545313174-13481-1-git-send-email-rohitkr@codeaurora.org>
- <1545313174-13481-3-git-send-email-rohitkr@codeaurora.org>
- <20190103235002.GI31596@builder>
+From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
+Subject: [PATCH V2 1/2] dt-bindings: bcm-ns-usb2-phy: rework binding to use CRU syscon
+Date: Tue,  8 Jan 2019 13:39:06 +0100
+Message-ID: <20190108123907.19816-1-zajec5@gmail.com>
+References: <20190107082545.5529-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190103235002.GI31596@builder>
-Content-Language: en-US
+In-Reply-To: <20190107082545.5529-1-zajec5@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: dianders@chromium.org, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, plai@codeaurora.org, bgoswami@codeaurora.org, srinivas.kandagatla@linaro.org, linux-remoteproc@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>
+Cc: linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Thanks Bjorn for review.
+From: Rafał Miłecki <rafal@milecki.pl>
 
-On 1/4/2019 5:20 AM, Bjorn Andersson wrote:
-> On Thu 20 Dec 05:39 PST 2018, Rohit kumar wrote:
->
->> This patch adds Q6V5 ADSP remoteproc node for SDM845 SoCs.
->>
-> Thanks Rohit, nice to see these things on the list!
->
->> Signed-off-by: Rohit kumar <rohitkr@codeaurora.org>
->> ---
->>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 96 +++++++++++++++++++++++++++++++++++-
->>   1 file changed, 95 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> index c0a012f..dfeb3cf 100644
->> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->> @@ -13,6 +13,9 @@
->>   #include <dt-bindings/reset/qcom,sdm845-aoss.h>
->>   #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->>   #include <dt-bindings/clock/qcom,gcc-sdm845.h>
->> +#include <dt-bindings/soc/qcom,apr.h>
->> +#include <dt-bindings/sound/qcom,q6afe.h>
->> +#include <dt-bindings/sound/qcom,q6asm.h>
->>   
->>   / {
->>   	interrupt-parent = <&intc>;
->> @@ -1691,7 +1694,98 @@
->>   				status = "disabled";
->>   			};
->>   		};
->> -	};
->> +
->> +		adsp_pil: remoteproc@17300000 {
-> Please sort nodes by address, then name.
+USB 2.0 PHY is a hardware block that happens to use two registers from
+the CRU block to setup a single PLL. It's not part of the CRU or DMU
+and so its binding shouldn't cover the whole DMU.
 
-Sure.
+The correct way of handling this is to reference CRU block node using a
+syscon. Document that & deprecate the old way.
 
+Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+---
+V2: use syscon@ in example (thanks Ray)
+---
+ .../devicetree/bindings/phy/bcm-ns-usb2-phy.txt    | 27 ++++++++++++++++++----
+ 1 file changed, 23 insertions(+), 4 deletions(-)
 
->
->> +			compatible = "qcom,sdm845-adsp-pil";
->> +
->> +			reg = <0x17300000 0x410>;
->> +			reg-names = "qdsp6ss";
-> reg-names was dropped from the binding (iirc), please omit it here.
-
-
-Yup. Will remove it in next spin.
-
->
->> +
->> +			interrupts-extended = <&intc 0 162 IRQ_TYPE_EDGE_RISING>,
-> s/0/GIC_SPI/
-okay.
->
->> +				<&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
->> +				<&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
->> +				<&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
->> +				<&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
->> +			interrupt-names = "wdog", "fatal", "ready",
->> +					  "handover", "stop-ack";
->> +
->> +			clocks = <&rpmhcc RPMH_CXO_CLK>,
->> +				 <&gcc GCC_LPASS_SWAY_CLK>,
->> +				 <&lpasscc LPASS_Q6SS_AHBS_AON_CLK>,
->> +				 <&lpasscc LPASS_Q6SS_AHBM_AON_CLK>,
->> +				 <&lpasscc LPASS_QDSP6SS_XO_CLK>,
->> +				 <&lpasscc LPASS_QDSP6SS_SLEEP_CLK>,
->> +				 <&lpasscc LPASS_QDSP6SS_CORE_CLK>;
->> +
->> +			clock-names = "xo", "sway_cbcr", "lpass_ahbs_aon_cbcr",
->> +				      "lpass_ahbm_aon_cbcr", "qdsp6ss_xo",
->> +				      "qdsp6ss_sleep", "qdsp6ss_core";
->> +
->> +			resets = <&pdc_reset PDC_AUDIO_SYNC_RESET>,
->> +				 <&aoss_reset AOSS_CC_LPASS_RESTART>;
->> +			reset-names = "pdc_sync", "cc_lpass";
->> +
->> +			qcom,halt-regs = <&tcsr_mutex_regs 0x22000>;
->> +
->> +			memory-region = <&pil_adsp_mem>;
->> +
->> +			qcom,smem-states = <&adsp_smp2p_out 0>;
->> +			qcom,smem-state-names = "stop";
->> +
->> +			glink-edge {
-> So we will end up duplicating these between the PAS based and non-PAS
-> based remoteprocs. I don't have a better idea right now, but this
-> deserves some thought.
-
-
-Yup. Will try to think if we can have some common node for glink-edge.
-
->> +				compatible = "qcom,glink-smem";
->> +				interrupts = <0 156 IRQ_TYPE_EDGE_RISING>;
-> s/0/GIC_SPI/
-
-sure
-
-
->
->> +
->> +				label = "lpass";
->> +				qcom,remote-pid = <2>;
->> +				mboxes = <&apss_shared 8>;
->> +				mbox-names = "adsp_smem";
-> mbox-names is not a documented property, please omit it.
-
-
-okay
-
->
->> +				#address-cells = <1>;
->> +				#size-cells = <0>;
->> +				apr@4 {
->> +					compatible = "qcom,apr-v2";
->> +					qcom,glink-channels = "apr_audio_svc";
->> +					reg = <APR_DOMAIN_ADSP>;
->> +					#address-cells = <1>;
->> +					#size-cells = <0>;
->> +					q6core {
->> +						compatible = "qcom,q6core";
->> +						reg = <APR_SVC_ADSP_CORE>;
->> +					};
->> +
->> +					q6afe {
->> +						compatible = "qcom,q6afe";
->> +						reg = <APR_SVC_AFE>;
->> +						q6afedai: afedais {
->> +							compatible = "qcom,q6afe-dais";
->> +							#sound-dai-cells = <1>;
->> +							#address-cells = <1>;
->> +							#size-cells = <0>;
->> +						};
->> +					};
->> +
->> +					q6asm {
->> +						compatible = "qcom,q6asm";
->> +						reg = <APR_SVC_ASM>;
->> +						q6asmdai: asmdai{
->> +							compatible = "qcom,q6asm-dais";
->> +							iommus = <&apps_smmu 0x1821 0x0>;
->> +							#sound-dai-cells = <1>;
->> +						};
->> +					};
->> +
->> +					q6adm {
->> +						compatible = "qcom,q6adm";
->> +						reg = <APR_SVC_ADM>;
->> +						q6routing: routing {
->> +							compatible = "qcom,q6adm-routing";
->> +							#sound-dai-cells = <0>;
->> +						};
->> +					};
->> +				};
->> +			};
->> +			status = "disabled";
-> Properties must come before subnodes.
-Yup, right. Will update in next spin.
->
->> +		};
-> Regards,
-> Bjorn
-
-Thanks,
-
-Rohit
-
+diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+index a7aee9ea8926..2cafee6b4a8b 100644
+--- a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
++++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+@@ -2,19 +2,38 @@ Driver for Broadcom Northstar USB 2.0 PHY
+ 
+ Required properties:
+ - compatible: brcm,ns-usb2-phy
+-- reg: iomem address range of DMU (Device Management Unit)
+-- reg-names: "dmu", the only needed & supported reg right now
++- syscon-cru: phandle to the CRU (Central Resource Unit) syscon
+ - clocks: USB PHY reference clock
+ - clock-names: "phy-ref-clk", the only needed & supported clock right now
+ 
++Deprecated:
++
++PHY block should not claim the whole DMU so such a binding has been deprecated.
++It only requires to access few CRU (a DMU subblock) registers and that should be
++handled with a syscon since CRU is a MFD (Multi-Function Device).
++
++- reg: iomem address range of DMU (Device Management Unit)
++- reg-names: "dmu", the only needed & supported reg right now
++
+ To initialize USB 2.0 PHY driver needs to setup PLL correctly. To do this it
+ requires passing phandle to the USB PHY reference clock.
+ 
+ Example:
++	dmu@1800c000 {
++		compatible = "simple-bus";
++		ranges = <0 0x1800c000 0x1000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++
++		cru: syscon@100 {
++			compatible = "syscon", "simple-mfd";
++			reg = <0x100 0x1a4>;
++		};
++	};
++
+ 	usb2-phy {
+ 		compatible = "brcm,ns-usb2-phy";
+-		reg = <0x1800c000 0x1000>;
+-		reg-names = "dmu";
++		syscon-cru = <&cru>;
+ 		#phy-cells = <0>;
+ 		clocks = <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
+ 		clock-names = "phy-ref-clk";
 -- 
-Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-of the Code Aurora Forum, hosted by the Linux Foundation.
+2.13.7
