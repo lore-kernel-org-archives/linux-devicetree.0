@@ -1,47 +1,96 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
- boards
-Date: Tue, 8 Jan 2019 16:09:30 +0000
-Message-ID: <f96952b2-7b19-5397-00a1-0fe9b5800dab@ysoft.com>
-References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
- <20181228232556.GA14277@bogus>
- <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
- <CAL_JsqJyZt=VCv2bX1YYFQt91BcFqDWfeAqkJVcF7eFD0_JM1g@mail.gmail.com>
- <6fd5ac6a-edb5-a600-3c10-b46a1c1d9906@ysoft.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark driver
+Date: Tue,  8 Jan 2019 17:24:25 +0100
+Message-ID: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <6fd5ac6a-edb5-a600-3c10-b46a1c1d9906@ysoft.com>
-Content-Language: en-US
-Content-ID: <D3AEFEAD395B954291955C5469C50AE0@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gOC4xLjIwMTkgMTY6MDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0KPiBPbiA4LjEuMjAxOSAx
-NTo1NiwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+PiBPbiBUdWUsIEphbiA4LCAyMDE5IGF0IDU6NDMg
-QU0gVm9rw6HEjSBNaWNoYWwgPE1pY2hhbC5Wb2thY0B5c29mdC5jb20+IHdyb3RlOg0KPj4+DQo+
-Pj4gT24gMjkuMTIuMjAxOCAwMDoyNSwgUm9iIEhlcnJpbmcgd3JvdGU6DQo+Pj4+IE9uIFR1ZSwg
-RGVjIDE4LCAyMDE4IGF0IDAyOjQyOjExUE0gKzAwMDAsIFZva8OhxI0gTWljaGFsIHdyb3RlOg0K
-Pj4+Pj4gVGhlc2UgYXJlIGkuTVg2Uy9ETCBiYXNlZCBTQkNzIGVtYmVkZGVkIGluIHZhcmlvdXMg
-WSBTb2Z0IHByb2R1Y3RzLg0KPj4+Pj4gQWxsIHNoYXJlIHRoZSBzYW1lIGJvYXJkIGRlc2lnbiBi
-dXQgaGF2ZSBzbGlnaHRseSBkaWZmZXJlbnQgSFcNCj4+Pj4+IGNvbmZpZ3VyYXRpb24uDQo+Pg0K
-Pj4gWy4uLl0NCj4+DQo+Pj4+PiArLyB7DQo+Pj4+PiArICAgIG1vZGVsID0gIlkgU29mdCBJT1RB
-IERyYWNvIGkuTVg2U29sbyBib2FyZCI7DQo+Pj4+PiArICAgIGNvbXBhdGlibGUgPSAieXNvZnQs
-aW14NmRsLXlhcHA0LWRyYWNvIiwgImZzbCxpbXg2ZGwiOw0KPj4+Pg0KPj4+PiBBbGwgY29tcGF0
-aWJsZSBzdHJpbmdzIHNob3VsZCBiZSBkb2N1bWVudGVkLCBub3QganVzdCBTb0MgdmVuZG9yIGJv
-YXJkcy4NCj4+Pg0KPj4+IE9LLCBJIHdpbGwgYWRkIGEgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
-L2JpbmRpbmdzL2FybS95c29mdC55YW1sIGZpbGUgZm9yIHRoYXQuDQo+Pg0KPj4gQWN0dWFsbHks
-IGl0IHNob3VsZCBnbyBpbiBmc2wueWFtbC4gVGhlIGZpbGUgZm9yIGV2ZXJ5IGJvYXJkIHZlbmRv
-ciBpcw0KPj4gZ29uZS4gaS5NWCB3YXMgcHJldHR5IG11Y2ggdGhlIG9ubHkgcGxhdGZvcm0gZG9p
-bmcgdGhhdC4NCj4gDQo+IE9LLCBJIHdpbGwgZG8gc28uIFRoYW5rIHlvdS4NCg0KSSBhbSBzb3Jy
-eSBmb3IgdGhlIG5vaXNlIFJvYiwgYnV0IHlvdXIgImR0LWJpbmRpbmdzOiBhcm06IENvbnZlcnQg
-RlNMDQpib2FyZC9zb2MgYmluZGluZ3MgdG8ganNvbi1zY2hlbWEiIHBhdGNoIGlzIG5vdCBpbiBt
-YWlubGluZSB5ZXQuIFNvDQp0aGVyZSBpcyBubyBhcm0vZnNsLnlhbWwgZmlsZSB0byBhZGQgbXkg
-Y29tcGF0aWJsZSBzdHJpbmdzIGludG8uDQoNCk5vdyBJIGRvIG5vdCBrbm93IGhvdyB0byByZXNw
-aW4uIFNob3VsZCBJIHNlbmQgdGhpcyB1cGRhdGVkIGR0cy9kdHNpDQpwYXRjaCBhcyB1c3VhbCBh
-bmQgY3JlYXRlIGFub3RoZXIgcGF0Y2ggd2l0aCB0aGUgeXNvZnQgY29tcGF0aWJsZQ0Kc3RyaW5n
-cyBhZ2FpbnN0IHlvdXIgeWFtbC1iaW5kaW5ncy12MiBicmFuY2gsIHdoZXJlIHRoZSBmc2wueWFt
-bCBmaWxlDQpleGlzdD8gT3Igc29tZXRoaW5nIGVsc2U/DQoNClRoYW5rIHlvdSwNCk1pY2hhbA0K
+Hello,
+
+As part of an effort to bring suspend to RAM support to Armada 3700
+SoCs (main target: ESPRESSObin), this series handles the work around
+the PCIe IP.
+
+First, more configuration is done in the 'setup' helper as inspired
+from the U-Boot driver. This is needed to entirely initialize the IP
+during future resume operation (patch 1).
+
+Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+current device trees do not provide the corresponding properties, not
+finding one of these properties is not an error and just produces a
+warning. However, if the property is present, an error during PHY
+initialization will fail the probe of the driver.
+
+Note: To be sure the clock will be resumed before this driver, a first
+series adding links between clocks and consumers has been submitted,
+see [1]. Anyway, having the clock series applied first is not needed.
+
+Patch 5 adds suspend/resume hooks, re-using all the above.
+
+Finally, bindings and device trees are updated to reflect the hardware
+(patch 6-12). While the clock depends on the SoC, the reset GPIO and
+the PHY depends on the board so the clock is added in the
+armada-37xx.dtsi file while the two other properties are added in
+armada-3720-espressobin.dts.
+
+[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-January/623885.html
+
+Thanks,
+Miquèl
+
+
+Changes since v2:
+=================
+* Minor patches reordering.
+* Added pinctrl patches from Gregory Clement fixing the PCIe pins. His
+  changes implied modifications in the DT/bindings patches adding PCIe
+  reset pin support.
+* Added a new patch that enlarges the PIO timeout of the driver
+  (explanations in the commit log).
+* With the timeout changed, removed the "experimental delay" that was
+  needed at resume time before accessing any register.
+
+Changes since v1:
+=================
+* Change the capitalization in commit titles to follow the PCI
+  subsystem rules.
+* Added Suggested-by tag to the patch adding PHY support and to the
+  patch adding the PHY property in the DT.
+* Added Rob's Reviewed-by tags on bindings.
+* I am following the discussion about calling functions that might
+  sleep in a NOIRQ context. As there is no real problem yet (as per my
+  understanding), I did not change anything on this regard.
+
+
+Miquel Raynal (15):
+  PCI: aardvark: Enlarge PIO timeout
+  PCI: aardvark: Configure more registers in the configuration helper
+  PCI: aardvark: Add clock support
+  PCI: aardvark: Add PHY support
+  PCI: aardvark: Add PCIe warm reset support
+  PCI: aardvark: Add external reset GPIO support
+  PCI: aardvark: Add suspend to RAM support
+  dt-bindings: PCI: aardvark: Describe the clocks property
+  dt-bindings: PCI: aardvark: Describe the PHY property
+  dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
+  dt-bindings: PCI: aardvark: Describe the reset-gpios property
+  ARM64: dts: marvell: armada-37xx: declare PCIe clock
+  ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
+  ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
+  ARM64: dts: marvell: armada-3720-espressobin: declare PCIe warm reset
+    pin
+
+ .../devicetree/bindings/pci/aardvark-pci.txt  |  14 ++
+ .../dts/marvell/armada-3720-espressobin.dts   |   3 +
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  10 +
+ drivers/pci/controller/pci-aardvark.c         | 217 +++++++++++++++++-
+ 4 files changed, 243 insertions(+), 1 deletion(-)
+
+-- 
+2.19.1
