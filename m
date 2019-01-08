@@ -1,58 +1,49 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v2] dt-bindings: input: ti-tsc-adc: Add new compatible for AM654 SoCs
-Date: Tue, 8 Jan 2019 10:56:31 +0530
-Message-ID: <20190108052631.4169-1-vigneshr@ti.com>
+From: Pi-Hsun Shih <pihsun@chromium.org>
+Subject: [RFC v2 1/6] dt-bindings: Add a binding for Mediatek SCP
+Date: Tue,  8 Jan 2019 13:26:01 +0800
+Message-ID: <20190108052606.59426-2-pihsun@chromium.org>
+References: <20190108052606.59426-1-pihsun@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190108052606.59426-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Vignesh R <vigneshr@ti.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Nicolas Boichat <drinkcat@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
+        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
+        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-AM654 SoCs has ADC IP which is similar to AM335x, but without the
-touchscreen part. Add new compatible to handle AM654 SoCs. Also, it
-seems that existing compatible strings used in the kernel DTs were never
-documented. So, document them now.
+From: Erin Lo <erin.lo@mediatek.com>
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
+Add a DT binding documentation of SCP for the
+MT8183 SoC from Mediatek.
+
+Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 ---
-v2:
-Fix subject line to include subsystem name
-Rebase onto v5.0-rc1
-v1: https://lkml.org/lkml/2018/11/19/313
+Changes from v1:
+ - no change
+---
+ .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 
- .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-index b1163bf97146..aad5e34965eb 100644
---- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-+++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
-@@ -2,7 +2,12 @@
- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- 
- Required properties:
-+- mfd
-+	compatible: Should be
-+		"ti,am3359-tscadc" for AM335x/AM437x SoCs
-+		"ti,am654-tscadc", "ti,am3359-tscadc" for AM654 SoCs
- - child "tsc"
-+	compatible: Should be "ti,am3359-tsc".
- 	ti,wires: Wires refer to application modes i.e. 4/5/8 wire touchscreen
- 		  support on the platform.
- 	ti,x-plate-resistance: X plate resistance
-@@ -25,6 +30,9 @@ Required properties:
- 			AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
- 			XP  = 0, XN = 1, YP = 2, YN = 3.
- - child "adc"
-+	compatible: Should be
-+		    "ti,am3359-adc" for AM335x/AM437x SoCs
-+		    "ti,am654-adc", "ti,am3359-adc" for AM654 SoCs
- 	ti,adc-channels: List of analog inputs available for ADC.
- 			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
- 
+diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+new file mode 100644
+index 00000000000000..b07e5c4ca9af1d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+@@ -0,0 +1,10 @@
++Mediatek SCP Bindings
++----------------------------------------
++
++This binding provides support for ARM Cortex M4 Co-processor found on some
++Mediatek SoCs.
++
++Required properties:
++- compatible		Should be "mediatek,mt8183-scp"
++- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
++
 -- 
-2.20.1
+2.20.1.97.g81188d93c3-goog
