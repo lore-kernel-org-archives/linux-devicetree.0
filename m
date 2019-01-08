@@ -1,66 +1,58 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v9 08/10] OPP: Add a dev_pm_opp_of_get_level() helper
-Date: Tue, 8 Jan 2019 10:24:02 +0530
-Message-ID: <20190108045402.2jglb5y3bk76dems@vireshk-i7>
-References: <20190107100959.14528-1-rnayak@codeaurora.org>
- <20190107100959.14528-9-rnayak@codeaurora.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v2] dt-bindings: input: ti-tsc-adc: Add new compatible for AM654 SoCs
+Date: Tue, 8 Jan 2019 10:56:31 +0530
+Message-ID: <20190108052631.4169-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190107100959.14528-9-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: andy.gross@linaro.org, robh@kernel.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Vignesh R <vigneshr@ti.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, Lee Jones <lee.jones@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On 07-01-19, 15:39, Rajendra Nayak wrote:
-> Now that we have atleast 2 genpd providers, both using a simple
+AM654 SoCs has ADC IP which is similar to AM335x, but without the
+touchscreen part. Add new compatible to handle AM654 SoCs. Also, it
+seems that existing compatible strings used in the kernel DTs were never
+documented. So, document them now.
 
-This kind of reasoning for this patch isn't required anymore. Make
-this patch the second one in the series, i.e. just after the bindings.
+Signed-off-by: Vignesh R <vigneshr@ti.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
+v2:
+Fix subject line to include subsystem name
+Rebase onto v5.0-rc1
+v1: https://lkml.org/lkml/2018/11/19/313
 
-> routine to read a performance state (opp-level) value from device
-> tree, in order to implement the .opp_to_performance_state
-> callback, add a dev_pm_opp_of_get_level() helper to do
-> it, so it can be resued across all such genpd providers which
-> just need to read the value from DT.
-> 
-> Suggested-by: Stephen Boyd <sboyd@kernel.org>
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  drivers/opp/of.c       | 23 +++++++++++++++++++++++
->  include/linux/pm_opp.h |  5 +++++
->  2 files changed, 28 insertions(+)
-> 
-> diff --git a/drivers/opp/of.c b/drivers/opp/of.c
-> index 06f0f632ec47..6fb383fee601 100644
-> --- a/drivers/opp/of.c
-> +++ b/drivers/opp/of.c
-> @@ -1029,6 +1029,29 @@ int of_get_required_opp_performance_state(struct device_node *np, int index)
->  }
->  EXPORT_SYMBOL_GPL(of_get_required_opp_performance_state);
->  
-> +/**
-> + * dev_pm_opp_of_get_level() - Reads the opp-level value from Device Tree
-> + * @opp: opp for which 'opp-level' should be read and returned
-> + *
-> + * Returns the opp-level value read from Device Tree, if present, else 0
-> + *
-> + * Return: Zero or positive opp-level value read from Device tree
-> + */
-> +unsigned int dev_pm_opp_of_get_level(struct dev_pm_opp *opp)
-> +{
-> +	struct device_node *np;
-> +	unsigned int perf_state = 0;
-> +
-> +	np = dev_pm_opp_get_of_node(opp);
-> +	if (of_property_read_u32(np, "opp-level", &perf_state))
-> +		pr_err("%s: missing 'opp-level' property\n", __func__);
+ .../devicetree/bindings/input/touchscreen/ti-tsc-adc.txt  | 8 ++++++++
+ 1 file changed, 8 insertions(+)
 
-Instead of this, add a field "level" in the opp structure in
-drivers/opp/opp.h and fill it while parsing the OPPs. And here you can
-just read the values then.
-
+diff --git a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+index b1163bf97146..aad5e34965eb 100644
+--- a/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
++++ b/Documentation/devicetree/bindings/input/touchscreen/ti-tsc-adc.txt
+@@ -2,7 +2,12 @@
+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+ 
+ Required properties:
++- mfd
++	compatible: Should be
++		"ti,am3359-tscadc" for AM335x/AM437x SoCs
++		"ti,am654-tscadc", "ti,am3359-tscadc" for AM654 SoCs
+ - child "tsc"
++	compatible: Should be "ti,am3359-tsc".
+ 	ti,wires: Wires refer to application modes i.e. 4/5/8 wire touchscreen
+ 		  support on the platform.
+ 	ti,x-plate-resistance: X plate resistance
+@@ -25,6 +30,9 @@ Required properties:
+ 			AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
+ 			XP  = 0, XN = 1, YP = 2, YN = 3.
+ - child "adc"
++	compatible: Should be
++		    "ti,am3359-adc" for AM335x/AM437x SoCs
++		    "ti,am654-adc", "ti,am3359-adc" for AM654 SoCs
+ 	ti,adc-channels: List of analog inputs available for ADC.
+ 			 AIN0 = 0, AIN1 = 1 and so on till AIN7 = 7.
+ 
 -- 
-viresh
+2.20.1
