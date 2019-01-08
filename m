@@ -1,78 +1,116 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.20 012/117] of: overlay: add missing of_node_put() after add new node to changeset
-Date: Tue,  8 Jan 2019 14:24:40 -0500
-Message-ID: <20190108192628.121270-12-sashal@kernel.org>
-References: <20190108192628.121270-1-sashal@kernel.org>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH 1/2] dt: bindings: lp5024: Introduce the lp5024 and lp5018
+ RGB driver
+Date: Tue, 8 Jan 2019 21:33:46 +0100
+Message-ID: <dc2283f9-db85-1eaf-f046-3fbbd4adcace@gmail.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-2-dmurphy@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108192628.121270-1-sashal@kernel.org>
+In-Reply-To: <20181219162626.12297-2-dmurphy@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Frank Rowand <frank.rowand@sony.com>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
+Dan,
 
-[ Upstream commit 7c528e457d53c75107d5aa56892316d265c778de ]
+On 12/19/18 5:26 PM, Dan Murphy wrote:
+> Introduce the bindings for the Texas Instruments LP5024 and the LP5018
+> RGB LED device driver.  The LP5024/18 can control RGB LEDs individually
+> or as part of a control bank group.  These devices have the ability
+> to adjust the mixing control for the RGB LEDs to obtain different colors
+> independent of the overall brightness of the LED grouping.
+> 
+> Datasheet:
+> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> 
+> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> ---
+>   .../devicetree/bindings/leds/leds-lp5024.txt  | 63 +++++++++++++++++++
+>   1 file changed, 63 insertions(+)
+>   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp5024.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/leds/leds-lp5024.txt b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
+> new file mode 100644
+> index 000000000000..9567aa6f7813
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
+> @@ -0,0 +1,63 @@
+> +* Texas Instruments - LP5024/18 RGB LED driver
+> +
+> +The LM3692x is an ultra-compact, highly efficient,
+> +white-LED driver designed for LCD display backlighting.
+> +
+> +The main difference between the LP5024 and L5018 is the number of
+> +RGB LEDs they support.  The LP5024 supports twenty four strings while the
+> +LP5018 supports eighteen strings.
+> +
+> +Required properties:
+> +	- compatible:
+> +		"ti,lp5018"
+> +		"ti,lp5024"
+> +	- reg :  I2C slave address
+> +	- #address-cells : 1
+> +	- #size-cells : 0
+> +
+> +Optional properties:
+> +	- enable-gpios : gpio pin to enable/disable the device.
+> +	- vled-supply : LED supply
+> +
+> +Required child properties:
+> +	- reg : Is the child node iteration.
+> +	- led-sources : LP5024 - 0 - 7
+> +			LP5018 - 0 - 5
+> +			Declares the LED string or strings that the child node
+> +			will control.  If ti,control-bank is set then this
+> +			property will contain multiple LED IDs.
+> +
+> +Optional child properties:
+> +	- label : see Documentation/devicetree/bindings/leds/common.txt
+> +	- linux,default-trigger :
+> +	   see Documentation/devicetree/bindings/leds/common.txt
+> +	- ti,control-bank : Indicates that the LED strings declared in the
+> +			    led-sources property are grouped within a control
+> +			    bank for brightness and mixing control.
+> +
+> +Example:
+> +
+> +led-controller@28 {
+> +	compatible = "ti,lp5024";
+> +	reg = <0x28>;
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +
+> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+> +	vled-supply = <&vbatt>;
+> +
+> +	led@0 {
+> +		reg = <0>;
+> +		led-sources = <1>;
+> +	};
+> +
+> +	led@1 {
+> +		reg = <1>;
+> +		led-sources = <0 6>;
+> +		ti,control-bank;
 
-The refcount of a newly added overlay node decrements to one
-(instead of zero) when the overlay changeset is destroyed.  This
-change will cause the final decrement be to zero.
+Do you really need ti,control-bank? Doesn't led-sources array size
+greater than 1 mean that the node describes control bank?
 
-After applying this patch, new validation warnings will be
-reported from the devicetree unittest during boot due to
-a pre-existing devicetree bug.  The warnings will be similar to:
+Also, does it make sense to have only two LEDs in the bank?
 
-  OF: ERROR: memory leak before free overlay changeset,  /testcase-data/overlay-node/test-bus/test-unittest4
+> +	};
+> +
+> +}
+> +
+> +For more product information please see the link below:
+> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
+> 
 
-This pre-existing devicetree bug will also trigger a WARN_ONCE() from
-refcount_sub_and_test_checked() when an overlay changeset is
-destroyed without having first been applied.  This scenario occurs
-when an error in the overlay is detected during the overlay changeset
-creation:
-
-  WARNING: CPU: 0 PID: 1 at lib/refcount.c:187 refcount_sub_and_test_checked+0xa8/0xbc
-  refcount_t: underflow; use-after-free.
-
-  (unwind_backtrace) from (show_stack+0x10/0x14)
-  (show_stack) from (dump_stack+0x6c/0x8c)
-  (dump_stack) from (__warn+0xdc/0x104)
-  (__warn) from (warn_slowpath_fmt+0x44/0x6c)
-  (warn_slowpath_fmt) from (refcount_sub_and_test_checked+0xa8/0xbc)
-  (refcount_sub_and_test_checked) from (kobject_put+0x24/0x208)
-  (kobject_put) from (of_changeset_destroy+0x2c/0xb4)
-  (of_changeset_destroy) from (free_overlay_changeset+0x1c/0x9c)
-  (free_overlay_changeset) from (of_overlay_remove+0x284/0x2cc)
-  (of_overlay_remove) from (of_unittest_apply_revert_overlay_check.constprop.4+0xf8/0x1e8)
-  (of_unittest_apply_revert_overlay_check.constprop.4) from (of_unittest_overlay+0x960/0xed8)
-  (of_unittest_overlay) from (of_unittest+0x1cc4/0x2138)
-  (of_unittest) from (do_one_initcall+0x4c/0x28c)
-  (do_one_initcall) from (kernel_init_freeable+0x29c/0x378)
-  (kernel_init_freeable) from (kernel_init+0x8/0x110)
-  (kernel_init) from (ret_from_fork+0x14/0x2c)
-
-Tested-by: Alan Tull <atull@kernel.org>
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/of/overlay.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/overlay.c b/drivers/of/overlay.c
-index 42b1f73ac5f6..1e058196f23f 100644
---- a/drivers/of/overlay.c
-+++ b/drivers/of/overlay.c
-@@ -378,7 +378,9 @@ static int add_changeset_node(struct overlay_changeset *ovcs,
- 		if (ret)
- 			return ret;
- 
--		return build_changeset_next_level(ovcs, tchild, node);
-+		ret = build_changeset_next_level(ovcs, tchild, node);
-+		of_node_put(tchild);
-+		return ret;
- 	}
- 
- 	if (node->phandle && tchild->phandle)
 -- 
-2.19.1
+Best regards,
+Jacek Anaszewski
