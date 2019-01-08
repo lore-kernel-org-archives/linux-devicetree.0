@@ -1,96 +1,32 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 5/5] arm64: dts: rockchip: Fix nanopi4 uSD card detect
-Date: Tue, 8 Jan 2019 23:22:01 +0000
-Message-ID: <c2c40662-f7aa-75d5-572e-c58b21170b59@arm.com>
-References: <cover.1546981251.git.robin.murphy@arm.com>
- <83098c7ecc471a77dd89564f5f98fcf30c1ed431.1546981251.git.robin.murphy@arm.com>
- <6925511.AQqqGbhmY3@phil>
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Subject: Re: [PATCH v4 01/15] ARM: export arm_pm_restart()
+Date: Tue, 8 Jan 2019 23:31:37 +0000
+Message-ID: <20190108233137.GW11171@n2100.armlinux.org.uk>
+References: <20190108175818.705110-1-lkundrak@v3.sk>
+ <20190108175818.705110-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6925511.AQqqGbhmY3@phil>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190108175818.705110-2-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, James Cameron <quozl@laptop.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, x86@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-08 10:42 pm, Heiko Stuebner wrote:
-> Am Dienstag, 8. Januar 2019, 22:57:27 CET schrieb Robin Murphy:
->> For whatever reason, the sdmmc_dectn function isn't working properly
->> as-is, and microSD insertion and removal goes unnoticed. Flipping the
->> pin into GPIO mode, however, does do the job, so let's just handle it
->> that way for now until someone feels inclined to figure out what GRF
->> voodoo or otherwise is needed for correct 'native' operation.
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->> ---
->>   arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi | 7 ++++++-
->>   1 file changed, 6 insertions(+), 1 deletion(-)
->>
->> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
->> index 9c723038d8f8..2a183a6af150 100644
->> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
->> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
->> @@ -505,6 +505,10 @@
->>   		sdmmc0_pwr_h: sdmmc0-pwr-h {
->>   			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
->>   		};
->> +
->> +		sdmmc0_det_l: sdmmc0-det-l {
-> 
-> alphabetically by node-name please,
-> aka sdmmc0-det-* should be above sdmmc0-pwr-*
+On Tue, Jan 08, 2019 at 06:58:04PM +0100, Lubomir Rintel wrote:
+> The OLPC XO 1.75 laptop is rebooted with a command to the Embedded
+> Controller. The EC driver should be a module, since most people don't need
+> it to be compiled in.
 
-Right you are, not sure how that one slipped through.
+Why do you need this - is there a reason why you can't hook onto the
+restart_handler_list using register_restart_handler()?  The registered
+handlers are passed the command.
 
-> If you're respinning the whole series this should be fixed,
-> otherwise I can also do that when applying.
+I would rather this is not exported to modules, it is generally unsafe
+to hook stuff by directly poking function pointers from module code.
 
-I've fixed it up locally, although it might be worth holding off on this 
-particular patch for the moment now that I've taken another look through 
-the TRM and noticed those smoking-gun-looking bits in 
-GRF_SIG_DETECT_CON{0,1} - I'll investigate...
-
-[ side note - do you reckon there'd be any value in bolting a debugfs 
-interface onto the GRF driver, or is the realistic answer to just use 
-/dev/mem like everyone else and stop having silly ideas? ]
-
-Thanks,
-Robin.
-
-> 
-> 
-> Heiko
-> 
->> +			rockchip,pins = <0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
->> +		};
->>   	};
->>   
->>   	sdio-pwrseq {
->> @@ -563,9 +567,10 @@
->>   	bus-width = <4>;
->>   	cap-sd-highspeed;
->>   	cap-mmc-highspeed;
->> +	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
->>   	disable-wp;
->>   	pinctrl-names = "default";
->> -	pinctrl-0 = <&sdmmc_bus4 &sdmmc_cd &sdmmc_clk &sdmmc_cmd>;
->> +	pinctrl-0 = <&sdmmc_bus4 &sdmmc0_det_l &sdmmc_clk &sdmmc_cmd>;
->>   	sd-uhs-sdr104;
->>   	vmmc-supply = <&vcc3v0_sd>;
->>   	vqmmc-supply = <&vcc_sdio>;
->>
-> 
-> 
-> 
-> 
+-- 
+RMK's Patch system: http://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
