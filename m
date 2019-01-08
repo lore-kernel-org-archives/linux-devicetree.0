@@ -1,48 +1,67 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH] ARM: dts: sun6i: Add clock-output-names to osc24M clock
-Date: Tue,  8 Jan 2019 15:25:26 +0800
-Message-ID: <20190108072526.2621-1-wens@csie.org>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [RFC] device-tree: resets properties, reset topology, and shared resets
+Date: Tue, 8 Jan 2019 09:09:18 +0100
+Message-ID: <CAMuHMdXQqAaXBBAs6e4wJHWTjDTikXjzt3N0bMmAwSgyMqEcRw@mail.gmail.com>
+References: <20190107175127.21240-1-geert+renesas@glider.be>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190107175127.21240-1-geert+renesas@glider.be>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Philipp Zabel <p.zabel@pengutronix.de>, Auger Eric <eric.auger@redhat.com>, Alex Williamson <alex.williamson@redhat.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The osc24M clock does not have a "clock-output-names" property, which
-means that the clock name is derived from the node name in Linux. The
-node name was changed in commit acfd5bbe2641 ("ARM: dts: sun6i: Change
-clock node names to avoid warnings"). This breaks Linux as the sunxi-ng
-clock driver implicitly depends on the external clock being named
-"osc24M".
+On Mon, Jan 7, 2019 at 6:51 PM Geert Uytterhoeven
+<geert+renesas@glider.be> wrote:
+> --- a/drivers/reset/core.c
+> +++ b/drivers/reset/core.c
+> @@ -459,6 +459,42 @@ static void __reset_control_put_internal(struct reset_control *rstc)
+>         kref_put(&rstc->refcnt, __reset_control_release);
+>  }
+>
+> +static bool __of_reset_is_exclusive(const struct device_node *node,
+> +                                   const struct of_phandle_args *args,
+> +                                   const char *id)
+> +{
+> +       struct of_phandle_args args2;
+> +       struct device_node *node2;
+> +       int index, ret;
+> +       bool eq;
+> +
+> +       for_each_node_with_property(node2, "resets") {
+> +               if (node == node2)
+> +                       continue;
+> +
+> +               for (index = 0; ; index++) {
+> +                       ret = of_parse_phandle_with_args(node2, "resets",
+> +                                                        "#reset-cells", index,
+> +                                                        &args2);
+> +                       if (ret)
+> +                               break;
+> +
+> +                       eq = (args2.np == args.np &&
+> +                             args2.args_count == args.args_count &&
+> +                             !memcmp(args2.args, args.args,
+> +                                     args.args_count * sizeof(args.args[0])));
 
-Add a "clock-output-names" property to restore the previous behavior.
+This is embarrasing: as kbuild test robot pointed out, these should be
+"args->" instead of "args.".
 
-Fixes: acfd5bbe2641 ("ARM: dts: sun6i: Change clock node names to avoid
-		      warnings")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
-This is a critical fix for v5.0-rc. Without it the A31 boots up to the
-UART failing to get its clock rate, and thus failing to setup a console.
+I failed to notice, as I have a local follow-up patch extracting this
+comparison into a common helper.
 
-Also the timer-sun5i init code hits a divide by zero exception. I'll
-send a separate patch to make this one fail gracefully.
----
- arch/arm/boot/dts/sun6i-a31.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Nevertheless, this doesn't change anything w.r.t. the principle behind
+this patch.
+Thanks again!
 
-diff --git a/arch/arm/boot/dts/sun6i-a31.dtsi b/arch/arm/boot/dts/sun6i-a31.dtsi
-index 353d90f99b40..13304b8c5139 100644
---- a/arch/arm/boot/dts/sun6i-a31.dtsi
-+++ b/arch/arm/boot/dts/sun6i-a31.dtsi
-@@ -216,6 +216,7 @@
- 			#clock-cells = <0>;
- 			compatible = "fixed-clock";
- 			clock-frequency = <24000000>;
-+			clock-output-names = "osc24M";
- 		};
- 
- 		osc32k: clk-32k {
+Gr{oetje,eeting}s,
+
+                        Geert
+
 -- 
-2.20.1
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
