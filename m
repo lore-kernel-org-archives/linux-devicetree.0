@@ -1,96 +1,74 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 2/5] arm64: dts: rockchip: Add DT for NanoPi M4
-Date: Tue, 8 Jan 2019 22:35:40 +0000
-Message-ID: <a9934783-7562-c872-fdcd-1f8e72e85881@arm.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 5/5] arm64: dts: rockchip: Fix nanopi4 uSD card detect
+Date: Tue, 08 Jan 2019 23:42:50 +0100
+Message-ID: <6925511.AQqqGbhmY3@phil>
 References: <cover.1546981251.git.robin.murphy@arm.com>
- <324b75bbeef2552ddde62f4e1834ac908a45bebd.1546981251.git.robin.murphy@arm.com>
- <1755553.je4OVlYtzY@phil>
+ <83098c7ecc471a77dd89564f5f98fcf30c1ed431.1546981251.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1755553.je4OVlYtzY@phil>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <83098c7ecc471a77dd89564f5f98fcf30c1ed431.1546981251.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Heiko,
+Am Dienstag, 8. Januar 2019, 22:57:27 CET schrieb Robin Murphy:
+> For whatever reason, the sdmmc_dectn function isn't working properly
+> as-is, and microSD insertion and removal goes unnoticed. Flipping the
+> pin into GPIO mode, however, does do the job, so let's just handle it
+> that way for now until someone feels inclined to figure out what GRF
+> voodoo or otherwise is needed for correct 'native' operation.
+> 
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi | 7 ++++++-
+>  1 file changed, 6 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> index 9c723038d8f8..2a183a6af150 100644
+> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+> @@ -505,6 +505,10 @@
+>  		sdmmc0_pwr_h: sdmmc0-pwr-h {
+>  			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+>  		};
+> +
+> +		sdmmc0_det_l: sdmmc0-det-l {
 
-On 2019-01-08 10:15 pm, Heiko Stuebner wrote:
-> Hi Robin,
-> 
-> Am Dienstag, 8. Januar 2019, 22:57:24 CET schrieb Robin Murphy:
->> There are a number of subtle differences between the nanopi4 variants,
->> and where they disagree, the common DTSI currently follows the details
->> of NanoPi M4. In order to improve matters even more, let's add a
->> separate DTS for the M4 to which we can start splitting things out
->> appropriately. The third variant, NanoPi NEO4, is a lot closer to the M4
->> than either is to the larger T4, so arguably could get away with just
->> sharing the M4 DT for now (plus I have neither of the smaller boards to
->> actually test with).
->>
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> 
-> I'm not sure if Rob actually checks the devicetree list or relies on
-> patches Cc'ed directly to him for binding review, so you might want
-> to add the 2 dt maintainers explicitly.
+alphabetically by node-name please,
+aka sdmmc0-det-* should be above sdmmc0-pwr-*
 
-Er, that's embarassing... I somehow failed to register that my mindless 
-copy-paste job ends up adding a new binding that *isn't* the one Rob 
-already reviewed :(
+If you're respinning the whole series this should be fixed,
+otherwise I can also do that when applying.
 
->> ---
->>   .../devicetree/bindings/arm/rockchip.yaml      |  5 +++++
->>   arch/arm64/boot/dts/rockchip/Makefile          |  1 +
->>   .../boot/dts/rockchip/rk3399-nanopi-m4.dts     | 18 ++++++++++++++++++
->>   3 files changed, 24 insertions(+)
->>   create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
->>
->> diff --git a/Documentation/devicetree/bindings/arm/rockchip.yaml b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> index bcc60c492a12..b4756e0cb7d0 100644
->> --- a/Documentation/devicetree/bindings/arm/rockchip.yaml
->> +++ b/Documentation/devicetree/bindings/arm/rockchip.yaml
->> @@ -92,6 +92,11 @@ properties:
->>             - const: friendlyarm,nanopc-t4
->>             - const: rockchip,rk3399
->>   
->> +      - description: FriendlyElec NanoPi M4
->> +        items:
->> +          - const: friendlyarm,nanopi-m4
->> +          - const: rockchip,rk3399
->> +
-> 
-> When we hashed out the Rockchip yaml thingy, there also
-> came up the possibility of grouping the similar boards together
-> into an enum, see the rk3399-firefly or the rk3288-evb-* for example.
-> 
-> So the binding for both could possibly become:
-> 
->        - description: FriendlyElec NanoPi
->          items:
-> 	  - enum:
->            	- friendlyarm,nanopi-m4
->            	- friendlyarm,nanopi-t4
->            - const: rockchip,rk3399
-> 
-> We didn't come up with a hard rule for all cases, but the
-> Nano PI feels like it qualifies ;-)
 
-...but I completely agree with that idea anyway - as the commit log 
-alludes to, this was really just somewhere to move the existing nodes to 
-without much thought involved. I'll give it a day or two for any more 
-comments, then respin at least this patch and make sure the binding 
-update goes to the maintainers properly.
+Heiko
 
-Cheers,
-Robin.
+> +			rockchip,pins = <0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
+> +		};
+>  	};
+>  
+>  	sdio-pwrseq {
+> @@ -563,9 +567,10 @@
+>  	bus-width = <4>;
+>  	cap-sd-highspeed;
+>  	cap-mmc-highspeed;
+> +	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+>  	disable-wp;
+>  	pinctrl-names = "default";
+> -	pinctrl-0 = <&sdmmc_bus4 &sdmmc_cd &sdmmc_clk &sdmmc_cmd>;
+> +	pinctrl-0 = <&sdmmc_bus4 &sdmmc0_det_l &sdmmc_clk &sdmmc_cmd>;
+>  	sd-uhs-sdr104;
+>  	vmmc-supply = <&vcc3v0_sd>;
+>  	vqmmc-supply = <&vcc_sdio>;
+> 
