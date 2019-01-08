@@ -1,54 +1,54 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH 2/2] ARM: dts: at91: at91-sama5d27_som1_ek: enable qspi1
- memory
-Date: Tue, 8 Jan 2019 19:15:53 +0100
-Message-ID: <20190108181553.GG10218@piout.net>
-References: <20181212163057.22183-1-tudor.ambarus@microchip.com>
- <20181212163057.22183-2-tudor.ambarus@microchip.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v2 0/5] add quartz load support to NXP rtc drivers
+Date: Tue,  8 Jan 2019 19:54:09 +0100
+Message-ID: <20190108185414.26922-1-sam@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181212163057.22183-2-tudor.ambarus@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tudor.Ambarus@microchip.com
-Cc: Nicolas.Ferre@microchip.com, Ludovic.Desroches@microchip.com, robh+dt@kernel.org, mark.rutland@arm.com, Claudiu.Beznea@microchip.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, boris.brezillon@bootlin.com, linux-mtd@lists.infradead.org, broonie@kernel.org, linux-spi@vger.kernel.org
+To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+Cc: Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2018 16:31:11+0000, Tudor.Ambarus@microchip.com wrote:
-> From: Claudiu Beznea <claudiu.beznea@microchip.com>
-> 
-> Enable qspi1.
-> 
-> Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
+pcf8523 hardcode the quartz load to 12.5pF
+pcf85063 uses the reset default of 7pF
 
-Note that this should have your SoB too as you are sending a patch that
-is not from you.
+Introduce a new generic property "quartz-load-femtofarad"
+to specify the quartz load.
+The default value is selected to match the current Linux
+drivers, so there are no behavior changes if a binding do not
+specify the quarts-load.
+The unit is femtofarads because several RTC's define the quarts load
+in steps of 0.5 pF.
 
-> ---
->  arch/arm/boot/dts/at91-sama5d27_som1_ek.dts | 4 ++++
->  1 file changed, 4 insertions(+)
-> 
-> diff --git a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> index 363a43d77424..73d16d98bf9c 100644
-> --- a/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> +++ b/arch/arm/boot/dts/at91-sama5d27_som1_ek.dts
-> @@ -109,6 +109,10 @@
->  				status = "okay";
->  			};
->  
-> +			qspi1: spi@f0024000 {
-> +				status = "okay";
-> +			};
-> +
->  			spi0: spi@f8000000 {
->  				pinctrl-names = "default";
->  				pinctrl-0 = <&pinctrl_spi0_default>;
-> -- 
-> 2.9.4
-> 
+The two drivers rtc-pcf8523 and rtc-pcf85063 are both
+updated to use the new binding.
+The fix is tested on a proprietary board for both
+RTC variants.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+v2:
+- Introduce a generic property "quartz-load-femtofarads"
+- Add femtofarads to property-units.txt
+- Make the changes backward compatible
+- Reduced logging
+- Warn, when we continue with a default value
+- Tested, by Søren Andersen, on real HW
+- Rebased on top of v5.0-rc1
+
+	Sam
+
+Sam Ravnborg (5):
+      devicetree: property-units: Add femtofarads unit
+      dt-binding: pcf8523: add xtal load capacitance
+      dt-binding: pcf85063: add xtal load capacitance
+      rtc: pcf8523: set xtal load capacitance from DT
+      rtc: pcf85063: set xtal load capacitance from DT
+
+ .../devicetree/bindings/property-units.txt         |  1 +
+ .../devicetree/bindings/rtc/nxp,pcf85063.txt       | 18 ++++++++++
+ .../devicetree/bindings/rtc/nxp,pcf8523.txt        | 18 ++++++++++
+ Documentation/devicetree/bindings/rtc/rtc.txt      |  2 --
+ drivers/rtc/rtc-pcf85063.c                         | 39 ++++++++++++++++++++++
+ drivers/rtc/rtc-pcf8523.c                          | 28 +++++++++++-----
+ 6 files changed, 96 insertions(+), 10 deletions(-)
