@@ -1,42 +1,51 @@
-From: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous
- error detection driver
-Date: Tue, 8 Jan 2019 19:12:06 +0100
-Message-ID: <20190108181206.GA3848@kroah.com>
-References: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
- <20190108104204.GA14243@zn.tnic>
- <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: at91: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Tue, 8 Jan 2019 19:13:40 +0100
+Message-ID: <20190108181340.GD10218@piout.net>
+References: <20181221181149.6708-1-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>
-Cc: Borislav Petkov <bp@alien8.de>, "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.ker
+In-Reply-To: <20181221181149.6708-1-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: devicetree@vger.kernel.org, Peter Rosin <peda@axentia.se>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 08, 2019 at 05:57:24PM +0000, James Morse wrote:
-> >> diff --git a/drivers/edac/cortex_a15_l2_async_edac.c b/drivers/edac/cortex_a15_l2_async_edac.c
-> >> new file mode 100644
-> >> index 000000000000..26252568e961
-> >> --- /dev/null
-> >> +++ b/drivers/edac/cortex_a15_l2_async_edac.c
-> >> @@ -0,0 +1,134 @@
-> >> +// SPDX-License-Identifier: GPL-2.0
-> >> +/*
-> >> + * Copyright (C) 2018 Nokia Corporation
+On 21/12/2018 18:11:49+0000, Sudeep Holla wrote:
+> Most of the legacy "gpio-key,wakeup" property are already replaced
+> with "wakeup-source". However few occurrences of old property has
+> popped up again, probably from the remnants in downstream trees.
+> Almost all of those were remove couple of years back.
 > 
-> (boiler plate not needed with the SPDX header)
+> Replace the legacy properties with the unified "wakeup-source"
+> property introduced in the commit 700a38b27eef ("Input: gpio_keys -
+> switch to using generic device properties")
+> 
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Peter Rosin <peda@axentia.se>
+> Cc: Nicolas Ferre <nicolas.ferre@microchip.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
+> ---
+>  arch/arm/boot/dts/at91-nattis-2-natte-2.dts | 2 +-
+>  arch/arm/boot/dts/at91-wb45n.dts            | 2 +-
+>  arch/arm/boot/dts/at91-wb50n.dts            | 4 ++--
+>  3 files changed, 4 insertions(+), 4 deletions(-)
+> 
+Applied, thanks.
 
-Not true at all.  Copyright is not the same thing as an SPDX license
-identifier in any way, shape, or form.  As-is, this is just fine.
-
-Now I will not go into the issues where a "Copyright..." line really
-means nothing at all anymore, as lawyers like to cargo-cult worse than
-programmers do, so it's good to have those lines there just to make them
-happy :)
-
-thanks,
-
-greg k-h
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
