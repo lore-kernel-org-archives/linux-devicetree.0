@@ -1,77 +1,77 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v2 2/5] dt-binding: pcf8523: add xtal load capacitance
-Date: Tue,  8 Jan 2019 19:54:11 +0100
-Message-ID: <20190108185414.26922-3-sam@ravnborg.org>
-References: <20190108185414.26922-1-sam@ravnborg.org>
+From: Tomasz Duszynski <tduszyns@gmail.com>
+Subject: Re: [PATCH 1/3] iio: chemical: add support for Plantower PMS7003
+ sensor
+Date: Tue, 8 Jan 2019 20:07:57 +0100
+Message-ID: <20190108190756.GA25862@arch>
+References: <20190106171614.12615-1-tduszyns@gmail.com>
+ <20190106171614.12615-2-tduszyns@gmail.com>
+ <20190107153542.GD14782@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108185414.26922-1-sam@ravnborg.org>
+Content-Disposition: inline
+In-Reply-To: <20190107153542.GD14782@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>, =?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+To: Johan Hovold <johan@kernel.org>
+Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The NXP pcf8523 supports two different xtal load capacitance
-- 7000fF  (7pF)    HW default
-- 12500fF (12.5pF) Minimum power consumption, driver default
+On Mon, Jan 07, 2019 at 04:35:42PM +0100, Johan Hovold wrote:
+> On Sun, Jan 06, 2019 at 06:16:12PM +0100, Tomasz Duszynski wrote:
+> > Add support for Plantower PMS7003 particulate matter sensor.
+> >
+> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
+>
+> > +static int pms7003_do_cmd(struct pms7003_state *state, u8 cmd)
+> > +{
+> > +	/*
+> > +	 * commands have following format:
+> > +	 *
+> > +	 * +------+------+-----+------+-----+-----------+-----------+
+> > +	 * | 0x42 | 0x4d | cmd | 0x00 | arg | cksum msb | cksum lsb |
+> > +	 * +------+------+-----+------+-----+-----------+-----------+
+> > +	 */
+> > +	u8 tmp[PMS7003_CMD_LENGTH] = { PMS7003_MAGIC_MSB, PMS7003_MAGIC_LSB };
+> > +	int ret, n = 2;
+> > +	u16 checksum;
+> > +
+> > +	switch (cmd) {
+> > +	case CMD_WAKEUP:
+> > +		tmp[n++] = 0xe4;
+> > +		tmp[n++] = 0x00;
+> > +		tmp[n++] = 0x01;
+> > +		break;
+> > +	case CMD_ENTER_PASSIVE_MODE:
+> > +		tmp[n++] = 0xe1;
+> > +		tmp[n++] = 0x00;
+> > +		tmp[n++] = 0x00;
+> > +		break;
+> > +	case CMD_READ_PASSIVE:
+> > +		tmp[n++] = 0xe2;
+> > +		tmp[n++] = 0x00;
+> > +		tmp[n++] = 0x00;
+> > +		break;
+> > +	case CMD_SLEEP:
+> > +		tmp[n++] = 0xe4;
+> > +		tmp[n++] = 0x00;
+> > +		tmp[n++] = 0x00;
+> > +		break;
+> > +	}
+> > +
+> > +	checksum = pms7003_calc_checksum(tmp, n);
+> > +	put_unaligned_be16(checksum, tmp + n);
+> > +	n += PMS7003_CHECKSUM_LENGTH;
+> > +
+> > +	ret = serdev_device_write(state->serdev, tmp, n, PMS7003_TIMEOUT);
+> > +	if (ret)
+> > +		return ret;
+>
+> Beginning with 5.0, serdev_device_write() returns the number of bytes
+> written before timeout (or being interrupted) so you need to check
+> against < n here.
+>
 
-To obtain a precise RTC the pcf8523 must be configured
-with the correct capacitance load of the xtal.
+Right, on the second though that can be simplified by just ignoring
+return value I guess. Anyway, thanks for pointing this out.
 
-Add a property to specify the xtal capacitance load.
-The default value matches that of the current Linux driver.
-
-With a dedicated binding remove the entry in rtc.txt
-
-Signed-off-by: Søren Andersen <san@skov.dk>
-Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
----
- Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt | 18 ++++++++++++++++++
- Documentation/devicetree/bindings/rtc/rtc.txt         |  1 -
- 2 files changed, 18 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-
-diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-new file mode 100644
-index 000000000000..214ac5d26df7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/nxp,pcf8523.txt
-@@ -0,0 +1,18 @@
-+* NXP PCF8523 Real Time Clock
-+
-+Required properties:
-+- compatible: Should contain "nxp,pcf8523".
-+- reg: I2C address for chip.
-+
-+Optional property:
-+- quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-+  expressed in femto Farad (fF). Valid values are 7000 and 12500.
-+  Default value (if no value is specified) is 12500fF.
-+
-+Example:
-+
-+pcf8523: pcf8523@68 {
-+	compatible = "nxp,pcf8523";
-+	reg = <0x68>;
-+	quartz-load-femtofarads = <7000>;
-+};
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-index 7c8da6926095..e07b15d151ac 100644
---- a/Documentation/devicetree/bindings/rtc/rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-@@ -51,7 +51,6 @@ isil,isl12022		Intersil ISL12022 Real-time Clock
- microcrystal,rv3029	Real Time Clock Module with I2C-Bus
- nxp,pcf2127		Real-time clock
- nxp,pcf2129		Real-time clock
--nxp,pcf8523		Real-time Clock
- nxp,pcf8563		Real-time clock/calendar
- nxp,pcf85063		Tiny Real-Time Clock
- pericom,pt7c4338	Real-time Clock Module
--- 
-2.12.0
+> Johan
