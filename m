@@ -1,73 +1,51 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 02/15] PCI: aardvark: Configure more registers in the
- configuration helper
-Date: Tue,  8 Jan 2019 17:24:27 +0100
-Message-ID: <20190108162441.5278-3-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 10/15] dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
+Date: Tue,  8 Jan 2019 17:24:35 +0100
+Message-ID: <20190108162441.5278-11-miquel.raynal@bootlin.com>
 References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190108162441.5278-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Antoine Tenart <antoine.tenart@bootlin.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-Mimic U-Boot configuration to be sure all hardware registers are set
-properly. This will be needed for future S2RAM operation.
+A line might be used by the PCIe IP to reset the endpoint card upon:
+  - platform reset,
+  - hot reset,
+  - link failure.
+
+Describe the properties needed in this case (optional).
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/pci/controller/pci-aardvark.c | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ Documentation/devicetree/bindings/pci/aardvark-pci.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index 18120e312ae1..0f50163ae072 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -100,6 +100,8 @@
- #define     PCIE_CORE_CTRL2_STRICT_ORDER_ENABLE	BIT(5)
- #define     PCIE_CORE_CTRL2_OB_WIN_ENABLE	BIT(6)
- #define     PCIE_CORE_CTRL2_MSI_ENABLE		BIT(10)
-+#define PCIE_PHY_REFCLK				(CONTROL_BASE_ADDR + 0x14)
-+#define     PCIE_PHY_REFCLK_BUF_CTRL		0x1342
- #define PCIE_MSG_LOG_REG			(CONTROL_BASE_ADDR + 0x30)
- #define PCIE_ISR0_REG				(CONTROL_BASE_ADDR + 0x40)
- #define PCIE_MSG_PM_PME_MASK			BIT(7)
-@@ -243,6 +245,9 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- {
- 	u32 reg;
+diff --git a/Documentation/devicetree/bindings/pci/aardvark-pci.txt b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
+index a440f182ccf8..8b7f048705ec 100644
+--- a/Documentation/devicetree/bindings/pci/aardvark-pci.txt
++++ b/Documentation/devicetree/bindings/pci/aardvark-pci.txt
+@@ -24,6 +24,9 @@ contain the following properties:
+ The following are optional properties:
  
-+	/* Set HW Reference Clock Buffer Control */
-+	advk_writel(pcie, PCIE_PHY_REFCLK_BUF_CTRL, PCIE_PHY_REFCLK);
-+
- 	/* Set to Direct mode */
- 	reg = advk_readl(pcie, CTRL_CONFIG_REG);
- 	reg &= ~(CTRL_MODE_MASK << CTRL_MODE_SHIFT);
-@@ -274,6 +279,15 @@ static void advk_pcie_setup_hw(struct advk_pcie *pcie)
- 		PCIE_CORE_CTRL2_TD_ENABLE;
- 	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
+  - phys: the PCIe PHY handle
++ - pinctrl-names: must be "default".
++ - pinctrl-0: pin control group to be used to mux the PCIe endpoint card
++   reset line so that it will be automatically driven by the PCIe IP.
  
-+	/* Set PCIe Device Control and Status 1 PF0 register */
-+	reg = PCIE_CORE_DEV_CTRL_STATS_RELAX_ORDER_DISABLE |
-+		PCIE_CORE_DEV_CTRL_STATS_SNOOP_DISABLE;
-+	advk_writel(pcie, reg, PCIE_CORE_DEV_CTRL_STATS_REG);
-+
-+	/* Program PCIe Control 2 to disable strict ordering */
-+	reg = PCIE_CORE_CTRL2_RESERVED | PCIE_CORE_CTRL2_TD_ENABLE;
-+	advk_writel(pcie, reg, PCIE_CORE_CTRL2_REG);
-+
- 	/* Set GEN2 */
- 	reg = advk_readl(pcie, PCIE_CORE_CTRL0_REG);
- 	reg &= ~PCIE_GEN_SEL_MSK;
+ In addition, the Device Tree describing an Aardvark PCIe controller
+ must include a sub-node that describes the legacy interrupt controller
+@@ -55,6 +58,8 @@ Example:
+ 				<0 0 0 3 &pcie_intc 2>,
+ 				<0 0 0 4 &pcie_intc 3>;
+ 		phys = <&comphy1 0>;
++		pinctrl-names = "default";
++		pinctrl-0 = <&pcie_card_reset_pins &pcie_clkreq_pins>;
+ 		pcie_intc: interrupt-controller {
+ 			interrupt-controller;
+ 			#interrupt-cells = <1>;
 -- 
 2.19.1
