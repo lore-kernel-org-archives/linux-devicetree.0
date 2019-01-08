@@ -1,14 +1,11 @@
 From: Tero Kristo <t-kristo@ti.com>
-Subject: [PATCH 1/3] dt-bindings: clock: ti,
- sci-clk: Add support for parsing clock info from DT
-Date: Tue, 8 Jan 2019 15:30:21 +0200
-Message-ID: <1546954223-9738-2-git-send-email-t-kristo@ti.com>
-References: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
+Subject: [PATCH 0/3] clk: keystone: a few TI sci-clk improvements
+Date: Tue, 8 Jan 2019 15:30:20 +0200
+Message-ID: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1546954223-9738-1-git-send-email-t-kristo@ti.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,37 +18,30 @@ Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead
 To: sboyd@kernel.org, mturquette@baylibre.com, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, ssantosh@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-By default, the available clock info is queried from firmware, which can
-be quite a lengthy operation if there is a very large amount of clocks
-available. Add option for parsing the used clocks from DT instead, and
-only register these which can improve the boot time of the device quite
-a lot.
+Hi,
 
-Signed-off-by: Tero Kristo <t-kristo@ti.com>
----
- Documentation/devicetree/bindings/clock/ti,sci-clk.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+Patch 1 & 2 introduce a new DT flag for parsing the clock data from devicetree
+instead of querying everything from firmware. The purpose of this change
+is to improve boot time, it can be seen to give ~2s improvement in certain
+setups. If adding a new DT flag for this is not acceptable, a kernel command
+line parameter could be introduced instead, or even a new Kconfig option.
+I voted for the DT flag for now as that seems to be the most versatile
+solution.
 
-diff --git a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-index 4e59dc6..c757ae1 100644
---- a/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-+++ b/Documentation/devicetree/bindings/clock/ti,sci-clk.txt
-@@ -18,6 +18,13 @@ Required properties:
-   and clocks IDs for 66AK2G SoC are documented at
-   http://processors.wiki.ti.com/index.php/TISCI#66AK2G02_Data
- 
-+Optional properties:
-+-------------------
-+- ti,scan-clocks-from-dt: Scan clock tree info from DT. By default,
-+  clocks are queried from firmware, which can be rather slow operation,
-+  especially if there is a really large number of clocks available out
-+  of which only a handful are ever used by kernel.
-+
- Examples:
- --------
- 
--- 
-1.9.1
+Patch 3 shortens the kernel registered clock names, currently for am65x
+they are of the form:
+
+interconnect@100000:interconnect@28380000:interconnect@42040000:dmsc:clocks:11:1
+0
+
+After this patch the same clock name is cut down to:
+
+clocks:11:10
+
+This makes the debugfs interface much more readable in addition to some
+memory savings.
+
+-Tero
 
 --
 Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki. Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
