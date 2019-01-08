@@ -1,184 +1,96 @@
-From: Luca Ceresoli <luca@lucaceresoli.net>
-Subject: [RFC 3/4] media: dt-bindings: add DS90UB954-Q1 video deserializer
-Date: Tue,  8 Jan 2019 23:39:52 +0100
-Message-ID: <20190108223953.9969-4-luca@lucaceresoli.net>
-References: <20190108223953.9969-1-luca@lucaceresoli.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108223953.9969-1-luca@lucaceresoli.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-media@vger.kernel.org
-Cc: Luca Ceresoli <luca@lucaceresoli.net>, Kieran Bingham <kieran.bingham@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, jacopo mondi <jacopo@jmondi.org>, Vladimir Zapolskiy <vz@mleia.com>, Wolfram Sang <wsa@the-dreams.de>, Peter Rosin <peda@axentia.se>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 5/5] arm64: dts: rockchip: Fix nanopi4 uSD card detect
+Date: Tue, 8 Jan 2019 23:22:01 +0000
+Message-ID: <c2c40662-f7aa-75d5-572e-c58b21170b59@arm.com>
+References: <cover.1546981251.git.robin.murphy@arm.com>
+ <83098c7ecc471a77dd89564f5f98fcf30c1ed431.1546981251.git.robin.murphy@arm.com>
+ <6925511.AQqqGbhmY3@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <6925511.AQqqGbhmY3@phil>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This is a first, tentative DT layout to describe a 2-input video
-deserializer with I2C Address Translator and remote GPIOs.
+On 2019-01-08 10:42 pm, Heiko Stuebner wrote:
+> Am Dienstag, 8. Januar 2019, 22:57:27 CET schrieb Robin Murphy:
+>> For whatever reason, the sdmmc_dectn function isn't working properly
+>> as-is, and microSD insertion and removal goes unnoticed. Flipping the
+>> pin into GPIO mode, however, does do the job, so let's just handle it
+>> that way for now until someone feels inclined to figure out what GRF
+>> voodoo or otherwise is needed for correct 'native' operation.
+>>
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+>> ---
+>>   arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi | 7 ++++++-
+>>   1 file changed, 6 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+>> index 9c723038d8f8..2a183a6af150 100644
+>> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
+>> @@ -505,6 +505,10 @@
+>>   		sdmmc0_pwr_h: sdmmc0-pwr-h {
+>>   			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
+>>   		};
+>> +
+>> +		sdmmc0_det_l: sdmmc0-det-l {
+> 
+> alphabetically by node-name please,
+> aka sdmmc0-det-* should be above sdmmc0-pwr-*
 
-NOTES / TODO:
- * This GPIOs representation is not realistic, it has been used only
-   to test that thing work. It shall be rewritten properly.
+Right you are, not sure how that one slipped through.
 
-Signed-off-by: Luca Ceresoli <luca@lucaceresoli.net>
----
- .../bindings/media/ti,ds90ub954-q1.txt        | 151 ++++++++++++++++++
- 1 file changed, 151 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/ti,ds90ub954-q1.txt
+> If you're respinning the whole series this should be fixed,
+> otherwise I can also do that when applying.
 
-diff --git a/Documentation/devicetree/bindings/media/ti,ds90ub954-q1.txt b/Documentation/devicetree/bindings/media/ti,ds90ub954-q1.txt
-new file mode 100644
-index 000000000000..3024ef2df100
---- /dev/null
-+++ b/Documentation/devicetree/bindings/media/ti,ds90ub954-q1.txt
-@@ -0,0 +1,151 @@
-+Texas Instruments DS90UB954-Q1 dual video Deserializer
-+======================================================
-+
-+Required properties:
-+
-+ - compatible: must be "ti,ds90ub954-q1"
-+ - reg: I2C bus address of the chip (0x30..0xdd, based on strapping options)
-+ - reset-gpios: chip reset GPIO, active low (connected to PDB pin of the chip)
-+ - i2c-alias-pool: list of I2C addresses that are known to be available on the
-+                   "local" (SoC-to-deser) I2C bus; they will be picked at
-+		   runtime and used as aliases to reach remove I2C chips
-+
-+
-+Required subnodes:
-+ - ports: A ports node with one port child node per device input and output
-+          port, in accordance with the video interface bindings defined in
-+          Documentation/devicetree/bindings/media/video-interfaces.txt. The
-+          port nodes are numbered as follows:
-+
-+          Port Description
-+          -----------------------------
-+          0    Input from FPD-Link 3 RX port 0
-+          1    Input from FPD-Link 3 RX port 1
-+          2    CSI-2 output
-+ - gpios: *** this is a temporary test implementation, ignore it
-+ - i2c-mux: contains one child per RX port, each generates an I2C adapter
-+            representing the I2C bus on the remote side
-+ - rxports: contains one child per RX port, each describes one FPD-Link 3 port
-+            with these fields:
-+	    - reg: the RX port index
-+	    - ser-i2c-alias: the alias to access the remore serializer from
-+	      the local bus
-+	    - bc-gpio-map: maps backchannel GPIO numbers to local GPIO inputs
-+	                   with pairs <fpd_gpio_number gpio_node>
-+			   (TODO change when reimplementing the gpios subnode)
-+
-+
-+Device node example
-+-------------------
-+
-+&i2c0 {
-+	deser@3d {
-+		reg = <0x3d>;
-+		compatible = "ti,ds90ub954-q1";
-+		reset-gpios = <&gpio1 2 0>;
-+
-+		i2c-alias-pool = /bits/ 16 <0x20 0x21 0x22 0x23 0x24 0x25>;
-+
-+		ports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			port@0 {
-+				reg = <0>;
-+				ds90ub954_fpd3_in0: endpoint {
-+					remote-endpoint = <&remote_sensor_0_out>;
-+				};
-+			};
-+
-+			// TODO enable both ports (and s/1/2/g in th MIPI port below)
-+			// port@1 {
-+			// 	reg = <1>;
-+			// 	ds90ub954_fpd3_in1: endpoint {
-+			// 		remote-endpoint = <&remote_sensor_1_out>;
-+			// 	};
-+			// };
-+
-+			port@1 {
-+				reg = <1>;
-+				ds90ub954_mipi_out0: endpoint {
-+					data-lanes = <1 2 3 4>;
-+					remote-endpoint = <&csirx_0_in>;
-+				};
-+			};
-+		};
-+
-+		gpios {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			// From sensor to CPU
-+			gpio@0 {
-+				reg = <0>;
-+				output;
-+				source = <0>; // RX port 0
-+				function = <0>;
-+			};
-+
-+			// CPU to sensor reset, active low
-+			remote_sensor1_reset: gpio@1 {
-+				reg = <1>;
-+				input;
-+			};
-+		};
-+
-+		i2c-mux {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			remote_i2c0: i2c@0 {
-+				reg = <0>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clock-frequency = <400000>;
-+			};
-+
-+			remote_i2c1: i2c@1 {
-+				reg = <1>;
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+				clock-frequency = <400000>;
-+			};
-+		};
-+
-+		rxports {
-+			#address-cells = <1>;
-+			#size-cells = <0>;
-+
-+			rxport@0 {
-+				reg = <0>;
-+				ser-i2c-alias = <0x3e>;
-+
-+				/* Map BC GPIO numbers to local GPIO inputs */
-+				bc-gpio-map = <1 &remote_sensor1_reset>;
-+			};
-+
-+			rxport@1 {
-+				reg = <1>;
-+				ser-i2c-alias = <0x3f>;
-+			};
-+		};
-+	};
-+};
-+
-+&remote_i2c0 {
-+	remote_sensor0@1a {
-+		reg = <0x1a>;
-+		compatible = "sony,imx274";
-+
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		reset-gpios = <&gpio1 4 0>;
-+
-+		port@0 {
-+			reg = <0>;
-+			remote_sensor_0_out: endpoint {
-+				remote-endpoint = <&ds90ub954_fpd3_in0>;
-+			};
-+		};
-+	};
-+};
--- 
-2.17.1
+I've fixed it up locally, although it might be worth holding off on this 
+particular patch for the moment now that I've taken another look through 
+the TRM and noticed those smoking-gun-looking bits in 
+GRF_SIG_DETECT_CON{0,1} - I'll investigate...
+
+[ side note - do you reckon there'd be any value in bolting a debugfs 
+interface onto the GRF driver, or is the realistic answer to just use 
+/dev/mem like everyone else and stop having silly ideas? ]
+
+Thanks,
+Robin.
+
+> 
+> 
+> Heiko
+> 
+>> +			rockchip,pins = <0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
+>> +		};
+>>   	};
+>>   
+>>   	sdio-pwrseq {
+>> @@ -563,9 +567,10 @@
+>>   	bus-width = <4>;
+>>   	cap-sd-highspeed;
+>>   	cap-mmc-highspeed;
+>> +	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+>>   	disable-wp;
+>>   	pinctrl-names = "default";
+>> -	pinctrl-0 = <&sdmmc_bus4 &sdmmc_cd &sdmmc_clk &sdmmc_cmd>;
+>> +	pinctrl-0 = <&sdmmc_bus4 &sdmmc0_det_l &sdmmc_clk &sdmmc_cmd>;
+>>   	sd-uhs-sdr104;
+>>   	vmmc-supply = <&vcc3v0_sd>;
+>>   	vqmmc-supply = <&vcc_sdio>;
+>>
+> 
+> 
+> 
+> 
