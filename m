@@ -1,265 +1,286 @@
-From: Martin Kepplinger <martink@posteo.de>
-Subject: Re: [PATCH V7 2/2] iio: accell: mma8452: add vdd/vddio regulator
- operation support
-Date: Tue, 8 Jan 2019 12:41:04 +0100
-Message-ID: <84c2971b-29d5-a0d0-c830-11504c381dd2@posteo.de>
-References: <1546938556-26969-1-git-send-email-Anson.Huang@nxp.com>
- <1546938556-26969-2-git-send-email-Anson.Huang@nxp.com>
+From: Vishal Sagar <vsagar@xilinx.com>
+Subject: RE: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
+ CSI-2 Rx Subsystem
+Date: Tue, 8 Jan 2019 11:41:58 +0000
+Message-ID: <CY4PR02MB27094F7483A1628CB269AB3CA78A0@CY4PR02MB2709.namprd02.prod.outlook.com>
+References: <1527620084-94864-1-git-send-email-vishal.sagar@xilinx.com>
+ <1527620084-94864-2-git-send-email-vishal.sagar@xilinx.com>
+ <20180612200338.GA31620@rob-hp-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546938556-26969-2-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <20180612200338.GA31620@rob-hp-laptop>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>, "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh@kernel.org>, Vishal Sagar <vishal.sagar@xilinx.com>
+Cc: Hyun Kwon <hyunk@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, Michal Simek <michals@xilinx.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "sakari.ailus@linux.intel.com" <sakari.ailus@linux.intel.com>, Dinesh Kumar <dineshk@xilinx.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Sandip Kothari <sandipk@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-On 08.01.19 10:14, Anson Huang wrote:
-> The accelerometer's power supply could be controllable on some
-> platforms, such as i.MX6Q-SABRESD board, the mma8451's power supplies
-> are controlled by a GPIO fixed regulator, need to make sure the
-> regulators are enabled before any communication with mma8451, this
-> patch adds vdd/vddio regulator operation support.
-> 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
-> Acked-by: Martin Kepplinger <martink@posteo.de>
-> ---
-> ChangeLog Since V6:
->   - separate the error handling of regulators get to make code easy to read.
-> ---
->  drivers/iio/accel/mma8452.c | 105 ++++++++++++++++++++++++++++++++++----------
->  1 file changed, 83 insertions(+), 22 deletions(-)
-> 
-> diff --git a/drivers/iio/accel/mma8452.c b/drivers/iio/accel/mma8452.c
-> index 421a0a8..3027811 100644
-> --- a/drivers/iio/accel/mma8452.c
-> +++ b/drivers/iio/accel/mma8452.c
-> @@ -31,6 +31,7 @@
->  #include <linux/of_device.h>
->  #include <linux/of_irq.h>
->  #include <linux/pm_runtime.h>
-> +#include <linux/regulator/consumer.h>
->  
->  #define MMA8452_STATUS				0x00
->  #define  MMA8452_STATUS_DRDY			(BIT(2) | BIT(1) | BIT(0))
-> @@ -107,6 +108,8 @@ struct mma8452_data {
->  	u8 data_cfg;
->  	const struct mma_chip_info *chip_info;
->  	int sleep_val;
-> +	struct regulator *vdd_reg;
-> +	struct regulator *vddio_reg;
->  };
->  
->   /**
-> @@ -1534,9 +1537,39 @@ static int mma8452_probe(struct i2c_client *client,
->  	mutex_init(&data->lock);
->  	data->chip_info = match->data;
->  
-> +	data->vdd_reg = devm_regulator_get(&client->dev, "vdd");
-> +	if (IS_ERR(data->vdd_reg)) {
-> +		if (PTR_ERR(data->vdd_reg) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		dev_err(&client->dev, "failed to get VDD regulator!\n");
-> +		return PTR_ERR(data->vdd_reg);
-> +	}
-> +
-> +	data->vddio_reg = devm_regulator_get(&client->dev, "vddio");
-> +	if (IS_ERR(data->vddio_reg)) {
-> +		if (PTR_ERR(data->vddio_reg) == -EPROBE_DEFER)
-> +			return -EPROBE_DEFER;
-> +
-> +		dev_err(&client->dev, "failed to get VDDIO regulator!\n");
-> +		return PTR_ERR(data->vddio_reg);
-> +	}
-> +
-> +	ret = regulator_enable(data->vdd_reg);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to enable VDD regulator!\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_enable(data->vddio_reg);
-> +	if (ret) {
-> +		dev_err(&client->dev, "failed to enable VDDIO regulator!\n");
-> +		goto disable_regulator_vdd;
-> +	}
-> +
->  	ret = i2c_smbus_read_byte_data(client, MMA8452_WHO_AM_I);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	switch (ret) {
->  	case MMA8451_DEVICE_ID:
-> @@ -1549,7 +1582,8 @@ static int mma8452_probe(struct i2c_client *client,
->  			break;
->  		/* else: fall through */
->  	default:
-> -		return -ENODEV;
-> +		ret = -ENODEV;
-> +		goto disable_regulators;
->  	}
->  
->  	dev_info(&client->dev, "registering %s accelerometer; ID 0x%x\n",
-> @@ -1566,13 +1600,13 @@ static int mma8452_probe(struct i2c_client *client,
->  
->  	ret = mma8452_reset(client);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	data->data_cfg = MMA8452_DATA_CFG_FS_2G;
->  	ret = i2c_smbus_write_byte_data(client, MMA8452_DATA_CFG,
->  					data->data_cfg);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	/*
->  	 * By default set transient threshold to max to avoid events if
-> @@ -1581,7 +1615,7 @@ static int mma8452_probe(struct i2c_client *client,
->  	ret = i2c_smbus_write_byte_data(client, MMA8452_TRANSIENT_THS,
->  					MMA8452_TRANSIENT_THS_MASK);
->  	if (ret < 0)
-> -		return ret;
-> +		goto disable_regulators;
->  
->  	if (client->irq) {
->  		int irq2;
-> @@ -1595,7 +1629,7 @@ static int mma8452_probe(struct i2c_client *client,
->  						MMA8452_CTRL_REG5,
->  						data->chip_info->all_events);
->  			if (ret < 0)
-> -				return ret;
-> +				goto disable_regulators;
->  
->  			dev_dbg(&client->dev, "using interrupt line INT1\n");
->  		}
-> @@ -1604,11 +1638,11 @@ static int mma8452_probe(struct i2c_client *client,
->  					MMA8452_CTRL_REG4,
->  					data->chip_info->enabled_events);
->  		if (ret < 0)
-> -			return ret;
-> +			goto disable_regulators;
->  
->  		ret = mma8452_trigger_setup(indio_dev);
->  		if (ret < 0)
-> -			return ret;
-> +			goto disable_regulators;
->  	}
->  
->  	data->ctrl_reg1 = MMA8452_CTRL_ACTIVE |
-> @@ -1661,12 +1695,19 @@ static int mma8452_probe(struct i2c_client *client,
->  trigger_cleanup:
->  	mma8452_trigger_cleanup(indio_dev);
->  
-> +disable_regulators:
-> +	regulator_disable(data->vddio_reg);
-> +
-> +disable_regulator_vdd:
-> +	regulator_disable(data->vdd_reg);
-> +
->  	return ret;
->  }
->  
->  static int mma8452_remove(struct i2c_client *client)
->  {
->  	struct iio_dev *indio_dev = i2c_get_clientdata(client);
-> +	struct mma8452_data *data = iio_priv(indio_dev);
->  
->  	iio_device_unregister(indio_dev);
->  
-> @@ -1678,6 +1719,9 @@ static int mma8452_remove(struct i2c_client *client)
->  	mma8452_trigger_cleanup(indio_dev);
->  	mma8452_standby(iio_priv(indio_dev));
->  
-> +	regulator_disable(data->vddio_reg);
-> +	regulator_disable(data->vdd_reg);
-> +
->  	return 0;
->  }
->  
-> @@ -1696,6 +1740,18 @@ static int mma8452_runtime_suspend(struct device *dev)
->  		return -EAGAIN;
->  	}
->  
-> +	ret = regulator_disable(data->vddio_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to disable VDDIO regulator\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_disable(data->vdd_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to disable VDD regulator\n");
-> +		return ret;
-> +	}
-> +
->  	return 0;
->  }
->  
-> @@ -1705,9 +1761,22 @@ static int mma8452_runtime_resume(struct device *dev)
->  	struct mma8452_data *data = iio_priv(indio_dev);
->  	int ret, sleep_val;
->  
-> +	ret = regulator_enable(data->vdd_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable VDD regulator\n");
-> +		return ret;
-> +	}
-> +
-> +	ret = regulator_enable(data->vddio_reg);
-> +	if (ret) {
-> +		dev_err(dev, "failed to enable VDDIO regulator\n");
-> +		regulator_disable(data->vdd_reg);
-> +		return ret;
-> +	}
-> +
->  	ret = mma8452_active(data);
->  	if (ret < 0)
-> -		return ret;
-> +		goto runtime_resume_failed;
->  
->  	ret = mma8452_get_odr_index(data);
->  	sleep_val = 1000 / mma8452_samp_freq[ret][0];
-> @@ -1717,25 +1786,17 @@ static int mma8452_runtime_resume(struct device *dev)
->  		msleep_interruptible(sleep_val);
->  
->  	return 0;
-> -}
-> -#endif
->  
-> -#ifdef CONFIG_PM_SLEEP
-> -static int mma8452_suspend(struct device *dev)
-> -{
-> -	return mma8452_standby(iio_priv(i2c_get_clientdata(
-> -		to_i2c_client(dev))));
-> -}
-> +runtime_resume_failed:
-> +	regulator_disable(data->vddio_reg);
-> +	regulator_disable(data->vdd_reg);
->  
-> -static int mma8452_resume(struct device *dev)
-> -{
-> -	return mma8452_active(iio_priv(i2c_get_clientdata(
-> -		to_i2c_client(dev))));
-> +	return ret;
->  }
->  #endif
->  
->  static const struct dev_pm_ops mma8452_pm_ops = {
-> -	SET_SYSTEM_SLEEP_PM_OPS(mma8452_suspend, mma8452_resume)
-> +	SET_SYSTEM_SLEEP_PM_OPS(pm_runtime_force_suspend, pm_runtime_force_resume)
+Hi Rob,
 
-Just a quesion: Isn't it semantically a different change to replace
-mma8452_suspend() and mma8452_resume()? If not, why is it needed here?
+Thanks for the review.
 
-other than that, lgtm.
+> -----Original Message-----
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Wednesday, June 13, 2018 1:34 AM
+> To: Vishal Sagar <vishal.sagar@xilinx.com>
+> Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
+> michal.simek@xilinx.com; linux-media@vger.kernel.org;
+> devicetree@vger.kernel.org; mark.rutland@arm.com; mchehab@kernel.org;
+> linux-kernel@vger.kernel.org; hans.verkuil@cisco.com;
+> sakari.ailus@linux.intel.com; Dinesh Kumar <dineshk@xilinx.com>; linux-ar=
+m-
+> kernel@lists.infradead.org
+> Subject: Re: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx MI=
+PI CSI-2
+> Rx Subsystem
+>=20
+> On Wed, May 30, 2018 at 12:24:43AM +0530, Vishal Sagar wrote:
+> > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
+> >
+> > The Xilinx MIPI CSI-2 Rx Subsystem consists of a DPHY, CSI-2 Rx, an
+> > optional I2C controller and an optional Video Format Bridge (VFB). The
+> > active lanes can be configured at run time if enabled in the IP. The
+> > DPHY register interface may also be enabled.
+> >
+> > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
+> > ---
+> >  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 117
+> +++++++++++++++++++++
+> >  1 file changed, 117 insertions(+)
+> >  create mode 100644
+> Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rx=
+ss.txt
+> b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> > new file mode 100644
+> > index 0000000..31ed721
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+> > @@ -0,0 +1,117 @@
+> > +
+> > +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
+> > +--------------------------------------------------------
+> > +
+> > +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 t=
+raffic
+> > +from compliant camera sensors and send the output as AXI4 Stream video
+> data
+> > +for image processing.
+> > +
+> > +The subsystem consists of a MIPI DPHY in slave mode which captures the
+> > +data packets. This is passed along the MIPI CSI2 Rx IP which extracts =
+the
+> > +packet data. This data is taken in by the Video Format Bridge (VFB),
+> > +if selected, and converted into AXI4 Stream video data at selected
+> > +pixels per clock as per AXI4-Stream Video IP and System Design UG934.
+> > +
+> > +For more details, please refer to PG232 MIPI CSI-2 Receiver Subsystem.
+> >
+> +https://www.xilinx.com/support/documentation/ip_documentation/mipi_csi
+> 2_rx_subsystem/v3_0/pg232-mipi-csi2-rx.pdf
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-2.0" or
+> > +  "xlnx,mipi-csi2-rx-subsystem-3.0"
+> > +
+> > +- reg: Physical base address and length of the registers set for the d=
+evice.
+> > +
+> > +- interrupt-parent: specifies the phandle to the parent interrupt cont=
+roller
+> > +
+> > +- interrupts: Property with a value describing the interrupt number.
+> > +
+> > +- xlnx,max-lanes: Maximum active lanes in the design.
+>=20
+> There's already a property defined in video-interfaces.txt to limit
+> lanes.
+>=20
 
->  	SET_RUNTIME_PM_OPS(mma8452_runtime_suspend,
->  			   mma8452_runtime_resume, NULL)
->  };
-> 
+Ok I will use the standard data-lanes and remove this.
+
+> > +
+> > +- xlnx,vc: Virtual Channel, specifies virtual channel number to be fil=
+tered.
+> > +  If this is 4 then all virtual channels are allowed.
+> > +
+> > +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw d=
+esign.
+> > +  Packets other than this data type (except for RAW8 and User defined =
+data
+> > +  types) will be filtered out. Possible values are RAW6, RAW7, RAW8, R=
+AW10,
+> > +  RAW12, RAW14, RGB444, RGB555, RGB565, RGB666, RGB888 and
+> YUV4228bit.
+>=20
+> This should be standard property.
+
+I don't see a standard property for the CSI pixel formats.
+Do you mean media bus formats?
+
+>=20
+> > +
+> > +- xlnx,axis-tdata-width: AXI Stream width, This denotes the AXI Stream=
+ width.
+> > +  It depends on Data type chosen, Video Format Bridge enabled/disabled=
+ and
+> > +  pixels per clock. If VFB is disabled then its value is either 0x20 (=
+32 bit)
+> > +  or 0x40(64 bit) width.
+> > +
+> > +- xlnx,video-format, xlnx,video-width: Video format and width, as defi=
+ned in
+> > +  video.txt.
+>=20
+> This doc needs to define what are valid values.
+>=20
+
+Ok. The valid values list will be added in next revision.
+
+> Why do you need this on both ports? Can there be a conversion in this
+> block? At least for the MIPI CSI interface part, this should be a common
+> property. Not sure offhand if we have defined one. We have for parallel
+> interfaces.
+>=20
+> And 'width' doesn't seem like the right term for what this is defined to
+> be.
+>=20
+
+This is put on both ports to keep it consistent with other drivers.
+The video-format values are specific to Xilinx.=20
+The width here means bit per component.
+
+> > +
+> > +- port: Video port, using the DT bindings defined in ../video-interfac=
+es.txt.
+>=20
+> port is not a property. It goes in its own section. And port properties
+> should be under it.
+
+I will update this in next version.
+
+>=20
+> > +  The CSI 2 Rx Subsystem has a two ports, one input port for connectin=
+g to
+> > +  camera sensor and other is output port.
+>=20
+> Need be specific port #0 is ?? and port #1 is ??.
+>=20
+
+Right. I will describe them in the next version correctly.
+0 will be sink pad and 1 will source pad.
+
+> > +
+> > +- data-lanes: The number of data lanes through which CSI2 Rx Subsystem=
+ is
+> > +  connected to the camera sensor as per video-interfaces.txt
+>=20
+> Why do you need both this and max-lanes?
+
+I didn't know more and added both. I will keep this.
+
+>=20
+> > +
+> > +Optional properties:
+> > +
+> > +- xlnx,en-active-lanes: Enable Active lanes configuration in Protocol
+> > +  Configuration Register.
+> > +
+> > +- xlnx,dphy-present: This is equivalent to whether DPHY register inter=
+face is
+> > +  enabled or not.
+> > +
+> > +- xlnx,iic-present: This shows whether subsystem's IIC is present or n=
+ot. This
+> > +  affects the base address of the DPHY.
+>=20
+> Perhaps you should break up reg into ranges for each submodule (or make
+> the DPHY a separate node and use the phy binding.
+>=20
+
+Ok I will break the range into 2 parts and access DPHY accordingly.
+
+Regards
+Vishal Sagar
+
+> > +
+> > +- xlnx,vfb: Video Format Bridge, Denotes if Video Format Bridge is sel=
+ected
+> > +  so that output is as per AXI stream documented in UG934.
+> > +
+> > +- xlnx,ppc: Pixels per clock, Number of pixels to be transferred per p=
+ixel
+> > +  clock. This is valid only if xlnx,vfb property is present.
+> > +
+> > +Example:
+> > +
+> > +       csiss_1: csiss@a0020000 {
+> > +               compatible =3D "xlnx,mipi-csi2-rx-subsystem-3.0";
+> > +               reg =3D <0x0 0xa0020000 0x0 0x20000>;
+> > +               interrupt-parent =3D <&gic>;
+> > +               interrupts =3D <0 95 4>;
+> > +
+> > +               xlnx,max-lanes =3D <0x4>;
+> > +               xlnx,en-active-lanes;
+> > +               xlnx,dphy-present;
+> > +               xlnx,iic-present;
+> > +               xlnx,vc =3D <0x4>;
+> > +               xlnx,csi-pxl-format =3D "RAW8";
+> > +               xlnx,vfb;
+> > +               xlnx,ppc =3D <0x4>;
+> > +               xlnx,axis-tdata-width =3D <0x20>;
+> > +
+> > +               ports {
+> > +                       #address-cells =3D <1>;
+> > +                       #size-cells =3D <0>;
+> > +
+> > +                       port@0 {
+> > +                               reg =3D <0>;
+> > +
+> > +                               xlnx,video-format =3D <XVIP_VF_YUV_422>=
+;
+> > +                               xlnx,video-width =3D <8>;
+> > +                               csiss_out: endpoint {
+> > +                                       remote-endpoint =3D <&vcap_csis=
+s_in>;
+> > +                               };
+> > +                       };
+> > +                       port@1 {
+> > +                               reg =3D <1>;
+> > +
+> > +                               xlnx,video-format =3D <XVIP_VF_YUV_422>=
+;
+> > +                               xlnx,video-width =3D <8>;
+> > +
+> > +                               csiss_in: endpoint {
+> > +                                       data-lanes =3D <1 2 3 4>;
+> > +                                       /* MIPI CSI2 Camera handle */
+> > +                                       remote-endpoint =3D <&vs2016_ou=
+t>;
+> > +                               };
+> > +
+> > +                       };
+> > +
+> > +               };
+> > +       };
+> > --
+> > 2.7.4
+> >
+> > This email and any attachments are intended for the sole use of the nam=
+ed
+> recipient(s) and contain(s) confidential information that may be propriet=
+ary,
+> privileged or copyrighted under applicable law. If you are not the intend=
+ed
+> recipient, do not read, copy, or forward this email message or any attach=
+ments.
+> Delete this email message and any attachments immediately.
+> >
+> > _______________________________________________
+> > linux-arm-kernel mailing list
+> > linux-arm-kernel@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
