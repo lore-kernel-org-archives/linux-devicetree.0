@@ -1,81 +1,76 @@
 From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH lora-next 2/4] dt-bindings: lora: sx125x: add basic documentation
-Date: Tue,  8 Jan 2019 17:41:30 +0900
-Message-ID: <20190108084132.10214-2-ben.whitten@gmail.com>
+Subject: [PATCH lora-next 3/4] dt-bindings: lora: sx125x: add clock bindings
+Date: Tue,  8 Jan 2019 17:41:31 +0900
+Message-ID: <20190108084132.10214-3-ben.whitten@gmail.com>
 References: <20190108084132.10214-1-ben.whitten@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190108084132.10214-1-ben.whitten@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linux-lpwan@lists.infradead.org, afaerber@suse.de
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-The sx125x family are IQ radio transceivers from Semtech configured over
-SPI, they are typically connected to an sx130x series concentrator however
-may be connected to a host directly.
+The sx125x consumes a 32MHz clock and if it is coupled with a sx130x
+concentrator may also provide a gated version of this 32MHz for the
+concentrator.
 
-Required properties include the radio number of the host or concentrator
-bus.
+In the example we connect to output 0 of "txco" clock source. The radio
+also provides a single clock output, hence "#clock-cells = <0>", named
+"clk32m" for consumption by the sx130x concentrator.
 
 Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 ---
- .../bindings/lora/semtech,sx125x.yaml         | 45 +++++++++++++++++++
- 1 file changed, 45 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
+ .../{ => net}/lora/semtech,sx125x.yaml        | 27 +++++++++++++++++++
+ 1 file changed, 27 insertions(+)
+ rename Documentation/devicetree/bindings/{ => net}/lora/semtech,sx125x.yaml (67%)
 
-diff --git a/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
-new file mode 100644
-index 000000000000..5eadec860b70
---- /dev/null
-+++ b/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
-@@ -0,0 +1,45 @@
-+# SPDX-License-Identifier: GPL-2.0
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/lora/semtech,sx125x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Semtech IQ modulator/de-modulator transeiver
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+  - Ben Whitten <ben.whitten@gmail.com>
-+
-+description: |
-+  The sx125x family are highly integrated RF front-end to digital I and Q
-+  modulator/demodulator Multi-PHY mode transceiver capable of supporting
-+  multiple constant and non-constant envelope modulation schemes.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - semtech,sx1255
-+        - semtech,sx1257
-+        - semtech,sx1258
-+
-+  reg:
+diff --git a/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+similarity index 67%
+rename from Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
+rename to Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+index 5eadec860b70..c2fb4ac06341 100644
+--- a/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
++++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+@@ -33,13 +33,40 @@ properties:
+     description: The frequency of the SPI communication to the radio,
+       in Hz. Maximum SPI frequency is 10MHz.
+ 
++  clocks:
 +    maxItems: 1
-+    description: The chip select on the SPI bus or radio number in concentrator.
++    description: 32MHz clock provider
 +
-+  spi-max-frequency:
-+    maximum: 10000000
-+    default: 8000000
-+    description: The frequency of the SPI communication to the radio,
-+      in Hz. Maximum SPI frequency is 10MHz.
++  clock-names:
++    items:
++      - const: txco
 +
-+required:
-+  - compatible
-+  - reg
++  clock-output-names:
++    items:
++      - const: clk32m
++    description: 32MHz output clock name
 +
-+examples:
-+  - |
-+    radio0: lora@0 {
-+      compatible = "semtech,sx1257";
-+      reg = <0>;
++  '#clock-cells':
++    const: 0
++
+ required:
+   - compatible
+   - reg
+ 
+ examples:
+   - |
++    tcxo: dummy32m {
++      compatible = "fixed-clock";
++      clock-frequency = <32000000>;
++      clock-output-names = "tcxo";
++      #clock-cells = <0>;
 +    };
++
+     radio0: lora@0 {
+       compatible = "semtech,sx1257";
+       reg = <0>;
++      clocks = <&tcxo 0>;
++      clock-names = "tcxo";
++      clock-output-names = "clk32m";
++      #clock-cells = <0>;
+     };
 -- 
 2.17.1
