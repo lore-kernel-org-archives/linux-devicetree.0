@@ -1,96 +1,90 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark driver
-Date: Tue,  8 Jan 2019 17:24:25 +0100
-Message-ID: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 01/15] PCI: aardvark: Enlarge PIO timeout
+Date: Tue,  8 Jan 2019 17:24:26 +0100
+Message-ID: <20190108162441.5278-2-miquel.raynal@bootlin.com>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Antoine Tenart <antoine.tenart@bootlin.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This delay has been proven to work until now, however, there is a
+reproducible way to fail the driver probe because of it.
 
-As part of an effort to bring suspend to RAM support to Armada 3700
-SoCs (main target: ESPRESSObin), this series handles the work around
-the PCIe IP.
+Adding the support for the PCIe gated peripheral clock that feeds the
+Aardvark IP defers the Aardvark driver probe at boot time. The probe
+functions calls pci_host_probe() at its end. This is where the timeout
+(sometimes) resides, leading to a kernel panic the next time a
+register is accessed. Here is the function call sequence:
 
-First, more configuration is done in the 'setup' helper as inspired
-from the U-Boot driver. This is needed to entirely initialize the IP
-during future resume operation (patch 1).
+    advk_pcie_probe()
+    pci_host_probe()
+    pci_scan_root_bus_bridge()
+    pci_scan_child_bus_extend()
+    pci_scan_bridge_extend()
+    pci_scan_child_bus_extend()
+    pci_scan_slot()
+    pcie_aspm_init_link_state()
+    pcie_aspm_cap_init()
 
-Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
-current device trees do not provide the corresponding properties, not
-finding one of these properties is not an error and just produces a
-warning. However, if the property is present, an error during PHY
-initialization will fail the probe of the driver.
+pcie_aspm_cap_init() is in charge of doing the initial ASPM state
+setup (PCIe Active-State Power Management). The logic at the top of
+the function is:
 
-Note: To be sure the clock will be resumed before this driver, a first
-series adding links between clocks and consumers has been submitted,
-see [1]. Anyway, having the clock series applied first is not needed.
+    1/ Read upstream and downstream components' register state.
+    2/ Configure the common clock before checking latencies.
+    3/ Read again upstream and downstream component's register state.
+    4/ ...
 
-Patch 5 adds suspend/resume hooks, re-using all the above.
+Experimentation shows that while 1/ always work, 3/ sometimes timeouts
+when reading the downstream components' register state. Each read
+operation is handled by the following sequence:
 
-Finally, bindings and device trees are updated to reflect the hardware
-(patch 6-12). While the clock depends on the SoC, the reset GPIO and
-the PHY depends on the board so the clock is added in the
-armada-37xx.dtsi file while the two other properties are added in
-armada-3720-espressobin.dts.
+    pcie_capability_read_dword()
+    pci_bus_read_config_dword()
+    advk_pcie_rd_conf()
 
-[1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-January/623885.html
+advk_pcie_rd_conf() just configures a few registers and polls on the
+ISR bit before reading the value that has been retrieved through the
+interconnect. The polling timeout of the ISR bit is set to 1ms. While
+this value seems to fit most of the situations, in our case it is
+sometimes crossed when reading PCI_EXP_LNKCAP (PCI link capacities)
+from the downstream component. It has been measured that most of the
+time that the read lasts longer than 1ms, it rises ~24ms. In my tests,
+using twice this delay always works. The root cause and the reason why
+the timeout only appearing when the probe is delayed is unknown
+though.
 
-Thanks,
-Miquèl
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+---
+ drivers/pci/controller/pci-aardvark.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-
-Changes since v2:
-=================
-* Minor patches reordering.
-* Added pinctrl patches from Gregory Clement fixing the PCIe pins. His
-  changes implied modifications in the DT/bindings patches adding PCIe
-  reset pin support.
-* Added a new patch that enlarges the PIO timeout of the driver
-  (explanations in the commit log).
-* With the timeout changed, removed the "experimental delay" that was
-  needed at resume time before accessing any register.
-
-Changes since v1:
-=================
-* Change the capitalization in commit titles to follow the PCI
-  subsystem rules.
-* Added Suggested-by tag to the patch adding PHY support and to the
-  patch adding the PHY property in the DT.
-* Added Rob's Reviewed-by tags on bindings.
-* I am following the discussion about calling functions that might
-  sleep in a NOIRQ context. As there is no real problem yet (as per my
-  understanding), I did not change anything on this regard.
-
-
-Miquel Raynal (15):
-  PCI: aardvark: Enlarge PIO timeout
-  PCI: aardvark: Configure more registers in the configuration helper
-  PCI: aardvark: Add clock support
-  PCI: aardvark: Add PHY support
-  PCI: aardvark: Add PCIe warm reset support
-  PCI: aardvark: Add external reset GPIO support
-  PCI: aardvark: Add suspend to RAM support
-  dt-bindings: PCI: aardvark: Describe the clocks property
-  dt-bindings: PCI: aardvark: Describe the PHY property
-  dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
-  dt-bindings: PCI: aardvark: Describe the reset-gpios property
-  ARM64: dts: marvell: armada-37xx: declare PCIe clock
-  ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
-  ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
-  ARM64: dts: marvell: armada-3720-espressobin: declare PCIe warm reset
-    pin
-
- .../devicetree/bindings/pci/aardvark-pci.txt  |  14 ++
- .../dts/marvell/armada-3720-espressobin.dts   |   3 +
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  10 +
- drivers/pci/controller/pci-aardvark.c         | 217 +++++++++++++++++-
- 4 files changed, 243 insertions(+), 1 deletion(-)
-
+diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
+index 750081c1cb48..18120e312ae1 100644
+--- a/drivers/pci/controller/pci-aardvark.c
++++ b/drivers/pci/controller/pci-aardvark.c
+@@ -175,7 +175,7 @@
+ 	(PCIE_CONF_BUS(bus) | PCIE_CONF_DEV(PCI_SLOT(devfn))	| \
+ 	 PCIE_CONF_FUNC(PCI_FUNC(devfn)) | PCIE_CONF_REG(where))
+ 
+-#define PIO_TIMEOUT_MS			1
++#define PIO_TIMEOUT_MS			50
+ 
+ #define LINK_WAIT_MAX_RETRIES		10
+ #define LINK_WAIT_USLEEP_MIN		90000
 -- 
 2.19.1
