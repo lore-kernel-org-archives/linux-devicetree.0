@@ -1,121 +1,41 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 04/15] PCI: aardvark: Add PHY support
-Date: Tue,  8 Jan 2019 17:24:29 +0100
-Message-ID: <20190108162441.5278-5-miquel.raynal@bootlin.com>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v5 2/7] phy: enumerate SATA PHY mode
+Date: Tue,  8 Jan 2019 17:31:19 +0100
+Message-ID: <20190108163124.6409-3-miquel.raynal@bootlin.com>
+References: <20190108163124.6409-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20190108163124.6409-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Marcin Wojtas <mw@semihalf.com>, Grzegorz Jaszczyk <jaz@semihalf.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-The IP needs its PHY to be properly configured to work. While the PHY
-is usually already configured by the bootloader, we will need this
-feature when adding S2RAM support. Take care of registering and
-configuring the PHY from the driver itself.
+From: Grzegorz Jaszczyk <jaz@semihalf.com>
 
-Suggested-by: Grzegorz Jaszczyk <jaz@semihalf.com>
+Add SATA mode to the PHY framework in preparation of upcoming PHYs
+that will handle it. For instance, SATA mode will be used by the
+Armada3700 COMPHY driver, which supports configuring SERDES lanes to
+be used by various controllers: Ethernet, USB3, SATA and PCIe.
+
+Signed-off-by: Grzegorz Jaszczyk <jaz@semihalf.com>
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/pci/controller/pci-aardvark.c | 62 +++++++++++++++++++++++++++
- 1 file changed, 62 insertions(+)
+ include/linux/phy/phy.h | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/pci/controller/pci-aardvark.c b/drivers/pci/controller/pci-aardvark.c
-index b1b8897d2d28..27ec79defa57 100644
---- a/drivers/pci/controller/pci-aardvark.c
-+++ b/drivers/pci/controller/pci-aardvark.c
-@@ -17,6 +17,7 @@
- #include <linux/pci.h>
- #include <linux/init.h>
- #include <linux/platform_device.h>
-+#include <linux/phy/phy.h>
- #include <linux/of_address.h>
- #include <linux/of_pci.h>
- 
-@@ -203,6 +204,7 @@ struct advk_pcie {
- 	u16 msi_msg;
- 	int root_bus_nr;
- 	struct pci_bridge_emul bridge;
-+	struct phy *phy;
+diff --git a/include/linux/phy/phy.h b/include/linux/phy/phy.h
+index 1fdefadf150a..7fa18b684a7d 100644
+--- a/include/linux/phy/phy.h
++++ b/include/linux/phy/phy.h
+@@ -42,6 +42,7 @@ enum phy_mode {
+ 	PHY_MODE_PCIE,
+ 	PHY_MODE_ETHERNET,
+ 	PHY_MODE_MIPI_DPHY,
++	PHY_MODE_SATA,
  };
  
- static inline void advk_writel(struct advk_pcie *pcie, u32 val, u64 reg)
-@@ -998,6 +1000,62 @@ static int advk_pcie_setup_clk(struct advk_pcie *pcie)
- 	return ret;
- }
- 
-+static void __maybe_unused advk_pcie_disable_phy(struct advk_pcie *pcie)
-+{
-+	phy_power_off(pcie->phy);
-+	phy_exit(pcie->phy);
-+}
-+
-+static int advk_pcie_enable_phy(struct advk_pcie *pcie)
-+{
-+	int ret;
-+
-+	if (!pcie->phy)
-+		return 0;
-+
-+	ret = phy_init(pcie->phy);
-+	if (ret)
-+		return ret;
-+
-+	ret = phy_set_mode(pcie->phy, PHY_MODE_PCIE);
-+	if (ret) {
-+		phy_exit(pcie->phy);
-+		return ret;
-+	}
-+
-+	ret = phy_power_on(pcie->phy);
-+	if (ret) {
-+		phy_exit(pcie->phy);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int advk_pcie_setup_phy(struct advk_pcie *pcie)
-+{
-+	struct device *dev = &pcie->pdev->dev;
-+	struct device_node *node = dev->of_node;
-+	int ret = 0;
-+
-+	pcie->phy = devm_of_phy_get(dev, node, NULL);
-+	if (IS_ERR(pcie->phy) && (PTR_ERR(pcie->phy) == -EPROBE_DEFER))
-+		return PTR_ERR(pcie->phy);
-+
-+	/* Old bindings miss the PHY handle */
-+	if (IS_ERR(pcie->phy)) {
-+		dev_warn(dev, "PHY unavailable (%ld)\n", PTR_ERR(pcie->phy));
-+		pcie->phy = NULL;
-+		return 0;
-+	}
-+
-+	ret = advk_pcie_enable_phy(pcie);
-+	if (ret)
-+		dev_err(dev, "Failed to initialize PHY (%d)\n", ret);
-+
-+	return ret;
-+}
-+
- static int advk_pcie_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -1037,6 +1095,10 @@ static int advk_pcie_probe(struct platform_device *pdev)
- 	if (ret)
- 		return ret;
- 
-+	ret = advk_pcie_setup_phy(pcie);
-+	if (ret)
-+		return ret;
-+
- 	advk_pcie_setup_hw(pcie);
- 
- 	advk_sw_pci_bridge_init(pcie);
+ /**
 -- 
 2.19.1
