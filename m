@@ -1,175 +1,71 @@
-From: Anson Huang <anson.huang@nxp.com>
-Subject: Re: [PATCH V7 2/2] iio: accell: mma8452: add vdd/vddio regulator
- operation support
-Date: Tue, 8 Jan 2019 14:48:48 +0000
-Message-ID: <4CB70D1B-06A6-4E34-B701-58E72B1AC9D9@nxp.com>
-References: <1546938556-26969-1-git-send-email-Anson.Huang@nxp.com>
- <1546938556-26969-2-git-send-email-Anson.Huang@nxp.com>,<84c2971b-29d5-a0d0-c830-11504c381dd2@posteo.de>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt
+ parent for GPIO
+Date: Tue, 8 Jan 2019 08:49:16 -0600
+Message-ID: <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com>
+References: <20181219221105.3004-1-ilina@codeaurora.org> <20181219221105.3004-5-ilina@codeaurora.org>
+ <20181229000714.GA3654@bogus> <20190107185113.GH14960@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84c2971b-29d5-a0d0-c830-11504c381dd2@posteo.de>
-Content-Language: zh-CN
+In-Reply-To: <20190107185113.GH14960@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Lina Iyer <ilina@codeaurora.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIE1hcnRpbg0KDQpGcm9tIEFuc29uJ3MgaVBob25lIDYNCg0KDQo+IOWcqCAyMDE55bm0Meac
-iDjml6XvvIwxOTo0Me+8jE1hcnRpbiBLZXBwbGluZ2VyIDxtYXJ0aW5rQHBvc3Rlby5kZT4g5YaZ
-6YGT77yaDQo+IA0KPj4gT24gMDguMDEuMTkgMTA6MTQsIEFuc29uIEh1YW5nIHdyb3RlOg0KPj4g
-VGhlIGFjY2VsZXJvbWV0ZXIncyBwb3dlciBzdXBwbHkgY291bGQgYmUgY29udHJvbGxhYmxlIG9u
-IHNvbWUNCj4+IHBsYXRmb3Jtcywgc3VjaCBhcyBpLk1YNlEtU0FCUkVTRCBib2FyZCwgdGhlIG1t
-YTg0NTEncyBwb3dlciBzdXBwbGllcw0KPj4gYXJlIGNvbnRyb2xsZWQgYnkgYSBHUElPIGZpeGVk
-IHJlZ3VsYXRvciwgbmVlZCB0byBtYWtlIHN1cmUgdGhlDQo+PiByZWd1bGF0b3JzIGFyZSBlbmFi
-bGVkIGJlZm9yZSBhbnkgY29tbXVuaWNhdGlvbiB3aXRoIG1tYTg0NTEsIHRoaXMNCj4+IHBhdGNo
-IGFkZHMgdmRkL3ZkZGlvIHJlZ3VsYXRvciBvcGVyYXRpb24gc3VwcG9ydC4NCj4+IA0KPj4gU2ln
-bmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+PiBBY2tlZC1i
-eTogTWFydGluIEtlcHBsaW5nZXIgPG1hcnRpbmtAcG9zdGVvLmRlPg0KPj4gLS0tDQo+PiBDaGFu
-Z2VMb2cgU2luY2UgVjY6DQo+PiAgLSBzZXBhcmF0ZSB0aGUgZXJyb3IgaGFuZGxpbmcgb2YgcmVn
-dWxhdG9ycyBnZXQgdG8gbWFrZSBjb2RlIGVhc3kgdG8gcmVhZC4NCj4+IC0tLQ0KPj4gZHJpdmVy
-cy9paW8vYWNjZWwvbW1hODQ1Mi5jIHwgMTA1ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKystLS0tLS0tLS0tDQo+PiAxIGZpbGUgY2hhbmdlZCwgODMgaW5zZXJ0aW9ucygrKSwgMjIg
-ZGVsZXRpb25zKC0pDQo+PiANCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2lpby9hY2NlbC9tbWE4
-NDUyLmMgYi9kcml2ZXJzL2lpby9hY2NlbC9tbWE4NDUyLmMNCj4+IGluZGV4IDQyMWEwYTguLjMw
-Mjc4MTEgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL2lpby9hY2NlbC9tbWE4NDUyLmMNCj4+ICsr
-KyBiL2RyaXZlcnMvaWlvL2FjY2VsL21tYTg0NTIuYw0KPj4gQEAgLTMxLDYgKzMxLDcgQEANCj4+
-ICNpbmNsdWRlIDxsaW51eC9vZl9kZXZpY2UuaD4NCj4+ICNpbmNsdWRlIDxsaW51eC9vZl9pcnEu
-aD4NCj4+ICNpbmNsdWRlIDxsaW51eC9wbV9ydW50aW1lLmg+DQo+PiArI2luY2x1ZGUgPGxpbnV4
-L3JlZ3VsYXRvci9jb25zdW1lci5oPg0KPj4gDQo+PiAjZGVmaW5lIE1NQTg0NTJfU1RBVFVTICAg
-ICAgICAgICAgICAgIDB4MDANCj4+ICNkZWZpbmUgIE1NQTg0NTJfU1RBVFVTX0RSRFkgICAgICAg
-ICAgICAoQklUKDIpIHwgQklUKDEpIHwgQklUKDApKQ0KPj4gQEAgLTEwNyw2ICsxMDgsOCBAQCBz
-dHJ1Y3QgbW1hODQ1Ml9kYXRhIHsNCj4+ICAgIHU4IGRhdGFfY2ZnOw0KPj4gICAgY29uc3Qgc3Ry
-dWN0IG1tYV9jaGlwX2luZm8gKmNoaXBfaW5mbzsNCj4+ICAgIGludCBzbGVlcF92YWw7DQo+PiAr
-ICAgIHN0cnVjdCByZWd1bGF0b3IgKnZkZF9yZWc7DQo+PiArICAgIHN0cnVjdCByZWd1bGF0b3Ig
-KnZkZGlvX3JlZzsNCj4+IH07DQo+PiANCj4+ICAvKioNCj4+IEBAIC0xNTM0LDkgKzE1MzcsMzkg
-QEAgc3RhdGljIGludCBtbWE4NDUyX3Byb2JlKHN0cnVjdCBpMmNfY2xpZW50ICpjbGllbnQsDQo+
-PiAgICBtdXRleF9pbml0KCZkYXRhLT5sb2NrKTsNCj4+ICAgIGRhdGEtPmNoaXBfaW5mbyA9IG1h
-dGNoLT5kYXRhOw0KPj4gDQo+PiArICAgIGRhdGEtPnZkZF9yZWcgPSBkZXZtX3JlZ3VsYXRvcl9n
-ZXQoJmNsaWVudC0+ZGV2LCAidmRkIik7DQo+PiArICAgIGlmIChJU19FUlIoZGF0YS0+dmRkX3Jl
-ZykpIHsNCj4+ICsgICAgICAgIGlmIChQVFJfRVJSKGRhdGEtPnZkZF9yZWcpID09IC1FUFJPQkVf
-REVGRVIpDQo+PiArICAgICAgICAgICAgcmV0dXJuIC1FUFJPQkVfREVGRVI7DQo+PiArDQo+PiAr
-ICAgICAgICBkZXZfZXJyKCZjbGllbnQtPmRldiwgImZhaWxlZCB0byBnZXQgVkREIHJlZ3VsYXRv
-ciFcbiIpOw0KPj4gKyAgICAgICAgcmV0dXJuIFBUUl9FUlIoZGF0YS0+dmRkX3JlZyk7DQo+PiAr
-ICAgIH0NCj4+ICsNCj4+ICsgICAgZGF0YS0+dmRkaW9fcmVnID0gZGV2bV9yZWd1bGF0b3JfZ2V0
-KCZjbGllbnQtPmRldiwgInZkZGlvIik7DQo+PiArICAgIGlmIChJU19FUlIoZGF0YS0+dmRkaW9f
-cmVnKSkgew0KPj4gKyAgICAgICAgaWYgKFBUUl9FUlIoZGF0YS0+dmRkaW9fcmVnKSA9PSAtRVBS
-T0JFX0RFRkVSKQ0KPj4gKyAgICAgICAgICAgIHJldHVybiAtRVBST0JFX0RFRkVSOw0KPj4gKw0K
-Pj4gKyAgICAgICAgZGV2X2VycigmY2xpZW50LT5kZXYsICJmYWlsZWQgdG8gZ2V0IFZERElPIHJl
-Z3VsYXRvciFcbiIpOw0KPj4gKyAgICAgICAgcmV0dXJuIFBUUl9FUlIoZGF0YS0+dmRkaW9fcmVn
-KTsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICByZXQgPSByZWd1bGF0b3JfZW5hYmxlKGRhdGEt
-PnZkZF9yZWcpOw0KPj4gKyAgICBpZiAocmV0KSB7DQo+PiArICAgICAgICBkZXZfZXJyKCZjbGll
-bnQtPmRldiwgImZhaWxlZCB0byBlbmFibGUgVkREIHJlZ3VsYXRvciFcbiIpOw0KPj4gKyAgICAg
-ICAgcmV0dXJuIHJldDsNCj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICByZXQgPSByZWd1bGF0b3Jf
-ZW5hYmxlKGRhdGEtPnZkZGlvX3JlZyk7DQo+PiArICAgIGlmIChyZXQpIHsNCj4+ICsgICAgICAg
-IGRldl9lcnIoJmNsaWVudC0+ZGV2LCAiZmFpbGVkIHRvIGVuYWJsZSBWRERJTyByZWd1bGF0b3Ih
-XG4iKTsNCj4+ICsgICAgICAgIGdvdG8gZGlzYWJsZV9yZWd1bGF0b3JfdmRkOw0KPj4gKyAgICB9
-DQo+PiArDQo+PiAgICByZXQgPSBpMmNfc21idXNfcmVhZF9ieXRlX2RhdGEoY2xpZW50LCBNTUE4
-NDUyX1dIT19BTV9JKTsNCj4+ICAgIGlmIChyZXQgPCAwKQ0KPj4gLSAgICAgICAgcmV0dXJuIHJl
-dDsNCj4+ICsgICAgICAgIGdvdG8gZGlzYWJsZV9yZWd1bGF0b3JzOw0KPj4gDQo+PiAgICBzd2l0
-Y2ggKHJldCkgew0KPj4gICAgY2FzZSBNTUE4NDUxX0RFVklDRV9JRDoNCj4+IEBAIC0xNTQ5LDcg
-KzE1ODIsOCBAQCBzdGF0aWMgaW50IG1tYTg0NTJfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNs
-aWVudCwNCj4+ICAgICAgICAgICAgYnJlYWs7DQo+PiAgICAgICAgLyogZWxzZTogZmFsbCB0aHJv
-dWdoICovDQo+PiAgICBkZWZhdWx0Og0KPj4gLSAgICAgICAgcmV0dXJuIC1FTk9ERVY7DQo+PiAr
-ICAgICAgICByZXQgPSAtRU5PREVWOw0KPj4gKyAgICAgICAgZ290byBkaXNhYmxlX3JlZ3VsYXRv
-cnM7DQo+PiAgICB9DQo+PiANCj4+ICAgIGRldl9pbmZvKCZjbGllbnQtPmRldiwgInJlZ2lzdGVy
-aW5nICVzIGFjY2VsZXJvbWV0ZXI7IElEIDB4JXhcbiIsDQo+PiBAQCAtMTU2NiwxMyArMTYwMCwx
-MyBAQCBzdGF0aWMgaW50IG1tYTg0NTJfcHJvYmUoc3RydWN0IGkyY19jbGllbnQgKmNsaWVudCwN
-Cj4+IA0KPj4gICAgcmV0ID0gbW1hODQ1Ml9yZXNldChjbGllbnQpOw0KPj4gICAgaWYgKHJldCA8
-IDApDQo+PiAtICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICAgICAgZ290byBkaXNhYmxlX3Jl
-Z3VsYXRvcnM7DQo+PiANCj4+ICAgIGRhdGEtPmRhdGFfY2ZnID0gTU1BODQ1Ml9EQVRBX0NGR19G
-U18yRzsNCj4+ICAgIHJldCA9IGkyY19zbWJ1c193cml0ZV9ieXRlX2RhdGEoY2xpZW50LCBNTUE4
-NDUyX0RBVEFfQ0ZHLA0KPj4gICAgICAgICAgICAgICAgICAgIGRhdGEtPmRhdGFfY2ZnKTsNCj4+
-ICAgIGlmIChyZXQgPCAwKQ0KPj4gLSAgICAgICAgcmV0dXJuIHJldDsNCj4+ICsgICAgICAgIGdv
-dG8gZGlzYWJsZV9yZWd1bGF0b3JzOw0KPj4gDQo+PiAgICAvKg0KPj4gICAgICogQnkgZGVmYXVs
-dCBzZXQgdHJhbnNpZW50IHRocmVzaG9sZCB0byBtYXggdG8gYXZvaWQgZXZlbnRzIGlmDQo+PiBA
-QCAtMTU4MSw3ICsxNjE1LDcgQEAgc3RhdGljIGludCBtbWE4NDUyX3Byb2JlKHN0cnVjdCBpMmNf
-Y2xpZW50ICpjbGllbnQsDQo+PiAgICByZXQgPSBpMmNfc21idXNfd3JpdGVfYnl0ZV9kYXRhKGNs
-aWVudCwgTU1BODQ1Ml9UUkFOU0lFTlRfVEhTLA0KPj4gICAgICAgICAgICAgICAgICAgIE1NQTg0
-NTJfVFJBTlNJRU5UX1RIU19NQVNLKTsNCj4+ICAgIGlmIChyZXQgPCAwKQ0KPj4gLSAgICAgICAg
-cmV0dXJuIHJldDsNCj4+ICsgICAgICAgIGdvdG8gZGlzYWJsZV9yZWd1bGF0b3JzOw0KPj4gDQo+
-PiAgICBpZiAoY2xpZW50LT5pcnEpIHsNCj4+ICAgICAgICBpbnQgaXJxMjsNCj4+IEBAIC0xNTk1
-LDcgKzE2MjksNyBAQCBzdGF0aWMgaW50IG1tYTg0NTJfcHJvYmUoc3RydWN0IGkyY19jbGllbnQg
-KmNsaWVudCwNCj4+ICAgICAgICAgICAgICAgICAgICAgICAgTU1BODQ1Ml9DVFJMX1JFRzUsDQo+
-PiAgICAgICAgICAgICAgICAgICAgICAgIGRhdGEtPmNoaXBfaW5mby0+YWxsX2V2ZW50cyk7DQo+
-PiAgICAgICAgICAgIGlmIChyZXQgPCAwKQ0KPj4gLSAgICAgICAgICAgICAgICByZXR1cm4gcmV0
-Ow0KPj4gKyAgICAgICAgICAgICAgICBnb3RvIGRpc2FibGVfcmVndWxhdG9yczsNCj4+IA0KPj4g
-ICAgICAgICAgICBkZXZfZGJnKCZjbGllbnQtPmRldiwgInVzaW5nIGludGVycnVwdCBsaW5lIElO
-VDFcbiIpOw0KPj4gICAgICAgIH0NCj4+IEBAIC0xNjA0LDExICsxNjM4LDExIEBAIHN0YXRpYyBp
-bnQgbW1hODQ1Ml9wcm9iZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50LA0KPj4gICAgICAgICAg
-ICAgICAgICAgIE1NQTg0NTJfQ1RSTF9SRUc0LA0KPj4gICAgICAgICAgICAgICAgICAgIGRhdGEt
-PmNoaXBfaW5mby0+ZW5hYmxlZF9ldmVudHMpOw0KPj4gICAgICAgIGlmIChyZXQgPCAwKQ0KPj4g
-LSAgICAgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgICAgICAgICAgZ290byBkaXNhYmxlX3Jl
-Z3VsYXRvcnM7DQo+PiANCj4+ICAgICAgICByZXQgPSBtbWE4NDUyX3RyaWdnZXJfc2V0dXAoaW5k
-aW9fZGV2KTsNCj4+ICAgICAgICBpZiAocmV0IDwgMCkNCj4+IC0gICAgICAgICAgICByZXR1cm4g
-cmV0Ow0KPj4gKyAgICAgICAgICAgIGdvdG8gZGlzYWJsZV9yZWd1bGF0b3JzOw0KPj4gICAgfQ0K
-Pj4gDQo+PiAgICBkYXRhLT5jdHJsX3JlZzEgPSBNTUE4NDUyX0NUUkxfQUNUSVZFIHwNCj4+IEBA
-IC0xNjYxLDEyICsxNjk1LDE5IEBAIHN0YXRpYyBpbnQgbW1hODQ1Ml9wcm9iZShzdHJ1Y3QgaTJj
-X2NsaWVudCAqY2xpZW50LA0KPj4gdHJpZ2dlcl9jbGVhbnVwOg0KPj4gICAgbW1hODQ1Ml90cmln
-Z2VyX2NsZWFudXAoaW5kaW9fZGV2KTsNCj4+IA0KPj4gK2Rpc2FibGVfcmVndWxhdG9yczoNCj4+
-ICsgICAgcmVndWxhdG9yX2Rpc2FibGUoZGF0YS0+dmRkaW9fcmVnKTsNCj4+ICsNCj4+ICtkaXNh
-YmxlX3JlZ3VsYXRvcl92ZGQ6DQo+PiArICAgIHJlZ3VsYXRvcl9kaXNhYmxlKGRhdGEtPnZkZF9y
-ZWcpOw0KPj4gKw0KPj4gICAgcmV0dXJuIHJldDsNCj4+IH0NCj4+IA0KPj4gc3RhdGljIGludCBt
-bWE4NDUyX3JlbW92ZShzdHJ1Y3QgaTJjX2NsaWVudCAqY2xpZW50KQ0KPj4gew0KPj4gICAgc3Ry
-dWN0IGlpb19kZXYgKmluZGlvX2RldiA9IGkyY19nZXRfY2xpZW50ZGF0YShjbGllbnQpOw0KPj4g
-KyAgICBzdHJ1Y3QgbW1hODQ1Ml9kYXRhICpkYXRhID0gaWlvX3ByaXYoaW5kaW9fZGV2KTsNCj4+
-IA0KPj4gICAgaWlvX2RldmljZV91bnJlZ2lzdGVyKGluZGlvX2Rldik7DQo+PiANCj4+IEBAIC0x
-Njc4LDYgKzE3MTksOSBAQCBzdGF0aWMgaW50IG1tYTg0NTJfcmVtb3ZlKHN0cnVjdCBpMmNfY2xp
-ZW50ICpjbGllbnQpDQo+PiAgICBtbWE4NDUyX3RyaWdnZXJfY2xlYW51cChpbmRpb19kZXYpOw0K
-Pj4gICAgbW1hODQ1Ml9zdGFuZGJ5KGlpb19wcml2KGluZGlvX2RldikpOw0KPj4gDQo+PiArICAg
-IHJlZ3VsYXRvcl9kaXNhYmxlKGRhdGEtPnZkZGlvX3JlZyk7DQo+PiArICAgIHJlZ3VsYXRvcl9k
-aXNhYmxlKGRhdGEtPnZkZF9yZWcpOw0KPj4gKw0KPj4gICAgcmV0dXJuIDA7DQo+PiB9DQo+PiAN
-Cj4+IEBAIC0xNjk2LDYgKzE3NDAsMTggQEAgc3RhdGljIGludCBtbWE4NDUyX3J1bnRpbWVfc3Vz
-cGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYpDQo+PiAgICAgICAgcmV0dXJuIC1FQUdBSU47DQo+PiAg
-ICB9DQo+PiANCj4+ICsgICAgcmV0ID0gcmVndWxhdG9yX2Rpc2FibGUoZGF0YS0+dmRkaW9fcmVn
-KTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4gKyAgICAgICAgZGV2X2VycihkZXYsICJmYWlsZWQg
-dG8gZGlzYWJsZSBWRERJTyByZWd1bGF0b3JcbiIpOw0KPj4gKyAgICAgICAgcmV0dXJuIHJldDsN
-Cj4+ICsgICAgfQ0KPj4gKw0KPj4gKyAgICByZXQgPSByZWd1bGF0b3JfZGlzYWJsZShkYXRhLT52
-ZGRfcmVnKTsNCj4+ICsgICAgaWYgKHJldCkgew0KPj4gKyAgICAgICAgZGV2X2VycihkZXYsICJm
-YWlsZWQgdG8gZGlzYWJsZSBWREQgcmVndWxhdG9yXG4iKTsNCj4+ICsgICAgICAgIHJldHVybiBy
-ZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICAgIHJldHVybiAwOw0KPj4gfQ0KPj4gDQo+PiBAQCAt
-MTcwNSw5ICsxNzYxLDIyIEBAIHN0YXRpYyBpbnQgbW1hODQ1Ml9ydW50aW1lX3Jlc3VtZShzdHJ1
-Y3QgZGV2aWNlICpkZXYpDQo+PiAgICBzdHJ1Y3QgbW1hODQ1Ml9kYXRhICpkYXRhID0gaWlvX3By
-aXYoaW5kaW9fZGV2KTsNCj4+ICAgIGludCByZXQsIHNsZWVwX3ZhbDsNCj4+IA0KPj4gKyAgICBy
-ZXQgPSByZWd1bGF0b3JfZW5hYmxlKGRhdGEtPnZkZF9yZWcpOw0KPj4gKyAgICBpZiAocmV0KSB7
-DQo+PiArICAgICAgICBkZXZfZXJyKGRldiwgImZhaWxlZCB0byBlbmFibGUgVkREIHJlZ3VsYXRv
-clxuIik7DQo+PiArICAgICAgICByZXR1cm4gcmV0Ow0KPj4gKyAgICB9DQo+PiArDQo+PiArICAg
-IHJldCA9IHJlZ3VsYXRvcl9lbmFibGUoZGF0YS0+dmRkaW9fcmVnKTsNCj4+ICsgICAgaWYgKHJl
-dCkgew0KPj4gKyAgICAgICAgZGV2X2VycihkZXYsICJmYWlsZWQgdG8gZW5hYmxlIFZERElPIHJl
-Z3VsYXRvclxuIik7DQo+PiArICAgICAgICByZWd1bGF0b3JfZGlzYWJsZShkYXRhLT52ZGRfcmVn
-KTsNCj4+ICsgICAgICAgIHJldHVybiByZXQ7DQo+PiArICAgIH0NCj4+ICsNCj4+ICAgIHJldCA9
-IG1tYTg0NTJfYWN0aXZlKGRhdGEpOw0KPj4gICAgaWYgKHJldCA8IDApDQo+PiAtICAgICAgICBy
-ZXR1cm4gcmV0Ow0KPj4gKyAgICAgICAgZ290byBydW50aW1lX3Jlc3VtZV9mYWlsZWQ7DQo+PiAN
-Cj4+ICAgIHJldCA9IG1tYTg0NTJfZ2V0X29kcl9pbmRleChkYXRhKTsNCj4+ICAgIHNsZWVwX3Zh
-bCA9IDEwMDAgLyBtbWE4NDUyX3NhbXBfZnJlcVtyZXRdWzBdOw0KPj4gQEAgLTE3MTcsMjUgKzE3
-ODYsMTcgQEAgc3RhdGljIGludCBtbWE4NDUyX3J1bnRpbWVfcmVzdW1lKHN0cnVjdCBkZXZpY2Ug
-KmRldikNCj4+ICAgICAgICBtc2xlZXBfaW50ZXJydXB0aWJsZShzbGVlcF92YWwpOw0KPj4gDQo+
-PiAgICByZXR1cm4gMDsNCj4+IC19DQo+PiAtI2VuZGlmDQo+PiANCj4+IC0jaWZkZWYgQ09ORklH
-X1BNX1NMRUVQDQo+PiAtc3RhdGljIGludCBtbWE4NDUyX3N1c3BlbmQoc3RydWN0IGRldmljZSAq
-ZGV2KQ0KPj4gLXsNCj4+IC0gICAgcmV0dXJuIG1tYTg0NTJfc3RhbmRieShpaW9fcHJpdihpMmNf
-Z2V0X2NsaWVudGRhdGEoDQo+PiAtICAgICAgICB0b19pMmNfY2xpZW50KGRldikpKSk7DQo+PiAt
-fQ0KPj4gK3J1bnRpbWVfcmVzdW1lX2ZhaWxlZDoNCj4+ICsgICAgcmVndWxhdG9yX2Rpc2FibGUo
-ZGF0YS0+dmRkaW9fcmVnKTsNCj4+ICsgICAgcmVndWxhdG9yX2Rpc2FibGUoZGF0YS0+dmRkX3Jl
-Zyk7DQo+PiANCj4+IC1zdGF0aWMgaW50IG1tYTg0NTJfcmVzdW1lKHN0cnVjdCBkZXZpY2UgKmRl
-dikNCj4+IC17DQo+PiAtICAgIHJldHVybiBtbWE4NDUyX2FjdGl2ZShpaW9fcHJpdihpMmNfZ2V0
-X2NsaWVudGRhdGEoDQo+PiAtICAgICAgICB0b19pMmNfY2xpZW50KGRldikpKSk7DQo+PiArICAg
-IHJldHVybiByZXQ7DQo+PiB9DQo+PiAjZW5kaWYNCj4+IA0KPj4gc3RhdGljIGNvbnN0IHN0cnVj
-dCBkZXZfcG1fb3BzIG1tYTg0NTJfcG1fb3BzID0gew0KPj4gLSAgICBTRVRfU1lTVEVNX1NMRUVQ
-X1BNX09QUyhtbWE4NDUyX3N1c3BlbmQsIG1tYTg0NTJfcmVzdW1lKQ0KPj4gKyAgICBTRVRfU1lT
-VEVNX1NMRUVQX1BNX09QUyhwbV9ydW50aW1lX2ZvcmNlX3N1c3BlbmQsIHBtX3J1bnRpbWVfZm9y
-Y2VfcmVzdW1lKQ0KPiANCj4gSnVzdCBhIHF1ZXNpb246IElzbid0IGl0IHNlbWFudGljYWxseSBh
-IGRpZmZlcmVudCBjaGFuZ2UgdG8gcmVwbGFjZQ0KPiBtbWE4NDUyX3N1c3BlbmQoKSBhbmQgbW1h
-ODQ1Ml9yZXN1bWUoKT8gSWYgbm90LCB3aHkgaXMgaXQgbmVlZGVkIGhlcmU/DQo+IA0KPiBvdGhl
-ciB0aGFuIHRoYXQsIGxndG0uDQoNCkl0IGlzIGJlY2F1c2Ugd2l0aCByZWd1bGF0b3Igb3BlcmF0
-aW9uIGFkZGVkLCBiZWZvcmUgc3lzdGVtIHN1c3BlbmQsIGRyaXZlciBpcyBpbiBydW50aW1lIHN1
-c3BlbmQgYWxyZWFkeSwgdGhlIHN1c3BlbmQvcmVzdW1lIGNhbGxiYWNrIG5lZWQgdG8gZGVhbCB3
-aXRoIHJlZ3VsYXRvciBhZ2FpbiBpbmNsdWRpbmcgZXJyb3IgaGFuZGxpbmcgZXRjLiwgYW5kIGFs
-c28gbmVlZCB0byBkaXNhYmxlIHJ1bnRpbWUgcG0gYW5kIHJlLWVuYWJsZSBpdCBldGMuLCB0aGlz
-IGludHJvZHVjZXMgdG9vIG1hbnkgY29tcGxpY2F0ZWQgY29kZS9sb2dpYywgYWxzbywgdGhlIHRo
-aW5ncyBzdXNwZW5kL3Jlc3VtZSBjYWxsYmFjayBkb2VzIGFyZSBhY3R1YWxseSBzYW1lIGFzIHJ1
-bnRpbWUgc3VzcGVuZC8gcmVzdW1lLCBzbyBqdXN0IHVzaW5nIHBtX3J1bnRpbWVfZm9yY2Vfc3Vz
-cGVuZC9yZXN1bWUgY2FuIHNhdmUgdGhlc2UgZHVwbGljYXRlZCBvcGVyYXRpb25zIGFuZCBtYWtl
-IGNvZGUgZWFzeS9jbGVhbi4NCg0KQW5zb24uDQoNCg0KDQoNCj4gDQo+PiAgICBTRVRfUlVOVElN
-RV9QTV9PUFMobW1hODQ1Ml9ydW50aW1lX3N1c3BlbmQsDQo+PiAgICAgICAgICAgICAgIG1tYTg0
-NTJfcnVudGltZV9yZXN1bWUsIE5VTEwpDQo+PiB9Ow0KPj4gDQo+IA0K
+On Mon, Jan 7, 2019 at 12:51 PM Lina Iyer <ilina@codeaurora.org> wrote:
+>
+> On Fri, Dec 28 2018 at 17:07 -0700, Rob Herring wrote:
+> >On Wed, Dec 19, 2018 at 03:11:02PM -0700, Lina Iyer wrote:
+> >> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+> >> routed to the PDC as interrupts that can be used to wake the system up
+> >> from deep low power modes and suspend.
+> >>
+> >> Cc: devicetree@vger.kernel.org
+> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> >> ---
+> >>  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
+> >>  1 file changed, 6 insertions(+), 1 deletion(-)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> >> index 665aadb5ea28..a522ca46667d 100644
+> >> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> >> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+> >> @@ -29,6 +29,11 @@ SDM845 platform.
+> >>      Definition: must be 2. Specifying the pin number and flags, as defined
+> >>                  in <dt-bindings/interrupt-controller/irq.h>
+> >>
+> >> +- wakeup-parent:
+> >> +    Usage: optional
+> >> +    Value type: <phandle>
+> >> +    Definition: A phandle to the wakeup interrupt controller for the SoC.
+> >
+> >Is this really necessary? Is there more than one possible wakeup-parent
+> >node?
+> >
+> No.  There is only one but depending on the architecture, the wakeup
+> interrupt controller could be different device like PDC on SDM845 or MPM
+> on SDM820.
+>
+> What do you have in mind? Let me know if you have a better idea than
+> referencing in DT.
+
+If there's only one possibility for a given platform, then you can
+just use of_find_compatible_node(). I don't think it matters that
+different platforms have a different device here. It's not going to be
+a large table and you may need to know the differences if there's not
+an abstracted interface to it (seems there is in your case).
+Alternatively, if the PDC/MPM code knows what interrupt controller it
+is associated with, then it could setup that relationship and the
+interrupt controller code could retrieve that. Maybe the stacked
+domain support doesn't work in that direction (I haven't looked at the
+irq code much since that was added).
+
+However, my main concern is documenting something genericish in a
+device specific binding. It looks like Tegra is trying to add the same
+thing, so this needs to be documented in a common place. One question
+is whether wakeup is the only use or if this should be more generally
+a secondary interrupt parent?
+
+Rob
