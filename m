@@ -1,39 +1,78 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v2 1/5] devicetree: property-units: Add femtofarads unit
-Date: Tue,  8 Jan 2019 19:54:10 +0100
-Message-ID: <20190108185414.26922-2-sam@ravnborg.org>
+Subject: [PATCH v2 3/5] dt-binding: pcf85063: add xtal load capacitance
+Date: Tue,  8 Jan 2019 19:54:12 +0100
+Message-ID: <20190108185414.26922-4-sam@ravnborg.org>
 References: <20190108185414.26922-1-sam@ravnborg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190108185414.26922-1-sam@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
-Cc: Sam Ravnborg <sam@ravnborg.org>, Rob Herring <robh@kernel.org>
+Cc: Sam Ravnborg <sam@ravnborg.org>, =?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
 List-Id: devicetree@vger.kernel.org
 
-When dealing with capacitance of 0.5 pF then
-a smaller unit is preferred.
-Add femtofarads to deal with this.
+The NXP pcf85063 supports two different xtal load capacitance
+- 7000fF  (7pF)    HW default, Linux driver default
+- 12500fF (12.5pF) Minimum power consumption
 
+To obtain a precise RTC the pcf85063 must be configured
+with the correct capacitance load of the xtal.
+
+Add a property to specify the xtal capacitance load.
+The default value matches that of the current Linux driver.
+
+With a dedicated binding remove the entry in rtc.txt
+
+Signed-off-by: Søren Andersen <san@skov.dk>
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-Cc: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Alessandro Zummo <a.zummo@towertech.it>
 Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Urs Fässler <urs.fassler@bbv.ch>
 ---
- Documentation/devicetree/bindings/property-units.txt | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt | 18 ++++++++++++++++++
+ Documentation/devicetree/bindings/rtc/rtc.txt          |  1 -
+ 2 files changed, 18 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
 
-diff --git a/Documentation/devicetree/bindings/property-units.txt b/Documentation/devicetree/bindings/property-units.txt
-index 45ce054d844d..bfd33734faca 100644
---- a/Documentation/devicetree/bindings/property-units.txt
-+++ b/Documentation/devicetree/bindings/property-units.txt
-@@ -31,6 +31,7 @@ Electricity
- -microwatt-hours: micro Watt-hours
- -microvolt	: micro volts
- -picofarads	: picofarads
-+-femtofarads	: femtofarads
- 
- Temperature
- ----------------------------------------
+diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+new file mode 100644
+index 000000000000..ad5e8eaa370e
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+@@ -0,0 +1,18 @@
++* NXP PCF85063 Real Time Clock
++
++Required properties:
++- compatible: Should contain "nxp,pcf85063".
++- reg: I2C address for chip.
++
++Optional property:
++- quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
++  expressed in femto Farad (fF). Valid values are 7000 and 12500.
++  Default value (if no value is specified) is 7000fF.
++
++Example:
++
++pcf85063: pcf85063@51 {
++	compatible = "nxp,pcf85063";
++	reg = <0x51>;
++	quartz-load-femtofarads = <12500>;
++};
+diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
+index e07b15d151ac..efac6dc5b914 100644
+--- a/Documentation/devicetree/bindings/rtc/rtc.txt
++++ b/Documentation/devicetree/bindings/rtc/rtc.txt
+@@ -52,7 +52,6 @@ microcrystal,rv3029	Real Time Clock Module with I2C-Bus
+ nxp,pcf2127		Real-time clock
+ nxp,pcf2129		Real-time clock
+ nxp,pcf8563		Real-time clock/calendar
+-nxp,pcf85063		Tiny Real-Time Clock
+ pericom,pt7c4338	Real-time Clock Module
+ ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
+ ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
 -- 
 2.12.0
