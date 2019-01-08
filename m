@@ -1,74 +1,64 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: Consistent capitalization of "device tree"?
-Date: Mon, 7 Jan 2019 20:49:32 -0800
-Message-ID: <64534368-1ee5-3a6b-18a6-d1d527aa4bdd@gmail.com>
-References: <20190107183711.GA5671@amd>
- <91bc4723-8e3a-4ed6-5104-36a614d6a6d2@gmail.com> <20190107192458.GG933@amd>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v9 01/10] dt-bindings: opp: Introduce opp-level bindings
+Date: Tue, 8 Jan 2019 10:19:58 +0530
+Message-ID: <20190108044958.katgnp4ozmpqien2@vireshk-i7>
+References: <20190107100959.14528-1-rnayak@codeaurora.org>
+ <20190107100959.14528-2-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107192458.GG933@amd>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190107100959.14528-2-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, kernel list <linux-kernel@vger.kernel.org>, corbet@lwn.net, linux-doc@vger.kernel.org
+To: Rajendra Nayak <rnayak@codeaurora.org>
+Cc: andy.gross@linaro.org, robh@kernel.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-On 1/7/19 11:24 AM, Pavel Machek wrote:
-> On Mon 2019-01-07 11:06:27, Frank Rowand wrote:
->>
->> + Frank
->>
->> On 1/7/19 10:37 AM, Pavel Machek wrote:
->>> Is it "Device Tree" or "device tree"?
->>>     
->>>  pavel@duo:/data/l/k/Documentation$ grep -r "Device Tree"  | wc -l
->>>  235
->>>  pavel@duo:/data/l/k/Documentation$ grep -r "device tree"  | wc -l
->>>  595
->>>     
->>> I guess it would be nice to make it consistent. I guess "device tree"
->>> is preffered?
->>>
->>> Should we do something like this?
->>> 								Pavel
->>>
->>> Signed-off-by: Pavel Machek <pavel@ucw.cz>
->>>     
->>> diff --git a/Documentation/devicetree/overlay-notes.txt b/Documentation/devicetree/overlay-notes.txt
->>> index 725fb8d..cc5f507 100644
->>> --- a/Documentation/devicetree/overlay-notes.txt
->>> +++ b/Documentation/devicetree/overlay-notes.txt
->>> @@ -8,7 +8,7 @@ companion document to Documentation/devicetree/dynamic-resolution-notes.txt[1]
->>>  How overlays work
->>>  -----------------
->>>  
->>> -A Device Tree's overlay purpose is to modify the kernel's live tree, and
->>> +A device tree's overlay purpose is to modify the kernel's live tree, and
->>>  have the modification affecting the state of the kernel in a way that
->>>  is reflecting the changes.
->>>  Since the kernel mainly deals with devices, any new device node that result
->>>
->>
->> Not a strong opinion, but I would prefer a third option of devicetree.  That
->> makes it much easier to search for.
+On 07-01-19, 15:39, Rajendra Nayak wrote:
+> On some SoCs (especially from Qualcomm and MediaTek) an OPP
+> node needs to describe an additional level/corner value
+> that is then communicated to a remote microprocessor by the CPU, which
+> then takes some actions (like adjusting voltage values across various rails)
+> based on the value passed.
 > 
-> That one is much less popular at the moment -- according to my
-> searches... so it would be a bigger change.
+> Describe these bindings in the opp-level bindings document.
 > 
-> (Which I'll gladly support if I won't have to do the work... as long
-> as it is consistent. But I believe that "device tree" is most common
-> here, makes sense, and is easiest change, so...)
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> ---
+>  .../devicetree/bindings/opp/opp-level.txt     | 29 +++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/opp/opp-level.txt
 > 
-> 								Pavel
+> diff --git a/Documentation/devicetree/bindings/opp/opp-level.txt b/Documentation/devicetree/bindings/opp/opp-level.txt
+> new file mode 100644
+> index 000000000000..f9134ed08164
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/opp/opp-level.txt
+> @@ -0,0 +1,29 @@
+> +OPP level bindings to descibe OPP nodes with corner/level values
+> +
+> +OPP tables for devices on some SoCs, especially from Qualcomm and
+> +MediaTek require an additional platform specific corner/level
+> +value to be specified.
+> +This value is passed on to a Power Manager by
+> +the CPU, which then takes the necessary actions to set a voltage
+> +rail to an appropriate voltage based on the value passed.
+> +
+> +The bindings are based on top of the operating-points-v2 bindings
+> +described in Documentation/devicetree/bindings/opp/opp.txt,
+> +with the exception that all of the properties are now optional,
+> +including the opp-hz property.
+> +
+> +Additional properties are described below.
+> +
+> +* OPP Table Node
+> +
+> +Required properties:
+> +- compatible: Allow OPPs to express their compatibility. It should be:
+> +  "operating-points-v2-level"
 
-After finding the rest of the thread, and thinking further, I don't think
-the easiest change is the correct change.  Ease of search is much more
-than just grep of the kernel source, it is also web search engines.  I
-think that the extra effort of "devicetree" is worth while in the long
-run.  But I don't see a need to do an immediate global change - it can
-happen either slowly over time or quickly as people choose to submit
-patches.
+All this isn't required. Just define it as a regular property in
+opp.txt only, just like opp-hz or something else.
 
--Frank
+-- 
+viresh
