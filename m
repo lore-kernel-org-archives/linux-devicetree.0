@@ -1,41 +1,47 @@
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH v2 2/2] driver: clocksource: Add nxp system counter timer
- driver support
-Date: Tue, 8 Jan 2019 09:33:18 +0000
-Message-ID: <VI1PR0402MB3519AF0CEF41F24867B10986878A0@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <1544592770-19996-1-git-send-email-ping.bai@nxp.com>
- <1544592770-19996-2-git-send-email-ping.bai@nxp.com>
- <dbe836ff-cd29-a693-4d83-a2fee419b424@infradead.org>
+From: Michael Ellerman <mpe@ellerman.id.au>
+Subject: Re: [PATCH] powerpc: build dtb even without COMPILE_TEST
+Date: Tue, 08 Jan 2019 21:14:07 +1100
+Message-ID: <87bm4rtq1c.fsf@concordia.ellerman.id.au>
+References: <1546595897-33291-1-git-send-email-clabbe@baylibre.com> <CAL_Jsq+Wo7kWTHg6f+HkTfq1=JN8r4iBrwSz9JRdJ0rhjyKSpg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dbe836ff-cd29-a693-4d83-a2fee419b424@infradead.org>
-Content-Language: en-US
+In-Reply-To: <CAL_Jsq+Wo7kWTHg6f+HkTfq1=JN8r4iBrwSz9JRdJ0rhjyKSpg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>, "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+To: Rob Herring <robh+dt@kernel.org>, Corentin Labbe <clabbe@baylibre.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Paul Mackerras <paulus@samba.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gZHJpdmVyOiBjbG9ja3NvdXJjZTogQWRkIG54
-cCBzeXN0ZW0gY291bnRlciB0aW1lcg0KPiBkcml2ZXIgc3VwcG9ydA0KPiANCj4gSGksDQo+IA0K
-PiBPbiAxMi8xMS8xOCA5OjI4IFBNLCBKYWNreSBCYWkgd3JvdGU6DQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZpZyBiL2RyaXZlcnMvY2xvY2tzb3VyY2UvS2NvbmZp
-Zw0KPiA+IGluZGV4IGM1N2IxNTYuLjdlNWYyZGUgMTAwNjQ0DQo+ID4gLS0tIGEvZHJpdmVycy9j
-bG9ja3NvdXJjZS9LY29uZmlnDQo+ID4gKysrIGIvZHJpdmVycy9jbG9ja3NvdXJjZS9LY29uZmln
-DQo+ID4gQEAgLTU3OSw2ICs1NzksMTQgQEAgY29uZmlnIENMS1NSQ19JTVhfVFBNDQo+ID4gIAkg
-IEVuYWJsZSB0aGlzIG9wdGlvbiB0byB1c2UgSU1YIFRpbWVyL1BXTSBNb2R1bGUgKFRQTSkgdGlt
-ZXIgYXMNCj4gPiAgCSAgY2xvY2tzb3VyY2UuDQo+ID4NCj4gPiArY29uZmlnIENMS1NSQ19JTVhf
-U1lTX0NUUg0KPiA+ICsJYm9vbCAiQ2xvY2tzb3VyY2UgdXNpbmcgaS5NWCBzeXN0ZW0gY291bnRl
-ciIgaWYgQ09NUElMRV9URVNUDQo+IA0KPiBMb29rcyBsaWtlIGEgIm1ha2UgKmNvbmZpZyIgdXNl
-ciBvbmx5IGdldHMgdGhpcyBwcm9tcHQgaWYgQ09NUElMRV9URVNUIGlzIHNldC4NCj4gDQo+IElm
-IENPTVBJTEVfVEVTVCBpcyBub3Qgc2V0LCBob3cgZG9lcyB0aGlzIGRyaXZlciBiZWNvbWUgZW5h
-YmxlZC9zZXQ/DQo+IA0KPiANCg0KU29ycnkgZm9yIHJlcGx5IHRvIHlvdSBzbyBsYXRlci4gdGhp
-cyBkcml2ZXIgbmVlZCB0byBiZSBlbmFibGUgZXhwbGljaXRseSB3aGVuIElNWCBzb2MgaXMgYnVp
-bHQuDQoNCkJSDQo+ID4gKwlkZXBlbmRzIG9uIChBUk0gfHwgQVJNNjQpICYmIENMS0RFVl9MT09L
-VVANCj4gPiArCXNlbGVjdCBDTEtTUkNfTU1JTw0KPiA+ICsJaGVscA0KPiA+ICsJICBFbmFibGUg
-dGhpcyBvcHRpb24gdG8gdXNlIElNWCBzeXN0ZW0gY291bnRlciB0aW1lciBhcw0KPiA+ICsJICBj
-bG9ja3NvdXJjZS4NCj4gPiArDQo+ID4gIGNvbmZpZyBDTEtTUkNfU1RfTFBDDQo+ID4gIAlib29s
-ICJMb3cgcG93ZXIgY2xvY2tzb3VyY2UgZm91bmQgaW4gdGhlIExQQyIgaWYgQ09NUElMRV9URVNU
-DQo+ID4gIAlzZWxlY3QgVElNRVJfT0YgaWYgT0YNCj4gDQo+IHRoYW5rcywNCj4gLS0NCj4gflJh
-bmR5DQo=
+Rob Herring <robh+dt@kernel.org> writes:
+> On Fri, Jan 4, 2019 at 3:58 AM Corentin Labbe <clabbe@baylibre.com> wrote:
+>>
+>> I wanted to test the virtex440-ml507 qemu machine and found that the dtb
+>> for it was not builded.
+>
+> Just do:
+>
+> make virtex440-ml507.dtb
+
+I actually thought you had to do that, so I've never done anything different.
+
+>> All powerpc DTB are only built when CONFIG_OF_ALL_DTBS is set which depend on
+>> COMPILE_TEST.
+>> But building DTB is not related to a "compile build test".
+>
+> But it is. We normally only build the dtbs for enabled platforms just
+> like we only build platform/driver code for enabled platforms. It's
+> hidden behind COMPILE_TEST so it only gets enabled for
+> allmodconfig/allyesconfig builds.
+>
+>> So this patch made building of DTB independent of COMPILE_TEST (by
+>> depending only on the PPC arch)
+>> A better selection of which DTB to build could be done in the future
+>> like that do the ARM arch.
+>
+> No reason you can't start that now for the platform you care about.
+> You don't have to convert everyone.
+
+Yeah that seems like the best option. I'm happy to take a patch just for
+that target.
+
+cheers
