@@ -1,131 +1,441 @@
-MIME-Version: 1.0
-Date: Fri, 4 Jan 2019 18:25:06 -0600
-References: <20190104112131.14451-1-afaerber@suse.de>
-	<20190104112131.14451-6-afaerber@suse.de>
-	<CAL_Jsq+BMOvRLEbD2Eo2D=n446vSubeXV3-FbkBSHjpfL=LYsg@mail.gmail.com>
-	<9d97fec5-31b0-8717-cd10-de4f36d1cf05@suse.de>
-In-Reply-To: <9d97fec5-31b0-8717-cd10-de4f36d1cf05@suse.de>
-Message-ID: <CAL_JsqL3zvPfuMGa5i2ij19MD73c-bvtOEq0pKL0nFdDZxteZw@mail.gmail.com>
-Subject: Re: [RFC lora-next 5/5] HACK: net: lora: sx130x: Add PicoCell gateway
- shim for cdc-acm
-From: Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: linux-lpwan@lists.infradead.org, linux-serial <linux-serial@vger.kernel.org>, Linux USB List <linux-usb@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>, "David S. Miller" <davem@davemloft.net>, Oliver Neukum <oneukum@suse.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, netdev <netdev@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
+Return-Path: <SRS0=mSv1=PQ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:41664 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727656AbfAHOwc (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 8 Jan 2019 09:52:32 -0500
+From: Akinobu Mita <akinobu.mita@gmail.com>
+Subject: [PATCH v2 07/13] media: mt9m001: switch s_power callback to runtime PM
+Date: Tue,  8 Jan 2019 23:51:44 +0900
+Message-Id: <1546959110-19445-8-git-send-email-akinobu.mita@gmail.com>
+In-Reply-To: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
+References: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jan 4, 2019 at 5:43 PM Andreas F=C3=A4rber <afaerber@suse.de> wrote=
-:
->
-> Hi Rob,
->
-> Am 04.01.19 um 18:07 schrieb Rob Herring:
-> > On Fri, Jan 4, 2019 at 5:21 AM Andreas F=C3=A4rber <afaerber@suse.de> w=
-rote:
-> >>
-> >> Ignore our device in cdc-acm probing and add a new driver for it,
-> >> dispatching to cdc-acm for the actual implementation.
-> >>
-> >> WARNING: It is likely that this VID/PID is in use for unrelated device=
-s.
-> >> Only the Product string hints what this really is in current v0.2.1.
-> >> Previous code v0.2.0 was using a Semtech VID/PID, but no card shipping
-> >> with such firmware is known to me.
-> >>
-> >> While this may seem unorthodox, no internals of the driver are accesse=
-d,
-> >> just the set of driver callbacks is duplicated as shim.
-> >>
-> >> Use this shim construct to fake DT nodes for serdev on probe.
-> >> For testing purposes these nodes do not have a parent yet.
-> >> This results in two "Error -2 creating of_node link" warnings on probe=
-.
-> >
-> > It looks like the DT is pretty static. Rather than creating the nodes
-> > at run-time, can't you create a dts file and build that into your
-> > module.
->
-> Heh, if that were the only issue with this patch... ;)
+Switch s_power() callback to runtime PM framework.  This also removes
+soc_camera specific power management code and introduces reset and standby
+gpios instead.
 
-Yeah, I ignored all the big issues. :)
+Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
+Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
+Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
+---
+* v2
+- Add new label for error handling in s_stream() callback.
+- Replace pm_runtime_get_noresume() + pm_runtime_put_sync() with a
+  single pm_runtime_idle() call in probe() function.
+- Change the argument of mt9m001_power_o{n,ff} to struct device, and
+  use them for runtime PM callbacks directly.
 
-> I had read about that possibility here [1], but it just appeared to give
-> me a binary blob with no handy documentation on how to parse the
-> __dtb_XXX_begin..__dtb_XXX_end blob afterwards for assignment to
-> interface->dev.of_node. Two nodes and one compatible property were
-> enough to get me started, so that was quickest, given lack of knowledge.
+ drivers/media/i2c/mt9m001.c | 222 +++++++++++++++++++++++++++++++-------------
+ 1 file changed, 160 insertions(+), 62 deletions(-)
 
-You just need to unflatten the blob at __dtb_XXX_begin and then you should =
-have the same end result. The DT unittest has an example.
-
-> I intentionally left it static to keep error handling and cleanup
-> manageable for now... Otherwise I'd need to kstrdup()/kzalloc() all
-> properties so that I can consistently kfree() them again on release.
->
-> Note that this was just a PoC, so there are properties missing here:
->
-> At least currently Ben's patch [2] (wrongly?) relies on the optional
-> clock-output-names property if #clock-cells property is specified -
-> which I did not in this patch. (Thus it'll disable clk_out, which would
-> break opening the netdev if we wouldn't run into other errors first.)
->
-> Any comments on how to best deal with clk names on the driver side would
-> be appreciated, so that we can just leave the property away here and get
-> a sane default name. Otherwise we'd need to generate a unique name here.
->
-> If #clock-cells were present, the driver would also rely on obtaining a
-> parent clock, which may be easiest for me to fix in the driver; but
-> assuming we need it, we'd need a clocks property pointing to phandles.
-> Wouldn't phandles need to be unique globally in the kernel for lookup?
-> phandles from a separate .dtb fragment wouldn't seem to tick that box.
->
-> (For reference there's also a clk locking issue under discussion at [3],
-> as well as multiple unresolved Kbuild reports about clk_hw not being
-> applicable on sparc64 allyesconfigs and m68k allmodconfig that I'm
-> unsure how to best resolve while keeping the driver broadly usable. Not
-> using clk would solve above DT worries but would leave us with ugly
-> driver dependencies across spi and a custom sx130x_radio bus.)
->
-> Kconfig may also be a topic to consider for this USB driver - my x86_64
-> host for instance doesn't have CONFIG_OF, so it might work to manually
-> allocate such nodes, whereas using API or &of_fwnode_ops (needed?) may
-> be a problem - although without CONFIG_OF the serdev code probably is
-> unable to enumerate the nodes in the first place?
->
-> And I assume on ACPI platforms hot-pluggable USB devices shouldn't need
-> a user-overridden ACPI table either - have you thought about some
-> serdev-specific lookup as fallback when OF and ACPI come up empty?
->
-> Your drivers/tty/serdev/core.c:serdev_controller_add() has access to
-> ctrl->dev->parent, so it could maintain a list of callbacks that drivers
-> (e.g., cdc-acm) could register callbacks with and cast the device here
-> to usb_interface; my module here would then only need to register such a
-> callback against cdc-acm in its module init to allow cdc-acm to provide
-> it with the usb_interface, where it could then check for the iProduct to
-> determine whether that device should be serdev-controlled or not - say
-> by returning 0 to bind, negative error to ignore - and loading/creating
-> an internal of_node or whatever necessary. Just a rough idea for now...
->
-> Even easier, serdev_device_driver could just get an optional callback!
-> Then my driver in 3/5 could just determine itself which device it wants
-> to bind against and still use the module_serdev_device_driver() macro.
-> (serdev is built-in, so not as easy to tweak on random boards here...)
->
-> Any comments on serdev in 4/5? I wonder whether that was an oversight
-> (in which case it should get a Fixes line) or an intentional choice due
-> to issues? You mentioned hangup and open/close mismatches before...
->
-> Thanks,
-> Andreas
->
-> [1] https://elinux.org/Device_Tree_Linux#FDT_built_into_kernel_as_data
-> [2] https://patchwork.ozlabs.org/patch/983173/
-> [3]
-> https://lists.infradead.org/pipermail/linux-lpwan/2019-January/000069.htm=
-l
->
-> --
-> SUSE Linux GmbH, Maxfeldstr. 5, 90409 N=C3=BCrnberg, Germany
-> GF: Felix Imend=C3=B6rffer, Jane Smithard, Graham Norton
-> HRB 21284 (AG N=C3=BCrnberg)
+diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
+index 7ba11a8..1619c8c 100644
+--- a/drivers/media/i2c/mt9m001.c
++++ b/drivers/media/i2c/mt9m001.c
+@@ -5,15 +5,18 @@
+  * Copyright (C) 2008, Guennadi Liakhovetski <kernel@pengutronix.de>
+  */
+ 
++#include <linux/clk.h>
++#include <linux/delay.h>
++#include <linux/gpio/consumer.h>
+ #include <linux/i2c.h>
+ #include <linux/log2.h>
+ #include <linux/module.h>
++#include <linux/pm_runtime.h>
+ #include <linux/slab.h>
+ #include <linux/videodev2.h>
+ 
+ #include <media/drv-intf/soc_mediabus.h>
+ #include <media/soc_camera.h>
+-#include <media/v4l2-clk.h>
+ #include <media/v4l2-ctrls.h>
+ #include <media/v4l2-subdev.h>
+ 
+@@ -92,8 +95,12 @@ struct mt9m001 {
+ 		struct v4l2_ctrl *autoexposure;
+ 		struct v4l2_ctrl *exposure;
+ 	};
++	bool streaming;
++	struct mutex mutex;
+ 	struct v4l2_rect rect;	/* Sensor window */
+-	struct v4l2_clk *clk;
++	struct clk *clk;
++	struct gpio_desc *standby_gpio;
++	struct gpio_desc *reset_gpio;
+ 	const struct mt9m001_datafmt *fmt;
+ 	const struct mt9m001_datafmt *fmts;
+ 	int num_fmts;
+@@ -177,8 +184,7 @@ static int mt9m001_init(struct i2c_client *client)
+ 	return multi_reg_write(client, init_regs, ARRAY_SIZE(init_regs));
+ }
+ 
+-static int mt9m001_apply_selection(struct v4l2_subdev *sd,
+-				    struct v4l2_rect *rect)
++static int mt9m001_apply_selection(struct v4l2_subdev *sd)
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct mt9m001 *mt9m001 = to_mt9m001(client);
+@@ -190,11 +196,11 @@ static int mt9m001_apply_selection(struct v4l2_subdev *sd,
+ 		 * The caller provides a supported format, as verified per
+ 		 * call to .set_fmt(FORMAT_TRY).
+ 		 */
+-		{ MT9M001_COLUMN_START, rect->left },
+-		{ MT9M001_ROW_START, rect->top },
+-		{ MT9M001_WINDOW_WIDTH, rect->width - 1 },
++		{ MT9M001_COLUMN_START, mt9m001->rect.left },
++		{ MT9M001_ROW_START, mt9m001->rect.top },
++		{ MT9M001_WINDOW_WIDTH, mt9m001->rect.width - 1 },
+ 		{ MT9M001_WINDOW_HEIGHT,
+-			rect->height + mt9m001->y_skip_top - 1 },
++			mt9m001->rect.height + mt9m001->y_skip_top - 1 },
+ 	};
+ 
+ 	return multi_reg_write(client, regs, ARRAY_SIZE(regs));
+@@ -203,11 +209,48 @@ static int mt9m001_apply_selection(struct v4l2_subdev *sd,
+ static int mt9m001_s_stream(struct v4l2_subdev *sd, int enable)
+ {
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
++	struct mt9m001 *mt9m001 = to_mt9m001(client);
++	int ret = 0;
++
++	mutex_lock(&mt9m001->mutex);
++
++	if (mt9m001->streaming == enable)
++		goto done;
++
++	if (enable) {
++		ret = pm_runtime_get_sync(&client->dev);
++		if (ret < 0)
++			goto put_unlock;
++
++		ret = mt9m001_apply_selection(sd);
++		if (ret)
++			goto put_unlock;
++
++		ret = __v4l2_ctrl_handler_setup(&mt9m001->hdl);
++		if (ret)
++			goto put_unlock;
++
++		/* Switch to master "normal" mode */
++		ret = reg_write(client, MT9M001_OUTPUT_CONTROL, 2);
++		if (ret < 0)
++			goto put_unlock;
++	} else {
++		/* Switch to master stop sensor readout */
++		reg_write(client, MT9M001_OUTPUT_CONTROL, 0);
++		pm_runtime_put(&client->dev);
++	}
++
++	mt9m001->streaming = enable;
++done:
++	mutex_unlock(&mt9m001->mutex);
+ 
+-	/* Switch to master "normal" mode or stop sensor readout */
+-	if (reg_write(client, MT9M001_OUTPUT_CONTROL, enable ? 2 : 0) < 0)
+-		return -EIO;
+ 	return 0;
++
++put_unlock:
++	pm_runtime_put(&client->dev);
++	mutex_unlock(&mt9m001->mutex);
++
++	return ret;
+ }
+ 
+ static int mt9m001_set_selection(struct v4l2_subdev *sd,
+@@ -217,7 +260,6 @@ static int mt9m001_set_selection(struct v4l2_subdev *sd,
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct mt9m001 *mt9m001 = to_mt9m001(client);
+ 	struct v4l2_rect rect = sel->r;
+-	int ret;
+ 
+ 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
+ 	    sel->target != V4L2_SEL_TGT_CROP)
+@@ -243,15 +285,9 @@ static int mt9m001_set_selection(struct v4l2_subdev *sd,
+ 	mt9m001->total_h = rect.height + mt9m001->y_skip_top +
+ 			   MT9M001_DEFAULT_VBLANK;
+ 
++	mt9m001->rect = rect;
+ 
+-	ret = mt9m001_apply_selection(sd, &rect);
+-	if (!ret && v4l2_ctrl_g_ctrl(mt9m001->autoexposure) == V4L2_EXPOSURE_AUTO)
+-		ret = reg_write(client, MT9M001_SHUTTER_WIDTH, mt9m001->total_h);
+-
+-	if (!ret)
+-		mt9m001->rect = rect;
+-
+-	return ret;
++	return 0;
+ }
+ 
+ static int mt9m001_get_selection(struct v4l2_subdev *sd,
+@@ -395,13 +431,40 @@ static int mt9m001_s_register(struct v4l2_subdev *sd,
+ }
+ #endif
+ 
+-static int mt9m001_s_power(struct v4l2_subdev *sd, int on)
++static int mt9m001_power_on(struct device *dev)
+ {
+-	struct i2c_client *client = v4l2_get_subdevdata(sd);
+-	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
++	struct i2c_client *client = to_i2c_client(dev);
+ 	struct mt9m001 *mt9m001 = to_mt9m001(client);
++	int ret;
++
++	ret = clk_prepare_enable(mt9m001->clk);
++	if (ret)
++		return ret;
++
++	if (mt9m001->standby_gpio) {
++		gpiod_set_value_cansleep(mt9m001->standby_gpio, 0);
++		usleep_range(1000, 2000);
++	}
+ 
+-	return soc_camera_set_power(&client->dev, ssdd, mt9m001->clk, on);
++	if (mt9m001->reset_gpio) {
++		gpiod_set_value_cansleep(mt9m001->reset_gpio, 1);
++		usleep_range(1000, 2000);
++		gpiod_set_value_cansleep(mt9m001->reset_gpio, 0);
++		usleep_range(1000, 2000);
++	}
++
++	return 0;
++}
++
++static int mt9m001_power_off(struct device *dev)
++{
++	struct i2c_client *client = to_i2c_client(dev);
++	struct mt9m001 *mt9m001 = to_mt9m001(client);
++
++	gpiod_set_value_cansleep(mt9m001->standby_gpio, 1);
++	clk_disable_unprepare(mt9m001->clk);
++
++	return 0;
+ }
+ 
+ static int mt9m001_g_volatile_ctrl(struct v4l2_ctrl *ctrl)
+@@ -429,16 +492,18 @@ static int mt9m001_s_ctrl(struct v4l2_ctrl *ctrl)
+ 	struct i2c_client *client = v4l2_get_subdevdata(sd);
+ 	struct v4l2_ctrl *exp = mt9m001->exposure;
+ 	int data;
++	int ret;
++
++	if (!pm_runtime_get_if_in_use(&client->dev))
++		return 0;
+ 
+ 	switch (ctrl->id) {
+ 	case V4L2_CID_VFLIP:
+ 		if (ctrl->val)
+-			data = reg_set(client, MT9M001_READ_OPTIONS2, 0x8000);
++			ret = reg_set(client, MT9M001_READ_OPTIONS2, 0x8000);
+ 		else
+-			data = reg_clear(client, MT9M001_READ_OPTIONS2, 0x8000);
+-		if (data < 0)
+-			return -EIO;
+-		return 0;
++			ret = reg_clear(client, MT9M001_READ_OPTIONS2, 0x8000);
++		break;
+ 
+ 	case V4L2_CID_GAIN:
+ 		/* See Datasheet Table 7, Gain settings. */
+@@ -448,9 +513,7 @@ static int mt9m001_s_ctrl(struct v4l2_ctrl *ctrl)
+ 			data = ((ctrl->val - (s32)ctrl->minimum) * 8 + range / 2) / range;
+ 
+ 			dev_dbg(&client->dev, "Setting gain %d\n", data);
+-			data = reg_write(client, MT9M001_GLOBAL_GAIN, data);
+-			if (data < 0)
+-				return -EIO;
++			ret = reg_write(client, MT9M001_GLOBAL_GAIN, data);
+ 		} else {
+ 			/* Pack it into 1.125..15 variable step, register values 9..67 */
+ 			/* We assume qctrl->maximum - qctrl->default_value - 1 > 0 */
+@@ -467,11 +530,9 @@ static int mt9m001_s_ctrl(struct v4l2_ctrl *ctrl)
+ 
+ 			dev_dbg(&client->dev, "Setting gain from %d to %d\n",
+ 				 reg_read(client, MT9M001_GLOBAL_GAIN), data);
+-			data = reg_write(client, MT9M001_GLOBAL_GAIN, data);
+-			if (data < 0)
+-				return -EIO;
++			ret = reg_write(client, MT9M001_GLOBAL_GAIN, data);
+ 		}
+-		return 0;
++		break;
+ 
+ 	case V4L2_CID_EXPOSURE_AUTO:
+ 		if (ctrl->val == V4L2_EXPOSURE_MANUAL) {
+@@ -482,19 +543,22 @@ static int mt9m001_s_ctrl(struct v4l2_ctrl *ctrl)
+ 			dev_dbg(&client->dev,
+ 				"Setting shutter width from %d to %lu\n",
+ 				reg_read(client, MT9M001_SHUTTER_WIDTH), shutter);
+-			if (reg_write(client, MT9M001_SHUTTER_WIDTH, shutter) < 0)
+-				return -EIO;
++			ret = reg_write(client, MT9M001_SHUTTER_WIDTH, shutter);
+ 		} else {
+-			const u16 vblank = 25;
+-
+ 			mt9m001->total_h = mt9m001->rect.height +
+-				mt9m001->y_skip_top + vblank;
+-			if (reg_write(client, MT9M001_SHUTTER_WIDTH, mt9m001->total_h) < 0)
+-				return -EIO;
++				mt9m001->y_skip_top + MT9M001_DEFAULT_VBLANK;
++			ret = reg_write(client, MT9M001_SHUTTER_WIDTH,
++					mt9m001->total_h);
+ 		}
+-		return 0;
++		break;
++	default:
++		ret = -EINVAL;
++		break;
+ 	}
+-	return -EINVAL;
++
++	pm_runtime_put(&client->dev);
++
++	return ret;
+ }
+ 
+ /*
+@@ -509,10 +573,6 @@ static int mt9m001_video_probe(struct soc_camera_subdev_desc *ssdd,
+ 	unsigned long flags;
+ 	int ret;
+ 
+-	ret = mt9m001_s_power(&mt9m001->subdev, 1);
+-	if (ret < 0)
+-		return ret;
+-
+ 	/* Enable the chip */
+ 	data = reg_write(client, MT9M001_CHIP_ENABLE, 1);
+ 	dev_dbg(&client->dev, "write: %d\n", data);
+@@ -571,7 +631,6 @@ static int mt9m001_video_probe(struct soc_camera_subdev_desc *ssdd,
+ 	ret = v4l2_ctrl_handler_setup(&mt9m001->hdl);
+ 
+ done:
+-	mt9m001_s_power(&mt9m001->subdev, 0);
+ 	return ret;
+ }
+ 
+@@ -601,7 +660,6 @@ static const struct v4l2_subdev_core_ops mt9m001_subdev_core_ops = {
+ 	.g_register	= mt9m001_g_register,
+ 	.s_register	= mt9m001_s_register,
+ #endif
+-	.s_power	= mt9m001_s_power,
+ };
+ 
+ static int mt9m001_enum_mbus_code(struct v4l2_subdev *sd,
+@@ -700,6 +758,20 @@ static int mt9m001_probe(struct i2c_client *client,
+ 	if (!mt9m001)
+ 		return -ENOMEM;
+ 
++	mt9m001->clk = devm_clk_get(&client->dev, NULL);
++	if (IS_ERR(mt9m001->clk))
++		return PTR_ERR(mt9m001->clk);
++
++	mt9m001->standby_gpio = devm_gpiod_get_optional(&client->dev, "standby",
++							GPIOD_OUT_LOW);
++	if (IS_ERR(mt9m001->standby_gpio))
++		return PTR_ERR(mt9m001->standby_gpio);
++
++	mt9m001->reset_gpio = devm_gpiod_get_optional(&client->dev, "reset",
++						      GPIOD_OUT_LOW);
++	if (IS_ERR(mt9m001->reset_gpio))
++		return PTR_ERR(mt9m001->reset_gpio);
++
+ 	v4l2_i2c_subdev_init(&mt9m001->subdev, client, &mt9m001_subdev_ops);
+ 	v4l2_ctrl_handler_init(&mt9m001->hdl, 4);
+ 	v4l2_ctrl_new_std(&mt9m001->hdl, &mt9m001_ctrl_ops,
+@@ -722,6 +794,9 @@ static int mt9m001_probe(struct i2c_client *client,
+ 	v4l2_ctrl_auto_cluster(2, &mt9m001->autoexposure,
+ 					V4L2_EXPOSURE_MANUAL, true);
+ 
++	mutex_init(&mt9m001->mutex);
++	mt9m001->hdl.lock = &mt9m001->mutex;
++
+ 	/* Second stage probe - when a capture adapter is there */
+ 	mt9m001->y_skip_top	= 0;
+ 	mt9m001->rect.left	= MT9M001_COLUMN_SKIP;
+@@ -729,18 +804,29 @@ static int mt9m001_probe(struct i2c_client *client,
+ 	mt9m001->rect.width	= MT9M001_MAX_WIDTH;
+ 	mt9m001->rect.height	= MT9M001_MAX_HEIGHT;
+ 
+-	mt9m001->clk = v4l2_clk_get(&client->dev, "mclk");
+-	if (IS_ERR(mt9m001->clk)) {
+-		ret = PTR_ERR(mt9m001->clk);
+-		goto eclkget;
+-	}
++	ret = mt9m001_power_on(&client->dev);
++	if (ret)
++		goto error_hdl_free;
++
++	pm_runtime_set_active(&client->dev);
++	pm_runtime_enable(&client->dev);
+ 
+ 	ret = mt9m001_video_probe(ssdd, client);
+-	if (ret) {
+-		v4l2_clk_put(mt9m001->clk);
+-eclkget:
+-		v4l2_ctrl_handler_free(&mt9m001->hdl);
+-	}
++	if (ret)
++		goto error_power_off;
++
++	pm_runtime_idle(&client->dev);
++
++	return 0;
++
++error_power_off:
++	pm_runtime_disable(&client->dev);
++	pm_runtime_set_suspended(&client->dev);
++	mt9m001_power_off(&client->dev);
++
++error_hdl_free:
++	v4l2_ctrl_handler_free(&mt9m001->hdl);
++	mutex_destroy(&mt9m001->mutex);
+ 
+ 	return ret;
+ }
+@@ -750,10 +836,17 @@ static int mt9m001_remove(struct i2c_client *client)
+ 	struct mt9m001 *mt9m001 = to_mt9m001(client);
+ 	struct soc_camera_subdev_desc *ssdd = soc_camera_i2c_to_desc(client);
+ 
+-	v4l2_clk_put(mt9m001->clk);
+ 	v4l2_device_unregister_subdev(&mt9m001->subdev);
++	pm_runtime_get_sync(&client->dev);
++
++	pm_runtime_disable(&client->dev);
++	pm_runtime_set_suspended(&client->dev);
++	pm_runtime_put_noidle(&client->dev);
++	mt9m001_power_off(&client->dev);
++
+ 	v4l2_ctrl_handler_free(&mt9m001->hdl);
+ 	mt9m001_video_remove(ssdd);
++	mutex_destroy(&mt9m001->mutex);
+ 
+ 	return 0;
+ }
+@@ -764,6 +857,10 @@ static const struct i2c_device_id mt9m001_id[] = {
+ };
+ MODULE_DEVICE_TABLE(i2c, mt9m001_id);
+ 
++static const struct dev_pm_ops mt9m001_pm_ops = {
++	SET_RUNTIME_PM_OPS(mt9m001_power_off, mt9m001_power_on, NULL)
++};
++
+ static const struct of_device_id mt9m001_of_match[] = {
+ 	{ .compatible = "onnn,mt9m001", },
+ 	{ /* sentinel */ },
+@@ -773,6 +870,7 @@ MODULE_DEVICE_TABLE(of, mt9m001_of_match);
+ static struct i2c_driver mt9m001_i2c_driver = {
+ 	.driver = {
+ 		.name = "mt9m001",
++		.pm = &mt9m001_pm_ops,
+ 		.of_match_table = mt9m001_of_match,
+ 	},
+ 	.probe		= mt9m001_probe,
+-- 
+2.7.4
