@@ -1,33 +1,85 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 5/5] ARM: dts: qcom: msm8974: add interrupt controller properties
-Date: Mon, 07 Jan 2019 15:51:47 -0800
-Message-ID: <154690510733.15366.11047294617451125580@swboyd.mtv.corp.google.com>
-References: <20190107021145.6370-1-masneyb@onstation.org> <20190107021145.6370-6-masneyb@onstation.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v1] cpufreq: qcom: Read voltage LUT and populate OPP
+Date: Mon, 7 Jan 2019 16:02:14 -0800
+Message-ID: <20190108000214.GR261387@google.com>
+References: <1545415608-15163-1-git-send-email-tdas@codeaurora.org>
+ <20181221205752.GD261387@google.com>
+ <2977f340-cd4e-86bc-da3a-8845676e39ed@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107021145.6370-6-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <2977f340-cd4e-86bc-da3a-8845676e39ed@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, lee.jones@linaro.org, linus.walleij@linaro.org
-Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2019-01-06 18:11:45)
-> -                                    <0 0xde 0 IRQ_TYPE_NONE>,
-> -                                    <0 0xdf 0 IRQ_TYPE_NONE>,
-> -                                    <0 0xe0 0 IRQ_TYPE_NONE>,
-> -                                    <0 0xe1 0 IRQ_TYPE_NONE>,
-> -                                    <0 0xe2 0 IRQ_TYPE_NONE>,
-> -                                    <0 0xe3 0 IRQ_TYPE_NONE>;
-> +                       interrupt-parent =3D <&spmi_bus>;
+Hi Taniya. 
 
-If I'm reading of_irq_find_parent() correctly, we don't need to specify
-this? It becomes implicit because spmi_bus has the interrupt-cells
-property and this is a child node of that.
+On Mon, Dec 24, 2018 at 12:29:18AM +0530, Taniya Das wrote:
 
-> +                       interrupt-controller;
-> +                       #interrupt-cells =3D <2>;
-> =20
->                         boost_bypass_n_pin: boost-bypass {
->                                 pins =3D "gpio21";
+> Could you help validating with the patch below?
+
+...
+
+> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c
+> b/drivers/cpufreq/qcom-cpufreq-hw.c
+> index 7559b87..23338b2 100644
+> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
+> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
+> @@ -81,7 +81,6 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+>         u32 volt;
+>         unsigned int max_cores = cpumask_weight(policy->cpus);
+>         struct cpufreq_frequency_table  *table;
+> -       unsigned long cpu_r;
+> 
+>         table = kcalloc(LUT_MAX_ENTRIES + 1, sizeof(*table), GFP_KERNEL);
+>         if (!table)
+> @@ -110,6 +109,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+>                         table[i].frequency = freq;
+>                         dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
+>                                 freq, core_count);
+> +                       dev_pm_opp_add(get_cpu_device(policy->cpu),
+> +                                       freq * 1000, volt);
+>                 }
+> 
+>                 /*
+> @@ -126,6 +127,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+>                         if (prev_cc != max_cores) {
+>                                 prev->frequency = prev_freq;
+>                                 prev->flags = CPUFREQ_BOOST_FREQ;
+> +                               dev_pm_opp_add(get_cpu_device(policy->cpu),
+> +                                               prev_freq * 1000, volt);
+>                         }
+> 
+>                         break;
+> @@ -133,12 +136,9 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+> 
+>                 prev_cc = core_count;
+>                 prev_freq = freq;
+> -
+> -               freq *= 1000;
+> -               for_each_cpu(cpu_r, policy->cpus)
+> -                       dev_pm_opp_add(get_cpu_device(cpu_r), freq, volt);
+>         }
+> 
+> +       dev_pm_opp_set_sharing_cpus(get_cpu_device(policy->cpu),
+> policy->cpus);
+>         table[i].frequency = CPUFREQ_TABLE_END;
+>         policy->freq_table = table;
+> 
+> @@ -245,6 +245,7 @@ static int qcom_cpufreq_hw_cpu_exit(struct
+> cpufreq_policy *policy)
+>  {
+>         void __iomem *base = policy->driver_data - REG_PERF_STATE;
+> 
+> +       dev_pm_opp_cpumask_remove_table(policy->cpus);
+
+Evan found that this doesn't actually remove dynamically added
+OPPs. You'll have to use the shiny new dev_pm_opp_remove_all_dynamic()
+(https://lore.kernel.org/patchwork/patch/1028942/) instead.
+
+Cheers
+
+Matthias
