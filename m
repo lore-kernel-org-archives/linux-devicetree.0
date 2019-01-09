@@ -1,181 +1,38 @@
-From: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
-Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
- LP5024/18 RGB LED driver
-Date: Wed, 9 Jan 2019 09:11:03 +0200
-Message-ID: <1c53d379-64e5-4e72-5236-de8db77a5048@gmail.com>
-References: <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
- <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
- <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
- <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com> <20190108225952.GA13299@amd>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v4 01/15] ARM: export arm_pm_restart()
+Date: Wed, 09 Jan 2019 08:24:04 +0100
+Message-ID: <916efaa742e0b621f02b385f0ac6f186b960c028.camel@v3.sk>
+References: <20190108175818.705110-1-lkundrak@v3.sk>
+         <20190108175818.705110-2-lkundrak@v3.sk>
+         <20190108233137.GW11171@n2100.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108225952.GA13299@amd>
-Content-Language: en-US
+In-Reply-To: <20190108233137.GW11171@n2100.armlinux.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Cc: Dan Murphy <dmurphy@ti.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Russell King - ARM Linux <linux@armlinux.org.uk>
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, platform-driver-x86@vger.kernel.org, James Cameron <quozl@laptop.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, x86@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Pavel,
-
-On 09/01/2019 0.59, Pavel Machek wrote:
-> Hi!
+On Tue, 2019-01-08 at 23:31 +0000, Russell King - ARM Linux wrote:
+> On Tue, Jan 08, 2019 at 06:58:04PM +0100, Lubomir Rintel wrote:
+> > The OLPC XO 1.75 laptop is rebooted with a command to the Embedded
+> > Controller. The EC driver should be a module, since most people don't need
+> > it to be compiled in.
 > 
->>>>> Grab yourself an RGB LED and play with it; you'll see what the
->>>>> problems are. It is hard to explain colors over email...
->>>>
->>>> Video [0] gives some overview of lp5024 capabilities.
->>>>
->>>> I don't see any problems in exposing separate red,green,blue
->>>> files and brightness for the devices with hardware support for
->>>> that.
->>>
->>> Well, that's what we do today, as three separate LEDs, right?
->>
->> No. It doesn't allow for setting color intensity by having
->> the color fixed beforehand. Below is relevant excerpt from
->> the lp5024 documentation. This is not something that can be
->> mapped to RGB color space, but rather to HSV/HSL, with the
->> reservation that the hardware implementation uses PWM
->> for setting color intensity.
-> 
-> So they have feature where they have independent controls for each
-> channel, then one common control per three channels. Other chips have
-> common control for all the LEDs, for example. We don't support that
-> currently; lets focus on the RGB thing first.
-> 
->>> I don't have problem with that, either; other drivers already do
->>> that. He's free to use existing same interface.
->>>
->>> But that is insufficient, as it does not allow simple stuff, such as
->>> turning led "white".
->>>
->>> So... perhaps we should agree on requirements, first, and then we can
->>> discuss solutions?
->>>
->>> Requirements for RGB LED interface:
->>>
->>> 1) Userspace should be able to set the white color
->>>
->>> 2) Userspace should be able to arbitrary color from well known list
->>> and it should approximately match what would CRT, LCD or OLED monitor display
->>
->> The difference is that monitor display driver is pre-calibrated
->> for given display by the manufacturer. With the LED controllers the
->> manufacturer has no control over what LEDs will be connected to the
->> iouts. Therefore it should be not surprising that colors produced
->> by custom LEDs are not as user would expect when comparing to
->> the RGB color displayed on the monitor display.
-> 
-> It is true that _chip_ manufacturer can not know what LEDs will be
-> connected. But _system_ manufacturer can and should know that, and
-> should tell be able to tell us in the dts.
-> 
->> This renders your requirement 2) infeasible with use of custom LEDs
->> any fixed algorithm, since the final effect will always heavily depend
->> on the LED circuit design.
-> 
-> Depending on LED circuit design and actual LEDs connected is okay.. we
-> just need to get information from _system_ designer (not chip
-> designer), and pass it to a place where color is computed.
-> 
->>> a) RGB LEDs are usually not balanced. Setting 100% PWM on
->>> red/green/blue channels will result in nothing close to white
->>> light. In fact, to get white light on N900, blue and green channel's
->>> PWM needs to be set pretty low, as in 5%.
->>>
->>> b) LED class does not define any relation between "brightness" in
->>> sysfs and ammount of light in lumens. Some drivers use close to linear
->>> relation, some use exponential relation. Human eyes percieve logarithm
->>> of lumens. RGB color model uses even more complex function.
->>
->> One general question: do you have any solutions in store?
-> 
-> I played with LEDs on N900 over the weekend, yes.
-> 
-> And getting reasonable colors seems to be possible, when a) and b) are
-> solved... a) seems to be more important than b).
-> 
-> Now... this does not tell us how we should design kernel<->user
-> interface, but it should tell us that main goals - 1) and 2) are
-> possible.
+> Why do you need this - is there a reason why you can't hook onto the
+> restart_handler_list using register_restart_handler()?  The registered
+> handlers are passed the command.
 
-I was thinking about this calibration and color correctness thing and I 
-am thinking a bit that it should be partly in kernel and partly in user 
-space.
+Actually, yes. The restart handlers are invoked in atomic context, but
+the EC communication needs to block. (The 1.75 EC is actually a SPI
+master: a command it initiated by poking a GPIO and waiting until EC
+tells us it's ready to read a command.)
 
-For displays and printers there are defined icc-profiles that define how 
-colors are mapped to particular device in cases when you want to have 
-accurate color representation. In theory to get accurate LED output one 
-could model LEDs with icc profile and then pick your color and convert 
-it with icc profile to actual raw hardware values. Then this raw 
-hardware value could be written from user space to kernel.
+Sorry for not mentioning that earlier, I forgot that it is the case.
 
-In kernel we could provide raw hardware value support and in case of PWM 
-IC controlled LEDs we could provide curve mapping to linearize the 
-behavior of values entered to enable use in cases where close enough is 
-good enough.
+> I would rather this is not exported to modules, it is generally unsafe
+> to hook stuff by directly poking function pointers from module code.
 
-Eg. if you want to have "white" then you have your color space picker 
-like sRGB(255,255,255). Then you would define icc profile it might 
-translate to hardware raw values 253%, 230%, 225%.
-
-Then you would write this to kernel with:
-
-# set red, green and blue color elements
-echo "253 230 225" > color
-
-In this case however behavior of brightness node is challening in 
-accuracy domain. Britghtness value 255 would of course provide 1:1 
-mapping in this case.
-
-To go right to correct color and brightness at one go we could have 
-optional brightness at the end of color value array:
-
-# set red, green and blue color element and brightness setting:
-echo "253 230 225 255" > color
-
-If you want to have fancier behavior for brightness in your system then 
-we probably need to have configurable brightness model.
-
-- hardware, like in lp5024 case would map to hardware register (would be 
-omitted if there is no such register)
-- onoff, would act like light switch ON/OFF eg. either configured value 
-or all zeroes.
-- scaled, would multiply the color elements
-- hsl, would use hsl formula
-- and this can be extended later with some other models and allows us to 
-start with with some models now.
-
-We could define this in devicetree and from sysfs a bit like with trigger:
-
-$ cat brightness_model
-[hardware] onoff scaled hsl
-
-$ echo "hsl" > brightness_model
-
-$ cat brightness_model
-hardware onoff scaled [hsl]
-
-Then we could have "color_names" or such sysfs entry to determine allow 
-user space auto detection of led elements):
-
-$ cat color_names
-red green blue
-
-I suppose this model would provide flexibilty for multiple cases. Make 
-it simple for most uses, allow accuracy with icc profiles for advanced 
-users, would allow atomic color setting.
-
-I have updated (not yet in github) my tests to use color array model and 
-color_names already and can play with brightness_model thing if this is 
-something that is good path?
-
-What do you think?
-
-Thanks,
-Vesa Jääskeläinen
+Lubo
