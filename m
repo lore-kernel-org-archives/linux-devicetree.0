@@ -1,48 +1,35 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 13/34] dt-bindings: arm: amlogic: Move
- 'amlogic,meson-gx-ao-secure' binding to its own file
-Date: Wed, 9 Jan 2019 10:12:23 -0600
-Message-ID: <CAL_JsqJ2yN_h0FUJ_F79OBMNkpOH=ou-o4iBHffoRt4XRP8mYA@mail.gmail.com>
-References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-14-robh@kernel.org>
- <7hr2ewbxd4.fsf@baylibre.com> <CAL_Jsq+hZRJZZ1ZcOxZVXtsUs0013cP0fyf3A=_9J15WbzuUhw@mail.gmail.com>
+From: Dinh Nguyen <dinguyen@kernel.org>
+Subject: Re: [PATCH] arm64: dts: stratix10: Add Stratix10 SMMU support
+Date: Wed, 9 Jan 2019 10:22:02 -0600
+Message-ID: <773738c7-acce-0d33-5a46-5ebb2360824d@kernel.org>
+References: <1546629826-1167-1-git-send-email-thor.thayer@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_Jsq+hZRJZZ1ZcOxZVXtsUs0013cP0fyf3A=_9J15WbzuUhw@mail.gmail.com>
+In-Reply-To: <1546629826-1167-1-git-send-email-thor.thayer@linux.intel.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org
+To: thor.thayer@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Dec 4, 2018 at 10:18 PM Rob Herring <robh@kernel.org> wrote:
->
-> On Tue, Dec 4, 2018 at 7:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
-> >
-> > Rob Herring <robh@kernel.org> writes:
-> >
-> > > It is best practice to have 1 binding per file, so board level bindings
-> > > should be separate for various misc SoC bindings.
-> > >
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Carlo Caione <carlo@caione.org>
-> > > Cc: Kevin Hilman <khilman@baylibre.com>
-> > > Cc: devicetree@vger.kernel.org
-> > > Cc: linux-arm-kernel@lists.infradead.org
-> > > Cc: linux-amlogic@lists.infradead.org
-> > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > ---
-> > >  .../devicetree/bindings/arm/amlogic.txt       | 29 -------------------
-> > >  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ++++++++++++++++++
-> > >  2 files changed, 28 insertions(+), 29 deletions(-)
-> > >  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
-> >
-> > Acked-by: Kevin Hilman <khilman@baylibre.com>
-> >
-> > But this isn't really related to the schema series is it?  If you
-> > prefer, I can just queue this one separately via my tree.
->
-> Yes, you can take it.
 
-Hey Kevin, doesn't look like this got applied.
 
-Rob
+On 1/4/19 1:23 PM, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> Now there are device tree clocks for the ARM64 SMMU,
+> add SMMU support to the Stratix10 Device Tree which
+> includes adding the SMMU node and adding IOMMU stream
+> ids to the SMMU peripherals.
+> 
+> Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+> ---
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi | 29 +++++++++++++++++++++++
+>  1 file changed, 29 insertions(+)
+
+Applied!
+
+Thanks,
+Dinh
