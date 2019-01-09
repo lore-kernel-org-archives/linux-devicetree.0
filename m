@@ -1,58 +1,69 @@
-From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH] ARM: dts: s5pv210: Fix onenand's unit address format warning
-Date: Wed, 09 Jan 2019 15:31:06 +0100
-Message-ID: <2629067.mKC4sQJUgE@acerlaptop>
-References: <1547041383-16924-1-git-send-email-krzk@kernel.org>
+From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v4 2/3] drm/msm/dpu: Integrate interconnect
+ API in MDSS
+Date: Wed, 9 Jan 2019 16:38:47 +0200
+Message-ID: <f27f5879-04d2-ad7d-a1d6-3a4e638ef33d@linaro.org>
+References: <1545373225-32046-1-git-send-email-jshekhar@codeaurora.org>
+ <1545373225-32046-3-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547041383-16924-1-git-send-email-krzk@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Tomasz Figa <tomasz.figa@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1545373225-32046-3-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Dnia =C5=9Broda, 9 stycznia 2019 14:43:03 CET Krzysztof Kozlowski pisze:
-> According to Devicetree specification, the unit-address must match the
-> first address specified in the reg property of the node.  Fix the DTC
-> warning onenand node:
->=20
->     arch/arm/boot/dts/s5pv210.dtsi:81.29-93.5:
->         Warning (simple_bus_reg): /soc/onenand@b0000000: simple-bus unit =
-address format error, expected "b0600000"
->=20
-> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
->=20
-> ---
->=20
-> The remaining warning is wrong clock-controller subnode of fimc camera.
->     arch/arm/boot/dts/s5pv210.dtsi:578.32-580.6: Warning (simple_bus_reg)=
-: /soc/camera/clock-controller: missing or empty reg/ranges property
-> The subnode in my understanding does not follow bindings and the driver.
-> The driver with current s5pv210.dtsi will not register a clock provider..=
-=2E but
-> I do not have a device to confirm this.
-> ---
->  arch/arm/boot/dts/s5pv210.dtsi | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->=20
-> diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.d=
-tsi
-> index cc22c9db80d2..26ea5c66d8ce 100644
-> --- a/arch/arm/boot/dts/s5pv210.dtsi
-> +++ b/arch/arm/boot/dts/s5pv210.dtsi
-> @@ -78,7 +78,7 @@
->  			};
->  		};
-> =20
-> -		onenand: onenand@b0000000 {
-> +		onenand: onenand@b0600000 {
->  			compatible =3D "samsung,s5pv210-onenand";
->  			reg =3D <0xb0600000 0x2000>,
->  				<0xb0000000 0x20000>,
->=20
-Checked on Samsung Galaxy S (with local, not yet submited patches for devic=
-etree support for onenand, which is missing in mainline) and it looks ok (d=
-evice probed, was able to use ubi tools).
-Tested-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+SGkgSmF5YW50LAoKT24gMTIvMjEvMTggMDg6MjAsIEpheWFudCBTaGVraGFyIHdyb3RlOgo+IEZy
+b206IFNyYXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1a3VAY29kZWF1cm9yYS5vcmc+Cj4gCj4g
+VGhlIGludGVyY29ubmVjdCBmcmFtZXdvcmsgaXMgZGVzaWduZWQgdG8gcHJvdmlkZSBhCj4gc3Rh
+bmRhcmQga2VybmVsIGludGVyZmFjZSB0byBjb250cm9sIHRoZSBzZXR0aW5ncyBvZgo+IHRoZSBp
+bnRlcmNvbm5lY3RzIG9uIGEgU29DLgo+IAo+IFRoZSBpbnRlcmNvbm5lY3QgQVBJIHVzZXMgYSBj
+b25zdW1lci9wcm92aWRlci1iYXNlZCBtb2RlbCwKPiB3aGVyZSB0aGUgcHJvdmlkZXJzIGFyZSB0
+aGUgaW50ZXJjb25uZWN0IGJ1c2VzIGFuZCB0aGUKPiBjb25zdW1lcnMgY291bGQgYmUgdmFyaW91
+cyBkcml2ZXJzLgo+IAo+IE1EU1MgaXMgb25lIG9mIHRoZSBpbnRlcmNvbm5lY3QgY29uc3VtZXJz
+IHdoaWNoIHVzZXMgdGhlCj4gaW50ZXJjb25uZWN0IEFQSXMgdG8gZ2V0IHRoZSBwYXRoIGJldHdl
+ZW4gZW5kcG9pbnRzIGFuZAo+IHNldCBpdHMgYmFuZHdpZHRoL2xhdGVuY3kvUW9TIHJlcXVpcmVt
+ZW50cyBmb3IgdGhlIGdpdmVuCgpDdXJyZW50bHkgd2Ugc2V0IG9ubHkgYmFuZHdpZHRoLgoKPiBp
+bnRlcmNvbm5lY3RlZCBwYXRoLgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gCS0gUmVtb3ZlIGVycm9y
+IGxvZyBhbmQgdW5uZWNlc3NhcnkgY2hlY2sgKEpvcmRhbiBDcm91c2UpCj4gCj4gQ2hhbmdlcyBp
+biB2MzoKPiAJLSBDb2RlIGNsZWFuIGludm9sdmluZyB2YXJpYWJsZSBuYW1lIGNoYW5nZSwgcmVt
+b3ZhbAo+IAkgIG9mIGV4dHJhIHBhcmFudGhlc2lzIGFuZCB2YXJpYWJsZXMgKE1hdHRoaWFzIEth
+ZWhsY2tlKQo+IAo+IENoYW5nZXMgaW4gdjQ6Cj4gCS0gQWRkIGNvbW1lbnRzLCBzcGFjaW5ncywg
+dGFicywgcHJvcGVyIHBvcnQgbmFtZQo+IAkgIGFuZCBpY2MgbWFjcm8gKEdlb3JnaSBEamFrb3Yp
+CgpUaGUgY2hhbmdlcyBzaG91bGQgbm90IGJlIHBhcnQgb2YgdGhlIGNvbW1pdCB0ZXh0LCBidXQg
+c2hvdWxkIG1vdmUgYmVsb3cKdGhlICItLS0iIGxpbmUuCgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNy
+YXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1a3VAY29kZWF1cm9yYS5vcmc+Cj4gU2lnbmVkLW9m
+Zi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBk
+cml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jIHwgNDkgKysrKysrKysrKysr
+KysrKysrKysrKysrKysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyks
+IDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlz
+cC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRz
+cy5jCj4gaW5kZXggMzg1NzZmOC4uZmNhYTcxZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
+cm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9k
+aXNwL2RwdTEvZHB1X21kc3MuYwo+IEBAIC00LDExICs0LDE1IEBACj4gICAqLwo+ICAKPiAgI2lu
+Y2x1ZGUgImRwdV9rbXMuaCIKPiArI2luY2x1ZGUgPGxpbnV4L2ludGVyY29ubmVjdC5oPgo+ICAK
+PiAgI2RlZmluZSB0b19kcHVfbWRzcyh4KSBjb250YWluZXJfb2YoeCwgc3RydWN0IGRwdV9tZHNz
+LCBiYXNlKQo+ICAKPiAgI2RlZmluZSBIV19JTlRSX1NUQVRVUwkJCTB4MDAxMAo+ICAKPiArLyog
+TWF4IEJXIGRlZmluZWQgaW4gS0JwcyAqLwo+ICsjZGVmaW5lIE1BWF9CVwkJCQk2ODAwMDAwCj4g
+Kwo+ICBzdHJ1Y3QgZHB1X21kc3Mgewo+ICAJc3RydWN0IG1zbV9tZHNzIGJhc2U7Cj4gIAl2b2lk
+IF9faW9tZW0gKm1taW87Cj4gQEAgLTE2LDggKzIwLDMwIEBAIHN0cnVjdCBkcHVfbWRzcyB7Cj4g
+IAl1MzIgaHd2ZXJzaW9uOwo+ICAJc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgbXA7Cj4gIAlzdHJ1
+Y3QgZHB1X2lycV9jb250cm9sbGVyIGlycV9jb250cm9sbGVyOwo+ICsJc3RydWN0IGljY19wYXRo
+ICpwYXRoWzJdOwo+ICsJdTMyIG51bV9wYXRoczsKPiAgfTsKPiAgCj4gK3N0YXRpYyBpbnQgZHB1
+X21kc3NfcGFyc2VfZGF0YV9idXNfaWNjX3BhdGgoc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPiAr
+CQlzdHJ1Y3QgZHB1X21kc3MgKmRwdV9tZHNzKQoKTml0OiBQbGVhc2UgYWxpZ24gdG8gdGhlIG9w
+ZW4gcGFyZW50aGVzaXMuCgpPdGhlcndpc2UgbG9va3MgZ29vZCB0byBtZS4KClRoYW5rcywKR2Vv
+cmdpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
