@@ -1,51 +1,56 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous
- error detection driver
-Date: Wed, 9 Jan 2019 09:57:06 +0000
-Message-ID: <52dc5125-9213-9ee4-eca6-cc8ffbc869f7@arm.com>
-References: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
- <20190108104204.GA14243@zn.tnic>
- <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
- <20190108181206.GA3848@kroah.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] ARM: dts: sun6i: Add clock-output-names to osc24M clock
+Date: Wed, 9 Jan 2019 11:11:37 +0100
+Message-ID: <20190109101137.sh6ioyvq5wm6ug23@flea>
+References: <20190108072526.2621-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="nrrmjmmauuftwoov"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108181206.GA3848@kroah.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190108072526.2621-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: Borislav Petkov <bp@alien8.de>, "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.ker
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Greg,
 
-On 01/08/2019 06:12 PM, gregkh@linuxfoundation.org wrote:
-> On Tue, Jan 08, 2019 at 05:57:24PM +0000, James Morse wrote:
->>>> diff --git a/drivers/edac/cortex_a15_l2_async_edac.c b/drivers/edac/cortex_a15_l2_async_edac.c
->>>> new file mode 100644
->>>> index 000000000000..26252568e961
->>>> --- /dev/null
->>>> +++ b/drivers/edac/cortex_a15_l2_async_edac.c
->>>> @@ -0,0 +1,134 @@
->>>> +// SPDX-License-Identifier: GPL-2.0
->>>> +/*
->>>> + * Copyright (C) 2018 Nokia Corporation
->>
->> (boiler plate not needed with the SPDX header)
-> 
-> Not true at all.  Copyright is not the same thing as an SPDX license
-> identifier in any way, shape, or form.  As-is, this is just fine.
+--nrrmjmmauuftwoov
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
+On Tue, Jan 08, 2019 at 03:25:26PM +0800, Chen-Yu Tsai wrote:
+> The osc24M clock does not have a "clock-output-names" property, which
+> means that the clock name is derived from the node name in Linux. The
+> node name was changed in commit acfd5bbe2641 ("ARM: dts: sun6i: Change
+> clock node names to avoid warnings"). This breaks Linux as the sunxi-ng
+> clock driver implicitly depends on the external clock being named
+> "osc24M".
+>=20
+> Add a "clock-output-names" property to restore the previous behavior.
+>=20
+> Fixes: acfd5bbe2641 ("ARM: dts: sun6i: Change clock node names to avoid
+> 		      warnings")
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-This looks funny because I removed the GPL license text that was here, 
-but left this comment when trimming the reply. I should have left a few 
-lines of it for context.
+Applied, thanks!
+Maxime
 
-(Originally: 
-https://lore.kernel.org/lkml/20190108104204.GA14243@zn.tnic/T/#u)
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
+--nrrmjmmauuftwoov
+Content-Type: application/pgp-signature; name="signature.asc"
 
-Thanks,
+-----BEGIN PGP SIGNATURE-----
 
-James
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXDXI2QAKCRDj7w1vZxhR
+xZmoAQDm3bL9J9jdFm0jYD84rJW8RuzHZuBZQrjMhlByqYpQvQEAo9PkDmEnw3O+
+FXvx0AK+HIKpG+Beknn8yqrrudy3+wI=
+=rytg
+-----END PGP SIGNATURE-----
+
+--nrrmjmmauuftwoov--
