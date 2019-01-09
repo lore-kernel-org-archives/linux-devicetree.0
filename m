@@ -1,56 +1,35 @@
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Subject: Re: [PATCH] arm64/hisilicon: fix SDcard detection
-Date: Wed, 9 Jan 2019 20:08:59 +0100
-Message-ID: <CAKfTPtAaVXjm8sf1o=4yfRt_pyVU0T7H8jOatm6EreYVNoWj+w@mail.gmail.com>
-References: <1547056892-16527-1-git-send-email-vincent.guittot@linaro.org> <CACRpkdbA8cvoaG_5=JCrpQd2k1HYRxUjqGsoGJLLvroGGQukkA@mail.gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V5 0/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Wed, 9 Jan 2019 20:09:50 +0100 (CET)
+Message-ID: <1739529063.54681.1547060990832@email.ionos.de>
+References: <1546034967-2427-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbA8cvoaG_5=JCrpQd2k1HYRxUjqGsoGJLLvroGGQukkA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1546034967-2427-1-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
+Cc: devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 9 Jan 2019 at 19:28, Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> Hi Vincent!
->
-> On Wed, Jan 9, 2019 at 7:01 PM Vincent Guittot
-> <vincent.guittot@linaro.org> wrote:
->
-> > commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> > has changed how cd_gpios phandle and cd-inverted are used to set gpio's flags.
-> >
-> > Since this change, hikey960 SDcard is not detected anymore because flags
-> > are not set correctly. Updating cd-gpios to set GPIO_ACTIVE_LOW instead
-> > of high, fixes the problem.
-> >
-> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
->
-> Please check if this patch fixes your problem:
-> https://marc.info/?l=linux-mmc&m=154637189021211&w=2
 
-This fix the problem
+> Stefan Wahren <stefan.wahren@i2se.com> hat am 28. Dezember 2018 um 23:09 geschrieben:
+> 
+> 
+> This patch series adds support for the brand new Raspberry Pi 3 A+ .
+> Since there is no official DTS file yet, this one bases on a procfs dump and
+> the dt-blob of the firmware [1].
+> 
+> [1] - https://github.com/raspberrypi/firmware/blob/master/extra/dt-blob.dts
+> 
 
->
-> > --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> > +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
-> > @@ -582,7 +582,7 @@
-> >         sd-uhs-sdr104;
-> >         disable-wp;
-> >         cd-inverted;
-> > -       cd-gpios = <&gpio25 3 0>;
-> > +       cd-gpios = <&gpio25 3 GPIO_ACTIVE_LOW>;
->
-> This is also a good change, but the old device tree should
-> continue to work so we need to fix the real bug.
->
-> If you also remove "cd-inverted" above, this patch should
-> hopefully still work and be fine to apply as well.
-
-ok. I'm going to send an update
-
->
-> Yours,
-> Linus Walleij
+Applied to bcm2835-dt-next / bcm2835-dt-64-next
