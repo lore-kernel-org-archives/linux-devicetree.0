@@ -1,61 +1,29 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v10 1/9] dt-bindings: opp: Introduce opp-level bindings
-Date: Wed, 9 Jan 2019 14:39:12 +0530
-Message-ID: <20190109090912.ciq4uzo5sjghyms2@vireshk-i7>
-References: <20190109090420.8100-1-rnayak@codeaurora.org>
- <20190109090420.8100-2-rnayak@codeaurora.org>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH 0/3] 8250_omap: use clk APIs to get fclk freqeuncy
+Date: Wed, 9 Jan 2019 14:42:03 +0530
+Message-ID: <20190109091206.25759-1-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190109090420.8100-2-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: andy.gross@linaro.org, robh@kernel.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Jiri Slaby <jslaby@suse.com>, Vignesh R <vigneshr@ti.com>, Tony Lindgren <tony@atomide.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 09-01-19, 14:34, Rajendra Nayak wrote:
-> On some SoCs (especially from Qualcomm and MediaTek) an OPP
-> node needs to describe an additional level/corner value
-> that is then communicated to a remote microprocessor by the CPU, which
-> then takes some actions (like adjusting voltage values across variousi
-> rails) based on the value passed.
-> 
-> Add opp-level as an additional property in the OPP node and describe it
-> in the OPP bindings document.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> ---
->  Documentation/devicetree/bindings/opp/opp.txt | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index c396c4c0af92..e83fb7cbfd58 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -129,6 +129,11 @@ Optional properties:
->  - opp-microamp-<name>: Named opp-microamp property. Similar to
->    opp-microvolt-<name> property, but for microamp instead.
->  
-> +- opp-level: On some SoC platforms an OPP node can describe a positive value
-> +  representing a corner/level that's communicated with a remote microprocessor
-> +  (usually called the power manager) which then translates it into a certain
-> +  voltage on a voltage rail.
-> +
+This series adds support obtain clk frequency of functional clk via
+clocks phandle instead of hard coding it in DT as part of
+clock-frequency DT parameter. This eliminates need to calculate
+frequency offline and populate it.
 
-This binding is generic enough and doesn't have anything to do with a
-remote mp and so such statements should be avoided in here. And then
-Linux can use it the way it wants.
+Vignesh R (3):
+  serial: 8250_omap: Drop check for of_node
+  dt-bindings: serial: omap_serial: add clocks entry
+  serial: 8250_omap: Use clk_get_rate() to obtain fclk frequency
 
-Maybe just say that it describes the performance level of the device.
-That's all.
-
->  - clock-latency-ns: Specifies the maximum possible transition latency (in
->    nanoseconds) for switching to this OPP from any other OPP.
->  
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
+ .../bindings/serial/omap_serial.txt           |  2 +
+ drivers/tty/serial/8250/8250_omap.c           | 75 ++++++++++---------
+ 2 files changed, 42 insertions(+), 35 deletions(-)
 
 -- 
-viresh
+2.20.1
