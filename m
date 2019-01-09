@@ -1,103 +1,28 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt
- parent for GPIO
-Date: Wed, 9 Jan 2019 13:36:56 -0600
-Message-ID: <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
-References: <20181219221105.3004-1-ilina@codeaurora.org> <20181219221105.3004-5-ilina@codeaurora.org>
- <20181229000714.GA3654@bogus> <20190107185113.GH14960@codeaurora.org>
- <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com> <20190109173111.GB22547@codeaurora.org>
+Subject: Re: [PATCH v2] ARM: dts: omap3-gta04: Fix graph_port warning
+Date: Wed, 9 Jan 2019 13:37:44 -0600
+Message-ID: <CAL_JsqLhGGx_amtDSZh3OJ+Tq-Oziu450NOt4Z+aoQMt-JY46Q@mail.gmail.com>
+References: <97349a696b43af65d62b5d8e795ec3771b5e78bd.1547060514.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109173111.GB22547@codeaurora.org>
+In-Reply-To: <97349a696b43af65d62b5d8e795ec3771b5e78bd.1547060514.git.hns@goldelico.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
+To: "H. Nikolaus Schaller" <hns@goldelico.com>
+Cc: Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 9, 2019 at 11:31 AM Lina Iyer <ilina@codeaurora.org> wrote:
+On Wed, Jan 9, 2019 at 1:02 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
 >
-> On Tue, Jan 08 2019 at 07:49 -0700, Rob Herring wrote:
-> >On Mon, Jan 7, 2019 at 12:51 PM Lina Iyer <ilina@codeaurora.org> wrote:
-> >>
-> >> On Fri, Dec 28 2018 at 17:07 -0700, Rob Herring wrote:
-> >> >On Wed, Dec 19, 2018 at 03:11:02PM -0700, Lina Iyer wrote:
-> >> >> SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-> >> >> routed to the PDC as interrupts that can be used to wake the system up
-> >> >> from deep low power modes and suspend.
-> >> >>
-> >> >> Cc: devicetree@vger.kernel.org
-> >> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
-> >> >> ---
-> >> >>  .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
-> >> >>  1 file changed, 6 insertions(+), 1 deletion(-)
-> >> >>
-> >> >> diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> >> >> index 665aadb5ea28..a522ca46667d 100644
-> >> >> --- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> >> >> +++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-> >> >> @@ -29,6 +29,11 @@ SDM845 platform.
-> >> >>      Definition: must be 2. Specifying the pin number and flags, as defined
-> >> >>                  in <dt-bindings/interrupt-controller/irq.h>
-> >> >>
-> >> >> +- wakeup-parent:
-> >> >> +    Usage: optional
-> >> >> +    Value type: <phandle>
-> >> >> +    Definition: A phandle to the wakeup interrupt controller for the SoC.
-> >> >
-> >> >Is this really necessary? Is there more than one possible wakeup-parent
-> >> >node?
-> >> >
-> >> No.  There is only one but depending on the architecture, the wakeup
-> >> interrupt controller could be different device like PDC on SDM845 or MPM
-> >> on SDM820.
-> >>
-> >> What do you have in mind? Let me know if you have a better idea than
-> >> referencing in DT.
-> >
-> >If there's only one possibility for a given platform, then you can
-> >just use of_find_compatible_node(). I don't think it matters that
-> >different platforms have a different device here. It's not going to be
-> >a large table and you may need to know the differences if there's not
-> >an abstracted interface to it (seems there is in your case).
-> The GPIO irqchip would be in hierarchy with the wakeup-parent
-> irqchip and no device specific functions would be called directly.
-> We could achieve this with compatible strings to the irqchip.
+> From: Tony Lindgren <tony@atomide.com>
 >
-> >Alternatively, if the PDC/MPM code knows what interrupt controller it
-> >is associated with, then it could setup that relationship and the
-> >interrupt controller code could retrieve that. Maybe the stacked
-> >domain support doesn't work in that direction (I haven't looked at the
-> >irq code much since that was added).
-> >
-> The PDC/MPM do not know about the association.
-
-Neither does the main interrupt controller. The association is part of
-SoC integration. You can describe that association in either direction
-and that is sufficient from a DT standpoint. You've probably picked
-putting this in the GIC(?) based on what works more easily with the
-Linux irqdomain code.
-
-> >However, my main concern is documenting something genericish in a
-> >device specific binding. It looks like Tegra is trying to add the same
-> >thing, so this needs to be documented in a common place. One question
-> >is whether wakeup is the only use or if this should be more generally
-> >a secondary interrupt parent?
-> >
-> Yes, wakeup is the only use of this interrupt parent.
-
-Maybe for you, but I was wondering about this more generally. Should
-we encode what the function (e.g. wakeup) is in the property name or
-have something like aux-interrupt-controller? Maybe some platforms
-have some need for a secondary interrupt-controller which is not
-wakeup. Routing interrupts to other cores perhaps?
-
-> It is powered by
-> an always-on rail and therefore can detect some interrupts that are
-> routed to it even when the GIC is powered off. Though Tegra's
-> implementation of the irqchip is a bit different from QCOM, the idea is
-> generally the same. It would be helpful, if we could make this a
-> generic enough binding.
+> We're currently getting a warning with make dtbs:
 >
-> -- Lina
+> arch/arm/boot/dts/omap3-gta04.dtsi:720.7-727.4: Warning (graph_port):
+> /ocp@68000000/dss@48050000/encoder@48050c0 0/port: graph node unit
+> address error, expected "0"
 >
+> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
+> Signed-off-by: Tony Lindgren <tony@atomide.com>
+
+Acked-by: Rob Herring <robh@kernel.org>
