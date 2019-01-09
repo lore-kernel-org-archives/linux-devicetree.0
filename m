@@ -1,47 +1,131 @@
-From: Seiya Wang <seiya.wang@mediatek.com>
-Subject: [PATCH v1 1/1] arm64: dts: mt8173: add pmu nodes for mt8173
-Date: Wed, 9 Jan 2019 16:21:43 +0800
-Message-ID: <20190109082143.26468-1-seiya.wang@mediatek.com>
-Mime-Version: 1.0
-Content-Type: text/plain
+From: Lukasz Majewski <lukma@denx.de>
+Subject: [PATCH v5] ARM: dspi: Provide support for DSPI slave mode operation (Vybryd vf610)
+Date: Wed,  9 Jan 2019 09:26:44 +0100
+Message-ID: <20190109082644.14941-1-lukma@denx.de>
+References: <20180927150709.17010-1-lukma@denx.de>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20180927150709.17010-1-lukma@denx.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, srv_heupstream@mediatek.com, Seiya Wang <seiya.wang@mediatek.com>
+To: Mark Brown <broonie@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Esben Haabendal <eha@deif.com>, =?UTF-8?q?Martin=20Hundeb=C3=B8ll?= <martin@geanix.com>, Andrey Smirnov <andrew.smirnov@gmail.com>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds the device nodes of ARM Performance Monitor Uint
-for mt8173.
+The NXP's Vybryd vf610 can work as a SPI slave device (the CS and clock
+signals are provided by master).
 
-Signed-off-by: Seiya Wang <seiya.wang@mediatek.com>
+It is possible to specify a single device to work in that mode. As we do
+use DMA for transferring data, the RX channel must be prepared for
+incoming data.
+Moreover, in slave mode we just set a subset of control fields in
+configuration registers (CTAR0, PUSHR).
+
+For testing the spidev_test program has been used.
+Test script for this patch can be found here:
+https://github.com/lmajewski/tests-spi/blob/master/tests/spi/spi_tests.sh
+
+Signed-off-by: Lukasz Majewski <lukma@denx.de>
 ---
- arch/arm64/boot/dts/mediatek/mt8173.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+Changes for v5:
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8173.dtsi b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-index 412ffd4d426b..44374c506a1c 100644
---- a/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8173.dtsi
-@@ -216,6 +216,20 @@
- 		};
- 	};
+- Rebase to v5.0-rc1 (no code changes needed)
+
+Changes for v4:
+
+- Rebase to v4.20-rc5 (no code changes needed)
+
+Changes for v3:
+
+- Rebase to v4.20-rc2 (no code changes needed)
+
+Changes for v2:
+
+- Remove patch which adds extra NXP specific DTS property to support slave
+mode and reuse the generic one (spi-slave)
+- Remove patch which brings back the mcr_register local copy. It is not
+needed as generic SPI slave infrastructure is used.
+- Rewrite the code to use spi_controller_is_slave() helper functions
+---
+ drivers/spi/spi-fsl-dspi.c | 40 ++++++++++++++++++++++++++++++----------
+ 1 file changed, 30 insertions(+), 10 deletions(-)
+
+diff --git a/drivers/spi/spi-fsl-dspi.c b/drivers/spi/spi-fsl-dspi.c
+index 5e10dc5c93a5..348682be9dd5 100644
+--- a/drivers/spi/spi-fsl-dspi.c
++++ b/drivers/spi/spi-fsl-dspi.c
+@@ -233,6 +233,9 @@ static u32 dspi_pop_tx_pushr(struct fsl_dspi *dspi)
+ {
+ 	u16 cmd = dspi->tx_cmd, data = dspi_pop_tx(dspi);
  
-+	pmu_a53 {
-+		compatible = "arm,cortex-a53-pmu";
-+		interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 9 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-affinity = <&cpu0>, <&cpu1>;
-+	};
++	if (spi_controller_is_slave(dspi->master))
++		return data;
 +
-+	pmu_a72 {
-+		compatible = "arm,cortex-a72-pmu";
-+		interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_LOW>,
-+			     <GIC_SPI 13 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-affinity = <&cpu2>, <&cpu3>;
-+	};
+ 	if (dspi->len > 0)
+ 		cmd |= SPI_PUSHR_CMD_CONT;
+ 	return cmd << 16 | data;
+@@ -329,6 +332,11 @@ static int dspi_next_xfer_dma_submit(struct fsl_dspi *dspi)
+ 	dma_async_issue_pending(dma->chan_rx);
+ 	dma_async_issue_pending(dma->chan_tx);
+ 
++	if (spi_controller_is_slave(dspi->master)) {
++		wait_for_completion_interruptible(&dspi->dma->cmd_rx_complete);
++		return 0;
++	}
 +
- 	psci {
- 		compatible = "arm,psci-1.0", "arm,psci-0.2", "arm,psci";
- 		method = "smc";
+ 	time_left = wait_for_completion_timeout(&dspi->dma->cmd_tx_complete,
+ 					DMA_COMPLETION_TIMEOUT);
+ 	if (time_left == 0) {
+@@ -798,14 +806,18 @@ static int dspi_setup(struct spi_device *spi)
+ 	ns_delay_scale(&pasc, &asc, sck_cs_delay, clkrate);
+ 
+ 	chip->ctar_val = SPI_CTAR_CPOL(spi->mode & SPI_CPOL ? 1 : 0)
+-		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0)
+-		| SPI_CTAR_LSBFE(spi->mode & SPI_LSB_FIRST ? 1 : 0)
+-		| SPI_CTAR_PCSSCK(pcssck)
+-		| SPI_CTAR_CSSCK(cssck)
+-		| SPI_CTAR_PASC(pasc)
+-		| SPI_CTAR_ASC(asc)
+-		| SPI_CTAR_PBR(pbr)
+-		| SPI_CTAR_BR(br);
++		| SPI_CTAR_CPHA(spi->mode & SPI_CPHA ? 1 : 0);
++
++	if (!spi_controller_is_slave(dspi->master)) {
++		chip->ctar_val |= SPI_CTAR_LSBFE(spi->mode &
++						 SPI_LSB_FIRST ? 1 : 0)
++			| SPI_CTAR_PCSSCK(pcssck)
++			| SPI_CTAR_CSSCK(cssck)
++			| SPI_CTAR_PASC(pasc)
++			| SPI_CTAR_ASC(asc)
++			| SPI_CTAR_PBR(pbr)
++			| SPI_CTAR_BR(br);
++	}
+ 
+ 	spi_set_ctldata(spi, chip);
+ 
+@@ -970,8 +982,13 @@ static const struct regmap_config dspi_xspi_regmap_config[] = {
+ 
+ static void dspi_init(struct fsl_dspi *dspi)
+ {
+-	regmap_write(dspi->regmap, SPI_MCR, SPI_MCR_MASTER | SPI_MCR_PCSIS |
+-		     (dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0));
++	unsigned int mcr = SPI_MCR_PCSIS |
++		(dspi->devtype_data->xspi_mode ? SPI_MCR_XSPI : 0);
++
++	if (!spi_controller_is_slave(dspi->master))
++		mcr |= SPI_MCR_MASTER;
++
++	regmap_write(dspi->regmap, SPI_MCR, mcr);
+ 	regmap_write(dspi->regmap, SPI_SR, SPI_SR_CLEAR);
+ 	if (dspi->devtype_data->xspi_mode)
+ 		regmap_write(dspi->regmap, SPI_CTARE(0),
+@@ -1027,6 +1044,9 @@ static int dspi_probe(struct platform_device *pdev)
+ 		}
+ 		master->bus_num = bus_num;
+ 
++		if (of_property_read_bool(np, "spi-slave"))
++			master->slave = true;
++
+ 		dspi->devtype_data = of_device_get_match_data(&pdev->dev);
+ 		if (!dspi->devtype_data) {
+ 			dev_err(&pdev->dev, "can't get devtype_data\n");
 -- 
-2.14.1
+2.11.0
