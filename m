@@ -1,99 +1,103 @@
-From: Inki Dae <inki.dae@samsung.com>
-Subject: Re: [PATCH 1/3] drm/exynos: rotator: Add support for s5pv210
-Date: Wed, 9 Jan 2019 12:59:27 +0900
-Message-ID: <265fadf7-5e6f-6cba-85c8-9dcd3c85ae18@samsung.com>
-References: <20181219155704.15264-1-pawel.mikolaj.chmiel@gmail.com>
-        <CGME20181219160447epcas3p4b25fc066564986e75f170e1816c7a48a@epcas3p4.samsung.com>
-        <20181219155704.15264-2-pawel.mikolaj.chmiel@gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 6/6] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Tue, 8 Jan 2019 21:20:44 -0800
+Message-ID: <CAD=FV=WZkOV95Ka2MVtHtUAYLjzKAZwwe=H87LJCefbm06ogeg@mail.gmail.com>
+References: <20181218183241.12830-1-jcrouse@codeaurora.org>
+ <20181218183241.12830-7-jcrouse@codeaurora.org>
+ <CAD=FV=VRv82aHfd1dQ_8mjtFFu-u_=JxNGz1qYG+5apTsmBz2Q@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181219155704.15264-2-pawel.mikolaj.chmiel@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pawe=c5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>, krzk@kernel.org, airlied@linux.ie
-Cc: jy0922.shim@samsung.com, sw0312.kim@samsung.com, kyungmin.park@samsung.com, kgene@kernel.org, dri-devel@lists.freedesktop.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <CAD=FV=VRv82aHfd1dQ_8mjtFFu-u_=JxNGz1qYG+5apTsmBz2Q-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-18. 12. 20. 오전 12:57에 Paweł Chmiel 이(가) 쓴 글:
-> This commit adds support for s5pv210.
-> Currently only NV12 and XRGB8888 formats are supported.
-> It was tested by using tool from
-> https://www.spinics.net/lists/linux-samsung-soc/msg60498.html
-> 
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Applied.
-
-Thanks,
-Inki Dae
-
-> ---
->  drivers/gpu/drm/exynos/exynos_drm_rotator.c | 23 +++++++++++++++++++++
->  1 file changed, 23 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/exynos/exynos_drm_rotator.c b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-> index a820a68429b9..a822d340ccf6 100644
-> --- a/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-> +++ b/drivers/gpu/drm/exynos/exynos_drm_rotator.c
-> @@ -357,6 +357,11 @@ static int rotator_runtime_resume(struct device *dev)
->  }
->  #endif
->  
-> +static const struct drm_exynos_ipp_limit rotator_s5pv210_rbg888_limits[] = {
-> +	{ IPP_SIZE_LIMIT(BUFFER, .h = { 8, SZ_16K }, .v = { 8, SZ_16K }) },
-> +	{ IPP_SIZE_LIMIT(AREA, .h.align = 2, .v.align = 2) },
-> +};
-> +
->  static const struct drm_exynos_ipp_limit rotator_4210_rbg888_limits[] = {
->  	{ IPP_SIZE_LIMIT(BUFFER, .h = { 8, SZ_16K }, .v = { 8, SZ_16K }) },
->  	{ IPP_SIZE_LIMIT(AREA, .h.align = 4, .v.align = 4) },
-> @@ -372,6 +377,11 @@ static const struct drm_exynos_ipp_limit rotator_5250_rbg888_limits[] = {
->  	{ IPP_SIZE_LIMIT(AREA, .h.align = 2, .v.align = 2) },
->  };
->  
-> +static const struct drm_exynos_ipp_limit rotator_s5pv210_yuv_limits[] = {
-> +	{ IPP_SIZE_LIMIT(BUFFER, .h = { 32, SZ_64K }, .v = { 32, SZ_64K }) },
-> +	{ IPP_SIZE_LIMIT(AREA, .h.align = 8, .v.align = 8) },
-> +};
-> +
->  static const struct drm_exynos_ipp_limit rotator_4210_yuv_limits[] = {
->  	{ IPP_SIZE_LIMIT(BUFFER, .h = { 32, SZ_64K }, .v = { 32, SZ_64K }) },
->  	{ IPP_SIZE_LIMIT(AREA, .h.align = 8, .v.align = 8) },
-> @@ -382,6 +392,11 @@ static const struct drm_exynos_ipp_limit rotator_4412_yuv_limits[] = {
->  	{ IPP_SIZE_LIMIT(AREA, .h.align = 8, .v.align = 8) },
->  };
->  
-> +static const struct exynos_drm_ipp_formats rotator_s5pv210_formats[] = {
-> +	{ IPP_SRCDST_FORMAT(XRGB8888, rotator_s5pv210_rbg888_limits) },
-> +	{ IPP_SRCDST_FORMAT(NV12, rotator_s5pv210_yuv_limits) },
-> +};
-> +
->  static const struct exynos_drm_ipp_formats rotator_4210_formats[] = {
->  	{ IPP_SRCDST_FORMAT(XRGB8888, rotator_4210_rbg888_limits) },
->  	{ IPP_SRCDST_FORMAT(NV12, rotator_4210_yuv_limits) },
-> @@ -397,6 +412,11 @@ static const struct exynos_drm_ipp_formats rotator_5250_formats[] = {
->  	{ IPP_SRCDST_FORMAT(NV12, rotator_4412_yuv_limits) },
->  };
->  
-> +static const struct rot_variant rotator_s5pv210_data = {
-> +	.formats = rotator_s5pv210_formats,
-> +	.num_formats = ARRAY_SIZE(rotator_s5pv210_formats),
-> +};
-> +
->  static const struct rot_variant rotator_4210_data = {
->  	.formats = rotator_4210_formats,
->  	.num_formats = ARRAY_SIZE(rotator_4210_formats),
-> @@ -414,6 +434,9 @@ static const struct rot_variant rotator_5250_data = {
->  
->  static const struct of_device_id exynos_rotator_match[] = {
->  	{
-> +		.compatible = "samsung,s5pv210-rotator",
-> +		.data = &rotator_s5pv210_data,
-> +	}, {
->  		.compatible = "samsung,exynos4210-rotator",
->  		.data = &rotator_4210_data,
->  	}, {
-> 
+SGksCgpPbiBUdWUsIERlYyAxOCwgMjAxOCBhdCAyOjU3IFBNIERvdWcgQW5kZXJzb24gPGRpYW5k
+ZXJzQGNocm9taXVtLm9yZz4gd3JvdGU6Cj4KPiBIaSwKPgo+IE9uIFR1ZSwgRGVjIDE4LCAyMDE4
+IGF0IDEwOjMzIEFNIEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1cm9yYS5vcmc+IHdyb3Rl
+Ogo+ID4KPiA+IEFkZCB0aGUgbm9kZXMgdG8gZGVzY3JpYmUgdGhlIEFkcmVubyBHUFUgYW5kIEdN
+VSBkZXZpY2VzLgo+ID4KPiA+IFNpZ25lZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VA
+Y29kZWF1cm9yYS5vcmc+Cj4gPiAtLS0KPiA+Cj4gPiB2NzogVXBkYXRlZCB0aGUgR01VIGNvbXBh
+dGlibGUgc3RyaW5nIGFuZCByZW1vdmVkIGludGVycnVwdC1uYW1lcwo+ID4KPiA+ICBhcmNoL2Fy
+bTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAxMjIgKysrKysrKysrKysrKysrKysrKysr
+KysrKysrCj4gPiAgMSBmaWxlIGNoYW5nZWQsIDEyMiBpbnNlcnRpb25zKCspCj4gPgo+ID4gZGlm
+ZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaSBiL2FyY2gvYXJt
+NjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4gaW5kZXggMjMzYTU4OThlYmMyLi40Nzc5
+MDE0ZTRhMDUgMTAwNjQ0Cj4gPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1
+LmR0c2kKPiA+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQo+ID4g
+QEAgLTExLDYgKzExLDcgQEAKPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvY2xvY2svcWNvbSxy
+cG1oLmg+Cj4gPiAgI2luY2x1ZGUgPGR0LWJpbmRpbmdzL2ludGVycnVwdC1jb250cm9sbGVyL2Fy
+bS1naWMuaD4KPiA+ICAjaW5jbHVkZSA8ZHQtYmluZGluZ3MvcGh5L3BoeS1xY29tLXF1c2IyLmg+
+Cj4gPiArI2luY2x1ZGUgPGR0LWJpbmRpbmdzL3Bvd2VyL3Fjb20tcnBtcGQuaD4KPiA+ICAjaW5j
+bHVkZSA8ZHQtYmluZGluZ3MvcmVzZXQvcWNvbSxzZG04NDUtYW9zcy5oPgo+ID4gICNpbmNsdWRl
+IDxkdC1iaW5kaW5ncy9zb2MvcWNvbSxycG1oLXJzYy5oPgo+ID4gICNpbmNsdWRlIDxkdC1iaW5k
+aW5ncy9jbG9jay9xY29tLGdjYy1zZG04NDUuaD4KPiA+IEBAIC0xMzQ5LDYgKzEzNTAsMTI3IEBA
+Cj4gPiAgICAgICAgICAgICAgICAgICAgICAgICB9Owo+ID4gICAgICAgICAgICAgICAgIH07Cj4g
+Pgo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgIGdwdUA1MDAwMDAwIHsKPgo+IFJlcGVhdGluZyBt
+eSBjb21tZW50cyBmcm9tIHY2Ogo+Cj4gbml0IHRoYXQgeW91J3JlIGFkZGluZyBhbiBleHRyYSBi
+bGFuayBsaW5lIGhlcmUgdGhhdCB5b3UgZG9uJ3QgbmVlZC4KPiBHaXZlbiB0aGUgcXVhbnRpdHkg
+b2Ygb3V0c3RhbmRpbmcgZHRzIHBhdGNoZXMgdGhvdWdoLCBpdCdzIGFsbW9zdAo+IGNlcnRhaW4g
+dGhhdCBBbmR5IHdpbGwgbmVlZCB0byBtYW51YWxseSByZXNvbHZlIGNvbmZsaWN0cyB3aGVuCj4g
+YXBwbHlpbmcgdGhpcyBwYXRjaCBzbyBwcmVzdW1hYmx5IGhlIGNhbiBmaXggdXAgd2hlbiBoZSBs
+YW5kcy4KPgo+IEluIGFueSBjYXNlLCBmZWVsIGZyZWUgdG8gYWRkOgo+Cj4gUmV2aWV3ZWQtYnk6
+IERvdWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPiBUZXN0ZWQtYnk6IERv
+dWdsYXMgQW5kZXJzb24gPGRpYW5kZXJzQGNocm9taXVtLm9yZz4KPgo+Cj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICBjb21wYXRpYmxlID0gInFjb20sYWRyZW5vLTYzMC4yIiwgInFjb20sYWRy
+ZW5vIjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICNzdHJlYW0taWQtY2VsbHMgPSA8MTY+
+Owo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4NTAwMDAwMCAweDQw
+MDAwPiwgPDB4NTA5ZTAwMCAweDEwPjsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHJlZy1u
+YW1lcyA9ICJrZ3NsXzNkMF9yZWdfbWVtb3J5IiwgImN4X21lbSI7Cj4gPiArCj4gPiArICAgICAg
+ICAgICAgICAgICAgICAgICAvKgo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICogTG9vayBt
+YSwgbm8gY2xvY2tzISBUaGUgR1BVIGNsb2NrcyBhbmQgcG93ZXIgYXJlCj4gPiArICAgICAgICAg
+ICAgICAgICAgICAgICAgKiBjb250cm9sbGVkIGVudGlyZWx5IGJ5IHRoZSBHTVUKPiA+ICsgICAg
+ICAgICAgICAgICAgICAgICAgICAqLwo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAg
+aW50ZXJydXB0cyA9IDxHSUNfU1BJIDMwMCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsKPiA+
+ICsgICAgICAgICAgICAgICAgICAgICAgIGlvbW11cyA9IDwmYWRyZW5vX3NtbXUgMD47Cj4gPiAr
+Cj4gPiArICAgICAgICAgICAgICAgICAgICAgICBvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZncHVf
+b3BwX3RhYmxlPjsKPiA+ICsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgIHFjb20sZ211ID0g
+PCZnbXU+Owo+ID4gKwo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgZ3B1X29wcF90YWJsZTog
+b3BwLXRhYmxlIHsKPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgY29tcGF0aWJs
+ZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20tbGV2ZWwiOwo+Cj4gSSBiZWxpZXZlIHRoYXQg
+dGhlIGNvbnNlbnN1cyBmcm9tIHRoZSB2MiBjb21tZW50cyBhdAo+IDxodHRwczovL3BhdGNod29y
+ay5rZXJuZWwub3JnL3BhdGNoLzEwNzI3MTIxLz4gYXJlIHRoYXQgdGhpcyBzaG91bGQKPiBiZToK
+Pgo+IGNvbXBhdGlibGUgPSAib3BlcmF0aW5nLXBvaW50cy12Mi1xY29tLWxldmVsIiwgIm9wZXJh
+dGluZy1wb2ludHMtdjIiOwo+Cj4gLi4uc2FtZSB3aXRoIHRoZSBvdGhlciBvbmUgYmVsb3cuLi4K
+Ck9LLCBzbyBJIHJlYWQgYW5kIHJlLXJlYWQgYWxsIHRoZSBkaXNjdXNzaW9ucyBhYm91dCB0aGlz
+IHRoYXQgaGF2ZQpoYXBwZW5lZCBzaW5jZSBteSBsYXN0IGVtYWlsIGFuZCBhbHNvIGhhZCBhbiBv
+ZmZsaW5lIGNoYXQgd2l0aCBTdGVwaGVuCmFuZCBJIGJlbGlldmUgdGhlIGRlY2lzaW9uIGlzIF9u
+b3RfIHRvIGRvIHRoZSAib3BlcmF0aW5nLXBvaW50cy12MiIKZmFsbGJhY2sgZXZlbiBpZiB5b3Vy
+IHRhYmxlIGhhcHBlbnMgdG8gaGF2ZSAib3BwLWh6IiBpbiBpdC4gIFNvCnByZXN1bWFibHkgdGhh
+dCdzIHJlc29sdmVkLiAgT25lIHJlYXNvbiB0aGlzIHdvcmtzIE9LIGZvciB1cyBpcyB0aGF0Cndl
+IGhhdmUgdGhlICJvcGVyYXRpbmctcG9pbnRzIiBhcyBhIHN1Yi1ub2RlIG9mIHRoZSBHUFUgYW5k
+IHRodXMgZG9uJ3QKaGF2ZSB0byB3b3JyeSBhYm91dCB0aGUgbWVzc2luZyB3aXRoIHRoZSBza2lw
+IHRhYmxlIHRvIHByZXZlbnQgYQpkZXZpY2UgZnJvbSBiZWluZyBjcmVhdGVkIChhcyBkaXNjdXNz
+ZWQgaW4gdGhlIGNvbW1lbnRzIG9mIHY2KSBbMV0KCi4uLmJ1dCBpbiB0aGUgbWVhbnRpbWUgUmFq
+ZW5kcmEgaGFzIGhhZCB0byBjaGFuZ2UgaGlzIGJpbmRpbmdzLCBzbyB5b3UKc3RpbGwgbmVlZCB0
+byBzcGluIHRoaXMgdG8gYWNjb3VudCBmb3IgUmFqZW5kcmEncyB2OSBiaW5kaW5ncyBbMl0uClNw
+ZWNpZmljYWxseSB5b3UgbmVlZCB0byBtYWtlIGNoYW5nZXMgbGlrZToKCi0gICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRzLXYyLXFjb20t
+bGV2ZWwiOworICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAib3Bl
+cmF0aW5nLXBvaW50cy12Mi1sZXZlbCI7CgouLi5hbmQ6CgotICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICAgICAgcWNvbSxsZXZlbCA9CjxSUE1IX1JFR1VMQVRPUl9MRVZFTF9UVVJC
+T19MMT47CisgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBvcHAtbGV2ZWwg
+PQo8UlBNSF9SRUdVTEFUT1JfTEVWRUxfVFVSQk9fTDE+OwoKLi4ud2hlbiB5b3Ugc3BpbiBmb3Ig
+dGhpcywgcGxlYXNlIG1ha2Ugc3VyZSB5b3UgYWNjb3VudCBmb3IgdGhlIG5pdAooYmxhbmsgbGlu
+ZSkgSSBjb21tZW50ZWQgYWJvdXQgYWJvdmUuCgotRG91ZwoKWzFdIGh0dHBzOi8vbG9yZS5rZXJu
+ZWwub3JnL2xpbnV4LWFybS1rZXJuZWwvN2UzMTA0MTYtNzhkMy1iN2U1LTUwMTMtMGJjYzhiZmQw
+MzUxQGNvZGVhdXJvcmEub3JnLwpbMl0gaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MDEw
+NzEwMDk1OS4xNDUyOC0yLXJuYXlha0Bjb2RlYXVyb3JhLm9yZwpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
+cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
