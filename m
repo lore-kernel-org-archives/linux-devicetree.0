@@ -1,180 +1,137 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: [PATCH v7 3/5] leds: trigger: pattern: Add pattern initialization from Device Tree
-Date: Wed,  9 Jan 2019 15:44:47 +0100
-Message-ID: <1547045089-19128-4-git-send-email-krzk@kernel.org>
-References: <1547045089-19128-1-git-send-email-krzk@kernel.org>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v6 0/5] spi: spi-mem: Add driver for NXP FlexSPI
+ controller
+Date: Wed, 9 Jan 2019 15:56:30 +0100
+Message-ID: <20190109155630.3ec34c60@jawa>
+References: <1546939346-20181-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <7188c406-3dd2-88a6-b6ed-d5e8bf678df8@kontron.de>
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/qfV7IP6UbfJ_zClhLB+efu+"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547045089-19128-1-git-send-email-krzk@kernel.org>
+In-Reply-To: <7188c406-3dd2-88a6-b6ed-d5e8bf678df8@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Krzysztof Kozlowski <krzk@kernel.org>
+To: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Allow initialization of pattern used in pattern trigger from Device Tree
-property.
+--Sig_/qfV7IP6UbfJ_zClhLB+efu+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-This is especially useful for embedded systems where the pattern trigger
-would be used to indicate the process of boot status in a nice,
-user-friendly blinking way.  This initialization pattern will be used
-till user-space is brought up and sets its own pattern, indicating the
-boot status is for example finished.
+Hi Schrempf,
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- drivers/leds/trigger/ledtrig-pattern.c | 99 +++++++++++++++++++++++++++-------
- 1 file changed, 80 insertions(+), 19 deletions(-)
+> On 08.01.19 10:24, Yogesh Narayan Gaur wrote:
+> > - Add driver for NXP FlexSPI host controller
+> >=20
+> >   FlexSPI is a flexsible SPI host controller [1], Chapter 30 page
+> > 1475, which supports two SPI channels and up to 4 external devices.
+> >   Each channel supports Single/Dual/Quad/Octal mode data transfer
+> > (1/2/4/8 bidirectional data lines) i.e. FlexSPI acts as an
+> > interface to external devices, maximum 4, each with up to 8
+> > bidirectional data lines.
+> >=20
+> > - Tested this driver with mtd_debug(Erase/Write/Read) utility and
+> > JFFS2 filesystem mounting and booting on NXP LX2160ARDB[2] and
+> > LX2160AQDS targets. LX2160ARDB is having two NOR slave device
+> > connected on single bus A i.e. A0 and A1 (CS0 and CS1).
+> >   LX2160AQDS is having two NOR slave device connected on separate
+> > buses one flash on A0 and second on B1 i.e. (CS0 and CS3).
+> >   Verified this driver on following SPI NOR flashes:
+> >     Micron, mt35xu512aba, [Read - 1 bit mode]
+> >     Cypress, s25fl512s, [Read - 1/2/4 bit mode]
+> >=20
+> > [1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+> > [2]
+> > https://patchwork.kernel.org/project/linux-arm-kernel/list/?submitter=
+=3D182097
+> >=20
+> > Yogesh Narayan Gaur (5):
+> >    spi: spi-mem: Add driver for NXP FlexSPI controller
+> >    dt-bindings: spi: add binding file for NXP FlexSPI controller
+> >    arm64: dts: lx2160a: add FlexSPI node property
+> >    arm64: defconfig: enable NXP FlexSPI driver
+> >    MAINTAINERS: add maintainers for the NXP FlexSPI driver
+> >=20
+> > Changes for v6:
+> > - Rebase on top of v5.0-rc1. =20
+>=20
+> Your patches don't apply to v5.0-rc1. It seems like you have instead=20
+> rebased onto the for-5.1 or for-next branch of the SPI tree. I guess=20
+> this is okay, but you should have pointed that out correctly here.
 
-diff --git a/drivers/leds/trigger/ledtrig-pattern.c b/drivers/leds/trigger/ledtrig-pattern.c
-index 1870cf87afe1..718729c89440 100644
---- a/drivers/leds/trigger/ledtrig-pattern.c
-+++ b/drivers/leds/trigger/ledtrig-pattern.c
-@@ -220,22 +220,10 @@ static ssize_t pattern_trig_show_patterns(struct pattern_trig_data *data,
- 	return count;
- }
- 
--static ssize_t pattern_trig_store_patterns(struct led_classdev *led_cdev,
--					   const char *buf, size_t count,
--					   bool hw_pattern)
-+static int pattern_trig_store_patterns_string(struct pattern_trig_data *data,
-+					      const char *buf, size_t count)
- {
--	struct pattern_trig_data *data = led_cdev->trigger_data;
--	int ccount, cr, offset = 0, err = 0;
--
--	mutex_lock(&data->lock);
--
--	del_timer_sync(&data->timer);
--
--	if (data->is_hw_pattern)
--		led_cdev->pattern_clear(led_cdev);
--
--	data->is_hw_pattern = hw_pattern;
--	data->npatterns = 0;
-+	int ccount, cr, offset = 0;
- 
- 	while (offset < count - 1 && data->npatterns < MAX_PATTERNS) {
- 		cr = 0;
-@@ -244,14 +232,54 @@ static ssize_t pattern_trig_store_patterns(struct led_classdev *led_cdev,
- 				&data->patterns[data->npatterns].delta_t, &cr);
- 		if (ccount != 2) {
- 			data->npatterns = 0;
--			err = -EINVAL;
--			goto out;
-+			return -EINVAL;
- 		}
- 
- 		offset += cr;
- 		data->npatterns++;
- 	}
- 
-+	return 0;
-+}
-+
-+static int pattern_trig_store_patterns_int(struct pattern_trig_data *data,
-+					   const u32 *buf, size_t count)
-+{
-+	unsigned int i;
-+
-+	for (i = 0; i < count; i += 2) {
-+		data->patterns[data->npatterns].brightness = buf[i];
-+		data->patterns[data->npatterns].delta_t = buf[i + 1];
-+		data->npatterns++;
-+	}
-+
-+	return 0;
-+}
-+
-+static ssize_t pattern_trig_store_patterns(struct led_classdev *led_cdev,
-+					   const char *buf, const u32 *buf_int,
-+					   size_t count, bool hw_pattern)
-+{
-+	struct pattern_trig_data *data = led_cdev->trigger_data;
-+	int err = 0;
-+
-+	mutex_lock(&data->lock);
-+
-+	del_timer_sync(&data->timer);
-+
-+	if (data->is_hw_pattern)
-+		led_cdev->pattern_clear(led_cdev);
-+
-+	data->is_hw_pattern = hw_pattern;
-+	data->npatterns = 0;
-+
-+	if (buf)
-+		err = pattern_trig_store_patterns_string(data, buf, count);
-+	else
-+		err = pattern_trig_store_patterns_int(data, buf_int, count);
-+	if (err)
-+		goto out;
-+
- 	err = pattern_trig_start_pattern(led_cdev);
- 	if (err)
- 		data->npatterns = 0;
-@@ -275,7 +303,7 @@ static ssize_t pattern_store(struct device *dev, struct device_attribute *attr,
- {
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 
--	return pattern_trig_store_patterns(led_cdev, buf, count, false);
-+	return pattern_trig_store_patterns(led_cdev, buf, NULL, count, false);
- }
- 
- static DEVICE_ATTR_RW(pattern);
-@@ -295,7 +323,7 @@ static ssize_t hw_pattern_store(struct device *dev,
- {
- 	struct led_classdev *led_cdev = dev_get_drvdata(dev);
- 
--	return pattern_trig_store_patterns(led_cdev, buf, count, true);
-+	return pattern_trig_store_patterns(led_cdev, buf, NULL, count, true);
- }
- 
- static DEVICE_ATTR_RW(hw_pattern);
-@@ -331,6 +359,30 @@ static const struct attribute_group *pattern_trig_groups[] = {
- 	NULL,
- };
- 
-+static void pattern_init(struct led_classdev *led_cdev)
-+{
-+	unsigned int size = 0;
-+	u32 *pattern;
-+	int err;
-+
-+	pattern = led_get_default_pattern(led_cdev, &size);
-+	if (!pattern)
-+		return;
-+
-+	if (size % 2) {
-+		dev_warn(led_cdev->dev, "Expected pattern of tuples\n");
-+		goto out;
-+	}
-+
-+	err = pattern_trig_store_patterns(led_cdev, NULL, pattern, size, false);
-+	if (err < 0)
-+		dev_warn(led_cdev->dev,
-+			 "Pattern initialization failed with error %d\n", err);
-+
-+out:
-+	kfree(pattern);
-+}
-+
- static int pattern_trig_activate(struct led_classdev *led_cdev)
- {
- 	struct pattern_trig_data *data;
-@@ -354,6 +406,15 @@ static int pattern_trig_activate(struct led_classdev *led_cdev)
- 	timer_setup(&data->timer, pattern_trig_timer_function, 0);
- 	led_cdev->activated = true;
- 
-+	if (led_cdev->flags & LED_INIT_DEFAULT_TRIGGER) {
-+		pattern_init(led_cdev);
-+		/*
-+		 * Mark as initialized even on pattern_init() error because
-+		 * any consecutive call to it would produce the same error.
-+		 */
-+		led_cdev->flags &= ~LED_INIT_DEFAULT_TRIGGER;
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.7.4
+If I may ask for a few (1-2) days, so I can test this code on vf610 NXP
+SoC.
+
+As fair as I remember there were some issues when I tested it a few
+months back.
+
+>=20
+> > - Incorporated review comments for
+> >    patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> > - Updated s-b tag in all patches.
+> > Changes for v5:
+> > - Rebase on top of v4.20-rc2
+> > - Incorporated review comments for
+> >    patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> > Changes for v4:
+> > - Incorporated review comments for
+> >    patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> > - Incorporated binding file review comments.
+> > Changes for v3:
+> > - Incorporated review comments for
+> >    patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> > Changes for v2:
+> > - Incorporated Boris review comments and drop below patches as per
+> > the comments.
+> >   - Patch 'spi: add slave device size in spi_device struct'
+> >   - Patch 'spi: add flags for octal I/O data transfer'
+> > - Incorporated DTS and Binding file review comments of Shawn Guo
+> > and Rob Herring.
+> >=20
+> >   .../devicetree/bindings/spi/spi-nxp-fspi.txt  |   39 +
+> >   MAINTAINERS                                   |    7 +
+> >   .../boot/dts/freescale/fsl-lx2160a-rdb.dts    |   22 +
+> >   .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi |   13 +
+> >   arch/arm64/configs/defconfig                  |    1 +
+> >   drivers/spi/Kconfig                           |   10 +
+> >   drivers/spi/Makefile                          |    1 +
+> >   drivers/spi/spi-nxp-fspi.c                    | 1095
+> > +++++++++++++++++ 8 files changed, 1188 insertions(+)
+> >   create mode 100644
+> > Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt create mode
+> > 100644 drivers/spi/spi-nxp-fspi.c=20
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
+
+
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/qfV7IP6UbfJ_zClhLB+efu+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlw2C54ACgkQAR8vZIA0
+zr0Bygf8CIJkJt1rC2YiQntRmvFJk7rlDUHSGzV+pRjNWOGCzkv9Q8wBs7GUjXeC
+XcOe+RXQgzwhAH3ByyxMBmtdC55PqceJDb30NQyExXCVhMpuqdmU2G0R7l9g6H8D
+odGNDv6IC47oMzaq8zT6dC2f1iddFpfuQ4qvyDjBmEpyqTKPFFSH8KNTRa6Kjoph
+Opg8/CjSvxaPQMtBQkl0MqKI5lr9iSAMPrL6Gk3FnU0hqMtEZmgbBflieJoIZo77
+5mvs1nWSWAs8yEvVqH1VN9HqBLvZSi8RvMgCzvQB4kt/gh3ehGPN9hLbELeMDp24
+xasMUxYP8WrDjPZtm5kwEWX9gcvbxQ==
+=S3Bd
+-----END PGP SIGNATURE-----
+
+--Sig_/qfV7IP6UbfJ_zClhLB+efu+--
