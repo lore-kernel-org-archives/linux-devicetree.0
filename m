@@ -1,56 +1,36 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] ARM: dts: sun8i: h3: Add ethernet0 alias to
- Beelink X2
-Date: Wed, 9 Jan 2019 11:20:49 +0100
-Message-ID: <20190109102049.npk77pxtxru4tcyb@flea>
-References: <20190108191840.16007-1-jernej.skrabec@siol.net>
- <20190109101228.alsaaw6s57dbapfe@flea>
- <CAGb2v64QM9gyPTtpw0C0fpANW5R9DEsWFSDA_tJPYhdgF_FAhQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: Re: [PATCH 2/4] cpufreq: s5pv210: Don't flood kernel log after
+ cpufreq change
+Date: Wed, 9 Jan 2019 11:27:08 +0100
+Message-ID: <CAJKOXPcqcyimyUBD5ka60FZCeehqkE=GNH8YYYkgQpJ4=yQ3nw@mail.gmail.com>
+References: <20190108200509.30494-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190108200509.30494-3-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="mkj2k5z2j34krmbx"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNMW27QQKGQEAFEGWPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAGb2v64QM9gyPTtpw0C0fpANW5R9DEsWFSDA_tJPYhdgF_FAhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190108200509.30494-3-pawel.mikolaj.chmiel@gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, linux-pm@vger.kernel.org, viresh.kumar@linaro.org, rjw@rjwysocki.net, linux@armlinux.org.uk, robh+dt@kernel.org, linux-kernel@vger.kernel.org, kgene@kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-
---mkj2k5z2j34krmbx
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Jan 09, 2019 at 06:13:24PM +0800, Chen-Yu Tsai wrote:
-> On Wed, Jan 9, 2019 at 6:12 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> >
-> > On Tue, Jan 08, 2019 at 08:18:40PM +0100, Jernej Skrabec wrote:
-> > > Because "ethernet0" alias is missing, U-Boot doesn't generate board
-> > > specific MAC address. Effect of this is random MAC address every boot
-> > > and thus new IP address is assigned to the board.
-> > >
-> > > Fix this by adding alias.
-> > >
-> > > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> >
-> > Applied, thanks!
-> > Maxime
-> 
-> Might we add a fixes tag, so the patch gets backported?
-
-It's done, thanks for the suggestion!
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---mkj2k5z2j34krmbx--
+T24gVHVlLCA4IEphbiAyMDE5IGF0IDIxOjA1LCBQYXdlxYIgQ2htaWVsCjxwYXdlbC5taWtvbGFq
+LmNobWllbEBnbWFpbC5jb20+IHdyb3RlOgo+Cj4gVGhpcyBjb21taXQgcmVwbGFjZXMgcHJpbnRr
+IHdpdGggcHJfZGVidWcsIHNvIHdlIGRvbid0IGZsb29kIGtlcm5lbCBsb2cuCj4KPiBTaWduZWQt
+b2ZmLWJ5OiBQYXdlxYIgQ2htaWVsIDxwYXdlbC5taWtvbGFqLmNobWllbEBnbWFpbC5jb20+Cj4g
+LS0tCj4gIGRyaXZlcnMvY3B1ZnJlcS9zNXB2MjEwLWNwdWZyZXEuYyB8IDIgKy0KPiAgMSBmaWxl
+IGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspLCAxIGRlbGV0aW9uKC0pCgpBY2tlZC1ieTogS3J6eXN6
+dG9mIEtvemxvd3NraSA8a3J6a0BrZXJuZWwub3JnPgoKQmVzdCByZWdhcmRzLApLcnp5c3p0b2YK
+Cl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFy
+bS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
+ZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1r
+ZXJuZWwK
