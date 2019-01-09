@@ -1,75 +1,48 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v7 0/6] arm64: dts: Add sdm845 GPU/GMU and
- SMMU
-Date: Wed, 9 Jan 2019 10:20:20 -0800
-Message-ID: <CAD=FV=XLWUwkQLStKzV5DGji0WNEk44ft51NTWJmQNG7GW4Rkg@mail.gmail.com>
-References: <20181218183241.12830-1-jcrouse@codeaurora.org>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH] arm64/hisilicon: fix SDcard detection
+Date: Wed, 9 Jan 2019 19:27:48 +0100
+Message-ID: <CACRpkdbA8cvoaG_5=JCrpQd2k1HYRxUjqGsoGJLLvroGGQukkA@mail.gmail.com>
+References: <1547056892-16527-1-git-send-email-vincent.guittot@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <20181218183241.12830-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1547056892-16527-1-git-send-email-vincent.guittot@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vincent Guittot <vincent.guittot@linaro.org>
+Cc: Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKT24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMTA6MzIgQU0gSm9yZGFuIENyb3VzZSA8
-amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBOb3cgdGhhdCBtb3JlIG9mIHRoZSBz
-ZG04NDUgYmluZGluZ3MgYXJlIGhlYWRlZCB1cHN0cmVhbSB0aGlzIGEgcmVmcmVzaCBvZgo+IG9m
-IGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvMzkzMDgvIHRvIGFkZCBi
-aW5kaW5ncyBhbmQgbm9kZXMKPiBmb3IgdGhlIEdQVS9HTVUgYW5kIEdQVSBTTU1VIGZvciBzZG04
-NDUuIHY3IG9mIHRoaXMgcGF0Y2hzZXQgYWxzbyByZW1vdmVzCj4gaW50ZXJydXB0LW5hbWVzIGZy
-b20gdGhlIGRyaXZlciBhbmQgdGhlIGV4aXN0aW5nIERUIGNoYW5nZXMgcGVyIGZlZWRiYWNrIGZy
-b20KPiBSb2IgSGVycmluZy4KPgo+IFRoaXMgaXMgYmFzZWQgb24gOgo+IGdpdDovL2dpdC5rZXJu
-ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9hZ3Jvc3MvbGludXguZ2l0IGZvci1uZXh0
-Cj4KPiB3aXRoOgo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMDE4
-MzY1Lwo+Cj4gVGhpcyBjaGFuZ2UgcmVxdWlyZXMgdGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXM6
-Cj4KPiBpbmNsdWRlL2R0LWJpbmRpbmdzL3Bvd2VyL3Fjb20tcnBtcGQuaDoKPiBodHRwczovL3Bh
-dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzExMTE5Lwo+Cj4gcWNvbSxzbW11LXYyIGJpbmRp
-bmc6Cj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDU4MTkxMS8KPgo+IHY3
-OiBBZGQgcGF0Y2hlcyB0byByZW1vdmUgaW50ZXJydXB0LW5hbWVzLCBhZGQgdmVyc2lvbiBzcGVj
-aWZpYyBjb21wYXRpYmxlCj4gICAgIHN0cmluZyBmb3IgZ211Cj4gdjY6IFVwZGF0ZSBHUFUgYmlu
-ZGluZ3MgZm9yIGE2eHggYW5kIG1ha2UgdGhlIGV4YW1wbGVzIG1hdGNoIHRoZSBub2RlcyBhbmQg
-dmljZQo+ICB2ZXJzYS4gIENsZWFuIHVwIHR5cGVzIGFuZCByZWJhc2Ugb24KPiAgaHR0cHM6Ly9s
-b3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEwMTgzNjUvIHRvIGhlbHAgZmFjaWxpdGF0
-ZSBtZXJnaW5nLgo+IHY1OiBVc2Ugc3ltYm9saWMgbmFtZXMgZm9yIHRoZSBSUE1IIHBvd2VyIGxl
-dmVscyBkZWZpbmVkIGluIE9QUCB0YWJsZSwKPiAgbW92ZSB0aGUgb3BwIHRhYmxlcyBhcyBjaGls
-ZHJlbiBvZiB0aGVpciByZXNwZWN0aXZlIG5vZGVzIGFuZCByZW5hbWUKPiAgdGhlIGlvbW11IGRl
-dmljZS4KPiB2NDogUmViYXNlCj4gdjM6IFNwbGl0IEdNVSBQREMgcmVnaW9uIGludG8gdHdvIEdQ
-VSBzcGVjaWZpYyBzZWN0aW9ucywgZml4IGluZGVudGF0aW9uLAo+ICAgcmVhbGx5IHVzZSBxY29t
-LGdtdSBmb3IgdGhlIHBoYW5kbGUgbmFtZQo+IHYyOiBjaGFuZ2VkIHFjb20sYXJjLWxldmVsIHRv
-IHFjb20sbGV2ZWwgZm9sbG93aW5nIGRpc2N1c3Npb24gd2l0aCBWaXJlc2g7Cj4gICBjaGFuZ2Ug
-Z211IHBoYW5kbGUgdG8gcWNvbSxnbXUgcGVyIFJvYgo+Cj4gSm9yZGFuIENyb3VzZSAoNik6Cj4g
-ICBkcm0vbXNtL2dwdTogUmVtb3ZlIGhhcmRjb2RlZCBpbnRlcnJ1cHQgbmFtZQo+ICAgZHJtL21z
-bTogZHJvcCBpbnRlcnJ1cHQtbmFtZXMKPiAgIEFSTTogZHRzOiBxY29tOiBSZW1vdmVkIHVudXNl
-ZCBpbnRlcnJ1cHQtbmFtZXMgZnJvbSBHUFUgbm9kZQo+ICAgYXJtNjQ6IGR0czogcWNvbTogbXNt
-ODkxNjogUmVtb3ZlIHVudXNlZCBpbnRlcnJ1cHQtbmFtZXMgZnJvbSBHUFUKPiAgIGR0LWJpbmRp
-bmdzOiBkcm0vbXNtL2E2eHg6IERvY3VtZW50IEdNVSBhbmQgdXBkYXRlIEdQVSBiaW5kaW5ncwo+
-ICAgYXJtNjQ6IGR0czogc2RtODQ1OiBBZGQgZ3B1IGFuZCBnbXUgZGV2aWNlIG5vZGVzCgpJIGtu
-b3cgaXQncyBiZWVuIGhvbGlkYXlzIGFuZCBldmVyeW9uZSAoaW5jbHVkaW5nIG1lKSBoYXMgYmVl
-biBvbgp2YWNhdGlvbiwgYnV0IGp1c3Qgd2FudGVkIHRvIG1ha2Ugc3VyZSB0aGUgY3VycmVudCBz
-dGF0dXMgb2YgdGhpcwpzZXJpZXMgd2FzIGV4cGxpY2l0bHkgY2FsbGVkIG91dC4gIDotKQoKCkkg
-YmVsaWV2ZSBwYXRjaGVzICMxIGFuZCAjMiBhcmUgcmVhZHkgdG8gbGFuZCBhbmQgd2lsbCBnbyB0
-aHJvdWdoIHlvdXIgdHJlZS4KClBhdGNoZXMgIzMgYW5kICM0IHNob3VsZCBwcm9iYWJseSBnbyB0
-aHJvdWdoIEFuZHkncyB0cmVlIGFuZCBhcmUgbm90CnVyZ2VudCAodGhleSBhcmUganVzdCBjbGVh
-bnVwKS4gIFRoZXkgY2FuIHNpdCBvbiB0aGUgYmFjayBidXJuZXIgdW50aWwKcGF0Y2hlcyAjMSBh
-bmQgIzIgaGF2ZSBoaXQgbWFpbmxpbmUuICBUaGF0J3MgYSBnb29kIHJlYXNvbiB0byBsYW5kICMx
-CmFuZCAjMiBzb29uZXIuICA7LSkKCkkgdGhpbmsgcGF0Y2ggIzUgaXMgYWxzbyByZWFkeSB0byBs
-YW5kLiAgVGhlcmUncyBiZWVuIHNvbWUKYmlrZXNoZWRkaW5nIGFib3V0IHRoZSBleGFjdCBmb3Jt
-YXQgZm9yIHRoZSBvcHAgdGFibGUsIGJ1dCBub25lIG9mCnRoYXQgYmlrZXNoZWRkaW5nIGFmZmVj
-dHMgdGhlIGJpbmRpbmdzIHRoYXQgSm9yZGFuIHdyb3RlLiAgSWYgeW91CmFncmVlIHRoYXQgdGhp
-cyBpcyBPSyB0byBsYW5kLCBpdCB3b3VsZCBhbHNvIGJlIG5pY2UgdG8gZ2V0IGluLgoKLi4udGhl
-biBKb3JkYW4gY2FuIHNwaW4gcGF0Y2ggIzYgKG9uY2UgUm9iIEggQWNrcyBSYWplbmRyYSdzIG9w
-cApiaW5kaW5ncykgYWxvbmUgYXQgYSBmdXR1cmUgZGF0ZS4KCgotRG91ZwpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
-CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+Hi Vincent!
+
+On Wed, Jan 9, 2019 at 7:01 PM Vincent Guittot
+<vincent.guittot@linaro.org> wrote:
+
+> commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
+> has changed how cd_gpios phandle and cd-inverted are used to set gpio's flags.
+>
+> Since this change, hikey960 SDcard is not detected anymore because flags
+> are not set correctly. Updating cd-gpios to set GPIO_ACTIVE_LOW instead
+> of high, fixes the problem.
+>
+> Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+
+Please check if this patch fixes your problem:
+https://marc.info/?l=linux-mmc&m=154637189021211&w=2
+
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> @@ -582,7 +582,7 @@
+>         sd-uhs-sdr104;
+>         disable-wp;
+>         cd-inverted;
+> -       cd-gpios = <&gpio25 3 0>;
+> +       cd-gpios = <&gpio25 3 GPIO_ACTIVE_LOW>;
+
+This is also a good change, but the old device tree should
+continue to work so we need to fix the real bug.
+
+If you also remove "cd-inverted" above, this patch should
+hopefully still work and be fine to apply as well.
+
+Yours,
+Linus Walleij
