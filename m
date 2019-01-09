@@ -1,80 +1,37 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 2/3] coresight: etm4x: Add support to enable ETMv4.2
-Date: Wed,  9 Jan 2019 23:16:48 +0530
-Message-ID: <4cb23e3bc414f3a1cac555d27b93e7e8cfeb68c9.1547054308.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+Subject: [PATCH v2] arm: dts: gta04: add bluetooth serdev driver flags
+Date: Wed,  9 Jan 2019 18:47:52 +0100
+Message-ID: <913cd7034be0d05c01148cbcedbb663454772b03.1547056071.git.hns@goldelico.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+To: Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh@kernel.org>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-kernel@vger.kernel.org, linux-omap <linux-omap@vger.kernel.org>, letux-kernel@openphoenux.org, Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-SDM845 has ETMv4.2 and can use the existing etm4x driver.
-But the current etm driver checks only for ETMv4.0 and
-errors out for other etm4x versions. This patch adds this
-missing support to enable SoC's with ETMv4x to use same
-driver by checking only the ETM architecture major version
-number.
+From: Andreas Kemnade <andreas@kemnade.info>
 
-Without this change, we get below error during etm probe:
+gta04a[34] have bluetooth chips which simply understand
+h4 protocol.
 
-/ # dmesg | grep etm
-[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
-
-With this change, etm probe is successful:
-
-/ # dmesg | grep coresight
-[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
-
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 2 +-
- drivers/hwtracing/coresight/coresight-etm4x.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 53e2fb6e86f6..40cf17df5023 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -1021,7 +1021,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index 499e3b0e920b..ec7b1e31c07e 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -722,6 +722,8 @@
  
- 	cpus_read_unlock();
- 
--	if (etm4_arch_supported(drvdata->arch) == false) {
-+	if (etm4_arch_supported(drvdata->arch >> 4) == false) {
- 		ret = -EINVAL;
- 		goto err_arch_supported;
- 	}
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
-index 52786e9d8926..05d4bd330881 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.h
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.h
-@@ -136,7 +136,7 @@
- #define ETM_MAX_RES_SEL			16
- #define ETM_MAX_SS_CMP			8
- 
--#define ETM_ARCH_V4			0x40
-+#define ETM_ARCH_V4			0x4
- #define ETMv4_SYNC_MASK			0x1F
- #define ETM_CYC_THRESHOLD_MASK		0xFFF
- #define ETM_CYC_THRESHOLD_DEFAULT       0x100
+ 	bluetooth: bluetooth {
+ 		compatible = "wi2wi,w2cbw003-bluetooth";
++		speed = <3000000>;
++		flow;
+ 		vdd-supply = <&vaux4>;
+ 	};
+ };
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.19.1
