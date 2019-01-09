@@ -1,158 +1,141 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v2 5/7] remoteproc: q6v5-mss: Active powerdomain for
- SDM845
-Date: Wed, 09 Jan 2019 20:10:25 +0530
-Message-ID: <df33fe44c56424ca1d5865c972e0034e@codeaurora.org>
-References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
- <20190106080915.4493-6-bjorn.andersson@linaro.org>
+From: "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
+Subject: RE: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous
+ error detection driver
+Date: Wed, 9 Jan 2019 14:44:26 +0000
+Message-ID: <AM6PR0702MB37997C0FA1670DD1AF4C25C7FA8B0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+References: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+ <20190108104204.GA14243@zn.tnic>
+ <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190106080915.4493-6-bjorn.andersson@linaro.org>
+In-Reply-To: <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
+To: James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-06 13:39, Bjorn Andersson wrote:
-> The SDM845 MSS needs the load_state powerdomain voted for during the
-> duration of the MSS being powered on, to let the AOSS know that it may
-> not perform certain power save measures. So vote for this.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v1:
-> - New patch
-> 
-
-Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
-Tested-by: Sibi Sankar <sibis@codeaurora.org>
-
->  drivers/remoteproc/qcom_q6v5_mss.c | 31 ++++++++++++++++++++++++++++--
->  1 file changed, 29 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
-> b/drivers/remoteproc/qcom_q6v5_mss.c
-> index 62cf16ddb7af..7f86d9c551c4 100644
-> --- a/drivers/remoteproc/qcom_q6v5_mss.c
-> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
-> @@ -133,6 +133,7 @@ struct rproc_hexagon_res {
->  	char **proxy_clk_names;
->  	char **reset_clk_names;
->  	char **active_clk_names;
-> +	char **active_pd_names;
->  	char **proxy_pd_names;
->  	int version;
->  	bool need_mem_protection;
-> @@ -159,10 +160,12 @@ struct q6v5 {
->  	struct clk *active_clks[8];
->  	struct clk *reset_clks[4];
->  	struct clk *proxy_clks[4];
-> +	struct device *active_pds[1];
->  	struct device *proxy_pds[3];
->  	int active_clk_count;
->  	int reset_clk_count;
->  	int proxy_clk_count;
-> +	int active_pd_count;
->  	int proxy_pd_count;
-> 
->  	struct reg_info active_regs[1];
-> @@ -730,10 +733,16 @@ static int q6v5_mba_load(struct q6v5 *qproc)
-> 
->  	qcom_q6v5_prepare(&qproc->q6v5);
-> 
-> +	ret = q6v5_pds_enable(qproc, qproc->active_pds, 
-> qproc->active_pd_count);
-> +	if (ret < 0) {
-> +		dev_err(qproc->dev, "failed to enable active power domains\n");
-> +		goto disable_irqs;
-> +	}
-> +
->  	ret = q6v5_pds_enable(qproc, qproc->proxy_pds, 
-> qproc->proxy_pd_count);
->  	if (ret < 0) {
->  		dev_err(qproc->dev, "failed to enable proxy power domains\n");
-> -		goto disable_irqs;
-> +		goto disable_active_pds;
->  	}
-> 
->  	ret = q6v5_regulator_enable(qproc, qproc->proxy_regs,
-> @@ -839,6 +848,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
->  			       qproc->proxy_reg_count);
->  disable_proxy_pds:
->  	q6v5_pds_disable(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
-> +disable_active_pds:
-> +	q6v5_pds_disable(qproc, qproc->active_pds, qproc->active_pd_count);
->  disable_irqs:
->  	qcom_q6v5_unprepare(&qproc->q6v5);
-> 
-> @@ -878,6 +889,7 @@ static void q6v5_mba_reclaim(struct q6v5 *qproc)
->  			 qproc->active_clk_count);
->  	q6v5_regulator_disable(qproc, qproc->active_regs,
->  			       qproc->active_reg_count);
-> +	q6v5_pds_disable(qproc, qproc->active_pds, qproc->active_pd_count);
-> 
->  	/* In case of failure or coredump scenario where reclaiming MBA 
-> memory
->  	 * could not happen reclaim it here.
-> @@ -1410,11 +1422,19 @@ static int q6v5_probe(struct platform_device 
-> *pdev)
->  	}
->  	qproc->active_reg_count = ret;
-> 
-> +	ret = q6v5_pds_attach(&pdev->dev, qproc->active_pds,
-> +			      desc->active_pd_names);
-> +	if (ret < 0) {
-> +		dev_err(&pdev->dev, "Failed to attach active power domains\n");
-> +		goto free_rproc;
-> +	}
-> +	qproc->active_pd_count = ret;
-> +
->  	ret = q6v5_pds_attach(&pdev->dev, qproc->proxy_pds,
->  			      desc->proxy_pd_names);
->  	if (ret < 0) {
->  		dev_err(&pdev->dev, "Failed to init power domains\n");
-> -		goto free_rproc;
-> +		goto detach_active_pds;
->  	}
->  	qproc->proxy_pd_count = ret;
-> 
-> @@ -1446,6 +1466,8 @@ static int q6v5_probe(struct platform_device 
-> *pdev)
-> 
->  detach_proxy_pds:
->  	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
-> +detach_active_pds:
-> +	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
->  free_rproc:
->  	rproc_free(rproc);
-> 
-> @@ -1463,6 +1485,7 @@ static int q6v5_remove(struct platform_device 
-> *pdev)
->  	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
->  	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
-> 
-> +	q6v5_pds_detach(qproc, qproc->active_pds, qproc->active_pd_count);
->  	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
-> 
->  	rproc_free(qproc->rproc);
-> @@ -1489,6 +1512,10 @@ static const struct rproc_hexagon_res sdm845_mss 
-> = {
->  			"mnoc_axi",
->  			NULL
->  	},
-> +	.active_pd_names = (char*[]){
-> +			"load_state",
-> +			NULL
-> +	},
->  	.proxy_pd_names = (char*[]){
->  			"cx",
->  			"mx",
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+SGkgSmFtZXMsDQoNCmZpcnN0IG9mIGFsbCB0aGFua3MgYSBsb3QgZm9yIHRoZSBjb25zdHJ1Y3Rp
+dmUgYW5kIGZhc3QgZmVlZGJhY2shDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
+RnJvbTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+DQo+IFNlbnQ6IFR1ZXNkYXks
+IEphbnVhcnkgMDgsIDIwMTkgNjo1NyBQTQ0KPiANCj4gSGkgQm9yaXMsIFdsYWRpc2xhdiwNCj4g
+DQo+IE9uIDA4LzAxLzIwMTkgMTA6NDIsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gPiArIEph
+bWVzIGFuZCBsZWF2aW5nIGluIHRoZSByZXN0IGZvciByZWZlcmVuY2UuDQo+IA0KPiAodGhhbmtz
+ISkNCj4gDQo+ID4gU28gdGhlIGZpcnN0IHRoaW5nIHRvIGZpZ3VyZSBvdXQgaGVyZSBpcyBob3cg
+Z2VuZXJpYyBpcyB0aGlzIGFuZCBpZg0KPiA+IHNvLCB0byBtYWtlIGl0IGEgY29ydGV4X2ExNV9l
+ZGFjLmMgZHJpdmVyIHdoaWNoIGNvbnRhaW5zIGFsbCB0aGUgUkFTDQo+ID4gZnVuY3Rpb25hbGl0
+eSBmb3IgQTE1LiBEZWZpbml0ZWx5IG5vdCBhbiBFREFDIGRyaXZlciBwZXIgZnVuY3Rpb25hbA0K
+PiA+IHVuaXQgYnV0IHJhdGhlciBwZXIgdmVuZG9yIG9yIGV2ZW4gQVJNIGNvcmUuDQo+IA0KPiBU
+aGlzIGlzIGltcGxlbWVudGF0aW9uLWRlZmluZWQvc3BlY2lmaWMtdG8tQTE1IGFuZCBpcyBkb2N1
+bWVudGVkIGluIHRoZQ0KPiBUUk0gWzBdLg0KPiAoT24gdGhlICdhbGwgdGhlIFJBUyBmdW5jdGlv
+bmFsaXR5IGZvciBBMTUnIGZyb250OiB0aGVyZSBhcmUgdHdvIG1vcmUgcmVnaXN0ZXJzOg0KPiBM
+Mk1FUlJTUiBhbmQgQ1BVTUVSUlNSLiBUaGVzZSBhcmUgYm90aCBhY2Nlc3NpYmxlIGZyb20gdGhl
+IG5vcm1hbC0NCj4gd29ybGQsIGFuZCBkb24ndCBhcHBlYXIgdG8gbmVlZCBlbmFibGluZy4pDQo+
+IA0KPiANCj4gQnV0IHdlIGhhdmUgdGhlIHVzdWFsIHByZS12OC4yIHByb2JsZW1zLCBhbmQgaW4g
+YWRkaXRpb24gY2x1c3Rlci1pbnRlcnJ1cHRzLA0KPiBhcyB0aGlzIHNpZ25hbCBtaWdodCBiZSBw
+ZXItY2x1c3Rlciwgb3IgaXQgbWlnaHQgYmUgY29tYmluZWQuDQo+IA0KPiBXbGFkaXNsYXYsIEkn
+bSBhZnJhaWQgd2UndmUgaGFkIGEgZmV3IGF0dGVtcHRzIGF0IHByZS04LjIgRURBQyBkcml2ZXJz
+LCB0aGUNCj4gYmVsb3cgbGlzdCBvZiBwcm9ibGVtcyBpcyB3aGF0IHdlJ3ZlIGxlYXJudCBhbG9u
+ZyB0aGUgd2F5LiBUaGUgdXBzaG90IGlzIHRoYXQNCj4gYmVmb3JlIHRoZSBhcmNoaXRlY3RlZCBS
+QVMgZXh0ZW5zaW9ucywgdGhlIGV4cGVjdGF0aW9uIGlzIGZpcm13YXJlIHdpbGwNCj4gaGFuZGxl
+IGFsbCB0aGlzLCBhcyBpdHMgZGlmZmljdWx0IGZvciB0aGUgT1MgdG8gZGVhbCB3aXRoLg0KPiAN
+Cj4gDQo+IE15IGZpcnN0IHF1ZXN0aW9uIGlzIGhvdyB1c2VmdWwgaXMgYSAnc29tZXRoaW5nIGJh
+ZCBoYXBwZW5lZCcgZWRhYyBldmVudD8NCg0KV2UgZXhwZXJpZW5jZWQgc29tZXRpbWVzIHJhbmRv
+bSB1c2VyLXNwYWNlIGNyYXNoZXMgd2hlcmUgd2UgZGlkbid0IA0KZXhwZWN0IGEgYnVnIGluIHRo
+ZSBhcHBsaWNhdGlvbiBjb2RlLiBJZiB0aGVyZSB3b3VsZCBiZSBhIG5vdGlmaWNhdGlvbiANCmJ5
+IHN1Y2ggZWRhYyBldmVudCwgd2Ugd291bGQgYXQgbGVhc3Qga25vdyB0aGF0IHNvbWV0aGluZyBi
+YWQgaGFwcGVuZWQgYmVmb3JlLg0KDQo+IEJlZm9yZSB0aGUgdjguMiBleHRlbnNpb25zIHdpdGgg
+aXRzIGNsYXNzaWZpY2F0aW9uIG9mIGVycm9ycywgd2UgZG9uJ3Qga25vdw0KPiBhbnl0aGluZyBt
+b3JlLg0KPiANCj4gVGhlIHVzdWFsIHN1c3BlY3RzIGFyZSwgKHBhcnRseSB0YWtlbiBmcm9tIHRo
+ZSB0aHJlYWQgYXQgWzFdKToNCj4gKiBBMTUgZXhpc3RzIGluIGJpZy9saXR0bGUgY29uZmlndXJh
+dGlvbnMuIFdlIG5lZWQgdG8ga25vdyB3aGljaCBDUFVzIGFyZQ0KPiBBMTUuDQo+ICogV2UgbmVl
+ZCB0byBrbm93IHdlIGFyZW4ndCBydW5uaW5nIHVuZGVyIGEgaHlwZXJ2aXNvciwgKGEgaHlwZXJ2
+aXNvciBjYW4NCj4gdHJhcA0KPiAgIGFjY2Vzc2VzIHRvIHRoZXNlIGltcC1kZWYgcmVnaXN0ZXIs
+IEtWTSBkb2VzKS4NCj4gKiBOb3RoaW5nIGVsc2Ugc2hvdWxkIGJlIGNsZWFyaW5nIHRoZXNlIGJp
+dHMsIGUuZy4gc2VjdXJlLXdvcmxkIHNvZnR3YXJlLCBvcg0KPiAgIGFub3RoZXIgQ1BVLg0KPiAq
+IFNlY3VyZS13b3JsZCBuZWVkcyB0byBlbmFibGUgd3JpdGUtYWNjZXNzIHRvIEwyRUNUTFIsIGFu
+ZCB3ZSBuZWVkIHRvDQo+ICAga25vdyBpdHMgZG9uZSBpdC4gVGhpcyBuZWVkcyBkb2luZyBvbiBl
+dmVyeSBDUFUsIGFuZCBuZWVkcyB0byBub3QgJ2dvDQo+IG1pc3NpbmcnDQo+ICAgb3ZlciBjcHUt
+aG90cGx1ZyBvciBjcHUtaWRsZS4NCj4gDQo+IFRoZXNlIGFyZSB0aGluZ3MgdGhhdCBkb24ndCBu
+YXR1cmFsbHkgbGl2ZSBpbiB0aGUgRFQuDQo+IA0KPiANCj4gVGhlIG5ldy1vbmUgaXMgdGhlc2Ug
+Y2x1c3Rlci1pbnRlcnJ1cHRzOiBIb3cgZG8gd2Uga25vdyB3aGljaCBzZXQgb2YgQ1BVcw0KPiBl
+YWNoIGludGVycnVwdCBnb2VzIHdpdGg/IFdoYXQgaGFwcGVucyBpZiB1c2VyLXNwYWNlIHRyaWVz
+IHRvIHJlYmFsYW5jZQ0KPiB0aGVtPw0KDQpWYWxpZCBxdWVzdGlvbiAtIHNvIGZhciwgSSBkaWRu
+J3QgY29uc2lkZXIgdGhpcyBjYXNlLg0KIA0KPiBBbm90aGVyIFNvQyB3aXRoIEExNSBtYXkgY29t
+YmluZSBhbGwgdGhlIGNsdXN0ZXItaW50ZXJydXB0cyBpbnRvIGEgc2luZ2xlDQo+ICdzb21ldGhp
+bmcgYmFkIGhhcHBlbmVkJyBpbnRlcnJ1cHQuIERvbmUgbGlrZSB0aGlzLCB3ZSB3b3VsZCBuZWVk
+IHRvIGNyb3NzLQ0KPiBjYWxsIHRvIHRoZSBvdGhlciBDUFVzIHdoZW4gd2UgdGFrZSBhbiBpbnRl
+cnJ1cHQgLSB3aGljaCBpcyBub3Qgc29tZXRoaW5nIHdlDQo+IGNhbiBkby4NCj4gDQo+IElzIHRo
+aXMgYSBsZXZlbCBvciBlZGdlIGludGVycnVwdD8gSXMgaXQgbmVjZXNzYXJ5IHRvIGNsZWFyIHRo
+YXQgYml0IGluIHRoZSByZWdpc3Rlcg0KPiB0byBsb3dlciB0aGUgaW50ZXJydXB0IGxpbmU/DQo+
+IFRoZSBUUk0gdGFsa3MgYWJvdXQgJ3BlbmRpbmcgTDIgaW50ZXJuYWwgYXN5bmNocm9ub3VzIGVy
+cm9yJywgcGVuZGluZw0KPiBtYWtlcyBtZSBzdXNwZWN0IHRoaXMgaXMgYXQgbGVhc3QgcG9zc2li
+bGUuIElmIGl0IGlzLCBhIGxldmVsLWludGVycnVwdCB0byBvbmUNCj4gQ1BVLCB0aGF0IGNhbiBv
+bmx5IGJlIGNsZWFyZWQgYnkgYW5vdGhlciBsZWFkcyB0byBkZWFkbG9jay4NCj4gDQo+IA0KPiBU
+aGFua3MsDQo+IA0KPiBKYW1lcw0KPiANCj4gPiBPbiBUdWUsIEphbiAwOCwgMjAxOSBhdCAwODox
+MDo0NUFNICswMDAwLCBXaWViZSwgV2xhZGlzbGF2IChOb2tpYSAtDQo+IERFL1VsbSkgd3JvdGU6
+DQo+ID4+IFRoaXMgZHJpdmVyIGFkZHMgc3VwcG9ydCBmb3IgTDIgaW50ZXJuYWwgYXN5bmNocm9u
+b3VzIGVycm9yIGRldGVjdGlvbg0KPiA+PiBjYXVzZWQgYnkgTDIgUkFNIGRvdWJsZS1iaXQgRUND
+IGVycm9yIG9yIGlsbGVnYWwgd3JpdGVzIHRvIHRoZQ0KPiA+PiBJbnRlcnJ1cHQgQ29udHJvbGxl
+ciBtZW1vcnktbWFwIHJlZ2lvbiBvbiB0aGUgQ29ydGV4IEExNS4NCj4gDQo+ID4+IGRpZmYgLS1n
+aXQgYS9kcml2ZXJzL2VkYWMvY29ydGV4X2ExNV9sMl9hc3luY19lZGFjLmMNCj4gPj4gYi9kcml2
+ZXJzL2VkYWMvY29ydGV4X2ExNV9sMl9hc3luY19lZGFjLmMNCj4gPj4gbmV3IGZpbGUgbW9kZSAx
+MDA2NDQNCj4gPj4gaW5kZXggMDAwMDAwMDAwMDAwLi4yNjI1MjU2OGU5NjENCj4gPj4gLS0tIC9k
+ZXYvbnVsbA0KPiA+PiArKysgYi9kcml2ZXJzL2VkYWMvY29ydGV4X2ExNV9sMl9hc3luY19lZGFj
+LmMNCj4gPj4gQEAgLTAsMCArMSwxMzQgQEANCj4gPj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
+aWVyOiBHUEwtMi4wDQo+ID4+ICsvKg0KPiA+PiArICogQ29weXJpZ2h0IChDKSAyMDE4IE5va2lh
+IENvcnBvcmF0aW9uDQo+IA0KPiAoYm9pbGVyIHBsYXRlIG5vdCBuZWVkZWQgd2l0aCB0aGUgU1BE
+WCBoZWFkZXIpDQo+IA0KPiA+PiArICovDQo+ID4+ICsNCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9t
+b2R1bGUuaD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPj4gKyNpbmNs
+dWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9vZi5o
+Pg0KPiA+PiArDQo+ID4+ICsjaW5jbHVkZSAiZWRhY19tb2R1bGUuaCINCj4gPj4gKw0KPiA+PiAr
+I2RlZmluZSBEUklWRVJfTkFNRSAiY29ydGV4X2ExNV9sMl9hc3luY19lZGFjIg0KPiA+PiArDQo+
+ID4+ICsjZGVmaW5lIEwyRUNUTFJfTDJfQVNZTkNfRVJSIEJJVCgzMCkNCj4gPj4gKw0KPiA+PiAr
+c3RhdGljIGlycXJldHVybl90IGNvcnRleF9hMTVfbDJfYXN5bmNfZWRhY19lcnJfaGFuZGxlcihp
+bnQgaXJxLA0KPiA+PiArdm9pZCAqZGV2X2lkKSB7DQo+ID4+ICsJc3RydWN0IGVkYWNfZGV2aWNl
+X2N0bF9pbmZvICpkY2kgPSBkZXZfaWQ7DQo+ID4+ICsJdTMyIHN0YXR1cyA9IDA7DQo+ID4+ICsN
+Cj4gPj4gKwkvKg0KPiA+PiArCSAqIFJlYWQgYW5kIGNsZWFyIEwyRUNUTFIgTDIgQVNZTkMgZXJy
+b3IgYml0IGNhdXNlZCBieSBJTlRFUlJJUlEuDQo+ID4+ICsJICogUmVhc29uIGNvdWxkIGJlIGEg
+TDIgUkFNIGRvdWJsZS1iaXQgRUNDIGVycm9yIG9yIGlsbGVnYWwgd3JpdGVzDQo+ID4+ICsJICog
+dG8gdGhlIEludGVycnVwdCBDb250cm9sbGVyIG1lbW9yeS1tYXAgcmVnaW9uLg0KPiA+PiArCSAq
+Lw0KPiA+PiArCWFzbSgibXJjIHAxNSwgMSwgJTAsIGM5LCBjMCwgMyIgOiAiPXIiIChzdGF0dXMp
+KTsNCj4gDQo+ICJMMiBpbnRlcm5hbCBhc3luY2hyb25vdXMgZXJyb3IgY2F1c2VkIGJ5IEwyIFJB
+TSBkb3VibGUtYml0IEVDQyBlcnJvciINCj4gZG9lc24ndCB0ZWxsIHVzIGlmIGEgQ1BVIGNvbnN1
+bWVkIHRoZSBlcnJvciwgb3IgaWYgdGhlIGVycm9yIGhhcyBjYXVzZWQgYSB3cml0ZQ0KPiB0byBn
+byBtaXNzaW5nLiBXaXRob3V0IHRoZSBjbGFzc2lmaWNhdGlvbiwgdGhpcyBtZWFucyAnc29tZXRo
+aW5nIGJhZA0KPiBoYXBwZW5lZCcuDQo+IA0KPiBJJ2QgcHJlZmVyIHRvIHBhbmljKCkgd2hlbiB3
+ZSBzZWUgb25lIG9mIHRoZXNlLiBJJ2QgbGlrZSBpdCBldmVuIG1vcmUgaWYNCj4gZmlybXdhcmUg
+cmVib290ZWQgZm9yIHVzLg0KDQpUaGUgRURBQyBzdWJzeXN0ZW0gYWxsb3dzIHRvIGNvbmZpZ3Vy
+ZSBhIHBhbmljKCkgZnJvbSB1c2Vyc3BhY2Uvc3lzZnMuDQpTbyB3ZSBjYW4gYmUgZmxleGlibGUg
+YXQgdGhpcyBwb2ludCBJIHRoaW5rLg0KDQo+IA0KPiA+PiArCWlmIChzdGF0dXMgJiBMMkVDVExS
+X0wyX0FTWU5DX0VSUikgew0KPiA+PiArCQlzdGF0dXMgJj0gfkwyRUNUTFJfTDJfQVNZTkNfRVJS
+Ow0KPiA+PiArCQlhc20oIm1jciBwMTUsIDEsICUwLCBjOSwgYzAsIDMiIDogOiAiciIgKHN0YXR1
+cykpOw0KPiANCj4gNC4zLjQ5ICJMMiBFeHRlbmRlZCBDb250cm9sIFJlZ2lzdGVyIiBvZiB0aGUg
+QTE1IFRSTSBzYXlzIHRoaXMgZmllbGQgY2FuIGJlDQo+IHJlYWQtb25seS93cml0ZS1pZ25vcmVk
+IGZvciB0aGUgbm9ybWFsIHdvcmxkIGlmIE5TQUNSLk5TX0wyRVJSIGlzIDAuDQo+IA0KPiBIb3cg
+ZG8gd2Uga25vdyBpZiBmaXJtd2FyZSBoYXMgc2V0IHRoaXMgYml0IG9uIGFsbCBDUFVzPyBXZSBj
+YW4ndCBjbGVhciB0aGUNCj4gZXJyb3Igb3RoZXJ3aXNlLg0KDQpWYWxpZCBwb2ludCENCiANCj4g
+DQo+ID4+ICsJCWVkYWNfcHJpbnRrKEtFUk5fRU1FUkcsIERSSVZFUl9OQU1FLA0KPiA+PiArCQkJ
+ICAgICJMMiBpbnRlcm5hbCBhc3luY2hyb25vdXMgZXJyb3Igb2NjdXJyZWQhXG4iKTsNCj4gPj4g
+KwkJZWRhY19kZXZpY2VfaGFuZGxlX3VlKGRjaSwgMCwgMCwgZGNpLT5jdGxfbmFtZSk7DQo+IA0K
+PiA+PiArDQo+ID4+ICsJCXJldHVybiBJUlFfSEFORExFRDsNCj4gPj4gKwl9DQo+ID4+ICsNCj4g
+Pj4gKwlyZXR1cm4gSVJRX05PTkU7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4gK3N0YXRpYyBpbnQg
+Y29ydGV4X2ExNV9sMl9hc3luY19lZGFjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4g
+Pj4gKypwZGV2KSB7DQo+ID4+ICsJc3RydWN0IGVkYWNfZGV2aWNlX2N0bF9pbmZvICpkY2k7DQo+
+ID4+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiA+PiAr
+CWNoYXIgKmN0bF9uYW1lID0gKGNoYXIgKilucC0+bmFtZTsNCj4gPj4gKwlpbnQgaSA9IDAsIHJl
+dCA9IDAsIGVycl9pcnEgPSAwLCBpcnFfY291bnQgPSAwOw0KPiA+PiArDQo+ID4+ICsJLyogV2Ug
+Y2FuIGhhdmUgbXVsdGlwbGUgQ1BVIGNsdXN0ZXJzIHdpdGggb25lIElOVEVSUklSUSBwZXIgY2x1
+c3Rlcg0KPiA+PiArKi8NCj4gDQo+IFN1cmVseSB0aGlzIGFuIGludGVncmF0aW9uIGNob2ljZT8N
+Cj4gDQo+IFlvdSdyZSBhY2Nlc3NpbmcgdGhlIGNsdXN0ZXIgdGhyb3VnaCBhIGNwdSByZWdpc3Rl
+ciBpbiB0aGUgaGFuZGxlciwgd2hhdA0KPiBoYXBwZW5zIGlmIHRoZSBpbnRlcnJ1cHQgaXMgZGVs
+aXZlcmVkIHRvIHRoZSB3cm9uZyBjbHVzdGVyPw0KPiBIb3cgZG8gd2Uga25vdyB3aGljaCBpbnRl
+cnJ1cHQgbWFwcyB0byB3aGljaCBjbHVzdGVyPw0KPiBIb3cgZG8gd2Ugc3RvcCB1c2VyLXNwYWNl
+ICdiYWxhbmNpbmcnIHRoZSBpbnRlcnJ1cHRzPw0KDQpZb3UgYXJlIHJpZ2h0LCBiYXNlZCBvbiBh
+bGwgeW91ciBpbnB1dHMgSSB0aGluayB3ZSBjYW4gc3RvcCB1c2luZyB0aGlzIGRyaXZlcg0KYXMg
+Z2VuZXJpYyBBMTUgc29sdXRpb24gKGF0IGxlYXN0IEkgd291bGQgbmVlZCBtb3JlIHRpbWUgdG8g
+ZG8NCnRoZSByZWZhY3RvcmluZyBjb25zaWRlcmluZyBhbGwgcG9pbnRzIHlvdSBzdGF0ZWQgYW5k
+IGV4cGVyaWVuY2VkIGFscmVhZHkpLg0KDQpUaGFua3MgYSBsb3QhDQoNCi0gV2xhZGlzbGF2DQoN
+Cg==
