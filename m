@@ -1,28 +1,27 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] ARM: dts: omap3-gta04: Fix graph_port warning
-Date: Wed, 9 Jan 2019 13:37:44 -0600
-Message-ID: <CAL_JsqLhGGx_amtDSZh3OJ+Tq-Oziu450NOt4Z+aoQMt-JY46Q@mail.gmail.com>
-References: <97349a696b43af65d62b5d8e795ec3771b5e78bd.1547060514.git.hns@goldelico.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v2 2/2] clk: Add Fixed MMIO clock driver
+Date: Wed, 09 Jan 2019 11:42:34 -0800
+Message-ID: <154706295457.15366.6974721928926110954@swboyd.mtv.corp.google.com>
+References: <20181213124929.32736-1-jank@cadence.com> <20181213124929.32736-3-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <97349a696b43af65d62b5d8e795ec3771b5e78bd.1547060514.git.hns@goldelico.com>
+In-Reply-To: <20181213124929.32736-3-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Tony Lindgren <tony@atomide.com>, Tomi Valkeinen <tomi.valkeinen@ti.com>, =?UTF-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 9, 2019 at 1:02 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
->
-> From: Tony Lindgren <tony@atomide.com>
->
-> We're currently getting a warning with make dtbs:
->
-> arch/arm/boot/dts/omap3-gta04.dtsi:720.7-727.4: Warning (graph_port):
-> /ocp@68000000/dss@48050000/encoder@48050c0 0/port: graph node unit
-> address error, expected "0"
->
-> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> Signed-off-by: Tony Lindgren <tony@atomide.com>
+Quoting Jan Kotas (2018-12-13 04:49:29)
+> This patch adds a driver for Fixed MMIO clock.
+> The driver reads a clock frequency value from a single 32-bit memory
+> mapped register and registers it as a fixed rate clock.
+>=20
+> It can be enabled with COMMON_CLK_FIXED_MMIO Kconfig option.
+>=20
+> Signed-off-by: Jan Kotas <jank@cadence.com>
 
-Acked-by: Rob Herring <robh@kernel.org>
+This needed to use the clk_hw based APIs and add a static. I made the
+changes myself. Let me know if you have any problems with what's in
+clk-next and it can be fixed.
