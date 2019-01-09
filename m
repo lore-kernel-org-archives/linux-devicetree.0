@@ -1,53 +1,67 @@
 From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm845: Remove the duplicate header
- inclusion
-Date: Wed, 9 Jan 2019 14:57:00 -0800
-Message-ID: <CAD=FV=UgFwVdsTuaQhVA9q18Ns8n278A4mx=TrvuOW3mmZm84A@mail.gmail.com>
-References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
- <5f400b3a15cab5dd071e4a129d38cb21e7123b78.1547054308.git.saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH v12 6/7] arm64: dts: sdm845: Add interconnect provider DT nodes
+Date: Wed, 9 Jan 2019 15:18:01 -0800
+Message-ID: <CAD=FV=Xg5Sz029_UjuDg-ms05Ez+riv8qr0FLWkvg6axPYbZ_g@mail.gmail.com>
+References: <20181208170216.32555-1-georgi.djakov@linaro.org> <20181208170216.32555-7-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <5f400b3a15cab5dd071e4a129d38cb21e7123b78.1547054308.git.saiprakash.ranjan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Leo Yan <leo.yan@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181208170216.32555-7-georgi.djakov@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Evan Green <evgreen@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Thierry
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Wed, Jan 9, 2019 at 9:48 AM Sai Prakash Ranjan
-<saiprakash.ranjan@codeaurora.org> wrote:
+On Sat, Dec 8, 2018 at 9:02 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
 >
-> Remove the duplicate inclusion of qcom,gcc-sdm845.h
-> mistakenly introduced by commit 6e17f8140521 ("arm64:
-> dts: sdm845: add prng-ee node").
+> From: David Dai <daidavid1@codeaurora.org>
 >
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Add RSC (Resource State Coordinator) provider
+> dictating network-on-chip interconnect bus performance
+> found on SDM845-based platforms.
+>
+> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 -
->  1 file changed, 1 deletion(-)
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
+>  1 file changed, 5 insertions(+)
 >
 > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 03683179b8f7..8dced99f875e 100644
+> index b72bdb0a31a5..b3cd256a154e 100644
 > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -12,7 +12,6 @@
->  #include <dt-bindings/phy/phy-qcom-qusb2.h>
->  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> -#include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> @@ -1324,6 +1324,11 @@
+>                                 compatible = "qcom,sdm845-rpmh-clk";
+>                                 #clock-cells = <1>;
+>                         };
+> +
+> +                       rsc_hlos: interconnect {
+> +                               compatible = "qcom,sdm845-rsc-hlos";
+> +                               #interconnect-cells = <1>;
+> +                       };
 
-This was on my TODO list, but you beat me to it.  This could land any
-time and is completely separate from the other patches in this series.
+It would have been convenient if this patch had also added an include above:
 
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+#include <dt-bindings/interconnect/qcom,sdm845.h>
+
+...while the include isn't technically needed by this patch, all the
+patches that want to actually _use_ the interconnect will need to add
+the #include and then you get to some fun fights about who has to add
+the include in which patch.  For instance these two patches won't
+compile:
+
+* https://lkml.kernel.org/r/1545373748-1416-1-git-send-email-jshekhar@codeaurora.org
+* https://lkml.kernel.org/r/20181220173026.3857-4-jcrouse@codeaurora.org
+
+...because neither of them happened to add the include.  Maybe they
+were both assuming someone else would do it?
+
+
+If nobody else wants to, I'm happy to post a patch to add that include
+myself and it can be applied atop this one.  ...or if this patch needs
+to spin for some other reason maybe you could add it into this patch
+directly?
+
+-Doug
