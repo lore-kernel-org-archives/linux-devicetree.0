@@ -1,141 +1,72 @@
-From: "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
-Subject: RE: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous
- error detection driver
-Date: Wed, 9 Jan 2019 14:44:26 +0000
-Message-ID: <AM6PR0702MB37997C0FA1670DD1AF4C25C7FA8B0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
-References: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
- <20190108104204.GA14243@zn.tnic>
- <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Krzysztof Kozlowski <krzk@kernel.org>
+Subject: [PATCH v7 0/5] leds: trigger: Add pattern initialization from Device Tree
+Date: Wed,  9 Jan 2019 15:44:44 +0100
+Message-ID: <1547045089-19128-1-git-send-email-krzk@kernel.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: James Morse <james.morse@arm.com>, Borislav Petkov <bp@alien8.de>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Krzysztof Kozlowski <krzk@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmFtZXMsDQoNCmZpcnN0IG9mIGFsbCB0aGFua3MgYSBsb3QgZm9yIHRoZSBjb25zdHJ1Y3Rp
-dmUgYW5kIGZhc3QgZmVlZGJhY2shDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4g
-RnJvbTogSmFtZXMgTW9yc2UgPGphbWVzLm1vcnNlQGFybS5jb20+DQo+IFNlbnQ6IFR1ZXNkYXks
-IEphbnVhcnkgMDgsIDIwMTkgNjo1NyBQTQ0KPiANCj4gSGkgQm9yaXMsIFdsYWRpc2xhdiwNCj4g
-DQo+IE9uIDA4LzAxLzIwMTkgMTA6NDIsIEJvcmlzbGF2IFBldGtvdiB3cm90ZToNCj4gPiArIEph
-bWVzIGFuZCBsZWF2aW5nIGluIHRoZSByZXN0IGZvciByZWZlcmVuY2UuDQo+IA0KPiAodGhhbmtz
-ISkNCj4gDQo+ID4gU28gdGhlIGZpcnN0IHRoaW5nIHRvIGZpZ3VyZSBvdXQgaGVyZSBpcyBob3cg
-Z2VuZXJpYyBpcyB0aGlzIGFuZCBpZg0KPiA+IHNvLCB0byBtYWtlIGl0IGEgY29ydGV4X2ExNV9l
-ZGFjLmMgZHJpdmVyIHdoaWNoIGNvbnRhaW5zIGFsbCB0aGUgUkFTDQo+ID4gZnVuY3Rpb25hbGl0
-eSBmb3IgQTE1LiBEZWZpbml0ZWx5IG5vdCBhbiBFREFDIGRyaXZlciBwZXIgZnVuY3Rpb25hbA0K
-PiA+IHVuaXQgYnV0IHJhdGhlciBwZXIgdmVuZG9yIG9yIGV2ZW4gQVJNIGNvcmUuDQo+IA0KPiBU
-aGlzIGlzIGltcGxlbWVudGF0aW9uLWRlZmluZWQvc3BlY2lmaWMtdG8tQTE1IGFuZCBpcyBkb2N1
-bWVudGVkIGluIHRoZQ0KPiBUUk0gWzBdLg0KPiAoT24gdGhlICdhbGwgdGhlIFJBUyBmdW5jdGlv
-bmFsaXR5IGZvciBBMTUnIGZyb250OiB0aGVyZSBhcmUgdHdvIG1vcmUgcmVnaXN0ZXJzOg0KPiBM
-Mk1FUlJTUiBhbmQgQ1BVTUVSUlNSLiBUaGVzZSBhcmUgYm90aCBhY2Nlc3NpYmxlIGZyb20gdGhl
-IG5vcm1hbC0NCj4gd29ybGQsIGFuZCBkb24ndCBhcHBlYXIgdG8gbmVlZCBlbmFibGluZy4pDQo+
-IA0KPiANCj4gQnV0IHdlIGhhdmUgdGhlIHVzdWFsIHByZS12OC4yIHByb2JsZW1zLCBhbmQgaW4g
-YWRkaXRpb24gY2x1c3Rlci1pbnRlcnJ1cHRzLA0KPiBhcyB0aGlzIHNpZ25hbCBtaWdodCBiZSBw
-ZXItY2x1c3Rlciwgb3IgaXQgbWlnaHQgYmUgY29tYmluZWQuDQo+IA0KPiBXbGFkaXNsYXYsIEkn
-bSBhZnJhaWQgd2UndmUgaGFkIGEgZmV3IGF0dGVtcHRzIGF0IHByZS04LjIgRURBQyBkcml2ZXJz
-LCB0aGUNCj4gYmVsb3cgbGlzdCBvZiBwcm9ibGVtcyBpcyB3aGF0IHdlJ3ZlIGxlYXJudCBhbG9u
-ZyB0aGUgd2F5LiBUaGUgdXBzaG90IGlzIHRoYXQNCj4gYmVmb3JlIHRoZSBhcmNoaXRlY3RlZCBS
-QVMgZXh0ZW5zaW9ucywgdGhlIGV4cGVjdGF0aW9uIGlzIGZpcm13YXJlIHdpbGwNCj4gaGFuZGxl
-IGFsbCB0aGlzLCBhcyBpdHMgZGlmZmljdWx0IGZvciB0aGUgT1MgdG8gZGVhbCB3aXRoLg0KPiAN
-Cj4gDQo+IE15IGZpcnN0IHF1ZXN0aW9uIGlzIGhvdyB1c2VmdWwgaXMgYSAnc29tZXRoaW5nIGJh
-ZCBoYXBwZW5lZCcgZWRhYyBldmVudD8NCg0KV2UgZXhwZXJpZW5jZWQgc29tZXRpbWVzIHJhbmRv
-bSB1c2VyLXNwYWNlIGNyYXNoZXMgd2hlcmUgd2UgZGlkbid0IA0KZXhwZWN0IGEgYnVnIGluIHRo
-ZSBhcHBsaWNhdGlvbiBjb2RlLiBJZiB0aGVyZSB3b3VsZCBiZSBhIG5vdGlmaWNhdGlvbiANCmJ5
-IHN1Y2ggZWRhYyBldmVudCwgd2Ugd291bGQgYXQgbGVhc3Qga25vdyB0aGF0IHNvbWV0aGluZyBi
-YWQgaGFwcGVuZWQgYmVmb3JlLg0KDQo+IEJlZm9yZSB0aGUgdjguMiBleHRlbnNpb25zIHdpdGgg
-aXRzIGNsYXNzaWZpY2F0aW9uIG9mIGVycm9ycywgd2UgZG9uJ3Qga25vdw0KPiBhbnl0aGluZyBt
-b3JlLg0KPiANCj4gVGhlIHVzdWFsIHN1c3BlY3RzIGFyZSwgKHBhcnRseSB0YWtlbiBmcm9tIHRo
-ZSB0aHJlYWQgYXQgWzFdKToNCj4gKiBBMTUgZXhpc3RzIGluIGJpZy9saXR0bGUgY29uZmlndXJh
-dGlvbnMuIFdlIG5lZWQgdG8ga25vdyB3aGljaCBDUFVzIGFyZQ0KPiBBMTUuDQo+ICogV2UgbmVl
-ZCB0byBrbm93IHdlIGFyZW4ndCBydW5uaW5nIHVuZGVyIGEgaHlwZXJ2aXNvciwgKGEgaHlwZXJ2
-aXNvciBjYW4NCj4gdHJhcA0KPiAgIGFjY2Vzc2VzIHRvIHRoZXNlIGltcC1kZWYgcmVnaXN0ZXIs
-IEtWTSBkb2VzKS4NCj4gKiBOb3RoaW5nIGVsc2Ugc2hvdWxkIGJlIGNsZWFyaW5nIHRoZXNlIGJp
-dHMsIGUuZy4gc2VjdXJlLXdvcmxkIHNvZnR3YXJlLCBvcg0KPiAgIGFub3RoZXIgQ1BVLg0KPiAq
-IFNlY3VyZS13b3JsZCBuZWVkcyB0byBlbmFibGUgd3JpdGUtYWNjZXNzIHRvIEwyRUNUTFIsIGFu
-ZCB3ZSBuZWVkIHRvDQo+ICAga25vdyBpdHMgZG9uZSBpdC4gVGhpcyBuZWVkcyBkb2luZyBvbiBl
-dmVyeSBDUFUsIGFuZCBuZWVkcyB0byBub3QgJ2dvDQo+IG1pc3NpbmcnDQo+ICAgb3ZlciBjcHUt
-aG90cGx1ZyBvciBjcHUtaWRsZS4NCj4gDQo+IFRoZXNlIGFyZSB0aGluZ3MgdGhhdCBkb24ndCBu
-YXR1cmFsbHkgbGl2ZSBpbiB0aGUgRFQuDQo+IA0KPiANCj4gVGhlIG5ldy1vbmUgaXMgdGhlc2Ug
-Y2x1c3Rlci1pbnRlcnJ1cHRzOiBIb3cgZG8gd2Uga25vdyB3aGljaCBzZXQgb2YgQ1BVcw0KPiBl
-YWNoIGludGVycnVwdCBnb2VzIHdpdGg/IFdoYXQgaGFwcGVucyBpZiB1c2VyLXNwYWNlIHRyaWVz
-IHRvIHJlYmFsYW5jZQ0KPiB0aGVtPw0KDQpWYWxpZCBxdWVzdGlvbiAtIHNvIGZhciwgSSBkaWRu
-J3QgY29uc2lkZXIgdGhpcyBjYXNlLg0KIA0KPiBBbm90aGVyIFNvQyB3aXRoIEExNSBtYXkgY29t
-YmluZSBhbGwgdGhlIGNsdXN0ZXItaW50ZXJydXB0cyBpbnRvIGEgc2luZ2xlDQo+ICdzb21ldGhp
-bmcgYmFkIGhhcHBlbmVkJyBpbnRlcnJ1cHQuIERvbmUgbGlrZSB0aGlzLCB3ZSB3b3VsZCBuZWVk
-IHRvIGNyb3NzLQ0KPiBjYWxsIHRvIHRoZSBvdGhlciBDUFVzIHdoZW4gd2UgdGFrZSBhbiBpbnRl
-cnJ1cHQgLSB3aGljaCBpcyBub3Qgc29tZXRoaW5nIHdlDQo+IGNhbiBkby4NCj4gDQo+IElzIHRo
-aXMgYSBsZXZlbCBvciBlZGdlIGludGVycnVwdD8gSXMgaXQgbmVjZXNzYXJ5IHRvIGNsZWFyIHRo
-YXQgYml0IGluIHRoZSByZWdpc3Rlcg0KPiB0byBsb3dlciB0aGUgaW50ZXJydXB0IGxpbmU/DQo+
-IFRoZSBUUk0gdGFsa3MgYWJvdXQgJ3BlbmRpbmcgTDIgaW50ZXJuYWwgYXN5bmNocm9ub3VzIGVy
-cm9yJywgcGVuZGluZw0KPiBtYWtlcyBtZSBzdXNwZWN0IHRoaXMgaXMgYXQgbGVhc3QgcG9zc2li
-bGUuIElmIGl0IGlzLCBhIGxldmVsLWludGVycnVwdCB0byBvbmUNCj4gQ1BVLCB0aGF0IGNhbiBv
-bmx5IGJlIGNsZWFyZWQgYnkgYW5vdGhlciBsZWFkcyB0byBkZWFkbG9jay4NCj4gDQo+IA0KPiBU
-aGFua3MsDQo+IA0KPiBKYW1lcw0KPiANCj4gPiBPbiBUdWUsIEphbiAwOCwgMjAxOSBhdCAwODox
-MDo0NUFNICswMDAwLCBXaWViZSwgV2xhZGlzbGF2IChOb2tpYSAtDQo+IERFL1VsbSkgd3JvdGU6
-DQo+ID4+IFRoaXMgZHJpdmVyIGFkZHMgc3VwcG9ydCBmb3IgTDIgaW50ZXJuYWwgYXN5bmNocm9u
-b3VzIGVycm9yIGRldGVjdGlvbg0KPiA+PiBjYXVzZWQgYnkgTDIgUkFNIGRvdWJsZS1iaXQgRUND
-IGVycm9yIG9yIGlsbGVnYWwgd3JpdGVzIHRvIHRoZQ0KPiA+PiBJbnRlcnJ1cHQgQ29udHJvbGxl
-ciBtZW1vcnktbWFwIHJlZ2lvbiBvbiB0aGUgQ29ydGV4IEExNS4NCj4gDQo+ID4+IGRpZmYgLS1n
-aXQgYS9kcml2ZXJzL2VkYWMvY29ydGV4X2ExNV9sMl9hc3luY19lZGFjLmMNCj4gPj4gYi9kcml2
-ZXJzL2VkYWMvY29ydGV4X2ExNV9sMl9hc3luY19lZGFjLmMNCj4gPj4gbmV3IGZpbGUgbW9kZSAx
-MDA2NDQNCj4gPj4gaW5kZXggMDAwMDAwMDAwMDAwLi4yNjI1MjU2OGU5NjENCj4gPj4gLS0tIC9k
-ZXYvbnVsbA0KPiA+PiArKysgYi9kcml2ZXJzL2VkYWMvY29ydGV4X2ExNV9sMl9hc3luY19lZGFj
-LmMNCj4gPj4gQEAgLTAsMCArMSwxMzQgQEANCj4gPj4gKy8vIFNQRFgtTGljZW5zZS1JZGVudGlm
-aWVyOiBHUEwtMi4wDQo+ID4+ICsvKg0KPiA+PiArICogQ29weXJpZ2h0IChDKSAyMDE4IE5va2lh
-IENvcnBvcmF0aW9uDQo+IA0KPiAoYm9pbGVyIHBsYXRlIG5vdCBuZWVkZWQgd2l0aCB0aGUgU1BE
-WCBoZWFkZXIpDQo+IA0KPiA+PiArICovDQo+ID4+ICsNCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9t
-b2R1bGUuaD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9pbnRlcnJ1cHQuaD4NCj4gPj4gKyNpbmNs
-dWRlIDxsaW51eC9wbGF0Zm9ybV9kZXZpY2UuaD4NCj4gPj4gKyNpbmNsdWRlIDxsaW51eC9vZi5o
-Pg0KPiA+PiArDQo+ID4+ICsjaW5jbHVkZSAiZWRhY19tb2R1bGUuaCINCj4gPj4gKw0KPiA+PiAr
-I2RlZmluZSBEUklWRVJfTkFNRSAiY29ydGV4X2ExNV9sMl9hc3luY19lZGFjIg0KPiA+PiArDQo+
-ID4+ICsjZGVmaW5lIEwyRUNUTFJfTDJfQVNZTkNfRVJSIEJJVCgzMCkNCj4gPj4gKw0KPiA+PiAr
-c3RhdGljIGlycXJldHVybl90IGNvcnRleF9hMTVfbDJfYXN5bmNfZWRhY19lcnJfaGFuZGxlcihp
-bnQgaXJxLA0KPiA+PiArdm9pZCAqZGV2X2lkKSB7DQo+ID4+ICsJc3RydWN0IGVkYWNfZGV2aWNl
-X2N0bF9pbmZvICpkY2kgPSBkZXZfaWQ7DQo+ID4+ICsJdTMyIHN0YXR1cyA9IDA7DQo+ID4+ICsN
-Cj4gPj4gKwkvKg0KPiA+PiArCSAqIFJlYWQgYW5kIGNsZWFyIEwyRUNUTFIgTDIgQVNZTkMgZXJy
-b3IgYml0IGNhdXNlZCBieSBJTlRFUlJJUlEuDQo+ID4+ICsJICogUmVhc29uIGNvdWxkIGJlIGEg
-TDIgUkFNIGRvdWJsZS1iaXQgRUNDIGVycm9yIG9yIGlsbGVnYWwgd3JpdGVzDQo+ID4+ICsJICog
-dG8gdGhlIEludGVycnVwdCBDb250cm9sbGVyIG1lbW9yeS1tYXAgcmVnaW9uLg0KPiA+PiArCSAq
-Lw0KPiA+PiArCWFzbSgibXJjIHAxNSwgMSwgJTAsIGM5LCBjMCwgMyIgOiAiPXIiIChzdGF0dXMp
-KTsNCj4gDQo+ICJMMiBpbnRlcm5hbCBhc3luY2hyb25vdXMgZXJyb3IgY2F1c2VkIGJ5IEwyIFJB
-TSBkb3VibGUtYml0IEVDQyBlcnJvciINCj4gZG9lc24ndCB0ZWxsIHVzIGlmIGEgQ1BVIGNvbnN1
-bWVkIHRoZSBlcnJvciwgb3IgaWYgdGhlIGVycm9yIGhhcyBjYXVzZWQgYSB3cml0ZQ0KPiB0byBn
-byBtaXNzaW5nLiBXaXRob3V0IHRoZSBjbGFzc2lmaWNhdGlvbiwgdGhpcyBtZWFucyAnc29tZXRo
-aW5nIGJhZA0KPiBoYXBwZW5lZCcuDQo+IA0KPiBJJ2QgcHJlZmVyIHRvIHBhbmljKCkgd2hlbiB3
-ZSBzZWUgb25lIG9mIHRoZXNlLiBJJ2QgbGlrZSBpdCBldmVuIG1vcmUgaWYNCj4gZmlybXdhcmUg
-cmVib290ZWQgZm9yIHVzLg0KDQpUaGUgRURBQyBzdWJzeXN0ZW0gYWxsb3dzIHRvIGNvbmZpZ3Vy
-ZSBhIHBhbmljKCkgZnJvbSB1c2Vyc3BhY2Uvc3lzZnMuDQpTbyB3ZSBjYW4gYmUgZmxleGlibGUg
-YXQgdGhpcyBwb2ludCBJIHRoaW5rLg0KDQo+IA0KPiA+PiArCWlmIChzdGF0dXMgJiBMMkVDVExS
-X0wyX0FTWU5DX0VSUikgew0KPiA+PiArCQlzdGF0dXMgJj0gfkwyRUNUTFJfTDJfQVNZTkNfRVJS
-Ow0KPiA+PiArCQlhc20oIm1jciBwMTUsIDEsICUwLCBjOSwgYzAsIDMiIDogOiAiciIgKHN0YXR1
-cykpOw0KPiANCj4gNC4zLjQ5ICJMMiBFeHRlbmRlZCBDb250cm9sIFJlZ2lzdGVyIiBvZiB0aGUg
-QTE1IFRSTSBzYXlzIHRoaXMgZmllbGQgY2FuIGJlDQo+IHJlYWQtb25seS93cml0ZS1pZ25vcmVk
-IGZvciB0aGUgbm9ybWFsIHdvcmxkIGlmIE5TQUNSLk5TX0wyRVJSIGlzIDAuDQo+IA0KPiBIb3cg
-ZG8gd2Uga25vdyBpZiBmaXJtd2FyZSBoYXMgc2V0IHRoaXMgYml0IG9uIGFsbCBDUFVzPyBXZSBj
-YW4ndCBjbGVhciB0aGUNCj4gZXJyb3Igb3RoZXJ3aXNlLg0KDQpWYWxpZCBwb2ludCENCiANCj4g
-DQo+ID4+ICsJCWVkYWNfcHJpbnRrKEtFUk5fRU1FUkcsIERSSVZFUl9OQU1FLA0KPiA+PiArCQkJ
-ICAgICJMMiBpbnRlcm5hbCBhc3luY2hyb25vdXMgZXJyb3Igb2NjdXJyZWQhXG4iKTsNCj4gPj4g
-KwkJZWRhY19kZXZpY2VfaGFuZGxlX3VlKGRjaSwgMCwgMCwgZGNpLT5jdGxfbmFtZSk7DQo+IA0K
-PiA+PiArDQo+ID4+ICsJCXJldHVybiBJUlFfSEFORExFRDsNCj4gPj4gKwl9DQo+ID4+ICsNCj4g
-Pj4gKwlyZXR1cm4gSVJRX05PTkU7DQo+ID4+ICt9DQo+ID4+ICsNCj4gPj4gK3N0YXRpYyBpbnQg
-Y29ydGV4X2ExNV9sMl9hc3luY19lZGFjX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UNCj4g
-Pj4gKypwZGV2KSB7DQo+ID4+ICsJc3RydWN0IGVkYWNfZGV2aWNlX2N0bF9pbmZvICpkY2k7DQo+
-ID4+ICsJc3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiA+PiAr
-CWNoYXIgKmN0bF9uYW1lID0gKGNoYXIgKilucC0+bmFtZTsNCj4gPj4gKwlpbnQgaSA9IDAsIHJl
-dCA9IDAsIGVycl9pcnEgPSAwLCBpcnFfY291bnQgPSAwOw0KPiA+PiArDQo+ID4+ICsJLyogV2Ug
-Y2FuIGhhdmUgbXVsdGlwbGUgQ1BVIGNsdXN0ZXJzIHdpdGggb25lIElOVEVSUklSUSBwZXIgY2x1
-c3Rlcg0KPiA+PiArKi8NCj4gDQo+IFN1cmVseSB0aGlzIGFuIGludGVncmF0aW9uIGNob2ljZT8N
-Cj4gDQo+IFlvdSdyZSBhY2Nlc3NpbmcgdGhlIGNsdXN0ZXIgdGhyb3VnaCBhIGNwdSByZWdpc3Rl
-ciBpbiB0aGUgaGFuZGxlciwgd2hhdA0KPiBoYXBwZW5zIGlmIHRoZSBpbnRlcnJ1cHQgaXMgZGVs
-aXZlcmVkIHRvIHRoZSB3cm9uZyBjbHVzdGVyPw0KPiBIb3cgZG8gd2Uga25vdyB3aGljaCBpbnRl
-cnJ1cHQgbWFwcyB0byB3aGljaCBjbHVzdGVyPw0KPiBIb3cgZG8gd2Ugc3RvcCB1c2VyLXNwYWNl
-ICdiYWxhbmNpbmcnIHRoZSBpbnRlcnJ1cHRzPw0KDQpZb3UgYXJlIHJpZ2h0LCBiYXNlZCBvbiBh
-bGwgeW91ciBpbnB1dHMgSSB0aGluayB3ZSBjYW4gc3RvcCB1c2luZyB0aGlzIGRyaXZlcg0KYXMg
-Z2VuZXJpYyBBMTUgc29sdXRpb24gKGF0IGxlYXN0IEkgd291bGQgbmVlZCBtb3JlIHRpbWUgdG8g
-ZG8NCnRoZSByZWZhY3RvcmluZyBjb25zaWRlcmluZyBhbGwgcG9pbnRzIHlvdSBzdGF0ZWQgYW5k
-IGV4cGVyaWVuY2VkIGFscmVhZHkpLg0KDQpUaGFua3MgYSBsb3QhDQoNCi0gV2xhZGlzbGF2DQoN
-Cg==
+Hi,
+
+Changes since v6:
+1. Drop goto from led_get_default_pattern() and rename "DeviceTree"
+   into "device tree".
+2. Add Pavel's ack to patch 1/5.
+
+Changes since v5:
+1. Drop the "classdev" prefix from helper for getting default pattern
+   and move the kerneldoc to header file (this was not fixed in v5 by
+   mistake).
+
+Changes since v4:
+1. Move helper to get default pattern from led-class.c to led-core.c and
+   rename it (build issue pointed by kbuild robot).
+
+Changes since v3:
+1. Add missing EXPORT_SYMBOL_GPL.
+2. Put pattern trigger format into common file - shared between
+   dt-bindings and sysfs.
+3. Use array of integers as led-pattern property (since it is bigger change
+   I did not add Pavel's ack to patch 2/5).
+4. Mention ms units for led-pattern bindings.
+
+Changes since v2:
+1. Drop Jacek's patches and my "led: triggers: Initialize
+   LED_INIT_DEFAULT_TRIGGER if trigger is brought after class".
+2. Follow Rob's advices about bindings - use "led-pattern" property
+   and generalize usage of it into to three triggers.
+3. New patches (2/5, 4/5 and 5/5).
+
+Changes since v1:
+1. Rebase on Jacek's patches.
+2. Add patch 3/5 for fixup of Jacek's solution.
+3. Drop first two patches from the series (applied).
+4. Patch 5/5: Use LED_INIT_DEFAULT_TRIGGER (suggested by Jacek Anaszewski).
+5. Patch 5/5: Return-on-error and log warning (suggested by Pavel Machek).
+
+
+Best regards,
+Krzysztof
+
+Krzysztof Kozlowski (5):
+  dt-bindings: leds: Add pattern initialization from Device Tree
+  leds: Add helper for getting default pattern from Device Tree
+  leds: trigger: pattern: Add pattern initialization from Device Tree
+  leds: trigger: oneshot: Add initialization from Device Tree
+  leds: trigger: timer: Add initialization from Device Tree
+
+ .../ABI/testing/sysfs-class-led-trigger-pattern    | 51 +----------
+ Documentation/devicetree/bindings/leds/common.txt  | 12 +++
+ .../bindings/leds/leds-trigger-pattern.txt         | 49 +++++++++++
+ drivers/leds/led-core.c                            | 30 +++++++
+ drivers/leds/trigger/ledtrig-oneshot.c             | 38 ++++++++-
+ drivers/leds/trigger/ledtrig-pattern.c             | 99 +++++++++++++++++-----
+ drivers/leds/trigger/ledtrig-timer.c               | 34 ++++++++
+ include/linux/leds.h                               | 13 +++
+ 8 files changed, 257 insertions(+), 69 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-trigger-pattern.txt
+
+-- 
+2.7.4
