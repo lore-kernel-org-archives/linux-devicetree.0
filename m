@@ -1,48 +1,62 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCH 3/3] arm64: dts: qcom: sdm845: Remove the duplicate header
- inclusion
-Date: Wed,  9 Jan 2019 23:16:49 +0530
-Message-ID: <5f400b3a15cab5dd071e4a129d38cb21e7123b78.1547054308.git.saiprakash.ranjan@codeaurora.org>
-References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Subject: [v5 0/3] Use interconnect API in MDSS on SDM845
+Date: Wed,  9 Jan 2019 23:22:02 +0530
+Message-ID: <1547056325-1919-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Rajendra Nayak <rnayak@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Sibi Sankar <sibis@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Remove the duplicate inclusion of qcom,gcc-sdm845.h
-mistakenly introduced by commit 6e17f8140521 ("arm64:
-dts: sdm845: add prng-ee node").
-
-Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 03683179b8f7..8dced99f875e 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -12,7 +12,6 @@
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
--#include <dt-bindings/clock/qcom,gcc-sdm845.h>
- 
- / {
- 	interrupt-parent = <&intc>;
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+VGhlIGludGVyY29ubmVjdCBBUEkgcHJvdmlkZXMgYW4gaW50ZXJmYWNlIGZvciBjb25zdW1lciBk
+cml2ZXJzIHRvIGV4cHJlc3MKdGhlaXIgYmFuZHdpZHRoIG5lZWRzIGluIHRoZSBTb0MuIFRoaXMg
+ZGF0YSBpcyBhZ2dyZWdhdGVkIGFuZCB0aGUgb24tY2hpcAppbnRlcmNvbm5lY3QgaGFyZHdhcmUg
+aXMgY29uZmlndXJlZCB0byB0aGUgYXBwcm9wcmlhdGUgcG93ZXIvcGVyZm9ybWFuY2UKcHJvZmls
+ZS4KCk1EU1MgaXMgb25lIG9mIHRoZSBpbnRlcmNvbm5lY3QgY29uc3VtZXJzIHdoaWNoIHVzZXMg
+dGhlIGludGVyY29ubmVjdCBBUElzCnRvIGdldCB0aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBh
+bmQgc2V0IGl0cyBiYW5kd2lkdGggcmVxdWlyZW1lbnRzCmZvciB0aGUgZ2l2ZW4gaW50ZXJjb25u
+ZWN0ZWQgcGF0aC4KClN1YnNlcXVlbnRseSwgdGhlcmUgaXMgYSBjbGVhbiB1cCBwYXRjaCB0byBy
+ZW1vdmUgYWxsIHRoZSByZWZlcmVuY2VzCm9mIHRoZSBEUFUgY3VzdG9tIGJ1cyBzY2FsaW5nLgoK
+VGhlcmUgaXMgY29ycmVzcG9uZGluZyBEVCBwYXRjaCB3aXRoIHRoZSBzb3VyY2UgYW5kIGRlc3Rp
+bmF0aW9uIHBvcnRzCmRlZmluZWQgZm9yIGRpc3BsYXkgZHJpdmVyIHdoaWNoIHdpbGwgYmUgc2Vu
+dCBzZXBhcmF0ZWx5LgoKQ2hhbmdlcyBpbiB2MjoKCS0gUmVtb3ZlIGVycm9yIGxvZyBhbmQgdW5u
+ZWNlc3NhcnkgY2hlY2sgKEpvcmRhbiBDcm91c2UpCgktIEZpeGVkIGJ1aWxkIGVycm9yIGR1ZSB0
+byBwYXJ0aWFsIGNsZWFuIHVwCgpDaGFuZ2VzIGluIHYzOgoJLSBSZW1vdmUgY29tbW9uIHByb3Bl
+cnR5IGRlZmluaXRpb25zIChSb2IgSGVycmluZykKCS0gQ29kZSBjbGVhbiB1cCBpbnZvbHZpbmcg
+dmFyaWFibGUgbmFtZSBjaGFuZ2UsIHJlbW92YWwKCSAgb2YgZXh0cmEgcGFyYW50aGVzaXMgYW5k
+IHZhcmlhYmxlcyAoTWF0dGhpYXMgS2FlaGxja2UpCgktIENvbmRlbnNlIG11bHRpcGxlIGxpbmVz
+IGludG8gYSBzaW5nbGUgbGluZSAoU2VhbiBQYXVsKQoKQ2hhbmdlcyBpbiB2NDoKCS0gQWRkIGNv
+bW1lbnRzLCBzcGFjaW5ncywgdGFicywgcHJvcGVyIHBvcnQgbmFtZSBhbmQgaWNjIG1hY3JvCgkt
+IFVzZSBwb3J0IG1hY3JvcyBhbmQgY2hhbmdlIHBvcnQgc3RyaW5nIG5hbWVzIChHZW9yZ2kgRGph
+a292KQoKQ2hhbmdlcyBpbiB2NToKCS0gVXBkYXRlZCBjb21taXQgdGV4dCBhbmQgcGFyZW50aGVz
+aXMgYWxpZ25tZW50IChHZW9yZ2kgRGpha292KQoKU3JhdmFudGhpIEtvbGx1a3VkdXJ1ICgzKToK
+ICBkcm0vbXNtL2RwdTogY2xlYW4gdXAgcmVmZXJlbmNlcyBvZiBEUFUgY3VzdG9tIGJ1cyBzY2Fs
+aW5nCiAgZHJtL21zbS9kcHU6IEludGVncmF0ZSBpbnRlcmNvbm5lY3QgQVBJIGluIE1EU1MKICBk
+dC1iaW5kaW5nczogbXNtL2Rpc3A6IEludHJvZHVjZSBpbnRlcmNvbm5lY3QgYmluZGluZ3MgZm9y
+IE1EU1Mgb24KICAgIFNETTg0NQoKIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNt
+L2RwdS50eHQgICAgICAgIHwgIDEwICsrCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9k
+cHVfY29yZV9wZXJmLmMgICAgICB8IDE3NCArKysrKysrKy0tLS0tLS0tLS0tLS0KIGRyaXZlcnMv
+Z3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9jb3JlX3BlcmYuaCAgICAgIHwgICA0ICstCiBkcml2
+ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfY3J0Yy5jICAgICAgICAgICB8ICAxMyArLQog
+ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyAgICAgICAgICAgfCAgNDkg
+KysrKystCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfcG93ZXJfaGFuZGxlLmMg
+ICB8ICA0NyArKy0tLS0KIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9wb3dlcl9o
+YW5kbGUuaCAgIHwgIDY4IC0tLS0tLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9k
+cHVfdHJhY2UuaCAgICAgICAgICB8ICAyMiArLS0KIDggZmlsZXMgY2hhbmdlZCwgMTQ0IGluc2Vy
+dGlvbnMoKyksIDI0MyBkZWxldGlvbnMoLSkKCi0tIApUaGUgUXVhbGNvbW0gSW5ub3ZhdGlvbiBD
+ZW50ZXIsIEluYy4gaXMgYSBtZW1iZXIgb2YgdGhlIENvZGUgQXVyb3JhIEZvcnVtLAphIExpbnV4
+IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0CgpfX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVu
+b0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
+bG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
