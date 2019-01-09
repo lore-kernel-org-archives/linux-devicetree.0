@@ -1,82 +1,92 @@
-Return-Path: <SRS0=MwbZ=PS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr40046.outbound.protection.outlook.com ([40.107.4.46]:54621
-        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726425AbfAJCOn (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 9 Jan 2019 21:14:43 -0500
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH 3/3] clk: imx: Add clock driver support for imx8mm
-Date: Thu, 10 Jan 2019 02:14:37 +0000
-Message-ID: <VI1PR0402MB3519F5D070C8C52AE1444C6A87840@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com>
- <1546938317-23203-3-git-send-email-ping.bai@nxp.com>
- <154706594997.15366.8932514505305165638@swboyd.mtv.corp.google.com>
-In-Reply-To: <154706594997.15366.8932514505305165638@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+Return-Path: <sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 3/3] clk: imx: Add clock driver support for imx8mm
+In-Reply-To: <1546938317-23203-3-git-send-email-ping.bai@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com> <1546938317-23203-3-git-send-email-ping.bai@nxp.com>
+Message-ID: <154706594997.15366.8932514505305165638@swboyd.mtv.corp.google.com>
+Date: Wed, 09 Jan 2019 12:32:29 -0800
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>
 Cc: Fabio Estevam <fabio.estevam@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gY2xrOiBpbXg6IEFkZCBjbG9jayBkcml2ZXIgc3Vw
-cG9ydCBmb3IgaW14OG1tDQo+IA0KPiBRdW90aW5nIEphY2t5IEJhaSAoMjAxOS0wMS0wOCAwMTow
-MTowNCkNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaW14OG1tX2Nsb2Nrc19wcm9iZShzdHJ1Y3Qg
-cGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYg
-PSAmcGRldi0+ZGV2Ow0KPiA+ICsgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpucCA9IGRldi0+
-b2Zfbm9kZTsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAqYmFzZTsNCj4gPiArICAgICAgIGlu
-dCByZXQgPSAwOw0KPiANCj4gUGxlYXNlIGRvbid0IGFzc2lnbiByZXQgaGVyZS4gSnVzdCBsZXQg
-aXQgYmUgYXNzaWduZWQgbGF0ZXIgb24uDQo+IA0KDQpTdXJlLg0KDQo+ID4gKw0KPiA+ICsgICAg
-ICAgY2xrc1tJTVg4TU1fQ0xLX0RVTU1ZXSA9IGlteF9jbGtfZml4ZWQoImR1bW15IiwgMCk7DQo+
-ID4gKyAgICAgICBjbGtzW0lNWDhNTV9DTEtfMjRNXSA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwg
-Im9zY18yNG0iKTsNCj4gPiArICAgICAgIGNsa3NbSU1YOE1NX0NMS18zMktdID0gb2ZfY2xrX2dl
-dF9ieV9uYW1lKG5wLCAib3NjXzMyayIpOw0KPiAvKiBDaGVjayBtb3JlICovDQo+ID4gKyAgICAg
-ICBjbGtzW0lNWDhNTV9DTEtfRVhUMV0gPSBvZl9jbGtfZ2V0X2J5X25hbWUobnAsICJjbGtfZXh0
-MSIpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4TU1fQ0xLX0VYVDJdID0gb2ZfY2xrX2dldF9ieV9u
-YW1lKG5wLCAiY2xrX2V4dDIiKTsNCj4gPiArICAgICAgIGNsa3NbSU1YOE1NX0NMS19FWFQzXSA9
-IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgImNsa19leHQzIik7DQo+ID4gKyAgICAgICBjbGtzW0lN
-WDhNTV9DTEtfRVhUNF0gPSBvZl9jbGtfZ2V0X2J5X25hbWUobnAsICJjbGtfZXh0NCIpOw0KPiA+
-ICsNCj4gPiArICAgICAgIG5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwN
-Cj4gImZzbCxpbXg4bW0tYW5hdG9wIik7DQo+ID4gKyAgICAgICBiYXNlID0gb2ZfaW9tYXAobnAs
-IDApOw0KPiA+ICsgICAgICAgaWYgKFdBUk5fT04oIWJhc2UpKQ0KPiA+ICsgICAgICAgICAgICAg
-ICByZXR1cm4gLUVOT01FTTsNCj4gDQo+IFdoeSBkbyB3ZSBuZWVkIHRvIHJlYWNoIGludG8gc29t
-ZSBvdGhlciBub2RlIHRvIGdldCB0aGUgbWVtb3J5IHJlZ2lvbiB0bw0KPiBtYXA/DQo+IA0KDQpU
-aGUgUExMcycgY29uZmlnIHJlZ2lzdGVyIGlzIGluIGEgc3BlcmF0ZSBtZW1vcnkgcmVnaW9uLiBB
-cyB3ZSByZWdpc3RlcmVkIGFsbCB0aGUgUExMcyBjbG9ja3MgaW4gdGhpcyBkcml2ZXIsIHRoZSBQ
-TExzIG1lbW9yeSByZWdpb24NCk5lZWQgdG8gYmUgcmVhZCBvdXQgZnJvbSBpdHMgY29ycmVzcG9u
-ZGluZyBub2RlLiBUaGlzIGlzIHRoZSBtZXRob2QgdGhhdCB3ZSB1c2VkIG9uIG91ciBhbGwgaS5N
-WCBwbGF0Zm9ybS4NCg0KPiA+ICsNCj4gPiArICAgICAgIGNsa3NbSU1YOE1NX0FVRElPX1BMTDFf
-UkVGX1NFTF0gPQ0KPiBpbXhfY2xrX211eCgiYXVkaW9fcGxsMV9yZWZfc2VsIiwgYmFzZSArIDB4
-MCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0KPiBBUlJBWV9TSVpFKHBsbF9yZWZfc2VscykpOw0KPiA+
-ICsgICAgICAgY2xrc1tJTVg4TU1fQVVESU9fUExMMl9SRUZfU0VMXSA9DQo+IGlteF9jbGtfbXV4
-KCJhdWRpb19wbGwyX3JlZl9zZWwiLCBiYXNlICsgMHgxNCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0K
-PiBBUlJBWV9TSVpFKHBsbF9yZWZfc2VscykpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4TU1fVklE
-RU9fUExMMV9SRUZfU0VMXSA9DQo+IGlteF9jbGtfbXV4KCJ2aWRlb19wbGwxX3JlZl9zZWwiLCBi
-YXNlICsgMHgyOCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0KPiBBUlJBWV9TSVpFKHBsbF9yZWZfc2Vs
-cykpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4TU1fRFJBTV9QTExfUkVGX1NFTF0gPQ0KPiA+ICsg
-aW14X2Nsa19tdXgoImRyYW1fcGxsX3JlZl9zZWwiLCBiYXNlICsgMHg1MCwgMCwgMiwgcGxsX3Jl
-Zl9zZWxzLA0KPiA+ICsgQVJSQVlfU0laRShwbGxfcmVmX3NlbHMpKTsNCj4gWy4uLl0NCj4gPiAr
-ICAgICAgIGNsa3NbSU1YOE1NX1NZU19QTEwyXzMzM01dID0NCj4gaW14X2Nsa19maXhlZF9mYWN0
-b3IoInN5c19wbGwyXzMzM20iLCAic3lzX3BsbDJfb3V0IiwgMSwgMyk7DQo+ID4gKyAgICAgICBj
-bGtzW0lNWDhNTV9TWVNfUExMMl81MDBNXSA9DQo+IGlteF9jbGtfZml4ZWRfZmFjdG9yKCJzeXNf
-cGxsMl81MDBtIiwgInN5c19wbGwyX291dCIsIDEsIDIpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4
-TU1fU1lTX1BMTDJfMTAwME1dID0NCj4gPiArIGlteF9jbGtfZml4ZWRfZmFjdG9yKCJzeXNfcGxs
-Ml8xMDAwbSIsICJzeXNfcGxsMl9vdXQiLCAxLCAxKTsNCj4gPiArDQo+ID4gKyAgICAgICBucCA9
-IGRldi0+b2Zfbm9kZTsNCj4gPiArICAgICAgIGJhc2UgPSBvZl9pb21hcChucCwgMCk7DQo+ID4g
-KyAgICAgICBpZiAoV0FSTl9PTighYmFzZSkpDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAt
-RU5PTUVNOw0KPiANCj4gVGhpcyBjYW4gc3VyZWx5IHVzZSB0aGUgcGxhdGZvcm0gZGV2aWNlIEFQ
-SXMgdG8gbWFwIGFuZCByZXRyaWV2ZSBtZW1vcnkNCj4gcmVnaW9ucy4NCj4gDQoNCk9rLCB3aWxs
-IGZpeCBpdA0KDQo+ID4gKw0KPiBbLi4uXQ0KPiA+ICsNCj4gPiArICAgICAgIGlteF9jaGVja19j
-bG9ja3MoY2xrcywgQVJSQVlfU0laRShjbGtzKSk7DQo+ID4gKw0KPiA+ICsgICAgICAgY2xrX2Rh
-dGEuY2xrcyA9IGNsa3M7DQo+ID4gKyAgICAgICBjbGtfZGF0YS5jbGtfbnVtID0gQVJSQVlfU0la
-RShjbGtzKTsNCj4gPiArICAgICAgIHJldCA9IG9mX2Nsa19hZGRfcHJvdmlkZXIobnAsIG9mX2Ns
-a19zcmNfb25lY2VsbF9nZXQsICZjbGtfZGF0YSk7DQo+ID4gKyAgICAgICBpZiAocmV0IDwgMCkg
-ew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZWdpc3RlciBj
-bGtzIGZvciBpLk1YOE1NXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7
-DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgaW14X3JlZ2lzdGVyX3VhcnRfY2xv
-Y2tzKHVhcnRfY2xrcyk7DQo+ID4gKw0KPiA+ICsgICAgICAgcHJfaW5mbygiaS5NWDhNTSBjbG9j
-ayBkcml2ZXIgaW5pdCBkb25lXG4iKTsNCj4gDQo+IFBsZWFzZSBubyAiSSJtIGFsaXZlIiBtZXNz
-YWdlcy4NCg0KSSB3aWxsIHJlbW92ZSBpdCBpbiBWMi4NCg0KQlINCj4gDQo+ID4gKw0KPiA+ICsg
-ICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo=
+Quoting Jacky Bai (2019-01-08 01:01:04)
+> +
+> +static int imx8mm_clocks_probe(struct platform_device *pdev)
+> +{
+> +       struct device *dev =3D &pdev->dev;
+> +       struct device_node *np =3D dev->of_node;
+> +       void __iomem *base;
+> +       int ret =3D 0;
+
+Please don't assign ret here. Just let it be assigned later on.
+
+> +
+> +       clks[IMX8MM_CLK_DUMMY] =3D imx_clk_fixed("dummy", 0);
+> +       clks[IMX8MM_CLK_24M] =3D of_clk_get_by_name(np, "osc_24m");
+> +       clks[IMX8MM_CLK_32K] =3D of_clk_get_by_name(np, "osc_32k"); /* Ch=
+eck more */
+> +       clks[IMX8MM_CLK_EXT1] =3D of_clk_get_by_name(np, "clk_ext1");
+> +       clks[IMX8MM_CLK_EXT2] =3D of_clk_get_by_name(np, "clk_ext2");
+> +       clks[IMX8MM_CLK_EXT3] =3D of_clk_get_by_name(np, "clk_ext3");
+> +       clks[IMX8MM_CLK_EXT4] =3D of_clk_get_by_name(np, "clk_ext4");
+> +
+> +       np =3D of_find_compatible_node(NULL, NULL, "fsl,imx8mm-anatop");
+> +       base =3D of_iomap(np, 0);
+> +       if (WARN_ON(!base))
+> +               return -ENOMEM;
+
+Why do we need to reach into some other node to get the memory region to
+map?
+
+> +
+> +       clks[IMX8MM_AUDIO_PLL1_REF_SEL] =3D imx_clk_mux("audio_pll1_ref_s=
+el", base + 0x0, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MM_AUDIO_PLL2_REF_SEL] =3D imx_clk_mux("audio_pll2_ref_s=
+el", base + 0x14, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MM_VIDEO_PLL1_REF_SEL] =3D imx_clk_mux("video_pll1_ref_s=
+el", base + 0x28, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+> +       clks[IMX8MM_DRAM_PLL_REF_SEL] =3D imx_clk_mux("dram_pll_ref_sel",=
+ base + 0x50, 0, 2, pll_ref_sels, ARRAY_SIZE(pll_ref_sels));
+[...]
+> +       clks[IMX8MM_SYS_PLL2_333M] =3D imx_clk_fixed_factor("sys_pll2_333=
+m", "sys_pll2_out", 1, 3);
+> +       clks[IMX8MM_SYS_PLL2_500M] =3D imx_clk_fixed_factor("sys_pll2_500=
+m", "sys_pll2_out", 1, 2);
+> +       clks[IMX8MM_SYS_PLL2_1000M] =3D imx_clk_fixed_factor("sys_pll2_10=
+00m", "sys_pll2_out", 1, 1);
+> +
+> +       np =3D dev->of_node;
+> +       base =3D of_iomap(np, 0);
+> +       if (WARN_ON(!base))
+> +               return -ENOMEM;
+
+This can surely use the platform device APIs to map and retrieve memory
+regions.
+
+> +
+[...]
+> +
+> +       imx_check_clocks(clks, ARRAY_SIZE(clks));
+> +
+> +       clk_data.clks =3D clks;
+> +       clk_data.clk_num =3D ARRAY_SIZE(clks);
+> +       ret =3D of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data=
+);
+> +       if (ret < 0) {
+> +               dev_err(dev, "failed to register clks for i.MX8MM\n");
+> +               return -EINVAL;
+> +       }
+> +
+> +       imx_register_uart_clocks(uart_clks);
+> +
+> +       pr_info("i.MX8MM clock driver init done\n");
+
+Please no "I"m alive" messages.
+
+> +
+> +       return 0;
+> +}
+> +
