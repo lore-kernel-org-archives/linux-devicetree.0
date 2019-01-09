@@ -1,26 +1,23 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v2 2/2] clk: Add Fixed MMIO clock driver
-Date: Wed, 09 Jan 2019 11:42:41 -0800
-Message-ID: <154706296156.15366.5318350293286114474@swboyd.mtv.corp.google.com>
-References: <20181213124929.32736-1-jank@cadence.com> <20181213124929.32736-3-jank@cadence.com>
+Subject: Re: [PATCH v4] clk: qcom: smd: Add support for MSM8998 rpm clocks
+Date: Wed, 09 Jan 2019 11:47:48 -0800
+Message-ID: <154706326873.15366.13916510775003275204@swboyd.mtv.corp.google.com>
+References: <1545099336-5615-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213124929.32736-3-jank@cadence.com>
+In-Reply-To: <1545099336-5615-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
+Cc: bjorn.andersson@linaro.org, marc.w.gonzalez@free.fr, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jan Kotas (2018-12-13 04:49:29)
-> This patch adds a driver for Fixed MMIO clock.
-> The driver reads a clock frequency value from a single 32-bit memory
-> mapped register and registers it as a fixed rate clock.
+Quoting Jeffrey Hugo (2018-12-17 18:15:36)
+> Add rpm smd clocks, PMIC and bus clocks which are required on MSM8998
+> for clients to vote on.
 >=20
-> It can be enabled with COMMON_CLK_FIXED_MMIO Kconfig option.
->=20
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 > ---
 
 Applied to clk-next
