@@ -1,175 +1,261 @@
-Return-Path: <SRS0=MwbZ=PS=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr70055.outbound.protection.outlook.com ([40.107.7.55]:22016
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726425AbfAJCJJ (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 9 Jan 2019 21:09:09 -0500
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH 1/3] clk: imx: Add PLLs driver for imx8mm soc
-Date: Thu, 10 Jan 2019 02:09:02 +0000
-Message-ID: <VI1PR0402MB3519F50CAF2766D6F644058587840@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com>
- <154706614586.15366.5517254314423441854@swboyd.mtv.corp.google.com>
-In-Reply-To: <154706614586.15366.5517254314423441854@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+Return-Path: <sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 1/3] clk: imx: Add PLLs driver for imx8mm soc
+In-Reply-To: <1546938317-23203-1-git-send-email-ping.bai@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com>
+Message-ID: <154706614586.15366.5517254314423441854@swboyd.mtv.corp.google.com>
+Date: Wed, 09 Jan 2019 12:35:45 -0800
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>
 Cc: Fabio Estevam <fabio.estevam@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDEvM10gY2xrOiBpbXg6IEFkZCBQTExzIGRyaXZlciBmb3Ig
-aW14OG1tIHNvYw0KPiANCj4gUXVvdGluZyBKYWNreSBCYWkgKDIwMTktMDEtMDggMDE6MDA6NDUp
-DQo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL2lteC9jbGstcGxsMTR4eC5jDQo+ID4gYi9k
-cml2ZXJzL2Nsay9pbXgvY2xrLXBsbDE0eHguYyBuZXcgZmlsZSBtb2RlIDEwMDY0NCBpbmRleA0K
-PiA+IDAwMDAwMDAuLmM5ZjgzZmQNCj4gPiAtLS0gL2Rldi9udWxsDQo+ID4gKysrIGIvZHJpdmVy
-cy9jbGsvaW14L2Nsay1wbGwxNHh4LmMNCj4gPiBAQCAtMCwwICsxLDQwOSBAQA0KPiA+ICsvLyBT
-UERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMA0KPiA+ICsvKg0KPiA+ICsgKiBDb3B5cmln
-aHQgMjAxNy0yMDE4IE5YUC4NCj4gPiArICovDQo+ID4gKw0KPiA+ICsjaW5jbHVkZSA8bGludXgv
-Yml0b3BzLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9jbGstcHJvdmlkZXIuaD4NCj4gPiArI2lu
-Y2x1ZGUgPGxpbnV4L2RlbGF5Lmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9lcnIuaD4NCj4gPiAr
-I2luY2x1ZGUgPGxpbnV4L2lvLmg+DQo+ID4gKyNpbmNsdWRlIDxsaW51eC9zbGFiLmg+DQo+ID4g
-KyNpbmNsdWRlIDxsaW51eC9qaWZmaWVzLmg+DQo+ID4gKw0KPiA+ICsjaW5jbHVkZSAiY2xrLmgi
-DQo+ID4gKw0KPiA+ICsjZGVmaW5lIEdOUkxfQ1RMICAgICAgIDB4MA0KPiA+ICsjZGVmaW5lIERJ
-Vl9DVEwgICAgICAgICAgICAgICAgMHg0DQo+ID4gKyNkZWZpbmUgTE9DS19TVEFUVVMgICAgQklU
-KDMxKQ0KPiA+ICsjZGVmaW5lIExPQ0tfU0VMX01BU0sgIEJJVCgyOSkNCj4gPiArI2RlZmluZSBD
-TEtFX01BU0sgICAgICBCSVQoMTEpDQo+ID4gKyNkZWZpbmUgUlNUX01BU0sgICAgICAgQklUKDkp
-DQo+ID4gKyNkZWZpbmUgQllQQVNTX01BU0sgICAgQklUKDQpDQo+ID4gKyNkZWZpbmUgTURJVl9T
-SElGVCAgICAgMTINCj4gPiArI2RlZmluZSBNRElWX01BU0sgICAgICBHRU5NQVNLKDIxLCAxMikN
-Cj4gPiArI2RlZmluZSBQRElWX1NISUZUICAgICA0DQo+ID4gKyNkZWZpbmUgUERJVl9NQVNLICAg
-ICAgR0VOTUFTSyg5LCA0KQ0KPiA+ICsjZGVmaW5lIFNESVZfU0hJRlQgICAgIDANCj4gPiArI2Rl
-ZmluZSBTRElWX01BU0sgICAgICBHRU5NQVNLKDIsIDApDQo+ID4gKyNkZWZpbmUgS0RJVl9TSElG
-VCAgICAgMA0KPiA+ICsjZGVmaW5lIEtESVZfTUFTSyAgICAgIEdFTk1BU0soMTUsIDApDQo+ID4g
-Kw0KPiA+ICtzdHJ1Y3QgY2xrX3BsbDE0eHggew0KPiA+ICsgICAgICAgc3RydWN0IGNsa19odyAg
-ICAgICAgICAgICAgICAgICBodzsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAgICAgICAgICAg
-ICAgICAgICAgKmJhc2U7DQo+ID4gKyAgICAgICBlbnVtIGlteF9wbGwxNHh4X3R5cGUgICAgICAg
-ICAgIHR5cGU7DQo+ID4gKyAgICAgICBzdHJ1Y3QgaW14X3BsbDE0eHhfcmF0ZV90YWJsZSAgICpy
-YXRlX3RhYmxlOw0KPiA+ICsgICAgICAgaW50IHJhdGVfY291bnQ7DQo+ID4gK307DQo+ID4gKw0K
-PiA+ICsjZGVmaW5lIHRvX2Nsa19wbGwxNHh4KF9odykgY29udGFpbmVyX29mKF9odywgc3RydWN0
-IGNsa19wbGwxNHh4LCBodykNCj4gPiArDQo+ID4gK3N0YXRpYyBjb25zdCBzdHJ1Y3QgaW14X3Bs
-bDE0eHhfcmF0ZV90YWJsZSAqaW14X2dldF9wbGxfc2V0dGluZ3MoDQo+ID4gKyAgICAgICAgICAg
-ICAgIHN0cnVjdCBjbGtfcGxsMTR4eCAqcGxsLCB1bnNpZ25lZCBsb25nIHJhdGUpIHsNCj4gPiAr
-ICAgICAgIGNvbnN0IHN0cnVjdCBpbXhfcGxsMTR4eF9yYXRlX3RhYmxlICpyYXRlX3RhYmxlID0g
-cGxsLT5yYXRlX3RhYmxlOw0KPiA+ICsgICAgICAgaW50IGk7DQo+ID4gKw0KPiA+ICsgICAgICAg
-Zm9yIChpID0gMDsgaSA8IHBsbC0+cmF0ZV9jb3VudDsgaSsrKSB7DQo+ID4gKyAgICAgICAgICAg
-ICAgIGlmIChyYXRlID09IHJhdGVfdGFibGVbaV0ucmF0ZSkNCj4gPiArICAgICAgICAgICAgICAg
-ICAgICAgICByZXR1cm4gJnJhdGVfdGFibGVbaV07DQo+ID4gKyAgICAgICB9DQo+IA0KPiBOaXRw
-aWNrOiBEcm9wIHRoZSBicmFja2V0cy4NCj4gDQpUaGFua3MsIHdpbGwgZml4IGl0IGluIFYyLg0K
-DQo+ID4gKw0KPiA+ICsgICAgICAgcmV0dXJuIE5VTEw7DQo+ID4gK30NCj4gPiArDQo+ID4gK3N0
-YXRpYyBsb25nIGNsa19wbGwxNHh4X3JvdW5kX3JhdGUoc3RydWN0IGNsa19odyAqaHcsIHVuc2ln
-bmVkIGxvbmcgcmF0ZSwNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICB1bnNpZ25lZCBsb25n
-ICpwcmF0ZSkgew0KPiA+ICsgICAgICAgc3RydWN0IGNsa19wbGwxNHh4ICpwbGwgPSB0b19jbGtf
-cGxsMTR4eChodyk7DQo+ID4gKyAgICAgICBjb25zdCBzdHJ1Y3QgaW14X3BsbDE0eHhfcmF0ZV90
-YWJsZSAqcmF0ZV90YWJsZSA9IHBsbC0+cmF0ZV90YWJsZTsNCj4gPiArICAgICAgIGludCBpOw0K
-PiA+ICsNCj4gPiArICAgICAgIC8qIEFzc3VtbWluZyByYXRlX3RhYmxlIGlzIGluIGRlc2NlbmRp
-bmcgb3JkZXIgKi8NCj4gPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBwbGwtPnJhdGVfY291bnQ7
-IGkrKykgew0KPiA+ICsgICAgICAgICAgICAgICBpZiAocmF0ZSA+PSByYXRlX3RhYmxlW2ldLnJh
-dGUpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgcmV0dXJuIHJhdGVfdGFibGVbaV0ucmF0
-ZTsNCj4gPiArICAgICAgIH0NCj4gPiArICAgICAgIC8qIHJldHVybiBtaW5pbXVtIHN1cHBvcnRl
-ZCB2YWx1ZSAqLw0KPiA+ICsgICAgICAgcmV0dXJuIHJhdGVfdGFibGVbaSAtIDFdLnJhdGU7IH0N
-Cj4gPiArDQo+ID4gK3N0YXRpYyB1bnNpZ25lZCBsb25nIGNsa19wbGwxNDE2eF9yZWNhbGNfcmF0
-ZShzdHJ1Y3QgY2xrX2h3ICpodywNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgIHVuc2lnbmVkIGxvbmcNCj4gPiArcGFyZW50X3JhdGUpIHsNCj4g
-PiArICAgICAgIHN0cnVjdCBjbGtfcGxsMTR4eCAqcGxsID0gdG9fY2xrX3BsbDE0eHgoaHcpOw0K
-PiA+ICsgICAgICAgdTMyIG1kaXYsIHBkaXYsIHNkaXYsIHBsbF9nbnJsLCBwbGxfZGl2Ow0KPiA+
-ICsgICAgICAgdTY0IGZ2Y28gPSBwYXJlbnRfcmF0ZTsNCj4gPiArDQo+ID4gKyAgICAgICBwbGxf
-Z25ybCA9IHJlYWRsX3JlbGF4ZWQocGxsLT5iYXNlKTsNCj4gPiArICAgICAgIHBsbF9kaXYgPSBy
-ZWFkbF9yZWxheGVkKHBsbC0+YmFzZSArIDQpOw0KPiA+ICsgICAgICAgbWRpdiA9IChwbGxfZGl2
-ICYgTURJVl9NQVNLKSA+PiBNRElWX1NISUZUOw0KPiA+ICsgICAgICAgcGRpdiA9IChwbGxfZGl2
-ICYgUERJVl9NQVNLKSA+PiBQRElWX1NISUZUOw0KPiA+ICsgICAgICAgc2RpdiA9IChwbGxfZGl2
-ICYgU0RJVl9NQVNLKSA+PiBTRElWX1NISUZUOw0KPiA+ICsNCj4gPiArICAgICAgIGZ2Y28gKj0g
-bWRpdjsNCj4gPiArICAgICAgIGRvX2RpdihmdmNvLCBwZGl2IDw8IHNkaXYpOw0KPiA+ICsNCj4g
-PiArICAgICAgIHJldHVybiAodW5zaWduZWQgbG9uZylmdmNvOw0KPiANCj4gTml0cGljazogRHJv
-cCB0aGUgY2FzdC4NCj4gDQoNClRoYW5rcywgd2lsbCBmaXggaXQgaW4gVjIuDQoNCj4gPiArfQ0K
-PiA+ICsNCj4gPiArc3RhdGljIHVuc2lnbmVkIGxvbmcgY2xrX3BsbDE0NDN4X3JlY2FsY19yYXRl
-KHN0cnVjdCBjbGtfaHcgKmh3LA0KPiA+ICsgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgdW5zaWduZWQgbG9uZw0KPiA+ICtwYXJlbnRfcmF0ZSkgew0KPiA+
-ICsgICAgICAgc3RydWN0IGNsa19wbGwxNHh4ICpwbGwgPSB0b19jbGtfcGxsMTR4eChodyk7DQo+
-ID4gKyAgICAgICB1MzIgbWRpdiwgcGRpdiwgc2RpdiwgcGxsX2ducmwsIHBsbF9kaXZfY3RsMCwg
-cGxsX2Rpdl9jdGwxOw0KPiA+ICsgICAgICAgc2hvcnQgaW50IGtkaXY7DQo+ID4gKyAgICAgICB1
-NjQgZnZjbyA9IHBhcmVudF9yYXRlOw0KPiA+ICsNCj4gPiArICAgICAgIHBsbF9nbnJsID0gcmVh
-ZGxfcmVsYXhlZChwbGwtPmJhc2UpOw0KPiA+ICsgICAgICAgcGxsX2Rpdl9jdGwwID0gcmVhZGxf
-cmVsYXhlZChwbGwtPmJhc2UgKyA0KTsNCj4gPiArICAgICAgIHBsbF9kaXZfY3RsMSA9IHJlYWRs
-X3JlbGF4ZWQocGxsLT5iYXNlICsgOCk7DQo+ID4gKyAgICAgICBtZGl2ID0gKHBsbF9kaXZfY3Rs
-MCAmIE1ESVZfTUFTSykgPj4gTURJVl9TSElGVDsNCj4gPiArICAgICAgIHBkaXYgPSAocGxsX2Rp
-dl9jdGwwICYgUERJVl9NQVNLKSA+PiBQRElWX1NISUZUOw0KPiA+ICsgICAgICAgc2RpdiA9IChw
-bGxfZGl2X2N0bDAgJiBTRElWX01BU0spID4+IFNESVZfU0hJRlQ7DQo+ID4gKyAgICAgICBrZGl2
-ID0gcGxsX2Rpdl9jdGwxICYgS0RJVl9NQVNLOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIGZ2Y28g
-PSAobSAqIDY1NTM2ICsgaykgKiBGaW4gLyAocCAqIDY1NTM2KSAqLw0KPiA+ICsgICAgICAgZnZj
-byAqPSAobWRpdiAqIDY1NTM2ICsga2Rpdik7DQo+ID4gKyAgICAgICBwZGl2ICo9IDY1NTM2Ow0K
-PiA+ICsNCj4gPiArICAgICAgIGRvX2RpdihmdmNvLCBwZGl2IDw8IHNkaXYpOw0KPiA+ICsNCj4g
-PiArICAgICAgIHJldHVybiAodW5zaWduZWQgbG9uZylmdmNvOw0KPiANCj4gTml0cGljazogRHJv
-cCB0aGUgY2FzdC4NCj4gDQoNCldpbGwgZml4IGluIFYyLg0KDQo+ID4gK30NCj4gPiArDQo+ID4g
-K3N0YXRpYyBpbmxpbmUgYm9vbCBjbGtfcGxsMTQxNnhfbXBfY2hhbmdlKGNvbnN0IHN0cnVjdA0K
-PiBpbXhfcGxsMTR4eF9yYXRlX3RhYmxlICpyYXRlLA0KPiA+ICsgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIHUzMiBwbGxfZGl2KSB7DQo+ID4gKyAgICAgICB1MzIgb2xk
-X21kaXYsIG9sZF9wZGl2Ow0KPiA+ICsNCj4gPiArICAgICAgIG9sZF9tZGl2ID0gKHBsbF9kaXYg
-Pj4gTURJVl9TSElGVCkgJiBNRElWX01BU0s7DQo+ID4gKyAgICAgICBvbGRfcGRpdiA9IChwbGxf
-ZGl2ID4+IFBESVZfU0hJRlQpICYgUERJVl9NQVNLOw0KPiA+ICsNCj4gPiArICAgICAgIHJldHVy
-biAocmF0ZS0+bWRpdiAhPSBvbGRfbWRpdiB8fCByYXRlLT5wZGl2ICE9IG9sZF9wZGl2KTsgfQ0K
-PiA+ICsNCj4gPiArc3RhdGljIGlubGluZSBib29sIGNsa19wbGwxNDQzeF9tcGtfY2hhbmdlKGNv
-bnN0IHN0cnVjdA0KPiBpbXhfcGxsMTR4eF9yYXRlX3RhYmxlICpyYXRlLA0KPiA+ICsgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHUzMiBwbGxfZGl2X2N0bDAsIHUzMg0K
-PiA+ICtwbGxfZGl2X2N0bDEpIHsNCj4gPiArICAgICAgIHUzMiBvbGRfbWRpdiwgb2xkX3BkaXYs
-IG9sZF9rZGl2Ow0KPiA+ICsNCj4gPiArICAgICAgIG9sZF9tZGl2ID0gKHBsbF9kaXZfY3RsMCA+
-PiBNRElWX1NISUZUKSAmIE1ESVZfTUFTSzsNCj4gPiArICAgICAgIG9sZF9wZGl2ID0gKHBsbF9k
-aXZfY3RsMCA+PiBQRElWX1NISUZUKSAmIFBESVZfTUFTSzsNCj4gPiArICAgICAgIG9sZF9rZGl2
-ID0gKHBsbF9kaXZfY3RsMSA+PiBLRElWX1NISUZUKSAmIEtESVZfTUFTSzsNCj4gPiArDQo+ID4g
-KyAgICAgICByZXR1cm4gKHJhdGUtPm1kaXYgIT0gb2xkX21kaXYgfHwgcmF0ZS0+cGRpdiAhPSBv
-bGRfcGRpdiB8fA0KPiA+ICsgICAgICAgICAgICAgICByYXRlLT5rZGl2ICE9IG9sZF9rZGl2KTsg
-fQ0KPiA+ICsNCj4gPiArc3RhdGljIGlubGluZSBib29sIGNsa19wbGwxNDQzeF9tcF9jaGFuZ2Uo
-Y29uc3Qgc3RydWN0DQo+IGlteF9wbGwxNHh4X3JhdGVfdGFibGUgKnJhdGUsDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgdTMyIHBsbF9kaXZfY3RsMCwgdTMy
-DQo+ID4gK3BsbF9kaXZfY3RsMSkgew0KPiA+ICsgICAgICAgdTMyIG9sZF9tZGl2LCBvbGRfcGRp
-diwgb2xkX2tkaXY7DQo+ID4gKw0KPiA+ICsgICAgICAgb2xkX21kaXYgPSAocGxsX2Rpdl9jdGww
-ID4+IE1ESVZfU0hJRlQpICYgTURJVl9NQVNLOw0KPiA+ICsgICAgICAgb2xkX3BkaXYgPSAocGxs
-X2Rpdl9jdGwwID4+IFBESVZfU0hJRlQpICYgUERJVl9NQVNLOw0KPiA+ICsgICAgICAgb2xkX2tk
-aXYgPSAocGxsX2Rpdl9jdGwxID4+IEtESVZfU0hJRlQpICYgS0RJVl9NQVNLOw0KPiA+ICsNCj4g
-PiArICAgICAgIHJldHVybiAocmF0ZS0+bWRpdiAhPSBvbGRfbWRpdiB8fCByYXRlLT5wZGl2ICE9
-IG9sZF9wZGl2IHx8DQo+ID4gKyAgICAgICAgICAgICAgIHJhdGUtPmtkaXYgIT0gb2xkX2tkaXYp
-Ow0KPiANCj4gTml0cGljazogUGxlYXNlIGRyb3AgdGhlIHBhcmVudGhlc2lzIG9uIGFsbCB0aGUg
-cmV0dXJucyBhYm92ZS4NCj4gDQpXaWxsIGZpeCBpbiBWMi4NCg0KPiA+ICt9DQo+ID4gKw0KPiA+
-ICtzdGF0aWMgaW50IGNsa19wbGwxNHh4X3dhaXRfbG9jayhzdHJ1Y3QgY2xrX3BsbDE0eHggKnBs
-bCkgew0KPiA+ICsgICAgICAgdW5zaWduZWQgbG9uZyB0aW1lb3V0ID0gamlmZmllcyArIG1zZWNz
-X3RvX2ppZmZpZXMoMTApOw0KPiA+ICsNCj4gPiArICAgICAgIC8qIFdhaXQgZm9yIFBMTCB0byBs
-b2NrICovDQo+ID4gKyAgICAgICBkbyB7DQo+ID4gKyAgICAgICAgICAgICAgIGlmIChyZWFkbF9y
-ZWxheGVkKHBsbC0+YmFzZSkgJiBMT0NLX1NUQVRVUykNCj4gPiArICAgICAgICAgICAgICAgICAg
-ICAgICBicmVhazsNCj4gPiArICAgICAgICAgICAgICAgaWYgKHRpbWVfYWZ0ZXIoamlmZmllcywg
-dGltZW91dCkpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgYnJlYWs7DQo+ID4gKyAgICAg
-ICB9IHdoaWxlICgxKTsNCj4gPiArDQo+ID4gKyAgICAgICByZXR1cm4gcmVhZGxfcmVsYXhlZChw
-bGwtPmJhc2UpICYgTE9DS19TVEFUVVMgPyAwIDoNCj4gPiArIC1FVElNRURPVVQ7DQo+IA0KPiBJ
-cyB0aGlzIHJlYWRsX3BvbGxfdGltZW91dCgpPw0KPiANCg0KWWVzLCB3aWxsIGZpeCBpdC4NCg0K
-PiA+ICt9DQo+ID4gKw0KPiBbLi4uXQ0KPiA+ICsNCj4gPiArc3RydWN0IGNsayAqaW14X2Nsa19w
-bGwxNHh4KGNvbnN0IGNoYXIgKm5hbWUsIGNvbnN0IGNoYXIgKnBhcmVudF9uYW1lLA0KPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICB2b2lkIF9faW9tZW0gKmJhc2UsDQo+ID4gKyAgICAg
-ICAgICAgICAgICAgICAgICAgICAgIGNvbnN0IHN0cnVjdCBpbXhfcGxsMTR4eF9jbGsgKnBsbF9j
-bGspIHsNCj4gPiArICAgICAgIHN0cnVjdCBjbGtfcGxsMTR4eCAqcGxsOw0KPiA+ICsgICAgICAg
-c3RydWN0IGNsayAqY2xrOw0KPiA+ICsgICAgICAgc3RydWN0IGNsa19pbml0X2RhdGEgaW5pdDsN
-Cj4gPiArICAgICAgIGludCBsZW47DQo+ID4gKw0KPiA+ICsgICAgICAgcGxsID0ga3phbGxvYyhz
-aXplb2YoKnBsbCksIEdGUF9LRVJORUwpOw0KPiA+ICsgICAgICAgaWYgKCFwbGwpDQo+ID4gKyAg
-ICAgICAgICAgICAgIHJldHVybiBFUlJfUFRSKC1FTk9NRU0pOw0KPiA+ICsNCj4gPiArICAgICAg
-IGluaXQubmFtZSA9IG5hbWU7DQo+ID4gKyAgICAgICBpbml0LmZsYWdzID0gcGxsX2Nsay0+Zmxh
-Z3M7DQo+ID4gKyAgICAgICBpbml0LnBhcmVudF9uYW1lcyA9ICZwYXJlbnRfbmFtZTsNCj4gPiAr
-ICAgICAgIGluaXQubnVtX3BhcmVudHMgPSAxOw0KPiA+ICsNCj4gPiArICAgICAgIGlmIChwbGxf
-Y2xrLT5yYXRlX3RhYmxlKSB7DQo+ID4gKyAgICAgICAgICAgICAgIGZvciAobGVuID0gMDsgcGxs
-X2Nsay0+cmF0ZV90YWJsZVtsZW5dLnJhdGUgIT0gMDsgKQ0KPiA+ICsgICAgICAgICAgICAgICAg
-ICAgICAgIGxlbisrOw0KPiA+ICsNCj4gPiArICAgICAgICAgICAgICAgcGxsLT5yYXRlX2NvdW50
-ID0gbGVuOw0KPiA+ICsgICAgICAgICAgICAgICBwbGwtPnJhdGVfdGFibGUgPSBrbWVtZHVwKHBs
-bF9jbGstPnJhdGVfdGFibGUsDQo+ID4gKyAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgcGxsLT5yYXRlX2NvdW50ICoNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICBzaXplb2Yoc3RydWN0DQo+ID4gKyBpbXhfcGxsMTR4eF9yYXRlX3Rh
-YmxlKSwNCj4gDQo+IElzIHRoaXMgc3RydWN0X3NpemUoKT8NCg0KV2lsbCBmaXggaXQgaW4gVjIN
-Cg0KPiANCj4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBHRlBf
-S0VSTkVMKTsNCj4gPiArICAgICAgICAgICAgICAgV0FSTighcGxsLT5yYXRlX3RhYmxlLCAiJXMg
-OiBjb3VsZCBub3QgYWxsb2MgcmF0ZQ0KPiA+ICsgdGFibGVcbiIsIF9fZnVuY19fKTsNCj4gDQo+
-IEFsbG9jYXRpb25zIHdpbGwgZmFpbCB3aXRoIGEgbG91ZCBtZXNzYWdlIGluZGljYXRpbmcgYXMg
-c3VjaCwgc28gdGhpcyBXQVJOIGlzIG5vdA0KPiBuZWNlc3NhcnkuDQo+IA0KDQpXaWxsIGZpeCBp
-biBWMg0KDQpCUg0KDQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgc3dpdGNoIChw
-bGxfY2xrLT50eXBlKSB7DQo+ID4gKyAgICAgICBjYXNlIFBMTF8xNDE2WDoNCj4gPiArICAgICAg
-ICAgICAgICAgaWYgKCFwbGwtPnJhdGVfdGFibGUpDQo+ID4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgaW5pdC5vcHMgPSAmY2xrX3BsbDE0MTZ4X21pbl9vcHM7DQo+ID4gKyAgICAgICAgICAgICAg
-IGVsc2UNCj4gPiArICAgICAgICAgICAgICAgICAgICAgICBpbml0Lm9wcyA9ICZjbGtfcGxsMTQx
-Nnhfb3BzOw0KPiA+ICsgICAgICAgICAgICAgICBicmVhazsNCj4gPiArICAgICAgIGNhc2UgUExM
-XzE0NDNYOg0K
+Quoting Jacky Bai (2019-01-08 01:00:45)
+> diff --git a/drivers/clk/imx/clk-pll14xx.c b/drivers/clk/imx/clk-pll14xx.c
+> new file mode 100644
+> index 0000000..c9f83fd
+> --- /dev/null
+> +++ b/drivers/clk/imx/clk-pll14xx.c
+> @@ -0,0 +1,409 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright 2017-2018 NXP.
+> + */
+> +
+> +#include <linux/bitops.h>
+> +#include <linux/clk-provider.h>
+> +#include <linux/delay.h>
+> +#include <linux/err.h>
+> +#include <linux/io.h>
+> +#include <linux/slab.h>
+> +#include <linux/jiffies.h>
+> +
+> +#include "clk.h"
+> +
+> +#define GNRL_CTL       0x0
+> +#define DIV_CTL                0x4
+> +#define LOCK_STATUS    BIT(31)
+> +#define LOCK_SEL_MASK  BIT(29)
+> +#define CLKE_MASK      BIT(11)
+> +#define RST_MASK       BIT(9)
+> +#define BYPASS_MASK    BIT(4)
+> +#define MDIV_SHIFT     12
+> +#define MDIV_MASK      GENMASK(21, 12)
+> +#define PDIV_SHIFT     4
+> +#define PDIV_MASK      GENMASK(9, 4)
+> +#define SDIV_SHIFT     0
+> +#define SDIV_MASK      GENMASK(2, 0)
+> +#define KDIV_SHIFT     0
+> +#define KDIV_MASK      GENMASK(15, 0)
+> +
+> +struct clk_pll14xx {
+> +       struct clk_hw                   hw;
+> +       void __iomem                    *base;
+> +       enum imx_pll14xx_type           type;
+> +       struct imx_pll14xx_rate_table   *rate_table;
+> +       int rate_count;
+> +};
+> +
+> +#define to_clk_pll14xx(_hw) container_of(_hw, struct clk_pll14xx, hw)
+> +
+> +static const struct imx_pll14xx_rate_table *imx_get_pll_settings(
+> +               struct clk_pll14xx *pll, unsigned long rate)
+> +{
+> +       const struct imx_pll14xx_rate_table *rate_table =3D pll->rate_tab=
+le;
+> +       int i;
+> +
+> +       for (i =3D 0; i < pll->rate_count; i++) {
+> +               if (rate =3D=3D rate_table[i].rate)
+> +                       return &rate_table[i];
+> +       }
+
+Nitpick: Drop the brackets.
+
+> +
+> +       return NULL;
+> +}
+> +
+> +static long clk_pll14xx_round_rate(struct clk_hw *hw, unsigned long rate,
+> +                       unsigned long *prate)
+> +{
+> +       struct clk_pll14xx *pll =3D to_clk_pll14xx(hw);
+> +       const struct imx_pll14xx_rate_table *rate_table =3D pll->rate_tab=
+le;
+> +       int i;
+> +
+> +       /* Assumming rate_table is in descending order */
+> +       for (i =3D 0; i < pll->rate_count; i++) {
+> +               if (rate >=3D rate_table[i].rate)
+> +                       return rate_table[i].rate;
+> +       }
+> +       /* return minimum supported value */
+> +       return rate_table[i - 1].rate;
+> +}
+> +
+> +static unsigned long clk_pll1416x_recalc_rate(struct clk_hw *hw,
+> +                                                 unsigned long parent_ra=
+te)
+> +{
+> +       struct clk_pll14xx *pll =3D to_clk_pll14xx(hw);
+> +       u32 mdiv, pdiv, sdiv, pll_gnrl, pll_div;
+> +       u64 fvco =3D parent_rate;
+> +
+> +       pll_gnrl =3D readl_relaxed(pll->base);
+> +       pll_div =3D readl_relaxed(pll->base + 4);
+> +       mdiv =3D (pll_div & MDIV_MASK) >> MDIV_SHIFT;
+> +       pdiv =3D (pll_div & PDIV_MASK) >> PDIV_SHIFT;
+> +       sdiv =3D (pll_div & SDIV_MASK) >> SDIV_SHIFT;
+> +
+> +       fvco *=3D mdiv;
+> +       do_div(fvco, pdiv << sdiv);
+> +
+> +       return (unsigned long)fvco;
+
+Nitpick: Drop the cast.
+
+> +}
+> +
+> +static unsigned long clk_pll1443x_recalc_rate(struct clk_hw *hw,
+> +                                                 unsigned long parent_ra=
+te)
+> +{
+> +       struct clk_pll14xx *pll =3D to_clk_pll14xx(hw);
+> +       u32 mdiv, pdiv, sdiv, pll_gnrl, pll_div_ctl0, pll_div_ctl1;
+> +       short int kdiv;
+> +       u64 fvco =3D parent_rate;
+> +
+> +       pll_gnrl =3D readl_relaxed(pll->base);
+> +       pll_div_ctl0 =3D readl_relaxed(pll->base + 4);
+> +       pll_div_ctl1 =3D readl_relaxed(pll->base + 8);
+> +       mdiv =3D (pll_div_ctl0 & MDIV_MASK) >> MDIV_SHIFT;
+> +       pdiv =3D (pll_div_ctl0 & PDIV_MASK) >> PDIV_SHIFT;
+> +       sdiv =3D (pll_div_ctl0 & SDIV_MASK) >> SDIV_SHIFT;
+> +       kdiv =3D pll_div_ctl1 & KDIV_MASK;
+> +
+> +       /* fvco =3D (m * 65536 + k) * Fin / (p * 65536) */
+> +       fvco *=3D (mdiv * 65536 + kdiv);
+> +       pdiv *=3D 65536;
+> +
+> +       do_div(fvco, pdiv << sdiv);
+> +
+> +       return (unsigned long)fvco;
+
+Nitpick: Drop the cast.
+
+> +}
+> +
+> +static inline bool clk_pll1416x_mp_change(const struct imx_pll14xx_rate_=
+table *rate,
+> +                                         u32 pll_div)
+> +{
+> +       u32 old_mdiv, old_pdiv;
+> +
+> +       old_mdiv =3D (pll_div >> MDIV_SHIFT) & MDIV_MASK;
+> +       old_pdiv =3D (pll_div >> PDIV_SHIFT) & PDIV_MASK;
+> +
+> +       return (rate->mdiv !=3D old_mdiv || rate->pdiv !=3D old_pdiv);
+> +}
+> +
+> +static inline bool clk_pll1443x_mpk_change(const struct imx_pll14xx_rate=
+_table *rate,
+> +                                         u32 pll_div_ctl0, u32 pll_div_c=
+tl1)
+> +{
+> +       u32 old_mdiv, old_pdiv, old_kdiv;
+> +
+> +       old_mdiv =3D (pll_div_ctl0 >> MDIV_SHIFT) & MDIV_MASK;
+> +       old_pdiv =3D (pll_div_ctl0 >> PDIV_SHIFT) & PDIV_MASK;
+> +       old_kdiv =3D (pll_div_ctl1 >> KDIV_SHIFT) & KDIV_MASK;
+> +
+> +       return (rate->mdiv !=3D old_mdiv || rate->pdiv !=3D old_pdiv ||
+> +               rate->kdiv !=3D old_kdiv);
+> +}
+> +
+> +static inline bool clk_pll1443x_mp_change(const struct imx_pll14xx_rate_=
+table *rate,
+> +                                         u32 pll_div_ctl0, u32 pll_div_c=
+tl1)
+> +{
+> +       u32 old_mdiv, old_pdiv, old_kdiv;
+> +
+> +       old_mdiv =3D (pll_div_ctl0 >> MDIV_SHIFT) & MDIV_MASK;
+> +       old_pdiv =3D (pll_div_ctl0 >> PDIV_SHIFT) & PDIV_MASK;
+> +       old_kdiv =3D (pll_div_ctl1 >> KDIV_SHIFT) & KDIV_MASK;
+> +
+> +       return (rate->mdiv !=3D old_mdiv || rate->pdiv !=3D old_pdiv ||
+> +               rate->kdiv !=3D old_kdiv);
+
+Nitpick: Please drop the parenthesis on all the returns above.
+
+> +}
+> +
+> +static int clk_pll14xx_wait_lock(struct clk_pll14xx *pll)
+> +{
+> +       unsigned long timeout =3D jiffies + msecs_to_jiffies(10);
+> +
+> +       /* Wait for PLL to lock */
+> +       do {
+> +               if (readl_relaxed(pll->base) & LOCK_STATUS)
+> +                       break;
+> +               if (time_after(jiffies, timeout))
+> +                       break;
+> +       } while (1);
+> +
+> +       return readl_relaxed(pll->base) & LOCK_STATUS ? 0 : -ETIMEDOUT;
+
+Is this readl_poll_timeout()?
+
+> +}
+> +
+[...]
+> +
+> +struct clk *imx_clk_pll14xx(const char *name, const char *parent_name,
+> +                           void __iomem *base,
+> +                           const struct imx_pll14xx_clk *pll_clk)
+> +{
+> +       struct clk_pll14xx *pll;
+> +       struct clk *clk;
+> +       struct clk_init_data init;
+> +       int len;
+> +
+> +       pll =3D kzalloc(sizeof(*pll), GFP_KERNEL);
+> +       if (!pll)
+> +               return ERR_PTR(-ENOMEM);
+> +
+> +       init.name =3D name;
+> +       init.flags =3D pll_clk->flags;
+> +       init.parent_names =3D &parent_name;
+> +       init.num_parents =3D 1;
+> +
+> +       if (pll_clk->rate_table) {
+> +               for (len =3D 0; pll_clk->rate_table[len].rate !=3D 0; )
+> +                       len++;
+> +
+> +               pll->rate_count =3D len;
+> +               pll->rate_table =3D kmemdup(pll_clk->rate_table,
+> +                                         pll->rate_count *
+> +                                         sizeof(struct imx_pll14xx_rate_=
+table),
+
+Is this struct_size()?
+
+> +                                         GFP_KERNEL);
+> +               WARN(!pll->rate_table, "%s : could not alloc rate table\n=
+", __func__);
+
+Allocations will fail with a loud message indicating as such, so this
+WARN is not necessary.
+
+> +       }
+> +
+> +       switch (pll_clk->type) {
+> +       case PLL_1416X:
+> +               if (!pll->rate_table)
+> +                       init.ops =3D &clk_pll1416x_min_ops;
+> +               else
+> +                       init.ops =3D &clk_pll1416x_ops;
+> +               break;
+> +       case PLL_1443X:
