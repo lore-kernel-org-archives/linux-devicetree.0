@@ -1,43 +1,101 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: =?utf-8?B?W1JFU0VORMKgUEFUQ0ggdjIgMS80XSBkdC1iaW5kaW5nczogZGlzcGxheTog?=
- =?utf-8?B?c3NkMTMwN2ZiOiBSZW1vdmUgcmVzZXQtYWN0aXZlLWxvdyBmcm9tIGV4YW1w?=
- =?utf-8?Q?les?=
-Date: Wed, 9 Jan 2019 08:39:42 +0000
-Message-ID: <1547023165-111798-2-git-send-email-michal.vokac@ysoft.com>
-References: <1547023165-111798-1-git-send-email-michal.vokac@ysoft.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH v2] cpufreq: qcom: Read voltage LUT and populate OPP
+Date: Wed, 9 Jan 2019 14:24:00 +0530
+Message-ID: <20190109085400.mscuzezwxta4fpfh@vireshk-i7>
+References: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547023165-111798-1-git-send-email-michal.vokac@ysoft.com>
-Content-Language: en-US
-Content-ID: <E9F7B441B015AE48B595B670E655EE13@eurprd04.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+To: Taniya Das <tdas@codeaurora.org>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, evgreen@google.com
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHJlc2V0LWFjdGl2ZS1sb3cgcHJvcGVydHkgaGFzIGJlZW4gcmVtb3ZlZCBicm9tIHRoZSBi
-aW5kaW5nIGEgd2hpbGUNCmFnby4gU28gcmVtb3ZlIGl0IGZyb20gdGhlIGV4YW1wbGVzIGFzIHdl
-bGwuDQoNCkZpeGVzOiA1MTliNGRiICgiZmJkZXY6IHNzZDEzMDdmYjogUmVtb3ZlIHJlc2V0LWFj
-dGl2ZS1sb3cgZnJvbSB0aGUgRFQgYmluZGluZyBkb2N1bWVudCIpDQpSZXZpZXdlZC1ieTogUm9i
-IEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4NClJldmlld2VkLWJ5OiBBbGV4YW5kcmUgQmVsbG9u
-aSA8YWxleGFuZHJlLmJlbGxvbmlAYm9vdGxpbi5jb20+DQpTaWduZWQtb2ZmLWJ5OiBNaWNoYWwg
-Vm9rw6HEjSA8bWljaGFsLnZva2FjQHlzb2Z0LmNvbT4NCi0tLQ0KQ2hhbmdlcyBpbiB2MiByZXNl
-bmQ6DQogLSBBZGQgUi1ieSBmcm9tIEFsZXhhbmRyZS4NCg0KQ2hhbmdlcyBmcm9tIHYxOg0KIC0g
-QWRkIFItYnkgZnJvbSBSb2INCg0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L3NzZDEzMDdmYi50eHQgfCAyIC0tDQogMSBmaWxlIGNoYW5nZWQsIDIgZGVsZXRpb25z
-KC0pDQoNCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlz
-cGxheS9zc2QxMzA3ZmIudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvc3NkMTMwN2ZiLnR4dA0KaW5kZXggMjA5ZDkzMS4uYjY3ZjhjYSAxMDA2NDQNCi0tLSBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NzZDEzMDdmYi50eHQN
-CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3NzZDEzMDdm
-Yi50eHQNCkBAIC0zNiw3ICszNiw2IEBAIHNzZDEzMDc6IG9sZWRAM2Mgew0KICAgICAgICAgcmVn
-ID0gPDB4M2M+Ow0KICAgICAgICAgcHdtcyA9IDwmcHdtIDQgMzAwMD47DQogICAgICAgICByZXNl
-dC1ncGlvcyA9IDwmZ3BpbzIgNz47DQotICAgICAgICByZXNldC1hY3RpdmUtbG93Ow0KIH07DQog
-DQogc3NkMTMwNjogb2xlZEAzYyB7DQpAQCAtNDQsNyArNDMsNiBAQCBzc2QxMzA2OiBvbGVkQDNj
-IHsNCiAgICAgICAgIHJlZyA9IDwweDNjPjsNCiAgICAgICAgIHB3bXMgPSA8JnB3bSA0IDMwMDA+
-Ow0KICAgICAgICAgcmVzZXQtZ3Bpb3MgPSA8JmdwaW8yIDc+Ow0KLSAgICAgICAgcmVzZXQtYWN0
-aXZlLWxvdzsNCiAgICAgICAgIHNvbG9tb24sY29tLWxycmVtYXA7DQogICAgICAgICBzb2xvbW9u
-LGNvbS1pbnZkaXI7DQogICAgICAgICBzb2xvbW9uLGNvbS1vZmZzZXQgPSA8MzI+Ow0KLS0gDQoy
-LjEuNA0KDQo=
+On 09-01-19, 13:37, Taniya Das wrote:
+> @@ -98,6 +107,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+
+You are only using this "dev" parameter for dev_dbg(), instead of that
+pass cpu_dev pointer.
+
+>  			table[i].frequency = CPUFREQ_ENTRY_INVALID;
+>  		} else {
+>  			table[i].frequency = freq;
+> +			dev_pm_opp_add(get_cpu_device(policy->cpu),
+> +					freq * 1000, volt);
+>  			dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
+>  				freq, core_count);
+>  		}
+> @@ -116,6 +127,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+>  			if (prev_cc != max_cores) {
+>  				prev->frequency = prev_freq;
+>  				prev->flags = CPUFREQ_BOOST_FREQ;
+> +				dev_pm_opp_add(get_cpu_device(policy->cpu),
+> +						prev_freq * 1000, volt);
+>  			}
+> 
+>  			break;
+> @@ -127,6 +140,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+> 
+>  	table[i].frequency = CPUFREQ_TABLE_END;
+>  	policy->freq_table = table;
+> +	dev_pm_opp_set_sharing_cpus(get_cpu_device(policy->cpu), policy->cpus);
+
+and then all the above sites can be simplified a bit.
+
+>  	return 0;
+>  }
+> @@ -159,10 +173,18 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>  	struct device *dev = &global_pdev->dev;
+>  	struct of_phandle_args args;
+>  	struct device_node *cpu_np;
+> +	struct device *cpu_dev;
+>  	struct resource *res;
+>  	void __iomem *base;
+>  	int ret, index;
+> 
+> +	cpu_dev = get_cpu_device(policy->cpu);
+> +	if (!cpu_dev) {
+> +		pr_err("%s: failed to get cpu%d device\n", __func__,
+> +		       policy->cpu);
+> +		return -ENODEV;
+> +	}
+> +
+>  	cpu_np = of_cpu_device_node_get(policy->cpu);
+>  	if (!cpu_np)
+>  		return -EINVAL;
+> @@ -205,6 +227,12 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
+>  		goto error;
+>  	}
+> 
+> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
+> +	if (ret <= 0) {
+> +		dev_err(cpu_dev, "OPP table is not ready\n");
+
+Rather say "Failed to add OPPs\n".
+
+> +		goto error;
+> +	}
+> +
+>  	policy->fast_switch_possible = true;
+> 
+>  	return 0;
+> @@ -217,6 +245,7 @@ static int qcom_cpufreq_hw_cpu_exit(struct cpufreq_policy *policy)
+>  {
+>  	void __iomem *base = policy->driver_data - REG_PERF_STATE;
+> 
+> +	dev_pm_opp_remove_all_dynamic(&global_pdev->dev);
+
+This is platform device's device structure, while you added the OPPs
+using cpu_dev. You sure this will work ?
+
+>  	kfree(policy->freq_table);
+>  	devm_iounmap(&global_pdev->dev, base);
+> 
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+
+-- 
+viresh
