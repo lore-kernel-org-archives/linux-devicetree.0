@@ -1,403 +1,114 @@
-From: Tomer Maimon <tmaimon77@gmail.com>
-Subject: [PATCH v2 2/2] iio: adc: add NPCM ADC driver
-Date: Wed,  9 Jan 2019 18:43:43 +0200
-Message-ID: <20190109164343.164205-3-tmaimon77@gmail.com>
-References: <20190109164343.164205-1-tmaimon77@gmail.com>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v5 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+Date: Wed,  9 Jan 2019 22:30:10 +0530
+Message-ID: <20190109170010.15430-1-sibis@codeaurora.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109164343.164205-1-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au
-Cc: linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Nuvoton NPCM BMC Analog-to-Digital Converter(ADC) driver.
+This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
 
-The NPCM ADC is a 10-bit converter for eight channel inputs.
-
-Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
 ---
- drivers/iio/adc/Kconfig    |  10 ++
- drivers/iio/adc/Makefile   |   1 +
- drivers/iio/adc/npcm_adc.c | 338 +++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 349 insertions(+)
- create mode 100644 drivers/iio/adc/npcm_adc.c
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 7a3ca4ec0cb7..2d1e70a7d5c4 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -576,6 +576,16 @@ config NAU7802
- 	  To compile this driver as a module, choose M here: the
- 	  module will be called nau7802.
+v5:
+  * Use qmp_aop updated dt binding
+
+v3:
+  * with shutdown-ack irq redesign make it mandatory,
+    merge multiple patches into a single one
+
+v2:
+  * Fixed style changes
+  * Added missing clocks in the dt-bindings
+  * Split mss remoteproc node into a number of patches
+
+This patch depends on the following bindings:
+https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
+https://patchwork.kernel.org/patch/10657325/ - pdc reset node
+https://patchwork.kernel.org/patch/10753659/ - rpmhpd dt node
+https://patchwork.kernel.org/patch/10749469/ - AOP QMP dt bindings
+https://patchwork.kernel.org/patch/10751757/ - shutdown-irq binding
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 60 ++++++++++++++++++++++++++++
+ 1 file changed, 60 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index 5da9fa1feb8a..e021b15f87fd 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -1366,6 +1366,66 @@
+ 			};
+ 		};
  
-+config NPCM_ADC
-+	tristate "Nuvoton NPCM ADC driver"
-+	depends on ARCH_NPCM || COMPILE_TEST
-+	depends on HAS_IOMEM
-+	help
-+	  Say yes here to build support for Nuvoton NPCM ADC.
++		remoteproc@4080000 {
++			compatible = "qcom,sdm845-mss-pil";
++			reg = <0x04080000 0x408>, <0x04180000 0x48>;
++			reg-names = "qdsp6", "rmb";
 +
-+	  This driver can also be built as a module. If so, the module
-+	  will be called npcm_adc.
++			interrupts-extended =
++				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
++				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
++			interrupt-names = "wdog", "fatal", "ready",
++					  "handover", "stop-ack",
++					  "shutdown-ack";
 +
- config PALMAS_GPADC
- 	tristate "TI Palmas General Purpose ADC"
- 	depends on MFD_PALMAS
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 07df37f621bd..3337eb1f4c30 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -55,6 +55,7 @@ obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
- obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
- obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
- obj-$(CONFIG_NAU7802) += nau7802.o
-+obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
- obj-$(CONFIG_PALMAS_GPADC) += palmas_gpadc.o
- obj-$(CONFIG_QCOM_SPMI_ADC5) += qcom-spmi-adc5.o
- obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
-diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
-new file mode 100644
-index 000000000000..c364f2dbd702
---- /dev/null
-+++ b/drivers/iio/adc/npcm_adc.c
-@@ -0,0 +1,338 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2019 Nuvoton Technology corporation.
++			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
++				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
++				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
++				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
++				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
++				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
++				 <&gcc GCC_PRNG_AHB_CLK>,
++				 <&rpmhcc RPMH_CXO_CLK>;
++			clock-names = "iface", "bus", "mem", "gpll0_mss",
++				      "snoc_axi", "mnoc_axi", "prng", "xo";
 +
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/mfd/syscon.h>
-+#include <linux/io.h>
-+#include <linux/iio/iio.h>
-+#include <linux/interrupt.h>
-+#include <linux/kernel.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/regulator/consumer.h>
-+#include <linux/spinlock.h>
-+#include <linux/uaccess.h>
++			qcom,smem-states = <&modem_smp2p_out 0>;
++			qcom,smem-state-names = "stop";
 +
-+struct npcm_adc {
-+	bool int_status;
-+	u32 adc_sample_hz;
-+	struct device *dev;
-+	void __iomem *regs;
-+	struct clk *adc_clk;
-+	wait_queue_head_t wq;
-+	struct regulator *vref;
-+	struct regmap *rst_regmap;
-+};
++			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
++				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
++			reset-names = "mss_restart", "pdc_reset";
 +
-+/* NPCM7xx reset module */
-+#define NPCM7XX_IPSRST1_OFFSET		0x020
-+#define NPCM7XX_IPSRST1_ADC_RST		BIT(27)
++			qcom,halt-regs = <&tcsr_mutex_regs
++						0x23000 0x25000 0x24000>;
 +
-+/* ADC registers */
-+#define NPCM_ADCCON	 0x00
-+#define NPCM_ADCDATA	 0x04
++			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
++					<&rpmhpd SDM845_CX>,
++					<&rpmhpd SDM845_MX>,
++					<&rpmhpd SDM845_MSS>;
++			power-domain-names = "load_state", "cx", "mx", "mss";
 +
-+/* ADCCON Register Bits */
-+#define NPCM_ADCCON_ADC_INT_EN		BIT(21)
-+#define NPCM_ADCCON_REFSEL		BIT(19)
-+#define NPCM_ADCCON_ADC_INT_ST		BIT(18)
-+#define NPCM_ADCCON_ADC_EN		BIT(17)
-+#define NPCM_ADCCON_ADC_RST		BIT(16)
-+#define NPCM_ADCCON_ADC_CONV		BIT(13)
++			mba {
++				memory-region = <&mba_region>;
++			};
 +
-+#define NPCM_ADCCON_CH_MASK		GENMASK(27, 24)
-+#define NPCM_ADCCON_CH(x)		((x) << 24)
-+#define NPCM_ADCCON_DIV_SHIFT		1
-+#define NPCM_ADCCON_DIV_MASK		GENMASK(8, 1)
-+#define NPCM_ADC_DATA_MASK(x)		((x) & GENMASK(9, 0))
++			mpss {
++				memory-region = <&mpss_region>;
++			};
 +
-+#define NPCM_ADC_ENABLE		(NPCM_ADCCON_ADC_EN | NPCM_ADCCON_ADC_INT_EN)
++			glink-edge {
++				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
++				label = "modem";
++				qcom,remote-pid = <1>;
++				mboxes = <&apss_shared 12>;
++				mbox-names = "mpss_smem";
++			};
++		};
 +
-+/* ADC General Definition */
-+#define NPCM_RESOLUTION_BITS		10
-+#define NPCM_ADC_DEFAULT_SAMPLE_RATE	12500000
-+#define NPCM_INT_VREF_MV		2000
-+
-+#define NPCM_ADC_CHAN(ch) {					\
-+	.type = IIO_VOLTAGE,					\
-+	.indexed = 1,						\
-+	.channel = ch,						\
-+	.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),		\
-+	.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |	\
-+				BIT(IIO_CHAN_INFO_SAMP_FREQ),	\
-+}
-+
-+static const struct iio_chan_spec npcm_adc_iio_channels[] = {
-+	NPCM_ADC_CHAN(0),
-+	NPCM_ADC_CHAN(1),
-+	NPCM_ADC_CHAN(2),
-+	NPCM_ADC_CHAN(3),
-+	NPCM_ADC_CHAN(4),
-+	NPCM_ADC_CHAN(5),
-+	NPCM_ADC_CHAN(6),
-+	NPCM_ADC_CHAN(7),
-+};
-+
-+static irqreturn_t npcm_adc_isr(int irq, void *data)
-+{
-+	u32 regtemp;
-+	struct iio_dev *indio_dev = data;
-+	struct npcm_adc *info = iio_priv(indio_dev);
-+
-+	regtemp = ioread32(info->regs + NPCM_ADCCON);
-+	if (regtemp & NPCM_ADCCON_ADC_INT_ST) {
-+		iowrite32(regtemp, info->regs + NPCM_ADCCON);
-+		wake_up_interruptible(&info->wq);
-+		info->int_status = true;
-+	}
-+
-+	return IRQ_HANDLED;
-+}
-+
-+static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
-+{
-+	int ret;
-+	u32 regtemp;
-+
-+	/* Select ADC channel */
-+	regtemp = ioread32(info->regs + NPCM_ADCCON);
-+	regtemp &= ~NPCM_ADCCON_CH_MASK;
-+	info->int_status = false;
-+	iowrite32(regtemp | NPCM_ADCCON_CH(channel) |
-+		  NPCM_ADCCON_ADC_CONV, info->regs + NPCM_ADCCON);
-+
-+	ret = wait_event_interruptible_timeout(info->wq, info->int_status,
-+					       msecs_to_jiffies(10));
-+	if (ret == 0) {
-+		regtemp = ioread32(info->regs + NPCM_ADCCON);
-+		if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
-+			/* if conversion failed - reset ADC module */
-+			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
-+				     NPCM7XX_IPSRST1_ADC_RST);
-+			msleep(100);
-+			regmap_write(info->rst_regmap, NPCM7XX_IPSRST1_OFFSET,
-+				     0x0);
-+			msleep(100);
-+
-+			/* Enable ADC and start conversion module */
-+			iowrite32(NPCM_ADC_ENABLE | NPCM_ADCCON_ADC_CONV,
-+				  info->regs + NPCM_ADCCON);
-+			dev_err(info->dev, "RESET ADC Complete\n");
-+		}
-+		return -ETIMEDOUT;
-+	}
-+	if (ret < 0)
-+		return ret;
-+
-+	*val = NPCM_ADC_DATA_MASK(ioread32(info->regs + NPCM_ADCDATA));
-+
-+	return 0;
-+}
-+
-+static int npcm_adc_read_raw(struct iio_dev *indio_dev,
-+			     struct iio_chan_spec const *chan, int *val,
-+			     int *val2, long mask)
-+{
-+	int ret;
-+	int vref_uv;
-+	struct npcm_adc *info = iio_priv(indio_dev);
-+
-+	switch (mask) {
-+	case IIO_CHAN_INFO_RAW:
-+		mutex_lock(&indio_dev->mlock);
-+		ret = npcm_adc_read(info, val, chan->channel);
-+		mutex_unlock(&indio_dev->mlock);
-+		if (ret) {
-+			dev_err(info->dev, "NPCM ADC read failed\n");
-+			return ret;
-+		}
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		if (info->vref) {
-+			vref_uv = regulator_get_voltage(info->vref);
-+			*val = vref_uv / 1000;
-+		} else {
-+			*val = NPCM_INT_VREF_MV;
-+		}
-+		*val2 = NPCM_RESOLUTION_BITS;
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	case IIO_CHAN_INFO_SAMP_FREQ:
-+		*val = info->adc_sample_hz;
-+		return IIO_VAL_INT;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return 0;
-+}
-+
-+static const struct iio_info npcm_adc_iio_info = {
-+	.read_raw = &npcm_adc_read_raw,
-+};
-+
-+static const struct of_device_id npcm_adc_match[] = {
-+	{ .compatible = "nuvoton,npcm750-adc", },
-+	{ /* sentinel */ }
-+};
-+MODULE_DEVICE_TABLE(of, npcm_adc_match);
-+
-+static int npcm_adc_probe(struct platform_device *pdev)
-+{
-+	int ret;
-+	int irq;
-+	u32 div;
-+	u32 reg_con;
-+	struct resource *res;
-+	struct npcm_adc *info;
-+	struct iio_dev *indio_dev;
-+	struct device *dev = &pdev->dev;
-+	struct device_node *np = pdev->dev.of_node;
-+
-+	indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
-+	if (!indio_dev)
-+		return -ENOMEM;
-+	info = iio_priv(indio_dev);
-+
-+	info->dev = &pdev->dev;
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	info->regs = devm_ioremap_resource(&pdev->dev, res);
-+	if (IS_ERR(info->regs))
-+		return PTR_ERR(info->regs);
-+
-+	info->adc_clk = devm_clk_get(&pdev->dev, NULL);
-+	if (IS_ERR(info->adc_clk)) {
-+		dev_warn(&pdev->dev, "ADC clock failed: can't read clk, assuming ADC clock rate 12.5MHz\n");
-+		info->adc_sample_hz = NPCM_ADC_DEFAULT_SAMPLE_RATE;
-+	} else {
-+		/* calculate ADC clock sample rate */
-+		reg_con = ioread32(info->regs + NPCM_ADCCON);
-+		div = reg_con & NPCM_ADCCON_DIV_MASK;
-+		div = div >> NPCM_ADCCON_DIV_SHIFT;
-+		info->adc_sample_hz = clk_get_rate(info->adc_clk) /
-+			((div + 1) * 2);
-+	}
-+
-+	if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
-+		info->rst_regmap = syscon_regmap_lookup_by_compatible
-+			("nuvoton,npcm750-rst");
-+		if (IS_ERR(info->rst_regmap)) {
-+			dev_err(&pdev->dev, "Failed to find nuvoton,npcm750-rst\n");
-+			ret = PTR_ERR(info->rst_regmap);
-+			goto err_disable_clk;
-+		}
-+	}
-+
-+	reg_con = ioread32(info->regs + NPCM_ADCCON);
-+	info->vref = devm_regulator_get_optional(&pdev->dev, "vref");
-+	if (!IS_ERR(info->vref)) {
-+		ret = regulator_enable(info->vref);
-+		if (ret) {
-+			dev_err(&pdev->dev, "Can't enable ADC reference voltage\n");
-+			goto err_disable_clk;
-+		}
-+
-+		iowrite32(reg_con & ~NPCM_ADCCON_REFSEL,
-+			  info->regs + NPCM_ADCCON);
-+	} else {
-+		/*
-+		 * Any error which is not ENODEV indicates the regulator
-+		 * has been specified and so is a failure case.
-+		 */
-+		if (PTR_ERR(info->vref) != -ENODEV) {
-+			ret = PTR_ERR(info->vref);
-+			goto err_disable_clk;
-+		}
-+
-+		/* Use internal reference */
-+		iowrite32(reg_con | NPCM_ADCCON_REFSEL,
-+			  info->regs + NPCM_ADCCON);
-+	}
-+
-+	irq = platform_get_irq(pdev, 0);
-+	if (irq <= 0) {
-+		dev_err(dev, "failed getting interrupt resource\n");
-+		ret = -EINVAL;
-+		goto err_disable_vref_reg;
-+	}
-+
-+	ret = devm_request_irq(&pdev->dev, irq, npcm_adc_isr, 0,
-+			       "NPCM_ADC", indio_dev);
-+	if (ret < 0) {
-+		dev_err(dev, "failed requesting interrupt\n");
-+		goto err_disable_vref_reg;
-+	}
-+
-+	init_waitqueue_head(&info->wq);
-+
-+	reg_con = ioread32(info->regs + NPCM_ADCCON);
-+	reg_con |= NPCM_ADC_ENABLE;
-+
-+	/* Enable the ADC Module */
-+	iowrite32(reg_con, info->regs + NPCM_ADCCON);
-+
-+	/* Start ADC conversion */
-+	iowrite32(reg_con | NPCM_ADCCON_ADC_CONV, info->regs + NPCM_ADCCON);
-+
-+	platform_set_drvdata(pdev, indio_dev);
-+	indio_dev->name = dev_name(&pdev->dev);
-+	indio_dev->dev.parent = &pdev->dev;
-+	indio_dev->info = &npcm_adc_iio_info;
-+	indio_dev->modes = INDIO_DIRECT_MODE;
-+	indio_dev->channels = npcm_adc_iio_channels;
-+	indio_dev->num_channels = ARRAY_SIZE(npcm_adc_iio_channels);
-+
-+	ret = iio_device_register(indio_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Couldn't register the device.\n");
-+		goto err_disable_vref_reg;
-+	}
-+
-+	pr_info("NPCM ADC driver probed\n");
-+
-+	return 0;
-+
-+err_disable_vref_reg:
-+	if (!IS_ERR(info->vref))
-+		regulator_disable(info->vref);
-+err_disable_clk:
-+	clk_disable_unprepare(info->adc_clk);
-+
-+	return ret;
-+}
-+
-+static int npcm_adc_remove(struct platform_device *pdev)
-+{
-+	struct iio_dev *indio_dev = platform_get_drvdata(pdev);
-+	struct npcm_adc *info = iio_priv(indio_dev);
-+	u32 regtemp;
-+
-+	regtemp = ioread32(info->regs + NPCM_ADCCON);
-+
-+	/* Disable the ADC Module */
-+	iowrite32(regtemp & ~NPCM_ADCCON_ADC_EN, info->regs + NPCM_ADCCON);
-+
-+	iio_device_unregister(indio_dev);
-+	clk_disable_unprepare(info->adc_clk);
-+	if (!IS_ERR(info->vref))
-+		regulator_disable(info->vref);
-+
-+	return 0;
-+}
-+
-+static struct platform_driver npcm_adc_driver = {
-+	.probe		= npcm_adc_probe,
-+	.remove		= npcm_adc_remove,
-+	.driver		= {
-+		.name	= "npcm_adc",
-+		.of_match_table = npcm_adc_match,
-+	},
-+};
-+
-+module_platform_driver(npcm_adc_driver);
-+
-+MODULE_DESCRIPTION("Nuvoton NPCM ADC Driver");
-+MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
-+MODULE_LICENSE("GPL v2");
+ 		usb_1_hsphy: phy@88e2000 {
+ 			compatible = "qcom,sdm845-qusb2-phy";
+ 			reg = <0x88e2000 0x400>;
 -- 
-2.14.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
