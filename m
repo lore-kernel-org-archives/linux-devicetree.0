@@ -1,69 +1,303 @@
-From: Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v4 2/3] drm/msm/dpu: Integrate interconnect
- API in MDSS
-Date: Wed, 9 Jan 2019 16:38:47 +0200
-Message-ID: <f27f5879-04d2-ad7d-a1d6-3a4e638ef33d@linaro.org>
-References: <1545373225-32046-1-git-send-email-jshekhar@codeaurora.org>
- <1545373225-32046-3-git-send-email-jshekhar@codeaurora.org>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v2 4/7] remoteproc: q6v5-mss: Vote for rpmh power domains
+Date: Wed, 09 Jan 2019 20:09:19 +0530
+Message-ID: <e23a079aa090b393666c413d57440765@codeaurora.org>
+References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
+ <20190106080915.4493-5-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1545373225-32046-3-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: ryadav-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190106080915.4493-5-bjorn.andersson@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-kernel-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmF5YW50LAoKT24gMTIvMjEvMTggMDg6MjAsIEpheWFudCBTaGVraGFyIHdyb3RlOgo+IEZy
-b206IFNyYXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1a3VAY29kZWF1cm9yYS5vcmc+Cj4gCj4g
-VGhlIGludGVyY29ubmVjdCBmcmFtZXdvcmsgaXMgZGVzaWduZWQgdG8gcHJvdmlkZSBhCj4gc3Rh
-bmRhcmQga2VybmVsIGludGVyZmFjZSB0byBjb250cm9sIHRoZSBzZXR0aW5ncyBvZgo+IHRoZSBp
-bnRlcmNvbm5lY3RzIG9uIGEgU29DLgo+IAo+IFRoZSBpbnRlcmNvbm5lY3QgQVBJIHVzZXMgYSBj
-b25zdW1lci9wcm92aWRlci1iYXNlZCBtb2RlbCwKPiB3aGVyZSB0aGUgcHJvdmlkZXJzIGFyZSB0
-aGUgaW50ZXJjb25uZWN0IGJ1c2VzIGFuZCB0aGUKPiBjb25zdW1lcnMgY291bGQgYmUgdmFyaW91
-cyBkcml2ZXJzLgo+IAo+IE1EU1MgaXMgb25lIG9mIHRoZSBpbnRlcmNvbm5lY3QgY29uc3VtZXJz
-IHdoaWNoIHVzZXMgdGhlCj4gaW50ZXJjb25uZWN0IEFQSXMgdG8gZ2V0IHRoZSBwYXRoIGJldHdl
-ZW4gZW5kcG9pbnRzIGFuZAo+IHNldCBpdHMgYmFuZHdpZHRoL2xhdGVuY3kvUW9TIHJlcXVpcmVt
-ZW50cyBmb3IgdGhlIGdpdmVuCgpDdXJyZW50bHkgd2Ugc2V0IG9ubHkgYmFuZHdpZHRoLgoKPiBp
-bnRlcmNvbm5lY3RlZCBwYXRoLgo+IAo+IENoYW5nZXMgaW4gdjI6Cj4gCS0gUmVtb3ZlIGVycm9y
-IGxvZyBhbmQgdW5uZWNlc3NhcnkgY2hlY2sgKEpvcmRhbiBDcm91c2UpCj4gCj4gQ2hhbmdlcyBp
-biB2MzoKPiAJLSBDb2RlIGNsZWFuIGludm9sdmluZyB2YXJpYWJsZSBuYW1lIGNoYW5nZSwgcmVt
-b3ZhbAo+IAkgIG9mIGV4dHJhIHBhcmFudGhlc2lzIGFuZCB2YXJpYWJsZXMgKE1hdHRoaWFzIEth
-ZWhsY2tlKQo+IAo+IENoYW5nZXMgaW4gdjQ6Cj4gCS0gQWRkIGNvbW1lbnRzLCBzcGFjaW5ncywg
-dGFicywgcHJvcGVyIHBvcnQgbmFtZQo+IAkgIGFuZCBpY2MgbWFjcm8gKEdlb3JnaSBEamFrb3Yp
-CgpUaGUgY2hhbmdlcyBzaG91bGQgbm90IGJlIHBhcnQgb2YgdGhlIGNvbW1pdCB0ZXh0LCBidXQg
-c2hvdWxkIG1vdmUgYmVsb3cKdGhlICItLS0iIGxpbmUuCgo+IAo+IFNpZ25lZC1vZmYtYnk6IFNy
-YXZhbnRoaSBLb2xsdWt1ZHVydSA8c2tvbGx1a3VAY29kZWF1cm9yYS5vcmc+Cj4gU2lnbmVkLW9m
-Zi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEub3JnPgo+IC0tLQo+ICBk
-cml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jIHwgNDkgKysrKysrKysrKysr
-KysrKysrKysrKysrKysrKystLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDQ1IGluc2VydGlvbnMoKyks
-IDQgZGVsZXRpb25zKC0pCj4gCj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlz
-cC9kcHUxL2RwdV9tZHNzLmMgYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRz
-cy5jCj4gaW5kZXggMzg1NzZmOC4uZmNhYTcxZiAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9k
-cm0vbXNtL2Rpc3AvZHB1MS9kcHVfbWRzcy5jCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9k
-aXNwL2RwdTEvZHB1X21kc3MuYwo+IEBAIC00LDExICs0LDE1IEBACj4gICAqLwo+ICAKPiAgI2lu
-Y2x1ZGUgImRwdV9rbXMuaCIKPiArI2luY2x1ZGUgPGxpbnV4L2ludGVyY29ubmVjdC5oPgo+ICAK
-PiAgI2RlZmluZSB0b19kcHVfbWRzcyh4KSBjb250YWluZXJfb2YoeCwgc3RydWN0IGRwdV9tZHNz
-LCBiYXNlKQo+ICAKPiAgI2RlZmluZSBIV19JTlRSX1NUQVRVUwkJCTB4MDAxMAo+ICAKPiArLyog
-TWF4IEJXIGRlZmluZWQgaW4gS0JwcyAqLwo+ICsjZGVmaW5lIE1BWF9CVwkJCQk2ODAwMDAwCj4g
-Kwo+ICBzdHJ1Y3QgZHB1X21kc3Mgewo+ICAJc3RydWN0IG1zbV9tZHNzIGJhc2U7Cj4gIAl2b2lk
-IF9faW9tZW0gKm1taW87Cj4gQEAgLTE2LDggKzIwLDMwIEBAIHN0cnVjdCBkcHVfbWRzcyB7Cj4g
-IAl1MzIgaHd2ZXJzaW9uOwo+ICAJc3RydWN0IGRzc19tb2R1bGVfcG93ZXIgbXA7Cj4gIAlzdHJ1
-Y3QgZHB1X2lycV9jb250cm9sbGVyIGlycV9jb250cm9sbGVyOwo+ICsJc3RydWN0IGljY19wYXRo
-ICpwYXRoWzJdOwo+ICsJdTMyIG51bV9wYXRoczsKPiAgfTsKPiAgCj4gK3N0YXRpYyBpbnQgZHB1
-X21kc3NfcGFyc2VfZGF0YV9idXNfaWNjX3BhdGgoc3RydWN0IGRybV9kZXZpY2UgKmRldiwKPiAr
-CQlzdHJ1Y3QgZHB1X21kc3MgKmRwdV9tZHNzKQoKTml0OiBQbGVhc2UgYWxpZ24gdG8gdGhlIG9w
-ZW4gcGFyZW50aGVzaXMuCgpPdGhlcndpc2UgbG9va3MgZ29vZCB0byBtZS4KClRoYW5rcywKR2Vv
-cmdpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
-cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+Hi Bjorn,
+With the changes suggested below:
+
+Reviewed-by: Sibi Sankar <sibis@codeaurora.org>
+Tested-by: Sibi Sankar <sibis@codeaurora.org>
+
+On 2019-01-06 13:39, Bjorn Andersson wrote:
+> From: Rajendra Nayak <rnayak@codeaurora.org>
+> 
+> With rpmh ARC resources being modelled as power domains with 
+> performance
+> state, we need to proxy vote on these for SDM845.
+> Add support to vote on multiple of them, now that genpd supports
+> associating mutliple power domains to a device.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+> [bjorn: Drop device link, improve error handling, name things "proxy"]
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> This is v3 of this patch, but updated to cover "loadstate". v2 can be
+> found here:
+> https://lore.kernel.org/lkml/20180904071046.8152-1-rnayak@codeaurora.org/
+> 
+> Changes since v2:
+> - Drop device links, as we can do active and proxy votes using device 
+> links
+> - Improved error handling, by unrolling some votes on failure
+> - Rename things proxy, to follow naming of "proxy" and "active"
+> 
+>  drivers/remoteproc/qcom_q6v5_mss.c | 115 ++++++++++++++++++++++++++++-
+>  1 file changed, 111 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/remoteproc/qcom_q6v5_mss.c
+> b/drivers/remoteproc/qcom_q6v5_mss.c
+> index 01be7314e176..62cf16ddb7af 100644
+> --- a/drivers/remoteproc/qcom_q6v5_mss.c
+> +++ b/drivers/remoteproc/qcom_q6v5_mss.c
+> @@ -25,6 +25,8 @@
+>  #include <linux/of_address.h>
+>  #include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+> +#include <linux/pm_domain.h>
+> +#include <linux/pm_runtime.h>
+>  #include <linux/regmap.h>
+>  #include <linux/regulator/consumer.h>
+>  #include <linux/remoteproc.h>
+> @@ -131,6 +133,7 @@ struct rproc_hexagon_res {
+>  	char **proxy_clk_names;
+>  	char **reset_clk_names;
+>  	char **active_clk_names;
+> +	char **proxy_pd_names;
+>  	int version;
+>  	bool need_mem_protection;
+>  	bool has_alt_reset;
+> @@ -156,9 +159,11 @@ struct q6v5 {
+>  	struct clk *active_clks[8];
+>  	struct clk *reset_clks[4];
+>  	struct clk *proxy_clks[4];
+> +	struct device *proxy_pds[3];
+>  	int active_clk_count;
+>  	int reset_clk_count;
+>  	int proxy_clk_count;
+> +	int proxy_pd_count;
+> 
+>  	struct reg_info active_regs[1];
+>  	struct reg_info proxy_regs[3];
+> @@ -321,6 +326,41 @@ static void q6v5_clk_disable(struct device *dev,
+>  		clk_disable_unprepare(clks[i]);
+>  }
+> 
+> +static int q6v5_pds_enable(struct q6v5 *qproc, struct device **pds,
+> +			   size_t pd_count)
+> +{
+> +	int ret;
+> +	int i;
+> +
+> +	for (i = 0; i < pd_count; i++) {
+> +		dev_pm_genpd_set_performance_state(pds[i], INT_MAX);
+> +		ret = pm_runtime_get_sync(pds[i]);
+> +		if (ret < 0)
+> +			goto unroll_pd_votes;
+> +	}
+> +
+> +	return 0;
+> +
+> +unroll_pd_votes:
+> +	for (i--; i >= 0; i--) {
+> +		dev_pm_genpd_set_performance_state(pds[i], 0);
+> +		pm_runtime_put(pds[i]);
+> +	}
+> +
+> +	return ret;
+> +};
+> +
+> +static void q6v5_pds_disable(struct q6v5 *qproc, struct device **pds,
+> +			     size_t pd_count)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < pd_count; i++) {
+> +		dev_pm_genpd_set_performance_state(pds[i], 0);
+> +		pm_runtime_put(pds[i]);
+> +	}
+> +}
+> +
+>  static int q6v5_xfer_mem_ownership(struct q6v5 *qproc, int 
+> *current_perm,
+>  				   bool remote_owner, phys_addr_t addr,
+>  				   size_t size)
+> @@ -690,11 +730,17 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+> 
+>  	qcom_q6v5_prepare(&qproc->q6v5);
+> 
+> +	ret = q6v5_pds_enable(qproc, qproc->proxy_pds, 
+> qproc->proxy_pd_count);
+> +	if (ret < 0) {
+> +		dev_err(qproc->dev, "failed to enable proxy power domains\n");
+> +		goto disable_irqs;
+> +	}
+> +
+>  	ret = q6v5_regulator_enable(qproc, qproc->proxy_regs,
+>  				    qproc->proxy_reg_count);
+>  	if (ret) {
+>  		dev_err(qproc->dev, "failed to enable proxy supplies\n");
+> -		goto disable_irqs;
+> +		goto disable_proxy_pds;
+>  	}
+> 
+>  	ret = q6v5_clk_enable(qproc->dev, qproc->proxy_clks,
+> @@ -791,6 +837,8 @@ static int q6v5_mba_load(struct q6v5 *qproc)
+>  disable_proxy_reg:
+>  	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+>  			       qproc->proxy_reg_count);
+> +disable_proxy_pds:
+> +	q6v5_pds_disable(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
+>  disable_irqs:
+>  	qcom_q6v5_unprepare(&qproc->q6v5);
+> 
+> @@ -1121,6 +1169,7 @@ static void qcom_msa_handover(struct qcom_q6v5 
+> *q6v5)
+>  			 qproc->proxy_clk_count);
+>  	q6v5_regulator_disable(qproc, qproc->proxy_regs,
+>  			       qproc->proxy_reg_count);
+> +	q6v5_pds_disable(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
+
+we should call proxy pds_disable on mba_reclaim
+as well:
+
+ret = qcom_q6v5_unprepare(&qproc->q6v5);
+if (ret) {
+   ...
+   q6v5_pds_disable(...);
+}
+
+>  }
+> 
+>  static int q6v5_init_mem(struct q6v5 *qproc, struct platform_device 
+> *pdev)
+> @@ -1181,6 +1230,45 @@ static int q6v5_init_clocks(struct device *dev,
+> struct clk **clks,
+>  	return i;
+>  }
+> 
+> +static int q6v5_pds_attach(struct device *dev, struct device **devs,
+> +			   char **pd_names)
+> +{
+> +	size_t num_pds = 0;
+> +	int ret;
+> +	int i;
+> +
+> +	if (!pd_names)
+> +		return 0;
+> +
+> +	while (pd_names[num_pds])
+> +		num_pds++;
+> +
+> +	for (i = 0; i < num_pds; i++) {
+> +		devs[i] = dev_pm_domain_attach_by_name(dev, pd_names[i]);
+> +		if (IS_ERR(devs[i])) {
+> +			ret = PTR_ERR(devs[i]);
+> +			goto unroll_attach;
+> +		}
+> +	}
+> +
+> +	return num_pds;
+> +
+> +unroll_attach:
+> +	for (i--; i >= 0; i--)
+> +		dev_pm_domain_detach(devs[i], false);
+> +
+> +	return ret;
+> +};
+> +
+> +static void q6v5_pds_detach(struct q6v5 *qproc, struct device **pds,
+> +			    size_t pd_count)
+> +{
+> +	int i;
+> +
+> +	for (i = 0; i < pd_count; i++)
+> +		dev_pm_domain_detach(pds[i], false);
+> +}
+> +
+>  static int q6v5_init_reset(struct q6v5 *qproc)
+>  {
+>  	qproc->mss_restart = devm_reset_control_get_exclusive(qproc->dev,
+> @@ -1322,10 +1410,18 @@ static int q6v5_probe(struct platform_device 
+> *pdev)
+>  	}
+>  	qproc->active_reg_count = ret;
+> 
+> +	ret = q6v5_pds_attach(&pdev->dev, qproc->proxy_pds,
+> +			      desc->proxy_pd_names);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "Failed to init power domains\n");
+
+Should be "Failed to attach proxy power domains"
+
+> +		goto free_rproc;
+> +	}
+> +	qproc->proxy_pd_count = ret;
+> +
+>  	qproc->has_alt_reset = desc->has_alt_reset;
+>  	ret = q6v5_init_reset(qproc);
+>  	if (ret)
+> -		goto free_rproc;
+> +		goto detach_proxy_pds;
+> 
+>  	qproc->version = desc->version;
+>  	qproc->need_mem_protection = desc->need_mem_protection;
+> @@ -1333,7 +1429,7 @@ static int q6v5_probe(struct platform_device 
+> *pdev)
+>  	ret = qcom_q6v5_init(&qproc->q6v5, pdev, rproc, 
+> MPSS_CRASH_REASON_SMEM,
+>  			     qcom_msa_handover);
+>  	if (ret)
+> -		goto free_rproc;
+> +		goto detach_proxy_pds;
+> 
+>  	qproc->mpss_perm = BIT(QCOM_SCM_VMID_HLOS);
+>  	qproc->mba_perm = BIT(QCOM_SCM_VMID_HLOS);
+> @@ -1344,10 +1440,12 @@ static int q6v5_probe(struct platform_device 
+> *pdev)
+> 
+>  	ret = rproc_add(rproc);
+>  	if (ret)
+> -		goto free_rproc;
+> +		goto detach_proxy_pds;
+> 
+>  	return 0;
+> 
+> +detach_proxy_pds:
+> +	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
+>  free_rproc:
+>  	rproc_free(rproc);
+> 
+> @@ -1364,6 +1462,9 @@ static int q6v5_remove(struct platform_device 
+> *pdev)
+>  	qcom_remove_glink_subdev(qproc->rproc, &qproc->glink_subdev);
+>  	qcom_remove_smd_subdev(qproc->rproc, &qproc->smd_subdev);
+>  	qcom_remove_ssr_subdev(qproc->rproc, &qproc->ssr_subdev);
+> +
+> +	q6v5_pds_detach(qproc, qproc->proxy_pds, qproc->proxy_pd_count);
+> +
+>  	rproc_free(qproc->rproc);
+> 
+>  	return 0;
+> @@ -1388,6 +1489,12 @@ static const struct rproc_hexagon_res sdm845_mss 
+> = {
+>  			"mnoc_axi",
+>  			NULL
+>  	},
+> +	.proxy_pd_names = (char*[]){
+> +			"cx",
+> +			"mx",
+> +			"mss",
+> +			NULL
+> +	},
+>  	.need_mem_protection = true,
+>  	.has_alt_reset = true,
+>  	.version = MSS_SDM845,
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
