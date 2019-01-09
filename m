@@ -1,71 +1,56 @@
-From: Otto Sabart <ottosabart@seberm.com>
-Subject: [PATCH 1/1] doc: gpio-mvebu: fix broken reference to
- cp110-system-controller0.txt file
-Date: Wed, 9 Jan 2019 20:07:41 +0100
-Message-ID: <8fd140950dd0bb859f9a48d8b25fb919cbb3cc6b.1547059503.git.ottosabart@seberm.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Subject: Re: [PATCH] arm64/hisilicon: fix SDcard detection
+Date: Wed, 9 Jan 2019 20:08:59 +0100
+Message-ID: <CAKfTPtAaVXjm8sf1o=4yfRt_pyVU0T7H8jOatm6EreYVNoWj+w@mail.gmail.com>
+References: <1547056892-16527-1-git-send-email-vincent.guittot@linaro.org> <CACRpkdbA8cvoaG_5=JCrpQd2k1HYRxUjqGsoGJLLvroGGQukkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="4Ckj6UjgE2iN1+kY"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
+In-Reply-To: <CACRpkdbA8cvoaG_5=JCrpQd2k1HYRxUjqGsoGJLLvroGGQukkA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-pwm@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Miquel Raynal <miquel.raynal@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: Xu Wei <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Wed, 9 Jan 2019 at 19:28, Linus Walleij <linus.walleij@linaro.org> wrote:
+>
+> Hi Vincent!
+>
+> On Wed, Jan 9, 2019 at 7:01 PM Vincent Guittot
+> <vincent.guittot@linaro.org> wrote:
+>
+> > commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
+> > has changed how cd_gpios phandle and cd-inverted are used to set gpio's flags.
+> >
+> > Since this change, hikey960 SDcard is not detected anymore because flags
+> > are not set correctly. Updating cd-gpios to set GPIO_ACTIVE_LOW instead
+> > of high, fixes the problem.
+> >
+> > Signed-off-by: Vincent Guittot <vincent.guittot@linaro.org>
+>
+> Please check if this patch fixes your problem:
+> https://marc.info/?l=linux-mmc&m=154637189021211&w=2
 
---4Ckj6UjgE2iN1+kY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+This fix the problem
 
-The cp110-system-controller0.txt file was renamed to
-cp110-system-controller.txt.
+>
+> > --- a/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> > +++ b/arch/arm64/boot/dts/hisilicon/hi3660-hikey960.dts
+> > @@ -582,7 +582,7 @@
+> >         sd-uhs-sdr104;
+> >         disable-wp;
+> >         cd-inverted;
+> > -       cd-gpios = <&gpio25 3 0>;
+> > +       cd-gpios = <&gpio25 3 GPIO_ACTIVE_LOW>;
+>
+> This is also a good change, but the old device tree should
+> continue to work so we need to fix the real bug.
+>
+> If you also remove "cd-inverted" above, this patch should
+> hopefully still work and be fine to apply as well.
 
-Fixes: 4aa5496980e4 ("dt-bindings: cp110: rename cp110 syscon file")
-Signed-off-by: Otto Sabart <ottosabart@seberm.com>
----
- Documentation/devicetree/bindings/gpio/gpio-mvebu.txt | 2 --
- 1 file changed, 2 deletions(-)
+ok. I'm going to send an update
 
-diff --git a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt b/Docume=
-ntation/devicetree/bindings/gpio/gpio-mvebu.txt
-index 38ca2201e8ae..2e097b57f170 100644
---- a/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-+++ b/Documentation/devicetree/bindings/gpio/gpio-mvebu.txt
-@@ -14,8 +14,6 @@ Required properties:
-=20
-     "marvell,armada-8k-gpio" should be used for the Armada 7K and 8K
-     SoCs (either from AP or CP), see
--    Documentation/devicetree/bindings/arm/marvell/cp110-system-controller0=
-=2Etxt
--    and
-     Documentation/devicetree/bindings/arm/marvell/ap806-system-controller.=
-txt
-     for specific details about the offset property.
-=20
---=20
-2.17.2
-
-
---4Ckj6UjgE2iN1+kY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEEb6VOpv2s03VHGoilgjuumfi+HjwFAlw2Rn4ACgkQgjuumfi+
-Hjxfiw/9Fk7Ox0asGlTrDCjLScq8iEd1p1iAgMz26Ut5NKHWaKqBEGajxQIhQnUN
-utxLjTWH8QDcGItpbzvTYcnKrF+mRhcpDvHZ/O8dhac5ZYA7qcA/106aRB/MSogh
-u3/GeVNokIGUtXi8xepJvm9vmYnhdgqOild8hxc9Frr1x26ORpgPBbWurcf7YFZJ
-SET3fv86kPjPWaLakjT67ULGPhhX5RxJv8M4QllsyLJfvBntrxH5ACMovdTciV8A
-PBEWQQ1gMlD4cCnrvviuG/ySZig0JCG2DcYWaZsp8yOw+zYFExavgSHkoxESFC/P
-1UoVldOmp5QKGOMYfrD4SjysZJnaLhsw/kJVGDwTiHtXc5iYd95Jercp47Vmd8TJ
-u2bkmgEIVlCkAiMjZBuYlxr0HI6kISe55V+FqCtco3q8/ZUQCnUOsL3gkFDMtepq
-2fvD9Lw9Crr3lrcnCZVLJYMAZ8oKxNSQCuMCZjMiHeJyE7T1yNJbK80QruG4tKO1
-k504yGakideglEWAXUJaKuevEBGALwxLBZu+EkMFdBHPGLcbALNcfAIhbdniX6lQ
-o6+XZkHxrU4hxnyZtnFJTucPSQ1oLcCqgEF5PtasXnhCmTWF6wGsc0EN4tWWIq0E
-pWvNLfoaHb4CS4PeDSP04GA63D1A6t7FSH+fHmhswgUS2PpoQ1U=
-=/a7b
------END PGP SIGNATURE-----
-
---4Ckj6UjgE2iN1+kY--
+>
+> Yours,
+> Linus Walleij
