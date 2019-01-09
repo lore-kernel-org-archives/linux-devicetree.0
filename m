@@ -1,101 +1,123 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2] cpufreq: qcom: Read voltage LUT and populate OPP
-Date: Wed, 9 Jan 2019 14:24:00 +0530
-Message-ID: <20190109085400.mscuzezwxta4fpfh@vireshk-i7>
-References: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v10 0/9] Add power domain driver for corners on msm8996/sdm845
+Date: Wed,  9 Jan 2019 14:34:11 +0530
+Message-ID: <20190109090420.8100-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, evgreen@google.com
+To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On 09-01-19, 13:37, Taniya Das wrote:
-> @@ -98,6 +107,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
+Changes in v10:
+* Updated level bindings to include opp-level as an
+optional property using operating-points-v2, no new
+compatible for the OPP table
+* Updated the dev_pm_opp_get_level() helper as per
+suggestions from Viresh
 
-You are only using this "dev" parameter for dev_dbg(), instead of that
-pass cpu_dev pointer.
+Changes in v9:
+* Updated qcom-opp bindings to be generic and usable across other SoCs 
+with similar needs (Like MediaTek)
+* Removed the simple_opp_to_performance_state() helper and added a
+dev_pm_opp_of_get_level() helper instead
+* Rebased on 5.0-rc1
 
->  			table[i].frequency = CPUFREQ_ENTRY_INVALID;
->  		} else {
->  			table[i].frequency = freq;
-> +			dev_pm_opp_add(get_cpu_device(policy->cpu),
-> +					freq * 1000, volt);
->  			dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
->  				freq, core_count);
->  		}
-> @@ -116,6 +127,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->  			if (prev_cc != max_cores) {
->  				prev->frequency = prev_freq;
->  				prev->flags = CPUFREQ_BOOST_FREQ;
-> +				dev_pm_opp_add(get_cpu_device(policy->cpu),
-> +						prev_freq * 1000, volt);
->  			}
-> 
->  			break;
-> @@ -127,6 +140,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
-> 
->  	table[i].frequency = CPUFREQ_TABLE_END;
->  	policy->freq_table = table;
-> +	dev_pm_opp_set_sharing_cpus(get_cpu_device(policy->cpu), policy->cpus);
+Changes in v8:
+* Patch 01/10: Bindings updated to mention opp-hz is optional
+* Patch 02/10: Fixed #power-domain-cells
+* All dependencies for 'Patch 10/10' are on their way to 4.21 via the pm tree
 
-and then all the above sites can be simplified a bit.
+Changes in v7:
+* Rebased on Andy's for-next, and used the updated cmd_db_read_aux_data()
+* Other minor fixes, all in 'PATCH 06/10' as suggested by Stephen
 
->  	return 0;
->  }
-> @@ -159,10 +173,18 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  	struct device *dev = &global_pdev->dev;
->  	struct of_phandle_args args;
->  	struct device_node *cpu_np;
-> +	struct device *cpu_dev;
->  	struct resource *res;
->  	void __iomem *base;
->  	int ret, index;
-> 
-> +	cpu_dev = get_cpu_device(policy->cpu);
-> +	if (!cpu_dev) {
-> +		pr_err("%s: failed to get cpu%d device\n", __func__,
-> +		       policy->cpu);
-> +		return -ENODEV;
-> +	}
-> +
->  	cpu_np = of_cpu_device_node_get(policy->cpu);
->  	if (!cpu_np)
->  		return -EINVAL;
-> @@ -205,6 +227,12 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  		goto error;
->  	}
-> 
-> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
-> +	if (ret <= 0) {
-> +		dev_err(cpu_dev, "OPP table is not ready\n");
+Changes in v6:
+* OPP binding updates for qcom,level reviewed by Rob
+* DT bindings for rpmpd and rpmhpd updated to specify the
+OPP tables as child nodes of the power-controller itself
+* Removed some module specific remains from the drivers,
+now that they can only be built-in
+* Added a simple_opp_to_performance_state() helper
 
-Rather say "Failed to add OPPs\n".
+Changes in v5:
+* First 6 patches are unchanged
+* Patch 7/8 adds the DT node for rpmh power-controller on sdm845 and the
+corresponding OPP tables for it to describe the performance states
+* Patch 8/8 adds a parent/child relationship across mx/cx and mx_ao/cx_ao
+as needed on sdm845 platform. This patch is dependent on the series from
+Viresh [1] which adds support to propogate performance states across the
+power domain hierarchy which is still being reviewed
 
-> +		goto error;
-> +	}
-> +
->  	policy->fast_switch_possible = true;
-> 
->  	return 0;
-> @@ -217,6 +245,7 @@ static int qcom_cpufreq_hw_cpu_exit(struct cpufreq_policy *policy)
->  {
->  	void __iomem *base = policy->driver_data - REG_PERF_STATE;
-> 
-> +	dev_pm_opp_remove_all_dynamic(&global_pdev->dev);
+Changes in v4:
+* Included the patch to add qcom-opp bindings (dropped accidentally in v3)
+* merged the patches to add bindings for rpm and rpmh, added consumer binding example
+* Made the drivers built in, removed .remove
+* Added better description in changelog for PATCH 6/6
+* Updated rpmhpd_aggregate_corner() based on Davids feedback
+* rpmhpd_set_performance_state() returns max corner, in cases where its called
+with an INT_MAX
+* Dropped the patch to max vote on all corners at init, the patch did not
+work anyway, and it shouldn't be needed now
 
-This is platform device's device structure, while you added the OPPs
-using cpu_dev. You sure this will work ?
+Changes in v3:
+* Bindings split into seperate patches
+* Bindings updated to remove duplicate OPP table phandles
+* DT headers defining macros for Power domain indexes and OPP levels
+* Optimisations to use rpmh_write_async() whereever applicable
+* Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
+* Fixed the vlvl to hlvl conversions in set_performance
+* Other minor fixes based on review of v2
+* TODO: This series does not handle the case where all VDD_MX votes
+should be higher than VDD_CX from APPs, as pointed out
+by David Collins in v2. This needs support at genpd to propogate performance
+state up the parents, if we model these as Parent/Child to handle the
+interdependency.
 
->  	kfree(policy->freq_table);
->  	devm_iounmap(&global_pdev->dev, base);
-> 
-> --
-> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
-> of the Code Aurora Forum, hosted by the  Linux Foundation.
+Changes in v2:
+* added a power domain driver for sdm845 which supports communicating to RPMh
+* dropped the changes to sdhc driver to move over to using OPP
+as there is active discussion on using OPP as the interface vs
+handling all of it in clock drivers
+* Other minor binding updates based on review of v1
+
+With performance state support for genpd/OPP merged, this is an effort
+to model a power domain driver to communicate corner/level
+values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
+
+[1] https://lkml.org/lkml/2018/11/26/333
+
+Rajendra Nayak (9):
+  dt-bindings: opp: Introduce opp-level bindings
+  OPP: Add support for parsing the 'opp-level' property
+  dt-bindings: power: Add qcom rpm power domain driver bindings
+  soc: qcom: rpmpd: Add a Power domain driver to model corners
+  soc: qcom: rpmpd: Add support for get/set performance state
+  arm64: dts: msm8996: Add rpmpd device node
+  soc: qcom: rpmhpd: Add RPMh power domain driver
+  arm64: dts: sdm845: Add rpmh powercontroller node
+  soc: qcom: rpmhpd: Mark mx as a parent for cx
+
+ Documentation/devicetree/bindings/opp/opp.txt |   5 +
+ .../devicetree/bindings/power/qcom,rpmpd.txt  | 145 +++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
+ drivers/opp/core.c                            |  18 +
+ drivers/opp/of.c                              |   5 +-
+ drivers/opp/opp.h                             |   2 +
+ drivers/soc/qcom/Kconfig                      |  18 +
+ drivers/soc/qcom/Makefile                     |   2 +
+ drivers/soc/qcom/rpmhpd.c                     | 402 ++++++++++++++++++
+ drivers/soc/qcom/rpmpd.c                      | 317 ++++++++++++++
+ include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
+ include/linux/pm_opp.h                        |   7 +
+ 13 files changed, 1044 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+ create mode 100644 drivers/soc/qcom/rpmhpd.c
+ create mode 100644 drivers/soc/qcom/rpmpd.c
+ create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
 
 -- 
-viresh
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
