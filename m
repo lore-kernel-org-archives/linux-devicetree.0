@@ -1,189 +1,56 @@
-From: guoren@kernel.org
-Subject: [PATCH] irqchip/csky: support csky,dh7k SOC intc driver
-Date: Wed,  9 Jan 2019 18:18:26 +0800
-Message-ID: <1547029106-20846-1-git-send-email-guoren@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jason@lakedaemon.net, tglx@linutronix.de, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: h3: Add ethernet0 alias to
+ Beelink X2
+Date: Wed, 9 Jan 2019 11:20:49 +0100
+Message-ID: <20190109102049.npk77pxtxru4tcyb@flea>
+References: <20190108191840.16007-1-jernej.skrabec@siol.net>
+ <20190109101228.alsaaw6s57dbapfe@flea>
+ <CAGb2v64QM9gyPTtpw0C0fpANW5R9DEsWFSDA_tJPYhdgF_FAhQ@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+Mime-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="mkj2k5z2j34krmbx"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBNMW27QQKGQEAFEGWPY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAGb2v64QM9gyPTtpw0C0fpANW5R9DEsWFSDA_tJPYhdgF_FAhQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
 
-C-SKY dh7k SOC use simple APB interrupt controller and most of driver's
-implementation codes could be reused in csky-apb-intc.c. So merge them
-together.
+--mkj2k5z2j34krmbx
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
----
- .../interrupt-controller/csky,apb-intc.txt         |  1 +
- drivers/irqchip/irq-csky-apb-intc.c                | 95 +++++++++++++++++++---
- 2 files changed, 86 insertions(+), 10 deletions(-)
+On Wed, Jan 09, 2019 at 06:13:24PM +0800, Chen-Yu Tsai wrote:
+> On Wed, Jan 9, 2019 at 6:12 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> >
+> > On Tue, Jan 08, 2019 at 08:18:40PM +0100, Jernej Skrabec wrote:
+> > > Because "ethernet0" alias is missing, U-Boot doesn't generate board
+> > > specific MAC address. Effect of this is random MAC address every boot
+> > > and thus new IP address is assigned to the board.
+> > >
+> > > Fix this by adding alias.
+> > >
+> > > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> >
+> > Applied, thanks!
+> > Maxime
+> 
+> Might we add a fixes tag, so the patch gets backported?
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-index 44286dc..63bc9dc 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/csky,apb-intc.txt
-@@ -23,6 +23,7 @@ intc node bindings definition
- 		Definition: must be "csky,apb-intc"
- 				    "csky,dual-apb-intc"
- 				    "csky,gx6605s-intc"
-+				    "csky,dh7k-intc"
- 	- #interrupt-cells
- 		Usage: required
- 		Value type: <u32>
-diff --git a/drivers/irqchip/irq-csky-apb-intc.c b/drivers/irqchip/irq-csky-apb-intc.c
-index 5a2ec43..fcc5444 100644
---- a/drivers/irqchip/irq-csky-apb-intc.c
-+++ b/drivers/irqchip/irq-csky-apb-intc.c
-@@ -12,6 +12,7 @@
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <asm/irq.h>
-+#include <asm/traps.h>
- 
- #define INTC_IRQS		64
- 
-@@ -31,6 +32,17 @@
- #define GX_INTC_NMASK63_32	0x54
- #define GX_INTC_SOURCE		0x60
- 
-+#define DH_INTC_CLR		0x10
-+#define DH_INTC_INIT		0x34
-+#define DH_INTC_NMASK31_00	0x08
-+#define DH_INTC_NMASK63_32	0x68
-+#define DH_INTC_SOURCE31_00	0x14
-+#define DH_INTC_SOURCE63_32	0x6c
-+#define DH_INTC_EDGE31_00	0x00
-+#define DH_INTC_EDGE63_32	0x60
-+#define DH_INTC_POLL31_00	0x04
-+#define DH_INTC_POLL63_32	0x64
-+
- static void __iomem *reg_base;
- static struct irq_domain *root_domain;
- 
-@@ -58,15 +70,21 @@ static void irq_ck_mask_set_bit(struct irq_data *d)
- }
- 
- static void __init ck_set_gc(struct device_node *node, void __iomem *reg_base,
--			     u32 mask_reg, u32 irq_base)
-+				u32 en_off, u32 mask_off, u32 irq_base)
- {
- 	struct irq_chip_generic *gc;
- 
- 	gc = irq_get_domain_generic_chip(root_domain, irq_base);
- 	gc->reg_base = reg_base;
--	gc->chip_types[0].regs.mask = mask_reg;
--	gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
--	gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
-+	if (en_off) {
-+		gc->chip_types[0].regs.mask = en_off;
-+		gc->chip_types[0].chip.irq_mask = irq_gc_mask_clr_bit;
-+		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_set_bit;
-+	} else if (mask_off) {
-+		gc->chip_types[0].regs.mask = mask_off;
-+		gc->chip_types[0].chip.irq_mask = irq_gc_mask_set_bit;
-+		gc->chip_types[0].chip.irq_unmask = irq_gc_mask_clr_bit;
-+	}
- 
- 	if (of_find_property(node, "csky,support-pulse-signal", NULL))
- 		gc->chip_types[0].chip.irq_unmask = irq_ck_mask_set_bit;
-@@ -183,8 +201,8 @@ gx_intc_init(struct device_node *node, struct device_node *parent)
- 
- 	setup_irq_channel(0x03020100, reg_base + GX_INTC_SOURCE);
- 
--	ck_set_gc(node, reg_base, GX_INTC_NEN31_00, 0);
--	ck_set_gc(node, reg_base, GX_INTC_NEN63_32, 32);
-+	ck_set_gc(node, reg_base, GX_INTC_NEN31_00, 0, 0);
-+	ck_set_gc(node, reg_base, GX_INTC_NEN63_32, 0, 32);
- 
- 	set_handle_irq(gx_irq_handler);
- 
-@@ -192,6 +210,63 @@ gx_intc_init(struct device_node *node, struct device_node *parent)
- }
- IRQCHIP_DECLARE(csky_gx6605s_intc, "csky,gx6605s-intc", gx_intc_init);
- 
-+static void dh_irq_handler(struct pt_regs *regs)
-+{
-+	u32 tmp;
-+	unsigned long vector = (mfcr("psr") >> 16) & 0xff;
-+
-+	tmp = readl(reg_base + DH_INTC_CLR);
-+	tmp |= BIT(2);
-+	writel(tmp, reg_base + DH_INTC_CLR);
-+
-+	handle_domain_irq(root_domain, vector - 32, regs);
-+}
-+
-+extern void csky_irq(void);
-+
-+static int __init
-+dh_intc_init(struct device_node *node, struct device_node *parent)
-+{
-+	int ret, i;
-+
-+	ret = ck_intc_init_comm(node, parent);
-+	if (ret)
-+		return ret;
-+
-+	/* set default mode */
-+	writel(0xffffffff, reg_base + DH_INTC_EDGE31_00);
-+	writel(0xffffffff, reg_base + DH_INTC_EDGE63_32);
-+	writel(0xffffffff, reg_base + DH_INTC_POLL31_00);
-+	writel(0xffffffff, reg_base + DH_INTC_POLL63_32);
-+
-+	writel(BIT(1) | BIT(6), reg_base + DH_INTC_INIT);
-+
-+	/* Setup  0-31 channel slots */
-+	for (i = 0; i < INTC_IRQS/2; i += 4)
-+		writel(build_channel_val(i, 0x03020100) + 0x40404040,
-+				reg_base + DH_INTC_SOURCE31_00 + i);
-+
-+	/* Setup 32-63 channel slots */
-+	for (i = 0; i < INTC_IRQS/2; i += 4)
-+		writel(build_channel_val(i, 0x03020100) + 0x40404040,
-+				reg_base + DH_INTC_SOURCE63_32 + i);
-+
-+	/* mask all interrrupts */
-+	writel(0xffffffff, reg_base + DH_INTC_NMASK31_00);
-+	writel(0xffffffff, reg_base + DH_INTC_NMASK63_32);
-+
-+	ck_set_gc(node, reg_base, 0, DH_INTC_NMASK31_00, 0);
-+	ck_set_gc(node, reg_base, 0, DH_INTC_NMASK63_32, 32);
-+
-+	for (i = 32; i < 128; i++)
-+		VEC_INIT(i, csky_irq);
-+
-+	set_handle_irq(dh_irq_handler);
-+
-+	return 0;
-+}
-+IRQCHIP_DECLARE(csky_dh7k_intc, "csky,dh7k-intc", dh_intc_init);
-+
- /*
-  * C-SKY simple 64 irqs interrupt controller, dual-together could support 128
-  * irqs.
-@@ -243,8 +318,8 @@ ck_intc_init(struct device_node *node, struct device_node *parent)
- 	/* Enable irq intc */
- 	writel(BIT(31), reg_base + CK_INTC_ICR);
- 
--	ck_set_gc(node, reg_base, CK_INTC_NEN31_00, 0);
--	ck_set_gc(node, reg_base, CK_INTC_NEN63_32, 32);
-+	ck_set_gc(node, reg_base, CK_INTC_NEN31_00, 0, 0);
-+	ck_set_gc(node, reg_base, CK_INTC_NEN63_32, 0, 32);
- 
- 	setup_irq_channel(0x00010203, reg_base + CK_INTC_SOURCE);
- 
-@@ -270,8 +345,8 @@ ck_dual_intc_init(struct device_node *node, struct device_node *parent)
- 	writel(0, reg_base + CK_INTC_NEN31_00 + CK_INTC_DUAL_BASE);
- 	writel(0, reg_base + CK_INTC_NEN63_32 + CK_INTC_DUAL_BASE);
- 
--	ck_set_gc(node, reg_base + CK_INTC_DUAL_BASE, CK_INTC_NEN31_00, 64);
--	ck_set_gc(node, reg_base + CK_INTC_DUAL_BASE, CK_INTC_NEN63_32, 96);
-+	ck_set_gc(node, reg_base + CK_INTC_DUAL_BASE, CK_INTC_NEN31_00, 0, 64);
-+	ck_set_gc(node, reg_base + CK_INTC_DUAL_BASE, CK_INTC_NEN63_32, 0, 96);
- 
- 	setup_irq_channel(0x00010203,
- 			  reg_base + CK_INTC_SOURCE + CK_INTC_DUAL_BASE);
+It's done, thanks for the suggestion!
+Maxime
+
 -- 
-2.7.4
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--mkj2k5z2j34krmbx--
