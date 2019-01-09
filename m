@@ -1,89 +1,150 @@
-From: Andy Shevchenko <andy.shevchenko@gmail.com>
-Subject: Re: [PATCH v4 06/15] Platform: OLPC: Move EC-specific functionality
- out from x86
-Date: Wed, 9 Jan 2019 13:23:12 +0200
-Message-ID: <CAHp75Vf7ctTmncjOfMKL7MDAi=4rr2huBmZ7RsAnPKyJv7HTQQ@mail.gmail.com>
-References: <20190108175818.705110-1-lkundrak@v3.sk> <20190108175818.705110-7-lkundrak@v3.sk>
+From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Subject: Re: [PATCH v5 7/8] ARM: dts: Add stmpe-adc DT node to Toradex iMX6
+ modules
+Date: Wed, 9 Jan 2019 11:47:58 +0000
+Message-ID: <80de6dff82363982d1e6ab6d99e9304986466d7d.camel@toradex.com>
+References: <20181221134638.20600-1-dev@pschenker.ch>
+ <20181221134638.20600-8-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108175818.705110-7-lkundrak@v3.sk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Platform Driver <platform-driver-x86@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, James Cameron <quozl@laptop.org>, Mark Rutland <mark.rutland@arm.com>, Pavel Machek <pavel@ucw.cz>, Rob Herring <robh+dt@kernel.org>, Sebastian Reichel <sre@kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181221134638.20600-8-dev@pschenker.ch>
+Content-Language: en-US
+Content-ID: <2E166BF52D44B44EAA4D7FA738A39986@eurprd05.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "stefan@agner.ch" <stefan@agner.ch>, "dev@pschenker.ch" <dev@pschenker.ch>, "jic23@kernel.org" <jic23@kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Philippe Schenker <philippe.schenker@toradex.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "digetx@gmail.com" <digetx@gmail.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "coquelin.stm32@gmail.com" <coquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 8, 2019 at 7:59 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> Move the olpc-ec driver away from the X86 OLPC platform so that it could be
-> used by the ARM based laptops too. Notably, the driver for the OLPC battery,
-> which is also used on the ARM models, builds on this driver's interface.
->
-> It is actually plaform independent: the OLPC EC commands with their argument
-> and responses are mostly the same despite the delivery mechanism is
-> different.
->
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
+On Fri, 2018-12-21 at 14:46 +0100, Philippe Schenker wrote:
+> From: Philippe Schenker <philippe.schenker@toradex.com>
+> 
+> Add the stmpe-adc DT node as found on Toradex iMX6 modules
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
->  #define OLPC_F_PRESENT         0x01
->  #define OLPC_F_DCON            0x02
-> -#define OLPC_F_EC_WIDE_SCI     0x04
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
 
-Still same concern, i.e. if the initially added definitions are
-coupled together by some reason, why we split them?
-As I told either move all, or none or put in commit message how
-decoupling would benefit.
-
-> +       /* EC version 0x5f adds support for wide SCI mask */
-> +       if (ec->version >= 0x5f) {
-> +               __be16 ec_word = cpu_to_be16(bits);
+> ---
+> 
+> Changes in v5: None
+> Changes in v4:
+>  - Moved T30 devicetree settings to separate commit
+> 
+> Changes in v3:
+>  - None
+> 
+> Changes in v2:
+>  - Put common ADC settings in mfd
+> 
+>  arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 22 ++++++++++++++--------
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 23 +++++++++++++++--------
+>  2 files changed, 29 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> index 3dc99dd8dde1..8db476d8978d 100644
+> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> @@ -331,11 +331,18 @@
+>  		id = <0>;
+>  		blocks = <0x5>;
+>  		irq-trigger = <0x1>;
+> +		/* 3.25 MHz ADC clock speed */
+> +		st,adc-freq = <1>;
+> +		/* 12-bit ADC */
+> +		st,mod-12b = <1>;
+> +		/* internal ADC reference */
+> +		st,ref-sel = <0>;
+> +		/* ADC converstion time: 80 clocks */
+> +		st,sample-time = <4>;
+> +		/* forbid to use ADC channels 3-0 (touch) */
+>  
+>  		stmpe_touchscreen {
+>  			compatible = "st,stmpe-ts";
+> -			/* 3.25 MHz ADC clock speed */
+> -			st,adc-freq = <1>;
+>  			/* 8 sample average control */
+>  			st,ave-ctrl = <3>;
+>  			/* 7 length fractional part in z */
+> @@ -345,17 +352,16 @@
+>  			 * current limit value
+>  			 */
+>  			st,i-drive = <1>;
+> -			/* 12-bit ADC */
+> -			st,mod-12b = <1>;
+> -			/* internal ADC reference */
+> -			st,ref-sel = <0>;
+> -			/* ADC converstion time: 80 clocks */
+> -			st,sample-time = <4>;
+>  			/* 1 ms panel driver settling time */
+>  			st,settling = <3>;
+>  			/* 5 ms touch detect interrupt delay */
+>  			st,touch-det-delay = <5>;
+>  		};
 > +
-> +               return olpc_ec_cmd(EC_WRITE_EXT_SCI_MASK, (void *) &ec_word, 2, NULL, 0);
-
-No space is needed in "(void *)&ec_word".
-
-> +       } else {
-
-> +               unsigned char ec_byte = bits & 0xff;
-
-Shouldn't be u8?
-
-> +               return olpc_ec_cmd(EC_WRITE_SCI_MASK, &ec_byte, 1, NULL, 0);
-> +       }
-> +}
-> +EXPORT_SYMBOL_GPL(olpc_ec_mask_write);
-
-> +int olpc_ec_sci_query(u16 *sci_value)
-> +{
-> +       struct olpc_ec_priv *ec = ec_priv;
-> +       int ret;
+> +		stmpe_adc {
+> +			compatible = "st,stmpe-adc";
+> +			st,norequest-mask = <0x0F>;
+> +		};
+>  	};
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 87e15e7cb32b..2e303d79c7f8 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -262,11 +262,18 @@
+>  		id = <0>;
+>  		blocks = <0x5>;
+>  		irq-trigger = <0x1>;
+> +		/* 3.25 MHz ADC clock speed */
+> +		st,adc-freq = <1>;
+> +		/* 12-bit ADC */
+> +		st,mod-12b = <1>;
+> +		/* internal ADC reference */
+> +		st,ref-sel = <0>;
+> +		/* ADC converstion time: 80 clocks */
+> +		st,sample-time = <4>;
+> +		/* forbid to use ADC channels 3-0 (touch) */
+>  
+>  		stmpe_touchscreen {
+>  			compatible = "st,stmpe-ts";
+> -			/* 3.25 MHz ADC clock speed */
+> -			st,adc-freq = <1>;
+>  			/* 8 sample average control */
+>  			st,ave-ctrl = <3>;
+>  			/* 7 length fractional part in z */
+> @@ -276,17 +283,17 @@
+>  			 * current limit value
+>  			 */
+>  			st,i-drive = <1>;
+> -			/* 12-bit ADC */
+> -			st,mod-12b = <1>;
+> -			/* internal ADC reference */
+> -			st,ref-sel = <0>;
+> -			/* ADC converstion time: 80 clocks */
+> -			st,sample-time = <4>;
+>  			/* 1 ms panel driver settling time */
+>  			st,settling = <3>;
+>  			/* 5 ms touch detect interrupt delay */
+>  			st,touch-det-delay = <5>;
+>  		};
 > +
-> +       if (WARN_ON(!ec))
-> +               return -ENODEV;
-> +
-> +       /* EC version 0x5f adds support for wide SCI mask */
-> +       if (ec->version >= 0x5f) {
-> +               __be16 ec_word;
-> +
-> +               ret = olpc_ec_cmd(EC_EXT_SCI_QUERY, NULL, 0, (void *)&ec_word, 2);
-> +               if (ret == 0)
-> +                       *sci_value = be16_to_cpu(ec_word);
-> +       } else {
-> +               unsigned char ec_byte;
-
-u8?
-
-> +
-> +               ret = olpc_ec_cmd(EC_SCI_QUERY, NULL, 0, &ec_byte, 1);
-> +               if (ret == 0)
-> +                       *sci_value = ec_byte;
-> +       }
-> +
-> +       return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(olpc_ec_sci_query);
-
--- 
-With Best Regards,
-Andy Shevchenko
+> +		stmpe_adc {
+> +			compatible = "st,stmpe-adc";
+> +			/* 3.25 MHz ADC clock speed */
+> +			st,norequest-mask = <0x0F>;
+> +		};
+>  	};
+>  };
