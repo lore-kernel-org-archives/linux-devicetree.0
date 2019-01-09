@@ -1,53 +1,40 @@
 From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v2] arm64: dts: meson: Fix mmc cd-gpio polarity
-Date: Wed, 9 Jan 2019 23:14:57 +0100
-Message-ID: <CAFBinCBf+yJu4z1JYNdH7B4h07-U_0ckysV_=nC65nd5ByOCvA@mail.gmail.com>
-References: <1547042198-17601-1-git-send-email-lollivier@baylibre.com> <CACRpkdbhVB7-Y9EBhBC6GAxqFt8zujS2QJ4CzGDJnDMDjj2Ptg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson: add g12a x96 max board
+Date: Wed, 9 Jan 2019 23:22:21 +0100
+Message-ID: <CAFBinCD64ttcjq-aM_PJ4eAQcVmWk2+ptHUKznniPzALgKSOEA@mail.gmail.com>
+References: <20181219002620.12138-1-khilman@baylibre.com>
+ <20181219002620.12138-2-khilman@baylibre.com>
+ <CAFBinCCbPbSQZeF1mzfBfLt+cJ0P=ajHznZM2prn600NO7G3sA@mail.gmail.com>
+ <CAFBinCB393w2cBacB6c_79Xt22suWWfx5omEKmzBJx02vb3fKw@mail.gmail.com>
+ <CACdvmAg3=GmcLOKJ33K6aGks7DRnityd4KiU30qwCb-YWz_EPA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACRpkdbhVB7-Y9EBhBC6GAxqFt8zujS2QJ4CzGDJnDMDjj2Ptg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>, Loys Ollivier <lollivier@baylibre.com>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, "open list:ARM/Amlogic Meson..." <linux-amlogic@lists.infradead.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACdvmAg3=GmcLOKJ33K6aGks7DRnityd4KiU30qwCb-YWz_EPA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Da Xue <da@lessconfused.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On Wed, Jan 9, 2019 at 7:31 PM Linus Walleij <linus.walleij@linaro.org> wrote:
+On Wed, Jan 9, 2019 at 1:11 AM Da Xue <da@lessconfused.com> wrote:
 >
-> Hi Ollivier!
->
-> On Wed, Jan 9, 2019 at 2:56 PM Loys Ollivier <lollivier@baylibre.com> wrote:
->
-> > Commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> > changed the behavior of "cd-inverted" to follow the device tree bindings
-> > specification.
-> > Lines specifying "cd-inverted" are now "acitve high".
-there's a typo in the description - it should be "active"
+> I would be careful about adding TV boxes from unknown manufacturers in China. The manufacturer can and will change part numbers willy nilly and cause a ton of confusion. They are assembled with the cheapest part at the time so the DDR, WiFi module, eMMC, and even PCB will change without warning.
+this is why I sent an update with the actual hardware which was
+available for testing at the time this patch written / tested.
 
-> >
-> > Fix the SD card for meson by setting the cd-gpio as "active low" according
-> > to the boards specifications.
-> >
-> > Fixes: 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> > Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> >
-> > v2: fix more occurences, also in other meson boards.
->
-> This is a good change in itself since it gets rid of some occasions
-> of the dreaded "cd-inverted" property. I think Martin Blumenstingl
-> already sent patches like these though (I might be confused).
-I sent patches for the 32-bit Amlogic SoCs
-my TODO-list is now a bit longer, I'll test this series on my Khadas
-VIM, VIM2 and Libretech CC during the weekend
-
-> But we should keep the old device trees working as well.
-> Can you test if Martins patch:
-> https://marc.info/?l=linux-mmc&m=154637189021211&w=2
->
-> Also makes your boards work?
-feedback on that patch is appreciated
+do you have any suggestion how to add support for this device while
+being prepare for future changes?
 
 
 Regards
