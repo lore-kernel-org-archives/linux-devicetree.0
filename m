@@ -1,150 +1,82 @@
 From: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-Subject: Re: [PATCH v5 7/8] ARM: dts: Add stmpe-adc DT node to Toradex iMX6
+Subject: Re: [PATCH v5 8/8] ARM: dts: Add stmpe-adc DT node to Toradex T30
  modules
-Date: Wed, 9 Jan 2019 11:47:58 +0000
-Message-ID: <80de6dff82363982d1e6ab6d99e9304986466d7d.camel@toradex.com>
+Date: Wed, 9 Jan 2019 11:51:37 +0000
+Message-ID: <fb969b4fb6ece5b9674ee47c35534c075e389620.camel@toradex.com>
 References: <20181221134638.20600-1-dev@pschenker.ch>
- <20181221134638.20600-8-dev@pschenker.ch>
+         <20181221134638.20600-9-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181221134638.20600-8-dev@pschenker.ch>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20181221134638.20600-9-dev@pschenker.ch>
 Content-Language: en-US
-Content-ID: <2E166BF52D44B44EAA4D7FA738A39986@eurprd05.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-ID: <7F833CA3C044474481205527C129A88A@eurprd05.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: "stefan@agner.ch" <stefan@agner.ch>, "dev@pschenker.ch" <dev@pschenker.ch>, "jic23@kernel.org" <jic23@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Philippe Schenker <philippe.schenker@toradex.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "linux-imx@nxp.com" <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "digetx@gmail.com" <digetx@gmail.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "coquelin.stm32@gmail.com" <coquelin.stm32@gmail.com>, linux-arm-kernel@lists.infradead.org
+Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "jonathanh@nvidia.com" <jonathanh@nvidia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "digetx@gmail.com" <digetx@gmail.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, "coquelin.stm32@gmail.com" <coquelin.stm32@gmail.com>, Philippe Schenker <philippe.schenker@toradex.com>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "alexandre.torgue@st.com" <alexandre.torgue@st.com>, "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2018-12-21 at 14:46 +0100, Philippe Schenker wrote:
-> From: Philippe Schenker <philippe.schenker@toradex.com>
-> 
-> Add the stmpe-adc DT node as found on Toradex iMX6 modules
-> 
-> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
-
-Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
-
-> ---
-> 
-> Changes in v5: None
-> Changes in v4:
->  - Moved T30 devicetree settings to separate commit
-> 
-> Changes in v3:
->  - None
-> 
-> Changes in v2:
->  - Put common ADC settings in mfd
-> 
->  arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 22 ++++++++++++++--------
->  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 23 +++++++++++++++--------
->  2 files changed, 29 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> index 3dc99dd8dde1..8db476d8978d 100644
-> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
-> @@ -331,11 +331,18 @@
->  		id = <0>;
->  		blocks = <0x5>;
->  		irq-trigger = <0x1>;
-> +		/* 3.25 MHz ADC clock speed */
-> +		st,adc-freq = <1>;
-> +		/* 12-bit ADC */
-> +		st,mod-12b = <1>;
-> +		/* internal ADC reference */
-> +		st,ref-sel = <0>;
-> +		/* ADC converstion time: 80 clocks */
-> +		st,sample-time = <4>;
-> +		/* forbid to use ADC channels 3-0 (touch) */
->  
->  		stmpe_touchscreen {
->  			compatible = "st,stmpe-ts";
-> -			/* 3.25 MHz ADC clock speed */
-> -			st,adc-freq = <1>;
->  			/* 8 sample average control */
->  			st,ave-ctrl = <3>;
->  			/* 7 length fractional part in z */
-> @@ -345,17 +352,16 @@
->  			 * current limit value
->  			 */
->  			st,i-drive = <1>;
-> -			/* 12-bit ADC */
-> -			st,mod-12b = <1>;
-> -			/* internal ADC reference */
-> -			st,ref-sel = <0>;
-> -			/* ADC converstion time: 80 clocks */
-> -			st,sample-time = <4>;
->  			/* 1 ms panel driver settling time */
->  			st,settling = <3>;
->  			/* 5 ms touch detect interrupt delay */
->  			st,touch-det-delay = <5>;
->  		};
-> +
-> +		stmpe_adc {
-> +			compatible = "st,stmpe-adc";
-> +			st,norequest-mask = <0x0F>;
-> +		};
->  	};
->  };
->  
-> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> index 87e15e7cb32b..2e303d79c7f8 100644
-> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
-> @@ -262,11 +262,18 @@
->  		id = <0>;
->  		blocks = <0x5>;
->  		irq-trigger = <0x1>;
-> +		/* 3.25 MHz ADC clock speed */
-> +		st,adc-freq = <1>;
-> +		/* 12-bit ADC */
-> +		st,mod-12b = <1>;
-> +		/* internal ADC reference */
-> +		st,ref-sel = <0>;
-> +		/* ADC converstion time: 80 clocks */
-> +		st,sample-time = <4>;
-> +		/* forbid to use ADC channels 3-0 (touch) */
->  
->  		stmpe_touchscreen {
->  			compatible = "st,stmpe-ts";
-> -			/* 3.25 MHz ADC clock speed */
-> -			st,adc-freq = <1>;
->  			/* 8 sample average control */
->  			st,ave-ctrl = <3>;
->  			/* 7 length fractional part in z */
-> @@ -276,17 +283,17 @@
->  			 * current limit value
->  			 */
->  			st,i-drive = <1>;
-> -			/* 12-bit ADC */
-> -			st,mod-12b = <1>;
-> -			/* internal ADC reference */
-> -			st,ref-sel = <0>;
-> -			/* ADC converstion time: 80 clocks */
-> -			st,sample-time = <4>;
->  			/* 1 ms panel driver settling time */
->  			st,settling = <3>;
->  			/* 5 ms touch detect interrupt delay */
->  			st,touch-det-delay = <5>;
->  		};
-> +
-> +		stmpe_adc {
-> +			compatible = "st,stmpe-adc";
-> +			/* 3.25 MHz ADC clock speed */
-> +			st,norequest-mask = <0x0F>;
-> +		};
->  	};
->  };
+T24gRnJpLCAyMDE4LTEyLTIxIGF0IDE0OjQ2ICswMTAwLCBQaGlsaXBwZSBTY2hlbmtlciB3cm90
+ZToNCj4gRnJvbTogUGhpbGlwcGUgU2NoZW5rZXIgPHBoaWxpcHBlLnNjaGVua2VyQHRvcmFkZXgu
+Y29tPg0KPiANCj4gQWRkIHRoZSBzdG1wZS1hZGMgRFQgbm9kZSBhcyBmb3VuZCBvbiBUb3JhZGV4
+IFQzMCBtb2R1bGVzDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBQaGlsaXBwZSBTY2hlbmtlciA8cGhp
+bGlwcGUuc2NoZW5rZXJAdG9yYWRleC5jb20+DQoNCkFja2VkLWJ5OiBNYXJjZWwgWmlzd2lsZXIg
+PG1hcmNlbC56aXN3aWxlckB0b3JhZGV4LmNvbT4NCg0KPiAtLS0NCj4gDQo+IENoYW5nZXMgaW4g
+djU6IE5vbmUNCj4gQ2hhbmdlcyBpbiB2NDoNCj4gIC0gTmV3IHNlcGFyYXRlIGNvbW1pdCB0byBo
+b2xkIFQzMCBkZXZpY2V0cmVlIGNoYW5nZXMNCj4gDQo+IENoYW5nZXMgaW4gdjM6IE5vbmUNCj4g
+Q2hhbmdlcyBpbiB2MjogTm9uZQ0KPiANCj4gIGFyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBh
+bGlzLmR0c2kgIHwgMjIgKysrKysrKysrKysrKystLS0tLS0tLQ0KPiAgYXJjaC9hcm0vYm9vdC9k
+dHMvdGVncmEzMC1jb2xpYnJpLmR0c2kgfCAyMiArKysrKysrKysrKysrKy0tLS0tLS0tDQo+ICAy
+IGZpbGVzIGNoYW5nZWQsIDI4IGluc2VydGlvbnMoKyksIDE2IGRlbGV0aW9ucygtKQ0KPiANCj4g
+ZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBhbGlzLmR0c2kNCj4gYi9h
+cmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWFwYWxpcy5kdHNpDQo+IGluZGV4IDdmMTEyZjE5MmZl
+OS4uODUwYjBkMTM1NDlhIDEwMDY0NA0KPiAtLS0gYS9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMw
+LWFwYWxpcy5kdHNpDQo+ICsrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtYXBhbGlzLmR0
+c2kNCj4gQEAgLTk3NiwxMSArOTc2LDE4IEBADQo+ICAJCQlpZCA9IDwwPjsNCj4gIAkJCWJsb2Nr
+cyA9IDwweDU+Ow0KPiAgCQkJaXJxLXRyaWdnZXIgPSA8MHgxPjsNCj4gKwkJCS8qIDMuMjUgTUh6
+IEFEQyBjbG9jayBzcGVlZCAqLw0KPiArCQkJc3QsYWRjLWZyZXEgPSA8MT47DQo+ICsJCQkvKiAx
+Mi1iaXQgQURDICovDQo+ICsJCQlzdCxtb2QtMTJiID0gPDE+Ow0KPiArCQkJLyogaW50ZXJuYWwg
+QURDIHJlZmVyZW5jZSAqLw0KPiArCQkJc3QscmVmLXNlbCA9IDwwPjsNCj4gKwkJCS8qIEFEQyBj
+b252ZXJzdGlvbiB0aW1lOiA4MCBjbG9ja3MgKi8NCj4gKwkJCXN0LHNhbXBsZS10aW1lID0gPDQ+
+Ow0KPiArCQkJLyogZm9yYmlkIHRvIHVzZSBBREMgY2hhbm5lbHMgMy0wICh0b3VjaCkgKi8NCj4g
+IA0KPiAgCQkJc3RtcGVfdG91Y2hzY3JlZW4gew0KPiAgCQkJCWNvbXBhdGlibGUgPSAic3Qsc3Rt
+cGUtdHMiOw0KPiAtCQkJCS8qIDMuMjUgTUh6IEFEQyBjbG9jayBzcGVlZCAqLw0KPiAtCQkJCXN0
+LGFkYy1mcmVxID0gPDE+Ow0KPiAgCQkJCS8qIDggc2FtcGxlIGF2ZXJhZ2UgY29udHJvbCAqLw0K
+PiAgCQkJCXN0LGF2ZS1jdHJsID0gPDM+Ow0KPiAgCQkJCS8qIDcgbGVuZ3RoIGZyYWN0aW9uYWwg
+cGFydCBpbiB6ICovDQo+IEBAIC05OTAsMTcgKzk5NywxNiBAQA0KPiAgCQkJCSAqIGN1cnJlbnQg
+bGltaXQgdmFsdWUNCj4gIAkJCQkgKi8NCj4gIAkJCQlzdCxpLWRyaXZlID0gPDE+Ow0KPiAtCQkJ
+CS8qIDEyLWJpdCBBREMgKi8NCj4gLQkJCQlzdCxtb2QtMTJiID0gPDE+Ow0KPiAtCQkJCS8qIGlu
+dGVybmFsIEFEQyByZWZlcmVuY2UgKi8NCj4gLQkJCQlzdCxyZWYtc2VsID0gPDA+Ow0KPiAtCQkJ
+CS8qIEFEQyBjb252ZXJzdGlvbiB0aW1lOiA4MCBjbG9ja3MgKi8NCj4gLQkJCQlzdCxzYW1wbGUt
+dGltZSA9IDw0PjsNCj4gIAkJCQkvKiAxIG1zIHBhbmVsIGRyaXZlciBzZXR0bGluZyB0aW1lICov
+DQo+ICAJCQkJc3Qsc2V0dGxpbmcgPSA8Mz47DQo+ICAJCQkJLyogNSBtcyB0b3VjaCBkZXRlY3Qg
+aW50ZXJydXB0IGRlbGF5ICovDQo+ICAJCQkJc3QsdG91Y2gtZGV0LWRlbGF5ID0gPDU+Ow0KPiAg
+CQkJfTsNCj4gKw0KPiArCQkJc3RtcGVfYWRjIHsNCj4gKwkJCQljb21wYXRpYmxlID0gInN0LHN0
+bXBlLWFkYyI7DQo+ICsJCQkJc3Qsbm9yZXF1ZXN0LW1hc2sgPSA8MHgwRj47DQo+ICsJCQl9Ow0K
+PiAgCQl9Ow0KPiAgDQo+ICAJCS8qDQo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy90
+ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiBiL2FyY2gvYXJtL2Jvb3QvZHRzL3RlZ3JhMzAtY29saWJy
+aS5kdHNpDQo+IGluZGV4IDM1YWYwM2NhOWU5MC4uMWY5MTk4YmIyNGZmIDEwMDY0NA0KPiAtLS0g
+YS9hcmNoL2FybS9ib290L2R0cy90ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiArKysgYi9hcmNoL2Fy
+bS9ib290L2R0cy90ZWdyYTMwLWNvbGlicmkuZHRzaQ0KPiBAQCAtODQ1LDExICs4NDUsMTggQEAN
+Cj4gIAkJCWlkID0gPDA+Ow0KPiAgCQkJYmxvY2tzID0gPDB4NT47DQo+ICAJCQlpcnEtdHJpZ2dl
+ciA9IDwweDE+Ow0KPiArCQkJLyogMy4yNSBNSHogQURDIGNsb2NrIHNwZWVkICovDQo+ICsJCQlz
+dCxhZGMtZnJlcSA9IDwxPjsNCj4gKwkJCS8qIDEyLWJpdCBBREMgKi8NCj4gKwkJCXN0LG1vZC0x
+MmIgPSA8MT47DQo+ICsJCQkvKiBpbnRlcm5hbCBBREMgcmVmZXJlbmNlICovDQo+ICsJCQlzdCxy
+ZWYtc2VsID0gPDA+Ow0KPiArCQkJLyogQURDIGNvbnZlcnN0aW9uIHRpbWU6IDgwIGNsb2NrcyAq
+Lw0KPiArCQkJc3Qsc2FtcGxlLXRpbWUgPSA8ND47DQo+ICsJCQkvKiBmb3JiaWQgdG8gdXNlIEFE
+QyBjaGFubmVscyAzLTAgKHRvdWNoKSAqLw0KPiAgDQo+ICAJCQlzdG1wZV90b3VjaHNjcmVlbiB7
+DQo+ICAJCQkJY29tcGF0aWJsZSA9ICJzdCxzdG1wZS10cyI7DQo+IC0JCQkJLyogMy4yNSBNSHog
+QURDIGNsb2NrIHNwZWVkICovDQo+IC0JCQkJc3QsYWRjLWZyZXEgPSA8MT47DQo+ICAJCQkJLyog
+OCBzYW1wbGUgYXZlcmFnZSBjb250cm9sICovDQo+ICAJCQkJc3QsYXZlLWN0cmwgPSA8Mz47DQo+
+ICAJCQkJLyogNyBsZW5ndGggZnJhY3Rpb25hbCBwYXJ0IGluIHogKi8NCj4gQEAgLTg1OSwxNyAr
+ODY2LDE2IEBADQo+ICAJCQkJICogY3VycmVudCBsaW1pdCB2YWx1ZQ0KPiAgCQkJCSAqLw0KPiAg
+CQkJCXN0LGktZHJpdmUgPSA8MT47DQo+IC0JCQkJLyogMTItYml0IEFEQyAqLw0KPiAtCQkJCXN0
+LG1vZC0xMmIgPSA8MT47DQo+IC0JCQkJLyogaW50ZXJuYWwgQURDIHJlZmVyZW5jZSAqLw0KPiAt
+CQkJCXN0LHJlZi1zZWwgPSA8MD47DQo+IC0JCQkJLyogQURDIGNvbnZlcnN0aW9uIHRpbWU6IDgw
+IGNsb2NrcyAqLw0KPiAtCQkJCXN0LHNhbXBsZS10aW1lID0gPDQ+Ow0KPiAgCQkJCS8qIDEgbXMg
+cGFuZWwgZHJpdmVyIHNldHRsaW5nIHRpbWUgKi8NCj4gIAkJCQlzdCxzZXR0bGluZyA9IDwzPjsN
+Cj4gIAkJCQkvKiA1IG1zIHRvdWNoIGRldGVjdCBpbnRlcnJ1cHQgZGVsYXkgKi8NCj4gIAkJCQlz
+dCx0b3VjaC1kZXQtZGVsYXkgPSA8NT47DQo+ICAJCQl9Ow0KPiArDQo+ICsJCQlzdG1wZV9hZGMg
+ew0KPiArCQkJCWNvbXBhdGlibGUgPSAic3Qsc3RtcGUtYWRjIjsNCj4gKwkJCQlzdCxub3JlcXVl
+c3QtbWFzayA9IDwweDBGPjsNCj4gKwkJCX07DQo+ICAJCX07DQo+ICANCj4gIAkJLyoNCg==
