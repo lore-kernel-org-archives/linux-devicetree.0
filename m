@@ -1,50 +1,57 @@
-Return-Path: <SRS0=YwbL=PS=nxp.com=ping.bai@kernel.org>
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: RE: [PATCH 2/3] dt-bindings: imx: Add clock binding doc for imx8mm
-Date: Thu, 10 Jan 2019 01:59:07 +0000
-Message-ID: 
- <VI1PR0402MB351916006483034F8146FEDE87840@VI1PR0402MB3519.eurprd04.prod.outlook.com>
-References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com>
- <1546938317-23203-2-git-send-email-ping.bai@nxp.com>
- <154706619539.15366.15074052691710369448@swboyd.mtv.corp.google.com>
-In-Reply-To: 
- <154706619539.15366.15074052691710369448@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+Return-Path: <sboyd@kernel.org>
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-To: Stephen Boyd <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Content-Transfer-Encoding: quoted-printable
+Subject: Re: [PATCH 2/3] dt-bindings: imx: Add clock binding doc for imx8mm
+In-Reply-To: <1546938317-23203-2-git-send-email-ping.bai@nxp.com>
+From: Stephen Boyd <sboyd@kernel.org>
+References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com> <1546938317-23203-2-git-send-email-ping.bai@nxp.com>
+Message-ID: <154706619539.15366.15074052691710369448@swboyd.mtv.corp.google.com>
+Date: Wed, 09 Jan 2019 12:36:35 -0800
+To: "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Jacky Bai <ping.bai@nxp.com>
 Cc: Fabio Estevam <fabio.estevam@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-PiBTdWJqZWN0OiBSZTogW1BBVENIIDIvM10gZHQtYmluZGluZ3M6IGlteDogQWRkIGNsb2NrIGJp
-bmRpbmcgZG9jIGZvciBpbXg4bW0NCj4gDQo+IFF1b3RpbmcgSmFja3kgQmFpICgyMDE5LTAxLTA4
-IDAxOjAwOjU4KQ0KPiA+IEFkZCB0aGUgY2xvY2sgYmluZGluZyBkb2MgZm9yIGkuTVg4TU0uDQo+
-ID4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBCYWkgUGluZyA8cGluZy5iYWlAbnhwLmNvbT4NCj4gPiAt
-LS0NCj4gPiAgLi4uL2RldmljZXRyZWUvYmluZGluZ3MvY2xvY2svaW14OG1tLWNsb2NrLnR4dCAg
-ICAgfCAgMTkgKysNCj4gPiAgaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9jay9pbXg4bW0tY2xvY2su
-aCAgICAgICAgICAgfCAyNDQNCj4gKysrKysrKysrKysrKysrKysrKysrDQo+ID4gIDIgZmlsZXMg
-Y2hhbmdlZCwgMjYzIGluc2VydGlvbnMoKykNCj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0DQo+ID4g
-RG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDhtbS1jbG9jay50eHQN
-Cj4gPiAgY3JlYXRlIG1vZGUgMTAwNjQ0IGluY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14OG1t
-LWNsb2NrLmgNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUv
-YmluZGluZ3MvY2xvY2svaW14OG1tLWNsb2NrLnR4dA0KPiA+IGIvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDhtbS1jbG9jay50eHQNCj4gPiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAuLjAzNGI2ZDQNCj4gPiAtLS0gL2Rldi9udWxsDQo+
-ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Nsb2NrL2lteDhtbS1j
-bG9jay50eHQNCj4gPiBAQCAtMCwwICsxLDE5IEBADQo+ID4gKyogQ2xvY2sgYmluZGluZ3MgZm9y
-IE5YUCBpLk1YOE0gTWluaQ0KPiA+ICsNCj4gPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gPiAr
-LSBjb21wYXRpYmxlOiBTaG91bGQgYmUgImZzbCxpbXg4bW0tY2NtIg0KPiA+ICstIHJlZzogQWRk
-cmVzcyBhbmQgbGVuZ3RoIG9mIHRoZSByZWdpc3RlciBzZXQNCj4gPiArLSAjY2xvY2stY2VsbHM6
-IFNob3VsZCBiZSA8MT4NCj4gPiArLSBjbG9ja3M6IGxpc3Qgb2YgY2xvY2sgc3BlY2lmaWVycywg
-bXVzdCBjb250YWluIGFuIGVudHJ5IGZvciBlYWNoIHJlcXVpcmVkDQo+ID4gKyAgICAgICAgICBl
-bnRyeSBpbiBjbG9jay1uYW1lcw0KPiA+ICstIGNsb2NrLW5hbWVzOiBzaG91bGQgaW5jbHVkZSB0
-aGUgZm9sbG93aW5nIGVudHJpZXM6DQo+ID4gKyAgICAtICJvc2NfMzJrIg0KPiA+ICsgICAgLSAi
-b3NjXzI0bSINCj4gPiArICAgIC0gImNsa19leHQxIg0KPiA+ICsgICAgLSAiY2xrX2V4dDIiDQo+
-ID4gKyAgICAtICJjbGtfZXh0MyINCj4gPiArICAgIC0gImNsa19leHQ0Ig0KPiA+ICsNCj4gPiAr
-VGhlIGNsb2NrIGNvbnN1bWVyIHNob3VsZCBzcGVjaWZ5IHRoZSBkZXNpcmVkIGNsb2NrIGJ5IGhh
-dmluZyB0aGUNCj4gPiArY2xvY2sgSUQgaW4gaXRzICJjbG9ja3MiIHBoYW5kbGUgY2VsbC4gU2Vl
-DQo+ID4gK2luY2x1ZGUvZHQtYmluZGluZ3MvY2xvY2svaW14OG1tLWNsb2NrLmgNCj4gPiArZm9y
-IHRoZSBmdWxsIGxpc3Qgb2YgaS5NWDhNIE1pbmkgY2xvY2sgSURzLg0KPiANCj4gQW55IGV4YW1w
-bGUgb2YgdGhpcyBub2RlPyBOb3QgdGhlIGNsb2NrIGNvbnN1bWVyLg0KDQpTdXJlLCBJIGNhbiBh
-ZGQgYW4gZXhhbXBsZSBpbiBWMi4NCg0KQlINCkphY2t5IEJhaQ0K
+Quoting Jacky Bai (2019-01-08 01:00:58)
+> Add the clock binding doc for i.MX8MM.
+>=20
+> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+> ---
+>  .../devicetree/bindings/clock/imx8mm-clock.txt     |  19 ++
+>  include/dt-bindings/clock/imx8mm-clock.h           | 244 +++++++++++++++=
+++++++
+>  2 files changed, 263 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/clock/imx8mm-clock.=
+txt
+>  create mode 100644 include/dt-bindings/clock/imx8mm-clock.h
+>=20
+> diff --git a/Documentation/devicetree/bindings/clock/imx8mm-clock.txt b/D=
+ocumentation/devicetree/bindings/clock/imx8mm-clock.txt
+> new file mode 100644
+> index 0000000..034b6d4
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/clock/imx8mm-clock.txt
+> @@ -0,0 +1,19 @@
+> +* Clock bindings for NXP i.MX8M Mini
+> +
+> +Required properties:
+> +- compatible: Should be "fsl,imx8mm-ccm"
+> +- reg: Address and length of the register set
+> +- #clock-cells: Should be <1>
+> +- clocks: list of clock specifiers, must contain an entry for each requi=
+red
+> +          entry in clock-names
+> +- clock-names: should include the following entries:
+> +    - "osc_32k"
+> +    - "osc_24m"
+> +    - "clk_ext1"
+> +    - "clk_ext2"
+> +    - "clk_ext3"
+> +    - "clk_ext4"
+> +
+> +The clock consumer should specify the desired clock by having the clock
+> +ID in its "clocks" phandle cell. See include/dt-bindings/clock/imx8mm-cl=
+ock.h
+> +for the full list of i.MX8M Mini clock IDs.
+
+Any example of this node? Not the clock consumer.
