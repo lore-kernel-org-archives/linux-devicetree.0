@@ -1,200 +1,96 @@
-Return-Path: <SRS0=+lSs=PU=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH RFC 2/3] arm64: dts: renesas: r8a77970: eagle/v3msk: add QSPI
- flash support
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <4b74a2a5-6b3b-9b06-6a8f-fce39124ec59@cogentembedded.com>
-Message-ID: <1e3c7821-1f48-e27b-e3d5-a376b219e590@cogentembedded.com>
-Date: Sat, 12 Jan 2019 20:44:32 +0300
-MIME-Version: 1.0
-In-Reply-To: <4b74a2a5-6b3b-9b06-6a8f-fce39124ec59@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>
+Return-Path: <SRS0=TUFM=PR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.54]:18066 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726831AbfAIRmb (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 9 Jan 2019 12:42:31 -0500
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [PATCH] ARM: dts: omap3-gta04: Fix graph_port warning
+From: "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <20190109170119.GR5544@atomide.com>
+Date: Wed, 9 Jan 2019 18:42:27 +0100
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <751B822B-ED91-4558-AAEF-2D88B89A645E@goldelico.com>
+References: <20190107160512.9480-1-tony@atomide.com> <ED6668F3-73A7-49A1-A7C7-E54381841222@goldelico.com> <CAL_Jsq+RQMjeH+YTphrXBQRdpUse1rSvPGdJiqcoRQWMPT+-ZQ@mail.gmail.com> <20190107183419.GG5544@atomide.com> <DE542A85-9B46-4AA4-B4E8-8880D23355EC@goldelico.com> <46dce758-2339-c4ef-891b-5cf4522fb7df@ti.com> <20190108155606.GM5544@atomide.com> <4F877B6F-2AED-4891-9676-5AB69B01C1AD@goldelico.com> <20190109170119.GR5544@atomide.com>
+Sender: devicetree-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>, Rob Herring <robh@kernel.org>, linux-omap <linux-omap@vger.kernel.org>, =?utf-8?Q?Beno=C3=AEt_Cousson?= <bcousson@baylibre.com>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Define the Eagle/V3MSK board dependent parts of the RPC-IF device node.
-Add device nodes for Spansion S25FS512S SPI flash and MTD partitions on it.
+Hi Tony,
 
-Based on the original patches by Dmitry Shifrin.
+> Am 09.01.2019 um 18:01 schrieb Tony Lindgren <tony@atomide.com>:
+>=20
+> * H. Nikolaus Schaller <hns@goldelico.com> [190109 16:47]:
+>> Ho Tony, Tomi,
+>>=20
+>>> Am 08.01.2019 um 16:56 schrieb Tony Lindgren <tony@atomide.com>:
+>>>=20
+>>> * Tomi Valkeinen <tomi.valkeinen@ti.com> [190108 07:57]:
+>>>> On 07/01/19 21:34, H. Nikolaus Schaller wrote:
+>>>>=20
+>>>>>>> If there's only one port, then it is redundant and you should =
+drop reg
+>>>>>>> instead.
+>>>>>=20
+>>>>> If I remember correctly it was required by older omapdrm code =
+(which
+>>>>> did scan for a reg property) but that may have changed. Therefore =
+I've
+>>>>> added Tomi to this discussion.
+>>>>=20
+>>>> I don't think so. The code looks for 'reg', but if it's not there, =
+then
+>>>> it's considered 0.
+>>>=20
+>>> FYI, the binding doc for the graph bindings is at
+>>> Documentation/devicetree/bindings/graph.txt if there is
+>>> any questions on how things should work.
+>>=20
+>> I interpret it that "port@number" is only needed if there are
+>> multiple ports and there should not be any "@" or "reg" for the
+>> single port case. Although it seems not to be explicitly
+>> forbidden.
+>>=20
+>> The &dss port doesn't have it either.
+>>=20
+>> So let's remove the reg =3D <0>;
+>>=20
+>> It also seems that
+>>=20
+>> 	#address-cells =3D <1>;
+>> 	#size-cells =3D <0>;
+>>=20
+>> is not required in this case and can also be removed.
+>>=20
+>> I've tested and it works with v5.0-rc1.
+>>=20
+>> There is an edited patch [1] but IMHO you as the original
+>> author should post it.
+>=20
+> Looks good to me. But since you already modified it, all
+> you need to do is add your Signed-off-by after mine and
+> mail it out :)
 
-Signed-off-by: Dmitry Shifrin <dmitry.shifrin@cogentembedded.com>
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Well, the main job is mailing it out (collecting the destination
+addresses)...
 
----
- arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |   68 +++++++++++++++++++++++++
- arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts |   68 +++++++++++++++++++++++++
- 2 files changed, 136 insertions(+)
+> That is if you want to keep me as the
+> original author I guess for the description.
+>=20
+> Otherwise we have to go through one more round of emails
+> where I post it you ack it and so on as I can't test it.
 
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
-@@ -173,12 +173,80 @@
- 		function = "i2c0";
- 	};
- 
-+	qspi0_pins: qspi0 {
-+		groups = "qspi0_ctrl", "qspi0_data4";
-+		function = "qspi0";
-+	};
-+
- 	scif0_pins: scif0 {
- 		groups = "scif0_data";
- 		function = "scif0";
- 	};
- };
- 
-+&rpc {
-+	pinctrl-0 = <&qspi0_pins>;
-+	pinctrl-names = "default";
-+
-+	renesas,rpc-mode = "spi";
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "spansion,s25fs512s", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+		spi-rx-bus-width = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootparam@0 {
-+				reg = <0x00000000 0x040000>;
-+				read-only;
-+			};
-+			cr7@40000 {
-+				reg = <0x00040000 0x080000>;
-+				read-only;
-+			};
-+			cert_header_sa3@c0000 {
-+				reg = <0x000c0000 0x080000>;
-+				read-only;
-+			};
-+			bl2@140000 {
-+				reg = <0x00140000 0x040000>;
-+				read-only;
-+			};
-+			cert_header_sa6@180000 {
-+				reg = <0x00180000 0x040000>;
-+				read-only;
-+			};
-+			bl31@1c0000 {
-+				reg = <0x001c0000 0x460000>;
-+				read-only;
-+			};
-+			uboot@640000 {
-+				reg = <0x00640000 0x0c0000>;
-+				read-only;
-+			};
-+			uboot-env@700000 {
-+				reg = <0x00700000 0x040000>;
-+				read-only;
-+			};
-+			dtb@740000 {
-+				reg = <0x00740000 0x080000>;
-+			};
-+			kernel@7c0000 {
-+				reg = <0x007c0000 0x1400000>;
-+			};
-+			user@1bc0000 {
-+				reg = <0x01bc0000 0x2440000>;
-+			};
-+		};
-+	};
-+};
-+
- &rwdt {
- 	timeout-sec = <60>;
- 	status = "okay";
-Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-===================================================================
---- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-+++ renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
-@@ -145,6 +145,11 @@
- 		power-source = <3300>;
- 	};
- 
-+	qspi0_pins: qspi0 {
-+		groups = "qspi0_ctrl", "qspi0_data4";
-+		function = "qspi0";
-+	};
-+
- 	scif0_pins: scif0 {
- 		groups = "scif0_data";
- 		function = "scif0";
-@@ -220,6 +225,69 @@
- 	status = "okay";
- };
- 
-+&rpc {
-+	pinctrl-0 = <&qspi0_pins>;
-+	pinctrl-names = "default";
-+
-+	renesas,rpc-mode = "spi";
-+	status = "okay";
-+
-+	flash@0 {
-+		compatible = "spansion,s25fs512s", "jedec,spi-nor";
-+		reg = <0>;
-+		spi-max-frequency = <50000000>;
-+		spi-rx-bus-width = <4>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			bootparam@0 {
-+				reg = <0x00000000 0x040000>;
-+				read-only;
-+			};
-+			cr7@40000 {
-+				reg = <0x00040000 0x080000>;
-+				read-only;
-+			};
-+			cert_header_sa3@c0000 {
-+				reg = <0x000c0000 0x080000>;
-+				read-only;
-+			};
-+			bl2@140000 {
-+				reg = <0x00140000 0x040000>;
-+				read-only;
-+			};
-+			cert_header_sa6@180000 {
-+				reg = <0x00180000 0x040000>;
-+				read-only;
-+			};
-+			bl31@1c0000 {
-+				reg = <0x001c0000 0x460000>;
-+				read-only;
-+			};
-+			uboot@640000 {
-+				reg = <0x00640000 0x0c0000>;
-+				read-only;
-+			};
-+			uboot-env@700000 {
-+				reg = <0x00700000 0x040000>;
-+				read-only;
-+			};
-+			dtb@740000 {
-+				reg = <0x00740000 0x080000>;
-+			};
-+			kernel@7c0000 {
-+				reg = <0x007c0000 0x1400000>;
-+			};
-+			user@1bc0000 {
-+				reg = <0x01bc0000 0x2440000>;
-+			};
-+		};
-+	};
-+};
-+
- &scif0 {
- 	pinctrl-0 = <&scif0_pins>;
- 	pinctrl-names = "default";
+Anyways, I send it asap.
+
+BR,
+Nikolaus
+
+>=20
+> Regards,
+>=20
+> Tony
+>=20
+>> [1]: =
+http://git.goldelico.com/?p=3Dletux-kernel.git;a=3Dcommit;h=3De46369390f62=
+ce7176e91dfa443185e4b097ef4b
