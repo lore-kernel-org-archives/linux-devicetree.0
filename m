@@ -1,51 +1,67 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: [PATCH 2/5] ARM: dts: sun8i: r40: Add pinmux setting
- for CLK_OUT_A
-Date: Wed,  9 Jan 2019 23:02:54 +0800
-Message-ID: <20190109150257.12602-3-wens@csie.org>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 3/5] ARM: dts: sun8i: r40: bananapi-m2-ultra: Fix WiFi regulator definitions
+Date: Wed,  9 Jan 2019 23:02:55 +0800
+Message-ID: <20190109150257.12602-4-wens@csie.org>
 References: <20190109150257.12602-1-wens@csie.org>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBBKM23DQQKGQEB7M7RMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190109150257.12602-1-wens-jdAy2FN1RRM@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190109150257.12602-1-wens@csie.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-CLK_OUT_A, an external clock output function driven from the clock
-control unit, on the R40 is sometimes used to provide a low rate low
-power clock to a WiFi or Bluetooth controller.
+The design of the Bananapi M2 Ultra has both DLDO1 and DLDO2 regulators
+provide power to the WiFi+BT module, which is based on the Broadcom
+BCM43438 or BCM43430 chip. Each regulator output from the PMIC can supply
+up to 200 mA. The datasheet of the chip suggests a maximum power draw of
+up to 360 mA when transmitting, thus requiring two outputs from the PMIC
+to handle the load. However the device tree only references one of them,
+leaving the other unused and possibly turned off.
 
-This patch adds a pinmux setting for it.
+This patch marks both as always-on, since we don't have a proper binding
+to specify two regulators as "bound together". The name and constraints
+of DLDO2 are also added.
 
-Signed-off-by: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Fixes: da7ac948fa93 ("ARM: dts: sun8i: Add board dts file for Banana Pi M2
+		      Ultra")
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- arch/arm/boot/dts/sun8i-r40.dtsi | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts | 15 +++++++++++++++
+ 1 file changed, 15 insertions(+)
 
-diff --git a/arch/arm/boot/dts/sun8i-r40.dtsi b/arch/arm/boot/dts/sun8i-r40.dtsi
-index f1fcfa0bdce0..06b685869f52 100644
---- a/arch/arm/boot/dts/sun8i-r40.dtsi
-+++ b/arch/arm/boot/dts/sun8i-r40.dtsi
-@@ -342,6 +342,11 @@
- 			#interrupt-cells = <3>;
- 			#gpio-cells = <3>;
+diff --git a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+index 438b7b44dab3..1a6794e63b90 100644
+--- a/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
++++ b/arch/arm/boot/dts/sun8i-r40-bananapi-m2-ultra.dts
+@@ -250,12 +250,27 @@
+ 	regulator-name = "vcc-wifi-io";
+ };
  
-+			clk_out_a_pin: clk-out-a-pin {
-+				pins = "PI12";
-+				function = "clk_out_a";
-+			};
++/*
++ * Our WiFi chip needs both DLDO2 and DLDO3 to be powered at the same
++ * time, with the two being in sync, to be able to meet maximum power
++ * consumption during transmits. Since this is not really supported
++ * right now, just use the two as always on, and we will fix it later.
++ */
 +
- 			gmac_rgmii_pins: gmac-rgmii-pins {
- 				pins = "PA0", "PA1", "PA2", "PA3",
- 				       "PA4", "PA5", "PA6", "PA7",
+ &reg_dldo2 {
++	regulator-always-on;
+ 	regulator-min-microvolt = <3300000>;
+ 	regulator-max-microvolt = <3300000>;
+ 	regulator-name = "vcc-wifi";
+ };
+ 
++&reg_dldo3 {
++	regulator-always-on;
++	regulator-min-microvolt = <3300000>;
++	regulator-max-microvolt = <3300000>;
++	regulator-name = "vcc-wifi-2";
++};
++
+ &reg_dldo4 {
+ 	regulator-min-microvolt = <2500000>;
+ 	regulator-max-microvolt = <2500000>;
 -- 
 2.20.1
