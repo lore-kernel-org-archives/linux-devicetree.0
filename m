@@ -1,49 +1,48 @@
-From: Dinh Nguyen <dinguyen@kernel.org>
-Subject: Re: [PATCH 0/2] Add board support for Chameleon96 Board
-Date: Wed, 9 Jan 2019 10:09:35 -0600
-Message-ID: <f62acea9-527b-026f-ac3e-11cb1b9ef241@kernel.org>
-References: <20181215030152.4386-1-manivannan.sadhasivam@linaro.org>
- <20190108064321.GA6543@mani>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 13/34] dt-bindings: arm: amlogic: Move
+ 'amlogic,meson-gx-ao-secure' binding to its own file
+Date: Wed, 9 Jan 2019 10:12:23 -0600
+Message-ID: <CAL_JsqJ2yN_h0FUJ_F79OBMNkpOH=ou-o4iBHffoRt4XRP8mYA@mail.gmail.com>
+References: <20181203213223.16986-1-robh@kernel.org> <20181203213223.16986-14-robh@kernel.org>
+ <7hr2ewbxd4.fsf@baylibre.com> <CAL_Jsq+hZRJZZ1ZcOxZVXtsUs0013cP0fyf3A=_9J15WbzuUhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108064321.GA6543@mani>
-Content-Language: en-US
+In-Reply-To: <CAL_Jsq+hZRJZZ1ZcOxZVXtsUs0013cP0fyf3A=_9J15WbzuUhw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, amit.kucheria@linaro.org, yossi@novtech.com, nazik@novtech.com
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Dec 4, 2018 at 10:18 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Dec 4, 2018 at 7:01 PM Kevin Hilman <khilman@baylibre.com> wrote:
+> >
+> > Rob Herring <robh@kernel.org> writes:
+> >
+> > > It is best practice to have 1 binding per file, so board level bindings
+> > > should be separate for various misc SoC bindings.
+> > >
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Carlo Caione <carlo@caione.org>
+> > > Cc: Kevin Hilman <khilman@baylibre.com>
+> > > Cc: devicetree@vger.kernel.org
+> > > Cc: linux-arm-kernel@lists.infradead.org
+> > > Cc: linux-amlogic@lists.infradead.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > > ---
+> > >  .../devicetree/bindings/arm/amlogic.txt       | 29 -------------------
+> > >  .../amlogic/amlogic,meson-gx-ao-secure.txt    | 28 ++++++++++++++++++
+> > >  2 files changed, 28 insertions(+), 29 deletions(-)
+> > >  create mode 100644 Documentation/devicetree/bindings/arm/amlogic/amlogic,meson-gx-ao-secure.txt
+> >
+> > Acked-by: Kevin Hilman <khilman@baylibre.com>
+> >
+> > But this isn't really related to the schema series is it?  If you
+> > prefer, I can just queue this one separately via my tree.
+>
+> Yes, you can take it.
 
+Hey Kevin, doesn't look like this got applied.
 
-On 1/8/19 12:43 AM, Manivannan Sadhasivam wrote:
-> On Sat, Dec 15, 2018 at 08:31:50AM +0530, Manivannan Sadhasivam wrote:
->> Hello,
->>
->> This patchset adds board support for Chameleon96 board from Novetech
->> based on Intel Cyclone V SoC FPGA. This board is one of the Consumer
->> Edition boards of the 96Boards family and has the following key features:
->>     
->> * SoC - Intel Cyclone V SoC FPGA
->> * GPU - Graphics based on Intel Video Suite for FPGA
->> * RAM - 512MB DDR3L
->> * USB - 2x USB2.0 Host, 1x USB2.0 OTG
->> * Wireless - Wifi, BT
->>     
->> More information about this board can be found in 96Boards product
->> page: https://www.96boards.org/product/chameleon96/
->>
->> This patchset has been tested on Chameleon96 board and the board boots
->> into a distro on SD card with USB ports working.
->>
-> 
-> Hi,
-> 
-> Ping on this series!
-> 
-
-Applied!
-
-Thanks,
-Dinh
+Rob
