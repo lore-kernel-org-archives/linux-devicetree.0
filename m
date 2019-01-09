@@ -1,14 +1,15 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH V3] arm64: dts: r8a77990: ebisu: Add and enable SDHI
- device nodes
-Date: Wed, 9 Jan 2019 11:57:54 +0100
-Message-ID: <20190109105754.vvqx6uvsktvxeq7a@ninjato>
-References: <20181106204647.18051-1-marek.vasut+renesas@gmail.com>
- <20190109104922.z6g772vgncdqqbqt@verge.net.au>
+From: Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v4 07/15] Platform: OLPC: Use BIT() and GENMASK() for
+ event masks
+Date: Wed, 9 Jan 2019 13:14:08 +0200
+Message-ID: <CAHp75Vf=B4TxZ5ETXaezQAm3HGzQ6cNkApwxq+3_fw92phumkw@mail.gmail.com>
+References: <20190108175818.705110-1-lkundrak@v3.sk>
+ <20190108175818.705110-8-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============3617666679457328161=="
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190109104922.z6g772vgncdqqbqt@verge.net.au>
+In-Reply-To: <20190108175818.705110-8-lkundrak@v3.sk>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -18,60 +19,72 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Simon Horman <horms@verge.net.au>
-Cc: devicetree@vger.kernel.org, Takeshi Kihara <takeshi.kihara.df@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>, linux-renesas-soc@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, linux-arm-kernel@lists.infradead.org, Marek Vasut <marek.vasut+renesas@gmail.com>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, James Cameron <quozl@laptop.org>, Linux PM <linux-pm@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>, Russell King <linux@armlinux.org.uk>, Platform Driver <platform-driver-x86@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, Pavel Machek <pavel@ucw.cz>, Sebastian Reichel <sre@kernel.org>, Darren Hart <dvhart@infradead.org>, Andy Shevchenko <andy@infradead.org>
 List-Id: devicetree@vger.kernel.org
 
+On Tue, Jan 8, 2019 at 7:58 PM Lubomir Rintel <lkundrak@v3.sk> wrote:
+>
+> Just a cosmetic tidy-up.
+>
 
---===============3617666679457328161==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="phwlhbwhrxbkakdi"
-Content-Disposition: inline
+Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+>
+> ---
+> Changes since v1:
+> - This patch was added to the set.
+>
+>  include/linux/olpc-ec.h | 23 ++++++++++++-----------
+>  1 file changed, 12 insertions(+), 11 deletions(-)
+>
+> diff --git a/include/linux/olpc-ec.h b/include/linux/olpc-ec.h
+> index e28f72416a57..c4602364e909 100644
+> --- a/include/linux/olpc-ec.h
+> +++ b/include/linux/olpc-ec.h
+> @@ -2,6 +2,8 @@
+>  #ifndef _LINUX_OLPC_EC_H
+>  #define _LINUX_OLPC_EC_H
+>
+> +#include <linux/bits.h>
+> +
+>  /* XO-1 EC commands */
+>  #define EC_FIRMWARE_REV                        0x08
+>  #define EC_WRITE_SCI_MASK              0x1b
+> @@ -17,17 +19,16 @@
+>  #define EC_EXT_SCI_QUERY               0x85
+>
+>  /* SCI source values */
+> -#define EC_SCI_SRC_EMPTY        0x00
+> -#define EC_SCI_SRC_GAME         0x01
+> -#define EC_SCI_SRC_BATTERY      0x02
+> -#define EC_SCI_SRC_BATSOC       0x04
+> -#define EC_SCI_SRC_BATERR       0x08
+> -#define EC_SCI_SRC_EBOOK        0x10    /* XO-1 only */
+> -#define EC_SCI_SRC_WLAN         0x20    /* XO-1 only */
+> -#define EC_SCI_SRC_ACPWR        0x40
+> -#define EC_SCI_SRC_BATCRIT      0x80
+> -#define EC_SCI_SRC_GPWAKE       0x100   /* XO-1.5 only */
+> -#define EC_SCI_SRC_ALL          0x1FF
+> +#define EC_SCI_SRC_GAME         BIT(0)
+> +#define EC_SCI_SRC_BATTERY      BIT(1)
+> +#define EC_SCI_SRC_BATSOC       BIT(2)
+> +#define EC_SCI_SRC_BATERR       BIT(3)
+> +#define EC_SCI_SRC_EBOOK        BIT(4)    /* XO-1 only */
+> +#define EC_SCI_SRC_WLAN         BIT(5)    /* XO-1 only */
+> +#define EC_SCI_SRC_ACPWR        BIT(6)
+> +#define EC_SCI_SRC_BATCRIT      BIT(7)
+> +#define EC_SCI_SRC_GPWAKE       BIT(8)   /* XO-1.5 only */
+> +#define EC_SCI_SRC_ALL          GENMASK(8, 0)
+>
+>  struct platform_device;
+>
+> --
+> 2.20.1
+>
 
 
---phwlhbwhrxbkakdi
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-
-> [    3.373714] renesas_sdhi_internal_dmac ee100000.sd: mmc0 base at 0xee100000 max clock rate 200 MHz
-> [    3.456829] renesas_sdhi_internal_dmac ee120000.sd: mmc1 base at 0xee120000 max clock rate 200 MHz
-
-No mmc2 initialized. That should work regardless of eMMC. Probably
-something wrong in the DT somewhere.
-
-
---phwlhbwhrxbkakdi
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlw107IACgkQFA3kzBSg
-KbZUJA//YTnAX1C+RWIs26zxjrhGtZVQqNchtRQVPrtAgcDh9swKWcOpLbIcEH1W
-cb9Ly2QqkKMNMh271IW2SxkaocaQ7vTKl1lwGP3MqKfHc2MB8EWcmOjzRGiASD+P
-/LSilcxUpxb2yweyUH/2V/DNSVU1oNgFTn6ux44LqlZEtHgXMxFQY4jXaYrBZ3Mu
-2FhnFx6m7NCXYA9bTPZz1eEOsWHxEfCrCJzRqLP29zhg0RiBmOYcwy5GNyaFZfuT
-kS1QqD0AwmF17WmekCOBNTKgMKnMHJxIs3yjE7FMDTUKR94eNL9eok2PiXZt8JSv
-N1aMmw+5ISR0ZPDn5mlq0H52vCyTRmHu9R6Z1phJdR5MaSh8+ELP1C5GPxudMpfS
-BKUzEIN2aX5BmlLhGrDMAhlv3vutKQp03/6Y4ZTXZPhyiDqA1oY4YFuTUCt+/8ny
-21sBlIHd+LvU0H3exLLz1yOb3D72unvbNhNVixlmS4LY9qLAXcfTf1bsp/Dt48q3
-cCKjmCGElASTJDfxL4PcN5z72eevgKHlIzeMDu/22ZAUVsOK/0mjYN102uONyaTb
-nlHG1pndronLO35R1ncv9AqiCKm8bEyjvvBkDFQpE4oCPC0Xl5S3eRpB40LphHjE
-17zX5/0YgUZ5hL+roYh96FQB1y8P+kh3XXx7BR6F7j/wJDppdNQ=
-=6CtJ
------END PGP SIGNATURE-----
-
---phwlhbwhrxbkakdi--
-
-
---===============3617666679457328161==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============3617666679457328161==--
+-- 
+With Best Regards,
+Andy Shevchenko
