@@ -1,114 +1,54 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v5 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Wed,  9 Jan 2019 22:30:10 +0530
-Message-ID: <20190109170010.15430-1-sibis@codeaurora.org>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH v2] dt-bindings: phy-rockchip-inno-usb2: add documentation for extcon property
+Date: Wed,  9 Jan 2019 18:17:39 +0100
+Message-ID: <20190109171739.11494-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+To: linux-kernel@vger.kernel.org
+Cc: kernel@collabora.com, bleung@chromium.org, heiko@sntech.de, groeck@google.com, kieran.bingham@ideasonboard.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
+Commit 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for
+rk3399") introduces the extcon property that is used to detect the
+cable-state. Document this property in the documentation binding.
 
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Fixes: 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for rk3399")
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
 ---
+Hi all,
 
-v5:
-  * Use qmp_aop updated dt binding
+This patch was send for the first time within these series [1], but
+might have more sense sent alone as doesn't depends on the rest of
+the series, so, remove from these series and send a second version
+that can be applied independently.
 
-v3:
-  * with shutdown-ack irq redesign make it mandatory,
-    merge multiple patches into a single one
+Best regards,
+Enric
 
-v2:
-  * Fixed style changes
-  * Added missing clocks in the dt-bindings
-  * Split mss remoteproc node into a number of patches
+[1] https://lkml.org/lkml/2018/8/15/141
 
-This patch depends on the following bindings:
-https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
-https://patchwork.kernel.org/patch/10657325/ - pdc reset node
-https://patchwork.kernel.org/patch/10753659/ - rpmhpd dt node
-https://patchwork.kernel.org/patch/10749469/ - AOP QMP dt bindings
-https://patchwork.kernel.org/patch/10751757/ - shutdown-irq binding
+Changes in v2:
+- Split from the first version and send as a separate patch.
+- Mention that the extcon provides the cable-state. (Heiko)
+- Remove the introduced utmi-avalid documentation.
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 60 ++++++++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
+ .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt          | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 5da9fa1feb8a..e021b15f87fd 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1366,6 +1366,66 @@
- 			};
- 		};
+diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+index 074a7b3b0425..00639baae74a 100644
+--- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
++++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+@@ -23,6 +23,8 @@ Optional properties:
+ 		 register files". When set driver will request its
+ 		 phandle as one companion-grf for some special SoCs
+ 		 (e.g RV1108).
++ - extcon : phandle to the extcon device providing the cable state for
++		 the otg phy.
  
-+		remoteproc@4080000 {
-+			compatible = "qcom,sdm845-mss-pil";
-+			reg = <0x04080000 0x408>, <0x04180000 0x48>;
-+			reg-names = "qdsp6", "rmb";
-+
-+			interrupts-extended =
-+				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack",
-+					  "shutdown-ack";
-+
-+			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-+				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-+				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-+				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-+				 <&gcc GCC_PRNG_AHB_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "iface", "bus", "mem", "gpll0_mss",
-+				      "snoc_axi", "mnoc_axi", "prng", "xo";
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-+				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-+			reset-names = "mss_restart", "pdc_reset";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs
-+						0x23000 0x25000 0x24000>;
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-+					<&rpmhpd SDM845_CX>,
-+					<&rpmhpd SDM845_MX>,
-+					<&rpmhpd SDM845_MSS>;
-+			power-domain-names = "load_state", "cx", "mx", "mss";
-+
-+			mba {
-+				memory-region = <&mba_region>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_region>;
-+			};
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-+				label = "modem";
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apss_shared 12>;
-+				mbox-names = "mpss_smem";
-+			};
-+		};
-+
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
- 			reg = <0x88e2000 0x400>;
+ Required nodes : a sub-node is required for each port the phy provides.
+ 		 The sub-node name is used to identify host or otg port,
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.20.1
