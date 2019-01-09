@@ -1,56 +1,46 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] ARM: dts: sun6i: Add clock-output-names to osc24M clock
-Date: Wed, 9 Jan 2019 11:11:37 +0100
-Message-ID: <20190109101137.sh6ioyvq5wm6ug23@flea>
-References: <20190108072526.2621-1-wens@csie.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH] ARM: dts: sun8i: h3: Add ethernet0 alias to
+ Beelink X2
+Date: Wed, 9 Jan 2019 11:12:28 +0100
+Message-ID: <20190109101228.alsaaw6s57dbapfe@flea>
+References: <20190108191840.16007-1-jernej.skrabec@siol.net>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="nrrmjmmauuftwoov"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+	protocol="application/pgp-signature"; boundary="qm6qjgqr54a5zefy"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBF4S27QQKGQEAG2GTUY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190108072526.2621-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190108191840.16007-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
 
---nrrmjmmauuftwoov
-Content-Type: text/plain; charset=us-ascii
+--qm6qjgqr54a5zefy
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Tue, Jan 08, 2019 at 03:25:26PM +0800, Chen-Yu Tsai wrote:
-> The osc24M clock does not have a "clock-output-names" property, which
-> means that the clock name is derived from the node name in Linux. The
-> node name was changed in commit acfd5bbe2641 ("ARM: dts: sun6i: Change
-> clock node names to avoid warnings"). This breaks Linux as the sunxi-ng
-> clock driver implicitly depends on the external clock being named
-> "osc24M".
->=20
-> Add a "clock-output-names" property to restore the previous behavior.
->=20
-> Fixes: acfd5bbe2641 ("ARM: dts: sun6i: Change clock node names to avoid
-> 		      warnings")
-> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+On Tue, Jan 08, 2019 at 08:18:40PM +0100, Jernej Skrabec wrote:
+> Because "ethernet0" alias is missing, U-Boot doesn't generate board
+> specific MAC address. Effect of this is random MAC address every boot
+> and thus new IP address is assigned to the board.
+> 
+> Fix this by adding alias.
+> 
+> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 
 Applied, thanks!
 Maxime
 
---=20
+-- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
-
---nrrmjmmauuftwoov
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXDXI2QAKCRDj7w1vZxhR
-xZmoAQDm3bL9J9jdFm0jYD84rJW8RuzHZuBZQrjMhlByqYpQvQEAo9PkDmEnw3O+
-FXvx0AK+HIKpG+Beknn8yqrrudy3+wI=
-=rytg
------END PGP SIGNATURE-----
-
---nrrmjmmauuftwoov--
+--qm6qjgqr54a5zefy--
