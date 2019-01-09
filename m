@@ -1,48 +1,75 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH] arm64: dts: allwinner: a64: Fix USB OTG regulator
-Date: Wed,  9 Jan 2019 19:16:04 +0100
-Message-ID: <20190109181604.16988-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v7 0/6] arm64: dts: Add sdm845 GPU/GMU and
+ SMMU
+Date: Wed, 9 Jan 2019 10:20:20 -0800
+Message-ID: <CAD=FV=XLWUwkQLStKzV5DGji0WNEk44ft51NTWJmQNG7GW4Rkg@mail.gmail.com>
+References: <20181218183241.12830-1-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB3HU3DQQKGQEJRV3VMA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <20181218183241.12830-1-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-pm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, vireshk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Linux ARM <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, AXP803 driver assumes that reg_drivevbus is input which is
-wrong. Unfortunate consequence of that is that none of the USB ports
-work on the board, even USB HOST port, because USB PHY driver probing
-fails due to missing regulator.
-
-Fix that by adding "x-powers,drive-vbus-en" property to AXP803 node.
-
-Fixes: 14ff5d8f9151 ("arm64: dts: allwinner: a64: Orange Pi Win: Enable USB OTG socket")
-
-Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index b0c64f75792c..8974b5a1d3b1 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -188,6 +188,7 @@
- 		reg = <0x3a3>;
- 		interrupt-parent = <&r_intc>;
- 		interrupts = <0 IRQ_TYPE_LEVEL_LOW>;
-+		x-powers,drive-vbus-en; /* set N_VBUSEN as output pin */
- 	};
- };
- 
--- 
-2.20.1
+SGkgUm9iLAoKT24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMTA6MzIgQU0gSm9yZGFuIENyb3VzZSA8
+amNyb3VzZUBjb2RlYXVyb3JhLm9yZz4gd3JvdGU6Cj4KPiBOb3cgdGhhdCBtb3JlIG9mIHRoZSBz
+ZG04NDUgYmluZGluZ3MgYXJlIGhlYWRlZCB1cHN0cmVhbSB0aGlzIGEgcmVmcmVzaCBvZgo+IG9m
+IGh0dHBzOi8vcGF0Y2h3b3JrLmZyZWVkZXNrdG9wLm9yZy9zZXJpZXMvMzkzMDgvIHRvIGFkZCBi
+aW5kaW5ncyBhbmQgbm9kZXMKPiBmb3IgdGhlIEdQVS9HTVUgYW5kIEdQVSBTTU1VIGZvciBzZG04
+NDUuIHY3IG9mIHRoaXMgcGF0Y2hzZXQgYWxzbyByZW1vdmVzCj4gaW50ZXJydXB0LW5hbWVzIGZy
+b20gdGhlIGRyaXZlciBhbmQgdGhlIGV4aXN0aW5nIERUIGNoYW5nZXMgcGVyIGZlZWRiYWNrIGZy
+b20KPiBSb2IgSGVycmluZy4KPgo+IFRoaXMgaXMgYmFzZWQgb24gOgo+IGdpdDovL2dpdC5rZXJu
+ZWwub3JnL3B1Yi9zY20vbGludXgva2VybmVsL2dpdC9hZ3Jvc3MvbGludXguZ2l0IGZvci1uZXh0
+Cj4KPiB3aXRoOgo+IGh0dHBzOi8vbG9yZS5rZXJuZWwub3JnL3BhdGNod29yay9wYXRjaC8xMDE4
+MzY1Lwo+Cj4gVGhpcyBjaGFuZ2UgcmVxdWlyZXMgdGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXM6
+Cj4KPiBpbmNsdWRlL2R0LWJpbmRpbmdzL3Bvd2VyL3Fjb20tcnBtcGQuaDoKPiBodHRwczovL3Bh
+dGNod29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzExMTE5Lwo+Cj4gcWNvbSxzbW11LXYyIGJpbmRp
+bmc6Cj4gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9wYXRjaC8xMDU4MTkxMS8KPgo+IHY3
+OiBBZGQgcGF0Y2hlcyB0byByZW1vdmUgaW50ZXJydXB0LW5hbWVzLCBhZGQgdmVyc2lvbiBzcGVj
+aWZpYyBjb21wYXRpYmxlCj4gICAgIHN0cmluZyBmb3IgZ211Cj4gdjY6IFVwZGF0ZSBHUFUgYmlu
+ZGluZ3MgZm9yIGE2eHggYW5kIG1ha2UgdGhlIGV4YW1wbGVzIG1hdGNoIHRoZSBub2RlcyBhbmQg
+dmljZQo+ICB2ZXJzYS4gIENsZWFuIHVwIHR5cGVzIGFuZCByZWJhc2Ugb24KPiAgaHR0cHM6Ly9s
+b3JlLmtlcm5lbC5vcmcvcGF0Y2h3b3JrL3BhdGNoLzEwMTgzNjUvIHRvIGhlbHAgZmFjaWxpdGF0
+ZSBtZXJnaW5nLgo+IHY1OiBVc2Ugc3ltYm9saWMgbmFtZXMgZm9yIHRoZSBSUE1IIHBvd2VyIGxl
+dmVscyBkZWZpbmVkIGluIE9QUCB0YWJsZSwKPiAgbW92ZSB0aGUgb3BwIHRhYmxlcyBhcyBjaGls
+ZHJlbiBvZiB0aGVpciByZXNwZWN0aXZlIG5vZGVzIGFuZCByZW5hbWUKPiAgdGhlIGlvbW11IGRl
+dmljZS4KPiB2NDogUmViYXNlCj4gdjM6IFNwbGl0IEdNVSBQREMgcmVnaW9uIGludG8gdHdvIEdQ
+VSBzcGVjaWZpYyBzZWN0aW9ucywgZml4IGluZGVudGF0aW9uLAo+ICAgcmVhbGx5IHVzZSBxY29t
+LGdtdSBmb3IgdGhlIHBoYW5kbGUgbmFtZQo+IHYyOiBjaGFuZ2VkIHFjb20sYXJjLWxldmVsIHRv
+IHFjb20sbGV2ZWwgZm9sbG93aW5nIGRpc2N1c3Npb24gd2l0aCBWaXJlc2g7Cj4gICBjaGFuZ2Ug
+Z211IHBoYW5kbGUgdG8gcWNvbSxnbXUgcGVyIFJvYgo+Cj4gSm9yZGFuIENyb3VzZSAoNik6Cj4g
+ICBkcm0vbXNtL2dwdTogUmVtb3ZlIGhhcmRjb2RlZCBpbnRlcnJ1cHQgbmFtZQo+ICAgZHJtL21z
+bTogZHJvcCBpbnRlcnJ1cHQtbmFtZXMKPiAgIEFSTTogZHRzOiBxY29tOiBSZW1vdmVkIHVudXNl
+ZCBpbnRlcnJ1cHQtbmFtZXMgZnJvbSBHUFUgbm9kZQo+ICAgYXJtNjQ6IGR0czogcWNvbTogbXNt
+ODkxNjogUmVtb3ZlIHVudXNlZCBpbnRlcnJ1cHQtbmFtZXMgZnJvbSBHUFUKPiAgIGR0LWJpbmRp
+bmdzOiBkcm0vbXNtL2E2eHg6IERvY3VtZW50IEdNVSBhbmQgdXBkYXRlIEdQVSBiaW5kaW5ncwo+
+ICAgYXJtNjQ6IGR0czogc2RtODQ1OiBBZGQgZ3B1IGFuZCBnbXUgZGV2aWNlIG5vZGVzCgpJIGtu
+b3cgaXQncyBiZWVuIGhvbGlkYXlzIGFuZCBldmVyeW9uZSAoaW5jbHVkaW5nIG1lKSBoYXMgYmVl
+biBvbgp2YWNhdGlvbiwgYnV0IGp1c3Qgd2FudGVkIHRvIG1ha2Ugc3VyZSB0aGUgY3VycmVudCBz
+dGF0dXMgb2YgdGhpcwpzZXJpZXMgd2FzIGV4cGxpY2l0bHkgY2FsbGVkIG91dC4gIDotKQoKCkkg
+YmVsaWV2ZSBwYXRjaGVzICMxIGFuZCAjMiBhcmUgcmVhZHkgdG8gbGFuZCBhbmQgd2lsbCBnbyB0
+aHJvdWdoIHlvdXIgdHJlZS4KClBhdGNoZXMgIzMgYW5kICM0IHNob3VsZCBwcm9iYWJseSBnbyB0
+aHJvdWdoIEFuZHkncyB0cmVlIGFuZCBhcmUgbm90CnVyZ2VudCAodGhleSBhcmUganVzdCBjbGVh
+bnVwKS4gIFRoZXkgY2FuIHNpdCBvbiB0aGUgYmFjayBidXJuZXIgdW50aWwKcGF0Y2hlcyAjMSBh
+bmQgIzIgaGF2ZSBoaXQgbWFpbmxpbmUuICBUaGF0J3MgYSBnb29kIHJlYXNvbiB0byBsYW5kICMx
+CmFuZCAjMiBzb29uZXIuICA7LSkKCkkgdGhpbmsgcGF0Y2ggIzUgaXMgYWxzbyByZWFkeSB0byBs
+YW5kLiAgVGhlcmUncyBiZWVuIHNvbWUKYmlrZXNoZWRkaW5nIGFib3V0IHRoZSBleGFjdCBmb3Jt
+YXQgZm9yIHRoZSBvcHAgdGFibGUsIGJ1dCBub25lIG9mCnRoYXQgYmlrZXNoZWRkaW5nIGFmZmVj
+dHMgdGhlIGJpbmRpbmdzIHRoYXQgSm9yZGFuIHdyb3RlLiAgSWYgeW91CmFncmVlIHRoYXQgdGhp
+cyBpcyBPSyB0byBsYW5kLCBpdCB3b3VsZCBhbHNvIGJlIG5pY2UgdG8gZ2V0IGluLgoKLi4udGhl
+biBKb3JkYW4gY2FuIHNwaW4gcGF0Y2ggIzYgKG9uY2UgUm9iIEggQWNrcyBSYWplbmRyYSdzIG9w
+cApiaW5kaW5ncykgYWxvbmUgYXQgYSBmdXR1cmUgZGF0ZS4KCgotRG91ZwpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
