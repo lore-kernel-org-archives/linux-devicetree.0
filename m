@@ -1,216 +1,190 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] dt: bindings: lp5024: Introduce the lp5024 and lp5018
- RGB driver
-Date: Wed, 9 Jan 2019 15:31:10 -0600
-Message-ID: <adcd7987-f7fc-ae1f-9aa4-cebcbf01ad58@ti.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-2-dmurphy@ti.com>
- <dc2283f9-db85-1eaf-f046-3fbbd4adcace@gmail.com>
- <2d2d5dcd-9c23-e901-daac-9b79aa5a5e82@ti.com>
- <6c62956e-7789-58ba-5437-f2e033f2825c@gmail.com>
- <366cbf6d-94fa-fea9-be58-07ddb09cff3a@ti.com>
- <df59c10d-7038-cb4a-45f0-7420254c6398@gmail.com>
- <ec0393b7-118e-1f3b-d5af-86ecdf66412a@ti.com>
- <ae700129-7b59-c92b-0c0a-b57a6f230ff7@gmail.com>
+From: Lukasz Majewski <lukma@denx.de>
+Subject: Re: [PATCH v6 0/5] spi: spi-mem: Add driver for NXP FlexSPI
+ controller
+Date: Wed, 9 Jan 2019 22:34:01 +0100
+Message-ID: <20190109223401.32a957c3@jawa>
+References: <1546939346-20181-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+        <7188c406-3dd2-88a6-b6ed-d5e8bf678df8@kontron.de>
+        <20190109155630.3ec34c60@jawa>
+        <33797571-8456-0b18-087b-71330901f3a8@kontron.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/1tZn.EhU2u0toM7wDxle.ut"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ae700129-7b59-c92b-0c0a-b57a6f230ff7@gmail.com>
-Content-Language: en-US
+In-Reply-To: <33797571-8456-0b18-087b-71330901f3a8@kontron.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Schrempf Frieder <frieder.schrempf@kontron.de>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "robh@kernel.org" <robh@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+--Sig_/1tZn.EhU2u0toM7wDxle.ut
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 1/9/19 3:28 PM, Jacek Anaszewski wrote:
-> On 1/9/19 10:12 PM, Dan Murphy wrote:
->> On 1/9/19 2:12 PM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> On 1/8/19 10:22 PM, Dan Murphy wrote:
->>>> On 1/8/19 3:16 PM, Jacek Anaszewski wrote:
->>>>> On 1/8/19 9:53 PM, Dan Murphy wrote:
->>>>>> Jacek
->>>>>>
->>>>>> On 1/8/19 2:33 PM, Jacek Anaszewski wrote:
->>>>>>> Dan,
->>>>>>>
->>>>>>> On 12/19/18 5:26 PM, Dan Murphy wrote:
->>>>>>>> Introduce the bindings for the Texas Instruments LP5024 and the LP5018
->>>>>>>> RGB LED device driver.  The LP5024/18 can control RGB LEDs individually
->>>>>>>> or as part of a control bank group.  These devices have the ability
->>>>>>>> to adjust the mixing control for the RGB LEDs to obtain different colors
->>>>>>>> independent of the overall brightness of the LED grouping.
->>>>>>>>
->>>>>>>> Datasheet:
->>>>>>>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>>>>>>>
->>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>>>> ---
->>>>>>>>      .../devicetree/bindings/leds/leds-lp5024.txt  | 63 +++++++++++++++++++
->>>>>>>>      1 file changed, 63 insertions(+)
->>>>>>>>      create mode 100644 Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp5024.txt b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>>>>>>> new file mode 100644
->>>>>>>> index 000000000000..9567aa6f7813
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>>>>>>> @@ -0,0 +1,63 @@
->>>>>>>> +* Texas Instruments - LP5024/18 RGB LED driver
->>>>>>>> +
->>>>>>>> +The LM3692x is an ultra-compact, highly efficient,
->>>>>>>> +white-LED driver designed for LCD display backlighting.
->>>>>>>> +
->>>>>>>> +The main difference between the LP5024 and L5018 is the number of
->>>>>>>> +RGB LEDs they support.  The LP5024 supports twenty four strings while the
->>>>>>>> +LP5018 supports eighteen strings.
->>>>>>>> +
->>>>>>>> +Required properties:
->>>>>>>> +    - compatible:
->>>>>>>> +        "ti,lp5018"
->>>>>>>> +        "ti,lp5024"
->>>>>>>> +    - reg :  I2C slave address
->>>>>>>> +    - #address-cells : 1
->>>>>>>> +    - #size-cells : 0
->>>>>>>> +
->>>>>>>> +Optional properties:
->>>>>>>> +    - enable-gpios : gpio pin to enable/disable the device.
->>>>>>>> +    - vled-supply : LED supply
->>>>>>>> +
->>>>>>>> +Required child properties:
->>>>>>>> +    - reg : Is the child node iteration.
->>>>>>>> +    - led-sources : LP5024 - 0 - 7
->>>>>>>> +            LP5018 - 0 - 5
->>>>>>>> +            Declares the LED string or strings that the child node
->>>>>>>> +            will control.  If ti,control-bank is set then this
->>>>>>>> +            property will contain multiple LED IDs.
->>>>>>>> +
->>>>>>>> +Optional child properties:
->>>>>>>> +    - label : see Documentation/devicetree/bindings/leds/common.txt
->>>>>>>> +    - linux,default-trigger :
->>>>>>>> +       see Documentation/devicetree/bindings/leds/common.txt
->>>>>>>> +    - ti,control-bank : Indicates that the LED strings declared in the
->>>>>>>> +                led-sources property are grouped within a control
->>>>>>>> +                bank for brightness and mixing control.
->>>>>>>> +
->>>>>>>> +Example:
->>>>>>>> +
->>>>>>>> +led-controller@28 {
->>>>>>>> +    compatible = "ti,lp5024";
->>>>>>>> +    reg = <0x28>;
->>>>>>>> +    #address-cells = <1>;
->>>>>>>> +    #size-cells = <0>;
->>>>>>>> +
->>>>>>>> +    enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->>>>>>>> +    vled-supply = <&vbatt>;
->>>>>>>> +
->>>>>>>> +    led@0 {
->>>>>>>> +        reg = <0>;
->>>>>>>> +        led-sources = <1>;
->>>>>>>> +    };
->>>>>>>> +
->>>>>>>> +    led@1 {
->>>>>>>> +        reg = <1>;
->>>>>>>> +        led-sources = <0 6>;
->>>>>>>> +        ti,control-bank;
->>>>>>>
->>>>>>> Do you really need ti,control-bank? Doesn't led-sources array size
->>>>>>> greater than 1 mean that the node describes control bank?
->>>>>>>
->>>>>>
->>>>>> That will work too.
->>>>>
->>>>>>> Also, does it make sense to have only two LEDs in the bank?
->>>>>>
->>>>>> The array can populate all 7 LEDs in a single node.  I only show 2 here as the example.
->>>>>> See the description above of the led-sources
->>>>>
->>>>> OK, I confused RGB LED modules with banks.
->>>>>
->>>>> Shouldn't we allow for defining either strings or RGB LED
->>>>> triplets somehow then?
->>>>>
->>>>
->>>> Well that is what this should be doing.  If you define a single LED in LED sources then
->>>> the triplet is controlled via the associated LEDx_brightness register.
->>>
->>> led-sources should map to iouts directly.
->>> So, for RGB LED modules I would expect:
->>>
->>> LED0: led-sources = <0 1 2>;
->>> LED1: led-sources = <3 4 5>;
->>> LED2: led-sources = <6 7 8>;
->>> and so on.
->>
->>>
->>> for banks:
->>>
->>> Bank A with iouts 0,3,6,9: led-sources<0 3 6 9>;
->>> Bank B with iouts 2,4,10:  led-sources<2 4 10>;
->>> Bank C with iouts 5,8,11,14,17: led-sources<5 8 11 14 17>;
->>>
->>
->> Ok the led-sources would need to be different then this as I don't define the sources for banks.
->>
->> The led-sources for the banks and the individual groups will have different meanings within the same
->> document.  I was attempting to keep the led-sources mapped to the LEDx_brightness registers as opposed to
->> the hardware outputs since the RGB LEDs are controlled and grouped by a single brightness register and if banked then
->> it would be controlled by the bank brightness register.
->>
->> Describing these in the DT seems wrought with potential issues as the data sheet defines what outputs map to what bank and LED
->> registers.
-> 
-> Yes, that's why I mentioned the need for validation of led-sources.
-> But they have to be iouts. This property was introduced specifically
-> for such purposes.
-> 
+Hi Frieder,
 
-Yes Pavel also mentioned that as well.
+> Hi Lukasz,
+>=20
+> On 09.01.19 15:56, Lukasz Majewski wrote:
+> > Hi Schrempf,
+> >  =20
+> >> On 08.01.19 10:24, Yogesh Narayan Gaur wrote: =20
+> >>> - Add driver for NXP FlexSPI host controller
+> >>>
+> >>>    FlexSPI is a flexsible SPI host controller [1], Chapter 30 page
+> >>> 1475, which supports two SPI channels and up to 4 external
+> >>> devices. Each channel supports Single/Dual/Quad/Octal mode data
+> >>> transfer (1/2/4/8 bidirectional data lines) i.e. FlexSPI acts as
+> >>> an interface to external devices, maximum 4, each with up to 8
+> >>> bidirectional data lines.
+> >>>
+> >>> - Tested this driver with mtd_debug(Erase/Write/Read) utility and
+> >>> JFFS2 filesystem mounting and booting on NXP LX2160ARDB[2] and
+> >>> LX2160AQDS targets. LX2160ARDB is having two NOR slave device
+> >>> connected on single bus A i.e. A0 and A1 (CS0 and CS1).
+> >>>    LX2160AQDS is having two NOR slave device connected on separate
+> >>> buses one flash on A0 and second on B1 i.e. (CS0 and CS3).
+> >>>    Verified this driver on following SPI NOR flashes:
+> >>>      Micron, mt35xu512aba, [Read - 1 bit mode]
+> >>>      Cypress, s25fl512s, [Read - 1/2/4 bit mode]
+> >>>
+> >>> [1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+> >>> [2]
+> >>> https://patchwork.kernel.org/project/linux-arm-kernel/list/?submitter=
+=3D182097
+> >>>
+> >>> Yogesh Narayan Gaur (5):
+> >>>     spi: spi-mem: Add driver for NXP FlexSPI controller
+> >>>     dt-bindings: spi: add binding file for NXP FlexSPI controller
+> >>>     arm64: dts: lx2160a: add FlexSPI node property
+> >>>     arm64: defconfig: enable NXP FlexSPI driver
+> >>>     MAINTAINERS: add maintainers for the NXP FlexSPI driver
+> >>>
+> >>> Changes for v6:
+> >>> - Rebase on top of v5.0-rc1. =20
+> >>
+> >> Your patches don't apply to v5.0-rc1. It seems like you have
+> >> instead rebased onto the for-5.1 or for-next branch of the SPI
+> >> tree. I guess this is okay, but you should have pointed that out
+> >> correctly here. =20
+> >=20
+> > If I may ask for a few (1-2) days, so I can test this code on vf610
+> > NXP SoC.
+> >=20
+> > As fair as I remember there were some issues when I tested it a few
+> > months back. =20
+>=20
+> You're probably mixing that up. This series is about the FlexSPI=20
+> controller in the Layerscape SOCs.
 
-I will look into validating the sources.  But there will be no mapping of the sources to the output that is done
-in the hardware.  This would just be a data sheet mapping since the outputs are not configurable.
+Thanks for the explanation - I've indeed mixed up things a bit :-).
 
-Dan
+I was of course thinking about the QuadSPI driver - as in [1].
 
-> common LED bindings say:
-> 
-> - led-sources : List of device current outputs the LED is connected to. The
->                 outputs are identified by the numbers that must be defined
->                 in the LED device binding documentation.
-> 
->>> We could additionally mark banks with ti,control-bank,
->>
->> We would have to keep the ti,control-bank node based on the above.
->>
->>> but I'm not sure if it would ease parsing, since
->>> you will have to validate iouts configuration anyway.
->>>
->>>> If you have multiple LED sources defined in the led-sources then those LEDs would be grouped in the bank.
->>>> I guess I need to provide some protection or a warning if a DT defines two banks because there is only one bank control.
->>>
->>> Does the hardware allow the IOUT to belong to an RGB LED module
->>> and to a bank in the same time?
->>>
->>
->> No it does not.  LED_CONFIG0 sets the bit if it is control bank or not.
-> 
-> OK, so validation will also have to check if led-sources definitions
-> are not mutually exclusive between child DT nodes. For consistency it
-> would be really better if bank definitions also used led-sources.
-> 
->> Section 8.3.2 in the data sheet says
->> "When a channel is configured in
->> LED bank-control mode, the related color mixing and intensity control is governed by the bank control registers
->> (BANK_A_COLOR, BANK_B_COLOR, BANK_C_COLOR, and BANK_BRIGHTNESS) regardless of the inputs
->> on its own color-mixing and intensity-control registers."
->>
-> 
+>=20
+> The QuadSPI driver is already in linux-next to be merged in 5.1 [1].
+> The issues with vf610 existed in the old SPI-NOR driver and probably
+> still exist in the new SPI driver. You are welcome to test the new
+> driver and come up with some fixes.
+
+I've posted some questions on NXP community, but no reply so far.=20
+
+>=20
+> Sooner or later, there will probably also be other changes coming up,=20
+> such as implementation of the dirmap API.
+>=20
+> Thanks,
+> Frieder
+>=20
+> [1]:=20
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
+t/drivers/spi?h=3Dnext-20190109&id=3D84d043185dbe0d1b4f6db575bd91c834d37e2f=
+78
+>=20
+> >  =20
+> >> =20
+> >>> - Incorporated review comments for
+> >>>     patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> >>> - Updated s-b tag in all patches.
+> >>> Changes for v5:
+> >>> - Rebase on top of v4.20-rc2
+> >>> - Incorporated review comments for
+> >>>     patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> >>> Changes for v4:
+> >>> - Incorporated review comments for
+> >>>     patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> >>> - Incorporated binding file review comments.
+> >>> Changes for v3:
+> >>> - Incorporated review comments for
+> >>>     patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+> >>> Changes for v2:
+> >>> - Incorporated Boris review comments and drop below patches as per
+> >>> the comments.
+> >>>    - Patch 'spi: add slave device size in spi_device struct'
+> >>>    - Patch 'spi: add flags for octal I/O data transfer'
+> >>> - Incorporated DTS and Binding file review comments of Shawn Guo
+> >>> and Rob Herring.
+> >>>
+> >>>    .../devicetree/bindings/spi/spi-nxp-fspi.txt  |   39 +
+> >>>    MAINTAINERS                                   |    7 +
+> >>>    .../boot/dts/freescale/fsl-lx2160a-rdb.dts    |   22 +
+> >>>    .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi |   13 +
+> >>>    arch/arm64/configs/defconfig                  |    1 +
+> >>>    drivers/spi/Kconfig                           |   10 +
+> >>>    drivers/spi/Makefile                          |    1 +
+> >>>    drivers/spi/spi-nxp-fspi.c                    | 1095
+> >>> +++++++++++++++++ 8 files changed, 1188 insertions(+)
+> >>>    create mode 100644
+> >>> Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt create mode
+> >>> 100644 drivers/spi/spi-nxp-fspi.c =20
+> >> ______________________________________________________
+> >> Linux MTD discussion mailing list
+> >> http://lists.infradead.org/mailman/listinfo/linux-mtd/ =20
+> >=20
+> >=20
+> >=20
+> >=20
+> > Best regards,
+> >=20
+> > Lukasz Majewski
+> >=20
+> > --
+> >=20
+> > DENX Software Engineering GmbH,      Managing Director: Wolfgang
+> > Denk HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell,
+> > Germany Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email:
+> > lukma@denx.de=20
+> ______________________________________________________
+> Linux MTD discussion mailing list
+> http://lists.infradead.org/mailman/listinfo/linux-mtd/
 
 
--- 
-------------------
-Dan Murphy
+
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/1tZn.EhU2u0toM7wDxle.ut
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAlw2aMoACgkQAR8vZIA0
+zr318AgAzCL/X8/xbMQ3yo2gDaKHZoKn7yVT7V8l2rP7yPLmzzt5idLkSovh7rHW
+DBIAfYaE4ZXoUDC1MkzMn+fjxkuRWXFAmy59wrfQC/QvEfxpEAxORwuQ3jDUYBJ1
+QpXS/mOTk81ltTAu7igDd5ngSeeObUbcIE0xlI7g4+vzTezhsBUdygawpMCGMdGO
+gEGTmZ0d1pJDStgAsSscKNtvhqFPH55C7PYhXTobMfPWfBZwYhLSUj+wWrIOdGhk
+wMDtduklwxS4Zl+KNcU02CeTSiRQY4tF04zJIPjqxqac1PRpgBC07REmK8Jpyeb/
+sS850q9fMLipJNVHVqZMw0gczf83tg==
+=no86
+-----END PGP SIGNATURE-----
+
+--Sig_/1tZn.EhU2u0toM7wDxle.ut--
