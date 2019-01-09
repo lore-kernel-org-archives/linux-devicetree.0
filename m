@@ -1,86 +1,82 @@
-Return-Path: <SRS0=mSv1=PQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:35557 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728787AbfAHOwo (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 8 Jan 2019 09:52:44 -0500
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v2 12/13] media: mt9m001: make VIDIOC_SUBDEV_G_FMT ioctl work with V4L2_SUBDEV_FORMAT_TRY
-Date: Tue,  8 Jan 2019 23:51:49 +0900
-Message-Id: <1546959110-19445-13-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
-References: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
+Return-Path: <SRS0=TUFM=PR=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:36901 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730392AbfAILap (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Wed, 9 Jan 2019 06:30:45 -0500
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: [PATCH 0/3] Add ZynqMP VCU/Allegro DVT H.264 encoder driver
+Date: Wed,  9 Jan 2019 12:30:34 +0100
+Message-Id: <20190109113037.28430-1-m.tretter@pengutronix.de>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
 To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org, Michael Tretter <m.tretter@pengutronix.de>
 List-ID: <devicetree@vger.kernel.org>
 
-The VIDIOC_SUBDEV_G_FMT ioctl for this driver doesn't recognize
-V4L2_SUBDEV_FORMAT_TRY and always works as if V4L2_SUBDEV_FORMAT_ACTIVE
-is specified.
+This series adds support for the Allegro DVT H.264 encoder found in the EV
+family of the Xilinx ZynqMP platform.
 
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* v2
-- Set initial try format with default configuration instead of
-  current one.
+The encoder is part of the ZynqMP VCU (video codec unit), which supports
+encoding and decoding of H.264 and H.265. I am planning to support decoding
+and H.265 as well in this driver.
 
- drivers/media/i2c/mt9m001.c | 27 +++++++++++++++++++++++++++
- 1 file changed, 27 insertions(+)
+The codec engines are separate hard IP cores in the FPGA of the ZynqMP and
+each engine is controlled by a microcontroller (MCU). Each MCU executes code
+in its own memory mapped SRAM. This SRAM also contains mailboxes that the
+driver uses to exchange command and status messages with the MCU.
 
-diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
-index 66a0928..f97ab48 100644
---- a/drivers/media/i2c/mt9m001.c
-+++ b/drivers/media/i2c/mt9m001.c
-@@ -329,6 +329,12 @@ static int mt9m001_get_fmt(struct v4l2_subdev *sd,
- 	if (format->pad)
- 		return -EINVAL;
- 
-+	if (format->which == V4L2_SUBDEV_FORMAT_TRY) {
-+		mf = v4l2_subdev_get_try_format(sd, cfg, 0);
-+		format->format = *mf;
-+		return 0;
-+	}
-+
- 	mf->width	= mt9m001->rect.width;
- 	mf->height	= mt9m001->rect.height;
- 	mf->code	= mt9m001->fmt->code;
-@@ -642,6 +648,26 @@ static const struct v4l2_subdev_core_ops mt9m001_subdev_core_ops = {
- #endif
- };
- 
-+static int mt9m001_init_cfg(struct v4l2_subdev *sd,
-+			    struct v4l2_subdev_pad_config *cfg)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	struct mt9m001 *mt9m001 = to_mt9m001(client);
-+	struct v4l2_mbus_framefmt *try_fmt =
-+		v4l2_subdev_get_try_format(sd, cfg, 0);
-+
-+	try_fmt->width		= MT9M001_MAX_WIDTH;
-+	try_fmt->height		= MT9M001_MAX_HEIGHT;
-+	try_fmt->code		= mt9m001->fmts[0].code;
-+	try_fmt->colorspace	= mt9m001->fmts[0].colorspace;
-+	try_fmt->field		= V4L2_FIELD_NONE;
-+	try_fmt->ycbcr_enc	= V4L2_YCBCR_ENC_DEFAULT;
-+	try_fmt->quantization	= V4L2_QUANTIZATION_DEFAULT;
-+	try_fmt->xfer_func	= V4L2_XFER_FUNC_DEFAULT;
-+
-+	return 0;
-+}
-+
- static int mt9m001_enum_mbus_code(struct v4l2_subdev *sd,
- 		struct v4l2_subdev_pad_config *cfg,
- 		struct v4l2_subdev_mbus_code_enum *code)
-@@ -678,6 +704,7 @@ static const struct v4l2_subdev_sensor_ops mt9m001_subdev_sensor_ops = {
- };
- 
- static const struct v4l2_subdev_pad_ops mt9m001_subdev_pad_ops = {
-+	.init_cfg	= mt9m001_init_cfg,
- 	.enum_mbus_code = mt9m001_enum_mbus_code,
- 	.get_selection	= mt9m001_get_selection,
- 	.set_selection	= mt9m001_set_selection,
+Encoder and decoder share an interrupt that is triggered whenever a message is
+available in one of the mailboxes. Each MCU provides an interrupt status
+register in its own register space.
+
+I would appreciate feedback to the device tree bindings, the overall
+architecture of the driver and if there are any major issues that I need to
+address.
+
+There are several things already on my own TODO list:
+
+- The driver still contains various hard coded values and only works with a
+  resolution of 144x144. I am working on enabling more resolutions and
+  actually calculating the hard-coded values.
+
+- The driver also only works with the vcu-firmware release 2018.2 [0]. The
+  2018.3 release uses a different mailbox size, which needs to be reflected in
+  the driver.
+
+- There is the xlnx-vcu driver for managing the clocks via the FPGA glue code.
+  Right now, the allegro driver does not interact with the driver to configure
+  the clocks.
+
+I ran v4l2-compliance without failures on the driver, but I think adding the
+test results right now only distracts from more important open issues in the
+driver.
+
+Michael
+
+[0] https://github.com/Xilinx/vcu-firmware/tree/xilinx-v2018.2
+
+Michael Tretter (3):
+  media: dt-bindings: media: document allegro-dvt bindings
+  [media] allegro: add Allegro DVT video IP core driver
+  [media] allegro: add SPS/PPS nal unit writer
+
+ .../devicetree/bindings/media/allegro.txt     |   35 +
+ MAINTAINERS                                   |    6 +
+ drivers/staging/media/Kconfig                 |    2 +
+ drivers/staging/media/Makefile                |    1 +
+ drivers/staging/media/allegro-dvt/Kconfig     |    6 +
+ drivers/staging/media/allegro-dvt/Makefile    |    6 +
+ .../staging/media/allegro-dvt/allegro-core.c  | 2425 +++++++++++++++++
+ drivers/staging/media/allegro-dvt/nal-h264.c  | 1278 +++++++++
+ drivers/staging/media/allegro-dvt/nal-h264.h  |  188 ++
+ 9 files changed, 3947 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
+ create mode 100644 drivers/staging/media/allegro-dvt/Kconfig
+ create mode 100644 drivers/staging/media/allegro-dvt/Makefile
+ create mode 100644 drivers/staging/media/allegro-dvt/allegro-core.c
+ create mode 100644 drivers/staging/media/allegro-dvt/nal-h264.c
+ create mode 100644 drivers/staging/media/allegro-dvt/nal-h264.h
+
 -- 
-2.7.4
+2.19.1
