@@ -1,60 +1,240 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH 1/3] serial: 8250_omap: Drop check for of_node
-Date: Thu, 10 Jan 2019 07:27:05 -0800
-Message-ID: <20190110152705.GX5544@atomide.com>
-References: <20190109091206.25759-1-vigneshr@ti.com>
- <20190109091206.25759-2-vigneshr@ti.com>
- <20190109214403.GW5544@atomide.com>
- <20190110120758.bz63neey5ztepw4m@earth.universe>
- <dbc00a69-2144-6e30-e9b1-4f8ee272ab8a@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: [PATCH v3] arm64: dts: meson: Fix mmc cd-gpios polarity
+Date: Thu, 10 Jan 2019 16:40:22 +0100
+Message-ID: <1547134822-18498-1-git-send-email-lollivier@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dbc00a69-2144-6e30-e9b1-4f8ee272ab8a@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vignesh R <vigneshr@ti.com>
-Cc: Sebastian Reichel <sre@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Jiri Slaby <jslaby@suse.com>, Lokesh Vutla <lokeshvutla@ti.com>, linux-serial@vger.kernel.org, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+Cc: Loys Ollivier <lollivier@baylibre.com>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-* Vignesh R <vigneshr@ti.com> [190110 13:24]:
-> 
-> On 10-Jan-19 5:37 PM, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > On Wed, Jan 09, 2019 at 01:44:03PM -0800, Tony Lindgren wrote:
-> >> * Vignesh R <vigneshr@ti.com> [190109 09:11]:
-> >>> 8250_omap is DT only driver so dev->of_node always exists. Drop check
-> >>> for existence of valid dev->of_node to simplify omap8250_probe().
-> >>
-> >> That part seems safe to me now.
-> >>
-> >>> --- a/drivers/tty/serial/8250/8250_omap.c
-> >>> +++ b/drivers/tty/serial/8250/8250_omap.c
-> >> ...
-> >>> -		const struct of_device_id *id;
-> >>> -
-> >>> -		ret = of_alias_get_id(pdev->dev.of_node, "serial");
-> >>> -
-> >>> -		of_property_read_u32(pdev->dev.of_node, "clock-frequency",
-> >>> -				     &up.port.uartclk);
-> >>> -		priv->wakeirq = irq_of_parse_and_map(pdev->dev.of_node, 1);
-> >>> -
-> >>> -		id = of_match_device(of_match_ptr(omap8250_dt_ids), &pdev->dev);
-> >>> -		if (id && id->data)
-> >>> -			priv->habit |= *(u8 *)id->data;
-> >>
-> >> But this part it seems we still need to keep around
-> >> as we still have lots of clock-frequency references
-> >> in the *.dtsi files. Or am I missing something?
-> > 
-> > It's re-added a couple of lines later. Only the indent was removed.
-> > 
-> 
-> That's right. You beat me to it. Thanks :)
+Commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
+changed the behavior of "cd-inverted" to follow the device tree bindings
+specification.
+Lines specifying "cd-inverted" are now "active high".
 
-Oh right, sorry I missed that :)
+Fix the SD card for meson by setting the cd-gpios as "active low" according
+to the boards specifications.
 
-Regards,
+Fixes: 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
+Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+---
 
-Tony
+v3: fix typos in the commit message
+
+v2: fix more occurences, also in other meson boards.
+
+ arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi            | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts           | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts         | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts            | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi               | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi           | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi              | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi          | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts          | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts            | 3 +--
+ arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts             | 3 +--
+ 14 files changed, 14 insertions(+), 28 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+index e14e0ce7e89f..016641a41694 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+@@ -187,8 +187,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+index 8cd50b75171d..ade2ee09ae96 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+@@ -305,8 +305,7 @@
+ 	max-frequency = <200000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddio_ao3v3>;
+ 	vqmmc-supply = <&vddio_tf>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+index 4cf7f6e80c6a..25105ac96d55 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+@@ -238,8 +238,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_card>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 2e1cd5e3a246..1cc9dc68ef00 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -258,8 +258,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&tflash_vdd>;
+ 	vqmmc-supply = <&tf_io>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+index ce862266b9aa..0be0f2a5d2fe 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+@@ -196,8 +196,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_card>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+index 93a4acf2c46c..ad4d50bd9d77 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+@@ -154,8 +154,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vcc_3v3>;
+ };
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+index ec09bb5792b7..2d2db783c44c 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+@@ -211,8 +211,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vcc_3v3>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+index f1c410e2da2b..796baea7a0bf 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+@@ -131,8 +131,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_card>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+index db293440e4ca..255cede7b447 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+@@ -238,8 +238,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vcc_3v3>;
+ 	vqmmc-supply = <&vcc_card>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+index 6739697be1de..9cbdb85fb591 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+@@ -183,8 +183,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_card>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+index a1b31013ab6e..bc811a2faf42 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+@@ -137,8 +137,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+index 3c3a667a8df8..3f086ed7de05 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+@@ -356,8 +356,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+index f7a1cffab4a8..8acfd40090d2 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+@@ -147,8 +147,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+index 7212dc4531e4..7fa20a8ede17 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+@@ -170,8 +170,7 @@
+ 	max-frequency = <100000000>;
+ 	disable-wp;
+ 
+-	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+-	cd-inverted;
++	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+ 
+ 	vmmc-supply = <&vddao_3v3>;
+ 	vqmmc-supply = <&vddio_boot>;
+-- 
+2.7.4
