@@ -1,60 +1,78 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3 0/6] Add CPU clock support for Armada 7K/8K
-Date: Thu, 10 Jan 2019 17:36:33 +0100
-Message-ID: <875zuwo4fi.fsf@FE-laptop>
-References: <20181216094147.6468-1-gregory.clement@bootlin.com>
-        <87a7k8o5d5.fsf@FE-laptop>
-        <154713766177.15366.14948014236046606980@swboyd.mtv.corp.google.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH v12 6/7] arm64: dts: sdm845: Add interconnect provider DT
+ nodes
+Date: Thu, 10 Jan 2019 18:39:22 +0200
+Message-ID: <40c11483-40c4-5f6a-3127-6a718930582a@linaro.org>
+References: <20181208170216.32555-1-georgi.djakov@linaro.org>
+ <20181208170216.32555-7-georgi.djakov@linaro.org>
+ <CAD=FV=Xg5Sz029_UjuDg-ms05Ez+riv8qr0FLWkvg6axPYbZ_g@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154713766177.15366.14948014236046606980@swboyd.mtv.corp.google.com>
-        (Stephen Boyd's message of "Thu, 10 Jan 2019 08:27:41 -0800")
+In-Reply-To: <CAD=FV=Xg5Sz029_UjuDg-ms05Ez+riv8qr0FLWkvg6axPYbZ_g@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Stephen Boyd <sboyd@codeaurora.org>, devicetree@vger.kernel.org, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Antoine Tenart <antoine.tenart@bootlin.com>, Mike Turquette <mturquette@baylibre.com>, linux-kernel@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, =?utf-8?Q?Miqu=C3=A8l?= Raynal <miquel.raynal@bootlin.com>, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Andy Gross <andy.gross@linaro.org>, Olof Johansson <olof@lixom.net>, Arnd Bergmann <arnd@arndb.de>, linux-pm@vger.kernel.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, Michael Turquette <mturquette@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Vincent Guittot <vincent.guittot@linaro.org>, Saravana Kannan <skannan@codeaurora.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, Evan Green <evgreen@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Alexandre Bailon <abailon@baylibre.com>, maxime.ripard@bootlin.com, Thierry
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
- 
- On jeu., janv. 10 2019, Stephen Boyd <sboyd@kernel.org> wrote:
+Hi Doug,
 
-> Quoting Gregory CLEMENT (2019-01-10 08:16:22)
->> Hi Stephen,
->>  
->>  On dim., déc. 16 2018, Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
->> 
->> > Hello,
->> >
->> > This is the third version of a series allowing to manage the cpu
->> > clock for Armada 7K/8K. For these SoCs, the CPUs share the same clock
->> > by cluster, so actually the clock management is done at cluster level.
->> >
->> > As for the other Armada 7K/8K clocks it is possible to have multiple
->> > AP so here again we need to have unique name: the purpose of the second
->> > patch is to share a common code which will be used in 3 drivers.
->> >
->> > The last 2 patch enable the driver at dt and platform level and will
->> > be applied through the mvebu subsystem.
->> 
->> What is the status of this series?
->> 
->> The only comments I had was from Rob about the binding and I answered
->> them 3 weeks ago. Do you have any other comments? Do you expect a rebase
->> of this series on v5.0-rc1?
->> 
->
-> I'm waiting for Rob. I think the binding is not proper so presumably you
-> will figure out what Rob wants and then change the code accordingly and
-> resend?
+On 1/10/19 01:18, Doug Anderson wrote:
+> Hi,
+> 
+> On Sat, Dec 8, 2018 at 9:02 AM Georgi Djakov <georgi.djakov@linaro.org> wrote:
+>>
+>> From: David Dai <daidavid1@codeaurora.org>
+>>
+>> Add RSC (Resource State Coordinator) provider
+>> dictating network-on-chip interconnect bus performance
+>> found on SDM845-based platforms.
+>>
+>> Signed-off-by: David Dai <daidavid1@codeaurora.org>
+>> Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
+>> ---
+>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 5 +++++
+>>  1 file changed, 5 insertions(+)
+>>
+>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> index b72bdb0a31a5..b3cd256a154e 100644
+>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+>> @@ -1324,6 +1324,11 @@
+>>                                 compatible = "qcom,sdm845-rpmh-clk";
+>>                                 #clock-cells = <1>;
+>>                         };
+>> +
+>> +                       rsc_hlos: interconnect {
+>> +                               compatible = "qcom,sdm845-rsc-hlos";
+>> +                               #interconnect-cells = <1>;
+>> +                       };
+> 
+> It would have been convenient if this patch had also added an include above:
+> 
+> #include <dt-bindings/interconnect/qcom,sdm845.h>
+> 
+> ...while the include isn't technically needed by this patch, all the
+> patches that want to actually _use_ the interconnect will need to add
+> the #include and then you get to some fun fights about who has to add
+> the include in which patch.  For instance these two patches won't
+> compile:
+> 
+> * https://lkml.kernel.org/r/1545373748-1416-1-git-send-email-jshekhar@codeaurora.org
+> * https://lkml.kernel.org/r/20181220173026.3857-4-jcrouse@codeaurora.org
+> 
+> ...because neither of them happened to add the include.  Maybe they
+> were both assuming someone else would do it?
+> 
+> 
+> If nobody else wants to, I'm happy to post a patch to add that include
+> myself and it can be applied atop this one.  ...or if this patch needs
+> to spin for some other reason maybe you could add it into this patch
+> directly?
 
-Actually the binding describes properly the hardware we have and that
-what I answered to Rob.
+Ok, i will add it and resend.
 
-Gregory
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Thanks,
+Georgi
