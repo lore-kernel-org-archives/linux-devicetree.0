@@ -1,124 +1,72 @@
-From: Raju P L S S S N <rplsssn@codeaurora.org>
-Subject: Re: [PATCH RFC 3/5] dt-bindings: Add PDC timer bindings for Qualcomm
- SoCs
-Date: Thu, 10 Jan 2019 22:28:41 +0530
-Message-ID: <3ae4bf87-88be-466d-0f1e-ff7bf5c4e816@codeaurora.org>
-References: <20181221115946.10095-1-rplsssn@codeaurora.org>
- <20181221115946.10095-4-rplsssn@codeaurora.org>
- <154546438942.179992.14851496143150245966@swboyd.mtv.corp.google.com>
- <504cae51-0f35-beb8-496b-a335863a9071@codeaurora.org>
- <154603310752.179992.9262815873457262616@swboyd.mtv.corp.google.com>
- <b97937a0-68ff-ded7-d63b-680981818114@codeaurora.org>
- <154655037205.15366.7302521016277534390@swboyd.mtv.corp.google.com>
- <6384bcac-634c-5e7e-b357-93982de6eafb@codeaurora.org>
- <93a4b632-5740-42a9-9552-b46dd599ad68@codeaurora.org>
- <154705600478.15366.3563482093409250809@swboyd.mtv.corp.google.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 03/14] media: ov7670: hook s_power onto v4l2 core
+Date: Thu, 10 Jan 2019 18:59:03 +0200
+Message-ID: <20190110165903.gcedksczp5tmkl5t@valkosipuli.retiisi.org.uk>
+References: <20181120100318.367987-1-lkundrak@v3.sk>
+ <20181120100318.367987-4-lkundrak@v3.sk>
+ <20181122122146.a6wydozsg676i3w7@valkosipuli.retiisi.org.uk>
+ <868bd721260bc8948835fe2a697a047ae2277cd0.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154705600478.15366.3563482093409250809@swboyd.mtv.corp.google.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <868bd721260bc8948835fe2a697a047ae2277cd0.camel@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
+Hi Lubomir,
 
+On Wed, Nov 28, 2018 at 12:29:33PM +0100, Lubomir Rintel wrote:
+> On Thu, 2018-11-22 at 14:21 +0200, Sakari Ailus wrote:
+> > Hi Lubomir,
+> > 
+> > On Tue, Nov 20, 2018 at 11:03:08AM +0100, Lubomir Rintel wrote:
+> > > The commit 71862f63f351 ("media: ov7670: Add the ov7670_s_power function")
+> > > added a power control routing. However, it was not good enough to use as
+> > > a s_power() callback: it merely flipped on the power GPIOs without
+> > > restoring the register settings.
+> > > 
+> > > Fix this now and register an actual power callback.
+> > > 
+> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > > 
+> > > ---
+> > > Changes since v2:
+> > > - Restore the controls, format and frame rate on power on
+> > > 
+> > >  drivers/media/i2c/ov7670.c | 50 +++++++++++++++++++++++++++++++++-----
+> > >  1 file changed, 44 insertions(+), 6 deletions(-)
+> > > 
+> > > diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+> > > index ead0c360df33..cbaab60aaaac 100644
+> > > --- a/drivers/media/i2c/ov7670.c
+> > > +++ b/drivers/media/i2c/ov7670.c
+...
+> > > @@ -1945,7 +1983,7 @@ static int ov7670_remove(struct i2c_client *client)
+> > >  	v4l2_ctrl_handler_free(&info->hdl);
+> > >  	clk_disable_unprepare(info->clk);
+> > >  	media_entity_cleanup(&info->sd.entity);
+> > > -	ov7670_s_power(sd, 0);
+> > > +	ov7670_power_off(sd);
+> > >  	return 0;
+> > >  }
+> > >  
+> > 
+> > Could you consider instead switching to runtime PM? A few drivers such as
+> > the ov2685 driver does that already.
+> 
+> Yes, I'll take a look. Thanks for the suggestion. I didn't know such
+> thing exists, so it may take some time for me to grasp it though.
 
-On 1/9/2019 11:16 PM, Stephen Boyd wrote:
-> Quoting Raju P L S S S N (2019-01-08 21:34:32)
->>
->>
->> On 1/7/2019 9:47 PM, Raju P L S S S N wrote:
->>>
->>>
->>> On 1/4/2019 2:49 AM, Stephen Boyd wrote:
->>>>
->>>> I'd hope that each RSC's PDC timer wakes up the owner of the RSC so that
->>>> we can use the sysreg based timers and ignore the MMIO based timers
->>>> here. This isn't a very important distinction to make though, so if you
->>>> have to use the MMIO timers then it just means some extra DT things need
->>>> to be done to relate the MMIO timers with the RSC that has the timer
->>>> that needs to be programmed too.
->>>
->>>>
->>>> Either way we would need a way to either hook the ARM architected timer
->>>> driver in the kernel, or reimplement the bit of code needed to implement
->>>> the clockevent based on the ARM architected timer that programs the ARM
->>>> timer and the PDC timer together.
->>>>
->>>
->>> Could you please provide some more details on the implementation?
->>
->> Hi Stephen,
->>
->> Regardless of implementation options about application processor
->> subsytem PDC timer, I think there is a need to differentiate the fact
->> that for application processor subsystem PDC timer programming is done
->> by SW but not for display processor subsystem as HW sleep solver takes
->> care of PDC timer during sleep entry/exit. How about having a dt
->> property like qcom,pdc-timer-mode = "solver"/"sw" ? The current patch
->> introduced client based model using regmap to achieve this
->> differentiation between these two subsystems. By using the dt property,
->> once rpmh-src driver instance for application subsystem can have PDC
->> timer programing implemented. Let me know if there is another way.
->>
->> For implementation of PDC timer, I see the following based on above
->> discussion -
->> 1. Take the existing cpu_pm_notify approach and move the current series
->> approach of programing PDC timer registers to RSC driver. This wouldn't
->> involve any changes in clock_event_framework/broadcast framework.
->>
->> 2. Add api hooks (like reading the next wake up programmed) to ARM
->> architecture timer driver so that the value is copied to PDC timer using
->> the api with in RSC driver based on cpu_pm_notifications.
->>
->> 3. Changes in clockevent to program both ARM mem timer & PDC timer
->> together. Could you please share some more details on this?
->>
->>
->> Please let me know if the first approach is ok.
->>
-> 
-> The first approach requires that we expose internals of the clockevent
-> and broadcast timer information to drivers. From my perspective it looks
-> like a weird kludge to workaround the fact that the broadcast timer
-> doesn't actually work on this platform. That's why I'm suggesting that
-> you fix the broadcast timer on your platform to actually work, and do
-> that within the clockevent/broadcast layers instead of indirecting that
-> through cpu_pm notifiers.
-> 
-> That could be done by making a PDC clockevent that has some DT binding
-> of a property pointing to an MMIO timer frame and then reimplementing
-> the MMIO timer code in the PDC driver on top of the frame/register
-> region it pulls out of there. Or it could be written in reverse by
-> having the generic MMIO timer driver point to the PDC somehow and
-> implement some platform specific API to pass that information to the
-> real wakeup programming part in PDC.
-> 
-> I'm leaning toward the first approach where PDC is the clockevent and
-> that uses the MMIO timer on the backend to do what it needs to program a
-> wakeup. That way you can mandate the usage of the physical timer and
-> keep this quirk away from the ARM timer driver. It also makes the idea
-> of a qcom,pdc-timer-mode sort of useless because the PDC will have a
-> property that points to the timer frame and that will mean "use this for
-> broadcast wakeup". I'm not sure how the ARM folks feel about this
-> though. It would probably require some sort of ARM timer API that lets
-> us program the MMIO timer frame from the PDC driver. So exporting
-> arch_timer_reg_write() and making that always inlined to optimize hot
-> paths would be required.
-> 
+I'm be tempted to merge the ov7670 patches as they significantly improve
+the driver, even if we're at the moment missing the runtime PM conversion.
+It could be done later on as well.
 
-Regarding the first approach -
-If PDC clk_evt_dev is created and registered to broadcast framework, it 
-means it will replace MMIO timer event device in broadcast framework (as 
-only one broadcast event timer can exist). So in registration phase, the 
-tick broadcast framework would configure broadcat event handler for 
-PDC(clk_evt_dev).
+Would that be ok for you?
 
-Even if we have some way of exporting arch_timer_reg_write() to program 
-the wakeup for MMIO timer, the irq handler for MMIO timer is responsible 
-to invoke event_handler. However, since MMIO timer is replaced by PDC 
-timer event device, event handler will not be able to inform broadcast 
-framework. What can be done about this?
+-- 
+Kind regards,
+
+Sakari Ailus
