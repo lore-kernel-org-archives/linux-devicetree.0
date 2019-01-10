@@ -1,77 +1,136 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v2 1/1] arm64: dts: marvell: armada-ap806: reserve PSCI area
-Date: Thu, 10 Jan 2019 12:04:46 +0100
-Message-ID: <874lagpycx.fsf@FE-laptop>
-References: <20181221164503.5128-1-xypron.glpk@gmx.de>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/5] gnss: sirf: write data to gnss only when the gnss
+ device is open
+Date: Thu, 10 Jan 2019 13:02:28 +0100
+Message-ID: <20190110120228.GB3430@localhost>
+References: <20181209195150.5192-1-andreas@kemnade.info>
+ <20181209195150.5192-2-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181221164503.5128-1-xypron.glpk@gmx.de> (Heinrich Schuchardt's
-        message of "Fri, 21 Dec 2018 17:45:03 +0100")
+Content-Disposition: inline
+In-Reply-To: <20181209195150.5192-2-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heinrich Schuchardt <xypron.glpk@gmx.de>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Heinrich,
- 
- On ven., déc. 21 2018, Heinrich Schuchardt <xypron.glpk@gmx.de> wrote:
-
-> The memory area [0x4000000-0x4200000[ is occupied by the PSCI firmware. Any
-> attempt to access it from Linux leads to an immediate crash.
->
-> So let's make the same memory reservation as the vendor kernel.
->
-> Signed-off-by: Heinrich Schuchardt <xypron.glpk@gmx.de>
-
-
-Applied on mvebu/fixes
-
-I added a comment about the use with a mainline /U-Boot
-
-Thanks,
-
-Gregory
-
-
+On Sun, Dec 09, 2018 at 08:51:46PM +0100, Andreas Kemnade wrote:
+> The api forbids writing data there otherwise. Prepare for the
+> serdev_open()/close() being a part of runtime pm.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 > ---
-> v2
-> 	Move the change from armada-8040-mcbin.dts to armada-ap806.dtsi.
-> 	I only have a MACCHIATObin for testing but
-> 	https://github.com/MarvellEmbeddedProcessors/linux-marvell
-> 	has the reservation in that file.
-> ---
->  arch/arm64/boot/dts/marvell/armada-ap806.dtsi | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> index 7d94c1fa592a..f8dafef83db0 100644
-> --- a/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> +++ b/arch/arm64/boot/dts/marvell/armada-ap806.dtsi
-> @@ -28,6 +28,17 @@
->  		method = "smc";
->  	};
+> Changes in v2:
+>  add locking
+> 
+>  drivers/gnss/sirf.c | 28 +++++++++++++++++++++++++++-
+>  1 file changed, 27 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> index 2c22836d3ffd..ba663de1db49 100644
+> --- a/drivers/gnss/sirf.c
+> +++ b/drivers/gnss/sirf.c
+> @@ -35,6 +35,12 @@ struct sirf_data {
+>  	struct gpio_desc *wakeup;
+>  	int irq;
+>  	bool active;
+> +	/*
+> +	 * There might be races between returning data and closing the gnss
+> +	 * device.
+> +	 */
+
+Please drop this comment, which is too verbose. The mutex protects the
+opened flag, and that could be indicated using a new line above the
+mutex and below the flag, or using a short comment before the mutex.
+
+> +	struct mutex gdev_mutex;
+
+Please rename "mutex". We should be able to reuse this for the serdev
+open count as well, right?
+
+> +	bool opened;
+
+Rename "open" (i.e. same tense as "active").
+
+And just add a newline here too.
+
+>  	wait_queue_head_t power_wait;
+>  };
 >  
-> +	reserved-memory {
-> +		#address-cells = <2>;
-> +		#size-cells = <2>;
-> +		ranges;
-> +
-> +		psci-area@4000000 {
-> +			reg = <0x0 0x4000000 0x0 0x200000>;
-> +			no-map;
-> +		};
-> +	};
-> +
->  	ap806 {
->  		#address-cells = <2>;
->  		#size-cells = <2>;
-> -- 
-> 2.19.2
->
+> @@ -44,6 +50,7 @@ static int sirf_open(struct gnss_device *gdev)
+>  	struct serdev_device *serdev = data->serdev;
+>  	int ret;
+>  
+> +	data->opened = true;
 
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Always hold the mutex when manipulating the open flag so we don't have
+to worry about ordering issues.
+
+>  	ret = serdev_device_open(serdev);
+>  	if (ret)
+>  		return ret;
+> @@ -55,6 +62,7 @@ static int sirf_open(struct gnss_device *gdev)
+>  	if (ret < 0) {
+>  		dev_err(&gdev->dev, "failed to runtime resume: %d\n", ret);
+>  		pm_runtime_put_noidle(&serdev->dev);
+> +		data->opened = false;
+
+And to avoid problems on error paths.
+
+>  		goto err_close;
+>  	}
+>  
+> @@ -74,6 +82,9 @@ static void sirf_close(struct gnss_device *gdev)
+>  	serdev_device_close(serdev);
+>  
+>  	pm_runtime_put(&serdev->dev);
+
+Add a newline here.
+
+> +	mutex_lock(&data->gdev_mutex);
+> +	data->opened = false;
+> +	mutex_unlock(&data->gdev_mutex);
+>  }
+>  
+>  static int sirf_write_raw(struct gnss_device *gdev, const unsigned char *buf,
+> @@ -105,8 +116,22 @@ static int sirf_receive_buf(struct serdev_device *serdev,
+>  {
+>  	struct sirf_data *data = serdev_device_get_drvdata(serdev);
+>  	struct gnss_device *gdev = data->gdev;
+> +	int ret = 0;
+> +
+> +	/*
+> +	 * we might come here everytime when runtime is resumed
+> +	 * and data is received. Two cases are possible
+> +	 * 1. device is opened during initialisation
+> +	 * 2. kernel is compiled without runtime pm
+> +	 *    and device is opened all the time
+> +	 */
+
+This comments makes little sense with the current code. Please remove.
+
+> +	mutex_lock(&data->gdev_mutex);
+> +	if (data->opened)
+> +		ret = gnss_insert_raw(gdev, buf, count);
+>  
+
+No new line (or add one after mutex_lock() above).
+
+> -	return gnss_insert_raw(gdev, buf, count);
+> +	mutex_unlock(&data->gdev_mutex);
+> +
+> +	return ret;
+>  }
+>  
+>  static const struct serdev_device_ops sirf_serdev_ops = {
+> @@ -275,6 +300,7 @@ static int sirf_probe(struct serdev_device *serdev)
+>  	data->serdev = serdev;
+>  	data->gdev = gdev;
+>  
+> +	mutex_init(&data->gdev_mutex);
+>  	init_waitqueue_head(&data->power_wait);
+>  
+>  	serdev_device_set_drvdata(serdev, data);
+
+Johan
