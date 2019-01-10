@@ -1,42 +1,58 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH v2 4/4] usb: musb: Kconfig: Drop dependency on CONFIG_USB for jz4740
-Date: Thu, 10 Jan 2019 10:37:00 -0300
-Message-ID: <20190110133700.4471-4-paul@crapouillou.net>
-References: <20190110133700.4471-1-paul@crapouillou.net>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110133700.4471-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bin Liu <b-liu@ti.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH v5 1/5] arm64: dts: rockchip: Add DT for NanoPC-T4
+Date: Thu, 10 Jan 2019 13:42:13 +0000
+Message-ID: <b192edd9-7d08-3b7f-cae0-620e95a7bbce@arm.com>
+References: <cover.1546981251.git.robin.murphy@arm.com>
+ <a92dd6f978b2b026557ca681610400c83ebf59b2.1546981251.git.robin.murphy@arm.com>
+ <3242500.qteudgsQcv@phil>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <3242500.qteudgsQcv@phil>
+Content-Language: en-GB
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Heiko Stuebner <heiko@sntech.de>
+Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Kconfig entry previously depended on USB_OTG_BLACKLIST_HUB
-unconditionally, which is an option that is only available when
-CONFIG_USB is enabled. However, the USB IP in the JZ4740 SoC does not
-support host mode, only gadget mode, so it makes sense to allow it to
-build when CONFIG_USB is not set.
+On 10/01/2019 13:37, Heiko Stuebner wrote:
+> Am Dienstag, 8. Januar 2019, 22:57:23 CET schrieb Robin Murphy:
+>> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>>
+>> This adds a device tree for the NanoPC-T4 SBC, which is based on the
+>> Rockchip RK3399 SoC and marketed by FriendlyELEC.
+>>
+>> Known working:
+>>
+>> - Serial
+>> - Ethernet
+>> - HDMI
+>> - USB 2.0
+>>
+>> All of the interesting stuff is in a .dtsi because there are at least
+>> two other boards that share most of it: NanoPi M4 and NanoPi NEO4.
+>>
+>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
+>> Reviewed-by: Rob Herring <robh@kernel.org>
+>> [rm: various further cleanup]
+>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> 
+> nobody complained, the binding was reviewed and all looks good
+> so I've gone forward and applied this one for 5.1 already.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
+Awesome, thanks!
 
-v2: Instead of removing the dependency on USB_OTG_BLACKLIST_HUB, we now
-    depend on (USB=n || USB_OTG_BLACKLIST_HUB)
+I'll probably follow up with a v2 of the rest of the patches next week, 
+after I've had the chance to play some more over the weekend.
 
- drivers/usb/musb/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
-index 6f5b0ed6a507..fda7691bf173 100644
---- a/drivers/usb/musb/Kconfig
-+++ b/drivers/usb/musb/Kconfig
-@@ -113,7 +113,7 @@ config USB_MUSB_JZ4740
- 	depends on NOP_USB_XCEIV
- 	depends on MIPS || COMPILE_TEST
- 	depends on USB_MUSB_GADGET
--	depends on USB_OTG_BLACKLIST_HUB
-+	depends on USB=n || USB_OTG_BLACKLIST_HUB
- 
- config USB_MUSB_AM335X_CHILD
- 	tristate
--- 
-2.11.0
+Cheers,
+Robin.
