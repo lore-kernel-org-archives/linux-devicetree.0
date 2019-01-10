@@ -1,78 +1,29 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v9 14/27] pwm: jz4740: Improve algorithm of clock
- calculation
-Date: Thu, 10 Jan 2019 11:04:56 -0300
-Message-ID: <1547129096.16183.0@crapouillou.net>
-References: <20181227181319.31095-1-paul@crapouillou.net>
-        <20181227181319.31095-15-paul@crapouillou.net>
-        <20190105195725.cuxfge6zkpbt3cyk@pengutronix.de>
-        <1546722339.30174.0@crapouillou.net>
-        <20190105212711.s765knwwerceytvk@pengutronix.de>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
+ boards
+Date: Thu, 10 Jan 2019 14:06:13 +0000
+Message-ID: <54495589-67d8-f0e2-c5b0-1fe912376e26@ysoft.com>
+References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
+ <20181228232556.GA14277@bogus>
+ <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
+ <CAL_JsqJyZt=VCv2bX1YYFQt91BcFqDWfeAqkJVcF7eFD0_JM1g@mail.gmail.com>
+ <6fd5ac6a-edb5-a600-3c10-b46a1c1d9906@ysoft.com>
+ <f96952b2-7b19-5397-00a1-0fe9b5800dab@ysoft.com>
+ <CAL_JsqLRX2g1t-8YCqpZ5fd=-MyLPkgy88Gb=6ohEZbxWfS+LA@mail.gmail.com>
+ <20190110135742.GC30487@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190105212711.s765knwwerceytvk@pengutronix.de>
+In-Reply-To: <20190110135742.GC30487@dragon>
+Content-Language: en-US
+Content-ID: <11A56CF19AC4B545BAAF2A87CB8E41AB@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?iso-8859-1?q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Stephen Boyd <sboyd@kernel.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, Russell King <linux@armlinux.org.uk>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-Adding Stephen to the discussion.
-Adding Stephen to the discussion.
-
-On Sat, Jan 5, 2019 at 6:27 PM, Uwe Kleine-K=F6nig=20
-<u.kleine-koenig@pengutronix.de> wrote:
-> Hello Paul,
->=20
-> On Sat, Jan 05, 2019 at 06:05:38PM -0300, Paul Cercueil wrote:
->>  On Sat, Jan 5, 2019 at 4:57 PM, Uwe Kleine-K=F6nig
->>  <u.kleine-koenig@pengutronix.de> wrote:
->>  > You are assuming stuff here about the parent clk which isn't=20
->> guaranteed
->>  > (AFAICT) by the clk framework: If you call clk_round_rate(clk,=20
->> rate - 1)
->>  > this might well return rate even if the clock could run slower=20
->> than
->>  > rate.
->>=20
->>  It may not be guaranteed by the clock framework itself, but it is=20
->> guaranteed
->>  to behave like that on this family of SoCs.
->=20
-> You shouldn't rely on that. Experience shows that people will start
-> copying code to machines where this is not guaranteed. Even if they
-> don't copy and only learn from reading this is bad. Also how do you
-> guarantee that this won't change in the future making the pwm code=20
-> break
-> without noticing?
->=20
-> If you use an API better don't assume more things given than are
-> guaranteed by the API.
->=20
-> Having said that I would consider it sensible to introduce something
-> like clk_roundup_rate() and clk_rounddown_rate() which would allow
-> calculations like that.
-
-@Stephen:
-Some context: my algorithm makes use of clk_round_rate(clk, rate - 1)=20
-to get the
-next (smaller) clock rate that a clock support.
-
-Is it something safe to assume? If not is there a better way?
-
->>  > Wouldn't it make sense to start iterating with rate =3D 0xffff *=20
->> 1e9 /
->>  > period? Otherwise you get bad configurations if rate is=20
->> considerable
->>  > slower than necessary.
->>=20
->>  The algorithm will start with 'rate' being the parent clock's rate,=20
->> which
->>  will always be the highest rate that the child clock will support.
->=20
-> Ah right, I missed that bit.
-
-Thanks,
--Paul
-=
+T24gMTAuMS4yMDE5IDE0OjU3LCBTaGF3biBHdW8gd3JvdGU6DQo+IEBWb2vDocSNLA0KPiANCj4g
+UGxlYXNlIGdlbmVyYXRlIHlvdXIgcGF0Y2hlcyBhZ2FpbnN0IG15IGZvci1uZXh0IGJyYW5jaCB3
+aXRoIGR0LWJpbmRpbmdzDQo+IGJlaW5nIHNlcGFyYXRlIHBhdGNoIGZyb20gZHRzIG9uZS4NCg0K
+T0ssIHRoYW5rIHlvdSBTaGF3bi4NCk1pY2hhbA0K
