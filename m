@@ -1,58 +1,36 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH v5 1/5] arm64: dts: rockchip: Add DT for NanoPC-T4
-Date: Thu, 10 Jan 2019 13:42:13 +0000
-Message-ID: <b192edd9-7d08-3b7f-cae0-620e95a7bbce@arm.com>
-References: <cover.1546981251.git.robin.murphy@arm.com>
- <a92dd6f978b2b026557ca681610400c83ebf59b2.1546981251.git.robin.murphy@arm.com>
- <3242500.qteudgsQcv@phil>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2 18/34] dt-bindings: arm: Convert FSL board/soc
+ bindings to json-schema
+Date: Thu, 10 Jan 2019 21:44:04 +0800
+Message-ID: <20190110134402.GB30487@dragon>
+References: <20181203213223.16986-1-robh@kernel.org>
+ <20181203213223.16986-19-robh@kernel.org>
+ <20181206023140.GZ3987@dragon>
+ <CAL_JsqK5nBdk-MiuTPMxr9oXqXnLqeMU3vtZi6AnT9V35_W55A@mail.gmail.com>
+ <20181208015835.GM3987@dragon>
+ <20190110064256.GA25218@dragon>
+ <dc0ef959-78a0-2a32-c0f9-e8da11e035e6@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <3242500.qteudgsQcv@phil>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <dc0ef959-78a0-2a32-c0f9-e8da11e035e6@ysoft.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2019 13:37, Heiko Stuebner wrote:
-> Am Dienstag, 8. Januar 2019, 22:57:23 CET schrieb Robin Murphy:
->> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>
->> This adds a device tree for the NanoPC-T4 SBC, which is based on the
->> Rockchip RK3399 SoC and marketed by FriendlyELEC.
->>
->> Known working:
->>
->> - Serial
->> - Ethernet
->> - HDMI
->> - USB 2.0
->>
->> All of the interesting stuff is in a .dtsi because there are at least
->> two other boards that share most of it: NanoPi M4 and NanoPi NEO4.
->>
->> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->> Reviewed-by: Rob Herring <robh@kernel.org>
->> [rm: various further cleanup]
->> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+On Thu, Jan 10, 2019 at 10:44:03AM +0000, Vokáč Michal wrote:
+...
+> > What happened to this?  It seems the patch did not hit v5.0-rc1.
 > 
-> nobody complained, the binding was reviewed and all looks good
-> so I've gone forward and applied this one for 5.1 already.
+> Hi Shawn,
+> Rob actually asked you a similar question two days ago..
+> 
+> https://lkml.org/lkml/2019/1/8/754
 
-Awesome, thanks!
+Oops, it seems there were some miscommunication between Rob and me.  Let
+me fix this by queuing this patch on my tree now.
 
-I'll probably follow up with a v2 of the rest of the patches next week, 
-after I've had the chance to play some more over the weekend.
-
-Cheers,
-Robin.
+Shawn
