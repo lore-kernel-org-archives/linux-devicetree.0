@@ -1,50 +1,36 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v2] ARM: dts: omap3-gta04: Fix graph_port warning
-Date: Thu, 10 Jan 2019 08:17:09 -0800
-Message-ID: <20190110161709.GZ5544@atomide.com>
-References: <97349a696b43af65d62b5d8e795ec3771b5e78bd.1547060514.git.hns@goldelico.com>
- <CAL_JsqLhGGx_amtDSZh3OJ+Tq-Oziu450NOt4Z+aoQMt-JY46Q@mail.gmail.com>
- <20190109213903.GV5544@atomide.com>
- <8674356B-8688-49B6-AB72-16A991124A73@goldelico.com>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: [PATCH shawn/for-next v3 1/2] dt-bindings: arm: Add Y Soft IOTA
+ Draco, Hydra and Ursa boards
+Date: Thu, 10 Jan 2019 16:20:50 +0000
+Message-ID: <1547137215-25928-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <8674356B-8688-49B6-AB72-16A991124A73@goldelico.com>
+Content-Language: en-US
+Content-ID: <600BE0E33F000448B8BFA2C51739FFC0@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "H. Nikolaus Schaller" <hns@goldelico.com>
-Cc: Rob Herring <robh@kernel.org>, Tomi Valkeinen <tomi.valkeinen@ti.com>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree <devicetree@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-omap <linux-omap@vger.kernel.org>, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-* H. Nikolaus Schaller <hns@goldelico.com> [190110 05:31]:
-> 
-> > Am 09.01.2019 um 22:39 schrieb Tony Lindgren <tony@atomide.com>:
-> > 
-> > * Rob Herring <robh@kernel.org> [190109 19:38]:
-> >> On Wed, Jan 9, 2019 at 1:02 PM H. Nikolaus Schaller <hns@goldelico.com> wrote:
-> >>> 
-> >>> From: Tony Lindgren <tony@atomide.com>
-> >>> 
-> >>> We're currently getting a warning with make dtbs:
-> >>> 
-> >>> arch/arm/boot/dts/omap3-gta04.dtsi:720.7-727.4: Warning (graph_port):
-> >>> /ocp@68000000/dss@48050000/encoder@48050c0 0/port: graph node unit
-> >>> address error, expected "0"
-> >>> 
-> >>> Tested-by: H. Nikolaus Schaller <hns@goldelico.com>
-> >>> Signed-off-by: Tony Lindgren <tony@atomide.com>
-> >> 
-> >> Acked-by: Rob Herring <robh@kernel.org>
-> > 
-> > Nikolaus, care to reply with your Signed-off-by since
-> > you also edited the patch?
-> 
-> Sorry, I forgot (too busy with other topics)...
-> 
-> Here:
-> 
-> Signed-off-by: H. Nikolaus Schaller <hns@goldelico.com>
-
-Thanks applying into omap-for-v5.0/fixes.
-
-Tony
+VGhlc2UgYXJlIGkuTVg2RHVhbExpdGUvU29sbyBiYXNlZCBzaW5nbGUgYm9hcmQgY29tcHV0ZXJz
+IHVzZWQNCmluIHZhcmlvdXMgWSBTb2Z0IHByb2R1Y3RzLg0KDQpDYzogQW5kcmV3IEx1bm4gPGFu
+ZHJld0BsdW5uLmNoPg0KU2lnbmVkLW9mZi1ieTogTWljaGFsIFZva8OhxI0gPG1pY2hhbC52b2th
+Y0B5c29mdC5jb20+DQotLS0NCkNoYW5nZXMgc2luY2UgdjI6DQogLSBOZXcgcGF0Y2gNCg0KIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwgfCAzICsrKw0KIDEg
+ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQppbmRleCBhNGQ2MjVkLi5iMzkwOGEwIDEwMDY0
+NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0K
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KQEAg
+LTk0LDYgKzk0LDkgQEAgcHJvcGVydGllczoNCiAgICAgICAgICAgICAgIC0gZnNsLGlteDZkbC1z
+YWJyZXNkICAgICAgICAjIGkuTVg2IER1YWxMaXRlIFNBQlJFIFNtYXJ0IERldmljZSBCb2FyZA0K
+ICAgICAgICAgICAgICAgLSB0ZWNobm9sb2dpYyxpbXg2ZGwtdHM0OTAwDQogICAgICAgICAgICAg
+ICAtIHRlY2hub2xvZ2ljLGlteDZkbC10czc5NzANCisgICAgICAgICAgICAgIC0geXNvZnQsaW14
+NmRsLXlhcHA0LWRyYWNvICAjIGkuTVg2IER1YWxMaXRlIFkgU29mdCBJT1RBIERyYWNvIGJvYXJk
+DQorICAgICAgICAgICAgICAtIHlzb2Z0LGlteDZkbC15YXBwNC1oeWRyYSAgIyBpLk1YNiBEdWFs
+TGl0ZSBZIFNvZnQgSU9UQSBIeWRyYSBib2FyZA0KKyAgICAgICAgICAgICAgLSB5c29mdCxpbXg2
+ZGwteWFwcDQtdXJzYSAgICMgaS5NWDYgU29sbyBZIFNvZnQgSU9UQSBVcnNhIGJvYXJkDQogICAg
+ICAgICAgIC0gY29uc3Q6IGZzbCxpbXg2ZGwNCiANCiAgICAgICAtIGRlc2NyaXB0aW9uOiBpLk1Y
+NlNMIGJhc2VkIEJvYXJkcw0KLS0gDQoyLjEuNA0KDQo=
