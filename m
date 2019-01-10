@@ -1,90 +1,48 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [RFC RESEND PATCH 0/7] Add driver for dvfsrc and add support for
- active state of scpsys on mt8183
-Date: Thu, 10 Jan 2019 11:39:03 +0200
-Message-ID: <d03ec933-5fe6-d076-d658-9b966cee9c0f@linaro.org>
-References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
- <154655603153.15366.7761694381359713995@swboyd.mtv.corp.google.com>
- <1546859080.6818.128.camel@mtksdaap41>
- <08d15fa8-7e53-518c-54bb-8050b0e4aabd@linaro.org>
- <1547003324.6818.156.camel@mtksdaap41>
+From: Simon Horman <horms-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
+ compatible string
+Date: Thu, 10 Jan 2019 10:47:38 +0100
+Message-ID: <20190110094738.boxjsx6iv73t4a4m@verge.net.au>
+References: <20190109202934.29304-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547003324.6818.156.camel@mtksdaap41>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>
-Cc: Stephen Boyd <swboyd@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, Viresh Kumar <vireshk@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <20190109202934.29304-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On 1/9/19 05:08, Henry Chen wrote:
-> On Mon, 2019-01-07 at 18:34 +0200, Georgi Djakov wrote:
->> Hi Henry,
->>
->> On 1/7/19 13:04, Henry Chen wrote:
->>> On Thu, 2019-01-03 at 14:53 -0800, Stephen Boyd wrote:
->>>> Quoting Henry Chen (2019-01-02 06:09:51)
->>>>> The patchsets add support for MediaTek hardware module named DVFSRC
->>>>> (dynamic voltage and frequency scaling resource collector). The DVFSRC is
->>>>> a HW module which is used to collect all the requests from both software
->>>>> and hardware and turn into the decision of minimum operating voltage and
->>>>> minimum DRAM frequency to fulfill those requests.
->>>>>
->>>>> So, This series is to implement the dvfsrc driver to collect all the
->>>>> requests of operating voltage or DRAM bandwidth from other device drivers
->>>>> likes GPU/Camera through 2 frameworks basically:
->>>>>
->>>>> 1. PM_QOS_MEMORY_BANDWIDTH from PM QOS: to aggregate the bandwidth
->>>>>    requirements from different clients
->>>>
->>>> Have you looked at using the interconnect framework for this instead of
->>>> using PM_QOS_MEMORY_BANDWIDTH? Qcom is pushing an interconnect framework
->>>> to do DRAM bandwidth requirement aggregation.
->>>
->>> Sorry, I haven't heard that before. Do you mean is following series
->>> patch?
->>> https://patchwork.kernel.org/project/linux-arm-msm/list/?series=53775
->>>
->>
->> Yes, this one. The idea is that consumer drivers like GPU, camera, video
->> encoder etc. report their bandwidth needs by using the interconnect API.
->> The framework does the aggregation and configures the hardware. In order
->> to use it you need to implement a platform-specific dvfsrc interconnect
->> provider driver that understands the SoC topology and knows how to
->> configure the hardware. I am not familiar with DVFSRC, but it seems to
->> me that it can fit as interconnect provider.
->> Does this HW module support any QoS priority/latency configuration or is
->> it only bandwidth and voltage?
->>
->> Thanks,
->> Georgi
+On Wed, Jan 09, 2019 at 02:29:34PM -0600, Rob Herring wrote:
+> The 'arm,armv8' compatible string is only for software models. It adds
+> little value otherwise and is inconsistently used as a fallback on some
+> platforms. Remove it from those platforms.
 > 
-> Hi Georgi,
+> This fixes warnings generated by the DT schema.
 > 
-> Yes, the design is only to support bandwidth and voltage. The one of the
-> function is to collect the memory bandwidth requirement from consumer
-> and select the minimum DRAM frequency to fulfill system performance.It
-> just get the total bandwidth then set it to HW, not involves complex SoC
-> topology. So we choose to use PM QOS to model that DVFSRC driver can
-> receive the bandwidth information from consumer driver via
-> PM_QOS_MEMORY_BANDWIDTH.
+> Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> armsoc folks, Please apply directly.
+> 
+> Note that there's still a case left in msm8998 that needs a new 
+> compatible string.
 
-Ok, good. The current patchset supports bandwidth, but there was a
-discussion about adding support for latency and priority in the future.
-Thanks for the information!
+My only concern about this is that it may cause conflicts, but I suppose
+the ARM SoC maintainers can decide how they wish to deal with that.
 
-> Do you have a patch that show how consumer driver used interconnect to
-> update their requirement.
+Renesas portion:
 
-Here are some examples:
-https://lkml.org/lkml/2018/12/7/584
-https://lkml.org/lkml/2018/10/11/499
-https://lkml.org/lkml/2018/9/20/986
-https://lkml.org/lkml/2018/11/22/772
-
-Thanks,
-Georgi
+Acked-by: Simon Horman <horms+renesas-/R6kz+dDXgpPR4JQBCEnsQ@public.gmane.org>
