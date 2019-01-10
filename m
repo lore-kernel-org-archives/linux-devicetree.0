@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v11 8/9] arm64: dts: sdm845: Add rpmh powercontroller node
-Date: Thu, 10 Jan 2019 09:32:08 +0530
-Message-ID: <20190110040209.6028-9-rnayak@codeaurora.org>
+Subject: [PATCH v11 9/9] soc: qcom: rpmhpd: Mark mx as a parent for cx
+Date: Thu, 10 Jan 2019 09:32:09 +0530
+Message-ID: <20190110040209.6028-10-rnayak@codeaurora.org>
 References: <20190110040209.6028-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,84 +12,58 @@ To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kerne
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the DT node for the rpmhpd powercontroller.
+Specify the active + sleep and active-only MX power domains as
+the parents of the corresponding CX power domains. This will ensure that
+performance state requests on CX automatically generate equivalent requests
+on MX power domains.
+
+This is used to enforce a requirement that exists for various
+hardware blocks on SDM845 that MX performance state >= CX performance
+state for a given operating frequency.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
 Reviewed-by: Stephen Boyd <swboyd@chromium.org>
+Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 51 ++++++++++++++++++++++++++++
- 1 file changed, 51 insertions(+)
+ drivers/soc/qcom/rpmhpd.c | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c27cbd3bcb0a..22dc2b2df662 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -10,6 +10,7 @@
- #include <dt-bindings/clock/qcom,rpmh.h>
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/phy/phy-qcom-qusb2.h>
-+#include <dt-bindings/power/qcom-rpmpd.h>
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-@@ -1602,6 +1603,56 @@
- 				compatible = "qcom,sdm845-rpmh-clk";
- 				#clock-cells = <1>;
- 			};
-+
-+			rpmhpd: power-controller {
-+				compatible = "qcom,sdm845-rpmhpd";
-+				#power-domain-cells = <1>;
-+				operating-points-v2 = <&rpmhpd_opp_table>;
-+
-+				rpmhpd_opp_table: opp-table {
-+					compatible = "operating-points-v2";
-+
-+					rpmhpd_opp_ret: opp1 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_RETENTION>;
-+					};
-+
-+					rpmhpd_opp_min_svs: opp2 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_MIN_SVS>;
-+					};
-+
-+					rpmhpd_opp_low_svs: opp3 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_LOW_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs: opp4 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS>;
-+					};
-+
-+					rpmhpd_opp_svs_l1: opp5 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_SVS_L1>;
-+					};
-+
-+					rpmhpd_opp_nom: opp6 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM>;
-+					};
-+
-+					rpmhpd_opp_nom_l1: opp7 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L1>;
-+					};
-+
-+					rpmhpd_opp_nom_l2: opp8 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_NOM_L2>;
-+					};
-+
-+					rpmhpd_opp_turbo: opp9 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_TURBO>;
-+					};
-+
-+					rpmhpd_opp_turbo_l1: opp10 {
-+						opp-level = <RPMH_REGULATOR_LEVEL_TURBO_L1>;
-+					};
-+				};
-+			};
- 		};
+diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
+index e45628694f09..4aadece0ac5a 100644
+--- a/drivers/soc/qcom/rpmhpd.c
++++ b/drivers/soc/qcom/rpmhpd.c
+@@ -97,12 +97,14 @@ static struct rpmhpd sdm845_cx_ao;
+ static struct rpmhpd sdm845_cx = {
+ 	.pd = { .name = "cx", },
+ 	.peer = &sdm845_cx_ao,
++	.parent = &sdm845_mx.pd,
+ 	.res_name = "cx.lvl",
+ };
  
- 		intc: interrupt-controller@17a00000 {
+ static struct rpmhpd sdm845_cx_ao = {
+ 	.pd = { .name = "cx_ao", },
+ 	.peer = &sdm845_cx,
++	.parent = &sdm845_mx_ao.pd,
+ 	.res_name = "cx.lvl",
+ };
+ 
+@@ -372,6 +374,15 @@ static int rpmhpd_probe(struct platform_device *pdev)
+ 		data->domains[i] = &rpmhpds[i]->pd;
+ 	}
+ 
++	/* Add subdomains */
++	for (i = 0; i < num_pds; i++) {
++		if (!rpmhpds[i])
++			continue;
++		if (rpmhpds[i]->parent)
++			pm_genpd_add_subdomain(rpmhpds[i]->parent,
++					       &rpmhpds[i]->pd);
++	}
++
+ 	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
+ }
+ 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
