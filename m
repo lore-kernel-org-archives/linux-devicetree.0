@@ -1,54 +1,26 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 18/34] dt-bindings: arm: Convert FSL board/soc
- bindings to json-schema
-Date: Thu, 10 Jan 2019 14:42:57 +0800
-Message-ID: <20190110064256.GA25218@dragon>
-References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-19-robh@kernel.org>
- <20181206023140.GZ3987@dragon>
- <CAL_JsqK5nBdk-MiuTPMxr9oXqXnLqeMU3vtZi6AnT9V35_W55A@mail.gmail.com>
- <20181208015835.GM3987@dragon>
+Subject: Re: [PATCH 3/3] ARM: dts: imx7ulp: add HSRUN mode clocks
+Date: Thu, 10 Jan 2019 14:56:21 +0800
+Message-ID: <20190110065619.GB25218@dragon>
+References: <1544176659-32022-1-git-send-email-Anson.Huang@nxp.com>
+ <1544176659-32022-3-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181208015835.GM3987@dragon>
+In-Reply-To: <1544176659-32022-3-git-send-email-Anson.Huang@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "sboyd@kernel.org" <sboyd@kernel.org>, Aisheng Dong <aisheng.dong@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Dec 08, 2018 at 09:58:37AM +0800, Shawn Guo wrote:
-> On Thu, Dec 06, 2018 at 05:33:13PM -0600, Rob Herring wrote:
-> > On Wed, Dec 5, 2018 at 8:32 PM Shawn Guo <shawnguo@kernel.org> wrote:
-> > >
-> > > On Mon, Dec 03, 2018 at 03:32:07PM -0600, Rob Herring wrote:
-> > > > Convert Freescale SoC bindings to DT schema format using json-schema.
-> > > >
-> > > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > > Cc: devicetree@vger.kernel.org
-> > > > Signed-off-by: Rob Herring <robh@kernel.org>
-> > > > ---
-> > > >  .../devicetree/bindings/arm/armadeus.txt      |   6 -
-> > > >  Documentation/devicetree/bindings/arm/bhf.txt |   6 -
-> > > >  .../bindings/arm/compulab-boards.txt          |  25 --
-> > > >  Documentation/devicetree/bindings/arm/fsl.txt | 229 ------------------
-> > > >  .../devicetree/bindings/arm/fsl.yaml          | 214 ++++++++++++++++
-> > >
-> > > Rob,
-> > >
-> > > I do have any changes on bindings/arm/fsl.txt queued for 4.21 on my
-> > > tree, so please send it via your tree.
-> > 
-> > What about:
-> > 
-> > c386f362957b dt-bindings: Add compatible string for LS1028A-QDS
-> > 3671cd57de06 dt-bindings: ls1012a: Add FRWY-LS1012A device tree binding
+On Fri, Dec 07, 2018 at 10:03:39AM +0000, Anson Huang wrote:
+> i.MX7ULP can switch CPU between RUN mode and HSRUN mode
+> by programming SMC1 register, different clock sources
+> will be used for CPU in different modes, so SMC1 can be
+> abstracted as a clock controller for CPU clock switch,
+> this patch adds support for it.
 > 
-> Ah, sorry, I only checked on imx/dt branch and forgot imx/dt64.  I will
-> drop the changes on fsl.txt and update fsl.yaml after it hits mainline.
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-What happened to this?  It seems the patch did not hit v5.0-rc1.
-
-Shawn
+Applied, thanks.
