@@ -1,492 +1,217 @@
 From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: interrupt-controller: Convert ARM GICv3 to json-schema
-Date: Thu, 10 Jan 2019 16:19:00 -0600
-Message-ID: <20190110221903.3990-3-robh@kernel.org>
+Subject: [PATCH] dt-bindings: serial: Convert arm,pl011 to json-schema
+Date: Thu, 10 Jan 2019 16:19:42 -0600
+Message-ID: <20190110221942.5374-1-robh@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>
+Cc: linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert the ARM GICv3 binding document to DT schema format using
-json-schema.
+Convert the arm,pl011 binding to DT schema using json-schema.
 
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
+The zte,zx296702-uart binding appears to be broken as the dts files are
+missing 'arm,primecell'. That's included in the schema here to throw a
+warning.
+
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-serial@vger.kernel.org
 Signed-off-by: Rob Herring <robh@kernel.org>
 ---
- .../interrupt-controller/arm,gic-v3.txt       | 175 -----------
- .../interrupt-controller/arm,gic-v3.yaml      | 279 ++++++++++++++++++
- 2 files changed, 279 insertions(+), 175 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+ .../devicetree/bindings/serial/pl011.txt      |  51 -------
+ .../devicetree/bindings/serial/pl011.yaml     | 126 ++++++++++++++++++
+ 2 files changed, 126 insertions(+), 51 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/serial/pl011.txt
+ create mode 100644 Documentation/devicetree/bindings/serial/pl011.yaml
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+diff --git a/Documentation/devicetree/bindings/serial/pl011.txt b/Documentation/devicetree/bindings/serial/pl011.txt
 deleted file mode 100644
-index b83bb8249074..000000000000
---- a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.txt
+index 77863aefe9ef..000000000000
+--- a/Documentation/devicetree/bindings/serial/pl011.txt
 +++ /dev/null
-@@ -1,175 +0,0 @@
--* ARM Generic Interrupt Controller, version 3
+@@ -1,51 +0,0 @@
+-* ARM AMBA Primecell PL011 serial UART
 -
--AArch64 SMP cores are often associated with a GICv3, providing Private
--Peripheral Interrupts (PPI), Shared Peripheral Interrupts (SPI),
--Software Generated Interrupts (SGI), and Locality-specific Peripheral
--Interrupts (LPI).
+-Required properties:
+-- compatible: must be "arm,primecell", "arm,pl011", "zte,zx296702-uart"
+-- reg: exactly one register range with length 0x1000
+-- interrupts: exactly one interrupt specifier
 -
--Main node required properties:
+-Optional properties:
+-- pinctrl:
+-	   When present, must have one state named "default",
+-	   and may contain a second name named "sleep". The former
+-	   state sets up pins for ordinary operation whereas
+-	   the latter state will put the associated pins to sleep
+-	   when the UART is unused
+-- clocks:
+-	   When present, the first clock listed must correspond to
+-	   the clock named UARTCLK on the IP block, i.e. the clock
+-	   to the external serial line, whereas the second clock
+-	   must correspond to the PCLK clocking the internal logic
+-	   of the block. Just listing one clock (the first one) is
+-	   deprecated.
+-- clock-names:
+-	   When present, the first clock listed must be named
+-	   "uartclk" and the second clock listed must be named
+-	   "apb_pclk"
+-- dmas:	
+-	   When present, may have one or two dma channels.
+-	   The first one must be named "rx", the second one
+-	   must be named "tx".
+-- auto-poll:
+-	   Enables polling when using RX DMA.
+-- poll-rate-ms:
+-	   Rate at which poll occurs when auto-poll is set,
+-	   default 100ms.
+-- poll-timeout-ms:
+-	   Poll timeout when auto-poll is set, default
+-	   3000ms.
 -
--- compatible : should at least contain  "arm,gic-v3" or either
--		"qcom,msm8996-gic-v3", "arm,gic-v3" for msm8996 SoCs
--		to address SoC specific bugs/quirks
--- interrupt-controller : Identifies the node as an interrupt controller
--- #interrupt-cells : Specifies the number of cells needed to encode an
--  interrupt source. Must be a single cell with a value of at least 3.
--  If the system requires describing PPI affinity, then the value must
--  be at least 4.
+-See also bindings/arm/primecell.txt
 -
--  The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
--  interrupts. Other values are reserved for future use.
+-Example:
 -
--  The 2nd cell contains the interrupt number for the interrupt type.
--  SPI interrupts are in the range [0-987]. PPI interrupts are in the
--  range [0-15].
--
--  The 3rd cell is the flags, encoded as follows:
--	bits[3:0] trigger type and level flags.
--		1 = edge triggered
--		4 = level triggered
--
--  The 4th cell is a phandle to a node describing a set of CPUs this
--  interrupt is affine to. The interrupt must be a PPI, and the node
--  pointed must be a subnode of the "ppi-partitions" subnode. For
--  interrupt types other than PPI or PPIs that are not partitionned,
--  this cell must be zero. See the "ppi-partitions" node description
--  below.
--
--  Cells 5 and beyond are reserved for future use and must have a value
--  of 0 if present.
--
--- reg : Specifies base physical address(s) and size of the GIC
--  registers, in the following order:
--  - GIC Distributor interface (GICD)
--  - GIC Redistributors (GICR), one range per redistributor region
--  - GIC CPU interface (GICC)
--  - GIC Hypervisor interface (GICH)
--  - GIC Virtual CPU interface (GICV)
--
--  GICC, GICH and GICV are optional.
--
--- interrupts : Interrupt source of the VGIC maintenance interrupt.
--
--Optional
--
--- redistributor-stride : If using padding pages, specifies the stride
--  of consecutive redistributors. Must be a multiple of 64kB.
--
--- #redistributor-regions: The number of independent contiguous regions
--  occupied by the redistributors. Required if more than one such
--  region is present.
--
--- msi-controller: Boolean property. Identifies the node as an MSI
--  controller. Only present if the Message Based Interrupt
--  functionnality is being exposed by the HW, and the mbi-ranges
--  property present.
--
--- mbi-ranges: A list of pairs <intid span>, where "intid" is the first
--  SPI of a range that can be used an MBI, and "span" the size of that
--  range. Multiple ranges can be provided. Requires "msi-controller" to
--  be set.
--
--- mbi-alias: Address property. Base address of an alias of the GICD
--  region containing only the {SET,CLR}SPI registers to be used if
--  isolation is required, and if supported by the HW.
--
--Sub-nodes:
--
--PPI affinity can be expressed as a single "ppi-partitions" node,
--containing a set of sub-nodes, each with the following property:
--- affinity: Should be a list of phandles to CPU nodes (as described in
--Documentation/devicetree/bindings/arm/cpus.txt).
--
--GICv3 has one or more Interrupt Translation Services (ITS) that are
--used to route Message Signalled Interrupts (MSI) to the CPUs.
--
--These nodes must have the following properties:
--- compatible : Should at least contain  "arm,gic-v3-its".
--- msi-controller : Boolean property. Identifies the node as an MSI controller
--- #msi-cells: Must be <1>. The single msi-cell is the DeviceID of the device
--  which will generate the MSI.
--- reg: Specifies the base physical address and size of the ITS
--  registers.
--
--Optional:
--- socionext,synquacer-pre-its: (u32, u32) tuple describing the untranslated
--  address and size of the pre-ITS window.
--
--The main GIC node must contain the appropriate #address-cells,
--#size-cells and ranges properties for the reg property of all ITS
--nodes.
--
--Examples:
--
--	gic: interrupt-controller@2cf00000 {
--		compatible = "arm,gic-v3";
--		#interrupt-cells = <3>;
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--		interrupt-controller;
--		reg = <0x0 0x2f000000 0 0x10000>,	// GICD
--		      <0x0 0x2f100000 0 0x200000>,	// GICR
--		      <0x0 0x2c000000 0 0x2000>,	// GICC
--		      <0x0 0x2c010000 0 0x2000>,	// GICH
--		      <0x0 0x2c020000 0 0x2000>;	// GICV
--		interrupts = <1 9 4>;
--
--		msi-controller;
--		mbi-ranges = <256 128>;
--
--		gic-its@2c200000 {
--			compatible = "arm,gic-v3-its";
--			msi-controller;
--			#msi-cells = <1>;
--			reg = <0x0 0x2c200000 0 0x20000>;
--		};
--	};
--
--	gic: interrupt-controller@2c010000 {
--		compatible = "arm,gic-v3";
--		#interrupt-cells = <4>;
--		#address-cells = <2>;
--		#size-cells = <2>;
--		ranges;
--		interrupt-controller;
--		redistributor-stride = <0x0 0x40000>;	// 256kB stride
--		#redistributor-regions = <2>;
--		reg = <0x0 0x2c010000 0 0x10000>,	// GICD
--		      <0x0 0x2d000000 0 0x800000>,	// GICR 1: CPUs 0-31
--		      <0x0 0x2e000000 0 0x800000>;	// GICR 2: CPUs 32-63
--		      <0x0 0x2c040000 0 0x2000>,	// GICC
--		      <0x0 0x2c060000 0 0x2000>,	// GICH
--		      <0x0 0x2c080000 0 0x2000>;	// GICV
--		interrupts = <1 9 4>;
--
--		gic-its@2c200000 {
--			compatible = "arm,gic-v3-its";
--			msi-controller;
--			#msi-cells = <1>;
--			reg = <0x0 0x2c200000 0 0x20000>;
--		};
--
--		gic-its@2c400000 {
--			compatible = "arm,gic-v3-its";
--			msi-controller;
--			#msi-cells = <1>;
--			reg = <0x0 0x2c400000 0 0x20000>;
--		};
--
--		ppi-partitions {
--			part0: interrupt-partition-0 {
--				affinity = <&cpu0 &cpu2>;
--			};
--
--			part1: interrupt-partition-1 {
--				affinity = <&cpu1 &cpu3>;
--			};
--		};
--	};
--
--
--	device@0 {
--		reg = <0 0 0 4>;
--		interrupts = <1 1 4 &part0>;
--	};
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
+-uart@80120000 {
+-	compatible = "arm,pl011", "arm,primecell";
+-	reg = <0x80120000 0x1000>;
+-	interrupts = <0 11 IRQ_TYPE_LEVEL_HIGH>;
+-	dmas = <&dma 13 0 0x2>, <&dma 13 0 0x0>;
+-	dma-names = "rx", "tx";
+-	clocks = <&foo_clk>, <&bar_clk>;
+-	clock-names = "uartclk", "apb_pclk";
+-};
+diff --git a/Documentation/devicetree/bindings/serial/pl011.yaml b/Documentation/devicetree/bindings/serial/pl011.yaml
 new file mode 100644
-index 000000000000..c34df35a25fc
+index 000000000000..1a64d59152aa
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/arm,gic-v3.yaml
-@@ -0,0 +1,279 @@
++++ b/Documentation/devicetree/bindings/serial/pl011.yaml
+@@ -0,0 +1,126 @@
 +# SPDX-License-Identifier: GPL-2.0
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/interrupt-controller/arm,gic-v3.yaml#
++$id: http://devicetree.org/schemas/serial/pl011.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: ARM Generic Interrupt Controller, version 3
++title: ARM AMBA Primecell PL011 serial UART
 +
 +maintainers:
-+  - Marc Zyngier <marc.zyngier@arm.com>
-+
-+description: |
-+  AArch64 SMP cores are often associated with a GICv3, providing Private
-+  Peripheral Interrupts (PPI), Shared Peripheral Interrupts (SPI),
-+  Software Generated Interrupts (SGI), and Locality-specific Peripheral
-+  Interrupts (LPI).
++  - Rob Herring <robh@kernel.org>
 +
 +allOf:
-+  - $ref: /schemas/interrupt-controller.yaml#
++  - $ref: /schemas/serial.yaml#
++
++# Need a custom select here or 'arm,primecell' will match on lots of nodes
++select:
++  properties:
++    compatible:
++      contains:
++        enum:
++          - arm,pl011
++          - zte,zx296702-uart
++  required:
++    - compatible
 +
 +properties:
 +  compatible:
 +    oneOf:
 +      - items:
-+          - enum:
-+              - qcom,msm8996-gic-v3
-+          - const: arm,gic-v3
-+      - const: arm,gic-v3
-+
-+  interrupt-controller: true
-+
-+  "#address-cells":
-+    enum: [ 0, 1, 2 ]
-+  "#size-cells":
-+    enum: [ 1, 2 ]
-+
-+  ranges: true
-+
-+  "#interrupt-cells":
-+    description: |
-+      Specifies the number of cells needed to encode an interrupt source.
-+      Must be a single cell with a value of at least 3.
-+      If the system requires describing PPI affinity, then the value must
-+      be at least 4.
-+
-+      The 1st cell is the interrupt type; 0 for SPI interrupts, 1 for PPI
-+      interrupts. Other values are reserved for future use.
-+
-+      The 2nd cell contains the interrupt number for the interrupt type.
-+      SPI interrupts are in the range [0-987]. PPI interrupts are in the
-+      range [0-15].
-+
-+      The 3rd cell is the flags, encoded as follows:
-+      bits[3:0] trigger type and level flags.
-+        1 = edge triggered
-+        4 = level triggered
-+
-+      The 4th cell is a phandle to a node describing a set of CPUs this
-+      interrupt is affine to. The interrupt must be a PPI, and the node
-+      pointed must be a subnode of the "ppi-partitions" subnode. For
-+      interrupt types other than PPI or PPIs that are not partitionned,
-+      this cell must be zero. See the "ppi-partitions" node description
-+      below.
-+
-+      Cells 5 and beyond are reserved for future use and must have a value
-+      of 0 if present.
-+    enum: [ 3, 4 ]
++          - const: arm,pl011
++          - const: arm,primecell
++      - items:
++          - const: zte,zx296702-uart
++          - const: arm,primecell
 +
 +  reg:
-+    description: |
-+      Specifies base physical address(s) and size of the GIC
-+      registers, in the following order:
-+      - GIC Distributor interface (GICD)
-+      - GIC Redistributors (GICR), one range per redistributor region
-+      - GIC CPU interface (GICC)
-+      - GIC Hypervisor interface (GICH)
-+      - GIC Virtual CPU interface (GICV)
-+
-+      GICC, GICH and GICV are optional.
-+    minItems: 2
-+    maxItems: 4096   # Should be enough?
-+
-+  interrupts:
-+    description:
-+      Interrupt source of the VGIC maintenance interrupt.
 +    maxItems: 1
 +
-+  redistributor-stride:
-+    description:
-+      If using padding pages, specifies the stride of consecutive
-+      redistributors. Must be a multiple of 64kB.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint64
-+      - multipleOf: 0x10000
-+        exclusiveMinimum: 0
++  interrupts:
++    maxItems: 1
 +
-+  "#redistributor-regions":
++  pinctrl-0: true
++  pinctrl-1: true
++
++  pinctrl-names:
 +    description:
-+      The number of independent contiguous regions occupied by the
-+      redistributors. Required if more than one such region is present.
++      When present, must have one state named "default",
++      and may contain a second name named "sleep". The former
++      state sets up pins for ordinary operation whereas
++      the latter state will put the associated pins to sleep
++      when the UART is unused
++    minItems: 1
++    items:
++      - const: default
++      - const: sleep
++
++  clocks:
++    description:
++      When present, the first clock listed must correspond to
++      the clock named UARTCLK on the IP block, i.e. the clock
++      to the external serial line, whereas the second clock
++      must correspond to the PCLK clocking the internal logic
++      of the block. Just listing one clock (the first one) is
++      deprecated.
++    maxItems: 2
++
++  clock-names:
++    items:
++      - const: uartclk
++      - const: apb_pclk
++
++  dmas:
++    minItems: 1
++    maxItems: 2
++
++  dma-names:
++    minItems: 1
++    items:
++      - const: rx
++      - const: tx
++
++  auto-poll:
++    description:
++      Enables polling when using RX DMA.
++    type: boolean
++
++  poll-rate-ms:
++    description:
++      Rate at which poll occurs when auto-poll is set.
++      default 100ms.
 +    allOf:
 +      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - maximum: 4096   # Should be enough?
++      - default: 100
 +
-+  msi-controller:
++  poll-timeout-ms:
 +    description:
-+      Only present if the Message Based Interrupt functionnality is
-+      being exposed by the HW, and the mbi-ranges property present.
-+
-+  mbi-ranges:
-+    description:
-+      A list of pairs <intid span>, where "intid" is the first SPI of a range
-+      that can be used an MBI, and "span" the size of that range. Multiple
-+      ranges can be provided.
++      Poll timeout when auto-poll is set, default
++      3000ms.
 +    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-matrix
-+      - items:
-+          minItems: 2
-+          maxItems: 2
-+
-+  mbi-alias:
-+    description:
-+      Address property. Base address of an alias of the GICD region containing
-+      only the {SET,CLR}SPI registers to be used if isolation is required,
-+      and if supported by the HW.
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - items:
-+          minItems: 1
-+          maxItems: 2
-+
-+  ppi-partitions:
-+    type: object
-+    description:
-+      PPI affinity can be expressed as a single "ppi-partitions" node,
-+      containing a set of sub-nodes.
-+    patternProperties:
-+      "^interrupt-partition-[0-9]+$":
-+        properties:
-+          affinity:
-+            $ref: /schemas/types.yaml#/definitions/phandle-array
-+            description:
-+              Should be a list of phandles to CPU nodes (as described in
-+              Documentation/devicetree/bindings/arm/cpus.yaml).
-+
-+        required:
-+          - affinity
-+
-+dependencies:
-+  mbi-ranges: [ msi-controller ]
-+  msi-controller: [ mbi-ranges ]
++      - $ref: /schemas/types.yaml#/definitions/uint32
++      - default: 3000
 +
 +required:
 +  - compatible
-+  - interrupts
 +  - reg
++  - interrupts
 +
-+patternProperties:
-+  "^gic-its@": false
-+  "^interrupt-controller@[0-9a-f]+$": false
-+  # msi-controller is preferred, but allow other names
-+  "^(msi-controller|gic-its|interrupt-controller)@[0-9a-f]+$":
-+    type: object
-+    description:
-+      GICv3 has one or more Interrupt Translation Services (ITS) that are
-+      used to route Message Signalled Interrupts (MSI) to the CPUs.
-+    properties:
-+      compatible:
-+        const: arm,gic-v3-its
-+
-+      msi-controller: true
-+
-+      "#msi-cells":
-+        description:
-+          The single msi-cell is the DeviceID of the device which will generate
-+          the MSI.
-+        const: 1
-+
-+      reg:
-+        description:
-+          Specifies the base physical address and size of the ITS registers.
-+        maxItems: 1
-+
-+      socionext,synquacer-pre-its:
-+        description:
-+          (u32, u32) tuple describing the untranslated
-+          address and size of the pre-ITS window.
-+        allOf:
-+          - $ref: /schemas/types.yaml#/definitions/uint32-array
-+          - items:
-+              minItems: 2
-+              maxItems: 2
-+
-+    required:
-+      - compatible
-+      - msi-controller
-+      - "#msi-cells"
-+      - reg
-+
-+    additionalProperties: false
++dependencies:
++  poll-rate-ms: [ auto-poll ]
++  poll-timeout-ms: [ auto-poll ]
 +
 +additionalProperties: false
 +
 +examples:
 +  - |
-+    gic: interrupt-controller@2cf00000 {
-+      compatible = "arm,gic-v3";
-+      #interrupt-cells = <3>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges;
-+      interrupt-controller;
-+      reg = <0x2f000000 0x10000>,  // GICD
-+            <0x2f100000 0x200000>,  // GICR
-+            <0x2c000000 0x2000>,  // GICC
-+            <0x2c010000 0x2000>,  // GICH
-+            <0x2c020000 0x2000>;  // GICV
-+      interrupts = <1 9 4>;
-+
-+      msi-controller;
-+      mbi-ranges = <256 128>;
-+
-+      msi-controller@2c200000 {
-+        compatible = "arm,gic-v3-its";
-+        msi-controller;
-+        #msi-cells = <1>;
-+        reg = <0x2c200000 0x20000>;
-+      };
-+    };
-+
-+    interrupt-controller@2c010000 {
-+      compatible = "arm,gic-v3";
-+      #interrupt-cells = <4>;
-+      #address-cells = <1>;
-+      #size-cells = <1>;
-+      ranges;
-+      interrupt-controller;
-+      redistributor-stride = <0x0 0x40000>;  // 256kB stride
-+      #redistributor-regions = <2>;
-+      reg = <0x2c010000 0x10000>,  // GICD
-+            <0x2d000000 0x800000>,  // GICR 1: CPUs 0-31
-+            <0x2e000000 0x800000>,  // GICR 2: CPUs 32-63
-+            <0x2c040000 0x2000>,  // GICC
-+            <0x2c060000 0x2000>,  // GICH
-+            <0x2c080000 0x2000>;  // GICV
-+      interrupts = <1 9 4>;
-+
-+      msi-controller@2c200000 {
-+        compatible = "arm,gic-v3-its";
-+        msi-controller;
-+        #msi-cells = <1>;
-+        reg = <0x2c200000 0x20000>;
-+      };
-+
-+      msi-controller@2c400000 {
-+        compatible = "arm,gic-v3-its";
-+        msi-controller;
-+        #msi-cells = <1>;
-+        reg = <0x2c400000 0x20000>;
-+      };
-+
-+      ppi-partitions {
-+        part0: interrupt-partition-0 {
-+          affinity = <&cpu0 &cpu2>;
-+        };
-+
-+        part1: interrupt-partition-1 {
-+          affinity = <&cpu1 &cpu3>;
-+        };
-+      };
-+    };
-+
-+
-+    device@0 {
-+      reg = <0 4>;
-+      interrupts = <1 1 4 &part0>;
++    serial@80120000 {
++      compatible = "arm,pl011", "arm,primecell";
++      reg = <0x80120000 0x1000>;
++      interrupts = <0 11 4>;
++      dmas = <&dma 13 0 0x2>, <&dma 13 0 0x0>;
++      dma-names = "rx", "tx";
++      clocks = <&foo_clk>, <&bar_clk>;
++      clock-names = "uartclk", "apb_pclk";
 +    };
 +
 +...
