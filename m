@@ -1,71 +1,204 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH RFC 3/5] dt-bindings: Add PDC timer bindings for Qualcomm SoCs
-Date: Thu, 10 Jan 2019 13:27:56 -0800
-Message-ID: <154715567680.19284.12367636883540337540@swboyd.mtv.corp.google.com>
-References: <20181221115946.10095-1-rplsssn@codeaurora.org> <154546438942.179992.14851496143150245966@swboyd.mtv.corp.google.com> <504cae51-0f35-beb8-496b-a335863a9071@codeaurora.org> <154603310752.179992.9262815873457262616@swboyd.mtv.corp.google.com> <b97937a0-68ff-ded7-d63b-680981818114@codeaurora.org> <154655037205.15366.7302521016277534390@swboyd.mtv.corp.google.com> <6384bcac-634c-5e7e-b357-93982de6eafb@codeaurora.org> <93a4b632-5740-42a9-9552-b46dd599ad68@codeaurora.org> <154705600478.15366.3563482093409250809@swboyd.mtv.corp.google.com> <3ae4bf87-88be-466d-0f1e-ff7bf5c4e816@codeaurora.org>
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: Re: [PATCH v2 2/5] gnss: sirf: power on logic for devices without
+ wakeup signal
+Date: Thu, 10 Jan 2019 23:02:23 +0100
+Message-ID: <20190110230223.18ecbd87@kemnade.info>
+References: <20181209195150.5192-1-andreas@kemnade.info>
+        <20181209195150.5192-3-andreas@kemnade.info>
+        <20190110121038.GA9725@localhost>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Z4bAl0SI8H2jq793e+XJap3"; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3ae4bf87-88be-466d-0f1e-ff7bf5c4e816@codeaurora.org>
+In-Reply-To: <20190110121038.GA9725@localhost>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Raju P L S S S N <rplsssn@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
-Cc: rnayak@codeaurora.org, bjorn.andersson@linaro.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, evgreen@chromium.org, dianders@chromium.org, mka@chromium.org, ilina@codeaurora.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Johan Hovold <johan@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Raju P L S S S N (2019-01-10 08:58:41)
+--Sig_/Z4bAl0SI8H2jq793e+XJap3
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
+
+Hi Johan,
+
+On Thu, 10 Jan 2019 13:10:38 +0100
+Johan Hovold <johan@kernel.org> wrote:
+
+> Please change the commit summary to something more descriptive like
 >=20
+> 	gnss: sirf: add support for configurations without wakeup signal
 >=20
-> On 1/9/2019 11:16 PM, Stephen Boyd wrote:
-> > That could be done by making a PDC clockevent that has some DT binding
-> > of a property pointing to an MMIO timer frame and then reimplementing
-> > the MMIO timer code in the PDC driver on top of the frame/register
-> > region it pulls out of there. Or it could be written in reverse by
-> > having the generic MMIO timer driver point to the PDC somehow and
-> > implement some platform specific API to pass that information to the
-> > real wakeup programming part in PDC.
+> On Sun, Dec 09, 2018 at 08:51:47PM +0100, Andreas Kemnade wrote:
+> > Some Wi2Wi devices do not have a wakeup output, so device state can
+> > only be indirectly detected by looking whether there is communitcation
+> > over the serial lines. =20
+>=20
+> > Additionally it checks for the initial state of the device during
+> > probing to ensure it is off. =20
+>=20
+> Is this really needed? If so, it should probably go in a separate patch.
+>=20
+Well, it is the main motivation for the new try of upstreaming this again.
+You know the loooong history...
+It has several times messed up my power consumption statistics. As I try
+to test patches on top of mainline, this has often led to false alarms
+regarding pm bugs in other drivers.
+
+We could also come from another kernel here via kexec having the device in
+another state.=20
+
+And why we do not want to check for uncommon things here? We e.g. do multip=
+le tries
+for changing power state.=20
+
+> > Timeout values need to be increased, because the reaction on serial line
+> > is slower and are in line  with previous patches by =20
+>=20
+> I don't think this is an accurate description, but more on that below.
+>=20
+I do not think so, but I do not have a too strong opinion here.
+
+> > Neil Brown <neilb@suse.de> and  H. Nikolaus Schaller <hns@goldelico.com=
+>.
 > >=20
-> > I'm leaning toward the first approach where PDC is the clockevent and
-> > that uses the MMIO timer on the backend to do what it needs to program a
-> > wakeup. That way you can mandate the usage of the physical timer and
-> > keep this quirk away from the ARM timer driver. It also makes the idea
-> > of a qcom,pdc-timer-mode sort of useless because the PDC will have a
-> > property that points to the timer frame and that will mean "use this for
-> > broadcast wakeup". I'm not sure how the ARM folks feel about this
-> > though. It would probably require some sort of ARM timer API that lets
-> > us program the MMIO timer frame from the PDC driver. So exporting
-> > arch_timer_reg_write() and making that always inlined to optimize hot
-> > paths would be required.
+> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > ---
+> > Changes in v2:
+> >  - style cleanup
+> >  - do not keep serdev open just because runtime is active,
+> >    only when needed (gnss device is opened or state is changed)
+> >  - clearer timeout semantics
 > >=20
+> >  drivers/gnss/sirf.c | 114 +++++++++++++++++++++++++++++++++++++++++---=
+--------
+> >  1 file changed, 91 insertions(+), 23 deletions(-)
+> >=20
+> > diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> > index ba663de1db49..c64369494afb 100644
+> > --- a/drivers/gnss/sirf.c
+> > +++ b/drivers/gnss/sirf.c
+> > @@ -23,8 +23,13 @@
+> > =20
+> >  #define SIRF_BOOT_DELAY			500
+> >  #define SIRF_ON_OFF_PULSE_TIME		100
+> > +/* activate till reaction of wakeup pin */
+> >  #define SIRF_ACTIVATE_TIMEOUT		200
+> > +/* activate till reception of data */
+> > +#define SIRF_ACTIVATE_TILL_OUTPUT_TIMEOUT	1000
+> >  #define SIRF_HIBERNATE_TIMEOUT		200
+> > +/* If no data arrives for this time, we expect the chip to be off. */
+> > +#define SIRF_MIN_SILENCE	1000 =20
 >=20
-> Regarding the first approach -
-> If PDC clk_evt_dev is created and registered to broadcast framework, it=20
-> means it will replace MMIO timer event device in broadcast framework (as =
-
-> only one broadcast event timer can exist). So in registration phase, the =
-
-> tick broadcast framework would configure broadcat event handler for=20
-> PDC(clk_evt_dev).
-
-Yes all the MMIO timer frames would need to be marked as "disabled" I
-suppose, or somehow we would need to tell the MMIO timer driver to not
-register the MMIO timer frame from there because it's used by the PDC
-now. Maybe that would require changing the MMIO timer's compatible
-string to be something different.
-
+> You only need to add one new define for the no-wakeup case and it should
+> reflect the report cycle (e.g. name it SIRF_NOWAKEUP_REPORT_CYCLE).
+> Specifically, it is the time we must wait in order to infer that a
+> device has failed to be activated, or succeeded to hibernate.
 >=20
-> Even if we have some way of exporting arch_timer_reg_write() to program=20
-> the wakeup for MMIO timer, the irq handler for MMIO timer is responsible =
+GPS chips will have usually some boot messages. So it is not the
+"send nmea data set every X seconds" for the wakeup case, it is
+another situation deserving IMHO another name.
 
-> to invoke event_handler. However, since MMIO timer is replaced by PDC=20
-> timer event device, event handler will not be able to inform broadcast=20
-> framework. What can be done about this?
+> In pseudo code we have:
 >=20
+>   activate:
+>    - toggle on-off
+>    - wait(data-received, ACTIVATE_TIMEOUT + REPORT_CYCLE)
+>      - reception: success=20
 
-It sounds like you imagine that the MMIO timer frame will still be
-active and in use by the ARM architected timer driver? I wasn't thinking
-that would be the case. I was thinking that the PDC code would basically
-reimplement all of the ARM timer code again by calling some shared timer
-code so that we avoid code duplication. Including the irq handler that
-would be registered for by the PDC driver and flow from that piece of
-code instead of the ARM timer code.
+Note: we can also get the goodbye/shutdown message from the chip here
+so there are chances of a false success, but since we initially power down,
+we will rule out wrong state here.
+
+>      - timeout: failure
+>=20
+>   hibernate:
+>    - toggle on-off
+>    - sleep(HIBERNATE_TIMEOUT)
+we could also additionally check here for=20
+   if (last_bytes_received =3D=3D GOODBYE_MSG)
+or alternatively check for
+   if (!BOOTUP_MSG_RECEIVED)
+     - return success
+
+>    - wait(data-received, REPORT_CYCLE)
+>      - reception: failure
+>      - timeout: success
+>=20
+> A problem with your implementation, is that you assume a report cycle
+> of one second, but this need to be the case. Judging from a quick look
+> at the sirf protocols (sirf nmea and sirf binary) report cycles can be
+> configured to be as long as 30s (sirf binary) or even 255s (sirf nmea).
+> [ To make things worse these numbers can be even higher in some
+> low-power modes it seems. ]
+>=20
+As far as I see we will only might have a problem if=20
+  - those settings are nonvolatile (or we come in with those
+    settings on another way)
+  - or a state change lateron fails which we cannot properly detect
+
+
+> Adding just a one-second timeout (the minimum supported cycle length)
+> seems way too low, even if whatever value we choose will be reflected
+> directly in the time it takes to hibernate (suspend) the device.
+>=20
+> And since this is configurable at runtime, the only safe value would be
+> the maximum one...
+>=20
+> Perhaps we can say that no-wakeup support depends on having reasonably
+> short report cycles, but this needs to be documented.
+>=20
+Where should it be documented? Comment in code?
+devicetree bindings?
+
+So in general I see these possibilities:
+1. just document tho problem with low cycle length requirement
+   lateron we might improve the solution
+
+2. do the data parsing like above just for the first or/and last bytes
+   if these things really come reliable, we would catch the low-power
+   corner cases like only data reports if you move around.
+   I have to do some research here.
+
+3. monitor serial output in off state and send a pulse if data arrives
+  this would require the serial device to do aggressive power saving
+  in that time(you send an example patch for that) or giving a gpio interru=
+pt
+  coming from the rx line to the gnss driver.
+  Those things look like more restructuring work (or having a separate driv=
+er
+  which is not that practical for further extensions) and would not
+  catch low-power modes
+
+My personal opinion here
+is
+first 1.
+later improve to 2. (and do some more tests in regards of 2.)
+
+Just for the general things first.
+
+Regards,
+Andreas
+
+--Sig_/Z4bAl0SI8H2jq793e+XJap3
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlw3wPAACgkQfb1qx03i
+kyShZhAAk94icWm87/LLaq2a43dTtw4TV/ladWPH4J0U2MlGFZrII4erCg56Ay0z
+hrny7qIULCG84gS8fATV74UpZ8rakVhWSIZchhknAj69yiotqZGrcAYMwG9xxMbv
+HBXdBi74jJt1fQ4Cy105fvouNOevOwhEGdCgdYHEVT0E+6PcIh5CWHB/Jjm9hQlW
+AY/8btXdZmWfb+WGP8aupZAakmyStGDYuDgxBiqBD/ZBjF2cq5Efa+DOdi4W5jgD
+QKmflMVH0v1FmsyuxubN1zxxxYnkHjiz4JxVPtfnAVlf+9aWBv0kF5fJ/437lzxF
+LSHVEWNjr4KlMyJ2HI8To/aNq+Nk3H/RAQ0D1ql9bp1NZrnOFOWFNSnO6tvQ08Xj
+StEYEZJQxEICp6s6BxElJ2Blb8ST1QSbZQ50FGGZT6JOqqEPYWFHPiKClKiRMPda
+rI7n8wp3abtVnp182A3YcO9eF0iIzEpwfFf/k0W+fw1SDoAoE9aj/z53B9xS8IqS
+JrS6mvsAPaUVy2QZAVgug+dx/dfMRSVHDxM/etk12uLt/MLaS2OCNR14Ci9kFv6z
+QjYqezXCjGK3jlF3IMTVLXFdJYdqcqUiPeioNCmVwGSzLI3kdmkr++jiaZQISq0D
+kjjmtjuGVwuXuderggBmCIfPfdOKh6rAwG6TOthVaWBwwwCBNkk=
+=5cDC
+-----END PGP SIGNATURE-----
+
+--Sig_/Z4bAl0SI8H2jq793e+XJap3--
