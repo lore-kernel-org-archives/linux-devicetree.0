@@ -1,69 +1,42 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v11 9/9] soc: qcom: rpmhpd: Mark mx as a parent for cx
-Date: Thu, 10 Jan 2019 09:32:09 +0530
-Message-ID: <20190110040209.6028-10-rnayak@codeaurora.org>
-References: <20190110040209.6028-1-rnayak@codeaurora.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 3/3] arm64: dts: qcom: sdm845: Remove the duplicate header
+ inclusion
+Date: Thu, 10 Jan 2019 10:12:45 +0530
+Message-ID: <b8762c0d-45f2-7f32-2d13-ce1bd1274e0a@codeaurora.org>
+References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <5f400b3a15cab5dd071e4a129d38cb21e7123b78.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <CAD=FV=UgFwVdsTuaQhVA9q18Ns8n278A4mx=TrvuOW3mmZm84A@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110040209.6028-1-rnayak@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
-Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, Rajendra Nayak <rnayak@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAD=FV=UgFwVdsTuaQhVA9q18Ns8n278A4mx=TrvuOW3mmZm84A@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Doug Anderson <dianders@chromium.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Leo Yan <leo.yan@linaro.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Specify the active + sleep and active-only MX power domains as
-the parents of the corresponding CX power domains. This will ensure that
-performance state requests on CX automatically generate equivalent requests
-on MX power domains.
+Hi Doug,
 
-This is used to enforce a requirement that exists for various
-hardware blocks on SDM845 that MX performance state >= CX performance
-state for a given operating frequency.
+On 1/10/2019 4:27 AM, Doug Anderson wrote:
+> 
+> This was on my TODO list, but you beat me to it.  This could land any
+> time and is completely separate from the other patches in this series.
+> 
+> Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> 
 
-Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
-Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
----
- drivers/soc/qcom/rpmhpd.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+Thanks for the review. Sorry I missed keeping you and Bjorn in CC.
 
-diff --git a/drivers/soc/qcom/rpmhpd.c b/drivers/soc/qcom/rpmhpd.c
-index e45628694f09..4aadece0ac5a 100644
---- a/drivers/soc/qcom/rpmhpd.c
-+++ b/drivers/soc/qcom/rpmhpd.c
-@@ -97,12 +97,14 @@ static struct rpmhpd sdm845_cx_ao;
- static struct rpmhpd sdm845_cx = {
- 	.pd = { .name = "cx", },
- 	.peer = &sdm845_cx_ao,
-+	.parent = &sdm845_mx.pd,
- 	.res_name = "cx.lvl",
- };
- 
- static struct rpmhpd sdm845_cx_ao = {
- 	.pd = { .name = "cx_ao", },
- 	.peer = &sdm845_cx,
-+	.parent = &sdm845_mx_ao.pd,
- 	.res_name = "cx.lvl",
- };
- 
-@@ -372,6 +374,15 @@ static int rpmhpd_probe(struct platform_device *pdev)
- 		data->domains[i] = &rpmhpds[i]->pd;
- 	}
- 
-+	/* Add subdomains */
-+	for (i = 0; i < num_pds; i++) {
-+		if (!rpmhpds[i])
-+			continue;
-+		if (rpmhpds[i]->parent)
-+			pm_genpd_add_subdomain(rpmhpds[i]->parent,
-+					       &rpmhpds[i]->pd);
-+	}
-+
- 	return of_genpd_add_provider_onecell(pdev->dev.of_node, data);
- }
- 
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
