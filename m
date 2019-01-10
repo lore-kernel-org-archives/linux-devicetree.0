@@ -1,100 +1,274 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: RE: [PATCH 1/2] ahci: qoriq: add lx2160 platforms support
-Date: Thu, 10 Jan 2019 10:31:52 +0000
-Message-ID: <VI1PR04MB44311C4FCA7DE543941E84B0ED840@VI1PR04MB4431.eurprd04.prod.outlook.com>
-References: <20190110100533.33333-1-peng.ma@nxp.com>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: Re: [PATCH v9 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
+ support
+Date: Thu, 10 Jan 2019 18:33:51 +0800
+Message-ID: <1547116431.3831.43.camel@mhfsdcap03>
+References: <1546395178-8880-1-git-send-email-long.cheng@mediatek.com>
+         <1546395178-8880-2-git-send-email-long.cheng@mediatek.com>
+         <20190104171953.GQ13372@vkoul-mobl.Dlink>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110100533.33333-1-peng.ma@nxp.com>
-Content-Language: en-US
+In-Reply-To: <20190104171953.GQ13372@vkoul-mobl.Dlink>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>
-Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Andy Tang <andy.tang@nxp.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.liu@me>
 List-Id: devicetree@vger.kernel.org
 
-SGkgSmVuc6OsDQoNCglJIHNlbmQgdGhlIHNhdGEgcGF0Y2hzIHRvIHRoZSB1cHN0cmVhbSBwYXRj
-aHdvcmsgd2l0aCAuL3NjcmlwdHMvZ2V0X21haW50YWluZXIucGwsIGJ1dCBJIGZpbmQgbXkgcGF0
-Y2ggb24gaHR0cDovL3BhdGNod29yay5vemxhYnMub3JnL3Byb2plY3QvbGludXgtaWRlL2xpc3Qv
-ICwgSSBzYXcgdGhlIE1BSU5UQUlORVJTLCB0aGUgZHJpdmVyL2F0YS8qIHNob3VsZCBiZSBvbiBo
-dHRwczovL3BhdGNod29yay5rZXJuZWwub3JnL3Byb2plY3QvbGludXgtYmxvY2svbGlzdC8gLiBj
-b3VsZCB5b3UgcGxlYXNlIGhlbHAgbWUgd2hhdCB0aGUgcGF0Y2h3b3JrIGlzIHJpZ2h0Lg0KCVRo
-YW5rcyBhIGxvdC4NCg0KQmVzdCBSZWdhcmRzLA0KUGVuZw0KDQo+LS0tLS1PcmlnaW5hbCBNZXNz
-YWdlLS0tLS0NCj5Gcm9tOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+U2VudDogMjAxOcTq
-MdTCMTDI1SAxODowNg0KPlRvOiBzaGF3bmd1b0BrZXJuZWwub3JnOyBheGJvZUBrZXJuZWwuZGsN
-Cj5DYzogTGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+
-bWFyay5ydXRsYW5kQGFybS5jb207IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9y
-ZzsNCj5kZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsNCj5saW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBQZW5nIE1hIDxwZW5nLm1hQG54cC5j
-b20+DQo+U3ViamVjdDogW1BBVENIIDEvMl0gYWhjaTogcW9yaXE6IGFkZCBseDIxNjAgcGxhdGZv
-cm1zIHN1cHBvcnQNCj4NCj5MeDIxNjBhIGlzIGEgbmV3IGludHJvZHVjZWQgc29jIHdoaWNoIHN1
-cHBvcnRzIEFUQTMuMCBhbmQgQ2xlYW4gdXAgc29tZQ0KPmNvZGUNCj4NCj5TaWduZWQtb2ZmLWJ5
-OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+LS0tDQo+IGRyaXZlcnMvYXRhL2FoY2lfcW9y
-aXEuYyB8ICAgNDQgKysrKysrKysrKysrLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0N
-Cj4gMSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAzMiBkZWxldGlvbnMoLSkNCj4N
-Cj5kaWZmIC0tZ2l0IGEvZHJpdmVycy9hdGEvYWhjaV9xb3JpcS5jIGIvZHJpdmVycy9hdGEvYWhj
-aV9xb3JpcS5jIGluZGV4DQo+Y2U1OTI1My4uMTk5NGJmMiAxMDA2NDQNCj4tLS0gYS9kcml2ZXJz
-L2F0YS9haGNpX3FvcmlxLmMNCj4rKysgYi9kcml2ZXJzL2F0YS9haGNpX3FvcmlxLmMNCj5AQCAt
-NTcsNyArNTcsNyBAQCBlbnVtIGFoY2lfcW9yaXFfdHlwZSB7DQo+IAlBSENJX0xTMjA4MEEsDQo+
-IAlBSENJX0xTMTA0NkEsDQo+IAlBSENJX0xTMTA4OEEsDQo+LQlBSENJX0xTMjA4OEEsDQo+KwlB
-SENJX0xYMjE2MEEsDQo+IH07DQo+DQo+IHN0cnVjdCBhaGNpX3FvcmlxX3ByaXYgew0KPkBAIC03
-Myw3ICs3Myw3IEBAIHN0cnVjdCBhaGNpX3FvcmlxX3ByaXYgew0KPiAJeyAuY29tcGF0aWJsZSA9
-ICJmc2wsbHMyMDgwYS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFMyMDgwQX0sDQo+IAl7
-IC5jb21wYXRpYmxlID0gImZzbCxsczEwNDZhLWFoY2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9M
-UzEwNDZBfSwNCj4gCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA4OGEtYWhjaSIsIC5kYXRhID0g
-KHZvaWQgKilBSENJX0xTMTA4OEF9LA0KPi0JeyAuY29tcGF0aWJsZSA9ICJmc2wsbHMyMDg4YS1h
-aGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFMyMDg4QX0sDQo+Kwl7IC5jb21wYXRpYmxlID0g
-ImZzbCxseDIxNjBhLWFoY2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9MWDIxNjBBfSwNCj4gCXt9
-LA0KPiB9Ow0KPiBNT0RVTEVfREVWSUNFX1RBQkxFKG9mLCBhaGNpX3FvcmlxX29mX21hdGNoKTsg
-QEAgLTE3NCwxMiArMTc0LDEwDQo+QEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3BoeV9pbml0KHN0
-cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYpDQo+IAkJd3JpdGVsKExTMTAyMUFfUE9SVF9QSFk0
-LCByZWdfYmFzZSArIFBPUlRfUEhZNCk7DQo+IAkJd3JpdGVsKExTMTAyMUFfUE9SVF9QSFk1LCBy
-ZWdfYmFzZSArIFBPUlRfUEhZNSk7DQo+IAkJd3JpdGVsKEFIQ0lfUE9SVF9UUkFOU19DRkcsIHJl
-Z19iYXNlICsgUE9SVF9UUkFOUyk7DQo+LQkJaWYgKHFwcml2LT5pc19kbWFjb2hlcmVudCkNCj4t
-CQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsDQo+LQkJCQkJcmVnX2Jhc2UgKyBMUzEwMjFB
-X0FYSUNDX0FERFIpOw0KPiAJCWJyZWFrOw0KPg0KPiAJY2FzZSBBSENJX0xTMTA0M0E6DQo+Kwlj
-YXNlIEFIQ0lfTFMxMDQ2QToNCj4gCQlpZiAoIXFwcml2LT5lY2NfYWRkcikNCj4gCQkJcmV0dXJu
-IC1FSU5WQUw7DQo+IAkJd3JpdGVsKHJlYWRsKHFwcml2LT5lY2NfYWRkcikgfCBFQ0NfRElTX0FS
-TVY4X0NIMiwgQEAgLTE4OCw4DQo+KzE4Niw2IEBAIHN0YXRpYyBpbnQgYWhjaV9xb3JpcV9waHlf
-aW5pdChzdHJ1Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2KQ0KPiAJCXdyaXRlbChBSENJX1BPUlRf
-UEhZMl9DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkyKTsNCj4gCQl3cml0ZWwoQUhDSV9QT1JUX1BI
-WTNfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMyk7DQo+IAkJd3JpdGVsKEFIQ0lfUE9SVF9UUkFO
-U19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7DQo+LQkJaWYgKHFwcml2LT5pc19kbWFjb2hl
-cmVudCkNCj4tCQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsIHJlZ19iYXNlICsgUE9SVF9B
-WElDQyk7DQo+IAkJYnJlYWs7DQo+DQo+IAljYXNlIEFIQ0lfTFMyMDgwQToNCj5AQCAtMTk3LDI0
-ICsxOTMsMTAgQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3BoeV9pbml0KHN0cnVjdCBhaGNpX2hv
-c3RfcHJpdg0KPipocHJpdikNCj4gCQl3cml0ZWwoQUhDSV9QT1JUX1BIWTJfQ0ZHLCByZWdfYmFz
-ZSArIFBPUlRfUEhZMik7DQo+IAkJd3JpdGVsKEFIQ0lfUE9SVF9QSFkzX0NGRywgcmVnX2Jhc2Ug
-KyBQT1JUX1BIWTMpOw0KPiAJCXdyaXRlbChBSENJX1BPUlRfVFJBTlNfQ0ZHLCByZWdfYmFzZSAr
-IFBPUlRfVFJBTlMpOw0KPi0JCWlmIChxcHJpdi0+aXNfZG1hY29oZXJlbnQpDQo+LQkJCXdyaXRl
-bChBSENJX1BPUlRfQVhJQ0NfQ0ZHLCByZWdfYmFzZSArIFBPUlRfQVhJQ0MpOw0KPi0JCWJyZWFr
-Ow0KPi0NCj4tCWNhc2UgQUhDSV9MUzEwNDZBOg0KPi0JCWlmICghcXByaXYtPmVjY19hZGRyKQ0K
-Pi0JCQlyZXR1cm4gLUVJTlZBTDsNCj4tCQl3cml0ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8
-IEVDQ19ESVNfQVJNVjhfQ0gyLA0KPi0JCQkJcXByaXYtPmVjY19hZGRyKTsNCj4tCQl3cml0ZWwo
-QUhDSV9QT1JUX1BIWV8xX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTEpOw0KPi0JCXdyaXRlbChB
-SENJX1BPUlRfUEhZMl9DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkyKTsNCj4tCQl3cml0ZWwoQUhD
-SV9QT1JUX1BIWTNfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMyk7DQo+LQkJd3JpdGVsKEFIQ0lf
-UE9SVF9UUkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7DQo+LQkJaWYgKHFwcml2LT5p
-c19kbWFjb2hlcmVudCkNCj4tCQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsIHJlZ19iYXNl
-ICsgUE9SVF9BWElDQyk7DQo+IAkJYnJlYWs7DQo+DQo+IAljYXNlIEFIQ0lfTFMxMDg4QToNCj4r
-CWNhc2UgQUhDSV9MWDIxNjBBOg0KPiAJCWlmICghcXByaXYtPmVjY19hZGRyKQ0KPiAJCQlyZXR1
-cm4gLUVJTlZBTDsNCj4gCQl3cml0ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNf
-TFMxMDg4QSwgQEAgLTIyMywxOA0KPisyMDUsMTYgQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3Bo
-eV9pbml0KHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYpDQo+IAkJd3JpdGVsKEFIQ0lfUE9S
-VF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0KPiAJCXdyaXRlbChBSENJX1BPUlRf
-UEhZM19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsNCj4gCQl3cml0ZWwoQUhDSV9QT1JUX1RS
-QU5TX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1RSQU5TKTsNCj4tCQlpZiAocXByaXYtPmlzX2RtYWNv
-aGVyZW50KQ0KPi0JCQl3cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywgcmVnX2Jhc2UgKyBQT1JU
-X0FYSUNDKTsNCj4gCQlicmVhazsNCj4rCX0NCj4NCj4tCWNhc2UgQUhDSV9MUzIwODhBOg0KPi0J
-CXdyaXRlbChBSENJX1BPUlRfUEhZXzFfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMSk7DQo+LQkJ
-d3JpdGVsKEFIQ0lfUE9SVF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0KPi0JCXdy
-aXRlbChBSENJX1BPUlRfUEhZM19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsNCj4tCQl3cml0
-ZWwoQUhDSV9QT1JUX1RSQU5TX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1RSQU5TKTsNCj4tCQlpZiAo
-cXByaXYtPmlzX2RtYWNvaGVyZW50KQ0KPi0JCQl3cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywg
-cmVnX2Jhc2UgKyBQT1JUX0FYSUNDKTsNCj4tCQlicmVhazsNCj4rCWlmIChxcHJpdi0+aXNfZG1h
-Y29oZXJlbnQpIHsNCj4rCQlpZiAocXByaXYtPnR5cGUgPT0gQUhDSV9MUzEwMjFBKQ0KPisJCQl3
-cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywNCj4rCQkJICAgICAgIHJlZ19iYXNlICsgTFMxMDIx
-QV9BWElDQ19BRERSKTsNCj4rCQllbHNlDQo+KwkJCXdyaXRlbChBSENJX1BPUlRfQVhJQ0NfQ0ZH
-LA0KPisJCQkgICAgICAgcmVnX2Jhc2UgKyBQT1JUX0FYSUNDKTsNCj4gCX0NCj4NCj4gCXJldHVy
-biAwOw0KPi0tDQo+MS43LjENCg0K
+On Fri, 2019-01-04 at 22:49 +0530, Vinod Koul wrote:
+> On 02-01-19, 10:12, Long Cheng wrote:
+> > In DMA engine framework, add 8250 uart dma to support MediaTek uart.
+> > If MediaTek uart enabled(SERIAL_8250_MT6577), and want to improve
+> > the performance, can enable the function.
+> 
+> Is the DMA controller UART specific, can it work with other controllers
+> as well, if so you should get rid of uart name in patch
+> 
+
+I don't know that it can work or not on other controller. but it's for
+MediaTek SOC
+
+> > +#define MTK_UART_APDMA_CHANNELS		(CONFIG_SERIAL_8250_NR_UARTS * 2)
+> 
+> Why are the channels not coming from DT?
+> 
+
+i will using dma-requests install of it.
+
+> > +
+> > +#define VFF_EN_B		BIT(0)
+> > +#define VFF_STOP_B		BIT(0)
+> > +#define VFF_FLUSH_B		BIT(0)
+> > +#define VFF_4G_SUPPORT_B	BIT(0)
+> > +#define VFF_RX_INT_EN0_B	BIT(0)	/*rx valid size >=  vff thre*/
+> > +#define VFF_RX_INT_EN1_B	BIT(1)
+> > +#define VFF_TX_INT_EN_B		BIT(0)	/*tx left size >= vff thre*/
+> 
+> space around /* space */ also run checkpatch to check for style errors
+> 
+
+ok.
+
+> > +static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
+> > +{
+> > +	unsigned int len, send, left, wpt, d_wpt, tmp;
+> > +	int ret;
+> > +
+> > +	left = mtk_uart_apdma_read(c, VFF_LEFT_SIZE);
+> > +	if (!left) {
+> > +		mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > +		return;
+> > +	}
+> > +
+> > +	/* Wait 1sec for flush,  can't sleep*/
+> > +	ret = readx_poll_timeout(readl, c->base + VFF_FLUSH, tmp,
+> > +			tmp != VFF_FLUSH_B, 0, 1000000);
+> > +	if (ret)
+> > +		dev_warn(c->vc.chan.device->dev, "tx: fail, debug=0x%x\n",
+> > +			mtk_uart_apdma_read(c, VFF_DEBUG_STATUS));
+> > +
+> > +	send = min_t(unsigned int, left, c->desc->avail_len);
+> > +	wpt = mtk_uart_apdma_read(c, VFF_WPT);
+> > +	len = mtk_uart_apdma_read(c, VFF_LEN);
+> > +
+> > +	d_wpt = wpt + send;
+> > +	if ((d_wpt & VFF_RING_SIZE) >= len) {
+> > +		d_wpt = d_wpt - len;
+> > +		d_wpt = d_wpt ^ VFF_RING_WRAP;
+> > +	}
+> > +	mtk_uart_apdma_write(c, VFF_WPT, d_wpt);
+> > +
+> > +	c->desc->avail_len -= send;
+> > +
+> > +	mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > +	if (mtk_uart_apdma_read(c, VFF_FLUSH) == 0U)
+> > +		mtk_uart_apdma_write(c, VFF_FLUSH, VFF_FLUSH_B);
+> > +}
+> > +
+> > +static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
+> > +{
+> > +	struct mtk_uart_apdma_desc *d = c->desc;
+> > +	unsigned int len, wg, rg, cnt;
+> > +
+> > +	if ((mtk_uart_apdma_read(c, VFF_VALID_SIZE) == 0U) ||
+> > +		!d || !vchan_next_desc(&c->vc))
+> > +		return;
+> > +
+> > +	len = mtk_uart_apdma_read(c, VFF_LEN);
+> > +	rg = mtk_uart_apdma_read(c, VFF_RPT);
+> > +	wg = mtk_uart_apdma_read(c, VFF_WPT);
+> > +	if ((rg ^ wg) & VFF_RING_WRAP)
+> > +		cnt = (wg & VFF_RING_SIZE) + len - (rg & VFF_RING_SIZE);
+> > +	else
+> > +		cnt = (wg & VFF_RING_SIZE) - (rg & VFF_RING_SIZE);
+> > +
+> > +	c->rx_status = cnt;
+> > +	mtk_uart_apdma_write(c, VFF_RPT, wg);
+> > +
+> > +	list_del(&d->vd.node);
+> > +	vchan_cookie_complete(&d->vd);
+> > +}
+> 
+> this looks odd, why do you have different rx and tx start routines?
+> 
+
+Would you like explain it in more detail? thanks.
+In tx function, will wait the last data flush done. and the count the
+size that send.
+In Rx function, will count the size that receive.
+Any way, in rx / tx, need andle WPT or RPT.
+
+> > +static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
+> > +{
+> > +	struct mtk_uart_apdmadev *mtkd = to_mtk_uart_apdma_dev(chan->device);
+> > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > +	u32 tmp;
+> > +	int ret;
+> > +
+> > +	pm_runtime_get_sync(mtkd->ddev.dev);
+> > +
+> > +	mtk_uart_apdma_write(c, VFF_ADDR, 0);
+> > +	mtk_uart_apdma_write(c, VFF_THRE, 0);
+> > +	mtk_uart_apdma_write(c, VFF_LEN, 0);
+> > +	mtk_uart_apdma_write(c, VFF_RST, VFF_WARM_RST_B);
+> > +
+> > +	ret = readx_poll_timeout(readl, c->base + VFF_EN, tmp,
+> > +			tmp == 0, 10, 100);
+> > +	if (ret) {
+> > +		dev_err(chan->device->dev, "dma reset: fail, timeout\n");
+> > +		return ret;
+> > +	}
+> 
+> register read does reset?
+> 
+
+'mtk_uart_apdma_write(c, VFF_RST, VFF_WARM_RST_B);' is reset. resd just
+poll reset done.
+
+> > +
+> > +	if (!c->requested) {
+> > +		c->requested = true;
+> > +		ret = request_irq(mtkd->dma_irq[chan->chan_id],
+> > +				  mtk_uart_apdma_irq_handler, IRQF_TRIGGER_NONE,
+> > +				  KBUILD_MODNAME, chan);
+> 
+> why is the irq not requested in driver probe?
+> 
+
+I have explained in below,
+http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016418.html
+
+> > +static enum dma_status mtk_uart_apdma_tx_status(struct dma_chan *chan,
+> > +					 dma_cookie_t cookie,
+> > +					 struct dma_tx_state *txstate)
+> > +{
+> > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > +	enum dma_status ret;
+> > +	unsigned long flags;
+> > +
+> > +	if (!txstate)
+> > +		return DMA_ERROR;
+> > +
+> > +	ret = dma_cookie_status(chan, cookie, txstate);
+> > +	spin_lock_irqsave(&c->vc.lock, flags);
+> > +	if (ret == DMA_IN_PROGRESS) {
+> > +		c->rx_status = mtk_uart_apdma_read(c, VFF_RPT) & VFF_RING_SIZE;
+> > +		dma_set_residue(txstate, c->rx_status);
+> > +	} else if (ret == DMA_COMPLETE && c->cfg.direction == DMA_DEV_TO_MEM) {
+> 
+> why set reside when it is complete? also reside can be null, that should
+> be checked as well
+> 
+In different status, set different reside.
+
+> > +static struct dma_async_tx_descriptor *mtk_uart_apdma_prep_slave_sg
+> > +	(struct dma_chan *chan, struct scatterlist *sgl,
+> > +	unsigned int sglen, enum dma_transfer_direction dir,
+> > +	unsigned long tx_flags, void *context)
+> > +{
+> > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > +	struct mtk_uart_apdma_desc *d;
+> > +
+> > +	if ((dir != DMA_DEV_TO_MEM) &&
+> > +		(dir != DMA_MEM_TO_DEV)) {
+> > +		dev_err(chan->device->dev, "bad direction\n");
+> > +		return NULL;
+> > +	}
+> 
+> we have a macro for this
+
+Thanks for your suggestion. i will modify it.
+> 
+> > +
+> > +	/* Now allocate and setup the descriptor */
+> > +	d = kzalloc(sizeof(*d), GFP_ATOMIC);
+> > +	if (!d)
+> > +		return NULL;
+> > +
+> > +	/* sglen is 1 */
+> 
+> ?
+> 
+> > +static int mtk_uart_apdma_slave_config(struct dma_chan *chan,
+> > +				struct dma_slave_config *cfg)
+> > +{
+> > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > +	struct mtk_uart_apdmadev *mtkd =
+> > +				to_mtk_uart_apdma_dev(c->vc.chan.device);
+> > +
+> > +	c->cfg = *cfg;
+> > +
+> > +	if (cfg->direction == DMA_DEV_TO_MEM) {
+> 
+> fg->direction is deprecated, in fact I have removed all users recently,
+> please do not use this
+
+You will remove 'direction' in 'struct dma_slave_config'? if remove, how
+do confirm direction?
+
+> 
+> > +		unsigned int rx_len = cfg->src_addr_width * 1024;
+> > +
+> > +		mtk_uart_apdma_write(c, VFF_ADDR, cfg->src_addr);
+> > +		mtk_uart_apdma_write(c, VFF_LEN, rx_len);
+> > +		mtk_uart_apdma_write(c, VFF_THRE, VFF_RX_THRE(rx_len));
+> > +		mtk_uart_apdma_write(c, VFF_INT_EN,
+> > +				VFF_RX_INT_EN0_B | VFF_RX_INT_EN1_B);
+> > +		mtk_uart_apdma_write(c, VFF_RPT, 0);
+> > +		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_FLAG_CLR_B);
+> > +		mtk_uart_apdma_write(c, VFF_EN, VFF_EN_B);
+> 
+> why are we writing this here, we are supposed to do that when txn
+> starts!
+> 
+
+also you can review the link
+http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016418.html
+
+> > +static int mtk_uart_apdma_device_resume(struct dma_chan *chan)
+> > +{
+> > +	/* just for check caps pass */
+> > +	return 0;
+> > +}
+> 
+> if you do not support this please remove this!
+> 
+> > +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+> > +{
+> > +	while (list_empty(&mtkd->ddev.channels) == 0) {
+> > +		struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
+> > +			struct mtk_chan, vc.chan.device_node);
+> > +
+> > +		list_del(&c->vc.chan.device_node);
+> > +		tasklet_kill(&c->vc.task);
+> > +	}
+> > +}
+> > +
+> > +static const struct of_device_id mtk_uart_apdma_match[] = {
+> > +	{ .compatible = "mediatek,mt6577-uart-dma", },
+> 
+> where is the binding document for ediatek,mt6577-uart-dma ??
+> 
+
+http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016154.html
