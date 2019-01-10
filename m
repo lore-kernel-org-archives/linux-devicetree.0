@@ -1,82 +1,118 @@
-From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v3 1/6] pinctrl: qcom: spmi-gpio: hardcode IRQ counts
-Date: Wed,  9 Jan 2019 20:12:53 -0500
-Message-ID: <20190110011258.17227-2-masneyb@onstation.org>
-References: <20190110011258.17227-1-masneyb@onstation.org>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v1 6/7] arm64: dts: sdm845: Increase alert trip point to
+ 95 degrees
+Date: Wed, 9 Jan 2019 17:15:33 -0800
+Message-ID: <20190110011533.GV261387@google.com>
+References: <cover.1547078153.git.amit.kucheria@linaro.org>
+ <041258d65883df964890249a24d2a4788c419304.1547078153.git.amit.kucheria@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110011258.17227-1-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <041258d65883df964890249a24d2a4788c419304.1547078153.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org
-Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The probing of this driver calls platform_irq_count, which will
-setup all of the IRQs that are configured in device tree. In
-preparation for converting this driver to be a hierarchical IRQ
-chip, hardcode the IRQ count based on the hardware type so that all
-the IRQs are not configured immediately and are configured on an
-as-needed basis later in the boot process. This change will also
-allow for the removal of the interrupts property later in this
-patch series once the hierarchical IRQ chip support is in.
+Hi Amit,
 
-This patch also removes the generic qcom,spmi-gpio OF match since we
-don't know the number of pins. All of the existing upstream bindings
-already include the more-specific binding.
+On Thu, Jan 10, 2019 at 05:30:55AM +0530, Amit Kucheria wrote:
+> 75 degrees is too aggressive for throttling the CPU. After speaking to
+> Qualcomm engineers, increase it to 95 degrees.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index c27cbd3bcb0a..29e823b0caf4 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1692,7 +1692,7 @@
+>  
+>  			trips {
+>  				cpu_alert0: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1713,7 +1713,7 @@
+>  
+>  			trips {
+>  				cpu_alert1: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1734,7 +1734,7 @@
+>  
+>  			trips {
+>  				cpu_alert2: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1755,7 +1755,7 @@
+>  
+>  			trips {
+>  				cpu_alert3: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1776,7 +1776,7 @@
+>  
+>  			trips {
+>  				cpu_alert4: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1797,7 +1797,7 @@
+>  
+>  			trips {
+>  				cpu_alert5: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1818,7 +1818,7 @@
+>  
+>  			trips {
+>  				cpu_alert6: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+> @@ -1839,7 +1839,7 @@
+>  
+>  			trips {
+>  				cpu_alert7: trip0 {
+> -					temperature = <75000>;
+> +					temperature = <95000>;
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
 
-The pm8941 code was tested on a LG Nexus 5 (hammerhead) phone.
+The change itself looks good to me, however I wonder if it would be
+worth to eliminate redundancy and merge the current 8 thermal zones
+into 2, one for the Silver and one for the Gold cluster (as done by
+http://crrev.com/c/1381752). There is a single cooling device for
+each cluster, so it's not clear to me if there is any gain from having
+a separate thermal zone for each CPU. If it is important to monitor
+the temperatures of the individual cores this can still be done by
+configuring the thermal zone of the cluster with multiple thermal
+sensors.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
----
-Changes since v2:
-- Don't move pmic_gpio_of_match block. Use device_get_match_data instead
-  of of_match_device.
-- Correct build warning on arm64: warning: cast from pointer to integer
-  of different size
+Cheers
 
- drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 23 +++++++++--------------
- 1 file changed, 9 insertions(+), 14 deletions(-)
-
-diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-index 4458d44dfcf6..d3ce7a0e1203 100644
---- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-+++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-@@ -951,13 +951,7 @@ static int pmic_gpio_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	npins = platform_irq_count(pdev);
--	if (!npins)
--		return -EINVAL;
--	if (npins < 0)
--		return npins;
--
--	BUG_ON(npins > ARRAY_SIZE(pmic_gpio_groups));
-+	npins = (u16)(uintptr_t) device_get_match_data(&pdev->dev);
- 
- 	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
- 	if (!state)
-@@ -1062,14 +1056,15 @@ static int pmic_gpio_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+/* data contains the number of GPIOs */
- static const struct of_device_id pmic_gpio_of_match[] = {
--	{ .compatible = "qcom,pm8916-gpio" },	/* 4 GPIO's */
--	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
--	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
--	{ .compatible = "qcom,pmi8994-gpio" },  /* 10 GPIO's */
--	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
--	{ .compatible = "qcom,pms405-gpio" },	/* 12 GPIO's, holes on 1 9 10 */
--	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
-+	{ .compatible = "qcom,pm8916-gpio", .data = (void *) 4 },
-+	{ .compatible = "qcom,pm8941-gpio", .data = (void *) 36 },
-+	{ .compatible = "qcom,pm8994-gpio", .data = (void *) 22 },
-+	{ .compatible = "qcom,pmi8994-gpio", .data = (void *) 10 },
-+	{ .compatible = "qcom,pma8084-gpio", .data = (void *) 22 },
-+	/* pms405 has 12 GPIOs with holes on 1, 9, and 10 */
-+	{ .compatible = "qcom,pms405-gpio", .data = (void *) 12 },
- 	{ },
- };
- 
--- 
-2.17.2
+Matthias
