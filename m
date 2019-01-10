@@ -1,298 +1,66 @@
-From: Zhang Rui <rui.zhang@intel.com>
-Subject: Re: [PATCH v2 02/11] thermal: add irq-mode configuration for trip
- point
-Date: Thu, 10 Jan 2019 22:20:15 +0800
-Message-ID: <1547130015.10666.17.camel@intel.com>
-References: <1541610593-28542-1-git-send-email-l.luba@partner.samsung.com>
-         <CGME20181107171036eucas1p13253d56b463c8f888ab8f8e418635297@eucas1p1.samsung.com>
-         <1541610593-28542-3-git-send-email-l.luba@partner.samsung.com>
-         <1544022595.2841.45.camel@intel.com>
-         <2ac425fc-7c32-6e2f-7086-c14f85b0bbfd@partner.samsung.com>
-         <3314da31-1b8b-ec19-4aee-38d98aa8adbf@partner.samsung.com>
+From: "Richter, Robert" <Robert.Richter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
+ compatible string
+Date: Thu, 10 Jan 2019 14:45:51 +0000
+Message-ID: <20190110144537.p5setcurwu6bwrtl@rric.localdomain>
+References: <20190109202934.29304-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3314da31-1b8b-ec19-4aee-38d98aa8adbf@partner.samsung.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lukasz Luba <l.luba@partner.samsung.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
-Cc: edubezval@gmail.com, daniel.lezcano@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, corbet@lwn.net, b.zolnierkie@samsung.com, krzk@kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190109202934.29304-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: en-US
+Content-ID: <09F322A8707A4F4AB2C73BCBE4014E40-Tk6F3M/euE6cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "Nair, Jayachandran" <Jayachandran.Nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>linu
 List-Id: devicetree@vger.kernel.org
 
-Hi, Lukasz,
+Rob,
 
-On 四, 2018-12-06 at 20:55 +0100, Lukasz Luba wrote:
+On 09.01.19 14:29:34, Rob Herring wrote:
+> External Email
 > 
-> On 12/6/18 8:18 PM, Lukasz Luba wrote:
-> > 
-> > Hi Rui,
-> > 
-> > On 12/5/18 4:09 PM, Zhang Rui wrote:
-> > > 
-> > > On 三, 2018-11-07 at 18:09 +0100, Lukasz Luba wrote:
-> > > > 
-> > > > This patch adds support irq mode in trip point.
-> > > > When that flag is set in DT, there is no need for polling
-> > > > in thermal framework. Crossing the trip point will rise an IRQ.
-> > > > The naming convention for tip point 'type' can be confussing
-> > > > and 'passive' (whic is passive cooling) might be interpretted
-> > > > wrongly.
-> > > > 
-> > > > This mechanism prevents from missue and adds explicit setting
-> > > > for hardware which support interrupts for pre-configured
-> > > > temperature
-> > > > threshold.
-> > > > 
-> > > > Cc: Zhang Rui <rui.zhang@intel.com>
-> > > > Cc: Eduardo Valentin <edubezval@gmail.com>
-> > > > Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> > > > Signed-off-by: Lukasz Luba <l.luba@partner.samsung.com>
-> > > > ---
-> > > >   drivers/thermal/of-thermal.c   | 17 +++++++++++++++++
-> > > >   drivers/thermal/thermal_core.c | 10 ++++++++--
-> > > >   include/linux/thermal.h        |  5 +++++
-> > > >   3 files changed, 30 insertions(+), 2 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/thermal/of-thermal.c b/drivers/thermal/of-
-> > > > thermal.c
-> > > > index 4bfdb4a..1a75946a 100644
-> > > > --- a/drivers/thermal/of-thermal.c
-> > > > +++ b/drivers/thermal/of-thermal.c
-> > > > @@ -312,6 +312,20 @@ static int of_thermal_get_trip_type(struct
-> > > > thermal_zone_device *tz, int trip,
-> > > >       return 0;
-> > > >   }
-> > > > +static int
-> > > > +of_thermal_get_trip_irq_mode(struct thermal_zone_device *tz,
-> > > > int
-> > > > trip,
-> > > > +                 bool *mode)
-> > > > +{
-> > > > +    struct __thermal_zone *data = tz->devdata;
-> > > > +
-> > > > +    if (trip >= data->ntrips || trip < 0)
-> > > > +        return -EDOM;
-> > > > +
-> > > > +    *mode = data->trips[trip].irq_mode;
-> > > > +
-> > > > +    return 0;
-> > > > +}
-> > > > +
-> > > >   static int of_thermal_get_trip_temp(struct
-> > > > thermal_zone_device *tz,
-> > > > int trip,
-> > > >                       int *temp)
-> > > >   {
-> > > > @@ -394,6 +408,7 @@ static struct thermal_zone_device_ops
-> > > > of_thermal_ops = {
-> > > >       .set_mode = of_thermal_set_mode,
-> > > >       .get_trip_type = of_thermal_get_trip_type,
-> > > > +    .get_trip_irq_mode = of_thermal_get_trip_irq_mode,
-> > > >       .get_trip_temp = of_thermal_get_trip_temp,
-> > > >       .set_trip_temp = of_thermal_set_trip_temp,
-> > > >       .get_trip_hyst = of_thermal_get_trip_hyst,
-> > > > @@ -827,6 +842,8 @@ static int thermal_of_populate_trip(struct
-> > > > device_node *np,
-> > > >           return ret;
-> > > >       }
-> > > > +    trip->irq_mode = of_property_read_bool(np, "irq-mode");
-> > > > +
-> > > >       /* Required for cooling map matching */
-> > > >       trip->np = np;
-> > > >       of_node_get(np);
-> > > > diff --git a/drivers/thermal/thermal_core.c
-> > > > b/drivers/thermal/thermal_core.c
-> > > > index 39fc812..6d41e08 100644
-> > > > --- a/drivers/thermal/thermal_core.c
-> > > > +++ b/drivers/thermal/thermal_core.c
-> > > > @@ -406,6 +406,7 @@ static void handle_critical_trips(struct
-> > > > thermal_zone_device *tz,
-> > > >   static void handle_thermal_trip(struct thermal_zone_device
-> > > > *tz, int
-> > > > trip)
-> > > >   {
-> > > >       enum thermal_trip_type type;
-> > > > +    bool irq_mode = false;
-> > > >       /* Ignore disabled trip points */
-> > > >       if (test_bit(trip, &tz->trips_disabled))
-> > > > @@ -419,9 +420,14 @@ static void handle_thermal_trip(struct
-> > > > thermal_zone_device *tz, int trip)
-> > > >           handle_non_critical_trips(tz, trip);
-> > > >       /*
-> > > >        * Alright, we handled this trip successfully.
-> > > > -     * So, start monitoring again.
-> > > > +     * So, start monitoring in polling mode if
-> > > > +     * trip is not using irq HW support.
-> > > >        */
-> > > > -    monitor_thermal_zone(tz);
-> > > > +    if (tz->ops->get_trip_irq_mode)
-> > > > +        tz->ops->get_trip_irq_mode(tz, trip, &irq_mode);
-> > > > +
-> > > > +    if (!irq_mode)
-> > > > +        monitor_thermal_zone(tz);
-> > > >   }
-> > > handle_thermal_trip() is called from
-> > > thermal_zone_device_update(), and
-> > > it is invoked for every trip points.
-> > > say, you have a passive trip point 1 that supports irq_mode, and
-> > > another passive trip point 2 that does not support irq_mode,
-> > > monitor_thermal_zone() is still called in handle_thermal_trip(tz,
-> > > 2),
-> > > and the passive timer will be activated anyway, do I miss
-> > > something?
-
-sorry that I missed this thread.
-
-> > Yes, the passive timer will be activated in your example. It is
-> > correct
-> > behavior and does not break anything.
-> > case 1: there is 'k' passive trip points which have irq_mode and 1
-> > additional which does not have 'irq_mode', the framework will start
-> > polling but skip check for those 'k' trip points.
-> > case 2: all of the passive trip points have irq_mode set, the
-> > framework
-> > will not register 'scheduled_work' because it will not call 
-> > 'monitor_thermal_zone()'.
-> > This is the case of most Exynos platforms, but there is one
-> > exception 
-> > which has 'case 1' with 2 trip points not supporting irq_mode.
-> Do you suggest to cover the 'case 1'?
-
-So this solution does not cover case 1.
-And for case 2, why not set passive_delay to 0? are they sharing the
-same DT file?
-
-> It would be possible after adding a new enum THERMAL_FRAMEWORK_POLL, 
-> then function:
-
-hmmm, I think we can
-1. use tz->passive to count the passive trip points that need passive
-polling.
-2. count tz->passive properly in the governors
-3. always do passive polling when tz->passive > 0.
-
-This will cover both cases, right?
-
-some sample code to handle this in step_wise governor attached below,
-
-what do you think?
-
-thanks,
-rui
-
-diff --git a/drivers/thermal/step_wise.c b/drivers/thermal/step_wise.c
-index ee047ca..59d9a1d 100644
---- a/drivers/thermal/step_wise.c
-+++ b/drivers/thermal/step_wise.c
-@@ -121,8 +121,15 @@ static void update_passive_instance(struct
-thermal_zone_device *tz,
-         * If value is +1, activate a passive instance.
-         * If value is -1, deactivate a passive instance.
-         */
--       if (type == THERMAL_TRIP_PASSIVE || type == THERMAL_TRIPS_NONE)
--               tz->passive += value;
-+       if (type != THERMAL_TRIP_PASSIVE && type != THERMAL_TRIPS_NONE)
-+               return;
-+       if (tz->ops->get_trip_irq_mode) {
-+               if (tz->ops->get_trip_irq_mode(tz, trip, &irq_mode))
-+                               return;
-+               if (irq_mode)
-+                               return;
-+       }
-+       tz->passive += value;
- }
-
-
-> thermal_zone_device_check() will call
-> thermal_zone_device_update(tz, THERMAL_FRAMEWORK_POLL)
-> and in handle_thermal_trip() implement something like:
-> --------------8<----------------
-> static void handle_thermal_trip(struct thermal_zone_device *tz, int
-> trip)
-> {
-> 	enum thermal_trip_type type;
-> 	bool irq_mode = false;
+> The 'arm,armv8' compatible string is only for software models. It adds
+> little value otherwise and is inconsistently used as a fallback on some
+> platforms. Remove it from those platforms.
 > 
-> 	/* Ignore disabled trip points */
-> 	if (test_bit(trip, &tz->trips_disabled))
-> 		return;
+> This fixes warnings generated by the DT schema.
 > 
-> 	if (tz->ops->get_trip_irq_mode)
-> 		tz->ops->get_trip_irq_mode(tz, trip, &irq_mode)
+> Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> armsoc folks, Please apply directly.
+
+> diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> index ff5c4c47b22b..c616132f7d6d 100644
+> --- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> +++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> @@ -27,28 +27,28 @@
 > 
-> 	if (tz->notify_event == THERMAL_FRAMEWORK_POLL && irq_mode)
-> 		return;
-> ...
-> 
-> 	if (!irq_mode)
-> 		monitor_thermal_zone(tz);
-> }
-> 
-> ---------->8-----------------------
-> 
-> I could implement it in v3 if you don't see that it add too much of
-> mess 
-> and agree for this approach.
-> 
-> Regards,
-> Lukasz
-> 
-> > 
-> > 
-> > Regards,
-> > Lukasz
-> > 
-> > > 
-> > > 
-> > > thanks,
-> > > rui
-> > > 
-> > > > 
-> > > >   static void update_temperature(struct thermal_zone_device
-> > > > *tz)
-> > > > diff --git a/include/linux/thermal.h b/include/linux/thermal.h
-> > > > index 5f4705f..b064565 100644
-> > > > --- a/include/linux/thermal.h
-> > > > +++ b/include/linux/thermal.h
-> > > > @@ -103,6 +103,7 @@ struct thermal_zone_device_ops {
-> > > >           enum thermal_device_mode);
-> > > >       int (*get_trip_type) (struct thermal_zone_device *, int,
-> > > >           enum thermal_trip_type *);
-> > > > +    int (*get_trip_irq_mode) (struct thermal_zone_device *,
-> > > > int,
-> > > > bool *);
-> > > >       int (*get_trip_temp) (struct thermal_zone_device *, int,
-> > > > int
-> > > > *);
-> > > >       int (*set_trip_temp) (struct thermal_zone_device *, int,
-> > > > int);
-> > > >       int (*get_trip_hyst) (struct thermal_zone_device *, int,
-> > > > int
-> > > > *);
-> > > > @@ -196,6 +197,7 @@ struct thermal_zone_device {
-> > > >       struct thermal_attr *trip_temp_attrs;
-> > > >       struct thermal_attr *trip_type_attrs;
-> > > >       struct thermal_attr *trip_hyst_attrs;
-> > > > +    struct thermal_attr *trip_irq_mode_attrs;
-> > > >       void *devdata;
-> > > >       int trips;
-> > > >       unsigned long trips_disabled;    /* bitmap for disabled
-> > > > trips */
-> > > > @@ -364,6 +366,8 @@ struct thermal_zone_of_device_ops {
-> > > >    * @temperature: temperature value in miliCelsius
-> > > >    * @hysteresis: relative hysteresis in miliCelsius
-> > > >    * @type: trip point type
-> > > > + * @irq_mode: to not use polling in framework set support of
-> > > > HW irq
-> > > > (which will
-> > > > + *          be triggered when temperature reaches this level).
-> > > >    */
-> > > >   struct thermal_trip {
-> > > > @@ -371,6 +375,7 @@ struct thermal_trip {
-> > > >       int temperature;
-> > > >       int hysteresis;
-> > > >       enum thermal_trip_type type;
-> > > > +    bool irq_mode;
-> > > >   };
-> > > >   /* Function declarations */
-> > > 
+>                 cpu@0 {
+>                         device_type = "cpu";
+> -                       compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
+> +                       compatible = "cavium,thunder2";
+
+We are just checking if removing the "brcm,vulcan" string has any
+impact on early silicon revisions we want to support (see also
+BRCM_CPU_PART_VULCAN).
+
+Maybe you make this a separate change?
+
+-Robert
+
+>                         reg = <0x0 0x0>;
+>                         enable-method = "psci";
+>                 };
