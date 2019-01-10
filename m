@@ -1,76 +1,48 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 6/8 v3] arm64: dts: hi3660: Add dma to uart nodes
-Date: Thu, 10 Jan 2019 09:34:10 -0800
-Message-ID: <1547141652-8660-7-git-send-email-john.stultz@linaro.org>
+Subject: [PATCH 2/8 v3] Documentation: bindings: k3dma: Add binding for hisi-dma-avail-chan
+Date: Thu, 10 Jan 2019 09:34:06 -0800
+Message-ID: <1547141652-8660-3-git-send-email-john.stultz@linaro.org>
 References: <1547141652-8660-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1547141652-8660-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lkml <linux-kernel@vger.kernel.org>
-Cc: Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Try to add DMA support to the uart nodes following
-the assignments made in the dts from the victoria vendor kernel
-here:
-https://consumer.huawei.com/en/opensource/detail/?siteCode=worldwide&keywords=p10&fileType=openSourceSoftware&pageSize=10&curPage=1
+Some dma channels can be reserved for secure mode or other
+hardware on the SoC, so provide a binding for a bitmask
+listing the available channels for the kernel to use.
 
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Tanglei Han <hantanglei@huawei.com>
 Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
 Cc: Ryan Grachek <ryan@edited.us>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: dmaengine@vger.kernel.org
 Cc: devicetree@vger.kernel.org
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v3:
-* Remove dma enablment on uart0 which would use reserved channel 0
+v3: Renamed to hisi-dma-avail-chan
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
+ 1 file changed, 3 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 20ae40d..4c8d682 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -478,6 +478,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf00000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 2 &dma0 3>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART1>,
- 				 <&crg_ctrl HI3660_CLK_GATE_UART1>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -490,6 +492,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf03000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 4 &dma0 5>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART2>,
- 				 <&crg_ctrl HI3660_PCLK>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -514,6 +518,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf01000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 6 &dma0 7>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART4>,
- 				 <&crg_ctrl HI3660_CLK_GATE_UART4>;
- 			clock-names = "uartclk", "apb_pclk";
-@@ -526,6 +532,8 @@
- 			compatible = "arm,pl011", "arm,primecell";
- 			reg = <0x0 0xfdf05000 0x0 0x1000>;
- 			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
-+			dma-names = "rx", "tx";
-+			dmas =  <&dma0 8 &dma0 9>;
- 			clocks = <&crg_ctrl HI3660_CLK_GATE_UART5>,
- 				 <&crg_ctrl HI3660_CLK_GATE_UART5>;
- 			clock-names = "uartclk", "apb_pclk";
+diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
+index 10a2f15..38825d4 100644
+--- a/Documentation/devicetree/bindings/dma/k3dma.txt
++++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+@@ -14,6 +14,9 @@ Required properties:
+ 		have specific request line
+ - clocks: clock required
+ 
++Optional properties:
++- hisi-dma-avail-chan: Bitmask of available physical channels
++
+ Example:
+ 
+ Controller:
 -- 
 2.7.4
