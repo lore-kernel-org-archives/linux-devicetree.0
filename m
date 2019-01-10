@@ -1,7 +1,7 @@
 From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: [PATCH v11 1/9] dt-bindings: opp: Introduce opp-level bindings
-Date: Thu, 10 Jan 2019 09:32:01 +0530
-Message-ID: <20190110040209.6028-2-rnayak@codeaurora.org>
+Subject: [PATCH v11 2/9] OPP: Add support for parsing the 'opp-level' property
+Date: Thu, 10 Jan 2019 09:32:02 +0530
+Message-ID: <20190110040209.6028-3-rnayak@codeaurora.org>
 References: <20190110040209.6028-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,33 +12,107 @@ To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kerne
 Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add opp-level as an additional property in the OPP node to describe
-the performance level of the device.
-
-On some SoCs (especially from Qualcomm and MediaTek) this value
-is communicated to a remote microprocessor by the CPU, which
-then takes some actions (like adjusting voltage values across various
-rails) based on the value passed.
+Now that the OPP bindings are updated to include an optional
+'opp-level' property, add support to parse it from device tree
+and store it as part of dev_pm_opp structure.
+Also add and export an helper 'dev_pm_opp_get_level()' that can be
+used to get the level value read from device tree when present.
 
 Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 ---
- Documentation/devicetree/bindings/opp/opp.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ drivers/opp/core.c     | 18 ++++++++++++++++++
+ drivers/opp/of.c       |  2 ++
+ drivers/opp/opp.h      |  2 ++
+ include/linux/pm_opp.h |  7 +++++++
+ 4 files changed, 29 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-index c396c4c0af92..76b6c79604a5 100644
---- a/Documentation/devicetree/bindings/opp/opp.txt
-+++ b/Documentation/devicetree/bindings/opp/opp.txt
-@@ -129,6 +129,9 @@ Optional properties:
- - opp-microamp-<name>: Named opp-microamp property. Similar to
-   opp-microvolt-<name> property, but for microamp instead.
+diff --git a/drivers/opp/core.c b/drivers/opp/core.c
+index e5507add8f04..90b78a122be9 100644
+--- a/drivers/opp/core.c
++++ b/drivers/opp/core.c
+@@ -130,6 +130,24 @@ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
+ }
+ EXPORT_SYMBOL_GPL(dev_pm_opp_get_freq);
  
-+- opp-level: A value representing the performance level of the device,
-+  expressed as a 32-bit integer.
++/**
++ * dev_pm_opp_get_level() - Gets the level corresponding to an available opp
++ * @opp:	opp for which level value has to be returned for
++ *
++ * Return: level read from device tree corresponding to the opp, else
++ * return 0.
++ */
++unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp)
++{
++	if (IS_ERR_OR_NULL(opp) || !opp->available) {
++		pr_err("%s: Invalid parameters\n", __func__);
++		return 0;
++	}
 +
- - clock-latency-ns: Specifies the maximum possible transition latency (in
-   nanoseconds) for switching to this OPP from any other OPP.
++	return opp->level;
++}
++EXPORT_SYMBOL_GPL(dev_pm_opp_get_level);
++
+ /**
+  * dev_pm_opp_is_turbo() - Returns if opp is turbo OPP or not
+  * @opp: opp for which turbo mode is being verified
+diff --git a/drivers/opp/of.c b/drivers/opp/of.c
+index 06f0f632ec47..1779f2c93291 100644
+--- a/drivers/opp/of.c
++++ b/drivers/opp/of.c
+@@ -594,6 +594,8 @@ static struct dev_pm_opp *_opp_add_static_v2(struct opp_table *opp_table,
+ 		new_opp->rate = (unsigned long)rate;
+ 	}
  
++	of_property_read_u32(np, "opp-level", &new_opp->level);
++
+ 	/* Check if the OPP supports hardware's hierarchy of versions or not */
+ 	if (!_opp_is_supported(dev, opp_table, np)) {
+ 		dev_dbg(dev, "OPP not supported by hardware: %llu\n", rate);
+diff --git a/drivers/opp/opp.h b/drivers/opp/opp.h
+index e24d81497375..4458175aa661 100644
+--- a/drivers/opp/opp.h
++++ b/drivers/opp/opp.h
+@@ -60,6 +60,7 @@ extern struct list_head opp_tables;
+  * @suspend:	true if suspend OPP
+  * @pstate: Device's power domain's performance state.
+  * @rate:	Frequency in hertz
++ * @level:	Performance level
+  * @supplies:	Power supplies voltage/current values
+  * @clock_latency_ns: Latency (in nanoseconds) of switching to this OPP's
+  *		frequency from any other OPP's frequency.
+@@ -80,6 +81,7 @@ struct dev_pm_opp {
+ 	bool suspend;
+ 	unsigned int pstate;
+ 	unsigned long rate;
++	unsigned int level;
+ 
+ 	struct dev_pm_opp_supply *supplies;
+ 
+diff --git a/include/linux/pm_opp.h b/include/linux/pm_opp.h
+index 0a2a88e5a383..473d2c7516f0 100644
+--- a/include/linux/pm_opp.h
++++ b/include/linux/pm_opp.h
+@@ -86,6 +86,8 @@ unsigned long dev_pm_opp_get_voltage(struct dev_pm_opp *opp);
+ 
+ unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp);
+ 
++unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp);
++
+ bool dev_pm_opp_is_turbo(struct dev_pm_opp *opp);
+ 
+ int dev_pm_opp_get_opp_count(struct device *dev);
+@@ -157,6 +159,11 @@ static inline unsigned long dev_pm_opp_get_freq(struct dev_pm_opp *opp)
+ 	return 0;
+ }
+ 
++static inline unsigned int dev_pm_opp_get_level(struct dev_pm_opp *opp)
++{
++	return 0;
++}
++
+ static inline bool dev_pm_opp_is_turbo(struct dev_pm_opp *opp)
+ {
+ 	return false;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
