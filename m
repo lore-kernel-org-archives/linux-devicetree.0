@@ -1,46 +1,234 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH 2/2] dt-bindings: serial: Move renesas,rzn1-uart into the snps-dw-apb-uart binding
-Date: Thu, 10 Jan 2019 16:20:17 -0600
-Message-ID: <20190110222017.6390-2-robh@kernel.org>
-References: <20190110222017.6390-1-robh@kernel.org>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH 2/2] rtc: Add Cadence RTC driver
+Date: Thu, 10 Jan 2019 23:27:26 +0100
+Message-ID: <20190110222726.GI2362@piout.net>
+References: <20190108122242.12411-1-jank@cadence.com>
+ <20190108122242.12411-3-jank@cadence.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110222017.6390-1-robh@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190108122242.12411-3-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Phil Edworthy <phil.edworthy@renesas.com>, Simon Horman <horms+renesas@verge.net.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org
+To: Jan Kotas <jank@cadence.com>
+Cc: a.zummo@towertech.it, robh+dt@kernel.org, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The renesas,rzn1-uart binding only differs in compatible string from the
-snps-dw-apb-uart binding. Move it there, converting it to json-schema in
-the process.
+Hello,
 
-Cc: Phil Edworthy <phil.edworthy@renesas.com>
-Cc: Simon Horman <horms+renesas@verge.net.au>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: linux-serial@vger.kernel.org
-Signed-off-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/serial/renesas,rzn1-uart.txt   | 10 ----------
- 1 file changed, 10 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt
+On 08/01/2019 12:22:42+0000, Jan Kotas wrote:
+>  drivers/rtc/Kconfig       |  10 ++
+>  drivers/rtc/Makefile      |   1 +
+>  drivers/rtc/rtc-cadence.c | 404 ++++++++++++++++++++++++++++++++++++++++++++++
 
-diff --git a/Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt b/Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt
-deleted file mode 100644
-index 8b9e0d4dc2e4..000000000000
---- a/Documentation/devicetree/bindings/serial/renesas,rzn1-uart.txt
-+++ /dev/null
-@@ -1,10 +0,0 @@
--Renesas RZ/N1 UART
--
--This controller is based on the Synopsys DesignWare ABP UART and inherits all
--properties defined in snps-dw-apb-uart.txt except for the compatible property.
--
--Required properties:
--- compatible : The device specific string followed by the generic RZ/N1 string.
--   Therefore it must be one of:
--   "renesas,r9a06g032-uart", "renesas,rzn1-uart"
--   "renesas,r9a06g033-uart", "renesas,rzn1-uart"
+I would prefer a name that is a bit less generic, unless you can
+guarantee this driver will be able to handle every RTCs from Cadence.
+
+> +static int cdns_rtc_alarm_irq_enable(struct device *dev, unsigned int enabled)
+> +{
+> +	struct cdns_rtc *crtc = dev_get_drvdata(dev);
+> +
+> +	if (enabled) {
+> +		writel((CDNS_RTC_AEI_SEC | CDNS_RTC_AEI_MIN | CDNS_RTC_AEI_HOUR
+> +			| CDNS_RTC_AEI_DATE | CDNS_RTC_AEI_SEC),
+
+CDNS_RTC_AEI_SEC is used twice here.
+
+> +		       crtc->regs + CDNS_RTC_AENR);
+> +		writel(CDNS_RTC_AEI_ALRM, crtc->regs + CDNS_RTC_IENR);
+> +	} else {
+> +		writel(0, crtc->regs + CDNS_RTC_AENR);
+> +		writel(CDNS_RTC_AEI_ALRM, crtc->regs + CDNS_RTC_IDISR);
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+
+
+> +static int cdns_rtc_probe(struct platform_device *pdev)
+> +{
+> +	struct cdns_rtc *crtc;
+> +	struct resource *res;
+> +	int ret;
+> +	unsigned long ref_clk_freq;
+> +
+> +	crtc = devm_kzalloc(&pdev->dev, sizeof(*crtc), GFP_KERNEL);
+> +	if (!crtc)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	crtc->regs = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(crtc->regs))
+> +		return PTR_ERR(crtc->regs);
+> +
+> +	crtc->irq = platform_get_irq(pdev, 0);
+> +	if (crtc->irq < 0)
+> +		return -EINVAL;
+> +
+> +	crtc->pclk = devm_clk_get(&pdev->dev, "pclk");
+> +	if (IS_ERR(crtc->pclk)) {
+> +		ret = PTR_ERR(crtc->pclk);
+> +		dev_err(&pdev->dev,
+> +			"Failed to retrieve the peripheral clock, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	crtc->ref_clk = devm_clk_get(&pdev->dev, "ref_clk");
+> +	if (IS_ERR(crtc->ref_clk)) {
+> +		ret = PTR_ERR(crtc->ref_clk);
+> +		dev_err(&pdev->dev,
+> +			"Failed to retrieve the reference clock, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(crtc->pclk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to enable the peripheral clock, %d\n", ret);
+> +		return ret;
+> +	}
+> +
+> +	ret = clk_prepare_enable(crtc->ref_clk);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Failed to enable the reference clock, %d\n", ret);
+> +		goto err_disable_pclk;
+> +	}
+> +
+> +	ref_clk_freq = clk_get_rate(crtc->ref_clk);
+> +	if ((ref_clk_freq != 1) && (ref_clk_freq != 100)) {
+> +		dev_err(&pdev->dev,
+> +			"Invalid reference clock frequency %lu Hz.\n",
+> +			ref_clk_freq);
+> +		ret = -EINVAL;
+> +		goto err_disable_ref_clk;
+> +	}
+> +
+> +	ret = devm_request_irq(&pdev->dev, crtc->irq,
+> +			       cdns_rtc_irq_handler, 0,
+> +			       dev_name(&pdev->dev), &pdev->dev);
+> +	if (ret) {
+> +		dev_err(&pdev->dev,
+> +			"Unable to request interrupt for the device, %d\n",
+> +			ret);
+> +		goto err_disable_ref_clk;
+> +	}
+> +
+
+You should use devm_rtc_allocate_device to allocate crtc->rtc_dev before
+requesting the IRQ. Else, this leaves a race condition open.
+
+Also, please set crtc->rtc_dev->range_min and crtc->rtc_dev->range_max
+according to the fully contiguous range of time that is supported by the
+RTC. You can use
+https://git.kernel.org/pub/scm/linux/kernel/git/abelloni/rtc-tools.git/tree/rtc-range.c
+to assist you.
+
+> +	/* Always use 24-hour mode */
+> +	writel(0, crtc->regs + CDNS_RTC_HMR);
+> +
+> +	device_init_wakeup(&pdev->dev, 1);
+> +	platform_set_drvdata(pdev, crtc);
+> +	cdns_rtc_set_enabled(crtc, true);
+
+Is that really necessary? I guess you could check whether it has already
+been enabled to know whether the currently set time is valid so
+cdns_rtc_read_time could return -EINVAL when it knows it isn't valid.
+cdns_rtc_set_time will enable the RTC once the time has been set anyway.
+
+> +
+> +	crtc->rtc_dev = devm_rtc_device_register(&pdev->dev,
+> +						 dev_name(&pdev->dev),
+> +						 &cdns_rtc_ops,
+> +						 THIS_MODULE);
+> +	if (IS_ERR(crtc->rtc_dev)) {
+> +		ret = PTR_ERR(crtc->rtc_dev);
+> +		dev_err(&pdev->dev, "Unable to register the rtc device, %d\n",
+> +			ret);
+> +		goto err_stop_rtc;
+> +	}
+> +
+> +	return 0;
+> +
+> +err_stop_rtc:
+> +	cdns_rtc_set_enabled(crtc, false);
+> +
+> +err_disable_ref_clk:
+> +	clk_disable_unprepare(crtc->ref_clk);
+> +
+> +err_disable_pclk:
+> +	clk_disable_unprepare(crtc->pclk);
+> +
+> +	return ret;
+> +}
+> +
+> +static int cdns_rtc_remove(struct platform_device *pdev)
+> +{
+> +	struct cdns_rtc *crtc = platform_get_drvdata(pdev);
+> +
+> +	cdns_rtc_alarm_irq_enable(&pdev->dev, 0);
+> +	device_init_wakeup(&pdev->dev, 0);
+> +
+> +	clk_disable_unprepare(crtc->pclk);
+> +	clk_disable_unprepare(crtc->ref_clk);
+> +
+> +	return 0;
+> +}
+> +
+> +#ifdef CONFIG_PM_SLEEP
+> +static int cdns_rtc_suspend(struct device *dev)
+> +{
+> +	struct cdns_rtc *crtc = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		enable_irq_wake(crtc->irq);
+> +
+> +	return 0;
+> +}
+> +
+> +static int cdns_rtc_resume(struct device *dev)
+> +{
+> +	struct cdns_rtc *crtc = dev_get_drvdata(dev);
+> +
+> +	if (device_may_wakeup(dev))
+> +		disable_irq_wake(crtc->irq);
+> +
+> +	return 0;
+> +}
+> +#endif
+> +
+> +static SIMPLE_DEV_PM_OPS(cdns_rtc_pm_ops, cdns_rtc_suspend, cdns_rtc_resume);
+> +
+> +static const struct of_device_id cdns_rtc_of_match[] = {
+> +	{ .compatible = "cdns,rtc-r109v3" },
+
+Is r109v3 an IP name or a revision?
+
+> +	{ },
+> +};
+> +MODULE_DEVICE_TABLE(of, cdns_rtc_of_match);
+> +
+> +static struct platform_driver cdns_rtc_driver = {
+> +	.driver = {
+> +		.name = "cdns-rtc",
+> +		.of_match_table = cdns_rtc_of_match,
+> +		.pm = &cdns_rtc_pm_ops,
+> +	},
+> +	.probe = cdns_rtc_probe,
+> +	.remove = cdns_rtc_remove,
+> +};
+> +module_platform_driver(cdns_rtc_driver);
+> +
+> +MODULE_AUTHOR("Jan Kotas <jank@cadence.com>");
+> +MODULE_DESCRIPTION("Cadence RTC driver");
+> +MODULE_LICENSE("GPL v2");
+> +MODULE_ALIAS("platform:cdns-rtc");
+> -- 
+> 2.15.0
+> 
+
 -- 
-2.19.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
