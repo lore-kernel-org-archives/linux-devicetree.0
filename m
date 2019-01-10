@@ -1,279 +1,130 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
- LP5024/18 RGB LED driver
-Date: Thu, 10 Jan 2019 20:23:02 +0100
-Message-ID: <1594152a-4f57-e258-5c9c-e1b158c72932@gmail.com>
-References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
- <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
- <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
- <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
- <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
- <b027299c-a24a-abeb-8f92-97c32c13290b@ti.com>
- <2c3425b0-70af-1f38-35ee-0af857bf0539@gmail.com>
- <a388f510-d0a4-e88b-cfa4-8c9f45f7252a@ti.com>
- <63713076-b111-316d-7e60-9b799ff22c0a@gmail.com>
- <f323ce2c-01f9-f474-4071-96c3c4ef2b24@ti.com>
- <0a163b0c-eabc-6cf0-c605-28622af3d31d@ti.com>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v1 6/7] arm64: dts: sdm845: Increase alert trip point to
+ 95 degrees
+Date: Fri, 11 Jan 2019 01:15:09 +0530
+Message-ID: <CAHLCerM+p+GkVsR_WuC0xF1oFvj=8cZ+OmU=pMssfZGGs-eS7w@mail.gmail.com>
+References: <cover.1547078153.git.amit.kucheria@linaro.org>
+ <041258d65883df964890249a24d2a4788c419304.1547078153.git.amit.kucheria@linaro.org>
+ <20190110011533.GV261387@google.com> <20190110021522.GW261387@google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <0a163b0c-eabc-6cf0-c605-28622af3d31d@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190110021522.GW261387@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Dan,
+On Thu, Jan 10, 2019 at 7:45 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> On Wed, Jan 09, 2019 at 05:15:33PM -0800, Matthias Kaehlcke wrote:
+> > Hi Amit,
+> >
+> > On Thu, Jan 10, 2019 at 05:30:55AM +0530, Amit Kucheria wrote:
+> > > 75 degrees is too aggressive for throttling the CPU. After speaking to
+> > > Qualcomm engineers, increase it to 95 degrees.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++--------
+> > >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index c27cbd3bcb0a..29e823b0caf4 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > @@ -1692,7 +1692,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert0: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1713,7 +1713,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert1: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1734,7 +1734,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert2: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1755,7 +1755,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert3: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1776,7 +1776,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert4: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1797,7 +1797,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert5: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1818,7 +1818,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert6: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> > > @@ -1839,7 +1839,7 @@
+> > >
+> > >                     trips {
+> > >                             cpu_alert7: trip0 {
+> > > -                                   temperature = <75000>;
+> > > +                                   temperature = <95000>;
+> > >                                     hysteresis = <2000>;
+> > >                                     type = "passive";
+> > >                             };
+> >
+> > The change itself looks good to me, however I wonder if it would be
+> > worth to eliminate redundancy and merge the current 8 thermal zones
+> > into 2, one for the Silver and one for the Gold cluster (as done by
+> > http://crrev.com/c/1381752). There is a single cooling device for
+> > each cluster, so it's not clear to me if there is any gain from having
+> > a separate thermal zone for each CPU. If it is important to monitor
+> > the temperatures of the individual cores this can still be done by
+> > configuring the thermal zone of the cluster with multiple thermal
+> > sensors.
+>
+> I see your idea is to have a cooling device per CPU ("arm64: dts:
+> sdm845: wireup the thermal trip points to cpufreq" /
+> https://lore.kernel.org/patchwork/patch/1030742/), however that
+> doesn't work as intended. Only two cpufreq 'devices' are created,
+> one for CPU0 and one for CPU4. In consequence cpufreq->ready() only
+> runs for these cores and only two cooling devices are
+> registered. Since the cores of a cluster all run at the same
+> frequency I also doubt if having multiple cooling devices would
+> bring any benefits.
 
-On 1/10/19 1:46 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 1/8/19 3:25 PM, Dan Murphy wrote:
->> Jacek
->>
->> On 1/8/19 3:18 PM, Jacek Anaszewski wrote:
->>> Hi Dan,
->>>
->>> On 1/7/19 10:14 PM, Dan Murphy wrote:
->>>> Jacek
->>>>
->>>> On 1/7/19 2:59 PM, Jacek Anaszewski wrote:
->>>>> Dan,
->>>>>
->>>>> On 1/7/19 8:36 PM, Dan Murphy wrote:
->>>>>> Jacek
->>>>>>
->>>>>> On 1/7/19 1:13 PM, Jacek Anaszewski wrote:
->>>>>>> On 1/6/19 4:52 PM, Jacek Anaszewski wrote:
->>>>>>>> Hi Pavel,
->>>>>>>>
->>>>>>>> On 1/5/19 11:12 PM, Pavel Machek wrote:
->>>>>>>>> Hi!
->>>>>>>>>
->>>>>>>>>>> Grab yourself an RGB LED and play with it; you'll see what the
->>>>>>>>>>> problems are. It is hard to explain colors over email...
->>>>>>>>>>
->>>>>>>>>> Video [0] gives some overview of lp5024 capabilities.
->>>>>>>>>>
->>>>>>>>>> I don't see any problems in exposing separate red,green,blue
->>>>>>>>>> files and brightness for the devices with hardware support for
->>>>>>>>>> that.
->>>>>>>>>
->>>>>>>>> Well, that's what we do today, as three separate LEDs, right?
->>>>>>>>
->>>>>>>> No. It doesn't allow for setting color intensity by having
->>>>>>>> the color fixed beforehand. Below is relevant excerpt from
->>>>>>>> the lp5024 documentation. This is not something that can be
->>>>>>>> mapped to RGB color space, but rather to HSV/HSL, with the
->>>>>>>> reservation that the hardware implementation uses PWM
->>>>>>>> for setting color intensity.
->>>>>>>>
->>>>>>>> <quote>
->>>>>>>> 8.3.1.2 Independent Intensity Control Per RGB LED Module
->>>>>>>>
->>>>>>>> When color is fixed, the independent intensity-control is used to
->>>>>>>> achieve accurate and flexible dimming control for every RGB LED module.
->>>>>>>>
->>>>>>>> 8.3.1.2.1 Intensity-Control Register Configuration
->>>>>>>>
->>>>>>>> Every three consecutive output channels are assigned to their respective
->>>>>>>> intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
->>>>>>>> and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
->>>>>>>> connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
->>>>>>>> device allows 256-step intensity control for each RGB LED module, which
->>>>>>>> helps achieve a smooth dimming effect.
->>>>>>>> </quote>
->>>>>>>>
->>>>>>>>> I don't have problem with that, either; other drivers already do
->>>>>>>>> that. He's free to use existing same interface.
->>>>>>>>>
->>>>>>>>> But that is insufficient, as it does not allow simple stuff, such as
->>>>>>>>> turning led "white".
->>>>>>>>>
->>>>>>>>> So... perhaps we should agree on requirements, first, and then we can
->>>>>>>>> discuss solutions?
->>>>>>>>>
->>>>>>>>> Requirements for RGB LED interface:
->>>>>>>>>
->>>>>>>>> 1) Userspace should be able to set the white color
->>>>>>>>>
->>>>>>>>> 2) Userspace should be able to arbitrary color from well known list
->>>>>>>>> and it should approximately match what would CRT, LCD or OLED monitor display
->>>>>>>>
->>>>>>>> The difference is that monitor display driver is pre-calibrated
->>>>>>>> for given display by the manufacturer. With the LED controllers the
->>>>>>>> manufacturer has no control over what LEDs will be connected to the
->>>>>>>> iouts. Therefore it should be not surprising that colors produced
->>>>>>>> by custom LEDs are not as user would expect when comparing to
->>>>>>>> the RGB color displayed on the monitor display.
->>>>>>>>
->>>>>>>> TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
->>>>>>>> that show how to produce various patterns with use of the reference
->>>>>>>> board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
->>>>>>>>
->>>>>>>> Document [0] mentions also specific "Design considerations" in the
->>>>>>>> chapter 2.2:
->>>>>>>>
->>>>>>>> <quote>
->>>>>>>> Several considerations are taken into account for this particular design:
->>>>>>>> • LED map (ring) for meeting the requirement of popular human-machine interaction style.
->>>>>>>> • LED size, numbers and the diffuse design for meeting lighting pattern uniformity.
->>>>>>>> • Analog dimming in the difference ambient light lux without losing dimming resolution in lighting pattern.
->>>>>>>>
->>>>>>>> These considerations apply to most human-machine interaction end equipment with day and night vision
->>>>>>>> designs in some way, but the designer must decide the particular considerations to take into account for a
->>>>>>>> specific design.
->>>>>>>> </quote>
->>>>>>>>
->>>>>>>> This renders your requirement 2) infeasible with use of custom LEDs
->>>>>>>> any fixed algorithm, since the final effect will always heavily depend
->>>>>>>
->>>>>>> Typo here: s/any fixed/and fixed/
->>>>>>>
->>>>>>>> on the LED circuit design.
->>>>>>>>
->>>>>>>>>
->>>>>>>>>         2a) LEDs probably slightly change color as they age. That's out of
->>>>>>>>>         scope, unless the variation is much greater than on monitors.
->>>>>>>>>
->>>>>>>>>         2b) Manufacturing differences cause small color variation. Again,
->>>>>>>>>         that's out of scope, unless the variation is much greater than on
->>>>>>>>>         monitors.
->>>>>>>>>
->>>>>>>>> Nice to have features:
->>>>>>>>>
->>>>>>>>> 3) Full range of available colors/intensities should be available to
->>>>>>>>> userspace
->>>>>>>>>
->>>>>>>>> 4) Interface should work well with existing triggers
->>>>>>>>>
->>>>>>>>> 5) It would be nice if userland knew how many lumens are produced at
->>>>>>>>> each wavelength for each setting (again, minus aging and manufacturing
->>>>>>>>> variations).
->>>>>>>>>
->>>>>>>>> 6) Complexity of math in kernel should be low, and preferably it
->>>>>>>>> should be integer or fixed point
->>>>>>>>>
->>>>>>>>> Problems:
->>>>>>>>>
->>>>>>>>> a) RGB LEDs are usually not balanced. Setting 100% PWM on
->>>>>>>>> red/green/blue channels will result in nothing close to white
->>>>>>>>> light. In fact, to get white light on N900, blue and green channel's
->>>>>>>>> PWM needs to be set pretty low, as in 5%.
->>>>>>>>>
->>>>>>>>> b) LED class does not define any relation between "brightness" in
->>>>>>>>> sysfs and ammount of light in lumens. Some drivers use close to linear
->>>>>>>>> relation, some use exponential relation. Human eyes percieve logarithm
->>>>>>>>> of lumens. RGB color model uses even more complex function.
->>>>>>>>>
->>>>>>>>> c) Except for white LEDs, LEDs are basically sources of single
->>>>>>>>> wavelength of light, while CRTs and LCDs produce broader
->>>>>>>>> spectrums.
->>>>>>>>>
->>>>>>>>> d) RG, RGBW and probably other LED combinations exist.
->>>>>>>>>
->>>>>>>>> e) Not all "red" LEDs will produce same wavelength. Similar
->>>>>>>>> differences will exist for other colors.
->>>>>>>>>
->>>>>>>>> f) We have existing RGB LEDs represented as three separate
->>>>>>>>> monochromatic LEDs in sysfs.
->>>>>>>>
->>>>>>>> One general question: do you have any solutions in store?
->>>>>>>>
->>>>>>>> [0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
->>>>>>>> [1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
->>>>>>>>
->>>>>>>
->>>>>>
->>>>>> I just wanted to point out that there are 4 total devices right now that use the same mapping
->>>>>>
->>>>>> LP5018, LP5024, LP5030 and the LP5036.
->>>>>>
->>>>>> I can implement what ever we would like to I just need to know what to design against.
->>>>>
->>>>> As you can see from the discussion in this thread it may take some
->>>>> time to work out the interface satisfying everyone. I made some design
->>>>> proposal, but Pavel had no warm word for it. It would be easier if
->>>>> we had more opinions.
->>>>
->>>> I got it from the threads and just the time invested in the FW and HSV.
->>>>
->>>>>
->>>>> How do you feel about using brightness file for setting LEDn_BRIGHTNESS?
->>>>
->>>> I am using that now.  The brightness file will adjust the overall brightness of the LED group
->>>> or bank pending on how the LEDs are grouped in the DT file.
->>>>
->>>>>
->>>>> Does increasing LEDn_BRIGHTNESS value (i.e. color intensity) feel like
->>>>> increasing color lightness (i.e. the pattern presented in the video [0]
->>>>> starting from 1:22)?
->>>>
->>>> No unfortunately this is why I introduced the new files to control the individual RGB intensities
->>>> so that the designers can set, tune, create color variations or patterns like the video.
->>>>
->>>> The RGB group brightness would be independent based on lighting conditions, enclosures and diffusers.
->>>> So you could technically be changing color and overall brightness virtually simultaneously
->>>
->>> Oh, so this is surprising. Now it gets even more obscure to me.
->>>
->>> It would be really helpful if we could see a video showing
->>> the LED effects with regard to the applied settings.
->>
->> Well I am doing a test off the command line to ensure the user space can interface with the RGB LED.
->>
->> I can ping someone in product development to see the application of this device if that would help.
->> We did give them a test driver to work on their features but told them the driver is not final until it
->> is in the mainline kernel
->>
->> Dan
->>
->>>
->>>>>> But keep in mind I still need to invest my time in the other TI-lmu patches on my list to complete.
->>>>>
->>>>> Do what you deem most suitable for you. We are here only to help
->>>>> merging the patches, but keeping in mind that kernel interface once
->>>>> introduced must be preserved forever. Therefore we need to do our
->>>>> best to make the best possible design decisions.
->>>>>
->>>>> [0] https://www.youtube.com/watch?v=qdt-alh8i6E
->>>>>
->>>>
->>>> I understand.  Maybe I can make the files generic to use for either control or individual control.
->>>>
->>>> We can probably define new ABI's until either HSV or DT frameworks get going.  And them make the file presentation
->>>> configurable and default to the new files.
->>>
->>> I am leaning towards it. Just commented on your patches.
->>>
->>
->>
-> 
-> Asked the HW team for videos this is what they sent
-> https://training.ti.com/lp50x-led-drivers-achieve-optimal-color-brightness-zero-audible-noise
-> https://training.ti.com/how-configuring-led-brightness-color-and-patterns-lp50x-gui-tool
-> 
-> Not sure how helpful these would be
-
-Thank you for the videos - they are helpful, and they confirm my first
-impression regarding the LEDn_BRIGHTNESS effect. In is shown in the
-second video starting from 3:37.
-
-This is the same what I was asking about previously (video [0] from
-previous message starting from 1:22). For me this looks similarly
-to increasing V of HSV or L of HSL [1].
-
-You denied, so either we interpret colors differently, or there was
-some misunderstanding.
-
-[1] http://hslpicker.com
-
--- 
-Best regards,
-Jacek Anaszewski
+I actually only intended for two cooling devices - one for each
+frequency domain. I'll clarify it better in the patch description.
