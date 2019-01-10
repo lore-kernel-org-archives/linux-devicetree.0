@@ -1,119 +1,269 @@
-From: Leo Li <leoyang.li@nxp.com>
-Subject: RE: [PATCH 1/2] ahci: qoriq: add lx2160 platforms support
-Date: Thu, 10 Jan 2019 20:30:03 +0000
-Message-ID: <AM6PR04MB58636C1666ADCEC1784C7E218F840@AM6PR04MB5863.eurprd04.prod.outlook.com>
-References: <20190110100533.33333-1-peng.ma@nxp.com>
- <VI1PR04MB44311C4FCA7DE543941E84B0ED840@VI1PR04MB4431.eurprd04.prod.outlook.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH 1/2] dt: bindings: lp5024: Introduce the lp5024 and lp5018
+ RGB driver
+Date: Thu, 10 Jan 2019 14:43:54 -0600
+Message-ID: <92cc81dc-7280-8bf0-9536-9c4d990eaf3b@ti.com>
+References: <20181219162626.12297-1-dmurphy@ti.com>
+ <20181219162626.12297-2-dmurphy@ti.com>
+ <dc2283f9-db85-1eaf-f046-3fbbd4adcace@gmail.com>
+ <2d2d5dcd-9c23-e901-daac-9b79aa5a5e82@ti.com>
+ <6c62956e-7789-58ba-5437-f2e033f2825c@gmail.com>
+ <366cbf6d-94fa-fea9-be58-07ddb09cff3a@ti.com>
+ <df59c10d-7038-cb4a-45f0-7420254c6398@gmail.com>
+ <ec0393b7-118e-1f3b-d5af-86ecdf66412a@ti.com>
+ <ae700129-7b59-c92b-0c0a-b57a6f230ff7@gmail.com>
+ <adcd7987-f7fc-ae1f-9aa4-cebcbf01ad58@ti.com>
+ <1702dfd6-b08f-c1ff-e46d-1366618bedb0@gmail.com>
+ <72112839-11d4-54be-df94-b2322f77cb0f@ti.com>
+ <8b126077-c200-ed34-03b7-6d43a22fb0c9@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB44311C4FCA7DE543941E84B0ED840@VI1PR04MB4431.eurprd04.prod.outlook.com>
+In-Reply-To: <8b126077-c200-ed34-03b7-6d43a22fb0c9@gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Andy Tang <andy.tang@nxp.com>
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pavel@ucw.cz
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGVuZyBNYQ0KPiBTZW50
-OiBUaHVyc2RheSwgSmFudWFyeSAxMCwgMjAxOSA0OjMyIEFNDQo+IFRvOiBQZW5nIE1hIDxwZW5n
-Lm1hQG54cC5jb20+OyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBheGJvZUBrZXJuZWwuZGsNCj4g
-Q2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBt
-YXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
-Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
-Lm9yZzsgbGludXgtDQo+IGlkZUB2Z2VyLmtlcm5lbC5vcmc7IEFuZHkgVGFuZyA8YW5keS50YW5n
-QG54cC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggMS8yXSBhaGNpOiBxb3JpcTogYWRkIGx4
-MjE2MCBwbGF0Zm9ybXMgc3VwcG9ydA0KPiANCj4gSGkgSmVuc6OsDQo+IA0KPiAJSSBzZW5kIHRo
-ZSBzYXRhIHBhdGNocyB0byB0aGUgdXBzdHJlYW0gcGF0Y2h3b3JrDQo+IHdpdGggLi9zY3JpcHRz
-L2dldF9tYWludGFpbmVyLnBsLCBidXQgSSBmaW5kIG15IHBhdGNoIG9uDQo+IGh0dHA6Ly9wYXRj
-aHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L2xpbnV4LWlkZS9saXN0LyAsIEkgc2F3IHRoZSBNQUlO
-VEFJTkVSUywNCj4gdGhlIGRyaXZlci9hdGEvKiBzaG91bGQgYmUgb24gaHR0cHM6Ly9wYXRjaHdv
-cmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LQ0KPiBibG9jay9saXN0LyAuIGNvdWxkIHlvdSBw
-bGVhc2UgaGVscCBtZSB3aGF0IHRoZSBwYXRjaHdvcmsgaXMgcmlnaHQuDQoNClBlbmcsDQoNClRo
-ZSBwYXRjaHdvcmsgdXNlZCBpcyByZWxhdGVkIHRvIHRoZSBtYWlsaW5nIGxpc3Qgd2hpY2ggeW91
-IHNlbmQgdGhlIHBhdGNoIHRvIG5vdCB0aGUgbWFpbnRhaW5lcidzIGdpdCB0cmVlIHVzZWQuICBT
-aW5jZSB0aGUgTUFJTlRBSU5FUlMgZmlsZSBzYXlzIGRyaXZlcnMvYXRhIHNob3VsZCB1c2UgbGlu
-dXgtaWRlIG1haWxpbmcgbGlzdCwgcGF0Y2hlcyB3aWxsIGFwcGVhciBpbiBsaW51eC1pZGUgcGF0
-Y2h3b3JrLg0KDQpSZWdhcmRzLA0KTGVvDQoNCj4gCVRoYW5rcyBhIGxvdC4NCj4gDQo+IEJlc3Qg
-UmVnYXJkcywNCj4gUGVuZw0KPiANCj4gPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID5G
-cm9tOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+ID5TZW50OiAyMDE5xOox1MIxMMjVIDE4
-OjA2DQo+ID5Ubzogc2hhd25ndW9Aa2VybmVsLm9yZzsgYXhib2VAa2VybmVsLmRrDQo+ID5DYzog
-TGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID5tYXJr
-LnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
-PiA+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
-cmc7DQo+ID5saW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBQZW5nIE1hIDxwZW5nLm1hQG54cC5j
-b20+DQo+ID5TdWJqZWN0OiBbUEFUQ0ggMS8yXSBhaGNpOiBxb3JpcTogYWRkIGx4MjE2MCBwbGF0
-Zm9ybXMgc3VwcG9ydA0KPiA+DQo+ID5MeDIxNjBhIGlzIGEgbmV3IGludHJvZHVjZWQgc29jIHdo
-aWNoIHN1cHBvcnRzIEFUQTMuMCBhbmQgQ2xlYW4gdXAgc29tZQ0KPiA+Y29kZQ0KPiA+DQo+ID5T
-aWduZWQtb2ZmLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+ID4tLS0NCj4gPiBkcml2
-ZXJzL2F0YS9haGNpX3FvcmlxLmMgfCAgIDQ0ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tDQo+ID4gMSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAz
-MiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvYXRhL2FoY2lfcW9y
-aXEuYyBiL2RyaXZlcnMvYXRhL2FoY2lfcW9yaXEuYyBpbmRleA0KPiA+Y2U1OTI1My4uMTk5NGJm
-MiAxMDA2NDQNCj4gPi0tLSBhL2RyaXZlcnMvYXRhL2FoY2lfcW9yaXEuYw0KPiA+KysrIGIvZHJp
-dmVycy9hdGEvYWhjaV9xb3JpcS5jDQo+ID5AQCAtNTcsNyArNTcsNyBAQCBlbnVtIGFoY2lfcW9y
-aXFfdHlwZSB7DQo+ID4gCUFIQ0lfTFMyMDgwQSwNCj4gPiAJQUhDSV9MUzEwNDZBLA0KPiA+IAlB
-SENJX0xTMTA4OEEsDQo+ID4tCUFIQ0lfTFMyMDg4QSwNCj4gPisJQUhDSV9MWDIxNjBBLA0KPiA+
-IH07DQo+ID4NCj4gPiBzdHJ1Y3QgYWhjaV9xb3JpcV9wcml2IHsNCj4gPkBAIC03Myw3ICs3Myw3
-IEBAIHN0cnVjdCBhaGNpX3FvcmlxX3ByaXYgew0KPiA+IAl7IC5jb21wYXRpYmxlID0gImZzbCxs
-czIwODBhLWFoY2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9MUzIwODBBfSwNCj4gPiAJeyAuY29t
-cGF0aWJsZSA9ICJmc2wsbHMxMDQ2YS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFMxMDQ2
-QX0sDQo+ID4gCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA4OGEtYWhjaSIsIC5kYXRhID0gKHZv
-aWQgKilBSENJX0xTMTA4OEF9LA0KPiA+LQl7IC5jb21wYXRpYmxlID0gImZzbCxsczIwODhhLWFo
-Y2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9MUzIwODhBfSwNCj4gPisJeyAuY29tcGF0aWJsZSA9
-ICJmc2wsbHgyMTYwYS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFgyMTYwQX0sDQo+ID4g
-CXt9LA0KPiA+IH07DQo+ID4gTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWhjaV9xb3JpcV9vZl9t
-YXRjaCk7IEBAIC0xNzQsMTIgKzE3NCwxMA0KPiBAQA0KPiA+c3RhdGljIGludCBhaGNpX3Fvcmlx
-X3BoeV9pbml0KHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYpDQo+ID4gCQl3cml0ZWwoTFMx
-MDIxQV9QT1JUX1BIWTQsIHJlZ19iYXNlICsgUE9SVF9QSFk0KTsNCj4gPiAJCXdyaXRlbChMUzEw
-MjFBX1BPUlRfUEhZNSwgcmVnX2Jhc2UgKyBQT1JUX1BIWTUpOw0KPiA+IAkJd3JpdGVsKEFIQ0lf
-UE9SVF9UUkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7DQo+ID4tCQlpZiAocXByaXYt
-PmlzX2RtYWNvaGVyZW50KQ0KPiA+LQkJCXdyaXRlbChBSENJX1BPUlRfQVhJQ0NfQ0ZHLA0KPiA+
-LQkJCQkJcmVnX2Jhc2UgKyBMUzEwMjFBX0FYSUNDX0FERFIpOw0KPiA+IAkJYnJlYWs7DQo+ID4N
-Cj4gPiAJY2FzZSBBSENJX0xTMTA0M0E6DQo+ID4rCWNhc2UgQUhDSV9MUzEwNDZBOg0KPiA+IAkJ
-aWYgKCFxcHJpdi0+ZWNjX2FkZHIpDQo+ID4gCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gCQl3cml0
-ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNfQVJNVjhfQ0gyLCBAQCAtDQo+IDE4
-OCw4DQo+ID4rMTg2LDYgQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3BoeV9pbml0KHN0cnVjdCBh
-aGNpX2hvc3RfcHJpdiAqaHByaXYpDQo+ID4gCQl3cml0ZWwoQUhDSV9QT1JUX1BIWTJfQ0ZHLCBy
-ZWdfYmFzZSArIFBPUlRfUEhZMik7DQo+ID4gCQl3cml0ZWwoQUhDSV9QT1JUX1BIWTNfQ0ZHLCBy
-ZWdfYmFzZSArIFBPUlRfUEhZMyk7DQo+ID4gCQl3cml0ZWwoQUhDSV9QT1JUX1RSQU5TX0NGRywg
-cmVnX2Jhc2UgKyBQT1JUX1RSQU5TKTsNCj4gPi0JCWlmIChxcHJpdi0+aXNfZG1hY29oZXJlbnQp
-DQo+ID4tCQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsIHJlZ19iYXNlICsNCj4gUE9SVF9B
-WElDQyk7DQo+ID4gCQlicmVhazsNCj4gPg0KPiA+IAljYXNlIEFIQ0lfTFMyMDgwQToNCj4gPkBA
-IC0xOTcsMjQgKzE5MywxMCBAQCBzdGF0aWMgaW50IGFoY2lfcW9yaXFfcGh5X2luaXQoc3RydWN0
-DQo+ID5haGNpX2hvc3RfcHJpdg0KPiA+Kmhwcml2KQ0KPiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9Q
-SFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0KPiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9Q
-SFkzX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTMpOw0KPiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9U
-UkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7DQo+ID4tCQlpZiAocXByaXYtPmlzX2Rt
-YWNvaGVyZW50KQ0KPiA+LQkJCXdyaXRlbChBSENJX1BPUlRfQVhJQ0NfQ0ZHLCByZWdfYmFzZSAr
-DQo+IFBPUlRfQVhJQ0MpOw0KPiA+LQkJYnJlYWs7DQo+ID4tDQo+ID4tCWNhc2UgQUhDSV9MUzEw
-NDZBOg0KPiA+LQkJaWYgKCFxcHJpdi0+ZWNjX2FkZHIpDQo+ID4tCQkJcmV0dXJuIC1FSU5WQUw7
-DQo+ID4tCQl3cml0ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNfQVJNVjhfQ0gy
-LA0KPiA+LQkJCQlxcHJpdi0+ZWNjX2FkZHIpOw0KPiA+LQkJd3JpdGVsKEFIQ0lfUE9SVF9QSFlf
-MV9DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkxKTsNCj4gPi0JCXdyaXRlbChBSENJX1BPUlRfUEhZ
-Ml9DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkyKTsNCj4gPi0JCXdyaXRlbChBSENJX1BPUlRfUEhZ
-M19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsNCj4gPi0JCXdyaXRlbChBSENJX1BPUlRfVFJB
-TlNfQ0ZHLCByZWdfYmFzZSArIFBPUlRfVFJBTlMpOw0KPiA+LQkJaWYgKHFwcml2LT5pc19kbWFj
-b2hlcmVudCkNCj4gPi0JCQl3cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywgcmVnX2Jhc2UgKw0K
-PiBQT1JUX0FYSUNDKTsNCj4gPiAJCWJyZWFrOw0KPiA+DQo+ID4gCWNhc2UgQUhDSV9MUzEwODhB
-Og0KPiA+KwljYXNlIEFIQ0lfTFgyMTYwQToNCj4gPiAJCWlmICghcXByaXYtPmVjY19hZGRyKQ0K
-PiA+IAkJCXJldHVybiAtRUlOVkFMOw0KPiA+IAkJd3JpdGVsKHJlYWRsKHFwcml2LT5lY2NfYWRk
-cikgfCBFQ0NfRElTX0xTMTA4OEEsIEBAIC0NCj4gMjIzLDE4DQo+ID4rMjA1LDE2IEBAIHN0YXRp
-YyBpbnQgYWhjaV9xb3JpcV9waHlfaW5pdChzdHJ1Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2KQ0K
-PiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0K
-PiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9QSFkzX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTMpOw0K
-PiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9UUkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7
-DQo+ID4tCQlpZiAocXByaXYtPmlzX2RtYWNvaGVyZW50KQ0KPiA+LQkJCXdyaXRlbChBSENJX1BP
-UlRfQVhJQ0NfQ0ZHLCByZWdfYmFzZSArDQo+IFBPUlRfQVhJQ0MpOw0KPiA+IAkJYnJlYWs7DQo+
-ID4rCX0NCj4gPg0KPiA+LQljYXNlIEFIQ0lfTFMyMDg4QToNCj4gPi0JCXdyaXRlbChBSENJX1BP
-UlRfUEhZXzFfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMSk7DQo+ID4tCQl3cml0ZWwoQUhDSV9Q
-T1JUX1BIWTJfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMik7DQo+ID4tCQl3cml0ZWwoQUhDSV9Q
-T1JUX1BIWTNfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMyk7DQo+ID4tCQl3cml0ZWwoQUhDSV9Q
-T1JUX1RSQU5TX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1RSQU5TKTsNCj4gPi0JCWlmIChxcHJpdi0+
-aXNfZG1hY29oZXJlbnQpDQo+ID4tCQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsIHJlZ19i
-YXNlICsNCj4gUE9SVF9BWElDQyk7DQo+ID4tCQlicmVhazsNCj4gPisJaWYgKHFwcml2LT5pc19k
-bWFjb2hlcmVudCkgew0KPiA+KwkJaWYgKHFwcml2LT50eXBlID09IEFIQ0lfTFMxMDIxQSkNCj4g
-PisJCQl3cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywNCj4gPisJCQkgICAgICAgcmVnX2Jhc2Ug
-KyBMUzEwMjFBX0FYSUNDX0FERFIpOw0KPiA+KwkJZWxzZQ0KPiA+KwkJCXdyaXRlbChBSENJX1BP
-UlRfQVhJQ0NfQ0ZHLA0KPiA+KwkJCSAgICAgICByZWdfYmFzZSArIFBPUlRfQVhJQ0MpOw0KPiA+
-IAl9DQo+ID4NCj4gPiAJcmV0dXJuIDA7DQo+ID4tLQ0KPiA+MS43LjENCg0K
+Jacek
+
+On 1/10/19 1:57 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 1/10/19 8:22 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 1/10/19 12:44 PM, Jacek Anaszewski wrote:
+>>> Hi Dan,
+>>>
+>>> On 1/9/19 10:31 PM, Dan Murphy wrote:
+>>>> Jacek
+>>>>
+>>>> On 1/9/19 3:28 PM, Jacek Anaszewski wrote:
+>>>>> On 1/9/19 10:12 PM, Dan Murphy wrote:
+>>>>>> On 1/9/19 2:12 PM, Jacek Anaszewski wrote:
+>>>>>>> Hi Dan,
+>>>>>>>
+>>>>>>> On 1/8/19 10:22 PM, Dan Murphy wrote:
+>>>>>>>> On 1/8/19 3:16 PM, Jacek Anaszewski wrote:
+>>>>>>>>> On 1/8/19 9:53 PM, Dan Murphy wrote:
+>>>>>>>>>> Jacek
+>>>>>>>>>>
+>>>>>>>>>> On 1/8/19 2:33 PM, Jacek Anaszewski wrote:
+>>>>>>>>>>> Dan,
+>>>>>>>>>>>
+>>>>>>>>>>> On 12/19/18 5:26 PM, Dan Murphy wrote:
+>>>>>>>>>>>> Introduce the bindings for the Texas Instruments LP5024 and the LP5018
+>>>>>>>>>>>> RGB LED device driver.  The LP5024/18 can control RGB LEDs individually
+>>>>>>>>>>>> or as part of a control bank group.  These devices have the ability
+>>>>>>>>>>>> to adjust the mixing control for the RGB LEDs to obtain different colors
+>>>>>>>>>>>> independent of the overall brightness of the LED grouping.
+>>>>>>>>>>>>
+>>>>>>>>>>>> Datasheet:
+>>>>>>>>>>>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
+>>>>>>>>>>>>
+>>>>>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+>>>>>>>>>>>> ---
+>>>>>>>>>>>>        .../devicetree/bindings/leds/leds-lp5024.txt  | 63 +++++++++++++++++++
+>>>>>>>>>>>>        1 file changed, 63 insertions(+)
+>>>>>>>>>>>>        create mode 100644 Documentation/devicetree/bindings/leds/leds-lp5024.txt
+>>>>>>>>>>>>
+>>>>>>>>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp5024.txt b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
+>>>>>>>>>>>> new file mode 100644
+>>>>>>>>>>>> index 000000000000..9567aa6f7813
+>>>>>>>>>>>> --- /dev/null
+>>>>>>>>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
+>>>>>>>>>>>> @@ -0,0 +1,63 @@
+>>>>>>>>>>>> +* Texas Instruments - LP5024/18 RGB LED driver
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +The LM3692x is an ultra-compact, highly efficient,
+>>>>>>>>>>>> +white-LED driver designed for LCD display backlighting.
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +The main difference between the LP5024 and L5018 is the number of
+>>>>>>>>>>>> +RGB LEDs they support.  The LP5024 supports twenty four strings while the
+>>>>>>>>>>>> +LP5018 supports eighteen strings.
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +Required properties:
+>>>>>>>>>>>> +    - compatible:
+>>>>>>>>>>>> +        "ti,lp5018"
+>>>>>>>>>>>> +        "ti,lp5024"
+>>>>>>>>>>>> +    - reg :  I2C slave address
+>>>>>>>>>>>> +    - #address-cells : 1
+>>>>>>>>>>>> +    - #size-cells : 0
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +Optional properties:
+>>>>>>>>>>>> +    - enable-gpios : gpio pin to enable/disable the device.
+>>>>>>>>>>>> +    - vled-supply : LED supply
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +Required child properties:
+>>>>>>>>>>>> +    - reg : Is the child node iteration.
+>>>>>>>>>>>> +    - led-sources : LP5024 - 0 - 7
+>>>>>>>>>>>> +            LP5018 - 0 - 5
+>>>>>>>>>>>> +            Declares the LED string or strings that the child node
+>>>>>>>>>>>> +            will control.  If ti,control-bank is set then this
+>>>>>>>>>>>> +            property will contain multiple LED IDs.
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +Optional child properties:
+>>>>>>>>>>>> +    - label : see Documentation/devicetree/bindings/leds/common.txt
+>>>>>>>>>>>> +    - linux,default-trigger :
+>>>>>>>>>>>> +       see Documentation/devicetree/bindings/leds/common.txt
+>>>>>>>>>>>> +    - ti,control-bank : Indicates that the LED strings declared in the
+>>>>>>>>>>>> +                led-sources property are grouped within a control
+>>>>>>>>>>>> +                bank for brightness and mixing control.
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +Example:
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +led-controller@28 {
+>>>>>>>>>>>> +    compatible = "ti,lp5024";
+>>>>>>>>>>>> +    reg = <0x28>;
+>>>>>>>>>>>> +    #address-cells = <1>;
+>>>>>>>>>>>> +    #size-cells = <0>;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
+>>>>>>>>>>>> +    vled-supply = <&vbatt>;
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    led@0 {
+>>>>>>>>>>>> +        reg = <0>;
+>>>>>>>>>>>> +        led-sources = <1>;
+>>>>>>>>>>>> +    };
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +    led@1 {
+>>>>>>>>>>>> +        reg = <1>;
+>>>>>>>>>>>> +        led-sources = <0 6>;
+>>>>>>>>>>>> +        ti,control-bank;
+>>>>>>>>>>>
+>>>>>>>>>>> Do you really need ti,control-bank? Doesn't led-sources array size
+>>>>>>>>>>> greater than 1 mean that the node describes control bank?
+>>>>>>>>>>>
+>>>>>>>>>>
+>>>>>>>>>> That will work too.
+>>>>>>>>>
+>>>>>>>>>>> Also, does it make sense to have only two LEDs in the bank?
+>>>>>>>>>>
+>>>>>>>>>> The array can populate all 7 LEDs in a single node.  I only show 2 here as the example.
+>>>>>>>>>> See the description above of the led-sources
+>>>>>>>>>
+>>>>>>>>> OK, I confused RGB LED modules with banks.
+>>>>>>>>>
+>>>>>>>>> Shouldn't we allow for defining either strings or RGB LED
+>>>>>>>>> triplets somehow then?
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Well that is what this should be doing.  If you define a single LED in LED sources then
+>>>>>>>> the triplet is controlled via the associated LEDx_brightness register.
+>>>>>>>
+>>>>>>> led-sources should map to iouts directly.
+>>>>>>> So, for RGB LED modules I would expect:
+>>>>>>>
+>>>>>>> LED0: led-sources = <0 1 2>;
+>>>>>>> LED1: led-sources = <3 4 5>;
+>>>>>>> LED2: led-sources = <6 7 8>;
+>>>>>>> and so on.
+>>>>>>
+>>>>>>>
+>>>>>>> for banks:
+>>>>>>>
+>>>>>>> Bank A with iouts 0,3,6,9: led-sources<0 3 6 9>;
+>>>>>>> Bank B with iouts 2,4,10:  led-sources<2 4 10>;
+>>>>>>> Bank C with iouts 5,8,11,14,17: led-sources<5 8 11 14 17>;
+>>>>>>>
+>>>>>>
+>>>>>> Ok the led-sources would need to be different then this as I don't define the sources for banks.
+>>>>>>
+>>>>>> The led-sources for the banks and the individual groups will have different meanings within the same
+>>>>>> document.  I was attempting to keep the led-sources mapped to the LEDx_brightness registers as opposed to
+>>>>>> the hardware outputs since the RGB LEDs are controlled and grouped by a single brightness register and if banked then
+>>>>>> it would be controlled by the bank brightness register.
+>>>>>>
+>>>>>> Describing these in the DT seems wrought with potential issues as the data sheet defines what outputs map to what bank and LED
+>>>>>> registers.
+>>>>>
+>>>>> Yes, that's why I mentioned the need for validation of led-sources.
+>>>>> But they have to be iouts. This property was introduced specifically
+>>>>> for such purposes.
+>>>>>
+>>>>
+>>>> Yes Pavel also mentioned that as well.
+>>>>
+>>>> I will look into validating the sources.  But there will be no mapping of the sources to the output that is done
+>>>> in the hardware.  This would just be a data sheet mapping since the outputs are not configurable.
+>>>
+>>> Hmm, isn't the mapping defined in the hardware via LED_CONFIG0 register?
+>>> I have an impression that it defines whether LED belongs to an RGB LED
+>>> module or to a bank. Basing on that I created my DT example above.
+>>>
+>>
+>> Yes so if you turn on the bank control for LED0 and LED1 then
+>> out 0, 3 are mapped to BANK A
+>> out 1, 4 are mapped to BANK B
+> 
+> Just noticed that I made a mistake in my example, it should have been:
+> 
+> Bank B with iouts 1,4,10:  led-sources<1 4 10>;
+> 
+>> out 2, 5 are mapped to BANK C
+> 
+> Correct.
+> 
+>> All done automatically in the hardware and the LED0_BRIGHTNESS and LED1_BRIGHTNESS registers have no affect on the brightness
+> 
+> That's right.
+> 
+>> If we grouped the LEDs into a bank the led-sources would look more like this
+>> led-sources = < 0 1 2 3 4 5 >;
+> 
+> Why? This would be a mix of three banks. Like you listed above.
+> I'm still interpreting led-sources elements as iout identifiers.
+> 
+
+I am as well but as I tried to explain that if you define OUT0 as bank controlled then OUT1 and OUT2 are also bank controlled
+within the hardware.  We have no control of that.  If BIT(0) and BIT(1) are set in the LED_CONFIG0 register then OUT0, 1, 2, 3, 4 and 5 are all bank controlled.
+
+These OUTPUTs will appear as a single RGB LED grouping.
+
+>> ti,control-bank; // But this can be omitted as led-sources is greater then 3
+>>
+>> non-banked case would be
+>> led-sources = < 0 1 2 >;
+> 
+> Agreed here. It would be LED0 RGB LED module.
+>> But the actual OUT numbers don't matter in the bank case unless we do the validation.  There would need to be an algorithim
+>> that translates these output to the correct LEDx register and CONFIG0 bits.  Basically if OUT0 is mapped to the bank then OUT1 and OUT2
+>> are inherently mapped to the bank.  
+> 
+> To three separate banks, right?
+> OUT0 - bank A, OUT1 - bank B, OUT2 - bank C.
+
+Yes but there is no BANK output pin just like there is no dedicated LEDn output pin.  The banks are grouped internally to the device
+so again if OUT0 and OUT3 are defined as banked then 1, 2, 4, and 5 are all mapped to the bank.  1 BANK brightness register and 3 bank
+color adjustment registers.
+
+> 
+>> They cannot be separated so the device theoretically treats the RGB group as a single LED.  And
+>> when banked it treats the groups of RGBs that are defined as a single LED.
+>>
+>> This is why it was easier use the LEDx out as the virtual out as we only need to define the group number(s) that are controled by the
+>> LED file presented to the user space.
+> 
+> I suspect there is logical clash here due to interpreting
+> led-sources elements as iouts in one case and LEDn modules
+> in the other case.
+> 
+
+Yes.  When the RGBs are banked you have to think of them as a single RGB LED cluster and not as separate RGB LED clusters.
+As you know the brightness is controlled by the single BANK_BRIGHTNESS register.  So identifying each output in the led-sources is
+misleading as the hardware does this all on the chip.  This is why I just mapped each output to the Virtual LEDx module.
+
+If you define LED0 and LED1 as banked then OUT0->5 are banked and it would be considered a single virtual output.
+
+LED_CONFIG0 even uses the modular approach to define what is banked and what is not.  With the modular approach to led-sources
+the mapping of the sources to the CONFIG register become 1-1.
+
+1 = LED7 bank control mode enabled
+0 = LED7 independent control mode enabled
+
+-- 
+------------------
+Dan Murphy
