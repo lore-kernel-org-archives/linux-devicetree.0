@@ -1,28 +1,149 @@
-Return-Path: <SRS0=TUFM=PR=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from destinchamber.com ([185.244.39.84]:37185 "EHLO catchco.com"
-        rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726414AbfAIS2t (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Wed, 9 Jan 2019 13:28:49 -0500
-Subject: Want edit photos?
-Message-ID: <1c6101e979e9ab0cd2b23e380ce29cd2@bizrate.com>
-Date: Wed, 09 Jan 2019 10:24:56 +0100
-From: "Jane" <jeffopreinteedrpanlgop@verizon.net>
-Reply-To: sunchekam@sina.com
+Return-Path: <SRS0=hdC3=PS=intel.com=lkp@kernel.org>
+Date: Fri, 11 Jan 2019 04:56:28 +0800
+From: kbuild test robot <lkp@intel.com>
+Subject: Re: [PATCH 3/3] [media] allegro: add SPS/PPS nal unit writer
+Message-ID: <201901110444.GvAmr7Mv%fengguang.wu@intel.com>
+References: <20190109113037.28430-4-m.tretter@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190109113037.28430-4-m.tretter@pengutronix.de>
+To: Michael Tretter <m.tretter@pengutronix.de>
+Cc: kbuild-all@01.org, linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, robh+dt@kernel.org, mchehab@kernel.org, tfiga@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
-Do you have photos for editing? We asked this because we see your photos on
-your website.
+Hi Michael,
 
-We mainly supply service for photos cut out , clipping path, and
-retouching.
+I love your patch! Perhaps something to improve:
 
-You may just send us a photo, we can provide you test editing to check
-quality.
+[auto build test WARNING on linuxtv-media/master]
+[also build test WARNING on v5.0-rc1 next-20190110]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-Thanks,
-Jane
+url:    https://github.com/0day-ci/linux/commits/Michael-Tretter/Add-ZynqMP-VCU-Allegro-DVT-H-264-encoder-driver/20190110-020930
+base:   git://linuxtv.org/media_tree.git master
+
+New smatch warnings:
+drivers/staging/media/allegro-dvt/allegro-core.c:1090 allegro_h264_write_sps() error: potential null dereference 'sps'.  (kzalloc returns null)
+drivers/staging/media/allegro-dvt/allegro-core.c:1159 allegro_h264_write_pps() error: potential null dereference 'pps'.  (kzalloc returns null)
+drivers/staging/media/allegro-dvt/nal-h264.c:1251 nal_h264_read_filler() warn: impossible condition '(p[i] == 255) => ((-128)-127 == 255)'
+drivers/staging/media/allegro-dvt/nal-h264.c:1251 nal_h264_read_filler() warn: impossible condition '(p[i] == 255) => ((-128)-127 == 255)'
+drivers/staging/media/allegro-dvt/nal-h264.c:1254 nal_h264_read_filler() warn: always true condition '(p[i] != 128) => ((-128)-127 != 128)'
+
+Old smatch warnings:
+drivers/staging/media/allegro-dvt/allegro-core.c:625 allegro_mbox_write() error: uninitialized symbol 'err'.
+drivers/staging/media/allegro-dvt/allegro-core.c:752 v4l2_profile_to_mcu_profile() warn: signedness bug returning '(-22)'
+drivers/staging/media/allegro-dvt/allegro-core.c:762 v4l2_level_to_mcu_level() warn: signedness bug returning '(-22)'
+drivers/staging/media/allegro-dvt/allegro-core.c:1320 allegro_receive_message() warn: struct type mismatch 'mcu_msg_header vs mcu_msg_encode_one_frm_response'
+
+vim +/sps +1090 drivers/staging/media/allegro-dvt/allegro-core.c
+
+  1080	
+  1081	static ssize_t allegro_h264_write_sps(struct allegro_channel *channel,
+  1082					      void *dest, size_t n)
+  1083	{
+  1084		struct allegro_dev *dev = channel->dev;
+  1085		struct nal_h264_sps *sps = kzalloc(sizeof(*sps), GFP_KERNEL);
+  1086		ssize_t size;
+  1087	
+  1088		v4l2_dbg(1, debug, &dev->v4l2_dev, "write sps nal unit\n");
+  1089	
+> 1090		sps->profile_idc = nal_h264_profile_from_v4l2(channel->profile);
+  1091		sps->constraint_set0_flag = 0;
+  1092		sps->constraint_set1_flag = 1;
+  1093		sps->constraint_set2_flag = 0;
+  1094		sps->constraint_set3_flag = 0;
+  1095		sps->constraint_set4_flag = 0;
+  1096		sps->constraint_set5_flag = 0;
+  1097		sps->level_idc = nal_h264_level_from_v4l2(channel->level);
+  1098		sps->seq_parameter_set_id = 0;
+  1099		sps->log2_max_frame_num_minus4 = 0;
+  1100		sps->pic_order_cnt_type = 0;
+  1101		sps->log2_max_pic_order_cnt_lsb_minus4 = 6;
+  1102		sps->max_num_ref_frames = 3;
+  1103		sps->gaps_in_frame_num_value_allowed_flag = 0;
+  1104		sps->pic_width_in_mbs_minus1 = 8;
+  1105		sps->pic_height_in_map_units_minus1 = 8;
+  1106		sps->frame_mbs_only_flag = 1;
+  1107		sps->mb_adaptive_frame_field_flag = 0;
+  1108		sps->direct_8x8_inference_flag = 1;
+  1109		sps->frame_cropping_flag = 0;
+  1110		sps->vui_parameters_present_flag = 1;
+  1111		sps->vui.aspect_ratio_info_present_flag = 0;
+  1112		sps->vui.overscan_info_present_flag = 0;
+  1113		sps->vui.video_signal_type_present_flag = 1;
+  1114		sps->vui.video_format = 1;
+  1115		sps->vui.video_full_range_flag = 0;
+  1116		sps->vui.colour_description_present_flag = 1;
+  1117		sps->vui.colour_primaries = 5;
+  1118		sps->vui.transfer_characteristics = 5;
+  1119		sps->vui.matrix_coefficients = 5;
+  1120		sps->vui.chroma_loc_info_present_flag = 1;
+  1121		sps->vui.chroma_sample_loc_type_top_field = 0;
+  1122		sps->vui.chroma_sample_loc_type_bottom_field = 0;
+  1123		sps->vui.timing_info_present_flag = 1;
+  1124		sps->vui.num_units_in_tick = 1;
+  1125		sps->vui.time_scale = 50;
+  1126		sps->vui.fixed_frame_rate_flag = 1;
+  1127		sps->vui.nal_hrd_parameters_present_flag = 0;
+  1128		sps->vui.vcl_hrd_parameters_present_flag = 1;
+  1129		sps->vui.vcl_hrd_parameters.cpb_cnt_minus1 = 0;
+  1130		sps->vui.vcl_hrd_parameters.bit_rate_scale = 0;
+  1131		sps->vui.vcl_hrd_parameters.cpb_size_scale = 1;
+  1132		sps->vui.vcl_hrd_parameters.bit_rate_value_minus1[0] = 10936;
+  1133		sps->vui.vcl_hrd_parameters.cpb_size_value_minus1[0] = 21874;
+  1134		sps->vui.vcl_hrd_parameters.cbr_flag[0] = 1;
+  1135		sps->vui.vcl_hrd_parameters.initial_cpb_removal_delay_length_minus1 = 31;
+  1136		sps->vui.vcl_hrd_parameters.cpb_removal_delay_length_minus1 = 31;
+  1137		sps->vui.vcl_hrd_parameters.dpb_output_delay_length_minus1 = 31;
+  1138		sps->vui.vcl_hrd_parameters.time_offset_length = 0;
+  1139		sps->vui.low_delay_hrd_flag = 0;
+  1140		sps->vui.pic_struct_present_flag = 1;
+  1141		sps->vui.bitstream_restriction_flag = 0;
+  1142	
+  1143		size = nal_h264_write_sps(&dev->plat_dev->dev, dest, n, sps);
+  1144	
+  1145		kfree(sps);
+  1146	
+  1147		return size;
+  1148	}
+  1149	
+  1150	static ssize_t allegro_h264_write_pps(struct allegro_channel *channel,
+  1151					      void *dest, size_t n)
+  1152	{
+  1153		struct allegro_dev *dev = channel->dev;
+  1154		struct nal_h264_pps *pps = kzalloc(sizeof(*pps), GFP_KERNEL);
+  1155		ssize_t size;
+  1156	
+  1157		v4l2_dbg(1, debug, &dev->v4l2_dev, "write pps nal unit\n");
+  1158	
+> 1159		pps->pic_parameter_set_id = 0;
+  1160		pps->seq_parameter_set_id = 0;
+  1161		pps->entropy_coding_mode_flag = 0;
+  1162		pps->bottom_field_pic_order_in_frame_present_flag = 0;
+  1163		pps->num_slice_groups_minus1 = 0;
+  1164		pps->num_ref_idx_l0_default_active_minus1 = 2;
+  1165		pps->num_ref_idx_l1_default_active_minus1 = 2;
+  1166		pps->weighted_pred_flag = 0;
+  1167		pps->weighted_bipred_idc = 0;
+  1168		pps->pic_init_qp_minus26 = 0;
+  1169		pps->pic_init_qs_minus26 = 0;
+  1170		pps->chroma_qp_index_offset = 0;
+  1171		pps->deblocking_filter_control_present_flag = 1;
+  1172		pps->constrained_intra_pred_flag = 0;
+  1173		pps->redundant_pic_cnt_present_flag = 0;
+  1174		pps->transform_8x8_mode_flag = 0;
+  1175		pps->pic_scaling_matrix_present_flag = 0;
+  1176		pps->second_chroma_qp_index_offset = 0;
+  1177	
+  1178		size = nal_h264_write_pps(&dev->plat_dev->dev, dest, n, pps);
+  1179	
+  1180		kfree(pps);
+  1181	
+  1182		return size;
+  1183	}
+  1184	
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
