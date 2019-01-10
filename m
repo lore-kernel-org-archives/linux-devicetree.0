@@ -1,37 +1,59 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip points
- to cpufreq
-Date: Thu, 10 Jan 2019 17:58:47 +0530
-Message-ID: <CAHLCerNQgOrud7OkhJ3Vy431B=kQuXZU5pSMXc24cU1ZUeR1Xw@mail.gmail.com>
-References: <cover.1547078153.git.amit.kucheria@linaro.org>
- <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
- <154708009884.15366.3039982038291126570@swboyd.mtv.corp.google.com>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH 4/4] dt-bindings: phy-rockchip-inno-usb2: add new rockchip,force-bvalid property.
+Date: Thu, 10 Jan 2019 13:31:41 +0100
+Message-ID: <4750582.8aBUlXA8d6@phil>
+References: <20180815095934.11205-1-enric.balletbo@collabora.com> <20180815222604.GB8193@rob-hp-laptop> <CAFqH_538JF7gmpQzgyShw-8nhUEtkVrGQ6vjkdc5neJd8JCAOQ@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154708009884.15366.3039982038291126570@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAFqH_538JF7gmpQzgyShw-8nhUEtkVrGQ6vjkdc5neJd8JCAOQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Enric Balletbo Serra <eballetbo@gmail.com>
+Cc: Rob Herring <robh@kernel.org>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <groeck@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Frank Wang <frank.wang@rock-chips.com>, kieran.bingham@ideasonboard.com, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, kernel@collabora.com, Benson Leung <bleung@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 5:58 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-01-09 16:00:56)
-> > Since the big and little cpus are in the same frequency domain, use all
->
-> Oh? I thought the big and little cpus were in different frequency
-> domains and voltage domains. Maybe that's what you're saying here but
-> I'm misunderstanding. So change the wording a bit to be more clear?
-
-Yeah, forgive my English - it is my second language. ;-)
-
-That should've been "since all the cpus in the big and little clusters
-are in the same frequency domain". Will fix.
-
-> > of them for mitigation in the cooling-map. At the lower trip points we
-> > restrict ourselves to throttling only a few OPPs. At higher trip
-> > temperatures, allow ourselves to be throttled to any extent.
+Hi Enric,
+Am Donnerstag, 10. Januar 2019, 10:06:38 CET schrieb Enric Balletbo Serra:
+> Missatge de Rob Herring <robh@kernel.org> del dia dj., 16 d’ag. 2018 a les 0:26:
 > >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
->
+> > On Wed, Aug 15, 2018 at 11:59:34AM +0200, Enric Balletbo i Serra wrote:
+> > > This property is used when the otg-id pin is not connected. When this
+> > > property is set it forces to set the B-Device Session Valid bit when the
+> > > port works as device and clears that bit when the port works as host.
+> > >
+> > > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > > ---
+> > >
+> > >  .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt       | 5 +++++
+> > >  1 file changed, 5 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > > index 2d4808d3920b..55761f466c41 100644
+> > > --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > > +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > > @@ -48,6 +48,11 @@ Optional properties:
+> > >               See ./phy-bindings.txt for details.
+> > >   - rockchip,utmi-avalid : boolean, use the avalid register to get vbus status.
+> > >                         Otherwise, use the bvalid register.
+> > > + - rockchip,force-bvalid : boolean, set this to force the B-Device Session
+> > > +                       Valid bit when the usb port is in device mode. This
+> > > +                       is used when the otg-id pin is not connected.
+> > > +                       Only supported in case of compatible being:
+> > > +                       * "rockchip,rk3399-usb2phy"
+> >
+> > Shouldn't you describe the property of the h/w that ID pin is not
+> > connected, rather than what you do with that information.
+> >
+> 
+> What about "rockchip, otg-id-not-connected"?
+
+just pointing back to our discussion in patch3 about simply assuming
+id-not-connected in the case of the extcon missing
+
+I still think that might be the cleaner variant? But I guess you're
+probably already looking into doing that as so far you only resend the
+cleanup patches :-) .
+
+
+Heiko
