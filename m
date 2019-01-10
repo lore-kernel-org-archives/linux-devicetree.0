@@ -1,35 +1,37 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 5/5] dt-bindings: gnss: add lna-supply property
-Date: Thu, 10 Jan 2019 13:27:57 +0100
-Message-ID: <20190110122757.GB9725@localhost>
-References: <20181209195150.5192-1-andreas@kemnade.info>
- <20181209195150.5192-6-andreas@kemnade.info>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip points
+ to cpufreq
+Date: Thu, 10 Jan 2019 17:58:47 +0530
+Message-ID: <CAHLCerNQgOrud7OkhJ3Vy431B=kQuXZU5pSMXc24cU1ZUeR1Xw@mail.gmail.com>
+References: <cover.1547078153.git.amit.kucheria@linaro.org>
+ <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
+ <154708009884.15366.3039982038291126570@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181209195150.5192-6-andreas@kemnade.info>
+In-Reply-To: <154708009884.15366.3039982038291126570@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 09, 2018 at 08:51:50PM +0100, Andreas Kemnade wrote:
-> Add lna-supply property.
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> Changes in v2:
->  - reordering
-> Original order had a
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
->  Documentation/devicetree/bindings/gnss/sirfstar.txt | 1 +
->  1 file changed, 1 insertion(+)
+On Thu, Jan 10, 2019 at 5:58 AM Stephen Boyd <swboyd@chromium.org> wrote:
+>
+> Quoting Amit Kucheria (2019-01-09 16:00:56)
+> > Since the big and little cpus are in the same frequency domain, use all
+>
+> Oh? I thought the big and little cpus were in different frequency
+> domains and voltage domains. Maybe that's what you're saying here but
+> I'm misunderstanding. So change the wording a bit to be more clear?
 
-Ah, missed this one at first.
+Yeah, forgive my English - it is my second language. ;-)
 
-But shouldn't this go into the generic binding since it isn't specific
-for sirf-star based receivers?
+That should've been "since all the cpus in the big and little clusters
+are in the same frequency domain". Will fix.
 
-Johan
+> > of them for mitigation in the cooling-map. At the lower trip points we
+> > restrict ourselves to throttling only a few OPPs. At higher trip
+> > temperatures, allow ourselves to be throttled to any extent.
+> >
+> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+>
