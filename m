@@ -1,29 +1,58 @@
-From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
-Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
- boards
-Date: Thu, 10 Jan 2019 14:06:13 +0000
-Message-ID: <54495589-67d8-f0e2-c5b0-1fe912376e26@ysoft.com>
-References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
- <20181228232556.GA14277@bogus>
- <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
- <CAL_JsqJyZt=VCv2bX1YYFQt91BcFqDWfeAqkJVcF7eFD0_JM1g@mail.gmail.com>
- <6fd5ac6a-edb5-a600-3c10-b46a1c1d9906@ysoft.com>
- <f96952b2-7b19-5397-00a1-0fe9b5800dab@ysoft.com>
- <CAL_JsqLRX2g1t-8YCqpZ5fd=-MyLPkgy88Gb=6ohEZbxWfS+LA@mail.gmail.com>
- <20190110135742.GC30487@dragon>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
+ compatible string
+Date: Thu, 10 Jan 2019 08:16:24 -0600
+Message-ID: <CAL_JsqLkWAFpQckQO9RTKYcA1tQE7WTPuydqm78PU8pAoi7gpw@mail.gmail.com>
+References: <20190109202934.29304-1-robh@kernel.org>
+ <20190110022709.kh5vlave65jn7m4g@kahuna>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110135742.GC30487@dragon>
-Content-Language: en-US
-Content-ID: <11A56CF19AC4B545BAAF2A87CB8E41AB@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190110022709.kh5vlave65jn7m4g@kahuna>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, "open list:MEDIA DRIVERS FOR RENESAS - FCP" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, ARM-SoC Maintainers <arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-sam
 List-Id: devicetree@vger.kernel.org
 
-T24gMTAuMS4yMDE5IDE0OjU3LCBTaGF3biBHdW8gd3JvdGU6DQo+IEBWb2vDocSNLA0KPiANCj4g
-UGxlYXNlIGdlbmVyYXRlIHlvdXIgcGF0Y2hlcyBhZ2FpbnN0IG15IGZvci1uZXh0IGJyYW5jaCB3
-aXRoIGR0LWJpbmRpbmdzDQo+IGJlaW5nIHNlcGFyYXRlIHBhdGNoIGZyb20gZHRzIG9uZS4NCg0K
-T0ssIHRoYW5rIHlvdSBTaGF3bi4NCk1pY2hhbA0K
+On Wed, Jan 9, 2019 at 8:27 PM Nishanth Menon <nm-l0cyMroinI0@public.gmane.org> wrote:
+>
+> On 14:29-20190109, Rob Herring wrote:
+> > The 'arm,armv8' compatible string is only for software models. It adds
+> > little value otherwise and is inconsistently used as a fallback on some
+> > platforms. Remove it from those platforms.
+> >
+> > This fixes warnings generated by the DT schema.
+> >
+> > Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> [...]
+>
+> ARM SoC maintainers, At least on a quick look (I could be wrong), I
+> think we don't have any explicit processor bindings documentation.
+
+bindings/arm/cpus.yaml
+
+> However, most of SoC folks seem to key off matches else where I
+> guess..
+>
+> Not sure, while at this, you if you are planning on fixing up
+> Documentation/devicetree/bindings/arm/arm-boards:
+> compatible = "arm,cortex-a53","arm,armv8";
+> Documentation/devicetree/bindings/arm/cpu-capacity.txt:
+> compatible = "arm,cortex-a53","arm,armv8";
+
+I'll handle documentation separately.
+
+Rob
