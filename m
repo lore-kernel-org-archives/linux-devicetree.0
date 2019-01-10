@@ -1,70 +1,113 @@
-From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Subject: Re: [PATCH v5 1/5] arm64: dts: rockchip: Add DT for NanoPC-T4
-Date: Thu, 10 Jan 2019 15:18:37 +0100
-Message-ID: <9978c094-d56f-51ca-77bf-023f69d160d5@collabora.com>
-References: <cover.1546981251.git.robin.murphy@arm.com>
- <a92dd6f978b2b026557ca681610400c83ebf59b2.1546981251.git.robin.murphy@arm.com>
- <3242500.qteudgsQcv@phil> <b192edd9-7d08-3b7f-cae0-620e95a7bbce@arm.com>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH 4/4] usb: musb: Add support for MediaTek musb controller
+Date: Thu, 10 Jan 2019 08:18:40 -0600
+Message-ID: <20190110141840.GA18026@uda0271908>
+References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
+ <1545896066-897-5-git-send-email-min.guo@mediatek.com>
+ <20190108154441.GG25910@uda0271908>
+ <1547037068.4433.122.camel@mhfsdcap03>
+ <20190109140144.GI25910@uda0271908>
+ <1547105062.4433.144.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <b192edd9-7d08-3b7f-cae0-620e95a7bbce@arm.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>, Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547105062.4433.144.camel@mhfsdcap03>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Min Guo <min.guo@mediatek.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yonglong Wu <yonglong.wu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/10/19 2:42 PM, Robin Murphy wrote:
-> On 10/01/2019 13:37, Heiko Stuebner wrote:
->> Am Dienstag, 8. Januar 2019, 22:57:23 CET schrieb Robin Murphy:
->>> From: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>>
->>> This adds a device tree for the NanoPC-T4 SBC, which is based on the
->>> Rockchip RK3399 SoC and marketed by FriendlyELEC.
->>>
->>> Known working:
->>>
->>> - Serial
->>> - Ethernet
->>> - HDMI
->>> - USB 2.0
->>>
->>> All of the interesting stuff is in a .dtsi because there are at least
->>> two other boards that share most of it: NanoPi M4 and NanoPi NEO4.
->>>
->>> Signed-off-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
->>> Reviewed-by: Rob Herring <robh@kernel.org>
->>> [rm: various further cleanup]
->>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>
->> nobody complained, the binding was reviewed and all looks good
->> so I've gone forward and applied this one for 5.1 already.
+Hi Min,
+
+Please briefly summarize the controller differences in the commit log,
+such as
+
+- WIC interrupt registers;
+- data toggle bit;
+- no dedicated DMA interrupt line;
+
+so that we can quickly understand the core driver is modified
+accordingly to handle the differences.
+
+On Thu, Jan 10, 2019 at 03:24:22PM +0800, Min Guo wrote:
+> Hi Bin,
+
+[snip]
+
+> > > > > +		musb_writeb(mbase, MUSB_INTRUSB,
+> > > > > +			musb_readb(mbase, MUSB_INTRUSB));
+> > > > 
+> > > > For this clearing register bit operation, please create platform hooks
+> > > > musb_clearb() and musb_clearw() in struct musb_platform_ops instead,
+> > > > then follow how musb_readb() pointer is assigned in
+> > > > musb_init_controller() to use the W1C version for mtk platform.
+> > > 
+> > > I have tried implementing musb_readb(), musb_readw() interface with
+> > > interrupt status W1C function in struct musb_platform_ops. But this
+> > > interface will require a global variable to hold MAC basic address for
+> > > judgment, and then special handling of the interrupt state. A global
+> > > variable will make the driver work with only a single instance, so it
+> > > can't work on some MTK platforms which have two instances.
+> > 
+> > I didn't mean to modify musb_read*(), but
+> > 
+> > > How about creating musb_clearb/w() as following:
+> > > void (*clearb)(void __iomem *addr, unsigned offset, u8 data);
+> > > void (*clearw)(void __iomem *addr, unsigned offset, u16 data);
+> > 
+> > this is what I was asking for, similar to what musb_readb/w() is
+> > implemented.
 > 
-> Awesome, thanks!
+> I will prepare a patch for musb_clearb/w().
+
+This doesn't have to be a separate patch.
+
+> > > > > +		musb_writew(mbase, MUSB_INTRRX,
+> > > > > +			musb_readw(mbase, MUSB_INTRRX));
+> > > > > +		musb_writew(mbase, MUSB_INTRTX,
+> > > > > +			musb_readw(mbase, MUSB_INTRTX));
+> > > > > +	}
+
+[snip]
+
+> > > > > +	/* MediaTek controller has private toggle register */
+> > > > 
+> > > > only one toggle register for all endpoints? how does it handle
+> > > > difference toggle values for different endpoints?
+> > > 
+> > > MediaTek controller has separate registers to describe TX/RX toggle.
+> > 
+> > Is it one register per endpoint?
 > 
-> I'll probably follow up with a v2 of the rest of the patches next week, 
-> after I've had the chance to play some more over the weekend.
+> MUSB_RXTOG/MUSB_TXTOG is common register, each bit reflects the toggle
+> state of an endpoint. bit[0] not used,bit[1~8] corresponds to ep[1~8]
+> 
+> > > 
+> > > > > +	if (musb->ops->quirks & MUSB_MTK_QUIRKS) {
+> > > > > +		u16 toggle;
+> > > > > +		u8 epnum = qh->hw_ep->epnum;
+> > > > > +
+> > > > > +		if (is_in)
+> > > > > +			toggle = musb_readl(musb->mregs, MUSB_RXTOG);
+> > 
+> > this line seems telling there is just *one* register for all endpoints.
+> 
+> Yes, all endpoint share this register, endpoint and bit are one-to-one
+> correspondence.
 
-Thanks a lot for picking this up!
+Okay, thanks. Sorry I missed the bit operation in the code below.
 
-Have given the whole series a try and haven't found any issues. I have 
-booted with nfsroot and have only run a few OpenGL apps with panfrost, 
-using ARM's GPU driver.
+> 
+> > > > 
+> > > > should use musb_readw() instead? MUSB_RXTOG seems to be 16bit.
+> > > 
+> > > Ok
+> > > 
+> > > > > +		else
+> > > > > +			toggle = musb_readl(musb->mregs, MUSB_TXTOG);
+> > > > > +
+> > > > > +		csr = toggle & (1 << epnum);
 
-In case there's time for it:
-
-Tested-by: Tomeu Vizoso <tomeu.vizoso@collabora.com>
-
-Cheers,
-
-Tomeu
+Regards,
+-Bin.
