@@ -1,113 +1,119 @@
-From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode binding
-Date: Thu, 10 Jan 2019 21:11:35 +0100
-Message-ID: <7002692.meb5AFBGDJ@acerlaptop>
-References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <2089055.mctyXeETjz@acerlaptop> <5765349a-c94d-49c1-45b5-ab7ac09f9923@samsung.com>
+From: Leo Li <leoyang.li@nxp.com>
+Subject: RE: [PATCH 1/2] ahci: qoriq: add lx2160 platforms support
+Date: Thu, 10 Jan 2019 20:30:03 +0000
+Message-ID: <AM6PR04MB58636C1666ADCEC1784C7E218F840@AM6PR04MB5863.eurprd04.prod.outlook.com>
+References: <20190110100533.33333-1-peng.ma@nxp.com>
+ <VI1PR04MB44311C4FCA7DE543941E84B0ED840@VI1PR04MB4431.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="gb2312"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5765349a-c94d-49c1-45b5-ab7ac09f9923@samsung.com>
+In-Reply-To: <VI1PR04MB44311C4FCA7DE543941E84B0ED840@VI1PR04MB4431.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sylwester Nawrocki <s.nawrocki@samsung.com>
-Cc: Sebastian Reichel <sre@kernel.org>, lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
+To: Peng Ma <peng.ma@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "axboe@kernel.dk" <axboe@kernel.dk>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-ide@vger.kernel.org" <linux-ide@vger.kernel.org>, Andy Tang <andy.tang@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On Thursday, 10 January 2019 18:47:11 CET Sylwester Nawrocki wrote:
-> Hi,
->=20
-> On 5/1/18 16:43, Pawe=C5=82 Chmiel wrote:
-> > On Tuesday, May 1, 2018 2:45:40 PM CEST Sebastian Reichel wrote:
-> >> On Fri, Apr 27, 2018 at 06:03:02PM +0200, Pawe=C5=82 Chmiel wrote:
-> >>> This patch adds devicetree bindings documentation for
-> >>> battery charging controller as the subnode of MAX8998 PMIC.
-> >>> It's based on current behavior of driver.
-> >>>
-> >>> Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
-> >>> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> >>> ---
-> >>>  Documentation/devicetree/bindings/mfd/max8998.txt | 22 +++++++++++++=
-+++++++++
-> >>>  1 file changed, 22 insertions(+)
->=20
-> >>> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
-> >>> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
-> >>> @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buc=
-k2-dvs-gpio is defined:
-> >>>  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in mi=
-crovolts
-> >>>    for buck2 regulator that can be selected using dvs gpio.
-> >>> =20
-> >>> +Charger: Configuration for battery charging controller should be add=
-ed
-> >>> +inside a child node named 'charger'.
-> >>> +  Required properties:
-> >>> +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
-> >>> +    remain value set from bootloader or default value will be used.
-> >>> +    Valid values: 0, 10 - 45
-> >>> +
-> >>> +  - max8998,charge-restart: Setup "Charge Restart Level". If value e=
-quals 0,
-> >>> +    remain value set from bootloader or default value will be used.
-> >>> +    Valid values: -1, 0, 100, 150, 200
->=20
-> Perhaps change the property name to max8998,charge-restart-threshold,=20
-> in include/linux/mfd/max8998.h we have:
->=20
->  * @restart: Restart Level in mV: 100, 150, 200, and -1 for disable.
->  *   If it equals 0, leave it unchanged.
->=20
-> Then we could make it an optional property:
->=20
->  - max8998,charge-restart-threshold: Charge restart threshold in millivol=
-ts.=20
->    Valid values are: 0, 100, 150, 200. If the value equals 0 the charger=
-=20
->    restart will be disabled.
->=20
-> If the property is missing the charger restart threshold configuration wo=
-uld
-> be left unchanged.
->=20
-Strange, i've looked at max8998 and didn't saw information that those value=
-s are in mV (maybe it was from vendor sources).
-
-> >>> +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value eq=
-uals 0,
-> >>> +    remain value set from bootloader or default value will be used.
-> >>> +    Valid values: -1, 0, 5, 6, 7
-> >>
-> >> What are those values? seconds?
-> >>
-> > Honestly i don't know. I've just documented values accepted currently=20
-> > by charger driver, so we can use it from devicetree.
-> > I couldn't find any max8998 datasheet with this information (units, pos=
-sible=20
-> > values etc for those properties).
->=20
-> The charge timeout is in hours, as described in include/linux/mfd/max8998=
-=2Eh:
->=20
->=20
-> "* @timeout: Full Timeout in hours: 5, 6, 7, and -1 for disable.
->  *   If it equals 0, leave it unchanged.
->  *   Otherwise, leave it unchanged."
->=20
-> We could change description of the property to something along the lines =
-of:
->=20
-> Optional properties:
->=20
->   - max8998,charge-timeout: Charge timeout in hours. Valid values are:
->     0, 5, 6, 7. If the value is 0 the charge timer will be disabled.
->=20
-> Then if the property is missing the driver will leave charge timer config=
-uration
-> unchanged.
->=20
->=20
-Thanks Sylwester Nawrocki for all those hints (mostly regarding units of th=
-ose magic numbers/values). I'll prepare new version of those patches with a=
-ll hints included.
+DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gRnJvbTogUGVuZyBNYQ0KPiBTZW50
+OiBUaHVyc2RheSwgSmFudWFyeSAxMCwgMjAxOSA0OjMyIEFNDQo+IFRvOiBQZW5nIE1hIDxwZW5n
+Lm1hQG54cC5jb20+OyBzaGF3bmd1b0BrZXJuZWwub3JnOw0KPiBheGJvZUBrZXJuZWwuZGsNCj4g
+Q2M6IExlbyBMaSA8bGVveWFuZy5saUBueHAuY29tPjsgcm9iaCtkdEBrZXJuZWwub3JnOw0KPiBt
+YXJrLnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3Jn
+Ow0KPiBkZXZpY2V0cmVlQHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVs
+Lm9yZzsgbGludXgtDQo+IGlkZUB2Z2VyLmtlcm5lbC5vcmc7IEFuZHkgVGFuZyA8YW5keS50YW5n
+QG54cC5jb20+DQo+IFN1YmplY3Q6IFJFOiBbUEFUQ0ggMS8yXSBhaGNpOiBxb3JpcTogYWRkIGx4
+MjE2MCBwbGF0Zm9ybXMgc3VwcG9ydA0KPiANCj4gSGkgSmVuc6OsDQo+IA0KPiAJSSBzZW5kIHRo
+ZSBzYXRhIHBhdGNocyB0byB0aGUgdXBzdHJlYW0gcGF0Y2h3b3JrDQo+IHdpdGggLi9zY3JpcHRz
+L2dldF9tYWludGFpbmVyLnBsLCBidXQgSSBmaW5kIG15IHBhdGNoIG9uDQo+IGh0dHA6Ly9wYXRj
+aHdvcmsub3psYWJzLm9yZy9wcm9qZWN0L2xpbnV4LWlkZS9saXN0LyAsIEkgc2F3IHRoZSBNQUlO
+VEFJTkVSUywNCj4gdGhlIGRyaXZlci9hdGEvKiBzaG91bGQgYmUgb24gaHR0cHM6Ly9wYXRjaHdv
+cmsua2VybmVsLm9yZy9wcm9qZWN0L2xpbnV4LQ0KPiBibG9jay9saXN0LyAuIGNvdWxkIHlvdSBw
+bGVhc2UgaGVscCBtZSB3aGF0IHRoZSBwYXRjaHdvcmsgaXMgcmlnaHQuDQoNClBlbmcsDQoNClRo
+ZSBwYXRjaHdvcmsgdXNlZCBpcyByZWxhdGVkIHRvIHRoZSBtYWlsaW5nIGxpc3Qgd2hpY2ggeW91
+IHNlbmQgdGhlIHBhdGNoIHRvIG5vdCB0aGUgbWFpbnRhaW5lcidzIGdpdCB0cmVlIHVzZWQuICBT
+aW5jZSB0aGUgTUFJTlRBSU5FUlMgZmlsZSBzYXlzIGRyaXZlcnMvYXRhIHNob3VsZCB1c2UgbGlu
+dXgtaWRlIG1haWxpbmcgbGlzdCwgcGF0Y2hlcyB3aWxsIGFwcGVhciBpbiBsaW51eC1pZGUgcGF0
+Y2h3b3JrLg0KDQpSZWdhcmRzLA0KTGVvDQoNCj4gCVRoYW5rcyBhIGxvdC4NCj4gDQo+IEJlc3Qg
+UmVnYXJkcywNCj4gUGVuZw0KPiANCj4gPi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+ID5G
+cm9tOiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+ID5TZW50OiAyMDE5xOox1MIxMMjVIDE4
+OjA2DQo+ID5Ubzogc2hhd25ndW9Aa2VybmVsLm9yZzsgYXhib2VAa2VybmVsLmRrDQo+ID5DYzog
+TGVvIExpIDxsZW95YW5nLmxpQG54cC5jb20+OyByb2JoK2R0QGtlcm5lbC5vcmc7DQo+ID5tYXJr
+LnJ1dGxhbmRAYXJtLmNvbTsgbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOw0K
+PiA+ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5v
+cmc7DQo+ID5saW51eC1pZGVAdmdlci5rZXJuZWwub3JnOyBQZW5nIE1hIDxwZW5nLm1hQG54cC5j
+b20+DQo+ID5TdWJqZWN0OiBbUEFUQ0ggMS8yXSBhaGNpOiBxb3JpcTogYWRkIGx4MjE2MCBwbGF0
+Zm9ybXMgc3VwcG9ydA0KPiA+DQo+ID5MeDIxNjBhIGlzIGEgbmV3IGludHJvZHVjZWQgc29jIHdo
+aWNoIHN1cHBvcnRzIEFUQTMuMCBhbmQgQ2xlYW4gdXAgc29tZQ0KPiA+Y29kZQ0KPiA+DQo+ID5T
+aWduZWQtb2ZmLWJ5OiBQZW5nIE1hIDxwZW5nLm1hQG54cC5jb20+DQo+ID4tLS0NCj4gPiBkcml2
+ZXJzL2F0YS9haGNpX3FvcmlxLmMgfCAgIDQ0ICsrKysrKysrKysrKy0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tDQo+ID4gMSBmaWxlcyBjaGFuZ2VkLCAxMiBpbnNlcnRpb25zKCspLCAz
+MiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvYXRhL2FoY2lfcW9y
+aXEuYyBiL2RyaXZlcnMvYXRhL2FoY2lfcW9yaXEuYyBpbmRleA0KPiA+Y2U1OTI1My4uMTk5NGJm
+MiAxMDA2NDQNCj4gPi0tLSBhL2RyaXZlcnMvYXRhL2FoY2lfcW9yaXEuYw0KPiA+KysrIGIvZHJp
+dmVycy9hdGEvYWhjaV9xb3JpcS5jDQo+ID5AQCAtNTcsNyArNTcsNyBAQCBlbnVtIGFoY2lfcW9y
+aXFfdHlwZSB7DQo+ID4gCUFIQ0lfTFMyMDgwQSwNCj4gPiAJQUhDSV9MUzEwNDZBLA0KPiA+IAlB
+SENJX0xTMTA4OEEsDQo+ID4tCUFIQ0lfTFMyMDg4QSwNCj4gPisJQUhDSV9MWDIxNjBBLA0KPiA+
+IH07DQo+ID4NCj4gPiBzdHJ1Y3QgYWhjaV9xb3JpcV9wcml2IHsNCj4gPkBAIC03Myw3ICs3Myw3
+IEBAIHN0cnVjdCBhaGNpX3FvcmlxX3ByaXYgew0KPiA+IAl7IC5jb21wYXRpYmxlID0gImZzbCxs
+czIwODBhLWFoY2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9MUzIwODBBfSwNCj4gPiAJeyAuY29t
+cGF0aWJsZSA9ICJmc2wsbHMxMDQ2YS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFMxMDQ2
+QX0sDQo+ID4gCXsgLmNvbXBhdGlibGUgPSAiZnNsLGxzMTA4OGEtYWhjaSIsIC5kYXRhID0gKHZv
+aWQgKilBSENJX0xTMTA4OEF9LA0KPiA+LQl7IC5jb21wYXRpYmxlID0gImZzbCxsczIwODhhLWFo
+Y2kiLCAuZGF0YSA9ICh2b2lkICopQUhDSV9MUzIwODhBfSwNCj4gPisJeyAuY29tcGF0aWJsZSA9
+ICJmc2wsbHgyMTYwYS1haGNpIiwgLmRhdGEgPSAodm9pZCAqKUFIQ0lfTFgyMTYwQX0sDQo+ID4g
+CXt9LA0KPiA+IH07DQo+ID4gTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgYWhjaV9xb3JpcV9vZl9t
+YXRjaCk7IEBAIC0xNzQsMTIgKzE3NCwxMA0KPiBAQA0KPiA+c3RhdGljIGludCBhaGNpX3Fvcmlx
+X3BoeV9pbml0KHN0cnVjdCBhaGNpX2hvc3RfcHJpdiAqaHByaXYpDQo+ID4gCQl3cml0ZWwoTFMx
+MDIxQV9QT1JUX1BIWTQsIHJlZ19iYXNlICsgUE9SVF9QSFk0KTsNCj4gPiAJCXdyaXRlbChMUzEw
+MjFBX1BPUlRfUEhZNSwgcmVnX2Jhc2UgKyBQT1JUX1BIWTUpOw0KPiA+IAkJd3JpdGVsKEFIQ0lf
+UE9SVF9UUkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7DQo+ID4tCQlpZiAocXByaXYt
+PmlzX2RtYWNvaGVyZW50KQ0KPiA+LQkJCXdyaXRlbChBSENJX1BPUlRfQVhJQ0NfQ0ZHLA0KPiA+
+LQkJCQkJcmVnX2Jhc2UgKyBMUzEwMjFBX0FYSUNDX0FERFIpOw0KPiA+IAkJYnJlYWs7DQo+ID4N
+Cj4gPiAJY2FzZSBBSENJX0xTMTA0M0E6DQo+ID4rCWNhc2UgQUhDSV9MUzEwNDZBOg0KPiA+IAkJ
+aWYgKCFxcHJpdi0+ZWNjX2FkZHIpDQo+ID4gCQkJcmV0dXJuIC1FSU5WQUw7DQo+ID4gCQl3cml0
+ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNfQVJNVjhfQ0gyLCBAQCAtDQo+IDE4
+OCw4DQo+ID4rMTg2LDYgQEAgc3RhdGljIGludCBhaGNpX3FvcmlxX3BoeV9pbml0KHN0cnVjdCBh
+aGNpX2hvc3RfcHJpdiAqaHByaXYpDQo+ID4gCQl3cml0ZWwoQUhDSV9QT1JUX1BIWTJfQ0ZHLCBy
+ZWdfYmFzZSArIFBPUlRfUEhZMik7DQo+ID4gCQl3cml0ZWwoQUhDSV9QT1JUX1BIWTNfQ0ZHLCBy
+ZWdfYmFzZSArIFBPUlRfUEhZMyk7DQo+ID4gCQl3cml0ZWwoQUhDSV9QT1JUX1RSQU5TX0NGRywg
+cmVnX2Jhc2UgKyBQT1JUX1RSQU5TKTsNCj4gPi0JCWlmIChxcHJpdi0+aXNfZG1hY29oZXJlbnQp
+DQo+ID4tCQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsIHJlZ19iYXNlICsNCj4gUE9SVF9B
+WElDQyk7DQo+ID4gCQlicmVhazsNCj4gPg0KPiA+IAljYXNlIEFIQ0lfTFMyMDgwQToNCj4gPkBA
+IC0xOTcsMjQgKzE5MywxMCBAQCBzdGF0aWMgaW50IGFoY2lfcW9yaXFfcGh5X2luaXQoc3RydWN0
+DQo+ID5haGNpX2hvc3RfcHJpdg0KPiA+Kmhwcml2KQ0KPiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9Q
+SFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0KPiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9Q
+SFkzX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTMpOw0KPiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9U
+UkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7DQo+ID4tCQlpZiAocXByaXYtPmlzX2Rt
+YWNvaGVyZW50KQ0KPiA+LQkJCXdyaXRlbChBSENJX1BPUlRfQVhJQ0NfQ0ZHLCByZWdfYmFzZSAr
+DQo+IFBPUlRfQVhJQ0MpOw0KPiA+LQkJYnJlYWs7DQo+ID4tDQo+ID4tCWNhc2UgQUhDSV9MUzEw
+NDZBOg0KPiA+LQkJaWYgKCFxcHJpdi0+ZWNjX2FkZHIpDQo+ID4tCQkJcmV0dXJuIC1FSU5WQUw7
+DQo+ID4tCQl3cml0ZWwocmVhZGwocXByaXYtPmVjY19hZGRyKSB8IEVDQ19ESVNfQVJNVjhfQ0gy
+LA0KPiA+LQkJCQlxcHJpdi0+ZWNjX2FkZHIpOw0KPiA+LQkJd3JpdGVsKEFIQ0lfUE9SVF9QSFlf
+MV9DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkxKTsNCj4gPi0JCXdyaXRlbChBSENJX1BPUlRfUEhZ
+Ml9DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkyKTsNCj4gPi0JCXdyaXRlbChBSENJX1BPUlRfUEhZ
+M19DRkcsIHJlZ19iYXNlICsgUE9SVF9QSFkzKTsNCj4gPi0JCXdyaXRlbChBSENJX1BPUlRfVFJB
+TlNfQ0ZHLCByZWdfYmFzZSArIFBPUlRfVFJBTlMpOw0KPiA+LQkJaWYgKHFwcml2LT5pc19kbWFj
+b2hlcmVudCkNCj4gPi0JCQl3cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywgcmVnX2Jhc2UgKw0K
+PiBQT1JUX0FYSUNDKTsNCj4gPiAJCWJyZWFrOw0KPiA+DQo+ID4gCWNhc2UgQUhDSV9MUzEwODhB
+Og0KPiA+KwljYXNlIEFIQ0lfTFgyMTYwQToNCj4gPiAJCWlmICghcXByaXYtPmVjY19hZGRyKQ0K
+PiA+IAkJCXJldHVybiAtRUlOVkFMOw0KPiA+IAkJd3JpdGVsKHJlYWRsKHFwcml2LT5lY2NfYWRk
+cikgfCBFQ0NfRElTX0xTMTA4OEEsIEBAIC0NCj4gMjIzLDE4DQo+ID4rMjA1LDE2IEBAIHN0YXRp
+YyBpbnQgYWhjaV9xb3JpcV9waHlfaW5pdChzdHJ1Y3QgYWhjaV9ob3N0X3ByaXYgKmhwcml2KQ0K
+PiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9QSFkyX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTIpOw0K
+PiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9QSFkzX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1BIWTMpOw0K
+PiA+IAkJd3JpdGVsKEFIQ0lfUE9SVF9UUkFOU19DRkcsIHJlZ19iYXNlICsgUE9SVF9UUkFOUyk7
+DQo+ID4tCQlpZiAocXByaXYtPmlzX2RtYWNvaGVyZW50KQ0KPiA+LQkJCXdyaXRlbChBSENJX1BP
+UlRfQVhJQ0NfQ0ZHLCByZWdfYmFzZSArDQo+IFBPUlRfQVhJQ0MpOw0KPiA+IAkJYnJlYWs7DQo+
+ID4rCX0NCj4gPg0KPiA+LQljYXNlIEFIQ0lfTFMyMDg4QToNCj4gPi0JCXdyaXRlbChBSENJX1BP
+UlRfUEhZXzFfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMSk7DQo+ID4tCQl3cml0ZWwoQUhDSV9Q
+T1JUX1BIWTJfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMik7DQo+ID4tCQl3cml0ZWwoQUhDSV9Q
+T1JUX1BIWTNfQ0ZHLCByZWdfYmFzZSArIFBPUlRfUEhZMyk7DQo+ID4tCQl3cml0ZWwoQUhDSV9Q
+T1JUX1RSQU5TX0NGRywgcmVnX2Jhc2UgKyBQT1JUX1RSQU5TKTsNCj4gPi0JCWlmIChxcHJpdi0+
+aXNfZG1hY29oZXJlbnQpDQo+ID4tCQkJd3JpdGVsKEFIQ0lfUE9SVF9BWElDQ19DRkcsIHJlZ19i
+YXNlICsNCj4gUE9SVF9BWElDQyk7DQo+ID4tCQlicmVhazsNCj4gPisJaWYgKHFwcml2LT5pc19k
+bWFjb2hlcmVudCkgew0KPiA+KwkJaWYgKHFwcml2LT50eXBlID09IEFIQ0lfTFMxMDIxQSkNCj4g
+PisJCQl3cml0ZWwoQUhDSV9QT1JUX0FYSUNDX0NGRywNCj4gPisJCQkgICAgICAgcmVnX2Jhc2Ug
+KyBMUzEwMjFBX0FYSUNDX0FERFIpOw0KPiA+KwkJZWxzZQ0KPiA+KwkJCXdyaXRlbChBSENJX1BP
+UlRfQVhJQ0NfQ0ZHLA0KPiA+KwkJCSAgICAgICByZWdfYmFzZSArIFBPUlRfQVhJQ0MpOw0KPiA+
+IAl9DQo+ID4NCj4gPiAJcmV0dXJuIDA7DQo+ID4tLQ0KPiA+MS43LjENCg0K
