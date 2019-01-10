@@ -1,24 +1,35 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2] dt-bindings: phy-rockchip-inno-usb2: add documentation for extcon property
-Date: Thu, 10 Jan 2019 13:25:57 +0100
-Message-ID: <6183155.mchCxN3k72@phil>
-References: <20190109171739.11494-1-enric.balletbo@collabora.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 5/5] dt-bindings: gnss: add lna-supply property
+Date: Thu, 10 Jan 2019 13:27:57 +0100
+Message-ID: <20190110122757.GB9725@localhost>
+References: <20181209195150.5192-1-andreas@kemnade.info>
+ <20181209195150.5192-6-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7Bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109171739.11494-1-enric.balletbo@collabora.com>
+Content-Disposition: inline
+In-Reply-To: <20181209195150.5192-6-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Cc: linux-kernel@vger.kernel.org, kernel@collabora.com, bleung@chromium.org, groeck@google.com, kieran.bingham@ideasonboard.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-Am Mittwoch, 9. Januar 2019, 18:17:39 CET schrieb Enric Balletbo i Serra:
-> Commit 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for
-> rk3399") introduces the extcon property that is used to detect the
-> cable-state. Document this property in the documentation binding.
+On Sun, Dec 09, 2018 at 08:51:50PM +0100, Andreas Kemnade wrote:
+> Add lna-supply property.
 > 
-> Fixes: 98898f3bc83c8 ("phy: rockchip-inno-usb2: support otg-port for rk3399")
-> Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v2:
+>  - reordering
+> Original order had a
+> Reviewed-by: Rob Herring <robh@kernel.org>
+> 
+>  Documentation/devicetree/bindings/gnss/sirfstar.txt | 1 +
+>  1 file changed, 1 insertion(+)
 
-Reviewed-by: Heiko Stuebner <heiko@sntech.de>
+Ah, missed this one at first.
+
+But shouldn't this go into the generic binding since it isn't specific
+for sirf-star based receivers?
+
+Johan
