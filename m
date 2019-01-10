@@ -1,40 +1,50 @@
 From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: [PATCH v2 0/2] Support for eMMC in AM65x-evm
-Date: Thu, 10 Jan 2019 13:03:53 +0530
-Message-ID: <20190110073355.3382-1-faiz_abbas@ti.com>
+Subject: [PATCH v2 1/2] arm64: dts: ti: k3-am654: Add Support for MMC/SD
+Date: Thu, 10 Jan 2019 13:03:54 +0530
+Message-ID: <20190110073355.3382-2-faiz_abbas@ti.com>
+References: <20190110073355.3382-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190110073355.3382-1-faiz_abbas@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, nm@ti.com, robh+dt@kernel.org, t-kristo@ti.com, faiz_abbas@ti.com
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-The following patches add eMMC support on TI's AM65x-evm.
+Add support for the Secure Digital Host Controller Interface (SDHCI)
+present on TI's AM654 SOCs. It is compatible with eMMC5.1 Host
+Specifications and SDHC Standard Specification 4.10.
 
-v2:
- 1. The SD card node is under debug for some usecases.
-    Only upstreaming eMMC support for now.
- 2. Rebased to latest mainline.
- 3. Removed status = "disabled" from dtsi patch
- 4. Fixed node name to not include '_'s
+Enable only upto HS200 speed mode.
 
-Faiz Abbas (2):
-  arm64: dts: ti: k3-am654: Add Support for MMC/SD
-  arm64: dts: ti: k3-am654-base-board: Add MMC/SD support
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
- arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 13 ++++++++++
- .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
- 2 files changed, 38 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 272cf8fc8d30..78e1bb56adee 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -191,4 +191,17 @@
+ 		#address-cells = <1>;
+ 		#size-cells = <0>;
+ 	};
++
++	sdhci0: sdhci@4f80000 {
++		compatible = "ti,am654-sdhci-5.1";
++		reg = <0x0 0x4f80000 0x0 0x260>, <0x0 0x4f90000 0x0 0x134>;
++		power-domains = <&k3_pds 47>;
++		clocks = <&k3_clks 47 0>, <&k3_clks 47 1>;
++		clock-names = "clk_ahb", "clk_xin";
++		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
++		mmc-ddr-1_8v;
++		mmc-hs200-1_8v;
++		ti,otap-del-sel = <0x2>;
++		ti,trm-icp = <0x8>;
++	};
+ };
 -- 
 2.19.2
