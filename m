@@ -1,27 +1,82 @@
-Return-Path: <SRS0=OP5l=QE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from michaelmillerfabrics.com ([93.119.178.86]:53128 "EHLO
-        urbanoutfitters.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726762AbfA1R5e (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Jan 2019 12:57:34 -0500
-Subject: Want retouching for your photos?
-Message-ID: <5eb0fc1cc834613d2a90f0fd5d49830e@pahlen.com>
-Date: Mon, 28 Jan 2019 10:44:31 +0100
-From: "Jennifer" <haksmsxamt@mail.fr>
-Reply-To: junlutai@sina.com
+Return-Path: <SRS0=MwbZ=PS=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr40046.outbound.protection.outlook.com ([40.107.4.46]:54621
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726425AbfAJCOn (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Wed, 9 Jan 2019 21:14:43 -0500
+From: Jacky Bai <ping.bai@nxp.com>
+Subject: RE: [PATCH 3/3] clk: imx: Add clock driver support for imx8mm
+Date: Thu, 10 Jan 2019 02:14:37 +0000
+Message-ID: <VI1PR0402MB3519F5D070C8C52AE1444C6A87840@VI1PR0402MB3519.eurprd04.prod.outlook.com>
+References: <1546938317-23203-1-git-send-email-ping.bai@nxp.com>
+ <1546938317-23203-3-git-send-email-ping.bai@nxp.com>
+ <154706594997.15366.8932514505305165638@swboyd.mtv.corp.google.com>
+In-Reply-To: <154706594997.15366.8932514505305165638@swboyd.mtv.corp.google.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Aisheng Dong <aisheng.dong@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Did you receive my email from last week?
-
-Do you have needs for retouching of your photos? We can do it white
-background for your pictures.
-If you need clipping path just let me know.
-
-You can send 1 or 2 photos for testing to judge our quality.
-
-Thanks,
-Jennifer
+PiBTdWJqZWN0OiBSZTogW1BBVENIIDMvM10gY2xrOiBpbXg6IEFkZCBjbG9jayBkcml2ZXIgc3Vw
+cG9ydCBmb3IgaW14OG1tDQo+IA0KPiBRdW90aW5nIEphY2t5IEJhaSAoMjAxOS0wMS0wOCAwMTow
+MTowNCkNCj4gPiArDQo+ID4gK3N0YXRpYyBpbnQgaW14OG1tX2Nsb2Nrc19wcm9iZShzdHJ1Y3Qg
+cGxhdGZvcm1fZGV2aWNlICpwZGV2KSB7DQo+ID4gKyAgICAgICBzdHJ1Y3QgZGV2aWNlICpkZXYg
+PSAmcGRldi0+ZGV2Ow0KPiA+ICsgICAgICAgc3RydWN0IGRldmljZV9ub2RlICpucCA9IGRldi0+
+b2Zfbm9kZTsNCj4gPiArICAgICAgIHZvaWQgX19pb21lbSAqYmFzZTsNCj4gPiArICAgICAgIGlu
+dCByZXQgPSAwOw0KPiANCj4gUGxlYXNlIGRvbid0IGFzc2lnbiByZXQgaGVyZS4gSnVzdCBsZXQg
+aXQgYmUgYXNzaWduZWQgbGF0ZXIgb24uDQo+IA0KDQpTdXJlLg0KDQo+ID4gKw0KPiA+ICsgICAg
+ICAgY2xrc1tJTVg4TU1fQ0xLX0RVTU1ZXSA9IGlteF9jbGtfZml4ZWQoImR1bW15IiwgMCk7DQo+
+ID4gKyAgICAgICBjbGtzW0lNWDhNTV9DTEtfMjRNXSA9IG9mX2Nsa19nZXRfYnlfbmFtZShucCwg
+Im9zY18yNG0iKTsNCj4gPiArICAgICAgIGNsa3NbSU1YOE1NX0NMS18zMktdID0gb2ZfY2xrX2dl
+dF9ieV9uYW1lKG5wLCAib3NjXzMyayIpOw0KPiAvKiBDaGVjayBtb3JlICovDQo+ID4gKyAgICAg
+ICBjbGtzW0lNWDhNTV9DTEtfRVhUMV0gPSBvZl9jbGtfZ2V0X2J5X25hbWUobnAsICJjbGtfZXh0
+MSIpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4TU1fQ0xLX0VYVDJdID0gb2ZfY2xrX2dldF9ieV9u
+YW1lKG5wLCAiY2xrX2V4dDIiKTsNCj4gPiArICAgICAgIGNsa3NbSU1YOE1NX0NMS19FWFQzXSA9
+IG9mX2Nsa19nZXRfYnlfbmFtZShucCwgImNsa19leHQzIik7DQo+ID4gKyAgICAgICBjbGtzW0lN
+WDhNTV9DTEtfRVhUNF0gPSBvZl9jbGtfZ2V0X2J5X25hbWUobnAsICJjbGtfZXh0NCIpOw0KPiA+
+ICsNCj4gPiArICAgICAgIG5wID0gb2ZfZmluZF9jb21wYXRpYmxlX25vZGUoTlVMTCwgTlVMTCwN
+Cj4gImZzbCxpbXg4bW0tYW5hdG9wIik7DQo+ID4gKyAgICAgICBiYXNlID0gb2ZfaW9tYXAobnAs
+IDApOw0KPiA+ICsgICAgICAgaWYgKFdBUk5fT04oIWJhc2UpKQ0KPiA+ICsgICAgICAgICAgICAg
+ICByZXR1cm4gLUVOT01FTTsNCj4gDQo+IFdoeSBkbyB3ZSBuZWVkIHRvIHJlYWNoIGludG8gc29t
+ZSBvdGhlciBub2RlIHRvIGdldCB0aGUgbWVtb3J5IHJlZ2lvbiB0bw0KPiBtYXA/DQo+IA0KDQpU
+aGUgUExMcycgY29uZmlnIHJlZ2lzdGVyIGlzIGluIGEgc3BlcmF0ZSBtZW1vcnkgcmVnaW9uLiBB
+cyB3ZSByZWdpc3RlcmVkIGFsbCB0aGUgUExMcyBjbG9ja3MgaW4gdGhpcyBkcml2ZXIsIHRoZSBQ
+TExzIG1lbW9yeSByZWdpb24NCk5lZWQgdG8gYmUgcmVhZCBvdXQgZnJvbSBpdHMgY29ycmVzcG9u
+ZGluZyBub2RlLiBUaGlzIGlzIHRoZSBtZXRob2QgdGhhdCB3ZSB1c2VkIG9uIG91ciBhbGwgaS5N
+WCBwbGF0Zm9ybS4NCg0KPiA+ICsNCj4gPiArICAgICAgIGNsa3NbSU1YOE1NX0FVRElPX1BMTDFf
+UkVGX1NFTF0gPQ0KPiBpbXhfY2xrX211eCgiYXVkaW9fcGxsMV9yZWZfc2VsIiwgYmFzZSArIDB4
+MCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0KPiBBUlJBWV9TSVpFKHBsbF9yZWZfc2VscykpOw0KPiA+
+ICsgICAgICAgY2xrc1tJTVg4TU1fQVVESU9fUExMMl9SRUZfU0VMXSA9DQo+IGlteF9jbGtfbXV4
+KCJhdWRpb19wbGwyX3JlZl9zZWwiLCBiYXNlICsgMHgxNCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0K
+PiBBUlJBWV9TSVpFKHBsbF9yZWZfc2VscykpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4TU1fVklE
+RU9fUExMMV9SRUZfU0VMXSA9DQo+IGlteF9jbGtfbXV4KCJ2aWRlb19wbGwxX3JlZl9zZWwiLCBi
+YXNlICsgMHgyOCwgMCwgMiwgcGxsX3JlZl9zZWxzLA0KPiBBUlJBWV9TSVpFKHBsbF9yZWZfc2Vs
+cykpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4TU1fRFJBTV9QTExfUkVGX1NFTF0gPQ0KPiA+ICsg
+aW14X2Nsa19tdXgoImRyYW1fcGxsX3JlZl9zZWwiLCBiYXNlICsgMHg1MCwgMCwgMiwgcGxsX3Jl
+Zl9zZWxzLA0KPiA+ICsgQVJSQVlfU0laRShwbGxfcmVmX3NlbHMpKTsNCj4gWy4uLl0NCj4gPiAr
+ICAgICAgIGNsa3NbSU1YOE1NX1NZU19QTEwyXzMzM01dID0NCj4gaW14X2Nsa19maXhlZF9mYWN0
+b3IoInN5c19wbGwyXzMzM20iLCAic3lzX3BsbDJfb3V0IiwgMSwgMyk7DQo+ID4gKyAgICAgICBj
+bGtzW0lNWDhNTV9TWVNfUExMMl81MDBNXSA9DQo+IGlteF9jbGtfZml4ZWRfZmFjdG9yKCJzeXNf
+cGxsMl81MDBtIiwgInN5c19wbGwyX291dCIsIDEsIDIpOw0KPiA+ICsgICAgICAgY2xrc1tJTVg4
+TU1fU1lTX1BMTDJfMTAwME1dID0NCj4gPiArIGlteF9jbGtfZml4ZWRfZmFjdG9yKCJzeXNfcGxs
+Ml8xMDAwbSIsICJzeXNfcGxsMl9vdXQiLCAxLCAxKTsNCj4gPiArDQo+ID4gKyAgICAgICBucCA9
+IGRldi0+b2Zfbm9kZTsNCj4gPiArICAgICAgIGJhc2UgPSBvZl9pb21hcChucCwgMCk7DQo+ID4g
+KyAgICAgICBpZiAoV0FSTl9PTighYmFzZSkpDQo+ID4gKyAgICAgICAgICAgICAgIHJldHVybiAt
+RU5PTUVNOw0KPiANCj4gVGhpcyBjYW4gc3VyZWx5IHVzZSB0aGUgcGxhdGZvcm0gZGV2aWNlIEFQ
+SXMgdG8gbWFwIGFuZCByZXRyaWV2ZSBtZW1vcnkNCj4gcmVnaW9ucy4NCj4gDQoNCk9rLCB3aWxs
+IGZpeCBpdA0KDQo+ID4gKw0KPiBbLi4uXQ0KPiA+ICsNCj4gPiArICAgICAgIGlteF9jaGVja19j
+bG9ja3MoY2xrcywgQVJSQVlfU0laRShjbGtzKSk7DQo+ID4gKw0KPiA+ICsgICAgICAgY2xrX2Rh
+dGEuY2xrcyA9IGNsa3M7DQo+ID4gKyAgICAgICBjbGtfZGF0YS5jbGtfbnVtID0gQVJSQVlfU0la
+RShjbGtzKTsNCj4gPiArICAgICAgIHJldCA9IG9mX2Nsa19hZGRfcHJvdmlkZXIobnAsIG9mX2Ns
+a19zcmNfb25lY2VsbF9nZXQsICZjbGtfZGF0YSk7DQo+ID4gKyAgICAgICBpZiAocmV0IDwgMCkg
+ew0KPiA+ICsgICAgICAgICAgICAgICBkZXZfZXJyKGRldiwgImZhaWxlZCB0byByZWdpc3RlciBj
+bGtzIGZvciBpLk1YOE1NXG4iKTsNCj4gPiArICAgICAgICAgICAgICAgcmV0dXJuIC1FSU5WQUw7
+DQo+ID4gKyAgICAgICB9DQo+ID4gKw0KPiA+ICsgICAgICAgaW14X3JlZ2lzdGVyX3VhcnRfY2xv
+Y2tzKHVhcnRfY2xrcyk7DQo+ID4gKw0KPiA+ICsgICAgICAgcHJfaW5mbygiaS5NWDhNTSBjbG9j
+ayBkcml2ZXIgaW5pdCBkb25lXG4iKTsNCj4gDQo+IFBsZWFzZSBubyAiSSJtIGFsaXZlIiBtZXNz
+YWdlcy4NCg0KSSB3aWxsIHJlbW92ZSBpdCBpbiBWMi4NCg0KQlINCj4gDQo+ID4gKw0KPiA+ICsg
+ICAgICAgcmV0dXJuIDA7DQo+ID4gK30NCj4gPiArDQo=
