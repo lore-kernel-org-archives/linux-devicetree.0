@@ -1,51 +1,123 @@
-From: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
-Subject: [PATCH v3 3/4] ARM: dts: dps650ab: add power supply
-Date: Thu, 10 Jan 2019 10:29:13 +0800
-Message-ID: <a7b5fa54198e7fd0def33de3e7db36239a2e3da7.1546918172.git.xiaoting.liu@hxt-semitech.com>
-References: <cover.1546918172.git.xiaoting.liu@hxt-semitech.com>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: [PATCH v10 0/9] Add power domain driver for corners on msm8996/sdm845
+Date: Thu, 10 Jan 2019 09:28:43 +0530
+Message-ID: <20190110035852.5666-1-rnayak@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1546918172.git.xiaoting.liu@hxt-semitech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, linux@roeck-us.net
-Cc: openbmc@lists.ozlabs.org, joel@jms.id.au, andrew@aj.id.au, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, shunyong.yang@hxt-semitech.com, dongsheng.wang@hxt-semitech.com, Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+To: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org
+Cc: devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-Add Delta Electronics power supply DPS-650-AB.
+Changes in v10:
+* Updated level bindings to include opp-level as an
+optional property using operating-points-v2, no new
+compatible for the OPP table
+* Updated the dev_pm_opp_get_level() helper as per
+suggestions from Viresh
 
-Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
----
-v3:
-  Modify patch subject and commit message.
-  Add delta to compatible property.
----
-v2:
-  No change.
----
- arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+Changes in v9:
+* Updated qcom-opp bindings to be generic and usable across other SoCs 
+with similar needs (Like MediaTek)
+* Removed the simple_opp_to_performance_state() helper and added a
+dev_pm_opp_of_get_level() helper instead
+* Rebased on 5.0-rc1
 
-diff --git a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-index bdfd8c9f3a7c..521afbea2c5b 100644
---- a/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-+++ b/arch/arm/boot/dts/aspeed-bmc-arm-stardragon4800-rep2.dts
-@@ -173,6 +173,16 @@
- 			};
- 		};
- 	};
-+
-+	dps650ab@58 {
-+		compatible = "delta,dps650ab";
-+		reg = <0x58>;
-+	};
-+
-+	dps650ab@59 {
-+		compatible = "delta,dps650ab";
-+		reg = <0x59>;
-+	};
- };
- 
- &i2c9 {
+Changes in v8:
+* Patch 01/10: Bindings updated to mention opp-hz is optional
+* Patch 02/10: Fixed #power-domain-cells
+* All dependencies for 'Patch 10/10' are on their way to 4.21 via the pm tree
+
+Changes in v7:
+* Rebased on Andy's for-next, and used the updated cmd_db_read_aux_data()
+* Other minor fixes, all in 'PATCH 06/10' as suggested by Stephen
+
+Changes in v6:
+* OPP binding updates for qcom,level reviewed by Rob
+* DT bindings for rpmpd and rpmhpd updated to specify the
+OPP tables as child nodes of the power-controller itself
+* Removed some module specific remains from the drivers,
+now that they can only be built-in
+* Added a simple_opp_to_performance_state() helper
+
+Changes in v5:
+* First 6 patches are unchanged
+* Patch 7/8 adds the DT node for rpmh power-controller on sdm845 and the
+corresponding OPP tables for it to describe the performance states
+* Patch 8/8 adds a parent/child relationship across mx/cx and mx_ao/cx_ao
+as needed on sdm845 platform. This patch is dependent on the series from
+Viresh [1] which adds support to propogate performance states across the
+power domain hierarchy which is still being reviewed
+
+Changes in v4:
+* Included the patch to add qcom-opp bindings (dropped accidentally in v3)
+* merged the patches to add bindings for rpm and rpmh, added consumer binding example
+* Made the drivers built in, removed .remove
+* Added better description in changelog for PATCH 6/6
+* Updated rpmhpd_aggregate_corner() based on Davids feedback
+* rpmhpd_set_performance_state() returns max corner, in cases where its called
+with an INT_MAX
+* Dropped the patch to max vote on all corners at init, the patch did not
+work anyway, and it shouldn't be needed now
+
+Changes in v3:
+* Bindings split into seperate patches
+* Bindings updated to remove duplicate OPP table phandles
+* DT headers defining macros for Power domain indexes and OPP levels
+* Optimisations to use rpmh_write_async() whereever applicable
+* Fixed up handling of ACTIVE_ONLY/WAKE_ONLY/SLEEP voting for RPMh
+* Fixed the vlvl to hlvl conversions in set_performance
+* Other minor fixes based on review of v2
+* TODO: This series does not handle the case where all VDD_MX votes
+should be higher than VDD_CX from APPs, as pointed out
+by David Collins in v2. This needs support at genpd to propogate performance
+state up the parents, if we model these as Parent/Child to handle the
+interdependency.
+
+Changes in v2:
+* added a power domain driver for sdm845 which supports communicating to RPMh
+* dropped the changes to sdhc driver to move over to using OPP
+as there is active discussion on using OPP as the interface vs
+handling all of it in clock drivers
+* Other minor binding updates based on review of v1
+
+With performance state support for genpd/OPP merged, this is an effort
+to model a power domain driver to communicate corner/level
+values for qualcomm platforms to RPM (Remote Power Manager) and RPMh.
+
+[1] https://lkml.org/lkml/2018/11/26/333
+
+Rajendra Nayak (9):
+  dt-bindings: opp: Introduce opp-level bindings
+  OPP: Add support for parsing the 'opp-level' property
+  dt-bindings: power: Add qcom rpm power domain driver bindings
+  soc: qcom: rpmpd: Add a Power domain driver to model corners
+  soc: qcom: rpmpd: Add support for get/set performance state
+  arm64: dts: msm8996: Add rpmpd device node
+  soc: qcom: rpmhpd: Add RPMh power domain driver
+  arm64: dts: sdm845: Add rpmh powercontroller node
+  soc: qcom: rpmhpd: Mark mx as a parent for cx
+
+ Documentation/devicetree/bindings/opp/opp.txt |   5 +
+ .../devicetree/bindings/power/qcom,rpmpd.txt  | 145 +++++++
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
+ drivers/opp/core.c                            |  18 +
+ drivers/opp/of.c                              |   5 +-
+ drivers/opp/opp.h                             |   2 +
+ drivers/soc/qcom/Kconfig                      |  18 +
+ drivers/soc/qcom/Makefile                     |   2 +
+ drivers/soc/qcom/rpmhpd.c                     | 402 ++++++++++++++++++
+ drivers/soc/qcom/rpmpd.c                      | 317 ++++++++++++++
+ include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
+ include/linux/pm_opp.h                        |   7 +
+ 13 files changed, 1044 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+ create mode 100644 drivers/soc/qcom/rpmhpd.c
+ create mode 100644 drivers/soc/qcom/rpmpd.c
+ create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+
 -- 
-1.8.3.1
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
