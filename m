@@ -1,100 +1,38 @@
-From: Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 5/5] arm64: dts: rockchip: Fix nanopi4 uSD card detect
-Date: Thu, 10 Jan 2019 13:53:36 +0000
-Message-ID: <53136c8d-2e17-d404-884f-1fd22fdc192a@arm.com>
-References: <cover.1546981251.git.robin.murphy@arm.com>
- <6925511.AQqqGbhmY3@phil> <c2c40662-f7aa-75d5-572e-c58b21170b59@arm.com>
- <6110368.KK4K1XCW2x@phil>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] ARM: dts: imx: Add Y Soft IOTA Draco, Hydra and Ursa
+ boards
+Date: Thu, 10 Jan 2019 21:57:44 +0800
+Message-ID: <20190110135742.GC30487@dragon>
+References: <1545144107-88378-1-git-send-email-michal.vokac@ysoft.com>
+ <20181228232556.GA14277@bogus>
+ <49371bd4-6ab9-31c3-dd48-800becac17e3@ysoft.com>
+ <CAL_JsqJyZt=VCv2bX1YYFQt91BcFqDWfeAqkJVcF7eFD0_JM1g@mail.gmail.com>
+ <6fd5ac6a-edb5-a600-3c10-b46a1c1d9906@ysoft.com>
+ <f96952b2-7b19-5397-00a1-0fe9b5800dab@ysoft.com>
+ <CAL_JsqLRX2g1t-8YCqpZ5fd=-MyLPkgy88Gb=6ohEZbxWfS+LA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <6110368.KK4K1XCW2x@phil>
-Content-Language: en-GB
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: linux-rockchip@lists.infradead.org, tomeu.vizoso@collabora.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAL_JsqLRX2g1t-8YCqpZ5fd=-MyLPkgy88Gb=6ohEZbxWfS+LA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>
 List-Id: devicetree@vger.kernel.org
 
-On 10/01/2019 13:26, Heiko Stuebner wrote:
-> Am Mittwoch, 9. Januar 2019, 00:22:01 CET schrieb Robin Murphy:
->> On 2019-01-08 10:42 pm, Heiko Stuebner wrote:
->>> Am Dienstag, 8. Januar 2019, 22:57:27 CET schrieb Robin Murphy:
->>>> For whatever reason, the sdmmc_dectn function isn't working properly
->>>> as-is, and microSD insertion and removal goes unnoticed. Flipping the
->>>> pin into GPIO mode, however, does do the job, so let's just handle it
->>>> that way for now until someone feels inclined to figure out what GRF
->>>> voodoo or otherwise is needed for correct 'native' operation.
->>>>
->>>> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
->>>> ---
->>>>    arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi | 7 ++++++-
->>>>    1 file changed, 6 insertions(+), 1 deletion(-)
->>>>
->>>> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
->>>> index 9c723038d8f8..2a183a6af150 100644
->>>> --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
->>>> +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
->>>> @@ -505,6 +505,10 @@
->>>>    		sdmmc0_pwr_h: sdmmc0-pwr-h {
->>>>    			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
->>>>    		};
->>>> +
->>>> +		sdmmc0_det_l: sdmmc0-det-l {
->>>
->>> alphabetically by node-name please,
->>> aka sdmmc0-det-* should be above sdmmc0-pwr-*
->>
->> Right you are, not sure how that one slipped through.
->>
->>> If you're respinning the whole series this should be fixed,
->>> otherwise I can also do that when applying.
->>
->> I've fixed it up locally, although it might be worth holding off on this
->> particular patch for the moment now that I've taken another look through
->> the TRM and noticed those smoking-gun-looking bits in
->> GRF_SIG_DETECT_CON{0,1} - I'll investigate...
+On Tue, Jan 08, 2019 at 12:11:50PM -0600, Rob Herring wrote:
+> Humm, I thought Shawn had applied to his tree as there were some conflicts.
 > 
-> Personally I'm very much fine with using a cd-gpio instead of trying
-> to bring order to the GRF "chaos" ;-) as I'm also not really sure
-> if we gain anything with the IP-internal detect mechanism.
-> 
-> But then do as you like :-D
+> Shawn, do you need me to resend?
 
-I'm assuming from the wiring (and from how I recall my 3288/3328 boxes 
-behaving) that the dedicated function implements its own debouncing - 
-seems the switch in this particular socket is noisy enough that the GPIO 
-interrupt is firing well over 100 times per physical event. Not a big 
-deal really, I just need to scratch the itch of making things work 
-'properly' ;)
+Sorry.  I was actually dropping the conflicting changes from my tree and
+expecting you send the json-schema patch via your tree.  I just applied
+your patch to my tree.
 
->> [ side note - do you reckon there'd be any value in bolting a debugfs
->> interface onto the GRF driver, or is the realistic answer to just use
->> /dev/mem like everyone else and stop having silly ideas? ]
-> 
-> I don't think it would help much ... especially when it really only outputs
-> the register contents in the same way as mem or so does.
-> 
-> Having to fiddle with GRF bits really should only happen in rare cases,
-> so I guess mem should do the trick for that.
-> 
-> And the GRF driver also was a bit controversial anyway, with the title
-> of "dumping ground" looming over it ... so I'd like to keep it small
-> and simple ;-) .
+@Vokáč,
 
-Yeah, it would end up being one of those things that's really handy for 
-about 5 minutes every couple of years, and a massive pain to maintain 
-the rest of the time. Plus I realise that I'd want to compare the 
-behaviour of stock kernels anyway, and having to patch and rebuild those 
-rather defeats the point.
+Please generate your patches against my for-next branch with dt-bindings
+being separate patch from dts one.
 
-Thanks,
-Robin.
+Shawn
