@@ -1,264 +1,411 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: Generic RGB LED support was Re: [PATCH 2/2] leds: lp5024: Add the
- LP5024/18 RGB LED driver
-Date: Thu, 10 Jan 2019 06:46:26 -0600
-Message-ID: <0a163b0c-eabc-6cf0-c605-28622af3d31d@ti.com>
-References: <986b5105-2fdb-bd25-7c8a-ca8fd1ade821@gmail.com>
- <7f205102-e854-f1cb-cc03-1307d1cddc87@gmail.com>
- <c9f8965a-90f4-b456-8225-c70694c9f071@gmail.com>
- <cf6c0025-36e7-197b-b27a-1f31fb45cc38@gmail.com> <20190104201256.GA2931@amd>
- <a4e3a782-de76-ba91-3727-4db69cf27c3a@gmail.com> <20190104220726.GA12395@amd>
- <4cf79414-578e-eea7-4f46-fc8789206988@gmail.com> <20190105123146.GA16354@amd>
- <8044cdd9-b9b3-fddd-6106-184b906859e2@gmail.com> <20190105221254.GA22322@amd>
- <dac50714-9caf-2496-3208-fb62f886e31f@gmail.com>
- <70366f2a-aafd-174f-73ec-a8117133b7af@gmail.com>
- <b027299c-a24a-abeb-8f92-97c32c13290b@ti.com>
- <2c3425b0-70af-1f38-35ee-0af857bf0539@gmail.com>
- <a388f510-d0a4-e88b-cfa4-8c9f45f7252a@ti.com>
- <63713076-b111-316d-7e60-9b799ff22c0a@gmail.com>
- <f323ce2c-01f9-f474-4071-96c3c4ef2b24@ti.com>
+From: Arun Kumar Neelakantam <aneela@codeaurora.org>
+Subject: Re: [PATCH v2 2/7] soc: qcom: Add AOSS QMP communication driver
+Date: Thu, 10 Jan 2019 18:18:09 +0530
+Message-ID: <a162251c-bd84-356f-0f96-c733d775639d@codeaurora.org>
+References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
+ <20190106080915.4493-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <f323ce2c-01f9-f474-4071-96c3c4ef2b24@ti.com>
+In-Reply-To: <20190106080915.4493-3-bjorn.andersson@linaro.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, robh+dt@kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
 
-On 1/8/19 3:25 PM, Dan Murphy wrote:
-> Jacek
-> 
-> On 1/8/19 3:18 PM, Jacek Anaszewski wrote:
->> Hi Dan,
->>
->> On 1/7/19 10:14 PM, Dan Murphy wrote:
->>> Jacek
->>>
->>> On 1/7/19 2:59 PM, Jacek Anaszewski wrote:
->>>> Dan,
->>>>
->>>> On 1/7/19 8:36 PM, Dan Murphy wrote:
->>>>> Jacek
->>>>>
->>>>> On 1/7/19 1:13 PM, Jacek Anaszewski wrote:
->>>>>> On 1/6/19 4:52 PM, Jacek Anaszewski wrote:
->>>>>>> Hi Pavel,
->>>>>>>
->>>>>>> On 1/5/19 11:12 PM, Pavel Machek wrote:
->>>>>>>> Hi!
->>>>>>>>
->>>>>>>>>> Grab yourself an RGB LED and play with it; you'll see what the
->>>>>>>>>> problems are. It is hard to explain colors over email...
->>>>>>>>>
->>>>>>>>> Video [0] gives some overview of lp5024 capabilities.
->>>>>>>>>
->>>>>>>>> I don't see any problems in exposing separate red,green,blue
->>>>>>>>> files and brightness for the devices with hardware support for
->>>>>>>>> that.
->>>>>>>>
->>>>>>>> Well, that's what we do today, as three separate LEDs, right?
->>>>>>>
->>>>>>> No. It doesn't allow for setting color intensity by having
->>>>>>> the color fixed beforehand. Below is relevant excerpt from
->>>>>>> the lp5024 documentation. This is not something that can be
->>>>>>> mapped to RGB color space, but rather to HSV/HSL, with the
->>>>>>> reservation that the hardware implementation uses PWM
->>>>>>> for setting color intensity.
->>>>>>>
->>>>>>> <quote>
->>>>>>> 8.3.1.2 Independent Intensity Control Per RGB LED Module
->>>>>>>
->>>>>>> When color is fixed, the independent intensity-control is used to
->>>>>>> achieve accurate and flexible dimming control for every RGB LED module.
->>>>>>>
->>>>>>> 8.3.1.2.1 Intensity-Control Register Configuration
->>>>>>>
->>>>>>> Every three consecutive output channels are assigned to their respective
->>>>>>> intensity-control register (LEDx_BRIGHTNESS). For example, OUT0, OUT1,
->>>>>>> and OUT2 are assigned to LED0_BRIGHTNESS, so it is recommended to
->>>>>>> connect the RGB LEDs in the sequence as shown in Table 1. The LP50xx
->>>>>>> device allows 256-step intensity control for each RGB LED module, which
->>>>>>> helps achieve a smooth dimming effect.
->>>>>>> </quote>
->>>>>>>
->>>>>>>> I don't have problem with that, either; other drivers already do
->>>>>>>> that. He's free to use existing same interface.
->>>>>>>>
->>>>>>>> But that is insufficient, as it does not allow simple stuff, such as
->>>>>>>> turning led "white".
->>>>>>>>
->>>>>>>> So... perhaps we should agree on requirements, first, and then we can
->>>>>>>> discuss solutions?
->>>>>>>>
->>>>>>>> Requirements for RGB LED interface:
->>>>>>>>
->>>>>>>> 1) Userspace should be able to set the white color
->>>>>>>>
->>>>>>>> 2) Userspace should be able to arbitrary color from well known list
->>>>>>>> and it should approximately match what would CRT, LCD or OLED monitor display
->>>>>>>
->>>>>>> The difference is that monitor display driver is pre-calibrated
->>>>>>> for given display by the manufacturer. With the LED controllers the
->>>>>>> manufacturer has no control over what LEDs will be connected to the
->>>>>>> iouts. Therefore it should be not surprising that colors produced
->>>>>>> by custom LEDs are not as user would expect when comparing to
->>>>>>> the RGB color displayed on the monitor display.
->>>>>>>
->>>>>>> TI provides "Various LED Ring Lighting Patterns Reference Design" [0]
->>>>>>> that show how to produce various patterns with use of the reference
->>>>>>> board with LED ring built using sixteen 19-337/R6GHBHC-A01/2T LEDs [1].
->>>>>>>
->>>>>>> Document [0] mentions also specific "Design considerations" in the
->>>>>>> chapter 2.2:
->>>>>>>
->>>>>>> <quote>
->>>>>>> Several considerations are taken into account for this particular design:
->>>>>>> • LED map (ring) for meeting the requirement of popular human-machine interaction style.
->>>>>>> • LED size, numbers and the diffuse design for meeting lighting pattern uniformity.
->>>>>>> • Analog dimming in the difference ambient light lux without losing dimming resolution in lighting pattern.
->>>>>>>
->>>>>>> These considerations apply to most human-machine interaction end equipment with day and night vision
->>>>>>> designs in some way, but the designer must decide the particular considerations to take into account for a
->>>>>>> specific design.
->>>>>>> </quote>
->>>>>>>
->>>>>>> This renders your requirement 2) infeasible with use of custom LEDs
->>>>>>> any fixed algorithm, since the final effect will always heavily depend
->>>>>>
->>>>>> Typo here: s/any fixed/and fixed/
->>>>>>
->>>>>>> on the LED circuit design.
->>>>>>>
->>>>>>>>
->>>>>>>>        2a) LEDs probably slightly change color as they age. That's out of
->>>>>>>>        scope, unless the variation is much greater than on monitors.
->>>>>>>>
->>>>>>>>        2b) Manufacturing differences cause small color variation. Again,
->>>>>>>>        that's out of scope, unless the variation is much greater than on
->>>>>>>>        monitors.
->>>>>>>>
->>>>>>>> Nice to have features:
->>>>>>>>
->>>>>>>> 3) Full range of available colors/intensities should be available to
->>>>>>>> userspace
->>>>>>>>
->>>>>>>> 4) Interface should work well with existing triggers
->>>>>>>>
->>>>>>>> 5) It would be nice if userland knew how many lumens are produced at
->>>>>>>> each wavelength for each setting (again, minus aging and manufacturing
->>>>>>>> variations).
->>>>>>>>
->>>>>>>> 6) Complexity of math in kernel should be low, and preferably it
->>>>>>>> should be integer or fixed point
->>>>>>>>
->>>>>>>> Problems:
->>>>>>>>
->>>>>>>> a) RGB LEDs are usually not balanced. Setting 100% PWM on
->>>>>>>> red/green/blue channels will result in nothing close to white
->>>>>>>> light. In fact, to get white light on N900, blue and green channel's
->>>>>>>> PWM needs to be set pretty low, as in 5%.
->>>>>>>>
->>>>>>>> b) LED class does not define any relation between "brightness" in
->>>>>>>> sysfs and ammount of light in lumens. Some drivers use close to linear
->>>>>>>> relation, some use exponential relation. Human eyes percieve logarithm
->>>>>>>> of lumens. RGB color model uses even more complex function.
->>>>>>>>
->>>>>>>> c) Except for white LEDs, LEDs are basically sources of single
->>>>>>>> wavelength of light, while CRTs and LCDs produce broader
->>>>>>>> spectrums.
->>>>>>>>
->>>>>>>> d) RG, RGBW and probably other LED combinations exist.
->>>>>>>>
->>>>>>>> e) Not all "red" LEDs will produce same wavelength. Similar
->>>>>>>> differences will exist for other colors.
->>>>>>>>
->>>>>>>> f) We have existing RGB LEDs represented as three separate
->>>>>>>> monochromatic LEDs in sysfs.
->>>>>>>
->>>>>>> One general question: do you have any solutions in store?
->>>>>>>
->>>>>>> [0] http://www.ti.com/lit/ug/tiduee6/tiduee6.pdf
->>>>>>> [1] http://www.everlight.com/file/ProductFile/19-337-R6GHBHC-A01-2T.pdf
->>>>>>>
->>>>>>
->>>>>
->>>>> I just wanted to point out that there are 4 total devices right now that use the same mapping
->>>>>
->>>>> LP5018, LP5024, LP5030 and the LP5036.
->>>>>
->>>>> I can implement what ever we would like to I just need to know what to design against.
->>>>
->>>> As you can see from the discussion in this thread it may take some
->>>> time to work out the interface satisfying everyone. I made some design
->>>> proposal, but Pavel had no warm word for it. It would be easier if
->>>> we had more opinions.
->>>
->>> I got it from the threads and just the time invested in the FW and HSV.
->>>
->>>>
->>>> How do you feel about using brightness file for setting LEDn_BRIGHTNESS?
->>>
->>> I am using that now.  The brightness file will adjust the overall brightness of the LED group
->>> or bank pending on how the LEDs are grouped in the DT file.
->>>
->>>>
->>>> Does increasing LEDn_BRIGHTNESS value (i.e. color intensity) feel like
->>>> increasing color lightness (i.e. the pattern presented in the video [0]
->>>> starting from 1:22)?
->>>
->>> No unfortunately this is why I introduced the new files to control the individual RGB intensities
->>> so that the designers can set, tune, create color variations or patterns like the video.
->>>
->>> The RGB group brightness would be independent based on lighting conditions, enclosures and diffusers.
->>> So you could technically be changing color and overall brightness virtually simultaneously
->>
->> Oh, so this is surprising. Now it gets even more obscure to me.
->>
->> It would be really helpful if we could see a video showing
->> the LED effects with regard to the applied settings.
-> 
-> Well I am doing a test off the command line to ensure the user space can interface with the RGB LED.
-> 
-> I can ping someone in product development to see the application of this device if that would help.
-> We did give them a test driver to work on their features but told them the driver is not final until it
-> is in the mainline kernel
-> 
-> Dan
-> 
->>
->>>>> But keep in mind I still need to invest my time in the other TI-lmu patches on my list to complete.
->>>>
->>>> Do what you deem most suitable for you. We are here only to help
->>>> merging the patches, but keeping in mind that kernel interface once
->>>> introduced must be preserved forever. Therefore we need to do our
->>>> best to make the best possible design decisions.
->>>>
->>>> [0] https://www.youtube.com/watch?v=qdt-alh8i6E
->>>>
->>>
->>> I understand.  Maybe I can make the files generic to use for either control or individual control.
->>>
->>> We can probably define new ABI's until either HSV or DT frameworks get going.  And them make the file presentation
->>> configurable and default to the new files.
->>
->> I am leaning towards it. Just commented on your patches.
->>
-> 
-> 
-
-Asked the HW team for videos this is what they sent
-https://training.ti.com/lp50x-led-drivers-achieve-optimal-color-brightness-zero-audible-noise
-https://training.ti.com/how-configuring-led-brightness-color-and-patterns-lp50x-gui-tool
-
-Not sure how helpful these would be
-
-Dan
-
--- 
-------------------
-Dan Murphy
+On 1/6/2019 1:39 PM, Bjorn Andersson wrote:
+> The AOSS QMP driver is used to communicate with the AOSS for certain
+> side-channel requests, that are not enabled through the RPMh interface.
+>
+> The communication is a very simple synchronous mechanism of messages
+> being written in message RAM and a doorbell in the AOSS is rung. As the
+> AOSS has processed the message length is cleared and an interrupt is
+> fired by the AOSS as acknowledgment.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+Reviewed-by: Arun Kumar Neelakantam <aneela@codeaurora.org>
+> Changes since v1:
+> - Skip check in send for empty TX buffer
+> - Don't follow WARN_ON() with dev_err()
+> - Register platform_device rather than populate based on of-children
+>
+>   drivers/soc/qcom/Kconfig          |   9 +
+>   drivers/soc/qcom/Makefile         |   1 +
+>   drivers/soc/qcom/aoss-qmp.c       | 313 ++++++++++++++++++++++++++++++
+>   include/linux/soc/qcom/aoss-qmp.h |  12 ++
+>   4 files changed, 335 insertions(+)
+>   create mode 100644 drivers/soc/qcom/aoss-qmp.c
+>   create mode 100644 include/linux/soc/qcom/aoss-qmp.h
+>
+> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> index a51458022d21..dda19471057f 100644
+> --- a/drivers/soc/qcom/Kconfig
+> +++ b/drivers/soc/qcom/Kconfig
+> @@ -3,6 +3,15 @@
+>   #
+>   menu "Qualcomm SoC drivers"
+>   
+> +config QCOM_AOSS_QMP
+> +	tristate "Qualcomm AOSS Messaging Driver"
+> +	depends on ARCH_QCOM || COMPILE_TEST
+> +	depends on MAILBOX
+> +	help
+> +	  This driver provides the means for communicating with the
+> +	  micro-controller in the AOSS, using QMP, to control certain resource
+> +	  that are not exposed through RPMh.
+> +
+>   config QCOM_COMMAND_DB
+>   	bool "Qualcomm Command DB"
+>   	depends on ARCH_QCOM || COMPILE_TEST
+> diff --git a/drivers/soc/qcom/Makefile b/drivers/soc/qcom/Makefile
+> index 67cb85d0373c..d0d7fdc94d9a 100644
+> --- a/drivers/soc/qcom/Makefile
+> +++ b/drivers/soc/qcom/Makefile
+> @@ -1,5 +1,6 @@
+>   # SPDX-License-Identifier: GPL-2.0
+>   CFLAGS_rpmh-rsc.o := -I$(src)
+> +obj-$(CONFIG_QCOM_AOSS_QMP) +=	aoss-qmp.o
+>   obj-$(CONFIG_QCOM_GENI_SE) +=	qcom-geni-se.o
+>   obj-$(CONFIG_QCOM_COMMAND_DB) += cmd-db.o
+>   obj-$(CONFIG_QCOM_GLINK_SSR) +=	glink_ssr.o
+> diff --git a/drivers/soc/qcom/aoss-qmp.c b/drivers/soc/qcom/aoss-qmp.c
+> new file mode 100644
+> index 000000000000..de52703b96b6
+> --- /dev/null
+> +++ b/drivers/soc/qcom/aoss-qmp.c
+> @@ -0,0 +1,313 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018, Linaro Ltd
+> + */
+> +#include <linux/interrupt.h>
+> +#include <linux/io.h>
+> +#include <linux/mailbox_client.h>
+> +#include <linux/module.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/soc/qcom/aoss-qmp.h>
+> +
+> +#define QMP_DESC_MAGIC			0x0
+> +#define QMP_DESC_VERSION		0x4
+> +#define QMP_DESC_FEATURES		0x8
+> +
+> +#define QMP_DESC_UCORE_LINK_STATE	0xc
+> +#define QMP_DESC_UCORE_LINK_STATE_ACK	0x10
+> +#define QMP_DESC_UCORE_CH_STATE		0x14
+> +#define QMP_DESC_UCORE_CH_STATE_ACK	0x18
+> +#define QMP_DESC_UCORE_MBOX_SIZE	0x1c
+> +#define QMP_DESC_UCORE_MBOX_OFFSET	0x20
+> +
+> +#define QMP_DESC_MCORE_LINK_STATE	0x24
+> +#define QMP_DESC_MCORE_LINK_STATE_ACK	0x28
+> +#define QMP_DESC_MCORE_CH_STATE		0x2c
+> +#define QMP_DESC_MCORE_CH_STATE_ACK	0x30
+> +#define QMP_DESC_MCORE_MBOX_SIZE	0x34
+> +#define QMP_DESC_MCORE_MBOX_OFFSET	0x38
+> +
+> +#define QMP_STATE_UP	0x0000ffff
+> +#define QMP_STATE_DOWN	0xffff0000
+> +
+> +#define QMP_MAGIC	0x4d41494c
+> +#define QMP_VERSION	1
+> +
+> +/**
+> + * struct qmp - driver state for QMP implementation
+> + * @msgram: iomem referencing the message RAM used for communication
+> + * @dev: reference to QMP device
+> + * @mbox_client: mailbox client used to ring the doorbell on transmit
+> + * @mbox_chan: mailbox channel used to ring the doorbell on transmit
+> + * @offset: offset within @msgram where messages should be written
+> + * @size: maximum size of the messages to be transmitted
+> + * @event: wait_queue for synchronization with the IRQ
+> + * @tx_lock: provides syncrhonization between multiple callers of qmp_send()
+> + * @pd_pdev: platform device for the power-domain child device
+> + */
+> +struct qmp {
+> +	void __iomem *msgram;
+> +	struct device *dev;
+> +
+> +	struct mbox_client mbox_client;
+> +	struct mbox_chan *mbox_chan;
+> +
+> +	size_t offset;
+> +	size_t size;
+> +
+> +	wait_queue_head_t event;
+> +
+> +	struct mutex tx_lock;
+> +
+> +	struct platform_device *pd_pdev;
+> +};
+> +
+> +static void qmp_kick(struct qmp *qmp)
+> +{
+> +	mbox_send_message(qmp->mbox_chan, NULL);
+> +	mbox_client_txdone(qmp->mbox_chan, 0);
+> +}
+> +
+> +static bool qmp_magic_valid(struct qmp *qmp)
+> +{
+> +	return readl(qmp->msgram + QMP_DESC_MAGIC) == QMP_MAGIC;
+> +}
+> +
+> +static bool qmp_link_acked(struct qmp *qmp)
+> +{
+> +	return readl(qmp->msgram + QMP_DESC_MCORE_LINK_STATE_ACK) == QMP_STATE_UP;
+> +}
+> +
+> +static bool qmp_mcore_channel_acked(struct qmp *qmp)
+> +{
+> +	return readl(qmp->msgram + QMP_DESC_MCORE_CH_STATE_ACK) == QMP_STATE_UP;
+> +}
+> +
+> +static bool qmp_ucore_channel_up(struct qmp *qmp)
+> +{
+> +	return readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE) == QMP_STATE_UP;
+> +}
+> +
+> +static int qmp_open(struct qmp *qmp)
+> +{
+> +	int ret;
+> +	u32 val;
+> +
+> +	ret = wait_event_timeout(qmp->event, qmp_magic_valid(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "QMP magic doesn't match\n");
+> +		return -ETIMEDOUT;
+> +	}
+> +
+> +	val = readl(qmp->msgram + QMP_DESC_VERSION);
+> +	if (val != QMP_VERSION) {
+> +		dev_err(qmp->dev, "unsupported QMP version %d\n", val);
+> +		return -EINVAL;
+> +	}
+> +
+> +	qmp->offset = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_OFFSET);
+> +	qmp->size = readl(qmp->msgram + QMP_DESC_MCORE_MBOX_SIZE);
+> +	if (!qmp->size) {
+> +		dev_err(qmp->dev, "invalid mailbox size 0x%zx\n", qmp->size);
+> +		return -EINVAL;
+> +	}
+> +
+> +	/* Ack remote core's link state */
+> +	val = readl(qmp->msgram + QMP_DESC_UCORE_LINK_STATE);
+> +	writel(val, qmp->msgram + QMP_DESC_UCORE_LINK_STATE_ACK);
+> +
+> +	/* Set local core's link state to up */
+> +	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> +
+> +	qmp_kick(qmp);
+> +
+> +	ret = wait_event_timeout(qmp->event, qmp_link_acked(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore didn't ack link\n");
+> +		goto timeout_close_link;
+> +	}
+> +
+> +	writel(QMP_STATE_UP, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
+> +
+> +	ret = wait_event_timeout(qmp->event, qmp_ucore_channel_up(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore didn't open channel\n");
+> +		goto timeout_close_channel;
+> +	}
+> +
+> +	/* Ack remote core's channel state */
+> +	val = readl(qmp->msgram + QMP_DESC_UCORE_CH_STATE);
+> +	writel(val, qmp->msgram + QMP_DESC_UCORE_CH_STATE_ACK);
+> +
+> +	qmp_kick(qmp);
+> +
+> +	ret = wait_event_timeout(qmp->event, qmp_mcore_channel_acked(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore didn't ack channel\n");
+> +		goto timeout_close_channel;
+> +	}
+> +
+> +	return 0;
+> +
+> +timeout_close_channel:
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
+> +
+> +timeout_close_link:
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> +	qmp_kick(qmp);
+> +
+> +	return -ETIMEDOUT;
+> +}
+> +
+> +static void qmp_close(struct qmp *qmp)
+> +{
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_CH_STATE);
+> +	writel(QMP_STATE_DOWN, qmp->msgram + QMP_DESC_MCORE_LINK_STATE);
+> +	qmp_kick(qmp);
+> +}
+> +
+> +static irqreturn_t qmp_intr(int irq, void *data)
+> +{
+> +	struct qmp *qmp = data;
+> +
+> +	wake_up_interruptible_all(&qmp->event);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static bool qmp_message_empty(struct qmp *qmp)
+> +{
+> +	return readl(qmp->msgram + qmp->offset) == 0;
+> +}
+> +
+> +/**
+> + * qmp_send() - send a message to the AOSS
+> + * @qmp: qmp context
+> + * @data: message to be sent
+> + * @len: length of the message
+> + *
+> + * Transmit @data to AOSS and wait for the AOSS to acknowledge the message.
+> + * @len must be a multiple of 4 and not longer than the mailbox size. Access is
+> + * synchronized by this implementation.
+> + *
+> + * Return: 0 on success, negative errno on failure
+> + */
+> +int qmp_send(struct qmp *qmp, const void *data, size_t len)
+> +{
+> +	int ret;
+> +
+> +	if (WARN_ON(len + sizeof(u32) > qmp->size))
+> +		return -EINVAL;
+> +
+> +	if (WARN_ON(len % sizeof(u32)))
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&qmp->tx_lock);
+> +
+> +	/* The message RAM only implements 32-bit accesses */
+> +	__iowrite32_copy(qmp->msgram + qmp->offset + sizeof(u32),
+> +			 data, len / sizeof(u32));
+> +	writel(len, qmp->msgram + qmp->offset);
+> +	qmp_kick(qmp);
+> +
+> +	ret = wait_event_interruptible_timeout(qmp->event,
+> +					       qmp_message_empty(qmp), HZ);
+> +	if (!ret) {
+> +		dev_err(qmp->dev, "ucore did not ack channel\n");
+> +		ret = -ETIMEDOUT;
+> +
+> +		/* Clear message from buffer */
+> +		writel(0, qmp->msgram + qmp->offset);
+> +	} else {
+> +		ret = 0;
+> +	}
+> +
+> +	mutex_unlock(&qmp->tx_lock);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL(qmp_send);
+> +
+> +static int qmp_probe(struct platform_device *pdev)
+> +{
+> +	struct resource *res;
+> +	struct qmp *qmp;
+> +	int irq;
+> +	int ret;
+> +
+> +	qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
+> +	if (!qmp)
+> +		return -ENOMEM;
+> +
+> +	qmp->dev = &pdev->dev;
+> +	init_waitqueue_head(&qmp->event);
+> +	mutex_init(&qmp->tx_lock);
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
+> +	if (IS_ERR(qmp->msgram))
+> +		return PTR_ERR(qmp->msgram);
+> +
+> +	qmp->mbox_client.dev = &pdev->dev;
+> +	qmp->mbox_client.knows_txdone = true;
+> +	qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
+> +	if (IS_ERR(qmp->mbox_chan)) {
+> +		dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
+> +		return PTR_ERR(qmp->mbox_chan);
+> +	}
+> +
+> +	irq = platform_get_irq(pdev, 0);
+> +	ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
+> +			       "aoss-qmp", qmp);
+> +	if (ret < 0) {
+> +		dev_err(&pdev->dev, "failed to request interrupt\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = qmp_open(qmp);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	platform_set_drvdata(pdev, qmp);
+> +
+> +	if (of_property_read_bool(pdev->dev.of_node, "#power-domain-cells")) {
+> +		qmp->pd_pdev = platform_device_register_data(&pdev->dev,
+> +							     "aoss_qmp_pd",
+> +							     PLATFORM_DEVID_NONE,
+> +							     NULL, 0);
+> +		if (IS_ERR(qmp->pd_pdev))
+> +			dev_err(&pdev->dev, "failed to register AOSS PD\n");
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int qmp_remove(struct platform_device *pdev)
+> +{
+> +	struct qmp *qmp = platform_get_drvdata(pdev);
+> +
+> +	platform_device_unregister(qmp->pd_pdev);
+> +
+> +	qmp_close(qmp);
+> +
+> +	return 0;
+> +}
+> +
+> +static const struct of_device_id qmp_dt_match[] = {
+> +	{ .compatible = "qcom,sdm845-aoss-qmp", },
+> +	{}
+> +};
+> +MODULE_DEVICE_TABLE(of, qmp_dt_match);
+> +
+> +static struct platform_driver qmp_driver = {
+> +	.driver = {
+> +		.name		= "aoss_qmp",
+> +		.of_match_table	= qmp_dt_match,
+> +	},
+> +	.probe = qmp_probe,
+> +	.remove	= qmp_remove,
+> +};
+> +module_platform_driver(qmp_driver);
+> +
+> +MODULE_DESCRIPTION("Qualcomm AOSS QMP driver");
+> +MODULE_LICENSE("GPL v2");
+> diff --git a/include/linux/soc/qcom/aoss-qmp.h b/include/linux/soc/qcom/aoss-qmp.h
+> new file mode 100644
+> index 000000000000..32ccaa091a9f
+> --- /dev/null
+> +++ b/include/linux/soc/qcom/aoss-qmp.h
+> @@ -0,0 +1,12 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +/*
+> + * Copyright (c) 2018, Linaro Ltd
+> + */
+> +#ifndef __AOP_QMP_H__
+> +#define __AOP_QMP_H__
+> +
+> +struct qmp;
+> +
+> +int qmp_send(struct qmp *qmp, const void *data, size_t len);
+> +
+> +#endif
