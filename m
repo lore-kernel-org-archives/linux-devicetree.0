@@ -1,70 +1,241 @@
-From: Andreas Kemnade <andreas@kemnade.info>
-Subject: Re: [PATCH v2 5/5] dt-bindings: gnss: add lna-supply property
-Date: Thu, 10 Jan 2019 18:07:32 +0100
-Message-ID: <20190110180732.75490757@kemnade.info>
-References: <20181209195150.5192-1-andreas@kemnade.info>
-        <20181209195150.5192-6-andreas@kemnade.info>
-        <20190110122757.GB9725@localhost>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH v3 02/28] clk: sunxi-ng: Adjust MP clock
+ parent rate when allowed
+Date: Thu, 10 Jan 2019 18:10:59 +0100
+Message-ID: <2085880.8AFF3nNMGQ@jernej-laptop>
+References: <20181104182705.18047-1-jernej.skrabec@siol.net> <20181104182705.18047-3-jernej.skrabec@siol.net> <20190110091548.e6btt2qofi7ttt6z@plaes.org>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/kogTsdgB3P=GJqkn3Pu7N.f"; protocol="application/pgp-signature"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110122757.GB9725@localhost>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Johan Hovold <johan@kernel.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBK7Z3XQQKGQEPN55Y5A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190110091548.e6btt2qofi7ttt6z-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
---Sig_/kogTsdgB3P=GJqkn3Pu7N.f
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, 10 Jan 2019 13:27:57 +0100
-Johan Hovold <johan@kernel.org> wrote:
-
-> On Sun, Dec 09, 2018 at 08:51:50PM +0100, Andreas Kemnade wrote:
-> > Add lna-supply property.
+Dne =C4=8Detrtek, 10. januar 2019 ob 10:15:48 CET je Priit Laes napisal(a):
+> On Sun, Nov 04, 2018 at 07:26:39PM +0100, Jernej Skrabec wrote:
+> > Currently MP clocks don't consider adjusting parent rate even if they
+> > are allowed to do so. Such behaviour considerably lowers amount of
+> > possible rates, which is very inconvenient when such clock is used for
+> > pixel clock, for example.
 > >=20
-> > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > In order to improve the situation, adjusting parent rate is considered
+> > when allowed.
+> >=20
+> > This code is inspired by clk_divider_bestdiv() function, which does
+> > basically the same thing for different clock type.
+>=20
+> This patch seems to break the eMMC support on Olinuxino-Lime2-eMMC boards=
+:
+>=20
+> EXT4-fs (mmcblk1p4): INFO: recovery required on readonly filesystem
+> EXT4-fs (mmcblk1p4): write access will be enabled during recovery
+> sunxi-mmc 1c11000.mmc: data error, sending stop command
+> sunxi-mmc 1c11000.mmc: send stop command failed
+>=20
+
+I'm not familiar with A20. What is interesting is that emmc clocks don't ha=
+ve=20
+CLK_SET_RATE_PARENT flag set, so you shouldn't see any difference.
+
+Can you post content of clk_summary with and without this patch?
+
+Best regards,
+Jernej
+
+>=20
+> $ git bisect log
+> git bisect start
+> # good: [3df407b2a5346db1c48809706ece7a8616c79e0b] mmc: dw_mmc-bluefield:
+> simplify the probe() function git bisect good
+> 3df407b2a5346db1c48809706ece7a8616c79e0b
+> # bad: [00d59fde8532b2d42e80909d2e58678755e04da9] Merge tag 'mmc-v4.21' o=
+f
+> git://git.kernel.org/pub/scm/linux/kernel/git/ulfh/mmc git bisect bad
+> 00d59fde8532b2d42e80909d2e58678755e04da9
+> # good: [01e421feec0817bb3141eaae4c517410d193d440] Merge branch 'fixes' i=
+nto
+> next git bisect good 01e421feec0817bb3141eaae4c517410d193d440
+> # bad: [1eefdec18eded41833401cfd64749643ff72e7da] Merge branch
+> 'locking-core-for-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip git bisect bad
+> 1eefdec18eded41833401cfd64749643ff72e7da
+> # good: [eaa76499711535fd64d747cc4ef0d78ab0fd41c6] Merge tag 'mtd/for-4.2=
+1'
+> of git://git.infradead.org/linux-mtd git bisect good
+> eaa76499711535fd64d747cc4ef0d78ab0fd41c6
+> # good: [4e4390ad067a61ce4e7607bd0df31f19a4caa36a] Merge tag
+> 'leds-for-4.21-rc1' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/j.anaszewski/linux-leds git
+> bisect good 4e4390ad067a61ce4e7607bd0df31f19a4caa36a
+> # bad: [c2f1f3e0e17d94ab0c66d83e669492cb9e9a3698] Merge
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/sparc-next git bisect
+> bad c2f1f3e0e17d94ab0c66d83e669492cb9e9a3698
+> # bad: [e4b99d415c3908581d4703203e1e805f043a3e71] Merge branch
+> 'irq-core-for-linus' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip git bisect bad
+> e4b99d415c3908581d4703203e1e805f043a3e71
+> # bad: [ffe05540d18013db62c43627836a3638e9a2c7aa] Merge branches
+> 'clk-renesas', 'clk-allwinner', 'clk-tegra', 'clk-meson' and 'clk-rockchi=
+p'
+> into clk-next git bisect bad ffe05540d18013db62c43627836a3638e9a2c7aa
+> # good: [1a501c8defe950571316d5ddd917bf44f5ed7bd4] Merge branches
+> 'clk-managed-registration', 'clk-spdx', 'clk-remove-basic' and
+> 'clk-ops-const' into clk-next git bisect good
+> 1a501c8defe950571316d5ddd917bf44f5ed7bd4
+> # good: [e74581b79ddd9b49b8c61e2791fc4dffc0245afb] Merge tag
+> 'meson-clk-4.21-2' of https://github.com/BayLibre/clk-meson into clk-meso=
+n
+> git bisect good e74581b79ddd9b49b8c61e2791fc4dffc0245afb
+> # good: [60baf75e3f5b76043c25328ac0c5320aaef5ea41] Merge tag
+> 'clk-renesas-for-v4.21-tag2' of
+> git://git.kernel.org/pub/scm/linux/kernel/git/geert/renesas-drivers into
+> clk-renesas git bisect good 60baf75e3f5b76043c25328ac0c5320aaef5ea41
+> # bad: [a41f85b6017ee20952a60e4330bcae2527fe2c2a] Merge tag
+> 'sunxi-clk-for-4.21' of
+> https://git.kernel.org/pub/scm/linux/kernel/git/sunxi/linux into
+> clk-allwinner git bisect bad a41f85b6017ee20952a60e4330bcae2527fe2c2a
+> # bad: [ee678706e46d0d185c27cc214ad97828e0643159] clk: sunxi-ng: a64: Fix
+> gate bit of DSI DPHY git bisect bad
+> ee678706e46d0d185c27cc214ad97828e0643159
+> # bad: [65b6657672388b72822e0367f06d41c1e3ffb5bb] clk: sunxi-ng: Use u64 =
+for
+> calculation of NM rate git bisect bad
+> 65b6657672388b72822e0367f06d41c1e3ffb5bb
+> # good: [db7548934603d9eda12649dff97ea5c29884405d] clk: sunxi-ng: sun50i:
+> h6: Fix MMC clock mux width git bisect good
+> db7548934603d9eda12649dff97ea5c29884405d
+> # bad: [3f790433c3cb27ecaf2ca0e07ac25964e4fd9f15] clk: sunxi-ng: Adjust M=
+P
+> clock parent rate when allowed git bisect bad
+> 3f790433c3cb27ecaf2ca0e07ac25964e4fd9f15
+> # first bad commit: [3f790433c3cb27ecaf2ca0e07ac25964e4fd9f15] clk:
+> sunxi-ng: Adjust MP clock parent rate when allowed
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 > > ---
-> > Changes in v2:
-> >  - reordering
-> > Original order had a
-> > Reviewed-by: Rob Herring <robh@kernel.org>
 > >=20
-> >  Documentation/devicetree/bindings/gnss/sirfstar.txt | 1 +
-> >  1 file changed, 1 insertion(+) =20
->=20
-> Ah, missed this one at first.
->=20
-> But shouldn't this go into the generic binding since it isn't specific
-> for sirf-star based receivers?
+> >  drivers/clk/sunxi-ng/ccu_mp.c | 64 +++++++++++++++++++++++++++++++++--
+> >  1 file changed, 62 insertions(+), 2 deletions(-)
+> >=20
+> > diff --git a/drivers/clk/sunxi-ng/ccu_mp.c b/drivers/clk/sunxi-ng/ccu_m=
+p.c
+> > index 5d0af4051737..0357349eb767 100644
+> > --- a/drivers/clk/sunxi-ng/ccu_mp.c
+> > +++ b/drivers/clk/sunxi-ng/ccu_mp.c
+> > @@ -40,6 +40,61 @@ static void ccu_mp_find_best(unsigned long parent,
+> > unsigned long rate,>=20
+> >  	*p =3D best_p;
+> > =20
+> >  }
+> >=20
+> > +static unsigned long ccu_mp_find_best_with_parent_adj(struct clk_hw *h=
+w,
+> > +						     =20
+unsigned long *parent,
+> > +						     =20
+unsigned long rate,
+> > +						     =20
+unsigned int max_m,
+> > +						     =20
+unsigned int max_p)
+> > +{
+> > +	unsigned long parent_rate_saved;
+> > +	unsigned long parent_rate, now;
+> > +	unsigned long best_rate =3D 0;
+> > +	unsigned int _m, _p, div;
+> > +	unsigned long maxdiv;
+> > +
+> > +	parent_rate_saved =3D *parent;
+> > +
+> > +	/*
+> > +	 * The maximum divider we can use without overflowing
+> > +	 * unsigned long in rate * m * p below
+> > +	 */
+> > +	maxdiv =3D max_m * max_p;
+> > +	maxdiv =3D min(ULONG_MAX / rate, maxdiv);
+> > +
+> > +	for (_p =3D 1; _p <=3D max_p; _p <<=3D 1) {
+> > +		for (_m =3D 1; _m <=3D max_m; _m++) {
+> > +			div =3D _m * _p;
+> > +
+> > +			if (div > maxdiv)
+> > +				break;
+> > +
+> > +			if (rate * div =3D=3D parent_rate_saved) {
+> > +				/*
+> > +				 * It's the most ideal case if=20
+the requested
+> > +				 * rate can be divided from=20
+parent clock without
+> > +				 * needing to change parent rate,=20
+so return the
+> > +				 * divider immediately.
+> > +				 */
+> > +				*parent =3D parent_rate_saved;
+> > +				return rate;
+> > +			}
+> > +
+> > +			parent_rate =3D clk_hw_round_rate(hw, rate *=20
+div);
+> > +			now =3D parent_rate / div;
+> > +
+> > +			if (now <=3D rate && now > best_rate) {
+> > +				best_rate =3D now;
+> > +				*parent =3D parent_rate;
+> > +
+> > +				if (now =3D=3D rate)
+> > +					return rate;
+> > +			}
+> > +		}
+> > +	}
+> > +
+> > +	return best_rate;
+> > +}
+> > +
+> >=20
+> >  static unsigned long ccu_mp_round_rate(struct ccu_mux_internal *mux,
+> > =20
+> >  				       struct clk_hw *hw,
+> >  				       unsigned long=20
+*parent_rate,
+> >=20
+> > @@ -56,8 +111,13 @@ static unsigned long ccu_mp_round_rate(struct
+> > ccu_mux_internal *mux,>=20
+> >  	max_m =3D cmp->m.max ?: 1 << cmp->m.width;
+> >  	max_p =3D cmp->p.max ?: 1 << ((1 << cmp->p.width) - 1);
+> >=20
+> > -	ccu_mp_find_best(*parent_rate, rate, max_m, max_p, &m, &p);
+> > -	rate =3D *parent_rate / p / m;
+> > +	if (!(clk_hw_get_flags(hw) & CLK_SET_RATE_PARENT)) {
+> > +		ccu_mp_find_best(*parent_rate, rate, max_m, max_p, &m,=20
+&p);
+> > +		rate =3D *parent_rate / p / m;
+> > +	} else {
+> > +		rate =3D ccu_mp_find_best_with_parent_adj(hw, parent_rate,=20
+rate,
+> > +						=09
+max_m, max_p);
+> > +	}
+> >=20
+> >  	if (cmp->common.features & CCU_FEATURE_FIXED_POSTDIV)
+> >  =09
+> >  		rate /=3D cmp->fixed_post_div;
 
-That idea was formulated with a question mark towards Rob.
-And no reaction from Rob about that.
 
-Regards,
-Andreas
 
---Sig_/kogTsdgB3P=GJqkn3Pu7N.f
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEE7sDbhY5mwNpwYgrAfb1qx03ikyQFAlw3e9QACgkQfb1qx03i
-kyQJ8A//at4YsJK1yECSuQsCChA8HxdLQ/mCI4OESmDhNY2tEN1m36RPMh80SpXk
-KVmtT+6NTnjn4xzw0jGPHVH1yaAN2/egT7UnyBpjsA5Xj/smLmKajQ2VTarMFs5x
-5a4Q83f5NcDeVt03/0hnzbp7rdGp3BtHWiInBd8Fm18giY2BEFANnOLIyPMR1P/3
-ZIf8uBnnJhM0vmrRklI6kvZLoAjnpOZPDXK6n7SLTKT7Io8WuavG9Im/xjm3no8o
-/ko9aqE0wjf0fs/PDlYA8x59KVlLzd/2+0Bn6F0HN+kjYJomDgcmACMIvlj6bp39
-8SDzzQWhU1nASmRaHKm1LnNabrla37N2Uaxa0DCwUhTyhuh5lcVHerNQQRTD1oX3
-9mRcZIcJ4M+gKig287DgECHSpqWN3SIHSqSdnrze+BW2K8+/g1AbqJp4Z8HzGQSd
-Gq4LbgImEgEHaekSY/CaqpE98Cs/LQVbeiAjqSyNoIhc8Tc7xOylQ01dN0C+F6dF
-eOPF4Icxw226yzIk8mekzoxGrgA9kx+YVOjsiYEB643FFowggr3Doqg2LxGG3pnS
-jAPclnnt6F7Xdy7G2ncrkQ2B/85G4D/K4kTVnTqmChLDopaV0H8BvGmVusudyIbp
-zrNMeDaUjn1Q5/lWKWlZt/0gD3vDS18oUneu6CMqB99lhVSxJMQ=
-=JKBw
------END PGP SIGNATURE-----
-
---Sig_/kogTsdgB3P=GJqkn3Pu7N.f--
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
