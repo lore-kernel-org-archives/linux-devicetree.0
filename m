@@ -1,49 +1,51 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64: Fix USB OTG regulator
-Date: Thu, 10 Jan 2019 08:04:04 +0100
-Message-ID: <20190110070404.gmthhqpehllvatp7@flea>
-References: <20190109181604.16988-1-jernej.skrabec@siol.net>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: "Chanho Min" <chanho.min-Hm3cg6mZ9cc@public.gmane.org>
+Subject: RE: [PATCH] arm64: dts: Remove inconsistent use of 'arm,
+ armv8' compatible string
+Date: Thu, 10 Jan 2019 16:09:39 +0900
+Message-ID: <059a01d4a8b3$74b6dae0$5e2490a0$@lge.com>
+References: <20190109202934.29304-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="nrx4fsnyeq3jeufe"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4G43PQQKGQEKQQFIMI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190109181604.16988-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Cc: wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190109202934.29304-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Content-Language: ko
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: 'Rob Herring' <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: 'Nishanth Menon' <nm-l0cyMroinI0@public.gmane.org>, 'Andrew Lunn' <andrew-g2DYL2Zd6BY@public.gmane.org>, 'Heiko Stuebner' <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, 'Maxime Ripard' <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Liviu Dudau' <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, 'David Brown' <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Thierry Reding' <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Wei Xu' <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, 'Manivannan Sadhasivam' <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, 'Mark Rutland' <mark.rutland-5wv7dgnIgG8@public.gmane.org>, seungho1.park-Hm3cg6mZ9cc@public.gmane.org, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Lorenzo Pieralisi' <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, 'Kevin Hilman' <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, 'Gregory Clement' <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, 'Magnus Damm' <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, 'Michal Simek' <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, 'Krzysztof Kozlowski' <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, 'Jonathan Hunter' <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, 'Chen-Yu Tsai' <wens@cs>
 List-Id: devicetree@vger.kernel.org
 
-
---nrx4fsnyeq3jeufe
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Wed, Jan 09, 2019 at 07:16:04PM +0100, Jernej Skrabec wrote:
-> Currently, AXP803 driver assumes that reg_drivevbus is input which is
-> wrong. Unfortunate consequence of that is that none of the USB ports
-> work on the board, even USB HOST port, because USB PHY driver probing
-> fails due to missing regulator.
+> The 'arm,armv8' compatible string is only for software models. It adds
+> little value otherwise and is inconsistently used as a fallback on some
+> platforms. Remove it from those platforms.
 > 
-> Fix that by adding "x-powers,drive-vbus-en" property to AXP803 node.
+> This fixes warnings generated by the DT schema.
 > 
-> Fixes: 14ff5d8f9151 ("arm64: dts: allwinner: a64: Orange Pi Win: Enable USB OTG socket")
+> Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> armsoc folks, Please apply directly.
 > 
-> Cc: stable-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-> Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> Note that there's still a case left in msm8998 that needs a new
+> compatible string.
+> 
+> Rob
+>
+>  arch/arm64/boot/dts/lg/lg1312.dtsi            |   8 +-
+>  arch/arm64/boot/dts/lg/lg1313.dtsi            |   8 +-
 
-Applied, thanks!
-Maxime
+For lg soc,
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---nrx4fsnyeq3jeufe--
+Acked-by: Chanho Min <chanho.min-Hm3cg6mZ9cc@public.gmane.org>
+
+Chanho,
