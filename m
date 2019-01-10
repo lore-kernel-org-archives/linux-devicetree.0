@@ -1,36 +1,40 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 18/34] dt-bindings: arm: Convert FSL board/soc
- bindings to json-schema
-Date: Thu, 10 Jan 2019 21:44:04 +0800
-Message-ID: <20190110134402.GB30487@dragon>
-References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-19-robh@kernel.org>
- <20181206023140.GZ3987@dragon>
- <CAL_JsqK5nBdk-MiuTPMxr9oXqXnLqeMU3vtZi6AnT9V35_W55A@mail.gmail.com>
- <20181208015835.GM3987@dragon>
- <20190110064256.GA25218@dragon>
- <dc0ef959-78a0-2a32-c0f9-e8da11e035e6@ysoft.com>
+From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
+Subject: Re: [PATCH 3/5] arm64: dts: rockchip: Refine nanopi4 differences
+Date: Thu, 10 Jan 2019 14:46:44 +0100
+Message-ID: <1962946.sYgHsuXWla@phil>
+References: <cover.1546981251.git.robin.murphy@arm.com>
+ <2123f6ef0bc4429fc48709af822289c82a63d46f.1546981251.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <dc0ef959-78a0-2a32-c0f9-e8da11e035e6@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: Rob Herring <robh@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Kumar Gala <kumar.gala@linaro.org>, ARM-SoC Maintainers <arm@kernel.org>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Grant Likely <grant.likely@arm.com>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <2123f6ef0bc4429fc48709af822289c82a63d46f.1546981251.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, tomeu.vizoso-ZGY8ohtN/8qB+jHODAdFcQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 10:44:03AM +0000, Vokáč Michal wrote:
-...
-> > What happened to this?  It seems the patch did not hit v5.0-rc1.
+Am Dienstag, 8. Januar 2019, 22:57:25 CET schrieb Robin Murphy:
+> The nanopi4 boards differ primarily in their power trees, with the main
+> 5V and 3.3V rails having very different topologies on the smaller USB-C
+> powered boards vs. the 12V-powered T4, as well as minor variation in
+> other regulators related to various external connectors.
 > 
-> Hi Shawn,
-> Rob actually asked you a similar question two days ago..
+> Additionally, the recovery key is only present on the T4 - ADC_IN1 is
+> simply pulled high and not exposed on the other boards - and the lowest
+> common denominator for MMC speed is actually HS200 according to the
+> vendor DTs.
 > 
-> https://lkml.org/lkml/2019/1/8/754
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 
-Oops, it seems there were some miscommunication between Rob and me.  Let
-me fix this by queuing this patch on my tree now.
+this looks good to me, so only need patch2 to adapt and get reviewed.
 
-Shawn
+Heiko
