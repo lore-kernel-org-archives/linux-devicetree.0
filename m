@@ -1,129 +1,128 @@
 From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v1 6/7] arm64: dts: sdm845: Increase alert trip point to
- 95 degrees
-Date: Wed, 9 Jan 2019 18:15:22 -0800
-Message-ID: <20190110021522.GW261387@google.com>
+Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Wed, 9 Jan 2019 18:22:17 -0800
+Message-ID: <20190110022217.GX261387@google.com>
 References: <cover.1547078153.git.amit.kucheria@linaro.org>
- <041258d65883df964890249a24d2a4788c419304.1547078153.git.amit.kucheria@linaro.org>
- <20190110011533.GV261387@google.com>
+ <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190110011533.GV261387@google.com>
+In-Reply-To: <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Amit Kucheria <amit.kucheria@linaro.org>
 Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2019 at 05:15:33PM -0800, Matthias Kaehlcke wrote:
-> Hi Amit,
-> 
-> On Thu, Jan 10, 2019 at 05:30:55AM +0530, Amit Kucheria wrote:
-> > 75 degrees is too aggressive for throttling the CPU. After speaking to
-> > Qualcomm engineers, increase it to 95 degrees.
-> > 
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++--------
-> >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index c27cbd3bcb0a..29e823b0caf4 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -1692,7 +1692,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert0: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1713,7 +1713,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert1: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1734,7 +1734,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert2: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1755,7 +1755,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert3: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1776,7 +1776,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert4: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1797,7 +1797,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert5: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1818,7 +1818,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert6: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> > @@ -1839,7 +1839,7 @@
-> >  
-> >  			trips {
-> >  				cpu_alert7: trip0 {
-> > -					temperature = <75000>;
-> > +					temperature = <95000>;
-> >  					hysteresis = <2000>;
-> >  					type = "passive";
-> >  				};
-> 
-> The change itself looks good to me, however I wonder if it would be
-> worth to eliminate redundancy and merge the current 8 thermal zones
-> into 2, one for the Silver and one for the Gold cluster (as done by
-> http://crrev.com/c/1381752). There is a single cooling device for
-> each cluster, so it's not clear to me if there is any gain from having
-> a separate thermal zone for each CPU. If it is important to monitor
-> the temperatures of the individual cores this can still be done by
-> configuring the thermal zone of the cluster with multiple thermal
-> sensors.
+Hi Amit,
 
-I see your idea is to have a cooling device per CPU ("arm64: dts:
-sdm845: wireup the thermal trip points to cpufreq" /
-https://lore.kernel.org/patchwork/patch/1030742/), however that
-doesn't work as intended. Only two cpufreq 'devices' are created,
-one for CPU0 and one for CPU4. In consequence cpufreq->ready() only
-runs for these cores and only two cooling devices are
-registered. Since the cores of a cluster all run at the same
-frequency I also doubt if having multiple cooling devices would
-bring any benefits.
+On Thu, Jan 10, 2019 at 05:30:56AM +0530, Amit Kucheria wrote:
+> Since the big and little cpus are in the same frequency domain, use all
+> of them for mitigation in the cooling-map. At the lower trip points we
+> restrict ourselves to throttling only a few OPPs. At higher trip
+> temperatures, allow ourselves to be throttled to any extent.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 145 +++++++++++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 29e823b0caf4..cd6402a9aa64 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -13,6 +13,7 @@
+>  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -99,6 +100,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+> @@ -114,6 +116,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+
+This is not needed (also applies to other for other non-policy
+cores). A single cpufreq device is created per frequency domain /
+cluster, hence a single cooling device is registered per cluster,
+which IMO makes sense given that the CPUs of a cluster can't change
+their frequencies independently.
+
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+> @@ -126,6 +129,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+> @@ -138,6 +142,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+> @@ -150,6 +155,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+> @@ -162,6 +168,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+> @@ -174,6 +181,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+> @@ -186,6 +194,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+> @@ -1703,6 +1712,23 @@
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
+> +							 <&CPU1 THERMAL_NO_LIMIT 4>,
+
+As per above, there are no cooling devices for CPU1-3 and CPU5-7.
 
 Cheers
 
