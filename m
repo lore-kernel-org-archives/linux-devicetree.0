@@ -1,43 +1,113 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1 6/7] arm64: dts: sdm845: Increase alert trip point to
- 95 degrees
-Date: Fri, 11 Jan 2019 01:36:20 +0530
-Message-ID: <CAHLCerOVyOUvvXHRQFpn29=ycy4VZHocsNdHbcR4ZK4RfGq49A@mail.gmail.com>
-References: <cover.1547078153.git.amit.kucheria@linaro.org>
- <041258d65883df964890249a24d2a4788c419304.1547078153.git.amit.kucheria@linaro.org>
- <154708018331.15366.11574628155253134835@swboyd.mtv.corp.google.com>
+From: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: mfd: max8998: Add charger subnode binding
+Date: Thu, 10 Jan 2019 21:11:35 +0100
+Message-ID: <7002692.meb5AFBGDJ@acerlaptop>
+References: <1524844982-4714-1-git-send-email-pawel.mikolaj.chmiel@gmail.com> <2089055.mctyXeETjz@acerlaptop> <5765349a-c94d-49c1-45b5-ab7ac09f9923@samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154708018331.15366.11574628155253134835@swboyd.mtv.corp.google.com>
+In-Reply-To: <5765349a-c94d-49c1-45b5-ab7ac09f9923@samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Sylwester Nawrocki <s.nawrocki@samsung.com>
+Cc: Sebastian Reichel <sre@kernel.org>, lgirdwood@gmail.com, broonie@kernel.org, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 5:59 AM Stephen Boyd <swboyd@chromium.org> wrote:
->
-> Quoting Amit Kucheria (2019-01-09 16:00:55)
-> > 75 degrees is too aggressive for throttling the CPU. After speaking to
-> > Qualcomm engineers, increase it to 95 degrees.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++--------
->
-> Is the plan that these are some defaults that would be adjusted by board
-> variants? Just curious why we have anything in here and don't punt it
-> all to each board dts file.
+Hi
 
-These values are meant to be safe values for silicon operation as
-characterised[1] by the HW team. So I'd consider them a more than just
-default values. It also gives future boards a safe starting point.
+On Thursday, 10 January 2019 18:47:11 CET Sylwester Nawrocki wrote:
+> Hi,
+>=20
+> On 5/1/18 16:43, Pawe=C5=82 Chmiel wrote:
+> > On Tuesday, May 1, 2018 2:45:40 PM CEST Sebastian Reichel wrote:
+> >> On Fri, Apr 27, 2018 at 06:03:02PM +0200, Pawe=C5=82 Chmiel wrote:
+> >>> This patch adds devicetree bindings documentation for
+> >>> battery charging controller as the subnode of MAX8998 PMIC.
+> >>> It's based on current behavior of driver.
+> >>>
+> >>> Fixes: ee999fb3f17f ("mfd: max8998: Add support for Device Tree")
+> >>> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+> >>> ---
+> >>>  Documentation/devicetree/bindings/mfd/max8998.txt | 22 +++++++++++++=
++++++++++
+> >>>  1 file changed, 22 insertions(+)
+>=20
+> >>> --- a/Documentation/devicetree/bindings/mfd/max8998.txt
+> >>> +++ b/Documentation/devicetree/bindings/mfd/max8998.txt
+> >>> @@ -50,6 +50,21 @@ Additional properties required if max8998,pmic-buc=
+k2-dvs-gpio is defined:
+> >>>  - max8998,pmic-buck2-dvs-voltage: An array of 2 voltage values in mi=
+crovolts
+> >>>    for buck2 regulator that can be selected using dvs gpio.
+> >>> =20
+> >>> +Charger: Configuration for battery charging controller should be add=
+ed
+> >>> +inside a child node named 'charger'.
+> >>> +  Required properties:
+> >>> +  - max8998,charge-eoc: Setup "End of Charge". If value equals 0,
+> >>> +    remain value set from bootloader or default value will be used.
+> >>> +    Valid values: 0, 10 - 45
+> >>> +
+> >>> +  - max8998,charge-restart: Setup "Charge Restart Level". If value e=
+quals 0,
+> >>> +    remain value set from bootloader or default value will be used.
+> >>> +    Valid values: -1, 0, 100, 150, 200
+>=20
+> Perhaps change the property name to max8998,charge-restart-threshold,=20
+> in include/linux/mfd/max8998.h we have:
+>=20
+>  * @restart: Restart Level in mV: 100, 150, 200, and -1 for disable.
+>  *   If it equals 0, leave it unchanged.
+>=20
+> Then we could make it an optional property:
+>=20
+>  - max8998,charge-restart-threshold: Charge restart threshold in millivol=
+ts.=20
+>    Valid values are: 0, 100, 150, 200. If the value equals 0 the charger=
+=20
+>    restart will be disabled.
+>=20
+> If the property is missing the charger restart threshold configuration wo=
+uld
+> be left unchanged.
+>=20
+Strange, i've looked at max8998 and didn't saw information that those value=
+s are in mV (maybe it was from vendor sources).
 
-IMHO it would be better to have the characterized values merged
-upstream and if really required, those values can be tweaked in the
-board-specific DTS.
-
-[1] Caveat: The characterisation probably focused on mobile devices
-and might change depending on form-factor, active cooling and heat
-dissipation design but those differences should only impact the skin
-temperature, not the operation of the SoC itself.
+> >>> +  - max8998,charge-timeout: Setup "Charge Full Timeout". If value eq=
+uals 0,
+> >>> +    remain value set from bootloader or default value will be used.
+> >>> +    Valid values: -1, 0, 5, 6, 7
+> >>
+> >> What are those values? seconds?
+> >>
+> > Honestly i don't know. I've just documented values accepted currently=20
+> > by charger driver, so we can use it from devicetree.
+> > I couldn't find any max8998 datasheet with this information (units, pos=
+sible=20
+> > values etc for those properties).
+>=20
+> The charge timeout is in hours, as described in include/linux/mfd/max8998=
+=2Eh:
+>=20
+>=20
+> "* @timeout: Full Timeout in hours: 5, 6, 7, and -1 for disable.
+>  *   If it equals 0, leave it unchanged.
+>  *   Otherwise, leave it unchanged."
+>=20
+> We could change description of the property to something along the lines =
+of:
+>=20
+> Optional properties:
+>=20
+>   - max8998,charge-timeout: Charge timeout in hours. Valid values are:
+>     0, 5, 6, 7. If the value is 0 the charge timer will be disabled.
+>=20
+> Then if the property is missing the driver will leave charge timer config=
+uration
+> unchanged.
+>=20
+>=20
+Thanks Sylwester Nawrocki for all those hints (mostly regarding units of th=
+ose magic numbers/values). I'll prepare new version of those patches with a=
+ll hints included.
