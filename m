@@ -1,78 +1,289 @@
-From: Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>
-Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
- compatible string
-Date: Thu, 10 Jan 2019 09:13:57 +0100
-Message-ID: <20190110081357.GC5213@ulmo>
-References: <20190109202934.29304-1-robh@kernel.org>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: Re: [PATCH v9 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
+ support
+Date: Thu, 10 Jan 2019 16:24:45 +0800
+Message-ID: <1547108685.3831.21.camel@mhfsdcap03>
+References: <1546395178-8880-1-git-send-email-long.cheng@mediatek.com>
+         <1546395178-8880-2-git-send-email-long.cheng@mediatek.com>
+         <CANMq1KB=yuEJxUdi8M9deDhAv24WZ-4h+26cFq7AzBi8uyd88Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============2567556260122285650=="
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <20190109202934.29304-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedback-list-dY08KVG/lbpWk0Htik3J/w@public.gmane.org, Baolin
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANMq1KB=yuEJxUdi8M9deDhAv24WZ-4h+26cFq7AzBi8uyd88Q@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolas Boichat <drinkcat@chromium.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Z
 List-Id: devicetree@vger.kernel.org
 
+On Thu, 2019-01-03 at 09:39 +0800, Nicolas Boichat wrote:
+> On Wed, Jan 2, 2019 at 10:13 AM Long Cheng <long.cheng@mediatek.com> wrote:
+> >
 
---===============2567556260122285650==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="c3bfwLpm8qysLVxt"
-Content-Disposition: inline
+.....
 
+> > +/* interrupt trigger level for tx */
+> > +#define VFF_TX_THRE(n)         ((n) * 7 / 8)
+> > +/* interrupt trigger level for rx */
+> > +#define VFF_RX_THRE(n)         ((n) * 3 / 4)
+> > +
+> > +#define VFF_RING_SIZE  0xffffU
+> 
+> Well, the size is actually 0x10000. Maybe call this VFF_RING_SIZE_MASK?
+> 
 
---c3bfwLpm8qysLVxt
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+the max length is 0xffff.  the bit 16 is wrap bit. our buffer is ring
+buffer. So not mask.
 
-On Wed, Jan 09, 2019 at 02:29:34PM -0600, Rob Herring wrote:
-[...]
->  arch/arm64/boot/dts/nvidia/tegra132.dtsi      |   4 +-
->  arch/arm64/boot/dts/nvidia/tegra186.dtsi      |  12 +-
->  arch/arm64/boot/dts/nvidia/tegra194.dtsi      |  16 +--
-[...]
+> > +/* invert this bit when wrap ring head again*/
+> > +#define VFF_RING_WRAP  0x10000U
+> > +
+> > +       writel(val, c->base + reg);
+> > +}
+> > +
 
-Acked-by: Thierry Reding <treding-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>
+......
 
---c3bfwLpm8qysLVxt
-Content-Type: application/pgp-signature; name="signature.asc"
+> > +static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
+> > +{
+> > +       unsigned int len, send, left, wpt, d_wpt, tmp;
+> > +       int ret;
+> > +
+> > +       left = mtk_uart_apdma_read(c, VFF_LEFT_SIZE);
+> > +       if (!left) {
+> > +               mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > +               return;
+> > +       }
+> > +
+> > +       /* Wait 1sec for flush,  can't sleep*/
+> 
+> nit: one space after ',', period after 'sleep', space before '*'.
+> 
+> > +       ret = readx_poll_timeout(readl, c->base + VFF_FLUSH, tmp,
+> > +                       tmp != VFF_FLUSH_B, 0, 1000000);
+> > +       if (ret)
+> > +               dev_warn(c->vc.chan.device->dev, "tx: fail, debug=0x%x\n",
+> > +                       mtk_uart_apdma_read(c, VFF_DEBUG_STATUS));
+> 
+> Why do we need to wait for flush now? The previous implementation did
+> not require this...
+> 
 
------BEGIN PGP SIGNATURE-----
+because our HW buffer is cyclic. at one tx, if the size of data is
+bigger, data maybe cover. So must wait flush finish. confirm the data is
+right. like 128 bytes size, small length can't reproduce the issue.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlw2/sUACgkQ3SOs138+
-s6GbWRAAj2bdv3QOTZa5i0HnM41y5ws/ECQCaxNW1+MeTLqiQgdheGAHfjD7evuk
-vndnIolDpOB7x1xSgQd7pS8b1YkPvdtGRHqb/04VCU1UfahF1EUkPdZn0isNfIa8
-av3cPOP674KwtJtVpyK4bChk6U5YUI1coSFtUOBk40i5KUlJ0ORhZJLTfLJW0JA1
-/muJLHYdLJlgHx3BdcHlgpFEVzweRXplA8cTNcJlf8c/gah8jDTApWCip3TiDTAD
-J0EAo7S5Ofm3O3JxRHuOBr+EQM2QkJSUbzuPDZrCurLseCFYd9A19puiqUnCIJnz
-ioZDY7bZUTkSC1DPPyu9txfMAfgoBEPCcg1y0bxVcqXkwEJStPJEB+jkKHress6H
-trp+QGUnpxWQ+MmnEYsVWpSmXCwWggIIKPku8yH76PMQzo79UoYaH+3XVpqLccQg
-iVZgtvdkU+Qs3F7pNjbgusvX++N2ziOirbCKsotwbU6Bl9tpcnPrIZ8lVAFXozaS
-puOLmuHaZc7/pP6UzBg43YnV7Dt9CSR3SLccR2Qep2cKZTTeMGNlQUF9TK+tzzv9
-0Xb01uHzMrCRva+bUIWc/jrXSCxqcJjHOcN1xRfJw21Xk9lcwsnJC0mjn2r/zBwy
-0fMoxes4Qor/IBcJxYWQvQkKrzYFtRMAmVAlR+O1ZaD13owdjPA=
-=RZj4
------END PGP SIGNATURE-----
+> > +
+> > +       send = min_t(unsigned int, left, c->desc->avail_len);
+> > +       wpt = mtk_uart_apdma_read(c, VFF_WPT);
+> > +       len = mtk_uart_apdma_read(c, VFF_LEN);
+> > +
+> > +       d_wpt = wpt + send;
+> > +       if ((d_wpt & VFF_RING_SIZE) >= len) {
+> 
+> I don't get why you need to add "& VFF_RING_SIZE". If wpt + send >
+> VFF_RING_SIZE, don't you need to toggle VFF_RING_WRAP too?
 
---c3bfwLpm8qysLVxt--
+the longest actual length is VFF_RING_SIZE. one cyclic, will set bit[16]
+to ~bit[16]. the bit[0 ~ 15] is actual address. So need get rid of
+bit[16]
 
+> 
+> > +               d_wpt = d_wpt - len;
+> > +               d_wpt = d_wpt ^ VFF_RING_WRAP;
+> > +       }
+> > +       mtk_uart_apdma_write(c, VFF_WPT, d_wpt);
+> > +
+> > +       c->desc->avail_len -= send;
+> > +
+> > +       mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > +       if (mtk_uart_apdma_read(c, VFF_FLUSH) == 0U)
+> > +               mtk_uart_apdma_write(c, VFF_FLUSH, VFF_FLUSH_B);
+> > +}
+> 
+> (thanks for the rest of the changes, this looks much more readable)
+> 
+> > +
+......
 
---===============2567556260122285650==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
+> > +
+> > +static int mtk_uart_apdma_device_pause(struct dma_chan *chan)
+> > +{
+> > +       /* just for check caps pass */
+> > +       return 0;
+> > +}
+> 
+> This is still not right... Hopefully somebody more familiar with the
+> DMA subsystem can weigh in, but maybe it's enough to wait for the
+> current transfer to be flushed and temporarily disable interrupts?
+> e.g. call mtk_uart_apdma_terminate_all above?
+> 
 
-_______________________________________________
-Linux-rockchip mailing list
-Linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-http://lists.infradead.org/mailman/listinfo/linux-rockchip
+i had review the 8250 UART framework. just check the function pointer,
+not use. and our HW can't support the feature. So i just keep it at
+first version.
 
---===============2567556260122285650==--
+> > +
+> > +static int mtk_uart_apdma_device_resume(struct dma_chan *chan)
+> > +{
+> > +       /* just for check caps pass */
+> > +       return 0;
+> > +}
+> 
+> Drop this one since you don't really need it.
+> 
+
+ok, i will remove it.
+
+> > +
+> > +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+> > +{
+> > +       while (list_empty(&mtkd->ddev.channels) == 0) {
+> 
+> !list_empty(
+> 
+> > +               struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
+> > +                       struct mtk_chan, vc.chan.device_node);
+> > +
+> > +               list_del(&c->vc.chan.device_node);
+> > +               tasklet_kill(&c->vc.task);
+> > +       }
+> > +}
+> > +
+> > +static const struct of_device_id mtk_uart_apdma_match[] = {
+> > +       { .compatible = "mediatek,mt6577-uart-dma", },
+> > +       { /* sentinel */ },
+> > +};
+> > +MODULE_DEVICE_TABLE(of, mtk_uart_apdma_match);
+> > +
+> > +static int mtk_uart_apdma_probe(struct platform_device *pdev)
+> > +{
+> > +       struct mtk_uart_apdmadev *mtkd;
+> > +       struct resource *res;
+> > +       struct mtk_chan *c;
+> > +       unsigned int i;
+> > +       int rc;
+> > +
+> > +       mtkd = devm_kzalloc(&pdev->dev, sizeof(*mtkd), GFP_KERNEL);
+> > +       if (!mtkd)
+> > +               return -ENOMEM;
+> > +
+> > +       mtkd->clk = devm_clk_get(&pdev->dev, NULL);
+> > +       if (IS_ERR(mtkd->clk)) {
+> > +               dev_err(&pdev->dev, "No clock specified\n");
+> > +               rc = PTR_ERR(mtkd->clk);
+> > +               return rc;
+> > +       }
+> > +
+> > +       if (of_property_read_bool(pdev->dev.of_node, "dma-33bits"))
+> > +               mtkd->support_33bits = true;
+> 
+> I don't think this should be a device tree property. Typically we'd
+> have multiple compatible strings for (slightly) different HW blocks,
+> and enable 33bits only on HW that have support.
+> 
+> See how it's done in drivers/i2c/busses/i2c-mt65xx.c, for example.
+> 
+
+in MediaTek, not all IC can support 33bit. So i want to configure by DT.
+So don't need to modify code in New IC.
+
+> > +
+> > +       rc = dma_set_mask_and_coherent(&pdev->dev,
+> > +                               DMA_BIT_MASK(32 | mtkd->support_33bits));
+> 
+> I'd feel a little more confortable if you used a variable instead:
+> 
+> int dma_bits = 32;
+> 
+> if (support_33bits)
+>    dma_bits = 33;
+> 
+> ..., DMA_BIT_MASK(dma_bits));
+> 
+
+OK, i can modify it. thanks.
+
+> > +       if (rc)
+> > +               return rc;
+> > +
+> > +       dma_cap_set(DMA_SLAVE, mtkd->ddev.cap_mask);
+> > +       mtkd->ddev.device_alloc_chan_resources =
+> > +                               mtk_uart_apdma_alloc_chan_resources;
+> > +       mtkd->ddev.device_free_chan_resources =
+> > +                               mtk_uart_apdma_free_chan_resources;
+> > +       mtkd->ddev.device_tx_status = mtk_uart_apdma_tx_status;
+> > +       mtkd->ddev.device_issue_pending = mtk_uart_apdma_issue_pending;
+> > +       mtkd->ddev.device_prep_slave_sg = mtk_uart_apdma_prep_slave_sg;
+> > +       mtkd->ddev.device_config = mtk_uart_apdma_slave_config;
+> > +       mtkd->ddev.device_pause = mtk_uart_apdma_device_pause;
+> > +       mtkd->ddev.device_resume = mtk_uart_apdma_device_resume;
+> > +       mtkd->ddev.device_terminate_all = mtk_uart_apdma_terminate_all;
+> > +       mtkd->ddev.src_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> > +       mtkd->ddev.dst_addr_widths = BIT(DMA_SLAVE_BUSWIDTH_1_BYTE);
+> > +       mtkd->ddev.directions = BIT(DMA_DEV_TO_MEM) | BIT(DMA_MEM_TO_DEV);
+> > +       mtkd->ddev.residue_granularity = DMA_RESIDUE_GRANULARITY_SEGMENT;
+> > +       mtkd->ddev.dev = &pdev->dev;
+> > +       INIT_LIST_HEAD(&mtkd->ddev.channels);
+> > +
+> > +       for (i = 0; i < MTK_UART_APDMA_CHANNELS; i++) {
+> > +               c = devm_kzalloc(mtkd->ddev.dev, sizeof(*c), GFP_KERNEL);
+> > +               if (!c) {
+> > +                       rc = -ENODEV;
+> > +                       goto err_no_dma;
+> > +               }
+> > +
+> > +               res = platform_get_resource(pdev, IORESOURCE_MEM, i);
+> > +               if (!res) {
+> > +                       rc = -ENODEV;
+> > +                       goto err_no_dma;
+> > +               }
+> > +
+> > +               c->base = devm_ioremap_resource(&pdev->dev, res);
+> > +               if (IS_ERR(c->base)) {
+> > +                       rc = PTR_ERR(c->base);
+> > +                       goto err_no_dma;
+> > +               }
+> > +               c->requested = false;
+> > +               c->vc.desc_free = mtk_uart_apdma_desc_free;
+> > +               vchan_init(&c->vc, &mtkd->ddev);
+> > +
+> > +               mtkd->dma_irq[i] = platform_get_irq(pdev, i);
+> > +               if ((int)mtkd->dma_irq[i] < 0) {
+> > +                       dev_err(&pdev->dev, "failed to get IRQ[%d]\n", i);
+> > +                       rc = -EINVAL;
+> > +                       goto err_no_dma;
+> > +               }
+> > +       }
+> > +
+> > +       pm_runtime_enable(&pdev->dev);
+> > +       pm_runtime_set_active(&pdev->dev);
+> > +
+> > +       rc = dma_async_device_register(&mtkd->ddev);
+> > +       if (rc)
+> > +               goto rpm_disable;
+> > +
+> > +       platform_set_drvdata(pdev, mtkd);
+> > +
+> > +       if (pdev->dev.of_node) {
+> > +               /* Device-tree DMA controller registration */
+> > +               rc = of_dma_controller_register(pdev->dev.of_node,
+> > +                                               of_dma_xlate_by_chan_id,
+> > +                                               mtkd);
+> > +               if (rc)
+> > +                       goto dma_remove;
+> > +       }
+> > +
+> > +       return rc;
+> > +
+> > +dma_remove:
+> > +       dma_async_device_unregister(&mtkd->ddev);
+> > +rpm_disable:
+> > +       pm_runtime_disable(&pdev->dev);
+> > +err_no_dma:
+> > +       mtk_uart_apdma_free(mtkd);
+> > +       return rc;
+> > +}
+> > +
+
+......
