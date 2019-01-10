@@ -1,71 +1,75 @@
-From: Long Cheng <long.cheng@mediatek.com>
-Subject: Re: [PATCH v9 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
- support
-Date: Thu, 10 Jan 2019 16:50:25 +0800
-Message-ID: <1547110225.3831.24.camel@mhfsdcap03>
-References: <1546395178-8880-1-git-send-email-long.cheng@mediatek.com>
-         <1546395178-8880-2-git-send-email-long.cheng@mediatek.com>
-         <CANMq1KB=yuEJxUdi8M9deDhAv24WZ-4h+26cFq7AzBi8uyd88Q@mail.gmail.com>
-         <d60c25c2-efe4-9294-dc7e-98f0333bff76@infradead.org>
+From: Enric Balletbo Serra <eballetbo@gmail.com>
+Subject: Re: [PATCH 4/4] dt-bindings: phy-rockchip-inno-usb2: add new
+ rockchip,force-bvalid property.
+Date: Thu, 10 Jan 2019 10:06:38 +0100
+Message-ID: <CAFqH_538JF7gmpQzgyShw-8nhUEtkVrGQ6vjkdc5neJd8JCAOQ@mail.gmail.com>
+References: <20180815095934.11205-1-enric.balletbo@collabora.com>
+ <20180815095934.11205-5-enric.balletbo@collabora.com> <20180815222604.GB8193@rob-hp-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d60c25c2-efe4-9294-dc7e-98f0333bff76@infradead.org>
+In-Reply-To: <20180815222604.GB8193@rob-hp-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Randy Dunlap <rdunlap@infradead.org>
-Cc: Nicolas Boichat <drinkcat@chromium.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>, linux-mediatek@lists.infradead.org, lkml <linux-kernel@vger.kernel.org>, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhen
+To: Rob Herring <robh@kernel.org>
+Cc: Enric Balletbo i Serra <enric.balletbo@collabora.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Alexandru Stan <amstan@chromium.org>, Guenter Roeck <groeck@google.com>, Kishon Vijay Abraham I <kishon@ti.com>, Frank Wang <frank.wang@rock-chips.com>, kieran.bingham@ideasonboard.com, linux-kernel <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, kernel@collabora.com, Benson Leung <bleung@chromium.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>, =?UTF-8?Q?Heiko_St=C3=BCbner?= <heiko@sntech.de>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-01-02 at 18:03 -0800, Randy Dunlap wrote:
-> Hi,
-> 
-> While you are making changes, here are a few more:
-> 
+Hi Rob,
 
-hi
+Missatge de Rob Herring <robh@kernel.org> del dia dj., 16 d=E2=80=99ag. 201=
+8 a les 0:26:
+>
+> On Wed, Aug 15, 2018 at 11:59:34AM +0200, Enric Balletbo i Serra wrote:
+> > This property is used when the otg-id pin is not connected. When this
+> > property is set it forces to set the B-Device Session Valid bit when th=
+e
+> > port works as device and clears that bit when the port works as host.
+> >
+> > Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+> > ---
+> >
+> >  .../devicetree/bindings/phy/phy-rockchip-inno-usb2.txt       | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-us=
+b2.txt b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > index 2d4808d3920b..55761f466c41 100644
+> > --- a/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > +++ b/Documentation/devicetree/bindings/phy/phy-rockchip-inno-usb2.txt
+> > @@ -48,6 +48,11 @@ Optional properties:
+> >               See ./phy-bindings.txt for details.
+> >   - rockchip,utmi-avalid : boolean, use the avalid register to get vbus=
+ status.
+> >                         Otherwise, use the bvalid register.
+> > + - rockchip,force-bvalid : boolean, set this to force the B-Device Ses=
+sion
+> > +                       Valid bit when the usb port is in device mode. =
+This
+> > +                       is used when the otg-id pin is not connected.
+> > +                       Only supported in case of compatible being:
+> > +                       * "rockchip,rk3399-usb2phy"
+>
+> Shouldn't you describe the property of the h/w that ID pin is not
+> connected, rather than what you do with that information.
+>
 
-OK, thanks for your comments.
+What about "rockchip, otg-id-not-connected"?
 
-> 
-> On 1/2/19 5:39 PM, Nicolas Boichat wrote:
-> > diff --git a/drivers/dma/mediatek/Kconfig b/drivers/dma/mediatek/Kconfig
-> > index 27bac0b..1a523c87 100644
-> > --- a/drivers/dma/mediatek/Kconfig
-> > +++ b/drivers/dma/mediatek/Kconfig
-> > @@ -1,4 +1,15 @@
-> > 
-> > +config DMA_MTK_UART
-> > +       tristate "MediaTek SoCs APDMA support for UART"
-> > +       depends on OF && SERIAL_8250_MT6577
-> > +       select DMA_ENGINE
-> > +       select DMA_VIRTUAL_CHANNELS
-> > +       help
-> > +         Support for the UART DMA engine found on MediaTek MTK SoCs.
-> > +         when SERIAL_8250_MT6577 is enabled, and if you want to use DMA,
-> 
-> 	    When
-> 
-> > +         you can enable the config. the DMA engine can only be used
-> 
-> 	                               The
-> 
-> > +         with MediaTek SoCs.
-> > +
-> 
+> Is the pin not connected because it's a connector without ID pin? If so,
+> that should be a property of the connector (or inferred from the
+> connector compatible string).
+>
 
-above, i will modify.
+No, it's not the connector. it is not wired on the phy and the cable
+detection is done via an extcon.
 
-> Also, use tabs to indent instead of spaces.
-> The lines (tristate, depends, select, and help) should be indented with one tab.
-> The help text lines should be indented with one tab + 2 spaces.
-> 
+Thanks,
+ Enric
 
-in my patch, i already do this. So don't need modify.
-
-> >  config MTK_HSDMA
-> >         tristate "MediaTek High-Speed DMA controller support"
-> >         depends on ARCH_MEDIATEK || COMPILE_TEST
-> 
-> 
-> thanks,
+> Rob
+>
+> _______________________________________________
+> Linux-rockchip mailing list
+> Linux-rockchip@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-rockchip
