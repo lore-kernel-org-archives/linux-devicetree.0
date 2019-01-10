@@ -1,48 +1,38 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: remoteproc: qcom: Add firmware
- bindings for Q6V5
-Date: Thu, 10 Jan 2019 08:56:12 -0600
-Message-ID: <CAL_JsqKF5i8HNT-ez+Q=Dv9OA-Lf1VaqpZbL2ouo0Bm+v5FxJg@mail.gmail.com>
-References: <20181228044819.5697-1-sibis@codeaurora.org> <20181228044819.5697-2-sibis@codeaurora.org>
- <20190103233014.GA181833@google.com> <20190103235043.GA195759@google.com>
- <20190104000145.GJ31596@builder> <20190104001158.GA200069@google.com>
- <20190105015430.GA67838@google.com> <CAL_JsqLbMNB6EzYCzmq5PBc9EvVmYifsoJBwymV621h385Hv0w@mail.gmail.com>
- <20190109215532.GA178267@google.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH v2 0/3] usb: dwc3: Add support for AM654 USB
+Date: Thu, 10 Jan 2019 17:04:27 +0200
+Message-ID: <1547132670-5908-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109215532.GA178267@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Norris <briannorris@chromium.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Andy Gross <andy.gross@linaro.org>, Avaneesh Kumar Dwivedi <akdwived@codeaurora.org>, Chris Lew <clew@codeaurora.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-arm-msm-owner@vger.kernel.org, Ohad Ben-Cohen <ohad@wizery.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, devicetree@vger.kernel.org
+To: balbi@kernel.org
+Cc: vigneshr@ti.com, robh+dt@kernel.org, nsekhar@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 9, 2019 at 3:55 PM Brian Norris <briannorris@chromium.org> wrote:
->
-> On Tue, Jan 08, 2019 at 09:22:30AM -0600, Rob Herring wrote:
-> > On Fri, Jan 4, 2019 at 7:54 PM Brian Norris <briannorris@chromium.org> wrote:
-> > > To add to my thoughts, since I think maybe Sibi was a little unclear of
-> > > my thoughts:
-> > >
-> > > One of my primary concerns with the existing approach is that it's
-> > > basically a complete free-for-all. We should have some minimal standards
-> > > (enforced in code) such that our DTB can never point us at something
-> > > like /lib/firmware/<other-vendor>/foo.bin (or /lib/firmware/modem.mdt;
-> > > or lots of other bad examples). This could probably be done simply by
-> > > always prefixing 'qcom/' (I don't remember -- does request_firmware()
-> > > follow '..'? e.g., 'firmware-name = "../bar/foo.bin"'.)
-> >
-> > We can write a schema to enforce some of this:
-> >
-> > firmware-name:
-> >   pattern: "^\w.*"
->
-> Are DT schemas ready to use/enforce? Or would this currently just be a
-> suggestion? I'm out of the loop. But I guess that would be interesting.
+Hi Felipe,
 
-Yes, please! Initial support is in 5.0-rc.
+TI's AM654 USB SoC has 2 instances of the DWC3 controller.
+This series adds AM654 USB wrapper support to the keystone-usb driver.
 
-I'm not requiring new bindings to be written as schemas just yet
-though. We need to ring out any issues with early adopters.
+Changelog:
+v2:
+- Moved compatible to separate lines in DT binding.
 
-Rob
+cheers,
+-roger
+
+Roger Quadros (3):
+  usb: dwc3: gadget: Fix OTG events when gadget driver isn't loaded
+  dt-bindings: usb: keystone-usb: Add ti,am654-dwc3 support
+  usb: dwc3: keystone: Add support for ti,am654-dwc3
+
+ Documentation/devicetree/bindings/usb/keystone-usb.txt |  6 ++++--
+ drivers/usb/dwc3/Kconfig                               |  6 +++---
+ drivers/usb/dwc3/dwc3-keystone.c                       | 11 ++++++++++-
+ drivers/usb/dwc3/gadget.c                              |  2 ++
+ 4 files changed, 19 insertions(+), 6 deletions(-)
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
