@@ -1,62 +1,85 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 10/10] ARM64: dts: marvell: armada-37xx: link USB hosts
- with their PHYs
-Date: Fri, 11 Jan 2019 14:31:33 +0100
-Message-ID: <20190111133133.24803-11-miquel.raynal@bootlin.com>
-References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH 2/3] drivers: pwm: pwm-bcm-kona: Add pwm-kona-v2 support
+Date: Fri, 11 Jan 2019 14:51:25 +0100
+Message-ID: <20190111135125.GC1895@lunn.ch>
+References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
+ <1547184076-20521-3-git-send-email-sheetal.tigadoli@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111133133.24803-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547184076-20521-3-git-send-email-sheetal.tigadoli@broadcom.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-pwm@vger.kernel.org, Praveen Kumar B <praveen.b@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reference the PHY nodes from the USB controller nodes.
+On Fri, Jan 11, 2019 at 10:51:15AM +0530, Sheetal Tigadoli wrote:
+> From: Praveen Kumar B <praveen.b@broadcom.com>
+> 
+> Add support for new version of pwm-kona.
+> Add support to make PWM changes configured and stable.
+> 
+> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
+> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+> ---
+>  drivers/pwm/pwm-bcm-kona.c | 128 ++++++++++++++++++++++++++++++++++-----------
+>  1 file changed, 98 insertions(+), 30 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
+> index 09a95ae..2b44ad8 100644
+> --- a/drivers/pwm/pwm-bcm-kona.c
+> +++ b/drivers/pwm/pwm-bcm-kona.c
+> @@ -45,30 +45,39 @@
+>   *    high or low depending on its state at that exact instant.
+>   */
+>  
+> -#define PWM_CONTROL_OFFSET			(0x00000000)
+> +#define PWM_CONTROL_OFFSET			0x00000000
+>  #define PWM_CONTROL_SMOOTH_SHIFT(chan)		(24 + (chan))
+>  #define PWM_CONTROL_TYPE_SHIFT(chan)		(16 + (chan))
+>  #define PWM_CONTROL_POLARITY_SHIFT(chan)	(8 + (chan))
+>  #define PWM_CONTROL_TRIGGER_SHIFT(chan)		(chan)
+>  
+> -#define PRESCALE_OFFSET				(0x00000004)
+> +#define PRESCALE_OFFSET				0x00000004
+>  #define PRESCALE_SHIFT(chan)			((chan) << 2)
+>  #define PRESCALE_MASK(chan)			(0x7 << PRESCALE_SHIFT(chan))
+> -#define PRESCALE_MIN				(0x00000000)
+> -#define PRESCALE_MAX				(0x00000007)
+> +#define PRESCALE_MIN				0x00000000
+> +#define PRESCALE_MAX				0x00000007
 
-The USB3 host controller is wired to:
-  * the first PHY of the COMPHY IP
-  * the OTG-capable UTMI PHY
+Hi Praveen
 
-The USB2 host controller is wired to:
-  * the host-only UTMI PHY
+These changes are unrelated to adding support for a new PWM. So
+ideally they should be in a separate patch.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+> +static int kona_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan,
+> +				 unsigned int kona_ver)
+> +{
+> +	struct kona_pwmc *kp = to_kona_pwmc(chip);
+> +	unsigned int value;
+> +	unsigned int count = PWM_MONITOR_TIMEOUT_US * 1000;
+> +
+> +	switch (kona_ver) {
+> +	case KONA_PWM_V1:
+> +		/*
+> +		 * There must be a min 400ns delay between clearing trigger and
+> +		 * settingit. Failing to do this may result in no PWM signal.
+> +		 */
+> +		ndelay(400);
+> +		return 0;
+> +	case KONA_PWM_V2:
+> +		do {
+> +			value = readl(kp->base + PWM_MONITOR_OFFSET);
+> +			if (!(value & (BIT(chan))))
+> +				return 0;
+> +			ndelay(1);
+> +		} while (count--);
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index d87db3d4cc3d..f32dd1d048e4 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -347,6 +347,8 @@
- 				marvell,usb-misc-reg = <&usb32_syscon>;
- 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&sb_periph_clk 12>;
-+				phys = <&comphy0 0>, <&usb2_utmi_otg_phy>;
-+				phy-names = "usb3-phy", "usb2-utmi-otg-phy";
- 				status = "disabled";
- 			};
- 
-@@ -367,6 +369,8 @@
- 				reg = <0x5e000 0x1000>;
- 				marvell,usb-misc-reg = <&usb2_syscon>;
- 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				phys = <&usb2_utmi_host_phy>;
-+				phy-names = "usb2-utmi-host-phy";
- 				status = "disabled";
- 			};
- 
--- 
-2.19.1
+You can probably use readl_poll_timeout() here.
+
+    Andrew
