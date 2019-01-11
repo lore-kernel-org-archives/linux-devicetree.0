@@ -1,43 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: rockchip: add ROCK Pi 4 DTS support
-Date: Fri, 11 Jan 2019 16:01:43 -0600
-Message-ID: <20190111220143.GA9773@bogus>
-References: <20190106044030.1484-1-Pragnesh_Patel@mentor.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v3 3/6] gpio: add irq domain activate/deactivate functions
+Date: Fri, 11 Jan 2019 14:05:49 -0800
+Message-ID: <154724434941.169631.6671178005596601495@swboyd.mtv.corp.google.com>
+References: <20190110011258.17227-1-masneyb@onstation.org> <20190110011258.17227-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190106044030.1484-1-Pragnesh_Patel@mentor.com>
+In-Reply-To: <20190110011258.17227-4-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: heiko@sntech.de, Akash Gajjar <Akash_Gajjar@mentor.com>, Pragnesh Patel <Pragnesh_Patel@mentor.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Levin Du <djw@t-chip.com.cn>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Liang Chen <cl@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
+Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 6 Jan 2019 10:10:10 +0530, <Pragnesh_Patel@mentor.com> wrote:
-> From: Akash Gajjar <Akash_Gajjar@mentor.com>
-> 
-> ROCK Pi 4 is RK3399 based SBC from radxa.com. board has a 1G/2G/4G lpddr4, CSI,
-> DSI, HDMI, OTG, USB 2.0, USB 3.0, 10/100/1000 RGMII Ethernet Phy, es8316 codec,
-> POE, WIFI (for Model B only), PCIE M.2 support on board.
-> 
-> This patch enables
-> - HDMI Display
-> - Console
-> - MMC, EMMC
-> - USB 2.0, USB-3.0
-> - Ethernet
-> 
-> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
-> Signed-off-by: Pragnesh Patel <Pragnesh_Patel@mentor.com>
+Quoting Brian Masney (2019-01-09 17:12:55)
+> This adds the two new functions gpiochip_irq_domain_activate and
+> gpiochip_irq_domain_deactivate that can be used as the activate and
+> deactivate functions in the struct irq_domain_ops. This is for
+> situations where only gpiochip_{lock,unlock}_as_irq needs to be called.
+> SPMI and SSBI GPIO are two users that will initially use these
+> functions.
+>=20
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
-> changes in v2
-> - hdmi regulator name correction
-> - replace gpio pin number with appropriate macro
-> 
->  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
->  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
->  .../boot/dts/rockchip/rk3399-rock-pi-4.dts    | 606 ++++++++++++++++++
->  3 files changed, 612 insertions(+)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
-> 
+> Stephen: Reply if you want a Suggested-by tag for this.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sure. Add it please.
+
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+
+Minor question but otherwise
+
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+
+> +/**
+> + * gpiochip_irq_domain_deactivate() - Unlock a GPIO used as an IRQ
+> + * @domain: The IRQ domain used by this IRQ chip
+> + * @data: Outermost irq_data associated with the IRQ
+> + *
+> + * This function is a wrapper that will call &gpiochip_unlock_as_irq and=
+ is to
+
+Is this kernel-doc notation to refer to functions and structures with
+ampersand only? According to the docs[1] we should put () after
+functions and '&struct' before structures.
+
+> + * be used as the deactivate function for the struct &irq_domain_ops. The
+> + * host_data for the IRQ domain must be the struct &gpiochip.
+> + */
+> +void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
+> +                                   struct irq_data *data)
+> +{
+> +       struct gpio_chip *chip =3D domain->host_data;
+> +
+
+[1] https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html?highli=
+ght=3Dcross%20references#highlights-and-cross-references
