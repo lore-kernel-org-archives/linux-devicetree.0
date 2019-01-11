@@ -1,44 +1,70 @@
 From: Lars Poeschel <poeschel@lemonage.de>
-Subject: [PATCH v5 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
-Date: Fri, 11 Jan 2019 17:18:04 +0100
-Message-ID: <20190111161812.26325-1-poeschel@lemonage.de>
+Subject: [PATCH v5 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
+Date: Fri, 11 Jan 2019 17:18:05 +0100
+Message-ID: <20190111161812.26325-2-poeschel@lemonage.de>
+References: <20190111161812.26325-1-poeschel@lemonage.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190111161812.26325-1-poeschel@lemonage.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, open list <linux-kernel@vger.kernel.org>
 Cc: Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-It is favourable to have one unified compatible string for devices that
-have multiple interfaces. So this adds simply "pn532" as the devicetree
-binding compatible string and makes a note that the old ones are
-deprecated.
+Add a simple binding doc for the pn532.
 
 Cc: Johan Hovold <johan@kernel.org>
 Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
 ---
+Changes in v4:
+- Add documentation about reg property in case of i2c
+
 Changes in v3:
-- This patch is new in v3
+- seperate binding doc instead of entry in trivial-devices.txt
 
- drivers/nfc/pn533/i2c.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
 
-diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
-index 4389eb4c8d0b..f4eae9dd5305 100644
---- a/drivers/nfc/pn533/i2c.c
-+++ b/drivers/nfc/pn533/i2c.c
-@@ -258,6 +258,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
- }
- 
- static const struct of_device_id of_pn533_i2c_match[] = {
-+	{ .compatible = "nxp,pn532", },
-+	/*
-+	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
-+	 * deprecated and will be removed.
-+	 */
- 	{ .compatible = "nxp,pn533-i2c", },
- 	{ .compatible = "nxp,pn532-i2c", },
- 	{},
+diff --git a/Documentation/devicetree/bindings/nfc/pn532.txt b/Documentation/devicetree/bindings/nfc/pn532.txt
+new file mode 100644
+index 000000000000..d5aaa588073d
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nfc/pn532.txt
+@@ -0,0 +1,33 @@
++NXP PN532 NFC Chip
++
++Required properties:
++- compatible: Should be
++    - "nxp,pn532" Place a node with this inside the devicetree node of the bus
++                  where the NFC chip is connected to.
++                  Currently the kernel has phy bindings for uart and i2c.
++    - "nxp,pn532-i2c" (DEPRECATED) only works for the i2c binding.
++    - "nxp,pn533-i2c" (DEPRECATED) only works for the i2c binding.
++
++Required properties if connected on i2c:
++- reg: for the i2c bus address. This is fixed at 0x48 for the PN532.
++
++Example uart:
++
++uart4: serial@49042000 {
++        compatible = "ti,omap3-uart";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++        };
++};
++
++Example i2c:
++
++i2c1: i2c@0 {
++        compatible = "ti,omap3-i2c";
++
++        pn532: nfc {
++                compatible = "nxp,pn532";
++                reg = <0x48>;
++        };
++};
 -- 
 2.20.1
