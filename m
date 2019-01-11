@@ -1,40 +1,41 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 07/17] ARM: davinci: dm365: WARN() if clk_get() fails
-Date: Fri, 11 Jan 2019 18:21:24 +0100
-Message-ID: <20190111172134.30147-8-brgl@bgdev.pl>
-References: <20190111172134.30147-1-brgl@bgdev.pl>
+From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: [PATCH 0/3] Add support for IR on Allwinner A64
+Date: Fri, 11 Jan 2019 18:30:12 +0100
+Message-ID: <20190111173015.12119-1-jernej.skrabec@siol.net>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111172134.30147-1-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBNVF4PQQKGQERKXZ7QI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
+Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+IR on A64 is nothing special and very similar to IR on A13 to the point
+that same driver can be used.
 
-Currently the timer code checks if the clock pointer passed to it is
-good (!IS_ERR(clk)). The new clocksource driver expects the clock to
-be functional and doesn't perform any checks so emit a warning if
-clk_get() fails.
+Following patches just add necessary DT changes.
 
-Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
----
- arch/arm/mach-davinci/dm365.c | 1 +
- 1 file changed, 1 insertion(+)
+Best regards,
+Jernej
 
-diff --git a/arch/arm/mach-davinci/dm365.c b/arch/arm/mach-davinci/dm365.c
-index 01fb2b0c82de..842b7e706ba1 100644
---- a/arch/arm/mach-davinci/dm365.c
-+++ b/arch/arm/mach-davinci/dm365.c
-@@ -786,6 +786,7 @@ void __init dm365_init_time(void)
- 	dm365_psc_init(NULL, psc);
- 
- 	clk = clk_get(NULL, "timer0");
-+	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
- 
- 	davinci_timer_init(clk);
- }
+Igors Makejevs (1):
+  arm64: dts: allwinner: a64: Add IR node
+
+Jernej Skrabec (2):
+  media: dt: bindings: sunxi-ir: Add A64 compatible
+  arm64: dts: allwinner: a64: Orange Pi Win: Enable IR
+
+ .../devicetree/bindings/media/sunxi-ir.txt     |  5 ++++-
+ .../dts/allwinner/sun50i-a64-orangepi-win.dts  |  4 ++++
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi  | 18 ++++++++++++++++++
+ 3 files changed, 26 insertions(+), 1 deletion(-)
+
 -- 
-2.19.1
+2.20.1
