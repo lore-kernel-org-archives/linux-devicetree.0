@@ -1,77 +1,67 @@
-Return-Path: <SRS0=qbJX=PT=bootlin.com=thomas.petazzoni@kernel.org>
-Date: Fri, 11 Jan 2019 13:58:03 +0100
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH 3/4] gpio: add core support for pull-up/pull-down
- configuration
-Message-ID: <20190111135803.5644f06e@windsurf>
-In-Reply-To: <CACRpkdbypbX0-NsSG4DmFCv6hC2gYEQZSUyoKdJbgwiMDZ4yvg@mail.gmail.com>
-References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com>
-	<20190103164102.31437-4-thomas.petazzoni@bootlin.com>
-	<CACRpkdbypbX0-NsSG4DmFCv6hC2gYEQZSUyoKdJbgwiMDZ4yvg@mail.gmail.com>
+Return-Path: <SRS0=Muqj=PT=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Marek Vasut" <marek.vasut@gmail.com>
+References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com>
+ <20190103164102.31437-4-thomas.petazzoni@bootlin.com> <d0e6a519-fb38-4aa0-81d0-b1781129055d@cesnet.cz>
+ <20190108150455.60b03b02@windsurf>
+In-Reply-To: <20190108150455.60b03b02@windsurf>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Jan 2019 11:11:14 +0100
+Message-ID: <CACRpkdZGzDzW7Mh-r0RJB3Mc0PadXJ98ZaO3oz6qw5YeprHPXw@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: add core support for pull-up/pull-down configuration
+Content-Type: text/plain; charset="UTF-8"
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: =?UTF-8?B?SmFuIEt1bmRyw6F0?= <jan.kundrat@cesnet.cz>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello Linus,
+On Tue, Jan 8, 2019 at 3:04 PM Thomas Petazzoni
+<thomas.petazzoni@bootlin.com> wrote:
 
-On Fri, 11 Jan 2019 11:05:03 +0100, Linus Walleij wrote:
-
-> > The flag is simply propagated all the way to the core GPIO subsystem,
-> > where it is used to call the gpio_chip ->set_config callback with the
-> > appropriate existing PIN_CONFIG_BIAS_* values.
+> > > +/* Bit 4 express pull up */
+> > > +#define GPIO_PULL_UP 16
+> > > +
+> > > +/* Bit 5 express pull down */
+> > > +#define GPIO_PULL_DOWN 32
+> > > +
 > >
-> > Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>  
-> 
-> I'm overall happy with this approach.
+> > > +   GPIO_PULL_UP = (1 << 4),
+> > > +   GPIO_PULL_DOWN = (1 << 5),
+> >
+> > > +   OF_GPIO_PULL_UP = 0x10,
+> > > +   OF_GPIO_PULL_DOWN = 0x20,
+> >
+> > I understand that it's already there, but I wonder if this duplication can
+> > be removed. Am I missing something, perhaps a reason why
+> > include/linux/of_gpio.h and include/dt-bindings/gpio/gpio.h are separate
+> > files?
+>
+> I also wondered why there was such duplication when writing the
+> patches. I've assumed it was done so that
+> include/dt-bindings/gpio/gpio.h is "clean" enough to be included in DT,
+> while include/linux/of_gpio.h some more elaborate definitions. But
+> indeed <linux/of_gpio.h> could include <dt-bindings/gpio/gpio.h>.
+> Perhaps there's a good reason for this duplication? Let's see the
+> feedback of GPIO maintainers about this.
 
-Thanks for this review and feedback, very useful.
+There is a good reason for this.
 
-> 
-> > +/* Bit 4 express pull up */
-> > +#define GPIO_PULL_UP 16
-> > +
-> > +/* Bit 5 express pull down */
-> > +#define GPIO_PULL_DOWN 32  
-> 
-> Please use
-> #define GPIO_PULL_UP BIT(5)
-> #define GPIO_PULL_DOWN BIT(6)
+The reason is that DT ABI is written in clay, userspace ABI is
+written in stone and kernel internal API is written in water.
 
-Here, I did exactly like below: keep the existing approach used in the
-file. Today it has:
+For the last one see Documentation/process/stable-api-nonsense.rst
 
-/* Bit 0 express polarity */
-#define GPIO_ACTIVE_HIGH 0
-#define GPIO_ACTIVE_LOW 1
+For the DT the clay tablet hardens when devices are mass produced
+and shipped with a DT in flash.
 
-/* Bit 1 express single-endedness */
-#define GPIO_PUSH_PULL 0
-#define GPIO_SINGLE_ENDED 2
+For the userspace ABI, that will never change until the chardevice
+disappears.
 
-/* Bit 2 express Open drain or open source */
-#define GPIO_LINE_OPEN_SOURCE 0
-#define GPIO_LINE_OPEN_DRAIN 4
+So these ABIs are essentially versioned according to completely
+different rules and for this reason they are kept separate.
 
-[...]
+They overlap considerably, but for this reason we are keeping the
+definitions separately and also explicitly translating between them
+so that we can still change the internal kernel representation of
+these flags if we need.
 
-/* Bit 3 express GPIO suspend/resume and reset persistence */
-#define GPIO_PERSISTENT 0
-#define GPIO_TRANSITORY 8
-
-So I kept the same logic and used 16 and 32 to define the
-GPIO_PULL_UP/GPIO_PULL_DOWN values instead of BIT(x). BIT(x) would have
-been more logical.
-
-However, we are in the dt-bindings includes here, and apparently, there
-is no definition for the BIT() macro in those headers.
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Yours,
+Linus Walleij
