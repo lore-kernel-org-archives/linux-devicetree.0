@@ -1,68 +1,100 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add fallback compatible string
- for power domain
-Date: Fri, 11 Jan 2019 10:48:21 +0000
-Message-ID: <AM0PR04MB42119B411244F0B1BB829D9F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
- <1545148524-658-2-git-send-email-aisheng.dong@nxp.com>
- <20190111090009.GG32649@dragon> <20190111090653.GH32649@dragon>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH 2/7] mmc: sdhci-omap: Add using external dma
+Date: Fri, 11 Jan 2019 16:38:46 +0530
+Message-ID: <20190111110851.6805-3-faiz_abbas@ti.com>
+References: <20190111110851.6805-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111090653.GH32649@dragon>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "khilman@kernel.org" <khilman@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190111110851.6805-1-faiz_abbas@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
+Cc: zhang.chunyan@linaro.org, kishon@ti.com, adrian.hunter@intel.com, mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+From: Chunyan Zhang <zhang.chunyan@linaro.org>
 
-> -----Original Message-----
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Friday, January 11, 2019 5:07 PM
-> 
-> On Fri, Jan 11, 2019 at 05:00:11PM +0800, Shawn Guo wrote:
-> > On Tue, Dec 18, 2018 at 04:01:20PM +0000, Aisheng Dong wrote:
-> > > SCU power domain can be used in the same way by IMX8QXP and
-> IMX8QM SoCs.
-> > > Let's add a "fsl,scu-pd" fallback compatible string to allow other
-> > > SoCs to reuse the common part.
-> >
-> > This is not the practice we used to match devices with
-> > compatibilities, i.e. coding the compatible string with the SoC name
-> > that firstly introduces the device, and use the compatible as fallback for new
-> SoCs.
-> 
+sdhci-omap can support both external dma controller via dmaengine framework
+as well as ADMA which standard SD host controller provides.
 
-This is suggested by Rob that if the future SoCs are likely to be compatible.
-Then we can use a general fallback compatible string like "fsl,scu-pd".
-https://patchwork.kernel.org/patch/10644815/
+Fixes by Faiz Abbas <fazi_abbas@ti.com>:
+1. Switch to DMA slave mode when using external DMA
+2. Add offset to mapbase
 
->From SCU HW protocol point of view, they're indeed compatible.
-Just varies a bit on the domains numbers. 
-That's why we introduce "fsl,scu-pd".
-But still keep SoC specific compatible string in case any special tricks
-to ensure the ABI stability.
+Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
+Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+---
+ drivers/mmc/host/Kconfig      |  1 +
+ drivers/mmc/host/sdhci-omap.c | 16 +++++++++++++++-
+ 2 files changed, 16 insertions(+), 1 deletion(-)
 
-How do you think?
-
-Regards
-Dong Aisheng
-
-> For example, in imx8qm device tree, we can use compatible below to get it
-> work without change on kernel driver, while we still need to document the
-> compatible "fsl,imx8qm-scu-pd".
-> 
-> 	compatible = "fsl,imx8qm-scu-pd", "fsl,imx8qxp-scu-pd";
-> 
-> Shawn
+diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
+index 333292e8ecdd..70e90b00cb37 100644
+--- a/drivers/mmc/host/Kconfig
++++ b/drivers/mmc/host/Kconfig
+@@ -979,6 +979,7 @@ config MMC_SDHCI_OMAP
+ 	depends on MMC_SDHCI_PLTFM && OF
+ 	select THERMAL
+ 	select TI_SOC_THERMAL
++	select MMC_SDHCI_EXTERNAL_DMA if DMA_ENGINE
+ 	help
+ 	  This selects the Secure Digital Host Controller Interface (SDHCI)
+ 	  support present in TI's DRA7 SOCs. The controller supports
+diff --git a/drivers/mmc/host/sdhci-omap.c b/drivers/mmc/host/sdhci-omap.c
+index c11c18a9aacb..8a05e94fe612 100644
+--- a/drivers/mmc/host/sdhci-omap.c
++++ b/drivers/mmc/host/sdhci-omap.c
+@@ -696,7 +696,11 @@ static int sdhci_omap_enable_dma(struct sdhci_host *host)
+ 	struct sdhci_omap_host *omap_host = sdhci_pltfm_priv(pltfm_host);
+ 
+ 	reg = sdhci_omap_readl(omap_host, SDHCI_OMAP_CON);
+-	reg |= CON_DMA_MASTER;
++	reg &= ~CON_DMA_MASTER;
++	/* Switch to DMA slave mode when using external DMA */
++	if (!host->use_external_dma)
++		reg |= CON_DMA_MASTER;
++
+ 	sdhci_omap_writel(omap_host, SDHCI_OMAP_CON, reg);
+ 
+ 	return 0;
+@@ -1010,6 +1014,7 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+ 	const struct of_device_id *match;
+ 	struct sdhci_omap_data *data;
+ 	const struct soc_device_attribute *soc;
++	struct resource *regs;
+ 
+ 	match = of_match_device(omap_sdhci_match, dev);
+ 	if (!match)
+@@ -1022,6 +1027,10 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+ 	}
+ 	offset = data->offset;
+ 
++	regs = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	if (!regs)
++		return -ENXIO;
++
+ 	host = sdhci_pltfm_init(pdev, &sdhci_omap_pdata,
+ 				sizeof(*omap_host));
+ 	if (IS_ERR(host)) {
+@@ -1038,6 +1047,7 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+ 	omap_host->timing = MMC_TIMING_LEGACY;
+ 	omap_host->flags = data->flags;
+ 	host->ioaddr += offset;
++	host->mapbase = regs->start + offset;
+ 
+ 	mmc = host->mmc;
+ 	sdhci_get_of_property(pdev);
+@@ -1105,6 +1115,10 @@ static int sdhci_omap_probe(struct platform_device *pdev)
+ 	host->mmc_host_ops.execute_tuning = sdhci_omap_execute_tuning;
+ 	host->mmc_host_ops.enable_sdio_irq = sdhci_omap_enable_sdio_irq;
+ 
++	/* Switch to external DMA only if there is the "dmas" property */
++	if (of_find_property(dev->of_node, "dmas", NULL))
++		sdhci_switch_external_dma(host, true);
++
+ 	ret = sdhci_setup_host(host);
+ 	if (ret)
+ 		goto err_put_sync;
+-- 
+2.19.2
