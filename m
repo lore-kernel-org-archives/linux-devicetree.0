@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 09/17] ARM: davinci: dm646x: WARN() if clk_get() fails
-Date: Fri, 11 Jan 2019 18:21:26 +0100
-Message-ID: <20190111172134.30147-10-brgl@bgdev.pl>
+Subject: [PATCH 13/17] ARM: davinci: dm355: switch to using the clocksource driver
+Date: Fri, 11 Jan 2019 18:21:30 +0100
+Message-ID: <20190111172134.30147-14-brgl@bgdev.pl>
 References: <20190111172134.30147-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,27 +14,88 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Currently the timer code checks if the clock pointer passed to it is
-good (!IS_ERR(clk)). The new clocksource driver expects the clock to
-be functional and doesn't perform any checks so emit a warning if
-clk_get() fails.
+We now have a proper clocksource driver for davinci. Switch the platform
+to using it.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/dm646x.c | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm/mach-davinci/dm355.c | 36 ++++++++++++++++++++++-------------
+ 1 file changed, 23 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/dm646x.c b/arch/arm/mach-davinci/dm646x.c
-index 7dc54b2a610f..018315fa9aa9 100644
---- a/arch/arm/mach-davinci/dm646x.c
-+++ b/arch/arm/mach-davinci/dm646x.c
-@@ -665,6 +665,7 @@ void __init dm646x_init_time(unsigned long ref_clk_rate,
- 	dm646x_psc_init(NULL, psc);
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index 07ad9d6c9cae..2fd1186ceef6 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -29,7 +29,8 @@
+ #include <mach/irqs.h>
+ #include <mach/mux.h>
+ #include <mach/serial.h>
+-#include <mach/time.h>
++
++#include <clocksource/timer-davinci.h>
  
+ #include "asp.h"
+ #include "davinci.h"
+@@ -617,16 +618,24 @@ static struct davinci_id dm355_ids[] = {
+ 	},
+ };
+ 
+-/*
+- * T0_BOT: Timer 0, bottom:  clockevent source for hrtimers
+- * T0_TOP: Timer 0, top   :  clocksource for generic timekeeping
+- * T1_BOT: Timer 1, bottom:  (used by DSP in TI DSPLink code)
+- * T1_TOP: Timer 1, top   :  <unused>
+- */
+-static struct davinci_timer_info dm355_timer_info = {
+-	.timers		= davinci_timer_instance,
+-	.clockevent_id	= T0_BOT,
+-	.clocksource_id	= T0_TOP,
++static const struct davinci_timer_cfg dm355_timer_cfg = {
++	.reg = {
++		.start		= DAVINCI_TIMER0_BASE,
++		.end		= DAVINCI_TIMER0_BASE + SZ_4K,
++		.flags		= IORESOURCE_MEM,
++	},
++	.irq = {
++		{
++			.start	= IRQ_TINT0_TINT12,
++			.end	= IRQ_TINT0_TINT12,
++			.flags	= IORESOURCE_IRQ,
++		},
++		{
++			.start	= IRQ_TINT0_TINT34,
++			.end	= IRQ_TINT0_TINT34,
++			.flags	= IORESOURCE_IRQ,
++		}
++	}
+ };
+ 
+ static struct plat_serial8250_port dm355_serial0_platform_data[] = {
+@@ -708,7 +717,6 @@ static const struct davinci_soc_info davinci_soc_info_dm355 = {
+ 	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
+ 	.intc_irq_prios		= dm355_default_priorities,
+ 	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
+-	.timer_info		= &dm355_timer_info,
+ 	.sram_dma		= 0x00010000,
+ 	.sram_len		= SZ_32K,
+ };
+@@ -735,6 +743,7 @@ void __init dm355_init_time(void)
+ {
+ 	void __iomem *pll1, *psc;
+ 	struct clk *clk;
++	int rv;
+ 
+ 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM355_REF_FREQ);
+ 
+@@ -747,7 +756,8 @@ void __init dm355_init_time(void)
  	clk = clk_get(NULL, "timer0");
-+	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
+ 	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
  
- 	davinci_timer_init(clk);
+-	davinci_timer_init(clk);
++	rv = davinci_timer_register(clk, &dm355_timer_cfg);
++	WARN(rv, "Unable to register the timer: %d\n", rv);
  }
+ 
+ static struct resource dm355_pll2_resources[] = {
 -- 
 2.19.1
