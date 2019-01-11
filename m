@@ -1,25 +1,37 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 1/6] clk: actions: Add configurable PLL delay
-Date: Fri, 11 Jan 2019 15:57:06 -0800
-Message-ID: <154725102657.169631.13321616473847605014@swboyd.mtv.corp.google.com>
-References: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org> <20181231185517.18517-2-manivannan.sadhasivam@linaro.org>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH INTERNAL V3 0/3] Add support for PWM Configure and
+ stablize for PWM kona
+Date: Fri, 11 Jan 2019 15:58:59 -0800
+Message-ID: <4678b237-d0df-ef85-182f-759125a5c085@broadcom.com>
+References: <1547183284-19956-1-git-send-email-sheetal.tigadoli@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181231185517.18517-2-manivannan.sadhasivam@linaro.org>
+In-Reply-To: <1547183284-19956-1-git-send-email-sheetal.tigadoli@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: afaerber@suse.de, mturquette@baylibre.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Manivannan Sadhasivam (2018-12-31 10:55:12)
-> S500 SoC requires configurable delay for different PLLs. Hence, add
-> a separate macro for declaring a PLL with configurable delay and also
-> modify the existing OWL_PLL_NO_PARENT macro to use default delay so
-> that no need to modify the existing S700/S900 drivers.
->=20
-> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> ---
+Please remove 'INTERNAL' in all of your patches and cover letter.
 
-This one looks good to me.
+On 1/10/2019 9:08 PM, Sheetal Tigadoli wrote:
+> Hi,
+> 	This patchset contain support to make PWM changes configure
+> 	and stablize
+> 	Following are brief changes done
+> 	a. Add support for version2 compatible string
+> 	b. Change PWM config and stablize delay in PWM Kona
+> 
+> Praveen Kumar B (3):
+>   dt-bindings: pwm: kona: Add new compatible for new version pwm-kona
+>   drivers: pwm: pwm-bcm-kona: Add pwm-kona-v2 support
+>   ARM: dts: cygnus: Change pwm compatible to new version
+> 
+>  .../devicetree/bindings/pwm/brcm,kona-pwm.txt      |   2 +-
+>  arch/arm/boot/dts/bcm-cygnus.dtsi                  |   2 +-
+>  drivers/pwm/pwm-bcm-kona.c                         | 128 ++++++++++++++++-----
+>  3 files changed, 100 insertions(+), 32 deletions(-)
+> 
