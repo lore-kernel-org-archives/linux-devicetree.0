@@ -1,59 +1,63 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: [PATCH 3/3] arm64: dts: ti: k3-am654-base-board: enable USB1
-Date: Fri, 11 Jan 2019 12:01:01 +0200
-Message-ID: <1547200861-17795-4-git-send-email-rogerq@ti.com>
-References: <1547200861-17795-1-git-send-email-rogerq@ti.com>
+From: Janek Kotas <jank@cadence.com>
+Subject: Re: [PATCH 2/2] rtc: Add Cadence RTC driver
+Date: Fri, 11 Jan 2019 10:12:13 +0000
+Message-ID: <8333BCFF-BB5A-454E-AC3C-3E89E720526A@global.cadence.com>
+References: <20190108122242.12411-1-jank@cadence.com>
+ <20190108122242.12411-3-jank@cadence.com> <20190110222726.GI2362@piout.net>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547200861-17795-1-git-send-email-rogerq@ti.com>
+In-Reply-To: <20190110222726.GI2362@piout.net>
+Content-Language: en-US
+Content-ID: <01F292B8D4FC2C43AA89EAD9DC299FC1@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: t-kristo@ti.com
-Cc: nm@ti.com, nsekhar@ti.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Janek Kotas <jank@cadence.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add pinmux for USB1 and enable it as a dual role port.
-
-Signed-off-by: Roger Quadros <rogerq@ti.com>
----
- arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-index e41fc3a..c4f7b29 100644
---- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-+++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-@@ -69,6 +69,12 @@
- 			AM65X_IOPAD(0x01bc, PIN_OUTPUT, 0) /* (AG13) SPI0_CS0 */
- 		>;
- 	};
-+
-+	usb1_pins_default: usb1_pins_default {
-+		pinctrl-single,pins = <
-+			AM65X_IOPAD(0x02c0, PIN_OUTPUT, 0) /* (AC8) USB1_DRVVBUS */
-+		>;
-+	};
- };
- 
- &main_pmx1 {
-@@ -163,3 +169,17 @@
- 		#size-cells= <1>;
- 	};
- };
-+
-+&dwc3_1 {
-+	status = "okay";
-+};
-+
-+&usb1_phy {
-+	status = "okay";
-+};
-+
-+&usb1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&usb1_pins_default>;
-+	dr_mode = "otg";
-+};
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+SGkgQWxleGFuZHJlLA0KDQpUaGFuayB5b3UgZm9yIHlvdXIgcmVwbHkuDQoNCj4gT24gMTAgSmFu
+IDIwMTksIGF0IDIzOjI3LCBBbGV4YW5kcmUgQmVsbG9uaSA8YWxleGFuZHJlLmJlbGxvbmlAYm9v
+dGxpbi5jb20+IHdyb3RlOg0KPiANCj4gSGVsbG8sDQo+IA0KPiBPbiAwOC8wMS8yMDE5IDEyOjIy
+OjQyKzAwMDAsIEphbiBLb3RhcyB3cm90ZToNCj4+IGRyaXZlcnMvcnRjL0tjb25maWcgICAgICAg
+fCAgMTAgKysNCj4+IGRyaXZlcnMvcnRjL01ha2VmaWxlICAgICAgfCAgIDEgKw0KPj4gZHJpdmVy
+cy9ydGMvcnRjLWNhZGVuY2UuYyB8IDQwNCArKysrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysrKysrDQo+IA0KPiBJIHdvdWxkIHByZWZlciBhIG5hbWUgdGhhdCBpcyBhIGJp
+dCBsZXNzIGdlbmVyaWMsIHVubGVzcyB5b3UgY2FuDQo+IGd1YXJhbnRlZSB0aGlzIGRyaXZlciB3
+aWxsIGJlIGFibGUgdG8gaGFuZGxlIGV2ZXJ5IFJUQ3MgZnJvbSBDYWRlbmNlLg0KDQpZZXMsIHRo
+YXTigJlzIHRoZSBvbmx5IElQIHRoYXQgaXMgYmVpbmcgc29sZC4NCkl0IHdhcyBkZXNpZ25lZCBh
+IGxvbmcgdGltZSBhZ28sIGl04oCZcyBub3QgYmVpbmcgYWN0aXZlbHkgZGV2ZWxvcGVkDQppbiB0
+ZXJtcyBvZiBuZXcgZmVhdHVyZXMuDQoNCj4+ICtzdGF0aWMgaW50IGNkbnNfcnRjX2FsYXJtX2ly
+cV9lbmFibGUoc3RydWN0IGRldmljZSAqZGV2LCB1bnNpZ25lZCBpbnQgZW5hYmxlZCkNCj4+ICt7
+DQo+PiArCXN0cnVjdCBjZG5zX3J0YyAqY3J0YyA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOw0KPj4g
+Kw0KPj4gKwlpZiAoZW5hYmxlZCkgew0KPj4gKwkJd3JpdGVsKChDRE5TX1JUQ19BRUlfU0VDIHwg
+Q0ROU19SVENfQUVJX01JTiB8IENETlNfUlRDX0FFSV9IT1VSDQo+PiArCQkJfCBDRE5TX1JUQ19B
+RUlfREFURSB8IENETlNfUlRDX0FFSV9TRUMpLA0KPiANCj4gQ0ROU19SVENfQUVJX1NFQyBpcyB1
+c2VkIHR3aWNlIGhlcmUuDQoNClRoYW5rcyBmb3Igc3BvdHRpbmcgdGhhdCwgSeKAmWxsIGZpeCBp
+dC4NCg0KPj4gDQo+PiArCXJldCA9IGRldm1fcmVxdWVzdF9pcnEoJnBkZXYtPmRldiwgY3J0Yy0+
+aXJxLA0KPj4gKwkJCSAgICAgICBjZG5zX3J0Y19pcnFfaGFuZGxlciwgMCwNCj4+ICsJCQkgICAg
+ICAgZGV2X25hbWUoJnBkZXYtPmRldiksICZwZGV2LT5kZXYpOw0KPj4gKwlpZiAocmV0KSB7DQo+
+PiArCQlkZXZfZXJyKCZwZGV2LT5kZXYsDQo+PiArCQkJIlVuYWJsZSB0byByZXF1ZXN0IGludGVy
+cnVwdCBmb3IgdGhlIGRldmljZSwgJWRcbiIsDQo+PiArCQkJcmV0KTsNCj4+ICsJCWdvdG8gZXJy
+X2Rpc2FibGVfcmVmX2NsazsNCj4+ICsJfQ0KPj4gKw0KPiANCj4gWW91IHNob3VsZCB1c2UgZGV2
+bV9ydGNfYWxsb2NhdGVfZGV2aWNlIHRvIGFsbG9jYXRlIGNydGMtPnJ0Y19kZXYgYmVmb3JlDQo+
+IHJlcXVlc3RpbmcgdGhlIElSUS4gRWxzZSwgdGhpcyBsZWF2ZXMgYSByYWNlIGNvbmRpdGlvbiBv
+cGVuLg0KDQpPaywgSeKAmWxsIGZpeCBpdC4NCg0KPiBBbHNvLCBwbGVhc2Ugc2V0IGNydGMtPnJ0
+Y19kZXYtPnJhbmdlX21pbiBhbmQgY3J0Yy0+cnRjX2Rldi0+cmFuZ2VfbWF4DQo+IGFjY29yZGlu
+ZyB0byB0aGUgZnVsbHkgY29udGlndW91cyByYW5nZSBvZiB0aW1lIHRoYXQgaXMgc3VwcG9ydGVk
+IGJ5IHRoZQ0KPiBSVEMuIA0KDQpJ4oCZbGwgYWRkIGl0LCB0aGFua3MgZm9yIHBvaW50aW5nIGl0
+IG91dC4NCg0KPj4gKwkvKiBBbHdheXMgdXNlIDI0LWhvdXIgbW9kZSAqLw0KPj4gKwl3cml0ZWwo
+MCwgY3J0Yy0+cmVncyArIENETlNfUlRDX0hNUik7DQo+PiArDQo+PiArCWRldmljZV9pbml0X3dh
+a2V1cCgmcGRldi0+ZGV2LCAxKTsNCj4+ICsJcGxhdGZvcm1fc2V0X2RydmRhdGEocGRldiwgY3J0
+Yyk7DQo+PiArCWNkbnNfcnRjX3NldF9lbmFibGVkKGNydGMsIHRydWUpOw0KPiANCj4gSXMgdGhh
+dCByZWFsbHkgbmVjZXNzYXJ5PyBJIGd1ZXNzIHlvdSBjb3VsZCBjaGVjayB3aGV0aGVyIGl0IGhh
+cyBhbHJlYWR5DQo+IGJlZW4gZW5hYmxlZCB0byBrbm93IHdoZXRoZXIgdGhlIGN1cnJlbnRseSBz
+ZXQgdGltZSBpcyB2YWxpZCBzbw0KPiBjZG5zX3J0Y19yZWFkX3RpbWUgY291bGQgcmV0dXJuIC1F
+SU5WQUwgd2hlbiBpdCBrbm93cyBpdCBpc24ndCB2YWxpZC4NCj4gY2Ruc19ydGNfc2V0X3RpbWUg
+d2lsbCBlbmFibGUgdGhlIFJUQyBvbmNlIHRoZSB0aW1lIGhhcyBiZWVuIHNldCBhbnl3YXkuDQoN
+ClRoYXTigJlzIGEgZ29vZCBpZGVhLCBJ4oCZbGwgYWRkIGl0Lg0KDQo+PiArc3RhdGljIGNvbnN0
+IHN0cnVjdCBvZl9kZXZpY2VfaWQgY2Ruc19ydGNfb2ZfbWF0Y2hbXSA9IHsNCj4+ICsJeyAuY29t
+cGF0aWJsZSA9ICJjZG5zLHJ0Yy1yMTA5djMiIH0sDQo+IA0KPiBJcyByMTA5djMgYW4gSVAgbmFt
+ZSBvciBhIHJldmlzaW9uPw0KDQpJdOKAmXMgYSByZXZpc2lvbi4NCg0KPiAtLSANCj4gQWxleGFu
+ZHJlIEJlbGxvbmksIEJvb3RsaW4NCj4gRW1iZWRkZWQgTGludXggYW5kIEtlcm5lbCBlbmdpbmVl
+cmluZw0KDQpSZWdhcmRzLA0KSmFuDQoNCg==
