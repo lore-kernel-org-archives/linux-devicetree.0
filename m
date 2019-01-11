@@ -1,261 +1,50 @@
-From: Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: [PATCH] arm64: dts: marvell: Add device tree for uDPU board
-Date: Fri, 11 Jan 2019 18:20:55 +0100
-Message-ID: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 2/3] dt-bindings: drm/panel: simple: add Evervision
+ VGG804821
+Date: Fri, 11 Jan 2019 18:17:00 +0100
+Message-ID: <20190111171700.GB31681@ravnborg.org>
+References: <20190103182658.16377-1-m.felsch@pengutronix.de>
+ <20190103182658.16377-3-m.felsch@pengutronix.de>
+ <20190104163831.GA10538@ravnborg.org> <20190111170109.GA765@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Luis Torres <luis.torres@methode.com>, Paul Arola <paul.arola@telus.com>, Vladimir Vid <vladimir.vid@sartura.hr>, Scott Roberts <scott.roberts@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190111170109.GA765@bogus>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com, kernel@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-This adds initial support for micro-DPU (uDPU) board which is based on
-Armada-3720 SoC.  micro-DPU is the single-port FTTdp distribution point
-unit made by Methode Electronics which offers complete modularity with
-replaceable SFP modules both for uplink and downlink (G.hn over
-twisted-pair, G.hn over coax, 1G and 2.5G Ethernet over Cat-5e cable).
-
-On-board features:
-- 512 MiB DDR3
-- 2 x 2.5G SFP via HSGMII SERDES interface to the A3720 SoC
-- USB 2.0 Type-C connector
-- 4GB eMMC
-- ETSI TS 101548 reverse powering via twisted pair (RJ45) or coax (F Type)
-
-Cc: Luka Perkov <luka.perkov@sartura.hr>
-Cc: Luis Torres <luis.torres@methode.com>
-Cc: Scott Roberts <scott.roberts@telus.com>
-Cc: Paul Arola <paul.arola@telus.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
----
- MAINTAINERS                                   |   5 +
- arch/arm64/boot/dts/marvell/Makefile          |   1 +
- .../boot/dts/marvell/armada-3720-uDPU.dts     | 178 ++++++++++++++++++
- 3 files changed, 184 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 32d444476a90..0790f9a02db8 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9849,6 +9849,11 @@ F:	drivers/media/platform/meson/ao-cec.c
- F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
- T:	git git://linuxtv.org/media_tree.git
- 
-+METHODE UDPU SUPPORT
-+M:	Vladimir Vid <vladimir.vid@sartura.hr>
-+S:	Maintained
-+F:	arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-+
- MICROBLAZE ARCHITECTURE
- M:	Michal Simek <monstr@monstr.eu>
- W:	http://www.monstr.eu/fdt/
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index 2eff1f927471..caed4334f27d 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -2,6 +2,7 @@
- # Mvebu SoC Family
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-clearfog-gt-8k.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-new file mode 100644
-index 000000000000..eae30322a037
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-@@ -0,0 +1,178 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device tree for the uDPU board.
-+ * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
-+ * Copyright (C) 2016 Marvell
-+ * Copyright (C) 2018 Methode
-+ * Copyright (C) 2018 Telus
-+ *
-+ * Vladimir Vid <vladimir.vid@sartura.hr>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include "armada-372x.dtsi"
-+
-+/ {
-+	model = "Methode uDPU Board";
-+	compatible = "marvell,armada-3720-db", "marvell,armada3720",
-+		     "marvell,armada3710";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-+	};
-+
-+	leds {
-+		pinctrl-names = "default";
-+		compatible = "gpio-leds";
-+
-+		led@487 {
-+			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
-+			default-state = "off";
-+		};
-+
-+		led@488 {
-+			gpios = <&gpionb 12 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		led@489 {
-+			gpios = <&gpionb 13 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		led@490 {
-+			gpios = <&gpionb 14 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		led@491 {
-+			gpios = <&gpionb 15 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+
-+		led@492 {
-+			gpios = <&gpionb 16 GPIO_ACTIVE_HIGH>;
-+			default-state = "off";
-+		};
-+	};
-+
-+	sfp_eth0: sfp-eth0 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c0>;
-+		los-gpio = <&gpiosb 2 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpio = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpio = <&gpiosb 4 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpio = <&gpiosb 5 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	sfp_eth1: sfp-eth1 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c1>;
-+		los-gpio = <&gpiosb 7 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpio = <&gpiosb 8 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpio = <&gpiosb 9 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpio = <&gpiosb 10 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&sdhci0 {
-+	non-removable;
-+	bus-width = <8>;
-+	mmc-ddr-1_8v;
-+	mmc-hs400-1_8v;
-+	marvell,pad-type = "fixed-1-8v";
-+	status = "okay";
-+};
-+
-+&sdhci1 {
-+	marvell,xenon-phy-type = "emmc 5.0 phy";
-+	cd-gpios = <&gpiosb 2 GPIO_ACTIVE_LOW>;
-+	bus-width = <4>;
-+	marvell,pad-type = "fixed-1-8v";
-+	status = "okay";
-+	non-removable;
-+	no-sd;
-+	no-sdio;
-+};
-+
-+&mdio {
-+	status = "okay";
-+	phy0: ethernet-phy@0 {
-+		reg = <0>;
-+	};
-+	phy1: ethernet-phy@1 {
-+		reg = <1>;
-+	};
-+};
-+
-+&spi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_quad_pins>;
-+
-+	m25p80@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <54000000>;
-+
-+		/* bootloader is located on the SPI */
-+		partition@0 {
-+			label = "uboot";
-+			reg = <0 0x400000>;
-+		};
-+	};
-+};
-+
-+&usb3 {
-+	status = "okay";
-+	usb-phy = <&usb3_phy>;
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c04";
-+		reg = <0x50>;
-+	};
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	eeprom@50 {
-+		compatible = "atmel,24c04";
-+		reg = <0x50>;
-+	};
-+};
-+
-+&eth0 {
-+	phy-mode = "sgmii";
-+	status = "okay";
-+	managed = "in-band-status";
-+	sfp = <&sfp_eth0>;
-+};
-+
-+&eth1 {
-+	phy-mode = "sgmii";
-+	status = "okay";
-+	managed = "in-band-status";
-+	sfp = <&sfp_eth1>;
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
--- 
-2.19.0
+SGkgUm9iLgoKPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
+c3BsYXkvcGFuZWwvZXZlcnZpc2lvbix2Z2c4MDQ4MjEudHh0Cj4gPiA+IEBAIC0wLDAgKzEsMTIg
+QEAKPiA+ID4gK0V2ZXJ2aXNpb24gRWxlY3Ryb25pY3MgQ28uIEx0ZC4gVkdHODA0ODIxIDUuMCIg
+V1ZHQSBURlQgTENEIFBhbmVsCj4gPiA+ICsKPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
+PiA+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiZXZlcnZpc2lvbix2Z2c4MDQ4MjEiCj4gPiA+
+ICstIHBvd2VyLXN1cHBseTogU2VlIHNpbXBsZS1wYW5lbC50eHQKPiA+ID4gKwo+ID4gPiArT3B0
+aW9uYWwgcHJvcGVydGllczoKPiA+ID4gKy0gYmFja2xpZ2h0OiBTZWUgc2ltcGxlLXBhbmVsLnR4
+dAo+ID4gPiArLSBlbmFibGUtZ3Bpb3M6IFNlZSBzaW1wbGUtcGFuZWwudHh0Cj4gPiA+ICsKPiA+
+ID4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5k
+aW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPiA+ID4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhp
+cyBkaXJlY3RvcnkuCj4gPiAKPiA+IE90aGVyIGJpbmRpbmdzIGp1c3QgaGF2ZSB0aGUgY29tcGF0
+aWJsZSBsaXN0ZWQgYW5kIHRoZSBhYm92ZSB0d28gbGluZXMgYW5kCj4gPiBkbyBub3QgcmVwZWF0
+IHRoZSByZXF1aXJlZC9vcHRpb25hbCBwcm9wZXJ0aWVzLgo+ID4gSWYgdGhlcmUgaXMgbm90IHNw
+ZWNpYWwgcmVhc29uIHRvIGFkZCB0aGVzZSB0aGV5IEkgc3VnZ2VzdCB0byBzaW1wbGlmeSB0aGUg
+YmluZGluZy4KPiAKPiBJdCBpcyBub3Qgc3VmZmljaWVudCB0byBqdXN0IHJlZmVyIHRvIHNpbXBs
+ZS1wYW5lbC50eHQuIEZvciBleGFtcGxlLCAKPiB0aGF0IGRvZXNuJ3QgY29udmV5IGlmIGEgcGFu
+ZWwgaGFzIGEgc2luZ2xlIHN1cHBseSBvciBtdWx0aXBsZSBhbmQgdGhlIAo+IGF1dGhvciBqdXN0
+IGlnbm9yZWQgc3VwcGxpZXMuIE9yIHdoYXQgaWYgYSBwYW5lbCBkb2Vzbid0IGhhdmUgYSAKPiBi
+YWNrbGlnaHQgb3IgZW5hYmxlIGxpbmU/CgpUaGFua3MsIG5vdGVkLgpJIGhhdmUgYSBmZXcgYmlu
+ZGluZ3MgYXdhaXRpbmcgdG8gYmUgc2VudCB0aGF0IHdpbGwgbmVlZCBhIHNtYWxsIHVwZGF0ZS4K
+CglTYW0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
