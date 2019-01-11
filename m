@@ -1,89 +1,28 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/5] Meson (32-bit): add support for the Mali GPU
-Date: Thu, 10 Jan 2019 16:37:24 -0800
-Message-ID: <7hef9kqbaz.fsf@baylibre.com>
-References: <20181208171247.22238-1-martin.blumenstingl@googlemail.com> <13bd9d3a-3cbe-3952-03bb-ef5da6eec401@baylibre.com>
+Subject: Re: [PATCH 0/3] arm64: dts: meson-axg: add spdif input
+Date: Thu, 10 Jan 2019 16:43:49 -0800
+Message-ID: <7ha7k8qb0a.fsf@baylibre.com>
+References: <20181213143631.19218-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <13bd9d3a-3cbe-3952-03bb-ef5da6eec401@baylibre.com>
+In-Reply-To: <20181213143631.19218-1-jbrunet@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, jbrunet@baylibre.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, mturquette@baylibre.com
+To: Carlo Caione <carlo@caione.org>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> On 08/12/2018 18:12, Martin Blumenstingl wrote:
->> This series adds support for the Mali-450 GPU on Meson8 and Meson8b.
->> Meson6 uses a Mali-400 GPU but since we don't have a clock driver (and
->> I don't have a device for testing) Meson6 is left out in this series.
->> 
->> Meson8 uses a Mali-450 MP6 with six pixel processors. Meson8b (as
->> cost-reduced SoC) uses a Mali-450 MP2 with two pixel processors.
->> I tested both using the open source lima driver and a patched mesa
->> from the lima project as well. Since we don't have display support
->> on the 32-bit SoCs I used off-screen rendering as described in [0].
->> The result is (for example): [1]
->> 
->> The bootloader (at least on my boards) leaves the Mali clock disabled
->> by default. The board crashes when trying to access the Mali registers
->> with the "core" clock disabled.
->> Thus this series also implements the required clock driver changes. The
->> Mali clock tree on Meson8b and Meson8m2 is almost identical to the one
->> on GXBB (see the description of patch #3 for more details). Only Meson8
->> is slightly different as it doesn't have a glitch-free mux. Patch #2
->> prepares the meson8b clock driver so we can have different clocks per
->> SoC.
->> 
->> Dependencies:
->> - the .dts changes depend on my other series "ARM: dts: meson: add the
->>   APB/APB2 busses" from [2]
->> - the .dts changes from this series have no compile-time dependency on
->>   the clock driver changes because CLKID_MALI was defined in the
->>   dt-bindings since the first version of the clock driver (but it was
->>   not used until now).
->> - the .dts changes from this series have a runtime dependency on the
->>   clock driver changes (also from this series) if you have a kernel
->>   patched with the lima driver (without the lima driver there's no
->>   runtime dependency)
->> 
->> Other notes:
->> By default the GPU runs off the XTAL clock (24MHz). The lima driver
->> currently does not update the GPU clock rate. Different frequencies
->> have to be requested by adding the following properties to the Mali
->> GPU node (to run it at 510MHz for example):
->>   assigned-clocks = <&clkc CLKID_MALI>;
->>   assigned-clock-rates = <510000000>;
->> 
->> 
->> [0] https://gitlab.freedesktop.org/lima/web/wikis/home
->> [1] https://abload.de/img/dump0myic0.png
->> [2] https://patchwork.kernel.org/cover/10719445/
->> 
->> 
->> Martin Blumenstingl (5):
->>   dt-bindings: gpu: mali-utgard: add Amlogic Meson8 and Meson8b
->>     compatible
->>   clk: meson: meson8b: use a separate clock table for Meson8
->>   clk: meson: meson8b: add the GPU clock tree
->>   ARM: dts: meson8: add the Mali-450 MP6 GPU
->>   ARM: dts: meson8b: add the Mali-450 MP2 GPU
->> 
->>  .../bindings/gpu/arm,mali-utgard.txt          |   6 +
->>  arch/arm/boot/dts/meson8.dtsi                 |  58 +++
->>  arch/arm/boot/dts/meson8b.dtsi                |  46 +++
->>  drivers/clk/meson/meson8b.c                   | 349 +++++++++++++++++-
->>  drivers/clk/meson/meson8b.h                   |   9 +-
->>  5 files changed, 461 insertions(+), 7 deletions(-)
->> 
+> This patchset adds spdif input support to the axg SoC family and the
+> s400 reference design.
 >
-> Applied patches 2 & 3 to next/drivers for Linux 5.1
+> Kevin, ASoC support for this spdif input (including the binding doc) just
+> got merged in the ASoC tree [0]. Until the related patches hit mainline,
+> you may get a warning about using undocumented bindings.
 >
-> Kevin, have fun with the other patches !
+> [0]: https://lkml.kernel.org/r/20181213120843.876CB11254D1@debutante.sirena.org.uk
 
-Fun was had.
-
-Patches 1, 4, 5 queued for v5.1 (branch: v5.1/dt)
+Queued for v5.1 (branch: v5.1/dt64)
 
 Kevin
