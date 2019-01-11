@@ -1,69 +1,32 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH 2/8 v3] Documentation: bindings: k3dma: Add binding for hisi-dma-avail-chan
-Date: Fri, 11 Jan 2019 13:30:35 -0800
-Message-ID: <CALAqxLVzh8ZrXQPSEsvrTXocqmF2z4hMFHH48a29VybYM=QyFg@mail.gmail.com>
-References: <1547141652-8660-1-git-send-email-john.stultz@linaro.org>
- <1547141652-8660-3-git-send-email-john.stultz@linaro.org> <CAL_Jsq+2dYaCzLSr8n4W=ftSjgmKJaUqwQ4S7qv7ZAaR2A-5XQ@mail.gmail.com>
- <CAL_JsqJLm_tDakS10gch8K_3F+mHrzR3isw8Tm=D-R118D1sYQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: hwmon: ina3221: Add ti,single-shot
+ property
+Date: Fri, 11 Jan 2019 15:31:25 -0600
+Message-ID: <20190111213125.GA17790@bogus>
+References: <20190105004904.17947-1-nicoleotsuka@gmail.com>
+ <20190105004904.17947-2-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJLm_tDakS10gch8K_3F+mHrzR3isw8Tm=D-R118D1sYQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190105004904.17947-2-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: jdelvare@suse.com, linux@roeck-us.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 12:04 PM Rob Herring <robh+dt@kernel.org> wrote:
->
-> On Fri, Jan 11, 2019 at 1:58 PM Rob Herring <robh+dt@kernel.org> wrote:
-> >
-> > On Thu, Jan 10, 2019 at 11:34 AM John Stultz <john.stultz@linaro.org> wrote:
-> > >
-> > > Some dma channels can be reserved for secure mode or other
-> > > hardware on the SoC, so provide a binding for a bitmask
-> > > listing the available channels for the kernel to use.
-> > >
-> > > Cc: Vinod Koul <vkoul@kernel.org>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Mark Rutland <mark.rutland@arm.com>
-> > > Cc: Tanglei Han <hantanglei@huawei.com>
-> > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-> > > Cc: Ryan Grachek <ryan@edited.us>
-> > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > Cc: dmaengine@vger.kernel.org
-> > > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
-> > > ---
-> > > v3: Renamed to hisi-dma-avail-chan
-> > > ---
-> > >  Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
-> > >  1 file changed, 3 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > index 10a2f15..38825d4 100644
-> > > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
-> > > @@ -14,6 +14,9 @@ Required properties:
-> > >                 have specific request line
-> > >  - clocks: clock required
-> > >
-> > > +Optional properties:
-> > > +- hisi-dma-avail-chan: Bitmask of available physical channels
-> >
-> > Not quite right. Should be: hisilicon,dma-avail-chan
->
-> Actually, we already have the same case elsewhere with
-> 'brcm,dma-channel-mask'. Maybe there are others. So make the property
-> common (i.e. documented in dma.txt) and called 'dma-channel-mask'.
+On Fri,  4 Jan 2019 16:49:03 -0800, Nicolin Chen wrote:
+> By default, ina3221, as a hardware monitor, continuously measures
+> the inputs and generates corresponding data. However, for battery
+> powered devices, this mode might be power consuming.
+> 
+> This patch adds a "ti,single-shot" property to allow changing the
+> default continuous mode to single-shot operating mode.
+> 
+> Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+> ---
+>  Documentation/devicetree/bindings/hwmon/ina3221.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
 
-Ok. I'll rework it for that then.
-
-> Whether or not the dmaengine handles this or not is irrelevant to
-> whether the binding is common or not. I have no say over OS design
-> decisions.
-
-Ok. I'll keep it in the driver for now unless otherwise directed.
-
-Thanks so much for the review!
--john
+Reviewed-by: Rob Herring <robh@kernel.org>
