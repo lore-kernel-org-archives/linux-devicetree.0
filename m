@@ -1,30 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/4] ARM: dts: rv1108: Add support for rv1108-elgin-r1
- board
-Date: Fri, 11 Jan 2019 13:29:15 -0600
-Message-ID: <20190111192915.GA17772@bogus>
-References: <20190104014023.17973-1-otavio@ossystems.com.br>
- <20190104014023.17973-4-otavio@ossystems.com.br>
+Subject: Re: [PATCH v2,1/3] media: dt-bindings: media: add 'assigned-clocks'
+ to vcodec examples
+Date: Fri, 11 Jan 2019 13:30:02 -0600
+Message-ID: <20190111193002.GA19308@bogus>
+References: <1546571161-11470-1-git-send-email-yunfei.dong@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190104014023.17973-4-otavio@ossystems.com.br>
+In-Reply-To: <1546571161-11470-1-git-send-email-yunfei.dong@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, Jason Zhu <jason.zhu@rock-chips.com>, Vicent Chi <vicent.chi@rock-chips.com>, Andy Yan <andy.yan@rock-chips.com>, Philipp Tomsic <philipp.tomsich@theobroma-systems.com>, Otavio Salvador <otavio@ossystems.com.br>, devicetree@vger.kernel.org, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, linux-rockchip@lists.infradead.org, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>
+Cc: Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Yunfei Dong <yunfei.dong@mediatek.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-media@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu,  3 Jan 2019 23:40:23 -0200, Otavio Salvador wrote:
-> rv1108-elgin-r1 board is based on Rockchip RV1108 SoC.
+On Fri, 4 Jan 2019 11:05:59 +0800, Yunfei Dong wrote:
+> Fix MTK binding document for MT8173 dtsi changed in order
+> to use standard CCF interface.
+> MT8173 SoC from Mediatek.
 > 
-> Signed-off-by: Otavio Salvador <otavio@ossystems.com.br>
+> Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+> Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
 > ---
-> 
->  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
->  arch/arm/boot/dts/Makefile                    |   1 +
->  arch/arm/boot/dts/rv1108-elgin-r1.dts         | 206 ++++++++++++++++++
->  3 files changed, 212 insertions(+)
->  create mode 100644 arch/arm/boot/dts/rv1108-elgin-r1.dts
+> change note:
+> v2: modify subject
+> ---
+>  .../devicetree/bindings/media/mediatek-vcodec.txt   | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
