@@ -1,50 +1,70 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH v7 3/5] arm64: dts: qcom: sdm845: add UFS controller
-Date: Thu, 10 Jan 2019 16:19:37 -0800
-Message-ID: <CAE=gft7sGJ4dJDdJMMf4B36rLCpSNmULophrp7GEk=wBq+ZhdQ@mail.gmail.com>
-References: <20181210192826.241350-1-evgreen@chromium.org> <20181210192826.241350-4-evgreen@chromium.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 2/2] arm: dts: meson: Fix IRQ trigger type for macirq
+Date: Thu, 10 Jan 2019 16:21:14 -0800
+Message-ID: <7hpnt4qc1x.fsf@baylibre.com>
+References: <20181207105231.25593-1-ccaione@baylibre.com>
+ <20181207105231.25593-3-ccaione@baylibre.com>
+ <CAFBinCAbOdPnsH4TLLBmMnR5tS+jHfHagWudVLjaH6X89vtgDQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181210192826.241350-4-evgreen@chromium.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Douglas Anderson <dianders@chromium.org>, Stephen Boyd <swboyd@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCAbOdPnsH4TLLBmMnR5tS+jHfHagWudVLjaH6X89vtgDQ@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <ccaione@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, ingrassia@epigenesys.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Andy,
+Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
 
-On Mon, Dec 10, 2018 at 11:28 AM Evan Green <evgreen@chromium.org> wrote:
+> Hi Carlo,
 >
-> Add the UFS controller and PHY to SDM845.
+> On Fri, Dec 7, 2018 at 11:52 AM Carlo Caione <ccaione@baylibre.com> wrote:
+>>
+>> A long running stress test on a custom board shipping an AXG SoCs and a
+>> Realtek RTL8211F PHY revealed that after a few hours the connection
+>> speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
+>> the 'macirq' (eth0) IRQ would stop being triggered at all and as
+>> consequence the GMAC IRQs never ACKed.
+>>
+>> After a painful investigation the problem seemed to be due to a wrong
+>> defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
+>> EDGE_RISING.
+>>
+>> The change in the macirq IRQ type also solved another long standing
+>> issue affecting this SoC/PHY where EEE was causing the network
+>> connection to die after stressing it with iperf3 (even though much
+>> sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
+>> well.
+> (disclaimer: I was not able to reproduce this bug without your
+> patches, but I didn't run iperf3 for more than a couple of minutes)
+> I did test your patch with and without my "Meson8b RGMII Ethernet pin
+> cleanup" from [0] which shows that there's another performance related
+> problem:
+> 1) before and after your patch receive speeds were fine (above
+> 700Mbit/s and no transmit errors / retries in iperf3) but the transmit
+> speed was bad (<200Mbit/s and >1500 retries in perf3)
+> 2) transmit errors (when Odroid-C1 is sending) are not occurring
+> anymore after my patch from [0]
 >
-> Signed-off-by: Evan Green <evgreen@chromium.org>
-> Signed-off-by: Douglas Anderson <dianders@chromium.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> thus I believe your patch is fine, especially since we already have
+> IRQ_TYPE_LEVEL_HIGH for the dwc2 controllers
 >
-> ---
-> As Doug mentioned in v2, this should land after (or with) the driver fix
-> in this series.
+>> Fixes: 9c15795a4f96 ("ARM: dts: meson8b-odroidc1: ethernet support")
+>> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 >
-> Changes in v7: None
-> Changes in v6:
-> - Removed resets and reset-names (Bjorn)
-> - Renamed nodes (Bjorn)
->
-> Changes in v5: None
-> Changes in v4: None
-> Changes in v3: None
-> Changes in v2:
-> - Renamed ufsphy to phy (Vivek)
-> - Removed #clock-cells (Vivek)
->
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 64 ++++++++++++++++++++++++++++
->  1 file changed, 64 insertions(+)
->
+> I wonder if Kevin can send this as a fix for v4.20
 
-Patches 3, 4, and 5 of this series should be ready to go. Any reason
-they never got picked up? Were you just waiting for patches 1 and 2 to
-show up from Kishon?
+Queued as a fix for v5.0-rc
 
-
--Evan
+Kevin
