@@ -1,159 +1,56 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip points
- to cpufreq
-Date: Fri, 11 Jan 2019 16:47:15 +0530
-Message-ID: <CAHLCerP5ZyORkJm9E8kk-+4X6u6f2=vn_0hq7jSewr9O4=RKDw@mail.gmail.com>
-References: <cover.1547078153.git.amit.kucheria@linaro.org>
- <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
- <20190111003014.GB261387@google.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V6 1/4] dt-bindings: arm: imx: add imx8qxp mek support
+Date: Fri, 11 Jan 2019 11:37:24 +0000
+Message-ID: <1547206279-26169-2-git-send-email-aisheng.dong@nxp.com>
+References: <1547206279-26169-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111003014.GB261387@google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547206279-26169-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "dongas86@gmail.com" <dongas86@gmail.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "catalin.marinas@arm.com" <catalin.marinas@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 6:00 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> On Thu, Jan 10, 2019 at 05:30:56AM +0530, Amit Kucheria wrote:
-> > Since the big and little cpus are in the same frequency domain, use all
-> > of them for mitigation in the cooling-map. At the lower trip points we
-> > restrict ourselves to throttling only a few OPPs. At higher trip
-> > temperatures, allow ourselves to be throttled to any extent.
-> >
-> > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 145 +++++++++++++++++++++++++++
-> >  1 file changed, 145 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index 29e823b0caf4..cd6402a9aa64 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -13,6 +13,7 @@
-> >  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
-> >  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
-> >  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> > +#include <dt-bindings/thermal/thermal.h>
-> >
-> >  / {
-> >       interrupt-parent = <&intc>;
-> > @@ -99,6 +100,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x0>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_0>;
-> >                       L2_0: l2-cache {
-> >                               compatible = "cache";
-> > @@ -114,6 +116,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x100>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_100>;
-> >                       L2_100: l2-cache {
-> >                               compatible = "cache";
-> > @@ -126,6 +129,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x200>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_200>;
-> >                       L2_200: l2-cache {
-> >                               compatible = "cache";
-> > @@ -138,6 +142,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x300>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_300>;
-> >                       L2_300: l2-cache {
-> >                               compatible = "cache";
-> > @@ -150,6 +155,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x400>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_400>;
-> >                       L2_400: l2-cache {
-> >                               compatible = "cache";
-> > @@ -162,6 +168,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x500>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_500>;
-> >                       L2_500: l2-cache {
-> >                               compatible = "cache";
-> > @@ -174,6 +181,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x600>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_600>;
-> >                       L2_600: l2-cache {
-> >                               compatible = "cache";
-> > @@ -186,6 +194,7 @@
-> >                       compatible = "qcom,kryo385";
-> >                       reg = <0x0 0x700>;
-> >                       enable-method = "psci";
-> > +                     #cooling-cells = <2>;
-> >                       next-level-cache = <&L2_700>;
-> >                       L2_700: l2-cache {
-> >                               compatible = "cache";
-> > @@ -1703,6 +1712,23 @@
-> >                                       type = "critical";
-> >                               };
-> >                       };
-> > +
-> > +                     cooling-maps {
-> > +                             map0 {
-> > +                                     trip = <&cpu_alert0>;
-> > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-> > +                                                      <&CPU1 THERMAL_NO_LIMIT 4>,
-> > +                                                      <&CPU2 THERMAL_NO_LIMIT 4>,
-> > +                                                      <&CPU3 THERMAL_NO_LIMIT 4>;
-> > +                             };
-> > +                             map1 {
-> > +                                     trip = <&cpu_crit0>;
-> > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> > +                                                      <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> > +                             };
-> > +                     };
->
-> Slightly off-topic, buy maybe not so much since we are just starting
-> to use the trip points:
->
-> Currently we use the naming scheme 'cpu_<type>N' for trip points. I
-> anticipate that we're going to add more passive trip points soon, to
-> keep the 'power_allocator' thermal governor happy, which expects a
-> 'switch_on' and a 'desired_temperature' trip point. With the current
-> naming scheme this could become a bit messy. I suggest to change it to
-> 'cpuN_<type>[X]', which would allow for something like 'cpuN_alert0'
-> and 'cpuN_alert1'.
->
-> If you think the change makes sense you can consider to do it within
-> this series, I can also send a separate patch once it has landed.
+i.MX 8QuadXPlus is a quad (4x) Cortex-A35 proccessor with powerful
+graphic and multimedia features.
+This patch adds imx8qxp mek board support.
 
-Sure, I can change them to cpuN_alertX format.
+Cc: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+---
+ Documentation/devicetree/bindings/arm/fsl.yaml | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-> You could also consider to add the additional trip point in this
-> series if you agree that it will be needed.
-
-I expect that we'll end up with at least 2 passive trip points but I
-don't know what temperature to set the next one at. So let's just go
-with 1 passive and 1 critical trip point in this series and you can
-send a patch adding more once we've characterised IPA.
-
-> This is not necessarily a call for action, just thinking loudly about
-> a closely related topic ;-)
-
-Thanks for the reviews.
-
-Regards,
-Amit
+diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+index a4d625d..d34fe07 100644
+--- a/Documentation/devicetree/bindings/arm/fsl.yaml
++++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+@@ -151,6 +151,12 @@ properties:
+           - const: compulab,cl-som-imx7
+           - const: fsl,imx7d
+ 
++      - description: i.MX8QXP based Boards
++        items:
++          - enum:
++              - fsl,imx8qxp-mek           # i.MX8QXP MEK Board
++          - const: fsl,imx8qxp
++
+       - description:
+           Freescale Vybrid Platform Device Tree Bindings
+ 
+-- 
+2.7.4
