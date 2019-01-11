@@ -1,72 +1,57 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 03/17] ARM: davinci: enable the clocksource driver for DT mode
-Date: Fri, 11 Jan 2019 18:21:20 +0100
-Message-ID: <20190111172134.30147-4-brgl@bgdev.pl>
+Subject: [PATCH 12/17] ARM: davinci: move timer definitions to davinci.h
+Date: Fri, 11 Jan 2019 18:21:29 +0100
+Message-ID: <20190111172134.30147-13-brgl@bgdev.pl>
 References: <20190111172134.30147-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190111172134.30147-1-brgl@bgdev.pl>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-Switch all davinci boards using device tree to using the new
-clocksource driver: remove the previous OF_TIMER_DECLARE() from
-mach-davinci and select davinci-timer to be built for
-davinci_all_defconfig.
+Boards from the dm* family rely on register offset definitions from
+arch/arm/mach-davinci/include/mach/time.h. We'll be removing this file
+soon, so move the required defines to davinci.h where the rest of such
+constants live.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/Kconfig             |  1 +
- arch/arm/mach-davinci/time.c | 14 --------------
- 2 files changed, 1 insertion(+), 14 deletions(-)
+ arch/arm/mach-davinci/davinci.h           | 3 +++
+ arch/arm/mach-davinci/include/mach/time.h | 2 --
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-index 664e918e2624..8a09a0ab0ce2 100644
---- a/arch/arm/Kconfig
-+++ b/arch/arm/Kconfig
-@@ -586,6 +586,7 @@ config ARCH_DAVINCI
- 	select ARCH_HAS_HOLES_MEMORYMODEL
- 	select COMMON_CLK
- 	select CPU_ARM926T
-+	select DAVINCI_TIMER
- 	select GENERIC_ALLOCATOR
- 	select GENERIC_CLOCKEVENTS
- 	select GENERIC_IRQ_CHIP
-diff --git a/arch/arm/mach-davinci/time.c b/arch/arm/mach-davinci/time.c
-index 5a6de5368ab0..740410a3bb6a 100644
---- a/arch/arm/mach-davinci/time.c
-+++ b/arch/arm/mach-davinci/time.c
-@@ -398,17 +398,3 @@ void __init davinci_timer_init(struct clk *timer_clk)
- 	for (i=0; i< ARRAY_SIZE(timers); i++)
- 		timer32_config(&timers[i]);
- }
--
--static int __init of_davinci_timer_init(struct device_node *np)
--{
--	struct clk *clk;
--
--	clk = of_clk_get(np, 0);
--	if (IS_ERR(clk))
--		return PTR_ERR(clk);
--
--	davinci_timer_init(clk);
--
--	return 0;
--}
--TIMER_OF_DECLARE(davinci_timer, "ti,da830-timer", of_davinci_timer_init);
+diff --git a/arch/arm/mach-davinci/davinci.h b/arch/arm/mach-davinci/davinci.h
+index db4c95ef4d5c..dfd1b1ab7b59 100644
+--- a/arch/arm/mach-davinci/davinci.h
++++ b/arch/arm/mach-davinci/davinci.h
+@@ -60,6 +60,9 @@ void davinci_map_sysmod(void);
+ #define DAVINCI_GPIO_BASE 0x01C67000
+ int davinci_gpio_register(struct resource *res, int size, void *pdata);
+ 
++#define DAVINCI_TIMER0_BASE		(IO_PHYS + 0x21400)
++#define DAVINCI_WDOG_BASE		(IO_PHYS + 0x21C00)
++
+ /* DM355 base addresses */
+ #define DM355_ASYNC_EMIF_CONTROL_BASE	0x01e10000
+ #define DM355_ASYNC_EMIF_DATA_CE0_BASE	0x02000000
+diff --git a/arch/arm/mach-davinci/include/mach/time.h b/arch/arm/mach-davinci/include/mach/time.h
+index 1c971d8d8ba8..ba913736990f 100644
+--- a/arch/arm/mach-davinci/include/mach/time.h
++++ b/arch/arm/mach-davinci/include/mach/time.h
+@@ -11,9 +11,7 @@
+ #ifndef __ARCH_ARM_MACH_DAVINCI_TIME_H
+ #define __ARCH_ARM_MACH_DAVINCI_TIME_H
+ 
+-#define DAVINCI_TIMER0_BASE		(IO_PHYS + 0x21400)
+ #define DAVINCI_TIMER1_BASE		(IO_PHYS + 0x21800)
+-#define DAVINCI_WDOG_BASE		(IO_PHYS + 0x21C00)
+ 
+ enum {
+ 	T0_BOT,
 -- 
 2.19.1
