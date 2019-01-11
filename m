@@ -1,32 +1,49 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V7 1/2] dt-bindings: iio: accel: mma8452: add power
- supplies  property
-Date: Fri, 11 Jan 2019 08:32:19 -0600
-Message-ID: <20190111143219.GA8867@bogus>
-References: <1546938556-26969-1-git-send-email-Anson.Huang@nxp.com>
+Subject: Re: [PATCH 3/7] dt-bindings: net: stmmac: Add the bindings
+ documentation for delays
+Date: Fri, 11 Jan 2019 09:01:04 -0600
+Message-ID: <20190111150104.GA1465@bogus>
+References: <20190102091729.18582-1-vkoul@kernel.org>
+ <20190102091729.18582-4-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1546938556-26969-1-git-send-email-Anson.Huang@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anson Huang <anson.huang@nxp.com>
-Cc: "jic23@kernel.org" <jic23@kernel.org>, "knaack.h@gmx.de" <knaack.h@gmx.de>, "lars@metafoo.de" <lars@metafoo.de>, "pmeerw@pmeerw.net" <pmeerw@pmeerw.net>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "martink@posteo.de" <martink@posteo.de>, "gustavo@embeddedor.com" <gustavo@embeddedor.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, Leonard Crestez <leonard.crestez@nxp.com>, "rtresidd@electromag.com.au" <rtresidd@electromag.com.au>, "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+In-Reply-To: <20190102091729.18582-4-vkoul@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: Vinod Koul <vkoul@kernel.org>
+Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Jan 2019 09:14:01 +0000, Anson Huang wrote:
-> The accelerometer's power supplies could be controllable on some
-> platforms, add property "vdd/vddio" power supply to let device tree
-> to pass phandles to the regulators to driver.
+On Wed, Jan 02, 2019 at 02:47:25PM +0530, Vinod Koul wrote:
+> Some controllers require that phy delay should be disabled. So add
+
+If the MAC requires it, then the compatible string should imply this. If 
+it depends on the PHY, then okay.
+
+> optional properties rx-disable-delay and tx-disable-delay for it.
 > 
-> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> Signed-off-by: Vinod Koul <vkoul@kernel.org>
 > ---
->  Documentation/devicetree/bindings/iio/accel/mma8452.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  Documentation/devicetree/bindings/net/stmmac.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 > 
+> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+> index cb694062afff..ec18897e22c8 100644
+> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+> @@ -74,6 +74,8 @@ Optional properties:
+>  	- snps,mb: mixed-burst
+>  	- snps,rb: rebuild INCRx Burst
+>  - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+> +- rx-delay-disable: bool, when present disable the rx delay
+> +- tx-delay-disable: bool, when present disable the tx delay
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
+Needs a vendor prefix.
 
-If a tag was not added on purpose, please state why and what changed.
+>  - Multiple RX Queues parameters: below the list of all the parameters to
+>  				 configure the multiple RX queues:
+>  	- snps,rx-queues-to-use: number of RX queues to be used in the driver
+> -- 
+> 2.20.1
+> 
