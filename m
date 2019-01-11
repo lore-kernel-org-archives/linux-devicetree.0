@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 15/17] ARM: davinci: dm644x: switch to using the clocksource driver
-Date: Fri, 11 Jan 2019 18:21:32 +0100
-Message-ID: <20190111172134.30147-16-brgl@bgdev.pl>
+Subject: [PATCH 10/17] ARM: davinci: da850: switch to using the clocksource driver
+Date: Fri, 11 Jan 2019 18:21:27 +0100
+Message-ID: <20190111172134.30147-11-brgl@bgdev.pl>
 References: <20190111172134.30147-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -19,83 +19,104 @@ to using it.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/dm644x.c | 36 ++++++++++++++++++++++------------
- 1 file changed, 23 insertions(+), 13 deletions(-)
+ arch/arm/mach-davinci/da850.c | 56 ++++++++++++++---------------------
+ 1 file changed, 22 insertions(+), 34 deletions(-)
 
-diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
-index 85d69ac1bd70..adbcdefadee8 100644
---- a/arch/arm/mach-davinci/dm644x.c
-+++ b/arch/arm/mach-davinci/dm644x.c
-@@ -26,7 +26,8 @@
+diff --git a/arch/arm/mach-davinci/da850.c b/arch/arm/mach-davinci/da850.c
+index 9ff377f26c4b..e5b855103193 100644
+--- a/arch/arm/mach-davinci/da850.c
++++ b/arch/arm/mach-davinci/da850.c
+@@ -34,7 +34,8 @@
+ #include <mach/da8xx.h>
  #include <mach/irqs.h>
- #include <mach/mux.h>
- #include <mach/serial.h>
+ #include <mach/pm.h>
 -#include <mach/time.h>
 +
 +#include <clocksource/timer-davinci.h>
  
- #include "asp.h"
- #include "davinci.h"
-@@ -558,16 +559,24 @@ static struct davinci_id dm644x_ids[] = {
+ #include "mux.h"
+ 
+@@ -436,38 +437,24 @@ static struct davinci_id da850_ids[] = {
  	},
  };
  
+-static struct davinci_timer_instance da850_timer_instance[4] = {
+-	{
+-		.base		= DA8XX_TIMER64P0_BASE,
+-		.bottom_irq	= IRQ_DA8XX_TINT12_0,
+-		.top_irq	= IRQ_DA8XX_TINT34_0,
+-	},
+-	{
+-		.base		= DA8XX_TIMER64P1_BASE,
+-		.bottom_irq	= IRQ_DA8XX_TINT12_1,
+-		.top_irq	= IRQ_DA8XX_TINT34_1,
+-	},
+-	{
+-		.base		= DA850_TIMER64P2_BASE,
+-		.bottom_irq	= IRQ_DA850_TINT12_2,
+-		.top_irq	= IRQ_DA850_TINT34_2,
+-	},
+-	{
+-		.base		= DA850_TIMER64P3_BASE,
+-		.bottom_irq	= IRQ_DA850_TINT12_3,
+-		.top_irq	= IRQ_DA850_TINT34_3,
++static const struct davinci_timer_cfg da850_timer_cfg = {
++	.reg = {
++		.start		= DA8XX_TIMER64P0_BASE,
++		.end		= DA8XX_TIMER64P0_BASE + SZ_4K,
++		.flags		= IORESOURCE_MEM,
+ 	},
+-};
+-
 -/*
-- * T0_BOT: Timer 0, bottom:  clockevent source for hrtimers
-- * T0_TOP: Timer 0, top   :  clocksource for generic timekeeping
-- * T1_BOT: Timer 1, bottom:  (used by DSP in TI DSPLink code)
-- * T1_TOP: Timer 1, top   :  <unused>
+- * T0_BOT: Timer 0, bottom		: Used for clock_event
+- * T0_TOP: Timer 0, top			: Used for clocksource
+- * T1_BOT, T1_TOP: Timer 1, bottom & top: Used for watchdog timer
 - */
--static struct davinci_timer_info dm644x_timer_info = {
--	.timers		= davinci_timer_instance,
+-static struct davinci_timer_info da850_timer_info = {
+-	.timers		= da850_timer_instance,
 -	.clockevent_id	= T0_BOT,
 -	.clocksource_id	= T0_TOP,
-+static const struct davinci_timer_cfg dm644x_timer_cfg = {
-+	.reg = {
-+		.start		= DAVINCI_TIMER0_BASE,
-+		.end		= DAVINCI_TIMER0_BASE + SZ_4K,
-+		.flags		= IORESOURCE_MEM,
-+	},
 +	.irq = {
 +		{
-+			.start	= IRQ_TINT0_TINT12,
-+			.end	= IRQ_TINT0_TINT12,
++			.start	= IRQ_DA8XX_TINT12_0,
++			.end	= IRQ_DA8XX_TINT12_0,
 +			.flags	= IORESOURCE_IRQ,
 +		},
 +		{
-+			.start	= IRQ_TINT0_TINT34,
-+			.end	= IRQ_TINT0_TINT34,
++			.start	= IRQ_DA8XX_TINT34_0,
++			.end	= IRQ_DA8XX_TINT34_0,
 +			.flags	= IORESOURCE_IRQ,
 +		}
 +	}
  };
  
- static struct plat_serial8250_port dm644x_serial0_platform_data[] = {
-@@ -649,7 +658,6 @@ static const struct davinci_soc_info davinci_soc_info_dm644x = {
- 	.intc_type		= DAVINCI_INTC_TYPE_AINTC,
- 	.intc_irq_prios 	= dm644x_default_priorities,
- 	.intc_irq_num		= DAVINCI_N_AINTC_IRQ,
--	.timer_info		= &dm644x_timer_info,
- 	.emac_pdata		= &dm644x_emac_pdata,
- 	.sram_dma		= 0x00008000,
- 	.sram_len		= SZ_16K,
-@@ -671,6 +679,7 @@ void __init dm644x_init_time(void)
- {
- 	void __iomem *pll1, *psc;
+ #ifdef CONFIG_CPU_FREQ
+@@ -742,7 +729,6 @@ static const struct davinci_soc_info davinci_soc_info_da850 = {
+ 	.intc_type		= DAVINCI_INTC_TYPE_CP_INTC,
+ 	.intc_irq_prios		= da850_default_priorities,
+ 	.intc_irq_num		= DA850_N_CP_INTC_IRQ,
+-	.timer_info		= &da850_timer_info,
+ 	.emac_pdata		= &da8xx_emac_pdata,
+ 	.sram_dma		= DA8XX_SHARED_RAM_BASE,
+ 	.sram_len		= SZ_128K,
+@@ -765,6 +751,7 @@ void __init da850_init_time(void)
+ 	void __iomem *pll0;
+ 	struct regmap *cfgchip;
  	struct clk *clk;
 +	int rv;
  
- 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DM644X_REF_FREQ);
+ 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA850_REF_FREQ);
  
-@@ -683,7 +692,8 @@ void __init dm644x_init_time(void)
+@@ -776,7 +763,8 @@ void __init da850_init_time(void)
  	clk = clk_get(NULL, "timer0");
  	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
  
 -	davinci_timer_init(clk);
-+	rv = davinci_timer_register(clk, &dm644x_timer_cfg);
++	rv = davinci_timer_register(clk, &da850_timer_cfg);
 +	WARN(rv, "Unable to register the timer: %d\n", rv);
  }
  
- static struct resource dm644x_pll2_resources[] = {
+ static struct resource da850_pll1_resources[] = {
 -- 
 2.19.1
