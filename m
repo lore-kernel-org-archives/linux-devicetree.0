@@ -1,7 +1,7 @@
 From: Oleksij Rempel <o.rempel@pengutronix.de>
-Subject: [PATCH v1 01/11] MIPS: ath79: add helpers for setting clocks and expose the ref clock
-Date: Fri, 11 Jan 2019 15:22:30 +0100
-Message-ID: <20190111142240.10908-2-o.rempel@pengutronix.de>
+Subject: [PATCH v1 06/11] MIPS: ath79: export switch MDIO reference clock
+Date: Fri, 11 Jan 2019 15:22:35 +0100
+Message-ID: <20190111142240.10908-7-o.rempel@pengutronix.de>
 References: <20190111142240.10908-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,245 +14,62 @@ List-Id: devicetree@vger.kernel.org
 
 From: Felix Fietkau <nbd@nbd.name>
 
-Preparation for transitioning the legacy clock setup code over
-to OF.
+On AR934x, the MDIO reference clock can be configured to a fixed 100 MHz
+clock. If that feature is not used, it defaults to the main reference
+clock, like on all other SoC.
 
 Signed-off-by: Felix Fietkau <nbd@nbd.name>
 Signed-off-by: John Crispin <john@phrozen.org>
 ---
- arch/mips/ath79/clock.c               | 128 +++++++++++++-------------
- include/dt-bindings/clock/ath79-clk.h |   3 +-
- 2 files changed, 68 insertions(+), 63 deletions(-)
+ arch/mips/ath79/clock.c               | 8 ++++++++
+ include/dt-bindings/clock/ath79-clk.h | 3 ++-
+ 2 files changed, 10 insertions(+), 1 deletion(-)
 
 diff --git a/arch/mips/ath79/clock.c b/arch/mips/ath79/clock.c
-index cf9158e3c2d9..50bc3b01a4c4 100644
+index c234818b30e1..699f00f096cb 100644
 --- a/arch/mips/ath79/clock.c
 +++ b/arch/mips/ath79/clock.c
-@@ -37,20 +37,46 @@ static struct clk_onecell_data clk_data = {
- 	.clk_num = ARRAY_SIZE(clks),
+@@ -42,6 +42,7 @@ static const char * const clk_names[ATH79_CLK_END] = {
+ 	[ATH79_CLK_DDR] = "ddr",
+ 	[ATH79_CLK_AHB] = "ahb",
+ 	[ATH79_CLK_REF] = "ref",
++	[ATH79_CLK_MDIO] = "mdio",
  };
  
--static struct clk *__init ath79_add_sys_clkdev(
--	const char *id, unsigned long rate)
-+static const char * const clk_names[ATH79_CLK_END] = {
-+	[ATH79_CLK_CPU] = "cpu",
-+	[ATH79_CLK_DDR] = "ddr",
-+	[ATH79_CLK_AHB] = "ahb",
-+	[ATH79_CLK_REF] = "ref",
-+};
+ static const char * __init ath79_clk_name(int type)
+@@ -342,6 +343,10 @@ static void __init ar934x_clocks_init(void __iomem *pll_base)
+ 	ath79_set_clk(ATH79_CLK_DDR, ddr_rate);
+ 	ath79_set_clk(ATH79_CLK_AHB, ahb_rate);
+ 
++	clk_ctrl = __raw_readl(pll_base + AR934X_PLL_SWITCH_CLOCK_CONTROL_REG);
++	if (clk_ctrl & AR934X_PLL_SWITCH_CLOCK_CONTROL_MDIO_CLK_SEL)
++		ath79_set_clk(ATH79_CLK_MDIO, 100 * 1000 * 1000);
 +
-+static const char * __init ath79_clk_name(int type)
- {
--	struct clk *clk;
--	int err;
-+	BUG_ON(type >= ARRAY_SIZE(clk_names) || !clk_names[type]);
-+	return clk_names[type];
-+}
+ 	iounmap(dpll_base);
+ }
  
--	clk = clk_register_fixed_rate(NULL, id, NULL, 0, rate);
-+static void __init __ath79_set_clk(int type, const char *name, struct clk *clk)
-+{
- 	if (IS_ERR(clk))
--		panic("failed to allocate %s clock structure", id);
-+		panic("failed to allocate %s clock structure", clk_names[type]);
+@@ -698,6 +703,9 @@ static void __init ath79_clocks_init_dt(struct device_node *np)
+ 	else if (of_device_is_compatible(np, "qca,qca9560-pll"))
+ 		qca956x_clocks_init(pll_base);
  
--	err = clk_register_clkdev(clk, id, NULL);
--	if (err)
--		panic("unable to register %s clock device", id);
-+	clks[type] = clk;
-+	clk_register_clkdev(clk, name, NULL);
-+}
- 
-+static struct clk * __init ath79_set_clk(int type, unsigned long rate)
-+{
-+	const char *name = ath79_clk_name(type);
-+	struct clk *clk;
++	if (!clks[ATH79_CLK_MDIO])
++		clks[ATH79_CLK_MDIO] = clks[ATH79_CLK_REF];
 +
-+	clk = clk_register_fixed_rate(NULL, name, NULL, 0, rate);
-+	__ath79_set_clk(type, name, clk);
-+	return clk;
-+}
-+
-+static struct clk * __init ath79_set_ff_clk(int type, const char *parent,
-+					    unsigned int mult, unsigned int div)
-+{
-+	const char *name = ath79_clk_name(type);
-+	struct clk *clk;
-+
-+	clk = clk_register_fixed_factor(NULL, name, parent, 0, mult, div);
-+	__ath79_set_clk(type, name, clk);
- 	return clk;
- }
- 
-@@ -80,27 +106,15 @@ static void __init ar71xx_clocks_init(void)
- 	div = (((pll >> AR71XX_AHB_DIV_SHIFT) & AR71XX_AHB_DIV_MASK) + 1) * 2;
- 	ahb_rate = cpu_rate / div;
- 
--	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	ath79_set_clk(ATH79_CLK_REF, ref_rate);
-+	ath79_set_clk(ATH79_CLK_CPU, cpu_rate);
-+	ath79_set_clk(ATH79_CLK_DDR, ddr_rate);
-+	ath79_set_clk(ATH79_CLK_AHB, ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ahb", NULL);
- }
- 
--static struct clk * __init ath79_reg_ffclk(const char *name,
--		const char *parent_name, unsigned int mult, unsigned int div)
--{
--	struct clk *clk;
--
--	clk = clk_register_fixed_factor(NULL, name, parent_name, 0, mult, div);
--	if (IS_ERR(clk))
--		panic("failed to allocate %s clock structure", name);
--
--	return clk;
--}
--
- static void __init ar724x_clk_init(struct clk *ref_clk, void __iomem *pll_base)
- {
- 	u32 pll;
-@@ -114,24 +128,19 @@ static void __init ar724x_clk_init(struct clk *ref_clk, void __iomem *pll_base)
- 	ddr_div = ((pll >> AR724X_DDR_DIV_SHIFT) & AR724X_DDR_DIV_MASK) + 1;
- 	ahb_div = (((pll >> AR724X_AHB_DIV_SHIFT) & AR724X_AHB_DIV_MASK) + 1) * 2;
- 
--	clks[ATH79_CLK_CPU] = ath79_reg_ffclk("cpu", "ref", mult, div);
--	clks[ATH79_CLK_DDR] = ath79_reg_ffclk("ddr", "ref", mult, div * ddr_div);
--	clks[ATH79_CLK_AHB] = ath79_reg_ffclk("ahb", "ref", mult, div * ahb_div);
-+	ath79_set_ff_clk(ATH79_CLK_CPU, "ref", mult, div);
-+	ath79_set_ff_clk(ATH79_CLK_DDR, "ref", mult, div * ddr_div);
-+	ath79_set_ff_clk(ATH79_CLK_AHB, "ref", mult, div * ahb_div);
- }
- 
- static void __init ar724x_clocks_init(void)
- {
- 	struct clk *ref_clk;
- 
--	ref_clk = ath79_add_sys_clkdev("ref", AR724X_BASE_FREQ);
-+	ref_clk = ath79_set_clk(ATH79_CLK_REF, AR724X_BASE_FREQ);
- 
- 	ar724x_clk_init(ref_clk, ath79_pll_base);
- 
--	/* just make happy plat_time_init() from arch/mips/ath79/setup.c */
--	clk_register_clkdev(clks[ATH79_CLK_CPU], "cpu", NULL);
--	clk_register_clkdev(clks[ATH79_CLK_DDR], "ddr", NULL);
--	clk_register_clkdev(clks[ATH79_CLK_AHB], "ahb", NULL);
--
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ahb", NULL);
- }
-@@ -186,12 +195,12 @@ static void __init ar9330_clk_init(struct clk *ref_clk, void __iomem *pll_base)
- 		     AR933X_PLL_CLOCK_CTRL_AHB_DIV_MASK) + 1;
- 	}
- 
--	clks[ATH79_CLK_CPU] = ath79_reg_ffclk("cpu", "ref",
--					ninit_mul, ref_div * out_div * cpu_div);
--	clks[ATH79_CLK_DDR] = ath79_reg_ffclk("ddr", "ref",
--					ninit_mul, ref_div * out_div * ddr_div);
--	clks[ATH79_CLK_AHB] = ath79_reg_ffclk("ahb", "ref",
--					ninit_mul, ref_div * out_div * ahb_div);
-+	ath79_set_ff_clk(ATH79_CLK_CPU, "ref", ninit_mul,
-+			 ref_div * out_div * cpu_div);
-+	ath79_set_ff_clk(ATH79_CLK_DDR, "ref", ninit_mul,
-+			 ref_div * out_div * ddr_div);
-+	ath79_set_ff_clk(ATH79_CLK_AHB, "ref", ninit_mul,
-+			 ref_div * out_div * ahb_div);
- }
- 
- static void __init ar933x_clocks_init(void)
-@@ -206,15 +215,10 @@ static void __init ar933x_clocks_init(void)
- 	else
- 		ref_rate = (25 * 1000 * 1000);
- 
--	ref_clk = ath79_add_sys_clkdev("ref", ref_rate);
-+	ref_clk = ath79_set_clk(ATH79_CLK_REF, ref_rate);
- 
- 	ar9330_clk_init(ref_clk, ath79_pll_base);
- 
--	/* just make happy plat_time_init() from arch/mips/ath79/setup.c */
--	clk_register_clkdev(clks[ATH79_CLK_CPU], "cpu", NULL);
--	clk_register_clkdev(clks[ATH79_CLK_DDR], "ddr", NULL);
--	clk_register_clkdev(clks[ATH79_CLK_AHB], "ahb", NULL);
--
- 	clk_add_alias("wdt", NULL, "ahb", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
- }
-@@ -344,10 +348,10 @@ static void __init ar934x_clocks_init(void)
- 	else
- 		ahb_rate = cpu_pll / (postdiv + 1);
- 
--	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	ath79_set_clk(ATH79_CLK_REF, ref_rate);
-+	ath79_set_clk(ATH79_CLK_CPU, cpu_rate);
-+	ath79_set_clk(ATH79_CLK_DDR, ddr_rate);
-+	ath79_set_clk(ATH79_CLK_AHB, ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ref", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-@@ -431,10 +435,10 @@ static void __init qca953x_clocks_init(void)
- 	else
- 		ahb_rate = cpu_pll / (postdiv + 1);
- 
--	ath79_add_sys_clkdev("ref", ref_rate);
--	ath79_add_sys_clkdev("cpu", cpu_rate);
--	ath79_add_sys_clkdev("ddr", ddr_rate);
--	ath79_add_sys_clkdev("ahb", ahb_rate);
-+	ath79_set_clk(ATH79_CLK_REF, ref_rate);
-+	ath79_set_clk(ATH79_CLK_CPU, cpu_rate);
-+	ath79_set_clk(ATH79_CLK_DDR, ddr_rate);
-+	ath79_set_clk(ATH79_CLK_AHB, ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ref", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-@@ -516,10 +520,10 @@ static void __init qca955x_clocks_init(void)
- 	else
- 		ahb_rate = cpu_pll / (postdiv + 1);
- 
--	ath79_add_sys_clkdev("ref", ref_rate);
--	clks[ATH79_CLK_CPU] = ath79_add_sys_clkdev("cpu", cpu_rate);
--	clks[ATH79_CLK_DDR] = ath79_add_sys_clkdev("ddr", ddr_rate);
--	clks[ATH79_CLK_AHB] = ath79_add_sys_clkdev("ahb", ahb_rate);
-+	ath79_set_clk(ATH79_CLK_REF, ref_rate);
-+	ath79_set_clk(ATH79_CLK_CPU, cpu_rate);
-+	ath79_set_clk(ATH79_CLK_DDR, ddr_rate);
-+	ath79_set_clk(ATH79_CLK_AHB, ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ref", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
-@@ -620,10 +624,10 @@ static void __init qca956x_clocks_init(void)
- 	else
- 		ahb_rate = cpu_pll / (postdiv + 1);
- 
--	ath79_add_sys_clkdev("ref", ref_rate);
--	ath79_add_sys_clkdev("cpu", cpu_rate);
--	ath79_add_sys_clkdev("ddr", ddr_rate);
--	ath79_add_sys_clkdev("ahb", ahb_rate);
-+	ath79_set_clk(ATH79_CLK_REF, ref_rate);
-+	ath79_set_clk(ATH79_CLK_CPU, cpu_rate);
-+	ath79_set_clk(ATH79_CLK_DDR, ddr_rate);
-+	ath79_set_clk(ATH79_CLK_AHB, ahb_rate);
- 
- 	clk_add_alias("wdt", NULL, "ref", NULL);
- 	clk_add_alias("uart", NULL, "ref", NULL);
+ 	if (of_clk_add_provider(np, of_clk_src_onecell_get, &clk_data)) {
+ 		pr_err("%pOF: could not register clk provider\n", np);
+ 		goto err_iounmap;
 diff --git a/include/dt-bindings/clock/ath79-clk.h b/include/dt-bindings/clock/ath79-clk.h
-index 27359ad83904..262d7c5eb248 100644
+index 262d7c5eb248..dcc679a7ad85 100644
 --- a/include/dt-bindings/clock/ath79-clk.h
 +++ b/include/dt-bindings/clock/ath79-clk.h
-@@ -13,7 +13,8 @@
- #define ATH79_CLK_CPU		0
+@@ -14,7 +14,8 @@
  #define ATH79_CLK_DDR		1
  #define ATH79_CLK_AHB		2
-+#define ATH79_CLK_REF		3
+ #define ATH79_CLK_REF		3
++#define ATH79_CLK_MDIO		4
  
--#define ATH79_CLK_END		3
-+#define ATH79_CLK_END		4
+-#define ATH79_CLK_END		4
++#define ATH79_CLK_END		5
  
  #endif /* __DT_BINDINGS_ATH79_CLK_H */
 -- 
