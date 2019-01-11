@@ -1,42 +1,76 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 01/10] dt-bindings: olpc,xo1.75-ec: Add OLPC XO-1.75
- EC bindings
-Date: Fri, 11 Jan 2019 08:36:35 -0600
-Message-ID: <20190111143635.GA21484@bogus>
-References: <20190110175845.1203986-1-lkundrak@v3.sk>
- <20190110175845.1203986-2-lkundrak@v3.sk>
+Subject: Re: [PATCH 2/4] dt-bindings: gnss: add gtop binding
+Date: Fri, 11 Jan 2019 08:43:30 -0600
+Message-ID: <20190111144330.GA30111@bogus>
+References: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
+ <1545994235-8309-3-git-send-email-lollivier@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190110175845.1203986-2-lkundrak@v3.sk>
+In-Reply-To: <1545994235-8309-3-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 10 Jan 2019 18:58:36 +0100, Lubomir Rintel wrote:
-> The OLPC XO-1.75 Embedded Controller is a SPI master that uses extra
-> signals for handshaking. It needs to know when is the slave (Linux)
-> side's TX FIFO ready for transfer (the ready-gpio signal on the SPI
-> controller node) and when does it wish to respond with a command (the
-> cmd-gpio property).
+On Fri, Dec 28, 2018 at 11:50:33AM +0100, Loys Ollivier wrote:
+> Add binding for GlobalTop GNSS receivers.
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> Acked-by: Pavel Machek <pavel@ucw.cz>
-> 
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 > ---
-> Changes since v1:
-> - s/cmd-gpio/cmd-gpios/
-> - s/ready-gpio/ready-gpios/ in the documentation paragraph
-> - Remove status = "okay" from the example
+>  Documentation/devicetree/bindings/gnss/gtop.txt | 33 +++++++++++++++++++++++++
+>  1 file changed, 33 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gnss/gtop.txt
 > 
->  .../bindings/misc/olpc,xo1.75-ec.txt          | 23 +++++++++++++++++++
->  1 file changed, 23 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+> diff --git a/Documentation/devicetree/bindings/gnss/gtop.txt b/Documentation/devicetree/bindings/gnss/gtop.txt
+> new file mode 100644
+> index 000000000000..24c86703aa46
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gnss/gtop.txt
+> @@ -0,0 +1,33 @@
+> +GlobalTop GNSS Receiver DT binding
+> +
+> +The GlobalTop GNSS receivers uses UART interfaces.
+> +
+> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+> +properties.
+> +
+> +Required properties:
+> +
+> +- compatible	: Must be
+> +
+> +			"globaltop,pa6h"
+> +
+> +- vcc-supply	: Main voltage regulator
+> +
+> +Optional properties:
+> +
+> +- timepulse-gpios	: Time pulse GPIO
+> +- v-bckp-supply	: Backup voltage regulator
+> +
+> +Example:
+> +
+> +&uart_A {
+> +	status = "okay";
+
+Don't show status in examples.
+
+> +	pinctrl-0 = <&uart_a_pins>;
+> +	pinctrl-names = "default";
+> +
+> +	gnss {
+> +		compatible = "globaltop,pa6h";
+> +		vcc-supply = <&vcc_3v3>;
+> +		current-speed = <9600>;
+
+Shouldn't the driver know what speed the device operates at?
+
+If you do use this, then it needs to be documented as to when it is 
+needed.
+
+> +	};
+> +};
+> -- 
+> 2.7.4
 > 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
