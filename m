@@ -1,64 +1,89 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 0/3] ARM: dts: meson: add the APB/APB2 busses
-Date: Thu, 10 Jan 2019 16:36:27 -0800
-Message-ID: <7himywqbck.fsf@baylibre.com>
-References: <20181208165025.27689-1-martin.blumenstingl@googlemail.com> <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
+Subject: Re: [PATCH 0/5] Meson (32-bit): add support for the Mali GPU
+Date: Thu, 10 Jan 2019 16:37:24 -0800
+Message-ID: <7hef9kqbaz.fsf@baylibre.com>
+References: <20181208171247.22238-1-martin.blumenstingl@googlemail.com> <13bd9d3a-3cbe-3952-03bb-ef5da6eec401@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
+In-Reply-To: <13bd9d3a-3cbe-3952-03bb-ef5da6eec401@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org, linux-clk@vger.kernel.org, jbrunet@baylibre.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org, sboyd@kernel.org, mturquette@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
 Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> On 08/12/2018 17:50, Martin Blumenstingl wrote:
->> This adds the APB bus on Meson8 and Meson8b as well as the APB2 bus on
->> Meson6. This is preparation work for adding the Mali GPU which is
->> located on theses busses.
+> On 08/12/2018 18:12, Martin Blumenstingl wrote:
+>> This series adds support for the Mali-450 GPU on Meson8 and Meson8b.
+>> Meson6 uses a Mali-400 GPU but since we don't have a clock driver (and
+>> I don't have a device for testing) Meson6 is left out in this series.
 >> 
->> Meson6 seems to have it's APB at 0xc8000000 instead of 0xd0000000. The
->> region at 0xd0000000 is called APB2 or A9_APB and it has a different
->> size (256k) compared to Meson8 and Meson8b (2M).
+>> Meson8 uses a Mali-450 MP6 with six pixel processors. Meson8b (as
+>> cost-reduced SoC) uses a Mali-450 MP2 with two pixel processors.
+>> I tested both using the open source lima driver and a patched mesa
+>> from the lima project as well. Since we don't have display support
+>> on the 32-bit SoCs I used off-screen rendering as described in [0].
+>> The result is (for example): [1]
 >> 
->> Addresses and sizes are taken from the Amlogic 3.10 kernel sources:
->> - Meson6: [0]
->> - Meson8: [1]
->> - Meson8b: [2]
+>> The bootloader (at least on my boards) leaves the Mali clock disabled
+>> by default. The board crashes when trying to access the Mali registers
+>> with the "core" clock disabled.
+>> Thus this series also implements the required clock driver changes. The
+>> Mali clock tree on Meson8b and Meson8m2 is almost identical to the one
+>> on GXBB (see the description of patch #3 for more details). Only Meson8
+>> is slightly different as it doesn't have a glitch-free mux. Patch #2
+>> prepares the meson8b clock driver so we can have different clocks per
+>> SoC.
+>> 
+>> Dependencies:
+>> - the .dts changes depend on my other series "ARM: dts: meson: add the
+>>   APB/APB2 busses" from [2]
+>> - the .dts changes from this series have no compile-time dependency on
+>>   the clock driver changes because CLKID_MALI was defined in the
+>>   dt-bindings since the first version of the clock driver (but it was
+>>   not used until now).
+>> - the .dts changes from this series have a runtime dependency on the
+>>   clock driver changes (also from this series) if you have a kernel
+>>   patched with the lima driver (without the lima driver there's no
+>>   runtime dependency)
+>> 
+>> Other notes:
+>> By default the GPU runs off the XTAL clock (24MHz). The lima driver
+>> currently does not update the GPU clock rate. Different frequencies
+>> have to be requested by adding the following properties to the Mali
+>> GPU node (to run it at 510MHz for example):
+>>   assigned-clocks = <&clkc CLKID_MALI>;
+>>   assigned-clock-rates = <510000000>;
 >> 
 >> 
->> Changes since v1 at [3]:
->> - re-send the patches but this time don't include the old patches
->>   which still had a typo in the patch description (ABP vs APB)
+>> [0] https://gitlab.freedesktop.org/lima/web/wikis/home
+>> [1] https://abload.de/img/dump0myic0.png
+>> [2] https://patchwork.kernel.org/cover/10719445/
 >> 
 >> 
->> [0] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson6/include/mach/io.h#L61
->> [1] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8/include/mach/io.h#L53
->> [2] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8b/include/mach/io.h#L53
->> [3] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009424.html
+>> Martin Blumenstingl (5):
+>>   dt-bindings: gpu: mali-utgard: add Amlogic Meson8 and Meson8b
+>>     compatible
+>>   clk: meson: meson8b: use a separate clock table for Meson8
+>>   clk: meson: meson8b: add the GPU clock tree
+>>   ARM: dts: meson8: add the Mali-450 MP6 GPU
+>>   ARM: dts: meson8b: add the Mali-450 MP2 GPU
 >> 
->> 
->> Martin Blumenstingl (3):
->>   ARM: dts: meson6: add the APB2 bus
->>   ARM: dts: meson8: add the APB bus
->>   ARM: dts: meson8b: add the APB bus
->> 
->>  arch/arm/boot/dts/meson6.dtsi  | 8 ++++++++
->>  arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
->>  arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
->>  3 files changed, 24 insertions(+)
+>>  .../bindings/gpu/arm,mali-utgard.txt          |   6 +
+>>  arch/arm/boot/dts/meson8.dtsi                 |  58 +++
+>>  arch/arm/boot/dts/meson8b.dtsi                |  46 +++
+>>  drivers/clk/meson/meson8b.c                   | 349 +++++++++++++++++-
+>>  drivers/clk/meson/meson8b.h                   |   9 +-
+>>  5 files changed, 461 insertions(+), 7 deletions(-)
 >> 
 >
-> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+> Applied patches 2 & 3 to next/drivers for Linux 5.1
 >
-> But frankly I'll squash the meson8/meson8b patches with the mali node patches !
+> Kevin, have fun with the other patches !
 
-In general, I agree with Neil.  Adding the new busses along with the
-series that uses them would be fine, but I don't have a strong
-preference.
+Fun was had.
 
-So queueing this series as is for v5.1 (branch: v5.1/dt)
+Patches 1, 4, 5 queued for v5.1 (branch: v5.1/dt)
 
 Kevin
