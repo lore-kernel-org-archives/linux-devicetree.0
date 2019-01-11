@@ -1,83 +1,41 @@
-From: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: Re: [PATCH v2 3/4] cpufreq: s5pv210: Defer probe if getting
- regulators fail
-Date: Fri, 11 Jan 2019 10:53:44 +0100
-Message-ID: <CAKpie0S3ce1gYqf2-ncz9jQdxG-e58bzn2GkCOkT468sL_EapA@mail.gmail.com>
-References: <20190110205215.22030-1-pawel.mikolaj.chmiel@gmail.com>
- <20190110205215.22030-4-pawel.mikolaj.chmiel@gmail.com> <CAJKOXPdz-LfQ1-jPXB5Y7pVVVBDdH0Q=5xZJxvabjhZ-Ush+dg@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH 0/3] arm64: ti: k3-am654: USB support
+Date: Fri, 11 Jan 2019 12:00:58 +0200
+Message-ID: <1547200861-17795-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAJKOXPdz-LfQ1-jPXB5Y7pVVVBDdH0Q=5xZJxvabjhZ-Ush+dg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: Kukjin Kim <kgene@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux@armlinux.org.uk, Viresh Kumar <viresh.kumar@linaro.org>, rjw@rjwysocki.net, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org
+To: t-kristo@ti.com
+Cc: nm@ti.com, nsekhar@ti.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-pt., 11 sty 2019 o 10:46 Krzysztof Kozlowski <krzk@kernel.org> napisa=C5=82=
-(a):
->
-> On Thu, 10 Jan 2019 at 21:53, Pawe=C5=82 Chmiel
-> <pawel.mikolaj.chmiel@gmail.com> wrote:
-> >
-> > There is possibility, that when probing driver, regulators are not yet
-> > initialized. In this case we should return EPROBE_DEFER and wait till
-> > they're initialized, since they're required currently for cpufreq drive=
-r
-> > to work. Also move regulator initialization code at beginning of probe,
-> > so we can defer as fast as posibble.
-> >
-> > Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > ---
-> > Changes from v1:
-> >   - Fix compilation error
-> >   - Reorganize code so it's smaller
-> > ---
-> >  drivers/cpufreq/s5pv210-cpufreq.c | 32 ++++++++++++++++++-------------
-> >  1 file changed, 19 insertions(+), 13 deletions(-)
-> >
-> > diff --git a/drivers/cpufreq/s5pv210-cpufreq.c b/drivers/cpufreq/s5pv21=
-0-cpufreq.c
-> > index f51697f1e0b3..6df95941ba96 100644
-> > --- a/drivers/cpufreq/s5pv210-cpufreq.c
-> > +++ b/drivers/cpufreq/s5pv210-cpufreq.c
-> > @@ -594,6 +594,25 @@ static int s5pv210_cpufreq_probe(struct platform_d=
-evice *pdev)
-> >          * this whole driver as soon as S5PV210 gets migrated to use
-> >          * cpufreq-dt driver.
-> >          */
-> > +       arm_regulator =3D regulator_get(NULL, "vddarm");
-> > +       if (IS_ERR(arm_regulator)) {
-> > +               if (PTR_ERR(arm_regulator) =3D=3D -EPROBE_DEFER)
-> > +                       pr_debug("vddarm regulator not ready, defer\n")=
-;
-> > +               else
-> > +                       pr_err("failed to get regulator vddarm\n");
-> > +               return PTR_ERR(arm_regulator);
-> > +       }
-> > +
-> > +       int_regulator =3D regulator_get(NULL, "vddint");
-> > +       if (IS_ERR(int_regulator)) {
-> > +               if (PTR_ERR(int_regulator) =3D=3D -EPROBE_DEFER)
-> > +                       pr_debug("vddint regulator not ready, defer\n")=
-;
-> > +               else
-> > +                       pr_err("failed to get regulator vddint\n");
-> > +               regulator_put(arm_regulator);
-> > +               return PTR_ERR(int_regulator);
-> > +       }
-> > +
->
-> Error paths are now not correct. You should put the regulators when
-> returning later. The previous code had these error paths wrong as well
-> - not iounmapping - but if you move things around, maybe let's fix
-> things.
-Ok, will fix this in new version and will resend it (only this one
-patch, since all other looks ok/applied).
-Also will add missing iounmapping/etc to fix all other error paths.
+Hi,
 
-Thanks
->
-> Best regards,
-> Krzysztof
+The AM654 SoC supports 2 DWC3 USB controller instances. The
+AM654 base board supports the 2nd (USB1) instance in high-speed.
+
+This series enables support for USB1 instance on the AM654-base-board.
+
+To test, you need to first apply the below 2 series.
+
+AM654 USB2 PHY support https://lkml.org/lkml/2018/12/5/908
+AM654 DWC3 support https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1896101.html
+
+cheers,
+-roger
+
+Jyri Sarha (1):
+  arm64: dts: ti: am654: Add Main System Control Module node
+
+Roger Quadros (2):
+  arm64: dts: ti: k3-am6: add USB support
+  arm64: dts: ti: k3-am654-base-board: enable USB1
+
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi       | 88 ++++++++++++++++++++++++++
+ arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 20 ++++++
+ 2 files changed, 108 insertions(+)
+
+-- 
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
