@@ -1,42 +1,33 @@
-Return-Path: <SRS0=ySGx=QB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38915 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726917AbfAYOwG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Jan 2019 09:52:06 -0500
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH] dt-bindings: firmware: tegra186-bpmp: Remove name property
-Date: Fri, 25 Jan 2019 15:52:02 +0100
-Message-Id: <20190125145202.2982-1-thierry.reding@gmail.com>
+Return-Path: <SRS0=Muqj=PT=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: Jon Hunter <jonathanh@nvidia.com>, Timo Alho <talho@nvidia.com>, linux-tegra@vger.kernel.org, devicetree@vger.kernel.org
+References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com> <20190103164102.31437-5-thomas.petazzoni@bootlin.com>
+In-Reply-To: <20190103164102.31437-5-thomas.petazzoni@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Jan 2019 11:14:49 +0100
+Message-ID: <CACRpkdY4A_Yvv3cKmvYio_9w2HMw9retG-4feydn47sDQY62ig@mail.gmail.com>
+Subject: Re: [PATCH 4/4] gpio: pca953x: add ->set_config implementation
+Content-Type: text/plain; charset="UTF-8"
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thierry Reding <treding@nvidia.com>
+On Thu, Jan 3, 2019 at 5:41 PM Thomas Petazzoni
+<thomas.petazzoni@bootlin.com> wrote:
 
-This property is not used by device trees and was likely supposed to be
-a hint as to what the BPMP node should be named, rather than describing
-a property of the BPMP node.
+> This commit adds a minimal implementation of the ->set_config() hook,
+> with support for the PIN_CONFIG_BIAS_PULL_UP and
+> PIN_CONFIG_BIAS_PULL_DOWN configurations.
+>
+> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
 
-Suggested-by: Jon Hunter <jonathanh@nvidia.com>
-Signed-off-by: Thierry Reding <treding@nvidia.com>
----
- .../devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt        | 1 -
- 1 file changed, 1 deletion(-)
+This looks OK to me, but IIUC not all versions of the PCA953x supports
+this?
 
-diff --git a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-index 0c10802c8327..ff380dadb5f9 100644
---- a/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-+++ b/Documentation/devicetree/bindings/firmware/nvidia,tegra186-bpmp.txt
-@@ -8,7 +8,6 @@ which can create the interprocessor communication (IPC) between the CPU
- and BPMP.
- 
- Required properties:
--- name : Should be bpmp
- - compatible
-     Array of strings
-     One of:
--- 
-2.19.1
+So we need to make sure that you return -ENOTSUPP if the device
+does not support setting pull up/down.
+
+Also there are configs for debounce too, right? I suggested to add
+that first but I have no strong opinion on it.
+
+Yours,
+Linus Walleij
