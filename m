@@ -1,100 +1,29 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [RFC RESEND PATCH 1/7] dt-bindings: soc: Add DVFSRC driver
- bindings
-Date: Fri, 11 Jan 2019 10:09:18 -0600
-Message-ID: <20190111160918.GA20480@bogus>
-References: <1546438198-1677-1-git-send-email-henryc.chen@mediatek.com>
- <1546438198-1677-2-git-send-email-henryc.chen@mediatek.com>
+Subject: Re: [PATCH V3 1/3] dt-bindings: mmc: tegra: Add pinctrl for pad
+ drive strength config
+Date: Fri, 11 Jan 2019 10:11:20 -0600
+Message-ID: <20190111161120.GA6491@bogus>
+References: <1546462674-22856-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1546438198-1677-2-git-send-email-henryc.chen@mediatek.com>
+In-Reply-To: <1546462674-22856-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Henry Chen <henryc.chen@mediatek.com>
-Cc: Viresh Kumar <vireshk@kernel.org>, Stephen Boyd <sboyd@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Ulf Hansson <ulf.hansson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Fan Chen <fan.chen@mediatek.com>, Weiyi Lu <weiyi.lu@mediatek.com>, James Liao <jamesjj.liao@mediatek.com>, Kees Cook <keescook@chromium.org>, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 02, 2019 at 10:09:52PM +0800, Henry Chen wrote:
-> Document the binding for enabling DVFSRC on MediaTek SoC.
+On Wed, 2 Jan 2019 12:57:52 -0800, Sowjanya Komatineni wrote:
+> Add pinctrl for 3V3 and 1V8 pad drive strength configuration for
+> Tegra210 sdmmc which has pad configuration registers in the pinmux
+> reigster domain.
+> Pad drive strengths for Tegra186 and Later are
+> part of SDMMC device node itself.
 > 
-> Signed-off-by: Henry Chen <henryc.chen@mediatek.com>
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  .../devicetree/bindings/soc/mediatek/dvfsrc.txt    | 26 ++++++++++++++++++++++
->  include/dt-bindings/soc/mtk,dvfsrc.h               | 18 +++++++++++++++
->  2 files changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
->  create mode 100644 include/dt-bindings/soc/mtk,dvfsrc.h
+>  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 6 +++++-
+>  1 file changed, 5 insertions(+), 1 deletion(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-> new file mode 100644
-> index 0000000..402c885
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/mediatek/dvfsrc.txt
-> @@ -0,0 +1,26 @@
-> +MediaTek DVFSRC Driver
 
-Bindings are for h/w blocks, not drivers.
-
-> +The Dynamic Voltage and Frequency Scaling Resource Collector (DVFSRC) is a
-> +HW module which is used to collect all the requests from both software and
-> +hardware and turn into the decision of minimum operating voltage and minimum
-> +DRAM frequency to fulfill those requests.
-
-Seems like the OPP table should be a child of this instead of where you 
-currently have it?
-
-> +
-> +Required Properties:
-> +- compatible: Should be one of the following
-> +	- "mediatek,mt8183-dvfsrc": For MT8183 SoC
-> +- reg: Address range of the DVFSRC unit
-> +- dram_type: Refer to <include/dt-bindings/soc/mtk,dvfsrc.h> for the
-> +	different dram type support.
-
-This information should come from the DDR controller or memory nodes 
-probably. And we already have some properties related to DDR type.
-
-> +- clock-names: Must include the following entries:
-> +	"dvfsrc": DVFSRC module clock
-> +- clocks: Must contain an entry for each entry in clock-names.
-> +
-> +Example:
-> +
-> +	dvfsrc_top@10012000 {
-
-Drop the '_top'. (Don't use '_' in node and property names).
-
-> +		compatible = "mediatek,mt8183-dvfsrc";
-> +		reg = <0 0x10012000 0 0x1000>;
-> +		clocks = <&infracfg CLK_INFRA_DVFSRC>;
-> +		clock-names = "dvfsrc";
-> +		dram_type = <MT8183_DVFSRC_OPP_LP4>;
-> +	};
-> diff --git a/include/dt-bindings/soc/mtk,dvfsrc.h b/include/dt-bindings/soc/mtk,dvfsrc.h
-> new file mode 100644
-> index 0000000..60b3497
-> --- /dev/null
-> +++ b/include/dt-bindings/soc/mtk,dvfsrc.h
-> @@ -0,0 +1,18 @@
-> +/* SPDX-License-Identifier: GPL-2.0
-> + *
-> + * Copyright (c) 2018 MediaTek Inc.
-> + */
-> +
-> +#ifndef _DT_BINDINGS_POWER_MTK_DVFSRC_H
-> +#define _DT_BINDINGS_POWER_MTK_DVFSRC_H
-> +
-> +#define MT8183_DVFSRC_OPP_LP4	0
-> +#define MT8183_DVFSRC_OPP_LP4X	1
-> +#define MT8183_DVFSRC_OPP_LP3	2
-> +
-> +#define MT8183_DVFSRC_LEVEL_1	1
-> +#define MT8183_DVFSRC_LEVEL_2	2
-> +#define MT8183_DVFSRC_LEVEL_3	3
-> +#define MT8183_DVFSRC_LEVEL_4	4
-> +
-> +#endif /* _DT_BINDINGS_POWER_MTK_DVFSRC_H */
-> -- 
-> 1.9.1
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
