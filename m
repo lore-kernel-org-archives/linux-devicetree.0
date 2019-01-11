@@ -1,317 +1,81 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/3] drivers: pwm: pwm-bcm-kona: Add pwm-kona-v2 support
-Date: Fri, 11 Jan 2019 21:54:03 +0100
-Message-ID: <20190111205403.e4bgszqbrq65jsgh@pengutronix.de>
-References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1547184076-20521-3-git-send-email-sheetal.tigadoli@broadcom.com>
+From: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Subject: [PATCH v2 1/2] iio: chemical: bme680: Add device-tree support
+Date: Fri, 11 Jan 2019 15:53:58 -0500
+Message-ID: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547184076-20521-3-git-send-email-sheetal.tigadoli@broadcom.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org, Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+This commit allow the driver to work with device-tree.
 
-On Fri, Jan 11, 2019 at 10:51:15AM +0530, Sheetal Tigadoli wrote:
-> From: Praveen Kumar B <praveen.b@broadcom.com>
-> 
-> Add support for new version of pwm-kona.
-> Add support to make PWM changes configured and stable.
-> 
-> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-> ---
->  drivers/pwm/pwm-bcm-kona.c | 128 ++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 98 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
-> index 09a95ae..2b44ad8 100644
-> --- a/drivers/pwm/pwm-bcm-kona.c
-> +++ b/drivers/pwm/pwm-bcm-kona.c
-> @@ -45,30 +45,39 @@
->   *    high or low depending on its state at that exact instant.
->   */
->  
-> -#define PWM_CONTROL_OFFSET			(0x00000000)
-> +#define PWM_CONTROL_OFFSET			0x00000000
->  #define PWM_CONTROL_SMOOTH_SHIFT(chan)		(24 + (chan))
->  #define PWM_CONTROL_TYPE_SHIFT(chan)		(16 + (chan))
->  #define PWM_CONTROL_POLARITY_SHIFT(chan)	(8 + (chan))
->  #define PWM_CONTROL_TRIGGER_SHIFT(chan)		(chan)
->  
-> -#define PRESCALE_OFFSET				(0x00000004)
-> +#define PRESCALE_OFFSET				0x00000004
->  #define PRESCALE_SHIFT(chan)			((chan) << 2)
->  #define PRESCALE_MASK(chan)			(0x7 << PRESCALE_SHIFT(chan))
-> -#define PRESCALE_MIN				(0x00000000)
-> -#define PRESCALE_MAX				(0x00000007)
-> +#define PRESCALE_MIN				0x00000000
-> +#define PRESCALE_MAX				0x00000007
->  
->  #define PERIOD_COUNT_OFFSET(chan)		(0x00000008 + ((chan) << 3))
-> -#define PERIOD_COUNT_MIN			(0x00000002)
-> -#define PERIOD_COUNT_MAX			(0x00ffffff)
-> +#define PERIOD_COUNT_MIN			0x00000002
-> +#define PERIOD_COUNT_MAX			0x00ffffff
->  
->  #define DUTY_CYCLE_HIGH_OFFSET(chan)		(0x0000000c + ((chan) << 3))
-> -#define DUTY_CYCLE_HIGH_MIN			(0x00000000)
-> -#define DUTY_CYCLE_HIGH_MAX			(0x00ffffff)
-> +#define DUTY_CYCLE_HIGH_MIN			0x00000000
-> +#define DUTY_CYCLE_HIGH_MAX			0x00ffffff
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+---
+v1 -> v2:
+  - add missing of.h header in bme680_spi.c
+---
+ drivers/iio/chemical/bme680_i2c.c | 7 +++++++
+ drivers/iio/chemical/bme680_spi.c | 9 +++++++++
+ 2 files changed, 16 insertions(+)
 
-All these are unrelated changes.
-
-> +#define PWM_MONITOR_OFFSET			0xb0
-> +#define PWM_MONITOR_TIMEOUT_US			5
-> +
-> +enum kona_pwmc_ver {
-> +	KONA_PWM_V1 = 1,
-> +	KONA_PWM_V2
-> +};
->  
->  struct kona_pwmc {
->  	struct pwm_chip chip;
->  	void __iomem *base;
->  	struct clk *clk;
-> +	enum kona_pwmc_ver version;
->  };
->  
->  static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *_chip)
-> @@ -76,11 +85,40 @@ static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *_chip)
->  	return container_of(_chip, struct kona_pwmc, chip);
->  }
->  
-> +static int kona_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan,
-> +				 unsigned int kona_ver)
-> +{
-> +	struct kona_pwmc *kp = to_kona_pwmc(chip);
-> +	unsigned int value;
-> +	unsigned int count = PWM_MONITOR_TIMEOUT_US * 1000;
-> +
-> +	switch (kona_ver) {
-> +	case KONA_PWM_V1:
-> +		/*
-> +		 * There must be a min 400ns delay between clearing trigger and
-> +		 * settingit. Failing to do this may result in no PWM signal.
-
-Space missing.
-
-> +		 */
-> +		ndelay(400);
-> +		return 0;
-> +	case KONA_PWM_V2:
-> +		do {
-> +			value = readl(kp->base + PWM_MONITOR_OFFSET);
-> +			if (!(value & (BIT(chan))))
-> +				return 0;
-> +			ndelay(1);
-> +		} while (count--);
-> +
-> +		return -ETIMEDOUT;
-> +	default:
-> +		return -ENODEV;
-> +	}
-
-I wonder if v1 and v2 are different enough to justify a separate driver
-for v2.
-
-> +}
-> +
->  /*
->   * Clear trigger bit but set smooth bit to maintain old output.
->   */
-> -static void kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
-> -	unsigned int chan)
-> +static int kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
-> +					  unsigned int chan)
->  {
->  	unsigned int value = readl(kp->base + PWM_CONTROL_OFFSET);
->  
-> @@ -88,14 +126,10 @@ static void kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
->  	value &= ~(1 << PWM_CONTROL_TRIGGER_SHIFT(chan));
->  	writel(value, kp->base + PWM_CONTROL_OFFSET);
->  
-> -	/*
-> -	 * There must be a min 400ns delay between clearing trigger and setting
-> -	 * it. Failing to do this may result in no PWM signal.
-> -	 */
-> -	ndelay(400);
-> +	return kona_pwmc_wait_stable(&kp->chip, chan, kp->version);
->  }
->  
-> -static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
-> +static int kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
->  {
->  	unsigned int value = readl(kp->base + PWM_CONTROL_OFFSET);
->  
-> @@ -104,8 +138,7 @@ static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
->  	value |= 1 << PWM_CONTROL_TRIGGER_SHIFT(chan);
->  	writel(value, kp->base + PWM_CONTROL_OFFSET);
->  
-> -	/* Trigger bit must be held high for at least 400 ns. */
-> -	ndelay(400);
-> +	return kona_pwmc_wait_stable(&kp->chip, chan, kp->version);
->  }
->  
->  static int kona_pwmc_config(struct pwm_chip *chip, struct pwm_device *pwm,
-> @@ -115,6 +148,7 @@ static int kona_pwmc_config(struct pwm_chip *chip, struct pwm_device *pwm,
-
-It would be great if you converted the driver to new-style (that is
-implementing .apply instead of .config, .enable, .disable and
-.set_polarity). This usually simplifies the driver and maybe adding
-support for v2 would be easier then, too.
-
->  	u64 val, div, rate;
->  	unsigned long prescale = PRESCALE_MIN, pc, dc;
->  	unsigned int value, chan = pwm->hwpwm;
-> +	int ret;
->  
->  	/*
->  	 * Find period count, duty count and prescale to suit duty_ns and
-> @@ -156,7 +190,12 @@ static int kona_pwmc_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  	 * validated immediately instead of on enable.
->  	 */
->  	if (pwm_is_enabled(pwm)) {
-> -		kona_pwmc_prepare_for_settings(kp, chan);
-> +		ret = kona_pwmc_prepare_for_settings(kp, chan);
-> +		if (ret < 0) {
-> +			dev_err(chip->dev, "failed to prepare pwm settings: %d\n",
-> +				ret);
-> +			return ret;
-> +		}
->  
->  		value = readl(kp->base + PRESCALE_OFFSET);
->  		value &= ~PRESCALE_MASK(chan);
-> @@ -167,7 +206,12 @@ static int kona_pwmc_config(struct pwm_chip *chip, struct pwm_device *pwm,
->  
->  		writel(dc, kp->base + DUTY_CYCLE_HIGH_OFFSET(chan));
->  
-> -		kona_pwmc_apply_settings(kp, chan);
-> +		ret = kona_pwmc_apply_settings(kp, chan);
-> +		if (ret < 0) {
-> +			dev_err(chip->dev, "failed to apply settings: %d\n",
-> +				ret);
-> +			return ret;
-> +		}
->  	}
->  
->  	return 0;
-> @@ -187,7 +231,11 @@ static int kona_pwmc_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
->  		return ret;
->  	}
->  
-> -	kona_pwmc_prepare_for_settings(kp, chan);
-> +	ret = kona_pwmc_prepare_for_settings(kp, chan);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "failed to prepare pwm settings: %d\n", ret);
-> +		return ret;
-> +	}
->  
->  	value = readl(kp->base + PWM_CONTROL_OFFSET);
->  
-> @@ -198,7 +246,11 @@ static int kona_pwmc_set_polarity(struct pwm_chip *chip, struct pwm_device *pwm,
->  
->  	writel(value, kp->base + PWM_CONTROL_OFFSET);
->  
-> -	kona_pwmc_apply_settings(kp, chan);
-> +	ret = kona_pwmc_apply_settings(kp, chan);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "failed to apply pwm settings: %d\n", ret);
-> +		return ret;
-> +	}
->  
->  	clk_disable_unprepare(kp->clk);
->  
-> @@ -231,8 +283,13 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	struct kona_pwmc *kp = to_kona_pwmc(chip);
->  	unsigned int chan = pwm->hwpwm;
->  	unsigned int value;
-> +	int ret;
->  
-> -	kona_pwmc_prepare_for_settings(kp, chan);
-> +	ret = kona_pwmc_prepare_for_settings(kp, chan);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "failed to prepare pwm settings: %d\n", ret);
-> +		return;
-> +	}
->  
->  	/* Simulate a disable by configuring for zero duty */
->  	writel(0, kp->base + DUTY_CYCLE_HIGH_OFFSET(chan));
-> @@ -243,7 +300,11 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	value &= ~PRESCALE_MASK(chan);
->  	writel(value, kp->base + PRESCALE_OFFSET);
->  
-> -	kona_pwmc_apply_settings(kp, chan);
-> +	ret = kona_pwmc_apply_settings(kp, chan);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "failed to prepare pwm settings: %d\n", ret);
-> +		return;
-> +	}
->  
->  	clk_disable_unprepare(kp->clk);
->  }
-> @@ -256,14 +317,26 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	.owner = THIS_MODULE,
->  };
->  
-> +static const struct of_device_id bcm_kona_pwmc_dt[] = {
-> +	{ .compatible = "brcm,kona-pwm", .data = (void *)KONA_PWM_V1},
-> +	{ .compatible = "brcm,kona-pwm-v2", .data = (void *)KONA_PWM_V2},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm_kona_pwmc_dt);
-> +
->  static int kona_pwmc_probe(struct platform_device *pdev)
->  {
->  	struct kona_pwmc *kp;
->  	struct resource *res;
-> +	const struct of_device_id *of_id;
->  	unsigned int chan;
->  	unsigned int value = 0;
->  	int ret = 0;
->  
-> +	of_id = of_match_node(bcm_kona_pwmc_dt, pdev->dev.of_node);
-> +	if (!of_id)
-> +		return -ENODEV;
-> +
->  	kp = devm_kzalloc(&pdev->dev, sizeof(*kp), GFP_KERNEL);
->  	if (kp == NULL)
->  		return -ENOMEM;
-> @@ -276,6 +349,7 @@ static int kona_pwmc_probe(struct platform_device *pdev)
->  	kp->chip.npwm = 6;
->  	kp->chip.of_xlate = of_pwm_xlate_with_flags;
->  	kp->chip.of_pwm_n_cells = 3;
-> +	kp->version = (enum kona_pwmc_ver)of_id->data;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	kp->base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -322,12 +396,6 @@ static int kona_pwmc_remove(struct platform_device *pdev)
->  	return pwmchip_remove(&kp->chip);
->  }
->  
-> -static const struct of_device_id bcm_kona_pwmc_dt[] = {
-> -	{ .compatible = "brcm,kona-pwm" },
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, bcm_kona_pwmc_dt);
-> -
->  static struct platform_driver kona_pwmc_driver = {
->  	.driver = {
->  		.name = "bcm-kona-pwm",
-> -- 
-> 1.9.1
-> 
-> 
-
+diff --git a/drivers/iio/chemical/bme680_i2c.c b/drivers/iio/chemical/bme680_i2c.c
+index 06d4be539d2e..94a36ebdf0b2 100644
+--- a/drivers/iio/chemical/bme680_i2c.c
++++ b/drivers/iio/chemical/bme680_i2c.c
+@@ -70,10 +70,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+ 
++static const struct of_device_id bme680_of_i2c_match[] = {
++	{ .compatible = "bosch,bme680", },
++	{},
++}
++MODULE_DEVICE_TABLE(of, bme680_of_i2c_match);
++
+ static struct i2c_driver bme680_i2c_driver = {
+ 	.driver = {
+ 		.name			= "bme680_i2c",
+ 		.acpi_match_table       = ACPI_PTR(bme680_acpi_match),
++		.of_match_table		= of_match_ptr(bme680_of_i2c_match),
+ 	},
+ 	.probe = bme680_i2c_probe,
+ 	.id_table = bme680_i2c_id,
+diff --git a/drivers/iio/chemical/bme680_spi.c b/drivers/iio/chemical/bme680_spi.c
+index c9fb05e8d0b9..caa57287a911 100644
+--- a/drivers/iio/chemical/bme680_spi.c
++++ b/drivers/iio/chemical/bme680_spi.c
+@@ -6,9 +6,11 @@
+  */
+ #include <linux/acpi.h>
+ #include <linux/module.h>
++#include <linux/of.h>
+ #include <linux/regmap.h>
+ #include <linux/spi/spi.h>
+ 
++
+ #include "bme680.h"
+ 
+ static int bme680_regmap_spi_write(void *context, const void *data,
+@@ -110,10 +112,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+ 
++static const struct of_device_id bme680_of_spi_match[] = {
++	{ .compatible = "bosch,bme680", },
++	{},
++}
++MODULE_DEVICE_TABLE(of, bme680_of_spi_match);
++
+ static struct spi_driver bme680_spi_driver = {
+ 	.driver = {
+ 		.name			= "bme680_spi",
+ 		.acpi_match_table	= ACPI_PTR(bme680_acpi_match),
++		.of_match_table		= of_match_ptr(bme680_of_spi_match),
+ 	},
+ 	.probe = bme680_spi_probe,
+ 	.id_table = bme680_spi_id,
 -- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+2.20.1
