@@ -1,110 +1,120 @@
-From: James Morse <james.morse@arm.com>
-Subject: Re: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous
- error detection driver
-Date: Fri, 11 Jan 2019 18:11:04 +0000
-Message-ID: <bba99e8c-5e3e-98a4-d0c9-9734216e66d2@arm.com>
-References: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
- <20190108104204.GA14243@zn.tnic>
- <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
- <AM6PR0702MB37997C0FA1670DD1AF4C25C7FA8B0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
+Date: Fri, 11 Jan 2019 12:27:48 -0600
+Message-ID: <CAL_JsqJzNBYCMWbZtR37eZd4yx2kc590V+q3603Hg=kG2bZwhw@mail.gmail.com>
+References: <20190110221903.3990-4-robh@kernel.org> <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM6PR0702MB37997C0FA1670DD1AF4C25C7FA8B0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
-Content-Language: en-GB
+In-Reply-To: <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
-Cc: Borislav Petkov <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.or
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Wladislav,
+On Fri, Jan 11, 2019 at 11:44 AM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Rob Herring (2019-01-10 14:19:01)
+> > Convert the fixed-clock binding to DT schema format using json-schema.
+> >
+>
+> Any pointer to the full schema?
 
-On 09/01/2019 14:44, Wiebe, Wladislav (Nokia - DE/Ulm) wrote:
->> From: James Morse <james.morse@arm.com>
->> Sent: Tuesday, January 08, 2019 6:57 PM
+https://github.com/robherring/yaml-bindings/blob/master/schemas/
 
->> On 08/01/2019 10:42, Borislav Petkov wrote:
->>> So the first thing to figure out here is how generic is this and if
->>> so, to make it a cortex_a15_edac.c driver which contains all the RAS
->>> functionality for A15. Definitely not an EDAC driver per functional
->>> unit but rather per vendor or even ARM core.
->>
->> This is implementation-defined/specific-to-A15 and is documented in the
->> TRM [0].
->> (On the 'all the RAS functionality for A15' front: there are two more registers:
->> L2MERRSR and CPUMERRSR. These are both accessible from the normal-
->> world, and don't appear to need enabling.)
+And the clock schema in particular:
+https://github.com/robherring/yaml-bindings/blob/master/schemas/clock.yaml
 
-After I sent this it occurred to me the core can't know about errors in the L3
-cache (if there is one) or the memory-controller. These may have edac/ras
-abilities, but they are selected by the soc integrator, so could be per soc.
-This goes against Boris's no-per-functional-unit edac drivers. If we had to pick
-one out of that set, I think the memory-controller is most useful as DRAM is the
-most likely to be affected by errors.
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: linux-clk@vger.kernel.org
+> > Signed-off-by: Rob Herring <robh@kernel.org>
+> [...]
+> > diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.yaml b/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> > new file mode 100644
+> > index 000000000000..8b5628463b90
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> > @@ -0,0 +1,44 @@
+> > +# SPDX-License-Identifier: GPL-2.0
+> > +%YAML 1.2
+> > +---
+> > +$id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
+> > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > +
+> > +title: Binding for simple fixed-rate clock sources.
+>
+> Why does title have a full stop?
 
+Because it was there in the original. My script to extract just takes
+the first line of alphanumeric text.
 
->> But we have the usual pre-v8.2 problems, and in addition cluster-interrupts,
->> as this signal might be per-cluster, or it might be combined.
->>
->> Wladislav, I'm afraid we've had a few attempts at pre-8.2 EDAC drivers, the
->> below list of problems is what we've learnt along the way. The upshot is that
->> before the architected RAS extensions, the expectation is firmware will
->> handle all this, as its difficult for the OS to deal with.
->>
->>
->> My first question is how useful is a 'something bad happened' edac event?
-> 
-> We experienced sometimes random user-space crashes where we didn't 
-> expect a bug in the application code. If there would be a notification 
-> by such edac event,
+> > +
+> > +maintainers:
+> > +  - Michael Turquette <mturquette@baylibre.com>
+> > +  - Stephen Boyd <sboyd@kernel.org>
+> > +
+> > +properties:
+> > +  compatible:
+> > +    const: fixed-clock
+> > +
+> > +  "#clock-cells":
+> > +    const: 0
+> > +
+> > +  clock-frequency: true
+>
+> Why doesn't this need the $ref: /schemas/types.yaml#/... thing?
 
-Sure, but we always have to assume its the worst case: an uncontained error (to
-use the v8.2 terms). A write has gone somewhere it shouldn't, we can't trust
-memory anymore.
+You might want to read bindings/example-schema.yaml which tries to
+explain some of this.
 
-> we would at least know that something bad happened before.
+Standard properties are already defined in the core schemas. So we
+only have to say "we use this property" and any binding specific
+constraints. In this case, there aren't any other constraints. It is
+also needed to be listed here to mark it required and to satisfy
+'additionalProperties: false'.
 
->>> On Tue, Jan 08, 2019 at 08:10:45AM +0000, Wiebe, Wladislav (Nokia -
->> DE/Ulm) wrote:
->>>> This driver adds support for L2 internal asynchronous error detection
->>>> caused by L2 RAM double-bit ECC error or illegal writes to the
->>>> Interrupt Controller memory-map region on the Cortex A15.
->>
->>>> diff --git a/drivers/edac/cortex_a15_l2_async_edac.c
->>>> b/drivers/edac/cortex_a15_l2_async_edac.c
->>>> new file mode 100644
->>>> index 000000000000..26252568e961
->>>> --- /dev/null
->>>> +++ b/drivers/edac/cortex_a15_l2_async_edac.c
->>>> @@ -0,0 +1,134 @@
+> > +  clock-accuracy:
+> > +    description: accuracy of clock in ppb (parts per billion).
+> > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > +
+> > +  clock-output-names:
+> > +    maxItems: 1
+>
+> Is there a schema for strings?
 
->>>> +static int cortex_a15_l2_async_edac_probe(struct platform_device
->>>> +*pdev) {
->>>> +	struct edac_device_ctl_info *dci;
->>>> +	struct device_node *np = pdev->dev.of_node;
->>>> +	char *ctl_name = (char *)np->name;
->>>> +	int i = 0, ret = 0, err_irq = 0, irq_count = 0;
->>>> +
->>>> +	/* We can have multiple CPU clusters with one INTERRIRQ per cluster
->>>> +*/
->>
->> Surely this an integration choice?
->>
->> You're accessing the cluster through a cpu register in the handler, what
->> happens if the interrupt is delivered to the wrong cluster?
->> How do we know which interrupt maps to which cluster?
->> How do we stop user-space 'balancing' the interrupts?
-> 
-> You are right, based on all your inputs I think we can stop using this driver
-> as generic A15 solution
+Yes. The core already covers that '*-names' properties are a list of
+strings. So no need to do that again here and we just need to define
+how many strings are valid.
 
-Handling this interrupt in firmware is probably the best for your soc. For a
-generic a15 driver in the kernel, we would have to consider 'no interrupt',
-(e.g. the interrupt is wired to some other SCP/BMC thing). Once we've got
-polling code for these registers, we may as well always use it.
+> > +
+> > +required:
+> > +  - compatible
+> > +  - "#clock-cells"
+> > +  - clock-frequency
+> > +
+> > +additionalProperties: false
+>
+> Does this always have to be specified even if it's false?
 
+Yes, the default defined as true by the json-schema spec. In some
+cases we don't want to specify it.
 
-Thanks,
+> > +
+> > +examples:
+> > +  - |
+> > +    clock {
+> > +      compatible = "fixed-clock";
+> > +      #clock-cells = <0>;
+> > +      clock-frequency = <1000000000>;
+> > +      clock-accuracy = <100>;
+> > +    };
+> > +...
+> >
+>
+> Is the triple dot part of the schema?
 
-James
+Yes. Well, it is part of YAML. It's optional really as are the 2 lines
+at the start. It's just good hygiene.
+
+Rob
