@@ -1,92 +1,143 @@
-From: Mathieu Poirier <mathieu.poirier@linaro.org>
-Subject: Re: [PATCH 2/3] coresight: etm4x: Add support to enable ETMv4.2
-Date: Fri, 11 Jan 2019 11:52:42 -0700
-Message-ID: <20190111185242.GB22691@xps15>
-References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
- <4cb23e3bc414f3a1cac555d27b93e7e8cfeb68c9.1547054308.git.saiprakash.ranjan@codeaurora.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
+Date: Fri, 11 Jan 2019 10:54:00 -0800
+Message-ID: <154723284041.169631.6622751321828044091@swboyd.mtv.corp.google.com>
+References: <20190110221903.3990-4-robh@kernel.org> <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com> <CAL_JsqJzNBYCMWbZtR37eZd4yx2kc590V+q3603Hg=kG2bZwhw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4cb23e3bc414f3a1cac555d27b93e7e8cfeb68c9.1547054308.git.saiprakash.ranjan@codeaurora.org>
+In-Reply-To: <CAL_JsqJzNBYCMWbZtR37eZd4yx2kc590V+q3603Hg=kG2bZwhw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 09, 2019 at 11:16:48PM +0530, Sai Prakash Ranjan wrote:
-> SDM845 has ETMv4.2 and can use the existing etm4x driver.
-> But the current etm driver checks only for ETMv4.0 and
-> errors out for other etm4x versions. This patch adds this
-> missing support to enable SoC's with ETMv4x to use same
-> driver by checking only the ETM architecture major version
-> number.
-> 
-> Without this change, we get below error during etm probe:
-> 
-> / # dmesg | grep etm
-> [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-> [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-> [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-> [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-> [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-> [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-> [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-> [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
-> 
-> With this change, etm probe is successful:
-> 
-> / # dmesg | grep coresight
-> [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-> [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-> [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-> [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-> [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-> [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-> [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-> [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
-> 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->  drivers/hwtracing/coresight/coresight-etm4x.c | 2 +-
->  drivers/hwtracing/coresight/coresight-etm4x.h | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 53e2fb6e86f6..40cf17df5023 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -1021,7 +1021,7 @@ static int etm4_probe(struct amba_device *adev, const struct amba_id *id)
->  
->  	cpus_read_unlock();
->  
-> -	if (etm4_arch_supported(drvdata->arch) == false) {
-> +	if (etm4_arch_supported(drvdata->arch >> 4) == false) {
+Quoting Rob Herring (2019-01-11 10:27:48)
+> On Fri, Jan 11, 2019 at 11:44 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> >
+> > Quoting Rob Herring (2019-01-10 14:19:01)
+> > > Convert the fixed-clock binding to DT schema format using json-schema.
+> > >
+> >
+> > Any pointer to the full schema?
+>=20
+> https://github.com/robherring/yaml-bindings/blob/master/schemas/
+>=20
+> And the clock schema in particular:
+> https://github.com/robherring/yaml-bindings/blob/master/schemas/clock.yaml
 
-I think it would be better to simply mask out the minor version number bits in
-function etm4_arch_supported().  That way we can add more intelligence in there 
-in the future if we have to and we don't have to touch the calling code again.
+Awesome. Thanks for the pointers! Is the clock schema posted to the list
+somewhere?
 
-Thanks,
-Mathieu
+>=20
+> > > Cc: Michael Turquette <mturquette@baylibre.com>
+> > > Cc: Stephen Boyd <sboyd@kernel.org>
+> > > Cc: linux-clk@vger.kernel.org
+> > > Signed-off-by: Rob Herring <robh@kernel.org>
+> > [...]
+> > > diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.yaml=
+ b/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> > > new file mode 100644
+> > > index 000000000000..8b5628463b90
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> > > @@ -0,0 +1,44 @@
+> > > +# SPDX-License-Identifier: GPL-2.0
+> > > +%YAML 1.2
+> > > +---
+> > > +$id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
+> > > +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> > > +
+> > > +title: Binding for simple fixed-rate clock sources.
+> >
+> > Why does title have a full stop?
+>=20
+> Because it was there in the original. My script to extract just takes
+> the first line of alphanumeric text.
 
->  		ret = -EINVAL;
->  		goto err_arch_supported;
->  	}
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
-> index 52786e9d8926..05d4bd330881 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.h
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.h
-> @@ -136,7 +136,7 @@
->  #define ETM_MAX_RES_SEL			16
->  #define ETM_MAX_SS_CMP			8
->  
-> -#define ETM_ARCH_V4			0x40
-> +#define ETM_ARCH_V4			0x4
->  #define ETMv4_SYNC_MASK			0x1F
->  #define ETM_CYC_THRESHOLD_MASK		0xFFF
->  #define ETM_CYC_THRESHOLD_DEFAULT       0x100
-> -- 
-> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-> of Code Aurora Forum, hosted by The Linux Foundation
-> 
+Ok. I think it would be good to treat them like commit subjects that
+don't have the full stop either, so if the script is able to drop the
+full stop it would be great.
+
+>=20
+> > > +
+> > > +maintainers:
+> > > +  - Michael Turquette <mturquette@baylibre.com>
+> > > +  - Stephen Boyd <sboyd@kernel.org>
+> > > +
+> > > +properties:
+> > > +  compatible:
+> > > +    const: fixed-clock
+> > > +
+> > > +  "#clock-cells":
+> > > +    const: 0
+> > > +
+> > > +  clock-frequency: true
+> >
+> > Why doesn't this need the $ref: /schemas/types.yaml#/... thing?
+>=20
+> You might want to read bindings/example-schema.yaml which tries to
+> explain some of this.
+>=20
+> Standard properties are already defined in the core schemas. So we
+> only have to say "we use this property" and any binding specific
+> constraints. In this case, there aren't any other constraints. It is
+> also needed to be listed here to mark it required and to satisfy
+> 'additionalProperties: false'.
+
+Hmm ok. I suppose I'll have to hold that information in my mind when
+reviewing bindings. Is there any tooling or some script that I can run
+on json-schema bindings to verify they're correct? Or to find something
+redundant like this where a standard property is redefined? Grep would
+work for the redundant problem I suppose.
+
+>=20
+> > > +  clock-accuracy:
+> > > +    description: accuracy of clock in ppb (parts per billion).
+> > > +    $ref: /schemas/types.yaml#/definitions/uint32
+> > > +
+> > > +  clock-output-names:
+> > > +    maxItems: 1
+> >
+> > Is there a schema for strings?
+>=20
+> Yes. The core already covers that '*-names' properties are a list of
+> strings. So no need to do that again here and we just need to define
+> how many strings are valid.
+
+Alright. Thanks for the explanations.
+
+>=20
+> > > +
+> > > +required:
+> > > +  - compatible
+> > > +  - "#clock-cells"
+> > > +  - clock-frequency
+> > > +
+> > > +additionalProperties: false
+> >
+> > Does this always have to be specified even if it's false?
+>=20
+> Yes, the default defined as true by the json-schema spec. In some
+> cases we don't want to specify it.
+>=20
+> > > +
+> > > +examples:
+> > > +  - |
+> > > +    clock {
+> > > +      compatible =3D "fixed-clock";
+> > > +      #clock-cells =3D <0>;
+> > > +      clock-frequency =3D <1000000000>;
+> > > +      clock-accuracy =3D <100>;
+> > > +    };
+> > > +...
+> > >
+> >
+> > Is the triple dot part of the schema?
+>=20
+> Yes. Well, it is part of YAML. It's optional really as are the 2 lines
+> at the start. It's just good hygiene.
+>=20
+
+Sounds good.
