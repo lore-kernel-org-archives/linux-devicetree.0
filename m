@@ -1,49 +1,54 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH v3] arm64: dts: meson: Fix mmc cd-gpios polarity
-Date: Fri, 11 Jan 2019 20:46:46 +0100
-Message-ID: <CAFBinCDM4BTx0Ude-M=O6B2bXPE9EdfD=VxZfFzR9Dc=yT+xWQ@mail.gmail.com>
-References: <1547134822-18498-1-git-send-email-lollivier@baylibre.com>
+From: Jeffrey Hugo <jhugo@codeaurora.org>
+Subject: Re: [PATCH v1 4/6] phy: qcom-qmp: Add QMP V3 USB3 PHY support for
+ msm8998
+Date: Fri, 11 Jan 2019 12:48:50 -0700
+Message-ID: <a5f38a7b-a761-c924-08ef-fc685f027561@codeaurora.org>
+References: <1546620647-2467-1-git-send-email-jhugo@codeaurora.org>
+ <20190111194513.GA13699@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547134822-18498-1-git-send-email-lollivier@baylibre.com>
+In-Reply-To: <20190111194513.GA13699@bogus>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>
+To: Rob Herring <robh@kernel.org>
+Cc: kishon@ti.com, bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, mturquette@baylibre.com, sboyd@kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 1/11/2019 12:45 PM, Rob Herring wrote:
+> On Fri, Jan 04, 2019 at 09:50:47AM -0700, Jeffrey Hugo wrote:
+>> MSM8998 contains a single QMP v3 USB3 phy similar to the existing sdm845
+>> support, however MSM8998 does not have display port (DP) support.
+>>
+>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>> ---
+>>   .../devicetree/bindings/phy/qcom-qmp-phy.txt       |   5 +
+>>   drivers/phy/qualcomm/phy-qcom-qmp.c                | 142 +++++++++++++++++++++
+>>   drivers/phy/qualcomm/phy-qcom-qmp.h                |   4 +
+>>   3 files changed, 151 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> index 41a1074..6061b6f 100644
+>> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+>> @@ -9,6 +9,7 @@ Required properties:
+>>   	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+>>   	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+>>   	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+>> +	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+> 
+> Please make bindings a separate patch. Combining patch 1 and 2
+> binding changes is fine.
+> 
+> Rob
+> 
 
-some nit-picks as well as my Tested-by (in case it's not too late) below.
-thank you for taking care of this!
+Sure.  Planning on re-spinning early next week to address a few comments.
 
-On Thu, Jan 10, 2019 at 4:40 PM Loys Ollivier <lollivier@baylibre.com> wrote:
->
-> Commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> changed the behavior of "cd-inverted" to follow the device tree bindings
-> specification.
-> Lines specifying "cd-inverted" are now "active high".
-this depends on the polarity from the cd-gpios property. above commit
-caused cd-inverted to be applied twice (effectively making it a
-no-op). thus "cd-inverted" only means "active high" if cd-gpios also
-sets GPIO_ACTIVE_HIGH. if the polarity in cd-gpios is GPIO_ACTIVE_LOW
-together with "cd-inverted" then the GPIO will be treated as active
-low.
-
-> Fix the SD card for meson by setting the cd-gpios as "active low" according
-> to the boards specifications.
-not only switching to GPIO_ACTIVE_LOW, also dropping "cd-inverted"
-
-> Fixes: 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-in my patches for the 32-bit boards I used the commit which added SD
-card support to the board for the Fixes tag. however, I'm fine with
-this as well (I just wanted to point out that there's a small
-difference in our commits).
-
-> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-on my Khadas VIM(1), using Kevin's v5.0/fixes branch:
-Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-
-
-Regards
-Martin
+-- 
+Jeffrey Hugo
+Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
+Technologies, Inc.
+Qualcomm Technologies, Inc. is a member of the
+Code Aurora Forum, a Linux Foundation Collaborative Project.
