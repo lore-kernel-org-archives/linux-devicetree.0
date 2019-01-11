@@ -1,133 +1,37 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 2/9] dt/bindings: drm/komeda: Add DT bindings for ARM
- display processor D71
-Date: Fri, 11 Jan 2019 10:15:27 -0600
-Message-ID: <20190111161527.GA9669@bogus>
-References: <20190103113841.15403-1-james.qian.wang@arm.com>
- <20190103113841.15403-3-james.qian.wang@arm.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy regulator warning
+Date: Fri, 11 Jan 2019 21:46:56 +0530
+Message-ID: <CANAwSgTX4Rs7xXzjpNi-zizRyyO0FiFF0baOuQZ0fx9WEM9NCA@mail.gmail.com>
+References: <20190111092235.28161-1-linux.amoon@gmail.com> <772bd70c-2cd9-a1be-d18f-7824a9ea0556@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190103113841.15403-3-james.qian.wang@arm.com>
+In-Reply-To: <772bd70c-2cd9-a1be-d18f-7824a9ea0556@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Cc: Liviu Dudau <Liviu.Dudau@arm.com>, "daniel.vetter@ffwll.ch" <daniel.vetter@ffwll.ch>, "rdunlap@infradead.org" <rdunlap@infradead.org>, Mark Rutland <Mark.Rutland@arm.com>, "linux-doc@vger.kernel.org" <linux-doc@vger.kernel.org>, "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>, "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>, Alexandru-Cosmin Gheorghe <Alexandru-Cosmin.Gheorghe@arm.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "yamada.masahiro@socionext.com" <yamada.masahiro@socionext.com>, "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>
+To: Neil Armstrong <narmstrong@baylibre.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 03, 2019 at 11:40:04AM +0000, james qian wang (Arm Technology China) wrote:
-> From: "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-> 
-> Add DT bindings documentation for the ARM display processor D71 and later
-> IPs.
-> 
-> Changes in v4:
-> - Deleted unnecessary address-cells, size-cells [Liviu Dudau]
-> 
-> Changes in v3:
-> - Deleted unnecessary property: interrupt-names.
-> - Dropped 'ports' and moving 'port' up a level.
-> 
-> Signed-off-by: James Qian Wang (Arm Technology China) <james.qian.wang@arm.com>
-> Reviewed-by: Liviu Dudau <liviu.dudau@arm.com>
-> ---
->  .../bindings/display/arm/arm,komeda.txt       | 73 +++++++++++++++++++
->  1 file changed, 73 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/display/arm/arm,komeda.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/display/arm/arm,komeda.txt b/Documentation/devicetree/bindings/display/arm/arm,komeda.txt
-> new file mode 100644
-> index 000000000000..919d651d3e8c
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/display/arm/arm,komeda.txt
-> @@ -0,0 +1,73 @@
-> +Device Tree bindings for Arm Komeda display driver
-> +
-> +Required properties:
-> +- compatible: Should be "arm,mali-d71"
-> +- reg: Physical base address and length of the registers in the system
-> +- interrupts: the interrupt line number of the device in the system
-> +- clocks: A list of phandle + clock-specifier pairs, one for each entry
-> +    in 'clock-names'
-> +- clock-names: A list of clock names. It should contain:
-> +      - "mclk": for the main processor clock
-> +      - "pclk": for the APB interface clock
-> +- #address-cells: Must be 1
-> +- #size-cells: Must be 0
-> +
-> +Required properties for sub-node: pipeline@nq
-> +Each device contains one or two pipeline sub-nodes (at least one), each
-> +pipeline node should provide properties:
-> +- reg: Zero-indexed identifier for the pipeline
-> +- clocks: A list of phandle + clock-specifier pairs, one for each entry
-> +    in 'clock-names'
-> +- clock-names: should contain:
-> +      - "pxclk": pixel clock
-> +      - "aclk": AXI interface clock
-> +
-> +- port: each pipeline connect to an encoder input port. The connection is
-> +    modeled using the OF graph bindings specified in
-> +    Documentation/devicetree/bindings/graph.txt
-> +
-> +Optional properties:
-> +  - memory-region: phandle to a node describing memory (see
-> +    Documentation/devicetree/bindings/reserved-memory/reserved-memory.txt)
-> +    to be used for the framebuffer; if not present, the framebuffer may
-> +    be located anywhere in memory.
-> +
-> +Example:
-> +/ {
-> +	...
-> +
-> +	dp0: display@c00000 {
-> +		#address-cells = <1>;
-> +		#size-cells = <0>;
-> +		compatible = "arm,mali-d71";
-> +		reg = <0xc00000 0x20000>;
-> +		interrupts = <0 168 4>;
-> +		clocks = <&dpu_mclk>, <&dpu_aclk>;
-> +		clock-names = "mclk", "pclk";
-> +
-> +		dp0_pipe0: pipeline@0 {
-> +			clocks = <&fpgaosc2>, <&dpu_aclk>;
-> +			clock-names = "pxclk", "aclk";
-> +			reg = <0>;
-> +
-> +			port@0 {
+Hi Neil,
 
-Drop the '@0'
+On Fri, 11 Jan 2019 at 19:10, Neil Armstrong <narmstrong@baylibre.com> wrote:
+>
+> Hi Anand,
+>
+> On 11/01/2019 10:22, Anand Moon wrote:
+> > Add missing vin-supply 5V regulator node on usb_phy nodes needed
+> > to power usb bus ports. Override the dr_mode from "host" to "peripheral"
+> > for initialization of dwc2 usb0 phy node,changes fix the below
+> > warning for usb initialization.
+>
+> I would have switch the dr_mode to peripheral in another patch,
+> fix the regulator issue in this patch only.
+>
+> Neil
+>
+[snip]
 
-> +				dp0_pipe0_out: endpoint {
-> +					remote-endpoint = <&db_dvi0_in>;
-> +				};
-> +			};
-> +		};
-> +
-> +		dp0_pipe1: pipeline@1 {
-> +			clocks = <&fpgaosc2>, <&dpu_aclk>;
-> +			clock-names = "pxclk", "aclk";
-> +			reg = <1>;
-> +
-> +			port@0 {
+Ok will split this into two patches and send after next dts updates.
 
-And here.
-
-With that,
-
-Reviewed-by: Rob Herring <robh@kernel.org>
-
-> +				dp0_pipe1_out: endpoint {
-> +					remote-endpoint = <&db_dvi1_in>;
-> +				};
-> +			};
-> +		};
-> +	};
-> +	...
-> +};
-> -- 
-> 2.17.1
-> 
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+Best Regards
+-Anand
