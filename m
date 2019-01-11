@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 03/10] usb: ehci-orion: avoid double PHY initialization
-Date: Fri, 11 Jan 2019 14:31:26 +0100
-Message-ID: <20190111133133.24803-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 09/10] ARM64: dts: marvell: armada-37xx: declare USB2 UTMI
+ PHYs
+Date: Fri, 11 Jan 2019 14:31:32 +0100
+Message-ID: <20190111133133.24803-10-miquel.raynal@bootlin.com>
 References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,72 +22,66 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Gregory Clement <gregory.clement@boo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-No need to initialize the PHY from the driver's probe. It is done by
-the core automatically and doing it twice would increment the
-phy->powercount counter to 2 instead of 1. During later suspend
-operation, the counter will be decremented to one, no phy->power_off()
-will occur and worst than that, the following phy->power_on() at
-resume time will be also skipped, failing the whole S2RAM operation.
+On Marvell Armada 3700 SoCs there are two USB2 UTMI PHYs. They are
+both very similar but only one has OTG/charging capabilities.
+
+Because there are USB host registers and PHY registers mixed in a
+single area, a system controller is also created and referenced from
+both the USB host node and the PHY node.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/usb/host/ehci-orion.c | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 26 ++++++++++++++++++++
+ 1 file changed, 26 insertions(+)
 
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 1ad72647a069..3109f082949e 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->phy)) {
- 		err = PTR_ERR(priv->phy);
- 		if (err != -ENOSYS)
--			goto err_phy_get;
--	} else {
--		err = phy_init(priv->phy);
--		if (err)
--			goto err_phy_init;
--
--		err = phy_power_on(priv->phy);
--		if (err)
--			goto err_phy_power_on;
-+			goto err_dis_clk;
- 	}
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index 5cfd1b920f31..d87db3d4cc3d 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -344,18 +344,44 @@
+ 				compatible = "marvell,armada3700-xhci",
+ 				"generic-xhci";
+ 				reg = <0x58000 0x4000>;
++				marvell,usb-misc-reg = <&usb32_syscon>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&sb_periph_clk 12>;
+ 				status = "disabled";
+ 			};
  
- 	/*
-@@ -297,19 +289,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
++			usb2_utmi_otg_phy: phy@5d000 {
++				compatible = "marvell,a3700-utmi-otg-phy";
++				reg = <0x5d000 0x800>;
++				marvell,usb-misc-reg = <&usb32_syscon>;
++				#phy-cells = <0>;
++			};
++
++			usb32_syscon: system-controller@5d800 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x5d800 0x800>;
++			};
++
+ 			usb2: usb@5e000 {
+ 				compatible = "marvell,armada-3700-ehci";
+ 				reg = <0x5e000 0x1000>;
++				marvell,usb-misc-reg = <&usb2_syscon>;
+ 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
+ 				status = "disabled";
+ 			};
  
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err)
--		goto err_add_hcd;
-+		goto err_dis_clk;
- 
- 	device_wakeup_enable(hcd->self.controller);
- 	return 0;
- 
--err_add_hcd:
--	if (!IS_ERR(priv->phy))
--		phy_power_off(priv->phy);
--err_phy_power_on:
--	if (!IS_ERR(priv->phy))
--		phy_exit(priv->phy);
--err_phy_init:
--err_phy_get:
-+err_dis_clk:
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 	usb_put_hcd(hcd);
-@@ -327,11 +312,6 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
- 
- 	usb_remove_hcd(hcd);
- 
--	if (!IS_ERR(priv->phy)) {
--		phy_power_off(priv->phy);
--		phy_exit(priv->phy);
--	}
--
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 
++			usb2_utmi_host_phy: phy@5f000 {
++				compatible = "marvell,a3700-utmi-host-phy";
++				reg = <0x5f000 0x800>;
++				marvell,usb-misc-reg = <&usb2_syscon>;
++				#phy-cells = <0>;
++			};
++
++			usb2_syscon: system-controller@5f800 {
++				compatible = "syscon", "simple-mfd";
++				reg = <0x5f800 0x800>;
++			};
++
+ 			xor@60900 {
+ 				compatible = "marvell,armada-3700-xor";
+ 				reg = <0x60900 0x100>,
 -- 
 2.19.1
