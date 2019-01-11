@@ -1,68 +1,110 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v2 03/10] usb: ehci-orion: avoid double PHY initialization
-Date: Fri, 11 Jan 2019 21:03:01 +0300
-Message-ID: <ffb3d79a-a506-5bda-402e-98e67d52933f@cogentembedded.com>
-References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
- <20190111133133.24803-4-miquel.raynal@bootlin.com>
+From: James Morse <james.morse@arm.com>
+Subject: Re: [PATCH 2/2] EDAC: add ARM Cortex A15 L2 internal asynchronous
+ error detection driver
+Date: Fri, 11 Jan 2019 18:11:04 +0000
+Message-ID: <bba99e8c-5e3e-98a4-d0c9-9734216e66d2@arm.com>
+References: <AM6PR0702MB379953E130CC1E1DEE18B79BFA8A0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+ <20190108104204.GA14243@zn.tnic>
+ <e1458b95-6d17-21be-5dd8-ee7ff8d8b3fb@arm.com>
+ <AM6PR0702MB37997C0FA1670DD1AF4C25C7FA8B0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111133133.24803-4-miquel.raynal@bootlin.com>
-Content-Language: en-MW
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>, Kishon Vijay Abraham I <kishon@ti.com>, Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM6PR0702MB37997C0FA1670DD1AF4C25C7FA8B0@AM6PR0702MB3799.eurprd07.prod.outlook.com>
+Content-Language: en-GB
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Wiebe, Wladislav (Nokia - DE/Ulm)" <wladislav.wiebe@nokia.com>
+Cc: Borislav Petkov <bp@alien8.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>, "davem@davemloft.net" <davem@davemloft.net>, "akpm@linux-foundation.org" <akpm@linux-foundation.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "arnd@arndb.de" <arnd@arndb.de>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "mchehab@kernel.org" <mchehab@kernel.org>, "Sverdlin, Alexander (Nokia - DE/Ulm)" <alexander.sverdlin@nokia.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, linux-kernel@vger.kernel.or
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+Hi Wladislav,
 
-On 01/11/2019 04:31 PM, Miquel Raynal wrote:
+On 09/01/2019 14:44, Wiebe, Wladislav (Nokia - DE/Ulm) wrote:
+>> From: James Morse <james.morse@arm.com>
+>> Sent: Tuesday, January 08, 2019 6:57 PM
 
-> No need to initialize the PHY from the driver's probe. It is done by
-> the core automatically and doing it twice would increment the
-> phy->powercount counter to 2 instead of 1. During later suspend
-> operation, the counter will be decremented to one, no phy->power_off()
-> will occur and worst than that, the following phy->power_on() at
+>> On 08/01/2019 10:42, Borislav Petkov wrote:
+>>> So the first thing to figure out here is how generic is this and if
+>>> so, to make it a cortex_a15_edac.c driver which contains all the RAS
+>>> functionality for A15. Definitely not an EDAC driver per functional
+>>> unit but rather per vendor or even ARM core.
+>>
+>> This is implementation-defined/specific-to-A15 and is documented in the
+>> TRM [0].
+>> (On the 'all the RAS functionality for A15' front: there are two more registers:
+>> L2MERRSR and CPUMERRSR. These are both accessible from the normal-
+>> world, and don't appear to need enabling.)
 
-   Worse.
+After I sent this it occurred to me the core can't know about errors in the L3
+cache (if there is one) or the memory-controller. These may have edac/ras
+abilities, but they are selected by the soc integrator, so could be per soc.
+This goes against Boris's no-per-functional-unit edac drivers. If we had to pick
+one out of that set, I think the memory-controller is most useful as DRAM is the
+most likely to be affected by errors.
 
-> resume time will be also skipped, failing the whole S2RAM operation.
+
+>> But we have the usual pre-v8.2 problems, and in addition cluster-interrupts,
+>> as this signal might be per-cluster, or it might be combined.
+>>
+>> Wladislav, I'm afraid we've had a few attempts at pre-8.2 EDAC drivers, the
+>> below list of problems is what we've learnt along the way. The upshot is that
+>> before the architected RAS extensions, the expectation is firmware will
+>> handle all this, as its difficult for the OS to deal with.
+>>
+>>
+>> My first question is how useful is a 'something bad happened' edac event?
 > 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/usb/host/ehci-orion.c | 26 +++-----------------------
->  1 file changed, 3 insertions(+), 23 deletions(-)
+> We experienced sometimes random user-space crashes where we didn't 
+> expect a bug in the application code. If there would be a notification 
+> by such edac event,
+
+Sure, but we always have to assume its the worst case: an uncontained error (to
+use the v8.2 terms). A write has gone somewhere it shouldn't, we can't trust
+memory anymore.
+
+> we would at least know that something bad happened before.
+
+>>> On Tue, Jan 08, 2019 at 08:10:45AM +0000, Wiebe, Wladislav (Nokia -
+>> DE/Ulm) wrote:
+>>>> This driver adds support for L2 internal asynchronous error detection
+>>>> caused by L2 RAM double-bit ECC error or illegal writes to the
+>>>> Interrupt Controller memory-map region on the Cortex A15.
+>>
+>>>> diff --git a/drivers/edac/cortex_a15_l2_async_edac.c
+>>>> b/drivers/edac/cortex_a15_l2_async_edac.c
+>>>> new file mode 100644
+>>>> index 000000000000..26252568e961
+>>>> --- /dev/null
+>>>> +++ b/drivers/edac/cortex_a15_l2_async_edac.c
+>>>> @@ -0,0 +1,134 @@
+
+>>>> +static int cortex_a15_l2_async_edac_probe(struct platform_device
+>>>> +*pdev) {
+>>>> +	struct edac_device_ctl_info *dci;
+>>>> +	struct device_node *np = pdev->dev.of_node;
+>>>> +	char *ctl_name = (char *)np->name;
+>>>> +	int i = 0, ret = 0, err_irq = 0, irq_count = 0;
+>>>> +
+>>>> +	/* We can have multiple CPU clusters with one INTERRIRQ per cluster
+>>>> +*/
+>>
+>> Surely this an integration choice?
+>>
+>> You're accessing the cluster through a cpu register in the handler, what
+>> happens if the interrupt is delivered to the wrong cluster?
+>> How do we know which interrupt maps to which cluster?
+>> How do we stop user-space 'balancing' the interrupts?
 > 
-> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-> index 1ad72647a069..3109f082949e 100644
-> --- a/drivers/usb/host/ehci-orion.c
-> +++ b/drivers/usb/host/ehci-orion.c
-> @@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->phy)) {
->  		err = PTR_ERR(priv->phy);
->  		if (err != -ENOSYS)
-> -			goto err_phy_get;
-> -	} else {
-> -		err = phy_init(priv->phy);
-> -		if (err)
-> -			goto err_phy_init;
-> -
-> -		err = phy_power_on(priv->phy);
-> -		if (err)
-> -			goto err_phy_power_on;
-> +			goto err_dis_clk;
+> You are right, based on all your inputs I think we can stop using this driver
+> as generic A15 solution
 
-   Familiar code in unfamiliar place. Somebody must have blindly copied it... :-)
+Handling this interrupt in firmware is probably the best for your soc. For a
+generic a15 driver in the kernel, we would have to consider 'no interrupt',
+(e.g. the interrupt is wired to some other SCP/BMC thing). Once we've got
+polling code for these registers, we may as well always use it.
 
-[...]
 
-MBR, Sergei
+Thanks,
+
+James
