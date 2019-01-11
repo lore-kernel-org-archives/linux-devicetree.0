@@ -1,149 +1,64 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip
- points to cpufreq
-Date: Thu, 10 Jan 2019 16:30:14 -0800
-Message-ID: <20190111003014.GB261387@google.com>
-References: <cover.1547078153.git.amit.kucheria@linaro.org>
- <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v2 0/3] ARM: dts: meson: add the APB/APB2 busses
+Date: Thu, 10 Jan 2019 16:36:27 -0800
+Message-ID: <7himywqbck.fsf@baylibre.com>
+References: <20181208165025.27689-1-martin.blumenstingl@googlemail.com> <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
+In-Reply-To: <ba3e4fef-7a18-8c7d-e0ea-05c541b29913@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, linux-amlogic@lists.infradead.org
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 05:30:56AM +0530, Amit Kucheria wrote:
-> Since the big and little cpus are in the same frequency domain, use all
-> of them for mitigation in the cooling-map. At the lower trip points we
-> restrict ourselves to throttling only a few OPPs. At higher trip
-> temperatures, allow ourselves to be throttled to any extent.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 145 +++++++++++++++++++++++++++
->  1 file changed, 145 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 29e823b0caf4..cd6402a9aa64 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -13,6 +13,7 @@
->  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  
->  / {
->  	interrupt-parent = <&intc>;
-> @@ -99,6 +100,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
->  				compatible = "cache";
-> @@ -114,6 +116,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_100>;
->  			L2_100: l2-cache {
->  				compatible = "cache";
-> @@ -126,6 +129,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x200>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_200>;
->  			L2_200: l2-cache {
->  				compatible = "cache";
-> @@ -138,6 +142,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x300>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_300>;
->  			L2_300: l2-cache {
->  				compatible = "cache";
-> @@ -150,6 +155,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x400>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_400>;
->  			L2_400: l2-cache {
->  				compatible = "cache";
-> @@ -162,6 +168,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x500>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_500>;
->  			L2_500: l2-cache {
->  				compatible = "cache";
-> @@ -174,6 +181,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x600>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_600>;
->  			L2_600: l2-cache {
->  				compatible = "cache";
-> @@ -186,6 +194,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x700>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_700>;
->  			L2_700: l2-cache {
->  				compatible = "cache";
-> @@ -1703,6 +1712,23 @@
->  					type = "critical";
->  				};
->  			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpu_alert0>;
-> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-> +							 <&CPU1 THERMAL_NO_LIMIT 4>,
-> +							 <&CPU2 THERMAL_NO_LIMIT 4>,
-> +							 <&CPU3 THERMAL_NO_LIMIT 4>;
-> +				};
-> +				map1 {
-> +					trip = <&cpu_crit0>;
-> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-> +				};
-> +			};
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-Slightly off-topic, buy maybe not so much since we are just starting
-to use the trip points:
+> On 08/12/2018 17:50, Martin Blumenstingl wrote:
+>> This adds the APB bus on Meson8 and Meson8b as well as the APB2 bus on
+>> Meson6. This is preparation work for adding the Mali GPU which is
+>> located on theses busses.
+>> 
+>> Meson6 seems to have it's APB at 0xc8000000 instead of 0xd0000000. The
+>> region at 0xd0000000 is called APB2 or A9_APB and it has a different
+>> size (256k) compared to Meson8 and Meson8b (2M).
+>> 
+>> Addresses and sizes are taken from the Amlogic 3.10 kernel sources:
+>> - Meson6: [0]
+>> - Meson8: [1]
+>> - Meson8b: [2]
+>> 
+>> 
+>> Changes since v1 at [3]:
+>> - re-send the patches but this time don't include the old patches
+>>   which still had a typo in the patch description (ABP vs APB)
+>> 
+>> 
+>> [0] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson6/include/mach/io.h#L61
+>> [1] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8/include/mach/io.h#L53
+>> [2] https://github.com/endlessm/linux-meson/blob/cd4096c3ff4eb5b8a8a5581bb46508601c5470dc/arch/arm/mach-meson8b/include/mach/io.h#L53
+>> [3] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009424.html
+>> 
+>> 
+>> Martin Blumenstingl (3):
+>>   ARM: dts: meson6: add the APB2 bus
+>>   ARM: dts: meson8: add the APB bus
+>>   ARM: dts: meson8b: add the APB bus
+>> 
+>>  arch/arm/boot/dts/meson6.dtsi  | 8 ++++++++
+>>  arch/arm/boot/dts/meson8.dtsi  | 8 ++++++++
+>>  arch/arm/boot/dts/meson8b.dtsi | 8 ++++++++
+>>  3 files changed, 24 insertions(+)
+>> 
+>
+> Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+>
+> But frankly I'll squash the meson8/meson8b patches with the mali node patches !
 
-Currently we use the naming scheme 'cpu_<type>N' for trip points. I
-anticipate that we're going to add more passive trip points soon, to
-keep the 'power_allocator' thermal governor happy, which expects a
-'switch_on' and a 'desired_temperature' trip point. With the current
-naming scheme this could become a bit messy. I suggest to change it to
-'cpuN_<type>[X]', which would allow for something like 'cpuN_alert0'
-and 'cpuN_alert1'.
+In general, I agree with Neil.  Adding the new busses along with the
+series that uses them would be fine, but I don't have a strong
+preference.
 
-If you think the change makes sense you can consider to do it within
-this series, I can also send a separate patch once it has landed.
+So queueing this series as is for v5.1 (branch: v5.1/dt)
 
-You could also consider to add the additional trip point in this
-series if you agree that it will be needed.
-
-This is not necessarily a call for action, just thinking loudly about
-a closely related topic ;-)
-
-Cheers
-
-Matthias
+Kevin
