@@ -1,50 +1,66 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V4 01/20] dt-bindings: clock: tegra124-dfll: Update DFLL
- binding for PWM regulator
-Date: Fri, 11 Jan 2019 13:32:02 -0600
-Message-ID: <20190111193202.GA23016@bogus>
-References: <20190104030702.8684-1-josephl@nvidia.com>
- <20190104030702.8684-2-josephl@nvidia.com>
+From: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Subject: [PATCH 1/2] iio: chemical: bme680: Add device-tree support
+Date: Fri, 11 Jan 2019 14:31:40 -0500
+Message-ID: <20190111193141.20607-1-sebastien.bourdelin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190104030702.8684-2-josephl@nvidia.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: devicetree@vger.kernel.org, Peter De Schrijver <pdeschrijver@nvidia.com>, Jonathan Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>, Joseph Lo <josephl@nvidia.com>, linux-tegra@vger.kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linux-kernel@vger.kernel.org
+Cc: devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org, Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 4 Jan 2019 11:06:43 +0800, Joseph Lo wrote:
-> From: Peter De Schrijver <pdeschrijver@nvidia.com>
-> 
-> Add new properties to configure the DFLL PWM regulator support.
-> 
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Peter De Schrijver <pdeschrijver@nvidia.com>
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
-> Acked-by: Jon Hunter <jonathanh@nvidia.com>
-> ---
-> *V4:
->  - s/nvidia,pwm-period/nvidia,pwm-period-nanoseconds/
-> *V3:
->  - no change
-> *V2:
->  - update the binding strings and descriptions for
->  nvidia,pwm-tristate-microvolts
->  nvidia,pwm-min-microvolts
->  nvidia,pwm-voltage-step-microvolts
-> ---
->  .../bindings/clock/nvidia,tegra124-dfll.txt   | 79 ++++++++++++++++++-
->  1 file changed, 77 insertions(+), 2 deletions(-)
-> 
+This commit allow the driver to work with device-tree.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+---
+ drivers/iio/chemical/bme680_i2c.c | 7 +++++++
+ drivers/iio/chemical/bme680_spi.c | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/drivers/iio/chemical/bme680_i2c.c b/drivers/iio/chemical/bme680_i2c.c
+index 06d4be539d2e..94a36ebdf0b2 100644
+--- a/drivers/iio/chemical/bme680_i2c.c
++++ b/drivers/iio/chemical/bme680_i2c.c
+@@ -70,10 +70,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+ 
++static const struct of_device_id bme680_of_i2c_match[] = {
++	{ .compatible = "bosch,bme680", },
++	{},
++}
++MODULE_DEVICE_TABLE(of, bme680_of_i2c_match);
++
+ static struct i2c_driver bme680_i2c_driver = {
+ 	.driver = {
+ 		.name			= "bme680_i2c",
+ 		.acpi_match_table       = ACPI_PTR(bme680_acpi_match),
++		.of_match_table		= of_match_ptr(bme680_of_i2c_match),
+ 	},
+ 	.probe = bme680_i2c_probe,
+ 	.id_table = bme680_i2c_id,
+diff --git a/drivers/iio/chemical/bme680_spi.c b/drivers/iio/chemical/bme680_spi.c
+index c9fb05e8d0b9..45bd4e93a891 100644
+--- a/drivers/iio/chemical/bme680_spi.c
++++ b/drivers/iio/chemical/bme680_spi.c
+@@ -110,10 +110,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+ };
+ MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+ 
++static const struct of_device_id bme680_of_spi_match[] = {
++	{ .compatible = "bosch,bme680", },
++	{},
++}
++MODULE_DEVICE_TABLE(of, bme680_of_spi_match);
++
+ static struct spi_driver bme680_spi_driver = {
+ 	.driver = {
+ 		.name			= "bme680_spi",
+ 		.acpi_match_table	= ACPI_PTR(bme680_acpi_match),
++		.of_match_table		= of_match_ptr(bme680_of_spi_match),
+ 	},
+ 	.probe = bme680_spi_probe,
+ 	.id_table = bme680_spi_id,
+-- 
+2.20.1
