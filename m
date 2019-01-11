@@ -1,18 +1,14 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: fsl: scu: add fallback compatible
- string for power domain
-Date: Fri, 11 Jan 2019 21:03:14 +0800
-Message-ID: <20190111130311.GA3599@dragon>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
- <1545148524-658-2-git-send-email-aisheng.dong@nxp.com>
- <20190111090009.GG32649@dragon> <20190111090653.GH32649@dragon>
- <AM0PR04MB42119B411244F0B1BB829D9F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Subject: Re: [PATCH] ARM: dts: imx6sl: correct PWM ipg clock source
+Date: Fri, 11 Jan 2019 21:07:16 +0800
+Message-ID: <20190111130714.GB3599@dragon>
+References: <1545197799-9082-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <AM0PR04MB42119B411244F0B1BB829D9F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
+In-Reply-To: <1545197799-9082-1-git-send-email-Anson.Huang@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -22,45 +18,14 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 10:48:21AM +0000, Aisheng Dong wrote:
-> Hi Shawn,
+On Wed, Dec 19, 2018 at 05:41:31AM +0000, Anson Huang wrote:
+> From i.MX6SL Reference Manual, the PWMx's ipg clock
+> for registers access is from perclk, correct them.
 > 
-> > -----Original Message-----
-> > From: Shawn Guo [mailto:shawnguo@kernel.org]
-> > Sent: Friday, January 11, 2019 5:07 PM
-> > 
-> > On Fri, Jan 11, 2019 at 05:00:11PM +0800, Shawn Guo wrote:
-> > > On Tue, Dec 18, 2018 at 04:01:20PM +0000, Aisheng Dong wrote:
-> > > > SCU power domain can be used in the same way by IMX8QXP and
-> > IMX8QM SoCs.
-> > > > Let's add a "fsl,scu-pd" fallback compatible string to allow other
-> > > > SoCs to reuse the common part.
-> > >
-> > > This is not the practice we used to match devices with
-> > > compatibilities, i.e. coding the compatible string with the SoC name
-> > > that firstly introduces the device, and use the compatible as fallback for new
-> > SoCs.
-> > 
-> 
-> This is suggested by Rob that if the future SoCs are likely to be compatible.
-> Then we can use a general fallback compatible string like "fsl,scu-pd".
-> https://patchwork.kernel.org/patch/10644815/
-> 
-> From SCU HW protocol point of view, they're indeed compatible.
-> Just varies a bit on the domains numbers. 
-> That's why we introduce "fsl,scu-pd".
-> But still keep SoC specific compatible string in case any special tricks
-> to ensure the ABI stability.
-> 
-> How do you think?
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 
-Unless Rob is against the practice we have been used for long time on
-i.MX, I would keep using it for i.MX8, i.e. instead of introducing a
-generic compatible for fallback, simply falling on the compatible SoC
-specified IP block.
-
-Shawn
+Applied, thanks.
