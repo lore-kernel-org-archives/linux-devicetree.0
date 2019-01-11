@@ -1,55 +1,100 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH V2 1/3] dt-bindings: fsl: add imx7ulp system integration
- module binding
-Date: Fri, 11 Jan 2019 06:22:40 +0000
-Message-ID: <1547187469-14046-1-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH V2 2/3] ARM: imx: add i.MX7ULP SoC revision support
+Date: Fri, 11 Jan 2019 06:22:50 +0000
+Message-ID: <1547187469-14046-2-git-send-email-Anson.Huang@nxp.com>
+References: <1547187469-14046-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1547187469-14046-1-git-send-email-Anson.Huang@nxp.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add i.MX7ULP system integration module (SIM) binding.
+i.MX7ULP SoC's revision info is inside the SIM module,
+bit[31:28] of JTAG_ID register defines revision as below
+from B0:
+
+0001        B0
+0010        B1
+
+This patch adds SoC revision support for i.MX7ULP, test
+result as below:
+
+root@imx7ulp-evk ~$ cat /sys/devices/soc0/revision
+2.1
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- .../bindings/arm/freescale/fsl,imx7ulp-sim.txt           | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
+ arch/arm/mach-imx/mach-imx7ulp.c | 39 ++++++++++++++++++++++++++++++++++++=
++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
-new file mode 100644
-index 0000000..7d0c7f0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
-@@ -0,0 +1,16 @@
-+Freescale i.MX7ULP System Integration Module
-+----------------------------------------------
-+The system integration module (SIM) provides system control and chip configuration
-+registers. In this module, chip revision information is located in JTAG ID register,
-+and a set of registers have been made available in DGO domain for SW use, with the
-+objective to maintain its value between system resets.
+diff --git a/arch/arm/mach-imx/mach-imx7ulp.c b/arch/arm/mach-imx/mach-imx7=
+ulp.c
+index 19c5b30..11ac71a 100644
+--- a/arch/arm/mach-imx/mach-imx7ulp.c
++++ b/arch/arm/mach-imx/mach-imx7ulp.c
+@@ -6,18 +6,57 @@
+  */
+=20
+ #include <linux/irqchip.h>
++#include <linux/mfd/syscon.h>
+ #include <linux/of_platform.h>
++#include <linux/regmap.h>
+ #include <asm/mach/arch.h>
+=20
+ #include "common.h"
+ #include "cpuidle.h"
+ #include "hardware.h"
+=20
++#define SIM_JTAG_ID_REG		0x8c
 +
-+Required properties:
-+- compatible:	Should be "fsl,imx7ulp-sim".
-+- reg:		Specifies base physical address and size of the register sets.
++static void __init imx7ulp_set_revision(void)
++{
++	struct regmap *sim;
++	u32 revision;
 +
-+Example:
-+sim: sim@410a3000 {
-+	compatible = "fsl,imx7ulp-sim", "syscon";
-+	reg = <0x410a3000 0x1000>;
-+};
--- 
++	sim =3D syscon_regmap_lookup_by_compatible("fsl,imx7ulp-sim");
++	if (IS_ERR(sim)) {
++		pr_warn("failed to find fsl,imx7ulp-sim regmap!\n");
++		return;
++	}
++
++	if (regmap_read(sim, SIM_JTAG_ID_REG, &revision)) {
++		pr_warn("failed to read sim regmap!\n");
++		return;
++	}
++
++	/*
++	 * bit[31:28] of JTAG_ID register defines revision as below from B0:
++	 * 0001        B0
++	 * 0010        B1
++	 */
++	switch (revision >> 28) {
++	case 1:
++		imx_set_soc_revision(IMX_CHIP_REVISION_2_0);
++		break;
++	case 2:
++		imx_set_soc_revision(IMX_CHIP_REVISION_2_1);
++		break;
++	default:
++		imx_set_soc_revision(IMX_CHIP_REVISION_1_0);
++		break;
++	}
++}
++
+ static void __init imx7ulp_init_machine(void)
+ {
+ 	imx7ulp_pm_init();
+=20
+ 	mxc_set_cpu_type(MXC_CPU_IMX7ULP);
++	imx7ulp_set_revision();
+ 	of_platform_default_populate(NULL, NULL, imx_soc_device_init());
+ }
+=20
+--=20
 2.7.4
