@@ -1,15 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 2/2] arm64: dts: imx8mq: add GPC power domains
-Date: Fri, 11 Jan 2019 11:33:57 +0800
-Message-ID: <20190111033355.GA32341@dragon>
+Subject: Re: [PATCH 1/2] arm64: dts: imx8mq: move watchdog nodes to correct
+ location
+Date: Fri, 11 Jan 2019 11:34:27 +0800
+Message-ID: <20190111033425.GB32341@dragon>
 References: <20181214105510.1174-1-l.stach@pengutronix.de>
- <20181214105510.1174-2-l.stach@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20181214105510.1174-2-l.stach@pengutronix.de>
+In-Reply-To: <20181214105510.1174-1-l.stach@pengutronix.de>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,105 +23,10 @@ To: Lucas Stach <l.stach@pengutronix.de>
 Cc: devicetree@vger.kernel.org, patchwork-lst@pengutronix.de, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 11:55:10AM +0100, Lucas Stach wrote:
-> This adds support for the power domain controller found on the
-> i.MX8MQ SoC.
+On Fri, Dec 14, 2018 at 11:55:09AM +0100, Lucas Stach wrote:
+> The were added at the end of the AIPS1 address space, while they
+> are in fact in the middle.
 > 
 > Signed-off-by: Lucas Stach <l.stach@pengutronix.de>
-> ---
->  arch/arm64/boot/dts/freescale/imx8mq.dtsi | 66 +++++++++++++++++++++++
->  1 file changed, 66 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> index a55b9329376b..c521cd1b6820 100644
-> --- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-> @@ -5,6 +5,7 @@
->   */
->  
->  #include <dt-bindings/clock/imx8mq-clock.h>
-> +#include <dt-bindings/power/imx8mq-power.h>
->  #include <dt-bindings/gpio/gpio.h>
->  #include <dt-bindings/interrupt-controller/arm-gic.h>
->  #include "imx8mq-pinfunc.h"
-> @@ -252,6 +253,71 @@
->  				              "clk_ext1", "clk_ext2",
->  				              "clk_ext3", "clk_ext4";
->  			};
-> +
-> +			gpc: gpc@303a0000 {
-> +				compatible = "fsl,imx8mq-gpc";
-> +				reg = <0x303a0000 0x10000>;
-> +
-> +				pgc {
-> +					#address-cells = <1>;
-> +					#size-cells = <0>;
-> +
-> +					pgc_mipi: pgc-power-domain@0 {
 
-We generally want to keep node name as generic as possible, so dropping
-'pgc-' prefix might be sensible.
-
-Shawn
-
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_MIPI>;
-> +					};
-> +
-> +					pgc_pcie1: pgc-power-domain@1 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_PCIE1>;
-> +					};
-> +
-> +					pgc_otg1: pgc-power-domain@2 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_USB_OTG1>;
-> +					};
-> +
-> +					pgc_otg2: pgc-power-domain@3 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_USB_OTG2>;
-> +					};
-> +
-> +					pgc_ddr1: pgc-power-domain@4 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_DDR1>;
-> +					};
-> +
-> +					pgc_gpu: pgc-power-domain@5 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_GPU>;
-> +					};
-> +
-> +					pgc_vpu: pgc-power-domain@6 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_VPU>;
-> +					};
-> +
-> +					pgc_disp: pgc-power-domain@7 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_DISP>;
-> +					};
-> +
-> +					pgc_mipi_csi1: pgc-power-domain@8 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_MIPI_CSI1>;
-> +					};
-> +
-> +					pgc_mipi_csi2: pgc-power-domain@9 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_MIPI_CSI2>;
-> +					};
-> +
-> +					pgc_pcie2: pgc-power-domain@10 {
-> +						#power-domain-cells = <0>;
-> +						reg = <IMX8M_POWER_DOMAIN_PCIE2>;
-> +					};
-> +				};
-> +			};
->  		};
->  
->  		bus@30400000 { /* AIPS2 */
-> -- 
-> 2.19.1
-> 
+Applied, thanks.
