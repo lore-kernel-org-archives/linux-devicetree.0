@@ -1,119 +1,283 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH 4/4] usb: musb: Add support for MediaTek musb controller
-Date: Fri, 11 Jan 2019 09:18:10 +0800
-Message-ID: <1547169490.4433.147.camel@mhfsdcap03>
-References: <1545896066-897-1-git-send-email-min.guo@mediatek.com>
-         <1545896066-897-5-git-send-email-min.guo@mediatek.com>
-         <20190108154441.GG25910@uda0271908> <1547037068.4433.122.camel@mhfsdcap03>
-         <20190109140144.GI25910@uda0271908> <1547105062.4433.144.camel@mhfsdcap03>
-         <20190110141840.GA18026@uda0271908>
+From: Long Cheng <long.cheng@mediatek.com>
+Subject: Re: [PATCH v9 1/2] dmaengine: 8250_mtk_dma: add MediaTek uart DMA
+ support
+Date: Fri, 11 Jan 2019 09:18:42 +0800
+Message-ID: <1547169522.3831.47.camel@mhfsdcap03>
+References: <1546395178-8880-1-git-send-email-long.cheng@mediatek.com>
+         <1546395178-8880-2-git-send-email-long.cheng@mediatek.com>
+         <20190104171953.GQ13372@vkoul-mobl.Dlink>
+         <1547116431.3831.43.camel@mhfsdcap03>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110141840.GA18026@uda0271908>
+In-Reply-To: <1547116431.3831.43.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bin Liu <b-liu@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yonglong Wu <yonglong.wu@mediatek.com>
+To: Vinod Koul <vkoul@kernel.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenbao.li>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bin,
+On Thu, 2019-01-10 at 18:33 +0800, Long Cheng wrote:
+fix spell error
 
-On Thu, 2019-01-10 at 08:18 -0600, Bin Liu wrote:
-> Hi Min,
+> On Fri, 2019-01-04 at 22:49 +0530, Vinod Koul wrote:
+> > On 02-01-19, 10:12, Long Cheng wrote:
+> > > In DMA engine framework, add 8250 uart dma to support MediaTek uart.
+> > > If MediaTek uart enabled(SERIAL_8250_MT6577), and want to improve
+> > > the performance, can enable the function.
+> > 
+> > Is the DMA controller UART specific, can it work with other controllers
+> > as well, if so you should get rid of uart name in patch
+> > 
 > 
-> Please briefly summarize the controller differences in the commit log,
-> such as
+> I don't know that it can work or not on other controller. but it's for
+> MediaTek SOC
 > 
-> - WIC interrupt registers;
-> - data toggle bit;
-> - no dedicated DMA interrupt line;
+> > > +#define MTK_UART_APDMA_CHANNELS		(CONFIG_SERIAL_8250_NR_UARTS * 2)
+> > 
+> > Why are the channels not coming from DT?
+> > 
 > 
-> so that we can quickly understand the core driver is modified
-> accordingly to handle the differences.
+> i will using dma-requests install of it.
+> 
+i will using 'dma-requests' instead of it.
 
-Okay, tkanks.
+> > > +
+> > > +#define VFF_EN_B		BIT(0)
+> > > +#define VFF_STOP_B		BIT(0)
+> > > +#define VFF_FLUSH_B		BIT(0)
+> > > +#define VFF_4G_SUPPORT_B	BIT(0)
+> > > +#define VFF_RX_INT_EN0_B	BIT(0)	/*rx valid size >=  vff thre*/
+> > > +#define VFF_RX_INT_EN1_B	BIT(1)
+> > > +#define VFF_TX_INT_EN_B		BIT(0)	/*tx left size >= vff thre*/
+> > 
+> > space around /* space */ also run checkpatch to check for style errors
+> > 
+> 
+> ok.
+> 
+> > > +static void mtk_uart_apdma_start_tx(struct mtk_chan *c)
+> > > +{
+> > > +	unsigned int len, send, left, wpt, d_wpt, tmp;
+> > > +	int ret;
+> > > +
+> > > +	left = mtk_uart_apdma_read(c, VFF_LEFT_SIZE);
+> > > +	if (!left) {
+> > > +		mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > > +		return;
+> > > +	}
+> > > +
+> > > +	/* Wait 1sec for flush,  can't sleep*/
+> > > +	ret = readx_poll_timeout(readl, c->base + VFF_FLUSH, tmp,
+> > > +			tmp != VFF_FLUSH_B, 0, 1000000);
+> > > +	if (ret)
+> > > +		dev_warn(c->vc.chan.device->dev, "tx: fail, debug=0x%x\n",
+> > > +			mtk_uart_apdma_read(c, VFF_DEBUG_STATUS));
+> > > +
+> > > +	send = min_t(unsigned int, left, c->desc->avail_len);
+> > > +	wpt = mtk_uart_apdma_read(c, VFF_WPT);
+> > > +	len = mtk_uart_apdma_read(c, VFF_LEN);
+> > > +
+> > > +	d_wpt = wpt + send;
+> > > +	if ((d_wpt & VFF_RING_SIZE) >= len) {
+> > > +		d_wpt = d_wpt - len;
+> > > +		d_wpt = d_wpt ^ VFF_RING_WRAP;
+> > > +	}
+> > > +	mtk_uart_apdma_write(c, VFF_WPT, d_wpt);
+> > > +
+> > > +	c->desc->avail_len -= send;
+> > > +
+> > > +	mtk_uart_apdma_write(c, VFF_INT_EN, VFF_TX_INT_EN_B);
+> > > +	if (mtk_uart_apdma_read(c, VFF_FLUSH) == 0U)
+> > > +		mtk_uart_apdma_write(c, VFF_FLUSH, VFF_FLUSH_B);
+> > > +}
+> > > +
+> > > +static void mtk_uart_apdma_start_rx(struct mtk_chan *c)
+> > > +{
+> > > +	struct mtk_uart_apdma_desc *d = c->desc;
+> > > +	unsigned int len, wg, rg, cnt;
+> > > +
+> > > +	if ((mtk_uart_apdma_read(c, VFF_VALID_SIZE) == 0U) ||
+> > > +		!d || !vchan_next_desc(&c->vc))
+> > > +		return;
+> > > +
+> > > +	len = mtk_uart_apdma_read(c, VFF_LEN);
+> > > +	rg = mtk_uart_apdma_read(c, VFF_RPT);
+> > > +	wg = mtk_uart_apdma_read(c, VFF_WPT);
+> > > +	if ((rg ^ wg) & VFF_RING_WRAP)
+> > > +		cnt = (wg & VFF_RING_SIZE) + len - (rg & VFF_RING_SIZE);
+> > > +	else
+> > > +		cnt = (wg & VFF_RING_SIZE) - (rg & VFF_RING_SIZE);
+> > > +
+> > > +	c->rx_status = cnt;
+> > > +	mtk_uart_apdma_write(c, VFF_RPT, wg);
+> > > +
+> > > +	list_del(&d->vd.node);
+> > > +	vchan_cookie_complete(&d->vd);
+> > > +}
+> > 
+> > this looks odd, why do you have different rx and tx start routines?
+> > 
+> 
+> Would you like explain it in more detail? thanks.
+> In tx function, will wait the last data flush done. and the count the
+> size that send.
+> In Rx function, will count the size that receive.
+> Any way, in rx / tx, need andle WPT or RPT.
+> 
+Any way, in rx / tx, need handle WPT or RPT.
 
-> On Thu, Jan 10, 2019 at 03:24:22PM +0800, Min Guo wrote:
-> > Hi Bin,
-> 
-> [snip]
-> 
-> > > > > > +		musb_writeb(mbase, MUSB_INTRUSB,
-> > > > > > +			musb_readb(mbase, MUSB_INTRUSB));
-> > > > > 
-> > > > > For this clearing register bit operation, please create platform hooks
-> > > > > musb_clearb() and musb_clearw() in struct musb_platform_ops instead,
-> > > > > then follow how musb_readb() pointer is assigned in
-> > > > > musb_init_controller() to use the W1C version for mtk platform.
-> > > > 
-> > > > I have tried implementing musb_readb(), musb_readw() interface with
-> > > > interrupt status W1C function in struct musb_platform_ops. But this
-> > > > interface will require a global variable to hold MAC basic address for
-> > > > judgment, and then special handling of the interrupt state. A global
-> > > > variable will make the driver work with only a single instance, so it
-> > > > can't work on some MTK platforms which have two instances.
-> > > 
-> > > I didn't mean to modify musb_read*(), but
-> > > 
-> > > > How about creating musb_clearb/w() as following:
-> > > > void (*clearb)(void __iomem *addr, unsigned offset, u8 data);
-> > > > void (*clearw)(void __iomem *addr, unsigned offset, u16 data);
-> > > 
-> > > this is what I was asking for, similar to what musb_readb/w() is
-> > > implemented.
+> > > +static int mtk_uart_apdma_alloc_chan_resources(struct dma_chan *chan)
+> > > +{
+> > > +	struct mtk_uart_apdmadev *mtkd = to_mtk_uart_apdma_dev(chan->device);
+> > > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > +	u32 tmp;
+> > > +	int ret;
+> > > +
+> > > +	pm_runtime_get_sync(mtkd->ddev.dev);
+> > > +
+> > > +	mtk_uart_apdma_write(c, VFF_ADDR, 0);
+> > > +	mtk_uart_apdma_write(c, VFF_THRE, 0);
+> > > +	mtk_uart_apdma_write(c, VFF_LEN, 0);
+> > > +	mtk_uart_apdma_write(c, VFF_RST, VFF_WARM_RST_B);
+> > > +
+> > > +	ret = readx_poll_timeout(readl, c->base + VFF_EN, tmp,
+> > > +			tmp == 0, 10, 100);
+> > > +	if (ret) {
+> > > +		dev_err(chan->device->dev, "dma reset: fail, timeout\n");
+> > > +		return ret;
+> > > +	}
 > > 
-> > I will prepare a patch for musb_clearb/w().
-> 
-> This doesn't have to be a separate patch.
-
-Okay.
-
-> > > > > > +		musb_writew(mbase, MUSB_INTRRX,
-> > > > > > +			musb_readw(mbase, MUSB_INTRRX));
-> > > > > > +		musb_writew(mbase, MUSB_INTRTX,
-> > > > > > +			musb_readw(mbase, MUSB_INTRTX));
-> > > > > > +	}
-> 
-> [snip]
-> 
-> > > > > > +	/* MediaTek controller has private toggle register */
-> > > > > 
-> > > > > only one toggle register for all endpoints? how does it handle
-> > > > > difference toggle values for different endpoints?
-> > > > 
-> > > > MediaTek controller has separate registers to describe TX/RX toggle.
-> > > 
-> > > Is it one register per endpoint?
+> > register read does reset?
 > > 
-> > MUSB_RXTOG/MUSB_TXTOG is common register, each bit reflects the toggle
-> > state of an endpoint. bit[0] not used,bit[1~8] corresponds to ep[1~8]
-> > 
-> > > > 
-> > > > > > +	if (musb->ops->quirks & MUSB_MTK_QUIRKS) {
-> > > > > > +		u16 toggle;
-> > > > > > +		u8 epnum = qh->hw_ep->epnum;
-> > > > > > +
-> > > > > > +		if (is_in)
-> > > > > > +			toggle = musb_readl(musb->mregs, MUSB_RXTOG);
-> > > 
-> > > this line seems telling there is just *one* register for all endpoints.
-> > 
-> > Yes, all endpoint share this register, endpoint and bit are one-to-one
-> > correspondence.
 > 
-> Okay, thanks. Sorry I missed the bit operation in the code below.
+> 'mtk_uart_apdma_write(c, VFF_RST, VFF_WARM_RST_B);' is reset. resd just
+> poll reset done.
+> 
+> > > +
+> > > +	if (!c->requested) {
+> > > +		c->requested = true;
+> > > +		ret = request_irq(mtkd->dma_irq[chan->chan_id],
+> > > +				  mtk_uart_apdma_irq_handler, IRQF_TRIGGER_NONE,
+> > > +				  KBUILD_MODNAME, chan);
+> > 
+> > why is the irq not requested in driver probe?
+> > 
+> 
+> I have explained in below,
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016418.html
+> 
+> > > +static enum dma_status mtk_uart_apdma_tx_status(struct dma_chan *chan,
+> > > +					 dma_cookie_t cookie,
+> > > +					 struct dma_tx_state *txstate)
+> > > +{
+> > > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > +	enum dma_status ret;
+> > > +	unsigned long flags;
+> > > +
+> > > +	if (!txstate)
+> > > +		return DMA_ERROR;
+> > > +
+> > > +	ret = dma_cookie_status(chan, cookie, txstate);
+> > > +	spin_lock_irqsave(&c->vc.lock, flags);
+> > > +	if (ret == DMA_IN_PROGRESS) {
+> > > +		c->rx_status = mtk_uart_apdma_read(c, VFF_RPT) & VFF_RING_SIZE;
+> > > +		dma_set_residue(txstate, c->rx_status);
+> > > +	} else if (ret == DMA_COMPLETE && c->cfg.direction == DMA_DEV_TO_MEM) {
+> > 
+> > why set reside when it is complete? also reside can be null, that should
+> > be checked as well
+> > 
+> In different status, set different reside.
+> 
+> > > +static struct dma_async_tx_descriptor *mtk_uart_apdma_prep_slave_sg
+> > > +	(struct dma_chan *chan, struct scatterlist *sgl,
+> > > +	unsigned int sglen, enum dma_transfer_direction dir,
+> > > +	unsigned long tx_flags, void *context)
+> > > +{
+> > > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > +	struct mtk_uart_apdma_desc *d;
+> > > +
+> > > +	if ((dir != DMA_DEV_TO_MEM) &&
+> > > +		(dir != DMA_MEM_TO_DEV)) {
+> > > +		dev_err(chan->device->dev, "bad direction\n");
+> > > +		return NULL;
+> > > +	}
+> > 
+> > we have a macro for this
+> 
+> Thanks for your suggestion. i will modify it.
+> > 
+> > > +
+> > > +	/* Now allocate and setup the descriptor */
+> > > +	d = kzalloc(sizeof(*d), GFP_ATOMIC);
+> > > +	if (!d)
+> > > +		return NULL;
+> > > +
+> > > +	/* sglen is 1 */
+> > 
+> > ?
+> > 
+> > > +static int mtk_uart_apdma_slave_config(struct dma_chan *chan,
+> > > +				struct dma_slave_config *cfg)
+> > > +{
+> > > +	struct mtk_chan *c = to_mtk_uart_apdma_chan(chan);
+> > > +	struct mtk_uart_apdmadev *mtkd =
+> > > +				to_mtk_uart_apdma_dev(c->vc.chan.device);
+> > > +
+> > > +	c->cfg = *cfg;
+> > > +
+> > > +	if (cfg->direction == DMA_DEV_TO_MEM) {
+> > 
+> > fg->direction is deprecated, in fact I have removed all users recently,
+> > please do not use this
+> 
+> You will remove 'direction' in 'struct dma_slave_config'? if remove, how
+> do confirm direction?
 > 
 > > 
-> > > > > 
-> > > > > should use musb_readw() instead? MUSB_RXTOG seems to be 16bit.
-> > > > 
-> > > > Ok
-> > > > 
-> > > > > > +		else
-> > > > > > +			toggle = musb_readl(musb->mregs, MUSB_TXTOG);
-> > > > > > +
-> > > > > > +		csr = toggle & (1 << epnum);
+> > > +		unsigned int rx_len = cfg->src_addr_width * 1024;
+> > > +
+> > > +		mtk_uart_apdma_write(c, VFF_ADDR, cfg->src_addr);
+> > > +		mtk_uart_apdma_write(c, VFF_LEN, rx_len);
+> > > +		mtk_uart_apdma_write(c, VFF_THRE, VFF_RX_THRE(rx_len));
+> > > +		mtk_uart_apdma_write(c, VFF_INT_EN,
+> > > +				VFF_RX_INT_EN0_B | VFF_RX_INT_EN1_B);
+> > > +		mtk_uart_apdma_write(c, VFF_RPT, 0);
+> > > +		mtk_uart_apdma_write(c, VFF_INT_FLAG, VFF_RX_INT_FLAG_CLR_B);
+> > > +		mtk_uart_apdma_write(c, VFF_EN, VFF_EN_B);
+> > 
+> > why are we writing this here, we are supposed to do that when txn
+> > starts!
+> > 
 > 
-> Regards,
-> -Bin.
+> also you can review the link
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016418.html
+> 
+> > > +static int mtk_uart_apdma_device_resume(struct dma_chan *chan)
+> > > +{
+> > > +	/* just for check caps pass */
+> > > +	return 0;
+> > > +}
+> > 
+> > if you do not support this please remove this!
+> > 
+> > > +static void mtk_uart_apdma_free(struct mtk_uart_apdmadev *mtkd)
+> > > +{
+> > > +	while (list_empty(&mtkd->ddev.channels) == 0) {
+> > > +		struct mtk_chan *c = list_first_entry(&mtkd->ddev.channels,
+> > > +			struct mtk_chan, vc.chan.device_node);
+> > > +
+> > > +		list_del(&c->vc.chan.device_node);
+> > > +		tasklet_kill(&c->vc.task);
+> > > +	}
+> > > +}
+> > > +
+> > > +static const struct of_device_id mtk_uart_apdma_match[] = {
+> > > +	{ .compatible = "mediatek,mt6577-uart-dma", },
+> > 
+> > where is the binding document for ediatek,mt6577-uart-dma ??
+> > 
+> 
+> http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016154.html
+> 
