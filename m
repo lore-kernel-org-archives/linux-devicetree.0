@@ -1,46 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCHv4 1/4] dt-bindings: add DT binding for the layerscape
- PCIe controller with EP mode
-Date: Fri, 11 Jan 2019 08:31:23 -0600
-Message-ID: <20190111143123.GA6960@bogus>
-References: <20190108030922.24031-1-xiaowei.bao@nxp.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [v5 3/3] dt-bindings: msm/disp: Introduce
+ interconnect bindings for MDSS on SDM845
+Date: Fri, 11 Jan 2019 08:35:18 -0600
+Message-ID: <20190111143518.GA19187@bogus>
+References: <1547056325-1919-1-git-send-email-jshekhar@codeaurora.org>
+ <1547056325-1919-4-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190108030922.24031-1-xiaowei.bao@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-Cc: mark.rutland@arm.com, kstewart@linuxfoundation.org, linux-pci@vger.kernel.org, shawn.lin@rock-chips.com, minghuan.Lian@nxp.com, lorenzo.pieralisi@arm.com, kishon@ti.com, mingkai.hu@nxp.com, niklas.cassel@axis.com, devicetree@vger.kernel.org, arnd@arndb.de, linuxppc-dev@lists.ozlabs.org, robh+dt@kernel.org, cyrille.pitchen@free-electrons.com, bhelgaas@google.com, linux-arm-kernel@lists.infradead.org, roy.zang@nxp.com, Xiaowei Bao <xiaowei.bao@nxp.com>, gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org, leoyang.li@nxp.com, pombredanne@nexb.com, shawnguo@kernel.org
+In-Reply-To: <1547056325-1919-4-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue,  8 Jan 2019 11:09:19 +0800, Xiaowei Bao wrote:
-> Add the documentation for the Device Tree binding for the layerscape PCIe
-> controller with EP mode.
-> 
-> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-> ---
-> v2:
->  - Add the SoC specific compatibles.
-> v3:
->  - modify the commit message.
-> v4:
->  - no change.
-> 
->  .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
->  1 files changed, 3 insertions(+), 0 deletions(-)
-> 
-
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+T24gV2VkLCAgOSBKYW4gMjAxOSAyMzoyMjowNSArMDUzMCwgSmF5YW50IFNoZWtoYXIgd3JvdGU6
+Cj4gRnJvbTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4K
+PiAKPiBBZGQgaW50ZXJjb25uZWN0IHByb3BlcnRpZXMgc3VjaCBhcyBpbnRlcmNvbm5lY3QgcHJv
+dmlkZXIgc3BlY2lmaWVyCj4gLCB0aGUgZWRnZSBzb3VyY2UgYW5kIGRlc3RpbmF0aW9uIHBvcnRz
+IHdoaWNoIGFyZSByZXF1aXJlZCBieSB0aGUKPiBpbnRlcmNvbm5lY3QgQVBJIHRvIGNvbmZpZ3Vy
+ZSBpbnRlcmNvbm5lY3QgcGF0aCBmb3IgTURTUy4KPiAKPiBDaGFuZ2VzIGluIHYyOgo+IAktIG5v
+bmUKPiAKPiBDaGFuZ2VzIGluIHYzOgo+IAktIFJlbW92ZSBjb21tb24gcHJvcGVydHkgZGVmaW5p
+dGlvbnMgKFJvYiBIZXJyaW5nKQo+IAo+IENoYW5nZXMgaW4gdjQ6Cj4gCS0gVXNlIHBvcnQgbWFj
+cm9zIGFuZCBjaGFuZ2UgcG9ydCBzdHJpbmcgbmFtZXMgKEdlb3JnaSBEamFrb3YpCj4gCj4gQ2hh
+bmdlcyBpbiB2NToKPiAJLSBOb25lCj4gCj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1
+a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBKYXlhbnQg
+U2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24v
+ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0IHwgMTAgKysrKysrKysrKwo+
+ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQo+IAoKUGxlYXNlIGFkZCBBY2tlZC1i
+eS9SZXZpZXdlZC1ieSB0YWdzIHdoZW4gcG9zdGluZyBuZXcgdmVyc2lvbnMuIEhvd2V2ZXIsCnRo
+ZXJlJ3Mgbm8gbmVlZCB0byByZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBU
+aGUgdXBzdHJlYW0KbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24g
+dGhlIHZlcnNpb24gdGhleSBhcHBseS4KCklmIGEgdGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9z
+ZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFuZ2VkLgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
+cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
+bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
