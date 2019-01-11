@@ -1,58 +1,37 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 3/6] gpio: add irq domain activate/deactivate functions
-Date: Fri, 11 Jan 2019 14:05:49 -0800
-Message-ID: <154724434941.169631.6671178005596601495@swboyd.mtv.corp.google.com>
-References: <20190110011258.17227-1-masneyb@onstation.org> <20190110011258.17227-4-masneyb@onstation.org>
+Subject: Re: [PATCH v3 2/6] spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips
+Date: Fri, 11 Jan 2019 14:07:09 -0800
+Message-ID: <154724442941.169631.5308212449003169927@swboyd.mtv.corp.google.com>
+References: <20190110011258.17227-1-masneyb@onstation.org> <20190110011258.17227-3-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110011258.17227-4-masneyb@onstation.org>
+In-Reply-To: <20190110011258.17227-3-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
 Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2019-01-09 17:12:55)
-> This adds the two new functions gpiochip_irq_domain_activate and
-> gpiochip_irq_domain_deactivate that can be used as the activate and
-> deactivate functions in the struct irq_domain_ops. This is for
-> situations where only gpiochip_{lock,unlock}_as_irq needs to be called.
-> SPMI and SSBI GPIO are two users that will initially use these
-> functions.
+Quoting Brian Masney (2019-01-09 17:12:54)
+> Convert the spmi-pmic-arb IRQ code to use the version 2 IRQ interface
+> in order to support hierarchical IRQ chips. This is necessary so that
+> spmi-gpio can be setup as a hierarchical IRQ chip with pmic-arb as the
+> parent. IRQ chips in device tree should be usable from the start without
+> the consumer having to make an additional call to gpio[d]_to_irq() to
+> get the proper IRQ on the parent. Driver was tested on a LG Nexus 5
+> (hammerhead) phone.
 >=20
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
-> Stephen: Reply if you want a Suggested-by tag for this.
+> Changes since v2:
+> - None
+>=20
+> Changes since v1:
+> - Add intspec variable to qpnpint_irq_domain_translate to reduce the
+>   overall diff.
+> - Remove irq_domain_disassociate hack.
 
-Sure. Add it please.
-
-Suggested-by: Stephen Boyd <sboyd@kernel.org>
-
-Minor question but otherwise
-
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-
-> +/**
-> + * gpiochip_irq_domain_deactivate() - Unlock a GPIO used as an IRQ
-> + * @domain: The IRQ domain used by this IRQ chip
-> + * @data: Outermost irq_data associated with the IRQ
-> + *
-> + * This function is a wrapper that will call &gpiochip_unlock_as_irq and=
- is to
-
-Is this kernel-doc notation to refer to functions and structures with
-ampersand only? According to the docs[1] we should put () after
-functions and '&struct' before structures.
-
-> + * be used as the deactivate function for the struct &irq_domain_ops. The
-> + * host_data for the IRQ domain must be the struct &gpiochip.
-> + */
-> +void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
-> +                                   struct irq_data *data)
-> +{
-> +       struct gpio_chip *chip =3D domain->host_data;
-> +
-
-[1] https://www.kernel.org/doc/html/latest/doc-guide/kernel-doc.html?highli=
-ght=3Dcross%20references#highlights-and-cross-references
+I thought we would need to keep that around? And then dispose of the
+hack later on. Won't this just wreck the world almost immediately
+because the MFD is counting irqs from DT?
