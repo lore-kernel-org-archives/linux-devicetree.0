@@ -1,49 +1,92 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: [PATCH v1 4/8] arm64: dts: msm8996: Add UFS PHY reset controller
-Date: Fri, 11 Jan 2019 15:01:25 -0800
-Message-ID: <20190111230129.127037-5-evgreen@chromium.org>
-References: <20190111230129.127037-1-evgreen@chromium.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
+Date: Fri, 11 Jan 2019 17:09:58 -0600
+Message-ID: <CABGGiswYYpm-7T9e6F_Mp6FdU-JFDC8xV_JR1E6cgiz32A0u_Q@mail.gmail.com>
+References: <20190110221903.3990-4-robh@kernel.org> <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com>
+ <CAL_JsqJzNBYCMWbZtR37eZd4yx2kc590V+q3603Hg=kG2bZwhw@mail.gmail.com>
+ <154723284041.169631.6622751321828044091@swboyd.mtv.corp.google.com>
+ <CAL_JsqJFyC3AXwbd8PoJS1wZ5BSokAPcFi=4FF2DQ6yFi0XwCw@mail.gmail.com> <154724656826.169631.7419387360923471292@swboyd.mtv.corp.google.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111230129.127037-1-evgreen@chromium.org>
+In-Reply-To: <154724656826.169631.7419387360923471292@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
-Cc: Can Guo <cang@codeaurora.org>, Douglas Anderson <dianders@chromium.org>, Asutosh Das <asutoshd@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Evan Green <evgreen@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>
+To: Stephen Boyd <sboyd@kernel.org>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add the reset controller for the UFS controller, and wire it up
-so that the UFS PHY can initialize itself without relying on
-implicit sequencing between the two drivers.
+On Fri, Jan 11, 2019 at 4:42 PM Stephen Boyd <sboyd@kernel.org> wrote:
+>
+> Quoting Rob Herring (2019-01-11 12:49:04)
+> > On Fri, Jan 11, 2019 at 12:54 PM Stephen Boyd <sboyd@kernel.org> wrote:
+> > >
+> > > Quoting Rob Herring (2019-01-11 10:27:48)
+> > > > On Fri, Jan 11, 2019 at 11:44 AM Stephen Boyd <sboyd@kernel.org> wrote:
+> > > > >
+> > > > > Any pointer to the full schema?
+> > > >
+> > > > https://github.com/robherring/yaml-bindings/blob/master/schemas/
+> > > >
+> > > > And the clock schema in particular:
+> > > > https://github.com/robherring/yaml-bindings/blob/master/schemas/clock.yaml
+> > >
+> > > Awesome. Thanks for the pointers! Is the clock schema posted to the list
+> > > somewhere?
+> >
+> > No. Happy to post things, but I'm struggling to find anyone that cares.
+>
+> Ok. I can review that document too if you post it to the list.
+>
+> >
+> > > > > Why does title have a full stop?
+> > > >
+> > > > Because it was there in the original. My script to extract just takes
+> > > > the first line of alphanumeric text.
+> > >
+> > > Ok. I think it would be good to treat them like commit subjects that
+> > > don't have the full stop either, so if the script is able to drop the
+> > > full stop it would be great.
+> >
+> > I can just write a meta-schema to enforce that. :)
+>
+> Sounds good.
+>
+> >
+> > Yes, the meta-schema enforces this at least to the extent there is a
+> > meta-schema defined for a standard property. Even if not something for
+> > a specific property, we limit things to a subset of json-schema
+> > keywords. Also, you also can't define something contradicting a core
+> > schema (e.g. { reg: { type: string } }), but that wouldn't be found
+> > until you check actual DTs.
+> >
+> > The meta-schema check is run with:
+> > make dt_binding_check
+> >
+> > This is all documented in Documentation/devicetree/writing-schema.md.
+> >
+>
+> Ok I'll read that document now. Would be cool if the build robots (and
+> myself) can somehow run the dt_binding_check on a single YAML file so we
+> can quickly validate the binding. Maybe even make C=2 or C=1 do that?
+>
+> If the robots can then complain if the single file fails to build it
+> will save us tons of time. I just tried to run it but it seems to only
+> care about running on all the YAML files.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
----
+make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/file/to/test
 
- arch/arm64/boot/dts/qcom/msm8996.dtsi | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+It will check only the schema specified and check all the DT files
+against only that schema (plus any referenced schema if you use a
+top-level 'allOf'. See the GIC schema patch[2] for an example of
+that).
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-index 99b7495455a62..179f1988d45c5 100644
---- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-@@ -663,10 +663,11 @@
- 			clock-names = "ref_clk_src", "ref_clk";
- 			clocks = <&rpmcc RPM_SMD_LN_BB_CLK>,
- 				 <&gcc GCC_UFS_CLKREF_CLK>;
-+			resets = <&ufshc 0>;
- 			status = "disabled";
- 		};
- 
--		ufshc@624000 {
-+		ufshc: ufshc@624000 {
- 			compatible = "qcom,ufshc";
- 			reg = <0x624000 0x2500>;
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
-@@ -722,6 +723,7 @@
- 				<0 0>;
- 
- 			lanes-per-direction = <1>;
-+			#reset-cells = <1>;
- 			status = "disabled";
- 
- 			ufs_variant {
--- 
-2.18.1
+I'm running the schema check for patches in the DT patchwork instance.
+For example, here's this patch[1]. So as long as it has my R-by, then
+it should be good. I'm not yet running the schema check on DT files
+because generally there are warnings and I don't intend to fix them
+for everyone. But maybe I should anyways so we at least have the data.
+
+Rob
+
+[1] https://patchwork.ozlabs.org/patch/1023240/
+[2] https://patchwork.ozlabs.org/patch/1023243/
