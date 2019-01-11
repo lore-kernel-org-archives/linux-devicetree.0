@@ -1,91 +1,55 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
-Date: Fri, 11 Jan 2019 11:35:29 +0530
-Message-ID: <CAMty3ZAAa0VEOt50prvEApdNi9tkPe_vFC4oKone0z6pVd_Ziw@mail.gmail.com>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
- <20181220125438.11700-3-jagan@amarulasolutions.com> <20181221130025.lbvw7yvy74brf3jn@flea>
- <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com> <20190107132929.ksyajmzn2gzr6oep@flea>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH V2 1/3] dt-bindings: fsl: add imx7ulp system integration
+ module binding
+Date: Fri, 11 Jan 2019 06:22:40 +0000
+Message-ID: <1547187469-14046-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107132929.ksyajmzn2gzr6oep@flea>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 7, 2019 at 6:59 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Mon, Dec 24, 2018 at 08:57:48PM +0530, Jagan Teki wrote:
-> > On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > >
-> > > On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
-> > > > Unfortunately default CSI_SCLK rate cannot work properly to
-> > > > drive the connected sensor interface, particularly on few
-> > > > Allwinner SoC's like A64.
-> > > >
-> > > > So, add mod_rate quirk via driver data so-that the respective
-> > > > SoC's which require to alter the default mod clock rate can assign
-> > > > the operating clock rate.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
-> > > >  1 file changed, 28 insertions(+), 6 deletions(-)
-> > > >
-> > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > index ee882b66a5ea..fe002beae09c 100644
-> > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > @@ -15,6 +15,7 @@
-> > > >  #include <linux/ioctl.h>
-> > > >  #include <linux/module.h>
-> > > >  #include <linux/of.h>
-> > > > +#include <linux/of_device.h>
-> > > >  #include <linux/platform_device.h>
-> > > >  #include <linux/pm_runtime.h>
-> > > >  #include <linux/regmap.h>
-> > > > @@ -28,8 +29,13 @@
-> > > >
-> > > >  #define MODULE_NAME  "sun6i-csi"
-> > > >
-> > > > +struct sun6i_csi_variant {
-> > > > +     unsigned long                   mod_rate;
-> > > > +};
-> > > > +
-> > > >  struct sun6i_csi_dev {
-> > > >       struct sun6i_csi                csi;
-> > > > +     const struct sun6i_csi_variant  *variant;
-> > > >       struct device                   *dev;
-> > > >
-> > > >       struct regmap                   *regmap;
-> > > > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> > > >               return PTR_ERR(sdev->clk_mod);
-> > > >       }
-> > > >
-> > > > +     if (sdev->variant->mod_rate)
-> > > > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
-> > > > +
-> > >
-> > > It still doesn't make any sense to do it in the probe function...
-> >
-> > I'm not sure we discussed about the context wrt probe, we discussed
-> > about exclusive put clock.
->
-> https://lkml.org/lkml/2018/12/18/584
->
-> "Doing it here is not really optimal either, since you'll put a
-> constraint on the system (maintaining that clock at 300MHz), while
-> it's not in use."
->
-> > Since clocks were enabling in set_power and clock rate can be set
-> > during probe in single time instead of setting it in set_power for
-> > every power enablement. anything wrong with that.
->
-> See above.
->
-> Plus, a clock running draws power. It doesn't really make sense to
-> draw power for something that is unused.
+Add i.MX7ULP system integration module (SIM) binding.
 
-True, but clock is enabled only on sun6i_csi_set_power so setting
-clock frequency in probe will draw power?
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../bindings/arm/freescale/fsl,imx7ulp-sim.txt           | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
+
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
+new file mode 100644
+index 0000000..7d0c7f0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
+@@ -0,0 +1,16 @@
++Freescale i.MX7ULP System Integration Module
++----------------------------------------------
++The system integration module (SIM) provides system control and chip configuration
++registers. In this module, chip revision information is located in JTAG ID register,
++and a set of registers have been made available in DGO domain for SW use, with the
++objective to maintain its value between system resets.
++
++Required properties:
++- compatible:	Should be "fsl,imx7ulp-sim".
++- reg:		Specifies base physical address and size of the register sets.
++
++Example:
++sim: sim@410a3000 {
++	compatible = "fsl,imx7ulp-sim", "syscon";
++	reg = <0x410a3000 0x1000>;
++};
+-- 
+2.7.4
