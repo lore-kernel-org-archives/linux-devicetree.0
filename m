@@ -1,38 +1,56 @@
-From: Lars Poeschel <poeschel@lemonage.de>
-Subject: [PATCH v5 7/7] nfc: pn532_uart: Make use of pn532 autopoll
-Date: Fri, 11 Jan 2019 17:18:10 +0100
-Message-ID: <20190111161812.26325-7-poeschel@lemonage.de>
-References: <20190111161812.26325-1-poeschel@lemonage.de>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v2 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
+Date: Fri, 11 Jan 2019 15:14:00 +0000
+Message-ID: <20190111151401.25047-2-jank@cadence.com>
+References: <20190111151401.25047-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111161812.26325-1-poeschel@lemonage.de>
+In-Reply-To: <20190111151401.25047-1-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
-Cc: Johan Hovold <johan@kernel.org>
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-This switches the pn532 UART phy driver from manually polling to the new
-autopoll mechanism.
+This patch adds a DT binding documentation for
+Cadence RTC controller.
 
-Cc: Johan Hovold <johan@kernel.org>
-Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+Signed-off-by: Jan Kotas <jank@cadence.com>
 ---
- drivers/nfc/pn533/uart.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ Documentation/devicetree/bindings/rtc/cdns,rtc.txt | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/cdns,rtc.txt
 
-diff --git a/drivers/nfc/pn533/uart.c b/drivers/nfc/pn533/uart.c
-index 78ef464bfa7b..2f0fcc6d964a 100644
---- a/drivers/nfc/pn533/uart.c
-+++ b/drivers/nfc/pn533/uart.c
-@@ -254,7 +254,7 @@ static int pn532_uart_probe(struct serdev_device *serdev)
- 	serdev_device_set_flow_control(serdev, false);
- 	pn532->send_wakeup = PN532_SEND_WAKEUP;
- 	timer_setup(&pn532->cmd_timeout, pn532_cmd_timeout, 0);
--	priv = pn53x_common_init(PN533_DEVICE_PN532,
-+	priv = pn53x_common_init(PN533_DEVICE_PN532_AUTOPOLL,
- 				     PN533_PROTO_REQ_ACK_RESP,
- 				     pn532, &uart_phy_ops, NULL,
- 				     &pn532->serdev->dev);
+diff --git a/Documentation/devicetree/bindings/rtc/cdns,rtc.txt b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+new file mode 100644
+index 000000000..40713bbbe
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+@@ -0,0 +1,25 @@
++Cadence Real Time Clock
++
++The Cadence RTC controller with date, time and alarm capabilities.
++The alarm may wake the system from low-power state.
++
++Required properties:
++- compatible: Should be "cdns,rtc-r109v3"
++- reg: Specifies base physical address and size of the register area.
++- interrupts: A single interrupt specifier.
++- clocks: Must contain two entries:
++	- pclk: APB registers clock
++	- ref_clk: reference 1Hz of 100Hz clock, depending on IP configuration
++	See ../clocks/clock-bindings.txt for details.
++
++Example:
++        rtc0: rtc@fd080000 {
++        	compatible = "cdns,rtc-r109v3";
++        	reg = <0xfd080000 0x1000>;
++
++        	clock-names = "pclk", "ref_clk";
++        	clocks = <&sysclock>, <&refclock>;
++
++        	interrupt-parent = <&gic>;
++        	interrupts = <0 6 IRQ_TYPE_LEVEL_HIGH>;
++        };
 -- 
-2.20.1
+2.15.0
