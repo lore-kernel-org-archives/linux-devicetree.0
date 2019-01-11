@@ -1,34 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
-Date: Fri, 11 Jan 2019 16:21:12 -0600
-Message-ID: <20190111222112.GA14252@bogus>
-References: <20190107032810.13522-1-josephl@nvidia.com>
- <20190107032810.13522-2-josephl@nvidia.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: meson: add specific simplefb bindings
+Date: Fri, 11 Jan 2019 16:25:09 -0600
+Message-ID: <20190111222509.GA14462@bogus>
+References: <20190107095307.15233-1-mjourdan@baylibre.com>
+ <20190107095307.15233-2-mjourdan@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190107032810.13522-2-josephl@nvidia.com>
+In-Reply-To: <20190107095307.15233-2-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Maxime Jourdan <mjourdan@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Jan 2019 11:28:05 +0800, Joseph Lo wrote:
-> The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
-> timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
-> from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
-> (TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
-> or watchdog interrupts.
+On Mon, Jan 07, 2019 at 10:53:06AM +0100, Maxime Jourdan wrote:
+> Similar to simple-framebuffer-sunxi, we support different display pipelines
+> that the firmware is free to choose from.
 > 
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> This documents the "amlogic,simple-framebuffer" compatible and the
+> "amlogic,pipeline" extension.
+> 
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
 > ---
->  .../bindings/timer/nvidia,tegra210-timer.txt  | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
-> 
+>  .../display/simple-framebuffer-meson.txt      | 33 +++++++++++++++++++
+
+Use the compatible string for the file name: 
+amlogic,simple-framebuffer.txt
+
+With that,
 
 Reviewed-by: Rob Herring <robh@kernel.org>
