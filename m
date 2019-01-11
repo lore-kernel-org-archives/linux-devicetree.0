@@ -1,46 +1,38 @@
-Return-Path: <robherring2@gmail.com>
-Date: Fri, 11 Jan 2019 10:41:56 -0600
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/4] gpio: add core support for pull-up/pull-down
- configuration
-Message-ID: <20190111164156.GA28883@bogus>
-References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com>
- <20190103164102.31437-4-thomas.petazzoni@bootlin.com>
+Return-Path: <SRS0=Muqj=PT=linaro.org=linus.walleij@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190103164102.31437-4-thomas.petazzoni@bootlin.com>
+References: <20190103164102.31437-1-thomas.petazzoni@bootlin.com>
+ <20190103164102.31437-4-thomas.petazzoni@bootlin.com> <CACRpkdbypbX0-NsSG4DmFCv6hC2gYEQZSUyoKdJbgwiMDZ4yvg@mail.gmail.com>
+ <20190111135803.5644f06e@windsurf>
+In-Reply-To: <20190111135803.5644f06e@windsurf>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Jan 2019 15:38:39 +0100
+Message-ID: <CACRpkdakgdOdV7mxwN3447cg2dmdSwBU+tBX2odnjnE8Oj7wjg@mail.gmail.com>
+Subject: Re: [PATCH 3/4] gpio: add core support for pull-up/pull-down configuration
+Content-Type: text/plain; charset="UTF-8"
 To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Linus Walleij <linus.walleij@linaro.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>
+Cc: Bartosz Golaszewski <bgolaszewski@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Marek Vasut <marek.vasut@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-On Thu, Jan 03, 2019 at 05:41:01PM +0100, Thomas Petazzoni wrote:
-> This commit adds support for configuring the pull-up and pull-down
-> resistors available in some GPIO controllers. While configuring
-> pull-up/pull-down is already possible through the pinctrl subsystem,
-> some GPIO controllers, especially simple ones such as GPIO expanders
-> on I2C, don't have any pinmuxing capability and therefore do not use
-> the pinctrl subsystem.
-> 
-> This commit implements the GPIO_PULL_UP and GPIO_PULL_DOWN flags,
-> which can be used from the Device Tree, to enable a pull-up or
-> pull-down resistor on a given GPIO.
-> 
-> The flag is simply propagated all the way to the core GPIO subsystem,
-> where it is used to call the gpio_chip ->set_config callback with the
-> appropriate existing PIN_CONFIG_BIAS_* values.
-> 
-> Signed-off-by: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-> ---
->  drivers/gpio/gpiolib-of.c       |  5 +++++
->  drivers/gpio/gpiolib.c          | 12 ++++++++++++
->  drivers/gpio/gpiolib.h          |  2 ++
->  include/dt-bindings/gpio/gpio.h |  6 ++++++
+On Fri, Jan 11, 2019 at 1:58 PM Thomas Petazzoni
+<thomas.petazzoni@bootlin.com> wrote:
+> On Fri, 11 Jan 2019 11:05:03 +0100, Linus Walleij wrote:
 
-It's fine, but really this one should be part of the binding patch.
+> > > +/* Bit 4 express pull up */
+> > > +#define GPIO_PULL_UP 16
+> > > +
+> > > +/* Bit 5 express pull down */
+> > > +#define GPIO_PULL_DOWN 32
+> >
+> > Please use
+> > #define GPIO_PULL_UP BIT(5)
+> > #define GPIO_PULL_DOWN BIT(6)
+(...)
+> However, we are in the dt-bindings includes here, and apparently, there
+> is no definition for the BIT() macro in those headers.
 
->  include/linux/gpio/machine.h    |  2 ++
->  include/linux/of_gpio.h         |  2 ++
->  6 files changed, 29 insertions(+)
+Ah you nailed it :D
 
-Acked-by: Rob Herring <robh@kernel.org>
+OK keep it like this.
+
+Yours,
+Linus Walleij
