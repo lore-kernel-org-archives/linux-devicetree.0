@@ -1,55 +1,128 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v3] arm64: dts: meson: Fix mmc cd-gpios polarity
-Date: Fri, 11 Jan 2019 11:55:57 -0800
-Message-ID: <7hy37rm0j6.fsf@baylibre.com>
-References: <1547134822-18498-1-git-send-email-lollivier@baylibre.com> <CAFBinCDM4BTx0Ude-M=O6B2bXPE9EdfD=VxZfFzR9Dc=yT+xWQ@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Fri, 11 Jan 2019 11:58:13 -0800
+Message-ID: <20190111195813.GF261387@google.com>
+References: <cover.1547078153.git.amit.kucheria@linaro.org>
+ <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
+ <20190110022217.GX261387@google.com>
+ <20190110062359.aea3tic5aw3iuocr@vireshk-i7>
+ <20190110184241.GY261387@google.com>
+ <20190111034653.6dstox4c6hpjum4f@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDM4BTx0Ude-M=O6B2bXPE9EdfD=VxZfFzR9Dc=yT+xWQ@mail.gmail.com>
+Content-Disposition: inline
+In-Reply-To: <20190111034653.6dstox4c6hpjum4f@vireshk-i7>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Loys Ollivier <lollivier@baylibre.com>
-Cc: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, Jerome Brunet <jbrunet@baylibre.com>
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Amit Kucheria <amit.kucheria@linaro.org>, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+On Fri, Jan 11, 2019 at 09:16:53AM +0530, Viresh Kumar wrote:
+> On 10-01-19, 10:42, Matthias Kaehlcke wrote:
+> > Thanks for the pointer, there's always something new to learn!
+> > 
+> > Ok, so the policy CPU and hence the CPU registered as cooling
+> > device may vary. I understand that this requires to list all possible
+> > cooling devices,
+> 
+> I won't say that I changed DT because of a design issue with kernel,
+> rather the DT shall be complete by itself and that's why that change
+> was made.
 
-> Hi,
->
-> some nit-picks as well as my Tested-by (in case it's not too late) below.
-> thank you for taking care of this!
->
-> On Thu, Jan 10, 2019 at 4:40 PM Loys Ollivier <lollivier@baylibre.com> wrote:
->>
->> Commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
->> changed the behavior of "cd-inverted" to follow the device tree bindings
->> specification.
->> Lines specifying "cd-inverted" are now "active high".
-> this depends on the polarity from the cd-gpios property. above commit
-> caused cd-inverted to be applied twice (effectively making it a
-> no-op). thus "cd-inverted" only means "active high" if cd-gpios also
-> sets GPIO_ACTIVE_HIGH. if the polarity in cd-gpios is GPIO_ACTIVE_LOW
-> together with "cd-inverted" then the GPIO will be treated as active
-> low.
->
->> Fix the SD card for meson by setting the cd-gpios as "active low" according
->> to the boards specifications.
-> not only switching to GPIO_ACTIVE_LOW, also dropping "cd-inverted"
->
->> Fixes: 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> in my patches for the 32-bit boards I used the commit which added SD
-> card support to the board for the Fixes tag. however, I'm fine with
-> this as well (I just wanted to point out that there's a small
-> difference in our commits).
->
->> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> on my Khadas VIM(1), using Kevin's v5.0/fixes branch:
-> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+fair enough
 
-I can add this tested-by tag in my v5.0/fixes branch for now, and can
-replace it with a follow up if Loys can update the changelog with your
-suggestions/clarifications.
+> And then we can have more things going on. For example with cpuidle
+> cooling, we can individually control each CPU (and force idle on that)
+> even if all CPUs are part of the same freq-domain. Each CPU shall
+> expose its capabilities.
 
-Thanks,
+Just to gain a better understanding: is cpuidle cooling already
+available for arm64 (or is there a patch set)? I came across the
+relatively new idle injecting framework but it seems currently the
+only user is the Intel powerclamp driver.
 
-Kevin
+> > even though only one will be active at any given
+> > time. However I wonder if we could change this:
+> 
+> I won't say it that way. I see it as all the CPUs are active during a
+> cooling state, i.e. they are all participating.
+
+agreed, I was referring to the CPU cooling device, which (without
+cpuidle injection) could be considered a single device per freq domain.
+
+> > For device tree based platform the above implies that cooling maps
+> > must include a list of all possible cooling devices of a frequency
+> > domain, even though only one of them will exist at any given time.
+> > 
+> > For example:
+> > 
+> > cooling-maps {
+> > 	map0 {
+> > 		trip = <&cpu_alert0>;
+> > 		cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
+> > 				 <&CPU1 THERMAL_NO_LIMIT 4>,
+> > 				 <&CPU2 THERMAL_NO_LIMIT 4>,
+> > 				 <&CPU3 THERMAL_NO_LIMIT 4>;
+> > 	};
+> > 	map1 {
+> > 		trip = <&cpu_crit0>;
+> > 		cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > 				 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > 				 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> > 				 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> 
+> This is the right thing to do hardware description wise, no matter
+> what the kernel does.
+
+Not sure I would call it a hardware description. I'd say we pretend
+the thermal configuration is a hardware description so the DT folks
+don't yell at us ;-) IMO a CPU cooling device is an abstraction, I
+think there is no such IP block on most systems.
+
+It seems with cpuidle injection CPUs can perform cooling actions
+individually, with that I agree that representing them as individual
+cooling devices in the DT makes sense. Without that a cooling device
+per freq domain would seem a resonable abstraction.
+
+One of the reasons I dislike the above list of cooling devices is that
+it is repeated for different thermal-zone/cooling-maps, but I guess
+we have to live with that, would be nice if the DT would allow to do
+something like this:
+
+thermal-zones {
+	cooling_maps_fd0 : cooling-maps {
+		map0 {
+			trip = <&cpu_alert0>;
+			cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
+					 <&CPU1 THERMAL_NO_LIMIT 4>,
+					 <&CPU2 THERMAL_NO_LIMIT 4>,
+					 <&CPU3 THERMAL_NO_LIMIT 4>;
+		};
+		map1 {
+			trip = <&cpu_crit0>;
+			cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+					 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+					 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+					 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+	};
+
+	cpu0-thermal {
+		...
+		cooling-maps = @cooling_maps_fd0;
+		...
+	};
+
+	cpu1-thermal {
+		...
+		cooling-maps = @cooling_maps_fd0;
+		...
+	};
+
+	...
+};
+
+Cheers
+
+Matthias
