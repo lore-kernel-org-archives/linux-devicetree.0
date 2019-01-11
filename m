@@ -1,58 +1,61 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
-Date: Fri, 11 Jan 2019 15:20:48 -0800
-Message-ID: <154724884881.169631.9705938789464714812@swboyd.mtv.corp.google.com>
-References: <20181219221105.3004-1-ilina@codeaurora.org> <20181219221105.3004-5-ilina@codeaurora.org> <20181229000714.GA3654@bogus> <20190107185113.GH14960@codeaurora.org> <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com> <20190109173111.GB22547@codeaurora.org> <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
+Subject: Re: [PATCH v3 2/6] spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips
+Date: Fri, 11 Jan 2019 15:39:27 -0800
+Message-ID: <154724996786.169631.3834576842560322500@swboyd.mtv.corp.google.com>
+References: <20190110011258.17227-1-masneyb@onstation.org> <20190110011258.17227-3-masneyb@onstation.org> <154724442941.169631.5308212449003169927@swboyd.mtv.corp.google.com> <20190111230004.GA5805@basecamp>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
+In-Reply-To: <20190111230004.GA5805@basecamp>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2019-01-09 11:36:56)
+Quoting Brian Masney (2019-01-11 15:00:04)
+> On Fri, Jan 11, 2019 at 02:07:09PM -0800, Stephen Boyd wrote:
+> > Quoting Brian Masney (2019-01-09 17:12:54)
+> > > Convert the spmi-pmic-arb IRQ code to use the version 2 IRQ interface
+> > > in order to support hierarchical IRQ chips. This is necessary so that
+> > > spmi-gpio can be setup as a hierarchical IRQ chip with pmic-arb as the
+> > > parent. IRQ chips in device tree should be usable from the start with=
+out
+> > > the consumer having to make an additional call to gpio[d]_to_irq() to
+> > > get the proper IRQ on the parent. Driver was tested on a LG Nexus 5
+> > > (hammerhead) phone.
+> > >=20
+> > > Signed-off-by: Brian Masney <masneyb@onstation.org>
+> > > ---
+> > > Changes since v2:
+> > > - None
+> > >=20
+> > > Changes since v1:
+> > > - Add intspec variable to qpnpint_irq_domain_translate to reduce the
+> > >   overall diff.
+> > > - Remove irq_domain_disassociate hack.
+> >=20
+> > I thought we would need to keep that around? And then dispose of the
+> > hack later on. Won't this just wreck the world almost immediately
+> > because the MFD is counting irqs from DT?
 >=20
-> > >However, my main concern is documenting something genericish in a
-> > >device specific binding. It looks like Tegra is trying to add the same
-> > >thing, so this needs to be documented in a common place. One question
-> > >is whether wakeup is the only use or if this should be more generally
-> > >a secondary interrupt parent?
-> > >
-> > Yes, wakeup is the only use of this interrupt parent.
+> We won't run into the issue with the MFD counting the IRQs since the
+> interrupts property was removed and the interrupt-controller property
+> was added to device tree in the same patch. The interrupts property that
+> we ultimately don't need was the issue that I ran into with the MFD
+> subsystem.
 >=20
-> Maybe for you, but I was wondering about this more generally. Should
-> we encode what the function (e.g. wakeup) is in the property name or
-> have something like aux-interrupt-controller? Maybe some platforms
-> have some need for a secondary interrupt-controller which is not
-> wakeup. Routing interrupts to other cores perhaps?
+> However to be certain, I retested and we need the temporary hack since
+> pmic_gpio_to_irq in this series uses the new SPMI IRQ controller. It
+> breaks as soon as patch 4 in this series (qcom: spmi-gpio: add support
+> for hierarchical IRQ chip) is applied but starts working again at patch
+> 5 (ARM: dts: qcom: pm8941: add interrupt controller).
+>=20
+> I'll respin this series this weekend with the temporary hack and drop it
+> later in the series. Sorry about the noise and thanks for the
+> reviewed-bys.
 >=20
 
-I'd say it's not the interrupt-parent, but a secondary-interrupt-parent,
-because it's another path that some GPIO interrupts will go through vs.
-the "normal" summary irq line that uses the interrupt-parent. Maybe
-that's similar to the interrupt partitioning that ARM is doing for PPIs
-that only go to some CPUs?
-
-We don't really specify that some GPIO is corresponding to the secondary
-or primary interrupt controller for the GPIO controller in DT. If we
-did, then we could do something like the interrupt-map binding and have
-the index of that property be the gpio number and the interrupt parent
-that it maps to (either summary from the GIC or MPM pin number).
-
- interrupt-map =3D <0 0 &gic GIC_SPI 208 0>,
-                 <1 0 &pdc 3 0>;
- interrupt-map-mask =3D <0xfffffff 0>;
-
-And then we would pass the 2-cell GPIO interrupt specifier (gpio# and
-flags) through the table and remap it to arbitrary domain parents. We
-could use this same design for the SSBI and SPMI gpio interrupt
-controller where we're currently looking at hardcoding the base
-interrupt number in the driver (0xc0) and then adding the GPIO number to
-that to get the parent interrupt specifier.
-
-It's sort of an abuse of interrupt-map, but I don't know if it really
-matters because there isn't a child of the gpio controller that is going
-to go through this table.
+Ok sounds good. Can you also fix all the spmi-gpio specifying dts files?
+There are more than just two PMIC dts files that need changes (per my
+grep results sent to the list earlier).
