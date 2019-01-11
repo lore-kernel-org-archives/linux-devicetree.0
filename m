@@ -1,40 +1,36 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v6 0/7] Add virtio-iommu driver
-Date: Fri, 11 Jan 2019 13:28:46 +0100
-Message-ID: <20190111122846.GE5825@8bytes.org>
-References: <20181211182104.18241-1-jean-philippe.brucker@arm.com>
- <20181212103545.GV16835@8bytes.org>
- <9110873f-d344-b6b9-c722-9accfc329db2@arm.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 1/3] spmi: pmic-arb: convert to v2 irq interfaces to
+ support hierarchical IRQ chips
+Date: Fri, 11 Jan 2019 13:29:21 +0100
+Message-ID: <CACRpkda4j6WAS-s1Eo6q64dKwvSDYKsEstbWSG4PBeU9jNiZvQ@mail.gmail.com>
+References: <20181229114755.8711-1-masneyb@onstation.org> <20181229114755.8711-2-masneyb@onstation.org>
+ <154664792383.15366.9346249356552958882@swboyd.mtv.corp.google.com> <20190105014503.GA32383@basecamp>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <9110873f-d344-b6b9-c722-9accfc329db2@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: "virtio-dev@lists.oasis-open.org" <virtio-dev@lists.oasis-open.org>, "kevin.tian@intel.com" <kevin.tian@intel.com>, Lorenzo Pieralisi <Lorenzo.Pieralisi@arm.com>, "tnowicki@caviumnetworks.com" <tnowicki@caviumnetworks.com>, "mst@redhat.com" <mst@redhat.com>, Marc Zyngier <Marc.Zyngier@arm.com>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "jasowang@redhat.com" <jasowang@redhat.com>, Will Deacon <Will.Deacon@arm.com>, Robin Murphy <Robin.Murphy@arm.com>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, "iommu@lists.linux-foundation.org" <iommu@lists.linux-foundation.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "bhelgaas@google.com" <bhelgaas@google.com>, "frowand.list@gmail.com" <frowand.list@gmail.com>, "kvmarm@lists.cs.columbia.edu" <kvmarm@lists.cs.columbia.edu>, "devicetree@vger.kernel.org" <devicetree@vger.ker>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190105014503.GA32383@basecamp>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Philippe,
+On Sat, Jan 5, 2019 at 2:45 AM Brian Masney <masneyb@onstation.org> wrote:
+> [Stephen]
+> > Otherwise patch looks good to me. Thanks for working on this. Are you
+> > going to convert the ssbi master and gpio chip too?
+>
+> Yes, I will do that work as well once this patch series is accepted.
+> I currently don't have the hardware to test it, but I'm willing to pick
+> up a cheap device on ebay. Any suggestions for something that boots a
+> mainline kernel with the ssbi? It looks like the Sony Xperia Z phone is
+> one of the supported devices.
 
-On Thu, Dec 13, 2018 at 12:50:29PM +0000, Jean-Philippe Brucker wrote:
-> We already do deferred flush: UNMAP requests are added to the queue by
-> iommu_unmap(), and then flushed out by iotlb_sync(). So we switch to the
-> host only on iotlb_sync(), or when the request queue is full.
+I think my APQ8060 DragonBoard uses SSBI:
+https://dflund.se/~triad/krad/dragonboard/
+arch/arm/boot/dts/qcom-apq8060-dragonboard.dts
 
-So the mappings can stay in place until iotlb_sync() returns? What
-happens when the guest sends a map-request for a region it sent and
-unmap request before, but did not call iotlb_sync inbetween?
+So I can test it. Or even  write the patch once the SSPI is merged and
+known working.
 
-Regards,
-
-	Joerg
+Yours,
+Linus Walleij
