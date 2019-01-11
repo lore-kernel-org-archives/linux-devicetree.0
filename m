@@ -1,42 +1,158 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 2/4] ARM: dts: s5pv210: aries: Support for more devices
- present on Aries
-Date: Fri, 11 Jan 2019 09:33:41 +0100
-Message-ID: <CAJKOXPdZPTP1c1GN-274G0jBMCHZiXk1C3Q+JnergehkuExPXg@mail.gmail.com>
-References: <20190108165601.25708-1-pawel.mikolaj.chmiel@gmail.com> <20190108165601.25708-3-pawel.mikolaj.chmiel@gmail.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] arm64: dts: ls1088: add smmu device node
+Date: Fri, 11 Jan 2019 16:39:58 +0800
+Message-ID: <20190111083956.GF32649@dragon>
+References: <1545109016-1779-1-git-send-email-nipun.gupta@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108165601.25708-3-pawel.mikolaj.chmiel@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <1545109016-1779-1-git-send-email-nipun.gupta@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Pawe=C5=82_Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Cc: kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, xc-racer2@live.ca, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Nipun Gupta <nipun.gupta@nxp.com>
+Cc: Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robin.murphy@arm.com" <robin.murphy@arm.com>, "will.deacon@arm.com" <will.deacon@arm.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Jan 2019 at 17:56, Pawe=C5=82 Chmiel
-<pawel.mikolaj.chmiel@gmail.com> wrote:
->
-> From: Jonathan Bakker <xc-racer2@live.ca>
->
-> This commit enables following devices present on Aries based phones:
-> - pwm-vibrator attached to PWM 1
-> - poweroff support
-> - Atmel maXTouch touchscreen, connected to i2c2
-> - Broadcom BCM4329 bluetooth over uart0
->
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Pawe=C5=82 Chmiel <pawel.mikolaj.chmiel@gmail.com>
+On Tue, Dec 18, 2018 at 04:51:58AM +0000, Nipun Gupta wrote:
+> This patch also adds the iommu-map property in fsl-mc node, so
+> that fsl-mc can use iommu.
+> 
+> Signed-off-by: Nipun Gupta <nipun.gupta@nxp.com>
 > ---
-> Changes from v1:
->    - Touchscreen irq pin should have PULL_NONE, since it's already
->      pulled up with 2.8v
->    - Touchscreen irq should be edge failing (like in vendor sources)
-> ---
->  arch/arm/boot/dts/s5pv210-aries.dtsi | 68 ++++++++++++++++++++++++++++
->  1 file changed, 68 insertions(+)
+> These patches are based over:
+> git://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git,
+> as there are couple of changes related to fsl-mc bus in this tree:
+> https://lore.kernel.org/patchwork/patch/1021020/
+> 
+>  arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi | 92 +++++++++++++++++++++++++-
+>  1 file changed, 91 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> index de93b42..dec0c2d 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1088a.dtsi
+> @@ -576,6 +576,7 @@
+>  			reg = <0x00000008 0x0c000000 0 0x40>,	 /* MC portal base */
+>  			      <0x00000000 0x08340000 0 0x40000>; /* MC control reg */
+>  			msi-parent = <&its>;
+> +			iommu-map = <0 &smmu 0 0>;	/* This is fixed-up by u-boot */
+>  			#address-cells = <3>;
+>  			#size-cells = <1>;
+>  
+> @@ -641,6 +642,96 @@
+>  				};
+>  			};
+>  		};
+> +
+> +		smmu: iommu@5000000 {
 
-Thanks, applied.
+We are trying to keep the nodes with unit-address sorted in the address.
+I move the node to where it should be, and applied both patches.
 
-Best regards,
-Krzysztof
+Shawn
+
+> +			compatible = "arm,mmu-500";
+> +			reg = <0 0x5000000 0 0x800000>;
+> +			#iommu-cells = <1>;
+> +			stream-match-mask = <0x7C00>;
+> +			#global-interrupts = <12>;
+> +				     // global secure fault
+> +			interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>,
+> +				     // combined secure
+> +				     <GIC_SPI 14 IRQ_TYPE_LEVEL_HIGH>,
+> +				     // global non-secure fault
+> +				     <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>,
+> +				     // combined non-secure
+> +				     <GIC_SPI 16 IRQ_TYPE_LEVEL_HIGH>,
+> +				     // performance counter interrupts 0-7
+> +				     <GIC_SPI 211 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 212 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 213 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 214 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 215 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 217 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 218 IRQ_TYPE_LEVEL_HIGH>,
+> +				     // per context interrupt, 64 interrupts
+> +				     <GIC_SPI 146 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 147 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 148 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 149 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 150 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 151 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 152 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 153 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 154 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 155 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 156 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 157 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 158 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 159 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 160 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 161 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 162 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 163 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 164 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 165 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 166 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 167 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 168 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 169 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 170 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 171 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 172 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 173 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 175 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 176 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 177 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 178 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 179 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 180 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 181 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 182 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 183 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 184 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 185 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 188 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 189 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 190 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 191 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 192 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 193 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 194 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 195 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 196 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 197 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 198 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 199 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 200 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 201 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 202 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 203 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 205 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 206 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 207 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>,
+> +				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
+> +		};
+>  	};
+>  
+>  	firmware {
+> @@ -649,5 +740,4 @@
+>  			method = "smc";
+>  		};
+>  	};
+> -
+>  };
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
