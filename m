@@ -1,82 +1,91 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH] arm64: dts: marvell: Add device tree for uDPU board
-Date: Fri, 11 Jan 2019 18:41:47 +0100
-Message-ID: <20190111174147.GG20924@lunn.ch>
-References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
+Date: Fri, 11 Jan 2019 09:44:10 -0800
+Message-ID: <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com>
+References: <20190110221903.3990-4-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190111172055.30451-1-vladimir.vid@sartura.hr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Vid <vladimir.vid@sartura.hr>
-Cc: devicetree@vger.kernel.org, Luka Perkov <luka.perkov@sartura.hr>, Paul Arola <paul.arola@telus.com>, Luis Torres <luis.torres@methode.com>, Scott Roberts <scott.roberts@telus.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190110221903.3990-4-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+Quoting Rob Herring (2019-01-10 14:19:01)
+> Convert the fixed-clock binding to DT schema format using json-schema.
+>=20
+
+Any pointer to the full schema?
+
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: linux-clk@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+[...]
+> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.yaml b/D=
+ocumentation/devicetree/bindings/clock/fixed-clock.yaml
 > new file mode 100644
-> index 000000000000..eae30322a037
+> index 000000000000..8b5628463b90
 > --- /dev/null
-> +++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-> @@ -0,0 +1,178 @@
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device tree for the uDPU board.
-> + * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
-> + * Copyright (C) 2016 Marvell
-> + * Copyright (C) 2018 Methode
-> + * Copyright (C) 2018 Telus
-> + *
-> + * Vladimir Vid <vladimir.vid@sartura.hr>
-> + */
+> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.yaml
+> @@ -0,0 +1,44 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +/dts-v1/;
+> +title: Binding for simple fixed-rate clock sources.
+
+Why does title have a full stop?
+
 > +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "armada-372x.dtsi"
+> +maintainers:
+> +  - Michael Turquette <mturquette@baylibre.com>
+> +  - Stephen Boyd <sboyd@kernel.org>
 > +
-> +/ {
-> +	model = "Methode uDPU Board";
-> +	compatible = "marvell,armada-3720-db", "marvell,armada3720",
-> +		     "marvell,armada3710";
+> +properties:
+> +  compatible:
+> +    const: fixed-clock
 > +
-
-Hi Vladimir
-
-There should be a compatible string here for the board. It looks like
-you will also need to add Methode as a vendor to
-Documentation/devicetree/bindings/vendor-prefixes.txt.
-
-> +	leds {
-> +		pinctrl-names = "default";
-> +		compatible = "gpio-leds";
+> +  "#clock-cells":
+> +    const: 0
 > +
-> +		led@487 {
-> +			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
-> +			default-state = "off";
+> +  clock-frequency: true
 
-It is normal to have a name here, indicating what the LED is for, its
-colour, etc.
+Why doesn't this need the $ref: /schemas/types.yaml#/... thing?
 
-> +&mdio {
-> +	status = "okay";
-> +	phy0: ethernet-phy@0 {
-> +		reg = <0>;
-> +	};
-> +	phy1: ethernet-phy@1 {
-> +		reg = <1>;
-> +	};
-> +};
+> +  clock-accuracy:
+> +    description: accuracy of clock in ppb (parts per billion).
+> +    $ref: /schemas/types.yaml#/definitions/uint32
+> +
+> +  clock-output-names:
+> +    maxItems: 1
 
-These don't appear to be used anywhere. 
+Is there a schema for strings?
 
-      Andrew
+> +
+> +required:
+> +  - compatible
+> +  - "#clock-cells"
+> +  - clock-frequency
+> +
+> +additionalProperties: false
+
+Does this always have to be specified even if it's false?
+
+> +
+> +examples:
+> +  - |
+> +    clock {
+> +      compatible =3D "fixed-clock";
+> +      #clock-cells =3D <0>;
+> +      clock-frequency =3D <1000000000>;
+> +      clock-accuracy =3D <100>;
+> +    };
+> +...
+>=20
+
+Is the triple dot part of the schema?
