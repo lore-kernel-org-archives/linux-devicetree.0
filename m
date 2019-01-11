@@ -1,73 +1,29 @@
-From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: [PATCH v2 38/49] dt-bindings: display: tfp410: Add bus parameters
- properties
-Date: Fri, 11 Jan 2019 05:51:09 +0200
-Message-ID: <20190111035120.20668-39-laurent.pinchart@ideasonboard.com>
-References: <20190111035120.20668-1-laurent.pinchart@ideasonboard.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190111035120.20668-1-laurent.pinchart@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org
-Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Jyri Sarha <jsarha@ti.com>
+From: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Subject: [PATCH INTERNAL V3 0/3] Add support for PWM Configure and stablize for PWM kona
+Date: Fri, 11 Jan 2019 10:38:01 +0530
+Message-ID: <1547183284-19956-1-git-send-email-sheetal.tigadoli@broadcom.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIFRGUDQxMCBzdXBwb3J0cyBjb25maWd1cmF0aW9uIG9mIHNldmVyYWwgaW5wdXQgYnVzIHBh
-cmFtZXRlcnMKdGhyb3VnaCBlaXRoZXIgdGhlIEkyQyBwb3J0IG9yIGNoaXAgcGlucy4gSW4gdGhl
-IGxhdHRlciBjYXNlLCB3ZSBuZWVkIHRvCnNwZWNpZnkgdGhvc2UgcGFyYW1ldGVycyBpbiBEVC4K
-ClR3byBuZXcgcHJvcGVydGllcyBhcmUgYWRkZWQsIHRpLGRlc2tldyB0byBzcGVjaWZ5IHRoZSBk
-YXRhIGRlLXNrZXcKY29uZmlndXJhdGlvbiAoYXMgc2V0IHRocm91Z2ggdGhlIERLWzM6MV0gcGlu
-cyksIGFuZCBwY2xrLXNhbXBsZSB0bwpzcGVjaWZ5IHRoZSBwaXhlbCBjbG9jayBzYW1wbGluZyBl
-ZGdlIChhcyBzZXQgdGhyb3VnaCB0aGUgRURHRSBwaW4pLgoKU2lnbmVkLW9mZi1ieTogTGF1cmVu
-dCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgpSZXZpZXdlZC1i
-eTogVG9taSBWYWxrZWluZW4gPHRvbWkudmFsa2VpbmVuQHRpLmNvbT4KLS0tCiAuLi4vYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dCAgICAgfCAyNCArKysrKysrKysrKysrKy0t
-LS0tCiAxIGZpbGUgY2hhbmdlZCwgMTggaW5zZXJ0aW9ucygrKSwgNiBkZWxldGlvbnMoLSkKCmRp
-ZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlk
-Z2UvdGksdGZwNDEwLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
-bGF5L2JyaWRnZS90aSx0ZnA0MTAudHh0CmluZGV4IDU0ZDdlMzE1MjVlYy4uM2Y5MDNhZjkzOTQ5
-IDEwMDY0NAotLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9i
-cmlkZ2UvdGksdGZwNDEwLnR4dAorKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3MvZGlzcGxheS9icmlkZ2UvdGksdGZwNDEwLnR4dApAQCAtNiwxNSArNiwyNSBAQCBSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOgogCiBPcHRpb25hbCBwcm9wZXJ0aWVzOgogLSBwb3dlcmRvd24tZ3Bpb3M6
-IHBvd2VyLWRvd24gZ3BpbwotLSByZWc6IEkyQyBhZGRyZXNzLiBJZiBhbmQgb25seSBpZiBwcmVz
-ZW50IHRoZSBkZXZpY2Ugbm9kZQotICAgICAgIHNob3VsZCBiZSBwbGFjZWQgaW50byB0aGUgaTJj
-IGNvbnRyb2xsZXIgbm9kZSB3aGVyZSB0aGUKLSAgICAgICB0ZnA0MTAgaTJjIGlzIGNvbm5lY3Rl
-ZCB0by4KKy0gcmVnOiBJMkMgYWRkcmVzcy4gSWYgYW5kIG9ubHkgaWYgcHJlc2VudCB0aGUgZGV2
-aWNlIG5vZGUgc2hvdWxkIGJlIHBsYWNlZAorICBpbnRvIHRoZSBJMkMgY29udHJvbGxlciBub2Rl
-IHdoZXJlIHRoZSBURlA0MTAgSTJDIGlzIGNvbm5lY3RlZCB0by4KKy0gdGksZGVza2V3OiBkYXRh
-IGRlLXNrZXcgaW4gMzUwcHMgaW5jcmVtZW50cywgZnJvbSAtNCB0byArMywgYXMgY29uZmlndXJl
-ZAorICB0aHJvdWdoIHRoIERLWzM6MV0gcGlucy4gVGhpcyBwcm9wZXJ0eSBzaGFsbCBiZSBwcmVz
-ZW50IG9ubHkgaWYgdGhlIFRGUDQxMAorICBpcyBub3QgY29ubmVjdGVkIHRocm91Z2ggSTJDLgog
-CiBSZXF1aXJlZCBub2RlczoKLS0gVmlkZW8gcG9ydCAwIGZvciBEUEkgaW5wdXQgWzFdLgotLSBW
-aWRlbyBwb3J0IDEgZm9yIERWSSBvdXRwdXQgWzFdLgogCi1bMV06IERvY3VtZW50YXRpb24vZGV2
-aWNldHJlZS9iaW5kaW5ncy9tZWRpYS92aWRlby1pbnRlcmZhY2VzLnR4dAorVGhpcyBkZXZpY2Ug
-aGFzIHR3byB2aWRlbyBwb3J0cy4gVGhlaXIgY29ubmVjdGlvbnMgYXJlIG1vZGVsZWQgdXNpbmcg
-dGhlIE9GCitncmFwaCBiaW5kaW5ncyBzcGVjaWZpZWQgaW4gWzFdLiBFYWNoIHBvcnQgbm9kZSBz
-aGFsbCBoYXZlIGEgc2luZ2xlIGVuZHBvaW50LgorCistIFBvcnQgMCBpcyB0aGUgRFBJIGlucHV0
-IHBvcnQuIEl0cyBlbmRwb2ludCBzdWJub2RlIHNoYWxsIGNvbnRhaW4gYQorICBwY2xrLXNhbXBs
-ZSBwcm9wZXJ0eSBhbmQgYSByZW1vdGUtZW5kcG9pbnQgcHJvcGVydHkgYXMgc3BlY2lmaWVkIGlu
-IFsxXS4KKworLSBQb3J0IDEgaXMgdGhlIERWSSBvdXRwdXQgcG9ydC4gSXRzIGVuZHBvaW50IHN1
-Ym5vZGUgc2hhbGwgY29udGFpbiBhCisgIHJlbW90ZS1lbmRwb2ludCBwcm9wZXJ0eSBpcyBzcGVj
-aWZpZWQgaW4gWzFdLgorCitbMV0gRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0CisKIAogRXhhbXBsZQogLS0tLS0tLQpAQCAtMjIsNiAr
-MzIsNyBAQCBFeGFtcGxlCiB0ZnA0MTA6IGVuY29kZXJAMCB7CiAJY29tcGF0aWJsZSA9ICJ0aSx0
-ZnA0MTAiOwogCXBvd2VyZG93bi1ncGlvcyA9IDwmdHdsX2dwaW8gMiBHUElPX0FDVElWRV9MT1c+
-OworCXRpLGRlc2tldyA9IDw0PjsKIAogCXBvcnRzIHsKIAkJI2FkZHJlc3MtY2VsbHMgPSA8MT47
-CkBAIC0zMSw2ICs0Miw3IEBAIHRmcDQxMDogZW5jb2RlckAwIHsKIAkJCXJlZyA9IDwwPjsKIAog
-CQkJdGZwNDEwX2luOiBlbmRwb2ludEAwIHsKKwkJCQlwY2xrLXNhbXBsZSA9IDwxPjsKIAkJCQly
-ZW1vdGUtZW5kcG9pbnQgPSA8JmRwaV9vdXQ+OwogCQkJfTsKIAkJfTsKLS0gClJlZ2FyZHMsCgpM
-YXVyZW50IFBpbmNoYXJ0CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3Rv
-cC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmkt
-ZGV2ZWwK
+Hi,
+	This patchset contain support to make PWM changes configure
+	and stablize
+	Following are brief changes done
+	a. Add support for version2 compatible string
+	b. Change PWM config and stablize delay in PWM Kona
+
+Praveen Kumar B (3):
+  dt-bindings: pwm: kona: Add new compatible for new version pwm-kona
+  drivers: pwm: pwm-bcm-kona: Add pwm-kona-v2 support
+  ARM: dts: cygnus: Change pwm compatible to new version
+
+ .../devicetree/bindings/pwm/brcm,kona-pwm.txt      |   2 +-
+ arch/arm/boot/dts/bcm-cygnus.dtsi                  |   2 +-
+ drivers/pwm/pwm-bcm-kona.c                         | 128 ++++++++++++++++-----
+ 3 files changed, 100 insertions(+), 32 deletions(-)
+
+-- 
+1.9.1
