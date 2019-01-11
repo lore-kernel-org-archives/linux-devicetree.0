@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 11/17] ARM: davinci: da830: switch to using the clocksource driver
-Date: Fri, 11 Jan 2019 18:21:28 +0100
-Message-ID: <20190111172134.30147-12-brgl@bgdev.pl>
+Subject: [PATCH 08/17] ARM: davinci: dm644x: WARN() if clk_get() fails
+Date: Fri, 11 Jan 2019 18:21:25 +0100
+Message-ID: <20190111172134.30147-9-brgl@bgdev.pl>
 References: <20190111172134.30147-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -14,110 +14,27 @@ List-Id: devicetree@vger.kernel.org
 
 From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-We now have a proper clocksource driver for davinci. Switch the platform
-to using it.
+Currently the timer code checks if the clock pointer passed to it is
+good (!IS_ERR(clk)). The new clocksource driver expects the clock to
+be functional and doesn't perform any checks so emit a warning if
+clk_get() fails.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/da830.c | 56 ++++++++++++++++++-----------------
- 1 file changed, 29 insertions(+), 27 deletions(-)
+ arch/arm/mach-davinci/dm644x.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index ceb0417f10f6..0d81a8fdd9e6 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -20,7 +20,8 @@
- #include <mach/cputype.h>
- #include <mach/da8xx.h>
- #include <mach/irqs.h>
--#include <mach/time.h>
-+
-+#include <clocksource/timer-davinci.h>
+diff --git a/arch/arm/mach-davinci/dm644x.c b/arch/arm/mach-davinci/dm644x.c
+index 38f92b7d413e..85d69ac1bd70 100644
+--- a/arch/arm/mach-davinci/dm644x.c
++++ b/arch/arm/mach-davinci/dm644x.c
+@@ -681,6 +681,7 @@ void __init dm644x_init_time(void)
+ 	dm644x_psc_init(NULL, psc);
  
- #include "mux.h"
- 
-@@ -769,32 +770,32 @@ int __init da830_register_gpio(void)
- 	return da8xx_register_gpio(&da830_gpio_platform_data);
- }
- 
--static struct davinci_timer_instance da830_timer_instance[2] = {
--	{
--		.base		= DA8XX_TIMER64P0_BASE,
--		.bottom_irq	= IRQ_DA8XX_TINT12_0,
--		.top_irq	= IRQ_DA8XX_TINT34_0,
--		.cmp_off	= DA830_CMP12_0,
--		.cmp_irq	= IRQ_DA830_T12CMPINT0_0,
-+static const struct davinci_timer_cfg da830_timer_cfg = {
-+	.reg = {
-+		.start		= DA8XX_TIMER64P0_BASE,
-+		.end		= DA8XX_TIMER64P0_BASE + SZ_4K,
-+		.flags		= IORESOURCE_MEM,
- 	},
--	{
--		.base		= DA8XX_TIMER64P1_BASE,
--		.bottom_irq	= IRQ_DA8XX_TINT12_1,
--		.top_irq	= IRQ_DA8XX_TINT34_1,
--		.cmp_off	= DA830_CMP12_0,
--		.cmp_irq	= IRQ_DA830_T12CMPINT0_1,
-+	.irq = {
-+		{
-+			.start	= IRQ_DA8XX_TINT12_0,
-+			.end	= IRQ_DA8XX_TINT12_0,
-+			.flags	= IORESOURCE_IRQ,
-+		},
-+		{
-+			.start	= IRQ_DA8XX_TINT34_0,
-+			.end	= IRQ_DA8XX_TINT34_0,
-+			.flags	= IORESOURCE_IRQ,
-+		},
- 	},
--};
--
--/*
-- * T0_BOT: Timer 0, bottom		: Used for clock_event & clocksource
-- * T0_TOP: Timer 0, top			: Used by DSP
-- * T1_BOT, T1_TOP: Timer 1, bottom & top: Used for watchdog timer
-- */
--static struct davinci_timer_info da830_timer_info = {
--	.timers		= da830_timer_instance,
--	.clockevent_id	= T0_BOT,
--	.clocksource_id	= T0_BOT,
-+	.cmp = {
-+		.irq = {
-+			.start	= IRQ_DA830_T12CMPINT0_0,
-+			.end	= IRQ_DA830_T12CMPINT0_0,
-+			.flags	= IORESOURCE_IRQ,
-+		},
-+		.offset		= DA830_CMP12_0,
-+	}
- };
- 
- static const struct davinci_soc_info davinci_soc_info_da830 = {
-@@ -810,7 +811,6 @@ static const struct davinci_soc_info davinci_soc_info_da830 = {
- 	.intc_type		= DAVINCI_INTC_TYPE_CP_INTC,
- 	.intc_irq_prios		= da830_default_priorities,
- 	.intc_irq_num		= DA830_N_CP_INTC_IRQ,
--	.timer_info		= &da830_timer_info,
- 	.emac_pdata		= &da8xx_emac_pdata,
- };
- 
-@@ -826,6 +826,7 @@ void __init da830_init_time(void)
- {
- 	void __iomem *pll;
- 	struct clk *clk;
-+	int rv;
- 
- 	clk_register_fixed_rate(NULL, "ref_clk", NULL, 0, DA830_REF_FREQ);
- 
-@@ -836,7 +837,8 @@ void __init da830_init_time(void)
  	clk = clk_get(NULL, "timer0");
- 	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
++	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
  
--	davinci_timer_init(clk);
-+	rv = davinci_timer_register(clk, &da830_timer_cfg);
-+	WARN(rv, "Unable to register the timer: %d\n", rv);
+ 	davinci_timer_init(clk);
  }
- 
- static struct resource da830_psc0_resources[] = {
 -- 
 2.19.1
