@@ -1,8 +1,8 @@
 From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 1/5] dt-bindings: display: bridge: fork out ti,ds90c185
- from lvds-transmitter
-Date: Fri, 11 Jan 2019 15:18:55 +0000
-Message-ID: <20190111151843.11114-2-peda@axentia.se>
+Subject: [PATCH v4 2/5] dt-bindings: display: bridge: lvds-transmitter:
+ cleanup example
+Date: Fri, 11 Jan 2019 15:19:00 +0000
+Message-ID: <20190111151843.11114-3-peda@axentia.se>
 References: <20190111151843.11114-1-peda@axentia.se>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,106 +15,30 @@ To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-DS90C185 has a shutdown pin which does not fit in the lvds-transmitter
-binding, which is meant to be generic.
+Drop #address-cells and #size-cells from the root node in the
+example, they are unused.
 
-The sister chip DS90C187 is similar to DS90C185, describe it here as well.
-
+Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Peter Rosin <peda@axentia.se>
 ---
- .../bindings/display/bridge/lvds-transmitter.txt   | 10 ++--
- .../bindings/display/bridge/ti,ds90c185.txt        | 55 ++++++++++++++++++=
-++++
- 2 files changed, 59 insertions(+), 6 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/display/bridge/ti,ds9=
-0c185.txt
+ Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt | 2 =
+--
+ 1 file changed, 2 deletions(-)
 
 diff --git a/Documentation/devicetree/bindings/display/bridge/lvds-transmit=
 ter.txt b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter=
 .txt
-index 50220190c203..bc6960741cb5 100644
+index bc6960741cb5..60091db5dfa5 100644
 --- a/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
 +++ b/Documentation/devicetree/bindings/display/bridge/lvds-transmitter.txt
-@@ -22,13 +22,11 @@ among others.
+@@ -42,8 +42,6 @@ Example
 =20
- Required properties:
+ lvds-encoder {
+ 	compatible =3D "lvds-encoder";
+-	#address-cells =3D <1>;
+-	#size-cells =3D <0>;
 =20
--- compatible: Must be one or more of the following
--  - "ti,ds90c185" for the TI DS90C185 FPD-Link Serializer
--  - "lvds-encoder" for a generic LVDS encoder device
-+- compatible: Must be "lvds-encoder"
-=20
--  When compatible with the generic version, nodes must list the
--  device-specific version corresponding to the device first
--  followed by the generic version.
-+  Any encoder compatible with this generic binding, but with additional
-+  properties not listed here, must list a device specific compatible first
-+  followed by this generic compatible.
-=20
- Required nodes:
-=20
-diff --git a/Documentation/devicetree/bindings/display/bridge/ti,ds90c185.t=
-xt b/Documentation/devicetree/bindings/display/bridge/ti,ds90c185.txt
-new file mode 100644
-index 000000000000..e575f996959a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/display/bridge/ti,ds90c185.txt
-@@ -0,0 +1,55 @@
-+Texas Instruments FPD-Link (LVDS) Serializer
-+--------------------------------------------
-+
-+The DS90C185 and DS90C187 are low-power serializers for portable
-+battery-powered applications that reduces the size of the RGB
-+interface between the host GPU and the display.
-+
-+Required properties:
-+
-+- compatible: Should be
-+  "ti,ds90c185", "lvds-encoder"  for the TI DS90C185 FPD-Link Serializer
-+  "ti,ds90c187", "lvds-encoder"  for the TI DS90C187 FPD-Link Serializer
-+
-+Optional properties:
-+
-+- powerdown-gpios: Power down control GPIO (the PDB pin, active-low)
-+
-+Required nodes:
-+
-+The devices have two video ports. Their connections are modeled using the =
-OF
-+graph bindings specified in Documentation/devicetree/bindings/graph.txt.
-+
-+- Video port 0 for parallel input
-+- Video port 1 for LVDS output
-+
-+
-+Example
-+-------
-+
-+lvds-encoder {
-+	compatible =3D "ti,ds90c185", "lvds-encoder";
-+
-+	powerdown-gpios =3D <&gpio 17 GPIO_ACTIVE_LOW>;
-+
-+	ports {
-+		#address-cells =3D <1>;
-+		#size-cells =3D <0>;
-+
-+		port@0 {
-+			reg =3D <0>;
-+
-+			lvds_enc_in: endpoint {
-+				remote-endpoint =3D <&lcdc_out_rgb>;
-+			};
-+		};
-+
-+		port@1 {
-+			reg =3D <1>;
-+
-+			lvds_enc_out: endpoint {
-+				remote-endpoint =3D <&lvds_panel_in>;
-+			};
-+		};
-+	};
-+};
+ 	ports {
+ 		#address-cells =3D <1>;
 --=20
 2.11.0
