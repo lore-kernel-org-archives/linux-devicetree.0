@@ -1,46 +1,82 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 3/3] arm64: dts: allwinner: a64: Orange Pi Win:
- Enable IR
-Date: Fri, 11 Jan 2019 18:30:15 +0100
-Message-ID: <20190111173015.12119-4-jernej.skrabec@siol.net>
-References: <20190111173015.12119-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] arm64: dts: marvell: Add device tree for uDPU board
+Date: Fri, 11 Jan 2019 18:41:47 +0100
+Message-ID: <20190111174147.GG20924@lunn.ch>
+References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBPNF4PQQKGQE6NXDBTI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190111173015.12119-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Vid <vladimir.vid@sartura.hr>
+Cc: devicetree@vger.kernel.org, Luka Perkov <luka.perkov@sartura.hr>, Paul Arola <paul.arola@telus.com>, Luis Torres <luis.torres@methode.com>, Scott Roberts <scott.roberts@telus.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-OrangePi Win board contains IR receiver. Enable it.
+> diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+> new file mode 100644
+> index 000000000000..eae30322a037
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+> @@ -0,0 +1,178 @@
+> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
+> +/*
+> + * Device tree for the uDPU board.
+> + * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
+> + * Copyright (C) 2016 Marvell
+> + * Copyright (C) 2018 Methode
+> + * Copyright (C) 2018 Telus
+> + *
+> + * Vladimir Vid <vladimir.vid@sartura.hr>
+> + */
+> +
+> +/dts-v1/;
+> +
+> +#include <dt-bindings/gpio/gpio.h>
+> +#include "armada-372x.dtsi"
+> +
+> +/ {
+> +	model = "Methode uDPU Board";
+> +	compatible = "marvell,armada-3720-db", "marvell,armada3720",
+> +		     "marvell,armada3710";
+> +
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Hi Vladimir
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index b0c64f75792c..4f9bedce6c70 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -180,6 +180,10 @@
- 	status = "okay";
- };
- 
-+&r_ir {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
- 
--- 
-2.20.1
+There should be a compatible string here for the board. It looks like
+you will also need to add Methode as a vendor to
+Documentation/devicetree/bindings/vendor-prefixes.txt.
+
+> +	leds {
+> +		pinctrl-names = "default";
+> +		compatible = "gpio-leds";
+> +
+> +		led@487 {
+> +			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
+> +			default-state = "off";
+
+It is normal to have a name here, indicating what the LED is for, its
+colour, etc.
+
+> +&mdio {
+> +	status = "okay";
+> +	phy0: ethernet-phy@0 {
+> +		reg = <0>;
+> +	};
+> +	phy1: ethernet-phy@1 {
+> +		reg = <1>;
+> +	};
+> +};
+
+These don't appear to be used anywhere. 
+
+      Andrew
