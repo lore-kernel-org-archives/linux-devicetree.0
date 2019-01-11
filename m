@@ -1,57 +1,43 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v3 1/6] pinctrl: qcom: spmi-gpio: hardcode IRQ counts
-Date: Fri, 11 Jan 2019 14:00:58 -0800
-Message-ID: <154724405834.169631.5375710339019706473@swboyd.mtv.corp.google.com>
-References: <20190110011258.17227-1-masneyb@onstation.org> <20190110011258.17227-2-masneyb@onstation.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add ROCK Pi 4 DTS support
+Date: Fri, 11 Jan 2019 16:01:43 -0600
+Message-ID: <20190111220143.GA9773@bogus>
+References: <20190106044030.1484-1-Pragnesh_Patel@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110011258.17227-2-masneyb@onstation.org>
+Content-Disposition: inline
+In-Reply-To: <20190106044030.1484-1-Pragnesh_Patel@mentor.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
-Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: heiko@sntech.de, Akash Gajjar <Akash_Gajjar@mentor.com>, Pragnesh Patel <Pragnesh_Patel@mentor.com>, Mark Rutland <mark.rutland@arm.com>, Olof Johansson <olof@lixom.net>, Levin Du <djw@t-chip.com.cn>, Ezequiel Garcia <ezequiel@collabora.com>, Klaus Goger <klaus.goger@theobroma-systems.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Liang Chen <cl@rock-chips.com>, Vicente Bergas <vicencb@gmail.com>, Shawn Lin <shawn.lin@rock-chips.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2019-01-09 17:12:53)
-> @@ -1062,14 +1056,15 @@ static int pmic_gpio_remove(struct platform_devic=
-e *pdev)
->         return 0;
->  }
-> =20
-> +/* data contains the number of GPIOs */
->  static const struct of_device_id pmic_gpio_of_match[] =3D {
-> -       { .compatible =3D "qcom,pm8916-gpio" },   /* 4 GPIO's */
-> -       { .compatible =3D "qcom,pm8941-gpio" },   /* 36 GPIO's */
-> -       { .compatible =3D "qcom,pm8994-gpio" },   /* 22 GPIO's */
-> -       { .compatible =3D "qcom,pmi8994-gpio" },  /* 10 GPIO's */
-> -       { .compatible =3D "qcom,pma8084-gpio" },  /* 22 GPIO's */
-> -       { .compatible =3D "qcom,pms405-gpio" },   /* 12 GPIO's, holes on =
-1 9 10 */
-> -       { .compatible =3D "qcom,spmi-gpio" }, /* Generic */
-> +       { .compatible =3D "qcom,pm8916-gpio", .data =3D (void *) 4 },
-> +       { .compatible =3D "qcom,pm8941-gpio", .data =3D (void *) 36 },
-> +       { .compatible =3D "qcom,pm8994-gpio", .data =3D (void *) 22 },
-> +       { .compatible =3D "qcom,pmi8994-gpio", .data =3D (void *) 10 },
-> +       { .compatible =3D "qcom,pma8084-gpio", .data =3D (void *) 22 },
-> +       /* pms405 has 12 GPIOs with holes on 1, 9, and 10 */
-> +       { .compatible =3D "qcom,pms405-gpio", .data =3D (void *) 12 },
+On Sun, 6 Jan 2019 10:10:10 +0530, <Pragnesh_Patel@mentor.com> wrote:
+> From: Akash Gajjar <Akash_Gajjar@mentor.com>
+> 
+> ROCK Pi 4 is RK3399 based SBC from radxa.com. board has a 1G/2G/4G lpddr4, CSI,
+> DSI, HDMI, OTG, USB 2.0, USB 3.0, 10/100/1000 RGMII Ethernet Phy, es8316 codec,
+> POE, WIFI (for Model B only), PCIE M.2 support on board.
+> 
+> This patch enables
+> - HDMI Display
+> - Console
+> - MMC, EMMC
+> - USB 2.0, USB-3.0
+> - Ethernet
+> 
+> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+> Signed-off-by: Pragnesh Patel <Pragnesh_Patel@mentor.com>
+> ---
+> changes in v2
+> - hdmi regulator name correction
+> - replace gpio pin number with appropriate macro
+> 
+>  .../devicetree/bindings/arm/rockchip.yaml     |   5 +
+>  arch/arm64/boot/dts/rockchip/Makefile         |   1 +
+>  .../boot/dts/rockchip/rk3399-rock-pi-4.dts    | 606 ++++++++++++++++++
+>  3 files changed, 612 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-rock-pi-4.dts
+> 
 
-We've been lazy and not been updating this file.
-
- $ git grep "qcom,spmi-gpio"
- arch/arm/boot/dts/qcom-pm8941.dtsi:                     compatible =3D "qc=
-om,pm8941-gpio", "qcom,spmi-gpio";
- arch/arm/boot/dts/qcom-pma8084.dtsi:                    compatible =3D "qc=
-om,pma8084-gpio", "qcom,spmi-gpio";
- arch/arm64/boot/dts/qcom/pm8005.dtsi:                   compatible =3D "qc=
-om,pm8005-gpio", "qcom,spmi-gpio";
- arch/arm64/boot/dts/qcom/pm8998.dtsi:                   compatible =3D "qc=
-om,pm8998-gpio", "qcom,spmi-gpio";
- arch/arm64/boot/dts/qcom/pmi8994.dtsi:                  compatible =3D "qc=
-om,pmi8994-gpio", "qcom,spmi-gpio";
- arch/arm64/boot/dts/qcom/pmi8998.dtsi:                  compatible =3D "qc=
-om,pmi8998-gpio", "qcom,spmi-gpio";
-
-So we'll need to add pm8005, pm8998, pmi8998 here with their pin counts
-too to avoid breaking those devices with this patch.
+Reviewed-by: Rob Herring <robh@kernel.org>
