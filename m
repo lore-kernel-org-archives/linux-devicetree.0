@@ -1,91 +1,69 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
-Date: Fri, 11 Jan 2019 09:44:10 -0800
-Message-ID: <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com>
-References: <20190110221903.3990-4-robh@kernel.org>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] arm64: dts: marvell: Add device tree for uDPU board
+Date: Fri, 11 Jan 2019 18:44:32 +0100
+Message-ID: <20190111174432.GH20924@lunn.ch>
+References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110221903.3990-4-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Michael Turquette <mturquette@baylibre.com>, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Vid <vladimir.vid@sartura.hr>
+Cc: devicetree@vger.kernel.org, Luka Perkov <luka.perkov@sartura.hr>, Paul Arola <paul.arola@telus.com>, Luis Torres <luis.torres@methode.com>, Scott Roberts <scott.roberts@telus.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2019-01-10 14:19:01)
-> Convert the fixed-clock binding to DT schema format using json-schema.
->=20
-
-Any pointer to the full schema?
-
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: linux-clk@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-[...]
-> diff --git a/Documentation/devicetree/bindings/clock/fixed-clock.yaml b/D=
-ocumentation/devicetree/bindings/clock/fixed-clock.yaml
-> new file mode 100644
-> index 000000000000..8b5628463b90
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/clock/fixed-clock.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/clock/fixed-clock.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +	sfp_eth0: sfp-eth0 {
+> +		compatible = "sff,sfp";
+> +		i2c-bus = <&i2c0>;
+> +		los-gpio = <&gpiosb 2 GPIO_ACTIVE_HIGH>;
+> +		mod-def0-gpio = <&gpiosb 3 GPIO_ACTIVE_LOW>;
+> +		tx-disable-gpio = <&gpiosb 4 GPIO_ACTIVE_HIGH>;
+> +		tx-fault-gpio = <&gpiosb 5 GPIO_ACTIVE_HIGH>;
+> +	};
 > +
-> +title: Binding for simple fixed-rate clock sources.
+> +	sfp_eth1: sfp-eth1 {
+> +		compatible = "sff,sfp";
+> +		i2c-bus = <&i2c1>;
+> +		los-gpio = <&gpiosb 7 GPIO_ACTIVE_HIGH>;
+> +		mod-def0-gpio = <&gpiosb 8 GPIO_ACTIVE_LOW>;
+> +		tx-disable-gpio = <&gpiosb 9 GPIO_ACTIVE_HIGH>;
+> +		tx-fault-gpio = <&gpiosb 10 GPIO_ACTIVE_HIGH>;
+> +	};
+> +};
 
-Why does title have a full stop?
-
+> +&i2c0 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c1_pins>;
 > +
-> +maintainers:
-> +  - Michael Turquette <mturquette@baylibre.com>
-> +  - Stephen Boyd <sboyd@kernel.org>
+> +	eeprom@50 {
+> +		compatible = "atmel,24c04";
+> +		reg = <0x50>;
+> +	};
+> +};
 > +
-> +properties:
-> +  compatible:
-> +    const: fixed-clock
+> +&i2c1 {
+> +	status = "okay";
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&i2c2_pins>;
 > +
-> +  "#clock-cells":
-> +    const: 0
-> +
-> +  clock-frequency: true
+> +	eeprom@50 {
+> +		compatible = "atmel,24c04";
+> +		reg = <0x50>;
+> +	};
+> +};
 
-Why doesn't this need the $ref: /schemas/types.yaml#/... thing?
+The SFP driver will export the 'eeprom' via ethtool --module-info.
+Please don't add a standard EEPROM.
 
-> +  clock-accuracy:
-> +    description: accuracy of clock in ppb (parts per billion).
-> +    $ref: /schemas/types.yaml#/definitions/uint32
-> +
-> +  clock-output-names:
-> +    maxItems: 1
-
-Is there a schema for strings?
-
-> +
-> +required:
-> +  - compatible
-> +  - "#clock-cells"
-> +  - clock-frequency
-> +
-> +additionalProperties: false
-
-Does this always have to be specified even if it's false?
-
-> +
-> +examples:
-> +  - |
-> +    clock {
-> +      compatible =3D "fixed-clock";
-> +      #clock-cells =3D <0>;
-> +      clock-frequency =3D <1000000000>;
-> +      clock-accuracy =3D <100>;
-> +    };
-> +...
->=20
-
-Is the triple dot part of the schema?
+       Andrew
