@@ -1,49 +1,84 @@
-From: Peter Rosin <peda@axentia.se>
-Subject: [PATCH v4 3/5] dt-bindings: display: bridge: thc63lvdm83d: use
- standard powerdown-gpios
-Date: Fri, 11 Jan 2019 15:19:05 +0000
-Message-ID: <20190111151843.11114-4-peda@axentia.se>
-References: <20190111151843.11114-1-peda@axentia.se>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add fallback compatible string
+ for power domain
+Date: Fri, 11 Jan 2019 15:24:11 +0000
+Message-ID: <AM0PR04MB4211BFB2A3D02F67E4AE0B1F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
+ <1545148524-658-2-git-send-email-aisheng.dong@nxp.com>
+ <20190111090009.GG32649@dragon> <20190111090653.GH32649@dragon>
+ <AM0PR04MB42119B411244F0B1BB829D9F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <20190111130311.GA3599@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111151843.11114-1-peda@axentia.se>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190111130311.GA3599@dragon>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: Peter Rosin <peda@axentia.se>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Archit Taneja <architt@codeaurora.org>, Andrzej Hajda <a.hajda@samsung.com>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The name powerdown-gpios is the standard property name for the
-functionality covered by the previous pwdn-gpios name. This rename
-should be safe to do since the linux driver supporting the binding
-(lvds-encoder.c) never implemented the property, and no dts file
-names it. At least not upstream.
+> From: Shawn Guo [mailto:shawnguo@kernel.org]
+> Sent: Friday, January 11, 2019 9:03 PM
+> On Fri, Jan 11, 2019 at 10:48:21AM +0000, Aisheng Dong wrote:
+> > Hi Shawn,
+> >
+> > > -----Original Message-----
+> > > From: Shawn Guo [mailto:shawnguo@kernel.org]
+> > > Sent: Friday, January 11, 2019 5:07 PM
+> > >
+> > > On Fri, Jan 11, 2019 at 05:00:11PM +0800, Shawn Guo wrote:
+> > > > On Tue, Dec 18, 2018 at 04:01:20PM +0000, Aisheng Dong wrote:
+> > > > > SCU power domain can be used in the same way by IMX8QXP and
+> > > IMX8QM SoCs.
+> > > > > Let's add a "fsl,scu-pd" fallback compatible string to allow
+> > > > > other SoCs to reuse the common part.
+> > > >
+> > > > This is not the practice we used to match devices with
+> > > > compatibilities, i.e. coding the compatible string with the SoC
+> > > > name that firstly introduces the device, and use the compatible as
+> > > > fallback for new
+> > > SoCs.
+> > >
+> >
+> > This is suggested by Rob that if the future SoCs are likely to be compatible.
+> > Then we can use a general fallback compatible string like "fsl,scu-pd".
+> >
+> >
+> > From SCU HW protocol point of view, they're indeed compatible.
+> > Just varies a bit on the domains numbers.
+> > That's why we introduce "fsl,scu-pd".
+> > But still keep SoC specific compatible string in case any special
+> > tricks to ensure the ABI stability.
+> >
+> > How do you think?
+> 
+> Unless Rob is against the practice we have been used for long time on i.MX, I
+> would keep using it for i.MX8, i.e. instead of introducing a generic compatible
+> for fallback, simply falling on the compatible SoC specified IP block.
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Signed-off-by: Peter Rosin <peda@axentia.se>
----
- Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.txt | =
-2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Hmm, i feel protocol based devices is slightly a bit different from our old practice.
+See ARM and TI are all used generic compatible string.
+Documentation/devicetree/bindings/arm/arm,scpi.txt
+Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
 
-diff --git a/Documentation/devicetree/bindings/display/bridge/thine,thc63lv=
-dm83d.txt b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvd=
-m83d.txt
-index 527e236e9a2a..fee3c88e1a17 100644
---- a/Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.t=
-xt
-+++ b/Documentation/devicetree/bindings/display/bridge/thine,thc63lvdm83d.t=
-xt
-@@ -10,7 +10,7 @@ Required properties:
-=20
- Optional properties:
-=20
--- pwdn-gpios: Power down control GPIO
-+- powerdown-gpios: Power down control GPIO (the /PWDN pin, active low).
-=20
- Required nodes:
-=20
---=20
-2.11.0
+If from firmware protocol point of view, they're defined SoC independent.
+SW(driver) implementation might be a different on platforms due to special tricks
+or implemented as platform independent.
+
+Anyway, if you strongly against this, i will change to what you requested.
+
+Regards
+Dong Aisheng
+
+> Shawn
