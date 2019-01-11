@@ -1,8 +1,8 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH RESEND v1 2/4] dt-bindings: fsl: scu: add imx8qm scu clock
- support
-Date: Fri, 11 Jan 2019 11:56:00 +0000
-Message-ID: <1547207400-28307-3-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH RESEND v1 4/4] dt-bindings: imx8-clock: add a53 and a72 clock
+ id
+Date: Fri, 11 Jan 2019 11:56:09 +0000
+Message-ID: <1547207400-28307-5-git-send-email-aisheng.dong@nxp.com>
 References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,7 +23,9 @@ To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Add imx8qm scu clock support
+Add a53 and a72 clock id, as there's still no users, we update
+IMX_LSIO_MEM_CLK base to start from 6 to allow a53 and a72 clock
+id to be continued with a35 clk.
 
 Cc: Stephen Boyd <sboyd@kernel.org>
 Cc: Rob Herring <robh+dt@kernel.org>
@@ -34,22 +36,27 @@ Cc: Fabio Estevam <fabio.estevam@nxp.com>
 Cc: Michael Turquette <mturquette@baylibre.com>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ include/dt-bindings/clock/imx8-clock.h | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index 5ec6dca..b6a883e 100644
---- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-+++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -71,7 +71,8 @@ This binding uses the common clock binding[1].
+diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
+index 4236818..2f1aa2f 100644
+--- a/include/dt-bindings/clock/imx8-clock.h
++++ b/include/dt-bindings/clock/imx8-clock.h
+@@ -13,10 +13,12 @@
  
- Required properties:
- - compatible:		Should be one of:
--			  "fsl,imx8qxp-clock"
-+			  "fsl,imx8qm-clock",
-+			  "fsl,imx8qxp-clock".
- 			followed by "fsl,scu-clk"
- - #clock-cells:		Should be 1. Contains the Clock ID value.
- - clocks:		List of clock specifiers, must contain an entry for
+ /* CPU */
+ #define IMX_A35_CLK					1
++#define IMX_A53_CLK					2
++#define IMX_A72_CLK					3
+ 
+ /* LSIO SS */
+-#define IMX_LSIO_MEM_CLK				2
+-#define IMX_LSIO_BUS_CLK				3
++#define IMX_LSIO_MEM_CLK				6
++#define IMX_LSIO_BUS_CLK				7
+ #define IMX_LSIO_PWM0_CLK				10
+ #define IMX_LSIO_PWM1_CLK				11
+ #define IMX_LSIO_PWM2_CLK				12
 -- 
 2.7.4
