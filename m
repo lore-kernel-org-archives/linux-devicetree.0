@@ -1,46 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/7] drm: rockchip: vop: add rk3066 vop definitions
-Date: Fri, 11 Jan 2019 08:54:24 -0600
-Message-ID: <20190111145424.GA21604@bogus>
-References: <20181229133318.18128-1-jbx6244@gmail.com>
- <20181229133318.18128-4-jbx6244@gmail.com>
- <154632658.xpTMZOjgxT@phil>
+Subject: Re: [PATCH 2/6] dt-bindings: clock: Add DT bindings for Actions Semi
+ S500 CMU
+Date: Fri, 11 Jan 2019 08:56:42 -0600
+Message-ID: <20190111145642.GA25726@bogus>
+References: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
+ <20181231185517.18517-3-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <154632658.xpTMZOjgxT@phil>
+In-Reply-To: <20181231185517.18517-3-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Heiko Stuebner <heiko@sntech.de>
-Cc: Johan Jonker <jbx6244@gmail.com>, hjc@rock-chips.com, airlied@linux.ie, mark.rutland@arm.com, mturquette@baylibre.com, sboyd@kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: sboyd@kernel.org, mturquette@baylibre.com, afaerber@suse.de, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Dec 30, 2018 at 06:22:00PM +0100, Heiko Stuebner wrote:
-> Hi Johan,
+On Tue, Jan 01, 2019 at 12:25:13AM +0530, Manivannan Sadhasivam wrote:
+> From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
 > 
-> Am Samstag, 29. Dezember 2018, 14:33:14 CET schrieb Johan Jonker:
-> > From: Mark Yao <mark.yao@rock-chips.com>
-> > 
-> > This patch adds the rk3066 VOP definitions.
-> > 
-> > The VOP or LCD Controller serves as interface between
-> > framebuffer memory and a display device (LCD panel or TV set).
-> > 
-> > This SOC has two symmetrical LCDC's for a dual panel application.
-> > 
-> > A LCDC has 5 display layers.
-> > Only 3 are used here.
-> > 
-> > - Video layer 0 (Win0)
-> > - Video layer 1 (Win1)
-> > - OSD layer     (Win2)
+> Add devicetree bindings for Actions Semi S500 Clock Management Unit.
 > 
-> Patch itself looks good, we'll need to wait a bit to give Rob a chance
-> to look at the (simple) dt-binding change and I'll drop the paragraph
-> about the display layers when applying.
+> Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+> [Mani: Documented S500 CMU compatible]
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+> 
+> Rob, I have removed your Reviewed-by tag for this patch since the
+> earlier revision contained only bindings constants and lacked the
+> compatible documentation, which is added now.
+> 
+>  .../bindings/clock/actions,owl-cmu.txt        |  7 +-
+>  include/dt-bindings/clock/actions,s500-cmu.h  | 78 +++++++++++++++++++
+>  2 files changed, 82 insertions(+), 3 deletions(-)
+>  create mode 100644 include/dt-bindings/clock/actions,s500-cmu.h
+> 
+> diff --git a/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt b/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
+> index 2ef86ae96df8..86183f559022 100644
+> --- a/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
+> +++ b/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
+> @@ -2,13 +2,14 @@
+>  
+>  The Actions Semi Owl Clock Management Unit generates and supplies clock
+>  to various controllers within the SoC. The clock binding described here is
+> -applicable to S900 and S700 SoC's.
+> +applicable to S900,S700 and S500 SoC's.
 
-Don't wait on me for simple oneline compatible additions.
+space needed after the ','.
 
-Acked-by: Rob Herring <robh@kernel.org>
+With that,
 
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
