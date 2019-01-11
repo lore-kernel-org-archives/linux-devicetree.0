@@ -1,47 +1,42 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [v5 3/3] dt-bindings: msm/disp: Introduce
- interconnect bindings for MDSS on SDM845
-Date: Fri, 11 Jan 2019 08:35:18 -0600
-Message-ID: <20190111143518.GA19187@bogus>
-References: <1547056325-1919-1-git-send-email-jshekhar@codeaurora.org>
- <1547056325-1919-4-git-send-email-jshekhar@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v5 01/10] dt-bindings: olpc,xo1.75-ec: Add OLPC XO-1.75
+ EC bindings
+Date: Fri, 11 Jan 2019 08:36:35 -0600
+Message-ID: <20190111143635.GA21484@bogus>
+References: <20190110175845.1203986-1-lkundrak@v3.sk>
+ <20190110175845.1203986-2-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547056325-1919-4-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <20190110175845.1203986-2-lkundrak@v3.sk>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Russell King <linux@armlinux.org.uk>, Mark Rutland <mark.rutland@arm.com>, platform-driver-x86@vger.kernel.org, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Lubomir Rintel <lkundrak@v3.sk>, Pavel Machek <pavel@ucw.cz>
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCAgOSBKYW4gMjAxOSAyMzoyMjowNSArMDUzMCwgSmF5YW50IFNoZWtoYXIgd3JvdGU6
-Cj4gRnJvbTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4K
-PiAKPiBBZGQgaW50ZXJjb25uZWN0IHByb3BlcnRpZXMgc3VjaCBhcyBpbnRlcmNvbm5lY3QgcHJv
-dmlkZXIgc3BlY2lmaWVyCj4gLCB0aGUgZWRnZSBzb3VyY2UgYW5kIGRlc3RpbmF0aW9uIHBvcnRz
-IHdoaWNoIGFyZSByZXF1aXJlZCBieSB0aGUKPiBpbnRlcmNvbm5lY3QgQVBJIHRvIGNvbmZpZ3Vy
-ZSBpbnRlcmNvbm5lY3QgcGF0aCBmb3IgTURTUy4KPiAKPiBDaGFuZ2VzIGluIHYyOgo+IAktIG5v
-bmUKPiAKPiBDaGFuZ2VzIGluIHYzOgo+IAktIFJlbW92ZSBjb21tb24gcHJvcGVydHkgZGVmaW5p
-dGlvbnMgKFJvYiBIZXJyaW5nKQo+IAo+IENoYW5nZXMgaW4gdjQ6Cj4gCS0gVXNlIHBvcnQgbWFj
-cm9zIGFuZCBjaGFuZ2UgcG9ydCBzdHJpbmcgbmFtZXMgKEdlb3JnaSBEamFrb3YpCj4gCj4gQ2hh
-bmdlcyBpbiB2NToKPiAJLSBOb25lCj4gCj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1
-a3VkdXJ1IDxza29sbHVrdUBjb2RlYXVyb3JhLm9yZz4KPiBTaWduZWQtb2ZmLWJ5OiBKYXlhbnQg
-U2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+Cj4gLS0tCj4gIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0IHwgMTAgKysrKysrKysrKwo+
-ICAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQo+IAoKUGxlYXNlIGFkZCBBY2tlZC1i
-eS9SZXZpZXdlZC1ieSB0YWdzIHdoZW4gcG9zdGluZyBuZXcgdmVyc2lvbnMuIEhvd2V2ZXIsCnRo
-ZXJlJ3Mgbm8gbmVlZCB0byByZXBvc3QgcGF0Y2hlcyAqb25seSogdG8gYWRkIHRoZSB0YWdzLiBU
-aGUgdXBzdHJlYW0KbWFpbnRhaW5lciB3aWxsIGRvIHRoYXQgZm9yIGFja3MgcmVjZWl2ZWQgb24g
-dGhlIHZlcnNpb24gdGhleSBhcHBseS4KCklmIGEgdGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9z
-ZSwgcGxlYXNlIHN0YXRlIHdoeSBhbmQgd2hhdCBjaGFuZ2VkLgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVk
-cmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+On Thu, 10 Jan 2019 18:58:36 +0100, Lubomir Rintel wrote:
+> The OLPC XO-1.75 Embedded Controller is a SPI master that uses extra
+> signals for handshaking. It needs to know when is the slave (Linux)
+> side's TX FIFO ready for transfer (the ready-gpio signal on the SPI
+> controller node) and when does it wish to respond with a command (the
+> cmd-gpio property).
+> 
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Acked-by: Pavel Machek <pavel@ucw.cz>
+> 
+> ---
+> Changes since v1:
+> - s/cmd-gpio/cmd-gpios/
+> - s/ready-gpio/ready-gpios/ in the documentation paragraph
+> - Remove status = "okay" from the example
+> 
+>  .../bindings/misc/olpc,xo1.75-ec.txt          | 23 +++++++++++++++++++
+>  1 file changed, 23 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/olpc,xo1.75-ec.txt
+> 
+
+Please add Acked-by/Reviewed-by tags when posting new versions. However,
+there's no need to repost patches *only* to add the tags. The upstream
+maintainer will do that for acks received on the version they apply.
+
+If a tag was not added on purpose, please state why and what changed.
