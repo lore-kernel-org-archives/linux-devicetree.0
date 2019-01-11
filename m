@@ -1,70 +1,149 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v2 2/2] arm: dts: meson: Fix IRQ trigger type for macirq
-Date: Thu, 10 Jan 2019 16:21:14 -0800
-Message-ID: <7hpnt4qc1x.fsf@baylibre.com>
-References: <20181207105231.25593-1-ccaione@baylibre.com>
- <20181207105231.25593-3-ccaione@baylibre.com>
- <CAFBinCAbOdPnsH4TLLBmMnR5tS+jHfHagWudVLjaH6X89vtgDQ@mail.gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v1 7/7] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Thu, 10 Jan 2019 16:30:14 -0800
+Message-ID: <20190111003014.GB261387@google.com>
+References: <cover.1547078153.git.amit.kucheria@linaro.org>
+ <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCAbOdPnsH4TLLBmMnR5tS+jHfHagWudVLjaH6X89vtgDQ@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, ingrassia@epigenesys.com
+Content-Type: text/plain; charset=utf-8
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <6c5b26e65be18222587724e066fc2e39b9f60397.1547078153.git.amit.kucheria@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Martin Blumenstingl <martin.blumenstingl@googlemail.com> writes:
+On Thu, Jan 10, 2019 at 05:30:56AM +0530, Amit Kucheria wrote:
+> Since the big and little cpus are in the same frequency domain, use all
+> of them for mitigation in the cooling-map. At the lower trip points we
+> restrict ourselves to throttling only a few OPPs. At higher trip
+> temperatures, allow ourselves to be throttled to any extent.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 145 +++++++++++++++++++++++++++
+>  1 file changed, 145 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 29e823b0caf4..cd6402a9aa64 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -13,6 +13,7 @@
+>  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -99,6 +100,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+> @@ -114,6 +116,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+> @@ -126,6 +129,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+> @@ -138,6 +142,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+> @@ -150,6 +155,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+> @@ -162,6 +168,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+> @@ -174,6 +181,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+> @@ -186,6 +194,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+> @@ -1703,6 +1712,23 @@
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
+> +							 <&CPU1 THERMAL_NO_LIMIT 4>,
+> +							 <&CPU2 THERMAL_NO_LIMIT 4>,
+> +							 <&CPU3 THERMAL_NO_LIMIT 4>;
+> +				};
+> +				map1 {
+> +					trip = <&cpu_crit0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
+> +							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
+> +				};
+> +			};
 
-> Hi Carlo,
->
-> On Fri, Dec 7, 2018 at 11:52 AM Carlo Caione <ccaione@baylibre.com> wrote:
->>
->> A long running stress test on a custom board shipping an AXG SoCs and a
->> Realtek RTL8211F PHY revealed that after a few hours the connection
->> speed would drop drastically, from ~1000Mbps to ~3Mbps. At the same time
->> the 'macirq' (eth0) IRQ would stop being triggered at all and as
->> consequence the GMAC IRQs never ACKed.
->>
->> After a painful investigation the problem seemed to be due to a wrong
->> defined IRQ type for the GMAC IRQ that should be LEVEL_HIGH instead of
->> EDGE_RISING.
->>
->> The change in the macirq IRQ type also solved another long standing
->> issue affecting this SoC/PHY where EEE was causing the network
->> connection to die after stressing it with iperf3 (even though much
->> sooner). It's now possible to remove the 'eee-broken-1000t' quirk as
->> well.
-> (disclaimer: I was not able to reproduce this bug without your
-> patches, but I didn't run iperf3 for more than a couple of minutes)
-> I did test your patch with and without my "Meson8b RGMII Ethernet pin
-> cleanup" from [0] which shows that there's another performance related
-> problem:
-> 1) before and after your patch receive speeds were fine (above
-> 700Mbit/s and no transmit errors / retries in iperf3) but the transmit
-> speed was bad (<200Mbit/s and >1500 retries in perf3)
-> 2) transmit errors (when Odroid-C1 is sending) are not occurring
-> anymore after my patch from [0]
->
-> thus I believe your patch is fine, especially since we already have
-> IRQ_TYPE_LEVEL_HIGH for the dwc2 controllers
->
->> Fixes: 9c15795a4f96 ("ARM: dts: meson8b-odroidc1: ethernet support")
->> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
-> Reviewed-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Tested-by: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
->
-> I wonder if Kevin can send this as a fix for v4.20
+Slightly off-topic, buy maybe not so much since we are just starting
+to use the trip points:
 
-Queued as a fix for v5.0-rc
+Currently we use the naming scheme 'cpu_<type>N' for trip points. I
+anticipate that we're going to add more passive trip points soon, to
+keep the 'power_allocator' thermal governor happy, which expects a
+'switch_on' and a 'desired_temperature' trip point. With the current
+naming scheme this could become a bit messy. I suggest to change it to
+'cpuN_<type>[X]', which would allow for something like 'cpuN_alert0'
+and 'cpuN_alert1'.
 
-Kevin
+If you think the change makes sense you can consider to do it within
+this series, I can also send a separate patch once it has landed.
+
+You could also consider to add the additional trip point in this
+series if you agree that it will be needed.
+
+This is not necessarily a call for action, just thinking loudly about
+a closely related topic ;-)
+
+Cheers
+
+Matthias
