@@ -1,148 +1,490 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v1 6/7] arm64: dts: sdm845: Increase alert trip point to
- 95 degrees
-Date: Fri, 11 Jan 2019 10:30:23 -0800
-Message-ID: <20190111183023.GE261387@google.com>
-References: <cover.1547078153.git.amit.kucheria@linaro.org>
- <041258d65883df964890249a24d2a4788c419304.1547078153.git.amit.kucheria@linaro.org>
- <20190110011533.GV261387@google.com>
- <CAHLCerPN3dxd=XBEkU2cMacFDkZjNhXEw7BDYNTEyfSUszSUzg@mail.gmail.com>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Fri, 11 Jan 2019 11:46:43 -0700
+Message-ID: <20190111184643.GA22691@xps15>
+References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <a13ad49d3ae8d9a5a972027283b7212ab19f97d0.1547054308.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAHLCerPN3dxd=XBEkU2cMacFDkZjNhXEw7BDYNTEyfSUszSUzg@mail.gmail.com>
+In-Reply-To: <a13ad49d3ae8d9a5a972027283b7212ab19f97d0.1547054308.git.saiprakash.ranjan@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 03:54:23PM +0530, Amit Kucheria wrote:
-> On Thu, Jan 10, 2019 at 6:45 AM Matthias Kaehlcke <mka@chromium.org> wrote:
-> >
-> > Hi Amit,
-> >
-> > On Thu, Jan 10, 2019 at 05:30:55AM +0530, Amit Kucheria wrote:
-> > > 75 degrees is too aggressive for throttling the CPU. After speaking to
-> > > Qualcomm engineers, increase it to 95 degrees.
-> > >
-> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> > > ---
-> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 16 ++++++++--------
-> > >  1 file changed, 8 insertions(+), 8 deletions(-)
-> > >
-> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > index c27cbd3bcb0a..29e823b0caf4 100644
-> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > > @@ -1692,7 +1692,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert0: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1713,7 +1713,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert1: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1734,7 +1734,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert2: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1755,7 +1755,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert3: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1776,7 +1776,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert4: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1797,7 +1797,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert5: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1818,7 +1818,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert6: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> > > @@ -1839,7 +1839,7 @@
-> > >
-> > >                       trips {
-> > >                               cpu_alert7: trip0 {
-> > > -                                     temperature = <75000>;
-> > > +                                     temperature = <95000>;
-> > >                                       hysteresis = <2000>;
-> > >                                       type = "passive";
-> > >                               };
-> >
-> > The change itself looks good to me, however I wonder if it would be
-> > worth to eliminate redundancy and merge the current 8 thermal zones
-> > into 2, one for the Silver and one for the Gold cluster (as done by
-> > http://crrev.com/c/1381752). There is a single cooling device for
-> > each cluster, so it's not clear to me if there is any gain from having
-> > a separate thermal zone for each CPU. If it is important to monitor
-> > the temperatures of the individual cores this can still be done by
-> > configuring the thermal zone of the cluster with multiple thermal
-> > sensors.
+Hi Sai,
+
+On Wed, Jan 09, 2019 at 11:16:47PM +0530, Sai Prakash Ranjan wrote:
+> Add coresight components found on Qualcomm SDM845 SoC.
 > 
-> Reducing the number of thermal zones to 2 (by grouping 4 sensors per
-> zone) is not possible due a limitation of the thermal framework[1]. It
-> is something that we want to address. Previous attempts to fix this
-> were rejected for various reasons. Eduardo was going to share a way to
-> have more flexible mapping between sensors and zones after discussions
-> at LPC.
-
-I wasn't aware of this limitation, thanks for the clarification! With
-this I understand that for now we indeed need the 8 thermal zones with
-all the redundant information :(
-
-> <nag> Eduardo, do you have anything we can review? </nag> :-)
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>  .../arm64/boot/dts/qcom/sdm845-coresight.dtsi | 437 ++++++++++++++++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi          |   2 +
+>  2 files changed, 439 insertions(+)
+>  create mode 100644 arch/arm64/boot/dts/qcom/sdm845-coresight.dtsi
 > 
-> Having said that, we'll need some aggregation functions when we add
-> multiple sensors to a zone (e.g. max, mean) to reflect the zone. This
-> will lose information about hotspots and prevent things like idle
-> injection on a particular CPU that is causing most of the heat in the
-> aggregated zone. So IMHO, it might be useful to have information about
-> the hotspots (i.e TZ per sensor) and aggregated values (ambient
-> temperature) that can be fed to the thermal policy.
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-coresight.dtsi b/arch/arm64/boot/dts/qcom/sdm845-coresight.dtsi
+> new file mode 100644
+> index 000000000000..b6ef250b9186
+> --- /dev/null
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-coresight.dtsi
+> @@ -0,0 +1,437 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * SDM845 Coresight DTS
+> + *
+> + * Copyright (c) 2019, The Linux Foundation. All rights reserved.
+> + */
+> +
+> +&soc {
+> +	stm@6002000 {
+> +		compatible = "arm,coresight-stm", "arm,primecell";
+> +		reg = <0x06002000 0x1000>,
+> +		      <0x16280000 0x180000>;
+> +		reg-names = "stm-base", "stm-stimulus-base";
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				stm_out: endpoint {
+> +					remote-endpoint = <&funnel0_in7>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@6041000 {
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x06041000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				funnel0_out: endpoint {
+> +					remote-endpoint =
+> +						<&merge_funnel_in0>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@7 {
+> +				reg = <7>;
+> +				funnel0_in7: endpoint {
+> +					remote-endpoint = <&stm_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@6043000 {
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x06043000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				funnel2_out: endpoint {
+> +					remote-endpoint =
+> +					  <&merge_funnel_in2>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@5 {
+> +				reg = <5>;
+> +				funnel2_in5: endpoint {
+> +					remote-endpoint =
+> +					  <&apss_merge_funnel_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@6045000 {
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x06045000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				merge_funnel_out: endpoint {
+> +					remote-endpoint = <&etf_in>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				merge_funnel_in0: endpoint {
+> +					remote-endpoint =
+> +						<&funnel0_out>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +				merge_funnel_in2: endpoint {
+> +					remote-endpoint =
+> +						<&funnel2_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	replicator@6046000 {
+> +		compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
+> +		reg = <0x06046000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				replicator_out: endpoint {
+> +					remote-endpoint = <&etr_in>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			port {
+> +				replicator_in: endpoint {
+> +					remote-endpoint = <&etf_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etf@6047000 {
+> +		compatible = "arm,coresight-tmc", "arm,primecell";
+> +		reg = <0x06047000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etf_out: endpoint {
+> +					remote-endpoint = <&replicator_in>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				etf_in: endpoint {
+> +					remote-endpoint = <&merge_funnel_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etr@6048000 {
+> +		compatible = "arm,coresight-tmc", "arm,primecell";
+> +		reg = <0x06048000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		in-ports {
+> +			port {
+> +				etr_in: endpoint {
+> +					remote-endpoint = <&replicator_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7040000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
 
-Ok, it seems for now we need the 8 thermal zones in any case, when
-support for multiple sensors becomes available we can evaluate whether
-it's worth to change that or not.
+I'm a little curious as to why you need to bypass the normal AMBA bus discovery
+method by forcing the peripheral ID.  Tracers don't show up the way other
+coresight devices do at boot time?
 
-Cheers
-
-Matthias
+> +		reg = <0x07040000 0x1000>;
+> +
+> +		cpu = <&CPU0>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm0_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in0>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7140000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07140000 0x1000>;
+> +
+> +		cpu = <&CPU1>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm1_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in1>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7240000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07240000 0x1000>;
+> +
+> +		cpu = <&CPU2>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm2_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in2>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7340000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07340000 0x1000>;
+> +
+> +		cpu = <&CPU3>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm3_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in3>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7440000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07440000 0x1000>;
+> +
+> +		cpu = <&CPU4>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm4_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in4>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7540000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07540000 0x1000>;
+> +
+> +		cpu = <&CPU5>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm5_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in5>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7640000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07640000 0x1000>;
+> +
+> +		cpu = <&CPU6>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm6_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in6>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	etm@7740000 {
+> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+> +		arm,primecell-periphid = <0x000bb95d>;
+> +		reg = <0x07740000 0x1000>;
+> +
+> +		cpu = <&CPU7>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				etm7_out: endpoint {
+> +					remote-endpoint = <&apss_funnel_in7>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@7800000 { /* APSS Funnel */
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x07800000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				apss_funnel_out: endpoint {
+> +					remote-endpoint =
+> +					    <&apss_merge_funnel_in>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			#address-cells = <1>;
+> +			#size-cells = <0>;
+> +
+> +			port@0 {
+> +				reg = <0>;
+> +				apss_funnel_in0: endpoint {
+> +					remote-endpoint =
+> +						<&etm0_out>;
+> +				};
+> +			};
+> +
+> +			port@1 {
+> +				reg = <1>;
+> +				apss_funnel_in1: endpoint {
+> +					remote-endpoint =
+> +						<&etm1_out>;
+> +				};
+> +			};
+> +
+> +			port@2 {
+> +				reg = <2>;
+> +				apss_funnel_in2: endpoint {
+> +					remote-endpoint =
+> +						<&etm2_out>;
+> +				};
+> +			};
+> +
+> +			port@3 {
+> +				reg = <3>;
+> +				apss_funnel_in3: endpoint {
+> +					remote-endpoint =
+> +						<&etm3_out>;
+> +				};
+> +			};
+> +
+> +			port@4 {
+> +				reg = <4>;
+> +				apss_funnel_in4: endpoint {
+> +					remote-endpoint =
+> +						<&etm4_out>;
+> +				};
+> +			};
+> +
+> +			port@5 {
+> +				reg = <5>;
+> +				apss_funnel_in5: endpoint {
+> +					remote-endpoint =
+> +						<&etm5_out>;
+> +				};
+> +			};
+> +
+> +			port@6 {
+> +				reg = <6>;
+> +				apss_funnel_in6: endpoint {
+> +					remote-endpoint =
+> +						<&etm6_out>;
+> +				};
+> +			};
+> +
+> +			port@7 {
+> +				reg = <7>;
+> +				apss_funnel_in7: endpoint {
+> +					remote-endpoint =
+> +						<&etm7_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +
+> +	funnel@7810000 {
+> +		compatible = "arm,coresight-funnel", "arm,primecell";
+> +		reg = <0x07810000 0x1000>;
+> +
+> +		power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +
+> +		out-ports {
+> +			port {
+> +				apss_merge_funnel_out: endpoint {
+> +					remote-endpoint =
+> +					    <&funnel2_in5>;
+> +				};
+> +			};
+> +		};
+> +
+> +		in-ports {
+> +			port {
+> +				apss_merge_funnel_in: endpoint {
+> +					remote-endpoint =
+> +					    <&apss_funnel_out>;
+> +				};
+> +			};
+> +		};
+> +	};
+> +};
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index c27cbd3bcb0a..03683179b8f7 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -1853,3 +1853,5 @@
+>  		};
+>  	};
+>  };
+> +
+> +#include "sdm845-coresight.dtsi"
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
+> 
