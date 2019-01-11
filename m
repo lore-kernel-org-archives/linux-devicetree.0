@@ -1,54 +1,34 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v11 1/9] dt-bindings: opp: Introduce opp-level bindings
-Date: Fri, 11 Jan 2019 14:16:50 -0800
-Message-ID: <CAD=FV=U-1bJC9D3UV6E4FRK7L-cbEbwAg8dGG=HWAtaKvNuTFw@mail.gmail.com>
-References: <20190110040209.6028-1-rnayak@codeaurora.org> <20190110040209.6028-2-rnayak@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
+Date: Fri, 11 Jan 2019 16:21:12 -0600
+Message-ID: <20190111222112.GA14252@bogus>
+References: <20190107032810.13522-1-josephl@nvidia.com>
+ <20190107032810.13522-2-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110040209.6028-2-rnayak@codeaurora.org>
+Content-Disposition: inline
+In-Reply-To: <20190107032810.13522-2-josephl@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>, Rob Herring <robh@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Stephen Boyd <sboyd@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, David Collins <collinsd@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>, devicetree@vger.kernel.org, linux-arm-msm <linux-arm-msm@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, henryc.chen@mediatek.com
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Joseph Lo <josephl@nvidia.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-
-On Wed, Jan 9, 2019 at 8:03 PM Rajendra Nayak <rnayak@codeaurora.org> wrote:
->
-> Add opp-level as an additional property in the OPP node to describe
-> the performance level of the device.
->
-> On some SoCs (especially from Qualcomm and MediaTek) this value
-> is communicated to a remote microprocessor by the CPU, which
-> then takes some actions (like adjusting voltage values across various
-> rails) based on the value passed.
->
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
+On Mon, 7 Jan 2019 11:28:05 +0800, Joseph Lo wrote:
+> The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
+> timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
+> from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
+> (TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
+> or watchdog interrupts.
+> 
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
 > ---
->  Documentation/devicetree/bindings/opp/opp.txt | 3 +++
->  1 file changed, 3 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/opp/opp.txt b/Documentation/devicetree/bindings/opp/opp.txt
-> index c396c4c0af92..76b6c79604a5 100644
-> --- a/Documentation/devicetree/bindings/opp/opp.txt
-> +++ b/Documentation/devicetree/bindings/opp/opp.txt
-> @@ -129,6 +129,9 @@ Optional properties:
->  - opp-microamp-<name>: Named opp-microamp property. Similar to
->    opp-microvolt-<name> property, but for microamp instead.
->
-> +- opp-level: A value representing the performance level of the device,
-> +  expressed as a 32-bit integer.
-> +
+>  .../bindings/timer/nvidia,tegra210-timer.txt  | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+> 
 
-I like how this ended up!  :-)
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
-
-...are we just waiting for Rob to weigh back in about whether he's OK
-w/ this solution?
-
-Thanks!
-
-
--Doug
+Reviewed-by: Rob Herring <robh@kernel.org>
