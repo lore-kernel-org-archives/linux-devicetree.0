@@ -1,25 +1,24 @@
-Return-Path: <SRS0=ctnT=P2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.bootlin.com ([62.4.15.54]:44977 "EHLO mail.bootlin.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727123AbfAROVC (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Jan 2019 09:21:02 -0500
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH] pinctrl: armada-37xx: change suspend/resume time
-References: <20190108162843.6194-1-miquel.raynal@bootlin.com>
-Date: Fri, 18 Jan 2019 15:20:59 +0100
-In-Reply-To: <20190108162843.6194-1-miquel.raynal@bootlin.com> (Miquel
-        Raynal's message of "Tue, 8 Jan 2019 17:28:43 +0100")
-Message-ID: <87sgxqm4hg.fsf@FE-laptop>
+Return-Path: <SRS0=1UWY=PT=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:42407 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfAKI5F (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Fri, 11 Jan 2019 03:57:05 -0500
+Received: by mail-lj1-f193.google.com with SMTP id l15-v6so12213992lja.9
+        for <devicetree@vger.kernel.org>; Fri, 11 Jan 2019 00:57:03 -0800 (PST)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190108162843.6194-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20190108162843.6194-1-miquel.raynal@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Fri, 11 Jan 2019 09:56:51 +0100
+Message-ID: <CACRpkdYzjKYbTa7bWvqLE6HAgzybCdQ4rnEfNMDtZYHfiZY5nw@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: armada-37xx: change suspend/resume time
+Content-Type: text/plain; charset="UTF-8"
 Sender: devicetree-owner@vger.kernel.org
 To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, linux-gpio@vger.kernel.org
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Miquel,
- 
- On mar., janv. 08 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+On Tue, Jan 8, 2019 at 5:28 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
 > Armada 3700 PCIe IP relies on the pinctrl IP managed by this
 > driver. For reasons related to the PCI core's organization when
@@ -35,36 +34,11 @@ Hi Miquel,
 >
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
-Acked-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+I suppose this patch requires the three other patches I just applied
+for PCIe.
 
-Thanks,
+Would be nice to have Gregory's ACK on this patch before I apply
+it?
 
-Gregory
-
-> ---
->  drivers/pinctrl/mvebu/pinctrl-armada-37xx.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> index 4b9f2cf94431..6462d3ca7ceb 100644
-> --- a/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> +++ b/drivers/pinctrl/mvebu/pinctrl-armada-37xx.c
-> @@ -1107,8 +1107,8 @@ static int armada_3700_pinctrl_resume(struct device *dev)
->   * to other IO drivers.
->   */
->  static const struct dev_pm_ops armada_3700_pinctrl_pm_ops = {
-> -	.suspend_late = armada_3700_pinctrl_suspend,
-> -	.resume_early = armada_3700_pinctrl_resume,
-> +	.suspend_noirq = armada_3700_pinctrl_suspend,
-> +	.resume_noirq = armada_3700_pinctrl_resume,
->  };
->  
->  #define PINCTRL_ARMADA_37XX_DEV_PM_OPS (&armada_3700_pinctrl_pm_ops)
-> -- 
-> 2.19.1
->
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Yours,
+Linus Walleij
