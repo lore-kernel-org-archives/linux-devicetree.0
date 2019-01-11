@@ -1,28 +1,77 @@
 From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH 0/3] arm64: dts: meson-axg: add spdif input
-Date: Thu, 10 Jan 2019 16:43:49 -0800
-Message-ID: <7ha7k8qb0a.fsf@baylibre.com>
-References: <20181213143631.19218-1-jbrunet@baylibre.com>
+Subject: Re: [PATCH 2/2] arm64: dts: meson: libretech-cc: switch eMMC to 1.8v
+Date: Thu, 10 Jan 2019 16:53:35 -0800
+Message-ID: <7h5zuwqak0.fsf@baylibre.com>
+References: <20181220161037.23756-1-jbrunet@baylibre.com> <20181220161037.23756-3-jbrunet@baylibre.com> <CAFBinCBQkpLxUZYp2NQoXEA=8t_XCJMHauM+DwTz-p0FA57CrA@mail.gmail.com> <f4fa4226a508d563d1a77eaafa5590fd84577c15.camel@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181213143631.19218-1-jbrunet@baylibre.com>
+In-Reply-To: <f4fa4226a508d563d1a77eaafa5590fd84577c15.camel@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Carlo Caione <carlo@caione.org>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+To: Jerome Brunet <jbrunet@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Carlo Caione <carlo@caione.org>, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 Jerome Brunet <jbrunet@baylibre.com> writes:
 
-> This patchset adds spdif input support to the axg SoC family and the
-> s400 reference design.
+> On Sat, 2018-12-22 at 18:01 +0100, Martin Blumenstingl wrote:
+>> Hi Jerome,
+>> 
+>> On Thu, Dec 20, 2018 at 5:11 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>> > While some 3.3v eMMC 4.0 are available from libretech, the default
+>> > option for the aml-s905x-cc seems to 1.8v 5.0 modules.
+>> nit-pick:
+>> can you please state which module (storage size) you used for testing?
+>> you probably still remember that we had some confusion on Odroid-C2
+>> which eMMC module works and which doesn't, so let's be explicit here
+>> 
+>> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+>> > ---
+>> >  .../boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts    | 9 +++++----
+>> >  1 file changed, 5 insertions(+), 4 deletions(-)
+>> > 
+>> > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> > b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> > index daad007fac1f..d0d202cf7161 100644
+>> > --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> > +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> > @@ -118,8 +118,8 @@
+>> >         vddio_boot: regulator-vddio_boot {
+>> >                 compatible = "regulator-fixed";
+>> >                 regulator-name = "VDDIO_BOOT";
+>> > -               regulator-min-microvolt = <3300000>;
+>> > -               regulator-max-microvolt = <3300000>;
+>> > +               regulator-min-microvolt = <1800000>;
+>> > +               regulator-max-microvolt = <1800000>;
+>> is there a 3.3V -> 1.8V regulator on the eMMC module?
+>> I'm not sure about the schematics but it seems to be that the board
+>> itself supplies only 3.3V to the eMMC connector, so I'm not sure where
+>> 1.8V come from in this case
 >
-> Kevin, ASoC support for this spdif input (including the binding doc) just
-> got merged in the ASoC tree [0]. Until the related patches hit mainline,
-> you may get a warning about using undocumented bindings.
+> The module is indeed fed by 3.3v only but it has embedded LDOs add will feed
+> back the supply of the BOOT gpio bank.
 >
-> [0]: https://lkml.kernel.org/r/20181213120843.876CB11254D1@debutante.sirena.org.uk
+> I tried the following modules:
+> * 8 GB samsung - v1.0-170420
+> * 32 GB toshiba - v1.0-170421
+>
+> I think you can't get them here [0].
+>
+> In theory, these 4.x modules [1] could also work. They don't have the LDOs and
+> are directly feeding back the 3.3v to the BOOT bank. Since the modules are
+> advertised as being compatible with the Allwinner boards only, and not the AML
+> ones, it should not be the default option.
+>
+> [0] : 
+> https://www.loverpi.com/collections/libre-computer-project/products/libre-computer-board-emmc-5-x-module?variant=4173557729
+> [1] : 
+> https://www.loverpi.com/collections/libre-computer-project/products/libre-computer-board-emmc-4-x-module?variant=761282232333
+>
+>> can you please add a comment to the .dts about this?
+>
+> Sure
+>
 
-Queued for v5.1 (branch: v5.1/dt64)
+OK, I'll wait for a v2 of this series.
 
 Kevin
