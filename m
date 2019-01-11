@@ -1,58 +1,69 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: kona: Add new compatible for new
- version pwm-kona
-Date: Fri, 11 Jan 2019 13:28:45 -0800
-Message-ID: <f1ec3121-a8e7-a1c0-008a-ea4ae6028157@broadcom.com>
-References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1547184076-20521-2-git-send-email-sheetal.tigadoli@broadcom.com>
- <20190111204801.2ytdeblcai7lg3on@pengutronix.de>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 2/8 v3] Documentation: bindings: k3dma: Add binding for hisi-dma-avail-chan
+Date: Fri, 11 Jan 2019 13:30:35 -0800
+Message-ID: <CALAqxLVzh8ZrXQPSEsvrTXocqmF2z4hMFHH48a29VybYM=QyFg@mail.gmail.com>
+References: <1547141652-8660-1-git-send-email-john.stultz@linaro.org>
+ <1547141652-8660-3-git-send-email-john.stultz@linaro.org> <CAL_Jsq+2dYaCzLSr8n4W=ftSjgmKJaUqwQ4S7qv7ZAaR2A-5XQ@mail.gmail.com>
+ <CAL_JsqJLm_tDakS10gch8K_3F+mHrzR3isw8Tm=D-R118D1sYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111204801.2ytdeblcai7lg3on@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqJLm_tDakS10gch8K_3F+mHrzR3isw8Tm=D-R118D1sYQ@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Uwe
-
-On 2019-01-11 12:48 p.m., Uwe Kleine-König wrote:
-> On Fri, Jan 11, 2019 at 10:51:14AM +0530, Sheetal Tigadoli wrote:
->> From: Praveen Kumar B <praveen.b@broadcom.com>
->>
->> Add new compatible string for new version of pwm-kona
->>
->> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
->> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
->> ---
->>   Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->>
->> diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
->> index 8eae9fe..d37f697 100644
->> --- a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
->> +++ b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
->> @@ -3,7 +3,7 @@ Broadcom Kona PWM controller device tree bindings
->>   This controller has 6 channels.
->>   
->>   Required Properties :
->> -- compatible: should contain "brcm,kona-pwm"
->> +- compatible: should contain "brcm,kona-pwm" or "brcm,kona-pwm-v2"
-> Is v2 used on a newer generation of kona SoCs? On i.MX these variants
-> are usually named after the first SoC that came with the new variant. Is
-> this sensible here, too?
-
-It doesn't make as much sense here as different revs of the IP block are 
-picked up based on various decisions.
-
-A new SoC could decide to use an old version.
-
+On Fri, Jan 11, 2019 at 12:04 PM Rob Herring <robh+dt@kernel.org> wrote:
 >
-> Best regards
-> Uwe
+> On Fri, Jan 11, 2019 at 1:58 PM Rob Herring <robh+dt@kernel.org> wrote:
+> >
+> > On Thu, Jan 10, 2019 at 11:34 AM John Stultz <john.stultz@linaro.org> wrote:
+> > >
+> > > Some dma channels can be reserved for secure mode or other
+> > > hardware on the SoC, so provide a binding for a bitmask
+> > > listing the available channels for the kernel to use.
+> > >
+> > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Tanglei Han <hantanglei@huawei.com>
+> > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+> > > Cc: Ryan Grachek <ryan@edited.us>
+> > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Cc: dmaengine@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > > ---
+> > > v3: Renamed to hisi-dma-avail-chan
+> > > ---
+> > >  Documentation/devicetree/bindings/dma/k3dma.txt | 3 +++
+> > >  1 file changed, 3 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/dma/k3dma.txt b/Documentation/devicetree/bindings/dma/k3dma.txt
+> > > index 10a2f15..38825d4 100644
+> > > --- a/Documentation/devicetree/bindings/dma/k3dma.txt
+> > > +++ b/Documentation/devicetree/bindings/dma/k3dma.txt
+> > > @@ -14,6 +14,9 @@ Required properties:
+> > >                 have specific request line
+> > >  - clocks: clock required
+> > >
+> > > +Optional properties:
+> > > +- hisi-dma-avail-chan: Bitmask of available physical channels
+> >
+> > Not quite right. Should be: hisilicon,dma-avail-chan
 >
+> Actually, we already have the same case elsewhere with
+> 'brcm,dma-channel-mask'. Maybe there are others. So make the property
+> common (i.e. documented in dma.txt) and called 'dma-channel-mask'.
+
+Ok. I'll rework it for that then.
+
+> Whether or not the dmaengine handles this or not is irrelevant to
+> whether the binding is common or not. I have no say over OS design
+> decisions.
+
+Ok. I'll keep it in the driver for now unless otherwise directed.
+
+Thanks so much for the review!
+-john
