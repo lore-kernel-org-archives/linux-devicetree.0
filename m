@@ -1,49 +1,44 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 3/7] dt-bindings: net: stmmac: Add the bindings
- documentation for delays
-Date: Fri, 11 Jan 2019 09:01:04 -0600
-Message-ID: <20190111150104.GA1465@bogus>
-References: <20190102091729.18582-1-vkoul@kernel.org>
- <20190102091729.18582-4-vkoul@kernel.org>
+From: Lars Poeschel <poeschel@lemonage.de>
+Subject: [PATCH v5 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
+Date: Fri, 11 Jan 2019 17:11:13 +0100
+Message-ID: <20190111161124.24036-1-poeschel@lemonage.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190102091729.18582-4-vkoul@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: Vinod Koul <vkoul@kernel.org>
-Cc: "David S . Miller" <davem@davemloft.net>, netdev@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: devicetree@vger.kernel.org, Samuel Ortiz <sameo@linux.intel.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, "open list:NFC SUBSYSTEM" <linux-wireless@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+Cc: Johan Hovold <johan@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 02, 2019 at 02:47:25PM +0530, Vinod Koul wrote:
-> Some controllers require that phy delay should be disabled. So add
+It is favourable to have one unified compatible string for devices that
+have multiple interfaces. So this adds simply "pn532" as the devicetree
+binding compatible string and makes a note that the old ones are
+deprecated.
 
-If the MAC requires it, then the compatible string should imply this. If 
-it depends on the PHY, then okay.
+Cc: Johan Hovold <johan@kernel.org>
+Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+---
+Changes in v3:
+- This patch is new in v3
 
-> optional properties rx-disable-delay and tx-disable-delay for it.
-> 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
-> ---
->  Documentation/devicetree/bindings/net/stmmac.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
-> index cb694062afff..ec18897e22c8 100644
-> --- a/Documentation/devicetree/bindings/net/stmmac.txt
-> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
-> @@ -74,6 +74,8 @@ Optional properties:
->  	- snps,mb: mixed-burst
->  	- snps,rb: rebuild INCRx Burst
->  - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
-> +- rx-delay-disable: bool, when present disable the rx delay
-> +- tx-delay-disable: bool, when present disable the tx delay
+ drivers/nfc/pn533/i2c.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-Needs a vendor prefix.
-
->  - Multiple RX Queues parameters: below the list of all the parameters to
->  				 configure the multiple RX queues:
->  	- snps,rx-queues-to-use: number of RX queues to be used in the driver
-> -- 
-> 2.20.1
-> 
+diff --git a/drivers/nfc/pn533/i2c.c b/drivers/nfc/pn533/i2c.c
+index 4389eb4c8d0b..f4eae9dd5305 100644
+--- a/drivers/nfc/pn533/i2c.c
++++ b/drivers/nfc/pn533/i2c.c
+@@ -258,6 +258,11 @@ static int pn533_i2c_remove(struct i2c_client *client)
+ }
+ 
+ static const struct of_device_id of_pn533_i2c_match[] = {
++	{ .compatible = "nxp,pn532", },
++	/*
++	 * NOTE: The use of the compatibles with the trailing "...-i2c" is
++	 * deprecated and will be removed.
++	 */
+ 	{ .compatible = "nxp,pn533-i2c", },
+ 	{ .compatible = "nxp,pn532-i2c", },
+ 	{},
+-- 
+2.20.1
