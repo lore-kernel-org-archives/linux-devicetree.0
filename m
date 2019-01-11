@@ -1,394 +1,61 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] dts: arm64: fsl: lsch2: fix status field of serdes
- controlled devices
-Date: Fri, 11 Jan 2019 10:38:57 +0800
-Message-ID: <20190111023856.GG25218@dragon>
-References: <20181212123505.32415-1-pankaj.bansal@nxp.com>
- <20181212123505.32415-2-pankaj.bansal@nxp.com>
+Subject: Re: [PATCH 1/2] ARM: dts: imx7ulp: add sim node
+Date: Fri, 11 Jan 2019 10:53:15 +0800
+Message-ID: <20190111025314.GH25218@dragon>
+References: <1544775260-25458-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181212123505.32415-2-pankaj.bansal@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Pankaj Bansal <pankaj.bansal@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Leo Li <leoyang.li@nxp.com>
+In-Reply-To: <1544775260-25458-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Dec 12, 2018 at 07:09:54AM +0000, Pankaj Bansal wrote:
-> This patch disables that devices that are controlled by serdes
-> (pcie, sata, ethernet macs) in SOC dtsi files and enables the
-> interfaces in board dts file.
+On Fri, Dec 14, 2018 at 08:20:22AM +0000, Anson Huang wrote:
+> i.MX7ULP SoC revision info is inside the SIM mode's JTAG_ID
+> register, add sim node to support SoC revision check.
 > 
-> Actually this practise should be followed for all the devices and
-> not for only serdes controlled devices.
-> 
-> refer https://elinux.org/Device_Tree_Linux#disabled_nodes
-> 
-> Signed-off-by: Pankaj Bansal <pankaj.bansal@nxp.com>
-
-The subject prefix should be 'arm64: dts: ...'
-
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 > ---
->  .../boot/dts/freescale/fsl-ls1043a-qds.dts   | 18 +++++++++++++
->  .../boot/dts/freescale/fsl-ls1043a-rdb.dts   | 17 +++++++++++++
->  .../boot/dts/freescale/fsl-ls1043a.dtsi      |  1 +
->  .../boot/dts/freescale/fsl-ls1046a-qds.dts   | 18 +++++++++++++
->  .../boot/dts/freescale/fsl-ls1046a-rdb.dts   | 24 ++++++++++++++++++
->  .../boot/dts/freescale/fsl-ls1046a.dtsi      |  1 +
->  .../dts/freescale/qoriq-fman3-0-10g-0.dtsi   |  1 +
->  .../dts/freescale/qoriq-fman3-0-10g-1.dtsi   |  1 +
->  .../dts/freescale/qoriq-fman3-0-1g-0.dtsi    |  1 +
->  .../dts/freescale/qoriq-fman3-0-1g-1.dtsi    |  1 +
->  .../dts/freescale/qoriq-fman3-0-1g-2.dtsi    |  1 +
->  .../dts/freescale/qoriq-fman3-0-1g-3.dtsi    |  1 +
->  .../dts/freescale/qoriq-fman3-0-1g-4.dtsi    |  1 +
->  .../dts/freescale/qoriq-fman3-0-1g-5.dtsi    |  1 +
->  14 files changed, 87 insertions(+)
+>  arch/arm/boot/dts/imx7ulp.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> index dff3d648172e..384b21f8a606 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-qds.dts
-> @@ -65,6 +65,20 @@
->  		compatible = "fsl,ls1043aqds-fpga", "fsl,fpga-qixis";
->  		reg = <0x2 0x0 0x0000100>;
+> diff --git a/arch/arm/boot/dts/imx7ulp.dtsi b/arch/arm/boot/dts/imx7ulp.dtsi
+> index b86daf7..fca6e50 100644
+> --- a/arch/arm/boot/dts/imx7ulp.dtsi
+> +++ b/arch/arm/boot/dts/imx7ulp.dtsi
+> @@ -347,4 +347,17 @@
+>  			gpio-ranges = <&iomuxc1 0 96 32>;
+>  		};
 >  	};
 > +
-> +	soc {
-> +		pcie@3400000 {
+> +	m4aips1: bus@41080000 {
+> +		compatible = "simple-bus";
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +		reg = <0x41080000 0x80000>;
+> +		ranges;
+> +
+> +		sim: sim@410a3000 {
+> +			compatible = "fsl,imx7ulp-sim", "syscon";
 
-Can we label these devices in <soc>.dtsi and flip the 'status' using
-labeling node, just like &sata below?
+The compatible needs to be documented. Also we generally compose a series
+in order below.
+
+ - Bindings patch
+ - Kernel patch
+ - DTS patch
 
 Shawn
 
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3500000 {
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3600000 {
-> +			status = "okay";
+> +			reg = <0x410a3000 0x1000>;
 > +		};
 > +	};
 >  };
->  
->  &i2c0 {
-> @@ -147,4 +161,8 @@
->  	};
->  };
->  
-> +&sata {
-> +	status = "okay";
-> +};
-> +
->  #include "fsl-ls1043-post.dtsi"
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> index 17ca357e854f..50a744c3c428 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a-rdb.dts
-> @@ -25,6 +25,16 @@
->  	chosen {
->  		stdout-path = "serial0:115200n8";
->  	};
-> +
-> +	soc {
-> +		pcie@3500000 {
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3600000 {
-> +			status = "okay";
-> +		};
-> +	};
->  };
->  
->  &i2c0 {
-> @@ -111,36 +121,43 @@
->  	ethernet@e0000 {
->  		phy-handle = <&qsgmii_phy1>;
->  		phy-connection-type = "qsgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@e2000 {
->  		phy-handle = <&qsgmii_phy2>;
->  		phy-connection-type = "qsgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@e4000 {
->  		phy-handle = <&rgmii_phy1>;
->  		phy-connection-type = "rgmii-txid";
-> +		status = "okay";
->  	};
->  
->  	ethernet@e6000 {
->  		phy-handle = <&rgmii_phy2>;
->  		phy-connection-type = "rgmii-txid";
-> +		status = "okay";
->  	};
->  
->  	ethernet@e8000 {
->  		phy-handle = <&qsgmii_phy3>;
->  		phy-connection-type = "qsgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@ea000 {
->  		phy-handle = <&qsgmii_phy4>;
->  		phy-connection-type = "qsgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@f0000 { /* 10GEC1 */
->  		phy-handle = <&aqr105_phy>;
->  		phy-connection-type = "xgmii";
-> +		status = "okay";
->  	};
->  
->  	mdio@fc000 {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> index 70057b4e46e8..eea23b84daee 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1043a.dtsi
-> @@ -639,6 +639,7 @@
->  			interrupts = <0 69 0x4>;
->  			clocks = <&clockgen 4 0>;
->  			dma-coherent;
-> +			status = "disabled";
->  		};
->  
->  		msi1: msi-controller1@1571000 {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> index e58a8ca1386c..1c3ccf17a554 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-qds.dts
-> @@ -30,6 +30,20 @@
->  	chosen {
->  		stdout-path = "serial0:115200n8";
->  	};
-> +
-> +	soc {
-> +		pcie@3400000 {
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3500000 {
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3600000 {
-> +			status = "okay";
-> +		};
-> +	};
->  };
->  
->  &dspi {
-> @@ -176,4 +190,8 @@
->  	};
->  };
->  
-> +&sata {
-> +	status = "okay";
-> +};
-> +
->  #include "fsl-ls1046-post.dtsi"
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> index a59b48203688..65ea27c8341a 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a-rdb.dts
-> @@ -25,6 +25,20 @@
->  	chosen {
->  		stdout-path = "serial0:115200n8";
->  	};
-> +
-> +	soc {
-> +		pcie@3400000 {
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3500000 {
-> +			status = "okay";
-> +		};
-> +
-> +		pcie@3600000 {
-> +			status = "okay";
-> +		};
-> +	};
->  };
->  
->  &duart0 {
-> @@ -120,37 +134,47 @@
->  	};
->  };
->  
-> +&sata {
-> +	status = "okay";
-> +};
-> +
->  #include "fsl-ls1046-post.dtsi"
->  
->  &fman0 {
->  	ethernet@e4000 {
->  		phy-handle = <&rgmii_phy1>;
->  		phy-connection-type = "rgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@e6000 {
->  		phy-handle = <&rgmii_phy2>;
->  		phy-connection-type = "rgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@e8000 {
->  		phy-handle = <&sgmii_phy1>;
->  		phy-connection-type = "sgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@ea000 {
->  		phy-handle = <&sgmii_phy2>;
->  		phy-connection-type = "sgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@f0000 { /* 10GEC1 */
->  		phy-handle = <&aqr106_phy>;
->  		phy-connection-type = "xgmii";
-> +		status = "okay";
->  	};
->  
->  	ethernet@f2000 { /* 10GEC2 */
->  		fixed-link = <0 1 1000 0 0>;
->  		phy-connection-type = "xgmii";
-> +		status = "okay";
->  	};
->  
->  	mdio@fc000 {
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> index 9a2106e60e19..49a363abf2ad 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-ls1046a.dtsi
-> @@ -599,6 +599,7 @@
->  			reg-names = "ahci", "sata-ecc";
->  			interrupts = <GIC_SPI 69 IRQ_TYPE_LEVEL_HIGH>;
->  			clocks = <&clockgen 4 1>;
-> +			status = "disabled";
->  		};
->  
->  		msi1: msi-controller@1580000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
-> index dbd2fc3ba790..515be7448e3e 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-0.dtsi
-> @@ -27,6 +27,7 @@ fman@1a00000 {
->  		reg = <0xf0000 0x1000>;
->  		fsl,fman-ports = <&fman0_rx_0x10 &fman0_tx_0x30>;
->  		pcsphy-handle = <&pcsphy6>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@f1000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
-> index 6fc5d2560057..3fc43b0faa3f 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-10g-1.dtsi
-> @@ -27,6 +27,7 @@ fman@1a00000 {
->  		reg = <0xf2000 0x1000>;
->  		fsl,fman-ports = <&fman0_rx_0x11 &fman0_tx_0x31>;
->  		pcsphy-handle = <&pcsphy7>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@f3000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
-> index 4e02276fcf99..fa16a914e53b 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-0.dtsi
-> @@ -26,6 +26,7 @@ fman@1a00000 {
->  		fsl,fman-ports = <&fman0_rx_0x08 &fman0_tx_0x28>;
->  		ptp-timer = <&ptp_timer0>;
->  		pcsphy-handle = <&pcsphy0>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@e1000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
-> index 0312fa43fa77..8813d433d891 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-1.dtsi
-> @@ -26,6 +26,7 @@ fman@1a00000 {
->  		fsl,fman-ports = <&fman0_rx_0x09 &fman0_tx_0x29>;
->  		ptp-timer = <&ptp_timer0>;
->  		pcsphy-handle = <&pcsphy1>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@e3000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
-> index af2df07971dd..65663d449430 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-2.dtsi
-> @@ -26,6 +26,7 @@ fman@1a00000 {
->  		fsl,fman-ports = <&fman0_rx_0x0a &fman0_tx_0x2a>;
->  		ptp-timer = <&ptp_timer0>;
->  		pcsphy-handle = <&pcsphy2>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@e5000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
-> index 4ac98dc8b227..8ae370f11518 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-3.dtsi
-> @@ -26,6 +26,7 @@ fman@1a00000 {
->  		fsl,fman-ports = <&fman0_rx_0x0b &fman0_tx_0x2b>;
->  		ptp-timer = <&ptp_timer0>;
->  		pcsphy-handle = <&pcsphy3>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@e7000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
-> index bd932d8b0160..3ff5a97e0a58 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-4.dtsi
-> @@ -26,6 +26,7 @@ fman@1a00000 {
->  		fsl,fman-ports = <&fman0_rx_0x0c &fman0_tx_0x2c>;
->  		ptp-timer = <&ptp_timer0>;
->  		pcsphy-handle = <&pcsphy4>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@e9000 {
-> diff --git a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
-> index 7de1c5203f3e..4e9bd0b25499 100644
-> --- a/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/qoriq-fman3-0-1g-5.dtsi
-> @@ -26,6 +26,7 @@ fman@1a00000 {
->  		fsl,fman-ports = <&fman0_rx_0x0d &fman0_tx_0x2d>;
->  		ptp-timer = <&ptp_timer0>;
->  		pcsphy-handle = <&pcsphy5>;
-> +		status = "disabled";
->  	};
->  
->  	mdio@eb000 {
 > -- 
-> 2.17.1
+> 2.7.4
 > 
 > 
 > _______________________________________________
