@@ -1,7 +1,7 @@
 From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: [PATCH 05/17] ARM: davinci: da830: WARN() if clk_get() fails
-Date: Fri, 11 Jan 2019 18:21:22 +0100
-Message-ID: <20190111172134.30147-6-brgl@bgdev.pl>
+Subject: [PATCH 06/17] ARM: davinci: dm355: WARN() if clk_get() fails
+Date: Fri, 11 Jan 2019 18:21:23 +0100
+Message-ID: <20190111172134.30147-7-brgl@bgdev.pl>
 References: <20190111172134.30147-1-brgl@bgdev.pl>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -21,15 +21,15 @@ clk_get() fails.
 
 Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 ---
- arch/arm/mach-davinci/da830.c | 1 +
+ arch/arm/mach-davinci/dm355.c | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/mach-davinci/da830.c b/arch/arm/mach-davinci/da830.c
-index 2cc9fe4c3a91..ceb0417f10f6 100644
---- a/arch/arm/mach-davinci/da830.c
-+++ b/arch/arm/mach-davinci/da830.c
-@@ -834,6 +834,7 @@ void __init da830_init_time(void)
- 	da830_pll_init(NULL, pll, NULL);
+diff --git a/arch/arm/mach-davinci/dm355.c b/arch/arm/mach-davinci/dm355.c
+index 4c6e0bef4509..07ad9d6c9cae 100644
+--- a/arch/arm/mach-davinci/dm355.c
++++ b/arch/arm/mach-davinci/dm355.c
+@@ -745,6 +745,7 @@ void __init dm355_init_time(void)
+ 	dm355_psc_init(NULL, psc);
  
  	clk = clk_get(NULL, "timer0");
 +	WARN(IS_ERR(clk), "Unable to get the timer clock\n");
