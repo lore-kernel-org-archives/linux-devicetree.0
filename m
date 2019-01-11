@@ -1,76 +1,87 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 2/4] dt-bindings: gnss: add gtop binding
-Date: Fri, 11 Jan 2019 08:43:30 -0600
-Message-ID: <20190111144330.GA30111@bogus>
-References: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
- <1545994235-8309-3-git-send-email-lollivier@baylibre.com>
+Subject: Re: [PATCH v3 1/5] dt-bindings: display: bridge: fork out
+ ti,ds90c185 from lvds-transmitter
+Date: Fri, 11 Jan 2019 08:49:04 -0600
+Message-ID: <20190111144904.GA5052@bogus>
+References: <20181229070649.21308-1-peda@axentia.se>
+ <20181229070649.21308-2-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 Content-Disposition: inline
-In-Reply-To: <1545994235-8309-3-git-send-email-lollivier@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
+In-Reply-To: <20181229070649.21308-2-peda@axentia.se>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 28, 2018 at 11:50:33AM +0100, Loys Ollivier wrote:
-> Add binding for GlobalTop GNSS receivers.
-> 
-> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> ---
->  Documentation/devicetree/bindings/gnss/gtop.txt | 33 +++++++++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/gnss/gtop.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/gnss/gtop.txt b/Documentation/devicetree/bindings/gnss/gtop.txt
-> new file mode 100644
-> index 000000000000..24c86703aa46
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/gnss/gtop.txt
-> @@ -0,0 +1,33 @@
-> +GlobalTop GNSS Receiver DT binding
-> +
-> +The GlobalTop GNSS receivers uses UART interfaces.
-> +
-> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-> +properties.
-> +
-> +Required properties:
-> +
-> +- compatible	: Must be
-> +
-> +			"globaltop,pa6h"
-> +
-> +- vcc-supply	: Main voltage regulator
-> +
-> +Optional properties:
-> +
-> +- timepulse-gpios	: Time pulse GPIO
-> +- v-bckp-supply	: Backup voltage regulator
-> +
-> +Example:
-> +
-> +&uart_A {
-> +	status = "okay";
-
-Don't show status in examples.
-
-> +	pinctrl-0 = <&uart_a_pins>;
-> +	pinctrl-names = "default";
-> +
-> +	gnss {
-> +		compatible = "globaltop,pa6h";
-> +		vcc-supply = <&vcc_3v3>;
-> +		current-speed = <9600>;
-
-Shouldn't the driver know what speed the device operates at?
-
-If you do use this, then it needs to be documented as to when it is 
-needed.
-
-> +	};
-> +};
-> -- 
-> 2.7.4
-> 
+T24gU2F0LCBEZWMgMjksIDIwMTggYXQgMDc6MDc6MTlBTSArMDAwMCwgUGV0ZXIgUm9zaW4gd3Jv
+dGU6Cj4gRFM5MEMxODUgaGFzIGEgc2h1dGRvd24gcGluIHdoaWNoIGRvZXMgbm90IGZpdCBpbiB0
+aGUgbHZkcy10cmFuc21pdHRlcgo+IGJpbmRpbmcsIHdoaWNoIGlzIG1lYW50IHRvIGJlIGdlbmVy
+aWMuCj4gCj4gVGhlIHNpc3RlciBjaGlwIERTOTBDMTg3IGlzIHNpbWlsYXIgdG8gRFM5MEMxODUs
+IGRlc2NyaWJlIGl0IGhlcmUgYXMgd2VsbC4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBQZXRlciBSb3Np
+biA8cGVkYUBheGVudGlhLnNlPgo+IC0tLQo+ICAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2Uv
+bHZkcy10cmFuc21pdHRlci50eHQgICB8ICA4ICstLS0KPiAgLi4uL2JpbmRpbmdzL2Rpc3BsYXkv
+YnJpZGdlL3RpLGRzOTBjMTg1LnR4dCAgICAgICAgfCA1NSArKysrKysrKysrKysrKysrKysrKysr
+Cj4gIDIgZmlsZXMgY2hhbmdlZCwgNTYgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkKPiAg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNw
+bGF5L2JyaWRnZS90aSxkczkwYzE4NS50eHQKPiAKPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlv
+bi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMt
+dHJhbnNtaXR0ZXIudHh0Cj4gaW5kZXggNTAyMjAxOTBjMjAzLi5mZDM5YWQzNGMzODMgMTAwNjQ0
+Cj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvYnJpZGdl
+L2x2ZHMtdHJhbnNtaXR0ZXIudHh0Cj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0Cj4gQEAgLTIyLDEzICsy
+Miw3IEBAIGFtb25nIG90aGVycy4KPiAgCj4gIFJlcXVpcmVkIHByb3BlcnRpZXM6Cj4gIAo+IC0t
+IGNvbXBhdGlibGU6IE11c3QgYmUgb25lIG9yIG1vcmUgb2YgdGhlIGZvbGxvd2luZwo+IC0gIC0g
+InRpLGRzOTBjMTg1IiBmb3IgdGhlIFRJIERTOTBDMTg1IEZQRC1MaW5rIFNlcmlhbGl6ZXIKPiAt
+ICAtICJsdmRzLWVuY29kZXIiIGZvciBhIGdlbmVyaWMgTFZEUyBlbmNvZGVyIGRldmljZQo+IC0K
+PiAtICBXaGVuIGNvbXBhdGlibGUgd2l0aCB0aGUgZ2VuZXJpYyB2ZXJzaW9uLCBub2RlcyBtdXN0
+IGxpc3QgdGhlCj4gLSAgZGV2aWNlLXNwZWNpZmljIHZlcnNpb24gY29ycmVzcG9uZGluZyB0byB0
+aGUgZGV2aWNlIGZpcnN0Cj4gLSAgZm9sbG93ZWQgYnkgdGhlIGdlbmVyaWMgdmVyc2lvbi4KCkkg
+dGhpbmsgeW91IHNob3VsZCBrZWVwIHNvbWV0aGluZyBoZXJlLiBJJ2QgcmV3b3JkIGl0IHRvIHNh
+eSBhbnkgZW5jb2RlciAKd2l0aCBhZGRpdGlvbmFsIHByb3BlcnRpZXMgbXVzdCBoYXZlIGEgZGV2
+aWNlIHNwZWNpZmljIGNvbXBhdGlibGUgaW4gCmFkZGl0aW9uLgoKPiArLSBjb21wYXRpYmxlOiBN
+dXN0IGJlICJsdmRzLWVuY29kZXIiCj4gIAo+ICBSZXF1aXJlZCBub2RlczoKPiAgCj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+aSxkczkwYzE4NS50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9icmlkZ2UvdGksZHM5MGMxODUudHh0Cj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQKPiBpbmRleCAw
+MDAwMDAwMDAwMDAuLmU1NzVmOTk2OTU5YQo+IC0tLSAvZGV2L251bGwKPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvdGksZHM5MGMxODUudHh0
+Cj4gQEAgLTAsMCArMSw1NSBAQAo+ICtUZXhhcyBJbnN0cnVtZW50cyBGUEQtTGluayAoTFZEUykg
+U2VyaWFsaXplcgo+ICstLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LQo+ICsKPiArVGhlIERTOTBDMTg1IGFuZCBEUzkwQzE4NyBhcmUgbG93LXBvd2VyIHNlcmlhbGl6
+ZXJzIGZvciBwb3J0YWJsZQo+ICtiYXR0ZXJ5LXBvd2VyZWQgYXBwbGljYXRpb25zIHRoYXQgcmVk
+dWNlcyB0aGUgc2l6ZSBvZiB0aGUgUkdCCj4gK2ludGVyZmFjZSBiZXR3ZWVuIHRoZSBob3N0IEdQ
+VSBhbmQgdGhlIGRpc3BsYXkuCj4gKwo+ICtSZXF1aXJlZCBwcm9wZXJ0aWVzOgo+ICsKPiArLSBj
+b21wYXRpYmxlOiBTaG91bGQgYmUKPiArICAidGksZHM5MGMxODUiLCAibHZkcy1lbmNvZGVyIiAg
+Zm9yIHRoZSBUSSBEUzkwQzE4NSBGUEQtTGluayBTZXJpYWxpemVyCj4gKyAgInRpLGRzOTBjMTg3
+IiwgImx2ZHMtZW5jb2RlciIgIGZvciB0aGUgVEkgRFM5MEMxODcgRlBELUxpbmsgU2VyaWFsaXpl
+cgo+ICsKPiArT3B0aW9uYWwgcHJvcGVydGllczoKPiArCj4gKy0gcG93ZXJkb3duLWdwaW9zOiBQ
+b3dlciBkb3duIGNvbnRyb2wgR1BJTyAodGhlIFBEQiBwaW4sIGFjdGl2ZS1sb3cpCj4gKwo+ICtS
+ZXF1aXJlZCBub2RlczoKPiArCj4gK1RoZSBkZXZpY2VzIGhhdmUgdHdvIHZpZGVvIHBvcnRzLiBU
+aGVpciBjb25uZWN0aW9ucyBhcmUgbW9kZWxlZCB1c2luZyB0aGUgT0YKPiArZ3JhcGggYmluZGlu
+Z3Mgc3BlY2lmaWVkIGluIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9ncmFwaC50
+eHQuCj4gKwo+ICstIFZpZGVvIHBvcnQgMCBmb3IgcGFyYWxsZWwgaW5wdXQKPiArLSBWaWRlbyBw
+b3J0IDEgZm9yIExWRFMgb3V0cHV0Cj4gKwo+ICsKPiArRXhhbXBsZQo+ICstLS0tLS0tCj4gKwo+
+ICtsdmRzLWVuY29kZXIgewo+ICsJY29tcGF0aWJsZSA9ICJ0aSxkczkwYzE4NSIsICJsdmRzLWVu
+Y29kZXIiOwo+ICsKPiArCXBvd2VyZG93bi1ncGlvcyA9IDwmZ3BpbyAxNyBHUElPX0FDVElWRV9M
+T1c+Owo+ICsKPiArCXBvcnRzIHsKPiArCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiArCQkjc2l6
+ZS1jZWxscyA9IDwwPjsKPiArCj4gKwkJcG9ydEAwIHsKPiArCQkJcmVnID0gPDA+Owo+ICsKPiAr
+CQkJbHZkc19lbmNfaW46IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmbGNk
+Y19vdXRfcmdiPjsKPiArCQkJfTsKPiArCQl9Owo+ICsKPiArCQlwb3J0QDEgewo+ICsJCQlyZWcg
+PSA8MT47Cj4gKwo+ICsJCQlsdmRzX2VuY19vdXQ6IGVuZHBvaW50IHsKPiArCQkJCXJlbW90ZS1l
+bmRwb2ludCA9IDwmbHZkc19wYW5lbF9pbj47Cj4gKwkJCX07Cj4gKwkJfTsKPiArCX07Cj4gK307
+Cj4gLS0gCj4gMi4xMS4wCj4gCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
