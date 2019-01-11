@@ -1,50 +1,81 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 2/3] dt-bindings: drm/panel: simple: add Evervision
- VGG804821
-Date: Fri, 11 Jan 2019 18:17:00 +0100
-Message-ID: <20190111171700.GB31681@ravnborg.org>
-References: <20190103182658.16377-1-m.felsch@pengutronix.de>
- <20190103182658.16377-3-m.felsch@pengutronix.de>
- <20190104163831.GA10538@ravnborg.org> <20190111170109.GA765@bogus>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/17] ARM: davinci: modernize the timer support
+Date: Fri, 11 Jan 2019 18:21:17 +0100
+Message-ID: <20190111172134.30147-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190111170109.GA765@bogus>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Marco Felsch <m.felsch@pengutronix.de>, dri-devel@lists.freedesktop.org, thierry.reding@gmail.com, kernel@pengutronix.de
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLgoKPiA+ID4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvcGFuZWwvZXZlcnZpc2lvbix2Z2c4MDQ4MjEudHh0Cj4gPiA+IEBAIC0wLDAgKzEsMTIg
-QEAKPiA+ID4gK0V2ZXJ2aXNpb24gRWxlY3Ryb25pY3MgQ28uIEx0ZC4gVkdHODA0ODIxIDUuMCIg
-V1ZHQSBURlQgTENEIFBhbmVsCj4gPiA+ICsKPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4g
-PiA+ICstIGNvbXBhdGlibGU6IHNob3VsZCBiZSAiZXZlcnZpc2lvbix2Z2c4MDQ4MjEiCj4gPiA+
-ICstIHBvd2VyLXN1cHBseTogU2VlIHNpbXBsZS1wYW5lbC50eHQKPiA+ID4gKwo+ID4gPiArT3B0
-aW9uYWwgcHJvcGVydGllczoKPiA+ID4gKy0gYmFja2xpZ2h0OiBTZWUgc2ltcGxlLXBhbmVsLnR4
-dAo+ID4gPiArLSBlbmFibGUtZ3Bpb3M6IFNlZSBzaW1wbGUtcGFuZWwudHh0Cj4gPiA+ICsKPiA+
-ID4gK1RoaXMgYmluZGluZyBpcyBjb21wYXRpYmxlIHdpdGggdGhlIHNpbXBsZS1wYW5lbCBiaW5k
-aW5nLCB3aGljaCBpcyBzcGVjaWZpZWQKPiA+ID4gK2luIHNpbXBsZS1wYW5lbC50eHQgaW4gdGhp
-cyBkaXJlY3RvcnkuCj4gPiAKPiA+IE90aGVyIGJpbmRpbmdzIGp1c3QgaGF2ZSB0aGUgY29tcGF0
-aWJsZSBsaXN0ZWQgYW5kIHRoZSBhYm92ZSB0d28gbGluZXMgYW5kCj4gPiBkbyBub3QgcmVwZWF0
-IHRoZSByZXF1aXJlZC9vcHRpb25hbCBwcm9wZXJ0aWVzLgo+ID4gSWYgdGhlcmUgaXMgbm90IHNw
-ZWNpYWwgcmVhc29uIHRvIGFkZCB0aGVzZSB0aGV5IEkgc3VnZ2VzdCB0byBzaW1wbGlmeSB0aGUg
-YmluZGluZy4KPiAKPiBJdCBpcyBub3Qgc3VmZmljaWVudCB0byBqdXN0IHJlZmVyIHRvIHNpbXBs
-ZS1wYW5lbC50eHQuIEZvciBleGFtcGxlLCAKPiB0aGF0IGRvZXNuJ3QgY29udmV5IGlmIGEgcGFu
-ZWwgaGFzIGEgc2luZ2xlIHN1cHBseSBvciBtdWx0aXBsZSBhbmQgdGhlIAo+IGF1dGhvciBqdXN0
-IGlnbm9yZWQgc3VwcGxpZXMuIE9yIHdoYXQgaWYgYSBwYW5lbCBkb2Vzbid0IGhhdmUgYSAKPiBi
-YWNrbGlnaHQgb3IgZW5hYmxlIGxpbmU/CgpUaGFua3MsIG5vdGVkLgpJIGhhdmUgYSBmZXcgYmlu
-ZGluZ3MgYXdhaXRpbmcgdG8gYmUgc2VudCB0aGF0IHdpbGwgbmVlZCBhIHNtYWxsIHVwZGF0ZS4K
-CglTYW0KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
-LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+This series removes the legacy timer code from mach-davinci in favor of
+a new clocksource driver it introduces.
+
+The first patch fixes a device tree bug that's been around for a while.
+Unfortunately any systems shipped with the buggy device will stop booting
+once they switch to the new clocksource driver.
+
+Patch 2 adds a new clocksource driver for davinci.
+
+Patch 3 enables the new driver for device-tree based systems.
+
+Patches 4-9 add a WARN() to the machine code of all davinci boards
+which is triggered if clk_get() for the timer clock fails. This is needed
+as the new driver expects the clock to be functional and doesn't check it.
+
+Patches 10-11 and 13-16 switch the board files to using the new
+clocksource driver while patch 12 moves some necessary defines to
+a different place since we'll be removing the file that contains them.
+
+Patch 17 removes legacy timer code.
+
+Bartosz Golaszewski (17):
+  ARM: dts: da850: fix interrupt numbers for clocksource
+  clocksource: davinci-timer: new driver
+  ARM: davinci: enable the clocksource driver for DT mode
+  ARM: davinci: da850: WARN() if clk_get() fails
+  ARM: davinci: da830: WARN() if clk_get() fails
+  ARM: davinci: dm355: WARN() if clk_get() fails
+  ARM: davinci: dm365: WARN() if clk_get() fails
+  ARM: davinci: dm644x: WARN() if clk_get() fails
+  ARM: davinci: dm646x: WARN() if clk_get() fails
+  ARM: davinci: da850: switch to using the clocksource driver
+  ARM: davinci: da830: switch to using the clocksource driver
+  ARM: davinci: move timer definitions to davinci.h
+  ARM: davinci: dm355: switch to using the clocksource driver
+  ARM: davinci: dm365: switch to using the clocksource driver
+  ARM: davinci: dm644x: switch to using the clocksource driver
+  ARM: davinci: dm646x: switch to using the clocksource driver
+  ARM: davinci: remove legacy timer support
+
+ arch/arm/Kconfig                            |   1 +
+ arch/arm/boot/dts/da850.dtsi                |   2 +-
+ arch/arm/mach-davinci/Makefile              |   3 +-
+ arch/arm/mach-davinci/da830.c               |  57 +--
+ arch/arm/mach-davinci/da850.c               |  57 ++-
+ arch/arm/mach-davinci/davinci.h             |   3 +
+ arch/arm/mach-davinci/devices-da8xx.c       |   1 -
+ arch/arm/mach-davinci/devices.c             |  19 -
+ arch/arm/mach-davinci/dm355.c               |  37 +-
+ arch/arm/mach-davinci/dm365.c               |  31 +-
+ arch/arm/mach-davinci/dm644x.c              |  37 +-
+ arch/arm/mach-davinci/dm646x.c              |  37 +-
+ arch/arm/mach-davinci/include/mach/common.h |  17 -
+ arch/arm/mach-davinci/include/mach/time.h   |  35 --
+ arch/arm/mach-davinci/time.c                | 414 -------------------
+ drivers/clocksource/Kconfig                 |   5 +
+ drivers/clocksource/Makefile                |   1 +
+ drivers/clocksource/timer-davinci.c         | 415 ++++++++++++++++++++
+ include/clocksource/timer-davinci.h         |  35 ++
+ 19 files changed, 611 insertions(+), 596 deletions(-)
+ delete mode 100644 arch/arm/mach-davinci/include/mach/time.h
+ delete mode 100644 arch/arm/mach-davinci/time.c
+ create mode 100644 drivers/clocksource/timer-davinci.c
+ create mode 100644 include/clocksource/timer-davinci.h
+
+-- 
+2.19.1
