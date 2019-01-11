@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v2 08/10] ARM64: dts: marvell: armada-37xx: fix USB2 memory
- region
-Date: Fri, 11 Jan 2019 14:31:31 +0100
-Message-ID: <20190111133133.24803-9-miquel.raynal@bootlin.com>
+Subject: [PATCH v2 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY bindings
+Date: Fri, 11 Jan 2019 14:31:29 +0100
+Message-ID: <20190111133133.24803-7-miquel.raynal@bootlin.com>
 References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,34 +21,56 @@ To: Kishon Vijay Abraham I <kishon@ti.com>, Gregory Clement <gregory.clement@boo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The specification splits the USB2 memory region into three sections:
-1/ 0xD005E000-0xD005EFFF: USB2 Host Controller Registers
-2/ 0xD005F000-0xD005F7FF: USB2 UTMI PHY Registers
-3/ 0xD005F800-0xD005FFFF: USB2 Host Miscellaneous Registers
-
-Section 1/ belongs to the USB2 node but section 2/ belongs to the UTMI
-PHY node. Section 3/ can be accessed by both the USB controller and
-the PHY because of the miscaellaneous nature of the registers inside
-so a specific node will be created to cover the area and a handle to
-it will be added in both the USB controller and the PHY node.
+Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ .../bindings/phy/phy-mvebu-utmi.txt           | 37 +++++++++++++++++++
+ 1 file changed, 37 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index d6e548618a95..5cfd1b920f31 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -351,7 +351,7 @@
- 
- 			usb2: usb@5e000 {
- 				compatible = "marvell,armada-3700-ehci";
--				reg = <0x5e000 0x2000>;
-+				reg = <0x5e000 0x1000>;
- 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+new file mode 100644
+index 000000000000..4ade05ce5d51
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+@@ -0,0 +1,37 @@
++MVEBU A3700 UTMI PHY
++--------------------
++
++USB2 UTMI+ PHY controllers can be found on the following Marvell MVEBU SoCs:
++* Armada 3700
++
++On Armada 3700, there are two USB controllers, one is compatible with the USB2
++and USB3 specifications and supports OTG. The other one is USB2 compliant and
++only supports host mode. Both of these controllers come with a UTMI PHY.
++
++Required Properties:
++
++- compatible: Should be one of:
++	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
++	        the USB2 host-only controller.
++	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
++	        the USB3 and USB2 OTG capable controller.
++- reg: PHY IP register range.
++- marvell,usb-misc-reg: handle on the "USB miscellaneous registers" shared
++			region covering registers related to both the host
++			controller and the PHY.
++- #phy-cells: Standard property (Documentation: phy-bindings.txt) Should be 0.
++
++
++Example:
++
++	usb2_utmi_host_phy: phy@5f000 {
++		compatible = "marvell,armada-3700-utmi-host-phy";
++		reg = <0x5f000 0x800>;
++		marvell,usb-misc-reg = <&usb2_syscon>;
++		#phy-cells = <0>;
++	};
++
++	usb2_syscon: system-controller@5f800 {
++		compatible = "syscon", "simple-mfd";
++		reg = <0x5f800 0x800>;
++	};
 -- 
 2.19.1
