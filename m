@@ -1,78 +1,58 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v5 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Fri, 11 Jan 2019 13:06:42 -0800
-Message-ID: <CAD=FV=Xu3m5=ByHo_38T=H2cm4VqkndVjJ1rUkD2gp-2SWFXdQ@mail.gmail.com>
-References: <20190109170010.15430-1-sibis@codeaurora.org>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: kona: Add new compatible for new
+ version pwm-kona
+Date: Fri, 11 Jan 2019 13:28:45 -0800
+Message-ID: <f1ec3121-a8e7-a1c0-008a-ea4ae6028157@broadcom.com>
+References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
+ <1547184076-20521-2-git-send-email-sheetal.tigadoli@broadcom.com>
+ <20190111204801.2ytdeblcai7lg3on@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109170010.15430-1-sibis@codeaurora.org>
+In-Reply-To: <20190111204801.2ytdeblcai7lg3on@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, sricharan@codeaurora.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Uwe
 
-On Wed, Jan 9, 2019 at 9:00 AM Sibi Sankar <sibis@codeaurora.org> wrote:
+On 2019-01-11 12:48 p.m., Uwe Kleine-König wrote:
+> On Fri, Jan 11, 2019 at 10:51:14AM +0530, Sheetal Tigadoli wrote:
+>> From: Praveen Kumar B <praveen.b@broadcom.com>
+>>
+>> Add new compatible string for new version of pwm-kona
+>>
+>> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
+>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+>> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+>> ---
+>>   Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+>> index 8eae9fe..d37f697 100644
+>> --- a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+>> +++ b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+>> @@ -3,7 +3,7 @@ Broadcom Kona PWM controller device tree bindings
+>>   This controller has 6 channels.
+>>   
+>>   Required Properties :
+>> -- compatible: should contain "brcm,kona-pwm"
+>> +- compatible: should contain "brcm,kona-pwm" or "brcm,kona-pwm-v2"
+> Is v2 used on a newer generation of kona SoCs? On i.MX these variants
+> are usually named after the first SoC that came with the new variant. Is
+> this sensible here, too?
+
+It doesn't make as much sense here as different revs of the IP block are 
+picked up based on various decisions.
+
+A new SoC could decide to use an old version.
+
 >
-> This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
+> Best regards
+> Uwe
 >
-> Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> ---
->
-> v5:
->   * Use qmp_aop updated dt binding
-
-nit: since this is now a singleton patch in v5 (because patches #1 -
-#7 landed), the general policy is to drop the "8/8" in the subject.
-AKA I believe the subject of the patch ought to have been:
-
-[PATCH v5] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-
-
-> v3:
->   * with shutdown-ack irq redesign make it mandatory,
->     merge multiple patches into a single one
->
-> v2:
->   * Fixed style changes
->   * Added missing clocks in the dt-bindings
->   * Split mss remoteproc node into a number of patches
->
-> This patch depends on the following bindings:
-> https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
-> https://patchwork.kernel.org/patch/10657325/ - pdc reset node
-> https://patchwork.kernel.org/patch/10753659/ - rpmhpd dt node
-> https://patchwork.kernel.org/patch/10749469/ - AOP QMP dt bindings
-> https://patchwork.kernel.org/patch/10751757/ - shutdown-irq binding
->
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 60 ++++++++++++++++++++++++++++
->  1 file changed, 60 insertions(+)
->
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 5da9fa1feb8a..e021b15f87fd 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -1366,6 +1366,66 @@
->                         };
->                 };
->
-> +               remoteproc@4080000 {
-
-It would be handy if you added a label here, AKA:
-
-mss_pil: remoteproc@4080000 {
-
-It's expected that boards will need to refer to this node so that they
-can provide a firmware-name, so you need to give them a label to grab
-onto.
-
-...and actually, I wonder if boards will also need to be able to set
-status = "okay"?  Right now they don't because you don't have a status
-= "disabled" in sdm845.dtsi, but maybe you should?  Are there ever
-going to be any boards with sdm845 that don't hook up the modem?
-
-
--Doug
