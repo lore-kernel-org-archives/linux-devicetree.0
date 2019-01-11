@@ -1,84 +1,73 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 1/3] dt-bindings: fsl: scu: add fallback compatible string
- for power domain
-Date: Fri, 11 Jan 2019 15:24:11 +0000
-Message-ID: <AM0PR04MB4211BFB2A3D02F67E4AE0B1F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
- <1545148524-658-2-git-send-email-aisheng.dong@nxp.com>
- <20190111090009.GG32649@dragon> <20190111090653.GH32649@dragon>
- <AM0PR04MB42119B411244F0B1BB829D9F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20190111130311.GA3599@dragon>
+From: <Eugen.Hristev@microchip.com>
+Subject: Re: [V3, 3/4] Documentation: dt-bindings: media: Document bindings
+ for DW MIPI CSI-2 Host
+Date: Fri, 11 Jan 2019 15:29:03 +0000
+Message-ID: <a967f37a-07cb-4b0b-1777-f354427445ea@microchip.com>
+References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
+ <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111130311.GA3599@dragon>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "khilman@kernel.org" <khilman@kernel.org>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, Rob Herring <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-ID: <A3E7EB16CA57C944A93487FDAA009FF8@namprd11.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: luis.oliveira@synopsys.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: joao.pinto@synopsys.com, festevam@gmail.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, arnd@arndb.de, geert+renesas@glider.be, narmstrong@baylibre.com, p.zabel@pengutronix.de, keiichiw@chromium.org, kstewart@linuxfoundation.org, todor.tomov@linaro.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Shawn Guo [mailto:shawnguo@kernel.org]
-> Sent: Friday, January 11, 2019 9:03 PM
-> On Fri, Jan 11, 2019 at 10:48:21AM +0000, Aisheng Dong wrote:
-> > Hi Shawn,
-> >
-> > > -----Original Message-----
-> > > From: Shawn Guo [mailto:shawnguo@kernel.org]
-> > > Sent: Friday, January 11, 2019 5:07 PM
-> > >
-> > > On Fri, Jan 11, 2019 at 05:00:11PM +0800, Shawn Guo wrote:
-> > > > On Tue, Dec 18, 2018 at 04:01:20PM +0000, Aisheng Dong wrote:
-> > > > > SCU power domain can be used in the same way by IMX8QXP and
-> > > IMX8QM SoCs.
-> > > > > Let's add a "fsl,scu-pd" fallback compatible string to allow
-> > > > > other SoCs to reuse the common part.
-> > > >
-> > > > This is not the practice we used to match devices with
-> > > > compatibilities, i.e. coding the compatible string with the SoC
-> > > > name that firstly introduces the device, and use the compatible as
-> > > > fallback for new
-> > > SoCs.
-> > >
-> >
-> > This is suggested by Rob that if the future SoCs are likely to be compatible.
-> > Then we can use a general fallback compatible string like "fsl,scu-pd".
-> >
-> >
-> > From SCU HW protocol point of view, they're indeed compatible.
-> > Just varies a bit on the domains numbers.
-> > That's why we introduce "fsl,scu-pd".
-> > But still keep SoC specific compatible string in case any special
-> > tricks to ensure the ABI stability.
-> >
-> > How do you think?
-> 
-> Unless Rob is against the practice we have been used for long time on i.MX, I
-> would keep using it for i.MX8, i.e. instead of introducing a generic compatible
-> for fallback, simply falling on the compatible SoC specified IP block.
-> 
-
-Hmm, i feel protocol based devices is slightly a bit different from our old practice.
-See ARM and TI are all used generic compatible string.
-Documentation/devicetree/bindings/arm/arm,scpi.txt
-Documentation/devicetree/bindings/soc/ti/sci-pm-domain.txt
-
-If from firmware protocol point of view, they're defined SoC independent.
-SW(driver) implementation might be a different on platforms due to special tricks
-or implemented as platform independent.
-
-Anyway, if you strongly against this, i will change to what you requested.
-
-Regards
-Dong Aisheng
-
-> Shawn
+DQoNCk9uIDE5LjEwLjIwMTggMTU6NTIsIEx1aXMgT2xpdmVpcmEgd3JvdGU6DQo+IEFkZCBiaW5k
+aW5ncyBmb3IgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIENTSS0yIGhvc3QuDQo+IA0KPiBTaWdu
+ZWQtb2ZmLWJ5OiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNvbT4NCj4gLS0tDQo+
+IENoYW5nZWxvZw0KPiB2Mi1WMw0KPiAtIHJlbW92ZWQgSVBJIHNldHRpbmdzDQo+IA0KPiAgIC4u
+Li9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLXBsYXQudHh0IHwgNTIgKysr
+KysrKysrKysrKysrKysrKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCsp
+DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9zbnBzLGR3LWNzaS1wbGF0LnR4dA0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
+YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS1wbGF0LnR4dCBiL0Rv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS1wbGF0LnR4
+dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwLi5iZTNkYTA1DQo+IC0t
+LSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
+ZGlhL3NucHMsZHctY3NpLXBsYXQudHh0DQo+IEBAIC0wLDAgKzEsNTIgQEANCj4gK1N5bm9wc3lz
+IERlc2lnbldhcmUgQ1NJLTIgSG9zdCBjb250cm9sbGVyDQo+ICsNCj4gK0Rlc2NyaXB0aW9uDQo+
+ICstLS0tLS0tLS0tLQ0KPiArDQo+ICtUaGlzIEhXIGJsb2NrIGlzIHVzZWQgdG8gcmVjZWl2ZSBp
+bWFnZSBjb21pbmcgZnJvbSBhbiBNSVBJIENTSS0yIGNvbXBhdGlibGUNCj4gK2NhbWVyYS4NCj4g
+Kw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gY29tcGF0aWJsZTogc2hhbGwgYmUgInNu
+cHMsZHctY3NpLXBsYXQiDQo+ICstIHJlZwkJCTogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBz
+aXplIG9mIHRoZSBkZXZpY2UgbWVtb3J5IG1hcHBlZA0KPiArICByZWdpc3RlcnM7DQo+ICstIGlu
+dGVycnVwdHMJCTogQ1NJLTIgSG9zdCBpbnRlcnJ1cHQNCj4gKy0gc25wcyxvdXRwdXQtdHlwZQk6
+IENvcmUgb3V0cHV0IHRvIGJlIHVzZWQgKElQSS0+IDAgb3IgSURJLT4xIG9yIEJPVEgtPjIpDQo+
+ICsJCQkgIFRoZXNlICB2YWx1ZXMgY2hvb3NlIHdoaWNoIG9mIHRoZSBDb3JlIG91dHB1dHMgd2ls
+bCBiZSB1c2VkLA0KPiArCQkJICBpdCBjYW4gYmUgSW1hZ2UgRGF0YSBJbnRlcmZhY2Ugb3IgSW1h
+Z2UgUGl4ZWwgSW50ZXJmYWNlLg0KPiArLSBwaHlzCQkJOiBMaXN0IG9mIG9uZSBQSFkgc3BlY2lm
+aWVyIChhcyBkZWZpbmVkIGluDQo+ICsJCQkgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
+aW5ncy9waHkvcGh5LWJpbmRpbmdzLnR4dCkuDQo+ICsJCQkgIFRoaXMgUEhZIGlzIGEgTUlQSSBE
+UEhZIHdvcmtpbmcgaW4gUlggbW9kZS4NCj4gKy0gcmVzZXRzCQk6IFJlZmVyZW5jZSB0byBhIHJl
+c2V0IGNvbnRyb2xsZXIgKG9wdGlvbmFsKQ0KPiArDQo+ICtUaGUgcGVyLWJvYXJkIHNldHRpbmdz
+Og0KPiArIC0gcG9ydCBzdWItbm9kZSBkZXNjcmliaW5nIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5l
+Y3RlZCB0byB0aGUgY2FtZXJhIGFzDQo+ICsgICBkZXNjcmliZWQgaW4gdmlkZW8taW50ZXJmYWNl
+cy50eHRbMV0uDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsNCj4gKwljc2kyXzE6IGNzaTJAMzAwMCB7
+DQo+ICsJCWNvbXBhdGlibGUgPSAic25wcyxkdy1jc2ktcGxhdCI7DQo+ICsJCSNhZGRyZXNzLWNl
+bGxzID0gPDE+Ow0KPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKwkJcmVnID0gPCAweDAzMDAw
+IDB4N0ZGPjsNCj4gKwkJaW50ZXJydXB0cyA9IDwyPjsNCj4gKwkJb3V0cHV0LXR5cGUgPSA8Mj47
+DQo+ICsJCXJlc2V0cyA9IDwmZHdfcnN0IDE+Ow0KPiArCQlwaHlzID0gPCZtaXBpX2RwaHlfcngx
+IDA+Ow0KPiArCQlwaHktbmFtZXMgPSAiY3NpMi1kcGh5IjsNCj4gKw0KPiArCQkvKiBDU0ktMiBw
+ZXItYm9hcmQgc2V0dGluZ3MgKi8NCj4gKwkJcG9ydEAxIHsNCj4gKwkJCXJlZyA9IDwxPjsNCj4g
+KwkJCWNzaTFfZXAxOiBlbmRwb2ludCB7DQo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZjYW1l
+cmFfMT47DQo+ICsJCQkJZGF0YS1sYW5lcyA9IDwxIDI+Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4g
+KwkJcG9ydEAyIHsNCj4gKwkJCWNzaTFfZXAyOiBlbmRwb2ludCB7DQo+ICsJCQkJcmVtb3RlLWVu
+ZHBvaW50ID0gPCZ2aWYxX2VwPjsNCg0KSGkgYWdhaW4gTHVpcywNCg0KUmVnYXJkaW5nIHRoZSBv
+dXRwdXQgZW5kcG9pbnQsIGluIHlvdXIgZXhhbXBsZSBwb3J0QDIsIGlmIHdlIHVzZSB0aGUgDQpw
+cm9wZXJ0eSBzbnBzLG91dHB1dC10eXBlPTIgZm9yIGV4YW1wbGUsIHNvIElESSBvdXRwdXQsIHdo
+aWNoIGJ1cy10eXBlIA0KeW91IGhhdmUgaW4gbWluZCBmb3IgdGhpcyBsaW5rPyBJREkgaXMgbm90
+IGRvY3VtZW50ZWQgaW4gdGhlIA0KdmlkZW8taW50ZXJmYWNlcy50eHQgYmluZGluZy4NCg0KU2lu
+Y2UgdGhlIE1JUEkgQ1NJLTIgRFBIWSBpcyBhY3R1YWxseSBiZXR3ZWVuIGNhbWVyYSBzZW5zb3Ig
+YW5kIA0KY3NpMmhvc3QsIGFmdGVyIHRoaXMgd2UgY2FuIHVzZSBlaXRoZXIgSURJIG9yIElQSSBp
+ZiBteSB1bmRlcnN0YW5kaW5nIGlzIA0KY29ycmVjdCwgYW5kIGNvbm5lY3QgdG8gYSBkaWZmZXJl
+bnQgcGFkL2h3IGJsb2NrIHdoaWNoIGNhbiBmdXJ0aGVyIA0KaGFuZGxlIHRoZXNlIHBhY2tldHMv
+cGl4ZWxzLg0KDQpJIGFtIGludGVyZXN0ZWQgb24gaG93IHRvIHNwZWNpZnkgdGhlIGNvbm5lY3Rp
+b24gdHlwZSBiZXR3ZWVuIHRoaXMgDQpvdXRwdXQgcGFkIGFuZCB0aGUgbmV4dCBvbmUgKHVudGls
+IGEgL2Rldi92aWRlbyBjYW4gYmUgcmVnaXN0ZXJlZCBieSB0aGUgDQpsYXN0IGRyaXZlciBmb3Ig
+dGhlIGxhc3QgaHcgYmxvY2spLg0KDQpUaGFua3MsDQoNCkV1Z2VuDQoNCj4gKwkJCX07DQo+ICsJ
+CX07DQo+ICsJfTsNCj4gLS0NCj4gMi43LjQNCj4gDQo+IA0K
