@@ -1,37 +1,65 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH v2 1/4] ARM: dts: s5pv210: Add dmc nodes
-Date: Fri, 11 Jan 2019 15:11:20 +0530
-Message-ID: <20190111094120.6dcnspccp6ufxd4y@vireshk-i7>
-References: <20190110205215.22030-1-pawel.mikolaj.chmiel@gmail.com>
- <20190110205215.22030-2-pawel.mikolaj.chmiel@gmail.com>
- <CAJKOXPcWOtTh5nDpZuX=NfrcOcQDPUXoFJLc8JtLs6UEY9LL6w@mail.gmail.com>
+From: Roger Quadros <rogerq@ti.com>
+Subject: [PATCH] arm64: dts: ti: k3-am65: Add MSMC RAM node
+Date: Fri, 11 Jan 2019 11:44:15 +0200
+Message-ID: <1547199855-16374-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAJKOXPcWOtTh5nDpZuX=NfrcOcQDPUXoFJLc8JtLs6UEY9LL6w@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, kgene@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux@armlinux.org.uk, rjw@rjwysocki.net, linux-arm-kernel@lists.infradead.org, "linux-samsung-soc@vger.kernel.org" <linux-samsung-soc@vger.kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org
+To: t-kristo@ti.com
+Cc: robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>, Nishanth Menon <nm@ti.com>, Lokesh Vutla <lokeshvutla@ti.com>, "Andrew F . Davis" <afd@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 11-01-19, 09:32, Krzysztof Kozlowski wrote:
-> On Thu, 10 Jan 2019 at 21:53, Paweł Chmiel
-> <pawel.mikolaj.chmiel@gmail.com> wrote:
-> >
-> > This commit adds dmc nodes, which are needed by s5pv210 cpufreq driver
-> > to work.
-> >
-> > Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> > ---
-> >  arch/arm/boot/dts/s5pv210.dtsi | 12 ++++++++++++
-> >  1 file changed, 12 insertions(+)
-> >
-> 
-> Thanks, applied (actually I applied v1 - I hope there were no changes).
+The AM65 SoC has 2MB MSMC RAM. Add this as a mmio-sram
+node so drivers can use it via genpool API.
 
-Would you like to Ack the other patches so that I can apply them ?
+Following areas are marked reserved:
+- Lower 128KB for ATF
+- 64KB@0xf0000 for SYSFW
+- Upper 1MB for cache
 
+The reserved locations are subject to change at runtime by
+the bootloader.
+
+Cc: Nishanth Menon <nm@ti.com>
+Cc: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: Andrew F. Davis <afd@ti.com>
+Signed-off-by: Roger Quadros <rogerq@ti.com>
+---
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
+diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+index 272cf8f..5a18150 100644
+--- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
++++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+@@ -6,6 +6,26 @@
+  */
+ 
+ &cbass_main {
++	msmc_ram: sram@70000000 {
++		compatible = "mmio-sram";
++		reg = <0x0 0x70000000 0x0 0x200000>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges = <0x0 0x0 0x70000000 0x200000>;
++
++		atf-sram@0 {
++			reg = <0x0 0x20000>;
++		};
++
++		sysfw-sram@f0000 {
++			reg = <0xf0000 0x10000>;
++		};
++
++		l3cache-sram@100000 {
++			reg = <0x100000 0x100000>;
++		};
++	};
++
+ 	gic500: interrupt-controller@1800000 {
+ 		compatible = "arm,gic-v3";
+ 		#address-cells = <2>;
 -- 
-viresh
+Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
+Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
