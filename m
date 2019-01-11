@@ -1,7 +1,7 @@
 From: Lars Poeschel <poeschel@lemonage.de>
 Subject: [PATCH v5 1/7] nfc: pn533: i2c: "pn532" as dt compatible string
-Date: Fri, 11 Jan 2019 17:11:13 +0100
-Message-ID: <20190111161124.24036-1-poeschel@lemonage.de>
+Date: Fri, 11 Jan 2019 17:18:04 +0100
+Message-ID: <20190111161812.26325-1-poeschel@lemonage.de>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
