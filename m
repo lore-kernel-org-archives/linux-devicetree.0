@@ -1,92 +1,58 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
-Date: Fri, 11 Jan 2019 17:09:58 -0600
-Message-ID: <CABGGiswYYpm-7T9e6F_Mp6FdU-JFDC8xV_JR1E6cgiz32A0u_Q@mail.gmail.com>
-References: <20190110221903.3990-4-robh@kernel.org> <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com>
- <CAL_JsqJzNBYCMWbZtR37eZd4yx2kc590V+q3603Hg=kG2bZwhw@mail.gmail.com>
- <154723284041.169631.6622751321828044091@swboyd.mtv.corp.google.com>
- <CAL_JsqJFyC3AXwbd8PoJS1wZ5BSokAPcFi=4FF2DQ6yFi0XwCw@mail.gmail.com> <154724656826.169631.7419387360923471292@swboyd.mtv.corp.google.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 4/7] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+Date: Fri, 11 Jan 2019 15:20:48 -0800
+Message-ID: <154724884881.169631.9705938789464714812@swboyd.mtv.corp.google.com>
+References: <20181219221105.3004-1-ilina@codeaurora.org> <20181219221105.3004-5-ilina@codeaurora.org> <20181229000714.GA3654@bogus> <20190107185113.GH14960@codeaurora.org> <CAL_Jsq+McuN5F9_a2bmECegR65vziNATpUqt4hysKL7FT=b9RA@mail.gmail.com> <20190109173111.GB22547@codeaurora.org> <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154724656826.169631.7419387360923471292@swboyd.mtv.corp.google.com>
+In-Reply-To: <CAL_JsqL1z-iOewqBeE43n1cVSGiQyOPHBGbRmEm9zcVLJkoLEA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
+To: Lina Iyer <ilina@codeaurora.org>, Rob Herring <robh@kernel.org>
+Cc: Evan Green <evgreen@chromium.org>, Marc Zyngier <marc.zyngier@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "Raju P.L.S.S.S.N" <rplsssn@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 4:42 PM Stephen Boyd <sboyd@kernel.org> wrote:
->
-> Quoting Rob Herring (2019-01-11 12:49:04)
-> > On Fri, Jan 11, 2019 at 12:54 PM Stephen Boyd <sboyd@kernel.org> wrote:
+Quoting Rob Herring (2019-01-09 11:36:56)
+>=20
+> > >However, my main concern is documenting something genericish in a
+> > >device specific binding. It looks like Tegra is trying to add the same
+> > >thing, so this needs to be documented in a common place. One question
+> > >is whether wakeup is the only use or if this should be more generally
+> > >a secondary interrupt parent?
 > > >
-> > > Quoting Rob Herring (2019-01-11 10:27:48)
-> > > > On Fri, Jan 11, 2019 at 11:44 AM Stephen Boyd <sboyd@kernel.org> wrote:
-> > > > >
-> > > > > Any pointer to the full schema?
-> > > >
-> > > > https://github.com/robherring/yaml-bindings/blob/master/schemas/
-> > > >
-> > > > And the clock schema in particular:
-> > > > https://github.com/robherring/yaml-bindings/blob/master/schemas/clock.yaml
-> > >
-> > > Awesome. Thanks for the pointers! Is the clock schema posted to the list
-> > > somewhere?
-> >
-> > No. Happy to post things, but I'm struggling to find anyone that cares.
->
-> Ok. I can review that document too if you post it to the list.
->
-> >
-> > > > > Why does title have a full stop?
-> > > >
-> > > > Because it was there in the original. My script to extract just takes
-> > > > the first line of alphanumeric text.
-> > >
-> > > Ok. I think it would be good to treat them like commit subjects that
-> > > don't have the full stop either, so if the script is able to drop the
-> > > full stop it would be great.
-> >
-> > I can just write a meta-schema to enforce that. :)
->
-> Sounds good.
->
-> >
-> > Yes, the meta-schema enforces this at least to the extent there is a
-> > meta-schema defined for a standard property. Even if not something for
-> > a specific property, we limit things to a subset of json-schema
-> > keywords. Also, you also can't define something contradicting a core
-> > schema (e.g. { reg: { type: string } }), but that wouldn't be found
-> > until you check actual DTs.
-> >
-> > The meta-schema check is run with:
-> > make dt_binding_check
-> >
-> > This is all documented in Documentation/devicetree/writing-schema.md.
-> >
->
-> Ok I'll read that document now. Would be cool if the build robots (and
-> myself) can somehow run the dt_binding_check on a single YAML file so we
-> can quickly validate the binding. Maybe even make C=2 or C=1 do that?
->
-> If the robots can then complain if the single file fails to build it
-> will save us tons of time. I just tried to run it but it seems to only
-> care about running on all the YAML files.
+> > Yes, wakeup is the only use of this interrupt parent.
+>=20
+> Maybe for you, but I was wondering about this more generally. Should
+> we encode what the function (e.g. wakeup) is in the property name or
+> have something like aux-interrupt-controller? Maybe some platforms
+> have some need for a secondary interrupt-controller which is not
+> wakeup. Routing interrupts to other cores perhaps?
+>=20
 
-make dtbs_check DT_SCHEMA_FILES=Documentation/devicetree/bindings/file/to/test
+I'd say it's not the interrupt-parent, but a secondary-interrupt-parent,
+because it's another path that some GPIO interrupts will go through vs.
+the "normal" summary irq line that uses the interrupt-parent. Maybe
+that's similar to the interrupt partitioning that ARM is doing for PPIs
+that only go to some CPUs?
 
-It will check only the schema specified and check all the DT files
-against only that schema (plus any referenced schema if you use a
-top-level 'allOf'. See the GIC schema patch[2] for an example of
-that).
+We don't really specify that some GPIO is corresponding to the secondary
+or primary interrupt controller for the GPIO controller in DT. If we
+did, then we could do something like the interrupt-map binding and have
+the index of that property be the gpio number and the interrupt parent
+that it maps to (either summary from the GIC or MPM pin number).
 
-I'm running the schema check for patches in the DT patchwork instance.
-For example, here's this patch[1]. So as long as it has my R-by, then
-it should be good. I'm not yet running the schema check on DT files
-because generally there are warnings and I don't intend to fix them
-for everyone. But maybe I should anyways so we at least have the data.
+ interrupt-map =3D <0 0 &gic GIC_SPI 208 0>,
+                 <1 0 &pdc 3 0>;
+ interrupt-map-mask =3D <0xfffffff 0>;
 
-Rob
+And then we would pass the 2-cell GPIO interrupt specifier (gpio# and
+flags) through the table and remap it to arbitrary domain parents. We
+could use this same design for the SSBI and SPMI gpio interrupt
+controller where we're currently looking at hardcoding the base
+interrupt number in the driver (0xc0) and then adding the GPIO number to
+that to get the parent interrupt specifier.
 
-[1] https://patchwork.ozlabs.org/patch/1023240/
-[2] https://patchwork.ozlabs.org/patch/1023243/
+It's sort of an abuse of interrupt-map, but I don't know if it really
+matters because there isn't a child of the gpio controller that is going
+to go through this table.
