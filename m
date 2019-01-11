@@ -1,73 +1,83 @@
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [V3, 3/4] Documentation: dt-bindings: media: Document bindings
- for DW MIPI CSI-2 Host
-Date: Fri, 11 Jan 2019 15:29:03 +0000
-Message-ID: <a967f37a-07cb-4b0b-1777-f354427445ea@microchip.com>
-References: <1539953556-35762-1-git-send-email-lolivei@synopsys.com>
- <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
+From: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
+ compatible string
+Date: Fri, 11 Jan 2019 15:32:37 +0000
+Message-ID: <5C38B715.8030008@hisilicon.com>
+References: <20190109202934.29304-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1539953556-35762-4-git-send-email-lolivei@synopsys.com>
-Content-Language: en-US
-Content-ID: <A3E7EB16CA57C944A93487FDAA009FF8@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: luis.oliveira@synopsys.com, linux-media@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc: joao.pinto@synopsys.com, festevam@gmail.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, hans.verkuil@cisco.com, laurent.pinchart+renesas@ideasonboard.com, arnd@arndb.de, geert+renesas@glider.be, narmstrong@baylibre.com, p.zabel@pengutronix.de, keiichiw@chromium.org, kstewart@linuxfoundation.org, todor.tomov@linaro.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190109202934.29304-1-robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, arm-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Jonathan Hunter <jonathanh-DDmLM1+adcrQT0dZR+AlfA@public.gmane.org>, linux-samsung-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Kukjin Kim <kgene-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, bcm-kernel-feedba
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDE5LjEwLjIwMTggMTU6NTIsIEx1aXMgT2xpdmVpcmEgd3JvdGU6DQo+IEFkZCBiaW5k
-aW5ncyBmb3IgU3lub3BzeXMgRGVzaWduV2FyZSBNSVBJIENTSS0yIGhvc3QuDQo+IA0KPiBTaWdu
-ZWQtb2ZmLWJ5OiBMdWlzIE9saXZlaXJhIDxsb2xpdmVpQHN5bm9wc3lzLmNvbT4NCj4gLS0tDQo+
-IENoYW5nZWxvZw0KPiB2Mi1WMw0KPiAtIHJlbW92ZWQgSVBJIHNldHRpbmdzDQo+IA0KPiAgIC4u
-Li9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL3NucHMsZHctY3NpLXBsYXQudHh0IHwgNTIgKysr
-KysrKysrKysrKysrKysrKysrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCA1MiBpbnNlcnRpb25zKCsp
-DQo+ICAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9tZWRpYS9zbnBzLGR3LWNzaS1wbGF0LnR4dA0KPiANCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS1wbGF0LnR4dCBiL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9zbnBzLGR3LWNzaS1wbGF0LnR4
-dA0KPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiBpbmRleCAwMDAwMDAwLi5iZTNkYTA1DQo+IC0t
-LSAvZGV2L251bGwNCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21l
-ZGlhL3NucHMsZHctY3NpLXBsYXQudHh0DQo+IEBAIC0wLDAgKzEsNTIgQEANCj4gK1N5bm9wc3lz
-IERlc2lnbldhcmUgQ1NJLTIgSG9zdCBjb250cm9sbGVyDQo+ICsNCj4gK0Rlc2NyaXB0aW9uDQo+
-ICstLS0tLS0tLS0tLQ0KPiArDQo+ICtUaGlzIEhXIGJsb2NrIGlzIHVzZWQgdG8gcmVjZWl2ZSBp
-bWFnZSBjb21pbmcgZnJvbSBhbiBNSVBJIENTSS0yIGNvbXBhdGlibGUNCj4gK2NhbWVyYS4NCj4g
-Kw0KPiArUmVxdWlyZWQgcHJvcGVydGllczoNCj4gKy0gY29tcGF0aWJsZTogc2hhbGwgYmUgInNu
-cHMsZHctY3NpLXBsYXQiDQo+ICstIHJlZwkJCTogcGh5c2ljYWwgYmFzZSBhZGRyZXNzIGFuZCBz
-aXplIG9mIHRoZSBkZXZpY2UgbWVtb3J5IG1hcHBlZA0KPiArICByZWdpc3RlcnM7DQo+ICstIGlu
-dGVycnVwdHMJCTogQ1NJLTIgSG9zdCBpbnRlcnJ1cHQNCj4gKy0gc25wcyxvdXRwdXQtdHlwZQk6
-IENvcmUgb3V0cHV0IHRvIGJlIHVzZWQgKElQSS0+IDAgb3IgSURJLT4xIG9yIEJPVEgtPjIpDQo+
-ICsJCQkgIFRoZXNlICB2YWx1ZXMgY2hvb3NlIHdoaWNoIG9mIHRoZSBDb3JlIG91dHB1dHMgd2ls
-bCBiZSB1c2VkLA0KPiArCQkJICBpdCBjYW4gYmUgSW1hZ2UgRGF0YSBJbnRlcmZhY2Ugb3IgSW1h
-Z2UgUGl4ZWwgSW50ZXJmYWNlLg0KPiArLSBwaHlzCQkJOiBMaXN0IG9mIG9uZSBQSFkgc3BlY2lm
-aWVyIChhcyBkZWZpbmVkIGluDQo+ICsJCQkgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9waHkvcGh5LWJpbmRpbmdzLnR4dCkuDQo+ICsJCQkgIFRoaXMgUEhZIGlzIGEgTUlQSSBE
-UEhZIHdvcmtpbmcgaW4gUlggbW9kZS4NCj4gKy0gcmVzZXRzCQk6IFJlZmVyZW5jZSB0byBhIHJl
-c2V0IGNvbnRyb2xsZXIgKG9wdGlvbmFsKQ0KPiArDQo+ICtUaGUgcGVyLWJvYXJkIHNldHRpbmdz
-Og0KPiArIC0gcG9ydCBzdWItbm9kZSBkZXNjcmliaW5nIGEgc2luZ2xlIGVuZHBvaW50IGNvbm5l
-Y3RlZCB0byB0aGUgY2FtZXJhIGFzDQo+ICsgICBkZXNjcmliZWQgaW4gdmlkZW8taW50ZXJmYWNl
-cy50eHRbMV0uDQo+ICsNCj4gK0V4YW1wbGU6DQo+ICsNCj4gKwljc2kyXzE6IGNzaTJAMzAwMCB7
-DQo+ICsJCWNvbXBhdGlibGUgPSAic25wcyxkdy1jc2ktcGxhdCI7DQo+ICsJCSNhZGRyZXNzLWNl
-bGxzID0gPDE+Ow0KPiArCQkjc2l6ZS1jZWxscyA9IDwwPjsNCj4gKwkJcmVnID0gPCAweDAzMDAw
-IDB4N0ZGPjsNCj4gKwkJaW50ZXJydXB0cyA9IDwyPjsNCj4gKwkJb3V0cHV0LXR5cGUgPSA8Mj47
-DQo+ICsJCXJlc2V0cyA9IDwmZHdfcnN0IDE+Ow0KPiArCQlwaHlzID0gPCZtaXBpX2RwaHlfcngx
-IDA+Ow0KPiArCQlwaHktbmFtZXMgPSAiY3NpMi1kcGh5IjsNCj4gKw0KPiArCQkvKiBDU0ktMiBw
-ZXItYm9hcmQgc2V0dGluZ3MgKi8NCj4gKwkJcG9ydEAxIHsNCj4gKwkJCXJlZyA9IDwxPjsNCj4g
-KwkJCWNzaTFfZXAxOiBlbmRwb2ludCB7DQo+ICsJCQkJcmVtb3RlLWVuZHBvaW50ID0gPCZjYW1l
-cmFfMT47DQo+ICsJCQkJZGF0YS1sYW5lcyA9IDwxIDI+Ow0KPiArCQkJfTsNCj4gKwkJfTsNCj4g
-KwkJcG9ydEAyIHsNCj4gKwkJCWNzaTFfZXAyOiBlbmRwb2ludCB7DQo+ICsJCQkJcmVtb3RlLWVu
-ZHBvaW50ID0gPCZ2aWYxX2VwPjsNCg0KSGkgYWdhaW4gTHVpcywNCg0KUmVnYXJkaW5nIHRoZSBv
-dXRwdXQgZW5kcG9pbnQsIGluIHlvdXIgZXhhbXBsZSBwb3J0QDIsIGlmIHdlIHVzZSB0aGUgDQpw
-cm9wZXJ0eSBzbnBzLG91dHB1dC10eXBlPTIgZm9yIGV4YW1wbGUsIHNvIElESSBvdXRwdXQsIHdo
-aWNoIGJ1cy10eXBlIA0KeW91IGhhdmUgaW4gbWluZCBmb3IgdGhpcyBsaW5rPyBJREkgaXMgbm90
-IGRvY3VtZW50ZWQgaW4gdGhlIA0KdmlkZW8taW50ZXJmYWNlcy50eHQgYmluZGluZy4NCg0KU2lu
-Y2UgdGhlIE1JUEkgQ1NJLTIgRFBIWSBpcyBhY3R1YWxseSBiZXR3ZWVuIGNhbWVyYSBzZW5zb3Ig
-YW5kIA0KY3NpMmhvc3QsIGFmdGVyIHRoaXMgd2UgY2FuIHVzZSBlaXRoZXIgSURJIG9yIElQSSBp
-ZiBteSB1bmRlcnN0YW5kaW5nIGlzIA0KY29ycmVjdCwgYW5kIGNvbm5lY3QgdG8gYSBkaWZmZXJl
-bnQgcGFkL2h3IGJsb2NrIHdoaWNoIGNhbiBmdXJ0aGVyIA0KaGFuZGxlIHRoZXNlIHBhY2tldHMv
-cGl4ZWxzLg0KDQpJIGFtIGludGVyZXN0ZWQgb24gaG93IHRvIHNwZWNpZnkgdGhlIGNvbm5lY3Rp
-b24gdHlwZSBiZXR3ZWVuIHRoaXMgDQpvdXRwdXQgcGFkIGFuZCB0aGUgbmV4dCBvbmUgKHVudGls
-IGEgL2Rldi92aWRlbyBjYW4gYmUgcmVnaXN0ZXJlZCBieSB0aGUgDQpsYXN0IGRyaXZlciBmb3Ig
-dGhlIGxhc3QgaHcgYmxvY2spLg0KDQpUaGFua3MsDQoNCkV1Z2VuDQoNCj4gKwkJCX07DQo+ICsJ
-CX07DQo+ICsJfTsNCj4gLS0NCj4gMi43LjQNCj4gDQo+IA0K
+Hi Rob,
+
+On 2019/1/9 20:29, Rob Herring wrote:
+> The 'arm,armv8' compatible string is only for software models. It adds
+> little value otherwise and is inconsistently used as a fallback on some
+> platforms. Remove it from those platforms.
+> 
+> This fixes warnings generated by the DT schema.
+> 
+> Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> ---
+> armsoc folks, Please apply directly.
+> 
+> Note that there's still a case left in msm8998 that needs a new 
+> compatible string.
+> 
+> Rob
+> 
+>  arch/arm64/boot/dts/actions/s700.dtsi         |   8 +-
+>  arch/arm64/boot/dts/actions/s900.dtsi         |   8 +-
+>  arch/arm64/boot/dts/al/alpine-v2.dtsi         |   8 +-
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi |   8 +-
+>  arch/arm64/boot/dts/allwinner/sun50i-h5.dtsi  |   8 +-
+>  arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi  |   8 +-
+>  .../boot/dts/altera/socfpga_stratix10.dtsi    |   8 +-
+>  arch/arm64/boot/dts/amlogic/meson-axg.dtsi    |   8 +-
+>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   |   8 +-
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi     |   8 +-
+>  arch/arm64/boot/dts/amlogic/meson-gxm.dtsi    |   8 +-
+>  arch/arm64/boot/dts/apm/apm-shadowcat.dtsi    |  16 +--
+>  arch/arm64/boot/dts/apm/apm-storm.dtsi        |  16 +--
+>  arch/arm64/boot/dts/arm/juno-r1.dts           |  12 +-
+>  arch/arm64/boot/dts/arm/juno-r2.dts           |  12 +-
+>  arch/arm64/boot/dts/arm/juno.dts              |  12 +-
+>  .../boot/dts/arm/vexpress-v2f-1xv7-ca53x2.dts |   4 +-
+>  .../boot/dts/broadcom/northstar2/ns2.dtsi     |   8 +-
+>  .../boot/dts/broadcom/stingray/stingray.dtsi  |  16 +--
+>  arch/arm64/boot/dts/cavium/thunder-88xx.dtsi  |  96 ++++++-------
+>  arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi |   8 +-
+>  arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  16 +--
+>  arch/arm64/boot/dts/exynos/exynos7.dtsi       |   8 +-
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi     |  16 +--
+>  arch/arm64/boot/dts/hisilicon/hi3670.dtsi     |  16 +--
+>  arch/arm64/boot/dts/hisilicon/hi6220.dtsi     |  16 +--
+>  arch/arm64/boot/dts/hisilicon/hip05.dtsi      |  32 ++---
+>  arch/arm64/boot/dts/hisilicon/hip06.dtsi      |  32 ++---
+>  arch/arm64/boot/dts/hisilicon/hip07.dtsi      | 128 +++++++++---------
+
+For hisilicon,
+
+Acked-by: Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>
+
+Thanks!
+
+Best Regards,
+Wei
