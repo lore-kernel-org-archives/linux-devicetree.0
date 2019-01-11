@@ -1,85 +1,69 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH 2/3] drivers: pwm: pwm-bcm-kona: Add pwm-kona-v2 support
-Date: Fri, 11 Jan 2019 14:51:25 +0100
-Message-ID: <20190111135125.GC1895@lunn.ch>
-References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1547184076-20521-3-git-send-email-sheetal.tigadoli@broadcom.com>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
+ compatible string
+Date: Fri, 11 Jan 2019 07:57:12 -0600
+Message-ID: <CAL_JsqKMYY5RsCjzp4eMnW0YrohcqwmhVj0hfUEVrbGJEFx05w@mail.gmail.com>
+References: <20190109202934.29304-1-robh@kernel.org>
+ <20190110144537.p5setcurwu6bwrtl@rric.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547184076-20521-3-git-send-email-sheetal.tigadoli@broadcom.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, linux-pwm@vger.kernel.org, Praveen Kumar B <praveen.b@broadcom.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bcm-kernel-feedback-list@broadcom.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <20190110144537.p5setcurwu6bwrtl-vWBEXY7mpu582hYKe6nXyg@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: "Richter, Robert" <Robert.Richter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nair,
+ Jayachandran" <Jayachandran.Nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk@kerne>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 10:51:15AM +0530, Sheetal Tigadoli wrote:
-> From: Praveen Kumar B <praveen.b@broadcom.com>
-> 
-> Add support for new version of pwm-kona.
-> Add support to make PWM changes configured and stable.
-> 
-> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-> ---
->  drivers/pwm/pwm-bcm-kona.c | 128 ++++++++++++++++++++++++++++++++++-----------
->  1 file changed, 98 insertions(+), 30 deletions(-)
-> 
-> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
-> index 09a95ae..2b44ad8 100644
-> --- a/drivers/pwm/pwm-bcm-kona.c
-> +++ b/drivers/pwm/pwm-bcm-kona.c
-> @@ -45,30 +45,39 @@
->   *    high or low depending on its state at that exact instant.
->   */
->  
-> -#define PWM_CONTROL_OFFSET			(0x00000000)
-> +#define PWM_CONTROL_OFFSET			0x00000000
->  #define PWM_CONTROL_SMOOTH_SHIFT(chan)		(24 + (chan))
->  #define PWM_CONTROL_TYPE_SHIFT(chan)		(16 + (chan))
->  #define PWM_CONTROL_POLARITY_SHIFT(chan)	(8 + (chan))
->  #define PWM_CONTROL_TRIGGER_SHIFT(chan)		(chan)
->  
-> -#define PRESCALE_OFFSET				(0x00000004)
-> +#define PRESCALE_OFFSET				0x00000004
->  #define PRESCALE_SHIFT(chan)			((chan) << 2)
->  #define PRESCALE_MASK(chan)			(0x7 << PRESCALE_SHIFT(chan))
-> -#define PRESCALE_MIN				(0x00000000)
-> -#define PRESCALE_MAX				(0x00000007)
-> +#define PRESCALE_MIN				0x00000000
-> +#define PRESCALE_MAX				0x00000007
+On Thu, Jan 10, 2019 at 8:18 PM Richter, Robert
+<Robert.Richter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+>
+> Rob,
+>
+> On 09.01.19 14:29:34, Rob Herring wrote:
+> > External Email
+> >
+> > The 'arm,armv8' compatible string is only for software models. It adds
+> > little value otherwise and is inconsistently used as a fallback on some
+> > platforms. Remove it from those platforms.
+> >
+> > This fixes warnings generated by the DT schema.
+> >
+> > Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > ---
+> > armsoc folks, Please apply directly.
+>
+> > diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> > index ff5c4c47b22b..c616132f7d6d 100644
+> > --- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> > +++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> > @@ -27,28 +27,28 @@
+> >
+> >                 cpu@0 {
+> >                         device_type = "cpu";
+> > -                       compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
+> > +                       compatible = "cavium,thunder2";
+>
+> We are just checking if removing the "brcm,vulcan" string has any
+> impact on early silicon revisions we want to support (see also
+> BRCM_CPU_PART_VULCAN).
+>
+> Maybe you make this a separate change?
 
-Hi Praveen
+Dropping brcm,vulcan was unintentional (regex fail). Though keeping it
+means we need a schema change as it was not documented to be a
+fallback.
 
-These changes are unrelated to adding support for a new PWM. So
-ideally they should be in a separate patch.
-
-> +static int kona_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan,
-> +				 unsigned int kona_ver)
-> +{
-> +	struct kona_pwmc *kp = to_kona_pwmc(chip);
-> +	unsigned int value;
-> +	unsigned int count = PWM_MONITOR_TIMEOUT_US * 1000;
-> +
-> +	switch (kona_ver) {
-> +	case KONA_PWM_V1:
-> +		/*
-> +		 * There must be a min 400ns delay between clearing trigger and
-> +		 * settingit. Failing to do this may result in no PWM signal.
-> +		 */
-> +		ndelay(400);
-> +		return 0;
-> +	case KONA_PWM_V2:
-> +		do {
-> +			value = readl(kp->base + PWM_MONITOR_OFFSET);
-> +			if (!(value & (BIT(chan))))
-> +				return 0;
-> +			ndelay(1);
-> +		} while (count--);
-
-You can probably use readl_poll_timeout() here.
-
-    Andrew
+Rob
