@@ -1,72 +1,45 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] dt-bindings: clock: Convert fixed-clock binding to json-schema
-Date: Fri, 11 Jan 2019 14:42:48 -0800
-Message-ID: <154724656826.169631.7419387360923471292@swboyd.mtv.corp.google.com>
-References: <20190110221903.3990-4-robh@kernel.org> <154722865051.169631.16957443589975628047@swboyd.mtv.corp.google.com> <CAL_JsqJzNBYCMWbZtR37eZd4yx2kc590V+q3603Hg=kG2bZwhw@mail.gmail.com> <154723284041.169631.6622751321828044091@swboyd.mtv.corp.google.com> <CAL_JsqJFyC3AXwbd8PoJS1wZ5BSokAPcFi=4FF2DQ6yFi0XwCw@mail.gmail.com>
+Subject: Re: [PATCH 0/6] Add clock support for Actions Semi S500 SoC
+Date: Fri, 11 Jan 2019 14:51:04 -0800
+Message-ID: <154724706468.169631.2903523518830581075@swboyd.mtv.corp.google.com>
+References: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJFyC3AXwbd8PoJS1wZ5BSokAPcFi=4FF2DQ6yFi0XwCw@mail.gmail.com>
+In-Reply-To: <20181231185517.18517-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, linux-clk <linux-clk@vger.kernel.org>
+To: afaerber@suse.de, mturquette@baylibre.com, robh+dt@kernel.org
+Cc: linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Rob Herring (2019-01-11 12:49:04)
-> On Fri, Jan 11, 2019 at 12:54 PM Stephen Boyd <sboyd@kernel.org> wrote:
-> >
-> > Quoting Rob Herring (2019-01-11 10:27:48)
-> > > On Fri, Jan 11, 2019 at 11:44 AM Stephen Boyd <sboyd@kernel.org> wrot=
-e:
-> > > >
-> > > > Any pointer to the full schema?
-> > >
-> > > https://github.com/robherring/yaml-bindings/blob/master/schemas/
-> > >
-> > > And the clock schema in particular:
-> > > https://github.com/robherring/yaml-bindings/blob/master/schemas/clock=
-.yaml
-> >
-> > Awesome. Thanks for the pointers! Is the clock schema posted to the list
-> > somewhere?
+Quoting Manivannan Sadhasivam (2018-12-31 10:55:11)
+> Hello,
 >=20
-> No. Happy to post things, but I'm struggling to find anyone that cares.
+> This patchset adds common clock support for Actions Semi S500 SoC of
+> the Owl family SoCs. This series is based on the initial work done
+> by Edgar Bernardi Righi. https://patchwork.kernel.org/cover/10587527/
+>=20
+> Since there isn't any update from him for long time, I took the liberty
+> to modify his patches, address review comments and send to list for revie=
+w.
+>=20
+> This series has been tested on Allo Sparky SBC.
+>=20
+> Thanks,
+> Mani
+>=20
+> Edgar Bernardi Righi (1):
+>   dt-bindings: clock: Add DT bindings for Actions Semi S500 CMU
+>=20
+> Manivannan Sadhasivam (5):
+>   clk: actions: Add configurable PLL delay
+>   ARM: dts: Add CMU support for Actions Semi Owl S500 SoC
+>   ARM: dts: Remove fake UART clock for S500 based SBCs
+>   clk: actions: Add clock driver for S500 SoC
+>   MAINTAINERS: Add linux-actions mailing list for Actions Semi
 
-Ok. I can review that document too if you post it to the list.
-
->=20
-> > > > Why does title have a full stop?
-> > >
-> > > Because it was there in the original. My script to extract just takes
-> > > the first line of alphanumeric text.
-> >
-> > Ok. I think it would be good to treat them like commit subjects that
-> > don't have the full stop either, so if the script is able to drop the
-> > full stop it would be great.
->=20
-> I can just write a meta-schema to enforce that. :)
-
-Sounds good.
-
->=20
-> Yes, the meta-schema enforces this at least to the extent there is a
-> meta-schema defined for a standard property. Even if not something for
-> a specific property, we limit things to a subset of json-schema
-> keywords. Also, you also can't define something contradicting a core
-> schema (e.g. { reg: { type: string } }), but that wouldn't be found
-> until you check actual DTs.
->=20
-> The meta-schema check is run with:
-> make dt_binding_check
->=20
-> This is all documented in Documentation/devicetree/writing-schema.md.
->=20
-
-Ok I'll read that document now. Would be cool if the build robots (and
-myself) can somehow run the dt_binding_check on a single YAML file so we
-can quickly validate the binding. Maybe even make C=3D2 or C=3D1 do that?
-
-If the robots can then complain if the single file fails to build it
-will save us tons of time. I just tried to run it but it seems to only
-care about running on all the YAML files.
+What's the merge strategy for these patches? Some are for clk, others
+are for arm-soc, etc. I see a sandwich of patches too so it sounds like
+I can't even take just the clk ones for fear of breaking something that
+the dts bits in the middle clear out of the way.
