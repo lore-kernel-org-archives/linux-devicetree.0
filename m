@@ -1,58 +1,59 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [Potential Spoof] Re: [Potential Spoof] Re: [PATCH v2 4/4] ARM:
- dts: aspeed: Add lpc ctrl for Facebook
-Date: Sat, 12 Jan 2019 00:33:08 +0000
-Message-ID: <5972B57A-23D5-43F4-9476-229379B96C7C@fb.com>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: [PATCH] ARM: dts: vf610-bk4: fix incorrect #address-cells for dspi3
+Date: Sat, 12 Jan 2019 09:15:14 +0800
+Message-ID: <20190112011514.8527-1-shawnguo@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Content-ID: <EF19AE313A2D0A45AFDFB9272A9F0EA5@namprd15.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Lukasz Majewski <lukma@denx.de>
 List-Id: devicetree@vger.kernel.org
 
-Sm9lbCwNClBsZWFzZSBtZXJnZSB0aGVzZSBwYXRjaGVzIGFzIGl0IGlzIHJlcXVpcmVkIGJ5IGZh
-Y2Vib29rIHBsYXRmb3JtLg0KDQpSZWdhcmRzDQotVmlqYXkNCg0K77u/T24gMS83LzE5LCAxMToy
-NSBBTSwgIkxpbnV4LWFzcGVlZCBvbiBiZWhhbGYgb2YgVmlqYXkgS2hlbWthIiA8bGludXgtYXNw
-ZWVkLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxpc3RzLm96bGFicy5vcmcgb24gYmVoYWxm
-IG9mIHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6DQoNCiAgICBQbGVhc2UgbWVyZ2UgdGhlc2Ug
-cGF0Y2hlcyBpbiB1cHN0cmVhbSBrZXJuZWwuDQogICAgDQogICAgUmVnYXJkcw0KICAgIC1WaWph
-eQ0KICAgIA0KICAgIE9uIDEyLzIwLzE4LCAxMDowNiBBTSwgIkxpbnV4LWFzcGVlZCBvbiBiZWhh
-bGYgb2YgVmlqYXkgS2hlbWthIiA8bGludXgtYXNwZWVkLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIu
-Y29tQGxpc3RzLm96bGFicy5vcmcgb24gYmVoYWxmIG9mIHZpamF5a2hlbWthQGZiLmNvbT4gd3Jv
-dGU6DQogICAgDQogICAgICAgIEpvZWwsIENhbiB5b3UgcGxlYXNlIHRha2UgY2FyZSBvZiB0aGVz
-ZSBwYXRjaGVzIG1lcmdlLg0KICAgICAgICANCiAgICAgICAgT24gMTIvMTcvMTgsIDEyOjA0IFBN
-LCAiVmlqYXkgS2hlbWthIiA8dmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCiAgICAgICAgDQog
-ICAgICAgICAgICBBZGRlZCBscGMgY3RybCBkZXZpY2UgdG8gZW5hYmxlIExQQyBjbG9jayBpbiBG
-YWNlYm9vaw0KICAgICAgICAgICAgVGlvZ2FwYXNzIGRldmljZSB0cmVlLg0KICAgICAgICAgICAg
-DQogICAgICAgICAgICBTaWduZWQtb2ZmLWJ5OiBWaWpheSBLaGVta2EgPHZpamF5a2hlbWthQGZi
-LmNvbT4NCiAgICAgICAgICAgIC0tLQ0KICAgICAgICAgICAgIC4uLi9ib290L2R0cy9hc3BlZWQt
-Ym1jLWZhY2Vib29rLXRpb2dhcGFzcy5kdHMgIHwgMTcgKysrKysrKysrKysrKysrKysNCiAgICAg
-ICAgICAgICAxIGZpbGUgY2hhbmdlZCwgMTcgaW5zZXJ0aW9ucygrKQ0KICAgICAgICAgICAgDQog
-ICAgICAgICAgICBkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNl
-Ym9vay10aW9nYXBhc3MuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9v
-ay10aW9nYXBhc3MuZHRzDQogICAgICAgICAgICBpbmRleCA3M2U1OGE4MjE2MTMuLmVmNzg3NWI1
-NDU2MiAxMDA2NDQNCiAgICAgICAgICAgIC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1i
-bWMtZmFjZWJvb2stdGlvZ2FwYXNzLmR0cw0KICAgICAgICAgICAgKysrIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgICAgICAgICBAQCAt
-MjIsNiArMjIsMTcgQEANCiAgICAgICAgICAgICAJCXJlZyA9IDwweDgwMDAwMDAwIDB4MjAwMDAw
-MDA+Ow0KICAgICAgICAgICAgIAl9Ow0KICAgICAgICAgICAgIA0KICAgICAgICAgICAgKwlyZXNl
-cnZlZC1tZW1vcnkgew0KICAgICAgICAgICAgKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47DQogICAg
-ICAgICAgICArCQkjc2l6ZS1jZWxscyA9IDwxPjsNCiAgICAgICAgICAgICsJCXJhbmdlczsNCiAg
-ICAgICAgICAgICsNCiAgICAgICAgICAgICsJCWZsYXNoX21lbW9yeTogcmVnaW9uQDk4MDAwMDAw
-IHsNCiAgICAgICAgICAgICsJCQluby1tYXA7DQogICAgICAgICAgICArCQkJcmVnID0gPDB4OTgw
-MDAwMDAgMHgwMDAwMTAwMD47IC8qIDRLICovDQogICAgICAgICAgICArCQl9Ow0KICAgICAgICAg
-ICAgKwl9Ow0KICAgICAgICAgICAgKw0KICAgICAgICAgICAgIAlpaW8taHdtb24gew0KICAgICAg
-ICAgICAgIAkJY29tcGF0aWJsZSA9ICJpaW8taHdtb24iOw0KICAgICAgICAgICAgIAkJaW8tY2hh
-bm5lbHMgPSA8JmFkYyAwPiwgPCZhZGMgMT4sIDwmYWRjIDI+LCA8JmFkYyAzPiwNCiAgICAgICAg
-ICAgIEBAIC01NCw2ICs2NSwxMiBAQA0KICAgICAgICAgICAgIAl9Ow0KICAgICAgICAgICAgIH07
-DQogICAgICAgICAgICAgDQogICAgICAgICAgICArJmxwY19jdHJsIHsNCiAgICAgICAgICAgICsJ
-c3RhdHVzID0gIm9rYXkiOw0KICAgICAgICAgICAgKwltZW1vcnktcmVnaW9uID0gPCZmbGFzaF9t
-ZW1vcnk+Ow0KICAgICAgICAgICAgKwlmbGFzaCA9IDwmc3BpMT47DQogICAgICAgICAgICArfTsN
-CiAgICAgICAgICAgICsNCiAgICAgICAgICAgICAmdWFydDEgew0KICAgICAgICAgICAgIAkvLyBI
-b3N0IENvbnNvbGUNCiAgICAgICAgICAgICAJc3RhdHVzID0gIm9rYXkiOw0KICAgICAgICAgICAg
-LS0gDQogICAgICAgICAgICAyLjE3LjENCiAgICAgICAgICAgIA0KICAgICAgICAgICAgDQogICAg
-ICAgIA0KICAgICAgICANCiAgICANCiAgICANCg0K
+The dspi3 is used as slave controller on vf610-bk4, and the default
+'#address-cells = <1>;' setting in vfxxx.dtsi causes the following DTC
+warning.
+
+  DTC     arch/arm/boot/dts/vf610-bk4.dtb
+../arch/arm/boot/dts/vfxxx.dtsi:550.24-563.6: Warning (spi_bus_bridge): /soc/aips-bus@40080000/spi@400ad000: incorrect #address-cells for SPI bus
+  also defined at ../arch/arm/boot/dts/vf610-bk4.dts:107.8-119.3
+arch/arm/boot/dts/vf610-bk4.dtb: Warning (spi_bus_reg): Failed prerequisite 'spi_bus_bridge'
+
+For spi device used as slave controller, '#address-cells' should be 0.
+Let's overwrite the property in vf610-bk4.dts to fix the warning.
+
+Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+---
+ arch/arm/boot/dts/vf610-bk4.dts | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/arch/arm/boot/dts/vf610-bk4.dts b/arch/arm/boot/dts/vf610-bk4.dts
+index 689c8930dce3..b08d561d6748 100644
+--- a/arch/arm/boot/dts/vf610-bk4.dts
++++ b/arch/arm/boot/dts/vf610-bk4.dts
+@@ -110,11 +110,11 @@
+ 	bus-num = <3>;
+ 	status = "okay";
+ 	spi-slave;
++	#address-cells = <0>;
+ 
+-	slave@0 {
++	slave {
+ 		compatible = "lwn,bk4";
+ 		spi-max-frequency = <30000000>;
+-		reg = <0>;
+ 	};
+ };
+ 
+-- 
+2.18.0
