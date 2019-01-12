@@ -1,8 +1,8 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 5/6] ARM: dts: bcm2837-rpi-3-b-plus: Clarify label for
- STATUS_LED
-Date: Sat, 12 Jan 2019 13:43:27 +0100
-Message-ID: <1547297008-2740-6-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 2/6] ARM: dts: bcm2835-rpi: Drop unnecessary
+ #address-cells/#size-cells
+Date: Sat, 12 Jan 2019 13:43:24 +0100
+Message-ID: <1547297008-2740-3-git-send-email-stefan.wahren@i2se.com>
 References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,27 +22,30 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Flori
 Cc: Gottfried Haider <gottfried.haider@gmail.com>, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, Peter Robinson <pbrobinson@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-The RPI 3 B+ provides control to both LEDs (PWR and ACT). So append
-the first letter of the LED color (like in the schematics) in order
-to clarify this.
+Compiling the bcm2835-rpi.dtsi with W=1 leads to the following warning:
+
+Warning (avoid_unnecessary_addr_size): /soc/firmware: unnecessary
+ #address-cells/#size-cells without "ranges" or child "reg" property
+
+Fix this by removing these unnecessary properties.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm2835-rpi.dtsi | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-index 7d65013..d3ec6cd 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
-@@ -42,7 +42,7 @@
- 		#gpio-cells = <2>;
- 		gpio-line-names = "BT_ON",
- 				  "WL_ON",
--				  "STATUS_LED",
-+				  "STATUS_LED_R",
- 				  "LAN_RUN",
- 				  "",
- 				  "CAM_GPIO0",
+diff --git a/arch/arm/boot/dts/bcm2835-rpi.dtsi b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+index e490f2a..715d50c 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi.dtsi
++++ b/arch/arm/boot/dts/bcm2835-rpi.dtsi
+@@ -19,8 +19,6 @@
+ 	soc {
+ 		firmware: firmware {
+ 			compatible = "raspberrypi,bcm2835-firmware", "simple-bus";
+-			#address-cells = <0>;
+-			#size-cells = <0>;
+ 			mboxes = <&mailbox>;
+ 		};
+ 
 -- 
 2.7.4
