@@ -1,111 +1,117 @@
 From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH lora-next 2/4] dt-bindings: lora: sx125x: add basic
- documentation
-Date: Sat, 12 Jan 2019 04:48:44 +0100
-Message-ID: <20191f9a-46b9-2ad1-d56b-7af302589f93@suse.de>
+Subject: Re: [PATCH lora-next 3/4] dt-bindings: lora: sx125x: add clock
+ bindings
+Date: Sat, 12 Jan 2019 05:14:23 +0100
+Message-ID: <cc85a823-74d4-7c35-16bd-1b278d5df732@suse.de>
 References: <20190108084132.10214-1-ben.whitten@gmail.com>
- <20190108084132.10214-2-ben.whitten@gmail.com>
+ <20190108084132.10214-3-ben.whitten@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190108084132.10214-2-ben.whitten@gmail.com>
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190108084132.10214-3-ben.whitten@gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: Ben Whitten <ben.whitten@gmail.com>
-Cc: linux-lpwan@lists.infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-lpwan@lists.infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
 Am 08.01.19 um 09:41 schrieb Ben Whitten:
-> The sx125x family are IQ radio transceivers from Semtech configured over
-> SPI, they are typically connected to an sx130x series concentrator however
-> may be connected to a host directly.
+> The sx125x consumes a 32MHz clock and if it is coupled with a sx130x
+> concentrator may also provide a gated version of this 32MHz for the
+> concentrator.
 
-"SX125x" and "SX130x"
+"SX125x", "SX130x", "32 MHz"
 
 > 
-> Required properties include the radio number of the host or concentrator
-> bus.
+> In the example we connect to output 0 of "txco" clock source. The radio
+> also provides a single clock output, hence "#clock-cells = <0>", named
+> "clk32m" for consumption by the sx130x concentrator.
+
+No, as pointed out before, output 0 with #clock-cells = <0> is wrong!
+Either it's 1 and then you can use a single-cell index, or it's 0, in
+which case that's the next (invalid) clock.
+
 > 
 > Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 > ---
->  .../bindings/lora/semtech,sx125x.yaml         | 45 +++++++++++++++++++
->  1 file changed, 45 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
+>  .../{ => net}/lora/semtech,sx125x.yaml        | 27 +++++++++++++++++++
+>  1 file changed, 27 insertions(+)
+>  rename Documentation/devicetree/bindings/{ => net}/lora/semtech,sx125x.yaml (67%)
 > 
-> diff --git a/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
-> new file mode 100644
-> index 000000000000..5eadec860b70
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
-> @@ -0,0 +1,45 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/lora/semtech,sx125x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech IQ modulator/de-modulator transeiver
-> +
-> +maintainers:
-> +  - Andreas Färber <afaerber@suse.de>
-> +  - Ben Whitten <ben.whitten@gmail.com>
-> +
-> +description: |
-> +  The sx125x family are highly integrated RF front-end to digital I and Q
-> +  modulator/demodulator Multi-PHY mode transceiver capable of supporting
-> +  multiple constant and non-constant envelope modulation schemes.
+> diff --git a/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+> similarity index 67%
+> rename from Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
+> rename to Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
 
-"SX125x"
+In wrong patch?
 
-"are ... transceivers"
-
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - semtech,sx1255
-> +        - semtech,sx1257
-> +        - semtech,sx1258
-
-Do we need all three? Probably yes for the concentrator to make decisions?
-
-> +
-> +  reg:
+> index 5eadec860b70..c2fb4ac06341 100644
+> --- a/Documentation/devicetree/bindings/lora/semtech,sx125x.yaml
+> +++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+> @@ -33,13 +33,40 @@ properties:
+>      description: The frequency of the SPI communication to the radio,
+>        in Hz. Maximum SPI frequency is 10MHz.
+>  
+> +  clocks:
 > +    maxItems: 1
-> +    description: The chip select on the SPI bus or radio number in concentrator.
+> +    description: 32MHz clock provider
+> +
+> +  clock-names:
+> +    items:
+> +      - const: txco
 
-", with radio A = 0 and radio B = 1."
+The name TCXO and 32 MHz appear to come from the SX1301 manual's
+reference example?
+
+In the SX1257 manual I see XTA/XTB connected to an XTAL, and CLK_IN.
+Both CLK_IN and CLK_OUT are documented as 36 MHz (page 8). In table 2-4
+(page 11) however FXOSC is 32 to 36 MHz, typically 36 MHz; FCLK_IN also
+has a range of 32 to 36 MHz there. So I guess we should be having two
+named clocks here and be more permissive in the description?
+
+While getting into the hairy details of clock names, we should also
+prepare optional properties for supply voltages, in case they come from
+some PMIC that needs a regulator drifer. By my count there's 7 inputs:
+VBAT1/2/3, VR_PA, VR_ANA1/2, VR_DIG. Do we need a named -supply property
+for each?
 
 > +
-> +  spi-max-frequency:
-> +    maximum: 10000000
-> +    default: 8000000
-> +    description: The frequency of the SPI communication to the radio,
-> +      in Hz. Maximum SPI frequency is 10MHz.
-
-If on the concentrator's SPI bus then this is unused. You don't mark it
-required below, so maybe add a textual note?
-
+> +  clock-output-names:
+> +    items:
+> +      - const: clk32m
+> +    description: 32MHz output clock name
 > +
-> +required:
-> +  - compatible
-> +  - reg
+> +  '#clock-cells':
+> +    const: 0
 > +
-> +examples:
-> +  - |
-> +    radio0: lora@0 {
-> +      compatible = "semtech,sx1257";
-> +      reg = <0>;
+>  required:
+>    - compatible
+>    - reg
+>  
+>  examples:
+>    - |
+> +    tcxo: dummy32m {
+> +      compatible = "fixed-clock";
+> +      clock-frequency = <32000000>;
+> +      clock-output-names = "tcxo";
+> +      #clock-cells = <0>;
 > +    };
+> +
+>      radio0: lora@0 {
+>        compatible = "semtech,sx1257";
+>        reg = <0>;
+> +      clocks = <&tcxo 0>;
 
-If you compare my sx127x implementation, should we prepare a
-"radio-frequency" (or "radio-center-frequency") property for the
-antenna, to preconfigure the driver during probe? Contents would then be
-<868000000>, for example.
+just <&tcxo>
 
-Thanks,
+> +      clock-names = "tcxo";
+> +      clock-output-names = "clk32m";
+> +      #clock-cells = <0>;
+>      };
+> 
+
+Regards,
 Andreas
 
 -- 
