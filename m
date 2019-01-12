@@ -1,26 +1,43 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2
- platforms
-Date: Sat, 12 Jan 2019 10:47:26 +0800
-Message-ID: <20190112024725.GO32649@dragon>
-References: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
- <1545406240-3061-2-git-send-email-ioana.ciornei@nxp.com>
+Subject: Re: [PATCH] ARM: dts: imx: replace gpio-key,wakeup with
+ wakeup-source property
+Date: Sat, 12 Jan 2019 10:50:00 +0800
+Message-ID: <20190112024958.GP32649@dragon>
+References: <20181221181203.6764-1-sudeep.holla@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <1545406240-3061-2-git-send-email-ioana.ciornei@nxp.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ioana Ciornei <ioana.ciornei@nxp.com>
-Cc: Leo Li <leoyang.li@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
+In-Reply-To: <20181221181203.6764-1-sudeep.holla@arm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sudeep Holla <sudeep.holla@arm.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, NXP Linux Team <linux-imx@nxp.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 21, 2018 at 03:31:09PM +0000, Ioana Ciornei wrote:
-> Add the dpaa2-console device tree node for the following
-> DPAA2 based platforms: LS1088A, LS2080A and LS2088A.
+On Fri, Dec 21, 2018 at 06:12:03PM +0000, Sudeep Holla wrote:
+> Most of the legacy "gpio-key,wakeup" and "enable-sdio-wakeup" boolean
+> properties are already replaced with "wakeup-source". However few
+> occurrences of old property has popped up again, probably from the
+> remnants in downstream trees. Almost all of those were remove couple
+> of years back.
 > 
-> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> Replace the legacy properties with the unified "wakeup-source" property
+> introduced in the commit 700a38b27eef ("Input: gpio_keys - switch to using
+> generic device properties") and commit 0dbcdc0622ea ("mmc: core: enable
+> support for the standard "wakeup-source" property")
+> 
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: NXP Linux Team <linux-imx@nxp.com>
+> Signed-off-by: Sudeep Holla <sudeep.holla@arm.com>
 
-DTS patch generally goes to the last in a series.
-
-Shawn
+Applied, thanks.
