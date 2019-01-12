@@ -1,161 +1,98 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH lora-next 4/4] dt-bindings: lora: sx130x: add clock
- bindings
-Date: Sat, 12 Jan 2019 05:44:47 +0100
-Message-ID: <56999005-89ca-c98c-0f5b-48eda15ea9fa@suse.de>
-References: <20190108084132.10214-1-ben.whitten@gmail.com>
- <20190108084132.10214-4-ben.whitten@gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 1/3] media: dt: bindings: sunxi-ir: Add A64 compatible
+Date: Sat, 12 Jan 2019 09:08:08 +0100
+Message-ID: <4866484.1b519qCrCi@jernej-laptop>
+References: <20190111173015.12119-1-jernej.skrabec@siol.net> <20190111173015.12119-2-jernej.skrabec@siol.net> <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190108084132.10214-4-ben.whitten@gmail.com>
-Content-Language: en-US
-Sender: netdev-owner@vger.kernel.org
-To: Ben Whitten <ben.whitten@gmail.com>
-Cc: linux-lpwan@lists.infradead.org, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDQNBWPU7YERB2WA43QQKGQECTD4PWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Am 08.01.19 um 09:41 schrieb Ben Whitten:
-> The sx130x family consumes two clocks, a 32MHz clock provided by a
-> connected IQ transceiver, and a 133MHz high speed clock.
+Dne sobota, 12. januar 2019 ob 02:56:11 CET je Chen-Yu Tsai napisal(a):
+> On Sat, Jan 12, 2019 at 1:30 AM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> 
+wrote:
+> > A64 IR is compatible with A13, so add A64 compatible with A13 as a
+> > fallback.
 > 
-> In the example we connect the concentrator to output 0 of a fixed clock
-> providing the 133MHz high speed clock, and we connect to output 0 of a
-> connected transceiver 32MHz clock.
+> We ask people to add the SoC-specific compatible as a contigency,
+> in case things turn out to be not so "compatible".
 > 
-> The connected radios are both fed from output 0 of a fixed 32MHz clock,
-> with only one being the clock source back with one output to the
-> sx130x concentrator.
+> To be consistent with all the other SoCs and other peripherals,
+> unless you already spotted a "compatible" difference in the
+> hardware, i.e. the hardware isn't completely the same, this
+> patch isn't needed. On the other hand, if you did, please mention
+> the differences in the commit log.
 
-No, no, no... See below.
+When comparing registers descriptions between A13 and A64, I noticed few minor 
+differences:
+
+A13: RXINT: 11:6 RAL
+A64: RXINT: 13:8 RAL
+
+A13: IR_RXSTA: 12:6 RAC
+A64: IR_RXSTA: 14:8 RAC, 7 STAT (missing on A13)
+
+What is strange that  RAL and RAC field have offset defined as 8 in driver. I'm 
+not sure if that is a typo in A13 manual or driver issue. I assume the former, 
+otherwise it wouldn't work. I couldn't found original BSP driver source to 
+confirm, though.
+
+STAT bit is really not that important. It just tells if IR unit is busy or 
+not.
+
+The biggest difference is in 0x34 register. A64 has one more clock option 
+(without postdivider), although register values are backward compatible. A64 
+also has Active threshold setting (duration of CIR going from idle to active 
+state).
+
+If we dismiss RAC and RAL differences as manual error and don't care for new 
+clock option and active threshold, then having new compatible maybe really 
+doesn't make sense.
+
+Best regards,
+Jernej
 
 > 
-> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-> ---
->  .../{ => net}/lora/semtech,sx130x.yaml        | 39 ++++++++++++++++++-
->  1 file changed, 38 insertions(+), 1 deletion(-)
->  rename Documentation/devicetree/bindings/{ => net}/lora/semtech,sx130x.yaml (62%)
+> ChenYu
 > 
-> diff --git a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-> similarity index 62%
-> rename from Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> rename to Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-> index ad263bc4e60d..23a096ca2912 100644
-> --- a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> +++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-> @@ -15,7 +15,8 @@ description: |
->    demodulating LoRa signals on 8 channels simultaneously.
->  
->    It is typically paired with two sx125x IQ radios controlled over an
-> -  SPI directly from the concentrator.
-> +  SPI directly from the concentrator. One of the radios will provide
-> +  a 32MHz clock back into the concentrator.
-
-The SX125x does not seem to document the frequency of the output clock,
-so I assume it's pass-through of whatever went in, and 32 MHz seems
-correct for the SX130x input side.
-
->  
->    The concentrator itself it controlled over SPI.
->  
-> @@ -41,6 +42,20 @@ properties:
->        in Hz. Maximum SPI frequency is 10MHz although 8MHz is typically used
->        on a number of cards.
->  
-> +  clocks:
-> +    maxItems: 2
-> +    items:
-> +      - description: 32MHz clock provider
-> +      - description: 133MHz high speed clock provider
-> +    description: The chip requires two clock inputs; A 32MHz clock at CMOS
-> +      level which is provided from a connected radio.
-> +      And a 133MHz high speed clock at CMOS level provided by an oscillator.
-> +
-> +  clock-names:
-> +    items:
-> +      - const: clk32m
-
-The pin is called CLK32M; in the specs there's XTAL32F/XTAL32T.
-
-> +      - const: clkhs
-
-The pin is called CLKHS; in the specs it's HSC_F.
-
-So I assume both names are good, but wanted to double-check.
-
-> +
->    radio-spi:
->      description: The concentrator has two radios connected which are contained
->        within the following node.
-> @@ -64,11 +79,27 @@ required:
->  
->  examples:
->    - |
-> +    tcxo: dummy32m {
-> +      compatible = "fixed-clock";
-> +      clock-frequency = <32000000>;
-> +      clock-output-names = "tcxo";
-> +      #clock-cells = <0>;
-> +    };
-> +
-> +    clkhs: dummy133m {
-> +      compatible = "fixed-clock";
-> +      clock-frequency = <133000000>;
-> +      clock-output-names = "clkhs";
-> +      #clock-cells = <0>;
-> +    };
-> +
->      concentrator0: lora@0 {
->        compatible = "semtech,sx1301";
->        reg = <0>;
->        reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
->        spi-max-frequency = <8000000>;
-> +      clocks = <&radio1 0>, <&clkhs 0>;
-
-Once again, this is wrong use of #clock-cells: <&radio1>, <&clkhs>
-Otherwise you have four clocks, and your "clkhs" will be <0>.
-
-> +      clock-names = "clk32m", "clkhs";
->  
->        radio-spi {
->          #address-cells = <1>;
-> @@ -77,11 +108,17 @@ examples:
->          radio0: lora@0 {
->            compatible = "semtech,sx1257";
->            reg = <0>;
-> +          clocks = <&tcxo 0>;
-
-Ditto, <&tcxo>.
-
-> +          clock-names = "tcxo";
->          };
->  
->          radio1: lora@1 {
->            compatible = "semtech,sx1257";
->            reg = <1>;
-> +          clocks = <&tcxo 0>;
-
-<&tcxo>
-
-> +          clock-names = "tcxo";
-> +          clock-output-names = "clk32m";
-> +          #clock-cells = <0>;
->          };
->        };
->      };
-
-This example may need to be updated to use a fixed-clock instead of the
-radio'S output, due to unsolved clk provider implementation problems
-that will render the example unusable.
-
-Same as for the radio, we should also prepare optional regulator inputs.
-There's at least 1.8 V and 3.3 V supplies here.
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> > ---
+> > 
+> >  Documentation/devicetree/bindings/media/sunxi-ir.txt | 5 ++++-
+> >  1 file changed, 4 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> > b/Documentation/devicetree/bindings/media/sunxi-ir.txt index
+> > 278098987edb..ecac6964b69b 100644
+> > --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> > +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
+> > @@ -1,7 +1,10 @@
+> > 
+> >  Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
+> > 
+> >  Required properties:
+> > -- compatible       : "allwinner,sun4i-a10-ir" or "allwinner,sun5i-a13-ir"
+> > +- compatible       : value must be one of:
+> > +  * "allwinner,sun4i-a10-ir"
+> > +  * "allwinner,sun5i-a13-ir"
+> > +  * "allwinner,sun50i-a64-ir", "allwinner,sun5i-a13-ir"
+> > 
+> >  - clocks           : list of clock specifiers, corresponding to
+> >  
+> >                       entries in clock-names property;
+> >  
+> >  - clock-names      : should contain "apb" and "ir" entries;
+> > 
+> > --
+> > 2.20.1
