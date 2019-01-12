@@ -1,428 +1,543 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH 1/2] dt: bindings: lp5024: Introduce the lp5024 and lp5018
- RGB driver
-Date: Sat, 12 Jan 2019 11:09:02 -0600
-Message-ID: <0140ad64-432e-7723-2415-0b3a8ac4d8dc@ti.com>
-References: <20181219162626.12297-1-dmurphy@ti.com>
- <20181219162626.12297-2-dmurphy@ti.com>
- <dc2283f9-db85-1eaf-f046-3fbbd4adcace@gmail.com>
- <2d2d5dcd-9c23-e901-daac-9b79aa5a5e82@ti.com>
- <6c62956e-7789-58ba-5437-f2e033f2825c@gmail.com>
- <366cbf6d-94fa-fea9-be58-07ddb09cff3a@ti.com>
- <df59c10d-7038-cb4a-45f0-7420254c6398@gmail.com>
- <ec0393b7-118e-1f3b-d5af-86ecdf66412a@ti.com>
- <ae700129-7b59-c92b-0c0a-b57a6f230ff7@gmail.com>
- <adcd7987-f7fc-ae1f-9aa4-cebcbf01ad58@ti.com>
- <1702dfd6-b08f-c1ff-e46d-1366618bedb0@gmail.com>
- <72112839-11d4-54be-df94-b2322f77cb0f@ti.com>
- <8b126077-c200-ed34-03b7-6d43a22fb0c9@gmail.com>
- <92cc81dc-7280-8bf0-9536-9c4d990eaf3b@ti.com>
- <459a4d7a-980b-5a46-9bd8-7a7afb37e1c3@gmail.com>
- <76577ad1-8c29-c5f6-e253-a8541a150dc0@ti.com>
- <3674d644-ccf6-d545-fc41-6bdf8960df44@gmail.com>
+From: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
+Subject: Re: [PATCH 1/3] iio: chemical: add support for Plantower PMS7003
+ sensor
+Date: Sat, 12 Jan 2019 17:48:22 +0000
+Message-ID: <20190112174822.25e36471@archlinux>
+References: <20190106171614.12615-1-tduszyns@gmail.com>
+        <20190106171614.12615-2-tduszyns@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3674d644-ccf6-d545-fc41-6bdf8960df44@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190106171614.12615-2-tduszyns@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, robh+dt@kernel.org, pavel@ucw.cz
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-leds@vger.kernel.org
+To: Tomasz Duszynski <tduszyns@gmail.com>
+Cc: linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Jacek
+On Sun,  6 Jan 2019 18:16:12 +0100
+Tomasz Duszynski <tduszyns@gmail.com> wrote:
 
-On 1/11/19 3:52 PM, Jacek Anaszewski wrote:
-> Dan,
+> Add support for Plantower PMS7003 particulate matter sensor.
 > 
-> On 1/11/19 1:38 PM, Dan Murphy wrote:
->> Jacek
->>
->> Sorry I missed some replies
->>
->> On 1/10/19 4:03 PM, Jacek Anaszewski wrote:
->>> On 1/10/19 9:43 PM, Dan Murphy wrote:
->>>> Jacek
->>>>
->>>> On 1/10/19 1:57 PM, Jacek Anaszewski wrote:
->>>>> Dan,
->>>>>
->>>>> On 1/10/19 8:22 PM, Dan Murphy wrote:
->>>>>> Jacek
->>>>>>
->>>>>> On 1/10/19 12:44 PM, Jacek Anaszewski wrote:
->>>>>>> Hi Dan,
->>>>>>>
->>>>>>> On 1/9/19 10:31 PM, Dan Murphy wrote:
->>>>>>>> Jacek
->>>>>>>>
->>>>>>>> On 1/9/19 3:28 PM, Jacek Anaszewski wrote:
->>>>>>>>> On 1/9/19 10:12 PM, Dan Murphy wrote:
->>>>>>>>>> On 1/9/19 2:12 PM, Jacek Anaszewski wrote:
->>>>>>>>>>> Hi Dan,
->>>>>>>>>>>
->>>>>>>>>>> On 1/8/19 10:22 PM, Dan Murphy wrote:
->>>>>>>>>>>> On 1/8/19 3:16 PM, Jacek Anaszewski wrote:
->>>>>>>>>>>>> On 1/8/19 9:53 PM, Dan Murphy wrote:
->>>>>>>>>>>>>> Jacek
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> On 1/8/19 2:33 PM, Jacek Anaszewski wrote:
->>>>>>>>>>>>>>> Dan,
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> On 12/19/18 5:26 PM, Dan Murphy wrote:
->>>>>>>>>>>>>>>> Introduce the bindings for the Texas Instruments LP5024 and the LP5018
->>>>>>>>>>>>>>>> RGB LED device driver.  The LP5024/18 can control RGB LEDs individually
->>>>>>>>>>>>>>>> or as part of a control bank group.  These devices have the ability
->>>>>>>>>>>>>>>> to adjust the mixing control for the RGB LEDs to obtain different colors
->>>>>>>>>>>>>>>> independent of the overall brightness of the LED grouping.
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Datasheet:
->>>>>>>>>>>>>>>> http://www.ti.com/lit/ds/symlink/lp5024.pdf
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> Signed-off-by: Dan Murphy <dmurphy@ti.com>
->>>>>>>>>>>>>>>> ---
->>>>>>>>>>>>>>>>          .../devicetree/bindings/leds/leds-lp5024.txt  | 63 +++++++++++++++++++
->>>>>>>>>>>>>>>>          1 file changed, 63 insertions(+)
->>>>>>>>>>>>>>>>          create mode 100644 Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>>>>>>>>>>>>>>>
->>>>>>>>>>>>>>>> diff --git a/Documentation/devicetree/bindings/leds/leds-lp5024.txt b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>>>>>>>>>>>>>>> new file mode 100644
->>>>>>>>>>>>>>>> index 000000000000..9567aa6f7813
->>>>>>>>>>>>>>>> --- /dev/null
->>>>>>>>>>>>>>>> +++ b/Documentation/devicetree/bindings/leds/leds-lp5024.txt
->>>>>>>>>>>>>>>> @@ -0,0 +1,63 @@
->>>>>>>>>>>>>>>> +* Texas Instruments - LP5024/18 RGB LED driver
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +The LM3692x is an ultra-compact, highly efficient,
->>>>>>>>>>>>>>>> +white-LED driver designed for LCD display backlighting.
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +The main difference between the LP5024 and L5018 is the number of
->>>>>>>>>>>>>>>> +RGB LEDs they support.  The LP5024 supports twenty four strings while the
->>>>>>>>>>>>>>>> +LP5018 supports eighteen strings.
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +Required properties:
->>>>>>>>>>>>>>>> +    - compatible:
->>>>>>>>>>>>>>>> +        "ti,lp5018"
->>>>>>>>>>>>>>>> +        "ti,lp5024"
->>>>>>>>>>>>>>>> +    - reg :  I2C slave address
->>>>>>>>>>>>>>>> +    - #address-cells : 1
->>>>>>>>>>>>>>>> +    - #size-cells : 0
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +Optional properties:
->>>>>>>>>>>>>>>> +    - enable-gpios : gpio pin to enable/disable the device.
->>>>>>>>>>>>>>>> +    - vled-supply : LED supply
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +Required child properties:
->>>>>>>>>>>>>>>> +    - reg : Is the child node iteration.
->>>>>>>>>>>>>>>> +    - led-sources : LP5024 - 0 - 7
->>>>>>>>>>>>>>>> +            LP5018 - 0 - 5
->>>>>>>>>>>>>>>> +            Declares the LED string or strings that the child node
->>>>>>>>>>>>>>>> +            will control.  If ti,control-bank is set then this
->>>>>>>>>>>>>>>> +            property will contain multiple LED IDs.
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +Optional child properties:
->>>>>>>>>>>>>>>> +    - label : see Documentation/devicetree/bindings/leds/common.txt
->>>>>>>>>>>>>>>> +    - linux,default-trigger :
->>>>>>>>>>>>>>>> +       see Documentation/devicetree/bindings/leds/common.txt
->>>>>>>>>>>>>>>> +    - ti,control-bank : Indicates that the LED strings declared in the
->>>>>>>>>>>>>>>> +                led-sources property are grouped within a control
->>>>>>>>>>>>>>>> +                bank for brightness and mixing control.
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +Example:
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +led-controller@28 {
->>>>>>>>>>>>>>>> +    compatible = "ti,lp5024";
->>>>>>>>>>>>>>>> +    reg = <0x28>;
->>>>>>>>>>>>>>>> +    #address-cells = <1>;
->>>>>>>>>>>>>>>> +    #size-cells = <0>;
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +    enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
->>>>>>>>>>>>>>>> +    vled-supply = <&vbatt>;
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +    led@0 {
->>>>>>>>>>>>>>>> +        reg = <0>;
->>>>>>>>>>>>>>>> +        led-sources = <1>;
->>>>>>>>>>>>>>>> +    };
->>>>>>>>>>>>>>>> +
->>>>>>>>>>>>>>>> +    led@1 {
->>>>>>>>>>>>>>>> +        reg = <1>;
->>>>>>>>>>>>>>>> +        led-sources = <0 6>;
->>>>>>>>>>>>>>>> +        ti,control-bank;
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>> Do you really need ti,control-bank? Doesn't led-sources array size
->>>>>>>>>>>>>>> greater than 1 mean that the node describes control bank?
->>>>>>>>>>>>>>>
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> That will work too.
->>>>>>>>>>>>>
->>>>>>>>>>>>>>> Also, does it make sense to have only two LEDs in the bank?
->>>>>>>>>>>>>>
->>>>>>>>>>>>>> The array can populate all 7 LEDs in a single node.  I only show 2 here as the example.
->>>>>>>>>>>>>> See the description above of the led-sources
->>>>>>>>>>>>>
->>>>>>>>>>>>> OK, I confused RGB LED modules with banks.
->>>>>>>>>>>>>
->>>>>>>>>>>>> Shouldn't we allow for defining either strings or RGB LED
->>>>>>>>>>>>> triplets somehow then?
->>>>>>>>>>>>>
->>>>>>>>>>>>
->>>>>>>>>>>> Well that is what this should be doing.  If you define a single LED in LED sources then
->>>>>>>>>>>> the triplet is controlled via the associated LEDx_brightness register.
->>>>>>>>>>>
->>>>>>>>>>> led-sources should map to iouts directly.
->>>>>>>>>>> So, for RGB LED modules I would expect:
->>>>>>>>>>>
->>>>>>>>>>> LED0: led-sources = <0 1 2>;
->>>>>>>>>>> LED1: led-sources = <3 4 5>;
->>>>>>>>>>> LED2: led-sources = <6 7 8>;
->>>>>>>>>>> and so on.
->>>>>>>>>>
->>>>>>>>>>>
->>>>>>>>>>> for banks:
->>>>>>>>>>>
->>>>>>>>>>> Bank A with iouts 0,3,6,9: led-sources<0 3 6 9>;
->>>>>>>>>>> Bank B with iouts 2,4,10:  led-sources<2 4 10>;
->>>>>>>>>>> Bank C with iouts 5,8,11,14,17: led-sources<5 8 11 14 17>;
->>>>>>>>>>>
->>>>>>>>>>
->>>>>>>>>> Ok the led-sources would need to be different then this as I don't define the sources for banks.
->>>>>>>>>>
->>>>>>>>>> The led-sources for the banks and the individual groups will have different meanings within the same
->>>>>>>>>> document.  I was attempting to keep the led-sources mapped to the LEDx_brightness registers as opposed to
->>>>>>>>>> the hardware outputs since the RGB LEDs are controlled and grouped by a single brightness register and if banked then
->>>>>>>>>> it would be controlled by the bank brightness register.
->>>>>>>>>>
->>>>>>>>>> Describing these in the DT seems wrought with potential issues as the data sheet defines what outputs map to what bank and LED
->>>>>>>>>> registers.
->>>>>>>>>
->>>>>>>>> Yes, that's why I mentioned the need for validation of led-sources.
->>>>>>>>> But they have to be iouts. This property was introduced specifically
->>>>>>>>> for such purposes.
->>>>>>>>>
->>>>>>>>
->>>>>>>> Yes Pavel also mentioned that as well.
->>>>>>>>
->>>>>>>> I will look into validating the sources.  But there will be no mapping of the sources to the output that is done
->>>>>>>> in the hardware.  This would just be a data sheet mapping since the outputs are not configurable.
->>>>>>>
->>>>>>> Hmm, isn't the mapping defined in the hardware via LED_CONFIG0 register?
->>>>>>> I have an impression that it defines whether LED belongs to an RGB LED
->>>>>>> module or to a bank. Basing on that I created my DT example above.
->>>>>>>
->>>>>>
->>>>>> Yes so if you turn on the bank control for LED0 and LED1 then
->>>>>> out 0, 3 are mapped to BANK A
->>>>>> out 1, 4 are mapped to BANK B
->>>>>
->>>>> Just noticed that I made a mistake in my example, it should have been:
->>>>>
->>>>> Bank B with iouts 1,4,10:  led-sources<1 4 10>;
->>>>>
->>>>>> out 2, 5 are mapped to BANK C
->>>>>
->>>>> Correct.
->>>>>
->>>>>> All done automatically in the hardware and the LED0_BRIGHTNESS and LED1_BRIGHTNESS registers have no affect on the brightness
->>>>>
->>>>> That's right.
->>>>>
->>>>>> If we grouped the LEDs into a bank the led-sources would look more like this
->>>>>> led-sources = < 0 1 2 3 4 5 >;
->>>>>
->>>>> Why? This would be a mix of three banks. Like you listed above.
->>>>> I'm still interpreting led-sources elements as iout identifiers.
->>>>>
->>>>
->>>> I am as well but as I tried to explain that if you define OUT0 as bank controlled then OUT1 and OUT2 are also bank controlled
->>>> within the hardware.  We have no control of that.  If BIT(0) and BIT(1) are set in the LED_CONFIG0 register then OUT0, 1, 2, 3, 4 and 5 are all bank controlled.
->>>
->>> There is naming conflict I noticed just now - LEDn_BANK_EN bits
->>> in LED_CONFIG0 register enable RGB LED modules, and not BANKs (A,B,C).
->>>
->>>> These OUTPUTs will appear as a single RGB LED grouping.
->>>
->>> Single? W would rather expect that we get two RGB LED modules, whose
->>> brightness will be controlled via LED0_BRIGHTNESS and LED1_BRIGHTNESS
->>> registers respectively.
->>>
->>>>>> ti,control-bank; // But this can be omitted as led-sources is greater then 3
->>>>>>
->>>>>> non-banked case would be
->>>>>> led-sources = < 0 1 2 >;
->>>>>
->>>>> Agreed here. It would be LED0 RGB LED module.
->>>>>> But the actual OUT numbers don't matter in the bank case unless we do the validation.  There would need to be an algorithim
->>>>>> that translates these output to the correct LEDx register and CONFIG0 bits.  Basically if OUT0 is mapped to the bank then OUT1 and OUT2
->>>>>> are inherently mapped to the bank.
->>>>>
->>>>> To three separate banks, right?
->>>>> OUT0 - bank A, OUT1 - bank B, OUT2 - bank C.
->>>>
->>>> Yes but there is no BANK output pin just like there is no dedicated LEDn output pin.  The banks are grouped internally to the device
->>>> so again if OUT0 and OUT3 are defined as banked then 1, 2, 4, and 5 are all mapped to the bank.  1 BANK brightness register and 3 bank
->>>> color adjustment registers.
->>>
->>> Here as above, I would expect two separate banks - LED0 and LED1.
->>> Moreover - not 3 color adjustment registers, but six - one per iout:
->>> OUT0_COLOR to OUT5_COLOR.
->>>
->>
->> When the LEDs are banked the banked LEDs are controlled by the bank registers not the LEDx registers
->> so you should only see 3 color adjustments on the banked LEDs.
->>
->>>>>> They cannot be separated so the device theoretically treats the RGB group as a single LED.  And
->>>>>> when banked it treats the groups of RGBs that are defined as a single LED.
->>>>>>
->>>>>> This is why it was easier use the LEDx out as the virtual out as we only need to define the group number(s) that are controled by the
->>>>>> LED file presented to the user space.
->>>>>
->>>>> I suspect there is logical clash here due to interpreting
->>>>> led-sources elements as iouts in one case and LEDn modules
->>>>> in the other case.
->>>>>
->>>>
->>>> Yes.  When the RGBs are banked you have to think of them as a single RGB LED cluster and not as separate RGB LED clusters.
->>>
->>> We have RGB LED modules (enabled with LEDn_Bank_EN bits) and three
->>> banks (A,B,C), which are enabled by default, am I right?
->>
->> No.  Independent LED modules are enabled by default.  You have to explicitly enable the banks.
->>
->>>
->>> Bank A iouts: 0, 3 ,6, 9, 12, 15
->>> Bank B iouts: 1, 4, 7, 10, 13, 16
->>> Bank C iouts: 2, 5, 8, 11, 14, 17
->>>
->>> When RGB LED module is enabled (via LEDn_Bank_EN bit),
->>> the BANK_{A.B,C}_COLOR and BANK_BRIGHTNESS registers
->>> lose control over related IOUTs in favour of LEDn_BRIGHTNESS and
->>> related OUTn_COLOR registers. Is it correct?
->>
->> No it is the opposite.  When the bit is enabled LED banking is enabled and the BANK brightness and color registers over
->> ride the LEDx color and brightness registers.
->>
->> Default is independent control of the RGB via the LEDx color and brightness registers.
->>
->>>
->>>> As you know the brightness is controlled by the single BANK_BRIGHTNESS register.  So identifying each output in the led-sources is
->>>> misleading as the hardware does this all on the chip.  This is why I just mapped each output to the Virtual LEDx module.
->>>
->>> Ekhm, I messed something here.
->>>
->>> So for this I would define a single LED class device.
->>> Related DT node would not need led-sources at all,
->>> but only ti,control-bank. The semantics would be:
->>> controls all iouts not taken by RGB LED modules.
->>>
->>
->> Hmm.  I guess I will put that on hold until you read the responses.  I am not sure that would work or
->> that would be really clean.  I still believe that mapping led-sources to the LEDx module number is the cleanest
->> simplest solution since the driver cannot inter mix different outputs for enablement.
-> 
-> I've read the doc again more carefully and hopefully I finally have
-> proper understanding. Let's check it.
-> 
-> 1. On reset LED_CONFIG0 bits are zeroed, which means
->    LEDn module independent control mode.
-> 2. LEDn modules (i.e. IOUT triplets) are controlled independently,
->    with use of LEDn_BRIGHTNESS registers, and each IOUT color can
->    be adjusted using OUTn_CONTROL registers.
-> 3. LEDn_Bank_EN bits, when set to 1, assign given RGB LED module
->    to one global bank, controlled via BANK_BRIGHTNESS and BANK_n_COLOR
->    registers.
-> 
-> Having that, I'd see led-sources definitions as follows
-> (led-sources element is IOUT identifier)
-> 
-> 1.
-> 
-> - LED0, LED1, LED2, LED3 modules controlled by separate
->   LED class devices
-> 
-> led-sources = <0 1 2>   // LED0
-> led-sources = <3 4 5>   // LED1
-> led-sources = <6 7 8>   // LED2
-> led-sources = <9 10 11> // LED3
-> 
-> 2.
-> 
-> - LED0 and LED3 modules assigned to the bank, and controlled
->   by one LED class device,
-> - LED1 and LED2 modules controlled by separate LED class devices
-> 
-> led-sources = <0 1 2 9 10 11> // Bank with LED0 and LED3
-> led-sources = <3 4 5>         // LED1
-> led-sources = <6 7 8>         // LED2
-> 
-> 
-> So now I see your point. It would be indeed easier
-> to switch to LEDn module identifiers for led-sources
-> elements. With that the definitions would look like
-> this:
-> 
-> 
-> 1.
-> 
-> - LED0, LED1, LED2, LED3 modules controlled by separate
->   LED class devices
-> 
-> led-sources = <0>   // LED0
-> led-sources = <1>   // LED1
-> led-sources = <2>   // LED2
-> led-sources = <3>   // LED3
-> 
-> 2.
-> 
-> - LED0 and LED3 modules assigned to the bank, and controlled
->   by one LED class device,
-> - LED1 and LED2 modules controlled by separate LED class devices
-> 
-> led-sources = <0 3> // Bank with LED0 and LED3
-> led-sources = <1>   // LED1
-> led-sources = <2>   // LED2
-> 
+> Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
 
-This is exactly how I submitted the code.
+A few minor bits and pieces from me.
 
-> 
-> But, I don't think use of led-sources is justified in
-> this case. I propose to introduce device specific properties:
-> 
-> ti,led-module and ti,led-bank
-> 
-> With that we would have:
-> 
-> ti,led-bank = <0 3>   // Bank with LED0 and LED3 modules
-> ti,led-module = <1>   // LED1
-> ti.led-module = <2>   // LED2
-> 
+Jonathan
 
-We are now aligned.  I can change the led-sources to the TI specific if there are no further objections.
-In doing this I can eliminate the ti,control-bank property.
-
+> ---
+>  drivers/iio/chemical/Kconfig   |  10 +
+>  drivers/iio/chemical/Makefile  |   1 +
+>  drivers/iio/chemical/pms7003.c | 411 +++++++++++++++++++++++++++++++++
+>  3 files changed, 422 insertions(+)
+>  create mode 100644 drivers/iio/chemical/pms7003.c
 > 
->>> I would also add Table 1 contents (Bank Number and LED Number
->>> Assignment) to the DT bindings.
->>>
->>
->> Should I add that to the DT binding or reference the data sheet table since this driver will support 4 different devices
->> with varying number of outputs from 18-36.
-> 
-> My first thought was to show full table, but four different
-> mappings would add too much noise. So the reference to the data
-> sheet should suffice.
-> 
+> diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
+> index 57832b4360e9..d5d146e9e372 100644
+> --- a/drivers/iio/chemical/Kconfig
+> +++ b/drivers/iio/chemical/Kconfig
+> @@ -61,6 +61,16 @@ config IAQCORE
+>  	  iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
+>  	  sensors
+>  
+> +config PMS7003
+> +	tristate "Plantower PMS7003 particulate matter sensor"
+> +	depends on SERIAL_DEV_BUS
+> +	help
+> +	  Say Y here to build support for the Plantower PMS7003 particulate
+> +	  matter sensor.
+> +
+> +	  To compile this driver as a module, choose M here: the module will
+> +	  be called pms7003.
+> +
+>  config SPS30
+>  	tristate "SPS30 particulate matter sensor"
+>  	depends on I2C
+> diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
+> index 65bf0f89c0e4..f5d1365acb49 100644
+> --- a/drivers/iio/chemical/Makefile
+> +++ b/drivers/iio/chemical/Makefile
+> @@ -9,6 +9,7 @@ obj-$(CONFIG_BME680_I2C) += bme680_i2c.o
+>  obj-$(CONFIG_BME680_SPI) += bme680_spi.o
+>  obj-$(CONFIG_CCS811)		+= ccs811.o
+>  obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
+> +obj-$(CONFIG_PMS7003) += pms7003.o
+>  obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
+>  obj-$(CONFIG_SPS30) += sps30.o
+>  obj-$(CONFIG_VZ89X)		+= vz89x.o
+> diff --git a/drivers/iio/chemical/pms7003.c b/drivers/iio/chemical/pms7003.c
+> new file mode 100644
+> index 000000000000..bc8a4fbdf641
+> --- /dev/null
+> +++ b/drivers/iio/chemical/pms7003.c
+> @@ -0,0 +1,411 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Plantower PMS7003 particulate matter sensor driver
+> + *
+> + * Copyright (c) Tomasz Duszynski <tduszyns@gmail.com>
+> + */
+> +
+> +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
+> +
+> +#include <asm/unaligned.h>
+> +#include <linux/completion.h>
+> +#include <linux/device.h>
+> +#include <linux/errno.h>
+> +#include <linux/iio/buffer.h>
+> +#include <linux/iio/iio.h>
+> +#include <linux/iio/trigger_consumer.h>
+> +#include <linux/iio/triggered_buffer.h>
+> +#include <linux/jiffies.h>
+> +#include <linux/kernel.h>
+> +#include <linux/mod_devicetable.h>
+> +#include <linux/module.h>
+> +#include <linux/mutex.h>
+> +#include <linux/serdev.h>
+> +
+> +#define PMS7003_DRIVER_NAME "pms7003"
+> +
+> +#define PMS7003_MAGIC_MSB 0x42
+> +#define PMS7003_MAGIC_LSB 0x4d
+> +/* last 2 data bytes hold frame checksum */
+> +#define PMS7003_MAX_DATA_LENGTH 28
+> +#define PMS7003_CHECKSUM_LENGTH 2
+> +#define PMS7003_PM10_OFFSET 10
+> +#define PMS7003_PM2P5_OFFSET 8
+> +#define PMS7003_PM1_OFFSET 6
+> +
+> +#define PMS7003_TIMEOUT msecs_to_jiffies(6000)
+> +#define PMS7003_CMD_LENGTH 7
+> +#define PMS7003_PM_MAX 1000
+> +#define PMS7003_PM_MIN 0
+> +
+> +enum {
+> +	PM1,
+> +	PM2P5,
+> +	PM10,
+> +};
+> +
+> +enum {
+> +	CMD_WAKEUP,
+> +	CMD_ENTER_PASSIVE_MODE,
+> +	CMD_READ_PASSIVE,
+> +	CMD_SLEEP,
+> +};
+> +
+> +enum {
+> +	STATE_MAGIC_MSB,
+> +	STATE_MAGIC_LSB,
+> +	STATE_LENGTH_MSB,
+> +	STATE_LENGTH_LSB,
+> +	STATE_DATA,
+> +};
+> +
+> +struct pms7003_frame {
+> +	u8 data[PMS7003_MAX_DATA_LENGTH];
+> +	u16 expected_length;
+> +	u16 length;
+> +	int state;
+> +};
+> +
+> +struct pms7003_state {
+> +	struct serdev_device *serdev;
+> +	struct pms7003_frame frame;
+> +	struct completion frame_ready;
+> +	struct mutex lock; /* must be held whenever state gets touched */
+> +};
+> +
+> +static u16 pms7003_calc_checksum(const u8 *data, int size)
+> +{
+> +	u16 checksum = 0;
+> +
+> +	while (size--)
+> +		checksum += data[size];
+> +
+> +	return checksum;
+> +}
+> +
+> +static int pms7003_do_cmd(struct pms7003_state *state, u8 cmd)
 
-OK
+Use the enum not u8.
 
-One last question I am going to add the LP5036 and 30 which have the same technology but slightly different register maps.
-Should I rename the driver to LP5036.c as the 30, 24 and 18 would technically be subsets?
+> +{
+> +	/*
+> +	 * commands have following format:
+> +	 *
+> +	 * +------+------+-----+------+-----+-----------+-----------+
+> +	 * | 0x42 | 0x4d | cmd | 0x00 | arg | cksum msb | cksum lsb |
+> +	 * +------+------+-----+------+-----+-----------+-----------+
+> +	 */
+> +	u8 tmp[PMS7003_CMD_LENGTH] = { PMS7003_MAGIC_MSB, PMS7003_MAGIC_LSB };
+> +	int ret, n = 2;
+> +	u16 checksum;
+> +
+> +	switch (cmd) {
+> +	case CMD_WAKEUP:
+> +		tmp[n++] = 0xe4;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x01;
+> +		break;
+> +	case CMD_ENTER_PASSIVE_MODE:
+> +		tmp[n++] = 0xe1;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x00;
+> +		break;
+> +	case CMD_READ_PASSIVE:
+> +		tmp[n++] = 0xe2;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x00;
+> +		break;
+> +	case CMD_SLEEP:
+> +		tmp[n++] = 0xe4;
+> +		tmp[n++] = 0x00;
+> +		tmp[n++] = 0x00;
+
+These look like they should be in a look up table to me rather than the more
+verbose switch statement.
+
+> +		break;
+> +	}
+> +
+> +	checksum = pms7003_calc_checksum(tmp, n);
+
+This is fixed for all calls of a given command (I think).  If so, it would
+be good to precompute it (on startup for example, ideally letting the compiler
+figure it out if it can).
+
+> +	put_unaligned_be16(checksum, tmp + n);
+> +	n += PMS7003_CHECKSUM_LENGTH;
+> +
+> +	ret = serdev_device_write(state->serdev, tmp, n, PMS7003_TIMEOUT);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = wait_for_completion_interruptible_timeout(&state->frame_ready,
+> +							PMS7003_TIMEOUT);
+> +	if (!ret)
+> +		ret = -ETIMEDOUT;
+> +
+> +	return ret < 0 ? ret : 0;
+> +}
+> +
+> +static u16 pms7003_get_pm(struct pms7003_frame *frame, int offset)
+> +{
+> +	return clamp_val(get_unaligned_be16(frame->data + offset),
+> +			 PMS7003_PM_MIN, PMS7003_PM_MAX);
+> +}
+> +
+> +static irqreturn_t pms7003_trigger_handler(int irq, void *p)
+> +{
+> +	struct iio_poll_func *pf = p;
+> +	struct iio_dev *indio_dev = pf->indio_dev;
+> +	struct pms7003_state *state = iio_priv(indio_dev);
+> +	struct pms7003_frame *frame = &state->frame;
+> +	u16 data[3 + 1 + 4]; /* PM1, PM2P5, PM10, padding, timestamp */
+> +	int ret;
+> +
+> +	mutex_lock(&state->lock);
+> +	ret = pms7003_do_cmd(state, CMD_READ_PASSIVE);
+> +	if (ret) {
+> +		mutex_unlock(&state->lock);
+> +		goto err;
+> +	}
+> +
+> +	data[PM1] = pms7003_get_pm(frame, PMS7003_PM1_OFFSET);
+> +	data[PM2P5] = pms7003_get_pm(frame, PMS7003_PM2P5_OFFSET);
+> +	data[PM10] = pms7003_get_pm(frame, PMS7003_PM10_OFFSET);
+
+> +	mutex_unlock(&state->lock);
+> +
+> +	iio_push_to_buffers_with_timestamp(indio_dev, data,
+> +					   iio_get_time_ns(indio_dev));
+> +err:
+> +	iio_trigger_notify_done(indio_dev->trig);
+> +
+> +	return IRQ_HANDLED;
+> +}
+> +
+> +static int pms7003_read_raw(struct iio_dev *indio_dev,
+> +			    struct iio_chan_spec const *chan,
+> +			    int *val, int *val2, long mask)
+> +{
+> +	struct pms7003_state *state = iio_priv(indio_dev);
+> +	struct pms7003_frame *frame = &state->frame;
+
+This local variable for the frame can go away once you make the other
+change suggested below.
+
+> +	int ret;
+> +
+> +	switch (mask) {
+> +	case IIO_CHAN_INFO_PROCESSED:
+> +		switch (chan->type) {
+> +		case IIO_MASSCONCENTRATION:
+> +			mutex_lock(&state->lock);
+
+Will this interfere in any way with buffered operation?  I'd normally
+expect to see some claim_direct etc calls in here to prevent that.
+
+> +			ret = pms7003_do_cmd(state, CMD_READ_PASSIVE);
+> +			if (ret) {
+> +				mutex_unlock(&state->lock);
+> +				return ret;
+> +			}
+> +
+> +			switch (chan->channel2) {
+> +			case IIO_MOD_PM1:
+> +				*val = pms7003_get_pm(frame,
+> +						      PMS7003_PM1_OFFSET);
+
+Put the PMS7003_PM1_OFFSET in the address element of the channel then
+you can get rid fo this switch statement.
+
+> +				break;
+> +			case IIO_MOD_PM2P5:
+> +				*val = pms7003_get_pm(frame,
+> +						      PMS7003_PM2P5_OFFSET);
+> +				break;
+> +			case IIO_MOD_PM10:
+> +				*val = pms7003_get_pm(frame,
+> +						      PMS7003_PM10_OFFSET);
+> +				break;
+
+Just possible some compiler will give us warnings for the lack of a default
+in here.  Might be worth putting one in to avoid that noise.
+Particularly as you already have one for the chan->type.
+
+> +			}
+> +			mutex_unlock(&state->lock);
+> +
+> +			return IIO_VAL_INT;
+> +		default:
+> +			return -EINVAL;
+> +		}
+> +	}
+> +
+> +	return -EINVAL;
+> +}
+> +
+> +
+> +static const struct iio_info pms7003_info = {
+> +	.read_raw = pms7003_read_raw,
+> +};
+> +
+> +#define PMS7003_CHAN(_index, _mod) { \
+> +	.type = IIO_MASSCONCENTRATION, \
+> +	.modified = 1, \
+> +	.channel2 = IIO_MOD_ ## _mod, \
+> +	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED), \
+> +	.scan_index = _index, \
+> +	.scan_type = { \
+> +		.sign = 'u', \
+> +		.realbits = 10, \
+> +		.storagebits = 16, \
+> +		.endianness = IIO_CPU, \
+> +	}, \
+> +}
+> +
+> +static const struct iio_chan_spec pms7003_channels[] = {
+> +	PMS7003_CHAN(0, PM1),
+> +	PMS7003_CHAN(1, PM2P5),
+> +	PMS7003_CHAN(2, PM10),
+> +	IIO_CHAN_SOFT_TIMESTAMP(3),
+> +};
+> +
+> +static int pms7003_frame_okay(struct pms7003_frame *frame)
+> +{
+> +	int offset = frame->length - PMS7003_CHECKSUM_LENGTH;
+> +	u16 checksum = PMS7003_MAGIC_MSB + PMS7003_MAGIC_LSB +
+> +		       (frame->length >> 8) + (u8)frame->length +
+> +		       pms7003_calc_checksum(frame->data, offset);
+> +
+> +	return checksum == get_unaligned_be16(frame->data + offset);
+> +}
+> +
+
+The returning of 1 or 0 is not entirely obvious.  Please provide
+some documentation on what that is doing.
+
+This doesn't seem like an entirely obvious construct in general.
+
+Given we can't (I think) do anything much useful with the data until
+we get a whole frame, why not simply buffer it up unprocessed until
+we have enough data to process it in one go?
+
+On first packet dump data until you get that start markers.  After that
+wait until you have the 'header' (length) and then wait until all data
+is available keeping it in a raw buffer.
+
+A state machine that is a simple step through like this one with only
+one path ends up less readable to my eye than buffer data and
+process when all there...
 
 
+> +static int pms7003_update_frame(struct pms7003_frame *frame, u8 byte)
+> +{
+> +	switch (frame->state) {
+> +	case STATE_MAGIC_MSB:
+> +		if (byte != PMS7003_MAGIC_MSB)
+> +			return 1;
+> +		frame->state = STATE_MAGIC_LSB;
+> +		frame->length = 0;
+> +		return 1;
+> +	case STATE_MAGIC_LSB:
+> +		if (byte != PMS7003_MAGIC_LSB) {
+> +			frame->state = STATE_MAGIC_MSB;
+> +			return 1;
+> +		}
+> +		frame->state = STATE_LENGTH_MSB;
+> +		return 1;
+> +	case STATE_LENGTH_MSB:
+> +		frame->expected_length = (u16)byte << 8;
+> +		frame->state = STATE_LENGTH_LSB;
+> +		return 1;
+> +	case STATE_LENGTH_LSB:
+> +		frame->expected_length |= byte;
+> +		frame->state = STATE_DATA;
+> +		return 1;
+> +	case STATE_DATA:
+> +		if (frame->length > PMS7003_MAX_DATA_LENGTH) {
+> +			frame->state = STATE_MAGIC_MSB;
+> +			return 1;
+> +		}
+> +
+> +		frame->data[frame->length++] = byte;
+> +
+> +		if (frame->length != frame->expected_length)
+> +			return 1;
+> +
+> +		if (!pms7003_frame_okay(frame)) {
+> +			frame->state = STATE_MAGIC_MSB;
+> +			return 1;
+> +		}
+> +
+> +		frame->state = STATE_MAGIC_MSB;
+> +		break;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int pms7003_receive_buf(struct serdev_device *serdev,
+> +			       const unsigned char *buf, size_t size)
+> +{
+> +	struct iio_dev *indio_dev = serdev_device_get_drvdata(serdev);
+> +	struct pms7003_state *state = iio_priv(indio_dev);
+> +	struct pms7003_frame *frame = &state->frame;
+> +	int i, ret;
+> +
+> +	for (i = 0; i < size; i++) {
+> +		ret = pms7003_update_frame(frame, buf[i]);
+> +		if (ret)
+> +			continue;
+Given this is the normal path (continue) I would invert the
+logic to be
+	if (!ret) {
+		complete
+		return..
+	}
 
-Dan
+Trivial but perhaps slightly easier to follow.
 
--- 
-------------------
-Dan Murphy
+> +
+> +		complete(&state->frame_ready);
+> +		return i + 1;
+> +	}
+> +
+> +	return size;
+> +}
+> +
+> +static const struct serdev_device_ops pms7003_serdev_ops = {
+> +	.receive_buf = pms7003_receive_buf,
+> +	.write_wakeup = serdev_device_write_wakeup,
+> +};
+> +
+> +static void pms7003_stop(void *data)
+> +{
+> +	struct pms7003_state *state = data;
+> +
+> +	pms7003_do_cmd(state, CMD_SLEEP);
+> +}
+> +
+> +static const unsigned long pms7003_scan_masks[] = { 0x07, 0x00 };
+> +
+> +static int pms7003_probe(struct serdev_device *serdev)
+> +{
+> +	struct pms7003_state *state;
+> +	struct iio_dev *indio_dev;
+> +	int ret;
+> +
+> +	indio_dev = devm_iio_device_alloc(&serdev->dev, sizeof(*state));
+> +	if (!indio_dev)
+> +		return -ENOMEM;
+> +
+> +	state = iio_priv(indio_dev);
+> +	serdev_device_set_drvdata(serdev, indio_dev);
+> +	state->serdev = serdev;
+> +	indio_dev->dev.parent = &serdev->dev;
+> +	indio_dev->info = &pms7003_info;
+> +	indio_dev->name = PMS7003_DRIVER_NAME;
+> +	indio_dev->channels = pms7003_channels,
+> +	indio_dev->num_channels = ARRAY_SIZE(pms7003_channels);
+> +	indio_dev->modes = INDIO_DIRECT_MODE;
+> +	indio_dev->available_scan_masks = pms7003_scan_masks;
+> +
+> +	mutex_init(&state->lock);
+> +	init_completion(&state->frame_ready);
+> +
+> +	serdev_device_set_client_ops(serdev, &pms7003_serdev_ops);
+> +	ret = devm_serdev_device_open(&serdev->dev, serdev);
+> +	if (ret)
+> +		return ret;
+> +
+> +	serdev_device_set_baudrate(serdev, 9600);
+> +	serdev_device_set_flow_control(serdev, false);
+> +
+> +	ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = pms7003_do_cmd(state, CMD_WAKEUP);
+> +	if (ret) {
+> +		dev_err(&serdev->dev, "failed to wakeup sensor\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = pms7003_do_cmd(state, CMD_ENTER_PASSIVE_MODE);
+> +	if (ret) {
+> +		dev_err(&serdev->dev, "failed to enter passive mode\n");
+> +		return ret;
+> +	}
+> +
+> +	ret = devm_add_action_or_reset(&serdev->dev, pms7003_stop, state);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = devm_iio_triggered_buffer_setup(&serdev->dev, indio_dev, NULL,
+> +					      pms7003_trigger_handler, NULL);
+> +	if (ret)
+> +		return ret;
+> +
+> +	return devm_iio_device_register(&serdev->dev, indio_dev);
+> +}
+> +
+> +static const struct of_device_id pms7003_of_match[] = {
+> +	{ .compatible = "plantower,pms7003" },
+> +	{ }
+> +};
+> +MODULE_DEVICE_TABLE(of, pms7003_of_match);
+> +
+> +static struct serdev_device_driver pms7003_driver = {
+> +	.driver = {
+> +		.name = PMS7003_DRIVER_NAME,
+> +		.of_match_table = pms7003_of_match,
+> +	},
+> +	.probe = pms7003_probe,
+> +};
+> +module_serdev_device_driver(pms7003_driver);
+> +
+> +MODULE_AUTHOR("Tomasz Duszynski <tduszyns@gmail.com>");
+> +MODULE_DESCRIPTION("Plantower PMS7003 particulate matter sensor driver");
+> +MODULE_LICENSE("GPL v2");
