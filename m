@@ -1,13 +1,15 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 3/6] ARM: dts: bcm2835: Fix labels for GPIO 0,1
-Date: Sat, 12 Jan 2019 13:43:25 +0100
-Message-ID: <1547297008-2740-4-git-send-email-stefan.wahren@i2se.com>
-References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
+From: saiprakash.ranjan@codeaurora.org
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Sat, 12 Jan 2019 18:21:00 +0530
+Message-ID: <81172d85ed7782e0db561fcf96a82d46@codeaurora.org>
+References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <a13ad49d3ae8d9a5a972027283b7212ab19f97d0.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <20190111184643.GA22691@xps15>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
+In-Reply-To: <20190111184643.GA22691@xps15>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,81 +19,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
-Cc: Gottfried Haider <gottfried.haider@gmail.com>, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, Peter Robinson <pbrobinson@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Leo Yan <leo.yan@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-msm-owner@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-According to the schematics for all RPis with a 40 pin header,
-the GPIOs 0 and 1 are labeled as ID_SD and ID_SC. In order to
-clarify that is a I2C bus, append the third letter.
+Hi Mathieu,
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 4 ++--
- arch/arm/boot/dts/bcm2835-rpi-zero.dts   | 4 ++--
- 4 files changed, 8 insertions(+), 8 deletions(-)
+>> +
+>> +	etm@7040000 {
+>> +		compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +		arm,primecell-periphid = <0x000bb95d>;
+> 
+> I'm a little curious as to why you need to bypass the normal AMBA bus 
+> discovery
+> method by forcing the peripheral ID.  Tracers don't show up the way 
+> other
+> coresight devices do at boot time?
+> 
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-index 2cd9c5e..db8a601 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
-@@ -31,8 +31,8 @@
- 	 * "FOO" = GPIO line named "FOO" on the schematic
- 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
- 	 */
--	gpio-line-names = "SDA0",
--			  "SCL0",
-+	gpio-line-names = "ID_SDA",
-+			  "ID_SCL",
- 			  "SDA1",
- 			  "SCL1",
- 			  "GPIO_GCLK",
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-index cfbdaac..1e40d67 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
-@@ -33,8 +33,8 @@
- 	 * "FOO" = GPIO line named "FOO" on the schematic
- 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
- 	 */
--	gpio-line-names = "SDA0",
--			  "SCL0",
-+	gpio-line-names = "ID_SDA",
-+			  "ID_SCL",
- 			  "SDA1",
- 			  "SCL1",
- 			  "GPIO_GCLK",
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-index 644d907..5765d34 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -40,8 +40,8 @@
- 	 * "FOO" = GPIO line named "FOO" on the schematic
- 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
- 	 */
--	gpio-line-names = "GPIO0",
--			  "GPIO1",
-+	gpio-line-names = "ID_SDA",
-+			  "ID_SCL",
- 			  "SDA1",
- 			  "SCL1",
- 			  "GPIO_GCLK",
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-index 00323ba..3b35a8a 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
-@@ -28,8 +28,8 @@
- 	 * "FOO" = GPIO line named "FOO" on the schematic
- 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
- 	 */
--	gpio-line-names = "SDA0",
--			  "SCL0",
-+	gpio-line-names = "ID_SDA",
-+			  "ID_SCL",
- 			  "SDA1",
- 			  "SCL1",
- 			  "GPIO_GCLK",
--- 
-2.7.4
+Yes on some Qcom SoC's like SDM845 and also on some previous ones, for 
+ETM(only) amba bus discovery method fails because of wrong pid read from 
+the registers. So we have to force this primecell peripheral ids to 
+probe etm.
+
+- Sai
+
+--
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a 
+member of Code Aurora Forum, hosted by The Linux Foundation
