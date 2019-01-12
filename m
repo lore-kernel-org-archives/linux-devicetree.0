@@ -1,98 +1,112 @@
-From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: Re: [PATCH 1/3] media: dt: bindings: sunxi-ir: Add A64 compatible
-Date: Sat, 12 Jan 2019 09:08:08 +0100
-Message-ID: <4866484.1b519qCrCi@jernej-laptop>
-References: <20190111173015.12119-1-jernej.skrabec@siol.net> <20190111173015.12119-2-jernej.skrabec@siol.net> <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw@mail.gmail.com>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Himanshu Jha <himanshujha199640@gmail.com>
+Subject: Re: [PATCH v2 1/2] iio: chemical: bme680: Add device-tree support
+Date: Sat, 12 Jan 2019 15:12:26 +0530
+Message-ID: <20190112094226.GA910@himanshu-Vostro-3559>
+References: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERB2WA43QQKGQECTD4PWI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dne sobota, 12. januar 2019 ob 02:56:11 CET je Chen-Yu Tsai napisal(a):
-> On Sat, Jan 12, 2019 at 1:30 AM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> 
-wrote:
-> > A64 IR is compatible with A13, so add A64 compatible with A13 as a
-> > fallback.
+On Fri, Jan 11, 2019 at 03:53:58PM -0500, Sebastien Bourdelin wrote:
+> This commit allow the driver to work with device-tree.
 > 
-> We ask people to add the SoC-specific compatible as a contigency,
-> in case things turn out to be not so "compatible".
-> 
-> To be consistent with all the other SoCs and other peripherals,
-> unless you already spotted a "compatible" difference in the
-> hardware, i.e. the hardware isn't completely the same, this
-> patch isn't needed. On the other hand, if you did, please mention
-> the differences in the commit log.
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+> ---
 
-When comparing registers descriptions between A13 and A64, I noticed few minor 
-differences:
+I get the following compilation failure:
 
-A13: RXINT: 11:6 RAL
-A64: RXINT: 13:8 RAL
+Below I have `allyesconfig` except 'BME680' configure as [M]
+in case you wish to reproduce.
 
-A13: IR_RXSTA: 12:6 RAC
-A64: IR_RXSTA: 14:8 RAC, 7 STAT (missing on A13)
+himanshu@himanshu-Vostro-3559:~/linux-next$ grep -i -w 'CONFIG_BME680\|CONFIG_ACPI\|CONFIG_OF' .config
+CONFIG_ACPI=y
+CONFIG_OF=y
+CONFIG_BME680=m
+himanshu@himanshu-Vostro-3559:~/linux-next$ sudo make drivers/iio/chemical/bme680_spi.o
+make[1]: Nothing to be done for 'all'.
+  CALL    scripts/checksyscalls.sh
+  DESCEND  objtool
+  CC [M]  drivers/iio/chemical/bme680_spi.o
+In file included from ./include/linux/acpi.h:41:0,
+                 from drivers/iio/chemical/bme680_spi.c:7:
+./include/linux/module.h:213:1: error: expected ‘,’ or ‘;’ before ‘extern’
+ extern typeof(name) __mod_##type##__##name##_device_table  \
+ ^
+drivers/iio/chemical/bme680_spi.c:119:1: note: in expansion of macro ‘MODULE_DEVICE_TABLE’
+ MODULE_DEVICE_TABLE(of, bme680_of_spi_match);
+ ^~~~~~~~~~~~~~~~~~~
+scripts/Makefile.build:291: recipe for target 'drivers/iio/chemical/bme680_spi.o' failed
+make[1]: *** [drivers/iio/chemical/bme680_spi.o] Error 1
+Makefile:1741: recipe for target 'drivers/iio/chemical/bme680_spi.o' failed
+make: *** [drivers/iio/chemical/bme680_spi.o] Error 2
 
-What is strange that  RAL and RAC field have offset defined as 8 in driver. I'm 
-not sure if that is a typo in A13 manual or driver issue. I assume the former, 
-otherwise it wouldn't work. I couldn't found original BSP driver source to 
-confirm, though.
+BUT if:
 
-STAT bit is really not that important. It just tells if IR unit is busy or 
-not.
+himanshu@himanshu-Vostro-3559:~/linux-next$ make allyesconfig
+scripts/kconfig/conf  --allyesconfig Kconfig
+#
+# configuration written to .config
+#
 
-The biggest difference is in 0x34 register. A64 has one more clock option 
-(without postdivider), although register values are backward compatible. A64 
-also has Active threshold setting (duration of CIR going from idle to active 
-state).
+himanshu@himanshu-Vostro-3559:~/linux-next$ sudo make drivers/iio/chemical/bme680_spi.o
+scripts/kconfig/conf  --syncconfig Kconfig
+make[1]: Nothing to be done for 'all'.
+  HOSTCC  scripts/dtc/dtc.o
+  HOSTCC  scripts/dtc/flattree.o
+  HOSTCC  scripts/dtc/fstree.o
+  HOSTCC  scripts/dtc/data.o
+  HOSTCC  scripts/dtc/livetree.o
+  HOSTCC  scripts/dtc/treesource.o
+  HOSTCC  scripts/dtc/srcpos.o
+  HOSTCC  scripts/dtc/checks.o
+  HOSTCC  scripts/dtc/util.o
+  LEX     scripts/dtc/dtc-lexer.lex.c
+  YACC    scripts/dtc/dtc-parser.tab.h
+  HOSTCC  scripts/dtc/dtc-lexer.lex.o
+  YACC    scripts/dtc/dtc-parser.tab.c
+  HOSTCC  scripts/dtc/dtc-parser.tab.o
+  HOSTLD  scripts/dtc/dtc
+  CC      scripts/mod/empty.o
+  MKELF   scripts/mod/elfconfig.h
+  HOSTCC  scripts/mod/modpost.o
+  CC      scripts/mod/devicetable-offsets.s
+  HOSTCC  scripts/mod/file2alias.o
+  HOSTCC  scripts/mod/sumversion.o
+  HOSTLD  scripts/mod/modpost
+  CC      kernel/bounds.s
+  CC      arch/x86/kernel/asm-offsets.s
+  CALL    scripts/checksyscalls.sh
+  DESCEND  objtool
+  CC      drivers/iio/chemical/bme680_spi.o
 
-If we dismiss RAC and RAL differences as manual error and don't care for new 
-clock option and active threshold, then having new compatible maybe really 
-doesn't make sense.
+Compiles without any issues. 
 
-Best regards,
-Jernej
+Also, wondering when is 0x77 i2c address used, since I tested
+this on 3 different boards with 0x76(when SDO is connected to GND)
 
-> 
-> ChenYu
-> 
-> > Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-> > ---
-> > 
-> >  Documentation/devicetree/bindings/media/sunxi-ir.txt | 5 ++++-
-> >  1 file changed, 4 insertions(+), 1 deletion(-)
-> > 
-> > diff --git a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> > b/Documentation/devicetree/bindings/media/sunxi-ir.txt index
-> > 278098987edb..ecac6964b69b 100644
-> > --- a/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> > +++ b/Documentation/devicetree/bindings/media/sunxi-ir.txt
-> > @@ -1,7 +1,10 @@
-> > 
-> >  Device-Tree bindings for SUNXI IR controller found in sunXi SoC family
-> > 
-> >  Required properties:
-> > -- compatible       : "allwinner,sun4i-a10-ir" or "allwinner,sun5i-a13-ir"
-> > +- compatible       : value must be one of:
-> > +  * "allwinner,sun4i-a10-ir"
-> > +  * "allwinner,sun5i-a13-ir"
-> > +  * "allwinner,sun50i-a64-ir", "allwinner,sun5i-a13-ir"
-> > 
-> >  - clocks           : list of clock specifiers, corresponding to
-> >  
-> >                       entries in clock-names property;
-> >  
-> >  - clock-names      : should contain "apb" and "ir" entries;
-> > 
-> > --
-> > 2.20.1
+And why do I connect SDO to ground everytime ?
+It is because if SDO pin is left floating then I2C address will be
+undefined as said in datasheet + I have observed this while testing.
+
+Actallly, I don't understand what "VDIDO" is, as explained in the
+datasheet.
+
+
+Anyway, if the above compilation issue is not a problem, then
+
+	Acked-by: Himanshu Jha <himanshujha199640@gmail.com>
+
+
+Thanks
+-- 
+Himanshu Jha
+Undergraduate Student
+Department of Electronics & Communication
+Guru Tegh Bahadur Institute of Technology
