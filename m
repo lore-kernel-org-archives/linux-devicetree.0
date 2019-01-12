@@ -1,69 +1,200 @@
-Return-Path: <SRS0=4w2F=PL=gmail.com=geert.uytterhoeven@kernel.org>
+Return-Path: <SRS0=+lSs=PU=cogentembedded.com=sergei.shtylyov@kernel.org>
+Subject: [PATCH RFC 2/3] arm64: dts: renesas: r8a77970: eagle/v3msk: add QSPI
+ flash support
+From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+References: <4b74a2a5-6b3b-9b06-6a8f-fce39124ec59@cogentembedded.com>
+Message-ID: <1e3c7821-1f48-e27b-e3d5-a376b219e590@cogentembedded.com>
+Date: Sat, 12 Jan 2019 20:44:32 +0300
 MIME-Version: 1.0
-References: <1544000815-28069-1-git-send-email-biju.das@bp.renesas.com> <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1544000815-28069-5-git-send-email-biju.das@bp.renesas.com>
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Date: Thu, 3 Jan 2019 14:47:08 +0100
-Message-ID: <CAMuHMdW+qVJxu0fjC+j8w-neHU8FOHmJqRbHAtp1JvKYJ+RrXQ@mail.gmail.com>
-Subject: Re: [PATCH v2 4/5] ARM: dts: r8a7743: Remove LVDS encoder from du node
-Content-Type: text/plain; charset="UTF-8"
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+In-Reply-To: <4b74a2a5-6b3b-9b06-6a8f-fce39124ec59@cogentembedded.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
+To: Simon Horman <horms@verge.net.au>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Magnus Damm <magnus.damm@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Biju,
+Define the Eagle/V3MSK board dependent parts of the RPC-IF device node.
+Add device nodes for Spansion S25FS512S SPI flash and MTD partitions on it.
 
-On Wed, Dec 5, 2018 at 10:15 AM Biju Das <biju.das@bp.renesas.com> wrote:
-> The internal LVDS encoder now has DT bindings separate from the DU.
-> So remove it from du node.
->
-> Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+Based on the original patches by Dmitry Shifrin.
 
-Thanks for your patch!
+Signed-off-by: Dmitry Shifrin <dmitry.shifrin@cogentembedded.com>
+Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
 
-> ---
-> V1-->V2
->         * Removed LVDS encoder definition from DU node.
+---
+ arch/arm64/boot/dts/renesas/r8a77970-eagle.dts |   68 +++++++++++++++++++++++++
+ arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts |   68 +++++++++++++++++++++++++
+ 2 files changed, 136 insertions(+)
 
-Shouldn't you add a new node for the LVDS encoder?
-
-> ---
->  arch/arm/boot/dts/r8a7743.dtsi | 9 +++------
->  1 file changed, 3 insertions(+), 6 deletions(-)
->
-> diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-> index 3cc33f7..3ad1efc 100644
-> --- a/arch/arm/boot/dts/r8a7743.dtsi
-> +++ b/arch/arm/boot/dts/r8a7743.dtsi
-> @@ -1681,15 +1681,12 @@
->
->                 du: display@feb00000 {
->                         compatible = "renesas,du-r8a7743";
-> -                       reg = <0 0xfeb00000 0 0x40000>,
-> -                             <0 0xfeb90000 0 0x1c>;
-> -                       reg-names = "du", "lvds.0";
-> +                       reg = <0 0xfeb00000 0 0x40000>;
->                         interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
->                                      <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
->                         clocks = <&cpg CPG_MOD 724>,
-> -                                <&cpg CPG_MOD 723>,
-> -                                <&cpg CPG_MOD 726>;
-> -                       clock-names = "du.0", "du.1", "lvds.0";
-> +                                <&cpg CPG_MOD 723>;
-> +                       clock-names = "du.0", "du.1";
->                         status = "disabled";
->
->                         ports {
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970-eagle.dts
+@@ -173,12 +173,80 @@
+ 		function = "i2c0";
+ 	};
+ 
++	qspi0_pins: qspi0 {
++		groups = "qspi0_ctrl", "qspi0_data4";
++		function = "qspi0";
++	};
++
+ 	scif0_pins: scif0 {
+ 		groups = "scif0_data";
+ 		function = "scif0";
+ 	};
+ };
+ 
++&rpc {
++	pinctrl-0 = <&qspi0_pins>;
++	pinctrl-names = "default";
++
++	renesas,rpc-mode = "spi";
++	status = "okay";
++
++	flash@0 {
++		compatible = "spansion,s25fs512s", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++		spi-rx-bus-width = <4>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bootparam@0 {
++				reg = <0x00000000 0x040000>;
++				read-only;
++			};
++			cr7@40000 {
++				reg = <0x00040000 0x080000>;
++				read-only;
++			};
++			cert_header_sa3@c0000 {
++				reg = <0x000c0000 0x080000>;
++				read-only;
++			};
++			bl2@140000 {
++				reg = <0x00140000 0x040000>;
++				read-only;
++			};
++			cert_header_sa6@180000 {
++				reg = <0x00180000 0x040000>;
++				read-only;
++			};
++			bl31@1c0000 {
++				reg = <0x001c0000 0x460000>;
++				read-only;
++			};
++			uboot@640000 {
++				reg = <0x00640000 0x0c0000>;
++				read-only;
++			};
++			uboot-env@700000 {
++				reg = <0x00700000 0x040000>;
++				read-only;
++			};
++			dtb@740000 {
++				reg = <0x00740000 0x080000>;
++			};
++			kernel@7c0000 {
++				reg = <0x007c0000 0x1400000>;
++			};
++			user@1bc0000 {
++				reg = <0x01bc0000 0x2440000>;
++			};
++		};
++	};
++};
++
+ &rwdt {
+ 	timeout-sec = <60>;
+ 	status = "okay";
+Index: renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
+===================================================================
+--- renesas.orig/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
++++ renesas/arch/arm64/boot/dts/renesas/r8a77970-v3msk.dts
+@@ -145,6 +145,11 @@
+ 		power-source = <3300>;
+ 	};
+ 
++	qspi0_pins: qspi0 {
++		groups = "qspi0_ctrl", "qspi0_data4";
++		function = "qspi0";
++	};
++
+ 	scif0_pins: scif0 {
+ 		groups = "scif0_data";
+ 		function = "scif0";
+@@ -220,6 +225,69 @@
+ 	status = "okay";
+ };
+ 
++&rpc {
++	pinctrl-0 = <&qspi0_pins>;
++	pinctrl-names = "default";
++
++	renesas,rpc-mode = "spi";
++	status = "okay";
++
++	flash@0 {
++		compatible = "spansion,s25fs512s", "jedec,spi-nor";
++		reg = <0>;
++		spi-max-frequency = <50000000>;
++		spi-rx-bus-width = <4>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			bootparam@0 {
++				reg = <0x00000000 0x040000>;
++				read-only;
++			};
++			cr7@40000 {
++				reg = <0x00040000 0x080000>;
++				read-only;
++			};
++			cert_header_sa3@c0000 {
++				reg = <0x000c0000 0x080000>;
++				read-only;
++			};
++			bl2@140000 {
++				reg = <0x00140000 0x040000>;
++				read-only;
++			};
++			cert_header_sa6@180000 {
++				reg = <0x00180000 0x040000>;
++				read-only;
++			};
++			bl31@1c0000 {
++				reg = <0x001c0000 0x460000>;
++				read-only;
++			};
++			uboot@640000 {
++				reg = <0x00640000 0x0c0000>;
++				read-only;
++			};
++			uboot-env@700000 {
++				reg = <0x00700000 0x040000>;
++				read-only;
++			};
++			dtb@740000 {
++				reg = <0x00740000 0x080000>;
++			};
++			kernel@7c0000 {
++				reg = <0x007c0000 0x1400000>;
++			};
++			user@1bc0000 {
++				reg = <0x01bc0000 0x2440000>;
++			};
++		};
++	};
++};
++
+ &scif0 {
+ 	pinctrl-0 = <&scif0_pins>;
+ 	pinctrl-names = "default";
