@@ -1,95 +1,240 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: New IIO/counter driver
-Date: Sat, 12 Jan 2019 17:51:59 +0000
-Message-ID: <20190112175159.3dac7a70@archlinux>
-References: <CAKKE0ZHmODzhvjPNJFVgT2cF_F=f2kNKr5K_CGP+0XgA5XZokw@mail.gmail.com>
-        <20190108004632.GA3247@icarus>
-        <CA+M3ks7wX6MxvapDi_5SQ0rkJWoV+BcmzmbvtiqHVBzrrwAp4g@mail.gmail.com>
-        <8b2bb569-a6e0-25ec-740d-48083b30fe60@st.com>
+From: Sergey Suloev <ssuloev@orpaltech.com>
+Subject: Re: [PATCH V4 2/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Sat, 12 Jan 2019 21:11:46 +0300
+Message-ID: <2da60463-f536-84f4-a176-4f8df30f6eaf@orpaltech.com>
+References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
+ <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8b2bb569-a6e0-25ec-740d-48083b30fe60@st.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Benjamin Gaignard <benjamin.gaignard@linaro.org>, William Breathitt Gray <vilhelm.gray@gmail.com>, Patrick Havelange <patrick.havelange@essensium.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org, Lars-Peter Clausen <lars@metafoo.de>, Benjamin GAIGNARD <benjamin.gaignard@st.com>, linux-iio@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Hartmut Knaack <knaack.h@gmx.de>, Andrew Morton <akpm@linux-foundation.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Stefan Wahren <stefan.wahren@i2se.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
+Cc: devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Jan 2019 12:01:57 +0100
-Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+Hi, Stefan,
 
-> On 1/8/19 11:57 AM, Benjamin Gaignard wrote:
-> > Le mar. 8 janv. 2019 =C3=A0 01:46, William Breathitt Gray
-> > <vilhelm.gray@gmail.com> a =C3=A9crit : =20
-> >>
-> >> On Mon, Jan 07, 2019 at 02:45:37PM +0100, Patrick Havelange wrote: =20
-> >>> Hello,
-> >>>
-> >>> I'm in the process of adding a new IIO/counter driver, however I also=
- saw
-> >>> that there was a work in progress to have a separate counter subsyste=
-m (
-> >>> https://marc.info/?l=3Dlinux-iio&m=3D153974167727206 ). But it seems =
-there is
-> >>> no recent progress on it.
-> >>> What is the state of those patches ? Is it still interesting to devel=
-op the
-> >>> driver as an IIO/counter , or should I use already that new subsystem=
- ?
-> >>>
-> >>> Best Regards,
-> >>>
-> >>> Patrick Havelange. =20
-> >>
-> >> Hello,
-> >>
-> >> I am still open to merging this patchset and maintaining the Counter
-> >> subsystem. However, I took the lack of response for my latest
-> >> submission to indicate a loss of interest in this patchset's approach.
-> >> If there are still people who want this, I can rebase and resend this
-> >> patchset for submission; the past few versions have primarily been code
-> >> clarity and documentation changes so I believe the core design itself =
-is
-> >> somewhat stable now.
-> >>
-> >> Just let me know how best to proceed and I shall be happy to oblige --
-> >> whether to continue maintaining this patchset or to drop this design in
-> >> favor of improving the existing IIO Counter code in the kernel.
-> >>
-> >> I'll CC those from the patchset submission to keep them in the loop. =
-=20
-> >=20
-> > I confirm that I still interested to get those patches merged.
-> >=20
-> > Regards,
-> > Benjamin =20
-> Hi,
->=20
-> Same for me,
-In a more abstract fashion (I don't have any hardware of this type!)
-I'm still keen for the counter subsystem to go in.  Hopefully, if
-Greg or anyone else wants to take a detailed look they will have time
-this cycle to do so.
+is this patch the only update required to run Rpi3 A+ with kernel 4.20?
 
-I was pretty happy with the last version I read through.  There will
-always be things to improved, but as long a we are happy with
-the userspace inteface, the little things can happen later.
+Thank you,
+Sergey
 
-Jonathan
 
->=20
-> Regards,
-> Fabrice
-> >>
-> >> Sincerely,
-> >>
-> >> William Breathitt Gray
-> >>
-> >> _______________________________________________
-> >> linux-arm-kernel mailing list
-> >> linux-arm-kernel@lists.infradead.org
-> >> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel =20
-> >=20
-> >=20
-> >  =20
+On 12/26/18 2:20 AM, Stefan Wahren wrote:
+> The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
+> 1 USB 2.0 port and no Ethernet.
+>
+> Compared to the Raspberry Pi 3 B it isn't possible to control BT_ON and
+> WL_ON separately.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+> ---
+>   arch/arm/boot/dts/Makefile                 |   1 +
+>   arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 175 +++++++++++++++++++++++++++++
+>   2 files changed, 176 insertions(+)
+>   create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+>
+> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
+> index 78551c4..764fe91 100644
+> --- a/arch/arm/boot/dts/Makefile
+> +++ b/arch/arm/boot/dts/Makefile
+> @@ -79,6 +79,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
+>   	bcm2835-rpi-a-plus.dtb \
+>   	bcm2835-rpi-cm1-io1.dtb \
+>   	bcm2836-rpi-2-b.dtb \
+> +	bcm2837-rpi-3-a-plus.dtb \
+>   	bcm2837-rpi-3-b.dtb \
+>   	bcm2837-rpi-3-b-plus.dtb \
+>   	bcm2837-rpi-cm3-io3.dtb \
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+> new file mode 100644
+> index 0000000..61f4e4d
+> --- /dev/null
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+> @@ -0,0 +1,175 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/dts-v1/;
+> +#include "bcm2837.dtsi"
+> +#include "bcm2836-rpi.dtsi"
+> +#include "bcm283x-rpi-usb-host.dtsi"
+> +
+> +/ {
+> +	compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
+> +	model = "Raspberry Pi 3 Model A+";
+> +
+> +	chosen {
+> +		/* 8250 auxiliary UART instead of pl011 */
+> +		stdout-path = "serial1:115200n8";
+> +	};
+> +
+> +	memory {
+> +		reg = <0 0x20000000>;
+> +	};
+> +
+> +	leds {
+> +		act {
+> +			gpios = <&gpio 29 GPIO_ACTIVE_HIGH>;
+> +		};
+> +
+> +		pwr {
+> +			label = "PWR";
+> +			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
+> +		};
+> +	};
+> +};
+> +
+> +&gpio {
+> +	/*
+> +	 * This is mostly based on the official GPU firmware DT blob.
+> +	 *
+> +	 * Legend:
+> +	 * "NC" = not connected (no rail from the SoC)
+> +	 * "FOO" = GPIO line named "FOO" on the schematic
+> +	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
+> +	 */
+> +	gpio-line-names = "ID_SDA",
+> +			  "ID_SCL",
+> +			  "SDA1",
+> +			  "SCL1",
+> +			  "GPIO_GCLK",
+> +			  "GPIO5",
+> +			  "GPIO6",
+> +			  "SPI_CE1_N",
+> +			  "SPI_CE0_N",
+> +			  "SPI_MISO",
+> +			  "SPI_MOSI",
+> +			  "SPI_SCLK",
+> +			  "GPIO12",
+> +			  "GPIO13",
+> +			  /* Serial port */
+> +			  "TXD1",
+> +			  "RXD1",
+> +			  "GPIO16",
+> +			  "GPIO17",
+> +			  "GPIO18",
+> +			  "GPIO19",
+> +			  "GPIO20",
+> +			  "GPIO21",
+> +			  "GPIO22",
+> +			  "GPIO23",
+> +			  "GPIO24",
+> +			  "GPIO25",
+> +			  "GPIO26",
+> +			  "GPIO27",
+> +			  "HDMI_HPD_N",
+> +			  "STATUS_LED",
+> +			  /* Used by BT module */
+> +			  "CTS0",
+> +			  "RTS0",
+> +			  "TXD0",
+> +			  "RXD0",
+> +			  /* Used by Wifi */
+> +			  "SD1_CLK",
+> +			  "SD1_CMD",
+> +			  "SD1_DATA0",
+> +			  "SD1_DATA1",
+> +			  "SD1_DATA2",
+> +			  "SD1_DATA3",
+> +			  "PWM0_OUT",
+> +			  "PWM1_OUT",
+> +			  "NC", /* GPIO42 */
+> +			  "WIFI_CLK",
+> +			  "SDA0",
+> +			  "SCL0",
+> +			  "SMPS_SCL",
+> +			  "SMPS_SDA",
+> +			  /* Used by SD Card */
+> +			  "SD_CLK_R",
+> +			  "SD_CMD_R",
+> +			  "SD_DATA0_R",
+> +			  "SD_DATA1_R",
+> +			  "SD_DATA2_R",
+> +			  "SD_DATA3_R";
+> +};
+> +
+> +&firmware {
+> +	expgpio: gpio {
+> +		compatible = "raspberrypi,firmware-gpio";
+> +		gpio-controller;
+> +		#gpio-cells = <2>;
+> +		gpio-line-names = "",
+> +				  "BT_WL_ON",
+> +				  "STATUS_LED",
+> +				  "",
+> +				  "",
+> +				  "CAM_GPIO0",
+> +				  "CAM_GPIO1",
+> +				  "";
+> +		status = "okay";
+> +	};
+> +};
+> +
+> +&hdmi {
+> +	hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
+> +};
+> +
+> +&pwm {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
+> +	status = "okay";
+> +};
+> +
+> +/*
+> + * SDHCI is used to control the SDIO for wireless
+> + *
+> + * WL_REG_ON and BT_REG_ON of the CYW43455 Wifi/BT module are driven
+> + * by a single GPIO. We can't give GPIO control to one of the drivers,
+> + * otherwise the other part would get unexpectedly disturbed.
+> + */
+> +&sdhci {
+> +	#address-cells = <1>;
+> +	#size-cells = <0>;
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&emmc_gpio34>;
+> +	status = "okay";
+> +	bus-width = <4>;
+> +	non-removable;
+> +
+> +	brcmf: wifi@1 {
+> +		reg = <1>;
+> +		compatible = "brcm,bcm4329-fmac";
+> +	};
+> +};
+> +
+> +/* SDHOST is used to drive the SD card */
+> +&sdhost {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&sdhost_gpio48>;
+> +	status = "okay";
+> +	bus-width = <4>;
+> +};
+> +
+> +/* uart0 communicates with the BT module */
+> +&uart0 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
+> +	status = "okay";
+> +
+> +	bluetooth {
+> +		compatible = "brcm,bcm43438-bt";
+> +		max-speed = <2000000>;
+> +	};
+> +};
+> +
+> +/* uart1 is mapped to the pin header */
+> +&uart1 {
+> +	pinctrl-names = "default";
+> +	pinctrl-0 = <&uart1_gpio14>;
+> +	status = "okay";
+> +};
