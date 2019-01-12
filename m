@@ -1,240 +1,92 @@
-From: Sergey Suloev <ssuloev@orpaltech.com>
-Subject: Re: [PATCH V4 2/3] ARM: dts: add Raspberry Pi 3 A+
-Date: Sat, 12 Jan 2019 21:11:46 +0300
-Message-ID: <2da60463-f536-84f4-a176-4f8df30f6eaf@orpaltech.com>
-References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
- <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7768-1
+Date: Sat, 12 Jan 2019 18:13:40 +0000
+Message-ID: <20190112181340.0efe0ea0@archlinux>
+References: <1546867609-4273-1-git-send-email-stefan.popa@analog.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
-Cc: devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org, bcm-kernel-feedback-list@broadcom.com
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1546867609-4273-1-git-send-email-stefan.popa@analog.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stefan Popa <stefan.popa@analog.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi, Stefan,
+On Mon, 7 Jan 2019 15:26:49 +0200
+Stefan Popa <stefan.popa@analog.com> wrote:
 
-is this patch the only update required to run Rpi3 A+ with kernel 4.20?
+> Document support for AD7768-1 Analog to Digital Converter.
+> 
+> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
 
-Thank you,
-Sergey
+A few comments inline.
 
-
-On 12/26/18 2:20 AM, Stefan Wahren wrote:
-> The Raspberry Pi 3 A+ is similar to the Pi 3 B+ but has only 512 MB RAM,
-> 1 USB 2.0 port and no Ethernet.
->
-> Compared to the Raspberry Pi 3 B it isn't possible to control BT_ON and
-> WL_ON separately.
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+J
 > ---
->   arch/arm/boot/dts/Makefile                 |   1 +
->   arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts | 175 +++++++++++++++++++++++++++++
->   2 files changed, 176 insertions(+)
->   create mode 100644 arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
->
-> diff --git a/arch/arm/boot/dts/Makefile b/arch/arm/boot/dts/Makefile
-> index 78551c4..764fe91 100644
-> --- a/arch/arm/boot/dts/Makefile
-> +++ b/arch/arm/boot/dts/Makefile
-> @@ -79,6 +79,7 @@ dtb-$(CONFIG_ARCH_BCM2835) += \
->   	bcm2835-rpi-a-plus.dtb \
->   	bcm2835-rpi-cm1-io1.dtb \
->   	bcm2836-rpi-2-b.dtb \
-> +	bcm2837-rpi-3-a-plus.dtb \
->   	bcm2837-rpi-3-b.dtb \
->   	bcm2837-rpi-3-b-plus.dtb \
->   	bcm2837-rpi-cm3-io3.dtb \
-> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
+>  .../devicetree/bindings/iio/adc/adi,ad7768-1.txt   | 34 ++++++++++++++++++++++
+>  MAINTAINERS                                        |  1 +
+>  2 files changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
 > new file mode 100644
-> index 0000000..61f4e4d
+> index 0000000..bf619fa8
 > --- /dev/null
-> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-a-plus.dts
-> @@ -0,0 +1,175 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/dts-v1/;
-> +#include "bcm2837.dtsi"
-> +#include "bcm2836-rpi.dtsi"
-> +#include "bcm283x-rpi-usb-host.dtsi"
+> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
+> @@ -0,0 +1,34 @@
+> +Analog Devices AD7768-1 ADC device driver
 > +
-> +/ {
-> +	compatible = "raspberrypi,3-model-a-plus", "brcm,bcm2837";
-> +	model = "Raspberry Pi 3 Model A+";
+> +Required properties for the AD7768-1:
 > +
-> +	chosen {
-> +		/* 8250 auxiliary UART instead of pl011 */
-> +		stdout-path = "serial1:115200n8";
+> +- compatible: Must be "adi,ad7768-1"
+> +- reg: SPI chip select number for the device
+> +- spi-max-frequency: Max SPI frequency to use
+> +	see: Documentation/devicetree/bindings/spi/spi-bus.txt
+> +- clocks: phandle to the master clock (mclk)
+> +	see: Documentation/devicetree/bindings/clock/clock-bindings.txt
+> +- clock-names: Must be "mclk".
+> +- interrupts: IRQ line for the ADC
+> +	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
+> +- vref-supply: vref supply can be used as reference for conversion
+> +- adi,sync-in-gpios: must be the device tree identifier of the SYNC-IN pin. A pulse
+> +	is always required if the configuration is changed in any way, for example
+> +	if the filter decimation rate changes. As the line is active low, it should
+> +	be marked GPIO_ACTIVE_LOW.
+Should mention it's also used for simultaneous sampling.  The name makes that
+kind of obvious, but then the comment doesn't mention it.
+
+There are some other potential gpios it seems.  Good to get them in the binding
+now even if we don't do anything much with them.  Reset definitely.  The others
+maybe not as we are only supporting the spi control mode and I can't see why
+we would want to do anything different. I suppose there might be boards wired
+with it set to pin mode but hopefully not.
+
+> +
+> +Example:
+> +
+> +	adc@0 {
+> +		compatible = "adi,ad7768-1";
+> +		reg = <0>;
+> +		spi-max-frequency = <2000000>;
+> +		spi-cpol;
+> +		spi-cpha;
+> +		vref-supply = <&adc_vref>;
+> +		interrupts = <25 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-parent = <&gpio>;
+> +		adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
+> +		clocks = <&ad7768_mclk>;
+> +		clock-names = "mclk";
 > +	};
-> +
-> +	memory {
-> +		reg = <0 0x20000000>;
-> +	};
-> +
-> +	leds {
-> +		act {
-> +			gpios = <&gpio 29 GPIO_ACTIVE_HIGH>;
-> +		};
-> +
-> +		pwr {
-> +			label = "PWR";
-> +			gpios = <&expgpio 2 GPIO_ACTIVE_LOW>;
-> +		};
-> +	};
-> +};
-> +
-> +&gpio {
-> +	/*
-> +	 * This is mostly based on the official GPU firmware DT blob.
-> +	 *
-> +	 * Legend:
-> +	 * "NC" = not connected (no rail from the SoC)
-> +	 * "FOO" = GPIO line named "FOO" on the schematic
-> +	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
-> +	 */
-> +	gpio-line-names = "ID_SDA",
-> +			  "ID_SCL",
-> +			  "SDA1",
-> +			  "SCL1",
-> +			  "GPIO_GCLK",
-> +			  "GPIO5",
-> +			  "GPIO6",
-> +			  "SPI_CE1_N",
-> +			  "SPI_CE0_N",
-> +			  "SPI_MISO",
-> +			  "SPI_MOSI",
-> +			  "SPI_SCLK",
-> +			  "GPIO12",
-> +			  "GPIO13",
-> +			  /* Serial port */
-> +			  "TXD1",
-> +			  "RXD1",
-> +			  "GPIO16",
-> +			  "GPIO17",
-> +			  "GPIO18",
-> +			  "GPIO19",
-> +			  "GPIO20",
-> +			  "GPIO21",
-> +			  "GPIO22",
-> +			  "GPIO23",
-> +			  "GPIO24",
-> +			  "GPIO25",
-> +			  "GPIO26",
-> +			  "GPIO27",
-> +			  "HDMI_HPD_N",
-> +			  "STATUS_LED",
-> +			  /* Used by BT module */
-> +			  "CTS0",
-> +			  "RTS0",
-> +			  "TXD0",
-> +			  "RXD0",
-> +			  /* Used by Wifi */
-> +			  "SD1_CLK",
-> +			  "SD1_CMD",
-> +			  "SD1_DATA0",
-> +			  "SD1_DATA1",
-> +			  "SD1_DATA2",
-> +			  "SD1_DATA3",
-> +			  "PWM0_OUT",
-> +			  "PWM1_OUT",
-> +			  "NC", /* GPIO42 */
-> +			  "WIFI_CLK",
-> +			  "SDA0",
-> +			  "SCL0",
-> +			  "SMPS_SCL",
-> +			  "SMPS_SDA",
-> +			  /* Used by SD Card */
-> +			  "SD_CLK_R",
-> +			  "SD_CMD_R",
-> +			  "SD_DATA0_R",
-> +			  "SD_DATA1_R",
-> +			  "SD_DATA2_R",
-> +			  "SD_DATA3_R";
-> +};
-> +
-> +&firmware {
-> +	expgpio: gpio {
-> +		compatible = "raspberrypi,firmware-gpio";
-> +		gpio-controller;
-> +		#gpio-cells = <2>;
-> +		gpio-line-names = "",
-> +				  "BT_WL_ON",
-> +				  "STATUS_LED",
-> +				  "",
-> +				  "",
-> +				  "CAM_GPIO0",
-> +				  "CAM_GPIO1",
-> +				  "";
-> +		status = "okay";
-> +	};
-> +};
-> +
-> +&hdmi {
-> +	hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
-> +};
-> +
-> +&pwm {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
-> +	status = "okay";
-> +};
-> +
-> +/*
-> + * SDHCI is used to control the SDIO for wireless
-> + *
-> + * WL_REG_ON and BT_REG_ON of the CYW43455 Wifi/BT module are driven
-> + * by a single GPIO. We can't give GPIO control to one of the drivers,
-> + * otherwise the other part would get unexpectedly disturbed.
-> + */
-> +&sdhci {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&emmc_gpio34>;
-> +	status = "okay";
-> +	bus-width = <4>;
-> +	non-removable;
-> +
-> +	brcmf: wifi@1 {
-> +		reg = <1>;
-> +		compatible = "brcm,bcm4329-fmac";
-> +	};
-> +};
-> +
-> +/* SDHOST is used to drive the SD card */
-> +&sdhost {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&sdhost_gpio48>;
-> +	status = "okay";
-> +	bus-width = <4>;
-> +};
-> +
-> +/* uart0 communicates with the BT module */
-> +&uart0 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart0_ctsrts_gpio30 &uart0_gpio32 &gpclk2_gpio43>;
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "brcm,bcm43438-bt";
-> +		max-speed = <2000000>;
-> +	};
-> +};
-> +
-> +/* uart1 is mapped to the pin header */
-> +&uart1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&uart1_gpio14>;
-> +	status = "okay";
-> +};
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 3ba3811..e5613b6 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -868,6 +868,7 @@ L:	linux-iio@vger.kernel.org
+>  W:	http://ez.analog.com/community/linux-device-drivers
+>  S:	Supported
+>  F:	drivers/iio/adc/ad7768-1.c
+> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
+>  
+>  ANALOG DEVICES INC AD9389B DRIVER
+>  M:	Hans Verkuil <hans.verkuil@cisco.com>
