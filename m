@@ -1,15 +1,14 @@
-From: saiprakash.ranjan@codeaurora.org
-Subject: Re: [PATCH 2/3] coresight: etm4x: Add support to enable ETMv4.2
-Date: Sat, 12 Jan 2019 18:03:57 +0530
-Message-ID: <2039d8fcb6c09efeeb5df3f373a4d6dd@codeaurora.org>
-References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
- <4cb23e3bc414f3a1cac555d27b93e7e8cfeb68c9.1547054308.git.saiprakash.ranjan@codeaurora.org>
- <20190111185242.GB22691@xps15>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: [PATCH 5/6] ARM: dts: bcm2837-rpi-3-b-plus: Clarify label for
+ STATUS_LED
+Date: Sat, 12 Jan 2019 13:43:27 +0100
+Message-ID: <1547297008-2740-6-git-send-email-stefan.wahren@i2se.com>
+References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111185242.GB22691@xps15>
+In-Reply-To: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,21 +18,31 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rajendra Nayak <rnayak@codeaurora.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Sibi Sankar <sibis@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Leo Yan <leo.yan@linaro.org>, Andy Gross <andy.gross@linaro.org>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
+Cc: Gottfried Haider <gottfried.haider@gmail.com>, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, Peter Robinson <pbrobinson@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
+The RPI 3 B+ provides control to both LEDs (PWR and ACT). So append
+the first letter of the LED color (like in the schematics) in order
+to clarify this.
 
-> I think it would be better to simply mask out the minor version number 
-> bits in
-> function etm4_arch_supported().  That way we can add more intelligence 
-> in there
-> in the future if we have to and we don't have to touch the calling code 
-> again.
-> 
+Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+---
+ arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Thanks for the review. Yes it seems good, I will make this change in 
-next version of the patch.
-
-  - Sai
+diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+index 7d65013..d3ec6cd 100644
+--- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+@@ -42,7 +42,7 @@
+ 		#gpio-cells = <2>;
+ 		gpio-line-names = "BT_ON",
+ 				  "WL_ON",
+-				  "STATUS_LED",
++				  "STATUS_LED_R",
+ 				  "LAN_RUN",
+ 				  "",
+ 				  "CAM_GPIO0",
+-- 
+2.7.4
