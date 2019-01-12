@@ -1,33 +1,43 @@
-From: Heiko Stuebner <heiko@sntech.de>
-Subject: Re: [PATCH v2 5/7] ARM: dts: rockchip: add rk3066 vop display nodes
-Date: Sat, 12 Jan 2019 20:24:23 +0100
-Message-ID: <2822435.PgMx1mWbPR@phil>
-References: <20181229133318.18128-1-jbx6244@gmail.com>
- <20181229133318.18128-6-jbx6244@gmail.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH V4 2/3] ARM: dts: add Raspberry Pi 3 A+
+Date: Sat, 12 Jan 2019 20:34:54 +0100 (CET)
+Message-ID: <458895695.364954.1547321694901@email.ionos.de>
+References: <1545780008-22271-1-git-send-email-stefan.wahren@i2se.com>
+ <1545780008-22271-3-git-send-email-stefan.wahren@i2se.com>
+ <2da60463-f536-84f4-a176-4f8df30f6eaf@orpaltech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20181229133318.18128-6-jbx6244@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Johan Jonker <jbx6244@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, airlied@linux.ie, mturquette@baylibre.com, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, sboyd@kernel.org, robh+dt@kernel.org, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <2da60463-f536-84f4-a176-4f8df30f6eaf@orpaltech.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sergey Suloev <ssuloev@orpaltech.com>
+Cc: devicetree@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-QW0gU2Ftc3RhZywgMjkuIERlemVtYmVyIDIwMTgsIDE0OjMzOjE2IENFVCBzY2hyaWViIEpvaGFu
-IEpvbmtlcjoKPiBGcm9tOiBNYXJrIFlhbyA8bWFyay55YW9Acm9jay1jaGlwcy5jb20+Cj4gCj4g
-VGhpcyBwYXRjaCBhZGRzIHRoZSBjb3JlIGRpc3BsYXkgc3Vic3lzdGVtIGFuZCB2b3Agbm9kZXMg
-dG8gcmszMDY2Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IE1hcmsgWWFvIDxtYXJrLnlhb0Byb2NrLWNo
-aXBzLmNvbT4KPiBTaWduZWQtb2ZmLWJ5OiBKb2hhbiBKb25rZXIgPGpieDYyNDRAZ21haWwuY29t
-PgoKYXBwbGllZCBmb3IgNS4xCgpUaGFua3MKSGVpa28KCgpfX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZl
-bEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Hi Sergey,
+
+> Sergey Suloev <ssuloev@orpaltech.com> hat am 12. Januar 2019 um 19:11 geschrieben:
+> 
+> 
+> Hi, Stefan,
+> 
+> is this patch the only update required to run Rpi3 A+ with kernel 4.20?
+
+this patch depends on the "Improve VCHIQ cache line size handling" series. But you could also use the RPi 3 B+ DTB.
+
+Btw you are replying to an outdated version of this series. V5 has been applied.
+
+Stefan
+
+> 
+> Thank you,
+> Sergey
