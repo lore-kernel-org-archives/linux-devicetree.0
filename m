@@ -1,102 +1,76 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v5 8/8] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Sat, 12 Jan 2019 10:42:55 -0800
-Message-ID: <20190112184255.GA28907@builder>
-References: <20190109170010.15430-1-sibis@codeaurora.org>
- <CAD=FV=Xu3m5=ByHo_38T=H2cm4VqkndVjJ1rUkD2gp-2SWFXdQ@mail.gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 1/2] dt-binding: iio: add NPCM ADC documentation
+Date: Sat, 12 Jan 2019 18:46:02 +0000
+Message-ID: <20190112184602.3d3dc364@archlinux>
+References: <20190109164343.164205-1-tmaimon77@gmail.com>
+        <20190109164343.164205-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=Xu3m5=ByHo_38T=H2cm4VqkndVjJ1rUkD2gp-2SWFXdQ@mail.gmail.com>
+In-Reply-To: <20190109164343.164205-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, sricharan@codeaurora.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri 11 Jan 13:06 PST 2019, Doug Anderson wrote:
+On Wed,  9 Jan 2019 18:43:42 +0200
+Tomer Maimon <tmaimon77@gmail.com> wrote:
 
-> Hi,
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Analog-to-Digital Converter(ADC).
 > 
-> On Wed, Jan 9, 2019 at 9:00 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-> >
-> > This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
-> >
-> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > ---
-> >
-> > v5:
-> >   * Use qmp_aop updated dt binding
-> 
-> nit: since this is now a singleton patch in v5 (because patches #1 -
-> #7 landed), the general policy is to drop the "8/8" in the subject.
-> AKA I believe the subject of the patch ought to have been:
-> 
-> [PATCH v5] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-> 
-> 
-> > v3:
-> >   * with shutdown-ack irq redesign make it mandatory,
-> >     merge multiple patches into a single one
-> >
-> > v2:
-> >   * Fixed style changes
-> >   * Added missing clocks in the dt-bindings
-> >   * Split mss remoteproc node into a number of patches
-> >
-> > This patch depends on the following bindings:
-> > https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
-> > https://patchwork.kernel.org/patch/10657325/ - pdc reset node
-> > https://patchwork.kernel.org/patch/10753659/ - rpmhpd dt node
-> > https://patchwork.kernel.org/patch/10749469/ - AOP QMP dt bindings
-> > https://patchwork.kernel.org/patch/10751757/ - shutdown-irq binding
-> >
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 60 ++++++++++++++++++++++++++++
-> >  1 file changed, 60 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index 5da9fa1feb8a..e021b15f87fd 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -1366,6 +1366,66 @@
-> >                         };
-> >                 };
-> >
-> > +               remoteproc@4080000 {
-> 
-> It would be handy if you added a label here, AKA:
-> 
-> mss_pil: remoteproc@4080000 {
-> 
-> It's expected that boards will need to refer to this node so that they
-> can provide a firmware-name, so you need to give them a label to grab
-> onto.
-> 
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+This looks fine to me, but I would like Rob's confirmation that
+he is happy with the reset part in particular.
 
-I agree.
+Thanks,
 
-> ...and actually, I wonder if boards will also need to be able to set
-> status = "okay"?  Right now they don't because you don't have a status
-> = "disabled" in sdm845.dtsi, but maybe you should?  Are there ever
-> going to be any boards with sdm845 that don't hook up the modem?
+Jonathan
+
+> ---
+>  .../bindings/iio/adc/nuvoton,npcm-adc.txt          | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
 > 
-
-The modem is status "ok" on my SDA845 device (but haven't verified
-upstream myself yet), so I think it's fine to leave it enabled.
-
-But merging this as is will cause the modem to crash repeatedly until
-rmtfs is present. Sibi is making progress on tying this to rmtfs, which
-would be accompanied by the following commit:
-
-https://lore.kernel.org/lkml/20180524192141.20323-1-ramon.fried@gmail.com/
-
-I'm okay with merging that now, to unblock the merge of this patch.
-Would appreciate an Ack on this.
-
-
-Also, Sibi, the glink-edge binding doesn't define the mbox-names
-property, so please drop it.
-
-Regards,
-Bjorn
+> diff --git a/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+> new file mode 100644
+> index 000000000000..1b8132cd9060
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+> @@ -0,0 +1,35 @@
+> +Nuvoton NPCM Analog to Digital Converter (ADC)
+> +
+> +The NPCM ADC is a 10-bit converter for eight channel inputs.
+> +
+> +Required properties:
+> +- compatible: "nuvoton,npcm750-adc" for the NPCM7XX BMC.
+> +- reg: specifies physical base address and size of the registers.
+> +- interrupts: Contain the ADC interrupt with flags for falling edge.
+> +
+> +Optional properties:
+> +- clocks: phandle of ADC reference clock, in case the clock is not
+> +		  added the ADC will use the default ADC sample rate.
+> +- vref-supply: The regulator supply ADC reference voltage, in case the
+> +			   vref-supply is not added the ADC will use internal voltage
+> +			   reference.
+> +
+> +Required Node in the NPCM7xx BMC:
+> +An additional register is present in the NPCM7xx SOC which is
+> +assumed to be in the same device tree, with and marked as
+> +compatible with "nuvoton,npcm750-rst".
+> +
+> +Example:
+> +
+> +adc: adc@f000c000 {
+> +	compatible = "nuvoton,npcm750-adc";
+> +	reg = <0xf000c000 0x8>;
+> +	interrupts = <GIC_SPI 0 IRQ_TYPE_LEVEL_HIGH>;
+> +	clocks = <&clk NPCM7XX_CLK_ADC>;
+> +};
+> +
+> +rst: rst@f0801000 {
+> +	compatible = "nuvoton,npcm750-rst", "syscon",
+> +	"simple-mfd";
+> +	reg = <0xf0801000 0x6C>;
+> +};
