@@ -1,92 +1,98 @@
 From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] dt-bindings: iio: adc: Add docs for AD7768-1
-Date: Sat, 12 Jan 2019 18:13:40 +0000
-Message-ID: <20190112181340.0efe0ea0@archlinux>
-References: <1546867609-4273-1-git-send-email-stefan.popa@analog.com>
+Subject: Re: [PATCH v2 1/2] iio: chemical: bme680: Add device-tree support
+Date: Sat, 12 Jan 2019 18:22:21 +0000
+Message-ID: <20190112182221.4765d287@archlinux>
+References: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546867609-4273-1-git-send-email-stefan.popa@analog.com>
+In-Reply-To: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Popa <stefan.popa@analog.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, Michael.Hennerich@analog.com, gregkh@linuxfoundation.org, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 7 Jan 2019 15:26:49 +0200
-Stefan Popa <stefan.popa@analog.com> wrote:
+On Fri, 11 Jan 2019 15:53:58 -0500
+Sebastien Bourdelin <sebastien.bourdelin@gmail.com> wrote:
 
-> Document support for AD7768-1 Analog to Digital Converter.
+> This commit allow the driver to work with device-tree.
 > 
-> Signed-off-by: Stefan Popa <stefan.popa@analog.com>
-
-A few comments inline.
+> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+Minor stuff inline.
 
 J
 > ---
->  .../devicetree/bindings/iio/adc/adi,ad7768-1.txt   | 34 ++++++++++++++++++++++
->  MAINTAINERS                                        |  1 +
->  2 files changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
+> v1 -> v2:
+>   - add missing of.h header in bme680_spi.c
+> ---
+>  drivers/iio/chemical/bme680_i2c.c | 7 +++++++
+>  drivers/iio/chemical/bme680_spi.c | 9 +++++++++
+>  2 files changed, 16 insertions(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
-> new file mode 100644
-> index 0000000..bf619fa8
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
-> @@ -0,0 +1,34 @@
-> +Analog Devices AD7768-1 ADC device driver
-> +
-> +Required properties for the AD7768-1:
-> +
-> +- compatible: Must be "adi,ad7768-1"
-> +- reg: SPI chip select number for the device
-> +- spi-max-frequency: Max SPI frequency to use
-> +	see: Documentation/devicetree/bindings/spi/spi-bus.txt
-> +- clocks: phandle to the master clock (mclk)
-> +	see: Documentation/devicetree/bindings/clock/clock-bindings.txt
-> +- clock-names: Must be "mclk".
-> +- interrupts: IRQ line for the ADC
-> +	see: Documentation/devicetree/bindings/interrupt-controller/interrupts.txt
-> +- vref-supply: vref supply can be used as reference for conversion
-> +- adi,sync-in-gpios: must be the device tree identifier of the SYNC-IN pin. A pulse
-> +	is always required if the configuration is changed in any way, for example
-> +	if the filter decimation rate changes. As the line is active low, it should
-> +	be marked GPIO_ACTIVE_LOW.
-Should mention it's also used for simultaneous sampling.  The name makes that
-kind of obvious, but then the comment doesn't mention it.
-
-There are some other potential gpios it seems.  Good to get them in the binding
-now even if we don't do anything much with them.  Reset definitely.  The others
-maybe not as we are only supporting the spi control mode and I can't see why
-we would want to do anything different. I suppose there might be boards wired
-with it set to pin mode but hopefully not.
-
-> +
-> +Example:
-> +
-> +	adc@0 {
-> +		compatible = "adi,ad7768-1";
-> +		reg = <0>;
-> +		spi-max-frequency = <2000000>;
-> +		spi-cpol;
-> +		spi-cpha;
-> +		vref-supply = <&adc_vref>;
-> +		interrupts = <25 IRQ_TYPE_EDGE_RISING>;
-> +		interrupt-parent = <&gpio>;
-> +		adi,sync-in-gpios = <&gpio 22 GPIO_ACTIVE_LOW>;
-> +		clocks = <&ad7768_mclk>;
-> +		clock-names = "mclk";
-> +	};
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 3ba3811..e5613b6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -868,6 +868,7 @@ L:	linux-iio@vger.kernel.org
->  W:	http://ez.analog.com/community/linux-device-drivers
->  S:	Supported
->  F:	drivers/iio/adc/ad7768-1.c
-> +F:	Documentation/devicetree/bindings/iio/adc/adi,ad7768-1.txt
+> diff --git a/drivers/iio/chemical/bme680_i2c.c b/drivers/iio/chemical/bme680_i2c.c
+> index 06d4be539d2e..94a36ebdf0b2 100644
+> --- a/drivers/iio/chemical/bme680_i2c.c
+> +++ b/drivers/iio/chemical/bme680_i2c.c
+> @@ -70,10 +70,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
 >  
->  ANALOG DEVICES INC AD9389B DRIVER
->  M:	Hans Verkuil <hans.verkuil@cisco.com>
+> +static const struct of_device_id bme680_of_i2c_match[] = {
+> +	{ .compatible = "bosch,bme680", },
+> +	{},
+> +}
+> +MODULE_DEVICE_TABLE(of, bme680_of_i2c_match);
+> +
+>  static struct i2c_driver bme680_i2c_driver = {
+>  	.driver = {
+>  		.name			= "bme680_i2c",
+>  		.acpi_match_table       = ACPI_PTR(bme680_acpi_match),
+> +		.of_match_table		= of_match_ptr(bme680_of_i2c_match),
+
+As below. just = bme680...
+
+>  	},
+>  	.probe = bme680_i2c_probe,
+>  	.id_table = bme680_i2c_id,
+> diff --git a/drivers/iio/chemical/bme680_spi.c b/drivers/iio/chemical/bme680_spi.c
+> index c9fb05e8d0b9..caa57287a911 100644
+> --- a/drivers/iio/chemical/bme680_spi.c
+> +++ b/drivers/iio/chemical/bme680_spi.c
+> @@ -6,9 +6,11 @@
+>   */
+>  #include <linux/acpi.h>
+>  #include <linux/module.h>
+> +#include <linux/of.h>
+>  #include <linux/regmap.h>
+>  #include <linux/spi/spi.h>
+>  
+> +
+
+This white space change should not be here.
+
+>  #include "bme680.h"
+>  
+>  static int bme680_regmap_spi_write(void *context, const void *data,
+> @@ -110,10 +112,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+>  };
+>  MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+>  
+> +static const struct of_device_id bme680_of_spi_match[] = {
+> +	{ .compatible = "bosch,bme680", },
+> +	{},
+> +}
+> +MODULE_DEVICE_TABLE(of, bme680_of_spi_match);
+> +
+>  static struct spi_driver bme680_spi_driver = {
+>  	.driver = {
+>  		.name			= "bme680_spi",
+>  		.acpi_match_table	= ACPI_PTR(bme680_acpi_match),
+> +		.of_match_table		= of_match_ptr(bme680_of_spi_match),
+Please don't use of_match_ptr.  We actually want this entry to be there even
+if devicetree is not in use.  This is because there is a magic ACPI hid
+that can use this table even from ACPI.
+
+>  	},
+>  	.probe = bme680_spi_probe,
+>  	.id_table = bme680_spi_id,
