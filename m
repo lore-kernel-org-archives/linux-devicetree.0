@@ -1,8 +1,7 @@
 From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH 4/6] ARM: dts: bcm2837-rpi-3-b: Use consistent label for HDMI
- hotplug
-Date: Sat, 12 Jan 2019 13:43:26 +0100
-Message-ID: <1547297008-2740-5-git-send-email-stefan.wahren@i2se.com>
+Subject: [PATCH 3/6] ARM: dts: bcm2835: Fix labels for GPIO 0,1
+Date: Sat, 12 Jan 2019 13:43:25 +0100
+Message-ID: <1547297008-2740-4-git-send-email-stefan.wahren@i2se.com>
 References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,26 +21,77 @@ To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Flori
 Cc: Gottfried Haider <gottfried.haider@gmail.com>, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, Peter Robinson <pbrobinson@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-This make the GPIO label for HDMI hotplug more consistent to the other
-boards.
+According to the schematics for all RPis with a 40 pin header,
+the GPIOs 0 and 1 are labeled as ID_SD and ID_SC. In order to
+clarify that is a I2C bus, append the third letter.
 
 Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 ---
- arch/arm/boot/dts/bcm2837-rpi-3-b.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/bcm2835-rpi-a-plus.dts | 4 ++--
+ arch/arm/boot/dts/bcm2835-rpi-b-plus.dts | 4 ++--
+ arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 4 ++--
+ arch/arm/boot/dts/bcm2835-rpi-zero.dts   | 4 ++--
+ 4 files changed, 8 insertions(+), 8 deletions(-)
 
-diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-index 9abb9c5..31b1c03 100644
---- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-+++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
-@@ -39,7 +39,7 @@
- 				  "WL_ON",
- 				  "STATUS_LED",
- 				  "LAN_RUN",
--				  "HPD_N",
-+				  "HDMI_HPD_N",
- 				  "CAM_GPIO0",
- 				  "CAM_GPIO1",
- 				  "PWR_LOW_N";
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+index 2cd9c5e..db8a601 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-a-plus.dts
+@@ -31,8 +31,8 @@
+ 	 * "FOO" = GPIO line named "FOO" on the schematic
+ 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
+ 	 */
+-	gpio-line-names = "SDA0",
+-			  "SCL0",
++	gpio-line-names = "ID_SDA",
++			  "ID_SCL",
+ 			  "SDA1",
+ 			  "SCL1",
+ 			  "GPIO_GCLK",
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+index cfbdaac..1e40d67 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-b-plus.dts
+@@ -33,8 +33,8 @@
+ 	 * "FOO" = GPIO line named "FOO" on the schematic
+ 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
+ 	 */
+-	gpio-line-names = "SDA0",
+-			  "SCL0",
++	gpio-line-names = "ID_SDA",
++			  "ID_SCL",
+ 			  "SDA1",
+ 			  "SCL1",
+ 			  "GPIO_GCLK",
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+index 644d907..5765d34 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
+@@ -40,8 +40,8 @@
+ 	 * "FOO" = GPIO line named "FOO" on the schematic
+ 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
+ 	 */
+-	gpio-line-names = "GPIO0",
+-			  "GPIO1",
++	gpio-line-names = "ID_SDA",
++			  "ID_SCL",
+ 			  "SDA1",
+ 			  "SCL1",
+ 			  "GPIO_GCLK",
+diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero.dts b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+index 00323ba..3b35a8a 100644
+--- a/arch/arm/boot/dts/bcm2835-rpi-zero.dts
++++ b/arch/arm/boot/dts/bcm2835-rpi-zero.dts
+@@ -28,8 +28,8 @@
+ 	 * "FOO" = GPIO line named "FOO" on the schematic
+ 	 * "FOO_N" = GPIO line named "FOO" on schematic, active low
+ 	 */
+-	gpio-line-names = "SDA0",
+-			  "SCL0",
++	gpio-line-names = "ID_SDA",
++			  "ID_SCL",
+ 			  "SDA1",
+ 			  "SCL1",
+ 			  "GPIO_GCLK",
 -- 
 2.7.4
