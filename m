@@ -1,82 +1,44 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: Re: [PATCH v4 4/4] PCI: imx6: Add support for i.MX8MQ
-Date: Sat, 12 Jan 2019 13:28:47 -0800
-Message-ID: <CAHQ1cqHO=aw0AoLCrO+r7uCG5tE=Ai9or+UAOM3MJ1Cu-fCZ-w@mail.gmail.com>
-References: <20190104165335.13205-1-andrew.smirnov@gmail.com>
- <20190104165335.13205-5-andrew.smirnov@gmail.com> <20190111195302.GA18985@bogus>
+From: Heiko Stuebner <heiko@sntech.de>
+Subject: Re: [PATCH v2] arm64: dts: rockchip: add ROCK Pi 4 DTS support
+Date: Sat, 12 Jan 2019 22:37:10 +0100
+Message-ID: <1646372.YqHRDYLcbR@phil>
+References: <20190106044030.1484-1-Pragnesh_Patel@mentor.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111195302.GA18985@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Bjorn Helgaas <bhelgaas@google.com>, Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-pci@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190106044030.1484-1-Pragnesh_Patel@mentor.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Pragnesh_Patel@mentor.com
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-rockchip@lists.infradead.org, Shawn Lin <shawn.lin@rock-chips.com>, Akash Gajjar <Akash_Gajjar@mentor.com>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, Enric Balletbo i Serra <enric.balletbo@collabora.com>, Rob Herring <robh+dt@kernel.org>, Klaus Goger <klaus.goger@theobroma-systems.com>, linux-arm-kernel@lists.infradead.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Olof Johansson <olof@lixom.net>, Levin Du <djw@t-chip.com.cn>, Ezequiel Garcia <ezequiel@collabora.com>, Liang Chen <cl@rock-chips.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 11:53 AM Rob Herring <robh@kernel.org> wrote:
->
-> On Fri, Jan 04, 2019 at 08:53:35AM -0800, Andrey Smirnov wrote:
-> > Add code needed to support i.MX8MQ variant.
-> >
-> > Cc: Bjorn Helgaas <bhelgaas@google.com>
-> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> > Cc: Chris Healy <cphealy@gmail.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> > Cc: Rob Herring <robh@kernel.org>,
-> > Cc: devicetree@vger.kernel.org,
-> > Cc: linux-imx@nxp.com
-> > Cc: linux-arm-kernel@lists.infradead.org
-> > Cc: linux-kernel@vger.kernel.org
-> > Cc: linux-pci@vger.kernel.org
-> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> > ---
-> >  .../bindings/pci/fsl,imx6q-pcie.txt           |  3 +-
-> >  drivers/pci/controller/dwc/Kconfig            |  4 +-
-> >  drivers/pci/controller/dwc/pci-imx6.c         | 77 ++++++++++++++++++-
-> >  3 files changed, 79 insertions(+), 5 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > index d514c1f2365f..920ca93870a8 100644
-> > --- a/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > +++ b/Documentation/devicetree/bindings/pci/fsl,imx6q-pcie.txt
-> > @@ -9,6 +9,7 @@ Required properties:
-> >       - "fsl,imx6sx-pcie",
-> >       - "fsl,imx6qp-pcie"
-> >       - "fsl,imx7d-pcie"
-> > +     - "fsl,imx8mq-pcie"
-> >  - reg: base address and length of the PCIe controller
-> >  - interrupts: A list of interrupt outputs of the controller. Must contain an
-> >    entry for each entry in the interrupt-names property.
-> > @@ -45,7 +46,7 @@ Additional required properties for imx6sx-pcie:
-> >    PCIE_PHY power domains
-> >  - power-domain-names: Must be "pcie", "pcie_phy"
-> >
-> > -Additional required properties for imx7d-pcie:
-> > +Additional required properties for imx7d-pcie and imx8mq-pcie:
-> >  - power-domains: Must be set to a phandle pointing to PCIE_PHY power domain
-> >  - resets: Must contain phandles to PCIe-related reset lines exposed by SRC
-> >    IP block
-> > diff --git a/drivers/pci/controller/dwc/Kconfig b/drivers/pci/controller/dwc/Kconfig
-> > index 6aafec3fad00..83ea318ad989 100644
-> > --- a/drivers/pci/controller/dwc/Kconfig
-> > +++ b/drivers/pci/controller/dwc/Kconfig
-> > @@ -89,8 +89,8 @@ config PCI_EXYNOS
-> >       select PCIE_DW_HOST
-> >
-> >  config PCI_IMX6
-> > -     bool "Freescale i.MX6/7 PCIe controller"
-> > -     depends on SOC_IMX6Q || SOC_IMX7D || (ARM && COMPILE_TEST)
-> > +     bool "Freescale i.MX6/7/8 PCIe controller"
-> > +     depends on SOC_IMX6Q || SOC_IMX7D || (ARM64 && ARCH_MXC) || ((ARM || ARM64) && COMPILE_TEST)
->
-> Since you added the ifdef around the abort handler, I think you can drop
-> "(ARM || ARM64)" and enable building other arches.
->
+Am Sonntag, 6. Januar 2019, 05:40:10 CET schrieb Pragnesh_Patel@mentor.com:
+> From: Akash Gajjar <Akash_Gajjar@mentor.com>
+> 
+> ROCK Pi 4 is RK3399 based SBC from radxa.com. board has a 1G/2G/4G lpddr4, CSI,
+> DSI, HDMI, OTG, USB 2.0, USB 3.0, 10/100/1000 RGMII Ethernet Phy, es8316 codec,
+> POE, WIFI (for Model B only), PCIE M.2 support on board.
+> 
+> This patch enables
+> - HDMI Display
+> - Console
+> - MMC, EMMC
+> - USB 2.0, USB-3.0
+> - Ethernet
+> 
+> Signed-off-by: Akash Gajjar <Akash_Gajjar@mentor.com>
+> Signed-off-by: Pragnesh Patel <Pragnesh_Patel@mentor.com>
 
-OK, makes sense. I'll give it a go in v5.
+applied for 5.1
 
-Thanks,
-Andrey Smirnov
+Thanks
+Heiko
