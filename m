@@ -1,7 +1,7 @@
 From: =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
-Subject: [PATCH 2/2] powerpc: wii.dts: Add GPIO keys
-Date: Sat, 12 Jan 2019 17:21:24 +0100
-Message-ID: <20190112162124.3341-3-j.neuschaefer@gmx.net>
+Subject: [PATCH 1/2] powerpc: wii.dts: Add interrupt-related properties to GPIO node
+Date: Sat, 12 Jan 2019 17:21:23 +0100
+Message-ID: <20190112162124.3341-2-j.neuschaefer@gmx.net>
 References: <20190112162124.3341-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -13,49 +13,31 @@ To: linuxppc-dev@lists.ozlabs.org
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
 List-Id: devicetree@vger.kernel.org
 
-The Wii has POWER and EJECT buttons, which are connected through
-normalization logic to the GPIO controller (the length of an assertion
-of these signals is always the same, regardless of how long the user
-pressed the buttons).
+The Hollywood GPIO controller is connected to the Hollywood PIC (&PIC1)
+at IRQs 10 and 11; IRQ 10 for GPIO lines that are configured for access
+by the PPC, 11 for GPIO lines that are configured for access by the
+ARM926.
 
 Signed-off-by: Jonathan Neuschäfer <j.neuschaefer@gmx.net>
 ---
- arch/powerpc/boot/dts/wii.dts | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+ arch/powerpc/boot/dts/wii.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/powerpc/boot/dts/wii.dts b/arch/powerpc/boot/dts/wii.dts
-index 864e5a17aa1d..64f886a6327f 100644
+index 40fe791ec9e6..864e5a17aa1d 100644
 --- a/arch/powerpc/boot/dts/wii.dts
 +++ b/arch/powerpc/boot/dts/wii.dts
-@@ -14,6 +14,7 @@
+@@ -187,6 +187,11 @@
+ 				"DEBUG0", "DEBUG1", "DEBUG2", "DEBUG3",
+ 				"DEBUG4", "DEBUG5", "DEBUG6", "DEBUG7";
  
- /dts-v1/;
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/input/input.h>
- 
- /*
-  * This is commented-out for now.
-@@ -249,5 +250,21 @@
- 			gpios = <&GPIO 8 GPIO_ACTIVE_HIGH>;
- 		};
- 	};
++			interrupt-controller;
++			#interrupt-cells = <2>;
++			interrupts = <10>;
++			interrupt-parent = <&PIC1>;
 +
-+	gpio-keys {
-+		compatible = "gpio-keys";
-+
-+		power {
-+			label = "Power Button";
-+			gpios = <&GPIO 0 GPIO_ACTIVE_HIGH>;
-+			linux,code = <KEY_POWER>;
-+		};
-+
-+		eject {
-+			label = "Eject Button";
-+			gpios = <&GPIO 6 GPIO_ACTIVE_HIGH>;
-+			linux,code = <KEY_EJECTCD>;
-+		};
-+	};
- };
- 
+ 			/*
+ 			 * This is commented out while a standard binding
+ 			 * for i2c over gpio is defined.
 -- 
 2.20.1
