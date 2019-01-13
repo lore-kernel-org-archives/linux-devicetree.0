@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v4 08/14] ARM: dts: qcom: pm8941: add interrupt controller properties
-Date: Sun, 13 Jan 2019 10:47:10 -0500
-Message-ID: <20190113154716.5145-9-masneyb@onstation.org>
+Subject: [PATCH v4 14/14] spmi: pmic-arb: revert "disassociate old virq if hwirq mapping already exists"
+Date: Sun, 13 Jan 2019 10:47:16 -0500
+Message-ID: <20190113154716.5145-15-masneyb@onstation.org>
 References: <20190113154716.5145-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190113154716.5145-1-masneyb@onstation.org>
@@ -10,74 +10,40 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt controller properties now that spmi-gpio is a proper
-hierarchical IRQ chip. The interrupts property is no longer needed so
-remove it. Code was tested on the LG Nexus 5 (hammerhead) phone.
+Now that spmi-gpio is a proper hierarchical IRQ chip, and all in-tree
+users of device tree have been updated, we can now drop the hack that
+was introduced to disassociate the old Linux virq if a hwirq mapping
+already exists. That patch was introduced to not break git bisect for
+any existing boards.
+
+Driver was tested using gpio-keys and iadc/vadc on the LG Nexus 5
+(hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
-Changes since v3:
-- None
+This is a new patch introduced in V4.
 
-Changes since v2:
-- Remove interrupt-parent property
+ drivers/spmi/spmi-pmic-arb.c | 6 ------
+ 1 file changed, 6 deletions(-)
 
-Changes since v1:
-- Interrupts are now two cells instead of four cells.
-- Drop unnecessary interrupts property.
-
- arch/arm/boot/dts/qcom-pm8941.dtsi | 38 ++----------------------------
- 1 file changed, 2 insertions(+), 36 deletions(-)
-
-diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-index 2515c5c217ac..e65049e0fb45 100644
---- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-+++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-@@ -64,42 +64,8 @@
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
--				     <0 0xc1 0 IRQ_TYPE_NONE>,
--				     <0 0xc2 0 IRQ_TYPE_NONE>,
--				     <0 0xc3 0 IRQ_TYPE_NONE>,
--				     <0 0xc4 0 IRQ_TYPE_NONE>,
--				     <0 0xc5 0 IRQ_TYPE_NONE>,
--				     <0 0xc6 0 IRQ_TYPE_NONE>,
--				     <0 0xc7 0 IRQ_TYPE_NONE>,
--				     <0 0xc8 0 IRQ_TYPE_NONE>,
--				     <0 0xc9 0 IRQ_TYPE_NONE>,
--				     <0 0xca 0 IRQ_TYPE_NONE>,
--				     <0 0xcb 0 IRQ_TYPE_NONE>,
--				     <0 0xcc 0 IRQ_TYPE_NONE>,
--				     <0 0xcd 0 IRQ_TYPE_NONE>,
--				     <0 0xce 0 IRQ_TYPE_NONE>,
--				     <0 0xcf 0 IRQ_TYPE_NONE>,
--				     <0 0xd0 0 IRQ_TYPE_NONE>,
--				     <0 0xd1 0 IRQ_TYPE_NONE>,
--				     <0 0xd2 0 IRQ_TYPE_NONE>,
--				     <0 0xd3 0 IRQ_TYPE_NONE>,
--				     <0 0xd4 0 IRQ_TYPE_NONE>,
--				     <0 0xd5 0 IRQ_TYPE_NONE>,
--				     <0 0xd6 0 IRQ_TYPE_NONE>,
--				     <0 0xd7 0 IRQ_TYPE_NONE>,
--				     <0 0xd8 0 IRQ_TYPE_NONE>,
--				     <0 0xd9 0 IRQ_TYPE_NONE>,
--				     <0 0xda 0 IRQ_TYPE_NONE>,
--				     <0 0xdb 0 IRQ_TYPE_NONE>,
--				     <0 0xdc 0 IRQ_TYPE_NONE>,
--				     <0 0xdd 0 IRQ_TYPE_NONE>,
--				     <0 0xde 0 IRQ_TYPE_NONE>,
--				     <0 0xdf 0 IRQ_TYPE_NONE>,
--				     <0 0xe0 0 IRQ_TYPE_NONE>,
--				     <0 0xe1 0 IRQ_TYPE_NONE>,
--				     <0 0xe2 0 IRQ_TYPE_NONE>,
--				     <0 0xe3 0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index b7cfee831417..356bc3f66e22 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -744,14 +744,8 @@ static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
+ 				   struct irq_domain *domain, unsigned int virq,
+ 				   irq_hw_number_t hwirq)
+ {
+-	unsigned int old_virq;
+-
+ 	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu\n", virq, hwirq);
  
- 			boost_bypass_n_pin: boost-bypass {
- 				pins = "gpio21";
+-	old_virq = irq_find_mapping(domain, hwirq);
+-	if (old_virq)
+-		irq_domain_disassociate(domain, old_virq);
+-
+ 	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
+ 			    handle_level_irq, NULL, NULL);
+ }
 -- 
 2.17.2
