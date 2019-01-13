@@ -1,53 +1,110 @@
-From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH 2/3] OF: properties: add missing of_node_put
-Date: Sun, 13 Jan 2019 10:44:50 +0100
-Message-ID: <1547372691-28324-3-git-send-email-Julia.Lawall@lip6.fr>
-References: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PatchV2 1/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy regulator
+ power failed warning
+Date: Sun, 13 Jan 2019 15:30:21 +0000
+Message-ID: <20190113153022.5040-1-linux.amoon@gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Add an of_node_put when the result of of_graph_get_remote_port_parent is
-not available.
+Override the dr_mode from "host" to "peripheral" for dwc2
+usb_phy0->usb0 initilization of OTG Micro-B type.
+Changes fix the below warning for phy poweron failed --> -22
 
-The semantic match that finds this problem is as follows
-(http://coccinelle.lip6.fr):
+Changes fix the initialization of c9000000.usb phy
 
-// <smpl>
-@r exists@
-local idexpression e;
-expression x;
-@@
-e = of_graph_get_remote_port_parent(...);
-... when != x = e
-    when != true e == NULL
-    when != of_node_put(e)
-    when != of_fwnode_handle(e)
-(
-return e;
-|
-*return ...;
-)
-// </smpl>
+[    1.203900] phy phy-c0000000.phy.0: USB ID detect failed!
+[    1.208048] phy phy-c0000000.phy.0: phy poweron failed --> -22
+[    1.213877] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+[    1.222953] Modules linked in:
+[    1.225976] CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.0.0-rc1-xc2ml #3
+[    1.232872] Hardware name: Hardkernel ODROID-C2 (DT)
+[    1.237794] Workqueue: events deferred_probe_work_func
+[    1.242878] pstate: 80000005 (Nzcv daif -PAN -UAO)
+[    1.247623] pc : _regulator_put.part.11+0xf0/0xf8
+[    1.252280] lr : regulator_put+0x34/0x48
+[    1.256159] sp : ffff00001176bb00
+[    1.259437] x29: ffff00001176bb00 x28: 0000000000000000
+[    1.264698] x27: ffff80007f31beb8 x26: ffff000010eeb7e0
+[    1.269959] x25: 0000000000000000 x24: 0000000000000009
+[    1.275220] x23: ffff00001176bbc8 x22: ffff80007ed9d500
+[    1.280482] x21: ffff0000111bd6c8 x20: ffff80007ed9d700
+[    1.285743] x19: ffff80007ed9d700 x18: 000000000000006f
+[    1.291004] x17: 0000000000000000 x16: 0000000000000000
+[    1.296265] x15: 0000000000000400 x14: 0000000000000400
+[    1.301527] x13: ff00000000000000 x12: ffffffffffffffff
+[    1.306788] x11: 0000000000000038 x10: 0000000000000040
+[    1.312049] x9 : ffff0000111d58b0 x8 : ffff0000111d58a8
+[    1.317310] x7 : ffff80007ed9db00 x6 : ffff80007ec21b00
+[    1.322571] x5 : ffff80007f400248 x4 : ffff80007fba9b00
+[    1.327833] x3 : ffff0000112d9eb8 x2 : ffff80007ec21b00
+[    1.333094] x1 : 0000000000000000 x0 : 0000000000000001
+[    1.338356] Call trace:
+[    1.340773]  _regulator_put.part.11+0xf0/0xf8
+[    1.345085]  regulator_put+0x34/0x48
+[    1.348621]  regulator_bulk_free+0x30/0x50
+[    1.352675]  devm_regulator_bulk_release+0x18/0x20
+[    1.357421]  release_nodes+0x1b0/0x220
+[    1.361127]  devres_release_all+0x34/0x50
+[    1.365094]  really_probe+0xec/0x290
+[    1.368630]  driver_probe_device+0x54/0xe8
+[    1.372684]  __device_attach_driver+0xb8/0xe8
+[    1.376997]  bus_for_each_drv+0x78/0xc8
+[    1.380792]  __device_attach+0xd4/0x130
+[    1.384587]  device_initial_probe+0x10/0x18
+[    1.388727]  bus_probe_device+0x90/0x98
+[    1.392522]  deferred_probe_work_func+0x6c/0xa0
+[    1.397010]  process_one_work+0x1e0/0x318
+[    1.400975]  worker_thread+0x228/0x428
+[    1.404684]  kthread+0x124/0x128
+[    1.407876]  ret_from_fork+0x10/0x18
+[    1.411410] ---[ end trace de5fd1b262c1f56a ]---
+[    1.416055] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+[    1.425123] Modules linked in:
+[    1.428144] CPU: 1 PID: 44 Comm: kworker/1:1 Tainted: GW 5.0.0-rc1-xc2ml #3
+[    1.436422] Hardware name: Hardkernel ODROID-C2 (DT)
+[    1.441340] Workqueue: events deferred_probe_work_func
 
-Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
-
+Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
+Tested-by: Kevin Hilman <khilman@baylibre.com>
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 ---
- drivers/of/property.c |    1 +
+Rebased on Kevin's amlogic/v5.0/fixes branch
+Changes from patch v1 [0] https://lore.kernel.org/patchwork/patch/1031243/
+- Split the patch into two part
+- Fix the commit message
+- Added Tested by Kevin Hilman
+---
+ arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/of/property.c b/drivers/of/property.c
-index 0843003..8631efa 100644
---- a/drivers/of/property.c
-+++ b/drivers/of/property.c
-@@ -806,6 +806,7 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
+diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+index 1cc9dc68ef00..25a36d117183 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+@@ -302,6 +302,7 @@
  
- 	if (!of_device_is_available(remote)) {
- 		pr_debug("not available for remote node\n");
-+		of_node_put(remote);
- 		return NULL;
- 	}
+ &usb0 {
+ 	status = "okay";
++	dr_mode = "peripheral";
+ };
  
+ &usb1 {
+-- 
+2.20.1
