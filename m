@@ -1,77 +1,109 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v3 03/14] media: ov7670: hook s_power onto v4l2 core
-Date: Sun, 13 Jan 2019 17:38:55 +0100
-Message-ID: <0f9b127c407cebb390ca0a4f5d923e7aef1359c9.camel@v3.sk>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
-         <20181120100318.367987-4-lkundrak@v3.sk>
-         <20181122122146.a6wydozsg676i3w7@valkosipuli.retiisi.org.uk>
-         <868bd721260bc8948835fe2a697a047ae2277cd0.camel@v3.sk>
-         <20190110165903.gcedksczp5tmkl5t@valkosipuli.retiisi.org.uk>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [PATCH 1/2] ARM: dts: meson8b: odroidc1: Enable usb phy node
+Date: Sun, 13 Jan 2019 18:18:07 +0000
+Message-ID: <20190113181808.5768-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190110165903.gcedksczp5tmkl5t@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Emiliano Ingrassia <ingrassia@epigenesys.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-01-10 at 18:59 +0200, Sakari Ailus wrote:
-> Hi Lubomir,
-> 
-> On Wed, Nov 28, 2018 at 12:29:33PM +0100, Lubomir Rintel wrote:
-> > On Thu, 2018-11-22 at 14:21 +0200, Sakari Ailus wrote:
-> > > Hi Lubomir,
-> > > 
-> > > On Tue, Nov 20, 2018 at 11:03:08AM +0100, Lubomir Rintel wrote:
-> > > > The commit 71862f63f351 ("media: ov7670: Add the ov7670_s_power function")
-> > > > added a power control routing. However, it was not good enough to use as
-> > > > a s_power() callback: it merely flipped on the power GPIOs without
-> > > > restoring the register settings.
-> > > > 
-> > > > Fix this now and register an actual power callback.
-> > > > 
-> > > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > > 
-> > > > ---
-> > > > Changes since v2:
-> > > > - Restore the controls, format and frame rate on power on
-> > > > 
-> > > >  drivers/media/i2c/ov7670.c | 50 +++++++++++++++++++++++++++++++++-----
-> > > >  1 file changed, 44 insertions(+), 6 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> > > > index ead0c360df33..cbaab60aaaac 100644
-> > > > --- a/drivers/media/i2c/ov7670.c
-> > > > +++ b/drivers/media/i2c/ov7670.c
-> ...
-> > > > @@ -1945,7 +1983,7 @@ static int ov7670_remove(struct i2c_client *client)
-> > > >  	v4l2_ctrl_handler_free(&info->hdl);
-> > > >  	clk_disable_unprepare(info->clk);
-> > > >  	media_entity_cleanup(&info->sd.entity);
-> > > > -	ov7670_s_power(sd, 0);
-> > > > +	ov7670_power_off(sd);
-> > > >  	return 0;
-> > > >  }
-> > > >  
-> > > 
-> > > Could you consider instead switching to runtime PM? A few drivers such as
-> > > the ov2685 driver does that already.
-> > 
-> > Yes, I'll take a look. Thanks for the suggestion. I didn't know such
-> > thing exists, so it may take some time for me to grasp it though.
-> 
-> I'm be tempted to merge the ov7670 patches as they significantly improve
-> the driver, even if we're at the moment missing the runtime PM conversion.
-> It could be done later on as well.
-> 
-> Would that be ok for you?
+Add missing vbus-supply link to phy controller for usb_phy0
+and usb_phy1 nodes, this changes fixed the power issue
+on usb ports usb, changes help fix usb reset warning.
 
-Yes, I'm fine with it. In fact, I'm happy about it.
+[  821.991470] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+[  825.243385] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+[  828.151310] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+[  830.991241] usb 1-1.2: reset high-speed USB device number 3 using dwc2
 
-I'd eventually like to implement the runtime PM, but it's not going to
-happen before 5.1 merge window.
+Fixes: 2eb79a4d15ff (ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board)
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>
+Cc: Neil Armstrong <narmstrong@baylibre.com>
+Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+---
+Rebased on Kevin's amlogic/v5.0/fixes branch
 
-Cheers
-Lubo
+[alarm@archl-c1t ~]$ lsusb -t
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+        |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+        |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
+        |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
+        |__ Port 3: Dev 3, If 2, Class=Audio, Driver=snd-usb-audio, 480M
+        |__ Port 3: Dev 3, If 3, Class=Audio, Driver=snd-usb-audio, 480M
+[alarm@archl-c1t ~]$
+[alarm@archl-c1t ~]$ lsusb -v|egrep "^Bus|MaxPower"
+Couldn't open device, some information will be missing
+Bus 001 Device 003: ID 1b71:0056 Fushicai
+    MaxPower              500mA
+Couldn't open device, some information will be missing
+Bus 001 Device 004: ID 152d:0578 JMicron Technology Corp. / JMicron USA Technology Corp. JMS567 SATA 6Gb/s bridge
+    MaxPower               30mA
+Couldn't open device, some information will be missing
+Couldn't open device, some information will be missing
+Bus 001 Device 002: ID 05e3:0610 Genesys Logic, Inc. 4-port hub
+    MaxPower              100mA
+Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+    MaxPower                0mA
+---
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 23 +++++++++++++++++++++++
+ 1 file changed, 23 insertions(+)
+
+diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+index 0f0a46ddf3ff..a49a8509b288 100644
+--- a/arch/arm/boot/dts/meson8b-odroidc1.dts
++++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+@@ -83,6 +83,19 @@
+ 		regulator-max-microvolt = <5000000>;
+ 	};
+ 
++	usb_vbus: regulator-usb-vbus {
++		compatible = "regulator-fixed";
++
++		regulator-name = "USB_VBUS";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++
++		vin-supply = <&p5v0>;
++
++		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
++
+ 	tflash_vdd: regulator-tflash_vdd {
+ 		/*
+ 		 * signal name from schematics: TFLASH_VDD_EN
+@@ -293,8 +306,18 @@
+ 	pinctrl-names = "default";
+ };
+ 
++&usb0_phy {
++	status = "okay";
++	vbus-supply = <&usb_vbus>;
++};
++
+ &usb1_phy {
+ 	status = "okay";
++	vbus-supply = <&usb_vbus>;
++};
++
++&usb0 {
++	status = "okay";
+ };
+ 
+ &usb1 {
+-- 
+2.20.1
