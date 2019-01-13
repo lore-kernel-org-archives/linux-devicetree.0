@@ -1,68 +1,74 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: [PatchV2 2/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy reset warning
-Date: Sun, 13 Jan 2019 15:30:22 +0000
-Message-ID: <20190113153022.5040-2-linux.amoon@gmail.com>
-References: <20190113153022.5040-1-linux.amoon@gmail.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v4 00/14] qcom: spmi: add support for hierarchical IRQ chip
+Date: Sun, 13 Jan 2019 10:47:02 -0500
+Message-ID: <20190113154716.5145-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190113153022.5040-1-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc: Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org
+Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add missing vin-supply node 5.0V regulator setting to power
-to usb ports, changes help fix the usb reset warning.
+This patch series adds hierarchical IRQ chip support to spmi-gpio so
+that device tree consumers can request an IRQ directly from the GPIO
+block rather than having to request an IRQ from the underlying PMIC.
 
-[  795.380156] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-[  798.356073] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-[  801.331999] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-[  804.307919] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-[  807.283844] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+For more background information, see the email thread with Linus
+Walleij's excellent description of the problem at
+https://www.spinics.net/lists/linux-gpio/msg34655.html.
 
-Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
-Tested-by: Kevin Hilman <khilman@baylibre.com>
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Anand Moon <linux.amoon@gmail.com>
----
-Rebased on Kevin's amlogic/v5.0/fixes branch
-Changes from patch v1 [0] https://lore.kernel.org/patchwork/patch/1031243/
-- Split the patch into two part: new patch
-- Fix the commit message
-- Added Tested by Kevin Hilman
----
- arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 9 +++++++++
- 1 file changed, 9 insertions(+)
+This work was tested on a LG Nexus 5 (hammerhead) phone. My status page
+at https://masneyb.github.io/nexus-5-upstream/ describes what is working
+so far with the upstream kernel.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-index 25a36d117183..a947b46bfaa8 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-@@ -28,6 +28,13 @@
- 		reg = <0x0 0x0 0x0 0x80000000>;
- 	};
- 
-+	p5v0: regulator-p5v0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "P5V0";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+	};
-+
- 	usb_otg_pwr: regulator-usb-pwrs {
- 		compatible = "regulator-fixed";
- 
-@@ -36,6 +43,8 @@
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 
-+		vin-supply = <&p5v0>;
-+
- 		gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
- 		enable-active-high;
- 	};
+High-level changes since v3:
+- Add missing variants to spmi-gpio driver and device tree binding doc
+  that are already in use in device tree.
+- Introduce patch that disassociates the old virq if hwirq mapping
+  already exists and then drop it at the end of the series. This is to
+  not break git bisect for existing boards.
+- Migrate arm64 device tree files.
+- There are 8 new patches in this series and I denoted this in the notes
+  on the relevant patches.
+
+High-level changes since v2:
+- Dropped patch to mfd/qcom-spmi-pmic.c
+- Patch 3 is new and adds two new functions to gpiolib
+- Patch 6 is new and corrects the only other upstream user of spmi-gpio
+
+High-level changes since v1:
+- Patches 1 and 2 are new. This brought in a third subsystem (mfd).
+- I have detailed changelogs attached to the notes on patches 3-5.
+
+Brian Masney (14):
+  dt-bindings: pinctrl: qcom-pmic-gpio: add qcom,pmi8998-gpio binding
+  pinctrl: qcom: spmi-gpio: add support for three new variants
+  pinctrl: qcom: spmi-gpio: hardcode IRQ counts
+  spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical
+    IRQ chips
+  gpio: add irq domain activate/deactivate functions
+  spmi: pmic-arb: disassociate old virq if hwirq mapping already exists
+  qcom: spmi-gpio: add support for hierarchical IRQ chip
+  ARM: dts: qcom: pm8941: add interrupt controller properties
+  ARM: dts: qcom: pma8084: add interrupt controller properties
+  arm64: dts: qcom: pm8005: add interrupt controller properties
+  arm64: dts: qcom: pm8998: add interrupt controller properties
+  arm64: dts: qcom: pmi8994: add interrupt controller properties
+  arm64: dts: qcom: pmi8998: add interrupt controller properties
+  spmi: pmic-arb: revert "disassociate old virq if hwirq mapping already
+    exists"
+
+ .../bindings/pinctrl/qcom,pmic-gpio.txt       |   1 +
+ arch/arm/boot/dts/qcom-pm8941.dtsi            |  38 +----
+ arch/arm/boot/dts/qcom-pma8084.dtsi           |  24 +---
+ arch/arm64/boot/dts/qcom/pm8005.dtsi          |   6 +-
+ arch/arm64/boot/dts/qcom/pm8998.dtsi          |  28 +---
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi         |  12 +-
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  16 +--
+ drivers/gpio/gpiolib.c                        |  37 +++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      | 136 ++++++++++++++----
+ drivers/spmi/spmi-pmic-arb.c                  |  58 +++++---
+ include/linux/gpio/driver.h                   |   5 +
+ 11 files changed, 205 insertions(+), 156 deletions(-)
+
 -- 
-2.20.1
+2.17.2
