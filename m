@@ -1,46 +1,186 @@
-From: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-Subject: [PATCH v3 2/2] arm64: dts: allwinner: a64: Enable A64
- timer workaround
-Date: Sat, 12 Jan 2019 20:17:19 -0600
-Message-ID: <20190113021719.46457-3-samuel@sholland.org>
-References: <20190113021719.46457-1-samuel@sholland.org>
-Reply-To: samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/2] arm: dts: imx7d-sdb: add SD3.0 support for usdhc1
+Date: Sun, 13 Jan 2019 10:32:45 +0800
+Message-ID: <20190113023243.GC11426@dragon>
+References: <20181228093558.18434-1-haibo.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDA2PU6QWEARBNF75LQQKGQEZY647AA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190113021719.46457-1-samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Catalin Marinas <catalin.marinas-5wv7dgnIgG8@public.gmane.org>, Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <Mark.Rutland-5wv7dgnIgG8@public.gmane.org>, Daniel Lezcano <daniel.lezcano-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thomas Gleixner <tglx-hfZtesqFncYOwBW4kG4KsQ@public.gmane.org>, Marc Zyngier <marc.zyngier-5wv7dgnIgG8@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20181228093558.18434-1-haibo.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: BOUGH CHEN <haibo.chen@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-As instability in the architectural timer has been observed on multiple
-devices using this SoC, inluding the Pine64 and the Orange Pi Win,
-enable the workaround in the SoC's device tree.
+On Fri, Dec 28, 2018 at 09:28:30AM +0000, BOUGH CHEN wrote:
+> Add usdhc1 support SD3.0.
+> 
+> Besides, add fsl,tuning-start-tap for all usdhc, imx usdhc IP
+> logic require the tuning-start-tap larger than 10, to make
+> sure the tuning logical can work normal.
+> 
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Signed-off-by: Samuel Holland <samuel-RkNLwX/CsU9g9hUCZPvPmw@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+For i.MX arm32 dts, please use prefix 'ARM: dts: ...'.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index f3a66f888205..13eac92a8c55 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -175,6 +175,7 @@
- 
- 	timer {
- 		compatible = "arm,armv8-timer";
-+		allwinner,erratum-unknown1;
- 		interrupts = <GIC_PPI 13
- 			(GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>,
- 			     <GIC_PPI 14
--- 
-2.19.2
+> ---
+>  arch/arm/boot/dts/imx7d-sdb.dts | 55 +++++++++++++++++++++++++++------
+>  arch/arm/boot/dts/imx7s.dtsi    |  6 ++++
+>  2 files changed, 52 insertions(+), 9 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/imx7d-sdb.dts b/arch/arm/boot/dts/imx7d-sdb.dts
+> index 202922ed3754..ded43decf46c 100644
+> --- a/arch/arm/boot/dts/imx7d-sdb.dts
+> +++ b/arch/arm/boot/dts/imx7d-sdb.dts
+> @@ -87,6 +87,16 @@
+>  		regulator-max-microvolt = <1800000>;
+>  	};
+>  
+> +	reg_sd1_vmmc: regulator-sd1-vmmc {
+> +		compatible = "regulator-fixed";
+> +		regulator-name = "VDD_SD1";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		gpio = <&gpio5 2 GPIO_ACTIVE_HIGH>;
+> +		startup-delay-us = <200000>;
+> +		enable-active-high;
+> +	};
+> +
+>  	reg_brcm: regulator-brcm {
+>  		compatible = "regulator-fixed";
+>  		gpio = <&gpio4 21 GPIO_ACTIVE_HIGH>;
+> @@ -408,12 +418,13 @@
+>  };
+>  
+>  &usdhc1 {
+> -	pinctrl-names = "default";
+> -	pinctrl-0 = <&pinctrl_usdhc1>;
+> +	pinctrl-names = "default", "state_100mhz", "state_200mhz";
+> +	pinctrl-0 = <&pinctrl_usdhc1>, <&pinctrl_usdhc1_gpio>;
+> +	pinctrl-1 = <&pinctrl_usdhc1_100mhz>, <&pinctrl_usdhc1_gpio>;
+> +	pinctrl-2 = <&pinctrl_usdhc1_200mhz>, <&pinctrl_usdhc1_gpio>;
+>  	cd-gpios = <&gpio5 0 GPIO_ACTIVE_LOW>;
+>  	wp-gpios = <&gpio5 1 GPIO_ACTIVE_HIGH>;
+> -	wakeup-source;
+> -	keep-power-in-suspend;
+
+Why these changes?
+
+> +	vmmc-supply = <&reg_sd1_vmmc>;
+>  	status = "okay";
+>  };
+>  
+> @@ -426,7 +437,6 @@
+>  	keep-power-in-suspend;
+>  	non-removable;
+>  	vmmc-supply = <&reg_brcm>;
+> -	fsl,tuning-step = <2>;
+>  	status = "okay";
+>  };
+>  
+> @@ -438,7 +448,6 @@
+>  	assigned-clocks = <&clks IMX7D_USDHC3_ROOT_CLK>;
+>  	assigned-clock-rates = <400000000>;
+>  	bus-width = <8>;
+> -	fsl,tuning-step = <2>;
+>  	non-removable;
+>  	status = "okay";
+>  };
+> @@ -638,6 +647,15 @@
+>  			>;
+>  		};
+>  
+> +		pinctrl_usdhc1_gpio: usdhc1_gpiogrp {
+> +			fsl,pins = <
+> +				MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
+> +				MX7D_PAD_SD1_WP__GPIO5_IO1		0x59 /* WP */
+> +				MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x59 /* vmmc */
+> +				MX7D_PAD_GPIO1_IO08__SD1_VSELECT	0x59 /* VSELECT */
+> +			>;
+> +		};
+> +
+>  		pinctrl_usdhc1: usdhc1grp {
+>  			fsl,pins = <
+>  				MX7D_PAD_SD1_CMD__SD1_CMD		0x59
+> @@ -646,9 +664,28 @@
+>  				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x59
+>  				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x59
+>  				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x59
+> -				MX7D_PAD_SD1_CD_B__GPIO5_IO0		0x59 /* CD */
+> -				MX7D_PAD_SD1_WP__GPIO5_IO1		0x59 /* WP */
+> -				MX7D_PAD_SD1_RESET_B__GPIO5_IO2		0x59 /* vmmc */
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc1_100mhz: usdhc1grp_100mhz {
+> +			fsl,pins = <
+> +				MX7D_PAD_SD1_CMD__SD1_CMD		0x5a
+> +				MX7D_PAD_SD1_CLK__SD1_CLK		0x1a
+> +				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5a
+> +				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5a
+> +				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5a
+> +				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5a
+> +			>;
+> +		};
+> +
+> +		pinctrl_usdhc1_200mhz: usdhc1grp_200mhz {
+> +			fsl,pins = <
+> +				MX7D_PAD_SD1_CMD__SD1_CMD		0x5b
+> +				MX7D_PAD_SD1_CLK__SD1_CLK		0x1b
+> +				MX7D_PAD_SD1_DATA0__SD1_DATA0		0x5b
+> +				MX7D_PAD_SD1_DATA1__SD1_DATA1		0x5b
+> +				MX7D_PAD_SD1_DATA2__SD1_DATA2		0x5b
+> +				MX7D_PAD_SD1_DATA3__SD1_DATA3		0x5b
+>  			>;
+>  		};
+>  
+> diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+> index e88f53a4c7f4..bee8dc2f614b 100644
+> --- a/arch/arm/boot/dts/imx7s.dtsi
+> +++ b/arch/arm/boot/dts/imx7s.dtsi
+> @@ -1036,6 +1036,8 @@
+>  					<&clks IMX7D_USDHC1_ROOT_CLK>;
+>  				clock-names = "ipg", "ahb", "per";
+>  				bus-width = <4>;
+> +				fsl,tuning-step = <2>;
+
+The commit log should mention the move of fsl,tuning-step from board
+level dts to SoC level.
+
+Shawn
+
+> +				fsl,tuning-start-tap = <20>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -1048,6 +1050,8 @@
+>  					<&clks IMX7D_USDHC2_ROOT_CLK>;
+>  				clock-names = "ipg", "ahb", "per";
+>  				bus-width = <4>;
+> +				fsl,tuning-step = <2>;
+> +				fsl,tuning-start-tap = <20>;
+>  				status = "disabled";
+>  			};
+>  
+> @@ -1060,6 +1064,8 @@
+>  					<&clks IMX7D_USDHC3_ROOT_CLK>;
+>  				clock-names = "ipg", "ahb", "per";
+>  				bus-width = <4>;
+> +				fsl,tuning-step = <2>;
+> +				fsl,tuning-start-tap = <20>;
+>  				status = "disabled";
+>  			};
+>  
+> -- 
+> 2.17.1
+> 
