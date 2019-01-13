@@ -1,30 +1,53 @@
 From: Julia Lawall <Julia.Lawall@lip6.fr>
-Subject: [PATCH 0/3] add missing of_node_put
-Date: Sun, 13 Jan 2019 10:44:48 +0100
-Message-ID: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: devicetree@vger.kernel.org
-Cc: kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 2/3] OF: properties: add missing of_node_put
+Date: Sun, 13 Jan 2019 10:44:50 +0100
+Message-ID: <1547372691-28324-3-git-send-email-Julia.Lawall@lip6.fr>
+References: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-VGhlIHJlc3VsdCBvZiBvZl9ncmFwaF9nZXRfcmVtb3RlX3BvcnRfcGFyZW50IG5lZWRzIGFuIG9m
-X25vZGVfcHV0LApldmVuIGlmIGl0IGlzIG5vdCBhdmFpbGFibGUuCgotLS0KCiBkcml2ZXJzL2dw
-dS9kcm0vbWVzb24vbWVzb25fZHJ2LmMgICAgIHwgICAgOSArKysrKysrLS0KIGRyaXZlcnMvZ3B1
-L2RybS9yY2FyLWR1L3JjYXJfZHVfa21zLmMgfCAgICAxICsKIGRyaXZlcnMvb2YvcHJvcGVydHku
-YyAgICAgICAgICAgICAgICAgfCAgICAxICsKIDMgZmlsZXMgY2hhbmdlZCwgOSBpbnNlcnRpb25z
-KCspLCAyIGRlbGV0aW9ucygtKQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+Add an of_node_put when the result of of_graph_get_remote_port_parent is
+not available.
+
+The semantic match that finds this problem is as follows
+(http://coccinelle.lip6.fr):
+
+// <smpl>
+@r exists@
+local idexpression e;
+expression x;
+@@
+e = of_graph_get_remote_port_parent(...);
+... when != x = e
+    when != true e == NULL
+    when != of_node_put(e)
+    when != of_fwnode_handle(e)
+(
+return e;
+|
+*return ...;
+)
+// </smpl>
+
+Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+
+---
+ drivers/of/property.c |    1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/drivers/of/property.c b/drivers/of/property.c
+index 0843003..8631efa 100644
+--- a/drivers/of/property.c
++++ b/drivers/of/property.c
+@@ -806,6 +806,7 @@ struct device_node *of_graph_get_remote_node(const struct device_node *node,
+ 
+ 	if (!of_device_is_available(remote)) {
+ 		pr_debug("not available for remote node\n");
++		of_node_put(remote);
+ 		return NULL;
+ 	}
+ 
