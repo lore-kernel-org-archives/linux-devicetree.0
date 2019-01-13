@@ -1,99 +1,79 @@
-From: Alban Gruin <alban.gruin@gmail.com>
-Subject: Re: [PATCH] userdiff: Add a builtin pattern for dts files
-Date: Sun, 13 Jan 2019 22:26:21 +0100
-Message-ID: <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
-References: <20190111215127.57356-1-sboyd@kernel.org>
+From: Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [Potential Spoof] Re: [Potential Spoof] Re: [PATCH v2 4/4] ARM:
+ dts: aspeed: Add lpc ctrl for Facebook
+Date: Mon, 14 Jan 2019 09:09:40 +1030
+Message-ID: <1547419180.2315773.1633559160.3F7D29CF@webmail.messagingengine.com>
+References: <5972B57A-23D5-43F4-9476-229379B96C7C@fb.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <20190111215127.57356-1-sboyd@kernel.org>
-Content-Language: en-GB
-Sender: git-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>, git@vger.kernel.org
-Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <5972B57A-23D5-43F4-9476-229379B96C7C@fb.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vijay Khemka <vijaykhemka@fb.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
+Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Stephen,
-
-thank you for your patch.  I left a few comments below.
-
-Le 11/01/2019 à 22:51, Stephen Boyd a écrit :
-> The Linux kernel receives many patches to the devicetree files each
-> release. The hunk header for those patches typically show nothing,
-> making it difficult to figure out what node is being modified without
-> applying the patch or opening the file and seeking to the context. Let's
-> add a builtin 'dts' pattern to git so that users can get better diff
-> output on dts files when they use the diff=dts driver.
-> 
-> The regex has been constructed based on the spec at devicetree.org[1]
-> 
-> [1] https://github.com/devicetree-org/devicetree-specification/releases/latest
-> 
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Signed-off-by: Stephen Boyd <sboyd@kernel.org>
-> ---
->  Documentation/gitattributes.txt |  2 ++
->  t/t4018-diff-funcname.sh        |  1 +
->  t/t4018/dts-labels              |  8 +++++++
->  t/t4018/dts-node-unitless       |  8 +++++++
->  t/t4018/dts-nodes               |  8 +++++++
->  t/t4018/dts-reference           |  8 +++++++
->  t/t4034-diff-words.sh           |  1 +
->  t/t4034/dts/expect              | 37 +++++++++++++++++++++++++++++++++
->  t/t4034/dts/post                | 32 ++++++++++++++++++++++++++++
->  t/t4034/dts/pre                 | 32 ++++++++++++++++++++++++++++
->  userdiff.c                      |  9 ++++++++
->  11 files changed, 146 insertions(+)
->  create mode 100644 t/t4018/dts-labels
->  create mode 100644 t/t4018/dts-node-unitless
->  create mode 100644 t/t4018/dts-nodes
->  create mode 100644 t/t4018/dts-reference
->  create mode 100644 t/t4034/dts/expect
->  create mode 100644 t/t4034/dts/post
->  create mode 100644 t/t4034/dts/pre
-> 
-> -%<-
-> diff --git a/userdiff.c b/userdiff.c
-> index 97007abe5b16..2bc964e11089 100644
-> --- a/userdiff.c
-> +++ b/userdiff.c
-> @@ -23,6 +23,15 @@ IPATTERN("ada",
->  	 "[a-zA-Z][a-zA-Z0-9_]*"
->  	 "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
->  	 "|=>|\\.\\.|\\*\\*|:=|/=|>=|<=|<<|>>|<>"),
-> +PATTERNS("dts",
-> +	 /* Node name (with optional label and unit address) */
-> +	 "^[ \t]*((([a-zA-Z_][a-zA-Z0-9_]*: )?[a-zA-Z][a-zA-Z0-9,._+-]*(@[a-zA-Z0-9,._+-]+)?"
-
->From the spec, label and node names “shall be [between] 1 to 31
-characters in length”.  It’s not enforced here, and I guess it’s not
-really git’s job to check for this kind of rule.  Others may disagree
-with me, though.
-
-Should labels end with exactly one space after the colon, or can there
-be more, or none at all?
-
-> +	 /* Reference */
-> +	 "|&[a-zA-Z_][a-zA-Z0-9_]*[ \t]*)[ \t]*\\{)[ \t]*$",
-
-It’s not specified in the spec, but these lines must end with a curly
-brace?  What if there is a comment after the curly brace?
-
-This pattern does not match the root node, but I guess it’s not
-important as most of the interesting stuff in a dts is not directly in it.
-
-> +	 /* -- */
-> +	 /* Property names and math operators */
-> +	 "[a-zA-Z0-9,._+?#-]+"
-> +	 "|[-+*/%&^|!~]"),
-
-There is a `%' operator here and in your tests, but it’s not mentioned
-in the spec if I’m not mistaken.  Does it actually exists?
-
->  IPATTERN("fortran",
->  	 "!^([C*]|[ \t]*!)\n"
->  	 "!^[ \t]*MODULE[ \t]+PROCEDURE[ \t]\n"
-> 
-Cheers,
-Alban
+SGkgVmlqYXksCgpTb3JyeSBmb3IgcHJvdmlkaW5nIGFuIG9waW5pb24gc28gbGF0ZSwgaG93ZXZl
+cjoKCk9uIFNhdCwgMTIgSmFuIDIwMTksIGF0IDExOjAzLCBWaWpheSBLaGVta2Egd3JvdGU6Cj4g
+Sm9lbCwKPiBQbGVhc2UgbWVyZ2UgdGhlc2UgcGF0Y2hlcyBhcyBpdCBpcyByZXF1aXJlZCBieSBm
+YWNlYm9vayBwbGF0Zm9ybS4KPiAKPiBSZWdhcmRzCj4gLVZpamF5Cj4gCj4g77u/T24gMS83LzE5
+LCAxMToyNSBBTSwgIkxpbnV4LWFzcGVlZCBvbiBiZWhhbGYgb2YgVmlqYXkgS2hlbWthIiA8bGlu
+dXgtCj4gYXNwZWVkLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxpc3RzLm96bGFicy5vcmcg
+b24gYmVoYWxmIG9mIAo+IHZpamF5a2hlbWthQGZiLmNvbT4gd3JvdGU6Cj4gCj4gICAgIFBsZWFz
+ZSBtZXJnZSB0aGVzZSBwYXRjaGVzIGluIHVwc3RyZWFtIGtlcm5lbC4KPiAgICAgCj4gICAgIFJl
+Z2FyZHMKPiAgICAgLVZpamF5Cj4gICAgIAo+ICAgICBPbiAxMi8yMC8xOCwgMTA6MDYgQU0sICJM
+aW51eC1hc3BlZWQgb24gYmVoYWxmIG9mIFZpamF5IEtoZW1rYSIgCj4gPGxpbnV4LWFzcGVlZC1i
+b3VuY2VzK3ZpamF5a2hlbWthPWZiLmNvbUBsaXN0cy5vemxhYnMub3JnIG9uIGJlaGFsZiBvZiAK
+PiB2aWpheWtoZW1rYUBmYi5jb20+IHdyb3RlOgo+ICAgICAKPiAgICAgICAgIEpvZWwsIENhbiB5
+b3UgcGxlYXNlIHRha2UgY2FyZSBvZiB0aGVzZSBwYXRjaGVzIG1lcmdlLgo+ICAgICAgICAgCj4g
+ICAgICAgICBPbiAxMi8xNy8xOCwgMTI6MDQgUE0sICJWaWpheSBLaGVta2EiIDx2aWpheWtoZW1r
+YUBmYi5jb20+IHdyb3RlOgo+ICAgICAgICAgCj4gICAgICAgICAgICAgQWRkZWQgbHBjIGN0cmwg
+ZGV2aWNlIHRvIGVuYWJsZSBMUEMgY2xvY2sgaW4gRmFjZWJvb2sKPiAgICAgICAgICAgICBUaW9n
+YXBhc3MgZGV2aWNlIHRyZWUuCj4gICAgICAgICAgICAgCj4gICAgICAgICAgICAgU2lnbmVkLW9m
+Zi1ieTogVmlqYXkgS2hlbWthIDx2aWpheWtoZW1rYUBmYi5jb20+Cj4gICAgICAgICAgICAgLS0t
+Cj4gICAgICAgICAgICAgIC4uLi9ib290L2R0cy9hc3BlZWQtYm1jLWZhY2Vib29rLXRpb2dhcGFz
+cy5kdHMgIHwgMTcgKysrKysrCj4gKysrKysrKysrKysKPiAgICAgICAgICAgICAgMSBmaWxlIGNo
+YW5nZWQsIDE3IGluc2VydGlvbnMoKykKPiAgICAgICAgICAgICAKPiAgICAgICAgICAgICBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay0KPiB0aW9nYXBh
+c3MuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3Mu
+ZHRzCj4gICAgICAgICAgICAgaW5kZXggNzNlNThhODIxNjEzLi5lZjc4NzViNTQ1NjIgMTAwNjQ0
+Cj4gICAgICAgICAgICAgLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9v
+ay10aW9nYXBhc3MuZHRzCj4gICAgICAgICAgICAgKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNw
+ZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzCj4gICAgICAgICAgICAgQEAgLTIyLDYgKzIy
+LDE3IEBACj4gICAgICAgICAgICAgIAkJcmVnID0gPDB4ODAwMDAwMDAgMHgyMDAwMDAwMD47Cj4g
+ICAgICAgICAgICAgIAl9Owo+ICAgICAgICAgICAgICAKPiAgICAgICAgICAgICArCXJlc2VydmVk
+LW1lbW9yeSB7Cj4gICAgICAgICAgICAgKwkJI2FkZHJlc3MtY2VsbHMgPSA8MT47Cj4gICAgICAg
+ICAgICAgKwkJI3NpemUtY2VsbHMgPSA8MT47Cj4gICAgICAgICAgICAgKwkJcmFuZ2VzOwo+ICAg
+ICAgICAgICAgICsKPiAgICAgICAgICAgICArCQlmbGFzaF9tZW1vcnk6IHJlZ2lvbkA5ODAwMDAw
+MCB7Cj4gICAgICAgICAgICAgKwkJCW5vLW1hcDsKPiAgICAgICAgICAgICArCQkJcmVnID0gPDB4
+OTgwMDAwMDAgMHgwMDAwMTAwMD47IC8qIDRLICovCj4gICAgICAgICAgICAgKwkJfTsKPiAgICAg
+ICAgICAgICArCX07Cj4gICAgICAgICAgICAgKwo+ICAgICAgICAgICAgICAJaWlvLWh3bW9uIHsK
+PiAgICAgICAgICAgICAgCQljb21wYXRpYmxlID0gImlpby1od21vbiI7Cj4gICAgICAgICAgICAg
+IAkJaW8tY2hhbm5lbHMgPSA8JmFkYyAwPiwgPCZhZGMgMT4sIDwmYWRjIDI+LCA8JmFkYyAzPiwK
+PiAgICAgICAgICAgICBAQCAtNTQsNiArNjUsMTIgQEAKPiAgICAgICAgICAgICAgCX07Cj4gICAg
+ICAgICAgICAgIH07Cj4gICAgICAgICAgICAgIAo+ICAgICAgICAgICAgICsmbHBjX2N0cmwgewo+
+ICAgICAgICAgICAgICsJc3RhdHVzID0gIm9rYXkiOwo+ICAgICAgICAgICAgICsJbWVtb3J5LXJl
+Z2lvbiA9IDwmZmxhc2hfbWVtb3J5PjsKPiAgICAgICAgICAgICArCWZsYXNoID0gPCZzcGkxPjsK
+PiAgICAgICAgICAgICArfTsKPiAgICAgICAgICAgICArCj4gICAgICAgICAgICAgICZ1YXJ0MSB7
+Cj4gICAgICAgICAgICAgIAkvLyBIb3N0IENvbnNvbGUKPiAgICAgICAgICAgICAgCXN0YXR1cyA9
+ICJva2F5IjsKPiAgICAgICAgICAgICAtLSAKPiAgICAgICAgICAgICAyLjE3LjEKCkkgdW5kZXJz
+dGFuZCB5b3UganVzdCB3YW50IHRvIG1ha2UgeW91ciBzeXN0ZW0gd29yaywgYnV0IHRoaXMgaXMg
+YQpicm9rZW4gd2F5IHRvIGRvIGl0LiBBbmQgdGhhdCdzIG5vdCB5b3VyIGZhdWx0IC0gd2Ugc2hv
+dWxkIHJlYWxseSBmaXgKdGhlIGRyaXZlci4gSSB0aGluayB0aGUgbWVtb3J5LXJlZ2lvbiBwaGFu
+ZGxlIHNob3VsZCBiZSBvcHRpb25hbAphbmQgdGhlIGRyaXZlciBzaG91bGQgc2ltcGx5IGxpbWl0
+IHRoZSBvcHRpb25zIGF2YWlsYWJsZSB0byB0aGUgaW9jdGwKdG8ganVzdCB0aGUgZmxhc2ggcmVn
+aW9uIGlmIHRoZSBtZW1vcnkgbm9kZSBpcyBub3QgcHJlc2VudCAoaS5lLiByZXR1cm4KYW4gZXJy
+b3IgaWYgdGhlIG1lbW9yeSByZWdpb24gaXMgcmVxdWVzdGVkIGJ1dCBub3QgZGVzY3JpYmVkIGlu
+IHRoZQpkZXZpY2V0cmVlKS4KCkFuZHJldwoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJt
+LWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21h
+aWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
