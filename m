@@ -1,31 +1,58 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v10 09/12] Documentation: hwmon: Add documents for PECI
- hwmon client drivers
-Date: Mon, 14 Jan 2019 22:13:17 +1030
-Message-ID: <CACPK8XdK-VpV7y1UT81QUo7CXuUp=gjjnZmTbvLvRVERtv5fDA@mail.gmail.com>
-References: <20190107214136.5256-1-jae.hyun.yoo@linux.intel.com> <20190107214136.5256-10-jae.hyun.yoo@linux.intel.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH v2 1/3] dt-bindings: mmc: fsl-imx-esdhc: add imx6ull
+ compatible string
+Date: Mon, 14 Jan 2019 12:43:54 +0100
+Message-ID: <CAPDyKFrOW5tM7ztKzQ2akp6xvVsX72NAc1zmRzcFnt5Q9YrhtA@mail.gmail.com>
+References: <20181228033323.32308-1-haibo.chen@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190107214136.5256-10-jae.hyun.yoo@linux.intel.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20181228033323.32308-1-haibo.chen@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: BOUGH CHEN <haibo.chen@nxp.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 8 Jan 2019 at 08:11, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
+On Fri, 28 Dec 2018 at 04:26, BOUGH CHEN <haibo.chen@nxp.com> wrote:
 >
-> This commit adds hwmon documents for PECI cputemp and dimmtemp drivers.
+> Add imx6ull compatible string
 >
-> Cc: Guenter Roeck <linux@roeck-us.net>
-> Cc: Jean Delvare <jdelvare@suse.com>
-> Cc: Jonathan Corbet <corbet@lwn.net>
-> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
-> Cc: Randy Dunlap <rdunlap@infradead.org>
-> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
-> Reviewed-by: James Feist <james.feist@linux.intel.com>
-> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
-> Acked-by: Guenter Roeck <linux@roeck-us.net>
+> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
 
-Reviewed-by: Joel Stanley <joel@jms.id.au>
+Applied for next, thanks!
+
+I also amended the changelog by adding some more information about why
+this is needed, according to the comment from Fabio.
+
+Kind regards
+Uffe
+
+
+> ---
+>  Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> index 9201a7d8d7b0..540c65ed9cba 100644
+> --- a/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> +++ b/Documentation/devicetree/bindings/mmc/fsl-imx-esdhc.txt
+> @@ -15,6 +15,7 @@ Required properties:
+>                "fsl,imx6q-usdhc"
+>                "fsl,imx6sl-usdhc"
+>                "fsl,imx6sx-usdhc"
+> +              "fsl,imx6ull-usdhc"
+>                "fsl,imx7d-usdhc"
+>                "fsl,imx8qxp-usdhc"
+>
+> --
+> 2.17.1
+>
