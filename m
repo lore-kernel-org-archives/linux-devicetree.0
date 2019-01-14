@@ -1,41 +1,43 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 2/3] dt-bindings: arm: fsl: Add devicetree binding for Oxalis
-Date: Mon, 14 Jan 2019 15:50:52 +0530
-Message-ID: <20190114102053.16013-3-manivannan.sadhasivam@linaro.org>
-References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v2 0/9] Thermal throttling for SDM845
+Date: Mon, 14 Jan 2019 15:51:02 +0530
+Message-ID: <cover.1547458732.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, amit.kucheria@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, mka@chromium.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Javi Merino <javi.merino@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "open list:CPU FREQUENCY DRIVERS" <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add devicetree binding for Oxalis board in JSON format. While adding
-that, let's fix the description for LS1012A also.
+Add support for thermal throttling on SDM845. 
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+We introduce a generic flag to be used by cpufreq drivers to tell the
+cpufreq core to auto-register a thermal cooling device.
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index d34fe0749199..0f30142fe316 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -173,12 +173,13 @@ properties:
-               - fsl,vf610
-               - fsl,vf610m4
- 
--      - description: LS1021A based Boards
-+      - description: LS1012A based Boards
-         items:
-           - enum:
-               - fsl,ls1012a-rdb
-               - fsl,ls1012a-frdm
-               - fsl,ls1012a-qds
-+              - ebs-systart,oxalis
-           - const: fsl,ls1021a
- 
-       - description: LS1043A based Boards
+There are a few miscellaneous fixes to keep checkpatch happy.
+
+If this approach is acceptable I can send a series converting other cpufreq
+drivers to use this flag and get rid of driver code.
+
+Amit Kucheria (9):
+  [ALREADY QUEUED] cpufreq: qcom-hw: Move to device_initcall
+  drivers: thermal: of-thermal: Print name of device node with error
+  drivers: cpufreq: Add thermal_cooling_device pointer to struct
+    cpufreq_policy
+  cpufreq: Add a flag to auto-register a cooling device
+  cpufreq: Replace open-coded << with BIT()
+  cpufreq: qcom-hw: Register as a cpufreq cooling device
+  arm64: dts: sdm845: Increase alert trip point to 95 degrees
+  arm64: dts: sdm845: wireup the thermal trip points to cpufreq
+  thermal: cpu_cooling: Clarify error message
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 193 +++++++++++++++++++++++----
+ drivers/cpufreq/cpufreq.c            |  13 ++
+ drivers/cpufreq/qcom-cpufreq-hw.c    |   5 +-
+ drivers/thermal/cpu_cooling.c        |   2 +-
+ drivers/thermal/of-thermal.c         |   4 +-
+ include/linux/cpufreq.h              |  34 +++--
+ 6 files changed, 210 insertions(+), 41 deletions(-)
+
 -- 
 2.17.1
