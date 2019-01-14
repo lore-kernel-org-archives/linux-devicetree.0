@@ -1,91 +1,54 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 3/7] soc: qcom: Add AOSS QMP genpd provider
-Date: Mon, 14 Jan 2019 15:29:30 -0800
-Message-ID: <20190114232930.GE9278@minitux>
-References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
- <20190106080915.4493-4-bjorn.andersson@linaro.org>
- <154750565372.169631.9416138415370937156@swboyd.mtv.corp.google.com>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH 3/7] dt-bindings: net: stmmac: Add the bindings
+ documentation for delays
+Date: Mon, 14 Jan 2019 15:34:57 -0800
+Message-ID: <eb51e1de-5090-b441-ea33-f5e67358f53c@gmail.com>
+References: <20190102091729.18582-1-vkoul@kernel.org>
+ <20190102091729.18582-4-vkoul@kernel.org> <20190111150104.GA1465@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <154750565372.169631.9416138415370937156@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <swboyd@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190111150104.GA1465@bogus>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>, Vinod Koul <vkoul@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, netdev@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, "David S . Miller" <davem@davemloft.net>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 14 Jan 14:40 PST 2019, Stephen Boyd wrote:
-
-> Quoting Bjorn Andersson (2019-01-06 00:09:11)
-> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> > index dda19471057f..d81256ef5055 100644
-> > --- a/drivers/soc/qcom/Kconfig
-> > +++ b/drivers/soc/qcom/Kconfig
-> > @@ -12,6 +12,15 @@ config QCOM_AOSS_QMP
-> >           micro-controller in the AOSS, using QMP, to control certain resource
-> >           that are not exposed through RPMh.
-> >  
-> > +config QCOM_AOSS_QMP_PD
-> > +       tristate "Qualcomm AOSS Messaging Power Domain driver"
-> > +       depends on QCOM_AOSS_QMP
-> > +       select PM_GENERIC_DOMAINS
-> > +       help
-> > +         This driver provides the means of controlling the AOSSs handling of
+On 1/11/19 7:01 AM, Rob Herring wrote:
+> On Wed, Jan 02, 2019 at 02:47:25PM +0530, Vinod Koul wrote:
+>> Some controllers require that phy delay should be disabled. So add
 > 
-> Is that possesive? AOSS's?
+> If the MAC requires it, then the compatible string should imply this. If 
+> it depends on the PHY, then okay.
 > 
-
-That's correct, will fix.
-
-> > +         low-power state for resources related to the remoteproc subsystems as
-> > +         well as controlling the debug clocks.
-> > +
-> >  config QCOM_COMMAND_DB
-> >         bool "Qualcomm Command DB"
-> >         depends on ARCH_QCOM || COMPILE_TEST
-> > diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-pd.c
-> > new file mode 100644
-> > index 000000000000..62b8fcb9d09e
-> > --- /dev/null
-> > +++ b/drivers/soc/qcom/aoss-qmp-pd.c
-> > @@ -0,0 +1,135 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Copyright (c) 2018, Linaro Ltd
-> > + */
-> > +#include <linux/module.h>
-> > +#include <linux/platform_device.h>
-> > +#include <linux/pm_domain.h>
-> > +#include <linux/soc/qcom/aoss-qmp.h>
-> > +#include <dt-bindings/power/qcom-aoss-qmp.h>
-> > +
-> > +struct qmp_pd {
-> > +       struct qmp *qmp;
-> > +
-> > +       struct generic_pm_domain pd;
-> > +
-> > +       const char *name;
-> > +};
-> > +
-> > +#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
-> > +
-> > +struct qmp_pd_resource {
-> > +       const char *name;
-> > +       int (*on)(struct generic_pm_domain *domain);
-> > +       int (*off)(struct generic_pm_domain *domain);
-> > +};
-> > +
-> > +static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
-> > +{
-> > +       char buf[96];
+>> optional properties rx-disable-delay and tx-disable-delay for it.
+>>
+>> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+>> ---
+>>  Documentation/devicetree/bindings/net/stmmac.txt | 2 ++
+>>  1 file changed, 2 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/stmmac.txt b/Documentation/devicetree/bindings/net/stmmac.txt
+>> index cb694062afff..ec18897e22c8 100644
+>> --- a/Documentation/devicetree/bindings/net/stmmac.txt
+>> +++ b/Documentation/devicetree/bindings/net/stmmac.txt
+>> @@ -74,6 +74,8 @@ Optional properties:
+>>  	- snps,mb: mixed-burst
+>>  	- snps,rb: rebuild INCRx Burst
+>>  - mdio: with compatible = "snps,dwmac-mdio", create and register mdio bus.
+>> +- rx-delay-disable: bool, when present disable the rx delay
+>> +- tx-delay-disable: bool, when present disable the tx delay
 > 
-> Is 96 calculated from somewhere? Can it be a define because it's quite
-> magical.
-> 
+> Needs a vendor prefix.
 
-This is inherited by downstream, I know it has to be % 4, I'll check and
-update accordingly.
+Indeed, and it would actually be nicer to allow specifying delays
+directly in ps units, see:
 
-Thanks,
-Bjorn
+Documentation/devicetree/bindings/net/dwmac-sun8i.txt
+Documentation/devicetree/bindings/net/mediatek-dwmac.txt
+
+for examples.
+-- 
+Florian
