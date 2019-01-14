@@ -1,27 +1,48 @@
-Return-Path: <SRS0=XutU=PV=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from typhoonoptics.com ([185.202.172.61]:45235 "EHLO
-        dentmagictools.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726154AbfAMIek (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 13 Jan 2019 03:34:40 -0500
-Subject: Do you need to edit your images?
-Message-ID: <3c2947eef4f09059c9476f4d3e8c4e63@modcloth.com>
-Date: Sat, 12 Jan 2019 15:12:23 +0100
-From: "Ruby" <loupamintererpaenlop@verizon.net>
-Reply-To: desaiten@aliyun.com
+Return-Path: <SRS0=TOSu=PW=gmail.com=dmitry.torokhov@kernel.org>
+Date: Sun, 13 Jan 2019 23:42:24 -0800
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH 0/5] Input: edt-ft5x06 - Add support for Evervision FT
+ devices
+Message-ID: <20190114074224.GF217283@dtor-ws>
+References: <20190103192327.6170-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; format=flowed; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190103192327.6170-1-m.felsch@pengutronix.de>
+To: Marco Felsch <m.felsch@pengutronix.de>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, kernel@pengutronix.de, linux-input@vger.kernel.org, hdegoede@redhat.com, simon.budig@kernelconcepts.de
 List-ID: <devicetree@vger.kernel.org>
 
-Do you need to edit your photos?
+On Thu, Jan 03, 2019 at 08:23:22PM +0100, Marco Felsch wrote:
+> This series adds the support for Evervision Focaltech based touchscreen
+> controllers. Evervision uses three different controllers, depending on
+> the display resolution, these are:
+>  - FT5306
+>  - FT5726
+>  - FT5C26.
+> 
+> It seems that the firmware for all controllers doesn't differ, but I
+> had only a FT5726 based device. So this series adds only the support
+> for those devices.
+> 
+> The Evervision vendor-prefix was added in an another patchset [1].
+> 
+> This patchset is based on the v4.20-rc1 tag.
+> 
+> [1] https://www.spinics.net/lists/devicetree/msg266938.html
+> 
+> Marco Felsch (5):
+>   dt-bindings: Input: edt-ft5x06 - add support for FT5726
+>   Input: edt-ft5x06 - add support for Evervision FT5726
+>   Input: edt-ft5x06 - Add support to update ev-ft5726 registers
+>   dt-bindings: Input: edt-ft5x06 - add offset bindings for ft5726
+>   Input: edt-ft5x06 - add offset support for ev-ft5726
+> 
+>  .../bindings/input/touchscreen/edt-ft5x06.txt |  13 ++-
+>  drivers/input/touchscreen/edt-ft5x06.c        | 110 ++++++++++++++++--
+>  2 files changed, 114 insertions(+), 9 deletions(-)
 
-Here are the editing service we mostly for the photos from our clients.
-Photos cut out background , clipping path, and also retouching.
+Applied the lot, thank you.
 
-You may send some photos to us. we will let our editing staffs to work on
-them.
-
-Thanks,
-Ruby
+-- 
+Dmitry
