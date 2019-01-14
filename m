@@ -1,118 +1,54 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: [PATCH v6] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Tue, 15 Jan 2019 00:52:01 +0530
-Message-ID: <20190114192201.23779-1-sibis@codeaurora.org>
+From: Jolly Shah <jolly.shah@xilinx.com>
+Subject: [PATCH v5 0/3] drivers: soc: xilinx: Add support for ZynqMP PM driver
+Date: Mon, 14 Jan 2019 11:22:55 -0800
+Message-ID: <1547493778-22720-1-git-send-email-jollys@xilinx.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, robh+dt@kernel.org, andy.gross@linaro.org, david.brown@linaro.org, dianders@chromium.org
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, mark.rutland@arm.com, linux-remoteproc@vger.kernel.org, evgreen@chromium.org, briannorris@chromium.org, sricharan@codeaurora.org, Sibi Sankar <sibis@codeaurora.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: matthias.bgg@gmail.com, andy.gross@linaro.org, shawnguo@kernel.org, geert+renesas@glider.be, bjorn.andersson@linaro.org, sean.wang@mediatek.com, m.szyprowski@samsung.com, michal.simek@xilinx.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, rajanv@xilinx.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jolly Shah <jollys@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
-
-Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
----
-
-v6:
-  * Drop unused mbox-names property
-  * Add mss_pil label
-  * Rebased to Andy's for-next
+Add ZynqMP PM driver. PM driver provides power management
+support for ZynqMP.
 
 v5:
-  * Use qmp_aop updated dt binding
+ - Added Reviewed tag for dt bindings
 
-v3:
-  * with shutdown-ack irq redesign make it mandatory,
-    merge multiple patches into a single one
-
-v2:
-  * Fixed style changes
-  * Added missing clocks in the dt-bindings
-  * Split mss remoteproc node into a number of patches
-
-This patch depends on the following bindings:
-https://patchwork.kernel.org/patch/10662089/ - mba/mpss reserved regions
-https://patchwork.kernel.org/patch/10657325/ - pdc reset node
-https://patchwork.kernel.org/patch/10755191/ - rpmhpd dt node
-https://patchwork.kernel.org/patch/10755197/ - rpmhpd dt binding
-https://patchwork.kernel.org/patch/10749469/ - AOP QMP dt binding
-https://patchwork.kernel.org/patch/10751757/ - shutdown-irq binding
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 59 ++++++++++++++++++++++++++++
- 1 file changed, 59 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index 7d05e967c9ee..b5a58e508bb2 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -1440,6 +1440,65 @@
- 			};
- 		};
+v4:
+ - Minor fixes to address v3 review comments
  
-+		mss_pil: remoteproc@4080000 {
-+			compatible = "qcom,sdm845-mss-pil";
-+			reg = <0x04080000 0x408>, <0x04180000 0x48>;
-+			reg-names = "qdsp6", "rmb";
-+
-+			interrupts-extended =
-+				<&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-+				<&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-+			interrupt-names = "wdog", "fatal", "ready",
-+					  "handover", "stop-ack",
-+					  "shutdown-ack";
-+
-+			clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-+				 <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-+				 <&gcc GCC_BOOT_ROM_AHB_CLK>,
-+				 <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-+				 <&gcc GCC_MSS_SNOC_AXI_CLK>,
-+				 <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-+				 <&gcc GCC_PRNG_AHB_CLK>,
-+				 <&rpmhcc RPMH_CXO_CLK>;
-+			clock-names = "iface", "bus", "mem", "gpll0_mss",
-+				      "snoc_axi", "mnoc_axi", "prng", "xo";
-+
-+			qcom,smem-states = <&modem_smp2p_out 0>;
-+			qcom,smem-state-names = "stop";
-+
-+			resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-+				 <&pdc_reset PDC_MODEM_SYNC_RESET>;
-+			reset-names = "mss_restart", "pdc_reset";
-+
-+			qcom,halt-regs = <&tcsr_mutex_regs
-+						0x23000 0x25000 0x24000>;
-+
-+			power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-+					<&rpmhpd SDM845_CX>,
-+					<&rpmhpd SDM845_MX>,
-+					<&rpmhpd SDM845_MSS>;
-+			power-domain-names = "load_state", "cx", "mx", "mss";
-+
-+			mba {
-+				memory-region = <&mba_region>;
-+			};
-+
-+			mpss {
-+				memory-region = <&mpss_region>;
-+			};
-+
-+			glink-edge {
-+				interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-+				label = "modem";
-+				qcom,remote-pid = <1>;
-+				mboxes = <&apss_shared 12>;
-+			};
-+		};
-+
- 		sdhc_2: sdhci@8804000 {
- 			compatible = "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5";
- 			reg = <0x8804000 0x1000>;
+v3:
+ - Updated DT bindings as per v2 review comments
+ 
+v2:
+ - Rebased on top of latest firmware driver patch series
+ - Updated driver to use shared interrupt instead of mailbox
+
+Rajan Vaja (3):
+  dt-bindings: soc: Add ZynqMP PM bindings
+  firmware: xilinx: Implement ZynqMP power management APIs
+  drivers: soc: xilinx: Add ZynqMP PM driver
+
+ .../bindings/power/reset/xlnx,zynqmp-power.txt     |  25 +++
+ drivers/firmware/xilinx/zynqmp.c                   |  29 ++++
+ drivers/soc/xilinx/Kconfig                         |  11 ++
+ drivers/soc/xilinx/Makefile                        |   1 +
+ drivers/soc/xilinx/zynqmp_power.c                  | 178 +++++++++++++++++++++
+ include/linux/firmware/xlnx-zynqmp.h               |  20 +++
+ 6 files changed, 264 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+ create mode 100644 drivers/soc/xilinx/zynqmp_power.c
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
