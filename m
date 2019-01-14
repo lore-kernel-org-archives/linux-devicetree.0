@@ -1,42 +1,30 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: [PATCH v1 1/3] dt-bindings: mtd: mtk-quadspi: update bindings for MT7629 SoC
-Date: Mon, 14 Jan 2019 13:12:18 +0800
-Message-ID: <67e650ca4fcaaddbbc98bf4e1cbe04647c990dc3.1547442452.git.ryder.lee@mediatek.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v10 01/12] dt-bindings: Add a document of PECI subsystem
+Date: Mon, 14 Jan 2019 16:04:53 +1030
+Message-ID: <CACPK8Xe5H31M=U3JQQaOheoopFZQtS0ZegaGRx4Pmw7Ym9g5YQ@mail.gmail.com>
+References: <20190107214136.5256-1-jae.hyun.yoo@linux.intel.com> <20190107214136.5256-2-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190107214136.5256-2-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Ryder Lee <ryder.lee@mediatek.com>
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
 List-Id: devicetree@vger.kernel.org
 
-This updates bindings for the MT7629 SPI-NOR controller.
+On Tue, 8 Jan 2019 at 08:11, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
+>
+> This commit adds a document of generic PECI bus, adapter and client
+> driver.
+>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+> Reviewed-by: James Feist <james.feist@linux.intel.com>
+> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-Changes since v1: add a Reviewed-by tag. 
----
- Documentation/devicetree/bindings/mtd/mtk-quadspi.txt | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-index 56d3668..a12e3b5 100644
---- a/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/mtk-quadspi.txt
-@@ -1,4 +1,4 @@
--* Serial NOR flash controller for MTK MT81xx (and similar)
-+* Serial NOR flash controller for MediaTek SoCs
- 
- Required properties:
- - compatible: 	  For mt8173, compatible should be "mediatek,mt8173-nor",
-@@ -10,6 +10,7 @@ Required properties:
- 		  "mediatek,mt2712-nor", "mediatek,mt8173-nor"
- 		  "mediatek,mt7622-nor", "mediatek,mt8173-nor"
- 		  "mediatek,mt7623-nor", "mediatek,mt8173-nor"
-+		  "mediatek,mt7629-nor", "mediatek,mt8173-nor"
- 		  "mediatek,mt8173-nor"
- - reg: 		  physical base address and length of the controller's register
- - clocks: 	  the phandle of the clocks needed by the nor controller
--- 
-1.9.1
+Reviewed-by: Joel Stanley <joel@jms.id.au>
