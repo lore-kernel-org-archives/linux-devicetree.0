@@ -1,68 +1,45 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 1/5] gnss: sirf: write data to gnss only when the gnss
- device is open
-Date: Mon, 14 Jan 2019 13:00:21 +0100
-Message-ID: <20190114120021.GF3691@localhost>
-References: <20181209195150.5192-1-andreas@kemnade.info>
- <20181209195150.5192-2-andreas@kemnade.info>
- <20190110120228.GB3430@localhost>
- <20190113215036.11c543db@aktux>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: dt-bindings: Convert fixed-regulator to
+ json-schema
+Date: Mon, 14 Jan 2019 12:01:03 +0000
+Message-ID: <20190114120103.GB11073@sirena.org.uk>
+References: <20190110221903.3990-6-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="yNb1oOkm5a9FJOVX"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190113215036.11c543db@aktux>
+In-Reply-To: <20190110221903.3990-6-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 13, 2019 at 09:50:36PM +0100, Andreas Kemnade wrote:
-> On Thu, 10 Jan 2019 13:02:28 +0100
-> Johan Hovold <johan@kernel.org> wrote:
-> 
-> > On Sun, Dec 09, 2018 at 08:51:46PM +0100, Andreas Kemnade wrote:
-> > > The api forbids writing data there otherwise. Prepare for the
-> > > serdev_open()/close() being a part of runtime pm.
-> > > 
-> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> > > ---
-> > > Changes in v2:
-> > >  add locking
-> > > 
-> > >  drivers/gnss/sirf.c | 28 +++++++++++++++++++++++++++-
-> > >  1 file changed, 27 insertions(+), 1 deletion(-)
-> > > 
-> > > diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
-> > > index 2c22836d3ffd..ba663de1db49 100644
-> > > --- a/drivers/gnss/sirf.c
-> > > +++ b/drivers/gnss/sirf.c
-> > > @@ -35,6 +35,12 @@ struct sirf_data {
-> > >  	struct gpio_desc *wakeup;
-> > >  	int irq;
-> > >  	bool active;
-> > > +	/*
-> > > +	 * There might be races between returning data and closing the gnss
-> > > +	 * device.
-> > > +	 */  
-> > 
-> > Please drop this comment, which is too verbose. The mutex protects the
-> > opened flag, and that could be indicated using a new line above the
-> > mutex and below the flag, or using a short comment before the mutex.
-> > 
-> > > +	struct mutex gdev_mutex;  
-> > 
-> > Please rename "mutex". We should be able to reuse this for the serdev
-> > open count as well, right?
-> 
-> No. we cannot. The problem here is that we would take the same mutex
-> in a serdev callback and around a serdev call. Then we have things like
-> that:
-> 
-> [   36.700408] ======================================================
-> [   36.706970] WARNING: possible circular locking dependency detected
 
-Right, we need to be able to flush as part of close. Thanks for
-investigating, though.
+--yNb1oOkm5a9FJOVX
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Johan
+On Thu, Jan 10, 2019 at 04:19:03PM -0600, Rob Herring wrote:
+> Convert the fixed-regulator binding to DT schema format using
+> json-schema.
+
+This looks good but has collided with some other changes from Linus, can
+you please respin against them?
+
+--yNb1oOkm5a9FJOVX
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlw8ef4ACgkQJNaLcl1U
+h9C1egf9EyDGFsMmJv/xo3E2kJqh/9tf9dUeYFgj16wNrEOBt5DRZuPNgxzMPRAe
+fCFq481WOjcwxQ/B5bEI/TpZFX+rOx1nsaxYPs2ZOtPu4OjN9gZlZLzuzT35+S5c
+aJeCbd8Ok/XRhZuyxd3b3M7UY60CYUQpfUK1AUyZ+39/mfa1y7eN6TT3HM9OMYD0
+lz1rhAKaPNw27ugIq+kIYDIbgungxphH0l+j/0waTsIugbS86dVnMxC2abfdlFBv
+yKtTULJ7Ca90Ygiw0pd5yz75KJzeDVh5K3s9rut3TkghiQl3jKwMrvyG87s0SQtJ
+gBcqKNpWOIQKAjaFX2EpiSvc3xiUcg==
+=8aBq
+-----END PGP SIGNATURE-----
+
+--yNb1oOkm5a9FJOVX--
