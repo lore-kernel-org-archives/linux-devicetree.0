@@ -1,53 +1,33 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 0/3] Add Oxalis board support
-Date: Mon, 14 Jan 2019 15:50:50 +0530
-Message-ID: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 1/3] dt-bindings: vendor-prefixes: Add EBS-SYSTART GmbH Vendor Prefix
+Date: Mon, 14 Jan 2019 15:50:51 +0530
+Message-ID: <20190114102053.16013-2-manivannan.sadhasivam@linaro.org>
+References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, amit.kucheria@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Add vendor prefix for EBS-SYSTART GmbH.
 
-This patchset adds Oxalis board support. This board is one of the
-96Boards Enterprise Edition platform from EBS-SYSTART GmbH. Below are some
-of the key features of this board:
+Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+---
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-* SoC: NXP Layerscape LS1012A
-* RAM: 1GB DDR3L
-* PMU: NXP VR5100
-* Storage: 64MByte SPI Flash for bootloader and RCW, MicroSD Card, SATA
-* Connectivity: 2x Ethernet
-* USB: 2x USB3.0
-
-More information about this board can be found in 96Boards product
-page: https://www.96boards.org/product/oxalis/
-
-Ethernet and SPI flash are not supported yet!
-
-Thanks,
-Mani
-
-Changes in v2:
-
-As per Rob's review:
-
-* Adopted the Oxalis board binding to JSON format.
-* Sorted the EBS-SYSTART vendor prefix alphabetically.
-* Used the generic node name for audio codec.
-
-Manivannan Sadhasivam (3):
-  dt-bindings: vendor-prefixes: Add EBS-SYSTART GmbH Vendor Prefix
-  dt-bindings: arm: fsl: Add devicetree binding for Oxalis
-  arm64: dts: freescale: Add devicetree for Oxalis
-
- .../devicetree/bindings/arm/fsl.yaml          |  3 +-
- .../devicetree/bindings/vendor-prefixes.txt   |  1 +
- arch/arm64/boot/dts/freescale/Makefile        |  1 +
- .../boot/dts/freescale/fsl-ls1012a-oxalis.dts | 96 +++++++++++++++++++
- 4 files changed, 100 insertions(+), 1 deletion(-)
- create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts
-
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389508584f48..38693105b5c6 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -108,6 +108,7 @@ dongwoon	Dongwoon Anatech
+ dptechnics	DPTechnics
+ dragino	Dragino Technology Co., Limited
+ ea	Embedded Artists AB
++ebs-systart EBS-SYSTART GmbH
+ ebv	EBV Elektronik
+ eckelmann	Eckelmann AG
+ edt	Emerging Display Technologies
 -- 
 2.17.1
