@@ -1,114 +1,90 @@
-From: Bartosz Golaszewski <brgl@bgdev.pl>
-Subject: Re: [PATCH 02/17] clocksource: davinci-timer: new driver
-Date: Mon, 14 Jan 2019 17:39:03 +0100
-Message-ID: <CAMRc=McrT4KTW45=3CTBxspVb+z8k=DDjOvKi9NH0aA9eJ8=cQ@mail.gmail.com>
-References: <20190111172134.30147-1-brgl@bgdev.pl> <20190111172134.30147-3-brgl@bgdev.pl>
- <08200de1-fde5-c525-c874-c7872259067b@ti.com>
+From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Subject: [PATCH] arm64: dts: imx8mq: Add pwm
+Date: Mon, 14 Jan 2019 17:30:34 +0100
+Message-ID: <20190114163034.GA24531@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <08200de1-fde5-c525-c874-c7872259067b@ti.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sekhar Nori <nsekhar@ti.com>
-Cc: Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-pon., 14 sty 2019 o 13:20 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
->
-> Hi Bartosz,
->
-> On 11/01/19 10:51 PM, Bartosz Golaszewski wrote:
-> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> >
-> > Currently the clocksource and clockevent support for davinci platforms
-> > lives in mach-davinci. It hard-codes many things, used global variables=
-,
-> > implements functionalities unused by any platform and has code fragment=
-s
-> > scattered across many (often unrelated) files.
-> >
-> > Implement a new, modern and simplified timer driver and put it into
-> > drivers/clocksource. We still need to support legacy board files so
-> > export a config structure and a function that allows machine code to
-> > register the timer.
-> >
-> > We don't check the return values of regmap reads and writes since with
-> > mmio it's only likely to fail due to programmer's errors.
-> >
-> > We also don't bother freeing resources on errors in
-> > davinci_timer_register() as the system won't boot without a timer anywa=
-y.
-> >
-> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> With this series, DA830 fails to boot. Rest of the devices are okay from
-> boot perspective.
->
-> DA830 is pretty unique because it uses the same timer-half for both
-> clocksource and clockevent. May be you can set the same configuration on
-> your DA850 to see the same issue? Else, I will enable low-level debug
-> and try to provide more debug data.
->
+We can reuse the pwm from fsl,imx27-pwm as with other imx SOCs.
 
-I can't boot da850 with the same config as da830 (0x60 compare
-register, compare irq 74) even with the old timer code. Just to make
-sure: does da830 boot fine with mainline v5.0-rc2?
+Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
+---
+This is against linux-next (next-20190114)
 
-> Some minor comments below from quick look:
->
-> > diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/=
-timer-davinci.c
-> > new file mode 100644
-> > index 000000000000..7282a1fda80f
-> > --- /dev/null
-> > +++ b/drivers/clocksource/timer-davinci.c
-> > @@ -0,0 +1,415 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * TI DaVinci clocksource driver
-> > + *
-> > + * Copyright (C) 2019 Texas Instruments
-> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> > + * (with some parts adopted from code by Kevin Hilman <khilman@baylibr=
-e.com>)
->
-> Did you really intend GPL v2 or later? The original code referred to
-> above is marked 2.0 only.
->
+ arch/arm64/boot/dts/freescale/imx8mq.dtsi | 44 +++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-I'm not sure. Should it be GPLv2 only? I'm not well versed with licensing.
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
+s/freescale/imx8mq.dtsi
+index 8e9d6d5ed7b2..53ed0bdfc06a 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
++++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
+@@ -252,6 +252,50 @@
+ 				clocks =3D <&clk IMX8MQ_CLK_WDOG3_ROOT>;
+ 				status =3D "disabled";
+ 			};
++
++			pwm1: pwm@30660000 {
++				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
++				reg =3D <0x30660000 0x10000>;
++				interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&clk IMX8MQ_CLK_PWM1_ROOT>,
++				<&clk IMX8MQ_CLK_PWM1_ROOT>;
++				clock-names =3D "ipg", "per";
++				#pwm-cells =3D <2>;
++				status =3D "disabled";
++			};
++
++			pwm2: pwm@30670000 {
++				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
++				reg =3D <0x30670000 0x10000>;
++				interrupts =3D <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&clk IMX8MQ_CLK_PWM2_ROOT>,
++				<&clk IMX8MQ_CLK_PWM2_ROOT>;
++				clock-names =3D "ipg", "per";
++				#pwm-cells =3D <2>;
++				status =3D "disabled";
++			};
++
++			pwm3: pwm@30680000 {
++				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
++				reg =3D <0x30680000 0x10000>;
++				interrupts =3D <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&clk IMX8MQ_CLK_PWM3_ROOT>,
++				<&clk IMX8MQ_CLK_PWM3_ROOT>;
++				clock-names =3D "ipg", "per";
++				#pwm-cells =3D <2>;
++				status =3D "disabled";
++			};
++
++			pwm4: pwm@30690000 {
++				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
++				reg =3D <0x30690000 0x10000>;
++				interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++				clocks =3D <&clk IMX8MQ_CLK_PWM4_ROOT>,
++				<&clk IMX8MQ_CLK_PWM4_ROOT>;
++				clock-names =3D "ipg", "per";
++				#pwm-cells =3D <2>;
++				status =3D "disabled";
++			};
+ 		};
+ =
 
-Bart
+ 		bus@30400000 { /* AIPS2 */
+-- =
 
-> > + */
-> > +
-> > +#include <linux/clk.h>
-> > +#include <linux/clockchips.h>
-> > +#include <linux/clocksource.h>
-> > +#include <linux/err.h>
-> > +#include <linux/interrupt.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/of_address.h>
-> > +#include <linux/of_irq.h>
-> > +#include <linux/regmap.h>
-> > +#include <linux/sched_clock.h>
-> > +
-> > +#include <clocksource/timer-davinci.h>
-> > +
-> > +#define DAVINCI_TIMER_REG_TIM12                      0x10
-> > +#define DAVINCI_TIMER_REG_TIM34                      0x14
-> > +#define DAVINCI_TIMER_REG_PRD12                      0x18
-> > +#define DAVINCI_TIMER_REG_PRD34                      0x1c
-> > +#define DAVINCI_TIMER_REG_TCR                        0x20
-> > +#define DAVINCI_TIMER_REG_TGCR                       0x24
-> > +
-> > +#define DAVINCI_TIMER_TIMMODE_MASK           0x0000000c
-> > +#define DAVINCI_TIMER_RESET_MASK             0x00000003
-> > +#define DAVINCI_TIMER_TIMMODE_32BIT_UNCHAINED        0x00000004
-> > +#define DAVINCI_TIMER_UNRESET                        0x00000003
->
-> I think these are more readable if using BIT() and GENMASK()
->
-> Thanks,
-> Sekhar
+2.20.1
