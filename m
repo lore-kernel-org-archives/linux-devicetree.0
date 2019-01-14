@@ -1,115 +1,78 @@
-Return-Path: <SRS0=iARg=PP=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail.kernel.org ([198.145.29.99]:57082 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727599AbfAGOah (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Mon, 7 Jan 2019 09:30:37 -0500
-Subject: patch "staging: mt7621-pci-phy: dt-bindings: add bindings for Mediatek" added to staging-next
-From: <gregkh@linuxfoundation.org>
-Date: Mon, 07 Jan 2019 15:29:23 +0100
-Message-ID: <1546871363166149@kroah.com>
+Return-Path: <SRS0=rhSe=PW=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from [223.203.96.18] ([223.203.96.18]:47269 "EHLO
+        barracuda02.hxt-semitech.com" rhost-flags-FAIL-FAIL-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726677AbfANClY (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sun, 13 Jan 2019 21:41:24 -0500
+From: "Liu, Xiaoting" <xiaoting.liu@hxt-semitech.com>
+Subject: Re: [PATCH 2/4] dt-bindings: power supply: Document dps650ab
+Date: Mon, 14 Jan 2019 02:41:04 +0000
+Message-ID: <d51a1a5fe99b4227a596ff66c05ad67c@HXTBJIDCEMVIW02.hxtcorp.net>
+References: <cover.1546591275.git.xiaoting.liu@hxt-semitech.com>
+ <8540dfc96a75a6aa4bd1a7d5f24db7d36a71282c.1546591275.git.xiaoting.liu@hxt-semitech.com>
+ <20190111193612.GA23166@bogus>
+Content-Language: en-US
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Type: text/plain; charset=ANSI_X3.4-1968
-Content-Transfer-Encoding: 8bit
 Sender: devicetree-owner@vger.kernel.org
-To: sergio.paracuellos@gmail.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org
+To: Rob Herring <robh@kernel.org>
+Cc: "jdelvare@suse.com" <jdelvare@suse.com>, "linux@roeck-us.net" <linux@roeck-us.net>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "openbmc@lists.ozlabs.org" <openbmc@lists.ozlabs.org>, "linux-hwmon@vger.kernel.org" <linux-hwmon@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Yang, Shunyong" <shunyong.yang@hxt-semitech.com>, "Wang, Dongsheng" <dongsheng.wang@hxt-semitech.com>
 List-ID: <devicetree@vger.kernel.org>
 
+Hi Rob Herring,
 
-This is a note to let you know that I've just added the patch titled
+Thanks for your reply.
 
-    staging: mt7621-pci-phy: dt-bindings: add bindings for Mediatek
+On 2019/1/12 3:42, Rob Herring wrote:
+> On Fri, Jan 04, 2019 at 05:00:30PM +0800, Xiaoting Liu wrote:
+>> Bindings for DPS650AB power, voltage, temperature, and fan monitering.
+> s/monitering/monitoring/
 
-to my staging git tree which can be found at
-    git://git.kernel.org/pub/scm/linux/kernel/git/gregkh/staging.git
-in the staging-next branch.
+I delivered the latest v3 patch and updated the subject. you can refer
+to the following link:
 
-The patch will show up in the next release of the linux-next tree
-(usually sometime within the next 24 hours during the week.)
+https://patchwork.ozlabs.org/patch/1022664/
 
-The patch will also be merged in the next major kernel release
-during the merge window.
+>
+>> Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+>> ---
+>>  Documentation/devicetree/bindings/hwmon/dps650ab.txt | 11 +++++++++++
+>>  1 file changed, 11 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/hwmon/dps650ab.txt b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+>> new file mode 100644
+>> index 000000000000..bbd601100e66
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/hwmon/dps650ab.txt
+>> @@ -0,0 +1,11 @@
+>> +Bindings for DPS650AB power, voltage, temperature, and fan monitering
+>> +
+>> +Required properties:
+>> +- compatible : "dps650ab"
+> Needs a vendor prefix.g
+Add vendor delta on v3 patch.
+>
+>> +- reg        : I2C address, one of 0x58, 0x59.
+>> +
+>> +Example:
+>> +       dps650ab@58 {
+>> +                   compatible = "dps650ab";
+>> +                   reg = <0x58>;
+>> +       };
+>> --
+>> 1.8.3.1
+>>
+>>
+>>
+>>
+>> This email is intended only for the named addressee. It may contain information that is confidential/private, legally privileged, or copyright-protected, and you should handle it accordingly. If you are not the intended recipient, you do not have legal rights to retain, copy, or distribute this email or its contents, and should promptly delete the email and all electronic copies in your system; do not retain copies in any media. If you have received this email in error, please notify the sender promptly. Thank you.
+> We can't accept emails with these clauses.
+>
+> Rob
 
-If you have any questions about this process, please let me know.
+Delete the message on v3 patch.
 
+Thanks,
 
->From 9e2ddbdd9218bf0e465d19daecdd053052ffd79c Mon Sep 17 00:00:00 2001
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Fri, 4 Jan 2019 08:08:24 +0100
-Subject: staging: mt7621-pci-phy: dt-bindings: add bindings for Mediatek
- MT7621 Pcie PHY
-
-Add bindings documentation for PCie PHY of Mediatek MT7621.
-This file will be moved into its appropiate documentation bindings'place
-when this driver is mainlined.
-
-CC: Device Tree mailing list <devicetree@vger.kernel.org>
-Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- .../mediatek,mt7621-pci-phy.txt               | 54 +++++++++++++++++++
- 1 file changed, 54 insertions(+)
- create mode 100644 drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt
-
-diff --git a/drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt b/drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt
-new file mode 100644
-index 000000000000..33a8a698bdd0
---- /dev/null
-+++ b/drivers/staging/mt7621-pci-phy/mediatek,mt7621-pci-phy.txt
-@@ -0,0 +1,54 @@
-+Mediatek Mt7621 PCIe PHY
-+
-+Required properties:
-+- compatible: must be "mediatek,mt7621-pci-phy"
-+- reg: base address and length of the PCIe PHY block
-+- #address-cells: must be 1
-+- #size-cells: must be 0
-+
-+Each PCIe PHY should be represented by a child node
-+
-+Required properties For the child node:
-+- reg: the PHY ID
-+0 - PCIe RC 0
-+1 - PCIe RC 1
-+- #phy-cells: must be 0
-+
-+Example:
-+	pcie0_phy: pcie-phy@1a149000 {
-+		compatible = "mediatek,mt7621-pci-phy";
-+		reg = <0x1a149000 0x0700>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pcie0_port: pcie-phy@0 {
-+			reg = <0>;
-+			#phy-cells = <0>;
-+		};
-+
-+		pcie1_port: pcie-phy@1 {
-+			reg = <1>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	pcie1_phy: pcie-phy@1a14a000 {
-+		compatible = "mediatek,mt7621-pci-phy";
-+		reg = <0x1a14a000 0x0700>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		pcie2_port: pcie-phy@0 {
-+			reg = <0>;
-+			#phy-cells = <0>;
-+		};
-+	};
-+
-+	/* users of the PCIe phy */
-+
-+	pcie: pcie@1e140000 {
-+		...
-+		...
-+		phys = <&pcie0_port>, <&pcie1_port>, <&pcie2_port>;
-+		phy-names = "pcie-phy0", "pcie-phy1", "pcie-phy2";
-+	};
-\ No newline at end of file
--- 
-2.20.1
+Xiaoting
