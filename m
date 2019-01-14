@@ -1,45 +1,48 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH] regulator: dt-bindings: Convert fixed-regulator to
- json-schema
-Date: Mon, 14 Jan 2019 12:01:03 +0000
-Message-ID: <20190114120103.GB11073@sirena.org.uk>
-References: <20190110221903.3990-6-robh@kernel.org>
+From: Robin Murphy <robin.murphy@arm.com>
+Subject: [PATCH v2 0/4] NanoPC-T4 (and a bit of NanoPi M4) support
+Date: Mon, 14 Jan 2019 12:05:30 +0000
+Message-ID: <cover.1547466003.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="yNb1oOkm5a9FJOVX"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110221903.3990-6-robh@kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: heiko@sntech.de
+Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi all,
 
---yNb1oOkm5a9FJOVX
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+With the initial patch now queued (thankfully solving the version-number
+conundrum), here's an updated v2 of my further changes with the tweaks
+Heiko pointed out. Comparing GRF dumps didn't give any insight into the
+SD card thing, so I've kept the GPIO patch; ~100 interrupts per insertion
+is still more useful than 0!
 
-On Thu, Jan 10, 2019 at 04:19:03PM -0600, Rob Herring wrote:
-> Convert the fixed-regulator binding to DT schema format using
-> json-schema.
+Robin.
 
-This looks good but has collided with some other changes from Linus, can
-you please respin against them?
 
---yNb1oOkm5a9FJOVX
-Content-Type: application/pgp-signature; name="signature.asc"
+Robin Murphy (4):
+  arm64: dts: rockchip: Add DT for NanoPi M4
+  arm64: dts: rockchip: Refine nanopi4 differences
+  arm64: dts: rockchip: Add NanoPC-T4 IR receiver
+  arm64: dts: rockchip: 'Fix' nanopi4 uSD card detect
 
------BEGIN PGP SIGNATURE-----
+ .../devicetree/bindings/arm/rockchip.yaml     |  6 +-
+ arch/arm64/boot/dts/rockchip/Makefile         |  1 +
+ .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 74 +++++++++++++++++++
+ .../boot/dts/rockchip/rk3399-nanopi-m4.dts    | 66 +++++++++++++++++
+ .../boot/dts/rockchip/rk3399-nanopi4.dtsi     | 74 ++++---------------
+ 5 files changed, 158 insertions(+), 63 deletions(-)
+ create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlw8ef4ACgkQJNaLcl1U
-h9C1egf9EyDGFsMmJv/xo3E2kJqh/9tf9dUeYFgj16wNrEOBt5DRZuPNgxzMPRAe
-fCFq481WOjcwxQ/B5bEI/TpZFX+rOx1nsaxYPs2ZOtPu4OjN9gZlZLzuzT35+S5c
-aJeCbd8Ok/XRhZuyxd3b3M7UY60CYUQpfUK1AUyZ+39/mfa1y7eN6TT3HM9OMYD0
-lz1rhAKaPNw27ugIq+kIYDIbgungxphH0l+j/0waTsIugbS86dVnMxC2abfdlFBv
-yKtTULJ7Ca90Ygiw0pd5yz75KJzeDVh5K3s9rut3TkghiQl3jKwMrvyG87s0SQtJ
-gBcqKNpWOIQKAjaFX2EpiSvc3xiUcg==
-=8aBq
------END PGP SIGNATURE-----
-
---yNb1oOkm5a9FJOVX--
+-- 
+2.20.1.dirty
