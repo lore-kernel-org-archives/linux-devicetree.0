@@ -1,160 +1,36 @@
-Return-Path: <SRS0=mSv1=PQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43046 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727656AbfAHOwa (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 8 Jan 2019 09:52:30 -0500
-From: Akinobu Mita <akinobu.mita@gmail.com>
-Subject: [PATCH v2 06/13] media: mt9m001: introduce multi_reg_write()
-Date: Tue,  8 Jan 2019 23:51:43 +0900
-Message-Id: <1546959110-19445-7-git-send-email-akinobu.mita@gmail.com>
-In-Reply-To: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
-References: <1546959110-19445-1-git-send-email-akinobu.mita@gmail.com>
-Sender: devicetree-owner@vger.kernel.org
-To: linux-media@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Akinobu Mita <akinobu.mita@gmail.com>, Guennadi Liakhovetski <g.liakhovetski@gmx.de>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
+Return-Path: <SRS0=JHHS=PW=gmail.com=joel.stan@kernel.org>
+MIME-Version: 1.0
+References: <20190107214136.5256-1-jae.hyun.yoo@linux.intel.com> <20190107214136.5256-5-jae.hyun.yoo@linux.intel.com>
+In-Reply-To: <20190107214136.5256-5-jae.hyun.yoo@linux.intel.com>
+From: Joel Stanley <joel@jms.id.au>
+Date: Mon, 14 Jan 2019 16:07:16 +1030
+Message-ID: <CACPK8Xd=tNhZOTb_cb5wckormAF7-8O4a3DJN_trv4XB6q=fjQ@mail.gmail.com>
+Subject: Re: [PATCH v10 04/12] dt-bindings: Add a document of PECI adapter
+ driver for ASPEED AST24xx/25xx SoCs
+Content-Type: text/plain; charset="UTF-8"
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Philippe Ombredanne <pombredanne@nexb.com>, Vinod Koul <vkoul@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, David Kershner <david.kershner@unisys.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, Sagar Dharia <sdharia@codeaurora.org>, Johan Hovold <johan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Juergen Gross <jgross@suse.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, linux-hwmon@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-doc@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Jason M Biils <jason.m.bills@linux.intel.com>, Milton Miller II <miltonm@us.ibm.com>, Pavel Machek <pavel@ucw.cz>, Robin Murphy <robin.murphy@arm.com>, Ryan Chen <ryan_chen@aspeedtech.com>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Introduce multi_reg_write() to write multiple registers to the device and
-use it where possible.
+On Tue, 8 Jan 2019 at 08:11, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
+>
+> This commit adds a dt-bindings document of PECI adapter driver for ASPEED
+> AST24xx/25xx SoCs.
+>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: Joel Stanley <joel@jms.id.au>
+> Cc: Andrew Jeffery <andrew@aj.id.au>
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: Jason M Biils <jason.m.bills@linux.intel.com>
+> Cc: Milton Miller II <miltonm@us.ibm.com>
+> Cc: Pavel Machek <pavel@ucw.cz>
+> Cc: Robin Murphy <robin.murphy@arm.com>
+> Cc: Ryan Chen <ryan_chen@aspeedtech.com>
+> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> Reviewed-by: Haiyue Wang <haiyue.wang@linux.intel.com>
+> Reviewed-by: James Feist <james.feist@linux.intel.com>
+> Reviewed-by: Vernon Mauery <vernon.mauery@linux.intel.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-Cc: Guennadi Liakhovetski <g.liakhovetski@gmx.de>
-Cc: Sakari Ailus <sakari.ailus@linux.intel.com>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>
-Signed-off-by: Akinobu Mita <akinobu.mita@gmail.com>
----
-* No changes from v1
-
- drivers/media/i2c/mt9m001.c | 88 +++++++++++++++++++++++++++++----------------
- 1 file changed, 57 insertions(+), 31 deletions(-)
-
-diff --git a/drivers/media/i2c/mt9m001.c b/drivers/media/i2c/mt9m001.c
-index 3864d88..7ba11a8 100644
---- a/drivers/media/i2c/mt9m001.c
-+++ b/drivers/media/i2c/mt9m001.c
-@@ -47,6 +47,8 @@
- #define MT9M001_MIN_HEIGHT		32
- #define MT9M001_COLUMN_SKIP		20
- #define MT9M001_ROW_SKIP		12
-+#define MT9M001_DEFAULT_HBLANK		9
-+#define MT9M001_DEFAULT_VBLANK		25
- 
- /* MT9M001 has only one fixed colorspace per pixelcode */
- struct mt9m001_datafmt {
-@@ -137,25 +139,65 @@ static int reg_clear(struct i2c_client *client, const u8 reg,
- 	return reg_write(client, reg, ret & ~data);
- }
- 
-+struct mt9m001_reg {
-+	u8 reg;
-+	u16 data;
-+};
-+
-+static int multi_reg_write(struct i2c_client *client,
-+			   const struct mt9m001_reg *regs, int num)
-+{
-+	int i;
-+
-+	for (i = 0; i < num; i++) {
-+		int ret = reg_write(client, regs[i].reg, regs[i].data);
-+
-+		if (ret)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
- static int mt9m001_init(struct i2c_client *client)
- {
--	int ret;
-+	const struct mt9m001_reg init_regs[] = {
-+		/*
-+		 * Issue a soft reset. This returns all registers to their
-+		 * default values.
-+		 */
-+		{ MT9M001_RESET, 1 },
-+		{ MT9M001_RESET, 0 },
-+		/* Disable chip, synchronous option update */
-+		{ MT9M001_OUTPUT_CONTROL, 0 }
-+	};
- 
- 	dev_dbg(&client->dev, "%s\n", __func__);
- 
--	/*
--	 * We don't know, whether platform provides reset, issue a soft reset
--	 * too. This returns all registers to their default values.
--	 */
--	ret = reg_write(client, MT9M001_RESET, 1);
--	if (!ret)
--		ret = reg_write(client, MT9M001_RESET, 0);
-+	return multi_reg_write(client, init_regs, ARRAY_SIZE(init_regs));
-+}
- 
--	/* Disable chip, synchronous option update */
--	if (!ret)
--		ret = reg_write(client, MT9M001_OUTPUT_CONTROL, 0);
-+static int mt9m001_apply_selection(struct v4l2_subdev *sd,
-+				    struct v4l2_rect *rect)
-+{
-+	struct i2c_client *client = v4l2_get_subdevdata(sd);
-+	struct mt9m001 *mt9m001 = to_mt9m001(client);
-+	const struct mt9m001_reg regs[] = {
-+		/* Blanking and start values - default... */
-+		{ MT9M001_HORIZONTAL_BLANKING, MT9M001_DEFAULT_HBLANK },
-+		{ MT9M001_VERTICAL_BLANKING, MT9M001_DEFAULT_VBLANK },
-+		/*
-+		 * The caller provides a supported format, as verified per
-+		 * call to .set_fmt(FORMAT_TRY).
-+		 */
-+		{ MT9M001_COLUMN_START, rect->left },
-+		{ MT9M001_ROW_START, rect->top },
-+		{ MT9M001_WINDOW_WIDTH, rect->width - 1 },
-+		{ MT9M001_WINDOW_HEIGHT,
-+			rect->height + mt9m001->y_skip_top - 1 },
-+	};
- 
--	return ret;
-+	return multi_reg_write(client, regs, ARRAY_SIZE(regs));
- }
- 
- static int mt9m001_s_stream(struct v4l2_subdev *sd, int enable)
-@@ -175,7 +217,6 @@ static int mt9m001_set_selection(struct v4l2_subdev *sd,
- 	struct i2c_client *client = v4l2_get_subdevdata(sd);
- 	struct mt9m001 *mt9m001 = to_mt9m001(client);
- 	struct v4l2_rect rect = sel->r;
--	const u16 hblank = 9, vblank = 25;
- 	int ret;
- 
- 	if (sel->which != V4L2_SUBDEV_FORMAT_ACTIVE ||
-@@ -199,26 +240,11 @@ static int mt9m001_set_selection(struct v4l2_subdev *sd,
- 	soc_camera_limit_side(&rect.top, &rect.height,
- 		     MT9M001_ROW_SKIP, MT9M001_MIN_HEIGHT, MT9M001_MAX_HEIGHT);
- 
--	mt9m001->total_h = rect.height + mt9m001->y_skip_top + vblank;
-+	mt9m001->total_h = rect.height + mt9m001->y_skip_top +
-+			   MT9M001_DEFAULT_VBLANK;
- 
--	/* Blanking and start values - default... */
--	ret = reg_write(client, MT9M001_HORIZONTAL_BLANKING, hblank);
--	if (!ret)
--		ret = reg_write(client, MT9M001_VERTICAL_BLANKING, vblank);
- 
--	/*
--	 * The caller provides a supported format, as verified per
--	 * call to .set_fmt(FORMAT_TRY).
--	 */
--	if (!ret)
--		ret = reg_write(client, MT9M001_COLUMN_START, rect.left);
--	if (!ret)
--		ret = reg_write(client, MT9M001_ROW_START, rect.top);
--	if (!ret)
--		ret = reg_write(client, MT9M001_WINDOW_WIDTH, rect.width - 1);
--	if (!ret)
--		ret = reg_write(client, MT9M001_WINDOW_HEIGHT,
--				rect.height + mt9m001->y_skip_top - 1);
-+	ret = mt9m001_apply_selection(sd, &rect);
- 	if (!ret && v4l2_ctrl_g_ctrl(mt9m001->autoexposure) == V4L2_EXPOSURE_AUTO)
- 		ret = reg_write(client, MT9M001_SHUTTER_WIDTH, mt9m001->total_h);
- 
--- 
-2.7.4
+Reviewed-by: Joel Stanley <joel@jms.id.au>
