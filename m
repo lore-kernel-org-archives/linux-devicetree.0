@@ -1,92 +1,84 @@
-From: Vijay Khemka <vijaykhemka@fb.com>
-Subject: Re: [Potential Spoof] Re: [Potential Spoof] Re: [PATCH v2 4/4] ARM:
- dts: aspeed: Add lpc ctrl for Facebook
-Date: Mon, 14 Jan 2019 19:28:41 +0000
-Message-ID: <B36B9550-0E17-442C-974A-908736EB2980@fb.com>
-References: <5972B57A-23D5-43F4-9476-229379B96C7C@fb.com>
- <1547419180.2315773.1633559160.3F7D29CF@webmail.messagingengine.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v3 0/5] misc: Add support to Qualcomm FastRPC driver
+Date: Mon, 14 Jan 2019 19:41:07 +0000
+Message-ID: <20190114194112.32567-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547419180.2315773.1633559160.3F7D29CF@webmail.messagingengine.com>
-Content-Language: en-US
-Content-ID: <2F0D47D5C7865C44ADAACD1CBC68E370@namprd15.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Jeffery <andrew@aj.id.au>, Rob Herring <robh+dt@kernel.org>, Mark
- Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-aspeed@lists.ozlabs.org" <linux-aspeed@lists.ozlabs.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "openbmc @ lists . ozlabs . org" <openbmc@lists.ozlabs.org>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, thierry.escande@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCu+7v09uIDEvMTMvMTksIDI6MzkgUE0sICJBbmRyZXcgSmVmZmVyeSIgPGFuZHJld0Bhai5p
-ZC5hdT4gd3JvdGU6DQoNCiAgICBIaSBWaWpheSwNCiAgICANCiAgICBTb3JyeSBmb3IgcHJvdmlk
-aW5nIGFuIG9waW5pb24gc28gbGF0ZSwgaG93ZXZlcjoNCiAgICANCiAgICBPbiBTYXQsIDEyIEph
-biAyMDE5LCBhdCAxMTowMywgVmlqYXkgS2hlbWthIHdyb3RlOg0KICAgID4gSm9lbCwNCiAgICA+
-IFBsZWFzZSBtZXJnZSB0aGVzZSBwYXRjaGVzIGFzIGl0IGlzIHJlcXVpcmVkIGJ5IGZhY2Vib29r
-IHBsYXRmb3JtLg0KICAgID4gDQogICAgPiBSZWdhcmRzDQogICAgPiAtVmlqYXkNCiAgICA+IA0K
-ICAgID4gT24gMS83LzE5LCAxMToyNSBBTSwgIkxpbnV4LWFzcGVlZCBvbiBiZWhhbGYgb2YgVmlq
-YXkgS2hlbWthIiA8bGludXgtDQogICAgPiBhc3BlZWQtYm91bmNlcyt2aWpheWtoZW1rYT1mYi5j
-b21AbGlzdHMub3psYWJzLm9yZyBvbiBiZWhhbGYgb2YgDQogICAgPiB2aWpheWtoZW1rYUBmYi5j
-b20+IHdyb3RlOg0KICAgID4gDQogICAgPiAgICAgUGxlYXNlIG1lcmdlIHRoZXNlIHBhdGNoZXMg
-aW4gdXBzdHJlYW0ga2VybmVsLg0KICAgID4gICAgIA0KICAgID4gICAgIFJlZ2FyZHMNCiAgICA+
-ICAgICAtVmlqYXkNCiAgICA+ICAgICANCiAgICA+ICAgICBPbiAxMi8yMC8xOCwgMTA6MDYgQU0s
-ICJMaW51eC1hc3BlZWQgb24gYmVoYWxmIG9mIFZpamF5IEtoZW1rYSIgDQogICAgPiA8bGludXgt
-YXNwZWVkLWJvdW5jZXMrdmlqYXlraGVta2E9ZmIuY29tQGxpc3RzLm96bGFicy5vcmcgb24gYmVo
-YWxmIG9mIA0KICAgID4gdmlqYXlraGVta2FAZmIuY29tPiB3cm90ZToNCiAgICA+ICAgICANCiAg
-ICA+ICAgICAgICAgSm9lbCwgQ2FuIHlvdSBwbGVhc2UgdGFrZSBjYXJlIG9mIHRoZXNlIHBhdGNo
-ZXMgbWVyZ2UuDQogICAgPiAgICAgICAgIA0KICAgID4gICAgICAgICBPbiAxMi8xNy8xOCwgMTI6
-MDQgUE0sICJWaWpheSBLaGVta2EiIDx2aWpheWtoZW1rYUBmYi5jb20+IHdyb3RlOg0KICAgID4g
-ICAgICAgICANCiAgICA+ICAgICAgICAgICAgIEFkZGVkIGxwYyBjdHJsIGRldmljZSB0byBlbmFi
-bGUgTFBDIGNsb2NrIGluIEZhY2Vib29rDQogICAgPiAgICAgICAgICAgICBUaW9nYXBhc3MgZGV2
-aWNlIHRyZWUuDQogICAgPiAgICAgICAgICAgICANCiAgICA+ICAgICAgICAgICAgIFNpZ25lZC1v
-ZmYtYnk6IFZpamF5IEtoZW1rYSA8dmlqYXlraGVta2FAZmIuY29tPg0KICAgID4gICAgICAgICAg
-ICAgLS0tDQogICAgPiAgICAgICAgICAgICAgLi4uL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJv
-b2stdGlvZ2FwYXNzLmR0cyAgfCAxNyArKysrKysNCiAgICA+ICsrKysrKysrKysrDQogICAgPiAg
-ICAgICAgICAgICAgMSBmaWxlIGNoYW5nZWQsIDE3IGluc2VydGlvbnMoKykNCiAgICA+ICAgICAg
-ICAgICAgIA0KICAgID4gICAgICAgICAgICAgZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRz
-L2FzcGVlZC1ibWMtZmFjZWJvb2stDQogICAgPiB0aW9nYXBhc3MuZHRzIGIvYXJjaC9hcm0vYm9v
-dC9kdHMvYXNwZWVkLWJtYy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgPiAgICAgICAgICAg
-ICBpbmRleCA3M2U1OGE4MjE2MTMuLmVmNzg3NWI1NDU2MiAxMDA2NDQNCiAgICA+ICAgICAgICAg
-ICAgIC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL2FzcGVlZC1ibWMtZmFjZWJvb2stdGlvZ2FwYXNz
-LmR0cw0KICAgID4gICAgICAgICAgICAgKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMvYXNwZWVkLWJt
-Yy1mYWNlYm9vay10aW9nYXBhc3MuZHRzDQogICAgPiAgICAgICAgICAgICBAQCAtMjIsNiArMjIs
-MTcgQEANCiAgICA+ICAgICAgICAgICAgICAJCXJlZyA9IDwweDgwMDAwMDAwIDB4MjAwMDAwMDA+
-Ow0KICAgID4gICAgICAgICAgICAgIAl9Ow0KICAgID4gICAgICAgICAgICAgIA0KICAgID4gICAg
-ICAgICAgICAgKwlyZXNlcnZlZC1tZW1vcnkgew0KICAgID4gICAgICAgICAgICAgKwkJI2FkZHJl
-c3MtY2VsbHMgPSA8MT47DQogICAgPiAgICAgICAgICAgICArCQkjc2l6ZS1jZWxscyA9IDwxPjsN
-CiAgICA+ICAgICAgICAgICAgICsJCXJhbmdlczsNCiAgICA+ICAgICAgICAgICAgICsNCiAgICA+
-ICAgICAgICAgICAgICsJCWZsYXNoX21lbW9yeTogcmVnaW9uQDk4MDAwMDAwIHsNCiAgICA+ICAg
-ICAgICAgICAgICsJCQluby1tYXA7DQogICAgPiAgICAgICAgICAgICArCQkJcmVnID0gPDB4OTgw
-MDAwMDAgMHgwMDAwMTAwMD47IC8qIDRLICovDQogICAgPiAgICAgICAgICAgICArCQl9Ow0KICAg
-ID4gICAgICAgICAgICAgKwl9Ow0KICAgID4gICAgICAgICAgICAgKw0KICAgID4gICAgICAgICAg
-ICAgIAlpaW8taHdtb24gew0KICAgID4gICAgICAgICAgICAgIAkJY29tcGF0aWJsZSA9ICJpaW8t
-aHdtb24iOw0KICAgID4gICAgICAgICAgICAgIAkJaW8tY2hhbm5lbHMgPSA8JmFkYyAwPiwgPCZh
-ZGMgMT4sIDwmYWRjIDI+LCA8JmFkYyAzPiwNCiAgICA+ICAgICAgICAgICAgIEBAIC01NCw2ICs2
-NSwxMiBAQA0KICAgID4gICAgICAgICAgICAgIAl9Ow0KICAgID4gICAgICAgICAgICAgIH07DQog
-ICAgPiAgICAgICAgICAgICAgDQogICAgPiAgICAgICAgICAgICArJmxwY19jdHJsIHsNCiAgICA+
-ICAgICAgICAgICAgICsJc3RhdHVzID0gIm9rYXkiOw0KICAgID4gICAgICAgICAgICAgKwltZW1v
-cnktcmVnaW9uID0gPCZmbGFzaF9tZW1vcnk+Ow0KICAgID4gICAgICAgICAgICAgKwlmbGFzaCA9
-IDwmc3BpMT47DQogICAgPiAgICAgICAgICAgICArfTsNCiAgICA+ICAgICAgICAgICAgICsNCiAg
-ICA+ICAgICAgICAgICAgICAmdWFydDEgew0KICAgID4gICAgICAgICAgICAgIAkvLyBIb3N0IENv
-bnNvbGUNCiAgICA+ICAgICAgICAgICAgICAJc3RhdHVzID0gIm9rYXkiOw0KICAgID4gICAgICAg
-ICAgICAgLS0gDQogICAgPiAgICAgICAgICAgICAyLjE3LjENCiAgICANCiAgICBJIHVuZGVyc3Rh
-bmQgeW91IGp1c3Qgd2FudCB0byBtYWtlIHlvdXIgc3lzdGVtIHdvcmssIGJ1dCB0aGlzIGlzIGEN
-CiAgICBicm9rZW4gd2F5IHRvIGRvIGl0LiBBbmQgdGhhdCdzIG5vdCB5b3VyIGZhdWx0IC0gd2Ug
-c2hvdWxkIHJlYWxseSBmaXgNCiAgICB0aGUgZHJpdmVyLiBJIHRoaW5rIHRoZSBtZW1vcnktcmVn
-aW9uIHBoYW5kbGUgc2hvdWxkIGJlIG9wdGlvbmFsDQogICAgYW5kIHRoZSBkcml2ZXIgc2hvdWxk
-IHNpbXBseSBsaW1pdCB0aGUgb3B0aW9ucyBhdmFpbGFibGUgdG8gdGhlIGlvY3RsDQogICAgdG8g
-anVzdCB0aGUgZmxhc2ggcmVnaW9uIGlmIHRoZSBtZW1vcnkgbm9kZSBpcyBub3QgcHJlc2VudCAo
-aS5lLiByZXR1cm4NCiAgICBhbiBlcnJvciBpZiB0aGUgbWVtb3J5IHJlZ2lvbiBpcyByZXF1ZXN0
-ZWQgYnV0IG5vdCBkZXNjcmliZWQgaW4gdGhlDQogICAgZGV2aWNldHJlZSkuDQpMZXQgbWUgZml4
-IGRyaXZlciBpdHNlbGYgZmlyc3QuDQogICAgDQogICAgQW5kcmV3DQogICAgDQoNCl9fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwg
-bWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8v
-bGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Thanks for reviewing the v2, here is new version addressing the
+comments from v2.
+This patchset adds support to Qualcomm FastRPC driver which implements
+an IPC (Inter-Processor Communication) mechanism that allows for clients
+to transparently make remote method invocations across processor boundaries.
+
+The below diagram depicts invocation of a single method where the client
+and objects reside on different processors. An object could expose
+multiple methods which can be grouped together and referred to as an
+interface.
+
+: ,--------,        ,------,  ,-----------,  ,------,        ,--------,
+: |        | method |      |  |           |  |      | method |        |
+: | Client |------->| Stub |->| Transport |->| Skel |------->| Object |
+: |        |        |      |  |           |  |      |        |        |
+: `--------`        `------`  `-----------`  `------`        `--------`
+
+Client:    Linux user mode process that initiates the remote invocation
+Stub:      Auto generated code linked in with the user mode process that
+           takes care of marshaling parameters
+
+Transport: Involved in carrying an invocation from a client to an
+           object. This involves two portions: 1) FastRPC Linux
+           kernel driver that receives the remote invocation, queues
+           them up and then waits for the response after signaling the
+           remote side. 2) Service running on the remote side that
+           dequeues the messages from the queue and dispatches them for
+           processing.
+Skel:      Auto generated code that takes care of un-marshaling
+           parameters
+Object:    Method implementation
+
+Most of the work is derived from various downstream Qualcomm kernels.
+Credits to various Qualcomm authors who have contributed to this code.
+Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+
+TODO:
+ - Support INIT_STATIC process
+ - Support remote mmap/unmap methods.
+ - Handling secure compute context banks.
+ - Add secure buffer support
+
+This patchset has been tested on DB410c(msm8916), DB820c (msm8996), SDM845
+and QCS404 Qualcomm SoCs with sample apps like matrix multiply, calculator
+from Hexagon SDK. You can find more info on how to test this at:
+https://github.com/96boards/documentation/wiki/Dragonboard-Hexagon-DSP
+
+Changes since v2 (https://lkml.org/lkml/2018/12/7/550) :
+- removed compat_ioctl specific structures and various cleanups as
+  suggested by Greg KH
+- replace reg property with label property as suggested by Bjorn
+- minor content cleanup in bindings as suggested by Mark Rutland
+
+Srinivas Kandagatla (5):
+  misc: dt-bindings: Add Qualcomm Fastrpc bindings
+  misc: fastrpc: Add Qualcomm fastrpc basic driver model
+  misc: fastrpc: Add support for context Invoke method
+  misc: fastrpc: Add support for create remote init process
+  misc: fastrpc: Add support for dmabuf exporter
+
+ .../devicetree/bindings/misc/qcom,fastrpc.txt |   84 +
+ drivers/misc/Kconfig                          |   10 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/fastrpc.c                        | 1356 +++++++++++++++++
+ include/uapi/misc/fastrpc.h                   |   41 +
+ 5 files changed, 1492 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+ create mode 100644 drivers/misc/fastrpc.c
+ create mode 100644 include/uapi/misc/fastrpc.h
+
+-- 
+2.20.1
