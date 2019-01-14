@@ -1,69 +1,67 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add pwm
-Date: Mon, 14 Jan 2019 17:45:31 +0100
-Message-ID: <1547484331.2718.8.camel@pengutronix.de>
-References: <20190114163034.GA24531@bogon.m.sigxcpu.org>
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: Re: [PATCH v2 0/9] Thermal throttling for SDM845
+Date: Mon, 14 Jan 2019 22:22:54 +0530
+Message-ID: <CAHLCerOH05ouDKuhe9Cz-qh-tJcqumHbrv7NqSc3STcH_UN-HA@mail.gmail.com>
+References: <cover.1547458732.git.amit.kucheria@linaro.org>
+ <CAJZ5v0h+m6sR=nFFXSMv_FKy=y0W4mSd3W34qW48-BpnGBPcZQ@mail.gmail.com> <CAHLCerM+bbXbUzoqm_5oPw_o-zEFCN4FjXRGVVqYkGYzC5upDA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190114163034.GA24531@bogon.m.sigxcpu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAHLCerM+bbXbUzoqm_5oPw_o-zEFCN4FjXRGVVqYkGYzC5upDA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Javi Merino <javi.merino@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3VpZG8sCgpBbSBNb250YWcsIGRlbiAxNC4wMS4yMDE5LCAxNzozMCArMDEwMCBzY2hyaWVi
-IEd1aWRvIEfDvG50aGVyOgo+IFdlIGNhbiByZXVzZSB0aGUgcHdtIGZyb20gZnNsLGlteDI3LXB3
-bSBhcyB3aXRoIG90aGVyIGlteCBTT0NzLgo+IAo+ID4gU2lnbmVkLW9mZi1ieTogR3VpZG8gR8O8
-bnRoZXIgPGFneEBzaWd4Y3B1Lm9yZz4KPiAtLS0KPiBUaGlzIGlzIGFnYWluc3QgbGludXgtbmV4
-dCAobmV4dC0yMDE5MDExNCkKPiAKPiDCoGFyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lt
-eDhtcS5kdHNpIHwgNDQgKysrKysrKysrKysrKysrKysrKysrKysKPiDCoDEgZmlsZSBjaGFuZ2Vk
-LCA0NCBpbnNlcnRpb25zKCspCj4gCj4gZGlmZiAtLWdpdCBhL2FyY2gvYXJtNjQvYm9vdC9kdHMv
-ZnJlZXNjYWxlL2lteDhtcS5kdHNpIGIvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14
-OG1xLmR0c2kKPiBpbmRleCA4ZTlkNmQ1ZWQ3YjIuLjUzZWQwYmRmYzA2YSAxMDA2NDQKPiAtLS0g
-YS9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRzaQo+ICsrKyBiL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gQEAgLTI1Miw2ICsyNTIsNTAg
-QEAKPiA+IMKgCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfV0RPRzNfUk9PVD47Cj4gPiDC
-oAkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gwqAJCQl9Owo+ICsKPiA+ID4gKwkJCXB3bTE6
-IHB3bUAzMDY2MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1wd20iLCAi
-ZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjYwMDAwIDB4MTAwMDA+Owo+ID4g
-KwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODEgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4gPiAr
-CQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNMV9ST09UPiwKPiArCQkJCTwmY2xrIElN
-WDhNUV9DTEtfUFdNMV9ST09UPjsKClBsZWFzZSBhbGlnbiB0aGUgc2Vjb25kIGVudHJ5IHdpdGgg
-dGhlIGZpcnN0IG9uZSxhcyB3aXRoIGFsbCB0aGUgb3RoZXIKbm9kZXMgaW4gdGhpcyBmaWxlLgoK
-PiArCQkJCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOwo+ID4gKwkJCQkjcHdtLWNlbGxzID0g
-PDI+Owo+ID4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gKwkJCX07Cj4gKwo+ID4gPiAr
-CQkJcHdtMjogcHdtQDMwNjcwMDAwIHsKPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1x
-LXB3bSIsICJmc2wsaW14MjctcHdtIjsKPiA+ICsJCQkJcmVnID0gPDB4MzA2NzAwMDAgMHgxMDAw
-MD47Cj4gPiArCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4MiBJUlFfVFlQRV9MRVZFTF9ISUdI
-PjsKPiA+ICsJCQkJY2xvY2tzID0gPCZjbGsgSU1YOE1RX0NMS19QV00yX1JPT1Q+LAo+ID4gKwkJ
-CQk8JmNsayBJTVg4TVFfQ0xLX1BXTTJfUk9PVD47Cj4gPiArCQkJCWNsb2NrLW5hbWVzID0gImlw
-ZyIsICJwZXIiOwo+ID4gKwkJCQkjcHdtLWNlbGxzID0gPDI+Owo+ID4gKwkJCQlzdGF0dXMgPSAi
-ZGlzYWJsZWQiOwo+ID4gKwkJCX07Cj4gKwo+ID4gPiArCQkJcHdtMzogcHdtQDMwNjgwMDAwIHsK
-PiA+ICsJCQkJY29tcGF0aWJsZSA9ICJmc2wsaW14OG1xLXB3bSIsICJmc2wsaW14MjctcHdtIjsK
-PiA+ICsJCQkJcmVnID0gPDB4MzA2ODAwMDAgMHgxMDAwMD47Cj4gPiArCQkJCWludGVycnVwdHMg
-PSA8R0lDX1NQSSA4MyBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKPiA+ICsJCQkJY2xvY2tzID0gPCZj
-bGsgSU1YOE1RX0NMS19QV00zX1JPT1Q+LAo+ID4gKwkJCQk8JmNsayBJTVg4TVFfQ0xLX1BXTTNf
-Uk9PVD47Cj4gPiArCQkJCWNsb2NrLW5hbWVzID0gImlwZyIsICJwZXIiOwo+ID4gKwkJCQkjcHdt
-LWNlbGxzID0gPDI+Owo+ID4gKwkJCQlzdGF0dXMgPSAiZGlzYWJsZWQiOwo+ID4gKwkJCX07Cj4g
-Kwo+ID4gPiArCQkJcHdtNDogcHdtQDMwNjkwMDAwIHsKPiA+ICsJCQkJY29tcGF0aWJsZSA9ICJm
-c2wsaW14OG1xLXB3bSIsICJmc2wsaW14MjctcHdtIjsKPiA+ICsJCQkJcmVnID0gPDB4MzA2OTAw
-MDAgMHgxMDAwMD47Cj4gPiArCQkJCWludGVycnVwdHMgPSA8R0lDX1NQSSA4NCBJUlFfVFlQRV9M
-RVZFTF9ISUdIPjsKPiA+ICsJCQkJY2xvY2tzID0gPCZjbGsgSU1YOE1RX0NMS19QV000X1JPT1Q+
-LAo+ID4gKwkJCQk8JmNsayBJTVg4TVFfQ0xLX1BXTTRfUk9PVD47Cj4gPiArCQkJCWNsb2NrLW5h
-bWVzID0gImlwZyIsICJwZXIiOwo+ID4gKwkJCQkjcHdtLWNlbGxzID0gPDI+Owo+ID4gKwkJCQlz
-dGF0dXMgPSAiZGlzYWJsZWQiOwo+ICsJCQl9OwoKQWxsIHRob3NlIGFkZHJlc3NlcyBhcmUgd2l0
-aGluIHRoZSBBSVBTMiBidXMgcmFuZ2UsIHNvIHRoaXMgcGF0Y2ggYWRkcwp0aGVtIHRvIHRoZSB3
-cm9uZyBidXMuCgpSZWdhcmRzLApMdWNhcwoKPiDCoAkJfTsKPiDCoAo+ID4gwqAJCWJ1c0AzMDQw
-MDAwMCB7IC8qIEFJUFMyICovCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVs
-QGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9s
-aXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, Jan 14, 2019 at 4:04 PM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> On Mon, Jan 14, 2019 at 3:57 PM Rafael J. Wysocki <rafael@kernel.org> wrote:
+> >
+> > On Mon, Jan 14, 2019 at 11:22 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+> > >
+> > > Add support for thermal throttling on SDM845.
+> > >
+> > > We introduce a generic flag to be used by cpufreq drivers to tell the
+> > > cpufreq core to auto-register a thermal cooling device.
+> > >
+> > > There are a few miscellaneous fixes to keep checkpatch happy.
+> > >
+> > > If this approach is acceptable I can send a series converting other cpufreq
+> > > drivers to use this flag and get rid of driver code.
+> > >
+> > > Amit Kucheria (9):
+> > >   [ALREADY QUEUED] cpufreq: qcom-hw: Move to device_initcall
+> > >   drivers: thermal: of-thermal: Print name of device node with error
+> > >   drivers: cpufreq: Add thermal_cooling_device pointer to struct
+> > >     cpufreq_policy
+> > >   cpufreq: Add a flag to auto-register a cooling device
+> > >   cpufreq: Replace open-coded << with BIT()
+> > >   cpufreq: qcom-hw: Register as a cpufreq cooling device
+> > >   arm64: dts: sdm845: Increase alert trip point to 95 degrees
+> > >   arm64: dts: sdm845: wireup the thermal trip points to cpufreq
+> > >   thermal: cpu_cooling: Clarify error message
+> > >
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 193 +++++++++++++++++++++++----
+> > >  drivers/cpufreq/cpufreq.c            |  13 ++
+> > >  drivers/cpufreq/qcom-cpufreq-hw.c    |   5 +-
+> > >  drivers/thermal/cpu_cooling.c        |   2 +-
+> > >  drivers/thermal/of-thermal.c         |   4 +-
+> > >  include/linux/cpufreq.h              |  34 +++--
+> > >  6 files changed, 210 insertions(+), 41 deletions(-)
+> >
+> > Would it be possible to split this series so as to put the cpufreq
+> > patches separately?
+>
+> Sure, will send out another version.
+
+I've now sent out a separate series just tackling the
+auto-registration feature of a cooling device[1]. So the only bits in
+this series needing separate review are patches 2, 7,8 and 9.
+
+I'll wait couple of days to get some review on the other series before
+sending out another version of the remaining patches listed above.
+Feel free to comment on them in this thread, in the meanwhile.
+
+Thanks.
+
+[1] https://lore.kernel.org/patchwork/cover/1031909/
