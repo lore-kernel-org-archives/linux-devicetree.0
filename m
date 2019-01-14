@@ -1,63 +1,32 @@
 From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v2 1/6] dt-bindings: phy-qcom: Add support for msm8998 usb
-Date: Mon, 14 Jan 2019 09:36:11 -0700
-Message-ID: <1547483771-5334-1-git-send-email-jhugo@codeaurora.org>
+Subject: [PATCH v2 2/6] dt-bindings: usb: Add support for msm8998
+Date: Mon, 14 Jan 2019 09:36:27 -0700
+Message-ID: <1547483787-5371-1-git-send-email-jhugo@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: robh+dt@kernel.org, mark.rutland@arm.com
-Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-USB on msm8998 utilizes the QUSB2 and QMP phys, similar to sdm845.
+msm8998 USB has a dwc3 controller just like the existing sdm845 support
 
 Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
 ---
- Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   | 5 +++++
- Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 1 +
- 2 files changed, 6 insertions(+)
+ Documentation/devicetree/bindings/usb/qcom,dwc3.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-index 41a1074..6061b6f 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
-@@ -9,6 +9,7 @@ Required properties:
- 	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
- 	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
- 	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
-+	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
- 	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
- 	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
- 	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
-@@ -42,6 +43,8 @@ Required properties:
- 			"aux", "cfg_ahb", "ref".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain:
- 			"aux", "cfg_ahb", "ref".
-+		For "qcom,msm8998-qmp-usb3-phy" must contain:
-+			"aux", "cfg_ahb", "ref".
- 		For "qcom,sdm845-qmp-usb3-phy" must contain:
- 			"aux", "cfg_ahb", "ref", "com_aux".
- 		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
-@@ -60,6 +63,8 @@ Required properties:
- 		For "qcom,msm8996-qmp-pcie-phy" must contain:
- 			"phy", "common", "cfg".
- 		For "qcom,msm8996-qmp-usb3-phy" must contain
-+		 "phy", "common".
-+		For "qcom,msm8998-qmp-usb3-phy" must contain
- 			"phy", "common".
- 		For "qcom,sdm845-qmp-usb3-phy" must contain:
- 			"phy", "common".
-diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-index 03025d9..fe29f9e 100644
---- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-+++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
-@@ -6,6 +6,7 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
- Required properties:
-  - compatible: compatible list, contains
- 	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
-+	       "qcom,msm8998-qusb2-phy" for 10nm PHY on msm8998,
- 	       "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
- 
-  - reg: offset and length of the PHY register set.
+diff --git a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+index 95afdcf..cb695aa 100644
+--- a/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
++++ b/Documentation/devicetree/bindings/usb/qcom,dwc3.txt
+@@ -4,6 +4,7 @@ Required properties:
+ - compatible:		Compatible list, contains
+ 			"qcom,dwc3"
+ 			"qcom,msm8996-dwc3" for msm8996 SOC.
++			"qcom,msm8998-dwc3" for msm8998 SOC.
+ 			"qcom,sdm845-dwc3" for sdm845 SOC.
+ - reg:			Offset and length of register set for QSCRATCH wrapper
+ - power-domains:	specifies a phandle to PM domain provider node
 -- 
 Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
 Qualcomm Technologies, Inc. is a member of the
