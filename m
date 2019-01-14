@@ -1,267 +1,50 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] dt-bindings: serial: Convert snps,dw-apb-uart to
- json-schema
-Date: Mon, 14 Jan 2019 10:30:22 +0100
-Message-ID: <20190114093022.hjouckoss2zemefg@verge.net.au>
-References: <20190110222017.6390-1-robh@kernel.org>
+From: <Eugen.Hristev@microchip.com>
+Subject: [PATCH v2 0/3] drm: Add panel support for PDA 91-00156-A0
+Date: Mon, 14 Jan 2019 09:43:23 +0000
+Message-ID: <1547458584-29548-1-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110222017.6390-1-robh@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-serial@vger.kernel.org
+To: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, thierry.reding@gmail.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas.Ferre@microchip.com
+Cc: Eugen.Hristev@microchip.com, Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 04:20:16PM -0600, Rob Herring wrote:
-> Convert the snps,dw-apb-uart binding to DT schema using json-schema.
-> 
-> The Rockchip and Broadcom compatible strings were not documented,
-> so add them here.
+From: Eugen Hristev <eugen.hristev@microchip.com>
 
-I believe the documentation of the Renesas compatible strings is also new
-in this file. Perhaps it would be worth mentioning that too.
+Hello,
 
-In any case
+This patch series adds support for PDA (Precision Design Associates, Inc.)
+vendor, and for the PDA 91-00156-A0 simple panel, together with the binding=
+s.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+The series is on top of http://anongit.freedesktop.org/git/drm/drm.git drm-=
+next
+branch.
 
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: linux-serial@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../bindings/serial/snps-dw-apb-uart.txt      |  76 ----------
->  .../bindings/serial/snps-dw-apb-uart.yaml     | 140 ++++++++++++++++++
->  2 files changed, 140 insertions(+), 76 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
->  create mode 100644 Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-> deleted file mode 100644
-> index 12bbe9f22560..000000000000
-> --- a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.txt
-> +++ /dev/null
-> @@ -1,76 +0,0 @@
-> -* Synopsys DesignWare ABP UART
-> -
-> -Required properties:
-> -- compatible : "snps,dw-apb-uart"
-> -- reg : offset and length of the register set for the device.
-> -- interrupts : should contain uart interrupt.
-> -
-> -Clock handling:
-> -The clock rate of the input clock needs to be supplied by one of
-> -- clock-frequency : the input clock frequency for the UART.
-> -- clocks : phandle to the input clock
-> -
-> -The supplying peripheral clock can also be handled, needing a second property
-> -- clock-names: tuple listing input clock names.
-> -	Required elements: "baudclk", "apb_pclk"
-> -
-> -Optional properties:
-> -- snps,uart-16550-compatible : reflects the value of UART_16550_COMPATIBLE
-> -  configuration parameter. Define this if your UART does not implement the busy
-> -  functionality.
-> -- resets : phandle to the parent reset controller.
-> -- reg-shift : quantity to shift the register offsets by.  If this property is
-> -  not present then the register offsets are not shifted.
-> -- reg-io-width : the size (in bytes) of the IO accesses that should be
-> -  performed on the device.  If this property is not present then single byte
-> -  accesses are used.
-> -- dcd-override : Override the DCD modem status signal. This signal will always
-> -  be reported as active instead of being obtained from the modem status
-> -  register. Define this if your serial port does not use this pin.
-> -- dsr-override : Override the DTS modem status signal. This signal will always
-> -  be reported as active instead of being obtained from the modem status
-> -  register. Define this if your serial port does not use this pin.
-> -- cts-override : Override the CTS modem status signal. This signal will always
-> -  be reported as active instead of being obtained from the modem status
-> -  register. Define this if your serial port does not use this pin.
-> -- ri-override : Override the RI modem status signal. This signal will always be
-> -  reported as inactive instead of being obtained from the modem status register.
-> -  Define this if your serial port does not use this pin.
-> -
-> -Example:
-> -
-> -	uart@80230000 {
-> -		compatible = "snps,dw-apb-uart";
-> -		reg = <0x80230000 0x100>;
-> -		clock-frequency = <3686400>;
-> -		interrupts = <10>;
-> -		reg-shift = <2>;
-> -		reg-io-width = <4>;
-> -		dcd-override;
-> -		dsr-override;
-> -		cts-override;
-> -		ri-override;
-> -	};
-> -
-> -Example with one clock:
-> -
-> -	uart@80230000 {
-> -		compatible = "snps,dw-apb-uart";
-> -		reg = <0x80230000 0x100>;
-> -		clocks = <&baudclk>;
-> -		interrupts = <10>;
-> -		reg-shift = <2>;
-> -		reg-io-width = <4>;
-> -	};
-> -
-> -Example with two clocks:
-> -
-> -	uart@80230000 {
-> -		compatible = "snps,dw-apb-uart";
-> -		reg = <0x80230000 0x100>;
-> -		clocks = <&baudclk>, <&apb_pclk>;
-> -		clock-names = "baudclk", "apb_pclk";
-> -		interrupts = <10>;
-> -		reg-shift = <2>;
-> -		reg-io-width = <4>;
-> -	};
-> diff --git a/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-> new file mode 100644
-> index 000000000000..b42002542690
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/serial/snps-dw-apb-uart.yaml
-> @@ -0,0 +1,140 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/serial/snps-dw-apb-uart.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Synopsys DesignWare ABP UART
-> +
-> +maintainers:
-> +  - Rob Herring <robh@kernel.org>
-> +
-> +allOf:
-> +  - $ref: /schemas/serial.yaml#
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      - items:
-> +          - enum:
-> +              - renesas,r9a06g032-uart
-> +              - renesas,r9a06g033-uart
-> +          - const: renesas,rzn1-uart
-> +      - items:
-> +          - enum:
-> +              - rockchip,px30-uart
-> +              - rockchip,rk3036-uart
-> +              - rockchip,rk3066-uart
-> +              - rockchip,rk3188-uart
-> +              - rockchip,rk3288-uart
-> +              - rockchip,rk3328-uart
-> +              - rockchip,rk3368-uart
-> +              - rockchip,rk3399-uart
-> +              - rockchip,rv1108-uart
-> +          - const: snps,dw-apb-uart
-> +      - items:
-> +          - enum:
-> +              - brcm,bcm11351-dw-apb-uart
-> +              - brcm,bcm21664-dw-apb-uart
-> +          - const: snps,dw-apb-uart
-> +      - const: snps,dw-apb-uart
-> +
-> +  reg:
-> +    maxItems: 1
-> +
-> +  interrupts:
-> +    maxItems: 1
-> +
-> +  clock-frequency: true
-> +
-> +  clocks:
-> +    minItems: 1
-> +    maxItems: 2
-> +
-> +  clock-names:
-> +    items:
-> +      - const: baudclk
-> +      - const: apb_pclk
-> +
-> +  snps,uart-16550-compatible:
-> +    description: reflects the value of UART_16550_COMPATIBLE configuration
-> +      parameter. Define this if your UART does not implement the busy functionality.
-> +    type: boolean
-> +
-> +  resets:
-> +    maxItems: 1
-> +
-> +  reg-shift: true
-> +
-> +  reg-io-width: true
-> +
-> +  dcd-override:
-> +    description: Override the DCD modem status signal. This signal will
-> +      always be reported as active instead of being obtained from the modem
-> +      status register. Define this if your serial port does not use this
-> +      pin.
-> +    type: boolean
-> +
-> +  dsr-override:
-> +    description: Override the DTS modem status signal. This signal will
-> +      always be reported as active instead of being obtained from the modem
-> +      status register. Define this if your serial port does not use this
-> +      pin.
-> +    type: boolean
-> +
-> +  cts-override:
-> +    description: Override the CTS modem status signal. This signal will
-> +      always be reported as active instead of being obtained from the modem
-> +      status register. Define this if your serial port does not use this
-> +      pin.
-> +    type: boolean
-> +
-> +  ri-override:
-> +    description: Override the RI modem status signal. This signal will always
-> +      be reported as inactive instead of being obtained from the modem status
-> +      register. Define this if your serial port does not use this pin.
-> +    type: boolean
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - interrupts
-> +
-> +examples:
-> +  - |
-> +    serial@80230000 {
-> +      compatible = "snps,dw-apb-uart";
-> +      reg = <0x80230000 0x100>;
-> +      clock-frequency = <3686400>;
-> +      interrupts = <10>;
-> +      reg-shift = <2>;
-> +      reg-io-width = <4>;
-> +      dcd-override;
-> +      dsr-override;
-> +      cts-override;
-> +      ri-override;
-> +    };
-> +
-> +  - |
-> +    // Example with one clock:
-> +    serial@80230000 {
-> +      compatible = "snps,dw-apb-uart";
-> +      reg = <0x80230000 0x100>;
-> +      clocks = <&baudclk>;
-> +      interrupts = <10>;
-> +      reg-shift = <2>;
-> +      reg-io-width = <4>;
-> +    };
-> +
-> +  - |
-> +    // Example with two clocks:
-> +    serial@80230000 {
-> +      compatible = "snps,dw-apb-uart";
-> +      reg = <0x80230000 0x100>;
-> +      clocks = <&baudclk>, <&apb_pclk>;
-> +      clock-names = "baudclk", "apb_pclk";
-> +      interrupts = <10>;
-> +      reg-shift = <2>;
-> +      reg-io-width = <4>;
-> +    };
-> +...
+Changes in v2:
+- According to Rob Herring's review, added backlight and supply binding
+to the .../devicetree/bindings/display/panel/pda,91-00156-a0.txt to comply =
+with
+the simple-panel bindings
+
+Cristian Birsan (1):
+  dt-bindings: drm/panel: simple: add support for PDA 91-00156-A0
+
+Eugen Hristev (2):
+  dt-bindings: add vendor prefix for PDA Precision Design Associates,
+    Inc.
+  drm/panel: simple: add support for PDA 91-00156-A0 panel
+
+ .../bindings/display/panel/pda,91-00156-a0.txt     | 14 +++++++++++
+ .../devicetree/bindings/vendor-prefixes.txt        |  1 +
+ drivers/gpu/drm/panel/panel-simple.c               | 27 ++++++++++++++++++=
+++++
+ 3 files changed, 42 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/display/panel/pda,91-=
+00156-a0.txt
+
+--=20
+2.7.4
