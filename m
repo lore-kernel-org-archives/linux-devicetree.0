@@ -1,109 +1,94 @@
-From: Sakari Ailus <sakari.ailus@iki.fi>
-Subject: Re: [PATCH v3 02/14] media: ov7670: split register setting from
- set_framerate() logic
-Date: Tue, 15 Jan 2019 01:03:07 +0200
-Message-ID: <20190114230307.h5poc22jfs32hly3@valkosipuli.retiisi.org.uk>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
- <20181120100318.367987-3-lkundrak@v3.sk>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 2/7] soc: qcom: Add AOSS QMP communication driver
+Date: Mon, 14 Jan 2019 15:20:31 -0800
+Message-ID: <20190114232031.GD9278@minitux>
+References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
+ <20190106080915.4493-3-bjorn.andersson@linaro.org>
+ <154750540229.169631.4962369801600780946@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181120100318.367987-3-lkundrak@v3.sk>
+In-Reply-To: <154750540229.169631.4962369801600780946@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Nov 20, 2018 at 11:03:07AM +0100, Lubomir Rintel wrote:
-> This will allow us to restore the last set frame rate after the device
-> returns from a power off.
+On Mon 14 Jan 14:36 PST 2019, Stephen Boyd wrote:
+
+> Quoting Bjorn Andersson (2019-01-06 00:09:10)
+> > diff --git a/drivers/soc/qcom/aoss-qmp.c b/drivers/soc/qcom/aoss-qmp.c
+> > new file mode 100644
+> > index 000000000000..de52703b96b6
+> > --- /dev/null
+> > +++ b/drivers/soc/qcom/aoss-qmp.c
+> > @@ -0,0 +1,313 @@
+> [...]
+> > +
+> > +static int qmp_probe(struct platform_device *pdev)
+> > +{
+> > +       struct resource *res;
+> > +       struct qmp *qmp;
+> > +       int irq;
+> > +       int ret;
+> > +
+> > +       qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
+> > +       if (!qmp)
+> > +               return -ENOMEM;
+> > +
+> > +       qmp->dev = &pdev->dev;
+> > +       init_waitqueue_head(&qmp->event);
+> > +       mutex_init(&qmp->tx_lock);
+> > +
+> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > +       qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
+> > +       if (IS_ERR(qmp->msgram))
+> > +               return PTR_ERR(qmp->msgram);
+> > +
+> > +       qmp->mbox_client.dev = &pdev->dev;
+> > +       qmp->mbox_client.knows_txdone = true;
+> > +       qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
+> > +       if (IS_ERR(qmp->mbox_chan)) {
+> > +               dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
+> > +               return PTR_ERR(qmp->mbox_chan);
+> > +       }
+> > +
+> > +       irq = platform_get_irq(pdev, 0);
+> > +       ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
+> > +                              "aoss-qmp", qmp);
+> > +       if (ret < 0) {
+> > +               dev_err(&pdev->dev, "failed to request interrupt\n");
 > 
-> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> Don't we need to free_mbox_channel() all over the place here?
 > 
-> ---
-> Changes since v2:
-> - This patch was added to the series
+
+We do, thanks for spotting this.
+
+[..]
+> > diff --git a/include/linux/soc/qcom/aoss-qmp.h b/include/linux/soc/qcom/aoss-qmp.h
+> > new file mode 100644
+> > index 000000000000..32ccaa091a9f
+> > --- /dev/null
+> > +++ b/include/linux/soc/qcom/aoss-qmp.h
+> > @@ -0,0 +1,12 @@
+> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +/*
+> > + * Copyright (c) 2018, Linaro Ltd
+> > + */
+> > +#ifndef __AOP_QMP_H__
+> > +#define __AOP_QMP_H__
 > 
->  drivers/media/i2c/ov7670.c | 30 ++++++++++++++----------------
->  1 file changed, 14 insertions(+), 16 deletions(-)
+> include <linux/types.h> for size_t usage?
 > 
-> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> index ee2302fbdeee..ead0c360df33 100644
-> --- a/drivers/media/i2c/ov7670.c
-> +++ b/drivers/media/i2c/ov7670.c
-> @@ -810,13 +810,24 @@ static void ov7675_get_framerate(struct v4l2_subdev *sd,
->  			(4 * clkrc);
->  }
->  
-> +static int ov7675_apply_framerate(struct v4l2_subdev *sd)
-> +{
-> +	struct ov7670_info *info = to_state(sd);
-> +	int ret;
-> +
-> +	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return ov7670_write(sd, REG_DBLV, info->pll_bypass ? DBLV_BYPASS : DBLV_X4);
-> +}
-> +
->  static int ov7675_set_framerate(struct v4l2_subdev *sd,
->  				 struct v4l2_fract *tpf)
->  {
->  	struct ov7670_info *info = to_state(sd);
->  	u32 clkrc;
->  	int pll_factor;
-> -	int ret;
->  
->  	/*
->  	 * The formula is fps = 5/4*pixclk for YUV/RGB and
-> @@ -825,19 +836,10 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
->  	 * pixclk = clock_speed / (clkrc + 1) * PLLfactor
->  	 *
->  	 */
-> -	if (info->pll_bypass) {
-> -		pll_factor = 1;
-> -		ret = ov7670_write(sd, REG_DBLV, DBLV_BYPASS);
-> -	} else {
-> -		pll_factor = PLL_FACTOR;
-> -		ret = ov7670_write(sd, REG_DBLV, DBLV_X4);
-> -	}
-> -	if (ret < 0)
-> -		return ret;
-> -
->  	if (tpf->numerator == 0 || tpf->denominator == 0) {
->  		clkrc = 0;
->  	} else {
-> +		pll_factor = info->pll_bypass ? 1 : PLL_FACTOR;
->  		clkrc = (5 * pll_factor * info->clock_speed * tpf->numerator) /
->  			(4 * tpf->denominator);
->  		if (info->fmt->mbus_code == MEDIA_BUS_FMT_SBGGR8_1X8)
-> @@ -859,11 +861,7 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
->  	/* Recalculate frame rate */
->  	ov7675_get_framerate(sd, tpf);
->  
-> -	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> -	if (ret < 0)
-> -		return ret;
-> -
-> -	return ov7670_write(sd, REG_DBLV, DBLV_X4);
-> +	return ov7675_apply_framerate(sd);
->  }
->  
->  static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
 
-Unfortunately this one no longer applies due to Jacopo's patch "v4l2: i2c:
-ov7670: Fix PLL bypass register values" in my tree. Could you resend it if
-you still think it's useful, please?
+That wouldn't hurt.
 
-My tree is here:
+> > +
+> > +struct qmp;
+> > +
+> > +int qmp_send(struct qmp *qmp, const void *data, size_t len);
+> > +
 
-<URL:https://git.linuxtv.org/sailus/media_tree.git/log/>
-
-I've applied the rest there, with a trivial patch I'll send briefly.
-
-Thanks.
-
--- 
-Sakari Ailus
+Thanks,
+Bjorn
