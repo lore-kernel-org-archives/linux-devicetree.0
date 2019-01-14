@@ -1,41 +1,109 @@
-From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Subject: Re: [PATCH v10 08/12] mfd: intel-peci-client: Add PECI client driver
-Date: Mon, 14 Jan 2019 15:03:15 -0800
-Message-ID: <7f63d8f1-2af6-e386-d5b2-c78e3881d789@linux.intel.com>
-References: <20190107214136.5256-1-jae.hyun.yoo@linux.intel.com>
- <20190107214136.5256-9-jae.hyun.yoo@linux.intel.com>
- <CACPK8Xet1HUbC4MN-XO31oZj56+af1Lpc_mtee-COSYizedWTg@mail.gmail.com>
+From: Sakari Ailus <sakari.ailus@iki.fi>
+Subject: Re: [PATCH v3 02/14] media: ov7670: split register setting from
+ set_framerate() logic
+Date: Tue, 15 Jan 2019 01:03:07 +0200
+Message-ID: <20190114230307.h5poc22jfs32hly3@valkosipuli.retiisi.org.uk>
+References: <20181120100318.367987-1-lkundrak@v3.sk>
+ <20181120100318.367987-3-lkundrak@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8Xet1HUbC4MN-XO31oZj56+af1Lpc_mtee-COSYizedWTg@mail.gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181120100318.367987-3-lkundrak@v3.sk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/14/2019 3:42 AM, Joel Stanley wrote:
-> On Tue, 8 Jan 2019 at 08:11, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
->>
->> This commit adds PECI client driver.
+On Tue, Nov 20, 2018 at 11:03:07AM +0100, Lubomir Rintel wrote:
+> This will allow us to restore the last set frame rate after the device
+> returns from a power off.
 > 
-> It looks like it's a PECI driver for the three CPU families, and it
-> implements cpu and dimm temp, with sideband functions deferred to the
-> future. If you add that information with a few more words it would
-> make for a nicer commit message.
+> Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 > 
-
-Yes, that would be nicer. I'll add the description into the commit
-message.
-
-Thanks for your review!
-
-Regards,
-Jae
-
->> Signed-off-by: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+> ---
+> Changes since v2:
+> - This patch was added to the series
 > 
-> Reviewed-by: Joel Stanley <joel@jms.id.au>
+>  drivers/media/i2c/ov7670.c | 30 ++++++++++++++----------------
+>  1 file changed, 14 insertions(+), 16 deletions(-)
 > 
+> diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+> index ee2302fbdeee..ead0c360df33 100644
+> --- a/drivers/media/i2c/ov7670.c
+> +++ b/drivers/media/i2c/ov7670.c
+> @@ -810,13 +810,24 @@ static void ov7675_get_framerate(struct v4l2_subdev *sd,
+>  			(4 * clkrc);
+>  }
+>  
+> +static int ov7675_apply_framerate(struct v4l2_subdev *sd)
+> +{
+> +	struct ov7670_info *info = to_state(sd);
+> +	int ret;
+> +
+> +	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
+> +	if (ret < 0)
+> +		return ret;
+> +
+> +	return ov7670_write(sd, REG_DBLV, info->pll_bypass ? DBLV_BYPASS : DBLV_X4);
+> +}
+> +
+>  static int ov7675_set_framerate(struct v4l2_subdev *sd,
+>  				 struct v4l2_fract *tpf)
+>  {
+>  	struct ov7670_info *info = to_state(sd);
+>  	u32 clkrc;
+>  	int pll_factor;
+> -	int ret;
+>  
+>  	/*
+>  	 * The formula is fps = 5/4*pixclk for YUV/RGB and
+> @@ -825,19 +836,10 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
+>  	 * pixclk = clock_speed / (clkrc + 1) * PLLfactor
+>  	 *
+>  	 */
+> -	if (info->pll_bypass) {
+> -		pll_factor = 1;
+> -		ret = ov7670_write(sd, REG_DBLV, DBLV_BYPASS);
+> -	} else {
+> -		pll_factor = PLL_FACTOR;
+> -		ret = ov7670_write(sd, REG_DBLV, DBLV_X4);
+> -	}
+> -	if (ret < 0)
+> -		return ret;
+> -
+>  	if (tpf->numerator == 0 || tpf->denominator == 0) {
+>  		clkrc = 0;
+>  	} else {
+> +		pll_factor = info->pll_bypass ? 1 : PLL_FACTOR;
+>  		clkrc = (5 * pll_factor * info->clock_speed * tpf->numerator) /
+>  			(4 * tpf->denominator);
+>  		if (info->fmt->mbus_code == MEDIA_BUS_FMT_SBGGR8_1X8)
+> @@ -859,11 +861,7 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
+>  	/* Recalculate frame rate */
+>  	ov7675_get_framerate(sd, tpf);
+>  
+> -	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
+> -	if (ret < 0)
+> -		return ret;
+> -
+> -	return ov7670_write(sd, REG_DBLV, DBLV_X4);
+> +	return ov7675_apply_framerate(sd);
+>  }
+>  
+>  static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+
+Unfortunately this one no longer applies due to Jacopo's patch "v4l2: i2c:
+ov7670: Fix PLL bypass register values" in my tree. Could you resend it if
+you still think it's useful, please?
+
+My tree is here:
+
+<URL:https://git.linuxtv.org/sailus/media_tree.git/log/>
+
+I've applied the rest there, with a trivial patch I'll send briefly.
+
+Thanks.
+
+-- 
+Sakari Ailus
