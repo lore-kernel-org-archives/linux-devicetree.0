@@ -1,90 +1,72 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] userdiff: Add a builtin pattern for dts files
-Date: Mon, 14 Jan 2019 10:34:31 -0800
-Message-ID: <154749087173.169631.13885160480779834976@swboyd.mtv.corp.google.com>
-References: <20190111215127.57356-1-sboyd@kernel.org> <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: [PATCH] arm64: dts: sdm845: Add CPU topology
+Date: Mon, 14 Jan 2019 10:42:55 -0800
+Message-ID: <20190114184255.258318-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
 Content-Transfer-Encoding: 8bit
-Sender: git-owner@vger.kernel.org
-To: Alban Gruin <alban.gruin@gmail.com>, git@vger.kernel.org
-Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Alban Gruin (2019-01-13 13:26:21)
-> Hi Stephen,
->=20
-> thank you for your patch.  I left a few comments below.
->=20
-> Le 11/01/2019 =C3=A0 22:51, Stephen Boyd a =C3=A9crit=C2=A0:
-> > diff --git a/userdiff.c b/userdiff.c
-> > index 97007abe5b16..2bc964e11089 100644
-> > --- a/userdiff.c
-> > +++ b/userdiff.c
-> > @@ -23,6 +23,15 @@ IPATTERN("ada",
-> >        "[a-zA-Z][a-zA-Z0-9_]*"
-> >        "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
-> >        "|=3D>|\\.\\.|\\*\\*|:=3D|/=3D|>=3D|<=3D|<<|>>|<>"),
-> > +PATTERNS("dts",
-> > +      /* Node name (with optional label and unit address) */
-> > +      "^[ \t]*((([a-zA-Z_][a-zA-Z0-9_]*: )?[a-zA-Z][a-zA-Z0-9,._+-]*(@=
-[a-zA-Z0-9,._+-]+)?"
->=20
-> From the spec, label and node names =E2=80=9Cshall be [between] 1 to 31
-> characters in length=E2=80=9D.  It=E2=80=99s not enforced here, and I gue=
-ss it=E2=80=99s not
-> really git=E2=80=99s job to check for this kind of rule.  Others may disa=
-gree
-> with me, though.
->=20
-> Should labels end with exactly one space after the colon, or can there
-> be more, or none at all?
+The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+that describes this topology.
 
-There can be any number of spaces after the colon. I can fix the regex
-here to accept any amount of whitespace after the colon.
+Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
+ 1 file changed, 38 insertions(+)
 
->=20
-> > +      /* Reference */
-> > +      "|&[a-zA-Z_][a-zA-Z0-9_]*[ \t]*)[ \t]*\\{)[ \t]*$",
->=20
-> It=E2=80=99s not specified in the spec, but these lines must end with a c=
-urly
-> brace? =20
-
-That isn't common but it is supported. I can change the regex to look
-for a line that ends in '{' or something that isn't ';' with anything
-after the node name?
-
-> What if there is a comment after the curly brace?
-
-There can be a comment after the curly brace or before the curly brace.
-The spec allows C style /* */ type comments, in addition to C++ style //
-comments. I've never really seen that happen in practice though so it's
-not very common. Grepping the linux sources shows two hits:
-
-arch/arm/boot/dts/lpc3250-ea3250.dts:&ohci /* &usbd */ {
-arch/arm/boot/dts/lpc3250-phy3250.dts:&ohci /* &usbd */ {
-
->=20
-> This pattern does not match the root node, but I guess it=E2=80=99s not
-> important as most of the interesting stuff in a dts is not directly in it.
-
-Agreed.
-
->=20
-> > +      /* -- */
-> > +      /* Property names and math operators */
-> > +      "[a-zA-Z0-9,._+?#-]+"
-> > +      "|[-+*/%&^|!~]"),
->=20
-> There is a `%' operator here and in your tests, but it=E2=80=99s not ment=
-ioned
-> in the spec if I=E2=80=99m not mistaken.  Does it actually exists?
-
-The compiler doesn't seem to complain when it's used. I can send a patch
-to update the spec for this rather esoteric feature. I can also include
-more tests and support for the boolean relational operators which also
-seem to be supported but probably never used.
+diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+index c27cbd3bcb0a6..f6c0d87e663f3 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
++++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+@@ -192,6 +192,44 @@
+ 				next-level-cache = <&L3_0>;
+ 			};
+ 		};
++
++		cpu-map {
++			cluster0 {
++				core0 {
++					cpu = <&CPU0>;
++				};
++
++				core1 {
++					cpu = <&CPU1>;
++				};
++
++				core2 {
++					cpu = <&CPU2>;
++				};
++
++				core3 {
++					cpu = <&CPU3>;
++				};
++			};
++
++			cluster1 {
++				core0 {
++					cpu = <&CPU4>;
++				};
++
++				core1 {
++					cpu = <&CPU5>;
++				};
++
++				core2 {
++					cpu = <&CPU6>;
++				};
++
++				core3 {
++					cpu = <&CPU7>;
++				};
++			};
++		};
+ 	};
+ 
+ 	pmu {
+-- 
+2.20.1.97.g81188d93c3-goog
