@@ -1,59 +1,90 @@
-From: Junio C Hamano <gitster@pobox.com>
+From: Stephen Boyd <sboyd@kernel.org>
 Subject: Re: [PATCH] userdiff: Add a builtin pattern for dts files
-Date: Mon, 14 Jan 2019 10:34:07 -0800
-Message-ID: <xmqq7ef7w0kg.fsf@gitster-ct.c.googlers.com>
-References: <20190111215127.57356-1-sboyd@kernel.org>
-        <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
+Date: Mon, 14 Jan 2019 10:34:31 -0800
+Message-ID: <154749087173.169631.13885160480779834976@swboyd.mtv.corp.google.com>
+References: <20190111215127.57356-1-sboyd@kernel.org> <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com> (Alban Gruin's
-        message of "Sun, 13 Jan 2019 22:26:21 +0100")
+In-Reply-To: <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
+Content-Transfer-Encoding: 8bit
 Sender: git-owner@vger.kernel.org
-To: Alban Gruin <alban.gruin@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+To: Alban Gruin <alban.gruin@gmail.com>, git@vger.kernel.org
+Cc: Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Alban Gruin <alban.gruin@gmail.com> writes:
-
+Quoting Alban Gruin (2019-01-13 13:26:21)
+> Hi Stephen,
+>=20
 > thank you for your patch.  I left a few comments below.
->
-> Le 11/01/2019 à 22:51, Stephen Boyd a écrit:
->> The Linux kernel receives many patches to the devicetree files each
->> release. The hunk header for those patches typically show nothing,
->> making it difficult to figure out what node is being modified without
->> applying the patch or opening the file and seeking to the context. Let's
->> add a builtin 'dts' pattern to git so that users can get better diff
->> output on dts files when they use the diff=dts driver.
+>=20
+> Le 11/01/2019 =C3=A0 22:51, Stephen Boyd a =C3=A9crit=C2=A0:
+> > diff --git a/userdiff.c b/userdiff.c
+> > index 97007abe5b16..2bc964e11089 100644
+> > --- a/userdiff.c
+> > +++ b/userdiff.c
+> > @@ -23,6 +23,15 @@ IPATTERN("ada",
+> >        "[a-zA-Z][a-zA-Z0-9_]*"
+> >        "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
+> >        "|=3D>|\\.\\.|\\*\\*|:=3D|/=3D|>=3D|<=3D|<<|>>|<>"),
+> > +PATTERNS("dts",
+> > +      /* Node name (with optional label and unit address) */
+> > +      "^[ \t]*((([a-zA-Z_][a-zA-Z0-9_]*: )?[a-zA-Z][a-zA-Z0-9,._+-]*(@=
+[a-zA-Z0-9,._+-]+)?"
+>=20
+> From the spec, label and node names =E2=80=9Cshall be [between] 1 to 31
+> characters in length=E2=80=9D.  It=E2=80=99s not enforced here, and I gue=
+ss it=E2=80=99s not
+> really git=E2=80=99s job to check for this kind of rule.  Others may disa=
+gree
+> with me, though.
+>=20
+> Should labels end with exactly one space after the colon, or can there
+> be more, or none at all?
 
-A sort of meta-question.
+There can be any number of spaces after the colon. I can fix the regex
+here to accept any amount of whitespace after the colon.
 
-What is missing in the current git that prevents the folks involved
-in device-tree project from achieving what this patch tries to
-accomplish without having to wait the Git project to act on it?  To
-put it another way, is it a symptom of a bad design that from time
-to time the Git project has to add built-in patterns?
+>=20
+> > +      /* Reference */
+> > +      "|&[a-zA-Z_][a-zA-Z0-9_]*[ \t]*)[ \t]*\\{)[ \t]*$",
+>=20
+> It=E2=80=99s not specified in the spec, but these lines must end with a c=
+urly
+> brace? =20
 
-Ability to ship arbitrary piece of text that you would normally
-place in .git/config is not exactly an answer to the above question,
-and will not happen as that has grave security implications.
+That isn't common but it is supported. I can change the regex to look
+for a line that ends in '{' or something that isn't ';' with anything
+after the node name?
 
-But perhaps we can start accepting an in-tree config-like file whose
-contents are limited to verified-safe settings
-(e.g. "diff.*.xfuncname" and nothing else), so that projects can
-ship two files in-tree:
+> What if there is a comment after the curly brace?
 
- - ".gitattributes" that says "*.dts diff=dts"
+There can be a comment after the curly brace or before the curly brace.
+The spec allows C style /* */ type comments, in addition to C++ style //
+comments. I've never really seen that happen in practice though so it's
+not very common. Grepping the linux sources shows two hits:
 
- - ".gitpreferences" that says "[diff "dts"] xfuncname=..." to
-   define the pattern the patch under review adds.
+arch/arm/boot/dts/lpc3250-ea3250.dts:&ohci /* &usbd */ {
+arch/arm/boot/dts/lpc3250-phy3250.dts:&ohci /* &usbd */ {
 
-without waiting for the next release of Git to add one more built-in
-pattern?
+>=20
+> This pattern does not match the root node, but I guess it=E2=80=99s not
+> important as most of the interesting stuff in a dts is not directly in it.
 
-Anything that defines executable (e.g. "diff.*.command") should
-never be accepted as part of the in-tree config-like file (for two
-reasons: security and portability), but there should be some
-"obviously safe" subset of config settings that we can allow project
-to impose on its users, I hope.
+Agreed.
+
+>=20
+> > +      /* -- */
+> > +      /* Property names and math operators */
+> > +      "[a-zA-Z0-9,._+?#-]+"
+> > +      "|[-+*/%&^|!~]"),
+>=20
+> There is a `%' operator here and in your tests, but it=E2=80=99s not ment=
+ioned
+> in the spec if I=E2=80=99m not mistaken.  Does it actually exists?
+
+The compiler doesn't seem to complain when it's used. I can send a patch
+to update the spec for this rather esoteric feature. I can also include
+more tests and support for the boolean relational operators which also
+seem to be supported but probably never used.
