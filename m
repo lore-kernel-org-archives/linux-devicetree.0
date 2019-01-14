@@ -1,265 +1,114 @@
-From: Kevin Hilman <khilman@baylibre.com>
-Subject: Re: [PATCH v4] arm64: dts: meson: Fix mmc cd-gpios polarity
-Date: Mon, 14 Jan 2019 08:01:58 -0800
-Message-ID: <7hh8ebmdmx.fsf@baylibre.com>
-References: <1547477061-31543-1-git-send-email-lollivier@baylibre.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PatchV2 1/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy
+ regulator power failed warning
+Date: Mon, 14 Jan 2019 17:17:32 +0100
+Message-ID: <c73797cc-f954-483e-1713-324b4929f889@baylibre.com>
+References: <20190113153022.5040-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547477061-31543-1-git-send-email-lollivier@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
-Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Linus Walleij <linus.walleij@linaro.org>, Loys Ollivier <lollivier@baylibre.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190113153022.5040-1-linux.amoon@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Loys Ollivier <lollivier@baylibre.com> writes:
+Hi Anand,
 
-> Commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> changed the behavior of "cd-inverted" to follow the device tree bindings
-> specification:
-> According to SDHCI standard, CD lines are specified as "active low".
-> Using the "cd-inverted" property means that the CD line is "active high".
->
-> Fix the SD card description for meson by setting the cd-gpios as
-> "active low", according to the boards specifications, and dropping the
-> "cd-inverted" property.
->
-> Fixes: 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
-> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-
-Queued as fix for v5.0-rc. (I replaced v3 in my fixes branch with this
-one)
-
-Kevin
-
+On 13/01/2019 16:30, Anand Moon wrote:
+> Override the dr_mode from "host" to "peripheral" for dwc2
+> usb_phy0->usb0 initilization of OTG Micro-B type.
+> Changes fix the below warning for phy poweron failed --> -22
+> 
+> Changes fix the initialization of c9000000.usb phy
+> 
+> [    1.203900] phy phy-c0000000.phy.0: USB ID detect failed!
+> [    1.208048] phy phy-c0000000.phy.0: phy poweron failed --> -22
+> [    1.213877] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+> [    1.222953] Modules linked in:
+> [    1.225976] CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.0.0-rc1-xc2ml #3
+> [    1.232872] Hardware name: Hardkernel ODROID-C2 (DT)
+> [    1.237794] Workqueue: events deferred_probe_work_func
+> [    1.242878] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> [    1.247623] pc : _regulator_put.part.11+0xf0/0xf8
+> [    1.252280] lr : regulator_put+0x34/0x48
+> [    1.256159] sp : ffff00001176bb00
+> [    1.259437] x29: ffff00001176bb00 x28: 0000000000000000
+> [    1.264698] x27: ffff80007f31beb8 x26: ffff000010eeb7e0
+> [    1.269959] x25: 0000000000000000 x24: 0000000000000009
+> [    1.275220] x23: ffff00001176bbc8 x22: ffff80007ed9d500
+> [    1.280482] x21: ffff0000111bd6c8 x20: ffff80007ed9d700
+> [    1.285743] x19: ffff80007ed9d700 x18: 000000000000006f
+> [    1.291004] x17: 0000000000000000 x16: 0000000000000000
+> [    1.296265] x15: 0000000000000400 x14: 0000000000000400
+> [    1.301527] x13: ff00000000000000 x12: ffffffffffffffff
+> [    1.306788] x11: 0000000000000038 x10: 0000000000000040
+> [    1.312049] x9 : ffff0000111d58b0 x8 : ffff0000111d58a8
+> [    1.317310] x7 : ffff80007ed9db00 x6 : ffff80007ec21b00
+> [    1.322571] x5 : ffff80007f400248 x4 : ffff80007fba9b00
+> [    1.327833] x3 : ffff0000112d9eb8 x2 : ffff80007ec21b00
+> [    1.333094] x1 : 0000000000000000 x0 : 0000000000000001
+> [    1.338356] Call trace:
+> [    1.340773]  _regulator_put.part.11+0xf0/0xf8
+> [    1.345085]  regulator_put+0x34/0x48
+> [    1.348621]  regulator_bulk_free+0x30/0x50
+> [    1.352675]  devm_regulator_bulk_release+0x18/0x20
+> [    1.357421]  release_nodes+0x1b0/0x220
+> [    1.361127]  devres_release_all+0x34/0x50
+> [    1.365094]  really_probe+0xec/0x290
+> [    1.368630]  driver_probe_device+0x54/0xe8
+> [    1.372684]  __device_attach_driver+0xb8/0xe8
+> [    1.376997]  bus_for_each_drv+0x78/0xc8
+> [    1.380792]  __device_attach+0xd4/0x130
+> [    1.384587]  device_initial_probe+0x10/0x18
+> [    1.388727]  bus_probe_device+0x90/0x98
+> [    1.392522]  deferred_probe_work_func+0x6c/0xa0
+> [    1.397010]  process_one_work+0x1e0/0x318
+> [    1.400975]  worker_thread+0x228/0x428
+> [    1.404684]  kthread+0x124/0x128
+> [    1.407876]  ret_from_fork+0x10/0x18
+> [    1.411410] ---[ end trace de5fd1b262c1f56a ]---
+> [    1.416055] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+> [    1.425123] Modules linked in:
+> [    1.428144] CPU: 1 PID: 44 Comm: kworker/1:1 Tainted: GW 5.0.0-rc1-xc2ml #3
+> [    1.436422] Hardware name: Hardkernel ODROID-C2 (DT)
+> [    1.441340] Workqueue: events deferred_probe_work_func
+> 
+> Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
 > ---
->
-> v4: commit message clarification on the "cd-inverted" property and usage.
->
-> v3: fix typos in the commit message.
->
-> v2: fix more occurences, also in other meson boards.
->
->  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi            | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts           | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts         | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts            | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi               | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi           | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi              | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi          | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts          | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts            | 3 +--
->  arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts             | 3 +--
->  14 files changed, 14 insertions(+), 28 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-> index e14e0ce7e89f..016641a41694 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
-> @@ -187,8 +187,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_boot>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-> index 8cd50b75171d..ade2ee09ae96 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
-> @@ -305,8 +305,7 @@
->  	max-frequency = <200000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddio_ao3v3>;
->  	vqmmc-supply = <&vddio_tf>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-> index 4cf7f6e80c6a..25105ac96d55 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
-> @@ -238,8 +238,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_card>;
+> Rebased on Kevin's amlogic/v5.0/fixes branch
+> Changes from patch v1 [0] https://lore.kernel.org/patchwork/patch/1031243/
+> - Split the patch into two part
+> - Fix the commit message
+> - Added Tested by Kevin Hilman
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 > diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> index 2e1cd5e3a246..1cc9dc68ef00 100644
+> index 1cc9dc68ef00..25a36d117183 100644
 > --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
 > +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
-> @@ -258,8 +258,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
+> @@ -302,6 +302,7 @@
 >  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&tflash_vdd>;
->  	vqmmc-supply = <&tf_io>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> index ce862266b9aa..0be0f2a5d2fe 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
-> @@ -196,8 +196,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_card>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-> index 93a4acf2c46c..ad4d50bd9d77 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
-> @@ -154,8 +154,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vcc_3v3>;
+>  &usb0 {
+>  	status = "okay";
+> +	dr_mode = "peripheral";
 >  };
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> index ec09bb5792b7..2d2db783c44c 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
-> @@ -211,8 +211,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
 >  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vcc_3v3>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-> index f1c410e2da2b..796baea7a0bf 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
-> @@ -131,8 +131,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_card>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> index db293440e4ca..255cede7b447 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
-> @@ -238,8 +238,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vcc_3v3>;
->  	vqmmc-supply = <&vcc_card>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-> index 6739697be1de..9cbdb85fb591 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
-> @@ -183,8 +183,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_card>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> index a1b31013ab6e..bc811a2faf42 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
-> @@ -137,8 +137,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_boot>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-> index 3c3a667a8df8..3f086ed7de05 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
-> @@ -356,8 +356,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_boot>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-> index f7a1cffab4a8..8acfd40090d2 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
-> @@ -147,8 +147,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_boot>;
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-> index 7212dc4531e4..7fa20a8ede17 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
-> @@ -170,8 +170,7 @@
->  	max-frequency = <100000000>;
->  	disable-wp;
->  
-> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
-> -	cd-inverted;
-> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
->  
->  	vmmc-supply = <&vddao_3v3>;
->  	vqmmc-supply = <&vddio_boot>;
-> -- 
-> 2.7.4
+>  &usb1 {
+> 
+
+
+Reviewed-by: Neil Armstrong <narmstrong@baylibre.com>
+
+PS: Please add a cover-letter next time !
+
+Neil
