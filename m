@@ -1,127 +1,61 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: [v2] arm64: dts: lx2160a: add sata node support
-Date: Mon, 14 Jan 2019 09:55:00 +0000
-Message-ID: <20190114095500.1600-1-peng.ma@nxp.com>
+From: Pascal PAILLET-LME <p.paillet@st.com>
+Subject: [PATCH RESEND v8 0/6] Introduce STPMIC1 PMIC Driver
+Date: Mon, 14 Jan 2019 10:05:14 +0000
+Message-ID: <1547460290-21049-1-git-send-email-p.paillet@st.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Peng Ma <peng.ma@nxp.com>
+To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lee.jones@linaro.org" <lee.jones@linaro.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+Cc: Pascal PAILLET-LME <p.paillet@st.com>
 List-Id: devicetree@vger.kernel.org
 
-Add sata node support and Enable sata support
+The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
+STMicroelectronics. 
+The STPMIC1 regulators supply power to an application processor as well as 
+to external system peripherals such as DDR, Flash memories and system
+devices. It also features onkey button input and an hardware watchdog.
+The STPMIC1 is controlled via I2C. 
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
----
-changed for V2:
-	- put the 'status' at the end of property list
-	- add lx2160aqds sata support
+Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
+irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
+as parent.
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
- 3 files changed, 76 insertions(+), 0 deletions(-)
+STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-index 99a22ab..0289955 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-@@ -110,3 +110,19 @@
- &usb1 {
- 	status = "okay";
- };
-+
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 6481e5f..aacca27 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -117,3 +117,19 @@
- &usb1 {
- 	status = "okay";
- };
-+
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index a79f5c1..4390aea 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -762,5 +762,49 @@
- 				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
- 			dma-coherent;
- 		};
-+
-+		sata0: sata@3200000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata1: sata@3210000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3210000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata2: sata@3220000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3220000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata3: sata@3230000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3230000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
- 	};
- };
+Pascal Paillet (6):
+  dt-bindings: mfd: document stpmic1
+  mfd: stpmic1: add stpmic1 driver
+  dt-bindings: input: document stpmic1 pmic onkey
+  input: stpmic1: add stpmic1 onkey driver
+  dt-bindings: watchdog: document stpmic1 pmic watchdog
+  watchdog: stpmic1: add stpmic1 watchdog driver
+
+ .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
+ .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
+ .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
+ drivers/input/misc/Kconfig                         |  11 ++
+ drivers/input/misc/Makefile                        |   2 +
+ drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
+ drivers/mfd/Kconfig                                |  16 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  12 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/stpmic1_wdt.c                     | 139 ++++++++++++++
+ include/dt-bindings/mfd/st,stpmic1.h               |  50 +++++
+ include/linux/mfd/stpmic1.h                        | 212 ++++++++++++++++++++
+ 14 files changed, 955 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+ create mode 100644 drivers/input/misc/stpmic1_onkey.c
+ create mode 100644 drivers/mfd/stpmic1.c
+ create mode 100644 drivers/watchdog/stpmic1_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+ create mode 100644 include/linux/mfd/stpmic1.h
+
 -- 
-1.7.1
+1.9.1
