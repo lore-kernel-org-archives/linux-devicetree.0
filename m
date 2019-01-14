@@ -1,7 +1,7 @@
 From: Robin Murphy <robin.murphy@arm.com>
-Subject: [PATCH v2 2/4] arm64: dts: rockchip: Refine nanopi4 differences
-Date: Mon, 14 Jan 2019 12:05:32 +0000
-Message-ID: <d153035e76d98cfae0f03eef8b49d814357ccb67.1547466003.git.robin.murphy@arm.com>
+Subject: [PATCH v2 4/4] arm64: dts: rockchip: 'Fix' nanopi4 uSD card detect
+Date: Mon, 14 Jan 2019 12:05:34 +0000
+Message-ID: <0608599d485117a9d99f5fb274fbb1b55f6ba9f7.1547466003.git.robin.murphy@arm.com>
 References: <cover.1547466003.git.robin.murphy@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,260 +21,66 @@ To: heiko@sntech.de
 Cc: linux-rockchip@lists.infradead.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The nanopi4 boards differ primarily in their power trees, with the main
-5V and 3.3V rails having very different topologies on the smaller USB-C
-powered boards vs. the 12V-powered T4, as well as minor variation in
-other regulators related to various external connectors.
-
-Additionally, the recovery key is only present on the T4 - ADC_IN1 is
-simply pulled high and not exposed on the other boards - and the lowest
-common denominator for MMC speed is actually HS200 according to the
-vendor DTs.
+For whatever reason, the sdmmc_dectn function isn't working properly
+as-is, and microSD insertion and removal goes unnoticed. Using the pin
+as a GPIO interrupt instead is rather noisy without any debouncing, but
+is good enough to make it useful until someone feels inclined to figure
+out how the vendor kernel/firmware gets the dedicated function to work
+with no obvious difference in the pinmux/GRF configuration. Let's also
+take the opportunity to tweak the node name so that all related pins
+end up grouped together in the compiled DTB.
 
 Signed-off-by: Robin Murphy <robin.murphy@arm.com>
 ---
 
-v2: No change
+v2: Clean up ordering
 
- .../boot/dts/rockchip/rk3399-nanopc-t4.dts    | 58 +++++++++++++++++++
- .../boot/dts/rockchip/rk3399-nanopi-m4.dts    | 48 +++++++++++++++
- .../boot/dts/rockchip/rk3399-nanopi4.dtsi     | 55 +-----------------
- 3 files changed, 107 insertions(+), 54 deletions(-)
+ .../boot/dts/rockchip/rk3399-nanopi4.dtsi     | 19 ++++++++++++-------
+ 1 file changed, 12 insertions(+), 7 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-index af0bb2544709..623a03f2548a 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopc-t4.dts
-@@ -14,4 +14,62 @@
- / {
- 	model = "FriendlyElec NanoPC-T4";
- 	compatible = "friendlyarm,nanopc-t4", "rockchip,rk3399";
-+
-+	vcc12v0_sys: vcc12v0-sys {
-+		compatible = "regulator-fixed";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-max-microvolt = <12000000>;
-+		regulator-min-microvolt = <12000000>;
-+		regulator-name = "vcc12v0_sys";
-+	};
-+
-+	vcc5v0_host0: vcc5v0-host0 {
-+		compatible = "regulator-fixed";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		regulator-name = "vcc5v0_host0";
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	adc-keys {
-+		compatible = "adc-keys";
-+		io-channels = <&saradc 1>;
-+		io-channel-names = "buttons";
-+		keyup-threshold-microvolt = <1800000>;
-+		poll-interval = <100>;
-+
-+		recovery {
-+			label = "Recovery";
-+			linux,code = <KEY_VENDOR>;
-+			press-threshold-microvolt = <18000>;
-+		};
-+	};
-+};
-+
-+&sdhci {
-+	mmc-hs400-1_8v;
-+	mmc-hs400-enhanced-strobe;
-+};
-+
-+&u2phy0_host {
-+	phy-supply = <&vcc5v0_host0>;
-+};
-+
-+&u2phy1_host {
-+	phy-supply = <&vcc5v0_host0>;
-+};
-+
-+&vcc5v0_sys {
-+	vin-supply = <&vcc12v0_sys>;
-+};
-+
-+&vcc3v3_sys {
-+	vin-supply = <&vcc12v0_sys>;
-+};
-+
-+&vbus_typec {
-+	enable-active-high;
-+	gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
-+	vin-supply = <&vcc5v0_sys>;
- };
-diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
-index 8d3f0ba29c72..60358ab8c7df 100644
---- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
-@@ -15,4 +15,52 @@
- / {
- 	model = "FriendlyElec NanoPi M4";
- 	compatible = "friendlyarm,nanopi-m4", "rockchip,rk3399";
-+
-+	vdd_5v: vdd-5v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vdd_5v";
-+		regulator-always-on;
-+		regulator-boot-on;
-+	};
-+
-+	vcc5v0_core: vcc5v0-core {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_core";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vdd_5v>;
-+	};
-+
-+	vcc5v0_usb1: vcc5v0-usb1 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_usb1";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+
-+	vcc5v0_usb2: vcc5v0-usb2 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "vcc5v0_usb2";
-+		regulator-always-on;
-+		regulator-boot-on;
-+		vin-supply = <&vcc5v0_sys>;
-+	};
-+};
-+
-+&vcc3v3_sys {
-+	vin-supply = <&vcc5v0_core>;
-+};
-+
-+&u2phy0_host {
-+	phy-supply = <&vcc5v0_usb1>;
-+};
-+
-+&u2phy1_host {
-+	phy-supply = <&vcc5v0_usb2>;
-+};
-+
-+&vbus_typec {
-+	regulator-always-on;
-+	vin-supply = <&vdd_5v>;
- };
 diff --git a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-index 3e8f1c10ba4f..9c723038d8f8 100644
+index 9c723038d8f8..2d304d2df62e 100644
 --- a/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
 +++ b/arch/arm64/boot/dts/rockchip/rk3399-nanopi4.dtsi
-@@ -28,21 +28,6 @@
- 		#clock-cells = <0>;
+@@ -501,17 +501,21 @@
+ 		};
  	};
  
--	vdd_5v: vdd-5v {
--		compatible = "regulator-fixed";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-name = "vdd_5v";
--	};
--
--	vcc5v0_core: vcc5v0-core {
--		compatible = "regulator-fixed";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-name = "vcc5v0_core";
--		vin-supply = <&vdd_5v>;
--	};
--
- 	vcc3v3_sys: vcc3v3-sys {
- 		compatible = "regulator-fixed";
- 		regulator-always-on;
-@@ -50,7 +35,6 @@
- 		regulator-min-microvolt = <3300000>;
- 		regulator-max-microvolt = <3300000>;
- 		regulator-name = "vcc3v3_sys";
--		vin-supply = <&vcc5v0_core>;
- 	};
- 
- 	vcc5v0_sys: vcc5v0-sys {
-@@ -63,22 +47,6 @@
- 		vin-supply = <&vdd_5v>;
- 	};
- 
--	vcc5v0_usb1: vcc5v0-usb1 {
--		compatible = "regulator-fixed";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-name = "vcc5v0_usb1";
--		vin-supply = <&vcc5v0_sys>;
--	};
--
--	vcc5v0_usb2: vcc5v0-usb2 {
--		compatible = "regulator-fixed";
--		regulator-always-on;
--		regulator-boot-on;
--		regulator-name = "vcc5v0_usb2";
--		vin-supply = <&vcc5v0_sys>;
--	};
--
- 	/* switched by pmic_sleep */
- 	vcc1v8_s3: vcca1v8_s3: vcc1v8-s3 {
- 		compatible = "regulator-fixed";
-@@ -105,27 +73,9 @@
- 
- 	vbus_typec: vbus-typec {
- 		compatible = "regulator-fixed";
--		enable-active-high;
--		gpios = <&gpio4 RK_PD2 GPIO_ACTIVE_HIGH>;
--		regulator-always-on;
- 		regulator-min-microvolt = <5000000>;
- 		regulator-max-microvolt = <5000000>;
- 		regulator-name = "vbus_typec";
--		vin-supply = <&vdd_5v>;
--	};
--
--	adc-keys {
--		compatible = "adc-keys";
--		io-channels = <&saradc 1>;
--		io-channel-names = "buttons";
--		keyup-threshold-microvolt = <1800000>;
--		poll-interval = <100>;
--
--		recovery {
--			label = "Recovery";
--			linux,code = <KEY_VENDOR>;
--			press-threshold-microvolt = <18000>;
+-	sd {
+-		sdmmc0_pwr_h: sdmmc0-pwr-h {
+-			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
 -		};
+-	};
+-
+ 	sdio-pwrseq {
+ 		wifi_reg_on_h: wifi-reg_on-h {
+ 			rockchip,pins = <0 RK_PB2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
  	};
- 
- 	gpio-keys {
-@@ -590,8 +540,7 @@
- 
- &sdhci {
- 	bus-width = <8>;
--	mmc-hs400-1_8v;
--	mmc-hs400-enhanced-strobe;
-+	mmc-hs200-1_8v;
- 	non-removable;
- 	status = "okay";
- };
-@@ -644,7 +593,6 @@
++
++	sdmmc {
++		sdmmc0_det_l: sdmmc0-det-l {
++			rockchip,pins = <0 RK_PA7 RK_FUNC_GPIO &pcfg_pull_up>;
++		};
++
++		sdmmc0_pwr_h: sdmmc0-pwr-h {
++			rockchip,pins = <0 RK_PA1 RK_FUNC_GPIO &pcfg_pull_none>;
++		};
++	};
  };
  
- &u2phy0_host {
--	phy-supply = <&vcc5v0_usb1>;
- 	status = "okay";
- };
- 
-@@ -657,7 +605,6 @@
- };
- 
- &u2phy1_host {
--	phy-supply = <&vcc5v0_usb2>;
- 	status = "okay";
- };
- 
+ &pmu_io_domains {
+@@ -563,9 +567,10 @@
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+ 	cap-mmc-highspeed;
++	cd-gpios = <&gpio0 RK_PA7 GPIO_ACTIVE_LOW>;
+ 	disable-wp;
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&sdmmc_bus4 &sdmmc_cd &sdmmc_clk &sdmmc_cmd>;
++	pinctrl-0 = <&sdmmc_bus4 &sdmmc_clk &sdmmc_cmd &sdmmc0_det_l>;
+ 	sd-uhs-sdr104;
+ 	vmmc-supply = <&vcc3v0_sd>;
+ 	vqmmc-supply = <&vcc_sdio>;
 -- 
 2.20.1.dirty
