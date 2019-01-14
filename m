@@ -1,81 +1,119 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v2 3/7] soc: qcom: Add AOSS QMP genpd provider
-Date: Mon, 14 Jan 2019 14:40:53 -0800
-Message-ID: <154750565372.169631.9416138415370937156@swboyd.mtv.corp.google.com>
-References: <20190106080915.4493-1-bjorn.andersson@linaro.org> <20190106080915.4493-4-bjorn.andersson@linaro.org>
+From: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Subject: Re: [PATCH v10 06/12] peci: Add a PECI adapter driver for Aspeed
+ AST24xx/AST25xx
+Date: Mon, 14 Jan 2019 14:49:48 -0800
+Message-ID: <abaef001-a769-ec5d-45f0-02a994fdbee6@linux.intel.com>
+References: <20190107214136.5256-1-jae.hyun.yoo@linux.intel.com>
+ <20190107214136.5256-7-jae.hyun.yoo@linux.intel.com>
+ <CACPK8XfMyXfomepZEPJCr=A-cCPw-CVAZ0B2CuKn7oXCNz6LbQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190106080915.4493-4-bjorn.andersson@linaro.org>
+In-Reply-To: <CACPK8XfMyXfomepZEPJCr=A-cCPw-CVAZ0B2CuKn7oXCNz6LbQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joel Stanley <joel@jms.id.au>
+Cc: Andrew Jeffery <andrew@aj.id.au>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Arnd Bergmann <arnd@arndb.de>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Andy Shevchenko <andriy.shevchenko@intel.com>, Robin Murphy <robin.murphy@arm.com>, Ryan Chen <ryan_chen@aspeedtech.com>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-01-06 00:09:11)
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index dda19471057f..d81256ef5055 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -12,6 +12,15 @@ config QCOM_AOSS_QMP
->           micro-controller in the AOSS, using QMP, to control certain res=
-ource
->           that are not exposed through RPMh.
-> =20
-> +config QCOM_AOSS_QMP_PD
-> +       tristate "Qualcomm AOSS Messaging Power Domain driver"
-> +       depends on QCOM_AOSS_QMP
-> +       select PM_GENERIC_DOMAINS
-> +       help
-> +         This driver provides the means of controlling the AOSSs handlin=
-g of
+On 1/14/2019 3:37 AM, Joel Stanley wrote:
+> On Tue, 8 Jan 2019 at 08:11, Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com> wrote:
+>> +       ret = of_property_read_u32(priv->dev->of_node, "cmd-timeout-ms",
+>> +                                  &priv->cmd_timeout_ms);
+>> +       if (ret || priv->cmd_timeout_ms > PECI_CMD_TIMEOUT_MS_MAX ||
+>> +           priv->cmd_timeout_ms == 0) {
+>> +               if (!ret)
+>> +                       dev_warn(priv->dev,
+>> +                                "Invalid cmd-timeout-ms : %u. Use default : %u\n",
+>> +                                priv->cmd_timeout_ms,
+>> +                                PECI_CMD_TIMEOUT_MS_DEFAULT);
+> 
+> As this property is documented as optional, I'd split out the checks
+> so you only warn when the value provided is invalid.
+> 
 
-Is that possesive? AOSS's?
+Please check the above 'if' statement too. It prints out warning only
+when the property is defined in device tree but the value is out of
+range.
 
-> +         low-power state for resources related to the remoteproc subsyst=
-ems as
-> +         well as controlling the debug clocks.
-> +
->  config QCOM_COMMAND_DB
->         bool "Qualcomm Command DB"
->         depends on ARCH_QCOM || COMPILE_TEST
-> diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-p=
-d.c
-> new file mode 100644
-> index 000000000000..62b8fcb9d09e
-> --- /dev/null
-> +++ b/drivers/soc/qcom/aoss-qmp-pd.c
-> @@ -0,0 +1,135 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018, Linaro Ltd
-> + */
-> +#include <linux/module.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_domain.h>
-> +#include <linux/soc/qcom/aoss-qmp.h>
-> +#include <dt-bindings/power/qcom-aoss-qmp.h>
-> +
-> +struct qmp_pd {
-> +       struct qmp *qmp;
-> +
-> +       struct generic_pm_domain pd;
-> +
-> +       const char *name;
-> +};
-> +
-> +#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
-> +
-> +struct qmp_pd_resource {
-> +       const char *name;
-> +       int (*on)(struct generic_pm_domain *domain);
-> +       int (*off)(struct generic_pm_domain *domain);
-> +};
-> +
-> +static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
-> +{
-> +       char buf[96];
+>> +
+>> +       regmap_write(priv->regmap, ASPEED_PECI_CTRL,
+>> +                    FIELD_PREP(PECI_CTRL_CLK_DIV_MASK, PECI_CLK_DIV_DEFAULT) |
+>> +                    PECI_CTRL_PECI_CLK_EN);
+>> +
+>> +       /**
+> 
+> Just the one *.
+> 
 
-Is 96 calculated from somewhere? Can it be a define because it's quite
-magical.
+Will fix it.
+
+>> +        * Timing negotiation period setting.
+>> +        * The unit of the programmed value is 4 times of PECI clock period.
+>> +        */
+>> +       regmap_write(priv->regmap, ASPEED_PECI_TIMING,
+>> +                    FIELD_PREP(PECI_TIMING_MESSAGE_MASK, msg_timing) |
+>> +                    FIELD_PREP(PECI_TIMING_ADDRESS_MASK, addr_timing));
+> 
+>> +static int aspeed_peci_xfer(struct peci_adapter *adapter,
+>> +                           struct peci_xfer_msg *msg)
+>> +{
+>> +       struct aspeed_peci *priv = peci_get_adapdata(adapter);
+>> +
+>> +       return aspeed_peci_xfer_native(priv, msg);
+>> +}
+> 
+> It looks like you could do the peci_get_adapdata in
+> aspeed_peci_xfer_native and drop the need for this wrapper.
+> 
+
+Yes, that would be neater. Will remove this wrapper.
+
+>> +
+>> +static int aspeed_peci_probe(struct platform_device *pdev)
+>> +{
+> 
+>>
+>> +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>> +       base = devm_ioremap_resource(&pdev->dev, res);
+>> +       if (IS_ERR(base)) {
+>> +               ret = PTR_ERR(base);
+>> +               goto err_put_adapter_dev;
+>> +       }
+>> +
+>> +       priv->regmap = devm_regmap_init_mmio(&pdev->dev, base,
+>> +                                            &aspeed_peci_regmap_config);
+>> +       if (IS_ERR(priv->regmap)) {
+>> +               ret = PTR_ERR(priv->regmap);
+>> +               goto err_put_adapter_dev;
+>> +       }
+>> +
+>> +       /**
+>> +        * We check that the regmap works on this very first access,
+>> +        * but as this is an MMIO-backed regmap, subsequent regmap
+>> +        * access is not going to fail and we skip error checks from
+>> +        * this point.
+> 
+> Why do you use a regmap for this driver? AFAICT it has exclusive
+> ownership over the register range it uses, which is sometimes a reason
+> to use a regmap over a mmio region.
+> 
+> I'm not sure if you've ever disassembled drivers/base/regmap/regmap.o,
+> but if you do you will find that a single mmio read turns into
+> hundreds of instructions.
+> 
+
+No specific reason. regmap makes some overhead as you mentioned but it
+also provides some advantages on access simplification, endianness
+handling and register dump at run time. I would not insist using of
+regmap if you prefer using of raw readl and writel. Do you want replace
+regmap with readl and writel in this driver?
+
+Thanks,
+Jae
+
+> Cheers,
+> 
+> Joel
+> 
