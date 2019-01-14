@@ -1,94 +1,91 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v2 2/7] soc: qcom: Add AOSS QMP communication driver
-Date: Mon, 14 Jan 2019 15:20:31 -0800
-Message-ID: <20190114232031.GD9278@minitux>
+Subject: Re: [PATCH v2 3/7] soc: qcom: Add AOSS QMP genpd provider
+Date: Mon, 14 Jan 2019 15:29:30 -0800
+Message-ID: <20190114232930.GE9278@minitux>
 References: <20190106080915.4493-1-bjorn.andersson@linaro.org>
- <20190106080915.4493-3-bjorn.andersson@linaro.org>
- <154750540229.169631.4962369801600780946@swboyd.mtv.corp.google.com>
+ <20190106080915.4493-4-bjorn.andersson@linaro.org>
+ <154750565372.169631.9416138415370937156@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <154750540229.169631.4962369801600780946@swboyd.mtv.corp.google.com>
+In-Reply-To: <154750565372.169631.9416138415370937156@swboyd.mtv.corp.google.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Stephen Boyd <swboyd@chromium.org>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Ulf Hansson <ulf.hansson@linaro.org>, Arun Kumar Neelakantam <aneela@codeaurora.org>, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 14 Jan 14:36 PST 2019, Stephen Boyd wrote:
+On Mon 14 Jan 14:40 PST 2019, Stephen Boyd wrote:
 
-> Quoting Bjorn Andersson (2019-01-06 00:09:10)
-> > diff --git a/drivers/soc/qcom/aoss-qmp.c b/drivers/soc/qcom/aoss-qmp.c
-> > new file mode 100644
-> > index 000000000000..de52703b96b6
-> > --- /dev/null
-> > +++ b/drivers/soc/qcom/aoss-qmp.c
-> > @@ -0,0 +1,313 @@
-> [...]
-> > +
-> > +static int qmp_probe(struct platform_device *pdev)
-> > +{
-> > +       struct resource *res;
-> > +       struct qmp *qmp;
-> > +       int irq;
-> > +       int ret;
-> > +
-> > +       qmp = devm_kzalloc(&pdev->dev, sizeof(*qmp), GFP_KERNEL);
-> > +       if (!qmp)
-> > +               return -ENOMEM;
-> > +
-> > +       qmp->dev = &pdev->dev;
-> > +       init_waitqueue_head(&qmp->event);
-> > +       mutex_init(&qmp->tx_lock);
-> > +
-> > +       res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> > +       qmp->msgram = devm_ioremap_resource(&pdev->dev, res);
-> > +       if (IS_ERR(qmp->msgram))
-> > +               return PTR_ERR(qmp->msgram);
-> > +
-> > +       qmp->mbox_client.dev = &pdev->dev;
-> > +       qmp->mbox_client.knows_txdone = true;
-> > +       qmp->mbox_chan = mbox_request_channel(&qmp->mbox_client, 0);
-> > +       if (IS_ERR(qmp->mbox_chan)) {
-> > +               dev_err(&pdev->dev, "failed to acquire ipc mailbox\n");
-> > +               return PTR_ERR(qmp->mbox_chan);
-> > +       }
-> > +
-> > +       irq = platform_get_irq(pdev, 0);
-> > +       ret = devm_request_irq(&pdev->dev, irq, qmp_intr, IRQF_ONESHOT,
-> > +                              "aoss-qmp", qmp);
-> > +       if (ret < 0) {
-> > +               dev_err(&pdev->dev, "failed to request interrupt\n");
+> Quoting Bjorn Andersson (2019-01-06 00:09:11)
+> > diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
+> > index dda19471057f..d81256ef5055 100644
+> > --- a/drivers/soc/qcom/Kconfig
+> > +++ b/drivers/soc/qcom/Kconfig
+> > @@ -12,6 +12,15 @@ config QCOM_AOSS_QMP
+> >           micro-controller in the AOSS, using QMP, to control certain resource
+> >           that are not exposed through RPMh.
+> >  
+> > +config QCOM_AOSS_QMP_PD
+> > +       tristate "Qualcomm AOSS Messaging Power Domain driver"
+> > +       depends on QCOM_AOSS_QMP
+> > +       select PM_GENERIC_DOMAINS
+> > +       help
+> > +         This driver provides the means of controlling the AOSSs handling of
 > 
-> Don't we need to free_mbox_channel() all over the place here?
+> Is that possesive? AOSS's?
 > 
 
-We do, thanks for spotting this.
+That's correct, will fix.
 
-[..]
-> > diff --git a/include/linux/soc/qcom/aoss-qmp.h b/include/linux/soc/qcom/aoss-qmp.h
+> > +         low-power state for resources related to the remoteproc subsystems as
+> > +         well as controlling the debug clocks.
+> > +
+> >  config QCOM_COMMAND_DB
+> >         bool "Qualcomm Command DB"
+> >         depends on ARCH_QCOM || COMPILE_TEST
+> > diff --git a/drivers/soc/qcom/aoss-qmp-pd.c b/drivers/soc/qcom/aoss-qmp-pd.c
 > > new file mode 100644
-> > index 000000000000..32ccaa091a9f
+> > index 000000000000..62b8fcb9d09e
 > > --- /dev/null
-> > +++ b/include/linux/soc/qcom/aoss-qmp.h
-> > @@ -0,0 +1,12 @@
-> > +/* SPDX-License-Identifier: GPL-2.0 */
+> > +++ b/drivers/soc/qcom/aoss-qmp-pd.c
+> > @@ -0,0 +1,135 @@
+> > +// SPDX-License-Identifier: GPL-2.0
 > > +/*
 > > + * Copyright (c) 2018, Linaro Ltd
 > > + */
-> > +#ifndef __AOP_QMP_H__
-> > +#define __AOP_QMP_H__
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/pm_domain.h>
+> > +#include <linux/soc/qcom/aoss-qmp.h>
+> > +#include <dt-bindings/power/qcom-aoss-qmp.h>
+> > +
+> > +struct qmp_pd {
+> > +       struct qmp *qmp;
+> > +
+> > +       struct generic_pm_domain pd;
+> > +
+> > +       const char *name;
+> > +};
+> > +
+> > +#define to_qmp_pd_resource(res) container_of(res, struct qmp_pd, pd)
+> > +
+> > +struct qmp_pd_resource {
+> > +       const char *name;
+> > +       int (*on)(struct generic_pm_domain *domain);
+> > +       int (*off)(struct generic_pm_domain *domain);
+> > +};
+> > +
+> > +static int qmp_pd_clock_toggle(struct qmp_pd *res, bool enable)
+> > +{
+> > +       char buf[96];
 > 
-> include <linux/types.h> for size_t usage?
+> Is 96 calculated from somewhere? Can it be a define because it's quite
+> magical.
 > 
 
-That wouldn't hurt.
-
-> > +
-> > +struct qmp;
-> > +
-> > +int qmp_send(struct qmp *qmp, const void *data, size_t len);
-> > +
+This is inherited by downstream, I know it has to be % 4, I'll check and
+update accordingly.
 
 Thanks,
 Bjorn
