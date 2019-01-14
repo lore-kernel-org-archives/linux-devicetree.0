@@ -1,411 +1,150 @@
-From: Amit Kucheria <amit.kucheria@linaro.org>
-Subject: [PATCH v2 8/9] arm64: dts: sdm845: wireup the thermal trip points to cpufreq
-Date: Mon, 14 Jan 2019 15:51:10 +0530
-Message-ID: <7f94696460848a6bcfe5aee5ffda7fe556240736.1547458732.git.amit.kucheria@linaro.org>
-References: <cover.1547458732.git.amit.kucheria@linaro.org>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 10/34] dt-bindings: arm: Convert Actions Semi bindings
+ to jsonschema
+Date: Mon, 14 Jan 2019 15:56:17 +0530
+Message-ID: <20190114102614.GC13162@Mani-XPS-13-9360>
+References: <20181203213223.16986-1-robh@kernel.org>
+ <20181203213223.16986-11-robh@kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1547458732.git.amit.kucheria@linaro.org>
-In-Reply-To: <cover.1547458732.git.amit.kucheria@linaro.org>
-References: <cover.1547458732.git.amit.kucheria@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20181203213223.16986-11-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Since all cpus in the big and little clusters, respectively, are in the
-same frequency domain, use all of them for mitigation in the
-cooling-map. We end up with two cooling devices - one each for the big
-and little clusters.
+On Mon, Dec 03, 2018 at 03:31:59PM -0600, Rob Herring wrote:
+> Convert Actions Semi SoC bindings to DT schema format using json-schema.
+> 
 
-At the lower trip points we restrict ourselves to throttling only a few
-OPPs. At higher trip temperatures, allow ourselves to be throttled to
-any extent.
+Andreas,
 
-Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 177 ++++++++++++++++++++++++---
- 1 file changed, 161 insertions(+), 16 deletions(-)
+Shall I just apply this patch to Actions sub-tree?
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index fb7da678b116..7973e88bdf94 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -13,6 +13,7 @@
- #include <dt-bindings/reset/qcom,sdm845-aoss.h>
- #include <dt-bindings/soc/qcom,rpmh-rsc.h>
- #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-+#include <dt-bindings/thermal/thermal.h>
- 
- / {
- 	interrupt-parent = <&intc>;
-@@ -99,6 +100,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_0>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 
-@@ -116,6 +118,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_100>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 
-@@ -130,6 +133,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_200>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 
-@@ -144,6 +148,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_300>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 
-@@ -158,6 +163,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_400>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 
-@@ -172,6 +178,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_500>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 
-@@ -186,6 +193,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_600>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 
-@@ -200,6 +208,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			#cooling-cells = <2>;
- 			next-level-cache = <&L2_700>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 
-@@ -1719,18 +1728,35 @@
- 			thermal-sensors = <&tsens0 1>;
- 
- 			trips {
--				cpu_alert0: trip0 {
-+				cpu0_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit0: trip1 {
-+				cpu0_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu0_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-+							 <&CPU1 THERMAL_NO_LIMIT 4>,
-+							 <&CPU2 THERMAL_NO_LIMIT 4>,
-+							 <&CPU3 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu0_crit>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu1-thermal {
-@@ -1740,18 +1766,35 @@
- 			thermal-sensors = <&tsens0 2>;
- 
- 			trips {
--				cpu_alert1: trip0 {
-+				cpu1_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit1: trip1 {
-+				cpu1_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu1_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-+							 <&CPU1 THERMAL_NO_LIMIT 4>,
-+							 <&CPU2 THERMAL_NO_LIMIT 4>,
-+							 <&CPU3 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu1_crit>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu2-thermal {
-@@ -1761,18 +1804,35 @@
- 			thermal-sensors = <&tsens0 3>;
- 
- 			trips {
--				cpu_alert2: trip0 {
-+				cpu2_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit2: trip1 {
-+				cpu2_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu2_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-+							 <&CPU1 THERMAL_NO_LIMIT 4>,
-+							 <&CPU2 THERMAL_NO_LIMIT 4>,
-+							 <&CPU3 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu2_crit>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu3-thermal {
-@@ -1782,18 +1842,35 @@
- 			thermal-sensors = <&tsens0 4>;
- 
- 			trips {
--				cpu_alert3: trip0 {
-+				cpu3_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit3: trip1 {
-+				cpu3_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu3_alert0>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-+							 <&CPU1 THERMAL_NO_LIMIT 4>,
-+							 <&CPU2 THERMAL_NO_LIMIT 4>,
-+							 <&CPU3 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu3_crit>;
-+					cooling-device = <&CPU0 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU1 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU2 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU3 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu4-thermal {
-@@ -1803,18 +1880,35 @@
- 			thermal-sensors = <&tsens0 7>;
- 
- 			trips {
--				cpu_alert4: trip0 {
-+				cpu4_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit4: trip1 {
-+				cpu4_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu4_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT 4>,
-+							 <&CPU5 THERMAL_NO_LIMIT 4>,
-+							 <&CPU6 THERMAL_NO_LIMIT 4>,
-+							 <&CPU7 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu4_crit>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu5-thermal {
-@@ -1824,18 +1918,35 @@
- 			thermal-sensors = <&tsens0 8>;
- 
- 			trips {
--				cpu_alert5: trip0 {
-+				cpu5_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit5: trip1 {
-+				cpu5_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu5_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT 4>,
-+							 <&CPU5 THERMAL_NO_LIMIT 4>,
-+							 <&CPU6 THERMAL_NO_LIMIT 4>,
-+							 <&CPU7 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu5_crit>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu6-thermal {
-@@ -1845,18 +1956,35 @@
- 			thermal-sensors = <&tsens0 9>;
- 
- 			trips {
--				cpu_alert6: trip0 {
-+				cpu6_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit6: trip1 {
-+				cpu6_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu6_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT 4>,
-+							 <&CPU5 THERMAL_NO_LIMIT 4>,
-+							 <&CPU6 THERMAL_NO_LIMIT 4>,
-+							 <&CPU7 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu6_crit>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 
- 		cpu7-thermal {
-@@ -1866,18 +1994,35 @@
- 			thermal-sensors = <&tsens0 10>;
- 
- 			trips {
--				cpu_alert7: trip0 {
-+				cpu7_alert0: trip-point@0 {
- 					temperature = <95000>;
- 					hysteresis = <2000>;
- 					type = "passive";
- 				};
- 
--				cpu_crit7: trip1 {
-+				cpu7_crit: cpu_crit@0 {
- 					temperature = <110000>;
- 					hysteresis = <1000>;
- 					type = "critical";
- 				};
- 			};
-+
-+			cooling-maps {
-+				map0 {
-+					trip = <&cpu7_alert0>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT 4>,
-+							 <&CPU5 THERMAL_NO_LIMIT 4>,
-+							 <&CPU6 THERMAL_NO_LIMIT 4>,
-+							 <&CPU7 THERMAL_NO_LIMIT 4>;
-+				};
-+				map1 {
-+					trip = <&cpu7_crit>;
-+					cooling-device = <&CPU4 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU5 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU6 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>,
-+							 <&CPU7 THERMAL_NO_LIMIT THERMAL_NO_LIMIT>;
-+				};
-+			};
- 		};
- 	};
- };
--- 
-2.17.1
+Thanks,
+Mani
+
+> Cc: "Andreas Färber" <afaerber@suse.de>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
+> ---
+>  .../devicetree/bindings/arm/actions.txt       | 56 -------------------
+>  .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
+>  2 files changed, 38 insertions(+), 56 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
+>  create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
+> deleted file mode 100644
+> index d54f33c4e0da..000000000000
+> --- a/Documentation/devicetree/bindings/arm/actions.txt
+> +++ /dev/null
+> @@ -1,56 +0,0 @@
+> -Actions Semi platforms device tree bindings
+> --------------------------------------------
+> -
+> -
+> -S500 SoC
+> -========
+> -
+> -Required root node properties:
+> -
+> - - compatible :  must contain "actions,s500"
+> -
+> -
+> -Modules:
+> -
+> -Root node property compatible must contain, depending on module:
+> -
+> - - LeMaker Guitar: "lemaker,guitar"
+> -
+> -
+> -Boards:
+> -
+> -Root node property compatible must contain, depending on board:
+> -
+> - - Allo.com Sparky: "allo,sparky"
+> - - Cubietech CubieBoard6: "cubietech,cubieboard6"
+> - - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
+> -
+> -
+> -S700 SoC
+> -========
+> -
+> -Required root node properties:
+> -
+> -- compatible :  must contain "actions,s700"
+> -
+> -
+> -Boards:
+> -
+> -Root node property compatible must contain, depending on board:
+> -
+> - - Cubietech CubieBoard7: "cubietech,cubieboard7"
+> -
+> -
+> -S900 SoC
+> -========
+> -
+> -Required root node properties:
+> -
+> -- compatible :  must contain "actions,s900"
+> -
+> -
+> -Boards:
+> -
+> -Root node property compatible must contain, depending on board:
+> -
+> - - uCRobotics Bubblegum-96: "ucrobotics,bubblegum-96"
+> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
+> new file mode 100644
+> index 000000000000..60abd371e474
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
+> @@ -0,0 +1,38 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/actions.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Actions Semi platforms device tree bindings
+> +
+> +maintainers:
+> +  - Andreas Färber <afaerber@suse.de>
+> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      # The Actions Semi S500 is a quad-core ARM Cortex-A9 SoC.
+> +      - items:
+> +          - enum:
+> +              - allo,sparky # Allo.com Sparky
+> +              - cubietech,cubieboard6 # Cubietech CubieBoard6
+> +          - const: actions,s500
+> +      - items:
+> +          - enum:
+> +              - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
+> +          - const: lemaker,guitar
+> +          - const: actions,s500
+> +
+> +      # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
+> +      - items:
+> +          - enum:
+> +              - cubietech,cubieboard7 # Cubietech CubieBoard7
+> +          - const: actions,s700
+> +
+> +      # The Actions Semi S900 is a quad-core ARM Cortex-A53 SoC.
+> +      - items:
+> +          - enum:
+> +              - ucrobotics,bubblegum-96 # uCRobotics Bubblegum-96
+> +          - const: actions,s900
+> -- 
+> 2.19.1
+> 
