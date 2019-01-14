@@ -1,104 +1,68 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v2 2/3] mmc: sdhci-esdhc-imx: add SD clock limitation for
- imx6ull
-Date: Mon, 14 Jan 2019 12:43:58 +0100
-Message-ID: <CAPDyKFpM3O=Ye6K2cG4b0=E6EXt7HhUYs6HNhomf=azayRL0FA@mail.gmail.com>
-References: <20181228033323.32308-1-haibo.chen@nxp.com>
- <20181228033323.32308-2-haibo.chen@nxp.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 1/5] gnss: sirf: write data to gnss only when the gnss
+ device is open
+Date: Mon, 14 Jan 2019 13:00:21 +0100
+Message-ID: <20190114120021.GF3691@localhost>
+References: <20181209195150.5192-1-andreas@kemnade.info>
+ <20181209195150.5192-2-andreas@kemnade.info>
+ <20190110120228.GB3430@localhost>
+ <20190113215036.11c543db@aktux>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181228033323.32308-2-haibo.chen@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: BOUGH CHEN <haibo.chen@nxp.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, "adrian.hunter@intel.com" <adrian.hunter@intel.com>, "rmk+kernel@armlinux.org.uk" <rmk+kernel@armlinux.org.uk>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190113215036.11c543db@aktux>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 28 Dec 2018 at 04:26, BOUGH CHEN <haibo.chen@nxp.com> wrote:
->
-> i.MX6ULL has errata ERR010450, point out that due to SOC I/O
-> timing limitation, for eMMC HS200 and SD/SDIO 3.0 SDR104, the
-> clock rate can't exceed 150MHz. And for eMMC DDR52 and SD/SDIO
-> DDR50 mode, the clock rate can't exceed 45MHz.
->
-> This patch add this limit for imx6ull.
->
-> Signed-off-by: Haibo Chen <haibo.chen@nxp.com>
-> Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+On Sun, Jan 13, 2019 at 09:50:36PM +0100, Andreas Kemnade wrote:
+> On Thu, 10 Jan 2019 13:02:28 +0100
+> Johan Hovold <johan@kernel.org> wrote:
+> 
+> > On Sun, Dec 09, 2018 at 08:51:46PM +0100, Andreas Kemnade wrote:
+> > > The api forbids writing data there otherwise. Prepare for the
+> > > serdev_open()/close() being a part of runtime pm.
+> > > 
+> > > Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> > > ---
+> > > Changes in v2:
+> > >  add locking
+> > > 
+> > >  drivers/gnss/sirf.c | 28 +++++++++++++++++++++++++++-
+> > >  1 file changed, 27 insertions(+), 1 deletion(-)
+> > > 
+> > > diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> > > index 2c22836d3ffd..ba663de1db49 100644
+> > > --- a/drivers/gnss/sirf.c
+> > > +++ b/drivers/gnss/sirf.c
+> > > @@ -35,6 +35,12 @@ struct sirf_data {
+> > >  	struct gpio_desc *wakeup;
+> > >  	int irq;
+> > >  	bool active;
+> > > +	/*
+> > > +	 * There might be races between returning data and closing the gnss
+> > > +	 * device.
+> > > +	 */  
+> > 
+> > Please drop this comment, which is too verbose. The mutex protects the
+> > opened flag, and that could be indicated using a new line above the
+> > mutex and below the flag, or using a short comment before the mutex.
+> > 
+> > > +	struct mutex gdev_mutex;  
+> > 
+> > Please rename "mutex". We should be able to reuse this for the serdev
+> > open count as well, right?
+> 
+> No. we cannot. The problem here is that we would take the same mutex
+> in a serdev callback and around a serdev call. Then we have things like
+> that:
+> 
+> [   36.700408] ======================================================
+> [   36.706970] WARNING: possible circular locking dependency detected
 
-Applied for next (I amended the patch by fixing a trivial conflict and
-made the struct "const").
+Right, we need to be able to flush as part of close. Thanks for
+investigating, though.
 
-Kind regards
-Uffe
-
-
-> ---
->  drivers/mmc/host/sdhci-esdhc-imx.c | 21 ++++++++++++++++++++-
->  1 file changed, 20 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-esdhc-imx.c b/drivers/mmc/host/sdhci-esdhc-imx.c
-> index 7cfcc8618e45..e1d9b2985979 100644
-> --- a/drivers/mmc/host/sdhci-esdhc-imx.c
-> +++ b/drivers/mmc/host/sdhci-esdhc-imx.c
-> @@ -138,7 +138,11 @@
->  #define ESDHC_FLAG_HS200               BIT(8)
->  /* The IP supports HS400 mode */
->  #define ESDHC_FLAG_HS400               BIT(9)
-> -
-> +/* The IP has errata ERR010450
-> + * uSDHC: Due to the I/O timing limit, for SDR mode, SD card clock can't
-> + * exceed 150MHz, for DDR mode, SD card clock can't exceed 45MHz.
-> + */
-> +#define ESDHC_FLAG_ERR010450           BIT(10)
->  /* A clock frequency higher than this rate requires strobe dll control */
->  #define ESDHC_STROBE_DLL_CLK_FREQ      100000000
->
-> @@ -177,6 +181,12 @@ static struct esdhc_soc_data usdhc_imx6sx_data = {
->                         | ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200,
->  };
->
-> +static struct esdhc_soc_data usdhc_imx6ull_data = {
-> +       .flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
-> +                       | ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> +                       | ESDHC_FLAG_ERR010450,
-> +};
-> +
->  static struct esdhc_soc_data usdhc_imx7d_data = {
->         .flags = ESDHC_FLAG_USDHC | ESDHC_FLAG_STD_TUNING
->                         | ESDHC_FLAG_HAVE_CAP1 | ESDHC_FLAG_HS200
-> @@ -227,6 +237,7 @@ static const struct of_device_id imx_esdhc_dt_ids[] = {
->         { .compatible = "fsl,imx6sx-usdhc", .data = &usdhc_imx6sx_data, },
->         { .compatible = "fsl,imx6sl-usdhc", .data = &usdhc_imx6sl_data, },
->         { .compatible = "fsl,imx6q-usdhc", .data = &usdhc_imx6q_data, },
-> +       { .compatible = "fsl,imx6ull-usdhc", .data = &usdhc_imx6ull_data, },
->         { .compatible = "fsl,imx7d-usdhc", .data = &usdhc_imx7d_data, },
->         { /* sentinel */ }
->  };
-> @@ -733,6 +744,14 @@ static inline void esdhc_pltfm_set_clock(struct sdhci_host *host,
->                 | ESDHC_CLOCK_MASK);
->         sdhci_writel(host, temp, ESDHC_SYSTEM_CONTROL);
->
-> +       if (imx_data->socdata->flags & ESDHC_FLAG_ERR010450) {
-> +               unsigned int max_clock;
-> +
-> +               max_clock = imx_data->is_ddr ? 45000000 : 150000000;
-> +
-> +               clock = min(clock, max_clock);
-> +       }
-> +
->         while (host_clock / (16 * pre_div * ddr_pre_div) > clock &&
->                         pre_div < 256)
->                 pre_div *= 2;
-> --
-> 2.17.1
->
+Johan
