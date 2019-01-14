@@ -1,92 +1,58 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: [PATCH v2] arm64: dts: imx8mq: Add pwm
-Date: Mon, 14 Jan 2019 18:03:16 +0100
-Message-ID: <20190114170316.GB4168@bogon.m.sigxcpu.org>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PatchV2 2/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy reset warning
+Date: Mon, 14 Jan 2019 22:49:54 +0530
+Message-ID: <CANAwSgQS0B4Gbbvgu2N4cawmXMGWG1Sm0TOg0hTBr2nLteKQxQ@mail.gmail.com>
+References: <20190113153022.5040-1-linux.amoon@gmail.com> <20190113153022.5040-2-linux.amoon@gmail.com>
+ <7hy37nky4v.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7hy37nky4v.fsf@baylibre.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-We can reuse the pwm from fsl,imx27-pwm as with other imx SOCs.
+Hi Kevin / Neil
 
-Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
----
-Changes from v1 (thanks Lucas Stach for the review):
-  - fix indentation of multine entries
-  - move to AIPS2 bus
+On Mon, 14 Jan 2019 at 21:52, Kevin Hilman <khilman@baylibre.com> wrote:
+>
+> Hi Anand,
+>
+> Anand Moon <linux.amoon@gmail.com> writes:
+>
+> > Add missing vin-supply node 5.0V regulator setting to power
+> > to usb ports, changes help fix the usb reset warning.
+> >
+> > [  795.380156] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > [  798.356073] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > [  801.331999] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > [  804.307919] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > [  807.283844] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> >
+> > Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
+> > Tested-by: Kevin Hilman <khilman@baylibre.com>
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > Rebased on Kevin's amlogic/v5.0/fixes branch
+> > Changes from patch v1 [0] https://lore.kernel.org/patchwork/patch/1031243/
+> > - Split the patch into two part: new patch
+> > - Fix the commit message
+> > - Added Tested by Kevin Hilman
+>
+> Queued as fixes for v5.0-rc (branch: v5.0/fixes) with Neil's reviewed-by tags.
+>
+> Thanks for breaking up into two patches, and as Neil said, please add a
+> cover letter to multi-patch series in the future.
+>
+> Thanks,
+>
+> Kevin
 
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 44 +++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+Ok will follow the protocol next time I send some patches.
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index 8e9d6d5ed7b2..0b42fcb1ecaa 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -259,6 +259,50 @@
- 			#address-cells =3D <1>;
- 			#size-cells =3D <1>;
- 			ranges =3D <0x30400000 0x30400000 0x400000>;
-+
-+			pwm1: pwm@30660000 {
-+				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
-+				reg =3D <0x30660000 0x10000>;
-+				interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_PWM1_ROOT>,
-+				         <&clk IMX8MQ_CLK_PWM1_ROOT>;
-+				clock-names =3D "ipg", "per";
-+				#pwm-cells =3D <2>;
-+				status =3D "disabled";
-+			};
-+
-+			pwm2: pwm@30670000 {
-+				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
-+				reg =3D <0x30670000 0x10000>;
-+				interrupts =3D <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_PWM2_ROOT>,
-+				         <&clk IMX8MQ_CLK_PWM2_ROOT>;
-+				clock-names =3D "ipg", "per";
-+				#pwm-cells =3D <2>;
-+				status =3D "disabled";
-+			};
-+
-+			pwm3: pwm@30680000 {
-+				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
-+				reg =3D <0x30680000 0x10000>;
-+				interrupts =3D <GIC_SPI 83 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_PWM3_ROOT>,
-+				         <&clk IMX8MQ_CLK_PWM3_ROOT>;
-+				clock-names =3D "ipg", "per";
-+				#pwm-cells =3D <2>;
-+				status =3D "disabled";
-+			};
-+
-+			pwm4: pwm@30690000 {
-+				compatible =3D "fsl,imx8mq-pwm", "fsl,imx27-pwm";
-+				reg =3D <0x30690000 0x10000>;
-+				interrupts =3D <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+				clocks =3D <&clk IMX8MQ_CLK_PWM4_ROOT>,
-+				         <&clk IMX8MQ_CLK_PWM4_ROOT>;
-+				clock-names =3D "ipg", "per";
-+				#pwm-cells =3D <2>;
-+				status =3D "disabled";
-+			};
- 		};
- =
-
- 		bus@30800000 { /* AIPS3 */
--- =
-
-2.20.1
+Best Regards
+-Anand
