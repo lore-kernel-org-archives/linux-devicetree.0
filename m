@@ -1,19 +1,19 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH v4 09/14] ARM: dts: qcom: pma8084: add interrupt controller properties
-Date: Mon, 14 Jan 2019 15:44:33 -0800
-Message-ID: <154750947374.169631.15455581745164449073@swboyd.mtv.corp.google.com>
-References: <20190113154716.5145-1-masneyb@onstation.org> <20190113154716.5145-10-masneyb@onstation.org>
+Subject: Re: [PATCH v4 13/14] arm64: dts: qcom: pmi8998: add interrupt controller properties
+Date: Mon, 14 Jan 2019 15:43:45 -0800
+Message-ID: <154750942515.169631.3493832994858414803@swboyd.mtv.corp.google.com>
+References: <20190113154716.5145-1-masneyb@onstation.org> <20190113154716.5145-14-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190113154716.5145-10-masneyb@onstation.org>
+In-Reply-To: <20190113154716.5145-14-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Brian Masney <masneyb@onstation.org>, andy.gross@linaro.org, bjorn.andersson@linaro.org, linus.walleij@linaro.org
 Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Brian Masney (2019-01-13 07:47:11)
+Quoting Brian Masney (2019-01-13 07:47:15)
 > Add interrupt controller properties now that spmi-gpio is a proper
 > hierarchical IRQ chip. The interrupts property is no longer needed so
 > remove it.
@@ -23,7 +23,6 @@ Quoting Brian Masney (2019-01-13 07:47:11)
 > no issues.
 >=20
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 > ---
 
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
