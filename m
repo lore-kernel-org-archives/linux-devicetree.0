@@ -1,150 +1,48 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 10/34] dt-bindings: arm: Convert Actions Semi bindings
- to jsonschema
-Date: Mon, 14 Jan 2019 15:56:17 +0530
-Message-ID: <20190114102614.GC13162@Mani-XPS-13-9360>
-References: <20181203213223.16986-1-robh@kernel.org>
- <20181203213223.16986-11-robh@kernel.org>
+From: "Rafael J. Wysocki" <rafael@kernel.org>
+Subject: Re: [PATCH v2 0/9] Thermal throttling for SDM845
+Date: Mon, 14 Jan 2019 11:27:17 +0100
+Message-ID: <CAJZ5v0h+m6sR=nFFXSMv_FKy=y0W4mSd3W34qW48-BpnGBPcZQ@mail.gmail.com>
+References: <cover.1547458732.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20181203213223.16986-11-robh@kernel.org>
+In-Reply-To: <cover.1547458732.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm@kernel.org, Andreas =?iso-8859-1?Q?F=E4rber?= <afaerber@suse.de>, Mark Rutland <mark.rutland@arm.com>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, bjorn.andersson@linaro.org, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Doug Anderson <dianders@chromium.org>, Matthias Kaehlcke <mka@chromium.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>, Daniel Lezcano <daniel.lezcano@linaro.org>, David Brown <david.brown@linaro.org>, Javi Merino <javi.merino@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Zhang Rui <rui.zhang@intel.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 03, 2018 at 03:31:59PM -0600, Rob Herring wrote:
-> Convert Actions Semi SoC bindings to DT schema format using json-schema.
-> 
+On Mon, Jan 14, 2019 at 11:22 AM Amit Kucheria <amit.kucheria@linaro.org> wrote:
+>
+> Add support for thermal throttling on SDM845.
+>
+> We introduce a generic flag to be used by cpufreq drivers to tell the
+> cpufreq core to auto-register a thermal cooling device.
+>
+> There are a few miscellaneous fixes to keep checkpatch happy.
+>
+> If this approach is acceptable I can send a series converting other cpufreq
+> drivers to use this flag and get rid of driver code.
+>
+> Amit Kucheria (9):
+>   [ALREADY QUEUED] cpufreq: qcom-hw: Move to device_initcall
+>   drivers: thermal: of-thermal: Print name of device node with error
+>   drivers: cpufreq: Add thermal_cooling_device pointer to struct
+>     cpufreq_policy
+>   cpufreq: Add a flag to auto-register a cooling device
+>   cpufreq: Replace open-coded << with BIT()
+>   cpufreq: qcom-hw: Register as a cpufreq cooling device
+>   arm64: dts: sdm845: Increase alert trip point to 95 degrees
+>   arm64: dts: sdm845: wireup the thermal trip points to cpufreq
+>   thermal: cpu_cooling: Clarify error message
+>
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 193 +++++++++++++++++++++++----
+>  drivers/cpufreq/cpufreq.c            |  13 ++
+>  drivers/cpufreq/qcom-cpufreq-hw.c    |   5 +-
+>  drivers/thermal/cpu_cooling.c        |   2 +-
+>  drivers/thermal/of-thermal.c         |   4 +-
+>  include/linux/cpufreq.h              |  34 +++--
+>  6 files changed, 210 insertions(+), 41 deletions(-)
 
-Andreas,
-
-Shall I just apply this patch to Actions sub-tree?
-
-Thanks,
-Mani
-
-> Cc: "Andreas Färber" <afaerber@suse.de>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
-> ---
->  .../devicetree/bindings/arm/actions.txt       | 56 -------------------
->  .../devicetree/bindings/arm/actions.yaml      | 38 +++++++++++++
->  2 files changed, 38 insertions(+), 56 deletions(-)
->  delete mode 100644 Documentation/devicetree/bindings/arm/actions.txt
->  create mode 100644 Documentation/devicetree/bindings/arm/actions.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/arm/actions.txt b/Documentation/devicetree/bindings/arm/actions.txt
-> deleted file mode 100644
-> index d54f33c4e0da..000000000000
-> --- a/Documentation/devicetree/bindings/arm/actions.txt
-> +++ /dev/null
-> @@ -1,56 +0,0 @@
-> -Actions Semi platforms device tree bindings
-> --------------------------------------------
-> -
-> -
-> -S500 SoC
-> -========
-> -
-> -Required root node properties:
-> -
-> - - compatible :  must contain "actions,s500"
-> -
-> -
-> -Modules:
-> -
-> -Root node property compatible must contain, depending on module:
-> -
-> - - LeMaker Guitar: "lemaker,guitar"
-> -
-> -
-> -Boards:
-> -
-> -Root node property compatible must contain, depending on board:
-> -
-> - - Allo.com Sparky: "allo,sparky"
-> - - Cubietech CubieBoard6: "cubietech,cubieboard6"
-> - - LeMaker Guitar Base Board rev. B: "lemaker,guitar-bb-rev-b", "lemaker,guitar"
-> -
-> -
-> -S700 SoC
-> -========
-> -
-> -Required root node properties:
-> -
-> -- compatible :  must contain "actions,s700"
-> -
-> -
-> -Boards:
-> -
-> -Root node property compatible must contain, depending on board:
-> -
-> - - Cubietech CubieBoard7: "cubietech,cubieboard7"
-> -
-> -
-> -S900 SoC
-> -========
-> -
-> -Required root node properties:
-> -
-> -- compatible :  must contain "actions,s900"
-> -
-> -
-> -Boards:
-> -
-> -Root node property compatible must contain, depending on board:
-> -
-> - - uCRobotics Bubblegum-96: "ucrobotics,bubblegum-96"
-> diff --git a/Documentation/devicetree/bindings/arm/actions.yaml b/Documentation/devicetree/bindings/arm/actions.yaml
-> new file mode 100644
-> index 000000000000..60abd371e474
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/arm/actions.yaml
-> @@ -0,0 +1,38 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/arm/actions.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Actions Semi platforms device tree bindings
-> +
-> +maintainers:
-> +  - Andreas Färber <afaerber@suse.de>
-> +  - Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> +
-> +properties:
-> +  compatible:
-> +    oneOf:
-> +      # The Actions Semi S500 is a quad-core ARM Cortex-A9 SoC.
-> +      - items:
-> +          - enum:
-> +              - allo,sparky # Allo.com Sparky
-> +              - cubietech,cubieboard6 # Cubietech CubieBoard6
-> +          - const: actions,s500
-> +      - items:
-> +          - enum:
-> +              - lemaker,guitar-bb-rev-b # LeMaker Guitar Base Board rev. B
-> +          - const: lemaker,guitar
-> +          - const: actions,s500
-> +
-> +      # The Actions Semi S700 is a quad-core ARM Cortex-A53 SoC.
-> +      - items:
-> +          - enum:
-> +              - cubietech,cubieboard7 # Cubietech CubieBoard7
-> +          - const: actions,s700
-> +
-> +      # The Actions Semi S900 is a quad-core ARM Cortex-A53 SoC.
-> +      - items:
-> +          - enum:
-> +              - ucrobotics,bubblegum-96 # uCRobotics Bubblegum-96
-> +          - const: actions,s900
-> -- 
-> 2.19.1
-> 
+Would it be possible to split this series so as to put the cpufreq
+patches separately?
