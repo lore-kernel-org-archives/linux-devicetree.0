@@ -1,116 +1,103 @@
 From: sebastien bourdelin <sebastien.bourdelin@gmail.com>
 Subject: Re: [PATCH v2 1/2] iio: chemical: bme680: Add device-tree support
-Date: Mon, 14 Jan 2019 15:00:41 -0500
-Message-ID: <2522efda-2762-01a6-7597-38c086779b74@gmail.com>
+Date: Mon, 14 Jan 2019 15:01:41 -0500
+Message-ID: <44dd6866-07fa-83cb-19d8-e35a5aa989a0@gmail.com>
 References: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
- <20190112094226.GA910@himanshu-Vostro-3559>
+ <20190112182221.4765d287@archlinux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190112094226.GA910@himanshu-Vostro-3559>
+In-Reply-To: <20190112182221.4765d287@archlinux>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Himanshu Jha <himanshujha199640@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
 Hi,
 
-On 1/12/19 4:42 AM, Himanshu Jha wrote:
-> On Fri, Jan 11, 2019 at 03:53:58PM -0500, Sebastien Bourdelin wrote:
+On 1/12/19 1:22 PM, Jonathan Cameron wrote:
+> On Fri, 11 Jan 2019 15:53:58 -0500
+> Sebastien Bourdelin <sebastien.bourdelin@gmail.com> wrote:
+>
 >> This commit allow the driver to work with device-tree.
 >>
 >> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+> Minor stuff inline.
+>
+> J
 >> ---
-> I get the following compilation failure:
+>> v1 -> v2:
+>>    - add missing of.h header in bme680_spi.c
+>> ---
+>>   drivers/iio/chemical/bme680_i2c.c | 7 +++++++
+>>   drivers/iio/chemical/bme680_spi.c | 9 +++++++++
+>>   2 files changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/iio/chemical/bme680_i2c.c b/drivers/iio/chemical/bme680_i2c.c
+>> index 06d4be539d2e..94a36ebdf0b2 100644
+>> --- a/drivers/iio/chemical/bme680_i2c.c
+>> +++ b/drivers/iio/chemical/bme680_i2c.c
+>> @@ -70,10 +70,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+>>   
+>> +static const struct of_device_id bme680_of_i2c_match[] = {
+>> +	{ .compatible = "bosch,bme680", },
+>> +	{},
+>> +}
+>> +MODULE_DEVICE_TABLE(of, bme680_of_i2c_match);
+>> +
+>>   static struct i2c_driver bme680_i2c_driver = {
+>>   	.driver = {
+>>   		.name			= "bme680_i2c",
+>>   		.acpi_match_table       = ACPI_PTR(bme680_acpi_match),
+>> +		.of_match_table		= of_match_ptr(bme680_of_i2c_match),
+> As below. just = bme680...
+Got it, thanks!
 >
-> Below I have `allyesconfig` except 'BME680' configure as [M]
-> in case you wish to reproduce.
+>>   	},
+>>   	.probe = bme680_i2c_probe,
+>>   	.id_table = bme680_i2c_id,
+>> diff --git a/drivers/iio/chemical/bme680_spi.c b/drivers/iio/chemical/bme680_spi.c
+>> index c9fb05e8d0b9..caa57287a911 100644
+>> --- a/drivers/iio/chemical/bme680_spi.c
+>> +++ b/drivers/iio/chemical/bme680_spi.c
+>> @@ -6,9 +6,11 @@
+>>    */
+>>   #include <linux/acpi.h>
+>>   #include <linux/module.h>
+>> +#include <linux/of.h>
+>>   #include <linux/regmap.h>
+>>   #include <linux/spi/spi.h>
+>>   
+>> +
+> This white space change should not be here.
+My bad.
+>>   #include "bme680.h"
+>>   
+>>   static int bme680_regmap_spi_write(void *context, const void *data,
+>> @@ -110,10 +112,17 @@ static const struct acpi_device_id bme680_acpi_match[] = {
+>>   };
+>>   MODULE_DEVICE_TABLE(acpi, bme680_acpi_match);
+>>   
+>> +static const struct of_device_id bme680_of_spi_match[] = {
+>> +	{ .compatible = "bosch,bme680", },
+>> +	{},
+>> +}
+>> +MODULE_DEVICE_TABLE(of, bme680_of_spi_match);
+>> +
+>>   static struct spi_driver bme680_spi_driver = {
+>>   	.driver = {
+>>   		.name			= "bme680_spi",
+>>   		.acpi_match_table	= ACPI_PTR(bme680_acpi_match),
+>> +		.of_match_table		= of_match_ptr(bme680_of_spi_match),
+> Please don't use of_match_ptr.  We actually want this entry to be there even
+> if devicetree is not in use.  This is because there is a magic ACPI hid
+> that can use this table even from ACPI.
 >
-> himanshu@himanshu-Vostro-3559:~/linux-next$ grep -i -w 'CONFIG_BME680\|CONFIG_ACPI\|CONFIG_OF' .config
-> CONFIG_ACPI=y
-> CONFIG_OF=y
-> CONFIG_BME680=m
-> himanshu@himanshu-Vostro-3559:~/linux-next$ sudo make drivers/iio/chemical/bme680_spi.o
-> make[1]: Nothing to be done for 'all'.
->    CALL    scripts/checksyscalls.sh
->    DESCEND  objtool
->    CC [M]  drivers/iio/chemical/bme680_spi.o
-> In file included from ./include/linux/acpi.h:41:0,
->                   from drivers/iio/chemical/bme680_spi.c:7:
-> ./include/linux/module.h:213:1: error: expected ‘,’ or ‘;’ before ‘extern’
->   extern typeof(name) __mod_##type##__##name##_device_table  \
->   ^
-> drivers/iio/chemical/bme680_spi.c:119:1: note: in expansion of macro ‘MODULE_DEVICE_TABLE’
->   MODULE_DEVICE_TABLE(of, bme680_of_spi_match);
->   ^~~~~~~~~~~~~~~~~~~
-> scripts/Makefile.build:291: recipe for target 'drivers/iio/chemical/bme680_spi.o' failed
-> make[1]: *** [drivers/iio/chemical/bme680_spi.o] Error 1
-> Makefile:1741: recipe for target 'drivers/iio/chemical/bme680_spi.o' failed
-> make: *** [drivers/iio/chemical/bme680_spi.o] Error 2
-Thanks for the test, this is bad, i will fix that!
-> BUT if:
->
-> himanshu@himanshu-Vostro-3559:~/linux-next$ make allyesconfig
-> scripts/kconfig/conf  --allyesconfig Kconfig
-> #
-> # configuration written to .config
-> #
->
-> himanshu@himanshu-Vostro-3559:~/linux-next$ sudo make drivers/iio/chemical/bme680_spi.o
-> scripts/kconfig/conf  --syncconfig Kconfig
-> make[1]: Nothing to be done for 'all'.
->    HOSTCC  scripts/dtc/dtc.o
->    HOSTCC  scripts/dtc/flattree.o
->    HOSTCC  scripts/dtc/fstree.o
->    HOSTCC  scripts/dtc/data.o
->    HOSTCC  scripts/dtc/livetree.o
->    HOSTCC  scripts/dtc/treesource.o
->    HOSTCC  scripts/dtc/srcpos.o
->    HOSTCC  scripts/dtc/checks.o
->    HOSTCC  scripts/dtc/util.o
->    LEX     scripts/dtc/dtc-lexer.lex.c
->    YACC    scripts/dtc/dtc-parser.tab.h
->    HOSTCC  scripts/dtc/dtc-lexer.lex.o
->    YACC    scripts/dtc/dtc-parser.tab.c
->    HOSTCC  scripts/dtc/dtc-parser.tab.o
->    HOSTLD  scripts/dtc/dtc
->    CC      scripts/mod/empty.o
->    MKELF   scripts/mod/elfconfig.h
->    HOSTCC  scripts/mod/modpost.o
->    CC      scripts/mod/devicetable-offsets.s
->    HOSTCC  scripts/mod/file2alias.o
->    HOSTCC  scripts/mod/sumversion.o
->    HOSTLD  scripts/mod/modpost
->    CC      kernel/bounds.s
->    CC      arch/x86/kernel/asm-offsets.s
->    CALL    scripts/checksyscalls.sh
->    DESCEND  objtool
->    CC      drivers/iio/chemical/bme680_spi.o
->
-> Compiles without any issues.
-Hum, weird it compiles actually :s
-> Also, wondering when is 0x77 i2c address used, since I tested
-> this on 3 different boards with 0x76(when SDO is connected to GND)
->
-> And why do I connect SDO to ground everytime ?
-> It is because if SDO pin is left floating then I2C address will be
-> undefined as said in datasheet + I have observed this while testing.
-
-Ah, thanks for the reminder, actually i have only tested with a floating
-
-SDO, but i will probably use the GND instead even if i didn't had any
-
-problem right now.
-
-> Actallly, I don't understand what "VDIDO" is, as explained in the
-> datasheet.
->
->
-> Anyway, if the above compilation issue is not a problem, then
->
-> 	Acked-by: Himanshu Jha <himanshujha199640@gmail.com>
->
->
-> Thanks
+Sure.
+>>   	},
+>>   	.probe = bme680_spi_probe,
+>>   	.id_table = bme680_spi_id,
