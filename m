@@ -1,336 +1,265 @@
-From: Daniel Lezcano <daniel.lezcano@linaro.org>
-Subject: Re: [PATCH v2 2/2] driver: clocksource: Add nxp system counter timer
- driver support
-Date: Mon, 14 Jan 2019 16:45:19 +0100
-Message-ID: <d38cda5d-b78b-10de-2c19-be5fd869243a@linaro.org>
-References: <1544592770-19996-1-git-send-email-ping.bai@nxp.com>
- <1544592770-19996-2-git-send-email-ping.bai@nxp.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v4] arm64: dts: meson: Fix mmc cd-gpios polarity
+Date: Mon, 14 Jan 2019 08:01:58 -0800
+Message-ID: <7hh8ebmdmx.fsf@baylibre.com>
+References: <1547477061-31543-1-git-send-email-lollivier@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544592770-19996-2-git-send-email-ping.bai@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jacky Bai <ping.bai@nxp.com>, "tglx@linutronix.de" <tglx@linutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547477061-31543-1-git-send-email-lollivier@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Linus Walleij <linus.walleij@linaro.org>, Loys Ollivier <lollivier@baylibre.com>, linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12/12/2018 06:28, Jacky Bai wrote:
-> The system counter (sys_ctr) is a programmable system counter
-> which provides a shared time base to the Cortex A15, A7, A53 etc cores.
-> It is intended for use in applications where the counter is always
-> powered on and supports multiple, unrelated clocks. The sys_ctr hardware
-> supports:
->  - 56-bit counter width (roll-over time greater than 40 years)
->  - compare frame(64-bit compare value) contains programmable interrupt
->    generation
-> 
-> Signed-off-by: Bai Ping <ping.bai@nxp.com>
+Loys Ollivier <lollivier@baylibre.com> writes:
+
+> Commit 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
+> changed the behavior of "cd-inverted" to follow the device tree bindings
+> specification:
+> According to SDHCI standard, CD lines are specified as "active low".
+> Using the "cd-inverted" property means that the CD line is "active high".
+>
+> Fix the SD card description for meson by setting the cd-gpios as
+> "active low", according to the boards specifications, and dropping the
+> "cd-inverted" property.
+>
+> Fixes: 89a5e15bcba8 ("gpio/mmc/of: Respect polarity in the device tree")
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+
+Queued as fix for v5.0-rc. (I replaced v3 in my fixes branch with this
+one)
+
+Kevin
+
 > ---
-> change v1->v2:
->  - no change 
-> ---
->  drivers/clocksource/Kconfig            |   8 ++
->  drivers/clocksource/Makefile           |   1 +
->  drivers/clocksource/timer-imx-sysctr.c | 204 +++++++++++++++++++++++++++++++++
->  3 files changed, 213 insertions(+)
->  create mode 100644 drivers/clocksource/timer-imx-sysctr.c
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index c57b156..7e5f2de 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -579,6 +579,14 @@ config CLKSRC_IMX_TPM
->  	  Enable this option to use IMX Timer/PWM Module (TPM) timer as
->  	  clocksource.
+>
+> v4: commit message clarification on the "cd-inverted" property and usage.
+>
+> v3: fix typos in the commit message.
+>
+> v2: fix more occurences, also in other meson boards.
+>
+>  arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi            | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts           | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts         | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts            | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi               | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi           | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi              | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts   | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts    | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi          | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts          | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts            | 3 +--
+>  arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts             | 3 +--
+>  14 files changed, 14 insertions(+), 28 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> index e14e0ce7e89f..016641a41694 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx-p23x-q20x.dtsi
+> @@ -187,8 +187,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
 >  
-> +config CLKSRC_IMX_SYS_CTR
-
-As the driver is a timer, please replace the CLKSRC by TIMER
-
-> +	bool "Clocksource using i.MX system counter" if COMPILE_TEST
-> +	depends on (ARM || ARM64) && CLKDEV_LOOKUP
-
-CLKDEV_LOOKUP is not needed, it is selected with COMMON_CLK
-
-> +	select CLKSRC_MMIO
-> +	help
-> +	  Enable this option to use IMX system counter timer as
-> +	  clocksource.
-> +
->  config CLKSRC_ST_LPC
->  	bool "Low power clocksource found in the LPC" if COMPILE_TEST
->  	select TIMER_OF if OF
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index dd91381..372bf4e 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -71,6 +71,7 @@ obj-$(CONFIG_CLKSRC_MIPS_GIC)		+= mips-gic-timer.o
->  obj-$(CONFIG_CLKSRC_TANGO_XTAL)		+= tango_xtal.o
->  obj-$(CONFIG_CLKSRC_IMX_GPT)		+= timer-imx-gpt.o
->  obj-$(CONFIG_CLKSRC_IMX_TPM)		+= timer-imx-tpm.o
-> +obj-$(CONFIG_CLKSRC_IMX_SYS_CTR)	+= timer-imx-sysctr.o
->  obj-$(CONFIG_ASM9260_TIMER)		+= asm9260_timer.o
->  obj-$(CONFIG_H8300_TMR8)		+= h8300_timer8.o
->  obj-$(CONFIG_H8300_TMR16)		+= h8300_timer16.o
-> diff --git a/drivers/clocksource/timer-imx-sysctr.c b/drivers/clocksource/timer-imx-sysctr.c
-> new file mode 100644
-> index 0000000..ad3c27f
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-imx-sysctr.c
-> @@ -0,0 +1,204 @@
-> +// SPDX-License-Identifier: GPL-2.0+
-> +//
-> +// Copyright 2017-2018 NXP
-> +
-> +#include <linux/interrupt.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/delay.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/sched_clock.h>
-> +
-> +#define CNTCV_LO	0x8
-> +#define CNTCV_HI	0xc
-> +#define CMPCV_LO	0x20
-> +#define CMPCV_HI	0x24
-> +#define CMPCR		0x2c
-> +
-> +#define SYS_CTR_EN		0x1
-> +#define SYS_CTR_IRQ_MASK	0x2
-> +
-> +static void __iomem *sys_ctr_rd_base;
-> +static void __iomem *sys_ctr_cmp_base;
-> +static struct clock_event_device clockevent_sysctr;
-> +
-> +static inline void sysctr_timer_enable(bool enable)
-
-Remove 'inline' tag
-
-> +{
-> +	u32 val;
-> +
-> +	val = readl(sys_ctr_cmp_base + CMPCR);
-> +	val &= ~SYS_CTR_EN;
-> +	if (enable)
-> +		val |= SYS_CTR_EN;
-> +
-> +	writel(val, sys_ctr_cmp_base + CMPCR);
-> +}
-> +
-> +static void sysctr_irq_acknowledge(void)
-> +{
-> +	u32 val;
-> +
-> +	/* clear th enable bit(EN=0) to clear the ISTAT */
-
-What is the ISTAT?
-
-Thanks for adding comments, however the format is:
-
-/*
- *
- */
-
-> +	val = readl(sys_ctr_cmp_base + CMPCR);
-> +	val &= ~SYS_CTR_EN;
-> +	writel(val, sys_ctr_cmp_base + CMPCR);
-
-This is duplicate with the sysctr_timer_enable() function, call it
-instead of duplicating code.
-
-> +}
-> +
-> +static inline u64 sysctr_read_counter(void)
-> +{
-> +	u32 cnt_hi, tmp_hi, cnt_lo;
-> +
-> +	do {
-> +		cnt_hi = readl_relaxed(sys_ctr_rd_base + CNTCV_HI);
-> +		cnt_lo = readl_relaxed(sys_ctr_rd_base + CNTCV_LO);
-> +		tmp_hi = readl_relaxed(sys_ctr_rd_base + CNTCV_HI);
-> +	} while (tmp_hi != cnt_hi);
-> +
-> +	return  ((u64) cnt_hi << 32) | cnt_lo;
-> +}
-
-It has been showed a 64bit counter usage adds a non negligible overhead,
-especially on 32bits. Are you really sure you want this ?
-
-> +static u64 notrace sysctr_read_sched_clock(void)
-> +{
-> +	return sysctr_read_counter();
-> +}
-> +
-> +static u64 sysctr_clocksource_read(struct clocksource *cs)
-> +{
-> +	return sysctr_read_counter();
-> +}
-> +
-> +static int __init sysctr_clocksource_init(unsigned int rate)
-> +{
-> +	sched_clock_register(sysctr_read_sched_clock, 56, rate);
-> +	return clocksource_mmio_init(sys_ctr_rd_base, "i.MX sys_ctr",
-> +				     rate, 200, 56, sysctr_clocksource_read);
-> +}
-> +
-> +static int sysctr_set_next_event(unsigned long delta,
-> +				 struct clock_event_device *evt)
-> +{
-> +	u32 cmp_hi, cmp_lo;
-> +	u64 next;
-> +
-> +	sysctr_timer_enable(false);
-> +
-> +	next = sysctr_read_counter();
-> +
-> +	next += delta;
-> +
-> +	cmp_hi = (next >> 32) & 0x00fffff;
-> +	cmp_lo = next & 0xffffffff;
-> +
-> +	writel_relaxed(cmp_hi, sys_ctr_cmp_base + CMPCV_HI);
-> +	writel_relaxed(cmp_lo, sys_ctr_cmp_base + CMPCV_LO);
-> +
-> +	sysctr_timer_enable(true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sysctr_set_state_oneshot(struct clock_event_device *evt)
-> +{
-> +	/* enable timer */
-
-The function name is explicit enough, no need to add this comment
-
-> +	sysctr_timer_enable(true);
-> +
-> +	return 0;
-> +}
-> +
-> +static int sysctr_set_state_shutdown(struct clock_event_device *evt)
-> +{
-> +	/* disable the timer */
-
-Ditto
-
-> +	sysctr_timer_enable(false);
-> +
-> +	return 0;
-> +}
-> +
-> +static irqreturn_t sysctr_timer_interrupt(int irq, void *dev_id)
-> +{
-> +	struct clock_event_device *evt = &clockevent_sysctr;
-> +
-> +	sysctr_irq_acknowledge();
-> +
-> +	evt->event_handler(evt);
-> +
-> +	return IRQ_HANDLED;
-> +}
-> +
-> +static struct clock_event_device clockevent_sysctr = {
-> +	.name			= "i.MX system counter timer",
-> +	.features		= CLOCK_EVT_FEAT_ONESHOT | CLOCK_EVT_FEAT_DYNIRQ,
-> +	.set_state_oneshot	= sysctr_set_state_oneshot,
-> +	.set_next_event		= sysctr_set_next_event,
-> +	.set_state_shutdown	= sysctr_set_state_shutdown,
-> +	.rating			= 200,
-> +};
-> +
-> +static int __init sysctr_clockevent_init(unsigned long rate, int irq)
-> +{
-> +	int ret;
-> +
-> +	ret = request_irq(irq, sysctr_timer_interrupt, IRQF_TIMER | IRQF_IRQPOLL,
-> +		    "i.MX system counter timer", &clockevent_sysctr);
-> +	if (ret) {
-> +		pr_err("Failed to request i.MX sysctr timer irq\n");
-> +		return ret;
-> +	}
-> +
-> +	clockevent_sysctr.cpumask = cpumask_of(0);
-> +	clockevent_sysctr.irq = irq;
-> +	clockevents_config_and_register(&clockevent_sysctr,
-> +			rate, 0xff, 0x7fffffff);
-> +	return 0;
-> +}
-> +
-> +static int __init sysctr_timer_init(struct device_node *np)
-> +{
-> +	u32 rate;
-> +	int irq, ret = 0;
-> +
-> +	/* map the system counter's CNTreadbase */
-
-Comment not useful, remove it
-
-> +	sys_ctr_rd_base = of_iomap(np, 0);
-> +	if (!sys_ctr_rd_base) {
-> +		pr_err("Failed to map sys_ctr rd base%pOF\n", np);
-
-nit: space missing after 'base'
-
-> +		return -ENXIO;
-> +	}
-> +
-> +	/* map the system counter's CNTcomparebase */
-
-Remove comment
-
-> +	sys_ctr_cmp_base = of_iomap(np, 1);
-> +	if (!sys_ctr_cmp_base) {
-> +		pr_err("Failed to map sys_ctr compare base%pOF\n", np);
-> +		ret = -ENXIO;
-> +		goto out_free2;
-> +	}
-> +
-> +	/*
-> +	 * the purpose of this driver is to provide a global timer,
-> +	 * So only use one compare frame, request frame0's irq only.
-> +	 */
-> +	irq = irq_of_parse_and_map(np, 0);
-> +	if (!irq) {
-> +		pr_err("Failed to map interrupt for %pOF\n", np);
-> +		ret = -EINVAL;
-> +		goto out_free1;
-> +	}
-> +
-> +	if (of_property_read_u32(np, "clock-frequency", &rate)) {
-> +		pr_err("Failed to get clock frequency %pOF\n", np);
-> +		ret = -EINVAL;
-> +		goto out_free1;
-> +	}
-
-Please replace it with a 'fixed-clock' in the DT and use the clk API.
-
-In addition you can use the timer-of API (cf timer-of.h)
-
-> +
-> +	sysctr_clocksource_init(rate);
-> +	sysctr_clockevent_init(rate, irq);
-> +
-> +	return 0;
-> +
-> +out_free1:
-
-label names are inadequate, use out_iounmap_cmp: for example
-
-> +	iounmap(sys_ctr_cmp_base);
-> +out_free2:
-> +	iounmap(sys_ctr_rd_base);
-> +	return ret;
-> +}
-> +TIMER_OF_DECLARE(sysctr_timer, "nxp,sysctr-timer", sysctr_timer_init);
-> 
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_boot>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+> index 8cd50b75171d..ade2ee09ae96 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nanopi-k2.dts
+> @@ -305,8 +305,7 @@
+>  	max-frequency = <200000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddio_ao3v3>;
+>  	vqmmc-supply = <&vddio_tf>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> index 4cf7f6e80c6a..25105ac96d55 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-nexbox-a95x.dts
+> @@ -238,8 +238,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_card>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> index 2e1cd5e3a246..1cc9dc68ef00 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> @@ -258,8 +258,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&tflash_vdd>;
+>  	vqmmc-supply = <&tf_io>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+> index ce862266b9aa..0be0f2a5d2fe 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-p20x.dtsi
+> @@ -196,8 +196,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_card>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+> index 93a4acf2c46c..ad4d50bd9d77 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-vega-s95.dtsi
+> @@ -154,8 +154,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vcc_3v3>;
+>  };
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> index ec09bb5792b7..2d2db783c44c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-wetek.dtsi
+> @@ -211,8 +211,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vcc_3v3>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+> index f1c410e2da2b..796baea7a0bf 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-hwacom-amazetv.dts
+> @@ -131,8 +131,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_card>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> index db293440e4ca..255cede7b447 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+> @@ -238,8 +238,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vcc_3v3>;
+>  	vqmmc-supply = <&vcc_card>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+> index 6739697be1de..9cbdb85fb591 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-nexbox-a95x.dts
+> @@ -183,8 +183,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_card>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+> index a1b31013ab6e..bc811a2faf42 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-p212.dtsi
+> @@ -137,8 +137,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_boot>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> index 3c3a667a8df8..3f086ed7de05 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-khadas-vim2.dts
+> @@ -356,8 +356,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_boot>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> index f7a1cffab4a8..8acfd40090d2 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-nexbox-a1.dts
+> @@ -147,8 +147,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_boot>;
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+> index 7212dc4531e4..7fa20a8ede17 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxm-rbox-pro.dts
+> @@ -170,8 +170,7 @@
+>  	max-frequency = <100000000>;
+>  	disable-wp;
+>  
+> -	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_HIGH>;
+> -	cd-inverted;
+> +	cd-gpios = <&gpio CARD_6 GPIO_ACTIVE_LOW>;
+>  
+>  	vmmc-supply = <&vddao_3v3>;
+>  	vqmmc-supply = <&vddio_boot>;
+> -- 
+> 2.7.4
