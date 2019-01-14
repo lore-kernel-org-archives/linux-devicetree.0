@@ -1,33 +1,31 @@
-From: Maxime Jourdan <mjourdan@baylibre.com>
-Subject: [PATCH] arm64: dts: meson-gx: Add canvas provider node to the vpu
-Date: Mon, 14 Jan 2019 17:22:29 +0100
-Message-ID: <20190114162229.5412-1-mjourdan@baylibre.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] dt-bindings: serial: Convert snps,dw-apb-uart to json-schema
+Date: Mon, 14 Jan 2019 10:23:15 -0600
+Message-ID: <CAL_JsqJd_kHi+XU7_oe0upg1iJT2rjjEup3YpyrDQA-OhkgKTw@mail.gmail.com>
+References: <20190110222017.6390-1-robh@kernel.org> <20190114093022.hjouckoss2zemefg@verge.net.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190114093022.hjouckoss2zemefg@verge.net.au>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Maxime Jourdan <mjourdan@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Allows the vpu driver to optionally use a canvas provider node.
+On Mon, Jan 14, 2019 at 3:30 AM Simon Horman <horms@verge.net.au> wrote:
+>
+> On Thu, Jan 10, 2019 at 04:20:16PM -0600, Rob Herring wrote:
+> > Convert the snps,dw-apb-uart binding to DT schema using json-schema.
+> >
+> > The Rockchip and Broadcom compatible strings were not documented,
+> > so add them here.
+>
+> I believe the documentation of the Renesas compatible strings is also new
+> in this file. Perhaps it would be worth mentioning that too.
 
-Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 1 +
- 1 file changed, 1 insertion(+)
+Ah, that should be in patch 2. Will respin.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-index 44c5c51ff1fa..9b0ac183ee0c 100644
---- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
-@@ -510,6 +510,7 @@
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
-+			amlogic,canvas = <&canvas>;
- 
- 			/* CVBS VDAC output port */
- 			cvbs_vdac_port: port@0 {
--- 
-2.20.1
+> In any case
+>
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+>
