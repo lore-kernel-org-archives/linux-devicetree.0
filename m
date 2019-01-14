@@ -1,96 +1,46 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2 8/9] arm64: dts: sdm845: wireup the thermal trip
- points to cpufreq
-Date: Mon, 14 Jan 2019 14:01:01 -0800
-Message-ID: <20190114220101.GN261387@google.com>
-References: <cover.1547458732.git.amit.kucheria@linaro.org>
- <7f94696460848a6bcfe5aee5ffda7fe556240736.1547458732.git.amit.kucheria@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH] regulator: dt-bindings: Convert fixed-regulator to
+ json-schema
+Date: Mon, 14 Jan 2019 22:08:17 +0000
+Message-ID: <20190114220817.GH11073@sirena.org.uk>
+References: <20190110221903.3990-6-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="+Z7/5fzWRHDJ0o7Q"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <7f94696460848a6bcfe5aee5ffda7fe556240736.1547458732.git.amit.kucheria@linaro.org>
+In-Reply-To: <20190110221903.3990-6-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, viresh.kumar@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 03:51:10PM +0530, Amit Kucheria wrote:
-> Since all cpus in the big and little clusters, respectively, are in the
-> same frequency domain, use all of them for mitigation in the
-> cooling-map. We end up with two cooling devices - one each for the big
-> and little clusters.
-> 
-> At the lower trip points we restrict ourselves to throttling only a few
-> OPPs. At higher trip temperatures, allow ourselves to be throttled to
-> any extent.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 177 ++++++++++++++++++++++++---
->  1 file changed, 161 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index fb7da678b116..7973e88bdf94 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->
-> ...
->
-> @@ -1719,18 +1728,35 @@
->  			thermal-sensors = <&tsens0 1>;
->  
->  			trips {
-> -				cpu_alert0: trip0 {
-> +				cpu0_alert0: trip-point@0 {
 
-Thanks for adapting the trip point names and labels in anticipation of
-further additions!
+--+Z7/5fzWRHDJ0o7Q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Seems you aren't overly convinced about the 'target/threshold'
-terminology used by some other arm64 platforms ;-)
+On Thu, Jan 10, 2019 at 04:19:03PM -0600, Rob Herring wrote:
+> Convert the fixed-regulator binding to DT schema format using
+> json-schema.
 
->  					temperature = <95000>;
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
+Actually I've had to drop the series this conflicted with since it broke
+a bunch of platforms so I'll go ahead and apply this instead, no need to
+respin!
 
-I realized that we still have the potential problem of a name change
-in the trip point node name if a 'threshold' node for IPA is added,
-since this node will have a lower temperature than 95°. If this is
-something to be concerned about it might be worth to add that extra
-trip point already to avoid headaches or funky trip point enumeration,
-even if we know that the value might not be the final one.
+--+Z7/5fzWRHDJ0o7Q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-(I'm aware that we are also changing the node names and labels right
-now, it seems less problematic at this point since the SDM845 thermal
-zones are a fairly recent addition)
+-----BEGIN PGP SIGNATURE-----
 
-> -				cpu_crit0: trip1 {
-> +				cpu0_crit: cpu_crit@0 {
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlw9CFEACgkQJNaLcl1U
+h9D3Uwf/YdWRexgPnkLabs94GZD6T9erBqzrFnXhZf0b4SxxknkChZ9ahq+VDi1r
+pUsf/T5HKA75PiPQCcbn+TVM0fRQBlNDeb/2q1l1YWnU8fXSgY8VgYmWqgJGKpVg
+ytWAKmIo440zfYvyPOXwxedGaJ29xGUmAHiL96WXIZJZdqqBkrWLyrbRMpSCnwI/
+tO9Q5TntZM1TcaALSx2ooGCO+eqCXTKHfazMxco7qFYwqzVsEeYjNzIjBQ/Vx3q4
+ynf/SetNemGsPfIa+0gHkdn6eoC5e2nIGz1OhBEuW6CVhvpcFxDkoGAiYcin2Rc4
+zQwyCkCtS5kMSUCi+IoUijCgKqLOdw==
+=8G0B
+-----END PGP SIGNATURE-----
 
-nit: does the @0 add any value here? IIUC there can be only one
-critical trip point, hence there will never be a cpu_crit@1 or
-higher.
-
->  					temperature = <110000>;
->  					hysteresis = <1000>;
->  					type = "critical";
->  				};
->  			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpu0_alert0>;
-> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
-> +							 <&CPU1 THERMAL_NO_LIMIT 4>,
-> +							 <&CPU2 THERMAL_NO_LIMIT 4>,
-> +							 <&CPU3 THERMAL_NO_LIMIT 4>;
-> +				};
-
-Out of curiosity: how did you determing the max cooling state of 4?
-
-Cheers
-
-Matthias
+--+Z7/5fzWRHDJ0o7Q--
