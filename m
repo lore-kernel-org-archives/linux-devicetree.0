@@ -1,398 +1,176 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: [PATCH v3 2/5] misc: fastrpc: Add Qualcomm fastrpc basic driver model
-Date: Mon, 14 Jan 2019 19:41:09 +0000
-Message-ID: <20190114194112.32567-3-srinivas.kandagatla@linaro.org>
-References: <20190114194112.32567-1-srinivas.kandagatla@linaro.org>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: [PATCH v3] remoteproc: qcom: Add support for parsing fw dt bindings
+Date: Tue, 15 Jan 2019 01:20:01 +0530
+Message-ID: <20190114195001.7016-1-sibis@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114194112.32567-1-srinivas.kandagatla@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, thierry.escande@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+To: bjorn.andersson@linaro.org, briannorris@chromium.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org
+Cc: akdwived@codeaurora.org, clew@codeaurora.org, linux-kernel@vger.kernel.org, linux-arm-msm-owner@vger.kernel.org, ohad@wizery.com, linux-remoteproc@vger.kernel.org, devicetree@vger.kernel.org, dianders@chromium.org, Sibi Sankar <sibis@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds basic driver model for qualcomm fastrpc.
-Each DSP rpmsg channel is represented as fastrpc channel context and
-is exposed as a character driver for userspace interface.
-Each compute context bank is represented as fastrpc-session-context,
-which are dynamically managed by the channel context char device.
+Add support for parsing "firmware-name" dt bindings which specifies
+the relative paths of mba/modem/pas image as strings. Fallback to
+the default paths for mba/modem/pas image on -EINVAL.
 
-Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
-Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
-Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
 ---
- drivers/misc/Kconfig   |  10 ++
- drivers/misc/Makefile  |   1 +
- drivers/misc/fastrpc.c | 327 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 338 insertions(+)
- create mode 100644 drivers/misc/fastrpc.c
 
-diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-index f417b06e11c5..7e0726253755 100644
---- a/drivers/misc/Kconfig
-+++ b/drivers/misc/Kconfig
-@@ -295,6 +295,16 @@ config QCOM_COINCELL
- 	  to maintain PMIC register and RTC state in the absence of
- 	  external power.
+v3:
+ * Fixed minor code style issues
+ * Add comments for firmware blob name generation
+   and use sprintf instead
+
+ drivers/remoteproc/qcom_q6v5_mss.c | 47 +++++++++++++++++++++++-------
+ drivers/remoteproc/qcom_q6v5_pas.c |  9 +++++-
+ 2 files changed, 45 insertions(+), 11 deletions(-)
+
+diff --git a/drivers/remoteproc/qcom_q6v5_mss.c b/drivers/remoteproc/qcom_q6v5_mss.c
+index c86dc40cfb8c..41e92a025d21 100644
+--- a/drivers/remoteproc/qcom_q6v5_mss.c
++++ b/drivers/remoteproc/qcom_q6v5_mss.c
+@@ -188,6 +188,7 @@ struct q6v5 {
+ 	bool has_alt_reset;
+ 	int mpss_perm;
+ 	int mba_perm;
++	const char *hexagon_mdt_image;
+ 	int version;
+ };
  
-+config QCOM_FASTRPC
-+	tristate "Qualcomm FastRPC"
-+	depends on ARCH_QCOM || COMPILE_TEST
-+	depends on RPMSG
-+	help
-+	  Provides a communication mechanism that allows for clients to
-+	  make remote method invocations across processor boundary to
-+	  applications DSP processor. Say M if you want to enable this
-+	  module.
-+
- config SGI_GRU
- 	tristate "SGI GRU driver"
- 	depends on X86_UV && SMP
-diff --git a/drivers/misc/Makefile b/drivers/misc/Makefile
-index e39ccbbc1b3a..623d002c59ce 100644
---- a/drivers/misc/Makefile
-+++ b/drivers/misc/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_TIFM_CORE)       	+= tifm_core.o
- obj-$(CONFIG_TIFM_7XX1)       	+= tifm_7xx1.o
- obj-$(CONFIG_PHANTOM)		+= phantom.o
- obj-$(CONFIG_QCOM_COINCELL)	+= qcom-coincell.o
-+obj-$(CONFIG_QCOM_FASTRPC)	+= fastrpc.o
- obj-$(CONFIG_SENSORS_BH1770)	+= bh1770glc.o
- obj-$(CONFIG_SENSORS_APDS990X)	+= apds990x.o
- obj-$(CONFIG_SGI_IOC4)		+= ioc4.o
-diff --git a/drivers/misc/fastrpc.c b/drivers/misc/fastrpc.c
-new file mode 100644
-index 000000000000..2b2dd7373959
---- /dev/null
-+++ b/drivers/misc/fastrpc.c
-@@ -0,0 +1,327 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (c) 2011-2018, The Linux Foundation. All rights reserved.
-+// Copyright (c) 2018, Linaro Limited
-+
-+#include <linux/device.h>
-+#include <linux/dma-mapping.h>
-+#include <linux/idr.h>
-+#include <linux/list.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of.h>
-+#include <linux/of_platform.h>
-+#include <linux/rpmsg.h>
-+#include <linux/scatterlist.h>
-+#include <linux/slab.h>
-+
-+#define ADSP_DOMAIN_ID (0)
-+#define MDSP_DOMAIN_ID (1)
-+#define SDSP_DOMAIN_ID (2)
-+#define CDSP_DOMAIN_ID (3)
-+#define FASTRPC_DEV_MAX		4 /* adsp, mdsp, slpi, cdsp*/
-+#define FASTRPC_MAX_SESSIONS	9 /*8 compute, 1 cpz*/
-+#define FASTRPC_CTX_MAX (256)
-+#define FASTRPC_CTXID_MASK (0xFF0)
-+#define FASTRPC_DEVICE_NAME	"fastrpc"
-+
-+#define miscdev_to_cctx(d) container_of(d, struct fastrpc_channel_ctx, miscdev)
-+
-+static const char *domains[FASTRPC_DEV_MAX] = { "adsp", "mdsp",
-+						"sdsp", "cdsp"};
-+
-+struct fastrpc_session_ctx {
-+	struct device *dev;
-+	int sid;
-+	bool used;
-+	bool valid;
-+	bool secure;
-+};
-+
-+struct fastrpc_channel_ctx {
-+	int domain_id;
-+	int sesscount;
-+	struct rpmsg_device *rpdev;
-+	struct fastrpc_session_ctx session[FASTRPC_MAX_SESSIONS];
-+	spinlock_t lock;
-+	struct idr ctx_idr;
-+	struct list_head users;
-+	struct miscdevice miscdev;
-+};
-+
-+struct fastrpc_user {
-+	struct list_head user;
-+	struct list_head maps;
-+	struct list_head pending;
-+
-+	struct fastrpc_channel_ctx *cctx;
-+	struct fastrpc_session_ctx *sctx;
-+
-+	int tgid;
-+	int pd;
-+	/* Lock for lists */
-+	spinlock_t lock;
-+	/* lock for allocations */
-+	struct mutex mutex;
-+};
-+
-+static struct fastrpc_session_ctx *fastrpc_session_alloc(
-+					struct fastrpc_channel_ctx *cctx,
-+					int secure)
-+{
-+	struct fastrpc_session_ctx *session = NULL;
-+	int i;
-+
-+	spin_lock(&cctx->lock);
-+	for (i = 0; i < cctx->sesscount; i++) {
-+		if (!cctx->session[i].used && cctx->session[i].valid &&
-+		    cctx->session[i].secure == secure) {
-+			cctx->session[i].used = true;
-+			session = &cctx->session[i];
-+			break;
-+		}
-+	}
-+	spin_unlock(&cctx->lock);
-+
-+	return session;
-+}
-+
-+static void fastrpc_session_free(struct fastrpc_channel_ctx *cctx,
-+				 struct fastrpc_session_ctx *session)
-+{
-+	spin_lock(&cctx->lock);
-+	session->used = false;
-+	spin_unlock(&cctx->lock);
-+}
-+
-+static int fastrpc_device_release(struct inode *inode, struct file *file)
-+{
-+	struct fastrpc_user *fl = (struct fastrpc_user *)file->private_data;
-+	struct fastrpc_channel_ctx *cctx = fl->cctx;
-+
-+	spin_lock(&cctx->lock);
-+	list_del(&fl->user);
-+	spin_unlock(&cctx->lock);
-+
-+	fastrpc_session_free(fl->cctx, fl->sctx);
-+
-+	mutex_destroy(&fl->mutex);
-+	kfree(fl);
-+	file->private_data = NULL;
-+
-+	return 0;
-+}
-+
-+static int fastrpc_device_open(struct inode *inode, struct file *filp)
-+{
-+	struct fastrpc_channel_ctx *cctx = miscdev_to_cctx(filp->private_data);
-+	struct fastrpc_user *fl = NULL;
-+
-+	fl = kzalloc(sizeof(*fl), GFP_KERNEL);
-+	if (!fl)
-+		return -ENOMEM;
-+
-+	filp->private_data = fl;
-+	spin_lock_init(&fl->lock);
-+	mutex_init(&fl->mutex);
-+	INIT_LIST_HEAD(&fl->pending);
-+	INIT_LIST_HEAD(&fl->maps);
-+	INIT_LIST_HEAD(&fl->user);
-+	fl->tgid = current->tgid;
-+	fl->cctx = cctx;
-+	spin_lock(&cctx->lock);
-+	list_add_tail(&fl->user, &cctx->users);
-+	spin_unlock(&cctx->lock);
-+	fl->sctx = fastrpc_session_alloc(cctx, 0);
-+
-+	return 0;
-+}
-+
-+static const struct file_operations fastrpc_fops = {
-+	.open = fastrpc_device_open,
-+	.release = fastrpc_device_release,
-+};
-+
-+static int fastrpc_cb_probe(struct platform_device *pdev)
-+{
-+	struct fastrpc_channel_ctx *cctx;
-+	struct fastrpc_session_ctx *sess;
-+	struct device *dev = &pdev->dev;
-+	int i, sessions = 0;
-+
-+	cctx = dev_get_drvdata(dev->parent);
-+	if (!cctx)
+@@ -860,17 +861,26 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 	phys_addr_t min_addr = PHYS_ADDR_MAX;
+ 	phys_addr_t max_addr = 0;
+ 	bool relocate = false;
+-	char seg_name[10];
++	char *fw_name;
++	size_t fw_name_len;
+ 	ssize_t offset;
+ 	size_t size = 0;
+ 	void *ptr;
+ 	int ret;
+ 	int i;
+ 
+-	ret = request_firmware(&fw, "modem.mdt", qproc->dev);
++	fw_name_len = strlen(qproc->hexagon_mdt_image);
++	if (fw_name_len <= 4)
 +		return -EINVAL;
 +
-+	of_property_read_u32(dev->of_node, "nsessions", &sessions);
-+
-+	spin_lock(&cctx->lock);
-+	sess = &cctx->session[cctx->sesscount];
-+	sess->used = false;
-+	sess->valid = true;
-+	sess->dev = dev;
-+	dev_set_drvdata(dev, sess);
-+	sess->secure = of_property_read_bool(dev->of_node, "secured");
-+
-+	if (of_property_read_u32(dev->of_node, "reg", &sess->sid))
-+		dev_info(dev, "FastRPC Session ID not specified in DT\n");
-+
-+	if (sessions > 0) {
-+		struct fastrpc_session_ctx *dup_sess;
-+
-+		for (i = 1; i < sessions; i++) {
-+			if (cctx->sesscount++ >= FASTRPC_MAX_SESSIONS)
-+				break;
-+			dup_sess = &cctx->session[cctx->sesscount];
-+			memcpy(dup_sess, sess, sizeof(*dup_sess));
-+		}
-+	}
-+	cctx->sesscount++;
-+	spin_unlock(&cctx->lock);
-+	dma_set_mask(dev, DMA_BIT_MASK(32));
-+
-+	return 0;
-+}
-+
-+static int fastrpc_cb_remove(struct platform_device *pdev)
-+{
-+	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(pdev->dev.parent);
-+	struct fastrpc_session_ctx *sess = dev_get_drvdata(&pdev->dev);
-+	int i;
-+
-+	spin_lock(&cctx->lock);
-+	for (i = 1; i < FASTRPC_MAX_SESSIONS; i++) {
-+		if (cctx->session[i].sid == sess->sid) {
-+			cctx->session[i].valid = false;
-+			cctx->sesscount--;
-+		}
-+	}
-+	spin_unlock(&cctx->lock);
-+
-+	return 0;
-+}
-+
-+static const struct of_device_id fastrpc_match_table[] = {
-+	{ .compatible = "qcom,fastrpc-compute-cb", },
-+	{}
-+};
-+
-+static struct platform_driver fastrpc_cb_driver = {
-+	.probe = fastrpc_cb_probe,
-+	.remove = fastrpc_cb_remove,
-+	.driver = {
-+		.name = "qcom,fastrpc-cb",
-+		.of_match_table = fastrpc_match_table,
-+		.suppress_bind_attrs = true,
-+	},
-+};
-+
-+static int fastrpc_rpmsg_probe(struct rpmsg_device *rpdev)
-+{
-+	struct device *rdev = &rpdev->dev;
-+	struct fastrpc_channel_ctx *data;
-+	int i, err, domain_id = 0;
-+	const char *domain;
-+
-+	data = devm_kzalloc(rdev, sizeof(*data), GFP_KERNEL);
-+	if (!data)
++	fw_name = kstrdup(qproc->hexagon_mdt_image, GFP_KERNEL);
++	if (!fw_name)
 +		return -ENOMEM;
 +
-+	err = of_property_read_string(rdev->of_node, "label", &domain);
-+	if (err) {
-+		dev_info(rdev, "FastRPC Domain not specified in DT\n");
-+		return err;
-+	}
-+
-+	for (i = 0; i < CDSP_DOMAIN_ID; i++) {
-+		if (!strcmp(domains[i], domain)) {
-+			domain_id = i;
-+			break;
-+		}
-+	}
-+
-+	if (domain_id > CDSP_DOMAIN_ID) {
-+		dev_info(rdev, "FastRPC Invalid Domain ID %d\n", domain_id);
-+		return -EINVAL;
-+	}
-+
-+	data->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	data->miscdev.name = kasprintf(GFP_KERNEL, "fastrpc-%s",
-+				domains[domain_id]);
-+	data->miscdev.fops = &fastrpc_fops;
-+	err = misc_register(&data->miscdev);
-+	if (err)
-+		return err;
-+
-+	dev_set_drvdata(&rpdev->dev, data);
-+	dma_set_mask_and_coherent(rdev, DMA_BIT_MASK(32));
-+	INIT_LIST_HEAD(&data->users);
-+	spin_lock_init(&data->lock);
-+	idr_init(&data->ctx_idr);
-+	data->domain_id = domain_id;
-+	data->rpdev = rpdev;
-+
-+	return of_platform_populate(rdev->of_node, NULL, NULL, rdev);
-+}
-+
-+static void fastrpc_rpmsg_remove(struct rpmsg_device *rpdev)
-+{
-+	struct fastrpc_channel_ctx *cctx = dev_get_drvdata(&rpdev->dev);
-+
-+	misc_deregister(&cctx->miscdev);
-+	of_platform_depopulate(&rpdev->dev);
-+	kfree(cctx);
-+}
-+
-+static int fastrpc_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
-+				  int len, void *priv, u32 addr)
-+{
-+	return 0;
-+}
-+
-+static const struct of_device_id fastrpc_rpmsg_of_match[] = {
-+	{ .compatible = "qcom,fastrpc" },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, fastrpc_rpmsg_of_match);
-+
-+static struct rpmsg_driver fastrpc_driver = {
-+	.probe = fastrpc_rpmsg_probe,
-+	.remove = fastrpc_rpmsg_remove,
-+	.callback = fastrpc_rpmsg_callback,
-+	.drv = {
-+		.name = "qcom,fastrpc",
-+		.of_match_table = fastrpc_rpmsg_of_match,
-+	},
-+};
-+
-+static int fastrpc_init(void)
-+{
-+	int ret;
-+
-+	ret = platform_driver_register(&fastrpc_cb_driver);
-+	if (ret < 0) {
-+		pr_err("fastrpc: failed to register cb driver\n");
++	ret = request_firmware(&fw, fw_name, qproc->dev);
+ 	if (ret < 0) {
+-		dev_err(qproc->dev, "unable to load modem.mdt\n");
+-		return ret;
++		dev_err(qproc->dev, "unable to load %s\n", fw_name);
++		goto out;
+ 	}
+ 
+ 	/* Initialize the RMB validator */
+@@ -918,10 +928,11 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 		ptr = qproc->mpss_region + offset;
+ 
+ 		if (phdr->p_filesz) {
+-			snprintf(seg_name, sizeof(seg_name), "modem.b%02d", i);
+-			ret = request_firmware(&seg_fw, seg_name, qproc->dev);
++			/* Replace "xxx.xxx" with "xxx.bxx" */
++			sprintf(fw_name + fw_name_len - 3, "b%02d", i);
++			ret = request_firmware(&seg_fw, fw_name, qproc->dev);
+ 			if (ret) {
+-				dev_err(qproc->dev, "failed to load %s\n", seg_name);
++				dev_err(qproc->dev, "failed to load %s\n", fw_name);
+ 				goto release_firmware;
+ 			}
+ 
+@@ -960,6 +971,8 @@ static int q6v5_mpss_load(struct q6v5 *qproc)
+ 
+ release_firmware:
+ 	release_firmware(fw);
++out:
++	kfree(fw_name);
+ 
+ 	return ret < 0 ? ret : 0;
+ }
+@@ -1075,9 +1088,10 @@ static int qcom_q6v5_register_dump_segments(struct rproc *rproc,
+ 	unsigned long i;
+ 	int ret;
+ 
+-	ret = request_firmware(&fw, "modem.mdt", qproc->dev);
++	ret = request_firmware(&fw, qproc->hexagon_mdt_image, qproc->dev);
+ 	if (ret < 0) {
+-		dev_err(qproc->dev, "unable to load modem.mdt\n");
++		dev_err(qproc->dev, "unable to load %s\n",
++			qproc->hexagon_mdt_image);
+ 		return ret;
+ 	}
+ 
+@@ -1253,6 +1267,7 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	const struct rproc_hexagon_res *desc;
+ 	struct q6v5 *qproc;
+ 	struct rproc *rproc;
++	const char *mba_image;
+ 	int ret;
+ 
+ 	desc = of_device_get_match_data(&pdev->dev);
+@@ -1262,8 +1277,14 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	if (desc->need_mem_protection && !qcom_scm_is_available())
+ 		return -EPROBE_DEFER;
+ 
++	mba_image = desc->hexagon_mba_image;
++	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
++					    0, &mba_image);
++	if (ret < 0 && ret != -EINVAL)
 +		return ret;
-+	}
 +
-+	ret = register_rpmsg_driver(&fastrpc_driver);
-+	if (ret < 0) {
-+		pr_err("fastrpc: failed to register rpmsg driver\n");
-+		platform_driver_unregister(&fastrpc_cb_driver);
+ 	rproc = rproc_alloc(&pdev->dev, pdev->name, &q6v5_ops,
+-			    desc->hexagon_mba_image, sizeof(*qproc));
++			    mba_image, sizeof(*qproc));
+ 	if (!rproc) {
+ 		dev_err(&pdev->dev, "failed to allocate rproc\n");
+ 		return -ENOMEM;
+@@ -1272,6 +1293,12 @@ static int q6v5_probe(struct platform_device *pdev)
+ 	qproc = (struct q6v5 *)rproc->priv;
+ 	qproc->dev = &pdev->dev;
+ 	qproc->rproc = rproc;
++	qproc->hexagon_mdt_image = "modem.mdt";
++	ret = of_property_read_string_index(pdev->dev.of_node, "firmware-name",
++					    1, &qproc->hexagon_mdt_image);
++	if (ret < 0 && ret != -EINVAL)
 +		return ret;
-+	}
 +
-+	return 0;
-+}
-+module_init(fastrpc_init);
+ 	platform_set_drvdata(pdev, qproc);
+ 
+ 	ret = q6v5_init_mem(qproc, pdev);
+diff --git a/drivers/remoteproc/qcom_q6v5_pas.c b/drivers/remoteproc/qcom_q6v5_pas.c
+index b1e63fcd5fdf..cfdafd68e2cd 100644
+--- a/drivers/remoteproc/qcom_q6v5_pas.c
++++ b/drivers/remoteproc/qcom_q6v5_pas.c
+@@ -258,6 +258,7 @@ static int adsp_probe(struct platform_device *pdev)
+ 	const struct adsp_data *desc;
+ 	struct qcom_adsp *adsp;
+ 	struct rproc *rproc;
++	const char *fw_name;
+ 	int ret;
+ 
+ 	desc = of_device_get_match_data(&pdev->dev);
+@@ -267,8 +268,14 @@ static int adsp_probe(struct platform_device *pdev)
+ 	if (!qcom_scm_is_available())
+ 		return -EPROBE_DEFER;
+ 
++	fw_name = desc->firmware_name;
++	ret = of_property_read_string(pdev->dev.of_node, "firmware-name",
++				      &fw_name);
++	if (ret < 0 && ret != -EINVAL)
++		return ret;
 +
-+static void fastrpc_exit(void)
-+{
-+	platform_driver_unregister(&fastrpc_cb_driver);
-+	unregister_rpmsg_driver(&fastrpc_driver);
-+}
-+module_exit(fastrpc_exit);
-+
-+MODULE_ALIAS("fastrpc:fastrpc");
-+MODULE_LICENSE("GPL v2");
+ 	rproc = rproc_alloc(&pdev->dev, pdev->name, &adsp_ops,
+-			    desc->firmware_name, sizeof(*adsp));
++			    fw_name, sizeof(*adsp));
+ 	if (!rproc) {
+ 		dev_err(&pdev->dev, "unable to allocate remoteproc\n");
+ 		return -ENOMEM;
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
