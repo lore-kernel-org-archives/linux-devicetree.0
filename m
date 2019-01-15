@@ -1,40 +1,43 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v9 0/2]  mtd: rawnand: meson: add Amlogic NAND driver
- support
-Date: Tue, 15 Jan 2019 17:53:22 +0100
-Message-ID: <20190115175322.4aa4b5db@xps13>
-References: <1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com>
-        <20190115175232.3d82d4a9@xps13>
+Subject: Re: [PATCH v4 0/3] mtd: rawnand: add STM32 FMC2 NAND flash
+ controller driver
+Date: Tue, 15 Jan 2019 17:54:42 +0100
+Message-ID: <20190115175442.6b553a84@xps13>
+References: <1544781488-18723-1-git-send-email-christophe.kerello@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115175232.3d82d4a9@xps13>
+In-Reply-To: <1544781488-18723-1-git-send-email-christophe.kerello@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.o
+To: Christophe Kerello <christophe.kerello@st.com>
+Cc: boris.brezillon@bootlin.com, richard@nod.at, dwmw2@infradead.org, computersforpeace@gmail.com, marek.vasut@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Christophe,
 
-Miquel Raynal <miquel.raynal@bootlin.com> wrote on Tue, 15 Jan 2019
-17:52:32 +0100:
+Christophe Kerello <christophe.kerello@st.com> wrote on Fri, 14 Dec
+2018 10:58:05 +0100:
 
-> Hi Jianxin,
+> This patchset adds the support for the STMicroelectronics FMC2 NAND flash
+> controller found on STM32MP SOCs.
 > 
-> Jianxin Pan <jianxin.pan@amlogic.com> wrote on Tue, 15 Jan 2019
-> 23:38:02 +0800:
-> 
-> > These two patches try to add initial NAND driver support for Amlogic Meson
-> > SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
-> > 
-> > Changes since V8 at [9]
-> >  - fix build failre at object_is_on_stack
-> >  - update Kconfig as Martin's suggested
-> 
-> Thanks for this last version, looks good to me. Could you please send a
-> patch to add a MAINTAINERS entry?
+> This patchset supports:
+>   - the command sequencer feature, a hardware accelerator for read/write
+>     within a page
+>   - the manual mode feature, useful for debug purpose
+>   - a maximum 8k page size
+>   - following ECC strength and step size
+> 	- nand-ecc-strength = <8>, nand-ecc-step-size = <512> (BCH8)
+> 	- nand-ecc-strength = <4>, nand-ecc-step-size = <512> (BCH4)
+> 	- nand-ecc-strength = <1>, nand-ecc-step-size = <512> (Extended
+> 	  ecc based on HAMMING)
+>     
+> This patchset has been tested on Micron MT29F8G08ABACAH4 (8-bit SLC NAND)
+> and MT29F8G16ABACAH4 (16-bit SLC NAND)
 
-Just to be clear, no need to resend the series.
+Series applied on nand/next.
+
 
 Thanks,
 Miquèl
