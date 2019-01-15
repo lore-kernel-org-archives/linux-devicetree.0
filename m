@@ -1,7 +1,7 @@
 From: <min.guo@mediatek.com>
-Subject: [PATCH v2 1/4] dt-bindings: usb: musb: Add support for MediaTek musb controller
-Date: Tue, 15 Jan 2019 09:43:43 +0800
-Message-ID: <1547516626-5084-2-git-send-email-min.guo@mediatek.com>
+Subject: [PATCH v2 3/4] usb: musb: Extract set toggle as a separate interface
+Date: Tue, 15 Jan 2019 09:43:45 +0800
+Message-ID: <1547516626-5084-4-git-send-email-min.guo@mediatek.com>
 References: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,63 +14,78 @@ List-Id: devicetree@vger.kernel.org
 
 From: Min Guo <min.guo@mediatek.com>
 
-This adds support for MediaTek musb controller in
-host, peripheral and otg mode.
+Add a common interface for set data toggle
 
 Signed-off-by: Min Guo <min.guo@mediatek.com>
 ---
- .../devicetree/bindings/usb/mediatek,musb.txt      | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+ drivers/usb/musb/musb_host.c | 37 +++++++++++++++++++++++--------------
+ 1 file changed, 23 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-new file mode 100644
-index 0000000..3e3f671
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-@@ -0,0 +1,43 @@
-+MediaTek musb DRD/OTG controller
-+-------------------------------------------
+diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
+index b59ce9a..16d0ba4 100644
+--- a/drivers/usb/musb/musb_host.c
++++ b/drivers/usb/musb/musb_host.c
+@@ -306,6 +306,25 @@ static inline void musb_save_toggle(struct musb_qh *qh, int is_in,
+ 	usb_settoggle(urb->dev, qh->epnum, !is_in, csr ? 1 : 0);
+ }
+ 
++static inline u16 musb_set_toggle(struct musb_qh *qh, int is_in,
++	struct urb *urb)
++{
++	u16 csr = 0;
++	u16 toggle = 0;
 +
-+Required properties:
-+ - compatible      : should be "mediatek,mtk-musb"
-+ - reg             : specifies physical base address and size of
-+   the registers
-+ - interrupts      : interrupt used by musb controller
-+ - interrupt-names : must be "mc"
-+ - phys            : PHY specifier for the OTG phy
-+ - dr_mode         : should be one of "host", "peripheral" or "otg",
-+   refer to usb/generic.txt
-+ - clocks          : a list of phandle + clock-specifier pairs, one for
-+   each entry in clock-names
-+ - clock-names     : must contain "main", "mcu", "univpll"
-+   for clocks of controller
++	toggle = usb_gettoggle(urb->dev, qh->epnum, !is_in);
 +
-+Optional properties:
-+ - extcon : external connector for VBUS and IDPIN changes detection,
-+   needed when supports dual-role mode.
-+ - vbus-supply : reference to the VBUS regulator, needed when supports
-+   dual-role mode.
-+ - power-domains   : a phandle to USB power domain node to control USB's
-+   MTCMOS
++	if (is_in)
++		csr = toggle ? (MUSB_RXCSR_H_WR_DATATOGGLE
++				| MUSB_RXCSR_H_DATATOGGLE) : 0;
++	else
++		csr = toggle ? (MUSB_TXCSR_H_WR_DATATOGGLE
++				| MUSB_TXCSR_H_DATATOGGLE)
++				: MUSB_TXCSR_CLRDATATOG;
 +
-+Example:
++	return csr;
++}
 +
-+usb2: usb@11200000 {
-+	compatible = "mediatek,mt2701-musb",
-+		     "mediatek,mtk-musb";
-+	reg = <0 0x11200000 0 0x1000>;
-+	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+	interrupt-names = "mc";
-+	phys = <&u2port2 PHY_TYPE_USB2>;
-+	vbus-supply = <&usb_vbus>;
-+	extcon = <&extcon_usb>;
-+	dr_mode = "otg";
-+	clocks = <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB0_MCU>,
-+		 <&pericfg CLK_PERI_USB_SLV>;
-+	clock-names = "main","mcu","univpll";
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-+};
+ /*
+  * Advance this hardware endpoint's queue, completing the specified URB and
+  * advancing to either the next URB queued to that qh, or else invalidating
+@@ -772,13 +791,8 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 					);
+ 			csr |= MUSB_TXCSR_MODE;
+ 
+-			if (!hw_ep->tx_double_buffered) {
+-				if (usb_gettoggle(urb->dev, qh->epnum, 1))
+-					csr |= MUSB_TXCSR_H_WR_DATATOGGLE
+-						| MUSB_TXCSR_H_DATATOGGLE;
+-				else
+-					csr |= MUSB_TXCSR_CLRDATATOG;
+-			}
++			if (!hw_ep->tx_double_buffered)
++				csr |= musb_set_toggle(qh, !is_out, urb);
+ 
+ 			musb_writew(epio, MUSB_TXCSR, csr);
+ 			/* REVISIT may need to clear FLUSHFIFO ... */
+@@ -860,17 +874,12 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
+ 
+ 	/* IN/receive */
+ 	} else {
+-		u16	csr;
++		u16 csr = 0;
+ 
+ 		if (hw_ep->rx_reinit) {
+ 			musb_rx_reinit(musb, qh, epnum);
++			csr |= musb_set_toggle(qh, !is_out, urb);
+ 
+-			/* init new state: toggle and NYET, maybe DMA later */
+-			if (usb_gettoggle(urb->dev, qh->epnum, 0))
+-				csr = MUSB_RXCSR_H_WR_DATATOGGLE
+-					| MUSB_RXCSR_H_DATATOGGLE;
+-			else
+-				csr = 0;
+ 			if (qh->type == USB_ENDPOINT_XFER_INT)
+ 				csr |= MUSB_RXCSR_DISNYET;
+ 
 -- 
 1.9.1
