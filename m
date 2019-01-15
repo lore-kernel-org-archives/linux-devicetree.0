@@ -1,94 +1,83 @@
-From: Stefan Schaeckeler <schaecsn@gmx.net>
-Subject: Re: [PATCH 1/2] EDAC: Add Aspeed AST2500 EDAC driver
-Date: Tue, 15 Jan 2019 09:57:48 -0800 (PST)
-Message-ID: <20190115175749.01E3C6E85603@corona.crabdance.com>
-References: <1545026517-64069-1-git-send-email-schaecsn@gmx.net>
- <1545026517-64069-2-git-send-email-schaecsn@gmx.net>
- <20190110095049.GB17621@zn.tnic>
-Reply-To: schaecsn@gmx.net
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v2 1/6] dt-bindings: phy-qcom: Add support for msm8998 usb
+Date: Tue, 15 Jan 2019 10:08:39 -0800
+Message-ID: <20190115180839.GC28907@builder>
+References: <1547483771-5334-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-reply-to: <20190110095049.GB17621@zn.tnic> (message from Borislav Petkov on
- Thu, 10 Jan 2019 10:50:49 +0100)
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: bp@alien8.de
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-aspeed@lists.ozlabs.org, andrew@aj.id.au, linux-kernel@vger.kernel.org, robh+dt@kernel.org, joel@jms.id.au, sschaeck@cisco.com, mchehab@kernel.org, linux-arm-kernel@lists.infradead.org, linux-edac@vger.kernel.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547483771-5334-1-git-send-email-jhugo@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, kishon@ti.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello Boris,
+On Mon 14 Jan 08:36 PST 2019, Jeffrey Hugo wrote:
 
-Thank you for your feedback.
-
-> From: Borislav Petkov <bp@alien8.de>
+> USB on msm8998 utilizes the QUSB2 and QMP phys, similar to sdm845.
 > 
-> On Sun, Dec 16, 2018 at 10:01:56PM -0800, Stefan Schaeckeler wrote:
-> > From: Stefan M Schaeckeler <sschaeck@cisco.com>
-> > 
-> > Add support for the Aspeed AST2500 SoC EDAC driver.
-> > 
-> > Signed-off-by: Stefan M Schaeckeler <sschaeck@cisco.com>
-> > ---
-> >  MAINTAINERS                      |   6 +
-> >  arch/arm/boot/dts/aspeed-g5.dtsi |   7 +
-> >  drivers/edac/Kconfig             |   7 +
-> >  drivers/edac/Makefile            |   1 +
-> >  drivers/edac/aspeed_edac.c       | 457 +++++++++++++++++++++++++++++++
-> >  5 files changed, 478 insertions(+)
-> >  create mode 100644 drivers/edac/aspeed_edac.c
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   | 5 +++++
+>  Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 1 +
+>  2 files changed, 6 insertions(+)
 > 
-> I couldn't see anything out of the ordinary - only nitpicks below.
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> index 41a1074..6061b6f 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
+> @@ -9,6 +9,7 @@ Required properties:
+>  	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
+>  	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
+>  	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
+> +	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
+>  	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
+>  	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
+>  	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
+> @@ -42,6 +43,8 @@ Required properties:
+>  			"aux", "cfg_ahb", "ref".
+>  		For "qcom,msm8996-qmp-usb3-phy" must contain:
+>  			"aux", "cfg_ahb", "ref".
+> +		For "qcom,msm8998-qmp-usb3-phy" must contain:
+> +			"aux", "cfg_ahb", "ref".
+>  		For "qcom,sdm845-qmp-usb3-phy" must contain:
+>  			"aux", "cfg_ahb", "ref", "com_aux".
+>  		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
+> @@ -60,6 +63,8 @@ Required properties:
+>  		For "qcom,msm8996-qmp-pcie-phy" must contain:
+>  			"phy", "common", "cfg".
+>  		For "qcom,msm8996-qmp-usb3-phy" must contain
+> +		 "phy", "common".
 
-[...]
+Odd indentation.
 
 
-> > diff --git a/drivers/edac/aspeed_edac.c b/drivers/edac/aspeed_edac.c
-> > new file mode 100644
-> > index 000000000000..d6ed119909eb
-> > --- /dev/null
-> > +++ b/drivers/edac/aspeed_edac.c
-> > @@ -0,0 +1,457 @@
-> > +// SPDX-License-Identifier: GPL-2.0+
-> > +/*
-> > + * Copyright 2018 Cisco Systems
-> > + *
-> > + * This program is free software; you can redistribute it and/or
-> > + * modify it under the terms of the GNU General Public License
-> > + * as published by the Free Software Foundation; either version
-> > + * 2 of the License, or (at your option) any later version.
+Apart from this, you have my
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+> +		For "qcom,msm8998-qmp-usb3-phy" must contain
+>  			"phy", "common".
+>  		For "qcom,sdm845-qmp-usb3-phy" must contain:
+>  			"phy", "common".
+> diff --git a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> index 03025d9..fe29f9e 100644
+> --- a/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt
+> @@ -6,6 +6,7 @@ QUSB2 controller supports LS/FS/HS usb connectivity on Qualcomm chipsets.
+>  Required properties:
+>   - compatible: compatible list, contains
+>  	       "qcom,msm8996-qusb2-phy" for 14nm PHY on msm8996,
+> +	       "qcom,msm8998-qusb2-phy" for 10nm PHY on msm8998,
+>  	       "qcom,sdm845-qusb2-phy" for 10nm PHY on sdm845.
+>  
+>   - reg: offset and length of the PHY register set.
+> -- 
+> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+> Qualcomm Technologies, Inc. is a member of the
+> Code Aurora Forum, a Linux Foundation Collaborative Project.
 > 
-> You have the SPDX license identifier - no need for that text.
-
-That's interesting. I did a grep over all 16944 GPL licensed files with an SPDX
-identifier.
-
-785 of them have a license text while 16159 don't. I will remove mine.
-
-
-> > +static int aspeed_edac_regmap_reg_write(void *context, unsigned int reg,
-> > +					unsigned int val)
-> 
-> All the static functions don't need the "aspeed_edac" prefix.
-
-When stripping off aspeed_edac_, some static function names will become quite
-"bare-bone":
-
-aspeed_edac_init(), aspeed_edac_exit(), aspeed_edac_probe(),
-aspeed_edac_remove(), aspeed_edac_of_match(), aspeed_edac_isr(),
-aspeed_edac_config_irq().
-
-
-Does your suggestion also apply to static variables? E.g. aspeed_edac_regmap,
-aspeed_edac_regmap_config, aspeed_edac_driver? Also, here some variable names
-would become quite "bare-bone".
-
- Stefan
