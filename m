@@ -1,46 +1,62 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v2 0/2] Support for eMMC in AM65x-evm
-Date: Tue, 15 Jan 2019 08:29:48 -0600
-Message-ID: <20190115142948.3fq2i6vav7jn4ulq@kahuna>
-References: <20190110073355.3382-1-faiz_abbas@ti.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/4] spi: sprd: Add DMA mode support
+Date: Tue, 15 Jan 2019 14:30:42 +0000
+Message-ID: <20190115143042.GB5522@sirena.org.uk>
+References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
+ <324f3106dbff2f28baae098b05219f1384fda97a.1547559542.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190110073355.3382-1-faiz_abbas@ti.com>
+In-Reply-To: <324f3106dbff2f28baae098b05219f1384fda97a.1547559542.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@unisoc.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13:03-20190110, Faiz Abbas wrote:
-> The following patches add eMMC support on TI's AM65x-evm.
-> 
-> v2:
->  1. The SD card node is under debug for some usecases.
->     Only upstreaming eMMC support for now.
->  2. Rebased to latest mainline.
->  3. Removed status = "disabled" from dtsi patch
->  4. Fixed node name to not include '_'s
-> 
-> Faiz Abbas (2):
->   arm64: dts: ti: k3-am654: Add Support for MMC/SD
->   arm64: dts: ti: k3-am654-base-board: Add MMC/SD support
 
-Once the $subject changes in the above two patches (should be emmc
-instead of MMC/SD):
+--9zSXsLTf0vkW971A
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Nishanth Menon <nm@ti.com>
+On Tue, Jan 15, 2019 at 09:46:53PM +0800, Baolin Wang wrote:
+> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+>=20
+> Add DMA mode support for the Spreadtrum SPI controller, and we will enable
+> SPI interrupt to help to complete the SPI transfer work in DMA mode.
 
-> 
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 13 ++++++++++
->  .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
->  2 files changed, 38 insertions(+)
-> 
-> -- 
-> 2.19.2
-> 
+Again this looks good, one thing to check though:
 
--- 
-Regards,
-Nishanth Menon
+> +static bool sprd_spi_can_dma(struct spi_controller *sctlr,
+> +			     struct spi_device *spi, struct spi_transfer *t)
+> +{
+> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
+> +
+> +	return ss->dma.enable;
+> +}
+
+Is it always a benefit to use DMA?  One reason this is a function rather
+than just a property is that even if the device can DMA any size of
+transfer often for short transfers the performance is better if you use
+PIO since the overhead of setting up the DMA controller, waiting and
+then taking the interrupt when it finishes ends up being more than the
+cost of just reading and writing directly to the FIFOs for PIO.
+
+--9zSXsLTf0vkW971A
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlw97pEACgkQJNaLcl1U
+h9A9nAf+P9t2LyV+tEMCXlBQkjp0a/mBHna6R0+O2ldyqMIHvFWCYcTrED5sYgFq
+ijPCK+i2c5VdbhxEtOfSgyijaElF1E4GT5rqHMGpcBOsnGHvx0CbLYniyg1WE1xB
+nary/yQzFekPVbGunZnSQNcrIsgiKxBl5RuWhvzJH24X4uXNywQy0nr/ul3xgOcA
+jIOvRfmPOz3M7Rus9RdD+f7pJpIfsgskY58QTR8xid+DyIUH7f2PttbcsAKwSHfB
+Mq2EcAc9nDLP87ubjLGVc/E0JlSxeh5vunO5F/pmnJ1+2RPOvOBRXzYuexWG+uKN
+B0jSxQRAynE4YApO1KR6NUFk3DU/JQ==
+=1wSg
+-----END PGP SIGNATURE-----
+
+--9zSXsLTf0vkW971A--
