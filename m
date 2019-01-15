@@ -1,121 +1,143 @@
 From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 1/6] clk: actions: Add configurable PLL delay
-Date: Tue, 15 Jan 2019 09:03:35 +0530
-Message-ID: <20190115033340.25016-2-manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v2 2/6] dt-bindings: clock: Add DT bindings for Actions Semi S500 CMU
+Date: Tue, 15 Jan 2019 09:03:36 +0530
+Message-ID: <20190115033340.25016-3-manivannan.sadhasivam@linaro.org>
 References: <20190115033340.25016-1-manivannan.sadhasivam@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190115033340.25016-1-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: sboyd@kernel.org, mturquette@baylibre.com, afaerber@suse.de, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-S500 SoC requires configurable delay for different PLLs. Hence, add
-a separate macro for declaring a PLL with configurable delay and also
-modify the existing OWL_PLL_NO_PARENT macro to use default delay so
-that no need to modify the existing S700/S900 drivers.
+From: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
 
+Add devicetree bindings for Actions Semi S500 Clock Management Unit.
+
+Signed-off-by: Edgar Bernardi Righi <edgar.righi@lsitec.org.br>
+[Mani: Documented S500 CMU compatible]
 Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/clk/actions/owl-pll.c |  2 +-
- drivers/clk/actions/owl-pll.h | 30 ++++++++++++++++++++++++------
- 2 files changed, 25 insertions(+), 7 deletions(-)
+ .../bindings/clock/actions,owl-cmu.txt        |  7 +-
+ include/dt-bindings/clock/actions,s500-cmu.h  | 78 +++++++++++++++++++
+ 2 files changed, 82 insertions(+), 3 deletions(-)
+ create mode 100644 include/dt-bindings/clock/actions,s500-cmu.h
 
-diff --git a/drivers/clk/actions/owl-pll.c b/drivers/clk/actions/owl-pll.c
-index 058e06d7099f..02437bdedf4d 100644
---- a/drivers/clk/actions/owl-pll.c
-+++ b/drivers/clk/actions/owl-pll.c
-@@ -179,7 +179,7 @@ static int owl_pll_set_rate(struct clk_hw *hw, unsigned long rate,
+diff --git a/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt b/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
+index 2ef86ae96df8..d19885b7c73f 100644
+--- a/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
++++ b/Documentation/devicetree/bindings/clock/actions,owl-cmu.txt
+@@ -2,13 +2,14 @@
  
- 	regmap_write(common->regmap, pll_hw->reg, reg);
+ The Actions Semi Owl Clock Management Unit generates and supplies clock
+ to various controllers within the SoC. The clock binding described here is
+-applicable to S900 and S700 SoC's.
++applicable to S900, S700 and S500 SoC's.
  
--	udelay(PLL_STABILITY_WAIT_US);
-+	udelay(pll_hw->delay);
+ Required Properties:
  
- 	return 0;
- }
-diff --git a/drivers/clk/actions/owl-pll.h b/drivers/clk/actions/owl-pll.h
-index 0aae30abd5dc..6fb0d45bb088 100644
---- a/drivers/clk/actions/owl-pll.h
-+++ b/drivers/clk/actions/owl-pll.h
-@@ -13,6 +13,8 @@
+ - compatible: should be one of the following,
+ 	"actions,s900-cmu"
+ 	"actions,s700-cmu"
++	"actions,s500-cmu"
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+ - clocks: Reference to the parent clocks ("hosc", "losc")
+@@ -19,8 +20,8 @@ Each clock is assigned an identifier, and client nodes can use this identifier
+ to specify the clock which they consume.
  
- #include "owl-common.h"
+ All available clocks are defined as preprocessor macros in corresponding
+-dt-bindings/clock/actions,s900-cmu.h or actions,s700-cmu.h header and can be
+-used in device tree sources.
++dt-bindings/clock/actions,s900-cmu.h or actions,s700-cmu.h or
++actions,s500-cmu.h header and can be used in device tree sources.
  
-+#define OWL_PLL_DEF_DELAY	50
+ External clocks:
+ 
+diff --git a/include/dt-bindings/clock/actions,s500-cmu.h b/include/dt-bindings/clock/actions,s500-cmu.h
+new file mode 100644
+index 000000000000..dc3fd2b0299d
+--- /dev/null
++++ b/include/dt-bindings/clock/actions,s500-cmu.h
+@@ -0,0 +1,78 @@
++// SPDX-License-Identifier: GPL-2.0+
++/*
++ * Device Tree binding constants for Actions Semi S500 Clock Management Unit
++ *
++ * Copyright (c) 2014 Actions Semi Inc.
++ * Copyright (c) 2018 LSI-TEC - Caninos Loucos
++ */
 +
- /* last entry should have rate = 0 */
- struct clk_pll_table {
- 	unsigned int		val;
-@@ -27,6 +29,7 @@ struct owl_pll_hw {
- 	u8			width;
- 	u8			min_mul;
- 	u8			max_mul;
-+	u8			delay;
- 	const struct clk_pll_table *table;
- };
- 
-@@ -36,7 +39,7 @@ struct owl_pll {
- };
- 
- #define OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,			\
--		   _width, _min_mul, _max_mul, _table)			\
-+		   _width, _min_mul, _max_mul, _delay, _table)		\
- 	{								\
- 		.reg		= _reg,					\
- 		.bfreq		= _bfreq,				\
-@@ -45,6 +48,7 @@ struct owl_pll {
- 		.width		= _width,				\
- 		.min_mul	= _min_mul,				\
- 		.max_mul	= _max_mul,				\
-+		.delay		= _delay,				\
- 		.table		= _table,				\
- 	}
- 
-@@ -52,8 +56,8 @@ struct owl_pll {
- 		_shift, _width, _min_mul, _max_mul, _table, _flags)	\
- 	struct owl_pll _struct = {					\
- 		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
--				     _width, _min_mul,			\
--				     _max_mul, _table),			\
-+				     _width, _min_mul, _max_mul,	\
-+				     OWL_PLL_DEF_DELAY,	_table),	\
- 		.common = {						\
- 			.regmap = NULL,					\
- 			.hw.init = CLK_HW_INIT(_name,			\
-@@ -67,8 +71,23 @@ struct owl_pll {
- 		_shift, _width, _min_mul, _max_mul, _table, _flags)	\
- 	struct owl_pll _struct = {					\
- 		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
--				     _width, _min_mul,			\
--				     _max_mul, _table),			\
-+				     _width, _min_mul, _max_mul,	\
-+				     OWL_PLL_DEF_DELAY,	_table),	\
-+		.common = {						\
-+			.regmap = NULL,					\
-+			.hw.init = CLK_HW_INIT_NO_PARENT(_name,		\
-+					       &owl_pll_ops,		\
-+					       _flags),			\
-+		},							\
-+	}
++#ifndef __DT_BINDINGS_CLOCK_S500_CMU_H
++#define __DT_BINDINGS_CLOCK_S500_CMU_H
 +
-+#define OWL_PLL_NO_PARENT_DELAY(_struct, _name, _reg, _bfreq, _bit_idx,	\
-+		_shift, _width, _min_mul, _max_mul, _delay, _table,	\
-+		_flags)							\
-+	struct owl_pll _struct = {					\
-+		.pll_hw	= OWL_PLL_HW(_reg, _bfreq, _bit_idx, _shift,	\
-+				     _width, _min_mul,  _max_mul,	\
-+				     _delay, _table),			\
- 		.common = {						\
- 			.regmap = NULL,					\
- 			.hw.init = CLK_HW_INIT_NO_PARENT(_name,		\
-@@ -78,7 +97,6 @@ struct owl_pll {
- 	}
- 
- #define mul_mask(m)		((1 << ((m)->width)) - 1)
--#define PLL_STABILITY_WAIT_US	(50)
- 
- static inline struct owl_pll *hw_to_owl_pll(const struct clk_hw *hw)
- {
++#define CLK_NONE		0
++
++/* fixed rate clocks */
++#define CLK_LOSC		1
++#define CLK_HOSC		2
++
++/* pll clocks */
++#define CLK_CORE_PLL		3
++#define CLK_DEV_PLL		4
++#define CLK_DDR_PLL		5
++#define CLK_NAND_PLL		6
++#define CLK_DISPLAY_PLL		7
++#define CLK_ETHERNET_PLL	8
++#define CLK_AUDIO_PLL		9
++
++/* system clock */
++#define CLK_DEV			10
++#define CLK_H			11
++#define CLK_AHBPREDIV		12
++#define CLK_AHB			13
++#define CLK_DE			14
++#define CLK_BISP		15
++#define CLK_VCE			16
++#define CLK_VDE			17
++
++/* peripheral device clock */
++#define CLK_TIMER		18
++#define CLK_I2C0		19
++#define CLK_I2C1		20
++#define CLK_I2C2		21
++#define CLK_I2C3		22
++#define CLK_PWM0		23
++#define CLK_PWM1		24
++#define CLK_PWM2		25
++#define CLK_PWM3		26
++#define CLK_PWM4		27
++#define CLK_PWM5		28
++#define CLK_SD0			29
++#define CLK_SD1			30
++#define CLK_SD2			31
++#define CLK_SENSOR0		32
++#define CLK_SENSOR1		33
++#define CLK_SPI0		34
++#define CLK_SPI1		35
++#define CLK_SPI2		36
++#define CLK_SPI3		37
++#define CLK_UART0		38
++#define CLK_UART1		39
++#define CLK_UART2		40
++#define CLK_UART3		41
++#define CLK_UART4		42
++#define CLK_UART5		43
++#define CLK_UART6		44
++#define CLK_DE1			45
++#define CLK_DE2			46
++#define CLK_I2SRX		47
++#define CLK_I2STX		48
++#define CLK_HDMI_AUDIO		49
++#define CLK_HDMI		50
++#define CLK_SPDIF		51
++#define CLK_NAND		52
++#define CLK_ECC			53
++#define CLK_RMII_REF		54
++
++#define CLK_NR_CLKS	       (CLK_RMII_REF + 1)
++
++#endif /* __DT_BINDINGS_CLOCK_S500_CMU_H */
 -- 
 2.17.1
