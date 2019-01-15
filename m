@@ -1,189 +1,272 @@
-From: guoren@kernel.org
-Subject: [PATCH] irqchip/irq-csky-mpintc: Add triger type and priority setting
-Date: Wed, 16 Jan 2019 00:36:39 +0800
-Message-ID: <1547570199-25944-1-git-send-email-guoren@kernel.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, guoren@kernel.org, Guo Ren <ren_guo@c-sky.com>
+From: Vladimir Vid <vladimir.vid@sartura.hr>
+Subject: [PATCH v4] arm64: dts: marvell: Add device tree for uDPU board
+Date: Tue, 15 Jan 2019 18:38:43 +0100
+Message-ID: <20190115173842.30367-1-vladimir.vid@sartura.hr>
+References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Andrew Lunn <andrew@lunn.ch>, Luis Torres <luis.torres@methode.com>, Jason Cooper <jason@lakedaemon.net>, Paul Arola <paul.arola@telus.com>, Gregory Clement <gregory.clement@bootlin.com>, Vladimir Vid <vladimir.vid@sartura.hr>, Scott Roberts <scott.roberts@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Guo Ren <ren_guo@c-sky.com>
+This adds initial support for micro-DPU (uDPU) board which is based on
+Armada-3720 SoC.  micro-DPU is the single-port FTTdp distribution point
+unit made by Methode Electronics which offers complete modularity with
+replaceable SFP modules both for uplink and downlink (G.hn over
+twisted-pair, G.hn over coax, 1G and 2.5G Ethernet over Cat-5e cable).
 
-Support 4 triger types:
- - IRQ_TYPE_LEVEL_HIGH
- - IRQ_TYPE_LEVEL_LOW
- - IRQ_TYPE_EDGE_RISING
- - IRQ_TYPE_EDGE_FALLING
+On-board features:
+- 512 MiB DDR3
+- 2 x 2.5G SFP via HSGMII SERDES interface to the A3720 SoC
+- USB 2.0 Type-C connector
+- 4GB eMMC
+- ETSI TS 101548 reverse powering via twisted pair (RJ45) or coax (F Type)
 
-Support 0-255 priority setting for each irq.
-
-Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Luka Perkov <luka.perkov@sartura.hr>
+Cc: Luis Torres <luis.torres@methode.com>
+Cc: Scott Roberts <scott.roberts@telus.com>
+Cc: Paul Arola <paul.arola@telus.com>
+Cc: Andrew Lunn <andrew@lunn.ch>
+Cc: Jason Cooper <jason@lakedaemon.net>
+Cc: Gregory Clement <gregory.clement@bootlin.com>
+Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
 ---
- .../bindings/interrupt-controller/csky,mpintc.txt  | 24 ++++++-
- drivers/irqchip/irq-csky-mpintc.c                  | 78 +++++++++++++++++++++-
- 2 files changed, 99 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-index ab921f1..364b789 100644
---- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-+++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-@@ -11,6 +11,14 @@ Interrupt number definition:
-  16-31  : private  irq, and we use 16 as the co-processor timer.
-  31-1024: common irq for soc ip.
+v2:
+- add compatible string for the uDPU board
+- add names and labels for the LEDs
+- remove unused mdio node
+- remove eeprom nodes
+
+v3:
+- update copyright year for Methode and Telus
+- fix Methode copyright (use Methode Electornics instead of Methode)
+- sort compatible string by relevance, remove armada-3720-db and
+armada3710 to keep it generic
+
+v4:
+- add generic names for LEDs since they don't use regs
+- add 'partitions' section to standarize with other A37xx/A7K/A8K dts's
+- remove usb3 phandle because of the broken usb_phy (previously used on
+Marvell linux repo) and since usb support is still work in progress
+
+---
+ MAINTAINERS                                   |   5 +
+ arch/arm64/boot/dts/marvell/Makefile          |   1 +
+ .../boot/dts/marvell/armada-3720-uDPU.dts     | 163 ++++++++++++++++++
+ 3 files changed, 169 insertions(+)
+ create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 4d04cebb4a71..4ba06bfc1a1e 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9852,6 +9852,11 @@ F:	drivers/media/platform/meson/ao-cec.c
+ F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
+ T:	git git://linuxtv.org/media_tree.git
  
-+Interrupt triger mode:
-+  IRQ_TYPE_LEVEL_HIGH (default)
-+  IRQ_TYPE_LEVEL_LOW
-+  IRQ_TYPE_EDGE_RISING
-+  IRQ_TYPE_EDGE_FALLING
++METHODE UDPU SUPPORT
++M:	Vladimir Vid <vladimir.vid@sartura.hr>
++S:	Maintained
++F:	arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
 +
-+Interrupt priority range: 0-255
+ MICROBLAZE ARCHITECTURE
+ M:	Michal Simek <monstr@monstr.eu>
+ W:	http://www.monstr.eu/fdt/
+diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
+index 2eff1f927471..caed4334f27d 100644
+--- a/arch/arm64/boot/dts/marvell/Makefile
++++ b/arch/arm64/boot/dts/marvell/Makefile
+@@ -2,6 +2,7 @@
+ # Mvebu SoC Family
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
++dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-clearfog-gt-8k.dtb
+ dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
+diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+new file mode 100644
+index 000000000000..1d7e6c82d3ec
+--- /dev/null
++++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+@@ -0,0 +1,163 @@
++// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
++/*
++ * Device tree for the uDPU board.
++ * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
++ * Copyright (C) 2016 Marvell
++ * Copyright (C) 2019 Methode Electronics
++ * Copyright (C) 2019 Telus
++ *
++ * Vladimir Vid <vladimir.vid@sartura.hr>
++ */
 +
- =============================
- intc node bindings definition
- =============================
-@@ -26,7 +34,7 @@ intc node bindings definition
- 	- #interrupt-cells
- 		Usage: required
- 		Value type: <u32>
--		Definition: must be <1>
-+		Definition: could be <1> or <2>
- 	- interrupt-controller:
- 		Usage: required
- 
-@@ -35,6 +43,18 @@ Examples:
- 
- 	intc: interrupt-controller {
- 		compatible = "csky,mpintc";
--		#interrupt-cells = <1>;
-+		#interrupt-cells = <2>;
- 		interrupt-controller;
- 	};
++/dts-v1/;
 +
-+	0: device-example {
-+		...
-+		interrupts = <33 IRQ_TYPE_EDGE_RISING>;
-+		interrupt-parent = <&intc>;
++#include <dt-bindings/gpio/gpio.h>
++#include "armada-372x.dtsi"
++
++/ {
++	model = "Methode uDPU Board";
++	compatible = "methode,udpu", "marvell,armada3720";
++
++	chosen {
++		stdout-path = "serial0:115200n8";
 +	};
 +
-+	1: device-example {
-+		...
-+		interrupts = <34 ((priority << 4) | IRQ_TYPE_EDGE_RISING)>;
-+		interrupt-parent = <&intc>;
++	memory@0 {
++		device_type = "memory";
++		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
 +	};
-diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
-index c67c961..9edc6d3 100644
---- a/drivers/irqchip/irq-csky-mpintc.c
-+++ b/drivers/irqchip/irq-csky-mpintc.c
-@@ -29,9 +29,12 @@ static void __iomem *INTCL_base;
- 
- #define INTCG_ICTLR	0x0
- #define INTCG_CICFGR	0x100
-+#define INTCG_CIPRTR	0x200
- #define INTCG_CIDSTR	0x1000
- 
- #define INTCL_PICTLR	0x0
-+#define INTCL_CFGR	0x14
-+#define INTCL_PRTR	0x20
- #define INTCL_SIGR	0x60
- #define INTCL_HPPIR	0x68
- #define INTCL_RDYIR	0x6c
-@@ -73,6 +76,78 @@ static void csky_mpintc_eoi(struct irq_data *d)
- 	writel_relaxed(d->hwirq, reg_base + INTCL_CACR);
- }
- 
-+static int csky_mpintc_set_type(struct irq_data *d, unsigned int type)
-+{
-+	unsigned int priority, triger;
-+	unsigned int offset, bit_offset;
-+	void __iomem *reg_base;
 +
-+	/*
-+	 * type Bit field: | 32 - 12  |  11 - 4  |   3 - 0    |
-+	 *                   reserved   priority   triger type
-+	 */
-+	triger	 = type & IRQ_TYPE_SENSE_MASK;
-+	priority = (type >> 4) & 0xff;
++	leds {
++		pinctrl-names = "default";
++		compatible = "gpio-leds";
 +
-+	switch (triger) {
-+	case IRQ_TYPE_LEVEL_HIGH:
-+		triger = 0;
-+		break;
-+	case IRQ_TYPE_LEVEL_LOW:
-+		triger = 1;
-+		break;
-+	case IRQ_TYPE_EDGE_RISING:
-+		triger = 2;
-+		break;
-+	case IRQ_TYPE_EDGE_FALLING:
-+		triger = 3;
-+		break;
-+	default:
-+		triger = 0;
-+		break;
-+	}
++		power1 {
++			label = "power:green:led1";
++			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
++			default-state = "off";
++		};
 +
-+	if (d->hwirq < COMM_IRQ_BASE) {
-+		reg_base = this_cpu_read(intcl_reg);
++		power2 {
++			label = "power:red:led1";
++			gpios = <&gpionb 12 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
 +
-+		if (triger) {
-+			offset = ((d->hwirq * 2) / 32) * 4;
-+			bit_offset = (d->hwirq * 2) % 32;
++		network1 {
++			label = "network:green:led2";
++			gpios = <&gpionb 13 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
 +
-+			writel_relaxed(triger << bit_offset,
-+				reg_base + INTCL_CFGR + offset);
-+		}
++		network2 {
++			label = "network:red:led2";
++			gpios = <&gpionb 14 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
 +
-+		if (priority) {
-+			offset = ((d->hwirq * 8) / 32) * 4;
-+			bit_offset = (d->hwirq * 8) % 32;
++		alarm1 {
++			label = "alarm:green:led3";
++			gpios = <&gpionb 15 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
 +
-+			writel_relaxed(priority << bit_offset,
-+				reg_base + INTCL_PRTR + offset);
-+		}
-+	} else {
-+		reg_base = INTCG_base;
++		alarm2 {
++			label = "alarm:red:led3";
++			gpios = <&gpionb 16 GPIO_ACTIVE_HIGH>;
++			default-state = "off";
++		};
++	};
 +
-+		if (triger) {
-+			offset = (((d->hwirq - COMM_IRQ_BASE) * 2) / 32) * 4;
-+			bit_offset = ((d->hwirq - COMM_IRQ_BASE) * 2) % 32;
++	sfp_eth0: sfp-eth0 {
++		compatible = "sff,sfp";
++		i2c-bus = <&i2c0>;
++		los-gpio = <&gpiosb 2 GPIO_ACTIVE_HIGH>;
++		mod-def0-gpio = <&gpiosb 3 GPIO_ACTIVE_LOW>;
++		tx-disable-gpio = <&gpiosb 4 GPIO_ACTIVE_HIGH>;
++		tx-fault-gpio = <&gpiosb 5 GPIO_ACTIVE_HIGH>;
++	};
 +
-+			writel_relaxed(triger << bit_offset,
-+				reg_base + INTCG_CICFGR + offset);
-+		}
++	sfp_eth1: sfp-eth1 {
++		compatible = "sff,sfp";
++		i2c-bus = <&i2c1>;
++		los-gpio = <&gpiosb 7 GPIO_ACTIVE_HIGH>;
++		mod-def0-gpio = <&gpiosb 8 GPIO_ACTIVE_LOW>;
++		tx-disable-gpio = <&gpiosb 9 GPIO_ACTIVE_HIGH>;
++		tx-fault-gpio = <&gpiosb 10 GPIO_ACTIVE_HIGH>;
++	};
++};
 +
-+		if (priority) {
-+			offset = (((d->hwirq - COMM_IRQ_BASE) * 8) / 32) * 4;
-+			bit_offset = ((d->hwirq - COMM_IRQ_BASE) * 8) % 32;
++&sdhci0 {
++	non-removable;
++	bus-width = <8>;
++	mmc-ddr-1_8v;
++	mmc-hs400-1_8v;
++	marvell,pad-type = "fixed-1-8v";
++	status = "okay";
++};
 +
-+			writel_relaxed(priority << bit_offset,
-+				reg_base + INTCG_CIPRTR + offset);
-+		}
-+	}
++&sdhci1 {
++	marvell,xenon-phy-type = "emmc 5.0 phy";
++	cd-gpios = <&gpiosb 2 GPIO_ACTIVE_LOW>;
++	bus-width = <4>;
++	marvell,pad-type = "fixed-1-8v";
++	status = "okay";
++	non-removable;
++	no-sd;
++	no-sdio;
++};
 +
-+	return 0;
-+}
++&spi0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&spi_quad_pins>;
 +
- #ifdef CONFIG_SMP
- static int csky_irq_set_affinity(struct irq_data *d,
- 				 const struct cpumask *mask_val,
-@@ -105,6 +180,7 @@ static struct irq_chip csky_irq_chip = {
- 	.irq_eoi	= csky_mpintc_eoi,
- 	.irq_enable	= csky_mpintc_enable,
- 	.irq_disable	= csky_mpintc_disable,
-+	.irq_set_type	= csky_mpintc_set_type,
- #ifdef CONFIG_SMP
- 	.irq_set_affinity = csky_irq_set_affinity,
- #endif
-@@ -127,7 +203,7 @@ static int csky_irqdomain_map(struct irq_domain *d, unsigned int irq,
- 
- static const struct irq_domain_ops csky_irqdomain_ops = {
- 	.map	= csky_irqdomain_map,
--	.xlate	= irq_domain_xlate_onecell,
-+	.xlate	= irq_domain_xlate_onetwocell,
- };
- 
- #ifdef CONFIG_SMP
++	m25p80@0 {
++		compatible = "jedec,spi-nor";
++		reg = <0>;
++		#address-cells = <1>;
++		#size-cells = <1>;
++		spi-max-frequency = <54000000>;
++
++		partitions {
++			compatible = "fixed-partitions";
++			#address-cells = <1>;
++			#size-cells = <1>;
++			/* only bootloader is located on the SPI */
++			partition@0 {
++				label = "uboot";
++				reg = <0 0x400000>;
++			};
++		};
++	};
++};
++
++&i2c0 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c1_pins>;
++};
++
++&i2c1 {
++	status = "okay";
++	pinctrl-names = "default";
++	pinctrl-0 = <&i2c2_pins>;
++};
++
++&eth0 {
++	phy-mode = "sgmii";
++	status = "okay";
++	managed = "in-band-status";
++	sfp = <&sfp_eth0>;
++};
++
++&eth1 {
++	phy-mode = "sgmii";
++	status = "okay";
++	managed = "in-band-status";
++	sfp = <&sfp_eth1>;
++};
++
++&uart0 {
++	status = "okay";
++};
 -- 
-2.7.4
+2.19.0
