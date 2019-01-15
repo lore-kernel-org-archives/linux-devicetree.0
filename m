@@ -1,40 +1,69 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/2] dt-bindings: serial: Convert snps,dw-apb-uart to
- json-schema
-Date: Tue, 15 Jan 2019 09:02:38 +0100
-Message-ID: <20190115080233.dllow4e4vsdp3k63@verge.net.au>
-References: <20190110222017.6390-1-robh@kernel.org>
- <20190114093022.hjouckoss2zemefg@verge.net.au>
- <CAL_JsqJd_kHi+XU7_oe0upg1iJT2rjjEup3YpyrDQA-OhkgKTw@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add pwm
+Date: Tue, 15 Jan 2019 09:29:58 +0100
+Message-ID: <1547540998.4339.0.camel@pengutronix.de>
+References: <20190114170316.GB4168@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJd_kHi+XU7_oe0upg1iJT2rjjEup3YpyrDQA-OhkgKTw@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190114170316.GB4168@bogon.m.sigxcpu.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 10:23:15AM -0600, Rob Herring wrote:
-> On Mon, Jan 14, 2019 at 3:30 AM Simon Horman <horms@verge.net.au> wrote:
-> >
-> > On Thu, Jan 10, 2019 at 04:20:16PM -0600, Rob Herring wrote:
-> > > Convert the snps,dw-apb-uart binding to DT schema using json-schema.
-> > >
-> > > The Rockchip and Broadcom compatible strings were not documented,
-> > > so add them here.
-> >
-> > I believe the documentation of the Renesas compatible strings is also new
-> > in this file. Perhaps it would be worth mentioning that too.
-> 
-> Ah, that should be in patch 2. Will respin.
-
-Thanks!
-
-> 
-> > In any case
-> >
-> > Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-> >
-> 
+QW0gTW9udGFnLCBkZW4gMTQuMDEuMjAxOSwgMTg6MDMgKzAxMDAgc2NocmllYiBHdWlkbyBHw7xu
+dGhlcjoKPiBXZSBjYW4gcmV1c2UgdGhlIHB3bSBmcm9tIGZzbCxpbXgyNy1wd20gYXMgd2l0aCBv
+dGhlciBpbXggU09Dcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNp
+Z3hjcHUub3JnPgoKUmV2aWV3ZWQtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4
+LmRlPgoKPiAtLS0KPiBDaGFuZ2VzIGZyb20gdjEgKHRoYW5rcyBMdWNhcyBTdGFjaCBmb3IgdGhl
+IHJldmlldyk6Cj4gwqAgLSBmaXggaW5kZW50YXRpb24gb2YgbXVsdGluZSBlbnRyaWVzCj4gwqAg
+LSBtb3ZlIHRvIEFJUFMyIGJ1cwo+IAo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
+aW14OG1xLmR0c2kgfCA0NCArKysrKysrKysrKysrKysrKysrKysrKwo+IMKgMSBmaWxlIGNoYW5n
+ZWQsIDQ0IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
+cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
+bXg4bXEuZHRzaQo+IGluZGV4IDhlOWQ2ZDVlZDdiMi4uMGI0MmZjYjFlY2FhIDEwMDY0NAo+IC0t
+LSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gKysrIGIvYXJj
+aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBAQCAtMjU5LDYgKzI1OSw1
+MCBAQAo+ID4gwqAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+IMKgCQkJI3NpemUtY2VsbHMg
+PSA8MT47Cj4gPiDCoAkJCXJhbmdlcyA9IDwweDMwNDAwMDAwIDB4MzA0MDAwMDAgMHg0MDAwMDA+
+Owo+ICsKPiA+ID4gKwkJCXB3bTE6IHB3bUAzMDY2MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUg
+PSAiZnNsLGlteDhtcS1wd20iLCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMw
+NjYwMDAwIDB4MTAwMDA+Owo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODEgSVJRX1RZ
+UEVfTEVWRUxfSElHSD47Cj4gPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNMV9S
+T09UPiwKPiA+ICsJCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV00xX1JP
+T1Q+Owo+ID4gKwkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1j
+ZWxscyA9IDwyPjsKPiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ICsK
+PiA+ID4gKwkJCXB3bTI6IHB3bUAzMDY3MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNs
+LGlteDhtcS1wd20iLCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjcwMDAw
+IDB4MTAwMDA+Owo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODIgSVJRX1RZUEVfTEVW
+RUxfSElHSD47Cj4gPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNMl9ST09UPiwK
+PiA+ICsJCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV00yX1JPT1Q+Owo+
+ID4gKwkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1jZWxscyA9
+IDwyPjsKPiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ICsKPiA+ID4g
+KwkJCXB3bTM6IHB3bUAzMDY4MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDht
+cS1wd20iLCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjgwMDAwIDB4MTAw
+MDA+Owo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODMgSVJRX1RZUEVfTEVWRUxfSElH
+SD47Cj4gPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNM19ST09UPiwKPiA+ICsJ
+CQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV00zX1JPT1Q+Owo+ID4gKwkJ
+CQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1jZWxscyA9IDwyPjsK
+PiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ICsKPiA+ID4gKwkJCXB3
+bTQ6IHB3bUAzMDY5MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1wd20i
+LCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjkwMDAwIDB4MTAwMDA+Owo+
+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODQgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4g
+PiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNNF9ST09UPiwKPiA+ICsJCQkJwqDC
+oMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV000X1JPT1Q+Owo+ID4gKwkJCQljbG9j
+ay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1jZWxscyA9IDwyPjsKPiA+ICsJ
+CQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ID4gwqAJCX07Cj4gwqAKPiA+IMKg
+CQlidXNAMzA4MDAwMDAgeyAvKiBBSVBTMyAqLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
+YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
+L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
