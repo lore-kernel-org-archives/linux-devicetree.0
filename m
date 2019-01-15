@@ -1,78 +1,56 @@
 From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH 3/3] arm64: dts: ti: k3-am654-base-board: enable USB1
-Date: Tue, 15 Jan 2019 08:37:12 -0600
-Message-ID: <20190115143712.hb2ogjcjxwokkioa@kahuna>
-References: <1547200861-17795-1-git-send-email-rogerq@ti.com>
- <1547200861-17795-4-git-send-email-rogerq@ti.com>
+Subject: Re: [RFC PATCH v4 10/13] soc: ti: Add MSI domain support for K3
+ Interrupt Aggregator
+Date: Tue, 15 Jan 2019 08:41:23 -0600
+Message-ID: <20190115144123.3lmt4qqi5y5ssiym@kahuna>
+References: <20181227060829.5080-1-lokeshvutla@ti.com>
+ <20181227061313.5451-1-lokeshvutla@ti.com>
+ <20181227061313.5451-10-lokeshvutla@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547200861-17795-4-git-send-email-rogerq@ti.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Roger Quadros <rogerq@ti.com>
-Cc: devicetree@vger.kernel.org, vigneshr@ti.com, nsekhar@ti.com, linux-kernel@vger.kernel.org, t-kristo@ti.com, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20181227061313.5451-10-lokeshvutla@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>
+Cc: marc.zyngier@arm.com, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 12:01-20190111, Roger Quadros wrote:
-> Add pinmux for USB1 and enable it as a dual role port.
+On 11:43-20181227, Lokesh Vutla wrote:
+> With the system coprocessor managing the range allocation of the
+> inputs to Interrupt Aggregator, it is difficult to represent
+> the device IRQs from DT.
 > 
-> Signed-off-by: Roger Quadros <rogerq@ti.com>
+> The suggestion is to use MSI in such cases where devices wants
+> to allocate and group interrupts dynamically.
+> 
+> Create a MSI domain bus layer that allocates and frees MSIs for
+> a device.
+> 
+> APIs that are implemented are:
+> - inta_msi_create_irq_domain() that creates a MSI domain
+> - inta_msi_domain_alloc_group_irqs() that creates MSIs for the
+>   specified device and source indexes. All these are expected to
+>   be grouped by the parent interrupt controller to MSI domain.
+> - inta_msi_domain_free_group_irqs() frees the grouped irqs.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
 > ---
->  arch/arm64/boot/dts/ti/k3-am654-base-board.dts | 20 ++++++++++++++++++++
->  1 file changed, 20 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> index e41fc3a..c4f7b29 100644
-> --- a/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> +++ b/arch/arm64/boot/dts/ti/k3-am654-base-board.dts
-> @@ -69,6 +69,12 @@
->  			AM65X_IOPAD(0x01bc, PIN_OUTPUT, 0) /* (AG13) SPI0_CS0 */
->  		>;
->  	};
-> +
-> +	usb1_pins_default: usb1_pins_default {
-> +		pinctrl-single,pins = <
-> +			AM65X_IOPAD(0x02c0, PIN_OUTPUT, 0) /* (AC8) USB1_DRVVBUS */
-> +		>;
-> +	};
->  };
->  
->  &main_pmx1 {
-> @@ -163,3 +169,17 @@
->  		#size-cells= <1>;
->  	};
->  };
-> +
-> +&dwc3_1 {
-> +	status = "okay";
-> +};
-> +
-> +&usb1_phy {
-> +	status = "okay";
-> +};
-
-NAK -> we dont do status = "okay" in ARMV8.
-
-> +
-> +&usb1 {
-> +	pinctrl-names = "default";
-> +	pinctrl-0 = <&usb1_pins_default>;
-> +	dr_mode = "otg";
-> +};
-> -- 
-> Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-> Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> - May be the same functionaly can be included in platform msi. But I would
+>   like to get a feedback on the approach.
 > 
+>  drivers/soc/ti/Kconfig             |   6 +
+>  drivers/soc/ti/Makefile            |   1 +
+>  drivers/soc/ti/k3_inta_msi.c       | 193 +++++++++++++++++++++++++++++
+>  include/linux/irqdomain.h          |   1 +
+>  include/linux/msi.h                |   6 +
+>  include/linux/soc/ti/k3_inta_msi.h |  22 ++++
+>  6 files changed, 229 insertions(+)
+>  create mode 100644 drivers/soc/ti/k3_inta_msi.c
+>  create mode 100644 include/linux/soc/ti/k3_inta_msi.h
+
+Did we miss maintainer file?
 
 -- 
 Regards,
