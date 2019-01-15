@@ -1,54 +1,59 @@
-From: Andrew Lunn <andrew@lunn.ch>
-Subject: Re: [PATCH v2 1/2] arm64: dts: marvell: Add device tree for uDPU board
-Date: Tue, 15 Jan 2019 14:42:29 +0100
-Message-ID: <20190115134229.GE19687@lunn.ch>
-References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
- <20190115121113.5636-1-vladimir.vid@sartura.hr>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190115121113.5636-1-vladimir.vid@sartura.hr>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vladimir Vid <vladimir.vid@sartura.hr>
-Cc: devicetree@vger.kernel.org, Luis Torres <luis.torres@methode.com>, Paul Arola <paul.arola@telus.com>, Scott Roberts <scott.roberts@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/4] spi: sprd: Fix the error data length in SPI read-only mode
+Date: Tue, 15 Jan 2019 21:46:50 +0800
+Message-ID: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: broonie@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@unisoc.com, baolin.wang@linaro.org, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> +// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-> +/*
-> + * Device tree for the uDPU board.
-> + * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
-> + * Copyright (C) 2016 Marvell
-> + * Copyright (C) 2018 Methode
-> + * Copyright (C) 2018 Telus
+From: Lanqing Liu <lanqing.liu@spreadtrum.com>
 
-2019?
+In SPI read-only mode, we will always return the writing length,
+which is always the power of "bits_per_word", but the length unit
+using by users is byte.
 
-> + *
-> + * Vladimir Vid <vladimir.vid@sartura.hr>
-> + */
-> +
-> +/dts-v1/;
-> +
-> +#include <dt-bindings/gpio/gpio.h>
-> +#include "armada-372x.dtsi"
-> +
-> +/ {
-> +	model = "Methode uDPU Board";
-> +	compatible = "marvell,armada-3720-db", "marvell,armada3720",
-> +		     "marvell,armada3710", "methode,udpu";
+Thus this patch fixes the returning length by getting from
+read_bufs() function to get the correct length.
 
-Compatible strings are sorted as most specific to most generic. So
-"methode,udpu" should be first. "marvell,armada-3720-db" can probably
-be dropped.
+Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/spi/spi-sprd.c |   10 ++++++----
+ 1 file changed, 6 insertions(+), 4 deletions(-)
 
-   Andrew
+diff --git a/drivers/spi/spi-sprd.c b/drivers/spi/spi-sprd.c
+index 8daa24e..fa324ce 100644
+--- a/drivers/spi/spi-sprd.c
++++ b/drivers/spi/spi-sprd.c
+@@ -380,7 +380,7 @@ static int sprd_spi_txrx_bufs(struct spi_device *sdev, struct spi_transfer *t)
+ {
+ 	struct sprd_spi *ss = spi_controller_get_devdata(sdev->controller);
+ 	u32 trans_len = ss->trans_len, len;
+-	int ret, write_size = 0;
++	int ret, write_size = 0, read_size = 0;
+ 
+ 	while (trans_len) {
+ 		len = trans_len > SPRD_SPI_FIFO_SIZE ? SPRD_SPI_FIFO_SIZE :
+@@ -416,13 +416,15 @@ static int sprd_spi_txrx_bufs(struct spi_device *sdev, struct spi_transfer *t)
+ 			goto complete;
+ 
+ 		if (ss->trans_mode & SPRD_SPI_RX_MODE)
+-			ss->read_bufs(ss, len);
++			read_size += ss->read_bufs(ss, len);
+ 
+ 		trans_len -= len;
+ 	}
+ 
+-	ret = write_size;
+-
++	if (ss->trans_mode & SPRD_SPI_TX_MODE)
++		ret = write_size;
++	else
++		ret = read_size;
+ complete:
+ 	sprd_spi_enter_idle(ss);
+ 
+-- 
+1.7.9.5
