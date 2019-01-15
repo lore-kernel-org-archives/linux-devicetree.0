@@ -1,12 +1,13 @@
-From: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Subject: [PATCH] arm64: dts: imx8mq: Add system reset controller
-Date: Tue, 15 Jan 2019 12:46:41 +0100
-Message-ID: <20190115114641.GA15870@bogon.m.sigxcpu.org>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Add system reset controller
+Date: Tue, 15 Jan 2019 12:51:57 +0100
+Message-ID: <1547553117.4339.8.camel@pengutronix.de>
+References: <20190115114641.GA15870@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
+In-Reply-To: <20190115114641.GA15870@bogon.m.sigxcpu.org>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,48 +17,39 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-We can reuse the src from fsl,imx51-src as with other imx SOCs.
-
-Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
----
-I'm mostly interested in the syscon part to be able to use regmap for
-MIPI DSI here.
-
-Patch is against next-20190114 plus Lucas "arm64: dts: imx8mq: move
-watchdog nodes to correct location" but also applies to
-
-    https://git.kernel.org/pub/scm/linux/kernel/git/shawnguo/linux.git/log/=
-?h=3Dimx/dt64
-
-It will conflict with "arm64: dts: imx8mq: add GPC power domains" which
-is not yet in any tree I've seen.
-
- arch/arm64/boot/dts/freescale/imx8mq.dtsi | 7 +++++++
- 1 file changed, 7 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dt=
-s/freescale/imx8mq.dtsi
-index 0225eae2216e..7b1e0bdbd932 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -252,6 +252,13 @@
- 				              "clk_ext1", "clk_ext2",
- 				              "clk_ext3", "clk_ext4";
- 			};
-+
-+			src: src@30390000 {
-+				compatible =3D "fsl,imx8mq-src", "fsl,imx51-src", "syscon";
-+				reg =3D <0x30390000 0x10000>;
-+				interrupts =3D <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+				#reset-cells =3D <1>;
-+			};
- 		};
- =
-
- 		bus@30400000 { /* AIPS2 */
--- =
-
-2.20.1
+QW0gRGllbnN0YWcsIGRlbiAxNS4wMS4yMDE5LCAxMjo0NiArMDEwMCBzY2hyaWViIEd1aWRvIEfD
+vG50aGVyOgo+IFdlIGNhbiByZXVzZSB0aGUgc3JjIGZyb20gZnNsLGlteDUxLXNyYyBhcyB3aXRo
+IG90aGVyIGlteCBTT0NzLgoKVGhhdCdzIG5vdCB0cnVlLiBUaGUgU1JDIGlzIHNpZ25pZmljYW50
+bHkgZGlmZmVyZW50IGZyb20gdGhlIGkuTVg1MQpvbmUuIFNlZSBzZXJpZXMgIltQQVRDSCB2NCAw
+LzNdIFJlc2V0IGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgaS5NWDhNUSIuCgpXZSBnZW5lcmFsbHkg
+ZG9uJ3QgYWRkIHRoZSBEVCBub2RlcyB1bnRpbCBhdCBsZWFzdCB0aGUgYmluZGluZywgYmV0dGVy
+CnlldCB0aGUgZnVsbCBkcml2ZXIsIGlzIHVwc3RyZWFtLgoKUmVnYXJkcywKTHVjYXMKCj4gCj4g
+PiBTaWduZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNpZ3hjcHUub3JnPgo+IC0tLQo+
+IEknbSBtb3N0bHkgaW50ZXJlc3RlZCBpbiB0aGUgc3lzY29uIHBhcnQgdG8gYmUgYWJsZSB0byB1
+c2UgcmVnbWFwIGZvcgo+IE1JUEkgRFNJIGhlcmUuCj4gCj4gUGF0Y2ggaXMgYWdhaW5zdCBuZXh0
+LTIwMTkwMTE0IHBsdXMgTHVjYXMgImFybTY0OiBkdHM6IGlteDhtcTogbW92ZQo+IHdhdGNoZG9n
+IG5vZGVzIHRvIGNvcnJlY3QgbG9jYXRpb24iIGJ1dCBhbHNvIGFwcGxpZXMgdG8KPiAKPiDCoMKg
+wqDCoGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3NoYXdu
+Z3VvL2xpbnV4LmdpdC9sb2cvP2g9aW14L2R0NjQKPiAKPiBJdCB3aWxsIGNvbmZsaWN0IHdpdGgg
+ImFybTY0OiBkdHM6IGlteDhtcTogYWRkIEdQQyBwb3dlciBkb21haW5zIiB3aGljaAo+IGlzIG5v
+dCB5ZXQgaW4gYW55IHRyZWUgSSd2ZSBzZWVuLgo+IAo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9m
+cmVlc2NhbGUvaW14OG1xLmR0c2kgfCA3ICsrKysrKysKPiDCoDEgZmlsZSBjaGFuZ2VkLCA3IGlu
+c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
+bGUvaW14OG1xLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRz
+aQo+IGluZGV4IDAyMjVlYWUyMjE2ZS4uN2IxZTBiZGJkOTMyIDEwMDY0NAo+IC0tLSBhL2FyY2gv
+YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9i
+b290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBAQCAtMjUyLDYgKzI1MiwxMyBAQAo+ID4g
+wqAJCQkJwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJjbGtfZXh0MSIsICJjbGtfZXh0MiIs
+Cj4gPiDCoAkJCQnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImNsa19leHQzIiwgImNsa19l
+eHQ0IjsKPiA+IMKgCQkJfTsKPiArCj4gPiA+ICsJCQlzcmM6IHNyY0AzMDM5MDAwMCB7Cj4gPiAr
+CQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1zcmMiLCAiZnNsLGlteDUxLXNyYyIsICJzeXNj
+b24iOwo+ID4gKwkJCQlyZWcgPSA8MHgzMDM5MDAwMCAweDEwMDAwPjsKPiA+ICsJCQkJaW50ZXJy
+dXB0cyA9IDxHSUNfU1BJIDg5IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJCQkjcmVzZXQt
+Y2VsbHMgPSA8MT47Cj4gPiArCQkJfTsKPiA+IMKgCQl9Owo+IMKgCj4gPiDCoAkJYnVzQDMwNDAw
+MDAwIHsgLyogQUlQUzIgKi8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
+bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
+c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
