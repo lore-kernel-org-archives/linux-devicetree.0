@@ -1,37 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v5 2/7] nfc: pn532_uart: Add NXP PN532 to devicetree docs
-Date: Tue, 15 Jan 2019 13:59:02 -0600
-Message-ID: <20190115195902.GA3106@bogus>
-References: <20190111161812.26325-1-poeschel@lemonage.de>
- <20190111161812.26325-2-poeschel@lemonage.de>
+Subject: Re: [PATCH v11 1/9] dt-bindings: opp: Introduce opp-level bindings
+Date: Tue, 15 Jan 2019 13:59:49 -0600
+Message-ID: <20190115195949.GA8255@bogus>
+References: <20190110040209.6028-1-rnayak@codeaurora.org>
+ <20190110040209.6028-2-rnayak@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190111161812.26325-2-poeschel@lemonage.de>
+In-Reply-To: <20190110040209.6028-2-rnayak@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, "GitAuthor: Lars Poeschel" <poeschel@lemonage.de>, open list <linux-kernel@vger.kernel.org>, Johan Hovold <johan@kernel.org>
+Cc: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 11 Jan 2019 17:18:05 +0100, Lars Poeschel wrote:
-> Add a simple binding doc for the pn532.
+On Thu, 10 Jan 2019 09:32:01 +0530, Rajendra Nayak wrote:
+> Add opp-level as an additional property in the OPP node to describe
+> the performance level of the device.
 > 
-> Cc: Johan Hovold <johan@kernel.org>
-> Signed-off-by: Lars Poeschel <poeschel@lemonage.de>
+> On some SoCs (especially from Qualcomm and MediaTek) this value
+> is communicated to a remote microprocessor by the CPU, which
+> then takes some actions (like adjusting voltage values across various
+> rails) based on the value passed.
+> 
+> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
 > ---
-> Changes in v4:
-> - Add documentation about reg property in case of i2c
-> 
-> Changes in v3:
-> - seperate binding doc instead of entry in trivial-devices.txt
-> 
->  .../devicetree/bindings/nfc/pn532.txt         | 33 +++++++++++++++++++
->  1 file changed, 33 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/nfc/pn532.txt
+>  Documentation/devicetree/bindings/opp/opp.txt | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
-Please add Acked-by/Reviewed-by tags when posting new versions. However,
-there's no need to repost patches *only* to add the tags. The upstream
-maintainer will do that for acks received on the version they apply.
-
-If a tag was not added on purpose, please state why and what changed.
+Reviewed-by: Rob Herring <robh@kernel.org>
