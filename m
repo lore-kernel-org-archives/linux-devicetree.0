@@ -1,74 +1,39 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 2/5] gnss: sirf: power on logic for devices without
- wakeup signal
-Date: Tue, 15 Jan 2019 10:08:25 +0100
-Message-ID: <20190115090825.GM3691@localhost>
-References: <20181209195150.5192-1-andreas@kemnade.info>
- <20181209195150.5192-3-andreas@kemnade.info>
- <20190110121038.GA9725@localhost>
- <20190110230223.18ecbd87@kemnade.info>
- <20190114105129.GE3691@localhost>
- <20190114225802.4dcd8cd2@aktux>
+From: Neil Armstrong <narmstrong@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson-gx: Add canvas provider node to the vpu
+Date: Tue, 15 Jan 2019 10:36:29 +0100
+Message-ID: <c7502035-0986-5d7d-b2b9-a35056146310@baylibre.com>
+References: <20190114162229.5412-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190114225802.4dcd8cd2@aktux>
+In-Reply-To: <20190114162229.5412-1-mjourdan@baylibre.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: Johan Hovold <johan@kernel.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Discussions about the Letux Kernel <letux-kernel@openphoenux.org>
+To: Maxime Jourdan <mjourdan@baylibre.com>, Kevin Hilman <khilman@baylibre.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 10:58:02PM +0100, Andreas Kemnade wrote:
-> On Mon, 14 Jan 2019 11:51:29 +0100
-> Johan Hovold <johan@kernel.org> wrote:
+On 14/01/2019 17:22, Maxime Jourdan wrote:
+> Allows the vpu driver to optionally use a canvas provider node.
 > 
-> here is a second part of a reply.
-
-I'm not sure I received the first part if you're saying you replied to
-my mail in two parts?
-
-> [...]
-> > > > In pseudo code we have:
-> > > > 
-> > > >   activate:
-> > > >    - toggle on-off
-> > > >    - wait(data-received, ACTIVATE_TIMEOUT + REPORT_CYCLE)
-> > > >      - reception: success   
-> > > 
-> > > Note: we can also get the goodbye/shutdown message from the chip here
-> > > so there are chances of a false success, but since we initially power down,
-> > > we will rule out wrong state here.  
-> > 
-> > Good point. Unless we know the current state, we'd need to sleep for
-> > HIBERNATE_TIMEOUT before waiting for data reception.
+> Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gx.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> And probably this also magically (together with my
-> runtime_get/put()-pair) in _probe()) worked around the
-> problems fixed by the.
-> gnss: sirf: fix activation retry handling
-
-The retry-handling fix would only avoid a successful last retry attempt
-incorrectly being reported as a failure, so I don't think that would
-change much here.
-
-> Well, with the last patchset and short report cycle we can detect state
-> changes to off state reliably but state changes to on state
-> only unreliably (which was, as said, not the intention). If the GPS chip
-> behaves well enough, we will not see trouble.
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> index 44c5c51ff1fa..9b0ac183ee0c 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gx.dtsi
+> @@ -510,6 +510,7 @@
+>  			interrupts = <GIC_SPI 3 IRQ_TYPE_EDGE_RISING>;
+>  			#address-cells = <1>;
+>  			#size-cells = <0>;
+> +			amlogic,canvas = <&canvas>;
+>  
+>  			/* CVBS VDAC output port */
+>  			cvbs_vdac_port: port@0 {
 > 
-> Now with long report cycles: Off state detection will always return
-> success. On state detection (in its current wonky form) will see the
-> state change messages and will also always return success. If initial
-> state is correct, this works at least in a wonky way.
-> 
-> I do not like these wonky things too much. So I would rather see
-> well-defined behavior with well-known limitations.
-> 
-> State change failures are probably not only a theoretical thing,
-> so it is a good idea to track that.
 
-Good, sounds like we're on the same page then.
-
-Thanks,
-Johan
+Acked-by: Neil Armstrong <narmstrong@baylibre.com>
