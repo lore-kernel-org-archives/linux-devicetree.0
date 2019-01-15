@@ -1,85 +1,72 @@
-Return-Path: <SRS0=Tq4V=PY=linux.intel.com=thor.thayer@kernel.org>
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 2/4] EDAC, altera: Less Intrusive Error Injection
-Date: Wed, 16 Jan 2019 17:11:52 -0600
-Message-Id: <1547680314-31045-3-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+Return-Path: <SRS0=RXyf=PX=pengutronix.de=mfe@kernel.org>
+Date: Tue, 15 Jan 2019 12:58:30 +0100
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: Re: [PATCH v2 0/2] Microchip QT1050 support
+Message-ID: <20190115115830.uulucadzp5eseuvb@pengutronix.de>
+References: <20181029133826.30326-1-m.felsch@pengutronix.de>
+ <20181126091359.lkzo6ijzjks7v4qu@pengutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20181126091359.lkzo6ijzjks7v4qu@pengutronix.de>
+To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, raphaelpereira@gmail.com, voice.shen@atmel.com, kernel@pengutronix.de, linux-input@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+Hi Dmitry,
 
-Improve the Arria10 and Stratix10 error injection routines
-by reading the data and changing just 1 bit before writing
-back out. Previous routine would set the first bytes to 0
-then change to 1 but this method is less intrusive.
+unfortunately you missed this patchset for 5.0. Please can you give me
+your feedback so it will get into 5.1.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- drivers/edac/altera_edac.c | 30 +++++++++++++-----------------
- drivers/edac/altera_edac.h |  2 +-
- 2 files changed, 14 insertions(+), 18 deletions(-)
+Thanks,
+Marco
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index c89d82aa2776..56af98d18645 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1756,28 +1756,24 @@ static ssize_t altr_edac_a10_device_trig2(struct file *file,
- 	if (trig_type == ALTR_UE_TRIGGER_CHAR) {
- 		writel(priv->ue_set_mask, set_addr);
- 	} else {
--		/* Setup write of 0 to first 4 bytes */
--		writel(0x0, drvdata->base + ECC_BLK_WDATA0_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
--		/* Setup write of 4 bytes */
-+		/* Setup read/write of 4 bytes */
- 		writel(ECC_WORD_WRITE, drvdata->base + ECC_BLK_DBYTECTRL_OFST);
- 		/* Setup Address to 0 */
--		writel(0x0, drvdata->base + ECC_BLK_ADDRESS_OFST);
--		/* Setup accctrl to write & data override */
--		writel(ECC_WRITE_DOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
--		/* Kick it. */
--		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
--		/* Setup accctrl to read & ecc override */
--		writel(ECC_READ_EOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
-+		writel(0, drvdata->base + ECC_BLK_ADDRESS_OFST);
-+		/* Setup accctrl to read & ecc & data override */
-+		writel(ECC_READ_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
- 		/* Kick it. */
- 		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
- 		/* Setup write for single bit change */
--		writel(0x1, drvdata->base + ECC_BLK_WDATA0_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA0_OFST) ^ 0x1,
-+		       drvdata->base + ECC_BLK_WDATA0_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA1_OFST),
-+		       drvdata->base + ECC_BLK_WDATA1_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA2_OFST),
-+		       drvdata->base + ECC_BLK_WDATA2_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA3_OFST),
-+		       drvdata->base + ECC_BLK_WDATA3_OFST);
-+
- 		/* Copy Read ECC to Write ECC */
- 		writel(readl(drvdata->base + ECC_BLK_RECC0_OFST),
- 		       drvdata->base + ECC_BLK_WECC0_OFST);
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index f8664bac9fa8..a1acca99c50b 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -319,7 +319,7 @@ struct altr_sdram_mc_data {
- #define ECC_BLK_STARTACC_OFST             0x7C
- 
- #define ECC_XACT_KICK                     0x10000
--#define ECC_WORD_WRITE                    0xF
-+#define ECC_WORD_WRITE                    0xFF
- #define ECC_WRITE_DOVR                    0x101
- #define ECC_WRITE_EDOVR                   0x103
- #define ECC_READ_EOVR                     0x2
+On 18-11-26 10:13, Marco Felsch wrote:
+> Hi,
+> 
+> I send this series a month ago, Rob already added his reviewed-by tag.
+> 
+> Regards,
+> Marco
+> 
+> On 18-10-29 14:38, Marco Felsch wrote:
+> > Hi,
+> > 
+> > this is my v2 containing the comments made on my v1 [1].
+> > 
+> > I split the dt-bindings according to commit [2].
+> > 
+> > [1] https://www.spinics.net/lists/devicetree/msg250279.html
+> > [2] https://www.spinics.net/lists/devicetree/msg253946.html
+> > 
+> > Marco Felsch (2):
+> >   dt-bindings: input: add Microchip QT1050 bindings
+> >   Input: qt1050 - add Microchip AT42QT1050 support
+> > 
+> >  .../bindings/input/microchip,qt1050.txt       |  74 +++
+> >  drivers/input/keyboard/Kconfig                |  11 +
+> >  drivers/input/keyboard/Makefile               |   1 +
+> >  drivers/input/keyboard/qt1050.c               | 620 ++++++++++++++++++
+> >  4 files changed, 706 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/input/microchip,qt1050.txt
+> >  create mode 100644 drivers/input/keyboard/qt1050.c
+> > 
+> > -- 
+> > 2.19.1
+> > 
+> > 
+> > 
+> 
+> -- 
+> Pengutronix e.K.                           |                             |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> 
+> 
+
 -- 
-2.7.4
+Pengutronix e.K.                           |                             |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
+Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
