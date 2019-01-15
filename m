@@ -1,106 +1,48 @@
 From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH v9 1/2] dt-bindings: nand: meson: add Amlogic NAND controller
- driver
-Date: Tue, 15 Jan 2019 23:38:03 +0800
-Message-ID: <1547566684-57472-2-git-send-email-jianxin.pan@amlogic.com>
-References: <1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com>
+Subject: Re: [PATCH v8 0/2] mtd: rawnand: meson: add Amlogic NAND driver
+ support
+Date: Tue, 15 Jan 2019 23:44:08 +0800
+Message-ID: <18ad7184-3bbe-4bd1-826a-fce5d31c215c@amlogic.com>
+References: <1544973463-59523-1-git-send-email-jianxin.pan@amlogic.com>
+ <20190115094911.75f4edc9@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Richard Weinberger <richard@nod.at>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190115094911.75f4edc9@xps13>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.o
 List-Id: devicetree@vger.kernel.org
 
-From: Liang Yang <liang.yang@amlogic.com>
+Hi Miquel,
 
-Add Amlogic NAND controller dt-bindings for Meson SoC,
-Current this driver support GXBB/GXL/AXG platform.
-
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-Signed-off-by: Yixun Lan <yixun.lan@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
- .../devicetree/bindings/mtd/amlogic,meson-nand.txt | 60 ++++++++++++++++++++++
- 1 file changed, 60 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-
-diff --git a/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-new file mode 100644
-index 0000000..3983c11
---- /dev/null
-+++ b/Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-@@ -0,0 +1,60 @@
-+Amlogic NAND Flash Controller (NFC) for GXBB/GXL/AXG family SoCs
-+
-+This file documents the properties in addition to those available in
-+the MTD NAND bindings.
-+
-+Required properties:
-+- compatible : contains one of:
-+  - "amlogic,meson-gxl-nfc"
-+  - "amlogic,meson-axg-nfc"
-+- clocks     :
-+	A list of phandle + clock-specifier pairs for the clocks listed
-+	in clock-names.
-+
-+- clock-names: Should contain the following:
-+	"core" - NFC module gate clock
-+	"device" - device clock from eMMC sub clock controller
-+	"rx" - rx clock phase
-+	"tx" - tx clock phase
-+
-+- amlogic,mmc-syscon	: Required for NAND clocks, it's shared with SD/eMMC
-+				controller port C
-+
-+Optional children nodes:
-+Children nodes represent the available nand chips.
-+
-+Other properties:
-+see Documentation/devicetree/bindings/mtd/nand.txt for generic bindings.
-+
-+Example demonstrate on AXG SoC:
-+
-+	sd_emmc_c_clkc: mmc@7000 {
-+		compatible = "amlogic,meson-axg-mmc-clkc", "syscon";
-+		reg = <0x0 0x7000 0x0 0x800>;
-+	};
-+
-+	nand-controller@7800 {
-+		compatible = "amlogic,meson-axg-nfc";
-+		reg = <0x0 0x7800 0x0 0x100>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+		interrupts = <GIC_SPI 34 IRQ_TYPE_EDGE_RISING>;
-+
-+		clocks = <&clkc CLKID_SD_EMMC_C>,
-+			<&sd_emmc_c_clkc CLKID_MMC_DIV>,
-+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_RX>,
-+			<&sd_emmc_c_clkc CLKID_MMC_PHASE_TX>;
-+		clock-names = "core", "device", "rx", "tx";
-+		amlogic,mmc-syscon = <&sd_emmc_c_clkc>;
-+
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&nand_pins>;
-+
-+		nand@0 {
-+			reg = <0>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			nand-on-flash-bbt;
-+		};
-+	};
--- 
-1.9.1
+On 2019/1/15 16:49, Miquel Raynal wrote:
+> Hi Jianxin,
+> 
+> Jianxin Pan <jianxin.pan@amlogic.com> wrote on Sun, 16 Dec 2018
+> 23:17:41 +0800:
+> 
+>> These two patches try to add initial NAND driver support for Amlogic Meson
+>> SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
+>>
+>> Changes since V6 at [8]
+>>  - fix bitflips checking for blank pages
+>>  - trace the latest commit with nand/next branch
+>>  - checking the return of meson_nand_op_get_dma_safe_*input/output*_buf
+>>  - add .detach_chip for free meson_nand.data_buf/info_buf
+>>
+> 
+> Can you send a v9 with the build failre (object_is_on_stack pb) fixed
+> and the Kconfig entry updated (the Meson common clock thing) as
+> suggested by Martin?
+I sent v9 just now, object_is_on_stack build fail is fixed and Kconfig is updated as Martin suggested.
+Thank you for your time.
+> 
+> 
+> Thanks,
+> Miquèl
+> 
+> .
+> 
