@@ -1,56 +1,36 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [RFC PATCH v4 12/13] irqchip: ti-sci-inta: Add support for
- Interrupt Aggregator driver
-Date: Tue, 15 Jan 2019 08:04:51 -0600
-Message-ID: <20190115140451.fnmvqm5kcfgt7rh2@kahuna>
-References: <20181227060829.5080-1-lokeshvutla@ti.com>
- <20181227061313.5451-1-lokeshvutla@ti.com>
- <20181227061313.5451-12-lokeshvutla@ti.com>
- <9efbb01b-2ef9-13e7-f871-8db2c92844ee@ti.com>
- <50da7038-9b1c-6910-2cf1-78fa98ddc3bd@ti.com>
- <ad43911d-78b2-6ed0-31c2-8361b5f4911f@ti.com>
+From: =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
+Subject: [PATCH shawn/for-next v4 1/2] dt-bindings: arm: Add Y Soft IOTA
+ Draco, Hydra and Ursa boards
+Date: Tue, 15 Jan 2019 14:22:44 +0000
+Message-ID: <1547562139-64730-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <ad43911d-78b2-6ed0-31c2-8361b5f4911f@ti.com>
+Content-Language: en-US
+Content-ID: <81378A1F400DB24585AA96296B7D9D59@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Tero Kristo <t-kristo@ti.com>
-Cc: Lokesh Vutla <lokeshvutla@ti.com>, Peter Ujfalusi <peter.ujfalusi@ti.com>, marc.zyngier@arm.com, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net, Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On 14:38-20190115, Tero Kristo wrote:
-[...]
-> 
-> The mentioned failure only happens with a specific .config. Not sure what is
-> the actual Kconfig that masks the failure though, but anyway it looks like
-> interrupt.h gets included via some indirect path with arm64 defconfig making
-> it pass.
-
-I am able to reproduce the build fail as well:
-.config: -> Notice that all v8 arch other than K3 is disabled, expert
-mode is enabled and few ancillary "optimization" of config
-	  https://pastebin.ubuntu.com/p/w5t9Wvp2jJ/
-Here is what I did:
- git checkout next-20190115
- wget -O inta.mbox https://lore.kernel.org/patchwork/series/377815/mbox/
- git am inta.mbox
- I put the above .config as my .config
- make oldconfig
- make drivers/irqchip/irq-ti-sci-inta.o
-
-I got the exact failure as well..
- https://pastebin.ubuntu.com/p/JzFXGz7Gh9/
-
-I agree with peter than this should be fixed. randconfig would have
-caught this anyways.. I did'nt bother looking further in the config to
-figure out why the side effect, but glad it got caught early enough.
-
-Thanks Peter.
-
-Lokesh, I know you are out this week, will appreciate if you could post
-a v5 once you are back?
-
--- 
-Regards,
-Nishanth Menon
+VGhlc2UgYXJlIGkuTVg2RHVhbExpdGUvU29sbyBiYXNlZCBzaW5nbGUgYm9hcmQgY29tcHV0ZXJz
+IHVzZWQNCmluIHZhcmlvdXMgWSBTb2Z0IHByb2R1Y3RzLg0KDQpDYzogQW5kcmV3IEx1bm4gPGFu
+ZHJld0BsdW5uLmNoPg0KU2lnbmVkLW9mZi1ieTogTWljaGFsIFZva8OhxI0gPG1pY2hhbC52b2th
+Y0B5c29mdC5jb20+DQotLS0NCkNoYW5nZXMgc2luY2UgdjI6DQogLSBOZXcgcGF0Y2gNCg0KIERv
+Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwgfCAzICsrKw0KIDEg
+ZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCg0KZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnNsLnlhbWwgYi9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvYXJtL2ZzbC55YW1sDQppbmRleCBhNGQ2MjVkLi5iMzkwOGEwIDEwMDY0
+NA0KLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0K
+KysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mc2wueWFtbA0KQEAg
+LTk0LDYgKzk0LDkgQEAgcHJvcGVydGllczoNCiAgICAgICAgICAgICAgIC0gZnNsLGlteDZkbC1z
+YWJyZXNkICAgICAgICAjIGkuTVg2IER1YWxMaXRlIFNBQlJFIFNtYXJ0IERldmljZSBCb2FyZA0K
+ICAgICAgICAgICAgICAgLSB0ZWNobm9sb2dpYyxpbXg2ZGwtdHM0OTAwDQogICAgICAgICAgICAg
+ICAtIHRlY2hub2xvZ2ljLGlteDZkbC10czc5NzANCisgICAgICAgICAgICAgIC0geXNvZnQsaW14
+NmRsLXlhcHA0LWRyYWNvICAjIGkuTVg2IER1YWxMaXRlIFkgU29mdCBJT1RBIERyYWNvIGJvYXJk
+DQorICAgICAgICAgICAgICAtIHlzb2Z0LGlteDZkbC15YXBwNC1oeWRyYSAgIyBpLk1YNiBEdWFs
+TGl0ZSBZIFNvZnQgSU9UQSBIeWRyYSBib2FyZA0KKyAgICAgICAgICAgICAgLSB5c29mdCxpbXg2
+ZGwteWFwcDQtdXJzYSAgICMgaS5NWDYgU29sbyBZIFNvZnQgSU9UQSBVcnNhIGJvYXJkDQogICAg
+ICAgICAgIC0gY29uc3Q6IGZzbCxpbXg2ZGwNCiANCiAgICAgICAtIGRlc2NyaXB0aW9uOiBpLk1Y
+NlNMIGJhc2VkIEJvYXJkcw0KLS0gDQoyLjEuNA0KDQo=
