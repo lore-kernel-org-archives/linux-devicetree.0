@@ -1,51 +1,59 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH v2 3/4] usb: musb: Kconfig: Drop dependency on
- MACH_JZ4740 for jz4740
-Date: Tue, 15 Jan 2019 10:26:03 -0600
-Message-ID: <20190115162603.GB18026@uda0271908>
-References: <20190110133700.4471-1-paul@crapouillou.net>
- <20190110133700.4471-3-paul@crapouillou.net>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Tue, 15 Jan 2019 21:57:04 +0530
+Message-ID: <5724d2d4-39df-a923-5f94-b53c40a84fd3@codeaurora.org>
+References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <a13ad49d3ae8d9a5a972027283b7212ab19f97d0.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <20190113072319.GB28907@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110133700.4471-3-paul@crapouillou.net>
+In-Reply-To: <20190113072319.GB28907@builder>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Paul,
+Hi Bjorn,
 
-On Thu, Jan 10, 2019 at 10:36:59AM -0300, Paul Cercueil wrote:
-> Depending on MACH_INGENIC prevent us from creating a generic kernel that
+Thanks for the review. Please find my comments inline.
 
-Again, did you mean MACH_JZ4740 instead?
+On 1/13/2019 12:53 PM, Bjorn Andersson wrote:
+> On Wed 09 Jan 09:46 PST 2019, Sai Prakash Ranjan wrote:
+> 
+>> Add coresight components found on Qualcomm SDM845 SoC.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
+> Hi Sai,
+> 
+> The content of this patch looks good, but please fold it into
+> sdm845.dtsi (keep the nodes sorted by address).
+> 
 
-> works on more than one MIPS board. Instead, we just depend on MIPS being
-> set.
+I had looked at the sample from hi6220 for coresight and
+decided to keep sdm845 coresight dtsi in separate file as it
+would look much cleaner than mixing it with main dtsi file.
+Also I guess it would make coresight topology more understandable
+if we keep it separately (plus there are about 400+ lines of coresight
+dt entries). Is there any reason for wanting coresight entries merged
+into sdm845.dtsi file? If you still prefer it, I can make the
+change in the next version.
+
+> And mention below the --- that this depends on my AMBA bus pclk change
+> and include the URL:
 > 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+> https://lore.kernel.org/lkml/20190106080915.4493-7-bjorn.andersson@linaro.org/
 > 
-> v2: Remove info about adding COMPILE_TEST in commit message, as it was
->     there before
-> 
->  drivers/usb/musb/Kconfig | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
-> index ad08895e78f9..6f5b0ed6a507 100644
-> --- a/drivers/usb/musb/Kconfig
-> +++ b/drivers/usb/musb/Kconfig
-> @@ -111,7 +111,7 @@ config USB_MUSB_UX500
->  config USB_MUSB_JZ4740
->  	tristate "JZ4740"
->  	depends on NOP_USB_XCEIV
-> -	depends on MACH_JZ4740 || COMPILE_TEST
-> +	depends on MIPS || COMPILE_TEST
->  	depends on USB_MUSB_GADGET
->  	depends on USB_OTG_BLACKLIST_HUB
-  
-Regards,
--Bin.
+
+I had mentioned this dependency in the cover letter. But I suppose
+I can mention it here as well.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
