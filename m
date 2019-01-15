@@ -1,55 +1,101 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Add system reset controller
-Date: Tue, 15 Jan 2019 12:51:57 +0100
-Message-ID: <1547553117.4339.8.camel@pengutronix.de>
-References: <20190115114641.GA15870@bogon.m.sigxcpu.org>
+From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
+Subject: [PATCH v8 0/5] spi: spi-mem: Add driver for NXP FlexSPI controller
+Date: Tue, 15 Jan 2019 12:00:09 +0000
+Message-ID: <1547553487-9936-1-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190115114641.GA15870@bogon.m.sigxcpu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "frieder.schrempf@kontron.de" <frieder.schrempf@kontron.de>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QW0gRGllbnN0YWcsIGRlbiAxNS4wMS4yMDE5LCAxMjo0NiArMDEwMCBzY2hyaWViIEd1aWRvIEfD
-vG50aGVyOgo+IFdlIGNhbiByZXVzZSB0aGUgc3JjIGZyb20gZnNsLGlteDUxLXNyYyBhcyB3aXRo
-IG90aGVyIGlteCBTT0NzLgoKVGhhdCdzIG5vdCB0cnVlLiBUaGUgU1JDIGlzIHNpZ25pZmljYW50
-bHkgZGlmZmVyZW50IGZyb20gdGhlIGkuTVg1MQpvbmUuIFNlZSBzZXJpZXMgIltQQVRDSCB2NCAw
-LzNdIFJlc2V0IGNvbnRyb2xsZXIgc3VwcG9ydCBmb3IgaS5NWDhNUSIuCgpXZSBnZW5lcmFsbHkg
-ZG9uJ3QgYWRkIHRoZSBEVCBub2RlcyB1bnRpbCBhdCBsZWFzdCB0aGUgYmluZGluZywgYmV0dGVy
-CnlldCB0aGUgZnVsbCBkcml2ZXIsIGlzIHVwc3RyZWFtLgoKUmVnYXJkcywKTHVjYXMKCj4gCj4g
-PiBTaWduZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNpZ3hjcHUub3JnPgo+IC0tLQo+
-IEknbSBtb3N0bHkgaW50ZXJlc3RlZCBpbiB0aGUgc3lzY29uIHBhcnQgdG8gYmUgYWJsZSB0byB1
-c2UgcmVnbWFwIGZvcgo+IE1JUEkgRFNJIGhlcmUuCj4gCj4gUGF0Y2ggaXMgYWdhaW5zdCBuZXh0
-LTIwMTkwMTE0IHBsdXMgTHVjYXMgImFybTY0OiBkdHM6IGlteDhtcTogbW92ZQo+IHdhdGNoZG9n
-IG5vZGVzIHRvIGNvcnJlY3QgbG9jYXRpb24iIGJ1dCBhbHNvIGFwcGxpZXMgdG8KPiAKPiDCoMKg
-wqDCoGh0dHBzOi8vZ2l0Lmtlcm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3NoYXdu
-Z3VvL2xpbnV4LmdpdC9sb2cvP2g9aW14L2R0NjQKPiAKPiBJdCB3aWxsIGNvbmZsaWN0IHdpdGgg
-ImFybTY0OiBkdHM6IGlteDhtcTogYWRkIEdQQyBwb3dlciBkb21haW5zIiB3aGljaAo+IGlzIG5v
-dCB5ZXQgaW4gYW55IHRyZWUgSSd2ZSBzZWVuLgo+IAo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9m
-cmVlc2NhbGUvaW14OG1xLmR0c2kgfCA3ICsrKysrKysKPiDCoDEgZmlsZSBjaGFuZ2VkLCA3IGlu
-c2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2Nh
-bGUvaW14OG1xLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9pbXg4bXEuZHRz
-aQo+IGluZGV4IDAyMjVlYWUyMjE2ZS4uN2IxZTBiZGJkOTMyIDEwMDY0NAo+IC0tLSBhL2FyY2gv
-YXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gKysrIGIvYXJjaC9hcm02NC9i
-b290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBAQCAtMjUyLDYgKzI1MiwxMyBAQAo+ID4g
-wqAJCQkJwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoCJjbGtfZXh0MSIsICJjbGtfZXh0MiIs
-Cj4gPiDCoAkJCQnCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgImNsa19leHQzIiwgImNsa19l
-eHQ0IjsKPiA+IMKgCQkJfTsKPiArCj4gPiA+ICsJCQlzcmM6IHNyY0AzMDM5MDAwMCB7Cj4gPiAr
-CQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1zcmMiLCAiZnNsLGlteDUxLXNyYyIsICJzeXNj
-b24iOwo+ID4gKwkJCQlyZWcgPSA8MHgzMDM5MDAwMCAweDEwMDAwPjsKPiA+ICsJCQkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDg5IElSUV9UWVBFX0xFVkVMX0hJR0g+Owo+ID4gKwkJCQkjcmVzZXQt
-Y2VsbHMgPSA8MT47Cj4gPiArCQkJfTsKPiA+IMKgCQl9Owo+IMKgCj4gPiDCoAkJYnVzQDMwNDAw
-MDAwIHsgLyogQUlQUzIgKi8KCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxA
-bGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xp
-c3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+- Add driver for NXP FlexSPI host controller
+
+ FlexSPI is a flexsible SPI host controller [1], Chapter 30 page 1475,
+ which supports two SPI channels and up to 4 external devices.
+ Each channel supports Single/Dual/Quad/Octal mode data transfer (1/2/4/8 bidirectional data lines)
+ i.e. FlexSPI acts as an interface to external devices, maximum 4, each with up to 8
+ bidirectional data lines.
+
+- Tested this driver with mtd_debug(Erase/Write/Read) utility and JFFS2
+ filesystem mounting and booting on NXP LX2160ARDB[2] and LX2160AQDS targets.
+ LX2160ARDB is having two NOR slave device connected on single bus A
+ i.e. A0 and A1 (CS0 and CS1).
+ LX2160AQDS is having two NOR slave device connected on separate buses
+ one flash on A0 and second on B1 i.e. (CS0 and CS3).
+ Verified this driver on following SPI NOR flashes:
+   Micron, mt35xu512aba, [Read - 1 bit mode]
+   Cypress, s25fl512s, [Read - 1/2/4 bit mode]
+
+[1] https://www.nxp.com/docs/en/reference-manual/IMXRT1050RM.pdf
+[2] https://patchwork.kernel.org/project/linux-arm-kernel/list/?submitter=182097
+
+Yogesh Narayan Gaur (5):
+  spi: spi-mem: Add driver for NXP FlexSPI controller
+  dt-bindings: spi: add binding file for NXP FlexSPI controller
+  arm64: dts: lx2160a: add FlexSPI node property
+  arm64: defconfig: enable NXP FlexSPI driver
+  MAINTAINERS: add maintainers for the NXP FlexSPI driver
+
+Changes for v8:
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'
+- Update MAINTAINERS file
+Changes for v7:
+- Rebase on top of SPI tree
+  https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git/
+  branch: for-next
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+Changes for v6:
+- Rebase on top of v5.0-rc1.
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+- Updated s-b tag in all patches.
+Changes for v5:
+- Rebase on top of v4.20-rc2
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+Changes for v4:
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+- Incorporated binding file review comments.
+Changes for v3:
+- Incorporated review comments for
+  patch 'spi: spi-mem: Add driver for NXP FlexSPI controller'.
+Changes for v2:
+- Incorporated Boris review comments and drop below patches as per the comments.
+ - Patch 'spi: add slave device size in spi_device struct'
+ - Patch 'spi: add flags for octal I/O data transfer'
+- Incorporated DTS and Binding file review comments of Shawn Guo and Rob Herring.
+
+ .../devicetree/bindings/spi/spi-nxp-fspi.txt  |   39 +
+ MAINTAINERS                                   |    8 +
+ .../boot/dts/freescale/fsl-lx2160a-rdb.dts    |   22 +
+ .../arm64/boot/dts/freescale/fsl-lx2160a.dtsi |   13 +
+ arch/arm64/configs/defconfig                  |    1 +
+ drivers/spi/Kconfig                           |   10 +
+ drivers/spi/Makefile                          |    1 +
+ drivers/spi/spi-nxp-fspi.c                    | 1105 +++++++++++++++++
+ 8 files changed, 1199 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/spi/spi-nxp-fspi.txt
+ create mode 100644 drivers/spi/spi-nxp-fspi.c
+
+-- 
+2.17.1
+
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
