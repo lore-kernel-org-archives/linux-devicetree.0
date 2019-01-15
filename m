@@ -1,104 +1,40 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v2 3/4] usb: musb: Extract set toggle as a separate
- interface
-Date: Tue, 15 Jan 2019 16:19:42 +0100
-Message-ID: <a4e71c59-8e25-b3e9-797f-46d918121dd4@gmail.com>
-References: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
- <1547516626-5084-4-git-send-email-min.guo@mediatek.com>
+From: Schrempf Frieder <frieder.schrempf@kontron.de>
+Subject: Re: [PATCH v8 5/7] ARM: dts: ls1021a: Remove fsl,qspi-has-second-chip
+ as it is not used
+Date: Tue, 15 Jan 2019 15:24:01 +0000
+Message-ID: <7ffa6d92-3fdd-f838-ab6d-185ea5f1c103@kontron.de>
+References: <20190107092823.11188-1-frieder.schrempf@kontron.de>
+ <20190107092823.11188-6-frieder.schrempf@kontron.de>
+ <20190113033117.GG11426@dragon>
+ <ee3eb5d5-4b04-002e-5e49-d4b766138ec5@kontron.de>
+ <20190115151818.GD13895@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547516626-5084-4-git-send-email-min.guo@mediatek.com>
+In-Reply-To: <20190115151818.GD13895@dragon>
 Content-Language: en-US
+Content-ID: <A70D2C538BB6254E8E263CC9273AD2A0@snt-world.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: min.guo@mediatek.com, Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "broonie@kernel.org" <broonie@kernel.org>, Li Yang <leoyang.li@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "dwmw2@infradead.org" <dwmw2@infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "richard@nod.at" <richard@nod.at>, "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>, "david.wolfe@nxp.com" <david.wolfe@nxp.com>, "fabio.estevam@nxp.com" <fabio.estevam@nxp.com>, "prabhakar.kushwaha@nxp.com" <prabhakar.kushwaha@nxp.com>, "yogeshnarayan.gaur@nxp.com" <yogeshnarayan.gaur@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 15/01/2019 02:43, min.guo@mediatek.com wrote:
-> From: Min Guo <min.guo@mediatek.com>
-> 
-> Add a common interface for set data toggle
-> 
-> Signed-off-by: Min Guo <min.guo@mediatek.com>
-> ---
->  drivers/usb/musb/musb_host.c | 37 +++++++++++++++++++++++--------------
->  1 file changed, 23 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-> index b59ce9a..16d0ba4 100644
-> --- a/drivers/usb/musb/musb_host.c
-> +++ b/drivers/usb/musb/musb_host.c
-> @@ -306,6 +306,25 @@ static inline void musb_save_toggle(struct musb_qh *qh, int is_in,
->  	usb_settoggle(urb->dev, qh->epnum, !is_in, csr ? 1 : 0);
->  }
->  
-> +static inline u16 musb_set_toggle(struct musb_qh *qh, int is_in,
-> +	struct urb *urb)
-> +{
-> +	u16 csr = 0;
-> +	u16 toggle = 0;
-> +
-> +	toggle = usb_gettoggle(urb->dev, qh->epnum, !is_in);
-> +
-> +	if (is_in)
-> +		csr = toggle ? (MUSB_RXCSR_H_WR_DATATOGGLE
-> +				| MUSB_RXCSR_H_DATATOGGLE) : 0;
-> +	else
-> +		csr = toggle ? (MUSB_TXCSR_H_WR_DATATOGGLE
-> +				| MUSB_TXCSR_H_DATATOGGLE)
-> +				: MUSB_TXCSR_CLRDATATOG;
-
-Can we switch the if and use is_out logic as function parameter. This would make
-the code easier to understand.
-
-Regards,
-Matthias
-
-> +
-> +	return csr;
-> +}
-> +
->  /*
->   * Advance this hardware endpoint's queue, completing the specified URB and
->   * advancing to either the next URB queued to that qh, or else invalidating
-> @@ -772,13 +791,8 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
->  					);
->  			csr |= MUSB_TXCSR_MODE;
->  
-> -			if (!hw_ep->tx_double_buffered) {
-> -				if (usb_gettoggle(urb->dev, qh->epnum, 1))
-> -					csr |= MUSB_TXCSR_H_WR_DATATOGGLE
-> -						| MUSB_TXCSR_H_DATATOGGLE;
-> -				else
-> -					csr |= MUSB_TXCSR_CLRDATATOG;
-> -			}
-> +			if (!hw_ep->tx_double_buffered)
-> +				csr |= musb_set_toggle(qh, !is_out, urb);
->  
->  			musb_writew(epio, MUSB_TXCSR, csr);
->  			/* REVISIT may need to clear FLUSHFIFO ... */
-> @@ -860,17 +874,12 @@ static void musb_ep_program(struct musb *musb, u8 epnum,
->  
->  	/* IN/receive */
->  	} else {
-> -		u16	csr;
-> +		u16 csr = 0;
->  
->  		if (hw_ep->rx_reinit) {
->  			musb_rx_reinit(musb, qh, epnum);
-> +			csr |= musb_set_toggle(qh, !is_out, urb);
->  
-> -			/* init new state: toggle and NYET, maybe DMA later */
-> -			if (usb_gettoggle(urb->dev, qh->epnum, 0))
-> -				csr = MUSB_RXCSR_H_WR_DATATOGGLE
-> -					| MUSB_RXCSR_H_DATATOGGLE;
-> -			else
-> -				csr = 0;
->  			if (qh->type == USB_ENDPOINT_XFER_INT)
->  				csr |= MUSB_RXCSR_DISNYET;
->  
-> 
+T24gMTUuMDEuMTkgMTY6MTgsIFNoYXduIEd1byB3cm90ZToNCj4gT24gTW9uLCBKYW4gMTQsIDIw
+MTkgYXQgMDg6MTg6NDlBTSArMDAwMCwgU2NocmVtcGYgRnJpZWRlciB3cm90ZToNCj4+IEhpIFNo
+YXduLA0KPj4NCj4+IE9uIDEzLjAxLjE5IDA0OjMxLCBTaGF3biBHdW8gd3JvdGU6DQo+Pj4gT24g
+TW9uLCBKYW4gMDcsIDIwMTkgYXQgMDk6Mjk6NTRBTSArMDAwMCwgU2NocmVtcGYgRnJpZWRlciB3
+cm90ZToNCj4+Pj4gRnJvbTogRnJpZWRlciBTY2hyZW1wZiA8ZnJpZWRlci5zY2hyZW1wZkBrb250
+cm9uLmRlPg0KPj4+Pg0KPj4+PiBBZnRlciBzd2l0Y2hpbmcgdG8gdGhlIG5ldyBGU0wgUVNQSSBk
+cml2ZXIgdGhlIHByb3BlcnR5DQo+Pj4+ICdmc2wscXNwaS1oYXMtc2Vjb25kLWNoaXAnIGlzIG5v
+dCBuZWVkZWQgYW55bW9yZS4NCj4+Pj4NCj4+Pj4gVGhlIGRyaXZlciBub3cgdXNlcyB0aGUgJ3Jl
+ZycgcHJvcGVydHkgdG8gZGV0ZXJtaW5lIHRoZSBidXMgYW5kDQo+Pj4+IHRoZSBjaGlwc2VsZWN0
+Lg0KPj4+Pg0KPj4+PiBTaWduZWQtb2ZmLWJ5OiBGcmllZGVyIFNjaHJlbXBmIDxmcmllZGVyLnNj
+aHJlbXBmQGtvbnRyb24uZGU+DQo+Pj4NCj4+PiBBcHBsaWVkLCB0aGFua3MuDQo+Pg0KPj4gSSBq
+dXN0IG5vdGljZWQsIHRoYXQgdGhpcyBhbmQgdGhlIGFybTY0IHBhdGNoIGRlcGVuZCBvbiB0aGUg
+ZHJpdmVyDQo+PiBjaGFuZ2VzIGZvciA1LjEgdGhhdCBnbyB0aHJvdWdoIHRoZSBTUEkgdHJlZS4g
+U28gSSBndWVzcyB3ZSBjYW4ndCBiZQ0KPj4gc3VyZSB0aGF0IHRoaXMgd2lsbCBiZSBtZXJnZWQg
+aW4gdGhlIHJpZ2h0IG9yZGVyIGFuZCB3ZSBuZWVkIHRvIGRlbGF5DQo+PiB0aGlzIGNsZWFudXAg
+dG8gNS4yLCBvciBhbSBJIHdyb25nPw0KPiANCj4gWW91IGFyZSByaWdodC4gIEkganVzdCBkcm9w
+cGVkIHRoZSBib3RoIHBhdGNoZXMuICBQaW5nIG1lIG9yIHJlc2VuZCB3aGVuDQo+IHRoZXkgYXJl
+IHJlYWR5IHRvIGdvLg0KDQpUaGFua3MsIHdpbGwgZG8gc28uDQoNCkZyaWVkZXI=
