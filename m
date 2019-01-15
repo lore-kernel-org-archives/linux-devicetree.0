@@ -1,13 +1,16 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [SPAM][PATCH v2 0/4] Add MediaTek MUSB Controller Driver
-Date: Tue, 15 Jan 2019 13:18:44 +0800
-Message-ID: <1547529524.13961.2.camel@mtkswgap22>
-References: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
+From: =?UTF-8?Q?Rafa=C5=82_Mi=C5=82ecki?= <rafal@milecki.pl>
+Subject: Re: [PATCH] ARM: dts: BCM53573: Relicense Luxul files to the GPL 2.0+
+ / MIT
+Date: Tue, 15 Jan 2019 07:10:45 +0100
+Message-ID: <b72a3624209f93f9ceb363b886a88f79@milecki.pl>
+References: <1543795215-31863-1-git-send-email-dan.haab@luxul.com>
+ <1abbf738f6ac9808310e27a43f430cc9@milecki.pl>
+ <158e0161-0d94-54a9-3851-9a3e65e85b77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"; Format="flowed"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
+In-Reply-To: <158e0161-0d94-54a9-3851-9a3e65e85b77@gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -17,63 +20,25 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: min.guo@mediatek.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, chunfeng.yun@mediatek.com, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, Bin Liu <b-liu@ti.com>, linux-arm-kernel@lists.infradead.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Dan Haab <riproute@gmail.com>, Rob Herring <robh+dt@kernel.org>, Dan Haab <dan.haab@luxul.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-01-15 at 09:43 +0800, min.guo@mediatek.com wrote:
-> From: Min Guo <min.guo@mediatek.com>
-> 
-> These patches introduce the MediaTek MUSB controller driver.
-> 
-> The driver can be configured as Dual-Role Device (DRD),
-> Peripheral Only and Host Only modes. This has beed tested on
-> MT2701 with a variety of devices in host mode and with the 
-> f_mass gadget driver in peripheral mode, plugging otg cables
-> in/out a lot of times in all possible imaginable plug orders.
-> 
-> changes in v2:
-> changes of dt-bindings suggested by Rob and Bin:
-> 1. Modify DRC to DRD
-> 2. Drop the "<soc-model>-musb" in compatible
-> 3. Remove phy-names
-> 4. Add space after comma in clock-names
-> dtsi:
-> 1. Remove phy-names
-> changes of driver suggested by Bin:
-> 1. Add a new patch for musb_set_toggle
-> 2. Add summarize of MediaTek musb controller differences in the commit log
-> 3. Abondon patch "usb: musb: Move musbhsdma macro definition to musb_dma.h"
-> 4. Add "|| COMPILE_TEST" in Kconfig
-> 5. Add musb_clearb() and musb_clearw() hooks
-> 6. Add get_toggle() and set_toggle() hooks
-> 7. Replace musb_readl() with musb_readw() to read 16bit toggle register
-> 8. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
-> 9. Create musbhs_dma_controller_create_noirq()
-> 
-> Min Guo (4):
->   dt-bindings: usb: musb: Add support for MediaTek musb controller
->   arm: dts: mt2701: Add usb2 device nodes
->   usb: musb: Extract set toggle as a separate interface
->   usb: musb: Add support for MediaTek musb controller
-> 
->  .../devicetree/bindings/usb/mediatek,musb.txt      |  43 ++
->  arch/arm/boot/dts/mt2701-evb.dts                   |  21 +
->  arch/arm/boot/dts/mt2701.dtsi                      |  33 ++
->  drivers/usb/musb/Kconfig                           |   8 +-
->  drivers/usb/musb/Makefile                          |   1 +
->  drivers/usb/musb/mediatek.c                        | 617 +++++++++++++++++++++
->  drivers/usb/musb/musb_core.c                       |  69 +++
->  drivers/usb/musb/musb_core.h                       |   9 +
->  drivers/usb/musb/musb_dma.h                        |   9 +
->  drivers/usb/musb/musb_host.c                       |  35 +-
->  drivers/usb/musb/musb_io.h                         |   6 +
->  drivers/usb/musb/musbhsdma.c                       |  55 +-
->  12 files changed, 868 insertions(+), 38 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
->  create mode 100644 drivers/usb/musb/mediatek.c
-> 
-
-I tried the series on my mt7623
-
-Tested-by: Ryder Lee <ryder.lee@mediatek.com>
+T24gMjAxOS0wMS0xNCAxOToyNiwgRmxvcmlhbiBGYWluZWxsaSB3cm90ZToKPiBPbiAxLzEzLzE5
+IDExOjE1IFBNLCBSYWZhxYIgTWnFgmVja2kgd3JvdGU6Cj4+IE9uIDIwMTgtMTItMDMgMDE6MDAs
+IERhbiBIYWFiIHdyb3RlOgo+Pj4gVGhpcyBtYXRjaGVzIGxpY2Vuc2luZyB1c2VkIGJ5IG90aGVy
+IEJDTTUzNTczIGZpbGVzIGFuZCBCQ001MzAxWC4KPj4+IAo+Pj4gU2lnbmVkLW9mZi1ieTogRGFu
+IEhhYWIgPGRhbi5oYWFiQGx1eHVsLmNvbT4KPj4gCj4+IEFja2VkLWJ5OiBSYWZhxYIgTWnFgmVj
+a2kgPHJhZmFsQG1pbGVja2kucGw+Cj4+IAo+PiBGbG9yaWFuOiBwaW5nIDopCj4gCj4gSWYgYmNt
+LWtlcm5lbC1mZWVkYmFjay1saXN0QGJyb2FkY29tLmNvbSBpcyBub3QgY29waWVkLCB0aGVuIG91
+cgo+IHBhdGNod29yayBpbnN0YW5jZSBkb2VzIG5vdCBwaWNrIHVwIHRoYXQgcGF0Y2gsIGFuZCB0
+aGVyZSBpcyBhIHJlbW90ZQo+IGNoYW5jZSB0aGluZ3MgY2FuIGdldCBsb3N0Li4uIE5vdCB0cnlp
+bmcgdG8gdXNlIHRoYXQgYXMgYW4gZXhjdXNlIGZvcgo+IG5vdCBoYXZpbmcgc2VlbiB0aGlzLCBi
+dXQgcGxlYXNlIG1ha2Ugc3VyZSB5b3UgY29weSB0aGF0IGxpc3QgdG8KPiBtYXhpbWl6ZSB0aGUg
+bGlrZWxpaG9vZCBvZiBnZXR0aW5nIHBhdGNoZXMgYWNjZXB0ZWQuCgpQZXJoYXBzIHdlIHNob3Vs
+ZCBhZGQgYmNtLWtlcm5lbC1mZWVkYmFjay1saXN0QCB0byB0aGUKQlJPQURDT00gQkNNNTM1NzMg
+QVJNIEFSQ0hJVEVDVFVSRQplbnRyeSBpbiBNQUlOVEFJTkVSUz8gV291bGQgeW91IG1pbmQgaGFu
+ZGxpbmcgdGhhdD8KCj4gTm93IGFwcGxpZWQsIHRoYW5rcyEKClRoYW5rcyEKCl9fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
+bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
+dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
