@@ -1,48 +1,49 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH v8 0/2] mtd: rawnand: meson: add Amlogic NAND driver
- support
-Date: Tue, 15 Jan 2019 23:44:08 +0800
-Message-ID: <18ad7184-3bbe-4bd1-826a-fce5d31c215c@amlogic.com>
-References: <1544973463-59523-1-git-send-email-jianxin.pan@amlogic.com>
- <20190115094911.75f4edc9@xps13>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64: Fix a typo
+Date: Tue, 15 Jan 2019 10:52:28 +0100
+Message-ID: <20190115095228.kwhgtumqcechpr5j@flea>
+References: <20190113161413.14654-1-j.neuschaefer@gmx.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="mochvrg5c7cnhkly"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115094911.75f4edc9@xps13>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190113161413.14654-1-j.neuschaefer@gmx.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.o
+To: Jonathan =?utf-8?Q?Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>
+Cc: linux-arm-kernel@lists.infradead.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
 
-On 2019/1/15 16:49, Miquel Raynal wrote:
-> Hi Jianxin,
-> 
-> Jianxin Pan <jianxin.pan@amlogic.com> wrote on Sun, 16 Dec 2018
-> 23:17:41 +0800:
-> 
->> These two patches try to add initial NAND driver support for Amlogic Meson
->> SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
->>
->> Changes since V6 at [8]
->>  - fix bitflips checking for blank pages
->>  - trace the latest commit with nand/next branch
->>  - checking the return of meson_nand_op_get_dma_safe_*input/output*_buf
->>  - add .detach_chip for free meson_nand.data_buf/info_buf
->>
-> 
-> Can you send a v9 with the build failre (object_is_on_stack pb) fixed
-> and the Kconfig entry updated (the Meson common clock thing) as
-> suggested by Martin?
-I sent v9 just now, object_is_on_stack build fail is fixed and Kconfig is updated as Martin suggested.
-Thank you for your time.
-> 
-> 
-> Thanks,
-> Miquèl
-> 
-> .
-> 
+--mochvrg5c7cnhkly
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Sun, Jan 13, 2019 at 05:14:13PM +0100, Jonathan Neusch=E4fer wrote:
+> This typo inverted the meaning of the comment, but the rest of the
+> comment and the code reveal that the regulator in question needs to be
+> on at all times.
+>=20
+> Signed-off-by: Jonathan Neusch=E4fer <j.neuschaefer@gmx.net>
+
+Applied, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--mochvrg5c7cnhkly
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXD2tXAAKCRDj7w1vZxhR
+xfD7AP4qywnKHNgiMVKQgQm9Unl856D2G5YayGFo46hzFw/4MQEA23fYuGlEoHwa
+xCIReP3XHYr04DGgK/uAsJW/1WkT9Qg=
+=kEiC
+-----END PGP SIGNATURE-----
+
+--mochvrg5c7cnhkly--
