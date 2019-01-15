@@ -1,31 +1,51 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 2/2] dt-bindings: iio: chemical: Add bindings for
- bme680
-Date: Tue, 15 Jan 2019 14:28:02 -0600
-Message-ID: <20190115202802.GA26149@bogus>
-References: <20190114201914.24572-1-sebastien.bourdelin@gmail.com>
- <20190114201914.24572-2-sebastien.bourdelin@gmail.com>
+Subject: Re: [PATCH V2 2/2] Input: rotaty-encoder - Add DT binding document
+Date: Tue, 15 Jan 2019 14:29:48 -0600
+Message-ID: <20190115202948.GA26482@bogus>
+References: <20190107164249.2342-1-nazgul33@gmail.com>
+ <20190107164249.2342-3-nazgul33@gmail.com>
+ <20190115035221.GA151157@dtor-ws>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190114201914.24572-2-sebastien.bourdelin@gmail.com>
+In-Reply-To: <20190115035221.GA151157@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de, jic23@kernel.org, Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Donghoon Han <nazgul33@gmail.com>, linux-input@vger.kernel.org, Daniel Mack <daniel@caiaq.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jan 2019 15:19:14 -0500, Sebastien Bourdelin wrote:
-> BME680 is a pressure/temperature/humidity/voc sensor.
+On Mon, Jan 14, 2019 at 07:52:21PM -0800, Dmitry Torokhov wrote:
+> On Tue, Jan 08, 2019 at 01:42:49AM +0900, Donghoon Han wrote:
+> > Add DT binding document for rotary-encoder, keycode options.
+> > 
+> > Signed-off-by: Donghoon Han <nazgul33@gmail.com>
+> > Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> > Cc: Daniel Mack <daniel@caiaq.de>
+> > Cc: devicetree@vger.kernel.org
+> > To: linux-input@vger.kernel.org
+> > ---
+> >  .../devicetree/bindings/input/rotary-encoder.txt     | 12 ++++++++++++
+> >  1 file changed, 12 insertions(+)
+> > 
+> > diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> > index f99fe5cdeaec..9986ec2af2d4 100644
+> > --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> > +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> > @@ -12,6 +12,10 @@ Optional properties:
+> >  - rotary-encoder,relative-axis: register a relative axis rather than an
+> >    absolute one. Relative axis will only generate +1/-1 events on the input
+> >    device, hence no steps need to be passed.
+> > +- rotary-encoder,relative-keys : generate pair of key events. This setting
+> > +  behaves just like relative-axis, generating key events instead.
+> > +  (Keycodes[2] corresponds to -1/1 events.)
+> > +- rotary-encoder,relative-keycodes : keycodes for relative-keys
 > 
-> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
-> ---
-> v2 -> v3:
->   - change i2c address to 0x76 as it seems more reliable: Suggested by Himanshu Jha <himanshujha199640@gmail.com>
->   - rebase on master
-> ---
->  .../devicetree/bindings/iio/chemical/bme680.txt       | 11 +++++++++++
->  1 file changed, 11 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/chemical/bme680.txt
+> Given that keycodes are linux-specific, I think the property should be
+> linux,keycodes. Also, I am not sure we need separate
+> rotary-encoder,relative-keys property as we can infer that we want to
+> generate keys from presence of linux,keycodes property.
 > 
+> Rob, any comments?
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes, I had similar thoughts.
