@@ -1,60 +1,48 @@
-From: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
-Date: Mon, 14 Jan 2019 16:48:56 -0800
-Message-ID: <20190115004856.GL117329@dtor-ws>
-References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
- <20181214124701.GZ4497@dell>
+From: Brian Masney <masneyb@onstation.org>
+Subject: Re: [PATCH v4 03/14] pinctrl: qcom: spmi-gpio: hardcode IRQ counts
+Date: Mon, 14 Jan 2019 20:14:32 -0500
+Message-ID: <20190115011432.GA7900@basecamp>
+References: <20190113154716.5145-1-masneyb@onstation.org>
+ <20190113154716.5145-4-masneyb@onstation.org>
+ <20190115003428.GJ9278@minitux>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181214124701.GZ4497@dell>
+In-Reply-To: <20190115003428.GJ9278@minitux>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: linus.walleij@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 14, 2018 at 12:47:01PM +0000, Lee Jones wrote:
-> On Fri, 30 Nov 2018, Pascal PAILLET-LME wrote:
+On Mon, Jan 14, 2019 at 04:34:28PM -0800, Bjorn Andersson wrote:
+> > -	npins = platform_irq_count(pdev);
+> > -	if (!npins)
+> > -		return -EINVAL;
+> > -	if (npins < 0)
+> > -		return npins;
+> > -
+> > -	BUG_ON(npins > ARRAY_SIZE(pmic_gpio_groups));
+> > +	npins = (u16)(uintptr_t) device_get_match_data(&pdev->dev);
 > 
-> > The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
-> > STMicroelectronics. 
-> > The STPMIC1 regulators supply power to an application processor as well as 
-> > to external system peripherals such as DDR, Flash memories and system
-> > devices. It also features onkey button input and an hardware watchdog.
-> > The STPMIC1 is controlled via I2C. 
-> > 
-> > Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
-> > irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
-> > as parent.
-> > 
-> > STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
-> > 
-> > Pascal Paillet (7):
-> > changes in v7:
-> > * rebase on regul/for-next
-> > 
-> >   dt-bindings: mfd: document stpmic1
-> >   mfd: stpmic1: add stpmic1 driver
-> >   dt-bindings: input: document stpmic1 pmic onkey
-> >   input: stpmic1: add stpmic1 onkey driver
-> >   dt-bindings: watchdog: document stpmic1 pmic watchdog
-> >   watchdog: stpmic1: add stpmic1 watchdog driver
-> >   regulator: stpmic1: fix regulator_lock usage
+> Why u16, afaict npins is an int? I'm pretty sure you can leave the last
+> cast as implicit and as it's not actually a pointer that we're acquiring
+> casting it to "unsigned long" is the idiomatic way.
 > 
-> Could you please remove any patches which have been applied and
-> [RESEND]?
+> Apart from this the change looks good.
 > 
-> Also, is Dmitry planning on Acking:
-> 
->   dt-bindings: input: document stpmic1 pmic onkey
-> 
-> ... or is Rob's Ack enough?
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-For bindings I normally defer to Rob (unless I see something that really
-bugs me and then I'll speak up).
+I can change it to this:
 
-Thanks.
+npins = (uintptr_t) device_get_match_data(&pdev->dev);
 
--- 
-Dmitry
+I'll send out V5 on Wednesday evening (GMT-5) to give time for any other
+reviews that may trickle in.
+
+Thanks Bjorn, Stephen, and Linus for the reviews. This was a fun task; I
+learned a lot working on it.
+
+I'll also convert SSBI based on this series.
+
+Brian
