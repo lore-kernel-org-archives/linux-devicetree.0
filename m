@@ -1,62 +1,37 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/4] spi: sprd: Add DMA mode support
-Date: Tue, 15 Jan 2019 14:30:42 +0000
-Message-ID: <20190115143042.GB5522@sirena.org.uk>
-References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
- <324f3106dbff2f28baae098b05219f1384fda97a.1547559542.git.baolin.wang@linaro.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH 0/3] arm64: ti: k3-am654: USB support
+Date: Tue, 15 Jan 2019 08:33:06 -0600
+Message-ID: <20190115143306.wub3y2c2zsq7byy5@kahuna>
+References: <1547200861-17795-1-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="9zSXsLTf0vkW971A"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <324f3106dbff2f28baae098b05219f1384fda97a.1547559542.git.baolin.wang@linaro.org>
+In-Reply-To: <1547200861-17795-1-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@unisoc.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>
+Cc: t-kristo@ti.com, nsekhar@ti.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 12:00-20190111, Roger Quadros wrote:
+> Hi,
+> 
+> The AM654 SoC supports 2 DWC3 USB controller instances. The
+> AM654 base board supports the 2nd (USB1) instance in high-speed.
+> 
+> This series enables support for USB1 instance on the AM654-base-board.
+> 
+> To test, you need to first apply the below 2 series.
+> 
+> AM654 USB2 PHY support https://lkml.org/lkml/2018/12/5/908
+> AM654 DWC3 support https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1896101.html
+> 
 
---9zSXsLTf0vkW971A
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Please clarify if these have hit linux-next yet (I dont see anything in
+the threads as to being picked up yet, may be I am wrong). Once they do hit
+linux-next, please rebase to Tero's latest tip and repost.
 
-On Tue, Jan 15, 2019 at 09:46:53PM +0800, Baolin Wang wrote:
-> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
->=20
-> Add DMA mode support for the Spreadtrum SPI controller, and we will enable
-> SPI interrupt to help to complete the SPI transfer work in DMA mode.
 
-Again this looks good, one thing to check though:
-
-> +static bool sprd_spi_can_dma(struct spi_controller *sctlr,
-> +			     struct spi_device *spi, struct spi_transfer *t)
-> +{
-> +	struct sprd_spi *ss =3D spi_controller_get_devdata(sctlr);
-> +
-> +	return ss->dma.enable;
-> +}
-
-Is it always a benefit to use DMA?  One reason this is a function rather
-than just a property is that even if the device can DMA any size of
-transfer often for short transfers the performance is better if you use
-PIO since the overhead of setting up the DMA controller, waiting and
-then taking the interrupt when it finishes ends up being more than the
-cost of just reading and writing directly to the FIFOs for PIO.
-
---9zSXsLTf0vkW971A
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlw97pEACgkQJNaLcl1U
-h9A9nAf+P9t2LyV+tEMCXlBQkjp0a/mBHna6R0+O2ldyqMIHvFWCYcTrED5sYgFq
-ijPCK+i2c5VdbhxEtOfSgyijaElF1E4GT5rqHMGpcBOsnGHvx0CbLYniyg1WE1xB
-nary/yQzFekPVbGunZnSQNcrIsgiKxBl5RuWhvzJH24X4uXNywQy0nr/ul3xgOcA
-jIOvRfmPOz3M7Rus9RdD+f7pJpIfsgskY58QTR8xid+DyIUH7f2PttbcsAKwSHfB
-Mq2EcAc9nDLP87ubjLGVc/E0JlSxeh5vunO5F/pmnJ1+2RPOvOBRXzYuexWG+uKN
-B0jSxQRAynE4YApO1KR6NUFk3DU/JQ==
-=1wSg
------END PGP SIGNATURE-----
-
---9zSXsLTf0vkW971A--
+-- 
+Regards,
+Nishanth Menon
