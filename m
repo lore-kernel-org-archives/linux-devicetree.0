@@ -1,65 +1,285 @@
-Return-Path: <SRS0=6fMI=PL=denx.de=marex@kernel.org>
-From: Marek Vasut <marex@denx.de>
-Subject: [PATCH V3 01/10] input: touchscreen: ili210x: Add DT binding document
-Date: Thu,  3 Jan 2019 02:29:29 +0100
-Message-Id: <20190103012938.7442-2-marex@denx.de>
-In-Reply-To: <20190103012938.7442-1-marex@denx.de>
-References: <20190103012938.7442-1-marex@denx.de>
+Return-Path: <SRS0=UCR+=PX=gmail.com=simon.k.r.goldschmidt@kernel.org>
+Subject: Re: [PATCH] ARM: dts: socfpga: update missing reset property
+ peripherals
+References: <20190115162049.743-1-dinguyen@kernel.org>
+From: Simon Goldschmidt <simon.k.r.goldschmidt@gmail.com>
+Message-ID: <d63c7dfc-3f79-8d2c-9e16-5992b16e7c60@gmail.com>
+Date: Tue, 15 Jan 2019 21:40:33 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: linux-input@vger.kernel.org
-Cc: Marek Vasut <marex@denx.de>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Henrik Rydberg <rydberg@bitmath.org>, Olivier Sobrie <olivier@sobrie.be>, Philipp Puschmann <pp@emlix.com>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org
+In-Reply-To: <20190115162049.743-1-dinguyen@kernel.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+To: Dinh Nguyen <dinguyen@kernel.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Add DT binding document for the Ilitek ILI210x and ILI251x
-touchscreen controllers.
+Am 15.01.2019 um 17:20 schrieb Dinh Nguyen:
+> Add reset property for gpio, i2c, sdmmc, nand, qspi, spi, uart, and
+> watchdog on base socfpga and socfpga_arria10.
+> 
+> Signed-off-by: Dinh Nguyen <dinguyen@kernel.org>
+> ---
+>   arch/arm/boot/dts/socfpga.dtsi         | 12 ++++++++++++
 
-Signed-off-by: Marek Vasut <marex@denx.de>
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: Henrik Rydberg <rydberg@bitmath.org>
-Cc: Olivier Sobrie <olivier@sobrie.be>
-Cc: Philipp Puschmann <pp@emlix.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org
-To: linux-input@vger.kernel.org
----
-V2: New patch
-V3: Replace touch@ with touchscreen@
----
- .../bindings/input/ilitek,ili2xxx.txt         | 25 +++++++++++++++++++
- 1 file changed, 25 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
+I have prepared a similar patch for U-Boot, where, in addition to the 
+things you added, I have added DMA_RESET, CAN0_RESET and CAN1_RESET.
 
-diff --git a/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-new file mode 100644
-index 000000000000..b2a76301e632
---- /dev/null
-+++ b/Documentation/devicetree/bindings/input/ilitek,ili2xxx.txt
-@@ -0,0 +1,25 @@
-+Ilitek ILI210x/ILI251x touchscreen controller
-+
-+Required properties:
-+- compatible:
-+    ilitek,ili210x for ILI210x
-+    ilitek,ili251x for ILI251x
-+
-+- reg: The I2C address of the device
-+
-+- interrupts: The sink for the touchscreen's IRQ output
-+    See ../interrupt-controller/interrupts.txt
-+
-+Optional properties for main touchpad device:
-+
-+- reset-gpios: GPIO specifier for the touchscreen's reset pin (active low)
-+
-+Example:
-+
-+	touchscreen@41 {
-+		compatible = "ilitek,ili251x";
-+		reg = <0x41>;
-+		interrupt-parent = <&gpio4>;
-+		interrupts = <7 IRQ_TYPE_EDGE_FALLING>;
-+		reset-gpios = <&gpio5 21 GPIO_ACTIVE_LOW>;
-+	};
--- 
-2.19.2
+I don't know if these are used in Linux, but just for being complete, I 
+think they should be added, too.
+
+Regards,
+Simon
+
+>   arch/arm/boot/dts/socfpga_arria10.dtsi | 18 ++++++++++++++++++
+>   2 files changed, 30 insertions(+)
+> 
+> diff --git a/arch/arm/boot/dts/socfpga.dtsi b/arch/arm/boot/dts/socfpga.dtsi
+> index dcb8fba3d709..f365003f0102 100644
+> --- a/arch/arm/boot/dts/socfpga.dtsi
+> +++ b/arch/arm/boot/dts/socfpga.dtsi
+> @@ -585,6 +585,7 @@
+>   			compatible = "snps,dw-apb-gpio";
+>   			reg = <0xff708000 0x1000>;
+>   			clocks = <&l4_mp_clk>;
+> +			resets = <&rst GPIO0_RESET>;
+>   			status = "disabled";
+>   
+>   			porta: gpio-controller@0 {
+> @@ -605,6 +606,7 @@
+>   			compatible = "snps,dw-apb-gpio";
+>   			reg = <0xff709000 0x1000>;
+>   			clocks = <&l4_mp_clk>;
+> +			resets = <&rst GPIO1_RESET>;
+>   			status = "disabled";
+>   
+>   			portb: gpio-controller@0 {
+> @@ -625,6 +627,7 @@
+>   			compatible = "snps,dw-apb-gpio";
+>   			reg = <0xff70a000 0x1000>;
+>   			clocks = <&l4_mp_clk>;
+> +			resets = <&rst GPIO2_RESET>;
+>   			status = "disabled";
+>   
+>   			portc: gpio-controller@0 {
+> @@ -735,6 +738,7 @@
+>   			#size-cells = <0>;
+>   			clocks = <&l4_mp_clk>, <&sdmmc_clk_divided>;
+>   			clock-names = "biu", "ciu";
+> +			resets = <&rst SDMMC_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -748,6 +752,7 @@
+>   			interrupts = <0x0 0x90 0x4>;
+>   			clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
+>   			clock-names = "nand", "nand_x", "ecc";
+> +			resets = <&rst NAND_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -767,6 +772,7 @@
+>   			cdns,fifo-width = <4>;
+>   			cdns,trigger-address = <0x00000000>;
+>   			clocks = <&qspi_clk>;
+> +			resets = <&rst QSPI_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -801,6 +807,7 @@
+>   			interrupts = <0 154 4>;
+>   			num-cs = <4>;
+>   			clocks = <&spi_m_clk>;
+> +			resets = <&rst SPIM0_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -812,6 +819,7 @@
+>   			interrupts = <0 155 4>;
+>   			num-cs = <4>;
+>   			clocks = <&spi_m_clk>;
+> +			resets = <&rst SPIM1_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -878,6 +886,7 @@
+>   			dmas = <&pdma 28>,
+>   			       <&pdma 29>;
+>   			dma-names = "tx", "rx";
+> +			resets = <&rst UART0_RESET>;
+>   		};
+>   
+>   		uart1: serial1@ffc03000 {
+> @@ -890,6 +899,7 @@
+>   			dmas = <&pdma 30>,
+>   			       <&pdma 31>;
+>   			dma-names = "tx", "rx";
+> +			resets = <&rst UART1_RESET>;
+>   		};
+>   
+>   		usbphy0: usbphy {
+> @@ -929,6 +939,7 @@
+>   			reg = <0xffd02000 0x1000>;
+>   			interrupts = <0 171 4>;
+>   			clocks = <&osc1>;
+> +			resets = <&rst L4WD0_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -937,6 +948,7 @@
+>   			reg = <0xffd03000 0x1000>;
+>   			interrupts = <0 172 4>;
+>   			clocks = <&osc1>;
+> +			resets = <&rst L4WD1_RESET>;
+>   			status = "disabled";
+>   		};
+>   	};
+> diff --git a/arch/arm/boot/dts/socfpga_arria10.dtsi b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> index e41fa23481c3..ae24599d5829 100644
+> --- a/arch/arm/boot/dts/socfpga_arria10.dtsi
+> +++ b/arch/arm/boot/dts/socfpga_arria10.dtsi
+> @@ -470,6 +470,7 @@
+>   			tx-fifo-depth = <4096>;
+>   			rx-fifo-depth = <16384>;
+>   			clocks = <&l4_mp_clk>;
+> +			resets = <&rst EMAC2_RESET>;
+>   			clock-names = "stmmaceth";
+>   			snps,axi-config = <&socfpga_axi_setup>;
+>   			status = "disabled";
+> @@ -480,6 +481,7 @@
+>   			#size-cells = <0>;
+>   			compatible = "snps,dw-apb-gpio";
+>   			reg = <0xffc02900 0x100>;
+> +			resets = <&rst GPIO0_RESET>;
+>   			status = "disabled";
+>   
+>   			porta: gpio-controller@0 {
+> @@ -499,6 +501,7 @@
+>   			#size-cells = <0>;
+>   			compatible = "snps,dw-apb-gpio";
+>   			reg = <0xffc02a00 0x100>;
+> +			resets = <&rst GPIO1_RESET>;
+>   			status = "disabled";
+>   
+>   			portb: gpio-controller@0 {
+> @@ -518,6 +521,7 @@
+>   			#size-cells = <0>;
+>   			compatible = "snps,dw-apb-gpio";
+>   			reg = <0xffc02b00 0x100>;
+> +			resets = <&rst GPIO2_RESET>;
+>   			status = "disabled";
+>   
+>   			portc: gpio-controller@0 {
+> @@ -548,6 +552,7 @@
+>   			reg = <0xffc02200 0x100>;
+>   			interrupts = <0 105 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst I2C0_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -558,6 +563,7 @@
+>   			reg = <0xffc02300 0x100>;
+>   			interrupts = <0 106 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst I2C1_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -568,6 +574,7 @@
+>   			reg = <0xffc02400 0x100>;
+>   			interrupts = <0 107 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst I2C2_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -578,6 +585,7 @@
+>   			reg = <0xffc02500 0x100>;
+>   			interrupts = <0 108 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst I2C3_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -588,6 +596,7 @@
+>   			reg = <0xffc02600 0x100>;
+>   			interrupts = <0 109 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst I2C4_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -600,6 +609,7 @@
+>   			num-cs = <4>;
+>   			/*32bit_access;*/
+>   			clocks = <&spi_m_clk>;
+> +			resets = <&rst SPIM0_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -614,6 +624,7 @@
+>   			tx-dma-channel = <&pdma 16>;
+>   			rx-dma-channel = <&pdma 17>;
+>   			clocks = <&spi_m_clk>;
+> +			resets = <&rst SPIM1_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -642,6 +653,7 @@
+>   			fifo-depth = <0x400>;
+>   			clocks = <&l4_mp_clk>, <&sdmmc_clk>;
+>   			clock-names = "biu", "ciu";
+> +			resets = <&rst SDMMC_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -655,6 +667,7 @@
+>   			interrupts = <0 99 4>;
+>   			clocks = <&nand_clk>, <&nand_x_clk>, <&nand_ecc_clk>;
+>   			clock-names = "nand", "nand_x", "ecc";
+> +			resets = <&rst NAND_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -739,6 +752,7 @@
+>   			cdns,fifo-width = <4>;
+>   			cdns,trigger-address = <0x00000000>;
+>   			clocks = <&qspi_clk>;
+> +			resets = <&rst QSPI_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -815,6 +829,7 @@
+>   			reg-shift = <2>;
+>   			reg-io-width = <4>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst UART0_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -825,6 +840,7 @@
+>   			reg-shift = <2>;
+>   			reg-io-width = <4>;
+>   			clocks = <&l4_sp_clk>;
+> +			resets = <&rst UART1_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -865,6 +881,7 @@
+>   			reg = <0xffd00200 0x100>;
+>   			interrupts = <0 119 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sys_free_clk>;
+> +			resets = <&rst L4WD0_RESET>;
+>   			status = "disabled";
+>   		};
+>   
+> @@ -873,6 +890,7 @@
+>   			reg = <0xffd00300 0x100>;
+>   			interrupts = <0 120 IRQ_TYPE_LEVEL_HIGH>;
+>   			clocks = <&l4_sys_free_clk>;
+> +			resets = <&rst L4WD1_RESET>;
+>   			status = "disabled";
+>   		};
+>   	};
+> 
