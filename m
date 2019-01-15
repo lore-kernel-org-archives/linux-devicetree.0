@@ -1,69 +1,130 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add pwm
-Date: Tue, 15 Jan 2019 09:29:58 +0100
-Message-ID: <1547540998.4339.0.camel@pengutronix.de>
-References: <20190114170316.GB4168@bogon.m.sigxcpu.org>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH v3 02/14] media: ov7670: split register setting from
+ set_framerate() logic
+Date: Tue, 15 Jan 2019 09:30:31 +0100
+Message-ID: <f6807e8ec5900b07bbaf6bb7e969b3da9be30f14.camel@v3.sk>
+References: <20181120100318.367987-1-lkundrak@v3.sk>
+         <20181120100318.367987-3-lkundrak@v3.sk>
+         <20190114230307.h5poc22jfs32hly3@valkosipuli.retiisi.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190114170316.GB4168@bogon.m.sigxcpu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190114230307.h5poc22jfs32hly3@valkosipuli.retiisi.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sakari Ailus <sakari.ailus@iki.fi>
+Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-QW0gTW9udGFnLCBkZW4gMTQuMDEuMjAxOSwgMTg6MDMgKzAxMDAgc2NocmllYiBHdWlkbyBHw7xu
-dGhlcjoKPiBXZSBjYW4gcmV1c2UgdGhlIHB3bSBmcm9tIGZzbCxpbXgyNy1wd20gYXMgd2l0aCBv
-dGhlciBpbXggU09Dcy4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBHdWlkbyBHw7xudGhlciA8YWd4QHNp
-Z3hjcHUub3JnPgoKUmV2aWV3ZWQtYnk6IEx1Y2FzIFN0YWNoIDxsLnN0YWNoQHBlbmd1dHJvbml4
-LmRlPgoKPiAtLS0KPiBDaGFuZ2VzIGZyb20gdjEgKHRoYW5rcyBMdWNhcyBTdGFjaCBmb3IgdGhl
-IHJldmlldyk6Cj4gwqAgLSBmaXggaW5kZW50YXRpb24gb2YgbXVsdGluZSBlbnRyaWVzCj4gwqAg
-LSBtb3ZlIHRvIEFJUFMyIGJ1cwo+IAo+IMKgYXJjaC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUv
-aW14OG1xLmR0c2kgfCA0NCArKysrKysrKysrKysrKysrKysrKysrKwo+IMKgMSBmaWxlIGNoYW5n
-ZWQsIDQ0IGluc2VydGlvbnMoKykKPiAKPiBkaWZmIC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0
-cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL2ZyZWVzY2FsZS9p
-bXg4bXEuZHRzaQo+IGluZGV4IDhlOWQ2ZDVlZDdiMi4uMGI0MmZjYjFlY2FhIDEwMDY0NAo+IC0t
-LSBhL2FyY2gvYXJtNjQvYm9vdC9kdHMvZnJlZXNjYWxlL2lteDhtcS5kdHNpCj4gKysrIGIvYXJj
-aC9hcm02NC9ib290L2R0cy9mcmVlc2NhbGUvaW14OG1xLmR0c2kKPiBAQCAtMjU5LDYgKzI1OSw1
-MCBAQAo+ID4gwqAJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKPiA+IMKgCQkJI3NpemUtY2VsbHMg
-PSA8MT47Cj4gPiDCoAkJCXJhbmdlcyA9IDwweDMwNDAwMDAwIDB4MzA0MDAwMDAgMHg0MDAwMDA+
-Owo+ICsKPiA+ID4gKwkJCXB3bTE6IHB3bUAzMDY2MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUg
-PSAiZnNsLGlteDhtcS1wd20iLCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMw
-NjYwMDAwIDB4MTAwMDA+Owo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODEgSVJRX1RZ
-UEVfTEVWRUxfSElHSD47Cj4gPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNMV9S
-T09UPiwKPiA+ICsJCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV00xX1JP
-T1Q+Owo+ID4gKwkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1j
-ZWxscyA9IDwyPjsKPiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ICsK
-PiA+ID4gKwkJCXB3bTI6IHB3bUAzMDY3MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNs
-LGlteDhtcS1wd20iLCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjcwMDAw
-IDB4MTAwMDA+Owo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODIgSVJRX1RZUEVfTEVW
-RUxfSElHSD47Cj4gPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNMl9ST09UPiwK
-PiA+ICsJCQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV00yX1JPT1Q+Owo+
-ID4gKwkJCQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1jZWxscyA9
-IDwyPjsKPiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ICsKPiA+ID4g
-KwkJCXB3bTM6IHB3bUAzMDY4MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDht
-cS1wd20iLCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjgwMDAwIDB4MTAw
-MDA+Owo+ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODMgSVJRX1RZUEVfTEVWRUxfSElH
-SD47Cj4gPiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNM19ST09UPiwKPiA+ICsJ
-CQkJwqDCoMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV00zX1JPT1Q+Owo+ID4gKwkJ
-CQljbG9jay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1jZWxscyA9IDwyPjsK
-PiA+ICsJCQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ICsKPiA+ID4gKwkJCXB3
-bTQ6IHB3bUAzMDY5MDAwMCB7Cj4gPiArCQkJCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtcS1wd20i
-LCAiZnNsLGlteDI3LXB3bSI7Cj4gPiArCQkJCXJlZyA9IDwweDMwNjkwMDAwIDB4MTAwMDA+Owo+
-ID4gKwkJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgODQgSVJRX1RZUEVfTEVWRUxfSElHSD47Cj4g
-PiArCQkJCWNsb2NrcyA9IDwmY2xrIElNWDhNUV9DTEtfUFdNNF9ST09UPiwKPiA+ICsJCQkJwqDC
-oMKgwqDCoMKgwqDCoMKgPCZjbGsgSU1YOE1RX0NMS19QV000X1JPT1Q+Owo+ID4gKwkJCQljbG9j
-ay1uYW1lcyA9ICJpcGciLCAicGVyIjsKPiA+ICsJCQkJI3B3bS1jZWxscyA9IDwyPjsKPiA+ICsJ
-CQkJc3RhdHVzID0gImRpc2FibGVkIjsKPiA+ICsJCQl9Owo+ID4gwqAJCX07Cj4gwqAKPiA+IMKg
-CQlidXNAMzA4MDAwMDAgeyAvKiBBSVBTMyAqLwoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue, 2019-01-15 at 01:03 +0200, Sakari Ailus wrote:
+> On Tue, Nov 20, 2018 at 11:03:07AM +0100, Lubomir Rintel wrote:
+> > This will allow us to restore the last set frame rate after the device
+> > returns from a power off.
+> > 
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > 
+> > ---
+> > Changes since v2:
+> > - This patch was added to the series
+> > 
+> >  drivers/media/i2c/ov7670.c | 30 ++++++++++++++----------------
+> >  1 file changed, 14 insertions(+), 16 deletions(-)
+> > 
+> > diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
+> > index ee2302fbdeee..ead0c360df33 100644
+> > --- a/drivers/media/i2c/ov7670.c
+> > +++ b/drivers/media/i2c/ov7670.c
+> > @@ -810,13 +810,24 @@ static void ov7675_get_framerate(struct v4l2_subdev *sd,
+> >  			(4 * clkrc);
+> >  }
+> >  
+> > +static int ov7675_apply_framerate(struct v4l2_subdev *sd)
+> > +{
+> > +	struct ov7670_info *info = to_state(sd);
+> > +	int ret;
+> > +
+> > +	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
+> > +	if (ret < 0)
+> > +		return ret;
+> > +
+> > +	return ov7670_write(sd, REG_DBLV, info->pll_bypass ? DBLV_BYPASS : DBLV_X4);
+> > +}
+> > +
+> >  static int ov7675_set_framerate(struct v4l2_subdev *sd,
+> >  				 struct v4l2_fract *tpf)
+> >  {
+> >  	struct ov7670_info *info = to_state(sd);
+> >  	u32 clkrc;
+> >  	int pll_factor;
+> > -	int ret;
+> >  
+> >  	/*
+> >  	 * The formula is fps = 5/4*pixclk for YUV/RGB and
+> > @@ -825,19 +836,10 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
+> >  	 * pixclk = clock_speed / (clkrc + 1) * PLLfactor
+> >  	 *
+> >  	 */
+> > -	if (info->pll_bypass) {
+> > -		pll_factor = 1;
+> > -		ret = ov7670_write(sd, REG_DBLV, DBLV_BYPASS);
+> > -	} else {
+> > -		pll_factor = PLL_FACTOR;
+> > -		ret = ov7670_write(sd, REG_DBLV, DBLV_X4);
+> > -	}
+> > -	if (ret < 0)
+> > -		return ret;
+> > -
+> >  	if (tpf->numerator == 0 || tpf->denominator == 0) {
+> >  		clkrc = 0;
+> >  	} else {
+> > +		pll_factor = info->pll_bypass ? 1 : PLL_FACTOR;
+> >  		clkrc = (5 * pll_factor * info->clock_speed * tpf->numerator) /
+> >  			(4 * tpf->denominator);
+> >  		if (info->fmt->mbus_code == MEDIA_BUS_FMT_SBGGR8_1X8)
+> > @@ -859,11 +861,7 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
+> >  	/* Recalculate frame rate */
+> >  	ov7675_get_framerate(sd, tpf);
+> >  
+> > -	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
+> > -	if (ret < 0)
+> > -		return ret;
+> > -
+> > -	return ov7670_write(sd, REG_DBLV, DBLV_X4);
+> > +	return ov7675_apply_framerate(sd);
+> >  }
+> >  
+> >  static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+> 
+> Unfortunately this one no longer applies due to Jacopo's patch "v4l2: i2c:
+> ov7670: Fix PLL bypass register values" in my tree. Could you resend it if
+> you still think it's useful, please?
+> 
+> My tree is here:
+> 
+> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/>
+> 
+> I've applied the rest there, with a trivial patch I'll send briefly.
+
+Thank you.
+
+It seems that you've accidentally attached the hunks of that patch to a
+previous one though ("media: ov7670: split register setting from
+set_fmt() logic"). There's just one conflicted line to resolve left.
+
+I have a branch based on your tree that reverts the patch first and
+then applies the two cleanly:
+
+ git pull https://github.com/hackerspace/olpc-xo175-linux.git lr/ov7670
+
+Feel free to pull, or, if you're fine with rebasing your tree, remove
+the patch from your tree and then just pick the two.
+
+Alternatively, if you prefer a patch by e-mail, please just let me know
+when you've fixed things up in your tree.
+
+Cheers
+Lubo
+
+> 
+> Thanks.
+> 
