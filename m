@@ -1,74 +1,101 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH v2 3/4] usb: musb: Extract set toggle as a separate
- interface
-Date: Tue, 15 Jan 2019 14:40:49 -0600
-Message-ID: <20190115204049.GE18026@uda0271908>
-References: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
- <1547516626-5084-4-git-send-email-min.guo@mediatek.com>
- <a4e71c59-8e25-b3e9-797f-46d918121dd4@gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH V2 1/2] dt-bindings: bcm-ns-usb2-phy: rework binding to
+ use CRU syscon
+Date: Tue, 15 Jan 2019 14:53:00 -0600
+Message-ID: <20190115205300.GA6754@bogus>
+References: <20190107082545.5529-1-zajec5@gmail.com>
+ <20190108123907.19816-1-zajec5@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <a4e71c59-8e25-b3e9-797f-46d918121dd4@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, min.guo@mediatek.com, chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <20190108123907.19816-1-zajec5@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
+Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
 List-Id: devicetree@vger.kernel.org
 
-Hi Min,
-
-On Tue, Jan 15, 2019 at 04:19:42PM +0100, Matthias Brugger wrote:
+On Tue, Jan 08, 2019 at 01:39:06PM +0100, Rafał Miłecki wrote:
+> From: Rafał Miłecki <rafal@milecki.pl>
 > 
+> USB 2.0 PHY is a hardware block that happens to use two registers from
+> the CRU block to setup a single PLL. It's not part of the CRU or DMU
+> and so its binding shouldn't cover the whole DMU.
 > 
-> On 15/01/2019 02:43, min.guo@mediatek.com wrote:
-> > From: Min Guo <min.guo@mediatek.com>
-> > 
-> > Add a common interface for set data toggle
-> > 
-> > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > ---
-> >  drivers/usb/musb/musb_host.c | 37 +++++++++++++++++++++++--------------
-> >  1 file changed, 23 insertions(+), 14 deletions(-)
-> > 
-> > diff --git a/drivers/usb/musb/musb_host.c b/drivers/usb/musb/musb_host.c
-> > index b59ce9a..16d0ba4 100644
-> > --- a/drivers/usb/musb/musb_host.c
-> > +++ b/drivers/usb/musb/musb_host.c
-> > @@ -306,6 +306,25 @@ static inline void musb_save_toggle(struct musb_qh *qh, int is_in,
-> >  	usb_settoggle(urb->dev, qh->epnum, !is_in, csr ? 1 : 0);
-> >  }
-> >  
-> > +static inline u16 musb_set_toggle(struct musb_qh *qh, int is_in,
-> > +	struct urb *urb)
-> > +{
-> > +	u16 csr = 0;
-> > +	u16 toggle = 0;
-> > +
-> > +	toggle = usb_gettoggle(urb->dev, qh->epnum, !is_in);
-> > +
-> > +	if (is_in)
-> > +		csr = toggle ? (MUSB_RXCSR_H_WR_DATATOGGLE
-> > +				| MUSB_RXCSR_H_DATATOGGLE) : 0;
-> > +	else
-> > +		csr = toggle ? (MUSB_TXCSR_H_WR_DATATOGGLE
-> > +				| MUSB_TXCSR_H_DATATOGGLE)
-> > +				: MUSB_TXCSR_CLRDATATOG;
+> The correct way of handling this is to reference CRU block node using a
+> syscon. Document that & deprecate the old way.
 > 
-> Can we switch the if and use is_out logic as function parameter. This would make
-> the code easier to understand.
+> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> ---
+> V2: use syscon@ in example (thanks Ray)
+> ---
+>  .../devicetree/bindings/phy/bcm-ns-usb2-phy.txt    | 27 ++++++++++++++++++----
+>  1 file changed, 23 insertions(+), 4 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+> index a7aee9ea8926..2cafee6b4a8b 100644
+> --- a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+> +++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
+> @@ -2,19 +2,38 @@ Driver for Broadcom Northstar USB 2.0 PHY
+>  
+>  Required properties:
+>  - compatible: brcm,ns-usb2-phy
+> -- reg: iomem address range of DMU (Device Management Unit)
+> -- reg-names: "dmu", the only needed & supported reg right now
+> +- syscon-cru: phandle to the CRU (Central Resource Unit) syscon
+>  - clocks: USB PHY reference clock
+>  - clock-names: "phy-ref-clk", the only needed & supported clock right now
+>  
+> +Deprecated:
+> +
+> +PHY block should not claim the whole DMU so such a binding has been deprecated.
+> +It only requires to access few CRU (a DMU subblock) registers and that should be
+> +handled with a syscon since CRU is a MFD (Multi-Function Device).
+> +
+> +- reg: iomem address range of DMU (Device Management Unit)
+> +- reg-names: "dmu", the only needed & supported reg right now
+> +
+>  To initialize USB 2.0 PHY driver needs to setup PLL correctly. To do this it
+>  requires passing phandle to the USB PHY reference clock.
+>  
+>  Example:
+> +	dmu@1800c000 {
+> +		compatible = "simple-bus";
 
-based on the current implementation in patch 4/4, I don't think we need
-this separate patch any more, but Matthias' comments still apply.
+DMU sounds like some sort of block, not just a bus.
 
-Regards,
--Bin.
+> +		ranges = <0 0x1800c000 0x1000>;
+> +		#address-cells = <1>;
+> +		#size-cells = <1>;
+> +
+> +		cru: syscon@100 {
+> +			compatible = "syscon", "simple-mfd";
+
+Those 2 compatibles alone are not valid. And 'simple-mfd' implies child 
+nodes.
+
+Without any knowledge of what else is in the DMU, I can't give any 
+advice as to what this should look like instead.
+
+> +			reg = <0x100 0x1a4>;
+> +		};
+> +	};
+> +
+>  	usb2-phy {
+>  		compatible = "brcm,ns-usb2-phy";
+> -		reg = <0x1800c000 0x1000>;
+> -		reg-names = "dmu";
+> +		syscon-cru = <&cru>;
+
+No need for this. Make it a child of cru node.
+
+There's not a contiguous range of phy registers? If there are, keep 
+'reg' even if Linux doesn't (currently) use it.
+
+>  		#phy-cells = <0>;
+>  		clocks = <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
+>  		clock-names = "phy-ref-clk";
+> -- 
+> 2.13.7
+> 
