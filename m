@@ -1,69 +1,36 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v3] arm64: dts: marvell: Add device tree for uDPU board
-Date: Tue, 15 Jan 2019 17:37:36 +0100
-Message-ID: <8736ptri5r.fsf@FE-laptop>
-References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
- <20190115144421.29968-1-vladimir.vid@sartura.hr>
- <20190115161608.GA25888@lunn.ch>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v9 0/2]  mtd: rawnand: meson: add Amlogic NAND driver
+ support
+Date: Tue, 15 Jan 2019 17:52:32 +0100
+Message-ID: <20190115175232.3d82d4a9@xps13>
+References: <1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190115161608.GA25888@lunn.ch> (Andrew Lunn's message of "Tue,
- 15 Jan 2019 17:16:08 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree@vger.kernel.org, Luis Torres <luis.torres@methode.com>, Paul Arola <paul.arola@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, Vladimir Vid <vladimir.vid@sartura.hr>, Scott Roberts <scott.roberts@telus.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jianxin Pan <jianxin.pan@amlogic.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.o
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
- 
- On mar., janv. 15 2019, Andrew Lunn <andrew@lunn.ch> wrote:
+Hi Jianxin,
 
-> Hi Vladimir
->
-> Ah, i did not notice early. You need to Cc: the Marvell mvebu
-> maintainers. They are the ones who will accept this patch.
->
->
->> +	leds {
->> +		pinctrl-names = "default";
->> +		compatible = "gpio-leds";
->> +
->> +		power@487 {
->> +			label = "power:green:led1";
->> +			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
->> +			default-state = "off";
->> +		};
->
-> I'm a bit out of date with dtc warnings. I think the @487 will
-> generate a warning because there is no reg property?
->
-> Gregory, do you know?
+Jianxin Pan <jianxin.pan@amlogic.com> wrote on Tue, 15 Jan 2019
+23:38:02 +0800:
 
-I confirm that if there is no reg then there should not have a @XXX.
+> These two patches try to add initial NAND driver support for Amlogic Meson
+> SoCs, current it has been tested on GXL(p212) and AXG(s400) platform.
+> 
+> Changes since V8 at [9]
+>  - fix build failre at object_is_on_stack
+>  - update Kconfig as Martin's suggested
 
-Gregory
+Thanks for this last version, looks good to me. Could you please send a
+patch to add a MAINTAINERS entry?
 
+Also, can we face any deadly failure if someone compiles this driver
+without the MMC clock driver updated?
 
->
-> Thanks
-> 	Andrew
->
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+Thanks,
+Miquèl
