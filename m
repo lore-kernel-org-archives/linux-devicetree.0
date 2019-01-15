@@ -1,27 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-binding: iio: add NPCM ADC documentation
-Date: Tue, 15 Jan 2019 15:31:58 -0600
-Message-ID: <20190115213158.GA7016@bogus>
-References: <20190109164343.164205-1-tmaimon77@gmail.com>
- <20190109164343.164205-2-tmaimon77@gmail.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: usb: keystone-usb: Add ti,am654-dwc3
+ support
+Date: Tue, 15 Jan 2019 15:35:00 -0600
+Message-ID: <20190115213500.GA12172@bogus>
+References: <1547132670-5908-1-git-send-email-rogerq@ti.com>
+ <1547132670-5908-3-git-send-email-rogerq@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190109164343.164205-2-tmaimon77@gmail.com>
+In-Reply-To: <1547132670-5908-3-git-send-email-rogerq@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
+Cc: balbi@kernel.org, vigneshr@ti.com, robh+dt@kernel.org, nsekhar@ti.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Roger Quadros <rogerq@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed,  9 Jan 2019 18:43:42 +0200, Tomer Maimon wrote:
-> Added device tree binding documentation for Nuvoton BMC
-> NPCM Analog-to-Digital Converter(ADC).
+On Thu, 10 Jan 2019 17:04:29 +0200, Roger Quadros wrote:
+> The AM654 SoC from TI contains a DWC3 controller. Add
+> support for it.
 > 
-> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
+> Signed-off-by: Roger Quadros <rogerq@ti.com>
 > ---
->  .../bindings/iio/adc/nuvoton,npcm-adc.txt          | 35 ++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
+>  Documentation/devicetree/bindings/usb/keystone-usb.txt | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
