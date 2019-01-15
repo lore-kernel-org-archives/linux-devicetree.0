@@ -1,86 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH shawn/for-next v4 2/2] ARM: dts: imx: Add Y Soft IOTA
- Draco,  Hydra and Ursa boards
-Date: Tue, 15 Jan 2019 14:12:15 -0600
-Message-ID: <20190115201215.GA32682@bogus>
-References: <1547562139-64730-1-git-send-email-michal.vokac@ysoft.com>
- <1547562139-64730-2-git-send-email-michal.vokac@ysoft.com>
+Subject: Re: [PATCH v3 10/15] dt-bindings: PCI: aardvark: Describe the PCIe
+ endpoint card reset pins
+Date: Tue, 15 Jan 2019 14:13:26 -0600
+Message-ID: <20190115201326.GA2362@bogus>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+ <20190108162441.5278-11-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547562139-64730-2-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <20190108162441.5278-11-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Miquel Raynal <miquel.raynal@bootlin.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 15 Jan 2019 14:22:45 +0000, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= wrote:
-> These are i.MX6S/DL based SBCs embedded in various Y Soft products.
-> All share the same board design but have slightly different HW
-> configuration.
+On Tue,  8 Jan 2019 17:24:35 +0100, Miquel Raynal wrote:
+> A line might be used by the PCIe IP to reset the endpoint card upon:
+>   - platform reset,
+>   - hot reset,
+>   - link failure.
 > 
-> Ursa
-> - i.MX6S SoC, 512MB RAM DDR3, 4GB eMMC, microSD
-> - parallel WVGA 7" LCD with touch panel
-> - 1x Eth (QCA8334 switch)
-> - USB OTG
-> - USB host (micro-B)
+> Describe the properties needed in this case (optional).
 > 
-> Draco
-> - i.MX6S SoC, 512MB RAM DDR3, 4GB eMMC, microSD
-> - parallel WVGA 7" LCD with touch panel
-> - 2x Eth (QCA8334 switch)
-> - USB OTG
-> - USB host (micro-B)
-> - RGB LED (I2C LP5562)
-> - 3.5mm audio jack + codec (LM49350)
-> 
-> Hydra
-> - i.MX6DL SoC, 2GB RAM DDR3, 4GB eMMC, microSD
-> - I2C OLED display, capacitive matrix keys
-> - 2x Eth (QCA8334 switch)
-> - USB OTG
-> - RGB LED (I2C LP5562)
-> - 3.5mm audio jack + codec (LM49350)
-> - HDMI
-> - miniPCIe slot
-> 
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
-> Changes since v3:
->  - Do not abbreviate regulator word in node names. (Shawn)
->  - Sort fixed regulator nodes alphabetically.
->  - Sort pmic regulator childe nodes alphabetically.
->  - Use newline between properties and child node in switch node. (Shawn)
->  - Sort i2c bus child nodes in order of unit-address. (Shawn)
->  - Rename PWM pinctl label to be consistent with node name. (Shawn)
-> 
-> Changes since v2:
->  - Remove cpus {/delete-node/ cpu@1;}; node from i.MX6Solo based board. (Fabio)
->  - Use "device_type = "memory";" in memory nodes. (Fabio)
->  - Use GPIO_ACTIVE_LOW for fec phy-reset-gpios. (Fabio)
->  - Use "-" in node names. (Rob)
->  - Remove label from led-controller node. (Rob)
->  
-> Changes since v1:
->  - Enable HDMI on Hydra board.
->  - Move regulators to the root node and remove simple-bus property. (Rob)
->  - Remove reg and unit-address property from regulators. (Rob)
->  - Use correct names for led-controller and pmic node. (Rob)
->  - Use wakeup-source instead of deprecated enable-sdio-wakeup. (Shawn)
-> 
->  arch/arm/boot/dts/Makefile                 |   3 +
->  arch/arm/boot/dts/imx6dl-yapp4-common.dtsi | 595 +++++++++++++++++++++++++++++
->  arch/arm/boot/dts/imx6dl-yapp4-draco.dts   |  58 +++
->  arch/arm/boot/dts/imx6dl-yapp4-hydra.dts   |  50 +++
->  arch/arm/boot/dts/imx6dl-yapp4-ursa.dts    |  54 +++
->  5 files changed, 760 insertions(+)
->  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-common.dtsi
->  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-draco.dts
->  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-hydra.dts
->  create mode 100644 arch/arm/boot/dts/imx6dl-yapp4-ursa.dts
+>  Documentation/devicetree/bindings/pci/aardvark-pci.txt | 5 +++++
+>  1 file changed, 5 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
