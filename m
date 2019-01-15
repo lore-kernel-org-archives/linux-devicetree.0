@@ -1,15 +1,15 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 08/14] ARM: dts: qcom: pm8941: add interrupt
+Subject: Re: [PATCH v4 09/14] ARM: dts: qcom: pma8084: add interrupt
  controller properties
-Date: Mon, 14 Jan 2019 16:42:41 -0800
-Message-ID: <20190115004240.GL9278@minitux>
+Date: Mon, 14 Jan 2019 16:42:54 -0800
+Message-ID: <20190115004254.GM9278@minitux>
 References: <20190113154716.5145-1-masneyb@onstation.org>
- <20190113154716.5145-9-masneyb@onstation.org>
+ <20190113154716.5145-10-masneyb@onstation.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190113154716.5145-9-masneyb@onstation.org>
+In-Reply-To: <20190113154716.5145-10-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Brian Masney <masneyb@onstation.org>
 Cc: linus.walleij@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
@@ -19,7 +19,11 @@ On Sun 13 Jan 07:47 PST 2019, Brian Masney wrote:
 
 > Add interrupt controller properties now that spmi-gpio is a proper
 > hierarchical IRQ chip. The interrupts property is no longer needed so
-> remove it. Code was tested on the LG Nexus 5 (hammerhead) phone.
+> remove it.
+> 
+> This change was not tested on any hardware but the same change was
+> tested on qcom-pm8941.dtsi using a LG Nexus 5 (hammerhead) phone with
+> no issues.
 > 
 
 Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
@@ -27,24 +31,17 @@ Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > Signed-off-by: Brian Masney <masneyb@onstation.org>
 > Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 > ---
-> Changes since v3:
+> Chances since v3:
 > - None
 > 
-> Changes since v2:
-> - Remove interrupt-parent property
+>  arch/arm/boot/dts/qcom-pma8084.dtsi | 24 ++----------------------
+>  1 file changed, 2 insertions(+), 22 deletions(-)
 > 
-> Changes since v1:
-> - Interrupts are now two cells instead of four cells.
-> - Drop unnecessary interrupts property.
-> 
->  arch/arm/boot/dts/qcom-pm8941.dtsi | 38 ++----------------------------
->  1 file changed, 2 insertions(+), 36 deletions(-)
-> 
-> diff --git a/arch/arm/boot/dts/qcom-pm8941.dtsi b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> index 2515c5c217ac..e65049e0fb45 100644
-> --- a/arch/arm/boot/dts/qcom-pm8941.dtsi
-> +++ b/arch/arm/boot/dts/qcom-pm8941.dtsi
-> @@ -64,42 +64,8 @@
+> diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
+> index aac7e73b6872..8f5ea7add20f 100644
+> --- a/arch/arm/boot/dts/qcom-pma8084.dtsi
+> +++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
+> @@ -32,28 +32,8 @@
 >  			reg = <0xc000>;
 >  			gpio-controller;
 >  			#gpio-cells = <2>;
@@ -69,26 +66,12 @@ Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > -				     <0 0xd2 0 IRQ_TYPE_NONE>,
 > -				     <0 0xd3 0 IRQ_TYPE_NONE>,
 > -				     <0 0xd4 0 IRQ_TYPE_NONE>,
-> -				     <0 0xd5 0 IRQ_TYPE_NONE>,
-> -				     <0 0xd6 0 IRQ_TYPE_NONE>,
-> -				     <0 0xd7 0 IRQ_TYPE_NONE>,
-> -				     <0 0xd8 0 IRQ_TYPE_NONE>,
-> -				     <0 0xd9 0 IRQ_TYPE_NONE>,
-> -				     <0 0xda 0 IRQ_TYPE_NONE>,
-> -				     <0 0xdb 0 IRQ_TYPE_NONE>,
-> -				     <0 0xdc 0 IRQ_TYPE_NONE>,
-> -				     <0 0xdd 0 IRQ_TYPE_NONE>,
-> -				     <0 0xde 0 IRQ_TYPE_NONE>,
-> -				     <0 0xdf 0 IRQ_TYPE_NONE>,
-> -				     <0 0xe0 0 IRQ_TYPE_NONE>,
-> -				     <0 0xe1 0 IRQ_TYPE_NONE>,
-> -				     <0 0xe2 0 IRQ_TYPE_NONE>,
-> -				     <0 0xe3 0 IRQ_TYPE_NONE>;
+> -				     <0 0xd5 0 IRQ_TYPE_NONE>;
 > +			interrupt-controller;
 > +			#interrupt-cells = <2>;
+>  		};
 >  
->  			boost_bypass_n_pin: boost-bypass {
->  				pins = "gpio21";
+>  		pma8084_mpps: mpps@a000 {
 > -- 
 > 2.17.2
 > 
