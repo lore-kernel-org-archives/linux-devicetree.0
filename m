@@ -1,88 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/5] dt-binding: pcf85063: add xtal load capacitance
-Date: Tue, 15 Jan 2019 15:08:27 -0600
-Message-ID: <20190115210827.GA25046@bogus>
-References: <20190108185414.26922-1-sam@ravnborg.org>
- <20190108185414.26922-4-sam@ravnborg.org>
+Subject: Re: [PATCH v2 1/2] dt-binding: iio: add NPCM ADC documentation
+Date: Tue, 15 Jan 2019 15:31:58 -0600
+Message-ID: <20190115213158.GA7016@bogus>
+References: <20190109164343.164205-1-tmaimon77@gmail.com>
+ <20190109164343.164205-2-tmaimon77@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190108185414.26922-4-sam@ravnborg.org>
+In-Reply-To: <20190109164343.164205-2-tmaimon77@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Urs =?iso-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+Cc: jic23@kernel.org, knaack.h@gmx.de, lars@metafoo.de, pmeerw@pmeerw.net, robh+dt@kernel.org, mark.rutland@arm.com, yuenn@google.com, venture@google.com, brendanhiggins@google.com, avifishman70@gmail.com, joel@jms.id.au, linux-iio@vger.kernel.org, openbmc@lists.ozlabs.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Tomer Maimon <tmaimon77@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 08, 2019 at 07:54:12PM +0100, Sam Ravnborg wrote:
-> The NXP pcf85063 supports two different xtal load capacitance
-> - 7000fF  (7pF)    HW default, Linux driver default
-> - 12500fF (12.5pF) Minimum power consumption
+On Wed,  9 Jan 2019 18:43:42 +0200, Tomer Maimon wrote:
+> Added device tree binding documentation for Nuvoton BMC
+> NPCM Analog-to-Digital Converter(ADC).
 > 
-> To obtain a precise RTC the pcf85063 must be configured
-> with the correct capacitance load of the xtal.
-> 
-> Add a property to specify the xtal capacitance load.
-> The default value matches that of the current Linux driver.
-> 
-> With a dedicated binding remove the entry in rtc.txt
-> 
-> Signed-off-by: Søren Andersen <san@skov.dk>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Urs Fässler <urs.fassler@bbv.ch>
+> Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>
 > ---
->  Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt | 18 ++++++++++++++++++
->  Documentation/devicetree/bindings/rtc/rtc.txt          |  1 -
->  2 files changed, 18 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+>  .../bindings/iio/adc/nuvoton,npcm-adc.txt          | 35 ++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/adc/nuvoton,npcm-adc.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-> new file mode 100644
-> index 000000000000..ad5e8eaa370e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-> @@ -0,0 +1,18 @@
-> +* NXP PCF85063 Real Time Clock
-> +
-> +Required properties:
-> +- compatible: Should contain "nxp,pcf85063".
-> +- reg: I2C address for chip.
-> +
-> +Optional property:
-> +- quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
 
-Probably should put this in rtc.txt so it can be shared.
-
-> +  expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> +  Default value (if no value is specified) is 7000fF.
-> +
-> +Example:
-> +
-> +pcf85063: pcf85063@51 {
-
-rtc@51
-
-> +	compatible = "nxp,pcf85063";
-> +	reg = <0x51>;
-> +	quartz-load-femtofarads = <12500>;
-> +};
-> diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-> index e07b15d151ac..efac6dc5b914 100644
-> --- a/Documentation/devicetree/bindings/rtc/rtc.txt
-> +++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-> @@ -52,7 +52,6 @@ microcrystal,rv3029	Real Time Clock Module with I2C-Bus
->  nxp,pcf2127		Real-time clock
->  nxp,pcf2129		Real-time clock
->  nxp,pcf8563		Real-time clock/calendar
-> -nxp,pcf85063		Tiny Real-Time Clock
->  pericom,pt7c4338	Real-time Clock Module
->  ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
->  ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
-> -- 
-> 2.12.0
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
