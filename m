@@ -1,193 +1,109 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v2] cpufreq: qcom: Read voltage LUT and populate OPP
-Date: Mon, 14 Jan 2019 16:29:28 -0800
-Message-ID: <20190115002928.GO261387@google.com>
-References: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v4 03/14] pinctrl: qcom: spmi-gpio: hardcode IRQ counts
+Date: Mon, 14 Jan 2019 16:34:28 -0800
+Message-ID: <20190115003428.GJ9278@minitux>
+References: <20190113154716.5145-1-masneyb@onstation.org>
+ <20190113154716.5145-4-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
+In-Reply-To: <20190113154716.5145-4-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Taniya Das <tdas@codeaurora.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Viresh Kumar <viresh.kumar@linaro.org>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, evgreen@google.com
+To: Brian Masney <masneyb@onstation.org>
+Cc: linus.walleij@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Taniya,
+On Sun 13 Jan 07:47 PST 2019, Brian Masney wrote:
 
-On Wed, Jan 09, 2019 at 01:37:28PM +0530, Taniya Das wrote:
-> Add support to read the voltage look up table and populate OPP for all
-> corresponding CPUS for consumers like the energy model could use the
-> frequency and voltage from the OPP tables.
+> The probing of this driver calls platform_irq_count, which will
+> setup all of the IRQs that are configured in device tree. In
+> preparation for converting this driver to be a hierarchical IRQ
+> chip, hardcode the IRQ count based on the hardware type so that all
+> the IRQs are not configured immediately and are configured on an
+> as-needed basis later in the boot process. This change will also
+> allow for the removal of the interrupts property later in this
+> patch series once the hierarchical IRQ chip support is in.
 > 
-> Tested-by: Matthias Kaehlcke <mka@chromium.org>
-> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> This patch also removes the generic qcom,spmi-gpio OF match since we
+> don't know the number of pins. All of the existing upstream bindings
+> already include the more-specific binding.
+> 
+> The pm8941 code was tested on a LG Nexus 5 (hammerhead) phone.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
 > ---
->  drivers/cpufreq/qcom-cpufreq-hw.c | 33 +++++++++++++++++++++++++++++++--
->  1 file changed, 31 insertions(+), 2 deletions(-)
+> Changes since v3:
+> - More variants are now included. I missed these since I searched for
+>   qcom,spmi-gpio in the arm dts, and missed the ones in the arm64 dts.
 > 
-> diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-> index d83939a..18f90bb 100644
-> --- a/drivers/cpufreq/qcom-cpufreq-hw.c
-> +++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-> @@ -10,18 +10,21 @@
->  #include <linux/module.h>
->  #include <linux/of_address.h>
->  #include <linux/of_platform.h>
-> +#include <linux/pm_opp.h>
->  #include <linux/slab.h>
+> Changes since v2:
+> - Don't move pmic_gpio_of_match block. Use device_get_match_data instead
+>   of of_match_device.
+> - Correct build warning on arm64: warning: cast from pointer to integer
+>   of different size
 > 
->  #define LUT_MAX_ENTRIES			40U
->  #define LUT_SRC				GENMASK(31, 30)
->  #define LUT_L_VAL			GENMASK(7, 0)
->  #define LUT_CORE_COUNT			GENMASK(18, 16)
-> +#define LUT_VOLT			GENMASK(11, 0)
->  #define LUT_ROW_SIZE			32
->  #define CLK_HW_DIV			2
+>  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 28 ++++++++++--------------
+>  1 file changed, 11 insertions(+), 17 deletions(-)
 > 
->  /* Register offsets */
->  #define REG_ENABLE			0x0
-> -#define REG_LUT_TABLE			0x110
-> +#define REG_FREQ_LUT			0x110
-> +#define REG_VOLT_LUT			0x114
->  #define REG_PERF_STATE			0x920
-> 
->  static unsigned long cpu_hw_rate, xo_rate;
-> @@ -75,6 +78,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->  				    void __iomem *base)
->  {
->  	u32 data, src, lval, i, core_count, prev_cc = 0, prev_freq = 0, freq;
-> +	u32 volt;
->  	unsigned int max_cores = cpumask_weight(policy->cpus);
->  	struct cpufreq_frequency_table	*table;
-> 
-> @@ -83,11 +87,16 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->  		return -ENOMEM;
-> 
->  	for (i = 0; i < LUT_MAX_ENTRIES; i++) {
-> -		data = readl_relaxed(base + REG_LUT_TABLE + i * LUT_ROW_SIZE);
-> +		data = readl_relaxed(base + REG_FREQ_LUT +
-> +				      i * LUT_ROW_SIZE);
->  		src = FIELD_GET(LUT_SRC, data);
->  		lval = FIELD_GET(LUT_L_VAL, data);
->  		core_count = FIELD_GET(LUT_CORE_COUNT, data);
-> 
-> +		data = readl_relaxed(base + REG_VOLT_LUT +
-> +				      i * LUT_ROW_SIZE);
-> +		volt = FIELD_GET(LUT_VOLT, data) * 1000;
-> +
->  		if (src)
->  			freq = xo_rate * lval / 1000;
->  		else
-> @@ -98,6 +107,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->  			table[i].frequency = CPUFREQ_ENTRY_INVALID;
->  		} else {
->  			table[i].frequency = freq;
-> +			dev_pm_opp_add(get_cpu_device(policy->cpu),
-> +					freq * 1000, volt);
->  			dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
->  				freq, core_count);
->  		}
-> @@ -116,6 +127,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->  			if (prev_cc != max_cores) {
->  				prev->frequency = prev_freq;
->  				prev->flags = CPUFREQ_BOOST_FREQ;
-> +				dev_pm_opp_add(get_cpu_device(policy->cpu),
-> +						prev_freq * 1000, volt);
->  			}
-> 
->  			break;
-> @@ -127,6 +140,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
-> 
->  	table[i].frequency = CPUFREQ_TABLE_END;
->  	policy->freq_table = table;
-> +	dev_pm_opp_set_sharing_cpus(get_cpu_device(policy->cpu), policy->cpus);
-> 
->  	return 0;
->  }
-> @@ -159,10 +173,18 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  	struct device *dev = &global_pdev->dev;
->  	struct of_phandle_args args;
->  	struct device_node *cpu_np;
-> +	struct device *cpu_dev;
->  	struct resource *res;
->  	void __iomem *base;
->  	int ret, index;
-> 
-> +	cpu_dev = get_cpu_device(policy->cpu);
-> +	if (!cpu_dev) {
-> +		pr_err("%s: failed to get cpu%d device\n", __func__,
-> +		       policy->cpu);
-> +		return -ENODEV;
-> +	}
-> +
->  	cpu_np = of_cpu_device_node_get(policy->cpu);
->  	if (!cpu_np)
->  		return -EINVAL;
-> @@ -205,6 +227,12 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->  		goto error;
+> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> index 5f2977982ef1..b74c44357e8a 100644
+> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
+> @@ -951,13 +951,7 @@ static int pmic_gpio_probe(struct platform_device *pdev)
+>  		return ret;
 >  	}
+>  
+> -	npins = platform_irq_count(pdev);
+> -	if (!npins)
+> -		return -EINVAL;
+> -	if (npins < 0)
+> -		return npins;
+> -
+> -	BUG_ON(npins > ARRAY_SIZE(pmic_gpio_groups));
+> +	npins = (u16)(uintptr_t) device_get_match_data(&pdev->dev);
+
+Why u16, afaict npins is an int? I'm pretty sure you can leave the last
+cast as implicit and as it's not actually a pointer that we're acquiring
+casting it to "unsigned long" is the idiomatic way.
+
+Apart from this the change looks good.
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Regards,
+Bjorn
+
+>  
+>  	state = devm_kzalloc(dev, sizeof(*state), GFP_KERNEL);
+>  	if (!state)
+> @@ -1063,16 +1057,16 @@ static int pmic_gpio_remove(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id pmic_gpio_of_match[] = {
+> -	{ .compatible = "qcom,pm8005-gpio" },	/* 4 GPIO's */
+> -	{ .compatible = "qcom,pm8916-gpio" },	/* 4 GPIO's */
+> -	{ .compatible = "qcom,pm8941-gpio" },	/* 36 GPIO's */
+> -	{ .compatible = "qcom,pm8994-gpio" },	/* 22 GPIO's */
+> -	{ .compatible = "qcom,pmi8994-gpio" },  /* 10 GPIO's */
+> -	{ .compatible = "qcom,pm8998-gpio" },	/* 26 GPIO's */
+> -	{ .compatible = "qcom,pmi8998-gpio" },	/* 14 GPIO's */
+> -	{ .compatible = "qcom,pma8084-gpio" },	/* 22 GPIO's */
+> -	{ .compatible = "qcom,pms405-gpio" },	/* 12 GPIO's, holes on 1 9 10 */
+> -	{ .compatible = "qcom,spmi-gpio" }, /* Generic */
+> +	{ .compatible = "qcom,pm8005-gpio", .data = (void *) 4 },
+> +	{ .compatible = "qcom,pm8916-gpio", .data = (void *) 4 },
+> +	{ .compatible = "qcom,pm8941-gpio", .data = (void *) 36 },
+> +	{ .compatible = "qcom,pm8994-gpio", .data = (void *) 22 },
+> +	{ .compatible = "qcom,pmi8994-gpio", .data = (void *) 10 },
+> +	{ .compatible = "qcom,pm8998-gpio", .data = (void *) 26 },
+> +	{ .compatible = "qcom,pmi8998-gpio", .data = (void *) 14 },
+> +	{ .compatible = "qcom,pma8084-gpio", .data = (void *) 22 },
+> +	/* pms405 has 12 GPIOs with holes on 1, 9, and 10 */
+> +	{ .compatible = "qcom,pms405-gpio", .data = (void *) 12 },
+>  	{ },
+>  };
+>  
+> -- 
+> 2.17.2
 > 
-> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
-> +	if (ret <= 0) {
-> +		dev_err(cpu_dev, "OPP table is not ready\n");
-> +		goto error;
-> +	}
-> +
->  	policy->fast_switch_possible = true;
-> 
->  	return 0;
-> @@ -217,6 +245,7 @@ static int qcom_cpufreq_hw_cpu_exit(struct cpufreq_policy *policy)
->  {
->  	void __iomem *base = policy->driver_data - REG_PERF_STATE;
-> 
-> +	dev_pm_opp_remove_all_dynamic(&global_pdev->dev);
->  	kfree(policy->freq_table);
->  	devm_iounmap(&global_pdev->dev, base);
-
-With this patch I get the following message on a SDM845 platform:
-
-[    0.847515] cpu cpu0: _opp_is_duplicate: duplicate OPPs detected. Existing: freq: 1766400000, volt: 804000, enabled: 1. New: freq: 1766400000, volt: 804000, enabled: 1
-
-A LUT that doesn't end with a boost frequency isn't handled
-properly. The below patch fixes this.
-
-Cheers
-
-Matthias
-
-
->From 481d7d6b190285c95f20e9e1b5ccd5c6b9910a0d Mon Sep 17 00:00:00 2001
-From: Matthias Kaehlcke <mka@chromium.org>
-Date: Mon, 14 Jan 2019 15:54:54 -0800
-Subject: [PATCH] cpufreq: qcom-hw: Don't add duplicate OPPs
-
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- drivers/cpufreq/qcom-cpufreq-hw.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/cpufreq/qcom-cpufreq-hw.c b/drivers/cpufreq/qcom-cpufreq-hw.c
-index 41557329777e5a..314c8d29276b5e 100644
---- a/drivers/cpufreq/qcom-cpufreq-hw.c
-+++ b/drivers/cpufreq/qcom-cpufreq-hw.c
-@@ -103,15 +103,14 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
- 		else
- 			freq = cpu_hw_rate / 1000;
- 
--		/* Ignore boosts in the middle of the table */
--		if (core_count != max_cores) {
--			table[i].frequency = CPUFREQ_ENTRY_INVALID;
--		} else {
-+		if ((freq != prev_freq) && (core_count == max_cores)) {
- 			table[i].frequency = freq;
- 			dev_pm_opp_add(get_cpu_device(policy->cpu),
--					freq * 1000, volt);
-+				       freq * 1000, volt);
- 			dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
- 				freq, core_count);
-+		} else {
-+			table[i].frequency = CPUFREQ_ENTRY_INVALID;
- 		}
- 
- 		/*
