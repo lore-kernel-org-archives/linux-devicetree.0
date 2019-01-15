@@ -1,30 +1,31 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v4 01/14] dt-bindings: pinctrl: qcom-pmic-gpio: add
- qcom,pmi8998-gpio binding
-Date: Tue, 15 Jan 2019 14:07:08 -0600
-Message-ID: <20190115200708.GA20288@bogus>
-References: <20190113154716.5145-1-masneyb@onstation.org>
- <20190113154716.5145-2-masneyb@onstation.org>
+Subject: Re: [PATCH shawn/for-next v4 1/2] dt-bindings: arm: Add Y Soft IOTA
+  Draco, Hydra and Ursa boards
+Date: Tue, 15 Jan 2019 14:09:36 -0600
+Message-ID: <20190115200936.GA28224@bogus>
+References: <1547562139-64730-1-git-send-email-michal.vokac@ysoft.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190113154716.5145-2-masneyb@onstation.org>
+In-Reply-To: <1547562139-64730-1-git-send-email-michal.vokac@ysoft.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Cc: Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, 13 Jan 2019 10:47:03 -0500, Brian Masney wrote:
-> Add support for the PMI8998 GPIO variant to the Qualcomm PMIC GPIO
-> binding document.
+On Tue, 15 Jan 2019 14:22:44 +0000, =?utf-8?B?Vm9rw6HEjSBNaWNoYWw=?= wrote:
+> These are i.MX6DualLite/Solo based single board computers used
+> in various Y Soft products.
 > 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 > ---
-> This is a new patch introduced in V4.
+> Changes since v2:
+>  - New patch
 > 
->  Documentation/devicetree/bindings/pinctrl/qcom,pmic-gpio.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 3 +++
+>  1 file changed, 3 insertions(+)
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
