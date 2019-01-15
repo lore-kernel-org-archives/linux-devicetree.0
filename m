@@ -1,83 +1,61 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 2/4] spi: sprd: Add the SPI irq function for the SPI DMA
- mode
-Date: Tue, 15 Jan 2019 14:24:52 +0000
-Message-ID: <20190115142452.GA5522@sirena.org.uk>
-References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
- <ec1741f29c44c436c1086877ff5b208e6b8af45d.1547559542.git.baolin.wang@linaro.org>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: ti: k3-am654: Add Support for MMC/SD
+Date: Tue, 15 Jan 2019 08:27:11 -0600
+Message-ID: <20190115142711.iwsx4p3gfa63dutc@kahuna>
+References: <20190110073355.3382-1-faiz_abbas@ti.com>
+ <20190110073355.3382-2-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="oyUTqETQ0mS9luUI"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <ec1741f29c44c436c1086877ff5b208e6b8af45d.1547559542.git.baolin.wang@linaro.org>
+In-Reply-To: <20190110073355.3382-2-faiz_abbas@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Baolin Wang <baolin.wang@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, orsonzhai@gmail.com, zhang.lyra@gmail.com, lanqing.liu@unisoc.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
+$subject claims MMC/SD, while the patch is specific for emmc and HS200?
 
---oyUTqETQ0mS9luUI
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+could you fix that up please?
 
-On Tue, Jan 15, 2019 at 09:46:51PM +0800, Baolin Wang wrote:
-
-This looks good, just one small issue and a thing to check:
-
-> +static irqreturn_t sprd_spi_handle_irq(int irq, void *data)
-> +{
-> +	struct sprd_spi *ss = (struct sprd_spi *)data;
-> +	u32 val = readl_relaxed(ss->base + SPRD_SPI_INT_MASK_STS);
+On 13:03-20190110, Faiz Abbas wrote:
+> Add support for the Secure Digital Host Controller Interface (SDHCI)
+> present on TI's AM654 SOCs. It is compatible with eMMC5.1 Host
+> Specifications and SDHC Standard Specification 4.10.
+> 
+> Enable only upto HS200 speed mode.
+> 
+> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> ---
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> index 272cf8fc8d30..78e1bb56adee 100644
+> --- a/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> +++ b/arch/arm64/boot/dts/ti/k3-am65-main.dtsi
+> @@ -191,4 +191,17 @@
+>  		#address-cells = <1>;
+>  		#size-cells = <0>;
+>  	};
 > +
-> +	if (val & SPRD_SPI_MASK_TX_END) {
-> +		writel_relaxed(SPRD_SPI_TX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
-> +		if (!(ss->trans_mode & SPRD_SPI_RX_MODE))
-> +			complete(&ss->xfer_completion);
-> +		return IRQ_HANDLED;
-> +	}
-> +
-> +	if (val & SPRD_SPI_MASK_RX_END) {
-> +		writel_relaxed(SPRD_SPI_RX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
-> +		complete(&ss->xfer_completion);
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +}
+> +	sdhci0: sdhci@4f80000 {
+> +		compatible = "ti,am654-sdhci-5.1";
+> +		reg = <0x0 0x4f80000 0x0 0x260>, <0x0 0x4f90000 0x0 0x134>;
+> +		power-domains = <&k3_pds 47>;
+> +		clocks = <&k3_clks 47 0>, <&k3_clks 47 1>;
+> +		clock-names = "clk_ahb", "clk_xin";
+> +		interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> +		mmc-ddr-1_8v;
+> +		mmc-hs200-1_8v;
+> +		ti,otap-del-sel = <0x2>;
+> +		ti,trm-icp = <0x8>;
+> +	};
+>  };
+> -- 
+> 2.19.2
+> 
 
-This will return IRQ_HANDLED no matter if there was an interrupt
-actually handled.  That means that if something goes wrong due to some
-bug or a hardware change (eg, a new version of the IP) and there's
-another interrupt fired we won't clear it and the interrupt core won't
-be able to detect that it's a spurious interrupt and use its own error
-handling.  It's better to return IRQ_NONE in that case.
-
-> +	ret = devm_request_irq(&pdev->dev, ss->irq, sprd_spi_handle_irq,
-> +				0, pdev->name, ss);
-> +	if (ret)
-> +		dev_err(&pdev->dev, "failed to request spi irq %d, ret = %d\n",
-> +			ss->irq, ret);
-
-Are you sure it's safe to use devm_request_irq(), especially when
-unloading the driver?  Using it means that we will only disable the
-interrupt after the driver's remove function has finished so there's a
-danger of an interrupt firing when some of the resources the hander has
-used are still in use.  I didn't spot any issues, just something to
-check especially with the later patches building on top of this.
-
---oyUTqETQ0mS9luUI
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlw97TMACgkQJNaLcl1U
-h9BFNwf9HP3Z+bpkgsUNL5XdG5PvKTnwIdDpVQSXq4JNtppq2ITkJ7VxbDbJ3+1l
-8dK4dnT6wX3+/dib9ky626PIovD+WkchDpQYKud/tb4ZsKwmhJ5OhfxLd/2rQOOF
-eeYdFPiKHai0NzIdZpOga6orkDvjgM860VSh7Ylfl2iJ13cZGoR8Jnxo+Sa+huPg
-lxphZAUJWUjFVeU0fetbyVb8iY89ovgBUMtzJ5xcWzdLXiLi3yT2s8NGrTtDxS2u
-QVhJulPTxjxJ694mGH2mPz8hda+7uw/IT8sjk8bd3MmK/efl6CEZ5B1frzIm85Jg
-pDm8Fno1/aJOZ339cLVOo5pjwxtJ2g==
-=cuso
------END PGP SIGNATURE-----
-
---oyUTqETQ0mS9luUI--
+-- 
+Regards,
+Nishanth Menon
