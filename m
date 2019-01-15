@@ -1,247 +1,89 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 1/2] dt: bindings: lp50xx: Introduce the lp50xx family
- of RGB drivers
-Date: Tue, 15 Jan 2019 22:42:23 +0100
-Message-ID: <45f28e71-54c5-dfa8-78b8-c68b2d39c019@gmail.com>
-References: <20190114211723.11186-1-dmurphy@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
+ bindings
+Date: Tue, 15 Jan 2019 15:44:29 -0600
+Message-ID: <20190115214429.GA21758@bogus>
+References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
+ <20190111133133.24803-7-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114211723.11186-1-dmurphy@ti.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, pavel@ucw.cz, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190111133133.24803-7-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
-
-Thank you for the patch.
-
-Seeing the mess with regs and led-modules I think
-it will be better to abide by the regs alone.
-
-Please see below how I would structure that.
-
-On 1/14/19 10:17 PM, Dan Murphy wrote:
-> Introduce the bindings for the Texas Instruments LP5036, LP5030, LP5024 and the LP5018
-> RGB LED device driver.  The LP5036/3024/18 can control RGB LEDs individually
-> or as part of a control bank group.  These devices have the ability
-> to adjust the mixing control for the RGB LEDs to obtain different colors
-> independent of the overall brightness of the LED grouping.
+On Fri, Jan 11, 2019 at 02:31:29PM +0100, Miquel Raynal wrote:
+> Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
 > 
-> Datasheet:
-> http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> http://www.ti.com/lit/ds/symlink/lp5036.pdf
-> 
-> Signed-off-by: Dan Murphy <dmurphy@ti.com>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
+>  .../bindings/phy/phy-mvebu-utmi.txt           | 37 +++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
 > 
-> v2 - Added the LP5030/36 devices, defined the modules vs banked properties
-> renamed the file from lp5024 to lp50xx. - https://lore.kernel.org/patchwork/patch/1026514/
-> 
->   .../devicetree/bindings/leds/leds-lp50xx.txt  | 143 ++++++++++++++++++
->   1 file changed, 143 insertions(+)
->   create mode 100644 Documentation/devicetree/bindings/leds/leds-lp50xx.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/leds/leds-lp50xx.txt b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
+> diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
 > new file mode 100644
-> index 000000000000..7bc6843ddba4
+> index 000000000000..4ade05ce5d51
 > --- /dev/null
-> +++ b/Documentation/devicetree/bindings/leds/leds-lp50xx.txt
-> @@ -0,0 +1,143 @@
-> +* Texas Instruments - LP5018/24/30/36 RGB LED driver
+> +++ b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+> @@ -0,0 +1,37 @@
+> +MVEBU A3700 UTMI PHY
+> +--------------------
 > +
-> +The LP50XX is multi-channel, I2C RGB LED Drivers that can group RGB LEDs into
-> +a LED group or control them individually.
+> +USB2 UTMI+ PHY controllers can be found on the following Marvell MVEBU SoCs:
+> +* Armada 3700
 > +
-> +The difference in these RGB LED drivers is the number of supported RGB strings.
+> +On Armada 3700, there are two USB controllers, one is compatible with the USB2
+> +and USB3 specifications and supports OTG. The other one is USB2 compliant and
+> +only supports host mode. Both of these controllers come with a UTMI PHY.
 
-Maybe it would be better to replace "strings" with "modules"?
-Strings usually mean LEDs connected in a row, which is specific
-to backlights.
-
-> +Required properties:
-> +	- compatible:
-> +		"ti,lp5018"
-> +		"ti,lp5024"
-> +		"ti,lp5030"
-> +		"ti,lp5036"
-> +	- reg :  I2C slave address
-> +		lp5018/24 - 0x28
-> +		lp5030/36 - 0x30
-> +	- #address-cells : 1
-> +	- #size-cells : 0
-> +
-> +Optional properties:
-> +	- enable-gpios : gpio pin to enable/disable the device.
-> +	- vled-supply : LED supply
-> +
-> +Required child properties:
-> +	- reg : Is the child node iteration.
-
-Let's change it to:
-
-- reg : RGB LED module number. For the node describing RGB cluster bank
-         it should match first element of ti,led-bank array.
+This paragraph says the controllers are different, but are the PHYs 
+different?
 
 > +
-> +Required Child properties but only one should be defined per child:
-> +Either one of these two properties are required for each node.  The
-> +property ti,led-bank takes precedence over the ti,led-module within the same
-> +node.
+> +Required Properties:
 > +
-> +	- ti,led-module : This property denotes the single LED module number
-> +			  that will be controlled in the LED class instance.
-
-It will be not needed then.
-
-> +	- ti,led-bank : This property denotes the LED module numbers that will
-> +			be controlled as a single RGB cluster.  Each LED module
-> +			number will be controlled by a single LED class instance.
-> +			There can only be one instance of the ti,led-bank
-> +			property for each device node.
+> +- compatible: Should be one of:
+> +	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
+> +	        the USB2 host-only controller.
+> +	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
+> +	        the USB3 and USB2 OTG capable controller.
+> +- reg: PHY IP register range.
+> +- marvell,usb-misc-reg: handle on the "USB miscellaneous registers" shared
+> +			region covering registers related to both the host
+> +			controller and the PHY.
+> +- #phy-cells: Standard property (Documentation: phy-bindings.txt) Should be 0.
 > +
-> +The LED outpus associated with the LED modules are defined in Table 1 of the
-> +corresponding data sheets.
 > +
-> +LP5018 - 6 Total RGB cluster LED outputs 0-5
-> +LP5024 - 8 Total RGB cluster LED outputs 0-7
-> +LP5030 - 10 Total RGB cluster LED outputs 0-9
-> +LP5036 - 12 Total RGB cluster LED outputs 0-11
+> +Example:
 > +
-> +Optional child properties:
-> +	- label : see Documentation/devicetree/bindings/leds/common.txt
-> +	- linux,default-trigger :
-> +	   see Documentation/devicetree/bindings/leds/common.txt
-> +
-> +Examples:
-> +LP5018 and LP5024 example:
-> +led-controller@29 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "ti,lp5024";
-> +	reg = <0x29>;
-> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +	vled-supply = <&vmmcsd_fixed>;
-> +
-> +	led@0 {
-> +	        reg = <0>;
-> +	        label = "led1_mod";
-> +		ti,led-module = <1>;
+> +	usb2_utmi_host_phy: phy@5f000 {
+> +		compatible = "marvell,armada-3700-utmi-host-phy";
+> +		reg = <0x5f000 0x800>;
+> +		marvell,usb-misc-reg = <&usb2_syscon>;
+> +		#phy-cells = <0>;
 > +	};
 > +
-> +	led@1 {
-> +	        reg = <1>;
-> +	        label = "banked_leds";
-> +		ti,led-bank = <0 2 5 3 >;
+> +	usb2_syscon: system-controller@5f800 {
+> +		compatible = "syscon", "simple-mfd";
+
+This is not valid because there's not a specific compatible string and 
+'simple-mfd' implies there are child nodes.
+
+> +		reg = <0x5f800 0x800>;
 > +	};
-> +
-> +	led@2 {
-> +	        reg = <2>;
-> +	        label = "led4_mod";
-> +		ti,led-module = <4>;
-> +	};
-> +
-> +	led@3 {
-> +	        reg = <3>;
-> +	        label = "led7_mod";
-> +		ti,led-module = <7>;
-> +	};
-> +
-> +	led@4 {
-> +	        reg = <4>;
-> +	        label = "led6_mod";
-> +		ti,led-module = <6>;
-> +	};
-
-Without ti,led-module it will look like below:
-
-
-led@0 {
-         reg = <0>;
-         label = "banked_leds";
-         ti,led-bank = <0 2 5 3 >;
-};
-
-led@1 {
-         reg = <1>;
-         label = "led1_mod";
-};
-
-
-led@4 {
-         reg = <4>;
-         label = "led4_mod";
-};
-
-led@6 {
-         reg = <6>;
-         label = "led6_mod";
-};
-
-led@7 {
-         reg = <7>;
-         label = "led7_mod";
-};
-
-
-
-> +};
-> +
-> +LP5030 and LP5036 example:
-> +led-controller@30 {
-> +	#address-cells = <1>;
-> +	#size-cells = <0>;
-> +	compatible = "ti,lp5036";
-> +	reg = <0x30>;
-> +	enable-gpios = <&gpio1 28 GPIO_ACTIVE_HIGH>;
-> +	vled-supply = <&vmmcsd_fixed>;
-> +
-> +	led@0 {
-> +	        reg = <0>;
-> +	        label = "led1_mod";
-> +		ti,led-module = <1>;
-> +	};
-> +
-> +	led@1 {
-> +	        reg = <1>;
-> +	        label = "led_banked";
-> +		ti,led-bank = <0 2 5 3 9 10 >;
-> +	};
-> +
-> +	led@2 {
-> +	        reg = <2>;
-> +	        label = "led4_mod";
-> +		ti,led-module = <4>;
-> +	};
-> +
-> +	led@3 {
-> +	        reg = <3>;
-> +	        label = "led7_mod";
-> +		ti,led-module = <7>;
-> +	};
-> +
-> +	led@4 {
-> +	        reg = <4>;
-> +	        label = "led6_mod";
-> +		ti,led-module = <6>;
-> +	};
-> +
-> +	led@5 {
-> +	        reg = <5>;
-> +	        label = "led8_mod";
-> +		ti,led-module = <8>;
-> +	};
-> +};
-> +
-> +
-> +For more product information please see the link below:
-> +http://www.ti.com/lit/ds/symlink/lp5024.pdf
-> +http://www.ti.com/lit/ds/symlink/lp5036.pdf
+> -- 
+> 2.19.1
 > 
-
--- 
-Best regards,
-Jacek Anaszewski
