@@ -1,83 +1,74 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v4 06/14] spmi: pmic-arb: disassociate old virq if hwirq
- mapping already exists
-Date: Mon, 14 Jan 2019 16:42:03 -0800
-Message-ID: <20190115004203.GK9278@minitux>
-References: <20190113154716.5145-1-masneyb@onstation.org>
- <20190113154716.5145-7-masneyb@onstation.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH v5 2/3] Input: atmel_mxt_ts: Wait for device be ready for
+ communication
+Date: Mon, 14 Jan 2019 16:42:32 -0800
+Message-ID: <20190115004232.GK117329@dtor-ws>
+References: <20181214151214.5391-1-pawel.mikolaj.chmiel@gmail.com>
+ <20181214151214.5391-3-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190113154716.5145-7-masneyb@onstation.org>
+In-Reply-To: <20181214151214.5391-3-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: linus.walleij@linaro.org, sboyd@kernel.org, andy.gross@linaro.org, marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: nick@shmanahar.org, robh+dt@kernel.org, mark.rutland@arm.com, nicolas.ferre@microchip.com, alexandre.belloni@bootlin.com, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sun 13 Jan 07:47 PST 2019, Brian Masney wrote:
-
-> Check to see if the hwirq is already associated with another virq on
-> this IRQ domain. If so, then disassociate it before associating the
-> hwirq with the new virq.
+On Fri, Dec 14, 2018 at 04:12:13PM +0100, Paweł Chmiel wrote:
+> According to documentation, device isn't ready for communication,
+> until firmware asserts the CHG line. Add missing wait for this.
 > 
-> This is a temporary hack that is needed in order to not break git
-> bisect for existing boards. The next patch in this series converts
-> spmi-gpio to be a hierarchical IRQ chip, then there are several patches
-> to update all of the device tree files, and finally this patch will be
-> reverted within the same patch series.
-> 
-
-You must maintain compatibility with existing DTB files (at least for
-some time), so I don't think we can revert this patch at the end of the
-series. 
-
-But the patch itself looks reasonable,
-
-Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-
-Regards,
-Bjorn
-
-> IRQs for spmi-gpio are all initially setup without an IRQ hierarchy
-> on pmic-arb when mfd/qcom-spmi-pmic.c is probed (via the
-> devm_of_platform_populate call) due to the interrupts property in
-> device tree. Once spmi-gpio is converted to be a hierarchical IRQ chip
-> in the next patch, existing users of gpio[d]_to_irq() will call
-> pmic_gpio_to_irq(), and that will use the new IRQ chip code in
-> spmi-gpio that sets up the IRQ in an IRQ hierarchy. The hwirq is now
-> associated with two Linux virqs and interrupts will not work as
-> expected. This patch corrects that issue.
-> 
-> Driver was tested using gpio-keys and iadc/vadc on the LG Nexus 5
-> (hammerhead) phone.
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 > ---
-> This is a new patch introduced in V4, but this logic was present in V1.
+> Changes from v1:
+>   - Fix checkpatch issues
+> ---
+>  drivers/input/touchscreen/atmel_mxt_ts.c | 11 +++++++++++
+>  1 file changed, 11 insertions(+)
 > 
->  drivers/spmi/spmi-pmic-arb.c | 6 ++++++
->  1 file changed, 6 insertions(+)
-> 
-> diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-> index 356bc3f66e22..b7cfee831417 100644
-> --- a/drivers/spmi/spmi-pmic-arb.c
-> +++ b/drivers/spmi/spmi-pmic-arb.c
-> @@ -744,8 +744,14 @@ static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
->  				   struct irq_domain *domain, unsigned int virq,
->  				   irq_hw_number_t hwirq)
->  {
-> +	unsigned int old_virq;
-> +
->  	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu\n", virq, hwirq);
+> diff --git a/drivers/input/touchscreen/atmel_mxt_ts.c b/drivers/input/touchscreen/atmel_mxt_ts.c
+> index 55a107fc1b73..e8949c6ceafa 100644
+> --- a/drivers/input/touchscreen/atmel_mxt_ts.c
+> +++ b/drivers/input/touchscreen/atmel_mxt_ts.c
+> @@ -202,6 +202,7 @@ enum t100_type {
+>  #define MXT_CRC_TIMEOUT		1000	/* msec */
+>  #define MXT_FW_RESET_TIME	3000	/* msec */
+>  #define MXT_FW_CHG_TIMEOUT	300	/* msec */
+> +#define MXT_POWERON_DELAY	150	/* msec */
 >  
-> +	old_virq = irq_find_mapping(domain, hwirq);
-> +	if (old_virq)
-> +		irq_domain_disassociate(domain, old_virq);
+>  /* Command to unlock bootloader */
+>  #define MXT_UNLOCK_CMD_MSB	0xaa
+> @@ -3070,6 +3071,16 @@ static int mxt_regulator_enable(struct mxt_data *data)
+>  		msleep(MXT_REGULATOR_DELAY);
+>  		gpiod_set_value(data->reset_gpio, 1);
+>  		msleep(MXT_RESET_INVALID_CHG);
 > +
->  	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
->  			    handle_level_irq, NULL, NULL);
->  }
+> +retry_wait:
+> +		reinit_completion(&data->bl_completion);
+> +		data->in_bootloader = true;
+
+I think you would want to reinit the ocmpletion and set the flag before
+releasing reset line and sleeping, otherwise if interrupt fires too
+early you'll be spinning for extra time.
+
+I'd also really want to hear from Nick on this change.
+
+> +		error = mxt_wait_for_completion(data, &data->bl_completion,
+> +						MXT_POWERON_DELAY);
+> +		if (error == -EINTR)
+> +			goto retry_wait;
+> +
+> +		data->in_bootloader = false;
+>  	}
+>  
+>  	return 0;
 > -- 
-> 2.17.2
+> 2.17.1
 > 
+
+Thanks.
+
+-- 
+Dmitry
