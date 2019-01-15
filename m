@@ -1,40 +1,64 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH v2 3/5] dt-binding: pcf85063: add xtal load capacitance
-Date: Tue, 15 Jan 2019 23:22:23 +0100
-Message-ID: <20190115222223.GA558@ravnborg.org>
-References: <20190108185414.26922-1-sam@ravnborg.org>
- <20190108185414.26922-4-sam@ravnborg.org>
- <20190115210827.GA25046@bogus>
+From: Wolfram Sang <wsa@the-dreams.de>
+Subject: Re: [PATCH i2c-next v9 0/5] i2c: aspeed: Add bus idle waiting logic
+ for multi-master use cases
+Date: Tue, 15 Jan 2019 23:47:13 +0100
+Message-ID: <20190115224713.duoha332mjlrmwji@ninjato>
+References: <20181030210917.32711-1-jae.hyun.yoo@linux.intel.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="xwuf2wduqyb2yvvn"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190115210827.GA25046@bogus>
+In-Reply-To: <20181030210917.32711-1-jae.hyun.yoo@linux.intel.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Urs =?iso-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
+Cc: Brendan Higgins <brendanhiggins@google.com>, Rob Herring <robh+dt@kernel.org>, Joel Stanley <joel@jms.id.au>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Mark Rutland <mark.rutland@arm.com>, Andrew Jeffery <andrew@aj.id.au>, linux-i2c@vger.kernel.org, openbmc@lists.ozlabs.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org, Jarkko Nikula <jarkko.nikula@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob.
 
-> > +
-> > +Optional property:
-> > +- quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-> 
-> Probably should put this in rtc.txt so it can be shared.
+--xwuf2wduqyb2yvvn
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Good point - will do and respin the patchset.
+On Tue, Oct 30, 2018 at 02:09:11PM -0700, Jae Hyun Yoo wrote:
+> In multi-master environment, this driver's master cannot know
+> exactly when a peer master sends data to this driver's slave so a
+> case can be happened that this master tries to send data through
+> the master_xfer function but slave data from peer master is still
+> being processed by this driver. To prevent state corruption in the
+> case, this patch adds checking code if any slave operation is
+> ongoing and it waits up to the bus timeout duration before starting
+> a master_xfer operation.
+>=20
+> To support this change, it introduces changes on i2c-core-base to
+> make that able to read the bus timeout and master transfer retries
+> count values from device tree properties.
+>=20
+> Please review this patch set.
 
-> 
-> > +  expressed in femto Farad (fF). Valid values are 7000 and 12500.
-> > +  Default value (if no value is specified) is 7000fF.
-> > +
-> > +Example:
-> > +
-> > +pcf85063: pcf85063@51 {
-> 
-> rtc@51
+Marking this as "Changes requested". I think if the mutex approach
+works, these patches become obsolete then.
 
-OK, will change.
 
-	Sam
+--xwuf2wduqyb2yvvn
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlw+YvEACgkQFA3kzBSg
+Kbb02Q/9G2qC89KWcdgTbnn6LJRKpfD/+wioyzPtJdq3Vy0UHGJJZ0DvcZbLBkbt
+Mc5ToZFckDRdznQCBm4vZG6r+9HqKRK58i+EJXzg/iomWYTWi+WScUb0uo5PNpy3
+UX5ZxtOkw0JBpBPRtjxp3pH88/KGv/9ROOUbpToh1BzF2ZLWEjAf0BFK0snNbdEZ
+A2BNFIntvm14mk5TskacVvbJS/61W8LDoZSU/PTTp3XpaQVq+GYvPw23Dw/h+L0U
+xNCa2WEHly8p79Ol4cSzb5U7Y+SEVmaSSGx1y/mRkcxh4vEywzlxVOg01OueAv+S
+ZrdtWSruFEaZ5MzJgA7zSpX4Ox6xzw5grLF7AxiJ3cNnBSQEithH5qm9+9PxvjeB
+wrKrtz37ZqyeYeNOxT1gZIBXPvx/PTanD7X87quyks1rbIlsSimUEqllpgqZlJrP
+5pxdzpuJcgdRnx+WPJme5V4M+uLvoi79kJMIYKaabCDC9HG1EiFHw2HQn9K32UUp
+kj9myrPOF7rUfZZTGrUHyGBy9/EHnU9Wl3QaUSTN1Q0Moo+QE/0sqeK4MsAYnoBO
+JxebYGo8XO++FtvFHI3BlhQ8/yVQ3HsxISMtiwr1TsJDY7LNKA+fKJCMIAyBI99T
+jQ8aRWsMrbnFdYxXApxkmkVwHgCFRARZ0ushrdIT/RWr87yXiUI=
+=krzm
+-----END PGP SIGNATURE-----
+
+--xwuf2wduqyb2yvvn--
