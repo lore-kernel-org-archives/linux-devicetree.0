@@ -1,57 +1,46 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH 0/3] nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
-Date: Tue, 15 Jan 2019 10:21:02 +0000
-Message-ID: <617796b0-47b1-7dc2-533b-1765dc825bd0@linaro.org>
-References: <1544536273-17909-1-git-send-email-stefan.wahren@i2se.com>
- <7ca64f1d-8649-79a3-4c48-5242a68a837b@i2se.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <7ca64f1d-8649-79a3-4c48-5242a68a837b@i2se.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Stefan Wahren <stefan.wahren@i2se.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, linux-imx@nxp.com, kernel@pengutronix.de
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: [PATCH 1/4] dt-bindings: power: sc27xx: Add one IIO channel to read charge voltage
+Date: Tue, 15 Jan 2019 18:32:34 +0800
+Message-ID: <76a12fe5d0cc670266100b0587b047714c9a8a83.1547544142.git.baolin.wang@linaro.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, zhang.lyra@gmail.com, orsonzhai@gmail.com
 List-Id: devicetree@vger.kernel.org
 
+Add one IIO channel named "charge_vol" to read the charge voltage for
+the SC27XX fuel gauge controller.
 
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ .../devicetree/bindings/power/supply/sc27xx-fg.txt |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-On 15/01/2019 10:17, Stefan Wahren wrote:
-> Hi Shawn,
-> hi Srinivas,
-> 
-> Am 11.12.18 um 14:51 schrieb Stefan Wahren:
->> According to the reference manuals for i.MX6ULL and i.MX6ULZ both SoCs
->> only support 8 OTP banks instead of 16. So we can't use the compatible
->> string of i.MX6UL.
->>
->> Stefan Wahren (3):
->>    dt-bindings: imx-ocotp: Add i.MX6ULL/ULZ support
->>    nvmem: imx-ocotp: Implement i.MX6ULL/ULZ support
->>    ARM: dts: imx6ull: Fix i.MX6ULL/ULZ ocotp compatible
->>
->>   Documentation/devicetree/bindings/nvmem/imx-ocotp.txt | 3 ++-
->>   arch/arm/boot/dts/imx6ull.dtsi                        | 4 ++++
->>   drivers/nvmem/imx-ocotp.c                             | 7 +++++++
->>   3 files changed, 13 insertions(+), 1 deletion(-)
->>
-> Rob already gave his Reviewed-By for the binding. Are you fine with the rest of the series?
-> 
-
-I can take 1 and 2 via nvmem tree, dt patch has to go via ARM SoC tree!
-
-
-thanks,
-srini
-> Regards
-> Stefan
-> 
+diff --git a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+index fc35ac5..0a5705b 100644
+--- a/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
++++ b/Documentation/devicetree/bindings/power/supply/sc27xx-fg.txt
+@@ -9,8 +9,8 @@ Required properties:
+   "sprd,sc2731-fgu".
+ - reg: The address offset of fuel gauge unit.
+ - battery-detect-gpios: GPIO for battery detection.
+-- io-channels: Specify the IIO ADC channel to get temperature.
+-- io-channel-names: Should be "bat-temp".
++- io-channels: Specify the IIO ADC channels to get temperature and charge voltage.
++- io-channel-names: Should be "bat-temp" or "charge-vol".
+ - nvmem-cells: A phandle to the calibration cells provided by eFuse device.
+ - nvmem-cell-names: Should be "fgu_calib".
+ - monitored-battery: Phandle of battery characteristics devicetree node.
+@@ -47,8 +47,8 @@ Example:
+ 			compatible = "sprd,sc2731-fgu";
+ 			reg = <0xa00>;
+ 			battery-detect-gpios = <&pmic_eic 9 GPIO_ACTIVE_HIGH>;
+-			io-channels = <&pmic_adc 5>;
+-			io-channel-names = "bat-temp";
++			io-channels = <&pmic_adc 5>, <&pmic_adc 14>;
++			io-channel-names = "bat-temp", "charge-vol";
+ 			nvmem-cells = <&fgu_calib>;
+ 			nvmem-cell-names = "fgu_calib";
+ 			monitored-battery = <&bat>;
+-- 
+1.7.9.5
