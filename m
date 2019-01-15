@@ -1,101 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/2] dt-bindings: bcm-ns-usb2-phy: rework binding to
- use CRU syscon
-Date: Tue, 15 Jan 2019 14:53:00 -0600
-Message-ID: <20190115205300.GA6754@bogus>
-References: <20190107082545.5529-1-zajec5@gmail.com>
- <20190108123907.19816-1-zajec5@gmail.com>
+Subject: Re: [PATCH v2 2/4] ASoC: add fsl_audmix DT binding documentation
+Date: Tue, 15 Jan 2019 14:54:07 -0600
+Message-ID: <20190115205407.GA3442@bogus>
+References: <1546952716-2743-1-git-send-email-viorel.suman@nxp.com>
+ <1546952716-2743-3-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190108123907.19816-1-zajec5@gmail.com>
+In-Reply-To: <1546952716-2743-3-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <zajec5@gmail.com>
-Cc: Kishon Vijay Abraham I <kishon@ti.com>, linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hauke Mehrtens <hauke@hauke-m.de>, bcm-kernel-feedback-list@broadcom.com, =?utf-8?B?UmFmYcWCIE1pxYJlY2tp?= <rafal@milecki.pl>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 08, 2019 at 01:39:06PM +0100, Rafał Miłecki wrote:
-> From: Rafał Miłecki <rafal@milecki.pl>
+On Tue, 8 Jan 2019 13:05:47 +0000, Viorel Suman wrote:
+> Add the DT binding documentation for NXP Audio Mixer
+> CPU DAI driver.
 > 
-> USB 2.0 PHY is a hardware block that happens to use two registers from
-> the CRU block to setup a single PLL. It's not part of the CRU or DMU
-> and so its binding shouldn't cover the whole DMU.
-> 
-> The correct way of handling this is to reference CRU block node using a
-> syscon. Document that & deprecate the old way.
-> 
-> Signed-off-by: Rafał Miłecki <rafal@milecki.pl>
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
 > ---
-> V2: use syscon@ in example (thanks Ray)
-> ---
->  .../devicetree/bindings/phy/bcm-ns-usb2-phy.txt    | 27 ++++++++++++++++++----
->  1 file changed, 23 insertions(+), 4 deletions(-)
+>  .../devicetree/bindings/sound/fsl,audmix.txt       | 44 ++++++++++++++++++++++
+>  1 file changed, 44 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
-> index a7aee9ea8926..2cafee6b4a8b 100644
-> --- a/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
-> +++ b/Documentation/devicetree/bindings/phy/bcm-ns-usb2-phy.txt
-> @@ -2,19 +2,38 @@ Driver for Broadcom Northstar USB 2.0 PHY
->  
->  Required properties:
->  - compatible: brcm,ns-usb2-phy
-> -- reg: iomem address range of DMU (Device Management Unit)
-> -- reg-names: "dmu", the only needed & supported reg right now
-> +- syscon-cru: phandle to the CRU (Central Resource Unit) syscon
->  - clocks: USB PHY reference clock
->  - clock-names: "phy-ref-clk", the only needed & supported clock right now
->  
-> +Deprecated:
-> +
-> +PHY block should not claim the whole DMU so such a binding has been deprecated.
-> +It only requires to access few CRU (a DMU subblock) registers and that should be
-> +handled with a syscon since CRU is a MFD (Multi-Function Device).
-> +
-> +- reg: iomem address range of DMU (Device Management Unit)
-> +- reg-names: "dmu", the only needed & supported reg right now
-> +
->  To initialize USB 2.0 PHY driver needs to setup PLL correctly. To do this it
->  requires passing phandle to the USB PHY reference clock.
->  
->  Example:
-> +	dmu@1800c000 {
-> +		compatible = "simple-bus";
 
-DMU sounds like some sort of block, not just a bus.
-
-> +		ranges = <0 0x1800c000 0x1000>;
-> +		#address-cells = <1>;
-> +		#size-cells = <1>;
-> +
-> +		cru: syscon@100 {
-> +			compatible = "syscon", "simple-mfd";
-
-Those 2 compatibles alone are not valid. And 'simple-mfd' implies child 
-nodes.
-
-Without any knowledge of what else is in the DMU, I can't give any 
-advice as to what this should look like instead.
-
-> +			reg = <0x100 0x1a4>;
-> +		};
-> +	};
-> +
->  	usb2-phy {
->  		compatible = "brcm,ns-usb2-phy";
-> -		reg = <0x1800c000 0x1000>;
-> -		reg-names = "dmu";
-> +		syscon-cru = <&cru>;
-
-No need for this. Make it a child of cru node.
-
-There's not a contiguous range of phy registers? If there are, keep 
-'reg' even if Linux doesn't (currently) use it.
-
->  		#phy-cells = <0>;
->  		clocks = <&genpll BCM_NSP_GENPLL_USB_PHY_REF_CLK>;
->  		clock-names = "phy-ref-clk";
-> -- 
-> 2.13.7
-> 
+Reviewed-by: Rob Herring <robh@kernel.org>
