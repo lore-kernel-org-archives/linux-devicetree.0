@@ -1,50 +1,27 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 43/49] dt-bindings: display: Add OSD Displays
- OSD070T1718-19TS panel binding
-Date: Tue, 15 Jan 2019 15:39:05 -0600
-Message-ID: <20190115213905.GA17873@bogus>
-References: <20190111035120.20668-1-laurent.pinchart@ideasonboard.com>
- <20190111035120.20668-44-laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH V2 1/3] dt-bindings: fsl: add imx7ulp system integration
+  module binding
+Date: Tue, 15 Jan 2019 15:40:27 -0600
+Message-ID: <20190115214027.GA21610@bogus>
+References: <1547187469-14046-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190111035120.20668-44-laurent.pinchart@ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: devicetree@vger.kernel.org, Tomi Valkeinen <tomi.valkeinen@ti.com>, Thierry Reding <thierry.reding@gmail.com>, dri-devel@lists.freedesktop.org
+In-Reply-To: <1547187469-14046-1-git-send-email-Anson.Huang@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Anson Huang <anson.huang@nxp.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gRnJpLCBKYW4gMTEsIDIwMTkgYXQgMDU6NTE6MTRBTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBUaGUgT1NEIERpc3BsYXlzIE9TRDA3MFQxNzE4LTE5VFMgaXMgYSA3IiBXVkdB
-ICg4MDB4NDgwKSAyNGJpdCBSR0IgcGFuZWwKPiBhbmQgaXMgY29tcGF0aWJsZSB3aXRoIHRoZSBz
-aW1wbGUtcGFuZWwgYmluZGluZ3MuCj4gCj4gU2lnbmVkLW9mZi1ieTogTGF1cmVudCBQaW5jaGFy
-dCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29uYm9hcmQuY29tPgo+IC0tLQo+ICAuLi4vZGlzcGxh
-eS9wYW5lbC9vc2RkaXNwbGF5cyxvc2QwNzB0MTcxOC0xOXRzLnR4dCAgICAgICAgIHwgNyArKysr
-KysrCj4gIDEgZmlsZSBjaGFuZ2VkLCA3IGluc2VydGlvbnMoKykKPiAgY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZGRp
-c3BsYXlzLG9zZDA3MHQxNzE4LTE5dHMudHh0Cj4gCj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29zZGRpc3BsYXlzLG9zZDA3MHQx
-NzE4LTE5dHMudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkv
-cGFuZWwvb3NkZGlzcGxheXMsb3NkMDcwdDE3MTgtMTl0cy50eHQKPiBuZXcgZmlsZSBtb2RlIDEw
-MDY0NAo+IGluZGV4IDAwMDAwMDAwMDAwMC4uYWU3MDExODIwMjMxCj4gLS0tIC9kZXYvbnVsbAo+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3BhbmVsL29z
-ZGRpc3BsYXlzLG9zZDA3MHQxNzE4LTE5dHMudHh0Cj4gQEAgLTAsMCArMSw3IEBACj4gK09TRCBE
-aXNwbGF5cyBPU0QwNzBUMTcxOC0xOVRTIDciIFdWR0EgVEZUIExDRCBwYW5lbAo+ICsKPiArUmVx
-dWlyZWQgcHJvcGVydGllczoKPiArLSBjb21wYXRpYmxlOiBzaG91bGQgYmUgIm9zZGRpc3BsYXlz
-LG9zZDA3MHQxNzE4LTE5dHMiCj4gKwo+ICtUaGlzIGJpbmRpbmcgaXMgY29tcGF0aWJsZSB3aXRo
-IHRoZSBzaW1wbGUtcGFuZWwgYmluZGluZywgd2hpY2ggaXMgc3BlY2lmaWVkCj4gK2luIHNpbXBs
-ZS1wYW5lbC50eHQgaW4gdGhpcyBkaXJlY3RvcnkuCgpQbGVhc2UgZW51bWVyYXRlIGV4YWN0bHkg
-d2hpY2ggcHJvcGVydGllcyBmcm9tIHNpbXBsZS1wYW5lbCBhcmUgdXNlZC4KClJvYgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGlu
-ZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVl
-ZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Fri, 11 Jan 2019 06:22:40 +0000, Anson Huang wrote:
+> Add i.MX7ULP system integration module (SIM) binding.
+> 
+> Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+> ---
+>  .../bindings/arm/freescale/fsl,imx7ulp-sim.txt           | 16 ++++++++++++++++
+>  1 file changed, 16 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/arm/freescale/fsl,imx7ulp-sim.txt
+> 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
