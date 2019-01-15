@@ -1,52 +1,69 @@
-From: Dmitry Osipenko <digetx@gmail.com>
-Subject: Re: [PATCH v7 00/24] Tegra GART driver clean up and optimization
-Date: Tue, 15 Jan 2019 19:33:54 +0300
-Message-ID: <bbefe330-d3e8-3eea-0f9e-a2b0b7915120@gmail.com>
-References: <20181212203907.23461-1-digetx@gmail.com>
- <20181217091455.kkxpyojp4r4fyhrw@8bytes.org>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v3] arm64: dts: marvell: Add device tree for uDPU board
+Date: Tue, 15 Jan 2019 17:37:36 +0100
+Message-ID: <8736ptri5r.fsf@FE-laptop>
+References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+ <20190115144421.29968-1-vladimir.vid@sartura.hr>
+ <20190115161608.GA25888@lunn.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181217091455.kkxpyojp4r4fyhrw@8bytes.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joerg Roedel <joro@8bytes.org>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190115161608.GA25888@lunn.ch> (Andrew Lunn's message of "Tue,
+ 15 Jan 2019 17:16:08 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Andrew Lunn <andrew@lunn.ch>
+Cc: devicetree@vger.kernel.org, Luis Torres <luis.torres@methode.com>, Paul Arola <paul.arola@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, Vladimir Vid <vladimir.vid@sartura.hr>, Scott Roberts <scott.roberts@telus.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-17.12.2018 12:14, Joerg Roedel пишет:
-> On Wed, Dec 12, 2018 at 11:38:43PM +0300, Dmitry Osipenko wrote:
->> Dmitry Osipenko (24):
->>   iommu/tegra: gart: Remove pr_fmt and clean up includes
->>   iommu/tegra: gart: Clean up driver probe errors handling
->>   iommu/tegra: gart: Ignore devices without IOMMU phandle in DT
->>   iommu: Introduce iotlb_sync_map callback
->>   iommu/tegra: gart: Optimize mapping / unmapping performance
->>   dt-bindings: memory: tegra: Squash tegra20-gart into tegra20-mc
->>   ARM: dts: tegra20: Update Memory Controller node to the new binding
->>   memory: tegra: Don't invoke Tegra30+ specific memory timing setup on
->>     Tegra20
->>   memory: tegra: Adapt to Tegra20 device-tree binding changes
->>   memory: tegra: Read client ID on GART page fault
->>   memory: tegra: Use of_device_get_match_data()
->>   memory: tegra: Use relaxed versions of readl/writel
->>   iommu/tegra: gart: Integrate with Memory Controller driver
->>   memory: tegra: Do not try to probe SMMU on Tegra20
->>   memory: tegra: Do not ask for IRQ sharing
->>   memory: tegra: Clean up error messages
->>   iommu/tegra: gart: Fix spinlock recursion
->>   iommu/tegra: gart: Fix NULL pointer dereference
->>   iommu/tegra: gart: Allow only one active domain at a time
->>   iommu/tegra: gart: Don't use managed resources
->>   iommu/tegra: gart: Prepend error/debug messages with "gart:"
->>   iommu/tegra: gart: Don't detach devices from inactive domains
->>   iommu/tegra: gart: Simplify clients-tracking code
->>   iommu/tegra: gart: Perform code refactoring
-> 
-> Applied, thanks.
-> 
+Hi Andrew,
+ 
+ On mar., janv. 15 2019, Andrew Lunn <andrew@lunn.ch> wrote:
 
-Hello Joerg,
+> Hi Vladimir
+>
+> Ah, i did not notice early. You need to Cc: the Marvell mvebu
+> maintainers. They are the ones who will accept this patch.
+>
+>
+>> +	leds {
+>> +		pinctrl-names = "default";
+>> +		compatible = "gpio-leds";
+>> +
+>> +		power@487 {
+>> +			label = "power:green:led1";
+>> +			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
+>> +			default-state = "off";
+>> +		};
+>
+> I'm a bit out of date with dtc warnings. I think the @487 will
+> generate a warning because there is no reg property?
+>
+> Gregory, do you know?
 
-Should I expect that the patches will appear in the IOMMU git and in -next consequently? Please let me know if there is any problem with the applying of the patches.
+I confirm that if there is no reg then there should not have a @XXX.
+
+Gregory
+
+
+>
+> Thanks
+> 	Andrew
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
