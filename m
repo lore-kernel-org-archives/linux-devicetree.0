@@ -1,130 +1,76 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: Re: [PATCH v3 02/14] media: ov7670: split register setting from
- set_framerate() logic
-Date: Tue, 15 Jan 2019 09:30:31 +0100
-Message-ID: <f6807e8ec5900b07bbaf6bb7e969b3da9be30f14.camel@v3.sk>
-References: <20181120100318.367987-1-lkundrak@v3.sk>
-         <20181120100318.367987-3-lkundrak@v3.sk>
-         <20190114230307.h5poc22jfs32hly3@valkosipuli.retiisi.org.uk>
+From: "Richter, Robert" <Robert.Richter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>
+Subject: Re: [PATCH] arm64: dts: Remove inconsistent use of 'arm,armv8'
+ compatible string
+Date: Tue, 15 Jan 2019 08:45:53 +0000
+Message-ID: <20190115084537.3hedrtkowg3elzca@rric.localdomain>
+References: <20190109202934.29304-1-robh@kernel.org>
+ <20190110144537.p5setcurwu6bwrtl@rric.localdomain>
+ <CAL_JsqKMYY5RsCjzp4eMnW0YrohcqwmhVj0hfUEVrbGJEFx05w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114230307.h5poc22jfs32hly3@valkosipuli.retiisi.org.uk>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sakari Ailus <sakari.ailus@iki.fi>
-Cc: Mauro Carvalho Chehab <mchehab@kernel.org>, Jonathan Corbet <corbet@lwn.net>, linux-media@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, James Cameron <quozl@laptop.org>, Pavel Machek <pavel@ucw.cz>, Libin Yang <lbyang@marvell.com>, Albert Wang <twang13@marvell.com>
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+In-Reply-To: <CAL_JsqKMYY5RsCjzp4eMnW0YrohcqwmhVj0hfUEVrbGJEFx05w-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+Content-Language: en-US
+Content-ID: <A7717CEB01A5B3418666A183E6A72D3A-Tk6F3M/euE6cE4WynfumptQqCkab/8FMAL8bYrjMMd8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Nishanth Menon <nm-l0cyMroinI0@public.gmane.org>, Andrew Lunn <andrew-g2DYL2Zd6BY@public.gmane.org>, Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, "linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, Liviu Dudau <liviu.dudau-5wv7dgnIgG8@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Thierry Reding <thierry.reding-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Wei Xu <xuwei5-C8/M+/jPZTeaMJb+Lgu22Q@public.gmane.org>, Manivannan Sadhasivam <manivannan.sadhasivam-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, "linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org" <linux-renesas-soc-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, "Nair,
+ Jayachandran" <Jayachandran.Nair-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org>, Lorenzo Pieralisi <lorenzo.pieralisi-5wv7dgnIgG8@public.gmane.org>, "linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org" <linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, Kevin Hilman <khilman-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Gregory Clement <gregory.clement-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Magnus Damm <magnus.damm-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>, Krzysztof Kozlowski <krzk@kerne>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 2019-01-15 at 01:03 +0200, Sakari Ailus wrote:
-> On Tue, Nov 20, 2018 at 11:03:07AM +0100, Lubomir Rintel wrote:
-> > This will allow us to restore the last set frame rate after the device
-> > returns from a power off.
-> > 
-> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > 
-> > ---
-> > Changes since v2:
-> > - This patch was added to the series
-> > 
-> >  drivers/media/i2c/ov7670.c | 30 ++++++++++++++----------------
-> >  1 file changed, 14 insertions(+), 16 deletions(-)
-> > 
-> > diff --git a/drivers/media/i2c/ov7670.c b/drivers/media/i2c/ov7670.c
-> > index ee2302fbdeee..ead0c360df33 100644
-> > --- a/drivers/media/i2c/ov7670.c
-> > +++ b/drivers/media/i2c/ov7670.c
-> > @@ -810,13 +810,24 @@ static void ov7675_get_framerate(struct v4l2_subdev *sd,
-> >  			(4 * clkrc);
-> >  }
-> >  
-> > +static int ov7675_apply_framerate(struct v4l2_subdev *sd)
-> > +{
-> > +	struct ov7670_info *info = to_state(sd);
-> > +	int ret;
-> > +
-> > +	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> > +	if (ret < 0)
-> > +		return ret;
-> > +
-> > +	return ov7670_write(sd, REG_DBLV, info->pll_bypass ? DBLV_BYPASS : DBLV_X4);
-> > +}
-> > +
-> >  static int ov7675_set_framerate(struct v4l2_subdev *sd,
-> >  				 struct v4l2_fract *tpf)
-> >  {
-> >  	struct ov7670_info *info = to_state(sd);
-> >  	u32 clkrc;
-> >  	int pll_factor;
-> > -	int ret;
-> >  
-> >  	/*
-> >  	 * The formula is fps = 5/4*pixclk for YUV/RGB and
-> > @@ -825,19 +836,10 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
-> >  	 * pixclk = clock_speed / (clkrc + 1) * PLLfactor
-> >  	 *
-> >  	 */
-> > -	if (info->pll_bypass) {
-> > -		pll_factor = 1;
-> > -		ret = ov7670_write(sd, REG_DBLV, DBLV_BYPASS);
-> > -	} else {
-> > -		pll_factor = PLL_FACTOR;
-> > -		ret = ov7670_write(sd, REG_DBLV, DBLV_X4);
-> > -	}
-> > -	if (ret < 0)
-> > -		return ret;
-> > -
-> >  	if (tpf->numerator == 0 || tpf->denominator == 0) {
-> >  		clkrc = 0;
-> >  	} else {
-> > +		pll_factor = info->pll_bypass ? 1 : PLL_FACTOR;
-> >  		clkrc = (5 * pll_factor * info->clock_speed * tpf->numerator) /
-> >  			(4 * tpf->denominator);
-> >  		if (info->fmt->mbus_code == MEDIA_BUS_FMT_SBGGR8_1X8)
-> > @@ -859,11 +861,7 @@ static int ov7675_set_framerate(struct v4l2_subdev *sd,
-> >  	/* Recalculate frame rate */
-> >  	ov7675_get_framerate(sd, tpf);
-> >  
-> > -	ret = ov7670_write(sd, REG_CLKRC, info->clkrc);
-> > -	if (ret < 0)
-> > -		return ret;
-> > -
-> > -	return ov7670_write(sd, REG_DBLV, DBLV_X4);
-> > +	return ov7675_apply_framerate(sd);
-> >  }
-> >  
-> >  static void ov7670_get_framerate_legacy(struct v4l2_subdev *sd,
+On 11.01.19 07:57:12, Rob Herring wrote:
+> On Thu, Jan 10, 2019 at 8:18 PM Richter, Robert
+> <Robert.Richter-YGCgFSpz5w/QT0dZR+AlfA@public.gmane.org> wrote:
+> >
+> > Rob,
+> >
+> > On 09.01.19 14:29:34, Rob Herring wrote:
+> > > The 'arm,armv8' compatible string is only for software models. It adds
+> > > little value otherwise and is inconsistently used as a fallback on some
+> > > platforms. Remove it from those platforms.
+> > >
+> > > This fixes warnings generated by the DT schema.
+> > >
+> > > Reported-by: Michal Simek <michal.simek-gjFFaj9aHVfQT0dZR+AlfA@public.gmane.org>
+> > > Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> > > Cc: Will Deacon <will.deacon-5wv7dgnIgG8@public.gmane.org>
+> > > Signed-off-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> > > ---
+> > > armsoc folks, Please apply directly.
+> >
+> > > diff --git a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> > > index ff5c4c47b22b..c616132f7d6d 100644
+> > > --- a/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> > > +++ b/arch/arm64/boot/dts/cavium/thunder2-99xx.dtsi
+> > > @@ -27,28 +27,28 @@
+> > >
+> > >                 cpu@0 {
+> > >                         device_type = "cpu";
+> > > -                       compatible = "cavium,thunder2", "brcm,vulcan", "arm,armv8";
+> > > +                       compatible = "cavium,thunder2";
+> >
+> > We are just checking if removing the "brcm,vulcan" string has any
+> > impact on early silicon revisions we want to support (see also
+> > BRCM_CPU_PART_VULCAN).
+> >
+> > Maybe you make this a separate change?
 > 
-> Unfortunately this one no longer applies due to Jacopo's patch "v4l2: i2c:
-> ov7670: Fix PLL bypass register values" in my tree. Could you resend it if
-> you still think it's useful, please?
-> 
-> My tree is here:
-> 
-> <URL:https://git.linuxtv.org/sailus/media_tree.git/log/>
-> 
-> I've applied the rest there, with a trivial patch I'll send briefly.
+> Dropping brcm,vulcan was unintentional (regex fail). Though keeping it
+> means we need a schema change as it was not documented to be a
+> fallback.
 
-Thank you.
+We have checked this and brcm,vulcan can be dropped too. Sending an
+ack in a separate mail.
 
-It seems that you've accidentally attached the hunks of that patch to a
-previous one though ("media: ov7670: split register setting from
-set_fmt() logic"). There's just one conflicted line to resolve left.
+Thanks,
 
-I have a branch based on your tree that reverts the patch first and
-then applies the two cleanly:
-
- git pull https://github.com/hackerspace/olpc-xo175-linux.git lr/ov7670
-
-Feel free to pull, or, if you're fine with rebasing your tree, remove
-the patch from your tree and then just pick the two.
-
-Alternatively, if you prefer a patch by e-mail, please just let me know
-when you've fixed things up in your tree.
-
-Cheers
-Lubo
-
-> 
-> Thanks.
-> 
+-Robert
