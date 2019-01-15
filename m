@@ -1,44 +1,50 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V8 1/3] dt-bindings: mmc: tegra: Add supports-cqe property
-Date: Tue, 15 Jan 2019 14:02:09 -0600
-Message-ID: <20190115200209.GA8473@bogus>
-References: <1547176135-2470-1-git-send-email-skomatineni@nvidia.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 3/5] arm64: dts: mt7622: add a property
+ "mediatek,num-pwms" for PWM
+Date: Tue, 15 Jan 2019 21:02:31 +0100
+Message-ID: <20190115200231.drn2rbxu4jxr22yz@pengutronix.de>
+References: <0c400cb1899c1afb4c9f021350cdc0c6ca3f6239.1547453586.git.ryder.lee@mediatek.com>
+ <b5ed4626a553acb5e3107c6c96e82b674439128f.1547453586.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547176135-2470-1-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <b5ed4626a553acb5e3107c6c96e82b674439128f.1547453586.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Matthias Brugger <matthias.bgg@gmail.com>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 07:08:53PM -0800, Sowjanya Komatineni wrote:
-> Add supports-cqe optional property for Tegra SDMMC.
+Hello,
+
+On Mon, Jan 14, 2019 at 04:21:22PM +0800, Ryder Lee wrote:
+> This adds a property "mediatek,num-pwms" for PWM controller.
 > 
-> Tegra186 and Tegra194 supports HW Command queue only
-> on SDMMC4 controller. This property is used to identify
-> command queue support controller in the tegra sdhci driver.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > ---
->  Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  arch/arm64/boot/dts/mediatek/mt7622.dtsi | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> index 32b4b4e41923..fb14c2c8d7ee 100644
-> --- a/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> +++ b/Documentation/devicetree/bindings/mmc/nvidia,tegra20-sdhci.txt
-> @@ -72,6 +72,10 @@ Optional properties for Tegra210 and Tegra186:
->  - nvidia,default-trim : Specify the default outbound clock trimmer
->    value.
->  - nvidia,dqs-trim : Specify DQS trim value for HS400 timing
-> +- supports-cqe : The presence of this property indicates that the
-> +  corresponding controller supports HW command queue feature.
-> +  Tegra186 and Tegra194 has 4 SDMMC Controllers and only SDMMC4
-> +  controller supports HW Command Queue with eMMC device.
+> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> index 8fc4aa7..ab016cf 100644
+> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> @@ -436,6 +436,7 @@
+>  			 <&pericfg CLK_PERI_PWM6_PD>;
+>  		clock-names = "top", "main", "pwm1", "pwm2", "pwm3", "pwm4",
+>  			      "pwm5", "pwm6";
+> +		mediatek,num-pwms = <6>;
+>  		status = "disabled";
 
-Don't SDHCI capability bits do this? If not, this should probably be 
-common.
+Conceptually this patch must go in before the change to the driver.
+Otherwise the pwms are not usable with only patch 1 applied which breaks
+bisectability.
 
-Rob
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
