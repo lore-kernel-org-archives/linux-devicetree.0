@@ -1,66 +1,77 @@
-From: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Subject: RE: [PATCH v6 1/5] spi: spi-mem: Add driver for NXP FlexSPI
- controller
-Date: Tue, 15 Jan 2019 09:54:27 +0000
-Message-ID: <VI1PR04MB572615130C849F1B8A807F9A99810@VI1PR04MB5726.eurprd04.prod.outlook.com>
-References: <1546939346-20181-1-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <1546939346-20181-2-git-send-email-yogeshnarayan.gaur@nxp.com>
-        <dbb6ddc8-5939-3d4b-7031-931afa79fccb@kontron.de>
- <20190114093759.2ce51b55@bbrezillon>
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: Re: [PATCH 0/4] Add driver for globaltop GNSS receivers
+Date: Tue, 15 Jan 2019 11:00:37 +0100
+Message-ID: <86fttup7ei.fsf@baylibre.com>
+References: <1545994235-8309-1-git-send-email-lollivier@baylibre.com>
+        <CAL_JsqLvSWF60eqLsXUcP5GL0ijgfE6XwvectiM1D1Y9LPpOkA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114093759.2ce51b55@bbrezillon>
-Content-Language: en-US
+In-Reply-To: <CAL_JsqLvSWF60eqLsXUcP5GL0ijgfE6XwvectiM1D1Y9LPpOkA@mail.gmail.com>
+        (Rob Herring's message of "Fri, 4 Jan 2019 11:51:51 -0600")
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>, Schrempf Frieder <frieder.schrempf@kontron.de>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "robh@kernel.org" <robh@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Boris,
+On Fri 04 Jan 2019 at 11:51, Rob Herring <robh+dt@kernel.org> wrote:
 
-> -----Original Message-----
-> From: Boris Brezillon [mailto:bbrezillon@kernel.org]
-> Sent: Monday, January 14, 2019 2:08 PM
-> To: Schrempf Frieder <frieder.schrempf@kontron.de>
-> Cc: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>; linux-
-> mtd@lists.infradead.org; boris.brezillon@bootlin.com; marek.vasut@gmail.c=
-om;
-> broonie@kernel.org; linux-spi@vger.kernel.org; devicetree@vger.kernel.org=
-;
-> mark.rutland@arm.com; robh@kernel.org; linux-kernel@vger.kernel.org;
-> computersforpeace@gmail.com; shawnguo@kernel.org; linux-arm-
-> kernel@lists.infradead.org
-> Subject: Re: [PATCH v6 1/5] spi: spi-mem: Add driver for NXP FlexSPI cont=
-roller
->=20
-> On Thu, 10 Jan 2019 17:28:57 +0000
-> Schrempf Frieder <frieder.schrempf@kontron.de> wrote:
->=20
-> > Hi Yogesh,
-> >
-> > my comments below are mainly about things I already mentioned in my
-> > review for v5 and about removing or simplifying some unnecessary or
-> > complex code.
-> >
-[...]
-> >
->=20
-> Once you've addressed all of Frieder's comments you can add
->=20
-> Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
->=20
-Thanks.
-I have send next version, v7, of the patch series having added code changes=
- as per Frieder's comments. [1]
-Based on the feedback from Frieder, would add yours r-o-b tag.
+> On Fri, Dec 28, 2018 at 4:51 AM Loys Ollivier <lollivier@baylibre.com> wrote:
+>>
+>> Hello !
+>>
+>> This patch series adds a new GNSS driver for the globaltop GNSS receivers.
+>> These receivers transmits NMEA output sequence as soon as they have booted.
+>> Power management can be done via the main supply and optional backup supply
+>> as defined in the device tree.
+>>
+>> The driver has been tested using a GlobalTop pa6h chipset on a Libretech-cc
+>> board using the expansion header. Changes made in the board device tree can
+>> be found below for reference and testing.
+>>
+>> Loys
+>>
+>> Loys Ollivier (4):
+>>   dt-bindings: Add vendor prefix for "GlobalTop Technology, Inc."
+>>   dt-bindings: gnss: add gtop binding
+>>   gnss: add gtop receiver type support
+>>   gnss: add driver for globaltop receivers
+>>
+>>  Documentation/devicetree/bindings/gnss/gtop.txt    |  33 +++++
+>>  .../devicetree/bindings/vendor-prefixes.txt        |   1 +
+>>  drivers/gnss/Kconfig                               |  13 ++
+>>  drivers/gnss/Makefile                              |   3 +
+>>  drivers/gnss/core.c                                |   1 +
+>>  drivers/gnss/gtop.c                                | 152 +++++++++++++++++++++
+>>  include/linux/gnss.h                               |   1 +
+>>  7 files changed, 204 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/gnss/gtop.txt
+>>  create mode 100644 drivers/gnss/gtop.c
+>>
+>> ---
+>> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> index 90a56af967a7..3b3d4dcc47aa 100644
+>> --- a/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> +++ b/arch/arm64/boot/dts/amlogic/meson-gxl-s905x-libretech-cc.dts
+>> @@ -17,6 +17,7 @@
+>>
+>>         aliases {
+>>                 serial0 = &uart_AO;
+>> +               serial1 = &uart_A;
+>
+> You should not need this as the UART is not used as a tty. It could be
+> that the serial driver requires aliases, but that should be fixed.
+> There should be some examples of fixing this in other serial drivers.
+>
 
---
-Regards
-Yogesh Gaur
-[1] https://patchwork.ozlabs.org/project/linux-mtd/list/?series=3D86130
+Thanks Rob,
+Followed up on that [0]. 
 
-> Regards,
->=20
-> Boris
+[0]: https://lore.kernel.org/linux-amlogic/1547484866-3600-1-git-send-email-lollivier@baylibre.com/
+>>                 ethernet0 = &ethmac;
+>>         };
+>
+> _______________________________________________
+> linux-amlogic mailing list
+> linux-amlogic@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-amlogic
