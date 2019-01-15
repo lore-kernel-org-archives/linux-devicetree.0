@@ -1,36 +1,71 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: [PATCH v2 6/6] MAINTAINERS: Add linux-actions mailing list for Actions Semi
-Date: Tue, 15 Jan 2019 09:03:40 +0530
-Message-ID: <20190115033340.25016-7-manivannan.sadhasivam@linaro.org>
-References: <20190115033340.25016-1-manivannan.sadhasivam@linaro.org>
+From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Subject: Re: [PATCH V2 2/2] Input: rotaty-encoder - Add DT binding document
+Date: Mon, 14 Jan 2019 19:52:21 -0800
+Message-ID: <20190115035221.GA151157@dtor-ws>
+References: <20190107164249.2342-1-nazgul33@gmail.com>
+ <20190107164249.2342-3-nazgul33@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115033340.25016-1-manivannan.sadhasivam@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <20190107164249.2342-3-nazgul33@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sboyd@kernel.org, mturquette@baylibre.com, afaerber@suse.de, robh+dt@kernel.org, linux-arm-kernel@lists.infradead.org, linux-actions@lists.infradead.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+To: Donghoon Han <nazgul33@gmail.com>
+Cc: linux-input@vger.kernel.org, Daniel Mack <daniel@caiaq.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the linux-actions mailing list for Actions Semi SoC architecture.
+On Tue, Jan 08, 2019 at 01:42:49AM +0900, Donghoon Han wrote:
+> Add DT binding document for rotary-encoder, keycode options.
+> 
+> Signed-off-by: Donghoon Han <nazgul33@gmail.com>
+> Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+> Cc: Daniel Mack <daniel@caiaq.de>
+> Cc: devicetree@vger.kernel.org
+> To: linux-input@vger.kernel.org
+> ---
+>  .../devicetree/bindings/input/rotary-encoder.txt     | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/input/rotary-encoder.txt b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> index f99fe5cdeaec..9986ec2af2d4 100644
+> --- a/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> +++ b/Documentation/devicetree/bindings/input/rotary-encoder.txt
+> @@ -12,6 +12,10 @@ Optional properties:
+>  - rotary-encoder,relative-axis: register a relative axis rather than an
+>    absolute one. Relative axis will only generate +1/-1 events on the input
+>    device, hence no steps need to be passed.
+> +- rotary-encoder,relative-keys : generate pair of key events. This setting
+> +  behaves just like relative-axis, generating key events instead.
+> +  (Keycodes[2] corresponds to -1/1 events.)
+> +- rotary-encoder,relative-keycodes : keycodes for relative-keys
 
-Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
----
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+Given that keycodes are linux-specific, I think the property should be
+linux,keycodes. Also, I am not sure we need separate
+rotary-encoder,relative-keys property as we can infer that we want to
+generate keys from presence of linux,keycodes property.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 7d37f8a4743c..f30e25c8e4a7 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1240,6 +1240,7 @@ ARM/ACTIONS SEMI ARCHITECTURE
- M:	Andreas Färber <afaerber@suse.de>
- R:	Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
- L:	linux-arm-kernel@lists.infradead.org (moderated for non-subscribers)
-+L:	linux-actions@lists.infradead.org (moderated for non-subscribers)
- S:	Maintained
- N:	owl
- F:	arch/arm/mach-actions/
+Rob, any comments?
+
+>  - rotary-encoder,rollover: Automatic rollover when the rotary value becomes
+>    greater than the specified steps or smaller than 0. For absolute axis only.
+>  - rotary-encoder,steps-per-period: Number of steps (stable states) per period.
+> @@ -48,3 +52,11 @@ Example:
+>  			rotary-encoder,encoding = "binary";
+>  			rotary-encoder,rollover;
+>  		};
+> +
+> +		rotary@2 {
+> +			compatible = "rotary-encoder";
+> +			gpios = <&gpio 21 0>, <&gpio 22 0>;
+> +			rotary-encoder,relative-keys;
+> +			rotary-encoder,relative-keycode = <103>, <108>;
+> +			rotary-encoder,steps-per-period = <2>;
+> +		};
+> -- 
+> 2.17.1
+> 
+
+Thanks.
+
 -- 
-2.17.1
+Dmitry
