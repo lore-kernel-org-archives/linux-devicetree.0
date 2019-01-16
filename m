@@ -1,39 +1,40 @@
-Return-Path: <dinguyen@kernel.org>
-Subject: Re: [PATCH 1/4] EDAC, altera: Fix S10 persistent register offset
+Return-Path: <SRS0=Tq4V=PY=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCH 1/4] EDAC, altera: Fix S10 persistent register offset
+Date: Wed, 16 Jan 2019 17:11:51 -0600
+Message-Id: <1547680314-31045-2-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
 References: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
- <1547680314-31045-2-git-send-email-thor.thayer@linux.intel.com>
-From: Dinh Nguyen <dinguyen@kernel.org>
-Message-ID: <f9365fd8-284c-eab8-b22e-df803d4189a5@kernel.org>
-Date: Thu, 17 Jan 2019 08:52:20 -0600
-MIME-Version: 1.0
-In-Reply-To: <1547680314-31045-2-git-send-email-thor.thayer@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-To: thor.thayer@linux.intel.com, bp@alien8.de, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
-Cc: devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
+Correct the persistent register offset where address
+and status are stored.
 
-On 1/16/19 5:11 PM, thor.thayer@linux.intel.com wrote:
-> From: Thor Thayer <thor.thayer@linux.intel.com>
-> 
-> Correct the persistent register offset where address
-> and status are stored.
-> 
-> Fixes: 08f08bfb7b4c ("EDAC, altera: Merge Stratix10 into the Arria10 SDRAM
-> 		      probe routine")
+Fixes: 08f08bfb7b4c ("EDAC, altera: Merge Stratix10 into the Arria10 SDRAM
+		      probe routine")
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+ drivers/edac/altera_edac.h | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-The "Fixes" line should be all on one line. I recently got dinged for this.
-
->From Documentation/process/submitting-patches.rst"
-
-"If your patch fixes a bug in a specific commit, e.g. you found an issue
-using
-``git bisect``, please use the 'Fixes:' tag with the first 12 characters of
-the SHA-1 ID, and the one line summary.  For example::
-
-Fixes: e21d2170f366 ("video: remove unnecessary platform_set_drvdata()")"
-
-Dinh
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index 4213cb0bb2a7..f8664bac9fa8 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -295,8 +295,8 @@ struct altr_sdram_mc_data {
+ #define S10_SYSMGR_ECC_INTSTAT_DERR_OFST  0xA0
+ 
+ /* Sticky registers for Uncorrected Errors */
+-#define S10_SYSMGR_UE_VAL_OFST            0x120
+-#define S10_SYSMGR_UE_ADDR_OFST           0x124
++#define S10_SYSMGR_UE_VAL_OFST            0x220
++#define S10_SYSMGR_UE_ADDR_OFST           0x224
+ 
+ #define S10_DDR0_IRQ_MASK                 BIT(16)
+ 
+-- 
+2.7.4
