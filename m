@@ -1,43 +1,72 @@
-From: Juergen Gross <jgross@suse.com>
-Subject: Re: [Xen-devel] [PATCH 19/21] treewide: add checks for the return
- value of memblock_alloc*()
-Date: Wed, 16 Jan 2019 15:32:03 +0100
-Message-ID: <1c04fc81-7e7c-9b4a-cab2-c9b023e1a3b1@suse.com>
-References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
- <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [alsa-devel] [PATCH v2 4/4] ASoC: add imx-audmix DT binding documentation
+Date: Wed, 16 Jan 2019 08:57:53 -0600
+Message-ID: <CAL_JsqKzmqubd8BVPdju2hLwZNMsen-1+uuHT+S-yirXaSNyHw@mail.gmail.com>
+References: <1546952716-2743-1-git-send-email-viorel.suman@nxp.com>
+ <1546952716-2743-5-git-send-email-viorel.suman@nxp.com> <20190115205755.GA4022@bogus>
+ <CAEnQRZBn7nM-KrGSvnzPWuU=a+jyRxfEKhZSsDD4wTqr6spkwg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
-Content-Language: de-DE
+In-Reply-To: <CAEnQRZBn7nM-KrGSvnzPWuU=a+jyRxfEKhZSsDD4wTqr6spkwg@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>, linux-mm@kvack.org
-Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux
+To: Daniel Baluta <daniel.baluta@gmail.com>
+Cc: Viorel Suman <viorel.suman@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On 16/01/2019 14:44, Mike Rapoport wrote:
-> Add check for the return value of memblock_alloc*() functions and call
-> panic() in case of error.
-> The panic message repeats the one used by panicing memblock allocators with
-> adjustment of parameters to include only relevant ones.
-> 
-> The replacement was mostly automated with semantic patches like the one
-> below with manual massaging of format strings.
-> 
-> @@
-> expression ptr, size, align;
-> @@
-> ptr = memblock_alloc(size, align);
-> + if (!ptr)
-> + 	panic("%s: Failed to allocate %lu bytes align=0x%lx\n", __func__,
-> size, align);
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+On Wed, Jan 16, 2019 at 2:22 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+>
+> On Tue, Jan 15, 2019 at 10:58 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Tue, Jan 08, 2019 at 01:05:51PM +0000, Viorel Suman wrote:
+> > > Add the DT binding documentation for Audio Mixer
+> > > machine driver.
+> > >
+> > > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> > > ---
+> > >  .../devicetree/bindings/sound/imx-audmix.txt       | 24 ++++++++++++++++++++++
+> > >  1 file changed, 24 insertions(+)
+> > >  create mode 100644 Documentation/devicetree/bindings/sound/imx-audmix.txt
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/sound/imx-audmix.txt b/Documentation/devicetree/bindings/sound/imx-audmix.txt
+> > > new file mode 100644
+> > > index 0000000..6ac1230
+> > > --- /dev/null
+> > > +++ b/Documentation/devicetree/bindings/sound/imx-audmix.txt
+> > > @@ -0,0 +1,24 @@
+> > > +NXP Audio Mixer (AUDMIX) machine driver.
+> > > +
+> > > +Required properties:
+> > > +===================================
+> > > +  - compatible               : Compatible list, contains "fsl,imx-audmix"
+> > > +
+> > > +  - model            : Short audio card description.
+> > > +
+> > > +  - dais             : Must contain a list of phandles to AUDMIX connected
+> > > +                       DAIs. The current implementation requires two phandles
+> > > +                       to SAI interfaces to be provided, the first SAI in the
+> > > +                       list being used to route the AUDMIX output.
+> > > +
+> > > +  - audmix-controller        : Must contain the phandle to the AUDMIX device node.
+> >
+> > I don't think you need 2 nodes for this as this one is just a virtual
+> > device. Just add the dais property to the audmix node.
+>
+> Hi Rob,
+>
+> Thanks for the suggestion. We want to understand better the reasoning
+> behind this.
+>
+> Is it because dais are physically connected to AUDMIX node?
+>
+> In ALSA we usually add all the components inside the
+> associated machine driver virtual node.
 
-For the Xen part:
+Yes, but in those cases, there's a bunch of components (DAIs, DMA,
+DSP, amp, codecs, etc.) with no main device. That doesn't really
+appear to be the case here (or your example was incomplete).
 
-Reviewed-by: Juergen Gross <jgross@suse.com>
+It's simply that we try to avoid such virtual devices unless
+absolutely necessary.
 
-
-Juergen
+Rob
