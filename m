@@ -1,110 +1,76 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
-Date: Wed, 16 Jan 2019 12:11:09 +0100
-Message-ID: <20190116111109.dkc4zgsz6lcjlzs5@flea>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
- <20181220125438.11700-3-jagan@amarulasolutions.com>
- <20181221130025.lbvw7yvy74brf3jn@flea>
- <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
- <20190107132929.ksyajmzn2gzr6oep@flea>
- <CAMty3ZAx9MthB0M-eFmsZv9CxF3Z1BkFTU6Hw=ZT5wu6aJwjGQ@mail.gmail.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 08/11] clk: renesas: r8a774c0: Add missing CANFD clock
+Date: Wed, 16 Jan 2019 19:24:54 +0000
+Message-ID: <TY1PR01MB17704CFDBA8A1C2D920B763DC0820@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-9-git-send-email-fabrizio.castro@bp.renesas.com>
+ <CAMuHMdWG6m11eAjvPeFXjsu3jhYnfsxN-EUXw5_SQZ6qMrebYw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="tme5liorzp5mnfdf"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4UG73QQKGQEBGUMBQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <CAMty3ZAx9MthB0M-eFmsZv9CxF3Z1BkFTU6Hw=ZT5wu6aJwjGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdWG6m11eAjvPeFXjsu3jhYnfsxN-EUXw5_SQZ6qMrebYw@mail.gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?utf-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin>
 List-Id: devicetree@vger.kernel.org
 
-
---tme5liorzp5mnfdf
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, Jan 11, 2019 at 11:54:12AM +0530, Jagan Teki wrote:
-> On Mon, Jan 7, 2019 at 6:59 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > On Mon, Dec 24, 2018 at 08:57:48PM +0530, Jagan Teki wrote:
-> > > On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > > >
-> > > > On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
-> > > > > Unfortunately default CSI_SCLK rate cannot work properly to
-> > > > > drive the connected sensor interface, particularly on few
-> > > > > Allwinner SoC's like A64.
-> > > > >
-> > > > > So, add mod_rate quirk via driver data so-that the respective
-> > > > > SoC's which require to alter the default mod clock rate can assign
-> > > > > the operating clock rate.
-> > > > >
-> > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> > > > > ---
-> > > > >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
-> > > > >  1 file changed, 28 insertions(+), 6 deletions(-)
-> > > > >
-> > > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > index ee882b66a5ea..fe002beae09c 100644
-> > > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > @@ -15,6 +15,7 @@
-> > > > >  #include <linux/ioctl.h>
-> > > > >  #include <linux/module.h>
-> > > > >  #include <linux/of.h>
-> > > > > +#include <linux/of_device.h>
-> > > > >  #include <linux/platform_device.h>
-> > > > >  #include <linux/pm_runtime.h>
-> > > > >  #include <linux/regmap.h>
-> > > > > @@ -28,8 +29,13 @@
-> > > > >
-> > > > >  #define MODULE_NAME  "sun6i-csi"
-> > > > >
-> > > > > +struct sun6i_csi_variant {
-> > > > > +     unsigned long                   mod_rate;
-> > > > > +};
-> > > > > +
-> > > > >  struct sun6i_csi_dev {
-> > > > >       struct sun6i_csi                csi;
-> > > > > +     const struct sun6i_csi_variant  *variant;
-> > > > >       struct device                   *dev;
-> > > > >
-> > > > >       struct regmap                   *regmap;
-> > > > > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> > > > >               return PTR_ERR(sdev->clk_mod);
-> > > > >       }
-> > > > >
-> > > > > +     if (sdev->variant->mod_rate)
-> > > > > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
-> > > > > +
-> > > >
-> > > > It still doesn't make any sense to do it in the probe function...
-> > >
-> > > I'm not sure we discussed about the context wrt probe, we discussed
-> > > about exclusive put clock.
-> >
-> > https://lkml.org/lkml/2018/12/18/584
-> >
-> > "Doing it here is not really optimal either, since you'll put a
-> > constraint on the system (maintaining that clock at 300MHz), while
-> > it's not in use."
-> 
-> But this constraint is only set, for SoC's who need mod_rate change
-> not for whole SoCs.
-
-Still, that constraint is there for the whole system on affected
-SoCs. Whether it applies to one SoC or not is not really relevant.
-
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---tme5liorzp5mnfdf--
+SGkgR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBHZWVy
+dCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAxNiBKYW51YXJ5
+IDIwMTkgMTk6MDYNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAwOC8xMV0gY2xrOiByZW5lc2FzOiBy
+OGE3NzRjMDogQWRkIG1pc3NpbmcgQ0FORkQgY2xvY2sNCj4NCj4gSGkgRmFicml6aW8sDQo+DQo+
+IFRoYW5rcyBmb3IgeW91ciBwYXRjaCENCj4NCj4gT24gV2VkLCBKYW4gMTYsIDIwMTkgYXQgNzoz
+OSBQTSBGYWJyaXppbyBDYXN0cm8NCj4gPGZhYnJpemlvLmNhc3Ryb0BicC5yZW5lc2FzLmNvbT4g
+d3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIHRoZSBtaXNzaW5nIENBTkZEIGNsb2NrIHRvIHRo
+ZSByOGE3NzRjMCBzcGVjaWZpYw0KPiA+IGNsb2NrIGRyaXZlci4NCj4NCj4gQXJlIHlvdSBzdXJl
+IHRoZSBDQU5GRCBjbG9jayBleGlzdHMgb24gUlovRzJFPw0KDQpJIHlldCBoYXZlIHRvIHJ1biB0
+ZXN0cyBvbiB0aGUgYm9hcmQgc3BlY2lmaWMgdG8gQ0FORkQsIGJ1dCB3ZSBrbm93IGZvciBzdXJl
+IHRoYXQncw0KZ29pbmcgdG8gYXBwZWFyIG9uIHRoZSBSWi9HMkUgKGlmIGl0J3Mgbm90IGluIHRo
+ZSByZXZpc2lvbiBvZiB0aGUgU29DIHdlIGhhdmUgYWxyZWFkeSkuDQpKYXBhbiBoYXZlIGNvbmZp
+cm1lZCB0aGF0IGV2ZXJ5dGhpbmcgQ0FORkQtd2lzZSBzaG91bGQgYmUgdGhlIHNhbWUgYXMgcGVy
+IHRoZQ0KY29ycmVzcG9uZGluZyBHZW4zIHBhcnRzLCBhbmQgdGhhdCdzIHdoeSBhcmUgcHVzaGlu
+ZyB0aGlzIHBhdGNoIChhbmQgc2hvcnRseQ0Kc29tZXRoaW5nIHNpbWlsYXIgZm9yIHRoZSByOGE3
+NzRhMSkgZm9yIGl0IGFzIGl0J3Mgb24gb3VyIGNyaXRpY2FsIHBhdGguIEFueXdheXMsIHRoZQ0K
+SFcgb2YgdGhlIEVLODc0IHNob3VsZCBzdXBwb3J0IENBTkZEIHByb3Blcmx5LCB0aGVyZWZvcmUg
+SSBhbSBnb2luZyB0byB0cnkgYW5kDQpydW4gc29tZSB0ZXN0cyAoYXMgc29vbiBhcyBJIHNvcnQg
+b3V0IHRoZSBjYWJsZXMpLCBzbyB0aGF0IHdlIGNsZWFyIGFueSBkb3VidHMuDQoNCldvdWxkIHlv
+dSByYXRoZXIgd2UgaGVsZCBiYWNrIGFsbCBvZiB0aGUgQ0FOIHJlbGF0ZWQgY2hhbmdlcyBmb3Ig
+bm93Pw0KDQo+DQo+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8gQ2FzdHJvIDxmYWJyaXppby5j
+YXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gUmV2aWV3ZWQtYnk6IENocmlzIFBhdGVyc29uIDxD
+aHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+DQo+DQo+ID4gLS0tIGEvZHJpdmVycy9jbGsvcmVu
+ZXNhcy9yOGE3NzRjMC1jcGctbXNzci5jDQo+ID4gKysrIGIvZHJpdmVycy9jbGsvcmVuZXNhcy9y
+OGE3NzRjMC1jcGctbXNzci5jDQo+DQo+ID4gLS0tIGEvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9j
+ay9yOGE3NzRjMC1jcGctbXNzci5oDQo+ID4gKysrIGIvaW5jbHVkZS9kdC1iaW5kaW5ncy9jbG9j
+ay9yOGE3NzRjMC1jcGctbXNzci5oDQo+ID4gQEAgLTQ4LDEzICs0OCwxNCBAQA0KPiA+ICAjZGVm
+aW5lIFI4QTc3NEMwX0NMS19aQTIgICAgICAgICAgICAgICAzNw0KPiA+ICAjZGVmaW5lIFI4QTc3
+NEMwX0NMS19aQTggICAgICAgICAgICAgICAzOA0KPiA+ICAjZGVmaW5lIFI4QTc3NEMwX0NMS19a
+MkQgICAgICAgICAgICAgICAzOQ0KPiA+IC0jZGVmaW5lIFI4QTc3NEMwX0NMS19NU08gICAgICAg
+ICAgICAgICA0MA0KPiA+IC0jZGVmaW5lIFI4QTc3NEMwX0NMS19SICAgICAgICAgICAgICAgICA0
+MQ0KPiA+IC0jZGVmaW5lIFI4QTc3NEMwX0NMS19PU0MgICAgICAgICAgICAgICA0Mg0KPiA+IC0j
+ZGVmaW5lIFI4QTc3NEMwX0NMS19MVjAgICAgICAgICAgICAgICA0Mw0KPiA+IC0jZGVmaW5lIFI4
+QTc3NEMwX0NMS19MVjEgICAgICAgICAgICAgICA0NA0KPiA+IC0jZGVmaW5lIFI4QTc3NEMwX0NM
+S19DU0kwICAgICAgICAgICAgICA0NQ0KPiA+IC0jZGVmaW5lIFI4QTc3NEMwX0NMS19DUCAgICAg
+ICAgICAgICAgICAgICAgICAgIDQ2DQo+ID4gLSNkZWZpbmUgUjhBNzc0QzBfQ0xLX0NQRVggICAg
+ICAgICAgICAgIDQ3DQo+ID4gKyNkZWZpbmUgUjhBNzc0QzBfQ0xLX0NBTkZEICAgICAgICAgICAg
+IDQwDQo+ID4gKyNkZWZpbmUgUjhBNzc0QzBfQ0xLX01TTyAgICAgICAgICAgICAgIDQxDQo+ID4g
+KyNkZWZpbmUgUjhBNzc0QzBfQ0xLX1IgICAgICAgICAgICAgICAgIDQyDQo+ID4gKyNkZWZpbmUg
+UjhBNzc0QzBfQ0xLX09TQyAgICAgICAgICAgICAgIDQzDQo+ID4gKyNkZWZpbmUgUjhBNzc0QzBf
+Q0xLX0xWMCAgICAgICAgICAgICAgIDQ0DQo+ID4gKyNkZWZpbmUgUjhBNzc0QzBfQ0xLX0xWMSAg
+ICAgICAgICAgICAgIDQ1DQo+ID4gKyNkZWZpbmUgUjhBNzc0QzBfQ0xLX0NTSTAgICAgICAgICAg
+ICAgIDQ2DQo+ID4gKyNkZWZpbmUgUjhBNzc0QzBfQ0xLX0NQICAgICAgICAgICAgICAgICAgICAg
+ICAgNDcNCj4gPiArI2RlZmluZSBSOEE3NzRDMF9DTEtfQ1BFWCAgICAgICAgICAgICAgNDgNCj4N
+Cj4gVGhpcyBmaWxlIGlzIHBhcnQgb2YgdGhlIERUIEFCSSwgaGVuY2UgbGlzdCBvZiBkZWZpbml0
+aW9ucyBpcyBhcHBlbmQtb25seS4NCg0KV2lsbCBmaXggdGhpcyB3aXRoIGEgdjINCg0KVGhhbmtz
+LA0KRmFiDQoNCj4NCj4gUGxlYXNlIGFkZCBSOEE3NzRDMF9DTEtfQ0FORkQgYXQgdGhlIGVuZCwg
+aS5lLg0KPg0KPiAgICAgI2RlZmluZSBSOEE3NzRDMF9DTEtfQ0FORkQgICAgICAgICAgICAgIDQ4
+DQo+DQo+IEdye29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBH
+ZWVydA0KPg0KPiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExp
+bnV4IGJleW9uZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+DQo+IEluIHBlcnNvbmFs
+IGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFj
+a2VyLiBCdXQNCj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJw
+cm9ncmFtbWVyIiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIC0tIExpbnVzIFRvcnZhbGRzDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNz
+IEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1
+Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVz
+IHVuZGVyIFJlZ2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
