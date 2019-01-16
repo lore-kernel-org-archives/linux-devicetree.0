@@ -1,24 +1,35 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] dt-bindings: imx8mq: Number clocks consecutively
-Date: Wed, 16 Jan 2019 21:27:42 +0800
-Message-ID: <20190116132741.GC17702@dragon>
-References: <20190116084122.GA19712@bogon.m.sigxcpu.org>
+From: Dmitry Osipenko <digetx@gmail.com>
+Subject: Re: [PATCH v7 00/24] Tegra GART driver clean up and optimization
+Date: Wed, 16 Jan 2019 16:41:22 +0300
+Message-ID: <0254cf29-6fb3-4389-1cb8-e4add71f98d4@gmail.com>
+References: <20181212203907.23461-1-digetx@gmail.com>
+ <20181217091455.kkxpyojp4r4fyhrw@8bytes.org>
+ <bbefe330-d3e8-3eea-0f9e-a2b0b7915120@gmail.com>
+ <20190116125534.354irioqwfu36ajj@8bytes.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190116084122.GA19712@bogon.m.sigxcpu.org>
+In-Reply-To: <20190116125534.354irioqwfu36ajj@8bytes.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Joerg Roedel <joro@8bytes.org>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Jonathan Hunter <jonathanh@nvidia.com>, Robin Murphy <robin.murphy@arm.com>, iommu@lists.linux-foundation.org, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 09:41:22AM +0100, Guido G�nther wrote:
-> This fixes a duplicate use of 232 and numbers the clocks without holes.
+16.01.2019 15:55, Joerg Roedel пишет:
+> On Tue, Jan 15, 2019 at 07:33:54PM +0300, Dmitry Osipenko wrote:
+>> Should I expect that the patches will appear in the IOMMU git and in
+>> -next consequently? Please let me know if there is any problem with
+>> the applying of the patches.
 > 
-> Fixes: 1cf3817bf1f5 ("dt-bindings: Add binding for i.MX8MQ CCM")
+> Hmm, I thought I applied these patches already, but obviously they
+> didn't show up in the iommu-tree. I have no idea how that happened, but
+> they are now applied.
 > 
-> Signed-off-by: Guido G�nther <agx@sigxcpu.org>
+> Thanks for the reminder,
+> 
+>        Joerg
+> 
 
-Applied, thanks.
+Thanks!
