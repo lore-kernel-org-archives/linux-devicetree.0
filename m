@@ -1,68 +1,56 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: fsl: Add devicetree binding for Oxalis
-Date: Tue, 15 Jan 2019 22:07:12 -0600
-Message-ID: <CAL_Jsq+myeZ1n4X=KhHZjtPDHnGH=L65xxYbzMrt8Rq6Bur4Bg@mail.gmail.com>
-References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
- <20190114102053.16013-3-manivannan.sadhasivam@linaro.org> <CAL_JsqJpRPrCpRTpqh1v6JZwpEtZnaeuLTHR+0EiMSoxbk9zeQ@mail.gmail.com>
- <20190116022100.GC15808@dragon>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH RESEND v1 0/4] dt-binding: clk: prepare for imx8qm clock
+ support
+Date: Wed, 16 Jan 2019 05:40:01 +0000
+Message-ID: <AM0PR04MB42115D3E98B8B319936AC60E80820@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116022100.GC15808@dragon>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Yang-Leo Li <leoyang.li@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, Amit Kucheria <amit.kucheria@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 15, 2019 at 8:21 PM Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Mon, Jan 14, 2019 at 12:02:47PM -0600, Rob Herring wrote:
-> > On Mon, Jan 14, 2019 at 4:21 AM Manivannan Sadhasivam
-> > <manivannan.sadhasivam@linaro.org> wrote:
-> > >
-> > > Add devicetree binding for Oxalis board in JSON format. While adding
-> > > that, let's fix the description for LS1012A also.
-> > >
-> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 ++-
-> > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > index d34fe0749199..0f30142fe316 100644
-> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > @@ -173,12 +173,13 @@ properties:
-> > >                - fsl,vf610
-> > >                - fsl,vf610m4
-> > >
-> > > -      - description: LS1021A based Boards
-> > > +      - description: LS1012A based Boards
-> >
-> > Well, yes that was wrong...
-> >
-> > >          items:
-> > >            - enum:
-> > >                - fsl,ls1012a-rdb
-> > >                - fsl,ls1012a-frdm
-> > >                - fsl,ls1012a-qds
-> > > +              - ebs-systart,oxalis
-> >
-> > Sort alphabetically.
-> >
-> > >            - const: fsl,ls1021a
-> >
-> > And this is wrong too.
-> >
-> > I you just change it, then we will be missing an entry for LS1021A.
-> > What's the status of that SoC because there is no board dts file? We
-> > should not have .dtsi files in the kernel which don't get built.
->
-> Hmm, I do not see any LS1021A SoC .dtsi in the tree.  I suspect it's
-> just a typo of LS1012A.
->
-> @Leo, do we have a LS1021A SoC?
+Ping...
 
-arch/arm/boot/dts/ls1021a.dtsi
+BTW, as the first two patches change the same firmware binding doc fs.scu.txt.
+I'm not sure whether it should go to Shawn's tree for the binding part, or Stephen's clock tree.
 
-Rob
+Shawn & Stephen,
+What's your suggestion?
+
+Regards
+Dong Aisheng
+
+> From: Aisheng Dong [mailto:aisheng.dong@nxp.com]
+> Sent: Friday, January 11, 2019 7:56 PM
+> 
+> After a bit more investigation on IMX8QM, it seemed SCU clock can be used in
+> a similar way as IMX8QXP. So update the binding and driver to be a bit generic
+> for easily extension of IMX8QM support later.
+> 
+> Dong Aisheng (4):
+>   dt-bindings: fsl: scu: add fallback compatible string for clock
+>   dt-bindings: fsl: scu: add imx8qm scu clock support
+>   clk: imx: scu: add fallback compatible string support
+>   dt-bindings: imx8-clock: add a53 and a72 clock id
+> 
+>  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 7 +++++--
+>  drivers/clk/imx/clk-imx8qxp.c                               | 1 +
+>  include/dt-bindings/clock/imx8-clock.h                      | 6 ++++--
+>  3 files changed, 10 insertions(+), 4 deletions(-)
+> 
+> --
+> 2.7.4
