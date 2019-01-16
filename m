@@ -1,60 +1,231 @@
-From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Subject: [PATCH 11/11] dt-bindings: can: rcar_canfd: document r8a774c0 support
-Date: Wed, 16 Jan 2019 18:37:54 +0000
-Message-ID: <1547663874-29411-12-git-send-email-fabrizio.castro@bp.renesas.com>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Wed, 16 Jan 2019 12:41:52 -0600
+Message-ID: <86299268-3202-814a-134b-04bd2170faab@ti.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+In-Reply-To: <20190116105537.GA1803@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben Whitten <ben.whitten@gmail.com>, Chris Paterson <Chris.Paterson2@renesas.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.orglinux-
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Document the support for rcar_canfd on R8A774C0 SoC devices.
+Hello
 
-Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
----
-This patch depends on:
-https://patchwork.kernel.org/patch/10687999/
-https://patchwork.kernel.org/patch/10688001/
+On 1/16/19 4:55 AM, Pavel Machek wrote:
+> Hi!
+> 
+>> On 1/15/19 4:22 PM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
+>>>>> +XX - Do not care ignored by the driver
+>>>>> +RR - is the 8 bit Red LED value
+>>>>> +GG - is the 8 bit Green LED value
+>>>>> +BB - is the 8 bit Blue LED value
+>>>>> +
+>>>>> +Example:
+>>>>> +LED module output 4 of the LP5024 will be a yellow color:
+>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
+>>>>> +
+>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
+>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
+>>>>> +
+>>>>> +LED banked RGBs of the LP5036 will be a white color:
+>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
+>>>>
+>>>> This part with example cans remain in Documentation/leds if you
+>>>>> like.
+>>>
+>>> Does it actually work like that on hardware?
+>>
+>> What?
+> 
+> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
+> does it actually produce white? With all the different RGB modules
+> manufacturers can use with lp5024P?
+> 
+> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
+> it actually produce yellow, with all the different RGB modules
+> manufacturers can use with lp5024P?
+> 
 
- Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 16 +++++++++-------
- 1 file changed, 9 insertions(+), 7 deletions(-)
+I believe the answer to the general questions is no for any RGB cluster and driver out there.
+Because if you set the same values on each and every RGB device out there you will get varying shades of the color.
+But for this device yes the color does appear to be yellow to me versus what was displayed on my monitor by the HSL picker.
+But everyone interprets colors differently.
 
-diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-index 41049fe..32f051f 100644
---- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-+++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
-@@ -3,7 +3,8 @@ Renesas R-Car CAN FD controller Device Tree Bindings
- 
- Required properties:
- - compatible: Must contain one or more of the following:
--  - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
-+  - "renesas,rcar-gen3-canfd" for R-Car Gen3 and RZ/G2 compatible controllers.
-+  - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
-   - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
-   - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
-   - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
-@@ -28,12 +29,13 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
- child node supports the "status" property only, which is used to
- enable/disable the respective channel.
- 
--Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd",
--"renesas,r8a77965-canfd" and "renesas,r8a77990-canfd" compatible:
--In R8A7795, R8A7796, R8A77965 and R8A77990 SoCs, canfd clock is a div6 clock
--and can be used by both CAN and CAN FD controller at the same time. It needs
--to be scaled to maximum frequency if any of these controllers use it. This is
--done using the below properties:
-+Required properties for "renesas,r8a774c0-canfd", "renesas,r8a7795-canfd",
-+"renesas,r8a7796-canfd", "renesas,r8a77965-canfd", and "renesas,r8a77990-canfd"
-+compatible:
-+In R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd clock is a
-+div6 clock and can be used by both CAN and CAN FD controller at the same time.
-+It needs to be scaled to maximum frequency if any of these controllers use it.
-+This is done using the below properties:
- 
- - assigned-clocks: phandle of canfd clock.
- - assigned-clock-rates: maximum frequency of this clock.
+If you write the same value for yellow or white on a droid 4 and the N900 do they produce the same color side by side?
+Most probably not.
+
+As you pointed out the PWM needs to be modified to obtain the correct white color to account for LED and other device constraints.
+
+But we need to take into account the light pipe.  Pools nowadays have RGB LED spot lights in them.  It can
+be set to white.  On my pool right off the lens the color has a purplish hue to it.  As the light is diffracted into
+the pool the color becomes white.  The pool is clear.  When I add chemicals to the pool and make it cloudy
+and turn on the lights the color off the lens is now white.  This is an example on a large scale but the issue
+scales down to the hand helds and smart home applications.
+
+If the cluster is piped through a flexible optic 0xffffff may produce the "white" you want on its output.
+
+So an expectation of certain color without proper piping based on a single RGB value may be a little unreasonable.
+There may need to be a way to attenuate the values based on the hardware aspect of the equation ie light pipe (or lack thereof) and LED vendor.
+So if we write 0xffffff to the RGB driver the driver could adjust the intensity of the individual LEDs based on the diffraction
+coefficients.
+
+I also think that is an unreasonable expectation here that writing a single value to any LED RGB driver would produce
+a "rest of the world" absolute color.  Maybe it can produce something similar but not identical.
+As you indicated in the requirements there is more involved here then just the LED and the values written.
+The colors should be close but may not be identical.
+
+A 10 year old N900 should not be considered the gold standard for color production due to advancements in LED,
+light pipe and LED driver technology.
+The single package RGB clusters on the board I am testing is about the size of a single RGB LED from 10 years ago.
+
+I agree that the interface developed should work on the device but the algorithm derived to obtain the color needs to have
+a hardware aspect to the calculation.
+
+>>> Is it supposed to support "normal" RGB colors as seen on monitors?
+>>
+>> Monitors are not an application for this part.
+> 
+> You did not answer the question. When you talk about yellow, is it
+> same yellow the rest of world talks about?
+> 
+
+See above.  It is close to what was on my monitor displayed.
+
+>>> Because 100% PWM on all channels does not result in white on hardware
+>>> I have.
+>>
+>> I don't know I am usually blinded by the light and have no diffuser over
+>> the LEDs to disperse the light so when I look I see all 3 colors.
+> 
+> How can we have useful discussion about colors when you don't see the
+> colors?
+> 
+> Place a piece of paper over the LEDs....
+> 
+
+Good suggestion for a rough test.
+
+>>> But...
+>>>
+>>> I believe we should have a reasonable design before we do something
+>>> like this. There's no guarantee someone will not use lp50xx with just
+>>> the white LEDs for example. How will this work? Plus existing hardware
+>>> already uses three separate LEDs for RGB LED. Why not provide same
+>>> interface?
+>>
+>> Which existing hardware?  Are they using this part?
+> 
+> Nokia N900. They are not using this part, but any interface we invent
+> should work there, too.
+> 
+
+Yes a common interface would be nice with some sort of hardware tuning coefficient.
+
+>> <rant>
+>> Why are we delaying getting the RGB framework or HSV in?
+>> I would rather design against something you want instead of having
+>> everyone complain about every implementation I post.
+>> </rant>
+> 
+> Because you insist on creating new kernel interfaces, when existing
+> interfaces work, and are doing that badly.
+> 
+> Because your patches are of lower quality than is acceptable for linux
+> kernel.
+> 
+> Because you don't seem to be reading the emails.
+> 
+> I sent list of requirements for RGB led support. This does not meet
+> them.
+> 
+
+Sigh.  You did not answer my question.
+
+Your requirements seem to be centered around monitors but that is only one application of the current
+RGB LED landscape.
+
+I am willing to work with you on the HSV and adapting the LP50xx part to this framework.
+Or any RGB framework for that matter.  I still don't agree with the kernel needing to declare colors
+ maybe color capabilities but not specific colors.
+
+It was agreed to continue forward with this particular implementation.
+At least thats what the email (I apparently did not read) stated.
+
+I need to fix the code to use the space separated value as pointed out and shown by Vesa.
+This will map nicely into this device with the color file as what I implemented is in theory
+they same code except for the space separated values.
+
+>> It is not a normal RGB driver.  The device collates the individual RGB
+>> clusters into a single brightness register and you can modify the intensity of the individual
+>> LEDs via other registers.  If brightness is 0 then the cluster is OFF regardless of the color
+>> set in the individual registers.
+> 
+> I understand that. So just set cluster brightness to 255 and you have
+> normal RGB driver you can control with existing interfaces. You don't
+> have to use every feature your hardware has.
+> 
+
+The brightness file is available and adjusts the brightness of the RGB cluster.
+I am not attempting to implement every feature the device has.  But I am attempting to use
+the basic features that are available and useful.
+
+> You did not answer the "what if someone uses this with all white LEDs"
+> question.
+> 
+
+Are you asking what if someone places a white LED instead of a RGB on the hardware?
+Well then they need to go back and have a review of the data sheet and what they are trying to
+achieve.  That would be a misapplication of the LED driver itself and something software cannot fix.
+
+But if they do determine they want to control these white LEDs with this device
+then they can ignore the "color" file and control the cluster via the brightness file like we
+do today.  The color file will only change the intensity of the single output (assuming LED module mode)
+or the banked output.
+
+If a user wants to place a RGB cluster down on the hardware and have white as the consistent color
+well then that is fine as the RGB outputs are all set to 0xff and the intensity of the cluster is
+controlled by the brightness file.  If they cannot achieve the "white" with the default settings then
+on init they can set the color file once to obtain the "white" color and continue to use the brightness
+file to control the overall brightness of the cluster.
+
+It was determined in the email chain not to expose a brightness file per output as this device
+does not lend itself to that convention.
+
+> You know what? First, submit driver with similar functionality to
+> existing RGB drivers, using same interface existing drivers are
+> using. When that is accepted, we can talk about extending
+> kernel<->user interfaces.
+> 
+
+I could do that but then there is no way for users to have any other color but "white" with this driver.
+That defeats the purpose of the device itself.
+
+This is why I would rather align the interfaces with what is being proposed so the interfaces won't change only
+the engine underneath will.
+
+I am not sure if you are aware of this or care but I found this recent blog on this effort:
+https://www.phoronix.com/scan.php?page=news_item&px=Linux-RGB-LED-Interface
+See some of the comments.
+
+Dan
+
+> Thanks,
+> 									Pavel
+> 
+
+
 -- 
-2.7.4
+------------------
+Dan Murphy
