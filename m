@@ -1,68 +1,118 @@
 From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v2 1/6] dt-bindings: phy-qcom: Add support for msm8998 usb
-Date: Wed, 16 Jan 2019 14:27:43 +0530
-Message-ID: <899dbd3d-2ce2-9a31-aca3-0ca936bdd2dd@ti.com>
-References: <1547483771-5334-1-git-send-email-jhugo@codeaurora.org>
- <20190115180839.GC28907@builder>
+Subject: Re: [PATCH v2 3/6] phy: qcom-qusb2: Add QUSB2 PHY support for msm8998
+Date: Wed, 16 Jan 2019 14:28:44 +0530
+Message-ID: <60137083-59d3-a04f-d55b-c5587038e946@ti.com>
+References: <1547483802-5408-1-git-send-email-jhugo@codeaurora.org>
+ <20190115181114.GE28907@builder>
+ <72cedbb9-c64b-a142-7c0d-64cb15f7ce00@ti.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115180839.GC28907@builder>
+In-Reply-To: <72cedbb9-c64b-a142-7c0d-64cb15f7ce00@ti.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bjorn Andersson <bjorn.andersson@linaro.org>, Jeffrey Hugo <jhugo@codeaurora.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org
+Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-
-On 15/01/19 11:38 PM, Bjorn Andersson wrote:
-> On Mon 14 Jan 08:36 PST 2019, Jeffrey Hugo wrote:
+On 16/01/19 2:20 PM, Kishon Vijay Abraham I wrote:
 > 
->> USB on msm8998 utilizes the QUSB2 and QMP phys, similar to sdm845.
+> 
+> On 15/01/19 11:41 PM, Bjorn Andersson wrote:
+>> On Mon 14 Jan 08:36 PST 2019, Jeffrey Hugo wrote:
 >>
->> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt   | 5 +++++
->>  Documentation/devicetree/bindings/phy/qcom-qusb2-phy.txt | 1 +
->>  2 files changed, 6 insertions(+)
+>>> MSM8998 contains one QUSB2 PHY which is very similar to the existing
+>>> sdm845 support.
+>>>
 >>
->> diff --git a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> index 41a1074..6061b6f 100644
->> --- a/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/qcom-qmp-phy.txt
->> @@ -9,6 +9,7 @@ Required properties:
->>  	       "qcom,ipq8074-qmp-pcie-phy" for PCIe phy on IPQ8074
->>  	       "qcom,msm8996-qmp-pcie-phy" for 14nm PCIe phy on msm8996,
->>  	       "qcom,msm8996-qmp-usb3-phy" for 14nm USB3 phy on msm8996,
->> +	       "qcom,msm8998-qmp-usb3-phy" for USB3 QMP V3 phy on msm8998,
->>  	       "qcom,sdm845-qmp-usb3-phy" for USB3 QMP V3 phy on sdm845,
->>  	       "qcom,sdm845-qmp-usb3-uni-phy" for USB3 QMP V3 UNI phy on sdm845,
->>  	       "qcom,sdm845-qmp-ufs-phy" for UFS QMP phy on sdm845.
->> @@ -42,6 +43,8 @@ Required properties:
->>  			"aux", "cfg_ahb", "ref".
->>  		For "qcom,msm8996-qmp-usb3-phy" must contain:
->>  			"aux", "cfg_ahb", "ref".
->> +		For "qcom,msm8998-qmp-usb3-phy" must contain:
->> +			"aux", "cfg_ahb", "ref".
->>  		For "qcom,sdm845-qmp-usb3-phy" must contain:
->>  			"aux", "cfg_ahb", "ref", "com_aux".
->>  		For "qcom,sdm845-qmp-usb3-uni-phy" must contain:
->> @@ -60,6 +63,8 @@ Required properties:
->>  		For "qcom,msm8996-qmp-pcie-phy" must contain:
->>  			"phy", "common", "cfg".
->>  		For "qcom,msm8996-qmp-usb3-phy" must contain
->> +		 "phy", "common".
-> 
-> Odd indentation.
-> 
-> 
-> Apart from this, you have my
-> 
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> I don't seem to have the dt-binding patch in my inbox. Can you send them as well?
 
-Fixed the indentation and merged it.
+Ignore my request. I found the patch.
 
 Thanks
 Kishon
+
+> 
+> Thanks
+> Kishon
+>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+>>
+>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+>>> ---
+>>>  drivers/phy/qualcomm/phy-qcom-qusb2.c | 41 +++++++++++++++++++++++++++++++++++
+>>>  1 file changed, 41 insertions(+)
+>>>
+>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+>>> index 9177989f..e5e4f36 100644
+>>> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
+>>> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
+>>> @@ -152,6 +152,32 @@ enum qusb2phy_reg_layout {
+>>>  	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
+>>>  };
+>>>  
+>>> +static const unsigned int msm8998_regs_layout[] = {
+>>> +	[QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
+>>> +	[QUSB2PHY_PLL_STATUS]              = 0x1a0,
+>>> +	[QUSB2PHY_PORT_TUNE1]              = 0x23c,
+>>> +	[QUSB2PHY_PORT_TUNE2]              = 0x240,
+>>> +	[QUSB2PHY_PORT_TUNE3]              = 0x244,
+>>> +	[QUSB2PHY_PORT_TUNE4]              = 0x248,
+>>> +	[QUSB2PHY_PORT_TEST1]              = 0x24c,
+>>> +	[QUSB2PHY_PORT_TEST2]              = 0x250,
+>>> +	[QUSB2PHY_PORT_POWERDOWN]          = 0x210,
+>>> +	[QUSB2PHY_INTR_CTRL]               = 0x22c,
+>>> +};
+>>> +
+>>> +static const struct qusb2_phy_init_tbl msm8998_init_tbl[] = {
+>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_ANALOG_CONTROLS_TWO, 0x13),
+>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CLOCK_INVERTERS, 0x7c),
+>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CMODE, 0x80),
+>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_LOCK_DELAY, 0x0a),
+>>> +
+>>> +	QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE1, 0xa5),
+>>> +	QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE2, 0x09),
+>>> +
+>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_DIGITAL_TIMERS_TWO, 0x19),
+>>> +};
+>>> +
+>>> +
+>>>  static const unsigned int sdm845_regs_layout[] = {
+>>>  	[QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
+>>>  	[QUSB2PHY_PLL_STATUS]		= 0x1a0,
+>>> @@ -221,6 +247,18 @@ struct qusb2_phy_cfg {
+>>>  	.autoresume_en	 = BIT(3),
+>>>  };
+>>>  
+>>> +static const struct qusb2_phy_cfg msm8998_phy_cfg = {
+>>> +	.tbl            = msm8998_init_tbl,
+>>> +	.tbl_num        = ARRAY_SIZE(msm8998_init_tbl),
+>>> +	.regs           = msm8998_regs_layout,
+>>> +
+>>> +	.disable_ctrl   = POWER_DOWN,
+>>> +	.mask_core_ready = CORE_READY_STATUS,
+>>> +	.has_pll_override = true,
+>>> +	.autoresume_en   = BIT(0),
+>>> +	.update_tune1_with_efuse = true,
+>>> +};
+>>> +
+>>>  static const struct qusb2_phy_cfg sdm845_phy_cfg = {
+>>>  	.tbl		= sdm845_init_tbl,
+>>>  	.tbl_num	= ARRAY_SIZE(sdm845_init_tbl),
+>>> @@ -734,6 +772,9 @@ static int qusb2_phy_exit(struct phy *phy)
+>>>  		.compatible	= "qcom,msm8996-qusb2-phy",
+>>>  		.data		= &msm8996_phy_cfg,
+>>>  	}, {
+>>> +		.compatible	= "qcom,msm8998-qusb2-phy",
+>>> +		.data		= &msm8998_phy_cfg,
+>>> +	}, {
+>>>  		.compatible	= "qcom,sdm845-qusb2-phy",
+>>>  		.data		= &sdm845_phy_cfg,
+>>>  	},
+>>> -- 
+>>> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
+>>> Qualcomm Technologies, Inc. is a member of the
+>>> Code Aurora Forum, a Linux Foundation Collaborative Project.
+>>>
