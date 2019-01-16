@@ -1,73 +1,75 @@
-Return-Path: <SRS0=ctnT=P2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from lb1-smtp-cloud9.xs4all.net ([194.109.24.22]:56708 "EHLO
-        lb1-smtp-cloud9.xs4all.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726032AbfARKp4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Fri, 18 Jan 2019 05:45:56 -0500
-Subject: Re: [PATCH v4 1/2] media: dt-bindings: media: video-i2c: add melexis
- mlx90640 documentation
-References: <20181211151701.10002-1-matt.ranostay@konsulko.com>
- <20181211151701.10002-2-matt.ranostay@konsulko.com>
-From: Hans Verkuil <hverkuil@xs4all.nl>
-Message-ID: <83ee363d-f168-2c27-5479-d4a44a14fa16@xs4all.nl>
-Date: Fri, 18 Jan 2019 11:45:53 +0100
+Return-Path: <SRS0=LEhR=PY=pengutronix.de=mfe@kernel.org>
+From: Marco Felsch <m.felsch@pengutronix.de>
+Subject: [PATCH v3 2/2] usb: usb251xb: add usb data lane port swap feature
+Date: Wed, 16 Jan 2019 15:20:37 +0100
+Message-Id: <20190116142037.10086-2-m.felsch@pengutronix.de>
+In-Reply-To: <20190116142037.10086-1-m.felsch@pengutronix.de>
+References: <20190116142037.10086-1-m.felsch@pengutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20181211151701.10002-2-matt.ranostay@konsulko.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Sender: devicetree-owner@vger.kernel.org
-To: Matt Ranostay <matt.ranostay@konsulko.com>, linux-media@vger.kernel.org
-Cc: devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+To: richard.leitner@skidata.com, robh@kernel.org, fancer.lancer@gmail.com
+Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, kernel@pengutronix.de, gregkh@linuxfoundation.org
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Matt,
+The HW can swap the USB differential-pair (D+/D-) for each port
+separately. So the USB signals can be re-aligned with a misplaced
+USB connector on the PCB.
 
-I'm merging this patch, but can you add a new patch that updates the entry for
-this driver in the MAINTAINERS file with references to the relevant bindings files?
+Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
+Reviewed-by: Richard Leitner <richard.leitner@skidata.com>
+---
+Changes:
+v3:
+ - fix comment
+v2:
+ - rename property s/sw-dx-lanes-ports/swap-dx-lanes
+ - add comment for future users
 
-I.e., for this one you add:
+ drivers/usb/misc/usb251xb.c | 15 +++++++++++++--
+ 1 file changed, 13 insertions(+), 2 deletions(-)
 
-F:	Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
-
-but you need to add the panasonic bindings file as well.
-
-Thanks!
-
-	Hans
-
-On 12/11/18 4:17 PM, Matt Ranostay wrote:
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
-> ---
->  .../bindings/media/i2c/melexis,mlx90640.txt   | 20 +++++++++++++++++++
->  1 file changed, 20 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
-> new file mode 100644
-> index 000000000000..060d2b7a5893
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
-> @@ -0,0 +1,20 @@
-> +* Melexis MLX90640 FIR Sensor
-> +
-> +Melexis MLX90640 FIR sensor support which allows recording of thermal data
-> +with 32x24 resolution excluding 2 lines of coefficient data that is used by
-> +userspace to render processed frames.
-> +
-> +Required Properties:
-> + - compatible : Must be "melexis,mlx90640"
-> + - reg : i2c address of the device
-> +
-> +Example:
-> +
-> +	i2c0@1c22000 {
-> +		...
-> +		mlx90640@33 {
-> +			compatible = "melexis,mlx90640";
-> +			reg = <0x33>;
-> +		};
-> +		...
-> +	};
-> 
+diff --git a/drivers/usb/misc/usb251xb.c b/drivers/usb/misc/usb251xb.c
+index a6efb9a72939..4d72b7d1d383 100644
+--- a/drivers/usb/misc/usb251xb.c
++++ b/drivers/usb/misc/usb251xb.c
+@@ -337,10 +337,12 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	struct device *dev = hub->dev;
+ 	struct device_node *np = dev->of_node;
+ 	int len, err, i;
+-	u32 property_u32 = 0;
++	u32 port, property_u32 = 0;
+ 	const u32 *cproperty_u32;
+ 	const char *cproperty_char;
+ 	char str[USB251XB_STRING_BUFSIZE / 2];
++	struct property *prop;
++	const __be32 *p;
+ 
+ 	if (!np) {
+ 		dev_err(dev, "failed to get ofdata\n");
+@@ -539,6 +541,16 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 			      (wchar_t *)hub->serial,
+ 			      USB251XB_STRING_BUFSIZE);
+ 
++	/*
++	 * The datasheet documents the register as 'Port Swap' but in real the
++	 * register controls the USB DP/DM signal swapping for each port.
++	 */
++	hub->port_swap = USB251XB_DEF_PORT_SWAP;
++	of_property_for_each_u32(np, "swap-dx-lanes", prop, p, port) {
++		if ((port >= 0) && (port <= data->port_cnt))
++			hub->port_swap |= BIT(port);
++	}
++
+ 	/* The following parameters are currently not exposed to devicetree, but
+ 	 * may be as soon as needed.
+ 	 */
+@@ -546,7 +558,6 @@ static int usb251xb_get_ofdata(struct usb251xb *hub,
+ 	hub->boost_up = USB251XB_DEF_BOOST_UP;
+ 	hub->boost_57 = USB251XB_DEF_BOOST_57;
+ 	hub->boost_14 = USB251XB_DEF_BOOST_14;
+-	hub->port_swap = USB251XB_DEF_PORT_SWAP;
+ 	hub->port_map12 = USB251XB_DEF_PORT_MAP_12;
+ 	hub->port_map34 = USB251XB_DEF_PORT_MAP_34;
+ 	hub->port_map56 = USB251XB_DEF_PORT_MAP_56;
+-- 
+2.20.1
