@@ -1,63 +1,72 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH v2 4/4] usb: musb: Add support for MediaTek musb controller
-Date: Wed, 16 Jan 2019 07:59:14 -0600
-Message-ID: <20190116135914.GF18026@uda0271908>
-References: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
- <1547516626-5084-5-git-send-email-min.guo@mediatek.com>
- <20190115203815.GD18026@uda0271908>
- <1547631542.4433.232.camel@mhfsdcap03>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: [GIT PULL] Immutable branch between MFD, Input and Watchdog due for
+ the v5.1 merge window
+Date: Wed, 16 Jan 2019 14:04:26 +0000
+Message-ID: <20190116140426.GF23399@dell>
+References: <1547460290-21049-1-git-send-email-p.paillet@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547631542.4433.232.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Min Guo <min.guo@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yonglong Wu <yonglong.wu@mediatek.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+In-Reply-To: <1547460290-21049-1-git-send-email-p.paillet@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pascal PAILLET-LME <p.paillet@st.com>
+Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 05:39:02PM +0800, Min Guo wrote:
-> Hi Bin,
-> 
-> On Tue, 2019-01-15 at 14:38 -0600, Bin Liu wrote:
-> > Hi Min,
-> > 
-> > very close, thanks.
-> > Below I tried to explain a further cleanup in musb_clearb/w() and
-> > musb_get/set_toggle() implementation. Please let me know if it is not
-> > clear.
-> > 
-> > Basically, we don't need musb_default_clearb/w(), just assign the
-> > musb_io function pointers to musb_readb/w().
-> > 
-> > Then the mtk platform musb_clearb/w() calls musb_readb/w() and
-> > musb_writeb/w() to handle W1C.
-> 
-> Sorry to bother you again, I encounter a problem when prepare the patch.
+Enjoy!
 
-no problem at all.
+The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
 
-> The define of musb_clearb/w and musb_readb/w are difference as follow,
-> and cannot be directly assigned:
-> u8/u16 (*readb/w)(const void __iomem *addr, unsigned offset)
-> void (*clearb/w)(void __iomem *addr, unsigned int offset)) 
-> 
-> if modify clearb/w as:
-> u8/u16 (*clearb/w)(const void __iomem *addr, unsigned int offset)) 
-> then musb_clear needs writeb/w the const addr.
-> Can I delete const in (*readb/w)?
+  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
 
-yes, please create a separate patch for it, and for readl() as well,
-and stating it is for implementing clearing W1C registers.
+are available in the Git repository at:
 
-Regards,
--Bin.
+  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-input-watchdog-v5.1
+
+for you to fetch changes up to 28804c2c8fb3401aa4b7f16a883d49dd82f5e377:
+
+  watchdog: stpmic1: Add STPMIC1 watchdog driver (2019-01-16 14:01:19 +0000)
+
+----------------------------------------------------------------
+Immutable branch between MFD, Input and Watchdog due for the v5.1 merge window
+
+----------------------------------------------------------------
+Pascal PAILLET-LME (6):
+      dt-bindings: mfd: Document STPMIC1
+      mfd: stpmic1: Add STPMIC1 driver
+      dt-bindings: input: Document STPMIC1 PMIC onkey
+      input: stpmic1: Add STPMIC1 onkey driver
+      dt-bindings: watchdog: document STPMIC1 PMIC watchdog
+      watchdog: stpmic1: Add STPMIC1 watchdog driver
+
+ .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
+ .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
+ .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
+ drivers/input/misc/Kconfig                         |  11 ++
+ drivers/input/misc/Makefile                        |   2 +
+ drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
+ drivers/mfd/Kconfig                                |  16 ++
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
+ drivers/watchdog/Kconfig                           |  12 ++
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/stpmic1_wdt.c                     | 139 ++++++++++++++
+ include/dt-bindings/mfd/st,stpmic1.h               |  50 +++++
+ include/linux/mfd/stpmic1.h                        | 212 ++++++++++++++++++++
+ 14 files changed, 955 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
+ create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
+ create mode 100644 drivers/input/misc/stpmic1_onkey.c
+ create mode 100644 drivers/mfd/stpmic1.c
+ create mode 100644 drivers/watchdog/stpmic1_wdt.c
+ create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
+ create mode 100644 include/linux/mfd/stpmic1.h
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
