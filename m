@@ -1,48 +1,41 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] dt-bindings: reset: meson-axg: fix SPDX license id
-Date: Wed, 16 Jan 2019 11:36:32 +0100
-Message-ID: <20190116103632.17754-1-jbrunet@baylibre.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH] dt-bindings: reset: meson-axg: fix SPDX license id
+Date: Wed, 16 Jan 2019 11:44:44 +0100 (CET)
+Message-ID: <alpine.DEB.2.21.1901161144130.1655@nanos.tec.linutronix.de>
+References: <20190116103632.17754-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Carlo Caione <carlo@caione.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190116103632.17754-1-jbrunet@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jerome Brunet <jbrunet@baylibre.com>
+Cc: devicetree@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Yixun Lan <yixun.lan@amlogic.com>, linux-kernel@vger.kernel.org, Philipp Zabel <p.zabel@pengutronix.de>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-As reported, the SPDX license id is not placed correctly and the variant
-of the BSD License used should be specified.
+On Wed, 16 Jan 2019, Jerome Brunet wrote:
 
-Fixes: c16292578ffa ("dt-bindings: reset: Add bindings for the Meson-AXG SoC Reset Controller")
-Reported-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
+> As reported, the SPDX license id is not placed correctly and the variant
+> of the BSD License used should be specified.
+> 
+> Fixes: c16292578ffa ("dt-bindings: reset: Add bindings for the Meson-AXG SoC Reset Controller")
+> Reported-by: Thomas Gleixner <tglx@linutronix.de>
+> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 
- Sorry for the delay Thomas.
+Reviewed-by: Thomas Gleixner <tglx@linutronix.de>
 
- Regards
- Jerome
+> ---
+> 
+>  Sorry for the delay Thomas.
 
- include/dt-bindings/reset/amlogic,meson-axg-reset.h | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+Thanks for fixing it!
 
-diff --git a/include/dt-bindings/reset/amlogic,meson-axg-reset.h b/include/dt-bindings/reset/amlogic,meson-axg-reset.h
-index ad6f55dabd6d..0f2e0fe45ca4 100644
---- a/include/dt-bindings/reset/amlogic,meson-axg-reset.h
-+++ b/include/dt-bindings/reset/amlogic,meson-axg-reset.h
-@@ -1,12 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0+ OR BSD-3-Clause */
- /*
-- *
-  * Copyright (c) 2016 BayLibre, SAS.
-  * Author: Neil Armstrong <narmstrong@baylibre.com>
-  *
-  * Copyright (c) 2017 Amlogic, inc.
-  * Author: Yixun Lan <yixun.lan@amlogic.com>
-  *
-- * SPDX-License-Identifier: (GPL-2.0+ OR BSD)
-  */
- 
- #ifndef _DT_BINDINGS_AMLOGIC_MESON_AXG_RESET_H
--- 
-2.20.1
+       tglx
