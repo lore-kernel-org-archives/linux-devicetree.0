@@ -1,59 +1,39 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v11 0/9] Add power domain driver for corners on
- msm8996/sdm845
-Date: Tue, 15 Jan 2019 21:52:38 -0800
-Message-ID: <20190116055238.GD25927@tuxbook-pro>
-References: <20190110040209.6028-1-rnayak@codeaurora.org>
- <20190110063323.ltmqkl2xl4nhccvq@vireshk-i7>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v2 2/3] mtd: spi-nor: mtk-quadspi: add SNOR_HWCAPS_READ to
+ spi_nor_hwcaps mask
+Date: Wed, 16 Jan 2019 06:05:10 +0000
+Message-ID: <9788fb78-7289-1c5d-51db-75aff997b5e0@microchip.com>
+References: <74d710ed89fd505a49bce53b51f6cb489e313dbb.1547538621.git.ryder.lee@mediatek.com>
+ <2afa18c0c898259fc244f15844c5319f71e811df.1547538621.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110063323.ltmqkl2xl4nhccvq@vireshk-i7>
+In-Reply-To: <2afa18c0c898259fc244f15844c5319f71e811df.1547538621.git.ryder.lee@mediatek.com>
+Content-Language: en-US
+Content-ID: <33A36E50F9B6AB41B4C15449CD7065BA@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, rjw@rjwysocki.net, ulf.hansson@linaro.org, andy.gross@linaro.org, robh@kernel.org, sboyd@kernel.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
+To: ryder.lee@mediatek.com, marek.vasut@gmail.com, computersforpeace@gmail.com, boris.brezillon@bootlin.com
+Cc: devicetree@vger.kernel.org, guochun.mao@mediatek.com, weijie.gao@mediatek.com, linux-kernel@vger.kernel.org, robh+dt@kernel.org, linux-mtd@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed 09 Jan 22:33 PST 2019, Viresh Kumar wrote:
-
-> +Rafael
-> 
-> On 10-01-19, 09:32, Rajendra Nayak wrote:
-> > Changes in v11:
-> > * Updated opp-level binding description based on feedback
-> > from Viresh
-> > * Other minor fixups in 'PATCH 2/9'
-> 
-> >  Documentation/devicetree/bindings/opp/opp.txt |   3 +
-> >  .../devicetree/bindings/power/qcom,rpmpd.txt  | 145 +++++++
-> >  arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
-> >  drivers/opp/core.c                            |  18 +
-> >  drivers/opp/of.c                              |   2 +
-> >  drivers/opp/opp.h                             |   2 +
-> >  drivers/soc/qcom/Kconfig                      |  18 +
-> >  drivers/soc/qcom/Makefile                     |   2 +
-> >  drivers/soc/qcom/rpmhpd.c                     | 402 ++++++++++++++++++
-> >  drivers/soc/qcom/rpmpd.c                      | 317 ++++++++++++++
-> >  include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
-> >  include/linux/pm_opp.h                        |   7 +
-> >  13 files changed, 1040 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
-> >  create mode 100644 drivers/soc/qcom/rpmhpd.c
-> >  create mode 100644 drivers/soc/qcom/rpmpd.c
-> >  create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
-> 
-> Rafael/Ulf: Who should pick this series ? Should I take this via OPP
-> tree ?
-> 
-
-Given that the weight of the patches lies in arm-soc area it could be
-favourable to just take them that way, with the one opp-patch carrying
-your (Rafael's?) ack.
-
-If you prefer otherwise, I suggest that we take patch 6 and 8 (the two
-dts patches) through arm-soc and you merge the rest in your tree.
-
-Regards,
-Bjorn
+DQoNCk9uIDAxLzE2LzIwMTkgMDQ6MTIgQU0sIFJ5ZGVyIExlZSB3cm90ZToNCj4gRnJvbTogR3Vv
+Y2h1biBNYW8gPGd1b2NodW4ubWFvQG1lZGlhdGVrLmNvbT4NCj4gDQo+IFNOT1JfSFdDQVBTX1JF
+QUQgc2hvdWxkIGJlIHN1cHBvcnRlZCBieSB0aGlzIGNvbnRyb2xsZXIsIHNvIGFkZCB0aGlzDQo+
+IGZsYWcgdG8gc3BpX25vcl9od2NhcHMgbWFzay4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEd1b2No
+dW4gTWFvIDxndW9jaHVuLm1hb0BtZWRpYXRlay5jb20+DQo+IFNpZ25lZC1vZmYtYnk6IFJ5ZGVy
+IExlZSA8cnlkZXIubGVlQG1lZGlhdGVrLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IFR1ZG9yIEFtYmFy
+dXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCg0KPiAtLS0NCj4gQ2hhbmdlcyBzaW5j
+ZSB2MjogUmV2aXNlIGNvbW1pdCBtc2cuIA0KPiBDaGFuZ2VzIHNpbmNlIHYxOiBub25lLiANCj4g
+LS0tDQo+ICBkcml2ZXJzL210ZC9zcGktbm9yL210ay1xdWFkc3BpLmMgfCAzICsrLQ0KPiAgMSBm
+aWxlIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAt
+LWdpdCBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvbXRrLXF1YWRzcGkuYyBiL2RyaXZlcnMvbXRkL3Nw
+aS1ub3IvbXRrLXF1YWRzcGkuYw0KPiBpbmRleCA1NDQyOTkzLi5kOWVlZDY4IDEwMDY0NA0KPiAt
+LS0gYS9kcml2ZXJzL210ZC9zcGktbm9yL210ay1xdWFkc3BpLmMNCj4gKysrIGIvZHJpdmVycy9t
+dGQvc3BpLW5vci9tdGstcXVhZHNwaS5jDQo+IEBAIC00MzEsNyArNDMxLDggQEAgc3RhdGljIGlu
+dCBtdGtfbm9yX2luaXQoc3RydWN0IG10a19ub3IgKm10a19ub3IsDQo+ICAJCQlzdHJ1Y3QgZGV2
+aWNlX25vZGUgKmZsYXNoX25vZGUpDQo+ICB7DQo+ICAJY29uc3Qgc3RydWN0IHNwaV9ub3JfaHdj
+YXBzIGh3Y2FwcyA9IHsNCj4gLQkJLm1hc2sgPSBTTk9SX0hXQ0FQU19SRUFEX0ZBU1QgfA0KPiAr
+CQkubWFzayA9IFNOT1JfSFdDQVBTX1JFQUQgfA0KPiArCQkJU05PUl9IV0NBUFNfUkVBRF9GQVNU
+IHwNCj4gIAkJCVNOT1JfSFdDQVBTX1JFQURfMV8xXzIgfA0KPiAgCQkJU05PUl9IV0NBUFNfUFAs
+DQo+ICAJfTsNCj4gDQo=
