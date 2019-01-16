@@ -1,46 +1,85 @@
-Return-Path: <SRS0=r0ub=QA=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46699 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727566AbfAXPty (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Thu, 24 Jan 2019 10:49:54 -0500
-Received: by mail-wr1-f65.google.com with SMTP id l9so6957917wrt.13
-        for <devicetree@vger.kernel.org>; Thu, 24 Jan 2019 07:49:53 -0800 (PST)
-From: Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: Re: [PATCH v4] arm64: dts: marvell: Add device tree for uDPU board
-Date: Thu, 24 Jan 2019 16:54:26 +0100
-Message-Id: <20190124155426.9781-1-vladimir.vid@sartura.hr>
-In-Reply-To: <20190111172055.30451-1-vladimir.vid@sartura.hr>
-References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: gregory.clement@bootlin.com
-Cc: devicetree@vger.kernel.org, Vladimir Vid <vladimir.vid@satura.hr>
+Return-Path: <SRS0=Tq4V=PY=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCH 2/4] EDAC, altera: Less Intrusive Error Injection
+Date: Wed, 16 Jan 2019 17:11:52 -0600
+Message-Id: <1547680314-31045-3-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-From: Vladimir Vid <vladimir.vid@satura.hr>
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Hi Gregory,
+Improve the Arria10 and Stratix10 error injection routines
+by reading the data and changing just 1 bit before writing
+back out. Previous routine would set the first bytes to 0
+then change to 1 but this method is less intrusive.
 
-> You have a GPIO for a card detect here:
->> +     cd-gpios = <&gpiosb 2 GPIO_ACTIVE_LOW>;
->> +     bus-width = <4>;
->> +     marvell,pad-type = "fixed-1-8v";
->> +     status = "okay";
->
-> But here you say that the card is not removable:
->> +     non-removable;
->> +     no-sd;
->> +     no-sdio;
->
-> Can you explain what do you expect to be connected here?
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
+---
+ drivers/edac/altera_edac.c | 30 +++++++++++++-----------------
+ drivers/edac/altera_edac.h |  2 +-
+ 2 files changed, 14 insertions(+), 18 deletions(-)
 
-Originally there was an hardware bug with the eMMC where we had
-to have both sdhci0 and sdhci1 interfaces in order to get it detected.
-
-As a part of a workaround we added the non-removable options on both nodes.
-This is fixed in the latest revision where sdhci1 is completely removed.
-I'm currently working on v5 as there as some other changes as well.
-
-Regards,
-Vladimir
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index c89d82aa2776..56af98d18645 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1756,28 +1756,24 @@ static ssize_t altr_edac_a10_device_trig2(struct file *file,
+ 	if (trig_type == ALTR_UE_TRIGGER_CHAR) {
+ 		writel(priv->ue_set_mask, set_addr);
+ 	} else {
+-		/* Setup write of 0 to first 4 bytes */
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA0_OFST);
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
+-		/* Setup write of 4 bytes */
++		/* Setup read/write of 4 bytes */
+ 		writel(ECC_WORD_WRITE, drvdata->base + ECC_BLK_DBYTECTRL_OFST);
+ 		/* Setup Address to 0 */
+-		writel(0x0, drvdata->base + ECC_BLK_ADDRESS_OFST);
+-		/* Setup accctrl to write & data override */
+-		writel(ECC_WRITE_DOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
+-		/* Kick it. */
+-		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
+-		/* Setup accctrl to read & ecc override */
+-		writel(ECC_READ_EOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
++		writel(0, drvdata->base + ECC_BLK_ADDRESS_OFST);
++		/* Setup accctrl to read & ecc & data override */
++		writel(ECC_READ_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
+ 		/* Kick it. */
+ 		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
+ 		/* Setup write for single bit change */
+-		writel(0x1, drvdata->base + ECC_BLK_WDATA0_OFST);
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
+-		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
++		writel(readl(drvdata->base + ECC_BLK_RDATA0_OFST) ^ 0x1,
++		       drvdata->base + ECC_BLK_WDATA0_OFST);
++		writel(readl(drvdata->base + ECC_BLK_RDATA1_OFST),
++		       drvdata->base + ECC_BLK_WDATA1_OFST);
++		writel(readl(drvdata->base + ECC_BLK_RDATA2_OFST),
++		       drvdata->base + ECC_BLK_WDATA2_OFST);
++		writel(readl(drvdata->base + ECC_BLK_RDATA3_OFST),
++		       drvdata->base + ECC_BLK_WDATA3_OFST);
++
+ 		/* Copy Read ECC to Write ECC */
+ 		writel(readl(drvdata->base + ECC_BLK_RECC0_OFST),
+ 		       drvdata->base + ECC_BLK_WECC0_OFST);
+diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
+index f8664bac9fa8..a1acca99c50b 100644
+--- a/drivers/edac/altera_edac.h
++++ b/drivers/edac/altera_edac.h
+@@ -319,7 +319,7 @@ struct altr_sdram_mc_data {
+ #define ECC_BLK_STARTACC_OFST             0x7C
+ 
+ #define ECC_XACT_KICK                     0x10000
+-#define ECC_WORD_WRITE                    0xF
++#define ECC_WORD_WRITE                    0xFF
+ #define ECC_WRITE_DOVR                    0x101
+ #define ECC_WRITE_EDOVR                   0x103
+ #define ECC_READ_EOVR                     0x2
+-- 
+2.7.4
