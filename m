@@ -1,138 +1,280 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: Re: [PATCH v2 3/6] phy: qcom-qusb2: Add QUSB2 PHY support for msm8998
-Date: Wed, 16 Jan 2019 08:28:27 -0700
-Message-ID: <c6b1887e-139a-6b3b-3f9e-d0842fbe8eeb@codeaurora.org>
-References: <1547483802-5408-1-git-send-email-jhugo@codeaurora.org>
- <20190115181114.GE28907@builder>
- <72cedbb9-c64b-a142-7c0d-64cb15f7ce00@ti.com>
- <60137083-59d3-a04f-d55b-c5587038e946@ti.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: [PATCH v13 0/8] Introduce on-chip interconnect API
+Date: Wed, 16 Jan 2019 18:10:55 +0200
+Message-ID: <20190116161103.6937-1-georgi.djakov@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <60137083-59d3-a04f-d55b-c5587038e946@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org
+To: gregkh@linuxfoundation.org
+Cc: andy.gross@linaro.org, olof@lixom.net, arnd@arndb.de, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, abailon@baylibre.com, maxime.ripard@bootlin.com, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, henryc.chen@mediatek.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/16/2019 1:58 AM, Kishon Vijay Abraham I wrote:
-> Hi,
-> 
-> On 16/01/19 2:20 PM, Kishon Vijay Abraham I wrote:
->>
->>
->> On 15/01/19 11:41 PM, Bjorn Andersson wrote:
->>> On Mon 14 Jan 08:36 PST 2019, Jeffrey Hugo wrote:
->>>
->>>> MSM8998 contains one QUSB2 PHY which is very similar to the existing
->>>> sdm845 support.
->>>>
->>>
->> I don't seem to have the dt-binding patch in my inbox. Can you send them as well?
-> 
-> Ignore my request. I found the patch.
+Modern SoCs have multiple processors and various dedicated cores (video, gpu,
+graphics, modem). These cores are talking to each other and can generate a
+lot of data flowing through the on-chip interconnects. These interconnect
+buses could form different topologies such as crossbar, point to point buses,
+hierarchical buses or use the network-on-chip concept.
 
-Sorry about that.  I was made aware there is something glitched when 
-sending this out, and the series didn't get threaded properly.  I'll be 
-investigating and correcting for the next time I need to send out a series.
+These buses have been sized usually to handle use cases with high data
+throughput but it is not necessary all the time and consume a lot of power.
+Furthermore, the priority between masters can vary depending on the running
+use case like video playback or CPU intensive tasks.
 
-Is this change acceptable?  I saw you picked up patch 1 (phy bindings) 
-and patch 4 (QMP phy changes), but not this one.  I do want to see as 
-much of this hit 5.1 as possible, so if there is anything I need to 
-correct, please let me know.  I'd be happy to update.
+Having an API to control the requirement of the system in terms of bandwidth
+and QoS, so we can adapt the interconnect configuration to match those by
+scaling the frequencies, setting link priority and tuning QoS parameters.
+This configuration can be a static, one-time operation done at boot for some
+platforms or a dynamic set of operations that happen at run-time.
 
-> 
-> Thanks
-> Kishon
-> 
->>
->> Thanks
->> Kishon
->>> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
->>>
->>>> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
->>>> ---
->>>>   drivers/phy/qualcomm/phy-qcom-qusb2.c | 41 +++++++++++++++++++++++++++++++++++
->>>>   1 file changed, 41 insertions(+)
->>>>
->>>> diff --git a/drivers/phy/qualcomm/phy-qcom-qusb2.c b/drivers/phy/qualcomm/phy-qcom-qusb2.c
->>>> index 9177989f..e5e4f36 100644
->>>> --- a/drivers/phy/qualcomm/phy-qcom-qusb2.c
->>>> +++ b/drivers/phy/qualcomm/phy-qcom-qusb2.c
->>>> @@ -152,6 +152,32 @@ enum qusb2phy_reg_layout {
->>>>   	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_PWR_CTRL, 0x00),
->>>>   };
->>>>   
->>>> +static const unsigned int msm8998_regs_layout[] = {
->>>> +	[QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
->>>> +	[QUSB2PHY_PLL_STATUS]              = 0x1a0,
->>>> +	[QUSB2PHY_PORT_TUNE1]              = 0x23c,
->>>> +	[QUSB2PHY_PORT_TUNE2]              = 0x240,
->>>> +	[QUSB2PHY_PORT_TUNE3]              = 0x244,
->>>> +	[QUSB2PHY_PORT_TUNE4]              = 0x248,
->>>> +	[QUSB2PHY_PORT_TEST1]              = 0x24c,
->>>> +	[QUSB2PHY_PORT_TEST2]              = 0x250,
->>>> +	[QUSB2PHY_PORT_POWERDOWN]          = 0x210,
->>>> +	[QUSB2PHY_INTR_CTRL]               = 0x22c,
->>>> +};
->>>> +
->>>> +static const struct qusb2_phy_init_tbl msm8998_init_tbl[] = {
->>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_ANALOG_CONTROLS_TWO, 0x13),
->>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CLOCK_INVERTERS, 0x7c),
->>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_CMODE, 0x80),
->>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_LOCK_DELAY, 0x0a),
->>>> +
->>>> +	QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE1, 0xa5),
->>>> +	QUSB2_PHY_INIT_CFG_L(QUSB2PHY_PORT_TUNE2, 0x09),
->>>> +
->>>> +	QUSB2_PHY_INIT_CFG(QUSB2PHY_PLL_DIGITAL_TIMERS_TWO, 0x19),
->>>> +};
->>>> +
->>>> +
->>>>   static const unsigned int sdm845_regs_layout[] = {
->>>>   	[QUSB2PHY_PLL_CORE_INPUT_OVERRIDE] = 0xa8,
->>>>   	[QUSB2PHY_PLL_STATUS]		= 0x1a0,
->>>> @@ -221,6 +247,18 @@ struct qusb2_phy_cfg {
->>>>   	.autoresume_en	 = BIT(3),
->>>>   };
->>>>   
->>>> +static const struct qusb2_phy_cfg msm8998_phy_cfg = {
->>>> +	.tbl            = msm8998_init_tbl,
->>>> +	.tbl_num        = ARRAY_SIZE(msm8998_init_tbl),
->>>> +	.regs           = msm8998_regs_layout,
->>>> +
->>>> +	.disable_ctrl   = POWER_DOWN,
->>>> +	.mask_core_ready = CORE_READY_STATUS,
->>>> +	.has_pll_override = true,
->>>> +	.autoresume_en   = BIT(0),
->>>> +	.update_tune1_with_efuse = true,
->>>> +};
->>>> +
->>>>   static const struct qusb2_phy_cfg sdm845_phy_cfg = {
->>>>   	.tbl		= sdm845_init_tbl,
->>>>   	.tbl_num	= ARRAY_SIZE(sdm845_init_tbl),
->>>> @@ -734,6 +772,9 @@ static int qusb2_phy_exit(struct phy *phy)
->>>>   		.compatible	= "qcom,msm8996-qusb2-phy",
->>>>   		.data		= &msm8996_phy_cfg,
->>>>   	}, {
->>>> +		.compatible	= "qcom,msm8998-qusb2-phy",
->>>> +		.data		= &msm8998_phy_cfg,
->>>> +	}, {
->>>>   		.compatible	= "qcom,sdm845-qusb2-phy",
->>>>   		.data		= &sdm845_phy_cfg,
->>>>   	},
->>>> -- 
->>>> Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
->>>> Qualcomm Technologies, Inc. is a member of the
->>>> Code Aurora Forum, a Linux Foundation Collaborative Project.
->>>>
+This patchset introduce a new API to get the requirement and configure the
+interconnect buses across the entire chipset to fit with the current demand.
+The API is NOT for changing the performance of the endpoint devices, but only
+the interconnect path in between them.
 
+The API is using a consumer/provider-based model, where the providers are
+the interconnect buses and the consumers could be various drivers.
+The consumers request interconnect resources (path) to an endpoint and set
+the desired constraints on this data flow path. The provider(s) receive
+requests from consumers and aggregate these requests for all master-slave
+pairs on that path. Then the providers configure each participating in the
+topology node according to the requested data flow path, physical links and
+constraints. The topology could be complicated and multi-tiered and is SoC
+specific.
 
--- 
-Jeffrey Hugo
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm 
-Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Below is a simplified diagram of a real-world SoC topology. The interconnect
+providers are the NoCs.
+
++----------------+    +----------------+
+| HW Accelerator |--->|      M NoC     |<---------------+
++----------------+    +----------------+                |
+                        |      |                    +------------+
+ +-----+  +-------------+      V       +------+     |            |
+ | DDR |  |                +--------+  | PCIe |     |            |
+ +-----+  |                | Slaves |  +------+     |            |
+   ^ ^    |                +--------+     |         |   C NoC    |
+   | |    V                               V         |            |
++------------------+   +------------------------+   |            |   +-----+
+|                  |-->|                        |-->|            |-->| CPU |
+|                  |-->|                        |<--|            |   +-----+
+|     Mem NoC      |   |         S NoC          |   +------------+
+|                  |<--|                        |---------+    |
+|                  |<--|                        |<------+ |    |   +--------+
++------------------+   +------------------------+       | |    +-->| Slaves |
+  ^  ^    ^    ^          ^                             | |        +--------+
+  |  |    |    |          |                             | V
++------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
+| CPUs |  |  | GPU |   | DSP |  | Masters |-->|       P NoC    |-->| Slaves |
++------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
+          |
+      +-------+
+      | Modem |
+      +-------+
+
+It's important to note that the interconnect API, in contrast with devfreq,
+is allowing drivers to express their needs in advance and be proactive.
+Devfreq is using a reactive approach (e.g. monitor performance counters and
+reconfigure bandwidth when the bottleneck had already occurred), which is
+suboptimal and might not work well. The interconnect API is designed to
+deal with multi-tiered bus topologies and aggregating constraints provided
+by drivers, while the devfreq is more oriented towards a device like GPU
+or CPU, that controls the power/performance of itself and not other devices.
+
+Some examples of how interconnect API is used by consumers:
+https://lkml.org/lkml/2018/12/20/811
+https://lkml.org/lkml/2019/1/9/740
+https://lkml.org/lkml/2018/10/11/499
+https://lkml.org/lkml/2018/9/20/986
+
+Platform drivers for different SoCs are available:
+https://lkml.org/lkml/2018/11/17/368
+https://lkml.org/lkml/2018/8/10/380
+
+TODO:
+* Create icc_set() to handle multiple parameters such as latency and other
+  QoS values. Nvidia and Qcom guys are interested in this.
+* Cache the path between nodes instead of walking the graph on each get().
+* Sync interconnect requests with the idle state of the device.
+
+Changes since patchset v12 (https://lkml.org/lkml/2018/12/8/152)
+* Rebased on v5.0-rc2
+* Picked Acked-by/Reviewed-by Rob Herring.
+* Renamed icc_set() to icc_set_bw() in patch 1. Rob suggested that icc_set()
+  is a too generic name of a function that sets only bandwidth. In the future
+  we plan to support also latency and priority.
+* Extended the cover letter with info why devfreq is not a good fit and added
+  links to consumer drivers as suggested by Olof Johansson and Mike Turquette.
+* Included the header with port IDs in patch 6 as suggested by Doug Anderson.
+* Added patch 8 to revert the bandwidth configuration if any of the requests
+  fails to apply. This came as a requirement for Nvidia platforms.
+
+Changes since patchset v11 (https://lkml.org/lkml/2018/12/7/491)
+* Squashed the newly introduced in v11 patch 8 into patch 5 to keep things
+  bisectable. (Quentin Perret, Doug Anderson)
+* Wrapped commit message of patch 2 to 75 chars.
+
+Changes since patchset v10 (https://lkml.org/lkml/2018/11/28/2)
+* Addressed comments from Joe Perches.
+* Addressed comments from Evan Green and picked Reviewed-by.
+* Changed the name of the DT node from qnoc to interconnect.
+* Minor changes - typos, whitespaces etc.
+* Added a new patch to adjust the sdm845 provider driver to the
+  recently changed cmd_db API in linux-next.
+
+Changes since patchset v9 (https://lkml.org/lkml/2018/8/31/444)
+* Converted from using global node identifiers to local per provider ids.
+* Dropped msm8916 platform driver until we figure out DT bindings.
+* Included sdm845 platform driver instead.
+* Added macros for converting to mbps, gbps, etc. to icc units.
+* Added comments about aggregation, other minor changes.
+* Fixed uninitialized variable. (Gustavo A. R. Silva)
+* Removed set but not used variable. (YueHaibing)
+* Fixed build error without DEBUGFS. (Arnd Bergmann)
+
+Changes since patchset v8 (https://lkml.org/lkml/2018/8/10/387)
+* Fixed the names of the files when built as modules.
+* Corrected some typos in comments.
+
+Changes since patchset v7 (https://lkml.org/lkml/2018/7/31/647)
+* Addressed comments on kernel-doc and grammar. (Randy)
+* Picked Reviewed-by: Evan
+* Squashed consumer and provider DT bindings into single patch. (Rob)
+* Cleaned-up msm8916 DT bindings docs by removing unused port ids.
+* Updated documentation for the cases when NULL is returned. (Saravana)
+* New patch to add myself as maintainer.
+
+Changes since patchset v6 (https://lkml.org/lkml/2018/7/9/698)
+* [patches 1,6]: Move the aggregation within the provider from the framework to
+  the platform driver's set() callback, as the aggregation point could be SoC
+  specific.
+* [patch 1]: Include missing header, reset state only of the traversed nodes,
+  move more code into path_init(), add more asserts, move misplaced mutex,
+  simplify icc_link_destroy() (Evan)
+* [patch 1]: Fix the order of requests to go from source to destination. (Alex)
+* [patch 7]: Use better wording in the documentation. (Evan)
+* [patch 6]: Reorder struct members, sort nodes alphabetically, improve naming
+  of variables , add missing clk_disable_unprepare() in error paths. (Matthias)
+* [patch 6]: Remove redundant NULL pointer check in msm8916 driver. (Alex)
+* [patch 6]: Add missing depend on QCOM_SMD_RPM in Kconfig. (Evan)
+* [patch 3]: Don't check for errors on debugfs calls, remove debugfs directory
+  when module is unloaded (Greg)
+
+Changes since patchset v5 (https://lkml.org/lkml/2018/6/20/453)
+* Fix the modular build, make rpm-smd driver a module.
+* Optimize locking and move to higher level. (Evan)
+* Code cleanups. Fix typos. (Evan, Matthias)
+* Add the source node to the path. (Evan)
+* Rename path_allocate() to path_init() with minor refactoring. (Evan)
+* Rename *_remove() functions to *_destroy().
+* Return fixed errors in icc_link_destroy(). (Evan)
+* Fix krealloc() usage in icc_link_destroy(). (Evan)
+* Add missing kfree() in icc_node_create(). (Matthias)
+* Make icc_node_add() return void. (Matthias)
+* Change mutex_init to mutex_lock in icc_provider_add(). (Matthias)
+* Add new icc_node_del() function to delete nodes from provider.
+* Fix the header guard to reflect the path in smd-rpm.h. (Evan)
+* Check for errors returned by qcom_icc_rpm_smd_send(). (Evan)
+* Propagate the error of icc_provider_del(). (Evan)
+
+Changes since patchset v4 (https://lkml.org/lkml/2018/3/9/856)
+* Simplified locking by using a single global mutex. (Evan)
+* Changed the aggregation function interface.
+* Implemented functions for node, link, provider removal. (Evan)
+* Naming changes on variables and functions, removed redundant code. (Evan)
+* Fixes and clarifications in the docs. (Matthias, Evan, Amit, Alexandre)
+* Removed mandatory reg DT property, made interconnect-names optional. (Bjorn)
+* Made interconnect-cells property required to align with other bindings. (Neil)
+* Moved msm8916 specific bindings into a separate file and patch. (Bjorn)
+* Use the names, instead of the hardcoded ids for topology. (Matthias)
+* Init the node before creating the links. (Evan)
+* Added icc_units_to_bps macro. (Amit)
+
+Changes since patchset v3 (https://lkml.org/lkml/2017/9/8/544)
+* Refactored the constraints aggregation.
+* Use the IDR API.
+* Split the provider and consumer bindings into separate patches and propose
+  new bindings for consumers, which allows to specify the local source port.
+* Adopted the icc_ prefix for API functions.
+* Introduced separate API functions for creating interconnect nodes and links.
+* Added DT lookup support in addition to platform data.
+* Dropped the event tracing patch for now.
+* Added a patch to provide summary via debugfs.
+* Use macro for the list of topology definitions in the platform driver.
+* Various minor changes.
+
+Changes since patchset v2 (https://lkml.org/lkml/2017/7/20/825)
+* Split the aggregation into per node and per provider. Cache the
+  aggregated values.
+* Various small refactorings and cleanups in the framework.
+* Added a patch introducing basic tracepoint support for monitoring
+  the time required to update the interconnect nodes.
+
+Changes since patchset v1 (https://lkml.org/lkml/2017/6/27/890)
+* Updates in the documentation.
+* Changes in request aggregation, locking.
+* Dropped the aggregate() callback and use the default as it currently
+  sufficient for the single vendor driver. Will add it later when needed.
+* Dropped the dt-bindings draft patch for now.
+
+Changes since RFC v2 (https://lkml.org/lkml/2017/6/12/316)
+* Converted documentation to rst format.
+* Fixed an incorrect call to mutex_lock. Renamed max_bw to peak_bw.
+
+Changes since RFC v1 (https://lkml.org/lkml/2017/5/15/605)
+* Refactored code into shorter functions.
+* Added a new aggregate() API function.
+* Rearranged some structs to reduce padding bytes.
+
+Changes since RFC v0 (https://lkml.org/lkml/2017/3/1/599)
+* Removed DT support and added optional Patch 3 with new bindings proposal.
+* Converted the topology into internal driver data.
+* Made the framework modular.
+* interconnect_get() now takes (src and dst ports as arguments).
+* Removed public declarations of some structs.
+* Now passing prev/next nodes to the vendor driver.
+* Properly remove requests on _put().
+* Added refcounting.
+* Updated documentation.
+* Changed struct interconnect_path to use array instead of linked list.
+
+David Dai (2):
+  interconnect: qcom: Add sdm845 interconnect provider driver
+  arm64: dts: sdm845: Add interconnect provider DT nodes
+
+Georgi Djakov (6):
+  interconnect: Add generic on-chip interconnect API
+  dt-bindings: Introduce interconnect binding
+  interconnect: Allow endpoints translation via DT
+  interconnect: Add debugfs support
+  MAINTAINERS: add a maintainer for the interconnect API
+  interconnect: Revert to previous config if any request fails
+
+ .../bindings/interconnect/interconnect.txt    |  60 ++
+ .../bindings/interconnect/qcom,sdm845.txt     |  24 +
+ Documentation/interconnect/interconnect.rst   |  94 ++
+ MAINTAINERS                                   |  10 +
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          |   6 +
+ drivers/Kconfig                               |   2 +
+ drivers/Makefile                              |   1 +
+ drivers/interconnect/Kconfig                  |  15 +
+ drivers/interconnect/Makefile                 |   6 +
+ drivers/interconnect/core.c                   | 799 +++++++++++++++++
+ drivers/interconnect/qcom/Kconfig             |  13 +
+ drivers/interconnect/qcom/Makefile            |   5 +
+ drivers/interconnect/qcom/sdm845.c            | 838 ++++++++++++++++++
+ .../dt-bindings/interconnect/qcom,sdm845.h    | 143 +++
+ include/linux/interconnect-provider.h         | 142 +++
+ include/linux/interconnect.h                  |  59 ++
+ 16 files changed, 2217 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interconnect/interconnect.txt
+ create mode 100644 Documentation/devicetree/bindings/interconnect/qcom,sdm845.txt
+ create mode 100644 Documentation/interconnect/interconnect.rst
+ create mode 100644 drivers/interconnect/Kconfig
+ create mode 100644 drivers/interconnect/Makefile
+ create mode 100644 drivers/interconnect/core.c
+ create mode 100644 drivers/interconnect/qcom/Kconfig
+ create mode 100644 drivers/interconnect/qcom/Makefile
+ create mode 100644 drivers/interconnect/qcom/sdm845.c
+ create mode 100644 include/dt-bindings/interconnect/qcom,sdm845.h
+ create mode 100644 include/linux/interconnect-provider.h
+ create mode 100644 include/linux/interconnect.h
