@@ -1,47 +1,27 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 2/3] OF: properties: add missing of_node_put
-Date: Wed, 16 Jan 2019 13:03:29 -0600
-Message-ID: <CAL_Jsq+H_0=mQ3hMg2BWKMZfPo+is53zvx6kpSHUMfKpSW=zJw@mail.gmail.com>
-References: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr> <1547372691-28324-3-git-send-email-Julia.Lawall@lip6.fr>
+Subject: Re: [PATCH] dt-bindings: soc: qcom: Fix trivial language typos
+Date: Wed, 16 Jan 2019 13:05:10 -0600
+Message-ID: <CAL_JsqK=hE4T4YOsbvYFAwrVed8fECtAPhiHp7Z8PhD1XyQ3jQ@mail.gmail.com>
+References: <1546949500-30044-1-git-send-email-krzk@kernel.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547372691-28324-3-git-send-email-Julia.Lawall@lip6.fr>
+In-Reply-To: <1546949500-30044-1-git-send-email-krzk@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Julia Lawall <Julia.Lawall@lip6.fr>
-Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Jiri Kosina <trivial@kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 13, 2019 at 4:21 AM Julia Lawall <Julia.Lawall@lip6.fr> wrote:
+On Tue, Jan 8, 2019 at 6:11 AM Krzysztof Kozlowski <krzk@kernel.org> wrote:
 >
-> Add an of_node_put when the result of of_graph_get_remote_port_parent is
-> not available.
+> Fix few trivial language typos in bindings.
 >
-> The semantic match that finds this problem is as follows
-> (http://coccinelle.lip6.fr):
->
-> // <smpl>
-> @r exists@
-> local idexpression e;
-> expression x;
-> @@
-> e = of_graph_get_remote_port_parent(...);
-> ... when != x = e
->     when != true e == NULL
->     when != of_node_put(e)
->     when != of_fwnode_handle(e)
-> (
-> return e;
-> |
-> *return ...;
-> )
-> // </smpl>
->
-> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
->
+> Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
 > ---
->  drivers/of/property.c |    1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/soc/qcom/qcom,glink.txt | 2 +-
+>  Documentation/devicetree/bindings/soc/qcom/qcom,smp2p.txt | 4 ++--
+>  2 files changed, 3 insertions(+), 3 deletions(-)
+>
 
 Applied, thanks.
 
