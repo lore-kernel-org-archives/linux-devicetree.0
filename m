@@ -1,73 +1,68 @@
-From: Peter Shih <pihsun@chromium.org>
-Subject: Re: [RFC v2 1/6] dt-bindings: Add a binding for Mediatek SCP
-Date: Wed, 16 Jan 2019 12:00:16 +0800
-Message-ID: <CANdKZ0fbP1Nm3GkO1ujeuaj4zAOQCdJ3MPowDQ-fJCUZ42a3dA@mail.gmail.com>
-References: <20190108052606.59426-1-pihsun@chromium.org>
- <20190108052606.59426-2-pihsun@chromium.org>
- <20190115203448.GA32546@bogus>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: arm: fsl: Add devicetree binding for Oxalis
+Date: Tue, 15 Jan 2019 22:07:12 -0600
+Message-ID: <CAL_Jsq+myeZ1n4X=KhHZjtPDHnGH=L65xxYbzMrt8Rq6Bur4Bg@mail.gmail.com>
+References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
+ <20190114102053.16013-3-manivannan.sadhasivam@linaro.org> <CAL_JsqJpRPrCpRTpqh1v6JZwpEtZnaeuLTHR+0EiMSoxbk9zeQ@mail.gmail.com>
+ <20190116022100.GC15808@dragon>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190115203448.GA32546@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Nicolas Boichat <drinkcat@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Erin Lo <erin.lo@mediatek.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190116022100.GC15808@dragon>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Shawn Guo <shawnguo@kernel.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Yang-Leo Li <leoyang.li@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, Amit Kucheria <amit.kucheria@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 4:34 AM Rob Herring <robh@kernel.org> wrote:
+On Tue, Jan 15, 2019 at 8:21 PM Shawn Guo <shawnguo@kernel.org> wrote:
 >
-> On Tue, Jan 08, 2019 at 01:26:01PM +0800, Pi-Hsun Shih wrote:
-> > From: Erin Lo <erin.lo@mediatek.com>
+> On Mon, Jan 14, 2019 at 12:02:47PM -0600, Rob Herring wrote:
+> > On Mon, Jan 14, 2019 at 4:21 AM Manivannan Sadhasivam
+> > <manivannan.sadhasivam@linaro.org> wrote:
+> > >
+> > > Add devicetree binding for Oxalis board in JSON format. While adding
+> > > that, let's fix the description for LS1012A also.
+> > >
+> > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 ++-
+> > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > index d34fe0749199..0f30142fe316 100644
+> > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > @@ -173,12 +173,13 @@ properties:
+> > >                - fsl,vf610
+> > >                - fsl,vf610m4
+> > >
+> > > -      - description: LS1021A based Boards
+> > > +      - description: LS1012A based Boards
 > >
-> > Add a DT binding documentation of SCP for the
-> > MT8183 SoC from Mediatek.
+> > Well, yes that was wrong...
 > >
-> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
-> > ---
-> > Changes from v1:
-> >  - no change
+> > >          items:
+> > >            - enum:
+> > >                - fsl,ls1012a-rdb
+> > >                - fsl,ls1012a-frdm
+> > >                - fsl,ls1012a-qds
+> > > +              - ebs-systart,oxalis
+> >
+> > Sort alphabetically.
+> >
+> > >            - const: fsl,ls1021a
+> >
+> > And this is wrong too.
+> >
+> > I you just change it, then we will be missing an entry for LS1021A.
+> > What's the status of that SoC because there is no board dts file? We
+> > should not have .dtsi files in the kernel which don't get built.
 >
-> No answer to my question on v1?
+> Hmm, I do not see any LS1021A SoC .dtsi in the tree.  I suspect it's
+> just a typo of LS1012A.
 >
+> @Leo, do we have a LS1021A SoC?
 
-Sorry I missed the last mail.
+arch/arm/boot/dts/ls1021a.dtsi
 
-Yes there would be additional optional properties. For the current patch
-series, the "cros-ec-rpmsg" entry would not be listed in the device tree, but
-there would be a "mediatek,mt8183-rpmsg" under this node.
-
-Would update this in v3.
-
-> > ---
-> >  .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
-> >  1 file changed, 10 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > new file mode 100644
-> > index 00000000000000..b07e5c4ca9af1d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-> > @@ -0,0 +1,10 @@
-> > +Mediatek SCP Bindings
-> > +----------------------------------------
-> > +
-> > +This binding provides support for ARM Cortex M4 Co-processor found on some
-> > +Mediatek SoCs.
-> > +
-> > +Required properties:
-> > +- compatible         Should be "mediatek,mt8183-scp"
-> > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
-> > +
-> > --
-> > 2.20.1.97.g81188d93c3-goog
-> >
+Rob
