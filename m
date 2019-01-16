@@ -1,72 +1,74 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: [GIT PULL] Immutable branch between MFD, Input and Watchdog due for
- the v5.1 merge window
-Date: Wed, 16 Jan 2019 14:04:26 +0000
-Message-ID: <20190116140426.GF23399@dell>
-References: <1547460290-21049-1-git-send-email-p.paillet@st.com>
+From: Fabrice Gasnier <fabrice.gasnier@st.com>
+Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
+Date: Wed, 16 Jan 2019 15:10:08 +0100
+Message-ID: <9e0ee154-a399-9bff-3beb-adfd9d6c6fee@st.com>
+References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
+ <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
+ <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547460290-21049-1-git-send-email-p.paillet@st.com>
+In-Reply-To: <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Pascal PAILLET-LME <p.paillet@st.com>
-Cc: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Enjoy!
+On 1/16/19 1:14 PM, Arnd Bergmann wrote:
+> (sorry for the late reply, I just realized that I had never sent out the
+> mail after Lee asked me for a review last year and I had drafted
+> my reply).
 
-The following changes since commit bfeffd155283772bbe78c6a05dec7c0128ee500c:
+Hi Arnd,
 
-  Linux 5.0-rc1 (2019-01-06 17:08:20 -0800)
+Many thanks for reviewing, no worries :-)
 
-are available in the Git repository at:
+> 
+> On Wed, Dec 12, 2018 at 9:48 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+>>
+>> Some system control registers need to be clocked, so the registers can
+>> be accessed. Add an optional clock and attach it to regmap.
+>>
+>> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> 
+> This looks ok to me in principle, but I have one question: When we
+> do a clk_get() and clk_prepare() as part of regmap_mmio_attach_clk(),
+> does that change the behavior of syscon nodes that are otherwise
+> unused?
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/lee/mfd.git ib-mfd-input-watchdog-v5.1
+I'm not sure I correctly understand this question. I don't think it will
+change the behavior for "unused" nodes. These should remain unused with
+this patch.
 
-for you to fetch changes up to 28804c2c8fb3401aa4b7f16a883d49dd82f5e377:
+> 
+> I think we have a bunch of devices that started out as a syscon but
+> then we added a proper driver for them, which would handle the
+> clocks explicitly. Is it guaranteed that this will keep working (including
+> shutting down the clocks when they are unused) if we have two drivers
+> that call clk_get() on the same device node?
 
-  watchdog: stpmic1: Add STPMIC1 watchdog driver (2019-01-16 14:01:19 +0000)
+I'd expect nothing wrong happens when two drivers call clk_get() for the
+same clock.
+Are there some case where two drivers are bind (e.g. syscon driver +
+another driver) for the same piece of hardware ?
 
-----------------------------------------------------------------
-Immutable branch between MFD, Input and Watchdog due for the v5.1 merge window
+The clk_prepare() is part of regmap_mmio_attach_clk(). It's called once
+upon registration via of_syscon_register(). There is currently no mean
+to unregister, e.g. something like "of_syscon_unregister" and so do
+clk_unprepare via regmap_mmio_detach_clk().
 
-----------------------------------------------------------------
-Pascal PAILLET-LME (6):
-      dt-bindings: mfd: Document STPMIC1
-      mfd: stpmic1: Add STPMIC1 driver
-      dt-bindings: input: Document STPMIC1 PMIC onkey
-      input: stpmic1: Add STPMIC1 onkey driver
-      dt-bindings: watchdog: document STPMIC1 PMIC watchdog
-      watchdog: stpmic1: Add STPMIC1 watchdog driver
+Then point is clk_enable()/clk_disable() calls will be used in
+regmap_mmio_read() and regmap_mmio_write(). These calls are balanced.
+Then clock framework should correctly disable/gate the clock when
+unused, based on the enable count.
 
- .../devicetree/bindings/input/st,stpmic1-onkey.txt |  28 +++
- .../devicetree/bindings/mfd/st,stpmic1.txt         |  61 ++++++
- .../bindings/watchdog/st,stpmic1-wdt.txt           |  11 ++
- drivers/input/misc/Kconfig                         |  11 ++
- drivers/input/misc/Makefile                        |   2 +
- drivers/input/misc/stpmic1_onkey.c                 | 198 +++++++++++++++++++
- drivers/mfd/Kconfig                                |  16 ++
- drivers/mfd/Makefile                               |   1 +
- drivers/mfd/stpmic1.c                              | 213 +++++++++++++++++++++
- drivers/watchdog/Kconfig                           |  12 ++
- drivers/watchdog/Makefile                          |   1 +
- drivers/watchdog/stpmic1_wdt.c                     | 139 ++++++++++++++
- include/dt-bindings/mfd/st,stpmic1.h               |  50 +++++
- include/linux/mfd/stpmic1.h                        | 212 ++++++++++++++++++++
- 14 files changed, 955 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/input/st,stpmic1-onkey.txt
- create mode 100644 Documentation/devicetree/bindings/mfd/st,stpmic1.txt
- create mode 100644 Documentation/devicetree/bindings/watchdog/st,stpmic1-wdt.txt
- create mode 100644 drivers/input/misc/stpmic1_onkey.c
- create mode 100644 drivers/mfd/stpmic1.c
- create mode 100644 drivers/watchdog/stpmic1_wdt.c
- create mode 100644 include/dt-bindings/mfd/st,stpmic1.h
- create mode 100644 include/linux/mfd/stpmic1.h
+Is this answering your question?
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Thanks again,
+Best regards,
+Fabrice
+> 
+>        Arnd
+> 
