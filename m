@@ -1,88 +1,122 @@
-From: Ben Whitten <Ben.Whitten@lairdtech.com>
-Subject: RE: [PATCH lora-next 2/4] dt-bindings: lora: sx125x: add basic
- documentation
-Date: Wed, 16 Jan 2019 17:22:37 +0000
-Message-ID: <DM6PR02MB5978A80E5B4BEF52B8E13E95E7820@DM6PR02MB5978.namprd02.prod.outlook.com>
-References: <20190108084132.10214-1-ben.whitten@gmail.com>
- <20190108084132.10214-2-ben.whitten@gmail.com>
- <20191f9a-46b9-2ad1-d56b-7af302589f93@suse.de>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Wed, 16 Jan 2019 18:28:49 +0100
+Message-ID: <20190116172849.h5qdfa5wc3vaprbn@pengutronix.de>
+References: <1547194964-16718-1-git-send-email-yash.shah@sifive.com>
+ <1547194964-16718-3-git-send-email-yash.shah@sifive.com>
+ <20190115220046.etgbno6ymsux75dk@pengutronix.de>
+ <CAJ2_jOEuU_=bpbVmdsq7FFEKEm_wHza-h7Hu8QmZ3BgsGgi-ng@mail.gmail.com>
+ <20190116164640.mi3zjbhbhc6k5v7p@pengutronix.de>
+ <alpine.DEB.2.21.9999.1901160909540.19681@viisi.sifive.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20191f9a-46b9-2ad1-d56b-7af302589f93@suse.de>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?QW5kcmVhcyBGw6RyYmVy?= <afaerber@suse.de>, Ben Whitten <ben.whitten@gmail.com>
-Cc: "linux-lpwan@lists.infradead.org" <linux-lpwan@lists.infradead.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.9999.1901160909540.19681@viisi.sifive.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Paul Walmsley <paul.walmsley@sifive.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Yash Shah <yash.shah@sifive.com>, Thierry Reding <thierry.reding@gmail.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgQW5kcmVhcywNCg0KPiBBbSAwOC4wMS4xOSB1bSAwOTo0MSBzY2hyaWViIEJlbiBXaGl0dGVu
-Og0KPiA+IFRoZSBzeDEyNXggZmFtaWx5IGFyZSBJUSByYWRpbyB0cmFuc2NlaXZlcnMgZnJvbSBT
-ZW10ZWNoIGNvbmZpZ3VyZWQgb3Zlcg0KPiA+IFNQSSwgdGhleSBhcmUgdHlwaWNhbGx5IGNvbm5l
-Y3RlZCB0byBhbiBzeDEzMHggc2VyaWVzIGNvbmNlbnRyYXRvciBob3dldmVyDQo+ID4gbWF5IGJl
-IGNvbm5lY3RlZCB0byBhIGhvc3QgZGlyZWN0bHkuDQo+IA0KPiAiU1gxMjV4IiBhbmQgIlNYMTMw
-eCINCj4gDQo+ID4NCj4gPiBSZXF1aXJlZCBwcm9wZXJ0aWVzIGluY2x1ZGUgdGhlIHJhZGlvIG51
-bWJlciBvZiB0aGUgaG9zdCBvciBjb25jZW50cmF0b3INCj4gPiBidXMuDQo+ID4NCj4gPiBTaWdu
-ZWQtb2ZmLWJ5OiBCZW4gV2hpdHRlbiA8YmVuLndoaXR0ZW5AZ21haWwuY29tPg0KPiA+IC0tLQ0K
-PiA+ICAuLi4vYmluZGluZ3MvbG9yYS9zZW10ZWNoLHN4MTI1eC55YW1sICAgICAgICAgfCA0NSAr
-KysrKysrKysrKysrKysrKysrDQo+ID4gIDEgZmlsZSBjaGFuZ2VkLCA0NSBpbnNlcnRpb25zKCsp
-DQo+ID4gIGNyZWF0ZSBtb2RlIDEwMDY0NA0KPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvbG9yYS9zZW10ZWNoLHN4MTI1eC55YW1sDQo+ID4NCj4gPiBkaWZmIC0tZ2l0IGEvRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2xvcmEvc2VtdGVjaCxzeDEyNXgueWFtbA0K
-PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9sb3JhL3NlbXRlY2gsc3gxMjV4
-LnlhbWwNCj4gPiBuZXcgZmlsZSBtb2RlIDEwMDY0NA0KPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4u
-NWVhZGVjODYwYjcwDQo+ID4gLS0tIC9kZXYvbnVsbA0KPiA+ICsrKyBiL0RvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9sb3JhL3NlbXRlY2gsc3gxMjV4LnlhbWwNCj4gPiBAQCAtMCww
-ICsxLDQ1IEBADQo+ID4gKyMgU1BEWC1MaWNlbnNlLUlkZW50aWZpZXI6IEdQTC0yLjANCj4gPiAr
-JVlBTUwgMS4yDQo+ID4gKy0tLQ0KPiA+ICskaWQ6IGh0dHA6Ly9kZXZpY2V0cmVlLm9yZy9zY2hl
-bWFzL2xvcmEvc2VtdGVjaCxzeDEyNXgueWFtbCMNCj4gPiArJHNjaGVtYTogaHR0cDovL2Rldmlj
-ZXRyZWUub3JnL21ldGEtc2NoZW1hcy9jb3JlLnlhbWwjDQo+ID4gKw0KPiA+ICt0aXRsZTogU2Vt
-dGVjaCBJUSBtb2R1bGF0b3IvZGUtbW9kdWxhdG9yIHRyYW5zZWl2ZXINCj4gPiArDQo+ID4gK21h
-aW50YWluZXJzOg0KPiA+ICsgIC0gQW5kcmVhcyBGw6RyYmVyIDxhZmFlcmJlckBzdXNlLmRlPg0K
-PiA+ICsgIC0gQmVuIFdoaXR0ZW4gPGJlbi53aGl0dGVuQGdtYWlsLmNvbT4NCj4gPiArDQo+ID4g
-K2Rlc2NyaXB0aW9uOiB8DQo+ID4gKyAgVGhlIHN4MTI1eCBmYW1pbHkgYXJlIGhpZ2hseSBpbnRl
-Z3JhdGVkIFJGIGZyb250LWVuZCB0byBkaWdpdGFsIEkgYW5kIFENCj4gPiArICBtb2R1bGF0b3Iv
-ZGVtb2R1bGF0b3IgTXVsdGktUEhZIG1vZGUgdHJhbnNjZWl2ZXIgY2FwYWJsZSBvZg0KPiBzdXBw
-b3J0aW5nDQo+ID4gKyAgbXVsdGlwbGUgY29uc3RhbnQgYW5kIG5vbi1jb25zdGFudCBlbnZlbG9w
-ZSBtb2R1bGF0aW9uIHNjaGVtZXMuDQo+IA0KPiAiU1gxMjV4Ig0KPiANCj4gImFyZSAuLi4gdHJh
-bnNjZWl2ZXJzIg0KPiANCj4gPiArDQo+ID4gK3Byb3BlcnRpZXM6DQo+ID4gKyAgY29tcGF0aWJs
-ZToNCj4gPiArICAgIGl0ZW1zOg0KPiA+ICsgICAgICAtIGVudW06DQo+ID4gKyAgICAgICAgLSBz
-ZW10ZWNoLHN4MTI1NQ0KPiA+ICsgICAgICAgIC0gc2VtdGVjaCxzeDEyNTcNCj4gPiArICAgICAg
-ICAtIHNlbXRlY2gsc3gxMjU4DQo+IA0KPiBEbyB3ZSBuZWVkIGFsbCB0aHJlZT8gUHJvYmFibHkg
-eWVzIGZvciB0aGUgY29uY2VudHJhdG9yIHRvIG1ha2UgZGVjaXNpb25zPw0KDQpXZSBjYW4gcHJv
-YmUgdGhlIGRldmljZSB2ZXJzaW9uIGZyb20gdGhlIGNvbmNlbnRyYXRvciBvciBhIGhvc3QsIGJ1
-dCBpZiBJIHJlY2FsbA0KZnJvbSBhIHByZXZpb3VzIHJldmlldyB3ZSBzaG91bGQgbm90IHJlbHkg
-b24gdGhlIHZlcnNpb24gcmVnaXN0ZXIgZm9yIG1ha2luZw0KZGVjaXNpb25zLg0KVGhlIHZlcnNp
-b24gcmVnaXN0ZXIgb2YgdGhlIFNYMTI1NyBoYXMgYmVlbiBtaXNzZWQgZnJvbSB0aGUgcHVibGlj
-IGRhdGFzaGVldA0KKGFsdGhvdWdoIGV4aXN0cykgYW5kIHRoZSBleGlzdGluZyBjb25jZW50cmF0
-b3IgSEFMIGRvZXMgbm90IG1ha2UgZGVjaXNpb25zDQpiYXNlZCBvbiB0aGUgdmVyc2lvbiByZWdp
-c3RlciB2YWx1ZS4NCkJldHRlciB0byBiZSBleHBsaWNpdCBpbiB0aGUgRFQgYW5kIGxldCB0aGUg
-ZHJpdmVyIHVzZSB0aGF0Lg0KDQo+IA0KPiA+ICsNCj4gPiArICByZWc6DQo+ID4gKyAgICBtYXhJ
-dGVtczogMQ0KPiA+ICsgICAgZGVzY3JpcHRpb246IFRoZSBjaGlwIHNlbGVjdCBvbiB0aGUgU1BJ
-IGJ1cyBvciByYWRpbyBudW1iZXIgaW4NCj4gY29uY2VudHJhdG9yLg0KPiANCj4gIiwgd2l0aCBy
-YWRpbyBBID0gMCBhbmQgcmFkaW8gQiA9IDEuIg0KPiANCj4gPiArDQo+ID4gKyAgc3BpLW1heC1m
-cmVxdWVuY3k6DQo+ID4gKyAgICBtYXhpbXVtOiAxMDAwMDAwMA0KPiA+ICsgICAgZGVmYXVsdDog
-ODAwMDAwMA0KPiA+ICsgICAgZGVzY3JpcHRpb246IFRoZSBmcmVxdWVuY3kgb2YgdGhlIFNQSSBj
-b21tdW5pY2F0aW9uIHRvIHRoZSByYWRpbywNCj4gPiArICAgICAgaW4gSHouIE1heGltdW0gU1BJ
-IGZyZXF1ZW5jeSBpcyAxME1Iei4NCj4gDQo+IElmIG9uIHRoZSBjb25jZW50cmF0b3IncyBTUEkg
-YnVzIHRoZW4gdGhpcyBpcyB1bnVzZWQuIFlvdSBkb24ndCBtYXJrIGl0DQo+IHJlcXVpcmVkIGJl
-bG93LCBzbyBtYXliZSBhZGQgYSB0ZXh0dWFsIG5vdGU/DQoNCkFzIHdpdGggU1gxMzB4IGNvbW1l
-bnQsIHRoaXMgc2hvdWxkIGJlIGNvdmVyZWQgaW4gY29tbW9uIFNQSSBiaW5kaW5ncw0KYW55b25l
-IGNvbm5lY3RpbmcgZGlyZWN0bHkgdG8gc3BpIHdpbGwgaW5oZXJpdCB0aGF0LCBhbmQgdGhlbiBh
-bnlvbmUgdXNpbmcNCmNvbmNlbnRyYXRvciB3aWxsIG5vdCByZXF1aXJlIGl0IHNvIHdlIGNhbiBk
-cm9wIHRoaXMuDQoNCj4gDQo+ID4gKw0KPiA+ICtyZXF1aXJlZDoNCj4gPiArICAtIGNvbXBhdGli
-bGUNCj4gPiArICAtIHJlZw0KPiA+ICsNCj4gPiArZXhhbXBsZXM6DQo+ID4gKyAgLSB8DQo+ID4g
-KyAgICByYWRpbzA6IGxvcmFAMCB7DQo+ID4gKyAgICAgIGNvbXBhdGlibGUgPSAic2VtdGVjaCxz
-eDEyNTciOw0KPiA+ICsgICAgICByZWcgPSA8MD47DQo+ID4gKyAgICB9Ow0KPiANCj4gSWYgeW91
-IGNvbXBhcmUgbXkgc3gxMjd4IGltcGxlbWVudGF0aW9uLCBzaG91bGQgd2UgcHJlcGFyZSBhDQo+
-ICJyYWRpby1mcmVxdWVuY3kiIChvciAicmFkaW8tY2VudGVyLWZyZXF1ZW5jeSIpIHByb3BlcnR5
-IGZvciB0aGUNCj4gYW50ZW5uYSwgdG8gcHJlY29uZmlndXJlIHRoZSBkcml2ZXIgZHVyaW5nIHBy
-b2JlPyBDb250ZW50cyB3b3VsZCB0aGVuIGJlDQo+IDw4NjgwMDAwMDA+LCBmb3IgZXhhbXBsZS4N
-Cg0KSSBkb27igJl0IGtub3cgdGhlIHBvbGljeSBvZiBjb25maWd1cmF0aW9uIGluIERULg0KSXMg
-dGhlIHZhbHVlIGEgaGFyZHdhcmUgcHJvcGVydHkgb2YgdGhlIGFudGVubmE/IENvdWxkIHdlIGNh
-bGwgaXQNCiJhbnRlbm5hLWZyZXF1ZW5jeSIgb3IgImJhbmR3aWR0aCIgYW5kIGdpdmUgaXQgYSBo
-aWdoIGxvdyBwb2ludD8NCldoaWxzdCBjb25zaWRlcmluZyBhbnRlbm5hIHByb3BlcnRpZXMgd2Ug
-c2hvdWxkIGluY2x1ZGUgYSBnYWluIHZhbHVlIGFzDQp0aGF0IGFmZmVjdHMgdGhlIHJhZGlhdGVk
-IHBvd2VyIGF0IGEgZ2l2ZW4gdHJhbnNtaXQgcG93ZXIsIGZvb2QgZm9yIHRob3VnaA0Kd2hlbiB3
-ZSBjb21lIHRvIHJlZ3VsYXRvcnkgZGIuDQoNClRoYW5rcywNCkJlbiBXaGl0dGVuDQo=
+On Wed, Jan 16, 2019 at 09:18:45AM -0800, Paul Walmsley wrote:
+> On Wed, 16 Jan 2019, Uwe Kleine-K=F6nig wrote:
+> =
+
+> > On Wed, Jan 16, 2019 at 04:40:42PM +0530, Yash Shah wrote:
+> > > On Wed, Jan 16, 2019 at 3:30 AM Uwe Kleine-K=F6nig
+> > > <u.kleine-koenig@pengutronix.de> wrote:
+> > > > On Fri, Jan 11, 2019 at 01:52:44PM +0530, Yash Shah wrote:
+> > > > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > > > index a8f47df..3bcaf6a 100644
+> > > > > --- a/drivers/pwm/Kconfig
+> > > > > +++ b/drivers/pwm/Kconfig
+> > > > > @@ -380,6 +380,16 @@ config PWM_SAMSUNG
+> > > > >         To compile this driver as a module, choose M here: the mo=
+dule
+> > > > >         will be called pwm-samsung.
+> > > > >
+> > > > > +config PWM_SIFIVE
+> > > > > +     tristate "SiFive PWM support"
+> > > > > +     depends on OF
+> > > > > +     depends on COMMON_CLK
+> > > >
+> > > > I'd say add:
+> > > >
+> > > >         depends on MACH_SIFIVE || COMPILE_TEST
+> > > >
+> > > > (I guess "MACH_SIFIVE" is wrong, but I assume you get what I mean.)
+> > > =
+
+> > > As of now, MACH_SIFIVE/ARCH_SIFIVE isn't available.
+> > > @Paul, Do you have any comments on this?
+> > =
+
+> > If this is not going to be available at least protect it by
+> > =
+
+> > 	depends RISCV || COMPILE_TEST
+> =
+
+> There's nothing RISC-V or SiFive SoC-specific about this driver or IP =
+
+> block.  The HDL for this IP block is open-source and posted on Github.  =
+
+> The IP block and driver would work unchanged on an ARM or MIPS SoC, and i=
+n =
+
+> fact, SiFive does design ARM-based SoCs as well.  Likewise, any other SoC =
+
+> vendor could take the HDL for this IP block from the git tree and =
+
+> implement it on their own SoC.
+> =
+
+> More generally: it's a basic principle of Linux device drivers that they =
+
+> should be buildable for any architecture.  The idea here is to prevent =
+
+> developers from burying architecture or SoC-specific hacks into the =
+
+> driver.  So there shouldn't be any architecture or SoC-specific code in =
+
+> any device driver, unless it's abstracted in some way - ideally through a =
+
+> common framework.
+> =
+
+> So from this point of view, neither "depends MACH_SIFIVE" nor "depends =
+
+> RISCV" would be appropriate.  Similarly, the equivalents for other =
+
+> architectures (e.g. "ARCH_ARM") or SoC manufacturers (e.g., =
+
+> "MACH_SAMSUNG") wouldn't be appropriate for any generic IP block device =
+
+> driver like this one.
+
+The dependency serves two purposes:
+
+ a) ensure that the build requirements are fulfilled.
+ b) restrict configuration to actually existing machines
+
+When considering b) it doesn't make sense to enable the driver for (say)
+a machine that is powered by an ARM SoC by TI. If you still want to
+compile test the sifive driver for ARM, enable COMPILE_TEST. That's what
+this symbol is there for.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
