@@ -1,46 +1,27 @@
-Return-Path: <SRS0=RXyf=PX=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v2 1/2] dt-bindings: usb: usb251xb: add documentation for data lane swapping
-Date: Tue, 15 Jan 2019 12:50:17 +0100
-Message-Id: <20190115115018.27143-1-m.felsch@pengutronix.de>
+Return-Path: <robherring2@gmail.com>
+Date: Wed, 16 Jan 2019 15:39:40 -0600
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: add Methode Electronics vendor prefix
+Message-ID: <20190116213940.GA1371@bogus>
+References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
+ <20190115121113.5636-2-vladimir.vid@sartura.hr>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: richard.leitner@skidata.com, robh@kernel.org, fancer.lancer@gmail.com
-Cc: devicetree@vger.kernel.org, linux-usb@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190115121113.5636-2-vladimir.vid@sartura.hr>
+To: Vladimir Vid <vladimir.vid@sartura.hr>
+Cc: devicetree@vger.kernel.org, Andrew Lunn <andrew@lunn.ch>
 List-ID: <devicetree@vger.kernel.org>
 
-Add optional binding to allow USB differential-pair (D+/D-) data lane
-swapping. The swapping can be specified for each port separately,
-default is no swapping.
+On Tue, 15 Jan 2019 13:11:15 +0100, Vladimir Vid wrote:
+> Methode Electronics, Inc. is an international
+> engineering company headquartered in Chicago, IL.
+> 
+> Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
+> Cc: Andrew Lunn <andrew@lunn.ch>
+> ---
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
-Changes:
-v2:
- - rename property s/sw-dx-lanes-ports/swap-dx-lanes
-
- Documentation/devicetree/bindings/usb/usb251xb.txt | 4 ++++
- 1 file changed, 4 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/usb/usb251xb.txt b/Documentation/devicetree/bindings/usb/usb251xb.txt
-index 168ff819e827..17915f64b8ee 100644
---- a/Documentation/devicetree/bindings/usb/usb251xb.txt
-+++ b/Documentation/devicetree/bindings/usb/usb251xb.txt
-@@ -64,6 +64,8 @@ Optional properties :
-  - power-on-time-ms : Specifies the time it takes from the time the host
- 	initiates the power-on sequence to a port until the port has adequate
- 	power. The value is given in ms in a 0 - 510 range (default is 100ms).
-+ - swap-dx-lanes : Specifies the ports which will swap the differential-pair
-+	(D+/D-), default is not-swapped.
- 
- Examples:
- 	usb2512b@2c {
-@@ -81,4 +83,6 @@ Examples:
- 		manufacturer = "Foo";
- 		product = "Foo-Bar";
- 		serial = "1234567890A";
-+		/* correct misplaced usb connectors on port 1,2 */
-+		swap-dx-lanes = <1 2>;
- 	};
--- 
-2.20.1
+Reviewed-by: Rob Herring <robh@kernel.org>
