@@ -1,45 +1,57 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v3 2/2] mfd: tps65218.c: Add input voltage options
-Date: Wed, 16 Jan 2019 14:13:36 +0000
-Message-ID: <20190116141336.GG23399@dell>
-References: <1546523226-358-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1547453794-18770-3-git-send-email-Christian.Hohnstaedt@wago.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 13/21] arch: don't memset(0) memory returned by
+ memblock_alloc()
+Date: Wed, 16 Jan 2019 15:17:22 +0100
+Message-ID: <CAMuHMdXt8fPgAGp3KPGM=qVT_QzU=FJS7f5XUbK2hGXYdE9Yeg@mail.gmail.com>
+References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
+ <1547646261-32535-14-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547453794-18770-3-git-send-email-Christian.Hohnstaedt@wago.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Cc: Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547646261-32535-14-git-send-email-rppt@linux.ibm.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, the arch/x86 maintainers <x86@kernel.org>, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux <sparclinux@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, linux-s390 <linux-s390@vger.kernel.org>, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, Linux-sh list <linux-sh@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Greg Ungerer <gerg@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>arcml <li>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jan 2019, Christian Hohnstaedt wrote:
+On Wed, Jan 16, 2019 at 2:45 PM Mike Rapoport <rppt@linux.ibm.com> wrote:
+> memblock_alloc() already clears the allocated memory, no point in doing it
+> twice.
+>
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
 
-> These options apply to all regulators in this chip.
-> 
-> ti,strict-supply-voltage-supervision:
->   Set STRICT flag in CONFIG1
-> ti,under-voltage-limit-microvolt:
->   Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
-> ti,under-voltage-hyst-microvolt:
->   Select 200mV or 400mV UVLOHYS in CONFIG2
-> 
-> Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-> Tested-by: Keerthy <j-keerthy@ti.com>
-> Reviewed-by: Keerthy <j-keerthy@ti.com>
-> ---
->  drivers/mfd/tps65218.c       | 89 ++++++++++++++++++++++++++++++++++++++++++++
->  include/linux/mfd/tps65218.h |  4 ++
->  2 files changed, 93 insertions(+)
+>  arch/m68k/mm/mcfmmu.c       | 1 -
 
-This looks like regulator code.
+For m68k part:
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org>
 
-Why aren't you placing it into the regulator driver?
+> --- a/arch/m68k/mm/mcfmmu.c
+> +++ b/arch/m68k/mm/mcfmmu.c
+> @@ -44,7 +44,6 @@ void __init paging_init(void)
+>         int i;
+>
+>         empty_zero_page = (void *) memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+> -       memset((void *) empty_zero_page, 0, PAGE_SIZE);
+>
+>         pg_dir = swapper_pg_dir;
+>         memset(swapper_pg_dir, 0, sizeof(swapper_pg_dir));
+
+Gr{oetje,eeting}s,
+
+                        Geert
 
 -- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
