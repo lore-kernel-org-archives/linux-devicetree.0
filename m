@@ -1,43 +1,67 @@
-Return-Path: <SRS0=opqW=PX=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:33626 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727410AbfAOMKs (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Tue, 15 Jan 2019 07:10:48 -0500
-Received: by mail-wr1-f67.google.com with SMTP id c14so2735007wrr.0
-        for <devicetree@vger.kernel.org>; Tue, 15 Jan 2019 04:10:46 -0800 (PST)
-From: Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: [PATCH v2 2/2] dt-bindings: add Methode Electronics vendor prefix
-Date: Tue, 15 Jan 2019 13:11:15 +0100
-Message-Id: <20190115121113.5636-2-vladimir.vid@sartura.hr>
-In-Reply-To: <20190111172055.30451-1-vladimir.vid@sartura.hr>
-References: <20190111172055.30451-1-vladimir.vid@sartura.hr>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Vladimir Vid <vladimir.vid@sartura.hr>, Andrew Lunn <andrew@lunn.ch>
+Return-Path: <SRS0=Tq4V=PY=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCH 3/4] EDAC, altera: Add Stratix10 OCRAM ECC support
+Date: Wed, 16 Jan 2019 17:11:53 -0600
+Message-Id: <1547680314-31045-4-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Methode Electronics, Inc. is an international
-engineering company headquartered in Chicago, IL.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
-Cc: Andrew Lunn <andrew@lunn.ch>
+Use the newer ECC error injection method for Arria10 and
+Stratix10 OCRAM.
+OCRAM can't call the common peripheral init routine since
+OCRAM is being used. An OCRAM specific init routine ensures
+the OCRAM ECC is setup without clearing memory.
+
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/edac/altera_edac.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-index 389508584f48..cfd4413f2723 100644
---- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-+++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-@@ -237,6 +237,7 @@ melfas	MELFAS Inc.
- mellanox	Mellanox Technologies
- memsic	MEMSIC Inc.
- merrii	Merrii Technology Co., Ltd.
-+methode Methode Electronics, Inc.
- micrel	Micrel Inc.
- microchip	Microchip Technology Inc.
- microcrystal	Micro Crystal AG
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 56af98d18645..6a8993e6a278 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1216,8 +1216,26 @@ static const struct edac_device_prv_data ocramecc_data = {
+ 	.inject_fops = &altr_edac_device_inject_fops,
+ };
+ 
++static int __maybe_unused
++altr_a10_check_ecc_deps_init(struct altr_edac_device_dev *device)
++{
++	void __iomem  *base = device->base;
++	int ret;
++
++	ret = altr_check_ecc_deps(device);
++	if (ret)
++		return ret;
++
++	/* Enable IRQ on Single Bit Error */
++	writel(ALTR_A10_ECC_SERRINTEN, (base + ALTR_A10_ECC_ERRINTENS_OFST));
++	/* Ensure all writes complete */
++	wmb();
++
++	return 0;
++}
++
+ static const struct edac_device_prv_data a10_ocramecc_data = {
+-	.setup = altr_check_ecc_deps,
++	.setup = altr_a10_check_ecc_deps_init,
+ 	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
+ 	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
+ 	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_OCRAM,
+@@ -1227,7 +1245,7 @@ static const struct edac_device_prv_data a10_ocramecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ 	/*
+ 	 * OCRAM panic on uncorrectable error because sleep/resume
+ 	 * functions and FPGA contents are stored in OCRAM. Prefer
 -- 
-2.19.0
+2.7.4
