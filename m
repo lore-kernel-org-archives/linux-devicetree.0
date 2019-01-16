@@ -1,63 +1,38 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
-Date: Wed, 16 Jan 2019 15:08:06 -0600
-Message-ID: <20190116210806.GA21535@bogus>
-References: <20190111151401.25047-1-jank@cadence.com>
- <20190111151401.25047-2-jank@cadence.com>
+Subject: Re: [PATCH v2 2/3] dt-bindings: drm/panel: simple: add support for
+ PDA  91-00156-A0
+Date: Wed, 16 Jan 2019 15:09:22 -0600
+Message-ID: <20190116210922.GA24880@bogus>
+References: <1547458584-29548-1-git-send-email-eugen.hristev@microchip.com>
+ <1547458584-29548-3-git-send-email-eugen.hristev@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190111151401.25047-2-jank@cadence.com>
+In-Reply-To: <1547458584-29548-3-git-send-email-eugen.hristev@microchip.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jan Kotas <jank@cadence.com>
-Cc: a.zummo@towertech.it, alexandre.belloni@bootlin.com, mark.rutland@arm.com, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, thierry.reding@gmail.com, airlied@linux.ie, dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Nicolas.Ferre@microchip.com, Eugen.Hristev@microchip.com, Cristian.Birsan@microchip.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 03:14:00PM +0000, Jan Kotas wrote:
-> This patch adds a DT binding documentation for
-> Cadence RTC controller.
+On Mon, 14 Jan 2019 09:43:28 +0000, <Eugen.Hristev@microchip.com> wrote:
+> From: Cristian Birsan <cristian.birsan@microchip.com>
 > 
-> Signed-off-by: Jan Kotas <jank@cadence.com>
+> PDA 91-00156-A0 5.0 is a 5.0" WVGA TFT LCD panel.
+> This panel with backlight is found in PDA 5" LCD screen (TM5000 series or
+> AC320005-5).
+> Adding Device Tree bindings for this panel.
+> 
+> Signed-off-by: Cristian Birsan <cristian.birsan@microchip.com>
+> [eugen.hristev@microchip.com]: specified backlight and supply bindings
+> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
 > ---
->  Documentation/devicetree/bindings/rtc/cdns,rtc.txt | 25 ++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+> Changes in v2:
+> - added binding explanations for required properties from simple-panel:
+> backlight and power supply which are mandatory
 > 
-> diff --git a/Documentation/devicetree/bindings/rtc/cdns,rtc.txt b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
-> new file mode 100644
-> index 000000000..40713bbbe
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
-> @@ -0,0 +1,25 @@
-> +Cadence Real Time Clock
-> +
-> +The Cadence RTC controller with date, time and alarm capabilities.
-> +The alarm may wake the system from low-power state.
-> +
-> +Required properties:
-> +- compatible: Should be "cdns,rtc-r109v3"
-> +- reg: Specifies base physical address and size of the register area.
-> +- interrupts: A single interrupt specifier.
-> +- clocks: Must contain two entries:
-> +	- pclk: APB registers clock
-> +	- ref_clk: reference 1Hz of 100Hz clock, depending on IP configuration
-
-1Hz OR 100Hz?
-
-> +	See ../clocks/clock-bindings.txt for details.
-> +
-> +Example:
-> +        rtc0: rtc@fd080000 {
-> +        	compatible = "cdns,rtc-r109v3";
-> +        	reg = <0xfd080000 0x1000>;
-> +
-> +        	clock-names = "pclk", "ref_clk";
-> +        	clocks = <&sysclock>, <&refclock>;
-> +
-> +        	interrupt-parent = <&gic>;
-> +        	interrupts = <0 6 IRQ_TYPE_LEVEL_HIGH>;
-> +        };
-> -- 
-> 2.15.0
+>  .../devicetree/bindings/display/panel/pda,91-00156-a0.txt  | 14 ++++++++++++++
+>  1 file changed, 14 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/display/panel/pda,91-00156-a0.txt
 > 
+
+Reviewed-by: Rob Herring <robh@kernel.org>
