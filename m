@@ -1,150 +1,44 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [v2] arm64: dts: lx2160a: add sata node support
-Date: Wed, 16 Jan 2019 10:05:45 +0800
-Message-ID: <20190116020543.GB15808@dragon>
-References: <20190114095500.1600-1-peng.ma@nxp.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: [PATCH v2 2/3] mtd: spi-nor: mtk-quadspi: add SNOR_HWCAPS_READ to spi_nor_hwcaps mask
+Date: Wed, 16 Jan 2019 10:12:04 +0800
+Message-ID: <2afa18c0c898259fc244f15844c5319f71e811df.1547538621.git.ryder.lee@mediatek.com>
+References: <74d710ed89fd505a49bce53b51f6cb489e313dbb.1547538621.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190114095500.1600-1-peng.ma@nxp.com>
+In-Reply-To: <74d710ed89fd505a49bce53b51f6cb489e313dbb.1547538621.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peng Ma <peng.ma@nxp.com>
-Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Guochun Mao <guochun.mao@mediatek.com>, Ryder Lee <ryder.lee@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 09:55:00AM +0000, Peng Ma wrote:
-> Add sata node support and Enable sata support
+From: Guochun Mao <guochun.mao@mediatek.com>
 
-I would suggest you reword the commit log like below:
+SNOR_HWCAPS_READ should be supported by this controller, so add this
+flag to spi_nor_hwcaps mask.
 
-Add SATA device nodes for fsl-lx2160a and enable support for QDS and RDB
-boards.
+Signed-off-by: Guochun Mao <guochun.mao@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+---
+Changes since v2: Revise commit msg. 
+Changes since v1: none. 
+---
+ drivers/mtd/spi-nor/mtk-quadspi.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-> 
-> Signed-off-by: Peng Ma <peng.ma@nxp.com>
-> ---
-> changed for V2:
-> 	- put the 'status' at the end of property list
-> 	- add lx2160aqds sata support
-> 
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
->  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
->  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
->  3 files changed, 76 insertions(+), 0 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> index 99a22ab..0289955 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-> @@ -110,3 +110,19 @@
->  &usb1 {
->  	status = "okay";
->  };
-> +
-> +&sata0 {
-
-Please sort the labeling nodes alphabetically.
-
-Shawn
-
-> +	status = "okay";
-> +};
-> +
-> +&sata1 {
-> +	status = "okay";
-> +};
-> +
-> +&sata2 {
-> +	status = "okay";
-> +};
-> +
-> +&sata3 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> index 6481e5f..aacca27 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-> @@ -117,3 +117,19 @@
->  &usb1 {
->  	status = "okay";
->  };
-> +
-> +&sata0 {
-> +	status = "okay";
-> +};
-> +
-> +&sata1 {
-> +	status = "okay";
-> +};
-> +
-> +&sata2 {
-> +	status = "okay";
-> +};
-> +
-> +&sata3 {
-> +	status = "okay";
-> +};
-> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> index a79f5c1..4390aea 100644
-> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-> @@ -762,5 +762,49 @@
->  				     <GIC_SPI 209 IRQ_TYPE_LEVEL_HIGH>;
->  			dma-coherent;
->  		};
-> +
-> +		sata0: sata@3200000 {
-
-Please sort nodes with unit-address in order of the address.
-
-Shawn
-
-> +			compatible = "fsl,lx2160a-ahci";
-> +			reg = <0x0 0x3200000 0x0 0x10000>,
-> +			      <0x7 0x100520 0x0 0x4>;
-> +			reg-names = "ahci", "sata-ecc";
-> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 3>;
-> +			dma-coherent;
-> +			status = "disabled";
-> +		};
-> +
-> +		sata1: sata@3210000 {
-> +			compatible = "fsl,lx2160a-ahci";
-> +			reg = <0x0 0x3210000 0x0 0x10000>,
-> +			      <0x7 0x100520 0x0 0x4>;
-> +			reg-names = "ahci", "sata-ecc";
-> +			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 3>;
-> +			dma-coherent;
-> +			status = "disabled";
-> +		};
-> +
-> +		sata2: sata@3220000 {
-> +			compatible = "fsl,lx2160a-ahci";
-> +			reg = <0x0 0x3220000 0x0 0x10000>,
-> +			      <0x7 0x100520 0x0 0x4>;
-> +			reg-names = "ahci", "sata-ecc";
-> +			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 3>;
-> +			dma-coherent;
-> +			status = "disabled";
-> +		};
-> +
-> +		sata3: sata@3230000 {
-> +			compatible = "fsl,lx2160a-ahci";
-> +			reg = <0x0 0x3230000 0x0 0x10000>,
-> +			      <0x7 0x100520 0x0 0x4>;
-> +			reg-names = "ahci", "sata-ecc";
-> +			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-> +			clocks = <&clockgen 4 3>;
-> +			dma-coherent;
-> +			status = "disabled";
-> +		};
->  	};
->  };
-> -- 
-> 1.7.1
-> 
+diff --git a/drivers/mtd/spi-nor/mtk-quadspi.c b/drivers/mtd/spi-nor/mtk-quadspi.c
+index 5442993..d9eed68 100644
+--- a/drivers/mtd/spi-nor/mtk-quadspi.c
++++ b/drivers/mtd/spi-nor/mtk-quadspi.c
+@@ -431,7 +431,8 @@ static int mtk_nor_init(struct mtk_nor *mtk_nor,
+ 			struct device_node *flash_node)
+ {
+ 	const struct spi_nor_hwcaps hwcaps = {
+-		.mask = SNOR_HWCAPS_READ_FAST |
++		.mask = SNOR_HWCAPS_READ |
++			SNOR_HWCAPS_READ_FAST |
+ 			SNOR_HWCAPS_READ_1_1_2 |
+ 			SNOR_HWCAPS_PP,
+ 	};
+-- 
+1.9.1
