@@ -1,40 +1,87 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3] arm64: dts: qcom: sdm845: Expand soc bus address range
-Date: Wed, 16 Jan 2019 15:02:39 -0800
-Message-ID: <154767975942.169631.1254649555789319450@swboyd.mtv.corp.google.com>
-References: <20190116071939.23136-1-bjorn.andersson@linaro.org> <154767410807.169631.11634052870112778681@swboyd.mtv.corp.google.com> <20190116221003.GW9278@minitux> <154767899836.169631.10485468432153568181@swboyd.mtv.corp.google.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Wed, 16 Jan 2019 17:33:27 -0600
+Message-ID: <8c7dde3e-5f3c-80a5-ec57-73ce8e39deef@ti.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <86299268-3202-814a-134b-04bd2170faab@ti.com> <20190116220401.GA28024@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154767899836.169631.10485468432153568181@swboyd.mtv.corp.google.com>
+In-Reply-To: <20190116220401.GA28024@amd>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Stephen Boyd (2019-01-16 14:49:58)
-> > >=20
-> > > Do we need #size-cells =3D <2>? Maybe it could be #size-cells =3D <1>=
- and we
-> > > can avoid having to specify a second size entry that's always going to
-> > > be 0 because we don't have devices with huge IO regions in the SoC. Or
-> > > does it need to be 2 for the large size of the size element of
-> > > dma-ranges and ranges here? Looking at the code I think we can rely on
-> > > the size-cells of the parent node so I think it will work with size o=
-f 1
-> > > here.
-> > >=20
-> >=20
-> > The "length" part of dma-ranges is described using #size-cells number of
-> > cells, so with 1 there's no way we can describe this being 36 bits.
->=20
-> Yes, but doesn't the #size-cells of the parent node (i.e. root node in
-> this case) dictate the number of cells of the "length" part of the
-> dma-ranges property here? I hope that we don't need to push down the
-> larger size of 2 just for this reason, but I admit I haven't run the
-> code to understand this all properly.
->=20
+Hello
 
-Ok, nevermind. I read the code more and looked at the spec and I'm just
-talking nonsense on this point.
+On 1/16/19 4:04 PM, Pavel Machek wrote:
+> Hi!
+> 
+> ..snip. Let me read it and reply when I have a time.
+> 
+>>> You know what? First, submit driver with similar functionality to
+>>> existing RGB drivers, using same interface existing drivers are
+>>> using. When that is accepted, we can talk about extending
+>>> kernel<->user interfaces.
+>>>
+>>
+>> I could do that but then there is no way for users to have any other color but "white" with this driver.
+>> That defeats the purpose of the device itself.
+> 
+> No, that is not what I meant.
+> 
+> We do have RGB drivers in tree, they just present three separate LEDs
+> -- red, green and blue. I ask you to do the same for initial
+> submission.
+> 
+
+For clarification you are asking me to register a LED class per output pin?
+
+If that is not you mean can you point me to an example because looking through the code I see the
+lp5562, bd2802 and lp3944 of which none are equivalent to the LP50xx devices.  Each one
+of those devices have a dedicated register per LED output which makes perfect sense to do what
+you are asking.
+
+If it is what you are asking then this was already explained and it was agreed in the email chain to provide
+a Class with a "brightness" file that maps to the Master brightness register and
+the "color" file that would map to the respective color control register.
+These registrations would be per LED Module output and Banked output and not per LED output.
+
+RED LED Color Control Register------|					 |------| RED LED OUTPUT
+Green LED Color Control Register----|--- LED Master Brightness register--|------| Green LED OUTPUT
+Blue LED Color Control Register-----|					 |------| Blue LED OUTPUT
+
+As explained before the Master brightness register has absolute control over the output current
+to the LED outputs regardless of the color control setting.
+
+> You'll still be able to set brightness independently on the
+> red/green/blue LEDs...
+> 
+
+But which one would control the overall brightness of the cluster?
+
+Dan
+
+>> I am not sure if you are aware of this or care but I found this recent blog on this effort:
+>> https://www.phoronix.com/scan.php?page=news_item&px=Linux-RGB-LED-Interface
+>> See some of the comments.
+> 
+> I went through the comments quickly, but see nothing really
+> interesting.
+> 
+> Best regards,
+> 
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
