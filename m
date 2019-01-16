@@ -1,35 +1,61 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH] dt-bindings: reset: meson-axg: fix SPDX license id
-Date: Wed, 16 Jan 2019 13:10:33 -0600
-Message-ID: <CAL_JsqJx5_K=HtfE6pjirffFJ8kU8aEq+Etjxip2gFUpFSpCBw@mail.gmail.com>
-References: <20190116103632.17754-1-jbrunet@baylibre.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Wed, 16 Jan 2019 11:13:09 -0800
+Message-ID: <CAD=FV=WuVOWYLbNKy=t1+X4a7cjegU+AUyFJmYNHkjYnRzLQBA@mail.gmail.com>
+References: <1547661809-31184-1-git-send-email-jcrouse@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116103632.17754-1-jbrunet@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>, Thomas Gleixner <tglx@linutronix.de>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Yixun Lan <yixun.lan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Carlo Caione <carlo@caione.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1547661809-31184-1-git-send-email-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 4:36 AM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> As reported, the SPDX license id is not placed correctly and the variant
-> of the BSD License used should be specified.
->
-> Fixes: c16292578ffa ("dt-bindings: reset: Add bindings for the Meson-AXG SoC Reset Controller")
-> Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> ---
->
->  Sorry for the delay Thomas.
->
->  Regards
->  Jerome
->
->  include/dt-bindings/reset/amlogic,meson-axg-reset.h | 3 +--
->  1 file changed, 1 insertion(+), 2 deletions(-)
-
-Applied, thanks.
-
-Rob
+SGksCgpPbiBXZWQsIEphbiAxNiwgMjAxOSBhdCAxMDowMyBBTSBKb3JkYW4gQ3JvdXNlIDxqY3Jv
+dXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEFkZCB0aGUgbm9kZXMgdG8gZGVzY3JpYmUg
+dGhlIEFkcmVubyBHUFUgYW5kIEdNVSBkZXZpY2VzIGZvciBzZG04NDUuCj4KPiBTaWduZWQtb2Zm
+LWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+IFJldmlld2VkLWJ5
+OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gVGVzdGVkLWJ5OiBE
+b3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gLS0tCj4gVGhpcyBoYXMg
+dGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXM6Cj4KPiBbdjExLDEvOV0gZHQtYmluZGluZ3M6IG9w
+cDogSW50cm9kdWNlIG9wcC1sZXZlbCBiaW5kaW5ncwo+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
+bC5vcmcvcGF0Y2gvMTA3NTUxOTkvCj4KPiBBbmQgdGhlIGZvbGxvd2luZyBwYXRjaGVzIGFscmVh
+ZHkgaW4gUm9iJ3MgbXNtLW5leHQ6Cj4gbXNtLW5leHQ6ZDFjOWNhZGVhNmY3ICgiZHJtL21zbS9n
+cHU6IFJlbW92ZSBoYXJkY29kZWQgaW50ZXJydXB0IG5hbWUiKQo+IG1zbS1uZXh0OmIwOGI5MjU0
+NjgwNyAoImRybS9tc206IGRyb3AgaW50ZXJydXB0LW5hbWVzIikKPiBtc20tbmV4dDoyNDkzN2M1
+NDA5MTcgKCJkdC1iaW5kaW5nczogZHJtL21zbS9hNnh4OiBEb2N1bWVudCBHTVUgYW5kIHVwZGF0
+ZSBHUFUgYmluZGluZ3MiKQo+Cj4gQW5kIGZpbmFsbHkgZHJtL21zbTogRml4IEE2WFggc3VwcG9y
+dCBmb3Igb3BwLWxldmVsCj4gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNo
+LzI3Njc1Ni8KPgo+IFdoaWNoIGlzIG5vdCBtZXJnZWQgYmVjYXVzZSBpdCB0b28gZGVwZW5kcyBv
+biBSYWplbmRyYSdzIHN0YWNrLgoKTmV3ZXIgdmVyc2lvbjoKCmh0dHBzOi8vbG9yZS5rZXJuZWwu
+b3JnL3BhdGNod29yay9wYXRjaC8xMDMyNzI0LwoKLi4udGhhdCBvbmUgc2hvdWxkIGJlIGFibGUg
+dG8gbGFuZCBlYXJsaWVyIHNpbmNlIGl0J3Mgc2ltcGxlci4KCi0tLQoKRG9uJ3QgZm9yZ2V0IHRo
+YXQgeW91ciBwYXRjaCBhbHNvIGRlcGVuZHMgb246CgpodHRwczovL2xrbWwua2VybmVsLm9yZy9y
+LzIwMTgxMTI4MTg1NzQzLjc1MzI4LTItZGlhbmRlcnNAY2hyb21pdW0ub3JnCgouLi5iZWNhdXNl
+IHlvdSB3b24ndCBjb21waWxlIHVubGVzcyBncHVjYyBpcyB0aGVyZS4KCgo+ICBhcmNoL2FybTY0
+L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAxMjEgKysrKysrKysrKysrKysrKysrKysrKysr
+KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCspCj4KPiBkaWZm
+IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIGIvYXJjaC9hcm02
+NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gaW5kZXggZjA3YzRjYS4uOTA3NjZmYyAxMDA2
+NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysgYi9h
+cmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMTYxOCw2ICsxNjE4LDEy
+NyBAQAo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIH07Cj4K
+PiArCj4gKyAgICAgICAgICAgICAgIGdwdUA1MDAwMDAwIHsKCkhlYWRzIHVwIHRvIEFuZHkgdGhh
+dCB3aGVuIHRoaXMgbGFuZHMgaXQgc2hvdWxkIGJlIHJlLXNvcnRlZCB0byBiZQpyaWdodCBiZWZv
+cmUgZ3B1Y2Mgc28gdGhhdCB0aGUgdW5pdCBhZGRyZXNzZXMgYXJlIHNvcnRlZC4gIDotKSAgLi4u
+YW5kCndoaWxlIGRvaW5nIHRoYXQgd2UgY2FuIG1ha2Ugc3VyZSB0aGVyZSdzIG5vdCBhbiBleHRy
+YSBibGFuayBsaW5lLgoKCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
+ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
+L2ZyZWVkcmVubwo=
