@@ -1,7 +1,7 @@
 From: Andreas Kemnade <andreas@kemnade.info>
-Subject: [PATCH v3 5/6] gnss: sirf: add a separate supply for a lna
-Date: Wed, 16 Jan 2019 22:18:11 +0100
-Message-ID: <20190116211812.6337-6-andreas@kemnade.info>
+Subject: [PATCH v3 2/6] gnss: sirf: set power state initially off
+Date: Wed, 16 Jan 2019 22:18:08 +0100
+Message-ID: <20190116211812.6337-3-andreas@kemnade.info>
 References: <20190116211812.6337-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190116211812.6337-1-andreas@kemnade.info>
@@ -10,105 +10,42 @@ To: letux-kernel@openphoenux.org, johan@kernel.org, robh+dt@kernel.org, mark.rut
 Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-Devices might have a separate lna between antenna input of the gps
-chip and the antenna which might have a separate supply.
+On the GTA04 mobile phone, it was observed that the gps was powered
+on sometimes intially. Generally a reboot without powering the device
+off (direct reset of the processor, reboot from a system where gps
+power toggle was done in userspace) or glitches on the gpio pin during
+power on could cause this problem.
+This has the drawback that probing takes some seconds on
+systems without wakeup signal. On systems with wakeup signal
+this penalty is much lower.
+But if the chip is initially on and that is not fixed, the suspend
+current will be multiple times higher, so this sacrifice should
+be justified
 
 Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
 ---
-Changes in v3:
- - improved error checking
- - style cleanup
+- was part of 2/5 in v2
 
-Changes in v2:
- - handle lna also if there is no on-off gpio
- - rebase on changed 2/5
-
- drivers/gnss/sirf.c | 50 ++++++++++++++++++++++++++++++++++++++++++++------
- 1 file changed, 44 insertions(+), 6 deletions(-)
+ drivers/gnss/sirf.c | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
 diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
-index 943a2ec9b708..7de98edf198a 100644
+index b21e14351b82..c7706b91f6f0 100644
 --- a/drivers/gnss/sirf.c
 +++ b/drivers/gnss/sirf.c
-@@ -41,6 +41,7 @@ struct sirf_data {
- 	struct serdev_device *serdev;
- 	speed_t	speed;
- 	struct regulator *vcc;
-+	struct regulator *lna;
- 	struct gpio_desc *on_off;
- 	struct gpio_desc *wakeup;
- 	int irq;
-@@ -293,21 +294,52 @@ static int sirf_set_active(struct sirf_data *data, bool active)
- static int sirf_runtime_suspend(struct device *dev)
- {
- 	struct sirf_data *data = dev_get_drvdata(dev);
-+	int ret;
- 
--	if (!data->on_off)
--		return regulator_disable(data->vcc);
-+	if (data->on_off)
+@@ -367,6 +367,13 @@ static int sirf_probe(struct serdev_device *serdev)
+ 	if (IS_ENABLED(CONFIG_PM)) {
+ 		pm_runtime_set_suspended(dev);	/* clear runtime_error flag */
+ 		pm_runtime_enable(dev);
++		/*
++		 * Device might be enabled at boot, so ensure it is off.
++		 * This was observed in practice on GTA04.
++		 */
 +		ret = sirf_set_active(data, false);
-+	else
-+		ret = regulator_disable(data->vcc);
-+
-+	if (ret)
-+		return ret;
- 
--	return sirf_set_active(data, false);
-+	ret = regulator_disable(data->lna);
-+	if (ret) {
-+		int reenable_ret;
-+
-+		if (data->on_off)
-+			reenable_ret = sirf_set_active(data, true);
-+		else
-+			reenable_ret = regulator_enable(data->vcc);
-+
-+		if (reenable_ret)
-+			dev_err(dev,
-+				"failed to reenable power on failed suspend: %d\n",
-+				reenable_ret);
-+	}
-+
-+	return ret;
- }
- 
- static int sirf_runtime_resume(struct device *dev)
- {
- 	struct sirf_data *data = dev_get_drvdata(dev);
-+	int ret;
-+
-+	ret = regulator_enable(data->lna);
-+	if (ret)
-+		return ret;
- 
--	if (!data->on_off)
--		return regulator_enable(data->vcc);
-+	if (data->on_off)
-+		ret = sirf_set_active(data, true);
-+	else
-+		ret = regulator_enable(data->vcc);
- 
--	return sirf_set_active(data, true);
-+	if (ret)
-+		regulator_disable(data->lna);
-+
-+	return ret;
- }
- 
- static int __maybe_unused sirf_suspend(struct device *dev)
-@@ -395,6 +427,12 @@ static int sirf_probe(struct serdev_device *serdev)
- 		goto err_put_device;
- 	}
- 
-+	data->lna = devm_regulator_get(dev, "lna");
-+	if (IS_ERR(data->lna)) {
-+		ret = PTR_ERR(data->lna);
-+		goto err_put_device;
-+	}
-+
- 	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
- 			GPIOD_OUT_LOW);
- 	if (IS_ERR(data->on_off))
++		if (ret < 0)
++			goto err_disable_rpm;
+ 	} else {
+ 		ret = sirf_runtime_resume(dev);
+ 		if (ret < 0)
 -- 
 2.11.0
