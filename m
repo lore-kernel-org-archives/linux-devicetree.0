@@ -1,79 +1,24 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
- bindings
-Date: Wed, 16 Jan 2019 14:20:21 +0100
-Message-ID: <20190116142021.41faac8b@xps13>
-References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
- <20190111133133.24803-7-miquel.raynal@bootlin.com>
- <20190115214429.GA21758@bogus>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH v2] dt-bindings: imx8mq: Number clocks consecutively
+Date: Wed, 16 Jan 2019 21:27:42 +0800
+Message-ID: <20190116132741.GC17702@dragon>
+References: <20190116084122.GA19712@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190115214429.GA21758@bogus>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190116084122.GA19712@bogon.m.sigxcpu.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Stephen Boyd <sboyd@kernel.org>, Lucas Stach <l.stach@pengutronix.de>, Abel Vesa <abel.vesa@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLAoKUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGUgb24gVHVlLCAxNSBK
-YW4gMjAxOSAxNTo0NDoyOSAtMDYwMDoKCj4gT24gRnJpLCBKYW4gMTEsIDIwMTkgYXQgMDI6MzE6
-MjlQTSArMDEwMCwgTWlxdWVsIFJheW5hbCB3cm90ZToKPiA+IEFkZCBiaW5kaW5ncyBmb3IgTWFy
-dmVsbCBBcm1hZGEgMzcwMCBVU0IyIFVUTUkrIFBIWS4KPiA+IAo+ID4gU2lnbmVkLW9mZi1ieTog
-TWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4KPiA+IC0tLQo+ID4gIC4u
-Li9iaW5kaW5ncy9waHkvcGh5LW12ZWJ1LXV0bWkudHh0ICAgICAgICAgICB8IDM3ICsrKysrKysr
-KysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hhbmdlZCwgMzcgaW5zZXJ0aW9ucygrKQo+ID4gIGNy
-ZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3Bo
-eS1tdmVidS11dG1pLnR4dAo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3BoeS9waHktbXZlYnUtdXRtaS50eHQgYi9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvcGh5L3BoeS1tdmVidS11dG1pLnR4dAo+ID4gbmV3IGZpbGUgbW9k
-ZSAxMDA2NDQKPiA+IGluZGV4IDAwMDAwMDAwMDAwMC4uNGFkZTA1Y2U1ZDUxCj4gPiAtLS0gL2Rl
-di9udWxsCj4gPiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvcGh5L3Bo
-eS1tdmVidS11dG1pLnR4dAo+ID4gQEAgLTAsMCArMSwzNyBAQAo+ID4gK01WRUJVIEEzNzAwIFVU
-TUkgUEhZCj4gPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0KPiA+ICsKPiA+ICtVU0IyIFVUTUkrIFBI
-WSBjb250cm9sbGVycyBjYW4gYmUgZm91bmQgb24gdGhlIGZvbGxvd2luZyBNYXJ2ZWxsIE1WRUJV
-IFNvQ3M6Cj4gPiArKiBBcm1hZGEgMzcwMAo+ID4gKwo+ID4gK09uIEFybWFkYSAzNzAwLCB0aGVy
-ZSBhcmUgdHdvIFVTQiBjb250cm9sbGVycywgb25lIGlzIGNvbXBhdGlibGUgd2l0aCB0aGUgVVNC
-Mgo+ID4gK2FuZCBVU0IzIHNwZWNpZmljYXRpb25zIGFuZCBzdXBwb3J0cyBPVEcuIFRoZSBvdGhl
-ciBvbmUgaXMgVVNCMiBjb21wbGlhbnQgYW5kCj4gPiArb25seSBzdXBwb3J0cyBob3N0IG1vZGUu
-IEJvdGggb2YgdGhlc2UgY29udHJvbGxlcnMgY29tZSB3aXRoIGEgVVRNSSBQSFkuICAKPiAKPiBU
-aGlzIHBhcmFncmFwaCBzYXlzIHRoZSBjb250cm9sbGVycyBhcmUgZGlmZmVyZW50LCBidXQgYXJl
-IHRoZSBQSFlzIAo+IGRpZmZlcmVudD8KClllcyB0aGV5IGFyZS4gSSB3aWxsIG1ha2UgaXQgYXBw
-ZWFyIGNsZWFybHkgaW4gdGhlIHYzLgoKPiAKPiA+ICsKPiA+ICtSZXF1aXJlZCBQcm9wZXJ0aWVz
-Ogo+ID4gKwo+ID4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlIG9uZSBvZjoKPiA+ICsJICAgICAg
-KiAibWFydmVsbCxhMzcwMC11dG1pLWhvc3QtcGh5IiBmb3IgdGhlIFBIWSBjb25uZWN0ZWQgdG8K
-PiA+ICsJICAgICAgICB0aGUgVVNCMiBob3N0LW9ubHkgY29udHJvbGxlci4KPiA+ICsJICAgICAg
-KiAibWFydmVsbCxhMzcwMC11dG1pLW90Zy1waHkiIGZvciB0aGUgUEhZIGNvbm5lY3RlZCB0bwo+
-ID4gKwkgICAgICAgIHRoZSBVU0IzIGFuZCBVU0IyIE9URyBjYXBhYmxlIGNvbnRyb2xsZXIuCj4g
-PiArLSByZWc6IFBIWSBJUCByZWdpc3RlciByYW5nZS4KPiA+ICstIG1hcnZlbGwsdXNiLW1pc2Mt
-cmVnOiBoYW5kbGUgb24gdGhlICJVU0IgbWlzY2VsbGFuZW91cyByZWdpc3RlcnMiIHNoYXJlZAo+
-ID4gKwkJCXJlZ2lvbiBjb3ZlcmluZyByZWdpc3RlcnMgcmVsYXRlZCB0byBib3RoIHRoZSBob3N0
-Cj4gPiArCQkJY29udHJvbGxlciBhbmQgdGhlIFBIWS4KPiA+ICstICNwaHktY2VsbHM6IFN0YW5k
-YXJkIHByb3BlcnR5IChEb2N1bWVudGF0aW9uOiBwaHktYmluZGluZ3MudHh0KSBTaG91bGQgYmUg
-MC4KPiA+ICsKPiA+ICsKPiA+ICtFeGFtcGxlOgo+ID4gKwo+ID4gKwl1c2IyX3V0bWlfaG9zdF9w
-aHk6IHBoeUA1ZjAwMCB7Cj4gPiArCQljb21wYXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLTM3MDAt
-dXRtaS1ob3N0LXBoeSI7Cj4gPiArCQlyZWcgPSA8MHg1ZjAwMCAweDgwMD47Cj4gPiArCQltYXJ2
-ZWxsLHVzYi1taXNjLXJlZyA9IDwmdXNiMl9zeXNjb24+Owo+ID4gKwkJI3BoeS1jZWxscyA9IDww
-PjsKPiA+ICsJfTsKPiA+ICsKPiA+ICsJdXNiMl9zeXNjb246IHN5c3RlbS1jb250cm9sbGVyQDVm
-ODAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAic3lzY29uIiwgInNpbXBsZS1tZmQiOyAgCj4gCj4g
-VGhpcyBpcyBub3QgdmFsaWQgYmVjYXVzZSB0aGVyZSdzIG5vdCBhIHNwZWNpZmljIGNvbXBhdGli
-bGUgc3RyaW5nIGFuZCAKPiAnc2ltcGxlLW1mZCcgaW1wbGllcyB0aGVyZSBhcmUgY2hpbGQgbm9k
-ZXMuCgpXaGF0IGRvIHlvdSBzdWdnZXN0PyBJcyBjb21wYXRpYmxlID0gInN5c2NvbiI7IGVub3Vn
-aD8gVGhpcyBpcyBqdXN0IGFuCmFyZWEgd2l0aCBhIGZldyByZWdpc3RlcnMgdGhhdCBkbyBub3Qg
-YmVsb25nIHRvIGFueSBzcGVjaWZpYyBJUC4gVGhlcmUKYXJlIHJlZ2lzdGVycyB0aGF0IGFyZSBy
-ZWxhdGVkIHRvIHRoZSBjb250cm9sIG9mIHRoZSBVU0IgY29udHJvbGxlciwKYW5kIHJlZ2lzdGVy
-cyB0aGF0IGFyZSByZWxhdGVkIHRvIHRoZSBQSFkuIEl0J3MgcXVpdGUgY2hhbGxlbmdpbmcgdG8K
-ZmluZCBhIG1lYW5pbmdmdWwgc3BlY2lmaWMgY29tcGF0aWJsZSBzdHJpbmcuIElzIGl0IG1hbmRh
-dG9yeSB0byBhZGQKb25lPyBJZiB5ZXMsIHdvdWxkICJtYXJ2ZWxsLGFybWFkYS0zNzAwLXVzYi11
-dG1pLXtob3N0LG90Z30tbWlzYyIgZml0PwoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWls
-aW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0
-cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Wed, Jan 16, 2019 at 09:41:22AM +0100, Guido Günther wrote:
+> This fixes a duplicate use of 232 and numbers the clocks without holes.
+> 
+> Fixes: 1cf3817bf1f5 ("dt-bindings: Add binding for i.MX8MQ CCM")
+> 
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+
+Applied, thanks.
