@@ -1,56 +1,59 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH RESEND v1 0/4] dt-binding: clk: prepare for imx8qm clock
- support
-Date: Wed, 16 Jan 2019 05:40:01 +0000
-Message-ID: <AM0PR04MB42115D3E98B8B319936AC60E80820@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v11 0/9] Add power domain driver for corners on
+ msm8996/sdm845
+Date: Tue, 15 Jan 2019 21:52:38 -0800
+Message-ID: <20190116055238.GD25927@tuxbook-pro>
+References: <20190110040209.6028-1-rnayak@codeaurora.org>
+ <20190110063323.ltmqkl2xl4nhccvq@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190110063323.ltmqkl2xl4nhccvq@vireshk-i7>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, rjw@rjwysocki.net, ulf.hansson@linaro.org, andy.gross@linaro.org, robh@kernel.org, sboyd@kernel.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
 List-Id: devicetree@vger.kernel.org
 
-Ping...
+On Wed 09 Jan 22:33 PST 2019, Viresh Kumar wrote:
 
-BTW, as the first two patches change the same firmware binding doc fs.scu.txt.
-I'm not sure whether it should go to Shawn's tree for the binding part, or Stephen's clock tree.
+> +Rafael
+> 
+> On 10-01-19, 09:32, Rajendra Nayak wrote:
+> > Changes in v11:
+> > * Updated opp-level binding description based on feedback
+> > from Viresh
+> > * Other minor fixups in 'PATCH 2/9'
+> 
+> >  Documentation/devicetree/bindings/opp/opp.txt |   3 +
+> >  .../devicetree/bindings/power/qcom,rpmpd.txt  | 145 +++++++
+> >  arch/arm64/boot/dts/qcom/msm8996.dtsi         |  34 ++
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi          |  51 +++
+> >  drivers/opp/core.c                            |  18 +
+> >  drivers/opp/of.c                              |   2 +
+> >  drivers/opp/opp.h                             |   2 +
+> >  drivers/soc/qcom/Kconfig                      |  18 +
+> >  drivers/soc/qcom/Makefile                     |   2 +
+> >  drivers/soc/qcom/rpmhpd.c                     | 402 ++++++++++++++++++
+> >  drivers/soc/qcom/rpmpd.c                      | 317 ++++++++++++++
+> >  include/dt-bindings/power/qcom-rpmpd.h        |  39 ++
+> >  include/linux/pm_opp.h                        |   7 +
+> >  13 files changed, 1040 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/power/qcom,rpmpd.txt
+> >  create mode 100644 drivers/soc/qcom/rpmhpd.c
+> >  create mode 100644 drivers/soc/qcom/rpmpd.c
+> >  create mode 100644 include/dt-bindings/power/qcom-rpmpd.h
+> 
+> Rafael/Ulf: Who should pick this series ? Should I take this via OPP
+> tree ?
+> 
 
-Shawn & Stephen,
-What's your suggestion?
+Given that the weight of the patches lies in arm-soc area it could be
+favourable to just take them that way, with the one opp-patch carrying
+your (Rafael's?) ack.
 
-Regards
-Dong Aisheng
+If you prefer otherwise, I suggest that we take patch 6 and 8 (the two
+dts patches) through arm-soc and you merge the rest in your tree.
 
-> From: Aisheng Dong [mailto:aisheng.dong@nxp.com]
-> Sent: Friday, January 11, 2019 7:56 PM
-> 
-> After a bit more investigation on IMX8QM, it seemed SCU clock can be used in
-> a similar way as IMX8QXP. So update the binding and driver to be a bit generic
-> for easily extension of IMX8QM support later.
-> 
-> Dong Aisheng (4):
->   dt-bindings: fsl: scu: add fallback compatible string for clock
->   dt-bindings: fsl: scu: add imx8qm scu clock support
->   clk: imx: scu: add fallback compatible string support
->   dt-bindings: imx8-clock: add a53 and a72 clock id
-> 
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 7 +++++--
->  drivers/clk/imx/clk-imx8qxp.c                               | 1 +
->  include/dt-bindings/clock/imx8-clock.h                      | 6 ++++--
->  3 files changed, 10 insertions(+), 4 deletions(-)
-> 
-> --
-> 2.7.4
+Regards,
+Bjorn
