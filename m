@@ -1,16 +1,15 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: RE: [PATCHv4 1/4] dt-bindings: add DT binding for the layerscape PCIe
- controller with EP mode
-Date: Wed, 16 Jan 2019 03:50:44 +0000
-Message-ID: <AM5PR04MB32998AF3C7BA8EB9AF659646F5820@AM5PR04MB3299.eurprd04.prod.outlook.com>
-References: <20190108030922.24031-1-xiaowei.bao@nxp.com>
- <20190111143123.GA6960@bogus>
+From: Peter Shih <pihsun@chromium.org>
+Subject: Re: [RFC v2 1/6] dt-bindings: Add a binding for Mediatek SCP
+Date: Wed, 16 Jan 2019 12:00:16 +0800
+Message-ID: <CANdKZ0fbP1Nm3GkO1ujeuaj4zAOQCdJ3MPowDQ-fJCUZ42a3dA@mail.gmail.com>
+References: <20190108052606.59426-1-pihsun@chromium.org>
+ <20190108052606.59426-2-pihsun@chromium.org>
+ <20190115203448.GA32546@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="gb2312"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111143123.GA6960@bogus>
-Content-Language: en-US
+In-Reply-To: <20190115203448.GA32546@bogus>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,40 +20,54 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Rob Herring <robh@kernel.org>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "kstewart@linuxfoundation.org" <kstewart@linuxfoundation.org>, "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>, "shawn.lin@rock-chips.com" <shawn.lin@rock-chips.com>, "M.h. Lian" <minghuan.lian@nxp.com>, "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>, "kishon@ti.com" <kishon@ti.com>, Mingkai Hu <mingkai.hu@nxp.com>, "niklas.cassel@axis.com" <niklas.cassel@axis.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "arnd@arndb.de" <arnd@arndb.de>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "cyrille.pitchen@free-electrons.com" <cyrille.pitchen@free-electrons.com>, "bhelgaas@google.com" <bhelgaas@google.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, Roy Zang <roy.zang@nxp.com>, gregkh@linuxfounda
+Cc: Ohad Ben-Cohen <ohad@wizery.com>, Mark Rutland <mark.rutland@arm.com>, Nicolas Boichat <drinkcat@chromium.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Erin Lo <erin.lo@mediatek.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-DQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBSb2IgSGVycmluZyA8cm9iaEBr
-ZXJuZWwub3JnPiANClNlbnQ6IDIwMTnE6jHUwjExyNUgMjI6MzENClRvOiBYaWFvd2VpIEJhbyA8
-eGlhb3dlaS5iYW9AbnhwLmNvbT4NCkNjOiBiaGVsZ2Fhc0Bnb29nbGUuY29tOyByb2JoK2R0QGtl
-cm5lbC5vcmc7IG1hcmsucnV0bGFuZEBhcm0uY29tOyBzaGF3bmd1b0BrZXJuZWwub3JnOyBMZW8g
-TGkgPGxlb3lhbmcubGlAbnhwLmNvbT47IGtpc2hvbkB0aS5jb207IGxvcmVuem8ucGllcmFsaXNp
-QGFybS5jb207IGFybmRAYXJuZGIuZGU7IGdyZWdraEBsaW51eGZvdW5kYXRpb24ub3JnOyBNLmgu
-IExpYW4gPG1pbmdodWFuLmxpYW5AbnhwLmNvbT47IE1pbmdrYWkgSHUgPG1pbmdrYWkuaHVAbnhw
-LmNvbT47IFJveSBaYW5nIDxyb3kuemFuZ0BueHAuY29tPjsga3N0ZXdhcnRAbGludXhmb3VuZGF0
-aW9uLm9yZzsgY3lyaWxsZS5waXRjaGVuQGZyZWUtZWxlY3Ryb25zLmNvbTsgcG9tYnJlZGFubmVA
-bmV4Yi5jb207IHNoYXduLmxpbkByb2NrLWNoaXBzLmNvbTsgbmlrbGFzLmNhc3NlbEBheGlzLmNv
-bTsgbGludXgtcGNpQHZnZXIua2VybmVsLm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7
-IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5m
-cmFkZWFkLm9yZzsgbGludXhwcGMtZGV2QGxpc3RzLm96bGFicy5vcmc7IFhpYW93ZWkgQmFvIDx4
-aWFvd2VpLmJhb0BueHAuY29tPg0KU3ViamVjdDogUmU6IFtQQVRDSHY0IDEvNF0gZHQtYmluZGlu
-Z3M6IGFkZCBEVCBiaW5kaW5nIGZvciB0aGUgbGF5ZXJzY2FwZSBQQ0llIGNvbnRyb2xsZXIgd2l0
-aCBFUCBtb2RlDQoNCk9uIFR1ZSwgIDggSmFuIDIwMTkgMTE6MDk6MTkgKzA4MDAsIFhpYW93ZWkg
-QmFvIHdyb3RlOg0KPiBBZGQgdGhlIGRvY3VtZW50YXRpb24gZm9yIHRoZSBEZXZpY2UgVHJlZSBi
-aW5kaW5nIGZvciB0aGUgbGF5ZXJzY2FwZSANCj4gUENJZSBjb250cm9sbGVyIHdpdGggRVAgbW9k
-ZS4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IFhpYW93ZWkgQmFvIDx4aWFvd2VpLmJhb0BueHAuY29t
-Pg0KPiAtLS0NCj4gdjI6DQo+ICAtIEFkZCB0aGUgU29DIHNwZWNpZmljIGNvbXBhdGlibGVzLg0K
-PiB2MzoNCj4gIC0gbW9kaWZ5IHRoZSBjb21taXQgbWVzc2FnZS4NCj4gdjQ6DQo+ICAtIG5vIGNo
-YW5nZS4NCj4gDQo+ICAuLi4vZGV2aWNldHJlZS9iaW5kaW5ncy9wY2kvbGF5ZXJzY2FwZS1wY2ku
-dHh0ICAgICB8ICAgIDMgKysrDQo+ICAxIGZpbGVzIGNoYW5nZWQsIDMgaW5zZXJ0aW9ucygrKSwg
-MCBkZWxldGlvbnMoLSkNCj4gDQoNClBsZWFzZSBhZGQgQWNrZWQtYnkvUmV2aWV3ZWQtYnkgdGFn
-cyB3aGVuIHBvc3RpbmcgbmV3IHZlcnNpb25zLiBIb3dldmVyLCB0aGVyZSdzIG5vIG5lZWQgdG8g
-cmVwb3N0IHBhdGNoZXMgKm9ubHkqIHRvIGFkZCB0aGUgdGFncy4gVGhlIHVwc3RyZWFtIG1haW50
-YWluZXIgd2lsbCBkbyB0aGF0IGZvciBhY2tzIHJlY2VpdmVkIG9uIHRoZSB2ZXJzaW9uIHRoZXkg
-YXBwbHkuDQoNCklmIGEgdGFnIHdhcyBub3QgYWRkZWQgb24gcHVycG9zZSwgcGxlYXNlIHN0YXRl
-IHdoeSBhbmQgd2hhdCBjaGFuZ2VkLg0KW1hpYW93ZWkgQmFvXSBIaSBSb2IsIHRoYW5rcyBhIGxv
-dCBmb3IgeW91ciBjb21tZW50cywgaWYgdGhlIHBhdGNoZXMgaGF2ZSBuZXcgdXBkYXRlLCBJIHdp
-bGwgYWRkIHRoZSBBY2tlZC1ieS9SZXZpZXdlZC1ieSwgdGhhbmtzLg0KDQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Wed, Jan 16, 2019 at 4:34 AM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Jan 08, 2019 at 01:26:01PM +0800, Pi-Hsun Shih wrote:
+> > From: Erin Lo <erin.lo@mediatek.com>
+> >
+> > Add a DT binding documentation of SCP for the
+> > MT8183 SoC from Mediatek.
+> >
+> > Signed-off-by: Erin Lo <erin.lo@mediatek.com>
+> > ---
+> > Changes from v1:
+> >  - no change
+>
+> No answer to my question on v1?
+>
+
+Sorry I missed the last mail.
+
+Yes there would be additional optional properties. For the current patch
+series, the "cros-ec-rpmsg" entry would not be listed in the device tree, but
+there would be a "mediatek,mt8183-rpmsg" under this node.
+
+Would update this in v3.
+
+> > ---
+> >  .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
+> >  1 file changed, 10 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > new file mode 100644
+> > index 00000000000000..b07e5c4ca9af1d
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
+> > @@ -0,0 +1,10 @@
+> > +Mediatek SCP Bindings
+> > +----------------------------------------
+> > +
+> > +This binding provides support for ARM Cortex M4 Co-processor found on some
+> > +Mediatek SoCs.
+> > +
+> > +Required properties:
+> > +- compatible         Should be "mediatek,mt8183-scp"
+> > +- clocks             Clock for co-processor (See: ../clock/clock-bindings.txt)
+> > +
+> > --
+> > 2.20.1.97.g81188d93c3-goog
+> >
