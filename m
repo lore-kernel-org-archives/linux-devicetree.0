@@ -1,30 +1,39 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v2] dt-bindings: net: dsa: ksz9477: fix indentation for
- switch spi bindings
-Date: Tue, 15 Jan 2019 22:29:27 -0800 (PST)
-Message-ID: <20190115.222927.1494157190788107259.davem@davemloft.net>
-References: <20190113085648.26091-1-sergio.paracuellos@gmail.com>
+From: Ran Wang <ran.wang_1@nxp.com>
+Subject: [PATCH 0/2] usb: dwc3: Add avoiding vbus glitch happen during xhci
+ reset
+Date: Wed, 16 Jan 2019 06:48:03 +0000
+Message-ID: <20190116064820.20007-1-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190113085648.26091-1-sergio.paracuellos@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: sergio.paracuellos@gmail.com
-Cc: Woojung.Huh@microchip.com, UNGLinuxDriver@microchip.com, andrew@lunn.ch, vivien.didelot@gmail.com, f.fainelli@gmail.com, robh+dt@kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-Date: Sun, 13 Jan 2019 09:56:48 +0100
+This to fix USB enumeration compatibility issue found on DWC3 (host mode)
+IP only.
 
-> Switch bindings for spi managed mode are using spaces instead of tabs.
-> Fix them to get a file with a proper kernel indentation style.
-> 
-> Reviewed-by: Florian Fainelli <f.fainelli@gmail.com>
-> Signed-off-by: Sergio Paracuellos <sergio.paracuellos@gmail.com>
-> ---
-> Changes in v2:
->     - Rebase onto net-next
->     - Collect previous Reviewed-by tags
+Some pre-discussion mails can be referred from:
+https://lkml.org/lkml/2018/11/23/387
+https://lkml.org/lkml/2018/11/22/683
 
-Applied.
+As to the workaround, I know programming xhci register in DWC3 dirver
+(probe function) is not good from perspective of SW stack, but it seems
+to be the only place to fix this real existing problem (test result show
+that doing this in xhci-plat.c or xhci.c would not hlep on this kind of
+failure). If who have better idea, please let me know, thanks in advanced.
+
+Ran Wang (2):
+ dt-bindings: Add workaround for host mode VBUS glitch when boot
+ dwc3 core driver: Add avoiding vbus glitch happen during xhci reset
+
+ Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
+ drivers/usb/dwc3/core.c |   47 +++++++++++++++++++++++++++++++++++++++++++=
+++++
+ drivers/usb/dwc3/core.h |   10 +++++++++-
+ 3 files changed, 60 insertions(+), 0 deletions(-)
+--=20
+1.7.1
