@@ -1,65 +1,65 @@
 From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 20/21] memblock: memblock_alloc_try_nid: don't panic
-Date: Wed, 16 Jan 2019 15:44:20 +0200
-Message-ID: <1547646261-32535-21-git-send-email-rppt@linux.ibm.com>
+Subject: [PATCH 11/21] memblock: make
+ memblock_find_in_range_node() and choose_memblock_flags() static
+Date: Wed, 16 Jan 2019 15:44:11 +0200
+Message-ID: <1547646261-32535-12-git-send-email-rppt@linux.ibm.com>
 References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
 In-Reply-To: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
 To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+d>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, Petr Mladek <pmladek@suse.com>, linux-xtensa@linux-xten
 List-Id: devicetree@vger.kernel.org
 
-As all the memblock_alloc*() users are now checking the return value and
-panic() in case of error, the panic() call can be removed from the core
-memblock allocator, namely memblock_alloc_try_nid().
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
----
- mm/memblock.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
-
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 03b3929..7164275 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1526,7 +1526,7 @@ void * __init memblock_alloc_try_nid_nopanic(
- }
- 
- /**
-- * memblock_alloc_try_nid - allocate boot memory block with panicking
-+ * memblock_alloc_try_nid - allocate boot memory block
-  * @size: size of memory block to be allocated in bytes
-  * @align: alignment of the region and block's size
-  * @min_addr: the lower bound of the memory region from where the allocation
-@@ -1536,9 +1536,8 @@ void * __init memblock_alloc_try_nid_nopanic(
-  *	      allocate only from memory limited by memblock.current_limit value
-  * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-  *
-- * Public panicking version of memblock_alloc_try_nid_nopanic()
-- * which provides debug information (including caller info), if enabled,
-- * and panics if the request can not be satisfied.
-+ * Public function, provides additional debug information (including caller
-+ * info), if enabled. This function zeroes the allocated memory.
-  *
-  * Return:
-  * Virtual address of allocated memory block on success, NULL on failure.
-@@ -1555,14 +1554,10 @@ void * __init memblock_alloc_try_nid(
- 		     &max_addr, (void *)_RET_IP_);
- 	ptr = memblock_alloc_internal(size, align,
- 					   min_addr, max_addr, nid);
--	if (ptr) {
-+	if (ptr)
- 		memset(ptr, 0, size);
--		return ptr;
--	}
- 
--	panic("%s: Failed to allocate %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa\n",
--	      __func__, (u64)size, (u64)align, nid, &min_addr, &max_addr);
--	return NULL;
-+	return ptr;
- }
- 
- /**
--- 
-2.7.4
+VGhlc2UgZnVuY3Rpb25zIGFyZSBub3QgdXNlZCBvdXRzaWRlIG1lbWJsb2NrLiBNYWtlIHRoZW0g
+c3RhdGljLgoKU2lnbmVkLW9mZi1ieTogTWlrZSBSYXBvcG9ydCA8cnBwdEBsaW51eC5pYm0uY29t
+PgotLS0KIGluY2x1ZGUvbGludXgvbWVtYmxvY2suaCB8IDQgLS0tLQogbW0vbWVtYmxvY2suYyAg
+ICAgICAgICAgIHwgNCArKy0tCiAyIGZpbGVzIGNoYW5nZWQsIDIgaW5zZXJ0aW9ucygrKSwgNiBk
+ZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21lbWJsb2NrLmggYi9pbmNs
+dWRlL2xpbnV4L21lbWJsb2NrLmgKaW5kZXggY2Y0Y2Q5Yy4uZjVhODNhMSAxMDA2NDQKLS0tIGEv
+aW5jbHVkZS9saW51eC9tZW1ibG9jay5oCisrKyBiL2luY2x1ZGUvbGludXgvbWVtYmxvY2suaApA
+QCAtMTExLDkgKzExMSw2IEBAIHZvaWQgbWVtYmxvY2tfZGlzY2FyZCh2b2lkKTsKICNkZWZpbmUg
+bWVtYmxvY2tfZGJnKGZtdCwgLi4uKSBcCiAJaWYgKG1lbWJsb2NrX2RlYnVnKSBwcmludGsoS0VS
+Tl9JTkZPIHByX2ZtdChmbXQpLCAjI19fVkFfQVJHU19fKQogCi1waHlzX2FkZHJfdCBtZW1ibG9j
+a19maW5kX2luX3JhbmdlX25vZGUocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxpZ24s
+Ci0JCQkJCXBoeXNfYWRkcl90IHN0YXJ0LCBwaHlzX2FkZHJfdCBlbmQsCi0JCQkJCWludCBuaWQs
+IGVudW0gbWVtYmxvY2tfZmxhZ3MgZmxhZ3MpOwogcGh5c19hZGRyX3QgbWVtYmxvY2tfZmluZF9p
+bl9yYW5nZShwaHlzX2FkZHJfdCBzdGFydCwgcGh5c19hZGRyX3QgZW5kLAogCQkJCSAgIHBoeXNf
+YWRkcl90IHNpemUsIHBoeXNfYWRkcl90IGFsaWduKTsKIHZvaWQgbWVtYmxvY2tfYWxsb3dfcmVz
+aXplKHZvaWQpOwpAQCAtMTMwLDcgKzEyNyw2IEBAIGludCBtZW1ibG9ja19jbGVhcl9ob3RwbHVn
+KHBoeXNfYWRkcl90IGJhc2UsIHBoeXNfYWRkcl90IHNpemUpOwogaW50IG1lbWJsb2NrX21hcmtf
+bWlycm9yKHBoeXNfYWRkcl90IGJhc2UsIHBoeXNfYWRkcl90IHNpemUpOwogaW50IG1lbWJsb2Nr
+X21hcmtfbm9tYXAocGh5c19hZGRyX3QgYmFzZSwgcGh5c19hZGRyX3Qgc2l6ZSk7CiBpbnQgbWVt
+YmxvY2tfY2xlYXJfbm9tYXAocGh5c19hZGRyX3QgYmFzZSwgcGh5c19hZGRyX3Qgc2l6ZSk7Ci1l
+bnVtIG1lbWJsb2NrX2ZsYWdzIGNob29zZV9tZW1ibG9ja19mbGFncyh2b2lkKTsKIAogdW5zaWdu
+ZWQgbG9uZyBtZW1ibG9ja19mcmVlX2FsbCh2b2lkKTsKIHZvaWQgcmVzZXRfbm9kZV9tYW5hZ2Vk
+X3BhZ2VzKHBnX2RhdGFfdCAqcGdkYXQpOwpkaWZmIC0tZ2l0IGEvbW0vbWVtYmxvY2suYyBiL21t
+L21lbWJsb2NrLmMKaW5kZXggNzM5Zjc2OS4uMDNiMzkyOSAxMDA2NDQKLS0tIGEvbW0vbWVtYmxv
+Y2suYworKysgYi9tbS9tZW1ibG9jay5jCkBAIC0xMjUsNyArMTI1LDcgQEAgc3RhdGljIGludCBt
+ZW1ibG9ja19jYW5fcmVzaXplIF9faW5pdGRhdGFfbWVtYmxvY2s7CiBzdGF0aWMgaW50IG1lbWJs
+b2NrX21lbW9yeV9pbl9zbGFiIF9faW5pdGRhdGFfbWVtYmxvY2sgPSAwOwogc3RhdGljIGludCBt
+ZW1ibG9ja19yZXNlcnZlZF9pbl9zbGFiIF9faW5pdGRhdGFfbWVtYmxvY2sgPSAwOwogCi1lbnVt
+IG1lbWJsb2NrX2ZsYWdzIF9faW5pdF9tZW1ibG9jayBjaG9vc2VfbWVtYmxvY2tfZmxhZ3Modm9p
+ZCkKK3N0YXRpYyBlbnVtIG1lbWJsb2NrX2ZsYWdzIF9faW5pdF9tZW1ibG9jayBjaG9vc2VfbWVt
+YmxvY2tfZmxhZ3Modm9pZCkKIHsKIAlyZXR1cm4gc3lzdGVtX2hhc19zb21lX21pcnJvciA/IE1F
+TUJMT0NLX01JUlJPUiA6IE1FTUJMT0NLX05PTkU7CiB9CkBAIC0yNTQsNyArMjU0LDcgQEAgX19t
+ZW1ibG9ja19maW5kX3JhbmdlX3RvcF9kb3duKHBoeXNfYWRkcl90IHN0YXJ0LCBwaHlzX2FkZHJf
+dCBlbmQsCiAgKiBSZXR1cm46CiAgKiBGb3VuZCBhZGRyZXNzIG9uIHN1Y2Nlc3MsIDAgb24gZmFp
+bHVyZS4KICAqLwotcGh5c19hZGRyX3QgX19pbml0X21lbWJsb2NrIG1lbWJsb2NrX2ZpbmRfaW5f
+cmFuZ2Vfbm9kZShwaHlzX2FkZHJfdCBzaXplLAorc3RhdGljIHBoeXNfYWRkcl90IF9faW5pdF9t
+ZW1ibG9jayBtZW1ibG9ja19maW5kX2luX3JhbmdlX25vZGUocGh5c19hZGRyX3Qgc2l6ZSwKIAkJ
+CQkJcGh5c19hZGRyX3QgYWxpZ24sIHBoeXNfYWRkcl90IHN0YXJ0LAogCQkJCQlwaHlzX2FkZHJf
+dCBlbmQsIGludCBuaWQsCiAJCQkJCWVudW0gbWVtYmxvY2tfZmxhZ3MgZmxhZ3MpCi0tIAoyLjcu
+NAoKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fClhlbi1k
+ZXZlbCBtYWlsaW5nIGxpc3QKWGVuLWRldmVsQGxpc3RzLnhlbnByb2plY3Qub3JnCmh0dHBzOi8v
+bGlzdHMueGVucHJvamVjdC5vcmcvbWFpbG1hbi9saXN0aW5mby94ZW4tZGV2ZWw=
