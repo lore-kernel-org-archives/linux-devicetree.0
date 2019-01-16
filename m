@@ -1,112 +1,50 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v2 5/5] rtc: pcf85063: set xtal load capacitance from DT
-Date: Wed, 16 Jan 2019 22:11:47 +0100
-Message-ID: <20190116211147.GF2627@piout.net>
-References: <20190108185414.26922-1-sam@ravnborg.org>
- <20190108185414.26922-6-sam@ravnborg.org>
+From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: Add DT for NanoPi M4
+Date: Wed, 16 Jan 2019 15:12:58 -0600
+Message-ID: <20190116211258.GA29888@bogus>
+References: <cover.1547466003.git.robin.murphy@arm.com>
+ <a96995cfa599792b24e740ce46d53bd68ef1d462.1547466003.git.robin.murphy@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
 Content-Disposition: inline
-In-Reply-To: <20190108185414.26922-6-sam@ravnborg.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Urs =?iso-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+In-Reply-To: <a96995cfa599792b24e740ce46d53bd68ef1d462.1547466003.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
+List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
+ <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
+Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
+Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
+To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 08/01/2019 19:54:14+0100, Sam Ravnborg wrote:
-> Add support for specifying the xtal load capacitance in the DT node.
-> The pcf85063 supports xtal load capacitance of 7pF or 12.5pF.
-> If the rtc has the wrong configuration the time will
-> drift several hours/week.
+On Mon, 14 Jan 2019 12:05:31 +0000, Robin Murphy wrote:
+> There are a number of subtle differences between the nanopi4 variants,
+> and where they disagree, the common DTSI currently follows the details
+> of NanoPi M4. In order to improve matters even more, let's add a
+> separate DTS for the M4 to which we can start splitting things out
+> appropriately. The third variant, NanoPi NEO4, is a lot closer to the M4
+> than either is to the larger T4, so arguably could get away with just
+> sharing the M4 DT for now (plus I have neither of the smaller boards to
+> actually test with).
 > 
-> The driver use the default value 7pF.
-> 
-> The DT may specify either 7000fF or 12500fF.
-> (The DT uses femto Farad to avoid decimal numbers).
-> Other values are warned and the driver uses the default value.
-> 
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Urs Fässler <urs.fassler@bbv.ch>
+> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
 > ---
->  drivers/rtc/rtc-pcf85063.c | 39 +++++++++++++++++++++++++++++++++++++++
->  1 file changed, 39 insertions(+)
 > 
-> diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
-> index 283c2335b01b..0c0b6030627e 100644
-> --- a/drivers/rtc/rtc-pcf85063.c
-> +++ b/drivers/rtc/rtc-pcf85063.c
-> @@ -27,6 +27,7 @@
->  */
->  
->  #define PCF85063_REG_CTRL1		0x00 /* status */
-> +#define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
->  #define PCF85063_REG_CTRL1_STOP		BIT(5)
->  #define PCF85063_REG_CTRL2		0x01
->  
-> @@ -180,6 +181,39 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
->  	.set_time	= pcf85063_rtc_set_time
->  };
->  
-> +static int pcf85063_load_capacitance(struct i2c_client *client)
-> +{
-> +	u32 load;
-> +	int rc;
-> +	u8 reg;
-> +
-> +	rc = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
-> +	if (rc < 0)
-> +		return rc;
-> +
-> +	reg = rc;
-> +	load = 7000;
-> +	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
-> +			     &load);
-> +
-> +	switch (load) {
-> +	default:
-> +		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 7000",
-> +			load);
+> v2: Fix the copy-paste binding thinko
+> 
+>  .../devicetree/bindings/arm/rockchip.yaml      |  6 ++++--
+>  arch/arm64/boot/dts/rockchip/Makefile          |  1 +
+>  .../boot/dts/rockchip/rk3399-nanopi-m4.dts     | 18 ++++++++++++++++++
+>  3 files changed, 23 insertions(+), 2 deletions(-)
+>  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
+> 
 
-Alignment is not correct
-
-> +		/* fall through */
-> +	case 7000:
-> +		reg &= ~PCF85063_REG_CTRL1_CAP_SEL;
-> +		break;
-> +	case 12500:
-> +		reg |= PCF85063_REG_CTRL1_CAP_SEL;
-> +		break;
-> +	}
-> +
-> +	rc = i2c_smbus_write_byte_data(client, PCF85063_REG_CTRL1, reg);
-> +
-> +	return rc;
-> +}
-> +
->  static int pcf85063_probe(struct i2c_client *client,
->  				const struct i2c_device_id *id)
->  {
-> @@ -197,6 +231,11 @@ static int pcf85063_probe(struct i2c_client *client,
->  		return err;
->  	}
->  
-> +	err = pcf85063_load_capacitance(client);
-> +	if (err < 0)
-> +		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
-> +		         err);
-
-This should be using more tabs.
-
-As you can see, I don't have much to add and I'm quite pleased with the
-series.
-
-As Rob pointed out, quartz-load-femtofarads should be added in rtc.txt
-
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
