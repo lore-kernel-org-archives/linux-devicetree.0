@@ -1,71 +1,76 @@
-From: Lee Jones <lee.jones@linaro.org>
-Subject: Re: [PATCH v7 0/7] Introduce STPMIC1 PMIC Driver
-Date: Wed, 16 Jan 2019 08:13:56 +0000
-Message-ID: <20190116081356.GA23399@dell>
-References: <1543571742-17995-1-git-send-email-p.paillet@st.com>
- <20181214124701.GZ4497@dell>
- <20190115004856.GL117329@dtor-ws>
+From: Felipe Balbi <balbi@kernel.org>
+Subject: Re: [PATCH 2/2] usb: dwc3: Add workaround for host mode VBUS glitch when boot
+Date: Wed, 16 Jan 2019 10:21:15 +0200
+Message-ID: <87y37lko78.fsf@linux.intel.com>
+References: <20190116064820.20007-1-ran.wang_1@nxp.com> <20190116064820.20007-3-ran.wang_1@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; boundary="=-=-=";
+        micalg=pgp-sha256; protocol="application/pgp-signature"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190115004856.GL117329@dtor-ws>
+In-Reply-To: <20190116064820.20007-3-ran.wang_1@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "dmitry.torokhov@gmail.com" <dmitry.torokhov@gmail.com>
-Cc: Pascal PAILLET-LME <p.paillet@st.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "broonie@kernel.org" <broonie@kernel.org>, "wim@linux-watchdog.org" <wim@linux-watchdog.org>, "linux@roeck-us.net" <linux@roeck-us.net>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>, "benjamin.gaignard@linaro.org" <benjamin.gaignard@linaro.org>, "eballetbo@gmail.com" <eballetbo@gmail.com>, "axel.lin@ingics.com" <axel.lin@ingics.com>
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jan 2019, dmitry.torokhov@gmail.com wrote:
+--=-=-=
+Content-Type: text/plain
+Content-Transfer-Encoding: quoted-printable
 
-> On Fri, Dec 14, 2018 at 12:47:01PM +0000, Lee Jones wrote:
-> > On Fri, 30 Nov 2018, Pascal PAILLET-LME wrote:
-> > 
-> > > The goal of this patch-set is to propose a driver for the STPMIC1 PMIC from 
-> > > STMicroelectronics. 
-> > > The STPMIC1 regulators supply power to an application processor as well as 
-> > > to external system peripherals such as DDR, Flash memories and system
-> > > devices. It also features onkey button input and an hardware watchdog.
-> > > The STPMIC1 is controlled via I2C. 
-> > > 
-> > > Main driver is drivers/mfd/stpmic1 that handle I2C regmap configuration and
-> > > irqchip. stpmic1_regulator, stpmic1_onkey and stpmic1_wdt need stpmic1 mfd
-> > > as parent.
-> > > 
-> > > STPMIC1 MFD and regulator drivers maybe mandatory at boot time.
-> > > 
-> > > Pascal Paillet (7):
-> > > changes in v7:
-> > > * rebase on regul/for-next
-> > > 
-> > >   dt-bindings: mfd: document stpmic1
-> > >   mfd: stpmic1: add stpmic1 driver
-> > >   dt-bindings: input: document stpmic1 pmic onkey
-> > >   input: stpmic1: add stpmic1 onkey driver
-> > >   dt-bindings: watchdog: document stpmic1 pmic watchdog
-> > >   watchdog: stpmic1: add stpmic1 watchdog driver
-> > >   regulator: stpmic1: fix regulator_lock usage
-> > 
-> > Could you please remove any patches which have been applied and
-> > [RESEND]?
-> > 
-> > Also, is Dmitry planning on Acking:
-> > 
-> >   dt-bindings: input: document stpmic1 pmic onkey
-> > 
-> > ... or is Rob's Ack enough?
-> 
-> For bindings I normally defer to Rob (unless I see something that really
-> bugs me and then I'll speak up).
 
-I usually do the opposite.  Seeing as Rob is pretty heavily laden with
-DT patches, I tend to review/apply patches which do not add new DT
-properties and/or are obvious/trivial and leave Rob to the rest.
+Hi,
 
-Your train-set though of course, your decision.
+Ran Wang <ran.wang_1@nxp.com> writes:
+> +static void dwc3_power_off_all_roothub_ports(struct dwc3 *dwc)
+> +{
+> +	int i, port_num;
+> +	u32 reg, op_regs_base, offset;
+> +	void __iomem		*xhci_regs;
+> +
+> +	/* xhci regs is not mapped yet, do it temperary here */
+> +	if (dwc->xhci_resources[0].start) {
+> +		xhci_regs =3D ioremap(dwc->xhci_resources[0].start,
+> +				DWC3_XHCI_REGS_END);
+> +		if (IS_ERR(xhci_regs)) {
+> +			dev_err(dwc->dev, "Failed to ioremap xhci_regs\n");
+> +			return;
+> +		}
+> +
+> +		op_regs_base =3D HC_LENGTH(readl(xhci_regs));
+> +		reg =3D readl(xhci_regs + XHCI_HCSPARAMS1);
+> +		port_num =3D HCS_MAX_PORTS(reg);
+> +
+> +		for (i =3D 1; i <=3D port_num; i++) {
+> +			offset =3D op_regs_base + XHCI_PORTSC_BASE + 0x10*(i-1);
+> +			reg =3D readl(xhci_regs + offset);
+> +			reg &=3D ~PORT_POWER;
+> +			writel(reg, xhci_regs + offset);
+> +		}
+> +
+> +		iounmap(xhci_regs);
 
--- 
-Lee Jones [李琼斯]
-Linaro Services Technical Lead
-Linaro.org │ Open source software for ARM SoCs
-Follow Linaro: Facebook | Twitter | Blog
+why can't this be done during xhci_gen_setup()?
+
+=2D-=20
+balbi
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlw+6XsACgkQzL64meEa
+mQaYthAA0N7cZj+TDKBtt13xQYprxukJbw0hJF5r+Xwp64RbDU04hHDxOqrV7S7G
+gI+RWTZ1p/dvBZ5z0cf9/5Wj4Uyzcnyesd/OCWvTzJA18zNVObO7Dx/KrZawzgJf
+B6s3deHMVN1wUVJprVqqUFEXOyJ0hgvup9dQOVeatZMJLYqgW1ubPrK/7LSW52vy
+4KUBT4Ol4hXeJiz/SIngZopM9Vc1BTNXFs7ldR6UqWWtU9KnCajBz0QK5T0k4eqj
+cvw+jKj8PMts0beRRqTIRAL128aov+/+9o2X+1PEIrPYmiRlFDwUjSGTEaXfb/K2
+wHg1Bt6FdBufnlWYTuhGkT5mp1MPe6L2q11m/q6rYnJJNfqnCAExp6hx8K6cQSHP
+SATYdBr/ZaOpYJ3RaNOHX3ehfhCkLKFeofT3I/DJEUqSld5s4AmDH8VYLkSx+YtC
+KCBjwhYq9Rs1MF66jVWL+oaTG57q+Ta5FVlxlR/ARnZf3Rp65+NvSzZfckmze8p7
+pR+G1J34nziVWCNLV4YXmkfYVV3CHLdPl1YM6hvzEZiBOY0lAHPK40f56L9I/IIF
+I+eQmDT/SDNqXcEBs5pZh+2UXZSd1GWFGl2z6C5qXzXo8nGXjhHMg8powkudXxp4
+8OFNnT6Se2d9OYRnADDbMR1valZ3spQbsnjX1YPyh2s9ztsEfaU=
+=lIIu
+-----END PGP SIGNATURE-----
+--=-=-=--
