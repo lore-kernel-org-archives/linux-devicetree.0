@@ -1,76 +1,63 @@
-From: Felipe Balbi <balbi@kernel.org>
-Subject: Re: [PATCH 2/2] usb: dwc3: Add workaround for host mode VBUS glitch when boot
-Date: Wed, 16 Jan 2019 10:21:15 +0200
-Message-ID: <87y37lko78.fsf@linux.intel.com>
-References: <20190116064820.20007-1-ran.wang_1@nxp.com> <20190116064820.20007-3-ran.wang_1@nxp.com>
+From: Daniel Baluta <daniel.baluta@gmail.com>
+Subject: Re: [alsa-devel] [PATCH v2 4/4] ASoC: add imx-audmix DT binding documentation
+Date: Wed, 16 Jan 2019 10:21:52 +0200
+Message-ID: <CAEnQRZBn7nM-KrGSvnzPWuU=a+jyRxfEKhZSsDD4wTqr6spkwg@mail.gmail.com>
+References: <1546952716-2743-1-git-send-email-viorel.suman@nxp.com>
+ <1546952716-2743-5-git-send-email-viorel.suman@nxp.com> <20190115205755.GA4022@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116064820.20007-3-ran.wang_1@nxp.com>
+In-Reply-To: <20190115205755.GA4022@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Ran Wang <ran.wang_1@nxp.com>
+To: Rob Herring <robh@kernel.org>
+Cc: Viorel Suman <viorel.suman@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+On Tue, Jan 15, 2019 at 10:58 PM Rob Herring <robh@kernel.org> wrote:
+>
+> On Tue, Jan 08, 2019 at 01:05:51PM +0000, Viorel Suman wrote:
+> > Add the DT binding documentation for Audio Mixer
+> > machine driver.
+> >
+> > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> > ---
+> >  .../devicetree/bindings/sound/imx-audmix.txt       | 24 ++++++++++++++++++++++
+> >  1 file changed, 24 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/sound/imx-audmix.txt
+> >
+> > diff --git a/Documentation/devicetree/bindings/sound/imx-audmix.txt b/Documentation/devicetree/bindings/sound/imx-audmix.txt
+> > new file mode 100644
+> > index 0000000..6ac1230
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/sound/imx-audmix.txt
+> > @@ -0,0 +1,24 @@
+> > +NXP Audio Mixer (AUDMIX) machine driver.
+> > +
+> > +Required properties:
+> > +===================================
+> > +  - compatible               : Compatible list, contains "fsl,imx-audmix"
+> > +
+> > +  - model            : Short audio card description.
+> > +
+> > +  - dais             : Must contain a list of phandles to AUDMIX connected
+> > +                       DAIs. The current implementation requires two phandles
+> > +                       to SAI interfaces to be provided, the first SAI in the
+> > +                       list being used to route the AUDMIX output.
+> > +
+> > +  - audmix-controller        : Must contain the phandle to the AUDMIX device node.
+>
+> I don't think you need 2 nodes for this as this one is just a virtual
+> device. Just add the dais property to the audmix node.
 
+Hi Rob,
 
-Hi,
+Thanks for the suggestion. We want to understand better the reasoning
+behind this.
 
-Ran Wang <ran.wang_1@nxp.com> writes:
-> +static void dwc3_power_off_all_roothub_ports(struct dwc3 *dwc)
-> +{
-> +	int i, port_num;
-> +	u32 reg, op_regs_base, offset;
-> +	void __iomem		*xhci_regs;
-> +
-> +	/* xhci regs is not mapped yet, do it temperary here */
-> +	if (dwc->xhci_resources[0].start) {
-> +		xhci_regs =3D ioremap(dwc->xhci_resources[0].start,
-> +				DWC3_XHCI_REGS_END);
-> +		if (IS_ERR(xhci_regs)) {
-> +			dev_err(dwc->dev, "Failed to ioremap xhci_regs\n");
-> +			return;
-> +		}
-> +
-> +		op_regs_base =3D HC_LENGTH(readl(xhci_regs));
-> +		reg =3D readl(xhci_regs + XHCI_HCSPARAMS1);
-> +		port_num =3D HCS_MAX_PORTS(reg);
-> +
-> +		for (i =3D 1; i <=3D port_num; i++) {
-> +			offset =3D op_regs_base + XHCI_PORTSC_BASE + 0x10*(i-1);
-> +			reg =3D readl(xhci_regs + offset);
-> +			reg &=3D ~PORT_POWER;
-> +			writel(reg, xhci_regs + offset);
-> +		}
-> +
-> +		iounmap(xhci_regs);
+Is it because dais are physically connected to AUDMIX node?
 
-why can't this be done during xhci_gen_setup()?
+In ALSA we usually add all the components inside the
+associated machine driver virtual node.
 
-=2D-=20
-balbi
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAlw+6XsACgkQzL64meEa
-mQaYthAA0N7cZj+TDKBtt13xQYprxukJbw0hJF5r+Xwp64RbDU04hHDxOqrV7S7G
-gI+RWTZ1p/dvBZ5z0cf9/5Wj4Uyzcnyesd/OCWvTzJA18zNVObO7Dx/KrZawzgJf
-B6s3deHMVN1wUVJprVqqUFEXOyJ0hgvup9dQOVeatZMJLYqgW1ubPrK/7LSW52vy
-4KUBT4Ol4hXeJiz/SIngZopM9Vc1BTNXFs7ldR6UqWWtU9KnCajBz0QK5T0k4eqj
-cvw+jKj8PMts0beRRqTIRAL128aov+/+9o2X+1PEIrPYmiRlFDwUjSGTEaXfb/K2
-wHg1Bt6FdBufnlWYTuhGkT5mp1MPe6L2q11m/q6rYnJJNfqnCAExp6hx8K6cQSHP
-SATYdBr/ZaOpYJ3RaNOHX3ehfhCkLKFeofT3I/DJEUqSld5s4AmDH8VYLkSx+YtC
-KCBjwhYq9Rs1MF66jVWL+oaTG57q+Ta5FVlxlR/ARnZf3Rp65+NvSzZfckmze8p7
-pR+G1J34nziVWCNLV4YXmkfYVV3CHLdPl1YM6hvzEZiBOY0lAHPK40f56L9I/IIF
-I+eQmDT/SDNqXcEBs5pZh+2UXZSd1GWFGl2z6C5qXzXo8nGXjhHMg8powkudXxp4
-8OFNnT6Se2d9OYRnADDbMR1valZ3spQbsnjX1YPyh2s9ztsEfaU=
-=lIIu
------END PGP SIGNATURE-----
---=-=-=--
+thanks,
+Daniel.
