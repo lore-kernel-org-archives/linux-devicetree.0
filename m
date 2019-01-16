@@ -1,62 +1,78 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v2 3/3] mtd: spi-nor: mtk-quadspi: rename config to a
- common one
-Date: Wed, 16 Jan 2019 06:06:47 +0000
-Message-ID: <28cd6980-6697-e9f2-2e7a-226a507b5467@microchip.com>
-References: <74d710ed89fd505a49bce53b51f6cb489e313dbb.1547538621.git.ryder.lee@mediatek.com>
- <761c9a0a482795dbc48949e982ab46987b737e08.1547538621.git.ryder.lee@mediatek.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add lpasscc node
+Date: Tue, 15 Jan 2019 22:09:10 -0800
+Message-ID: <20190116060910.GA6841@builder>
+References: <1543996836-16717-1-git-send-email-tdas@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <761c9a0a482795dbc48949e982ab46987b737e08.1547538621.git.ryder.lee@mediatek.com>
-Content-Language: en-US
-Content-ID: <3ADEA60ACD9CF04F906056C3E46099F5@namprd11.prod.outlook.com>
+Content-Disposition: inline
+In-Reply-To: <1543996836-16717-1-git-send-email-tdas@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: ryder.lee@mediatek.com, marek.vasut@gmail.com, computersforpeace@gmail.com, boris.brezillon@bootlin.com
-Cc: robh+dt@kernel.org, weijie.gao@mediatek.com, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Taniya Das <tdas@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAxLzE2LzIwMTkgMDQ6MTIgQU0sIFJ5ZGVyIExlZSB3cm90ZToNCj4gVGhlIHF1YWRz
-cGkgaXMgYSBnZW5lcmljIGNvbW11bmljYXRpb24gaW50ZXJmYWNlIHdoaWNoIGNvdWxkIGJlIHNo
-YXJlZA0KPiB3aXRoIG90aGVyIE1lZGlhVGVrIFNvQ3MuIEhlbmNlIHJlbmFtZSBpdCB0byBhIGNv
-bW1vbiBvbmUuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBSeWRlciBMZWUgPHJ5ZGVyLmxlZUBtZWRp
-YXRlay5jb20+DQoNClJldmlld2VkLWJ5OiBUdWRvciBBbWJhcnVzIDx0dWRvci5hbWJhcnVzQG1p
-Y3JvY2hpcC5jb20+DQoNCj4gLS0tDQo+IENoYW5nZXMgc2luY2UgdjI6DQo+IC1yZWJhc2UgdG8g
-djUuMC1yYzEuDQo+IC1zb3J0IHRoZSBjb25maWcgaW4gYW4gYWxwaGFiZXRpY2FsIG9yZGVyLg0K
-PiANCj4gQ2hhbmdlcyBzaW5jZSB2MTogbm9uZS4gDQo+IC0tLQ0KPiAgZHJpdmVycy9tdGQvc3Bp
-LW5vci9LY29uZmlnICB8IDE2ICsrKysrKysrLS0tLS0tLS0NCj4gIGRyaXZlcnMvbXRkL3NwaS1u
-b3IvTWFrZWZpbGUgfCAgMiArLQ0KPiAgMiBmaWxlcyBjaGFuZ2VkLCA5IGluc2VydGlvbnMoKyks
-IDkgZGVsZXRpb25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9L
-Y29uZmlnIGIvZHJpdmVycy9tdGQvc3BpLW5vci9LY29uZmlnDQo+IGluZGV4IDQ0ZmU4MDEuLjQx
-NGU4ODcgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvS2NvbmZpZw0KPiArKysg
-Yi9kcml2ZXJzL210ZC9zcGktbm9yL0tjb25maWcNCj4gQEAgLTcsMTQgKzcsNiBAQCBtZW51Y29u
-ZmlnIE1URF9TUElfTk9SDQo+ICANCj4gIGlmIE1URF9TUElfTk9SDQo+ICANCj4gLWNvbmZpZyBN
-VERfTVQ4MXh4X05PUg0KPiAtCXRyaXN0YXRlICJNZWRpYXRlayBNVDgxeHggU1BJIE5PUiBmbGFz
-aCBjb250cm9sbGVyIg0KPiAtCWRlcGVuZHMgb24gSEFTX0lPTUVNDQo+IC0JaGVscA0KPiAtCSAg
-VGhpcyBlbmFibGVzIGFjY2VzcyB0byBTUEkgTk9SIGZsYXNoLCB1c2luZyBNVDgxeHggU1BJIE5P
-UiBmbGFzaA0KPiAtCSAgY29udHJvbGxlci4gVGhpcyBjb250cm9sbGVyIGRvZXMgbm90IHN1cHBv
-cnQgZ2VuZXJpYyBTUEkgQlVTLCBpdCBvbmx5DQo+IC0JICBzdXBwb3J0cyBTUEkgTk9SIEZsYXNo
-Lg0KPiAtDQo+ICBjb25maWcgTVREX1NQSV9OT1JfVVNFXzRLX1NFQ1RPUlMNCj4gIAlib29sICJV
-c2Ugc21hbGwgNDA5NiBCIGVyYXNlIHNlY3RvcnMiDQo+ICAJZGVmYXVsdCB5DQo+IEBAIC02Niw2
-ICs1OCwxNCBAQCBjb25maWcgU1BJX0hJU0lfU0ZDDQo+ICAJaGVscA0KPiAgCSAgVGhpcyBlbmFi
-bGVzIHN1cHBvcnQgZm9yIGhpc2lsaWNvbiBTUEktTk9SIGZsYXNoIGNvbnRyb2xsZXIuDQo+ICAN
-Cj4gK2NvbmZpZyBTUElfTVRLX1FVQURTUEkNCj4gKwl0cmlzdGF0ZSAiTWVkaWFUZWsgUXVhZCBT
-UEkgY29udHJvbGxlciINCj4gKwlkZXBlbmRzIG9uIEhBU19JT01FTQ0KPiArCWhlbHANCj4gKwkg
-IFRoaXMgZW5hYmxlcyBzdXBwb3J0IGZvciB0aGUgUXVhZCBTUEkgY29udHJvbGxlciBpbiBtYXN0
-ZXIgbW9kZS4NCj4gKwkgIFRoaXMgY29udHJvbGxlciBkb2VzIG5vdCBzdXBwb3J0IGdlbmVyaWMg
-U1BJLiBJdCBvbmx5IHN1cHBvcnRzDQo+ICsJICBTUEkgTk9SLg0KPiArDQo+ICBjb25maWcgU1BJ
-X05YUF9TUElGSQ0KPiAgCXRyaXN0YXRlICJOWFAgU1BJIEZsYXNoIEludGVyZmFjZSAoU1BJRkkp
-Ig0KPiAgCWRlcGVuZHMgb24gT0YgJiYgKEFSQ0hfTFBDMThYWCB8fCBDT01QSUxFX1RFU1QpDQo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL210ZC9zcGktbm9yL01ha2VmaWxlIGIvZHJpdmVycy9tdGQv
-c3BpLW5vci9NYWtlZmlsZQ0KPiBpbmRleCBhNTUyZWZkLi40ZTRkNDAwIDEwMDY0NA0KPiAtLS0g
-YS9kcml2ZXJzL210ZC9zcGktbm9yL01ha2VmaWxlDQo+ICsrKyBiL2RyaXZlcnMvbXRkL3NwaS1u
-b3IvTWFrZWZpbGUNCj4gQEAgLTQsNyArNCw3IEBAIG9iai0kKENPTkZJR19TUElfQVNQRUVEX1NN
-QykJKz0gYXNwZWVkLXNtYy5vDQo+ICBvYmotJChDT05GSUdfU1BJX0NBREVOQ0VfUVVBRFNQSSkJ
-Kz0gY2FkZW5jZS1xdWFkc3BpLm8NCj4gIG9iai0kKENPTkZJR19TUElfRlNMX1FVQURTUEkpCSs9
-IGZzbC1xdWFkc3BpLm8NCj4gIG9iai0kKENPTkZJR19TUElfSElTSV9TRkMpCSs9IGhpc2ktc2Zj
-Lm8NCj4gLW9iai0kKENPTkZJR19NVERfTVQ4MXh4X05PUikgICAgKz0gbXRrLXF1YWRzcGkubw0K
-PiArb2JqLSQoQ09ORklHX1NQSV9NVEtfUVVBRFNQSSkgICAgKz0gbXRrLXF1YWRzcGkubw0KPiAg
-b2JqLSQoQ09ORklHX1NQSV9OWFBfU1BJRkkpCSs9IG54cC1zcGlmaS5vDQo+ICBvYmotJChDT05G
-SUdfU1BJX0lOVEVMX1NQSSkJKz0gaW50ZWwtc3BpLm8NCj4gIG9iai0kKENPTkZJR19TUElfSU5U
-RUxfU1BJX1BDSSkJKz0gaW50ZWwtc3BpLXBjaS5vDQo+IA0K
+On Wed 05 Dec 00:00 PST 2018, Taniya Das wrote:
+
+> This adds the low pass audio clock controller node to sdm845 based on
+> the example in the bindings.
+> 
+
+Applying this causes my MTP to reboot as clk_disable_unused() tries to
+disable "lpass_qdsp6ss_core_clk". Am I missing something?
+
+Regards,
+Bjorn
+
+> Signed-off-by: Taniya Das <tdas@codeaurora.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 4 +++-
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 8 ++++++++
+>  2 files changed, 11 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> index b3def03..cf73f3c 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+> @@ -346,7 +346,9 @@
+>  &gcc {
+>  	protected-clocks = <GCC_QSPI_CORE_CLK>,
+>  			   <GCC_QSPI_CORE_CLK_SRC>,
+> -			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>;
+> +			   <GCC_QSPI_CNOC_PERIPH_AHB_CLK>,
+> +			   <GCC_LPASS_Q6_AXI_CLK>,
+> +			   <GCC_LPASS_SWAY_CLK>;
+>  };
+> 
+>  &i2c10 {
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 1419b00..a3db089 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -7,6 +7,7 @@
+> 
+>  #include <dt-bindings/clock/qcom,dispcc-sdm845.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +#include <dt-bindings/clock/qcom,lpass-sdm845.h>
+>  #include <dt-bindings/clock/qcom,rpmh.h>
+>  #include <dt-bindings/interrupt-controller/arm-gic.h>
+>  #include <dt-bindings/phy/phy-qcom-qusb2.h>
+> @@ -1264,6 +1265,13 @@
+>  			#power-domain-cells = <1>;
+>  		};
+> 
+> +		lpasscc: clock-controller@17014000 {
+> +			compatible = "qcom,sdm845-lpasscc";
+> +			reg = <0x17014000 0x1f004>, <0x17300000 0x200>;
+> +			reg-names = "cc", "qdsp6ss";
+> +			#clock-cells = <1>;
+> +		};
+> +
+>  		tsens0: thermal-sensor@c263000 {
+>  			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
+>  			reg = <0xc263000 0x1ff>, /* TM */
+> --
+> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
+> of the Code Aurora Forum, hosted by the  Linux Foundation.
+> 
