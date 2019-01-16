@@ -1,25 +1,38 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH shawn/for-next v4 1/2] dt-bindings: arm: Add Y Soft IOTA
- Draco, Hydra and Ursa boards
-Date: Wed, 16 Jan 2019 18:48:57 +0800
-Message-ID: <20190116104856.GK15808@dragon>
-References: <1547562139-64730-1-git-send-email-michal.vokac@ysoft.com>
+From: Philipp Puschmann <philipp.puschmann@emlix.com>
+Subject: [PATCH v2,1/2] dt-bindings: usb: ci-hdrc-usb2: add property power-active-high
+Date: Wed, 16 Jan 2019 11:51:02 +0100
+Message-ID: <20190116105103.28842-1-philipp.puschmann@emlix.com>
+References: <20190115123113.20577-1-philipp.puschmann@emlix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547562139-64730-1-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <20190115123113.20577-1-philipp.puschmann@emlix.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?Vm9rw6HEjQ==?= Michal <Michal.Vokac@ysoft.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Andrew Lunn <andrew@lunn.ch>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: gregkh@linuxfoundation.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, Peter.Chen@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, philipp.puschmann@emlix.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 15, 2019 at 02:22:44PM +0000, Vokáč Michal wrote:
-> These are i.MX6DualLite/Solo based single board computers used
-> in various Y Soft products.
-> 
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
+Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
 
-Applied both, thanks.
+---
+
+V2: unchanged ...
+
+---
+ Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+index adae82385dd6..8696e3eff6e7 100644
+--- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
++++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
+@@ -93,6 +93,7 @@ i.mx specific properties
+ - over-current-active-low: over current signal polarity is active low.
+ - over-current-active-high: over current signal polarity is active high.
+   It's recommended to specify the over current polarity.
++- power-active-high: power signal polarity is high active (only for imx6q/dl)
+ - external-vbus-divider: enables off-chip resistor divider for Vbus
+ 
+ Example:
+-- 
+2.20.1
