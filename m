@@ -1,66 +1,76 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: fsl: Add devicetree binding for
- Oxalis
-Date: Wed, 16 Jan 2019 10:21:01 +0800
-Message-ID: <20190116022100.GC15808@dragon>
-References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
- <20190114102053.16013-3-manivannan.sadhasivam@linaro.org>
- <CAL_JsqJpRPrCpRTpqh1v6JZwpEtZnaeuLTHR+0EiMSoxbk9zeQ@mail.gmail.com>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 2/4] spi: sprd: Add the SPI irq function for the SPI DMA mode
+Date: Wed, 16 Jan 2019 10:21:42 +0800
+Message-ID: <CAMz4ku+nky4YSFjjQ5BGJRCFQHCnXysh+_C7FmFF5YpdpDbZuA@mail.gmail.com>
+References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
+ <ec1741f29c44c436c1086877ff5b208e6b8af45d.1547559542.git.baolin.wang@linaro.org>
+ <20190115142452.GA5522@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJpRPrCpRTpqh1v6JZwpEtZnaeuLTHR+0EiMSoxbk9zeQ@mail.gmail.com>
+In-Reply-To: <20190115142452.GA5522@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Yang-Leo Li <leoyang.li@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, Amit Kucheria <amit.kucheria@linaro.org>
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@unisoc.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 12:02:47PM -0600, Rob Herring wrote:
-> On Mon, Jan 14, 2019 at 4:21 AM Manivannan Sadhasivam
-> <manivannan.sadhasivam@linaro.org> wrote:
-> >
-> > Add devicetree binding for Oxalis board in JSON format. While adding
-> > that, let's fix the description for LS1012A also.
-> >
-> > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > ---
-> >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 ++-
-> >  1 file changed, 2 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > index d34fe0749199..0f30142fe316 100644
-> > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > @@ -173,12 +173,13 @@ properties:
-> >                - fsl,vf610
-> >                - fsl,vf610m4
-> >
-> > -      - description: LS1021A based Boards
-> > +      - description: LS1012A based Boards
-> 
-> Well, yes that was wrong...
-> 
-> >          items:
-> >            - enum:
-> >                - fsl,ls1012a-rdb
-> >                - fsl,ls1012a-frdm
-> >                - fsl,ls1012a-qds
-> > +              - ebs-systart,oxalis
-> 
-> Sort alphabetically.
-> 
-> >            - const: fsl,ls1021a
-> 
-> And this is wrong too.
-> 
-> I you just change it, then we will be missing an entry for LS1021A.
-> What's the status of that SoC because there is no board dts file? We
-> should not have .dtsi files in the kernel which don't get built.
+Hi Mark,
 
-Hmm, I do not see any LS1021A SoC .dtsi in the tree.  I suspect it's
-just a typo of LS1012A.
+On Tue, 15 Jan 2019 at 22:25, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jan 15, 2019 at 09:46:51PM +0800, Baolin Wang wrote:
+>
+> This looks good, just one small issue and a thing to check:
+>
+> > +static irqreturn_t sprd_spi_handle_irq(int irq, void *data)
+> > +{
+> > +     struct sprd_spi *ss = (struct sprd_spi *)data;
+> > +     u32 val = readl_relaxed(ss->base + SPRD_SPI_INT_MASK_STS);
+> > +
+> > +     if (val & SPRD_SPI_MASK_TX_END) {
+> > +             writel_relaxed(SPRD_SPI_TX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
+> > +             if (!(ss->trans_mode & SPRD_SPI_RX_MODE))
+> > +                     complete(&ss->xfer_completion);
+> > +             return IRQ_HANDLED;
+> > +     }
+> > +
+> > +     if (val & SPRD_SPI_MASK_RX_END) {
+> > +             writel_relaxed(SPRD_SPI_RX_END_CLR, ss->base + SPRD_SPI_INT_CLR);
+> > +             complete(&ss->xfer_completion);
+> > +     }
+> > +
+> > +     return IRQ_HANDLED;
+> > +}
+>
+> This will return IRQ_HANDLED no matter if there was an interrupt
+> actually handled.  That means that if something goes wrong due to some
+> bug or a hardware change (eg, a new version of the IP) and there's
+> another interrupt fired we won't clear it and the interrupt core won't
+> be able to detect that it's a spurious interrupt and use its own error
+> handling.  It's better to return IRQ_NONE in that case.
 
-@Leo, do we have a LS1021A SoC?
+Yes, you are correct and will fix in next version.
 
-Shawn
+> > +     ret = devm_request_irq(&pdev->dev, ss->irq, sprd_spi_handle_irq,
+> > +                             0, pdev->name, ss);
+> > +     if (ret)
+> > +             dev_err(&pdev->dev, "failed to request spi irq %d, ret = %d\n",
+> > +                     ss->irq, ret);
+>
+> Are you sure it's safe to use devm_request_irq(), especially when
+> unloading the driver?  Using it means that we will only disable the
+> interrupt after the driver's remove function has finished so there's a
+> danger of an interrupt firing when some of the resources the hander has
+> used are still in use.  I didn't spot any issues, just something to
+> check especially with the later patches building on top of this.
+
+Yes, we missed this issue, thanks for pointing out this. After some
+discussion with Lanqing, we think we need call the
+spi_controller_suspend() manually in remove function to avoid this
+issue.
+
+Thanks for your comments.
+
+-- 
+Baolin Wang
+Best Regards
