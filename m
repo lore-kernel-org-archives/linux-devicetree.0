@@ -1,49 +1,37 @@
-From: Ioana Ciornei <ioana.ciornei@nxp.com>
-Subject: RE: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2
- platforms
-Date: Wed, 16 Jan 2019 17:31:46 +0000
-Message-ID: <VI1PR0402MB2800477D1F1FE0E78F1D8D33E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-References: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
- <1545406240-3061-2-git-send-email-ioana.ciornei@nxp.com>
- <20190112024725.GO32649@dragon>
- <VI1PR0402MB2800E8F9F1884EB0669EE9F0E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
- <20190116105559.GM15808@dragon>
- <VI1PR0402MB28007817A29E6116D1FAFC2BE0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH] arm64: dts: meson: s400: enable sdr104 on sdio
+Date: Wed, 16 Jan 2019 18:59:13 +0100
+Message-ID: <20190116175913.5907-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR0402MB28007817A29E6116D1FAFC2BE0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> > Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2
-> > platforms
-> >
-> > On Wed, Jan 16, 2019 at 10:02:01AM +0000, Ioana Ciornei wrote:
-> > > > Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for
-> > > > DPAA2 platforms
-> > > >
-> > > > On Fri, Dec 21, 2018 at 03:31:09PM +0000, Ioana Ciornei wrote:
-> > > > > Add the dpaa2-console device tree node for the following
-> > > > > DPAA2 based platforms: LS1088A, LS2080A and LS2088A.
-> > > > >
-> > > > > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > > >
-> > > > DTS patch generally goes to the last in a series.
-> > >
-> > > Should I resend this with the DTS patch the last?
-> >
-> > You do not have to resend the series only for this.  It's pretty much
-> > a suggestion for future posting.
->=20
+The bcm wifi/bt device on SDIO support SDR104 and it seems to work
+well following the recent mmc driver update, so enable this
+ultra high speed mode
 
-One more thing, do you have any other feedback on the DTS part?
-I think the best path for this patch set is through Leo's fsl soc tree but =
-of course we need an ack from the DTS part also.
+Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+---
+ arch/arm64/boot/dts/amlogic/meson-axg-s400.dts | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-Thanks,
-Ioana
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+index 2e1dcf1c26bf..0c98ca78c8b8 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
++++ b/arch/arm64/boot/dts/amlogic/meson-axg-s400.dts
+@@ -464,7 +464,8 @@
+ 
+ 	bus-width = <4>;
+ 	cap-sd-highspeed;
+-	max-frequency = <100000000>;
++	sd-uhs-sdr104;
++	max-frequency = <200000000>;
+ 	non-removable;
+ 	disable-wp;
+ 
+-- 
+2.20.1
