@@ -1,37 +1,36 @@
-From: Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
-Date: Wed, 16 Jan 2019 13:14:13 +0100
-Message-ID: <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
-References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com> <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
+From: Maxime Jourdan <mjourdan@baylibre.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: meson: add specific simplefb bindings
+Date: Wed, 16 Jan 2019 13:27:48 +0100
+Message-ID: <CAMO6nazpZmr7sNNc4HL_f7Sovv3xAfDmOAc=_NTyFFH7F2y__Q@mail.gmail.com>
+References: <20190107095307.15233-1-mjourdan@baylibre.com> <20190107095307.15233-2-mjourdan@baylibre.com>
+ <20190111222509.GA14462@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com>
+In-Reply-To: <20190111222509.GA14462@bogus>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrice Gasnier <fabrice.gasnier@st.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: Rob Herring <robh@kernel.org>
+Cc: Kevin Hilman <khilman@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-(sorry for the late reply, I just realized that I had never sent out the
-mail after Lee asked me for a review last year and I had drafted
-my reply).
-
-On Wed, Dec 12, 2018 at 9:48 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+On Fri, Jan 11, 2019 at 11:25 PM Rob Herring <robh@kernel.org> wrote:
 >
-> Some system control registers need to be clocked, so the registers can
-> be accessed. Add an optional clock and attach it to regmap.
+> On Mon, Jan 07, 2019 at 10:53:06AM +0100, Maxime Jourdan wrote:
+> > Similar to simple-framebuffer-sunxi, we support different display pipelines
+> > that the firmware is free to choose from.
+> >
+> > This documents the "amlogic,simple-framebuffer" compatible and the
+> > "amlogic,pipeline" extension.
+> >
+> > Signed-off-by: Maxime Jourdan <mjourdan@baylibre.com>
+> > ---
+> >  .../display/simple-framebuffer-meson.txt      | 33 +++++++++++++++++++
 >
-> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+> Use the compatible string for the file name:
+> amlogic,simple-framebuffer.txt
+>
+> With that,
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 
-This looks ok to me in principle, but I have one question: When we
-do a clk_get() and clk_prepare() as part of regmap_mmio_attach_clk(),
-does that change the behavior of syscon nodes that are otherwise
-unused?
-
-I think we have a bunch of devices that started out as a syscon but
-then we added a proper driver for them, which would handle the
-clocks explicitly. Is it guaranteed that this will keep working (including
-shutting down the clocks when they are unused) if we have two drivers
-that call clk_get() on the same device node?
-
-       Arnd
+Thanks for the review, will send a v3.
