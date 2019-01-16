@@ -1,44 +1,65 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 0/3] arm64: ti: k3-am654: USB support
-Date: Wed, 16 Jan 2019 13:00:03 +0200
-Message-ID: <5C3F0EB3.5090009@ti.com>
-References: <1547200861-17795-1-git-send-email-rogerq@ti.com>
- <20190115143306.wub3y2c2zsq7byy5@kahuna>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH RESEND v1 0/4] dt-binding: clk: prepare for imx8qm clock
+ support
+Date: Wed, 16 Jan 2019 19:02:17 +0800
+Message-ID: <20190116110216.GN15808@dragon>
+References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
+ <AM0PR04MB42115D3E98B8B319936AC60E80820@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115143306.wub3y2c2zsq7byy5@kahuna>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: t-kristo@ti.com, nsekhar@ti.com, vigneshr@ti.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <AM0PR04MB42115D3E98B8B319936AC60E80820@AM0PR04MB4211.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On 15/01/19 16:33, Nishanth Menon wrote:
-> On 12:00-20190111, Roger Quadros wrote:
->> Hi,
->>
->> The AM654 SoC supports 2 DWC3 USB controller instances. The
->> AM654 base board supports the 2nd (USB1) instance in high-speed.
->>
->> This series enables support for USB1 instance on the AM654-base-board.
->>
->> To test, you need to first apply the below 2 series.
->>
->> AM654 USB2 PHY support https://lkml.org/lkml/2018/12/5/908
->> AM654 DWC3 support https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1896101.html
->>
+On Wed, Jan 16, 2019 at 05:40:01AM +0000, Aisheng Dong wrote:
+> Ping...
 > 
-> Please clarify if these have hit linux-next yet (I dont see anything in
-> the threads as to being picked up yet, may be I am wrong). Once they do hit
-> linux-next, please rebase to Tero's latest tip and repost.
+> BTW, as the first two patches change the same firmware binding doc fs.scu.txt.
+> I'm not sure whether it should go to Shawn's tree for the binding part, or Stephen's clock tree.
 > 
-> 
+> Shawn & Stephen,
+> What's your suggestion?
 
-They haven't yet. PHY patches were picked up today.
+I can apply the first two to my tree as long as Rob and Stephen ack on
+them.
 
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+Shawn
+
+> 
+> Regards
+> Dong Aisheng
+> 
+> > From: Aisheng Dong [mailto:aisheng.dong@nxp.com]
+> > Sent: Friday, January 11, 2019 7:56 PM
+> > 
+> > After a bit more investigation on IMX8QM, it seemed SCU clock can be used in
+> > a similar way as IMX8QXP. So update the binding and driver to be a bit generic
+> > for easily extension of IMX8QM support later.
+> > 
+> > Dong Aisheng (4):
+> >   dt-bindings: fsl: scu: add fallback compatible string for clock
+> >   dt-bindings: fsl: scu: add imx8qm scu clock support
+> >   clk: imx: scu: add fallback compatible string support
+> >   dt-bindings: imx8-clock: add a53 and a72 clock id
+> > 
+> >  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 7 +++++--
+> >  drivers/clk/imx/clk-imx8qxp.c                               | 1 +
+> >  include/dt-bindings/clock/imx8-clock.h                      | 6 ++++--
+> >  3 files changed, 10 insertions(+), 4 deletions(-)
+> > 
+> > --
+> > 2.7.4
+> 
