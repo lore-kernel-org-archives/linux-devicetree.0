@@ -1,50 +1,47 @@
-From: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Subject: Re: [PATCH v2 1/4] arm64: dts: rockchip: Add DT for NanoPi M4
-Date: Wed, 16 Jan 2019 15:12:58 -0600
-Message-ID: <20190116211258.GA29888@bogus>
-References: <cover.1547466003.git.robin.murphy@arm.com>
- <a96995cfa599792b24e740ce46d53bd68ef1d462.1547466003.git.robin.murphy@arm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <a96995cfa599792b24e740ce46d53bd68ef1d462.1547466003.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH v3 0/6] gnss: sirf: add support for w2sg0004 + lna
+Date: Wed, 16 Jan 2019 22:18:06 +0100
+Message-ID: <20190116211812.6337-1-andreas@kemnade.info>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: letux-kernel@openphoenux.org, johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jan 2019 12:05:31 +0000, Robin Murphy wrote:
-> There are a number of subtle differences between the nanopi4 variants,
-> and where they disagree, the common DTSI currently follows the details
-> of NanoPi M4. In order to improve matters even more, let's add a
-> separate DTS for the M4 to which we can start splitting things out
-> appropriately. The third variant, NanoPi NEO4, is a lot closer to the M4
-> than either is to the larger T4, so arguably could get away with just
-> sharing the M4 DT for now (plus I have neither of the smaller boards to
-> actually test with).
-> 
-> CC: Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-> CC: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-> Signed-off-by: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-> ---
-> 
-> v2: Fix the copy-paste binding thinko
-> 
->  .../devicetree/bindings/arm/rockchip.yaml      |  6 ++++--
->  arch/arm64/boot/dts/rockchip/Makefile          |  1 +
->  .../boot/dts/rockchip/rk3399-nanopi-m4.dts     | 18 ++++++++++++++++++
->  3 files changed, 23 insertions(+), 2 deletions(-)
->  create mode 100644 arch/arm64/boot/dts/rockchip/rk3399-nanopi-m4.dts
-> 
+Here is another chapter of the story to get gta04 gnss power
+management into the mainline kernel.
+There is a w2sg0004 without wakeup line in there, so power state
+can only be determined indirectly by looking at the serial data lines.
+Then there as also an lna which needs to be powered for real gps
+reception.
 
-Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Changes in v2:
+  - do not change behavior of devices with wakeup line
+    - do not keep serdev open if runtime is active and device is not used
+  - style cleanup
+  - locking of sirf_close() vs. gnss_insert_raw()
+  - name reordering
+
+Changes in v3:
+  - more style cleanup
+  - more locking
+  - better regulator error handling
+  - timeout logic cleaned up and problems documented
+  - initial power off sorted out as a separate patch
+  - renamed patch gnss: sirf: power on logic for devices without wakeup signal
+
+Andreas Kemnade (6):
+  gnss: sirf: write data to gnss only when the gnss device is open
+  gnss: sirf: set power state initially off
+  gnss: sirf: add support for configurations without wakeup signal
+  dt-bindings: gnss: add w2sg0004 compatible string
+  gnss: sirf: add a separate supply for a lna
+  dt-bindings: gnss: add lna-supply property
+
+ Documentation/devicetree/bindings/gnss/gnss.txt    |   1 +
+ .../devicetree/bindings/gnss/sirfstar.txt          |   1 +
+ drivers/gnss/sirf.c                                | 204 +++++++++++++++++----
+ 3 files changed, 175 insertions(+), 31 deletions(-)
+
+-- 
+2.11.0
