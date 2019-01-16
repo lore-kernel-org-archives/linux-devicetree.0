@@ -1,203 +1,122 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH v2 2/2] reset: Add Broadcom STB SW_INIT reset controller
- driver
-Date: Wed, 16 Jan 2019 10:15:01 -0800
-Message-ID: <7bc8d9ee-5be1-1765-55dd-b7407cff962f@broadcom.com>
-References: <20190115184406.3164-1-f.fainelli@gmail.com>
- <20190115184406.3164-3-f.fainelli@gmail.com>
+From: Marc Zyngier <Marc.Zyngier@arm.com>
+Subject: Re: [RFC PATCH v4 08/13] genirq/msi: Add support for allocating
+ single MSI for a device
+Date: Wed, 16 Jan 2019 18:30:00 +0000
+Message-ID: <5be38277-3348-a6d9-4b67-3ead308c009a@arm.com>
+References: <20181227060829.5080-1-lokeshvutla@ti.com>
+ <20181227061313.5451-1-lokeshvutla@ti.com>
+ <20181227061313.5451-8-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115184406.3164-3-f.fainelli@gmail.com>
+In-Reply-To: <20181227061313.5451-8-lokeshvutla@ti.com>
 Content-Language: en-US
+Content-ID: <B546F36F8956E44E96B785BFE1F9DDC5@eurprd08.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, "jason@lakedaemon.net" <jason@lakedaemon.net>
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-
-On 2019-01-15 10:44 a.m., Florian Fainelli wrote:
-> Add support for resetting blocks through the Linux reset controller
-> subsystem when reset lines are provided through a SW_INIT-style reset
-> controller on Broadcom STB SoCs.
->
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->   drivers/reset/Kconfig         |   7 ++
->   drivers/reset/Makefile        |   1 +
->   drivers/reset/reset-brcmstb.c | 130 ++++++++++++++++++++++++++++++++++
->   3 files changed, 138 insertions(+)
->   create mode 100644 drivers/reset/reset-brcmstb.c
->
-> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
-> index 2e01bd833ffd..1ca03c57e049 100644
-> --- a/drivers/reset/Kconfig
-> +++ b/drivers/reset/Kconfig
-> @@ -40,6 +40,13 @@ config RESET_BERLIN
->   	help
->   	  This enables the reset controller driver for Marvell Berlin SoCs.
->   
-> +config RESET_BRCMSTB
-> +	bool "Broadcom STB reset controller" if COMPILE_TEST
-
-Could this even be:
-
-depends on ARCH_BRCMSTB || COMPILE_TEST
-
-> +	default ARCH_BRCMSTB
-> +	help
-> +	  This enables the reset controller driver for Broadcom STB SoCs using
-> +	  a SUN_TOP_CTRL_SW_INIT style controller.
-> +
->   config RESET_HSDK
->   	bool "Synopsys HSDK Reset Driver"
->   	depends on HAS_IOMEM
-> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-> index dc7874df78d9..7395db2cb1dd 100644
-> --- a/drivers/reset/Makefile
-> +++ b/drivers/reset/Makefile
-> @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
->   obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
->   obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
->   obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
-> +obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
->   obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
->   obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
->   obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
-> diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
-> new file mode 100644
-> index 000000000000..01ab1f71518b
-> --- /dev/null
-> +++ b/drivers/reset/reset-brcmstb.c
-> @@ -0,0 +1,130 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Broadcom STB generic reset controller for SW_INIT style reset controller
-> + *
-> + * Author: Florian Fainelli <f.fainelli@gmail.com>
-> + * Copyright (C) 2018 Broadcom
-> + */
-> +#include <linux/delay.h>
-> +#include <linux/device.h>
-> +#include <linux/io.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/reset-controller.h>
-> +#include <linux/types.h>
-> +
-> +struct brcmstb_reset {
-> +	void __iomem *base;
-> +	struct reset_controller_dev rcdev;
-> +};
-> +
-> +#define SW_INIT_SET		0x00
-> +#define SW_INIT_CLEAR		0x04
-> +#define SW_INIT_STATUS		0x08
-> +
-> +#define SW_INIT_BIT(id)		BIT((id) & 0x1f)
-> +#define SW_INIT_BANK(id)	((id) >> 5)
-> +
-> +/* A full bank contains extra registers that we are not utilizing but still
-> + * qualify as a single bank.
-> + */
-> +#define SW_INIT_BANK_SIZE	0x18
-> +
-> +static inline
-> +struct brcmstb_reset *to_brcmstb(struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct brcmstb_reset, rcdev);
-> +}
-> +
-> +static int brcmstb_reset_assert(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
-> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
-> +
-> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_SET);
-> +
-> +	return 0;
-> +}
-> +
-> +static int brcmstb_reset_deassert(struct reset_controller_dev *rcdev,
-> +				  unsigned long id)
-> +{
-> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
-> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
-> +
-> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_CLEAR);
-> +	/* Maximum reset delay after de-asserting a line and seeing block
-> +	 * operation is typically 14us for the worst case, build some slack
-> +	 * here.
-> +	 */
-> +	usleep_range(100, 200);
-> +
-> +	return 0;
-> +}
-> +
-> +static int brcmstb_reset_status(struct reset_controller_dev *rcdev,
-> +				unsigned long id)
-> +{
-> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
-> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
-> +
-> +	return readl_relaxed(priv->base + off + SW_INIT_STATUS) &
-> +			     SW_INIT_BIT(id);
-> +}
-> +
-> +static const struct reset_control_ops brcmstb_reset_ops = {
-> +	.assert	= brcmstb_reset_assert,
-> +	.deassert = brcmstb_reset_deassert,
-> +	.status = brcmstb_reset_status,
-> +};
-> +
-> +static int brcmstb_reset_probe(struct platform_device *pdev)
-> +{
-> +	struct device *kdev = &pdev->dev;
-> +	struct brcmstb_reset *priv;
-> +	struct resource *res;
-> +
-> +	priv = devm_kzalloc(kdev, sizeof(*priv), GFP_KERNEL);
-> +	if (!priv)
-> +		return -ENOMEM;
-> +
-> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +	if (resource_size(res) % SW_INIT_BANK_SIZE) {
-> +		dev_err(kdev, "incorrect register range\n");
-> +		return -EINVAL;
-> +	}
-> +
-> +	priv->base = devm_ioremap_resource(kdev, res);
-> +	if (IS_ERR(priv->base))
-> +		return PTR_ERR(priv->base);
-> +
-> +	dev_set_drvdata(kdev, priv);
-> +
-> +	priv->rcdev.owner = THIS_MODULE;
-> +	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
-> +	priv->rcdev.ops = &brcmstb_reset_ops;
-> +	priv->rcdev.of_node = kdev->of_node;
-> +	/* Use defaults: 1 cell and simple xlate function */
-> +
-> +	return devm_reset_controller_register(kdev, &priv->rcdev);
-> +}
-> +
-> +static const struct of_device_id brcmstb_reset_of_match[] = {
-> +	{ .compatible = "brcm,brcmstb-reset" },
-> +	{ /* sentinel */ }
-> +};
-> +
-> +static struct platform_driver brcmstb_reset_driver = {
-> +	.probe	= brcmstb_reset_probe,
-> +	.driver	= {
-> +		.name = "brcmstb-reset",
-> +		.of_match_table = brcmstb_reset_of_match,
-> +	},
-> +};
-> +module_platform_driver(brcmstb_reset_driver);
-> +
-> +MODULE_AUTHOR("Broadcom");
-> +MODULE_DESCRIPTION("Broadcom STB reset controller");
-> +MODULE_LICENSE("GPL");
+T24gMjcvMTIvMjAxOCAwNjoxMywgTG9rZXNoIFZ1dGxhIHdyb3RlOg0KPiBQcmV2aW91c2x5IGFs
+bCBtc2kgZm9yIGEgZGV2aWNlIGFyZSBhbGxvY2F0ZWQgaW4gb25lIGdvDQo+IGJ5IGNhbGxpbmcg
+bXNpX2RvbWFpbl9hbGxvY19pcnEoKSBmcm9tIGEgYnVzIGxheWVyLiBUaGlzIG1pZ2h0DQo+IG5v
+dCBiZSB0aGUgY2FzZSB3aGVuIGEgZGV2aWNlIGlzIHRyeWluZyB0byBhbGxvY2F0ZSBpbnRlcnJ1
+cHRzDQo+IGR5bmFtaWNhbGx5IGJhc2VkIG9uIGEgcmVxdWVzdCB0byBpdC4NCj4NCj4gU28gaW50
+cm9kdWNlIG1zaV9kb21haW5fYWxsb2MvZnJlZV9pcnEoKSBhcGlzIHRvIGFsbG9jYXRlIGEgc2lu
+Z2xlDQo+IG1zaS4gcHJlcGFyZSBhbmQgYWN0aXZhdGUgb3BlcmF0aW9ucyB0byBiZSBoYW5kbGVk
+IGJ5IGJ1cyBsYXllcg0KPiBjYWxsaW5nIG1zaV9kb21haW5fYWxsb2MvZnJlZV9pcnEoKSBhcGlz
+Lg0KPg0KPiBTaWduZWQtb2ZmLWJ5OiBMb2tlc2ggVnV0bGEgPGxva2VzaHZ1dGxhQHRpLmNvbT4N
+Cj4gLS0tDQo+ICBpbmNsdWRlL2xpbnV4L21zaS5oIHwgIDMgKysrDQo+ICBrZXJuZWwvaXJxL21z
+aS5jICAgIHwgNjIgKysrKysrKysrKysrKysrKysrKysrKysrKysrKystLS0tLS0tLS0tLS0tLS0t
+DQo+ICAyIGZpbGVzIGNoYW5nZWQsIDQzIGluc2VydGlvbnMoKyksIDIyIGRlbGV0aW9ucygtKQ0K
+Pg0KPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9saW51eC9tc2kuaCBiL2luY2x1ZGUvbGludXgvbXNp
+LmgNCj4gaW5kZXggNzg0ZmI1MmI5OTAwLi40NzQ0OTA4MjZmOGMgMTAwNjQ0DQo+IC0tLSBhL2lu
+Y2x1ZGUvbGludXgvbXNpLmgNCj4gKysrIGIvaW5jbHVkZS9saW51eC9tc2kuaA0KPiBAQCAtMzAx
+LDggKzMwMSwxMSBAQCBpbnQgbXNpX2RvbWFpbl9zZXRfYWZmaW5pdHkoc3RydWN0IGlycV9kYXRh
+ICpkYXRhLCBjb25zdCBzdHJ1Y3QgY3B1bWFzayAqbWFzaywNCj4gIHN0cnVjdCBpcnFfZG9tYWlu
+ICptc2lfY3JlYXRlX2lycV9kb21haW4oc3RydWN0IGZ3bm9kZV9oYW5kbGUgKmZ3bm9kZSwNCj4g
+ICBzdHJ1Y3QgbXNpX2RvbWFpbl9pbmZvICppbmZvLA0KPiAgIHN0cnVjdCBpcnFfZG9tYWluICpw
+YXJlbnQpOw0KPiAraW50IG1zaV9kb21haW5fYWxsb2NfaXJxKHN0cnVjdCBpcnFfZG9tYWluICpk
+b21haW4sIHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gKyBzdHJ1Y3QgbXNpX2Rlc2MgKmRlc2MsICBt
+c2lfYWxsb2NfaW5mb190ICphcmcpOw0KPiAgaW50IG1zaV9kb21haW5fYWxsb2NfaXJxcyhzdHJ1
+Y3QgaXJxX2RvbWFpbiAqZG9tYWluLCBzdHJ1Y3QgZGV2aWNlICpkZXYsDQo+ICAgIGludCBudmVj
+KTsNCj4gK3ZvaWQgbXNpX2RvbWFpbl9mcmVlX2lycShzdHJ1Y3QgbXNpX2Rlc2MgKmRlc2MpOw0K
+PiAgdm9pZCBtc2lfZG9tYWluX2ZyZWVfaXJxcyhzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLCBz
+dHJ1Y3QgZGV2aWNlICpkZXYpOw0KPiAgc3RydWN0IG1zaV9kb21haW5faW5mbyAqbXNpX2dldF9k
+b21haW5faW5mbyhzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluKTsNCj4NCj4gZGlmZiAtLWdpdCBh
+L2tlcm5lbC9pcnEvbXNpLmMgYi9rZXJuZWwvaXJxL21zaS5jDQo+IGluZGV4IGFkMjZmYmNmYmZj
+OC4uZWI3NDU5MzI0MTEzIDEwMDY0NA0KPiAtLS0gYS9rZXJuZWwvaXJxL21zaS5jDQo+ICsrKyBi
+L2tlcm5lbC9pcnEvbXNpLmMNCj4gQEAgLTM4Nyw2ICszODcsMzUgQEAgc3RhdGljIGJvb2wgbXNp
+X2NoZWNrX3Jlc2VydmF0aW9uX21vZGUoc3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwNCj4gIHJl
+dHVybiBkZXNjLT5tc2lfYXR0cmliLmlzX21zaXggfHwgZGVzYy0+bXNpX2F0dHJpYi5tYXNrYml0
+Ow0KPiAgfQ0KPg0KPiAraW50IG1zaV9kb21haW5fYWxsb2NfaXJxKHN0cnVjdCBpcnFfZG9tYWlu
+ICpkb21haW4sIHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gKyBzdHJ1Y3QgbXNpX2Rlc2MgKmRlc2Ms
+ICBtc2lfYWxsb2NfaW5mb190ICphcmcpDQo+ICt7DQo+ICtzdHJ1Y3QgbXNpX2RvbWFpbl9pbmZv
+ICppbmZvID0gZG9tYWluLT5ob3N0X2RhdGE7DQo+ICtzdHJ1Y3QgbXNpX2RvbWFpbl9vcHMgKm9w
+cyA9IGluZm8tPm9wczsNCj4gK2ludCBpLCByZXQsIHZpcnE7DQo+ICsNCj4gK29wcy0+c2V0X2Rl
+c2MoYXJnLCBkZXNjKTsNCj4gKw0KPiArdmlycSA9IF9faXJxX2RvbWFpbl9hbGxvY19pcnFzKGRv
+bWFpbiwgLTEsIGRlc2MtPm52ZWNfdXNlZCwNCj4gKyAgICAgICBkZXZfdG9fbm9kZShkZXYpLCBh
+cmcsIGZhbHNlLA0KPiArICAgICAgIGRlc2MtPmFmZmluaXR5KTsNCj4gK2lmICh2aXJxIDwgMCkg
+ew0KPiArcmV0ID0gLUVOT1NQQzsNCj4gK2lmIChvcHMtPmhhbmRsZV9lcnJvcikNCj4gK3JldCA9
+IG9wcy0+aGFuZGxlX2Vycm9yKGRvbWFpbiwgZGVzYywgcmV0KTsNCj4gK2lmIChvcHMtPm1zaV9m
+aW5pc2gpDQo+ICtvcHMtPm1zaV9maW5pc2goYXJnLCByZXQpOw0KPiArcmV0dXJuIHJldDsNCj4g
+K30NCj4gKw0KPiArZm9yIChpID0gMDsgaSA8IGRlc2MtPm52ZWNfdXNlZDsgaSsrKSB7DQo+ICtp
+cnFfc2V0X21zaV9kZXNjX29mZih2aXJxLCBpLCBkZXNjKTsNCj4gK2lycV9kZWJ1Z2ZzX2NvcHlf
+ZGV2bmFtZSh2aXJxICsgaSwgZGV2KTsNCj4gK30NCj4gKw0KPiArcmV0dXJuIDA7DQo+ICt9DQo+
+ICsNCj4gIC8qKg0KPiAgICogbXNpX2RvbWFpbl9hbGxvY19pcnFzIC0gQWxsb2NhdGUgaW50ZXJy
+dXB0cyBmcm9tIGEgTVNJIGludGVycnVwdCBkb21haW4NCj4gICAqIEBkb21haW46VGhlIGRvbWFp
+biB0byBhbGxvY2F0ZSBmcm9tDQo+IEBAIC00MDQsNyArNDMzLDcgQEAgaW50IG1zaV9kb21haW5f
+YWxsb2NfaXJxcyhzdHJ1Y3QgaXJxX2RvbWFpbiAqZG9tYWluLCBzdHJ1Y3QgZGV2aWNlICpkZXYs
+DQo+ICBzdHJ1Y3QgaXJxX2RhdGEgKmlycV9kYXRhOw0KPiAgc3RydWN0IG1zaV9kZXNjICpkZXNj
+Ow0KPiAgbXNpX2FsbG9jX2luZm9fdCBhcmc7DQo+IC1pbnQgaSwgcmV0LCB2aXJxOw0KPiAraW50
+IHJldCwgdmlycTsNCj4gIGJvb2wgY2FuX3Jlc2VydmU7DQo+DQo+ICByZXQgPSBtc2lfZG9tYWlu
+X3ByZXBhcmVfaXJxcyhkb21haW4sIGRldiwgbnZlYywgJmFyZyk7DQo+IEBAIC00MTIsMjQgKzQ0
+MSw5IEBAIGludCBtc2lfZG9tYWluX2FsbG9jX2lycXMoc3RydWN0IGlycV9kb21haW4gKmRvbWFp
+biwgc3RydWN0IGRldmljZSAqZGV2LA0KPiAgcmV0dXJuIHJldDsNCj4NCj4gIGZvcl9lYWNoX21z
+aV9lbnRyeShkZXNjLCBkZXYpIHsNCj4gLW9wcy0+c2V0X2Rlc2MoJmFyZywgZGVzYyk7DQo+IC0N
+Cj4gLXZpcnEgPSBfX2lycV9kb21haW5fYWxsb2NfaXJxcyhkb21haW4sIC0xLCBkZXNjLT5udmVj
+X3VzZWQsDQo+IC0gICAgICAgZGV2X3RvX25vZGUoZGV2KSwgJmFyZywgZmFsc2UsDQo+IC0gICAg
+ICAgZGVzYy0+YWZmaW5pdHkpOw0KPiAtaWYgKHZpcnEgPCAwKSB7DQo+IC1yZXQgPSAtRU5PU1BD
+Ow0KPiAtaWYgKG9wcy0+aGFuZGxlX2Vycm9yKQ0KPiAtcmV0ID0gb3BzLT5oYW5kbGVfZXJyb3Io
+ZG9tYWluLCBkZXNjLCByZXQpOw0KPiAtaWYgKG9wcy0+bXNpX2ZpbmlzaCkNCj4gLW9wcy0+bXNp
+X2ZpbmlzaCgmYXJnLCByZXQpOw0KPiArcmV0ID0gbXNpX2RvbWFpbl9hbGxvY19pcnEoZG9tYWlu
+LCBkZXYsIGRlc2MsICZhcmcpOw0KPiAraWYgKHJldCkNCj4gIHJldHVybiByZXQ7DQo+IC19DQo+
+IC0NCj4gLWZvciAoaSA9IDA7IGkgPCBkZXNjLT5udmVjX3VzZWQ7IGkrKykgew0KPiAtaXJxX3Nl
+dF9tc2lfZGVzY19vZmYodmlycSwgaSwgZGVzYyk7DQo+IC1pcnFfZGVidWdmc19jb3B5X2Rldm5h
+bWUodmlycSArIGksIGRldik7DQo+IC19DQo+ICB9DQo+DQo+ICBpZiAob3BzLT5tc2lfZmluaXNo
+KQ0KPiBAQCAtNDg3LDYgKzUwMSwxMiBAQCBpbnQgbXNpX2RvbWFpbl9hbGxvY19pcnFzKHN0cnVj
+dCBpcnFfZG9tYWluICpkb21haW4sIHN0cnVjdCBkZXZpY2UgKmRldiwNCj4gIHJldHVybiByZXQ7
+DQo+ICB9DQo+DQo+ICt2b2lkIG1zaV9kb21haW5fZnJlZV9pcnEoc3RydWN0IG1zaV9kZXNjICpk
+ZXNjKQ0KPiArew0KPiAraXJxX2RvbWFpbl9mcmVlX2lycXMoZGVzYy0+aXJxLCBkZXNjLT5udmVj
+X3VzZWQpOw0KPiArZGVzYy0+aXJxID0gMDsNCj4gK30NCj4gKw0KPiAgLyoqDQo+ICAgKiBtc2lf
+ZG9tYWluX2ZyZWVfaXJxcyAtIEZyZWUgaW50ZXJydXB0cyBmcm9tIGEgTVNJIGludGVycnVwdCBA
+ZG9tYWluIGFzc29jaWF0ZWQgdHAgQGRldg0KPiAgICogQGRvbWFpbjpUaGUgZG9tYWluIHRvIG1h
+bmFnaW5nIHRoZSBpbnRlcnJ1cHRzDQo+IEBAIC01MDMsMTAgKzUyMyw4IEBAIHZvaWQgbXNpX2Rv
+bWFpbl9mcmVlX2lycXMoc3RydWN0IGlycV9kb21haW4gKmRvbWFpbiwgc3RydWN0IGRldmljZSAq
+ZGV2KQ0KPiAgICogZW5vdWdoIHRoYXQgdGhlcmUgaXMgbm8gSVJRIGFzc29jaWF0ZWQgdG8gdGhp
+cw0KPiAgICogZW50cnkuIElmIHRoYXQncyB0aGUgY2FzZSwgZG9uJ3QgZG8gYW55dGhpbmcuDQo+
+ICAgKi8NCj4gLWlmIChkZXNjLT5pcnEpIHsNCj4gLWlycV9kb21haW5fZnJlZV9pcnFzKGRlc2Mt
+PmlycSwgZGVzYy0+bnZlY191c2VkKTsNCj4gLWRlc2MtPmlycSA9IDA7DQo+IC19DQo+ICtpZiAo
+ZGVzYy0+aXJxKQ0KPiArbXNpX2RvbWFpbl9mcmVlX2lycShkZXNjKTsNCj4gIH0NCj4gIH0NCj4N
+Cj4NCg0KSSBjYW4gc2VlIHNvbWUgaW50ZXJlc3RpbmcgaXNzdWVzIHdpdGggdGhpcyBBUEkuDQoN
+CkF0IHRoZSBtb21lbnQsIE1TSXMgYXJlIGFsbG9jYXRlZCB1cGZyb250LCBhbmQgdGhhdCdzIHVz
+dWFsbHkgZG9uZQ0KYmVmb3JlIHRoZSBkcml2ZXIgY2FuIGRvIGFueXRoaW5nIGVsc2UuIFdpdGgg
+d2hhdCB5b3UncmUgc3VnZ2VzdGluZw0KaGVyZSwgTVNJcyBjYW4gbm93IGJlIGFsbG9jYXRlZCBh
+dCBhbnkgdGltZSwgd2hpY2ggc291bmRzIGdyZWF0LiBCdXQgaG93DQpkb2VzIGl0IHdvcmsgd2hl
+biBNU0lzIGdldCBhZGRlZC9mcmVlZCBpbiBwYXJhbGxlbD8gSSBjYW4ndCBzZWUgYW55DQpsb2Nr
+aW5nIGhlcmUuLi4NCg0KSXQgaXMgYWxzbyBwcmV0dHkgbmFzdHkgdGhhdCB0aGUgdXNlciBvZiB0
+aGlzIEFQSSBoYXMgdG8ga25vdyBhYm91dCB0aGUNCk1TSSBkZXNjcmlwdG9yLiBSZWFsbHksIG5v
+Ym9keSBzaG91bGQgaGF2ZSB0byBkZWFsIHdpdGggdGhpcyBvdXRzaWRlIG9mDQp0aGUgTVNJIGxh
+eWVyLg0KDQpUaGUgcmVhbCBxdWVzdGlvbiBpcyB3aHkgeW91IG5lZWQgdG8gbmVlZCB0byBhbGxv
+Y2F0ZSBNU0lzIG9uIGRlbWFuZCBmb3INCmEgZ2l2ZW4gZGV2aWNlLiBVc3VhbGx5LCB5b3UgYWxs
+b2NhdGUgdGhlbSBiZWNhdXNlIHRoaXMgaXMgYSBwZXItQ1BVDQpyZXNvdXJjZSwgb3Igc29tZXRo
+aW5nIHNpbWlsYXIuIFdoYXQgbWFrZXMgaXQgc28gdmFyaWFibGUgdGhhdCB5b3UgbmVlZA0KdG8g
+cmVzb3J0IHRvIGZpbmUgZ3JhaW5lZCBNU0kgYWxsb2NhdGlvbj8NCg0KVGhhbmtzLA0KDQpNLg0K
+LS0NCkphenogaXMgbm90IGRlYWQuIEl0IGp1c3Qgc21lbGxzIGZ1bm55Li4uDQpJTVBPUlRBTlQg
+Tk9USUNFOiBUaGUgY29udGVudHMgb2YgdGhpcyBlbWFpbCBhbmQgYW55IGF0dGFjaG1lbnRzIGFy
+ZSBjb25maWRlbnRpYWwgYW5kIG1heSBhbHNvIGJlIHByaXZpbGVnZWQuIElmIHlvdSBhcmUgbm90
+IHRoZSBpbnRlbmRlZCByZWNpcGllbnQsIHBsZWFzZSBub3RpZnkgdGhlIHNlbmRlciBpbW1lZGlh
+dGVseSBhbmQgZG8gbm90IGRpc2Nsb3NlIHRoZSBjb250ZW50cyB0byBhbnkgb3RoZXIgcGVyc29u
+LCB1c2UgaXQgZm9yIGFueSBwdXJwb3NlLCBvciBzdG9yZSBvciBjb3B5IHRoZSBpbmZvcm1hdGlv
+biBpbiBhbnkgbWVkaXVtLiBUaGFuayB5b3UuDQo=
