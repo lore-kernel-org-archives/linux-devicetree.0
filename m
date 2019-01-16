@@ -1,121 +1,31 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH] arm64: dts: meson: fix g12a buses
-Date: Wed, 16 Jan 2019 17:52:36 +0100
-Message-ID: <20190116165236.8330-1-jbrunet@baylibre.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add lpasscc node
+Date: Wed, 16 Jan 2019 08:55:45 -0800
+Message-ID: <154765774593.169631.13437519610171417596@swboyd.mtv.corp.google.com>
+References: <1543996836-16717-1-git-send-email-tdas@codeaurora.org> <20190116060910.GA6841@builder>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190116060910.GA6841@builder>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>, Taniya Das <tdas@codeaurora.org>
+Cc: Andy Gross <andy.gross@linaro.org>, linux-arm-msm@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, david.brown@linaro.org, Mark Rutland <mark.rutland@arm.com>, linux-soc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-periph and hiu bus addresses/size are wrong.
-cbus, aobus and apb just don't exist in the memory map so remove them.
+Quoting Bjorn Andersson (2019-01-15 22:09:10)
+> On Wed 05 Dec 00:00 PST 2018, Taniya Das wrote:
+>=20
+> > This adds the low pass audio clock controller node to sdm845 based on
+> > the example in the bindings.
+> >=20
+>=20
+> Applying this causes my MTP to reboot as clk_disable_unused() tries to
+> disable "lpass_qdsp6ss_core_clk". Am I missing something?
+>=20
 
-Fixes: 9c8c52f7cb4f ("arm64: dts: meson-g12a: add initial g12a s905d2 SoC DT support")
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 70 +++++++--------------
- 1 file changed, 24 insertions(+), 46 deletions(-)
+Probably you need this patch[1] so that this "essential" clk isn't
+turned off during clk late init.
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 3b82a975c663..2aea5ba62fee 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -78,46 +78,40 @@
- 		#size-cells = <2>;
- 		ranges;
- 
--		periphs: periphs@ff634000 {
-+		periphs: bus@ff634400 {
- 			compatible = "simple-bus";
--			reg = <0x0 0xff634000 0x0 0x2000>;
-+			reg = <0x0 0xff634400 0x0 0x400>;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xff634000 0x0 0x2000>;
-+			ranges = <0x0 0x0 0x0 0xff634400 0x0 0x400>;
- 		};
- 
--		hiubus: bus@ff63c000 {
-+		hiu: bus@ff63c000 {
- 			compatible = "simple-bus";
--			reg = <0x0 0xff63c000 0x0 0x1c00>;
-+			reg = <0x0 0xff63c000 0x0 0x1400>;
- 			#address-cells = <2>;
- 			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1c00>;
-+			ranges = <0x0 0x0 0x0 0xff63c000 0x0 0x1400>;
- 		};
- 
--		aobus: bus@ff800000 {
--			compatible = "simple-bus";
--			reg = <0x0 0xff800000 0x0 0x100000>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xff800000 0x0 0x100000>;
--
--			uart_AO: serial@3000 {
--				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
--				reg = <0x0 0x3000 0x0 0x18>;
--				interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&xtal>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
--
--			uart_AO_B: serial@4000 {
--				compatible = "amlogic,meson-gx-uart", "amlogic,meson-ao-uart";
--				reg = <0x0 0x4000 0x0 0x18>;
--				interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
--				clocks = <&xtal>, <&xtal>, <&xtal>;
--				clock-names = "xtal", "pclk", "baud";
--				status = "disabled";
--			};
-+		uart_AO: serial@ff803000 {
-+			compatible = "amlogic,meson-gx-uart",
-+				     "amlogic,meson-ao-uart";
-+			reg = <0x0 0xff803000 0x0 0x18>;
-+			interrupts = <GIC_SPI 193 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&xtal>, <&xtal>, <&xtal>;
-+			clock-names = "xtal", "pclk", "baud";
-+			status = "disabled";
-+		};
-+
-+		uart_AO_B: serial@ff804000 {
-+			compatible = "amlogic,meson-gx-uart",
-+				     "amlogic,meson-ao-uart";
-+			reg = <0x0 0xff804000 0x0 0x18>;
-+			interrupts = <GIC_SPI 197 IRQ_TYPE_EDGE_RISING>;
-+			clocks = <&xtal>, <&xtal>, <&xtal>;
-+			clock-names = "xtal", "pclk", "baud";
-+			status = "disabled";
- 		};
- 
- 		gic: interrupt-controller@ffc01000 {
-@@ -132,22 +126,6 @@
- 			#interrupt-cells = <3>;
- 			#address-cells = <0>;
- 		};
--
--		cbus: bus@ffd00000 {
--			compatible = "simple-bus";
--			reg = <0x0 0xffd00000 0x0 0x25000>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xffd00000 0x0 0x25000>;
--		};
--
--		apb: apb@ffe00000 {
--			compatible = "simple-bus";
--			reg = <0x0 0xffe00000 0x0 0x200000>;
--			#address-cells = <2>;
--			#size-cells = <2>;
--			ranges = <0x0 0x0 0x0 0xffe00000 0x0 0x200000>;
--		};
- 	};
- 
- 	timer {
--- 
-2.20.1
+[1] https://lkml.kernel.org/r/1545306385-31240-1-git-send-email-tdas@codeau=
+rora.org
