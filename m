@@ -1,69 +1,59 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 7/8 v4] arm64: dts: hi3660: Add hisi asp dma device
-Date: Wed, 16 Jan 2019 09:10:28 -0800
-Message-ID: <1547658629-25378-8-git-send-email-john.stultz@linaro.org>
+Subject: [PATCH 2/8 v4] Documentation: bindings: dma: Add binding for dma-channel-mask
+Date: Wed, 16 Jan 2019 09:10:23 -0800
+Message-ID: <1547658629-25378-3-git-send-email-john.stultz@linaro.org>
 References: <1547658629-25378-1-git-send-email-john.stultz@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1547658629-25378-1-git-send-email-john.stultz@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: lkml <linux-kernel@vger.kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Youlin Wang <wwx575822@notesmail.huawei.com>, Ryan Grachek <ryan@edited.us>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Tanglei Han <hantanglei@huawei.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
+Cc: John Stultz <john.stultz@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Youlin Wang <wwx575822@notesmail.huawei.com>
+Some dma channels can be reserved for secure mode or other
+hardware on the SoC, so provide a binding for a bitmask
+listing the available channels for the kernel to use.
 
-Add asp-dma device to hi3660 dts
+This follows the pre-existing bcm,dma-channel-mask binding.
 
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Tanglei Han <hantanglei@huawei.com>
 Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
 Cc: Ryan Grachek <ryan@edited.us>
 Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
+Cc: dmaengine@vger.kernel.org
 Cc: devicetree@vger.kernel.org
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Youlin Wang <wwx575822@notesmail.huawei.com>
-Signed-off-by: Tanglei Han <hantanglei@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2: Removed undocumented bindings
+v3: Renamed to hisi-dma-avail-chan
+v4: Reworked to generic dma-channel-mask
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ Documentation/devicetree/bindings/dma/dma.txt | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 4c8d682..77a7135 100644
---- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-+++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -567,6 +567,16 @@
- 			dma-type = "hi3660_dma";
- 		};
+diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+index 6312fb0..eeb4e4d 100644
+--- a/Documentation/devicetree/bindings/dma/dma.txt
++++ b/Documentation/devicetree/bindings/dma/dma.txt
+@@ -16,6 +16,9 @@ Optional properties:
+ - dma-channels: 	Number of DMA channels supported by the controller.
+ - dma-requests: 	Number of DMA request signals supported by the
+ 			controller.
++- dma-channel-mask:	Bitmask of available DMA channels in ascending order
++			that are not reserved by firmware and are available to
++			the kernel. i.e. first channel corresponds to LSB.
  
-+		asp_dmac: dma-controller@e804b000 {
-+			compatible = "hisilicon,hisi-pcm-asp-dma-1.0";
-+			reg = <0x0 0xe804b000 0x0 0x1000>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			dma-requests = <32>;
-+			interrupts = <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "asp_dma_irq";
-+		};
-+
- 		rtc0: rtc@fff04000 {
- 			compatible = "arm,pl031", "arm,primecell";
- 			reg = <0x0 0Xfff04000 0x0 0x1000>;
+ Example:
+ 
+@@ -29,6 +32,7 @@ Example:
+ 		#dma-cells = <1>;
+ 		dma-channels = <32>;
+ 		dma-requests = <127>;
++		dma-channel-mask = <0xfffe>
+ 	};
+ 
+ * DMA router
 -- 
 2.7.4
