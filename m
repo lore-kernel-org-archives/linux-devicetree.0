@@ -1,61 +1,110 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Wed, 16 Jan 2019 11:13:09 -0800
-Message-ID: <CAD=FV=WuVOWYLbNKy=t1+X4a7cjegU+AUyFJmYNHkjYnRzLQBA@mail.gmail.com>
-References: <1547661809-31184-1-git-send-email-jcrouse@codeaurora.org>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
+Date: Wed, 16 Jan 2019 12:11:09 +0100
+Message-ID: <20190116111109.dkc4zgsz6lcjlzs5@flea>
+References: <20181220125438.11700-1-jagan@amarulasolutions.com>
+ <20181220125438.11700-3-jagan@amarulasolutions.com>
+ <20181221130025.lbvw7yvy74brf3jn@flea>
+ <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
+ <20190107132929.ksyajmzn2gzr6oep@flea>
+ <CAMty3ZAx9MthB0M-eFmsZv9CxF3Z1BkFTU6Hw=ZT5wu6aJwjGQ@mail.gmail.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1547661809-31184-1-git-send-email-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="tme5liorzp5mnfdf"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBB4UG73QQKGQEBGUMBQA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <CAMty3ZAx9MthB0M-eFmsZv9CxF3Z1BkFTU6Hw=ZT5wu6aJwjGQ-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIEphbiAxNiwgMjAxOSBhdCAxMDowMyBBTSBKb3JkYW4gQ3JvdXNlIDxqY3Jv
-dXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEFkZCB0aGUgbm9kZXMgdG8gZGVzY3JpYmUg
-dGhlIEFkcmVubyBHUFUgYW5kIEdNVSBkZXZpY2VzIGZvciBzZG04NDUuCj4KPiBTaWduZWQtb2Zm
-LWJ5OiBKb3JkYW4gQ3JvdXNlIDxqY3JvdXNlQGNvZGVhdXJvcmEub3JnPgo+IFJldmlld2VkLWJ5
-OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gVGVzdGVkLWJ5OiBE
-b3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1bS5vcmc+Cj4gLS0tCj4gVGhpcyBoYXMg
-dGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXM6Cj4KPiBbdjExLDEvOV0gZHQtYmluZGluZ3M6IG9w
-cDogSW50cm9kdWNlIG9wcC1sZXZlbCBiaW5kaW5ncwo+IGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5l
-bC5vcmcvcGF0Y2gvMTA3NTUxOTkvCj4KPiBBbmQgdGhlIGZvbGxvd2luZyBwYXRjaGVzIGFscmVh
-ZHkgaW4gUm9iJ3MgbXNtLW5leHQ6Cj4gbXNtLW5leHQ6ZDFjOWNhZGVhNmY3ICgiZHJtL21zbS9n
-cHU6IFJlbW92ZSBoYXJkY29kZWQgaW50ZXJydXB0IG5hbWUiKQo+IG1zbS1uZXh0OmIwOGI5MjU0
-NjgwNyAoImRybS9tc206IGRyb3AgaW50ZXJydXB0LW5hbWVzIikKPiBtc20tbmV4dDoyNDkzN2M1
-NDA5MTcgKCJkdC1iaW5kaW5nczogZHJtL21zbS9hNnh4OiBEb2N1bWVudCBHTVUgYW5kIHVwZGF0
-ZSBHUFUgYmluZGluZ3MiKQo+Cj4gQW5kIGZpbmFsbHkgZHJtL21zbTogRml4IEE2WFggc3VwcG9y
-dCBmb3Igb3BwLWxldmVsCj4gaHR0cHM6Ly9wYXRjaHdvcmsuZnJlZWRlc2t0b3Aub3JnL3BhdGNo
-LzI3Njc1Ni8KPgo+IFdoaWNoIGlzIG5vdCBtZXJnZWQgYmVjYXVzZSBpdCB0b28gZGVwZW5kcyBv
-biBSYWplbmRyYSdzIHN0YWNrLgoKTmV3ZXIgdmVyc2lvbjoKCmh0dHBzOi8vbG9yZS5rZXJuZWwu
-b3JnL3BhdGNod29yay9wYXRjaC8xMDMyNzI0LwoKLi4udGhhdCBvbmUgc2hvdWxkIGJlIGFibGUg
-dG8gbGFuZCBlYXJsaWVyIHNpbmNlIGl0J3Mgc2ltcGxlci4KCi0tLQoKRG9uJ3QgZm9yZ2V0IHRo
-YXQgeW91ciBwYXRjaCBhbHNvIGRlcGVuZHMgb246CgpodHRwczovL2xrbWwua2VybmVsLm9yZy9y
-LzIwMTgxMTI4MTg1NzQzLjc1MzI4LTItZGlhbmRlcnNAY2hyb21pdW0ub3JnCgouLi5iZWNhdXNl
-IHlvdSB3b24ndCBjb21waWxlIHVubGVzcyBncHVjYyBpcyB0aGVyZS4KCgo+ICBhcmNoL2FybTY0
-L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kgfCAxMjEgKysrKysrKysrKysrKysrKysrKysrKysr
-KysrKysrKysrKysKPiAgMSBmaWxlIGNoYW5nZWQsIDEyMSBpbnNlcnRpb25zKCspCj4KPiBkaWZm
-IC0tZ2l0IGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIGIvYXJjaC9hcm02
-NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpCj4gaW5kZXggZjA3YzRjYS4uOTA3NjZmYyAxMDA2
-NDQKPiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiArKysgYi9h
-cmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKPiBAQCAtMTYxOCw2ICsxNjE4LDEy
-NyBAQAo+ICAgICAgICAgICAgICAgICAgICAgICAgIH07Cj4gICAgICAgICAgICAgICAgIH07Cj4K
-PiArCj4gKyAgICAgICAgICAgICAgIGdwdUA1MDAwMDAwIHsKCkhlYWRzIHVwIHRvIEFuZHkgdGhh
-dCB3aGVuIHRoaXMgbGFuZHMgaXQgc2hvdWxkIGJlIHJlLXNvcnRlZCB0byBiZQpyaWdodCBiZWZv
-cmUgZ3B1Y2Mgc28gdGhhdCB0aGUgdW5pdCBhZGRyZXNzZXMgYXJlIHNvcnRlZC4gIDotKSAgLi4u
-YW5kCndoaWxlIGRvaW5nIHRoYXQgd2UgY2FuIG1ha2Ugc3VyZSB0aGVyZSdzIG5vdCBhbiBleHRy
-YSBibGFuayBsaW5lLgoKCi1Eb3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2ZyZWVkcmVubwo=
+
+--tme5liorzp5mnfdf
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Fri, Jan 11, 2019 at 11:54:12AM +0530, Jagan Teki wrote:
+> On Mon, Jan 7, 2019 at 6:59 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > On Mon, Dec 24, 2018 at 08:57:48PM +0530, Jagan Teki wrote:
+> > > On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > > >
+> > > > On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
+> > > > > Unfortunately default CSI_SCLK rate cannot work properly to
+> > > > > drive the connected sensor interface, particularly on few
+> > > > > Allwinner SoC's like A64.
+> > > > >
+> > > > > So, add mod_rate quirk via driver data so-that the respective
+> > > > > SoC's which require to alter the default mod clock rate can assign
+> > > > > the operating clock rate.
+> > > > >
+> > > > > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> > > > > ---
+> > > > >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
+> > > > >  1 file changed, 28 insertions(+), 6 deletions(-)
+> > > > >
+> > > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > > > index ee882b66a5ea..fe002beae09c 100644
+> > > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
+> > > > > @@ -15,6 +15,7 @@
+> > > > >  #include <linux/ioctl.h>
+> > > > >  #include <linux/module.h>
+> > > > >  #include <linux/of.h>
+> > > > > +#include <linux/of_device.h>
+> > > > >  #include <linux/platform_device.h>
+> > > > >  #include <linux/pm_runtime.h>
+> > > > >  #include <linux/regmap.h>
+> > > > > @@ -28,8 +29,13 @@
+> > > > >
+> > > > >  #define MODULE_NAME  "sun6i-csi"
+> > > > >
+> > > > > +struct sun6i_csi_variant {
+> > > > > +     unsigned long                   mod_rate;
+> > > > > +};
+> > > > > +
+> > > > >  struct sun6i_csi_dev {
+> > > > >       struct sun6i_csi                csi;
+> > > > > +     const struct sun6i_csi_variant  *variant;
+> > > > >       struct device                   *dev;
+> > > > >
+> > > > >       struct regmap                   *regmap;
+> > > > > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
+> > > > >               return PTR_ERR(sdev->clk_mod);
+> > > > >       }
+> > > > >
+> > > > > +     if (sdev->variant->mod_rate)
+> > > > > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
+> > > > > +
+> > > >
+> > > > It still doesn't make any sense to do it in the probe function...
+> > >
+> > > I'm not sure we discussed about the context wrt probe, we discussed
+> > > about exclusive put clock.
+> >
+> > https://lkml.org/lkml/2018/12/18/584
+> >
+> > "Doing it here is not really optimal either, since you'll put a
+> > constraint on the system (maintaining that clock at 300MHz), while
+> > it's not in use."
+> 
+> But this constraint is only set, for SoC's who need mod_rate change
+> not for whole SoCs.
+
+Still, that constraint is there for the whole system on affected
+SoCs. Whether it applies to one SoC or not is not really relevant.
+
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--tme5liorzp5mnfdf--
