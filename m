@@ -1,28 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/1] doc: gpio-mvebu: fix broken reference to
- cp110-system-controller0.txt file
-Date: Wed, 16 Jan 2019 13:02:32 -0600
-Message-ID: <CAL_JsqJFcUnDPmsZpvrxn3EsR5+B4jcjHonWsEsDrNxc98rZTA@mail.gmail.com>
-References: <8fd140950dd0bb859f9a48d8b25fb919cbb3cc6b.1547059503.git.ottosabart@seberm.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH 2/3] OF: properties: add missing of_node_put
+Date: Wed, 16 Jan 2019 13:03:29 -0600
+Message-ID: <CAL_Jsq+H_0=mQ3hMg2BWKMZfPo+is53zvx6kpSHUMfKpSW=zJw@mail.gmail.com>
+References: <1547372691-28324-1-git-send-email-Julia.Lawall@lip6.fr> <1547372691-28324-3-git-send-email-Julia.Lawall@lip6.fr>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <8fd140950dd0bb859f9a48d8b25fb919cbb3cc6b.1547059503.git.ottosabart@seberm.com>
+In-Reply-To: <1547372691-28324-3-git-send-email-Julia.Lawall@lip6.fr>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Otto Sabart <ottosabart@seberm.com>
-Cc: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Linux PWM List <linux-pwm@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree@vger.kernel.org, Miquel Raynal <miquel.raynal@bootlin.com>, Thierry Reding <thierry.reding@gmail.com>, Linus Walleij <linus.walleij@linaro.org>
+To: Julia Lawall <Julia.Lawall@lip6.fr>
+Cc: kernel-janitors@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 9, 2019 at 1:07 PM Otto Sabart <ottosabart@seberm.com> wrote:
+On Sun, Jan 13, 2019 at 4:21 AM Julia Lawall <Julia.Lawall@lip6.fr> wrote:
 >
-> The cp110-system-controller0.txt file was renamed to
-> cp110-system-controller.txt.
+> Add an of_node_put when the result of of_graph_get_remote_port_parent is
+> not available.
 >
-> Fixes: 4aa5496980e4 ("dt-bindings: cp110: rename cp110 syscon file")
-> Signed-off-by: Otto Sabart <ottosabart@seberm.com>
+> The semantic match that finds this problem is as follows
+> (http://coccinelle.lip6.fr):
+>
+> // <smpl>
+> @r exists@
+> local idexpression e;
+> expression x;
+> @@
+> e = of_graph_get_remote_port_parent(...);
+> ... when != x = e
+>     when != true e == NULL
+>     when != of_node_put(e)
+>     when != of_fwnode_handle(e)
+> (
+> return e;
+> |
+> *return ...;
+> )
+> // </smpl>
+>
+> Signed-off-by: Julia Lawall <Julia.Lawall@lip6.fr>
+>
 > ---
->  Documentation/devicetree/bindings/gpio/gpio-mvebu.txt | 2 --
->  1 file changed, 2 deletions(-)
+>  drivers/of/property.c |    1 +
+>  1 file changed, 1 insertion(+)
 
 Applied, thanks.
 
