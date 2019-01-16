@@ -1,228 +1,107 @@
-From: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Subject: [PATCH V2 3/4] drivers: pwm: pwm-bcm-kona: Add cygnus-pwm support
-Date: Thu, 17 Jan 2019 01:45:15 +0530
-Message-ID: <1547669716-20070-4-git-send-email-sheetal.tigadoli@broadcom.com>
-References: <1547669716-20070-1-git-send-email-sheetal.tigadoli@broadcom.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 4/5] rtc: pcf8523: set xtal load capacitance from DT
+Date: Wed, 16 Jan 2019 22:04:41 +0100
+Message-ID: <20190116210441.GE2627@piout.net>
+References: <20190108185414.26922-1-sam@ravnborg.org>
+ <20190108185414.26922-5-sam@ravnborg.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547669716-20070-1-git-send-email-sheetal.tigadoli@broadcom.com>
+Content-Disposition: inline
+In-Reply-To: <20190108185414.26922-5-sam@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+To: Sam Ravnborg <sam@ravnborg.org>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Urs =?iso-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Praveen Kumar B <praveen.b@broadcom.com>
+On 08/01/2019 19:54:13+0100, Sam Ravnborg wrote:
+> Add support for specifying the xtal load capacitance in the DT node.
+> The pcf8523 supports xtal load capacitance of 7pF or 12.5pF.
+> If the rtc has the wrong configuration the time will
+> drift several hours/week.
+> 
+> The driver use the default value 12.5pF.
+> 
+> The DT may specify either 7000fF or 12500fF.
+> (The DT uses femto Farad to avoid decimal numbers).
+> Other values are warned and the driver uses the default value.
+> 
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> ---
+>  drivers/rtc/rtc-pcf8523.c | 28 ++++++++++++++++++++--------
+>  1 file changed, 20 insertions(+), 8 deletions(-)
+> 
+> diff --git a/drivers/rtc/rtc-pcf8523.c b/drivers/rtc/rtc-pcf8523.c
+> index 3fcd2cbafc84..dbbc00b53b50 100644
+> --- a/drivers/rtc/rtc-pcf8523.c
+> +++ b/drivers/rtc/rtc-pcf8523.c
+> @@ -97,8 +97,9 @@ static int pcf8523_voltage_low(struct i2c_client *client)
+>  	return !!(value & REG_CONTROL3_BLF);
+>  }
+>  
+> -static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+> +static int pcf8523_load_capacitance(struct i2c_client *client)
+>  {
+> +	u32 load;
+>  	u8 value;
+>  	int err;
+>  
+> @@ -106,14 +107,24 @@ static int pcf8523_select_capacitance(struct i2c_client *client, bool high)
+>  	if (err < 0)
+>  		return err;
+>  
+> -	if (!high)
+> -		value &= ~REG_CONTROL1_CAP_SEL;
+> -	else
+> +	load = 12500;
+> +	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
+> +			     &load);
+> +
+> +	switch (load) {
+> +	default:
+> +		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 12500",
+> +			load);
 
-Add support for new version of pwm-cygnus.
-Add support to make PWM changes configured and stable.
+This alignment is not correct, as you will be respinning for the DT doc,
+please fix ;)
 
-Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
-Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
----
- drivers/pwm/pwm-bcm-kona.c | 95 ++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 76 insertions(+), 19 deletions(-)
+> +		/* fall through */
+> +	case 12500:
+>  		value |= REG_CONTROL1_CAP_SEL;
+> +		break;
+> +	case 7000:
+> +		value &= ~REG_CONTROL1_CAP_SEL;
+> +		break;
+> +	}
+>  
+>  	err = pcf8523_write(client, REG_CONTROL1, value);
+> -	if (err < 0)
+> -		return err;
+>  
+>  	return err;
+>  }
+> @@ -347,9 +358,10 @@ static int pcf8523_probe(struct i2c_client *client,
+>  	if (!pcf)
+>  		return -ENOMEM;
+>  
+> -	err = pcf8523_select_capacitance(client, true);
+> +	err = pcf8523_load_capacitance(client);
+>  	if (err < 0)
+> -		return err;
+> +		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
+> +			err);
+Ditto
 
-diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
-index fe63289..143843f 100644
---- a/drivers/pwm/pwm-bcm-kona.c
-+++ b/drivers/pwm/pwm-bcm-kona.c
-@@ -15,6 +15,7 @@
- #include <linux/delay.h>
- #include <linux/err.h>
- #include <linux/io.h>
-+#include <linux/iopoll.h>
- #include <linux/ioport.h>
- #include <linux/math64.h>
- #include <linux/module.h>
-@@ -65,10 +66,19 @@
- #define DUTY_CYCLE_HIGH_MIN			(0x00000000)
- #define DUTY_CYCLE_HIGH_MAX			(0x00ffffff)
- 
-+#define PWM_MONITOR_OFFSET			0xb0
-+#define PWM_MONITOR_TIMEOUT_US			5
-+
-+enum kona_pwmc_ver {
-+	KONA_PWM = 1,
-+	CYGNUS_PWM
-+};
-+
- struct kona_pwmc {
- 	struct pwm_chip chip;
- 	void __iomem *base;
- 	struct clk *clk;
-+	enum kona_pwmc_ver version;
- };
- 
- static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *_chip)
-@@ -76,10 +86,36 @@ static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *_chip)
- 	return container_of(_chip, struct kona_pwmc, chip);
- }
- 
-+static int kona_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan,
-+				 unsigned int kona_ver)
-+{
-+	struct kona_pwmc *kp = to_kona_pwmc(chip);
-+	unsigned int value;
-+
-+	switch (kona_ver) {
-+	case KONA_PWM:
-+		/*
-+		 * There must be a min 400ns delay between clearing trigger and
-+		 * settingit. Failing to do this may result in no PWM signal.
-+		 */
-+		ndelay(400);
-+		return 0;
-+
-+	case CYGNUS_PWM:
-+		return readl_poll_timeout(kp->base + PWM_MONITOR_OFFSET, value,
-+					  !(value & (BIT(chan))), 0,
-+					  PWM_MONITOR_TIMEOUT_US);
-+
-+	default:
-+		return -ENODEV;
-+
-+	}
-+}
-+
- /*
-  * Clear trigger bit but set smooth bit to maintain old output.
-  */
--static void kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
-+static int kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
- 	unsigned int chan)
- {
- 	unsigned int value = readl(kp->base + PWM_CONTROL_OFFSET);
-@@ -88,14 +124,10 @@ static void kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
- 	value &= ~(1 << PWM_CONTROL_TRIGGER_SHIFT(chan));
- 	writel(value, kp->base + PWM_CONTROL_OFFSET);
- 
--	/*
--	 * There must be a min 400ns delay between clearing trigger and setting
--	 * it. Failing to do this may result in no PWM signal.
--	 */
--	ndelay(400);
-+	return kona_pwmc_wait_stable(&kp->chip, chan, kp->version);
- }
- 
--static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
-+static int kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
- {
- 	unsigned int value = readl(kp->base + PWM_CONTROL_OFFSET);
- 
-@@ -104,8 +136,7 @@ static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
- 	value |= 1 << PWM_CONTROL_TRIGGER_SHIFT(chan);
- 	writel(value, kp->base + PWM_CONTROL_OFFSET);
- 
--	/* Trigger bit must be held high for at least 400 ns. */
--	ndelay(400);
-+	return kona_pwmc_wait_stable(&kp->chip, chan, kp->version);
- }
- 
- static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-@@ -113,8 +144,13 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	struct kona_pwmc *kp = to_kona_pwmc(chip);
- 	unsigned int chan = pwm->hwpwm;
- 	unsigned int value;
-+	int ret;
- 
--	kona_pwmc_prepare_for_settings(kp, chan);
-+	ret = kona_pwmc_prepare_for_settings(kp, chan);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "failed to prepare pwm settings: %d\n", ret);
-+		return;
-+	}
- 
- 	/* Simulate a disable by configuring for zero duty */
- 	writel(0, kp->base + DUTY_CYCLE_HIGH_OFFSET(chan));
-@@ -125,7 +161,11 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
- 	value &= ~PRESCALE_MASK(chan);
- 	writel(value, kp->base + PRESCALE_OFFSET);
- 
--	kona_pwmc_apply_settings(kp, chan);
-+	ret = kona_pwmc_apply_settings(kp, chan);
-+	if (ret < 0) {
-+		dev_err(chip->dev, "failed to apply pwm settings: %d\n", ret);
-+		return;
-+	}
- 
- 	clk_disable_unprepare(kp->clk);
- }
-@@ -188,7 +228,12 @@ static int kona_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			}
- 		}
- 
--		kona_pwmc_prepare_for_settings(kp, chan);
-+		ret = kona_pwmc_prepare_for_settings(kp, chan);
-+		if (ret < 0) {
-+			dev_err(chip->dev,
-+				"failed to prepare pwm settings: %d\n", ret);
-+			return ret;
-+		}
- 
- 		value = readl(kp->base + PRESCALE_OFFSET);
- 		value &= ~PRESCALE_MASK(chan);
-@@ -208,7 +253,12 @@ static int kona_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 			writel(value, kp->base + PWM_CONTROL_OFFSET);
- 		}
- 
--		kona_pwmc_apply_settings(kp, chan);
-+		ret = kona_pwmc_apply_settings(kp, chan);
-+		if (ret < 0) {
-+			dev_err(chip->dev,
-+				"failed to prepare pwm settings: %d\n", ret);
-+			return ret;
-+		}
- 	} else if (cstate.enabled) {
- 		kona_pwmc_disable(chip, pwm);
- 	}
-@@ -221,14 +271,26 @@ static int kona_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
- 	.owner = THIS_MODULE,
- };
- 
-+static const struct of_device_id bcm_kona_pwmc_dt[] = {
-+	{ .compatible = "brcm,kona-pwm", .data = (void *)KONA_PWM},
-+	{ .compatible = "brcm,cygnus-pwm", .data = (void *)CYGNUS_PWM},
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, bcm_kona_pwmc_dt);
-+
- static int kona_pwmc_probe(struct platform_device *pdev)
- {
- 	struct kona_pwmc *kp;
- 	struct resource *res;
-+	const struct of_device_id *of_id;
- 	unsigned int chan;
- 	unsigned int value = 0;
- 	int ret = 0;
- 
-+	of_id = of_match_node(bcm_kona_pwmc_dt, pdev->dev.of_node);
-+	if (!of_id)
-+		return -ENODEV;
-+
- 	kp = devm_kzalloc(&pdev->dev, sizeof(*kp), GFP_KERNEL);
- 	if (kp == NULL)
- 		return -ENOMEM;
-@@ -241,6 +303,7 @@ static int kona_pwmc_probe(struct platform_device *pdev)
- 	kp->chip.npwm = 6;
- 	kp->chip.of_xlate = of_pwm_xlate_with_flags;
- 	kp->chip.of_pwm_n_cells = 3;
-+	kp->version = (enum kona_pwmc_ver)of_id->data;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
- 	kp->base = devm_ioremap_resource(&pdev->dev, res);
-@@ -287,12 +350,6 @@ static int kona_pwmc_remove(struct platform_device *pdev)
- 	return pwmchip_remove(&kp->chip);
- }
- 
--static const struct of_device_id bcm_kona_pwmc_dt[] = {
--	{ .compatible = "brcm,kona-pwm" },
--	{ },
--};
--MODULE_DEVICE_TABLE(of, bcm_kona_pwmc_dt);
--
- static struct platform_driver kona_pwmc_driver = {
- 	.driver = {
- 		.name = "bcm-kona-pwm",
+>  
+>  	err = pcf8523_set_pm(client, 0);
+>  	if (err < 0)
+> -- 
+> 2.12.0
+> 
+
 -- 
-1.9.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
