@@ -1,103 +1,203 @@
-From: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [PATCH v8] arm64: dts: sdm845: Add gpu and gmu device
- nodes
-Date: Wed, 16 Jan 2019 11:03:29 -0700
-Message-ID: <1547661809-31184-1-git-send-email-jcrouse@codeaurora.org>
+From: Scott Branden <scott.branden@broadcom.com>
+Subject: Re: [PATCH v2 2/2] reset: Add Broadcom STB SW_INIT reset controller
+ driver
+Date: Wed, 16 Jan 2019 10:15:01 -0800
+Message-ID: <7bc8d9ee-5be1-1765-55dd-b7407cff962f@broadcom.com>
+References: <20190115184406.3164-1-f.fainelli@gmail.com>
+ <20190115184406.3164-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190115184406.3164-3-f.fainelli@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-QWRkIHRoZSBub2RlcyB0byBkZXNjcmliZSB0aGUgQWRyZW5vIEdQVSBhbmQgR01VIGRldmljZXMg
-Zm9yIHNkbTg0NS4KClNpZ25lZC1vZmYtYnk6IEpvcmRhbiBDcm91c2UgPGpjcm91c2VAY29kZWF1
-cm9yYS5vcmc+ClJldmlld2VkLWJ5OiBEb3VnbGFzIEFuZGVyc29uIDxkaWFuZGVyc0BjaHJvbWl1
-bS5vcmc+ClRlc3RlZC1ieTogRG91Z2xhcyBBbmRlcnNvbiA8ZGlhbmRlcnNAY2hyb21pdW0ub3Jn
-PgotLS0KVGhpcyBoYXMgdGhlIGZvbGxvd2luZyBkZXBlbmRlbmNpZXM6CgpbdjExLDEvOV0gZHQt
-YmluZGluZ3M6IG9wcDogSW50cm9kdWNlIG9wcC1sZXZlbCBiaW5kaW5ncwpodHRwczovL3BhdGNo
-d29yay5rZXJuZWwub3JnL3BhdGNoLzEwNzU1MTk5LwoKQW5kIHRoZSBmb2xsb3dpbmcgcGF0Y2hl
-cyBhbHJlYWR5IGluIFJvYidzIG1zbS1uZXh0Ogptc20tbmV4dDpkMWM5Y2FkZWE2ZjcgKCJkcm0v
-bXNtL2dwdTogUmVtb3ZlIGhhcmRjb2RlZCBpbnRlcnJ1cHQgbmFtZSIpCm1zbS1uZXh0OmIwOGI5
-MjU0NjgwNyAoImRybS9tc206IGRyb3AgaW50ZXJydXB0LW5hbWVzIikKbXNtLW5leHQ6MjQ5Mzdj
-NTQwOTE3ICgiZHQtYmluZGluZ3M6IGRybS9tc20vYTZ4eDogRG9jdW1lbnQgR01VIGFuZCB1cGRh
-dGUgR1BVIGJpbmRpbmdzIikKCkFuZCBmaW5hbGx5IGRybS9tc206IEZpeCBBNlhYIHN1cHBvcnQg
-Zm9yIG9wcC1sZXZlbApodHRwczovL3BhdGNod29yay5mcmVlZGVza3RvcC5vcmcvcGF0Y2gvMjc2
-NzU2LwoKV2hpY2ggaXMgbm90IG1lcmdlZCBiZWNhdXNlIGl0IHRvbyBkZXBlbmRzIG9uIFJhamVu
-ZHJhJ3Mgc3RhY2suCgogYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0NS5kdHNpIHwgMTIx
-ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTIx
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2Rt
-ODQ1LmR0c2kgYi9hcmNoL2FybTY0L2Jvb3QvZHRzL3Fjb20vc2RtODQ1LmR0c2kKaW5kZXggZjA3
-YzRjYS4uOTA3NjZmYyAxMDA2NDQKLS0tIGEvYXJjaC9hcm02NC9ib290L2R0cy9xY29tL3NkbTg0
-NS5kdHNpCisrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvcWNvbS9zZG04NDUuZHRzaQpAQCAtMTYx
-OCw2ICsxNjE4LDEyNyBAQAogCQkJfTsKIAkJfTsKIAorCisJCWdwdUA1MDAwMDAwIHsKKwkJCWNv
-bXBhdGlibGUgPSAicWNvbSxhZHJlbm8tNjMwLjIiLCAicWNvbSxhZHJlbm8iOworCQkJI3N0cmVh
-bS1pZC1jZWxscyA9IDwxNj47CisKKwkJCXJlZyA9IDwweDUwMDAwMDAgMHg0MDAwMD4sIDwweDUw
-OWUwMDAgMHgxMD47CisJCQlyZWctbmFtZXMgPSAia2dzbF8zZDBfcmVnX21lbW9yeSIsICJjeF9t
-ZW0iOworCisJCQkvKgorCQkJICogTG9vayBtYSwgbm8gY2xvY2tzISBUaGUgR1BVIGNsb2NrcyBh
-bmQgcG93ZXIgYXJlCisJCQkgKiBjb250cm9sbGVkIGVudGlyZWx5IGJ5IHRoZSBHTVUKKwkJCSAq
-LworCisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMzAwIElSUV9UWVBFX0xFVkVMX0hJR0g+Owor
-CisJCQlpb21tdXMgPSA8JmFkcmVub19zbW11IDA+OworCisJCQlvcGVyYXRpbmctcG9pbnRzLXYy
-ID0gPCZncHVfb3BwX3RhYmxlPjsKKworCQkJcWNvbSxnbXUgPSA8JmdtdT47CisKKwkJCWdwdV9v
-cHBfdGFibGU6IG9wcC10YWJsZSB7CisJCQkJY29tcGF0aWJsZSA9ICJvcGVyYXRpbmctcG9pbnRz
-LXYyIjsKKworCQkJCW9wcC03MTAwMDAwMDAgeworCQkJCQlvcHAtaHogPSAvYml0cy8gNjQgPDcx
-MDAwMDAwMD47CisJCQkJCW9wcC1sZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZFTF9UVVJCT19M
-MT47CisJCQkJfTsKKworCQkJCW9wcC02NzUwMDAwMDAgeworCQkJCQlvcHAtaHogPSAvYml0cy8g
-NjQgPDY3NTAwMDAwMD47CisJCQkJCW9wcC1sZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZFTF9U
-VVJCTz47CisJCQkJfTsKKworCQkJCW9wcC01OTYwMDAwMDAgeworCQkJCQlvcHAtaHogPSAvYml0
-cy8gNjQgPDU5NjAwMDAwMD47CisJCQkJCW9wcC1sZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZF
-TF9OT01fTDE+OworCQkJCX07CisKKwkJCQlvcHAtNTIwMDAwMDAwIHsKKwkJCQkJb3BwLWh6ID0g
-L2JpdHMvIDY0IDw1MjAwMDAwMDA+OworCQkJCQlvcHAtbGV2ZWwgPSA8UlBNSF9SRUdVTEFUT1Jf
-TEVWRUxfTk9NPjsKKwkJCQl9OworCisJCQkJb3BwLTQxNDAwMDAwMCB7CisJCQkJCW9wcC1oeiA9
-IC9iaXRzLyA2NCA8NDE0MDAwMDAwPjsKKwkJCQkJb3BwLWxldmVsID0gPFJQTUhfUkVHVUxBVE9S
-X0xFVkVMX1NWU19MMT47CisJCQkJfTsKKworCQkJCW9wcC0zNDIwMDAwMDAgeworCQkJCQlvcHAt
-aHogPSAvYml0cy8gNjQgPDM0MjAwMDAwMD47CisJCQkJCW9wcC1sZXZlbCA9IDxSUE1IX1JFR1VM
-QVRPUl9MRVZFTF9TVlM+OworCQkJCX07CisKKwkJCQlvcHAtMjU3MDAwMDAwIHsKKwkJCQkJb3Bw
-LWh6ID0gL2JpdHMvIDY0IDwyNTcwMDAwMDA+OworCQkJCQlvcHAtbGV2ZWwgPSA8UlBNSF9SRUdV
-TEFUT1JfTEVWRUxfTE9XX1NWUz47CisJCQkJfTsKKwkJCX07CisJCX07CisKKwkJYWRyZW5vX3Nt
-bXU6IGlvbW11QDUwNDAwMDAgeworCQkJY29tcGF0aWJsZSA9ICJxY29tLHNkbTg0NS1zbW11LXYy
-IiwgInFjb20sc21tdS12MiI7CisJCQlyZWcgPSA8MHg1MDQwMDAwIDB4MTAwMDA+OworCQkJI2lv
-bW11LWNlbGxzID0gPDE+OworCQkJI2dsb2JhbC1pbnRlcnJ1cHRzID0gPDI+OworCQkJaW50ZXJy
-dXB0cyA9IDxHSUNfU1BJIDIyOSBJUlFfVFlQRV9MRVZFTF9ISUdIPiwKKwkJCQkJPEdJQ19TUEkg
-MjMxIElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJCQk8R0lDX1NQSSAzNjQgSVJRX1RZUEVfRURH
-RV9SSVNJTkc+LAorCQkJCQk8R0lDX1NQSSAzNjUgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJ
-CQk8R0lDX1NQSSAzNjYgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJCQk8R0lDX1NQSSAzNjcg
-SVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJCQk8R0lDX1NQSSAzNjggSVJRX1RZUEVfRURHRV9S
-SVNJTkc+LAorCQkJCQk8R0lDX1NQSSAzNjkgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJCQk8
-R0lDX1NQSSAzNzAgSVJRX1RZUEVfRURHRV9SSVNJTkc+LAorCQkJCQk8R0lDX1NQSSAzNzEgSVJR
-X1RZUEVfRURHRV9SSVNJTkc+OworCQkJY2xvY2tzID0gPCZnY2MgR0NDX0dQVV9NRU1OT0NfR0ZY
-X0NMSz4sCisJCQkJPCZnY2MgR0NDX0dQVV9DRkdfQUhCX0NMSz47CisJCQljbG9jay1uYW1lcyA9
-ICJidXMiLCAiaWZhY2UiOworCisJCQlwb3dlci1kb21haW5zID0gPCZncHVjYyBHUFVfQ1hfR0RT
-Qz47CisJCX07CisKKwkJZ211OiBnbXVANTA2YTAwMCB7CisJCQljb21wYXRpYmxlPSJxY29tLGFk
-cmVuby1nbXUtNjMwLjIiLCAicWNvbSxhZHJlbm8tZ211IjsKKworCQkJcmVnID0gPDB4NTA2YTAw
-MCAweDMwMDAwPiwKKwkJCQk8MHhiMjgwMDAwIDB4MTAwMDA+LAorCQkJCTwweGI0ODAwMDAgMHgx
-MDAwMD47CisJCQlyZWctbmFtZXMgPSAiZ211IiwgImdtdV9wZGMiLCAiZ211X3BkY19zZXEiOwor
-CisJCQlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMzA0IElSUV9UWVBFX0xFVkVMX0hJR0g+LAorCQkJ
-ICAgICA8R0lDX1NQSSAzMDUgSVJRX1RZUEVfTEVWRUxfSElHSD47CisJCQlpbnRlcnJ1cHQtbmFt
-ZXMgPSAiaGZpIiwgImdtdSI7CisKKwkJCWNsb2NrcyA9IDwmZ3B1Y2MgR1BVX0NDX0NYX0dNVV9D
-TEs+LAorCQkJCTwmZ3B1Y2MgR1BVX0NDX0NYT19DTEs+LAorCQkJCTwmZ2NjIEdDQ19ERFJTU19H
-UFVfQVhJX0NMSz4sCisJCQkJPCZnY2MgR0NDX0dQVV9NRU1OT0NfR0ZYX0NMSz47CisJCQljbG9j
-ay1uYW1lcyA9ICJnbXUiLCAiY3hvIiwgImF4aSIsICJtZW1ub2MiOworCisJCQlwb3dlci1kb21h
-aW5zID0gPCZncHVjYyBHUFVfQ1hfR0RTQz47CisJCQlpb21tdXMgPSA8JmFkcmVub19zbW11IDU+
-OworCisJCQlvcGVyYXRpbmctcG9pbnRzLXYyID0gPCZnbXVfb3BwX3RhYmxlPjsKKworCQkJZ211
-X29wcF90YWJsZTogb3BwLXRhYmxlIHsKKwkJCQljb21wYXRpYmxlID0gIm9wZXJhdGluZy1wb2lu
-dHMtdjIiOworCisJCQkJb3BwLTQwMDAwMDAwMCB7CisJCQkJCW9wcC1oeiA9IC9iaXRzLyA2NCA8
-NDAwMDAwMDAwPjsKKwkJCQkJb3BwLWxldmVsID0gPFJQTUhfUkVHVUxBVE9SX0xFVkVMX1NWUz47
-CisJCQkJfTsKKworCQkJCW9wcC0yMDAwMDAwMDAgeworCQkJCQlvcHAtaHogPSAvYml0cy8gNjQg
-PDIwMDAwMDAwMD47CisJCQkJCW9wcC1sZXZlbCA9IDxSUE1IX1JFR1VMQVRPUl9MRVZFTF9NSU5f
-U1ZTPjsKKwkJCQl9OworCQkJfTsKKwkJfTsKKwogCQlkaXNwY2M6IGNsb2NrLWNvbnRyb2xsZXJA
-YWYwMDAwMCB7CiAJCQljb21wYXRpYmxlID0gInFjb20sc2RtODQ1LWRpc3BjYyI7CiAJCQlyZWcg
-PSA8MHhhZjAwMDAwIDB4MTAwMDA+OwotLSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5v
-QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
-bWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+
+On 2019-01-15 10:44 a.m., Florian Fainelli wrote:
+> Add support for resetting blocks through the Linux reset controller
+> subsystem when reset lines are provided through a SW_INIT-style reset
+> controller on Broadcom STB SoCs.
+>
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> ---
+>   drivers/reset/Kconfig         |   7 ++
+>   drivers/reset/Makefile        |   1 +
+>   drivers/reset/reset-brcmstb.c | 130 ++++++++++++++++++++++++++++++++++
+>   3 files changed, 138 insertions(+)
+>   create mode 100644 drivers/reset/reset-brcmstb.c
+>
+> diff --git a/drivers/reset/Kconfig b/drivers/reset/Kconfig
+> index 2e01bd833ffd..1ca03c57e049 100644
+> --- a/drivers/reset/Kconfig
+> +++ b/drivers/reset/Kconfig
+> @@ -40,6 +40,13 @@ config RESET_BERLIN
+>   	help
+>   	  This enables the reset controller driver for Marvell Berlin SoCs.
+>   
+> +config RESET_BRCMSTB
+> +	bool "Broadcom STB reset controller" if COMPILE_TEST
+
+Could this even be:
+
+depends on ARCH_BRCMSTB || COMPILE_TEST
+
+> +	default ARCH_BRCMSTB
+> +	help
+> +	  This enables the reset controller driver for Broadcom STB SoCs using
+> +	  a SUN_TOP_CTRL_SW_INIT style controller.
+> +
+>   config RESET_HSDK
+>   	bool "Synopsys HSDK Reset Driver"
+>   	depends on HAS_IOMEM
+> diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
+> index dc7874df78d9..7395db2cb1dd 100644
+> --- a/drivers/reset/Makefile
+> +++ b/drivers/reset/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_RESET_A10SR) += reset-a10sr.o
+>   obj-$(CONFIG_RESET_ATH79) += reset-ath79.o
+>   obj-$(CONFIG_RESET_AXS10X) += reset-axs10x.o
+>   obj-$(CONFIG_RESET_BERLIN) += reset-berlin.o
+> +obj-$(CONFIG_RESET_BRCMSTB) += reset-brcmstb.o
+>   obj-$(CONFIG_RESET_HSDK) += reset-hsdk.o
+>   obj-$(CONFIG_RESET_IMX7) += reset-imx7.o
+>   obj-$(CONFIG_RESET_LANTIQ) += reset-lantiq.o
+> diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
+> new file mode 100644
+> index 000000000000..01ab1f71518b
+> --- /dev/null
+> +++ b/drivers/reset/reset-brcmstb.c
+> @@ -0,0 +1,130 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Broadcom STB generic reset controller for SW_INIT style reset controller
+> + *
+> + * Author: Florian Fainelli <f.fainelli@gmail.com>
+> + * Copyright (C) 2018 Broadcom
+> + */
+> +#include <linux/delay.h>
+> +#include <linux/device.h>
+> +#include <linux/io.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/reset-controller.h>
+> +#include <linux/types.h>
+> +
+> +struct brcmstb_reset {
+> +	void __iomem *base;
+> +	struct reset_controller_dev rcdev;
+> +};
+> +
+> +#define SW_INIT_SET		0x00
+> +#define SW_INIT_CLEAR		0x04
+> +#define SW_INIT_STATUS		0x08
+> +
+> +#define SW_INIT_BIT(id)		BIT((id) & 0x1f)
+> +#define SW_INIT_BANK(id)	((id) >> 5)
+> +
+> +/* A full bank contains extra registers that we are not utilizing but still
+> + * qualify as a single bank.
+> + */
+> +#define SW_INIT_BANK_SIZE	0x18
+> +
+> +static inline
+> +struct brcmstb_reset *to_brcmstb(struct reset_controller_dev *rcdev)
+> +{
+> +	return container_of(rcdev, struct brcmstb_reset, rcdev);
+> +}
+> +
+> +static int brcmstb_reset_assert(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
+> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
+> +
+> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_SET);
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcmstb_reset_deassert(struct reset_controller_dev *rcdev,
+> +				  unsigned long id)
+> +{
+> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
+> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
+> +
+> +	writel_relaxed(SW_INIT_BIT(id), priv->base + off + SW_INIT_CLEAR);
+> +	/* Maximum reset delay after de-asserting a line and seeing block
+> +	 * operation is typically 14us for the worst case, build some slack
+> +	 * here.
+> +	 */
+> +	usleep_range(100, 200);
+> +
+> +	return 0;
+> +}
+> +
+> +static int brcmstb_reset_status(struct reset_controller_dev *rcdev,
+> +				unsigned long id)
+> +{
+> +	unsigned int off = SW_INIT_BANK(id) * SW_INIT_BANK_SIZE;
+> +	struct brcmstb_reset *priv = to_brcmstb(rcdev);
+> +
+> +	return readl_relaxed(priv->base + off + SW_INIT_STATUS) &
+> +			     SW_INIT_BIT(id);
+> +}
+> +
+> +static const struct reset_control_ops brcmstb_reset_ops = {
+> +	.assert	= brcmstb_reset_assert,
+> +	.deassert = brcmstb_reset_deassert,
+> +	.status = brcmstb_reset_status,
+> +};
+> +
+> +static int brcmstb_reset_probe(struct platform_device *pdev)
+> +{
+> +	struct device *kdev = &pdev->dev;
+> +	struct brcmstb_reset *priv;
+> +	struct resource *res;
+> +
+> +	priv = devm_kzalloc(kdev, sizeof(*priv), GFP_KERNEL);
+> +	if (!priv)
+> +		return -ENOMEM;
+> +
+> +	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> +	if (resource_size(res) % SW_INIT_BANK_SIZE) {
+> +		dev_err(kdev, "incorrect register range\n");
+> +		return -EINVAL;
+> +	}
+> +
+> +	priv->base = devm_ioremap_resource(kdev, res);
+> +	if (IS_ERR(priv->base))
+> +		return PTR_ERR(priv->base);
+> +
+> +	dev_set_drvdata(kdev, priv);
+> +
+> +	priv->rcdev.owner = THIS_MODULE;
+> +	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
+> +	priv->rcdev.ops = &brcmstb_reset_ops;
+> +	priv->rcdev.of_node = kdev->of_node;
+> +	/* Use defaults: 1 cell and simple xlate function */
+> +
+> +	return devm_reset_controller_register(kdev, &priv->rcdev);
+> +}
+> +
+> +static const struct of_device_id brcmstb_reset_of_match[] = {
+> +	{ .compatible = "brcm,brcmstb-reset" },
+> +	{ /* sentinel */ }
+> +};
+> +
+> +static struct platform_driver brcmstb_reset_driver = {
+> +	.probe	= brcmstb_reset_probe,
+> +	.driver	= {
+> +		.name = "brcmstb-reset",
+> +		.of_match_table = brcmstb_reset_of_match,
+> +	},
+> +};
+> +module_platform_driver(brcmstb_reset_driver);
+> +
+> +MODULE_AUTHOR("Broadcom");
+> +MODULE_DESCRIPTION("Broadcom STB reset controller");
+> +MODULE_LICENSE("GPL");
