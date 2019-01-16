@@ -1,1029 +1,445 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3] arm64: dts: qcom: sdm845: Expand soc bus address range
-Date: Tue, 15 Jan 2019 23:19:39 -0800
-Message-ID: <20190116071939.23136-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Doug Anderson <dianders@chromium.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH v5 2/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy
+ core
+Date: Wed, 16 Jan 2019 13:37:43 +0530
+Message-ID: <b521679a-0c79-44b1-8a2b-1f3391a362ae@ti.com>
+References: <1545140733-20689-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
+ <1545140733-20689-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545140733-20689-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>, robh+dt@kernel.org, Mark Rutland <mark.rutland@arm.com>, vivek.gautam@codeaurora.org
+Cc: devicetree@vger.kernel.org, apandey@xilinx.com, linux-kernel@vger.kernel.org, sundeep subbaraya <sundeep.lkml@gmail.com>, Michal Simek <michals@xilinx.com>, v.anuragkumar@gmail.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DMA addresses for devices on the soc bus must be constrained to the 36
-address bits that the bus provides.  When no IOMMU is present then this
-is easy--DMA addresses are just physical addresses and physical
-addresses are (by definition) within the address bits of the bus.  When
-an IOMMU is present, however, DMA addresses are virtual addresses.
-Despite these addresses being virtual, however, they are still
-constrained by the 36 address bits of the bus.
+Hi,
 
-Unless dma-ranges is specified, which causes bus_dma_mask to be set, DMA
-allocations for devices on the platform_bus will use all 48 address bits
-available by the ARM SMMU. Causing addresses to be truncated on the bus.
+On 18/12/18 7:15 PM, Anurag Kumar Vulisha wrote:
+> ZynqMP SoC has a Gigabit Transceiver with four lanes. All the high speed
+> peripherals such as USB, SATA, PCIE, Display Port and Ethernet SGMII can
+> rely on any of the four GT lanes for PHY layer. This patch adds driver
+> for that ZynqMP GT core.
+> 
+> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
+> ---
+> Changes in v5:
+> 	1. No functional changes. Added missing Author name
+> 
+> Changes in v4:
+> 	1. Moved include/dt-bindings/phy/phy.h into patch 1 as suggested by
+> 	   "Rob Herring"
+> 
+> Changes in v3:
+> 	1. Corrected the Documentation as suggested by "Vivek Gautam"
+> 
+> Changes in v2:
+> 	1. Fixed the compilation error when compiled phy-zynqmp.c as a module
+> 	2. Added CONFIG_PM macro in phy-zynqmp.c driver
+> ---
+>  drivers/phy/Kconfig            |    8 +
+>  drivers/phy/Makefile           |    1 +
+>  drivers/phy/phy-zynqmp.c       | 1582 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/phy/phy-zynqmp.h |   52 ++
+>  4 files changed, 1643 insertions(+)
+>  create mode 100644 drivers/phy/phy-zynqmp.c
+>  create mode 100644 include/linux/phy/phy-zynqmp.h
+> 
+> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig
+> index 60f949e..7a3c900 100644
+> --- a/drivers/phy/Kconfig
+> +++ b/drivers/phy/Kconfig
+> @@ -40,6 +40,14 @@ config PHY_XGENE
+>  	help
+>  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
+>  
+> +config PHY_XILINX_ZYNQMP
+> +	tristate "Xilinx ZynqMP PHY driver"
+> +	depends on ARCH_ZYNQMP
+> +	select GENERIC_PHY
+> +	help
+> +	  Enable this to support ZynqMP High Speed Gigabit Transceiver
+> +	  that is part of ZynqMP SoC.
+> +
+>  source "drivers/phy/allwinner/Kconfig"
+>  source "drivers/phy/amlogic/Kconfig"
+>  source "drivers/phy/broadcom/Kconfig"
+> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile
+> index 0301e25..2335e85 100644
+> --- a/drivers/phy/Makefile
+> +++ b/drivers/phy/Makefile
+> @@ -7,6 +7,7 @@ obj-$(CONFIG_GENERIC_PHY)		+= phy-core.o
+>  obj-$(CONFIG_PHY_LPC18XX_USB_OTG)	+= phy-lpc18xx-usb-otg.o
+>  obj-$(CONFIG_PHY_XGENE)			+= phy-xgene.o
+>  obj-$(CONFIG_PHY_PISTACHIO_USB)		+= phy-pistachio-usb.o
+> +obj-$(CONFIG_PHY_XILINX_ZYNQMP)		+= phy-zynqmp.o
+>  obj-$(CONFIG_ARCH_SUNXI)		+= allwinner/
+>  obj-$(CONFIG_ARCH_MESON)		+= amlogic/
+>  obj-$(CONFIG_LANTIQ)			+= lantiq/
+> diff --git a/drivers/phy/phy-zynqmp.c b/drivers/phy/phy-zynqmp.c
+> new file mode 100644
+> index 0000000..5caf4f2
+> --- /dev/null
+> +++ b/drivers/phy/phy-zynqmp.c
+> @@ -0,0 +1,1582 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * phy-zynqmp.c - PHY driver for Xilinx ZynqMP GT.
+> + *
+> + * Copyright (C) 2018 Xilinx Inc.
+> + *
+> + * Author: Anurag Kumar Vulisha <anuragku@xilinx.com>
+> + * Author: Subbaraya Sundeep <sundeep.lkml@gmail.com>
+> + *
+> + * This driver is tested for USB, SATA and Display Port currently.
+> + * Other controllers PCIe and SGMII should also work but that is
+> + * experimental as of now.
+> + */
+> +
+> +#include <linux/clk.h>
+> +#include <linux/delay.h>
+> +#include <linux/io.h>
+> +#include <linux/kernel.h>
+> +#include <linux/module.h>
+> +#include <linux/of.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/phy/phy.h>
+> +#include <linux/phy/phy-zynqmp.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/delay.h>
+> +#include <dt-bindings/phy/phy.h>
+> +#include <linux/reset.h>
+> +#include <linux/list.h>
+> +#include <linux/slab.h>
+> +
+> +/* Inter Connect Matrix parameters */
+> +#define ICM_CFG0			0x10010
+> +#define ICM_CFG1			0x10014
+> +#define ICM_CFG0_L0_MASK		0x07
+> +#define ICM_CFG0_L1_MASK		0x70
+> +#define ICM_CFG1_L2_MASK		0x07
+> +#define ICM_CFG2_L3_MASK		0x70
+> +#define ICM_CFG_SHIFT			4
+> +
+> +/* Inter Connect Matrix allowed protocols */
+> +#define ICM_PROTOCOL_PD			0x0
+> +#define ICM_PROTOCOL_PCIE		0x1
+> +#define ICM_PROTOCOL_SATA		0x2
+> +#define ICM_PROTOCOL_USB		0x3
+> +#define ICM_PROTOCOL_DP			0x4
+> +#define ICM_PROTOCOL_SGMII		0x5
+> +
+> +/* Test Mode common reset control  parameters */
+> +#define TM_CMN_RST			0x10018
+> +#define TM_CMN_RST_EN			0x1
+> +#define TM_CMN_RST_SET			0x2
+> +#define TM_CMN_RST_MASK			0x3
+> +
+> +/* Refclk selection parameters */
+> +#define PLL_REF_SEL0			0x10000
+> +#define PLL_REF_OFFSET			0x4
+> +#define PLL_FREQ_MASK			0x1F
+> +#define PLL_STATUS_READ_OFFSET		0x4000
+> +#define PLL_STATUS_LOCKED		0x10
+> +
+> +/* PLL SSC step size offsets */
+> +#define L0_L0_REF_CLK_SEL		0x2860
+> +#define L0_PLL_SS_STEPS_0_LSB		0x2368
+> +#define L0_PLL_SS_STEPS_1_MSB		0x236C
+> +#define L0_PLL_SS_STEP_SIZE_0_LSB	0x2370
+> +#define L0_PLL_SS_STEP_SIZE_1		0x2374
+> +#define L0_PLL_SS_STEP_SIZE_2		0x2378
+> +#define L0_PLL_SS_STEP_SIZE_3_MSB	0x237C
+> +#define L0_PLL_STATUS_READ_1		0x23E4
+> +
+> +/* SSC step size parameters */
+> +#define STEP_SIZE_OFFSET		0x4000
+> +#define STEP_SIZE_0_MASK		0xFF
+> +#define STEP_SIZE_1_MASK		0xFF
+> +#define STEP_SIZE_2_MASK		0xFF
+> +#define STEP_SIZE_3_MASK		0x3
+> +#define STEP_SIZE_SHIFT			8
+> +#define FORCE_STEP_SIZE			0x10
+> +#define FORCE_STEPS			0x20
+> +#define STEPS_OFFSET			0x4000
+> +#define STEPS_0_MASK			0xFF
+> +#define STEPS_1_MASK			0x07
+> +
+> +/* BG calibration parameters */
+> +#define BGCAL_REF_SEL			0x10028
+> +#define BGCAL_REF_VALUE			0x0C
+> +
+> +/* Calibration digital logic parameters */
+> +#define L3_TM_CALIB_DIG19		0xEC4C
+> +#define L3_CALIB_DONE_STATUS		0xEF14
+> +#define L3_TM_CALIB_DIG18		0xEC48
+> +#define L3_TM_CALIB_DIG19_NSW		0x07
+> +#define L3_TM_CALIB_DIG18_NSW		0xE0
+> +#define L3_TM_OVERRIDE_NSW_CODE         0x20
+> +#define L3_CALIB_DONE			0x02
+> +#define L3_NSW_SHIFT			5
+> +#define L3_NSW_PIPE_SHIFT		4
+> +#define L3_NSW_CALIB_SHIFT		3
+> +
+> +/* DN Resistor calibration code parameters */
+> +#define L0_TXPMA_ST_3			0x0B0C
+> +#define L0_DN_CALIB_CODE		0x3F
+> +
+> +/* PLL Test Mode register parameters */
+> +#define L0_TM_PLL_DIG_37		0x2094
+> +#define L0_TM_PLL_DIG_37_OFFSET		0x4000
+> +#define L0_TM_COARSE_CODE_LIMIT		0x10
+> +
+> +/* PCS control parameters */
+> +#define L0_TM_DIG_6			0x106C
+> +#define L0_TX_DIG_61			0x00F4
+> +#define L0_TM_DIG_6_OFFSET		0x4000
+> +#define L0_TX_DIG_61_OFFSET		0x4000
+> +#define L0_TM_DIS_DESCRAMBLE_DECODER	0x0F
+> +#define L0_TM_DISABLE_SCRAMBLE_ENCODER	0x0F
+> +
+> +/* TX De-emphasis parameters */
+> +#define L0_TX_ANA_TM_18			0x0048
+> +#define L0_TX_ANA_TM_118		0x01D8
+> +#define L0_TX_ANA_TM_18_OFFSET		0x4000
+> +#define L0_TX_ANA_TM_118_OFFSET		0x4000
+> +#define L0_TX_ANA_TM_118_FORCE_17_0	BIT(0)
+> +
+> +/* PMA control parameters */
+> +#define L0_TXPMD_TM_45			0x0CB4
+> +#define L0_TXPMD_TM_48			0x0CC0
+> +#define L0_TXPMD_TM_45_OFFSET		0x4000
+> +#define L0_TXPMD_TM_48_OFFSET		0x4000
+> +#define L0_TXPMD_TM_45_OVER_DP_MAIN	BIT(0)
+> +#define L0_TXPMD_TM_45_ENABLE_DP_MAIN	BIT(1)
+> +#define L0_TXPMD_TM_45_OVER_DP_POST1	BIT(2)
+> +#define L0_TXPMD_TM_45_ENABLE_DP_POST1	BIT(3)
+> +#define L0_TXPMD_TM_45_OVER_DP_POST2	BIT(4)
+> +#define L0_TXPMD_TM_45_ENABLE_DP_POST2	BIT(5)
+> +
+> +/* Bus width parameters */
+> +#define TX_PROT_BUS_WIDTH		0x10040
+> +#define RX_PROT_BUS_WIDTH		0x10044
+> +#define PROT_BUS_WIDTH_10		0x0
+> +#define PROT_BUS_WIDTH_20		0x1
+> +#define PROT_BUS_WIDTH_40		0x2
+> +#define PROT_BUS_WIDTH_SHIFT		2
+> +
+> +/* Max number of GT lanes */
+> +#define MAX_LANES			4
+> +
+> +/* Max Allowed refclk frequencies */
+> +#define MAX_REFCLK			13
+> +
+> +/* Lane CLK sharing mask */
+> +#define LANE_CLK_SHARE_MASK		0x8F
+> +
+> +/* SIOU SATA control register */
+> +#define SATA_CONTROL_OFFSET		0x0100
+> +
+> +/* Total number of controllers */
+> +#define CONTROLLERS_PER_LANE		5
+> +
+> +/* USB pipe control parameters */
+> +#define PIPE_CLK_OFFSET			0x7c
+> +#define PIPE_POWER_OFFSET		0x80
+> +#define PIPE_CLK_ON			1
+> +#define PIPE_CLK_OFF			0
+> +#define PIPE_POWER_ON			1
+> +#define PIPE_POWER_OFF			0
+> +
+> +/* Protocol Type Pparameters */
+> +#define XPSGTR_TYPE_USB0		0  /* USB controller 0 */
+> +#define XPSGTR_TYPE_USB1		1  /* USB controller 1 */
+> +#define XPSGTR_TYPE_SATA_0		2  /* SATA controller lane 0 */
+> +#define XPSGTR_TYPE_SATA_1		3  /* SATA controller lane 1 */
+> +#define XPSGTR_TYPE_PCIE_0		4  /* PCIe controller lane 0 */
+> +#define XPSGTR_TYPE_PCIE_1		5  /* PCIe controller lane 1 */
+> +#define XPSGTR_TYPE_PCIE_2		6  /* PCIe controller lane 2 */
+> +#define XPSGTR_TYPE_PCIE_3		7  /* PCIe controller lane 3 */
+> +#define XPSGTR_TYPE_DP_0		8  /* Display Port controller lane 0 */
+> +#define XPSGTR_TYPE_DP_1		9  /* Display Port controller lane 1 */
+> +#define XPSGTR_TYPE_SGMII0		10 /* Ethernet SGMII controller 0 */
+> +#define XPSGTR_TYPE_SGMII1		11 /* Ethernet SGMII controller 1 */
+> +#define XPSGTR_TYPE_SGMII2		12 /* Ethernet SGMII controller 2 */
+> +#define XPSGTR_TYPE_SGMII3		13 /* Ethernet SGMII controller 3 */
+> +
+> +/* Timeout values */
+> +#define RST_TIMEOUT_MS			1000
+> +#define TIMEOUT_US			1000
+> +
+> +/*
+> + * This table holds the valid combinations of controllers and
+> + * lanes(Interconnect Matrix).
+> + */
+> +static unsigned int icm_matrix[MAX_LANES][CONTROLLERS_PER_LANE] = {
+> +	{ XPSGTR_TYPE_PCIE_0, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
+> +		XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII0 },
+> +	{ XPSGTR_TYPE_PCIE_1, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB0,
+> +		XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII1 },
+> +	{ XPSGTR_TYPE_PCIE_2, XPSGTR_TYPE_SATA_0, XPSGTR_TYPE_USB0,
+> +		XPSGTR_TYPE_DP_1, XPSGTR_TYPE_SGMII2 },
+> +	{ XPSGTR_TYPE_PCIE_3, XPSGTR_TYPE_SATA_1, XPSGTR_TYPE_USB1,
+> +		XPSGTR_TYPE_DP_0, XPSGTR_TYPE_SGMII3 }
+> +};
+> +
+> +/* Allowed PLL reference clock frequencies */
+> +enum pll_frequencies {
+> +	REF_19_2M = 0,
+> +	REF_20M,
+> +	REF_24M,
+> +	REF_26M,
+> +	REF_27M,
+> +	REF_38_4M,
+> +	REF_40M,
+> +	REF_52M,
+> +	REF_100M,
+> +	REF_108M,
+> +	REF_125M,
+> +	REF_135M,
+> +	REF_150M,
+> +};
+> +
+> +/**
+> + * struct xpsgtr_phy - representation of a lane
+> + * @phy: pointer to the kernel PHY device
+> + * @type: controller which uses this lane
+> + * @lane: lane number
+> + * @protocol: protocol in which the lane operates
+> + * @ref_clk: enum of allowed ref clock rates for this lane PLL
+> + * @pll_lock: PLL status
+> + * @skip_phy_init: skip phy_init() if true
+> + * @data: pointer to hold private data
+> + * @refclk_rate: PLL reference clock frequency
+> + * @share_laneclk: lane number of the clock to be shared
+> + */
+> +struct xpsgtr_phy {
+> +	struct phy *phy;
+> +	u8 type;
+> +	u8 lane;
+> +	u8 protocol;
+> +	enum pll_frequencies ref_clk;
+> +	bool pll_lock;
+> +	bool skip_phy_init;
+> +	void *data;
+> +	u32 refclk_rate;
+> +	u32 share_laneclk;
+> +};
+> +
+> +/**
+> + * struct xpsgtr_ssc - structure to hold SSC settings for a lane
+> + * @refclk_rate: PLL reference clock frequency
+> + * @pll_ref_clk: value to be written to register for corresponding ref clk rate
+> + * @steps: number of steps of SSC (Spread Spectrum Clock)
+> + * @step_size: step size of each step
+> + */
+> +struct xpsgtr_ssc {
+> +	u32 refclk_rate;
+> +	u8  pll_ref_clk;
+> +	u32 steps;
+> +	u32 step_size;
+> +};
+> +
+> +/* lookup table to hold all settings needed for a ref clock frequency */
+> +static struct xpsgtr_ssc ssc_lookup[MAX_REFCLK] = {
+> +	{19200000, 0x05, 608, 264020},
+> +	{20000000, 0x06, 634, 243454},
+> +	{24000000, 0x07, 760, 168973},
+> +	{26000000, 0x08, 824, 143860},
+> +	{27000000, 0x09, 856, 86551},
+> +	{38400000, 0x0A, 1218, 65896},
+> +	{40000000, 0x0B, 634, 243454},
+> +	{52000000, 0x0C, 824, 143860},
+> +	{100000000, 0x0D, 1058, 87533},
+> +	{108000000, 0x0E, 856, 86551},
+> +	{125000000, 0x0F, 992, 119497},
+> +	{135000000, 0x10, 1070, 55393},
+> +	{150000000, 0x11, 792, 187091}
+> +};
+> +
+> +/**
+> + * struct xpsgtr_dev - representation of a ZynMP GT device
+> + * @dev: pointer to device
+> + * @serdes: serdes base address
+> + * @siou: siou base address
+> + * @gtr_mutex: mutex for locking
+> + * @phys: pointer to all the lanes
+> + * @tx_term_fix: fix for GT issue
+> + * @saved_icm_cfg0: stored value of ICM CFG0 register
+> + * @saved_icm_cfg1: stored value of ICM CFG1 register
+> + * @sata_rst: a reset control for SATA
+> + * @dp_rst: a reset control for DP
+> + * @usb0_crst: a reset control for usb0 core
+> + * @usb1_crst: a reset control for usb1 core
+> + * @usb0_hibrst: a reset control for usb0 hibernation module
+> + * @usb1_hibrst: a reset control for usb1 hibernation module
+> + * @usb0_apbrst: a reset control for usb0 apb bus
+> + * @usb1_apbrst: a reset control for usb1 apb bus
+> + * @gem0_rst: a reset control for gem0
+> + * @gem1_rst: a reset control for gem1
+> + * @gem2_rst: a reset control for gem2
+> + * @gem3_rst: a reset control for gem3
+> + */
+> +struct xpsgtr_dev {
+> +	struct device *dev;
+> +	void __iomem *serdes;
+> +	void __iomem *siou;
+> +	struct mutex gtr_mutex; /* mutex for locking */
+> +	struct xpsgtr_phy **phys;
+> +	bool tx_term_fix;
+> +	unsigned int saved_icm_cfg0;
+> +	unsigned int saved_icm_cfg1;
+> +	struct reset_control *sata_rst;
+> +	struct reset_control *dp_rst;
+> +	struct reset_control *usb0_crst;
+> +	struct reset_control *usb1_crst;
+> +	struct reset_control *usb0_hibrst;
+> +	struct reset_control *usb1_hibrst;
+> +	struct reset_control *usb0_apbrst;
+> +	struct reset_control *usb1_apbrst;
+> +	struct reset_control *gem0_rst;
+> +	struct reset_control *gem1_rst;
+> +	struct reset_control *gem2_rst;
+> +	struct reset_control *gem3_rst;
+> +};
+> +
+> +/**
+> + * xpsgtr_override_deemph - override PIPE TX de-emphasis
+> + * @phy: pointer to phy
+> + * @plvl: pre-emphasis level
+> + * @vlvl: voltage swing level
+> + *
+> + * Return: None
+> + */
+> +void xpsgtr_override_deemph(struct phy *phy, u8 plvl, u8 vlvl)
+> +{
+> +	struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
+> +	struct xpsgtr_dev *gtr_dev = gtr_phy->data;
+> +	static u8 pe[4][4] = { { 0x2, 0x2, 0x2, 0x2 },
+> +			       { 0x1, 0x1, 0x1, 0xFF },
+> +			       { 0x0, 0x0, 0xFF, 0xFF },
+> +			       { 0xFF, 0xFF, 0xFF, 0xFF } };
+> +
+> +	writel(pe[plvl][vlvl],
+> +	       gtr_dev->serdes + gtr_phy->lane * L0_TX_ANA_TM_18_OFFSET +
+> +	       L0_TX_ANA_TM_18);
+> +}
+> +EXPORT_SYMBOL_GPL(xpsgtr_override_deemph);
 
-This patch increases the #size-cells to 2, in order to be able to define
-dma-ranges describe the 36 bit DMA capability of the bus, and bumps
+I thought I gave a feedback to get rid of export symbol. This will make the
+consumer driver tied to this PHY driver.
 
-While touching all reg properties, addresses are padded to 8 digits.
-
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
-
-Changes since v2:
-- Actually include the changes from the rebase
-
-Changes since v1:
-- Update commit message per discussion with Doug
-- Updated "ranges"
-- Rebased ontop of a few additional patches from the mailing list
-
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 299 ++++++++++++++-------------
- 1 file changed, 150 insertions(+), 149 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c98b1937353b..fc01b1c93fe4 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -346,14 +346,15 @@
- 	};
- 
- 	soc: soc {
--		#address-cells = <1>;
--		#size-cells = <1>;
--		ranges = <0 0 0 0xffffffff>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges = <0 0 0 0 0x10 0>;
-+		dma-ranges = <0 0 0 0 0x10 0>;
- 		compatible = "simple-bus";
- 
- 		gcc: clock-controller@100000 {
- 			compatible = "qcom,gcc-sdm845";
--			reg = <0x100000 0x1f0000>;
-+			reg = <0 0x00100000 0 0x1f0000>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-@@ -361,7 +362,7 @@
- 
- 		qfprom@784000 {
- 			compatible = "qcom,qfprom";
--			reg = <0x784000 0x8ff>;
-+			reg = <0 0x00784000 0 0x8ff>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 
-@@ -378,25 +379,25 @@
- 
- 		rng: rng@793000 {
- 			compatible = "qcom,prng-ee";
--			reg = <0x00793000 0x1000>;
-+			reg = <0 0x00793000 0 0x1000>;
- 			clocks = <&gcc GCC_PRNG_AHB_CLK>;
- 			clock-names = "core";
- 		};
- 
- 		qupv3_id_0: geniqup@8c0000 {
- 			compatible = "qcom,geni-se-qup";
--			reg = <0x8c0000 0x6000>;
-+			reg = <0 0x008c0000 0 0x6000>;
- 			clock-names = "m-ahb", "s-ahb";
- 			clocks = <&gcc GCC_QUPV3_WRAP_0_M_AHB_CLK>,
- 				 <&gcc GCC_QUPV3_WRAP_0_S_AHB_CLK>;
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 			status = "disabled";
- 
- 			i2c0: i2c@880000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x880000 0x4000>;
-+				reg = <0 0x00880000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -409,7 +410,7 @@
- 
- 			spi0: spi@880000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x880000 0x4000>;
-+				reg = <0 0x00880000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -422,7 +423,7 @@
- 
- 			uart0: serial@880000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x880000 0x4000>;
-+				reg = <0 0x00880000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -433,7 +434,7 @@
- 
- 			i2c1: i2c@884000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x884000 0x4000>;
-+				reg = <0 0x00884000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -446,7 +447,7 @@
- 
- 			spi1: spi@884000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x884000 0x4000>;
-+				reg = <0 0x00884000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -459,7 +460,7 @@
- 
- 			uart1: serial@884000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x884000 0x4000>;
-+				reg = <0 0x00884000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -470,7 +471,7 @@
- 
- 			i2c2: i2c@888000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x888000 0x4000>;
-+				reg = <0 0x00888000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -483,7 +484,7 @@
- 
- 			spi2: spi@888000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x888000 0x4000>;
-+				reg = <0 0x00888000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -496,7 +497,7 @@
- 
- 			uart2: serial@888000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x888000 0x4000>;
-+				reg = <0 0x00888000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -507,7 +508,7 @@
- 
- 			i2c3: i2c@88c000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x88c000 0x4000>;
-+				reg = <0 0x0088c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -520,7 +521,7 @@
- 
- 			spi3: spi@88c000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x88c000 0x4000>;
-+				reg = <0 0x0088c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -533,7 +534,7 @@
- 
- 			uart3: serial@88c000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x88c000 0x4000>;
-+				reg = <0 0x0088c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -544,7 +545,7 @@
- 
- 			i2c4: i2c@890000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x890000 0x4000>;
-+				reg = <0 0x00890000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -557,7 +558,7 @@
- 
- 			spi4: spi@890000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x890000 0x4000>;
-+				reg = <0 0x00890000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -570,7 +571,7 @@
- 
- 			uart4: serial@890000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x890000 0x4000>;
-+				reg = <0 0x00890000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -581,7 +582,7 @@
- 
- 			i2c5: i2c@894000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x894000 0x4000>;
-+				reg = <0 0x00894000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
- 				pinctrl-names = "default";
-@@ -594,7 +595,7 @@
- 
- 			spi5: spi@894000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x894000 0x4000>;
-+				reg = <0 0x00894000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
- 				pinctrl-names = "default";
-@@ -607,7 +608,7 @@
- 
- 			uart5: serial@894000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x894000 0x4000>;
-+				reg = <0 0x00894000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S5_CLK>;
- 				pinctrl-names = "default";
-@@ -618,7 +619,7 @@
- 
- 			i2c6: i2c@898000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x898000 0x4000>;
-+				reg = <0 0x00898000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
- 				pinctrl-names = "default";
-@@ -631,7 +632,7 @@
- 
- 			spi6: spi@898000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x898000 0x4000>;
-+				reg = <0 0x00898000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
- 				pinctrl-names = "default";
-@@ -644,7 +645,7 @@
- 
- 			uart6: serial@898000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x898000 0x4000>;
-+				reg = <0 0x00898000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S6_CLK>;
- 				pinctrl-names = "default";
-@@ -655,7 +656,7 @@
- 
- 			i2c7: i2c@89c000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0x89c000 0x4000>;
-+				reg = <0 0x0089c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
- 				pinctrl-names = "default";
-@@ -668,7 +669,7 @@
- 
- 			spi7: spi@89c000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0x89c000 0x4000>;
-+				reg = <0 0x0089c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
- 				pinctrl-names = "default";
-@@ -681,7 +682,7 @@
- 
- 			uart7: serial@89c000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0x89c000 0x4000>;
-+				reg = <0 0x0089c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP0_S7_CLK>;
- 				pinctrl-names = "default";
-@@ -693,18 +694,18 @@
- 
- 		qupv3_id_1: geniqup@ac0000 {
- 			compatible = "qcom,geni-se-qup";
--			reg = <0xac0000 0x6000>;
-+			reg = <0 0x00ac0000 0 0x6000>;
- 			clock-names = "m-ahb", "s-ahb";
- 			clocks = <&gcc GCC_QUPV3_WRAP_1_M_AHB_CLK>,
- 				 <&gcc GCC_QUPV3_WRAP_1_S_AHB_CLK>;
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 			status = "disabled";
- 
- 			i2c8: i2c@a80000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa80000 0x4000>;
-+				reg = <0 0x00a80000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -717,7 +718,7 @@
- 
- 			spi8: spi@a80000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa80000 0x4000>;
-+				reg = <0 0x00a80000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -730,7 +731,7 @@
- 
- 			uart8: serial@a80000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa80000 0x4000>;
-+				reg = <0 0x00a80000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S0_CLK>;
- 				pinctrl-names = "default";
-@@ -741,7 +742,7 @@
- 
- 			i2c9: i2c@a84000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa84000 0x4000>;
-+				reg = <0 0x00a84000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -754,7 +755,7 @@
- 
- 			spi9: spi@a84000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa84000 0x4000>;
-+				reg = <0 0x00a84000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -767,7 +768,7 @@
- 
- 			uart9: serial@a84000 {
- 				compatible = "qcom,geni-debug-uart";
--				reg = <0xa84000 0x4000>;
-+				reg = <0 0x00a84000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S1_CLK>;
- 				pinctrl-names = "default";
-@@ -778,7 +779,7 @@
- 
- 			i2c10: i2c@a88000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa88000 0x4000>;
-+				reg = <0 0x00a88000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -791,7 +792,7 @@
- 
- 			spi10: spi@a88000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa88000 0x4000>;
-+				reg = <0 0x00a88000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -804,7 +805,7 @@
- 
- 			uart10: serial@a88000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa88000 0x4000>;
-+				reg = <0 0x00a88000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S2_CLK>;
- 				pinctrl-names = "default";
-@@ -815,7 +816,7 @@
- 
- 			i2c11: i2c@a8c000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa8c000 0x4000>;
-+				reg = <0 0x00a8c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -828,7 +829,7 @@
- 
- 			spi11: spi@a8c000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa8c000 0x4000>;
-+				reg = <0 0x00a8c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -841,7 +842,7 @@
- 
- 			uart11: serial@a8c000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa8c000 0x4000>;
-+				reg = <0 0x00a8c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S3_CLK>;
- 				pinctrl-names = "default";
-@@ -852,7 +853,7 @@
- 
- 			i2c12: i2c@a90000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa90000 0x4000>;
-+				reg = <0 0x00a90000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -865,7 +866,7 @@
- 
- 			spi12: spi@a90000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa90000 0x4000>;
-+				reg = <0 0x00a90000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -878,7 +879,7 @@
- 
- 			uart12: serial@a90000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa90000 0x4000>;
-+				reg = <0 0x00a90000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S4_CLK>;
- 				pinctrl-names = "default";
-@@ -889,7 +890,7 @@
- 
- 			i2c13: i2c@a94000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa94000 0x4000>;
-+				reg = <0 0x00a94000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
- 				pinctrl-names = "default";
-@@ -902,7 +903,7 @@
- 
- 			spi13: spi@a94000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa94000 0x4000>;
-+				reg = <0 0x00a94000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
- 				pinctrl-names = "default";
-@@ -915,7 +916,7 @@
- 
- 			uart13: serial@a94000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa94000 0x4000>;
-+				reg = <0 0x00a94000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S5_CLK>;
- 				pinctrl-names = "default";
-@@ -926,7 +927,7 @@
- 
- 			i2c14: i2c@a98000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa98000 0x4000>;
-+				reg = <0 0x00a98000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
- 				pinctrl-names = "default";
-@@ -939,7 +940,7 @@
- 
- 			spi14: spi@a98000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa98000 0x4000>;
-+				reg = <0 0x00a98000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
- 				pinctrl-names = "default";
-@@ -952,7 +953,7 @@
- 
- 			uart14: serial@a98000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa98000 0x4000>;
-+				reg = <0 0x00a98000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S6_CLK>;
- 				pinctrl-names = "default";
-@@ -963,7 +964,7 @@
- 
- 			i2c15: i2c@a9c000 {
- 				compatible = "qcom,geni-i2c";
--				reg = <0xa9c000 0x4000>;
-+				reg = <0 0x00a9c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
- 				pinctrl-names = "default";
-@@ -976,7 +977,7 @@
- 
- 			spi15: spi@a9c000 {
- 				compatible = "qcom,geni-spi";
--				reg = <0xa9c000 0x4000>;
-+				reg = <0 0x00a9c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
- 				pinctrl-names = "default";
-@@ -989,7 +990,7 @@
- 
- 			uart15: serial@a9c000 {
- 				compatible = "qcom,geni-uart";
--				reg = <0xa9c000 0x4000>;
-+				reg = <0 0x00a9c000 0 0x4000>;
- 				clock-names = "se";
- 				clocks = <&gcc GCC_QUPV3_WRAP1_S7_CLK>;
- 				pinctrl-names = "default";
-@@ -1002,7 +1003,7 @@
- 		ufs_mem_hc: ufshc@1d84000 {
- 			compatible = "qcom,sdm845-ufshc", "qcom,ufshc",
- 				     "jedec,ufs-2.0";
--			reg = <0x1d84000 0x2500>;
-+			reg = <0 0x01d84000 0 0x2500>;
- 			interrupts = <GIC_SPI 265 IRQ_TYPE_LEVEL_HIGH>;
- 			phys = <&ufs_mem_phy_lanes>;
- 			phy-names = "ufsphy";
-@@ -1044,9 +1045,9 @@
- 
- 		ufs_mem_phy: phy@1d87000 {
- 			compatible = "qcom,sdm845-qmp-ufs-phy";
--			reg = <0x1d87000 0x18c>;
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			reg = <0 0x01d87000 0 0x18c>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 			clock-names = "ref",
- 				      "ref_aux";
-@@ -1056,23 +1057,23 @@
- 			status = "disabled";
- 
- 			ufs_mem_phy_lanes: lanes@1d87400 {
--				reg = <0x1d87400 0x108>,
--				      <0x1d87600 0x1e0>,
--				      <0x1d87c00 0x1dc>,
--				      <0x1d87800 0x108>,
--				      <0x1d87a00 0x1e0>;
-+				reg = <0 0x01d87400 0 0x108>,
-+				      <0 0x01d87600 0 0x1e0>,
-+				      <0 0x01d87c00 0 0x1dc>,
-+				      <0 0x01d87800 0 0x108>,
-+				      <0 0x01d87a00 0 0x1e0>;
- 				#phy-cells = <0>;
- 			};
- 		};
- 
- 		tcsr_mutex_regs: syscon@1f40000 {
- 			compatible = "syscon";
--			reg = <0x1f40000 0x40000>;
-+			reg = <0 0x01f40000 0 0x40000>;
- 		};
- 
- 		tlmm: pinctrl@3400000 {
- 			compatible = "qcom,sdm845-pinctrl";
--			reg = <0x03400000 0xc00000>;
-+			reg = <0 0x03400000 0 0xc00000>;
- 			interrupts = <GIC_SPI 208 IRQ_TYPE_LEVEL_HIGH>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
-@@ -1469,7 +1470,7 @@
- 
- 		gpucc: clock-controller@5090000 {
- 			compatible = "qcom,sdm845-gpucc";
--			reg = <0x05090000 0x9000>;
-+			reg = <0 0x05090000 0 0x9000>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-@@ -1479,7 +1480,7 @@
- 
- 		sdhc_2: sdhci@8804000 {
- 			compatible = "qcom,sdm845-sdhci", "qcom,sdhci-msm-v5";
--			reg = <0x8804000 0x1000>;
-+			reg = <0 0x08804000 0 0x1000>;
- 
- 			interrupts = <GIC_SPI 204 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 222 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1494,7 +1495,7 @@
- 
- 		qspi: spi@88df000 {
- 			compatible = "qcom,sdm845-qspi", "qcom,qspi-v1";
--			reg = <0x88df000 0x600>;
-+			reg = <0 0x088df000 0 0x600>;
- 			#address-cells = <1>;
- 			#size-cells = <0>;
- 			interrupts = <GIC_SPI 82 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1506,7 +1507,7 @@
- 
- 		usb_1_hsphy: phy@88e2000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
--			reg = <0x88e2000 0x400>;
-+			reg = <0 0x088e2000 0 0x400>;
- 			status = "disabled";
- 			#phy-cells = <0>;
- 
-@@ -1521,7 +1522,7 @@
- 
- 		usb_2_hsphy: phy@88e3000 {
- 			compatible = "qcom,sdm845-qusb2-phy";
--			reg = <0x88e3000 0x400>;
-+			reg = <0 0x088e3000 0 0x400>;
- 			status = "disabled";
- 			#phy-cells = <0>;
- 
-@@ -1536,13 +1537,13 @@
- 
- 		usb_1_qmpphy: phy@88e9000 {
- 			compatible = "qcom,sdm845-qmp-usb3-phy";
--			reg = <0x88e9000 0x18c>,
--			      <0x88e8000 0x10>;
-+			reg = <0 0x088e9000 0 0x18c>,
-+			      <0 0x088e8000 0 0x10>;
- 			reg-names = "reg-base", "dp_com";
- 			status = "disabled";
- 			#clock-cells = <1>;
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 
- 			clocks = <&gcc GCC_USB3_PRIM_PHY_AUX_CLK>,
-@@ -1556,12 +1557,12 @@
- 			reset-names = "phy", "common";
- 
- 			usb_1_ssphy: lanes@88e9200 {
--				reg = <0x88e9200 0x128>,
--				      <0x88e9400 0x200>,
--				      <0x88e9c00 0x218>,
--				      <0x88e9600 0x128>,
--				      <0x88e9800 0x200>,
--				      <0x88e9a00 0x100>;
-+				reg = <0 0x088e9200 0 0x128>,
-+				      <0 0x088e9400 0 0x200>,
-+				      <0 0x088e9c00 0 0x218>,
-+				      <0 0x088e9600 0 0x128>,
-+				      <0 0x088e9800 0 0x200>,
-+				      <0 0x088e9a00 0 0x100>;
- 				#phy-cells = <0>;
- 				clocks = <&gcc GCC_USB3_PRIM_PHY_PIPE_CLK>;
- 				clock-names = "pipe0";
-@@ -1571,11 +1572,11 @@
- 
- 		usb_2_qmpphy: phy@88eb000 {
- 			compatible = "qcom,sdm845-qmp-usb3-uni-phy";
--			reg = <0x88eb000 0x18c>;
-+			reg = <0 0x088eb000 0 0x18c>;
- 			status = "disabled";
- 			#clock-cells = <1>;
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 
- 			clocks = <&gcc GCC_USB3_SEC_PHY_AUX_CLK>,
-@@ -1589,10 +1590,10 @@
- 			reset-names = "phy", "common";
- 
- 			usb_2_ssphy: lane@88eb200 {
--				reg = <0x88eb200 0x128>,
--				      <0x88eb400 0x1fc>,
--				      <0x88eb800 0x218>,
--				      <0x88eb600 0x70>;
-+				reg = <0 0x088eb200 0 0x128>,
-+				      <0 0x088eb400 0 0x1fc>,
-+				      <0 0x088eb800 0 0x218>,
-+				      <0 0x088eb600 0 0x70>;
- 				#phy-cells = <0>;
- 				clocks = <&gcc GCC_USB3_SEC_PHY_PIPE_CLK>;
- 				clock-names = "pipe0";
-@@ -1602,10 +1603,10 @@
- 
- 		usb_1: usb@a6f8800 {
- 			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
--			reg = <0xa6f8800 0x400>;
-+			reg = <0 0x0a6f8800 0 0x400>;
- 			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 
- 			clocks = <&gcc GCC_CFG_NOC_USB3_PRIM_AXI_CLK>,
-@@ -1633,7 +1634,7 @@
- 
- 			usb_1_dwc3: dwc3@a600000 {
- 				compatible = "snps,dwc3";
--				reg = <0xa600000 0xcd00>;
-+				reg = <0 0x0a600000 0 0xcd00>;
- 				interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
-@@ -1644,10 +1645,10 @@
- 
- 		usb_2: usb@a8f8800 {
- 			compatible = "qcom,sdm845-dwc3", "qcom,dwc3";
--			reg = <0xa8f8800 0x400>;
-+			reg = <0 0x0a8f8800 0 0x400>;
- 			status = "disabled";
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 
- 			clocks = <&gcc GCC_CFG_NOC_USB3_SEC_AXI_CLK>,
-@@ -1675,7 +1676,7 @@
- 
- 			usb_2_dwc3: dwc3@a800000 {
- 				compatible = "snps,dwc3";
--				reg = <0xa800000 0xcd00>;
-+				reg = <0 0x0a800000 0 0xcd00>;
- 				interrupts = <GIC_SPI 138 IRQ_TYPE_LEVEL_HIGH>;
- 				snps,dis_u2_susphy_quirk;
- 				snps,dis_enblslpm_quirk;
-@@ -1686,7 +1687,7 @@
- 
- 		videocc: clock-controller@ab00000 {
- 			compatible = "qcom,sdm845-videocc";
--			reg = <0x0ab00000 0x10000>;
-+			reg = <0 0x0ab00000 0 0x10000>;
- 			#clock-cells = <1>;
- 			#power-domain-cells = <1>;
- 			#reset-cells = <1>;
-@@ -1694,7 +1695,7 @@
- 
- 		mdss: mdss@ae00000 {
- 			compatible = "qcom,sdm845-mdss";
--			reg = <0x0ae00000 0x1000>;
-+			reg = <0 0x0ae00000 0 0x1000>;
- 			reg-names = "mdss";
- 
- 			power-domains = <&dispcc MDSS_GDSC>;
-@@ -1716,14 +1717,14 @@
- 
- 			status = "disabled";
- 
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 
- 			mdss_mdp: mdp@ae01000 {
- 				compatible = "qcom,sdm845-dpu";
--				reg = <0x0ae01000 0x8f000>,
--				      <0x0aeb0000 0x2008>;
-+				reg = <0 0x0ae01000 0 0x8f000>,
-+				      <0 0x0aeb0000 0 0x2008>;
- 				reg-names = "mdp", "vbif";
- 
- 				clocks = <&dispcc DISP_CC_MDSS_AHB_CLK>,
-@@ -1764,7 +1765,7 @@
- 
- 			dsi0: dsi@ae94000 {
- 				compatible = "qcom,mdss-dsi-ctrl";
--				reg = <0xae94000 0x400>;
-+				reg = <0 0x0ae94000 0 0x400>;
- 				reg-names = "dsi_ctrl";
- 
- 				interrupt-parent = <&mdss>;
-@@ -1812,9 +1813,9 @@
- 
- 			dsi0_phy: dsi-phy@ae94400 {
- 				compatible = "qcom,dsi-phy-10nm";
--				reg = <0xae94400 0x200>,
--				      <0xae94600 0x280>,
--				      <0xae94a00 0x1e0>;
-+				reg = <0 0x0ae94400 0 0x200>,
-+				      <0 0x0ae94600 0 0x280>,
-+				      <0 0x0ae94a00 0 0x1e0>;
- 				reg-names = "dsi_phy",
- 					    "dsi_phy_lane",
- 					    "dsi_pll";
-@@ -1830,7 +1831,7 @@
- 
- 			dsi1: dsi@ae96000 {
- 				compatible = "qcom,mdss-dsi-ctrl";
--				reg = <0xae96000 0x400>;
-+				reg = <0 0x0ae96000 0 0x400>;
- 				reg-names = "dsi_ctrl";
- 
- 				interrupt-parent = <&mdss>;
-@@ -1878,9 +1879,9 @@
- 
- 			dsi1_phy: dsi-phy@ae96400 {
- 				compatible = "qcom,dsi-phy-10nm";
--				reg = <0xae96400 0x200>,
--				      <0xae96600 0x280>,
--				      <0xae96a00 0x10e>;
-+				reg = <0 0x0ae96400 0 0x200>,
-+				      <0 0x0ae96600 0 0x280>,
-+				      <0 0x0ae96a00 0 0x10e>;
- 				reg-names = "dsi_phy",
- 					    "dsi_phy_lane",
- 					    "dsi_pll";
-@@ -1897,7 +1898,7 @@
- 
- 		dispcc: clock-controller@af00000 {
- 			compatible = "qcom,sdm845-dispcc";
--			reg = <0xaf00000 0x10000>;
-+			reg = <0 0x0af00000 0 0x10000>;
- 			#clock-cells = <1>;
- 			#reset-cells = <1>;
- 			#power-domain-cells = <1>;
-@@ -1905,39 +1906,39 @@
- 
- 		pdc_reset: reset-controller@b2e0000 {
- 			compatible = "qcom,sdm845-pdc-global";
--			reg = <0x0b2e0000 0x20000>;
-+			reg = <0 0x0b2e0000 0 0x20000>;
- 			#reset-cells = <1>;
- 		};
- 
- 		tsens0: thermal-sensor@c263000 {
- 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
--			reg = <0xc263000 0x1ff>, /* TM */
--			      <0xc222000 0x1ff>; /* SROT */
-+			reg = <0 0x0c263000 0 0x1ff>, /* TM */
-+			      <0 0x0c222000 0 0x1ff>; /* SROT */
- 			#qcom,sensors = <13>;
- 			#thermal-sensor-cells = <1>;
- 		};
- 
- 		tsens1: thermal-sensor@c265000 {
- 			compatible = "qcom,sdm845-tsens", "qcom,tsens-v2";
--			reg = <0xc265000 0x1ff>, /* TM */
--			      <0xc223000 0x1ff>; /* SROT */
-+			reg = <0 0x0c265000 0 0x1ff>, /* TM */
-+			      <0 0x0c223000 0 0x1ff>; /* SROT */
- 			#qcom,sensors = <8>;
- 			#thermal-sensor-cells = <1>;
- 		};
- 
- 		aoss_reset: reset-controller@c2a0000 {
- 			compatible = "qcom,sdm845-aoss-cc";
--			reg = <0xc2a0000 0x31000>;
-+			reg = <0 0x0c2a0000 0 0x31000>;
- 			#reset-cells = <1>;
- 		};
- 
- 		spmi_bus: spmi@c440000 {
- 			compatible = "qcom,spmi-pmic-arb";
--			reg = <0xc440000 0x1100>,
--			      <0xc600000 0x2000000>,
--			      <0xe600000 0x100000>,
--			      <0xe700000 0xa0000>,
--			      <0xc40a000 0x26000>;
-+			reg = <0 0x0c440000 0 0x1100>,
-+			      <0 0x0c600000 0 0x2000000>,
-+			      <0 0x0e600000 0 0x100000>,
-+			      <0 0x0e700000 0 0xa0000>,
-+			      <0 0x0c40a000 0 0x26000>;
- 			reg-names = "core", "chnls", "obsrvr", "intr", "cnfg";
- 			interrupt-names = "periph_irq";
- 			interrupts = <GIC_SPI 481 IRQ_TYPE_LEVEL_HIGH>;
-@@ -1952,7 +1953,7 @@
- 
- 		apps_smmu: iommu@15000000 {
- 			compatible = "qcom,sdm845-smmu-500", "arm,mmu-500";
--			reg = <0x15000000 0x80000>;
-+			reg = <0 0x15000000 0 0x80000>;
- 			#iommu-cells = <2>;
- 			#global-interrupts = <1>;
- 			interrupts = <GIC_SPI 65 IRQ_TYPE_LEVEL_HIGH>,
-@@ -2032,16 +2033,16 @@
- 
- 		apss_shared: mailbox@17990000 {
- 			compatible = "qcom,sdm845-apss-shared";
--			reg = <0x17990000 0x1000>;
-+			reg = <0 0x17990000 0 0x1000>;
- 			#mbox-cells = <1>;
- 		};
- 
- 		apps_rsc: rsc@179c0000 {
- 			label = "apps_rsc";
- 			compatible = "qcom,rpmh-rsc";
--			reg = <0x179c0000 0x10000>,
--			      <0x179d0000 0x10000>,
--			      <0x179e0000 0x10000>;
-+			reg = <0 0x179c0000 0 0x10000>,
-+			      <0 0x179d0000 0 0x10000>,
-+			      <0 0x179e0000 0 0x10000>;
- 			reg-names = "drv-0", "drv-1", "drv-2";
- 			interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 4 IRQ_TYPE_LEVEL_HIGH>,
-@@ -2061,85 +2062,85 @@
- 
- 		intc: interrupt-controller@17a00000 {
- 			compatible = "arm,gic-v3";
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 			#interrupt-cells = <3>;
- 			interrupt-controller;
--			reg = <0x17a00000 0x10000>,     /* GICD */
--			      <0x17a60000 0x100000>;    /* GICR * 8 */
-+			reg = <0 0x17a00000 0 0x10000>,     /* GICD */
-+			      <0 0x17a60000 0 0x100000>;    /* GICR * 8 */
- 			interrupts = <GIC_PPI 9 IRQ_TYPE_LEVEL_HIGH>;
- 
- 			gic-its@17a40000 {
- 				compatible = "arm,gic-v3-its";
- 				msi-controller;
- 				#msi-cells = <1>;
--				reg = <0x17a40000 0x20000>;
-+				reg = <0 0x17a40000 0 0x20000>;
- 				status = "disabled";
- 			};
- 		};
- 
- 		timer@17c90000 {
--			#address-cells = <1>;
--			#size-cells = <1>;
-+			#address-cells = <2>;
-+			#size-cells = <2>;
- 			ranges;
- 			compatible = "arm,armv7-timer-mem";
--			reg = <0x17c90000 0x1000>;
-+			reg = <0 0x17c90000 0 0x1000>;
- 
- 			frame@17ca0000 {
- 				frame-number = <0>;
- 				interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 6 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17ca0000 0x1000>,
--				      <0x17cb0000 0x1000>;
-+				reg = <0 0x17ca0000 0 0x1000>,
-+				      <0 0x17cb0000 0 0x1000>;
- 			};
- 
- 			frame@17cc0000 {
- 				frame-number = <1>;
- 				interrupts = <GIC_SPI 8 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17cc0000 0x1000>;
-+				reg = <0 0x17cc0000 0 0x1000>;
- 				status = "disabled";
- 			};
- 
- 			frame@17cd0000 {
- 				frame-number = <2>;
- 				interrupts = <GIC_SPI 9 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17cd0000 0x1000>;
-+				reg = <0 0x17cd0000 0 0x1000>;
- 				status = "disabled";
- 			};
- 
- 			frame@17ce0000 {
- 				frame-number = <3>;
- 				interrupts = <GIC_SPI 10 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17ce0000 0x1000>;
-+				reg = <0 0x17ce0000 0 0x1000>;
- 				status = "disabled";
- 			};
- 
- 			frame@17cf0000 {
- 				frame-number = <4>;
- 				interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17cf0000 0x1000>;
-+				reg = <0 0x17cf0000 0 0x1000>;
- 				status = "disabled";
- 			};
- 
- 			frame@17d00000 {
- 				frame-number = <5>;
- 				interrupts = <GIC_SPI 12 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17d00000 0x1000>;
-+				reg = <0 0x17d00000 0 0x1000>;
- 				status = "disabled";
- 			};
- 
- 			frame@17d10000 {
- 				frame-number = <6>;
- 				interrupts = <GIC_SPI 13 IRQ_TYPE_LEVEL_HIGH>;
--				reg = <0x17d10000 0x1000>;
-+				reg = <0 0x17d10000 0 0x1000>;
- 				status = "disabled";
- 			};
- 		};
- 
- 		cpufreq_hw: cpufreq@17d43000 {
- 			compatible = "qcom,cpufreq-hw";
--			reg = <0x17d43000 0x1400>, <0x17d45800 0x1400>;
-+			reg = <0 0x17d43000 0 0x1400>, <0 0x17d45800 0 0x1400>;
- 			reg-names = "freq-domain0", "freq-domain1";
- 
- 			clocks = <&rpmhcc RPMH_CXO_CLK>, <&gcc GPLL0>;
--- 
-2.18.0
+Thanks
+Kishon
