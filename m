@@ -1,72 +1,73 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [alsa-devel] [PATCH v2 4/4] ASoC: add imx-audmix DT binding documentation
-Date: Wed, 16 Jan 2019 08:57:53 -0600
-Message-ID: <CAL_JsqKzmqubd8BVPdju2hLwZNMsen-1+uuHT+S-yirXaSNyHw@mail.gmail.com>
-References: <1546952716-2743-1-git-send-email-viorel.suman@nxp.com>
- <1546952716-2743-5-git-send-email-viorel.suman@nxp.com> <20190115205755.GA4022@bogus>
- <CAEnQRZBn7nM-KrGSvnzPWuU=a+jyRxfEKhZSsDD4wTqr6spkwg@mail.gmail.com>
+From: Arnd Bergmann <arnd@arndb.de>
+Subject: Re: [PATCH v2 2/3] mfd: syscon: Add optional clock support
+Date: Wed, 16 Jan 2019 16:11:08 +0100
+Message-ID: <CAK8P3a0kV4-OF7JPwM9cEqxaPvNM9dFZdyZetc47t+D5izkFwQ@mail.gmail.com>
+References: <1544604495-4082-1-git-send-email-fabrice.gasnier@st.com>
+ <1544604495-4082-3-git-send-email-fabrice.gasnier@st.com> <CAK8P3a1MucNG86=bXwVVsasGBOLJ67kuRSpoeneF6M5aB6GmQA@mail.gmail.com>
+ <9e0ee154-a399-9bff-3beb-adfd9d6c6fee@st.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAEnQRZBn7nM-KrGSvnzPWuU=a+jyRxfEKhZSsDD4wTqr6spkwg@mail.gmail.com>
+In-Reply-To: <9e0ee154-a399-9bff-3beb-adfd9d6c6fee@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Daniel Baluta <daniel.baluta@gmail.com>
-Cc: Viorel Suman <viorel.suman@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, Takashi Iwai <tiwai@suse.com>, Liam Girdwood <lgirdwood@gmail.com>, Nicolin Chen <nicoleotsuka@gmail.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, Mark Brown <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>
+To: Fabrice Gasnier <fabrice.gasnier@st.com>
+Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Alexandre Torgue <alexandre.torgue@st.com>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Gabriel Fernandez <gabriel.fernandez@st.com>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 2:22 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
+On Wed, Jan 16, 2019 at 3:10 PM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
 >
-> On Tue, Jan 15, 2019 at 10:58 PM Rob Herring <robh@kernel.org> wrote:
+> On 1/16/19 1:14 PM, Arnd Bergmann wrote:
+> > (sorry for the late reply, I just realized that I had never sent out the
+> > mail after Lee asked me for a review last year and I had drafted
+> > my reply).
+>
+> Hi Arnd,
+>
+> Many thanks for reviewing, no worries :-)
+>
 > >
-> > On Tue, Jan 08, 2019 at 01:05:51PM +0000, Viorel Suman wrote:
-> > > Add the DT binding documentation for Audio Mixer
-> > > machine driver.
-> > >
-> > > Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> > > ---
-> > >  .../devicetree/bindings/sound/imx-audmix.txt       | 24 ++++++++++++++++++++++
-> > >  1 file changed, 24 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/sound/imx-audmix.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/sound/imx-audmix.txt b/Documentation/devicetree/bindings/sound/imx-audmix.txt
-> > > new file mode 100644
-> > > index 0000000..6ac1230
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/sound/imx-audmix.txt
-> > > @@ -0,0 +1,24 @@
-> > > +NXP Audio Mixer (AUDMIX) machine driver.
-> > > +
-> > > +Required properties:
-> > > +===================================
-> > > +  - compatible               : Compatible list, contains "fsl,imx-audmix"
-> > > +
-> > > +  - model            : Short audio card description.
-> > > +
-> > > +  - dais             : Must contain a list of phandles to AUDMIX connected
-> > > +                       DAIs. The current implementation requires two phandles
-> > > +                       to SAI interfaces to be provided, the first SAI in the
-> > > +                       list being used to route the AUDMIX output.
-> > > +
-> > > +  - audmix-controller        : Must contain the phandle to the AUDMIX device node.
+> > On Wed, Dec 12, 2018 at 9:48 AM Fabrice Gasnier <fabrice.gasnier@st.com> wrote:
+> >>
+> >> Some system control registers need to be clocked, so the registers can
+> >> be accessed. Add an optional clock and attach it to regmap.
+> >>
+> >> Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
 > >
-> > I don't think you need 2 nodes for this as this one is just a virtual
-> > device. Just add the dais property to the audmix node.
+> > This looks ok to me in principle, but I have one question: When we
+> > do a clk_get() and clk_prepare() as part of regmap_mmio_attach_clk(),
+> > does that change the behavior of syscon nodes that are otherwise
+> > unused?
 >
-> Hi Rob,
->
-> Thanks for the suggestion. We want to understand better the reasoning
-> behind this.
->
-> Is it because dais are physically connected to AUDMIX node?
->
-> In ALSA we usually add all the components inside the
-> associated machine driver virtual node.
+> I'm not sure I correctly understand this question. I don't think it will
+> change the behavior for "unused" nodes. These should remain unused with
+> this patch.
 
-Yes, but in those cases, there's a bunch of components (DAIs, DMA,
-DSP, amp, codecs, etc.) with no main device. That doesn't really
-appear to be the case here (or your example was incomplete).
+What I mean is that nodes that listed as 'compatible="syscon"' get
+probed by the syscon driver even when no other driver references
+them, and that in turn would acquire the clock, right?
 
-It's simply that we try to avoid such virtual devices unless
-absolutely necessary.
+> > I think we have a bunch of devices that started out as a syscon but
+> > then we added a proper driver for them, which would handle the
+> > clocks explicitly. Is it guaranteed that this will keep working (including
+> > shutting down the clocks when they are unused) if we have two drivers
+> > that call clk_get() on the same device node?
+>
+> I'd expect nothing wrong happens when two drivers call clk_get() for the
+> same clock.
+> Are there some case where two drivers are bind (e.g. syscon driver +
+> another driver) for the same piece of hardware ?
 
-Rob
+You won't actually have two drivers binding to the same device, but you
+could have a driver and a syscon user that does relies on the
+syscon_regmap_lookup_by_*() functions.
+
+I think we've had a couple of cases where we started out representing
+a device as syscon, and then later decided that a high-level abstraction
+would be needed because syscon didn't quite support all the needed
+features.
+
+Since each syscon node should also have a more specific
+compatible value, you can then have another driver that binds
+to that compatible string.
+
+      Arnd
