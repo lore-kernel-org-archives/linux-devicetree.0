@@ -1,105 +1,65 @@
 From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH 09/21] memblock: drop memblock_alloc_base()
-Date: Wed, 16 Jan 2019 15:44:09 +0200
-Message-ID: <1547646261-32535-10-git-send-email-rppt@linux.ibm.com>
+Subject: [PATCH 20/21] memblock: memblock_alloc_try_nid: don't panic
+Date: Wed, 16 Jan 2019 15:44:20 +0200
+Message-ID: <1547646261-32535-21-git-send-email-rppt@linux.ibm.com>
 References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mm@kvack.org
-Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, Petr Mladek <pmladek@suse.com>, linux-xtensa@linux-xten
+Cc: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+d>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIG1lbWJsb2NrX2FsbG9jX2Jhc2UoKSBmdW5jdGlvbiB0cmllcyB0byBhbGxvY2F0ZSBhIG1l
-bW9yeSB1cCB0byB0aGUKbGltaXQgc3BlY2lmaWVkIGJ5IGl0cyBtYXhfYWRkciBwYXJhbWV0ZXIg
-YW5kIHBhbmljcyBpZiB0aGUgYWxsb2NhdGlvbgpmYWlscy4gUmVwbGFjZSBpdHMgdXNhZ2Ugd2l0
-aCBtZW1ibG9ja19waHlzX2FsbG9jX3JhbmdlKCkgYW5kIG1ha2UgdGhlCmNhbGxlcnMgY2hlY2sg
-dGhlIHJldHVybiB2YWx1ZSBhbmQgcGFuaWMgaW4gY2FzZSBvZiBlcnJvci4KClNpZ25lZC1vZmYt
-Ynk6IE1pa2UgUmFwb3BvcnQgPHJwcHRAbGludXguaWJtLmNvbT4KLS0tCiBhcmNoL3Bvd2VycGMv
-a2VybmVsL3J0YXMuYyAgICAgIHwgIDYgKysrKystCiBhcmNoL3Bvd2VycGMvbW0vaGFzaF91dGls
-c182NC5jIHwgIDggKysrKysrLS0KIGFyY2gvczM5MC9rZXJuZWwvc21wLmMgICAgICAgICAgfCAg
-NiArKysrKy0KIGRyaXZlcnMvbWFjaW50b3NoL3NtdS5jICAgICAgICAgfCAgMiArLQogaW5jbHVk
-ZS9saW51eC9tZW1ibG9jay5oICAgICAgICB8ICAyIC0tCiBtbS9tZW1ibG9jay5jICAgICAgICAg
-ICAgICAgICAgIHwgMTQgLS0tLS0tLS0tLS0tLS0KIDYgZmlsZXMgY2hhbmdlZCwgMTcgaW5zZXJ0
-aW9ucygrKSwgMjEgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL2tlcm5l
-bC9ydGFzLmMgYi9hcmNoL3Bvd2VycGMva2VybmVsL3J0YXMuYwppbmRleCBkZTM1YmQ4Zi4uZmJj
-Njc2MSAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL2tlcm5lbC9ydGFzLmMKKysrIGIvYXJjaC9w
-b3dlcnBjL2tlcm5lbC9ydGFzLmMKQEAgLTExODcsNyArMTE4NywxMSBAQCB2b2lkIF9faW5pdCBy
-dGFzX2luaXRpYWxpemUodm9pZCkKIAkJaWJtX3N1c3BlbmRfbWVfdG9rZW4gPSBydGFzX3Rva2Vu
-KCJpYm0sc3VzcGVuZC1tZSIpOwogCX0KICNlbmRpZgotCXJ0YXNfcm1vX2J1ZiA9IG1lbWJsb2Nr
-X2FsbG9jX2Jhc2UoUlRBU19STU9CVUZfTUFYLCBQQUdFX1NJWkUsIHJ0YXNfcmVnaW9uKTsKKwly
-dGFzX3Jtb19idWYgPSBtZW1ibG9ja19waHlzX2FsbG9jX3JhbmdlKFJUQVNfUk1PQlVGX01BWCwg
-UEFHRV9TSVpFLAorCQkJCQkJIDAsIHJ0YXNfcmVnaW9uKTsKKwlpZiAoIXJ0YXNfcm1vX2J1ZikK
-KwkJcGFuaWMoIkVSUk9SOiBSVEFTOiBGYWlsZWQgdG8gYWxsb2NhdGUgJWx4IGJ5dGVzIGJlbG93
-ICVwYVxuIiwKKwkJICAgICAgUEFHRV9TSVpFLCAmcnRhc19yZWdpb24pOwogCiAjaWZkZWYgQ09O
-RklHX1JUQVNfRVJST1JfTE9HR0lORwogCXJ0YXNfbGFzdF9lcnJvcl90b2tlbiA9IHJ0YXNfdG9r
-ZW4oInJ0YXMtbGFzdC1lcnJvciIpOwpkaWZmIC0tZ2l0IGEvYXJjaC9wb3dlcnBjL21tL2hhc2hf
-dXRpbHNfNjQuYyBiL2FyY2gvcG93ZXJwYy9tbS9oYXNoX3V0aWxzXzY0LmMKaW5kZXggYmM2YmU0
-NC4uYzdkNWY0OCAxMDA2NDQKLS0tIGEvYXJjaC9wb3dlcnBjL21tL2hhc2hfdXRpbHNfNjQuYwor
-KysgYi9hcmNoL3Bvd2VycGMvbW0vaGFzaF91dGlsc182NC5jCkBAIC04ODIsOCArODgyLDEyIEBA
-IHN0YXRpYyB2b2lkIF9faW5pdCBodGFiX2luaXRpYWxpemUodm9pZCkKIAkJfQogI2VuZGlmIC8q
-IENPTkZJR19QUENfQ0VMTCAqLwogCi0JCXRhYmxlID0gbWVtYmxvY2tfYWxsb2NfYmFzZShodGFi
-X3NpemVfYnl0ZXMsIGh0YWJfc2l6ZV9ieXRlcywKLQkJCQkJICAgIGxpbWl0KTsKKwkJdGFibGUg
-PSBtZW1ibG9ja19waHlzX2FsbG9jX3JhbmdlKGh0YWJfc2l6ZV9ieXRlcywKKwkJCQkJCSAgaHRh
-Yl9zaXplX2J5dGVzLAorCQkJCQkJICAwLCBsaW1pdCk7CisJCWlmICghdGFibGUpCisJCQlwYW5p
-YygiRVJST1I6IEZhaWxlZCB0byBhbGxvY2F0ZSAlcGEgYnl0ZXMgYmVsb3cgJXBhXG4iLAorCQkJ
-ICAgICAgJmh0YWJfc2l6ZV9ieXRlcywgJmxpbWl0KTsKIAogCQlEQkcoIkhhc2ggdGFibGUgYWxs
-b2NhdGVkIGF0ICVseCwgc2l6ZTogJWx4XG4iLCB0YWJsZSwKIAkJICAgIGh0YWJfc2l6ZV9ieXRl
-cyk7CmRpZmYgLS1naXQgYS9hcmNoL3MzOTAva2VybmVsL3NtcC5jIGIvYXJjaC9zMzkwL2tlcm5l
-bC9zbXAuYwppbmRleCBmODJiM2QzLi45MDYxNTk3IDEwMDY0NAotLS0gYS9hcmNoL3MzOTAva2Vy
-bmVsL3NtcC5jCisrKyBiL2FyY2gvczM5MC9rZXJuZWwvc21wLmMKQEAgLTY1MSw3ICs2NTEsMTEg
-QEAgdm9pZCBfX2luaXQgc21wX3NhdmVfZHVtcF9jcHVzKHZvaWQpCiAJCS8qIE5vIHByZXZpb3Vz
-IHN5c3RlbSBwcmVzZW50LCBub3JtYWwgYm9vdC4gKi8KIAkJcmV0dXJuOwogCS8qIEFsbG9jYXRl
-IGEgcGFnZSBhcyBkdW1waW5nIGFyZWEgZm9yIHRoZSBzdG9yZSBzdGF0dXMgc2lncHMgKi8KLQlw
-YWdlID0gbWVtYmxvY2tfYWxsb2NfYmFzZShQQUdFX1NJWkUsIFBBR0VfU0laRSwgMVVMIDw8IDMx
-KTsKKwlwYWdlID0gbWVtYmxvY2tfcGh5c19hbGxvY19yYW5nZShQQUdFX1NJWkUsIFBBR0VfU0la
-RSwgMCwgMVVMIDw8IDMxKTsKKwlpZiAoIXBhZ2UpCisJCXBhbmljKCJFUlJPUjogRmFpbGVkIHRv
-IGFsbG9jYXRlICV4IGJ5dGVzIGJlbG93ICVseFxuIiwKKwkJICAgICAgUEFHRV9TSVpFLCAxVUwg
-PDwgMzEpOworCiAJLyogU2V0IG11bHRpLXRocmVhZGluZyBzdGF0ZSB0byB0aGUgcHJldmlvdXMg
-c3lzdGVtLiAqLwogCXBjcHVfc2V0X3NtdChzY2xwLm10aWRfcHJldik7CiAJYm9vdF9jcHVfYWRk
-ciA9IHN0YXAoKTsKZGlmZiAtLWdpdCBhL2RyaXZlcnMvbWFjaW50b3NoL3NtdS5jIGIvZHJpdmVy
-cy9tYWNpbnRvc2gvc211LmMKaW5kZXggMGEwYjhlMS4uNDJjZjY4ZCAxMDA2NDQKLS0tIGEvZHJp
-dmVycy9tYWNpbnRvc2gvc211LmMKKysrIGIvZHJpdmVycy9tYWNpbnRvc2gvc211LmMKQEAgLTQ4
-NSw3ICs0ODUsNyBAQCBpbnQgX19pbml0IHNtdV9pbml0ICh2b2lkKQogCSAqIFNNVSBiYXNlZCBH
-NXMgbmVlZCBzb21lIG1lbW9yeSBiZWxvdyAyR2IuIFRoYW5rZnVsbHkgdGhpcyBpcwogCSAqIGNh
-bGxlZCBhdCBhIHRpbWUgd2hlcmUgbWVtYmxvY2sgaXMgc3RpbGwgYXZhaWxhYmxlLgogCSAqLwot
-CXNtdV9jbWRidWZfYWJzID0gbWVtYmxvY2tfYWxsb2NfYmFzZSg0MDk2LCA0MDk2LCAweDgwMDAw
-MDAwVUwpOworCXNtdV9jbWRidWZfYWJzID0gbWVtYmxvY2tfcGh5c19hbGxvY19yYW5nZSg0MDk2
-LCA0MDk2LCAwLCAweDgwMDAwMDAwVUwpOwogCWlmIChzbXVfY21kYnVmX2FicyA9PSAwKSB7CiAJ
-CXByaW50ayhLRVJOX0VSUiAiU01VOiBDb21tYW5kIGJ1ZmZlciBhbGxvY2F0aW9uIGZhaWxlZCAh
-XG4iKTsKIAkJcmV0ID0gLUVJTlZBTDsKZGlmZiAtLWdpdCBhL2luY2x1ZGUvbGludXgvbWVtYmxv
-Y2suaCBiL2luY2x1ZGUvbGludXgvbWVtYmxvY2suaAppbmRleCA3NjhlMmI0Li42ODc0ZmRjIDEw
-MDY0NAotLS0gYS9pbmNsdWRlL2xpbnV4L21lbWJsb2NrLmgKKysrIGIvaW5jbHVkZS9saW51eC9t
-ZW1ibG9jay5oCkBAIC00OTQsOCArNDk0LDYgQEAgc3RhdGljIGlubGluZSBib29sIG1lbWJsb2Nr
-X2JvdHRvbV91cCh2b2lkKQogCXJldHVybiBtZW1ibG9jay5ib3R0b21fdXA7CiB9CiAKLXBoeXNf
-YWRkcl90IG1lbWJsb2NrX2FsbG9jX2Jhc2UocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3Qg
-YWxpZ24sCi0JCQkJcGh5c19hZGRyX3QgbWF4X2FkZHIpOwogcGh5c19hZGRyX3QgbWVtYmxvY2tf
-cGh5c19tZW1fc2l6ZSh2b2lkKTsKIHBoeXNfYWRkcl90IG1lbWJsb2NrX3Jlc2VydmVkX3NpemUo
-dm9pZCk7CiBwaHlzX2FkZHJfdCBtZW1ibG9ja19tZW1fc2l6ZSh1bnNpZ25lZCBsb25nIGxpbWl0
-X3Bmbik7CmRpZmYgLS1naXQgYS9tbS9tZW1ibG9jay5jIGIvbW0vbWVtYmxvY2suYwppbmRleCBl
-NWZmZGNkLi41MzFmYTc3IDEwMDY0NAotLS0gYS9tbS9tZW1ibG9jay5jCisrKyBiL21tL21lbWJs
-b2NrLmMKQEAgLTEzNjMsMjAgKzEzNjMsNiBAQCBwaHlzX2FkZHJfdCBfX2luaXQgbWVtYmxvY2tf
-cGh5c19hbGxvY19uaWQocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxpZ24sCiAJcmV0
-dXJuIHJldDsKIH0KIAotcGh5c19hZGRyX3QgX19pbml0IG1lbWJsb2NrX2FsbG9jX2Jhc2UocGh5
-c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxpZ24sIHBoeXNfYWRkcl90IG1heF9hZGRyKQot
-ewotCXBoeXNfYWRkcl90IGFsbG9jOwotCi0JYWxsb2MgPSBtZW1ibG9ja19hbGxvY19yYW5nZV9u
-aWQoc2l6ZSwgYWxpZ24sIDAsIG1heF9hZGRyLCBOVU1BX05PX05PREUsCi0JCQkJCU1FTUJMT0NL
-X05PTkUpOwotCi0JaWYgKGFsbG9jID09IDApCi0JCXBhbmljKCJFUlJPUjogRmFpbGVkIHRvIGFs
-bG9jYXRlICVwYSBieXRlcyBiZWxvdyAlcGEuXG4iLAotCQkgICAgICAmc2l6ZSwgJm1heF9hZGRy
-KTsKLQotCXJldHVybiBhbGxvYzsKLX0KLQogcGh5c19hZGRyX3QgX19pbml0IG1lbWJsb2NrX3Bo
-eXNfYWxsb2NfdHJ5X25pZChwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwgaW50
-IG5pZCkKIHsKIAlwaHlzX2FkZHJfdCByZXMgPSBtZW1ibG9ja19waHlzX2FsbG9jX25pZChzaXpl
-LCBhbGlnbiwgbmlkKTsKLS0gCjIuNy40CgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApYZW4tZGV2ZWxAbGlzdHMu
-eGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3Rp
-bmZvL3hlbi1kZXZlbA==
+As all the memblock_alloc*() users are now checking the return value and
+panic() in case of error, the panic() call can be removed from the core
+memblock allocator, namely memblock_alloc_try_nid().
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+---
+ mm/memblock.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
+
+diff --git a/mm/memblock.c b/mm/memblock.c
+index 03b3929..7164275 100644
+--- a/mm/memblock.c
++++ b/mm/memblock.c
+@@ -1526,7 +1526,7 @@ void * __init memblock_alloc_try_nid_nopanic(
+ }
+ 
+ /**
+- * memblock_alloc_try_nid - allocate boot memory block with panicking
++ * memblock_alloc_try_nid - allocate boot memory block
+  * @size: size of memory block to be allocated in bytes
+  * @align: alignment of the region and block's size
+  * @min_addr: the lower bound of the memory region from where the allocation
+@@ -1536,9 +1536,8 @@ void * __init memblock_alloc_try_nid_nopanic(
+  *	      allocate only from memory limited by memblock.current_limit value
+  * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
+  *
+- * Public panicking version of memblock_alloc_try_nid_nopanic()
+- * which provides debug information (including caller info), if enabled,
+- * and panics if the request can not be satisfied.
++ * Public function, provides additional debug information (including caller
++ * info), if enabled. This function zeroes the allocated memory.
+  *
+  * Return:
+  * Virtual address of allocated memory block on success, NULL on failure.
+@@ -1555,14 +1554,10 @@ void * __init memblock_alloc_try_nid(
+ 		     &max_addr, (void *)_RET_IP_);
+ 	ptr = memblock_alloc_internal(size, align,
+ 					   min_addr, max_addr, nid);
+-	if (ptr) {
++	if (ptr)
+ 		memset(ptr, 0, size);
+-		return ptr;
+-	}
+ 
+-	panic("%s: Failed to allocate %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa\n",
+-	      __func__, (u64)size, (u64)align, nid, &min_addr, &max_addr);
+-	return NULL;
++	return ptr;
+ }
+ 
+ /**
+-- 
+2.7.4
