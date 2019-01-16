@@ -1,139 +1,54 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v3 1/5] misc: dt-bindings: Add Qualcomm Fastrpc bindings
-Date: Wed, 16 Jan 2019 09:44:57 +0000
-Message-ID: <113dc31e-c17d-4df0-b275-9f2d09591037@linaro.org>
-References: <20190114194112.32567-1-srinivas.kandagatla@linaro.org>
- <20190114194112.32567-2-srinivas.kandagatla@linaro.org>
- <20190115202206.GA4849@bogus>
+From: Nicolas Ferre <nicolas.ferre@microchip.com>
+Subject: [PATCH 0/8] ARM: at91/dt: update to existing drivers for the sam9x60 SoC
+Date: Wed, 16 Jan 2019 10:57:36 +0100
+Message-ID: <cover.1547629763.git.nicolas.ferre@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115202206.GA4849@bogus>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: gregkh@linuxfoundation.org, arnd@arndb.de, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, thierry.escande@linaro.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <ludovic.desroches@microchip.com>
+Cc: linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sebastian Reichel <sre@kernel.org>, linux-pm@vger.kernel.org, netdev@vger.kernel.org, "David S . Miller" <davem@davemloft.net>, linux-usb@vger.kernel.org, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Nicolas Ferre <nicolas.ferre@microchip.com>
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review!
+Hi,
 
-On 15/01/2019 20:22, Rob Herring wrote:
-> On Mon, Jan 14, 2019 at 07:41:08PM +0000, Srinivas Kandagatla wrote:
->> The FastRPC driver implements an IPC (Inter-Processor Communication)
->> mechanism that allows for clients to transparently make remote method
->> invocations across DSP and APPS boundaries. This enables developers
->> to offload tasks to the DSP and free up the application processor for
->> other tasks.
->>
->> Co-developed-by: Thierry Escande <thierry.escande@linaro.org>
->> Signed-off-by: Thierry Escande <thierry.escande@linaro.org>
->> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
->> ---
->>   .../devicetree/bindings/misc/qcom,fastrpc.txt | 84 +++++++++++++++++++
->>   1 file changed, 84 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
->>
->> diff --git a/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt b/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
->> new file mode 100644
->> index 000000000000..004e636b4133
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
->> @@ -0,0 +1,84 @@
->> +Qualcomm Technologies, Inc. FastRPC Driver
->> +
->> +The FastRPC driver implements an IPC (Inter-Processor Communication)
-> 
-> driver or this is a h/w block?
+This serries collects some little modifications to DT bindings and associated
+drivers changes for supporting the upcoming SAM9X60 SoC.
 
-This is a software/firmware block in Hexagon DSP.
+I took the advantage of this series for fixing some of the leftovers in DT
+bindings for reset controller and Ethernet macb.
 
-> 
->> +mechanism that allows for clients to transparently make remote method
->> +invocations across DSP and APPS boundaries. This enables developers
->> +to offload tasks to the DSP and free up the application processor for
->> +other tasks.
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,fastrpc"
->> +
->> +- label
->> +	Usage: required
->> +	Value type: <string>
->> +	Definition: should specify the dsp domain name this fastrpc
->> +	corresponds to. must be one of this: "adsp", "mdsp", "sdsp", "cdsp"
->> +
->> +- #address-cells
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: Must be 1
->> +
->> +- #size-cells
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: Must be 0
->> +
->> += COMPUTE BANKS
->> +Each subnode of the Fastrpc node represents compute context banks available
->> +on the dsp. The name of the nodes are not important. The properties of these
-> 
-> Please specify what the node names are.
+These changes touch several sub-systems but I would like that these (mostly
+trivial) patches stay together for facilitating reviews, prevent breaking
+dependencies and facilitating the tracking of acceptance status. However, tell
+me if you think otherwise.
+My intentions are that the series would enter Mainline through arm-soc tree:
+sounds okay to everyone? If okay, I'm ready to collect Ack tags...
 
-Sure, these are compute context banks, will reword this accordingly.
+For the first batch, I send the whole series to everyone. I'll try my best to
+reduce subsequent message deliveries if one part of the serries needs rework.
 
-> 
->> +nodes are defined by the individual bindings for the specific service
->> +- All Compute context banks MUST contain the following property:
->> +
->> +- compatible:
->> +	Usage: required
->> +	Value type: <stringlist>
->> +	Definition: must be "qcom,fastrpc-compute-cb"
->> +
->> +- reg
->> +	Usage: required
->> +	Value type: <u32>
->> +	Definition: Context Bank ID.
->> +
->> +- secured:
->> +	Usage: Optional
->> +	Value type: <boolean>
->> +	Defination: Indicating context bank is secured
-> 
-> What does 'secured' mean here?
-> 
-secured in TZ sense, this context requires secure buffers to work with.
+Best regards,
+  Nicolas
 
 
->> +
->> +- nsessions:
->> +	Usage: Optional
->> +	Value type: <u32>
->> +	Defination: A value indicating how many sessions can share this
->> +		    context bank. Defaults to 1 when this property
->> +		    is not specified.
-> 
-> Needs a vendor prefix.
-> 
-Sure, will do that in next version!
+Nicolas Ferre (8):
+  dt-bindings: arm: atmel: add missing samx7 to reset controller
+  dt-bindings: arm: atmel: add new sam9x60 reset controller binding
+  dt-bindings: arm: atmel: add new sam9x60 SFR binding
+  net/macb: bindings doc/trivial: fix documentation for sama5d3 10/100
+    interface
+  net/macb: bindings doc: add sam9x60 binding
+  power: reset: at91-reset: add support for sam9x60 SoC
+  USB: host: ohci-at91: add sam9x60-sfr definition for ohci
+  net: macb: add sam9x60-macb compatibility string
 
->> +
->> +Example:
->> +
->> +adsp-pil {
->> +	compatible = "qcom,msm8996-adsp-pil";
->> +	...
->> +	smd-edge {
->> +		label = "lpass";
->> +		fastrpc {
->> +			compatible = "qcom,fastrpc";
->> +			qcom,smd-channels = "fastrpcsmd-apps-dsp";
->> +			lable = "adsp";
-> 
-> typo.
+ .../devicetree/bindings/arm/atmel-sysregs.txt       |  4 +++-
+ Documentation/devicetree/bindings/net/macb.txt      |  4 ++--
+ drivers/net/ethernet/cadence/macb_main.c            |  1 +
+ drivers/power/reset/at91-reset.c                    | 13 +++++++++++++
+ drivers/usb/host/ohci-at91.c                        |  7 +++++--
+ 5 files changed, 24 insertions(+), 5 deletions(-)
 
-Thanks for spotting this.. will fix this!
-
---srini
+-- 
+2.17.1
