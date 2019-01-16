@@ -1,31 +1,51 @@
-From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH v2] arm64: dts: imx8mq: Add pwm
-Date: Wed, 16 Jan 2019 10:24:20 +0800
-Message-ID: <20190116022419.GD15808@dragon>
-References: <20190114170316.GB4168@bogon.m.sigxcpu.org>
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 4/4] spi: sprd: Add DMA mode support
+Date: Wed, 16 Jan 2019 10:34:05 +0800
+Message-ID: <CAMz4kuKOceVJ9vjq6Z3pZUXSg28RLXHhguJKSvyZPYFLYj_hWw@mail.gmail.com>
+References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
+ <324f3106dbff2f28baae098b05219f1384fda97a.1547559542.git.baolin.wang@linaro.org>
+ <20190115143042.GB5522@sirena.org.uk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190114170316.GB4168@bogon.m.sigxcpu.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Guido =?iso-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190115143042.GB5522@sirena.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Chunyan Zhang <zhang.lyra@gmail.com>, lanqing.liu@unisoc.com, linux-spi@vger.kernel.org, DTML <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 06:03:16PM +0100, Guido G=FCnther wrote:
-> We can reuse the pwm from fsl,imx27-pwm as with other imx SOCs.
-> =
+Hi Mark,
 
-> Signed-off-by: Guido G=FCnther <agx@sigxcpu.org>
+On Tue, 15 Jan 2019 at 22:30, Mark Brown <broonie@kernel.org> wrote:
+>
+> On Tue, Jan 15, 2019 at 09:46:53PM +0800, Baolin Wang wrote:
+> > From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+> >
+> > Add DMA mode support for the Spreadtrum SPI controller, and we will enable
+> > SPI interrupt to help to complete the SPI transfer work in DMA mode.
+>
+> Again this looks good, one thing to check though:
+>
+> > +static bool sprd_spi_can_dma(struct spi_controller *sctlr,
+> > +                          struct spi_device *spi, struct spi_transfer *t)
+> > +{
+> > +     struct sprd_spi *ss = spi_controller_get_devdata(sctlr);
+> > +
+> > +     return ss->dma.enable;
+> > +}
+>
+> Is it always a benefit to use DMA?  One reason this is a function rather
+> than just a property is that even if the device can DMA any size of
+> transfer often for short transfers the performance is better if you use
+> PIO since the overhead of setting up the DMA controller, waiting and
+> then taking the interrupt when it finishes ends up being more than the
+> cost of just reading and writing directly to the FIFOs for PIO.
 
-Applied, thanks.
+Firstly we want to simplify the transfer, once we enable the DMA, we
+always want to use DMA mode. But I think you are reasonable, we will
+optimize the can_dma() ops for short transfers to improve the
+performance. Thanks for your comments.
+
+-- 
+Baolin Wang
+Best Regards
