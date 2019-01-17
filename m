@@ -1,60 +1,58 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v2 3/4] usb: musb: Kconfig: Drop dependency on MACH_JZ4740
- for jz4740
-Date: Thu, 17 Jan 2019 19:31:27 -0300
-Message-ID: <1547764287.2057.0@crapouillou.net>
-References: <20190110133700.4471-1-paul@crapouillou.net>
-        <20190110133700.4471-3-paul@crapouillou.net>
-        <20190115162603.GB18026@uda0271908>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
+Subject: [PATCH v3 1/4] Documentation: dt: Add binding info for jz4740-musb driver
+Date: Thu, 17 Jan 2019 19:33:27 -0300
+Message-ID: <20190117223330.16631-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115162603.GB18026@uda0271908>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Bin Liu <b-liu@ti.com>
-Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+This commit adds documentation for the device-tree bindings of the
+jz4740-musb driver, which provides support for the USB gadget mode
+of the JZ4740 and similar SoCs from Ingenic.
 
-On Tue, Jan 15, 2019 at 1:26 PM, Bin Liu <b-liu@ti.com> wrote:
-> Hi Paul,
-> 
-> On Thu, Jan 10, 2019 at 10:36:59AM -0300, Paul Cercueil wrote:
->>  Depending on MACH_INGENIC prevent us from creating a generic kernel 
->> that
-> 
-> Again, did you mean MACH_JZ4740 instead?
+Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-Dammit. I'm sorry. Will send a v3 right now.
+v2: No change
 
->>  works on more than one MIPS board. Instead, we just depend on MIPS 
->> being
->>  set.
->> 
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net 
->> <mailto:paul@crapouillou.net>>
->>  ---
->> 
->>  v2: Remove info about adding COMPILE_TEST in commit message, as it 
->> was
->>      there before
->> 
->>   drivers/usb/musb/Kconfig | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
->> 
->>  diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
->>  index ad08895e78f9..6f5b0ed6a507 100644
->>  --- a/drivers/usb/musb/Kconfig
->>  +++ b/drivers/usb/musb/Kconfig
->>  @@ -111,7 +111,7 @@ config USB_MUSB_UX500
->>   config USB_MUSB_JZ4740
->>   	tristate "JZ4740"
->>   	depends on NOP_USB_XCEIV
->>  -	depends on MACH_JZ4740 || COMPILE_TEST
->>  +	depends on MIPS || COMPILE_TEST
->>   	depends on USB_MUSB_GADGET
->>   	depends on USB_OTG_BLACKLIST_HUB
-> 
-> Regards,
-> -Bin.
+v3: No change
+
+ .../bindings/usb/ingenic,jz4740-musb.txt           | 24 ++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+
+diff --git a/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+new file mode 100644
+index 000000000000..620355cee63f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/usb/ingenic,jz4740-musb.txt
+@@ -0,0 +1,24 @@
++Ingenic JZ4740 MUSB driver
++
++Required properties:
++
++- compatible: Must be "ingenic,jz4740-musb"
++- reg: Address range of the UDC register set
++- interrupts: IRQ number related to the UDC hardware
++- interrupt-names: must be "mc"
++- clocks: phandle to the "udc" clock
++- clock-names: must be "udc"
++
++Example:
++
++udc: usb@13040000 {
++	compatible = "ingenic,jz4740-musb";
++	reg = <0x13040000 0x10000>;
++
++	interrupt-parent = <&intc>;
++	interrupts = <24>;
++	interrupt-names = "mc";
++
++	clocks = <&cgu JZ4740_CLK_UDC>;
++	clock-names = "udc";
++};
+-- 
+2.11.0
