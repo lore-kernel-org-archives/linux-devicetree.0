@@ -1,88 +1,48 @@
-From: mgottam@codeaurora.org
-Subject: Re: [PATCH v4] arm64: dts: sdm845: add video nodes
-Date: Thu, 17 Jan 2019 16:13:48 +0530
-Message-ID: <c1967739f843d1227803cb2c510373ae@codeaurora.org>
-References: <1546871444-13224-1-git-send-email-mgottam@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
+Date: Thu, 17 Jan 2019 11:44:48 +0100
+Message-ID: <20190117104448.zc53d3z6sl3x2mjo@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1546871444-13224-1-git-send-email-mgottam@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, stanimir.varbanov@linaro.org, vgarodia@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-07 20:00, Malathi Gottam wrote:
-> This adds video nodes to sdm845 based on the examples
-> in the bindings.
+On Wed, Jan 16, 2019 at 06:37:44PM +0000, Fabrizio Castro wrote:
+> From: Biju Das <biju.das@bp.renesas.com>
 > 
-> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+> Add Silicon Linux to the list of devicetree vendor prefixes.
+> 
+> Website: http://www.si-linux.co.jp
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
 > ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 
-> +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
+>  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index b72bdb0..df31d39 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -87,6 +87,11 @@
->  			reg = <0 0x86200000 0 0x2d00000>;
->  			no-map;
->  		};
-> +
-> +		venus_region: memory@95800000 {
-> +			reg = <0x0 0x95800000 0x0 0x600000>;
-> +			no-map;
-> +		};
->  	};
+> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> index 4b1a2a8..02a7037 100644
+> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
+> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+> @@ -344,6 +344,7 @@ sgx	SGX Sensortech
+>  sharp	Sharp Corporation
+>  shimafuji	Shimafuji Electric, Inc.
+>  si-en	Si-En Technology Ltd.
+> +si-linux	Silicon Linux Corporation
+>  sifive	SiFive, Inc.
+>  sigma	Sigma Designs, Inc.
+>  sii	Seiko Instruments, Inc.
+> -- 
+> 2.7.4
 > 
->  	cpus {
-> @@ -1403,5 +1408,35 @@
->  				status = "disabled";
->  			};
->  		};
-> +
-> +		video-codec@aa00000 {
-> +			compatible = "qcom,sdm845-venus";
-> +			reg = <0x0aa00000 0xff000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			power-domains = <&videocc VENUS_GDSC>;
-> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-> +			clock-names = "core", "iface", "bus";
-> +			iommus = <&apps_smmu 0x10a0 0x8>,
-> +				 <&apps_smmu 0x10b0 0x0>;
-> +			memory-region = <&venus_region>;
-> +
-> +			video-core0 {
-> +				compatible = "venus-decoder";
-> +				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> +					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> +				clock-names = "core", "bus";
-> +				power-domains = <&videocc VCODEC0_GDSC>;
-> +			};
-> +
-> +			video-core1 {
-> +				compatible = "venus-encoder";
-> +				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-> +					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-> +				clock-names = "core", "bus";
-> +				power-domains = <&videocc VCODEC1_GDSC>;
-> +			};
-> +		};
->  	};
->  };
-
-This patch is no longer needed as the size mismatch patch has been 
-posted
-https://patchwork.kernel.org/patch/10753645/
-
-So please consider v3 as the latest one.
-
-Thanks,
-Malathi.
