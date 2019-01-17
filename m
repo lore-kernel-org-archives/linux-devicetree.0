@@ -1,104 +1,40 @@
-From: Rajendra Nayak <rnayak@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU capacity values
-Date: Thu, 17 Jan 2019 15:38:10 +0530
-Message-ID: <5230df91-5d46-2d12-c31a-ca19934c521c@codeaurora.org>
-References: <20190116234039.12935-1-mka@chromium.org>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH 0/3] pinctrl: meson: g12a fixes
+Date: Thu, 17 Jan 2019 11:23:12 +0100
+Message-ID: <20190117102315.1833-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116234039.12935-1-mka@chromium.org>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
+To: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset fixes the initial pinctrl support added for th g12a SoC
+family, which is mainly around the register regions claimed by the
+driver.
 
+Linus, would it possible for you to provide a tag with these changes to
+Kevin ?
 
-On 1/17/2019 5:10 AM, Matthias Kaehlcke wrote:
-> Specify the relative CPU capacity of all SDM845 AP cores.
-> 
-> The values were provided by Qualcomm engineers.
-> 
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+ATM, we can only use the devices for which the pinmux is already set by
+the bootloader. Enabling the broken pinctrl driver could cause regressions
+in kernelCI. Having a tag, would allow us to start using pinctrl on this
+SoC in this cycle, w/o regression. It would be nice :)
 
-Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+Jerome
 
-> ---
->   arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
->   1 file changed, 8 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index d9be5bba62c45..e01949fd44075 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -99,6 +99,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x0>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <607>;
->   			qcom,freq-domain = <&cpufreq_hw 0>;
->   			next-level-cache = <&L2_0>;
->   			L2_0: l2-cache {
-> @@ -115,6 +116,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x100>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <607>;
->   			qcom,freq-domain = <&cpufreq_hw 0>;
->   			next-level-cache = <&L2_100>;
->   			L2_100: l2-cache {
-> @@ -128,6 +130,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x200>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <607>;
->   			qcom,freq-domain = <&cpufreq_hw 0>;
->   			next-level-cache = <&L2_200>;
->   			L2_200: l2-cache {
-> @@ -141,6 +144,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x300>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <607>;
->   			qcom,freq-domain = <&cpufreq_hw 0>;
->   			next-level-cache = <&L2_300>;
->   			L2_300: l2-cache {
-> @@ -154,6 +158,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x400>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
->   			qcom,freq-domain = <&cpufreq_hw 1>;
->   			next-level-cache = <&L2_400>;
->   			L2_400: l2-cache {
-> @@ -167,6 +172,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x500>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
->   			qcom,freq-domain = <&cpufreq_hw 1>;
->   			next-level-cache = <&L2_500>;
->   			L2_500: l2-cache {
-> @@ -180,6 +186,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x600>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
->   			qcom,freq-domain = <&cpufreq_hw 1>;
->   			next-level-cache = <&L2_600>;
->   			L2_600: l2-cache {
-> @@ -193,6 +200,7 @@
->   			compatible = "qcom,kryo385";
->   			reg = <0x0 0x700>;
->   			enable-method = "psci";
-> +			capacity-dmips-mhz = <1024>;
->   			qcom,freq-domain = <&cpufreq_hw 1>;
->   			next-level-cache = <&L2_700>;
->   			L2_700: l2-cache {
-> 
+Jerome Brunet (2):
+  dt-bindings: pinctrl: meson: update register descriptions
+  pinctrl: meson: add optional region for drive strength
+
+Xingyu Chen (1):
+  pinctrl: meson: fix G12A ao pull registers base address
+
+ .../bindings/pinctrl/meson,pinctrl.txt        | 10 ++++----
+ drivers/pinctrl/meson/pinctrl-meson.c         | 24 ++++++++++++-------
+ drivers/pinctrl/meson/pinctrl-meson.h         |  1 +
+ 3 files changed, 22 insertions(+), 13 deletions(-)
 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.20.1
