@@ -1,8 +1,10 @@
 From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v3 0/2] hwmon (ina3221) Add single-shot mode support
-Date: Thu, 17 Jan 2019 15:12:51 -0800
-Message-ID: <20190117231253.8828-1-nicoleotsuka@gmail.com>
+Subject: [PATCH v3 1/2] dt-bindings: hwmon: ina3221: Add ti,single-shot property
+Date: Thu, 17 Jan 2019 15:12:52 -0800
+Message-ID: <20190117231253.8828-2-nicoleotsuka@gmail.com>
+References: <20190117231253.8828-1-nicoleotsuka@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190117231253.8828-1-nicoleotsuka@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: jdelvare@suse.com, linux@roeck-us.net
 Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
@@ -12,23 +14,41 @@ By default, ina3221, as a hardware monitor, continuously measures
 the inputs and generates corresponding data. However, for battery
 powered devices, this mode might be power consuming.
 
-This series of patches add a feature of changing default operating
-mode to its single-shot mode via DT.
+This patch adds a "ti,single-shot" property to allow changing the
+default continuous mode to single-shot operating mode.
 
+Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 Changelog
 v2->v3:
- * Added "Reviewed-by" from Rob to PATCH-1
- * Cleaned-up PATCH-2
+ * Added "Reviewed-by" from Rob
 v1->v2:
- * Cleaned-up PATCH-2
+ * N/A
 
-Nicolin Chen (2):
-  dt-bindings: hwmon: ina3221: Add ti,single-shot property
-  hwmon: (ina3221) Implement ti,single-shot DT property
+ Documentation/devicetree/bindings/hwmon/ina3221.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
- .../devicetree/bindings/hwmon/ina3221.txt     | 10 ++++++++++
- drivers/hwmon/ina3221.c                       | 19 +++++++++++++++++++
- 2 files changed, 29 insertions(+)
-
+diff --git a/Documentation/devicetree/bindings/hwmon/ina3221.txt b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+index a7b25caa2b8e..fa63b6171407 100644
+--- a/Documentation/devicetree/bindings/hwmon/ina3221.txt
++++ b/Documentation/devicetree/bindings/hwmon/ina3221.txt
+@@ -6,6 +6,16 @@ Texas Instruments INA3221 Device Tree Bindings
+   - reg: I2C address
+ 
+   Optional properties:
++  - ti,single-shot: This chip has two power modes: single-shot (chip takes one
++                    measurement and then shuts itself down) and continuous (
++                    chip takes continuous measurements). The continuous mode is
++                    more reliable and suitable for hardware monitor type device,
++                    but the single-shot mode is more power-friendly and useful
++                    for battery-powered device which cares power consumptions
++                    while still needs some measurements occasionally.
++                    If this property is present, the single-shot mode will be
++                    used, instead of the default continuous one for monitoring.
++
+   = The node contains optional child nodes for three channels =
+   = Each child node describes the information of input source =
+ 
 -- 
 2.17.1
