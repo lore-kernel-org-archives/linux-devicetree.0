@@ -1,86 +1,88 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [RFC PATCH v4 09/13] genirq/msi: Add support for .msi_unprepare
- callback
-Date: Thu, 17 Jan 2019 10:39:36 +0000
-Message-ID: <c4736b58-08e9-eac3-fea1-5bbab7140388@arm.com>
-References: <20181227060829.5080-1-lokeshvutla@ti.com>
- <20181227061313.5451-1-lokeshvutla@ti.com>
- <20181227061313.5451-9-lokeshvutla@ti.com>
+From: mgottam@codeaurora.org
+Subject: Re: [PATCH v4] arm64: dts: sdm845: add video nodes
+Date: Thu, 17 Jan 2019 16:13:48 +0530
+Message-ID: <c1967739f843d1227803cb2c510373ae@codeaurora.org>
+References: <1546871444-13224-1-git-send-email-mgottam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181227061313.5451-9-lokeshvutla@ti.com>
-Content-Language: en-US
+In-Reply-To: <1546871444-13224-1-git-send-email-mgottam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net
-Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
+To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, stanimir.varbanov@linaro.org, vgarodia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 27/12/2018 06:13, Lokesh Vutla wrote:
-> Add an optional callback .msi_unprepare to struct msi_domain_ops.
-> This is used to clear any effect that is done by .msi_prepare callback.
+On 2019-01-07 20:00, Malathi Gottam wrote:
+> This adds video nodes to sdm845 based on the examples
+> in the bindings.
 > 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
 > ---
->  include/linux/msi.h |  3 +++
->  kernel/irq/msi.c    | 10 ++++++++++
->  2 files changed, 13 insertions(+)
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 
+> +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
 > 
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index 474490826f8c..f35dd19f6c69 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -239,6 +239,8 @@ struct msi_domain_ops {
->  	int		(*msi_prepare)(struct irq_domain *domain,
->  				       struct device *dev, int nvec,
->  				       msi_alloc_info_t *arg);
-> +	void		(*msi_unprepare)(struct irq_domain *domain, int nvec,
-> +					 void *data);
->  	void		(*msi_finish)(msi_alloc_info_t *arg, int retval);
->  	void		(*set_desc)(msi_alloc_info_t *arg,
->  				    struct msi_desc *desc);
-> @@ -319,6 +321,7 @@ void platform_msi_domain_free_irqs(struct device *dev);
->  /* When an MSI domain is used as an intermediate domain */
->  int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
->  			    int nvec, msi_alloc_info_t *args);
-> +void msi_domain_unprepare_irqs(struct irq_domain *domain, int nvec, void *data);
->  int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
->  			     int virq, int nvec, msi_alloc_info_t *args);
->  struct irq_domain *
-> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
-> index eb7459324113..1a1738690519 100644
-> --- a/kernel/irq/msi.c
-> +++ b/kernel/irq/msi.c
-> @@ -312,6 +312,16 @@ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
->  	return ret;
->  }
->  
-> +void msi_domain_unprepare_irqs(struct irq_domain *domain, int nvec,
-> +			       void *data)
-> +{
-> +	struct msi_domain_info *info = domain->host_data;
-> +	struct msi_domain_ops *ops = info->ops;
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index b72bdb0..df31d39 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -87,6 +87,11 @@
+>  			reg = <0 0x86200000 0 0x2d00000>;
+>  			no-map;
+>  		};
 > +
-> +	if (ops->msi_unprepare)
-> +		ops->msi_unprepare(domain, nvec, data);
-> +}
-> +
->  int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
->  			     int virq, int nvec, msi_alloc_info_t *arg)
->  {
+> +		venus_region: memory@95800000 {
+> +			reg = <0x0 0x95800000 0x0 0x600000>;
+> +			no-map;
+> +		};
+>  	};
 > 
+>  	cpus {
+> @@ -1403,5 +1408,35 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		video-codec@aa00000 {
+> +			compatible = "qcom,sdm845-venus";
+> +			reg = <0x0aa00000 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>;
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus";
+> +			iommus = <&apps_smmu 0x10a0 0x8>,
+> +				 <&apps_smmu 0x10b0 0x0>;
+> +			memory-region = <&venus_region>;
+> +
+> +			video-core0 {
+> +				compatible = "venus-decoder";
+> +				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +				clock-names = "core", "bus";
+> +				power-domains = <&videocc VCODEC0_GDSC>;
+> +			};
+> +
+> +			video-core1 {
+> +				compatible = "venus-encoder";
+> +				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> +					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> +				clock-names = "core", "bus";
+> +				power-domains = <&videocc VCODEC1_GDSC>;
+> +			};
+> +		};
+>  	};
+>  };
 
-Again, this needs justification. What does this brings to the table?
-What does this callback do that cannot be done when the MSI are freed?
+This patch is no longer needed as the size mismatch patch has been 
+posted
+https://patchwork.kernel.org/patch/10753645/
 
-Also, this only makes sense if it is plugged into the MSI framework. On
-its own, this is pretty useless. This makes me think that there is a gap
-in the way your MSI controller driver interacts with the reset of the
-MSI code.
+So please consider v3 as the latest one.
 
 Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Malathi.
