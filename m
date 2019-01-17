@@ -1,36 +1,68 @@
-From: Marc Gonzalez <marc.w.gonzalez@free.fr>
-Subject: Re: [PATCH v2] arm64: dts: qcom: sdm845: Expand soc bus address range
-Date: Thu, 17 Jan 2019 14:41:16 +0100
-Message-ID: <38c47c17-b86e-500a-e8c1-74d8944c6f9a@free.fr>
-References: <20190116064906.22791-1-bjorn.andersson@linaro.org>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
+Date: Thu, 17 Jan 2019 15:56:32 +0200
+Message-ID: <f151e774-96b5-56b5-1aaa-f51f9ac09e1e@ti.com>
+References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
+ <20190117123320.GD3271@phenom.ffwll.local>
+ <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
+ <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116064906.22791-1-bjorn.andersson@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: MSM <linux-arm-msm@vger.kernel.org>, DT <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, Doug Anderson <dianders@chromium.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, Frank Rowand <frowand.list@gmail.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Pantelis Antoniou <pantelis.antoniou@konsulko.com>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-On 16/01/2019 07:49, Bjorn Andersson wrote:
-
-> DMA addresses for devices on the soc bus must be constrained to the 36
-> address bits that the bus provides.  When no IOMMU is present then this
-> is easy--DMA addresses are just physical addresses and physical
-> addresses are (by definition) within the address bits of the bus.  When
-> an IOMMU is present, however, DMA addresses are virtual addresses.
-> Despite these addresses being virtual, however, they are still
-> constrained by the 36 address bits of the bus.
-> 
-> Unless dma-ranges is specified, which causes bus_dma_mask to be set, DMA
-> allocations for devices on the platform_bus will use all 48 address bits
-> available by the ARM SMMU. Causing addresses to be truncated on the bus.
-> 
-> This patch increases the #size-cells to 2, in order to be able to define
-> dma-ranges describe the 36 bit DMA capability of the bus, and bumps
-
-Seems like you changed your mind mid-sentence? :-)
-
-> While touching all reg properties, addresses are padded to 8 digits.
+T24gMTcvMDEvMTkgMTU6MjYsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4gT24gVGh1LCBKYW4gMTcs
+IDIwMTkgYXQgMjowNCBQTSBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPiB3
+cm90ZToKPj4KPj4gT24gMTcvMDEvMTkgMTQ6MzMsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4+PiBP
+biBUaHUsIEphbiAxNywgMjAxOSBhdCAwMToxOToxOFBNICswMjAwLCBUb21pIFZhbGtlaW5lbiB3
+cm90ZToKPj4+PiBUaGUgRFJNIGRldmljZSBtaW5vciBudW1iZXJzIGFyZSBhbGxvY2F0ZWQgYWNj
+b3JkaW5nIHRvIHRoZSByZWdpc3RyYXRpb24KPj4+PiBvcmRlci4gVGhpcyBjYXVzZXMgY29uZnVz
+aW9uIGluIGNhc2VzIHdoZXJlIHRoZSByZWdpc3RyYXRpb24gb3JkZXIgY2FuCj4+Pj4gY2hhbmdl
+LCBvciB3aGVuLCBzYXksIGEgbW9kZXNldHRpbmcgY2FwYWJsZSBkZXZpY2UgaXMgcHJlZmVycmVk
+IHRvIGJlCj4+Pj4gY2FyZDAsIGFuZCBhIHJlbmRlcmluZyBkZXZpY2UgaXMgcHJlZmVycmVkIHRv
+IGJlIGNhcmQxLgo+Pj4+Cj4+Pj4gVGhpcyBwYXRjaCBhZGRzIHNpbWlsYXIgZnVuY3Rpb25hbGl0
+eSB0aGF0IGlzIHVzZWQgaW4gc29tZSBvdGhlcgo+Pj4+IHN1YnN5c3RlbXMsIHdoZXJlIGRldmlj
+ZSBtaW5vciBudW1iZXJzIGNhbiBiZSBkZWZpbmVkIGluIERUIGJpbmRpbmdzJwo+Pj4+IGFsaWFz
+ZXMgbm9kZS4KPj4+Cj4+PiBXaGF0IG90aGVyIHN1YnN5c3RlbT8gSSB0aG91Z2h0IHRoYXQgbWlu
+b3IgbnVtYmVycyBzaG91bGRuJ3QgYmUgbWFkZSB1YXBpLAo+Pj4gYW5kIHRoYXQgdWRldiBvciBz
+aW1pbGFyIGlzIHN1cHBvc2VkIHRvIGdpdmUgeW91IHN0YWJsZSBuYW1lcyAuLi4gSXMgdGhhdAo+
+Pj4gbm90IHRoZSBjYXNlIG9uIFNvQz8KPj4KPj4gSSB0aGluayBhdCBsZWFzdCBpMmMsIHNwaSBh
+bmQgdWFydCB1c2UgRFQgYWxpYXNlcy4KPiAKPiBDb21taXRzL2NvZGUgaW1wbGVtZW50aW5nIHdv
+dWxkIGJlIGJlc3QuCgpGb3IgaTJjOgoKZWU1YzI3NDQwY2MyNGQ2MmVjNDYzY2NlNGMwMDBiYjMy
+YzU2OTJjNwooImkyYzogY29yZTogUGljayBpMmMgYnVzIG51bWJlciBmcm9tIGR0IGFsaWFzIGlm
+IHByZXNlbnQiKQoKMDNiZGU3YzMxYTM2MGY4MTRjYTQyMTAxZDYwNTYzYjFiODAzZGNhMQooImky
+YzogYnVzc2VzIHdpdGggZHluYW1pYyBpZHMgc2hvdWxkIHN0YXJ0IGFmdGVyIGZpeGVkIGlkcyBm
+b3IgRFQiKQoKPj4gSSBhbHNvIGhhdmUgbXkgZG91YnRzIGFib3V0IHRoaXMsIGJ1dCB0aG91Z2h0
+IHRvIHBvc3QgdGhpcyB0byBnZXQgc29tZQo+PiBjb21tZW50cywgYXMgaXQgZG9lcyBtYWtlIGxp
+ZmUgcXVpdGUgYSBiaXQgZWFzaWVyID0pLgo+IAo+IFllYWggSSB0aGluayAic29jIHdpdGhvdXQg
+dWRldiIgc2VlbXMgcmVhc29uYWJsZSBhc3N1bXB0aW9uLCBJIGp1c3QKCkknbSBub3QgdGhhdCBm
+YW1pbGlhciB3aXRoIHVkZXYgcnVsZXMuIEkgd29uZGVyIGhvdyBpdCB3b3VsZCB3b3JrLi4uIFRo
+ZQpydWxlIHdvdWxkIG5lZWQgdG8ga2VlcCBhbGwgZHluYW1pYyBjYXJkcyBvdXQgZnJvbSB0aGUg
+Z3JvdXAgb2YgcmVzZXJ2ZWQKY2FyZCBuYW1lcywgYW5kIGFsc28gaGFuZGxlIHJlbmRlciBub2Rl
+cy4gQWxsIHRoaXMgaXMgcHJvYmFibHkgcG9zc2libGUsCndpdGggYSBxdWljayBzdHVkeSBJIGNv
+dWxkIGZpbmQgb3V0IGhvdyB0byBpbXBsZW1lbnQgc29tZXRoaW5nIGxpa2UgdGhhdC4KCj4gdGhp
+bmsgdGhpcyBpcyBzb21ldGhpbmcgdGhlIG92ZXJhbGwgc29jIGNvbW11bml0eSBzaG91bGQgYWdy
+ZWUgb24gYXMgYQo+IGdvb2QgdGhpbmcgdG8gZG8uIEkgZ3Vlc3Mgc2luY2UgdGhlIG9mIHN0dWZm
+IHlvdSdyZSB1c2luZyBpcyBnZW5lcmljCj4gdGhhdCdzIGFsbCBoYXBwZW5lZCBhbHJlYWR5LCBz
+byBzaG91bGQgYW1vdW50IHRvIGdhdGhlcmluZyBhIHBpbGUgb2YKPiBhY2tzIGFuZCB0aGVuIG1l
+cmdpbmcgaXQuCgpPay4gSSdtIG5vdCBzdXJlIHdobyB0aGUgIlNvQyBwZW9wbGUiIHdvdWxkIGJl
+LCBidXQgSSBhZGRlZCBzb21lIG1vcmUgT0YKcGVvcGxlIGhlcmUuCgogVG9taQoKLS0gClRleGFz
+IEluc3RydW1lbnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtp
+LgpZLXR1bm51cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBI
+ZWxzaW5raQpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpk
+cmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0
+cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
