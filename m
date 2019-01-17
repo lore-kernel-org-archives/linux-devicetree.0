@@ -1,74 +1,118 @@
-From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
-Subject: [PATCH v3/RFT 2/2] net: phy: assert the phy reset during suspended if phy is not attached
-Date: Thu, 17 Jan 2019 20:05:09 +0900
-Message-ID: <1547723109-28792-3-git-send-email-yoshihiro.shimoda.uh@renesas.com>
-References: <1547723109-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 06/11] arm64: dts: renesas: r8a774c0-cat874: Add uSD
+ support
+Date: Thu, 17 Jan 2019 12:11:47 +0100
+Message-ID: <20190117111147.vb3lkdmgx24zusjx@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-7-git-send-email-fabrizio.castro@bp.renesas.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1547723109-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
+Content-Disposition: inline
+In-Reply-To: <1547663874-29411-7-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: netdev-owner@vger.kernel.org
-To: andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net
-Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.>
 List-Id: devicetree@vger.kernel.org
 
-This phy_device driver deasserts the reset signal in the following
-functions (expect error path):
- - phy_device_register()
- - phy_probe()
- - phy_init_hw() that is called by phy_attach_direct()
+On Wed, Jan 16, 2019 at 06:37:49PM +0000, Fabrizio Castro wrote:
+> From: Biju Das <biju.das@bp.renesas.com>
+> 
+> This patch adds uSD card support.
 
-And, the phy_device asserts the reset signal in the following
-functions (expect error path):
- - phy_device_remove()
- - phy_remove()
- - phy_detach()
+Can I confirm that SDHI0 is wired up to a uSD slot?
 
-So, if the following conditions happen, the reset signal keeps to be
-deasserted during suspended:
- - The phy driver is probed
- - But a net device doesn't open
- - And then the system enters suspend
+I ask because if that is the case then this patch looks good to me.
+But if it is wired up to a full-size SD slot then I believe
+a wp-gpio (write protect) should be described.
 
-So, this patch adds to assert the reset signal in phy_suspend() if
-a phy is not attached. Otherwise, R-Car Gen3 Salvator-XS board could
-not link up correctly if we do the following method:
-
- 1) Kernel boots by using initramfs.
- 2) Kernel enters the suspend.
- 3) Kernel returns from suspend.
- 4) ifconfig eth0 up
- --> Then, since edge signal of the reset doesn't happen,
-     it cannot link up.
-
-Signed-off-by: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
----
- drivers/net/phy/phy_device.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
-
-diff --git a/drivers/net/phy/phy_device.c b/drivers/net/phy/phy_device.c
-index d86356f..09ab62a 100644
---- a/drivers/net/phy/phy_device.c
-+++ b/drivers/net/phy/phy_device.c
-@@ -1346,6 +1346,10 @@ int phy_suspend(struct phy_device *phydev)
- 	if (ret)
- 		return ret;
- 
-+	/* Assert the reset signal if the phydev is not attached */
-+	if (!phydev->attached_dev)
-+		phy_device_reset(phydev, 1);
-+
- 	phydev->suspended = true;
- 
- 	return ret;
-@@ -1359,6 +1363,10 @@ int __phy_resume(struct phy_device *phydev)
- 
- 	WARN_ON(!mutex_is_locked(&phydev->lock));
- 
-+	/* Deassert the reset signal if the phydev is not attached */
-+	if (!phydev->attached_dev)
-+		phy_device_reset(phydev, 0);
-+
- 	if (phydev->drv && phydrv->resume)
- 		ret = phydrv->resume(phydev);
- 
--- 
-1.9.1
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+>  arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts | 50 +++++++++++++++++++++++++
+>  1 file changed, 50 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+> index c545ce5..477a56b 100644
+> --- a/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+> +++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+> @@ -7,6 +7,7 @@
+>  
+>  /dts-v1/;
+>  #include "r8a774c0.dtsi"
+> +#include <dt-bindings/gpio/gpio.h>
+>  
+>  / {
+>  	model = "Silicon Linux RZ/G2E 96board platform (CAT874)";
+> @@ -26,6 +27,29 @@
+>  		/* first 128MB is reserved for secure area. */
+>  		reg = <0x0 0x48000000 0x0 0x78000000>;
+>  	};
+> +
+> +	vcc_sdhi0: regulator-vcc-sdhi0 {
+> +		compatible = "regulator-fixed";
+> +
+> +		regulator-name = "SDHI0 Vcc";
+> +		regulator-min-microvolt = <3300000>;
+> +		regulator-max-microvolt = <3300000>;
+> +		regulator-always-on;
+> +		regulator-boot-on;
+> +	};
+> +
+> +	vccq_sdhi0: regulator-vccq-sdhi0 {
+> +		compatible = "regulator-gpio";
+> +
+> +		regulator-name = "SDHI0 VccQ";
+> +		regulator-min-microvolt = <1800000>;
+> +		regulator-max-microvolt = <3300000>;
+> +
+> +		gpios = <&gpio3 13 GPIO_ACTIVE_HIGH>;
+> +		gpios-states = <1>;
+> +		states = <3300000 1
+> +			  1800000 0>;
+> +	};
+>  };
+>  
+>  &extal_clk {
+> @@ -37,6 +61,18 @@
+>  		groups = "scif2_data_a";
+>  		function = "scif2";
+>  	};
+> +
+> +	sdhi0_pins: sd0 {
+> +		groups = "sdhi0_data4", "sdhi0_ctrl";
+> +		function = "sdhi0";
+> +		power-source = <3300>;
+> +	};
+> +
+> +	sdhi0_pins_uhs: sd0_uhs {
+> +		groups = "sdhi0_data4", "sdhi0_ctrl";
+> +		function = "sdhi0";
+> +		power-source = <1800>;
+> +	};
+>  };
+>  
+>  &scif2 {
+> @@ -45,3 +81,17 @@
+>  
+>  	status = "okay";
+>  };
+> +
+> +&sdhi0 {
+> +	pinctrl-0 = <&sdhi0_pins>;
+> +	pinctrl-1 = <&sdhi0_pins_uhs>;
+> +	pinctrl-names = "default", "state_uhs";
+> +
+> +	vmmc-supply = <&vcc_sdhi0>;
+> +	vqmmc-supply = <&vccq_sdhi0>;
+> +	cd-gpios = <&gpio3 12 GPIO_ACTIVE_LOW>;
+> +	bus-width = <4>;
+> +	sd-uhs-sdr50;
+> +	sd-uhs-sdr104;
+> +	status = "okay";
+> +};
+> -- 
+> 2.7.4
+> 
