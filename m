@@ -1,94 +1,95 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v5 2/6] media: sun6i: Add mod_rate quirk
-Date: Thu, 17 Jan 2019 10:04:08 +0530
-Message-ID: <CAMty3ZDVMW_BRmBgqjHWbkQF7P7T81Z5q3er9mBiJeeEVBZWXQ@mail.gmail.com>
-References: <20181220125438.11700-1-jagan@amarulasolutions.com>
- <20181220125438.11700-3-jagan@amarulasolutions.com> <20181221130025.lbvw7yvy74brf3jn@flea>
- <CAMty3ZCG5cF3tP2mid5xyS=yhtxkY+TOcGkwRkv+vrZt1=0iQg@mail.gmail.com>
- <20190107132929.ksyajmzn2gzr6oep@flea> <CAMty3ZAx9MthB0M-eFmsZv9CxF3Z1BkFTU6Hw=ZT5wu6aJwjGQ@mail.gmail.com>
- <20190116111109.dkc4zgsz6lcjlzs5@flea>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: sdm845-mtp: Add WCN3990 BT node
+Date: Wed, 16 Jan 2019 20:40:06 -0800
+Message-ID: <20190117044006.12463-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116111109.dkc4zgsz6lcjlzs5@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Chen-Yu Tsai <wens@csie.org>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>, linux-amarula@amarulasolutions.com, Michael Trimarchi <michael@amarulasolutions.com>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 12:48 AM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> On Fri, Jan 11, 2019 at 11:54:12AM +0530, Jagan Teki wrote:
-> > On Mon, Jan 7, 2019 at 6:59 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > On Mon, Dec 24, 2018 at 08:57:48PM +0530, Jagan Teki wrote:
-> > > > On Fri, Dec 21, 2018 at 6:30 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
-> > > > >
-> > > > > On Thu, Dec 20, 2018 at 06:24:34PM +0530, Jagan Teki wrote:
-> > > > > > Unfortunately default CSI_SCLK rate cannot work properly to
-> > > > > > drive the connected sensor interface, particularly on few
-> > > > > > Allwinner SoC's like A64.
-> > > > > >
-> > > > > > So, add mod_rate quirk via driver data so-that the respective
-> > > > > > SoC's which require to alter the default mod clock rate can assign
-> > > > > > the operating clock rate.
-> > > > > >
-> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > > > ---
-> > > > > >  .../platform/sunxi/sun6i-csi/sun6i_csi.c      | 34 +++++++++++++++----
-> > > > > >  1 file changed, 28 insertions(+), 6 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > > index ee882b66a5ea..fe002beae09c 100644
-> > > > > > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > > > > > @@ -15,6 +15,7 @@
-> > > > > >  #include <linux/ioctl.h>
-> > > > > >  #include <linux/module.h>
-> > > > > >  #include <linux/of.h>
-> > > > > > +#include <linux/of_device.h>
-> > > > > >  #include <linux/platform_device.h>
-> > > > > >  #include <linux/pm_runtime.h>
-> > > > > >  #include <linux/regmap.h>
-> > > > > > @@ -28,8 +29,13 @@
-> > > > > >
-> > > > > >  #define MODULE_NAME  "sun6i-csi"
-> > > > > >
-> > > > > > +struct sun6i_csi_variant {
-> > > > > > +     unsigned long                   mod_rate;
-> > > > > > +};
-> > > > > > +
-> > > > > >  struct sun6i_csi_dev {
-> > > > > >       struct sun6i_csi                csi;
-> > > > > > +     const struct sun6i_csi_variant  *variant;
-> > > > > >       struct device                   *dev;
-> > > > > >
-> > > > > >       struct regmap                   *regmap;
-> > > > > > @@ -822,33 +828,43 @@ static int sun6i_csi_resource_request(struct sun6i_csi_dev *sdev,
-> > > > > >               return PTR_ERR(sdev->clk_mod);
-> > > > > >       }
-> > > > > >
-> > > > > > +     if (sdev->variant->mod_rate)
-> > > > > > +             clk_set_rate_exclusive(sdev->clk_mod, sdev->variant->mod_rate);
-> > > > > > +
-> > > > >
-> > > > > It still doesn't make any sense to do it in the probe function...
-> > > >
-> > > > I'm not sure we discussed about the context wrt probe, we discussed
-> > > > about exclusive put clock.
-> > >
-> > > https://lkml.org/lkml/2018/12/18/584
-> > >
-> > > "Doing it here is not really optimal either, since you'll put a
-> > > constraint on the system (maintaining that clock at 300MHz), while
-> > > it's not in use."
-> >
-> > But this constraint is only set, for SoC's who need mod_rate change
-> > not for whole SoCs.
->
-> Still, that constraint is there for the whole system on affected
-> SoCs. Whether it applies to one SoC or not is not really relevant.
+The SDM845 MTP has a WCN3990 Bluetooth chip on UART6, enable this.
 
-OK, please see this code change and let me know the comments.
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 44 +++++++++++++++++++++++++
+ 1 file changed, 44 insertions(+)
 
-https://gist.github.com/openedev/518b9e141f53814bb3adfac6f2bfd78c
+diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+index af8c6a2445a2..f65d5a674103 100644
+--- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
++++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
+@@ -17,6 +17,7 @@
+ 
+ 	aliases {
+ 		serial0 = &uart9;
++		hsuart0 = &uart6;
+ 	};
+ 
+ 	chosen {
+@@ -357,6 +358,10 @@
+ 	clock-frequency = <400000>;
+ };
+ 
++&qupv3_id_0 {
++	status = "okay";
++};
++
+ &qupv3_id_1 {
+ 	status = "okay";
+ };
+@@ -373,6 +378,20 @@
+ 	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
+ };
+ 
++&uart6 {
++	status = "okay";
++
++	bluetooth {
++		compatible = "qcom,wcn3990-bt";
++
++		vddio-supply = <&vreg_s4a_1p8>;
++		vddxo-supply = <&vreg_l7a_1p8>;
++		vddrf-supply = <&vreg_l17a_1p3>;
++		vddch0-supply = <&vreg_l25a_3p3>;
++		max-speed = <3200000>;
++	};
++};
++
+ &uart9 {
+ 	status = "okay";
+ };
+@@ -470,6 +489,31 @@
+ 	};
+ };
+ 
++&qup_uart6_default {
++	pinmux {
++		pins = "gpio45", "gpio46", "gpio47", "gpio48";
++		function = "qup6";
++	};
++
++	ctsrx {
++		pins = "gpio45", "gpio48";
++		drive-strength = <2>;
++		bias-no-pull;
++	};
++
++	rts {
++		pins = "gpio46";
++		drive-strength = <2>;
++		bias-pull-down;
++	};
++
++	tx {
++		pins = "gpio47";
++		drive-strength = <2>;
++		bias-pull-up;
++	};
++};
++
+ &qup_uart9_default {
+ 	pinconf-tx {
+ 		pins = "gpio4";
+-- 
+2.18.0
