@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v5 04/14] spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical IRQ chips
-Date: Wed, 16 Jan 2019 19:32:24 -0500
-Message-ID: <20190117003234.22127-5-masneyb@onstation.org>
+Subject: [PATCH v5 05/14] gpio: add irq domain activate/deactivate functions
+Date: Wed, 16 Jan 2019 19:32:25 -0500
+Message-ID: <20190117003234.22127-6-masneyb@onstation.org>
 References: <20190117003234.22127-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190117003234.22127-1-masneyb@onstation.org>
@@ -10,135 +10,91 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Convert the spmi-pmic-arb IRQ code to use the version 2 IRQ interface
-in order to support hierarchical IRQ chips. This is necessary so that
-spmi-gpio can be setup as a hierarchical IRQ chip with pmic-arb as the
-parent. IRQ chips in device tree should be usable from the start without
-the consumer having to make an additional call to gpio[d]_to_irq() to
-get the proper IRQ on the parent. Driver was tested on a LG Nexus 5
-(hammerhead) phone.
+This adds the two new functions gpiochip_irq_domain_activate and
+gpiochip_irq_domain_deactivate that can be used as the activate and
+deactivate functions in the struct irq_domain_ops. This is for
+situations where only gpiochip_{lock,unlock}_as_irq needs to be called.
+SPMI and SSBI GPIO are two users that will initially use these
+functions.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
+Suggested-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
 Changes since v4:
-- None
+- Change '&struct gpiochip' in kernel doc to '&struct gpio_chip'
 
 Changes since v3:
-- None
+- Correct kernel doc syntax: 'struct &foo' -> '&struct foo'
+  '&func' -> 'func()'
 
-Changes since v2:
-- Don't move pmic_gpio_of_match block. Use device_get_match_data instead
-  of of_match_device.
-- Correct build warning on arm64: warning: cast from pointer to integer
-  of different size
+ drivers/gpio/gpiolib.c      | 37 +++++++++++++++++++++++++++++++++++++
+ include/linux/gpio/driver.h |  5 +++++
+ 2 files changed, 42 insertions(+)
 
- drivers/spmi/spmi-pmic-arb.c | 58 +++++++++++++++++++++++-------------
- 1 file changed, 38 insertions(+), 20 deletions(-)
-
-diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-index 360b8218f322..356bc3f66e22 100644
---- a/drivers/spmi/spmi-pmic-arb.c
-+++ b/drivers/spmi/spmi-pmic-arb.c
-@@ -666,7 +666,8 @@ static int qpnpint_get_irqchip_state(struct irq_data *d,
- 	return 0;
- }
- 
--static int qpnpint_irq_request_resources(struct irq_data *d)
-+static int qpnpint_irq_domain_activate(struct irq_domain *domain,
-+				       struct irq_data *d, bool reserve)
- {
- 	struct spmi_pmic_arb *pmic_arb = irq_data_get_irq_chip_data(d);
- 	u16 periph = hwirq_to_per(d->hwirq);
-@@ -692,27 +693,25 @@ static struct irq_chip pmic_arb_irqchip = {
- 	.irq_set_type	= qpnpint_irq_set_type,
- 	.irq_set_wake	= qpnpint_irq_set_wake,
- 	.irq_get_irqchip_state	= qpnpint_get_irqchip_state,
--	.irq_request_resources = qpnpint_irq_request_resources,
- 	.flags		= IRQCHIP_MASK_ON_SUSPEND,
+diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+index 1651d7f0a303..361a09c8138a 100644
+--- a/drivers/gpio/gpiolib.c
++++ b/drivers/gpio/gpiolib.c
+@@ -1775,6 +1775,43 @@ static const struct irq_domain_ops gpiochip_domain_ops = {
+ 	.xlate	= irq_domain_xlate_twocell,
  };
  
--static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
--					   struct device_node *controller,
--					   const u32 *intspec,
--					   unsigned int intsize,
--					   unsigned long *out_hwirq,
--					   unsigned int *out_type)
-+static int qpnpint_irq_domain_translate(struct irq_domain *d,
-+					struct irq_fwspec *fwspec,
-+					unsigned long *out_hwirq,
-+					unsigned int *out_type)
- {
- 	struct spmi_pmic_arb *pmic_arb = d->host_data;
-+	u32 *intspec = fwspec->param;
- 	u16 apid, ppid;
- 	int rc;
- 
- 	dev_dbg(&pmic_arb->spmic->dev, "intspec[0] 0x%1x intspec[1] 0x%02x intspec[2] 0x%02x\n",
- 		intspec[0], intspec[1], intspec[2]);
- 
--	if (irq_domain_get_of_node(d) != controller)
-+	if (irq_domain_get_of_node(d) != pmic_arb->spmic->dev.of_node)
- 		return -EINVAL;
--	if (intsize != 4)
-+	if (fwspec->param_count != 4)
- 		return -EINVAL;
- 	if (intspec[0] > 0xF || intspec[1] > 0xFF || intspec[2] > 0x7)
- 		return -EINVAL;
-@@ -740,17 +739,34 @@ static int qpnpint_irq_domain_dt_translate(struct irq_domain *d,
- 	return 0;
- }
- 
--static int qpnpint_irq_domain_map(struct irq_domain *d,
--				  unsigned int virq,
--				  irq_hw_number_t hwirq)
--{
--	struct spmi_pmic_arb *pmic_arb = d->host_data;
- 
-+static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
-+				   struct irq_domain *domain, unsigned int virq,
-+				   irq_hw_number_t hwirq)
++/**
++ * gpiochip_irq_domain_activate() - Lock a GPIO to be used as an IRQ
++ * @domain: The IRQ domain used by this IRQ chip
++ * @data: Outermost irq_data associated with the IRQ
++ * @reserve: If set, only reserve an interrupt vector instead of assigning one
++ *
++ * This function is a wrapper that calls gpiochip_lock_as_irq() and is to be
++ * used as the activate function for the &struct irq_domain_ops. The host_data
++ * for the IRQ domain must be the &struct gpio_chip.
++ */
++int gpiochip_irq_domain_activate(struct irq_domain *domain,
++				 struct irq_data *data, bool reserve)
 +{
- 	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu\n", virq, hwirq);
- 
--	irq_set_chip_and_handler(virq, &pmic_arb_irqchip, handle_level_irq);
--	irq_set_chip_data(virq, d->host_data);
--	irq_set_noprobe(virq);
-+	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
-+			    handle_level_irq, NULL, NULL);
++	struct gpio_chip *chip = domain->host_data;
++
++	return gpiochip_lock_as_irq(chip, data->hwirq);
 +}
++EXPORT_SYMBOL_GPL(gpiochip_irq_domain_activate);
 +
-+static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
-+				    unsigned int virq, unsigned int nr_irqs,
-+				    void *data)
++/**
++ * gpiochip_irq_domain_deactivate() - Unlock a GPIO used as an IRQ
++ * @domain: The IRQ domain used by this IRQ chip
++ * @data: Outermost irq_data associated with the IRQ
++ *
++ * This function is a wrapper that will call gpiochip_unlock_as_irq() and is to
++ * be used as the deactivate function for the &struct irq_domain_ops. The
++ * host_data for the IRQ domain must be the &struct gpio_chip.
++ */
++void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
++				    struct irq_data *data)
 +{
-+	struct spmi_pmic_arb *pmic_arb = domain->host_data;
-+	struct irq_fwspec *fwspec = data;
-+	irq_hw_number_t hwirq;
-+	unsigned int type;
-+	int ret, i;
++	struct gpio_chip *chip = domain->host_data;
 +
-+	ret = qpnpint_irq_domain_translate(domain, fwspec, &hwirq, &type);
-+	if (ret)
-+		return ret;
++	return gpiochip_unlock_as_irq(chip, data->hwirq);
++}
++EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
 +
-+	for (i = 0; i < nr_irqs; i++)
-+		qpnpint_irq_domain_map(pmic_arb, domain, virq + i, hwirq + i);
+ static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+ {
+ 	if (!gpiochip_irqchip_irq_valid(chip, offset))
+diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
+index 07cddbf45186..01497910f023 100644
+--- a/include/linux/gpio/driver.h
++++ b/include/linux/gpio/driver.h
+@@ -472,6 +472,11 @@ int gpiochip_irq_map(struct irq_domain *d, unsigned int irq,
+ 		     irq_hw_number_t hwirq);
+ void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq);
+ 
++int gpiochip_irq_domain_activate(struct irq_domain *domain,
++				 struct irq_data *data, bool reserve);
++void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
++				    struct irq_data *data);
 +
- 	return 0;
- }
- 
-@@ -1126,8 +1142,10 @@ static const struct pmic_arb_ver_ops pmic_arb_v5 = {
- };
- 
- static const struct irq_domain_ops pmic_arb_irq_domain_ops = {
--	.map	= qpnpint_irq_domain_map,
--	.xlate	= qpnpint_irq_domain_dt_translate,
-+	.activate = qpnpint_irq_domain_activate,
-+	.alloc = qpnpint_irq_domain_alloc,
-+	.free = irq_domain_free_irqs_common,
-+	.translate = qpnpint_irq_domain_translate,
- };
- 
- static int spmi_pmic_arb_probe(struct platform_device *pdev)
+ void gpiochip_set_chained_irqchip(struct gpio_chip *gpiochip,
+ 		struct irq_chip *irqchip,
+ 		unsigned int parent_irq,
 -- 
 2.17.2
