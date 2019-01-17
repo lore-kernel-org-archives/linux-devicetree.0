@@ -1,117 +1,55 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add WCN3990 BT node
-Date: Thu, 17 Jan 2019 11:28:12 -0800
-Message-ID: <20190117192812.GV261387@google.com>
-References: <20190117044006.12463-1-bjorn.andersson@linaro.org>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 3/5] arm64: dts: mt7622: add a property
+ "mediatek,num-pwms" for PWM
+Date: Thu, 17 Jan 2019 20:41:07 +0100
+Message-ID: <20190117194107.wrafykdre5tugv4q@pengutronix.de>
+References: <0c400cb1899c1afb4c9f021350cdc0c6ca3f6239.1547453586.git.ryder.lee@mediatek.com>
+ <b5ed4626a553acb5e3107c6c96e82b674439128f.1547453586.git.ryder.lee@mediatek.com>
+ <20190115200231.drn2rbxu4jxr22yz@pengutronix.de>
+ <2edcc5fd-ce60-b585-e0fd-226897a7a34c@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190117044006.12463-1-bjorn.andersson@linaro.org>
+In-Reply-To: <2edcc5fd-ce60-b585-e0fd-226897a7a34c@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To: Matthias Brugger <matthias.bgg@gmail.com>
+Cc: Ryder Lee <ryder.lee@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 08:40:06PM -0800, Bjorn Andersson wrote:
-> The SDM845 MTP has a WCN3990 Bluetooth chip on UART6, enable this.
+Hello,
+
+On Thu, Jan 17, 2019 at 02:00:43PM +0100, Matthias Brugger wrote:
+> On 15/01/2019 21:02, Uwe Kleine-König wrote:
+> > On Mon, Jan 14, 2019 at 04:21:22PM +0800, Ryder Lee wrote:
+> >> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> >> index 8fc4aa7..ab016cf 100644
+> >> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> >> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
+> >> @@ -436,6 +436,7 @@
+> >>  			 <&pericfg CLK_PERI_PWM6_PD>;
+> >>  		clock-names = "top", "main", "pwm1", "pwm2", "pwm3", "pwm4",
+> >>  			      "pwm5", "pwm6";
+> >> +		mediatek,num-pwms = <6>;
+> >>  		status = "disabled";
+> > 
+> > Conceptually this patch must go in before the change to the driver.
+> > Otherwise the pwms are not usable with only patch 1 applied which breaks
+> > bisectability.
+> > 
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 44 +++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index af8c6a2445a2..f65d5a674103 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -17,6 +17,7 @@
->  
->  	aliases {
->  		serial0 = &uart9;
-> +		hsuart0 = &uart6;
->  	};
->  
->  	chosen {
-> @@ -357,6 +358,10 @@
->  	clock-frequency = <400000>;
->  };
->  
-> +&qupv3_id_0 {
-> +	status = "okay";
-> +};
-> +
->  &qupv3_id_1 {
->  	status = "okay";
->  };
-> @@ -373,6 +378,20 @@
->  	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
->  };
->  
-> +&uart6 {
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "qcom,wcn3990-bt";
-> +
-> +		vddio-supply = <&vreg_s4a_1p8>;
-> +		vddxo-supply = <&vreg_l7a_1p8>;
-> +		vddrf-supply = <&vreg_l17a_1p3>;
-> +		vddch0-supply = <&vreg_l25a_3p3>;
-> +		max-speed = <3200000>;
-> +	};
-> +};
-> +
->  &uart9 {
->  	status = "okay";
->  };
-> @@ -470,6 +489,31 @@
->  	};
->  };
->  
-> +&qup_uart6_default {
-> +	pinmux {
-> +		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-> +		function = "qup6";
-> +	};
-> +
-> +	ctsrx {
-> +		pins = "gpio45", "gpio48";
-> +		drive-strength = <2>;
+> The driver should have backwards compatibility to older DTs. So that would need
+> to be fixed in the driver not in the patch order of the series.
 
-CTS and RX are input signals, no need to configure drive strength in
-this case IIUC.
+Right you are. Bisectability is a reason to not apply the patches in the
+order as is, but given that you already requested backwards
+compatibility the bisectability will be fixed en passant.
 
-> +		bias-no-pull;
+Best regards
+Uwe
 
-On another SDM845 based device we observe garbage on RX at
-initialization time, unless we enable a pull-up.
-
-> +	};
-> +
-> +	rts {
-> +		pins = "gpio46";
-> +		drive-strength = <2>;
-> +		bias-pull-down;
-> +	};
-
-On our device we don't configure a pull on the lines driven by the
-AP. I think a pull-down on RTS should be fine though since it matches
-the pull (during reset) on CTS of the BT module.
-
-> +	tx {
-> +		pins = "gpio47";
-> +		drive-strength = <2>;
-> +		bias-pull-up;
-> +	};
-> +};
-
-Similar to RTS, the pull matches the one on RXD of the BT module.
-
-For reference, this is what we currently use on our device:
-
-https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888/3/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-
-Cheers
-
-Matthias
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
