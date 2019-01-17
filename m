@@ -1,85 +1,122 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
- driver
-Date: Thu, 17 Jan 2019 07:27:00 -0600
-Message-ID: <8def5414-9170-7034-34f9-70e6c71f8161@ti.com>
-References: <20190114211723.11186-1-dmurphy@ti.com>
- <20190114211723.11186-2-dmurphy@ti.com>
- <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
- <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
- <86299268-3202-814a-134b-04bd2170faab@ti.com> <20190116220401.GA28024@amd>
- <8c7dde3e-5f3c-80a5-ec57-73ce8e39deef@ti.com> <20190117100651.GB17930@amd>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet support
+Date: Thu, 17 Jan 2019 13:27:51 +0000
+Message-ID: <TY1PR01MB1770241D7A553184ABB589DAC0830@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-8-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190117115945.bmlaoeoqvsmdqqot@verge.net.au>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117100651.GB17930@amd>
+Content-Type: text/plain; charset="iso-8859-2"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190117115945.bmlaoeoqvsmdqqot@verge.net.au>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Pavel Machek <pavel@ucw.cz>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
+Sender: netdev-owner@vger.kernel.org
+To: Simon Horman <horms@verge.net.au>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, =?iso-8859-2?Q?Andreas_F=E4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?iso-8859-2?Q?Michal_Vok=E1=E8?= <michal.vokac@ysoft.com>Martin Blumenstingl <mar>
 List-Id: devicetree@vger.kernel.org
 
-Hello
+Hello Simon,
 
-On 1/17/19 4:06 AM, Pavel Machek wrote:
-> Hi!
-> 
->>>>> You know what? First, submit driver with similar functionality to
->>>>> existing RGB drivers, using same interface existing drivers are
->>>>> using. When that is accepted, we can talk about extending
->>>>> kernel<->user interfaces.
->>>>>
->>>>
->>>> I could do that but then there is no way for users to have any other color but "white" with this driver.
->>>> That defeats the purpose of the device itself.
->>>
->>> No, that is not what I meant.
->>>
->>> We do have RGB drivers in tree, they just present three separate LEDs
->>> -- red, green and blue. I ask you to do the same for initial
->>> submission.
->>>
->>
->> For clarification you are asking me to register a LED class per
->> output pin?
-> 
-> Yes.
-> 
+Thank you for your feedback!
 
-OK I can do that but I would like to get Jacek to align with this as he
-suggested creating the code as I submitted based on the review of the
-devices data sheet.
+> From: Simon Horman <horms@verge.net.au>
+> Sent: 17 January 2019 12:00
+> Subject: Re: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet supp=
+ort
+>
+> On Wed, Jan 16, 2019 at 06:37:50PM +0000, Fabrizio Castro wrote:
+> > From: Biju Das <biju.das@bp.renesas.com>
+> >
+> > This patch adds ethernet support to the sub board.
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> > ---
+> >  arch/arm64/boot/dts/renesas/cat875.dtsi | 30 +++++++++++++++++++++++++=
++++++
+> >  1 file changed, 30 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/renesas/cat875.dtsi b/arch/arm64/boot/=
+dts/renesas/cat875.dtsi
+> > index a41d0d8..805ffa7 100644
+> > --- a/arch/arm64/boot/dts/renesas/cat875.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/cat875.dtsi
+> > @@ -7,4 +7,34 @@
+> >
+> >  / {
+> >  model =3D "Silicon Linux sub board for CAT874 (CAT875)";
+> > +
+> > +aliases {
+> > +ethernet0 =3D &avb;
+> > +};
+> > +};
+> > +
+> > +&avb {
+> > +pinctrl-0 =3D <&avb_pins>;
+> > +pinctrl-names =3D "default";
+> > +renesas,no-ether-link;
+>
+> Is the renesas,no-ether-link required?
 
-LED class registration per LED module or for the single Banked output.
+The AVB_LINK pin from the SoC is connected to the PMEB (Power Management Ev=
+ent, B stands for
+active low) pin on the  PHY, which means it is not a link signal. The PMEB =
+signal is active when a magic
+packet or a wake up frame are detected. As a result, we need renesas,no-eth=
+er-link and we can't
+specify avb_link with avb_pin either.
 
->> As explained before the Master brightness register has absolute control over the output current
->> to the LED outputs regardless of the color control setting.
->>
-> 
-> Yes, just set master brightness to 255 and you can ignore it.
+Thanks,
+Fab
 
-OK Sounds fine.  Will just need to do an init that sets the color
-register to 0 and brightness to 0 so we don't have a flash.
+>
+> My understanding is that "the property should only be used when a
+> board does not provide a proper AVB_LINK signal". And from my reading
+> of the schematic it looks like that signal may be provided on this board.
+>
+> That said, I have an outstanding patch for this for E3/Ebisu which
+> I have not applied because I am unsure of its correctness.
+>
+> [PATCH] arm64: dts: renesas: ebisu: Remove renesas, no-ether-link propert=
+y
+> https://patchwork.kernel.org/patch/10692755/
+>
+> Similar patches have been applied for other boards.
+> f.e:
+>
+> [PATCH] arm64: dts: renesas: salvator-x: Remove renesas, no-ether-link pr=
+operty
+> https://git.kernel.org/torvalds/c/87c059e9c39d
+>
+> > +phy-handle =3D <&phy0>;
+> > +phy-mode =3D "rgmii";
+> > +status =3D "okay";
+> > +
+> > +phy0: ethernet-phy@0 {
+> > +rxc-skew-ps =3D <1500>;
+> > +reg =3D <0>;
+> > +interrupt-parent =3D <&gpio2>;
+> > +interrupts =3D <21 IRQ_TYPE_LEVEL_LOW>;
+> > +reset-gpios =3D <&gpio1 20 GPIO_ACTIVE_LOW>;
+> > +};
+> > +};
+> > +
+> > +&pfc {
+> > +avb_pins: avb {
+> > +mux {
+> > +groups =3D "avb_mii";
+> > +function =3D "avb";
+> > +};
+> > +};
+> >  };
+> > --
+> > 2.7.4
+> >
 
-> 
->>> You'll still be able to set brightness independently on the
->>> red/green/blue LEDs...
->>>
->>
->> But which one would control the overall brightness of the cluster?
-> 
-> You would not have that control in initial version of the patch.
-> 
-
-See above on alignment
-
-Dan
-
-> 								Pavel
-> 
 
 
--- 
-------------------
-Dan Murphy
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
