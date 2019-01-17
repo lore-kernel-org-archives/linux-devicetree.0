@@ -1,98 +1,158 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 04/13] dt-bindings: mailbox: qcom: Add clock-name
- optional property
-Date: Wed, 16 Jan 2019 22:44:11 -0800
-Message-ID: <20190117064411.GK25498@builder>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
+From: Yash Shah <yash.shah@sifive.com>
+Subject: Re: [PATCH 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Thu, 17 Jan 2019 12:15:38 +0530
+Message-ID: <CAJ2_jOEuE1Y8G3xnYqa+aA9GSRGmN8xN7fh4nBs0_Yb68Br9bg@mail.gmail.com>
+References: <1547194964-16718-1-git-send-email-yash.shah@sifive.com>
+ <1547194964-16718-3-git-send-email-yash.shah@sifive.com> <20190115220046.etgbno6ymsux75dk@pengutronix.de>
+ <CAJ2_jOEuU_=bpbVmdsq7FFEKEm_wHza-h7Hu8QmZ3BgsGgi-ng@mail.gmail.com> <20190116164640.mi3zjbhbhc6k5v7p@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Cc: mark.rutland@arm.com, heiko@sntech.de, mturquette@baylibre.com, will.deacon@arm.com, david.brown@linaro.org, linux-clk@vger.kernel.org, jassisinghbrar@gmail.com, jagan@amarulasolutions.com, andy.gross@linaro.org, sibis@codeaurora.org, devicetree@vger.kernel.org, arnd@arndb.de, niklas.cassel@linaro.org, robh+dt@kernel.org, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, olof@lixom.net, sboyd@kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, vkoul@kernel.org, enric.balletbo@collabora.com, georgi.djakov@linaro.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190116164640.mi3zjbhbhc6k5v7p@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?Q?Uwe_Kleine=2DK=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Palmer Dabbelt <palmer@sifive.com>, linux-kernel@vger.kernel.org, robh+dt@kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>, Thierry Reding <thierry.reding@gmail.com>, Paul Walmsley <paul.walmsley@sifive.com>, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 17 Dec 01:46 PST 2018, Jorge Ramirez-Ortiz wrote:
+On Wed, Jan 16, 2019 at 10:16 PM Uwe Kleine-K=C3=B6nig
+<u.kleine-koenig@pengutronix.de> wrote:
+>
+> Hello,
+>
+> On Wed, Jan 16, 2019 at 04:40:42PM +0530, Yash Shah wrote:
+> > On Wed, Jan 16, 2019 at 3:30 AM Uwe Kleine-K=C3=B6nig
+> > <u.kleine-koenig@pengutronix.de> wrote:
+> > > On Fri, Jan 11, 2019 at 01:52:44PM +0530, Yash Shah wrote:
+> > > > Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed=
+ SoC.
+> > > >
+> > > > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > > > [Atish: Various fixes and code cleanup]
+> > > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > > > ---
+> > > >  drivers/pwm/Kconfig      |  10 ++
+> > > >  drivers/pwm/Makefile     |   1 +
+> > > >  drivers/pwm/pwm-sifive.c | 246 +++++++++++++++++++++++++++++++++++=
+++++++++++++
+> > > >  3 files changed, 257 insertions(+)
+> > > >  create mode 100644 drivers/pwm/pwm-sifive.c
+> > > >
+> > > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > > index a8f47df..3bcaf6a 100644
+> > > > --- a/drivers/pwm/Kconfig
+> > > > +++ b/drivers/pwm/Kconfig
+> > > > @@ -380,6 +380,16 @@ config PWM_SAMSUNG
+> > > >         To compile this driver as a module, choose M here: the modu=
+le
+> > > >         will be called pwm-samsung.
+> > > >
+> > > > +config PWM_SIFIVE
+> > > > +     tristate "SiFive PWM support"
+> > > > +     depends on OF
+> > > > +     depends on COMMON_CLK
+> > >
+> > > I'd say add:
+> > >
+> > >         depends on MACH_SIFIVE || COMPILE_TEST
+> > >
+> > > (I guess "MACH_SIFIVE" is wrong, but I assume you get what I mean.)
+> >
+> > As of now, MACH_SIFIVE/ARCH_SIFIVE isn't available.
+> > @Paul, Do you have any comments on this?
+>
+> If this is not going to be available at least protect it by
+>
+>         depends RISCV || COMPILE_TEST
+>
+> > > I wonder if such an instance should be only a single PWM instead of
+> > > four. Then you were more flexible with the period lengths (using
+> > > pwmcfg.pwmzerocmp) and could do stuff like inverted and uninverted mo=
+de.
+> > >
+> > > I didn't understand how the deglitch logic works yet. Currently it is
+> > > not used which might result in four edges in a single period (which i=
+s
+> > > bad).
+> >
+> > I can enable deglitch logic by just setting a bit (BIT_PWM_DEGLITCH) in
+> > REG_PWMCFG. Will do that.
+>
+> This only works for the first pwm output though.
+>
+> > > > +struct sifive_pwm_device {
+> > > > +     struct pwm_chip chip;
+> > > > +     struct notifier_block notifier;
+> > > > +     struct clk *clk;
+> > > > +     void __iomem *regs;
+> > > > +     unsigned int approx_period;
+>
+> When thinking about this a bit more, I think the better approach would
+> be to let the consumer change the period iff there is only one consumer.
+> Then you can drop that approx-period stuff and the result is more
+> flexible. (Having said that I still prefer making the driver provide
+> only a single PWM with the ability to have periods other than powers of
+> two.)
+>
 
-> When the APCS clock is registered (platform dependent), it retrieves
-> its parent names from hardcoded values in the driver.
-> 
-> The following commit allows the DT node to provide such clock names to
-> the platform data based clock driver therefore avoiding having to
-> explicitly embed those names in the clock driver source code.
-> 
-> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> ---
->  .../bindings/mailbox/qcom,apcs-kpss-global.txt      | 21 +++++++++++++++++++++
->  1 file changed, 21 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> index 1232fc9..f252439 100644
-> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
-> @@ -23,6 +23,10 @@ platforms.
->  	Value type: <phandle>
->  	Definition: phandle to the input PLL, which feeds the APCS mux/divider
->  
-> +       Usage: required if #clock-names property is present
-> +       Value type: <phandle array>
-> +	Definition: phandles to the two parent clocks of the clock driver.
+I am not confident about the implementation of the way you are suggesting.
+As of now, I am going to stick with the current implementation.
 
-I presume you meant to replace the existing definition of "clocks"?
+> > > > +     writel(frac, pwm->regs + REG_PWMCMP0 + dev->hwpwm * SIZE_PWMC=
+MP);
+> > >
+> > > If you get a constant inactive output with frac=3D0 and a constant ac=
+tive
+> > > output with frac=3D0xffff the calculation above seems wrong to me.
+> > > (A value i written to the pwmcmpX register means a duty cycle of
+> > > (i * period / 0xffff). Your calculation assumes a divisor of 0x10000
+> > > however.)
+> >
+> > Not sure if I get you completely. But, if divisor of 0xffff is your con=
+cern then
+> > does the below look ok?
+> >
+> > frac =3D div_u64(((u64)duty_cycle << 16) - duty_cycle, state->period);
+>
+> This works (I think, didn't redo the maths), but I would prefer
+>
+>         frac =3D div_u64((u64)duty_cycle * 0xffff, state->period);
+>
+> for better readability. (Maybe the compiler is even clever enough to see
+> this can be calculated as you suggested.)
 
-I think the purpose of "required if #clock-cells" comes from that
-meaning that it represents a clock-controller if #clock-cells is
-specified, in which case it requires the upstream clock(s).
+Sure, will multiply it with 0xffff for better readability.
 
-Regards,
-Bjorn
-
-> +
->  - #mbox-cells:
->  	Usage: required
->  	Value type: <u32>
-> @@ -33,6 +37,12 @@ platforms.
->  	Value type: <u32>
->  	Definition: as described in clock.txt, must be 0
->  
-> +- clock-names:
-> +	Usage: required if the platform data based clock driver needs to
-> +	retrieve the parent clock names from device tree.
-> +	This will requires two mandatory clocks to be defined.
-> +	Value type: <string-array>
-> +	Definition: must be "aux" and "pll"
->  
->  = EXAMPLE
->  The following example describes the APCS HMSS found in MSM8996 and part of the
-> @@ -65,3 +75,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
->  		clocks = <&a53pll>;
->  		#clock-cells = <0>;
->  	};
-> +
-> +Below is another example of the APCS binding on QCS404 platforms:
-> +
-> +	apcs_glb: mailbox@b011000 {
-> +		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
-> +		reg = <0x0b011000 0x1000>;
-> +		#mbox-cells = <1>;
-> +		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
-> +		clock-names = "aux", "pll";
-> +		#clock-cells = <0>;
-> +	};
-> -- 
-> 2.7.4
-> 
+>
+> > > > +static int sifive_pwm_clock_notifier(struct notifier_block *nb,
+> > > > +                                  unsigned long event, void *data)
+> > > > +{
+> > > > +     struct clk_notifier_data *ndata =3D data;
+> > > > +     struct sifive_pwm_device *pwm =3D
+> > > > +             container_of(nb, struct sifive_pwm_device, notifier);
+> > > > +
+> > > > +     if (event =3D=3D POST_RATE_CHANGE)
+> > > > +             sifive_pwm_update_clock(pwm, ndata->new_rate);
+> > >
+> > > Does this need locking? (Maybe not with the current state.)
+> >
+> > No. We can add it when required.
+>
+> My thought was, that the clk freq might change while .apply is active.
+> But given that you only configure the relative duty cycle this is
+> independent of the actual clk freq.
+>
+> Best regards
+> Uwe
+>
+> --
+> Pengutronix e.K.                           | Uwe Kleine-K=C3=B6nig       =
+     |
+> Industrial Linux Solutions                 | http://www.pengutronix.de/  =
+|
+>
+> _______________________________________________
+> linux-riscv mailing list
+> linux-riscv@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-riscv
