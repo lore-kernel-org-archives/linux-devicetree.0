@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v5 05/14] gpio: add irq domain activate/deactivate functions
-Date: Wed, 16 Jan 2019 19:32:25 -0500
-Message-ID: <20190117003234.22127-6-masneyb@onstation.org>
+Subject: [PATCH v5 06/14] spmi: pmic-arb: disassociate old virq if hwirq mapping already exists
+Date: Wed, 16 Jan 2019 19:32:26 -0500
+Message-ID: <20190117003234.22127-7-masneyb@onstation.org>
 References: <20190117003234.22127-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190117003234.22127-1-masneyb@onstation.org>
@@ -10,91 +10,59 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the two new functions gpiochip_irq_domain_activate and
-gpiochip_irq_domain_deactivate that can be used as the activate and
-deactivate functions in the struct irq_domain_ops. This is for
-situations where only gpiochip_{lock,unlock}_as_irq needs to be called.
-SPMI and SSBI GPIO are two users that will initially use these
-functions.
+Check to see if the hwirq is already associated with another virq on
+this IRQ domain. If so, then disassociate it before associating the
+hwirq with the new virq.
+
+This is a temporary hack that is needed in order to not break git
+bisect for existing boards. The next patch in this series converts
+spmi-gpio to be a hierarchical IRQ chip, then there are several patches
+to update all of the device tree files, and finally this patch will be
+reverted within the same patch series.
+
+IRQs for spmi-gpio are all initially setup without an IRQ hierarchy
+on pmic-arb when mfd/qcom-spmi-pmic.c is probed (via the
+devm_of_platform_populate call) due to the interrupts property in
+device tree. Once spmi-gpio is converted to be a hierarchical IRQ chip
+in the next patch, existing users of gpio[d]_to_irq() will call
+pmic_gpio_to_irq(), and that will use the new IRQ chip code in
+spmi-gpio that sets up the IRQ in an IRQ hierarchy. The hwirq is now
+associated with two Linux virqs and interrupts will not work as
+expected. This patch corrects that issue.
+
+Driver was tested using gpio-keys and iadc/vadc on the LG Nexus 5
+(hammerhead) phone.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
-Suggested-by: Stephen Boyd <sboyd@kernel.org>
 Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Acked-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 Changes since v4:
-- Change '&struct gpiochip' in kernel doc to '&struct gpio_chip'
+- None
 
-Changes since v3:
-- Correct kernel doc syntax: 'struct &foo' -> '&struct foo'
-  '&func' -> 'func()'
+Patch introduced in v4.
 
- drivers/gpio/gpiolib.c      | 37 +++++++++++++++++++++++++++++++++++++
- include/linux/gpio/driver.h |  5 +++++
- 2 files changed, 42 insertions(+)
+ drivers/spmi/spmi-pmic-arb.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1651d7f0a303..361a09c8138a 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1775,6 +1775,43 @@ static const struct irq_domain_ops gpiochip_domain_ops = {
- 	.xlate	= irq_domain_xlate_twocell,
- };
- 
-+/**
-+ * gpiochip_irq_domain_activate() - Lock a GPIO to be used as an IRQ
-+ * @domain: The IRQ domain used by this IRQ chip
-+ * @data: Outermost irq_data associated with the IRQ
-+ * @reserve: If set, only reserve an interrupt vector instead of assigning one
-+ *
-+ * This function is a wrapper that calls gpiochip_lock_as_irq() and is to be
-+ * used as the activate function for the &struct irq_domain_ops. The host_data
-+ * for the IRQ domain must be the &struct gpio_chip.
-+ */
-+int gpiochip_irq_domain_activate(struct irq_domain *domain,
-+				 struct irq_data *data, bool reserve)
-+{
-+	struct gpio_chip *chip = domain->host_data;
-+
-+	return gpiochip_lock_as_irq(chip, data->hwirq);
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_irq_domain_activate);
-+
-+/**
-+ * gpiochip_irq_domain_deactivate() - Unlock a GPIO used as an IRQ
-+ * @domain: The IRQ domain used by this IRQ chip
-+ * @data: Outermost irq_data associated with the IRQ
-+ *
-+ * This function is a wrapper that will call gpiochip_unlock_as_irq() and is to
-+ * be used as the deactivate function for the &struct irq_domain_ops. The
-+ * host_data for the IRQ domain must be the &struct gpio_chip.
-+ */
-+void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
-+				    struct irq_data *data)
-+{
-+	struct gpio_chip *chip = domain->host_data;
-+
-+	return gpiochip_unlock_as_irq(chip, data->hwirq);
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
-+
- static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index 356bc3f66e22..b7cfee831417 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -744,8 +744,14 @@ static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
+ 				   struct irq_domain *domain, unsigned int virq,
+ 				   irq_hw_number_t hwirq)
  {
- 	if (!gpiochip_irqchip_irq_valid(chip, offset))
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 07cddbf45186..01497910f023 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -472,6 +472,11 @@ int gpiochip_irq_map(struct irq_domain *d, unsigned int irq,
- 		     irq_hw_number_t hwirq);
- void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq);
- 
-+int gpiochip_irq_domain_activate(struct irq_domain *domain,
-+				 struct irq_data *data, bool reserve);
-+void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
-+				    struct irq_data *data);
++	unsigned int old_virq;
 +
- void gpiochip_set_chained_irqchip(struct gpio_chip *gpiochip,
- 		struct irq_chip *irqchip,
- 		unsigned int parent_irq,
+ 	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu\n", virq, hwirq);
+ 
++	old_virq = irq_find_mapping(domain, hwirq);
++	if (old_virq)
++		irq_domain_disassociate(domain, old_virq);
++
+ 	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
+ 			    handle_level_irq, NULL, NULL);
+ }
 -- 
 2.17.2
