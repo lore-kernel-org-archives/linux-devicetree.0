@@ -1,54 +1,85 @@
-From: Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
-Date: Thu, 17 Jan 2019 14:26:04 +0100
-Message-ID: <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
-References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
- <20190117123320.GD3271@phenom.ffwll.local>
- <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Thu, 17 Jan 2019 07:27:00 -0600
+Message-ID: <8def5414-9170-7034-34f9-70e6c71f8161@ti.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <86299268-3202-814a-134b-04bd2170faab@ti.com> <20190116220401.GA28024@amd>
+ <8c7dde3e-5f3c-80a5-ec57-73ce8e39deef@ti.com> <20190117100651.GB17930@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190117100651.GB17930@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBKYW4gMTcsIDIwMTkgYXQgMjowNCBQTSBUb21pIFZhbGtlaW5lbiA8dG9taS52YWxr
-ZWluZW5AdGkuY29tPiB3cm90ZToKPgo+IE9uIDE3LzAxLzE5IDE0OjMzLCBEYW5pZWwgVmV0dGVy
-IHdyb3RlOgo+ID4gT24gVGh1LCBKYW4gMTcsIDIwMTkgYXQgMDE6MTk6MThQTSArMDIwMCwgVG9t
-aSBWYWxrZWluZW4gd3JvdGU6Cj4gPj4gVGhlIERSTSBkZXZpY2UgbWlub3IgbnVtYmVycyBhcmUg
-YWxsb2NhdGVkIGFjY29yZGluZyB0byB0aGUgcmVnaXN0cmF0aW9uCj4gPj4gb3JkZXIuIFRoaXMg
-Y2F1c2VzIGNvbmZ1c2lvbiBpbiBjYXNlcyB3aGVyZSB0aGUgcmVnaXN0cmF0aW9uIG9yZGVyIGNh
-bgo+ID4+IGNoYW5nZSwgb3Igd2hlbiwgc2F5LCBhIG1vZGVzZXR0aW5nIGNhcGFibGUgZGV2aWNl
-IGlzIHByZWZlcnJlZCB0byBiZQo+ID4+IGNhcmQwLCBhbmQgYSByZW5kZXJpbmcgZGV2aWNlIGlz
-IHByZWZlcnJlZCB0byBiZSBjYXJkMS4KPiA+Pgo+ID4+IFRoaXMgcGF0Y2ggYWRkcyBzaW1pbGFy
-IGZ1bmN0aW9uYWxpdHkgdGhhdCBpcyB1c2VkIGluIHNvbWUgb3RoZXIKPiA+PiBzdWJzeXN0ZW1z
-LCB3aGVyZSBkZXZpY2UgbWlub3IgbnVtYmVycyBjYW4gYmUgZGVmaW5lZCBpbiBEVCBiaW5kaW5n
-cycKPiA+PiBhbGlhc2VzIG5vZGUuCj4gPgo+ID4gV2hhdCBvdGhlciBzdWJzeXN0ZW0/IEkgdGhv
-dWdodCB0aGF0IG1pbm9yIG51bWJlcnMgc2hvdWxkbid0IGJlIG1hZGUgdWFwaSwKPiA+IGFuZCB0
-aGF0IHVkZXYgb3Igc2ltaWxhciBpcyBzdXBwb3NlZCB0byBnaXZlIHlvdSBzdGFibGUgbmFtZXMg
-Li4uIElzIHRoYXQKPiA+IG5vdCB0aGUgY2FzZSBvbiBTb0M/Cj4KPiBJIHRoaW5rIGF0IGxlYXN0
-IGkyYywgc3BpIGFuZCB1YXJ0IHVzZSBEVCBhbGlhc2VzLgoKQ29tbWl0cy9jb2RlIGltcGxlbWVu
-dGluZyB3b3VsZCBiZSBiZXN0LgoKPiBJIGFsc28gaGF2ZSBteSBkb3VidHMgYWJvdXQgdGhpcywg
-YnV0IHRob3VnaHQgdG8gcG9zdCB0aGlzIHRvIGdldCBzb21lCj4gY29tbWVudHMsIGFzIGl0IGRv
-ZXMgbWFrZSBsaWZlIHF1aXRlIGEgYml0IGVhc2llciA9KS4KClllYWggSSB0aGluayAic29jIHdp
-dGhvdXQgdWRldiIgc2VlbXMgcmVhc29uYWJsZSBhc3N1bXB0aW9uLCBJIGp1c3QKdGhpbmsgdGhp
-cyBpcyBzb21ldGhpbmcgdGhlIG92ZXJhbGwgc29jIGNvbW11bml0eSBzaG91bGQgYWdyZWUgb24g
-YXMgYQpnb29kIHRoaW5nIHRvIGRvLiBJIGd1ZXNzIHNpbmNlIHRoZSBvZiBzdHVmZiB5b3UncmUg
-dXNpbmcgaXMgZ2VuZXJpYwp0aGF0J3MgYWxsIGhhcHBlbmVkIGFscmVhZHksIHNvIHNob3VsZCBh
-bW91bnQgdG8gZ2F0aGVyaW5nIGEgcGlsZSBvZgphY2tzIGFuZCB0aGVuIG1lcmdpbmcgaXQuCi1E
-YW5pZWwKLS0gCkRhbmllbCBWZXR0ZXIKU29mdHdhcmUgRW5naW5lZXIsIEludGVsIENvcnBvcmF0
-aW9uCis0MSAoMCkgNzkgMzY1IDU3IDQ4IC0gaHR0cDovL2Jsb2cuZmZ3bGwuY2gKX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcg
-bGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Hello
+
+On 1/17/19 4:06 AM, Pavel Machek wrote:
+> Hi!
+> 
+>>>>> You know what? First, submit driver with similar functionality to
+>>>>> existing RGB drivers, using same interface existing drivers are
+>>>>> using. When that is accepted, we can talk about extending
+>>>>> kernel<->user interfaces.
+>>>>>
+>>>>
+>>>> I could do that but then there is no way for users to have any other color but "white" with this driver.
+>>>> That defeats the purpose of the device itself.
+>>>
+>>> No, that is not what I meant.
+>>>
+>>> We do have RGB drivers in tree, they just present three separate LEDs
+>>> -- red, green and blue. I ask you to do the same for initial
+>>> submission.
+>>>
+>>
+>> For clarification you are asking me to register a LED class per
+>> output pin?
+> 
+> Yes.
+> 
+
+OK I can do that but I would like to get Jacek to align with this as he
+suggested creating the code as I submitted based on the review of the
+devices data sheet.
+
+LED class registration per LED module or for the single Banked output.
+
+>> As explained before the Master brightness register has absolute control over the output current
+>> to the LED outputs regardless of the color control setting.
+>>
+> 
+> Yes, just set master brightness to 255 and you can ignore it.
+
+OK Sounds fine.  Will just need to do an init that sets the color
+register to 0 and brightness to 0 so we don't have a flash.
+
+> 
+>>> You'll still be able to set brightness independently on the
+>>> red/green/blue LEDs...
+>>>
+>>
+>> But which one would control the overall brightness of the cluster?
+> 
+> You would not have that control in initial version of the patch.
+> 
+
+See above on alignment
+
+Dan
+
+> 								Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
