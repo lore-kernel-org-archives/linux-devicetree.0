@@ -1,161 +1,89 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v5 07/14] qcom: spmi-gpio: add support for hierarchical
- IRQ chip
-Date: Thu, 17 Jan 2019 11:32:01 +0000
-Message-ID: <e9234c48-9fce-1ec4-48f1-dff134559eed@arm.com>
-References: <20190117003234.22127-1-masneyb@onstation.org>
- <20190117003234.22127-8-masneyb@onstation.org>
+From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+Subject: Re: [PATCH v3] arm64: dts: sdm845: add video nodes
+Date: Thu, 17 Jan 2019 13:58:05 +0200
+Message-ID: <0ee6676f-f169-1ea1-506e-16e4097d1c04@linaro.org>
+References: <1545292023-5489-1-git-send-email-mgottam@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117003234.22127-8-masneyb@onstation.org>
+In-Reply-To: <1545292023-5489-1-git-send-email-mgottam@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>, linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org
-Cc: shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Malathi Gottam <mgottam@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-On 17/01/2019 00:32, Brian Masney wrote:
-> spmi-gpio did not have any irqchip support so consumers of this in
-> device tree would need to call gpio[d]_to_irq() in order to get the
-> proper IRQ on the underlying PMIC. IRQ chips in device tree should
-> be usable from the start without the consumer having to make an
-> additional call to get the proper IRQ on the parent. This patch adds
-> hierarchical IRQ chip support to the spmi-gpio code to correct this
-> issue.
+Hi Malathi,
+
+On 12/20/18 9:47 AM, Malathi Gottam wrote:
+> This adds video nodes to sdm845 based on the examples
+> in the bindings.
 > 
-> Driver was tested using the volume buttons (via gpio-keys) on the LG
-> Nexus 5 (hammerhead) phone with the following two configurations.
-> 
-> volume-up {
->         interrupts-extended = <&pm8941_gpios 2 IRQ_TYPE_EDGE_BOTH>;
->         ...
-> };
-> 
-> volume-up {
->         gpios = <&pm8941_gpios 2 GPIO_ACTIVE_LOW>;
->         ...
-> };
-> 
-> Both configurations now show that spmi-gpio is the IRQ domain and that
-> the IRQ is setup in a hierarchy.
-> 
-> $ grep volume_up /proc/interrupts
->  72:          6          0  spmi-gpio   1 Edge      volume_up
-> 
-> $ cat /sys/kernel/debug/irq/irqs/72
-> handler:  handle_edge_irq
-> device:   (null)
-> status:   0x00000403
->             _IRQ_NOPROBE
-> istate:   0x00000000
-> ddepth:   0
-> wdepth:   0
-> dstate:   0x02400203
->             IRQ_TYPE_EDGE_RISING
->             IRQ_TYPE_EDGE_FALLING
->             IRQD_ACTIVATED
->             IRQD_IRQ_STARTED
-> node:     0
-> affinity: 0-3
-> effectiv:
-> domain:  :soc:spmi@fc4cf000:pm8941@0:gpios@c000
->  hwirq:   0x1
->  chip:    spmi-gpio
->   flags:   0x4
->              IRQCHIP_MASK_ON_SUSPEND
->  parent:
->     domain:  :soc:spmi@fc4cf000
->      hwirq:   0xc100057
->      chip:    pmic_arb
->       flags:   0x4
->                  IRQCHIP_MASK_ON_SUSPEND
-> 
-> Signed-off-by: Brian Masney <masneyb@onstation.org>
-> Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
 > ---
-> Changes since v4:
-> - None
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
+>  1 file changed, 35 insertions(+)
+
+Looks good to me:
+
+Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
+
 > 
-> Changes since v3:
-> - None
-> 
-> Changes since v2:
-> - Use PMIC_GPIO_PHYSICAL_OFFSET instead of the 1 constant
-> - Use gpiochip_irq_domain_{activate,deactivate}
-> - Changed 'fwspec->param[0] + 0xc0 - 1' to 'hwirq + c0' in call to
->   irq_domain_alloc_irqs_parent
-> 
-> Changes since v1:
-> - Use two cells for interrupts instead of four.
-> - Pin numbers in interrupts-extended are now one based instead of zero
->   based so that they match the GPIO pin number.
-> - Drop unnecessary parenthesis in pmic_gpio_domain_translate
-> - Add missing of_node_put()
-> - Remove irq field from pmic_gpio_pad struct that is no longer
->   necessary.
-> 
->  drivers/pinctrl/qcom/pinctrl-spmi-gpio.c | 111 +++++++++++++++++++++--
->  1 file changed, 101 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> index b6fa2c7dbb26..3604c3cdbbc0 100644
-> --- a/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> +++ b/drivers/pinctrl/qcom/pinctrl-spmi-gpio.c
-> @@ -12,6 +12,7 @@
->   */
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index b72bdb0..ccd2b10 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -87,6 +87,11 @@
+>  			reg = <0 0x86200000 0 0x2d00000>;
+>  			no-map;
+>  		};
+> +
+> +		venus_region: memory@95800000 {
+> +			reg = <0x0 0x95800000 0x0 0x500000>;
+> +			no-map;
+> +		};
+>  	};
 >  
->  #include <linux/gpio/driver.h>
-> +#include <linux/interrupt.h>
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_irq.h>
-> @@ -136,7 +137,6 @@ enum pmic_gpio_func_index {
->  /**
->   * struct pmic_gpio_pad - keep current GPIO settings
->   * @base: Address base in SPMI device.
-> - * @irq: IRQ number which this GPIO generate.
->   * @is_enabled: Set to false when GPIO should be put in high Z state.
->   * @out_value: Cached pin output value
->   * @have_buffer: Set to true if GPIO output could be configured in push-pull,
-> @@ -156,7 +156,6 @@ enum pmic_gpio_func_index {
->   */
->  struct pmic_gpio_pad {
->  	u16		base;
-> -	int		irq;
->  	bool		is_enabled;
->  	bool		out_value;
->  	bool		have_buffer;
-> @@ -179,6 +178,8 @@ struct pmic_gpio_state {
->  	struct regmap	*map;
->  	struct pinctrl_dev *ctrl;
->  	struct gpio_chip chip;
-> +	struct fwnode_handle *fwnode;
-> +	struct irq_domain *domain;
+>  	cpus {
+> @@ -1403,5 +1408,35 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		video-codec@aa00000 {
+> +			compatible = "qcom,sdm845-venus";
+> +			reg = <0x0aa00000 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>;
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus";
+> +			iommus = <&apps_smmu 0x10a0 0x8>,
+> +				 <&apps_smmu 0x10b0 0x0>;
+> +			memory-region = <&venus_region>;
+> +
+> +			video-core0 {
+> +				compatible = "venus-decoder";
+> +				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +				clock-names = "core", "bus";
+> +				power-domains = <&videocc VCODEC0_GDSC>;
+> +			};
+> +
+> +			video-core1 {
+> +				compatible = "venus-encoder";
+> +				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> +					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> +				clock-names = "core", "bus";
+> +				power-domains = <&videocc VCODEC1_GDSC>;
+> +			};
+> +		};
+>  	};
 >  };
->  
->  static const struct pinconf_generic_params pmic_gpio_bindings[] = {
-> @@ -761,11 +762,14 @@ static int pmic_gpio_of_xlate(struct gpio_chip *chip,
->  static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
->  {
->  	struct pmic_gpio_state *state = gpiochip_get_data(chip);
-> -	struct pmic_gpio_pad *pad;
-> +	struct irq_fwspec fwspec;
->  
-> -	pad = state->ctrl->desc->pins[pin].drv_data;
-> +	fwspec.fwnode = state->fwnode;
-> +	fwspec.param_count = 2;
-> +	fwspec.param[0] = pin + PMIC_GPIO_PHYSICAL_OFFSET;
-> +	fwspec.param[1] = IRQ_TYPE_NONE;
+> 
 
-In my experience, IRQ_TYPE_NONE is rarely a good thing, unless you
-expect the trigger information to be found by some other mean. I guess
-that's one of the reasons why everything falls back to level in the SPMI
-driver...
-
-Thanks,
-
-	M.
 -- 
-Jazz is not dead. It just smells funny...
+regards,
+Stan
