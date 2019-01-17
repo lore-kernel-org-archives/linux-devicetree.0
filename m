@@ -1,154 +1,34 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 1/5] ptp_qoriq: fix interrupt enabling and handling
-Date: Thu, 17 Jan 2019 09:49:32 +0800
-Message-ID: <20190117014936.48117-2-yangbo.lu@nxp.com>
-References: <20190117014936.48117-1-yangbo.lu@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190117014936.48117-1-yangbo.lu@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>
+From: Joel Stanley <joel@jms.id.au>
+Subject: Re: [PATCH v3 3/4] ARM: dts: dps650ab: add power supply
+Date: Thu, 17 Jan 2019 12:57:08 +1100
+Message-ID: <CACPK8Xdj1Cas8E+141f=ke99REhm-H-pgWE0GBwxXaZ996tCeQ@mail.gmail.com>
+References: <cover.1546918172.git.xiaoting.liu@hxt-semitech.com> <a7b5fa54198e7fd0def33de3e7db36239a2e3da7.1546918172.git.xiaoting.liu@hxt-semitech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <a7b5fa54198e7fd0def33de3e7db36239a2e3da7.1546918172.git.xiaoting.liu@hxt-semitech.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Guenter Roeck <linux@roeck-us.net>, devicetree <devicetree@vger.kernel.org>, shunyong.yang@hxt-semitech.com, linux-aspeed@lists.ozlabs.org, dongsheng.wang@hxt-semitech.com, Andrew Jeffery <andrew@aj.id.au>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The tmr_tevent register would update event bits
-no matter tmr_temask bits were set or not. So we
-should get interrupts by tmr_tevent & tmr_temask,
-and clean up interrupts in tmr_tevent before
-enabling them.
+On Thu, 10 Jan 2019 at 13:29, Xiaoting Liu
+<xiaoting.liu@hxt-semitech.com> wrote:
+>
+> Add Delta Electronics power supply DPS-650-AB.
+>
+> Signed-off-by: Xiaoting Liu <xiaoting.liu@hxt-semitech.com>
+> ---
+> v3:
+>   Modify patch subject and commit message.
+>   Add delta to compatible property.
+> ---
+> v2:
+>   No change.
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- Remove useless lock/register operations.
----
- drivers/ptp/ptp_qoriq.c |   62 +++++++++++++++++++++++-----------------------
- 1 files changed, 31 insertions(+), 31 deletions(-)
+I tweaked the commit message to mention the board you were applying
+to. Applied to the aspeed tree for 5.1.
 
-diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index fdd49c2..2743214 100644
---- a/drivers/ptp/ptp_qoriq.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -98,11 +98,18 @@ static irqreturn_t isr(int irq, void *priv)
- 	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
- 	struct ptp_clock_event event;
- 	u64 ns;
--	u32 ack = 0, lo, hi, mask, val;
-+	u32 ack = 0, lo, hi, mask, val, irqs;
-+
-+	spin_lock(&qoriq_ptp->lock);
- 
- 	val = qoriq_read(&regs->ctrl_regs->tmr_tevent);
-+	mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
-+
-+	spin_unlock(&qoriq_ptp->lock);
-+
-+	irqs = val & mask;
- 
--	if (val & ETS1) {
-+	if (irqs & ETS1) {
- 		ack |= ETS1;
- 		hi = qoriq_read(&regs->etts_regs->tmr_etts1_h);
- 		lo = qoriq_read(&regs->etts_regs->tmr_etts1_l);
-@@ -113,7 +120,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
--	if (val & ETS2) {
-+	if (irqs & ETS2) {
- 		ack |= ETS2;
- 		hi = qoriq_read(&regs->etts_regs->tmr_etts2_h);
- 		lo = qoriq_read(&regs->etts_regs->tmr_etts2_l);
-@@ -124,7 +131,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
--	if (val & ALM2) {
-+	if (irqs & ALM2) {
- 		ack |= ALM2;
- 		if (qoriq_ptp->alarm_value) {
- 			event.type = PTP_CLOCK_ALARM;
-@@ -136,13 +143,10 @@ static irqreturn_t isr(int irq, void *priv)
- 			ns = qoriq_ptp->alarm_value + qoriq_ptp->alarm_interval;
- 			hi = ns >> 32;
- 			lo = ns & 0xffffffff;
--			spin_lock(&qoriq_ptp->lock);
- 			qoriq_write(&regs->alarm_regs->tmr_alarm2_l, lo);
- 			qoriq_write(&regs->alarm_regs->tmr_alarm2_h, hi);
--			spin_unlock(&qoriq_ptp->lock);
- 			qoriq_ptp->alarm_value = ns;
- 		} else {
--			qoriq_write(&regs->ctrl_regs->tmr_tevent, ALM2);
- 			spin_lock(&qoriq_ptp->lock);
- 			mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
- 			mask &= ~ALM2EN;
-@@ -153,7 +157,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		}
- 	}
- 
--	if (val & PP1) {
-+	if (irqs & PP1) {
- 		ack |= PP1;
- 		event.type = PTP_CLOCK_PPS;
- 		ptp_clock_event(qoriq_ptp->clock, &event);
-@@ -260,7 +264,7 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
- 	unsigned long flags;
--	u32 bit, mask;
-+	u32 bit, mask = 0;
- 
- 	switch (rq->type) {
- 	case PTP_CLK_REQ_EXTTS:
-@@ -274,32 +278,28 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 		default:
- 			return -EINVAL;
- 		}
--		spin_lock_irqsave(&qoriq_ptp->lock, flags);
--		mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
--		if (on)
--			mask |= bit;
--		else
--			mask &= ~bit;
--		qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
--		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
--		return 0;
--
-+		break;
- 	case PTP_CLK_REQ_PPS:
--		spin_lock_irqsave(&qoriq_ptp->lock, flags);
--		mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
--		if (on)
--			mask |= PP1EN;
--		else
--			mask &= ~PP1EN;
--		qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
--		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
--		return 0;
--
--	default:
-+		bit = PP1EN;
- 		break;
-+	default:
-+		return -EOPNOTSUPP;
- 	}
- 
--	return -EOPNOTSUPP;
-+	spin_lock_irqsave(&qoriq_ptp->lock, flags);
-+
-+	mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
-+	if (on) {
-+		mask |= bit;
-+		qoriq_write(&regs->ctrl_regs->tmr_tevent, bit);
-+	} else {
-+		mask &= ~bit;
-+	}
-+
-+	qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
-+
-+	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
-+	return 0;
- }
- 
- static const struct ptp_clock_info ptp_qoriq_caps = {
--- 
-1.7.1
+Thanks,
+
+Joel
