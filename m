@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v5 10/14] arm64: dts: qcom: pm8005: add interrupt controller properties
-Date: Wed, 16 Jan 2019 19:32:30 -0500
-Message-ID: <20190117003234.22127-11-masneyb@onstation.org>
+Subject: [PATCH v5 11/14] arm64: dts: qcom: pm8998: add interrupt controller properties
+Date: Wed, 16 Jan 2019 19:32:31 -0500
+Message-ID: <20190117003234.22127-12-masneyb@onstation.org>
 References: <20190117003234.22127-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190117003234.22127-1-masneyb@onstation.org>
@@ -27,21 +27,43 @@ Changes since v4:
 
 Patch introduced in v4.
 
- arch/arm64/boot/dts/qcom/pm8005.dtsi | 6 ++----
- 1 file changed, 2 insertions(+), 4 deletions(-)
+ arch/arm64/boot/dts/qcom/pm8998.dtsi | 28 ++--------------------------
+ 1 file changed, 2 insertions(+), 26 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/qcom/pm8005.dtsi b/arch/arm64/boot/dts/qcom/pm8005.dtsi
-index 4d5aca3eeb69..c0ddf128136c 100644
---- a/arch/arm64/boot/dts/qcom/pm8005.dtsi
-+++ b/arch/arm64/boot/dts/qcom/pm8005.dtsi
-@@ -16,10 +16,8 @@
+diff --git a/arch/arm64/boot/dts/qcom/pm8998.dtsi b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+index f1025a50c227..43cb5ea14089 100644
+--- a/arch/arm64/boot/dts/qcom/pm8998.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8998.dtsi
+@@ -94,32 +94,8 @@
  			reg = <0xc000>;
  			gpio-controller;
  			#gpio-cells = <2>;
 -			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
 -				     <0 0xc1 0 IRQ_TYPE_NONE>,
 -				     <0 0xc2 0 IRQ_TYPE_NONE>,
--				     <0 0xc3 0 IRQ_TYPE_NONE>;
+-				     <0 0xc3 0 IRQ_TYPE_NONE>,
+-				     <0 0xc4 0 IRQ_TYPE_NONE>,
+-				     <0 0xc5 0 IRQ_TYPE_NONE>,
+-				     <0 0xc6 0 IRQ_TYPE_NONE>,
+-				     <0 0xc7 0 IRQ_TYPE_NONE>,
+-				     <0 0xc8 0 IRQ_TYPE_NONE>,
+-				     <0 0xc9 0 IRQ_TYPE_NONE>,
+-				     <0 0xca 0 IRQ_TYPE_NONE>,
+-				     <0 0xcb 0 IRQ_TYPE_NONE>,
+-				     <0 0xcc 0 IRQ_TYPE_NONE>,
+-				     <0 0xcd 0 IRQ_TYPE_NONE>,
+-				     <0 0xce 0 IRQ_TYPE_NONE>,
+-				     <0 0xcf 0 IRQ_TYPE_NONE>,
+-				     <0 0xd0 0 IRQ_TYPE_NONE>,
+-				     <0 0xd1 0 IRQ_TYPE_NONE>,
+-				     <0 0xd2 0 IRQ_TYPE_NONE>,
+-				     <0 0xd3 0 IRQ_TYPE_NONE>,
+-				     <0 0xd4 0 IRQ_TYPE_NONE>,
+-				     <0 0xd5 0 IRQ_TYPE_NONE>,
+-				     <0 0xd6 0 IRQ_TYPE_NONE>,
+-				     <0 0xd7 0 IRQ_TYPE_NONE>,
+-				     <0 0xd8 0 IRQ_TYPE_NONE>,
+-				     <0 0xd9 0 IRQ_TYPE_NONE>;
 +			interrupt-controller;
 +			#interrupt-cells = <2>;
  		};
