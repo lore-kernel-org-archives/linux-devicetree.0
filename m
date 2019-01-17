@@ -1,71 +1,69 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v11 4/9] soc: qcom: rpmpd: Add a Power domain driver to
- model corners
-Date: Thu, 17 Jan 2019 09:42:54 -0800
-Message-ID: <20190117174254.GA17273@roeck-us.net>
-References: <20190110040209.6028-1-rnayak@codeaurora.org>
- <20190110040209.6028-5-rnayak@codeaurora.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH 2/8 v4] Documentation: bindings: dma: Add binding for dma-channel-mask
+Date: Thu, 17 Jan 2019 09:43:52 -0800
+Message-ID: <CALAqxLXc4dE=65MYR5M_jA-uKeGjsN0CL+JjDYbZUTyi+mKUTA@mail.gmail.com>
+References: <1547658629-25378-1-git-send-email-john.stultz@linaro.org>
+ <1547658629-25378-3-git-send-email-john.stultz@linaro.org> <20190117170829.GJ5283@Mani-XPS-13-9360>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190110040209.6028-5-rnayak@codeaurora.org>
+In-Reply-To: <20190117170829.GJ5283@Mani-XPS-13-9360>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rajendra Nayak <rnayak@codeaurora.org>
-Cc: andy.gross@linaro.org, robh@kernel.org, viresh.kumar@linaro.org, sboyd@kernel.org, ulf.hansson@linaro.org, collinsd@codeaurora.org, mka@chromium.org, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, henryc.chen@mediatek.com
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 10, 2019 at 09:32:04AM +0530, Rajendra Nayak wrote:
-> The Power domains for corners just pass the performance state set by the
-> consumers to the RPM (Remote Power manager) which then takes care
-> of setting the appropriate voltage on the corresponding rails to
-> meet the performance needs.
-> 
-> We add all power domain data needed on msm8996 here. This driver can easily
-> be extended by adding data for other qualcomm SoCs as well.
-> 
-> Signed-off-by: Rajendra Nayak <rnayak@codeaurora.org>
-> Signed-off-by: Viresh Kumar <viresh.kumar@linaro.org>
-> Reviewed-by: Ulf Hansson <ulf.hansson@linaro.org>
-> Acked-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> ---
->  drivers/soc/qcom/Kconfig  |   9 ++
->  drivers/soc/qcom/Makefile |   1 +
->  drivers/soc/qcom/rpmpd.c  | 282 ++++++++++++++++++++++++++++++++++++++
->  3 files changed, 292 insertions(+)
->  create mode 100644 drivers/soc/qcom/rpmpd.c
-> 
-> diff --git a/drivers/soc/qcom/Kconfig b/drivers/soc/qcom/Kconfig
-> index fcbf8a2e4080..df5cd9fa0d5e 100644
-> --- a/drivers/soc/qcom/Kconfig
-> +++ b/drivers/soc/qcom/Kconfig
-> @@ -98,6 +98,15 @@ config QCOM_RPMH
->  	  of hardware components aggregate requests for these resources and
->  	  help apply the aggregated state on the resource.
->  
-> +config QCOM_RPMPD
-> +	bool "Qualcomm RPM Power domain driver"
-> +	depends on MFD_QCOM_RPM && QCOM_SMD_RPM
+On Thu, Jan 17, 2019 at 9:08 AM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> On Wed, Jan 16, 2019 at 09:10:23AM -0800, John Stultz wrote:
+> > Some dma channels can be reserved for secure mode or other
+> > hardware on the SoC, so provide a binding for a bitmask
+> > listing the available channels for the kernel to use.
+> >
+> > This follows the pre-existing bcm,dma-channel-mask binding.
+> >
+> > Cc: Vinod Koul <vkoul@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Mark Rutland <mark.rutland@arm.com>
+> > Cc: Tanglei Han <hantanglei@huawei.com>
+> > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+> > Cc: Ryan Grachek <ryan@edited.us>
+> > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > Cc: dmaengine@vger.kernel.org
+> > Cc: devicetree@vger.kernel.org
+> > Signed-off-by: John Stultz <john.stultz@linaro.org>
+> > ---
+> > v3: Renamed to hisi-dma-avail-chan
+> > v4: Reworked to generic dma-channel-mask
+> > ---
+> >  Documentation/devicetree/bindings/dma/dma.txt | 4 ++++
+> >  1 file changed, 4 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> > index 6312fb0..eeb4e4d 100644
+> > --- a/Documentation/devicetree/bindings/dma/dma.txt
+> > +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> > @@ -16,6 +16,9 @@ Optional properties:
+> >  - dma-channels:      Number of DMA channels supported by the controller.
+> >  - dma-requests:      Number of DMA request signals supported by the
+> >                       controller.
+> > +- dma-channel-mask:  Bitmask of available DMA channels in ascending order
+> > +                     that are not reserved by firmware and are available to
+> > +                     the kernel. i.e. first channel corresponds to LSB.
+>
+> A general assumption is, "dma-channel-mask" refers to the bit fields of
+> the channels which needs to be masked. But here, it refers to the channels
+> which are available. Doesn't it contradict?
 
-Since this is bool, but the dependent configurations are tristate,
-configurations such as arm64:allmodconfig result in
+Hrm. So while I can sort of understand the common usage of "mask" as
+to "hide", thus the desire to have a bitfield mean "the channels we
+hide" or "don't use", but in my experience bitmasking is more commonly
+used to keep only a portion of the the bits, so from that perspective
+its more intuitive that a mask be the channels we keep to use. So I'm
+not sure if your suggestion makes it more clear.
 
-CONFIG_QCOM_RPMPD=y
-CONFIG_MFD_QCOM_RPM=m
-CONFIG_QCOM_SMD_RPM=m
+But I'm not very particular here, so I'll defer to others on this.
 
-This in turn results in
-
-   arm-linux-gnueabi-ld: drivers/soc/qcom/rpmpd.o: in function `rpmpd_send_enable': 
->> rpmpd.c:(.text+0x64): undefined reference to `qcom_rpm_smd_write' 
-   arm-linux-gnueabi-ld: drivers/soc/qcom/rpmpd.o: in function `rpmpd_power_on': 
-   rpmpd.c:(.text+0x408): undefined reference to `qcom_rpm_smd_write' 
->> arm-linux-gnueabi-ld: rpmpd.c:(.text+0x460): undefined reference to `qcom_rpm_smd_write' 
-
-as reported by 0day.
-
-Either this needs to change to tristate, or the dependency must be
-	depends on MFD_QCOM_RPM=y && QCOM_SMD_RPM=y
-
-Guenter
+thanks
+-john
