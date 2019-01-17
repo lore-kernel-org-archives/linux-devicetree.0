@@ -1,60 +1,98 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH 10/13] arm64: dts: qcom: qcs404: Add HFPLL node
-Date: Wed, 16 Jan 2019 22:38:04 -0800
-Message-ID: <20190117063804.GJ25498@builder>
+Subject: Re: [PATCH 04/13] dt-bindings: mailbox: qcom: Add clock-name
+ optional property
+Date: Wed, 16 Jan 2019 22:44:11 -0800
+Message-ID: <20190117064411.GK25498@builder>
 References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <154507555157.19322.2712807405425817338@swboyd.mtv.corp.google.com>
+ <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <154507555157.19322.2712807405425817338@swboyd.mtv.corp.google.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+In-Reply-To: <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: mark.rutland@arm.com, heiko@sntech.de, mturquette@baylibre.com, will.deacon@arm.com, david.brown@linaro.org, linux-clk@vger.kernel.org, jassisinghbrar@gmail.com, jagan@amarulasolutions.com, andy.gross@linaro.org, sibis@codeaurora.org, devicetree@vger.kernel.org, arnd@arndb.de, niklas.cassel@linaro.org, robh+dt@kernel.org, horms+renesas@verge.net.au, linux-arm-kernel@lists.infradead.org, olof@lixom.net, sboyd@kernel.org, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, vkoul@kernel.org, enric.balletbo@collabora.com, georgi.djakov@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon 17 Dec 11:39 PST 2018, Stephen Boyd wrote:
+On Mon 17 Dec 01:46 PST 2018, Jorge Ramirez-Ortiz wrote:
 
-> Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:27)
-> > The high frequency pll functionality is required to enable CPU
-> > frequency scaling operation.
-> > 
-> > Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-> > ---
-> >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 9 +++++++++
-> >  1 file changed, 9 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > index 4594fea7..ec3f6c7 100644
-> > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-> > @@ -375,6 +375,15 @@
-> >                         #mbox-cells = <1>;
-> >                 };
-> >  
-> > +               apcs_hfpll: clock-controller@0b016000 {
+> When the APCS clock is registered (platform dependent), it retrieves
+> its parent names from hardcoded values in the driver.
 > 
-> Drop leading 0 on unit address please.
+> The following commit allows the DT node to provide such clock names to
+> the platform data based clock driver therefore avoiding having to
+> explicitly embed those names in the clock driver source code.
 > 
-> > +                       compatible = "qcom,hfpll";
-> > +                       reg = <0x0b016000 0x30>;
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> ---
+>  .../bindings/mailbox/qcom,apcs-kpss-global.txt      | 21 +++++++++++++++++++++
+>  1 file changed, 21 insertions(+)
 > 
-> Wow that is small!
-> 
+> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> index 1232fc9..f252439 100644
+> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
+> @@ -23,6 +23,10 @@ platforms.
+>  	Value type: <phandle>
+>  	Definition: phandle to the input PLL, which feeds the APCS mux/divider
+>  
+> +       Usage: required if #clock-names property is present
+> +       Value type: <phandle array>
+> +	Definition: phandles to the two parent clocks of the clock driver.
 
-I double checked and it's actually 0x34, but the last register is
-protected.
+I presume you meant to replace the existing definition of "clocks"?
+
+I think the purpose of "required if #clock-cells" comes from that
+meaning that it represents a clock-controller if #clock-cells is
+specified, in which case it requires the upstream clock(s).
 
 Regards,
 Bjorn
 
-> > +                       #clock-cells = <0>;
-> > +                       clock-output-names = "apcs_hfpll";
-> > +                       clocks = <&xo_board>;
-> > +                       clock-names = "xo";
-> > +               };
-> > +
+> +
+>  - #mbox-cells:
+>  	Usage: required
+>  	Value type: <u32>
+> @@ -33,6 +37,12 @@ platforms.
+>  	Value type: <u32>
+>  	Definition: as described in clock.txt, must be 0
+>  
+> +- clock-names:
+> +	Usage: required if the platform data based clock driver needs to
+> +	retrieve the parent clock names from device tree.
+> +	This will requires two mandatory clocks to be defined.
+> +	Value type: <string-array>
+> +	Definition: must be "aux" and "pll"
+>  
+>  = EXAMPLE
+>  The following example describes the APCS HMSS found in MSM8996 and part of the
+> @@ -65,3 +75,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
+>  		clocks = <&a53pll>;
+>  		#clock-cells = <0>;
+>  	};
+> +
+> +Below is another example of the APCS binding on QCS404 platforms:
+> +
+> +	apcs_glb: mailbox@b011000 {
+> +		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
+> +		reg = <0x0b011000 0x1000>;
+> +		#mbox-cells = <1>;
+> +		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
+> +		clock-names = "aux", "pll";
+> +		#clock-cells = <0>;
+> +	};
+> -- 
+> 2.7.4
+> 
