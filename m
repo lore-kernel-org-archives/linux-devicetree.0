@@ -1,89 +1,61 @@
-From: Pavel Machek <pavel@ucw.cz>
-Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB
- LED driver
-Date: Thu, 17 Jan 2019 11:06:51 +0100
-Message-ID: <20190117100651.GB17930@amd>
-References: <20190114211723.11186-1-dmurphy@ti.com>
- <20190114211723.11186-2-dmurphy@ti.com>
- <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com>
- <20190115222223.GA17363@amd>
- <79394d17-3124-75b2-ccac-dc1046499d14@ti.com>
- <20190116105537.GA1803@amd>
- <86299268-3202-814a-134b-04bd2170faab@ti.com>
- <20190116220401.GA28024@amd>
- <8c7dde3e-5f3c-80a5-ec57-73ce8e39deef@ti.com>
+From: Viresh Kumar <viresh.kumar@linaro.org>
+Subject: Re: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Date: Thu, 17 Jan 2019 15:38:07 +0530
+Message-ID: <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20190117063312.GE25498@builder>
+ <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="4SFOXa2GPu3tIq4H"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <8c7dde3e-5f3c-80a5-ec57-73ce8e39deef@ti.com>
+In-Reply-To: <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>
-Cc: Jacek Anaszewski <jacek.anaszewski@gmail.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
+To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+On 17-01-19, 09:38, Jorge Ramirez wrote:
+> COMMON_CLK_DISABLED_UNUSED relies on the enable_count reference counter
+> to disable the clocks that were enabled by the firwmare and not by the
+> drivers.
+> 
+> the cpufreq driver does not enable the cpu clock.
+> 
+> so when clk_change_rate is called, the enable_count counter is not
+> incremented and therefore it just remains null since this was enabled by
+> the firmware.
+> 
+> I tried doing:
+> 
+> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+> index e58bfcb..5a9f83e 100644
+> --- a/drivers/cpufreq/cpufreq-dt.c
+> +++ b/drivers/cpufreq/cpufreq-dt.c
+> @@ -124,6 +124,10 @@ static int resources_available(void)
+>                 return ret;
+>         }
+> 
+> + ret = clk_prepare_enable(cpu_clk);
+> + if (ret)
+> +         return ret;
+> +
+>         clk_put(cpu_clk);
+> 
+>         name = find_supply_name(cpu_dev);
+> 
+> 
+> and that removed the need for CLK_IGNORE_UNUSED. But I am not sure of
+> the system wide consequences of that change to cpufreq.
 
---4SFOXa2GPu3tIq4H
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If the cpufreq driver enables it then it should disable it on exit as
+well, right ? And in that case if you unload your driver's module, you
+will hang the system as the clock will get disabled :)
 
-Hi!
+Every other platform must either be marking it with CLK_IGNORE_UNUSED
+or they must be doing clk_enable from somewhere, maybe the CPU online
+path, not sure though.
 
-> >>> You know what? First, submit driver with similar functionality to
-> >>> existing RGB drivers, using same interface existing drivers are
-> >>> using. When that is accepted, we can talk about extending
-> >>> kernel<->user interfaces.
-> >>>
-> >>
-> >> I could do that but then there is no way for users to have any other c=
-olor but "white" with this driver.
-> >> That defeats the purpose of the device itself.
-> >=20
-> > No, that is not what I meant.
-> >=20
-> > We do have RGB drivers in tree, they just present three separate LEDs
-> > -- red, green and blue. I ask you to do the same for initial
-> > submission.
-> >=20
->=20
-> For clarification you are asking me to register a LED class per
-> output pin?
-
-Yes.
-
-> As explained before the Master brightness register has absolute control o=
-ver the output current
-> to the LED outputs regardless of the color control setting.
->=20
-
-Yes, just set master brightness to 255 and you can ignore it.
-
-> > You'll still be able to set brightness independently on the
-> > red/green/blue LEDs...
-> >=20
->=20
-> But which one would control the overall brightness of the cluster?
-
-You would not have that control in initial version of the patch.
-
-								Pavel
---=20
-(english) http://www.livejournal.com/~pavelmachek
-(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
-g.html
-
---4SFOXa2GPu3tIq4H
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAlxAU7sACgkQMOfwapXb+vLcUwCgk7gzWalf88kSfQTICoLiUKgw
-xMIAoI7BHm0fNZlXPU3Cqctc5PX+JhlV
-=x4S1
------END PGP SIGNATURE-----
-
---4SFOXa2GPu3tIq4H--
+-- 
+viresh
