@@ -1,60 +1,59 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH v2 4/4] usb: musb: Add support for MediaTek musb
- controller
-Date: Thu, 17 Jan 2019 11:34:16 +0800
-Message-ID: <1547696056.4433.233.camel@mhfsdcap03>
-References: <1547516626-5084-1-git-send-email-min.guo@mediatek.com>
-         <1547516626-5084-5-git-send-email-min.guo@mediatek.com>
-         <20190115203815.GD18026@uda0271908> <1547631542.4433.232.camel@mhfsdcap03>
-         <20190116135914.GF18026@uda0271908>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: net: Add Qualcomm ethqos binding
+Date: Thu, 17 Jan 2019 09:33:30 +0530
+Message-ID: <20190117040330.GE13372@vkoul-mobl.Dlink>
+References: <20190108162926.17806-1-vkoul@kernel.org>
+ <20190108162926.17806-2-vkoul@kernel.org>
+ <20190115210317.GA12206@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116135914.GF18026@uda0271908>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bin Liu <b-liu@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, Yonglong Wu <yonglong.wu@mediatek.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190115210317.GA12206@bogus>
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: David S Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-01-16 at 07:59 -0600, Bin Liu wrote:
-> On Wed, Jan 16, 2019 at 05:39:02PM +0800, Min Guo wrote:
-> > Hi Bin,
+On 15-01-19, 15:03, Rob Herring wrote:
+> On Tue, Jan 08, 2019 at 09:59:22PM +0530, Vinod Koul wrote:
+> > Add support for Qualcomm ethqos found in some SoCs like QCS404.
 > > 
-> > On Tue, 2019-01-15 at 14:38 -0600, Bin Liu wrote:
-> > > Hi Min,
-> > > 
-> > > very close, thanks.
-> > > Below I tried to explain a further cleanup in musb_clearb/w() and
-> > > musb_get/set_toggle() implementation. Please let me know if it is not
-> > > clear.
-> > > 
-> > > Basically, we don't need musb_default_clearb/w(), just assign the
-> > > musb_io function pointers to musb_readb/w().
-> > > 
-> > > Then the mtk platform musb_clearb/w() calls musb_readb/w() and
-> > > musb_writeb/w() to handle W1C.
+> > Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> > ---
+> >  .../devicetree/bindings/net/qcom,dwmac.txt    | 129 ++++++++++++++++++
+> >  1 file changed, 129 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/net/qcom,dwmac.txt
 > > 
-> > Sorry to bother you again, I encounter a problem when prepare the patch.
+> > diff --git a/Documentation/devicetree/bindings/net/qcom,dwmac.txt b/Documentation/devicetree/bindings/net/qcom,dwmac.txt
+> > new file mode 100644
+> > index 000000000000..652d2213c3ac
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/net/qcom,dwmac.txt
 > 
-> no problem at all.
+> qcom,ethqos.txt?
 
-Thanks.
+Sure, will update
 
-> > The define of musb_clearb/w and musb_readb/w are difference as follow,
-> > and cannot be directly assigned:
-> > u8/u16 (*readb/w)(const void __iomem *addr, unsigned offset)
-> > void (*clearb/w)(void __iomem *addr, unsigned int offset)) 
-> > 
-> > if modify clearb/w as:
-> > u8/u16 (*clearb/w)(const void __iomem *addr, unsigned int offset)) 
-> > then musb_clear needs writeb/w the const addr.
-> > Can I delete const in (*readb/w)?
+> > @@ -0,0 +1,129 @@
+> > +Qualcomm Ethernet ETHQOS device
+> > +
 > 
-> yes, please create a separate patch for it, and for readl() as well,
-> and stating it is for implementing clearing W1C registers.
+> Perhaps some details like speeds and version of IP. There's lots of 
+> variants.
 
-Okay.
+yeah it does Gigabit, so will update that as well.
 
-> Regards,
-> -Bin.
+> 
+> > +This device has following properties:
+> > +
+> > +Required properties:
+> > +
+> > +- compatible: Should be qcom,ethqos-qcs404"
+> 
+> qcom,qcs404-ethqos
+
+Makes sense, thanks
+
+-- 
+~Vinod
