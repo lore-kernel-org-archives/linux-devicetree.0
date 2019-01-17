@@ -1,64 +1,70 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH] arm64: dts: meson: fix g12a buses
-Date: Thu, 17 Jan 2019 22:20:23 +0100
-Message-ID: <CAFBinCAdJu2C-LWspiHR4vVr=PUD2HGNi4zz+CSJP96ZE4GoJw@mail.gmail.com>
-References: <20190116165236.8330-1-jbrunet@baylibre.com> <CAFBinCBFge2tir-MXw+ojTxzW+7n9Uf4FzCahrw0MDzAYV2SSg@mail.gmail.com>
- <f7289814e316ad5879848fb8c379db396f615828.camel@baylibre.com>
- <CAFBinCDhryOWHmRKp7GhWp2O+NpJziEgHoUE4HKVitTPDMrrBQ@mail.gmail.com> <ba1f56258e7873041a0f75996e376170563c9e6e.camel@baylibre.com>
+From: Alban Gruin <alban.gruin@gmail.com>
+Subject: Re: [PATCH] userdiff: Add a builtin pattern for dts files
+Date: Thu, 17 Jan 2019 22:26:20 +0100
+Message-ID: <e932c7cb-ebf6-1499-00fb-cf0f5e8d9844@gmail.com>
+References: <20190111215127.57356-1-sboyd@kernel.org>
+ <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
+ <xmqq7ef7w0kg.fsf@gitster-ct.c.googlers.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ba1f56258e7873041a0f75996e376170563c9e6e.camel@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jerome Brunet <jbrunet@baylibre.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jianxin.pan@amlogic.com
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <git-owner@vger.kernel.org>
+In-Reply-To: <xmqq7ef7w0kg.fsf@gitster-ct.c.googlers.com>
+Content-Language: fr-FR
+Sender: git-owner@vger.kernel.org
+To: Junio C Hamano <gitster@pobox.com>
+Cc: Stephen Boyd <sboyd@kernel.org>, git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 9:39 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
->
-> On Thu, 2019-01-17 at 21:27 +0100, Martin Blumenstingl wrote:
-> > OK, but we had incorrect documentation in the past. did you check this
-> > with someone from Amlogic?
-> >
-> > I'm curious because there seem to be two different approaches here:
-> > 1) hiubus name and offsets are being fixed within this patch
-> > 2) aobus is being dropped here and re-introduced with a different name later
-> > on
-> >
->
-> because hiu exist and aobus does not, for which both the name and size was
-> wrong
->
-> > approach 1) can also be used for the "rti" region (at least in my
-> > opinion, the patch doesn't explain why it can't be done):
->
-> THe patch remove aobus (instead of fixing name and size) because, of the
-> multiple region documented covered by this 'made region', I did not anticipate
-> which one will be required and I did not want to add them all.
->
-> Better to add them as needed, which is want I done for pinctrl as you pointed
-> out
->
-> > rename "aobus" to "rti" and change the size to either 0x1000 or 0xb000
-> > (both values can be found in mesong12a.dtsi from
-> > buildroot_openlinux_kernel_4.9_fbdev_20180706)
->
-> RTI is added here:
-> https://lkml.kernel.org/r/20190117103151.3349-1-jbrunet@baylibre.com
->
-> I don't really understand the problem ? result is the same
-the actual problem is "me" as I have conflicting information:
-- Amlogic's buildroot kernel (for G12A) uses similar bus definitions
-as the GX SoCs (for which there are public datasheets) - this is how
-Jianxin added it to meson-g12a.dtsi originally
-- this patch does it different - but cannot check if this is correct
-(no public datasheet is available for G12A or AXG) nor do I have a
-"big picture" of upcoming changes
+Hi Junio,
 
-Cc'ing Jianxin: can you please review Jerome's patch and give some
-more details on the memory map on G12A so further contributions can be
-reviewed easier?
+Le 14/01/2019 à 19:34, Junio C Hamano a écrit :
+> Alban Gruin <alban.gruin@gmail.com> writes:
+> 
+>> thank you for your patch.  I left a few comments below.
+>>
+>> Le 11/01/2019 à 22:51, Stephen Boyd a écrit:
+>>> The Linux kernel receives many patches to the devicetree files each
+>>> release. The hunk header for those patches typically show nothing,
+>>> making it difficult to figure out what node is being modified without
+>>> applying the patch or opening the file and seeking to the context. Let's
+>>> add a builtin 'dts' pattern to git so that users can get better diff
+>>> output on dts files when they use the diff=dts driver.
+> 
+> A sort of meta-question.
+> 
+> What is missing in the current git that prevents the folks involved
+> in device-tree project from achieving what this patch tries to
+> accomplish without having to wait the Git project to act on it?  To
+> put it another way, is it a symptom of a bad design that from time
+> to time the Git project has to add built-in patterns?
+> 
+> Ability to ship arbitrary piece of text that you would normally
+> place in .git/config is not exactly an answer to the above question,
+> and will not happen as that has grave security implications.
+> 
+> But perhaps we can start accepting an in-tree config-like file whose
+> contents are limited to verified-safe settings
+> (e.g. "diff.*.xfuncname" and nothing else), so that projects can
+> ship two files in-tree:
+> 
+>  - ".gitattributes" that says "*.dts diff=dts"
+> 
+>  - ".gitpreferences" that says "[diff "dts"] xfuncname=..." to
+>    define the pattern the patch under review adds.
+> 
+> without waiting for the next release of Git to add one more built-in
+> pattern?
+> 
+> Anything that defines executable (e.g. "diff.*.command") should
+> never be accepted as part of the in-tree config-like file (for two
+> reasons: security and portability), but there should be some
+> "obviously safe" subset of config settings that we can allow project
+> to impose on its users, I hope.
+> 
 
-
-Regards
-Martin
+I really don’t know what to think about this.  I like your proposal, but
+it will take some time to write such a feature, while there is a patch
+almost ready to support the dts syntax.  But I guess that if it is
+merged, it will be nearly-impossible to remove from the source if a
+feature like you proposed is eventually implemented.
