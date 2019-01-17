@@ -1,68 +1,36 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
-Date: Thu, 17 Jan 2019 11:46:21 +0100
-Message-ID: <e55df608-7058-63b9-b449-982d32e08759@linaro.org>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20190117063312.GE25498@builder>
- <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
- <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
+From: Jan Kotas <jank@cadence.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
+Date: Thu, 17 Jan 2019 10:46:50 +0000
+Message-ID: <46BA7224-B229-4594-B039-8801A806657E@global.cadence.com>
+References: <20190111151401.25047-1-jank@cadence.com>
+ <20190111151401.25047-2-jank@cadence.com> <20190116210806.GA21535@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
+In-Reply-To: <20190116210806.GA21535@bogus>
 Content-Language: en-US
+Content-ID: <AD0E85CDC7D69644A830DE0B82855FF1@namprd07.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Jan Kotas <jank@cadence.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/17/19 11:08, Viresh Kumar wrote:
-> On 17-01-19, 09:38, Jorge Ramirez wrote:
->> COMMON_CLK_DISABLED_UNUSED relies on the enable_count reference counter
->> to disable the clocks that were enabled by the firwmare and not by the
->> drivers.
->>
->> the cpufreq driver does not enable the cpu clock.
->>
->> so when clk_change_rate is called, the enable_count counter is not
->> incremented and therefore it just remains null since this was enabled by
->> the firmware.
->>
->> I tried doing:
->>
->> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
->> index e58bfcb..5a9f83e 100644
->> --- a/drivers/cpufreq/cpufreq-dt.c
->> +++ b/drivers/cpufreq/cpufreq-dt.c
->> @@ -124,6 +124,10 @@ static int resources_available(void)
->>                 return ret;
->>         }
->>
->> + ret = clk_prepare_enable(cpu_clk);
->> + if (ret)
->> +         return ret;
->> +
->>         clk_put(cpu_clk);
->>
->>         name = find_supply_name(cpu_dev);
->>
->>
->> and that removed the need for CLK_IGNORE_UNUSED. But I am not sure of
->> the system wide consequences of that change to cpufreq.
-> 
-> If the cpufreq driver enables it then it should disable it on exit as
-> well, right ? And in that case if you unload your driver's module, you
-> will hang the system as the clock will get disabled :)
-
-ah, of course, sorry was over-thinking this thing :)
-
-> 
-> Every other platform must either be marking it with CLK_IGNORE_UNUSED
-> or they must be doing clk_enable from somewhere, maybe the CPU online
-> path, not sure though.
-> 
-
-since this clock is enabled by the firmware, it seems to me that using
-CLK_IGNORE_UNUSED remains the best option.
+DQo+IE9uIDE2IEphbiAyMDE5LCBhdCAyMjowOCwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
+Zz4gd3JvdGU6DQo+IA0KPiANCj4gT24gRnJpLCBKYW4gMTEsIDIwMTkgYXQgMDM6MTQ6MDBQTSAr
+MDAwMCwgSmFuIEtvdGFzIHdyb3RlOg0KPj4gVGhpcyBwYXRjaCBhZGRzIGEgRFQgYmluZGluZyBk
+b2N1bWVudGF0aW9uIGZvcg0KPj4gQ2FkZW5jZSBSVEMgY29udHJvbGxlci4NCj4+ICtSZXF1aXJl
+ZCBwcm9wZXJ0aWVzOg0KPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJjZG5zLHJ0Yy1yMTA5
+djMiDQo+PiArLSByZWc6IFNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUg
+b2YgdGhlIHJlZ2lzdGVyIGFyZWEuDQo+PiArLSBpbnRlcnJ1cHRzOiBBIHNpbmdsZSBpbnRlcnJ1
+cHQgc3BlY2lmaWVyLg0KPj4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gdHdvIGVudHJpZXM6DQo+
+PiArCS0gcGNsazogQVBCIHJlZ2lzdGVycyBjbG9jaw0KPj4gKwktIHJlZl9jbGs6IHJlZmVyZW5j
+ZSAxSHogb2YgMTAwSHogY2xvY2ssIGRlcGVuZGluZyBvbiBJUCBjb25maWd1cmF0aW9uDQo+IA0K
+PiAxSHogT1IgMTAwSHo/DQoNCkhpLA0KDQpUaGUgSVAgaGFzIGEgY29uZmlndXJhdGlvbiBwYXJh
+bWV0ZXIgYXQgYnVpbGQgdGltZSwNCndoaWNoIHNlbGVjdHMgdGhlIHJlZmVyZW5jZSBjbG9jayBm
+cmVxdWVuY3kuDQoNCkl0IGNhbm5vdCBiZSBjaGFuZ2VkIGxhdGVyLCBhbmQgdGhlcmXigJlzIG5v
+IHJlZ2lzdGVyIHdoaWNoDQp0ZWxscyB0aGUgc29mdHdhcmUgd2hpY2ggb3B0aW9uIHdhcyBzZWxl
+Y3RlZC4NCg0KSW4gdGhpcyB2ZXJzaW9uIG9mIHRoZSBwYXRjaCwgYm90aCB2YWx1ZXMgYXJlIGFj
+Y2VwdGVkLg0KSWYgaXQgbWFrZXMgc2Vuc2UgSSBjYW4gYWRkIGEgYm9vbCBwcm9wZXJ0eSwgbGlr
+ZQ0KcmVmY2xvY2stMTAwaHosIHdoaWNoIGNhbiBiZSB1c2VkIHRvIGNoZWNrIHRoZSBjbG9jayBm
+cmVxdWVuY3kuDQoNClJlZ2FyZHMsDQpKYW4NCg0K
