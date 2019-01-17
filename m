@@ -1,66 +1,86 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 2/2] arm64: dts: meson: g12a: add uart_ao_a pinctrl
-Date: Thu, 17 Jan 2019 11:31:51 +0100
-Message-ID: <20190117103151.3349-3-jbrunet@baylibre.com>
-References: <20190117103151.3349-1-jbrunet@baylibre.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [RFC PATCH v4 09/13] genirq/msi: Add support for .msi_unprepare
+ callback
+Date: Thu, 17 Jan 2019 10:39:36 +0000
+Message-ID: <c4736b58-08e9-eac3-fea1-5bbab7140388@arm.com>
+References: <20181227060829.5080-1-lokeshvutla@ti.com>
+ <20181227061313.5451-1-lokeshvutla@ti.com>
+ <20181227061313.5451-9-lokeshvutla@ti.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117103151.3349-1-jbrunet@baylibre.com>
+In-Reply-To: <20181227061313.5451-9-lokeshvutla@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
+To: Lokesh Vutla <lokeshvutla@ti.com>, Nishanth Menon <nm@ti.com>, Santosh Shilimkar <ssantosh@kernel.org>, Rob Herring <robh+dt@kernel.org>, tglx@linutronix.de, jason@lakedaemon.net
+Cc: Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>, linux-kernel@vger.kernel.org, Tero Kristo <t-kristo@ti.com>, Sekhar Nori <nsekhar@ti.com>, Device Tree Mailing List <devicetree@vger.kernel.org>, Peter Ujfalusi <peter.ujfalusi@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the always on UART pinctrl setting to the g12a soc DT and
-use it for the u200 reference design
+On 27/12/2018 06:13, Lokesh Vutla wrote:
+> Add an optional callback .msi_unprepare to struct msi_domain_ops.
+> This is used to clear any effect that is done by .msi_prepare callback.
+> 
+> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
+> ---
+>  include/linux/msi.h |  3 +++
+>  kernel/irq/msi.c    | 10 ++++++++++
+>  2 files changed, 13 insertions(+)
+> 
+> diff --git a/include/linux/msi.h b/include/linux/msi.h
+> index 474490826f8c..f35dd19f6c69 100644
+> --- a/include/linux/msi.h
+> +++ b/include/linux/msi.h
+> @@ -239,6 +239,8 @@ struct msi_domain_ops {
+>  	int		(*msi_prepare)(struct irq_domain *domain,
+>  				       struct device *dev, int nvec,
+>  				       msi_alloc_info_t *arg);
+> +	void		(*msi_unprepare)(struct irq_domain *domain, int nvec,
+> +					 void *data);
+>  	void		(*msi_finish)(msi_alloc_info_t *arg, int retval);
+>  	void		(*set_desc)(msi_alloc_info_t *arg,
+>  				    struct msi_desc *desc);
+> @@ -319,6 +321,7 @@ void platform_msi_domain_free_irqs(struct device *dev);
+>  /* When an MSI domain is used as an intermediate domain */
+>  int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+>  			    int nvec, msi_alloc_info_t *args);
+> +void msi_domain_unprepare_irqs(struct irq_domain *domain, int nvec, void *data);
+>  int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+>  			     int virq, int nvec, msi_alloc_info_t *args);
+>  struct irq_domain *
+> diff --git a/kernel/irq/msi.c b/kernel/irq/msi.c
+> index eb7459324113..1a1738690519 100644
+> --- a/kernel/irq/msi.c
+> +++ b/kernel/irq/msi.c
+> @@ -312,6 +312,16 @@ int msi_domain_prepare_irqs(struct irq_domain *domain, struct device *dev,
+>  	return ret;
+>  }
+>  
+> +void msi_domain_unprepare_irqs(struct irq_domain *domain, int nvec,
+> +			       void *data)
+> +{
+> +	struct msi_domain_info *info = domain->host_data;
+> +	struct msi_domain_ops *ops = info->ops;
+> +
+> +	if (ops->msi_unprepare)
+> +		ops->msi_unprepare(domain, nvec, data);
+> +}
+> +
+>  int msi_domain_populate_irqs(struct irq_domain *domain, struct device *dev,
+>  			     int virq, int nvec, msi_alloc_info_t *arg)
+>  {
+> 
 
-Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
----
- .../arm64/boot/dts/amlogic/meson-g12a-u200.dts |  2 ++
- arch/arm64/boot/dts/amlogic/meson-g12a.dtsi    | 18 ++++++++++++++++++
- 2 files changed, 20 insertions(+)
+Again, this needs justification. What does this brings to the table?
+What does this callback do that cannot be done when the MSI are freed?
 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-index c44dbdddf2cf..f2afd0bf3e28 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a-u200.dts
-@@ -25,5 +25,7 @@
- 
- &uart_AO {
- 	status = "okay";
-+	pinctrl-0 = <&uart_ao_a_pins>;
-+	pinctrl-names = "default";
- };
- 
-diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-index 39ad2bbaa162..bd24de947a5b 100644
---- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-+++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-@@ -140,6 +140,24 @@
- 					gpio-controller;
- 					#gpio-cells = <2>;
- 				};
-+
-+				uart_ao_a_pins: uart_a_ao {
-+					mux {
-+						groups = "uart_ao_a_tx",
-+							 "uart_ao_a_rx";
-+						function = "uart_ao_a";
-+						bias-disable;
-+					};
-+				};
-+
-+				uart_ao_a_cts_rts_pins: uart_ao_a_cts_rts {
-+					mux {
-+						groups = "uart_ao_a_cts",
-+							 "uart_ao_a_rts";
-+						function = "uart_ao_a";
-+						bias-disable;
-+					};
-+				};
- 			};
- 		};
- 
+Also, this only makes sense if it is plugged into the MSI framework. On
+its own, this is pretty useless. This makes me think that there is a gap
+in the way your MSI controller driver interacts with the reset of the
+MSI code.
+
+Thanks,
+
+	M.
 -- 
-2.20.1
+Jazz is not dead. It just smells funny...
