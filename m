@@ -1,90 +1,58 @@
-From: Anurag Kumar Vulisha <anuragku@xilinx.com>
-Subject: RE: [PATCH v5 2/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy
- core
-Date: Thu, 17 Jan 2019 16:09:31 +0000
-Message-ID: <BYAPR02MB5591E4BF4C547C3E29D9CF8AA7830@BYAPR02MB5591.namprd02.prod.outlook.com>
-References: <1545140733-20689-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1545140733-20689-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <b521679a-0c79-44b1-8a2b-1f3391a362ae@ti.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
+Date: Thu, 17 Jan 2019 10:18:04 -0600
+Message-ID: <20190117161804.GA5760@bogus>
+References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b521679a-0c79-44b1-8a2b-1f3391a362ae@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>
-Cc: Michal Simek <michals@xilinx.com>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, sundeep subbaraya <sundeep.lkml@gmail.com>, Ajay Yugalkishore Pandey <APANDEY@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2lzaG9uLA0KDQo+LS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj5Gcm9tOiBLaXNob24g
-VmlqYXkgQWJyYWhhbSBJIFttYWlsdG86a2lzaG9uQHRpLmNvbV0NCj5TZW50OiBXZWRuZXNkYXks
-IEphbnVhcnkgMTYsIDIwMTkgMTozOCBQTQ0KPlRvOiBBbnVyYWcgS3VtYXIgVnVsaXNoYSA8YW51
-cmFna3VAeGlsaW54LmNvbT47IHJvYmgrZHRAa2VybmVsLm9yZzsgTWFyaw0KPlJ1dGxhbmQgPG1h
-cmsucnV0bGFuZEBhcm0uY29tPjsgdml2ZWsuZ2F1dGFtQGNvZGVhdXJvcmEub3JnDQo+Q2M6IE1p
-Y2hhbCBTaW1layA8bWljaGFsc0B4aWxpbnguY29tPjsgdi5hbnVyYWdrdW1hckBnbWFpbC5jb207
-IHN1bmRlZXANCj5zdWJiYXJheWEgPHN1bmRlZXAubGttbEBnbWFpbC5jb20+OyBBamF5IFl1Z2Fs
-a2lzaG9yZSBQYW5kZXkNCj48QVBBTkRFWUB4aWxpbnguY29tPjsgbGludXgta2VybmVsQHZnZXIu
-a2VybmVsLm9yZzsgbGludXgtYXJtLQ0KPmtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnOyBkZXZp
-Y2V0cmVlQHZnZXIua2VybmVsLm9yZw0KPlN1YmplY3Q6IFJlOiBbUEFUQ0ggdjUgMi8yXSBwaHk6
-IHp5bnFtcDogQWRkIHBoeSBkcml2ZXIgZm9yIHhpbGlueCB6eW5xbXAgcGh5IGNvcmUNCj4NCj5I
-aSwNCj4NCj5PbiAxOC8xMi8xOCA3OjE1IFBNLCBBbnVyYWcgS3VtYXIgVnVsaXNoYSB3cm90ZToN
-Cj4+IFp5bnFNUCBTb0MgaGFzIGEgR2lnYWJpdCBUcmFuc2NlaXZlciB3aXRoIGZvdXIgbGFuZXMu
-IEFsbCB0aGUgaGlnaA0KPj4gc3BlZWQgcGVyaXBoZXJhbHMgc3VjaCBhcyBVU0IsIFNBVEEsIFBD
-SUUsIERpc3BsYXkgUG9ydCBhbmQgRXRoZXJuZXQNCj4+IFNHTUlJIGNhbiByZWx5IG9uIGFueSBv
-ZiB0aGUgZm91ciBHVCBsYW5lcyBmb3IgUEhZIGxheWVyLiBUaGlzIHBhdGNoDQo+PiBhZGRzIGRy
-aXZlciBmb3IgdGhhdCBaeW5xTVAgR1QgY29yZS4NCj4+DQo+PiBTaWduZWQtb2ZmLWJ5OiBBbnVy
-YWcgS3VtYXIgVnVsaXNoYSA8YW51cmFnLmt1bWFyLnZ1bGlzaGFAeGlsaW54LmNvbT4NCj4+IC0t
-LQ0KPj4gQ2hhbmdlcyBpbiB2NToNCj4+IAkxLiBObyBmdW5jdGlvbmFsIGNoYW5nZXMuIEFkZGVk
-IG1pc3NpbmcgQXV0aG9yIG5hbWUNCj4+DQo+PiBDaGFuZ2VzIGluIHY0Og0KPj4gCTEuIE1vdmVk
-IGluY2x1ZGUvZHQtYmluZGluZ3MvcGh5L3BoeS5oIGludG8gcGF0Y2ggMSBhcyBzdWdnZXN0ZWQg
-YnkNCj4+IAkgICAiUm9iIEhlcnJpbmciDQo+Pg0KPj4gQ2hhbmdlcyBpbiB2MzoNCj4+IAkxLiBD
-b3JyZWN0ZWQgdGhlIERvY3VtZW50YXRpb24gYXMgc3VnZ2VzdGVkIGJ5ICJWaXZlayBHYXV0YW0i
-DQo+Pg0KPj4gQ2hhbmdlcyBpbiB2MjoNCj4+IAkxLiBGaXhlZCB0aGUgY29tcGlsYXRpb24gZXJy
-b3Igd2hlbiBjb21waWxlZCBwaHktenlucW1wLmMgYXMgYSBtb2R1bGUNCj4+IAkyLiBBZGRlZCBD
-T05GSUdfUE0gbWFjcm8gaW4gcGh5LXp5bnFtcC5jIGRyaXZlcg0KPj4gLS0tDQo+PiAgZHJpdmVy
-cy9waHkvS2NvbmZpZyAgICAgICAgICAgIHwgICAgOCArDQo+PiAgZHJpdmVycy9waHkvTWFrZWZp
-bGUgICAgICAgICAgIHwgICAgMSArDQo+PiAgZHJpdmVycy9waHkvcGh5LXp5bnFtcC5jICAgICAg
-IHwgMTU4Mg0KPisrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysrKysNCj4+ICBp
-bmNsdWRlL2xpbnV4L3BoeS9waHktenlucW1wLmggfCAgIDUyICsrDQo+PiAgNCBmaWxlcyBjaGFu
-Z2VkLCAxNjQzIGluc2VydGlvbnMoKykNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9w
-aHkvcGh5LXp5bnFtcC5jICBjcmVhdGUgbW9kZSAxMDA2NDQNCj4+IGluY2x1ZGUvbGludXgvcGh5
-L3BoeS16eW5xbXAuaA0KPj4NCj4+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9LY29uZmlnIGIv
-ZHJpdmVycy9waHkvS2NvbmZpZyBpbmRleA0KPj4gNjBmOTQ5ZS4uN2EzYzkwMCAxMDA2NDQNCj4+
-IC0tLSBhL2RyaXZlcnMvcGh5L0tjb25maWcNCj4+ICsrKyBiL2RyaXZlcnMvcGh5L0tjb25maWcN
-Cj4+IEBAIC00MCw2ICs0MCwxNCBAQCBjb25maWcgUEhZX1hHRU5FDQo+PiAgCWhlbHANCj4+ICAJ
-ICBUaGlzIG9wdGlvbiBlbmFibGVzIHN1cHBvcnQgZm9yIEFQTSBYLUdlbmUgU29DIG11bHRpLXB1
-cnBvc2UgUEhZLg0KPj4NCj4+ICtjb25maWcgUEhZX1hJTElOWF9aWU5RTVANCj4+ICsJdHJpc3Rh
-dGUgIlhpbGlueCBaeW5xTVAgUEhZIGRyaXZlciINCj4+ICsJZGVwZW5kcyBvbiBBUkNIX1pZTlFN
-UA0KPj4gKwlzZWxlY3QgR0VORVJJQ19QSFkNCj4+ICsJaGVscA0KPj4gKwkgIEVuYWJsZSB0aGlz
-IHRvIHN1cHBvcnQgWnlucU1QIEhpZ2ggU3BlZWQgR2lnYWJpdCBUcmFuc2NlaXZlcg0KPj4gKwkg
-IHRoYXQgaXMgcGFydCBvZiBaeW5xTVAgU29DLg0KPj4gKw0KPj4gIHNvdXJjZSAiZHJpdmVycy9w
-aHkvYWxsd2lubmVyL0tjb25maWciDQo+PiAgc291cmNlICJkcml2ZXJzL3BoeS9hbWxvZ2ljL0tj
-b25maWciDQo+PiAgc291cmNlICJkcml2ZXJzL3BoeS9icm9hZGNvbS9LY29uZmlnIg0KPj4gZGlm
-ZiAtLWdpdCBhL2RyaXZlcnMvcGh5L01ha2VmaWxlIGIvZHJpdmVycy9waHkvTWFrZWZpbGUgaW5k
-ZXgNCj4+IDAzMDFlMjUuLjIzMzVlODUgMTAwNjQ0DQo+PiAtLS0gYS9kcml2ZXJzL3BoeS9NYWtl
-ZmlsZQ0KPj4gKysrIGIvZHJpdmVycy9waHkvTWFrZWZpbGUNCj4+ICsvKioNCj4+ICsNCj4+ICsv
-KioNCj4+ICsgKiB4cHNndHJfb3ZlcnJpZGVfZGVlbXBoIC0gb3ZlcnJpZGUgUElQRSBUWCBkZS1l
-bXBoYXNpcw0KPj4gKyAqIEBwaHk6IHBvaW50ZXIgdG8gcGh5DQo+PiArICogQHBsdmw6IHByZS1l
-bXBoYXNpcyBsZXZlbA0KPj4gKyAqIEB2bHZsOiB2b2x0YWdlIHN3aW5nIGxldmVsDQo+PiArICoN
-Cj4+ICsgKiBSZXR1cm46IE5vbmUNCj4+ICsgKi8NCj4+ICt2b2lkIHhwc2d0cl9vdmVycmlkZV9k
-ZWVtcGgoc3RydWN0IHBoeSAqcGh5LCB1OCBwbHZsLCB1OCB2bHZsKSB7DQo+PiArCXN0cnVjdCB4
-cHNndHJfcGh5ICpndHJfcGh5ID0gcGh5X2dldF9kcnZkYXRhKHBoeSk7DQo+PiArCXN0cnVjdCB4
-cHNndHJfZGV2ICpndHJfZGV2ID0gZ3RyX3BoeS0+ZGF0YTsNCj4+ICsJc3RhdGljIHU4IHBlWzRd
-WzRdID0geyB7IDB4MiwgMHgyLCAweDIsIDB4MiB9LA0KPj4gKwkJCSAgICAgICB7IDB4MSwgMHgx
-LCAweDEsIDB4RkYgfSwNCj4+ICsJCQkgICAgICAgeyAweDAsIDB4MCwgMHhGRiwgMHhGRiB9LA0K
-Pj4gKwkJCSAgICAgICB7IDB4RkYsIDB4RkYsIDB4RkYsIDB4RkYgfSB9Ow0KPj4gKw0KPj4gKwl3
-cml0ZWwocGVbcGx2bF1bdmx2bF0sDQo+PiArCSAgICAgICBndHJfZGV2LT5zZXJkZXMgKyBndHJf
-cGh5LT5sYW5lICogTDBfVFhfQU5BX1RNXzE4X09GRlNFVCArDQo+PiArCSAgICAgICBMMF9UWF9B
-TkFfVE1fMTgpOw0KPj4gK30NCj4+ICtFWFBPUlRfU1lNQk9MX0dQTCh4cHNndHJfb3ZlcnJpZGVf
-ZGVlbXBoKTsNCj4NCj5JIHRob3VnaHQgSSBnYXZlIGEgZmVlZGJhY2sgdG8gZ2V0IHJpZCBvZiBl
-eHBvcnQgc3ltYm9sLiBUaGlzIHdpbGwgbWFrZSB0aGUgY29uc3VtZXINCj5kcml2ZXIgdGllZCB0
-byB0aGlzIFBIWSBkcml2ZXIuDQo+DQoNClRoYW5rcyBhIGxvdCBmb3Igc3BlbmRpbmcgeW91ciB0
-aW1lIGluIHJldmlld2luZyB0aGlzIHBhdGNoLiBXaXRoIHRoZSBjdXJyZW50IGltcGxlbWVudGF0
-aW9uLA0KaWYgcGh5LXp5bnFtcC5jIGRyaXZlciBpcyBub3QgY29tcGlsZWQgYW5kIGNvbnN1bWVy
-IGRyaXZlciBjYWxscyB4cHNndHJfb3ZlcnJpZGVfZGVlbXBoKCkNCnJvdXRpbmUsIHN0YXRpYyBp
-bmxpbmUgZnVuY3Rpb24gaW4gcGh5LXp5bnFtcC5oIGdldHMgY2FsbGVkIGFuZCBlcnJvciAtRU5P
-REVWIGlzIHJldHVybmVkLiBTbywNCndpdGggdGhlIGN1cnJlbnQgaW1wbGVtZW50YXRpb24gdGhl
-IGNvbnN1bWVyIGRyaXZlciBpcyBhbHJlYWR5IGRlcGVuZGluZyBvbiBwaHktenlucW1wLmMNCmRy
-aXZlci4gUGxlYXNlIGNvcnJlY3QgbWUgaWYgIG15IHVuZGVyc3RhbmRpbmcgaXMgd3JvbmcNCg0K
-QmVzdCBSZWdhcmRzLA0KQW51cmFnIEt1bWFyIFZ1bGlzaGENCg==
+On Thu, Jan 17, 2019 at 12:46:25PM +0000, Viorel Suman wrote:
+> The patchset adds NXP Audio Mixer (AUDMIX) device and machine
+> drivers and related DT bindings documentation.
+> 
+> Changes since V2:
+> 1. Moved "dais" node from machine driver DTS node to device driver DTS node
+>   as suggested by Rob.
+
+That was not what I suggested. You still have a virtual node which looks 
+to me to be unnecessary.
+
+> 
+> Changes since V1:
+> 1. Original patch split into distinct patches for the device driver and
+>   DT binding documentation.
+> 2. Replaced AMIX with AUDMIX in both code and file names as it looks more
+>   RM-compliant.
+> 3. Removed polarity control from CPU DAI driver as suggested by Nicolin.
+> 4. Added machine driver and related DT binding documentation.
+> 
+> Viorel Suman (4):
+>   ASoC: fsl: Add Audio Mixer CPU DAI driver
+>   ASoC: add fsl_audmix DT binding documentation
+>   ASoC: fsl: Add Audio Mixer machine driver
+>   ASoC: add imx-audmix DT binding documentation
+> 
+>  .../devicetree/bindings/sound/fsl,audmix.txt       |  50 ++
+>  .../devicetree/bindings/sound/imx-audmix.txt       |  18 +
+>  sound/soc/fsl/Kconfig                              |  16 +
+>  sound/soc/fsl/Makefile                             |   5 +
+>  sound/soc/fsl/fsl_audmix.c                         | 551 +++++++++++++++++++++
+>  sound/soc/fsl/fsl_audmix.h                         | 102 ++++
+>  sound/soc/fsl/imx-audmix.c                         | 334 +++++++++++++
+>  7 files changed, 1076 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
+>  create mode 100644 Documentation/devicetree/bindings/sound/imx-audmix.txt
+>  create mode 100644 sound/soc/fsl/fsl_audmix.c
+>  create mode 100644 sound/soc/fsl/fsl_audmix.h
+>  create mode 100644 sound/soc/fsl/imx-audmix.c
+> 
+> -- 
+> 2.7.4
+> 
