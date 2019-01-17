@@ -1,7 +1,7 @@
 From: <min.guo@mediatek.com>
-Subject: [PATCH v3 1/4] dt-bindings: usb: musb: Add support for MediaTek musb controller
-Date: Thu, 17 Jan 2019 15:15:45 +0800
-Message-ID: <1547709348-17506-2-git-send-email-min.guo@mediatek.com>
+Subject: [PATCH v3 2/4] arm: dts: mt2701: Add usb2 device nodes
+Date: Thu, 17 Jan 2019 15:15:46 +0800
+Message-ID: <1547709348-17506-3-git-send-email-min.guo@mediatek.com>
 References: <1547709348-17506-1-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,63 +14,100 @@ List-Id: devicetree@vger.kernel.org
 
 From: Min Guo <min.guo@mediatek.com>
 
-This adds support for MediaTek musb controller in
-host, peripheral and otg mode.
+Add musb nodes and usb2 phy nodes for MT2701
 
 Signed-off-by: Min Guo <min.guo@mediatek.com>
 ---
- .../devicetree/bindings/usb/mediatek,musb.txt      | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+ arch/arm/boot/dts/mt2701-evb.dts | 21 +++++++++++++++++++++
+ arch/arm/boot/dts/mt2701.dtsi    | 33 +++++++++++++++++++++++++++++++++
+ 2 files changed, 54 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-new file mode 100644
-index 0000000..3e3f671
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-@@ -0,0 +1,43 @@
-+MediaTek musb DRD/OTG controller
-+-------------------------------------------
+diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
+index be0edb3..2635911 100644
+--- a/arch/arm/boot/dts/mt2701-evb.dts
++++ b/arch/arm/boot/dts/mt2701-evb.dts
+@@ -6,6 +6,7 @@
+  */
+ 
+ /dts-v1/;
++#include <dt-bindings/gpio/gpio.h>
+ #include "mt2701.dtsi"
+ 
+ / {
+@@ -60,6 +61,20 @@
+ 		>;
+ 		default-brightness-level = <9>;
+ 	};
 +
-+Required properties:
-+ - compatible      : should be "mediatek,mtk-musb"
-+ - reg             : specifies physical base address and size of
-+   the registers
-+ - interrupts      : interrupt used by musb controller
-+ - interrupt-names : must be "mc"
-+ - phys            : PHY specifier for the OTG phy
-+ - dr_mode         : should be one of "host", "peripheral" or "otg",
-+   refer to usb/generic.txt
-+ - clocks          : a list of phandle + clock-specifier pairs, one for
-+   each entry in clock-names
-+ - clock-names     : must contain "main", "mcu", "univpll"
-+   for clocks of controller
++	extcon_usb: extcon_iddig {
++		compatible = "linux,extcon-usb-gpio";
++		id-gpio = <&pio 44 GPIO_ACTIVE_HIGH>;
++	};
 +
-+Optional properties:
-+ - extcon : external connector for VBUS and IDPIN changes detection,
-+   needed when supports dual-role mode.
-+ - vbus-supply : reference to the VBUS regulator, needed when supports
-+   dual-role mode.
-+ - power-domains   : a phandle to USB power domain node to control USB's
-+   MTCMOS
++	usb_vbus: regulator@0 {
++		compatible = "regulator-fixed";
++		regulator-name = "usb_vbus";
++		regulator-min-microvolt = <5000000>;
++		regulator-max-microvolt = <5000000>;
++		gpio = <&pio 45 GPIO_ACTIVE_HIGH>;
++		enable-active-high;
++	};
+ };
+ 
+ &auxadc {
+@@ -229,3 +244,9 @@
+ &uart0 {
+ 	status = "okay";
+ };
 +
-+Example:
-+
-+usb2: usb@11200000 {
-+	compatible = "mediatek,mt2701-musb",
-+		     "mediatek,mtk-musb";
-+	reg = <0 0x11200000 0 0x1000>;
-+	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+	interrupt-names = "mc";
-+	phys = <&u2port2 PHY_TYPE_USB2>;
++&usb2 {
 +	vbus-supply = <&usb_vbus>;
 +	extcon = <&extcon_usb>;
-+	dr_mode = "otg";
-+	clocks = <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB0_MCU>,
-+		 <&pericfg CLK_PERI_USB_SLV>;
-+	clock-names = "main","mcu","univpll";
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
++	status = "okay";
 +};
+diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
+index 180377e..a6b1434 100644
+--- a/arch/arm/boot/dts/mt2701.dtsi
++++ b/arch/arm/boot/dts/mt2701.dtsi
+@@ -670,6 +670,39 @@
+ 		};
+ 	};
+ 
++	usb2: usb@11200000 {
++		compatible = "mediatek,mt2701-musb",
++			     "mediatek,mtk-musb";
++		reg = <0 0x11200000 0 0x1000>;
++		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
++		interrupt-names = "mc";
++		phys = <&u2port2 PHY_TYPE_USB2>;
++		dr_mode = "otg";
++		clocks = <&pericfg CLK_PERI_USB0>,
++			 <&pericfg CLK_PERI_USB0_MCU>,
++			 <&pericfg CLK_PERI_USB_SLV>;
++		clock-names = "main","mcu","univpll";
++		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
++		status = "disabled";
++	};
++
++	u2phy0: usb-phy@11210000 {
++		compatible = "mediatek,generic-tphy-v1";
++		reg = <0 0x11210000 0 0x0800>;
++		#address-cells = <2>;
++		#size-cells = <2>;
++		ranges;
++		status = "okay";
++
++		u2port2: usb-phy@1a1c4800 {
++			reg = <0 0x11210800 0 0x0100>;
++			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
++			clock-names = "ref";
++			#phy-cells = <1>;
++			status = "okay";
++		};
++	};
++
+ 	ethsys: syscon@1b000000 {
+ 		compatible = "mediatek,mt2701-ethsys", "syscon";
+ 		reg = <0 0x1b000000 0 0x1000>;
 -- 
 1.9.1
