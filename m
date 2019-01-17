@@ -1,52 +1,32 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 4/4] arm64: dts: meson: g12a: add clk measure support
-Date: Thu, 17 Jan 2019 19:14:05 +0100
-Message-ID: <284838d9e1672f2d733e687cedbda1239eab5279.camel@baylibre.com>
-References: <20190117164838.8008-1-jbrunet@baylibre.com>
-         <20190117164838.8008-5-jbrunet@baylibre.com>
+From: Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 2/2] arm64: dts: qcom: sdm845: Extend ranges and describe DMA space
+Date: Thu, 17 Jan 2019 10:22:36 -0800
+Message-ID: <154774935672.169631.8429033154347254149@swboyd.mtv.corp.google.com>
+References: <20190117042940.25487-1-bjorn.andersson@linaro.org> <20190117042940.25487-3-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117164838.8008-5-jbrunet@baylibre.com>
+In-Reply-To: <20190117042940.25487-3-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
+To: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Doug Anderson <dianders@chromium.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-01-17 at 17:48 +0100, Jerome Brunet wrote:
-> Add the clock measure device to the g12a SoC family
-> 
-> Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
+Quoting Bjorn Andersson (2019-01-16 20:29:40)
+> For devices attached to an IOMMU, translation between IOVA and physical
+> addresses is no longer 1:1 and dma-ranges should be specified to
+> describe the available IOVA address space.
+>=20
+> On SDM845 the busses are implemented with 36 address bits, so dma-ranges
+> must be defined to reduce the size of the IOVA address space from the 48
+> bits supported by the SMMU. Without this DMA allocations may end up with
+> IOVAs outside the valid range, that gets truncated by the bus between
+> the device and its translation unit.
+>=20
+> Also extend ranges to describe the available address space.
+>=20
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 > ---
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> index bd24de947a5b..0d3d3af8ea6f 100644
-> --- a/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> +++ b/arch/arm64/boot/dts/amlogic/meson-g12a.dtsi
-> @@ -181,6 +181,11 @@
->  			status = "disabled";
->  		};
->  
-> +		clk_msr: clock-sensor@ffd18000 {
-> +			compatible = "amlogic,meson-g12a-clk-measure";
-> +			reg = <0x0 0xffd18000 0x0 0x10>;
-> +		};
-> +
 
-Hi Kevin,
-I just noticed that I hace misplaced this node if, like for the axg, we are
-ordering them by address
-
-It should be under the GIC node.
-Can you fix this on the fly or do you want me to resend ?
-
-Cheers
-Jerome
-
->  		gic: interrupt-controller@ffc01000 {
->  			compatible = "arm,gic-400";
->  			reg = <0x0 0xffc01000 0 0x1000>,
+Reviewed-by: Stephen Boyd <swboyd@chromium.org>
