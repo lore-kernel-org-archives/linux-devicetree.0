@@ -1,91 +1,79 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: [PATCH] arm64: dts: sdm845: Add CPU capacity values
-Date: Wed, 16 Jan 2019 15:40:39 -0800
-Message-ID: <20190116234039.12935-1-mka@chromium.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v5 00/14] qcom: spmi: add support for hierarchical IRQ chip
+Date: Wed, 16 Jan 2019 19:32:20 -0500
+Message-ID: <20190117003234.22127-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>, Rajendra Nayak <rnayak@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>
+To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org
+Cc: marc.zyngier@arm.com, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Specify the relative CPU capacity of all SDM845 AP cores.
+This patch series adds hierarchical IRQ chip support to spmi-gpio so
+that device tree consumers can request an IRQ directly from the GPIO
+block rather than having to request an IRQ from the underlying PMIC.
 
-The values were provided by Qualcomm engineers.
+For more background information, see the email thread with Linus
+Walleij's excellent description of the problem at
+https://www.spinics.net/lists/linux-gpio/msg34655.html.
 
-Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
----
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
- 1 file changed, 8 insertions(+)
+This work was tested on a LG Nexus 5 (hammerhead) phone. My status page
+at https://masneyb.github.io/nexus-5-upstream/ describes what is working
+so far with the upstream kernel.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index d9be5bba62c45..e01949fd44075 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -99,6 +99,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x0>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <607>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_0>;
- 			L2_0: l2-cache {
-@@ -115,6 +116,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x100>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <607>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_100>;
- 			L2_100: l2-cache {
-@@ -128,6 +130,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x200>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <607>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_200>;
- 			L2_200: l2-cache {
-@@ -141,6 +144,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x300>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <607>;
- 			qcom,freq-domain = <&cpufreq_hw 0>;
- 			next-level-cache = <&L2_300>;
- 			L2_300: l2-cache {
-@@ -154,6 +158,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x400>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <1024>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_400>;
- 			L2_400: l2-cache {
-@@ -167,6 +172,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x500>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <1024>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_500>;
- 			L2_500: l2-cache {
-@@ -180,6 +186,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x600>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <1024>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_600>;
- 			L2_600: l2-cache {
-@@ -193,6 +200,7 @@
- 			compatible = "qcom,kryo385";
- 			reg = <0x0 0x700>;
- 			enable-method = "psci";
-+			capacity-dmips-mhz = <1024>;
- 			qcom,freq-domain = <&cpufreq_hw 1>;
- 			next-level-cache = <&L2_700>;
- 			L2_700: l2-cache {
+Changes since v4:
+- Patch 3: Remove unnecessary u16 cast on device_get_match_data()
+- Patch 5: Change '&struct gpiochip' in kernel doc to
+  '&struct gpio_chip'
+
+High-level changes since v3:
+- Add missing variants to spmi-gpio driver and device tree binding doc
+  that are already in use in device tree.
+- Introduce patch that disassociates the old virq if hwirq mapping
+  already exists and then drop it at the end of the series. This is to
+  not break git bisect for existing boards.
+- Migrate arm64 device tree files.
+- There are 8 new patches in this series and I denoted this in the notes
+  on the relevant patches.
+
+High-level changes since v2:
+- Dropped patch to mfd/qcom-spmi-pmic.c
+- Patch 3 is new and adds two new functions to gpiolib
+- Patch 6 is new and corrects the only other upstream user of spmi-gpio
+
+High-level changes since v1:
+- Patches 1 and 2 are new. This brought in a third subsystem (mfd).
+- I have detailed changelogs attached to the notes on patches 3-5.
+
+Brian Masney (14):
+  dt-bindings: pinctrl: qcom-pmic-gpio: add qcom,pmi8998-gpio binding
+  pinctrl: qcom: spmi-gpio: add support for three new variants
+  pinctrl: qcom: spmi-gpio: hardcode IRQ counts
+  spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical
+    IRQ chips
+  gpio: add irq domain activate/deactivate functions
+  spmi: pmic-arb: disassociate old virq if hwirq mapping already exists
+  qcom: spmi-gpio: add support for hierarchical IRQ chip
+  ARM: dts: qcom: pm8941: add interrupt controller properties
+  ARM: dts: qcom: pma8084: add interrupt controller properties
+  arm64: dts: qcom: pm8005: add interrupt controller properties
+  arm64: dts: qcom: pm8998: add interrupt controller properties
+  arm64: dts: qcom: pmi8994: add interrupt controller properties
+  arm64: dts: qcom: pmi8998: add interrupt controller properties
+  spmi: pmic-arb: revert "disassociate old virq if hwirq mapping already
+    exists"
+
+ .../bindings/pinctrl/qcom,pmic-gpio.txt       |   1 +
+ arch/arm/boot/dts/qcom-pm8941.dtsi            |  38 +----
+ arch/arm/boot/dts/qcom-pma8084.dtsi           |  24 +---
+ arch/arm64/boot/dts/qcom/pm8005.dtsi          |   6 +-
+ arch/arm64/boot/dts/qcom/pm8998.dtsi          |  28 +---
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi         |  12 +-
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  16 +--
+ drivers/gpio/gpiolib.c                        |  37 +++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      | 136 ++++++++++++++----
+ drivers/spmi/spmi-pmic-arb.c                  |  58 +++++---
+ include/linux/gpio/driver.h                   |   5 +
+ 11 files changed, 205 insertions(+), 156 deletions(-)
+
 -- 
-2.20.1.321.g9e740568ce-goog
+2.17.2
