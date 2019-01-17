@@ -1,55 +1,69 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 3/5] arm64: dts: mt7622: add a property
- "mediatek,num-pwms" for PWM
-Date: Thu, 17 Jan 2019 20:41:07 +0100
-Message-ID: <20190117194107.wrafykdre5tugv4q@pengutronix.de>
-References: <0c400cb1899c1afb4c9f021350cdc0c6ca3f6239.1547453586.git.ryder.lee@mediatek.com>
- <b5ed4626a553acb5e3107c6c96e82b674439128f.1547453586.git.ryder.lee@mediatek.com>
- <20190115200231.drn2rbxu4jxr22yz@pengutronix.de>
- <2edcc5fd-ce60-b585-e0fd-226897a7a34c@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Thu, 17 Jan 2019 11:50:27 -0800
+Message-ID: <20190117195027.GA12955@builder>
+References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <a13ad49d3ae8d9a5a972027283b7212ab19f97d0.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <20190113072319.GB28907@builder>
+ <5724d2d4-39df-a923-5f94-b53c40a84fd3@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <2edcc5fd-ce60-b585-e0fd-226897a7a34c@gmail.com>
+In-Reply-To: <5724d2d4-39df-a923-5f94-b53c40a84fd3@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: Ryder Lee <ryder.lee@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue 15 Jan 08:27 PST 2019, Sai Prakash Ranjan wrote:
 
-On Thu, Jan 17, 2019 at 02:00:43PM +0100, Matthias Brugger wrote:
-> On 15/01/2019 21:02, Uwe Kleine-König wrote:
-> > On Mon, Jan 14, 2019 at 04:21:22PM +0800, Ryder Lee wrote:
-> >> diff --git a/arch/arm64/boot/dts/mediatek/mt7622.dtsi b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> >> index 8fc4aa7..ab016cf 100644
-> >> --- a/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> >> +++ b/arch/arm64/boot/dts/mediatek/mt7622.dtsi
-> >> @@ -436,6 +436,7 @@
-> >>  			 <&pericfg CLK_PERI_PWM6_PD>;
-> >>  		clock-names = "top", "main", "pwm1", "pwm2", "pwm3", "pwm4",
-> >>  			      "pwm5", "pwm6";
-> >> +		mediatek,num-pwms = <6>;
-> >>  		status = "disabled";
+> Hi Bjorn,
+> 
+> Thanks for the review. Please find my comments inline.
+> 
+> On 1/13/2019 12:53 PM, Bjorn Andersson wrote:
+> > On Wed 09 Jan 09:46 PST 2019, Sai Prakash Ranjan wrote:
 > > 
-> > Conceptually this patch must go in before the change to the driver.
-> > Otherwise the pwms are not usable with only patch 1 applied which breaks
-> > bisectability.
+> > > Add coresight components found on Qualcomm SDM845 SoC.
+> > > 
+> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > 
+> > Hi Sai,
+> > 
+> > The content of this patch looks good, but please fold it into
+> > sdm845.dtsi (keep the nodes sorted by address).
 > > 
 > 
-> The driver should have backwards compatibility to older DTs. So that would need
-> to be fixed in the driver not in the patch order of the series.
+> I had looked at the sample from hi6220 for coresight and
+> decided to keep sdm845 coresight dtsi in separate file as it
+> would look much cleaner than mixing it with main dtsi file.
+> Also I guess it would make coresight topology more understandable
+> if we keep it separately (plus there are about 400+ lines of coresight
+> dt entries). Is there any reason for wanting coresight entries merged
+> into sdm845.dtsi file? If you still prefer it, I can make the
+> change in the next version.
+> 
 
-Right you are. Bisectability is a reason to not apply the patches in the
-order as is, but given that you already requested backwards
-compatibility the bisectability will be fixed en passant.
+There seems to be some variations of this, but we try to keep everything
+sorted in sdm845.dtsi to avoid having to jump around between the various
+files. So please merge it into sdm845.dtsi (sorted by address).
 
-Best regards
-Uwe
+Regards,
+Bjorn
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> > And mention below the --- that this depends on my AMBA bus pclk change
+> > and include the URL:
+> > 
+> > https://lore.kernel.org/lkml/20190106080915.4493-7-bjorn.andersson@linaro.org/
+> > 
+> 
+> I had mentioned this dependency in the cover letter. But I suppose
+> I can mention it here as well.
+> 
+> Thanks,
+> Sai
+> 
+> -- 
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
