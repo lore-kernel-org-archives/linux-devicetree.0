@@ -1,74 +1,182 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 2/8 v4] Documentation: bindings: dma: Add binding for
- dma-channel-mask
-Date: Thu, 17 Jan 2019 22:38:29 +0530
-Message-ID: <20190117170829.GJ5283@Mani-XPS-13-9360>
-References: <1547658629-25378-1-git-send-email-john.stultz@linaro.org>
- <1547658629-25378-3-git-send-email-john.stultz@linaro.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v4 1/3] reset: imx7: Add plubming to support multiple IP
+ variants
+Date: Thu, 17 Jan 2019 18:16:20 +0100
+Message-ID: <1547745380.4009.18.camel@pengutronix.de>
+References: <20181220010700.8598-1-andrew.smirnov@gmail.com>
+         <20181220010700.8598-2-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547658629-25378-3-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <20181220010700.8598-2-andrew.smirnov@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org
+To: Andrey Smirnov <andrew.smirnov@gmail.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 09:10:23AM -0800, John Stultz wrote:
-> Some dma channels can be reserved for secure mode or other
-> hardware on the SoC, so provide a binding for a bitmask
-> listing the available channels for the kernel to use.
+On Wed, 2018-12-19 at 17:06 -0800, Andrey Smirnov wrote:
+> In order to enable supporting i.MX8MQ with this driver, convert it to
+> expect variant specific bits to be passed via driver data.
 > 
-> This follows the pre-existing bcm,dma-channel-mask binding.
-> 
-> Cc: Vinod Koul <vkoul@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Tanglei Han <hantanglei@huawei.com>
-> Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
-> Cc: Ryan Grachek <ryan@edited.us>
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: dmaengine@vger.kernel.org
+> Cc: p.zabel@pengutronix.de
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: cphealy@gmail.com
+> Cc: l.stach@pengutronix.de
+> Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> Cc: Rob Herring <robh@kernel.org>
 > Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
+> Cc: linux-imx@nxp.com
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: linux-kernel@vger.kernel.org
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > ---
-> v3: Renamed to hisi-dma-avail-chan
-> v4: Reworked to generic dma-channel-mask
-> ---
->  Documentation/devicetree/bindings/dma/dma.txt | 4 ++++
->  1 file changed, 4 insertions(+)
+>  drivers/reset/reset-imx7.c | 62 +++++++++++++++++++++++++++-----------
+>  1 file changed, 45 insertions(+), 17 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
-> index 6312fb0..eeb4e4d 100644
-> --- a/Documentation/devicetree/bindings/dma/dma.txt
-> +++ b/Documentation/devicetree/bindings/dma/dma.txt
-> @@ -16,6 +16,9 @@ Optional properties:
->  - dma-channels: 	Number of DMA channels supported by the controller.
->  - dma-requests: 	Number of DMA request signals supported by the
->  			controller.
-> +- dma-channel-mask:	Bitmask of available DMA channels in ascending order
-> +			that are not reserved by firmware and are available to
-> +			the kernel. i.e. first channel corresponds to LSB.
-
-A general assumption is, "dma-channel-mask" refers to the bit fields of
-the channels which needs to be masked. But here, it refers to the channels
-which are available. Doesn't it contradict?
-
-Thanks,
-Mani
-
+> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+> index 77911fa8f31d..3a36d5863891 100644
+> --- a/drivers/reset/reset-imx7.c
+> +++ b/drivers/reset/reset-imx7.c
+> @@ -17,14 +17,29 @@
 >  
->  Example:
+>  #include <linux/mfd/syscon.h>
+>  #include <linux/mod_devicetable.h>
+> +#include <linux/of_device.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/reset-controller.h>
+>  #include <linux/regmap.h>
+>  #include <dt-bindings/reset/imx7-reset.h>
 >  
-> @@ -29,6 +32,7 @@ Example:
->  		#dma-cells = <1>;
->  		dma-channels = <32>;
->  		dma-requests = <127>;
-> +		dma-channel-mask = <0xfffe>
->  	};
+> +struct imx7_src_signal {
+> +	unsigned int offset, bit;
+> +};
+> +
+> +struct imx7_src;
+> +
+> +struct imx7_src_variant {
+> +	const struct imx7_src_signal *signals;
+> +	unsigned int signals_num;
+> +	unsigned int (*prepare)(struct imx7_src *imx7src, unsigned long id,
+> +				bool assert);
+
+Instead of adding a function pointer indirection, I'd prefer separate
+imx7_reset_ops and imx8m_reset_ops set by the variant, see below.
+
+> +};
+> +
+>  struct imx7_src {
+>  	struct reset_controller_dev rcdev;
+>  	struct regmap *regmap;
+> +	const struct imx7_src_variant *variant;
+
+This could then replaced with a direct pointer to the respective signals
+array.
+
+>  };
 >  
->  * DMA router
-> -- 
-> 2.7.4
-> 
+>  enum imx7_src_registers {
+> @@ -39,10 +54,6 @@ enum imx7_src_registers {
+>  	SRC_DDRC_RCR		= 0x1000,
+>  };
+>  
+> -struct imx7_src_signal {
+> -	unsigned int offset, bit;
+> -};
+> -
+>  static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
+>  	[IMX7_RESET_A7_CORE_POR_RESET0] = { SRC_A7RCR0, BIT(0) },
+>  	[IMX7_RESET_A7_CORE_POR_RESET1] = { SRC_A7RCR0, BIT(1) },
+> @@ -72,17 +83,11 @@ static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
+>  	[IMX7_RESET_DDRC_CORE_RST]	= { SRC_DDRC_RCR, BIT(1) },
+>  };
+>  
+> -static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
+> +static unsigned int
+> +imx7_src_prepare(struct imx7_src *imx7src, unsigned long id, bool assert)
+>  {
+> -	return container_of(rcdev, struct imx7_src, rcdev);
+> -}
+> -
+> -static int imx7_reset_set(struct reset_controller_dev *rcdev,
+> -			  unsigned long id, bool assert)
+> -{
+> -	struct imx7_src *imx7src = to_imx7_src(rcdev);
+> -	const struct imx7_src_signal *signal = &imx7_src_signals[id];
+> -	unsigned int value = assert ? signal->bit : 0;
+> +	const unsigned int bit = imx7src->variant->signals[id].bit;
+> +	unsigned int value = assert ? bit : 0;
+>  
+>  	switch (id) {
+>  	case IMX7_RESET_PCIEPHY:
+> @@ -95,10 +100,32 @@ static int imx7_reset_set(struct reset_controller_dev *rcdev,
+>  		break;
+>  
+>  	case IMX7_RESET_PCIE_CTRL_APPS_EN:
+> -		value = (assert) ? 0 : signal->bit;
+> +		value = assert ? 0 : bit;
+>  		break;
+>  	}
+>  
+> +	return value;
+> +}
+
+Instead of having a common imx7_reset_set and then calling the custom
+.prepare() through a function pointer, I'd suggest to have custom
+imx7_reset_set and imx8m_reset_set functions that contain the code from
+.prepare() and then call a common function to do the actual register
+access.
+
+> +
+> +static const struct imx7_src_variant variant_imx7 = {
+> +	.signals = imx7_src_signals,
+> +	.signals_num = ARRAY_SIZE(imx7_src_signals),
+> +	.prepare = imx7_src_prepare,
+> +};
+> +
+> +static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
+> +{
+> +	return container_of(rcdev, struct imx7_src, rcdev);
+> +}
+> +
+> +static int imx7_reset_set(struct reset_controller_dev *rcdev,
+> +			  unsigned long id, bool assert)
+> +{
+> +	struct imx7_src *imx7src = to_imx7_src(rcdev);
+> +	const struct imx7_src_variant *variant = imx7src->variant;
+> +	const struct imx7_src_signal *signal = &variant->signals[id];
+> +	const unsigned int value = variant->prepare(imx7src, id, assert);
+> +
+>  	return regmap_update_bits(imx7src->regmap,
+>  				  signal->offset, signal->bit, value);
+>  }
+> @@ -130,6 +157,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
+>  	if (!imx7src)
+>  		return -ENOMEM;
+>  
+> +	imx7src->variant = of_device_get_match_data(dev);
+>  	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
+>  	if (IS_ERR(imx7src->regmap)) {
+>  		dev_err(dev, "Unable to get imx7-src regmap");
+> @@ -138,7 +166,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
+>  	regmap_attach_dev(dev, imx7src->regmap, &config);
+>  
+>  	imx7src->rcdev.owner     = THIS_MODULE;
+> -	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
+> +	imx7src->rcdev.nr_resets = imx7src->variant->signals_num;
+>  	imx7src->rcdev.ops       = &imx7_reset_ops;
+>  	imx7src->rcdev.of_node   = dev->of_node;
+>  
+> @@ -146,7 +174,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
+>  }
+>  
+>  static const struct of_device_id imx7_reset_dt_ids[] = {
+> -	{ .compatible = "fsl,imx7d-src", },
+> +	{ .compatible = "fsl,imx7d-src", .data = &variant_imx7 },
+>  	{ /* sentinel */ },
+>  };
+
+regards
+Phililipp
