@@ -1,49 +1,28 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH] arm64: dts: meson: fix g12a buses
-Date: Thu, 17 Jan 2019 21:39:04 +0100
-Message-ID: <ba1f56258e7873041a0f75996e376170563c9e6e.camel@baylibre.com>
-References: <20190116165236.8330-1-jbrunet@baylibre.com>
-         <CAFBinCBFge2tir-MXw+ojTxzW+7n9Uf4FzCahrw0MDzAYV2SSg@mail.gmail.com>
-         <f7289814e316ad5879848fb8c379db396f615828.camel@baylibre.com>
-         <CAFBinCDhryOWHmRKp7GhWp2O+NpJziEgHoUE4HKVitTPDMrrBQ@mail.gmail.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PATCH v3 0/2] arm64: dts: meson: add simple-framebuffer nodes
+Date: Thu, 17 Jan 2019 12:58:04 -0800
+Message-ID: <7hfttratnn.fsf@baylibre.com>
+References: <20190116124030.16882-1-mjourdan@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCDhryOWHmRKp7GhWp2O+NpJziEgHoUE4HKVitTPDMrrBQ@mail.gmail.com>
+In-Reply-To: <20190116124030.16882-1-mjourdan@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: devicetree@vger.kernel.org
+Cc: Maxime Jourdan <mjourdan@baylibre.com>, Rob Herring <robh@kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-01-17 at 21:27 +0100, Martin Blumenstingl wrote:
-> OK, but we had incorrect documentation in the past. did you check this
-> with someone from Amlogic?
-> 
-> I'm curious because there seem to be two different approaches here:
-> 1) hiubus name and offsets are being fixed within this patch
-> 2) aobus is being dropped here and re-introduced with a different name later
-> on
-> 
+Maxime Jourdan <mjourdan@baylibre.com> writes:
 
-because hiu exist and aobus does not, for which both the name and size was
-wrong
+> This patch series adds support for simplefb for the GXBB and GXL chips.
+>
+> simple-framebuffer allows sharing a framebuffer already setup by the
+> firmware to the kernel for a seamless boot transition.
+>
+> It goes along with a u-boot patch series adding display support to
+> GXBB & GXL [3].
+>
 
-> approach 1) can also be used for the "rti" region (at least in my
-> opinion, the patch doesn't explain why it can't be done):
+Queued for v5.1 (branch: v5.1/dt64)
 
-THe patch remove aobus (instead of fixing name and size) because, of the
-multiple region documented covered by this 'made region', I did not anticipate
-which one will be required and I did not want to add them all.
-
-Better to add them as needed, which is want I done for pinctrl as you pointed
-out
-
-> rename "aobus" to "rti" and change the size to either 0x1000 or 0xb000
-> (both values can be found in mesong12a.dtsi from
-> buildroot_openlinux_kernel_4.9_fbdev_20180706)
-
-RTI is added here:
-https://lkml.kernel.org/r/20190117103151.3349-1-jbrunet@baylibre.com
-
-I don't really understand the problem ? result is the same
+Kevin
