@@ -1,36 +1,58 @@
-From: Jan Kotas <jank@cadence.com>
-Subject: Re: [PATCH v2 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
-Date: Thu, 17 Jan 2019 10:46:50 +0000
-Message-ID: <46BA7224-B229-4594-B039-8801A806657E@global.cadence.com>
-References: <20190111151401.25047-1-jank@cadence.com>
- <20190111151401.25047-2-jank@cadence.com> <20190116210806.GA21535@bogus>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 02/11] dt-bindings: arm: renesas: Add si-linux cat87[45]
+ boards
+Date: Thu, 17 Jan 2019 11:51:07 +0100
+Message-ID: <20190117105107.dtuttem7x7ovaey2@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-3-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116210806.GA21535@bogus>
-Content-Language: en-US
-Content-ID: <AD0E85CDC7D69644A830DE0B82855FF1@namprd07.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Jan Kotas <jank@cadence.com>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547663874-29411-3-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben
 List-Id: devicetree@vger.kernel.org
 
-DQo+IE9uIDE2IEphbiAyMDE5LCBhdCAyMjowOCwgUm9iIEhlcnJpbmcgPHJvYmhAa2VybmVsLm9y
-Zz4gd3JvdGU6DQo+IA0KPiANCj4gT24gRnJpLCBKYW4gMTEsIDIwMTkgYXQgMDM6MTQ6MDBQTSAr
-MDAwMCwgSmFuIEtvdGFzIHdyb3RlOg0KPj4gVGhpcyBwYXRjaCBhZGRzIGEgRFQgYmluZGluZyBk
-b2N1bWVudGF0aW9uIGZvcg0KPj4gQ2FkZW5jZSBSVEMgY29udHJvbGxlci4NCj4+ICtSZXF1aXJl
-ZCBwcm9wZXJ0aWVzOg0KPj4gKy0gY29tcGF0aWJsZTogU2hvdWxkIGJlICJjZG5zLHJ0Yy1yMTA5
-djMiDQo+PiArLSByZWc6IFNwZWNpZmllcyBiYXNlIHBoeXNpY2FsIGFkZHJlc3MgYW5kIHNpemUg
-b2YgdGhlIHJlZ2lzdGVyIGFyZWEuDQo+PiArLSBpbnRlcnJ1cHRzOiBBIHNpbmdsZSBpbnRlcnJ1
-cHQgc3BlY2lmaWVyLg0KPj4gKy0gY2xvY2tzOiBNdXN0IGNvbnRhaW4gdHdvIGVudHJpZXM6DQo+
-PiArCS0gcGNsazogQVBCIHJlZ2lzdGVycyBjbG9jaw0KPj4gKwktIHJlZl9jbGs6IHJlZmVyZW5j
-ZSAxSHogb2YgMTAwSHogY2xvY2ssIGRlcGVuZGluZyBvbiBJUCBjb25maWd1cmF0aW9uDQo+IA0K
-PiAxSHogT1IgMTAwSHo/DQoNCkhpLA0KDQpUaGUgSVAgaGFzIGEgY29uZmlndXJhdGlvbiBwYXJh
-bWV0ZXIgYXQgYnVpbGQgdGltZSwNCndoaWNoIHNlbGVjdHMgdGhlIHJlZmVyZW5jZSBjbG9jayBm
-cmVxdWVuY3kuDQoNCkl0IGNhbm5vdCBiZSBjaGFuZ2VkIGxhdGVyLCBhbmQgdGhlcmXigJlzIG5v
-IHJlZ2lzdGVyIHdoaWNoDQp0ZWxscyB0aGUgc29mdHdhcmUgd2hpY2ggb3B0aW9uIHdhcyBzZWxl
-Y3RlZC4NCg0KSW4gdGhpcyB2ZXJzaW9uIG9mIHRoZSBwYXRjaCwgYm90aCB2YWx1ZXMgYXJlIGFj
-Y2VwdGVkLg0KSWYgaXQgbWFrZXMgc2Vuc2UgSSBjYW4gYWRkIGEgYm9vbCBwcm9wZXJ0eSwgbGlr
-ZQ0KcmVmY2xvY2stMTAwaHosIHdoaWNoIGNhbiBiZSB1c2VkIHRvIGNoZWNrIHRoZSBjbG9jayBm
-cmVxdWVuY3kuDQoNClJlZ2FyZHMsDQpKYW4NCg0K
+On Wed, Jan 16, 2019 at 06:37:45PM +0000, Fabrizio Castro wrote:
+> This patch adds board cat874 (powered by the RZ/G2E) and board
+> cat875 (that sits on top of cat874). Both boards are made by
+> Silicon Linux.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> ---
+>  Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml b/Documentation/devicetree/bindings/arm/renesas.yaml
+> index 5e9d486..9e1e07b 100644
+> --- a/Documentation/devicetree/bindings/arm/renesas.yaml
+> +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
+> @@ -108,6 +108,14 @@ properties:
+>  
+>        - description: RZ/G2E (R8A774C0)
+>          items:
+> +          - enum:
+> +              - si-linux,cat874 # Silicon Linux RZ/G2E 96board platform (CAT874)
+
+Can I confirm that "96board platform" is correct for this board - I don't
+see it in the documentation I have, but that may not mean much.
+
+
+That aside, I'd like to wait for Rob to indicate if he will accept
+patch 1, which adds si-linux as a vendor, before I apply this patch.
+
+> +          - const: renesas,r8a774c0
+> +
+> +      - items:
+> +          - enum:
+> +              - si-linux,cat875 # Silicon Linux sub board for CAT874 (CAT875)
+> +          - const: si-linux,cat874
+>            - const: renesas,r8a774c0
+>  
+>        - description: R-Car M1A (R8A77781)
+> -- 
+> 2.7.4
+> 
