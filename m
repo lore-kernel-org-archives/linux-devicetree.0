@@ -1,182 +1,233 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v4 1/3] reset: imx7: Add plubming to support multiple IP
- variants
-Date: Thu, 17 Jan 2019 18:16:20 +0100
-Message-ID: <1547745380.4009.18.camel@pengutronix.de>
-References: <20181220010700.8598-1-andrew.smirnov@gmail.com>
-         <20181220010700.8598-2-andrew.smirnov@gmail.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] irqchip/irq-csky-mpintc: Add triger type and priority
+ setting
+Date: Thu, 17 Jan 2019 17:17:45 +0000
+Message-ID: <9c531bec-263c-070d-fed8-d953b42aa185@arm.com>
+References: <1547570199-25944-1-git-send-email-guoren@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181220010700.8598-2-andrew.smirnov@gmail.com>
+In-Reply-To: <1547570199-25944-1-git-send-email-guoren@kernel.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+To: guoren@kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2018-12-19 at 17:06 -0800, Andrey Smirnov wrote:
-> In order to enable supporting i.MX8MQ with this driver, convert it to
-> expect variant specific bits to be passed via driver data.
+Hi Guo,
+
+On 15/01/2019 16:36, guoren@kernel.org wrote:
+> From: Guo Ren <ren_guo@c-sky.com>
 > 
-> Cc: p.zabel@pengutronix.de
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: cphealy@gmail.com
-> Cc: l.stach@pengutronix.de
-> Cc: Leonard Crestez <leonard.crestez@nxp.com>
-> Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-> Cc: Richard Zhu <hongxing.zhu@nxp.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: linux-imx@nxp.com
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: linux-kernel@vger.kernel.org
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Support 4 triger types:
+>  - IRQ_TYPE_LEVEL_HIGH
+>  - IRQ_TYPE_LEVEL_LOW
+>  - IRQ_TYPE_EDGE_RISING
+>  - IRQ_TYPE_EDGE_FALLING
+> 
+> Support 0-255 priority setting for each irq.
+> 
+> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
 > ---
->  drivers/reset/reset-imx7.c | 62 +++++++++++++++++++++++++++-----------
->  1 file changed, 45 insertions(+), 17 deletions(-)
+>  .../bindings/interrupt-controller/csky,mpintc.txt  | 24 ++++++-
+>  drivers/irqchip/irq-csky-mpintc.c                  | 78 +++++++++++++++++++++-
+>  2 files changed, 99 insertions(+), 3 deletions(-)
 > 
-> diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-> index 77911fa8f31d..3a36d5863891 100644
-> --- a/drivers/reset/reset-imx7.c
-> +++ b/drivers/reset/reset-imx7.c
-> @@ -17,14 +17,29 @@
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> index ab921f1..364b789 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+> @@ -11,6 +11,14 @@ Interrupt number definition:
+>   16-31  : private  irq, and we use 16 as the co-processor timer.
+>   31-1024: common irq for soc ip.
 >  
->  #include <linux/mfd/syscon.h>
->  #include <linux/mod_devicetable.h>
-> +#include <linux/of_device.h>
->  #include <linux/platform_device.h>
->  #include <linux/reset-controller.h>
->  #include <linux/regmap.h>
->  #include <dt-bindings/reset/imx7-reset.h>
->  
-> +struct imx7_src_signal {
-> +	unsigned int offset, bit;
-> +};
+> +Interrupt triger mode:
+> +  IRQ_TYPE_LEVEL_HIGH (default)
+> +  IRQ_TYPE_LEVEL_LOW
+> +  IRQ_TYPE_EDGE_RISING
+> +  IRQ_TYPE_EDGE_FALLING
 > +
-> +struct imx7_src;
+> +Interrupt priority range: 0-255
 > +
-> +struct imx7_src_variant {
-> +	const struct imx7_src_signal *signals;
-> +	unsigned int signals_num;
-> +	unsigned int (*prepare)(struct imx7_src *imx7src, unsigned long id,
-> +				bool assert);
-
-Instead of adding a function pointer indirection, I'd prefer separate
-imx7_reset_ops and imx8m_reset_ops set by the variant, see below.
-
-> +};
+>  =============================
+>  intc node bindings definition
+>  =============================
+> @@ -26,7 +34,7 @@ intc node bindings definition
+>  	- #interrupt-cells
+>  		Usage: required
+>  		Value type: <u32>
+> -		Definition: must be <1>
+> +		Definition: could be <1> or <2>
+>  	- interrupt-controller:
+>  		Usage: required
+>  
+> @@ -35,6 +43,18 @@ Examples:
+>  
+>  	intc: interrupt-controller {
+>  		compatible = "csky,mpintc";
+> -		#interrupt-cells = <1>;
+> +		#interrupt-cells = <2>;
+>  		interrupt-controller;
+>  	};
 > +
->  struct imx7_src {
->  	struct reset_controller_dev rcdev;
->  	struct regmap *regmap;
-> +	const struct imx7_src_variant *variant;
-
-This could then replaced with a direct pointer to the respective signals
-array.
-
->  };
->  
->  enum imx7_src_registers {
-> @@ -39,10 +54,6 @@ enum imx7_src_registers {
->  	SRC_DDRC_RCR		= 0x1000,
->  };
->  
-> -struct imx7_src_signal {
-> -	unsigned int offset, bit;
-> -};
-> -
->  static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
->  	[IMX7_RESET_A7_CORE_POR_RESET0] = { SRC_A7RCR0, BIT(0) },
->  	[IMX7_RESET_A7_CORE_POR_RESET1] = { SRC_A7RCR0, BIT(1) },
-> @@ -72,17 +83,11 @@ static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
->  	[IMX7_RESET_DDRC_CORE_RST]	= { SRC_DDRC_RCR, BIT(1) },
->  };
->  
-> -static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
-> +static unsigned int
-> +imx7_src_prepare(struct imx7_src *imx7src, unsigned long id, bool assert)
->  {
-> -	return container_of(rcdev, struct imx7_src, rcdev);
-> -}
-> -
-> -static int imx7_reset_set(struct reset_controller_dev *rcdev,
-> -			  unsigned long id, bool assert)
-> -{
-> -	struct imx7_src *imx7src = to_imx7_src(rcdev);
-> -	const struct imx7_src_signal *signal = &imx7_src_signals[id];
-> -	unsigned int value = assert ? signal->bit : 0;
-> +	const unsigned int bit = imx7src->variant->signals[id].bit;
-> +	unsigned int value = assert ? bit : 0;
->  
->  	switch (id) {
->  	case IMX7_RESET_PCIEPHY:
-> @@ -95,10 +100,32 @@ static int imx7_reset_set(struct reset_controller_dev *rcdev,
->  		break;
->  
->  	case IMX7_RESET_PCIE_CTRL_APPS_EN:
-> -		value = (assert) ? 0 : signal->bit;
-> +		value = assert ? 0 : bit;
->  		break;
->  	}
->  
-> +	return value;
-> +}
-
-Instead of having a common imx7_reset_set and then calling the custom
-.prepare() through a function pointer, I'd suggest to have custom
-imx7_reset_set and imx8m_reset_set functions that contain the code from
-.prepare() and then call a common function to do the actual register
-access.
-
+> +	0: device-example {
+> +		...
+> +		interrupts = <33 IRQ_TYPE_EDGE_RISING>;
+> +		interrupt-parent = <&intc>;
+> +	};
 > +
-> +static const struct imx7_src_variant variant_imx7 = {
-> +	.signals = imx7_src_signals,
-> +	.signals_num = ARRAY_SIZE(imx7_src_signals),
-> +	.prepare = imx7_src_prepare,
-> +};
-> +
-> +static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
-> +{
-> +	return container_of(rcdev, struct imx7_src, rcdev);
-> +}
-> +
-> +static int imx7_reset_set(struct reset_controller_dev *rcdev,
-> +			  unsigned long id, bool assert)
-> +{
-> +	struct imx7_src *imx7src = to_imx7_src(rcdev);
-> +	const struct imx7_src_variant *variant = imx7src->variant;
-> +	const struct imx7_src_signal *signal = &variant->signals[id];
-> +	const unsigned int value = variant->prepare(imx7src, id, assert);
-> +
->  	return regmap_update_bits(imx7src->regmap,
->  				  signal->offset, signal->bit, value);
->  }
-> @@ -130,6 +157,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
->  	if (!imx7src)
->  		return -ENOMEM;
+> +	1: device-example {
+> +		...
+> +		interrupts = <34 ((priority << 4) | IRQ_TYPE_EDGE_RISING)>;
+> +		interrupt-parent = <&intc>;
+> +	};
+> diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
+> index c67c961..9edc6d3 100644
+> --- a/drivers/irqchip/irq-csky-mpintc.c
+> +++ b/drivers/irqchip/irq-csky-mpintc.c
+> @@ -29,9 +29,12 @@ static void __iomem *INTCL_base;
 >  
-> +	imx7src->variant = of_device_get_match_data(dev);
->  	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
->  	if (IS_ERR(imx7src->regmap)) {
->  		dev_err(dev, "Unable to get imx7-src regmap");
-> @@ -138,7 +166,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
->  	regmap_attach_dev(dev, imx7src->regmap, &config);
+>  #define INTCG_ICTLR	0x0
+>  #define INTCG_CICFGR	0x100
+> +#define INTCG_CIPRTR	0x200
+>  #define INTCG_CIDSTR	0x1000
 >  
->  	imx7src->rcdev.owner     = THIS_MODULE;
-> -	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
-> +	imx7src->rcdev.nr_resets = imx7src->variant->signals_num;
->  	imx7src->rcdev.ops       = &imx7_reset_ops;
->  	imx7src->rcdev.of_node   = dev->of_node;
->  
-> @@ -146,7 +174,7 @@ static int imx7_reset_probe(struct platform_device *pdev)
+>  #define INTCL_PICTLR	0x0
+> +#define INTCL_CFGR	0x14
+> +#define INTCL_PRTR	0x20
+>  #define INTCL_SIGR	0x60
+>  #define INTCL_HPPIR	0x68
+>  #define INTCL_RDYIR	0x6c
+> @@ -73,6 +76,78 @@ static void csky_mpintc_eoi(struct irq_data *d)
+>  	writel_relaxed(d->hwirq, reg_base + INTCL_CACR);
 >  }
 >  
->  static const struct of_device_id imx7_reset_dt_ids[] = {
-> -	{ .compatible = "fsl,imx7d-src", },
-> +	{ .compatible = "fsl,imx7d-src", .data = &variant_imx7 },
->  	{ /* sentinel */ },
->  };
+> +static int csky_mpintc_set_type(struct irq_data *d, unsigned int type)
+> +{
+> +	unsigned int priority, triger;
 
-regards
-Phililipp
+nit: s/triger/trigger/ everywhere.
+
+> +	unsigned int offset, bit_offset;
+> +	void __iomem *reg_base;
+> +
+> +	/*
+> +	 * type Bit field: | 32 - 12  |  11 - 4  |   3 - 0    |
+> +	 *                   reserved   priority   triger type
+> +	 */
+> +	triger	 = type & IRQ_TYPE_SENSE_MASK;
+> +	priority = (type >> 4) & 0xff;
+
+Definitely not. The Linux API to set the trigger does not carry any
+priority information, nor should it. Priorities should be set
+statically, and no driver should ever be able to change it.
+
+> +
+> +	switch (triger) {
+> +	case IRQ_TYPE_LEVEL_HIGH:
+> +		triger = 0;
+> +		break;
+> +	case IRQ_TYPE_LEVEL_LOW:
+> +		triger = 1;
+> +		break;
+> +	case IRQ_TYPE_EDGE_RISING:
+> +		triger = 2;
+> +		break;
+> +	case IRQ_TYPE_EDGE_FALLING:
+> +		triger = 3;
+
+Can you define some macros that represent these magic values?
+
+> +		break;
+> +	default:
+> +		triger = 0;
+> +		break;
+
+If you get an invalid combination, you shouldn't blindly accept it, but
+instead return an error.
+
+> +	}
+> +
+> +	if (d->hwirq < COMM_IRQ_BASE) {
+> +		reg_base = this_cpu_read(intcl_reg);
+
+Are you guaranteed to be in a non-preemptible section here? I can see
+things going wrong if not.
+
+> +
+> +		if (triger) {
+> +			offset = ((d->hwirq * 2) / 32) * 4;
+> +			bit_offset = (d->hwirq * 2) % 32;
+
+This needs to be turned into a set of macros so that the non-percpu code
+can reuse it.
+
+> +
+> +			writel_relaxed(triger << bit_offset,
+> +				reg_base + INTCL_CFGR + offset);
+> +		}
+> +
+> +		if (priority) {
+> +			offset = ((d->hwirq * 8) / 32) * 4;
+> +			bit_offset = (d->hwirq * 8) % 32;
+> +
+> +			writel_relaxed(priority << bit_offset,
+> +				reg_base + INTCL_PRTR + offset);
+> +		}
+
+And this should only be set at boot time.
+
+> +	} else {
+> +		reg_base = INTCG_base;
+> +
+> +		if (triger) {
+> +			offset = (((d->hwirq - COMM_IRQ_BASE) * 2) / 32) * 4;
+> +			bit_offset = ((d->hwirq - COMM_IRQ_BASE) * 2) % 32;
+> +
+> +			writel_relaxed(triger << bit_offset,
+> +				reg_base + INTCG_CICFGR + offset);
+> +		}
+> +
+> +		if (priority) {
+> +			offset = (((d->hwirq - COMM_IRQ_BASE) * 8) / 32) * 4;
+> +			bit_offset = ((d->hwirq - COMM_IRQ_BASE) * 8) % 32;
+> +
+> +			writel_relaxed(priority << bit_offset,
+> +				reg_base + INTCG_CIPRTR + offset);
+> +		}
+> +	}
+
+Same as above.
+
+> +
+> +	return 0;
+> +}
+> +
+>  #ifdef CONFIG_SMP
+>  static int csky_irq_set_affinity(struct irq_data *d,
+>  				 const struct cpumask *mask_val,
+> @@ -105,6 +180,7 @@ static struct irq_chip csky_irq_chip = {
+>  	.irq_eoi	= csky_mpintc_eoi,
+>  	.irq_enable	= csky_mpintc_enable,
+>  	.irq_disable	= csky_mpintc_disable,
+> +	.irq_set_type	= csky_mpintc_set_type,
+>  #ifdef CONFIG_SMP
+>  	.irq_set_affinity = csky_irq_set_affinity,
+>  #endif
+> @@ -127,7 +203,7 @@ static int csky_irqdomain_map(struct irq_domain *d, unsigned int irq,
+>  
+>  static const struct irq_domain_ops csky_irqdomain_ops = {
+>  	.map	= csky_irqdomain_map,
+> -	.xlate	= irq_domain_xlate_onecell,
+> +	.xlate	= irq_domain_xlate_onetwocell,
+>  };
+>  
+>  #ifdef CONFIG_SMP
+> 
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
