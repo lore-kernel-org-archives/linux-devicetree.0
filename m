@@ -1,40 +1,40 @@
-From: Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH 19/21] treewide: add checks for the return value of
- memblock_alloc*()
-Date: Thu, 17 Jan 2019 15:06:03 +0800
-Message-ID: <20190117070602.GA31839@guoren-Inspiron-7460>
-References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
- <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v7 3/5] mtd: m25p80: add support of octal mode I/O
+ transfer
+Date: Thu, 17 Jan 2019 07:16:01 +0000
+Message-ID: <8381785e-95c2-8dfc-6fac-ea4710b3c943@microchip.com>
+References: <1547546584-5254-1-git-send-email-yogeshnarayan.gaur@nxp.com>
+ <1547546584-5254-4-git-send-email-yogeshnarayan.gaur@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+In-Reply-To: <1547546584-5254-4-git-send-email-yogeshnarayan.gaur@nxp.com>
+Content-Language: en-US
+Content-ID: <CDE7A108107BB745BE3483018FC7CA90@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.>
+To: yogeshnarayan.gaur@nxp.com, linux-mtd@lists.infradead.org, boris.brezillon@bootlin.com, broonie@kernel.org, marek.vasut@gmail.com, vigneshr@ti.com, linux-spi@vger.kernel.org, devicetree@vger.kernel.org
+Cc: robh@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, computersforpeace@gmail.com, frieder.schrempf@exceet.de, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 03:44:19PM +0200, Mike Rapoport wrote:
->  arch/csky/mm/highmem.c                    |  5 +++++
-...
-> diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
-> index 53b1bfa..3317b774 100644
-> --- a/arch/csky/mm/highmem.c
-> +++ b/arch/csky/mm/highmem.c
-> @@ -141,6 +141,11 @@ static void __init fixrange_init(unsigned long start, unsigned long end,
->  			for (; (k < PTRS_PER_PMD) && (vaddr != end); pmd++, k++) {
->  				if (pmd_none(*pmd)) {
->  					pte = (pte_t *) memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
-> +					if (!pte)
-> +						panic("%s: Failed to allocate %lu bytes align=%lx\n",
-> +						      __func__, PAGE_SIZE,
-> +						      PAGE_SIZE);
-> +
->  					set_pmd(pmd, __pmd(__pa(pte)));
->  					BUG_ON(pte != pte_offset_kernel(pmd, 0));
->  				}
-
-Looks good for me and panic is ok.
-
-Reviewed-by: Guo Ren <ren_guo@c-sky.com>
+DQoNCk9uIDAxLzE1LzIwMTkgMTI6MDUgUE0sIFlvZ2VzaCBOYXJheWFuIEdhdXIgd3JvdGU6DQo+
+IEFkZCBzdXBwb3J0IGZvciBvY3RhbCBtb2RlIEkvTyBkYXRhIHRyYW5zZmVyIGJhc2VkIG9uIHRo
+ZSBjb250cm9sbGVyIChzcGkpDQo+IG1vZGUuDQo+IEFzc2lnbiBody1jYXBhYmlsaXR5IG1hc2sg
+Yml0cyBmb3Igb2N0YWwgdHJhbnNmZXIuDQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBZb2dlc2ggTmFy
+YXlhbiBHYXVyIDx5b2dlc2huYXJheWFuLmdhdXJAbnhwLmNvbT4NCg0KUmV2aWV3ZWQtYnk6IFR1
+ZG9yIEFtYmFydXMgPHR1ZG9yLmFtYmFydXNAbWljcm9jaGlwLmNvbT4NCg0KPiAtLS0NCj4gIGRy
+aXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMgfCA5ICsrKysrKysrLQ0KPiAgMSBmaWxlIGNoYW5n
+ZWQsIDggaW5zZXJ0aW9ucygrKSwgMSBkZWxldGlvbigtKQ0KPiANCj4gZGlmZiAtLWdpdCBhL2Ry
+aXZlcnMvbXRkL2RldmljZXMvbTI1cDgwLmMgYi9kcml2ZXJzL210ZC9kZXZpY2VzL20yNXA4MC5j
+DQo+IGluZGV4IGM0YTFkMDRiOGM4MC4uNjUxYmFiNmQ0ZTMxIDEwMDY0NA0KPiAtLS0gYS9kcml2
+ZXJzL210ZC9kZXZpY2VzL20yNXA4MC5jDQo+ICsrKyBiL2RyaXZlcnMvbXRkL2RldmljZXMvbTI1
+cDgwLmMNCj4gQEAgLTE5NSw3ICsxOTUsMTQgQEAgc3RhdGljIGludCBtMjVwX3Byb2JlKHN0cnVj
+dCBzcGlfbWVtICpzcGltZW0pDQo+ICAJc3BpX21lbV9zZXRfZHJ2ZGF0YShzcGltZW0sIGZsYXNo
+KTsNCj4gIAlmbGFzaC0+c3BpbWVtID0gc3BpbWVtOw0KPiAgDQo+IC0JaWYgKHNwaS0+bW9kZSAm
+IFNQSV9SWF9RVUFEKSB7DQo+ICsJaWYgKHNwaS0+bW9kZSAmIFNQSV9SWF9PQ1RBTCkgew0KPiAr
+CQlod2NhcHMubWFzayB8PSBTTk9SX0hXQ0FQU19SRUFEXzFfMV84Ow0KPiArDQo+ICsJCWlmIChz
+cGktPm1vZGUgJiBTUElfVFhfT0NUQUwpDQo+ICsJCQlod2NhcHMubWFzayB8PSAoU05PUl9IV0NB
+UFNfUkVBRF8xXzhfOCB8DQo+ICsJCQkJCVNOT1JfSFdDQVBTX1BQXzFfMV84IHwNCj4gKwkJCQkJ
+U05PUl9IV0NBUFNfUFBfMV84XzgpOw0KPiArCX0gZWxzZSBpZiAoc3BpLT5tb2RlICYgU1BJX1JY
+X1FVQUQpIHsNCj4gIAkJaHdjYXBzLm1hc2sgfD0gU05PUl9IV0NBUFNfUkVBRF8xXzFfNDsNCj4g
+IA0KPiAgCQlpZiAoc3BpLT5tb2RlICYgU1BJX1RYX1FVQUQpDQo+IA0K
