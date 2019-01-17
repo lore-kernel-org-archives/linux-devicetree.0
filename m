@@ -1,32 +1,34 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH v6] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Thu, 17 Jan 2019 15:05:51 -0800
-Message-ID: <CAD=FV=V2XoaDVy9hnh-S=jbzU-Di0KoD7gM2CxpZm3646k9ZjA@mail.gmail.com>
-References: <20190114192201.23779-1-sibis@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: [PATCH v3 0/2] hwmon (ina3221) Add single-shot mode support
+Date: Thu, 17 Jan 2019 15:12:51 -0800
+Message-ID: <20190117231253.8828-1-nicoleotsuka@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114192201.23779-1-sibis@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sibi Sankar <sibis@codeaurora.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, sricharan@codeaurora.org
+To: jdelvare@suse.com, linux@roeck-us.net
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+By default, ina3221, as a hardware monitor, continuously measures
+the inputs and generates corresponding data. However, for battery
+powered devices, this mode might be power consuming.
 
-On Mon, Jan 14, 2019 at 11:22 AM Sibi Sankar <sibis@codeaurora.org> wrote:
-> +               mss_pil: remoteproc@4080000 {
-> +                       compatible = "qcom,sdm845-mss-pil";
-> +                       reg = <0x04080000 0x408>, <0x04180000 0x48>;
+This series of patches add a feature of changing default operating
+mode to its single-shot mode via DT.
 
-This will now need to be adjusted to:
+Changelog
+v2->v3:
+ * Added "Reviewed-by" from Rob to PATCH-1
+ * Cleaned-up PATCH-2
+v1->v2:
+ * Cleaned-up PATCH-2
 
-reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
+Nicolin Chen (2):
+  dt-bindings: hwmon: ina3221: Add ti,single-shot property
+  hwmon: (ina3221) Implement ti,single-shot DT property
 
-This fixes things up to deal with the patch ("arm64: dts: qcom:
-sdm845: Increase address and size cells for soc"), AKA:
-- https://patchwork.kernel.org/patch/10767511/
-- https://lkml.kernel.org/r/20190117042940.25487-2-bjorn.andersson@linaro.org
+ .../devicetree/bindings/hwmon/ina3221.txt     | 10 ++++++++++
+ drivers/hwmon/ina3221.c                       | 19 +++++++++++++++++++
+ 2 files changed, 29 insertions(+)
 
-
--Doug
+-- 
+2.17.1
