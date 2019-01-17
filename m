@@ -1,78 +1,50 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 02/11] dt-bindings: arm: renesas: Add si-linux cat87[45]
- boards
-Date: Thu, 17 Jan 2019 13:59:12 +0100
-Message-ID: <20190117125912.y77powezi74rjtf7@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190117105107.dtuttem7x7ovaey2@verge.net.au>
- <TYAPR01MB2285EAE232CCADD7FB95E712B7830@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH 3/5] arm64: dts: mt7622: add a property
+ "mediatek,num-pwms" for PWM
+Date: Thu, 17 Jan 2019 14:00:43 +0100
+Message-ID: <2edcc5fd-ce60-b585-e0fd-226897a7a34c@gmail.com>
+References: <0c400cb1899c1afb4c9f021350cdc0c6ca3f6239.1547453586.git.ryder.lee@mediatek.com>
+ <b5ed4626a553acb5e3107c6c96e82b674439128f.1547453586.git.ryder.lee@mediatek.com>
+ <20190115200231.drn2rbxu4jxr22yz@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TYAPR01MB2285EAE232CCADD7FB95E712B7830@TYAPR01MB2285.jpnprd01.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Chris Paterson <Chris.Paterson2@renesas.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190115200231.drn2rbxu4jxr22yz@pengutronix.de>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Ryder Lee <ryder.lee@mediatek.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 12:32:37PM +0000, Chris Paterson wrote:
-> Hello Simon,
-> 
-> > From: Simon Horman <horms@verge.net.au>
-> > Sent: 17 January 2019 10:51
-> > 
-> > On Wed, Jan 16, 2019 at 06:37:45PM +0000, Fabrizio Castro wrote:
-> > > This patch adds board cat874 (powered by the RZ/G2E) and board
-> > > cat875 (that sits on top of cat874). Both boards are made by
-> > > Silicon Linux.
-> > >
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
-> > >  1 file changed, 8 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml
-> > b/Documentation/devicetree/bindings/arm/renesas.yaml
-> > > index 5e9d486..9e1e07b 100644
-> > > --- a/Documentation/devicetree/bindings/arm/renesas.yaml
-> > > +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
-> > > @@ -108,6 +108,14 @@ properties:
-> > >
-> > >        - description: RZ/G2E (R8A774C0)
-> > >          items:
-> > > +          - enum:
-> > > +              - si-linux,cat874 # Silicon Linux RZ/G2E 96board platform (CAT874)
-> > 
-> > Can I confirm that "96board platform" is correct for this board - I don't
-> > see it in the documentation I have, but that may not mean much.
-> 
-> The board follows the extended version of the Linaro 96board consumer edition (CE) specification [1].
-> 
-> You can see a pretty picture of the board on the CIP Blog [2].
-> 
-> [1] https://www.96boards.org/specifications/
-> [2] https://www.cip-project.org/blog/2018/10/23/renesas-rz-g2m-96ce-board-adopted-as-arm64-reference-board-for-the-next-cip-slts-kernel
-
-Thanks Chris, in that case I am fine with this patch.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-> > That aside, I'd like to wait for Rob to indicate if he will accept
-> > patch 1, which adds si-linux as a vendor, before I apply this patch.
-> > 
-> > > +          - const: renesas,r8a774c0
-> > > +
-> > > +      - items:
-> > > +          - enum:
-> > > +              - si-linux,cat875 # Silicon Linux sub board for CAT874 (CAT875)
-> > > +          - const: si-linux,cat874
-> > >            - const: renesas,r8a774c0
-> > >
-> > >        - description: R-Car M1A (R8A77781)
-> > > --
-> > > 2.7.4
-> > >
-> 
+CgpPbiAxNS8wMS8yMDE5IDIxOjAyLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90ZToKPiBIZWxsbywK
+PiAKPiBPbiBNb24sIEphbiAxNCwgMjAxOSBhdCAwNDoyMToyMlBNICswODAwLCBSeWRlciBMZWUg
+d3JvdGU6Cj4+IFRoaXMgYWRkcyBhIHByb3BlcnR5ICJtZWRpYXRlayxudW0tcHdtcyIgZm9yIFBX
+TSBjb250cm9sbGVyLgo+Pgo+PiBTaWduZWQtb2ZmLWJ5OiBSeWRlciBMZWUgPHJ5ZGVyLmxlZUBt
+ZWRpYXRlay5jb20+Cj4+IC0tLQo+PiAgYXJjaC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2
+MjIuZHRzaSB8IDEgKwo+PiAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspCj4+Cj4+IGRp
+ZmYgLS1naXQgYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NzYyMi5kdHNpIGIvYXJj
+aC9hcm02NC9ib290L2R0cy9tZWRpYXRlay9tdDc2MjIuZHRzaQo+PiBpbmRleCA4ZmM0YWE3Li5h
+YjAxNmNmIDEwMDY0NAo+PiAtLS0gYS9hcmNoL2FybTY0L2Jvb3QvZHRzL21lZGlhdGVrL210NzYy
+Mi5kdHNpCj4+ICsrKyBiL2FyY2gvYXJtNjQvYm9vdC9kdHMvbWVkaWF0ZWsvbXQ3NjIyLmR0c2kK
+Pj4gQEAgLTQzNiw2ICs0MzYsNyBAQAo+PiAgCQkJIDwmcGVyaWNmZyBDTEtfUEVSSV9QV002X1BE
+PjsKPj4gIAkJY2xvY2stbmFtZXMgPSAidG9wIiwgIm1haW4iLCAicHdtMSIsICJwd20yIiwgInB3
+bTMiLCAicHdtNCIsCj4+ICAJCQkgICAgICAicHdtNSIsICJwd202IjsKPj4gKwkJbWVkaWF0ZWss
+bnVtLXB3bXMgPSA8Nj47Cj4+ICAJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cj4gCj4gQ29uY2VwdHVh
+bGx5IHRoaXMgcGF0Y2ggbXVzdCBnbyBpbiBiZWZvcmUgdGhlIGNoYW5nZSB0byB0aGUgZHJpdmVy
+Lgo+IE90aGVyd2lzZSB0aGUgcHdtcyBhcmUgbm90IHVzYWJsZSB3aXRoIG9ubHkgcGF0Y2ggMSBh
+cHBsaWVkIHdoaWNoIGJyZWFrcwo+IGJpc2VjdGFiaWxpdHkuCj4gCgpUaGUgZHJpdmVyIHNob3Vs
+ZCBoYXZlIGJhY2t3YXJkcyBjb21wYXRpYmlsaXR5IHRvIG9sZGVyIERUcy4gU28gdGhhdCB3b3Vs
+ZCBuZWVkCnRvIGJlIGZpeGVkIGluIHRoZSBkcml2ZXIgbm90IGluIHRoZSBwYXRjaCBvcmRlciBv
+ZiB0aGUgc2VyaWVzLgoKUmVnYXJkcywKTWF0dGhpYXMKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0Cmxp
+bnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFk
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
