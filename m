@@ -1,8 +1,8 @@
 Return-Path: <SRS0=Mkof=PZ=opensource.cirrus.com=ckeepax@kernel.org>
 From: Charles Keepax <ckeepax@opensource.cirrus.com>
-Subject: [PATCH v6 5/6] clk: lochnagar: Add support for the Cirrus Logic Lochnagar
-Date: Thu, 17 Jan 2019 14:58:57 +0000
-Message-ID: <20190117145858.26659-5-ckeepax@opensource.cirrus.com>
+Subject: [PATCH v6 3/6] pinctrl: lochnagar: Add initial binding documentation
+Date: Thu, 17 Jan 2019 14:58:55 +0000
+Message-ID: <20190117145858.26659-3-ckeepax@opensource.cirrus.com>
 In-Reply-To: <20190117145858.26659-1-ckeepax@opensource.cirrus.com>
 References: <20190117145858.26659-1-ckeepax@opensource.cirrus.com>
 MIME-Version: 1.0
@@ -18,407 +18,166 @@ connection of various application processor systems to provide a
 full evaluation platform. This driver supports the board
 controller chip on the Lochnagar board.
 
-The Lochnagar can take several input clocks from the host system,
-provides several of its own clock sources, and provides extensive
-routing options for those clocks to be supplied to the attached
-CODEC/Amp device.
-
 Signed-off-by: Charles Keepax <ckeepax@opensource.cirrus.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 ---
 
-Changes since v5:
- - Remove unnecessary direction bit handling
- - Add missing 8m clock
- - Rename clock functions to remove regmap from the name
- - Change some error messages to debugs
- - No longer use of_clk_hw_onecell_get
- - Add missing MODULE_DEVICE_TABLE
- - Remove redundant MODULE_ALIAS and of_match_ptr
+No changes since v5.
 
 Thanks,
 Charles
 
- drivers/clk/Kconfig         |   7 +
- drivers/clk/Makefile        |   1 +
- drivers/clk/clk-lochnagar.c | 340 ++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 348 insertions(+)
- create mode 100644 drivers/clk/clk-lochnagar.c
+ .../bindings/pinctrl/cirrus,lochnagar.txt          | 141 +++++++++++++++++++++
+ 1 file changed, 141 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
 
-diff --git a/drivers/clk/Kconfig b/drivers/clk/Kconfig
-index e5b2fe80eab4..a5cb8f923674 100644
---- a/drivers/clk/Kconfig
-+++ b/drivers/clk/Kconfig
-@@ -219,6 +219,13 @@ config COMMON_CLK_XGENE
- 	---help---
- 	  Sypport for the APM X-Gene SoC reference, PLL, and device clocks.
- 
-+config COMMON_CLK_LOCHNAGAR
-+	tristate "Cirrus Logic Lochnagar clock driver"
-+	depends on MFD_LOCHNAGAR
-+	help
-+	  This driver supports the clocking features of the Cirrus Logic
-+	  Lochnagar audio development board.
-+
- config COMMON_CLK_NXP
- 	def_bool COMMON_CLK && (ARCH_LPC18XX || ARCH_LPC32XX)
- 	select REGMAP_MMIO if ARCH_LPC32XX
-diff --git a/drivers/clk/Makefile b/drivers/clk/Makefile
-index 8a9440a97500..7101d3da5efd 100644
---- a/drivers/clk/Makefile
-+++ b/drivers/clk/Makefile
-@@ -31,6 +31,7 @@ obj-$(CONFIG_COMMON_CLK_GEMINI)		+= clk-gemini.o
- obj-$(CONFIG_COMMON_CLK_ASPEED)		+= clk-aspeed.o
- obj-$(CONFIG_ARCH_HIGHBANK)		+= clk-highbank.o
- obj-$(CONFIG_CLK_HSDK)			+= clk-hsdk-pll.o
-+obj-$(CONFIG_COMMON_CLK_LOCHNAGAR)	+= clk-lochnagar.o
- obj-$(CONFIG_COMMON_CLK_MAX77686)	+= clk-max77686.o
- obj-$(CONFIG_COMMON_CLK_MAX9485)	+= clk-max9485.o
- obj-$(CONFIG_ARCH_MOXART)		+= clk-moxart.o
-diff --git a/drivers/clk/clk-lochnagar.c b/drivers/clk/clk-lochnagar.c
+diff --git a/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
 new file mode 100644
-index 000000000000..ced832e82f46
+index 000000000000..36de6b0555f2
 --- /dev/null
-+++ b/drivers/clk/clk-lochnagar.c
-@@ -0,0 +1,340 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Lochnagar clock control
-+ *
-+ * Copyright (c) 2017-2018 Cirrus Logic, Inc. and
-+ *                         Cirrus Logic International Semiconductor Ltd.
-+ *
-+ * Author: Charles Keepax <ckeepax@opensource.cirrus.com>
-+ */
++++ b/Documentation/devicetree/bindings/pinctrl/cirrus,lochnagar.txt
+@@ -0,0 +1,141 @@
++Cirrus Logic Lochnagar Audio Development Board
 +
-+#include <linux/clk-provider.h>
-+#include <linux/device.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
++Lochnagar is an evaluation and development board for Cirrus Logic
++Smart CODEC and Amp devices. It allows the connection of most Cirrus
++Logic devices on mini-cards, as well as allowing connection of
++various application processor systems to provide a full evaluation
++platform.  Audio system topology, clocking and power can all be
++controlled through the Lochnagar, allowing the device under test
++to be used in a variety of possible use cases.
 +
-+#include <linux/mfd/lochnagar.h>
-+#include <linux/mfd/lochnagar1_regs.h>
-+#include <linux/mfd/lochnagar2_regs.h>
++This binding document describes the binding for the pinctrl portion
++of the driver.
 +
-+#include <dt-bindings/clk/lochnagar.h>
++Also see these documents for generic binding information:
++  [1] GPIO : ../gpio/gpio.txt
++  [2] Pinctrl: ../pinctrl/pinctrl-bindings.txt
 +
-+#define LOCHNAGAR_NUM_CLOCKS	(LOCHNAGAR_SPDIF_CLKOUT + 1)
++And these for relevant defines:
++  [3] include/dt-bindings/pinctrl/lochnagar.h
 +
-+struct lochnagar_clk {
-+	const char * const name;
-+	struct clk_hw hw;
++This binding must be part of the Lochnagar MFD binding:
++  [4] ../mfd/cirrus,lochnagar.txt
 +
-+	struct lochnagar_clk_priv *priv;
++Required properties:
 +
-+	u16 cfg_reg;
-+	u16 ena_mask;
++  - compatible : One of the following strings:
++                 "cirrus,lochnagar-pinctrl"
 +
-+	u16 src_reg;
-+	u16 src_mask;
-+};
++  - gpio-controller : Indicates this device is a GPIO controller.
++  - #gpio-cells : Must be 2. The first cell is the pin number, see
++    [3] for available pins and the second cell is used to specify
++    optional parameters, see [1].
++  - gpio-ranges : Range of pins managed by the GPIO controller, see
++    [1]. Both the GPIO and Pinctrl base should be set to zero and the
++    count to the appropriate of the LOCHNAGARx_PIN_NUM_GPIOS define,
++    see [3].
 +
-+struct lochnagar_clk_priv {
-+	struct device *dev;
-+	struct regmap *regmap;
-+	enum lochnagar_type type;
++  - pinctrl-names : A pinctrl state named "default" must be defined.
++  - pinctrl-0 : A phandle to the default pinctrl state.
 +
-+	const char **parents;
-+	unsigned int nparents;
++Required sub-nodes:
 +
-+	struct lochnagar_clk lclks[LOCHNAGAR_NUM_CLOCKS];
-+};
++The pin configurations are defined as a child of the pinctrl states
++node, see [2]. Each sub-node can have the following properties:
++  - groups : A list of groups to select (either this or "pins" must be
++    specified), available groups:
++      codec-aif1, codec-aif2, codec-aif3, dsp-aif1, dsp-aif2, psia1,
++      psia2, gf-aif1, gf-aif2, gf-aif3, gf-aif4, spdif-aif, usb-aif1,
++      usb-aif2, adat-aif, soundcard-aif
++  - pins : A list of pin names to select (either this or "groups" must
++    be specified), available pins:
++      fgpa-gpio1, fgpa-gpio2, fgpa-gpio3, fgpa-gpio4, fgpa-gpio5,
++      fgpa-gpio6, codec-gpio1, codec-gpio2, codec-gpio3, codec-gpio4,
++      codec-gpio5, codec-gpio6, codec-gpio7, codec-gpio8, dsp-gpio1,
++      dsp-gpio2, dsp-gpio3, dsp-gpio4, dsp-gpio5, dsp-gpio6, gf-gpio2,
++      gf-gpio3, gf-gpio7, codec-aif1-bclk, codec-aif1-rxdat,
++      codec-aif1-lrclk, codec-aif1-txdat, codec-aif2-bclk,
++      codec-aif2-rxdat, codec-aif2-lrclk, codec-aif2-txdat,
++      codec-aif3-bclk, codec-aif3-rxdat, codec-aif3-lrclk,
++      codec-aif3-txdat, dsp-aif1-bclk, dsp-aif1-rxdat, dsp-aif1-lrclk,
++      dsp-aif1-txdat, dsp-aif2-bclk, dsp-aif2-rxdat,
++      dsp-aif2-lrclk, dsp-aif2-txdat, psia1-bclk, psia1-rxdat,
++      psia1-lrclk, psia1-txdat, psia2-bclk, psia2-rxdat, psia2-lrclk,
++      psia2-txdat, gf-aif3-bclk, gf-aif3-rxdat, gf-aif3-lrclk,
++      gf-aif3-txdat, gf-aif4-bclk, gf-aif4-rxdat, gf-aif4-lrclk,
++      gf-aif4-txdat, gf-aif1-bclk, gf-aif1-rxdat, gf-aif1-lrclk,
++      gf-aif1-txdat, gf-aif2-bclk, gf-aif2-rxdat, gf-aif2-lrclk,
++      gf-aif2-txdat, dsp-uart1-rx, dsp-uart1-tx, dsp-uart2-rx,
++      dsp-uart2-tx, gf-uart2-rx, gf-uart2-tx, usb-uart-rx,
++      codec-pdmclk1, codec-pdmdat1, codec-pdmclk2, codec-pdmdat2,
++      codec-dmicclk1, codec-dmicdat1, codec-dmicclk2, codec-dmicdat2,
++      codec-dmicclk3, codec-dmicdat3, codec-dmicclk4, codec-dmicdat4,
++      dsp-dmicclk1, dsp-dmicdat1, dsp-dmicclk2, dsp-dmicdat2, i2c2-scl,
++      i2c2-sda, i2c3-scl, i2c3-sda, i2c4-scl, i2c4-sda, dsp-standby,
++      codec-mclk1, codec-mclk2, dsp-clkin, psia1-mclk, psia2-mclk,
++      gf-gpio1, gf-gpio5, dsp-gpio20, led1, led2
++  - function : The mux function to select, available functions:
++      aif, fgpa-gpio1, fgpa-gpio2, fgpa-gpio3, fgpa-gpio4, fgpa-gpio5,
++      fgpa-gpio6, codec-gpio1, codec-gpio2, codec-gpio3, codec-gpio4,
++      codec-gpio5, codec-gpio6, codec-gpio7, codec-gpio8, dsp-gpio1,
++      dsp-gpio2, dsp-gpio3, dsp-gpio4, dsp-gpio5, dsp-gpio6, gf-gpio2,
++      gf-gpio3, gf-gpio7, gf-gpio1, gf-gpio5, dsp-gpio20, codec-clkout,
++      dsp-clkout, pmic-32k, spdif-clkout, clk-12m288, clk-11m2986,
++      clk-24m576, clk-22m5792, xmos-mclk, gf-clkout1, gf-mclk1,
++      gf-mclk3, gf-mclk2, gf-clkout2, codec-mclk1, codec-mclk2,
++      dsp-clkin, psia1-mclk, psia2-mclk, spdif-mclk, codec-irq,
++      codec-reset, dsp-reset, dsp-irq, dsp-standby, codec-pdmclk1,
++      codec-pdmdat1, codec-pdmclk2, codec-pdmdat2, codec-dmicclk1,
++      codec-dmicdat1, codec-dmicclk2, codec-dmicdat2, codec-dmicclk3,
++      codec-dmicdat3, codec-dmicclk4, codec-dmicdat4, dsp-dmicclk1,
++      dsp-dmicdat1, dsp-dmicclk2, dsp-dmicdat2, dsp-uart1-rx,
++      dsp-uart1-tx, dsp-uart2-rx, dsp-uart2-tx, gf-uart2-rx,
++      gf-uart2-tx, usb-uart-rx, usb-uart-tx, i2c2-scl, i2c2-sda,
++      i2c3-scl, i2c3-sda, i2c4-scl, i2c4-sda, gpio, spdif-aif, psia1,
++      psia1-bclk, psia1-lrclk, psia1-rxdat, psia1-txdat, psia2,
++      psia2-bclk, psia2-lrclk, psia2-rxdat, psia2-txdat, codec-aif1,
++      codec-aif1-bclk, codec-aif1-lrclk, codec-aif1-rxdat,
++      codec-aif1-txdat, codec-aif2, codec-aif2-bclk, codec-aif2-lrclk,
++      codec-aif2-rxdat, codec-aif2-txdat, codec-aif3, codec-aif3-bclk,
++      codec-aif3-lrclk, codec-aif3-rxdat, codec-aif3-txdat, dsp-aif1,
++      dsp-aif1-bclk, dsp-aif1-lrclk, dsp-aif1-rxdat, dsp-aif1-txdat,
++      dsp-aif2, dsp-aif2-bclk, dsp-aif2-lrclk, dsp-aif2-rxdat,
++      dsp-aif2-txdat, gf-aif3, gf-aif3-bclk, gf-aif3-lrclk,
++      gf-aif3-rxdat, gf-aif3-txdat, gf-aif4, gf-aif4-bclk,
++      gf-aif4-lrclk, gf-aif4-rxdat, gf-aif4-txdat, gf-aif1,
++      gf-aif1-bclk, gf-aif1-lrclk, gf-aif1-rxdat, gf-aif1-txdat,
++      gf-aif2, gf-aif2-bclk, gf-aif2-lrclk, gf-aif2-rxdat,
++      gf-aif2-txdat, usb-aif1, usb-aif2, adat-aif, soundcard-aif,
 +
-+static const char * const lochnagar1_clk_parents[] = {
-+	"ln-none",
-+	"ln-spdif-mclk",
-+	"ln-psia1-mclk",
-+	"ln-psia2-mclk",
-+	"ln-cdc-clkout",
-+	"ln-dsp-clkout",
-+	"ln-pmic-32k",
-+	"ln-gf-mclk1",
-+	"ln-gf-mclk3",
-+	"ln-gf-mclk2",
-+	"ln-gf-mclk4",
-+};
++  - output-enable : Specifies that an AIF group will be used as a master
++    interface (either this or input-enable is required if a group is
++    being muxed to an AIF)
++  - input-enable : Specifies that an AIF group will be used as a slave
++    interface (either this or output-enable is required if a group is
++    being muxed to an AIF)
 +
-+static const char * const lochnagar2_clk_parents[] = {
-+	"ln-none",
-+	"ln-cdc-clkout",
-+	"ln-dsp-clkout",
-+	"ln-pmic-32k",
-+	"ln-spdif-mclk",
-+	"ln-clk-12m",
-+	"ln-clk-11m",
-+	"ln-clk-24m",
-+	"ln-clk-22m",
-+	"ln-clk-8m",
-+	"ln-usb-clk-24m",
-+	"ln-gf-mclk1",
-+	"ln-gf-mclk3",
-+	"ln-gf-mclk2",
-+	"ln-psia1-mclk",
-+	"ln-psia2-mclk",
-+	"ln-spdif-clkout",
-+	"ln-adat-mclk",
-+	"ln-usb-clk-12m",
-+};
++Example:
 +
-+#define LN1_CLK(ID, NAME, REG) \
-+	[LOCHNAGAR_##ID] = { \
-+		.name = NAME, \
-+		.cfg_reg = LOCHNAGAR1_##REG, \
-+		.ena_mask = LOCHNAGAR1_##ID##_ENA_MASK, \
-+		.src_reg = LOCHNAGAR1_##ID##_SEL, \
-+		.src_mask = LOCHNAGAR1_SRC_MASK, \
-+	}
++lochnagar-pinctrl {
++	compatible = "cirrus,lochnagar-pinctrl";
 +
-+#define LN2_CLK(ID, NAME) \
-+	[LOCHNAGAR_##ID] = { \
-+		.name = NAME, \
-+		.cfg_reg = LOCHNAGAR2_##ID##_CTRL, \
-+		.src_reg = LOCHNAGAR2_##ID##_CTRL, \
-+		.ena_mask = LOCHNAGAR2_CLK_ENA_MASK, \
-+		.src_mask = LOCHNAGAR2_CLK_SRC_MASK, \
-+	}
++	gpio-controller;
++	#gpio-cells = <2>;
++	gpio-ranges = <&lochnagar 0 0 LOCHNAGAR2_PIN_NUM_GPIOS>;
 +
-+static const struct lochnagar_clk lochnagar1_clks[LOCHNAGAR_NUM_CLOCKS] = {
-+	LN1_CLK(CDC_MCLK1,      "ln-cdc-mclk1",  CDC_AIF_CTRL2),
-+	LN1_CLK(CDC_MCLK2,      "ln-cdc-mclk2",  CDC_AIF_CTRL2),
-+	LN1_CLK(DSP_CLKIN,      "ln-dsp-clkin",  DSP_AIF),
-+	LN1_CLK(GF_CLKOUT1,     "ln-gf-clkout1", GF_AIF1),
-+};
++	pinctrl-names = "default";
++	pinctrl-0 = <&pin-settings>;
 +
-+static const struct lochnagar_clk lochnagar2_clks[LOCHNAGAR_NUM_CLOCKS] = {
-+	LN2_CLK(CDC_MCLK1,      "ln-cdc-mclk1"),
-+	LN2_CLK(CDC_MCLK2,      "ln-cdc-mclk2"),
-+	LN2_CLK(DSP_CLKIN,      "ln-dsp-clkin"),
-+	LN2_CLK(GF_CLKOUT1,     "ln-gf-clkout1"),
-+	LN2_CLK(GF_CLKOUT2,     "ln-gf-clkout2"),
-+	LN2_CLK(PSIA1_MCLK,     "ln-psia1-mclk"),
-+	LN2_CLK(PSIA2_MCLK,     "ln-psia2-mclk"),
-+	LN2_CLK(SPDIF_MCLK,     "ln-spdif-mclk"),
-+	LN2_CLK(ADAT_MCLK,      "ln-adat-mclk"),
-+	LN2_CLK(SOUNDCARD_MCLK, "ln-soundcard-mclk"),
-+};
-+
-+static inline struct lochnagar_clk *lochnagar_hw_to_lclk(struct clk_hw *hw)
-+{
-+	return container_of(hw, struct lochnagar_clk, hw);
-+}
-+
-+static int lochnagar_clk_prepare(struct clk_hw *hw)
-+{
-+	struct lochnagar_clk *lclk = lochnagar_hw_to_lclk(hw);
-+	struct lochnagar_clk_priv *priv = lclk->priv;
-+	struct regmap *regmap = priv->regmap;
-+	int ret;
-+
-+	ret = regmap_update_bits(regmap, lclk->cfg_reg,
-+				 lclk->ena_mask, lclk->ena_mask);
-+	if (ret < 0)
-+		dev_dbg(priv->dev, "Failed to prepare %s: %d\n",
-+			lclk->name, ret);
-+
-+	return ret;
-+}
-+
-+static void lochnagar_clk_unprepare(struct clk_hw *hw)
-+{
-+	struct lochnagar_clk *lclk = lochnagar_hw_to_lclk(hw);
-+	struct lochnagar_clk_priv *priv = lclk->priv;
-+	struct regmap *regmap = priv->regmap;
-+	int ret;
-+
-+	ret = regmap_update_bits(regmap, lclk->cfg_reg, lclk->ena_mask, 0);
-+	if (ret < 0)
-+		dev_dbg(priv->dev, "Failed to unprepare %s: %d\n",
-+			lclk->name, ret);
-+}
-+
-+static int lochnagar_clk_set_parent(struct clk_hw *hw, u8 index)
-+{
-+	struct lochnagar_clk *lclk = lochnagar_hw_to_lclk(hw);
-+	struct lochnagar_clk_priv *priv = lclk->priv;
-+	struct regmap *regmap = priv->regmap;
-+	int ret;
-+
-+	ret = regmap_update_bits(regmap, lclk->src_reg, lclk->src_mask, index);
-+	if (ret < 0)
-+		dev_dbg(priv->dev, "Failed to reparent %s: %d\n",
-+			lclk->name, ret);
-+
-+	return ret;
-+}
-+
-+static u8 lochnagar_clk_get_parent(struct clk_hw *hw)
-+{
-+	struct lochnagar_clk *lclk = lochnagar_hw_to_lclk(hw);
-+	struct lochnagar_clk_priv *priv = lclk->priv;
-+	struct regmap *regmap = priv->regmap;
-+	unsigned int val;
-+	int ret;
-+
-+	ret = regmap_read(regmap, lclk->src_reg, &val);
-+	if (ret < 0) {
-+		dev_dbg(priv->dev, "Failed to read parent of %s: %d\n",
-+			lclk->name, ret);
-+		return priv->nparents;
-+	}
-+
-+	val &= lclk->src_mask;
-+
-+	return val;
-+}
-+
-+static const struct clk_ops lochnagar_clk_ops = {
-+	.prepare = lochnagar_clk_prepare,
-+	.unprepare = lochnagar_clk_unprepare,
-+	.set_parent = lochnagar_clk_set_parent,
-+	.get_parent = lochnagar_clk_get_parent,
-+};
-+
-+static int lochnagar_init_parents(struct lochnagar_clk_priv *priv)
-+{
-+	struct device_node *np = priv->dev->of_node;
-+	int i, j;
-+
-+	switch (priv->type) {
-+	case LOCHNAGAR1:
-+		memcpy(priv->lclks, lochnagar1_clks, sizeof(lochnagar1_clks));
-+
-+		priv->nparents = ARRAY_SIZE(lochnagar1_clk_parents);
-+		priv->parents = devm_kmemdup(priv->dev, lochnagar1_clk_parents,
-+					     sizeof(lochnagar1_clk_parents),
-+					     GFP_KERNEL);
-+		break;
-+	case LOCHNAGAR2:
-+		memcpy(priv->lclks, lochnagar2_clks, sizeof(lochnagar2_clks));
-+
-+		priv->nparents = ARRAY_SIZE(lochnagar2_clk_parents);
-+		priv->parents = devm_kmemdup(priv->dev, lochnagar2_clk_parents,
-+					     sizeof(lochnagar2_clk_parents),
-+					     GFP_KERNEL);
-+		break;
-+	default:
-+		dev_err(priv->dev, "Unknown Lochnagar type: %d\n", priv->type);
-+		return -EINVAL;
-+	}
-+
-+	if (!priv->parents)
-+		return -ENOMEM;
-+
-+	for (i = 0; i < priv->nparents; i++) {
-+		j = of_property_match_string(np, "clock-names",
-+					     priv->parents[i]);
-+		if (j >= 0)
-+			priv->parents[i] = of_clk_get_parent_name(np, j);
-+	}
-+
-+	return 0;
-+}
-+
-+static struct clk_hw *
-+lochnagar_of_clk_hw_get(struct of_phandle_args *clkspec, void *data)
-+{
-+	struct lochnagar_clk_priv *priv = data;
-+	unsigned int idx = clkspec->args[0];
-+
-+	if (idx >= ARRAY_SIZE(priv->lclks)) {
-+		dev_err(priv->dev, "Invalid index %u\n", idx);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return &priv->lclks[idx].hw;
-+}
-+
-+static int lochnagar_init_clks(struct lochnagar_clk_priv *priv)
-+{
-+	struct clk_init_data clk_init = {
-+		.ops = &lochnagar_clk_ops,
-+		.parent_names = priv->parents,
-+		.num_parents = priv->nparents,
++	pin-settings: pin-settings {
++		ap-aif {
++			input-enable;
++			groups = "gf-aif1";
++			function = "codec-aif3";
++		};
++		codec-aif {
++			output-enable;
++			groups = "codec-aif3";
++			function = "gf-aif1";
++		};
 +	};
-+	struct lochnagar_clk *lclk;
-+	int ret, i;
-+
-+	for (i = 0; i < ARRAY_SIZE(priv->lclks); i++) {
-+		lclk = &priv->lclks[i];
-+
-+		if (!lclk->name)
-+			continue;
-+
-+		clk_init.name = lclk->name;
-+
-+		lclk->priv = priv;
-+		lclk->hw.init = &clk_init;
-+
-+		ret = devm_clk_hw_register(priv->dev, &lclk->hw);
-+		if (ret) {
-+			dev_err(priv->dev, "Failed to register %s: %d\n",
-+				lclk->name, ret);
-+			return ret;
-+		}
-+	}
-+
-+	ret = devm_of_clk_add_hw_provider(priv->dev, lochnagar_of_clk_hw_get,
-+					  priv);
-+	if (ret < 0)
-+		dev_err(priv->dev, "Failed to register provider: %d\n", ret);
-+
-+	return ret;
-+}
-+
-+static const struct of_device_id lochnagar_of_match[] = {
-+	{ .compatible = "cirrus,lochnagar1-clk", .data = (void *)LOCHNAGAR1 },
-+	{ .compatible = "cirrus,lochnagar2-clk", .data = (void *)LOCHNAGAR2 },
-+	{}
 +};
-+MODULE_DEVICE_TABLE(of, lochnagar_of_match);
-+
-+static int lochnagar_clk_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct lochnagar_clk_priv *priv;
-+	const struct of_device_id *of_id;
-+	int ret;
-+
-+	of_id = of_match_device(lochnagar_of_match, dev);
-+	if (!of_id)
-+		return -EINVAL;
-+
-+	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	priv->dev = dev;
-+	priv->regmap = dev_get_regmap(dev->parent, NULL);
-+	priv->type = (enum lochnagar_type)of_id->data;
-+
-+	ret = lochnagar_init_parents(priv);
-+	if (ret)
-+		return ret;
-+
-+	ret = lochnagar_init_clks(priv);
-+	if (ret)
-+		return ret;
-+
-+	return 0;
-+}
-+
-+static struct platform_driver lochnagar_clk_driver = {
-+	.driver = {
-+		.name = "lochnagar-clk",
-+		.of_match_table = lochnagar_of_match,
-+	},
-+	.probe = lochnagar_clk_probe,
-+};
-+module_platform_driver(lochnagar_clk_driver);
-+
-+MODULE_AUTHOR("Charles Keepax <ckeepax@opensource.cirrus.com>");
-+MODULE_DESCRIPTION("Clock driver for Cirrus Logic Lochnagar Board");
-+MODULE_LICENSE("GPL v2");
 -- 
 2.11.0
