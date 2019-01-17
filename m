@@ -1,88 +1,38 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 4/4] memory: jz4780_nemc: Add support for the JZ4725B
-Date: Thu, 17 Jan 2019 19:45:50 -0300
-Message-ID: <20190117224550.18043-4-paul@crapouillou.net>
-References: <20190117224550.18043-1-paul@crapouillou.net>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v2 2/2] hwmon: (ina3221) Implement ti,single-shot DT
+ property
+Date: Thu, 17 Jan 2019 14:58:42 -0800
+Message-ID: <20190117225842.GA23511@roeck-us.net>
+References: <20190105030636.533-1-nicoleotsuka@gmail.com>
+ <20190105030636.533-3-nicoleotsuka@gmail.com>
+ <20190107193555.GA13547@roeck-us.net>
+ <20190117223012.GH16918@Asurada-Nvidia.nvidia.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117224550.18043-1-paul@crapouillou.net>
+Content-Disposition: inline
+In-Reply-To: <20190117223012.GH16918@Asurada-Nvidia.nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <bbrezillon@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add support for the JZ4725B SoC from Ingenic.
+On Thu, Jan 17, 2019 at 02:30:13PM -0800, Nicolin Chen wrote:
+> On Mon, Jan 07, 2019 at 11:35:55AM -0800, Guenter Roeck wrote:
+> 
+> > > +	if (of_property_read_bool(np, "ti,single-shot"))
+> > > +		ina->single_shot = true;
+> > > +
+> > 	ina->single_shot = of_property_read_bool(np, "ti,single-shot");
+> > 
+> > No need to resend right now; let's wait for feedback from Rob.
+> 
+> Looks like Rob has acked. Is this resend version fine for review?
+> 
+"Right now" was supposed to mean that you should wait for Rob's
+feedback before sending v3 with the feedback above applied.
+Did you send that version ? I don't see it in patchwork, nor
+in my inbox.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
----
- drivers/memory/jz4780-nemc.c | 24 +++++++++++++++++++++---
- 1 file changed, 21 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
-index ef3f20e46590..c472a22d6df5 100644
---- a/drivers/memory/jz4780-nemc.c
-+++ b/drivers/memory/jz4780-nemc.c
-@@ -44,9 +44,14 @@
- #define NEMC_NFCSR_NFCEn(n)	BIT((((n) - 1) << 1) + 1)
- #define NEMC_NFCSR_TNFEn(n)	BIT(16 + (n) - 1)
- 
-+struct jz_soc_info {
-+	u8 tas_tah_cycles_max;
-+};
-+
- struct jz4780_nemc {
- 	spinlock_t lock;
- 	struct device *dev;
-+	const struct jz_soc_info *soc_info;
- 	void __iomem *base;
- 	struct clk *clk;
- 	uint32_t clk_period;
-@@ -202,7 +207,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAS", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAS_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAS %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -214,7 +219,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
- 	if (of_property_read_u32(node, "ingenic,nemc-tAH", &val) == 0) {
- 		smcr &= ~NEMC_SMCR_TAH_MASK;
- 		cycles = jz4780_nemc_ns_to_cycles(nemc, val);
--		if (cycles > 15) {
-+		if (cycles > nemc->soc_info->tas_tah_cycles_max) {
- 			dev_err(nemc->dev, "tAH %u is too high (%u cycles)\n",
- 				val, cycles);
- 			return false;
-@@ -278,6 +283,10 @@ static int jz4780_nemc_probe(struct platform_device *pdev)
- 	if (!nemc)
- 		return -ENOMEM;
- 
-+	nemc->soc_info = device_get_match_data(dev);
-+	if (!nemc->soc_info)
-+		return -EINVAL;
-+
- 	spin_lock_init(&nemc->lock);
- 	nemc->dev = dev;
- 
-@@ -370,8 +379,17 @@ static int jz4780_nemc_remove(struct platform_device *pdev)
- 	return 0;
- }
- 
-+static const struct jz_soc_info jz4725b_soc_info = {
-+	.tas_tah_cycles_max = 7,
-+};
-+
-+static const struct jz_soc_info jz4780_soc_info = {
-+	.tas_tah_cycles_max = 15,
-+};
-+
- static const struct of_device_id jz4780_nemc_dt_match[] = {
--	{ .compatible = "ingenic,jz4780-nemc" },
-+	{ .compatible = "ingenic,jz4725b-nemc", .data = &jz4725b_soc_info, },
-+	{ .compatible = "ingenic,jz4780-nemc", .data = &jz4780_soc_info, },
- 	{},
- };
- 
--- 
-2.11.0
+Thanks,
+Guenter
