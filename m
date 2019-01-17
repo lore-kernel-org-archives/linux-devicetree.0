@@ -1,32 +1,53 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH 1/4] dt-bindings: memory: jz4780: Add compatible string for JZ4725B SoC
-Date: Thu, 17 Jan 2019 19:45:47 -0300
-Message-ID: <20190117224550.18043-1-paul@crapouillou.net>
+Subject: [PATCH 3/4] memory: jz4780-nemc: Reduce size of const array
+Date: Thu, 17 Jan 2019 19:45:49 -0300
+Message-ID: <20190117224550.18043-3-paul@crapouillou.net>
+References: <20190117224550.18043-1-paul@crapouillou.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190117224550.18043-1-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Boris Brezillon <bbrezillon@kernel.org>
 Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
 List-Id: devicetree@vger.kernel.org
 
-Add a compatible string to support the memory controller built into the
-JZ4725B SoC from Ingenic.
+The maximum value found in that array is 15, there's no need to store
+these values as uint32_t, a uint8_t is enough.
 
 Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 ---
- .../devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt       | 1 +
- 1 file changed, 1 insertion(+)
+ drivers/memory/jz4780-nemc.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
-index f936b5589b19..7cce6d761f2d 100644
---- a/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
-+++ b/Documentation/devicetree/bindings/memory-controllers/ingenic,jz4780-nemc.txt
-@@ -5,6 +5,7 @@ controller in Ingenic JZ4780
+diff --git a/drivers/memory/jz4780-nemc.c b/drivers/memory/jz4780-nemc.c
+index bcf06adefc96..ef3f20e46590 100644
+--- a/drivers/memory/jz4780-nemc.c
++++ b/drivers/memory/jz4780-nemc.c
+@@ -161,7 +161,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
+ 	 * Conversion of tBP and tAW cycle counts to values supported by the
+ 	 * hardware (round up to the next supported value).
+ 	 */
+-	static const uint32_t convert_tBP_tAW[] = {
++	static const u8 convert_tBP_tAW[] = {
+ 		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
  
- Required properties:
- - compatible: Should be set to one of:
-+    "ingenic,jz4725b-nemc" (JZ4725B)
-     "ingenic,jz4780-nemc" (JZ4780)
- - reg: Should specify the NEMC controller registers location and length.
- - clocks: Clock for the NEMC controller.
+ 		/* 11 - 12 -> 12 cycles */
+@@ -232,7 +232,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
+ 			return false;
+ 		}
+ 
+-		smcr |= convert_tBP_tAW[cycles] << NEMC_SMCR_TBP_SHIFT;
++		smcr |= (u32)convert_tBP_tAW[cycles] << NEMC_SMCR_TBP_SHIFT;
+ 	}
+ 
+ 	if (of_property_read_u32(node, "ingenic,nemc-tAW", &val) == 0) {
+@@ -244,7 +244,7 @@ static bool jz4780_nemc_configure_bank(struct jz4780_nemc *nemc,
+ 			return false;
+ 		}
+ 
+-		smcr |= convert_tBP_tAW[cycles] << NEMC_SMCR_TAW_SHIFT;
++		smcr |= (u32)convert_tBP_tAW[cycles] << NEMC_SMCR_TAW_SHIFT;
+ 	}
+ 
+ 	if (of_property_read_u32(node, "ingenic,nemc-tSTRV", &val) == 0) {
 -- 
 2.11.0
