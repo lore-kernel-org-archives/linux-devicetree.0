@@ -1,45 +1,35 @@
-From: Heiko Stuebner <heiko-4mtYJXux2i+zQB+pC5nmwQ@public.gmane.org>
-Subject: Re: [PATCH v2 0/4] NanoPC-T4 (and a bit of NanoPi M4) support
-Date: Thu, 17 Jan 2019 15:01:36 +0100
-Message-ID: <21515619.cB86tSjWlH@phil>
-References: <cover.1547466003.git.robin.murphy@arm.com>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 01/17] ARM: dts: da850: fix interrupt numbers for
+ clocksource
+Date: Thu, 17 Jan 2019 19:52:59 +0530
+Message-ID: <250a521a-ba07-ba17-83d8-d9ad8f55a460@ti.com>
+References: <20190111172134.30147-1-brgl@bgdev.pl>
+ <20190111172134.30147-2-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-In-Reply-To: <cover.1547466003.git.robin.murphy-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-rockchip/>
-List-Post: <mailto:linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-List-Help: <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-rockchip>,
- <mailto:linux-rockchip-request-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org?subject=subscribe>
-Sender: "Linux-rockchip" <linux-rockchip-bounces-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>
-Errors-To: linux-rockchip-bounces+glpar-linux-rockchip=m.gmane.org-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org
-To: Robin Murphy <robin.murphy-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-rockchip-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190111172134.30147-2-brgl@bgdev.pl>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <brgl@bgdev.pl>, Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Montag, 14. Januar 2019, 13:05:30 CET schrieb Robin Murphy:
-> Hi all,
+On 11/01/19 10:51 PM, Bartosz Golaszewski wrote:
+> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 > 
-> With the initial patch now queued (thankfully solving the version-number
-> conundrum), here's an updated v2 of my further changes with the tweaks
-> Heiko pointed out. Comparing GRF dumps didn't give any insight into the
-> SD card thing, so I've kept the GPIO patch; ~100 interrupts per insertion
-> is still more useful than 0!
+> The timer interrupts specified in commit 3652e2741f42 ("ARM: dts:
+> da850: Add clocks") are wrong but since the current timer code
+> hard-codes them, the bug was never spotted.
 > 
-> Robin.
-> 
-> 
-> Robin Murphy (4):
->   arm64: dts: rockchip: Add DT for NanoPi M4
->   arm64: dts: rockchip: Refine nanopi4 differences
->   arm64: dts: rockchip: Add NanoPC-T4 IR receiver
->   arm64: dts: rockchip: 'Fix' nanopi4 uSD card detect
+> This patch must go into stable since, once we introduce a proper
+> clocksource driver, devices with buggy device tree will stop booting.
 
-queued all 4 for 5.1
+Is this the case where someone uses device-tree from a stable tree and
+kernel from latest mainline?
 
-Thanks
-Heiko
+I have added it to my fixes branch for v5.0 anyway.
+
+Thanks,
+Sekhar
