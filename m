@@ -1,56 +1,42 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [PATCH v8] arm64: dts: sdm845: Add gpu and gmu
- device nodes
-Date: Thu, 17 Jan 2019 15:15:18 -0800
-Message-ID: <CAD=FV=U0_wi8mJNOXjsPdS7Yrmvbvw1+B20t-=KzDG+tnD8HUw@mail.gmail.com>
-References: <1547661809-31184-1-git-send-email-jcrouse@codeaurora.org>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v3 0/2] hwmon (ina3221) Add single-shot mode support
+Date: Thu, 17 Jan 2019 15:36:51 -0800
+Message-ID: <20190117233651.GA24862@roeck-us.net>
+References: <20190117231253.8828-1-nicoleotsuka@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1547661809-31184-1-git-send-email-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190117231253.8828-1-nicoleotsuka@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIEphbiAxNiwgMjAxOSBhdCAxMDowMyBBTSBKb3JkYW4gQ3JvdXNlIDxqY3Jv
-dXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiArICAgICAgICAgICAgICAgZ3B1QDUwMDAwMDAg
-ewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8tNjMw
-LjIiLCAicWNvbSxhZHJlbm8iOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICNzdHJlYW0taWQt
-Y2VsbHMgPSA8MTY+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHg1MDAw
-MDAwIDB4NDAwMDA+LCA8MHg1MDllMDAwIDB4MTA+OwoKVGhpcyB3aWxsIG5vdyBuZWVkIHRvIGJl
-IGFkanVzdGVkIHRvOgoKcmVnID0gPDAgMHgwNTAwMDAwMCAwIDB4NDAwMDA+LCA8MCAweDA1MDll
-MDAwIDAgMHgxMD47CgpUaGlzIGZpeGVzIHRoaW5ncyB1cCB0byBkZWFsIHdpdGggdGhlIHBhdGNo
-ICgiYXJtNjQ6IGR0czogcWNvbToKc2RtODQ1OiBJbmNyZWFzZSBhZGRyZXNzIGFuZCBzaXplIGNl
-bGxzIGZvciBzb2MiKSwgQUtBOgotIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
-MTA3Njc1MTEvCi0gaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MDExNzA0Mjk0MC4yNTQ4
-Ny0yLWJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnCgoKPiArICAgICAgICAgICAgICAgYWRyZW5v
-X3NtbXU6IGlvbW11QDUwNDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
-bGUgPSAicWNvbSxzZG04NDUtc21tdS12MiIsICJxY29tLHNtbXUtdjIiOwo+ICsgICAgICAgICAg
-ICAgICAgICAgICAgIHJlZyA9IDwweDUwNDAwMDAgMHgxMDAwMD47CgpUaGlzIG9uZSB0bzoKCnJl
-ZyA9IDwwIDB4MDUwNDAwMDAgMCAweDEwMDAwPjsKCgo+ICsgICAgICAgICAgICAgICBnbXU6IGdt
-dUA1MDZhMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlPSJxY29tLGFk
-cmVuby1nbXUtNjMwLjIiLCAicWNvbSxhZHJlbm8tZ211IjsKPiArCj4gKyAgICAgICAgICAgICAg
-ICAgICAgICAgcmVnID0gPDB4NTA2YTAwMCAweDMwMDAwPiwKPiArICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIDwweGIyODAwMDAgMHgxMDAwMD4sCj4gKyAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICA8MHhiNDgwMDAwIDB4MTAwMDA+OwoKVGhpcyBvbmUgdG86CgpyZWcgPSA8MCAw
-eDA1MDZhMDAwIDAgMHgzMDAwMD4sCiAgICAgICAgPDAgMHgwYjI4MDAwMCAwIDB4MTAwMDA+LAog
-ICAgICAgIDwwIDB4MGI0ODAwMDAgMCAweDEwMDAwPjsKCgpJbiB0aGUgZW1haWw6CgpodHRwczov
-L2xrbWwua2VybmVsLm9yZy9yLzIwMTkwMTE3MTkyOTU1LjE2NTE1LTEtYmpvcm4uYW5kZXJzc29u
-QGxpbmFyby5vcmcKCi4uLkJqb3JuIHByb3ZpZGVkIGEgbGluayB0byBhIGdpdGh1YiB0cmVlIHRo
-YXQgc2hvdWxkIGJlIE9LIHRvIHVzZSBhcwphIGJhc2lzIGZvciBzZW5kaW5nIGEgbmV3IHBhdGNo
-LiAgU3BlY2lmaWNhbGx5CjxodHRwczovL2dpdGh1Yi5jb20vYW5kZXJzc29uL2tlcm5lbC9jb21t
-aXRzL2Zvci1hbmR5L2FybTY0LWZvci01LjE+LgpUaGF0IHRyZWUgbm90IG9ubHkgaGFzIHRoZSBh
-ZGRyZXNzLWNlbGxzIC8gc2l6ZS1jZWxscyBjaGFuZ2UgYnV0IGFsc28KaGFzIGdwdWNjLgoKCi1E
-b3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
-cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
-L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+On Thu, Jan 17, 2019 at 03:12:51PM -0800, Nicolin Chen wrote:
+> By default, ina3221, as a hardware monitor, continuously measures
+> the inputs and generates corresponding data. However, for battery
+> powered devices, this mode might be power consuming.
+> 
+> This series of patches add a feature of changing default operating
+> mode to its single-shot mode via DT.
+> 
+> Changelog
+> v2->v3:
+>  * Added "Reviewed-by" from Rob to PATCH-1
+>  * Cleaned-up PATCH-2
+> v1->v2:
+>  * Cleaned-up PATCH-2
+> 
+> Nicolin Chen (2):
+>   dt-bindings: hwmon: ina3221: Add ti,single-shot property
+>   hwmon: (ina3221) Implement ti,single-shot DT property
+> 
+>  .../devicetree/bindings/hwmon/ina3221.txt     | 10 ++++++++++
+>  drivers/hwmon/ina3221.c                       | 19 +++++++++++++++++++
+>  2 files changed, 29 insertions(+)
+> 
+Series applied to hwmon-next.
+
+Thanks,
+Guenter
