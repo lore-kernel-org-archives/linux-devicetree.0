@@ -1,89 +1,89 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v3] arm64: dts: sdm845: add video nodes
-Date: Thu, 17 Jan 2019 13:58:05 +0200
-Message-ID: <0ee6676f-f169-1ea1-506e-16e4097d1c04@linaro.org>
-References: <1545292023-5489-1-git-send-email-mgottam@codeaurora.org>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet support
+Date: Thu, 17 Jan 2019 12:59:46 +0100
+Message-ID: <20190117115945.bmlaoeoqvsmdqqot@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-8-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545292023-5489-1-git-send-email-mgottam@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Malathi Gottam <mgottam@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, vgarodia@codeaurora.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547663874-29411-8-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.>
 List-Id: devicetree@vger.kernel.org
 
-Hi Malathi,
-
-On 12/20/18 9:47 AM, Malathi Gottam wrote:
-> This adds video nodes to sdm845 based on the examples
-> in the bindings.
+On Wed, Jan 16, 2019 at 06:37:50PM +0000, Fabrizio Castro wrote:
+> From: Biju Das <biju.das@bp.renesas.com>
 > 
-> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+> This patch adds ethernet support to the sub board.
+> 
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 > ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
->  1 file changed, 35 insertions(+)
-
-Looks good to me:
-
-Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-
+>  arch/arm64/boot/dts/renesas/cat875.dtsi | 30 ++++++++++++++++++++++++++++++
+>  1 file changed, 30 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index b72bdb0..ccd2b10 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -87,6 +87,11 @@
->  			reg = <0 0x86200000 0 0x2d00000>;
->  			no-map;
->  		};
-> +
-> +		venus_region: memory@95800000 {
-> +			reg = <0x0 0x95800000 0x0 0x500000>;
-> +			no-map;
-> +		};
->  	};
+> diff --git a/arch/arm64/boot/dts/renesas/cat875.dtsi b/arch/arm64/boot/dts/renesas/cat875.dtsi
+> index a41d0d8..805ffa7 100644
+> --- a/arch/arm64/boot/dts/renesas/cat875.dtsi
+> +++ b/arch/arm64/boot/dts/renesas/cat875.dtsi
+> @@ -7,4 +7,34 @@
 >  
->  	cpus {
-> @@ -1403,5 +1408,35 @@
->  				status = "disabled";
->  			};
->  		};
+>  / {
+>  	model = "Silicon Linux sub board for CAT874 (CAT875)";
 > +
-> +		video-codec@aa00000 {
-> +			compatible = "qcom,sdm845-venus";
-> +			reg = <0x0aa00000 0xff000>;
-> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> +			power-domains = <&videocc VENUS_GDSC>;
-> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-> +			clock-names = "core", "iface", "bus";
-> +			iommus = <&apps_smmu 0x10a0 0x8>,
-> +				 <&apps_smmu 0x10b0 0x0>;
-> +			memory-region = <&venus_region>;
+> +	aliases {
+> +		ethernet0 = &avb;
+> +	};
+> +};
 > +
-> +			video-core0 {
-> +				compatible = "venus-decoder";
-> +				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> +					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> +				clock-names = "core", "bus";
-> +				power-domains = <&videocc VCODEC0_GDSC>;
-> +			};
-> +
-> +			video-core1 {
-> +				compatible = "venus-encoder";
-> +				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-> +					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-> +				clock-names = "core", "bus";
-> +				power-domains = <&videocc VCODEC1_GDSC>;
-> +			};
-> +		};
->  	};
->  };
-> 
+> +&avb {
+> +	pinctrl-0 = <&avb_pins>;
+> +	pinctrl-names = "default";
+> +	renesas,no-ether-link;
 
--- 
-regards,
-Stan
+Is the renesas,no-ether-link required?
+
+My understanding is that "the property should only be used when a
+board does not provide a proper AVB_LINK signal". And from my reading
+of the schematic it looks like that signal may be provided on this board.
+
+That said, I have an outstanding patch for this for E3/Ebisu which
+I have not applied because I am unsure of its correctness.
+
+[PATCH] arm64: dts: renesas: ebisu: Remove renesas, no-ether-link property
+https://patchwork.kernel.org/patch/10692755/
+
+Similar patches have been applied for other boards.
+f.e:
+
+[PATCH] arm64: dts: renesas: salvator-x: Remove renesas, no-ether-link property
+https://git.kernel.org/torvalds/c/87c059e9c39d
+
+> +	phy-handle = <&phy0>;
+> +	phy-mode = "rgmii";
+> +	status = "okay";
+> +
+> +	phy0: ethernet-phy@0 {
+> +		rxc-skew-ps = <1500>;
+> +		reg = <0>;
+> +		interrupt-parent = <&gpio2>;
+> +		interrupts = <21 IRQ_TYPE_LEVEL_LOW>;
+> +		reset-gpios = <&gpio1 20 GPIO_ACTIVE_LOW>;
+> +	};
+> +};
+> +
+> +&pfc {
+> +	avb_pins: avb {
+> +		mux {
+> +			groups = "avb_mii";
+> +			function = "avb";
+> +		};
+> +	};
+>  };
+> -- 
+> 2.7.4
+> 
