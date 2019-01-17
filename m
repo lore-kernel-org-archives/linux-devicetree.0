@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/3] dt-bindings: pinctrl: meson: update register descriptions
-Date: Thu, 17 Jan 2019 11:23:13 +0100
-Message-ID: <20190117102315.1833-2-jbrunet@baylibre.com>
+Subject: [PATCH 3/3] pinctrl: meson: add optional region for drive strength
+Date: Thu, 17 Jan 2019 11:23:15 +0100
+Message-ID: <20190117102315.1833-4-jbrunet@baylibre.com>
 References: <20190117102315.1833-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,45 +12,44 @@ To: Linus Walleij <linus.walleij@linaro.org>, Kevin Hilman <khilman@baylibre.com
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-like pull-enable, pull should be optional has this region is available on
-every controllers. Also, the g12a feature a new region "ds" for the
-drive-strength
+On the G12a, there is a new 'region' to handle the drive-strength.
+This is optional since the older do not have this.
 
-All this region thing is one big mess. I suspect that there is only one
-big GPIO region with holes in it. All registers between the current
-regions reads '0' so it is probably just spare space to handle more pins.
-
-Since we need to continue to handle the existing controllers, switching to
-one single region now would not simplify things. However, if more
-organisation layouts and features keep on being added, we may have to look
-at this again
-
-Fixes: 3cd3c83f6752 ("pinctrl: Add compatibles for Amlogic Meson G12A pin controllers")
+Fixes: 29ae0952e85f ("pinctrl: meson-g12a: add pinctrl driver support")
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- .../devicetree/bindings/pinctrl/meson,pinctrl.txt      | 10 +++++-----
- 1 file changed, 5 insertions(+), 5 deletions(-)
+ drivers/pinctrl/meson/pinctrl-meson.c | 6 ++++++
+ drivers/pinctrl/meson/pinctrl-meson.h | 1 +
+ 2 files changed, 7 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-index 82ead40311f6..a47dd990a8d3 100644
---- a/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/meson,pinctrl.txt
-@@ -23,11 +23,11 @@ The GPIO bank for the controller is represented as a sub-node and it acts as a
- GPIO controller.
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.c b/drivers/pinctrl/meson/pinctrl-meson.c
+index a4ae1ac5369e..96a4a72708e4 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.c
++++ b/drivers/pinctrl/meson/pinctrl-meson.c
+@@ -507,6 +507,12 @@ static int meson_pinctrl_parse_dt(struct meson_pinctrl *pc,
+ 	if (IS_ERR(pc->reg_pullen))
+ 		pc->reg_pullen = pc->reg_pull;
  
- Required properties for sub-nodes are:
-- - reg: should contain address and size for mux, pull-enable, pull and
--   gpio register sets
-- - reg-names: an array of strings describing the "reg" entries. Must
--   contain "mux", "pull" and "gpio". "pull-enable" is optional and
--   when it is missing the "pull" registers are used instead
-+ - reg: should contain a list of address and size, one tuple for each entry
-+   in reg-names.
-+ - reg-names: an array of strings describing the "reg" entries.
-+   Must contain "mux" and "gpio".
-+   May contain "pull", "pull-enable" and "ds" when appropriate.
-  - gpio-controller: identifies the node as a gpio controller
-  - #gpio-cells: must be 2
++	pc->reg_ds = meson_map_resource(pc, gpio_np, "ds");
++	if (IS_ERR(pc->reg_ds)) {
++		dev_dbg(pc->dev, "ds registers not found - skipping\n");
++		pc->reg_ds = NULL;
++	}
++
+ 	return 0;
+ }
  
+diff --git a/drivers/pinctrl/meson/pinctrl-meson.h b/drivers/pinctrl/meson/pinctrl-meson.h
+index eff61ea1c67e..5eaab925f427 100644
+--- a/drivers/pinctrl/meson/pinctrl-meson.h
++++ b/drivers/pinctrl/meson/pinctrl-meson.h
+@@ -120,6 +120,7 @@ struct meson_pinctrl {
+ 	struct regmap *reg_pullen;
+ 	struct regmap *reg_pull;
+ 	struct regmap *reg_gpio;
++	struct regmap *reg_ds;
+ 	struct gpio_chip chip;
+ 	struct device_node *of_node;
+ };
 -- 
 2.20.1
