@@ -1,31 +1,60 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v2 2/2] hwmon: (ina3221) Implement ti,single-shot DT
- property
-Date: Thu, 17 Jan 2019 14:30:13 -0800
-Message-ID: <20190117223012.GH16918@Asurada-Nvidia.nvidia.com>
-References: <20190105030636.533-1-nicoleotsuka@gmail.com>
- <20190105030636.533-3-nicoleotsuka@gmail.com>
- <20190107193555.GA13547@roeck-us.net>
+From: Paul Cercueil <paul@crapouillou.net>
+Subject: Re: [PATCH v2 3/4] usb: musb: Kconfig: Drop dependency on MACH_JZ4740
+ for jz4740
+Date: Thu, 17 Jan 2019 19:31:27 -0300
+Message-ID: <1547764287.2057.0@crapouillou.net>
+References: <20190110133700.4471-1-paul@crapouillou.net>
+        <20190110133700.4471-3-paul@crapouillou.net>
+        <20190115162603.GB18026@uda0271908>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190107193555.GA13547@roeck-us.net>
+In-Reply-To: <20190115162603.GB18026@uda0271908>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: jdelvare@suse.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Bin Liu <b-liu@ti.com>
+Cc: linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 07, 2019 at 11:35:55AM -0800, Guenter Roeck wrote:
+Hi,
 
-> > +	if (of_property_read_bool(np, "ti,single-shot"))
-> > +		ina->single_shot = true;
-> > +
-> 	ina->single_shot = of_property_read_bool(np, "ti,single-shot");
+On Tue, Jan 15, 2019 at 1:26 PM, Bin Liu <b-liu@ti.com> wrote:
+> Hi Paul,
 > 
-> No need to resend right now; let's wait for feedback from Rob.
+> On Thu, Jan 10, 2019 at 10:36:59AM -0300, Paul Cercueil wrote:
+>>  Depending on MACH_INGENIC prevent us from creating a generic kernel 
+>> that
+> 
+> Again, did you mean MACH_JZ4740 instead?
 
-Looks like Rob has acked. Is this resend version fine for review?
+Dammit. I'm sorry. Will send a v3 right now.
 
-Thank you
-Nicolin
+>>  works on more than one MIPS board. Instead, we just depend on MIPS 
+>> being
+>>  set.
+>> 
+>>  Signed-off-by: Paul Cercueil <paul@crapouillou.net 
+>> <mailto:paul@crapouillou.net>>
+>>  ---
+>> 
+>>  v2: Remove info about adding COMPILE_TEST in commit message, as it 
+>> was
+>>      there before
+>> 
+>>   drivers/usb/musb/Kconfig | 2 +-
+>>   1 file changed, 1 insertion(+), 1 deletion(-)
+>> 
+>>  diff --git a/drivers/usb/musb/Kconfig b/drivers/usb/musb/Kconfig
+>>  index ad08895e78f9..6f5b0ed6a507 100644
+>>  --- a/drivers/usb/musb/Kconfig
+>>  +++ b/drivers/usb/musb/Kconfig
+>>  @@ -111,7 +111,7 @@ config USB_MUSB_UX500
+>>   config USB_MUSB_JZ4740
+>>   	tristate "JZ4740"
+>>   	depends on NOP_USB_XCEIV
+>>  -	depends on MACH_JZ4740 || COMPILE_TEST
+>>  +	depends on MIPS || COMPILE_TEST
+>>   	depends on USB_MUSB_GADGET
+>>   	depends on USB_OTG_BLACKLIST_HUB
+> 
+> Regards,
+> -Bin.
