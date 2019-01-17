@@ -1,84 +1,66 @@
-From: frowand.list@gmail.com
-Subject: [PATCH RESEND] of: add dtc annotations functionality to dtx_diff
-Date: Thu, 17 Jan 2019 14:01:14 -0800
-Message-ID: <1547762474-7832-1-git-send-email-frowand.list@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
+Date: Thu, 17 Jan 2019 16:04:34 -0600
+Message-ID: <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
+References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
+ <20190117123320.GD3271@phenom.ffwll.local>
+ <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
+ <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Tomi Valkeinen <tomi.valkeinen@ti.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-From: Frank Rowand <frank.rowand@sony.com>
-
-Add -T and --annotations command line arguments to dtx_diff.  These
-arguments will be passed through to dtc.  dtc will then add source
-location annotations to its output.
-
-Signed-off-by: Frank Rowand <frank.rowand@sony.com>
----
-
-If dtx_diff is provided with a single devicetree source file then
-that source file will be compiled, with all appropriate includes
-and pre-processing, and the result will be output as source.  This
-provides a convenient mechanism to see what the devicetree looks
-like after all processing and replacements occur.  The
---annotations argument will cause dtc to report information about
-where the source was located for each line of the output.
-
- scripts/dtc/dtx_diff | 13 ++++++++++++-
- 1 file changed, 12 insertions(+), 1 deletion(-)
-
-diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
-index 8c4fbad2055e..0d8572008729 100755
---- a/scripts/dtc/dtx_diff
-+++ b/scripts/dtc/dtx_diff
-@@ -21,6 +21,7 @@ Usage:
-         diff DTx_1 and DTx_2
- 
- 
-+      --annotate    synonym for -T
-        -f           print full dts in diff (--unified=99999)
-        -h           synonym for --help
-        -help        synonym for --help
-@@ -28,6 +29,7 @@ Usage:
-        -s SRCTREE   linux kernel source tree is at path SRCTREE
-                         (default is current directory)
-        -S           linux kernel source tree is at root of current git repo
-+       -T           Annotate output .dts with input source file and line (-T -T for more details)
-        -u           unsorted, do not sort DTx
- 
- 
-@@ -174,6 +176,7 @@ compile_to_dts() {
- 
- # -----  start of script
- 
-+annotate=""
- cmd_diff=0
- diff_flags="-u"
- dtx_file_1=""
-@@ -208,6 +211,14 @@ while [ $# -gt 0 ] ; do
- 		shift
- 		;;
- 
-+	-T | --annotate )
-+		if [ "${annotate}"  = "" ] ; then
-+			annotate="-T"
-+		elif [ "${annotate}"  = "-T" ] ; then
-+			annotate="-T -T"
-+		fi
-+		shift
-+		;;
- 	-u )
- 		dtc_sort=""
- 		shift
-@@ -327,7 +338,7 @@ cpp_flags="\
- DTC="\
- 	${DTC}                                     \
- 	-i ${srctree}/scripts/dtc/include-prefixes \
--	-O dts -qq -f ${dtc_sort} -o -"
-+	-O dts -qq -f ${dtc_sort} ${annotate} -o -"
- 
- 
- # -----  do the diff or decompile
--- 
-Frank Rowand <frank.rowand@sony.com>
+T24gVGh1LCBKYW4gMTcsIDIwMTkgYXQgNzoyNiBBTSBEYW5pZWwgVmV0dGVyIDxkYW5pZWxAZmZ3
+bGwuY2g+IHdyb3RlOgo+Cj4gT24gVGh1LCBKYW4gMTcsIDIwMTkgYXQgMjowNCBQTSBUb21pIFZh
+bGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPiB3cm90ZToKPiA+Cj4gPiBPbiAxNy8wMS8x
+OSAxNDozMywgRGFuaWVsIFZldHRlciB3cm90ZToKPiA+ID4gT24gVGh1LCBKYW4gMTcsIDIwMTkg
+YXQgMDE6MTk6MThQTSArMDIwMCwgVG9taSBWYWxrZWluZW4gd3JvdGU6Cj4gPiA+PiBUaGUgRFJN
+IGRldmljZSBtaW5vciBudW1iZXJzIGFyZSBhbGxvY2F0ZWQgYWNjb3JkaW5nIHRvIHRoZSByZWdp
+c3RyYXRpb24KPiA+ID4+IG9yZGVyLiBUaGlzIGNhdXNlcyBjb25mdXNpb24gaW4gY2FzZXMgd2hl
+cmUgdGhlIHJlZ2lzdHJhdGlvbiBvcmRlciBjYW4KPiA+ID4+IGNoYW5nZSwgb3Igd2hlbiwgc2F5
+LCBhIG1vZGVzZXR0aW5nIGNhcGFibGUgZGV2aWNlIGlzIHByZWZlcnJlZCB0byBiZQo+ID4gPj4g
+Y2FyZDAsIGFuZCBhIHJlbmRlcmluZyBkZXZpY2UgaXMgcHJlZmVycmVkIHRvIGJlIGNhcmQxLgo+
+ID4gPj4KPiA+ID4+IFRoaXMgcGF0Y2ggYWRkcyBzaW1pbGFyIGZ1bmN0aW9uYWxpdHkgdGhhdCBp
+cyB1c2VkIGluIHNvbWUgb3RoZXIKPiA+ID4+IHN1YnN5c3RlbXMsIHdoZXJlIGRldmljZSBtaW5v
+ciBudW1iZXJzIGNhbiBiZSBkZWZpbmVkIGluIERUIGJpbmRpbmdzJwo+ID4gPj4gYWxpYXNlcyBu
+b2RlLgo+ID4gPgo+ID4gPiBXaGF0IG90aGVyIHN1YnN5c3RlbT8gSSB0aG91Z2h0IHRoYXQgbWlu
+b3IgbnVtYmVycyBzaG91bGRuJ3QgYmUgbWFkZSB1YXBpLAo+ID4gPiBhbmQgdGhhdCB1ZGV2IG9y
+IHNpbWlsYXIgaXMgc3VwcG9zZWQgdG8gZ2l2ZSB5b3Ugc3RhYmxlIG5hbWVzIC4uLiBJcyB0aGF0
+Cj4gPiA+IG5vdCB0aGUgY2FzZSBvbiBTb0M/CgpZb3UgdGhvdWdodCBjb3JyZWN0bHkuIFRoZSBw
+cm9ibGVtIGlzIGxvdHMgb2YgcGVvcGxlIGxpa2UgdGhlaXIgc3RhYmxlIG5hbWVzLgoKPiA+IEkg
+dGhpbmsgYXQgbGVhc3QgaTJjLCBzcGkgYW5kIHVhcnQgdXNlIERUIGFsaWFzZXMuCgpXZWxsLCB5
+ZXMuIFVBUlRzIHdlcmUgbGFyZ2VseSB0byBub3QgYnJlYWsgJ2NvbnNvbGU9dHR5U3gnIGFuZC9v
+cgpnZXR0eSdzIG9uIGEgdHR5U3ggd2hlbiBtb3ZpbmcgdG8gRFQuIFRoYXQgaXMgbGFyZ2VseSBh
+IHNvbHZlZCBwcm9ibGVtCm5vdyAodGhvdWdoIGV2ZXJ5b25lIHN0aWxsIHB1dHMgdGhlbSBpbiku
+CgpTUEkgYW5kIEkyQyBzbmVha2VkIGluIEkgZ3Vlc3MuIFRob3NlIGFyZSByZWFsbHkgb25seSBm
+b3IgZm9sa3MKdHdpZGRsaW5nIHdpdGggU1BJIGFuZCBJMkMgZGlyZWN0bHkgZnJvbSB1c2Vyc3Bh
+Y2UuIFRoZXJlJ3MgYmVlbgpkaXNjdXNzaW9ucyBpbiB0aGUgcGFzdCBob3cgbm90IHVzZSBhbGlh
+c2VzLCBidXQgbm8gb25lIGhhcyBjYXJlZAplbm91Z2ggdG8gaW1wbGVtZW50LgoKPiBDb21taXRz
+L2NvZGUgaW1wbGVtZW50aW5nIHdvdWxkIGJlIGJlc3QuCj4KPiA+IEkgYWxzbyBoYXZlIG15IGRv
+dWJ0cyBhYm91dCB0aGlzLCBidXQgdGhvdWdodCB0byBwb3N0IHRoaXMgdG8gZ2V0IHNvbWUKPiA+
+IGNvbW1lbnRzLCBhcyBpdCBkb2VzIG1ha2UgbGlmZSBxdWl0ZSBhIGJpdCBlYXNpZXIgPSkuCj4K
+PiBZZWFoIEkgdGhpbmsgInNvYyB3aXRob3V0IHVkZXYiIHNlZW1zIHJlYXNvbmFibGUgYXNzdW1w
+dGlvbiwgSSBqdXN0Cj4gdGhpbmsgdGhpcyBpcyBzb21ldGhpbmcgdGhlIG92ZXJhbGwgc29jIGNv
+bW11bml0eSBzaG91bGQgYWdyZWUgb24gYXMgYQo+IGdvb2QgdGhpbmcgdG8gZG8uIEkgZ3Vlc3Mg
+c2luY2UgdGhlIG9mIHN0dWZmIHlvdSdyZSB1c2luZyBpcyBnZW5lcmljCj4gdGhhdCdzIGFsbCBo
+YXBwZW5lZCBhbHJlYWR5LCBzbyBzaG91bGQgYW1vdW50IHRvIGdhdGhlcmluZyBhIHBpbGUgb2YK
+PiBhY2tzIGFuZCB0aGVuIG1lcmdpbmcgaXQuCgpNZXNhL2xpYmRybSBhbHJlYWR5IGhhcyBsb3Rz
+IG9mIGNvZGUgdG8gb3BlbiB0aGUgY29ycmVjdCBkZXZpY2VzIGFuZApub3QgY2FyZSBhYm91dCBt
+aW5vciBudW1iZXJzLiBXaGF0J3MgdGhlIHByb2JsZW0gaGVyZT8KClJvYgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
