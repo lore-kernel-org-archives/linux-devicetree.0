@@ -1,159 +1,74 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v2, 2/5] ptp_qoriq: support external trigger stamp FIFO
-Date: Thu, 17 Jan 2019 09:49:33 +0800
-Message-ID: <20190117014936.48117-3-yangbo.lu@nxp.com>
+Subject: [v2, 5/5] ptp_qoriq: add fiper pulse loopback support
+Date: Thu, 17 Jan 2019 09:49:36 +0800
+Message-ID: <20190117014936.48117-6-yangbo.lu@nxp.com>
 References: <20190117014936.48117-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190117014936.48117-1-yangbo.lu@nxp.com>
 Sender: netdev-owner@vger.kernel.org
 To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>, Vladimir Oltean <vladimir.oltean@nxp.com>
+Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-The external trigger stamp FIFO was introduced as a new feature
-for QorIQ 1588 timer IP block. This patch is to support it by
-adding a new dts property "fsl,extts-fifo". Any QorIQ 1588 timer
-supporting this feature is required to add this property in its
-dts node.
-
-In addition, the FIFO should be cleaned up before enabling external
-trigger interrupts. Otherwise, there will be interrupts immediately
-just after enabling external trigger interrupts.
+This patch is to add Kconfig options to support fiper
+pulse loopback mode. This is very useful for validating
+hardware and driver without external hardware.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
-Signed-off-by: Vladimir Oltean <vladimir.oltean@nxp.com>
 ---
 Changes for v2:
-	- Converted to use extts_clean_up instead.
+	- None.
 ---
- drivers/ptp/ptp_qoriq.c       |   68 ++++++++++++++++++++++++++++++++--------
- include/linux/fsl/ptp_qoriq.h |    3 ++
- 2 files changed, 57 insertions(+), 14 deletions(-)
+ drivers/ptp/Kconfig     |   18 ++++++++++++++++++
+ drivers/ptp/ptp_qoriq.c |    7 ++++++-
+ 2 files changed, 24 insertions(+), 1 deletions(-)
 
+diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
+index d137c48..561d797 100644
+--- a/drivers/ptp/Kconfig
++++ b/drivers/ptp/Kconfig
+@@ -55,6 +55,24 @@ config PTP_1588_CLOCK_QORIQ
+ 	  To compile this driver as a module, choose M here: the module
+ 	  will be called ptp_qoriq.
+ 
++config PTP_1588_CLOCK_QORIQ_FIPER1_LOOPBACK
++	bool "Fiper1 pulse loopback"
++	depends on PTP_1588_CLOCK_QORIQ
++	default n
++	help
++	  Enable fiper1 pulse loopback mode. If choose y, fiper1 pulse is
++	  looped back into trigger1 input. In default, trigger1 input is
++	  based upon normal external trigger input.
++
++config PTP_1588_CLOCK_QORIQ_FIPER2_LOOPBACK
++	bool "Fiper2 pulse loopback"
++	depends on PTP_1588_CLOCK_QORIQ
++	default n
++	help
++	  Enable fiper2 pulse loopback mode. If choose y, fiper2 pulse is
++	  looped back into trigger2 input. In default, trigger2 input is
++	  based upon normal external trigger input.
++
+ config PTP_1588_CLOCK_IXP46X
+ 	tristate "Intel IXP46x as PTP clock"
+ 	depends on IXP4XX_ETH
 diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index 2743214..a2e7702 100644
+index a2e7702..5294475 100644
 --- a/drivers/ptp/ptp_qoriq.c
 +++ b/drivers/ptp/ptp_qoriq.c
-@@ -88,6 +88,49 @@ static void set_fipers(struct qoriq_ptp *qoriq_ptp)
- 	qoriq_write(&regs->fiper_regs->tmr_fiper2, qoriq_ptp->tmr_fiper2);
- }
+@@ -551,7 +551,12 @@ static int qoriq_ptp_probe(struct platform_device *dev)
+ 	tmr_ctrl =
+ 	  (qoriq_ptp->tclk_period & TCLK_PERIOD_MASK) << TCLK_PERIOD_SHIFT |
+ 	  (qoriq_ptp->cksel & CKSEL_MASK) << CKSEL_SHIFT;
+-
++#ifdef CONFIG_PTP_1588_CLOCK_QORIQ_FIPER1_LOOPBACK
++	tmr_ctrl |= PP1L;
++#endif
++#ifdef CONFIG_PTP_1588_CLOCK_QORIQ_FIPER2_LOOPBACK
++	tmr_ctrl |= PP2L;
++#endif
+ 	spin_lock_irqsave(&qoriq_ptp->lock, flags);
  
-+static int extts_clean_up(struct qoriq_ptp *qoriq_ptp, int index,
-+			  bool update_event)
-+{
-+	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
-+	struct ptp_clock_event event;
-+	void __iomem *reg_etts_l;
-+	void __iomem *reg_etts_h;
-+	u32 valid, stat, lo, hi;
-+
-+	switch (index) {
-+	case 0:
-+		valid = ETS1_VLD;
-+		reg_etts_l = &regs->etts_regs->tmr_etts1_l;
-+		reg_etts_h = &regs->etts_regs->tmr_etts1_h;
-+		break;
-+	case 1:
-+		valid = ETS2_VLD;
-+		reg_etts_l = &regs->etts_regs->tmr_etts2_l;
-+		reg_etts_h = &regs->etts_regs->tmr_etts2_h;
-+		break;
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	event.type = PTP_CLOCK_EXTTS;
-+	event.index = index;
-+
-+	do {
-+		lo = qoriq_read(reg_etts_l);
-+		hi = qoriq_read(reg_etts_h);
-+
-+		if (update_event) {
-+			event.timestamp = ((u64) hi) << 32;
-+			event.timestamp |= lo;
-+			ptp_clock_event(qoriq_ptp->clock, &event);
-+		}
-+
-+		stat = qoriq_read(&regs->ctrl_regs->tmr_stat);
-+	} while (qoriq_ptp->extts_fifo_support && (stat & valid));
-+
-+	return 0;
-+}
-+
- /*
-  * Interrupt service routine
-  */
-@@ -111,24 +154,12 @@ static irqreturn_t isr(int irq, void *priv)
- 
- 	if (irqs & ETS1) {
- 		ack |= ETS1;
--		hi = qoriq_read(&regs->etts_regs->tmr_etts1_h);
--		lo = qoriq_read(&regs->etts_regs->tmr_etts1_l);
--		event.type = PTP_CLOCK_EXTTS;
--		event.index = 0;
--		event.timestamp = ((u64) hi) << 32;
--		event.timestamp |= lo;
--		ptp_clock_event(qoriq_ptp->clock, &event);
-+		extts_clean_up(qoriq_ptp, 0, true);
- 	}
- 
- 	if (irqs & ETS2) {
- 		ack |= ETS2;
--		hi = qoriq_read(&regs->etts_regs->tmr_etts2_h);
--		lo = qoriq_read(&regs->etts_regs->tmr_etts2_l);
--		event.type = PTP_CLOCK_EXTTS;
--		event.index = 1;
--		event.timestamp = ((u64) hi) << 32;
--		event.timestamp |= lo;
--		ptp_clock_event(qoriq_ptp->clock, &event);
-+		extts_clean_up(qoriq_ptp, 1, true);
- 	}
- 
- 	if (irqs & ALM2) {
-@@ -278,6 +309,10 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 		default:
- 			return -EINVAL;
- 		}
-+
-+		if (on)
-+			extts_clean_up(qoriq_ptp, rq->extts.index, false);
-+
- 		break;
- 	case PTP_CLK_REQ_PPS:
- 		bit = PP1EN;
-@@ -441,6 +476,11 @@ static int qoriq_ptp_probe(struct platform_device *dev)
- 	if (of_property_read_u32(node, "fsl,cksel", &qoriq_ptp->cksel))
- 		qoriq_ptp->cksel = DEFAULT_CKSEL;
- 
-+	if (of_property_read_bool(node, "fsl,extts-fifo"))
-+		qoriq_ptp->extts_fifo_support = true;
-+	else
-+		qoriq_ptp->extts_fifo_support = false;
-+
- 	if (of_property_read_u32(node,
- 				 "fsl,tclk-period", &qoriq_ptp->tclk_period) ||
- 	    of_property_read_u32(node,
-diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index c1f003a..43b4b44 100644
---- a/include/linux/fsl/ptp_qoriq.h
-+++ b/include/linux/fsl/ptp_qoriq.h
-@@ -120,6 +120,8 @@ struct qoriq_ptp_registers {
- /* Bit definitions for the TMR_STAT register */
- #define STAT_VEC_SHIFT        (0) /* Timer general purpose status vector */
- #define STAT_VEC_MASK         (0x3f)
-+#define ETS1_VLD              (1<<24)
-+#define ETS2_VLD              (1<<25)
- 
- /* Bit definitions for the TMR_PRSC register */
- #define PRSC_OCK_SHIFT        (0) /* Output clock division/prescale factor. */
-@@ -141,6 +143,7 @@ struct qoriq_ptp {
- 	struct ptp_clock *clock;
- 	struct ptp_clock_info caps;
- 	struct resource *rsrc;
-+	bool extts_fifo_support;
- 	int irq;
- 	int phc_index;
- 	u64 alarm_interval; /* for periodic alarm */
+ 	regs = &qoriq_ptp->regs;
 -- 
 1.7.1
