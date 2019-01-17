@@ -1,72 +1,36 @@
-Return-Path: <SRS0=RXyf=PX=pengutronix.de=mfe@kernel.org>
-Date: Tue, 15 Jan 2019 12:58:30 +0100
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v2 0/2] Microchip QT1050 support
-Message-ID: <20190115115830.uulucadzp5eseuvb@pengutronix.de>
-References: <20181029133826.30326-1-m.felsch@pengutronix.de>
- <20181126091359.lkzo6ijzjks7v4qu@pengutronix.de>
+Return-Path: <SRS0=YYYg=PZ=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from kirsty.vergenet.net ([202.4.237.240]:34288 "EHLO
+        kirsty.vergenet.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725878AbfAQNQq (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Thu, 17 Jan 2019 08:16:46 -0500
+Date: Thu, 17 Jan 2019 14:16:41 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH] ARM: dts: r8a7778: Add HSCIF0/1 support
+Message-ID: <20190117131641.meqjsylxnwiwi4v5@verge.net.au>
+References: <20190110153232.21212-1-geert+renesas@glider.be>
+ <20190111135319.mgixoxa5iigmx5x4@verge.net.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20181126091359.lkzo6ijzjks7v4qu@pengutronix.de>
-To: dmitry.torokhov@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, raphaelpereira@gmail.com, voice.shen@atmel.com, kernel@pengutronix.de, linux-input@vger.kernel.org
+In-Reply-To: <20190111135319.mgixoxa5iigmx5x4@verge.net.au>
+Sender: devicetree-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert+renesas@glider.be>
+Cc: Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi Dmitry,
+On Fri, Jan 11, 2019 at 02:53:20PM +0100, Simon Horman wrote:
+> On Thu, Jan 10, 2019 at 04:32:32PM +0100, Geert Uytterhoeven wrote:
+> > From: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> > 
+> > Add HSCIF0/1 clocks and device nodes, based on Rev. 1.00 of the R-Car
+> > M1A datasheet.
+> > 
+> > Signed-off-by: Ulrich Hecht <ulrich.hecht+renesas@gmail.com>
+> > [geert: Squashed two patches]
+> > [geert: Correct HSCIF1 module clock index]
+> > [geert: Correct reg properties for non-LPAE]
+> > Signed-off-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-unfortunately you missed this patchset for 5.0. Please can you give me
-your feedback so it will get into 5.1.
-
-Thanks,
-Marco
-
-On 18-11-26 10:13, Marco Felsch wrote:
-> Hi,
-> 
-> I send this series a month ago, Rob already added his reviewed-by tag.
-> 
-> Regards,
-> Marco
-> 
-> On 18-10-29 14:38, Marco Felsch wrote:
-> > Hi,
-> > 
-> > this is my v2 containing the comments made on my v1 [1].
-> > 
-> > I split the dt-bindings according to commit [2].
-> > 
-> > [1] https://www.spinics.net/lists/devicetree/msg250279.html
-> > [2] https://www.spinics.net/lists/devicetree/msg253946.html
-> > 
-> > Marco Felsch (2):
-> >   dt-bindings: input: add Microchip QT1050 bindings
-> >   Input: qt1050 - add Microchip AT42QT1050 support
-> > 
-> >  .../bindings/input/microchip,qt1050.txt       |  74 +++
-> >  drivers/input/keyboard/Kconfig                |  11 +
-> >  drivers/input/keyboard/Makefile               |   1 +
-> >  drivers/input/keyboard/qt1050.c               | 620 ++++++++++++++++++
-> >  4 files changed, 706 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/input/microchip,qt1050.txt
-> >  create mode 100644 drivers/input/keyboard/qt1050.c
-> > 
-> > -- 
-> > 2.19.1
-> > 
-> > 
-> > 
-> 
-> -- 
-> Pengutronix e.K.                           |                             |
-> Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-> Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-> Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
-> 
-> 
-
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+Thanks, applied for v5.1.
