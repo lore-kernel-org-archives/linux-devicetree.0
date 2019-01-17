@@ -1,124 +1,68 @@
-From: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add WCN3990 BT node
-Date: Thu, 17 Jan 2019 11:40:35 +0530
-Message-ID: <aebd3bbb4bb3faac2570244af610b43d@codeaurora.org>
-References: <20190117044006.12463-1-bjorn.andersson@linaro.org>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 02/13] mbox: qcom: add APCS child device for QCS404
+Date: Wed, 16 Jan 2019 22:25:31 -0800
+Message-ID: <20190117062531.GA25498@builder>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117044006.12463-1-bjorn.andersson@linaro.org>
+Content-Disposition: inline
+In-Reply-To: <1545039990-19984-3-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+To: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anderson,
+On Mon 17 Dec 01:46 PST 2018, Jorge Ramirez-Ortiz wrote:
 
-On 2019-01-17 10:10, Bjorn Andersson wrote:
-> The SDM845 MTP has a WCN3990 Bluetooth chip on UART6, enable this.
+> There is clock controller functionality in the APCS hardware block of
+> qcs404 devices similar to msm8916.
 > 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+
+> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 > ---
->  arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 44 +++++++++++++++++++++++++
->  1 file changed, 44 insertions(+)
+>  drivers/mailbox/qcom-apcs-ipc-mailbox.c | 21 +++++++++++++--------
+>  1 file changed, 13 insertions(+), 8 deletions(-)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> index af8c6a2445a2..f65d5a674103 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> +++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-> @@ -17,6 +17,7 @@
+> diff --git a/drivers/mailbox/qcom-apcs-ipc-mailbox.c b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> index aed23ac..dc8fdab1 100644
+> --- a/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> +++ b/drivers/mailbox/qcom-apcs-ipc-mailbox.c
+> @@ -97,16 +97,21 @@ static int qcom_apcs_ipc_probe(struct platform_device *pdev)
+>  		return ret;
+>  	}
+>  
+> -	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global")) {
+> -		apcs->clk = platform_device_register_data(&pdev->dev,
+> -							  "qcom-apcs-msm8916-clk",
+> -							  -1, NULL, 0);
+> -		if (IS_ERR(apcs->clk))
+> -			dev_err(&pdev->dev, "failed to register APCS clk\n");
+> -	}
+> -
+>  	platform_set_drvdata(pdev, apcs);
+>  
+> +	if (of_device_is_compatible(np, "qcom,msm8916-apcs-kpss-global") ||
+> +	    of_device_is_compatible(np, "qcom,qcs404-apcs-apps-global"))
+> +		goto register_clk;
+> +
+> +	return 0;
+> +
+> +register_clk:
+> +	apcs->clk = platform_device_register_data(&pdev->dev,
+> +						  "qcom-apcs-msm8916-clk",
+> +						  -1, NULL, 0);
+> +	if (IS_ERR(apcs->clk))
+> +		dev_err(&pdev->dev, "failed to register APCS clk\n");
+> +
+>  	return 0;
+>  }
+>  
+> -- 
+> 2.7.4
 > 
->  	aliases {
->  		serial0 = &uart9;
-> +		hsuart0 = &uart6;
->  	};
-> 
->  	chosen {
-> @@ -357,6 +358,10 @@
->  	clock-frequency = <400000>;
->  };
-> 
-> +&qupv3_id_0 {
-> +	status = "okay";
-> +};
-> +
->  &qupv3_id_1 {
->  	status = "okay";
->  };
-> @@ -373,6 +378,20 @@
->  	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
->  };
-> 
-> +&uart6 {
-> +	status = "okay";
-> +
-> +	bluetooth {
-> +		compatible = "qcom,wcn3990-bt";
-> +
-> +		vddio-supply = <&vreg_s4a_1p8>;
-> +		vddxo-supply = <&vreg_l7a_1p8>;
-> +		vddrf-supply = <&vreg_l17a_1p3>;
-> +		vddch0-supply = <&vreg_l25a_3p3>;
-> +		max-speed = <3200000>;
-> +	};
-> +};
-> +
->  &uart9 {
->  	status = "okay";
->  };
-> @@ -470,6 +489,31 @@
->  	};
->  };
-> 
-> +&qup_uart6_default {
-> +	pinmux {
-> +		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-> +		function = "qup6";
-> +	};
-> +
-> +	ctsrx {
-> +		pins = "gpio45", "gpio48";
-> +		drive-strength = <2>;
-> +		bias-no-pull;
-> +	};
-> +
-> +	rts {
-> +		pins = "gpio46";
-> +		drive-strength = <2>;
-> +		bias-pull-down;
-> +	};
-> +
-> +	tx {
-> +		pins = "gpio47";
-> +		drive-strength = <2>;
-> +		bias-pull-up;
-> +	};
-> +};
-> +
->  &qup_uart9_default {
->  	pinconf-tx {
->  		pins = "gpio4";
-
-
-[Bala]:
-        GPIO 45 is CTS
-        GPIO 46 is RTS
-        GPIO 47 is Tx
-        GPIO 48 is Rx.
-
-        Tx & RTS are inputs to APPS processor, bias should be disable as 
-the source i.e. BT chip will pull them up.
-        CTS & RX are outputs from APPS processor, where as CTS is GPIO 
-which need to toggled, so the default state should be pull down.
-              RX is should be pulled up.
-        when TX & RX are pulled high it indicates that the lines are 
-ideal i.e. no data.
-
-Above is just my assumption, not sure whether they work on MTP.
-
--- 
-Regards
-Balakrishna.
