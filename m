@@ -1,74 +1,88 @@
-From: Loys Ollivier <lollivier@baylibre.com>
-Subject: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
-Date: Thu, 17 Jan 2019 17:54:32 +0100
-Message-ID: <1547744074-28308-3-git-send-email-lollivier@baylibre.com>
-References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH 6/8 v3] arm64: dts: hi3660: Add dma to uart nodes
+Date: Thu, 17 Jan 2019 22:26:29 +0530
+Message-ID: <20190117165629.GI5283@Mani-XPS-13-9360>
+References: <1547141652-8660-1-git-send-email-john.stultz@linaro.org>
+ <1547141652-8660-7-git-send-email-john.stultz@linaro.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <1547141652-8660-7-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
-Cc: Loys Ollivier <lollivier@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: John Stultz <john.stultz@linaro.org>
+Cc: lkml <linux-kernel@vger.kernel.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add binding for Mediatek-based GNSS receivers.
+On Thu, Jan 10, 2019 at 09:34:10AM -0800, John Stultz wrote:
+> Try to add DMA support to the uart nodes following
+> the assignments made in the dts from the victoria vendor kernel
+> here:
+> https://consumer.huawei.com/en/opensource/detail/?siteCode=worldwide&keywords=p10&fileType=openSourceSoftware&pageSize=10&curPage=1
+> 
+> Cc: Tanglei Han <hantanglei@huawei.com>
+> Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+> Cc: Ryan Grachek <ryan@edited.us>
+> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> Cc: Wei Xu <xuwei5@hisilicon.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> Cc: linux-arm-kernel@lists.infradead.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: John Stultz <john.stultz@linaro.org>
 
-Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
----
+Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
 
-v2:
-Renamed bindings from Globaltop/gtop to Mediatek/mtk.
-Moved current-speed as an optional propertie.
-Removed the status line in the example.
-Added "mediatek,mt3339" compatible.
+Thanks,
+Mani
 
- .../devicetree/bindings/gnss/mediatek.txt          | 39 ++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
-
-diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
-new file mode 100644
-index 000000000000..fd984b4a9a6d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
-@@ -0,0 +1,39 @@
-+Mediatek-based GNSS Receiver DT binding
-+
-+Mediatek chipsets are used in GNSS-receiver modules produced by several
-+vendors and can use UART, SPI or I2C interfaces.
-+
-+Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
-+properties.
-+
-+Required properties:
-+
-+- compatible	: Must be one of
-+
-+			"globaltop,pa6h"
-+			"mediatek,mt3339"
-+
-+- vcc-supply	: Main voltage regulator (pin name: 3V3_IN, VCC, VDD)
-+
-+Required properties (I2C):
-+- reg		: I2C slave address
-+
-+Required properties (SPI):
-+- reg		: SPI chip select address
-+
-+Optional properties:
-+
-+- timepulse-gpios	: Time pulse GPIO
-+- v-bckp-supply		: Backup voltage regulator
-+- current-speed		: Default UART baud rate
-+
-+Example:
-+
-+serial@1234 {
-+	compatible = "ns16550a";
-+
-+	gnss {
-+		compatible = "globaltop,pa6h";
-+		vcc-supply = <&vcc_3v3>;
-+	};
-+};
--- 
-2.7.4
+> ---
+> v3:
+> * Remove dma enablment on uart0 which would use reserved channel 0
+> ---
+>  arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 8 ++++++++
+>  1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> index 20ae40d..4c8d682 100644
+> --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
+> @@ -478,6 +478,8 @@
+>  			compatible = "arm,pl011", "arm,primecell";
+>  			reg = <0x0 0xfdf00000 0x0 0x1000>;
+>  			interrupts = <GIC_SPI 75 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-names = "rx", "tx";
+> +			dmas =  <&dma0 2 &dma0 3>;
+>  			clocks = <&crg_ctrl HI3660_CLK_GATE_UART1>,
+>  				 <&crg_ctrl HI3660_CLK_GATE_UART1>;
+>  			clock-names = "uartclk", "apb_pclk";
+> @@ -490,6 +492,8 @@
+>  			compatible = "arm,pl011", "arm,primecell";
+>  			reg = <0x0 0xfdf03000 0x0 0x1000>;
+>  			interrupts = <GIC_SPI 76 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-names = "rx", "tx";
+> +			dmas =  <&dma0 4 &dma0 5>;
+>  			clocks = <&crg_ctrl HI3660_CLK_GATE_UART2>,
+>  				 <&crg_ctrl HI3660_PCLK>;
+>  			clock-names = "uartclk", "apb_pclk";
+> @@ -514,6 +518,8 @@
+>  			compatible = "arm,pl011", "arm,primecell";
+>  			reg = <0x0 0xfdf01000 0x0 0x1000>;
+>  			interrupts = <GIC_SPI 77 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-names = "rx", "tx";
+> +			dmas =  <&dma0 6 &dma0 7>;
+>  			clocks = <&crg_ctrl HI3660_CLK_GATE_UART4>,
+>  				 <&crg_ctrl HI3660_CLK_GATE_UART4>;
+>  			clock-names = "uartclk", "apb_pclk";
+> @@ -526,6 +532,8 @@
+>  			compatible = "arm,pl011", "arm,primecell";
+>  			reg = <0x0 0xfdf05000 0x0 0x1000>;
+>  			interrupts = <GIC_SPI 78 IRQ_TYPE_LEVEL_HIGH>;
+> +			dma-names = "rx", "tx";
+> +			dmas =  <&dma0 8 &dma0 9>;
+>  			clocks = <&crg_ctrl HI3660_CLK_GATE_UART5>,
+>  				 <&crg_ctrl HI3660_CLK_GATE_UART5>;
+>  			clock-names = "uartclk", "apb_pclk";
+> -- 
+> 2.7.4
+> 
