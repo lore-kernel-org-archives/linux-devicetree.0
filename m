@@ -1,119 +1,40 @@
-From: Taniya Das <tdas@codeaurora.org>
-Subject: Re: [PATCH v2] cpufreq: qcom: Read voltage LUT and populate OPP
-Date: Thu, 17 Jan 2019 12:35:54 +0530
-Message-ID: <09114ef8-6ea7-ea92-caab-d5ea2904523f@codeaurora.org>
-References: <1547021248-27258-1-git-send-email-tdas@codeaurora.org>
- <20190109085400.mscuzezwxta4fpfh@vireshk-i7>
+From: Guo Ren <guoren@kernel.org>
+Subject: Re: [PATCH 19/21] treewide: add checks for the return value of
+ memblock_alloc*()
+Date: Thu, 17 Jan 2019 15:06:03 +0800
+Message-ID: <20190117070602.GA31839@guoren-Inspiron-7460>
+References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
+ <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190109085400.mscuzezwxta4fpfh@vireshk-i7>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viresh Kumar <viresh.kumar@linaro.org>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org, Stephen Boyd <sboyd@kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>, devicetree@vger.kernel.org, robh@kernel.org, skannan@codeaurora.org, linux-arm-msm@vger.kernel.org, amit.kucheria@linaro.org, Matthias Kaehlcke <mka@chromium.org>, evgreen@google.com
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.>
 List-Id: devicetree@vger.kernel.org
 
-Hello Viresh,
+On Wed, Jan 16, 2019 at 03:44:19PM +0200, Mike Rapoport wrote:
+>  arch/csky/mm/highmem.c                    |  5 +++++
+...
+> diff --git a/arch/csky/mm/highmem.c b/arch/csky/mm/highmem.c
+> index 53b1bfa..3317b774 100644
+> --- a/arch/csky/mm/highmem.c
+> +++ b/arch/csky/mm/highmem.c
+> @@ -141,6 +141,11 @@ static void __init fixrange_init(unsigned long start, unsigned long end,
+>  			for (; (k < PTRS_PER_PMD) && (vaddr != end); pmd++, k++) {
+>  				if (pmd_none(*pmd)) {
+>  					pte = (pte_t *) memblock_alloc_low(PAGE_SIZE, PAGE_SIZE);
+> +					if (!pte)
+> +						panic("%s: Failed to allocate %lu bytes align=%lx\n",
+> +						      __func__, PAGE_SIZE,
+> +						      PAGE_SIZE);
+> +
+>  					set_pmd(pmd, __pmd(__pa(pte)));
+>  					BUG_ON(pte != pte_offset_kernel(pmd, 0));
+>  				}
 
-On 1/9/2019 2:24 PM, Viresh Kumar wrote:
-> On 09-01-19, 13:37, Taniya Das wrote:
->> @@ -98,6 +107,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
-> 
-> You are only using this "dev" parameter for dev_dbg(), instead of that
-> pass cpu_dev pointer.
-> 
+Looks good for me and panic is ok.
 
-Sure, will clean it up to use cpu_dev.
-
->>   			table[i].frequency = CPUFREQ_ENTRY_INVALID;
->>   		} else {
->>   			table[i].frequency = freq;
->> +			dev_pm_opp_add(get_cpu_device(policy->cpu),
->> +					freq * 1000, volt);
->>   			dev_dbg(dev, "index=%d freq=%d, core_count %d\n", i,
->>   				freq, core_count);
->>   		}
->> @@ -116,6 +127,8 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->>   			if (prev_cc != max_cores) {
->>   				prev->frequency = prev_freq;
->>   				prev->flags = CPUFREQ_BOOST_FREQ;
->> +				dev_pm_opp_add(get_cpu_device(policy->cpu),
->> +						prev_freq * 1000, volt);
->>   			}
->>
->>   			break;
->> @@ -127,6 +140,7 @@ static int qcom_cpufreq_hw_read_lut(struct device *dev,
->>
->>   	table[i].frequency = CPUFREQ_TABLE_END;
->>   	policy->freq_table = table;
->> +	dev_pm_opp_set_sharing_cpus(get_cpu_device(policy->cpu), policy->cpus);
-> 
-> and then all the above sites can be simplified a bit.
-> 
->>   	return 0;
->>   }
->> @@ -159,10 +173,18 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->>   	struct device *dev = &global_pdev->dev;
->>   	struct of_phandle_args args;
->>   	struct device_node *cpu_np;
->> +	struct device *cpu_dev;
->>   	struct resource *res;
->>   	void __iomem *base;
->>   	int ret, index;
->>
->> +	cpu_dev = get_cpu_device(policy->cpu);
->> +	if (!cpu_dev) {
->> +		pr_err("%s: failed to get cpu%d device\n", __func__,
->> +		       policy->cpu);
->> +		return -ENODEV;
->> +	}
->> +
->>   	cpu_np = of_cpu_device_node_get(policy->cpu);
->>   	if (!cpu_np)
->>   		return -EINVAL;
->> @@ -205,6 +227,12 @@ static int qcom_cpufreq_hw_cpu_init(struct cpufreq_policy *policy)
->>   		goto error;
->>   	}
->>
->> +	ret = dev_pm_opp_get_opp_count(cpu_dev);
->> +	if (ret <= 0) {
->> +		dev_err(cpu_dev, "OPP table is not ready\n");
-> 
-> Rather say "Failed to add OPPs\n".
-> 
-
-Sure will update it.
-
->> +		goto error;
->> +	}
->> +
->>   	policy->fast_switch_possible = true;
->>
->>   	return 0;
->> @@ -217,6 +245,7 @@ static int qcom_cpufreq_hw_cpu_exit(struct cpufreq_policy *policy)
->>   {
->>   	void __iomem *base = policy->driver_data - REG_PERF_STATE;
->>
->> +	dev_pm_opp_remove_all_dynamic(&global_pdev->dev);
-> 
-> This is platform device's device structure, while you added the OPPs
-> using cpu_dev. You sure this will work ?
-> 
-
-Hmm, yeah, would update it in the next patch.
-
->>   	kfree(policy->freq_table);
->>   	devm_iounmap(&global_pdev->dev, base);
->>
->> --
->> Qualcomm INDIA, on behalf of Qualcomm Innovation Center, Inc.is a member
->> of the Code Aurora Forum, hosted by the  Linux Foundation.
-> 
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation.
-
---
+Reviewed-by: Guo Ren <ren_guo@c-sky.com>
