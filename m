@@ -1,85 +1,136 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH] userdiff: Add a builtin pattern for dts files
-Date: Thu, 17 Jan 2019 16:13:41 -0600
-Message-ID: <CAL_JsqLKQDfK=_M=od2_G6Y4mbdkMn3hLvL+BuSZBEOZKB--pQ@mail.gmail.com>
-References: <20190111215127.57356-1-sboyd@kernel.org> <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v4 1/3] reset: imx7: Add plubming to support multiple IP variants
+Date: Thu, 17 Jan 2019 14:20:42 -0800
+Message-ID: <CAHQ1cqHH=pg9QON-PZhr+DDz_JWOUYkzxwcb+xdWvnmB5US8+w@mail.gmail.com>
+References: <20181220010700.8598-1-andrew.smirnov@gmail.com>
+ <20181220010700.8598-2-andrew.smirnov@gmail.com> <1547745380.4009.18.camel@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <git-owner@vger.kernel.org>
-In-Reply-To: <16335abe-5e7e-fd7a-25f4-373f94e176e1@gmail.com>
-Sender: git-owner@vger.kernel.org
-To: Alban Gruin <alban.gruin@gmail.com>
-Cc: Stephen Boyd <sboyd@kernel.org>, git@vger.kernel.org, Adrian Johnson <ajohnson@redneon.com>, William Duclot <william.duclot@ensimag.grenoble-inp.fr>, Johannes Sixt <j6t@kdbg.org>, Matthieu Moy <matthieu.moy@grenoble-inp.fr>, devicetree@vger.kernel.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1547745380.4009.18.camel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 13, 2019 at 3:26 PM Alban Gruin <alban.gruin@gmail.com> wrote:
+On Thu, Jan 17, 2019 at 9:16 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
 >
-> Hi Stephen,
->
-> thank you for your patch.  I left a few comments below.
->
-> Le 11/01/2019 =C3=A0 22:51, Stephen Boyd a =C3=A9crit :
-> > The Linux kernel receives many patches to the devicetree files each
-> > release. The hunk header for those patches typically show nothing,
-> > making it difficult to figure out what node is being modified without
-> > applying the patch or opening the file and seeking to the context. Let'=
-s
-> > add a builtin 'dts' pattern to git so that users can get better diff
-> > output on dts files when they use the diff=3Ddts driver.
+> On Wed, 2018-12-19 at 17:06 -0800, Andrey Smirnov wrote:
+> > In order to enable supporting i.MX8MQ with this driver, convert it to
+> > expect variant specific bits to be passed via driver data.
 > >
-> > The regex has been constructed based on the spec at devicetree.org[1]
-> >
-> > [1] https://github.com/devicetree-org/devicetree-specification/releases=
-/latest
-> >
-> > Cc: Rob Herring <robh+dt@kernel.org>
-> > Signed-off-by: Stephen Boyd <sboyd@kernel.org>
+> > Cc: p.zabel@pengutronix.de
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: cphealy@gmail.com
+> > Cc: l.stach@pengutronix.de
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 > > ---
-> >  Documentation/gitattributes.txt |  2 ++
-> >  t/t4018-diff-funcname.sh        |  1 +
-> >  t/t4018/dts-labels              |  8 +++++++
-> >  t/t4018/dts-node-unitless       |  8 +++++++
-> >  t/t4018/dts-nodes               |  8 +++++++
-> >  t/t4018/dts-reference           |  8 +++++++
-> >  t/t4034-diff-words.sh           |  1 +
-> >  t/t4034/dts/expect              | 37 +++++++++++++++++++++++++++++++++
-> >  t/t4034/dts/post                | 32 ++++++++++++++++++++++++++++
-> >  t/t4034/dts/pre                 | 32 ++++++++++++++++++++++++++++
-> >  userdiff.c                      |  9 ++++++++
-> >  11 files changed, 146 insertions(+)
-> >  create mode 100644 t/t4018/dts-labels
-> >  create mode 100644 t/t4018/dts-node-unitless
-> >  create mode 100644 t/t4018/dts-nodes
-> >  create mode 100644 t/t4018/dts-reference
-> >  create mode 100644 t/t4034/dts/expect
-> >  create mode 100644 t/t4034/dts/post
-> >  create mode 100644 t/t4034/dts/pre
+> >  drivers/reset/reset-imx7.c | 62 +++++++++++++++++++++++++++-----------
+> >  1 file changed, 45 insertions(+), 17 deletions(-)
 > >
-> > -%<-
-> > diff --git a/userdiff.c b/userdiff.c
-> > index 97007abe5b16..2bc964e11089 100644
-> > --- a/userdiff.c
-> > +++ b/userdiff.c
-> > @@ -23,6 +23,15 @@ IPATTERN("ada",
-> >        "[a-zA-Z][a-zA-Z0-9_]*"
-> >        "|[-+]?[0-9][0-9#_.aAbBcCdDeEfF]*([eE][+-]?[0-9_]+)?"
-> >        "|=3D>|\\.\\.|\\*\\*|:=3D|/=3D|>=3D|<=3D|<<|>>|<>"),
-> > +PATTERNS("dts",
-> > +      /* Node name (with optional label and unit address) */
-> > +      "^[ \t]*((([a-zA-Z_][a-zA-Z0-9_]*: )?[a-zA-Z][a-zA-Z0-9,._+-]*(@=
-[a-zA-Z0-9,._+-]+)?"
+> > diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
+> > index 77911fa8f31d..3a36d5863891 100644
+> > --- a/drivers/reset/reset-imx7.c
+> > +++ b/drivers/reset/reset-imx7.c
+> > @@ -17,14 +17,29 @@
+> >
+> >  #include <linux/mfd/syscon.h>
+> >  #include <linux/mod_devicetable.h>
+> > +#include <linux/of_device.h>
+> >  #include <linux/platform_device.h>
+> >  #include <linux/reset-controller.h>
+> >  #include <linux/regmap.h>
+> >  #include <dt-bindings/reset/imx7-reset.h>
+> >
+> > +struct imx7_src_signal {
+> > +     unsigned int offset, bit;
+> > +};
+> > +
+> > +struct imx7_src;
+> > +
+> > +struct imx7_src_variant {
+> > +     const struct imx7_src_signal *signals;
+> > +     unsigned int signals_num;
+> > +     unsigned int (*prepare)(struct imx7_src *imx7src, unsigned long id,
+> > +                             bool assert);
 >
-> From the spec, label and node names =E2=80=9Cshall be [between] 1 to 31
-> characters in length=E2=80=9D.  It=E2=80=99s not enforced here, and I gue=
-ss it=E2=80=99s not
-> really git=E2=80=99s job to check for this kind of rule.  Others may disa=
-gree
-> with me, though.
+> Instead of adding a function pointer indirection, I'd prefer separate
+> imx7_reset_ops and imx8m_reset_ops set by the variant, see below.
+>
+> > +};
+> > +
+> >  struct imx7_src {
+> >       struct reset_controller_dev rcdev;
+> >       struct regmap *regmap;
+> > +     const struct imx7_src_variant *variant;
+>
+> This could then replaced with a direct pointer to the respective signals
+> array.
+>
+> >  };
+> >
+> >  enum imx7_src_registers {
+> > @@ -39,10 +54,6 @@ enum imx7_src_registers {
+> >       SRC_DDRC_RCR            = 0x1000,
+> >  };
+> >
+> > -struct imx7_src_signal {
+> > -     unsigned int offset, bit;
+> > -};
+> > -
+> >  static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
+> >       [IMX7_RESET_A7_CORE_POR_RESET0] = { SRC_A7RCR0, BIT(0) },
+> >       [IMX7_RESET_A7_CORE_POR_RESET1] = { SRC_A7RCR0, BIT(1) },
+> > @@ -72,17 +83,11 @@ static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
+> >       [IMX7_RESET_DDRC_CORE_RST]      = { SRC_DDRC_RCR, BIT(1) },
+> >  };
+> >
+> > -static struct imx7_src *to_imx7_src(struct reset_controller_dev *rcdev)
+> > +static unsigned int
+> > +imx7_src_prepare(struct imx7_src *imx7src, unsigned long id, bool assert)
+> >  {
+> > -     return container_of(rcdev, struct imx7_src, rcdev);
+> > -}
+> > -
+> > -static int imx7_reset_set(struct reset_controller_dev *rcdev,
+> > -                       unsigned long id, bool assert)
+> > -{
+> > -     struct imx7_src *imx7src = to_imx7_src(rcdev);
+> > -     const struct imx7_src_signal *signal = &imx7_src_signals[id];
+> > -     unsigned int value = assert ? signal->bit : 0;
+> > +     const unsigned int bit = imx7src->variant->signals[id].bit;
+> > +     unsigned int value = assert ? bit : 0;
+> >
+> >       switch (id) {
+> >       case IMX7_RESET_PCIEPHY:
+> > @@ -95,10 +100,32 @@ static int imx7_reset_set(struct reset_controller_dev *rcdev,
+> >               break;
+> >
+> >       case IMX7_RESET_PCIE_CTRL_APPS_EN:
+> > -             value = (assert) ? 0 : signal->bit;
+> > +             value = assert ? 0 : bit;
+> >               break;
+> >       }
+> >
+> > +     return value;
+> > +}
+>
+> Instead of having a common imx7_reset_set and then calling the custom
+> .prepare() through a function pointer, I'd suggest to have custom
+> imx7_reset_set and imx8m_reset_set functions that contain the code from
+> .prepare() and then call a common function to do the actual register
+> access.
+>
 
-The spec does say 31 characters, but that's never been enforced. So,
-of course, there are occurrences in the wild (though maybe they were
-just property names, not node names). In any case, we plan to change
-the spec to increase the size. To what, I don't know.
+OK, makes sense, will give it a spin in v5.
 
-Rob
+Thanks,
+Andrey Smirnov
