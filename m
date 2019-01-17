@@ -1,261 +1,117 @@
-From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
-Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
- driver
-Date: Thu, 17 Jan 2019 22:10:51 +0100
-Message-ID: <8dfa2854-2814-6874-ab8e-1858e9a18acf@gmail.com>
-References: <20190114211723.11186-1-dmurphy@ti.com>
- <20190114211723.11186-2-dmurphy@ti.com>
- <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
- <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
- <86299268-3202-814a-134b-04bd2170faab@ti.com>
+From: Kevin Hilman <khilman@baylibre.com>
+Subject: Re: [PatchV2 1/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy regulator power failed warning
+Date: Thu, 17 Jan 2019 13:14:41 -0800
+Message-ID: <7hy37j9ebi.fsf@baylibre.com>
+References: <20190113153022.5040-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86299268-3202-814a-134b-04bd2170faab@ti.com>
-Content-Language: en-US
+In-Reply-To: <20190113153022.5040-1-linux.amoon@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Dan Murphy <dmurphy@ti.com>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
+To: Anand Moon <linux.amoon@gmail.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Dan,
+Hi Anand,
 
-On 1/16/19 7:41 PM, Dan Murphy wrote:
-> Hello
-> 
-> On 1/16/19 4:55 AM, Pavel Machek wrote:
->> Hi!
->>
->>> On 1/15/19 4:22 PM, Pavel Machek wrote:
->>>> Hi!
->>>>
->>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
->>>>>> +XX - Do not care ignored by the driver
->>>>>> +RR - is the 8 bit Red LED value
->>>>>> +GG - is the 8 bit Green LED value
->>>>>> +BB - is the 8 bit Blue LED value
->>>>>> +
->>>>>> +Example:
->>>>>> +LED module output 4 of the LP5024 will be a yellow color:
->>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
->>>>>> +
->>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
->>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
->>>>>> +
->>>>>> +LED banked RGBs of the LP5036 will be a white color:
->>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
->>>>>
->>>>> This part with example cans remain in Documentation/leds if you
->>>>>> like.
->>>>
->>>> Does it actually work like that on hardware?
->>>
->>> What?
->>
->> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
->> does it actually produce white? With all the different RGB modules
->> manufacturers can use with lp5024P?
->>
->> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
->> it actually produce yellow, with all the different RGB modules
->> manufacturers can use with lp5024P?
->>
-> 
-> I believe the answer to the general questions is no for any RGB cluster and driver out there.
-> Because if you set the same values on each and every RGB device out there you will get varying shades of the color.
-> But for this device yes the color does appear to be yellow to me versus what was displayed on my monitor by the HSL picker.
-> But everyone interprets colors differently.
-> 
-> If you write the same value for yellow or white on a droid 4 and the N900 do they produce the same color side by side?
-> Most probably not.
-> 
-> As you pointed out the PWM needs to be modified to obtain the correct white color to account for LED and other device constraints.
-> 
-> But we need to take into account the light pipe.  Pools nowadays have RGB LED spot lights in them.  It can
-> be set to white.  On my pool right off the lens the color has a purplish hue to it.  As the light is diffracted into
-> the pool the color becomes white.  The pool is clear.  When I add chemicals to the pool and make it cloudy
-> and turn on the lights the color off the lens is now white.  This is an example on a large scale but the issue
-> scales down to the hand helds and smart home applications.
-> 
-> If the cluster is piped through a flexible optic 0xffffff may produce the "white" you want on its output.
-> 
-> So an expectation of certain color without proper piping based on a single RGB value may be a little unreasonable.
-> There may need to be a way to attenuate the values based on the hardware aspect of the equation ie light pipe (or lack thereof) and LED vendor.
-> So if we write 0xffffff to the RGB driver the driver could adjust the intensity of the individual LEDs based on the diffraction
-> coefficients.
-> 
-> I also think that is an unreasonable expectation here that writing a single value to any LED RGB driver would produce
-> a "rest of the world" absolute color.  Maybe it can produce something similar but not identical.
-> As you indicated in the requirements there is more involved here then just the LED and the values written.
-> The colors should be close but may not be identical.
-> 
-> A 10 year old N900 should not be considered the gold standard for color production due to advancements in LED,
-> light pipe and LED driver technology.
-> The single package RGB clusters on the board I am testing is about the size of a single RGB LED from 10 years ago.
-> 
-> I agree that the interface developed should work on the device but the algorithm derived to obtain the color needs to have
-> a hardware aspect to the calculation.
-> 
->>>> Is it supposed to support "normal" RGB colors as seen on monitors?
->>>
->>> Monitors are not an application for this part.
->>
->> You did not answer the question. When you talk about yellow, is it
->> same yellow the rest of world talks about?
->>
-> 
-> See above.  It is close to what was on my monitor displayed.
-> 
->>>> Because 100% PWM on all channels does not result in white on hardware
->>>> I have.
->>>
->>> I don't know I am usually blinded by the light and have no diffuser over
->>> the LEDs to disperse the light so when I look I see all 3 colors.
->>
->> How can we have useful discussion about colors when you don't see the
->> colors?
->>
->> Place a piece of paper over the LEDs....
->>
-> 
-> Good suggestion for a rough test.
-> 
->>>> But...
->>>>
->>>> I believe we should have a reasonable design before we do something
->>>> like this. There's no guarantee someone will not use lp50xx with just
->>>> the white LEDs for example. How will this work? Plus existing hardware
->>>> already uses three separate LEDs for RGB LED. Why not provide same
->>>> interface?
->>>
->>> Which existing hardware?  Are they using this part?
->>
->> Nokia N900. They are not using this part, but any interface we invent
->> should work there, too.
->>
-> 
-> Yes a common interface would be nice with some sort of hardware tuning coefficient.
-> 
->>> <rant>
->>> Why are we delaying getting the RGB framework or HSV in?
->>> I would rather design against something you want instead of having
->>> everyone complain about every implementation I post.
->>> </rant>
->>
->> Because you insist on creating new kernel interfaces, when existing
->> interfaces work, and are doing that badly.
->>
->> Because your patches are of lower quality than is acceptable for linux
->> kernel.
->>
->> Because you don't seem to be reading the emails.
->>
->> I sent list of requirements for RGB led support. This does not meet
->> them.
->>
-> 
-> Sigh.  You did not answer my question.
-> 
-> Your requirements seem to be centered around monitors but that is only one application of the current
-> RGB LED landscape.
-> 
-> I am willing to work with you on the HSV and adapting the LP50xx part to this framework.
-> Or any RGB framework for that matter.  I still don't agree with the kernel needing to declare colors
->   maybe color capabilities but not specific colors.
+Anand Moon <linux.amoon@gmail.com> writes:
 
-Dan, if you have a bandwidth for LED RGB class implementation
-then please go ahead. It would be good to compare colors produced
-by software HSV->RGB algorithm to what can be achieved with
-LEDn_BRIGHTNESS feature.
+> Override the dr_mode from "host" to "peripheral" for dwc2
+> usb_phy0->usb0 initilization of OTG Micro-B type.
+> Changes fix the below warning for phy poweron failed --> -22
+>
+> Changes fix the initialization of c9000000.usb phy
+>
+> [    1.203900] phy phy-c0000000.phy.0: USB ID detect failed!
+> [    1.208048] phy phy-c0000000.phy.0: phy poweron failed --> -22
+> [    1.213877] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+> [    1.222953] Modules linked in:
+> [    1.225976] CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.0.0-rc1-xc2ml #3
+> [    1.232872] Hardware name: Hardkernel ODROID-C2 (DT)
+> [    1.237794] Workqueue: events deferred_probe_work_func
+> [    1.242878] pstate: 80000005 (Nzcv daif -PAN -UAO)
+> [    1.247623] pc : _regulator_put.part.11+0xf0/0xf8
+> [    1.252280] lr : regulator_put+0x34/0x48
+> [    1.256159] sp : ffff00001176bb00
+> [    1.259437] x29: ffff00001176bb00 x28: 0000000000000000
+> [    1.264698] x27: ffff80007f31beb8 x26: ffff000010eeb7e0
+> [    1.269959] x25: 0000000000000000 x24: 0000000000000009
+> [    1.275220] x23: ffff00001176bbc8 x22: ffff80007ed9d500
+> [    1.280482] x21: ffff0000111bd6c8 x20: ffff80007ed9d700
+> [    1.285743] x19: ffff80007ed9d700 x18: 000000000000006f
+> [    1.291004] x17: 0000000000000000 x16: 0000000000000000
+> [    1.296265] x15: 0000000000000400 x14: 0000000000000400
+> [    1.301527] x13: ff00000000000000 x12: ffffffffffffffff
+> [    1.306788] x11: 0000000000000038 x10: 0000000000000040
+> [    1.312049] x9 : ffff0000111d58b0 x8 : ffff0000111d58a8
+> [    1.317310] x7 : ffff80007ed9db00 x6 : ffff80007ec21b00
+> [    1.322571] x5 : ffff80007f400248 x4 : ffff80007fba9b00
+> [    1.327833] x3 : ffff0000112d9eb8 x2 : ffff80007ec21b00
+> [    1.333094] x1 : 0000000000000000 x0 : 0000000000000001
+> [    1.338356] Call trace:
+> [    1.340773]  _regulator_put.part.11+0xf0/0xf8
+> [    1.345085]  regulator_put+0x34/0x48
+> [    1.348621]  regulator_bulk_free+0x30/0x50
+> [    1.352675]  devm_regulator_bulk_release+0x18/0x20
+> [    1.357421]  release_nodes+0x1b0/0x220
+> [    1.361127]  devres_release_all+0x34/0x50
+> [    1.365094]  really_probe+0xec/0x290
+> [    1.368630]  driver_probe_device+0x54/0xe8
+> [    1.372684]  __device_attach_driver+0xb8/0xe8
+> [    1.376997]  bus_for_each_drv+0x78/0xc8
+> [    1.380792]  __device_attach+0xd4/0x130
+> [    1.384587]  device_initial_probe+0x10/0x18
+> [    1.388727]  bus_probe_device+0x90/0x98
+> [    1.392522]  deferred_probe_work_func+0x6c/0xa0
+> [    1.397010]  process_one_work+0x1e0/0x318
+> [    1.400975]  worker_thread+0x228/0x428
+> [    1.404684]  kthread+0x124/0x128
+> [    1.407876]  ret_from_fork+0x10/0x18
+> [    1.411410] ---[ end trace de5fd1b262c1f56a ]---
+> [    1.416055] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
+> [    1.425123] Modules linked in:
+> [    1.428144] CPU: 1 PID: 44 Comm: kworker/1:1 Tainted: GW 5.0.0-rc1-xc2ml #3
+> [    1.436422] Hardware name: Hardkernel ODROID-C2 (DT)
+> [    1.441340] Workqueue: events deferred_probe_work_func
+>
+> Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
 
-The requirements for LED RGB class as I would see it:
+Minor nit: the shortlog should be in double quotes.
 
-sysfs interface:
+I fixed it up manually, so nothing you need to do, but just for future
+reference.
 
-brightness-model: space separated list of available options:
-- rgb (default):
-   - creates color file with "red green blue" decimal values
-   - creates brightness file
-	a) for devices with hardware support for adjusting color
-            intensity it maps to corresponding register
-         b) for the rest writing any value greater than 0 will result
-            in setting all color registers to max
-- hsv:
-   - creates color file with "h s v" values - it shall
-     use software HSV->RGB algorithm for setting color registers
+This was found by some automated checking recently added to the
+linux-next tree.
 
-- any other custom color ranges defined in DT, but it can be covered
-   later
-- other options?
+Kevin
 
-Best regards,
-Jacek Anaszewski
-
-
-> It was agreed to continue forward with this particular implementation.
-> At least thats what the email (I apparently did not read) stated.
-> 
-> I need to fix the code to use the space separated value as pointed out and shown by Vesa.
-> This will map nicely into this device with the color file as what I implemented is in theory
-> they same code except for the space separated values.
-> 
->>> It is not a normal RGB driver.  The device collates the individual RGB
->>> clusters into a single brightness register and you can modify the intensity of the individual
->>> LEDs via other registers.  If brightness is 0 then the cluster is OFF regardless of the color
->>> set in the individual registers.
->>
->> I understand that. So just set cluster brightness to 255 and you have
->> normal RGB driver you can control with existing interfaces. You don't
->> have to use every feature your hardware has.
->>
-> 
-> The brightness file is available and adjusts the brightness of the RGB cluster.
-> I am not attempting to implement every feature the device has.  But I am attempting to use
-> the basic features that are available and useful.
-> 
->> You did not answer the "what if someone uses this with all white LEDs"
->> question.
->>
-> 
-> Are you asking what if someone places a white LED instead of a RGB on the hardware?
-> Well then they need to go back and have a review of the data sheet and what they are trying to
-> achieve.  That would be a misapplication of the LED driver itself and something software cannot fix.
-> 
-> But if they do determine they want to control these white LEDs with this device
-> then they can ignore the "color" file and control the cluster via the brightness file like we
-> do today.  The color file will only change the intensity of the single output (assuming LED module mode)
-> or the banked output.
-> 
-> If a user wants to place a RGB cluster down on the hardware and have white as the consistent color
-> well then that is fine as the RGB outputs are all set to 0xff and the intensity of the cluster is
-> controlled by the brightness file.  If they cannot achieve the "white" with the default settings then
-> on init they can set the color file once to obtain the "white" color and continue to use the brightness
-> file to control the overall brightness of the cluster.
-> 
-> It was determined in the email chain not to expose a brightness file per output as this device
-> does not lend itself to that convention.
-> 
->> You know what? First, submit driver with similar functionality to
->> existing RGB drivers, using same interface existing drivers are
->> using. When that is accepted, we can talk about extending
->> kernel<->user interfaces.
->>
-> 
-> I could do that but then there is no way for users to have any other color but "white" with this driver.
-> That defeats the purpose of the device itself.
-> 
-> This is why I would rather align the interfaces with what is being proposed so the interfaces won't change only
-> the engine underneath will.
-> 
-> I am not sure if you are aware of this or care but I found this recent blog on this effort:
-> https://www.phoronix.com/scan.php?page=news_item&px=Linux-RGB-LED-Interface
-> See some of the comments.
-> 
-> Dan
-> 
->> Thanks,
->> 									Pavel
->>
-> 
-> 
+> Tested-by: Kevin Hilman <khilman@baylibre.com>
+> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> Cc: Jerome Brunet <jbrunet@baylibre.com>
+> Cc: Neil Armstrong <narmstrong@baylibre.com>
+> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> ---
+> Rebased on Kevin's amlogic/v5.0/fixes branch
+> Changes from patch v1 [0] https://lore.kernel.org/patchwork/patch/1031243/
+> - Split the patch into two part
+> - Fix the commit message
+> - Added Tested by Kevin Hilman
+> ---
+>  arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts | 1 +
+>  1 file changed, 1 insertion(+)
+>
+> diff --git a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> index 1cc9dc68ef00..25a36d117183 100644
+> --- a/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> +++ b/arch/arm64/boot/dts/amlogic/meson-gxbb-odroidc2.dts
+> @@ -302,6 +302,7 @@
+>  
+>  &usb0 {
+>  	status = "okay";
+> +	dr_mode = "peripheral";
+>  };
+>  
+>  &usb1 {
+> -- 
+> 2.20.1
