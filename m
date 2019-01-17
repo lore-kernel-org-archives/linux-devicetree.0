@@ -1,24 +1,22 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
 Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add WCN3990 BT node
-Date: Thu, 17 Jan 2019 13:53:24 -0800
-Message-ID: <20190117215323.GB12955@builder>
+Date: Thu, 17 Jan 2019 13:55:59 -0800
+Message-ID: <20190117215559.GC12955@builder>
 References: <20190117044006.12463-1-bjorn.andersson@linaro.org>
- <aebd3bbb4bb3faac2570244af610b43d@codeaurora.org>
+ <20190117192812.GV261387@google.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <aebd3bbb4bb3faac2570244af610b43d@codeaurora.org>
+In-Reply-To: <20190117192812.GV261387@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Balakrishna Godavarthi <bgodavar@codeaurora.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Kaehlcke <mka@chromium.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed 16 Jan 22:10 PST 2019, Balakrishna Godavarthi wrote:
+On Thu 17 Jan 11:28 PST 2019, Matthias Kaehlcke wrote:
 
-> Hi Anderson,
-> 
-> On 2019-01-17 10:10, Bjorn Andersson wrote:
+> On Wed, Jan 16, 2019 at 08:40:06PM -0800, Bjorn Andersson wrote:
 [..]
 > > +&qup_uart6_default {
 > > +	pinmux {
@@ -29,7 +27,18 @@ On Wed 16 Jan 22:10 PST 2019, Balakrishna Godavarthi wrote:
 > > +	ctsrx {
 > > +		pins = "gpio45", "gpio48";
 > > +		drive-strength = <2>;
+> 
+> CTS and RX are input signals, no need to configure drive strength in
+> this case IIUC.
+> 
+
+Right, didn't think that far when I hacked this up.
+
 > > +		bias-no-pull;
+> 
+> On another SDM845 based device we observe garbage on RX at
+> initialization time, unless we enable a pull-up.
+> 
 > > +	};
 > > +
 > > +	rts {
@@ -37,37 +46,26 @@ On Wed 16 Jan 22:10 PST 2019, Balakrishna Godavarthi wrote:
 > > +		drive-strength = <2>;
 > > +		bias-pull-down;
 > > +	};
-> > +
+> 
+> On our device we don't configure a pull on the lines driven by the
+> AP. I think a pull-down on RTS should be fine though since it matches
+> the pull (during reset) on CTS of the BT module.
+> 
 > > +	tx {
 > > +		pins = "gpio47";
 > > +		drive-strength = <2>;
 > > +		bias-pull-up;
 > > +	};
 > > +};
-> > +
-> >  &qup_uart9_default {
-> >  	pinconf-tx {
-> >  		pins = "gpio4";
 > 
+> Similar to RTS, the pull matches the one on RXD of the BT module.
 > 
-> [Bala]:
->        GPIO 45 is CTS
->        GPIO 46 is RTS
->        GPIO 47 is Tx
->        GPIO 48 is Rx.
+> For reference, this is what we currently use on our device:
 > 
->        Tx & RTS are inputs to APPS processor, bias should be disable as the
-> source i.e. BT chip will pull them up.
->        CTS & RX are outputs from APPS processor, where as CTS is GPIO which
-> need to toggled, so the default state should be pull down.
->              RX is should be pulled up.
->        when TX & RX are pulled high it indicates that the lines are ideal
-> i.e. no data.
-> 
-> Above is just my assumption, not sure whether they work on MTP.
+> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888/3/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
 > 
 
-I will update and verify.
+Thanks, I will update the patch.
 
-Thanks,
+Regards,
 Bjorn
