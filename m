@@ -1,95 +1,65 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcom: sdm845-mtp: Add WCN3990 BT node
-Date: Wed, 16 Jan 2019 20:40:06 -0800
-Message-ID: <20190117044006.12463-1-bjorn.andersson@linaro.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>, Matthias Kaehlcke <mka@chromium.org>
+From: Yunfei Dong <yunfei.dong@mediatek.com>
+Subject: [PATCH v3,
+ 1/3] media: dt-bindings: media: add 'assigned-clocks' to vcodec
+ examples
+Date: Thu, 17 Jan 2019 13:39:18 +0800
+Message-ID: <1547703560-16195-1-git-send-email-yunfei.dong@mediatek.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Tiffany Lin <tiffany.lin@mediatek.com>, Andrew-CT Chen <andrew-ct.chen@mediatek.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yunfei Dong <yunfei.dong@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Qianqian Yan <qianqian.yan@mediatek.com>, Matthias Brugger <matthias.bgg@gmail.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The SDM845 MTP has a WCN3990 Bluetooth chip on UART6, enable this.
+Fix MTK binding document for MT8173 dtsi changed in order
+to use standard CCF interface.
+MT8173 SoC from Mediatek.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Signed-off-by: Yunfei Dong <yunfei.dong@mediatek.com>
+Signed-off-by: Qianqian Yan <qianqian.yan@mediatek.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845-mtp.dts | 44 +++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+ .../devicetree/bindings/media/mediatek-vcodec.txt   | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-index af8c6a2445a2..f65d5a674103 100644
---- a/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-+++ b/arch/arm64/boot/dts/qcom/sdm845-mtp.dts
-@@ -17,6 +17,7 @@
+diff --git a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+index 2a615d84a682..b6b5dde6abd8 100644
+--- a/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
++++ b/Documentation/devicetree/bindings/media/mediatek-vcodec.txt
+@@ -66,6 +66,15 @@ vcodec_dec: vcodec@16000000 {
+                   "vencpll",
+                   "venc_lt_sel",
+                   "vdec_bus_clk_src";
++    assigned-clocks = <&topckgen CLK_TOP_VENC_LT_SEL>,
++                      <&topckgen CLK_TOP_CCI400_SEL>,
++                      <&topckgen CLK_TOP_VDEC_SEL>,
++                      <&apmixedsys CLK_APMIXED_VCODECPLL>,
++                      <&apmixedsys CLK_APMIXED_VENCPLL>;
++    assigned-clock-parents = <&topckgen CLK_TOP_VCODECPLL_370P5>,
++                             <&topckgen CLK_TOP_UNIVPLL_D2>,
++                             <&topckgen CLK_TOP_VCODECPLL>;
++    assigned-clock-rates = <0>, <0>, <0>, <1482000000>, <800000000>;
+   };
  
- 	aliases {
- 		serial0 = &uart9;
-+		hsuart0 = &uart6;
- 	};
- 
- 	chosen {
-@@ -357,6 +358,10 @@
- 	clock-frequency = <400000>;
- };
- 
-+&qupv3_id_0 {
-+	status = "okay";
-+};
-+
- &qupv3_id_1 {
- 	status = "okay";
- };
-@@ -373,6 +378,20 @@
- 	cd-gpios = <&tlmm 126 GPIO_ACTIVE_LOW>;
- };
- 
-+&uart6 {
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "qcom,wcn3990-bt";
-+
-+		vddio-supply = <&vreg_s4a_1p8>;
-+		vddxo-supply = <&vreg_l7a_1p8>;
-+		vddrf-supply = <&vreg_l17a_1p3>;
-+		vddch0-supply = <&vreg_l25a_3p3>;
-+		max-speed = <3200000>;
-+	};
-+};
-+
- &uart9 {
- 	status = "okay";
- };
-@@ -470,6 +489,31 @@
- 	};
- };
- 
-+&qup_uart6_default {
-+	pinmux {
-+		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-+		function = "qup6";
-+	};
-+
-+	ctsrx {
-+		pins = "gpio45", "gpio48";
-+		drive-strength = <2>;
-+		bias-no-pull;
-+	};
-+
-+	rts {
-+		pins = "gpio46";
-+		drive-strength = <2>;
-+		bias-pull-down;
-+	};
-+
-+	tx {
-+		pins = "gpio47";
-+		drive-strength = <2>;
-+		bias-pull-up;
-+	};
-+};
-+
- &qup_uart9_default {
- 	pinconf-tx {
- 		pins = "gpio4";
+   vcodec_enc: vcodec@18002000 {
+@@ -105,4 +114,8 @@ vcodec_dec: vcodec@16000000 {
+                   "venc_sel",
+                   "venc_lt_sel_src",
+                   "venc_lt_sel";
++    assigned-clocks = <&topckgen CLK_TOP_VENC_SEL>,
++                      <&topckgen CLK_TOP_VENC_LT_SEL>;
++    assigned-clock-parents = <&topckgen CLK_TOP_VENCPLL_D2>,
++                             <&topckgen CLK_TOP_UNIVPLL1_D2>;
+   };
 -- 
-2.18.0
+2.20.1
