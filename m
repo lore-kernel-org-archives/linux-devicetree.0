@@ -1,37 +1,49 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 05/11] arm64: dts: renesas: r8a774c0-cat874: Add
- pincontrol support to scif2
-Date: Thu, 17 Jan 2019 12:06:39 +0100
-Message-ID: <CAMuHMdUiiVJgMHmZ5UKLXNXd7D=U8Dyc0ZYgvVTVEgspFLaPYg@mail.gmail.com>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com> <1547663874-29411-6-git-send-email-fabrizio.castro@bp.renesas.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
+Subject: [PATCH v3/RFT 0/2] net: phy: assert the phy reset during suspended if phy is not attached
+Date: Thu, 17 Jan 2019 20:05:07 +0900
+Message-ID: <1547723109-28792-1-git-send-email-yoshihiro.shimoda.uh@renesas.com>
 Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <1547663874-29411-6-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysof>
+To: andrew@lunn.ch, f.fainelli@gmail.com, davem@davemloft.net
+Cc: netdev@vger.kernel.org, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Yoshihiro Shimoda <yoshihiro.shimoda.uh@renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 7:38 PM Fabrizio Castro
-<fabrizio.castro@bp.renesas.com> wrote:
-> From: Biju Das <biju.das@bp.renesas.com>
->
-> This patch adds pincontrol support to scif2.
->
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+This patch series is for R-Car Gen3 Salvator-XS boards. If we do
+the following method, the phy cannot link up correctly.
 
-Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+ 1) Kernel boots by using initramfs.
+ --> No open the nic, so phy_device_register() and phy_probe()
+     deasserts the reset.
+ 2) Kernel enters the suspend.
+ --> So, keep the reset signal as deassert.
+ --> On R-Car Salvator-XS board, unfortunately, the board power is
+     turned off.
+ 3) Kernel returns from suspend.
+ 4) ifconfig eth0 up
+ --> Then, since edge signal of the reset doesn't happen,
+     it cannot link up.
+ 5) ifconfig eth0 down
+ 6) ifconfig eth0 up
+ --> In this case, it can link up.
 
-Gr{oetje,eeting}s,
+Changes from v2:
+ - Rebase on the latest net-next.
+ - More generic code instead of micrel phy only code
+   (https://www.spinics.net/lists/netdev/msg540462.html).
+   So, I marked this patch series as RFT.
 
-                        Geert
+Changes from v1 (as RFC):
+ - No remove the current code of phy_device.c to avoid any side effects.
+ - Fix the mdio_bus_phy_resume() in phy_device.c.
+ - Add toggling the phy reset in micrel.c if the PHY is not attached.
+
+
+Yoshihiro Shimoda (2):
+  net: phy: Fix not to call phy_resume() if PHY is not attached
+  net: phy: assert the phy reset during suspended if phy is not attached
+
+ drivers/net/phy/phy_device.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+1.9.1
