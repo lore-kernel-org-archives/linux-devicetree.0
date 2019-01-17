@@ -1,71 +1,84 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH] arm64: dts: qcom: sdm845-mtp: Add WCN3990 BT node
-Date: Thu, 17 Jan 2019 13:55:59 -0800
-Message-ID: <20190117215559.GC12955@builder>
-References: <20190117044006.12463-1-bjorn.andersson@linaro.org>
- <20190117192812.GV261387@google.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: frowand.list@gmail.com
+Subject: [PATCH RESEND] of: add dtc annotations functionality to dtx_diff
+Date: Thu, 17 Jan 2019 14:01:14 -0800
+Message-ID: <1547762474-7832-1-git-send-email-frowand.list@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190117192812.GV261387@google.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Balakrishna Godavarthi <bgodavar@codeaurora.org>
+To: Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Julia Lawall <julia.lawall@lip6.fr>
 List-Id: devicetree@vger.kernel.org
 
-On Thu 17 Jan 11:28 PST 2019, Matthias Kaehlcke wrote:
+From: Frank Rowand <frank.rowand@sony.com>
 
-> On Wed, Jan 16, 2019 at 08:40:06PM -0800, Bjorn Andersson wrote:
-[..]
-> > +&qup_uart6_default {
-> > +	pinmux {
-> > +		pins = "gpio45", "gpio46", "gpio47", "gpio48";
-> > +		function = "qup6";
-> > +	};
-> > +
-> > +	ctsrx {
-> > +		pins = "gpio45", "gpio48";
-> > +		drive-strength = <2>;
-> 
-> CTS and RX are input signals, no need to configure drive strength in
-> this case IIUC.
-> 
+Add -T and --annotations command line arguments to dtx_diff.  These
+arguments will be passed through to dtc.  dtc will then add source
+location annotations to its output.
 
-Right, didn't think that far when I hacked this up.
+Signed-off-by: Frank Rowand <frank.rowand@sony.com>
+---
 
-> > +		bias-no-pull;
-> 
-> On another SDM845 based device we observe garbage on RX at
-> initialization time, unless we enable a pull-up.
-> 
-> > +	};
-> > +
-> > +	rts {
-> > +		pins = "gpio46";
-> > +		drive-strength = <2>;
-> > +		bias-pull-down;
-> > +	};
-> 
-> On our device we don't configure a pull on the lines driven by the
-> AP. I think a pull-down on RTS should be fine though since it matches
-> the pull (during reset) on CTS of the BT module.
-> 
-> > +	tx {
-> > +		pins = "gpio47";
-> > +		drive-strength = <2>;
-> > +		bias-pull-up;
-> > +	};
-> > +};
-> 
-> Similar to RTS, the pull matches the one on RXD of the BT module.
-> 
-> For reference, this is what we currently use on our device:
-> 
-> https://chromium-review.googlesource.com/c/chromiumos/third_party/kernel/+/1391888/3/arch/arm64/boot/dts/qcom/sdm845-cheza.dtsi
-> 
+If dtx_diff is provided with a single devicetree source file then
+that source file will be compiled, with all appropriate includes
+and pre-processing, and the result will be output as source.  This
+provides a convenient mechanism to see what the devicetree looks
+like after all processing and replacements occur.  The
+--annotations argument will cause dtc to report information about
+where the source was located for each line of the output.
 
-Thanks, I will update the patch.
+ scripts/dtc/dtx_diff | 13 ++++++++++++-
+ 1 file changed, 12 insertions(+), 1 deletion(-)
 
-Regards,
-Bjorn
+diff --git a/scripts/dtc/dtx_diff b/scripts/dtc/dtx_diff
+index 8c4fbad2055e..0d8572008729 100755
+--- a/scripts/dtc/dtx_diff
++++ b/scripts/dtc/dtx_diff
+@@ -21,6 +21,7 @@ Usage:
+         diff DTx_1 and DTx_2
+ 
+ 
++      --annotate    synonym for -T
+        -f           print full dts in diff (--unified=99999)
+        -h           synonym for --help
+        -help        synonym for --help
+@@ -28,6 +29,7 @@ Usage:
+        -s SRCTREE   linux kernel source tree is at path SRCTREE
+                         (default is current directory)
+        -S           linux kernel source tree is at root of current git repo
++       -T           Annotate output .dts with input source file and line (-T -T for more details)
+        -u           unsorted, do not sort DTx
+ 
+ 
+@@ -174,6 +176,7 @@ compile_to_dts() {
+ 
+ # -----  start of script
+ 
++annotate=""
+ cmd_diff=0
+ diff_flags="-u"
+ dtx_file_1=""
+@@ -208,6 +211,14 @@ while [ $# -gt 0 ] ; do
+ 		shift
+ 		;;
+ 
++	-T | --annotate )
++		if [ "${annotate}"  = "" ] ; then
++			annotate="-T"
++		elif [ "${annotate}"  = "-T" ] ; then
++			annotate="-T -T"
++		fi
++		shift
++		;;
+ 	-u )
+ 		dtc_sort=""
+ 		shift
+@@ -327,7 +338,7 @@ cpp_flags="\
+ DTC="\
+ 	${DTC}                                     \
+ 	-i ${srctree}/scripts/dtc/include-prefixes \
+-	-O dts -qq -f ${dtc_sort} -o -"
++	-O dts -qq -f ${dtc_sort} ${annotate} -o -"
+ 
+ 
+ # -----  do the diff or decompile
+-- 
+Frank Rowand <frank.rowand@sony.com>
