@@ -1,101 +1,56 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: [PATCH v3 2/2] hwmon: (ina3221) Implement ti,single-shot DT property
-Date: Thu, 17 Jan 2019 15:12:53 -0800
-Message-ID: <20190117231253.8828-3-nicoleotsuka@gmail.com>
-References: <20190117231253.8828-1-nicoleotsuka@gmail.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117231253.8828-1-nicoleotsuka@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: jdelvare@suse.com, linux@roeck-us.net
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [PATCH v8] arm64: dts: sdm845: Add gpu and gmu
+ device nodes
+Date: Thu, 17 Jan 2019 15:15:18 -0800
+Message-ID: <CAD=FV=U0_wi8mJNOXjsPdS7Yrmvbvw1+B20t-=KzDG+tnD8HUw@mail.gmail.com>
+References: <1547661809-31184-1-git-send-email-jcrouse@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1547661809-31184-1-git-send-email-jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jordan Crouse <jcrouse-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Andy Gross <andy.gross-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Bjorn Andersson <bjorn.andersson-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Rajendra Nayak <rnayak-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, David Brown <david.brown-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-By default, ina3221, as a hardware monitor, continuously measures
-the inputs and generates corresponding data. However, for battery
-powered devices, this mode might be power consuming.
-
-The DT binding doc is updated with a new boolean type property to
-allow changing the default operating mode from consuming mode to
-single-shot mode, which will measure input on demand and then shut
-down to save power.
-
-So this patch implements the DT property accordingly.
-
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-Changelog
-v2->v3:
- * Dropped useless if condition by using the return value directly.
-v1->v2:
- * Replaced the useless mode defines with a boolean variable.
-
- drivers/hwmon/ina3221.c | 19 +++++++++++++++++++
- 1 file changed, 19 insertions(+)
-
-diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-index e90ccac8bebb..a1e94d5d1e41 100644
---- a/drivers/hwmon/ina3221.c
-+++ b/drivers/hwmon/ina3221.c
-@@ -111,6 +111,7 @@ struct ina3221_input {
-  * @inputs: Array of channel input source specific structures
-  * @lock: mutex lock to serialize sysfs attribute accesses
-  * @reg_config: Register value of INA3221_CONFIG
-+ * @single_shot: running in single-shot operating mode
-  */
- struct ina3221_data {
- 	struct device *pm_dev;
-@@ -119,6 +120,8 @@ struct ina3221_data {
- 	struct ina3221_input inputs[INA3221_NUM_CHANNELS];
- 	struct mutex lock;
- 	u32 reg_config;
-+
-+	bool single_shot;
- };
- 
- static inline bool ina3221_is_enabled(struct ina3221_data *ina, int channel)
-@@ -188,6 +191,11 @@ static int ina3221_read_in(struct device *dev, u32 attr, int channel, long *val)
- 		if (!ina3221_is_enabled(ina, channel))
- 			return -ENODATA;
- 
-+		/* Write CONFIG register to trigger a single-shot measurement */
-+		if (ina->single_shot)
-+			regmap_write(ina->regmap, INA3221_CONFIG,
-+				     ina->reg_config);
-+
- 		ret = ina3221_wait_for_data(ina);
- 		if (ret)
- 			return ret;
-@@ -232,6 +240,11 @@ static int ina3221_read_curr(struct device *dev, u32 attr,
- 		if (!ina3221_is_enabled(ina, channel))
- 			return -ENODATA;
- 
-+		/* Write CONFIG register to trigger a single-shot measurement */
-+		if (ina->single_shot)
-+			regmap_write(ina->regmap, INA3221_CONFIG,
-+				     ina->reg_config);
-+
- 		ret = ina3221_wait_for_data(ina);
- 		if (ret)
- 			return ret;
-@@ -617,6 +630,8 @@ static int ina3221_probe_from_dt(struct device *dev, struct ina3221_data *ina)
- 	if (!np)
- 		return 0;
- 
-+	ina->single_shot = of_property_read_bool(np, "ti,single-shot");
-+
- 	for_each_child_of_node(np, child) {
- 		ret = ina3221_probe_child_from_dt(dev, child, ina);
- 		if (ret)
-@@ -666,6 +681,10 @@ static int ina3221_probe(struct i2c_client *client,
- 	/* The driver will be reset, so use reset value */
- 	ina->reg_config = INA3221_CONFIG_DEFAULT;
- 
-+	/* Clear continuous bit to use single-shot mode */
-+	if (ina->single_shot)
-+		ina->reg_config &= ~INA3221_CONFIG_MODE_CONTINUOUS;
-+
- 	/* Disable channels if their inputs are disconnected */
- 	for (i = 0; i < INA3221_NUM_CHANNELS; i++) {
- 		if (ina->inputs[i].disconnected)
--- 
-2.17.1
+SGksCgpPbiBXZWQsIEphbiAxNiwgMjAxOSBhdCAxMDowMyBBTSBKb3JkYW4gQ3JvdXNlIDxqY3Jv
+dXNlQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiArICAgICAgICAgICAgICAgZ3B1QDUwMDAwMDAg
+ewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAicWNvbSxhZHJlbm8tNjMw
+LjIiLCAicWNvbSxhZHJlbm8iOwo+ICsgICAgICAgICAgICAgICAgICAgICAgICNzdHJlYW0taWQt
+Y2VsbHMgPSA8MTY+Owo+ICsKPiArICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8MHg1MDAw
+MDAwIDB4NDAwMDA+LCA8MHg1MDllMDAwIDB4MTA+OwoKVGhpcyB3aWxsIG5vdyBuZWVkIHRvIGJl
+IGFkanVzdGVkIHRvOgoKcmVnID0gPDAgMHgwNTAwMDAwMCAwIDB4NDAwMDA+LCA8MCAweDA1MDll
+MDAwIDAgMHgxMD47CgpUaGlzIGZpeGVzIHRoaW5ncyB1cCB0byBkZWFsIHdpdGggdGhlIHBhdGNo
+ICgiYXJtNjQ6IGR0czogcWNvbToKc2RtODQ1OiBJbmNyZWFzZSBhZGRyZXNzIGFuZCBzaXplIGNl
+bGxzIGZvciBzb2MiKSwgQUtBOgotIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gv
+MTA3Njc1MTEvCi0gaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MDExNzA0Mjk0MC4yNTQ4
+Ny0yLWJqb3JuLmFuZGVyc3NvbkBsaW5hcm8ub3JnCgoKPiArICAgICAgICAgICAgICAgYWRyZW5v
+X3NtbXU6IGlvbW11QDUwNDAwMDAgewo+ICsgICAgICAgICAgICAgICAgICAgICAgIGNvbXBhdGli
+bGUgPSAicWNvbSxzZG04NDUtc21tdS12MiIsICJxY29tLHNtbXUtdjIiOwo+ICsgICAgICAgICAg
+ICAgICAgICAgICAgIHJlZyA9IDwweDUwNDAwMDAgMHgxMDAwMD47CgpUaGlzIG9uZSB0bzoKCnJl
+ZyA9IDwwIDB4MDUwNDAwMDAgMCAweDEwMDAwPjsKCgo+ICsgICAgICAgICAgICAgICBnbXU6IGdt
+dUA1MDZhMDAwIHsKPiArICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlPSJxY29tLGFk
+cmVuby1nbXUtNjMwLjIiLCAicWNvbSxhZHJlbm8tZ211IjsKPiArCj4gKyAgICAgICAgICAgICAg
+ICAgICAgICAgcmVnID0gPDB4NTA2YTAwMCAweDMwMDAwPiwKPiArICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIDwweGIyODAwMDAgMHgxMDAwMD4sCj4gKyAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICA8MHhiNDgwMDAwIDB4MTAwMDA+OwoKVGhpcyBvbmUgdG86CgpyZWcgPSA8MCAw
+eDA1MDZhMDAwIDAgMHgzMDAwMD4sCiAgICAgICAgPDAgMHgwYjI4MDAwMCAwIDB4MTAwMDA+LAog
+ICAgICAgIDwwIDB4MGI0ODAwMDAgMCAweDEwMDAwPjsKCgpJbiB0aGUgZW1haWw6CgpodHRwczov
+L2xrbWwua2VybmVsLm9yZy9yLzIwMTkwMTE3MTkyOTU1LjE2NTE1LTEtYmpvcm4uYW5kZXJzc29u
+QGxpbmFyby5vcmcKCi4uLkJqb3JuIHByb3ZpZGVkIGEgbGluayB0byBhIGdpdGh1YiB0cmVlIHRo
+YXQgc2hvdWxkIGJlIE9LIHRvIHVzZSBhcwphIGJhc2lzIGZvciBzZW5kaW5nIGEgbmV3IHBhdGNo
+LiAgU3BlY2lmaWNhbGx5CjxodHRwczovL2dpdGh1Yi5jb20vYW5kZXJzc29uL2tlcm5lbC9jb21t
+aXRzL2Zvci1hbmR5L2FybTY0LWZvci01LjE+LgpUaGF0IHRyZWUgbm90IG9ubHkgaGFzIHRoZSBh
+ZGRyZXNzLWNlbGxzIC8gc2l6ZS1jZWxscyBjaGFuZ2UgYnV0IGFsc28KaGFzIGdwdWNjLgoKCi1E
+b3VnCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCkZyZWVk
+cmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczov
+L2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
