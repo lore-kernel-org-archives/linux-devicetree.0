@@ -1,81 +1,37 @@
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v3 1/4] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Thu, 17 Jan 2019 14:06:17 +0300
-Message-ID: <15fb900e-c665-8ebd-b2cc-54f47cc35734@cogentembedded.com>
-References: <1547709348-17506-1-git-send-email-min.guo@mediatek.com>
- <1547709348-17506-2-git-send-email-min.guo@mediatek.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 05/11] arm64: dts: renesas: r8a774c0-cat874: Add
+ pincontrol support to scif2
+Date: Thu, 17 Jan 2019 12:06:39 +0100
+Message-ID: <CAMuHMdUiiVJgMHmZ5UKLXNXd7D=U8Dyc0ZYgvVTVEgspFLaPYg@mail.gmail.com>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com> <1547663874-29411-6-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547709348-17506-2-git-send-email-min.guo@mediatek.com>
-Content-Language: en-MW
-Sender: linux-kernel-owner@vger.kernel.org
-To: min.guo@mediatek.com, Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1547663874-29411-6-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysof>
 List-Id: devicetree@vger.kernel.org
 
-Hello!
+On Wed, Jan 16, 2019 at 7:38 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> From: Biju Das <biju.das@bp.renesas.com>
+>
+> This patch adds pincontrol support to scif2.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-On 01/17/2019 10:15 AM, min.guo@mediatek.com wrote:
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
 
-> From: Min Guo <min.guo@mediatek.com>
-> 
-> This adds support for MediaTek musb controller in
-> host, peripheral and otg mode.
-> 
-> Signed-off-by: Min Guo <min.guo@mediatek.com>
-> ---
->  .../devicetree/bindings/usb/mediatek,musb.txt      | 43 ++++++++++++++++++++++
->  1 file changed, 43 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> new file mode 100644
-> index 0000000..3e3f671
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> @@ -0,0 +1,43 @@
-> +MediaTek musb DRD/OTG controller
-> +-------------------------------------------
-> +
-> +Required properties:
-> + - compatible      : should be "mediatek,mtk-musb"
-> + - reg             : specifies physical base address and size of
-> +   the registers
+Gr{oetje,eeting}s,
 
-   I'd indent it more to align with "specifies", else it looks weird.
+                        Geert
 
-> + - interrupts      : interrupt used by musb controller
-> + - interrupt-names : must be "mc"
-> + - phys            : PHY specifier for the OTG phy
-> + - dr_mode         : should be one of "host", "peripheral" or "otg",
-> +   refer to usb/generic.txt
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
 
-  Same here...
-
-> + - clocks          : a list of phandle + clock-specifier pairs, one for
-> +   each entry in clock-names
-
-   Here...
-
-> + - clock-names     : must contain "main", "mcu", "univpll"
-> +   for clocks of controller
-
-  And here.
-
-> +
-> +Optional properties:
-> + - extcon : external connector for VBUS and IDPIN changes detection,
-
-   ID pin, maybe?
-
-> +   needed when supports dual-role mode.
-> + - vbus-supply : reference to the VBUS regulator, needed when supports
-> +   dual-role mode.
-> + - power-domains   : a phandle to USB power domain node to control USB's
-> +   MTCMOS
-[...]
-
-MBR, Sergei
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
