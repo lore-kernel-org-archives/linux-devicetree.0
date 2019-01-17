@@ -1,84 +1,85 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
-Date: Thu, 17 Jan 2019 13:38:15 -0800
-Message-ID: <87tvi73qyg.fsf@anholt.net>
-References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: Re: [PATCH] arm64: dts: meson: fix g12a buses
+Date: Thu, 17 Jan 2019 22:45:18 +0100
+Message-ID: <0dcd4c655bd9477d7adf2c6e32a1f0ebab18cee0.camel@baylibre.com>
+References: <20190116165236.8330-1-jbrunet@baylibre.com>
+         <CAFBinCBFge2tir-MXw+ojTxzW+7n9Uf4FzCahrw0MDzAYV2SSg@mail.gmail.com>
+         <f7289814e316ad5879848fb8c379db396f615828.camel@baylibre.com>
+         <CAFBinCDhryOWHmRKp7GhWp2O+NpJziEgHoUE4HKVitTPDMrrBQ@mail.gmail.com>
+         <ba1f56258e7873041a0f75996e376170563c9e6e.camel@baylibre.com>
+         <CAFBinCAdJu2C-LWspiHR4vVr=PUD2HGNi4zz+CSJP96ZE4GoJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1885300872=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190117111918.31759-1-tomi.valkeinen@ti.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCAdJu2C-LWspiHR4vVr=PUD2HGNi4zz+CSJP96ZE4GoJw@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, jianxin.pan@amlogic.com
 List-Id: devicetree@vger.kernel.org
 
---===============1885300872==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Thu, 2019-01-17 at 22:20 +0100, Martin Blumenstingl wrote:
+> On Thu, Jan 17, 2019 at 9:39 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+> > On Thu, 2019-01-17 at 21:27 +0100, Martin Blumenstingl wrote:
+> > > OK, but we had incorrect documentation in the past. did you check this
+> > > with someone from Amlogic?
+> > > 
+> > > I'm curious because there seem to be two different approaches here:
+> > > 1) hiubus name and offsets are being fixed within this patch
+> > > 2) aobus is being dropped here and re-introduced with a different name
+> > > later
+> > > on
+> > > 
+> > 
+> > because hiu exist and aobus does not, for which both the name and size was
+> > wrong
+> > 
+> > > approach 1) can also be used for the "rti" region (at least in my
+> > > opinion, the patch doesn't explain why it can't be done):
+> > 
+> > THe patch remove aobus (instead of fixing name and size) because, of the
+> > multiple region documented covered by this 'made region', I did not
+> > anticipate
+> > which one will be required and I did not want to add them all.
+> > 
+> > Better to add them as needed, which is want I done for pinctrl as you
+> > pointed
+> > out
+> > 
+> > > rename "aobus" to "rti" and change the size to either 0x1000 or 0xb000
+> > > (both values can be found in mesong12a.dtsi from
+> > > buildroot_openlinux_kernel_4.9_fbdev_20180706)
+> > 
+> > RTI is added here:
+> > https://lkml.kernel.org/r/20190117103151.3349-1-jbrunet@baylibre.com
+> > 
+> > I don't really understand the problem ? result is the same
+> the actual problem is "me" as I have conflicting information:
+> - Amlogic's buildroot kernel (for G12A) uses similar bus definitions
+> as the GX SoCs (for which there are public datasheets) - this is how
+> Jianxin added it to meson-g12a.dtsi originally
 
---=-=-=
-Content-Type: text/plain
+And it was the same for the GX family. AOBUS in the DT while there nothing
+about this in the memory map. Keep wrong patterns does not make them right.
 
-Tomi Valkeinen <tomi.valkeinen@ti.com> writes:
+I'm merely reading the memory map here
 
-> The DRM device minor numbers are allocated according to the registration
-> order. This causes confusion in cases where the registration order can
-> change, or when, say, a modesetting capable device is preferred to be
-> card0, and a rendering device is preferred to be card1.
->
-> This patch adds similar functionality that is used in some other
-> subsystems, where device minor numbers can be defined in DT bindings'
-> aliases node.
->
-> For example, this sets the DRM device minor number to 1 for the 'dss'
-> device.
->
-> aliases {
-> 	gpu1 = &dss;
-> };
+> - this patch does it different - but cannot check if this is correct
+> (no public datasheet is available for G12A or AXG) nor do I have a
+> "big picture" of upcoming changes
 
-This would be really nice to have.  Given that there's plenty of
-userspace code that opens the first available DRM node (whether or not
-that is Correct Behavior), making their behavior not dependent on the
-random probe order is a good thing.
+Yes it does it differently. We should have picked up on this a while ago,
+since gxbb at least, and we did not. There reason to create bus that don't
+exist in the memory map of any recent SoC.
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Creating bus should at least require a start and end offset explained
+somewhere. Copying vendor DT is not enough
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlxA9ccACgkQtdYpNtH8
-nuicAw/9EJ29WILMWp0TzOcR8EfB/RGp9Til9PM+4yiUPPtbV1DWte4EINtITX9P
-bPYBs7DChsH3D1bQS8C9bGKu0tw+IhR6FsLhcrnL/84TcYhz7RHatg9D+7bySBAP
-BxGIxvlo80s4qUIHgwpc4MlSW8cP1+8eqp15W7Nh2lg4FVO0UkdjWVD2YmHNcLmk
-qA0IMUNDl2LZw9X8hYHesYrWefRdT2y/xorBIdTmd2g9fxSAXPHjnnuc+PRehY83
-i4cxal4AIEiDbKQPJDmX8xJ9b8vzhQLLNl16cZCYeJC4O0zRcNlk6S+Aj7etrSYT
-1Fpe8yIbh6Kmb3XPtizbvT7ARt16bKQimD3ouJw3bC6AGkFt/1KyY6iwNjs+BdGC
-0kimvjCEYFG/h7R7ZJyzJ/BsalIXUEwtRK3Ma/gvUxHycHZ3WBiTI9jFos+ksOAZ
-phqwXRIEi6PMJDZr9I4AN9rmNAnZd2IRLgw22civVqCEULrSPFLqW1JlK3iuoWT2
-Cd4hy7q/4IU5Lic3YMbWbVapd8VwMqy9vfzpROzLht22fLsnuqzKTWOnYXFEQIMO
-3OpC/NsgHuVT5+kgGLBEyALE4j9z3ieVYxckSEU3Vc6gHuUNbWJq/HsUFtc5Bt1X
-UIfNHcTFV26vKIVdb4BfV0LGpglbsn1fgL4XCFW5saZsGkZLkxc=
-=cfVV
------END PGP SIGNATURE-----
---=-=-=--
-
---===============1885300872==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1885300872==--
+> 
+> Cc'ing Jianxin: can you please review Jerome's patch and give some
+> more details on the memory map on G12A so further contributions can be
+> reviewed easier?
+> 
+> 
+> Regards
+> Martin
