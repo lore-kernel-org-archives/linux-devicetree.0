@@ -1,67 +1,65 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-Date: Thu, 17 Jan 2019 12:17:56 +0100
-Message-ID: <bb5b27ed-a077-f639-b97b-4da22c9bb3ad@suse.de>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: [PATCH] drm: support gpu aliases defined in DT data
+Date: Thu, 17 Jan 2019 13:19:18 +0200
+Message-ID: <20190117111918.31759-1-tomi.valkeinen@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, =?UTF-8?B?TWljaGFsIFZva8OhxI0=?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@goo>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maarten Lankhorst <maarten.lankhorst@linux.intel.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, dri-devel@lists.freedesktop.org, Rob Herring <robh+dt@kernel.org>, devicetree@vger.kernel.org, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Cc: Tomi Valkeinen <tomi.valkeinen@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Fabrizio,
-
-Am 16.01.19 um 19:37 schrieb Fabrizio Castro:
-> From: Biju Das <biju.das@bp.renesas.com>
-> 
-> Add Silicon Linux to the list of devicetree vendor prefixes.
-> 
-> Website: http://www.si-linux.co.jp
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 4b1a2a8..02a7037 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -344,6 +344,7 @@ sgx	SGX Sensortech
->  sharp	Sharp Corporation
->  shimafuji	Shimafuji Electric, Inc.
->  si-en	Si-En Technology Ltd.
-> +si-linux	Silicon Linux Corporation
-
-With the website being Japanese only, I haven't been able to confirm the
-spelling of the company name. Looks sensible though.
-
-Due to "en" coming before "five" I've double-checked that elsewhere we
-do order dashes before letters, so placement in file and tab-indentation
-is fine, too.
-
->  sifive	SiFive, Inc.
->  sigma	Sigma Designs, Inc.
->  sii	Seiko Instruments, Inc.
-
-Personally I would drop the full stop at the end of the subject, but anyway:
-
-Reviewed-by: Andreas Färber <afaerber@suse.de>
-
-Thanks,
-Andreas
-
-P.S. Please double-check how this excessive CC list came to life!
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+VGhlIERSTSBkZXZpY2UgbWlub3IgbnVtYmVycyBhcmUgYWxsb2NhdGVkIGFjY29yZGluZyB0byB0
+aGUgcmVnaXN0cmF0aW9uCm9yZGVyLiBUaGlzIGNhdXNlcyBjb25mdXNpb24gaW4gY2FzZXMgd2hl
+cmUgdGhlIHJlZ2lzdHJhdGlvbiBvcmRlciBjYW4KY2hhbmdlLCBvciB3aGVuLCBzYXksIGEgbW9k
+ZXNldHRpbmcgY2FwYWJsZSBkZXZpY2UgaXMgcHJlZmVycmVkIHRvIGJlCmNhcmQwLCBhbmQgYSBy
+ZW5kZXJpbmcgZGV2aWNlIGlzIHByZWZlcnJlZCB0byBiZSBjYXJkMS4KClRoaXMgcGF0Y2ggYWRk
+cyBzaW1pbGFyIGZ1bmN0aW9uYWxpdHkgdGhhdCBpcyB1c2VkIGluIHNvbWUgb3RoZXIKc3Vic3lz
+dGVtcywgd2hlcmUgZGV2aWNlIG1pbm9yIG51bWJlcnMgY2FuIGJlIGRlZmluZWQgaW4gRFQgYmlu
+ZGluZ3MnCmFsaWFzZXMgbm9kZS4KCkZvciBleGFtcGxlLCB0aGlzIHNldHMgdGhlIERSTSBkZXZp
+Y2UgbWlub3IgbnVtYmVyIHRvIDEgZm9yIHRoZSAnZHNzJwpkZXZpY2UuCgphbGlhc2VzIHsKCWdw
+dTEgPSAmZHNzOwp9OwoKVGhlIGxvZ2ljIG9uIGhvdyB0byBwaWNrIHRoZSBtaW5vciBudW1iZXIg
+aXM6CgotIGlmIHRoZXJlJ3MgYSBEVCBncHUgYWxpYXMgZm9yIHRoZSBkZXZpY2UsIHVzZSB0aGF0
+Ci0gZWxzZSwgaWYgdGhlcmUgYXJlIGFueSBncHUgYWxpYXNlcywgcGljayBhIG1pbm9yIG51bWJl
+ciB0aGF0IGlzIGhpZ2hlcgogIHRoYW4gYW55IG9mIHRoZSBhbGlhc2VzLgotIGVsc2UsIHVzZSB0
+aGUgZnVsbCByYW5nZSBvZiBwb3NzaWJsZSBudW1iZXJzCgpTaWduZWQtb2ZmLWJ5OiBUb21pIFZh
+bGtlaW5lbiA8dG9taS52YWxrZWluZW5AdGkuY29tPgotLS0KIGRyaXZlcnMvZ3B1L2RybS9kcm1f
+ZHJ2LmMgfCAzMSArKysrKysrKysrKysrKysrKysrKysrKysrKysrKy0tCiAxIGZpbGUgY2hhbmdl
+ZCwgMjkgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJz
+L2dwdS9kcm0vZHJtX2Rydi5jIGIvZHJpdmVycy9ncHUvZHJtL2RybV9kcnYuYwppbmRleCBhNWZl
+OTFiOGMzYzkuLmY1MzZhMjc2MDI5MyAxMDA2NDQKLS0tIGEvZHJpdmVycy9ncHUvZHJtL2RybV9k
+cnYuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vZHJtX2Rydi5jCkBAIC0xMTAsNiArMTEwLDggQEAg
+c3RhdGljIGludCBkcm1fbWlub3JfYWxsb2Moc3RydWN0IGRybV9kZXZpY2UgKmRldiwgdW5zaWdu
+ZWQgaW50IHR5cGUpCiAJc3RydWN0IGRybV9taW5vciAqbWlub3I7CiAJdW5zaWduZWQgbG9uZyBm
+bGFnczsKIAlpbnQgcjsKKwlpbnQgbWluX2lkLCBtYXhfaWQ7CisJYm9vbCBvZl9pZF9mb3VuZCA9
+IGZhbHNlOwogCiAJbWlub3IgPSBremFsbG9jKHNpemVvZigqbWlub3IpLCBHRlBfS0VSTkVMKTsK
+IAlpZiAoIW1pbm9yKQpAQCAtMTE4LDEyICsxMjAsMzcgQEAgc3RhdGljIGludCBkcm1fbWlub3Jf
+YWxsb2Moc3RydWN0IGRybV9kZXZpY2UgKmRldiwgdW5zaWduZWQgaW50IHR5cGUpCiAJbWlub3It
+PnR5cGUgPSB0eXBlOwogCW1pbm9yLT5kZXYgPSBkZXY7CiAKKwltaW5faWQgPSA2NCAqIHR5cGU7
+CisJbWF4X2lkID0gNjQgKiAodHlwZSArIDEpOworCisJaWYgKGRldi0+ZGV2ICYmIGRldi0+ZGV2
+LT5vZl9ub2RlKSB7CisJCWludCBpZDsKKworCQlpZCA9IG9mX2FsaWFzX2dldF9pZChkZXYtPmRl
+di0+b2Zfbm9kZSwgImdwdSIpOworCisJCWlmIChpZCA+PSAwKSB7CisJCQltaW5faWQgPSA2NCAq
+IHR5cGUgKyBpZDsKKwkJCW1heF9pZCA9IDY0ICogdHlwZSArIGlkICsgMTsKKworCQkJb2ZfaWRf
+Zm91bmQgPSB0cnVlOworCQl9CisJfQorCisJaWYgKCFvZl9pZF9mb3VuZCkgeworCQlpbnQgaWQ7
+CisKKwkJaWQgPSBvZl9hbGlhc19nZXRfaGlnaGVzdF9pZCgiZ3B1Iik7CisKKwkJaWYgKGlkID49
+IDApCisJCQltaW5faWQgPSBpZCArIDE7CisJfQorCiAJaWRyX3ByZWxvYWQoR0ZQX0tFUk5FTCk7
+CiAJc3Bpbl9sb2NrX2lycXNhdmUoJmRybV9taW5vcl9sb2NrLCBmbGFncyk7CiAJciA9IGlkcl9h
+bGxvYygmZHJtX21pbm9yc19pZHIsCiAJCSAgICAgIE5VTEwsCi0JCSAgICAgIDY0ICogdHlwZSwK
+LQkJICAgICAgNjQgKiAodHlwZSArIDEpLAorCQkgICAgICBtaW5faWQsCisJCSAgICAgIG1heF9p
+ZCwKIAkJICAgICAgR0ZQX05PV0FJVCk7CiAJc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmZHJtX21p
+bm9yX2xvY2ssIGZsYWdzKTsKIAlpZHJfcHJlbG9hZF9lbmQoKTsKLS0gClRleGFzIEluc3RydW1l
+bnRzIEZpbmxhbmQgT3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51
+cy9CdXNpbmVzcyBJRDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQoK
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
