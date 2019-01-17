@@ -1,61 +1,104 @@
-From: Viresh Kumar <viresh.kumar@linaro.org>
-Subject: Re: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
-Date: Thu, 17 Jan 2019 15:38:07 +0530
-Message-ID: <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20190117063312.GE25498@builder>
- <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
+From: Rajendra Nayak <rnayak@codeaurora.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU capacity values
+Date: Thu, 17 Jan 2019 15:38:10 +0530
+Message-ID: <5230df91-5d46-2d12-c31a-ca19934c521c@codeaurora.org>
+References: <20190116234039.12935-1-mka@chromium.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
+In-Reply-To: <20190116234039.12935-1-mka@chromium.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Matthias Kaehlcke <mka@chromium.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Douglas Anderson <dianders@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-On 17-01-19, 09:38, Jorge Ramirez wrote:
-> COMMON_CLK_DISABLED_UNUSED relies on the enable_count reference counter
-> to disable the clocks that were enabled by the firwmare and not by the
-> drivers.
-> 
-> the cpufreq driver does not enable the cpu clock.
-> 
-> so when clk_change_rate is called, the enable_count counter is not
-> incremented and therefore it just remains null since this was enabled by
-> the firmware.
-> 
-> I tried doing:
-> 
-> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
-> index e58bfcb..5a9f83e 100644
-> --- a/drivers/cpufreq/cpufreq-dt.c
-> +++ b/drivers/cpufreq/cpufreq-dt.c
-> @@ -124,6 +124,10 @@ static int resources_available(void)
->                 return ret;
->         }
-> 
-> + ret = clk_prepare_enable(cpu_clk);
-> + if (ret)
-> +         return ret;
-> +
->         clk_put(cpu_clk);
-> 
->         name = find_supply_name(cpu_dev);
-> 
-> 
-> and that removed the need for CLK_IGNORE_UNUSED. But I am not sure of
-> the system wide consequences of that change to cpufreq.
 
-If the cpufreq driver enables it then it should disable it on exit as
-well, right ? And in that case if you unload your driver's module, you
-will hang the system as the clock will get disabled :)
 
-Every other platform must either be marking it with CLK_IGNORE_UNUSED
-or they must be doing clk_enable from somewhere, maybe the CPU online
-path, not sure though.
+On 1/17/2019 5:10 AM, Matthias Kaehlcke wrote:
+> Specify the relative CPU capacity of all SDM845 AP cores.
+> 
+> The values were provided by Qualcomm engineers.
+> 
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+
+Reviewed-by: Rajendra Nayak <rnayak@codeaurora.org>
+
+> ---
+>   arch/arm64/boot/dts/qcom/sdm845.dtsi | 8 ++++++++
+>   1 file changed, 8 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index d9be5bba62c45..e01949fd44075 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -99,6 +99,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x0>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <607>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+>   			next-level-cache = <&L2_0>;
+>   			L2_0: l2-cache {
+> @@ -115,6 +116,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x100>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <607>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+>   			next-level-cache = <&L2_100>;
+>   			L2_100: l2-cache {
+> @@ -128,6 +130,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x200>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <607>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+>   			next-level-cache = <&L2_200>;
+>   			L2_200: l2-cache {
+> @@ -141,6 +144,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x300>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <607>;
+>   			qcom,freq-domain = <&cpufreq_hw 0>;
+>   			next-level-cache = <&L2_300>;
+>   			L2_300: l2-cache {
+> @@ -154,6 +158,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x400>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+>   			qcom,freq-domain = <&cpufreq_hw 1>;
+>   			next-level-cache = <&L2_400>;
+>   			L2_400: l2-cache {
+> @@ -167,6 +172,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x500>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+>   			qcom,freq-domain = <&cpufreq_hw 1>;
+>   			next-level-cache = <&L2_500>;
+>   			L2_500: l2-cache {
+> @@ -180,6 +186,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x600>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+>   			qcom,freq-domain = <&cpufreq_hw 1>;
+>   			next-level-cache = <&L2_600>;
+>   			L2_600: l2-cache {
+> @@ -193,6 +200,7 @@
+>   			compatible = "qcom,kryo385";
+>   			reg = <0x0 0x700>;
+>   			enable-method = "psci";
+> +			capacity-dmips-mhz = <1024>;
+>   			qcom,freq-domain = <&cpufreq_hw 1>;
+>   			next-level-cache = <&L2_700>;
+>   			L2_700: l2-cache {
+> 
 
 -- 
-viresh
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
