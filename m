@@ -1,48 +1,68 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 01/11] dt-bindings: Add vendor prefix for Silicon Linux.
-Date: Thu, 17 Jan 2019 11:44:48 +0100
-Message-ID: <20190117104448.zc53d3z6sl3x2mjo@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Date: Thu, 17 Jan 2019 11:46:21 +0100
+Message-ID: <e55df608-7058-63b9-b449-982d32e08759@linaro.org>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20190117063312.GE25498@builder>
+ <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
+ <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547663874-29411-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 06:37:44PM +0000, Fabrizio Castro wrote:
-> From: Biju Das <biju.das@bp.renesas.com>
+On 1/17/19 11:08, Viresh Kumar wrote:
+> On 17-01-19, 09:38, Jorge Ramirez wrote:
+>> COMMON_CLK_DISABLED_UNUSED relies on the enable_count reference counter
+>> to disable the clocks that were enabled by the firwmare and not by the
+>> drivers.
+>>
+>> the cpufreq driver does not enable the cpu clock.
+>>
+>> so when clk_change_rate is called, the enable_count counter is not
+>> incremented and therefore it just remains null since this was enabled by
+>> the firmware.
+>>
+>> I tried doing:
+>>
+>> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+>> index e58bfcb..5a9f83e 100644
+>> --- a/drivers/cpufreq/cpufreq-dt.c
+>> +++ b/drivers/cpufreq/cpufreq-dt.c
+>> @@ -124,6 +124,10 @@ static int resources_available(void)
+>>                 return ret;
+>>         }
+>>
+>> + ret = clk_prepare_enable(cpu_clk);
+>> + if (ret)
+>> +         return ret;
+>> +
+>>         clk_put(cpu_clk);
+>>
+>>         name = find_supply_name(cpu_dev);
+>>
+>>
+>> and that removed the need for CLK_IGNORE_UNUSED. But I am not sure of
+>> the system wide consequences of that change to cpufreq.
 > 
-> Add Silicon Linux to the list of devicetree vendor prefixes.
-> 
-> Website: http://www.si-linux.co.jp
-> 
-> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> If the cpufreq driver enables it then it should disable it on exit as
+> well, right ? And in that case if you unload your driver's module, you
+> will hang the system as the clock will get disabled :)
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+ah, of course, sorry was over-thinking this thing :)
 
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
 > 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 4b1a2a8..02a7037 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -344,6 +344,7 @@ sgx	SGX Sensortech
->  sharp	Sharp Corporation
->  shimafuji	Shimafuji Electric, Inc.
->  si-en	Si-En Technology Ltd.
-> +si-linux	Silicon Linux Corporation
->  sifive	SiFive, Inc.
->  sigma	Sigma Designs, Inc.
->  sii	Seiko Instruments, Inc.
-> -- 
-> 2.7.4
+> Every other platform must either be marking it with CLK_IGNORE_UNUSED
+> or they must be doing clk_enable from somewhere, maybe the CPU online
+> path, not sure though.
 > 
+
+since this clock is enabled by the firmware, it seems to me that using
+CLK_IGNORE_UNUSED remains the best option.
