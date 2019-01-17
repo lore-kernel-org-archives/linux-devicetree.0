@@ -1,47 +1,31 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
-Date: Thu, 17 Jan 2019 15:04:33 +0200
-Message-ID: <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
-References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
- <20190117123320.GD3271@phenom.ffwll.local>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v2 08/11] clk: renesas: r8a774c0: Add missing CANFD clock
+Date: Thu, 17 Jan 2019 14:11:57 +0100
+Message-ID: <20190117131156.eq7zh3y5e6koueos@verge.net.au>
+References: <1547667945-5588-1-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190117123320.GD3271@phenom.ffwll.local>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel@lists.freedesktop.org, David Airlie <airlied@linux.ie>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547667945-5588-1-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben
 List-Id: devicetree@vger.kernel.org
 
-T24gMTcvMDEvMTkgMTQ6MzMsIERhbmllbCBWZXR0ZXIgd3JvdGU6Cj4gT24gVGh1LCBKYW4gMTcs
-IDIwMTkgYXQgMDE6MTk6MThQTSArMDIwMCwgVG9taSBWYWxrZWluZW4gd3JvdGU6Cj4+IFRoZSBE
-Uk0gZGV2aWNlIG1pbm9yIG51bWJlcnMgYXJlIGFsbG9jYXRlZCBhY2NvcmRpbmcgdG8gdGhlIHJl
-Z2lzdHJhdGlvbgo+PiBvcmRlci4gVGhpcyBjYXVzZXMgY29uZnVzaW9uIGluIGNhc2VzIHdoZXJl
-IHRoZSByZWdpc3RyYXRpb24gb3JkZXIgY2FuCj4+IGNoYW5nZSwgb3Igd2hlbiwgc2F5LCBhIG1v
-ZGVzZXR0aW5nIGNhcGFibGUgZGV2aWNlIGlzIHByZWZlcnJlZCB0byBiZQo+PiBjYXJkMCwgYW5k
-IGEgcmVuZGVyaW5nIGRldmljZSBpcyBwcmVmZXJyZWQgdG8gYmUgY2FyZDEuCj4+Cj4+IFRoaXMg
-cGF0Y2ggYWRkcyBzaW1pbGFyIGZ1bmN0aW9uYWxpdHkgdGhhdCBpcyB1c2VkIGluIHNvbWUgb3Ro
-ZXIKPj4gc3Vic3lzdGVtcywgd2hlcmUgZGV2aWNlIG1pbm9yIG51bWJlcnMgY2FuIGJlIGRlZmlu
-ZWQgaW4gRFQgYmluZGluZ3MnCj4+IGFsaWFzZXMgbm9kZS4KPiAKPiBXaGF0IG90aGVyIHN1YnN5
-c3RlbT8gSSB0aG91Z2h0IHRoYXQgbWlub3IgbnVtYmVycyBzaG91bGRuJ3QgYmUgbWFkZSB1YXBp
-LAo+IGFuZCB0aGF0IHVkZXYgb3Igc2ltaWxhciBpcyBzdXBwb3NlZCB0byBnaXZlIHlvdSBzdGFi
-bGUgbmFtZXMgLi4uIElzIHRoYXQKPiBub3QgdGhlIGNhc2Ugb24gU29DPwoKSSB0aGluayBhdCBs
-ZWFzdCBpMmMsIHNwaSBhbmQgdWFydCB1c2UgRFQgYWxpYXNlcy4KCkkgYWxzbyBoYXZlIG15IGRv
-dWJ0cyBhYm91dCB0aGlzLCBidXQgdGhvdWdodCB0byBwb3N0IHRoaXMgdG8gZ2V0IHNvbWUKY29t
-bWVudHMsIGFzIGl0IGRvZXMgbWFrZSBsaWZlIHF1aXRlIGEgYml0IGVhc2llciA9KS4KCiBUb21p
-CgotLSAKVGV4YXMgSW5zdHJ1bWVudHMgRmlubGFuZCBPeSwgUG9ya2thbGFua2F0dSAyMiwgMDAx
-ODAgSGVsc2lua2kuClktdHVubnVzL0J1c2luZXNzIElEOiAwNjE1NTIxLTQuIEtvdGlwYWlra2Ev
-RG9taWNpbGU6IEhlbHNpbmtpCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Wed, Jan 16, 2019 at 07:45:45PM +0000, Fabrizio Castro wrote:
+> This patch adds the missing CANFD clock to the r8a774c0 specific
+> clock driver.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> 
+> ---
+> The relevant documentation should appear in the next version
+> of the HW User's manual
+> 
+> v1->v2:
+> * appended R8A774C0_CLK_CANFD as per Geert's comment
+
+
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
