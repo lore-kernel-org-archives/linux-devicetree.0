@@ -1,51 +1,28 @@
-From: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-Subject: Re: [PATCH v3 2/2] mfd: tps65218.c: Add input voltage options
-Date: Thu, 17 Jan 2019 06:54:37 +0100
-Message-ID: <20190117055436.GA4213@wago.com>
-References: <1546523226-358-1-git-send-email-Christian.Hohnstaedt@wago.com>
- <1547453794-18770-3-git-send-email-Christian.Hohnstaedt@wago.com>
- <20190116141336.GG23399@dell>
+From: <yamada.masahiro@socionext.com>
+Subject: RE: [PATCH 2/3] kbuild: add real-prereqs shorthand for $(filter-out
+ FORCE, $^)
+Date: Thu, 17 Jan 2019 05:59:03 +0000
+Message-ID: <bf7380ec3fa145958c3f7b3e3551a395@SOC-EX01V.e01.socionext.com>
+References: <1547698231-20985-1-git-send-email-yamada.masahiro@socionext.com>
+ <1547698231-20985-2-git-send-email-yamada.masahiro@socionext.com>
+ <71a0e80a-c587-4973-cfc3-9c74b2b3a16c@ozlabs.ru>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190116141336.GG23399@dell>
+In-Reply-To: <71a0e80a-c587-4973-cfc3-9c74b2b3a16c@ozlabs.ru>
+Content-Language: ja-JP
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: Keerthy <j-keerthy@ti.com>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-omap@vger.kernel.org
+To: aik@ozlabs.ru, linux-kbuild@vger.kernel.org
+Cc: mark.rutland@arm.com, mgreer@animalcreek.com, linux-kernel@vger.kernel.org, paulus@samba.org, hpa@zytor.com, x86@kernel.org, mingo@redhat.com, joel@jms.id.au, jhogan@kernel.org, devicetree@vger.kernel.org, keescook@chromium.org, npiggin@gmail.com, robh+dt@kernel.org, bp@alien8.de, tglx@linutronix.de, michal.lkml@markovi.net, maurosr@linux.vnet.ibm.com, linux-mips@vger.kernel.org, ralf@linux-mips.org, paul.burton@mips.com, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 02:13:36PM +0000, Lee Jones wrote:
-> On Mon, 14 Jan 2019, Christian Hohnstaedt wrote:
-> 
-> > These options apply to all regulators in this chip.
-> > 
-> > ti,strict-supply-voltage-supervision:
-> >   Set STRICT flag in CONFIG1
-> > ti,under-voltage-limit-microvolt:
-> >   Select 2.75, 2.95, 3.25 or 3.35 V UVLO in CONFIG1
-> > ti,under-voltage-hyst-microvolt:
-> >   Select 200mV or 400mV UVLOHYS in CONFIG2
-> > 
-> > Signed-off-by: Christian Hohnstaedt <Christian.Hohnstaedt@wago.com>
-> > Tested-by: Keerthy <j-keerthy@ti.com>
-> > Reviewed-by: Keerthy <j-keerthy@ti.com>
-> > ---
-> >  drivers/mfd/tps65218.c       | 89 ++++++++++++++++++++++++++++++++++++++++++++
-> >  include/linux/mfd/tps65218.h |  4 ++
-> >  2 files changed, 93 insertions(+)
-> 
-> This looks like regulator code.
-> 
-> Why aren't you placing it into the regulator driver?
-
-This code manages properties of the chip, affecting all regulators.
-
-The regulator-driver has no hook to be called once for the chip.
-Even if I put this code into the regulator driver file,
-I will have to call it from here.
-
-This would introduce a dependency from the mfd to the regulator code.
-
-
-Christian
+SGkgQWxleGV5LA0KDQo+IFdoYXQgaXMgdGhpcyBzZXJpZXMgbWFkZSBvbiB0b3Agb2Y/IFRoaXMg
+ZG9lcyBub3QgYXBwbHkgb24gdG9wIG9mIG1hc3Rlcg0KPiBmcm9tDQo+IGh0dHBzOi8vZ2l0Lmtl
+cm5lbC5vcmcvcHViL3NjbS9saW51eC9rZXJuZWwvZ2l0L3RvcnZhbGRzL2xpbnV4LTIuNi5naXQN
+Cg0KDQpJZiB5b3Ugd2FudCB0byBhcHBseSB0aGlzIHNlcmllcyBjbGVhbmx5LCBwbGVhc2UgYXBw
+bHkgdGhlIGZvbGxvd2luZyBmaXJzdDoNCg0KaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9w
+YXRjaC8xMDc2MTYyNS8NCmh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvcGF0Y2gvMTA3Njcx
+OTMvDQoNCg0KDQpUaGUgY29uZmxpY3RzIGFyZSBub3Qgc2lnbmlmaWNhbnQuDQpZb3UgY2FuIHVz
+ZSAnZ2l0IGFtIC1DMScgaWYgeW91IHdhbnQgdG8gYXBwbHkgdGhpcyBzZXJpZXMNCmRpcmVjdGx5
+IHRvIExpbnVzIHRyZWUuDQoNCk1hc2FoaXJvDQoNCg==
