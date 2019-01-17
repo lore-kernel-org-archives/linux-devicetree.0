@@ -1,7 +1,7 @@
 From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: [PATCH 1/4] dt-bindings: amlogic: add new compatible devices to clk_measure
-Date: Thu, 17 Jan 2019 17:48:35 +0100
-Message-ID: <20190117164838.8008-2-jbrunet@baylibre.com>
+Subject: [PATCH 3/4] arm64: dts: meson: axg: add clk measure support
+Date: Thu, 17 Jan 2019 17:48:37 +0100
+Message-ID: <20190117164838.8008-4-jbrunet@baylibre.com>
 References: <20190117164838.8008-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,25 +12,28 @@ To: Kevin Hilman <khilman@baylibre.com>
 Cc: Jerome Brunet <jbrunet@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add the axg and g12a SoC family compatible to the clock measure bindings
+Add the clock measure device to the axg SoC family
 
 Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
 ---
- Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt | 2 ++
- 1 file changed, 2 insertions(+)
+ arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-index 205a54bcd7c7..6bf6b43f8dd8 100644
---- a/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-+++ b/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
-@@ -9,6 +9,8 @@ Required properties:
- 			"amlogic,meson-gx-clk-measure" for GX SoCs
- 			"amlogic,meson8-clk-measure" for Meson8 SoCs
- 			"amlogic,meson8b-clk-measure" for Meson8b SoCs
-+			"amlogic,meson-axg-clk-measure" for AXG SoCs
-+			"amlogic,meson-g12a-clk-measure" for G12a SoCs
- - reg: base address and size of the Clock Measurer register space.
+diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+index 0e0abb1a03e2..94ea36a2417a 100644
+--- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
++++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
+@@ -1611,6 +1611,11 @@
+ 				status = "disabled";
+ 			};
  
- Example:
++			clk_msr: clock-sensor@18000 {
++				compatible = "amlogic,meson-axg-clk-measure";
++				reg = <0x0 0x18000 0x0 0x10>;
++			};
++
+ 			i2c3: i2c@1c000 {
+ 				compatible = "amlogic,meson-axg-i2c";
+ 				reg = <0x0 0x1c000 0x0 0x20>;
 -- 
 2.20.1
