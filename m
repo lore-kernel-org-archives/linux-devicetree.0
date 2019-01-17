@@ -1,44 +1,60 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v2 0/2] Support for eMMC in AM65x-evm
-Date: Thu, 17 Jan 2019 14:35:09 +0530
-Message-ID: <488c457b-efc0-1006-ad2d-a29cd455d979@ti.com>
-References: <20190110073355.3382-1-faiz_abbas@ti.com>
- <20190115142948.3fq2i6vav7jn4ulq@kahuna>
+From: Petr Mladek <pmladek@suse.com>
+Subject: Re: [PATCH 21/21] memblock: drop memblock_alloc_*_nopanic() variants
+Date: Thu, 17 Jan 2019 10:28:42 +0100
+Message-ID: <20190117092842.wnvsc6em5mxga3rn@pathway.suse.cz>
+References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
+ <1547646261-32535-22-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190115142948.3fq2i6vav7jn4ulq@kahuna>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1547646261-32535-22-git-send-email-rppt@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nishanth Menon <nm@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Nishanth,
+On Wed 2019-01-16 15:44:21, Mike Rapoport wrote:
+> As all the memblock allocation functions return NULL in case of error
+> rather than panic(), the duplicates with _nopanic suffix can be removed.
 
-On 15/01/19 7:59 PM, Nishanth Menon wrote:
-> On 13:03-20190110, Faiz Abbas wrote:
->> The following patches add eMMC support on TI's AM65x-evm.
->>
->> v2:
->>  1. The SD card node is under debug for some usecases.
->>     Only upstreaming eMMC support for now.
->>  2. Rebased to latest mainline.
->>  3. Removed status = "disabled" from dtsi patch
->>  4. Fixed node name to not include '_'s
->>
->> Faiz Abbas (2):
->>   arm64: dts: ti: k3-am654: Add Support for MMC/SD
->>   arm64: dts: ti: k3-am654-base-board: Add MMC/SD support
-> 
-> Once the $subject changes in the above two patches (should be emmc
-> instead of MMC/SD):
-> 
-> Acked-by: Nishanth Menon <nm@ti.com>
-> 
+[...]
 
-Ok. Sending next version with fixes.
+> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
+> index c4f0a41..ae65221 100644
+> --- a/kernel/printk/printk.c
+> +++ b/kernel/printk/printk.c
+> @@ -1147,17 +1147,14 @@ void __init setup_log_buf(int early)
+>  	if (!new_log_buf_len)
+>  		return;
+>  
+> -	if (early) {
+> -		new_log_buf =
+> -			memblock_alloc(new_log_buf_len, LOG_ALIGN);
+> -	} else {
+> -		new_log_buf = memblock_alloc_nopanic(new_log_buf_len,
+> -							  LOG_ALIGN);
+> -	}
+> -
+> +	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
 
-Thanks,
-Faiz
+The above change is enough.
+
+>  	if (unlikely(!new_log_buf)) {
+> -		pr_err("log_buf_len: %lu bytes not available\n",
+> -			new_log_buf_len);
+> +		if (early)
+> +			panic("log_buf_len: %lu bytes not available\n",
+> +				new_log_buf_len);
+
+panic() is not needed here. printk() will just continue using
+the (smaller) static buffer.
+
+> +		else
+> +			pr_err("log_buf_len: %lu bytes not available\n",
+> +			       new_log_buf_len);
+>  		return;
+>  	}
+
+Best Regards,
+Petr
