@@ -1,248 +1,70 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 2/2] kbuild: add -I$(srctree)/$(src) automatically for
- hostprogs with O=
-Date: Thu, 17 Jan 2019 21:09:21 +0900
-Message-ID: <CAK7LNASfDS+ZisSj8Bcq9YG4zGEgBgH80ekkgXEFWMYkAcguaw@mail.gmail.com>
-References: <1547607401-20118-1-git-send-email-yamada.masahiro@socionext.com> <1547607401-20118-2-git-send-email-yamada.masahiro@socionext.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 11/11] dt-bindings: can: rcar_canfd: document r8a774c0
+ support
+Date: Thu, 17 Jan 2019 13:11:37 +0100
+Message-ID: <20190117121137.riri7nzwegkocnxc@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-12-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547607401-20118-2-git-send-email-yamada.masahiro@socionext.com>
+Content-Disposition: inline
+In-Reply-To: <1547663874-29411-12-git-send-email-fabrizio.castro@bp.renesas.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc: DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Mauro Rossi <issor.oruam@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 1:18 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> When building kernel objects with the O=3D option, scripts/Makefile.lib
-> automatically adds both -I$(srctree)/$(src) and -I$(obj) so each
-> Makefile does not need to add them explicitly.
->
-> In contrast, scripts/Makefile.host adds only -I$(obj) when building
-> host programs with the O=3D option. As a result, each Makefile must add
-> the extra option to include checkin headers from generated C files.
->
-> Let's cater to this in the build system for consistency, and drop
-> extra options from the kconfig, dtc, genksyms Makefiles.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+On Wed, Jan 16, 2019 at 06:37:54PM +0000, Fabrizio Castro wrote:
+> Document the support for rcar_canfd on R8A774C0 SoC devices.
+> 
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 > ---
+> This patch depends on:
+> https://patchwork.kernel.org/patch/10687999/
+> https://patchwork.kernel.org/patch/10688001/
+> 
+>  Documentation/devicetree/bindings/net/can/rcar_canfd.txt | 16 +++++++++-------
 
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-I take back this patch.
-
-I noticed this would break out-of-tree build of PowerPC.
-
-I attached the error log below.
-
-The error summary is, the host program
-arch/powerpc/mktree.c is including arch/powerpc/types.h
-via a system header.
-
-In arch/powerpc/boot, there are lots of headers
-whose name is the same as the system header,
-such as types.h, string.h, stdint.h, etc.
-
-
-
-
-
-  HOSTCC  arch/powerpc/boot/mktree
-In file included from /usr/include/x86_64-linux-gnu/sys/uio.h:23:0,
-                 from /usr/include/x86_64-linux-gnu/sys/socket.h:26,
-                 from /usr/include/netinet/in.h:23,
-                 from ../arch/powerpc/boot/mktree.c:18:
-/usr/include/x86_64-linux-gnu/sys/types.h:197:1: error: conflicting
-types for =E2=80=98int64_t=E2=80=99
- __intN_t (64, __DI__);
- ^
-In file included from ../arch/powerpc/boot/stdint.h:13:0,
-                 from /usr/include/netinet/in.h:22,
-                 from ../arch/powerpc/boot/mktree.c:18:
-../arch/powerpc/boot/types.h:26:13: note: previous declaration of
-=E2=80=98int64_t=E2=80=99 was here
- typedef s64 int64_t;
-             ^
-../arch/powerpc/boot/mktree.c: In function =E2=80=98main=E2=80=99:
-../arch/powerpc/boot/mktree.c:52:3: warning: implicit declaration of
-function =E2=80=98exit=E2=80=99 [-Wimplicit-function-declaration]
-   exit(1);
-   ^
-../arch/powerpc/boot/mktree.c:52:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:52:3: note: include =E2=80=98<stdlib.h>=E2=80=
-=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:56:3: warning: implicit declaration of
-function =E2=80=98perror=E2=80=99 [-Wimplicit-function-declaration]
-   perror("stat");
-   ^
-../arch/powerpc/boot/mktree.c:57:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(2);
-   ^
-../arch/powerpc/boot/mktree.c:57:3: note: include =E2=80=98<stdlib.h>=E2=80=
-=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-In file included from ../arch/powerpc/boot/mktree.c:18:0:
-../arch/powerpc/boot/mktree.c:65:21: warning: implicit declaration of
-function =E2=80=98strtoul=E2=80=99 [-Wimplicit-function-declaration]
-  bt.bb_dest =3D htonl(strtoul(argv[3], NULL, 0));
-                     ^
-../arch/powerpc/boot/mktree.c:84:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(3);
-   ^
-../arch/powerpc/boot/mktree.c:84:3: note: include =E2=80=98<stdlib.h>=E2=80=
-=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:89:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(3);
-   ^
-../arch/powerpc/boot/mktree.c:89:3: note: include =E2=80=98<stdlib.h>=E2=80=
-=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:102:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(4);
-   ^
-../arch/powerpc/boot/mktree.c:102:3: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:107:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(4);
-   ^
-../arch/powerpc/boot/mktree.c:107:3: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:112:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(4);
-   ^
-../arch/powerpc/boot/mktree.c:112:3: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:121:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(5);
-   ^
-../arch/powerpc/boot/mktree.c:121:3: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:127:4: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-    exit(5);
-    ^
-../arch/powerpc/boot/mktree.c:127:4: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:134:4: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-    exit(5);
-    ^
-../arch/powerpc/boot/mktree.c:134:4: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:143:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(1);
-   ^
-../arch/powerpc/boot/mktree.c:143:3: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:147:3: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-   exit(1);
-   ^
-../arch/powerpc/boot/mktree.c:147:3: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-../arch/powerpc/boot/mktree.c:150:2: warning: incompatible implicit
-declaration of built-in function =E2=80=98exit=E2=80=99
-  exit(0);
-  ^
-../arch/powerpc/boot/mktree.c:150:2: note: include =E2=80=98<stdlib.h>=E2=
-=80=99 or
-provide a declaration of =E2=80=98exit=E2=80=99
-
-
->
->  scripts/Makefile.host     | 4 ++--
->  scripts/dtc/Makefile      | 4 ----
->  scripts/genksyms/Makefile | 4 ----
->  scripts/kconfig/Makefile  | 2 --
->  4 files changed, 2 insertions(+), 12 deletions(-)
->
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index a115259..c41d5a1d 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -72,8 +72,8 @@ __hostcxx_flags       =3D $(_hostcxx_flags)
->
->  ifeq ($(KBUILD_EXTMOD),)
->  ifneq ($(KBUILD_SRC),)
-> -__hostc_flags  =3D -I$(obj) $(call flags,_hostc_flags)
-> -__hostcxx_flags        =3D -I$(obj) $(call flags,_hostcxx_flags)
-> +__hostc_flags  =3D -I $(srctree)/$(src) -I $(obj) $(call flags,_hostc_fl=
-ags)
-> +__hostcxx_flags        =3D -I $(srctree)/$(src) -I $(obj) $(call flags,_=
-hostcxx_flags)
->  endif
->  endif
->
-> diff --git a/scripts/dtc/Makefile b/scripts/dtc/Makefile
-> index 5f227d8..72d3fa4 100644
-> --- a/scripts/dtc/Makefile
-> +++ b/scripts/dtc/Makefile
-> @@ -22,9 +22,5 @@ dtc-objs      +=3D yamltree.o
->  HOSTLDLIBS_dtc :=3D -lyaml
->  endif
->
-> -# Generated files need one more search path to include headers in source=
- tree
-> -HOSTCFLAGS_dtc-lexer.lex.o :=3D -I$(src)
-> -HOSTCFLAGS_dtc-parser.tab.o :=3D -I$(src)
-> -
->  # dependencies on generated files need to be listed explicitly
->  $(obj)/dtc-lexer.lex.o: $(obj)/dtc-parser.tab.h
-> diff --git a/scripts/genksyms/Makefile b/scripts/genksyms/Makefile
-> index 03b7ce9..ae5953d 100644
-> --- a/scripts/genksyms/Makefile
-> +++ b/scripts/genksyms/Makefile
-> @@ -30,9 +30,5 @@ $(obj)/parse.tab.h: $(src)/parse.y FORCE
->
->  endif
->
-> -# -I needed for generated C source (shipped source)
-> -HOSTCFLAGS_parse.tab.o :=3D -I$(src)
-> -HOSTCFLAGS_lex.lex.o :=3D -I$(src)
-> -
->  # dependencies on generated files need to be listed explicitly
->  $(obj)/lex.lex.o: $(obj)/parse.tab.h
-> diff --git a/scripts/kconfig/Makefile b/scripts/kconfig/Makefile
-> index 1819735..12cb5eb 100644
-> --- a/scripts/kconfig/Makefile
-> +++ b/scripts/kconfig/Makefile
-> @@ -146,8 +146,6 @@ help:
->  common-objs    :=3D confdata.o expr.o symbol.o preprocess.o zconf.lex.o =
-zconf.tab.o
->
->  $(obj)/zconf.lex.o: $(obj)/zconf.tab.h
-> -HOSTCFLAGS_zconf.lex.o :=3D -I$(src)
-> -HOSTCFLAGS_zconf.tab.o :=3D -I$(src)
->
->  # conf: Used for defconfig, oldconfig and related targets
->  hostprogs-y    +=3D conf
-> --
+>  1 file changed, 9 insertions(+), 7 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> index 41049fe..32f051f 100644
+> --- a/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> +++ b/Documentation/devicetree/bindings/net/can/rcar_canfd.txt
+> @@ -3,7 +3,8 @@ Renesas R-Car CAN FD controller Device Tree Bindings
+>  
+>  Required properties:
+>  - compatible: Must contain one or more of the following:
+> -  - "renesas,rcar-gen3-canfd" for R-Car Gen3 compatible controller.
+> +  - "renesas,rcar-gen3-canfd" for R-Car Gen3 and RZ/G2 compatible controllers.
+> +  - "renesas,r8a774c0-canfd" for R8A774C0 (RZ/G2E) compatible controller.
+>    - "renesas,r8a7795-canfd" for R8A7795 (R-Car H3) compatible controller.
+>    - "renesas,r8a7796-canfd" for R8A7796 (R-Car M3-W) compatible controller.
+>    - "renesas,r8a77965-canfd" for R8A77965 (R-Car M3-N) compatible controller.
+> @@ -28,12 +29,13 @@ The name of the child nodes are "channel0" and "channel1" respectively. Each
+>  child node supports the "status" property only, which is used to
+>  enable/disable the respective channel.
+>  
+> -Required properties for "renesas,r8a7795-canfd", "renesas,r8a7796-canfd",
+> -"renesas,r8a77965-canfd" and "renesas,r8a77990-canfd" compatible:
+> -In R8A7795, R8A7796, R8A77965 and R8A77990 SoCs, canfd clock is a div6 clock
+> -and can be used by both CAN and CAN FD controller at the same time. It needs
+> -to be scaled to maximum frequency if any of these controllers use it. This is
+> -done using the below properties:
+> +Required properties for "renesas,r8a774c0-canfd", "renesas,r8a7795-canfd",
+> +"renesas,r8a7796-canfd", "renesas,r8a77965-canfd", and "renesas,r8a77990-canfd"
+> +compatible:
+> +In R8A774C0, R8A7795, R8A7796, R8A77965, and R8A77990 SoCs, canfd clock is a
+> +div6 clock and can be used by both CAN and CAN FD controller at the same time.
+> +It needs to be scaled to maximum frequency if any of these controllers use it.
+> +This is done using the below properties:
+>  
+>  - assigned-clocks: phandle of canfd clock.
+>  - assigned-clock-rates: maximum frequency of this clock.
+> -- 
 > 2.7.4
->
-
-
---=20
-Best Regards
-Masahiro Yamada
+> 
