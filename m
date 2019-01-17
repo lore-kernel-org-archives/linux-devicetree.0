@@ -1,56 +1,78 @@
-From: Viorel Suman <viorel.suman@nxp.com>
-Subject: [PATCH v3 4/4] ASoC: add imx-audmix DT binding documentation
-Date: Thu, 17 Jan 2019 12:46:32 +0000
-Message-ID: <1547729177-14317-5-git-send-email-viorel.suman@nxp.com>
-References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 02/11] dt-bindings: arm: renesas: Add si-linux cat87[45]
+ boards
+Date: Thu, 17 Jan 2019 13:59:12 +0100
+Message-ID: <20190117125912.y77powezi74rjtf7@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190117105107.dtuttem7x7ovaey2@verge.net.au>
+ <TYAPR01MB2285EAE232CCADD7FB95E712B7830@TYAPR01MB2285.jpnprd01.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Nicolin Chen <nicoleotsuka@gmail.com>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, Viorel Suman <viorel.suman@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>
-Cc: "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <TYAPR01MB2285EAE232CCADD7FB95E712B7830@TYAPR01MB2285.jpnprd01.prod.outlook.com>
+Sender: netdev-owner@vger.kernel.org
+To: Chris Paterson <Chris.Paterson2@renesas.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin
 List-Id: devicetree@vger.kernel.org
 
-Add the DT binding documentation for Audio Mixer
-machine driver.
+On Thu, Jan 17, 2019 at 12:32:37PM +0000, Chris Paterson wrote:
+> Hello Simon,
+> 
+> > From: Simon Horman <horms@verge.net.au>
+> > Sent: 17 January 2019 10:51
+> > 
+> > On Wed, Jan 16, 2019 at 06:37:45PM +0000, Fabrizio Castro wrote:
+> > > This patch adds board cat874 (powered by the RZ/G2E) and board
+> > > cat875 (that sits on top of cat874). Both boards are made by
+> > > Silicon Linux.
+> > >
+> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/renesas.yaml | 8 ++++++++
+> > >  1 file changed, 8 insertions(+)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/renesas.yaml
+> > b/Documentation/devicetree/bindings/arm/renesas.yaml
+> > > index 5e9d486..9e1e07b 100644
+> > > --- a/Documentation/devicetree/bindings/arm/renesas.yaml
+> > > +++ b/Documentation/devicetree/bindings/arm/renesas.yaml
+> > > @@ -108,6 +108,14 @@ properties:
+> > >
+> > >        - description: RZ/G2E (R8A774C0)
+> > >          items:
+> > > +          - enum:
+> > > +              - si-linux,cat874 # Silicon Linux RZ/G2E 96board platform (CAT874)
+> > 
+> > Can I confirm that "96board platform" is correct for this board - I don't
+> > see it in the documentation I have, but that may not mean much.
+> 
+> The board follows the extended version of the Linaro 96board consumer edition (CE) specification [1].
+> 
+> You can see a pretty picture of the board on the CIP Blog [2].
+> 
+> [1] https://www.96boards.org/specifications/
+> [2] https://www.cip-project.org/blog/2018/10/23/renesas-rz-g2m-96ce-board-adopted-as-arm64-reference-board-for-the-next-cip-slts-kernel
 
-Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
----
- Documentation/devicetree/bindings/sound/imx-audmix.txt | 18 ++++++++++++++=
-++++
- 1 file changed, 18 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/sound/imx-audmix.txt
+Thanks Chris, in that case I am fine with this patch.
 
-diff --git a/Documentation/devicetree/bindings/sound/imx-audmix.txt b/Docum=
-entation/devicetree/bindings/sound/imx-audmix.txt
-new file mode 100644
-index 0000000..c840ed5
---- /dev/null
-+++ b/Documentation/devicetree/bindings/sound/imx-audmix.txt
-@@ -0,0 +1,18 @@
-+NXP Audio Mixer (AUDMIX) machine driver.
-+
-+Required properties:
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+  - compatible		: Compatible list, contains "fsl,imx-audmix"
-+
-+  - model		: Short audio card description.
-+
-+  - audmix-controller	: Must contain the phandle to the AUDMIX device node=
-.
-+
-+Machine driver configuration example:
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-+  sound-audmix-sai {
-+    compatible =3D "fsl,imx-audmix";
-+    model =3D "audmix-sai";
-+    audmix-controller =3D <&audmix>;
-+  };
-+
---=20
-2.7.4
+Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+
+> > That aside, I'd like to wait for Rob to indicate if he will accept
+> > patch 1, which adds si-linux as a vendor, before I apply this patch.
+> > 
+> > > +          - const: renesas,r8a774c0
+> > > +
+> > > +      - items:
+> > > +          - enum:
+> > > +              - si-linux,cat875 # Silicon Linux sub board for CAT874 (CAT875)
+> > > +          - const: si-linux,cat874
+> > >            - const: renesas,r8a774c0
+> > >
+> > >        - description: R-Car M1A (R8A77781)
+> > > --
+> > > 2.7.4
+> > >
+> 
