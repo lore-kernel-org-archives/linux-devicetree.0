@@ -1,60 +1,36 @@
-From: Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH 21/21] memblock: drop memblock_alloc_*_nopanic() variants
-Date: Thu, 17 Jan 2019 10:28:42 +0100
-Message-ID: <20190117092842.wnvsc6em5mxga3rn@pathway.suse.cz>
-References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
- <1547646261-32535-22-git-send-email-rppt@linux.ibm.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: [PATCH v3 0/2] Support for eMMC in AM65x-evm
+Date: Thu, 17 Jan 2019 15:14:22 +0530
+Message-ID: <20190117094424.7683-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547646261-32535-22-git-send-email-rppt@linux.ibm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com, faiz_abbas@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed 2019-01-16 15:44:21, Mike Rapoport wrote:
-> As all the memblock allocation functions return NULL in case of error
-> rather than panic(), the duplicates with _nopanic suffix can be removed.
+The following patches add eMMC support on TI's AM65x-evm.
 
-[...]
+v3:
+ 1. Fixed patch titles to only include eMMC
+ 2. Added dma-coherent to the sdhci0 node.
 
-> diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-> index c4f0a41..ae65221 100644
-> --- a/kernel/printk/printk.c
-> +++ b/kernel/printk/printk.c
-> @@ -1147,17 +1147,14 @@ void __init setup_log_buf(int early)
->  	if (!new_log_buf_len)
->  		return;
->  
-> -	if (early) {
-> -		new_log_buf =
-> -			memblock_alloc(new_log_buf_len, LOG_ALIGN);
-> -	} else {
-> -		new_log_buf = memblock_alloc_nopanic(new_log_buf_len,
-> -							  LOG_ALIGN);
-> -	}
-> -
-> +	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
+v2:
+ 1. The SD card node is under debug for some usecases.
+    Only upstreaming eMMC support for now.
+ 2. Rebased to latest mainline.
+ 3. Removed status = "disabled" from dtsi patch
+ 4. Fixed node name to not include '_'s
 
-The above change is enough.
+Faiz Abbas (2):
+  arm64: dts: ti: k3-am654: Add Support for eMMC host controller
+  arm64: dts: ti: k3-am654-base-board: Add eMMC Support
 
->  	if (unlikely(!new_log_buf)) {
-> -		pr_err("log_buf_len: %lu bytes not available\n",
-> -			new_log_buf_len);
-> +		if (early)
-> +			panic("log_buf_len: %lu bytes not available\n",
-> +				new_log_buf_len);
+ arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 14 +++++++++++
+ .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
+ 2 files changed, 39 insertions(+)
 
-panic() is not needed here. printk() will just continue using
-the (smaller) static buffer.
-
-> +		else
-> +			pr_err("log_buf_len: %lu bytes not available\n",
-> +			       new_log_buf_len);
->  		return;
->  	}
-
-Best Regards,
-Petr
+-- 
+2.19.2
