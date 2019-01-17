@@ -1,67 +1,57 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to
- CAN nodes
-Date: Thu, 17 Jan 2019 13:05:42 +0100
-Message-ID: <20190117120541.slymsz47fjkzz3kg@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-11-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [PATCH v2 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
+Date: Thu, 17 Jan 2019 13:08:42 +0100
+Message-ID: <20190117120842.GB26715@piout.net>
+References: <20190111151401.25047-1-jank@cadence.com>
+ <20190111151401.25047-2-jank@cadence.com>
+ <20190116210806.GA21535@bogus>
+ <46BA7224-B229-4594-B039-8801A806657E@global.cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547663874-29411-11-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben
+In-Reply-To: <46BA7224-B229-4594-B039-8801A806657E@global.cadence.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jan Kotas <jank@cadence.com>
+Cc: Rob Herring <robh@kernel.org>, "a.zummo@towertech.it" <a.zummo@towertech.it>, Mark Rutland <mark.rutland@arm.com>, "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 06:37:53PM +0000, Fabrizio Castro wrote:
-> According to the latest information, clkp2 is available on RZ/G2.
-> Modify CAN0 and CAN1 nodes accordingly.
+On 17/01/2019 10:46:50+0000, Jan Kotas wrote:
 > 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-
-Taking your word for the motivation for this change,
-this patch seems fine to me but I would like to wait for review
-from others.
-
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
-
-> ---
->  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
+> > On 16 Jan 2019, at 22:08, Rob Herring <robh@kernel.org> wrote:
+> > 
+> > 
+> > On Fri, Jan 11, 2019 at 03:14:00PM +0000, Jan Kotas wrote:
+> >> This patch adds a DT binding documentation for
+> >> Cadence RTC controller.
+> >> +Required properties:
+> >> +- compatible: Should be "cdns,rtc-r109v3"
+> >> +- reg: Specifies base physical address and size of the register area.
+> >> +- interrupts: A single interrupt specifier.
+> >> +- clocks: Must contain two entries:
+> >> +	- pclk: APB registers clock
+> >> +	- ref_clk: reference 1Hz of 100Hz clock, depending on IP configuration
+> > 
+> > 1Hz OR 100Hz?
 > 
-> diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> index 3970aaf..326ab3a 100644
-> --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
-> @@ -809,8 +809,10 @@
->  				     "renesas,rcar-gen3-can";
->  			reg = <0 0xe6c30000 0 0x1000>;
->  			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&cpg CPG_MOD 916>, <&can_clk>;
-> -			clock-names = "clkp1", "can_clk";
-> +			clocks = <&cpg CPG_MOD 916>,
-> +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
-> +				 <&can_clk>;
-> +			clock-names = "clkp1", "clkp2", "can_clk";
->  			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
->  			resets = <&cpg 916>;
->  			status = "disabled";
-> @@ -821,8 +823,10 @@
->  				     "renesas,rcar-gen3-can";
->  			reg = <0 0xe6c38000 0 0x1000>;
->  			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
-> -			clocks = <&cpg CPG_MOD 915>, <&can_clk>;
-> -			clock-names = "clkp1", "can_clk";
-> +			clocks = <&cpg CPG_MOD 915>,
-> +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
-> +				 <&can_clk>;
-> +			clock-names = "clkp1", "clkp2", "can_clk";
->  			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
->  			resets = <&cpg 915>;
->  			status = "disabled";
-> -- 
-> 2.7.4
+> Hi,
 > 
+> The IP has a configuration parameter at build time,
+> which selects the reference clock frequency.
+> 
+> It cannot be changed later, and there’s no register which
+> tells the software which option was selected.
+> 
+> In this version of the patch, both values are accepted.
+> If it makes sense I can add a bool property, like
+> refclock-100hz, which can be used to check the clock frequency.
+> 
+
+I guess what rob suggested was s/of/or/
+
+
+-- 
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
