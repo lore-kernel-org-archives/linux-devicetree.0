@@ -1,69 +1,58 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v5 07/14] qcom: spmi-gpio: add support for hierarchical
- IRQ chip
-Date: Fri, 18 Jan 2019 13:21:07 +0000
-Message-ID: <94b2b50f-b0e7-3e5c-5ee5-c8df80d6f042@arm.com>
-References: <20190117003234.22127-1-masneyb@onstation.org>
- <20190117003234.22127-8-masneyb@onstation.org>
- <e9234c48-9fce-1ec4-48f1-dff134559eed@arm.com>
- <20190118124221.GB32143@basecamp>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH v3 4/4] usb: musb: Add support for MediaTek musb controller
+Date: Fri, 18 Jan 2019 07:34:08 -0600
+Message-ID: <20190118133408.GA30080@uda0271908>
+References: <1547709348-17506-1-git-send-email-min.guo@mediatek.com>
+ <1547709348-17506-5-git-send-email-min.guo@mediatek.com>
+ <20190117143342.GS5544@atomide.com>
+ <1547792054.4433.254.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118124221.GB32143@basecamp>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <1547792054.4433.254.camel@mhfsdcap03>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Min Guo <min.guo@mediatek.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yonglong Wu <yonglong.wu@mediatek.com>, hdegoede@redhat.com, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, chunfeng.yun@mediatek.com, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On 18/01/2019 12:42, Brian Masney wrote:
-> Hi Marc,
+Hi Min,
+
+On Fri, Jan 18, 2019 at 02:14:14PM +0800, Min Guo wrote:
+> On Thu, 2019-01-17 at 06:33 -0800, Tony Lindgren wrote:
+> > Hi,
+> > 
+> > * min.guo@mediatek.com <min.guo@mediatek.com> [190117 07:16]:
+> > > There are some quirk of MediaTek musb controller, such as:
+> > >  -W1C interrupt status registers
+> > >  -Private data toggle registers
+> > >  -No dedicated DMA interrupt line
+> > 
+> > Can you please separate the musb generic changes listed above
+> > into separate individual patches in preparation for adding
+> > support for new hardware?
+> > 
+> > Otherwise we'll have hard time finding out with git bisect what
+> > exactly breaks things if we run into trouble.
 > 
-> On Thu, Jan 17, 2019 at 11:32:01AM +0000, Marc Zyngier wrote:
->>>  static int pmic_gpio_to_irq(struct gpio_chip *chip, unsigned pin)
->>>  {
->>>  	struct pmic_gpio_state *state = gpiochip_get_data(chip);
->>> -	struct pmic_gpio_pad *pad;
->>> +	struct irq_fwspec fwspec;
->>>  
->>> -	pad = state->ctrl->desc->pins[pin].drv_data;
->>> +	fwspec.fwnode = state->fwnode;
->>> +	fwspec.param_count = 2;
->>> +	fwspec.param[0] = pin + PMIC_GPIO_PHYSICAL_OFFSET;
->>> +	fwspec.param[1] = IRQ_TYPE_NONE;
->>
->> In my experience, IRQ_TYPE_NONE is rarely a good thing, unless you
->> expect the trigger information to be found by some other mean. I guess
->> that's one of the reasons why everything falls back to level in the SPMI
->> driver...
-> 
-> I'm not sure how to determine what trigger to put here. I thought that
-> it would be up to the caller of request_any_context_irq() to explicitly
-> set the expected trigger type when a GPIO is used, which will overwrite
-> IRQ_TYPE_NONE with the proper trigger type.
+> Thanks for your suggestion.
+> I prepared to divide these changes into separate patches. Later, Mr.Bin
+> suggested not to do this.
 
-The main issue is that IRQ_TYPE_NONE is a bit loosely defined, and
-mostly means "keep whatever was there before", which is a bit like
-rolling a dice each time you allocate an interrupt.
+Initially I thought the clearb/w() changes should be just a couple
+lines, so didn't think to separate it. But after reviewed the final
+implemenation, I agree Tony's comment is the right thing to do, please
+separate the musb core changes, each for clearb/w(), get/set_toggle(),
+and dma.
 
-> 
-> For example, I've tested the hierarchical IRQ domains with gpio-keys and
-> when the gpio property is used, devm_request_any_context_irq() is called
-> with the flags IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING. This calls
-> __setup_irq(), which will call irq_set_type() and overwrite the trigger
-> type.
-> 
-> irq_set_type() is only called when the IRQ is not shared, so I'm not
-> sure if this would work as expected with a shared IRQ.
-
-I'd suggest you force the type to a "safe" value such as rising edge,
-and let the irq_set_type() call do the right thing, assuming you've
-plugged the issue in the core SPMI driver.
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+Regards,
+-Bin.
