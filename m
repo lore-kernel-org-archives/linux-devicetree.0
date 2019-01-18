@@ -1,30 +1,34 @@
-From: Doug Anderson <dianders@chromium.org>
-Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
-Date: Thu, 17 Jan 2019 18:50:46 -0800
-Message-ID: <CAD=FV=Xac6FCx=scgm5BCBsHFgtvqBpHT1ziKzrOWR2y7+J-_A@mail.gmail.com>
-References: <20190114184255.258318-1-mka@chromium.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCH 1/3] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Fri, 18 Jan 2019 08:30:15 +0530
+Message-ID: <c7c33640-ae2c-eacf-0c91-a7537b5f16c1@codeaurora.org>
+References: <cover.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <a13ad49d3ae8d9a5a972027283b7212ab19f97d0.1547054308.git.saiprakash.ranjan@codeaurora.org>
+ <20190113072319.GB28907@builder>
+ <5724d2d4-39df-a923-5f94-b53c40a84fd3@codeaurora.org>
+ <20190117195027.GA12955@builder>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190114184255.258318-1-mka@chromium.org>
+In-Reply-To: <20190117195027.GA12955@builder>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matthias Kaehlcke <mka@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On 1/18/2019 1:20 AM, Bjorn Andersson wrote:
+> 
+> There seems to be some variations of this, but we try to keep everything
+> sorted in sdm845.dtsi to avoid having to jump around between the various
+> files. So please merge it into sdm845.dtsi (sorted by address).
+> 
 
-On Mon, Jan 14, 2019 at 10:43 AM Matthias Kaehlcke <mka@chromium.org> wrote:
->
-> The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
-> ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
-> that describes this topology.
->
-> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
->  1 file changed, 38 insertions(+)
+Sure will do it.
 
-Looks right to me and matches bindings examples.
-
-Reviewed-by: Douglas Anderson <dianders@chromium.org>
+Thanks,
+Sai
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
