@@ -1,152 +1,31 @@
-From: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: meson8b: odroidc1: Enable usb phy node
-Date: Fri, 18 Jan 2019 23:29:08 +0100
-Message-ID: <CAFBinCCD4o0cXEht_7bgV6moCK2WfVRvZq8UUZD3gDo-TaRKbQ@mail.gmail.com>
-References: <20190113181808.5768-1-linux.amoon@gmail.com>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v1 1/1] mmc: dw_mmc-bluefield: : Fix the license
+ information
+Date: Fri, 18 Jan 2019 23:31:49 +0100 (CET)
+Message-ID: <alpine.DEB.2.21.1901182331080.1647@nanos.tec.linutronix.de>
+References: <7f45f1c645ec166b25afe51aa9ae1decdae0b600.1547834838.git.lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190113181808.5768-1-linux.amoon@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Anand Moon <linux.amoon@gmail.com>
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Kevin Hilman <khilman@baylibre.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Emiliano Ingrassia <ingrassia@epigenesys.com>
+Content-Type: text/plain; charset=US-ASCII
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <7f45f1c645ec166b25afe51aa9ae1decdae0b600.1547834838.git.lsun@mellanox.com>
+Sender: stable-owner@vger.kernel.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg KH <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>, David Woods <dwoods@mellanox.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Anand,
+Liming,
 
-thank you for this patch!
+On Fri, 18 Jan 2019, Liming Sun wrote:
 
-On Sun, Jan 13, 2019 at 7:18 PM Anand Moon <linux.amoon@gmail.com> wrote:
->
-> Add missing vbus-supply link to phy controller for usb_phy0
-> and usb_phy1 nodes, this changes fixed the power issue
-> on usb ports usb, changes help fix usb reset warning.
-I trust you on the fact that GPIOAO_5 controls VBUS of USB0 and USB1
+> The SPDX license identifier and the boiler plate text are
+> contradicting. Only the SPDX license identifier is needed. The
+> other one is removed.
+> 
+> Fixes: 86958dcc5ad7 ("mmc: dw_mmc-bluefield: Add driver extension")
+> Cc: stable@vger.kernel.org
+> Reviewed-by: David Woods <dwoods@mellanox.com>
+> Signed-off-by: Liming Sun <lsun@mellanox.com>
 
-to me the schematics are not 100% clear or I'm bad at interpreting them:
-- I'll refer to odroid-c1+_rev0.4_20150615.pdf
-- page 1 lists GPIOAO.BIT5 as input for the PWREN signal of the
-USB_OTG controller (usb0)
-- page 1 also shows a PWREN signal in the USB_HOST controller (usb1)
-but not it's input
-- based on your patch I assume that PWREN is the same signal for both
-USB controllers
+Thanks for fixing this!
 
-> [  821.991470] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> [  825.243385] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> [  828.151310] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> [  830.991241] usb 1-1.2: reset high-speed USB device number 3 using dwc2
->
-> Fixes: 2eb79a4d15ff (ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board)
-you already split your original patch into two, however I suggest
-splitting these patches differently:
-- this one (personally I would choose "ARM: dts: meson8b: odroidc1:
-fix USB VBUS supplies" as title), which contains the Fixes tag, adds
-the "usb_vbus" and references it in the "usb0" and "usb1" nodes
-- enables usb0_phy and usb0 as part of your second patch (I would call
-that "ARM: dts: meson8b: odroidc1: enable the OTG capable USB
-controller")
-
-> Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> Cc: Jerome Brunet <jbrunet@baylibre.com>
-> Cc: Neil Armstrong <narmstrong@baylibre.com>
-> Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> ---
-> Rebased on Kevin's amlogic/v5.0/fixes branch
->
-> [alarm@archl-c1t ~]$ lsusb -t
-> /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
->     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
->         |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
->         |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
->         |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
->         |__ Port 3: Dev 3, If 2, Class=Audio, Driver=snd-usb-audio, 480M
->         |__ Port 3: Dev 3, If 3, Class=Audio, Driver=snd-usb-audio, 480M
-> [alarm@archl-c1t ~]$
-> [alarm@archl-c1t ~]$ lsusb -v|egrep "^Bus|MaxPower"
-> Couldn't open device, some information will be missing
-> Bus 001 Device 003: ID 1b71:0056 Fushicai
->     MaxPower              500mA
-> Couldn't open device, some information will be missing
-> Bus 001 Device 004: ID 152d:0578 JMicron Technology Corp. / JMicron USA Technology Corp. JMS567 SATA 6Gb/s bridge
->     MaxPower               30mA
-> Couldn't open device, some information will be missing
-> Couldn't open device, some information will be missing
-> Bus 001 Device 002: ID 05e3:0610 Genesys Logic, Inc. 4-port hub
->     MaxPower              100mA
-> Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
->     MaxPower                0mA
-> ---
->  arch/arm/boot/dts/meson8b-odroidc1.dts | 23 +++++++++++++++++++++++
->  1 file changed, 23 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> index 0f0a46ddf3ff..a49a8509b288 100644
-> --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-> +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> @@ -83,6 +83,19 @@
->                 regulator-max-microvolt = <5000000>;
->         };
->
-> +       usb_vbus: regulator-usb-vbus {
-please add a comment here with some details about the regulator and
-add a hint that the signal in the schematics is called "PWREN"
-
-> +               compatible = "regulator-fixed";
-> +
-> +               regulator-name = "USB_VBUS";
-> +               regulator-min-microvolt = <5000000>;
-> +               regulator-max-microvolt = <5000000>;
-> +
-> +               vin-supply = <&p5v0>;
-> +
-> +               gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
-> +               enable-active-high;
-> +       };
-> +
->         tflash_vdd: regulator-tflash_vdd {
->                 /*
->                  * signal name from schematics: TFLASH_VDD_EN
-> @@ -293,8 +306,18 @@
->         pinctrl-names = "default";
->  };
->
-> +&usb0_phy {
-> +       status = "okay";
-> +       vbus-supply = <&usb_vbus>;
-> +};
-> +
->  &usb1_phy {
->         status = "okay";
-> +       vbus-supply = <&usb_vbus>;
-> +};
-> +
-> +&usb0 {
-> +       status = "okay";
->  };
-I believe there's a problem with the usb/usb_phy nodes here. on my
-Odroid-C1 this results in:
-# cat /sys/kernel/debug/regulator/regulator_summary | grep USB_VBUS
-   USB_VBUS                      0    0      0 unknown  5000mV     0mA
- 5000mV  5000mV
-(open count is 0)
-
-if I move "vbus-supply" to the "usb1" node (just as an example) then I get:
-# cat /sys/kernel/debug/regulator/regulator_summary | grep USB_VBUS
-   USB_VBUS                      1    1      0 unknown  5000mV     0mA
- 5000mV  5000mV
-
-unfortunately neither your original patch nor the modified version
-seem to enable USB VBUS on my Odroid-C1.
-I have documented my findings already back in December, see "USB
-issues on Odroid-C1" [0]
-help on that would be highly appreciated :)
-
-on which board revision have you tested this patch?
-
-
-Regards
-Martin
-
-
-[0] http://lists.infradead.org/pipermail/linux-amlogic/2018-December/009451.html
+       tglx
