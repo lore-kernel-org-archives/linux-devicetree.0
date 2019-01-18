@@ -1,45 +1,58 @@
-From: Thomas Gleixner <tglx@linutronix.de>
-Subject: Re: [PATCH v7 1/3] mmc: dw_mmc-bluefield: Add driver extension
-Date: Fri, 18 Jan 2019 11:06:04 +0100 (CET)
-Message-ID: <alpine.DEB.2.21.1901181059100.1647@nanos.tec.linutronix.de>
-References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com> <1525805210-15246-1-git-send-email-lsun@mellanox.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH 1/4] dt-binding: irq: imx-irqsteer: use irq number per
+ channel instead of group number
+Date: Fri, 18 Jan 2019 10:12:22 +0000
+Message-ID: <ef6eb38d-8e74-a55d-6d78-516d81fa957f@arm.com>
+References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+ <1547797668-30342-2-git-send-email-aisheng.dong@nxp.com>
+ <1547801291.2626.3.camel@pengutronix.de>
+ <45c7e5b6-26bb-81b1-093b-96312a1788ec@arm.com>
+ <AM0PR04MB42114D5B25B23C0D7FFF95BA809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1525805210-15246-1-git-send-email-lsun@mellanox.com>
+In-Reply-To: <AM0PR04MB42114D5B25B23C0D7FFF95BA809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>
+To: Aisheng Dong <aisheng.dong@nxp.com>, Lucas Stach <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>
 List-Id: devicetree@vger.kernel.org
 
-Liming,
+On 18/01/2019 09:46, Aisheng Dong wrote:
+>> From: Marc Zyngier [mailto:marc.zyngier@arm.com]
+>> Sent: Friday, January 18, 2019 5:39 PM
+>> On 18/01/2019 08:48, Lucas Stach wrote:
+>>> Am Freitag, den 18.01.2019, 07:53 +0000 schrieb Aisheng Dong:
+>>>> Not all 64 interrupts may be used in one group. e.g. most irqsteer in
+>>>> imx8qxp and imx8qm subsystems supports only 32 interrupts.
+>>>>
+>>>> As the IP integration parameters are Channel number and interrupts
+>>>> number, let's use fsl,irqs-per-chan to represents how many interrupts
+>>>> supported by this irqsteer channel.
+>>>
+>>> Sorry, but total NACK. I've got to great lengths with dumping the
+>>> actually implemented register layout on i.MX8M and AFAICS the IRQs are
+>>> always managed in groups of 64 IRQs, even if less than that are
+>>> connected as input IRQs. This is what the actually present register
+>>> set on i.MX8M tells us.
+>>
+>> Also, I'd really like the DT bindings not to change at every release. So whatever
+>> change (if any) has to be done for this driver to support existing HW, please
+>> make sure that the DT bindings are kept as stable as possible.
+>>
+> 
+> Sorry I should clarify it a bit.
+> There's still no users in Devicetree.
+> So I guess we can update it, right? Or not?
 
-On Tue, 8 May 2018, Liming Sun wrote:
-> index 0000000..54c3fbb
-> --- /dev/null
-> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
-> @@ -0,0 +1,81 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 Mellanox Technologies.
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License as published by
-> + * the Free Software Foundation; either version 2 of the License, or
-> + * (at your option) any later version.
-> + */
-
-This license information is broken. The SPDX license identifier and the
-boiler plate text are contradicting. The SPDX id is GPL v2 only and the
-boiler plate says v2 or later.
-
-Please decide which version you want and fix ASAP. If you fix that up
-please add a Fixes: tag and cc stable. While at it please remove the boiler
-plate text as the SPDX id is sufficient and the boiler plate is redundant
-information.
-
-See Documentation/process/license-rules.txt
+What do you mean by no users? This driver is in 5.0, and I assume people
+are using it one way or another. Not having a platform in the kernel
+tree is pretty much irrelevant, as the kernel tree is not a canonical
+repository of existing platforms.
 
 Thanks,
 
-	tglx
+	M.
+-- 
+Jazz is not dead. It just smells funny...
