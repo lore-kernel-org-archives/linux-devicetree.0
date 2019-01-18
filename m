@@ -1,12 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 4/6] arm64: dts: allwinner: a64: Add A64 CSI controller
-Date: Fri, 18 Jan 2019 22:01:56 +0530
-Message-ID: <20190118163158.21418-5-jagan@amarulasolutions.com>
+Subject: [PATCH v6 5/6] arm64: dts: allwinner: a64: Add pinmux
+ setting for CSI MCLK on PE1
+Date: Fri, 18 Jan 2019 22:01:57 +0530
+Message-ID: <20190118163158.21418-6-jagan@amarulasolutions.com>
 References: <20190118163158.21418-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBGX7Q7RAKGQENW74U7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBH77Q7RAKGQEHH7EPQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190118163158.21418-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,53 +20,33 @@ To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalh
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Add dts node details for Allwinner A64 CSI controller.
+Some camera modules have the SoC feeding a master clock to the sensor
+instead of having a standalone crystal. This clock signal is generated
+from the clock control unit and output from the CSI MCLK function of
+pin PE1.
 
-A64 CSI has similar features as like in H3, but the CSI_SCLK
-need to update it to 300MHz than default clock rate.
+Add a pinmux setting for it for camera sensors to reference.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 +++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-index 384c417cb7a2..89a0deb3fe6a 100644
+index 89a0deb3fe6a..dd5740bc3fc9 100644
 --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
 +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
-@@ -532,6 +532,12 @@
- 			interrupt-controller;
- 			#interrupt-cells = <3>;
+@@ -538,6 +538,11 @@
+ 				function = "csi0";
+ 			};
  
-+			csi_pins: csi-pins {
-+				pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
-+				       "PE7", "PE8", "PE9", "PE10", "PE11";
++			csi_mclk_pin: csi-mclk {
++				pins = "PE1";
 +				function = "csi0";
 +			};
 +
  			i2c0_pins: i2c0_pins {
  				pins = "PH0", "PH1";
  				function = "i2c0";
-@@ -899,6 +905,20 @@
- 			status = "disabled";
- 		};
- 
-+		csi: csi@1cb0000 {
-+			compatible = "allwinner,sun50i-a64-csi";
-+			reg = <0x01cb0000 0x1000>;
-+			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&ccu CLK_BUS_CSI>,
-+				 <&ccu CLK_CSI_SCLK>,
-+				 <&ccu CLK_DRAM_CSI>;
-+			clock-names = "bus", "mod", "ram";
-+			resets = <&ccu RST_BUS_CSI>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&csi_pins>;
-+			status = "disabled";
-+		};
-+
- 		hdmi: hdmi@1ee0000 {
- 			compatible = "allwinner,sun50i-a64-dw-hdmi",
- 				     "allwinner,sun8i-a83t-dw-hdmi";
 -- 
 2.18.0.321.gffc6fa0e3
