@@ -1,83 +1,71 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: Re: [PATCH v9 00/13] media: staging/imx7: add i.MX7 media driver
-Date: Fri, 18 Jan 2019 18:28:41 +0000
-Message-ID: <m3bm4dg6qu.fsf@linaro.org>
-References: <20181122151834.6194-1-rui.silva@linaro.org>
- <757f8c52-7c23-7cf7-32ee-75ddba767ff8@xs4all.nl>
- <CAOMZO5BCPAmcE=fU0fA9hgwZ89JMEtO5hOb15b7VwtD6i1LwSg@mail.gmail.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 08/13] regulator: max77650: add regulator support
+Date: Fri, 18 Jan 2019 18:36:53 +0000
+Message-ID: <20190118183653.GE6260@sirena.org.uk>
+References: <20190118134244.22253-1-brgl@bgdev.pl>
+ <20190118134244.22253-9-brgl@bgdev.pl>
+ <20190118180148.GD6260@sirena.org.uk>
+ <CAMpxmJX8OmnDtOhQjWi9edX-4pHu1daKiDkRdNAVw-PZsz9UXA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-reply-to: <CAOMZO5BCPAmcE=fU0fA9hgwZ89JMEtO5hOb15b7VwtD6i1LwSg@mail.gmail.com>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media <linux-media@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <CAMpxmJX8OmnDtOhQjWi9edX-4pHu1daKiDkRdNAVw-PZsz9UXA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Oi Fabio,
-On Fri 18 Jan 2019 at 16:49, Fabio Estevam wrote:
-> Hi Rui,
->
-> On Fri, Dec 7, 2018 at 10:44 AM Hans Verkuil 
-> <hverkuil@xs4all.nl> wrote:
->
->> I got a few checkpatch warnings about coding style:
->>
->> CHECK: Alignment should match open parenthesis
->> #953: FILE: drivers/staging/media/imx/imx7-media-csi.c:911:
->> +static struct v4l2_mbus_framefmt *imx7_csi_get_format(struct 
->> imx7_csi *csi,
->> +                                       struct 
->> v4l2_subdev_pad_config *cfg,
->>
->> CHECK: Alignment should match open parenthesis
->> #1341: FILE: drivers/staging/media/imx/imx7-media-csi.c:1299:
->> +       ret = v4l2_async_register_fwnode_subdev(&csi->sd,
->> +                                       sizeof(struct 
->> v4l2_async_subdev),
->>
->> CHECK: Lines should not end with a '('
->> #684: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:669:
->> +static struct csis_pix_format const *mipi_csis_try_format(
->>
->> CHECK: Alignment should match open parenthesis
->> #708: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:693:
->> +static struct v4l2_mbus_framefmt *mipi_csis_get_format(struct 
->> csi_state *state,
->> +                                       struct 
->> v4l2_subdev_pad_config *cfg,
->>
->> CHECK: Alignment should match open parenthesis
->> #936: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:921:
->> +       ret = v4l2_async_register_fwnode_subdev(mipi_sd,
->> +                               sizeof(struct 
->> v4l2_async_subdev), &sink_port, 1,
->>
->> Apparently the latest coding style is that alignment is more 
->> important than
->> line length, although I personally do not agree. But since you 
->> need to
->> respin in any case due to the wrong SPDX identifier you used 
->> you might as
->> well take this into account.
->>
->> I was really hoping I could merge this, but the SPDX license 
->> issue killed it.
->
-> Do you plan to submit a new version?
 
-Yeah, I will try to send one next week. I think have all this
-addressed in a branch, I will need to rebase again.
+--T6xhMxlHU34Bk0ad
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
----
-Cheers,
-	Rui
+On Fri, Jan 18, 2019 at 07:13:38PM +0100, Bartosz Golaszewski wrote:
+> pt., 18 sty 2019 o 19:01 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
+
+> > > +++ b/drivers/regulator/max77650-regulator.c
+> > > @@ -0,0 +1,537 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2018 BayLibre SAS
+> > > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+
+> > Please make the entire header C++ style so it looks more intentional.
+
+> Seems like there are more files in the kernel source using the mixed
+> comment style for the SPDX identifier and I also prefer it over C++
+> only. Would you mind if it stayed that way?
+
+I'd prefer to change.
+
+> > You don't need to do this, the core will do it for you (it will actually
+> > still do it even with the above, it'll only fall back to using
+> > config->init_data if it's own lookup fails).
+
+> I added this loop specifically because the core would not pick up the
+> init data from DT. What did I miss (some specific variable to assign)?
+> I just noticed some other drivers do the same and thought it's the
+> right thing to do.
+
+You should set regulators_node and of_match, see regulator_of_get_init_node=
+().
+
+--T6xhMxlHU34Bk0ad
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxCHMQACgkQJNaLcl1U
+h9DXBwf8DBxtp6P6ln8aUsZTEj9e2Ti+0cszf0ukaKXrny3tYAfY8PiUE/iYvr3E
+1xb8upkWmq7kT7QO8bm/PbeDdClAIKlfI9aUoWyLo1HkHkj0F4VMUjDMy6mTbsl6
+cijuEtr67FxzE+pak6KQOvqhKhh/tp2DMQFZD30dbDhSX3p8cMsM5YTqmlIO1q4t
+p0Md4tGBiMAvtcI2suzwxkteeTVogqx00qMv6FdUGmupnQZ3y+PldPNpMmRY6ck2
+xajDLGrBuvWCLesasIimDKVxmo2VRIYQ+fBqL1zPSJ0roZL1gknOfgmTOPyCwkYs
+SzRytR1wQyrsQzW0TzFtxFhHHBuNKQ==
+=LpDs
+-----END PGP SIGNATURE-----
+
+--T6xhMxlHU34Bk0ad--
