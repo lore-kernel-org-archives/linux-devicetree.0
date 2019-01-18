@@ -1,76 +1,71 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 08/13] regulator: max77650: add regulator support
-Date: Fri, 18 Jan 2019 18:01:48 +0000
-Message-ID: <20190118180148.GD6260@sirena.org.uk>
-References: <20190118134244.22253-1-brgl@bgdev.pl>
- <20190118134244.22253-9-brgl@bgdev.pl>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 19/21] treewide: add checks for the return value of
+ memblock_alloc*()
+Date: Fri, 18 Jan 2019 18:02:03 +0000
+Message-ID: <20190118180201.uva5nhf2g23uamkn@pburton-laptop>
+References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
+ <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EP0wieDxd4TSJjHq"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190118134244.22253-9-brgl@bgdev.pl>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+Content-Language: en-US
+Content-ID: <8AB5FF9934BD5A4E822E85B3C315428B@namprd22.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "x86@kernel.org" <x86@kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi Mike,
 
---EP0wieDxd4TSJjHq
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On Wed, Jan 16, 2019 at 03:44:19PM +0200, Mike Rapoport wrote:
+> Add check for the return value of memblock_alloc*() functions and call
+> panic() in case of error.
+> The panic message repeats the one used by panicing memblock allocators with
+> adjustment of parameters to include only relevant ones.
+> 
+> The replacement was mostly automated with semantic patches like the one
+> below with manual massaging of format strings.
+> 
+> @@
+> expression ptr, size, align;
+> @@
+> ptr = memblock_alloc(size, align);
+> + if (!ptr)
+> + 	panic("%s: Failed to allocate %lu bytes align=0x%lx\n", __func__,
+> size, align);
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+> ---
+>%
+> diff --git a/arch/mips/cavium-octeon/dma-octeon.c b/arch/mips/cavium-octeon/dma-octeon.c
+> index e8eb60e..db1deb2 100644
+> --- a/arch/mips/cavium-octeon/dma-octeon.c
+> +++ b/arch/mips/cavium-octeon/dma-octeon.c
+> @@ -245,6 +245,9 @@ void __init plat_swiotlb_setup(void)
+>  	swiotlbsize = swiotlb_nslabs << IO_TLB_SHIFT;
+>  
+>  	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
+> +	if (!octeon_swiotlb)
+> +		panic("%s: Failed to allocate %lu bytes align=%lx\n",
+> +		      __func__, swiotlbsize, PAGE_SIZE);
+>  
+>  	if (swiotlb_init_with_tbl(octeon_swiotlb, swiotlb_nslabs, 1) == -ENOMEM)
+>  		panic("Cannot allocate SWIOTLB buffer");
 
-On Fri, Jan 18, 2019 at 02:42:39PM +0100, Bartosz Golaszewski wrote:
+That one should be %zu rather than %lu. The rest looks good, so with
+that one tweak:
 
-> Add regulator support for max77650. We support all four variants of this
-> PMIC including non-linear voltage table for max77651 SBB1 rail.
+    Acked-by: Paul Burton <paul.burton@mips.com> # MIPS parts
 
-Looks good, the ramping stuff might be a candidate for core (TBH I was
-sure we'd got that implemented already but we don't seem to) but that
-can be done later and the more complex one with non-linear steps does
-feel like it might have to stay in the driver anyway.
-
-A couple of small nits:
-
-> +++ b/drivers/regulator/max77650-regulator.c
-> @@ -0,0 +1,537 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (C) 2018 BayLibre SAS
-> + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-
-Please make the entire header C++ style so it looks more intentional.
-
-> +		for_each_child_of_node(dev->of_node, child) {
-> +			if (!of_node_name_eq(child, rdesc->desc.name))
-> +				continue;
-> +
-> +			init_data = of_get_regulator_init_data(dev, child,
-> +							       &rdesc->desc);
-> +			if (!init_data)
-> +				return -ENOMEM;
-> +
-> +			config.of_node = child;
-> +			config.init_data = init_data;
-> +		}
-
-You don't need to do this, the core will do it for you (it will actually
-still do it even with the above, it'll only fall back to using
-config->init_data if it's own lookup fails).
-
---EP0wieDxd4TSJjHq
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxCFIsACgkQJNaLcl1U
-h9DaJQf9Ee2yWoCC92HHYenJAWkagKDlUOWo5MUoKpYE2BrcBcgKQAw3XMUz45Y9
-eb1/I4MoT9vqo5JKBSHlTUKCH+HE4gTo433lFQW2y46e8qf6I6vt1abn/pScmrlI
-7IudxGE9c4BJsIbAfvLI9rtLvfdOSxBUdjYMs3hMDnn0U4Oh4qc4q0lHkiYR/wSU
-Mp+PnFpDxVAMzWNnao55zS1vkkELoMy++tO50+aGuFxLRIXHvCBf8LZ5LkAOZo9Q
-gm3SDThdid8VaNnA/YlHiFRCdLsNrWDH9qfYoyVZ2XCNUW3cnXFmH8shroh0fBYy
-nuJZQHDLj3lAl8LsLmRwwzG2KdQlFw==
-=f48Z
------END PGP SIGNATURE-----
-
---EP0wieDxd4TSJjHq--
+Thanks,
+    Paul
