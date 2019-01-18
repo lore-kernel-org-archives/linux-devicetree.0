@@ -1,53 +1,53 @@
 Return-Path: <SRS0=w1PK=P2=partner.samsung.com=k.konieczny@kernel.org>
 From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v4 0/5] Add imem clock for Exynos 5433
-Date: Fri, 18 Jan 2019 14:16:34 +0100
-Message-Id: <20190118131639.17578-1-k.konieczny@partner.samsung.com>
+Subject: [PATCH v4 2/5] clk: samsung: exynos5433: fix name typo in sssx
+Date: Fri, 18 Jan 2019 14:16:36 +0100
+Message-Id: <20190118131639.17578-3-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190118131639.17578-1-k.konieczny@partner.samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Content-Type: text/plain; charset="utf-8"
-References: <CGME20190118131710eucas1p1b4d7f67c5aa2832b669b1f3cff0235aa@eucas1p1.samsung.com>
+References: <20190118131639.17578-1-k.konieczny@partner.samsung.com>
+	<CGME20190118131712eucas1p2b7e11ff6df0a78d8e7ea50b34f9cf737@eucas1p2.samsung.com>
 To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add imem clock for Exynos 5433. This will allow to use SlimSSS (Slim
-Security SubSystem) with crypto functions.
+Fix typo in sssx name, there should be three letters 's'.
 
-Changes since v3:
-- added Acked-by and Reviewed-by to patches 2 and 3
-- dropped "[PATCH v3 4/5] arm64: dts: exynos: add imem clock" because it
-  was already applied
-- split "[PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks"
-  into two parts, first for DT bindings and second for clock driver. In
-  clock driver I dropped all SSS clocks and left only two slimSSS, as I
-  was unable to test SSS with crypto driver s5p-sss.
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5433.c   | 2 +-
+ include/dt-bindings/clock/exynos5433.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
-Changes since v2:
-- added Reviewed-by to two first patches
-- fixed subject for 3rd patch and commit message
-- in patch 3 moved documentation of imem to end of clocks after CMU_CAM1
-- in patch 4 moved cmu_imem declarations after cmu_cam1
-- in patch 5 added newlines after clock registers, moved code after cmu_cam1,
-  removed CLK_OF_DECLARE and exynos5433_cmu_imem_init, moved cmu_imem
-  compatible to the end of exynos5433_cmu_of_match
-
-Changes since v1:
-- splitted typo patch into two, one of them for stable, suggested by Krzysztof
-  Kozlowski
-- added more registers as suggested by Chanwoo Choi
-
-Kamil Konieczny (5):
-  clk: samsung: exynos5433: fix typo in imem divider
-  clk: samsung: exynos5433: fix name typo in sssx
-  dt-bindings: clk: exynos5433: document imem clock
-  dt-bindings: clk: exynos5433: add imem clock
-  clk: samsung: exynos5433: add imem clocks
-
- .../bindings/clock/exynos5433-clock.txt       | 23 ++++++++
- drivers/clk/samsung/clk-exynos5433.c          | 38 ++++++++++++-
- include/dt-bindings/clock/exynos5433.h        | 57 ++++++++++++++++++-
- 3 files changed, 114 insertions(+), 4 deletions(-)
-
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index ea47f49abc7f..24c3360db65b 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+ 	/* ENABLE_ACLK_TOP */
+ 	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
+ 			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
+-	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
++	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
+ 			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
+ 			29, CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
+diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+index 98bd85ce1e45..87bb2b017143 100644
+--- a/include/dt-bindings/clock/exynos5433.h
++++ b/include/dt-bindings/clock/exynos5433.h
+@@ -156,7 +156,7 @@
+ #define CLK_ACLK_G2D_266		220
+ #define CLK_ACLK_G2D_400		221
+ #define CLK_ACLK_G3D_400		222
+-#define CLK_ACLK_IMEM_SSX_266		223
++#define CLK_ACLK_IMEM_SSSX_266		223
+ #define CLK_ACLK_BUS0_400		224
+ #define CLK_ACLK_BUS1_400		225
+ #define CLK_ACLK_IMEM_200		226
 -- 
 2.20.0
