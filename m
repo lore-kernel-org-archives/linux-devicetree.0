@@ -1,47 +1,46 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v6] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Fri, 18 Jan 2019 10:51:53 +0530
-Message-ID: <d3a814812039fdc7459656e2150e00a5@codeaurora.org>
-References: <20190114192201.23779-1-sibis@codeaurora.org>
- <CAD=FV=V2XoaDVy9hnh-S=jbzU-Di0KoD7gM2CxpZm3646k9ZjA@mail.gmail.com>
+From: Min Guo <min.guo@mediatek.com>
+Subject: Re: [PATCH v3 4/4] usb: musb: Add support for MediaTek musb
+ controller
+Date: Fri, 18 Jan 2019 14:14:14 +0800
+Message-ID: <1547792054.4433.254.camel@mhfsdcap03>
+References: <1547709348-17506-1-git-send-email-min.guo@mediatek.com>
+         <1547709348-17506-5-git-send-email-min.guo@mediatek.com>
+         <20190117143342.GS5544@atomide.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=V2XoaDVy9hnh-S=jbzU-Di0KoD7gM2CxpZm3646k9ZjA@mail.gmail.com>
+In-Reply-To: <20190117143342.GS5544@atomide.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, sricharan@codeaurora.org, linux-soc-owner@vger.kernel.org
+To: Tony Lindgren <tony@atomide.com>
+Cc: Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, hdegoede@redhat.com, Yonglong Wu <yonglong.wu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-18 04:35, Doug Anderson wrote:
+On Thu, 2019-01-17 at 06:33 -0800, Tony Lindgren wrote:
 > Hi,
 > 
-> On Mon, Jan 14, 2019 at 11:22 AM Sibi Sankar <sibis@codeaurora.org> 
-> wrote:
->> +               mss_pil: remoteproc@4080000 {
->> +                       compatible = "qcom,sdm845-mss-pil";
->> +                       reg = <0x04080000 0x408>, <0x04180000 0x48>;
+> * min.guo@mediatek.com <min.guo@mediatek.com> [190117 07:16]:
+> > There are some quirk of MediaTek musb controller, such as:
+> >  -W1C interrupt status registers
+> >  -Private data toggle registers
+> >  -No dedicated DMA interrupt line
 > 
-> This will now need to be adjusted to:
+> Can you please separate the musb generic changes listed above
+> into separate individual patches in preparation for adding
+> support for new hardware?
 > 
-> reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
+> Otherwise we'll have hard time finding out with git bisect what
+> exactly breaks things if we run into trouble.
 
-Yup, this was on my todo list after Bjorn
-posted out the patch
+Thanks for your suggestion.
+I prepared to divide these changes into separate patches. Later, Mr.Bin
+suggested not to do this.
 
-> 
-> This fixes things up to deal with the patch ("arm64: dts: qcom:
-> sdm845: Increase address and size cells for soc"), AKA:
-> - https://patchwork.kernel.org/patch/10767511/
-> - 
-> https://lkml.kernel.org/r/20190117042940.25487-2-bjorn.andersson@linaro.org
-> 
-> 
-> -Doug
+The detailed information can be referred to:
+https://patchwork.kernel.org/patch/10743561/
+https://patchwork.kernel.org/patch/10763737/
+https://patchwork.kernel.org/patch/107463741/
 
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+> Regards,
+> 
+> Tony
