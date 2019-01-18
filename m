@@ -1,12 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 3/6] media: sun6i: Add A64 CSI block support
-Date: Fri, 18 Jan 2019 22:01:55 +0530
-Message-ID: <20190118163158.21418-4-jagan@amarulasolutions.com>
+Subject: [PATCH v6 4/6] arm64: dts: allwinner: a64: Add A64 CSI controller
+Date: Fri, 18 Jan 2019 22:01:56 +0530
+Message-ID: <20190118163158.21418-5-jagan@amarulasolutions.com>
 References: <20190118163158.21418-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBFX7Q7RAKGQEWL5MPDI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBGX7Q7RAKGQENW74U7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190118163158.21418-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,36 +19,53 @@ To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalh
 Cc: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CSI block in Allwinner A64 has similar features as like in H3,
-but default mod clock rate in BSP along with latest mainline testing
-require to operate it at 300MHz.
+Add dts node details for Allwinner A64 CSI controller.
 
-So, add A64 CSI compatibe along with mod_rate quirk.
+A64 CSI has similar features as like in H3, but the CSI_SCLK
+need to update it to 300MHz than default clock rate.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 5 +++++
- 1 file changed, 5 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-index a9aef630c3b4..d03559d27066 100644
---- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -909,10 +909,15 @@ static int sun6i_csi_remove(struct platform_device *pdev)
- static const struct sun6i_csi_variant sun6i_a31_csi = {
- };
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 384c417cb7a2..89a0deb3fe6a 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -532,6 +532,12 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
-+static const struct sun6i_csi_variant sun50i_a64_csi = {
-+	.mod_rate	= 300000000,
-+};
++			csi_pins: csi-pins {
++				pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
++				       "PE7", "PE8", "PE9", "PE10", "PE11";
++				function = "csi0";
++			};
 +
- static const struct of_device_id sun6i_csi_of_match[] = {
- 	{ .compatible = "allwinner,sun6i-a31-csi", .data = &sun6i_a31_csi, },
- 	{ .compatible = "allwinner,sun8i-h3-csi", .data = &sun6i_a31_csi, },
- 	{ .compatible = "allwinner,sun8i-v3s-csi", .data = &sun6i_a31_csi, },
-+	{ .compatible = "allwinner,sun50i-a64-csi", .data = &sun50i_a64_csi, },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sun6i_csi_of_match);
+ 			i2c0_pins: i2c0_pins {
+ 				pins = "PH0", "PH1";
+ 				function = "i2c0";
+@@ -899,6 +905,20 @@
+ 			status = "disabled";
+ 		};
+ 
++		csi: csi@1cb0000 {
++			compatible = "allwinner,sun50i-a64-csi";
++			reg = <0x01cb0000 0x1000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_DRAM_CSI>;
++			clock-names = "bus", "mod", "ram";
++			resets = <&ccu RST_BUS_CSI>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&csi_pins>;
++			status = "disabled";
++		};
++
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun50i-a64-dw-hdmi",
+ 				     "allwinner,sun8i-a83t-dw-hdmi";
 -- 
 2.18.0.321.gffc6fa0e3
