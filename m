@@ -1,57 +1,85 @@
 From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH 2/8] dt-bindings: mtd: ingenic: Add compatible strings
- for the JZ4725B
-Date: Fri, 18 Jan 2019 09:20:06 +0100
-Message-ID: <20190118092006.79857045@bbrezillon>
+Subject: Re: [PATCH 3/8] mtd: rawnand: jz4780: Use SPDX license notifiers
+Date: Fri, 18 Jan 2019 09:22:25 +0100
+Message-ID: <20190118092225.440f0e6a@bbrezillon>
 References: <20190118010634.27399-1-paul@crapouillou.net>
-        <20190118010634.27399-2-paul@crapouillou.net>
+        <20190118010634.27399-3-paul@crapouillou.net>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118010634.27399-2-paul@crapouillou.net>
+In-Reply-To: <20190118010634.27399-3-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Paul Cercueil <paul@crapouillou.net>
 Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Jan 2019 22:06:28 -0300
+On Thu, 17 Jan 2019 22:06:29 -0300
 Paul Cercueil <paul@crapouillou.net> wrote:
 
-> Add compatible strings to probe the jz4780-nand and jz4780-bch drivers
-> from devicetree on the JZ4725B SoC from Ingenic.
+> Use SPDX license notifiers instead of GPLv2 license text in the headers.
 > 
 > Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
 Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
 
 > ---
->  Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt | 8 ++++++--
->  1 file changed, 6 insertions(+), 2 deletions(-)
+>  drivers/mtd/nand/raw/jz4780_bch.c  | 5 +----
+>  drivers/mtd/nand/raw/jz4780_bch.h  | 5 +----
+>  drivers/mtd/nand/raw/jz4780_nand.c | 5 +----
+>  3 files changed, 3 insertions(+), 12 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> index 29ea5853ca91..8ebed442ac55 100644
-> --- a/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> +++ b/Documentation/devicetree/bindings/mtd/ingenic,jz4780-nand.txt
-> @@ -6,7 +6,9 @@ memory-controllers/ingenic,jz4780-nemc.txt), and thus NAND device nodes must
->  be children of the NEMC node.
+> diff --git a/drivers/mtd/nand/raw/jz4780_bch.c b/drivers/mtd/nand/raw/jz4780_bch.c
+> index 7201827809e9..7e4e5e627603 100644
+> --- a/drivers/mtd/nand/raw/jz4780_bch.c
+> +++ b/drivers/mtd/nand/raw/jz4780_bch.c
+> @@ -1,12 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * JZ4780 BCH controller
+>   *
+>   * Copyright (c) 2015 Imagination Technologies
+>   * Author: Alex Smith <alex.smith@imgtec.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify it
+> - * under the terms of the GNU General Public License version 2 as published
+> - * by the Free Software Foundation.
+>   */
 >  
->  Required NAND controller device properties:
-> -- compatible: Should be set to "ingenic,jz4780-nand".
-> +- compatible: Should be one of:
-> +  * ingenic,jz4725b-nand
-> +  * ingenic,jz4780-nand
->  - reg: For each bank with a NAND chip attached, should specify a bank number,
->    an offset of 0 and a size of 0x1000000 (i.e. the whole NEMC bank).
+>  #include <linux/bitops.h>
+> diff --git a/drivers/mtd/nand/raw/jz4780_bch.h b/drivers/mtd/nand/raw/jz4780_bch.h
+> index bf4718088a3a..451e0c770160 100644
+> --- a/drivers/mtd/nand/raw/jz4780_bch.h
+> +++ b/drivers/mtd/nand/raw/jz4780_bch.h
+> @@ -1,12 +1,9 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+>  /*
+>   * JZ4780 BCH controller
+>   *
+>   * Copyright (c) 2015 Imagination Technologies
+>   * Author: Alex Smith <alex.smith@imgtec.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify it
+> - * under the terms of the GNU General Public License version 2 as published
+> - * by the Free Software Foundation.
+>   */
 >  
-> @@ -72,7 +74,9 @@ NAND devices. The following is a description of the device properties for a
->  BCH controller.
+>  #ifndef __DRIVERS_MTD_NAND_JZ4780_BCH_H__
+> diff --git a/drivers/mtd/nand/raw/jz4780_nand.c b/drivers/mtd/nand/raw/jz4780_nand.c
+> index 22e58975f0d5..7f55358b860f 100644
+> --- a/drivers/mtd/nand/raw/jz4780_nand.c
+> +++ b/drivers/mtd/nand/raw/jz4780_nand.c
+> @@ -1,12 +1,9 @@
+> +// SPDX-License-Identifier: GPL-2.0
+>  /*
+>   * JZ4780 NAND driver
+>   *
+>   * Copyright (c) 2015 Imagination Technologies
+>   * Author: Alex Smith <alex.smith@imgtec.com>
+> - *
+> - * This program is free software; you can redistribute it and/or modify it
+> - * under the terms of the GNU General Public License version 2 as published
+> - * by the Free Software Foundation.
+>   */
 >  
->  Required BCH properties:
-> -- compatible: Should be set to "ingenic,jz4780-bch".
-> +- compatible: Should be one of:
-> +  * ingenic,jz4725b-bch
-> +  * ingenic,jz4780-bch
->  - reg: Should specify the BCH controller registers location and length.
->  - clocks: Clock for the BCH controller.
->  
+>  #include <linux/delay.h>
