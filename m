@@ -1,58 +1,106 @@
-From: Tomi Valkeinen <tomi.valkeinen@ti.com>
-Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
-Date: Fri, 18 Jan 2019 10:29:33 +0200
-Message-ID: <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
-References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
- <20190117123320.GD3271@phenom.ffwll.local>
- <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
- <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
- <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH 5/8] mtd: rawnand: jz4780: Add ooblayout for the JZ4725B
+Date: Fri, 18 Jan 2019 09:29:45 +0100
+Message-ID: <20190118092945.4ca0fef2@bbrezillon>
+References: <20190118010634.27399-1-paul@crapouillou.net>
+        <20190118010634.27399-5-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh@kernel.org>, Daniel Vetter <daniel@ffwll.ch>
-Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190118010634.27399-5-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gMTgvMDEvMTkgMDA6MDQsIFJvYiBIZXJyaW5nIHdyb3RlOgoKPiBNZXNhL2xpYmRybSBhbHJl
-YWR5IGhhcyBsb3RzIG9mIGNvZGUgdG8gb3BlbiB0aGUgY29ycmVjdCBkZXZpY2VzIGFuZAo+IG5v
-dCBjYXJlIGFib3V0IG1pbm9yIG51bWJlcnMuIFdoYXQncyB0aGUgcHJvYmxlbSBoZXJlPwoKV2Vs
-bCwgbWF5YmUgdGhlIHByb2JsZW0gaXMgdGhhdCBJIGRvbid0IGtub3cgaG93IHRvIGRvIHRoaXMg
-PSkuCgpTbywgaWYgd2UgaGF2ZSBtdWx0aXBsZSBEUk0gZGV2aWNlcywgaG93IGRvZXMgb25lIG1h
-bmFnZSB0aG9zZT8KSXRlcmF0aW5nIG92ZXIgdGhlbSBhbmQgbG9va2luZyBmb3Iga21zLWNhcGFi
-bGUgb25lcyBpcyBlYXN5IGVub3VnaC4gQnV0CmlmIHRoZXJlIGFyZSBtdWx0aXBsZSBrbXMtY2Fw
-YWJsZSBvbmVzLCBob3cgc2hvdWxkIHRoZSB1c2Vyc3BhY2UgY2hvb3NlCmJldHdlZW4gdGhvc2U/
-CgpJIHNlZSB0aGF0IHVkZXYgY3JlYXRlcyAvZGV2L2RyaS9ieS1wYXRoLyBsaW5rcyB0byB0aGUg
-Y2FyZHMsIHNob3VsZCB0aGUKdXNlcnNwYWNlIHVzZSB0aG9zZSB0byBoYXZlIGEgcGVyc2lzdGVu
-dCBsaW5rIHRvIHRoZSBjYXJkPyBFLmcuIGZpcnN0CnRpbWUgdGhlIGFwcCBpcyByYW4sIGl0J2xs
-IGNvbGxlY3QgYWxsIHRoZSBrbXMtY2FwYWJsZSBjYXJkcywgYW5kIHN0b3JlCnRoZSBieS1wYXRo
-IG5hbWVzIHNvbWV3aGVyZSwgYW5kIGluIHN1YnNlcXVlbnQgcnVucyBpdCB3aWxsIGluc3RlYWQg
-dXNlCnRoZSBieS1wYXRoIG5hbWVzIHRvIGtlZXAgdGhlIG9yZGVyIHRoZSBzYW1lLgoKSWYgSSBo
-YXZlIGEgcHJvZHVjdCB3aXRoIHR3byBkaXNwbGF5IGNvbnRyb2xsZXJzLCBhbmQgb25lIG9mIHRo
-ZW0gaGFzCnRoZSBtYWluIGRpc3BsYXkgY29ubmVjdGVkLCBob3cgZG9lcyBteSBjdXN0b20gYXBw
-IGtub3cgd2hpY2ggY2FyZCB0bwp1c2U/IEhhcmRjb2RpbmcgdGhlIGJ5LXBhdGggaW4gdGhlIGFw
-cD8KCklmIHVkZXYvc3lzdGVtZCBpcyBub3QgYXZhaWxhYmxlLCBob3cgZG9lcyB0aGUgdXNlcnNw
-YWNlIGRvIHRoaXM/IEkKdHJpZWQgdG8gc2VlIGlmIG9uZSBjYW4gZ2V0IGVub3VnaCBpbmZvcm1h
-dGlvbiBmcm9tIHRoZSBjYXJkIGRldmljZSB3aXRoCmlvY3RscyB0byBmaWd1cmUgdGhlc2UgdGhp
-bmdzIG91dCwgYnV0IEkgZGlkbid0IGZpZ3VyZSB0aGlzIG91dC4gU2hvdWxkCnRoZSBkcm1HZXRC
-dXNpZCgpIHJldHVybiBzb21ldGhpbmcgZm9yIHBsYXRmb3JtIGRldmljZXMgdG9vPyBNYXliZSBJ
-J3ZlCmdvdCBzb21ldGhpbmcgbWlzc2luZyBmcm9tIHRoZSBkaXNwbGF5IGRyaXZlciwgYW5kIGRy
-bUdldEJ1c2lkKCkgc2hvdWxkCnJldHVybiBzb21ldGhpbmcgc2ltaWxhciBhcyB3aGF0IGlzIGlu
-IHRoZSBieS1wYXRoIG5hbWUuCgogVG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQg
-T3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJ
-RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
-CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
-cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Thu, 17 Jan 2019 22:06:31 -0300
+Paul Cercueil <paul@crapouillou.net> wrote:
+
+> The boot ROM of the JZ4725B SoC expects a specific OOB layout on the
+> NAND, so it makes sense to use this OOB layout unconditionally on this
+> SoC.
+> 
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+
+Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+
+> ---
+>  drivers/mtd/nand/raw/jz4780_nand.c | 40 +++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 39 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/mtd/nand/raw/jz4780_nand.c b/drivers/mtd/nand/raw/jz4780_nand.c
+> index cf24bf12884f..073b3da5c3f7 100644
+> --- a/drivers/mtd/nand/raw/jz4780_nand.c
+> +++ b/drivers/mtd/nand/raw/jz4780_nand.c
+> @@ -34,6 +34,7 @@ struct jz_soc_info {
+>  	unsigned long data_offset;
+>  	unsigned long addr_offset;
+>  	unsigned long cmd_offset;
+> +	const struct mtd_ooblayout_ops *oob_layout;
+>  };
+>  
+>  struct jz4780_nand_cs {
+> @@ -208,7 +209,7 @@ static int jz4780_nand_attach_chip(struct nand_chip *chip)
+>  		return -EINVAL;
+>  	}
+>  
+> -	mtd_set_ooblayout(mtd, &nand_ooblayout_lp_ops);
+> +	mtd_set_ooblayout(mtd, nfc->soc_info->oob_layout);
+>  
+>  	return 0;
+>  }
+> @@ -398,16 +399,53 @@ static int jz4780_nand_remove(struct platform_device *pdev)
+>  	return 0;
+>  }
+>  
+> +static int jz4725b_ooblayout_ecc(struct mtd_info *mtd, int section,
+> +				 struct mtd_oob_region *oobregion)
+> +{
+> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
+> +
+> +	if (section || !ecc->total)
+> +		return -ERANGE;
+> +
+> +	oobregion->length = ecc->total;
+> +	oobregion->offset = 3;
+> +
+> +	return 0;
+> +}
+> +
+> +static int jz4725b_ooblayout_free(struct mtd_info *mtd, int section,
+> +				  struct mtd_oob_region *oobregion)
+> +{
+> +	struct nand_chip *chip = mtd_to_nand(mtd);
+> +	struct nand_ecc_ctrl *ecc = &chip->ecc;
+> +
+> +	if (section)
+> +		return -ERANGE;
+> +
+> +	oobregion->length = mtd->oobsize - ecc->total - 3;
+> +	oobregion->offset = 3 + ecc->total;
+> +
+> +	return 0;
+> +}
+> +
+> +const struct mtd_ooblayout_ops jz4725b_ooblayout_ops = {
+> +	.ecc = jz4725b_ooblayout_ecc,
+> +	.free = jz4725b_ooblayout_free,
+> +};
+> +
+>  static const struct jz_soc_info jz4725b_soc_info = {
+>  	.data_offset = 0x00000000,
+>  	.cmd_offset  = 0x00008000,
+>  	.addr_offset = 0x00010000,
+> +	.oob_layout  = &jz4725b_ooblayout_ops,
+>  };
+>  
+>  static const struct jz_soc_info jz4780_soc_info = {
+>  	.data_offset = 0x00000000,
+>  	.cmd_offset  = 0x00400000,
+>  	.addr_offset = 0x00800000,
+> +	.oob_layout  = &nand_ooblayout_lp_ops,
+>  };
+>  
+>  static const struct of_device_id jz4780_nand_dt_match[] = {
