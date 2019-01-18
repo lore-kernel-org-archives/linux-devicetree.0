@@ -1,69 +1,47 @@
-From: Andrew Jeffery <andrew@aj.id.au>
-Subject: Re: [PATCH v2 2/2] dt-bindings: edac: Aspeed AST2500
-Date: Fri, 18 Jan 2019 15:43:54 +1030
-Message-ID: <1547788434.2065387.1637728584.1098F843@webmail.messagingengine.com>
-References: <1547743097-5236-1-git-send-email-schaecsn@gmx.net>
- <1547743097-5236-3-git-send-email-schaecsn@gmx.net>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v6] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+Date: Fri, 18 Jan 2019 10:51:53 +0530
+Message-ID: <d3a814812039fdc7459656e2150e00a5@codeaurora.org>
+References: <20190114192201.23779-1-sibis@codeaurora.org>
+ <CAD=FV=V2XoaDVy9hnh-S=jbzU-Di0KoD7gM2CxpZm3646k9ZjA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547743097-5236-3-git-send-email-schaecsn@gmx.net>
+In-Reply-To: <CAD=FV=V2XoaDVy9hnh-S=jbzU-Di0KoD7gM2CxpZm3646k9ZjA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stefan Schaeckeler <schaecsn@gmx.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Borislav Petkov <bp@alien8.de>, Mauro Carvalho Chehab <mchehab@kernel.org>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-aspeed@lists.ozlabs.org, linux-edac@vger.kernel.org
-Cc: Stefan M Schaeckeler <sschaeck@cisco.com>
+To: Doug Anderson <dianders@chromium.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, tsoni@codeaurora.org, clew@codeaurora.org, akdwived@codeaurora.org, Mark Rutland <mark.rutland@arm.com>, linux-remoteproc@vger.kernel.org, Evan Green <evgreen@chromium.org>, Brian Norris <briannorris@chromium.org>, sricharan@codeaurora.org, linux-soc-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Jan 2019, at 03:08, Stefan Schaeckeler wrote:
-> From: Stefan M Schaeckeler <sschaeck@cisco.com>
+On 2019-01-18 04:35, Doug Anderson wrote:
+> Hi,
 > 
-> Add support for EDAC on the Aspeed AST2500 SoC.
+> On Mon, Jan 14, 2019 at 11:22 AM Sibi Sankar <sibis@codeaurora.org> 
+> wrote:
+>> +               mss_pil: remoteproc@4080000 {
+>> +                       compatible = "qcom,sdm845-mss-pil";
+>> +                       reg = <0x04080000 0x408>, <0x04180000 0x48>;
 > 
-> Signed-off-by: Stefan M Schaeckeler <sschaeck@cisco.com>
+> This will now need to be adjusted to:
+> 
+> reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
 
-Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
+Yup, this was on my todo list after Bjorn
+posted out the patch
 
-> ---
->  .../bindings/edac/aspeed-sdram-edac.txt       | 25 +++++++++++++++++++
->  1 file changed, 25 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
 > 
-> diff --git a/Documentation/devicetree/bindings/edac/aspeed-sdram-
-> edac.txt b/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> new file mode 100644
-> index 000000000000..6a0f3d90d682
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/edac/aspeed-sdram-edac.txt
-> @@ -0,0 +1,25 @@
-> +Aspeed AST2500 SoC EDAC node
-> +
-> +The Aspeed AST2500 SoC supports DDR3 and DDR4 memory with and without 
-> ECC (error
-> +correction check).
-> +
-> +The memory controller supports SECDED (single bit error correction, 
-> double bit
-> +error detection) and single bit error auto scrubbing by reserving 8 
-> bits for
-> +every 64 bit word (effectively reducing available memory to 8/9).
-> +
-> +Note, the bootloader must configure ECC mode in the memory controller.
-> +
-> +
-> +Required properties:
-> +- compatible: should be "aspeed,ast2500-sdram-edac"
-> +- reg:        sdram controller register set should be <0x1e6e0000 
-> 0x174>
-> +- interrupts: should be AVIC interrupt #0
-> +
-> +
-> +Example:
-> +
-> +	edac: sdram@1e6e0000 {
-> +		compatible = "aspeed,ast2500-sdram-edac";
-> +		reg = <0x1e6e0000 0x174>;
-> +		interrupts = <0>;
-> +	};
-> -- 
-> 2.19.1
+> This fixes things up to deal with the patch ("arm64: dts: qcom:
+> sdm845: Increase address and size cells for soc"), AKA:
+> - https://patchwork.kernel.org/patch/10767511/
+> - 
+> https://lkml.kernel.org/r/20190117042940.25487-2-bjorn.andersson@linaro.org
 > 
+> 
+> -Doug
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
