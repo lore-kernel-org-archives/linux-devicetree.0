@@ -1,58 +1,82 @@
-From: Bin Liu <b-liu@ti.com>
-Subject: Re: [PATCH v3 4/4] usb: musb: Add support for MediaTek musb controller
-Date: Fri, 18 Jan 2019 07:34:08 -0600
-Message-ID: <20190118133408.GA30080@uda0271908>
-References: <1547709348-17506-1-git-send-email-min.guo@mediatek.com>
- <1547709348-17506-5-git-send-email-min.guo@mediatek.com>
- <20190117143342.GS5544@atomide.com>
- <1547792054.4433.254.camel@mhfsdcap03>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: [PATCH 00/13] mfd: add support for max77650 PMIC
+Date: Fri, 18 Jan 2019 14:42:31 +0100
+Message-ID: <20190118134244.22253-1-brgl@bgdev.pl>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <1547792054.4433.254.camel@mhfsdcap03>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Min Guo <min.guo@mediatek.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Yonglong Wu <yonglong.wu@mediatek.com>, hdegoede@redhat.com, Tony Lindgren <tony@atomide.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, chunfeng.yun@mediatek.com, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Matthias Brugger <matthias.bgg@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: linux-kernel@vger.kernel.org, linux-gpio@vger.kernel.org, devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Min,
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
 
-On Fri, Jan 18, 2019 at 02:14:14PM +0800, Min Guo wrote:
-> On Thu, 2019-01-17 at 06:33 -0800, Tony Lindgren wrote:
-> > Hi,
-> > 
-> > * min.guo@mediatek.com <min.guo@mediatek.com> [190117 07:16]:
-> > > There are some quirk of MediaTek musb controller, such as:
-> > >  -W1C interrupt status registers
-> > >  -Private data toggle registers
-> > >  -No dedicated DMA interrupt line
-> > 
-> > Can you please separate the musb generic changes listed above
-> > into separate individual patches in preparation for adding
-> > support for new hardware?
-> > 
-> > Otherwise we'll have hard time finding out with git bisect what
-> > exactly breaks things if we run into trouble.
-> 
-> Thanks for your suggestion.
-> I prepared to divide these changes into separate patches. Later, Mr.Bin
-> suggested not to do this.
+This series adds support for max77650 ultra low-power PMIC. It provides
+the core mfd driver and a set of five sub-drivers for the regulator,
+power supply, gpio, leds and input subsystems.
 
-Initially I thought the clearb/w() changes should be just a couple
-lines, so didn't think to separate it. But after reviewed the final
-implemenation, I agree Tony's comment is the right thing to do, please
-separate the musb core changes, each for clearb/w(), get/set_toggle(),
-and dma.
+Patches 1-6 add the DT binding documents. Patches 7-12 add all drivers.
+Last patch adds a MAINTAINERS entry for this device.
 
-Regards,
--Bin.
+Note that patch 8/13 depends on commit 03c87b95ac04 ("regulator: provide
+rdev_get_regmap()") which was picked up by Mark Brown for v5.1.
+
+Bartosz Golaszewski (13):
+  dt-bindings: mfd: add DT bindings for max77650
+  dt-bindings: regulator: add DT bindings for max77650
+  dt-bindings: power: supply: add DT bindings for max77650
+  dt-bindings: gpio: add DT bindings for max77650
+  dt-bindings: leds: add DT bindings for max77650
+  dt-bindings: input: add DT bindings for max77650
+  mfd: max77650: new core mfd driver
+  regulator: max77650: add regulator support
+  power: supply: max77650: add support for battery charger
+  gpio: max77650: add GPIO support
+  leds: max77650: add LEDs support
+  input: max77650: add onkey support
+  MAINTAINERS: add an entry for max77650 mfd driver
+
+ .../bindings/gpio/gpio-max77650.txt           |  34 ++
+ .../bindings/input/max77650-onkey.txt         |  26 +
+ .../bindings/leds/leds-max77650.txt           |  57 ++
+ .../devicetree/bindings/mfd/max77650.txt      |  28 +
+ .../power/supply/max77650-charger.txt         |  27 +
+ .../bindings/regulator/max77650-regulator.txt |  41 ++
+ MAINTAINERS                                   |  14 +
+ drivers/gpio/Kconfig                          |   7 +
+ drivers/gpio/Makefile                         |   1 +
+ drivers/gpio/gpio-max77650.c                  | 189 ++++++
+ drivers/input/misc/Kconfig                    |   9 +
+ drivers/input/misc/Makefile                   |   1 +
+ drivers/input/misc/max77650-onkey.c           | 135 +++++
+ drivers/leds/Kconfig                          |   6 +
+ drivers/leds/Makefile                         |   1 +
+ drivers/leds/leds-max77650.c                  | 162 ++++++
+ drivers/mfd/Kconfig                           |  11 +
+ drivers/mfd/Makefile                          |   1 +
+ drivers/mfd/max77650.c                        | 212 +++++++
+ drivers/power/supply/Kconfig                  |   7 +
+ drivers/power/supply/Makefile                 |   1 +
+ drivers/power/supply/max77650-charger.c       | 347 +++++++++++
+ drivers/regulator/Kconfig                     |   8 +
+ drivers/regulator/Makefile                    |   1 +
+ drivers/regulator/max77650-regulator.c        | 537 ++++++++++++++++++
+ include/linux/mfd/max77650.h                  |  73 +++
+ 26 files changed, 1936 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/gpio/gpio-max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/input/max77650-onkey.txt
+ create mode 100644 Documentation/devicetree/bindings/leds/leds-max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/mfd/max77650.txt
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max77650-charger.txt
+ create mode 100644 Documentation/devicetree/bindings/regulator/max77650-regulator.txt
+ create mode 100644 drivers/gpio/gpio-max77650.c
+ create mode 100644 drivers/input/misc/max77650-onkey.c
+ create mode 100644 drivers/leds/leds-max77650.c
+ create mode 100644 drivers/mfd/max77650.c
+ create mode 100644 drivers/power/supply/max77650-charger.c
+ create mode 100644 drivers/regulator/max77650-regulator.c
+ create mode 100644 include/linux/mfd/max77650.h
+
+-- 
+2.19.1
