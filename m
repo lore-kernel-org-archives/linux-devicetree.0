@@ -1,39 +1,64 @@
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH 21/21] memblock: drop memblock_alloc_*_nopanic() variants
-Date: Fri, 18 Jan 2019 09:42:30 +0100
-Message-ID: <20190118084230.GA8855@kroah.com>
-References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
- <1547646261-32535-22-git-send-email-rppt@linux.ibm.com>
+From: Andrzej Hajda <a.hajda@samsung.com>
+Subject: Re: [PATCH v4 0/5] drm/bridge: various small lvds-encoder things
+Date: Fri, 18 Jan 2019 09:43:16 +0100
+Message-ID: <be258481-b3e4-8051-abb2-ca430ecc2836@samsung.com>
+References: <CGME20190115040858epcas3p4b4b9bfa6f6706842ad92825fea36d59e@epcas3p4.samsung.com>
+ <20190111151843.11114-1-peda@axentia.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547646261-32535-22-git-send-email-rppt@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190111151843.11114-1-peda@axentia.se>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Peter Rosin <peda@axentia.se>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, David Airlie <airlied@linux.ie>, "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>, Rob Herring <robh+dt@kernel.org>, Laurent Pinchart <Laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 03:44:21PM +0200, Mike Rapoport wrote:
-> As all the memblock allocation functions return NULL in case of error
-> rather than panic(), the duplicates with _nopanic suffix can be removed.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/arc/kernel/unwind.c       |  3 +--
->  arch/sh/mm/init.c              |  2 +-
->  arch/x86/kernel/setup_percpu.c | 10 +++++-----
->  arch/x86/mm/kasan_init_64.c    | 14 ++++++++------
->  drivers/firmware/memmap.c      |  2 +-
->  drivers/usb/early/xhci-dbc.c   |  2 +-
->  include/linux/memblock.h       | 35 -----------------------------------
->  kernel/dma/swiotlb.c           |  2 +-
->  kernel/printk/printk.c         | 17 +++++++----------
->  mm/memblock.c                  | 35 -----------------------------------
->  mm/page_alloc.c                | 10 +++++-----
->  mm/page_ext.c                  |  2 +-
->  mm/percpu.c                    | 11 ++++-------
->  mm/sparse.c                    |  6 ++----
->  14 files changed, 37 insertions(+), 114 deletions(-)
-
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+T24gMTEuMDEuMjAxOSAxNjoxOCwgUGV0ZXIgUm9zaW4gd3JvdGU6Cj4gSGkhCj4KPiBJJ20gbm90
+IHN1cmUgaWYgSSBzaG91bGQgaGF2ZSBhZGRlZCB0aGUgdGV4YXMgY2hpcHMgdG8gdGhlIGx2ZHNf
+ZW5jb2Rlcl9tYXRjaAo+IGxpc3QgaW4gdGhlIGRyaXZlciwgcmlnaHQgbmV4dCB0byB0aGUgdGhp
+bmUsdGhjNjNsdmRtODNkIGVudHJ5LCBidXQgZW5kZWQKPiB1cCBub3QgZG9pbmcgdGhhdC4gVGhh
+dCBjYW4gYWx3YXlzIGJlIGFkZGVkIGxhdGVyLCBpZiBuZWVkZWQuLi4KPgo+IENoYW5nZXMgc2lu
+Y2UgdjM6Cj4gLSByZXRhaW5lZCBhIChtb2RpZmllZCkgbm90ZSBpbiBsdmRzLXRyYW5zbWl0dGVy
+LnR4dCBhYm91dCBlbmNvZGVycyB3aXRoCj4gICBhZGRpdGlvbmFsIGRldmljZS1zcGVjaWZpYyBw
+cm9wZXJ0aWVzCj4gLSBhZGRlZCB0YWcgZnJvbSBSb2Igb24gcGF0Y2ggMy81Cj4KPiBDaGFuZ2Vz
+IHNpbmNlIHYyOgo+IC0gY2hhbmdlZCBmcm9tIHB3ZG4tZ3Bpb3MgdG8gcG93ZXJkb3duLWdwaW9z
+IGFmdGVyIGRpc2N1c3Npb24gd2l0aCBSb2Igd2l0aAo+ICAgbmV3IHBhdGNoIDMvNSB1cGRhdGlu
+ZyB0aGUgdGhpbmUsdGhjNjNsdmRtODNkIGJpbmRpbmcgYXMgd2VsbCBhcyBhCj4gICBjb25zZXF1
+ZW5jZQo+IC0gYWRkZWQgcGF0Y2ggNC81IHdoaWNoIGhlbHBzIGtlZXAgbGluZXMgc2hvcnRlciBp
+biB0aGUgbHZkcy1lbmNvZGVyIGRyaXZlcgo+IC0gYWRkZWQgdGFnIGZyb20gUm9iIG9uIHBhdGNo
+IDIvNQo+Cj4gQ2hhbmdlcyBzaW5jZSB2MToKPiAtIGZvcmsgb3V0IHRoZSBiaW5kaW5ncyBmb3Ig
+dGhlIHRleGFzIGNoaXBzIGludG8gdGhlaXIgb3duIGZpbGUgaW4gb3JkZXIKPiAgIHRvIGF2b2lk
+IGNsdXR0ZXIgaW4gdGhlIGdlbmVyaWMgbHZkcy10cmFuc21pdHRlciBiaW5kaW5nLgo+IC0gYWRk
+ZWQgYSBwYXRjaCB0byByZW1vdmUgc29tZSBzdXJwbHVzIHN0dWZmIGluIHRoZSBnZW5lcmljIGx2
+ZHMtdHJhbnNtaXR0ZXIKPiAgIGJpbmRpbmcuCj4KPiBDaGVlcnMsCj4gUGV0ZXIKCgpRdWV1ZWQg
+dG8gZHJtLW1pc2MtbmV4dC4KCgpPbmUgdGhpbmcgSSBoYXZlIHNwb3R0ZWQgYWZ0ZXIgbWVyZ2lu
+ZyBpcyB0aGF0IHRoZXJlIG5vIG5lZWQgdG8KbnVsbC1jaGVjayBiZWZvcmUgZ3Bpb2Rfc2V0X3Zh
+bHVlX2NhbnNsZWVwLCBubyBiaWcgZGVhbCwgSSBndWVzcy4KCgpSZWdhcmRzCgpBbmRyemVqCgoK
+Pgo+IFBldGVyIFJvc2luICg1KToKPiAgIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiBicmlkZ2U6IGZv
+cmsgb3V0IHRpLGRzOTBjMTg1IGZyb20KPiAgICAgbHZkcy10cmFuc21pdHRlcgo+ICAgZHQtYmlu
+ZGluZ3M6IGRpc3BsYXk6IGJyaWRnZTogbHZkcy10cmFuc21pdHRlcjogY2xlYW51cCBleGFtcGxl
+Cj4gICBkdC1iaW5kaW5nczogZGlzcGxheTogYnJpZGdlOiB0aGM2M2x2ZG04M2Q6IHVzZSBzdGFu
+ZGFyZAo+ICAgICBwb3dlcmRvd24tZ3Bpb3MKPiAgIGRybS9icmlkZ2U6IGx2ZHMtZW5jb2Rlcjog
+YWRkIGRldiBoZWxwZXIgdmFyaWFibGUgaW4gLnByb2JlKCkKPiAgIGRybS9icmlkZ2U6IGx2ZHMt
+ZW5jb2RlcjogYWRkIHBvd2VyZG93bi1ncGlvcyBzdXBwb3J0Cj4KPiAgLi4uL2JpbmRpbmdzL2Rp
+c3BsYXkvYnJpZGdlL2x2ZHMtdHJhbnNtaXR0ZXIudHh0ICAgfCAxMiArKy0tLQo+ICAuLi4vYmlu
+ZGluZ3MvZGlzcGxheS9icmlkZ2UvdGhpbmUsdGhjNjNsdmRtODNkLnR4dCB8ICAyICstCj4gIC4u
+Li9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90aSxkczkwYzE4NS50eHQgICAgICAgIHwgNTUgKysr
+KysrKysrKysrKysrKysrKysrKwo+ICBkcml2ZXJzL2dwdS9kcm0vYnJpZGdlL2x2ZHMtZW5jb2Rl
+ci5jICAgICAgICAgICAgICB8IDUzICsrKysrKysrKysrKysrKysrLS0tLQo+ICA0IGZpbGVzIGNo
+YW5nZWQsIDEwMyBpbnNlcnRpb25zKCspLCAxOSBkZWxldGlvbnMoLSkKPiAgY3JlYXRlIG1vZGUg
+MTAwNjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2JyaWRnZS90
+aSxkczkwYzE4NS50eHQKPgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
+LWRldmVsCg==
