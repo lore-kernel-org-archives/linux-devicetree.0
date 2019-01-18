@@ -1,64 +1,118 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH v9 00/13] media: staging/imx7: add i.MX7 media driver
-Date: Fri, 18 Jan 2019 14:49:26 -0200
-Message-ID: <CAOMZO5BCPAmcE=fU0fA9hgwZ89JMEtO5hOb15b7VwtD6i1LwSg@mail.gmail.com>
-References: <20181122151834.6194-1-rui.silva@linaro.org>
- <757f8c52-7c23-7cf7-32ee-75ddba767ff8@xs4all.nl>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark driver
+Date: Fri, 18 Jan 2019 17:51:52 +0100
+Message-ID: <87va2llxhz.fsf@FE-laptop>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <757f8c52-7c23-7cf7-32ee-75ddba767ff8@xs4all.nl>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: Hans Verkuil <hverkuil@xs4all.nl>, Rui Miguel Silva <rui.silva@linaro.org>
-Cc: "open list:STAGING SUBSYSTEM" <devel@driverdev.osuosl.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sakari Ailus <sakari.ailus@linux.intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Philipp Zabel <p.zabel@pengutronix.de>, Steve Longerbeam <slongerbeam@gmail.com>, linux-media <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190108162441.5278-1-miquel.raynal@bootlin.com> (Miquel
+        Raynal's message of "Tue, 8 Jan 2019 17:24:25 +0100")
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rui,
+Hi Miquel,
+ 
+ On mar., janv. 08 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-On Fri, Dec 7, 2018 at 10:44 AM Hans Verkuil <hverkuil@xs4all.nl> wrote:
+> Hello,
+>
+> As part of an effort to bring suspend to RAM support to Armada 3700
+> SoCs (main target: ESPRESSObin), this series handles the work around
+> the PCIe IP.
+>
+> First, more configuration is done in the 'setup' helper as inspired
+> from the U-Boot driver. This is needed to entirely initialize the IP
+> during future resume operation (patch 1).
+>
+> Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+> current device trees do not provide the corresponding properties, not
+> finding one of these properties is not an error and just produces a
+> warning. However, if the property is present, an error during PHY
+> initialization will fail the probe of the driver.
+>
+> Note: To be sure the clock will be resumed before this driver, a first
+> series adding links between clocks and consumers has been submitted,
+> see [1]. Anyway, having the clock series applied first is not needed.
+>
+> Patch 5 adds suspend/resume hooks, re-using all the above.
+>
+> Finally, bindings and device trees are updated to reflect the hardware
+> (patch 6-12). While the clock depends on the SoC, the reset GPIO and
+> the PHY depends on the board so the clock is added in the
+> armada-37xx.dtsi file while the two other properties are added in
+> armada-3720-espressobin.dts.
+>
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-January/623885.html
+>
+> Thanks,
+> Miquèl
+>
+>
+> Changes since v2:
+> =================
+> * Minor patches reordering.
+> * Added pinctrl patches from Gregory Clement fixing the PCIe pins. His
+>   changes implied modifications in the DT/bindings patches adding PCIe
+>   reset pin support.
 
-> I got a few checkpatch warnings about coding style:
->
-> CHECK: Alignment should match open parenthesis
-> #953: FILE: drivers/staging/media/imx/imx7-media-csi.c:911:
-> +static struct v4l2_mbus_framefmt *imx7_csi_get_format(struct imx7_csi *csi,
-> +                                       struct v4l2_subdev_pad_config *cfg,
->
-> CHECK: Alignment should match open parenthesis
-> #1341: FILE: drivers/staging/media/imx/imx7-media-csi.c:1299:
-> +       ret = v4l2_async_register_fwnode_subdev(&csi->sd,
-> +                                       sizeof(struct v4l2_async_subdev),
->
-> CHECK: Lines should not end with a '('
-> #684: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:669:
-> +static struct csis_pix_format const *mipi_csis_try_format(
->
-> CHECK: Alignment should match open parenthesis
-> #708: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:693:
-> +static struct v4l2_mbus_framefmt *mipi_csis_get_format(struct csi_state *state,
-> +                                       struct v4l2_subdev_pad_config *cfg,
->
-> CHECK: Alignment should match open parenthesis
-> #936: FILE: drivers/staging/media/imx/imx7-mipi-csis.c:921:
-> +       ret = v4l2_async_register_fwnode_subdev(mipi_sd,
-> +                               sizeof(struct v4l2_async_subdev), &sink_port, 1,
->
-> Apparently the latest coding style is that alignment is more important than
-> line length, although I personally do not agree. But since you need to
-> respin in any case due to the wrong SPDX identifier you used you might as
-> well take this into account.
->
-> I was really hoping I could merge this, but the SPDX license issue killed it.
+Actually these patches are not in this series. You propably meant that
+this series is depend on these patches.
 
-Do you plan to submit a new version?
+If needed, for peoaple who wanted to test this series, the pinctrl
+changes are now in linux-next and also in pinctrl/for-next.
 
-Thanks
+Gregpry
+
+> * Added a new patch that enlarges the PIO timeout of the driver
+>   (explanations in the commit log).
+> * With the timeout changed, removed the "experimental delay" that was
+>   needed at resume time before accessing any register.
+>
+> Changes since v1:
+> =================
+> * Change the capitalization in commit titles to follow the PCI
+>   subsystem rules.
+> * Added Suggested-by tag to the patch adding PHY support and to the
+>   patch adding the PHY property in the DT.
+> * Added Rob's Reviewed-by tags on bindings.
+> * I am following the discussion about calling functions that might
+>   sleep in a NOIRQ context. As there is no real problem yet (as per my
+>   understanding), I did not change anything on this regard.
+>
+>
+> Miquel Raynal (15):
+>   PCI: aardvark: Enlarge PIO timeout
+>   PCI: aardvark: Configure more registers in the configuration helper
+>   PCI: aardvark: Add clock support
+>   PCI: aardvark: Add PHY support
+>   PCI: aardvark: Add PCIe warm reset support
+>   PCI: aardvark: Add external reset GPIO support
+>   PCI: aardvark: Add suspend to RAM support
+>   dt-bindings: PCI: aardvark: Describe the clocks property
+>   dt-bindings: PCI: aardvark: Describe the PHY property
+>   dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
+>   dt-bindings: PCI: aardvark: Describe the reset-gpios property
+>   ARM64: dts: marvell: armada-37xx: declare PCIe clock
+>   ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
+>   ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
+>   ARM64: dts: marvell: armada-3720-espressobin: declare PCIe warm reset
+>     pin
+>
+>  .../devicetree/bindings/pci/aardvark-pci.txt  |  14 ++
+>  .../dts/marvell/armada-3720-espressobin.dts   |   3 +
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  10 +
+>  drivers/pci/controller/pci-aardvark.c         | 217 +++++++++++++++++-
+>  4 files changed, 243 insertions(+), 1 deletion(-)
+>
+> -- 
+> 2.19.1
+>
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
