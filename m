@@ -1,51 +1,54 @@
 Return-Path: <SRS0=ctnT=P2=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:43307 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727020AbfAROj4 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 18 Jan 2019 09:39:56 -0500
-From: <Eugen.Hristev@microchip.com>
-Subject: Re: [PATCH v2 2/2] media: atmel-isc: Update device tree binding
+Received: from mail-eopbgr730097.outbound.protection.outlook.com ([40.107.73.97]:58688
+        "EHLO NAM05-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727481AbfARO2Y (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 18 Jan 2019 09:28:24 -0500
+From: Ken Sloat <KSloat@aampglobal.com>
+Subject: [PATCH v2 2/2] media: atmel-isc: Update device tree binding
  documentation
-Date: Fri, 18 Jan 2019 14:39:53 +0000
-Message-ID: <0c000df0-94ec-e8bf-e6b1-1a8a94170181@microchip.com>
+Date: Fri, 18 Jan 2019 14:28:17 +0000
+Message-ID: <20190118142803.70160-2-ksloat@aampglobal.com>
 References: <20190118142803.70160-1-ksloat@aampglobal.com>
- <20190118142803.70160-2-ksloat@aampglobal.com>
-In-Reply-To: <20190118142803.70160-2-ksloat@aampglobal.com>
+In-Reply-To: <20190118142803.70160-1-ksloat@aampglobal.com>
 Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <9C8E7A1DBEF9B249885D171910411690@namprd11.prod.outlook.com>
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: KSloat@aampglobal.com
-Cc: mchehab@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+To: "eugen.hristev@microchip.com" <eugen.hristev@microchip.com>
+Cc: "mchehab@kernel.org" <mchehab@kernel.org>, "nicolas.ferre@microchip.com" <nicolas.ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "ludovic.desroches@microchip.com" <ludovic.desroches@microchip.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-DQoNCk9uIDE4LjAxLjIwMTkgMTY6MjgsIEtlbiBTbG9hdCB3cm90ZToNCj4gRnJvbTogS2VuIFNs
-b2F0IDxrc2xvYXRAYWFtcGdsb2JhbC5jb20+DQo+IA0KPiBVcGRhdGUgZGV2aWNlIHRyZWUgYmlu
-ZGluZyBkb2N1bWVudGF0aW9uIHNwZWNpZnlpbmcgaG93IHRvDQo+IGVuYWJsZSBCVDY1NiB3aXRo
-IENSQyBkZWNvZGluZy4NCj4gDQo+IFNpZ25lZC1vZmYtYnk6IEtlbiBTbG9hdCA8a3Nsb2F0QGFh
-bXBnbG9iYWwuY29tPg0KPiAtLS0NCj4gICBDaGFuZ2VzIGluIHYyOg0KPiAgIC1Vc2UgY29ycmVj
-dCBtZWRpYSAiYnVzLXR5cGUiIGR0IHByb3BlcnR5Lg0KPiAgIA0KPiAgIERvY3VtZW50YXRpb24v
-ZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9hdG1lbC1pc2MudHh0IHwgNSArKysrKw0KPiAgIDEg
-ZmlsZSBjaGFuZ2VkLCA1IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvYXRtZWwtaXNjLnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9tZWRpYS9hdG1lbC1pc2MudHh0DQo+IGluZGV4IGJi
-ZTBlODdjNjE4OC4uMmQ0Mzc4ZGZkNmM4IDEwMDY0NA0KPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvYXRtZWwtaXNjLnR4dA0KPiArKysgYi9Eb2N1bWVudGF0
-aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvYXRtZWwtaXNjLnR4dA0KPiBAQCAtMjEsNiAr
-MjEsMTEgQEAgUmVxdWlyZWQgcHJvcGVydGllcyBmb3IgSVNDOg0KPiAgIC0gcGluY3RybC1uYW1l
-cywgcGluY3RybC0wDQo+ICAgCVBsZWFzZSByZWZlciB0byBwaW5jdHJsLWJpbmRpbmdzLnR4dC4N
-Cj4gICANCj4gK09wdGlvbmFsIHByb3BlcnRpZXMgZm9yIElTQzoNCj4gKy0gYnVzLXR5cGUNCj4g
-KwlXaGVuIHNldCB0byA2LCBCdC42NTYgZGVjb2RpbmcgKGVtYmVkZGVkIHN5bmMpIHdpdGggQ1JD
-IGRlY29kaW5nDQo+ICsJaXMgZW5hYmxlZC4NCj4gKw0KDQpJIGRvbid0IHRoaW5rIHRoaXMgcGF0
-Y2ggaXMgcmVxdWlyZWQgYXQgYWxsIGFjdHVhbGx5LCB0aGUgYmluZGluZyANCmNvbXBsaWVzIHRv
-IHRoZSB2aWRlby1pbnRlcmZhY2VzIGJ1cyBzcGVjaWZpY2F0aW9uIHdoaWNoIGluY2x1ZGVzIHRo
-ZSANCnBhcmFsbGVsIGFuZCBidC42NTYuDQoNCldvdWxkIGJlIHdvcnRoIG1lbnRpb25pbmcgYmVs
-b3cgZXhwbGljaXRseSB0aGF0IHBhcmFsbGVsIGFuZCBidC42NTYgYXJlIA0Kc3VwcG9ydGVkLCBv
-ciBhZGRlZCBhYm92ZSB0aGF0IGFsc28gcGxhaW4gcGFyYWxsZWwgYnVzIGlzIHN1cHBvcnRlZCA/
-DQoNCj4gICBJU0Mgc3VwcG9ydHMgYSBzaW5nbGUgcG9ydCBub2RlIHdpdGggcGFyYWxsZWwgYnVz
-LiBJdCBzaG91bGQgY29udGFpbiBvbmUNCg0KaGVyZSBpbnNpZGUgdGhlIHByZXZpb3VzIGxpbmUN
-Cg0KPiAgICdwb3J0JyBjaGlsZCBub2RlIHdpdGggY2hpbGQgJ2VuZHBvaW50JyBub2RlLiBQbGVh
-c2UgcmVmZXIgdG8gdGhlIGJpbmRpbmdzDQo+ICAgZGVmaW5lZCBpbiBEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8taW50ZXJmYWNlcy50eHQuDQo+IA0K
+From: Ken Sloat <ksloat@aampglobal.com>
+
+Update device tree binding documentation specifying how to
+enable BT656 with CRC decoding.
+
+Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
+---
+ Changes in v2:
+ -Use correct media "bus-type" dt property.
+=20
+ Documentation/devicetree/bindings/media/atmel-isc.txt | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt b/Docume=
+ntation/devicetree/bindings/media/atmel-isc.txt
+index bbe0e87c6188..2d4378dfd6c8 100644
+--- a/Documentation/devicetree/bindings/media/atmel-isc.txt
++++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
+@@ -21,6 +21,11 @@ Required properties for ISC:
+ - pinctrl-names, pinctrl-0
+ 	Please refer to pinctrl-bindings.txt.
+=20
++Optional properties for ISC:
++- bus-type
++	When set to 6, Bt.656 decoding (embedded sync) with CRC decoding
++	is enabled.
++
+ ISC supports a single port node with parallel bus. It should contain one
+ 'port' child node with child 'endpoint' node. Please refer to the bindings
+ defined in Documentation/devicetree/bindings/media/video-interfaces.txt.
+--=20
+2.17.1
