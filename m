@@ -1,71 +1,50 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 08/13] regulator: max77650: add regulator support
-Date: Fri, 18 Jan 2019 18:36:53 +0000
-Message-ID: <20190118183653.GE6260@sirena.org.uk>
-References: <20190118134244.22253-1-brgl@bgdev.pl>
- <20190118134244.22253-9-brgl@bgdev.pl>
- <20190118180148.GD6260@sirena.org.uk>
- <CAMpxmJX8OmnDtOhQjWi9edX-4pHu1daKiDkRdNAVw-PZsz9UXA@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH 2/2] ARM: dts: sun4i-a10: Add Video Engine
+ and reserved memory nodes
+Date: Fri, 18 Jan 2019 19:46:58 +0100
+Message-ID: <20190118184658.dflpkqvdlg6zox7f@flea>
+References: <20190118145730.22227-1-paul.kocialkowski@bootlin.com>
+ <20190118145730.22227-2-paul.kocialkowski@bootlin.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="T6xhMxlHU34Bk0ad"
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="k53ajjhsub4gzoqy"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV56RDRAKGQEWULXD5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <CAMpxmJX8OmnDtOhQjWi9edX-4pHu1daKiDkRdNAVw-PZsz9UXA@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm <linux-pm@vger.kernel.org>
+In-Reply-To: <20190118145730.22227-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
 
---T6xhMxlHU34Bk0ad
-Content-Type: text/plain; charset=utf-8
+--k53ajjhsub4gzoqy
+Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Fri, Jan 18, 2019 at 07:13:38PM +0100, Bartosz Golaszewski wrote:
-> pt., 18 sty 2019 o 19:01 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
+On Fri, Jan 18, 2019 at 03:57:30PM +0100, Paul Kocialkowski wrote:
+> This adds nodes for the Video Engine and the associated reserved memory
+> for the A10. Up to 96 MiB of memory are dedicated to the CMA pool.
+> 
+> The VPU can only map the first 256 MiB of DRAM, so the reserved memory
+> pool has to be located in that area. Following Allwinner's decision in
+> downstream software, the last 96 MiB of the first 256 MiB of RAM are
+> reserved for this purpose.
+> 
+> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-> > > +++ b/drivers/regulator/max77650-regulator.c
-> > > @@ -0,0 +1,537 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (C) 2018 BayLibre SAS
-> > > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Applied both, thanks
 
-> > Please make the entire header C++ style so it looks more intentional.
+Maxime
 
-> Seems like there are more files in the kernel source using the mixed
-> comment style for the SPDX identifier and I also prefer it over C++
-> only. Would you mind if it stayed that way?
-
-I'd prefer to change.
-
-> > You don't need to do this, the core will do it for you (it will actually
-> > still do it even with the above, it'll only fall back to using
-> > config->init_data if it's own lookup fails).
-
-> I added this loop specifically because the core would not pick up the
-> init data from DT. What did I miss (some specific variable to assign)?
-> I just noticed some other drivers do the same and thought it's the
-> right thing to do.
-
-You should set regulators_node and of_match, see regulator_of_get_init_node=
-().
-
---T6xhMxlHU34Bk0ad
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxCHMQACgkQJNaLcl1U
-h9DXBwf8DBxtp6P6ln8aUsZTEj9e2Ti+0cszf0ukaKXrny3tYAfY8PiUE/iYvr3E
-1xb8upkWmq7kT7QO8bm/PbeDdClAIKlfI9aUoWyLo1HkHkj0F4VMUjDMy6mTbsl6
-cijuEtr67FxzE+pak6KQOvqhKhh/tp2DMQFZD30dbDhSX3p8cMsM5YTqmlIO1q4t
-p0Md4tGBiMAvtcI2suzwxkteeTVogqx00qMv6FdUGmupnQZ3y+PldPNpMmRY6ck2
-xajDLGrBuvWCLesasIimDKVxmo2VRIYQ+fBqL1zPSJ0roZL1gknOfgmTOPyCwkYs
-SzRytR1wQyrsQzW0TzFtxFhHHBuNKQ==
-=LpDs
------END PGP SIGNATURE-----
-
---T6xhMxlHU34Bk0ad--
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--k53ajjhsub4gzoqy--
