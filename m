@@ -1,122 +1,73 @@
-From: Gregory CLEMENT <gregory.clement@bootlin.com>
-Subject: Re: [PATCH v2 03/10] usb: ehci-orion: avoid double PHY initialization
-Date: Fri, 18 Jan 2019 17:25:30 +0100
-Message-ID: <874la6lypx.fsf@FE-laptop>
-References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
- <20190111133133.24803-4-miquel.raynal@bootlin.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 2/8] Bluetooth: hci_h5: Add support for reset GPIO
+Date: Sat, 19 Jan 2019 01:13:55 +0800
+Message-ID: <CAGb2v665Wsu5dhNi1=-bMmPYP-5nfTamtu0uXVYym+RxzNeN=A@mail.gmail.com>
+References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-3-anarsoul@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111133133.24803-4-miquel.raynal@bootlin.com> (Miquel
- Raynal's message of "Fri, 11 Jan 2019 14:31:26 +0100")
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190118170232.16142-3-anarsoul@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Vasily Khoruzhick <anarsoul@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-bluetooth@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Miquel,
- 
- On ven., janv. 11 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
-
-> No need to initialize the PHY from the driver's probe. It is done by
-> the core automatically and doing it twice would increment the
-
-Do you know exactly which core take care of it?
-
-When the phy support was added to this driver there was not such
-feature. I made some research and found that recently (less than one
-year ago) a series was added to initialize PHYs at HCD level[1]. I think
-that our platform was forgotten in the conversion.
-
-Could you check that we are now aligned with the requirement of this
-series?
-
-Thanks,
-
-Gregory
-
-[1]:https://www.spinics.net/lists/linux-usb/msg166281.html
-
-
-> phy->powercount counter to 2 instead of 1. During later suspend
-> operation, the counter will be decremented to one, no phy->power_off()
-> will occur and worst than that, the following phy->power_on() at
-> resume time will be also skipped, failing the whole S2RAM operation.
+On Sat, Jan 19, 2019 at 1:02 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
 >
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> Some boards (e.g. Pine64 and Pinebook) wire a GPIO to reset pin of
+> RTL8723BS
+
+Pine64 / Pinebook don't have the enable pin. One could say that the
+enable pin and the reset pin you add here are actually the same thing.
+
+ChenYu
+
+> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 > ---
->  drivers/usb/host/ehci-orion.c | 26 +++-----------------------
->  1 file changed, 3 insertions(+), 23 deletions(-)
+>  drivers/bluetooth/hci_h5.c | 9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-> index 1ad72647a069..3109f082949e 100644
-> --- a/drivers/usb/host/ehci-orion.c
-> +++ b/drivers/usb/host/ehci-orion.c
-> @@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
->  	if (IS_ERR(priv->phy)) {
->  		err = PTR_ERR(priv->phy);
->  		if (err != -ENOSYS)
-> -			goto err_phy_get;
-> -	} else {
-> -		err = phy_init(priv->phy);
-> -		if (err)
-> -			goto err_phy_init;
-> -
-> -		err = phy_power_on(priv->phy);
-> -		if (err)
-> -			goto err_phy_power_on;
-> +			goto err_dis_clk;
->  	}
->  
->  	/*
-> @@ -297,19 +289,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
->  
->  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
->  	if (err)
-> -		goto err_add_hcd;
-> +		goto err_dis_clk;
->  
->  	device_wakeup_enable(hcd->self.controller);
->  	return 0;
->  
-> -err_add_hcd:
-> -	if (!IS_ERR(priv->phy))
-> -		phy_power_off(priv->phy);
-> -err_phy_power_on:
-> -	if (!IS_ERR(priv->phy))
-> -		phy_exit(priv->phy);
-> -err_phy_init:
-> -err_phy_get:
-> +err_dis_clk:
->  	if (!IS_ERR(priv->clk))
->  		clk_disable_unprepare(priv->clk);
->  	usb_put_hcd(hcd);
-> @@ -327,11 +312,6 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
->  
->  	usb_remove_hcd(hcd);
->  
-> -	if (!IS_ERR(priv->phy)) {
-> -		phy_power_off(priv->phy);
-> -		phy_exit(priv->phy);
-> -	}
-> -
->  	if (!IS_ERR(priv->clk))
->  		clk_disable_unprepare(priv->clk);
->  
-> -- 
-> 2.19.1
+> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+> index 069d1c8fde73..7ead8c3d8657 100644
+> --- a/drivers/bluetooth/hci_h5.c
+> +++ b/drivers/bluetooth/hci_h5.c
+> @@ -107,6 +107,7 @@ struct h5 {
+>         const struct h5_vnd *vnd;
+>         const char *id;
 >
-
--- 
-Gregory Clement, Bootlin
-Embedded Linux and Kernel engineering
-http://bootlin.com
+> +       struct gpio_desc *reset_gpio;
+>         struct gpio_desc *enable_gpio;
+>         struct gpio_desc *device_wake_gpio;
+>  };
+> @@ -833,6 +834,10 @@ static int h5_serdev_probe(struct serdev_device *serdev)
+>         if (IS_ERR(h5->device_wake_gpio))
+>                 return PTR_ERR(h5->device_wake_gpio);
+>
+> +       h5->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
+> +       if (IS_ERR(h5->reset_gpio))
+> +               return PTR_ERR(h5->reset_gpio);
+> +
+>         return hci_uart_register_device(&h5->serdev_hu, &h5p);
+>  }
+>
+> @@ -921,6 +926,9 @@ static void h5_btrtl_open(struct h5 *h5)
+>
+>         /* The controller needs up to 500ms to wakeup */
+>         gpiod_set_value_cansleep(h5->enable_gpio, 1);
+> +       /* Take it out of reset */
+> +       gpiod_set_value_cansleep(h5->reset_gpio, 0);
+> +       msleep(100);
+>         gpiod_set_value_cansleep(h5->device_wake_gpio, 1);
+>         msleep(500);
+>  }
+> @@ -928,6 +936,7 @@ static void h5_btrtl_open(struct h5 *h5)
+>  static void h5_btrtl_close(struct h5 *h5)
+>  {
+>         gpiod_set_value_cansleep(h5->device_wake_gpio, 0);
+> +       gpiod_set_value_cansleep(h5->reset_gpio, 1);
+>         gpiod_set_value_cansleep(h5->enable_gpio, 0);
+>  }
+>
+> --
+> 2.20.1
+>
