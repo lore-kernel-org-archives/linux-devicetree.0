@@ -1,123 +1,126 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts support
-Date: Fri, 18 Jan 2019 07:53:58 +0000
-Message-ID: <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
-References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
+        <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
+Date: Fri, 18 Jan 2019 08:59:25 +0100
+Message-ID: <20190118075925.noilab6glzm3cig6@pengutronix.de>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>, Marc Zyngier <marc.zyngier@arm.com>
+To: Ryder Lee <ryder.lee@mediatek.com>
+Cc: Thierry Reding <thierry.reding@gmail.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-One irqsteer channel can support up to 8 output interrupts.
+Hello,
 
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: Lucas Stach <l.stach@pengutronix.de>
-Cc: Shawn Guo <shawnguo@kernel.org>
-Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
----
- drivers/irqchip/irq-imx-irqsteer.c | 39 +++++++++++++++++++++++++++-------=
-----
- 1 file changed, 28 insertions(+), 11 deletions(-)
+On Fri, Jan 18, 2019 at 11:24:41AM +0800, Ryder Lee wrote:
+> This adds a property "mediatek,num-pwms" to avoid having an endless
+> list of compatibles with no differences for the same driver.
+> 
+> Thus, the driver should have backwards compatibility to older DTs.
 
-diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-i=
-rqsteer.c
-index 1bebf0a..54802fa 100644
---- a/drivers/irqchip/irq-imx-irqsteer.c
-+++ b/drivers/irqchip/irq-imx-irqsteer.c
-@@ -10,6 +10,7 @@
- #include <linux/irqchip/chained_irq.h>
- #include <linux/irqdomain.h>
- #include <linux/kernel.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <linux/spinlock.h>
-=20
-@@ -21,10 +22,13 @@
- #define CHAN_MINTDIS(t)		(CTRL_STRIDE_OFF(t, 3) + 0x4)
- #define CHAN_MASTRSTAT(t)	(CTRL_STRIDE_OFF(t, 3) + 0x8)
-=20
-+#define CHAN_MAX_OUTPUT_INT	0x8
-+
- struct irqsteer_data {
- 	void __iomem		*regs;
- 	struct clk		*ipg_clk;
--	int			irq;
-+	int			irq[CHAN_MAX_OUTPUT_INT];
-+	int			irq_count;
- 	raw_spinlock_t		lock;
- 	int			reg_num;
- 	int			channel;
-@@ -117,7 +121,7 @@ static int imx_irqsteer_probe(struct platform_device *p=
-dev)
- 	struct device_node *np =3D pdev->dev.of_node;
- 	struct irqsteer_data *data;
- 	struct resource *res;
--	int ret;
-+	int i, ret;
-=20
- 	data =3D devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
- 	if (!data)
-@@ -130,12 +134,6 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- 		return PTR_ERR(data->regs);
- 	}
-=20
--	data->irq =3D platform_get_irq(pdev, 0);
--	if (data->irq <=3D 0) {
--		dev_err(&pdev->dev, "failed to get irq\n");
--		return -ENODEV;
--	}
--
- 	data->ipg_clk =3D devm_clk_get(&pdev->dev, "ipg");
- 	if (IS_ERR(data->ipg_clk)) {
- 		ret =3D PTR_ERR(data->ipg_clk);
-@@ -177,8 +175,23 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- 		return -ENOMEM;
- 	}
-=20
--	irq_set_chained_handler_and_data(data->irq, imx_irqsteer_irq_handler,
--					 data);
-+	data->irq_count =3D of_irq_count(np);
-+	if (!data->irq_count || data->irq_count > CHAN_MAX_OUTPUT_INT) {
-+		clk_disable_unprepare(data->ipg_clk);
-+		return -EINVAL;
-+	}
-+
-+	for (i =3D 0; i < data->irq_count; i++) {
-+		data->irq[i] =3D irq_of_parse_and_map(np, i);
-+		if (!data->irq[i]) {
-+			clk_disable_unprepare(data->ipg_clk);
-+			return -EINVAL;
-+		}
-+
-+		irq_set_chained_handler_and_data(data->irq[i],
-+						 imx_irqsteer_irq_handler,
-+						 data);
-+	}
-=20
- 	platform_set_drvdata(pdev, data);
-=20
-@@ -188,8 +201,12 @@ static int imx_irqsteer_probe(struct platform_device *=
-pdev)
- static int imx_irqsteer_remove(struct platform_device *pdev)
- {
- 	struct irqsteer_data *irqsteer_data =3D platform_get_drvdata(pdev);
-+	int i;
-+
-+	for (i =3D 0; i < irqsteer_data->irq_count; i++)
-+		irq_set_chained_handler_and_data(irqsteer_data->irq[i],
-+						 NULL, NULL);
-=20
--	irq_set_chained_handler_and_data(irqsteer_data->irq, NULL, NULL);
- 	irq_domain_remove(irqsteer_data->domain);
-=20
- 	clk_disable_unprepare(irqsteer_data->ipg_clk);
---=20
-2.7.4
+I still think Thierry should bless "num-pwms" without vendor prefix.
+
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> Changes since v1: add some checks for backwards compatibility.
+> ---
+>  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 9 deletions(-)
+> 
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index eb6674c..81b7e5e 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -55,7 +55,7 @@ enum {
+>  };
+>  
+>  struct mtk_pwm_platform_data {
+
+Unrelated to this patch: This name is bad. This struct is not used as
+platform_data and so should better be named mtk_pwm_of_data. While at
+criticizing existing stuff: I'd prefer pwm_mediatek as common prefix to
+match the filename.
+
+> -	unsigned int num_pwms;
+> +	unsigned int num_pwms;	/* it should not be used in the future SoCs */
+
+I'd drop this comment in favour of a runtime warning.
+
+>  	bool pwm45_fixup;
+>  	bool has_clks;
+>  };
+> @@ -226,27 +226,36 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>  
+>  static int mtk_pwm_probe(struct platform_device *pdev)
+>  {
+> -	const struct mtk_pwm_platform_data *data;
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct mtk_pwm_chip *pc;
+>  	struct resource *res;
+> -	unsigned int i;
+> +	unsigned int i, num_pwms;
+>  	int ret;
+>  
+>  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+>  	if (!pc)
+>  		return -ENOMEM;
+>  
+> -	data = of_device_get_match_data(&pdev->dev);
+> -	if (data == NULL)
+> -		return -EINVAL;
+> -	pc->soc = data;
+> +	pc->soc = of_device_get_match_data(&pdev->dev);
+
+This might return NULL which ...
+
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+>  	if (IS_ERR(pc->regs))
+>  		return PTR_ERR(pc->regs);
+>  
+> -	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
+> +	/* Check if we have set 'num-pwms' in DTs. */
+> +	ret = of_property_read_u32(np, "mediatek,num-pwms", &num_pwms);
+> +	if (ret < 0) {
+> +		/* If no, fallback to use SoC data for backwards compatibility. */
+> +		if (pc->soc->num_pwms) {
+
+... here then results in a NULL pointer dereference. I think you want
+
+		if (pc->soc)
+
+here.
+
+> +			num_pwms = pc->soc->num_pwms;
+> +		} else {
+> +			dev_err(&pdev->dev, "failed to get pwm number: %d\n", ret);
+> +			return ret;
+> +		}
+> +	}
+> +
+> +	for (i = 0; i < num_pwms + 2 && pc->soc->has_clks; i++) {
+>  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+>  		if (IS_ERR(pc->clks[i])) {
+>  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+> @@ -260,7 +269,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	pc->chip.dev = &pdev->dev;
+>  	pc->chip.ops = &mtk_pwm_ops;
+>  	pc->chip.base = -1;
+> -	pc->chip.npwm = data->num_pwms;
+> +	pc->chip.npwm = num_pwms;
+>  
+>  	ret = pwmchip_add(&pc->chip);
+>  	if (ret < 0) {
+
+Best regards
+Uwe
+
+-- 
+Pengutronix e.K.                           | Uwe Kleine-König            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
