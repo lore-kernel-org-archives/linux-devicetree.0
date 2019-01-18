@@ -1,59 +1,68 @@
-From: Matthias Brugger <matthias.bgg@gmail.com>
-Subject: Re: [PATCH v1 2/5] dt-bindings: pwm: add a property
- "mediatek,num-pwms"
-Date: Fri, 18 Jan 2019 09:44:49 +0100
-Message-ID: <7d387d2a-74f0-c6c7-aa2d-cf9b87579682@gmail.com>
-References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
- <7e1de17a43f2cde73aecd2773e2b3a5fdfd294f3.1547781007.git.ryder.lee@mediatek.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 1/4] dt-binding: irq: imx-irqsteer: use irq number per
+ channel instead of group number
+Date: Fri, 18 Jan 2019 09:48:11 +0100
+Message-ID: <1547801291.2626.3.camel@pengutronix.de>
+References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+         <1547797668-30342-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7e1de17a43f2cde73aecd2773e2b3a5fdfd294f3.1547781007.git.ryder.lee@mediatek.com>
-Content-Language: en-US
+In-Reply-To: <1547797668-30342-2-git-send-email-aisheng.dong@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 18/01/2019 04:24, Ryder Lee wrote:
-> This adds a property "mediatek,num-pwms" in example so that we could
-> set the number of PWM channels via device tree.
+Am Freitag, den 18.01.2019, 07:53 +0000 schrieb Aisheng Dong:
+> Not all 64 interrupts may be used in one group. e.g. most irqsteer in
+> imx8qxp and imx8qm subsystems supports only 32 interrupts.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
-> ---
-> Changes since v1: add a Reviewed-by tag.
-> ---
->  Documentation/devicetree/bindings/pwm/pwm-mediatek.txt | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> index 991728c..f9e2d1f 100644
-> --- a/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> +++ b/Documentation/devicetree/bindings/pwm/pwm-mediatek.txt
-> @@ -20,6 +20,7 @@ Required properties:
->   - pinctrl-names: Must contain a "default" entry.
->   - pinctrl-0: One property must exist for each entry in pinctrl-names.
->     See pinctrl/pinctrl-bindings.txt for details of the property values.
-> + - mediatek,num-pwms: the number of PWM channels.
->  
->  Example:
->  	pwm0: pwm@11006000 {
-> @@ -37,4 +38,5 @@ Example:
->  			      "pwm3", "pwm4", "pwm5";
->  		pinctrl-names = "default";
->  		pinctrl-0 = <&pwm0_pins>;
-> +		mediatek,num-pwms = <5>;
->  	};
-> 
+> As the IP integration parameters are Channel number and interrupts number,
+> let's use fsl,irqs-per-chan to represents how many interrupts supported
+> by this irqsteer channel.
 
-Wasn't there a comment in the last version to use num-pwms instead of
-mediatek,num-pwms?
-
-Uwe I think you requested that.
+Sorry, but total NACK. I've got to great lengths with dumping the
+actually implemented register layout on i.MX8M and AFAICS the IRQs are
+always managed in groups of 64 IRQs, even if less than that are
+connected as input IRQs. This is what the actually present register set
+on i.MX8M tells us.
 
 Regards,
-Matthias
+Lucas
+
+> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt       | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> index 45790ce..eaabcda 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> @@ -16,8 +16,8 @@ Required properties:
+>  - #interrupt-cells: Specifies the number of cells needed to encode an
+>    interrupt source. The value must be 1.
+>  - fsl,channel: The output channel that all input IRQs should be steered into.
+> -- fsl,irq-groups: Number of IRQ groups managed by this controller instance.
+> -  Each group manages 64 input interrupts.
+> +- fsl,irqs-per-chan: Number of input interrupts per channel. Should be multiple of 32
+> +  input interrupts and up to 512 interrupts.
+>  
+>  Example:
+>  
+> @@ -28,7 +28,7 @@ Example:
+> >  		clocks = <&clk IMX8MQ_CLK_DISP_APB_ROOT>;
+> >  		clock-names = "ipg";
+> >  		fsl,channel = <0>;
+> > -		fsl,irq-groups = <1>;
+> > +		fsl,irqs-per-chan= <64>;
+> >  		interrupt-controller;
+> >  		#interrupt-cells = <1>;
+> >  	};
