@@ -1,119 +1,208 @@
-From: "Michael S. Tsirkin" <mst-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Fri, 18 Jan 2019 10:51:20 -0500
-Message-ID: <20190118103235-mutt-send-email-mst@kernel.org>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: RGB LED class Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX
+ family of the RGB LED driver
+Date: Fri, 18 Jan 2019 09:57:23 -0600
+Message-ID: <b7ee7c2b-0878-962c-71ee-3ef281f6de0f@ti.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <86299268-3202-814a-134b-04bd2170faab@ti.com>
+ <8dfa2854-2814-6874-ab8e-1858e9a18acf@gmail.com> <20190118000235.GB27661@amd>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="windows-1252"
 Content-Transfer-Encoding: 7bit
-Return-path: <iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <20190115121959.23763-1-jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-List-Unsubscribe: <https://lists.linuxfoundation.org/mailman/options/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=unsubscribe>
-List-Archive: <http://lists.linuxfoundation.org/pipermail/iommu/>
-List-Post: <mailto:iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org>
-List-Help: <mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.linuxfoundation.org/mailman/listinfo/iommu>,
-	<mailto:iommu-request-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org?subject=subscribe>
-Sender: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-Errors-To: iommu-bounces-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org
-To: Jean-Philippe Brucker <jean-philippe.brucker-5wv7dgnIgG8@public.gmane.org>
-Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, virtio-dev-sDuHXQ4OtrM4h7I2RyI4rWD2FQJk+8+b@public.gmane.org, kevin.tian-ral2JQCrhuEAvxtiuMwx3w@public.gmane.org, tnowicki-M3mlKVOIwJVv6pq1l3V1OdBPR1lH4CV8@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, marc.zyngier-5wv7dgnIgG8@public.gmane.org, linux-pci-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, will.deacon-5wv7dgnIgG8@public.gmane.org, robin.murphy-5wv7dgnIgG8@public.gmane.org, virtualization-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, iommu-cunTk1MwBs9QetFLy7KEm3xJsTq8ys+cHZ5vskTnxNA@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, kvmarm-FPEHb7Xf0XXUo1n7N8X6UoWGPAHP3yOg@public.gmane.org, bhelgaas-hpIqsD4AKlfQT0dZR+AlfA@public.gmane.org, frowand.list-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, jasowang-H+wXaHxf7aLQT0dZR+AlfA@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190118000235.GB27661@amd>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>, Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Hello
 
-On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.9 [1].
+On 1/17/19 6:02 PM, Pavel Machek wrote:
+> Hi!
 > 
-> This is a simple rebase onto Linux v5.0-rc2. We now use the
-> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
-> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
 > 
-> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
-> on Arm, and enable device assignment to guest userspace. In this
-> use-case the mappings are static, and don't require optimal performance,
-> so this series tries to keep things simple. However there is plenty more
-> to do for features and optimizations, and having this base in v5.1 would
-> be good. Given that most of the changes are to drivers/iommu, I believe
-> the driver and future changes should go via the IOMMU tree.
+>>> I am willing to work with you on the HSV and adapting the LP50xx part to this framework.
+>>> Or any RGB framework for that matter.  I still don't agree with the kernel needing to declare colors
+>>>  maybe color capabilities but not specific colors.
+>>
+>> Dan, if you have a bandwidth for LED RGB class implementation
+>> then please go ahead. It would be good to compare colors produced
+>> by software HSV->RGB algorithm to what can be achieved with
+>> LEDn_BRIGHTNESS feature.
 > 
-> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
-> module and x86 support on virtio-iommu/devel. Also tested with Eric's
-> QEMU device [4]. Please note that the series depends on Robin's
-> probe-deferral fix [5], which will hopefully land in v5.0.
+> Don't get me wrong, I'd like to see LED RGB class implementation. But
+> it will delay merge of this driver.
 > 
-> [1] Virtio-iommu specification v0.9, sources and pdf
->     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
+> If we want to do that, we should first discuss the requirements, and
+> then come up with interface.. and only then we can talk about the
+> driver code.
 > 
-> [2] [PATCH v6 0/7] Add virtio-iommu driver
->     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
+> That's why I believe preferable way would be to merge the driver using
+> the existing interface.
 > 
-> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
->     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
+> Of course, first designing RGB LED class and then merging the
+> driver.. is okay with me. But lets not rush the class because there's
+> driver waiting for it.
 > 
-> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->     https://www.mail-archive.com/qemu-devel-qX2TKyscuCcdnm+yROfE0A@public.gmane.org/msg575578.html
+
+We have been able to provide users a preliminary driver they can use to test
+their hardware.  It is not the ideal driver but it helps them develop their
+product.
+
+The important thing here is that the driver is available to all from the Linux mainline
+and not from a product repo.
+
+>> The requirements for LED RGB class as I would see it:
+>>
+>> sysfs interface:
+>>
+>> brightness-model: space separated list of available options:
+>> - rgb (default):
+>>   - creates color file with "red green blue" decimal values
+>>   - creates brightness file
+>> 	a) for devices with hardware support for adjusting color
+>>            intensity it maps to corresponding register
+>>         b) for the rest writing any value greater than 0 will result
+>>            in setting all color registers to max
+>> - hsv:
+>>   - creates color file with "h s v" values - it shall
+>>     use software HSV->RGB algorithm for setting color registers
+>>
+>> - any other custom color ranges defined in DT, but it can be covered
+>>   later
+>> - other options?
 > 
-> [5] [PATCH] iommu/of: Fix probe-deferral
->     https://www.spinics.net/lists/arm-kernel/msg698371.html
+> First, I think we want to decide if RGB LED should be presented as
+> 3 LEDs or as 1 LED... and what to do with existing RGB leds being
+> presented as 3 LEDs.
 
-Thanks for the work!
-So really my only issue with this is that there's no
-way for the IOMMU to describe the devices that it
-covers.
+What do we do with RGBW drivers?  Like the LP5562.  RGB can be grouped as a single
+LED but does the white LED get grouped too or should it register as a new LED?
 
-As a result that is then done in a platform-specific way.
+I am assuming the answer is that it would register as a new LED.
 
-And this means that for example it does not solve the problem that e.g.
-some power people have in that their platform simply does not have a way
-to specify which devices are covered by the IOMMU.
-
-Solving that problem would make me much more excited about
-this device.
-
-On the other hand I can see that while there have been some
-developments most of the code has been stable for quite a while now.
-
-So what I am trying to do right about now, is making a small module that
-loads early and pokes at the IOMMU sufficiently to get the data about
-which devices use the IOMMU out of it using standard virtio config
-space.  IIUC it's claimed to be impossible without messy changes to the
-boot sequence.
-
-If I succeed at least on some platforms I'll ask that this design is
-worked into this device, minimizing info that goes through DT/ACPI.  If
-I see I can't make it in time to meet the next merge window, I plan
-merging the existing patches using DT (barring surprises).
-
-As I only have a very small amount of time to spend on this attempt, If
-someone else wants to try doing that in parallel, that would be great!
-
-
-> Jean-Philippe Brucker (7):
->   dt-bindings: virtio-mmio: Add IOMMU description
->   dt-bindings: virtio: Add virtio-pci-iommu node
->   of: Allow the iommu-map property to omit untranslated devices
->   PCI: OF: Initialize dev->fwnode appropriately
->   iommu: Add virtio-iommu driver
->   iommu/virtio: Add probe request
->   iommu/virtio: Add event queue
 > 
->  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->  MAINTAINERS                                   |    7 +
->  drivers/iommu/Kconfig                         |   11 +
->  drivers/iommu/Makefile                        |    1 +
->  drivers/iommu/virtio-iommu.c                  | 1158 +++++++++++++++++
->  drivers/of/base.c                             |   10 +-
->  drivers/pci/of.c                              |    7 +
->  include/uapi/linux/virtio_ids.h               |    1 +
->  include/uapi/linux/virtio_iommu.h             |  161 +++
->  10 files changed, 1449 insertions(+), 3 deletions(-)
->  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->  create mode 100644 drivers/iommu/virtio-iommu.c
->  create mode 100644 include/uapi/linux/virtio_iommu.h
+> I don't think we want to support both RGB and HSV in the kernel. It is
+> math, and not a nice one.
 > 
-> -- 
-> 2.19.1
+> Yes, both have advantages and disadvantages, but having _both_ in
+> kernel has disadvantages of both.
+> 
+
+I agree.  Beyond the math I think giving developers a choice may bring about
+driver discussion of why the developer is using RGB over HSV or vice versa.
+
+> One way I could imagine the interface:
+> 
+>     RGB LED presented as one LED.
+> 
+
+We would have to figure out a cluster schema that would group these LEDs.
+
+Difficulty would come if you have different drivers driving different LEDs.
+I personally have not seen this but the possibility is there.
+
+We don't have to put that in the initial design and if a developer needs this
+level of functionality they can submit a patch.
+
+>     brightness -- controls brightness of whole RGB module.
+> 
+
+This would be nice assuming the product groups them.  They should also be
+individual LEDs like we have today. 
+
+>     pwm_channels -- "1000 240 300" -- "red part should be full on, green
+>     should be pwm controlled to 240/1000, blue should be 300/1000"
+> 
+
+Why 1000?  Why not based on a duty cycle percentage and let the LED driver figure out
+what that means to the device?
+
+pwm_channels -- "100 24 30" -- red part is full on 100%, green is 24% duty cycle and
+blue is 30% duty cycle.
+
+>     pwm_white -- "1000 500 400" -- tells userspace what to write to PWM
+>     channels to get approximately white color.
+> 
+
+Same as above on the duty cycle.
+
+But I still am in disagreement with the kernel detailing what is white or how to
+achieve white.
+
+Based on my earlier email about light pipes and the LED vendors and aging I think product
+developers will need to fine tune what is "white" on their product from user space or even a DT node.
+
+Not sure that the driver needs to have that level of intelligence because it has no idea
+what vendor or what shade of the LED it is driving or even if the LED it is driving is the
+color defined.  All be it that the LP50xx data sheet does suggest that the LEDs be connected to
+particular outputs but that does not mean they will.
+
+Wondering if it would be better to set a DT node property like rgb-white that defines the values
+the driver would need for the hardware to produce a white color.  Then the driver would register a
+set_color_white call back and the driver would take the hardware property and set the color values as defined.
+
+Then the user space can set either "color" to 0xff 0xff 0xff or pwm_channels to 100 100 100 and the framework
+would call the set_color_white call back as opposed to the set_color call back.
+
+If rbg-white does not exist in the dt node then no call back is set and the the set_color call back is only called.
+rgb-white can be an optional child property. And this eliminates the need for a user ABI
+
+Thoughts?
+
+
+>     This would assume that RGB LEDs are always pwm controlled. That
+>     seems to be true for hardware I seen.
+> 
+
+GPIO LEDs can be binary or use PWM depending on what is needed.
+
+>     + no complex math in kernel
+
+We can eliminate the math if we use the "color" file that was proposed and pass in absolute
+hex/decimal numbers for color.
+
+> 
+>     + userspace knows enough to display arbitrary colors
+> 
+>     + userspace can use full range of available PWM intensities
+> 
+
+Do we need a pwm_max file to indicate to the user space what the max values of the pwm
+is for each color?
+
+>     + existing triggers will work nicely
+> 
+>     - userland needs to do non-trivial math to get colors it wants
+> 
+
+Could this be done via a DT node that exposes an attenuation constant for each LED?
+Then user space can query and apply the attenuation to the associated LED.
+
+Or userland may not care and this can be done in the driver.
+It would be optional child property. And this eliminates the need for a user ABI
+
+>     - not sure how to migrate existing devices
+> 
+> Thoughts? Other possible interfaces?
+
+Userland would need to know what RGBs are available.  The product could use a green and blue
+or red and green or whatever combo.  So userland can know that not all colors are available.
+
+
+Dan
+
+> 
+> Best regards,
+> 									Pavel
+> 
+
+
+-- 
+------------------
+Dan Murphy
