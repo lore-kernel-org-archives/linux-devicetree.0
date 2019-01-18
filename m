@@ -1,7 +1,7 @@
 From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 2/8] Bluetooth: hci_h5: Add support for reset GPIO
-Date: Fri, 18 Jan 2019 09:02:26 -0800
-Message-ID: <20190118170232.16142-3-anarsoul@gmail.com>
+Subject: [PATCH 7/8] DO-NOT-MERGE: arm64: allwinner: a64: enable Bluetooth On Pine64
+Date: Fri, 18 Jan 2019 09:02:31 -0800
+Message-ID: <20190118170232.16142-8-anarsoul@gmail.com>
 References: <20190118170232.16142-1-anarsoul@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -11,54 +11,37 @@ Sender: netdev-owner@vger.kernel.org
 To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Vasily Khoruzhick <anarsoul@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some boards (e.g. Pine64 and Pinebook) wire a GPIO to reset pin of
-RTL8723BS
+Pine64 has optional RTL8723BS WiFi + BT module, BT is connected to UART1
+and uses PL4 as BT reset, PL5 as device wake GPIO, PL6 as host wake GPIO
+the I2C controlling signals are connected to R_I2C bus.
+
+Enable it in the device tree.
 
 Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
 ---
- drivers/bluetooth/hci_h5.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts | 10 +++++++++-
+ 1 file changed, 9 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-index 069d1c8fde73..7ead8c3d8657 100644
---- a/drivers/bluetooth/hci_h5.c
-+++ b/drivers/bluetooth/hci_h5.c
-@@ -107,6 +107,7 @@ struct h5 {
- 	const struct h5_vnd *vnd;
- 	const char *id;
- 
-+	struct gpio_desc *reset_gpio;
- 	struct gpio_desc *enable_gpio;
- 	struct gpio_desc *device_wake_gpio;
- };
-@@ -833,6 +834,10 @@ static int h5_serdev_probe(struct serdev_device *serdev)
- 	if (IS_ERR(h5->device_wake_gpio))
- 		return PTR_ERR(h5->device_wake_gpio);
- 
-+	h5->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-+	if (IS_ERR(h5->reset_gpio))
-+		return PTR_ERR(h5->reset_gpio);
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+index 216f2f5db5ef..4d48aa31d420 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pine64.dts
+@@ -302,7 +302,15 @@
+ &uart1 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
+-	status = "disabled";
++	status = "okay";
 +
- 	return hci_uart_register_device(&h5->serdev_hu, &h5p);
- }
++	bluetooth {
++		compatible = "realtek,rtl8723bs-bt";
++		reset-gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>; /* PL4 */
++		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_HIGH>; /* PL5 */
++		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
++		firmware-postfix = "pine64";
++	};
+ };
  
-@@ -921,6 +926,9 @@ static void h5_btrtl_open(struct h5 *h5)
- 
- 	/* The controller needs up to 500ms to wakeup */
- 	gpiod_set_value_cansleep(h5->enable_gpio, 1);
-+	/* Take it out of reset */
-+	gpiod_set_value_cansleep(h5->reset_gpio, 0);
-+	msleep(100);
- 	gpiod_set_value_cansleep(h5->device_wake_gpio, 1);
- 	msleep(500);
- }
-@@ -928,6 +936,7 @@ static void h5_btrtl_open(struct h5 *h5)
- static void h5_btrtl_close(struct h5 *h5)
- {
- 	gpiod_set_value_cansleep(h5->device_wake_gpio, 0);
-+	gpiod_set_value_cansleep(h5->reset_gpio, 1);
- 	gpiod_set_value_cansleep(h5->enable_gpio, 0);
- }
- 
+ /* On Pi-2 connector */
 -- 
 2.20.1
