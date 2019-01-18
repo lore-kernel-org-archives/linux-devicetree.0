@@ -1,71 +1,107 @@
-From: Heiko Carstens <heiko.carstens@de.ibm.com>
-Subject: Re: [PATCH 19/21] treewide: add checks for the return value of
- memblock_alloc*()
-Date: Fri, 18 Jan 2019 09:43:02 +0100
-Message-ID: <20190118084302.GA4160@osiris>
-References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
- <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+From: Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
+Date: Fri, 18 Jan 2019 09:43:53 +0100
+Message-ID: <c007d399-af86-98d3-94f9-b9762efdc219@gmail.com>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
-Content-Disposition: inline
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-snps-arc/>
-List-Post: <mailto:linux-snps-arc@lists.infradead.org>
-List-Help: <mailto:linux-snps-arc-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-snps-arc>,
- <mailto:linux-snps-arc-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-snps-arc" <linux-snps-arc-bounces@lists.infradead.org>
-Errors-To: linux-snps-arc-bounces+gla-linux-snps-arc=m.gmane.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, Petr Mladek <pmladek@suse.com>, linux-xtensa@linux-xtensa.org, linux-alpha@vger.kernel.org, linux-um@lists.infradead.org, linux-m68k@li
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ryder Lee <ryder.lee@mediatek.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 03:44:19PM +0200, Mike Rapoport wrote:
-> Add check for the return value of memblock_alloc*() functions and call
-> panic() in case of error.
-> The panic message repeats the one used by panicing memblock allocators with
-> adjustment of parameters to include only relevant ones.
+
+
+On 18/01/2019 04:24, Ryder Lee wrote:
+> This adds a property "mediatek,num-pwms" to avoid having an endless
+> list of compatibles with no differences for the same driver.
 > 
-> The replacement was mostly automated with semantic patches like the one
-> below with manual massaging of format strings.
+> Thus, the driver should have backwards compatibility to older DTs.
 > 
-> @@
-> expression ptr, size, align;
-> @@
-> ptr = memblock_alloc(size, align);
-> + if (!ptr)
-> + 	panic("%s: Failed to allocate %lu bytes align=0x%lx\n", __func__,
-> size, align);
+> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> ---
+> Changes since v1: add some checks for backwards compatibility.
+> ---
+>  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
+>  1 file changed, 18 insertions(+), 9 deletions(-)
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-...
-> diff --git a/arch/s390/numa/toptree.c b/arch/s390/numa/toptree.c
-> index 71a608c..0118c77 100644
-> --- a/arch/s390/numa/toptree.c
-> +++ b/arch/s390/numa/toptree.c
-> @@ -31,10 +31,14 @@ struct toptree __ref *toptree_alloc(int level, int id)
+> diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> index eb6674c..81b7e5e 100644
+> --- a/drivers/pwm/pwm-mediatek.c
+> +++ b/drivers/pwm/pwm-mediatek.c
+> @@ -55,7 +55,7 @@ enum {
+>  };
+>  
+>  struct mtk_pwm_platform_data {
+> -	unsigned int num_pwms;
+> +	unsigned int num_pwms;	/* it should not be used in the future SoCs */
+>  	bool pwm45_fixup;
+>  	bool has_clks;
+>  };
+> @@ -226,27 +226,36 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+>  
+>  static int mtk_pwm_probe(struct platform_device *pdev)
 >  {
->  	struct toptree *res;
-> 
-> -	if (slab_is_available())
-> +	if (slab_is_available()) {
->  		res = kzalloc(sizeof(*res), GFP_KERNEL);
-> -	else
-> +	} else {
->  		res = memblock_alloc(sizeof(*res), 8);
-> +		if (!res)
-> +			panic("%s: Failed to allocate %zu bytes align=0x%x\n",
-> +			      __func__, sizeof(*res), 8);
+> -	const struct mtk_pwm_platform_data *data;
+> +	struct device_node *np = pdev->dev.of_node;
+>  	struct mtk_pwm_chip *pc;
+>  	struct resource *res;
+> -	unsigned int i;
+> +	unsigned int i, num_pwms;
+>  	int ret;
+>  
+>  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+>  	if (!pc)
+>  		return -ENOMEM;
+>  
+> -	data = of_device_get_match_data(&pdev->dev);
+> -	if (data == NULL)
+> -		return -EINVAL;
+> -	pc->soc = data;
+> +	pc->soc = of_device_get_match_data(&pdev->dev);
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+>  	pc->regs = devm_ioremap_resource(&pdev->dev, res);
+>  	if (IS_ERR(pc->regs))
+>  		return PTR_ERR(pc->regs);
+>  
+> -	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
+> +	/* Check if we have set 'num-pwms' in DTs. */
+> +	ret = of_property_read_u32(np, "mediatek,num-pwms", &num_pwms);
+> +	if (ret < 0) {
+> +		/* If no, fallback to use SoC data for backwards compatibility. */
+> +		if (pc->soc->num_pwms) {
+> +			num_pwms = pc->soc->num_pwms;
+
+Maybe that's bike shedding, but I think it would be better to carve out the
+num_pwms from the mtk_pwm_platform_data and check against the compatible here.
+With a expressive comment it will help other driver developers to not start
+adding num_pwms in the platform data in their first attempt.
+
+Regards,
+Matthias
+
+> +		} else {
+> +			dev_err(&pdev->dev, "failed to get pwm number: %d\n", ret);
+> +			return ret;
+> +		}
 > +	}
->  	if (!res)
->  		return res;
-
-Please remove this hunk, since the code _should_ be able to handle
-allocation failures anyway (see end of quoted code).
-
-Otherwise for the s390 bits:
-Acked-by: Heiko Carstens <heiko.carstens@de.ibm.com>
+> +
+> +	for (i = 0; i < num_pwms + 2 && pc->soc->has_clks; i++) {
+>  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
+>  		if (IS_ERR(pc->clks[i])) {
+>  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
+> @@ -260,7 +269,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
+>  	pc->chip.dev = &pdev->dev;
+>  	pc->chip.ops = &mtk_pwm_ops;
+>  	pc->chip.base = -1;
+> -	pc->chip.npwm = data->num_pwms;
+> +	pc->chip.npwm = num_pwms;
+>  
+>  	ret = pwmchip_add(&pc->chip);
+>  	if (ret < 0) {
+> 
