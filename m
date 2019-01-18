@@ -1,103 +1,79 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
- support
-Date: Fri, 18 Jan 2019 09:54:32 +0000
-Message-ID: <AM0PR04MB42111D634F28492434AA9309809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
-         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
- <1547801609.2626.5.camel@pengutronix.de>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
+Date: Fri, 18 Jan 2019 18:01:09 +0800
+Message-ID: <1547805669.8969.4.camel@mtkswgap22>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
+         <20190118075925.noilab6glzm3cig6@pengutronix.de>
+         <1547804574.8124.6.camel@mtkswgap22>
+         <20190118095313.pbpdn43hd76khg2x@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547801609.2626.5.camel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190118095313.pbpdn43hd76khg2x@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNl
-bnQ6IEZyaWRheSwgSmFudWFyeSAxOCwgMjAxOSA0OjUzIFBNDQo+IEFtIEZyZWl0YWcsIGRlbiAx
-OC4wMS4yMDE5LCAwNzo1MyArMDAwMCBzY2hyaWViIEFpc2hlbmcgRG9uZzoNCj4gPiBPbmUgaXJx
-c3RlZXIgY2hhbm5lbCBjYW4gc3VwcG9ydCB1cCB0byA4IG91dHB1dCBpbnRlcnJ1cHRzLg0KPiAN
-Cj4gVGhpcyBoYXMgYmVlbiBkaXNjdXNzZWQgd2hlbiB1cHN0cmVhbWluZyB0aGUgZHJpdmVyLiBU
-aGUgY29udHJvbGxlciBtYXkNCj4gc3VwcG9ydCBtdWx0aXBsZSBvdXRwdXQgSVJRcywgYnV0IG9u
-bHkgb25lIHRoZW0gaXMgYWN0dWFsbHkgdXNlZCBkZXBlbmRpbmcgb24NCj4gdGhlIENIQU5DVFJM
-IGNvbmZpZy4gVGhlcmUgaXMgbm8gdXNlIGluIGhvb2tpbmcgdXAgYWxsIHRoZSBvdXRwdXQgSVJR
-cyBpbiBEVCwgaWYNCj4gb25seSBvbmUgb2YgdGhlbSBpcyBhY3R1YWxseSB1c2VkLiBTb21lIG9m
-IHRoZSBvdXRwdXRzIG1heSBub3QgZXZlbiBiZSB2aXNpYmxlDQo+IHRvIHRoZSBMaW51eCBzeXN0
-ZW0sIGJ1dCBtYXkgYmVsb25nIHRvIGEgQ29ydGV4IE00IHN1YnN5c3RlbS4gQWxsIG9mIHRob3Nl
-DQo+IGNvbmZpZ3VyYXRpb25zIGNhbiBiZSBkZXNjcmliZWQgaW4gRFQgYnkgY2hhbmdpbmcgdGhl
-IHVwc3RyZWFtIGludGVycnVwdCBhbmQNCj4gImZzbCxjaGFubmVsIiBpbiBhIGNvaGVyZW50IHdh
-eS4NCj4gDQo+IFBsZWFzZSBjb3JyZWN0IG1lIGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgdG90YWxs
-eSB3cm9uZy4NCg0KSSdtIGFmcmFpZCB5b3VyIHVuZGVyc3RhbmRpbmcgb2YgQ0hBTiBzZWVtcyB3
-cm9uZy4NCihCaW5kaW5nIGRvYyBvZiB0aGF0IHByb3BlcnR5IG5lZWRzIGNoYW5nZSBhcyB3ZWxs
-KS4NCg0KT24gUVhQIERDIFNTLCB0aGUgSVJRU1RFRVIgc3VwcG9ydHMgNTEyIGludGVycnVwdHMg
-d2l0aCA4IGludGVycnVwdCBvdXRwdXQNCkNvbm50ZWN0ZWQgdG8gR0lDLg0KVGhlIGN1cnJlbnQg
-ZHJpdmVyIGRvZXMgbm90IHN1cHBvcnQgaXQgYXMgaXQgYXNzdW1lcyBvbmx5IG9uZSBpbnRlcnJ1
-cHQgb3V0cHV0IHVzZWQuDQoNClJlZ2FyZHMNCkRvbmcgQWlzaGVuZw0KDQo+IA0KPiBSZWdhcmRz
-LA0KPiBMdWNhcw0KPiANCj4gPiBDYzogTWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNv
-bT4NCj4gPiA+IENjOiBMdWNhcyBTdGFjaCA8bC5zdGFjaEBwZW5ndXRyb25peC5kZT4NCj4gPiA+
-IENjOiBTaGF3biBHdW8gPHNoYXduZ3VvQGtlcm5lbC5vcmc+DQo+ID4gPiBTaWduZWQtb2ZmLWJ5
-OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KPiA+IC0tLQ0KPiA+IMKgZHJp
-dmVycy9pcnFjaGlwL2lycS1pbXgtaXJxc3RlZXIuYyB8IDM5DQo+ID4gKysrKysrKysrKysrKysr
-KysrKysrKysrKysrLS0tLS0tLS0tLS0NCj4gPiDCoDEgZmlsZSBjaGFuZ2VkLCAyOCBpbnNlcnRp
-b25zKCspLCAxMSBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL2ly
-cWNoaXAvaXJxLWlteC1pcnFzdGVlci5jDQo+ID4gYi9kcml2ZXJzL2lycWNoaXAvaXJxLWlteC1p
-cnFzdGVlci5jDQo+ID4gaW5kZXggMWJlYmYwYS4uNTQ4MDJmYSAxMDA2NDQNCj4gPiAtLS0gYS9k
-cml2ZXJzL2lycWNoaXAvaXJxLWlteC1pcnFzdGVlci5jDQo+ID4gKysrIGIvZHJpdmVycy9pcnFj
-aGlwL2lycS1pbXgtaXJxc3RlZXIuYw0KPiA+IEBAIC0xMCw2ICsxMCw3IEBADQo+ID4gwqAjaW5j
-bHVkZSA8bGludXgvaXJxY2hpcC9jaGFpbmVkX2lycS5oPg0KPiA+IMKgI2luY2x1ZGUgPGxpbnV4
-L2lycWRvbWFpbi5oPg0KPiA+IMKgI2luY2x1ZGUgPGxpbnV4L2tlcm5lbC5oPg0KPiA+ICsjaW5j
-bHVkZSA8bGludXgvb2ZfaXJxLmg+DQo+ID4gwqAjaW5jbHVkZSA8bGludXgvb2ZfcGxhdGZvcm0u
-aD4NCj4gPiDCoCNpbmNsdWRlIDxsaW51eC9zcGlubG9jay5oPg0KPiA+DQo+ID4gQEAgLTIxLDEw
-ICsyMiwxMyBAQA0KPiA+ID4gwqAjZGVmaW5lIENIQU5fTUlOVERJUyh0KQkJKENUUkxfU1RSSURF
-X09GRih0LCAzKSArIDB4NCkNCj4gPiA+IMKgI2RlZmluZSBDSEFOX01BU1RSU1RBVCh0KQkoQ1RS
-TF9TVFJJREVfT0ZGKHQsIDMpICsgMHg4KQ0KPiA+DQo+ID4gPiArI2RlZmluZSBDSEFOX01BWF9P
-VVRQVVRfSU5UCTB4OA0KPiA+ICsNCj4gPiDCoHN0cnVjdCBpcnFzdGVlcl9kYXRhIHsNCj4gPiA+
-ID4gwqAJdm9pZCBfX2lvbWVtCQkqcmVnczsNCj4gPiA+ID4gwqAJc3RydWN0IGNsawkJKmlwZ19j
-bGs7DQo+ID4gPiA+IC0JaW50CQkJaXJxOw0KPiA+ID4gPiArCWludAkJCWlycVtDSEFOX01BWF9P
-VVRQVVRfSU5UXTsNCj4gPiA+ID4gKwlpbnQJCQlpcnFfY291bnQ7DQo+ID4gPiA+IMKgCXJhd19z
-cGlubG9ja190CQlsb2NrOw0KPiA+ID4gPiDCoAlpbnQJCQlyZWdfbnVtOw0KPiA+ID4gPiDCoAlp
-bnQJCQljaGFubmVsOw0KPiA+IEBAIC0xMTcsNyArMTIxLDcgQEAgc3RhdGljIGludCBpbXhfaXJx
-c3RlZXJfcHJvYmUoc3RydWN0DQo+ID4gcGxhdGZvcm1fZGV2aWNlICpwZGV2KQ0KPiA+ID4gwqAJ
-c3RydWN0IGRldmljZV9ub2RlICpucCA9IHBkZXYtPmRldi5vZl9ub2RlOw0KPiA+ID4gwqAJc3Ry
-dWN0IGlycXN0ZWVyX2RhdGEgKmRhdGE7DQo+ID4gPiDCoAlzdHJ1Y3QgcmVzb3VyY2UgKnJlczsN
-Cj4gPiA+IC0JaW50IHJldDsNCj4gPiA+ICsJaW50IGksIHJldDsNCj4gPg0KPiA+ID4gwqAJZGF0
-YSA9IGRldm1fa3phbGxvYygmcGRldi0+ZGV2LCBzaXplb2YoKmRhdGEpLCBHRlBfS0VSTkVMKTsN
-Cj4gPiA+IMKgCWlmICghZGF0YSkNCj4gPiBAQCAtMTMwLDEyICsxMzQsNiBAQCBzdGF0aWMgaW50
-IGlteF9pcnFzdGVlcl9wcm9iZShzdHJ1Y3QNCj4gPiBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+
-ID4gPiDCoAkJcmV0dXJuIFBUUl9FUlIoZGF0YS0+cmVncyk7DQo+ID4gPiDCoAl9DQo+ID4NCj4g
-PiA+IC0JZGF0YS0+aXJxID0gcGxhdGZvcm1fZ2V0X2lycShwZGV2LCAwKTsNCj4gPiA+IC0JaWYg
-KGRhdGEtPmlycSA8PSAwKSB7DQo+ID4gPiAtCQlkZXZfZXJyKCZwZGV2LT5kZXYsICJmYWlsZWQg
-dG8gZ2V0IGlycVxuIik7DQo+ID4gPiAtCQlyZXR1cm4gLUVOT0RFVjsNCj4gPiA+IC0JfQ0KPiA+
-IC0NCj4gPiA+IMKgCWRhdGEtPmlwZ19jbGsgPSBkZXZtX2Nsa19nZXQoJnBkZXYtPmRldiwgImlw
-ZyIpOw0KPiA+ID4gwqAJaWYgKElTX0VSUihkYXRhLT5pcGdfY2xrKSkgew0KPiA+ID4gwqAJCXJl
-dCA9IFBUUl9FUlIoZGF0YS0+aXBnX2Nsayk7DQo+ID4gQEAgLTE3Nyw4ICsxNzUsMjMgQEAgc3Rh
-dGljIGludCBpbXhfaXJxc3RlZXJfcHJvYmUoc3RydWN0DQo+ID4gcGxhdGZvcm1fZGV2aWNlICpw
-ZGV2KQ0KPiA+ID4gwqAJCXJldHVybiAtRU5PTUVNOw0KPiA+ID4gwqAJfQ0KPiA+DQo+ID4gPiAt
-CWlycV9zZXRfY2hhaW5lZF9oYW5kbGVyX2FuZF9kYXRhKGRhdGEtPmlycSwgaW14X2lycXN0ZWVy
-X2lycV9oYW5kbGVyLA0KPiA+ID4gLQkJCQkJwqBkYXRhKTsNCj4gPiA+ICsJZGF0YS0+aXJxX2Nv
-dW50ID0gb2ZfaXJxX2NvdW50KG5wKTsNCj4gPiA+ICsJaWYgKCFkYXRhLT5pcnFfY291bnQgfHwg
-ZGF0YS0+aXJxX2NvdW50ID4gQ0hBTl9NQVhfT1VUUFVUX0lOVCkgew0KPiA+ID4gKwkJY2xrX2Rp
-c2FibGVfdW5wcmVwYXJlKGRhdGEtPmlwZ19jbGspOw0KPiA+ID4gKwkJcmV0dXJuIC1FSU5WQUw7
-DQo+ID4gPiArCX0NCj4gPiArDQo+ID4gPiArCWZvciAoaSA9IDA7IGkgPCBkYXRhLT5pcnFfY291
-bnQ7IGkrKykgew0KPiA+ID4gKwkJZGF0YS0+aXJxW2ldID0gaXJxX29mX3BhcnNlX2FuZF9tYXAo
-bnAsIGkpOw0KPiA+ID4gKwkJaWYgKCFkYXRhLT5pcnFbaV0pIHsNCj4gPiA+ICsJCQljbGtfZGlz
-YWJsZV91bnByZXBhcmUoZGF0YS0+aXBnX2Nsayk7DQo+ID4gPiArCQkJcmV0dXJuIC1FSU5WQUw7
-DQo+ID4gPiArCQl9DQo+ID4gKw0KPiA+ID4gKwkJaXJxX3NldF9jaGFpbmVkX2hhbmRsZXJfYW5k
-X2RhdGEoZGF0YS0+aXJxW2ldLA0KPiA+ID4gKwkJCQkJCcKgaW14X2lycXN0ZWVyX2lycV9oYW5k
-bGVyLA0KPiA+ID4gKwkJCQkJCcKgZGF0YSk7DQo+ID4gPiArCX0NCj4gPg0KPiA+ID4gwqAJcGxh
-dGZvcm1fc2V0X2RydmRhdGEocGRldiwgZGF0YSk7DQo+ID4NCj4gPiBAQCAtMTg4LDggKzIwMSwx
-MiBAQCBzdGF0aWMgaW50IGlteF9pcnFzdGVlcl9wcm9iZShzdHJ1Y3QNCj4gPiBwbGF0Zm9ybV9k
-ZXZpY2UgKnBkZXYpDQo+ID4gwqBzdGF0aWMgaW50IGlteF9pcnFzdGVlcl9yZW1vdmUoc3RydWN0
-IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gPiDCoHsNCj4gPiA+IMKgCXN0cnVjdCBpcnFzdGVl
-cl9kYXRhICppcnFzdGVlcl9kYXRhID0gcGxhdGZvcm1fZ2V0X2RydmRhdGEocGRldik7DQo+ID4g
-PiArCWludCBpOw0KPiA+ICsNCj4gPiA+ICsJZm9yIChpID0gMDsgaSA8IGlycXN0ZWVyX2RhdGEt
-PmlycV9jb3VudDsgaSsrKQ0KPiA+ID4gKwkJaXJxX3NldF9jaGFpbmVkX2hhbmRsZXJfYW5kX2Rh
-dGEoaXJxc3RlZXJfZGF0YS0+aXJxW2ldLA0KPiA+ID4gKwkJCQkJCcKgTlVMTCwgTlVMTCk7DQo+
-ID4NCj4gPiA+IC0JaXJxX3NldF9jaGFpbmVkX2hhbmRsZXJfYW5kX2RhdGEoaXJxc3RlZXJfZGF0
-YS0+aXJxLCBOVUxMLCBOVUxMKTsNCj4gPiA+IMKgCWlycV9kb21haW5fcmVtb3ZlKGlycXN0ZWVy
-X2RhdGEtPmRvbWFpbik7DQo+ID4NCj4gPiA+IMKgCWNsa19kaXNhYmxlX3VucHJlcGFyZShpcnFz
-dGVlcl9kYXRhLT5pcGdfY2xrKTsNCg==
+On Fri, 2019-01-18 at 10:53 +0100, Uwe Kleine-König wrote:
+> Hello Ryder,
+> 
+> On Fri, Jan 18, 2019 at 05:42:54PM +0800, Ryder Lee wrote:
+> > On Fri, 2019-01-18 at 08:59 +0100, Uwe Kleine-König wrote:
+> > > Hello,
+> > > 
+> > > On Fri, Jan 18, 2019 at 11:24:41AM +0800, Ryder Lee wrote:
+> > > > This adds a property "mediatek,num-pwms" to avoid having an endless
+> > > > list of compatibles with no differences for the same driver.
+> > > > 
+> > > > Thus, the driver should have backwards compatibility to older DTs.
+> > > 
+> > > I still think Thierry should bless "num-pwms" without vendor prefix.
+> > 
+> > Okay.
+> > 
+> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > ---
+> > > > Changes since v1: add some checks for backwards compatibility.
+> > > > ---
+> > > >  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
+> > > >  1 file changed, 18 insertions(+), 9 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> > > > index eb6674c..81b7e5e 100644
+> > > > --- a/drivers/pwm/pwm-mediatek.c
+> > > > +++ b/drivers/pwm/pwm-mediatek.c
+> > > > @@ -55,7 +55,7 @@ enum {
+> > > >  };
+> > > >  
+> > > >  struct mtk_pwm_platform_data {
+> > > 
+> > > Unrelated to this patch: This name is bad. This struct is not used as
+> > > platform_data and so should better be named mtk_pwm_of_data. While at
+> > > criticizing existing stuff: I'd prefer pwm_mediatek as common prefix to
+> > > match the filename.
+> > 
+> > I think we can take care about that in another patch.
+> 
+> That's what I wanted to say, right. Do you follow up?
+
+Yes, I will do that.
+
+> > > > -	unsigned int num_pwms;
+> > > > +	unsigned int num_pwms;	/* it should not be used in the future SoCs */
+> > > 
+> > > I'd drop this comment in favour of a runtime warning.
+> > 
+> > Sorry, I can't get you here.
+> 
+> I'd do a
+> 
+> 	dev_warn(dev, "dt didn't specify number of PWMs, falling back to %d\n", pc->soc->num_pwms);
+> 
+> to make people aware that updating the dt would be nice.
+
+Okay!
+
+Thanks
+Ryder
