@@ -1,78 +1,64 @@
 From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH 3/4] memory: jz4780-nemc: Reduce size of const array
-Date: Fri, 18 Jan 2019 11:10:50 -0300
-Message-ID: <1547820650.1909.0@crapouillou.net>
-References: <20190117224550.18043-1-paul@crapouillou.net>
-        <20190117224550.18043-3-paul@crapouillou.net>
-        <20190118091518.467087b8@bbrezillon>
+Subject: Re: [PATCH 1/8] MIPS: DTS: CI20: Set BCH clock to 200 MHz
+Date: Fri, 18 Jan 2019 11:15:14 -0300
+Message-ID: <1547820914.1909.1@crapouillou.net>
+References: <20190118010634.27399-1-paul@crapouillou.net>
+        <20190118090736.6f1283bd@bbrezillon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii; format=flowed
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118091518.467087b8@bbrezillon>
+In-Reply-To: <20190118090736.6f1283bd@bbrezillon>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Miquel Raynal <miquel.raynal@bootlin.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
-
 
 Hi,
 
-On Fri, Jan 18, 2019 at 5:15 AM, Boris Brezillon 
+On Fri, Jan 18, 2019 at 5:07 AM, Boris Brezillon 
 <bbrezillon@kernel.org> wrote:
-> On Thu, 17 Jan 2019 19:45:49 -0300
+> Hi Paul,
+> 
+> On Thu, 17 Jan 2019 22:06:27 -0300
 > Paul Cercueil <paul@crapouillou.net <mailto:paul@crapouillou.net>> 
 > wrote:
 > 
->>  The maximum value found in that array is 15, there's no need to 
->> store
->>  these values as uint32_t, a uint8_t is enough.
-> 
-> Is it really worth the additional cast you add in the code?
-
-They're not needed. I had to verify, because it was not obvious to me.
-I'll remove them then.
-
+>>  This is currently done inside the jz4780-bch driver, but it really
+>>  should be done here instead.
 >> 
+> 
+> I disagree with that statement. If it's a per-SoC constraint then you
+> can select the appropriate rate based on the compatible in the driver.
+> If the clock rate depends on the NAND chip it probably means it's used
+> to generate the RE/WE pulse and should depend on the NAND timings
+> passed to ->setup_data_interface(). In either case, this should not be
+> specified in the DT.
+
+Alright, I'll drop the patch.
+
+> Regards,
+> 
+> Boris
+> 
 >>  Signed-off-by: Paul Cercueil <paul@crapouillou.net 
 >> <mailto:paul@crapouillou.net>>
 >>  ---
->>   drivers/memory/jz4780-nemc.c | 6 +++---
->>   1 file changed, 3 insertions(+), 3 deletions(-)
+>>   arch/mips/boot/dts/ingenic/ci20.dts | 3 +++
+>>   1 file changed, 3 insertions(+)
 >> 
->>  diff --git a/drivers/memory/jz4780-nemc.c 
->> b/drivers/memory/jz4780-nemc.c
->>  index bcf06adefc96..ef3f20e46590 100644
->>  --- a/drivers/memory/jz4780-nemc.c
->>  +++ b/drivers/memory/jz4780-nemc.c
->>  @@ -161,7 +161,7 @@ static bool jz4780_nemc_configure_bank(struct 
->> jz4780_nemc *nemc,
->>   	 * Conversion of tBP and tAW cycle counts to values supported by 
->> the
->>   	 * hardware (round up to the next supported value).
->>   	 */
->>  -	static const uint32_t convert_tBP_tAW[] = {
->>  +	static const u8 convert_tBP_tAW[] = {
->>   		0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10,
+>>  diff --git a/arch/mips/boot/dts/ingenic/ci20.dts 
+>> b/arch/mips/boot/dts/ingenic/ci20.dts
+>>  index 50cff3cbcc6d..aa892ec54d0a 100644
+>>  --- a/arch/mips/boot/dts/ingenic/ci20.dts
+>>  +++ b/arch/mips/boot/dts/ingenic/ci20.dts
+>>  @@ -111,6 +111,9 @@
+>>   		pinctrl-names = "default";
+>>   		pinctrl-0 = <&pins_nemc>;
 >> 
->>   		/* 11 - 12 -> 12 cycles */
->>  @@ -232,7 +232,7 @@ static bool jz4780_nemc_configure_bank(struct 
->> jz4780_nemc *nemc,
->>   			return false;
->>   		}
+>>  +		assigned-clocks = <&cgu JZ4780_CLK_BCH>;
+>>  +		assigned-clock-rates = <200000000>;
+>>  +
+>>   		nand@1 {
+>>   			reg = <1>;
 >> 
->>  -		smcr |= convert_tBP_tAW[cycles] << NEMC_SMCR_TBP_SHIFT;
->>  +		smcr |= (u32)convert_tBP_tAW[cycles] << NEMC_SMCR_TBP_SHIFT;
->>   	}
->> 
->>   	if (of_property_read_u32(node, "ingenic,nemc-tAW", &val) == 0) {
->>  @@ -244,7 +244,7 @@ static bool jz4780_nemc_configure_bank(struct 
->> jz4780_nemc *nemc,
->>   			return false;
->>   		}
->> 
->>  -		smcr |= convert_tBP_tAW[cycles] << NEMC_SMCR_TAW_SHIFT;
->>  +		smcr |= (u32)convert_tBP_tAW[cycles] << NEMC_SMCR_TAW_SHIFT;
->>   	}
->> 
->>   	if (of_property_read_u32(node, "ingenic,nemc-tSTRV", &val) == 0) {
 > 
