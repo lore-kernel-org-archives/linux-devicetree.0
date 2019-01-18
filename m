@@ -1,130 +1,58 @@
-From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH 4/8] mtd: rawnand: jz4780: Add support for the JZ4725B
-Date: Fri, 18 Jan 2019 09:26:57 +0100
-Message-ID: <20190118092657.0293b819@bbrezillon>
-References: <20190118010634.27399-1-paul@crapouillou.net>
-        <20190118010634.27399-4-paul@crapouillou.net>
+From: Tomi Valkeinen <tomi.valkeinen@ti.com>
+Subject: Re: [PATCH] drm: support gpu aliases defined in DT data
+Date: Fri, 18 Jan 2019 10:29:33 +0200
+Message-ID: <e5513293-416c-f4aa-a6ab-7c4e762753ed@ti.com>
+References: <20190117111918.31759-1-tomi.valkeinen@ti.com>
+ <20190117123320.GD3271@phenom.ffwll.local>
+ <a96c03af-4a01-4c85-f8ab-9e4d52822cf1@ti.com>
+ <CAKMK7uEUhPtmyujMGb-YNbrhYM9tqVc2S+=cJFWQvQOeSRaSnw@mail.gmail.com>
+ <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118010634.27399-4-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAL_JsqLRPyxX2WDo-87mvXSC-SKTEnF6rR8OA1wd0hs-w4ohdw@mail.gmail.com>
+Content-Language: en-US
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh@kernel.org>, Daniel Vetter <daniel@ffwll.ch>
+Cc: devicetree@vger.kernel.org, Maxime Ripard <maxime.ripard@bootlin.com>, dri-devel <dri-devel@lists.freedesktop.org>, David Airlie <airlied@linux.ie>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Sean Paul <sean@poorly.run>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Jan 2019 22:06:30 -0300
-Paul Cercueil <paul@crapouillou.net> wrote:
-
-> Add support for probing the jz4780-nand driver on the JZ4725B SoC from
-> Ingenic.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
-
-BTW, if you have some time, maybe you could convert this driver to
-->exec_op() ;-).
-
-> ---
->  drivers/mtd/nand/raw/jz4780_nand.c | 39 +++++++++++++++++++++++++++++---------
->  1 file changed, 30 insertions(+), 9 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/jz4780_nand.c b/drivers/mtd/nand/raw/jz4780_nand.c
-> index 7f55358b860f..cf24bf12884f 100644
-> --- a/drivers/mtd/nand/raw/jz4780_nand.c
-> +++ b/drivers/mtd/nand/raw/jz4780_nand.c
-> @@ -13,6 +13,7 @@
->  #include <linux/module.h>
->  #include <linux/of.h>
->  #include <linux/of_address.h>
-> +#include <linux/of_device.h>
->  #include <linux/gpio/consumer.h>
->  #include <linux/platform_device.h>
->  #include <linux/slab.h>
-> @@ -26,13 +27,15 @@
->  
->  #define DRV_NAME	"jz4780-nand"
->  
-> -#define OFFSET_DATA	0x00000000
-> -#define OFFSET_CMD	0x00400000
-> -#define OFFSET_ADDR	0x00800000
-> -
->  /* Command delay when there is no R/B pin. */
->  #define RB_DELAY_US	100
->  
-> +struct jz_soc_info {
-> +	unsigned long data_offset;
-> +	unsigned long addr_offset;
-> +	unsigned long cmd_offset;
-> +};
-> +
->  struct jz4780_nand_cs {
->  	unsigned int bank;
->  	void __iomem *base;
-> @@ -40,6 +43,7 @@ struct jz4780_nand_cs {
->  
->  struct jz4780_nand_controller {
->  	struct device *dev;
-> +	const struct jz_soc_info *soc_info;
->  	struct jz4780_bch *bch;
->  	struct nand_controller controller;
->  	unsigned int num_banks;
-> @@ -101,9 +105,9 @@ static void jz4780_nand_cmd_ctrl(struct nand_chip *chip, int cmd,
->  		return;
->  
->  	if (ctrl & NAND_ALE)
-> -		writeb(cmd, cs->base + OFFSET_ADDR);
-> +		writeb(cmd, cs->base + nfc->soc_info->addr_offset);
->  	else if (ctrl & NAND_CLE)
-> -		writeb(cmd, cs->base + OFFSET_CMD);
-> +		writeb(cmd, cs->base + nfc->soc_info->cmd_offset);
->  }
->  
->  static int jz4780_nand_dev_ready(struct nand_chip *chip)
-> @@ -272,8 +276,8 @@ static int jz4780_nand_init_chip(struct platform_device *pdev,
->  		return -ENOMEM;
->  	mtd->dev.parent = dev;
->  
-> -	chip->legacy.IO_ADDR_R = cs->base + OFFSET_DATA;
-> -	chip->legacy.IO_ADDR_W = cs->base + OFFSET_DATA;
-> +	chip->legacy.IO_ADDR_R = cs->base + nfc->soc_info->data_offset;
-> +	chip->legacy.IO_ADDR_W = cs->base + nfc->soc_info->data_offset;
->  	chip->legacy.chip_delay = RB_DELAY_US;
->  	chip->options = NAND_NO_SUBPAGE_WRITE;
->  	chip->legacy.select_chip = jz4780_nand_select_chip;
-> @@ -353,6 +357,10 @@ static int jz4780_nand_probe(struct platform_device *pdev)
->  	if (!nfc)
->  		return -ENOMEM;
->  
-> +	nfc->soc_info = device_get_match_data(dev);
-> +	if (!nfc->soc_info)
-> +		return -EINVAL;
-> +
->  	/*
->  	 * Check for BCH HW before we call nand_scan_ident, to prevent us from
->  	 * having to call it again if the BCH driver returns -EPROBE_DEFER.
-> @@ -390,8 +398,21 @@ static int jz4780_nand_remove(struct platform_device *pdev)
->  	return 0;
->  }
->  
-> +static const struct jz_soc_info jz4725b_soc_info = {
-> +	.data_offset = 0x00000000,
-> +	.cmd_offset  = 0x00008000,
-> +	.addr_offset = 0x00010000,
-> +};
-> +
-> +static const struct jz_soc_info jz4780_soc_info = {
-> +	.data_offset = 0x00000000,
-> +	.cmd_offset  = 0x00400000,
-> +	.addr_offset = 0x00800000,
-> +};
-> +
->  static const struct of_device_id jz4780_nand_dt_match[] = {
-> -	{ .compatible = "ingenic,jz4780-nand" },
-> +	{ .compatible = "ingenic,jz4725b-nand", .data = &jz4725b_soc_info },
-> +	{ .compatible = "ingenic,jz4780-nand",  .data = &jz4780_soc_info  },
->  	{},
->  };
->  MODULE_DEVICE_TABLE(of, jz4780_nand_dt_match);
+T24gMTgvMDEvMTkgMDA6MDQsIFJvYiBIZXJyaW5nIHdyb3RlOgoKPiBNZXNhL2xpYmRybSBhbHJl
+YWR5IGhhcyBsb3RzIG9mIGNvZGUgdG8gb3BlbiB0aGUgY29ycmVjdCBkZXZpY2VzIGFuZAo+IG5v
+dCBjYXJlIGFib3V0IG1pbm9yIG51bWJlcnMuIFdoYXQncyB0aGUgcHJvYmxlbSBoZXJlPwoKV2Vs
+bCwgbWF5YmUgdGhlIHByb2JsZW0gaXMgdGhhdCBJIGRvbid0IGtub3cgaG93IHRvIGRvIHRoaXMg
+PSkuCgpTbywgaWYgd2UgaGF2ZSBtdWx0aXBsZSBEUk0gZGV2aWNlcywgaG93IGRvZXMgb25lIG1h
+bmFnZSB0aG9zZT8KSXRlcmF0aW5nIG92ZXIgdGhlbSBhbmQgbG9va2luZyBmb3Iga21zLWNhcGFi
+bGUgb25lcyBpcyBlYXN5IGVub3VnaC4gQnV0CmlmIHRoZXJlIGFyZSBtdWx0aXBsZSBrbXMtY2Fw
+YWJsZSBvbmVzLCBob3cgc2hvdWxkIHRoZSB1c2Vyc3BhY2UgY2hvb3NlCmJldHdlZW4gdGhvc2U/
+CgpJIHNlZSB0aGF0IHVkZXYgY3JlYXRlcyAvZGV2L2RyaS9ieS1wYXRoLyBsaW5rcyB0byB0aGUg
+Y2FyZHMsIHNob3VsZCB0aGUKdXNlcnNwYWNlIHVzZSB0aG9zZSB0byBoYXZlIGEgcGVyc2lzdGVu
+dCBsaW5rIHRvIHRoZSBjYXJkPyBFLmcuIGZpcnN0CnRpbWUgdGhlIGFwcCBpcyByYW4sIGl0J2xs
+IGNvbGxlY3QgYWxsIHRoZSBrbXMtY2FwYWJsZSBjYXJkcywgYW5kIHN0b3JlCnRoZSBieS1wYXRo
+IG5hbWVzIHNvbWV3aGVyZSwgYW5kIGluIHN1YnNlcXVlbnQgcnVucyBpdCB3aWxsIGluc3RlYWQg
+dXNlCnRoZSBieS1wYXRoIG5hbWVzIHRvIGtlZXAgdGhlIG9yZGVyIHRoZSBzYW1lLgoKSWYgSSBo
+YXZlIGEgcHJvZHVjdCB3aXRoIHR3byBkaXNwbGF5IGNvbnRyb2xsZXJzLCBhbmQgb25lIG9mIHRo
+ZW0gaGFzCnRoZSBtYWluIGRpc3BsYXkgY29ubmVjdGVkLCBob3cgZG9lcyBteSBjdXN0b20gYXBw
+IGtub3cgd2hpY2ggY2FyZCB0bwp1c2U/IEhhcmRjb2RpbmcgdGhlIGJ5LXBhdGggaW4gdGhlIGFw
+cD8KCklmIHVkZXYvc3lzdGVtZCBpcyBub3QgYXZhaWxhYmxlLCBob3cgZG9lcyB0aGUgdXNlcnNw
+YWNlIGRvIHRoaXM/IEkKdHJpZWQgdG8gc2VlIGlmIG9uZSBjYW4gZ2V0IGVub3VnaCBpbmZvcm1h
+dGlvbiBmcm9tIHRoZSBjYXJkIGRldmljZSB3aXRoCmlvY3RscyB0byBmaWd1cmUgdGhlc2UgdGhp
+bmdzIG91dCwgYnV0IEkgZGlkbid0IGZpZ3VyZSB0aGlzIG91dC4gU2hvdWxkCnRoZSBkcm1HZXRC
+dXNpZCgpIHJldHVybiBzb21ldGhpbmcgZm9yIHBsYXRmb3JtIGRldmljZXMgdG9vPyBNYXliZSBJ
+J3ZlCmdvdCBzb21ldGhpbmcgbWlzc2luZyBmcm9tIHRoZSBkaXNwbGF5IGRyaXZlciwgYW5kIGRy
+bUdldEJ1c2lkKCkgc2hvdWxkCnJldHVybiBzb21ldGhpbmcgc2ltaWxhciBhcyB3aGF0IGlzIGlu
+IHRoZSBieS1wYXRoIG5hbWUuCgogVG9taQoKLS0gClRleGFzIEluc3RydW1lbnRzIEZpbmxhbmQg
+T3ksIFBvcmtrYWxhbmthdHUgMjIsIDAwMTgwIEhlbHNpbmtpLgpZLXR1bm51cy9CdXNpbmVzcyBJ
+RDogMDYxNTUyMS00LiBLb3RpcGFpa2thL0RvbWljaWxlOiBIZWxzaW5raQpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0
+CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
