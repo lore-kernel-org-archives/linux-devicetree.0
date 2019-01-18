@@ -1,50 +1,38 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH 2/2] ARM: dts: sun4i-a10: Add Video Engine
- and reserved memory nodes
-Date: Fri, 18 Jan 2019 19:46:58 +0100
-Message-ID: <20190118184658.dflpkqvdlg6zox7f@flea>
-References: <20190118145730.22227-1-paul.kocialkowski@bootlin.com>
- <20190118145730.22227-2-paul.kocialkowski@bootlin.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
+Date: Fri, 18 Jan 2019 11:46:42 -0800
+Message-ID: <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
+References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
+ <20190117161804.GA5760@bogus>
+ <1547817384.11482.33.camel@nxp.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="k53ajjhsub4gzoqy"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBV56RDRAKGQEWULXD5Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=iso-8859-1
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190118145730.22227-2-paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Thomas Petazzoni <thomas.petazzoni-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+In-Reply-To: <1547817384.11482.33.camel@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: "robh@kernel.org" <robh@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, alsa-
 List-Id: devicetree@vger.kernel.org
 
-
---k53ajjhsub4gzoqy
-Content-Type: text/plain; charset="UTF-8"
-Content-Disposition: inline
-
-On Fri, Jan 18, 2019 at 03:57:30PM +0100, Paul Kocialkowski wrote:
-> This adds nodes for the Video Engine and the associated reserved memory
-> for the A10. Up to 96 MiB of memory are dedicated to the CMA pool.
+On Fri, Jan 18, 2019 at 01:16:24PM +0000, Viorel Suman wrote:
+> > > 1. Moved "dais" node from machine driver DTS node to device driver
+> > > DTS node
+> > >   as suggested by Rob.
+> > That was not what I suggested. You still have a virtual node which
+> > looks to me to be unnecessary.
 > 
-> The VPU can only map the first 256 MiB of DRAM, so the reserved memory
-> pool has to be located in that area. Following Allwinner's decision in
-> downstream software, the last 96 MiB of the first 256 MiB of RAM are
-> reserved for this purpose.
-> 
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> To me removing virtual node implies that AUDMIX machine driver (imx-
+> audmix.c + virtual node) shall be removed and machine driver code
+> merged into device driver (fsl_audmix.c + device node) - please let me
+> know if my understanding is wrong.
 
-Applied both, thanks
+We could use a non-DT configuration right? From the driver logic,
+DT just registers a device corresponding to the machine driver so
+that it can probe(). We could register one in fsl_audmix instead.
+Please refer to how fsl_ssi registers the sound card device. The
+machine driver can get audmix_np from the parent device pointer,
+and I think that's all you need.
 
-Maxime
-
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---k53ajjhsub4gzoqy--
+Or maybe someone else would provide a better way. But it'd work.
