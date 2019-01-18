@@ -1,60 +1,30 @@
-From: Joel Stanley <joel@jms.id.au>
-Subject: Re: [PATCH v4 9/9] hwmon (occ): Add sysfs attributes for additional
- OCC data
-Date: Fri, 18 Jan 2019 12:47:08 +1100
-Message-ID: <CACPK8Xf3=pTRubt0VnUJ6GyT7bG15oCL+XtqzfeAAtccqbR_xg@mail.gmail.com>
-References: <1531342898-15790-1-git-send-email-eajames@linux.vnet.ibm.com>
- <1531342898-15790-10-git-send-email-eajames@linux.vnet.ibm.com> <alpine.DEB.2.21.1901180140150.1647@nanos.tec.linutronix.de>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH] arm64: dts: sdm845: Add CPU topology
+Date: Thu, 17 Jan 2019 18:50:46 -0800
+Message-ID: <CAD=FV=Xac6FCx=scgm5BCBsHFgtvqBpHT1ziKzrOWR2y7+J-_A@mail.gmail.com>
+References: <20190114184255.258318-1-mka@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <alpine.DEB.2.21.1901180140150.1647@nanos.tec.linutronix.de>
+In-Reply-To: <20190114184255.258318-1-mka@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Eddie James <eajames@linux.vnet.ibm.com>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-hwmon@vger.kernel.org, devicetree <devicetree@vger.kernel.org>, linux-doc@vger.kernel.org, Greg KH <gregkh@linuxfoundation.org>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Guenter Roeck <linux@roeck-us.net>, Jean Delvare <jdelvare@suse.com>, Mark Rutland <mark.rutland@arm.com>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Rob Herring <robh+dt@kernel.org>, Kate Stewart <kstewart@linuxfoundation.org>
+To: Matthias Kaehlcke <mka@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Rajendra Nayak <rnayak@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Jan 2019 at 11:44, Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> Eddie,
->
-> On Wed, 11 Jul 2018, Eddie James wrote:
->
-> > --- /dev/null
-> > +++ b/drivers/hwmon/occ/sysfs.c
-> > @@ -0,0 +1,188 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * OCC hwmon driver sysfs interface
-> > + *
-> > + * Copyright (C) IBM Corporation 2018
-> > + *
-> > + * This program is free software; you can redistribute it and/or modify
-> > + * it under the terms of the GNU General Public License as published by
-> > + * the Free Software Foundation; either version 2 of the License, or
-> > + * (at your option) any later version.
-> > + */
->
-> The above license information is inconsistent.
->
-> The SPDX license identifier says GPL v2 only, but the license notice says
-> GPL v2 or later. This is just wrong.
->
-> Please decide which one to use and please also remove the boiler plate
-> text. It is redundant.
->
-> See Documentation/process/license-rules.rst
+Hi,
 
-Thanks Thomas.
+On Mon, Jan 14, 2019 at 10:43 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+>
+> The 8 CPU cores of the SDM845 are organized in two clusters of 4 big
+> ("gold") and 4 little ("silver") cores. Add a cpu-map node to the DT
+> that describes this topology.
+>
+> Signed-off-by: Matthias Kaehlcke <mka@chromium.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 
-Eddie, as IBM contributed code our preferred license is GPLv2+. Be
-sure to include the copyright line in your header (I noticed some OCC
-files are missing this, please audit all of your recent
-contributions):
+Looks right to me and matches bindings examples.
 
-// SPDX-License-Identifier: GPL-2.0+
-// Copyright IBM Corp 2019
-
-Cheers,
-
-Joel
+Reviewed-by: Douglas Anderson <dianders@chromium.org>
