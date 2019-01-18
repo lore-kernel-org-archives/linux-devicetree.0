@@ -1,88 +1,74 @@
-From: Marc Zyngier <marc.zyngier@arm.com>
-Subject: Re: [PATCH v5 04/14] spmi: pmic-arb: convert to v2 irq interfaces to
- support hierarchical IRQ chips
-Date: Fri, 18 Jan 2019 13:12:38 +0000
-Message-ID: <e604d738-dd60-62c0-869a-dbb578ce2ca8@arm.com>
-References: <20190117003234.22127-1-masneyb@onstation.org>
- <20190117003234.22127-5-masneyb@onstation.org>
- <d2e3c91c-2a54-e130-7512-e4a65bf2794d@arm.com>
- <20190118122716.GA32143@basecamp>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
+Date: Fri, 18 Jan 2019 13:16:24 +0000
+Message-ID: <1547817384.11482.33.camel@nxp.com>
+References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
+         <20190117161804.GA5760@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118122716.GA32143@basecamp>
+In-Reply-To: <20190117161804.GA5760@bogus>
 Content-Language: en-US
+Content-ID: <92DBA4F10D09D34EB93E4BAF7B64843A@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: "robh@kernel.org" <robh@kernel.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+Cc: dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-proj>
 List-Id: devicetree@vger.kernel.org
 
-On 18/01/2019 12:27, Brian Masney wrote:
-> Hi Marc,
-> 
-> On Thu, Jan 17, 2019 at 11:22:59AM +0000, Marc Zyngier wrote:
->>> -static int qpnpint_irq_domain_map(struct irq_domain *d,
->>> -				  unsigned int virq,
->>> -				  irq_hw_number_t hwirq)
->>> -{
->>> -	struct spmi_pmic_arb *pmic_arb = d->host_data;
->>>  
->>> +static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
->>> +				   struct irq_domain *domain, unsigned int virq,
->>> +				   irq_hw_number_t hwirq)
->>> +{
->>>  	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu\n", virq, hwirq);
->>>  
->>> -	irq_set_chip_and_handler(virq, &pmic_arb_irqchip, handle_level_irq);
->>> -	irq_set_chip_data(virq, d->host_data);
->>> -	irq_set_noprobe(virq);
->>> +	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
->>> +			    handle_level_irq, NULL, NULL);
->>
->> I understand you haven't changed the existing semantic here by always
->> setting the handler to handle_level_irq. But is that guaranteed to
->> always be the case? See below.
->>
->>> +}
->>> +
->>> +static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
->>> +				    unsigned int virq, unsigned int nr_irqs,
->>> +				    void *data)
->>> +{
->>> +	struct spmi_pmic_arb *pmic_arb = domain->host_data;
->>> +	struct irq_fwspec *fwspec = data;
->>> +	irq_hw_number_t hwirq;
->>> +	unsigned int type;
->>> +	int ret, i;
->>> +
->>> +	ret = qpnpint_irq_domain_translate(domain, fwspec, &hwirq, &type);
->>
->> Here, you extract the trigger from DT.
->>
->>> +	if (ret)
->>> +		return ret;
->>> +
->>> +	for (i = 0; i < nr_irqs; i++)
->>> +		qpnpint_irq_domain_map(pmic_arb, domain, virq + i, hwirq + i);
->>
->> Shouldn't you propagate it into the mapping function so that the handler
->> can be selected accordingly? Or does the interrupt controller convert
->> edge signals to level somehow?
-> 
-> qpnpint_irq_set_type() calls irq_set_handler_locked() to set the hander
-> to be either handle_edge_irq() or handle_level_irq(). So the handler is
-> initially setup incorrectly in some cases, but then setup correctly (via
-> __irq_set_trigger) when __setup_irq() is called by
-> request_threaded_irq().
-> 
-> It looks like that this will cause problems with shared IRQs to work as
-> expected.
-> 
-> I can rework this code and get this fixed.
-
-It'd definitely be worth it, thanks.
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+SGkgUm9iLCBOaWNvbGluLCBBbGwsDQoNCk9uIEpvLCAyMDE5LTAxLTE3IGF0IDEwOjE4IC0wNjAw
+LCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBKYW4gMTcsIDIwMTkgYXQgMTI6NDY6MjVQ
+TSArMDAwMCwgVmlvcmVsIFN1bWFuIHdyb3RlOg0KPiA+IA0KPiA+IFRoZSBwYXRjaHNldCBhZGRz
+IE5YUCBBdWRpbyBNaXhlciAoQVVETUlYKSBkZXZpY2UgYW5kIG1hY2hpbmUNCj4gPiBkcml2ZXJz
+IGFuZCByZWxhdGVkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24uDQo+ID4gDQo+ID4gQ2hhbmdl
+cyBzaW5jZSBWMjoNCj4gPiAxLiBNb3ZlZCAiZGFpcyIgbm9kZSBmcm9tIG1hY2hpbmUgZHJpdmVy
+IERUUyBub2RlIHRvIGRldmljZSBkcml2ZXINCj4gPiBEVFMgbm9kZQ0KPiA+IMKgIGFzIHN1Z2dl
+c3RlZCBieSBSb2IuDQo+IFRoYXQgd2FzIG5vdCB3aGF0IEkgc3VnZ2VzdGVkLiBZb3Ugc3RpbGwg
+aGF2ZSBhIHZpcnR1YWwgbm9kZSB3aGljaA0KPiBsb29rcyB0byBtZSB0byBiZSB1bm5lY2Vzc2Fy
+eS4NCg0KVG8gbWUgcmVtb3ZpbmcgdmlydHVhbCBub2RlIGltcGxpZXMgdGhhdCBBVURNSVggbWFj
+aGluZSBkcml2ZXIgKGlteC0NCmF1ZG1peC5jICsgdmlydHVhbCBub2RlKSBzaGFsbCBiZSByZW1v
+dmVkIGFuZCBtYWNoaW5lIGRyaXZlciBjb2RlDQptZXJnZWQgaW50byBkZXZpY2UgZHJpdmVyIChm
+c2xfYXVkbWl4LmMgKyBkZXZpY2Ugbm9kZSkgLSBwbGVhc2UgbGV0IG1lDQprbm93IGlmIG15IHVu
+ZGVyc3RhbmRpbmcgaXMgd3JvbmcuDQoNClRoZSBpbXBsaWNhdGlvbiBpcyB0aGF0IHRoaXMgbWFr
+ZXMgQVVETUlYIGRldmljZSBkcml2ZXIgYm91bmRlZCB0byBhDQpwYXJ0aWN1bGFyIERBSSB0eXBl
+IG9mIGludGVyZmFjZSAtIFNBSS4gVGhlIG9yaWdpbmFsIGludGVudGlvbiBpcyB0bw0Ka2VlcCBB
+VURNSVggZGV2aWNlIGRyaXZlciBEQUktYWdub3N0aWMuDQoNCkluZGVlZCwgY3VycmVudGx5IHRo
+ZSBjb25uZWN0aW9uIGJldHdlZW4gQVVETUlYIGFuZCBTQUkgSVAgYmxvY2tzIGluDQppLk1YOFFN
+IGFuZCBpLk1YOFFYUCBpcyBmaXhlZCBpbnNpZGUgdGhlIFNvQywgYnV0IG9uIG90aGVyIHBsYXRm
+b3JtcyB3ZQ0KbWF5IGV4cGVjdCBBVURNSVggdG8gYmUgY29ubmVjdGVkIGluc2lkZSB0aGUgU29D
+IHRvIG90aGVyIElQIGJsb2NrcyAtDQp0byBFU0FJIGludGVyZmFjZSBmb3IgaW5zdGFuY2UuDQoN
+CkF0IHRoaXMgbW9tZW50IGl0J3MgYSBiaXQgZGlmZmljdWx0IGZvciBtZSB0byBldmFsdWF0ZSBo
+b3cgY3JpdGljYWwgaXMNCnRvIGtlZXAgdGhlIGRldmljZSBkcml2ZXIgREFJLWFnbm9zdGljLCBz
+byBpZiB5b3UgdGhpbmsgaXQncyBiZXR0ZXIgdG8NCmdvIG5vdyB3aXRoIGEgU0FJIGJvdW5kZWQg
+QVVETUlYIGRldmljZSBkcml2ZXIgLSBwbGVhc2UgY29uZmlybSwgSSdsbA0KbWVyZ2UgbWFjaGlu
+ZSBkcml2ZXIgY29kZSBpbnRvIGRldmljZSBkcml2ZXIuDQoNClRoYW5rIHlvdSwNClZpb3JlbA0K
+DQo+IA0KPiA+IA0KPiA+IA0KPiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gMS4gT3JpZ2luYWwg
+cGF0Y2ggc3BsaXQgaW50byBkaXN0aW5jdCBwYXRjaGVzIGZvciB0aGUgZGV2aWNlIGRyaXZlcg0K
+PiA+IGFuZA0KPiA+IMKgIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbi4NCj4gPiAyLiBSZXBsYWNl
+ZCBBTUlYIHdpdGggQVVETUlYIGluIGJvdGggY29kZSBhbmQgZmlsZSBuYW1lcyBhcyBpdA0KPiA+
+IGxvb2tzIG1vcmUNCj4gPiDCoCBSTS1jb21wbGlhbnQuDQo+ID4gMy4gUmVtb3ZlZCBwb2xhcml0
+eSBjb250cm9sIGZyb20gQ1BVIERBSSBkcml2ZXIgYXMgc3VnZ2VzdGVkIGJ5DQo+ID4gTmljb2xp
+bi4NCj4gPiA0LiBBZGRlZCBtYWNoaW5lIGRyaXZlciBhbmQgcmVsYXRlZCBEVCBiaW5kaW5nIGRv
+Y3VtZW50YXRpb24uDQo+ID4gDQo+ID4gVmlvcmVsIFN1bWFuICg0KToNCj4gPiDCoCBBU29DOiBm
+c2w6IEFkZCBBdWRpbyBNaXhlciBDUFUgREFJIGRyaXZlcg0KPiA+IMKgIEFTb0M6IGFkZCBmc2xf
+YXVkbWl4IERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbg0KPiA+IMKgIEFTb0M6IGZzbDogQWRkIEF1
+ZGlvIE1peGVyIG1hY2hpbmUgZHJpdmVyDQo+ID4gwqAgQVNvQzogYWRkIGlteC1hdWRtaXggRFQg
+YmluZGluZyBkb2N1bWVudGF0aW9uDQo+ID4gDQo+ID4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
+cy9zb3VuZC9mc2wsYXVkbWl4LnR4dMKgwqDCoMKgwqDCoMKgfMKgwqA1MCArKw0KPiA+IMKgLi4u
+L2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvaW14LWF1ZG1peC50eHTCoMKgwqDCoMKgwqDCoHzC
+oMKgMTggKw0KPiA+IMKgc291bmQvc29jL2ZzbC9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqAxNiArDQo+ID4gwqBz
+b3VuZC9zb2MvZnNsL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHzCoMKgwqA1ICsNCj4gPiDCoHNvdW5kL3NvYy9mc2wvZnNs
+X2F1ZG1peC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqB8IDU1MQ0KPiA+ICsrKysrKysrKysrKysrKysrKysrKw0KPiA+IMKgc291bmQvc29jL2ZzbC9m
+c2xfYXVkbWl4LmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
+wqDCoHwgMTAyICsrKysNCj4gPiDCoHNvdW5kL3NvYy9mc2wvaW14LWF1ZG1peC5jwqDCoMKgwqDC
+oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDMzNA0KPiA+ICsrKysr
+KysrKysrKysNCj4gPiDCoDcgZmlsZXMgY2hhbmdlZCwgMTA3NiBpbnNlcnRpb25zKCspDQo+ID4g
+wqBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3Mvc291bmQvZnNsLGF1ZG1peC50eHQNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvaW14LQ0KPiA+IGF1ZG1peC50eHQNCj4g
+PiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2MvZnNsL2ZzbF9hdWRtaXguYw0KPiA+IMKg
+Y3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9mc2wvZnNsX2F1ZG1peC5oDQo+ID4gwqBjcmVh
+dGUgbW9kZSAxMDA2NDQgc291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMNCj4gPiA=
