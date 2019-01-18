@@ -1,71 +1,40 @@
-From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [v5 2/3] drm/msm/dpu: Integrate interconnect API in
- MDSS
-Date: Fri, 18 Jan 2019 09:52:12 -0800
-Message-ID: <CAD=FV=XUeMTGH+CDwGs3PfK4igdQrCbwucw7_2ViBc4i7grvxg@mail.gmail.com>
-References: <1547056325-1919-1-git-send-email-jshekhar@codeaurora.org>
- <1547056325-1919-3-git-send-email-jshekhar@codeaurora.org>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH 12/21] arch: use memblock_alloc() instead of
+ memblock_alloc_from(size, align, 0)
+Date: Fri, 18 Jan 2019 17:53:36 +0000
+Message-ID: <20190118175334.mj2mahbf4onhujgz@pburton-laptop>
+References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
+ <1547646261-32535-13-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1547056325-1919-3-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chandan Uddaraju <chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547646261-32535-13-git-send-email-rppt@linux.ibm.com>
+Content-Language: en-US
+Content-ID: <27E0FF00A643614DAB51ABA4F92A557E@namprd22.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: Rich Felker <dalias@libc.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "x86@kernel.org" <x86@kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>
 List-Id: devicetree@vger.kernel.org
 
-SGksCgpPbiBXZWQsIEphbiA5LCAyMDE5IGF0IDk6NTIgQU0gSmF5YW50IFNoZWtoYXIgPGpzaGVr
-aGFyQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiBAQCAtMTI3LDcgKzE1MywxMSBAQCBzdGF0aWMg
-aW50IGRwdV9tZHNzX2VuYWJsZShzdHJ1Y3QgbXNtX21kc3MgKm1kc3MpCj4gIHsKPiAgICAgICAg
-IHN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3MgPSB0b19kcHVfbWRzcyhtZHNzKTsKPiAgICAgICAg
-IHN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4gLSAgICAgICBp
-bnQgcmV0Owo+ICsgICAgICAgaW50IHJldCwgaTsKPiArICAgICAgIHU2NCBhdmdfYncgPSBkcHVf
-bWRzcy0+bnVtX3BhdGhzID8gTUFYX0JXIC8gZHB1X21kc3MtPm51bV9wYXRocyA6IDA7Cj4gKwo+
-ICsgICAgICAgZm9yIChpID0gMDsgaSA8IGRwdV9tZHNzLT5udW1fcGF0aHM7IGkrKykKPiArICAg
-ICAgICAgICAgICAgaWNjX3NldChkcHVfbWRzcy0+cGF0aFtpXSwgYXZnX2J3LCBrQnBzX3RvX2lj
-YyhNQVhfQlcpKTsKCllvdSdsbCBuZWVkIHRvIGNoYW5nZSBpY2Nfc2V0KCkgaGVyZSB0byBpY2Nf
-c2V0X2J3KCkgdG8gbWF0Y2ggdjEzLCBBS0E6CgotIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
-cmcvcGF0Y2gvMTA3NjYzMzUvCi0gaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MDExNjE2
-MTEwMy42OTM3LTItZ2VvcmdpLmRqYWtvdkBsaW5hcm8ub3JnCgoKPiAgICAgICAgIHJldCA9IG1z
-bV9kc3NfZW5hYmxlX2NsayhtcC0+Y2xrX2NvbmZpZywgbXAtPm51bV9jbGssIHRydWUpOwo+ICAg
-ICAgICAgaWYgKHJldCkKPiBAQCAtMTQwLDEyICsxNzAsMTUgQEAgc3RhdGljIGludCBkcHVfbWRz
-c19kaXNhYmxlKHN0cnVjdCBtc21fbWRzcyAqbWRzcykKPiAgewo+ICAgICAgICAgc3RydWN0IGRw
-dV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKG1kc3MpOwo+ICAgICAgICAgc3RydWN0IGRz
-c19tb2R1bGVfcG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKPiAtICAgICAgIGludCByZXQ7Cj4g
-KyAgICAgICBpbnQgcmV0LCBpOwo+Cj4gICAgICAgICByZXQgPSBtc21fZHNzX2VuYWJsZV9jbGso
-bXAtPmNsa19jb25maWcsIG1wLT5udW1fY2xrLCBmYWxzZSk7Cj4gICAgICAgICBpZiAocmV0KQo+
-ICAgICAgICAgICAgICAgICBEUFVfRVJST1IoImNsb2NrIGRpc2FibGUgZmFpbGVkLCByZXQ6JWRc
-biIsIHJldCk7Cj4KPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBkcHVfbWRzcy0+bnVtX3BhdGhz
-OyBpKyspCj4gKyAgICAgICAgICAgICAgIGljY19zZXQoZHB1X21kc3MtPnBhdGhbaV0sIDAsIDAp
-OwoKVGhpcyB3aWxsIGFsc28gbmVlZCB0byBjaGFuZ2UgdG8gaWNjX3NldF9idygpCgoKSSdtIGN1
-cmlvdXMgd2hhdCB0aGUgcGxhbiBpcyBmb3IgbGFuZGluZyB0aGlzIHNlcmllcy4gIFNlYW4gLyBS
-b2IgLwpHZXJvZ2k6IGRvIHlvdSBoYXZlIGFueSBwcmVmZXJlbmNlPyAgT3B0aW9ucyBJJ2QgaW1h
-Z2luZToKCkEpIFdhaXQgdW50aWwgaW50ZXJjb25uZWN0IGxhbmRzIChpbiA1LjE/KSBhbmQgbGFu
-ZCB0aGlzIHRocm91Z2gKZHJtLW1pc2MgLyBtc20tbmV4dCBpbiB0aGUgdmVyc2lvbiBhZnRlciAo
-NS4yPykKCkIpIEdlb3JnaSBwcm92aWRlcyBhbiBpbW11dGFibGUgYnJhbmNoIGZvciBpbnRlcmNv
-bm5lY3Qgd2hlbiBoaXMgbGFuZHMKKGFzc3VtaW5nIGhlJ3Mgc2VuZGluZyBoaXMgc3R1ZmYgdXBz
-dHJlYW0gdmlhIHB1bGwgcmVxdWVzdCkgYW5kIHRoYXQKaW1tdXRhYmxlIGJyYW5jaCBnZXRzIG1l
-cmdlZCBpbnRvIHRoZSB0aGUgcmVsZXZhbnQgZHJtIHRyZWUuCgpDKSBTZWFuIGFuZC9vciBSb2Ig
-QWNrcyB0aGlzIHNlcmllcyBhbmQgaW5kaWNhdGVzIHRoYXQgaXQgc2hvdWxkIGdvIGluCnRocm91
-Z2ggR2Vyb2dpJ3MgdHJlZSAocHJvYmFibHkgb25seSB3b3JrcyBpZiBHZW9yZ2kgcGxhbnMgdG8g
-c2VuZCBhCnB1bGwgcmVxdWVzdCkuICBJZiB3ZSdyZSBnb2luZyB0aGlzIHJvdXRlIHRoZW4gKElJ
-VUMpIHdlJ2Qgd2FudCB0bwpsYW5kIHRoaXMgaW4gR2Vyb2dpJ3MgdHJlZSBzb29uZXIgcmF0aGVy
-IHRoYW4gbGF0ZXIgc28gaXQgY2FuIGdldCBzb21lCmJha2UgdGltZSBpbiBsaW51eC1uZXh0ICh3
-ZSd2ZSBiZWVuIGJha2luZyBpdCBpbiBDaHJvbWUgT1MgZm9yIGEKd2hpbGUsIGJ1dCBuaWNlIHRv
-IHNlZSBpdCBpbiBsaW51eC1uZXh0IHRvbykuCgoKRG9lcyBhbnlvbmUgaGF2ZSBhIHByZWZlcmVu
-Y2U/ICBJdCdzIGJlIG5pY2UgaWYgd2hvZXZlciBpcyBwbGFubmluZyB0bwpsYW5kIHRoaXMgY291
-bGQgaW5kaWNhdGUgd2hldGhlciB0aGV5J2QgcHJlZmVyIEpheWFudCBzZW5kIGEgbmV3CnZlcnNp
-b24gdG8gaGFuZGxlIHRoZSBBUEkgY2hhbmdlIG9yIGlmIHRoZSByZWxldmFudCBtYWludGFpbmVy
-IGNhbgpqdXN0IGRvIHRoZSBmaXh1cCB3aGVuIHRoZSBwYXRjaCBsYW5kcy4KCgpUaGFua3MhCgot
-RG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVl
-ZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
+Hi Mike,
+
+On Wed, Jan 16, 2019 at 03:44:12PM +0200, Mike Rapoport wrote:
+> The last parameter of memblock_alloc_from() is the lower limit for the
+> memory allocation. When it is 0, the call is equivalent to
+> memblock_alloc().
+> 
+> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+
+Acked-by: Paul Burton <paul.burton@mips.com> # MIPS part
+
+Thanks,
+    Paul
