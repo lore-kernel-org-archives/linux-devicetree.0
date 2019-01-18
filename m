@@ -1,24 +1,60 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 1/3] clk: renesas: r8a774a1: Add missing CANFD clock
-Date: Fri, 18 Jan 2019 13:14:01 +0100
-Message-ID: <20190118121401.w36igfibeyfm26wv@verge.net.au>
-References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547736856-16539-2-git-send-email-fabrizio.castro@bp.renesas.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv3 0/4] Add coresight support for SDM845 and MSM8996
+Date: Fri, 18 Jan 2019 17:52:52 +0530
+Message-ID: <cover.1547813804.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547736856-16539-2-git-send-email-fabrizio.castro@bp.renesas.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 02:54:14PM +0000, Fabrizio Castro wrote:
-> This patch adds the missing CANFD clock to the r8a774a1 specific
-> clock driver.
-> 
-> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+This patch series adds support for coresight on SDM845 and MSM8996.
 
-Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+* Patch 1 adds device tree nodes for SDM845 coresight components.
+
+* Patch 2 adds device tree nodes for MSM8996 coresight components.
+
+* Patch 3 enables support for ETMv4.2 and enables SDM845 to make
+  use of same driver(etm4x).
+
+* Patch 4 is a trivial removal of duplicate header file.
+
+Patch 1 and 3 depends on below AOSS QMP patches by Bjorn:
+ https://patchwork.kernel.org/patch/10749469/
+ https://patchwork.kernel.org/patch/10749481/
+ https://patchwork.kernel.org/patch/10749479/
+ https://patchwork.kernel.org/patch/10749475/
+
+This patch series has been tested on SDM845 MTP and MSM8996
+based Dragonboard 820c.
+
+v3:
+ * Added arm,scatter-gather property as suggested by Suzuki.
+
+v2:
+ * Added coresight support for msm8996 based on Vivek's patch.
+   Cleaned up and added coresight cpu debug nodes for msm8996.
+ * Merged coresight dtsi file into sdm845.dtsi as suggested by Bjorn
+ * Addressed Mathieu's feedback about masking the minor version in
+   etm4_arch_supported() and added a comment for reason to bypass
+   the AMBA bus discovery method.
+
+Sai Prakash Ranjan (3):
+  arm64: dts: qcom: sdm845: Add Coresight support
+  coresight: etm4x: Add support to enable ETMv4.2
+  arm64: dts: qcom: sdm845: Remove the duplicate header inclusion
+
+Vivek Gautam (1):
+  arm64: dts: qcom: msm8996: Add Coresight support
+
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         | 448 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 449 +++++++++++++++++-
+ drivers/hwtracing/coresight/coresight-etm4x.c |   2 +-
+ drivers/hwtracing/coresight/coresight-etm4x.h |   2 +-
+ 4 files changed, 898 insertions(+), 3 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
