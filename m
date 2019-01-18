@@ -1,53 +1,40 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 3/4] arm64: dts: meson: axg: add clk measure support
-Date: Fri, 18 Jan 2019 08:52:39 +0100
-Message-ID: <8d178ecbf885e25e0eb3e30d652934722fbc5050.camel@baylibre.com>
-References: <20190117164838.8008-1-jbrunet@baylibre.com>
-         <20190117164838.8008-4-jbrunet@baylibre.com>
-         <CAFBinCChyyWaiju6ghaCHBFktTXV6DbtuCgZFjEENrf3t3eOxg@mail.gmail.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH 0/4] irq: imx-irqsteer: add 32 interrupts chan and multi
+ outputs support
+Date: Fri, 18 Jan 2019 07:53:39 +0000
+Message-ID: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAFBinCChyyWaiju6ghaCHBFktTXV6DbtuCgZFjEENrf3t3eOxg@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, patchwork-bot+notify@kernel.org, linux-kernel@vger.kernel.org
+To: "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "l.stach@pengutronix.de" <l.stach@pengutronix.de>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Aisheng Dong <aisheng.dong@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-01-17 at 20:57 +0100, Martin Blumenstingl wrote:
-> Hi Jerome,
-> 
-> On Thu, Jan 17, 2019 at 5:48 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
-> > Add the clock measure device to the axg SoC family
-> > 
-> > Signed-off-by: Jerome Brunet <jbrunet@baylibre.com>
-> > ---
-> >  arch/arm64/boot/dts/amlogic/meson-axg.dtsi | 5 +++++
-> >  1 file changed, 5 insertions(+)
-> > 
-> > diff --git a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > index 0e0abb1a03e2..94ea36a2417a 100644
-> > --- a/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > +++ b/arch/arm64/boot/dts/amlogic/meson-axg.dtsi
-> > @@ -1611,6 +1611,11 @@
-> >                                 status = "disabled";
-> >                         };
-> > 
-> > +                       clk_msr: clock-sensor@18000 {
-> in the dt-bindings specify "clock-measure@..."
+Not all 64 interrupts may be used in one group. e.g. most irqsteer in
+imx8qxp and imx8qm subsystems supports only 32 interrupts.
+And one irqsteer channel can support up to 8 output interrupts.
 
-That's the exemple, not a specification, AFAIK.
-I'm not sure I see the problem ?
+This patch series aims to support 32 interrupts chan and multi output
+interrupts.
 
-> this also applies to patch 4/4 from this series
+Tested on:
+iMX8QXP MEK with MIPI CSI capture and DC Display
+iMX8MQ EVK with MIPI DSI Display
 
+Dong Aisheng (4):
+  dt-binding: irq: imx-irqsteer: use irq number per channel instead of
+    group number
+  dt-bindings: irq: imx-irqsteer: add multi output interrupts support
+  irq: imx-irqsteer: change to use reg_num instead of irq_group
+  irq: imx: irqsteer: add multi output interrupts support
 
-Anyway, The node was not placed correctly in g12, I might as well rename it. I
-don't really care
+ .../bindings/interrupt-controller/fsl,irqsteer.txt | 11 ++--
+ drivers/irqchip/irq-imx-irqsteer.c                 | 74 ++++++++++++++----=
+----
+ 2 files changed, 53 insertions(+), 32 deletions(-)
 
-> 
-> 
-> [0] 
-> https://elixir.bootlin.com/linux/v5.0-rc1/source/Documentation/devicetree/bindings/soc/amlogic/clk-measure.txt
+--=20
+2.7.4
