@@ -1,131 +1,267 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
- support
-Date: Fri, 18 Jan 2019 09:53:29 +0100
-Message-ID: <1547801609.2626.5.camel@pengutronix.de>
-References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
-         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+From: Marc Zyngier <marc.zyngier@arm.com>
+Subject: Re: [PATCH] irqchip/irq-csky-mpintc: Add triger type and priority
+ setting
+Date: Fri, 18 Jan 2019 09:32:03 +0000
+Message-ID: <bb80062f-28ac-b41c-5d56-90ede82037a2@arm.com>
+References: <1547570199-25944-1-git-send-email-guoren@kernel.org>
+ <9c531bec-263c-070d-fed8-d953b42aa185@arm.com>
+ <20190118062811.GA19835@guoren-Inspiron-7460>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <20190118062811.GA19835@guoren-Inspiron-7460>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+To: Guo Ren <guoren@kernel.org>
+Cc: tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 18.01.2019, 07:53 +0000 schrieb Aisheng Dong:
-> One irqsteer channel can support up to 8 output interrupts.
-
-This has been discussed when upstreaming the driver. The controller may
-support multiple output IRQs, but only one them is actually used
-depending on the CHANCTRL config. There is no use in hooking up all the
-output IRQs in DT, if only one of them is actually used. Some of the
-outputs may not even be visible to the Linux system, but may belong to
-a Cortex M4 subsystem. All of those configurations can be described in
-DT by changing the upstream interrupt and "fsl,channel" in a coherent
-way.
-
-Please correct me if my understanding is totally wrong.
-
-Regards,
-Lucas
-
-> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
->  drivers/irqchip/irq-imx-irqsteer.c | 39 +++++++++++++++++++++++++++-----------
->  1 file changed, 28 insertions(+), 11 deletions(-)
+On 18/01/2019 06:28, Guo Ren wrote:
+> Thx Marc,
 > 
-> diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-> index 1bebf0a..54802fa 100644
-> --- a/drivers/irqchip/irq-imx-irqsteer.c
-> +++ b/drivers/irqchip/irq-imx-irqsteer.c
-> @@ -10,6 +10,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/spinlock.h>
->  
-> @@ -21,10 +22,13 @@
-> >  #define CHAN_MINTDIS(t)		(CTRL_STRIDE_OFF(t, 3) + 0x4)
-> >  #define CHAN_MASTRSTAT(t)	(CTRL_STRIDE_OFF(t, 3) + 0x8)
->  
-> > +#define CHAN_MAX_OUTPUT_INT	0x8
-> +
->  struct irqsteer_data {
-> > >  	void __iomem		*regs;
-> > >  	struct clk		*ipg_clk;
-> > > -	int			irq;
-> > > +	int			irq[CHAN_MAX_OUTPUT_INT];
-> > > +	int			irq_count;
-> > >  	raw_spinlock_t		lock;
-> > >  	int			reg_num;
-> > >  	int			channel;
-> @@ -117,7 +121,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  	struct device_node *np = pdev->dev.of_node;
-> >  	struct irqsteer_data *data;
-> >  	struct resource *res;
-> > -	int ret;
-> > +	int i, ret;
->  
-> >  	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> >  	if (!data)
-> @@ -130,12 +134,6 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  		return PTR_ERR(data->regs);
-> >  	}
->  
-> > -	data->irq = platform_get_irq(pdev, 0);
-> > -	if (data->irq <= 0) {
-> > -		dev_err(&pdev->dev, "failed to get irq\n");
-> > -		return -ENODEV;
-> > -	}
-> -
-> >  	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-> >  	if (IS_ERR(data->ipg_clk)) {
-> >  		ret = PTR_ERR(data->ipg_clk);
-> @@ -177,8 +175,23 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  		return -ENOMEM;
-> >  	}
->  
-> > -	irq_set_chained_handler_and_data(data->irq, imx_irqsteer_irq_handler,
-> > -					 data);
-> > +	data->irq_count = of_irq_count(np);
-> > +	if (!data->irq_count || data->irq_count > CHAN_MAX_OUTPUT_INT) {
-> > +		clk_disable_unprepare(data->ipg_clk);
-> > +		return -EINVAL;
-> > +	}
-> +
-> > +	for (i = 0; i < data->irq_count; i++) {
-> > +		data->irq[i] = irq_of_parse_and_map(np, i);
-> > +		if (!data->irq[i]) {
-> > +			clk_disable_unprepare(data->ipg_clk);
-> > +			return -EINVAL;
-> > +		}
-> +
-> > +		irq_set_chained_handler_and_data(data->irq[i],
-> > +						 imx_irqsteer_irq_handler,
-> > +						 data);
-> > +	}
->  
-> >  	platform_set_drvdata(pdev, data);
->  
-> @@ -188,8 +201,12 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
->  static int imx_irqsteer_remove(struct platform_device *pdev)
->  {
-> >  	struct irqsteer_data *irqsteer_data = platform_get_drvdata(pdev);
-> > +	int i;
-> +
-> > +	for (i = 0; i < irqsteer_data->irq_count; i++)
-> > +		irq_set_chained_handler_and_data(irqsteer_data->irq[i],
-> > +						 NULL, NULL);
->  
-> > -	irq_set_chained_handler_and_data(irqsteer_data->irq, NULL, NULL);
-> >  	irq_domain_remove(irqsteer_data->domain);
->  
-> >  	clk_disable_unprepare(irqsteer_data->ipg_clk);
+> On Thu, Jan 17, 2019 at 05:17:45PM +0000, Marc Zyngier wrote:
+>> Hi Guo,
+>>
+>> On 15/01/2019 16:36, guoren@kernel.org wrote:
+>>> From: Guo Ren <ren_guo@c-sky.com>
+>>>
+>>> Support 4 triger types:
+>>>  - IRQ_TYPE_LEVEL_HIGH
+>>>  - IRQ_TYPE_LEVEL_LOW
+>>>  - IRQ_TYPE_EDGE_RISING
+>>>  - IRQ_TYPE_EDGE_FALLING
+>>>
+>>> Support 0-255 priority setting for each irq.
+>>>
+>>> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+>>> ---
+>>>  .../bindings/interrupt-controller/csky,mpintc.txt  | 24 ++++++-
+>>>  drivers/irqchip/irq-csky-mpintc.c                  | 78 +++++++++++++++++++++-
+>>>  2 files changed, 99 insertions(+), 3 deletions(-)
+>>>
+>>> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+>>> index ab921f1..364b789 100644
+>>> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+>>> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+>>> @@ -11,6 +11,14 @@ Interrupt number definition:
+>>>   16-31  : private  irq, and we use 16 as the co-processor timer.
+>>>   31-1024: common irq for soc ip.
+>>>  
+>>> +Interrupt triger mode:
+>>> +  IRQ_TYPE_LEVEL_HIGH (default)
+>>> +  IRQ_TYPE_LEVEL_LOW
+>>> +  IRQ_TYPE_EDGE_RISING
+>>> +  IRQ_TYPE_EDGE_FALLING
+>>> +
+>>> +Interrupt priority range: 0-255
+>>> +
+>>>  =============================
+>>>  intc node bindings definition
+>>>  =============================
+>>> @@ -26,7 +34,7 @@ intc node bindings definition
+>>>  	- #interrupt-cells
+>>>  		Usage: required
+>>>  		Value type: <u32>
+>>> -		Definition: must be <1>
+>>> +		Definition: could be <1> or <2>
+>>>  	- interrupt-controller:
+>>>  		Usage: required
+>>>  
+>>> @@ -35,6 +43,18 @@ Examples:
+>>>  
+>>>  	intc: interrupt-controller {
+>>>  		compatible = "csky,mpintc";
+>>> -		#interrupt-cells = <1>;
+>>> +		#interrupt-cells = <2>;
+>>>  		interrupt-controller;
+>>>  	};
+>>> +
+>>> +	0: device-example {
+>>> +		...
+>>> +		interrupts = <33 IRQ_TYPE_EDGE_RISING>;
+>>> +		interrupt-parent = <&intc>;
+>>> +	};
+>>> +
+>>> +	1: device-example {
+>>> +		...
+>>> +		interrupts = <34 ((priority << 4) | IRQ_TYPE_EDGE_RISING)>;
+>>> +		interrupt-parent = <&intc>;
+>>> +	};
+>>> diff --git a/drivers/irqchip/irq-csky-mpintc.c b/drivers/irqchip/irq-csky-mpintc.c
+>>> index c67c961..9edc6d3 100644
+>>> --- a/drivers/irqchip/irq-csky-mpintc.c
+>>> +++ b/drivers/irqchip/irq-csky-mpintc.c
+>>> @@ -29,9 +29,12 @@ static void __iomem *INTCL_base;
+>>>  
+>>>  #define INTCG_ICTLR	0x0
+>>>  #define INTCG_CICFGR	0x100
+>>> +#define INTCG_CIPRTR	0x200
+>>>  #define INTCG_CIDSTR	0x1000
+>>>  
+>>>  #define INTCL_PICTLR	0x0
+>>> +#define INTCL_CFGR	0x14
+>>> +#define INTCL_PRTR	0x20
+>>>  #define INTCL_SIGR	0x60
+>>>  #define INTCL_HPPIR	0x68
+>>>  #define INTCL_RDYIR	0x6c
+>>> @@ -73,6 +76,78 @@ static void csky_mpintc_eoi(struct irq_data *d)
+>>>  	writel_relaxed(d->hwirq, reg_base + INTCL_CACR);
+>>>  }
+>>>  
+>>> +static int csky_mpintc_set_type(struct irq_data *d, unsigned int type)
+>>> +{
+>>> +	unsigned int priority, triger;
+>>
+>> nit: s/triger/trigger/ everywhere.
+> Ok
+> 
+>>
+>>> +	unsigned int offset, bit_offset;
+>>> +	void __iomem *reg_base;
+>>> +
+>>> +	/*
+>>> +	 * type Bit field: | 32 - 12  |  11 - 4  |   3 - 0    |
+>>> +	 *                   reserved   priority   triger type
+>>> +	 */
+>>> +	triger	 = type & IRQ_TYPE_SENSE_MASK;
+>>> +	priority = (type >> 4) & 0xff;
+>>
+>> Definitely not. The Linux API to set the trigger does not carry any
+>> priority information, nor should it. Priorities should be set
+>> statically, and no driver should ever be able to change it.
+> Currently priority in dts is:
+> 
+> 	interrupts = <34 ((priority << 4) | IRQ_TYPE_EDGE_RISING)>;
+> 
+> change it to:
+> 
+> 	interrupts = <34 IRQ_TYPE_EDGE_RISING priority>;
+> 
+
+I don't think you need to change the DT format, as this is quite painful
+for users.
+
+> Implement csky own csky_irq_domain_xlate_cells() ...
+> 
+> int csky_irq_domain_xlate_cells(struct irq_domain *d, struct device_node *ctrlr,
+> 			const u32 *intspec, unsigned int intsize,
+> 			irq_hw_number_t *out_hwirq, unsigned int *out_type)
+> {
+> 	if (WARN_ON(intsize < 1))
+> 		return -EINVAL;
+> 	*out_hwirq = intspec[0];
+> 	if (intsize > 1)
+> 		*out_type = intspec[1] & IRQ_TYPE_SENSE_MASK;
+> 	else
+> 		*out_type = IRQ_TYPE_NONE;
+> 
+> 	if (intsize > 2)
+> 		setup_priority(d->hwirq, intspec[2]);
+
+That's still a problem. Linux doesn't expect interrupts to have
+different priorities. All interrupts are equal in that respect, and
+interrupt nesting is not something we expect.
+
+I'd be more confident if you programmed a default priority at boot time,
+and completely ignored the DT information.
+
+> 
+> 	return 0;
+> }
+> Hmm?
+> 
+>>
+>>> +
+>>> +	switch (triger) {
+>>> +	case IRQ_TYPE_LEVEL_HIGH:
+>>> +		triger = 0;
+>>> +		break;
+>>> +	case IRQ_TYPE_LEVEL_LOW:
+>>> +		triger = 1;
+>>> +		break;
+>>> +	case IRQ_TYPE_EDGE_RISING:
+>>> +		triger = 2;
+>>> +		break;
+>>> +	case IRQ_TYPE_EDGE_FALLING:
+>>> +		triger = 3;
+>>
+>> Can you define some macros that represent these magic values?
+> OK.
+>>
+>>> +		break;
+>>> +	default:
+>>> +		triger = 0;
+>>> +		break;
+>>
+>> If you get an invalid combination, you shouldn't blindly accept it, but
+>> instead return an error.
+> OK.
+> 
+>>
+>>> +	}
+>>> +
+>>> +	if (d->hwirq < COMM_IRQ_BASE) {
+>>> +		reg_base = this_cpu_read(intcl_reg);
+>>
+>> Are you guaranteed to be in a non-preemptible section here? I can see
+>> things going wrong if not.
+> 
+> ???
+> In percpu-def.h, I see this_cpu_read is safe() for preemption or
+> interrupt.
+
+Sorry, I wasn't clear, see below.
+
+> What's the wrong with preemption?
+
+The problem is that if the driver calls irq_set_type() on a per-CPU
+interrupt without preemption being disabled, it can be preempted at any
+point and migrated anywhere before the call to this_cpu_read() takes
+place. This means you can never know which CPU you've programmed.
+
+One possible approach is to mandate these interrupts to be only changed
+in non-preemptible context, which is what the various ARM GICs do for
+their per-CPU interrupts.
+
+
+> 
+>>> +
+>>> +		if (triger) {
+>>> +			offset = ((d->hwirq * 2) / 32) * 4;
+>>> +			bit_offset = (d->hwirq * 2) % 32;
+>>
+>> This needs to be turned into a set of macros so that the non-percpu code
+>> can reuse it.
+> 
+> 
+> #define IRQ_OFFSET(irq) \
+> 	((irq < COMM_IRQ_BASE) ? irq : irq - COMM_IRQ_BASE) 
+> 
+> #define TRIG_VAL(trigger, irq) \
+> 	(trigger << ((IRQ_OFFSET(irq) * 2) % 32))
+> 
+> #define TRIG_VAL_MSK(irq) \
+> 	(3 << ((IRQ_OFFSET(irq) * 2) % 32))
+> 
+> #define TRIG_BASE(irq) \
+> 	((((IRQ_OFFSET(irq) * 2) / 32) * 4) + \
+> 	((irq < COMM_IRQ_BASE) ? this_cpu_read(intcl_reg) : INTCG_base))
+> 
+> tmp = readl_relaxed(TRIG_BASE(d->hwirq)) & (~TRIG_VAL_MSK(d->hwirq));
+> writel_relaxed(tmp | TRIG_VAL(triger, d->hwirq), TRIG_BASE(d->hwirq));
+> 
+> Hmm?
+
+I was only looking for something that abstract the offsets, such as:
+
+#define BYTE_OFFSET(i) (((i) * 2) / 32) * 4)
+#define BIT_OFFSET(i)  ((i) * 2) % 32)
+
+and keep the rest of the structure as is.
+
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
