@@ -1,51 +1,122 @@
-From: Vasily Khoruzhick <anarsoul@gmail.com>
-Subject: [PATCH 6/8] arm64: allwinner: a64: enable Bluetooth On Pinebook
-Date: Fri, 18 Jan 2019 09:02:30 -0800
-Message-ID: <20190118170232.16142-7-anarsoul@gmail.com>
-References: <20190118170232.16142-1-anarsoul@gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v2 03/10] usb: ehci-orion: avoid double PHY initialization
+Date: Fri, 18 Jan 2019 17:25:30 +0100
+Message-ID: <874la6lypx.fsf@FE-laptop>
+References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
+ <20190111133133.24803-4-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190118170232.16142-1-anarsoul@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Chen-Yu Tsai <wens@csie.org>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, Vasily Khoruzhick <anarsoul@gmail.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-bluetooth@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190111133133.24803-4-miquel.raynal@bootlin.com> (Miquel
+ Raynal's message of "Fri, 11 Jan 2019 14:31:26 +0100")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Pinebook has an RTL8723CS WiFi + BT chip, BT is connected to UART1
-and uses PL4 as BT reset, PL5 as device wake GPIO, PL6 as host wake GPIO
-the I2C controlling signals are connected to R_I2C bus.
-
-Enable it in the device tree.
-
-Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
----
- .../boot/dts/allwinner/sun50i-a64-pinebook.dts     | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
-
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-index d22736a62481..8fc55dfa7034 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-pinebook.dts
-@@ -340,6 +340,20 @@
- 	status = "okay";
- };
+Hi Miquel,
  
-+&uart1 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&uart1_pins>, <&uart1_rts_cts_pins>;
-+	status = "okay";
-+
-+	bluetooth {
-+		compatible = "realtek,rtl8723cs-bt";
-+		reset-gpios = <&r_pio 0 4 GPIO_ACTIVE_LOW>; /* PL4 */
-+		device-wake-gpios = <&r_pio 0 5 GPIO_ACTIVE_LOW>; /* PL5 */
-+		host-wake-gpios = <&r_pio 0 6 GPIO_ACTIVE_HIGH>; /* PL6 */
-+		firmware-postfix = "pinebook";
-+	};
-+};
-+
- &usb_otg {
- 	dr_mode = "host";
- };
+ On ven., janv. 11 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+
+> No need to initialize the PHY from the driver's probe. It is done by
+> the core automatically and doing it twice would increment the
+
+Do you know exactly which core take care of it?
+
+When the phy support was added to this driver there was not such
+feature. I made some research and found that recently (less than one
+year ago) a series was added to initialize PHYs at HCD level[1]. I think
+that our platform was forgotten in the conversion.
+
+Could you check that we are now aligned with the requirement of this
+series?
+
+Thanks,
+
+Gregory
+
+[1]:https://www.spinics.net/lists/linux-usb/msg166281.html
+
+
+> phy->powercount counter to 2 instead of 1. During later suspend
+> operation, the counter will be decremented to one, no phy->power_off()
+> will occur and worst than that, the following phy->power_on() at
+> resume time will be also skipped, failing the whole S2RAM operation.
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> ---
+>  drivers/usb/host/ehci-orion.c | 26 +++-----------------------
+>  1 file changed, 3 insertions(+), 23 deletions(-)
+>
+> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+> index 1ad72647a069..3109f082949e 100644
+> --- a/drivers/usb/host/ehci-orion.c
+> +++ b/drivers/usb/host/ehci-orion.c
+> @@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->phy)) {
+>  		err = PTR_ERR(priv->phy);
+>  		if (err != -ENOSYS)
+> -			goto err_phy_get;
+> -	} else {
+> -		err = phy_init(priv->phy);
+> -		if (err)
+> -			goto err_phy_init;
+> -
+> -		err = phy_power_on(priv->phy);
+> -		if (err)
+> -			goto err_phy_power_on;
+> +			goto err_dis_clk;
+>  	}
+>  
+>  	/*
+> @@ -297,19 +289,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  
+>  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (err)
+> -		goto err_add_hcd;
+> +		goto err_dis_clk;
+>  
+>  	device_wakeup_enable(hcd->self.controller);
+>  	return 0;
+>  
+> -err_add_hcd:
+> -	if (!IS_ERR(priv->phy))
+> -		phy_power_off(priv->phy);
+> -err_phy_power_on:
+> -	if (!IS_ERR(priv->phy))
+> -		phy_exit(priv->phy);
+> -err_phy_init:
+> -err_phy_get:
+> +err_dis_clk:
+>  	if (!IS_ERR(priv->clk))
+>  		clk_disable_unprepare(priv->clk);
+>  	usb_put_hcd(hcd);
+> @@ -327,11 +312,6 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
+>  
+>  	usb_remove_hcd(hcd);
+>  
+> -	if (!IS_ERR(priv->phy)) {
+> -		phy_power_off(priv->phy);
+> -		phy_exit(priv->phy);
+> -	}
+> -
+>  	if (!IS_ERR(priv->clk))
+>  		clk_disable_unprepare(priv->clk);
+>  
+> -- 
+> 2.19.1
+>
+
 -- 
-2.20.1
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
