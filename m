@@ -1,85 +1,57 @@
-From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [PATCH 3/8] mtd: rawnand: jz4780: Use SPDX license notifiers
-Date: Fri, 18 Jan 2019 09:22:25 +0100
-Message-ID: <20190118092225.440f0e6a@bbrezillon>
-References: <20190118010634.27399-1-paul@crapouillou.net>
-        <20190118010634.27399-3-paul@crapouillou.net>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv2 0/4] Add coresight support for SDM845 and MSM8996
+Date: Fri, 18 Jan 2019 13:55:36 +0530
+Message-ID: <cover.1547798966.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118010634.27399-3-paul@crapouillou.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Miquel Raynal <miquel.raynal@bootlin.com>, Harvey Hunt <harveyhuntnexus@gmail.com>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mips@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Jan 2019 22:06:29 -0300
-Paul Cercueil <paul@crapouillou.net> wrote:
+This patch series adds support for coresight on SDM845 and MSM8996. 
 
-> Use SPDX license notifiers instead of GPLv2 license text in the headers.
-> 
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+* Patch 1 adds device tree nodes for SDM845 coresight components.
 
-Reviewed-by: Boris Brezillon <bbrezillon@kernel.org>
+* Patch 2 adds device tree nodes for MSM8996 coresight components.
 
-> ---
->  drivers/mtd/nand/raw/jz4780_bch.c  | 5 +----
->  drivers/mtd/nand/raw/jz4780_bch.h  | 5 +----
->  drivers/mtd/nand/raw/jz4780_nand.c | 5 +----
->  3 files changed, 3 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/mtd/nand/raw/jz4780_bch.c b/drivers/mtd/nand/raw/jz4780_bch.c
-> index 7201827809e9..7e4e5e627603 100644
-> --- a/drivers/mtd/nand/raw/jz4780_bch.c
-> +++ b/drivers/mtd/nand/raw/jz4780_bch.c
-> @@ -1,12 +1,9 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * JZ4780 BCH controller
->   *
->   * Copyright (c) 2015 Imagination Technologies
->   * Author: Alex Smith <alex.smith@imgtec.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify it
-> - * under the terms of the GNU General Public License version 2 as published
-> - * by the Free Software Foundation.
->   */
->  
->  #include <linux/bitops.h>
-> diff --git a/drivers/mtd/nand/raw/jz4780_bch.h b/drivers/mtd/nand/raw/jz4780_bch.h
-> index bf4718088a3a..451e0c770160 100644
-> --- a/drivers/mtd/nand/raw/jz4780_bch.h
-> +++ b/drivers/mtd/nand/raw/jz4780_bch.h
-> @@ -1,12 +1,9 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
->  /*
->   * JZ4780 BCH controller
->   *
->   * Copyright (c) 2015 Imagination Technologies
->   * Author: Alex Smith <alex.smith@imgtec.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify it
-> - * under the terms of the GNU General Public License version 2 as published
-> - * by the Free Software Foundation.
->   */
->  
->  #ifndef __DRIVERS_MTD_NAND_JZ4780_BCH_H__
-> diff --git a/drivers/mtd/nand/raw/jz4780_nand.c b/drivers/mtd/nand/raw/jz4780_nand.c
-> index 22e58975f0d5..7f55358b860f 100644
-> --- a/drivers/mtd/nand/raw/jz4780_nand.c
-> +++ b/drivers/mtd/nand/raw/jz4780_nand.c
-> @@ -1,12 +1,9 @@
-> +// SPDX-License-Identifier: GPL-2.0
->  /*
->   * JZ4780 NAND driver
->   *
->   * Copyright (c) 2015 Imagination Technologies
->   * Author: Alex Smith <alex.smith@imgtec.com>
-> - *
-> - * This program is free software; you can redistribute it and/or modify it
-> - * under the terms of the GNU General Public License version 2 as published
-> - * by the Free Software Foundation.
->   */
->  
->  #include <linux/delay.h>
+* Patch 3 enables support for ETMv4.2 and enables SDM845 to make
+  use of same driver(etm4x).
+
+* Patch 4 is a trivial removal of duplicate header file.
+
+Patch 1 and 3 depends on below AOSS QMP patches by Bjorn:
+ https://patchwork.kernel.org/patch/10749469/ 
+ https://patchwork.kernel.org/patch/10749481/
+ https://patchwork.kernel.org/patch/10749479/
+ https://patchwork.kernel.org/patch/10749475/ 
+
+This patch series has been tested on SDM845 MTP and MSM8996
+based Dragonboard 820c.
+
+v2:
+ * Added coresight support for msm8996 based on Vivek's patch.
+   Cleaned up and added coresight cpu debug nodes for msm8996.
+ * Merged coresight dtsi file into sdm845.dtsi as suggested by Bjorn
+ * Addressed Mathieu's feedback about masking the minor version in
+   etm4_arch_supported() and added a comment for reason to bypass
+   the AMBA bus discovery method.
+
+Sai Prakash Ranjan (3):
+  arm64: dts: qcom: sdm845: Add Coresight support
+  coresight: etm4x: Add support to enable ETMv4.2
+  arm64: dts: qcom: sdm845: Remove the duplicate header inclusion
+
+Vivek Gautam (1):
+  arm64: dts: qcom: msm8996: Add Coresight support
+
+ arch/arm64/boot/dts/qcom/msm8996.dtsi         | 447 +++++++++++++++++
+ arch/arm64/boot/dts/qcom/sdm845.dtsi          | 448 +++++++++++++++++-
+ drivers/hwtracing/coresight/coresight-etm4x.c |   2 +-
+ drivers/hwtracing/coresight/coresight-etm4x.h |   2 +-
+ 4 files changed, 896 insertions(+), 3 deletions(-)
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
