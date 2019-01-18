@@ -1,71 +1,135 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH 19/21] treewide: add checks for the return value of
- memblock_alloc*()
-Date: Fri, 18 Jan 2019 18:02:03 +0000
-Message-ID: <20190118180201.uva5nhf2g23uamkn@pburton-laptop>
-References: <1547646261-32535-1-git-send-email-rppt@linux.ibm.com>
- <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: Re: [PATCH] arm64: dts: meson: fix g12a buses
+Date: Sat, 19 Jan 2019 02:09:55 +0800
+Message-ID: <98166e2c-f5f8-55b9-6acb-7374bf10d80c@amlogic.com>
+References: <20190116165236.8330-1-jbrunet@baylibre.com>
+ <CAFBinCBFge2tir-MXw+ojTxzW+7n9Uf4FzCahrw0MDzAYV2SSg@mail.gmail.com>
+ <f7289814e316ad5879848fb8c379db396f615828.camel@baylibre.com>
+ <CAFBinCDhryOWHmRKp7GhWp2O+NpJziEgHoUE4HKVitTPDMrrBQ@mail.gmail.com>
+ <ba1f56258e7873041a0f75996e376170563c9e6e.camel@baylibre.com>
+ <CAFBinCAdJu2C-LWspiHR4vVr=PUD2HGNi4zz+CSJP96ZE4GoJw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1547646261-32535-20-git-send-email-rppt@linux.ibm.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAFBinCAdJu2C-LWspiHR4vVr=PUD2HGNi4zz+CSJP96ZE4GoJw@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <8AB5FF9934BD5A4E822E85B3C315428B@namprd22.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: Rich Felker <dalias@libc.org>, "linux-ia64@vger.kernel.org" <linux-ia64@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, "x86@kernel.org" <x86@kernel.org>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, "sparclinux@vger.kernel.org" <sparclinux@vger.kernel.org>, Christoph Hellwig <hch@lst.de>, "linux-s390@vger.kernel.org" <linux-s390@vger.kernel.org>, "linux-c6x-dev@linux-c6x.org" <linux-c6x-dev@linux-c6x.org>, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, "linux-sh@vger.kernel.org" <linux-sh@vger.kernel.org>, Russell King <linux@armlinux.org.uk>, "kasan-dev@googlegroups.com" <kasan-dev@googlegroups.com>, Geert Uytterhoeven <geert@linux-m68k.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>
+Cc: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Victor Wan <victor.wan@amlogic.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Mike,
 
-On Wed, Jan 16, 2019 at 03:44:19PM +0200, Mike Rapoport wrote:
-> Add check for the return value of memblock_alloc*() functions and call
-> panic() in case of error.
-> The panic message repeats the one used by panicing memblock allocators with
-> adjustment of parameters to include only relevant ones.
+Hi Martin and Jerome,
+
+On 2019/1/18 5:20, Martin Blumenstingl wrote:
+> On Thu, Jan 17, 2019 at 9:39 PM Jerome Brunet <jbrunet@baylibre.com> wrote:
+>>
+>> On Thu, 2019-01-17 at 21:27 +0100, Martin Blumenstingl wrote:
+>>> OK, but we had incorrect documentation in the past. did you check this
+>>> with someone from Amlogic?
+>>>
+>>> I'm curious because there seem to be two different approaches here:
+>>> 1) hiubus name and offsets are being fixed within this patch
+>>> 2) aobus is being dropped here and re-introduced with a different name later
+>>> on
+>>>
+>>
+>> because hiu exist and aobus does not, for which both the name and size was
+>> wrong
+>>
+>>> approach 1) can also be used for the "rti" region (at least in my
+>>> opinion, the patch doesn't explain why it can't be done):
+>>
+>> THe patch remove aobus (instead of fixing name and size) because, of the
+>> multiple region documented covered by this 'made region', I did not anticipate
+>> which one will be required and I did not want to add them all.
+>>
+>> Better to add them as needed, which is want I done for pinctrl as you pointed
+>> out
+>>
+>>> rename "aobus" to "rti" and change the size to either 0x1000 or 0xb000
+>>> (both values can be found in mesong12a.dtsi from
+>>> buildroot_openlinux_kernel_4.9_fbdev_20180706)
+>>
+>> RTI is added here:
+>> https://lkml.kernel.org/r/20190117103151.3349-1-jbrunet@baylibre.com
+>>
+>> I don't really understand the problem ? result is the same
+> the actual problem is "me" as I have conflicting information:
+> - Amlogic's buildroot kernel (for G12A) uses similar bus definitions
+> as the GX SoCs (for which there are public datasheets) - this is how
+> Jianxin added it to meson-g12a.dtsi originally
+> - this patch does it different - but cannot check if this is correct
+> (no public datasheet is available for G12A or AXG) nor do I have a
+> "big picture" of upcoming changes
 > 
-> The replacement was mostly automated with semantic patches like the one
-> below with manual massaging of format strings.
+> Cc'ing Jianxin: can you please review Jerome's patch and give some
+> more details on the memory map on G12A so further contributions can be
+> reviewed easier?
 > 
-> @@
-> expression ptr, size, align;
-> @@
-> ptr = memblock_alloc(size, align);
-> + if (!ptr)
-> + 	panic("%s: Failed to allocate %lu bytes align=0x%lx\n", __func__,
-> size, align);
+1. "aobus: bus@ff800000" describes the following registers:
+ahb	ao_reg	reserved	980	FF80B000
+ahb	ao_reg	ao_mailbox	4	FF80A000
+ahb	ao_reg	sar_adc		4	FF809000
+ahb	ao_reg	ir_dec		4	FF808000
+ahb	ao_reg	pwm_ab		4	FF807000
+ahb	ao_reg	i2c_s		4	FF806000
+ahb	ao_reg	i2c_m		4	FF805000
+ahb	ao_reg	uart2		4	FF804000
+ahb	ao_reg	uart		4	FF803000
+ahb	ao_reg	pwm_cd		4	FF802000
+ahb	ao_reg	reserved	4	FF801000
+ahb	ao_reg	rti		4	FF800000
+
+
+2. "cbus: bus@ffd00000" describes the following registers:
+capb3	cbus	reserved	872	FFD26000	FFDFFFFF
+capb3	cbus	sc		4	FFD25000	FFD25FFF
+capb3	cbus	uart0		4	FFD24000	FFD24FFF
+capb3	cbus	uart1		4	FFD23000	FFD23FFF
+capb3	cbus	uart2		4	FFD22000	FFD22FFF
+capb3	cbus	reserved	4	FFD21000	FFD21FFF
+capb3	cbus	reserved	4	FFD20000	FFD20FFF
+capb3	cbus	i2c_m0		4	FFD1F000	FFD1FFFF
+capb3	cbus	i2c_m1		4	FFD1E000	FFD1EFFF
+capb3	cbus	i2c_m2		4	FFD1D000	FFD1DFFF
+capb3	cbus	i2c_m3		4	FFD1C000	FFD1CFFF
+capb3	cbus	pwm_ab		4	FFD1B000	FFD1BFFF
+capb3	cbus	pwm_cd		4	FFD1A000	FFD1AFFF
+capb3	cbus	pwm_ef		4	FFD19000	FFD19FFF
+capb3	cbus	msr_clk		4	FFD18000	FFD18FFF
+capb3	cbus	reserved	4	FFD17000	FFD17FFF
+capb3	cbus	reserved	4	FFD16000	FFD16FFF
+capb3	cbus	spicc_1		4	FFD15000	FFD15FFF
+capb3	cbus	spifc		4	FFD14000	FFD14FFF
+capb3	cbus	spicc_0		4	FFD13000	FFD13FFF
+capb3	cbus	reserved	4	FFD12000	FFD12FFF
+capb3	cbus	reserved	4	FFD11000	FFD11FFF
+capb3	cbus	reserved	4	FFD10000	FFD10FFF
+capb3	cbus	isa		4	FFD0F000	FFD0FFFF
+capb3	cbus	parser		4	FFD0E000	FFD0EFFF
+capb3	cbus	reserved	4	FFD0D000	FFD0DFFF
+capb3	cbus	sana		4	FFD0C000	FFD0CFFF
+capb3	cbus	stream		4	FFD0B000	FFD0BFFF
+capb3	cbus	async_fifo	4	FFD0A000	FFD0AFFF
+capb3	cbus	async_fifo2	4	FFD09000	FFD09FFF
+capb3	cbus	assist		4	FFD08000	FFD08FFF
+capb3	cbus	mipi_dsi_host	4	FFD07000	FFD07FFF
+capb3	cbus	stb		4	FFD06000	FFD06FFF
+capb3	cbus	aififo		4	FFD05000	FFD05FFF
+capb3	cbus	reserved	4	FFD04000	FFD04FFF
+capb3	cbus	reserved	4	FFD03000	FFD03FFF
+capb3	cbus	reserved	4	FFD02000	FFD02FFF
+capb3	cbus	reset		4	FFD01000	FFD01FFF
+capb3	cbus	reserved	4	FFD00000	FFD00FFF
+
+3. In public data sheet, I can only found memory map about sub-regions of each bus. 
+And no information about the bus itself.
+
 > 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->%
-> diff --git a/arch/mips/cavium-octeon/dma-octeon.c b/arch/mips/cavium-octeon/dma-octeon.c
-> index e8eb60e..db1deb2 100644
-> --- a/arch/mips/cavium-octeon/dma-octeon.c
-> +++ b/arch/mips/cavium-octeon/dma-octeon.c
-> @@ -245,6 +245,9 @@ void __init plat_swiotlb_setup(void)
->  	swiotlbsize = swiotlb_nslabs << IO_TLB_SHIFT;
->  
->  	octeon_swiotlb = memblock_alloc_low(swiotlbsize, PAGE_SIZE);
-> +	if (!octeon_swiotlb)
-> +		panic("%s: Failed to allocate %lu bytes align=%lx\n",
-> +		      __func__, swiotlbsize, PAGE_SIZE);
->  
->  	if (swiotlb_init_with_tbl(octeon_swiotlb, swiotlb_nslabs, 1) == -ENOMEM)
->  		panic("Cannot allocate SWIOTLB buffer");
-
-That one should be %zu rather than %lu. The rest looks good, so with
-that one tweak:
-
-    Acked-by: Paul Burton <paul.burton@mips.com> # MIPS parts
-
-Thanks,
-    Paul
+> Regards
+> Martin
+> 
+> .
+> 
