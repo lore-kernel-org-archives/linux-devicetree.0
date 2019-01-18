@@ -1,55 +1,70 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv2 2/4] arm64: dts: qcom: msm8996: Add Coresight support
-Date: Fri, 18 Jan 2019 10:57:09 +0000
-Message-ID: <1311e78a-21f6-6470-7861-39b3499974ce@arm.com>
-References: <cover.1547798966.git.saiprakash.ranjan@codeaurora.org>
- <552e408950525b1bac39d05b8b4f2ae1975397e0.1547798966.git.saiprakash.ranjan@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+From: Marcel Holtmann <marcel@holtmann.org>
+Subject: Re: [PATCHv2] Patch to add the realtek bluetooth device tree refs to
+ the code
+Date: Fri, 18 Jan 2019 11:57:17 +0100
+Message-ID: <510BE8B9-76BD-4A64-86C2-ACA1D50819DF@holtmann.org>
+References: <20181229115513.31153-1-beagleboard@davidjohnsummers.uk>
+ <20190103163538.6575-1-beagleboard@davidjohnsummers.uk>
+ <20190103163538.6575-2-beagleboard@davidjohnsummers.uk>
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <552e408950525b1bac39d05b8b4f2ae1975397e0.1547798966.git.saiprakash.ranjan@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190103163538.6575-2-beagleboard@davidjohnsummers.uk>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: David Summers <beagleboard@davidjohnsummers.uk>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Sai,
+Hi David,
 
-On 18/01/2019 08:25, Sai Prakash Ranjan wrote:
-> From: Vivek Gautam <vivek.gautam@codeaurora.org>
+> This patch adds the necessary device tree hooks to the realtek
+> bluetooth driver for serial connections.
 > 
-> Enable coresight support by adding device nodes for the
-> available source, sinks and channel blocks on msm8996.
+> The realtek devices that are listed btrtl.c are searched on the
+> realtek web site for the version that have serial connections.
 > 
-> This also adds coresight cpu debug nodes.
+> Most of these devices also have wi-fi connected via sdio, that is not
+> covered by the bluetooth driver - but as that interface will also be
+> needed in the device tree, the hocks here have "-bluetooth" added. The
+> exception to this is the rtl8761atv, which only has a serial
+> bluetooth.
 > 
-> Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
 > ---
->   arch/arm64/boot/dts/qcom/msm8996.dtsi | 447 ++++++++++++++++++++++++++
->   1 file changed, 447 insertions(+)
+> drivers/bluetooth/hci_h5.c | 16 ++++++++++++++++
+> 1 file changed, 16 insertions(+)
 > 
-> diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> index 99b7495455a6..96a16d5a258c 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+> index 8eede1197cd2..2fec7ff2ce7c 100644
+> --- a/drivers/bluetooth/hci_h5.c
+> +++ b/drivers/bluetooth/hci_h5.c
+> @@ -925,6 +925,22 @@ static struct h5_vnd rtl_vnd = {
+> };
+> #endif
+> 
+> +#ifdef CONFIG_OF
+> +static const struct of_device_id h5_of_match[] = {
+> +#ifdef CONFIG_BT_HCIUART_RTL
+> +       { .compatible = "realtek,rtl8723as-bluetooth"},
+> +       { .compatible = "realtek,rtl8723bs-bluetooth"},
+> +       { .compatible = "realtek,rtl8723ds-bluetooth"},
+> +       { .compatible = "realtek,rtl8761atv"},
+> +       { .compatible = "realtek,rtl8821as-bluetooth"},
+> +       { .compatible = "realtek,rtl8821cs-bluetooth"},
+> +       { .compatible = "realtek,rtl8822bs-bluetooth"},
+> +#endif
 
-> +
-> +		etr@3028000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0x3028000 0x1000>;
-> +
-> +			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
-> +			clock-names = "apb_pclk", "atclk";
+I really need an Ack from Rob on the naming here.
 
-If you want to use the scatter-gather mode, you must add "arm,scatter-gather"
-property to the node here.
+Regards
 
-Have you tested the scatter-gather mode on the chip ? Does that work at all ?
-Note: You could try this by setting a buffer_size > 1M for the ETR and use
-it as a sink from the sysfs mode.
-
-Cheers
-Suzuki
+Marcel
