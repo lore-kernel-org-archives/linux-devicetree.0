@@ -1,57 +1,53 @@
-Return-Path: <vkoul@kernel.org>
-From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH 1/3] arm64: dts: qcom: qcs404: Add Ethernet node
-Date: Wed, 23 Jan 2019 23:18:37 +0530
-Message-Id: <20190123174839.5321-1-vkoul@kernel.org>
+Return-Path: <SRS0=w1PK=P2=partner.samsung.com=k.konieczny@kernel.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v4 0/5] Add imem clock for Exynos 5433
+Date: Fri, 18 Jan 2019 14:16:34 +0100
+Message-Id: <20190118131639.17578-1-k.konieczny@partner.samsung.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>
+Content-Type: text/plain; charset="utf-8"
+References: <CGME20190118131710eucas1p1b4d7f67c5aa2832b669b1f3cff0235aa@eucas1p1.samsung.com>
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the ethernet node found in QCS404 platform.
+Add imem clock for Exynos 5433. This will allow to use SlimSSS (Slim
+Security SubSystem) with crypto functions.
 
-Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-Signed-off-by: Vinod Koul <vkoul@kernel.org>
----
- arch/arm64/boot/dts/qcom/qcs404.dtsi | 24 ++++++++++++++++++++++++
- 1 file changed, 24 insertions(+)
+Changes since v3:
+- added Acked-by and Reviewed-by to patches 2 and 3
+- dropped "[PATCH v3 4/5] arm64: dts: exynos: add imem clock" because it
+  was already applied
+- split "[PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks"
+  into two parts, first for DT bindings and second for clock driver. In
+  clock driver I dropped all SSS clocks and left only two slimSSS, as I
+  was unable to test SSS with crypto driver s5p-sss.
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-index f3d77e7ee0d2..4696472bdc4e 100644
---- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
-@@ -346,6 +346,30 @@
- 			status = "okay";
- 		};
- 
-+		ethernet: ethernet@7a80000 {
-+			compatible = "qcom,qcs404-ethqos";
-+			reg = <0x07a80000 0x10000>,
-+				<0x07a96000 0x100>;
-+			reg-names = "stmmaceth", "rgmii";
-+			clock-names = "stmmaceth", "pclk", "ptp_ref", "rgmii";
-+			clocks = <&gcc GCC_ETH_AXI_CLK>,
-+				<&gcc GCC_ETH_SLAVE_AHB_CLK>,
-+				<&gcc GCC_ETH_PTP_CLK>,
-+				<&gcc GCC_ETH_RGMII_CLK>;
-+			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
-+					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "macirq", "eth_lpi";
-+
-+			snps,txpbl = <8>;
-+			snps,rxpbl = <2>;
-+			snps,aal;
-+			snps,tso;
-+			rx-fifo-depth=<4096>;
-+			tx-fifo-depth=<4096>;
-+
-+			status = "disabled";
-+		};
-+
- 		wifi: wifi@a000000 {
- 			compatible = "qcom,wcn3990-wifi";
- 			reg = <0xa000000 0x800000>;
+Changes since v2:
+- added Reviewed-by to two first patches
+- fixed subject for 3rd patch and commit message
+- in patch 3 moved documentation of imem to end of clocks after CMU_CAM1
+- in patch 4 moved cmu_imem declarations after cmu_cam1
+- in patch 5 added newlines after clock registers, moved code after cmu_cam1,
+  removed CLK_OF_DECLARE and exynos5433_cmu_imem_init, moved cmu_imem
+  compatible to the end of exynos5433_cmu_of_match
+
+Changes since v1:
+- splitted typo patch into two, one of them for stable, suggested by Krzysztof
+  Kozlowski
+- added more registers as suggested by Chanwoo Choi
+
+Kamil Konieczny (5):
+  clk: samsung: exynos5433: fix typo in imem divider
+  clk: samsung: exynos5433: fix name typo in sssx
+  dt-bindings: clk: exynos5433: document imem clock
+  dt-bindings: clk: exynos5433: add imem clock
+  clk: samsung: exynos5433: add imem clocks
+
+ .../bindings/clock/exynos5433-clock.txt       | 23 ++++++++
+ drivers/clk/samsung/clk-exynos5433.c          | 38 ++++++++++++-
+ include/dt-bindings/clock/exynos5433.h        | 57 ++++++++++++++++++-
+ 3 files changed, 114 insertions(+), 4 deletions(-)
+
 -- 
-2.20.1
+2.20.0
