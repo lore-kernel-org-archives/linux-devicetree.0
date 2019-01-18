@@ -1,40 +1,71 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: [PATCH v1 1/1] mmc: dw_mmc-bluefield: : Fix the license information
-Date: Fri, 18 Jan 2019 13:12:06 -0500
-Message-ID: <7f45f1c645ec166b25afe51aa9ae1decdae0b600.1547834838.git.lsun@mellanox.com>
+From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Subject: Re: [PATCH 08/13] regulator: max77650: add regulator support
+Date: Fri, 18 Jan 2019 19:13:38 +0100
+Message-ID: <CAMpxmJX8OmnDtOhQjWi9edX-4pHu1daKiDkRdNAVw-PZsz9UXA@mail.gmail.com>
+References: <20190118134244.22253-1-brgl@bgdev.pl> <20190118134244.22253-9-brgl@bgdev.pl>
+ <20190118180148.GD6260@sirena.org.uk>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190118180148.GD6260@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thomas Gleixner <tglx@linutronix.de>, Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg KH <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>, David Woods <dwoods@mellanox.com>
-Cc: Liming Sun <lsun@mellanox.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, stable@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: Bartosz Golaszewski <brgl@bgdev.pl>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, LKML <linux-kernel@vger.kernel.org>, linux-gpio <linux-gpio@vger.kernel.org>, linux-devicetree <devicetree@vger.kernel.org>, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm <linux-pm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-The SPDX license identifier and the boiler plate text are
-contradicting. Only the SPDX license identifier is needed. The
-other one is removed.
+pt., 18 sty 2019 o 19:01 Mark Brown <broonie@kernel.org> napisa=C5=82(a):
+>
+> On Fri, Jan 18, 2019 at 02:42:39PM +0100, Bartosz Golaszewski wrote:
+>
+> > Add regulator support for max77650. We support all four variants of thi=
+s
+> > PMIC including non-linear voltage table for max77651 SBB1 rail.
+>
+> Looks good, the ramping stuff might be a candidate for core (TBH I was
+> sure we'd got that implemented already but we don't seem to) but that
+> can be done later and the more complex one with non-linear steps does
+> feel like it might have to stay in the driver anyway.
+>
+> A couple of small nits:
+>
+> > +++ b/drivers/regulator/max77650-regulator.c
+> > @@ -0,0 +1,537 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2018 BayLibre SAS
+> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>
+> Please make the entire header C++ style so it looks more intentional.
+>
 
-Fixes: 86958dcc5ad7 ("mmc: dw_mmc-bluefield: Add driver extension")
-Cc: stable@vger.kernel.org
-Reviewed-by: David Woods <dwoods@mellanox.com>
-Signed-off-by: Liming Sun <lsun@mellanox.com>
----
- drivers/mmc/host/dw_mmc-bluefield.c | 5 -----
- 1 file changed, 5 deletions(-)
+Seems like there are more files in the kernel source using the mixed
+comment style for the SPDX identifier and I also prefer it over C++
+only. Would you mind if it stayed that way?
 
-diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
-index ed8f225..aa38b1a 100644
---- a/drivers/mmc/host/dw_mmc-bluefield.c
-+++ b/drivers/mmc/host/dw_mmc-bluefield.c
-@@ -1,11 +1,6 @@
- // SPDX-License-Identifier: GPL-2.0
- /*
-  * Copyright (C) 2018 Mellanox Technologies.
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License as published by
-- * the Free Software Foundation; either version 2 of the License, or
-- * (at your option) any later version.
-  */
- 
- #include <linux/bitfield.h>
--- 
-1.8.3.1
+> > +             for_each_child_of_node(dev->of_node, child) {
+> > +                     if (!of_node_name_eq(child, rdesc->desc.name))
+> > +                             continue;
+> > +
+> > +                     init_data =3D of_get_regulator_init_data(dev, chi=
+ld,
+> > +                                                            &rdesc->de=
+sc);
+> > +                     if (!init_data)
+> > +                             return -ENOMEM;
+> > +
+> > +                     config.of_node =3D child;
+> > +                     config.init_data =3D init_data;
+> > +             }
+>
+> You don't need to do this, the core will do it for you (it will actually
+> still do it even with the above, it'll only fall back to using
+> config->init_data if it's own lookup fails).
+
+I added this loop specifically because the core would not pick up the
+init data from DT. What did I miss (some specific variable to assign)?
+I just noticed some other drivers do the same and thought it's the
+right thing to do.
+
+Thanks,
+Bart
