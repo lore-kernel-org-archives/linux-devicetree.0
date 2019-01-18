@@ -1,74 +1,43 @@
-From: Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
-Date: Fri, 18 Jan 2019 13:16:24 +0000
-Message-ID: <1547817384.11482.33.camel@nxp.com>
-References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
-         <20190117161804.GA5760@bogus>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v4 1/5] clk: samsung: exynos5433: fix typo in imem divider
+Date: Fri, 18 Jan 2019 14:16:35 +0100
+Message-ID: <20190118131639.17578-2-k.konieczny@partner.samsung.com>
+References: <20190118131639.17578-1-k.konieczny@partner.samsung.com>
+        <CGME20190118131711eucas1p190e9b63ac047566ba84fb4f8749aceee@eucas1p1.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117161804.GA5760@bogus>
-Content-Language: en-US
-Content-ID: <92DBA4F10D09D34EB93E4BAF7B64843A@eurprd04.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: "robh@kernel.org" <robh@kernel.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-proj>
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190118131639.17578-1-k.konieczny@partner.samsung.com>
+Sender: stable-owner@vger.kernel.org
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLCBOaWNvbGluLCBBbGwsDQoNCk9uIEpvLCAyMDE5LTAxLTE3IGF0IDEwOjE4IC0wNjAw
-LCBSb2IgSGVycmluZyB3cm90ZToNCj4gT24gVGh1LCBKYW4gMTcsIDIwMTkgYXQgMTI6NDY6MjVQ
-TSArMDAwMCwgVmlvcmVsIFN1bWFuIHdyb3RlOg0KPiA+IA0KPiA+IFRoZSBwYXRjaHNldCBhZGRz
-IE5YUCBBdWRpbyBNaXhlciAoQVVETUlYKSBkZXZpY2UgYW5kIG1hY2hpbmUNCj4gPiBkcml2ZXJz
-IGFuZCByZWxhdGVkIERUIGJpbmRpbmdzIGRvY3VtZW50YXRpb24uDQo+ID4gDQo+ID4gQ2hhbmdl
-cyBzaW5jZSBWMjoNCj4gPiAxLiBNb3ZlZCAiZGFpcyIgbm9kZSBmcm9tIG1hY2hpbmUgZHJpdmVy
-IERUUyBub2RlIHRvIGRldmljZSBkcml2ZXINCj4gPiBEVFMgbm9kZQ0KPiA+IMKgIGFzIHN1Z2dl
-c3RlZCBieSBSb2IuDQo+IFRoYXQgd2FzIG5vdCB3aGF0IEkgc3VnZ2VzdGVkLiBZb3Ugc3RpbGwg
-aGF2ZSBhIHZpcnR1YWwgbm9kZSB3aGljaA0KPiBsb29rcyB0byBtZSB0byBiZSB1bm5lY2Vzc2Fy
-eS4NCg0KVG8gbWUgcmVtb3ZpbmcgdmlydHVhbCBub2RlIGltcGxpZXMgdGhhdCBBVURNSVggbWFj
-aGluZSBkcml2ZXIgKGlteC0NCmF1ZG1peC5jICsgdmlydHVhbCBub2RlKSBzaGFsbCBiZSByZW1v
-dmVkIGFuZCBtYWNoaW5lIGRyaXZlciBjb2RlDQptZXJnZWQgaW50byBkZXZpY2UgZHJpdmVyIChm
-c2xfYXVkbWl4LmMgKyBkZXZpY2Ugbm9kZSkgLSBwbGVhc2UgbGV0IG1lDQprbm93IGlmIG15IHVu
-ZGVyc3RhbmRpbmcgaXMgd3JvbmcuDQoNClRoZSBpbXBsaWNhdGlvbiBpcyB0aGF0IHRoaXMgbWFr
-ZXMgQVVETUlYIGRldmljZSBkcml2ZXIgYm91bmRlZCB0byBhDQpwYXJ0aWN1bGFyIERBSSB0eXBl
-IG9mIGludGVyZmFjZSAtIFNBSS4gVGhlIG9yaWdpbmFsIGludGVudGlvbiBpcyB0bw0Ka2VlcCBB
-VURNSVggZGV2aWNlIGRyaXZlciBEQUktYWdub3N0aWMuDQoNCkluZGVlZCwgY3VycmVudGx5IHRo
-ZSBjb25uZWN0aW9uIGJldHdlZW4gQVVETUlYIGFuZCBTQUkgSVAgYmxvY2tzIGluDQppLk1YOFFN
-IGFuZCBpLk1YOFFYUCBpcyBmaXhlZCBpbnNpZGUgdGhlIFNvQywgYnV0IG9uIG90aGVyIHBsYXRm
-b3JtcyB3ZQ0KbWF5IGV4cGVjdCBBVURNSVggdG8gYmUgY29ubmVjdGVkIGluc2lkZSB0aGUgU29D
-IHRvIG90aGVyIElQIGJsb2NrcyAtDQp0byBFU0FJIGludGVyZmFjZSBmb3IgaW5zdGFuY2UuDQoN
-CkF0IHRoaXMgbW9tZW50IGl0J3MgYSBiaXQgZGlmZmljdWx0IGZvciBtZSB0byBldmFsdWF0ZSBo
-b3cgY3JpdGljYWwgaXMNCnRvIGtlZXAgdGhlIGRldmljZSBkcml2ZXIgREFJLWFnbm9zdGljLCBz
-byBpZiB5b3UgdGhpbmsgaXQncyBiZXR0ZXIgdG8NCmdvIG5vdyB3aXRoIGEgU0FJIGJvdW5kZWQg
-QVVETUlYIGRldmljZSBkcml2ZXIgLSBwbGVhc2UgY29uZmlybSwgSSdsbA0KbWVyZ2UgbWFjaGlu
-ZSBkcml2ZXIgY29kZSBpbnRvIGRldmljZSBkcml2ZXIuDQoNClRoYW5rIHlvdSwNClZpb3JlbA0K
-DQo+IA0KPiA+IA0KPiA+IA0KPiA+IENoYW5nZXMgc2luY2UgVjE6DQo+ID4gMS4gT3JpZ2luYWwg
-cGF0Y2ggc3BsaXQgaW50byBkaXN0aW5jdCBwYXRjaGVzIGZvciB0aGUgZGV2aWNlIGRyaXZlcg0K
-PiA+IGFuZA0KPiA+IMKgIERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbi4NCj4gPiAyLiBSZXBsYWNl
-ZCBBTUlYIHdpdGggQVVETUlYIGluIGJvdGggY29kZSBhbmQgZmlsZSBuYW1lcyBhcyBpdA0KPiA+
-IGxvb2tzIG1vcmUNCj4gPiDCoCBSTS1jb21wbGlhbnQuDQo+ID4gMy4gUmVtb3ZlZCBwb2xhcml0
-eSBjb250cm9sIGZyb20gQ1BVIERBSSBkcml2ZXIgYXMgc3VnZ2VzdGVkIGJ5DQo+ID4gTmljb2xp
-bi4NCj4gPiA0LiBBZGRlZCBtYWNoaW5lIGRyaXZlciBhbmQgcmVsYXRlZCBEVCBiaW5kaW5nIGRv
-Y3VtZW50YXRpb24uDQo+ID4gDQo+ID4gVmlvcmVsIFN1bWFuICg0KToNCj4gPiDCoCBBU29DOiBm
-c2w6IEFkZCBBdWRpbyBNaXhlciBDUFUgREFJIGRyaXZlcg0KPiA+IMKgIEFTb0M6IGFkZCBmc2xf
-YXVkbWl4IERUIGJpbmRpbmcgZG9jdW1lbnRhdGlvbg0KPiA+IMKgIEFTb0M6IGZzbDogQWRkIEF1
-ZGlvIE1peGVyIG1hY2hpbmUgZHJpdmVyDQo+ID4gwqAgQVNvQzogYWRkIGlteC1hdWRtaXggRFQg
-YmluZGluZyBkb2N1bWVudGF0aW9uDQo+ID4gDQo+ID4gwqAuLi4vZGV2aWNldHJlZS9iaW5kaW5n
-cy9zb3VuZC9mc2wsYXVkbWl4LnR4dMKgwqDCoMKgwqDCoMKgfMKgwqA1MCArKw0KPiA+IMKgLi4u
-L2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvaW14LWF1ZG1peC50eHTCoMKgwqDCoMKgwqDCoHzC
-oMKgMTggKw0KPiA+IMKgc291bmQvc29jL2ZzbC9LY29uZmlnwqDCoMKgwqDCoMKgwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgfMKgwqAxNiArDQo+ID4gwqBz
-b3VuZC9zb2MvZnNsL01ha2VmaWxlwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoHzCoMKgwqA1ICsNCj4gPiDCoHNvdW5kL3NvYy9mc2wvZnNs
-X2F1ZG1peC5jwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqB8IDU1MQ0KPiA+ICsrKysrKysrKysrKysrKysrKysrKw0KPiA+IMKgc291bmQvc29jL2ZzbC9m
-c2xfYXVkbWl4LmjCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKg
-wqDCoHwgMTAyICsrKysNCj4gPiDCoHNvdW5kL3NvYy9mc2wvaW14LWF1ZG1peC5jwqDCoMKgwqDC
-oMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqB8IDMzNA0KPiA+ICsrKysr
-KysrKysrKysNCj4gPiDCoDcgZmlsZXMgY2hhbmdlZCwgMTA3NiBpbnNlcnRpb25zKCspDQo+ID4g
-wqBjcmVhdGUgbW9kZSAxMDA2NDQNCj4gPiBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
-Z3Mvc291bmQvZnNsLGF1ZG1peC50eHQNCj4gPiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBEb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3Mvc291bmQvaW14LQ0KPiA+IGF1ZG1peC50eHQNCj4g
-PiDCoGNyZWF0ZSBtb2RlIDEwMDY0NCBzb3VuZC9zb2MvZnNsL2ZzbF9hdWRtaXguYw0KPiA+IMKg
-Y3JlYXRlIG1vZGUgMTAwNjQ0IHNvdW5kL3NvYy9mc2wvZnNsX2F1ZG1peC5oDQo+ID4gwqBjcmVh
-dGUgbW9kZSAxMDA2NDQgc291bmQvc29jL2ZzbC9pbXgtYXVkbWl4LmMNCj4gPiA=
+Fix typo in imem clock divider 200 switched with 266.
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5433.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 751e2c4fb65b..ea47f49abc7f 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+ 	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
+ 			ENABLE_ACLK_TOP, 25,
+ 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+-	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
++	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
+ 			ENABLE_ACLK_TOP, 24,
+ 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+-	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
++	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
+ 			ENABLE_ACLK_TOP, 23,
+ 			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_ACLK_PERIC_66, "aclk_peric_66", "div_aclk_peric_66_b",
+-- 
+2.20.0
