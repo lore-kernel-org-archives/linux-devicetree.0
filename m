@@ -1,79 +1,45 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
-Date: Fri, 18 Jan 2019 18:01:09 +0800
-Message-ID: <1547805669.8969.4.camel@mtkswgap22>
-References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
-         <20190118075925.noilab6glzm3cig6@pengutronix.de>
-         <1547804574.8124.6.camel@mtkswgap22>
-         <20190118095313.pbpdn43hd76khg2x@pengutronix.de>
+From: Thomas Gleixner <tglx@linutronix.de>
+Subject: Re: [PATCH v7 1/3] mmc: dw_mmc-bluefield: Add driver extension
+Date: Fri, 18 Jan 2019 11:06:04 +0100 (CET)
+Message-ID: <alpine.DEB.2.21.1901181059100.1647@nanos.tec.linutronix.de>
+References: <026fa942828c54fda5bad225981e56abc808b949.1524497286.git.lsun@mellanox.com> <1525805210-15246-1-git-send-email-lsun@mellanox.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118095313.pbpdn43hd76khg2x@pengutronix.de>
+In-Reply-To: <1525805210-15246-1-git-send-email-lsun@mellanox.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mediatek@lists.infradead.org, Matthias Brugger <matthias.bgg@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Liming Sun <lsun@mellanox.com>
+Cc: Ulf Hansson <ulf.hansson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, linux-mmc@vger.kernel.org, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Greg KH <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-01-18 at 10:53 +0100, Uwe Kleine-König wrote:
-> Hello Ryder,
-> 
-> On Fri, Jan 18, 2019 at 05:42:54PM +0800, Ryder Lee wrote:
-> > On Fri, 2019-01-18 at 08:59 +0100, Uwe Kleine-König wrote:
-> > > Hello,
-> > > 
-> > > On Fri, Jan 18, 2019 at 11:24:41AM +0800, Ryder Lee wrote:
-> > > > This adds a property "mediatek,num-pwms" to avoid having an endless
-> > > > list of compatibles with no differences for the same driver.
-> > > > 
-> > > > Thus, the driver should have backwards compatibility to older DTs.
-> > > 
-> > > I still think Thierry should bless "num-pwms" without vendor prefix.
-> > 
-> > Okay.
-> > 
-> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > > > ---
-> > > > Changes since v1: add some checks for backwards compatibility.
-> > > > ---
-> > > >  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
-> > > >  1 file changed, 18 insertions(+), 9 deletions(-)
-> > > > 
-> > > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> > > > index eb6674c..81b7e5e 100644
-> > > > --- a/drivers/pwm/pwm-mediatek.c
-> > > > +++ b/drivers/pwm/pwm-mediatek.c
-> > > > @@ -55,7 +55,7 @@ enum {
-> > > >  };
-> > > >  
-> > > >  struct mtk_pwm_platform_data {
-> > > 
-> > > Unrelated to this patch: This name is bad. This struct is not used as
-> > > platform_data and so should better be named mtk_pwm_of_data. While at
-> > > criticizing existing stuff: I'd prefer pwm_mediatek as common prefix to
-> > > match the filename.
-> > 
-> > I think we can take care about that in another patch.
-> 
-> That's what I wanted to say, right. Do you follow up?
+Liming,
 
-Yes, I will do that.
+On Tue, 8 May 2018, Liming Sun wrote:
+> index 0000000..54c3fbb
+> --- /dev/null
+> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
+> @@ -0,0 +1,81 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (C) 2018 Mellanox Technologies.
+> + *
+> + * This program is free software; you can redistribute it and/or modify
+> + * it under the terms of the GNU General Public License as published by
+> + * the Free Software Foundation; either version 2 of the License, or
+> + * (at your option) any later version.
+> + */
 
-> > > > -	unsigned int num_pwms;
-> > > > +	unsigned int num_pwms;	/* it should not be used in the future SoCs */
-> > > 
-> > > I'd drop this comment in favour of a runtime warning.
-> > 
-> > Sorry, I can't get you here.
-> 
-> I'd do a
-> 
-> 	dev_warn(dev, "dt didn't specify number of PWMs, falling back to %d\n", pc->soc->num_pwms);
-> 
-> to make people aware that updating the dt would be nice.
+This license information is broken. The SPDX license identifier and the
+boiler plate text are contradicting. The SPDX id is GPL v2 only and the
+boiler plate says v2 or later.
 
-Okay!
+Please decide which version you want and fix ASAP. If you fix that up
+please add a Fixes: tag and cc stable. While at it please remove the boiler
+plate text as the SPDX id is sufficient and the boiler plate is redundant
+information.
 
-Thanks
-Ryder
+See Documentation/process/license-rules.txt
+
+Thanks,
+
+	tglx
