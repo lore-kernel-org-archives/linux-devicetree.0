@@ -1,38 +1,38 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
-Date: Fri, 18 Jan 2019 11:46:42 -0800
-Message-ID: <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
-References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
- <20190117161804.GA5760@bogus>
- <1547817384.11482.33.camel@nxp.com>
+From: Martyn Welch <martyn.welch@collabora.com>
+Subject: [PATCH v2 1/2] dt-bindings: Add vendor prefix for Catalyst Semiconductor
+Date: Fri, 18 Jan 2019 19:48:11 +0000
+Message-ID: <20190118194812.3319-1-martyn.welch@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547817384.11482.33.camel@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viorel Suman <viorel.suman@nxp.com>
-Cc: "robh@kernel.org" <robh@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, alsa-
+To: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Christian Hemp <c.hemp@phytec.de>, =?UTF-8?q?Stefan=20Riedm=C3=BCller?= <s.riedmueller@phytec.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>, Martyn Welch <martyn.welch@collabora.com>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, =?UTF-8?q?Andreas=20F=C3=A4rber?= <afaerber@suse.de>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2019 at 01:16:24PM +0000, Viorel Suman wrote:
-> > > 1. Moved "dais" node from machine driver DTS node to device driver
-> > > DTS node
-> > >   as suggested by Rob.
-> > That was not what I suggested. You still have a virtual node which
-> > looks to me to be unnecessary.
-> 
-> To me removing virtual node implies that AUDMIX machine driver (imx-
-> audmix.c + virtual node) shall be removed and machine driver code
-> merged into device driver (fsl_audmix.c + device node) - please let me
-> know if my understanding is wrong.
+Add vendor prefix "catalyst" for Catalyst Semiconductor which is
+already in use but undocumented.
 
-We could use a non-DT configuration right? From the driver logic,
-DT just registers a device corresponding to the machine driver so
-that it can probe(). We could register one in fsl_audmix instead.
-Please refer to how fsl_ssi registers the sound card device. The
-machine driver can get audmix_np from the parent device pointer,
-and I think that's all you need.
+Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+---
 
-Or maybe someone else would provide a better way. But it'd work.
+Changes in v2: None
+
+ Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
+index 389508584f48..d80b23b7771f 100644
+--- a/Documentation/devicetree/bindings/vendor-prefixes.txt
++++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
+@@ -65,6 +65,7 @@ bticino Bticino International
+ calxeda	Calxeda
+ capella	Capella Microsystems, Inc
+ cascoda	Cascoda, Ltd.
++catalyst	Catalyst Semiconductor, Inc
+ cavium	Cavium, Inc.
+ cdns	Cadence Design Systems Inc.
+ cdtech	CDTech(H.K.) Electronics Limited
+-- 
+2.20.1
