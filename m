@@ -1,73 +1,71 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 2/8] Bluetooth: hci_h5: Add support for reset GPIO
-Date: Sat, 19 Jan 2019 01:13:55 +0800
-Message-ID: <CAGb2v665Wsu5dhNi1=-bMmPYP-5nfTamtu0uXVYym+RxzNeN=A@mail.gmail.com>
-References: <20190118170232.16142-1-anarsoul@gmail.com> <20190118170232.16142-3-anarsoul@gmail.com>
+From: Doug Anderson <dianders-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [v5 2/3] drm/msm/dpu: Integrate interconnect API in
+ MDSS
+Date: Fri, 18 Jan 2019 09:52:12 -0800
+Message-ID: <CAD=FV=XUeMTGH+CDwGs3PfK4igdQrCbwucw7_2ViBc4i7grvxg@mail.gmail.com>
+References: <1547056325-1919-1-git-send-email-jshekhar@codeaurora.org>
+ <1547056325-1919-3-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190118170232.16142-3-anarsoul@gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Vasily Khoruzhick <anarsoul@gmail.com>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, netdev <netdev@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-bluetooth@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1547056325-1919-3-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sean Paul <seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, Georgi Djakov <georgi.djakov-QSEj5FYQhm4dnm+yROfE0A@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel <dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Abhinav Kumar <abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, "Kristian H. Kristensen" <hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>, Chandan Uddaraju <chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, freedreno <freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>, Jeykumar Sankaran <jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 19, 2019 at 1:02 AM Vasily Khoruzhick <anarsoul@gmail.com> wrote:
->
-> Some boards (e.g. Pine64 and Pinebook) wire a GPIO to reset pin of
-> RTL8723BS
-
-Pine64 / Pinebook don't have the enable pin. One could say that the
-enable pin and the reset pin you add here are actually the same thing.
-
-ChenYu
-
-> Signed-off-by: Vasily Khoruzhick <anarsoul@gmail.com>
-> ---
->  drivers/bluetooth/hci_h5.c | 9 +++++++++
->  1 file changed, 9 insertions(+)
->
-> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-> index 069d1c8fde73..7ead8c3d8657 100644
-> --- a/drivers/bluetooth/hci_h5.c
-> +++ b/drivers/bluetooth/hci_h5.c
-> @@ -107,6 +107,7 @@ struct h5 {
->         const struct h5_vnd *vnd;
->         const char *id;
->
-> +       struct gpio_desc *reset_gpio;
->         struct gpio_desc *enable_gpio;
->         struct gpio_desc *device_wake_gpio;
->  };
-> @@ -833,6 +834,10 @@ static int h5_serdev_probe(struct serdev_device *serdev)
->         if (IS_ERR(h5->device_wake_gpio))
->                 return PTR_ERR(h5->device_wake_gpio);
->
-> +       h5->reset_gpio = devm_gpiod_get_optional(dev, "reset", GPIOD_OUT_HIGH);
-> +       if (IS_ERR(h5->reset_gpio))
-> +               return PTR_ERR(h5->reset_gpio);
-> +
->         return hci_uart_register_device(&h5->serdev_hu, &h5p);
->  }
->
-> @@ -921,6 +926,9 @@ static void h5_btrtl_open(struct h5 *h5)
->
->         /* The controller needs up to 500ms to wakeup */
->         gpiod_set_value_cansleep(h5->enable_gpio, 1);
-> +       /* Take it out of reset */
-> +       gpiod_set_value_cansleep(h5->reset_gpio, 0);
-> +       msleep(100);
->         gpiod_set_value_cansleep(h5->device_wake_gpio, 1);
->         msleep(500);
->  }
-> @@ -928,6 +936,7 @@ static void h5_btrtl_open(struct h5 *h5)
->  static void h5_btrtl_close(struct h5 *h5)
->  {
->         gpiod_set_value_cansleep(h5->device_wake_gpio, 0);
-> +       gpiod_set_value_cansleep(h5->reset_gpio, 1);
->         gpiod_set_value_cansleep(h5->enable_gpio, 0);
->  }
->
-> --
-> 2.20.1
->
+SGksCgpPbiBXZWQsIEphbiA5LCAyMDE5IGF0IDk6NTIgQU0gSmF5YW50IFNoZWtoYXIgPGpzaGVr
+aGFyQGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPiBAQCAtMTI3LDcgKzE1MywxMSBAQCBzdGF0aWMg
+aW50IGRwdV9tZHNzX2VuYWJsZShzdHJ1Y3QgbXNtX21kc3MgKm1kc3MpCj4gIHsKPiAgICAgICAg
+IHN0cnVjdCBkcHVfbWRzcyAqZHB1X21kc3MgPSB0b19kcHVfbWRzcyhtZHNzKTsKPiAgICAgICAg
+IHN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Cj4gLSAgICAgICBp
+bnQgcmV0Owo+ICsgICAgICAgaW50IHJldCwgaTsKPiArICAgICAgIHU2NCBhdmdfYncgPSBkcHVf
+bWRzcy0+bnVtX3BhdGhzID8gTUFYX0JXIC8gZHB1X21kc3MtPm51bV9wYXRocyA6IDA7Cj4gKwo+
+ICsgICAgICAgZm9yIChpID0gMDsgaSA8IGRwdV9tZHNzLT5udW1fcGF0aHM7IGkrKykKPiArICAg
+ICAgICAgICAgICAgaWNjX3NldChkcHVfbWRzcy0+cGF0aFtpXSwgYXZnX2J3LCBrQnBzX3RvX2lj
+YyhNQVhfQlcpKTsKCllvdSdsbCBuZWVkIHRvIGNoYW5nZSBpY2Nfc2V0KCkgaGVyZSB0byBpY2Nf
+c2V0X2J3KCkgdG8gbWF0Y2ggdjEzLCBBS0E6CgotIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5v
+cmcvcGF0Y2gvMTA3NjYzMzUvCi0gaHR0cHM6Ly9sa21sLmtlcm5lbC5vcmcvci8yMDE5MDExNjE2
+MTEwMy42OTM3LTItZ2VvcmdpLmRqYWtvdkBsaW5hcm8ub3JnCgoKPiAgICAgICAgIHJldCA9IG1z
+bV9kc3NfZW5hYmxlX2NsayhtcC0+Y2xrX2NvbmZpZywgbXAtPm51bV9jbGssIHRydWUpOwo+ICAg
+ICAgICAgaWYgKHJldCkKPiBAQCAtMTQwLDEyICsxNzAsMTUgQEAgc3RhdGljIGludCBkcHVfbWRz
+c19kaXNhYmxlKHN0cnVjdCBtc21fbWRzcyAqbWRzcykKPiAgewo+ICAgICAgICAgc3RydWN0IGRw
+dV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKG1kc3MpOwo+ICAgICAgICAgc3RydWN0IGRz
+c19tb2R1bGVfcG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKPiAtICAgICAgIGludCByZXQ7Cj4g
+KyAgICAgICBpbnQgcmV0LCBpOwo+Cj4gICAgICAgICByZXQgPSBtc21fZHNzX2VuYWJsZV9jbGso
+bXAtPmNsa19jb25maWcsIG1wLT5udW1fY2xrLCBmYWxzZSk7Cj4gICAgICAgICBpZiAocmV0KQo+
+ICAgICAgICAgICAgICAgICBEUFVfRVJST1IoImNsb2NrIGRpc2FibGUgZmFpbGVkLCByZXQ6JWRc
+biIsIHJldCk7Cj4KPiArICAgICAgIGZvciAoaSA9IDA7IGkgPCBkcHVfbWRzcy0+bnVtX3BhdGhz
+OyBpKyspCj4gKyAgICAgICAgICAgICAgIGljY19zZXQoZHB1X21kc3MtPnBhdGhbaV0sIDAsIDAp
+OwoKVGhpcyB3aWxsIGFsc28gbmVlZCB0byBjaGFuZ2UgdG8gaWNjX3NldF9idygpCgoKSSdtIGN1
+cmlvdXMgd2hhdCB0aGUgcGxhbiBpcyBmb3IgbGFuZGluZyB0aGlzIHNlcmllcy4gIFNlYW4gLyBS
+b2IgLwpHZXJvZ2k6IGRvIHlvdSBoYXZlIGFueSBwcmVmZXJlbmNlPyAgT3B0aW9ucyBJJ2QgaW1h
+Z2luZToKCkEpIFdhaXQgdW50aWwgaW50ZXJjb25uZWN0IGxhbmRzIChpbiA1LjE/KSBhbmQgbGFu
+ZCB0aGlzIHRocm91Z2gKZHJtLW1pc2MgLyBtc20tbmV4dCBpbiB0aGUgdmVyc2lvbiBhZnRlciAo
+NS4yPykKCkIpIEdlb3JnaSBwcm92aWRlcyBhbiBpbW11dGFibGUgYnJhbmNoIGZvciBpbnRlcmNv
+bm5lY3Qgd2hlbiBoaXMgbGFuZHMKKGFzc3VtaW5nIGhlJ3Mgc2VuZGluZyBoaXMgc3R1ZmYgdXBz
+dHJlYW0gdmlhIHB1bGwgcmVxdWVzdCkgYW5kIHRoYXQKaW1tdXRhYmxlIGJyYW5jaCBnZXRzIG1l
+cmdlZCBpbnRvIHRoZSB0aGUgcmVsZXZhbnQgZHJtIHRyZWUuCgpDKSBTZWFuIGFuZC9vciBSb2Ig
+QWNrcyB0aGlzIHNlcmllcyBhbmQgaW5kaWNhdGVzIHRoYXQgaXQgc2hvdWxkIGdvIGluCnRocm91
+Z2ggR2Vyb2dpJ3MgdHJlZSAocHJvYmFibHkgb25seSB3b3JrcyBpZiBHZW9yZ2kgcGxhbnMgdG8g
+c2VuZCBhCnB1bGwgcmVxdWVzdCkuICBJZiB3ZSdyZSBnb2luZyB0aGlzIHJvdXRlIHRoZW4gKElJ
+VUMpIHdlJ2Qgd2FudCB0bwpsYW5kIHRoaXMgaW4gR2Vyb2dpJ3MgdHJlZSBzb29uZXIgcmF0aGVy
+IHRoYW4gbGF0ZXIgc28gaXQgY2FuIGdldCBzb21lCmJha2UgdGltZSBpbiBsaW51eC1uZXh0ICh3
+ZSd2ZSBiZWVuIGJha2luZyBpdCBpbiBDaHJvbWUgT1MgZm9yIGEKd2hpbGUsIGJ1dCBuaWNlIHRv
+IHNlZSBpdCBpbiBsaW51eC1uZXh0IHRvbykuCgoKRG9lcyBhbnlvbmUgaGF2ZSBhIHByZWZlcmVu
+Y2U/ICBJdCdzIGJlIG5pY2UgaWYgd2hvZXZlciBpcyBwbGFubmluZyB0bwpsYW5kIHRoaXMgY291
+bGQgaW5kaWNhdGUgd2hldGhlciB0aGV5J2QgcHJlZmVyIEpheWFudCBzZW5kIGEgbmV3CnZlcnNp
+b24gdG8gaGFuZGxlIHRoZSBBUEkgY2hhbmdlIG9yIGlmIHRoZSByZWxldmFudCBtYWludGFpbmVy
+IGNhbgpqdXN0IGRvIHRoZSBmaXh1cCB3aGVuIHRoZSBwYXRjaCBsYW5kcy4KCgpUaGFua3MhCgot
+RG91ZwpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVl
+ZHJlbm8gbWFpbGluZyBsaXN0CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
+Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
