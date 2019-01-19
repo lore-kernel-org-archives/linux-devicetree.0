@@ -1,58 +1,75 @@
-From: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
-Subject: Re: [PATCH v2 1/2] dt-bindings: Add vendor prefix for Catalyst
- Semiconductor
-Date: Sat, 19 Jan 2019 12:30:14 +0100
-Message-ID: <a5349edd-015f-75da-c47d-90e931f99d43@suse.de>
-References: <20190118194812.3319-1-martyn.welch@collabora.com>
+From: Chanwoo Choi <cwchoi00@gmail.com>
+Subject: Re: [PATCH v4 5/5] clk: samsung: exynos5433: add imem clocks
+Date: Sat, 19 Jan 2019 21:41:17 +0900
+Message-ID: <CAGTfZH2sKvJ+Tq=YD2Xb1ZDV9QD0C3gEVRvxzMvRj54pU+2vHA@mail.gmail.com>
+References: <CGME20190118131713eucas1p11f52d9e6a11dbd2b66f289ca3c56d92c@eucas1p1.samsung.com>
+ <20190118131639.17578-1-k.konieczny@partner.samsung.com>
+ <20190118131639.17578-6-k.konieczny@partner.samsung.com>
+Reply-To: cwchoi00@gmail.com
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118194812.3319-1-martyn.welch@collabora.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Martyn Welch <martyn.welch@collabora.com>
-Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, Christian Hemp <c.hemp@phytec.de>, =?UTF-8?Q?Stefan_Riedm=c3=bcller?= <s.riedmueller@phytec.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-arm-kernel@lists.infradead.org, NXP Linux Team <linux-imx@nxp.com>, Rob Herring <robh@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Thierry Reding <treding@nvidia.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190118131639.17578-6-k.konieczny@partner.samsung.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Martyn,
-
-Am 18.01.19 um 20:48 schrieb Martyn Welch:
-> Add vendor prefix "catalyst" for Catalyst Semiconductor which is
-> already in use but undocumented.
-> 
-> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
-> 
-> Changes in v2: None
-> 
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 389508584f48..d80b23b7771f 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -65,6 +65,7 @@ bticino Bticino International
->  calxeda	Calxeda
->  capella	Capella Microsystems, Inc
->  cascoda	Cascoda, Ltd.
-> +catalyst	Catalyst Semiconductor, Inc
-
-"Inc" surely is an abbreviation for "Incorporated", so can you please
-follow the below examples of writing "Inc." with trailing dot?
-
->  cavium	Cavium, Inc.
->  cdns	Cadence Design Systems Inc.
->  cdtech	CDTech(H.K.) Electronics Limited
-
-Otherwise looks good. Thanks for fixing the undocumented use.
-
-Regards,
-Andreas
-
--- 
-SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
-GF: Felix Imendörffer, Jane Smithard, Graham Norton
-HRB 21284 (AG Nürnberg)
+SGkgS2FtaWwsCgoyMDE564WEIDHsm5QgMTjsnbwgKOq4iCkg7Jik7ZuEIDEwOjE4LCBLYW1pbCBL
+b25pZWN6bnkKPGsua29uaWVjem55QHBhcnRuZXIuc2Ftc3VuZy5jb20+64uY7J20IOyekeyEsToK
+Pgo+IEFkZCBpbWVtIGNsb2NrcyBmb3IgZXh5bm9zNTQzMy4gVGhpcyB3aWxsIGVuYWJsZSB0byB1
+c2UgY3J5cHRvIFNsaW0KPiBTZWN1cml0eSBTdWJTeXN0ZW0gKGluIHNob3J0IFNsaW1TU1MpIElQ
+IGJsb2NrLgo+Cj4gU2lnbmVkLW9mZi1ieTogS2FtaWwgS29uaWVjem55IDxrLmtvbmllY3pueUBw
+YXJ0bmVyLnNhbXN1bmcuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9zYW1zdW5nL2Nsay1leHlu
+b3M1NDMzLmMgfCAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
+Z2VkLCAzMiBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc2Ftc3Vu
+Zy9jbGstZXh5bm9zNTQzMy5jIGIvZHJpdmVycy9jbGsvc2Ftc3VuZy9jbGstZXh5bm9zNTQzMy5j
+Cj4gaW5kZXggMjRjMzM2MGRiNjViLi5kYWUxYzk2ZGU5MzMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
+cy9jbGsvc2Ftc3VuZy9jbGstZXh5bm9zNTQzMy5jCj4gKysrIGIvZHJpdmVycy9jbGsvc2Ftc3Vu
+Zy9jbGstZXh5bm9zNTQzMy5jCj4gQEAgLTU0NjcsNiArNTQ2NywzNSBAQCBzdGF0aWMgY29uc3Qg
+c3RydWN0IHNhbXN1bmdfY211X2luZm8gY2FtMV9jbXVfaW5mbyBfX2luaXRjb25zdCA9IHsKPiAg
+ICAgICAgIC5jbGtfbmFtZSAgICAgICAgICAgICAgID0gImFjbGtfY2FtMV80MDAiLAo+ICB9Owo+
+Cj4gKy8qCj4gKyAqIFJlZ2lzdGVyIG9mZnNldCBkZWZpbml0aW9ucyBmb3IgQ01VX0lNRU0KPiAr
+ICovCj4gKyNkZWZpbmUgRU5BQkxFX0FDTEtfSU1FTV9TTElNU1NTICAgICAgICAgICAgICAgMHgw
+ODBjCj4gKyNkZWZpbmUgRU5BQkxFX1BDTEtfSU1FTV9TTElNU1NTICAgICAgICAgICAgICAgMHgw
+OTA4Cj4gKwo+ICtzdGF0aWMgY29uc3QgdW5zaWduZWQgbG9uZyBpbWVtX2Nsa19yZWdzW10gX19p
+bml0Y29uc3QgPSB7Cj4gKyAgICAgICBFTkFCTEVfQUNMS19JTUVNX1NMSU1TU1MsCj4gKyAgICAg
+ICBFTkFCTEVfUENMS19JTUVNX1NMSU1TU1MsCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3Ry
+dWN0IHNhbXN1bmdfZ2F0ZV9jbG9jayBpbWVtX2dhdGVfY2xrc1tdIF9faW5pdGNvbnN0ID0gewo+
+ICsgICAgICAgLyogRU5BQkxFX0FDTEtfSU1FTV9TTElNU1NTICovCj4gKyAgICAgICBHQVRFKENM
+S19BQ0xLX1NMSU1TU1MsICJhY2xrX3NsaW1zc3MiLCAiYWNsa19pbWVtX3Nzc3hfMjY2IiwKPiAr
+ICAgICAgICAgICAgICAgICAgICAgICBFTkFCTEVfQUNMS19JTUVNX1NMSU1TU1MsIDAsIENMS19J
+R05PUkVfVU5VU0VELCAwKSwKPiArCj4gKyAgICAgICAvKiBFTkFCTEVfUENMS19JTUVNX1NMSU1T
+U1MgKi8KPiArICAgICAgIEdBVEUoQ0xLX1BDTEtfU0xJTVNTUywgInBjbGtfc2xpbXNzcyIsICJh
+Y2xrX2ltZW1fMjAwIiwKPiArICAgICAgICAgICAgICAgICAgICAgICBFTkFCTEVfUENMS19JTUVN
+X1NMSU1TU1MsIDAsIENMS19JR05PUkVfVU5VU0VELCAwKSwKPiArfTsKPiArCj4gK3N0YXRpYyBj
+b25zdCBzdHJ1Y3Qgc2Ftc3VuZ19jbXVfaW5mbyBpbWVtX2NtdV9pbmZvIF9faW5pdGNvbnN0ID0g
+ewo+ICsgICAgICAgLmdhdGVfY2xrcyAgICAgICAgICAgICAgPSBpbWVtX2dhdGVfY2xrcywKPiAr
+ICAgICAgIC5ucl9nYXRlX2Nsa3MgICAgICAgICAgID0gQVJSQVlfU0laRShpbWVtX2dhdGVfY2xr
+cyksCj4gKyAgICAgICAubnJfY2xrX2lkcyAgICAgICAgICAgICA9IElNRU1fTlJfQ0xLLAo+ICsg
+ICAgICAgLmNsa19yZWdzICAgICAgICAgICAgICAgPSBpbWVtX2Nsa19yZWdzLAo+ICsgICAgICAg
+Lm5yX2Nsa19yZWdzICAgICAgICAgICAgPSBBUlJBWV9TSVpFKGltZW1fY2xrX3JlZ3MpLAo+ICsg
+ICAgICAgLmNsa19uYW1lICAgICAgICAgICAgICAgPSAiYWNsa19pbWVtXzIwMCIsCj4gK307Cj4K
+PiAgc3RydWN0IGV4eW5vczU0MzNfY211X2RhdGEgewo+ICAgICAgICAgc3RydWN0IHNhbXN1bmdf
+Y2xrX3JlZ19kdW1wICpjbGtfc2F2ZTsKPiBAQCAtNTY1NCw2ICs1NjgzLDkgQEAgc3RhdGljIGNv
+bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZXh5bm9zNTQzM19jbXVfb2ZfbWF0Y2hbXSA9IHsKPiAg
+ICAgICAgIH0sIHsKPiAgICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlu
+b3M1NDMzLWNtdS1tc2NsIiwKPiAgICAgICAgICAgICAgICAgLmRhdGEgPSAmbXNjbF9jbXVfaW5m
+bywKPiArICAgICAgIH0sIHsKPiArICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAic2Ftc3Vu
+ZyxleHlub3M1NDMzLWNtdS1pbWVtIiwKPiArICAgICAgICAgICAgICAgLmRhdGEgPSAmaW1lbV9j
+bXVfaW5mbywKPiAgICAgICAgIH0sIHsKPiAgICAgICAgIH0sCj4gIH07Cj4gLS0KPiAyLjIwLjAK
+PgoKTG9va3MgZ29vZCB0byBtZS4KQWNrZWQtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNh
+bXN1bmcuY29tPgoKLS0gCkJlc3QgUmVnYXJkcywKQ2hhbndvbyBDaG9pClNhbXN1bmcgRWxlY3Ry
+b25pY3MKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
+bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
+ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
+LWFybS1rZXJuZWwK
