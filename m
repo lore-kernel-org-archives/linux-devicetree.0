@@ -1,46 +1,57 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 2/2] arm64: dts: allwinner: a64: Orange Pi
- Win: Enable IR
-Date: Sat, 19 Jan 2019 21:19:00 +0100
-Message-ID: <20190119201900.26592-3-jernej.skrabec@siol.net>
-References: <20190119201900.26592-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBQMMR3RAKGQE7CPGT2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190119201900.26592-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v6 12/15] arm64: dts: qcom: pmi8994: add interrupt controller properties
+Date: Sat, 19 Jan 2019 15:42:49 -0500
+Message-ID: <20190119204252.18370-13-masneyb@onstation.org>
+References: <20190119204252.18370-1-masneyb@onstation.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com
+Cc: shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-OrangePi Win board contains IR receiver. Enable it.
+Add interrupt controller properties now that spmi-gpio is a proper
+hierarchical IRQ chip. The interrupts property is no longer needed so
+remove it.
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+This change was not tested on any hardware but the same change was
+tested on qcom-pm8941.dtsi using a LG Nexus 5 (hammerhead) phone with
+no issues.
+
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts | 4 ++++
- 1 file changed, 4 insertions(+)
+Changes since v4:
+- None  
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-index 8974b5a1d3b1..8642db86ac68 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-orangepi-win.dts
-@@ -180,6 +180,10 @@
- 	status = "okay";
- };
- 
-+&r_ir {
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
+Patch introduced in v4.
+
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi | 12 ++----------
+ 1 file changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/qcom/pmi8994.dtsi b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+index dae1cdc23f54..3aee10e3f921 100644
+--- a/arch/arm64/boot/dts/qcom/pmi8994.dtsi
++++ b/arch/arm64/boot/dts/qcom/pmi8994.dtsi
+@@ -15,16 +15,8 @@
+ 			reg = <0xc000>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			interrupts = <2 0xc0 0 IRQ_TYPE_NONE>,
+-				     <2 0xc1 0 IRQ_TYPE_NONE>,
+-				     <2 0xc2 0 IRQ_TYPE_NONE>,
+-				     <2 0xc3 0 IRQ_TYPE_NONE>,
+-				     <2 0xc4 0 IRQ_TYPE_NONE>,
+-				     <2 0xc5 0 IRQ_TYPE_NONE>,
+-				     <2 0xc6 0 IRQ_TYPE_NONE>,
+-				     <2 0xc7 0 IRQ_TYPE_NONE>,
+-				     <2 0xc8 0 IRQ_TYPE_NONE>,
+-				     <2 0xc9 0 IRQ_TYPE_NONE>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
+ 	};
  
 -- 
-2.20.1
+2.17.2
