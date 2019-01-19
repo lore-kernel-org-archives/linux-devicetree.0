@@ -1,16 +1,18 @@
-From: Chanwoo Choi <cwchoi00@gmail.com>
-Subject: Re: [PATCH v4 5/5] clk: samsung: exynos5433: add imem clocks
-Date: Sat, 19 Jan 2019 21:41:17 +0900
-Message-ID: <CAGTfZH2sKvJ+Tq=YD2Xb1ZDV9QD0C3gEVRvxzMvRj54pU+2vHA@mail.gmail.com>
-References: <CGME20190118131713eucas1p11f52d9e6a11dbd2b66f289ca3c56d92c@eucas1p1.samsung.com>
- <20190118131639.17578-1-k.konieczny@partner.samsung.com>
- <20190118131639.17578-6-k.konieczny@partner.samsung.com>
-Reply-To: cwchoi00@gmail.com
+From: beagleboard@davidjohnsummers.uk
+Subject: Re: [PATCHv2] Patch to add the realtek bluetooth device tree refs to
+ the code
+Date: Sat, 19 Jan 2019 13:18:56 +0000
+Message-ID: <4b098970-9644-12b4-c6f1-2e66ffbe24fa@davidjohnsummers.uk>
+References: <20181229115513.31153-1-beagleboard@davidjohnsummers.uk>
+ <20190103163538.6575-1-beagleboard@davidjohnsummers.uk>
+ <20190103163538.6575-2-beagleboard@davidjohnsummers.uk>
+ <510BE8B9-76BD-4A64-86C2-ACA1D50819DF@holtmann.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"; Format="flowed"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190118131639.17578-6-k.konieczny@partner.samsung.com>
+In-Reply-To: <510BE8B9-76BD-4A64-86C2-ACA1D50819DF@holtmann.org>
+Content-Language: en-PH
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,56 +22,67 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-samsung-soc <linux-samsung-soc@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel <linux-kernel@vger.kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, Chanwoo Choi <cw00.choi@samsung.com>, Kukjin Kim <kgene@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Marcel Holtmann <marcel@holtmann.org>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, Johan Hedberg <johan.hedberg@gmail.com>, linux-bluetooth@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgS2FtaWwsCgoyMDE564WEIDHsm5QgMTjsnbwgKOq4iCkg7Jik7ZuEIDEwOjE4LCBLYW1pbCBL
-b25pZWN6bnkKPGsua29uaWVjem55QHBhcnRuZXIuc2Ftc3VuZy5jb20+64uY7J20IOyekeyEsToK
-Pgo+IEFkZCBpbWVtIGNsb2NrcyBmb3IgZXh5bm9zNTQzMy4gVGhpcyB3aWxsIGVuYWJsZSB0byB1
-c2UgY3J5cHRvIFNsaW0KPiBTZWN1cml0eSBTdWJTeXN0ZW0gKGluIHNob3J0IFNsaW1TU1MpIElQ
-IGJsb2NrLgo+Cj4gU2lnbmVkLW9mZi1ieTogS2FtaWwgS29uaWVjem55IDxrLmtvbmllY3pueUBw
-YXJ0bmVyLnNhbXN1bmcuY29tPgo+IC0tLQo+ICBkcml2ZXJzL2Nsay9zYW1zdW5nL2Nsay1leHlu
-b3M1NDMzLmMgfCAzMiArKysrKysrKysrKysrKysrKysrKysrKysrKysrCj4gIDEgZmlsZSBjaGFu
-Z2VkLCAzMiBpbnNlcnRpb25zKCspCj4KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9jbGsvc2Ftc3Vu
-Zy9jbGstZXh5bm9zNTQzMy5jIGIvZHJpdmVycy9jbGsvc2Ftc3VuZy9jbGstZXh5bm9zNTQzMy5j
-Cj4gaW5kZXggMjRjMzM2MGRiNjViLi5kYWUxYzk2ZGU5MzMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVy
-cy9jbGsvc2Ftc3VuZy9jbGstZXh5bm9zNTQzMy5jCj4gKysrIGIvZHJpdmVycy9jbGsvc2Ftc3Vu
-Zy9jbGstZXh5bm9zNTQzMy5jCj4gQEAgLTU0NjcsNiArNTQ2NywzNSBAQCBzdGF0aWMgY29uc3Qg
-c3RydWN0IHNhbXN1bmdfY211X2luZm8gY2FtMV9jbXVfaW5mbyBfX2luaXRjb25zdCA9IHsKPiAg
-ICAgICAgIC5jbGtfbmFtZSAgICAgICAgICAgICAgID0gImFjbGtfY2FtMV80MDAiLAo+ICB9Owo+
-Cj4gKy8qCj4gKyAqIFJlZ2lzdGVyIG9mZnNldCBkZWZpbml0aW9ucyBmb3IgQ01VX0lNRU0KPiAr
-ICovCj4gKyNkZWZpbmUgRU5BQkxFX0FDTEtfSU1FTV9TTElNU1NTICAgICAgICAgICAgICAgMHgw
-ODBjCj4gKyNkZWZpbmUgRU5BQkxFX1BDTEtfSU1FTV9TTElNU1NTICAgICAgICAgICAgICAgMHgw
-OTA4Cj4gKwo+ICtzdGF0aWMgY29uc3QgdW5zaWduZWQgbG9uZyBpbWVtX2Nsa19yZWdzW10gX19p
-bml0Y29uc3QgPSB7Cj4gKyAgICAgICBFTkFCTEVfQUNMS19JTUVNX1NMSU1TU1MsCj4gKyAgICAg
-ICBFTkFCTEVfUENMS19JTUVNX1NMSU1TU1MsCj4gK307Cj4gKwo+ICtzdGF0aWMgY29uc3Qgc3Ry
-dWN0IHNhbXN1bmdfZ2F0ZV9jbG9jayBpbWVtX2dhdGVfY2xrc1tdIF9faW5pdGNvbnN0ID0gewo+
-ICsgICAgICAgLyogRU5BQkxFX0FDTEtfSU1FTV9TTElNU1NTICovCj4gKyAgICAgICBHQVRFKENM
-S19BQ0xLX1NMSU1TU1MsICJhY2xrX3NsaW1zc3MiLCAiYWNsa19pbWVtX3Nzc3hfMjY2IiwKPiAr
-ICAgICAgICAgICAgICAgICAgICAgICBFTkFCTEVfQUNMS19JTUVNX1NMSU1TU1MsIDAsIENMS19J
-R05PUkVfVU5VU0VELCAwKSwKPiArCj4gKyAgICAgICAvKiBFTkFCTEVfUENMS19JTUVNX1NMSU1T
-U1MgKi8KPiArICAgICAgIEdBVEUoQ0xLX1BDTEtfU0xJTVNTUywgInBjbGtfc2xpbXNzcyIsICJh
-Y2xrX2ltZW1fMjAwIiwKPiArICAgICAgICAgICAgICAgICAgICAgICBFTkFCTEVfUENMS19JTUVN
-X1NMSU1TU1MsIDAsIENMS19JR05PUkVfVU5VU0VELCAwKSwKPiArfTsKPiArCj4gK3N0YXRpYyBj
-b25zdCBzdHJ1Y3Qgc2Ftc3VuZ19jbXVfaW5mbyBpbWVtX2NtdV9pbmZvIF9faW5pdGNvbnN0ID0g
-ewo+ICsgICAgICAgLmdhdGVfY2xrcyAgICAgICAgICAgICAgPSBpbWVtX2dhdGVfY2xrcywKPiAr
-ICAgICAgIC5ucl9nYXRlX2Nsa3MgICAgICAgICAgID0gQVJSQVlfU0laRShpbWVtX2dhdGVfY2xr
-cyksCj4gKyAgICAgICAubnJfY2xrX2lkcyAgICAgICAgICAgICA9IElNRU1fTlJfQ0xLLAo+ICsg
-ICAgICAgLmNsa19yZWdzICAgICAgICAgICAgICAgPSBpbWVtX2Nsa19yZWdzLAo+ICsgICAgICAg
-Lm5yX2Nsa19yZWdzICAgICAgICAgICAgPSBBUlJBWV9TSVpFKGltZW1fY2xrX3JlZ3MpLAo+ICsg
-ICAgICAgLmNsa19uYW1lICAgICAgICAgICAgICAgPSAiYWNsa19pbWVtXzIwMCIsCj4gK307Cj4K
-PiAgc3RydWN0IGV4eW5vczU0MzNfY211X2RhdGEgewo+ICAgICAgICAgc3RydWN0IHNhbXN1bmdf
-Y2xrX3JlZ19kdW1wICpjbGtfc2F2ZTsKPiBAQCAtNTY1NCw2ICs1NjgzLDkgQEAgc3RhdGljIGNv
-bnN0IHN0cnVjdCBvZl9kZXZpY2VfaWQgZXh5bm9zNTQzM19jbXVfb2ZfbWF0Y2hbXSA9IHsKPiAg
-ICAgICAgIH0sIHsKPiAgICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAic2Ftc3VuZyxleHlu
-b3M1NDMzLWNtdS1tc2NsIiwKPiAgICAgICAgICAgICAgICAgLmRhdGEgPSAmbXNjbF9jbXVfaW5m
-bywKPiArICAgICAgIH0sIHsKPiArICAgICAgICAgICAgICAgLmNvbXBhdGlibGUgPSAic2Ftc3Vu
-ZyxleHlub3M1NDMzLWNtdS1pbWVtIiwKPiArICAgICAgICAgICAgICAgLmRhdGEgPSAmaW1lbV9j
-bXVfaW5mbywKPiAgICAgICAgIH0sIHsKPiAgICAgICAgIH0sCj4gIH07Cj4gLS0KPiAyLjIwLjAK
-PgoKTG9va3MgZ29vZCB0byBtZS4KQWNrZWQtYnk6IENoYW53b28gQ2hvaSA8Y3cwMC5jaG9pQHNh
-bXN1bmcuY29tPgoKLS0gCkJlc3QgUmVnYXJkcywKQ2hhbndvbyBDaG9pClNhbXN1bmcgRWxlY3Ry
-b25pY3MKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxp
-bnV4LWFybS1rZXJuZWwgbWFpbGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFk
-ZWFkLm9yZwpodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4
-LWFybS1rZXJuZWwK
+Hi Marcel,
+
+Yes have been having an email conversation with Rob on the device tree 
+email list.
+
+he wants minor changes to the naming, which i agree with. So have much 
+of a revised patch set read to send in. Just need to check some things.
+
+Hopefully be able to send later this weekend, and it will replace the 
+patch below.
+
+Thanks,
+
+David.
+
+On 18/01/2019 10:57, Marcel Holtmann wrote:
+> Hi David,
+>
+>> This patch adds the necessary device tree hooks to the realtek
+>> bluetooth driver for serial connections.
+>>
+>> The realtek devices that are listed btrtl.c are searched on the
+>> realtek web site for the version that have serial connections.
+>>
+>> Most of these devices also have wi-fi connected via sdio, that is not
+>> covered by the bluetooth driver - but as that interface will also be
+>> needed in the device tree, the hocks here have "-bluetooth" added. The
+>> exception to this is the rtl8761atv, which only has a serial
+>> bluetooth.
+>>
+>> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+>> ---
+>> drivers/bluetooth/hci_h5.c | 16 ++++++++++++++++
+>> 1 file changed, 16 insertions(+)
+>>
+>> diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
+>> index 8eede1197cd2..2fec7ff2ce7c 100644
+>> --- a/drivers/bluetooth/hci_h5.c
+>> +++ b/drivers/bluetooth/hci_h5.c
+>> @@ -925,6 +925,22 @@ static struct h5_vnd rtl_vnd = {
+>> };
+>> #endif
+>>
+>> +#ifdef CONFIG_OF
+>> +static const struct of_device_id h5_of_match[] = {
+>> +#ifdef CONFIG_BT_HCIUART_RTL
+>> +       { .compatible = "realtek,rtl8723as-bluetooth"},
+>> +       { .compatible = "realtek,rtl8723bs-bluetooth"},
+>> +       { .compatible = "realtek,rtl8723ds-bluetooth"},
+>> +       { .compatible = "realtek,rtl8761atv"},
+>> +       { .compatible = "realtek,rtl8821as-bluetooth"},
+>> +       { .compatible = "realtek,rtl8821cs-bluetooth"},
+>> +       { .compatible = "realtek,rtl8822bs-bluetooth"},
+>> +#endif
+> I really need an Ack from Rob on the naming here.
+>
+> Regards
+>
+> Marcel
+>
