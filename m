@@ -1,21 +1,46 @@
-From: Boris Brezillon <bbrezillon@kernel.org>
-Subject: Re: [v2, 1/3] dt-bindings: mtd: mtk-quadspi: update bindings for MT7629 SoC
-Date: Sat, 19 Jan 2019 16:43:01 +0100
-Message-ID: <20190119154301.3800-1-bbrezillon@kernel.org>
-References: <74d710ed89fd505a49bce53b51f6cb489e313dbb.1547538621.git.ryder.lee@mediatek.com>
+From: Felix Brack <fb@ltec.ch>
+Subject: Re: [PATCH: linux-next] ARM: dts: am33xx: Remove unnecessary
+ properties
+Date: Sat, 19 Jan 2019 18:38:21 +0100
+Message-ID: <31a68b35-8b78-8fee-3dd9-5beb3c386247@ltec.ch>
+References: <20181218143931.4151-1-fb@ltec.ch>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <74d710ed89fd505a49bce53b51f6cb489e313dbb.1547538621.git.ryder.lee@mediatek.com>
+In-Reply-To: <20181218143931.4151-1-fb@ltec.ch>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ryder Lee <ryder.lee@mediatek.com>, Marek Vasut <marek.vasut@gmail.com>, Brian Norris <computersforpeace@gmail.com>, Boris Brezillon <boris.brezillon@bootlin.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>, devicetree@vger.kernel.org, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: Felix Brack <fb@ltec.ch>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+Cc: tony@atomide.com, bcousson@baylibre.com, mpfj@newflow.co.uk, mark.rutland@arm.com, robh+dt@kernel.org, linux@armlinux.org.uk, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 2019-01-16 at 02:12:03 UTC, Ryder Lee wrote:
-> This updates bindings for the MT7629 SPI-NOR controller.
+Hi Tony,
+On 18.12.18 15:39, Felix Brack wrote:
+> Remove the unnecessary properties #address-cells and #size-cells
+> of node pinmux as there are no child-nodes with property reg.
 > 
-> Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+> Signed-off-by: Felix Brack <fb@ltec.ch>
+> ---
+>   arch/arm/boot/dts/am33xx-l4.dtsi | 2 --
+>   1 file changed, 2 deletions(-)
+> 
+> diff --git a/arch/arm/boot/dts/am33xx-l4.dtsi b/arch/arm/boot/dts/am33xx-l4.dtsi
+> index 7b818d9d2eab..e957370f8aec 100644
+> --- a/arch/arm/boot/dts/am33xx-l4.dtsi
+> +++ b/arch/arm/boot/dts/am33xx-l4.dtsi
+> @@ -288,8 +288,6 @@
+>   				am33xx_pinmux: pinmux@800 {
+>   					compatible = "pinctrl-single";
+>   					reg = <0x800 0x238>;
+> -					#address-cells = <1>;
+> -					#size-cells = <0>;
+>   					#pinctrl-cells = <1>;
+>   					pinctrl-single,register-width = <32>;
+>   					pinctrl-single,function-mask = <0x7f>;
+> 
 
-Applied to http://git.infradead.org/linux-mtd.git spi-nor/next, thanks.
+Just a gentle ping. BTW: the patch applies not just to linux-next 
+correctly but now also to linux.
 
-Boris
+regards Felix
