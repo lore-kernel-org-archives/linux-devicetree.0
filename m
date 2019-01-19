@@ -1,121 +1,67 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
-Date: Sat, 19 Jan 2019 10:54:47 +0800
-Message-ID: <1547866487.14213.10.camel@mtkswgap22>
-References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
- <c007d399-af86-98d3-94f9-b9762efdc219@gmail.com>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: [PATCH v3 0/6] add quartz load support to NXP rtc drivers
+Date: Sat, 19 Jan 2019 10:00:25 +0100
+Message-ID: <20190119090031.29147-1-sam@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <c007d399-af86-98d3-94f9-b9762efdc219@gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Matthias Brugger <matthias.bgg@gmail.com>
-Cc: linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, Sean Wang <sean.wang@kernel.org>, Weijie Gao <weijie.gao@mediatek.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 2019-01-18 at 09:43 +0100, Matthias Brugger wrote:
-> 
-> On 18/01/2019 04:24, Ryder Lee wrote:
-> > This adds a property "mediatek,num-pwms" to avoid having an endless
-> > list of compatibles with no differences for the same driver.
-> > 
-> > Thus, the driver should have backwards compatibility to older DTs.
-> > 
-> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
-> > ---
-> > Changes since v1: add some checks for backwards compatibility.
-> > ---
-> >  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
-> >  1 file changed, 18 insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
-> > index eb6674c..81b7e5e 100644
-> > --- a/drivers/pwm/pwm-mediatek.c
-> > +++ b/drivers/pwm/pwm-mediatek.c
-> > @@ -55,7 +55,7 @@ enum {
-> >  };
-> >  
-> >  struct mtk_pwm_platform_data {
-> > -	unsigned int num_pwms;
-> > +	unsigned int num_pwms;	/* it should not be used in the future SoCs */
-> >  	bool pwm45_fixup;
-> >  	bool has_clks;
-> >  };
-> > @@ -226,27 +226,36 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-> >  
-> >  static int mtk_pwm_probe(struct platform_device *pdev)
-> >  {
-> > -	const struct mtk_pwm_platform_data *data;
-> > +	struct device_node *np = pdev->dev.of_node;
-> >  	struct mtk_pwm_chip *pc;
-> >  	struct resource *res;
-> > -	unsigned int i;
-> > +	unsigned int i, num_pwms;
-> >  	int ret;
-> >  
-> >  	pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
-> >  	if (!pc)
-> >  		return -ENOMEM;
-> >  
-> > -	data = of_device_get_match_data(&pdev->dev);
-> > -	if (data == NULL)
-> > -		return -EINVAL;
-> > -	pc->soc = data;
-> > +	pc->soc = of_device_get_match_data(&pdev->dev);
-> >  
-> >  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> >  	pc->regs = devm_ioremap_resource(&pdev->dev, res);
-> >  	if (IS_ERR(pc->regs))
-> >  		return PTR_ERR(pc->regs);
-> >  
-> > -	for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
-> > +	/* Check if we have set 'num-pwms' in DTs. */
-> > +	ret = of_property_read_u32(np, "mediatek,num-pwms", &num_pwms);
-> > +	if (ret < 0) {
-> > +		/* If no, fallback to use SoC data for backwards compatibility. */
-> > +		if (pc->soc->num_pwms) {
-> > +			num_pwms = pc->soc->num_pwms;
-> 
-> Maybe that's bike shedding, but I think it would be better to carve out the
-> num_pwms from the mtk_pwm_platform_data and check against the compatible here.
+Respin of patchset on top of v5.0-rc2 with feedback addressed (thanks!)
 
-I'm not sure how to properly curve it out? I think we still need this
-variable to save the specific value for some legacy SoCs (with older
-DTs).
+Introduce a new generic property "quartz-load-femtofarad"
+to specify the quartz load.
+The default value is selected to match the current Linux
+drivers, so there are no behavior changes if a binding do not
+specify the quarts-load.
+The unit is femtofarads because several RTC's define the quarts load
+in steps of 0.5 pF.
 
-> With a expressive comment it will help other driver developers to not start
-> adding num_pwms in the platform data in their first attempt.
+The two drivers rtc-pcf8523 and rtc-pcf85063 are both
+updated to use the new binding.
+Previously pcf8523 hardcoded the quartz load to 12.5pF, and
+pcf85063 used the reset default of 7pF.
+With this patchset it can now be specified in the DT,
+if the defaults are not OK.
 
-Definitely.
+The patch-set is tested on a proprietary board for both
+RTC variants (v2 variant only as there was only trivial changes in v3).
 
-Ryder
-> 
-> > +		} else {
-> > +			dev_err(&pdev->dev, "failed to get pwm number: %d\n", ret);
-> > +			return ret;
-> > +		}
-> > +	}
-> > +
-> > +	for (i = 0; i < num_pwms + 2 && pc->soc->has_clks; i++) {
-> >  		pc->clks[i] = devm_clk_get(&pdev->dev, mtk_pwm_clk_name[i]);
-> >  		if (IS_ERR(pc->clks[i])) {
-> >  			dev_err(&pdev->dev, "clock: %s fail: %ld\n",
-> > @@ -260,7 +269,7 @@ static int mtk_pwm_probe(struct platform_device *pdev)
-> >  	pc->chip.dev = &pdev->dev;
-> >  	pc->chip.ops = &mtk_pwm_ops;
-> >  	pc->chip.base = -1;
-> > -	pc->chip.npwm = data->num_pwms;
-> > +	pc->chip.npwm = num_pwms;
-> >  
-> >  	ret = pwmchip_add(&pc->chip);
-> >  	if (ret < 0) {
-> > 
+	Sam
+
+v3:
+- Document generic property "quartz-load-femtofarads" in rtc.txt (Rob)
+- Fix indent several places - ups (Alexandre)
+- Use the simpler name "rtc" in DT examples (Rob)
+- Collected "Reviewed by's"
+
+v2:
+- Introduce a generic property "quartz-load-femtofarads"
+- Add femtofarads to property-units.txt
+- Make the changes backward compatible
+- Reduced logging
+- Warn, when we continue with a default value
+- Tested, by Søren Andersen, on real HW
+- Rebased on top of v5.0-rc1
+
+        Sam
+
+Sam Ravnborg (6):
+      devicetree: property-units: Add femtofarads unit
+      dt-bindings: rtc: Add quartz-load-femtofarads property
+      dt-binding: pcf8523: add xtal load capacitance
+      dt-binding: pcf85063: add xtal load capacitance
+      rtc: pcf8523: set xtal load capacitance from DT
+      rtc: pcf85063: set xtal load capacitance from DT
+
+ .../devicetree/bindings/property-units.txt         |  1 +
+ .../devicetree/bindings/rtc/nxp,pcf85063.txt       | 18 ++++++++++
+ .../devicetree/bindings/rtc/nxp,pcf8523.txt        | 18 ++++++++++
+ Documentation/devicetree/bindings/rtc/rtc.txt      | 18 +++++-----
+ drivers/rtc/rtc-pcf85063.c                         | 39 ++++++++++++++++++++++
+ drivers/rtc/rtc-pcf8523.c                          | 28 +++++++++++-----
+ 6 files changed, 106 insertions(+), 16 deletions(-)
