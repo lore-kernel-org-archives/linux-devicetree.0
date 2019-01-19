@@ -1,41 +1,56 @@
-From: Rob Herring <robherring2@gmail.com>
-Subject: [GIT PULL] Devicetree fix for 5.0-rc
-Date: Sat, 19 Jan 2019 10:43:42 -0600
-Message-ID: <CAL_JsqKbma-kw0hrdBa2e7CLzSBsEy7dJZwvj+BrLjqzhuCPQA@mail.gmail.com>
+From: Jianxin Pan <jianxin.pan@amlogic.com>
+Subject: [PATCH] MAINTAINERS: Add entry for Amlogic NAND controller driver
+Date: Sun, 20 Jan 2019 01:02:35 +0800
+Message-ID: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Michael Ellerman <mpe@ellerman.id.au>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
+Cc: Rob Herring <robh@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Linus,
+Add entry for Amlogic NAND controller driver and its bindings[0].
 
-Please pull one more DT fix.
+[0] https://lore.kernel.org/lkml/1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com/
 
-Rob
+Signed-off-by: Liang Yang <liang.yang@amlogic.com>
+Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+---
+ MAINTAINERS | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
-The following changes since commit 3705add0b783e0deeb6646ba0311bf214fe52b0a:
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0abecc5..7d976a1 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9628,6 +9628,13 @@ F:	drivers/media/platform/meson/ao-cec.c
+ F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
+ T:	git git://linuxtv.org/media_tree.git
+ 
++MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
++M:	Liang Yang <liang.yang@amlogic.com>
++L:	linux-mtd@lists.infradead.org
++S:	Maintained
++F:	drivers/mtd/nand/raw/meson_*
++F:	Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
++
+ MICROBLAZE ARCHITECTURE
+ M:	Michal Simek <monstr@monstr.eu>
+ W:	http://www.monstr.eu/fdt/
+-- 
+1.9.1
 
-  dt-bindings: reset: meson-axg: fix SPDX license id (2019-01-16 12:50:27 -0600)
 
-are available in the Git repository at:
-
-  git://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git
-tags/devicetree-fixes-for-5.0-2
-
-for you to fetch changes up to 75a080cde08d2dcba19ee864f9732094d93fab41:
-
-  powerpc: chrp: Use of_node_is_type to access device_type (2019-01-19
-10:35:42 -0600)
-
-----------------------------------------------------------------
-A single build fix for powerpc due to device_node.type removal
-
-----------------------------------------------------------------
-Rob Herring (1):
-      powerpc: chrp: Use of_node_is_type to access device_type
-
- arch/powerpc/platforms/chrp/setup.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
