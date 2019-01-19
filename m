@@ -1,44 +1,54 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH v2 0/2] Add support for IR on Allwinner A64
-Date: Sat, 19 Jan 2019 21:18:58 +0100
-Message-ID: <20190119201900.26592-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBO4MR3RAKGQEOOTUIBY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+From: Brian Masney <masneyb@onstation.org>
+Subject: [PATCH v6 10/15] arm64: dts: qcom: pm8005: add interrupt controller properties
+Date: Sat, 19 Jan 2019 15:42:47 -0500
+Message-ID: <20190119204252.18370-11-masneyb@onstation.org>
+References: <20190119204252.18370-1-masneyb@onstation.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com
+Cc: shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-IR on A64 is nothing special and very similar to IR on A13 to the point
-that same driver can be used.
+Add interrupt controller properties now that spmi-gpio is a proper
+hierarchical IRQ chip. The interrupts property is no longer needed so
+remove it.
 
-Following patches just add necessary DT changes.
+This change was not tested on any hardware but the same change was
+tested on qcom-pm8941.dtsi using a LG Nexus 5 (hammerhead) phone with
+no issues.
 
-Best regards,
-Jernej
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+Changes since v5:
+- None  
 
-Changes from v1:
-- removed new dual compatible because IR peripheral is basically the
-  same as in A13
-- removed DT binding patch
+Changes since v4:
+- None  
 
-Igors Makejevs (1):
-  arm64: dts: allwinner: a64: Add IR node
+Patch introduced in v4.
 
-Jernej Skrabec (1):
-  arm64: dts: allwinner: a64: Orange Pi Win: Enable IR
+ arch/arm64/boot/dts/qcom/pm8005.dtsi | 6 ++----
+ 1 file changed, 2 insertions(+), 4 deletions(-)
 
- .../dts/allwinner/sun50i-a64-orangepi-win.dts   |  4 ++++
- arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi   | 17 +++++++++++++++++
- 2 files changed, 21 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/qcom/pm8005.dtsi b/arch/arm64/boot/dts/qcom/pm8005.dtsi
+index 4d5aca3eeb69..c0ddf128136c 100644
+--- a/arch/arm64/boot/dts/qcom/pm8005.dtsi
++++ b/arch/arm64/boot/dts/qcom/pm8005.dtsi
+@@ -16,10 +16,8 @@
+ 			reg = <0xc000>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
+-				     <0 0xc1 0 IRQ_TYPE_NONE>,
+-				     <0 0xc2 0 IRQ_TYPE_NONE>,
+-				     <0 0xc3 0 IRQ_TYPE_NONE>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
+ 
+ 	};
 -- 
-2.20.1
+2.17.2
