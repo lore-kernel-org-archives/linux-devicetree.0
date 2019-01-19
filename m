@@ -1,70 +1,42 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
- bme680
-Date: Sat, 19 Jan 2019 16:57:09 +0000
-Message-ID: <20190119165709.5045a18b@archlinux>
-References: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
-        <20190111205359.14158-2-sebastien.bourdelin@gmail.com>
-        <20190112182837.4cc42743@archlinux>
-        <4768d945-61aa-a8ab-3e41-68b4f861cc69@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH 2/2] dt-bindings: panel: td028ttec1: add backlight property
+Date: Sat, 19 Jan 2019 19:21:31 +0100
+Message-ID: <20190119182131.9341-3-andreas@kemnade.info>
+References: <20190119182131.9341-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4768d945-61aa-a8ab-3e41-68b4f861cc69@gmail.com>
+In-Reply-To: <20190119182131.9341-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: sebastien bourdelin <sebastien.bourdelin@gmail.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
+To: tomi.valkeinen@ti.com, airlied@linux.ie, daniel@ffwll.ch, laurent.pinchart@ideasonboard.com, sre@kernel.org, dri-devel@lists.freedesktop.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 14 Jan 2019 15:17:10 -0500
-sebastien bourdelin <sebastien.bourdelin@gmail.com> wrote:
+This add an additional backlight property as described
+in panel-common.txt
 
-> On 1/12/19 1:28 PM, Jonathan Cameron wrote:
-> > On Fri, 11 Jan 2019 15:53:59 -0500
-> > Sebastien Bourdelin <sebastien.bourdelin@gmail.com> wrote:
-> >  
-> >> BME680 is a pressure/temperature/humidity/voc sensor.
-> >>
-> >> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>  
-> > Hmm. We could add the VDD and VDIO regulators perhaps.
-> > Driver assumes they are on currently but we'll get a board where control
-> > is needed sooner or later.  I'm not that fussed about this though.  
-> 
-> If that's fine with you, i prefer to leave it as it is right now as i 
-> don't feel
-> 
-> confident enough to correctly explain it in the Documentation.
-> 
-> But if you have more input, you are more then welcome!
-Given we aren't planning to do more than turn them on and that'll work
-fine with stub regulators (so they can effectively be optional for ever),
-there is no particular need to put them in now if you prefer not to.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+ Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Jonathan
-
-> 
-> > Jonathan
-> >  
-> >> ---
-> >>   .../devicetree/bindings/iio/chemical/bme680.txt       | 11 +++++++++++
-> >>   1 file changed, 11 insertions(+)
-> >>   create mode 100644 Documentation/devicetree/bindings/iio/chemical/bme680.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/iio/chemical/bme680.txt b/Documentation/devicetree/bindings/iio/chemical/bme680.txt
-> >> new file mode 100644
-> >> index 000000000000..885a1b918340
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/iio/chemical/bme680.txt
-> >> @@ -0,0 +1,11 @@
-> >> +Bosch Sensortec BME680 pressure/temperature/humidity/voc sensors
-> >> +
-> >> +Required properties:
-> >> +- compatible: must be "bosch,bme680"
-> >> +
-> >> +Example:
-> >> +
-> >> +bme680@77 {
-> >> +          compatible = "bosch,bme680";
-> >> +          reg = <0x77>;
-> >> +};  
+diff --git a/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+index ed34253d9fb1..898e06ecf4ef 100644
+--- a/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
++++ b/Documentation/devicetree/bindings/display/panel/tpo,td028ttec1.txt
+@@ -6,6 +6,7 @@ Required properties:
+ 
+ Optional properties:
+ - label: a symbolic name for the panel
++- backlight: phandle of the backlight device
+ 
+ Required nodes:
+ - Video port for DPI input
+@@ -21,6 +22,7 @@ lcd-panel: td028ttec1@0 {
+ 	spi-cpha;
+ 
+ 	label = "lcd";
++	backlight = <&backlight>;
+ 	port {
+ 		lcd_in: endpoint {
+ 			remote-endpoint = <&dpi_out>;
+-- 
+2.11.0
