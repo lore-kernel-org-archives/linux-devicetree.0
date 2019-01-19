@@ -1,73 +1,85 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v6 09/15] ARM: dts: qcom: pma8084: add interrupt controller properties
-Date: Sat, 19 Jan 2019 15:42:46 -0500
-Message-ID: <20190119204252.18370-10-masneyb@onstation.org>
-References: <20190119204252.18370-1-masneyb@onstation.org>
+Subject: [PATCH v6 00/15] qcom: spmi: add support for hierarchical IRQ chip
+Date: Sat, 19 Jan 2019 15:42:37 -0500
+Message-ID: <20190119204252.18370-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy.gross@linaro.org, marc.zyngier@arm.com
 Cc: shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add interrupt controller properties now that spmi-gpio is a proper
-hierarchical IRQ chip. The interrupts property is no longer needed so
-remove it.
+This patch series adds hierarchical IRQ chip support to spmi-gpio so
+that device tree consumers can request an IRQ directly from the GPIO
+block rather than having to request an IRQ from the underlying PMIC.
 
-This change was not tested on any hardware but the same change was
-tested on qcom-pm8941.dtsi using a LG Nexus 5 (hammerhead) phone with
-no issues.
+For more background information, see the email thread with Linus
+Walleij's excellent description of the problem at
+https://www.spinics.net/lists/linux-gpio/msg34655.html.
 
-Signed-off-by: Brian Masney <masneyb@onstation.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
+This work was tested on a LG Nexus 5 (hammerhead) phone. My status page
+at https://masneyb.github.io/nexus-5-upstream/ describes what is working
+so far with the upstream kernel.
+
 Changes since v5:
-- None  
+- Patch 4: Set handler to edge or level when the IRQ is mapped.
+- Patch 7: Change IRQ_TYPE_NONE to IRQ_TYPE_EDGE_RISING
+- Patch 14: New patch to validate type when mapping IRQ
 
 Changes since v4:
-- None  
+- Patch 3: Remove unnecessary u16 cast on device_get_match_data()
+- Patch 5: Change '&struct gpiochip' in kernel doc to
+  '&struct gpio_chip'
 
-Chances since v3:
-- None
+High-level changes since v3:
+- Add missing variants to spmi-gpio driver and device tree binding doc
+  that are already in use in device tree.
+- Introduce patch that disassociates the old virq if hwirq mapping
+  already exists and then drop it at the end of the series. This is to
+  not break git bisect for existing boards.
+- Migrate arm64 device tree files.
+- There are 8 new patches in this series and I denoted this in the notes
+  on the relevant patches.
 
- arch/arm/boot/dts/qcom-pma8084.dtsi | 24 ++----------------------
- 1 file changed, 2 insertions(+), 22 deletions(-)
+High-level changes since v2:
+- Dropped patch to mfd/qcom-spmi-pmic.c
+- Patch 3 is new and adds two new functions to gpiolib
+- Patch 6 is new and corrects the only other upstream user of spmi-gpio
 
-diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
-index aac7e73b6872..8f5ea7add20f 100644
---- a/arch/arm/boot/dts/qcom-pma8084.dtsi
-+++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
-@@ -32,28 +32,8 @@
- 			reg = <0xc000>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
--			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
--				     <0 0xc1 0 IRQ_TYPE_NONE>,
--				     <0 0xc2 0 IRQ_TYPE_NONE>,
--				     <0 0xc3 0 IRQ_TYPE_NONE>,
--				     <0 0xc4 0 IRQ_TYPE_NONE>,
--				     <0 0xc5 0 IRQ_TYPE_NONE>,
--				     <0 0xc6 0 IRQ_TYPE_NONE>,
--				     <0 0xc7 0 IRQ_TYPE_NONE>,
--				     <0 0xc8 0 IRQ_TYPE_NONE>,
--				     <0 0xc9 0 IRQ_TYPE_NONE>,
--				     <0 0xca 0 IRQ_TYPE_NONE>,
--				     <0 0xcb 0 IRQ_TYPE_NONE>,
--				     <0 0xcc 0 IRQ_TYPE_NONE>,
--				     <0 0xcd 0 IRQ_TYPE_NONE>,
--				     <0 0xce 0 IRQ_TYPE_NONE>,
--				     <0 0xcf 0 IRQ_TYPE_NONE>,
--				     <0 0xd0 0 IRQ_TYPE_NONE>,
--				     <0 0xd1 0 IRQ_TYPE_NONE>,
--				     <0 0xd2 0 IRQ_TYPE_NONE>,
--				     <0 0xd3 0 IRQ_TYPE_NONE>,
--				     <0 0xd4 0 IRQ_TYPE_NONE>,
--				     <0 0xd5 0 IRQ_TYPE_NONE>;
-+			interrupt-controller;
-+			#interrupt-cells = <2>;
- 		};
- 
- 		pma8084_mpps: mpps@a000 {
+High-level changes since v1:
+- Patches 1 and 2 are new. This brought in a third subsystem (mfd).
+- I have detailed changelogs attached to the notes on patches 3-5.
+
+Brian Masney (15):
+  dt-bindings: pinctrl: qcom-pmic-gpio: add qcom,pmi8998-gpio binding
+  pinctrl: qcom: spmi-gpio: add support for three new variants
+  pinctrl: qcom: spmi-gpio: hardcode IRQ counts
+  spmi: pmic-arb: convert to v2 irq interfaces to support hierarchical
+    IRQ chips
+  gpio: add irq domain activate/deactivate functions
+  spmi: pmic-arb: disassociate old virq if hwirq mapping already exists
+  qcom: spmi-gpio: add support for hierarchical IRQ chip
+  ARM: dts: qcom: pm8941: add interrupt controller properties
+  ARM: dts: qcom: pma8084: add interrupt controller properties
+  arm64: dts: qcom: pm8005: add interrupt controller properties
+  arm64: dts: qcom: pm8998: add interrupt controller properties
+  arm64: dts: qcom: pmi8994: add interrupt controller properties
+  arm64: dts: qcom: pmi8998: add interrupt controller properties
+  spmi: pmic-arb: validate type when mapping IRQ
+  spmi: pmic-arb: revert "disassociate old virq if hwirq mapping already
+    exists"
+
+ .../bindings/pinctrl/qcom,pmic-gpio.txt       |   1 +
+ arch/arm/boot/dts/qcom-pm8941.dtsi            |  38 +----
+ arch/arm/boot/dts/qcom-pma8084.dtsi           |  24 +--
+ arch/arm64/boot/dts/qcom/pm8005.dtsi          |   6 +-
+ arch/arm64/boot/dts/qcom/pm8998.dtsi          |  28 +---
+ arch/arm64/boot/dts/qcom/pmi8994.dtsi         |  12 +-
+ arch/arm64/boot/dts/qcom/pmi8998.dtsi         |  16 +-
+ drivers/gpio/gpiolib.c                        |  37 +++++
+ drivers/pinctrl/qcom/pinctrl-spmi-gpio.c      | 140 +++++++++++++++---
+ drivers/spmi/spmi-pmic-arb.c                  |  74 ++++++---
+ include/linux/gpio/driver.h                   |   5 +
+ 11 files changed, 225 insertions(+), 156 deletions(-)
+
 -- 
 2.17.2
