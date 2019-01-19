@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v6 05/15] gpio: add irq domain activate/deactivate functions
-Date: Sat, 19 Jan 2019 15:42:42 -0500
-Message-ID: <20190119204252.18370-6-masneyb@onstation.org>
+Subject: [PATCH v6 14/15] spmi: pmic-arb: validate type when mapping IRQ
+Date: Sat, 19 Jan 2019 15:42:51 -0500
+Message-ID: <20190119204252.18370-15-masneyb@onstation.org>
 References: <20190119204252.18370-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
@@ -10,94 +10,68 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the two new functions gpiochip_irq_domain_activate and
-gpiochip_irq_domain_deactivate that can be used as the activate and
-deactivate functions in the struct irq_domain_ops. This is for
-situations where only gpiochip_{lock,unlock}_as_irq needs to be called.
-SPMI and SSBI GPIO are two users that will initially use these
-functions.
+qpnpint_irq_domain_map did not validate the IRQ type and this can cause
+IRQs to not work as expected if an unsupported type (such as
+IRQ_TYPE_NONE) is passed in. Now that spmi-gpio is a hierarchical IRQ
+controller, and all device tree bindings have been updated, add
+additional validation to the type field.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
-Suggested-by: Stephen Boyd <sboyd@kernel.org>
-Reviewed-by: Stephen Boyd <sboyd@kernel.org>
 ---
-Changes since v5:
-- None
+Patch introduced in v6
 
-Changes since v4:
-- Change '&struct gpiochip' in kernel doc to '&struct gpio_chip'
+ drivers/spmi/spmi-pmic-arb.c | 21 ++++++++++++++-------
+ 1 file changed, 14 insertions(+), 7 deletions(-)
 
-Changes since v3:
-- Correct kernel doc syntax: 'struct &foo' -> '&struct foo'
-  '&func' -> 'func()'
-
- drivers/gpio/gpiolib.c      | 37 +++++++++++++++++++++++++++++++++++++
- include/linux/gpio/driver.h |  5 +++++
- 2 files changed, 42 insertions(+)
-
-diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-index 1651d7f0a303..361a09c8138a 100644
---- a/drivers/gpio/gpiolib.c
-+++ b/drivers/gpio/gpiolib.c
-@@ -1775,6 +1775,43 @@ static const struct irq_domain_ops gpiochip_domain_ops = {
- 	.xlate	= irq_domain_xlate_twocell,
- };
+diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
+index bc7dc1d6e4b2..5666b99c9a92 100644
+--- a/drivers/spmi/spmi-pmic-arb.c
++++ b/drivers/spmi/spmi-pmic-arb.c
+@@ -740,9 +740,9 @@ static int qpnpint_irq_domain_translate(struct irq_domain *d,
+ }
  
-+/**
-+ * gpiochip_irq_domain_activate() - Lock a GPIO to be used as an IRQ
-+ * @domain: The IRQ domain used by this IRQ chip
-+ * @data: Outermost irq_data associated with the IRQ
-+ * @reserve: If set, only reserve an interrupt vector instead of assigning one
-+ *
-+ * This function is a wrapper that calls gpiochip_lock_as_irq() and is to be
-+ * used as the activate function for the &struct irq_domain_ops. The host_data
-+ * for the IRQ domain must be the &struct gpio_chip.
-+ */
-+int gpiochip_irq_domain_activate(struct irq_domain *domain,
-+				 struct irq_data *data, bool reserve)
-+{
-+	struct gpio_chip *chip = domain->host_data;
-+
-+	return gpiochip_lock_as_irq(chip, data->hwirq);
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_irq_domain_activate);
-+
-+/**
-+ * gpiochip_irq_domain_deactivate() - Unlock a GPIO used as an IRQ
-+ * @domain: The IRQ domain used by this IRQ chip
-+ * @data: Outermost irq_data associated with the IRQ
-+ *
-+ * This function is a wrapper that will call gpiochip_unlock_as_irq() and is to
-+ * be used as the deactivate function for the &struct irq_domain_ops. The
-+ * host_data for the IRQ domain must be the &struct gpio_chip.
-+ */
-+void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
-+				    struct irq_data *data)
-+{
-+	struct gpio_chip *chip = domain->host_data;
-+
-+	return gpiochip_unlock_as_irq(chip, data->hwirq);
-+}
-+EXPORT_SYMBOL_GPL(gpiochip_irq_domain_deactivate);
-+
- static int gpiochip_to_irq(struct gpio_chip *chip, unsigned offset)
+ 
+-static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
+-				   struct irq_domain *domain, unsigned int virq,
+-				   irq_hw_number_t hwirq, unsigned int type)
++static int qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
++				  struct irq_domain *domain, unsigned int virq,
++				  irq_hw_number_t hwirq, unsigned int type)
  {
- 	if (!gpiochip_irqchip_irq_valid(chip, offset))
-diff --git a/include/linux/gpio/driver.h b/include/linux/gpio/driver.h
-index 07cddbf45186..01497910f023 100644
---- a/include/linux/gpio/driver.h
-+++ b/include/linux/gpio/driver.h
-@@ -472,6 +472,11 @@ int gpiochip_irq_map(struct irq_domain *d, unsigned int irq,
- 		     irq_hw_number_t hwirq);
- void gpiochip_irq_unmap(struct irq_domain *d, unsigned int irq);
+ 	irq_flow_handler_t handler;
+ 	unsigned int old_virq;
+@@ -756,11 +756,15 @@ static void qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
  
-+int gpiochip_irq_domain_activate(struct irq_domain *domain,
-+				 struct irq_data *data, bool reserve);
-+void gpiochip_irq_domain_deactivate(struct irq_domain *domain,
-+				    struct irq_data *data);
+ 	if (type & IRQ_TYPE_EDGE_BOTH)
+ 		handler = handle_edge_irq;
+-	else
++	else if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
+ 		handler = handle_level_irq;
++	else
++		return -EINVAL;
+ 
+ 	irq_domain_set_info(domain, virq, hwirq, &pmic_arb_irqchip, pmic_arb,
+ 			    handler, NULL, NULL);
 +
- void gpiochip_set_chained_irqchip(struct gpio_chip *gpiochip,
- 		struct irq_chip *irqchip,
- 		unsigned int parent_irq,
++	return 0;
+ }
+ 
+ static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
+@@ -777,9 +781,12 @@ static int qpnpint_irq_domain_alloc(struct irq_domain *domain,
+ 	if (ret)
+ 		return ret;
+ 
+-	for (i = 0; i < nr_irqs; i++)
+-		qpnpint_irq_domain_map(pmic_arb, domain, virq + i, hwirq + i,
+-				       type);
++	for (i = 0; i < nr_irqs; i++) {
++		ret = qpnpint_irq_domain_map(pmic_arb, domain, virq + i,
++					     hwirq + i, type);
++		if (ret)
++			return ret;
++	}
+ 
+ 	return 0;
+ }
 -- 
 2.17.2
