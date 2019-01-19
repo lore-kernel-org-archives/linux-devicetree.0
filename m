@@ -1,954 +1,262 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH] iio: light: add driver support for MAX44009
-Date: Sat, 19 Jan 2019 18:53:19 +0000
-Message-ID: <20190119185319.4b20b939@archlinux>
-References: <20190117065623.12169-1-bobbyeshleman@gmail.com>
+From: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Sat, 19 Jan 2019 21:11:01 +0200
+Message-ID: <4115ad75-22f7-d9ae-c38f-e0ab61fb6655@gmail.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <efb4e1c1-0d13-bed7-d262-284fc1a0c9ab@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117065623.12169-1-bobbyeshleman@gmail.com>
+In-Reply-To: <efb4e1c1-0d13-bed7-d262-284fc1a0c9ab@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Robert Eshleman <bobbyeshleman@gmail.com>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Dan Murphy <dmurphy@ti.com>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 16 Jan 2019 22:56:23 -0800
-Robert Eshleman <bobbyeshleman@gmail.com> wrote:
+Hi Jacek et al,
 
-Hi Robert,
-
-Note I review drivers backwards, so comments may make more sense that
-way around.
-
-> The MAX44009 is a low-power ambient light sensor from Maxim Integrated.
-> It differs from the MAX44000 in that it doesn't have proximity sensing and that
-> it requires far less current (1 micro-amp vs 5 micro-amps). The register
-> mapping and feature set between the two are different enough to require a new
-> driver for the MAX44009.
+On 17/01/2019 23.08, Jacek Anaszewski wrote:
+> On 1/16/19 11:55 AM, Pavel Machek wrote:
+>> Hi!
+>>
+>>> On 1/15/19 4:22 PM, Pavel Machek wrote:
+>>>> Hi!
+>>>>
+>>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
+>>>>>> +XX - Do not care ignored by the driver
+>>>>>> +RR - is the 8 bit Red LED value
+>>>>>> +GG - is the 8 bit Green LED value
+>>>>>> +BB - is the 8 bit Blue LED value
+>>>>>> +
+>>>>>> +Example:
+>>>>>> +LED module output 4 of the LP5024 will be a yellow color:
+>>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
+>>>>>> +
+>>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
+>>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
+>>>>>> +
+>>>>>> +LED banked RGBs of the LP5036 will be a white color:
+>>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
+>>>>>
+>>>>> This part with example cans remain in Documentation/leds if you
+>>>>>> like.
+>>>>
+>>>> Does it actually work like that on hardware?
+>>>
+>>> What?
+>>
+>> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
+>> does it actually produce white? With all the different RGB modules
+>> manufacturers can use with lp5024P?
+>>
+>> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
+>> it actually produce yellow, with all the different RGB modules
+>> manufacturers can use with lp5024P?
 > 
-> Developed and tested with a BeagleBone Black and UDOO Neo (i.MX6SX)
+> Vesa proposed using icc-profiles to make the colors looking similar
+> on various LEDs. It was in reply to your message with requirements
+> for RGB LED class.
 > 
-> Supported features:
+> For this device we can however do without it. Videos showing the
+> performance of this particular device with a reference design using
+> RGB LEDs prove it works nice.
 > 
-> * Rising and falling illuminance threshold
->   events
-
-Not really on this one.  You support using them as a trigger, which
-is not how threshold events should be handled in IIO. Please
-report them as events.   This device doesn't seem  to have
-a trigger that can be used in general, so you shouldn't provide
-one.
-
-Userspace can use the event to decide to do a read if it wants to
-follow the classic move the thresholds so as to detect big
-'changes' in light intensity.
-
-Various other comments inline.  Quite a bit of style cleanup
-needed as well, please check the kernel docs for coding style
-https://www.kernel.org/doc/Documentation/process/coding-style.rst
-
-Also take a look at other IIO drivers for the bits that are
-noted in there as varying across the kernel.
-
-Whilst there is quite a bit to work on in here yet, great to see
-support for this new part! Looking forward to v2.
-
-Jonathan
-
+>>>> Is it supposed to support "normal" RGB colors as seen on monitors?
+>>>
+>>> Monitors are not an application for this part.
+>>
+>> You did not answer the question. When you talk about yellow, is it
+>> same yellow the rest of world talks about?
+>>
+>>>> Because 100% PWM on all channels does not result in white on hardware
+>>>> I have.
+>>>
+>>> I don't know I am usually blinded by the light and have no diffuser over
+>>> the LEDs to disperse the light so when I look I see all 3 colors.
+>>
+>> How can we have useful discussion about colors when you don't see the
+>> colors?
+>>
+>> Place a piece of paper over the LEDs....
+>>
+>>>> But...
+>>>>
+>>>> I believe we should have a reasonable design before we do something
+>>>> like this. There's no guarantee someone will not use lp50xx with just
+>>>> the white LEDs for example. How will this work? Plus existing hardware
+>>>> already uses three separate LEDs for RGB LED. Why not provide same
+>>>> interface?
+>>>
+>>> Which existing hardware?  Are they using this part?
+>>
+>> Nokia N900. They are not using this part, but any interface we invent
+>> should work there, too.
+>>
+>>> <rant>
+>>> Why are we delaying getting the RGB framework or HSV in?
+>>> I would rather design against something you want instead of having
+>>> everyone complain about every implementation I post.
+>>> </rant>
+>>
+>> Because you insist on creating new kernel interfaces, when existing
+>> interfaces work, and are doing that badly.
+>>
+>> Because your patches are of lower quality than is acceptable for linux
+>> kernel.
 > 
-> * Illuminance triggered buffers
+> Lets keep things civil please.
 > 
-> * Integration time
+> This sentence should look familiar to you - it's not the first time
+> you resort to this type of narration.
 > 
-> https://datasheets.maximintegrated.com/en/ds/MAX44009.pdf
+>> Because you don't seem to be reading the emails.
+>>
+>> I sent list of requirements for RGB led support. This does not meet
+>> them.
 > 
-> Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
-
-> ---
->  .../bindings/iio/light/max44009.txt           |  25 +
->  drivers/iio/light/Kconfig                     |  13 +
->  drivers/iio/light/Makefile                    |   1 +
->  drivers/iio/light/max44009.c                  | 696 ++++++++++++++++++
->  4 files changed, 735 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/iio/light/max44009.txt
->  create mode 100644 drivers/iio/light/max44009.c
+> And you didn't respond to the comments from Vesa. The requirements
+> has not been acclaimed.
 > 
-> diff --git a/Documentation/devicetree/bindings/iio/light/max44009.txt b/Documentation/devicetree/bindings/iio/light/max44009.txt
-> new file mode 100644
-> index 000000000000..220c2808dca1
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/iio/light/max44009.txt
-> @@ -0,0 +1,25 @@
-> +* MAX44009 Ambient Light Sensor
-> +
-> +Required properties:
-> +
-> +- compatible: should be "maxim,max44009"
-> +- reg: the I2C address of the device (default is <0x4a>)
-> +
-> +Optional properties:
-> +
-> +- interrupts : interrupt mapping for GPIO IRQ. Should be configured with
-> +  IRQ_TYPE_EDGE_FALLING.
-> +
-> +Refer to interrupt-controller/interrupts.txt for generic interrupt client
-> +node bindings.
-> +
-> +Example:
-> +
-> +max44009: max44009@4a {
-> +	compatible = "maxim,max44009";
-> +	reg = <0x4a>;
-> +
-> +	interrupt-parent = <&gpio1>;
-> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
-> +};
-> +
-> diff --git a/drivers/iio/light/Kconfig b/drivers/iio/light/Kconfig
-> index 36f458433480..cda544f1047d 100644
-> --- a/drivers/iio/light/Kconfig
-> +++ b/drivers/iio/light/Kconfig
-> @@ -299,6 +299,19 @@ config MAX44000
->  	 To compile this driver as a module, choose M here:
->  	 the module will be called max44000.
->  
-> +config MAX44009
-> +	tristate "MAX44009 Ambient Light Sensor"
-> +	depends on I2C
-> +	select IIO_BUFFER
-> +	select IIO_TRIGGERED_BUFFER
-> +	select IIO_TRIGGERED_EVENT
-> +	help
-> +	 Say Y here if you want to build support for Maxim Integrated's
-> +	 MAX44009 ambient light sensor device.
-> +
-> +	 To compile this driver as a module, choose M here:
-> +	 the module will be called max44009.
-> +
->  config OPT3001
->  	tristate "Texas Instruments OPT3001 Light Sensor"
->  	depends on I2C
-> diff --git a/drivers/iio/light/Makefile b/drivers/iio/light/Makefile
-> index 286bf3975372..e40794fbb435 100644
-> --- a/drivers/iio/light/Makefile
-> +++ b/drivers/iio/light/Makefile
-> @@ -28,6 +28,7 @@ obj-$(CONFIG_SENSORS_LM3533)	+= lm3533-als.o
->  obj-$(CONFIG_LTR501)		+= ltr501.o
->  obj-$(CONFIG_LV0104CS)		+= lv0104cs.o
->  obj-$(CONFIG_MAX44000)		+= max44000.o
-> +obj-$(CONFIG_MAX44009)		+= max44009.o
->  obj-$(CONFIG_OPT3001)		+= opt3001.o
->  obj-$(CONFIG_PA12203001)	+= pa12203001.o
->  obj-$(CONFIG_RPR0521)		+= rpr0521.o
-> diff --git a/drivers/iio/light/max44009.c b/drivers/iio/light/max44009.c
-> new file mode 100644
-> index 000000000000..e15aa8eeb2f6
-> --- /dev/null
-> +++ b/drivers/iio/light/max44009.c
-> @@ -0,0 +1,696 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * max44009.c - Support for MAX44009 Ambient Light Sensor
-> + *
-> + * Copyright (c) 2019 Robert Eshleman <bobbyeshleman@gmail.com>
-> + *
-> + * This program is free software; you can redistribute it and/or modify
-> + * it under the terms of the GNU General Public License version 2 as
-> + * published by the Free Software Foundation.
-If you have SPDX, no need to have a license statement.
-> + *
-> + *
-> + * Datasheet: https://datasheets.maximintegrated.com/en/ds/MAX44009.pdf
-> + *
-> + * TODO: Support continuous mode and processed event value (IIO_EV_INFO_VALUE)
-> + *
-> + * Default I2C address: 0x4a
-> + *
-No point in this blank line.
+>>> It is not a normal RGB driver.  The device collates the individual RGB
+>>> clusters into a single brightness register and you can modify the 
+>>> intensity of the individual
+>>> LEDs via other registers.  If brightness is 0 then the cluster is OFF 
+>>> regardless of the color
+>>> set in the individual registers.
+>>
+>> I understand that. So just set cluster brightness to 255 and you have
+>> normal RGB driver you can control with existing interfaces. You don't
+>> have to use every feature your hardware has.
+> 
+> This feature is one of the core advantages of this device.
+> 
+>> You did not answer the "what if someone uses this with all white LEDs"
+>> question.
+>>
+>> You know what? First, submit driver with similar functionality to
+>> existing RGB drivers, using same interface existing drivers are
+>> using. When that is accepted, we can talk about extending
+>> kernel<->user interfaces.
+> 
+> This stands in contradiction with my request.
+> 
+> Provided there will be no other NAKs, I am eager to accept the
+> interface with color and brightness files.
+> 
+> Moreover, I think that RGB LED class with configurable
+> brightness-model, and with possible color range adjustments via
+> icc-profiles or something similar, is the best solution that has been 
+> proposed so far. It is just flexible.
+> 
+> I'd like to capitalize on the ideas shared in this thread and have
+> finally LED RGB class materialized.
+> 
 
-> + */
-> +
-> +#include <linux/bits.h>
-> +#include <linux/i2c.h>
-> +#include <linux/iio/buffer.h>
-> +#include <linux/iio/events.h>
-> +#include <linux/iio/iio.h>
-> +#include <linux/iio/sysfs.h>
-> +#include <linux/iio/trigger.h>
-> +#include <linux/iio/trigger_consumer.h>
-> +#include <linux/iio/triggered_buffer.h>
-> +#include <linux/init.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/regmap.h>
-> +#include <linux/util_macros.h>
-> +
-> +#define MAX44009_DRV_NAME "max44009"
-> +#define MAX44009_IRQ_NAME "max44009_event"
+I have now updated my github code with my understanding of the discussion:
+https://github.com/vesajaaskelainen/linux/tree/wip-multi-color-led
 
-Unless used more than once, no point in defines like this.  Just put
-the string inline.
+Commits:
+- dt-bindings: leds: Introduce linux,default-brightness-model for all leds
+https://github.com/vesajaaskelainen/linux/commit/4ffb21d644056686096226bbede7c8c78b0254c2
+- drivers: leds: Add core support for multi color element LEDs
+https://github.com/vesajaaskelainen/linux/commit/627f38bb78cebc694b8e6d735fb088c87925435d
+- dt-bindings: leds: leds-pwm: Introduce multi color element leds support
+https://github.com/vesajaaskelainen/linux/commit/ef6c5730d621e79ea0b02470caa83bc39439536a
+- WIP: drivers: leds: leds-pwm: Add multi color element LED support.
+https://github.com/vesajaaskelainen/linux/commit/0430a27823d9162926424b32c23be1c53eb9cbe2
 
-> +
-> +/* Registers in datasheet order */
-> +#define MAX44009_REG_STATUS 0x0
-> +#define MAX44009_REG_ENABLE 0x1
-> +#define MAX44009_REG_CFG 0x2
-> +#define MAX44009_REG_LUX_HI 0x3
-> +#define MAX44009_REG_LUX_LO 0x4
-> +#define MAX44009_REG_UPPER_THR 0x5
-> +#define MAX44009_REG_LOWER_THR 0x6
-> +#define MAX44009_REG_THR_TIMER 0x7
-> +
-> +#define MAX44009_INT_TIME_MASK (BIT(2) | BIT(1) | BIT(0))
+First two commits are common and could be taken before I am happy with 
+the pwm led driver changes. This new conditional feature flag makes it a 
+bit harder. Of course one option would be to require it to be enabled.
 
-GENMASK
+Current set of concepts:
+- brightness-model: hardware, onoff, linear
+   - could be extended in future with other modes like hsv if wanted
+- led_common_setup_of: helper for setting up common parts of led class 
+device from devicetree.
+- led_color_element_setup_of: helper for setting up color element parts 
+of led class device from devicetree.
+- led_scale_color_elements: single point helper for handling 
+brightness-model.
+- From user space point-of-view atomic changes for color elements and 
+brightness.
 
-> +#define MAX44009_INT_TIME_SHIFT (0)
-> +
-> +#define MAX44009_MANUAL_MODE_MASK BIT(6)
-> +
-> +/* The maxmimum raw rising threshold for the max44009 */
-> +#define MAX44009_MAXIMUM_THRESHOLD 8355840
-> +
-> +#define MAX44009_HI_NIBBLE(reg) (((reg) >> 4) & 0xf)
-> +#define MAX44009_LO_NIBBLE(reg) ((reg) & 0xf)
-> +
-> +#define MAX44009_EXP_MASK 0xf00
-> +#define MAX44009_EXP_RSHIFT 8
-> +#define MAX44009_LUX_EXP(reg)	                                              \
-> +	(1 << (((reg) & MAX44009_EXP_MASK) >> MAX44009_EXP_RSHIFT))
-> +#define MAX44009_LUX_MANT(reg) ((reg) & 0xff)
-> +
-> +#define MAX44009_LUX(reg) (MAX44009_LUX_EXP(reg) * MAX44009_LUX_MANT(reg))
+Sysfs interfaces:
+- brightness_model: Change of brightness model on the fly. Similar if as 
+trigger selection.
+- color: configuring all color element values as array of values with 
+support for optional brightness entry as last value.
+- color_names: information for user space about color element values in 
+'color' array.
+- max_color: information for user space about maximum values for entries 
+in 'color' array.
 
-These are complex enough that a few small functions with documentation
-would be better than macros.
+Example usage:
 
-> +
-> +#define MAX44009_THRESH_MANT(reg) ((MAX44009_LO_NIBBLE(reg) << 4) + 15)
-> +#define MAX44009_THRESHOLD(reg)                                                \
-> +	((1 << MAX44009_HI_NIBBLE(reg)) * MAX44009_THRESH_MANT(reg))
-> +
+$ cd /sys/class/leds/status
 
-> +static const u32 max44009_int_time_ns_array[] = {
-> +	800000000,
-> +	400000000,
-> +	200000000,
-> +	100000000,
-> +	50000000, /* Manual mode only */
-> +	25000000, /* Manual mode only */
-> +	12500000, /* Manual mode only */
-> +	6250000,  /* Manual mode only */
-> +};
-> +
-> +static const char max44009_int_time_str[] =
-> +	"0.8 "
-> +	"0.4 "
-> +	"0.2 "
-> +	"0.1 "
-> +	"0.05 "
-> +	"0.025 "
-> +	"0.0125 "
-> +	"0.00625";
-> +
-> +static const u8 max44009_scale_avail_ulux_array[] = {45};
-> +static const char max44009_scale_avail_str[] = "0.045";
+$ ls
+brightness        brightness_model  color             color_names 
+device            max_brightness    max_color         power 
+subsystem         trigger           uevent
 
-If there is only one value, don't provide the avail stuff
-and just put the value in directly where used.
+$ cat brightness_model
+hardware [onoff] linear
+$ cat color_names
+red green blue
+$ cat max_color
+255 255 255
+$ cat brightness
+0
 
-> +
-> +struct max44009_data {
-> +	struct i2c_client *client;
-> +	struct iio_trigger *trigger;
-> +	struct mutex lock;
-> +	int64_t timestamp;
-> +};
-> +
-> +static const struct iio_event_spec max44009_event_spec[] = {
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_RISING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +	{
-> +		.type = IIO_EV_TYPE_THRESH,
-> +		.dir = IIO_EV_DIR_FALLING,
-> +		.mask_separate = BIT(IIO_EV_INFO_VALUE) |
-> +				 BIT(IIO_EV_INFO_ENABLE),
-> +	},
-> +};
-> +
-> +static const struct iio_chan_spec max44009_channels[] = {
-> +	{
-> +		.type = IIO_LIGHT,
-> +		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW),
-> +		.info_mask_shared_by_type = BIT(IIO_CHAN_INFO_INT_TIME),
-> +		.scan_index = 0,
-> +		.scan_type = {
-> +				.sign = 'u',
-> +				.realbits = 24,
-> +				.storagebits = 32,
-> +			},
-> +		.event_spec = max44009_event_spec,
-> +		.num_event_specs = ARRAY_SIZE(max44009_event_spec),
-> +	},
-> +	IIO_CHAN_SOFT_TIMESTAMP(1),
-> +};
-> +
-> +static int max44009_read_reg(struct max44009_data *data, char reg)
-> +{
-> +	struct i2c_client *client = data->client;
-> +	int ret;
-> +
-> +	mutex_lock(&data->lock);
-> +	ret = i2c_smbus_read_byte_data(client, reg);
-> +	if (ret < 0) {
+# Setting up color to not so bright purple with brightness set to 255
+$ echo "32 0 32 255" > color
 
-Same as below.
+# Setting up color to a bit brighter purple with brightness
+$ echo "128 0 128 255" > color
 
-> +		dev_err(&client->dev,
-> +			"failed to read reg 0x%0x, err: %d\n", reg, ret);
-> +		goto err;
-> +	}
-> +
-> +err:
-> +	mutex_unlock(&data->lock);
-> +	return ret;
-> +}
-> +
-> +static int max44009_write_reg(struct max44009_data *data, char reg, char buf)
-> +{
-> +	struct i2c_client *client = data->client;
-> +	int ret;
-> +
-> +	mutex_lock(&data->lock);
+# Activate heartbeat blinking
+$ echo "heartbeat" > trigger
 
-What is this mutex protecting?
+# Now led is blinking with purple color
 
-> +	ret = i2c_smbus_write_byte_data(client, reg, buf);
-> +	if (ret < 0) {
+# Change color to green
+$ echo "0 255 0" > color
 
-returns 0 on success.  So do
-if (ret) as it'll prove simpler to follow for handling later.
+# Now led is blinking with green color
 
-> +		dev_err(&client->dev,
-> +			"failed to write reg 0x%0x, err: %d\n",
-> +			reg, ret);
-> +		goto err;
-> +	}
-> +
-> +err:
-> +	mutex_unlock(&data->lock);
-> +	return ret;
-> +}
-> +
-> +static int max44009_read_int_time(struct max44009_data *data)
-> +{
-> +	int ret = max44009_read_reg(data, MAX44009_REG_CFG);
-> +
-> +	if (ret < 0) {
-> +		return ret;
-> +	}
-> +
-> +	return max44009_int_time_ns_array[ret & MAX44009_INT_TIME_MASK];
-> +}
-> +
-> +static int max44009_write_raw(struct iio_dev *indio_dev,
-> +			      struct iio_chan_spec const *chan, int val,
-> +			      int val2, long mask)
-> +{
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int ret, int_time;
-> +	s64 ns;
-> +
-> +	if (mask == IIO_CHAN_INFO_INT_TIME && chan->type == IIO_LIGHT) {
-> +		ns = val * NSEC_PER_SEC + val2;
-> +		int_time = find_closest_descending(
-> +				ns,
-> +				max44009_int_time_ns_array,
-> +				ARRAY_SIZE(max44009_int_time_ns_array));
-> +
-> +		ret = max44009_read_reg(data, MAX44009_REG_CFG);
-> +		if (ret < 0)
-> +			return ret;
-> +
-> +		ret &= ~MAX44009_INT_TIME_MASK;
-> +		ret |= (int_time << MAX44009_INT_TIME_SHIFT);
-> +		ret |= MAX44009_MANUAL_MODE_MASK;
-> +
-> +		return max44009_write_reg(data, MAX44009_REG_CFG, ret);
-> +	}
-> +	return -EINVAL;
-> +}
-> +
-> +static int max44009_write_raw_get_fmt(struct iio_dev *indio_dev,
-> +				      struct iio_chan_spec const *chan,
-> +				      long mask)
-> +{
-> +	if (mask == IIO_CHAN_INFO_INT_TIME && chan->type == IIO_LIGHT) {
+And in devicetree I had now:
 
-Make sure to get rid of all the brackets where kernel style doesn't have them.
-Basically any single statements if or else blocks (or simiilar).
+multi-color-leds {
+	compatible = "pwm-leds";
 
-> +		return IIO_VAL_INT_PLUS_NANO;
-> +	} else {
+	status-led {
+		label = "status";
+		linux,default-brightness-model = "onoff";
 
-You don't have any others...
+		element-red {
+			pwms = <&ehrpwm0 0 100000 0>;
+		};
+		element-green {
+			pwms = <&ehrpwm1 0 100000 0>;
+		};
+		element-blue {
+			pwms = <&ehrpwm1 1 100000 0>;
+		};
+	};
+};
 
-> +		return IIO_VAL_INT;
-> +	}
-> +}
-> +
-> +#define READ_LUX_XFER_LEN (4)
-> +
-> +static int max44009_read_lux_raw(struct max44009_data *data)
-> +{
-> +	int ret;
-> +	struct i2c_msg xfer[READ_LUX_XFER_LEN];
-> +	u8 luxhireg[1] = {MAX44009_REG_LUX_HI};
-> +	u8 luxloreg[1] = {MAX44009_REG_LUX_LO};
-> +	u8 lo = 0;
-> +	u8 hi = 0;
-> +	u16 reg = 0;
-> +
-> +	xfer[0].addr = data->client->addr;
-> +	xfer[0].flags = 0;
-> +	xfer[0].len = 1;
-> +	xfer[0].buf = luxhireg;
-> +
-> +	xfer[1].addr = data->client->addr;
-> +	xfer[1].flags = I2C_M_RD;
-> +	xfer[1].len = 1;
-> +	xfer[1].buf = &hi;
-> +
-> +	xfer[2].addr = data->client->addr;
-> +	xfer[2].flags = 0;
-> +	xfer[2].len = 1;
-> +	xfer[2].buf = luxloreg;
-> +
-> +	xfer[3].addr = data->client->addr;
-> +	xfer[3].flags = I2C_M_RD;
-> +	xfer[3].len = 1;
-> +	xfer[3].buf = &lo;
-> +
-> +	/*
-> +	 * Use i2c_transfer instead of smbus read because i2c_transfer
-> +	 * does NOT use a stop bit between address write and data read.
-> +	 * Using a stop bit causes disjoint upper/lower byte reads and
-> +	 * reduces accuracy
-> +	 */
-> +	mutex_lock(&data->lock);
-> +	ret = i2c_transfer(data->client->adapter, xfer, READ_LUX_XFER_LEN);
-> +	mutex_unlock(&data->lock);
-> +	if (ret != READ_LUX_XFER_LEN) {
-> +		return -EIO;
-> +	}
-> +
-> +	reg = (((u16)hi) << 4) | (lo & 0xf);
+What do you think is this something we agree and could go forward?
 
-> +
-> +	return MAX44009_LUX(reg);
-> +}
-> +
-> +static int max44009_read_raw(struct iio_dev *indio_dev,
-> +			     struct iio_chan_spec const *chan, int *val,
-> +			     int *val2, long mask)
-> +{
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	switch (mask) {
-> +	case IIO_CHAN_INFO_RAW: {
-> +		switch (chan->type) {
-> +		case IIO_LIGHT: {
-> +			ret = max44009_read_lux_raw(data);
-> +			if (ret < 0) {
-> +				return ret;
-> +			}
-> +			*val = ret;
-> +			*val2 = 0;
-> +			return IIO_VAL_INT;
-> +		}
-> +		default:
-> +			return -EINVAL;
-> +		}
-> +		break;
-> +	}
-> +
-> +	case IIO_CHAN_INFO_INT_TIME: {
-> +		ret = max44009_read_int_time(data);
-> +		if (ret < 0) {
-> +			return ret;
-> +		}
-> +
-> +		*val2 = ret;
-> +		*val = 0;
-> +		return IIO_VAL_INT_PLUS_NANO;
-> +	}
-> +
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static IIO_CONST_ATTR(illuminance_scale_available, max44009_scale_avail_str);
-> +static IIO_CONST_ATTR(illuminance_integration_time_available,
-> +		      max44009_int_time_str);
-> +
-> +static struct attribute *max44009_attributes[] = {
-> +	&iio_const_attr_illuminance_integration_time_available.dev_attr.attr,
-> +	&iio_const_attr_illuminance_scale_available.dev_attr.attr, NULL
-> +};
-> +
-> +static const struct attribute_group max44009_attribute_group = {
-> +	.attrs = max44009_attributes,
-> +};
-> +
-> +static int max44009_thresh_byte_from_int(int thresh)
-> +{
-> +	int mantissa, exp;
-> +
-> +	if (thresh < 0 || thresh > MAX44009_MAXIMUM_THRESHOLD) {
-> +		return -EINVAL;
-> +	}
-> +
-> +	for (mantissa = thresh, exp = 0; mantissa > 0xff; exp++) {
-> +		mantissa >>= 1;
-> +	}
-> +
-> +	mantissa >>= 4;
-> +	mantissa &= 0xf;
-> +	exp <<= 4;
-> +
-> +	return exp | mantissa;
-> +}
-> +
-> +static int max44009_get_thr_reg(enum iio_event_direction dir)
-> +{
-> +	switch (dir) {
-> +	case IIO_EV_DIR_RISING:
-> +		return MAX44009_REG_UPPER_THR;
-> +	case IIO_EV_DIR_FALLING:
-> +		return MAX44009_REG_LOWER_THR;
-> +	default:
-> +		return -EINVAL;
-> +	}
-> +}
-> +
-> +static int max44009_write_thresh(struct iio_dev *indio_dev,
-> +				 enum iio_event_direction dir, int val)
-> +{
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int thresh;
-> +	int reg;
-> +
-> +	reg = max44009_get_thr_reg(dir);
-> +	if (reg < 0) {
-> +		return reg;
-> +	}
-> +
-> +	thresh = max44009_thresh_byte_from_int(val);
-> +	if (thresh < 0) {
-> +		return thresh;
-> +	}
-> +
-> +	return max44009_write_reg(data, reg, thresh);
-> +}
-> +
-> +static int max44009_write_event_value(struct iio_dev *indio_dev,
-> +				      const struct iio_chan_spec *chan,
-> +				      enum iio_event_type type,
-> +				      enum iio_event_direction dir,
-> +				      enum iio_event_info info,
-> +				      int val, int val2)
-> +{
-> +	if (info != IIO_EV_INFO_VALUE || chan->type != IIO_LIGHT || val2 != 0) {
-> +		return -EINVAL;
-> +	}
-> +
-> +	return max44009_write_thresh(indio_dev, dir, val);
-> +}
-> +
-> +static int max44009_read_event_value(struct iio_dev *indio_dev,
-> +				     const struct iio_chan_spec *chan,
-> +				     enum iio_event_type type,
-> +				     enum iio_event_direction dir,
-> +				     enum iio_event_info info,
-> +				     int *val, int *val2)
-> +{
-> +	int thresh, reg;
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +
-> +	if (chan->type != IIO_LIGHT || type != IIO_EV_TYPE_THRESH) {
-> +		return -EINVAL;
-> +	}
-> +
-> +	reg = max44009_get_thr_reg(dir);
-> +	if (reg < 0) {
-> +		return reg;
-> +	}
-> +
-> +	thresh = max44009_read_reg(data, reg);
-> +	if (thresh < 0) {
-> +		return thresh;
-> +	}
-> +
-> +	*val = MAX44009_THRESHOLD(thresh);
-> +
-> +	return IIO_VAL_INT;
-> +}
-> +
-> +static int max44009_write_event_config(struct iio_dev *indio_dev,
-> +				       const struct iio_chan_spec *chan,
-> +				       enum iio_event_type type,
-> +				       enum iio_event_direction dir,
-> +				       int state)
-> +{
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (chan->type != IIO_LIGHT || type != IIO_EV_TYPE_THRESH) {
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = max44009_write_reg(data, MAX44009_REG_ENABLE, state);
-> +	if (ret < 0) {
-> +		return ret;
-> +	}
-> +
-> +	/*
-> +	 * Set device to trigger interrupt immediately upon exceeding
-> +	 * the threshold limit
-> +	 */
-> +	ret = max44009_write_reg(data, MAX44009_REG_THR_TIMER, 0);
-> +	if (ret < 0) {
-> +		return ret;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int max44009_read_event_config(struct iio_dev *indio_dev,
-> +				      const struct iio_chan_spec *chan,
-> +				      enum iio_event_type type,
-> +				      enum iio_event_direction dir)
-> +{
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	if (chan->type != IIO_LIGHT || type != IIO_EV_TYPE_THRESH) {
-> +		return -EINVAL;
-> +	}
-> +
-> +	ret = max44009_read_reg(data, MAX44009_REG_ENABLE);
-> +	if (ret < 0) {
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-We have lots of event config, but they are actually controlling the
-trigger.  The device doesn't generate any iio events at all that I can see.
+If it is it would be a good idea to get feedback from Dan on how easy it 
+is to use and other possible issues if he takes common commits and tries 
+it out with his lp50xx driver.
 
-> +
-> +static const struct iio_info max44009_info = {
-> +	.read_raw = max44009_read_raw,
-> +	.write_raw = max44009_write_raw,
-> +	.write_raw_get_fmt = max44009_write_raw_get_fmt,
-> +	.read_event_value = max44009_read_event_value,
-> +	.read_event_config = max44009_read_event_config,
-> +	.write_event_value = max44009_write_event_value,
-> +	.write_event_config = max44009_write_event_config,
-> +	.attrs = &max44009_attribute_group,
-> +};
-> +
-> +static int max44009_set_trigger_state(struct iio_trigger *trigger,
-> +				      bool enable)
-> +{
-> +	struct iio_dev *indio_dev = iio_trigger_get_drvdata(trigger);
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int ret;
-> +
-> +	ret = max44009_write_reg(data, MAX44009_REG_ENABLE, enable);
-> +	if (ret < 0) {
-> +		return ret;
-> +	}
-> +
-> +	ret = max44009_write_reg(data, MAX44009_REG_THR_TIMER, 0);
-> +	if (ret < 0) {
-As suggested above, write_reg should clearly only return 0 or negative.
-you can just do
-return max440..
-
-> +		return ret;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct iio_trigger_ops max44009_trigger_ops = {
-> +	.set_trigger_state = max44009_set_trigger_state,
-> +};
-> +
-> +static irqreturn_t max44009_trigger_handler(int irq, void *p)
-> +{
-> +	struct iio_dev *indio_dev = p;
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +	int lux, upper, lower;
-> +	int ret;
-> +	enum iio_event_direction direction;
-> +
-> +	/* 32-bit for lux and 64-bit for timestamp */
-> +	u32 buf[3] = {0};
-
-Except the timestamp needs to be 64 bit aligned so this isn't big enough.
-All elements in IIO buffers are 'naturally' aligned. so 32 bit is
-aligned to 32 bits, 64 to 64 bits.
-
-> +
-> +	ret = max44009_read_reg(data, MAX44009_REG_STATUS);
-> +	if (ret <= 0) {
-> +		goto err;
-> +	}
-> +
-> +	ret = max44009_read_reg(data, MAX44009_REG_ENABLE);
-> +	if (ret <= 0) {
-> +		goto err;
-> +	}
-
-If these reads are necessary, then add comments on why.
-
-> +
-> +	/* Clear interrupt by disabling interrupt (see datasheet) */
-> +	ret = max44009_write_reg(data, MAX44009_REG_ENABLE, 0);
-> +	if (ret < 0) {
-> +		goto err;
-> +	}
-> +
-> +	lux = max44009_read_lux_raw(data);
-> +	if (lux < 0) {
-> +		goto err;
-> +	}
-> +
-> +	upper = max44009_read_reg(data, MAX44009_REG_UPPER_THR);
-> +	if (upper < 0) {
-> +		goto err;
-> +	}
-> +	upper = MAX44009_THRESHOLD(upper);
-> +
-> +	lower = max44009_read_reg(data, MAX44009_REG_LOWER_THR);
-> +	if (lower < 0) {
-> +		goto err;
-> +	}
-> +	lower = MAX44009_THRESHOLD(lower);
-> +
-> +	/* If lux is NOT out-of-bounds then the interrupt was not triggered
-> +	 * by this device
-Multiline comment syntax in IIO (and most of the kernel) is
-/*
- * If...
- */
-
-Do we support shared interrupt lines?  Doesn't look like it, which means
-it 'probably was' generate by this device, but we don't know why because the value
-has changed.
-
-Returning IRQ_NONE is a bad idea unless we are pretty sure it is a spurious
-interrupt, or we have a shared interrupt line.  It will ultimately result
-in your interrupt being disable by the kernel and all activity breaking.
-
-There is also a perfectly good register to tell use if we generated the interrupt.
-Read that one and use that, not this racey approach.
-
-> +	 */
-> +	if (lux < upper && lux > lower) {
-> +		goto err;
-> +	}
-> +
-> +	/* Get event for correct thresh direction */
-> +	if (lux >= upper) {
-> +		direction = IIO_EV_DIR_RISING;
-> +	} else if (lux <= lower) {
-> +		direction = IIO_EV_DIR_FALLING;
-> +	} else {
-> +		goto err;
-> +	}
-> +
-> +	buf[0] = lux;
-> +	iio_push_to_buffers_with_timestamp(indio_dev, &buf, data->timestamp);
-> +	iio_trigger_notify_done(data->trigger);
-> +
-> +	iio_push_event(indio_dev,
-> +		       IIO_UNMOD_EVENT_CODE(IIO_LIGHT, 0,
-> +					    IIO_EV_TYPE_THRESH, direction),
-> +		       data->timestamp);
-> +
-> +	ret = max44009_write_reg(data, MAX44009_REG_ENABLE, 1);
-> +	if (ret < 0) {
-> +		goto err;
-> +	}
-> +
-> +	return IRQ_HANDLED;
-> +
-> +err:
-> +	/* Re-enable interrupt */
-> +	max44009_write_reg(data, MAX44009_REG_ENABLE, 1);
-> +	return IRQ_NONE;
-> +}
-> +
-> +static irqreturn_t max44009_irq_handler(int irq, void *p)
-> +{
-> +	struct iio_dev *indio_dev = p;
-> +	struct max44009_data *data = iio_priv(indio_dev);
-> +
-> +	data->timestamp = iio_get_time_ns(indio_dev);
-
-We have a standard core function to do this..
-iio_pollfunc_store_time.
-
-There 'might' be a reason to do it differently depending
-on whether you really need it to be that good if you
-can't identify whether it is your interrupt until the
-interrupt thread.
-
-
-> +	return IRQ_WAKE_THREAD;
-> +}
-> +
-> +static int max44009_probe(struct i2c_client *client,
-> +			  const struct i2c_device_id *id)
-> +{
-> +	struct max44009_data *data;
-> +	struct iio_dev *indio_dev;
-> +	int ret;
-> +
-> +	indio_dev = devm_iio_device_alloc(&client->dev, sizeof(*data));
-> +	if (!indio_dev) {
-> +		return -ENOMEM;
-> +	}
-> +	data = iio_priv(indio_dev);
-> +	i2c_set_clientdata(client, indio_dev);
-> +	data->client = client;
-> +	indio_dev->dev.parent = &client->dev;
-> +	indio_dev->info = &max44009_info;
-> +	indio_dev->modes = INDIO_DIRECT_MODE;
-> +	indio_dev->name = MAX44009_DRV_NAME;
-> +	indio_dev->channels = max44009_channels;
-> +	indio_dev->num_channels = ARRAY_SIZE(max44009_channels);
-> +	mutex_init(&data->lock);
-> +
-> +	/* Clear stale interrupt bit */
-> +	ret = max44009_read_reg(data, MAX44009_REG_STATUS);
-> +	if (ret < 0) {
-> +		goto err;
-> +	}
-> +
-> +	if (client->irq > 0) {
-> +		ret = devm_request_threaded_irq(&client->dev, client->irq,
-> +						max44009_irq_handler,
-
-This is wrong. The interrupt handler should call the iio_trigger_poll functions
-to cause the trigger handlers for all attached devices to be called.
-
-If for some reason the trigger is only suitable for use by this device
-then things get more blurred, but if not, the interrupt handler itself
-should establish that the interrupt is the data ready signal and call
-iio_trigger_poll.  If it is in a thread, call iio_trigger_poll_chained.
-
-The interrupt should be cleared (if it hasn't naturally happened for
-some other reason, in the trigger try_reenable callback.
-
-
-> +						max44009_trigger_handler,
-> +						IRQF_TRIGGER_FALLING |
-> +						IRQF_ONESHOT,
-> +						MAX44009_IRQ_NAME, indio_dev);
-> +		if (ret < 0) {
-> +			goto err;
-> +		}
-> +
-> +		ret = devm_iio_triggered_buffer_setup(&client->dev, indio_dev,
-> +						      max44009_irq_handler,
-> +						      max44009_trigger_handler,
-> +						      NULL);
-> +		if (ret < 0) {
-
-It's going to change anyway (see below) but note kernel style is no
-brackets when only one item in an block like this.
-
-> +			goto err;
-> +		}
-> +
-> +		data->trigger = devm_iio_trigger_alloc(indio_dev->dev.parent,
-> +						       "%s-dev%d",
-> +						       indio_dev->name,
-> +						       indio_dev->id);
-> +		if (!data->trigger) {
-> +			ret = -ENOMEM;
-> +			goto err;
-> +		}
-> +		data->trigger->dev.parent = indio_dev->dev.parent;
-> +		data->trigger->ops = &max44009_trigger_ops;
-> +		iio_trigger_set_drvdata(data->trigger, indio_dev);
-> +
-> +		ret = devm_iio_trigger_register(&client->dev, data->trigger);
-> +		if (ret < 0) {
-> +			goto err;
-> +		}
-> +	}
-> +
-> +	ret = devm_iio_device_register(&client->dev, indio_dev);
-> +	if (ret < 0) {
-> +		goto err;
-
-Without the mutex destroy these all just become return ret;
-
-> +	}
-> +
-> +	return 0;
-> +err:
-> +	mutex_destroy(&data->lock);
-
-mutex destroy is only really useful for lock debugging.  Given we don't
-leave anything behind here anyway, it just makes the flow more complex
-for no gain.  We very rarely bother with it as a result.
-
-> +	return ret;
-> +}
-> +
-> +static const struct i2c_device_id max44009_id[] = {
-> +	{ "max44009", 0 },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(i2c, max44009_id);
-> +
-> +static struct i2c_driver max44009_driver = {
-> +	.driver = {
-> +		.name = MAX44009_DRV_NAME,
-> +	},
-> +	.probe = max44009_probe,
-> +	.id_table = max44009_id,
-> +};
-> +module_i2c_driver(max44009_driver);
-> +
-> +static const struct of_device_id max44009_of_match[] = {
-> +	{ .compatible = "maxim,max44009" },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, max44009_of_match);
-> +
-> +MODULE_AUTHOR("Robert Eshleman <bobbyeshleman@gmail.com>");
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_VERSION("1.0.0");
-Please drop.  MODULE_VERSION provides very little useful info
-and tends to lead to people assuming it does.
-
-Userspace has no obligation to ever look at it and we can't
-break userspace that doesn't so it doesn't provide any value.
-
-> +MODULE_DESCRIPTION("MAX44009 ambient light sensor driver");
+Thanks,
+Vesa Jääskeläinen
