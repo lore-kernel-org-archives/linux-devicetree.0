@@ -1,56 +1,70 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: [PATCH] MAINTAINERS: Add entry for Amlogic NAND controller driver
-Date: Sun, 20 Jan 2019 01:02:35 +0800
-Message-ID: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
+ bme680
+Date: Sat, 19 Jan 2019 16:57:09 +0000
+Message-ID: <20190119165709.5045a18b@archlinux>
+References: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
+        <20190111205359.14158-2-sebastien.bourdelin@gmail.com>
+        <20190112182837.4cc42743@archlinux>
+        <4768d945-61aa-a8ab-3e41-68b4f861cc69@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org
-Cc: Rob Herring <robh@kernel.org>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Jianxin Pan <jianxin.pan@amlogic.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Richard Weinberger <richard@nod.at>, linux-kernel@vger.kernel.org, Marek Vasut <marek.vasut@gmail.com>, devicetree@vger.kernel.org, Liang Yang <liang.yang@amlogic.com>, Jian Hu <jian.hu@amlogic.com>, Kevin Hilman <khilman@baylibre.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4768d945-61aa-a8ab-3e41-68b4f861cc69@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: sebastien bourdelin <sebastien.bourdelin@gmail.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
 List-Id: devicetree@vger.kernel.org
 
-Add entry for Amlogic NAND controller driver and its bindings[0].
+On Mon, 14 Jan 2019 15:17:10 -0500
+sebastien bourdelin <sebastien.bourdelin@gmail.com> wrote:
 
-[0] https://lore.kernel.org/lkml/1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com/
+> On 1/12/19 1:28 PM, Jonathan Cameron wrote:
+> > On Fri, 11 Jan 2019 15:53:59 -0500
+> > Sebastien Bourdelin <sebastien.bourdelin@gmail.com> wrote:
+> >  
+> >> BME680 is a pressure/temperature/humidity/voc sensor.
+> >>
+> >> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>  
+> > Hmm. We could add the VDD and VDIO regulators perhaps.
+> > Driver assumes they are on currently but we'll get a board where control
+> > is needed sooner or later.  I'm not that fussed about this though.  
+> 
+> If that's fine with you, i prefer to leave it as it is right now as i 
+> don't feel
+> 
+> confident enough to correctly explain it in the Documentation.
+> 
+> But if you have more input, you are more then welcome!
+Given we aren't planning to do more than turn them on and that'll work
+fine with stub regulators (so they can effectively be optional for ever),
+there is no particular need to put them in now if you prefer not to.
 
-Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
----
- MAINTAINERS | 7 +++++++
- 1 file changed, 7 insertions(+)
+Jonathan
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 0abecc5..7d976a1 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9628,6 +9628,13 @@ F:	drivers/media/platform/meson/ao-cec.c
- F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
- T:	git git://linuxtv.org/media_tree.git
- 
-+MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
-+M:	Liang Yang <liang.yang@amlogic.com>
-+L:	linux-mtd@lists.infradead.org
-+S:	Maintained
-+F:	drivers/mtd/nand/raw/meson_*
-+F:	Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-+
- MICROBLAZE ARCHITECTURE
- M:	Michal Simek <monstr@monstr.eu>
- W:	http://www.monstr.eu/fdt/
--- 
-1.9.1
-
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> 
+> > Jonathan
+> >  
+> >> ---
+> >>   .../devicetree/bindings/iio/chemical/bme680.txt       | 11 +++++++++++
+> >>   1 file changed, 11 insertions(+)
+> >>   create mode 100644 Documentation/devicetree/bindings/iio/chemical/bme680.txt
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/iio/chemical/bme680.txt b/Documentation/devicetree/bindings/iio/chemical/bme680.txt
+> >> new file mode 100644
+> >> index 000000000000..885a1b918340
+> >> --- /dev/null
+> >> +++ b/Documentation/devicetree/bindings/iio/chemical/bme680.txt
+> >> @@ -0,0 +1,11 @@
+> >> +Bosch Sensortec BME680 pressure/temperature/humidity/voc sensors
+> >> +
+> >> +Required properties:
+> >> +- compatible: must be "bosch,bme680"
+> >> +
+> >> +Example:
+> >> +
+> >> +bme680@77 {
+> >> +          compatible = "bosch,bme680";
+> >> +          reg = <0x77>;
+> >> +};  
