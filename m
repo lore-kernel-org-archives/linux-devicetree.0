@@ -1,7 +1,7 @@
 From: Sam Ravnborg <sam@ravnborg.org>
-Subject: [PATCH v3 4/6] dt-binding: pcf85063: add xtal load capacitance
-Date: Sat, 19 Jan 2019 10:00:29 +0100
-Message-ID: <20190119090031.29147-5-sam@ravnborg.org>
+Subject: [PATCH v3 6/6] rtc: pcf85063: set xtal load capacitance from DT
+Date: Sat, 19 Jan 2019 10:00:31 +0100
+Message-ID: <20190119090031.29147-7-sam@ravnborg.org>
 References: <20190119090031.29147-1-sam@ravnborg.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
@@ -10,69 +10,91 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190119090031.29147-1-sam@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, =?UTF-8?q?S=C3=B8ren=20Andersen?= <san@skov.dk>
+Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, =?UTF-8?q?Urs=20F=C3=A4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-The NXP pcf85063 supports two different xtal load capacitance
-- 7000fF  (7pF)    HW default, Linux driver default
-- 12500fF (12.5pF) Minimum power consumption
+Add support for specifying the xtal load capacitance in the DT node.
+The pcf85063 supports xtal load capacitance of 7pF or 12.5pF.
+If the rtc has the wrong configuration the time will
+drift several hours/week.
 
-To obtain a precise RTC the pcf85063 must be configured
-with the correct capacitance load of the xtal.
+The driver use the default value 7pF.
 
-Add a property to specify the xtal capacitance load.
-The default value matches that of the current Linux driver.
+The DT may specify either 7000fF or 12500fF.
+(The DT uses femto Farad to avoid decimal numbers).
+Other values are warned and the driver uses the default value.
 
-With a dedicated binding remove the entry in rtc.txt
-
-Signed-off-by: Søren Andersen <san@skov.dk>
 Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
 Cc: Alessandro Zummo <a.zummo@towertech.it>
 Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: Urs Fässler <urs.fassler@bbv.ch>
 ---
- Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt | 18 ++++++++++++++++++
- Documentation/devicetree/bindings/rtc/rtc.txt          |  1 -
- 2 files changed, 18 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
+ drivers/rtc/rtc-pcf85063.c | 39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-new file mode 100644
-index 000000000000..d3e380ad712d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-@@ -0,0 +1,18 @@
-+* NXP PCF85063 Real Time Clock
+diff --git a/drivers/rtc/rtc-pcf85063.c b/drivers/rtc/rtc-pcf85063.c
+index 283c2335b01b..b79af6e96292 100644
+--- a/drivers/rtc/rtc-pcf85063.c
++++ b/drivers/rtc/rtc-pcf85063.c
+@@ -27,6 +27,7 @@
+ */
+ 
+ #define PCF85063_REG_CTRL1		0x00 /* status */
++#define PCF85063_REG_CTRL1_CAP_SEL	BIT(0)
+ #define PCF85063_REG_CTRL1_STOP		BIT(5)
+ #define PCF85063_REG_CTRL2		0x01
+ 
+@@ -180,6 +181,39 @@ static const struct rtc_class_ops pcf85063_rtc_ops = {
+ 	.set_time	= pcf85063_rtc_set_time
+ };
+ 
++static int pcf85063_load_capacitance(struct i2c_client *client)
++{
++	u32 load;
++	int rc;
++	u8 reg;
 +
-+Required properties:
-+- compatible: Should contain "nxp,pcf85063".
-+- reg: I2C address for chip.
++	rc = i2c_smbus_read_byte_data(client, PCF85063_REG_CTRL1);
++	if (rc < 0)
++		return rc;
 +
-+Optional property:
-+- quartz-load-femtofarads: The capacitive load of the quartz(x-tal),
-+  expressed in femto Farad (fF). Valid values are 7000 and 12500.
-+  Default value (if no value is specified) is 7000fF.
++	reg = rc;
++	load = 7000;
++	of_property_read_u32(client->dev.of_node, "quartz-load-femtofarads",
++			     &load);
 +
-+Example:
++	switch (load) {
++	default:
++		dev_warn(&client->dev, "Unknown quartz-load-femtofarads value: %d. Assuming 7000",
++			 load);
++		/* fall through */
++	case 7000:
++		reg &= ~PCF85063_REG_CTRL1_CAP_SEL;
++		break;
++	case 12500:
++		reg |= PCF85063_REG_CTRL1_CAP_SEL;
++		break;
++	}
 +
-+pcf85063: rtc@51 {
-+	compatible = "nxp,pcf85063";
-+	reg = <0x51>;
-+	quartz-load-femtofarads = <12500>;
-+};
-diff --git a/Documentation/devicetree/bindings/rtc/rtc.txt b/Documentation/devicetree/bindings/rtc/rtc.txt
-index 6d726a801d21..460c503e86c6 100644
---- a/Documentation/devicetree/bindings/rtc/rtc.txt
-+++ b/Documentation/devicetree/bindings/rtc/rtc.txt
-@@ -56,7 +56,6 @@ microcrystal,rv3029	Real Time Clock Module with I2C-Bus
- nxp,pcf2127		Real-time clock
- nxp,pcf2129		Real-time clock
- nxp,pcf8563		Real-time clock/calendar
--nxp,pcf85063		Tiny Real-Time Clock
- pericom,pt7c4338	Real-time Clock Module
- ricoh,r2025sd		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
- ricoh,r2221tl		I2C bus SERIAL INTERFACE REAL-TIME CLOCK IC
++	rc = i2c_smbus_write_byte_data(client, PCF85063_REG_CTRL1, reg);
++
++	return rc;
++}
++
+ static int pcf85063_probe(struct i2c_client *client,
+ 				const struct i2c_device_id *id)
+ {
+@@ -197,6 +231,11 @@ static int pcf85063_probe(struct i2c_client *client,
+ 		return err;
+ 	}
+ 
++	err = pcf85063_load_capacitance(client);
++	if (err < 0)
++		dev_warn(&client->dev, "failed to set xtal load capacitance: %d",
++			 err);
++
+ 	rtc = devm_rtc_device_register(&client->dev,
+ 				       pcf85063_driver.driver.name,
+ 				       &pcf85063_rtc_ops, THIS_MODULE);
 -- 
 2.12.0
