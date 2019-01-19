@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH v6 15/15] spmi: pmic-arb: revert "disassociate old virq if hwirq mapping already exists"
-Date: Sat, 19 Jan 2019 15:42:52 -0500
-Message-ID: <20190119204252.18370-16-masneyb@onstation.org>
+Subject: [PATCH v6 09/15] ARM: dts: qcom: pma8084: add interrupt controller properties
+Date: Sat, 19 Jan 2019 15:42:46 -0500
+Message-ID: <20190119204252.18370-10-masneyb@onstation.org>
 References: <20190119204252.18370-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
@@ -10,47 +10,64 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that spmi-gpio is a proper hierarchical IRQ chip, and all in-tree
-users of device tree have been updated, we can now drop the hack that
-was introduced to disassociate the old Linux virq if a hwirq mapping
-already exists. That patch was introduced to not break git bisect for
-any existing boards.
+Add interrupt controller properties now that spmi-gpio is a proper
+hierarchical IRQ chip. The interrupts property is no longer needed so
+remove it.
 
-Driver was tested using gpio-keys and iadc/vadc on the LG Nexus 5
-(hammerhead) phone.
+This change was not tested on any hardware but the same change was
+tested on qcom-pm8941.dtsi using a LG Nexus 5 (hammerhead) phone with
+no issues.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
+Reviewed-by: Stephen Boyd <sboyd@kernel.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
 Changes since v5:
-- None
+- None  
 
 Changes since v4:
+- None  
+
+Chances since v3:
 - None
 
-Patch introduced in v4.
+ arch/arm/boot/dts/qcom-pma8084.dtsi | 24 ++----------------------
+ 1 file changed, 2 insertions(+), 22 deletions(-)
 
- drivers/spmi/spmi-pmic-arb.c | 5 -----
- 1 file changed, 5 deletions(-)
-
-diff --git a/drivers/spmi/spmi-pmic-arb.c b/drivers/spmi/spmi-pmic-arb.c
-index 5666b99c9a92..316e2708f3ba 100644
---- a/drivers/spmi/spmi-pmic-arb.c
-+++ b/drivers/spmi/spmi-pmic-arb.c
-@@ -745,15 +745,10 @@ static int qpnpint_irq_domain_map(struct spmi_pmic_arb *pmic_arb,
- 				  irq_hw_number_t hwirq, unsigned int type)
- {
- 	irq_flow_handler_t handler;
--	unsigned int old_virq;
+diff --git a/arch/arm/boot/dts/qcom-pma8084.dtsi b/arch/arm/boot/dts/qcom-pma8084.dtsi
+index aac7e73b6872..8f5ea7add20f 100644
+--- a/arch/arm/boot/dts/qcom-pma8084.dtsi
++++ b/arch/arm/boot/dts/qcom-pma8084.dtsi
+@@ -32,28 +32,8 @@
+ 			reg = <0xc000>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+-			interrupts = <0 0xc0 0 IRQ_TYPE_NONE>,
+-				     <0 0xc1 0 IRQ_TYPE_NONE>,
+-				     <0 0xc2 0 IRQ_TYPE_NONE>,
+-				     <0 0xc3 0 IRQ_TYPE_NONE>,
+-				     <0 0xc4 0 IRQ_TYPE_NONE>,
+-				     <0 0xc5 0 IRQ_TYPE_NONE>,
+-				     <0 0xc6 0 IRQ_TYPE_NONE>,
+-				     <0 0xc7 0 IRQ_TYPE_NONE>,
+-				     <0 0xc8 0 IRQ_TYPE_NONE>,
+-				     <0 0xc9 0 IRQ_TYPE_NONE>,
+-				     <0 0xca 0 IRQ_TYPE_NONE>,
+-				     <0 0xcb 0 IRQ_TYPE_NONE>,
+-				     <0 0xcc 0 IRQ_TYPE_NONE>,
+-				     <0 0xcd 0 IRQ_TYPE_NONE>,
+-				     <0 0xce 0 IRQ_TYPE_NONE>,
+-				     <0 0xcf 0 IRQ_TYPE_NONE>,
+-				     <0 0xd0 0 IRQ_TYPE_NONE>,
+-				     <0 0xd1 0 IRQ_TYPE_NONE>,
+-				     <0 0xd2 0 IRQ_TYPE_NONE>,
+-				     <0 0xd3 0 IRQ_TYPE_NONE>,
+-				     <0 0xd4 0 IRQ_TYPE_NONE>,
+-				     <0 0xd5 0 IRQ_TYPE_NONE>;
++			interrupt-controller;
++			#interrupt-cells = <2>;
+ 		};
  
- 	dev_dbg(&pmic_arb->spmic->dev, "virq = %u, hwirq = %lu, type = %u\n",
- 		virq, hwirq, type);
- 
--	old_virq = irq_find_mapping(domain, hwirq);
--	if (old_virq)
--		irq_domain_disassociate(domain, old_virq);
--
- 	if (type & IRQ_TYPE_EDGE_BOTH)
- 		handler = handle_edge_irq;
- 	else if (type & (IRQ_TYPE_LEVEL_LOW | IRQ_TYPE_LEVEL_HIGH))
+ 		pma8084_mpps: mpps@a000 {
 -- 
 2.17.2
