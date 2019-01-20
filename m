@@ -1,109 +1,57 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v3 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Sun, 20 Jan 2019 14:56:42 +0000
-Message-ID: <6e6f7c3a-4772-1a17-0f5f-547ea9809283@microchip.com>
-References: <20190116103027.22657-1-vigneshr@ti.com>
- <20190116103027.22657-3-vigneshr@ti.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH] MAINTAINERS: Add entry for Amlogic NAND controller
+ driver
+Date: Sun, 20 Jan 2019 16:06:05 +0100
+Message-ID: <20190120160605.33689354@xps13>
+References: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190116103027.22657-3-vigneshr@ti.com>
-Content-Language: en-US
-Content-ID: <1A099F846579D24294CF38020A4C0E14@namprd11.prod.outlook.com>
+In-Reply-To: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vigneshr@ti.com, bbrezillon@kernel.org
-Cc: marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Jianxin Pan <jianxin.pan@amlogic.com>
+Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGksIFZpZ25lc2gsDQoNCk9uIDAxLzE2LzIwMTkgMTI6MzAgUE0sIFZpZ25lc2ggUiB3cm90ZToN
-Cj4gQ2FkZW5jZSBPU1BJIGNvbnRyb2xsZXIgSVAgc3VwcG9ydHMgT2N0YWwgSU8gKHg4IElPIGxp
-bmVzKSwNCj4gSXQgYWxzbyBoYXMgYW4gaW50ZWdyYXRlZCBQSFkuIElQIHJlZ2lzdGVyIGxheW91
-dCBpcyB2ZXJ5DQo+IHNpbWlsYXIgdG8gZXhpc3RpbmcgUVNQSSBJUCBleGNlcHQgZm9yIGFkZGl0
-aW9uYWwgYml0cyB0byBzdXBwb3J0IE9jdGFsDQo+IGFuZCBPY3RhbCBERFIgbW9kZS4gVGhlcmVm
-b3JlLCBleHRlbmQgY3VycmVudCBkcml2ZXIgdG8gc3VwcG9ydCBPY3RhbA0KPiBtb2RlLg0KPiAN
-Cj4gU2lnbmVkLW9mZi1ieTogVmlnbmVzaCBSIDx2aWduZXNockB0aS5jb20+DQo+IC0tLQ0KPiB2
-MzogTm8gY2hhbmdlcw0KPiANCj4gdjI6DQo+IERlY2xhcmUgT2N0YWwgbW9kZSBjYXBhYmlsaXR5
-IGJhc2VkIG9uIGNvbXBhdGlibGUuDQo+IA0KPiAgZHJpdmVycy9tdGQvc3BpLW5vci9jYWRlbmNl
-LXF1YWRzcGkuYyB8IDU0ICsrKysrKysrKysrKysrKysrKysrKy0tLS0tLQ0KPiAgMSBmaWxlIGNo
-YW5nZWQsIDQyIGluc2VydGlvbnMoKyksIDEyIGRlbGV0aW9ucygtKQ0KPiANCj4gZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMgYi9kcml2ZXJzL210ZC9z
-cGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jDQo+IGluZGV4IDA0Y2VkZDNhMmJmNi4uMzFlZDUwZjc4
-OTcyIDEwMDY0NA0KPiAtLS0gYS9kcml2ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5j
-DQo+ICsrKyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gQEAgLTkz
-LDYgKzkzLDExIEBAIHN0cnVjdCBjcXNwaV9zdCB7DQo+ICAJc3RydWN0IGNxc3BpX2ZsYXNoX3Bk
-YXRhIGZfcGRhdGFbQ1FTUElfTUFYX0NISVBTRUxFQ1RdOw0KPiAgfTsNCj4gIA0KPiArc3RydWN0
-IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSB7DQo+ICsJdTMyIGh3Y2Fwc19tYXNrOw0KPiArCXU4IHF1
-aXJrczsNCj4gK307DQo+ICsNCj4gIC8qIE9wZXJhdGlvbiB0aW1lb3V0IHZhbHVlICovDQo+ICAj
-ZGVmaW5lIENRU1BJX1RJTUVPVVRfTVMJCQk1MDANCj4gICNkZWZpbmUgQ1FTUElfUkVBRF9USU1F
-T1VUX01TCQkJMTANCj4gQEAgLTEwMSw2ICsxMDYsNyBAQCBzdHJ1Y3QgY3FzcGlfc3Qgew0KPiAg
-I2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfU0lOR0xFCQkJMA0KPiAgI2RlZmluZSBDUVNQSV9JTlNU
-X1RZUEVfRFVBTAkJCTENCj4gICNkZWZpbmUgQ1FTUElfSU5TVF9UWVBFX1FVQUQJCQkyDQo+ICsj
-ZGVmaW5lIENRU1BJX0lOU1RfVFlQRV9PQ1RBTAkJCTMNCj4gIA0KPiAgI2RlZmluZSBDUVNQSV9E
-VU1NWV9DTEtTX1BFUl9CWVRFCQk4DQo+ICAjZGVmaW5lIENRU1BJX0RVTU1ZX0JZVEVTX01BWAkJ
-CTQNCj4gQEAgLTkxMSw2ICs5MTcsOSBAQCBzdGF0aWMgaW50IGNxc3BpX3NldF9wcm90b2NvbChz
-dHJ1Y3Qgc3BpX25vciAqbm9yLCBjb25zdCBpbnQgcmVhZCkNCj4gIAkJY2FzZSBTTk9SX1BST1RP
-XzFfMV80Og0KPiAgCQkJZl9wZGF0YS0+ZGF0YV93aWR0aCA9IENRU1BJX0lOU1RfVFlQRV9RVUFE
-Ow0KPiAgCQkJYnJlYWs7DQo+ICsJCWNhc2UgU05PUl9QUk9UT18xXzFfODoNCj4gKwkJCWZfcGRh
-dGEtPmRhdGFfd2lkdGggPSBDUVNQSV9JTlNUX1RZUEVfT0NUQUw7DQo+ICsJCQlicmVhazsNCj4g
-IAkJZGVmYXVsdDoNCj4gIAkJCXJldHVybiAtRUlOVkFMOw0KPiAgCQl9DQo+IEBAIC0xMjEzLDIx
-ICsxMjIyLDE5IEBAIHN0YXRpYyB2b2lkIGNxc3BpX3JlcXVlc3RfbW1hcF9kbWEoc3RydWN0IGNx
-c3BpX3N0ICpjcXNwaSkNCj4gIA0KPiAgc3RhdGljIGludCBjcXNwaV9zZXR1cF9mbGFzaChzdHJ1
-Y3QgY3FzcGlfc3QgKmNxc3BpLCBzdHJ1Y3QgZGV2aWNlX25vZGUgKm5wKQ0KPiAgew0KPiAtCWNv
-bnN0IHN0cnVjdCBzcGlfbm9yX2h3Y2FwcyBod2NhcHMgPSB7DQo+IC0JCS5tYXNrID0gU05PUl9I
-V0NBUFNfUkVBRCB8DQo+IC0JCQlTTk9SX0hXQ0FQU19SRUFEX0ZBU1QgfA0KPiAtCQkJU05PUl9I
-V0NBUFNfUkVBRF8xXzFfMiB8DQo+IC0JCQlTTk9SX0hXQ0FQU19SRUFEXzFfMV80IHwNCj4gLQkJ
-CVNOT1JfSFdDQVBTX1BQLA0KPiAtCX07DQo+ICAJc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRl
-diA9IGNxc3BpLT5wZGV2Ow0KPiAgCXN0cnVjdCBkZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+
-ICsJc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSAqZGRhdGE7DQoNCmNvbnN0IHN0cnVjdCBj
-cXNwaV9kcml2ZXJfcGxhdGRhdGEgKmRkYXRhOw0KDQo+ICsJc3RydWN0IHNwaV9ub3JfaHdjYXBz
-IGh3Y2FwczsNCj4gIAlzdHJ1Y3QgY3FzcGlfZmxhc2hfcGRhdGEgKmZfcGRhdGE7DQo+ICAJc3Ry
-dWN0IHNwaV9ub3IgKm5vcjsNCj4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gIAl1bnNpZ25l
-ZCBpbnQgY3M7DQo+ICAJaW50IGksIHJldDsNCj4gIA0KPiArCWRkYXRhID0gKHN0cnVjdCBjcXNw
-aV9kcml2ZXJfcGxhdGRhdGEgKilvZl9kZXZpY2VfZ2V0X21hdGNoX2RhdGEoZGV2KTsNCg0KWW91
-IGZvcmdvdCB0byBjaGVjayBmb3IgTlVMTC4gQWxzbywgSSB3b3VsZCBleHBlY3QgYW4gaW1wbGlj
-aXQgdHlwZSBjYXN0LCB5b3UNCmNhbiBkcm9wIHRoZSBleHBsaWNpdCBjYXN0Lg0KDQo+ICsJaHdj
-YXBzLm1hc2sgPSBkZGF0YS0+aHdjYXBzX21hc2s7DQo+ICsNCj4gIAkvKiBHZXQgZmxhc2ggZGV2
-aWNlIGRhdGEgKi8NCj4gIAlmb3JfZWFjaF9hdmFpbGFibGVfY2hpbGRfb2Zfbm9kZShkZXYtPm9m
-X25vZGUsIG5wKSB7DQo+ICAJCXJldCA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyKG5wLCAicmVnIiwg
-JmNzKTsNCj4gQEAgLTEzMTAsNyArMTMxNyw3IEBAIHN0YXRpYyBpbnQgY3FzcGlfcHJvYmUoc3Ry
-dWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4gIAlzdHJ1Y3QgY3FzcGlfc3QgKmNxc3BpOw0K
-PiAgCXN0cnVjdCByZXNvdXJjZSAqcmVzOw0KPiAgCXN0cnVjdCByZXNvdXJjZSAqcmVzX2FoYjsN
-Cj4gLQl1bnNpZ25lZCBsb25nIGRhdGE7DQo+ICsJc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0
-YSAqZGRhdGE7DQoNCmNvbnN0IHN0cnVjdCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgKmRkYXRhOw0K
-DQo+ICAJaW50IHJldDsNCj4gIAlpbnQgaXJxOw0KPiAgDQo+IEBAIC0xMzc3LDggKzEzODQsOCBA
-QCBzdGF0aWMgaW50IGNxc3BpX3Byb2JlKHN0cnVjdCBwbGF0Zm9ybV9kZXZpY2UgKnBkZXYpDQo+
-ICAJfQ0KPiAgDQo+ICAJY3FzcGktPm1hc3Rlcl9yZWZfY2xrX2h6ID0gY2xrX2dldF9yYXRlKGNx
-c3BpLT5jbGspOw0KPiAtCWRhdGEgID0gKHVuc2lnbmVkIGxvbmcpb2ZfZGV2aWNlX2dldF9tYXRj
-aF9kYXRhKGRldik7DQo+IC0JaWYgKGRhdGEgJiBDUVNQSV9ORUVEU19XUl9ERUxBWSkNCj4gKwlk
-ZGF0YSAgPSAoc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSAqKW9mX2RldmljZV9nZXRfbWF0
-Y2hfZGF0YShkZXYpOw0KDQpJIHdvdWxkIGV4cGVjdCBhbiBpbXBsaWNpdCB0eXBlIGNhc3QsIHlv
-dSBjYW4gZHJvcCB0aGUgZXhwbGljaXQgY2FzdC4NCg0KPiArCWlmIChkZGF0YSAmJiAoZGRhdGEt
-PnF1aXJrcyAmIENRU1BJX05FRURTX1dSX0RFTEFZKSkNCj4gIAkJY3FzcGktPndyX2RlbGF5ID0g
-NSAqIERJVl9ST1VORF9VUChOU0VDX1BFUl9TRUMsDQo+ICAJCQkJCQkgICBjcXNwaS0+bWFzdGVy
-X3JlZl9jbGtfaHopOw0KPiAgDQo+IEBAIC0xNDYwLDE0ICsxNDY3LDM3IEBAIHN0YXRpYyBjb25z
-dCBzdHJ1Y3QgZGV2X3BtX29wcyBjcXNwaV9fZGV2X3BtX29wcyA9IHsNCj4gICNkZWZpbmUgQ1FT
-UElfREVWX1BNX09QUwlOVUxMDQo+ICAjZW5kaWYNCj4gIA0KPiArI2RlZmluZSBjcXNwaV9iYXNl
-X2h3Y2Fwc19tYXNrCQkJCQlcDQo+ICsJKFNOT1JfSFdDQVBTX1JFQUQgfCBTTk9SX0hXQ0FQU19S
-RUFEX0ZBU1QgfAkJXA0KPiArCVNOT1JfSFdDQVBTX1JFQURfMV8xXzIgfCBTTk9SX0hXQ0FQU19S
-RUFEXzFfMV80IHwJXA0KPiArCVNOT1JfSFdDQVBTX1BQKQ0KPiArDQo+ICtzdGF0aWMgY29uc3Qg
-c3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSBjZG5zX3FzcGkgPSB7DQo+ICsJLmh3Y2Fwc19t
-YXNrID0gY3FzcGlfYmFzZV9od2NhcHNfbWFzaywNCj4gK307DQo+ICsNCj4gK3N0YXRpYyBjb25z
-dCBzdHJ1Y3QgY3FzcGlfZHJpdmVyX3BsYXRkYXRhIGsyZ19xc3BpID0gew0KPiArCS5od2NhcHNf
-bWFzayA9IGNxc3BpX2Jhc2VfaHdjYXBzX21hc2ssDQo+ICsJLnF1aXJrcyA9IENRU1BJX05FRURT
-X1dSX0RFTEFZLA0KPiArfTsNCj4gKw0KPiArc3RhdGljIGNvbnN0IHN0cnVjdCBjcXNwaV9kcml2
-ZXJfcGxhdGRhdGEgYW02NTRfb3NwaSA9IHsNCj4gKwkuaHdjYXBzX21hc2sgPSBjcXNwaV9iYXNl
-X2h3Y2Fwc19tYXNrIHwgU05PUl9IV0NBUFNfUkVBRF8xXzFfOCwNCj4gKwkucXVpcmtzID0gQ1FT
-UElfTkVFRFNfV1JfREVMQVksDQo+ICt9Ow0KPiArDQo+ICBzdGF0aWMgY29uc3Qgc3RydWN0IG9m
-X2RldmljZV9pZCBjcXNwaV9kdF9pZHNbXSA9IHsNCj4gIAl7DQo+ICAJCS5jb21wYXRpYmxlID0g
-ImNkbnMscXNwaS1ub3IiLA0KPiAtCQkuZGF0YSA9ICh2b2lkICopMCwNCj4gKwkJLmRhdGEgPSAo
-dm9pZCAqKSZjZG5zX3FzcGksDQoNCllvdSBjYW4gZHJvcCB0aGUgKHZvaWQgKikgY2FzdC4NCg0K
-TG9va3MgZ29vZC4gRGlkIHlvdSB0ZXN0IHRoZSBvY3RhbCBtb2RlIHdpdGggbXQzNXh1NTEyYWJh
-PyBJZiB5ZXMsIGl0IHdvdWxkIGJlDQpuaWNlIHRvIHNwZWNpZnkgdGhpcyBpbiB0aGUgY29tbWl0
-IG1lc3NhZ2UuDQoNCkNoZWVycywNCnRhDQoNCj4gIAl9LA0KPiAgCXsNCj4gIAkJLmNvbXBhdGli
-bGUgPSAidGksazJnLXFzcGkiLA0KPiAtCQkuZGF0YSA9ICh2b2lkICopQ1FTUElfTkVFRFNfV1Jf
-REVMQVksDQo+ICsJCS5kYXRhID0gKHZvaWQgKikmazJnX3FzcGksDQo+ICsJfSwNCj4gKwl7DQo+
-ICsJCS5jb21wYXRpYmxlID0gInRpLGFtNjU0LW9zcGkiLA0KPiArCQkuZGF0YSA9ICh2b2lkICop
-JmFtNjU0X29zcGksDQo+ICAJfSwNCj4gIAl7IC8qIGVuZCBvZiB0YWJsZSAqLyB9DQo+ICB9Ow0K
-PiANCg==
+Hi Jianxin,
+
+Jianxin Pan <jianxin.pan@amlogic.com> wrote on Sun, 20 Jan 2019
+01:02:35 +0800:
+
+> Add entry for Amlogic NAND controller driver and its bindings[0].
+> 
+> [0] https://lore.kernel.org/lkml/1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com/
+> 
+> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
+> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
+
+If you are the author of the patch your Signed-off-by should come first.
+
+Also, why is Liang the Maintainer? Why not you?
+
+> ---
+>  MAINTAINERS | 7 +++++++
+>  1 file changed, 7 insertions(+)
+> 
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 0abecc5..7d976a1 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -9628,6 +9628,13 @@ F:	drivers/media/platform/meson/ao-cec.c
+>  F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
+>  T:	git git://linuxtv.org/media_tree.git
+>  
+> +MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
+> +M:	Liang Yang <liang.yang@amlogic.com>
+> +L:	linux-mtd@lists.infradead.org
+> +S:	Maintained
+> +F:	drivers/mtd/nand/raw/meson_*
+> +F:	Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
+> +
+>  MICROBLAZE ARCHITECTURE
+>  M:	Michal Simek <monstr@monstr.eu>
+>  W:	http://www.monstr.eu/fdt/
+
+Thanks,
+Miquèl
