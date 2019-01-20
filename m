@@ -1,66 +1,77 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet support
-Date: Sun, 20 Jan 2019 09:28:45 +0100
-Message-ID: <20190120082845.4apq3ylk4i6zbhlx@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-8-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190117115945.bmlaoeoqvsmdqqot@verge.net.au>
- <TY1PR01MB1770241D7A553184ABB589DAC0830@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: Re: [PATCH 2/8 v4] Documentation: bindings: dma: Add binding for
+ dma-channel-mask
+Date: Sun, 20 Jan 2019 16:36:42 +0530
+Message-ID: <20190120110642.GT4635@vkoul-mobl>
+References: <1547658629-25378-1-git-send-email-john.stultz@linaro.org>
+ <1547658629-25378-3-git-send-email-john.stultz@linaro.org>
+ <20190117170829.GJ5283@Mani-XPS-13-9360>
+ <CALAqxLXc4dE=65MYR5M_jA-uKeGjsN0CL+JjDYbZUTyi+mKUTA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <TY1PR01MB1770241D7A553184ABB589DAC0830@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.>
+In-Reply-To: <CALAqxLXc4dE=65MYR5M_jA-uKeGjsN0CL+JjDYbZUTyi+mKUTA@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: John Stultz <john.stultz@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, lkml <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, "open list:DMA GENERIC OFFLOAD ENGINE SUBSYSTEM" <dmaengine@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 01:27:51PM +0000, Fabrizio Castro wrote:
-> Hello Simon,
-> 
-> Thank you for your feedback!
-> 
-> > From: Simon Horman <horms@verge.net.au>
-> > Sent: 17 January 2019 12:00
-> > Subject: Re: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet support
+On 17-01-19, 09:43, John Stultz wrote:
+> On Thu, Jan 17, 2019 at 9:08 AM Manivannan Sadhasivam
+> <manivannan.sadhasivam@linaro.org> wrote:
 > >
-> > On Wed, Jan 16, 2019 at 06:37:50PM +0000, Fabrizio Castro wrote:
-> > > From: Biju Das <biju.das@bp.renesas.com>
+> > On Wed, Jan 16, 2019 at 09:10:23AM -0800, John Stultz wrote:
+> > > Some dma channels can be reserved for secure mode or other
+> > > hardware on the SoC, so provide a binding for a bitmask
+> > > listing the available channels for the kernel to use.
 > > >
-> > > This patch adds ethernet support to the sub board.
+> > > This follows the pre-existing bcm,dma-channel-mask binding.
 > > >
-> > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> > > Cc: Vinod Koul <vkoul@kernel.org>
+> > > Cc: Rob Herring <robh+dt@kernel.org>
+> > > Cc: Mark Rutland <mark.rutland@arm.com>
+> > > Cc: Tanglei Han <hantanglei@huawei.com>
+> > > Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+> > > Cc: Ryan Grachek <ryan@edited.us>
+> > > Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > Cc: dmaengine@vger.kernel.org
+> > > Cc: devicetree@vger.kernel.org
+> > > Signed-off-by: John Stultz <john.stultz@linaro.org>
 > > > ---
-> > >  arch/arm64/boot/dts/renesas/cat875.dtsi | 30 ++++++++++++++++++++++++++++++
-> > >  1 file changed, 30 insertions(+)
+> > > v3: Renamed to hisi-dma-avail-chan
+> > > v4: Reworked to generic dma-channel-mask
+> > > ---
+> > >  Documentation/devicetree/bindings/dma/dma.txt | 4 ++++
+> > >  1 file changed, 4 insertions(+)
 > > >
-> > > diff --git a/arch/arm64/boot/dts/renesas/cat875.dtsi b/arch/arm64/boot/dts/renesas/cat875.dtsi
-> > > index a41d0d8..805ffa7 100644
-> > > --- a/arch/arm64/boot/dts/renesas/cat875.dtsi
-> > > +++ b/arch/arm64/boot/dts/renesas/cat875.dtsi
-> > > @@ -7,4 +7,34 @@
-> > >
-> > >  / {
-> > >  model = "Silicon Linux sub board for CAT874 (CAT875)";
-> > > +
-> > > +aliases {
-> > > +ethernet0 = &avb;
-> > > +};
-> > > +};
-> > > +
-> > > +&avb {
-> > > +pinctrl-0 = <&avb_pins>;
-> > > +pinctrl-names = "default";
-> > > +renesas,no-ether-link;
+> > > diff --git a/Documentation/devicetree/bindings/dma/dma.txt b/Documentation/devicetree/bindings/dma/dma.txt
+> > > index 6312fb0..eeb4e4d 100644
+> > > --- a/Documentation/devicetree/bindings/dma/dma.txt
+> > > +++ b/Documentation/devicetree/bindings/dma/dma.txt
+> > > @@ -16,6 +16,9 @@ Optional properties:
+> > >  - dma-channels:      Number of DMA channels supported by the controller.
+> > >  - dma-requests:      Number of DMA request signals supported by the
+> > >                       controller.
+> > > +- dma-channel-mask:  Bitmask of available DMA channels in ascending order
+> > > +                     that are not reserved by firmware and are available to
+> > > +                     the kernel. i.e. first channel corresponds to LSB.
 > >
-> > Is the renesas,no-ether-link required?
+> > A general assumption is, "dma-channel-mask" refers to the bit fields of
+> > the channels which needs to be masked. But here, it refers to the channels
+> > which are available. Doesn't it contradict?
 > 
-> The AVB_LINK pin from the SoC is connected to the PMEB (Power Management Event, B stands for
-> active low) pin on the  PHY, which means it is not a link signal. The PMEB signal is active when a magic
-> packet or a wake up frame are detected. As a result, we need renesas,no-ether-link and we can't
-> specify avb_link with avb_pin either.
+> Hrm. So while I can sort of understand the common usage of "mask" as
+> to "hide", thus the desire to have a bitfield mean "the channels we
+> hide" or "don't use", but in my experience bitmasking is more commonly
+> used to keep only a portion of the the bits, so from that perspective
+> its more intuitive that a mask be the channels we keep to use. So I'm
+> not sure if your suggestion makes it more clear.
+> 
+> But I'm not very particular here, so I'll defer to others on this.
 
-Thanks for following-up. In that case I am fine with this patch.
+Given the context and documentation which explicitly says it is bitmask
+of available channels, i think we are fine :)
+
+-- 
+~Vinod
