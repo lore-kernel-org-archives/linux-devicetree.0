@@ -1,11 +1,14 @@
-From: =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <zajec5@gmail.com>
-Subject: [PATCH] ARM: dts: BCM5301X: Add basic DT for Phicomm K3
-Date: Sun, 20 Jan 2019 23:33:27 +0100
-Message-ID: <20190120223327.14999-1-zajec5@gmail.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH] arm64: dts: uniphier: Add PCIe host controller and PHY
+ nodes
+Date: Mon, 21 Jan 2019 08:02:18 +0900
+Message-ID: <CAK7LNARYk12eSzFDr7r7UQJD+0NZy9fgJtuxCV3ZYuA4WS3pjg@mail.gmail.com>
+References: <1545283393-2078-1-git-send-email-hayashi.kunihiko@socionext.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1545283393-2078-1-git-send-email-hayashi.kunihiko@socionext.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,61 +18,33 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Florian Fainelli <f.fainelli@gmail.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Hao Dong <halbertdong@gmail.com>, Hauke Mehrtens <hauke@hauke-m.de>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, =?UTF-8?q?Rafa=C5=82=20Mi=C5=82ecki?= <rafal@milecki.pl>, Hamster Tian <haotia@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>, Rob Herring <robh+dt@kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogSGFvIERvbmcgPGhhbGJlcnRkb25nQGdtYWlsLmNvbT4KClRoaXMgcm91dGVyIGhhcyBC
-Q000NzA5QzAgU29DLCAxMjggTWlCIE5BTkQgZmxhc2ggKE1YMzBMRjFHMThBQy1USSksCjUxMiBN
-aUIgbWVtb3J5IGFuZCAzIHggTEFOIGFuZCAxIHggV0FOIHBvcnRzLiBXaUZpIGNoaXBzIGFyZQpC
-Q000MzY2QzAgeCAyLiBUaGUgcm91dGVyIGhhcyBhIHNtYWxsIExDRCBhbmQgMyBjYXBhY3RpdmUg
-a2V5cyBkcml2ZW4gYnkKYSBQSUMgbWljcm9jb250cm9sbGVyLCB3aGljaCBpcyBpbiB0dXJuIHdp
-cmVkIHRvIFVBUlQxIG9mIG1haW4gYm9hcmQuCgpTaWduZWQtb2ZmLWJ5OiBIYW8gRG9uZyA8aGFs
-YmVydGRvbmdAZ21haWwuY29tPgpbcm1pbGVja2k6IGRyb3AgY2hvc2VuIHsgfSwgZml4IHdoaXRl
-c3BhY2VzLCB1cGRhdGUgY29tbWl0IG1lc3NhZ2VdClNpZ25lZC1vZmYtYnk6IFJhZmHFgiBNacWC
-ZWNraSA8cmFmYWxAbWlsZWNraS5wbD4KLS0tCkkndmUgdGFrZW4gT3BlbldydCBzdWJtaXR0ZWQg
-RFRTIGFuZCB1cGRhdGVkIGl0IHRvIGZpdCB1cHN0cmVhbQpzdGFuZGFyZHM6CjEpIERyb3BwZWQg
-Y2hvc2VuIHsgfSB3aXRoIGR1cGxpY2F0ZWQgY29uc29sZSBpbmZvCjIpIEZpeGVkIHdoaXRlc3Bh
-Y2VzCjMpIERyb3BwZWQgT3BlbldydCBzcGVjaWZpYyBpbmZvIGZyb20gdGhlIGNvbW1pdCBtZXNz
-YWdlOgogICAqIExDRCBzb2Z0d2FyZSBwYWNrYWdlCiAgICogb3BlbndydC5vcmcgJiA0MzY2YzAg
-ZmlybXdhcmUKLS0tCiBhcmNoL2FybS9ib290L2R0cy9NYWtlZmlsZSAgICAgICAgICAgICAgICB8
-ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LXBoaWNvbW0tazMuZHRzIHwgNzEgKysr
-KysrKysrKysrKysrKysrKysrKysKIDIgZmlsZXMgY2hhbmdlZCwgNzIgaW5zZXJ0aW9ucygrKQog
-Y3JlYXRlIG1vZGUgMTAwNjQ0IGFyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LXBoaWNvbW0tazMu
-ZHRzCgpkaWZmIC0tZ2l0IGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUgYi9hcmNoL2FybS9i
-b290L2R0cy9NYWtlZmlsZQppbmRleCBiZDQwMTQ4YTE1YjIuLmJiYzBmNDUyN2MzOSAxMDA2NDQK
-LS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvTWFrZWZpbGUKKysrIGIvYXJjaC9hcm0vYm9vdC9kdHMv
-TWFrZWZpbGUKQEAgLTExNSw2ICsxMTUsNyBAQCBkdGItJChDT05GSUdfQVJDSF9CQ01fNTMwMVgp
-ICs9IFwKIAliY200NzA5NC1sdXh1bC14d3ItMzEwMC5kdGIgXAogCWJjbTQ3MDk0LWx1eHVsLXh3
-ci0zMTUwLXYxLmR0YiBcCiAJYmNtNDcwOTQtbmV0Z2Vhci1yODUwMC5kdGIgXAorCWJjbTQ3MDk0
-LXBoaWNvbW0tazMuZHRiIFwKIAliY205NDcwOC5kdGIgXAogCWJjbTk0NzA5LmR0YiBcCiAJYmNt
-OTUzMDEyZXIuZHRiIFwKZGlmZiAtLWdpdCBhL2FyY2gvYXJtL2Jvb3QvZHRzL2JjbTQ3MDk0LXBo
-aWNvbW0tazMuZHRzIGIvYXJjaC9hcm0vYm9vdC9kdHMvYmNtNDcwOTQtcGhpY29tbS1rMy5kdHMK
-bmV3IGZpbGUgbW9kZSAxMDA2NDQKaW5kZXggMDAwMDAwMDAwMDAwLi5lYzA5YzA0MjZkMTYKLS0t
-IC9kZXYvbnVsbAorKysgYi9hcmNoL2FybS9ib290L2R0cy9iY200NzA5NC1waGljb21tLWszLmR0
-cwpAQCAtMCwwICsxLDcxIEBACisvLyBTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogR1BMLTIuMC1v
-ci1sYXRlciBPUiBNSVQKKy8qCisgKiBDb3B5cmlnaHQgKEMpIDIwMTcgSGFtc3RlciBUaWFuIDxo
-YW90aWFAZ21haWwuY29tPgorICogQ29weXJpZ2h0IChDKSAyMDE5IEhhbyBEb25nIDxoYWxiZXJ0
-ZG9uZ0BnbWFpbC5jb20+CisgKi8KKworL2R0cy12MS87CisKKyNpbmNsdWRlICJiY200NzA5NC5k
-dHNpIgorI2luY2x1ZGUgImJjbTUzMDF4LW5hbmQtY3MwLWJjaDQuZHRzaSIKKworLyB7CisJY29t
-cGF0aWJsZSA9ICJwaGljb21tLGszIiwgImJyY20sYmNtNDcwOTQiLCAiYnJjbSxiY200NzA4IjsK
-Kwltb2RlbCA9ICJQaGljb21tIEszIjsKKworCW1lbW9yeSB7CisJCXJlZyA9IDwweDAwMDAwMDAw
-IDB4MDgwMDAwMDAKKwkJICAgICAgIDB4ODgwMDAwMDAgMHgxODAwMDAwMD47CisJfTsKKworCWdw
-aW8ta2V5cyB7CisJCWNvbXBhdGlibGUgPSAiZ3Bpby1rZXlzIjsKKwkJI2FkZHJlc3MtY2VsbHMg
-PSA8MT47CisJCSNzaXplLWNlbGxzID0gPDA+OworCisJCXJlc3RhcnQgeworCQkJbGFiZWwgPSAi
-UmVzZXQiOworCQkJbGludXgsY29kZSA9IDxLRVlfUkVTVEFSVD47CisJCQlncGlvcyA9IDwmY2hp
-cGNvbW1vbiAxNyBHUElPX0FDVElWRV9MT1c+OworCQl9OworCX07Cit9OworCismdWFydDEgewor
-CXN0YXR1cyA9ICJva2F5IjsKK307CisKKyZ1c2IzX3BoeSB7CisJc3RhdHVzID0gIm9rYXkiOwor
-fTsKKworJm5hbmRjcyB7CisJcGFydGl0aW9ucyB7CisJCWNvbXBhdGlibGUgPSAiZml4ZWQtcGFy
-dGl0aW9ucyI7CisJCSNhZGRyZXNzLWNlbGxzID0gPDE+OworCQkjc2l6ZS1jZWxscyA9IDwxPjsK
-KworCQlwYXJ0aXRpb25AMCB7CisJCQlsYWJlbCA9ICJib290IjsKKwkJCXJlZyA9IDwweDAwMDAw
-MDAgMHgwMDgwMDAwPjsKKwkJCXJlYWQtb25seTsKKwkJfTsKKworCQlwYXJ0aXRpb25AODAwMDAg
-eworCQkJbGFiZWwgPSAibnZyYW0iOworCQkJcmVnID0gPDB4MDA4MDAwMCAweDAxMDAwMDA+Owor
-CQl9OworCisJCXBhcnRpdGlvbkAxODAwMDB7CisJCQlsYWJlbCA9ICJwaGljb21tIjsKKwkJCXJl
-ZyA9IDwweDAxODAwMDAgMHgwMjgwMDAwPjsKKwkJCXJlYWQtb25seTsKKwkJfTsKKworCQlwYXJ0
-aXRpb25ANDAwMDAwIHsKKwkJCWxhYmVsID0gImZpcm13YXJlIjsKKwkJCXJlZyA9IDwweDA0MDAw
-MDAgMHg3QzAwMDAwPjsKKwkJCWNvbXBhdGlibGUgPSAiYnJjbSx0cngiOworCQl9OworCX07Cit9
-OwotLSAKMi4yMC4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5lbEBsaXN0
-cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4vbGlzdGlu
-Zm8vbGludXgtYXJtLWtlcm5lbAo=
+On Thu, Dec 20, 2018 at 3:46 PM Kunihiko Hayashi
+<hayashi.kunihiko@socionext.com> wrote:
+>
+> Add PCIe host controller and PHY nodes. This supports for LD20, PXs3 and
+> their boards.
+>
+> This node defines PCIe memory, I/O, and config spaces as follows.
+>
+>   MEM: 20000000-2ffdffff (255MB)
+>   I/O: 2ffe0000-2ffeffff ( 64KB)
+>   CFG: 2fff0000-2fffffff ( 64KB)
+>
+> Signed-off-by: Kunihiko Hayashi <hayashi.kunihiko@socionext.com>
+> ---
+>  arch/arm64/boot/dts/socionext/uniphier-ld20.dtsi   | 47 ++++++++++++++++++++++
+>  .../arm64/boot/dts/socionext/uniphier-pxs3-ref.dts |  4 ++
+>  arch/arm64/boot/dts/socionext/uniphier-pxs3.dtsi   | 47 ++++++++++++++++++++++
+>  3 files changed, 98 insertions(+)
+
+
+Applied to linux-uniphier. Thanks.
+
+
+-- 
+Best Regards
+Masahiro Yamada
