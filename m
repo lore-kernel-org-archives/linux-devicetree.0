@@ -1,57 +1,77 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for Amlogic NAND controller
+Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
  driver
-Date: Sun, 20 Jan 2019 16:06:05 +0100
-Message-ID: <20190120160605.33689354@xps13>
-References: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
+Date: Sun, 20 Jan 2019 16:16:48 +0100
+Message-ID: <20190120161648.102191be@xps13>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+        <87va2llxhz.fsf@FE-laptop>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
+In-Reply-To: <87va2llxhz.fsf@FE-laptop>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jianxin Pan <jianxin.pan@amlogic.com>
-Cc: Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, Liang Yang <liang.yang@amlogic.com>, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jianxin,
+Hi Gregory,
 
-Jianxin Pan <jianxin.pan@amlogic.com> wrote on Sun, 20 Jan 2019
-01:02:35 +0800:
+Gregory CLEMENT <gregory.clement@bootlin.com> wrote on Fri, 18 Jan 2019
+17:51:52 +0100:
 
-> Add entry for Amlogic NAND controller driver and its bindings[0].
-> 
-> [0] https://lore.kernel.org/lkml/1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com/
-> 
-> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>
-
-If you are the author of the patch your Signed-off-by should come first.
-
-Also, why is Liang the Maintainer? Why not you?
-
-> ---
->  MAINTAINERS | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 0abecc5..7d976a1 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -9628,6 +9628,13 @@ F:	drivers/media/platform/meson/ao-cec.c
->  F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
->  T:	git git://linuxtv.org/media_tree.git
+> Hi Miquel,
 >  
-> +MESON NAND CONTROLLER DRIVER FOR AMLOGIC SOCS
-> +M:	Liang Yang <liang.yang@amlogic.com>
-> +L:	linux-mtd@lists.infradead.org
-> +S:	Maintained
-> +F:	drivers/mtd/nand/raw/meson_*
-> +F:	Documentation/devicetree/bindings/mtd/amlogic,meson-nand.txt
-> +
->  MICROBLAZE ARCHITECTURE
->  M:	Michal Simek <monstr@monstr.eu>
->  W:	http://www.monstr.eu/fdt/
+>  On mar., janv. 08 2019, Miquel Raynal <miquel.raynal@bootlin.com> wrote:
+> 
+> > Hello,
+> >
+> > As part of an effort to bring suspend to RAM support to Armada 3700
+> > SoCs (main target: ESPRESSObin), this series handles the work around
+> > the PCIe IP.
+> >
+> > First, more configuration is done in the 'setup' helper as inspired
+> > from the U-Boot driver. This is needed to entirely initialize the IP
+> > during future resume operation (patch 1).
+> >
+> > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+> > current device trees do not provide the corresponding properties, not
+> > finding one of these properties is not an error and just produces a
+> > warning. However, if the property is present, an error during PHY
+> > initialization will fail the probe of the driver.
+> >
+> > Note: To be sure the clock will be resumed before this driver, a first
+> > series adding links between clocks and consumers has been submitted,
+> > see [1]. Anyway, having the clock series applied first is not needed.
+> >
+> > Patch 5 adds suspend/resume hooks, re-using all the above.
+> >
+> > Finally, bindings and device trees are updated to reflect the hardware
+> > (patch 6-12). While the clock depends on the SoC, the reset GPIO and
+> > the PHY depends on the board so the clock is added in the
+> > armada-37xx.dtsi file while the two other properties are added in
+> > armada-3720-espressobin.dts.
+> >
+> > [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-January/623885.html
+> >
+> > Thanks,
+> > Miquèl
+> >
+> >
+> > Changes since v2:
+> > =================
+> > * Minor patches reordering.
+> > * Added pinctrl patches from Gregory Clement fixing the PCIe pins. His
+> >   changes implied modifications in the DT/bindings patches adding PCIe
+> >   reset pin support.  
+> 
+> Actually these patches are not in this series. You propably meant that
+> this series is depend on these patches.
+> 
+> If needed, for peoaple who wanted to test this series, the pinctrl
+> changes are now in linux-next and also in pinctrl/for-next.
+
+Absolutely, this is what I meant, thanks for clarifying.
 
 Thanks,
 Miquèl
