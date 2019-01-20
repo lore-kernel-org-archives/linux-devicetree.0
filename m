@@ -1,122 +1,145 @@
 From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PatchV2 1/2] ARM64: dts: meson-gxbb-odroidc2: Fix usb phy
- regulator power failed warning
-Date: Mon, 21 Jan 2019 00:15:15 +0530
-Message-ID: <CANAwSgRPkoos20wW9-avUGUP7LBD4=7uBKjO2CKyxnbLHxQzQw@mail.gmail.com>
-References: <20190113153022.5040-1-linux.amoon@gmail.com> <7hy37j9ebi.fsf@baylibre.com>
+Subject: Re: [PATCH 2/2] ARM: dts: meson8b: odroidc1: Fix usb phy regulator
+ power failed warning
+Date: Mon, 21 Jan 2019 00:16:40 +0530
+Message-ID: <CANAwSgQEq9oeE=n8L=h4bHgAnaZQeKCpMU0KWxRU=NijHNNUZw@mail.gmail.com>
+References: <20190113181808.5768-1-linux.amoon@gmail.com>
+ <20190113181808.5768-2-linux.amoon@gmail.com>
+ <CAFBinCCNpW=m4P=dqkn4eKeDPJyi_RML07ZhPKQeFH5j7mXkkg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hy37j9ebi.fsf@baylibre.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAFBinCCNpW=m4P=dqkn4eKeDPJyi_RML07ZhPKQeFH5j7mXkkg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Emiliano Ingrassia <ingrassia@epigenesys.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin / Martin,
+Hi Martin,
 
-On Fri, 18 Jan 2019 at 02:44, Kevin Hilman <khilman@baylibre.com> wrote:
+On Sat, 19 Jan 2019 at 03:36, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
 >
 > Hi Anand,
 >
-> Anand Moon <linux.amoon@gmail.com> writes:
->
+> On Sun, Jan 13, 2019 at 7:18 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> >
 > > Override the dr_mode from "host" to "peripheral" for dwc2
-> > usb_phy0->usb0 initilization of OTG Micro-B type.
+> > usb_phy0->usb0 initialization of OTG Micro-B type.
 > > Changes fix the below warning for phy poweron failed --> -22
 > >
-> > Changes fix the initialization of c9000000.usb phy
+> > This fix the initialization of c9040000.usb phy.
 > >
-> > [    1.203900] phy phy-c0000000.phy.0: USB ID detect failed!
-> > [    1.208048] phy phy-c0000000.phy.0: phy poweron failed --> -22
-> > [    1.213877] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
-> > [    1.222953] Modules linked in:
-> > [    1.225976] CPU: 1 PID: 44 Comm: kworker/1:1 Not tainted 5.0.0-rc1-xc2ml #3
-> > [    1.232872] Hardware name: Hardkernel ODROID-C2 (DT)
-> > [    1.237794] Workqueue: events deferred_probe_work_func
-> > [    1.242878] pstate: 80000005 (Nzcv daif -PAN -UAO)
-> > [    1.247623] pc : _regulator_put.part.11+0xf0/0xf8
-> > [    1.252280] lr : regulator_put+0x34/0x48
-> > [    1.256159] sp : ffff00001176bb00
-> > [    1.259437] x29: ffff00001176bb00 x28: 0000000000000000
-> > [    1.264698] x27: ffff80007f31beb8 x26: ffff000010eeb7e0
-> > [    1.269959] x25: 0000000000000000 x24: 0000000000000009
-> > [    1.275220] x23: ffff00001176bbc8 x22: ffff80007ed9d500
-> > [    1.280482] x21: ffff0000111bd6c8 x20: ffff80007ed9d700
-> > [    1.285743] x19: ffff80007ed9d700 x18: 000000000000006f
-> > [    1.291004] x17: 0000000000000000 x16: 0000000000000000
-> > [    1.296265] x15: 0000000000000400 x14: 0000000000000400
-> > [    1.301527] x13: ff00000000000000 x12: ffffffffffffffff
-> > [    1.306788] x11: 0000000000000038 x10: 0000000000000040
-> > [    1.312049] x9 : ffff0000111d58b0 x8 : ffff0000111d58a8
-> > [    1.317310] x7 : ffff80007ed9db00 x6 : ffff80007ec21b00
-> > [    1.322571] x5 : ffff80007f400248 x4 : ffff80007fba9b00
-> > [    1.327833] x3 : ffff0000112d9eb8 x2 : ffff80007ec21b00
-> > [    1.333094] x1 : 0000000000000000 x0 : 0000000000000001
-> > [    1.338356] Call trace:
-> > [    1.340773]  _regulator_put.part.11+0xf0/0xf8
-> > [    1.345085]  regulator_put+0x34/0x48
-> > [    1.348621]  regulator_bulk_free+0x30/0x50
-> > [    1.352675]  devm_regulator_bulk_release+0x18/0x20
-> > [    1.357421]  release_nodes+0x1b0/0x220
-> > [    1.361127]  devres_release_all+0x34/0x50
-> > [    1.365094]  really_probe+0xec/0x290
-> > [    1.368630]  driver_probe_device+0x54/0xe8
-> > [    1.372684]  __device_attach_driver+0xb8/0xe8
-> > [    1.376997]  bus_for_each_drv+0x78/0xc8
-> > [    1.380792]  __device_attach+0xd4/0x130
-> > [    1.384587]  device_initial_probe+0x10/0x18
-> > [    1.388727]  bus_probe_device+0x90/0x98
-> > [    1.392522]  deferred_probe_work_func+0x6c/0xa0
-> > [    1.397010]  process_one_work+0x1e0/0x318
-> > [    1.400975]  worker_thread+0x228/0x428
-> > [    1.404684]  kthread+0x124/0x128
-> > [    1.407876]  ret_from_fork+0x10/0x18
-> > [    1.411410] ---[ end trace de5fd1b262c1f56a ]---
-> > [    1.416055] WARNING: CPU: 1 PID: 44 at drivers/regulator/core.c:2054 _regulator_put.part.11+0xf0/0xf8
-> > [    1.425123] Modules linked in:
-> > [    1.428144] CPU: 1 PID: 44 Comm: kworker/1:1 Tainted: GW 5.0.0-rc1-xc2ml #3
-> > [    1.436422] Hardware name: Hardkernel ODROID-C2 (DT)
-> > [    1.441340] Workqueue: events deferred_probe_work_func
+> > [    1.639706] phy phy-c1108800.phy.0: USB ID detect failed!
+> > [    1.643850] phy phy-c1108800.phy.0: phy poweron failed --> -22
+> > [    1.649706] ------------[ cut here ]------------
+> > [    1.654273] WARNING: CPU: 0 PID: 29 at drivers/regulator/core.c:2054 _regulator_put.part.8+0xf8/0xfc
+> > [    1.663400] Modules linked in:
+> > [    1.666439] CPU: 0 PID: 29 Comm: kworker/0:1 Not tainted 4.20.0-xc1ml #11
+> > [    1.673192] Hardware name: Amlogic Meson platform
+> > [    1.677894] Workqueue: events deferred_probe_work_func
+> > [    1.683027] [<c0312204>] (unwind_backtrace) from [<c030cb8c>] (show_stack+0x10/0x14)
+> > [    1.690746] [<c030cb8c>] (show_stack) from [<c0e223b8>] (dump_stack+0x8c/0xa0)
+> > [    1.697953] [<c0e223b8>] (dump_stack) from [<c0346334>] (__warn.part.3+0xbc/0xd8)
+> > [    1.705418] [<c0346334>] (__warn.part.3) from [<c03464b0>] (warn_slowpath_null+0x44/0x4c)
+> > [    1.713579] [<c03464b0>] (warn_slowpath_null) from [<c07df6b8>] (_regulator_put.part.8+0xf8/0xfc)
+> > [    1.722437] [<c07df6b8>] (_regulator_put.part.8) from [<c07df6e4>] (regulator_put+0x28/0x38)
+> > [    1.730859] [<c07df6e4>] (regulator_put) from [<c07df71c>] (regulator_bulk_free+0x28/0x38)
+> > [    1.739112] [<c07df71c>] (regulator_bulk_free) from [<c0943858>] (release_nodes+0x1bc/0x200)
+> > [    1.747537] [<c0943858>] (release_nodes) from [<c093f82c>] (really_probe+0x110/0x2cc)
+> > [    1.755350] [<c093f82c>] (really_probe) from [<c093fb4c>] (driver_probe_device+0x60/0x16c)
+> > [    1.763599] [<c093fb4c>] (driver_probe_device) from [<c093dcd4>] (bus_for_each_drv+0x80/0xc4)
+> > [    1.772110] [<c093dcd4>] (bus_for_each_drv) from [<c093f6ac>] (__device_attach+0xd0/0x138)
+> > [    1.780359] [<c093f6ac>] (__device_attach) from [<c093eae4>] (bus_probe_device+0x84/0x8c)
+> > [    1.788522] [<c093eae4>] (bus_probe_device) from [<c093ef80>] (deferred_probe_work_func+0x60/0x8c)
+> > [    1.797470] [<c093ef80>] (deferred_probe_work_func) from [<c035fdb8>] (process_one_work+0x218/0x504)
+> > [    1.806585] [<c035fdb8>] (process_one_work) from [<c0360ea8>] (worker_thread+0x2a8/0x5bc)
+> > [    1.814748] [<c0360ea8>] (worker_thread) from [<c0365a18>] (kthread+0x14c/0x154)
+> > [    1.822128] [<c0365a18>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+> > [    1.829331] Exception stack(0xee0ebfb0 to 0xee0ebff8)
+> > [    1.834369] bfa0:                                     00000000 00000000 00000000 00000000
+> > [    1.842534] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > [    1.850695] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > [    1.857311] ---[ end trace e28bbc26874282a4 ]---
+> > [    1.861984] ------------[ cut here ]------------
+> > [    1.866524] WARNING: CPU: 0 PID: 29 at drivers/regulator/core.c:2054 _regulator_put.part.8+0xf8/0xfc
+> > [    1.875629] Modules linked in:
+> > [    1.878658] CPU: 0 PID: 29 Comm: kworker/0:1 Tainted: GW         4.20.0-xc1ml #11
+> > [    1.886817] Hardware name: Amlogic Meson platform
+> > [    1.891513] Workqueue: events deferred_probe_work_func
+> > [    1.896641] [<c0312204>] (unwind_backtrace) from [<c030cb8c>] (show_stack+0x10/0x14)
+> > [    1.904366] [<c030cb8c>] (show_stack) from [<c0e223b8>] (dump_stack+0x8c/0xa0)
+> > [    1.911573] [<c0e223b8>] (dump_stack) from [<c0346334>] (__warn.part.3+0xbc/0xd8)
+> > [    1.919041] [<c0346334>] (__warn.part.3) from [<c03464b0>] (warn_slowpath_null+0x44/0x4c)
+> > [    1.927203] [<c03464b0>] (warn_slowpath_null) from [<c07df6b8>] (_regulator_put.part.8+0xf8/0xfc)
+> > [    1.936060] [<c07df6b8>] (_regulator_put.part.8) from [<c07df6e4>] (regulator_put+0x28/0x38)
+> > [    1.944483] [<c07df6e4>] (regulator_put) from [<c07df71c>] (regulator_bulk_free+0x28/0x38)
+> > [    1.952734] [<c07df71c>] (regulator_bulk_free) from [<c0943858>] (release_nodes+0x1bc/0x200)
+> > [    1.961159] [<c0943858>] (release_nodes) from [<c093f82c>] (really_probe+0x110/0x2cc)
+> > [    1.968974] [<c093f82c>] (really_probe) from [<c093fb4c>] (driver_probe_device+0x60/0x16c)
+> > [    1.977224] [<c093fb4c>] (driver_probe_device) from [<c093dcd4>] (bus_for_each_drv+0x80/0xc4)
+> > [    1.985734] [<c093dcd4>] (bus_for_each_drv) from [<c093f6ac>] (__device_attach+0xd0/0x138)
+> > [    1.993984] [<c093f6ac>] (__device_attach) from [<c093eae4>] (bus_probe_device+0x84/0x8c)
+> > [    2.002147] [<c093eae4>] (bus_probe_device) from [<c093ef80>] (deferred_probe_work_func+0x60/0x8c)
+> > [    2.011092] [<c093ef80>] (deferred_probe_work_func) from [<c035fdb8>] (process_one_work+0x218/0x504)
+> > [    2.020209] [<c035fdb8>] (process_one_work) from [<c0360ea8>] (worker_thread+0x2a8/0x5bc)
+> > [    2.028371] [<c0360ea8>] (worker_thread) from [<c0365a18>] (kthread+0x14c/0x154)
+> > [    2.035752] [<c0365a18>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
+> > [    2.042955] Exception stack(0xee0ebfb0 to 0xee0ebff8)
+> > [    2.047993] bfa0:                                     00000000 00000000 00000000 00000000
+> > [    2.056158] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
+> > [    2.064320] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
+> > [    2.070934] ---[ end trace e28bbc26874282a5 ]---
 > >
-> > Fixes: 5a0803bd5ae (ARM64: dts: meson-gxbb-odroidc2: Enable USB Nodes)
+> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > ---
+> > Rebased on Kevin's amlogic/v5.0/fixes branch
+> > Note the warning is not getting produced on the latest kernel.
+> > ---
+> >  arch/arm/boot/dts/meson8b-odroidc1.dts | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+> > index a49a8509b288..9d7f725cfe35 100644
+> > --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
+> > +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+> > @@ -318,6 +318,7 @@
+> >
+> >  &usb0 {
+> >         status = "okay";
+> > +       dr_mode = "peripheral";
+> >  };
+> with this change I get the following message during boot:
+>   dwc2 c9040000.usb: Configuration mismatch. dr_mode forced to host
 >
-> Minor nit: the shortlog should be in double quotes.
+> as far as I understand your original problem is the following error
+> from the USB2 PHY driver:
+>   phy phy-c1108800.phy.0: USB ID detect failed!
+>   phy phy-c1108800.phy.0: phy poweron failed --> -22
+> maybe we should fix that instead?
+I could not fix the phy reg setting for c1108800 setting in dts to look into.
 >
-> I fixed it up manually, so nothing you need to do, but just for future
-> reference.
 >
-> This was found by some automated checking recently added to the
-> linux-next tree.
->
-> Kevin
->
+> Regards
+> Martin
 
-Thanks: I will follow the protocol next time.
+Thanks for pointing my mistake.
 
-As pointed my Martin on Odroid C1+ my patch do not fix complete issue.
-
-[0] https://patchwork.kernel.org/patch/10761371/
-[1] https://patchwork.kernel.org/patch/10761375/
-
-Both of my patch seem to be wrong and if possible please so drop them
-from linux-next and your fix tagged.
-I will try to find proper fix proper to the issue.
-
-Quick phy driver and dts changes enable  *Bus 01.Port 1* and *Bus 02.Port 1*
-
-[alarm@archl-c2m ~]$ lsusb -t
-/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
-    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
-        |__ Port 1: Dev 5, If 0, Class=Mass Storage, Driver=usb-storage, 480M
-        |__ Port 2: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
-        |__ Port 2: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
-        |__ Port 2: Dev 3, If 2, Class=Audio, Driver=, 480M
-        |__ Port 2: Dev 3, If 3, Class=Audio, Driver=, 480M
-        |__ Port 3: Dev 4, If 0, Class=Vendor Specific Class, Driver=, 480M
-/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
-
-Need to fix the vbus setting for both the bus ports, which I am looking into.
+Actually the dr_mode = "otg"; seem to be correct solution.
+with this changes we need to fix the phy-meson8b-usb2.c to enable the
+OTG bus port.
 
 Best Regards
 
