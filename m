@@ -1,16 +1,15 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 2/2] ARM: dts: meson8b: odroidc1: Fix usb phy regulator
- power failed warning
-Date: Mon, 21 Jan 2019 00:16:40 +0530
-Message-ID: <CANAwSgQEq9oeE=n8L=h4bHgAnaZQeKCpMU0KWxRU=NijHNNUZw@mail.gmail.com>
-References: <20190113181808.5768-1-linux.amoon@gmail.com>
- <20190113181808.5768-2-linux.amoon@gmail.com>
- <CAFBinCCNpW=m4P=dqkn4eKeDPJyi_RML07ZhPKQeFH5j7mXkkg@mail.gmail.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v3 1/8] i2c: iproc: I2C read up to 255 bytes support
+Date: Sun, 20 Jan 2019 13:41:14 -0800
+Message-ID: <e3f402dc-3fa9-4d3c-8fc5-956737c1a3f3@broadcom.com>
+References: <1547791464-3540-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <1547791464-3540-2-git-send-email-rayagonda.kokatanur@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAFBinCCNpW=m4P=dqkn4eKeDPJyi_RML07ZhPKQeFH5j7mXkkg@mail.gmail.com>
+In-Reply-To: <1547791464-3540-2-git-send-email-rayagonda.kokatanur@broadcom.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,128 +19,210 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Emiliano Ingrassia <ingrassia@epigenesys.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
+To: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, rjui@broadcom.com
+Cc: mark.rutland@arm.com, Shreesha Rajashekar <shreesha@broadcom.com>, heikki.krogerus@linux.intel.com, vigneshr@ti.com, ajayg@nvidia.com, wsa@the-dreams.de, rayagonoda.kokatanur@braodcom.com, aaron.wu@analog.com, pierre-yves.mordret@st.com, kramasub@codeaurora.org, linux-i2c@vger.kernel.org, manivannan.sadhasivam@linaro.org, jdelvare@suse.de, f.fainelli@gmail.com, eajames@linux.vnet.ibm.com, shreesha.rajashekar@broadcom.com, bcm-kernel-feedback-list@broadcom.com, geert@linux-m68k.org, devicetree@vger.kernel.org, arnd@arndb.de, robh+dt@kernel.org, ccheng@broadcom.com, andriy.shevchenko@linux.intel.com, mika.westerberg@linux.intel.com, linux-arm-kernel@lists.infradead.org, sbranden@broadcom.com, ard.biesheuvel@linaro.org, linux-kernel@vger.kernel.org, jarkko.nikula@linux.intel.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-On Sat, 19 Jan 2019 at 03:36, Martin Blumenstingl
-<martin.blumenstingl@googlemail.com> wrote:
->
-> Hi Anand,
->
-> On Sun, Jan 13, 2019 at 7:18 PM Anand Moon <linux.amoon@gmail.com> wrote:
-> >
-> > Override the dr_mode from "host" to "peripheral" for dwc2
-> > usb_phy0->usb0 initialization of OTG Micro-B type.
-> > Changes fix the below warning for phy poweron failed --> -22
-> >
-> > This fix the initialization of c9040000.usb phy.
-> >
-> > [    1.639706] phy phy-c1108800.phy.0: USB ID detect failed!
-> > [    1.643850] phy phy-c1108800.phy.0: phy poweron failed --> -22
-> > [    1.649706] ------------[ cut here ]------------
-> > [    1.654273] WARNING: CPU: 0 PID: 29 at drivers/regulator/core.c:2054 _regulator_put.part.8+0xf8/0xfc
-> > [    1.663400] Modules linked in:
-> > [    1.666439] CPU: 0 PID: 29 Comm: kworker/0:1 Not tainted 4.20.0-xc1ml #11
-> > [    1.673192] Hardware name: Amlogic Meson platform
-> > [    1.677894] Workqueue: events deferred_probe_work_func
-> > [    1.683027] [<c0312204>] (unwind_backtrace) from [<c030cb8c>] (show_stack+0x10/0x14)
-> > [    1.690746] [<c030cb8c>] (show_stack) from [<c0e223b8>] (dump_stack+0x8c/0xa0)
-> > [    1.697953] [<c0e223b8>] (dump_stack) from [<c0346334>] (__warn.part.3+0xbc/0xd8)
-> > [    1.705418] [<c0346334>] (__warn.part.3) from [<c03464b0>] (warn_slowpath_null+0x44/0x4c)
-> > [    1.713579] [<c03464b0>] (warn_slowpath_null) from [<c07df6b8>] (_regulator_put.part.8+0xf8/0xfc)
-> > [    1.722437] [<c07df6b8>] (_regulator_put.part.8) from [<c07df6e4>] (regulator_put+0x28/0x38)
-> > [    1.730859] [<c07df6e4>] (regulator_put) from [<c07df71c>] (regulator_bulk_free+0x28/0x38)
-> > [    1.739112] [<c07df71c>] (regulator_bulk_free) from [<c0943858>] (release_nodes+0x1bc/0x200)
-> > [    1.747537] [<c0943858>] (release_nodes) from [<c093f82c>] (really_probe+0x110/0x2cc)
-> > [    1.755350] [<c093f82c>] (really_probe) from [<c093fb4c>] (driver_probe_device+0x60/0x16c)
-> > [    1.763599] [<c093fb4c>] (driver_probe_device) from [<c093dcd4>] (bus_for_each_drv+0x80/0xc4)
-> > [    1.772110] [<c093dcd4>] (bus_for_each_drv) from [<c093f6ac>] (__device_attach+0xd0/0x138)
-> > [    1.780359] [<c093f6ac>] (__device_attach) from [<c093eae4>] (bus_probe_device+0x84/0x8c)
-> > [    1.788522] [<c093eae4>] (bus_probe_device) from [<c093ef80>] (deferred_probe_work_func+0x60/0x8c)
-> > [    1.797470] [<c093ef80>] (deferred_probe_work_func) from [<c035fdb8>] (process_one_work+0x218/0x504)
-> > [    1.806585] [<c035fdb8>] (process_one_work) from [<c0360ea8>] (worker_thread+0x2a8/0x5bc)
-> > [    1.814748] [<c0360ea8>] (worker_thread) from [<c0365a18>] (kthread+0x14c/0x154)
-> > [    1.822128] [<c0365a18>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-> > [    1.829331] Exception stack(0xee0ebfb0 to 0xee0ebff8)
-> > [    1.834369] bfa0:                                     00000000 00000000 00000000 00000000
-> > [    1.842534] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > [    1.850695] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > [    1.857311] ---[ end trace e28bbc26874282a4 ]---
-> > [    1.861984] ------------[ cut here ]------------
-> > [    1.866524] WARNING: CPU: 0 PID: 29 at drivers/regulator/core.c:2054 _regulator_put.part.8+0xf8/0xfc
-> > [    1.875629] Modules linked in:
-> > [    1.878658] CPU: 0 PID: 29 Comm: kworker/0:1 Tainted: GW         4.20.0-xc1ml #11
-> > [    1.886817] Hardware name: Amlogic Meson platform
-> > [    1.891513] Workqueue: events deferred_probe_work_func
-> > [    1.896641] [<c0312204>] (unwind_backtrace) from [<c030cb8c>] (show_stack+0x10/0x14)
-> > [    1.904366] [<c030cb8c>] (show_stack) from [<c0e223b8>] (dump_stack+0x8c/0xa0)
-> > [    1.911573] [<c0e223b8>] (dump_stack) from [<c0346334>] (__warn.part.3+0xbc/0xd8)
-> > [    1.919041] [<c0346334>] (__warn.part.3) from [<c03464b0>] (warn_slowpath_null+0x44/0x4c)
-> > [    1.927203] [<c03464b0>] (warn_slowpath_null) from [<c07df6b8>] (_regulator_put.part.8+0xf8/0xfc)
-> > [    1.936060] [<c07df6b8>] (_regulator_put.part.8) from [<c07df6e4>] (regulator_put+0x28/0x38)
-> > [    1.944483] [<c07df6e4>] (regulator_put) from [<c07df71c>] (regulator_bulk_free+0x28/0x38)
-> > [    1.952734] [<c07df71c>] (regulator_bulk_free) from [<c0943858>] (release_nodes+0x1bc/0x200)
-> > [    1.961159] [<c0943858>] (release_nodes) from [<c093f82c>] (really_probe+0x110/0x2cc)
-> > [    1.968974] [<c093f82c>] (really_probe) from [<c093fb4c>] (driver_probe_device+0x60/0x16c)
-> > [    1.977224] [<c093fb4c>] (driver_probe_device) from [<c093dcd4>] (bus_for_each_drv+0x80/0xc4)
-> > [    1.985734] [<c093dcd4>] (bus_for_each_drv) from [<c093f6ac>] (__device_attach+0xd0/0x138)
-> > [    1.993984] [<c093f6ac>] (__device_attach) from [<c093eae4>] (bus_probe_device+0x84/0x8c)
-> > [    2.002147] [<c093eae4>] (bus_probe_device) from [<c093ef80>] (deferred_probe_work_func+0x60/0x8c)
-> > [    2.011092] [<c093ef80>] (deferred_probe_work_func) from [<c035fdb8>] (process_one_work+0x218/0x504)
-> > [    2.020209] [<c035fdb8>] (process_one_work) from [<c0360ea8>] (worker_thread+0x2a8/0x5bc)
-> > [    2.028371] [<c0360ea8>] (worker_thread) from [<c0365a18>] (kthread+0x14c/0x154)
-> > [    2.035752] [<c0365a18>] (kthread) from [<c03010e8>] (ret_from_fork+0x14/0x2c)
-> > [    2.042955] Exception stack(0xee0ebfb0 to 0xee0ebff8)
-> > [    2.047993] bfa0:                                     00000000 00000000 00000000 00000000
-> > [    2.056158] bfc0: 00000000 00000000 00000000 00000000 00000000 00000000 00000000 00000000
-> > [    2.064320] bfe0: 00000000 00000000 00000000 00000000 00000013 00000000
-> > [    2.070934] ---[ end trace e28bbc26874282a5 ]---
-> >
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Rebased on Kevin's amlogic/v5.0/fixes branch
-> > Note the warning is not getting produced on the latest kernel.
-> > ---
-> >  arch/arm/boot/dts/meson8b-odroidc1.dts | 1 +
-> >  1 file changed, 1 insertion(+)
-> >
-> > diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> > index a49a8509b288..9d7f725cfe35 100644
-> > --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
-> > +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
-> > @@ -318,6 +318,7 @@
-> >
-> >  &usb0 {
-> >         status = "okay";
-> > +       dr_mode = "peripheral";
-> >  };
-> with this change I get the following message during boot:
->   dwc2 c9040000.usb: Configuration mismatch. dr_mode forced to host
->
-> as far as I understand your original problem is the following error
-> from the USB2 PHY driver:
->   phy phy-c1108800.phy.0: USB ID detect failed!
->   phy phy-c1108800.phy.0: phy poweron failed --> -22
-> maybe we should fix that instead?
-I could not fix the phy reg setting for c1108800 setting in dts to look into.
->
->
-> Regards
-> Martin
-
-Thanks for pointing my mistake.
-
-Actually the dr_mode = "otg"; seem to be correct solution.
-with this changes we need to fix the phy-meson8b-usb2.c to enable the
-OTG bus port.
-
-Best Regards
 
 
--Anand
+On 1/17/2019 10:04 PM, Rayagonda Kokatanur wrote:
+> From: Shreesha Rajashekar <shreesha@broadcom.com>
+> 
+> Add support to allow I2C RX transfer up to 255 bytes.
+> 
+> Signed-off-by: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>
+> Signed-off-by: Shreesha Rajashekar <shreesha@broadcom.com>
+> ---
+>  drivers/i2c/busses/i2c-bcm-iproc.c | 98 +++++++++++++++++++++++++++++---------
+>  1 file changed, 76 insertions(+), 22 deletions(-)
+> 
+> diff --git a/drivers/i2c/busses/i2c-bcm-iproc.c b/drivers/i2c/busses/i2c-bcm-iproc.c
+> index 4c8c3bc4669c..eb7339a0280e 100644
+> --- a/drivers/i2c/busses/i2c-bcm-iproc.c
+> +++ b/drivers/i2c/busses/i2c-bcm-iproc.c
+> @@ -80,6 +80,10 @@
+>  
+>  #define I2C_TIMEOUT_MSEC             50000
+>  #define M_TX_RX_FIFO_SIZE            64
+> +#define M_RX_FIFO_MAX_THLD_VALUE     (M_TX_RX_FIFO_SIZE - 1)
+> +
+> +#define M_RX_MAX_READ_LEN            255
+> +#define M_RX_FIFO_THLD_VALUE         50
+>  
+>  enum bus_speed_index {
+>  	I2C_SPD_100K = 0,
+> @@ -102,17 +106,41 @@ struct bcm_iproc_i2c_dev {
+>  
+>  	/* bytes that have been transferred */
+>  	unsigned int tx_bytes;
+> +	/* bytes that have been read */
+> +	unsigned int rx_bytes;
+> +	unsigned int thld_bytes;
+>  };
+>  
+>  /*
+>   * Can be expanded in the future if more interrupt status bits are utilized
+>   */
+> -#define ISR_MASK (BIT(IS_M_START_BUSY_SHIFT) | BIT(IS_M_TX_UNDERRUN_SHIFT))
+> +#define ISR_MASK (BIT(IS_M_START_BUSY_SHIFT) | BIT(IS_M_TX_UNDERRUN_SHIFT)\
+> +		| BIT(IS_M_RX_THLD_SHIFT))
+> +
+> +static void bcm_iproc_i2c_read_valid_bytes(struct bcm_iproc_i2c_dev *iproc_i2c)
+> +{
+> +	struct i2c_msg *msg = iproc_i2c->msg;
+> +
+> +	/* Read valid data from RX FIFO */
+> +	while (iproc_i2c->rx_bytes < msg->len) {
+> +		if (!((readl(iproc_i2c->base +
+> +		M_FIFO_CTRL_OFFSET) >>
+> +		M_FIFO_RX_CNT_SHIFT) &
+> +		M_FIFO_RX_CNT_MASK))
+> +			break;
+> +
+> +		msg->buf[iproc_i2c->rx_bytes] =
+> +			(readl(iproc_i2c->base + M_RX_OFFSET) >>
+> +			M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
+> +		iproc_i2c->rx_bytes++;
+> +	}
+> +}
+>  
+>  static irqreturn_t bcm_iproc_i2c_isr(int irq, void *data)
+>  {
+>  	struct bcm_iproc_i2c_dev *iproc_i2c = data;
+>  	u32 status = readl(iproc_i2c->base + IS_OFFSET);
+> +	u32 tmp;
+>  
+>  	status &= ISR_MASK;
+>  
+> @@ -136,8 +164,6 @@ static irqreturn_t bcm_iproc_i2c_isr(int irq, void *data)
+>  
+>  			/* mark the last byte */
+>  			if (idx == msg->len - 1) {
+> -				u32 tmp;
+> -
+>  				val |= BIT(M_TX_WR_STATUS_SHIFT);
+>  
+>  				/*
+> @@ -156,6 +182,32 @@ static irqreturn_t bcm_iproc_i2c_isr(int irq, void *data)
+>  		iproc_i2c->tx_bytes += tx_bytes;
+>  	}
+>  
+> +	if (status & BIT(IS_M_RX_THLD_SHIFT)) {
+> +		struct i2c_msg *msg = iproc_i2c->msg;
+> +		u32 bytes_left;
+> +
+> +		bcm_iproc_i2c_read_valid_bytes(iproc_i2c);
+> +		bytes_left = msg->len - iproc_i2c->rx_bytes;
+> +		if (bytes_left == 0) {
+> +			/* finished reading all data, disable rx thld event */
+> +			tmp = readl(iproc_i2c->base + IE_OFFSET);
+> +			tmp &= ~BIT(IS_M_RX_THLD_SHIFT);
+> +			writel(tmp, iproc_i2c->base + IE_OFFSET);
+> +		} else if (bytes_left < iproc_i2c->thld_bytes) {
+> +			/* set bytes left as threshold */
+> +			tmp = readl(iproc_i2c->base + M_FIFO_CTRL_OFFSET);
+> +			tmp &= ~(M_FIFO_RX_THLD_MASK << M_FIFO_RX_THLD_SHIFT);
+> +			tmp |= (bytes_left << M_FIFO_RX_THLD_SHIFT);
+> +			writel(tmp, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
+> +			iproc_i2c->thld_bytes = bytes_left;
+> +		}
+> +		/*
+> +		 * bytes_left >= iproc_i2c->thld_bytes,
+> +		 * hence no need to change the THRESHOLD SET.
+> +		 * It will remain as iproc_i2c->thld_bytes itself
+> +		 */
+> +	}
+> +
+>  	if (status & BIT(IS_M_START_BUSY_SHIFT)) {
+>  		iproc_i2c->xfer_is_done = 1;
+>  		complete(&iproc_i2c->done);
+> @@ -253,7 +305,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  {
+>  	int ret, i;
+>  	u8 addr;
+> -	u32 val;
+> +	u32 val, tmp, val_intr_en;
+>  	unsigned int tx_bytes;
+>  	unsigned long time_left = msecs_to_jiffies(I2C_TIMEOUT_MSEC);
+>  
+> @@ -298,7 +350,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  	 * transaction is done, i.e., the internal start_busy bit, transitions
+>  	 * from 1 to 0.
+>  	 */
+> -	val = BIT(IE_M_START_BUSY_SHIFT);
+> +	val_intr_en = BIT(IE_M_START_BUSY_SHIFT);
+>  
+>  	/*
+>  	 * If TX data size is larger than the TX FIFO, need to enable TX
+> @@ -307,9 +359,7 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  	 */
+>  	if (!(msg->flags & I2C_M_RD) &&
+>  	    msg->len > iproc_i2c->tx_bytes)
+> -		val |= BIT(IE_M_TX_UNDERRUN_SHIFT);
+> -
+> -	writel(val, iproc_i2c->base + IE_OFFSET);
+> +		val_intr_en |= BIT(IE_M_TX_UNDERRUN_SHIFT);
+>  
+>  	/*
+>  	 * Now we can activate the transfer. For a read operation, specify the
+> @@ -317,11 +367,27 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  	 */
+>  	val = BIT(M_CMD_START_BUSY_SHIFT);
+>  	if (msg->flags & I2C_M_RD) {
+> +		iproc_i2c->rx_bytes = 0;
+> +		if (msg->len > M_RX_FIFO_MAX_THLD_VALUE)
+> +			iproc_i2c->thld_bytes = M_RX_FIFO_THLD_VALUE;
+> +		else
+> +			iproc_i2c->thld_bytes = msg->len;
+> +
+> +		/* set threshold value */
+> +		tmp = readl(iproc_i2c->base + M_FIFO_CTRL_OFFSET);
+> +		tmp &= ~(M_FIFO_RX_THLD_MASK << M_FIFO_RX_THLD_SHIFT);
+> +		tmp |= iproc_i2c->thld_bytes << M_FIFO_RX_THLD_SHIFT;
+> +		writel(tmp, iproc_i2c->base + M_FIFO_CTRL_OFFSET);
+> +
+> +		/* enable the RX threshold interrupt */
+> +		val_intr_en |= BIT(IE_M_RX_THLD_SHIFT);
+> +
+>  		val |= (M_CMD_PROTOCOL_BLK_RD << M_CMD_PROTOCOL_SHIFT) |
+>  		       (msg->len << M_CMD_RD_CNT_SHIFT);
+>  	} else {
+>  		val |= (M_CMD_PROTOCOL_BLK_WR << M_CMD_PROTOCOL_SHIFT);
+>  	}
+> +	writel(val_intr_en, iproc_i2c->base + IE_OFFSET);
+>  	writel(val, iproc_i2c->base + M_CMD_OFFSET);
+>  
+>  	time_left = wait_for_completion_timeout(&iproc_i2c->done, time_left);
+> @@ -353,17 +419,6 @@ static int bcm_iproc_i2c_xfer_single_msg(struct bcm_iproc_i2c_dev *iproc_i2c,
+>  		return ret;
+>  	}
+>  
+> -	/*
+> -	 * For a read operation, we now need to load the data from FIFO
+> -	 * into the memory buffer
+> -	 */
+> -	if (msg->flags & I2C_M_RD) {
+> -		for (i = 0; i < msg->len; i++) {
+> -			msg->buf[i] = (readl(iproc_i2c->base + M_RX_OFFSET) >>
+> -				      M_RX_DATA_SHIFT) & M_RX_DATA_MASK;
+> -		}
+> -	}
+> -
+>  	return 0;
+>  }
+>  
+> @@ -395,9 +450,8 @@ static uint32_t bcm_iproc_i2c_functionality(struct i2c_adapter *adap)
+>  	.functionality = bcm_iproc_i2c_functionality,
+>  };
+>  
+> -static const struct i2c_adapter_quirks bcm_iproc_i2c_quirks = {
+> -	/* need to reserve one byte in the FIFO for the slave address */
+> -	.max_read_len = M_TX_RX_FIFO_SIZE - 1,
+> +static struct i2c_adapter_quirks bcm_iproc_i2c_quirks = {
+> +	.max_read_len = M_RX_MAX_READ_LEN,
+>  };
+>  
+>  static int bcm_iproc_i2c_cfg_speed(struct bcm_iproc_i2c_dev *iproc_i2c)
+> 
+
+Reviewed-by: Ray Jui <ray.jui@broadcom.com>
