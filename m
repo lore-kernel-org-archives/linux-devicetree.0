@@ -1,176 +1,76 @@
-From: Roger Quadros <rogerq@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: phy: ti: Add dt binding documentation
- for SERDES in AM654x SoC
-Date: Mon, 21 Jan 2019 13:22:11 +0200
-Message-ID: <5C45AB63.4010005@ti.com>
-References: <20190121064813.18444-1-kishon@ti.com>
- <20190121064813.18444-3-kishon@ti.com> <5C4596F8.7030009@ti.com>
- <b619ace8-f2be-8eb0-080e-0ae7a43799df@ti.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+From: Alok Chauhan <alokc@codeaurora.org>
+Subject: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
+Date: Mon, 21 Jan 2019 16:51:41 +0530
+Message-ID: <1548069703-26595-5-git-send-email-alokc@codeaurora.org>
+References: <1548069703-26595-1-git-send-email-alokc@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <b619ace8-f2be-8eb0-080e-0ae7a43799df@ti.com>
+In-Reply-To: <1548069703-26595-1-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Mark Brown <broonie@kernel.org>, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, Alok Chauhan <alokc@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
+Get the interconnect paths for SPI based Serial Engine device
+and vote accordingly based on maximum supported SPI frequency.
 
+Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+---
+ drivers/spi/spi-geni-qcom.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
 
-On 21/01/19 12:47, Kishon Vijay Abraham I wrote:
-> Hi Roger,
-> 
-> On 21/01/19 3:25 PM, Roger Quadros wrote:
->> Kishon,
->>
->> On 21/01/19 08:48, Kishon Vijay Abraham I wrote:
->>> AM654x has two SERDES instances. Each instance has three input clocks
->>> (left input, externel reference clock and right input) and two output
->>> clocks (left output and right output) in addition to a PLL mux clock
->>> which the SERDES uses for Clock Multiplier Unit (CMU refclock).
->>> The PLL mux clock can select from one of the three input clocks.
->>> The right output can select between left input and external reference
->>> clock while the left output can select between the right input and
->>> external reference clock.
->>>
->>> The left and right input reference clock of SERDES0 and SERDES1
->>> respectively are connected to the SoC clock. In the case of two lane
->>> SERDES personality card, the left input of SERDES1 is connected to
->>> the right output of SERDES0 in a chained fashion.
->>>
->>> See section "Reference Clock Distribution" of AM65x Sitara Processors
->>> TRM (SPRUID7 – April 2018) for more details.
->>>
->>> Add dt-binding documentation in order to represent all these different
->>> configurations in device tree.
->>>
->>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>> ---
->>>  .../devicetree/bindings/phy/ti-phy.txt        | 77 +++++++++++++++++++
->>>  include/dt-bindings/phy/phy-am654-serdes.h    | 13 ++++
->>>  2 files changed, 90 insertions(+)
->>>  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
->>>
->>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>> index 57dfda8a7a1d..fc2fff6b2c37 100644
->>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>> @@ -132,3 +132,80 @@ sata_phy: phy@4a096000 {
->>>  	syscon-pllreset = <&scm_conf 0x3fc>;
->>>  	#phy-cells = <0>;
->>>  };
->>> +
->>> +
->>> +TI AM654 SERDES
->>> +
->>> +Required properties:
->>> + - compatible: Should be "ti,phy-am654-serdes"
->>> + - reg : Address and length of the register set for the device.
->>> + - reg-names: Should be "serdes" which corresponds to the register space
->>> +	populated in "reg".
->>> + - #phy-cells: determine the number of cells that should be given in the
->>> +	phandle while referencing this phy. Should be "2". The 1st cell
->>> +	corresponds to the phy type (should be one of the types specified in
->>> +	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
->>> +	lane function.
->>> +	If SERDES0 is referenced 2nd cell should be:
->>> +		0 - USB3
->>> +		1 - PCIe0 Lane0
->>> +		2 - ICSS2 SGMII Lane0
->>> +	If SERDES1 is referenced 2nd cell should be:
->>> +		0 - PCIe1 Lane0
->>> +		1 - PCIe0 Lane1
->>> +		2 - ICSS2 SGMII Lane1
->>
->> Can we have a way to change default lane at probe time without having any user dependencies.
->>
->> e.g. To work in USB2.0 mode I don't want SERDES0 to be in lane 0 (which is SoC default).
->> But at the same time the application might not be using PCIe or SGMII, so there is no
->> PHY user to change the lane to 1 or 2.
->>
->> A DT property to allow selection of a default lane at probe time would help
-> Ideally we should be disabling the module that is not used ("status" property
-> of SERDES0 dt would be "disabled"). So there is no guarantee SERDES will be probed.
-> 
-
-OK. Is there something that can be done at the serdes_mux?
-As per bindings/mux/mmio-mux.txt
-
-Optional properties:
-- idle-states : if present, the state the muxes will have when idle. The
-                special state MUX_IDLE_AS_IS is the default.
-
-Could that be used?
-
-> 
->>
->>
->>> + - clocks: List of clock-specifiers representing the input to the SERDES.
->>> +	Should have 3 items representing the left input clock, external
->>> +	reference clock and right input clock in that order.
->>> + - clock-output-names: List of clock names for each of the clock outputs of
->>> +	SERDES. Should have 3 items for CMU reference clock,
->>> +	left output clock and right output clock in that order.
->>> + - assigned-clocks: As defined in
->>> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->>> + - assigned-clock-parents: As defined in
->>> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->>> + - #clock-cells: Should be <1> to choose between the 3 output clocks.
->>> +	Defined in Documentation/devicetree/bindings/clock/clock-bindings.txt
->>> +
->>> +   The following macros are defined in dt-bindings/phy/phy-am654-serdes.h
->>> +   for selecting the correct reference clock. This can be used while
->>> +   specifying the clocks created by SERDES.
->>> +	=> AM654_SERDES_CMU_REFCLK
->>> +	=> AM654_SERDES_LO_REFCLK
->>> +	=> AM654_SERDES_RO_REFCLK
->>> +
->>> + - mux-controls: phandle to the multiplexer
->>> +
->>> +Example:
->>> +
->>> +Example for SERDES0 is given below. It has 3 clock inputs;
->>> +left input reference clock as indicated by <&k3_clks 153 4>, external
->>> +reference clock as indicated by <&k3_clks 153 1> and right input
->>> +reference clock as indicated by <&serdes1 AM654_SERDES_LO_REFCLK>. (The
->>> +right input of SERDES0 is connected to the left output of SERDES1).
->>> +
->>> +SERDES0 registers 3 clock outputs as indicated in clock-output-names. The
->>> +first refers to the CMU reference clock, second refers to the left output
->>> +reference clock and the third refers to the right output reference clock.
->>> +
->>> +The assigned-clocks and assigned-clock-parents is used here to set the
->>> +parent of left input reference clock to MAINHSDIV_CLKOUT4 and parent of
->>> +CMU reference clock to left input reference clock.
->>> +
->>> +serdes0: serdes@900000 {
->>> +	compatible = "ti,phy-am654-serdes";
->>> +	reg = <0x0 0x900000 0x0 0x2000>;
->>> +	reg-names = "serdes";
->>> +	#phy-cells = <2>;
->>> +	power-domains = <&k3_pds 153>;
->>> +	clocks = <&k3_clks 153 4>, <&k3_clks 153 1>,
->>> +			<&serdes1 AM654_SERDES_LO_REFCLK>;
->>> +	clock-output-names = "serdes0_cmu_refclk", "serdes0_lo_refclk",
->>> +				"serdes0_ro_refclk";
->>> +	assigned-clocks = <&k3_clks 153 4>, <&serdes0 AM654_SERDES_CMU_REFCLK>;
->>> +	assigned-clock-parents = <&k3_clks 153 8>, <&k3_clks 153 4>;
->>> +	ti,serdes-clk = <&serdes0_clk>;
->>> +	mux-controls = <&serdes_mux 0>;
->>> +	#clock-cells = <1>;
->>> +	status = "disabled";
->>
->> We don't keep status "disabled" for AM6. All nodes are enabled by default.
-> 
-> Should all nodes be enabled by default? Is it not based on the features
-> supported by the EVM?
-
-Yes, enabled in the SoC. EVM is supposed to disable nodes that are not required.
-See https://www.spinics.net/lists/arm-kernel/msg700105.html
-
-cheers,
--roger
+diff --git a/drivers/spi/spi-geni-qcom.c b/drivers/spi/spi-geni-qcom.c
+index fdb7cb88..7bbbe9d 100644
+--- a/drivers/spi/spi-geni-qcom.c
++++ b/drivers/spi/spi-geni-qcom.c
+@@ -12,6 +12,7 @@
+ #include <linux/qcom-geni-se.h>
+ #include <linux/spi/spi.h>
+ #include <linux/spinlock.h>
++#include <linux/interconnect.h>
+ 
+ /* SPI SE specific registers and respective register fields */
+ #define SE_SPI_CPHA		0x224
+@@ -589,6 +590,15 @@ static int spi_geni_probe(struct platform_device *pdev)
+ 	spin_lock_init(&mas->lock);
+ 	pm_runtime_enable(&pdev->dev);
+ 
++	/* Set the bus quota to a reasonable value */
++	mas->se.avg_bw = Bps_to_icc(2500);
++	mas->se.peak_bw = Bps_to_icc(200000000);
++	ret = geni_interconnect_init(&mas->se);
++	if (ret) {
++		dev_err(&pdev->dev, "interconnect_init failed %d\n", ret);
++		return ret;
++	}
++
+ 	ret = spi_geni_init(mas);
+ 	if (ret)
+ 		goto spi_geni_probe_runtime_disable;
+@@ -628,8 +638,15 @@ static int __maybe_unused spi_geni_runtime_suspend(struct device *dev)
+ {
+ 	struct spi_master *spi = dev_get_drvdata(dev);
+ 	struct spi_geni_master *mas = spi_master_get_devdata(spi);
++	int ret;
+ 
+-	return geni_se_resources_off(&mas->se);
++	ret = geni_se_resources_off(&mas->se);
++	if (ret)
++		return ret;
++
++	geni_icc_update_bw(&mas->se, false);
++
++	return 0;
+ }
+ 
+ static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
+@@ -637,6 +654,7 @@ static int __maybe_unused spi_geni_runtime_resume(struct device *dev)
+ 	struct spi_master *spi = dev_get_drvdata(dev);
+ 	struct spi_geni_master *mas = spi_master_get_devdata(spi);
+ 
++	geni_icc_update_bw(&mas->se, true);
+ 	return geni_se_resources_on(&mas->se);
+ }
+ 
 -- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
