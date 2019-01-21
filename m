@@ -1,7 +1,7 @@
 From: <min.guo@mediatek.com>
-Subject: [PATCH v4 2/6] arm: dts: mt2701: Add usb2 device nodes
-Date: Mon, 21 Jan 2019 20:22:27 +0800
-Message-ID: <1548073351-13739-3-git-send-email-min.guo@mediatek.com>
+Subject: [PATCH v4 4/6] usb: musb: Add noirq type of dma create interface
+Date: Mon, 21 Jan 2019 20:22:29 +0800
+Message-ID: <1548073351-13739-5-git-send-email-min.guo@mediatek.com>
 References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -14,109 +14,143 @@ List-Id: devicetree@vger.kernel.org
 
 From: Min Guo <min.guo@mediatek.com>
 
-Add musb nodes and usb2 phy nodes for MT2701
+Add noirq type of dma create interface for platform which do not
+have dedicated DMA interrupt line, move musbhsdma macro definition
+to musb_dma.h
 
 Signed-off-by: Min Guo <min.guo@mediatek.com>
 ---
-changes in v4:
-1. no changes
-
-changes in v3:
-1. no changes
-
-changes in v2:
-1. Remove phy-names
+new patch based on v3:
 ---
- arch/arm/boot/dts/mt2701-evb.dts | 21 +++++++++++++++++++++
- arch/arm/boot/dts/mt2701.dtsi    | 33 +++++++++++++++++++++++++++++++++
- 2 files changed, 54 insertions(+)
+ drivers/usb/musb/musb_dma.h  |  9 ++++++++
+ drivers/usb/musb/musbhsdma.c | 54 ++++++++++++++++++++++++++++++--------------
+ 2 files changed, 46 insertions(+), 17 deletions(-)
 
-diff --git a/arch/arm/boot/dts/mt2701-evb.dts b/arch/arm/boot/dts/mt2701-evb.dts
-index be0edb3..2635911 100644
---- a/arch/arm/boot/dts/mt2701-evb.dts
-+++ b/arch/arm/boot/dts/mt2701-evb.dts
-@@ -6,6 +6,7 @@
+diff --git a/drivers/usb/musb/musb_dma.h b/drivers/usb/musb/musb_dma.h
+index 8f60271..05103ea 100644
+--- a/drivers/usb/musb/musb_dma.h
++++ b/drivers/usb/musb/musb_dma.h
+@@ -35,6 +35,12 @@
+  *    whether shared with the Inventra core or separate.
   */
  
- /dts-v1/;
-+#include <dt-bindings/gpio/gpio.h>
- #include "mt2701.dtsi"
++#define MUSB_HSDMA_BASE		0x200
++#define MUSB_HSDMA_INTR		(MUSB_HSDMA_BASE + 0)
++#define MUSB_HSDMA_CONTROL		0x4
++#define MUSB_HSDMA_ADDRESS		0x8
++#define MUSB_HSDMA_COUNT		0xc
++
+ #define	DMA_ADDR_INVALID	(~(dma_addr_t)0)
  
- / {
-@@ -60,6 +61,20 @@
- 		>;
- 		default-brightness-level = <9>;
- 	};
-+
-+	extcon_usb: extcon_iddig {
-+		compatible = "linux,extcon-usb-gpio";
-+		id-gpio = <&pio 44 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	usb_vbus: regulator@0 {
-+		compatible = "regulator-fixed";
-+		regulator-name = "usb_vbus";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		gpio = <&pio 45 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+	};
- };
+ #ifdef CONFIG_MUSB_PIO_ONLY
+@@ -191,6 +197,9 @@ static inline void musb_dma_controller_destroy(struct dma_controller *d) { }
+ extern struct dma_controller *
+ musbhs_dma_controller_create(struct musb *musb, void __iomem *base);
+ extern void musbhs_dma_controller_destroy(struct dma_controller *c);
++extern struct dma_controller *
++musbhs_dma_controller_create_noirq(struct musb *musb, void __iomem *base);
++extern irqreturn_t dma_controller_irq(int irq, void *private_data);
  
- &auxadc {
-@@ -229,3 +244,9 @@
- &uart0 {
- 	status = "okay";
- };
-+
-+&usb2 {
-+	vbus-supply = <&usb_vbus>;
-+	extcon = <&extcon_usb>;
-+	status = "okay";
-+};
-diff --git a/arch/arm/boot/dts/mt2701.dtsi b/arch/arm/boot/dts/mt2701.dtsi
-index 180377e..a6b1434 100644
---- a/arch/arm/boot/dts/mt2701.dtsi
-+++ b/arch/arm/boot/dts/mt2701.dtsi
-@@ -670,6 +670,39 @@
- 		};
- 	};
+ extern struct dma_controller *
+ tusb_dma_controller_create(struct musb *musb, void __iomem *base);
+diff --git a/drivers/usb/musb/musbhsdma.c b/drivers/usb/musb/musbhsdma.c
+index a688f7f..b2394a7 100644
+--- a/drivers/usb/musb/musbhsdma.c
++++ b/drivers/usb/musb/musbhsdma.c
+@@ -10,12 +10,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/slab.h>
+ #include "musb_core.h"
+-
+-#define MUSB_HSDMA_BASE		0x200
+-#define MUSB_HSDMA_INTR		(MUSB_HSDMA_BASE + 0)
+-#define MUSB_HSDMA_CONTROL		0x4
+-#define MUSB_HSDMA_ADDRESS		0x8
+-#define MUSB_HSDMA_COUNT		0xc
++#include "musb_dma.h"
  
-+	usb2: usb@11200000 {
-+		compatible = "mediatek,mt2701-musb",
-+			     "mediatek,mtk-musb";
-+		reg = <0 0x11200000 0 0x1000>;
-+		interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+		interrupt-names = "mc";
-+		phys = <&u2port2 PHY_TYPE_USB2>;
-+		dr_mode = "otg";
-+		clocks = <&pericfg CLK_PERI_USB0>,
-+			 <&pericfg CLK_PERI_USB0_MCU>,
-+			 <&pericfg CLK_PERI_USB_SLV>;
-+		clock-names = "main","mcu","univpll";
-+		power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-+		status = "disabled";
-+	};
+ #define MUSB_HSDMA_CHANNEL_OFFSET(_bchannel, _offset)		\
+ 		(MUSB_HSDMA_BASE + (_bchannel << 4) + _offset)
+@@ -268,7 +263,7 @@ static int dma_channel_abort(struct dma_channel *channel)
+ 	return 0;
+ }
+ 
+-static irqreturn_t dma_controller_irq(int irq, void *private_data)
++irqreturn_t dma_controller_irq(int irq, void *private_data)
+ {
+ 	struct musb_dma_controller *controller = private_data;
+ 	struct musb *musb = controller->private_data;
+@@ -382,6 +377,7 @@ static irqreturn_t dma_controller_irq(int irq, void *private_data)
+ 	spin_unlock_irqrestore(&musb->lock, flags);
+ 	return retval;
+ }
++EXPORT_SYMBOL_GPL(dma_controller_irq);
+ 
+ void musbhs_dma_controller_destroy(struct dma_controller *c)
+ {
+@@ -397,18 +393,10 @@ void musbhs_dma_controller_destroy(struct dma_controller *c)
+ }
+ EXPORT_SYMBOL_GPL(musbhs_dma_controller_destroy);
+ 
+-struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+-						    void __iomem *base)
++static struct musb_dma_controller *
++dma_controller_alloc(struct musb *musb, void __iomem *base)
+ {
+ 	struct musb_dma_controller *controller;
+-	struct device *dev = musb->controller;
+-	struct platform_device *pdev = to_platform_device(dev);
+-	int irq = platform_get_irq_byname(pdev, "dma");
+-
+-	if (irq <= 0) {
+-		dev_err(dev, "No DMA interrupt line!\n");
+-		return NULL;
+-	}
+ 
+ 	controller = kzalloc(sizeof(*controller), GFP_KERNEL);
+ 	if (!controller)
+@@ -422,6 +410,25 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+ 	controller->controller.channel_release = dma_channel_release;
+ 	controller->controller.channel_program = dma_channel_program;
+ 	controller->controller.channel_abort = dma_channel_abort;
++	return controller;
++}
 +
-+	u2phy0: usb-phy@11210000 {
-+		compatible = "mediatek,generic-tphy-v1";
-+		reg = <0 0x11210000 0 0x0800>;
-+		#address-cells = <2>;
-+		#size-cells = <2>;
-+		ranges;
-+		status = "okay";
++struct dma_controller *
++musbhs_dma_controller_create(struct musb *musb, void __iomem *base)
++{
++	struct musb_dma_controller *controller;
++	struct device *dev = musb->controller;
++	struct platform_device *pdev = to_platform_device(dev);
++	int irq = platform_get_irq_byname(pdev, "dma");
 +
-+		u2port2: usb-phy@1a1c4800 {
-+			reg = <0 0x11210800 0 0x0100>;
-+			clocks = <&topckgen CLK_TOP_USB_PHY48M>;
-+			clock-names = "ref";
-+			#phy-cells = <1>;
-+			status = "okay";
-+		};
-+	};
++	if (irq <= 0) {
++		dev_err(dev, "No DMA interrupt line!\n");
++		return NULL;
++	}
 +
- 	ethsys: syscon@1b000000 {
- 		compatible = "mediatek,mt2701-ethsys", "syscon";
- 		reg = <0 0x1b000000 0 0x1000>;
++	controller = dma_controller_alloc(musb, base);
++	if (!controller)
++		return NULL;
+ 
+ 	if (request_irq(irq, dma_controller_irq, 0,
+ 			dev_name(musb->controller), &controller->controller)) {
+@@ -436,3 +443,16 @@ struct dma_controller *musbhs_dma_controller_create(struct musb *musb,
+ 	return &controller->controller;
+ }
+ EXPORT_SYMBOL_GPL(musbhs_dma_controller_create);
++
++struct dma_controller *
++musbhs_dma_controller_create_noirq(struct musb *musb, void __iomem *base)
++{
++	struct musb_dma_controller *controller;
++
++	controller = dma_controller_alloc(musb, base);
++	if (!controller)
++		return NULL;
++
++	return &controller->controller;
++}
++EXPORT_SYMBOL_GPL(musbhs_dma_controller_create_noirq);
 -- 
 1.9.1
