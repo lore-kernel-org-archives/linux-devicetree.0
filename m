@@ -1,73 +1,29 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 1/3] dt-bindings: fsl: scu: add fallback compatible string
- for power domain
-Date: Mon, 21 Jan 2019 10:31:00 -0600
-Message-ID: <CAL_Jsq+v+TpgwMhhboo7UKA7bbPNT66QqO10of43gqR--pY4aQ@mail.gmail.com>
-References: <1545148524-658-1-git-send-email-aisheng.dong@nxp.com>
- <1545148524-658-2-git-send-email-aisheng.dong@nxp.com>
- <20190111090009.GG32649@dragon> <20190111090653.GH32649@dragon>
- <AM0PR04MB42119B411244F0B1BB829D9F80850@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20190111130311.GA3599@dragon>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v2 1/2] dt-bindings: reset: Add document for Broadcom
+ STB reset controller
+Date: Mon, 21 Jan 2019 17:34:48 +0100
+Message-ID: <1548088488.3287.12.camel@pengutronix.de>
+References: <20190115184406.3164-1-f.fainelli@gmail.com>
+         <20190115184406.3164-2-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190111130311.GA3599@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, Mark Rutland <mark.rutland@arm.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, "dongas86@gmail.com" <dongas86@gmail.com>, "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>, "khilman@kernel.org" <khilman@kernel.org>, "rjw@rjwysocki.net" <rjw@rjwysocki.net>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190115184406.3164-2-f.fainelli@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 7:03 AM Shawn Guo <shawnguo@kernel.org> wrote:
->
-> On Fri, Jan 11, 2019 at 10:48:21AM +0000, Aisheng Dong wrote:
-> > Hi Shawn,
-> >
-> > > -----Original Message-----
-> > > From: Shawn Guo [mailto:shawnguo@kernel.org]
-> > > Sent: Friday, January 11, 2019 5:07 PM
-> > >
-> > > On Fri, Jan 11, 2019 at 05:00:11PM +0800, Shawn Guo wrote:
-> > > > On Tue, Dec 18, 2018 at 04:01:20PM +0000, Aisheng Dong wrote:
-> > > > > SCU power domain can be used in the same way by IMX8QXP and
-> > > IMX8QM SoCs.
-> > > > > Let's add a "fsl,scu-pd" fallback compatible string to allow other
-> > > > > SoCs to reuse the common part.
-> > > >
-> > > > This is not the practice we used to match devices with
-> > > > compatibilities, i.e. coding the compatible string with the SoC name
-> > > > that firstly introduces the device, and use the compatible as fallback for new
-> > > SoCs.
-> > >
-> >
-> > This is suggested by Rob that if the future SoCs are likely to be compatible.
-> > Then we can use a general fallback compatible string like "fsl,scu-pd".
-> > https://patchwork.kernel.org/patch/10644815/
-> >
-> > From SCU HW protocol point of view, they're indeed compatible.
-> > Just varies a bit on the domains numbers.
-> > That's why we introduce "fsl,scu-pd".
-> > But still keep SoC specific compatible string in case any special tricks
-> > to ensure the ABI stability.
-> >
-> > How do you think?
->
-> Unless Rob is against the practice we have been used for long time on
-> i.MX, I would keep using it for i.MX8, i.e. instead of introducing a
-> generic compatible for fallback, simply falling on the compatible SoC
-> specified IP block.
+Hi Florian,
 
-That is certainly my preference and the traditional way to do
-compatible in DT, but some reason folks don't like having old SoC
-names in their shiny new SoC DT. So either way is fine. But I'd follow
-what you do for the rest of i.MX which I guess is what Shawn suggests.
+On Tue, 2019-01-15 at 10:44 -0800, Florian Fainelli wrote:
+> Add a binding document for the Broadcom STB reset controller, also known
+> as SW_INIT-style reset controller.
+> 
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 
-Rob
+Thank you, both applied to reset/next.
+
+regards
+Philipp
