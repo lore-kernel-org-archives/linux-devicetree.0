@@ -1,422 +1,110 @@
-Return-Path: <SRS0=mSv1=PQ=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr80072.outbound.protection.outlook.com ([40.107.8.72]:2976
-        "EHLO EUR04-VI1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727592AbfAHJF1 (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 8 Jan 2019 04:05:27 -0500
-From: Jacky Bai <ping.bai@nxp.com>
-Subject: [PATCH 2/2] pinctrl: freescale: Add imx8mm pinctrl driver support
-Date: Tue, 8 Jan 2019 09:05:19 +0000
-Message-ID: <1546938582-23377-2-git-send-email-ping.bai@nxp.com>
-References: <1546938582-23377-1-git-send-email-ping.bai@nxp.com>
-In-Reply-To: <1546938582-23377-1-git-send-email-ping.bai@nxp.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Return-Path: <SRS0=Vwwh=P5=gmail.com=tmaimon77@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "festevam@gmail.com" <festevam@gmail.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linus.walleij@linaro.org" <linus.walleij@linaro.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "linux-gpio@vger.kernel.org" <linux-gpio@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>
+References: <20190109164343.164205-1-tmaimon77@gmail.com> <20190109164343.164205-2-tmaimon77@gmail.com>
+ <CACPK8XebHzVAO2TX25N24S0Pgg_0xA=7GN3j0oXhSyD4LmL4=w@mail.gmail.com>
+ <CAP6Zq1j=oPdVXZKBteBcaLVZcvoU7M6YbfGhSCaC44Ld9AQ9Ag@mail.gmail.com>
+ <CACPK8XfFRigW9pN4JLrH+KcE6ACJUzX0qJV8xeph_DkfKWgBEQ@mail.gmail.com> <CAL_JsqLn3wCpAWDTQFsrvuPJqWurTDNcu=j988PpHWtuW4Po6w@mail.gmail.com>
+In-Reply-To: <CAL_JsqLn3wCpAWDTQFsrvuPJqWurTDNcu=j988PpHWtuW4Po6w@mail.gmail.com>
+From: Tomer Maimon <tmaimon77@gmail.com>
+Date: Mon, 21 Jan 2019 22:20:35 +0200
+Message-ID: <CAP6Zq1g=h2qqtOwFNi_u152nggVWVUXR-=59wKUyUCaPjgx21w@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] dt-binding: iio: add NPCM ADC documentation
+Content-Type: multipart/alternative; boundary="0000000000005ebd68057ffd818e"
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Joel Stanley <joel@jms.id.au>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Add the pinctrl driver support for i.MX8MM.
+--0000000000005ebd68057ffd818e
+Content-Type: text/plain; charset="UTF-8"
 
-Signed-off-by: Bai Ping <ping.bai@nxp.com>
----
- drivers/pinctrl/freescale/Kconfig          |   7 +
- drivers/pinctrl/freescale/Makefile         |   1 +
- drivers/pinctrl/freescale/pinctrl-imx8mm.c | 349 +++++++++++++++++++++++++=
-++++
- 3 files changed, 357 insertions(+)
- create mode 100644 drivers/pinctrl/freescale/pinctrl-imx8mm.c
+Hi Rob,
 
-diff --git a/drivers/pinctrl/freescale/Kconfig b/drivers/pinctrl/freescale/=
-Kconfig
-index 72b869d..05963a3 100644
---- a/drivers/pinctrl/freescale/Kconfig
-+++ b/drivers/pinctrl/freescale/Kconfig
-@@ -122,6 +122,13 @@ config PINCTRL_IMX7ULP
- 	help
- 	  Say Y here to enable the imx7ulp pinctrl driver
-=20
-+config PINCTRL_IMX8MM
-+	bool "IMX8MM pinctrl driver"
-+	depends on ARCH_MXC && ARM64
-+	select PINCTRL_IMX
-+	help
-+	  Say Y here to enable the imx8mm pinctrl driver
-+
- config PINCTRL_IMX8MQ
- 	bool "IMX8MQ pinctrl driver"
- 	depends on ARCH_MXC && ARM64
-diff --git a/drivers/pinctrl/freescale/Makefile b/drivers/pinctrl/freescale=
-/Makefile
-index 6ee398a..d64dc5d 100644
---- a/drivers/pinctrl/freescale/Makefile
-+++ b/drivers/pinctrl/freescale/Makefile
-@@ -18,6 +18,7 @@ obj-$(CONFIG_PINCTRL_IMX6SX)	+=3D pinctrl-imx6sx.o
- obj-$(CONFIG_PINCTRL_IMX6UL)	+=3D pinctrl-imx6ul.o
- obj-$(CONFIG_PINCTRL_IMX7D)	+=3D pinctrl-imx7d.o
- obj-$(CONFIG_PINCTRL_IMX7ULP)	+=3D pinctrl-imx7ulp.o
-+obj-$(CONFIG_PINCTRL_IMX8MM)	+=3D pinctrl-imx8mm.o
- obj-$(CONFIG_PINCTRL_IMX8MQ)	+=3D pinctrl-imx8mq.o
- obj-$(CONFIG_PINCTRL_IMX8QXP)	+=3D pinctrl-imx8qxp.o
- obj-$(CONFIG_PINCTRL_VF610)	+=3D pinctrl-vf610.o
-diff --git a/drivers/pinctrl/freescale/pinctrl-imx8mm.c b/drivers/pinctrl/f=
-reescale/pinctrl-imx8mm.c
-new file mode 100644
-index 0000000..60195a5
---- /dev/null
-+++ b/drivers/pinctrl/freescale/pinctrl-imx8mm.c
-@@ -0,0 +1,349 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright 2017-2018 NXP
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/init.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/of_device.h>
-+#include <linux/pinctrl/pinctrl.h>
-+
-+#include "pinctrl-imx.h"
-+
-+enum imx8mm_pads {
-+	MX8MM_PAD_RESERVE0 =3D 0,
-+	MX8MM_PAD_RESERVE1 =3D 1,
-+	MX8MM_PAD_RESERVE2 =3D 2,
-+	MX8MM_PAD_RESERVE3 =3D 3,
-+	MX8MM_PAD_RESERVE4 =3D 4,
-+	MX8MM_PAD_RESERVE5 =3D 5,
-+	MX8MM_PAD_RESERVE6 =3D 6,
-+	MX8MM_PAD_RESERVE7 =3D 7,
-+	MX8MM_PAD_RESERVE8 =3D 8,
-+	MX8MM_PAD_RESERVE9 =3D 9,
-+	MX8MM_IOMUXC_GPIO1_IO00 =3D 10,
-+	MX8MM_IOMUXC_GPIO1_IO01 =3D 11,
-+	MX8MM_IOMUXC_GPIO1_IO02 =3D 12,
-+	MX8MM_IOMUXC_GPIO1_IO03 =3D 13,
-+	MX8MM_IOMUXC_GPIO1_IO04 =3D 14,
-+	MX8MM_IOMUXC_GPIO1_IO05 =3D 15,
-+	MX8MM_IOMUXC_GPIO1_IO06 =3D 16,
-+	MX8MM_IOMUXC_GPIO1_IO07 =3D 17,
-+	MX8MM_IOMUXC_GPIO1_IO08 =3D 18,
-+	MX8MM_IOMUXC_GPIO1_IO09 =3D 19,
-+	MX8MM_IOMUXC_GPIO1_IO10 =3D 20,
-+	MX8MM_IOMUXC_GPIO1_IO11 =3D 21,
-+	MX8MM_IOMUXC_GPIO1_IO12 =3D 22,
-+	MX8MM_IOMUXC_GPIO1_IO13 =3D 23,
-+	MX8MM_IOMUXC_GPIO1_IO14 =3D 24,
-+	MX8MM_IOMUXC_GPIO1_IO15 =3D 25,
-+	MX8MM_IOMUXC_ENET_MDC =3D 26,
-+	MX8MM_IOMUXC_ENET_MDIO =3D 27,
-+	MX8MM_IOMUXC_ENET_TD3 =3D 28,
-+	MX8MM_IOMUXC_ENET_TD2 =3D 29,
-+	MX8MM_IOMUXC_ENET_TD1 =3D 30,
-+	MX8MM_IOMUXC_ENET_TD0 =3D 31,
-+	MX8MM_IOMUXC_ENET_TX_CTL =3D 32,
-+	MX8MM_IOMUXC_ENET_TXC =3D 33,
-+	MX8MM_IOMUXC_ENET_RX_CTL =3D 34,
-+	MX8MM_IOMUXC_ENET_RXC =3D 35,
-+	MX8MM_IOMUXC_ENET_RD0 =3D 36,
-+	MX8MM_IOMUXC_ENET_RD1 =3D 37,
-+	MX8MM_IOMUXC_ENET_RD2 =3D 38,
-+	MX8MM_IOMUXC_ENET_RD3 =3D 39,
-+	MX8MM_IOMUXC_SD1_CLK =3D 40,
-+	MX8MM_IOMUXC_SD1_CMD =3D 41,
-+	MX8MM_IOMUXC_SD1_DATA0 =3D 42,
-+	MX8MM_IOMUXC_SD1_DATA1 =3D 43,
-+	MX8MM_IOMUXC_SD1_DATA2 =3D 44,
-+	MX8MM_IOMUXC_SD1_DATA3 =3D 45,
-+	MX8MM_IOMUXC_SD1_DATA4 =3D 46,
-+	MX8MM_IOMUXC_SD1_DATA5 =3D 47,
-+	MX8MM_IOMUXC_SD1_DATA6 =3D 48,
-+	MX8MM_IOMUXC_SD1_DATA7 =3D 49,
-+	MX8MM_IOMUXC_SD1_RESET_B =3D 50,
-+	MX8MM_IOMUXC_SD1_STROBE =3D 51,
-+	MX8MM_IOMUXC_SD2_CD_B =3D 52,
-+	MX8MM_IOMUXC_SD2_CLK =3D 53,
-+	MX8MM_IOMUXC_SD2_CMD =3D 54,
-+	MX8MM_IOMUXC_SD2_DATA0 =3D 55,
-+	MX8MM_IOMUXC_SD2_DATA1 =3D 56,
-+	MX8MM_IOMUXC_SD2_DATA2 =3D 57,
-+	MX8MM_IOMUXC_SD2_DATA3 =3D 58,
-+	MX8MM_IOMUXC_SD2_RESET_B =3D 59,
-+	MX8MM_IOMUXC_SD2_WP =3D 60,
-+	MX8MM_IOMUXC_NAND_ALE =3D 61,
-+	MX8MM_IOMUXC_NAND_CE0 =3D 62,
-+	MX8MM_IOMUXC_NAND_CE1 =3D 63,
-+	MX8MM_IOMUXC_NAND_CE2 =3D 64,
-+	MX8MM_IOMUXC_NAND_CE3 =3D 65,
-+	MX8MM_IOMUXC_NAND_CLE =3D 66,
-+	MX8MM_IOMUXC_NAND_DATA00 =3D 67,
-+	MX8MM_IOMUXC_NAND_DATA01 =3D 68,
-+	MX8MM_IOMUXC_NAND_DATA02 =3D 69,
-+	MX8MM_IOMUXC_NAND_DATA03 =3D 70,
-+	MX8MM_IOMUXC_NAND_DATA04 =3D 71,
-+	MX8MM_IOMUXC_NAND_DATA05 =3D 72,
-+	MX8MM_IOMUXC_NAND_DATA06 =3D 73,
-+	MX8MM_IOMUXC_NAND_DATA07 =3D 74,
-+	MX8MM_IOMUXC_NAND_DQS =3D 75,
-+	MX8MM_IOMUXC_NAND_RE_B =3D 76,
-+	MX8MM_IOMUXC_NAND_READY_B =3D 77,
-+	MX8MM_IOMUXC_NAND_WE_B =3D 78,
-+	MX8MM_IOMUXC_NAND_WP_B =3D 79,
-+	MX8MM_IOMUXC_SAI5_RXFS =3D 80,
-+	MX8MM_IOMUXC_SAI5_RXC =3D 81,
-+	MX8MM_IOMUXC_SAI5_RXD0 =3D 82,
-+	MX8MM_IOMUXC_SAI5_RXD1 =3D 83,
-+	MX8MM_IOMUXC_SAI5_RXD2 =3D 84,
-+	MX8MM_IOMUXC_SAI5_RXD3 =3D 85,
-+	MX8MM_IOMUXC_SAI5_MCLK =3D 86,
-+	MX8MM_IOMUXC_SAI1_RXFS =3D 87,
-+	MX8MM_IOMUXC_SAI1_RXC =3D 88,
-+	MX8MM_IOMUXC_SAI1_RXD0 =3D 89,
-+	MX8MM_IOMUXC_SAI1_RXD1 =3D 90,
-+	MX8MM_IOMUXC_SAI1_RXD2 =3D 91,
-+	MX8MM_IOMUXC_SAI1_RXD3 =3D 92,
-+	MX8MM_IOMUXC_SAI1_RXD4 =3D 93,
-+	MX8MM_IOMUXC_SAI1_RXD5 =3D 94,
-+	MX8MM_IOMUXC_SAI1_RXD6 =3D 95,
-+	MX8MM_IOMUXC_SAI1_RXD7 =3D 96,
-+	MX8MM_IOMUXC_SAI1_TXFS =3D 97,
-+	MX8MM_IOMUXC_SAI1_TXC =3D 98,
-+	MX8MM_IOMUXC_SAI1_TXD0 =3D 99,
-+	MX8MM_IOMUXC_SAI1_TXD1 =3D 100,
-+	MX8MM_IOMUXC_SAI1_TXD2 =3D 101,
-+	MX8MM_IOMUXC_SAI1_TXD3 =3D 102,
-+	MX8MM_IOMUXC_SAI1_TXD4 =3D 103,
-+	MX8MM_IOMUXC_SAI1_TXD5 =3D 104,
-+	MX8MM_IOMUXC_SAI1_TXD6 =3D 105,
-+	MX8MM_IOMUXC_SAI1_TXD7 =3D 106,
-+	MX8MM_IOMUXC_SAI1_MCLK =3D 107,
-+	MX8MM_IOMUXC_SAI2_RXFS =3D 108,
-+	MX8MM_IOMUXC_SAI2_RXC =3D 109,
-+	MX8MM_IOMUXC_SAI2_RXD0 =3D 110,
-+	MX8MM_IOMUXC_SAI2_TXFS =3D 111,
-+	MX8MM_IOMUXC_SAI2_TXC =3D 112,
-+	MX8MM_IOMUXC_SAI2_TXD0 =3D 113,
-+	MX8MM_IOMUXC_SAI2_MCLK =3D 114,
-+	MX8MM_IOMUXC_SAI3_RXFS =3D 115,
-+	MX8MM_IOMUXC_SAI3_RXC =3D 116,
-+	MX8MM_IOMUXC_SAI3_RXD =3D 117,
-+	MX8MM_IOMUXC_SAI3_TXFS =3D 118,
-+	MX8MM_IOMUXC_SAI3_TXC =3D 119,
-+	MX8MM_IOMUXC_SAI3_TXD =3D 120,
-+	MX8MM_IOMUXC_SAI3_MCLK =3D 121,
-+	MX8MM_IOMUXC_SPDIF_TX =3D 122,
-+	MX8MM_IOMUXC_SPDIF_RX =3D 123,
-+	MX8MM_IOMUXC_SPDIF_EXT_CLK =3D 124,
-+	MX8MM_IOMUXC_ECSPI1_SCLK =3D 125,
-+	MX8MM_IOMUXC_ECSPI1_MOSI =3D 126,
-+	MX8MM_IOMUXC_ECSPI1_MISO =3D 127,
-+	MX8MM_IOMUXC_ECSPI1_SS0 =3D 128,
-+	MX8MM_IOMUXC_ECSPI2_SCLK =3D 129,
-+	MX8MM_IOMUXC_ECSPI2_MOSI =3D 130,
-+	MX8MM_IOMUXC_ECSPI2_MISO =3D 131,
-+	MX8MM_IOMUXC_ECSPI2_SS0 =3D 132,
-+	MX8MM_IOMUXC_I2C1_SCL =3D 133,
-+	MX8MM_IOMUXC_I2C1_SDA =3D 134,
-+	MX8MM_IOMUXC_I2C2_SCL =3D 135,
-+	MX8MM_IOMUXC_I2C2_SDA =3D 136,
-+	MX8MM_IOMUXC_I2C3_SCL =3D 137,
-+	MX8MM_IOMUXC_I2C3_SDA =3D 138,
-+	MX8MM_IOMUXC_I2C4_SCL =3D 139,
-+	MX8MM_IOMUXC_I2C4_SDA =3D 140,
-+	MX8MM_IOMUXC_UART1_RXD =3D 141,
-+	MX8MM_IOMUXC_UART1_TXD =3D 142,
-+	MX8MM_IOMUXC_UART2_RXD =3D 143,
-+	MX8MM_IOMUXC_UART2_TXD =3D 144,
-+	MX8MM_IOMUXC_UART3_RXD =3D 145,
-+	MX8MM_IOMUXC_UART3_TXD =3D 146,
-+	MX8MM_IOMUXC_UART4_RXD =3D 147,
-+	MX8MM_IOMUXC_UART4_TXD =3D 148,
-+};
-+
-+/* Pad names for the pinmux subsystem */
-+static const struct pinctrl_pin_desc imx8mm_pinctrl_pads[] =3D {
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE0),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE1),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE2),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE3),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE4),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE5),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE6),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE7),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE8),
-+	IMX_PINCTRL_PIN(MX8MM_PAD_RESERVE9),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO00),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO01),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO02),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO03),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO04),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO05),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO06),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO07),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO08),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO09),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO10),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO11),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO12),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO13),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO14),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_GPIO1_IO15),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_MDC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_MDIO),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_TD3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_TD2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_TD1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_TD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_TX_CTL),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_TXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_RX_CTL),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_RXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_RD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_RD1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_RD2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ENET_RD3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_CLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_CMD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA4),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA5),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA6),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_DATA7),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_RESET_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD1_STROBE),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_CD_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_CLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_CMD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_DATA0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_DATA1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_DATA2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_DATA3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_RESET_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SD2_WP),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_ALE),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_CE0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_CE1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_CE2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_CE3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_CLE),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA00),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA01),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA02),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA03),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA04),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA05),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA06),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DATA07),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_DQS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_RE_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_READY_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_WE_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_NAND_WP_B),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_RXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_RXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_RXD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_RXD1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_RXD2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_RXD3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI5_MCLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD4),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD5),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD6),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_RXD7),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD1),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD2),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD3),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD4),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD5),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD6),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_TXD7),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI1_MCLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_RXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_RXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_RXD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_TXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_TXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_TXD0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI2_MCLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_RXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_RXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_RXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_TXFS),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_TXC),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_TXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SAI3_MCLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SPDIF_TX),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SPDIF_RX),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_SPDIF_EXT_CLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI1_SCLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI1_MOSI),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI1_MISO),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI1_SS0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI2_SCLK),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI2_MOSI),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI2_MISO),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_ECSPI2_SS0),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C1_SCL),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C1_SDA),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C2_SCL),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C2_SDA),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C3_SCL),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C3_SDA),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C4_SCL),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_I2C4_SDA),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART1_RXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART1_TXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART2_RXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART2_TXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART3_RXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART3_TXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART4_RXD),
-+	IMX_PINCTRL_PIN(MX8MM_IOMUXC_UART4_TXD),
-+};
-+
-+static const struct imx_pinctrl_soc_info imx8mm_pinctrl_info =3D {
-+	.pins =3D imx8mm_pinctrl_pads,
-+	.npins =3D ARRAY_SIZE(imx8mm_pinctrl_pads),
-+	.gpr_compatible =3D "fsl,imx8mm-iomuxc-gpr",
-+};
-+
-+static const struct of_device_id imx8mm_pinctrl_of_match[] =3D {
-+	{ .compatible =3D "fsl,imx8mm-iomuxc", .data =3D &imx8mm_pinctrl_info, },
-+	{ /* sentinel */ }
-+};
-+
-+static int imx8mm_pinctrl_probe(struct platform_device *pdev)
-+{
-+	return imx_pinctrl_probe(pdev, &imx8mm_pinctrl_info);
-+}
-+
-+static struct platform_driver imx8mm_pinctrl_driver =3D {
-+	.driver =3D {
-+		.name =3D "imx8mm-pinctrl",
-+		.of_match_table =3D of_match_ptr(imx8mm_pinctrl_of_match),
-+		.suppress_bind_attrs =3D true,
-+	},
-+	.probe =3D imx8mm_pinctrl_probe,
-+};
-+
-+static int __init imx8mm_pinctrl_init(void)
-+{
-+	return platform_driver_register(&imx8mm_pinctrl_driver);
-+}
-+arch_initcall(imx8mm_pinctrl_init);
---=20
-1.9.1
+Thanks for the clarification,
+
+I will remove the rst node and Required Node in the NPCM7xx BMC explanation
+from the DT binding.
+
+On Mon, 21 Jan 2019 at 18:12, Rob Herring <robh+dt@kernel.org> wrote:
+
+> On Sun, Jan 20, 2019 at 7:48 PM Joel Stanley <joel@jms.id.au> wrote:
+> >
+> > On Sat, 19 Jan 2019 at 02:12, Tomer Maimon <tmaimon77@gmail.com> wrote:
+> > >
+> > > Hi Joel,
+> > >
+> > > Thanks for bringing this to my attention,
+> > >
+> > > I think I will leave it the same way it is now because I will like to
+> develop the reset driver and to handle the NPCM7xx SOC resets.
+> >
+> > You could also do that.
+> >
+> > But I was suggesting you use a phandle, so you could then find the
+> > node you want without searching the entire device tree for the node
+> > with the correct compatible.
+>
+> That's not really any more efficient. You just search the entire tree
+> for the matching phandle number instead. Well, that was true until we
+> recently added the phandle cache.
+>
+> In any case, it you plan to move to the reset binding (which would be
+> good), then it's better to have nothing in the DT and add something
+> rather than change the DT binding.
+
+
+>
+Rob
+>
+
+Thanks,
+
+Tomer
+
+--0000000000005ebd68057ffd818e
+Content-Type: text/html; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+
+<div dir=3D"ltr"><div dir=3D"ltr"><br></div><div dir=3D"ltr">Hi Rob,<br></d=
+iv><div><br></div>Thanks for the clarification,<div><br></div><div>I will r=
+emove the rst node and=C2=A0Required Node in the NPCM7xx BMC=C2=A0explanati=
+on from the DT binding.</div><div>=C2=A0<br><div class=3D"gmail_quote"><div=
+ dir=3D"ltr">On Mon, 21 Jan 2019 at 18:12, Rob Herring &lt;<a href=3D"mailt=
+o:robh%2Bdt@kernel.org">robh+dt@kernel.org</a>&gt; wrote:<br></div><blockqu=
+ote class=3D"gmail_quote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px=
+ solid rgb(204,204,204);padding-left:1ex">On Sun, Jan 20, 2019 at 7:48 PM J=
+oel Stanley &lt;<a href=3D"mailto:joel@jms.id.au" target=3D"_blank">joel@jm=
+s.id.au</a>&gt; wrote:<br>
+&gt;<br>
+&gt; On Sat, 19 Jan 2019 at 02:12, Tomer Maimon &lt;<a href=3D"mailto:tmaim=
+on77@gmail.com" target=3D"_blank">tmaimon77@gmail.com</a>&gt; wrote:<br>
+&gt; &gt;<br>
+&gt; &gt; Hi Joel,<br>
+&gt; &gt;<br>
+&gt; &gt; Thanks for bringing this to my attention,<br>
+&gt; &gt;<br>
+&gt; &gt; I think I will leave it the same way it is now because I will lik=
+e to develop the reset driver and to handle the NPCM7xx SOC resets.<br>
+&gt;<br>
+&gt; You could also do that.<br>
+&gt;<br>
+&gt; But I was suggesting you use a phandle, so you could then find the<br>
+&gt; node you want without searching the entire device tree for the node<br=
+>
+&gt; with the correct compatible.<br>
+<br>
+That&#39;s not really any more efficient. You just search the entire tree<b=
+r>
+for the matching phandle number instead. Well, that was true until we<br>
+recently added the phandle cache.<br>
+<br>
+In any case, it you plan to move to the reset binding (which would be<br>
+good), then it&#39;s better to have nothing in the DT and add something<br>
+rather than change the DT binding.</blockquote><blockquote class=3D"gmail_q=
+uote" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,2=
+04);padding-left:1ex">=C2=A0<br></blockquote><blockquote class=3D"gmail_quo=
+te" style=3D"margin:0px 0px 0px 0.8ex;border-left:1px solid rgb(204,204,204=
+);padding-left:1ex">
+Rob<br></blockquote><div><br></div><div>Thanks,</div><div><br></div><div>To=
+mer=C2=A0</div></div></div></div>
+
+--0000000000005ebd68057ffd818e--
