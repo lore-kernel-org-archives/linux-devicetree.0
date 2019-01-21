@@ -1,26 +1,39 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/5] dt-bindings: net: Add Qualcomm ethqos binding
-Date: Mon, 21 Jan 2019 09:31:07 -0600
-Message-ID: <20190121153107.GA6101@bogus>
-References: <20190121091318.20079-1-vkoul@kernel.org>
- <20190121091318.20079-2-vkoul@kernel.org>
+Subject: Re: [RFC v3 1/5] dt-bindings: Add a binding for Mediatek SCP
+Date: Mon, 21 Jan 2019 09:30:17 -0600
+Message-ID: <20190121153017.GA4608@bogus>
+References: <20190121071833.43443-1-pihsun@chromium.org>
+ <20190121071833.43443-2-pihsun@chromium.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190121091318.20079-2-vkoul@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-Cc: David S Miller <davem@davemloft.net>, netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+In-Reply-To: <20190121071833.43443-2-pihsun@chromium.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: Pi-Hsun Shih <pihsun@chromium.org>, Nicolas Boichat <drinkcat@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR (REMOTEPROC) SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 21 Jan 2019 14:43:14 +0530, Vinod Koul wrote:
-> Add support for Qualcomm ethqos found in some SoCs like QCS404.
+On Mon, 21 Jan 2019 15:18:29 +0800, Pi-Hsun Shih wrote:
+> From: Erin Lo <erin.lo@mediatek.com>
 > 
-> Signed-off-by: Vinod Koul <vkoul@kernel.org>
+> Add a DT binding documentation of SCP for the
+> MT8183 SoC from Mediatek.
+> 
+> Signed-off-by: Erin Lo <erin.lo@mediatek.com>
 > ---
->  .../devicetree/bindings/net/qcom,ethqos.txt   | 64 +++++++++++++++++++
->  1 file changed, 64 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/qcom,ethqos.txt
+> Changes from v2:
+>  - No change. I realized that for this patch series, there's no need to
+>    add anything under the mt8183-scp node (neither the mt8183-rpmsg or
+>    the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
+>    directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
+>    created by SCP name service.
+> 
+> Changes from v1:
+>  - No change.
+> ---
+>  .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
 > 
 
 Reviewed-by: Rob Herring <robh@kernel.org>
