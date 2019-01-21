@@ -1,55 +1,104 @@
-From: Alok Chauhan <alokc@codeaurora.org>
-Subject: [PATCH 6/6] arm64: dts: sdm845: Add interconnect for GENI QUP
-Date: Mon, 21 Jan 2019 16:51:43 +0530
-Message-ID: <1548069703-26595-7-git-send-email-alokc@codeaurora.org>
-References: <1548069703-26595-1-git-send-email-alokc@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548069703-26595-1-git-send-email-alokc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
-Cc: georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, Alok Chauhan <alokc@codeaurora.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: [PATCH v3 01/10] usb: core: comply to PHY framework
+Date: Mon, 21 Jan 2019 12:23:27 +0100
+Message-ID: <20190121112336.23489-2-miquel.raynal@bootlin.com>
+References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add interconnect ports for GENI QUPs to set bus
-capabilities.
+Current implementation of the USB core does not take into account the
+new PHY framework. Correct the situation by adding a call to
+phy_set_mode() before phy_power_on().
 
-Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+ drivers/usb/core/hcd.c |  5 +++++
+ drivers/usb/core/phy.c | 28 ++++++++++++++++++++++++++++
+ drivers/usb/core/phy.h |  2 ++
+ 3 files changed, 35 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c27cbd3..fb0a8a7 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -374,6 +374,13 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-+
-+			interconnects = <&rsc_hlos MASTER_BLSP_1
-+					&rsc_hlos SLAVE_EBI1>,
-+					<&rsc_hlos MASTER_APPSS_PROC
-+					&rsc_hlos SLAVE_BLSP_1>;
-+			interconnect-names = "qup-memory", "qup-config";
-+
- 			status = "disabled";
+diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+index 015b126ce455..86f39e44f98a 100644
+--- a/drivers/usb/core/hcd.c
++++ b/drivers/usb/core/hcd.c
+@@ -2736,6 +2736,11 @@ int usb_add_hcd(struct usb_hcd *hcd,
+ 		if (retval)
+ 			return retval;
  
- 			i2c0: i2c@880000 {
-@@ -682,6 +689,13 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
++		retval = usb_phy_roothub_set_mode(hcd->phy_roothub,
++						  PHY_MODE_USB_HOST_SS);
++		if (retval)
++			goto err_usb_phy_roothub_power_on;
 +
-+			interconnects = <&rsc_hlos MASTER_BLSP_2
-+					&rsc_hlos SLAVE_EBI1>,
-+					<&rsc_hlos MASTER_APPSS_PROC
-+					&rsc_hlos SLAVE_BLSP_2>;
-+			interconnect-names = "qup-memory", "qup-config";
-+
- 			status = "disabled";
+ 		retval = usb_phy_roothub_power_on(hcd->phy_roothub);
+ 		if (retval)
+ 			goto err_usb_phy_roothub_power_on;
+diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
+index 38b2c776c4b4..7580493b867a 100644
+--- a/drivers/usb/core/phy.c
++++ b/drivers/usb/core/phy.c
+@@ -123,6 +123,34 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub)
+ }
+ EXPORT_SYMBOL_GPL(usb_phy_roothub_exit);
  
- 			i2c8: i2c@a80000 {
++int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
++			     enum phy_mode mode)
++{
++	struct usb_phy_roothub *roothub_entry;
++	struct list_head *head;
++	int err;
++
++	if (!phy_roothub)
++		return 0;
++
++	head = &phy_roothub->list;
++
++	list_for_each_entry(roothub_entry, head, list) {
++		err = phy_set_mode(roothub_entry->phy, mode);
++		if (err)
++			goto err_out;
++	}
++
++	return 0;
++
++err_out:
++	list_for_each_entry_continue_reverse(roothub_entry, head, list)
++		phy_power_off(roothub_entry->phy);
++
++	return err;
++}
++EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
++
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
+ {
+ 	struct usb_phy_roothub *roothub_entry;
+diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
+index 88a3c037e9df..dad564e2d2d4 100644
+--- a/drivers/usb/core/phy.h
++++ b/drivers/usb/core/phy.h
+@@ -16,6 +16,8 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
+ int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
+ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
+ 
++int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
++			     enum phy_mode mode);
+ int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
+ void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
+ 
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.19.1
