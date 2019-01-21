@@ -1,78 +1,213 @@
-From: Marek =?ISO-8859-1?Q?Beh=FAn?= <marek.behun@nic.cz>
-Subject: Re: [PATCH RFC] ARM64: dts: marvell: Add DTS file for Turris Mox
-Date: Mon, 21 Jan 2019 14:12:54 +0100
-Message-ID: <20190121141254.3208d949@dellmb.labs.office.nic.cz>
-References: <20181113134408.5681-1-marek.behun@nic.cz>
-        <87lg3im3t4.fsf@FE-laptop>
+From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Subject: Re: [PATCH 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 21 Jan 2019 14:23:55 +0100
+Message-ID: <20190121132355.vqwmwzzcwrqgcxrm@pengutronix.de>
+References: <1547194964-16718-1-git-send-email-yash.shah@sifive.com>
+ <1547194964-16718-3-git-send-email-yash.shah@sifive.com>
+ <20190115220046.etgbno6ymsux75dk@pengutronix.de>
+ <20190121113039.GI16756@ulmo>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <87lg3im3t4.fsf@FE-laptop>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>, Andrew Lunn <andrew@lunn.ch>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190121113039.GI16756@ulmo>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
+List-Post: <mailto:linux-riscv@lists.infradead.org>
+List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
+ <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
+Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Jan 2019 15:35:35 +0100
-Gregory CLEMENT <gregory.clement@bootlin.com> wrote:
+On Mon, Jan 21, 2019 at 12:30:39PM +0100, Thierry Reding wrote:
+> On Tue, Jan 15, 2019 at 11:00:46PM +0100, Uwe Kleine-K=F6nig wrote:
+> > Hello,
+> > =
 
-> > The basic module can be extended by different modules.
-> > When those modules are connected, U-Boot has to let kernel know via
-> > device-tree. Since modules can be connected in different order and
-> > some modules can be connected multiple times (up to three 8-port
-> > switch modules can be connected), using dtb overlays would result in
-> > too files.  
-> 
-> What do you mean by too many files?
-> 
-> The dtb overlays seems really matches your situation.
-> Usually we have one dtb part by module and then we mix them together.
-> 
-> Gregory
+> > On Fri, Jan 11, 2019 at 01:52:44PM +0530, Yash Shah wrote:
+> > > Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed S=
+oC.
+> > > =
 
-Hi Gregory,
+> > > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > > [Atish: Various fixes and code cleanup]
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > > ---
+> > >  drivers/pwm/Kconfig      |  10 ++
+> > >  drivers/pwm/Makefile     |   1 +
+> > >  drivers/pwm/pwm-sifive.c | 246 +++++++++++++++++++++++++++++++++++++=
+++++++++++
+> > >  3 files changed, 257 insertions(+)
+> > >  create mode 100644 drivers/pwm/pwm-sifive.c
+> > > =
 
-the problem is that in some cases here some even if you have the same
-module, some parameters have to be different depending on which
-position the module is in the topology and what type of module is
-before it.
+> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > > index a8f47df..3bcaf6a 100644
+> > > --- a/drivers/pwm/Kconfig
+> > > +++ b/drivers/pwm/Kconfig
+> > > @@ -380,6 +380,16 @@ config PWM_SAMSUNG
+> > >  	  To compile this driver as a module, choose M here: the module
+> > >  	  will be called pwm-samsung.
+> > >  =
 
-For example up to three switch modules can be connected one after
-another, and although physically they are the same, their dtb
-parameters (MDIO address and whether they are connected to CPU or
-another switch module) are different. So if I wanter to use overlays
-without dtb modification from u-boot, I would have to have three
-overlays for Peridot module, for topologies:
-  peridot
-  peridot-peridot
-  peridot-peridot-peridot
+> > > +config PWM_SIFIVE
+> > > +	tristate "SiFive PWM support"
+> > > +	depends on OF
+> > > +	depends on COMMON_CLK
+> > =
 
-three for Topaz module:
-  topaz
-  peridot-topaz
-  peridot-peridot-topaz
+> > I'd say add:
+> > =
 
-and four for SFP module:
-  sfp
-  peridot-sfp
-  peridot-peridot-sfp
-  peridot-peridot-peridot-sfp
+> > 	depends on MACH_SIFIVE || COMPILE_TEST
+> > =
 
-For the PCIe and USB module this is not the case, only one overlay for
-each. But I thought (and still think) that in this case it is more
-elegant to just enable the modules in U-Boot than to use so many
-different overlays. And since I already thought up this solution for
-SFP and switch modules, I used it for the PCIe and USB modules as well,
-instead of mixing overlays there.
+> > (I guess "MACH_SIFIVE" is wrong, but I assume you get what I mean.)
+> > =
 
-I am of course willing to rewrite this to use overlays, if you guys are
-unwilling to merge it done this way, but I think this solution is
-better.
+> > > +	help
+> > > +	  Generic PWM framework driver for SiFive SoCs.
+> > > +
+> > > +	  To compile this driver as a module, choose M here: the module
+> > > +	  will be called pwm-sifive.
+> > > +
+> > >  config PWM_SPEAR
+> > >  	tristate "STMicroelectronics SPEAr PWM support"
+> > >  	depends on PLAT_SPEAR
+> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > > index 9c676a0..30089ca 100644
+> > > --- a/drivers/pwm/Makefile
+> > > +++ b/drivers/pwm/Makefile
+> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
+> > >  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
+> > >  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
+> > >  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
+> > > +obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
+> > >  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
+> > >  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
+> > >  obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
+> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > > new file mode 100644
+> > > index 0000000..7fee809
+> > > --- /dev/null
+> > > +++ b/drivers/pwm/pwm-sifive.c
+> > > @@ -0,0 +1,246 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +/*
+> > > + * Copyright (C) 2017-2018 SiFive
+> > > + * For SiFive's PWM IP block documentation please refer Chapter 14 of
+> > > + * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.=
+pdf
+> > =
 
-Also, I would like to have the dts definitions for all modules
-officially supported by Mox to have in the kernel, and if this was done
-via overlays, it would not be merged, or am I wrong? Are there overlay
-dts sources for some device in the kernel?
+> > I wonder if such an instance should be only a single PWM instead of
+> > four. Then you were more flexible with the period lengths (using
+> > pwmcfg.pwmzerocmp) and could do stuff like inverted and uninverted mode.
+> =
 
-Marek
+> I thought this IP only allowed a single period for all PWM channels in
+> the IP. If so, splitting this into four different devices is going to
+> complicate things because you'd have to coordinate between all four as
+> to which period is currently set.
+
+Take a look at the above link, figure 6 is depicting how this IP works
+(page 92 of the pdf). If you have pwmzerocmp=3D0 (and pwmcmpXgang=3D0) the
+four outputs (pwmcmpXgpio) are independant and the counter only resets
+on overflow of pwms. Then you have 4 outputs that can have their
+duty_cycle (but not period) set individually. So period is restricted to
+a count of clk cycles that is a power of two.
+
+With pwmzerocmp=3D1, pwmcmp0 resets the counter with the following
+effects:
+
+ - pwmcmp0gpio is always 0 (bad?)
+ - more finegrained control over the period length as the restriction to
+   powers of two is gone (good)
+
+The other three output can then either be used as 3 PWM outputs with the
+more flexible (but identical) period or only pwmcmp1gpio is used as a
+single output (my favourite) and with pwmcmp2, pwmcmp3 and pwmcmp2gang=3D1
+the output pwmcmp2gpio can be used as a secondary output to implement
+stuff that was called "complementary mode" or "Push-pull mode" by
+Claudiu Beznea.
+
+> > > +struct sifive_pwm_device {
+> > > +	struct pwm_chip	chip;
+> > > +	struct notifier_block notifier;
+> > > +	struct clk *clk;
+> > > +	void __iomem *regs;
+> > > +	unsigned int approx_period;
+> > > +	unsigned int real_period;
+> > > +};
+> > =
+
+> > I'd call this pwm_sifive_ddata. The prefix because the driver is called
+> > pwm-sifive and ddata because this is driver data and not a device.
+> =
+
+> I don't think there's a need to have an extra suffix. Just call this
+> sifive_pwm or pwm_sifive. There's no ambiguity in that name and it's
+> short and crisp.
+
+fine for me if "_device" goes away.
+
+> > > +	if (state->enabled)
+> > > +		sifive_pwm_get_state(chip, dev, state);
+> > =
+
+> > @Thierry: Should we bless this correction of state?
+> =
+
+> I'm not sure I understand why this correction is necessary. Is it okay
+> to request a state to be applied and when we're not able to set that
+> state we just set anything as close as possible? Sounds a bit risky to
+> me. What if somebody wants to use this in a case where precision
+> matters?
+
+There is always rounding involved. Where should we draw a line then?
+Consider a parent clk running at 1000000001 Hz. Can you provide a duty
+cycle of 1 ps? Of if the clk runs at 500000000 Hz, I can implement even
+periods, but not the uneven. Should the driver fail if an uneven period
+is requested? What should a user do if setting
+
+	.duty_cycle =3D 55, .period =3D 100,
+
+fails? Assume the pwm can set only even duty_cycles? Or maybe duty_cycle
+and period must be dividable by 3? Or maybe only periods that are a
+power of two are possible? To get both, an API that can actually be
+worked with and that provides precision, the driver needs to be allowed
+to round (preferably in some defined way that is used for all devices)
+and we need a function to determine the result without actually
+configuring. That's how it works in the clk_* universe. There is
+clk_round_rate and clk_set_rate and the explicit condition that
+
+	clk_set_rate(clk, somerate)
+
+has the same effect as
+
+	clk_set_rate(clk, clk_round_rate(clk, somerate))
+
+and after one of them we have
+
+	clk_get_rate(clk) =3D clk_round_rate(clk, somerate))
+
+> Now, if you're saying that there can't be such cases and we should
+> support this, then why restrict the state correction to when the PWM is
+> enabled? What's wrong with correcting it in either case?
+
+Either the correction should be done always or never.
+
+Best regards
+Uwe
+
+-- =
+
+Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
+Industrial Linux Solutions                 | http://www.pengutronix.de/  |
