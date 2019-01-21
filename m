@@ -1,44 +1,52 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 4/6] dt-binding: pcf85063: add xtal load capacitance
-Date: Mon, 21 Jan 2019 09:25:13 -0600
-Message-ID: <20190121152513.GA29037@bogus>
-References: <20190119090031.29147-1-sam@ravnborg.org>
- <20190119090031.29147-5-sam@ravnborg.org>
+Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
+Date: Mon, 21 Jan 2019 09:23:35 -0600
+Message-ID: <20190121152335.GA12284@bogus>
+References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
+ <20190117161804.GA5760@bogus>
+ <1547817384.11482.33.camel@nxp.com>
+ <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190119090031.29147-5-sam@ravnborg.org>
+In-Reply-To: <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>, =?iso-8859-1?Q?S=F8ren?= Andersen <san@skov.dk>
+To: Nicolin Chen <nicoleotsuka@gmail.com>
+Cc: Viorel Suman <viorel.suman@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, alsa-
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 19 Jan 2019 10:00:29 +0100, Sam Ravnborg wrote:
-> The NXP pcf85063 supports two different xtal load capacitance
-> - 7000fF  (7pF)    HW default, Linux driver default
-> - 12500fF (12.5pF) Minimum power consumption
+On Fri, Jan 18, 2019 at 11:46:42AM -0800, Nicolin Chen wrote:
+> On Fri, Jan 18, 2019 at 01:16:24PM +0000, Viorel Suman wrote:
+> > > > 1. Moved "dais" node from machine driver DTS node to device driver
+> > > > DTS node
+> > > >   as suggested by Rob.
+> > > That was not what I suggested. You still have a virtual node which
+> > > looks to me to be unnecessary.
+> > 
+> > To me removing virtual node implies that AUDMIX machine driver (imx-
+> > audmix.c + virtual node) shall be removed and machine driver code
+> > merged into device driver (fsl_audmix.c + device node) - please let me
+> > know if my understanding is wrong.
 > 
-> To obtain a precise RTC the pcf85063 must be configured
-> with the correct capacitance load of the xtal.
-> 
-> Add a property to specify the xtal capacitance load.
-> The default value matches that of the current Linux driver.
-> 
-> With a dedicated binding remove the entry in rtc.txt
-> 
-> Signed-off-by: Søren Andersen <san@skov.dk>
-> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
-> Cc: Alessandro Zummo <a.zummo@towertech.it>
-> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: Urs Fässler <urs.fassler@bbv.ch>
-> ---
->  Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt | 18 ++++++++++++++++++
->  Documentation/devicetree/bindings/rtc/rtc.txt          |  1 -
->  2 files changed, 18 insertions(+), 1 deletion(-)
->  create mode 100644 Documentation/devicetree/bindings/rtc/nxp,pcf85063.txt
-> 
+> We could use a non-DT configuration right? From the driver logic,
+> DT just registers a device corresponding to the machine driver so
+> that it can probe(). We could register one in fsl_audmix instead.
+> Please refer to how fsl_ssi registers the sound card device. The
+> machine driver can get audmix_np from the parent device pointer,
+> and I think that's all you need.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Yes.
+
+> Or maybe someone else would provide a better way. But it'd work.
+
+Or the machine driver could create the audmix device. That probably 
+makes less sense, but either way there doesn't have to be a 1-1 
+correspondence of DT nodes and (platform) devices.
+
+I'm not an ASoC expert, but why can't the machine driver just control 
+the audmix directly (with DAIs as separate drivers)? Is the audmix ever 
+going to a be a component for a different machine driver?
+
+Rob
