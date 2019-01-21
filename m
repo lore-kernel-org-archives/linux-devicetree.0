@@ -1,62 +1,35 @@
-From: Philipp Puschmann <pp@emlix.com>
-Subject: Re: [PATCH v3 1/2] dt-bindings: usb: ci-hdrc-usb2: add property
- power-active-high
-Date: Mon, 21 Jan 2019 19:00:39 +0100
-Message-ID: <7d0da12b-0173-aca1-b0eb-78a00681d35d@emlix.com>
-References: <20190116105103.28842-2-philipp.puschmann@emlix.com>
- <20190116111133.31326-1-philipp.puschmann@emlix.com>
- <VI1PR04MB5327656AD22454B054CE0AD08B830@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+From: Amit Kucheria <amit.kucheria@linaro.org>
+Subject: [PATCH v3 0/1] Thermal throttling for SDM845
+Date: Mon, 21 Jan 2019 23:38:33 +0530
+Message-ID: <cover.1548093127.git.amit.kucheria@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <VI1PR04MB5327656AD22454B054CE0AD08B830@VI1PR04MB5327.eurprd04.prod.outlook.com>
-Content-Language: de-DE
 Sender: linux-kernel-owner@vger.kernel.org
-To: Peter Chen <peter.chen@nxp.com>, Philipp Puschmann <philipp.puschmann@emlix.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: linux-kernel@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, mka@chromium.org, David Brown <david.brown@linaro.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Peter,
+Only one patch left in this series. This patch can be applied independently
+but needs [1] and [2] merged to have throttling work out of the box.
 
-Am 17.01.19 um 08:01 schrieb Peter Chen:
->  
->>
->> The i.MX6q/dl USB controller may drive the usb power line directly, but the polarity
->> depends on the board. Reset state of the polarity is low-active so add this property
->> to allow it to be high-active.
->>
-> 
-> As far as I know, most of i.mx USB controllers (except imx28/23, but they don't have non-core registers)
-> work like this, and most of them are low active for PP default. Would you just use "i.mx" at
-> both your code and your comment?
+Changes since v2:
+ - Split up the series into auto-register series for cpufreq[1] and
+   miscellaneous patches[2][3]. [1] and [2] are needed for this patch to
+   work.
+ - Merged the two DT patches into one. We end up with 2 passive and 1
+   critical trip point.
+ - Remove unncessary cooling map for critical trip point, we're shutting down at
+   that trip, duh!
 
-Am i right that i have to add my code block to (nearly) all other version specific init functions then?
-Will do so in next days and then send a v4 of this patch.
-> 
-> Peter
-> 
->> Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
->> ---
->> Changes in v3: add description
->> ---
->>  Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt | 1 +
->>  1 file changed, 1 insertion(+)
->>
->> diff --git a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->> b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->> index adae82385dd6..8696e3eff6e7 100644
->> --- a/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->> +++ b/Documentation/devicetree/bindings/usb/ci-hdrc-usb2.txt
->> @@ -93,6 +93,7 @@ i.mx specific properties
->>  - over-current-active-low: over current signal polarity is active low.
->>  - over-current-active-high: over current signal polarity is active high.
->>    It's recommended to specify the over current polarity.
->> +- power-active-high: power signal polarity is high active (only for
->> +imx6q/dl)
->>  - external-vbus-divider: enables off-chip resistor divider for Vbus
->>
->>  Example:
->> --
->> 2.20.1
-> 
+ [1] https://lore.kernel.org/lkml/cover.1548084260.git.amit.kucheria@linaro.org/
+ [2] https://lore.kernel.org/patchwork/patch/1033953/
+ [3] https://lore.kernel.org/patchwork/cover/1033970/
+
+Amit Kucheria (1):
+  arm64: dts: sdm845: wireup the thermal trip points to cpufreq
+
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 225 +++++++++++++++++++++++++--
+ 1 file changed, 209 insertions(+), 16 deletions(-)
+
+-- 
+2.17.1
