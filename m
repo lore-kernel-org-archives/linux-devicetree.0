@@ -1,172 +1,116 @@
-From: Jeffrey Hugo <jhugo@codeaurora.org>
-Subject: [PATCH v3 3/3] arm64: dts: qcom: msm8998: Add USB-related nodes
-Date: Mon, 21 Jan 2019 14:33:28 -0700
-Message-ID: <1548106408-5127-1-git-send-email-jhugo@codeaurora.org>
-References: <1548106307-4762-1-git-send-email-jhugo@codeaurora.org>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCHv3 3/4] coresight: etm4x: Add support to enable ETMv4.2
+Date: Mon, 21 Jan 2019 14:37:32 -0700
+Message-ID: <CANLsYkw5h+-fWhiit+kNJHnGPF__Bz1MHc94sG=WOyfTPHi_NQ@mail.gmail.com>
+References: <cover.1547813804.git.saiprakash.ranjan@codeaurora.org>
+ <d52546764f8570e8c07ac8e3e2841e087e66648c.1547813804.git.saiprakash.ranjan@codeaurora.org>
+ <cc71cfa9-8a11-9356-ac41-e27564a9f7b4@codeaurora.org> <20190121184831.GB14049@xps15>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548106307-4762-1-git-send-email-jhugo@codeaurora.org>
+In-Reply-To: <20190121184831.GB14049@xps15>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bjorn.andersson@linaro.org, andy.gross@linaro.org, david.brown@linaro.org
-Cc: linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, balbi@kernel.org, linux-usb@vger.kernel.org, Jeffrey Hugo <jhugo@codeaurora.org>
+To: Vivek Gautam <vivek.gautam@codeaurora.org>
+Cc: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add nodes for USB and related PHYs.
+On Mon, 21 Jan 2019 at 11:48, Mathieu Poirier
+<mathieu.poirier@linaro.org> wrote:
+>
+> On Mon, Jan 21, 2019 at 04:18:36PM +0530, Vivek Gautam wrote:
+> >
+> > On 1/18/2019 5:52 PM, Sai Prakash Ranjan wrote:
+> > > SDM845 has ETMv4.2 and can use the existing etm4x driver.
+> > > But the current etm driver checks only for ETMv4.0 and
+> > > errors out for other etm4x versions. This patch adds this
+> > > missing support to enable SoC's with ETMv4x to use same
+> > > driver by checking only the ETM architecture major version
+> > > number.
+> > >
+> > > Without this change, we get below error during etm probe:
+> > >
+> > > / # dmesg | grep etm
+> > > [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+> > > [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+> > > [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+> > > [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+> > > [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+> > > [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+> > > [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+> > > [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+> > >
+> > > With this change, etm probe is successful:
+> > >
+> > > / # dmesg | grep coresight
+> > > [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+> > > [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+> > > [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+> > > [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+> > > [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+> > > [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+> > > [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+> > > [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+> > >
+> > > Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > > ---
+> > >   drivers/hwtracing/coresight/coresight-etm4x.c | 2 +-
+> > >   drivers/hwtracing/coresight/coresight-etm4x.h | 2 +-
+> > >   2 files changed, 2 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> > > index 53e2fb6e86f6..93d5f1f3145e 100644
+> > > --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> > > +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> > > @@ -55,7 +55,7 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+> > >   static bool etm4_arch_supported(u8 arch)
+> > >   {
+> > > -   switch (arch) {
+> > > +   switch (arch >> 4) {
+> >
+> >
+> > While this looks good, from what it looks like arch is a combination of
+> > major version
+> > minor version. So, will it be better to masks, and shifts macros instead of
+> > a magic
+> > number shift.
+> > But, frankly it's upto Mathieu to decide the readability of this. So, I
+> > leave it to him.
+>
+> The layout of the architecture is already well defined in etm4_init_arch_data()
+> [1].  As such just doing the following would be fine with me:
+>
+>         /* Mask out the minor version nuber */
+>         switch (arch & 0xf) {
 
-Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
-Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi | 22 ++++++++
- arch/arm64/boot/dts/qcom/msm8998.dtsi     | 92 +++++++++++++++++++++++++++++++
- 2 files changed, 114 insertions(+)
+s/0xf/0xf0
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-index 50e9033..23676ae 100644
---- a/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998-mtp.dtsi
-@@ -65,6 +65,13 @@
- 	status = "okay";
- };
- 
-+&qusb2phy {
-+	status = "okay";
-+
-+	vdda-pll-supply = <&vreg_l12a_1p8>;
-+	vdda-phy-dpdm-supply = <&vreg_l24a_3p075>;
-+};
-+
- &rpm_requests {
- 	pm8998-regulators {
- 		compatible = "qcom,rpm-pm8998-regulators";
-@@ -257,3 +264,18 @@
- 	pinctrl-0 = <&sdc2_clk_on  &sdc2_cmd_on  &sdc2_data_on  &sdc2_cd_on>;
- 	pinctrl-1 = <&sdc2_clk_off &sdc2_cmd_off &sdc2_data_off &sdc2_cd_off>;
- };
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&usb3_dwc3 {
-+	dr_mode = "host"; /* Force to host until we have Type-C hooked up */
-+};
-+
-+&usb3phy {
-+	status = "okay";
-+
-+	vdda-phy-supply = <&vreg_l1a_0p875>;
-+	vdda-pll-supply = <&vreg_l2a_1p2>;
-+};
-diff --git a/arch/arm64/boot/dts/qcom/msm8998.dtsi b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-index 8d41b69..89d8bef 100644
---- a/arch/arm64/boot/dts/qcom/msm8998.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8998.dtsi
-@@ -540,6 +540,11 @@
- 			reg = <0x780000 0x621c>;
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+
-+			qusb2_hstx_trim: hstx-trim@423a {
-+				reg = <0x423a 0x1>;
-+				bits = <0 4>;
-+			};
- 		};
- 
- 		gcc: clock-controller@100000 {
-@@ -607,6 +612,93 @@
- 			#mbox-cells = <1>;
- 		};
- 
-+		usb3: usb@a8f8800 {
-+			compatible = "qcom,msm8998-dwc3", "qcom,dwc3";
-+			reg = <0x0a8f8800 0x400>;
-+			status = "disabled";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_CFG_NOC_USB3_AXI_CLK>,
-+				 <&gcc GCC_USB30_MASTER_CLK>,
-+				 <&gcc GCC_AGGRE1_USB3_AXI_CLK>,
-+				 <&gcc GCC_USB30_MOCK_UTMI_CLK>,
-+				 <&gcc GCC_USB30_SLEEP_CLK>;
-+			clock-names = "cfg_noc", "core", "iface", "mock_utmi",
-+				      "sleep";
-+
-+			assigned-clocks = <&gcc GCC_USB30_MOCK_UTMI_CLK>,
-+					  <&gcc GCC_USB30_MASTER_CLK>;
-+			assigned-clock-rates = <19200000>, <120000000>;
-+
-+			interrupts = <GIC_SPI 347 IRQ_TYPE_LEVEL_HIGH>,
-+				     <GIC_SPI 243 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "hs_phy_irq", "ss_phy_irq";
-+
-+			power-domains = <&gcc USB_30_GDSC>;
-+
-+			resets = <&gcc GCC_USB_30_BCR>;
-+
-+			usb3_dwc3: dwc3@a800000 {
-+				compatible = "snps,dwc3";
-+				reg = <0x0a800000 0xcd00>;
-+				interrupts = <GIC_SPI 131 IRQ_TYPE_LEVEL_HIGH>;
-+				snps,dis_u2_susphy_quirk;
-+				snps,dis_enblslpm_quirk;
-+				phys = <&qusb2phy>, <&usb3phy>;
-+				phy-names = "usb2-phy", "usb3-phy";
-+				snps,has-lpm-erratum;
-+				snps,hird-threshold = /bits/ 8 <0x10>;
-+			};
-+		};
-+
-+		usb3phy: phy@c010000 {
-+			compatible = "qcom,msm8998-qmp-usb3-phy";
-+			reg = <0x0c010000 0x18c>;
-+			status = "disabled";
-+			#clock-cells = <1>;
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			ranges;
-+
-+			clocks = <&gcc GCC_USB3_PHY_AUX_CLK>,
-+				 <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_USB3_CLKREF_CLK>;
-+			clock-names = "aux", "cfg_ahb", "ref";
-+
-+			resets = <&gcc GCC_USB3_PHY_BCR>,
-+				 <&gcc GCC_USB3PHY_PHY_BCR>;
-+			reset-names = "phy", "common";
-+
-+			usb1_ssphy: lane@c010200 {
-+				reg = <0xc010200 0x128>,
-+				      <0xc010400 0x200>,
-+				      <0xc010c00 0x20c>,
-+				      <0xc010600 0x128>,
-+				      <0xc010800 0x200>;
-+				#phy-cells = <0>;
-+				clocks = <&gcc GCC_USB3_PHY_PIPE_CLK>;
-+				clock-names = "pipe0";
-+				clock-output-names = "usb3_phy_pipe_clk_src";
-+			};
-+		};
-+
-+		qusb2phy: phy@c012000 {
-+			compatible = "qcom,msm8998-qusb2-phy";
-+			reg = <0x0c012000 0x2a8>;
-+			status = "disabled";
-+			#phy-cells = <0>;
-+
-+			clocks = <&gcc GCC_USB_PHY_CFG_AHB2PHY_CLK>,
-+				 <&gcc GCC_RX1_USB2_CLKREF_CLK>;
-+			clock-names = "cfg_ahb", "ref";
-+
-+			resets = <&gcc GCC_QUSB2PHY_PRIM_BCR>;
-+
-+			nvmem-cells = <&qusb2_hstx_trim>;
-+		};
-+
- 		sdhc2: sdhci@c0a4900 {
- 			compatible = "qcom,sdhci-msm-v4";
- 			reg = <0xc0a4900 0x314>, <0xc0a4000 0x800>;
--- 
-Qualcomm Datacenter Technologies as an affiliate of Qualcomm Technologies, Inc.
-Qualcomm Technologies, Inc. is a member of the
-Code Aurora Forum, a Linux Foundation Collaborative Project.
+Apologies for the confusion.
+
+>
+> Of course by proceeding this way we don't need to modify the define in
+> coresight-etm4x.h.
+>
+> Regards,
+> Mathieu
+>
+> [1]. https://elixir.bootlin.com/linux/latest/source/drivers/hwtracing/coresight/coresight-etm4x.c#L508
+>
+> >
+> > Thanks
+> > Vivek
+> >
+> > >     case ETM_ARCH_V4:
+> > >             break;
+> > >     default:
+> > > diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
+> > > index 52786e9d8926..05d4bd330881 100644
+> > > --- a/drivers/hwtracing/coresight/coresight-etm4x.h
+> > > +++ b/drivers/hwtracing/coresight/coresight-etm4x.h
+> > > @@ -136,7 +136,7 @@
+> > >   #define ETM_MAX_RES_SEL                   16
+> > >   #define ETM_MAX_SS_CMP                    8
+> > > -#define ETM_ARCH_V4                        0x40
+> > > +#define ETM_ARCH_V4                        0x4
+> > >   #define ETMv4_SYNC_MASK                   0x1F
+> > >   #define ETM_CYC_THRESHOLD_MASK            0xFFF
+> > >   #define ETM_CYC_THRESHOLD_DEFAULT       0x100
