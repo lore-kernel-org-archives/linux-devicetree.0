@@ -1,150 +1,187 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
- binding
-Date: Mon, 21 Jan 2019 23:08:59 +0000
-Message-ID: <20190121230859.b6bfmxjcrk4duknr@e5254000004ec.dyn.armlinux.org.uk>
-References: <20190120172534.24617-1-lkundrak@v3.sk>
- <20190120172534.24617-5-lkundrak@v3.sk>
- <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
- <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
- <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
- <20190121175301.lremzw6dul7dyff4@e5254000004ec.dyn.armlinux.org.uk>
- <4c21727d9753d4c0de667566972f2229dc9f1304.camel@v3.sk>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] dt-bindings: pwm: kona: Add new compatible for new
+ version pwm-kona
+Date: Mon, 21 Jan 2019 17:11:05 -0600
+Message-ID: <20190121231105.GA928@bogus>
+References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
+ <1547184076-20521-2-git-send-email-sheetal.tigadoli@broadcom.com>
+ <20190111204801.2ytdeblcai7lg3on@pengutronix.de>
+ <f1ec3121-a8e7-a1c0-008a-ea4ae6028157@broadcom.com>
+ <20190112150515.i7mwq7rtd62wlifh@pengutronix.de>
+ <faadc46d-94b5-a32c-79ae-4206fbc26608@broadcom.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <4c21727d9753d4c0de667566972f2229dc9f1304.camel@v3.sk>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
+In-Reply-To: <faadc46d-94b5-a32c-79ae-4206fbc26608@broadcom.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Scott Branden <scott.branden@broadcom.com>
+Cc: linux-pwm@vger.kernel.org, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, linux-kernel@vger.kernel.org, Thierry Reding <thierry.reding@gmail.com>, bcm-kernel-feedback-list@broadcom.com, Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, Praveen Kumar B <praveen.b@broadcom.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMjEsIDIwMTkgYXQgMDk6NDU6MjJQTSArMDEwMCwgTHVib21pciBSaW50ZWwg
-d3JvdGU6Cj4gT24gTW9uLCAyMDE5LTAxLTIxIGF0IDE3OjUzICswMDAwLCBSdXNzZWxsIEtpbmcg
-LSBBUk0gTGludXggYWRtaW4KPiB3cm90ZToKPiA+IE9uIE1vbiwgSmFuIDIxLCAyMDE5IGF0IDEw
-OjA3OjExQU0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4gPiBPbiBNb24sIEphbiAyMSwg
-MjAxOSBhdCA5OjQ2IEFNIEx1Ym9taXIgUmludGVsIDxsa3VuZHJha0B2My5zaz4gd3JvdGU6Cj4g
-PiA+ID4gT24gTW9uLCAyMDE5LTAxLTIxIGF0IDA5OjM1IC0wNjAwLCBSb2IgSGVycmluZyB3cm90
-ZToKPiA+ID4gPiA+IE9uIFN1biwgSmFuIDIwLCAyMDE5IGF0IDExOjI2IEFNIEx1Ym9taXIgUmlu
-dGVsIDxsa3VuZHJha0B2My5zaz4gd3JvdGU6Cj4gPiA+ID4gPiA+IFRoZSBNYXJ2ZWxsIEFybWFk
-YSBEUk0gbWFzdGVyIGRldmljZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFs
-bAo+ID4gPiA+ID4gPiBub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBncmFwaGljcyBzdWJzeXN0ZW0u
-Cj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMdWJvbWlyIFJpbnRlbCA8
-bGt1bmRyYWtAdjMuc2s+Cj4gPiA+ID4gPiA+IC0tLQo+ID4gPiA+ID4gPiAgLi4uL2Rpc3BsYXkv
-YXJtYWRhL21hcnZlbGwtYXJtYWRhLWRybS50eHQgICAgIHwgMjQgKysrKysrKysrKysrKysrKysr
-Kwo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKykKPiA+ID4gPiA+
-ID4gCj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1hcm1hZGEtZHJtLnR4dCBiL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0u
-dHh0Cj4gPiA+ID4gPiA+IGluZGV4IGRlNGNjYTk0MzJjOC4uM2RiZmE4MDQ3ZjBiIDEwMDY0NAo+
-ID4gPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
-eS9hcm1hZGEvbWFydmVsbC1hcm1hZGEtZHJtLnR4dAo+ID4gPiA+ID4gPiArKysgYi9Eb2N1bWVu
-dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1hcm1hZGEt
-ZHJtLnR4dAo+ID4gPiA+ID4gPiBAQCAtMSwzICsxLDI3IEBACj4gPiA+ID4gPiA+ICtNYXJ2ZWxs
-IEFybWFkYSBEUk0gbWFzdGVyIGRldmljZQo+ID4gPiA+ID4gPiArPT09PT09PT09PT09PT09PT09
-PT09PT09PT09PT09PT0KPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiArVGhlIE1hcnZlbGwgQXJt
-YWRhIERSTSBtYXN0ZXIgZGV2aWNlIGlzIGEgdmlydHVhbCBkZXZpY2UgbmVlZGVkIHRvIGxpc3Qg
-YWxsCj4gPiA+ID4gPiA+ICtub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBncmFwaGljcyBzdWJzeXN0
-ZW0uCj4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+
-ID4gPiA+ICsKPiA+ID4gPiA+ID4gKyAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAibWFy
-dmVsbCxkb3ZlLWRpc3BsYXktc3Vic3lzdGVtIiwKPiA+ID4gPiA+ID4gKyAgICJtYXJ2ZWxsLGFy
-bWFkYS1kaXNwbGF5LXN1YnN5c3RlbSIKPiA+ID4gPiA+ID4gKyAtIHBvcnRzOiBhIGxpc3Qgb2Yg
-cGhhbmRsZXMgcG9pbnRpbmcgdG8gZGlzcGxheSBpbnRlcmZhY2UgcG9ydHMgb2YgQ1JUQwo+ID4g
-PiA+ID4gPiArICAgZGV2aWNlcwo+ID4gPiA+ID4gPiArIC0gbWVtb3J5LXJlZ2lvbjogcGhhbmRs
-ZSB0byBhIG5vZGUgZGVzY3JpYmluZyBtZW1vcnkgdG8gYmUgdXNlZCBmb3IgdGhlCj4gPiA+ID4g
-PiA+ICsgICBmcmFtZWJ1ZmZlcgo+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ICtFeGFtcGxlOgo+
-ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ICsgICAgICAgZGlzcGxheS1zdWJzeXN0ZW0gewo+ID4g
-PiA+ID4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGRvdmUtZGlzcGxh
-eS1zdWJzeXN0ZW0iLAo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICJt
-YXJ2ZWxsLGFybWFkYS1kaXNwbGF5LXN1YnN5c3RlbSI7Cj4gPiA+ID4gPiA+ICsgICAgICAgICAg
-ICAgICBtZW1vcnktcmVnaW9uID0gPCZkaXNwbGF5X3Jlc2VydmVkPjsKPiA+ID4gPiA+ID4gKyAg
-ICAgICAgICAgICAgIHBvcnRzID0gPCZsY2QwX3BvcnQ+Owo+ID4gPiA+ID4gCj4gPiA+ID4gPiBJ
-ZiB0aGVyZSBpcyBvbmx5IG9uZSBkZXZpY2UsIHlvdSBkb24ndCBuZWVkIHRoaXMgdmlydHVhbCBu
-b2RlLgo+ID4gPiA+IAo+ID4gPiA+IEJ5ICJvbmUgZGV2aWNlIiB5b3UgbWVhbiBvbmUgTENEIGNv
-bnRyb2xsZXIgKENSVEMpPwo+ID4gPiAKPiA+ID4gWWVzLgo+ID4gCj4gPiBIb3cgZG9lcyB0aGF0
-IHdvcmsgKGFzIGZhciBhcyB0aGUgTGludXggaW1wbGVtZW50YXRpb24pID8gIEkgY2FuJ3Qgc2Vl
-Cj4gPiBhIHdheSB0aGF0IGNvdWxkIHdvcmssIHdoaWxlIGFsbG93aW5nIHRoZSBmbGV4aWJpbGl0
-eSB0aGF0IEFybWFkYSBEUk0KPiA+IGFsbG93cyAodHdvIGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQg
-TENEIGNvbnRyb2xsZXJzIGFzIHR3byBzZXBhcmF0ZSBEUk0KPiA+IGRldmljZXMgdnMgb25lIERS
-TSBkZXZpY2UgY29udGFpbmluZyBib3RoIExDRCBjb250cm9sbGVycy4pCj4gPiAKPiA+ID4gPiBJ
-IHN1cHBvc2UgaW4gdGhlIChzaW5nbGUgQ1JUQykgZXhhbXBsZSBjYXNlLCB0aGUgZGlzcGxheS1z
-dWJzeXN0ZW0gbm9kZQo+ID4gPiA+IHVzZWQgdG8gYXNzb2NpYXRlIGl0IHdpdGggdGhlIG1lbW9y
-eSByZWdpb24gcmVzZXJ2ZWQgZm9yIGFsbG9jYXRpbmcgdGhlCj4gPiA+ID4gZnJhbWUgYnVmZmVy
-cyBmcm9tLiBDb3VsZCB0aGF0IGJlIGRvbmUgZGlmZmVyZW50bHk/Cj4gPiA+IAo+ID4gPiBNb3Zl
-IG1lbW9yeS1yZWdpb24gdG8gdGhlIExDRCBjb250cm9sbGVyIG5vZGUuCj4gPiAKPiA+IFRoYXQg
-ZG9lc24ndCB3b3JrIC0gaXQgd291bGQgYXBwZWFyIGluIHRoZSB3cm9uZyBwYXJ0IG9mIHRoZSBk
-cml2ZXIuCj4gPiAKPiA+ID4gPiBBbHNvLCBpZiB0aGUgbm9kZSBpcyBpbmRlZWQgbWFkZSBvcHRp
-b25hbCwgdGhlbiBpdCdzIGdvaW5nIHRvCj4gPiA+ID4gY29tcGxpY2F0ZSB0aGluZ3Mgb24gdGhl
-IERSTSBzaWRlLiBDdXJyZW50bHkgdGhlIGRyaXZlciB0aGF0IGJpbmRzIHRvCj4gPiA+ID4gdGhl
-IG5vZGUgY3JlYXRlcyB0aGUgRFJNIGRldmljZSBvbmNlIGl0IHNlZXMgYWxsIHRoZSBjb21wb25l
-bnRzCj4gPiA+ID4gY29ubmVjdGVkIHRvIHRoZSBwb3J0cyBhcHBlYXIuIElmIHdlIGxvb3NlIGl0
-LCB0aGVuIHRoZSBMQ0QgY29udHJvbGxlcgo+ID4gPiA+IGRyaXZlciB3b3VsZCBzb21laG93IG5l
-ZWQgdG8gZmluZCBvdXQgdGhhdCBpdCdzIGFsb25lIGFuZCBjcmVhdGUgdGhlCj4gPiA+ID4gRFJN
-IGRldmljZSBpdHNlbGYuCj4gPiA+IAo+ID4gPiBEVCBpcyBub3QgdGhlIG9ubHkgd2F5IHRvIGNy
-ZWF0ZSBkZXZpY2VzLiBUaGUgRFJNIGRyaXZlciBjYW4gYmluZCB0bwo+ID4gPiB0aGUgTENEQyBu
-b2RlIGFuZCB0aGVuIGNyZWF0ZSBhIGNoaWxkIENSVEMgZGV2aWNlIChvciBldmVuIG11bHRpcGxl
-Cj4gPiA+IG9uZXMgZm9yIGgvdyB3aXRoIG11bHRpcGxlIHBpcGVsaW5lcykuCj4gPiAKPiA+IFRo
-YXQgc2VlbXMgY29tcGxldGVseSB1cHNpZGUgZG93biBhbmQgcmVkaWN1bG91cyB0byBtZSAtIGFy
-ZSB5b3UKPiA+IHJlYWxseSBzdWdnZXN0aW5nIHRoYXQgd2Ugc2hvdWxkIGhhdmUgc29tZSBraW5k
-IG9mIHZpcnR1YWwgZGV2aWNlCj4gPiBpbiBEVCwgYW5kIG9taXQgdGhlIF9yZWFsXyBwaHlzaWNh
-bCBkZXZpY2VzIGZvciB0aGF0LCBoYXZpbmcgdGhlCj4gPiBkcml2ZXIgY3JlYXRlIHRoZSBkZXZp
-Y2Ugd2l0aCBhbGwgdGhlIGFwcHJvcHJpYXRlIFNvQyByZXNvdXJjZXM/Cj4gCj4gSG1tLCB0aGF0
-J3Mgbm90IGhvdyBJIHJlYWQgdGhhdC4gTXkgdW5kZXJzdGFuZGluZyAocHV0dGluZyBhc2lkZQo+
-IHByYWN0aWNhbGl0eSBvZiB0aGUgc29sdXRpb24pIGlzIHRoYXQgUm9iIHdhcyBtZXJlbHkgc3Vn
-Z2VzdGluZyB0aGF0Cj4gZm9yIHRoZSBzaW5nbGUgTENEQyBjYXNlIHRoZXJlIHdvdWxkIGJlIGp1
-c3QgYSBzaW5nbGUgTENEQyBub2RlIGluIERUCj4gYW5kIHRoZSBkcml2ZXIgdGhhdCBiaW5kcyB0
-byBpdCB3b3VsZCBjcmVhdGUgdGhlIERSTSBkZXZpY2UgJiBDUlRDCj4gZGV2aWNlIHBhaXIuCgpI
-b3cgd291bGQgd2Uga25vdyB0aGF0IHdhcyB0aGUgY2FzZSB3aGVuIHRoZSBkcml2ZXIgYmluZHMg
-dG8gdGhlIENSVEMKbm9kZT8gIFRoZXJlIGlzIG5vIGJhY2stbGluayBmcm9tIHRoZSBDUlRDIHRv
-IHRoZSBkaXNwbGF5LXN1YnN5c3RlbQp3aGVuIHRoZXJlJ3MgYSBkaXNwbGF5LXN1YnN5c3RlbSBu
-b2RlIHByZXNlbnQsIHNvIHRoZXJlJ3Mgbm8gd2F5IGZvcgp0aGUgQ1JUQyBkcml2ZXIgdG8ga25v
-dyB3aGV0aGVyIGl0IHNob3VsZCBjcmVhdGUgdGhlIERSTSBkZXZpY2Ugb3IKbm90LgoKSSBqdXN0
-IGNhbid0IHNlZSBob3cgdGhpcyB3b3JrcyBhdCBhIHRlY2huaWNhbCBsZXZlbC4KCj4gPiA+IFlv
-dSdsbCBhbHNvIG5vdGljZSB0aGF0IHRoZXJlIGFyZSBvbmx5IDMgY2FzZXMgb2YgdGhpcyB2aXJ0
-dWFsIG5vZGUgaW4KPiA+ID4gdGhlIHRyZWU6IFNUaSwgaS5NWCBJUFUsIGFuZCBSb2NrY2hpcC4g
-VGhhdCdzIGJlY2F1c2Ugd2UndmUgZGVwcmVjYXRlZAo+ID4gPiBkb2luZyB0aGVzZSB2aXJ0dWFs
-IG5vZGVzIGZvciBzb21lIHRpbWUgbm93LiBJT1csIHRoZXJlIGFyZSBzZXZlcmFsCj4gPiA+IGV4
-YW1wbGVzIG9mIGhvdyB0byBkbyB0aGlzIHdpdGhvdXQgYSB2aXJ0dWFsIG5vZGUuCj4gPiAKPiA+
-IFRoaXMgZHJpdmVyIGhhcyBiZWVuIGluLXRyZWUgd2l0aCB0aGlzIHNldHVwIGZvciBzb21lIHRp
-bWUsIGFsdGhvdWdoCj4gPiB0aGUgZG9jdW1lbnRhdGlvbiBoYXMgYmVlbiBtaXNzaW5nICh3ZSBh
-Y3R1YWxseSBoYXZlIGEgX2xvdF8gb2YKPiA+IGluc3RhbmNlcyBvZiB0aGF0LikgIEhvd2V2ZXIs
-IHdlIGhhdmUgbm8gaW4tdHJlZSBEVCB1c2luZyBpdC4KPiA+IAo+ID4gSSBkb24ndCByZWFsbHkg
-c2VlIGhvdyB0byBzYXRpc2Z5IHlvdXIgY29tbWVudHMgd2l0aG91dCB0b3RhbGx5Cj4gPiByZXN0
-cnVjdHVyaW5nIHRoZSBkcml2ZXIsIHdoaWNoIGlzIGdvaW5nIHRvIGJlIHF1aXRlIGEgYmlnIGNo
-dW5rCj4gPiBvZiB3b3JrLiAgSSdtIG5vdCBzdXJlIEkgaGF2ZSB0aGUgbW90aXZhdGlvbiB0byBk
-byB0aGF0IHJpZ2h0IG5vdy4KPiAKPiBOb3RlIHRoYXQgdGhlIGluaXRpYWwgb2JqZWN0aW9uIHdh
-cyBhZ2FpbnN0IHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlCj4gYmVpbmcgbWFuZGF0b3J5IGlm
-ICJ0aGVyZSBpcyBvbmx5IG9uZSBbTENEQ10gZGV2aWNlIi4KPiAKPiBNeSB1bmRlcnN0YW5kaW5n
-IGlzIHRoYXQgbmVlZCB0byBpbmNsdWRlIHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlIGZvcgo+
-IHRoZSBtdWx0aXBsZSBMQ0RDIHNldHVwIChvbiBEb3ZlIHBsYXRmb3JtKSBhbnl3YXlzLiBJcyB0
-aGF0IGNvcnJlY3Q/Cj4gCj4gUm9iLCBJJ20gd29uZGVyaW5nIGlmIHRoZXJlIHdvdWxkIGJlIGEg
-cG9zc2liaWxpdHkgb2YgZmluZGluZyBzb21lCj4gbWlkZGxlIGdyb3VkPyBQZXJoYXBzIGRvY3Vt
-ZW50aW5nLCB0aGF0IHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlCj4gd291bGQgaWRlYWxseSBi
-ZSBvcHRpb25hbCBmb3Igc2luZ2xlIExDREMgc2V0dXBzLCBidXQgaW5kaWNhdGluZyB0aGF0Cj4g
-dGhlIEFybWFkYSBEUk0gZHJpdmVyIGFjdHVhbGx5IHJlcXVpcmVzIGlzPwo+IAo+IE5vdGUgdGhh
-dCB0aGlzIGlzIG5vdCBhIG5ldyBkcml2ZXIgLS0gaXQgaGFzIGJlZW4gYXJvdW5kIHNpbmNlIDIw
-MTMsCj4gdGhvdWdoLCB3aXRob3V0IHVzZWZ1bCBEVCBiaW5kaW5ncy4gTWF5YmUgaXQgd291bGQg
-ZG8ganVzdCB3ZWxsIGluCj4gY29tcGFueSBvZiB0aGUgb3RoZXIgdGhyZWUgZHJpdmVycyB5b3Ug
-bWVudGlvbmVkIHRoYXQgdXNlIHNpbWlsYXIKPiBiaW5kaW5ncy4KPiAKPiAoQWxzbywgdGhlcmUg
-c2VlbSB0byBoYXZlIHN1YnN0YW50aWFsIGRpc2N1c3Npb24gcmVnYXJkaW5nIHRoZSBiaW5kaW5n
-cwo+IGRlc2lnbiBiYWNrIGluICcxMywgc2hlZGRpbmcgc29tZSBsaWdodCBpbnRvIHdoeSB0aGUg
-ZGlzcGxheS1zdWJzeXN0ZW0KPiBub2RlIHdhcyBkZWVtZWQgdXNlZnVsOiBbMV0pCj4gCj4gWzFd
-IGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
-Lm9yZy9tc2c0MDM1OC5odG1sCj4gCj4gVGhhbmtzLAo+IEx1Ym8KPiAKPiAKCi0tIApSTUsncyBQ
-YXRjaCBzeXN0ZW06IGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hl
-cy8KRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZSBpbiBzdWJ1cmJpYTogc3luYyBhdCAx
-Mi4xTWJwcyBkb3duIDYyMmticHMgdXAKQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6IDExLjlN
-YnBzIGRvd24gNTAwa2JwcyB1cApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
-a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
-cmktZGV2ZWwK
+On Tue, Jan 15, 2019 at 04:14:21PM -0800, Scott Branden wrote:
+> Hi Uwe,
+> =
+
+> On 2019-01-12 7:05 a.m., Uwe Kleine-K=F6nig wrote:
+> > Hello Scott,
+> > =
+
+> > On Fri, Jan 11, 2019 at 01:28:45PM -0800, Scott Branden wrote:
+> > > On 2019-01-11 12:48 p.m., Uwe Kleine-K=F6nig wrote:
+> > > > On Fri, Jan 11, 2019 at 10:51:14AM +0530, Sheetal Tigadoli wrote:
+> > > > > From: Praveen Kumar B <praveen.b@broadcom.com>
+> > > > > =
+
+> > > > > Add new compatible string for new version of pwm-kona
+> > > > > =
+
+> > > > > Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
+> > > > > Reviewed-by: Ray Jui <ray.jui@broadcom.com>
+> > > > > Reviewed-by: Scott Branden <scott.branden@broadcom.com>
+> > > > > Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+> > > > > ---
+> > > > >    Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt | 2 +-
+> > > > >    1 file changed, 1 insertion(+), 1 deletion(-)
+> > > > > =
+
+> > > > > diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.=
+txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+> > > > > index 8eae9fe..d37f697 100644
+> > > > > --- a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+> > > > > +++ b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
+> > > > > @@ -3,7 +3,7 @@ Broadcom Kona PWM controller device tree bindings
+> > > > >    This controller has 6 channels.
+> > > > >    Required Properties :
+> > > > > -- compatible: should contain "brcm,kona-pwm"
+> > > > > +- compatible: should contain "brcm,kona-pwm" or "brcm,kona-pwm-v=
+2"
+> > > > Is v2 used on a newer generation of kona SoCs? On i.MX these varian=
+ts
+> > > > are usually named after the first SoC that came with the new varian=
+t. Is
+> > > > this sensible here, too?
+> > > It doesn't make as much sense here as different revs of the IP block =
+are
+> > > picked up based on various decisions.
+> > > =
+
+> > > A new SoC could decide to use an old version.
+> > IMHO this is no reason to not use the name of the oldest SoC with this
+> > variant. I don't know how the SoC names are in the broadcom family, but
+> > if they were (in order of age, oldest first):
+> > =
+
+> > 	ant
+> > 	bear
+> > 	crocodile
+> > =
+
+> > and ant and crocodile use the same IP block we would have
+> > =
+
+> > a) with v1, v2:
+> > =
+
+> > 	ant:
+> > 		compatible =3D "brcm,kona-pwm-v1";
+> > 	bear:
+> > 		compatible =3D "brcm,kona-pwm-v2";
+> > 	crocodile:
+> > 		compatible =3D "brcm,kona-pwm-v1";
+
+Version numbers can be fine, but generally only as fallbacks as even the =
+
+same IP version can be integrated into an SoC differently.
+
+The other issue with versions is they should be meanful such as =
+
+corresponding to version tags in IP repos. Often, I'd guess anything =
+
+with a 'v1' is just what some s/w person made up. Of course, we only =
+
+can really know that for opensource IP or programmable logic IP.
+
+If you do use versions, document what the versioning scheme is.
+
+> > =
+
+> > ; and
+> > =
+
+> > b) with the SoC naming:
+> > =
+
+> > 	ant:
+> > 		compatible =3D "brcm,kona-ant-pwm";
+> > 	bear:
+> > 		compatible =3D "brcm,kona-bear-pwm";
+> > 	crocodile:
+> > 		compatible =3D "brcm,kona-crocodile-pwm", "brcm,kona-ant-pwm";
+
+This is the recommended practice.
+
+> > =
+
+> > (If you want, drop "brcm,kona-crocodile-pwm", but keeping it is more
+> > defensive.)
+
+Generally, you should have "brcm,kona-crocodile-pwm" in case there's =
+
+some difference found later. Then you can support the bug or feature =
+
+without a DT change.
+
+> > =
+
+> > I like b) (with "...-crocodile-...") better than a). crocodile using
+> > "...-ant-..." is not more ugly than crocodile using "...-v1". This is
+> > also a tad more robust because if broadcom releases kona-dolphin and
+> > someone finds a minor difference between the IPs used on ant and
+> > crocodile it depends on the order of these events who gets v3, while
+> > with the SoC naming the result is clear.
+> > =
+
+> > (OK, and given that "brcm,kona-pwm" is already fixed, both approaches
+> > need slight adaption, but I guess you still get what I meant.)
+> =
+
+> Thanks for your thoughts and explanation.
+> =
+
+> It is unfortunate devicetree has no proper guidelines or documentation on
+> =
+
+> binding naming.=A0 In the interest of getting this upstream we can name it
+
+Surely we've captured that somewhere...
+
+> =
+
+> "brcm, omega-pwm".=A0 We can drop kona from the binding name as that
+> architecture
+> =
+
+> is really no more - only IP derived from it is - hence the name kona-v2
+> previously.
+> =
+
+> > =
+
+> > Best regards
+> > Uwe
+> > =
+
+> > =
+
+> Cheers,
+> Scott
