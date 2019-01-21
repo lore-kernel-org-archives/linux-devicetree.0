@@ -1,273 +1,301 @@
-From: Dan Murphy <dmurphy@ti.com>
-Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
- driver
-Date: Mon, 21 Jan 2019 07:27:30 -0600
-Message-ID: <275255f1-a552-1dc8-71b0-6575695c6ca7@ti.com>
-References: <20190114211723.11186-1-dmurphy@ti.com>
- <20190114211723.11186-2-dmurphy@ti.com>
- <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
- <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
- <efb4e1c1-0d13-bed7-d262-284fc1a0c9ab@gmail.com>
- <4115ad75-22f7-d9ae-c38f-e0ab61fb6655@gmail.com>
+From: Priit Laes <plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+Subject: Re: [PATCH v3 02/28] clk: sunxi-ng: Adjust MP clock
+ parent rate when allowed
+Date: Mon, 21 Jan 2019 13:34:33 +0000
+Message-ID: <20190121133433.lryqz7ivrj5cxu3g@plaes.org>
+References: <20181104182705.18047-1-jernej.skrabec@siol.net>
+ <11550554.k1qAFTnke5@jernej-laptop>
+ <20190117072402.ognqxsxewjg3kyyg@plaes.org>
+ <3212171.R3YZLKKLtu@jernej-laptop>
+ <20190121083729.7qsmj7drxvmnjoye@plaes.org>
+Reply-To: plaes-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <4115ad75-22f7-d9ae-c38f-e0ab61fb6655@gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
-Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDB4J47M7YERB24US7RAKGQEZHSTYYQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190121083729.7qsmj7drxvmnjoye-q/aMd4JkU83YtjvyW6yDsg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jernej =?utf-8?Q?=C5=A0krabec?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Cc: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org, sboyd-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, airlied-cv59FeDIM0c@public.gmane.org, architt-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, a.hajda-Sze3O3UU22JBDgjK7y7TUQ@public.gmane.org, Laurent.pinchart-ryLnwIuWjnjg/C1BVhZhaw@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Vesa
+On Mon, Jan 21, 2019 at 08:37:29AM +0000, Priit Laes wrote:
+> On Fri, Jan 18, 2019 at 10:51:10PM +0100, Jernej =C5=A0krabec wrote:
+> > Dne =C4=8Detrtek, 17. januar 2019 ob 08:24:02 CET je Priit Laes napisal=
+(a):
+> > > On Wed, Jan 16, 2019 at 06:00:32PM +0100, Jernej =C5=A0krabec wrote:
+> > > > Dne sreda, 16. januar 2019 ob 13:09:58 CET je Priit Laes napisal(a)=
+:
+> > > > > On Thu, Jan 10, 2019 at 06:10:59PM +0100, Jernej =C5=A0krabec wro=
+te:
+> > > > > > Dne =C4=8Detrtek, 10. januar 2019 ob 10:15:48 CET je Priit Laes=
+ napisal(a):
+> > > > > > > On Sun, Nov 04, 2018 at 07:26:39PM +0100, Jernej Skrabec wrot=
+e:
+> > > > > > > > Currently MP clocks don't consider adjusting parent rate ev=
+en if
+> > > > > > > > they
+> > > > > > > > are allowed to do so. Such behaviour considerably lowers am=
+ount of
+> > > > > > > > possible rates, which is very inconvenient when such clock =
+is used
+> > > > > > > > for
+> > > > > > > > pixel clock, for example.
+> > > > > > > >=20
+> > > > > > > > In order to improve the situation, adjusting parent rate is
+> > > > > > > > considered
+> > > > > > > > when allowed.
+> > > > > > > >=20
+> > > > > > > > This code is inspired by clk_divider_bestdiv() function, wh=
+ich
+> > > > > > > > does
+> > > > > > > > basically the same thing for different clock type.
+> > > > > > >=20
+> > > > > > > This patch seems to break the eMMC support on Olinuxino-Lime2=
+-eMMC
+> > > > > > > boards:
+> > > > > > >=20
+> > > > > > > EXT4-fs (mmcblk1p4): INFO: recovery required on readonly file=
+system
+> > > > > > > EXT4-fs (mmcblk1p4): write access will be enabled during reco=
+very
+> > > > > > > sunxi-mmc 1c11000.mmc: data error, sending stop command
+> > > > > > > sunxi-mmc 1c11000.mmc: send stop command failed
+> > > > > >=20
+> > > > > > I'm not familiar with A20. What is interesting is that emmc clo=
+cks
+> > > > > > don't
+> > > > > > have CLK_SET_RATE_PARENT flag set, so you shouldn't see any
+> > > > > > difference.
+> > > > > >=20
+> > > > > > Can you post content of clk_summary with and without this patch=
+?
+> > > > >=20
+> > > > > In both cases I booted from FEL with rootfs on sdcard and tried t=
+o mount
+> > > > > partition from eMMC to /mnt. With your patch, last step it fails.
+> > > > >=20
+> > > > > pre-patch working:
+> > > > > pll-ddr-other[768MHz] -> mmc2[512MHz]. (For some reason ahb-mmc2 =
+is
+> > > > > off?)
+> > > > >=20
+> > > > > post-patch not working:
+> > > > > pll-periph[600MHz] ->  mmc2[500Mhz], (ahb-mmc2 is enabled)
+> > > > >=20
+> > > > > Also, attached the logs.
+> > > >=20
+> > > > Thanks. Just one more request. Can you enable debug messages in mmc
+> > > > driver?
+> > > > I'm interested in output of this line:
+> > > >=20
+> > > > dev_dbg(mmc_dev(mmc), "setting clk to %d, rounded %ld\n",
+> > > >=20
+> > > > 		clock, rate);
+> > >=20
+> > > 1c11000 is eMMC:
+> > > [snip]
+> > > [    1.961644] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.004091] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.020296] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.039917] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.047847] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.055053] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.065256] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.092351] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.168725] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded =
+400000
+> > > [    2.189403] sunxi-mmc 1c11000.mmc: setting clk to 52000000, rounde=
+d
+> > > 52000000 [    2.203340] sunxi-mmc 1c11000.mmc: setting clk to 5200000=
+0,
+> > > rounded 52000000 [    2.211412] sunxi-mmc 1c11000.mmc: setting clk to
+> > > 52000000, rounded 52000000 [    4.967865] sunxi-mmc 1c11000.mmc: sett=
+ing
+> > > clk to 52000000, rounded 52000000 [    8.755345] sunxi-mmc 1c11000.mm=
+c:
+> > > setting clk to 52000000, rounded 52000000 [    9.082510] sunxi-mmc
+> > > 1c11000.mmc: setting clk to 52000000, rounded 52000000
+> > >=20
+> > > Here I tried to mount partition from eMMC...
+> > >=20
+> > > [   72.167311] sunxi-mmc 1c11000.mmc: setting clk to 52000000, rounde=
+d
+> > > 52000000 [   72.269629] sunxi-mmc 1c11000.mmc: data error, sending st=
+op
+> > > command [   73.268999] sunxi-mmc 1c11000.mmc: send stop command faile=
+d
+> > > [/snip]
+> > >=20
+> > > And clock tree:
+> > > [snip]
+> > > pll-periph-base                3        3        0  1200000000       =
+   0  =20
+> > >  0  50000 pll-periph                  6        6        0   600000000=
+     =20
+> > >    0     0  50000 mmc2                     3        3        0    500=
+00000=20
+> > >         0     0  50000 mmc2_sample           1        1        0  =20
+> > > 50000000          0   120  50000 mmc2_output           1        1    =
+    0=20
+> > >   50000000          0    60  50000 ahb                     18       1=
+8    =20
+> > >   0   300000000          0     0  50000 ahb-mmc2              1      =
+  1  =20
+> > >     0   300000000          0     0  50000 [/snip]
+> > >=20
+> > >=20
+> > > And without patch:
+> > > [snip]
+> > > [    2.003341] sunxi-mmc 1c11000.mmc: XXX: setting clk to 400000, rou=
+nded
+> > > 400000 [    2.019479] sunxi-mmc 1c11000.mmc: XXX: setting clk to 4000=
+00,
+> > > rounded 400000 [    2.039144] sunxi-mmc 1c11000.mmc: XXX: setting clk=
+ to
+> > > 400000, rounded 400000 [    2.047129] sunxi-mmc 1c11000.mmc: XXX: set=
+ting
+> > > clk to 400000, rounded 400000 [    2.054324] sunxi-mmc 1c11000.mmc: X=
+XX:
+> > > setting clk to 400000, rounded 400000 [    2.064481] sunxi-mmc 1c1100=
+0.mmc:
+> > > XXX: setting clk to 400000, rounded 400000 [    2.091624] sunxi-mmc
+> > > 1c11000.mmc: XXX: setting clk to 400000, rounded 400000 [    2.168067=
+]
+> > > sunxi-mmc 1c11000.mmc: XXX: setting clk to 400000, rounded 400000 [  =
+=20
+> > > 2.188239] sunxi-mmc 1c11000.mmc: XXX: setting clk to 52000000, rounde=
+d
+> > > 51200000 [    2.202779] sunxi-mmc 1c11000.mmc: XXX: setting clk to
+> > > 52000000, rounded 51200000 [    2.210817] sunxi-mmc 1c11000.mmc: XXX:
+> > > setting clk to 52000000, rounded 51200000 [    5.103358] sunxi-mmc
+> > > 1c11000.mmc: XXX: setting clk to 52000000, rounded 51200000 [    8.95=
+0237]
+> > > sunxi-mmc 1c11000.mmc: XXX: setting clk to 52000000, rounded 51200000=
+ [  =20
+> > > 9.376201] sunxi-mmc 1c11000.mmc: XXX: setting clk to 52000000, rounde=
+d
+> > > 51200000 [  113.618387] sunxi-mmc 1c11000.mmc: XXX: setting clk to
+> > > 52000000, rounded 51200000 [  113.707979] EXT4-fs (mmcblk1p4): recove=
+ry
+> > > complete
+> > > [  113.728162] EXT4-fs (mmcblk1p4): mounted filesystem with ordered d=
+ata
+> > > mode. Opts: (null) [/snip]
+> > >=20
+> > > And clock tree:
+> > > [snip]
+> > > pll-ddr-base                   2        2        0   768000000       =
+   0  =20
+> > >  0  50000 pll-ddr-other               1        1        0   768000000=
+     =20
+> > >    0     0  50000 mmc2                     0        0        0    512=
+00000=20
+> > >         0     0  50000 mmc2_sample           0        0        0  =20
+> > > 51200000          0   120  50000 mmc2_output           0        0    =
+    0=20
+> > >   51200000          0    72  50000 [/snip]
+> > >=20
+> >=20
+> > It seems to me that clock rate is set properly. It's even better than b=
+efore=20
+> > since there is no error between wanted and real clock. I bet that if yo=
+u call=20
+> > clk_get_rate() directly behind clk_set_rate() in mmc driver, you'll get=
+=20
+> > correct value.
+> >=20
+> > However, it seems that at some point some other peripheral changes it's=
+ parent=20
+> > clock rate, which inadvertely changes emmc2 clock rate too. The only po=
+ssible=20
+> > clock which could interfere is sata. Can you disable driver in you kern=
+el=20
+> > config and try again?
+>=20
+> OK, tried following things in succession, but SATA disabling does not wor=
+k:
+>=20
+> a) Marked all ahci stuff in devicetree as disabled
+> b) Disable CONFIG_AHCI_SUNXI in kernel
+> c) Even disabled SATA stuff in u-boot
 
-On 1/19/19 1:11 PM, Vesa Jääskeläinen wrote:
-> Hi Jacek et al,
-> 
-> On 17/01/2019 23.08, Jacek Anaszewski wrote:
->> On 1/16/19 11:55 AM, Pavel Machek wrote:
->>> Hi!
->>>
->>>> On 1/15/19 4:22 PM, Pavel Machek wrote:
->>>>> Hi!
->>>>>
->>>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
->>>>>>> +XX - Do not care ignored by the driver
->>>>>>> +RR - is the 8 bit Red LED value
->>>>>>> +GG - is the 8 bit Green LED value
->>>>>>> +BB - is the 8 bit Blue LED value
->>>>>>> +
->>>>>>> +Example:
->>>>>>> +LED module output 4 of the LP5024 will be a yellow color:
->>>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
->>>>>>> +
->>>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
->>>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
->>>>>>> +
->>>>>>> +LED banked RGBs of the LP5036 will be a white color:
->>>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
->>>>>>
->>>>>> This part with example cans remain in Documentation/leds if you
->>>>>>> like.
->>>>>
->>>>> Does it actually work like that on hardware?
->>>>
->>>> What?
->>>
->>> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
->>> does it actually produce white? With all the different RGB modules
->>> manufacturers can use with lp5024P?
->>>
->>> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
->>> it actually produce yellow, with all the different RGB modules
->>> manufacturers can use with lp5024P?
->>
->> Vesa proposed using icc-profiles to make the colors looking similar
->> on various LEDs. It was in reply to your message with requirements
->> for RGB LED class.
->>
->> For this device we can however do without it. Videos showing the
->> performance of this particular device with a reference design using
->> RGB LEDs prove it works nice.
->>
->>>>> Is it supposed to support "normal" RGB colors as seen on monitors?
->>>>
->>>> Monitors are not an application for this part.
->>>
->>> You did not answer the question. When you talk about yellow, is it
->>> same yellow the rest of world talks about?
->>>
->>>>> Because 100% PWM on all channels does not result in white on hardware
->>>>> I have.
->>>>
->>>> I don't know I am usually blinded by the light and have no diffuser over
->>>> the LEDs to disperse the light so when I look I see all 3 colors.
->>>
->>> How can we have useful discussion about colors when you don't see the
->>> colors?
->>>
->>> Place a piece of paper over the LEDs....
->>>
->>>>> But...
->>>>>
->>>>> I believe we should have a reasonable design before we do something
->>>>> like this. There's no guarantee someone will not use lp50xx with just
->>>>> the white LEDs for example. How will this work? Plus existing hardware
->>>>> already uses three separate LEDs for RGB LED. Why not provide same
->>>>> interface?
->>>>
->>>> Which existing hardware?  Are they using this part?
->>>
->>> Nokia N900. They are not using this part, but any interface we invent
->>> should work there, too.
->>>
->>>> <rant>
->>>> Why are we delaying getting the RGB framework or HSV in?
->>>> I would rather design against something you want instead of having
->>>> everyone complain about every implementation I post.
->>>> </rant>
->>>
->>> Because you insist on creating new kernel interfaces, when existing
->>> interfaces work, and are doing that badly.
->>>
->>> Because your patches are of lower quality than is acceptable for linux
->>> kernel.
->>
->> Lets keep things civil please.
->>
->> This sentence should look familiar to you - it's not the first time
->> you resort to this type of narration.
->>
->>> Because you don't seem to be reading the emails.
->>>
->>> I sent list of requirements for RGB led support. This does not meet
->>> them.
->>
->> And you didn't respond to the comments from Vesa. The requirements
->> has not been acclaimed.
->>
->>>> It is not a normal RGB driver.  The device collates the individual RGB
->>>> clusters into a single brightness register and you can modify the intensity of the individual
->>>> LEDs via other registers.  If brightness is 0 then the cluster is OFF regardless of the color
->>>> set in the individual registers.
->>>
->>> I understand that. So just set cluster brightness to 255 and you have
->>> normal RGB driver you can control with existing interfaces. You don't
->>> have to use every feature your hardware has.
->>
->> This feature is one of the core advantages of this device.
->>
->>> You did not answer the "what if someone uses this with all white LEDs"
->>> question.
->>>
->>> You know what? First, submit driver with similar functionality to
->>> existing RGB drivers, using same interface existing drivers are
->>> using. When that is accepted, we can talk about extending
->>> kernel<->user interfaces.
->>
->> This stands in contradiction with my request.
->>
->> Provided there will be no other NAKs, I am eager to accept the
->> interface with color and brightness files.
->>
->> Moreover, I think that RGB LED class with configurable
->> brightness-model, and with possible color range adjustments via
->> icc-profiles or something similar, is the best solution that has been proposed so far. It is just flexible.
->>
->> I'd like to capitalize on the ideas shared in this thread and have
->> finally LED RGB class materialized.
->>
-> 
-> I have now updated my github code with my understanding of the discussion:
-> https://github.com/vesajaaskelainen/linux/tree/wip-multi-color-led
-> 
+But it works, when I allow mmc2 clock to set parent rate:
 
-Maybe I did not see it but a RFC to the list would be good for discussion points.
-
-> Commits:
-> - dt-bindings: leds: Introduce linux,default-brightness-model for all leds
-> https://github.com/vesajaaskelainen/linux/commit/4ffb21d644056686096226bbede7c8c78b0254c2
-> - drivers: leds: Add core support for multi color element LEDs
-> https://github.com/vesajaaskelainen/linux/commit/627f38bb78cebc694b8e6d735fb088c87925435d
-> - dt-bindings: leds: leds-pwm: Introduce multi color element leds support
-> https://github.com/vesajaaskelainen/linux/commit/ef6c5730d621e79ea0b02470caa83bc39439536a
-> - WIP: drivers: leds: leds-pwm: Add multi color element LED support.
-> https://github.com/vesajaaskelainen/linux/commit/0430a27823d9162926424b32c23be1c53eb9cbe2
-> 
-> First two commits are common and could be taken before I am happy with the pwm led driver changes. This new conditional feature flag makes it a bit harder. Of course one option would be to require it to be enabled.
-> 
-> Current set of concepts:
-> - brightness-model: hardware, onoff, linear
-
-Seem to be missing logarithmic
-
->   - could be extended in future with other modes like hsv if wanted
-> - led_common_setup_of: helper for setting up common parts of led class device from devicetree.
-> - led_color_element_setup_of: helper for setting up color element parts of led class device from devicetree.
-> - led_scale_color_elements: single point helper for handling brightness-model.
-> - From user space point-of-view atomic changes for color elements and brightness.
-> 
-> Sysfs interfaces:
-> - brightness_model: Change of brightness model on the fly. Similar if as trigger selection.
-> - color: configuring all color element values as array of values with support for optional brightness entry as last value.
-> - color_names: information for user space about color element values in 'color' array.
-> - max_color: information for user space about maximum values for entries in 'color' array.
-> 
-> Example usage:
-> 
-> $ cd /sys/class/leds/status
-> 
-> $ ls
-> brightness        brightness_model  color             color_names device            max_brightness    max_color         power subsystem         trigger           uevent
-> 
-> $ cat brightness_model
-> hardware [onoff] linear
-> $ cat color_names
-> red green blue
-> $ cat max_color
-> 255 255 255
-> $ cat brightness
-> 0
-> 
-
-What happens if brightness is set?  Is that ignored?
-What is the driver supposed to do?
-The LP50xx can set brightness independent of color but other devices cannot do that.
-
-> # Setting up color to not so bright purple with brightness set to 255
-> $ echo "32 0 32 255" > color
-> 
-> # Setting up color to a bit brighter purple with brightness
-> $ echo "128 0 128 255" > color
-> 
-> # Activate heartbeat blinking
-> $ echo "heartbeat" > trigger
-> 
-> # Now led is blinking with purple color
-> 
-> # Change color to green
-> $ echo "0 255 0" > color
-> 
-> # Now led is blinking with green color
-> 
-> And in devicetree I had now:
-> 
-> multi-color-leds {
->     compatible = "pwm-leds";
-> 
->     status-led {
->         label = "status";
->         linux,default-brightness-model = "onoff";
-> 
->         element-red {
->             pwms = <&ehrpwm0 0 100000 0>;
->         };
->         element-green {
->             pwms = <&ehrpwm1 0 100000 0>;
->         };
->         element-blue {
->             pwms = <&ehrpwm1 1 100000 0>;
->         };
->     };
-> };
-> 
-> What do you think is this something we agree and could go forward?
-> 
-> If it is it would be a good idea to get feedback from Dan on how easy it is to use and other possible issues if he takes common commits and tries it out with his lp50xx driver.
-> 
-
-The LP50xx pwm is not standard.
-It defines a PWM dithering mode which phase shifts the LED outputs and does not really control the PWM width of the LEDs.
-
-I can try to stitch this together for testing.  I will need to go through this code and docs a bit more.
-
-Dan
-
-> Thanks,
-> Vesa Jääskeläinen
+pll-periph-base                3        3        0   312000000          0  =
+   0  50000
+   mbus                        1        1        0    78000000          0  =
+   0  50000
+   pll-periph-sata             1        1        0    26000000          0  =
+   0  50000
+      sata                     1        1        0    26000000          0  =
+   0  50000
+   pll-periph                  5        5        0   156000000          0  =
+   0  50000
+      mmc2                     0        0        0    52000000          0  =
+   0  50000
+         mmc2_sample           0        0        0    52000000          0  =
+ 120  50000
+         mmc2_output           0        0        0    52000000          0  =
+ 120  50000
+      mmc0                     0        0        0    39000000          0  =
+   0  50000
+         mmc0_sample           0        0        0    39000000          0  =
+  90  50000
+         mmc0_output           0        0        0    39000000          0  =
+  90  50000
 
 
--- 
-------------------
-Dan Murphy
+Now, what I don't understand is why the `enable count` does not increase :(
+
+---
+diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c b/drivers/clk/sunxi-ng/cc=
+u-sun4i-a10.c
+index 129ebd2588fd..605e13b4ef90 100644
+--- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
++++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+@@ -498,7 +498,7 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(mmc2_clk, "mmc2", mod=
+0_default_parents, 0x090,
+                                  16, 2,        /* P */
+                                  24, 2,        /* mux */
+                                  BIT(31),      /* gate */
+-                                 0);
++                                 CLK_SET_RATE_PARENT);
+=20
+ /* MMC output and sample clocks are not present on A10 */
+ static SUNXI_CCU_PHASE(mmc2_output_clk, "mmc2_output", "mmc2",
+
+
+>=20
+> >=20
+> > Best regards,
+> > Jernej
+>=20
+> --=20
+> You received this message because you are subscribed to the Google Groups=
+ "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an=
+ email to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+> For more options, visit https://groups.google.com/d/optout.
+
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
