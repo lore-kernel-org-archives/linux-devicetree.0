@@ -1,157 +1,95 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: phy: ti: Add dt binding documentation
- for SERDES in AM654x SoC
-Date: Mon, 21 Jan 2019 16:17:38 +0530
-Message-ID: <b619ace8-f2be-8eb0-080e-0ae7a43799df@ti.com>
-References: <20190121064813.18444-1-kishon@ti.com>
- <20190121064813.18444-3-kishon@ti.com> <5C4596F8.7030009@ti.com>
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
+Subject: Re: [PATCHv3 3/4] coresight: etm4x: Add support to enable ETMv4.2
+Date: Mon, 21 Jan 2019 16:18:36 +0530
+Message-ID: <cc71cfa9-8a11-9356-ac41-e27564a9f7b4@codeaurora.org>
+References: <cover.1547813804.git.saiprakash.ranjan@codeaurora.org>
+ <d52546764f8570e8c07ac8e3e2841e087e66648c.1547813804.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C4596F8.7030009@ti.com>
+In-Reply-To: <d52546764f8570e8c07ac8e3e2841e087e66648c.1547813804.git.saiprakash.ranjan@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Roger,
 
-On 21/01/19 3:25 PM, Roger Quadros wrote:
-> Kishon,
-> 
-> On 21/01/19 08:48, Kishon Vijay Abraham I wrote:
->> AM654x has two SERDES instances. Each instance has three input clocks
->> (left input, externel reference clock and right input) and two output
->> clocks (left output and right output) in addition to a PLL mux clock
->> which the SERDES uses for Clock Multiplier Unit (CMU refclock).
->> The PLL mux clock can select from one of the three input clocks.
->> The right output can select between left input and external reference
->> clock while the left output can select between the right input and
->> external reference clock.
->>
->> The left and right input reference clock of SERDES0 and SERDES1
->> respectively are connected to the SoC clock. In the case of two lane
->> SERDES personality card, the left input of SERDES1 is connected to
->> the right output of SERDES0 in a chained fashion.
->>
->> See section "Reference Clock Distribution" of AM65x Sitara Processors
->> TRM (SPRUID7 – April 2018) for more details.
->>
->> Add dt-binding documentation in order to represent all these different
->> configurations in device tree.
->>
->> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->> ---
->>  .../devicetree/bindings/phy/ti-phy.txt        | 77 +++++++++++++++++++
->>  include/dt-bindings/phy/phy-am654-serdes.h    | 13 ++++
->>  2 files changed, 90 insertions(+)
->>  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
->>
->> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> index 57dfda8a7a1d..fc2fff6b2c37 100644
->> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->> @@ -132,3 +132,80 @@ sata_phy: phy@4a096000 {
->>  	syscon-pllreset = <&scm_conf 0x3fc>;
->>  	#phy-cells = <0>;
->>  };
->> +
->> +
->> +TI AM654 SERDES
->> +
->> +Required properties:
->> + - compatible: Should be "ti,phy-am654-serdes"
->> + - reg : Address and length of the register set for the device.
->> + - reg-names: Should be "serdes" which corresponds to the register space
->> +	populated in "reg".
->> + - #phy-cells: determine the number of cells that should be given in the
->> +	phandle while referencing this phy. Should be "2". The 1st cell
->> +	corresponds to the phy type (should be one of the types specified in
->> +	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
->> +	lane function.
->> +	If SERDES0 is referenced 2nd cell should be:
->> +		0 - USB3
->> +		1 - PCIe0 Lane0
->> +		2 - ICSS2 SGMII Lane0
->> +	If SERDES1 is referenced 2nd cell should be:
->> +		0 - PCIe1 Lane0
->> +		1 - PCIe0 Lane1
->> +		2 - ICSS2 SGMII Lane1
-> 
-> Can we have a way to change default lane at probe time without having any user dependencies.
-> 
-> e.g. To work in USB2.0 mode I don't want SERDES0 to be in lane 0 (which is SoC default).
-> But at the same time the application might not be using PCIe or SGMII, so there is no
-> PHY user to change the lane to 1 or 2.
-> 
-> A DT property to allow selection of a default lane at probe time would help
-Ideally we should be disabling the module that is not used ("status" property
-of SERDES0 dt would be "disabled"). So there is no guarantee SERDES will be probed.
+On 1/18/2019 5:52 PM, Sai Prakash Ranjan wrote:
+> SDM845 has ETMv4.2 and can use the existing etm4x driver.
+> But the current etm driver checks only for ETMv4.0 and
+> errors out for other etm4x versions. This patch adds this
+> missing support to enable SoC's with ETMv4x to use same
+> driver by checking only the ETM architecture major version
+> number.
+>
+> Without this change, we get below error during etm probe:
+>
+> / # dmesg | grep etm
+> [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
+> [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
+> [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
+> [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
+> [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
+> [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
+> [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
+> [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+>
+> With this change, etm probe is successful:
+>
+> / # dmesg | grep coresight
+> [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
+> [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
+> [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
+> [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
+> [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
+> [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
+> [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
+> [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
+>
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> ---
+>   drivers/hwtracing/coresight/coresight-etm4x.c | 2 +-
+>   drivers/hwtracing/coresight/coresight-etm4x.h | 2 +-
+>   2 files changed, 2 insertions(+), 2 deletions(-)
+>
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
+> index 53e2fb6e86f6..93d5f1f3145e 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
+> @@ -55,7 +55,7 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+>   
+>   static bool etm4_arch_supported(u8 arch)
+>   {
+> -	switch (arch) {
+> +	switch (arch >> 4) {
 
 
-> 
-> 
->> + - clocks: List of clock-specifiers representing the input to the SERDES.
->> +	Should have 3 items representing the left input clock, external
->> +	reference clock and right input clock in that order.
->> + - clock-output-names: List of clock names for each of the clock outputs of
->> +	SERDES. Should have 3 items for CMU reference clock,
->> +	left output clock and right output clock in that order.
->> + - assigned-clocks: As defined in
->> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->> + - assigned-clock-parents: As defined in
->> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
->> + - #clock-cells: Should be <1> to choose between the 3 output clocks.
->> +	Defined in Documentation/devicetree/bindings/clock/clock-bindings.txt
->> +
->> +   The following macros are defined in dt-bindings/phy/phy-am654-serdes.h
->> +   for selecting the correct reference clock. This can be used while
->> +   specifying the clocks created by SERDES.
->> +	=> AM654_SERDES_CMU_REFCLK
->> +	=> AM654_SERDES_LO_REFCLK
->> +	=> AM654_SERDES_RO_REFCLK
->> +
->> + - mux-controls: phandle to the multiplexer
->> +
->> +Example:
->> +
->> +Example for SERDES0 is given below. It has 3 clock inputs;
->> +left input reference clock as indicated by <&k3_clks 153 4>, external
->> +reference clock as indicated by <&k3_clks 153 1> and right input
->> +reference clock as indicated by <&serdes1 AM654_SERDES_LO_REFCLK>. (The
->> +right input of SERDES0 is connected to the left output of SERDES1).
->> +
->> +SERDES0 registers 3 clock outputs as indicated in clock-output-names. The
->> +first refers to the CMU reference clock, second refers to the left output
->> +reference clock and the third refers to the right output reference clock.
->> +
->> +The assigned-clocks and assigned-clock-parents is used here to set the
->> +parent of left input reference clock to MAINHSDIV_CLKOUT4 and parent of
->> +CMU reference clock to left input reference clock.
->> +
->> +serdes0: serdes@900000 {
->> +	compatible = "ti,phy-am654-serdes";
->> +	reg = <0x0 0x900000 0x0 0x2000>;
->> +	reg-names = "serdes";
->> +	#phy-cells = <2>;
->> +	power-domains = <&k3_pds 153>;
->> +	clocks = <&k3_clks 153 4>, <&k3_clks 153 1>,
->> +			<&serdes1 AM654_SERDES_LO_REFCLK>;
->> +	clock-output-names = "serdes0_cmu_refclk", "serdes0_lo_refclk",
->> +				"serdes0_ro_refclk";
->> +	assigned-clocks = <&k3_clks 153 4>, <&serdes0 AM654_SERDES_CMU_REFCLK>;
->> +	assigned-clock-parents = <&k3_clks 153 8>, <&k3_clks 153 4>;
->> +	ti,serdes-clk = <&serdes0_clk>;
->> +	mux-controls = <&serdes_mux 0>;
->> +	#clock-cells = <1>;
->> +	status = "disabled";
-> 
-> We don't keep status "disabled" for AM6. All nodes are enabled by default.
-
-Should all nodes be enabled by default? Is it not based on the features
-supported by the EVM?
+While this looks good, from what it looks like arch is a combination of 
+major version
+minor version. So, will it be better to masks, and shifts macros instead 
+of a magic
+number shift.
+But, frankly it's upto Mathieu to decide the readability of this. So, I 
+leave it to him.
 
 Thanks
-Kishon
+Vivek
+
+>   	case ETM_ARCH_V4:
+>   		break;
+>   	default:
+> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
+> index 52786e9d8926..05d4bd330881 100644
+> --- a/drivers/hwtracing/coresight/coresight-etm4x.h
+> +++ b/drivers/hwtracing/coresight/coresight-etm4x.h
+> @@ -136,7 +136,7 @@
+>   #define ETM_MAX_RES_SEL			16
+>   #define ETM_MAX_SS_CMP			8
+>   
+> -#define ETM_ARCH_V4			0x40
+> +#define ETM_ARCH_V4			0x4
+>   #define ETMv4_SYNC_MASK			0x1F
+>   #define ETM_CYC_THRESHOLD_MASK		0xFFF
+>   #define ETM_CYC_THRESHOLD_DEFAULT       0x100
