@@ -1,11 +1,13 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 00/10] A3700 USB S2RAM support
-Date: Mon, 21 Jan 2019 12:23:26 +0100
-Message-ID: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 02/10] usb: host: xhci: mvebu: add reset on resume quirk
+Date: Mon, 21 Jan 2019 12:23:28 +0100
+Message-ID: <20190121112336.23489-3-miquel.raynal@bootlin.com>
+References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -16,83 +18,120 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
 To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Ofer Heifetz <oferh@marvell.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpBcyBwYXJ0IG9mIGFuIGVmZm9ydCB0byBicmluZyBzdXNwZW5kIHRvIFJBTSBzdXBw
-b3J0IHRvIEFybWFkYSAzNzAwClNvQ3MgKG1haW4gdGFyZ2V0OiBFU1BSRVNTT2JpbiksIHRoaXMg
-c2VyaWVzIGhhbmRsZXMgdGhlIHdvcmsgYXJvdW5kCnRoZSBVU0IyIGFuZCBVU0IzMiBJUHMuCgpG
-aXJzdCwgYSBjaGFuZ2UgaW4gdGhlIGNvcmUgYWRkcyBzdXBwb3J0IGZvciB0aGUgbmV3IFBIWSBm
-cmFtZXdvcmsgYnkKZm9sbG93aW5nIHRoZSBwaHlfc2V0X21vZGUoKS9waHlfcG93ZXJfb24oKSBz
-ZXF1ZW5jZSAocGF0Y2ggMSkuIFRoZQpzZWNvbmQgY2hhbmdlIG5lZWRlZCBpcyB0byB1cGRhdGUg
-dGhlIHhIQ0kgTVZFQlUgZHJpdmVyIChwYXRjaCAyKSB3aXRoCnRoZSBYSENJX1JFU0VUX09OX1JF
-U1VNRSBxdWlyayB0aGF0IHdpbGwgZG8gbW9zdCBvZiB0aGUKcmVjb25maWd1cmF0aW9uIHdvcmsg
-d2hlbiByZXN1bWluZy4KClRoZW4sIGJlY2F1c2Ugb2YgdGhlIGFzeW5jaHJvbm91cyBzdXNwZW5k
-IGZlYXR1cmUgaW1wbGVtZW50ZWQgbGF0ZWx5LAp0aGUgeEhDSSBkcml2ZXIgd2FzIGJsb2NraW5n
-IGR1cmluZyB0aGUgUzJSQU0gb3BlcmF0aW9uLCBwcm9iYWJseSBkdWUKdG8gYSByZWdpc3RlciBh
-Y2Nlc3Mgd2hpbGUgdGhlIGNsb2NrIHdhcyBub3QgZW5hYmxlZC4gQSBmaXJzdCBwYXRjaApoYXMg
-YmVlbiB3cml0dGVuIGZvciB0aGF0LCBhZGRpbmcgYSBuZXcgcXVpcmsgdG8gaWdub3JlIHRoZQph
-c3luY2hyb25vdXMgc2V0dGluZyBbMV0gd2hpY2ggaGFzIGJlY29tZSB1c2VsZXNzIG9uY2UgY2xv
-Y2sgbGlua3MKd2l0aCBjb25zdW1lciBoYXZlIGJlZW4gY29udHJpYnV0ZWQgWzJdIChzZXJpZXMg
-bm90IG1lcmdlZCB5ZXQpLgoKVGhlbiwgdGhlIE9IQ0kgT3Jpb24gKFVTQjIgaG9zdCBjb250cm9s
-bGVyKSBkcml2ZXIgaXMgdXBkYXRlZCB0byBhdm9pZApkb2luZyB0d2ljZSB0aGUgUEhZIG1hbmFn
-ZW1lbnQgKHBhdGNoIDMpIGFuZCB1cGdyYWRlZCB3aXRoIHRyYWRpdGlvbmFsClMyUkFNIGNhbGxi
-YWNrcyAocGF0Y2ggNCkuCgpUaGUgbGFzdCBtaXNzaW5nIHBlYWNlIGlzIGEgVVRNSSBQSFkgZHJp
-dmVyIGZvciB0aGUgVVNCMiBwYXJ0IG9mIGVhY2gKY29udHJvbGxlciwgd2hpY2ggaXMgYWRkZWQg
-aW4gcGF0Y2ggNSAoc2VlIHBhdGNoIDYgZm9yIHRoZSBiaW5kaW5ncykuCgpGaW5hbGx5LCB0aGUg
-QTM3MDAgZGV2aWNlIHRyZWUgaXMgdXBkYXRlZCAocGF0Y2ggNywgOCwgOSkgdG8gcmVmZXJlbmNl
-CnRoZSBQSFlzLiB4SENJIGJpbmRpbmdzIGFscmVhZHkgZG9jdW1lbnQgdGhlIFBIWSBzbyBubyB1
-cGRhdGUgaXMgbmVlZGVkCm9uIHRoaXMgcmVnYXJkLgoKWzFdIGh0dHA6Ly9jb2RlLmJ1bGl4Lm9y
-Zy9zMmNjZDQtNTExMTk4ClsyXSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwv
-bGludXgtYXJtLWtlcm5lbC8yMDE5LUphbnVhcnkvNjIzODg1Lmh0bWwKClRoYW5rcywKTWlxdcOo
-bAoKQ2hhbmdlcyBzaW5jZSB2MjoKPT09PT09PT09PT09PT09PT0KKiBUeXBvcwoqIFVUTUkgUEhZ
-IGJpbmRpbmdzOgogID4gTmV3IG5hbWUgZm9yIHRoZSBVU0IyIGhvc3QvUEhZIHN5c2NvbnMgKCsg
-Y2hhbmdlcyBpbiB0aGUgRFQpLgogID4gQ2xlYXJseSBzdGF0ZSB0aGF0IHRoZSBQSFlzIGFyZSBk
-aWZmZXJlbnQgYmV0d2VlbiBPVEcgYW5kCiAgICBob3N0LW9ubHkgY29udHJvbGxlcnMuCiogVVRN
-SSBQSFkgZHJpdmVyOgogID4gVXNlIEdFTk1BU0sgbWFjcm8uCiAgPiBSZW1vdmVkIHVzZWxlc3Mg
-Y2hlY2tzIG9uIGRyaXZlciBkYXRhIHJldHJpZXZhbC4KICA+IERyb3BwZWQgdGhlIGVtcHR5IC0+
-cmVtb3ZlKCkgaG9vay4KICA+IFVwZGF0ZWQgdGhlIGxpY2VuY2UgbWFjcm8gdG8gbWF0Y2ggdGhl
-IFNQRFggdGFnLgogID4gVXNlZCB0aGUgb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCkgaGVscGVy
-LgogID4gUmVtb3ZlZCB0aGUgdXNlIG9mIGEgbG9jYWwgdmFyaWFibGUgaW4gdGhlIC0+cHJvYmUo
-KSBmb3IgdGhlCiAgICBkcml2ZXIncyBvcGVyYXRpb25zLgogID4gRml4ZWQgdGhlIGRyaXZlciBj
-by1hdXRob3I6IElnYWwsIG5vdCBFdmFuLgoqIHhIQ0kgbXZlYnUgZHJpdmVyOgogID4gVXNlZCBB
-cm1hZGEgMzh4IG5hbWluZyBjb252ZW50aW9uOgogICAgcy9Bcm1hZGEgMzcwMCBTb0MvQXJtYWRh
-IDM3eHggU29DLwogID4gQWRkZWQgR3JlZ29yeSdzIFJldmlld2VkLWJ5IHRhZy4KCkNoYW5nZXMg
-c2luY2UgdjE6Cj09PT09PT09PT09PT09PT09CiogQWRkIFVUTUkgUEhZIGRyaXZlci9iaW5kaW5n
-cy9EVCBjaGFuZ2VzIHRvIGJyaW5nIFMyUkFNIHN1cHBvcnQgdG8KICBib3RoIFVTQiBwb3J0cyBh
-dmFpbGFibGUgb24gdGhlIEEzNzAwIFNvQy4KKiBVcGRhdGVzIHRvIHRoZSBPSENJIE9yaW9uIGRy
-aXZlciB0byBhdm9pZCBkb2luZyB0aGUgUEhZCiAgaW5pdGlhbGl6YXRpb24gdHdpY2UuCiogVXBn
-cmFkZSBvZiB0aGUgT0hDSSBPcmlvbiBkcml2ZXIgd2l0aCBTMlJBTSBjYWxsYmFja3MuCiogQWRk
-ZWQgYSByZWZlcmVuY2UgdG8gdGhlIEEzNzAwIFNvQyBpbiB0aGUgVVNCIEhvc3QgS2NvbmZpZyBw
-cm9tcHQKICAobm90IG9ubHkgaW4gdGhlIGhlbHAgc2VjdGlvbikuCiogUmViYXNlZCBvbiB0b3Ag
-b2YgdjUuMC1yYzEuCgoKTWlxdWVsIFJheW5hbCAoOSk6CiAgdXNiOiBjb3JlOiBjb21wbHkgdG8g
-UEhZIGZyYW1ld29yawogIHVzYjogZWhjaS1vcmlvbjogYXZvaWQgZG91YmxlIFBIWSBpbml0aWFs
-aXphdGlvbgogIHVzYjogZWhjaS1vcmlvbjogYWRkIFMyUkFNIHN1cHBvcnQKICBwaHk6IGFkZCBB
-MzcwMCBVVE1JIFBIWSBkcml2ZXIKICBkdC1iaW5kaW5nczogcGh5OiBtdmVidS11dG1pOiBhZGQg
-VVRNSSBQSFkgYmluZGluZ3MKICBNQUlOVEFJTkVSUzogcGh5OiBmaWxsIEFybWFkYSAzNzAwIFBI
-WSBkcml2ZXJzIGVudHJ5CiAgQVJNNjQ6IGR0czogbWFydmVsbDogYXJtYWRhLTM3eHg6IGZpeCBV
-U0IyIG1lbW9yeSByZWdpb24KICBBUk02NDogZHRzOiBtYXJ2ZWxsOiBhcm1hZGEtMzd4eDogZGVj
-bGFyZSBVU0IyIFVUTUkgUEhZcwogIEFSTTY0OiBkdHM6IG1hcnZlbGw6IGFybWFkYS0zN3h4OiBs
-aW5rIFVTQiBob3N0cyB3aXRoIHRoZWlyIFBIWXMKCk9mZXIgSGVpZmV0eiAoMSk6CiAgdXNiOiBo
-b3N0OiB4aGNpOiBtdmVidTogYWRkIHJlc2V0IG9uIHJlc3VtZSBxdWlyawoKIC4uLi9iaW5kaW5n
-cy9waHkvcGh5LW12ZWJ1LXV0bWkudHh0ICAgICAgICAgICB8ICAzOCArKysKIE1BSU5UQUlORVJT
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNCArLQogYXJjaC9hcm02NC9i
-b290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zN3h4LmR0c2kgIHwgIDM0ICsrLQogZHJpdmVycy9waHkv
-bWFydmVsbC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvcGh5L21h
-cnZlbGwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3BoeS9tYXJ2
-ZWxsL3BoeS1tdmVidS1hMzcwMC11dG1pLmMgICAgfCAyNzggKysrKysrKysrKysrKysrKysrCiBk
-cml2ZXJzL3VzYi9jb3JlL2hjZC5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwogZHJp
-dmVycy91c2IvY29yZS9waHkuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI4ICsrCiBkcml2
-ZXJzL3VzYi9jb3JlL3BoeS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVy
-cy91c2IvaG9zdC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICstCiBkcml2ZXJz
-L3VzYi9ob3N0L2VoY2ktb3Jpb24uYyAgICAgICAgICAgICAgICAgfCAgNTEgKystLQogZHJpdmVy
-cy91c2IvaG9zdC94aGNpLW12ZWJ1LmMgICAgICAgICAgICAgICAgIHwgIDExICsKIGRyaXZlcnMv
-dXNiL2hvc3QveGhjaS1tdmVidS5oICAgICAgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL3Vz
-Yi9ob3N0L3hoY2ktcGxhdC5jICAgICAgICAgICAgICAgICAgfCAgIDcgKwogMTQgZmlsZXMgY2hh
-bmdlZCwgNDUxIGluc2VydGlvbnMoKyksIDI3IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAw
-NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW12ZWJ1LXV0bWku
-dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtYTM3
-MDAtdXRtaS5jCgotLSAKMi4xOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+From: Ofer Heifetz <oferh@marvell.com>
+
+The mvebu xHCI host driver does not have suspend/resume support. Use of
+the XHCI_RESET_ON_RESUME quirk is mandatory in order to avoid failures
+after resume. This will work only if no USB device is plugged-in.
+
+While at it, mention in the Kconfig file that this IP is also present
+on the A3700 SoC.
+
+Signed-off-by: Ofer Heifetz <oferh@marvell.com>
+[miquel.raynal@bootlin.com: Reword the commit message]
+Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+Reviewed-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+---
+ drivers/usb/host/Kconfig      |  4 ++--
+ drivers/usb/host/xhci-mvebu.c | 11 +++++++++++
+ drivers/usb/host/xhci-mvebu.h |  6 ++++++
+ drivers/usb/host/xhci-plat.c  |  7 +++++++
+ 4 files changed, 26 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/usb/host/Kconfig b/drivers/usb/host/Kconfig
+index 16758b12a5e9..3a32f5e45840 100644
+--- a/drivers/usb/host/Kconfig
++++ b/drivers/usb/host/Kconfig
+@@ -69,13 +69,13 @@ config USB_XHCI_MTK
+ 	  If unsure, say N.
+ 
+ config USB_XHCI_MVEBU
+-	tristate "xHCI support for Marvell Armada 375/38x"
++	tristate "xHCI support for Marvell Armada 375/38x/37xx"
+ 	select USB_XHCI_PLATFORM
+ 	depends on HAS_IOMEM
+ 	depends on ARCH_MVEBU || COMPILE_TEST
+ 	---help---
+ 	  Say 'Y' to enable the support for the xHCI host controller
+-	  found in Marvell Armada 375/38x ARM SOCs.
++	  found in Marvell Armada 375/38x/37xx ARM SOCs.
+ 
+ config USB_XHCI_RCAR
+ 	tristate "xHCI support for Renesas R-Car SoCs"
+diff --git a/drivers/usb/host/xhci-mvebu.c b/drivers/usb/host/xhci-mvebu.c
+index 32e158568788..60651a50770f 100644
+--- a/drivers/usb/host/xhci-mvebu.c
++++ b/drivers/usb/host/xhci-mvebu.c
+@@ -13,6 +13,7 @@
+ #include <linux/usb/hcd.h>
+ 
+ #include "xhci-mvebu.h"
++#include "xhci.h"
+ 
+ #define USB3_MAX_WINDOWS	4
+ #define USB3_WIN_CTRL(w)	(0x0 + ((w) * 8))
+@@ -72,3 +73,13 @@ int xhci_mvebu_mbus_init_quirk(struct usb_hcd *hcd)
+ 
+ 	return 0;
+ }
++
++int xhci_mvebu_a3700_init_quirk(struct usb_hcd *hcd)
++{
++	struct xhci_hcd	*xhci = hcd_to_xhci(hcd);
++
++	/* Without reset on resume, the HC won't work at all */
++	xhci->quirks |= XHCI_RESET_ON_RESUME;
++
++	return 0;
++}
+diff --git a/drivers/usb/host/xhci-mvebu.h b/drivers/usb/host/xhci-mvebu.h
+index 09791df2cec0..ca0a3a5721dd 100644
+--- a/drivers/usb/host/xhci-mvebu.h
++++ b/drivers/usb/host/xhci-mvebu.h
+@@ -12,10 +12,16 @@ struct usb_hcd;
+ 
+ #if IS_ENABLED(CONFIG_USB_XHCI_MVEBU)
+ int xhci_mvebu_mbus_init_quirk(struct usb_hcd *hcd);
++int xhci_mvebu_a3700_init_quirk(struct usb_hcd *hcd);
+ #else
+ static inline int xhci_mvebu_mbus_init_quirk(struct usb_hcd *hcd)
+ {
+ 	return 0;
+ }
++
++static inline int xhci_mvebu_a3700_init_quirk(struct usb_hcd *hcd)
++{
++	return 0;
++}
+ #endif
+ #endif /* __LINUX_XHCI_MVEBU_H */
+diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
+index ef09cb06212f..0ac4ec975547 100644
+--- a/drivers/usb/host/xhci-plat.c
++++ b/drivers/usb/host/xhci-plat.c
+@@ -98,6 +98,10 @@ static const struct xhci_plat_priv xhci_plat_marvell_armada = {
+ 	.init_quirk = xhci_mvebu_mbus_init_quirk,
+ };
+ 
++static const struct xhci_plat_priv xhci_plat_marvell_armada3700 = {
++	.init_quirk = xhci_mvebu_a3700_init_quirk,
++};
++
+ static const struct xhci_plat_priv xhci_plat_renesas_rcar_gen2 = {
+ 	.firmware_name = XHCI_RCAR_FIRMWARE_NAME_V1,
+ 	.init_quirk = xhci_rcar_init_quirk,
+@@ -123,6 +127,9 @@ static const struct of_device_id usb_xhci_of_match[] = {
+ 	}, {
+ 		.compatible = "marvell,armada-380-xhci",
+ 		.data = &xhci_plat_marvell_armada,
++	}, {
++		.compatible = "marvell,armada3700-xhci",
++		.data = &xhci_plat_marvell_armada3700,
+ 	}, {
+ 		.compatible = "renesas,xhci-r8a7790",
+ 		.data = &xhci_plat_renesas_rcar_gen2,
+-- 
+2.19.1
