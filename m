@@ -1,64 +1,45 @@
-From: <Claudiu.Beznea@microchip.com>
-Subject: [PATCH 3/4] pwm: atmel: add support for SAM9X60's PWM controller
-Date: Mon, 21 Jan 2019 12:30:57 +0000
-Message-ID: <1548073783-22640-4-git-send-email-claudiu.beznea@microchip.com>
-References: <1548073783-22640-1-git-send-email-claudiu.beznea@microchip.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
+Date: Mon, 21 Jan 2019 12:43:27 +0000
+Message-ID: <20190121124327.GB12679@sirena.org.uk>
+References: <1548069703-26595-1-git-send-email-alokc@codeaurora.org>
+ <1548069703-26595-5-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="s/l3CgOIzMHHjg/5"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548073783-22640-1-git-send-email-claudiu.beznea@microchip.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548069703-26595-5-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com
-Cc: linux-arm-kernel@lists.infradead.org, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Claudiu.Beznea@microchip.com
+To: Alok Chauhan <alokc@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-spi@vger.kernel.org, linux-kernel@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-From: Claudiu Beznea <claudiu.beznea@microchip.com>
 
-Add support for SAM9X60's PWM controller.
+--s/l3CgOIzMHHjg/5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Signed-off-by: Claudiu Beznea <claudiu.beznea@microchip.com>
----
- drivers/pwm/pwm-atmel.c | 17 +++++++++++++++++
- 1 file changed, 17 insertions(+)
+On Mon, Jan 21, 2019 at 04:51:41PM +0530, Alok Chauhan wrote:
+> Get the interconnect paths for SPI based Serial Engine device
+> and vote accordingly based on maximum supported SPI frequency.
 
-diff --git a/drivers/pwm/pwm-atmel.c b/drivers/pwm/pwm-atmel.c
-index 44f4a1c9f60b..44a99ba60e11 100644
---- a/drivers/pwm/pwm-atmel.c
-+++ b/drivers/pwm/pwm-atmel.c
-@@ -315,6 +315,20 @@ static const struct atmel_pwm_data atmel_pwm_data_v2 =
-=3D {
- 	},
- };
-=20
-+static const struct atmel_pwm_data atmel_pwm_data_v3 =3D {
-+	.regs =3D {
-+		.period		=3D PWMV1_CPRD,
-+		.period_upd	=3D PWMV1_CUPD,
-+		.duty		=3D PWMV1_CDTY,
-+		.duty_upd	=3D PWMV1_CUPD,
-+	},
-+	.cfg =3D {
-+		/* 32 bits to keep period and duty. */
-+		.max_period	=3D PWM_MAXV2_PRD,
-+		.max_pres	=3D PRD_MAXV1_PRES,
-+	},
-+};
-+
- static const struct platform_device_id atmel_pwm_devtypes[] =3D {
- 	{
- 		.name =3D "at91sam9rl-pwm",
-@@ -339,6 +353,9 @@ static const struct of_device_id atmel_pwm_dt_ids[] =3D=
- {
- 		.compatible =3D "atmel,sama5d2-pwm",
- 		.data =3D &atmel_pwm_data_v2,
- 	}, {
-+		.compatible =3D "microchip,sam9x60-pwm",
-+		.data =3D &atmel_pwm_data_v3,
-+	}, {
- 		/* sentinel */
- 	},
- };
---=20
-2.7.4
+I don't have any of the other patches in this series or a cover letter -
+what's going on with dependencies here?
+
+--s/l3CgOIzMHHjg/5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxFvm4ACgkQJNaLcl1U
+h9BwHAf9GAJQWLR7hvzjlg9jObQnh1ulxHG6TJhue0l5nEpwbTJUugTlEtXrvxDh
+laFlozIEGlpQOIy4jqrW8QodcPFngge+AS4sn0J+X2E32btYfuU7GX1bmIOfCN2z
+S59CU6sw6bvkBM/kkhVKL+vGsSmbz+4lZ+1FeEWN3MSuhWFoZZ5Tn/yCt9j7kUoH
+QipZsmFJQoclLlUIRcpE5ejuOtesSnI2yC9vk/4dTSwBW4WE1L5+waGEpPzsjWZF
+OlUCNtpS6/zXIDnRY7Gcwd7e/qSN1LrX0LGwx/76wIpsQRQwPOIWFvWTbWfnHFsJ
+0a8wEyoYmn6fUhJ576yIXDBiIpwJgA==
+=Xpu0
+-----END PGP SIGNATURE-----
+
+--s/l3CgOIzMHHjg/5--
