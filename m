@@ -1,15 +1,15 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 02/10] usb: host: xhci: mvebu: add reset on resume quirk
-Date: Mon, 21 Jan 2019 11:54:22 +0100
-Message-ID: <20190121115422.5db1bd99@xps13>
-References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
- <20190111133133.24803-3-miquel.raynal@bootlin.com>
- <878szilzpq.fsf@FE-laptop>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCHv5 3/4] pci: layerscape: Add the EP mode support.
+Date: Mon, 21 Jan 2019 16:31:00 +0530
+Message-ID: <0791e307-17c5-6f47-ae89-73bb5dc0f232@ti.com>
+References: <20190121094500.10657-1-xiaowei.bao@nxp.com>
+ <20190121094500.10657-3-xiaowei.bao@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <878szilzpq.fsf@FE-laptop>
+In-Reply-To: <20190121094500.10657-3-xiaowei.bao@nxp.com>
+Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,42 +19,204 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Ofer Heifetz <oferh@marvell.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+To: Xiaowei Bao <xiaowei.bao@nxp.com>, bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, niklas.cassel@axis.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3JlZ29yeSwKCkdyZWdvcnkgQ0xFTUVOVCA8Z3JlZ29yeS5jbGVtZW50QGJvb3RsaW4uY29t
-PiB3cm90ZSBvbiBGcmksIDE4IEphbiAyMDE5CjE3OjA0OjAxICswMTAwOgoKPiBIaSBNaXF1ZWws
-Cj4gIAo+ICBPbiB2ZW4uLCBqYW52LiAxMSAyMDE5LCBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5
-bmFsQGJvb3RsaW4uY29tPiB3cm90ZToKPiAKPiA+IEZyb206IE9mZXIgSGVpZmV0eiA8b2ZlcmhA
-bWFydmVsbC5jb20+Cj4gPgo+ID4gVGhlIG12ZWJ1IHhIQ0kgaG9zdCBkcml2ZXIgZG9lcyBub3Qg
-aGF2ZSBzdXNwZW5kL3Jlc3VtZSBzdXBwb3J0LiBVc2Ugb2YKPiA+IHRoZSBYSENJX1JFU0VUX09O
-X1JFU1VNRSBxdWlyayBpcyBtYW5kYXRvcnkgaW4gb3JkZXIgdG8gYXZvaWQgZmFpbHVyZXMKPiA+
-IGFmdGVyIHJlc3VtZS4gVGhpcyB3aWxsIHdvcmsgb25seSBpZiBubyBVU0IgZGV2aWNlIGlzIHBs
-dWdnZWQtaW4uCj4gPgo+ID4gV2hpbGUgYXQgaXQsIG1lbnRpb24gaW4gdGhlIEtjb25maWcgZmls
-ZSB0aGF0IHRoaXMgSVAgaXMgYWxzbyBwcmVzZW50Cj4gPiBvbiB0aGUgQTM3MDAgU29DLgo+ID4K
-PiA+IFNpZ25lZC1vZmYtYnk6IE9mZXIgSGVpZmV0eiA8b2ZlcmhAbWFydmVsbC5jb20+Cj4gPiBb
-bWlxdWVsLnJheW5hbEBib290bGluLmNvbTogUmV3b3JkIHRoZSBjb21taXQgbWVzc2FnZV0KPiA+
-IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+
-Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL3VzYi9ob3N0L0tjb25maWcgICAgICB8ICA0ICsrLS0KPiA+
-ICBkcml2ZXJzL3VzYi9ob3N0L3hoY2ktbXZlYnUuYyB8IDExICsrKysrKysrKysrCj4gPiAgZHJp
-dmVycy91c2IvaG9zdC94aGNpLW12ZWJ1LmggfCAgNiArKysrKysKPiA+ICBkcml2ZXJzL3VzYi9o
-b3N0L3hoY2ktcGxhdC5jICB8ICA3ICsrKysrKysKPiA+ICA0IGZpbGVzIGNoYW5nZWQsIDI2IGlu
-c2VydGlvbnMoKyksIDIgZGVsZXRpb25zKC0pCj4gPgo+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-dXNiL2hvc3QvS2NvbmZpZyBiL2RyaXZlcnMvdXNiL2hvc3QvS2NvbmZpZwo+ID4gaW5kZXggMTY3
-NThiMTJhNWU5Li4xM2Q1OWJlNmE2YWEgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3VzYi9ob3N0
-L0tjb25maWcKPiA+ICsrKyBiL2RyaXZlcnMvdXNiL2hvc3QvS2NvbmZpZwo+ID4gQEAgLTY5LDEz
-ICs2OSwxMyBAQCBjb25maWcgVVNCX1hIQ0lfTVRLCj4gPiAgCSAgSWYgdW5zdXJlLCBzYXkgTi4K
-PiA+ICAKPiA+ICBjb25maWcgVVNCX1hIQ0lfTVZFQlUKPiA+IC0JdHJpc3RhdGUgInhIQ0kgc3Vw
-cG9ydCBmb3IgTWFydmVsbCBBcm1hZGEgMzc1LzM4eCIKPiA+ICsJdHJpc3RhdGUgInhIQ0kgc3Vw
-cG9ydCBmb3IgTWFydmVsbCBBcm1hZGEgMzc1LzM4eC8zNzAwIiAgCj4gCj4gSSB3b3VsZCBuYW1l
-IGl0IDM3eHggdG8gYmUgY29uc2lzdGVudCB3aXRoIDM4eAo+IAo+ID4gIAlzZWxlY3QgVVNCX1hI
-Q0lfUExBVEZPUk0KPiA+ICAJZGVwZW5kcyBvbiBIQVNfSU9NRU0KPiA+ICAJZGVwZW5kcyBvbiBB
-UkNIX01WRUJVIHx8IENPTVBJTEVfVEVTVAo+ID4gIAktLS1oZWxwLS0tCj4gPiAgCSAgU2F5ICdZ
-JyB0byBlbmFibGUgdGhlIHN1cHBvcnQgZm9yIHRoZSB4SENJIGhvc3QgY29udHJvbGxlcgo+ID4g
-LQkgIGZvdW5kIGluIE1hcnZlbGwgQXJtYWRhIDM3NS8zOHggQVJNIFNPQ3MuCj4gPiArCSAgZm91
-bmQgaW4gTWFydmVsbCBBcm1hZGEgMzc1LzM4eC8zNzAwIEFSTSBTT0NzLiAgCj4gc2FtZSBoZXJl
-Cj4gCgpTdXJlIQoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgt
-YXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3Jn
-L21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+Hi Xiaowei,
+
+On 21/01/19 3:14 PM, Xiaowei Bao wrote:
+> Add the PCIe EP mode support for layerscape platform.
+> 
+> Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+> Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
+> Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
+
+This patch looks good to me, except for using epc->features which I've tried to
+get rid of in [1]. After Lorenzo's review, one of us have to change it to the
+new design.
+
+Thanks
+Kishon
+
+[1] -> https://patchwork.kernel.org/project/linux-pci/list/?series=66177
+> ---
+> v2:
+>  - remove the EP mode check function.
+> v3:
+>  - modif the return value when enter default case.
+> v4:
+>  - no change.
+> v5:
+>  - no change.
+> 
+>  drivers/pci/controller/dwc/Makefile            |    2 +-
+>  drivers/pci/controller/dwc/pci-layerscape-ep.c |  146 ++++++++++++++++++++++++
+>  2 files changed, 147 insertions(+), 1 deletions(-)
+>  create mode 100644 drivers/pci/controller/dwc/pci-layerscape-ep.c
+> 
+> diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
+> index 7bcdcdf..b5f3b83 100644
+> --- a/drivers/pci/controller/dwc/Makefile
+> +++ b/drivers/pci/controller/dwc/Makefile
+> @@ -8,7 +8,7 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
+>  obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
+>  obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
+>  obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
+> -obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
+> +obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
+>  obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
+>  obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
+>  obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
+> diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> new file mode 100644
+> index 0000000..dafb528
+> --- /dev/null
+> +++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
+> @@ -0,0 +1,146 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * PCIe controller EP driver for Freescale Layerscape SoCs
+> + *
+> + * Copyright (C) 2018 NXP Semiconductor.
+> + *
+> + * Author: Xiaowei Bao <xiaowei.bao@nxp.com>
+> + */
+> +
+> +#include <linux/kernel.h>
+> +#include <linux/init.h>
+> +#include <linux/of_pci.h>
+> +#include <linux/of_platform.h>
+> +#include <linux/of_address.h>
+> +#include <linux/pci.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/resource.h>
+> +
+> +#include "pcie-designware.h"
+> +
+> +#define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
+> +
+> +struct ls_pcie_ep {
+> +	struct dw_pcie		*pci;
+> +};
+> +
+> +#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+> +
+> +static int ls_pcie_establish_link(struct dw_pcie *pci)
+> +{
+> +	return 0;
+> +}
+> +
+> +static const struct dw_pcie_ops ls_pcie_ep_ops = {
+> +	.start_link = ls_pcie_establish_link,
+> +};
+> +
+> +static const struct of_device_id ls_pcie_ep_of_match[] = {
+> +	{ .compatible = "fsl,ls-pcie-ep",},
+> +	{ },
+> +};
+> +
+> +static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +	struct pci_epc *epc = ep->epc;
+> +	enum pci_barno bar;
+> +
+> +	for (bar = BAR_0; bar <= BAR_5; bar++)
+> +		dw_pcie_ep_reset_bar(pci, bar);
+> +
+> +	epc->features |= EPC_FEATURE_NO_LINKUP_NOTIFIER;
+> +}
+> +
+> +static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
+> +				  enum pci_epc_irq_type type, u16 interrupt_num)
+> +{
+> +	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
+> +
+> +	switch (type) {
+> +	case PCI_EPC_IRQ_LEGACY:
+> +		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
+> +	case PCI_EPC_IRQ_MSI:
+> +		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
+> +	case PCI_EPC_IRQ_MSIX:
+> +		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
+> +	default:
+> +		dev_err(pci->dev, "UNKNOWN IRQ type\n");
+> +		return -EINVAL;
+> +	}
+> +}
+> +
+> +static struct dw_pcie_ep_ops pcie_ep_ops = {
+> +	.ep_init = ls_pcie_ep_init,
+> +	.raise_irq = ls_pcie_ep_raise_irq,
+> +};
+> +
+> +static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
+> +					struct platform_device *pdev)
+> +{
+> +	struct dw_pcie *pci = pcie->pci;
+> +	struct device *dev = pci->dev;
+> +	struct dw_pcie_ep *ep;
+> +	struct resource *res;
+> +	int ret;
+> +
+> +	ep = &pci->ep;
+> +	ep->ops = &pcie_ep_ops;
+> +
+> +	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
+> +	if (!res)
+> +		return -EINVAL;
+> +
+> +	ep->phys_base = res->start;
+> +	ep->addr_size = resource_size(res);
+> +
+> +	ret = dw_pcie_ep_init(ep);
+> +	if (ret) {
+> +		dev_err(dev, "failed to initialize endpoint\n");
+> +		return ret;
+> +	}
+> +
+> +	return 0;
+> +}
+> +
+> +static int __init ls_pcie_ep_probe(struct platform_device *pdev)
+> +{
+> +	struct device *dev = &pdev->dev;
+> +	struct dw_pcie *pci;
+> +	struct ls_pcie_ep *pcie;
+> +	struct resource *dbi_base;
+> +	int ret;
+> +
+> +	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
+> +	if (!pcie)
+> +		return -ENOMEM;
+> +
+> +	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
+> +	if (!pci)
+> +		return -ENOMEM;
+> +
+> +	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
+> +	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
+> +	if (IS_ERR(pci->dbi_base))
+> +		return PTR_ERR(pci->dbi_base);
+> +
+> +	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
+> +	pci->dev = dev;
+> +	pci->ops = &ls_pcie_ep_ops;
+> +	pcie->pci = pci;
+> +
+> +	platform_set_drvdata(pdev, pcie);
+> +
+> +	ret = ls_add_pcie_ep(pcie, pdev);
+> +
+> +	return ret;
+> +}
+> +
+> +static struct platform_driver ls_pcie_ep_driver = {
+> +	.driver = {
+> +		.name = "layerscape-pcie-ep",
+> +		.of_match_table = ls_pcie_ep_of_match,
+> +		.suppress_bind_attrs = true,
+> +	},
+> +};
+> +builtin_platform_driver_probe(ls_pcie_ep_driver, ls_pcie_ep_probe);
+> 
