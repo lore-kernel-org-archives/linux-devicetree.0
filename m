@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 10/10] ARM64: dts: marvell: armada-37xx: link USB hosts
- with their PHYs
-Date: Mon, 21 Jan 2019 12:23:36 +0100
-Message-ID: <20190121112336.23489-11-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 04/10] usb: ehci-orion: add S2RAM support
+Date: Mon, 21 Jan 2019 12:23:30 +0100
+Message-ID: <20190121112336.23489-5-miquel.raynal@bootlin.com>
 References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,41 +21,56 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Reference the PHY nodes from the USB controller nodes.
-
-The USB3 host controller is wired to:
-  * the first PHY of the COMPHY IP
-  * the OTG-capable UTMI PHY
-
-The USB2 host controller is wired to:
-  * the host-only UTMI PHY
+Add suspend/resume callbacks to reset the host controller properly
+during S2RAM operation.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/usb/host/ehci-orion.c | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index aeb2681428b3..029d8e090cb7 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -347,6 +347,8 @@
- 				marvell,usb-misc-reg = <&usb32_syscon>;
- 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&sb_periph_clk 12>;
-+				phys = <&comphy0 0>, <&usb2_utmi_otg_phy>;
-+				phy-names = "usb3-phy", "usb2-utmi-otg-phy";
- 				status = "disabled";
- 			};
+diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
+index 3109f082949e..dab22aa57c0b 100644
+--- a/drivers/usb/host/ehci-orion.c
++++ b/drivers/usb/host/ehci-orion.c
+@@ -182,6 +182,30 @@ static int ehci_orion_drv_reset(struct usb_hcd *hcd)
+ 	return ret;
+ }
  
-@@ -368,6 +370,8 @@
- 				reg = <0x5e000 0x1000>;
- 				marvell,usb-misc-reg = <&usb2_syscon>;
- 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
-+				phys = <&usb2_utmi_host_phy>;
-+				phy-names = "usb2-utmi-host-phy";
- 				status = "disabled";
- 			};
++static int __maybe_unused ehci_orion_drv_suspend(struct device *dev)
++{
++	struct usb_hcd *hcd = dev_get_drvdata(dev);
++	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
++
++	ehci_prepare_ports_for_controller_suspend(ehci,
++						  device_may_wakeup(dev));
++
++	return ehci_suspend(hcd, false);
++}
++
++static int __maybe_unused ehci_orion_drv_resume(struct device *dev)
++{
++	struct usb_hcd *hcd = dev_get_drvdata(dev);
++	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
++
++	ehci_prepare_ports_for_controller_resume(ehci);
++
++	return ehci_resume(hcd, false);
++}
++
++static SIMPLE_DEV_PM_OPS(ehci_orion_pm_ops, ehci_orion_drv_suspend,
++			 ehci_orion_drv_resume);
++
+ static const struct ehci_driver_overrides orion_overrides __initconst = {
+ 	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
+ 	.reset = ehci_orion_drv_reset,
+@@ -334,6 +358,7 @@ static struct platform_driver ehci_orion_driver = {
+ 	.driver = {
+ 		.name	= "orion-ehci",
+ 		.of_match_table = ehci_orion_dt_ids,
++		.pm = &ehci_orion_pm_ops,
+ 	},
+ };
  
 -- 
 2.19.1
