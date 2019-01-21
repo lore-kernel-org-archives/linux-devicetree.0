@@ -1,15 +1,14 @@
-From: Jianxin Pan <jianxin.pan@amlogic.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for Amlogic NAND controller driver
-Date: Mon, 21 Jan 2019 12:18:18 +0800
-Message-ID: <3f098e44-9d9b-3d0a-3e19-5913077aeb07@amlogic.com>
-References: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
- <20190120160605.33689354@xps13>
+From: Peter Robinson <pbrobinson@gmail.com>
+Subject: Re: [PATCH 6/6] ARM: dts: bcm283x: Add missing GPIO line names
+Date: Mon, 21 Jan 2019 04:52:26 +0000
+Message-ID: <CALeDE9OPnjGrg0QmLsVuOwQk-jzkggz=zaLTnrQGaJof_6Z8NA@mail.gmail.com>
+References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
+ <1547297008-2740-7-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190120160605.33689354@xps13>
-Content-Language: en-US
+In-Reply-To: <1547297008-2740-7-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,36 +18,267 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, Marek Vasut <marek.vasut@gmail.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Richard Weinberger <richard@nod.at>, Neil Armstrong <narmstrong@baylibre.com>, linux-kernel@vger.kernel.org, Boris Brezillon <boris.brezillon@bootlin.com>, Jian Hu <jian.hu@amlogic.com>, Liang Yang <liang.yang@amlogic.com>, linux-mtd@lists.infradead.org, Kevin Hilman <khilman@baylibre.com>, Carlo Caione <carlo@caione.org>, linux-amlogic@lists.infradead.org, Brian Norris <computersforpeace@gmail.com>, David Woodhouse <dwmw2@infradead.org>, linux-arm-kernel@lists.infradead.org, Jerome Brunet <jbrunet@baylibre.com>
+To: Stefan Wahren <stefan.wahren@i2se.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Gottfried Haider <gottfried.haider@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Scott Branden <sbranden@broadcom.com>, devicetree@vger.kernel.org, Ray Jui <rjui@broadcom.com>, Phil Elwell <phil@raspberrypi.org>, Eric Anholt <eric@anholt.net>, Rob Herring <robh+dt@kernel.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgTWlxdWVsLAoKT24gMjAxOS8xLzIwIDIzOjA2LCBNaXF1ZWwgUmF5bmFsIHdyb3RlOgo+IEhp
-IEppYW54aW4sCj4gCj4gSmlhbnhpbiBQYW4gPGppYW54aW4ucGFuQGFtbG9naWMuY29tPiB3cm90
-ZSBvbiBTdW4sIDIwIEphbiAyMDE5Cj4gMDE6MDI6MzUgKzA4MDA6Cj4gCj4+IEFkZCBlbnRyeSBm
-b3IgQW1sb2dpYyBOQU5EIGNvbnRyb2xsZXIgZHJpdmVyIGFuZCBpdHMgYmluZGluZ3NbMF0uCj4+
-Cj4+IFswXSBodHRwczovL2xvcmUua2VybmVsLm9yZy9sa21sLzE1NDc1NjY2ODQtNTc0NzItMS1n
-aXQtc2VuZC1lbWFpbC1qaWFueGluLnBhbkBhbWxvZ2ljLmNvbS8KPj4KPj4gU2lnbmVkLW9mZi1i
-eTogTGlhbmcgWWFuZyA8bGlhbmcueWFuZ0BhbWxvZ2ljLmNvbT4KPj4gU2lnbmVkLW9mZi1ieTog
-SmlhbnhpbiBQYW4gPGppYW54aW4ucGFuQGFtbG9naWMuY29tPgo+IAo+IElmIHlvdSBhcmUgdGhl
-IGF1dGhvciBvZiB0aGUgcGF0Y2ggeW91ciBTaWduZWQtb2ZmLWJ5IHNob3VsZCBjb21lIGZpcnN0
-LgpPSy4KPiAKPiBBbHNvLCB3aHkgaXMgTGlhbmcgdGhlIE1haW50YWluZXI/IFdoeSBub3QgeW91
-Pwo+IApZYW5nbGlhbmcgaXMgQW1sb2dpYyBtYWludGFpbmVyIGZvciBOQU5EIGNvbnRyb2xsZXIu
-IEFuZCBhbGwgcGF0Y2hlcyBhYm91dCBhbWxvZ2ljIE5BTkQgY29udHJvbGxlciBhcmUgZnJvbSBo
-aW0uCj4+IC0tLQo+PiAgTUFJTlRBSU5FUlMgfCA3ICsrKysrKysKPj4gIDEgZmlsZSBjaGFuZ2Vk
-LCA3IGluc2VydGlvbnMoKykKPj4KPj4gZGlmZiAtLWdpdCBhL01BSU5UQUlORVJTIGIvTUFJTlRB
-SU5FUlMKPj4gaW5kZXggMGFiZWNjNS4uN2Q5NzZhMSAxMDA2NDQKPj4gLS0tIGEvTUFJTlRBSU5F
-UlMKPj4gKysrIGIvTUFJTlRBSU5FUlMKPj4gQEAgLTk2MjgsNiArOTYyOCwxMyBAQCBGOglkcml2
-ZXJzL21lZGlhL3BsYXRmb3JtL21lc29uL2FvLWNlYy5jCj4+ICBGOglEb2N1bWVudGF0aW9uL2Rl
-dmljZXRyZWUvYmluZGluZ3MvbWVkaWEvbWVzb24tYW8tY2VjLnR4dAo+PiAgVDoJZ2l0IGdpdDov
-L2xpbnV4dHYub3JnL21lZGlhX3RyZWUuZ2l0Cj4+ICAKPj4gK01FU09OIE5BTkQgQ09OVFJPTExF
-UiBEUklWRVIgRk9SIEFNTE9HSUMgU09DUwo+PiArTToJTGlhbmcgWWFuZyA8bGlhbmcueWFuZ0Bh
-bWxvZ2ljLmNvbT4KPj4gK0w6CWxpbnV4LW10ZEBsaXN0cy5pbmZyYWRlYWQub3JnCj4+ICtTOglN
-YWludGFpbmVkCj4+ICtGOglkcml2ZXJzL210ZC9uYW5kL3Jhdy9tZXNvbl8qCj4+ICtGOglEb2N1
-bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvbXRkL2FtbG9naWMsbWVzb24tbmFuZC50eHQK
-Pj4gKwo+PiAgTUlDUk9CTEFaRSBBUkNISVRFQ1RVUkUKPj4gIE06CU1pY2hhbCBTaW1layA8bW9u
-c3RyQG1vbnN0ci5ldT4KPj4gIFc6CWh0dHA6Ly93d3cubW9uc3RyLmV1L2ZkdC8KPiAKPiBUaGFu
-a3MsCj4gTWlxdcOobAo+IAo+IC4KPiAKCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxpbmcgbGlzdApsaW51eC1hcm0t
-a2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3RzLmluZnJhZGVhZC5vcmcvbWFp
-bG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Sat, Jan 12, 2019 at 12:44 PM Stefan Wahren <stefan.wahren@i2se.com> wrote:
+>
+> The GPIO sysfs is deprecated and disabled in the defconfig files.
+> So in order to motivate the usage of the new GPIO character device API
+> add the missing GPIO line names for Raspberry Pi 2 and 3. In the lack
+> of full schematics i would leave all undocumented pins as unnamed.
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Tested-by: Peter Robinson <pbrobinson@gmail.com>
+
+Tested on RPi2/3/3B+ using lsgpio
+
+> ---
+>  arch/arm/boot/dts/bcm2836-rpi-2-b.dts      | 66 ++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts | 70 ++++++++++++++++++++++++++++++
+>  arch/arm/boot/dts/bcm2837-rpi-3-b.dts      | 70 ++++++++++++++++++++++++++++++
+>  3 files changed, 206 insertions(+)
+>
+> diff --git a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+> index 871fc4a..7b4e651 100644
+> --- a/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+> +++ b/arch/arm/boot/dts/bcm2836-rpi-2-b.dts
+> @@ -28,6 +28,72 @@
+>  };
+>
+>  &gpio {
+> +       /*
+> +        * Taken from rpi_SCH_2b_1p2_reduced.pdf and
+> +        * the official GPU firmware DT blob.
+> +        *
+> +        * Legend:
+> +        * "NC" = not connected (no rail from the SoC)
+> +        * "FOO" = GPIO line named "FOO" on the schematic
+> +        * "FOO_N" = GPIO line named "FOO" on schematic, active low
+> +        */
+> +       gpio-line-names = "ID_SDA",
+> +                         "ID_SCL",
+> +                         "SDA1",
+> +                         "SCL1",
+> +                         "GPIO_GCLK",
+> +                         "GPIO5",
+> +                         "GPIO6",
+> +                         "SPI_CE1_N",
+> +                         "SPI_CE0_N",
+> +                         "SPI_MISO",
+> +                         "SPI_MOSI",
+> +                         "SPI_SCLK",
+> +                         "GPIO12",
+> +                         "GPIO13",
+> +                         /* Serial port */
+> +                         "TXD0",
+> +                         "RXD0",
+> +                         "GPIO16",
+> +                         "GPIO17",
+> +                         "GPIO18",
+> +                         "GPIO19",
+> +                         "GPIO20",
+> +                         "GPIO21",
+> +                         "GPIO22",
+> +                         "GPIO23",
+> +                         "GPIO24",
+> +                         "GPIO25",
+> +                         "GPIO26",
+> +                         "GPIO27",
+> +                         "SDA0",
+> +                         "SCL0",
+> +                         "", /* GPIO30 */
+> +                         "LAN_RUN",
+> +                         "CAM_GPIO1",
+> +                         "", /* GPIO33 */
+> +                         "", /* GPIO34 */
+> +                         "PWR_LOW_N",
+> +                         "", /* GPIO36 */
+> +                         "", /* GPIO37 */
+> +                         "USB_LIMIT",
+> +                         "", /* GPIO39 */
+> +                         "PWM0_OUT",
+> +                         "CAM_GPIO0",
+> +                         "SMPS_SCL",
+> +                         "SMPS_SDA",
+> +                         "ETHCLK",
+> +                         "PWM1_OUT",
+> +                         "HDMI_HPD_N",
+> +                         "STATUS_LED",
+> +                         /* Used by SD Card */
+> +                         "SD_CLK_R",
+> +                         "SD_CMD_R",
+> +                         "SD_DATA0_R",
+> +                         "SD_DATA1_R",
+> +                         "SD_DATA2_R",
+> +                         "SD_DATA3_R";
+> +
+>         pinctrl-0 = <&gpioout &alt0 &i2s_alt0>;
+>
+>         /* I2S interface */
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+> index d3ec6cd..c6fa34c 100644
+> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b-plus.dts
+> @@ -52,6 +52,76 @@
+>         };
+>  };
+>
+> +&gpio {
+> +       /*
+> +        * Taken from rpi_SCH_3bplus_1p0_reduced.pdf and
+> +        * the official GPU firmware DT blob.
+> +        *
+> +        * Legend:
+> +        * "NC" = not connected (no rail from the SoC)
+> +        * "FOO" = GPIO line named "FOO" on the schematic
+> +        * "FOO_N" = GPIO line named "FOO" on schematic, active low
+> +        */
+> +       gpio-line-names = "ID_SDA",
+> +                         "ID_SCL",
+> +                         "SDA1",
+> +                         "SCL1",
+> +                         "GPIO_GCLK",
+> +                         "GPIO5",
+> +                         "GPIO6",
+> +                         "SPI_CE1_N",
+> +                         "SPI_CE0_N",
+> +                         "SPI_MISO",
+> +                         "SPI_MOSI",
+> +                         "SPI_SCLK",
+> +                         "GPIO12",
+> +                         "GPIO13",
+> +                         /* Serial port */
+> +                         "TXD1",
+> +                         "RXD1",
+> +                         "GPIO16",
+> +                         "GPIO17",
+> +                         "GPIO18",
+> +                         "GPIO19",
+> +                         "GPIO20",
+> +                         "GPIO21",
+> +                         "GPIO22",
+> +                         "GPIO23",
+> +                         "GPIO24",
+> +                         "GPIO25",
+> +                         "GPIO26",
+> +                         "GPIO27",
+> +                         "HDMI_HPD_N",
+> +                         "STATUS_LED_G",
+> +                         /* Used by BT module */
+> +                         "CTS0",
+> +                         "RTS0",
+> +                         "TXD0",
+> +                         "RXD0",
+> +                         /* Used by Wifi */
+> +                         "SD1_CLK",
+> +                         "SD1_CMD",
+> +                         "SD1_DATA0",
+> +                         "SD1_DATA1",
+> +                         "SD1_DATA2",
+> +                         "SD1_DATA3",
+> +                         "PWM0_OUT",
+> +                         "PWM1_OUT",
+> +                         "ETHCLK",
+> +                         "WIFI_CLK",
+> +                         "SDA0",
+> +                         "SCL0",
+> +                         "SMPS_SCL",
+> +                         "SMPS_SDA",
+> +                         /* Used by SD Card */
+> +                         "SD_CLK_R",
+> +                         "SD_CMD_R",
+> +                         "SD_DATA0_R",
+> +                         "SD_DATA1_R",
+> +                         "SD_DATA2_R",
+> +                         "SD_DATA3_R";
+> +};
+> +
+>  &hdmi {
+>         hpd-gpios = <&gpio 28 GPIO_ACTIVE_LOW>;
+>  };
+> diff --git a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> index 31b1c03..ce71f57 100644
+> --- a/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> +++ b/arch/arm/boot/dts/bcm2837-rpi-3-b.dts
+> @@ -47,6 +47,76 @@
+>         };
+>  };
+>
+> +&gpio {
+> +       /*
+> +        * Taken from rpi_SCH_3b_1p2_reduced.pdf and
+> +        * the official GPU firmware DT blob.
+> +        *
+> +        * Legend:
+> +        * "NC" = not connected (no rail from the SoC)
+> +        * "FOO" = GPIO line named "FOO" on the schematic
+> +        * "FOO_N" = GPIO line named "FOO" on schematic, active low
+> +        */
+> +       gpio-line-names = "ID_SDA",
+> +                         "ID_SCL",
+> +                         "SDA1",
+> +                         "SCL1",
+> +                         "GPIO_GCLK",
+> +                         "GPIO5",
+> +                         "GPIO6",
+> +                         "SPI_CE1_N",
+> +                         "SPI_CE0_N",
+> +                         "SPI_MISO",
+> +                         "SPI_MOSI",
+> +                         "SPI_SCLK",
+> +                         "GPIO12",
+> +                         "GPIO13",
+> +                         /* Serial port */
+> +                         "TXD1",
+> +                         "RXD1",
+> +                         "GPIO16",
+> +                         "GPIO17",
+> +                         "GPIO18",
+> +                         "GPIO19",
+> +                         "GPIO20",
+> +                         "GPIO21",
+> +                         "GPIO22",
+> +                         "GPIO23",
+> +                         "GPIO24",
+> +                         "GPIO25",
+> +                         "GPIO26",
+> +                         "GPIO27",
+> +                         "", /* GPIO 28 */
+> +                         "LAN_RUN_BOOT",
+> +                         /* Used by BT module */
+> +                         "CTS0",
+> +                         "RTS0",
+> +                         "TXD0",
+> +                         "RXD0",
+> +                         /* Used by Wifi */
+> +                         "SD1_CLK",
+> +                         "SD1_CMD",
+> +                         "SD1_DATA0",
+> +                         "SD1_DATA1",
+> +                         "SD1_DATA2",
+> +                         "SD1_DATA3",
+> +                         "PWM0_OUT",
+> +                         "PWM1_OUT",
+> +                         "ETHCLK",
+> +                         "WIFI_CLK",
+> +                         "SDA0",
+> +                         "SCL0",
+> +                         "SMPS_SCL",
+> +                         "SMPS_SDA",
+> +                         /* Used by SD Card */
+> +                         "SD_CLK_R",
+> +                         "SD_CMD_R",
+> +                         "SD_DATA0_R",
+> +                         "SD_DATA1_R",
+> +                         "SD_DATA2_R",
+> +                         "SD_DATA3_R";
+> +};
+> +
+>  &pwm {
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pwm0_gpio40 &pwm1_gpio41>;
+> --
+> 2.7.4
+>
