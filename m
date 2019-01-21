@@ -1,64 +1,38 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 1/4] arm64: dts: sprd: Remove PMIC INTC irq trigger type
-Date: Mon, 21 Jan 2019 15:38:28 +0800
-Message-ID: <b6a32917d1e231277d240a4084bebb6ad91247e3.1548052878.git.baolin.wang@linaro.org>
-References: <cover.1548052878.git.baolin.wang@linaro.org>
+From: Arthur Demchenkov <spinal.by@gmail.com>
+Subject: [PATCH] ARM: dts: n900: fix mmc1 card detect gpio polarity
+Date: Mon, 21 Jan 2019 06:21:09 +0300
+Message-ID: <20190121032109.10220-1-spinal.by@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.1548052878.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1548052878.git.baolin.wang@linaro.org>
-References: <cover.1548052878.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net, orsonzhai@gmail.com, zhang.lyra@gmail.com
-Cc: devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc: Arthur Demchenkov <spinal.by@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-The Spreadtrum PMIC INTC controller has no registers to set trigger type,
-since it is always high level trigger as default. So remove its child
-devices' irq trigger type setting and change #interrupt-cells to 1.
+Wrong polarity of card detect GPIO pin leads to the system not
+booting from external mmc, if the back cover of N900 is closed.
+When the cover is open the system boots fine.
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+This wasn't noticed before, because of a bug, which was fixed
+by commit e63201f19 (mmc: omap_hsmmc: Delete platform data GPIO
+CD and WP).
+
+Kernels up to 4.19 ignored the card detect GPIO from DT.
 ---
- arch/arm64/boot/dts/sprd/sc2731.dtsi |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ arch/arm/boot/dts/omap3-n900.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/sprd/sc2731.dtsi b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-index 82bd642..f2f2aa5 100644
---- a/arch/arm64/boot/dts/sprd/sc2731.dtsi
-+++ b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-@@ -13,7 +13,7 @@
- 		spi-max-frequency = <26000000>;
- 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
- 		interrupt-controller;
--		#interrupt-cells = <2>;
-+		#interrupt-cells = <1>;
- 		#address-cells = <1>;
- 		#size-cells = <0>;
+diff --git a/arch/arm/boot/dts/omap3-n900.dts b/arch/arm/boot/dts/omap3-n900.dts
+index 182a53991c90..826920e6b878 100644
+--- a/arch/arm/boot/dts/omap3-n900.dts
++++ b/arch/arm/boot/dts/omap3-n900.dts
+@@ -814,7 +814,7 @@
+ 	/* For debugging, it is often good idea to remove this GPIO.
+ 	   It means you can remove back cover (to reboot by removing
+ 	   battery) and still use the MMC card. */
+-	cd-gpios = <&gpio6 0 GPIO_ACTIVE_HIGH>; /* 160 */
++	cd-gpios = <&gpio6 0 GPIO_ACTIVE_LOW>; /* 160 */
+ };
  
-@@ -43,14 +43,14 @@
- 			compatible = "sprd,sc27xx-rtc", "sprd,sc2731-rtc";
- 			reg = <0x280>;
- 			interrupt-parent = <&sc2731_pmic>;
--			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <2>;
- 		};
- 
- 		pmic_eic: gpio@300 {
- 			compatible = "sprd,sc27xx-eic";
- 			reg = <0x300>;
- 			interrupt-parent = <&sc2731_pmic>;
--			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <5>;
- 			gpio-controller;
- 			#gpio-cells = <2>;
- 			interrupt-controller;
-@@ -69,7 +69,7 @@
- 			compatible = "sprd,sc27xx-adc", "sprd,sc2731-adc";
- 			reg = <0x480>;
- 			interrupt-parent = <&sc2731_pmic>;
--			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupts = <0>;
- 			#io-channel-cells = <1>;
- 			hwlocks = <&hwlock 4>;
- 		};
+ /* most boards use vaux3, only some old versions use vmmc2 instead */
 -- 
-1.7.9.5
+2.11.0
