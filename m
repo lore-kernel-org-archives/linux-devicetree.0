@@ -1,39 +1,40 @@
-Return-Path: <SRS0=3v29=P5=partner.samsung.com=k.konieczny@kernel.org>
-Subject: Re: [PATCH v3 4/5] arm64: dts: exynos: add imem clock
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Message-ID: <3ca730b9-3cad-4e98-1e3b-19aca71863d5@partner.samsung.com>
-Date: Mon, 21 Jan 2019 09:08:30 +0100
+Return-Path: <SRS0=chu1=P5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:35472 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728722AbfAUNNo (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Jan 2019 08:13:44 -0500
+Received: by mail-lf1-f68.google.com with SMTP id e26so15464567lfc.2
+        for <devicetree@vger.kernel.org>; Mon, 21 Jan 2019 05:13:43 -0800 (PST)
 MIME-Version: 1.0
-In-Reply-To: <20181213211009.GA5444@kozik-lap>
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-Content-Type: text/plain; charset="utf-8"
-References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
-	<CGME20181204165317eucas1p18cd6168fdefb2aa57259b9ec73438275@eucas1p1.samsung.com>
-	<20181204165248.17572-5-k.konieczny@partner.samsung.com>
-	<20181213211009.GA5444@kozik-lap>
-To: Krzysztof Kozlowski <krzk@kernel.org>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+References: <20190108162843.6194-1-miquel.raynal@bootlin.com>
+In-Reply-To: <20190108162843.6194-1-miquel.raynal@bootlin.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Date: Mon, 21 Jan 2019 14:13:30 +0100
+Message-ID: <CACRpkdbin-bV4_PYkoRmknNXAGN2X6tnHPpQUJm73PWiSrK=FQ@mail.gmail.com>
+Subject: Re: [PATCH] pinctrl: armada-37xx: change suspend/resume time
+Content-Type: text/plain; charset="UTF-8"
+Sender: devicetree-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On 13.12.2018 22:10, Krzysztof Kozlowski wrote:
-> On Tue, Dec 04, 2018 at 05:52:47PM +0100, Kamil Konieczny wrote:
->> Add description for imem clock in the Samsung Exynos5433. The users can use
->> compatibility "samsung,exynos5433-cmu-imem".
-> 
-> Thanks, applied but the commit message above is not matching contents at all.
-> You did not add the description. Mentioning some users and compatibility
-> also seems unrelated. Instead:
-> 1. You added DT node for IMEM clock controller on Exynos5433.
-> 2. Because it is necessary for SSS to work (beside obvious reasons: for
->    DTS completeness and allowing to gate them when not used).
-> Also, please use SoC name in commit title (for example at the end) to
-> differentiate from Exynos7 or any other future SoCs.
+On Tue, Jan 8, 2019 at 5:28 PM Miquel Raynal <miquel.raynal@bootlin.com> wrote:
 
-Thank you for your work and insightfull comments, I hope to improve my
-commit messages.
+> Armada 3700 PCIe IP relies on the pinctrl IP managed by this
+> driver. For reasons related to the PCI core's organization when
+> suspending/resuming, PCI host controller drivers must reconfigure
+> their register at suspend_noirq()/resume_noirq() which happens after
+> suspend()/suspend_late() and before resume_early()/resume().
+>
+> In the current state, after resuming from a suspend to RAM cycle the
+> PCIe IP is reconfigured before the pinctrl one which produces an
+> interrupt storm. The solution to support PCIe resume operation is to
+> change the "priority" of this pinctrl driver PM callbacks to
+> "_noirq()".
+>
+> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 
--- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+Patch applied with Gregory's ACK!
+
+Yours,
+Linus Walleij
