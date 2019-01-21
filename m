@@ -1,51 +1,94 @@
 From: Vinod Koul <vkoul@kernel.org>
-Subject: [PATCH v3 0/5] net: Add support for Qualcomm ethqos
-Date: Mon, 21 Jan 2019 14:43:13 +0530
-Message-ID: <20190121091318.20079-1-vkoul@kernel.org>
+Subject: [PATCH v3 1/5] dt-bindings: net: Add Qualcomm ethqos binding
+Date: Mon, 21 Jan 2019 14:43:14 +0530
+Message-ID: <20190121091318.20079-2-vkoul@kernel.org>
+References: <20190121091318.20079-1-vkoul@kernel.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190121091318.20079-1-vkoul@kernel.org>
 Sender: netdev-owner@vger.kernel.org
 To: David S Miller <davem@davemloft.net>
-Cc: netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Giuseppe Cavallaro <peppe.cavallaro@st.com>, Alexandre Torgue <alexandre.torgue@st.com>, Jose Abreu <joabreu@synopsys.com>, Andrew Lunn <andrew@lunn.ch>, Florian Fainelli <f.fainelli@gmail.com>, Vivien Didelot <vivien.didelot@savoirfairelinux.com>
+Cc: netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Some Qualcomm SoCs sport a ethqos controller which use DW ip, so add
-the glue driver which uses stmmac driver along with DT bindings for
-this device.
+Add support for Qualcomm ethqos found in some SoCs like QCS404.
 
-This controller supports rgmii mode and doesn't work with existing
-phy drivers as they do not remove the phy delay delay in this mode,
-so fix the two phy drivers tested with this.
-
-Changes in v3:
- - Add description in DT and rename the file and compatible as suggested by
-   Rob
- - Update changelog for QCA8K driver
- - Update AT803x phy disable delay for all RGMxx modes
-
-Changes in v2:
- - Fix the example in dt-binding
- - Remove DT property for disable the delay and disable delay for RGMII mode
-   in AT803x and QCA8K PHY drivers
-
-Vinod Koul (5):
-  dt-bindings: net: Add Qualcomm ethqos binding
-  net: stmmac: Add driver for Qualcomm ethqos
-  MAINTAINER: Add entry for Qualcomm ETHQOS ethernet driver
-  net: phy: at803x: Disable phy delay for RGMII mode
-  net: dsa: qca8k: disable delay for RGMII mode
-
- .../devicetree/bindings/net/qcom,ethqos.txt   |  64 ++
- MAINTAINERS                                   |   8 +
- drivers/net/dsa/qca8k.c                       |  16 +-
- drivers/net/ethernet/stmicro/stmmac/Kconfig   |  10 +
- drivers/net/ethernet/stmicro/stmmac/Makefile  |   1 +
- .../stmicro/stmmac/dwmac-qcom-ethqos.c        | 545 ++++++++++++++++++
- drivers/net/phy/at803x.c                      |  22 +-
- 7 files changed, 644 insertions(+), 22 deletions(-)
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
+---
+ .../devicetree/bindings/net/qcom,ethqos.txt   | 64 +++++++++++++++++++
+ 1 file changed, 64 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/net/qcom,ethqos.txt
- create mode 100644 drivers/net/ethernet/stmicro/stmmac/dwmac-qcom-ethqos.c
 
+diff --git a/Documentation/devicetree/bindings/net/qcom,ethqos.txt b/Documentation/devicetree/bindings/net/qcom,ethqos.txt
+new file mode 100644
+index 000000000000..fcf5035810b5
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/qcom,ethqos.txt
+@@ -0,0 +1,64 @@
++Qualcomm Ethernet ETHQOS device
++
++This documents dwmmac based ethernet device which supports Gigabit
++ethernet for version v2.3.0 onwards.
++
++This device has following properties:
++
++Required properties:
++
++- compatible: Should be qcom,qcs404-ethqos"
++
++- reg: Address and length of the register set for the device
++
++- reg-names: Should contain register names "stmmaceth", "rgmii"
++
++- clocks: Should contain phandle to clocks
++
++- clock-names: Should contain clock names "stmmaceth", "pclk",
++		"ptp_ref", "rgmii"
++
++- interrupts: Should contain phandle to interrupts
++
++- interrupt-names: Should contain interrupt names "macirq", "eth_lpi"
++
++Rest of the properties are defined in stmmac.txt file in same directory
++
++
++Example:
++
++ethernet: ethernet@7a80000 {
++	compatible = "qcom,qcs404-ethqos";
++	reg = <0x07a80000 0x10000>,
++		<0x07a96000 0x100>;
++	reg-names = "stmmaceth", "rgmii";
++	clock-names = "stmmaceth", "pclk", "ptp_ref", "rgmii";
++	clocks = <&gcc GCC_ETH_AXI_CLK>,
++		<&gcc GCC_ETH_SLAVE_AHB_CLK>,
++		<&gcc GCC_ETH_PTP_CLK>,
++		<&gcc GCC_ETH_RGMII_CLK>;
++	interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++			<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++	interrupt-names = "macirq", "eth_lpi";
++	snps,reset-gpio = <&tlmm 60 GPIO_ACTIVE_LOW>;
++	snps,reset-active-low;
++
++	snps,txpbl = <8>;
++	snps,rxpbl = <2>;
++	snps,aal;
++	snps,tso;
++
++	phy-handle = <&phy1>;
++	phy-mode = "rgmii";
++
++	mdio {
++		#address-cells = <0x1>;
++		#size-cells = <0x0>;
++		compatible = "snps,dwmac-mdio";
++		phy1: phy@4 {
++			device_type = "ethernet-phy";
++			reg = <0x4>;
++		};
++	};
++
++};
 -- 
 2.20.1
