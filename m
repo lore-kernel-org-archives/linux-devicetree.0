@@ -1,11 +1,12 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: [PATCH] ARM: dts: imx: Remove 'simple-bus' from anatop compatible
-Date: Mon, 21 Jan 2019 18:29:05 -0200
-Message-ID: <20190121202905.31224-1-festevam@gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Drop unnecessary pinctrl
+Date: Mon, 21 Jan 2019 12:29:08 -0800
+Message-ID: <87y37d3gbv.fsf@anholt.net>
+References: <1548003960-4807-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="===============7233481504113563960=="
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1548003960-4807-1-git-send-email-stefan.wahren@i2se.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -15,109 +16,63 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org
-Cc: devicetree@vger.kernel.org, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, Fabio Estevam <festevam@gmail.com>, linux-arm-kernel@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-dtc gives the following warnings when building with W=1:
+--===============7233481504113563960==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-arch/arm/boot/dts/imx6qdl.dtsi:702.19-715.7: Warning (simple_bus_reg): /soc/aips-bus@2000000/anatop@20c8000/regulator-1p1: missing or empty reg/ranges property
-arch/arm/boot/dts/imx6qdl.dtsi:717.19-730.7: Warning (simple_bus_reg): /soc/aips-bus@2000000/anatop@20c8000/regulator-3p0: missing or empty reg/ranges property
-arch/arm/boot/dts/imx6qdl.dtsi:732.19-745.7: Warning (simple_bus_reg): /soc/aips-bus@2000000/anatop@20c8000/regulator-2p5: missing or empty reg/ranges property
-arch/arm/boot/dts/imx6qdl.dtsi:747.32-762.7: Warning (simple_bus_reg): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddcore: missing or empty reg/ranges property
-arch/arm/boot/dts/imx6qdl.dtsi:764.29-779.7: Warning (simple_bus_reg): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddpu: missing or empty reg/ranges property
-arch/arm/boot/dts/imx6qdl.dtsi:781.31-796.7: Warning (simple_bus_reg): /soc/aips-bus@2000000/anatop@20c8000/regulator-vddsoc: missing or empty reg/ranges property
+--=-=-=
+Content-Type: text/plain
 
-Remove 'simple-bus' from the compatible list of anatop, since it is a
-regulator and thus should not be described as 'simple-bus'.
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-Signed-off-by: Fabio Estevam <festevam@gmail.com>
----
- arch/arm/boot/dts/imx6qdl.dtsi | 2 +-
- arch/arm/boot/dts/imx6sl.dtsi  | 2 +-
- arch/arm/boot/dts/imx6sll.dtsi | 2 +-
- arch/arm/boot/dts/imx6sx.dtsi  | 2 +-
- arch/arm/boot/dts/imx6ul.dtsi  | 2 +-
- arch/arm/boot/dts/imx7s.dtsi   | 2 +-
- 6 files changed, 6 insertions(+), 6 deletions(-)
+> There is no need to specify a pinctrl for the reset GPIO. So we better
+> remove this avoid a potential conflict between pinctrl and pwrseq
+> after the pinmux driver has been changed to strict:
+>
+> pinctrl-bcm2835 20200000.gpio: pin gpio41 already requested by wifi-pwrseq;
+> cannot claim for pinctrl-bcm2835:499
+> pinctrl-bcm2835 20200000.gpio: pin-41 (pinctrl-bcm2835:499) status -22
+> pwrseq_simple: probe of wifi-pwrseq failed with error -22
+>
+> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
 
-diff --git a/arch/arm/boot/dts/imx6qdl.dtsi b/arch/arm/boot/dts/imx6qdl.dtsi
-index fe17a3405edc..5b54f1bfa03d 100644
---- a/arch/arm/boot/dts/imx6qdl.dtsi
-+++ b/arch/arm/boot/dts/imx6qdl.dtsi
-@@ -693,7 +693,7 @@
- 			};
- 
- 			anatop: anatop@20c8000 {
--				compatible = "fsl,imx6q-anatop", "syscon", "simple-bus";
-+				compatible = "fsl,imx6q-anatop", "syscon";
- 				reg = <0x020c8000 0x1000>;
- 				interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
- 					     <0 54 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sl.dtsi b/arch/arm/boot/dts/imx6sl.dtsi
-index 4b4813f176cd..1bbcfcf6b2fc 100644
---- a/arch/arm/boot/dts/imx6sl.dtsi
-+++ b/arch/arm/boot/dts/imx6sl.dtsi
-@@ -518,7 +518,7 @@
- 			anatop: anatop@20c8000 {
- 				compatible = "fsl,imx6sl-anatop",
- 					     "fsl,imx6q-anatop",
--					     "syscon", "simple-bus";
-+					     "syscon";
- 				reg = <0x020c8000 0x1000>;
- 				interrupts = <0 49 IRQ_TYPE_LEVEL_HIGH>,
- 					     <0 54 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sll.dtsi b/arch/arm/boot/dts/imx6sll.dtsi
-index 62847c68330b..b2caf86dd9a9 100644
---- a/arch/arm/boot/dts/imx6sll.dtsi
-+++ b/arch/arm/boot/dts/imx6sll.dtsi
-@@ -506,7 +506,7 @@
- 			anatop: anatop@20c8000 {
- 				compatible = "fsl,imx6sll-anatop",
- 					     "fsl,imx6q-anatop",
--					     "syscon", "simple-bus";
-+					     "syscon";
- 				reg = <0x020c8000 0x4000>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6sx.dtsi b/arch/arm/boot/dts/imx6sx.dtsi
-index 5b16e65f7696..44b2824a0a3f 100644
---- a/arch/arm/boot/dts/imx6sx.dtsi
-+++ b/arch/arm/boot/dts/imx6sx.dtsi
-@@ -594,7 +594,7 @@
- 
- 			anatop: anatop@20c8000 {
- 				compatible = "fsl,imx6sx-anatop", "fsl,imx6q-anatop",
--					     "syscon", "simple-bus";
-+					     "syscon";
- 				reg = <0x020c8000 0x1000>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx6ul.dtsi b/arch/arm/boot/dts/imx6ul.dtsi
-index 3282eed497ea..6916d8ea1abc 100644
---- a/arch/arm/boot/dts/imx6ul.dtsi
-+++ b/arch/arm/boot/dts/imx6ul.dtsi
-@@ -557,7 +557,7 @@
- 
- 			anatop: anatop@20c8000 {
- 				compatible = "fsl,imx6ul-anatop", "fsl,imx6q-anatop",
--					     "syscon", "simple-bus";
-+					     "syscon";
- 				reg = <0x020c8000 0x1000>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
- 					     <GIC_SPI 54 IRQ_TYPE_LEVEL_HIGH>,
-diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
-index 81fe18c0b7da..73fea5b16b6c 100644
---- a/arch/arm/boot/dts/imx7s.dtsi
-+++ b/arch/arm/boot/dts/imx7s.dtsi
-@@ -519,7 +519,7 @@
- 
- 			anatop: anatop@30360000 {
- 				compatible = "fsl,imx7d-anatop", "fsl,imx6q-anatop",
--					"syscon", "simple-bus";
-+					"syscon";
- 				reg = <0x30360000 0x10000>;
- 				interrupts = <GIC_SPI 49 IRQ_TYPE_LEVEL_HIGH>,
- 					<GIC_SPI 51 IRQ_TYPE_LEVEL_HIGH>;
--- 
-2.17.1
+Reviewed-by: Eric Anholt <eric@anholt.net>
+
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlxGK5QACgkQtdYpNtH8
+nuiUbQ//U3KGqKij+SJ32+YotSZa64EUJT4R00K4D27hd0/HMWcS/yECReOGv0RX
+gAjxgAc5AIihAZjjlFRfN4fj3mKe+NhQMNNebDAQCdrD8yFFDhAeV5gpOMGLkcbU
+fPEzSQz6/wSkJcAY20VSzBpuavCrUQI+g9w7TFyzhfqnTx1ftZdIinWxtdLudrMI
+/L1eFH4R2XuUOzQ2enyPbvIBka4ouW2rjYZ5q8nwXQWdONSWkxt1UVAK1FvsZtyp
+V/HRq9YvsAttDrJIjuo2kx4U6tWRWAOydfpMjQ67BRbVU/Y8LrXXapZiI3aqvRbG
+88xfiY1zWqncUs9qtumtuUTSlzxPfWx8EInW+ZD9Ys/6IZ86K5Kngb9d5U1UQUxI
+hvea/3wyE+tJI4FawWhZfer9+dzXHFIhpk/PjZGnWCEjcfIAwszSZ/Ctv+vbz2fW
+X6kFgw+jm2oDezO92qy43YnefghpM13rC8CGjI1rhPH/IzOow5t+IBc+Nab5xHqj
+5ESQ1v7pywdPyE1Gn8TRpGnAuohtErt8QR9zCvCNA7Ffiq1XplFfdGyKc3/xgxyP
+zeam0dMkHnNPwclazRe64c+BIK81JiUx7JlFSkoZ8Gob3Y8cjlwrWjKJyMll5M8l
+HjkrPzldf1D/cH7mT9GuMaWv8NmAq4c7DxVwzKptgN1AAG2qGnQ=
+=ZREv
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============7233481504113563960==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7233481504113563960==--
