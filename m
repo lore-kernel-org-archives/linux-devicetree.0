@@ -1,53 +1,53 @@
-Return-Path: <SRS0=jtBt=P4=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from avasout05.plus.net ([84.93.230.250]:44645 "EHLO
-        avasout05.plus.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730552AbfATMlQ (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Sun, 20 Jan 2019 07:41:16 -0500
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: [PATCH v3 1/2] Bluetooth: dt-bindings: Realtek serial bluetooth
-Date: Sun, 20 Jan 2019 12:40:45 +0000
-Message-Id: <20190120124046.6715-1-beagleboard@davidjohnsummers.uk>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Sender: devicetree-owner@vger.kernel.org
-To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: David Summers <beagleboard@davidjohnsummers.uk>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org
+Return-Path: <SRS0=ysr4=P5=linuxtv.org=mchehab@kernel.org>
+From: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Date: Mon, 21 Jan 2019 17:38:31 +0000
+Subject: [git:media_tree/master] media: dt-bindings: media: video-i2c: add melexis mlx90640 documentation
+Reply-to: linux-media@vger.kernel.org
+Message-Id: <E1gleat-0000E8-UZ@www.linuxtv.org>
+To: linuxtv-commits@linuxtv.org
+Cc: Hans Verkuil <hverkuil-cisco@xs4all.nl>, devicetree@vger.kernel.org, Matt Ranostay <matt.ranostay@konsulko.com>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Since v2, the compatible binding names have been changed to end in
--bt, as requested by robh.
+This is an automatic generated email to let you know that the following patch were queued:
 
-Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+Subject: media: dt-bindings: media: video-i2c: add melexis mlx90640 documentation
+Author:  Matt Ranostay <matt.ranostay@konsulko.com>
+Date:    Tue Dec 11 13:17:00 2018 -0200
+
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Matt Ranostay <matt.ranostay@konsulko.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+
+ .../bindings/media/i2c/melexis,mlx90640.txt          | 20 ++++++++++++++++++++
+ 1 file changed, 20 insertions(+)
+
 ---
- drivers/bluetooth/hci_h5.c | 16 ++++++++++++++++
- 1 file changed, 16 insertions(+)
 
-diff --git a/drivers/bluetooth/hci_h5.c b/drivers/bluetooth/hci_h5.c
-index 8eede1197cd2..056ab2decccc 100644
---- a/drivers/bluetooth/hci_h5.c
-+++ b/drivers/bluetooth/hci_h5.c
-@@ -925,6 +925,22 @@ static struct h5_vnd rtl_vnd = {
- };
- #endif
- 
-+#ifdef CONFIG_OF
-+static const struct of_device_id h5_of_match[] = {
-+#ifdef CONFIG_BT_HCIUART_RTL
-+       { .compatible = "realtek,rtl8723as-bt"},
-+       { .compatible = "realtek,rtl8723bs-bt"},
-+       { .compatible = "realtek,rtl8723ds-bt"},
-+       { .compatible = "realtek,rtl8761atv"},
-+       { .compatible = "realtek,rtl8821as-bt"},
-+       { .compatible = "realtek,rtl8821cs-bt"},
-+       { .compatible = "realtek,rtl8822bs-bt"},
-+#endif
-+       { }
-+};
-+MODULE_DEVICE_TABLE(of, h5_of_match);
-+#endif
+diff --git a/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
+new file mode 100644
+index 000000000000..060d2b7a5893
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/i2c/melexis,mlx90640.txt
+@@ -0,0 +1,20 @@
++* Melexis MLX90640 FIR Sensor
 +
- #ifdef CONFIG_ACPI
- static const struct acpi_device_id h5_acpi_match[] = {
- #ifdef CONFIG_BT_HCIUART_RTL
--- 
-beagleboard@davidjohnsummers.uk
++Melexis MLX90640 FIR sensor support which allows recording of thermal data
++with 32x24 resolution excluding 2 lines of coefficient data that is used by
++userspace to render processed frames.
++
++Required Properties:
++ - compatible : Must be "melexis,mlx90640"
++ - reg : i2c address of the device
++
++Example:
++
++	i2c0@1c22000 {
++		...
++		mlx90640@33 {
++			compatible = "melexis,mlx90640";
++			reg = <0x33>;
++		};
++		...
++	};
