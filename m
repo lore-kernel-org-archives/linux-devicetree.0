@@ -1,16 +1,17 @@
 From: Vignesh R <vigneshr@ti.com>
 Subject: Re: [PATCH v3 2/2] mtd: spi-nor: cadence-quadspi: Add support for
  Octal SPI controller
-Date: Mon, 21 Jan 2019 11:28:30 +0530
-Message-ID: <1fc56694-fdac-ea99-79d3-cd0fad196c3c@ti.com>
+Date: Mon, 21 Jan 2019 11:30:57 +0530
+Message-ID: <de9f281c-6bbb-2686-a809-f53302d1a3e0@ti.com>
 References: <20190116103027.22657-1-vigneshr@ti.com>
  <20190116103027.22657-3-vigneshr@ti.com>
  <6e6f7c3a-4772-1a17-0f5f-547ea9809283@microchip.com>
+ <353a011e-920a-ddb3-4eef-e3256555ac93@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <6e6f7c3a-4772-1a17-0f5f-547ea9809283@microchip.com>
+In-Reply-To: <353a011e-920a-ddb3-4eef-e3256555ac93@microchip.com>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
  <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
@@ -25,159 +26,38 @@ To: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "bbrezillon@ker
 Cc: "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi, Tudor,
 
-On 20/01/19 8:26 PM, Tudor.Ambarus@microchip.com wrote:
-> Hi, Vignesh,
+
+On 20/01/19 8:58 PM, Tudor.Ambarus@microchip.com wrote:
+> Vignesh,
 > 
-> On 01/16/2019 12:30 PM, Vignesh R wrote:
->> Cadence OSPI controller IP supports Octal IO (x8 IO lines),
->> It also has an integrated PHY. IP register layout is very
->> similar to existing QSPI IP except for additional bits to support Octal
->> and Octal DDR mode. Therefore, extend current driver to support Octal
->> mode.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->> v3: No changes
->>
->> v2:
->> Declare Octal mode capability based on compatible.
->>
->>  drivers/mtd/spi-nor/cadence-quadspi.c | 54 +++++++++++++++++++++------
->>  1 file changed, 42 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
->> index 04cedd3a2bf6..31ed50f78972 100644
->> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->> @@ -93,6 +93,11 @@ struct cqspi_st {
->>  	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
->>  };
->>  
->> +struct cqspi_driver_platdata {
->> +	u32 hwcaps_mask;
->> +	u8 quirks;
->> +};
->> +
->>  /* Operation timeout value */
->>  #define CQSPI_TIMEOUT_MS			500
->>  #define CQSPI_READ_TIMEOUT_MS			10
->> @@ -101,6 +106,7 @@ struct cqspi_st {
->>  #define CQSPI_INST_TYPE_SINGLE			0
->>  #define CQSPI_INST_TYPE_DUAL			1
->>  #define CQSPI_INST_TYPE_QUAD			2
->> +#define CQSPI_INST_TYPE_OCTAL			3
->>  
->>  #define CQSPI_DUMMY_CLKS_PER_BYTE		8
->>  #define CQSPI_DUMMY_BYTES_MAX			4
->> @@ -911,6 +917,9 @@ static int cqspi_set_protocol(struct spi_nor *nor, const int read)
->>  		case SNOR_PROTO_1_1_4:
->>  			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
->>  			break;
->> +		case SNOR_PROTO_1_1_8:
->> +			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
->> +			break;
->>  		default:
->>  			return -EINVAL;
->>  		}
->> @@ -1213,21 +1222,19 @@ static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
->>  
->>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
->>  {
->> -	const struct spi_nor_hwcaps hwcaps = {
->> -		.mask = SNOR_HWCAPS_READ |
->> -			SNOR_HWCAPS_READ_FAST |
->> -			SNOR_HWCAPS_READ_1_1_2 |
->> -			SNOR_HWCAPS_READ_1_1_4 |
->> -			SNOR_HWCAPS_PP,
->> -	};
->>  	struct platform_device *pdev = cqspi->pdev;
->>  	struct device *dev = &pdev->dev;
->> +	struct cqspi_driver_platdata *ddata;
+> On 01/20/2019 04:56 PM, Tudor.Ambarus@microchip.com wrote:
+>> Looks good.
 > 
-> const struct cqspi_driver_platdata *ddata;
+> one more thing: in cqspi_read_setup() I see that the dummy cycles are adjusted
+> if (f_pdata->inst_width != CQSPI_INST_TYPE_QUAD).
 > 
->> +	struct spi_nor_hwcaps hwcaps;
->>  	struct cqspi_flash_pdata *f_pdata;
->>  	struct spi_nor *nor;
->>  	struct mtd_info *mtd;
->>  	unsigned int cs;
->>  	int i, ret;
->>  
->> +	ddata = (struct cqspi_driver_platdata *)of_device_get_match_data(dev);
-> 
-> You forgot to check for NULL. Also, I would expect an implicit type cast, you
-> can drop the explicit cast.
-> 
->> +	hwcaps.mask = ddata->hwcaps_mask;
->> +
->>  	/* Get flash device data */
->>  	for_each_available_child_of_node(dev->of_node, np) {
->>  		ret = of_property_read_u32(np, "reg", &cs);
->> @@ -1310,7 +1317,7 @@ static int cqspi_probe(struct platform_device *pdev)
->>  	struct cqspi_st *cqspi;
->>  	struct resource *res;
->>  	struct resource *res_ahb;
->> -	unsigned long data;
->> +	struct cqspi_driver_platdata *ddata;
-> 
-> const struct cqspi_driver_platdata *ddata;
-> 
->>  	int ret;
->>  	int irq;
->>  
->> @@ -1377,8 +1384,8 @@ static int cqspi_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->> -	data  = (unsigned long)of_device_get_match_data(dev);
->> -	if (data & CQSPI_NEEDS_WR_DELAY)
->> +	ddata  = (struct cqspi_driver_platdata *)of_device_get_match_data(dev);
-> 
-> I would expect an implicit type cast, you can drop the explicit cast.
-> 
->> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
->>  		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
->>  						   cqspi->master_ref_clk_hz);
->>  
->> @@ -1460,14 +1467,37 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
->>  #define CQSPI_DEV_PM_OPS	NULL
->>  #endif
->>  
->> +#define cqspi_base_hwcaps_mask					\
->> +	(SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST |		\
->> +	SNOR_HWCAPS_READ_1_1_2 | SNOR_HWCAPS_READ_1_1_4 |	\
->> +	SNOR_HWCAPS_PP)
->> +
->> +static const struct cqspi_driver_platdata cdns_qspi = {
->> +	.hwcaps_mask = cqspi_base_hwcaps_mask,
->> +};
->> +
->> +static const struct cqspi_driver_platdata k2g_qspi = {
->> +	.hwcaps_mask = cqspi_base_hwcaps_mask,
->> +	.quirks = CQSPI_NEEDS_WR_DELAY,
->> +};
->> +
->> +static const struct cqspi_driver_platdata am654_ospi = {
->> +	.hwcaps_mask = cqspi_base_hwcaps_mask | SNOR_HWCAPS_READ_1_1_8,
->> +	.quirks = CQSPI_NEEDS_WR_DELAY,
->> +};
->> +
->>  static const struct of_device_id cqspi_dt_ids[] = {
->>  	{
->>  		.compatible = "cdns,qspi-nor",
->> -		.data = (void *)0,
->> +		.data = (void *)&cdns_qspi,
-> 
-> You can drop the (void *) cast.
-> 
-> Looks good. Did you test the octal mode with mt35xu512aba? If yes, it would be
-> nice to specify this in the commit message.
+> Should you adjust the dummy cycles for octo too? 
+
+Driver does not claim support for SNOR_HWCAPS_PP_4_4_4 mode or
+SNOR_HWCAPS_PP_8_8_8 mode. Therefore inst_width is always be
+CQSPI_INST_TYPE_SINGLE (cqspi_set_protocol() always sets inst_width and
+addr_width to CQSPI_INST_TYPE_SINGLE).
+Code to support 4_4_4 or 8_8_8 mode is incomplete in the driver. Also,
+using mode bits to satisfy dummy clk cycles does not seem right. My
+guess is driver is broken, if inst_width is indeed CQSPI_INST_TYPE_QUAD
+as we end up sending additional 8 dummy clock cycles over what is asked
+in nor->read_dummy.
+I will plan to fix these as part of moving driver over to spi-mem. But
+above code should not impact 1-1-8 mode support.
+
+> I tried to find a datasheet for the controller, without success though ...
 > 
 
-Yes, octal mode was tested with mt35xu512aba flash. I will address all
-the comments in v4. Thanks for the review!
+You can find Octal SPI controller datasheet in AM65x SoC TRM here:
+http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
+Page 9449: 12.3.2 Octal Serial Peripheral Interface (OSPI)
+
 
 
 -- 
