@@ -1,56 +1,36 @@
-From: Pi-Hsun Shih <pihsun@chromium.org>
-Subject: [RFC v3 1/5] dt-bindings: Add a binding for Mediatek SCP
-Date: Mon, 21 Jan 2019 15:18:29 +0800
-Message-ID: <20190121071833.43443-2-pihsun@chromium.org>
-References: <20190121071833.43443-1-pihsun@chromium.org>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH 0/3] PHY: Add support for SERDES in TI's AM654 platform
+Date: Mon, 21 Jan 2019 12:18:10 +0530
+Message-ID: <20190121064813.18444-1-kishon@ti.com>
 Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190121071833.43443-1-pihsun@chromium.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Pi-Hsun Shih <pihsun@chromium.org>, Nicolas Boichat <drinkcat@chromium.org>, Erin Lo <erin.lo@mediatek.com>, Ohad Ben-Cohen <ohad@wizery.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, "open list:REMOTE PROCESSOR
-        REMOTEPROC SUBSYSTEM" <linux-remoteproc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-arm-kernel@lists.infradead.org>, "moderated list:ARM/Mediatek SoC
-        support" <linux-mediatek@lists.infradead.org>, open list <linux-kernel@vger.kernel.org>
+To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, Roger Quadros <rogerq@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Erin Lo <erin.lo@mediatek.com>
+Patch series adds support for SERDES module in am654. This also
+modifies phy_reset API to invoke pm_runtime_get/pm_runtime_put since
+the reset callback can access registers.
 
-Add a DT binding documentation of SCP for the
-MT8183 SoC from Mediatek.
+Kishon Vijay Abraham I (3):
+  phy: core: Invoke pm_runtime_get_*/pm_runtime_put_* before invoking
+    reset callback
+  dt-bindings: phy: ti: Add dt binding documentation for SERDES in
+    AM654x SoC
+  phy: ti: Add a new SERDES driver for TI's AM654x SoC
 
-Signed-off-by: Erin Lo <erin.lo@mediatek.com>
----
-Changes from v2:
- - No change. I realized that for this patch series, there's no need to
-   add anything under the mt8183-scp node (neither the mt8183-rpmsg or
-   the cros-ec-rpmsg) for them to work, since mt8183-rpmsg is added
-   directly as a rproc_subdev by code, and cros-ec-rpmsg is dynamically
-   created by SCP name service.
+ .../devicetree/bindings/phy/ti-phy.txt        |  77 +++
+ drivers/phy/phy-core.c                        |   6 +
+ drivers/phy/ti/Kconfig                        |  11 +
+ drivers/phy/ti/Makefile                       |   1 +
+ drivers/phy/ti/phy-am654-serdes.c             | 528 ++++++++++++++++++
+ include/dt-bindings/phy/phy-am654-serdes.h    |  13 +
+ 6 files changed, 636 insertions(+)
+ create mode 100644 drivers/phy/ti/phy-am654-serdes.c
+ create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
 
-Changes from v1:
- - No change.
----
- .../devicetree/bindings/remoteproc/mtk,scp.txt         | 10 ++++++++++
- 1 file changed, 10 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-
-diff --git a/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-new file mode 100644
-index 00000000000000..b07e5c4ca9af1d
---- /dev/null
-+++ b/Documentation/devicetree/bindings/remoteproc/mtk,scp.txt
-@@ -0,0 +1,10 @@
-+Mediatek SCP Bindings
-+----------------------------------------
-+
-+This binding provides support for ARM Cortex M4 Co-processor found on some
-+Mediatek SoCs.
-+
-+Required properties:
-+- compatible		Should be "mediatek,mt8183-scp"
-+- clocks		Clock for co-processor (See: ../clock/clock-bindings.txt)
-+
 -- 
-2.20.1.321.g9e740568ce-goog
+2.17.1
