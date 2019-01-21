@@ -1,69 +1,103 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v3 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Mon, 21 Jan 2019 11:30:57 +0530
-Message-ID: <de9f281c-6bbb-2686-a809-f53302d1a3e0@ti.com>
-References: <20190116103027.22657-1-vigneshr@ti.com>
- <20190116103027.22657-3-vigneshr@ti.com>
- <6e6f7c3a-4772-1a17-0f5f-547ea9809283@microchip.com>
- <353a011e-920a-ddb3-4eef-e3256555ac93@microchip.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: Re: [PATCH v2 2/3] dt-bindings: arm: fsl: Add devicetree binding for
+ Oxalis
+Date: Mon, 21 Jan 2019 11:39:50 +0530
+Message-ID: <20190121060950.GA8713@Mani-XPS-13-9360>
+References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
+ <20190114102053.16013-3-manivannan.sadhasivam@linaro.org>
+ <CAL_JsqJpRPrCpRTpqh1v6JZwpEtZnaeuLTHR+0EiMSoxbk9zeQ@mail.gmail.com>
+ <20190116022100.GC15808@dragon>
+ <CAL_Jsq+myeZ1n4X=KhHZjtPDHnGH=L65xxYbzMrt8Rq6Bur4Bg@mail.gmail.com>
+ <20190116101441.GH15808@dragon>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
-In-Reply-To: <353a011e-920a-ddb3-4eef-e3256555ac93@microchip.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
-List-Post: <mailto:linux-mtd@lists.infradead.org>
-List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
- <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
-Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
-To: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>
-Cc: "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190116101441.GH15808@dragon>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Yang-Leo Li <leoyang.li@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-
-
-On 20/01/19 8:58 PM, Tudor.Ambarus@microchip.com wrote:
-> Vignesh,
+On Wed, Jan 16, 2019 at 06:14:43PM +0800, Shawn Guo wrote:
+> On Tue, Jan 15, 2019 at 10:07:12PM -0600, Rob Herring wrote:
+> > On Tue, Jan 15, 2019 at 8:21 PM Shawn Guo <shawnguo@kernel.org> wrote:
+> > >
+> > > On Mon, Jan 14, 2019 at 12:02:47PM -0600, Rob Herring wrote:
+> > > > On Mon, Jan 14, 2019 at 4:21 AM Manivannan Sadhasivam
+> > > > <manivannan.sadhasivam@linaro.org> wrote:
+> > > > >
+> > > > > Add devicetree binding for Oxalis board in JSON format. While adding
+> > > > > that, let's fix the description for LS1012A also.
+> > > > >
+> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> > > > > ---
+> > > > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 ++-
+> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
+> > > > >
+> > > > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > > index d34fe0749199..0f30142fe316 100644
+> > > > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
+> > > > > @@ -173,12 +173,13 @@ properties:
+> > > > >                - fsl,vf610
+> > > > >                - fsl,vf610m4
+> > > > >
+> > > > > -      - description: LS1021A based Boards
+> > > > > +      - description: LS1012A based Boards
+> > > >
+> > > > Well, yes that was wrong...
+> > > >
+> > > > >          items:
+> > > > >            - enum:
+> > > > >                - fsl,ls1012a-rdb
+> > > > >                - fsl,ls1012a-frdm
+> > > > >                - fsl,ls1012a-qds
+> > > > > +              - ebs-systart,oxalis
+> > > >
+> > > > Sort alphabetically.
+> > > >
+> > > > >            - const: fsl,ls1021a
+> > > >
+> > > > And this is wrong too.
+> > > >
+> > > > I you just change it, then we will be missing an entry for LS1021A.
+> > > > What's the status of that SoC because there is no board dts file? We
+> > > > should not have .dtsi files in the kernel which don't get built.
+> > >
+> > > Hmm, I do not see any LS1021A SoC .dtsi in the tree.  I suspect it's
+> > > just a typo of LS1012A.
+> > >
+> > > @Leo, do we have a LS1021A SoC?
+> > 
+> > arch/arm/boot/dts/ls1021a.dtsi
 > 
-> On 01/20/2019 04:56 PM, Tudor.Ambarus@microchip.com wrote:
->> Looks good.
+> Oops, I only searched arm64 folder.
 > 
-> one more thing: in cqspi_read_setup() I see that the dummy cycles are adjusted
-> if (f_pdata->inst_width != CQSPI_INST_TYPE_QUAD).
+> So it seems the compatible of the boards below are missing there.
 > 
-> Should you adjust the dummy cycles for octo too? 
+>   ls1021a-moxa-uc-8410a.dts
+>   ls1021a-qds.dts
+>   ls1021a-twr.dts
 
-Driver does not claim support for SNOR_HWCAPS_PP_4_4_4 mode or
-SNOR_HWCAPS_PP_8_8_8 mode. Therefore inst_width is always be
-CQSPI_INST_TYPE_SINGLE (cqspi_set_protocol() always sets inst_width and
-addr_width to CQSPI_INST_TYPE_SINGLE).
-Code to support 4_4_4 or 8_8_8 mode is incomplete in the driver. Also,
-using mode bits to satisfy dummy clk cycles does not seem right. My
-guess is driver is broken, if inst_width is indeed CQSPI_INST_TYPE_QUAD
-as we end up sending additional 8 dummy clock cycles over what is asked
-in nor->read_dummy.
-I will plan to fix these as part of moving driver over to spi-mem. But
-above code should not impact 1-1-8 mode support.
+So how should we proceed here? The above mentioned boards are lacking
+compatible in dts files and I guess that's the reason they didn't get
+mentioned in "fsl" binding file.
 
-> I tried to find a datasheet for the controller, without success though ...
+Should I just go ahead and add the compatibles for these boards and list
+them in binding file?
+
+Thanks,
+Mani
+
 > 
-
-You can find Octal SPI controller datasheet in AM65x SoC TRM here:
-http://www.ti.com/lit/ug/spruid7b/spruid7b.pdf
-Page 9449: 12.3.2 Octal Serial Peripheral Interface (OSPI)
-
-
-
--- 
-Regards
-Vignesh
-
-______________________________________________________
-Linux MTD discussion mailing list
-http://lists.infradead.org/mailman/listinfo/linux-mtd/
+> Shawn
