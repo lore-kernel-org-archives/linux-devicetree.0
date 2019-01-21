@@ -1,70 +1,107 @@
 From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v2 04/21] memblock: drop
- memblock_alloc_base_nid()
-Date: Mon, 21 Jan 2019 10:03:51 +0200
-Message-ID: <1548057848-15136-5-git-send-email-rppt@linux.ibm.com>
+Subject: [PATCH v2 13/21] arch: don't memset(0) memory returned by memblock_alloc()
+Date: Mon, 21 Jan 2019 10:04:00 +0200
+Message-ID: <1548057848-15136-14-git-send-email-rppt@linux.ibm.com>
 References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <xen-devel-bounces@lists.xenproject.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
-List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
-List-Post: <mailto:xen-devel@lists.xenproject.org>
-List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
-List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
- <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
-Errors-To: xen-devel-bounces@lists.xenproject.org
-Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: linux-mm@kvack.org
-Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, Petr Mladek <pmladek@suse.com>, linux-xtensa@linux-xten
+Cc: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+d>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIG1lbWJsb2NrX2FsbG9jX2Jhc2VfbmlkKCkgaXMgYSBvbmVsaW5lciB3cmFwcGVyIGZvcgpt
-ZW1ibG9ja19hbGxvY19yYW5nZV9uaWQoKSB3aXRob3V0IGFueSBzaWRlIGVmZmVjdC4KUmVwbGFj
-ZSBpdCdzIHVzYWdlIGJ5IHRoZSBkaXJlY3QgY2FsbHMgdG8gbWVtYmxvY2tfYWxsb2NfcmFuZ2Vf
-bmlkKCkuCgpTaWduZWQtb2ZmLWJ5OiBNaWtlIFJhcG9wb3J0IDxycHB0QGxpbnV4LmlibS5jb20+
-Ci0tLQogaW5jbHVkZS9saW51eC9tZW1ibG9jay5oIHwgIDMgLS0tCiBtbS9tZW1ibG9jay5jICAg
-ICAgICAgICAgfCAxNSArKysrLS0tLS0tLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRp
-b25zKCspLCAxNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21lbWJs
-b2NrLmggYi9pbmNsdWRlL2xpbnV4L21lbWJsb2NrLmgKaW5kZXggNjBlMTAwZi4uZjdlZjMxMyAx
-MDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9tZW1ibG9jay5oCisrKyBiL2luY2x1ZGUvbGludXgv
-bWVtYmxvY2suaApAQCAtNDkwLDkgKzQ5MCw2IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBtZW1ibG9j
-a19ib3R0b21fdXAodm9pZCkKIHBoeXNfYWRkcl90IF9faW5pdCBtZW1ibG9ja19hbGxvY19yYW5n
-ZShwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwKIAkJCQkJcGh5c19hZGRyX3Qg
-c3RhcnQsIHBoeXNfYWRkcl90IGVuZCwKIAkJCQkJZW51bSBtZW1ibG9ja19mbGFncyBmbGFncyk7
-Ci1waHlzX2FkZHJfdCBtZW1ibG9ja19hbGxvY19iYXNlX25pZChwaHlzX2FkZHJfdCBzaXplLAot
-CQkJCQlwaHlzX2FkZHJfdCBhbGlnbiwgcGh5c19hZGRyX3QgbWF4X2FkZHIsCi0JCQkJCWludCBu
-aWQsIGVudW0gbWVtYmxvY2tfZmxhZ3MgZmxhZ3MpOwogcGh5c19hZGRyX3QgbWVtYmxvY2tfYWxs
-b2NfYmFzZShwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwKIAkJCQlwaHlzX2Fk
-ZHJfdCBtYXhfYWRkcik7CiBwaHlzX2FkZHJfdCBfX21lbWJsb2NrX2FsbG9jX2Jhc2UocGh5c19h
-ZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxpZ24sCmRpZmYgLS1naXQgYS9tbS9tZW1ibG9jay5j
-IGIvbW0vbWVtYmxvY2suYwppbmRleCBhMzJkYjMwLi5jODAwMjllIDEwMDY0NAotLS0gYS9tbS9t
-ZW1ibG9jay5jCisrKyBiL21tL21lbWJsb2NrLmMKQEAgLTEzNDYsMjEgKzEzNDYsMTQgQEAgcGh5
-c19hZGRyX3QgX19pbml0IG1lbWJsb2NrX2FsbG9jX3JhbmdlKHBoeXNfYWRkcl90IHNpemUsIHBo
-eXNfYWRkcl90IGFsaWduLAogCQkJCQlmbGFncyk7CiB9CiAKLXBoeXNfYWRkcl90IF9faW5pdCBt
-ZW1ibG9ja19hbGxvY19iYXNlX25pZChwaHlzX2FkZHJfdCBzaXplLAotCQkJCQlwaHlzX2FkZHJf
-dCBhbGlnbiwgcGh5c19hZGRyX3QgbWF4X2FkZHIsCi0JCQkJCWludCBuaWQsIGVudW0gbWVtYmxv
-Y2tfZmxhZ3MgZmxhZ3MpCi17Ci0JcmV0dXJuIG1lbWJsb2NrX2FsbG9jX3JhbmdlX25pZChzaXpl
-LCBhbGlnbiwgMCwgbWF4X2FkZHIsIG5pZCwgZmxhZ3MpOwotfQotCiBwaHlzX2FkZHJfdCBfX2lu
-aXQgbWVtYmxvY2tfcGh5c19hbGxvY19uaWQocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3Qg
-YWxpZ24sIGludCBuaWQpCiB7CiAJZW51bSBtZW1ibG9ja19mbGFncyBmbGFncyA9IGNob29zZV9t
-ZW1ibG9ja19mbGFncygpOwogCXBoeXNfYWRkcl90IHJldDsKIAogYWdhaW46Ci0JcmV0ID0gbWVt
-YmxvY2tfYWxsb2NfYmFzZV9uaWQoc2l6ZSwgYWxpZ24sIE1FTUJMT0NLX0FMTE9DX0FDQ0VTU0lC
-TEUsCi0JCQkJICAgICAgbmlkLCBmbGFncyk7CisJcmV0ID0gbWVtYmxvY2tfYWxsb2NfcmFuZ2Vf
-bmlkKHNpemUsIGFsaWduLCAwLAorCQkJCSAgICAgICBNRU1CTE9DS19BTExPQ19BQ0NFU1NJQkxF
-LCBuaWQsIGZsYWdzKTsKIAogCWlmICghcmV0ICYmIChmbGFncyAmIE1FTUJMT0NLX01JUlJPUikp
-IHsKIAkJZmxhZ3MgJj0gfk1FTUJMT0NLX01JUlJPUjsKQEAgLTEzNzEsOCArMTM2NCw4IEBAIHBo
-eXNfYWRkcl90IF9faW5pdCBtZW1ibG9ja19waHlzX2FsbG9jX25pZChwaHlzX2FkZHJfdCBzaXpl
-LCBwaHlzX2FkZHJfdCBhbGlnbiwKIAogcGh5c19hZGRyX3QgX19pbml0IF9fbWVtYmxvY2tfYWxs
-b2NfYmFzZShwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwgcGh5c19hZGRyX3Qg
-bWF4X2FkZHIpCiB7Ci0JcmV0dXJuIG1lbWJsb2NrX2FsbG9jX2Jhc2VfbmlkKHNpemUsIGFsaWdu
-LCBtYXhfYWRkciwgTlVNQV9OT19OT0RFLAotCQkJCSAgICAgICBNRU1CTE9DS19OT05FKTsKKwly
-ZXR1cm4gbWVtYmxvY2tfYWxsb2NfcmFuZ2VfbmlkKHNpemUsIGFsaWduLCAwLCBtYXhfYWRkciwg
-TlVNQV9OT19OT0RFLAorCQkJCQlNRU1CTE9DS19OT05FKTsKIH0KIAogcGh5c19hZGRyX3QgX19p
-bml0IG1lbWJsb2NrX2FsbG9jX2Jhc2UocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxp
-Z24sIHBoeXNfYWRkcl90IG1heF9hZGRyKQotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhlbi1k
-ZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpodHRwczovL2xpc3RzLnhlbnByb2plY3Qub3JnL21h
-aWxtYW4vbGlzdGluZm8veGVuLWRldmVs
+memblock_alloc() already clears the allocated memory, no point in doing it
+twice.
+
+Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+Acked-by: Geert Uytterhoeven <geert@linux-m68k.org> # m68k
+---
+ arch/c6x/mm/init.c          | 1 -
+ arch/h8300/mm/init.c        | 1 -
+ arch/ia64/kernel/mca.c      | 2 --
+ arch/m68k/mm/mcfmmu.c       | 1 -
+ arch/microblaze/mm/init.c   | 6 ++----
+ arch/sparc/kernel/prom_32.c | 2 --
+ 6 files changed, 2 insertions(+), 11 deletions(-)
+
+diff --git a/arch/c6x/mm/init.c b/arch/c6x/mm/init.c
+index af5ada0..e83c046 100644
+--- a/arch/c6x/mm/init.c
++++ b/arch/c6x/mm/init.c
+@@ -40,7 +40,6 @@ void __init paging_init(void)
+ 
+ 	empty_zero_page      = (unsigned long) memblock_alloc(PAGE_SIZE,
+ 							      PAGE_SIZE);
+-	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+ 
+ 	/*
+ 	 * Set up user data space
+diff --git a/arch/h8300/mm/init.c b/arch/h8300/mm/init.c
+index 6519252..a157890 100644
+--- a/arch/h8300/mm/init.c
++++ b/arch/h8300/mm/init.c
+@@ -68,7 +68,6 @@ void __init paging_init(void)
+ 	 * to a couple of allocated pages.
+ 	 */
+ 	empty_zero_page = (unsigned long)memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+-	memset((void *)empty_zero_page, 0, PAGE_SIZE);
+ 
+ 	/*
+ 	 * Set up SFC/DFC registers (user data space).
+diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
+index 74d148b..370bc34 100644
+--- a/arch/ia64/kernel/mca.c
++++ b/arch/ia64/kernel/mca.c
+@@ -400,8 +400,6 @@ ia64_log_init(int sal_info_type)
+ 
+ 	// set up OS data structures to hold error info
+ 	IA64_LOG_ALLOCATE(sal_info_type, max_size);
+-	memset(IA64_LOG_CURR_BUFFER(sal_info_type), 0, max_size);
+-	memset(IA64_LOG_NEXT_BUFFER(sal_info_type), 0, max_size);
+ }
+ 
+ /*
+diff --git a/arch/m68k/mm/mcfmmu.c b/arch/m68k/mm/mcfmmu.c
+index 0de4999..492f953 100644
+--- a/arch/m68k/mm/mcfmmu.c
++++ b/arch/m68k/mm/mcfmmu.c
+@@ -44,7 +44,6 @@ void __init paging_init(void)
+ 	int i;
+ 
+ 	empty_zero_page = (void *) memblock_alloc(PAGE_SIZE, PAGE_SIZE);
+-	memset((void *) empty_zero_page, 0, PAGE_SIZE);
+ 
+ 	pg_dir = swapper_pg_dir;
+ 	memset(swapper_pg_dir, 0, sizeof(swapper_pg_dir));
+diff --git a/arch/microblaze/mm/init.c b/arch/microblaze/mm/init.c
+index 44f4b89..bd1cd4b 100644
+--- a/arch/microblaze/mm/init.c
++++ b/arch/microblaze/mm/init.c
+@@ -376,10 +376,8 @@ void * __ref zalloc_maybe_bootmem(size_t size, gfp_t mask)
+ 
+ 	if (mem_init_done)
+ 		p = kzalloc(size, mask);
+-	else {
++	else
+ 		p = memblock_alloc(size, SMP_CACHE_BYTES);
+-		if (p)
+-			memset(p, 0, size);
+-	}
++
+ 	return p;
+ }
+diff --git a/arch/sparc/kernel/prom_32.c b/arch/sparc/kernel/prom_32.c
+index 38940af..e7126ca 100644
+--- a/arch/sparc/kernel/prom_32.c
++++ b/arch/sparc/kernel/prom_32.c
+@@ -33,8 +33,6 @@ void * __init prom_early_alloc(unsigned long size)
+ 	void *ret;
+ 
+ 	ret = memblock_alloc(size, SMP_CACHE_BYTES);
+-	if (ret != NULL)
+-		memset(ret, 0, size);
+ 
+ 	prom_early_allocated += size;
+ 
+-- 
+2.7.4
