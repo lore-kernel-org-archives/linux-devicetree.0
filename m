@@ -1,72 +1,51 @@
-From: sebastien bourdelin <sebastien.bourdelin@gmail.com>
-Subject: Re: [PATCH v2 2/2] dt-bindings: iio: chemical: Add bindings for
- bme680
-Date: Mon, 21 Jan 2019 16:43:26 -0500
-Message-ID: <31759389-7498-6478-2408-a6de2fde9fc1@gmail.com>
-References: <20190111205359.14158-1-sebastien.bourdelin@gmail.com>
- <20190111205359.14158-2-sebastien.bourdelin@gmail.com>
- <20190112182837.4cc42743@archlinux>
- <4768d945-61aa-a8ab-3e41-68b4f861cc69@gmail.com>
- <20190119165709.5045a18b@archlinux>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
+Date: Mon, 21 Jan 2019 15:51:36 -0600
+Message-ID: <CAL_JsqKVgWnLXGWxydj5HKiKeZ5Vf7HAgyr8+PkvrviUAwNW8w@mail.gmail.com>
+References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
+ <1547744074-28308-3-git-send-email-lollivier@baylibre.com>
+ <20190121171019.GA2903@bogus> <86imyhapl9.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190119165709.5045a18b@archlinux>
-Content-Language: en-US
+In-Reply-To: <86imyhapl9.fsf@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-iio@vger.kernel.org, himanshujha199640@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org, pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, "moderated list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 21, 2019 at 11:29 AM Loys Ollivier <lollivier@baylibre.com> wrote:
+>
+>
+> On Mon 21 Jan 2019 at 17:10, Rob Herring wrote:
+>
+> > On Thu, 17 Jan 2019 17:54:32 +0100, Loys Ollivier wrote:
+> >> Add binding for Mediatek-based GNSS receivers.
+> >>
+> >> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+> >> ---
+> >>
+> >> v2:
+> >> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+> >> Moved current-speed as an optional propertie.
+> >> Removed the status line in the example.
+> >> Added "mediatek,mt3339" compatible.
+> >>
+> >>  .../devicetree/bindings/gnss/mediatek.txt          | 39
+> >>  ++++++++++++++++++++++
+> >>  1 file changed, 39 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+> >>
+> >
+> > Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> Thanks Rob,
+> If there are no objections by others, I'll stop sending these two patch
+> (1/4 and 2/4) and reference any new patch serie for 3 and 4 as depending
+> on those two.
 
-On 1/19/19 11:57 AM, Jonathan Cameron wrote:
-> On Mon, 14 Jan 2019 15:17:10 -0500
-> sebastien bourdelin <sebastien.bourdelin@gmail.com> wrote:
->
->> On 1/12/19 1:28 PM, Jonathan Cameron wrote:
->>> On Fri, 11 Jan 2019 15:53:59 -0500
->>> Sebastien Bourdelin <sebastien.bourdelin@gmail.com> wrote:
->>>   
->>>> BME680 is a pressure/temperature/humidity/voc sensor.
->>>>
->>>> Signed-off-by: Sebastien Bourdelin <sebastien.bourdelin@gmail.com>
->>> Hmm. We could add the VDD and VDIO regulators perhaps.
->>> Driver assumes they are on currently but we'll get a board where control
->>> is needed sooner or later.  I'm not that fussed about this though.
->> If that's fine with you, i prefer to leave it as it is right now as i
->> don't feel
->>
->> confident enough to correctly explain it in the Documentation.
->>
->> But if you have more input, you are more then welcome!
-> Given we aren't planning to do more than turn them on and that'll work
-> fine with stub regulators (so they can effectively be optional for ever),
-> there is no particular need to put them in now if you prefer not to.
->
-> Jonathan
-Ok Thanks Jonathan!
->>> Jonathan
->>>   
->>>> ---
->>>>    .../devicetree/bindings/iio/chemical/bme680.txt       | 11 +++++++++++
->>>>    1 file changed, 11 insertions(+)
->>>>    create mode 100644 Documentation/devicetree/bindings/iio/chemical/bme680.txt
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/iio/chemical/bme680.txt b/Documentation/devicetree/bindings/iio/chemical/bme680.txt
->>>> new file mode 100644
->>>> index 000000000000..885a1b918340
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/iio/chemical/bme680.txt
->>>> @@ -0,0 +1,11 @@
->>>> +Bosch Sensortec BME680 pressure/temperature/humidity/voc sensors
->>>> +
->>>> +Required properties:
->>>> +- compatible: must be "bosch,bme680"
->>>> +
->>>> +Example:
->>>> +
->>>> +bme680@77 {
->>>> +          compatible = "bosch,bme680";
->>>> +          reg = <0x77>;
->>>> +};
+Generally, you should just resend the whole series unless the
+maintainer has applied some of the patches. I could apply this but
+usually the whole series goes in together.
+
+Rob
