@@ -1,53 +1,77 @@
-From: Wei Ni <wni@nvidia.com>
-Subject: Re: [PATCH v1 00/12] Add some functionalities for Tegra soctherm
-Date: Mon, 21 Jan 2019 17:26:57 +0800
-Message-ID: <ce989feb-e179-98d1-59d4-e7619ceff26a@nvidia.com>
-References: <1545118484-23641-1-git-send-email-wni@nvidia.com>
- <1545118484-23641-2-git-send-email-wni@nvidia.com>
+From: Martyn Welch <martyn.welch@collabora.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: imx6: Add support for Phytec phyBOARD
+ i.MX6UL Segin
+Date: Mon, 21 Jan 2019 09:40:54 +0000
+Message-ID: <8746aab308f76b4d8f33a20fea3f54da323832b3.camel@collabora.com>
+References: <20190118194812.3319-1-martyn.welch@collabora.com>
+ <20190118194812.3319-2-martyn.welch@collabora.com>
+ <CAOMZO5ASTUDfKkghXq5FftM8-XNztXCYpmdOU9CVfyX3pgKxxA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1545118484-23641-2-git-send-email-wni@nvidia.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: thierry.reding@gmail.com, daniel.lezcano@linaro.org, edubezval@gmail.com, linux-tegra@vger.kernel.org
-Cc: rui.zhang@intel.com, srikars@nvidia.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAOMZO5ASTUDfKkghXq5FftM8-XNztXCYpmdOU9CVfyX3pgKxxA@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Fabio Estevam <festevam@gmail.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Stefan =?ISO-8859-1?Q?Riedm=FCller?= <s.riedmueller@phytec.de>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Christian Hemp <c.hemp@phytec.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM
+ ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Eduardo,
-Could you please take a look this serial?
+Hi Fabio,
 
-Thanks.
-Wei.
+On Fri, 2019-01-18 at 19:18 -0200, Fabio Estevam wrote:
+> diff --git a/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-
+> > full.dts b/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
+> > new file mode 100644
+> > index 000000000000..83cdf4fa10c0
+> > --- /dev/null
+> > +++ b/arch/arm/boot/dts/imx6ul-phytec-phyboard-segin-full.dts
+> > @@ -0,0 +1,96 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2016 PHYTEC Messtechnik GmbH
+> > + * Author: Christian Hemp <c.hemp@phytec.de>
+> > + */
+> > +
+> > +/dts-v1/;
+> > +#include "imx6ul-phytec-pcl063.dtsi"
+> > +#include "imx6ul-phytec-phyboard-segin.dtsi"
+> > +#include "imx6ul-phytec-peb-eval-01.dtsi"
+> > +
+> > +/ {
+> > +       model = "Phytec phyBOARD-Segin i.MX6 UltraLite Full
+> > Featured";
+> > +       compatible = "phytec,imx6ul-pbacd10", "phytec,imx6ul-
+> > pcl063",
+> > +                    "fsl,imx6ul";
+> 
+> Better keep it in a single line?
+> 
 
-On 18/12/2018 3:34 PM, Wei Ni wrote:
-> Move the hw/sw shutdown patches into this serial. There already have
-> some discussion for it in https://lkml.org/lkml/2018/12/7/225.
-> Support GPU HW throttle, thermal IRQ, set_trips(), EDP IRQ and OC
-> hw throttle.
+It makes it longer than 80 chars, but I'm not adverse to that.
+
+> > +&ecspi3 {
+> > +       pinctrl-names = "default";
+> > +       pinctrl-0 = <&pinctrl_ecspi3>;
+> > +       cs-gpios = <&gpio1 20 GPIO_ACTIVE_HIGH>;
+> > +       status = "okay";
+> > +
+> > +       spidev@0 {
+> > +               compatible = "spidev";
 > 
-> Wei Ni (12):
->   of: Add bindings of thermtrip for Tegra soctherm
->   thermal: tegra: support hw and sw shutdown
->   arm64: dts: tegra210: set thermtrip
->   of: Add bindings of gpu hw throttle for Tegra soctherm
->   thermal: tegra: add support for gpu hw-throttle
->   arm64: dts: tegra210: set gpu hw throttle level
->   thermal: tegra: add support for thermal IRQ
->   thermal: tegra: add set_trips functionality
->   thermal: tegra: add support for EDP IRQ
->   arm64: dts: tegra210: set EDP interrupt line
->   of: Add bindings of OC hw throttle for Tegra soctherm
->   thermal: tegra: enable OC hw throttle
+> Doesn't the kernel complain about spidev dts nodes?
 > 
->  .../bindings/thermal/nvidia,tegra124-soctherm.txt  |  63 +-
->  arch/arm64/boot/dts/nvidia/tegra210.dtsi           |  20 +-
->  drivers/thermal/tegra/soctherm.c                   | 959 +++++++++++++++++++--
->  drivers/thermal/tegra/soctherm.h                   |  16 +
->  drivers/thermal/tegra/tegra124-soctherm.c          |   7 +-
->  drivers/thermal/tegra/tegra132-soctherm.c          |   7 +-
->  drivers/thermal/tegra/tegra210-soctherm.c          |  15 +-
->  include/dt-bindings/thermal/tegra124-soctherm.h    |  22 +-
->  8 files changed, 1033 insertions(+), 76 deletions(-)
-> 
+
+Oh, yes, it does when spidev is loaded...
+
+Removing.
+
+Martyn
