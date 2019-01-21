@@ -1,268 +1,141 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH V2 3/4] drivers: pwm: pwm-bcm-kona: Add cygnus-pwm support
-Date: Mon, 21 Jan 2019 19:53:53 +0100
-Message-ID: <20190121185353.fam72wk5eeyz3kwy@pengutronix.de>
-References: <1547669716-20070-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1547669716-20070-4-git-send-email-sheetal.tigadoli@broadcom.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH lora-next 1/4] dt-bindings: lora: sx130x: add basic
+ documentation
+Date: Mon, 21 Jan 2019 13:14:20 -0600
+Message-ID: <20190121191420.GA7878@bogus>
+References: <20190108084132.10214-1-ben.whitten@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547669716-20070-4-git-send-email-sheetal.tigadoli@broadcom.com>
+In-Reply-To: <20190108084132.10214-1-ben.whitten@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>
+To: Ben Whitten <ben.whitten@gmail.com>
+Cc: linux-lpwan@lists.infradead.org, afaerber@suse.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hello,
-
-On Thu, Jan 17, 2019 at 01:45:15AM +0530, Sheetal Tigadoli wrote:
-> From: Praveen Kumar B <praveen.b@broadcom.com>
+On Tue, Jan 08, 2019 at 05:41:29PM +0900, Ben Whitten wrote:
+> Add basic documentation in YAML format for the sx130x series concentrators
+> from Semtech.
+> Required is; the location on the SPI bus, the reset gpio and the node for
+> downstream IQ radios, typically sx125x.
 > 
-> Add support for new version of pwm-cygnus.
-> Add support to make PWM changes configured and stable.
-> 
-> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 > ---
->  drivers/pwm/pwm-bcm-kona.c | 95 ++++++++++++++++++++++++++++++++++++----------
->  1 file changed, 76 insertions(+), 19 deletions(-)
+>  .../bindings/lora/semtech,sx130x.yaml         | 87 +++++++++++++++++++
+>  1 file changed, 87 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
+
+A schema binding. Yay!
+
 > 
-> diff --git a/drivers/pwm/pwm-bcm-kona.c b/drivers/pwm/pwm-bcm-kona.c
-> index fe63289..143843f 100644
-> --- a/drivers/pwm/pwm-bcm-kona.c
-> +++ b/drivers/pwm/pwm-bcm-kona.c
-> @@ -15,6 +15,7 @@
->  #include <linux/delay.h>
->  #include <linux/err.h>
->  #include <linux/io.h>
-> +#include <linux/iopoll.h>
->  #include <linux/ioport.h>
->  #include <linux/math64.h>
->  #include <linux/module.h>
-> @@ -65,10 +66,19 @@
->  #define DUTY_CYCLE_HIGH_MIN			(0x00000000)
->  #define DUTY_CYCLE_HIGH_MAX			(0x00ffffff)
->  
-> +#define PWM_MONITOR_OFFSET			0xb0
-> +#define PWM_MONITOR_TIMEOUT_US			5
+> diff --git a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
+> new file mode 100644
+> index 000000000000..ad263bc4e60d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
+> @@ -0,0 +1,87 @@
+> +# SPDX-License-Identifier: GPL-2.0
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/lora/semtech,sx130x.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
 > +
-> +enum kona_pwmc_ver {
-> +	KONA_PWM = 1,
-> +	CYGNUS_PWM
-> +};
+> +title: Semtech LoRa concentrator
 > +
->  struct kona_pwmc {
->  	struct pwm_chip chip;
->  	void __iomem *base;
->  	struct clk *clk;
-> +	enum kona_pwmc_ver version;
->  };
->  
->  static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *_chip)
-> @@ -76,10 +86,36 @@ static inline struct kona_pwmc *to_kona_pwmc(struct pwm_chip *_chip)
->  	return container_of(_chip, struct kona_pwmc, chip);
->  }
->  
-> +static int kona_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan,
-> +				 unsigned int kona_ver)
-> +{
-> +	struct kona_pwmc *kp = to_kona_pwmc(chip);
-> +	unsigned int value;
+> +maintainers:
+> +  - Andreas Färber <afaerber@suse.de>
+> +  - Ben Whitten <ben.whitten@gmail.com>
 > +
-> +	switch (kona_ver) {
-> +	case KONA_PWM:
-> +		/*
-> +		 * There must be a min 400ns delay between clearing trigger and
-> +		 * settingit. Failing to do this may result in no PWM signal.
-> +		 */
-> +		ndelay(400);
-> +		return 0;
+> +description: |
+> +  Semtech LoRa concentrator sx130x digital baseband chip is capable of
+> +  demodulating LoRa signals on 8 channels simultaneously.
 > +
-> +	case CYGNUS_PWM:
-> +		return readl_poll_timeout(kp->base + PWM_MONITOR_OFFSET, value,
-> +					  !(value & (BIT(chan))), 0,
-> +					  PWM_MONITOR_TIMEOUT_US);
+> +  It is typically paired with two sx125x IQ radios controlled over an
+> +  SPI directly from the concentrator.
 > +
-> +	default:
-> +		return -ENODEV;
-> +
-> +	}
-> +}
+> +  The concentrator itself it controlled over SPI.
 
-This function is the only difference between these two otherwise similar
-implementations. If you do the following instead:
-
-	static int kona_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan)
-	{
-		ndelay(400);
-		return 0;
-	}
-
-	static int cygnus_pwmc_wait_stable(struct pwm_chip *chip, unsigned int chan)
-	{
-		return readl_poll_timeout(...);
-	}
-
-and then maintain a
-
-	int (*wait_stable)(struct pwm_chip *, unsigned int);
-
-in struct kona_pwmc that is initialized in .probe you save quite some
-checks for the version.
+s/it/is/
 
 > +
->  /*
->   * Clear trigger bit but set smooth bit to maintain old output.
->   */
-> -static void kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
-> +static int kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
->  	unsigned int chan)
->  {
->  	unsigned int value = readl(kp->base + PWM_CONTROL_OFFSET);
-> @@ -88,14 +124,10 @@ static void kona_pwmc_prepare_for_settings(struct kona_pwmc *kp,
->  	value &= ~(1 << PWM_CONTROL_TRIGGER_SHIFT(chan));
->  	writel(value, kp->base + PWM_CONTROL_OFFSET);
->  
-> -	/*
-> -	 * There must be a min 400ns delay between clearing trigger and setting
-> -	 * it. Failing to do this may result in no PWM signal.
-> -	 */
-> -	ndelay(400);
-> +	return kona_pwmc_wait_stable(&kp->chip, chan, kp->version);
->  }
->  
-> -static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
-> +static int kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
->  {
->  	unsigned int value = readl(kp->base + PWM_CONTROL_OFFSET);
->  
-> @@ -104,8 +136,7 @@ static void kona_pwmc_apply_settings(struct kona_pwmc *kp, unsigned int chan)
->  	value |= 1 << PWM_CONTROL_TRIGGER_SHIFT(chan);
->  	writel(value, kp->base + PWM_CONTROL_OFFSET);
->  
-> -	/* Trigger bit must be held high for at least 400 ns. */
-> -	ndelay(400);
-> +	return kona_pwmc_wait_stable(&kp->chip, chan, kp->version);
->  }
->  
->  static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
-> @@ -113,8 +144,13 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	struct kona_pwmc *kp = to_kona_pwmc(chip);
->  	unsigned int chan = pwm->hwpwm;
->  	unsigned int value;
-> +	int ret;
->  
-> -	kona_pwmc_prepare_for_settings(kp, chan);
-> +	ret = kona_pwmc_prepare_for_settings(kp, chan);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "failed to prepare pwm settings: %d\n", ret);
-> +		return;
-> +	}
->  
->  	/* Simulate a disable by configuring for zero duty */
->  	writel(0, kp->base + DUTY_CYCLE_HIGH_OFFSET(chan));
-> @@ -125,7 +161,11 @@ static void kona_pwmc_disable(struct pwm_chip *chip, struct pwm_device *pwm)
->  	value &= ~PRESCALE_MASK(chan);
->  	writel(value, kp->base + PRESCALE_OFFSET);
->  
-> -	kona_pwmc_apply_settings(kp, chan);
-> +	ret = kona_pwmc_apply_settings(kp, chan);
-> +	if (ret < 0) {
-> +		dev_err(chip->dev, "failed to apply pwm settings: %d\n", ret);
-> +		return;
-
-I think it would make sense to change kona_pwmc_disable to return an
-error code and then use that in the callers.
-
-> +	}
->  
->  	clk_disable_unprepare(kp->clk);
->  }
-> @@ -188,7 +228,12 @@ static int kona_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  			}
->  		}
->  
-> -		kona_pwmc_prepare_for_settings(kp, chan);
-> +		ret = kona_pwmc_prepare_for_settings(kp, chan);
-> +		if (ret < 0) {
-> +			dev_err(chip->dev,
-> +				"failed to prepare pwm settings: %d\n", ret);
-> +			return ret;
-> +		}
->  
->  		value = readl(kp->base + PRESCALE_OFFSET);
->  		value &= ~PRESCALE_MASK(chan);
-> @@ -208,7 +253,12 @@ static int kona_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  			writel(value, kp->base + PWM_CONTROL_OFFSET);
->  		}
->  
-> -		kona_pwmc_apply_settings(kp, chan);
-> +		ret = kona_pwmc_apply_settings(kp, chan);
-> +		if (ret < 0) {
-> +			dev_err(chip->dev,
-> +				"failed to prepare pwm settings: %d\n", ret);
-> +			return ret;
-> +		}
->  	} else if (cstate.enabled) {
->  		kona_pwmc_disable(chip, pwm);
->  	}
-> @@ -221,14 +271,26 @@ static int kona_pwmc_apply(struct pwm_chip *chip, struct pwm_device *pwm,
->  	.owner = THIS_MODULE,
->  };
->  
-> +static const struct of_device_id bcm_kona_pwmc_dt[] = {
-> +	{ .compatible = "brcm,kona-pwm", .data = (void *)KONA_PWM},
-> +	{ .compatible = "brcm,cygnus-pwm", .data = (void *)CYGNUS_PWM},
-> +	{ },
-> +};
-> +MODULE_DEVICE_TABLE(of, bcm_kona_pwmc_dt);
+> +properties:
+> +  compatible:
+> +    items:
+> +      - enum:
+> +        - semtech,sx1301
+> +        - semtech,sx1308
 > +
->  static int kona_pwmc_probe(struct platform_device *pdev)
->  {
->  	struct kona_pwmc *kp;
->  	struct resource *res;
-> +	const struct of_device_id *of_id;
->  	unsigned int chan;
->  	unsigned int value = 0;
->  	int ret = 0;
->  
-> +	of_id = of_match_node(bcm_kona_pwmc_dt, pdev->dev.of_node);
-> +	if (!of_id)
-> +		return -ENODEV;
+> +  reg:
+> +    maxItems: 1
+> +    description: The chip select on the SPI bus.
 > +
->  	kp = devm_kzalloc(&pdev->dev, sizeof(*kp), GFP_KERNEL);
->  	if (kp == NULL)
->  		return -ENOMEM;
-> @@ -241,6 +303,7 @@ static int kona_pwmc_probe(struct platform_device *pdev)
->  	kp->chip.npwm = 6;
->  	kp->chip.of_xlate = of_pwm_xlate_with_flags;
->  	kp->chip.of_pwm_n_cells = 3;
-> +	kp->version = (enum kona_pwmc_ver)of_id->data;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
->  	kp->base = devm_ioremap_resource(&pdev->dev, res);
-> @@ -287,12 +350,6 @@ static int kona_pwmc_remove(struct platform_device *pdev)
->  	return pwmchip_remove(&kp->chip);
->  }
->  
-> -static const struct of_device_id bcm_kona_pwmc_dt[] = {
-> -	{ .compatible = "brcm,kona-pwm" },
-> -	{ },
-> -};
-> -MODULE_DEVICE_TABLE(of, bcm_kona_pwmc_dt);
-> -
->  static struct platform_driver kona_pwmc_driver = {
->  	.driver = {
->  		.name = "bcm-kona-pwm",
+> +  reset-gpios:
+> +    maxItems: 1
+> +    description: A connection of the reset gpio line.
+> +
+> +  spi-max-frequency:
+> +    maximum: 10000000
+> +    default: 8000000
+> +    description: The frequency of the SPI communication to the concentrator,
+> +      in Hz. Maximum SPI frequency is 10MHz although 8MHz is typically used
+> +      on a number of cards.
+> +
+> +  radio-spi:
 
-Best regards
-Uwe
+child nodes should have 'type: object'
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+> +    description: The concentrator has two radios connected which are contained
+> +      within the following node.
+> +
+> +    properties:
+> +      '#address-cells':
+> +        const: 1
+> +
+> +      '#size-cells':
+> +        const: 0
+
+You need the grandchildren here too to define 'reg' should be 0-8. 
+You'll need to use 'patternProperties' since there's a unit-address.
+
+You could maybe get rid of the radio-spi node. You don't need it unless 
+you wanted to add other types of child nodes.
+
+> +
+> +    required:
+> +      - '#address-cells'
+> +      - '#size-cells'
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - reset-gpios
+> +  - radio-spi
+> +
+> +examples:
+> +  - |
+> +    concentrator0: lora@0 {
+> +      compatible = "semtech,sx1301";
+> +      reg = <0>;
+> +      reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
+> +      spi-max-frequency = <8000000>;
+> +
+> +      radio-spi {
+> +        #address-cells = <1>;
+> +        #size-cells = <0>;
+> +
+> +        radio0: lora@0 {
+> +          compatible = "semtech,sx1257";
+> +          reg = <0>;
+> +        };
+> +
+> +        radio1: lora@1 {
+> +          compatible = "semtech,sx1257";
+> +          reg = <1>;
+> +        };
+> +      };
+> +    };
+> -- 
+> 2.17.1
+> 
