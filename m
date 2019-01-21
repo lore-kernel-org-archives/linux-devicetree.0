@@ -1,144 +1,78 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH lora-next 1/4] dt-bindings: lora: sx130x: add basic
- documentation
-Date: Mon, 21 Jan 2019 14:11:52 -0600
-Message-ID: <20190121201152.GA2512@bogus>
-References: <20190108084132.10214-1-ben.whitten@gmail.com>
+From: Eric Anholt <eric@anholt.net>
+Subject: Re: [PATCH 6/6] ARM: dts: bcm283x: Add missing GPIO line names
+Date: Mon, 21 Jan 2019 12:27:23 -0800
+Message-ID: <871s554uz8.fsf@anholt.net>
+References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
+ <1547297008-2740-7-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190108084132.10214-1-ben.whitten@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Whitten <ben.whitten@gmail.com>
-Cc: linux-lpwan@lists.infradead.org, afaerber@suse.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: multipart/mixed; boundary="===============7657847242977051009=="
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547297008-2740-7-git-send-email-stefan.wahren@i2se.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
+Cc: Gottfried Haider <gottfried.haider@gmail.com>, devicetree@vger.kernel.org, Stefan Wahren <stefan.wahren@i2se.com>, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, Peter Robinson <pbrobinson@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 08, 2019 at 05:41:29PM +0900, Ben Whitten wrote:
-> Add basic documentation in YAML format for the sx130x series concentrators
-> from Semtech.
-> Required is; the location on the SPI bus, the reset gpio and the node for
-> downstream IQ radios, typically sx125x.
-> 
-> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-> ---
->  .../bindings/lora/semtech,sx130x.yaml         | 87 +++++++++++++++++++
->  1 file changed, 87 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> 
-> diff --git a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> new file mode 100644
-> index 000000000000..ad263bc4e60d
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> @@ -0,0 +1,87 @@
-> +# SPDX-License-Identifier: GPL-2.0
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/lora/semtech,sx130x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech LoRa concentrator
-> +
-> +maintainers:
-> +  - Andreas Färber <afaerber@suse.de>
-> +  - Ben Whitten <ben.whitten@gmail.com>
-> +
-> +description: |
-> +  Semtech LoRa concentrator sx130x digital baseband chip is capable of
-> +  demodulating LoRa signals on 8 channels simultaneously.
-> +
-> +  It is typically paired with two sx125x IQ radios controlled over an
-> +  SPI directly from the concentrator.
-> +
-> +  The concentrator itself it controlled over SPI.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - semtech,sx1301
-> +        - semtech,sx1308
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: The chip select on the SPI bus.
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: A connection of the reset gpio line.
-> +
-> +  spi-max-frequency:
-> +    maximum: 10000000
-> +    default: 8000000
-> +    description: The frequency of the SPI communication to the concentrator,
-> +      in Hz. Maximum SPI frequency is 10MHz although 8MHz is typically used
-> +      on a number of cards.
-> +
-> +  radio-spi:
-> +    description: The concentrator has two radios connected which are contained
-> +      within the following node.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +  - reset-gpios
-> +  - radio-spi
-> +
-> +examples:
-> +  - |
+--===============7657847242977051009==
+Content-Type: multipart/signed; boundary="=-=-=";
+	micalg=pgp-sha512; protocol="application/pgp-signature"
 
-One more comment. Make sure you "build" the schema with 
-'dt_binding_check' target. That builds the examples.
+--=-=-=
+Content-Type: text/plain
 
-It is also checked by a CI job and the status is added to patchwork[1]. 
-(Though it didn't work correctly for this one and I just fixed it.)
+Stefan Wahren <stefan.wahren@i2se.com> writes:
 
-> +    concentrator0: lora@0 {
+> The GPIO sysfs is deprecated and disabled in the defconfig files.
+> So in order to motivate the usage of the new GPIO character device API
+> add the missing GPIO line names for Raspberry Pi 2 and 3. In the lack
+> of full schematics i would leave all undocumented pins as unnamed.
 
-This example doesn't build because there's an expectation of the top 
-level nodes being MMIO if there's a reg prop. You just need to wrap this 
-in a parent node representing a spi controller:
+I didn't cross-check the GPIOs against schematics this time, but I trust
+your attention to detail on this.
 
-spi {
-  #address-cells = <1>;
-  #size-cells = <0>;
+Series is:
 
-  ...
+Reviewed-by: Eric Anholt <eric@anholt.net>
 
-};
+--=-=-=
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +      compatible = "semtech,sx1301";
-> +      reg = <0>;
-> +      reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
-> +      spi-max-frequency = <8000000>;
-> +
-> +      radio-spi {
-> +        #address-cells = <1>;
-> +        #size-cells = <0>;
-> +
-> +        radio0: lora@0 {
-> +          compatible = "semtech,sx1257";
-> +          reg = <0>;
-> +        };
-> +
-> +        radio1: lora@1 {
-> +          compatible = "semtech,sx1257";
-> +          reg = <1>;
-> +        };
-> +      };
-> +    };
+-----BEGIN PGP SIGNATURE-----
 
-[1] https://patchwork.ozlabs.org/patch/1021773/
+iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlxGKysACgkQtdYpNtH8
+nujUHA/+MJTcTE82y75LgXa7DY7+ZVSnD6afFFuBLYyRiwxt9JKN3nG4I5DM+NzH
+FHpHgtZwaddCYpZfb0s12xnirlqaekLZf3LJkBlbEVP3jFT7Qr42dVJqrDXunyVX
+7QCCs+4X/0Z0MlejJFUQxGvgKIt+of/6XPIRjcn8o5nOMaGxcgJYclnpKiBcykLq
+L06DNsLzluH4gYYfTMGSOi+MFnqza22ePVDc/JJYVqKz4ihTaurow4EOPfhZ54dd
+cI5QikGmSSwN4P2Am9pLC6dhfh69jynZpvVjcvfcnZhqdYFoZ6LPMm7mGOjFhuyR
+sRonMvh95jWhhDtxuuqrX2AeOXCqbXYDLpEjw5XpKyg57eVBvtnnME/iBlNPMNaS
+Pj3oEl8nRb9JbR2s9CtBfwi7R7kB9fFm55yveS7e1x3gNultjStgNaTXcWdCL71l
+RyhPYKzvNAKX/CsR9Tl6G3OgiiEsMwNtVc0CPLdptiU1pt8ZCRX5epustVlNtqgu
+3V7yaPv6pY16bZpyTlw4eS2K8LYcGWAr5yzvD6pPjfvOVx2GjoZsnYY3xXjoYH+q
+CGlj98/LgRgGCgmWHHgNrC/wc8/0sSirp1rgs7vksdsDrXOAkv9LXKvAlHzV9q+g
+0ImAwJibcNAYj7me1i6lC4jguA4mn68q6AUhnoLRjG+xyxMRqYk=
+=sgYs
+-----END PGP SIGNATURE-----
+--=-=-=--
+
+
+--===============7657847242977051009==
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--===============7657847242977051009==--
