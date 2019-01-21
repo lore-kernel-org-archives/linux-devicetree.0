@@ -1,56 +1,68 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 3/4] kbuild: add real-prereqs shorthand for
- $(filter-out FORCE,$^)
-Date: Mon, 21 Jan 2019 09:53:17 -0600
-Message-ID: <20190121155317.GA7426@bogus>
-References: <1547719364-18849-1-git-send-email-yamada.masahiro@socionext.com>
- <1547719364-18849-3-git-send-email-yamada.masahiro@socionext.com>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH v4 5/6] usb: musb: Add musb_clearb/w() interface
+Date: Mon, 21 Jan 2019 09:59:29 -0600
+Message-ID: <20190121155929.GC30080@uda0271908>
+References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
+ <1548073351-13739-6-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547719364-18849-3-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <1548073351-13739-6-git-send-email-min.guo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Masahiro Yamada <yamada.masahiro@socionext.com>
-Cc: linux-kbuild@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, linux-s390@vger.kernel.org, Borislav Petkov <bp@alien8.de>, linux-mips@vger.kernel.org, James Hogan <jhogan@kernel.org>, x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Marek <michal.lkml@markovi.net>, Paul Burton <paul.burton@mips.com>, Ingo Molnar <mingo@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
+To: min.guo@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 07:02:43PM +0900, Masahiro Yamada wrote:
-> In Kbuild, if_changed and friends must have FORCE as a prerequisite.
+Hi Min,
+
+On Mon, Jan 21, 2019 at 08:22:30PM +0800, min.guo@mediatek.com wrote:
+> From: Min Guo <min.guo@mediatek.com>
 > 
-> Hence, $(filter-out FORCE,$^) or $(filter-out $(PHONY),$^) is a common
-> pattern to get the names of all the prerequisites except phony targets.
+> Delete the const attribute of addr parameter in readb/w/l hooks, these
+> changes are for implementing clearing W1C registers.
+> Replace musb_readb/w with musb_clearb/w to clear the interrupt status.
 > 
-> Add real-prereqs as a shorthand.
-> 
-> Note:
-> We cannot replace $(filter %.o,$^) in cmd_link_multi-m because $^ may
-> include auto-generated dependencies from the .*.cmd file when a single
-> object module is changed into a multi object module. Refer to commit
-> 69ea912fda74 ("kbuild: remove unneeded link_multi_deps"). I added some
-> comment to avoid accidental breakage.
-> 
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> Signed-off-by: Min Guo <min.guo@mediatek.com>
 > ---
+> new patch based on v3:
+> ---
+>  drivers/usb/musb/musb_core.c | 32 +++++++++++++++++++++++---------
+>  drivers/usb/musb/musb_core.h |  8 ++++++--
+>  drivers/usb/musb/musb_io.h   |  8 +++++---
+>  drivers/usb/musb/musbhsdma.c |  3 +++
+>  drivers/usb/musb/sunxi.c     |  4 ++--
+>  drivers/usb/musb/tusb6010.c  |  2 +-
+>  6 files changed, 40 insertions(+), 17 deletions(-)
 > 
-> The patch context depends on some other ones.
-> Please use 'git am -C1' if you want to test this
-> on Linus' tree.
-> 
-> 
-> Changes in v2:
->   - clean up arch/s390/boot/Makefile as well
-> 
->  Documentation/devicetree/bindings/Makefile |  2 +-
+> diff --git a/drivers/usb/musb/musb_core.c b/drivers/usb/musb/musb_core.c
+> index 2fe5225..5ef8848 100644
+> --- a/drivers/usb/musb/musb_core.c
+> +++ b/drivers/usb/musb/musb_core.c
 
-Acked-by: Rob Herring <robh@kernel.org>
+[snip]
 
->  arch/mips/boot/Makefile                    |  2 +-
->  arch/powerpc/boot/Makefile                 |  2 +-
->  arch/s390/boot/Makefile                    |  2 +-
->  arch/x86/realmode/rm/Makefile              |  3 +--
->  scripts/Kbuild.include                     |  4 ++++
->  scripts/Makefile.build                     |  9 ++++++---
->  scripts/Makefile.lib                       | 18 +++++++++---------
->  scripts/Makefile.modpost                   |  2 +-
->  9 files changed, 25 insertions(+), 19 deletions(-)
+> diff --git a/drivers/usb/musb/musbhsdma.c b/drivers/usb/musb/musbhsdma.c
+> index b2394a7..7bf91cb 100644
+> --- a/drivers/usb/musb/musbhsdma.c
+> +++ b/drivers/usb/musb/musbhsdma.c
+> @@ -286,6 +286,9 @@ irqreturn_t dma_controller_irq(int irq, void *private_data)
+>  
+>  	int_hsdma = musb_readb(mbase, MUSB_HSDMA_INTR);
+>  
+> +	/* clear pending interrupts by manual */
+> +	musb_clearb(musb->mregs, MUSB_HSDMA_INTR);
+> +
+
+Make musb_clearb/w() return the value of the _read() instead of
+_write(), so that we don't have to read twice here. The value of
+_write() is not used anyway.
+
+The change above can be:
+
+	int_hsdma = musb_clearb(mbase, MUSB_HSDMA_INTR);
+
+Please see my comments in 6/6 for details.
+
+Regards,
+-Bin.
