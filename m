@@ -1,31 +1,56 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH V2 1/4] dt-bindings: pwm: kona: Add new compatible for
- new version pwm-cygnus
-Date: Mon, 21 Jan 2019 09:51:47 -0600
-Message-ID: <20190121155147.GA7190@bogus>
-References: <1547669716-20070-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1547669716-20070-2-git-send-email-sheetal.tigadoli@broadcom.com>
+Subject: Re: [PATCH v2 3/4] kbuild: add real-prereqs shorthand for
+ $(filter-out FORCE,$^)
+Date: Mon, 21 Jan 2019 09:53:17 -0600
+Message-ID: <20190121155317.GA7426@bogus>
+References: <1547719364-18849-1-git-send-email-yamada.masahiro@socionext.com>
+ <1547719364-18849-3-git-send-email-yamada.masahiro@socionext.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547669716-20070-2-git-send-email-sheetal.tigadoli@broadcom.com>
+In-Reply-To: <1547719364-18849-3-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Thierry Reding <thierry.reding@gmail.com>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+To: Masahiro Yamada <yamada.masahiro@socionext.com>
+Cc: linux-kbuild@vger.kernel.org, Martin Schwidefsky <schwidefsky@de.ibm.com>, linux-s390@vger.kernel.org, Borislav Petkov <bp@alien8.de>, linux-mips@vger.kernel.org, James Hogan <jhogan@kernel.org>, x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, devicetree@vger.kernel.org, "H. Peter Anvin" <hpa@zytor.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Michal Marek <michal.lkml@markovi.net>, Paul Burton <paul.burton@mips.com>, Ingo Molnar <mingo@redhat.com>, Michael Ellerman <mpe@ellerman.id.au>, Heiko Carstens <heiko.carstens@de.ibm.com>, linux-kernel@vger.kernel.org, Paul Mackerras <paulus@samba.org>, Mark Rutland <mark.rutland@arm.com>, linuxppc-dev@lists.ozlabs.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 17 Jan 2019 01:45:13 +0530, Sheetal Tigadoli wrote:
-> From: Praveen Kumar B <praveen.b@broadcom.com>
+On Thu, Jan 17, 2019 at 07:02:43PM +0900, Masahiro Yamada wrote:
+> In Kbuild, if_changed and friends must have FORCE as a prerequisite.
 > 
-> Add new compatible string for new version pwm-cygnus
+> Hence, $(filter-out FORCE,$^) or $(filter-out $(PHONY),$^) is a common
+> pattern to get the names of all the prerequisites except phony targets.
 > 
-> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
-> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
-> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
-> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
+> Add real-prereqs as a shorthand.
+> 
+> Note:
+> We cannot replace $(filter %.o,$^) in cmd_link_multi-m because $^ may
+> include auto-generated dependencies from the .*.cmd file when a single
+> object module is changed into a multi object module. Refer to commit
+> 69ea912fda74 ("kbuild: remove unneeded link_multi_deps"). I added some
+> comment to avoid accidental breakage.
+> 
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 > ---
->  Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
+> The patch context depends on some other ones.
+> Please use 'git am -C1' if you want to test this
+> on Linus' tree.
+> 
+> 
+> Changes in v2:
+>   - clean up arch/s390/boot/Makefile as well
+> 
+>  Documentation/devicetree/bindings/Makefile |  2 +-
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  arch/mips/boot/Makefile                    |  2 +-
+>  arch/powerpc/boot/Makefile                 |  2 +-
+>  arch/s390/boot/Makefile                    |  2 +-
+>  arch/x86/realmode/rm/Makefile              |  3 +--
+>  scripts/Kbuild.include                     |  4 ++++
+>  scripts/Makefile.build                     |  9 ++++++---
+>  scripts/Makefile.lib                       | 18 +++++++++---------
+>  scripts/Makefile.modpost                   |  2 +-
+>  9 files changed, 25 insertions(+), 19 deletions(-)
