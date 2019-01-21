@@ -1,113 +1,162 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH 2/3] dt-bindings: phy: ti: Add dt binding documentation
- for SERDES in AM654x SoC
-Date: Mon, 21 Jan 2019 17:19:27 +0530
-Message-ID: <7980b15c-0187-32e1-c728-d3d98e4c8c0e@ti.com>
-References: <20190121064813.18444-1-kishon@ti.com>
- <20190121064813.18444-3-kishon@ti.com> <5C4596F8.7030009@ti.com>
- <b619ace8-f2be-8eb0-080e-0ae7a43799df@ti.com> <5C45AB63.4010005@ti.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 21 Jan 2019 12:54:55 +0100
+Message-ID: <20190121115455.GJ16756@ulmo>
+References: <1547194964-16718-1-git-send-email-yash.shah@sifive.com>
+ <1547194964-16718-3-git-send-email-yash.shah@sifive.com>
+ <20190115220046.etgbno6ymsux75dk@pengutronix.de>
+ <CAJ2_jOEuU_=bpbVmdsq7FFEKEm_wHza-h7Hu8QmZ3BgsGgi-ng@mail.gmail.com>
+ <20190116164640.mi3zjbhbhc6k5v7p@pengutronix.de>
+ <alpine.DEB.2.21.9999.1901160909540.19681@viisi.sifive.com>
+ <20190116172849.h5qdfa5wc3vaprbn@pengutronix.de>
+ <alpine.DEB.2.21.9999.1901161015400.19681@viisi.sifive.com>
+ <20190117081956.hpj4ewdihpwuoonz@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="HcccYpVZDxQ8hzPO"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <5C45AB63.4010005@ti.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20190117081956.hpj4ewdihpwuoonz@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Roger Quadros <rogerq@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Paul Walmsley <paul.walmsley@sifive.com>, Yash Shah <yash.shah@sifive.com>, Palmer Dabbelt <palmer@sifive.com>, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Sachin Ghadi <sachin.ghadi@sifive.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 21/01/19 4:52 PM, Roger Quadros wrote:
-> 
-> 
-> On 21/01/19 12:47, Kishon Vijay Abraham I wrote:
->> Hi Roger,
->>
->> On 21/01/19 3:25 PM, Roger Quadros wrote:
->>> Kishon,
->>>
->>> On 21/01/19 08:48, Kishon Vijay Abraham I wrote:
->>>> AM654x has two SERDES instances. Each instance has three input clocks
->>>> (left input, externel reference clock and right input) and two output
->>>> clocks (left output and right output) in addition to a PLL mux clock
->>>> which the SERDES uses for Clock Multiplier Unit (CMU refclock).
->>>> The PLL mux clock can select from one of the three input clocks.
->>>> The right output can select between left input and external reference
->>>> clock while the left output can select between the right input and
->>>> external reference clock.
->>>>
->>>> The left and right input reference clock of SERDES0 and SERDES1
->>>> respectively are connected to the SoC clock. In the case of two lane
->>>> SERDES personality card, the left input of SERDES1 is connected to
->>>> the right output of SERDES0 in a chained fashion.
->>>>
->>>> See section "Reference Clock Distribution" of AM65x Sitara Processors
->>>> TRM (SPRUID7 – April 2018) for more details.
->>>>
->>>> Add dt-binding documentation in order to represent all these different
->>>> configurations in device tree.
->>>>
->>>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
->>>> ---
->>>>  .../devicetree/bindings/phy/ti-phy.txt        | 77 +++++++++++++++++++
->>>>  include/dt-bindings/phy/phy-am654-serdes.h    | 13 ++++
->>>>  2 files changed, 90 insertions(+)
->>>>  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
->>>>
->>>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> index 57dfda8a7a1d..fc2fff6b2c37 100644
->>>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
->>>> @@ -132,3 +132,80 @@ sata_phy: phy@4a096000 {
->>>>  	syscon-pllreset = <&scm_conf 0x3fc>;
->>>>  	#phy-cells = <0>;
->>>>  };
->>>> +
->>>> +
->>>> +TI AM654 SERDES
->>>> +
->>>> +Required properties:
->>>> + - compatible: Should be "ti,phy-am654-serdes"
->>>> + - reg : Address and length of the register set for the device.
->>>> + - reg-names: Should be "serdes" which corresponds to the register space
->>>> +	populated in "reg".
->>>> + - #phy-cells: determine the number of cells that should be given in the
->>>> +	phandle while referencing this phy. Should be "2". The 1st cell
->>>> +	corresponds to the phy type (should be one of the types specified in
->>>> +	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
->>>> +	lane function.
->>>> +	If SERDES0 is referenced 2nd cell should be:
->>>> +		0 - USB3
->>>> +		1 - PCIe0 Lane0
->>>> +		2 - ICSS2 SGMII Lane0
->>>> +	If SERDES1 is referenced 2nd cell should be:
->>>> +		0 - PCIe1 Lane0
->>>> +		1 - PCIe0 Lane1
->>>> +		2 - ICSS2 SGMII Lane1
->>>
->>> Can we have a way to change default lane at probe time without having any user dependencies.
->>>
->>> e.g. To work in USB2.0 mode I don't want SERDES0 to be in lane 0 (which is SoC default).
->>> But at the same time the application might not be using PCIe or SGMII, so there is no
->>> PHY user to change the lane to 1 or 2.
->>>
->>> A DT property to allow selection of a default lane at probe time would help
->> Ideally we should be disabling the module that is not used ("status" property
->> of SERDES0 dt would be "disabled"). So there is no guarantee SERDES will be probed.
->>
-> 
-> OK. Is there something that can be done at the serdes_mux?
-> As per bindings/mux/mmio-mux.txt
-> 
-> Optional properties:
-> - idle-states : if present, the state the muxes will have when idle. The
->                 special state MUX_IDLE_AS_IS is the default.
-> 
-> Could that be used?
+--HcccYpVZDxQ8hzPO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Looks like that's something we could use.
+On Thu, Jan 17, 2019 at 09:19:56AM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello Paul,
+>=20
+> On Wed, Jan 16, 2019 at 11:29:35AM -0800, Paul Walmsley wrote:
+> > COMPILE_TEST made slightly more sense before the broad availability of=
+=20
+> > open-source soft cores, SoC integration, and IP; and before powerful,=
+=20
+> > inexpensive FPGAs and SoCs with FPGA fabrics were common.
+> >=20
+> > Even back then, COMPILE_TEST was starting to look questionable.  IP blo=
+cks=20
+> > from CPU- and SoC vendor-independent libraries, like DesignWare and the=
+=20
+> > Cadence IP libraries, were integrated on SoCs across varying CPU=20
+> > architectures.  (Fortunately, looking at the tree, subsystem maintainer=
+s=20
+> > with DesignWare drivers seem to have largely avoided adding architectur=
+e=20
+> > or SoC-specific Kconfig restrictions there - and thus have also avoided=
+=20
+> > the need for COMPILE_TEST.)  If an unnecessary architecture Kconfig=20
+> > dependency was added for a leaf driver, that Kconfig line would either=
+=20
+> > need to be patched out by hand, or if present, COMPILE_TEST would need =
+to=20
+> > be enabled.
+> >=20
+> > This was less of a problem then.  There were very few FPGA Linux users,=
+=20
+> > and they were mostly working on internal proprietary projects. FPGAs th=
+at=20
+> > could run Linux at a reasonable speed, including MMUs and FPUs, were=20
+> > expensive or were missing good tool support.  So most FPGA Linux=20
+> > development was restricted to ASIC vendors - the Samsungs, Qualcomms,=
+=20
+> > NVIDIAs of the world - for prototyping, and those FPGA platforms never=
+=20
+> > made it outside those companies.
+> >=20
+> > The situation is different now.  The major FPGA vendors have inexpensiv=
+e=20
+> > FPGA SoCs with full-featured CPU hard macros.  The development boards c=
+an=20
+> > be quite affordable (< USD 300 for the Xilinx Ultra96).  There are also=
+=20
+> > now open-source SoC HDL implementations - including MMUs, FPUs, and=20
+> > peripherals like PWM and UART - for the conventional FPGA market.  Thes=
+e=20
+> > can run at mid-1990's clock rates - slow by modern standards but still=
+=20
+> > quite usable.
+>=20
+> In my eyes it's better to make a driver not possible to enable out of
+> the box than offering to enable it while it most probably won't be used.
 
-Thanks
-Kishon
+This might sound like a good idea in general, but it's also something
+that is pretty much impossible to do. There's just no heuristic that
+would allow you to determine with a sufficient degree of probability
+that a driver won't be needed. Most of the PCI drivers that are
+installed on my workstation aren't used, and I would venture to say
+there are a lot of drivers that aren't used in, say, 95% of
+installations. That doesn't mean that we should somehow make these
+drivers difficult to install, or require someone to patch the kernel
+to build them.
+
+> People who configure their own kernel and distribution kernel
+> maintainers will thank you. (Well ok, they won't notice, so they won't
+> actually tell you, but anyhow.) I'm a member of the Debian kernel team
+> and I see how many config items there are that are not explicitly
+> handled for the various different kernel images. If they were restricted
+> using COMPILE_TEST to just be possible to enable on machines where it is
+> known (or at least likely) to make sense that would help. Also when I do
+> a kernel version bump for a machine with a tailored kernel running (say)
+> on an ARM/i.MX SoC, I could more easily be careful about the relevant
+> changes when doing oldconfig if I were not asked about a whole bunch of
+> drivers that are sure to be irrelevant.
+
+I think the important thing here is that the driver is "default n". If
+you're a developer and build your own kernels, you're pretty likely to
+know already if a new kernel that you're installing contains that new
+driver that you've been working on or waiting for. In that case you can
+easily just enable it manually rather than go through make oldconfig and
+wait for it to show up.
+
+As for distribution kernel maintainers, are they really still building a
+lot of different kernels? If so, it sounds like most of the multi-
+platform efforts have been in vain. I would imagine that if, as a
+distribution kernel team, you'd want to carefully evaluate for every
+driver whether or not you'd want to include it. I would also imagine
+that you'd want to provide your users with the most flexible kernel
+possible, so that if they do have a system with an FPGA that you'd make
+it possible for them to use pwm-sifive if they choose to synthesize it.
+
+If you really want to create custom builds tailored to a single chip or
+board, it's going to be a fair amount of work anyway. I've occasionally
+done that in the past and usually just resorted to starting from an
+allnoconfig configuration and then working my way up from there.
+
+As for daily work as a developer, when I transition between kernel
+versions, or from one linux-next to another, I typically end up doing
+the manual equivalent of:
+
+	$ yes '' | make oldconfig
+
+if I know that I'm not interested in any new features. But I also often
+just look at what's new because it's interesting to see what's been
+going on elsewhere.
+
+Thierry
+
+--HcccYpVZDxQ8hzPO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxFsw0ACgkQ3SOs138+
+s6GNbg//X2cHx6MggoF4ietANVc9LVW8Bw6/XohO0dLUy5qlwnhnFxt7AhCeczQ/
+RKBciwJzq7iLy6TozjXxVRvtZKUWLmOQ3R6cckDv5NVNl3W+snuEh8w/2JTUArGS
+o9wIM90cpPBIfhfBadz/kxoOqtOBy0FiYokoyaykm+jPbNh2uQzQx0n+LiqHfoV0
+on3t3n9YrjPYHKC9VTpb8hsaFGDi8EhXqxaaXs4DlKboz6ezIYAi5o3ObLhI3aRs
+4fk1T63gWIlwb2qteXGAMdFsJGBzHtALwrZFxJQ1M3GWnyz/JkbCGTvLlsbdNA4V
+HheD38F+geoAaK+j5RdESJw1vWkX1w/GqoN9njwEod8kEfzbhpnPofm0U5WSwkvU
+GFtRzVD1iC2Qn/U3YtiZu3UbFF+LVadBp7lk8vX/mqKsUdYdlA7esgCGOKVmsxNk
+AFm4R+frtEZwf1gG5BVOw3LeZFPGT2Om1wOIawdxbfyGnrQl2dsPuo97jjqcZ90+
+T9F6s1jel/OVnJhWwzCdZi7sf/swwLyeoYn3vd+PWiT2WhRaDMygwg/KtVoY+or8
+1G+AKQSLDbh618/ck/La6VSssIMfwwVdAyD4t9eQtKiR48N6JobgkQwumvyFpllF
+a7zVRytrnwgDFRSkayIJGz+faQRJ68vwePKlxQPH1Sy2POhAdn4=
+=dNnQ
+-----END PGP SIGNATURE-----
+
+--HcccYpVZDxQ8hzPO--
