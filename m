@@ -1,52 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
-Date: Mon, 21 Jan 2019 09:23:35 -0600
-Message-ID: <20190121152335.GA12284@bogus>
-References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
- <20190117161804.GA5760@bogus>
- <1547817384.11482.33.camel@nxp.com>
- <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
+Subject: Re: [PATCH v3 2/6] dt-bindings: rtc: Add quartz-load-femtofarads
+ property
+Date: Mon, 21 Jan 2019 09:24:34 -0600
+Message-ID: <20190121152434.GA27828@bogus>
+References: <20190119090031.29147-1-sam@ravnborg.org>
+ <20190119090031.29147-3-sam@ravnborg.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <20190119090031.29147-3-sam@ravnborg.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolin Chen <nicoleotsuka@gmail.com>
-Cc: Viorel Suman <viorel.suman@nxp.com>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, alsa-
+Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, Sam Ravnborg <sam@ravnborg.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2019 at 11:46:42AM -0800, Nicolin Chen wrote:
-> On Fri, Jan 18, 2019 at 01:16:24PM +0000, Viorel Suman wrote:
-> > > > 1. Moved "dais" node from machine driver DTS node to device driver
-> > > > DTS node
-> > > >   as suggested by Rob.
-> > > That was not what I suggested. You still have a virtual node which
-> > > looks to me to be unnecessary.
-> > 
-> > To me removing virtual node implies that AUDMIX machine driver (imx-
-> > audmix.c + virtual node) shall be removed and machine driver code
-> > merged into device driver (fsl_audmix.c + device node) - please let me
-> > know if my understanding is wrong.
+On Sat, 19 Jan 2019 10:00:27 +0100, Sam Ravnborg wrote:
+> The quartz-load-femtofarads are relevant for
+> several users. Add it as a common property in rtc.
+> Note that valid values and default values must be documented.
 > 
-> We could use a non-DT configuration right? From the driver logic,
-> DT just registers a device corresponding to the machine driver so
-> that it can probe(). We could register one in fsl_audmix instead.
-> Please refer to how fsl_ssi registers the sound card device. The
-> machine driver can get audmix_np from the parent device pointer,
-> and I think that's all you need.
+> Signed-off-by: Sam Ravnborg <sam@ravnborg.org>
+> Suggested-by: Rob Herring <robh+dt@kernel.org>
+> Cc: Alessandro Zummo <a.zummo@towertech.it>
+> Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: Mark Rutland <mark.rutland@arm.com>
+> ---
+>  Documentation/devicetree/bindings/rtc/rtc.txt | 16 ++++++++++------
+>  1 file changed, 10 insertions(+), 6 deletions(-)
+> 
 
-Yes.
-
-> Or maybe someone else would provide a better way. But it'd work.
-
-Or the machine driver could create the audmix device. That probably 
-makes less sense, but either way there doesn't have to be a 1-1 
-correspondence of DT nodes and (platform) devices.
-
-I'm not an ASoC expert, but why can't the machine driver just control 
-the audmix directly (with DAIs as separate drivers)? Is the audmix ever 
-going to a be a component for a different machine driver?
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
