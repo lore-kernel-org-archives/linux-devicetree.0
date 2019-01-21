@@ -1,95 +1,73 @@
-Return-Path: <SRS0=u3Zw=P7=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from nblzone-211-213.nblnetworks.fi ([83.145.211.213]:55784 "EHLO
-        hillosipuli.retiisi.org.uk" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726203AbfAWMqG (ORCPT
-        <rfc822;devicetree@vger.kernel.org>);
-        Wed, 23 Jan 2019 07:46:06 -0500
-Date: Wed, 23 Jan 2019 14:45:38 +0200
-From: Sakari Ailus <sakari.ailus@iki.fi>
+Return-Path: <SRS0=chu1=P5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from esa2.microchip.iphmx.com ([68.232.149.84]:41306 "EHLO
+        esa2.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728474AbfAUHn2 (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Jan 2019 02:43:28 -0500
+From: <Eugen.Hristev@microchip.com>
 Subject: Re: [PATCH v2 2/2] media: atmel-isc: Update device tree binding
  documentation
-Message-ID: <20190123124538.5vfxhsyl2npy4jnp@valkosipuli.retiisi.org.uk>
+Date: Mon, 21 Jan 2019 07:43:25 +0000
+Message-ID: <3280bef8-e567-8dfb-e497-c365fa01609e@microchip.com>
 References: <20190118142803.70160-1-ksloat@aampglobal.com>
  <20190118142803.70160-2-ksloat@aampglobal.com>
  <0c000df0-94ec-e8bf-e6b1-1a8a94170181@microchip.com>
  <DM5PR07MB411967243FA1C96C1179071FAD9C0@DM5PR07MB4119.namprd07.prod.outlook.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
 In-Reply-To: <DM5PR07MB411967243FA1C96C1179071FAD9C0@DM5PR07MB4119.namprd07.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <1140D1FE67E1044EBA8481FB02DABD0C@namprd11.prod.outlook.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: devicetree-owner@vger.kernel.org
-To: Ken Sloat <KSloat@aampglobal.com>
-Cc: "Eugen.Hristev@microchip.com" <Eugen.Hristev@microchip.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "Nicolas.Ferre@microchip.com" <Nicolas.Ferre@microchip.com>, "alexandre.belloni@bootlin.com" <alexandre.belloni@bootlin.com>, "Ludovic.Desroches@microchip.com" <Ludovic.Desroches@microchip.com>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: KSloat@aampglobal.com
+Cc: mchehab@kernel.org, Nicolas.Ferre@microchip.com, alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jan 18, 2019 at 06:05:23PM +0000, Ken Sloat wrote:
-> > -----Original Message-----
-> > From: Eugen.Hristev@microchip.com <Eugen.Hristev@microchip.com>
-> > Sent: Friday, January 18, 2019 9:40 AM
-> > To: Ken Sloat <KSloat@aampglobal.com>
-> > Cc: mchehab@kernel.org; Nicolas.Ferre@microchip.com;
-> > alexandre.belloni@bootlin.com; Ludovic.Desroches@microchip.com; linux-
-> > media@vger.kernel.org; devicetree@vger.kernel.org
-> > Subject: Re: [PATCH v2 2/2] media: atmel-isc: Update device tree binding
-> > documentation
-> > 
-> > 
-> > 
-> > On 18.01.2019 16:28, Ken Sloat wrote:
-> > > From: Ken Sloat <ksloat@aampglobal.com>
-> > >
-> > > Update device tree binding documentation specifying how to enable
-> > > BT656 with CRC decoding.
-> > >
-> > > Signed-off-by: Ken Sloat <ksloat@aampglobal.com>
-> > > ---
-> > >   Changes in v2:
-> > >   -Use correct media "bus-type" dt property.
-> > >
-> > >   Documentation/devicetree/bindings/media/atmel-isc.txt | 5 +++++
-> > >   1 file changed, 5 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/atmel-isc.txt
-> > > b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> > > index bbe0e87c6188..2d4378dfd6c8 100644
-> > > --- a/Documentation/devicetree/bindings/media/atmel-isc.txt
-> > > +++ b/Documentation/devicetree/bindings/media/atmel-isc.txt
-> > > @@ -21,6 +21,11 @@ Required properties for ISC:
-> > >   - pinctrl-names, pinctrl-0
-> > >   	Please refer to pinctrl-bindings.txt.
-> > >
-> > > +Optional properties for ISC:
-> > > +- bus-type
-> > > +	When set to 6, Bt.656 decoding (embedded sync) with CRC decoding
-> > > +	is enabled.
-> > > +
-> > 
-> > I don't think this patch is required at all actually, the binding complies to the
-> > video-interfaces bus specification which includes the parallel and bt.656.
-> > 
-> > Would be worth mentioning below explicitly that parallel and bt.656 are
-> > supported, or added above that also plain parallel bus is supported ?
-> > 
-> > >   ISC supports a single port node with parallel bus. It should contain
-> > > one
-> > 
-> > here inside the previous line
-> Hi Eugen,
-> 
-> Yes it's true adding new documentation here may be overkill, but yes it should say something
-> (as a user I always find it helpful if the docs are more verbose than not).
-> 
-> So per your suggestion, how about the simplified:
-> "ISC supports a single port node with parallel bus and optionally Bt.656 support."
-> 
-> and I'll remit the other statements.
-
-Please still include the name of the property, as well as the valid values
-for it (numeric as well as human-readable). The rest of the documentation
-should stay in video-interfaces.txt IMO --- this is documentation for the
-hardware only.
-
--- 
-Regards,
-
-Sakari Ailus
+DQoNCk9uIDE4LjAxLjIwMTkgMjA6MDUsIEtlbiBTbG9hdCB3cm90ZToNCj4+IC0tLS0tT3JpZ2lu
+YWwgTWVzc2FnZS0tLS0tDQo+PiBGcm9tOiBFdWdlbi5IcmlzdGV2QG1pY3JvY2hpcC5jb20gPEV1
+Z2VuLkhyaXN0ZXZAbWljcm9jaGlwLmNvbT4NCj4+IFNlbnQ6IEZyaWRheSwgSmFudWFyeSAxOCwg
+MjAxOSA5OjQwIEFNDQo+PiBUbzogS2VuIFNsb2F0IDxLU2xvYXRAYWFtcGdsb2JhbC5jb20+DQo+
+PiBDYzogbWNoZWhhYkBrZXJuZWwub3JnOyBOaWNvbGFzLkZlcnJlQG1pY3JvY2hpcC5jb207DQo+
+PiBhbGV4YW5kcmUuYmVsbG9uaUBib290bGluLmNvbTsgTHVkb3ZpYy5EZXNyb2NoZXNAbWljcm9j
+aGlwLmNvbTsgbGludXgtDQo+PiBtZWRpYUB2Z2VyLmtlcm5lbC5vcmc7IGRldmljZXRyZWVAdmdl
+ci5rZXJuZWwub3JnDQo+PiBTdWJqZWN0OiBSZTogW1BBVENIIHYyIDIvMl0gbWVkaWE6IGF0bWVs
+LWlzYzogVXBkYXRlIGRldmljZSB0cmVlIGJpbmRpbmcNCj4+IGRvY3VtZW50YXRpb24NCj4+DQo+
+Pg0KPj4NCj4+IE9uIDE4LjAxLjIwMTkgMTY6MjgsIEtlbiBTbG9hdCB3cm90ZToNCj4+PiBGcm9t
+OiBLZW4gU2xvYXQgPGtzbG9hdEBhYW1wZ2xvYmFsLmNvbT4NCj4+Pg0KPj4+IFVwZGF0ZSBkZXZp
+Y2UgdHJlZSBiaW5kaW5nIGRvY3VtZW50YXRpb24gc3BlY2lmeWluZyBob3cgdG8gZW5hYmxlDQo+
+Pj4gQlQ2NTYgd2l0aCBDUkMgZGVjb2RpbmcuDQo+Pj4NCj4+PiBTaWduZWQtb2ZmLWJ5OiBLZW4g
+U2xvYXQgPGtzbG9hdEBhYW1wZ2xvYmFsLmNvbT4NCj4+PiAtLS0NCj4+PiAgICBDaGFuZ2VzIGlu
+IHYyOg0KPj4+ICAgIC1Vc2UgY29ycmVjdCBtZWRpYSAiYnVzLXR5cGUiIGR0IHByb3BlcnR5Lg0K
+Pj4+DQo+Pj4gICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL21lZGlhL2F0bWVs
+LWlzYy50eHQgfCA1ICsrKysrDQo+Pj4gICAgMSBmaWxlIGNoYW5nZWQsIDUgaW5zZXJ0aW9ucygr
+KQ0KPj4+DQo+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9hdG1lbC1pc2MudHh0DQo+Pj4gYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvbWVkaWEvYXRtZWwtaXNjLnR4dA0KPj4+IGluZGV4IGJiZTBlODdjNjE4OC4uMmQ0Mzc4
+ZGZkNmM4IDEwMDY0NA0KPj4+IC0tLSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
+cy9tZWRpYS9hdG1lbC1pc2MudHh0DQo+Pj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVl
+L2JpbmRpbmdzL21lZGlhL2F0bWVsLWlzYy50eHQNCj4+PiBAQCAtMjEsNiArMjEsMTEgQEAgUmVx
+dWlyZWQgcHJvcGVydGllcyBmb3IgSVNDOg0KPj4+ICAgIC0gcGluY3RybC1uYW1lcywgcGluY3Ry
+bC0wDQo+Pj4gICAgCVBsZWFzZSByZWZlciB0byBwaW5jdHJsLWJpbmRpbmdzLnR4dC4NCj4+Pg0K
+Pj4+ICtPcHRpb25hbCBwcm9wZXJ0aWVzIGZvciBJU0M6DQo+Pj4gKy0gYnVzLXR5cGUNCj4+PiAr
+CVdoZW4gc2V0IHRvIDYsIEJ0LjY1NiBkZWNvZGluZyAoZW1iZWRkZWQgc3luYykgd2l0aCBDUkMg
+ZGVjb2RpbmcNCj4+PiArCWlzIGVuYWJsZWQuDQo+Pj4gKw0KPj4NCj4+IEkgZG9uJ3QgdGhpbmsg
+dGhpcyBwYXRjaCBpcyByZXF1aXJlZCBhdCBhbGwgYWN0dWFsbHksIHRoZSBiaW5kaW5nIGNvbXBs
+aWVzIHRvIHRoZQ0KPj4gdmlkZW8taW50ZXJmYWNlcyBidXMgc3BlY2lmaWNhdGlvbiB3aGljaCBp
+bmNsdWRlcyB0aGUgcGFyYWxsZWwgYW5kIGJ0LjY1Ni4NCj4+DQo+PiBXb3VsZCBiZSB3b3J0aCBt
+ZW50aW9uaW5nIGJlbG93IGV4cGxpY2l0bHkgdGhhdCBwYXJhbGxlbCBhbmQgYnQuNjU2IGFyZQ0K
+Pj4gc3VwcG9ydGVkLCBvciBhZGRlZCBhYm92ZSB0aGF0IGFsc28gcGxhaW4gcGFyYWxsZWwgYnVz
+IGlzIHN1cHBvcnRlZCA/DQo+Pg0KPj4+ICAgIElTQyBzdXBwb3J0cyBhIHNpbmdsZSBwb3J0IG5v
+ZGUgd2l0aCBwYXJhbGxlbCBidXMuIEl0IHNob3VsZCBjb250YWluDQo+Pj4gb25lDQo+Pg0KPj4g
+aGVyZSBpbnNpZGUgdGhlIHByZXZpb3VzIGxpbmUNCj4gSGkgRXVnZW4sDQo+IA0KPiBZZXMgaXQn
+cyB0cnVlIGFkZGluZyBuZXcgZG9jdW1lbnRhdGlvbiBoZXJlIG1heSBiZSBvdmVya2lsbCwgYnV0
+IHllcyBpdCBzaG91bGQgc2F5IHNvbWV0aGluZw0KPiAoYXMgYSB1c2VyIEkgYWx3YXlzIGZpbmQg
+aXQgaGVscGZ1bCBpZiB0aGUgZG9jcyBhcmUgbW9yZSB2ZXJib3NlIHRoYW4gbm90KS4NCj4gDQo+
+IFNvIHBlciB5b3VyIHN1Z2dlc3Rpb24sIGhvdyBhYm91dCB0aGUgc2ltcGxpZmllZDoNCj4gIklT
+QyBzdXBwb3J0cyBhIHNpbmdsZSBwb3J0IG5vZGUgd2l0aCBwYXJhbGxlbCBidXMgYW5kIG9wdGlv
+bmFsbHkgQnQuNjU2IHN1cHBvcnQuIg0KPiANCj4gYW5kIEknbGwgcmVtaXQgdGhlIG90aGVyIHN0
+YXRlbWVudHMuDQoNClRoYXQncyBmaW5lIHdpdGggbWUsIEkgd2lsbCBsZXQgUm9iIGhhdmUgaGlz
+IG9waW5pb24gaGVhcmQgYXMgd2VsbC4NCg0KVGhhbmtzIGFnYWluLA0KDQpFdWdlbg0KDQo+IA0K
+Pj4+ICAgICdwb3J0JyBjaGlsZCBub2RlIHdpdGggY2hpbGQgJ2VuZHBvaW50JyBub2RlLiBQbGVh
+c2UgcmVmZXIgdG8gdGhlIGJpbmRpbmdzDQo+Pj4gICAgZGVmaW5lZCBpbiBEb2N1bWVudGF0aW9u
+L2RldmljZXRyZWUvYmluZGluZ3MvbWVkaWEvdmlkZW8tDQo+PiBpbnRlcmZhY2VzLnR4dC4NCj4+
+Pg0KPiANCj4gVGhhbmtzLA0KPiBLZW4NCj4gDQo=
