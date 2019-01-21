@@ -1,126 +1,150 @@
-From: Chris Packham <Chris.Packham@alliedtelesis.co.nz>
-Subject: Re: [PATCH v7 0/9] EDAC drivers for Armada XP L2 and DDR
-Date: Mon, 21 Jan 2019 22:03:21 +0000
-Message-ID: <f40952f1bc7b4a209328b1213fd517b1@svr-chch-ex1.atlnz.lc>
-References: <20181122001142.19187-1-chris.packham@alliedtelesis.co.nz>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
+ binding
+Date: Mon, 21 Jan 2019 23:08:59 +0000
+Message-ID: <20190121230859.b6bfmxjcrk4duknr@e5254000004ec.dyn.armlinux.org.uk>
+References: <20190120172534.24617-1-lkundrak@v3.sk>
+ <20190120172534.24617-5-lkundrak@v3.sk>
+ <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
+ <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
+ <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
+ <20190121175301.lremzw6dul7dyff4@e5254000004ec.dyn.armlinux.org.uk>
+ <4c21727d9753d4c0de667566972f2229dc9f1304.camel@v3.sk>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: "linux@armlinux.org.uk" <linux@armlinux.org.uk>, "bp@alien8.de" <bp@alien8.de>, "arnd@arndb.de" <arnd@arndb.de>, "jlu@pengutronix.de" <jlu@pengutronix.de>, "gregory.clement@bootlin.com" <gregory.clement@bootlin.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <4c21727d9753d4c0de667566972f2229dc9f1304.camel@v3.sk>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Lubomir Rintel <lkundrak@v3.sk>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi All,=0A=
-=0A=
-On 22/11/18 1:12 PM, Chris Packham wrote:=0A=
-> The current plan is for these to go in via the ARM tree once appropriate=
-=0A=
-> Reviews/Acks have been given=0A=
-> =0A=
-> http://lists.infradead.org/pipermail/linux-arm-kernel/2017-August/525561.=
-html=0A=
-=0A=
-Is there anything I need to be doing to move this series along? It seems =
-=0A=
-to have dropped off the radar.=0A=
-=0A=
-> =0A=
-> This series adds drivers for the L2 cache and DDR RAM ECC functionality a=
-s=0A=
-> found on the MV78230/MV78x60 SoCs. Jan has tested these changes with the=
-=0A=
-> MV78460 (on a custom board with a DDR3 ECC DIMM), Chris has tested these=
-=0A=
-> changes with 88F6820 and 98dx3236 (both a custom boards with fixed DDR3 +=
- ECC).=0A=
-> =0A=
-> Also contained in this series is an additional debugfs wrapper.=0A=
-> =0A=
-> Compared to the previous v6 series I've dropped the marvell,ecc-disable=
-=0A=
-> property.=0A=
-> =0A=
-> Compared to the previous v5 series I've split the dt-binding documentatio=
-n into=0A=
-> its own patch and updated armada_xp_edac.c to use a SPDX license.=0A=
-> =0A=
-> Compared to the previous v4 series I've added my s-o-b to some of Jan's=
-=0A=
-> patches and rebased against v4.19.0.=0A=
-> =0A=
-> Compared to the previous v3 series, the following changes have been made:=
-=0A=
-> - Use shorter names for the AURORA ECC and parity registers=0A=
-> - Numerous formatting changes to edac/armada_xp.c (as requested by Boris)=
-=0A=
-> - Added support for Armada-38x and 98dx3236 SoCs=0A=
-> =0A=
-> Compared to the previous v2 series, the following changes have been made:=
-=0A=
-> - Allocate EDAC structures later during probing and drop devres support=
-=0A=
->    patches (requested by Boris)=0A=
-> - Make drvdata->width usage consistent according to the comment (suggeste=
-d by=0A=
->    Chris)=0A=
-> =0A=
-> Compared to the previous v1 series, the following changes have been made:=
-=0A=
-> - Add the aurora-l2 register defines earlier in the series (suggested by=
-=0A=
->    Russell King and Gregory CLEMENT )=0A=
-> - Changed the DT vendor prefix from "arm" to "marvell" for the ecc-enable=
-/disable=0A=
->    properties on the aurora-l2 (suggested by Russell King)=0A=
-> - Fix some warnings reported by checkpatch=0A=
-> =0A=
-> Compared to the original RFC series, the following changes have been made=
-:=0A=
-> - Integrated Chris' patches for parity and ECC configuration via DT=0A=
-> - Merged the DDR RAM and L2 cache drivers (as requested by Boris, analogo=
-us=0A=
->    to fsl_ddr_edac.c and mpc85xx_edac.c)=0A=
-> - Added myself to MAINTAINERS (requested by Boris)=0A=
-> - L2 cache: Track the msg size and use snprintf (review comment by Chris)=
-=0A=
-> - L2 cache: Split error injection from the check function (review comment=
- by=0A=
->    Chris)=0A=
-> - DDR RAM: Allow 16 bit width in addition to 32 and 64 bit (review commen=
-t by=0A=
->    Chris)=0A=
-> - Use of_match_ptr() (review comments by Chris)=0A=
-> - Minor checkpatch cleanups=0A=
-> =0A=
-> Chris Packham (4):=0A=
->    ARM: l2x0: support parity-enable/disable on aurora=0A=
->    dt-bindings: ARM: document marvell,ecc-enable binding=0A=
->    ARM: l2x0: add marvell,ecc-enable property for aurora=0A=
->    EDAC: armada_xp: Add support for more SoCs=0A=
-> =0A=
-> Jan Luebbe (5):=0A=
->    ARM: l2c: move cache-aurora-l2.h to asm/hardware=0A=
->    ARM: aurora-l2: add prefix to MAX_RANGE_SIZE=0A=
->    ARM: aurora-l2: add defines for parity and ECC registers=0A=
->    EDAC: Add missing debugfs_create_x32 wrapper=0A=
->    EDAC: Add driver for the Marvell Armada XP SDRAM and L2 cache ECC=0A=
-> =0A=
->   .../devicetree/bindings/arm/l2c2x0.txt        |   1 +=0A=
->   MAINTAINERS                                   |   6 +=0A=
->   .../asm/hardware}/cache-aurora-l2.h           |  50 +-=0A=
->   arch/arm/mm/cache-l2x0.c                      |  18 +-=0A=
->   drivers/edac/Kconfig                          |   7 +=0A=
->   drivers/edac/Makefile                         |   1 +=0A=
->   drivers/edac/armada_xp_edac.c                 | 635 ++++++++++++++++++=
-=0A=
->   drivers/edac/debugfs.c                        |  11 +=0A=
->   drivers/edac/edac_module.h                    |   5 +=0A=
->   9 files changed, 730 insertions(+), 4 deletions(-)=0A=
->   rename arch/arm/{mm =3D> include/asm/hardware}/cache-aurora-l2.h (50%)=
-=0A=
->   create mode 100644 drivers/edac/armada_xp_edac.c=0A=
-> =0A=
-=0A=
+T24gTW9uLCBKYW4gMjEsIDIwMTkgYXQgMDk6NDU6MjJQTSArMDEwMCwgTHVib21pciBSaW50ZWwg
+d3JvdGU6Cj4gT24gTW9uLCAyMDE5LTAxLTIxIGF0IDE3OjUzICswMDAwLCBSdXNzZWxsIEtpbmcg
+LSBBUk0gTGludXggYWRtaW4KPiB3cm90ZToKPiA+IE9uIE1vbiwgSmFuIDIxLCAyMDE5IGF0IDEw
+OjA3OjExQU0gLTA2MDAsIFJvYiBIZXJyaW5nIHdyb3RlOgo+ID4gPiBPbiBNb24sIEphbiAyMSwg
+MjAxOSBhdCA5OjQ2IEFNIEx1Ym9taXIgUmludGVsIDxsa3VuZHJha0B2My5zaz4gd3JvdGU6Cj4g
+PiA+ID4gT24gTW9uLCAyMDE5LTAxLTIxIGF0IDA5OjM1IC0wNjAwLCBSb2IgSGVycmluZyB3cm90
+ZToKPiA+ID4gPiA+IE9uIFN1biwgSmFuIDIwLCAyMDE5IGF0IDExOjI2IEFNIEx1Ym9taXIgUmlu
+dGVsIDxsa3VuZHJha0B2My5zaz4gd3JvdGU6Cj4gPiA+ID4gPiA+IFRoZSBNYXJ2ZWxsIEFybWFk
+YSBEUk0gbWFzdGVyIGRldmljZSBpcyBhIHZpcnR1YWwgZGV2aWNlIG5lZWRlZCB0byBsaXN0IGFs
+bAo+ID4gPiA+ID4gPiBub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBncmFwaGljcyBzdWJzeXN0ZW0u
+Cj4gPiA+ID4gPiA+IAo+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBMdWJvbWlyIFJpbnRlbCA8
+bGt1bmRyYWtAdjMuc2s+Cj4gPiA+ID4gPiA+IC0tLQo+ID4gPiA+ID4gPiAgLi4uL2Rpc3BsYXkv
+YXJtYWRhL21hcnZlbGwtYXJtYWRhLWRybS50eHQgICAgIHwgMjQgKysrKysrKysrKysrKysrKysr
+Kwo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5nZWQsIDI0IGluc2VydGlvbnMoKykKPiA+ID4gPiA+
+ID4gCj4gPiA+ID4gPiA+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1hcm1hZGEtZHJtLnR4dCBiL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0u
+dHh0Cj4gPiA+ID4gPiA+IGluZGV4IGRlNGNjYTk0MzJjOC4uM2RiZmE4MDQ3ZjBiIDEwMDY0NAo+
+ID4gPiA+ID4gPiAtLS0gYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxh
+eS9hcm1hZGEvbWFydmVsbC1hcm1hZGEtZHJtLnR4dAo+ID4gPiA+ID4gPiArKysgYi9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvZGlzcGxheS9hcm1hZGEvbWFydmVsbC1hcm1hZGEt
+ZHJtLnR4dAo+ID4gPiA+ID4gPiBAQCAtMSwzICsxLDI3IEBACj4gPiA+ID4gPiA+ICtNYXJ2ZWxs
+IEFybWFkYSBEUk0gbWFzdGVyIGRldmljZQo+ID4gPiA+ID4gPiArPT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT0KPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiArVGhlIE1hcnZlbGwgQXJt
+YWRhIERSTSBtYXN0ZXIgZGV2aWNlIGlzIGEgdmlydHVhbCBkZXZpY2UgbmVlZGVkIHRvIGxpc3Qg
+YWxsCj4gPiA+ID4gPiA+ICtub2RlcyB0aGF0IGNvbXByaXNlIHRoZSBncmFwaGljcyBzdWJzeXN0
+ZW0uCj4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+ID4gK1JlcXVpcmVkIHByb3BlcnRpZXM6Cj4gPiA+
+ID4gPiA+ICsKPiA+ID4gPiA+ID4gKyAtIGNvbXBhdGlibGU6IHZhbHVlIHNob3VsZCBiZSAibWFy
+dmVsbCxkb3ZlLWRpc3BsYXktc3Vic3lzdGVtIiwKPiA+ID4gPiA+ID4gKyAgICJtYXJ2ZWxsLGFy
+bWFkYS1kaXNwbGF5LXN1YnN5c3RlbSIKPiA+ID4gPiA+ID4gKyAtIHBvcnRzOiBhIGxpc3Qgb2Yg
+cGhhbmRsZXMgcG9pbnRpbmcgdG8gZGlzcGxheSBpbnRlcmZhY2UgcG9ydHMgb2YgQ1JUQwo+ID4g
+PiA+ID4gPiArICAgZGV2aWNlcwo+ID4gPiA+ID4gPiArIC0gbWVtb3J5LXJlZ2lvbjogcGhhbmRs
+ZSB0byBhIG5vZGUgZGVzY3JpYmluZyBtZW1vcnkgdG8gYmUgdXNlZCBmb3IgdGhlCj4gPiA+ID4g
+PiA+ICsgICBmcmFtZWJ1ZmZlcgo+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ICtFeGFtcGxlOgo+
+ID4gPiA+ID4gPiArCj4gPiA+ID4gPiA+ICsgICAgICAgZGlzcGxheS1zdWJzeXN0ZW0gewo+ID4g
+PiA+ID4gPiArICAgICAgICAgICAgICAgY29tcGF0aWJsZSA9ICJtYXJ2ZWxsLGRvdmUtZGlzcGxh
+eS1zdWJzeXN0ZW0iLAo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgICAgICAgICAgICAgICJt
+YXJ2ZWxsLGFybWFkYS1kaXNwbGF5LXN1YnN5c3RlbSI7Cj4gPiA+ID4gPiA+ICsgICAgICAgICAg
+ICAgICBtZW1vcnktcmVnaW9uID0gPCZkaXNwbGF5X3Jlc2VydmVkPjsKPiA+ID4gPiA+ID4gKyAg
+ICAgICAgICAgICAgIHBvcnRzID0gPCZsY2QwX3BvcnQ+Owo+ID4gPiA+ID4gCj4gPiA+ID4gPiBJ
+ZiB0aGVyZSBpcyBvbmx5IG9uZSBkZXZpY2UsIHlvdSBkb24ndCBuZWVkIHRoaXMgdmlydHVhbCBu
+b2RlLgo+ID4gPiA+IAo+ID4gPiA+IEJ5ICJvbmUgZGV2aWNlIiB5b3UgbWVhbiBvbmUgTENEIGNv
+bnRyb2xsZXIgKENSVEMpPwo+ID4gPiAKPiA+ID4gWWVzLgo+ID4gCj4gPiBIb3cgZG9lcyB0aGF0
+IHdvcmsgKGFzIGZhciBhcyB0aGUgTGludXggaW1wbGVtZW50YXRpb24pID8gIEkgY2FuJ3Qgc2Vl
+Cj4gPiBhIHdheSB0aGF0IGNvdWxkIHdvcmssIHdoaWxlIGFsbG93aW5nIHRoZSBmbGV4aWJpbGl0
+eSB0aGF0IEFybWFkYSBEUk0KPiA+IGFsbG93cyAodHdvIGNvbXBsZXRlbHkgaW5kZXBlbmRlbnQg
+TENEIGNvbnRyb2xsZXJzIGFzIHR3byBzZXBhcmF0ZSBEUk0KPiA+IGRldmljZXMgdnMgb25lIERS
+TSBkZXZpY2UgY29udGFpbmluZyBib3RoIExDRCBjb250cm9sbGVycy4pCj4gPiAKPiA+ID4gPiBJ
+IHN1cHBvc2UgaW4gdGhlIChzaW5nbGUgQ1JUQykgZXhhbXBsZSBjYXNlLCB0aGUgZGlzcGxheS1z
+dWJzeXN0ZW0gbm9kZQo+ID4gPiA+IHVzZWQgdG8gYXNzb2NpYXRlIGl0IHdpdGggdGhlIG1lbW9y
+eSByZWdpb24gcmVzZXJ2ZWQgZm9yIGFsbG9jYXRpbmcgdGhlCj4gPiA+ID4gZnJhbWUgYnVmZmVy
+cyBmcm9tLiBDb3VsZCB0aGF0IGJlIGRvbmUgZGlmZmVyZW50bHk/Cj4gPiA+IAo+ID4gPiBNb3Zl
+IG1lbW9yeS1yZWdpb24gdG8gdGhlIExDRCBjb250cm9sbGVyIG5vZGUuCj4gPiAKPiA+IFRoYXQg
+ZG9lc24ndCB3b3JrIC0gaXQgd291bGQgYXBwZWFyIGluIHRoZSB3cm9uZyBwYXJ0IG9mIHRoZSBk
+cml2ZXIuCj4gPiAKPiA+ID4gPiBBbHNvLCBpZiB0aGUgbm9kZSBpcyBpbmRlZWQgbWFkZSBvcHRp
+b25hbCwgdGhlbiBpdCdzIGdvaW5nIHRvCj4gPiA+ID4gY29tcGxpY2F0ZSB0aGluZ3Mgb24gdGhl
+IERSTSBzaWRlLiBDdXJyZW50bHkgdGhlIGRyaXZlciB0aGF0IGJpbmRzIHRvCj4gPiA+ID4gdGhl
+IG5vZGUgY3JlYXRlcyB0aGUgRFJNIGRldmljZSBvbmNlIGl0IHNlZXMgYWxsIHRoZSBjb21wb25l
+bnRzCj4gPiA+ID4gY29ubmVjdGVkIHRvIHRoZSBwb3J0cyBhcHBlYXIuIElmIHdlIGxvb3NlIGl0
+LCB0aGVuIHRoZSBMQ0QgY29udHJvbGxlcgo+ID4gPiA+IGRyaXZlciB3b3VsZCBzb21laG93IG5l
+ZWQgdG8gZmluZCBvdXQgdGhhdCBpdCdzIGFsb25lIGFuZCBjcmVhdGUgdGhlCj4gPiA+ID4gRFJN
+IGRldmljZSBpdHNlbGYuCj4gPiA+IAo+ID4gPiBEVCBpcyBub3QgdGhlIG9ubHkgd2F5IHRvIGNy
+ZWF0ZSBkZXZpY2VzLiBUaGUgRFJNIGRyaXZlciBjYW4gYmluZCB0bwo+ID4gPiB0aGUgTENEQyBu
+b2RlIGFuZCB0aGVuIGNyZWF0ZSBhIGNoaWxkIENSVEMgZGV2aWNlIChvciBldmVuIG11bHRpcGxl
+Cj4gPiA+IG9uZXMgZm9yIGgvdyB3aXRoIG11bHRpcGxlIHBpcGVsaW5lcykuCj4gPiAKPiA+IFRo
+YXQgc2VlbXMgY29tcGxldGVseSB1cHNpZGUgZG93biBhbmQgcmVkaWN1bG91cyB0byBtZSAtIGFy
+ZSB5b3UKPiA+IHJlYWxseSBzdWdnZXN0aW5nIHRoYXQgd2Ugc2hvdWxkIGhhdmUgc29tZSBraW5k
+IG9mIHZpcnR1YWwgZGV2aWNlCj4gPiBpbiBEVCwgYW5kIG9taXQgdGhlIF9yZWFsXyBwaHlzaWNh
+bCBkZXZpY2VzIGZvciB0aGF0LCBoYXZpbmcgdGhlCj4gPiBkcml2ZXIgY3JlYXRlIHRoZSBkZXZp
+Y2Ugd2l0aCBhbGwgdGhlIGFwcHJvcHJpYXRlIFNvQyByZXNvdXJjZXM/Cj4gCj4gSG1tLCB0aGF0
+J3Mgbm90IGhvdyBJIHJlYWQgdGhhdC4gTXkgdW5kZXJzdGFuZGluZyAocHV0dGluZyBhc2lkZQo+
+IHByYWN0aWNhbGl0eSBvZiB0aGUgc29sdXRpb24pIGlzIHRoYXQgUm9iIHdhcyBtZXJlbHkgc3Vn
+Z2VzdGluZyB0aGF0Cj4gZm9yIHRoZSBzaW5nbGUgTENEQyBjYXNlIHRoZXJlIHdvdWxkIGJlIGp1
+c3QgYSBzaW5nbGUgTENEQyBub2RlIGluIERUCj4gYW5kIHRoZSBkcml2ZXIgdGhhdCBiaW5kcyB0
+byBpdCB3b3VsZCBjcmVhdGUgdGhlIERSTSBkZXZpY2UgJiBDUlRDCj4gZGV2aWNlIHBhaXIuCgpI
+b3cgd291bGQgd2Uga25vdyB0aGF0IHdhcyB0aGUgY2FzZSB3aGVuIHRoZSBkcml2ZXIgYmluZHMg
+dG8gdGhlIENSVEMKbm9kZT8gIFRoZXJlIGlzIG5vIGJhY2stbGluayBmcm9tIHRoZSBDUlRDIHRv
+IHRoZSBkaXNwbGF5LXN1YnN5c3RlbQp3aGVuIHRoZXJlJ3MgYSBkaXNwbGF5LXN1YnN5c3RlbSBu
+b2RlIHByZXNlbnQsIHNvIHRoZXJlJ3Mgbm8gd2F5IGZvcgp0aGUgQ1JUQyBkcml2ZXIgdG8ga25v
+dyB3aGV0aGVyIGl0IHNob3VsZCBjcmVhdGUgdGhlIERSTSBkZXZpY2Ugb3IKbm90LgoKSSBqdXN0
+IGNhbid0IHNlZSBob3cgdGhpcyB3b3JrcyBhdCBhIHRlY2huaWNhbCBsZXZlbC4KCj4gPiA+IFlv
+dSdsbCBhbHNvIG5vdGljZSB0aGF0IHRoZXJlIGFyZSBvbmx5IDMgY2FzZXMgb2YgdGhpcyB2aXJ0
+dWFsIG5vZGUgaW4KPiA+ID4gdGhlIHRyZWU6IFNUaSwgaS5NWCBJUFUsIGFuZCBSb2NrY2hpcC4g
+VGhhdCdzIGJlY2F1c2Ugd2UndmUgZGVwcmVjYXRlZAo+ID4gPiBkb2luZyB0aGVzZSB2aXJ0dWFs
+IG5vZGVzIGZvciBzb21lIHRpbWUgbm93LiBJT1csIHRoZXJlIGFyZSBzZXZlcmFsCj4gPiA+IGV4
+YW1wbGVzIG9mIGhvdyB0byBkbyB0aGlzIHdpdGhvdXQgYSB2aXJ0dWFsIG5vZGUuCj4gPiAKPiA+
+IFRoaXMgZHJpdmVyIGhhcyBiZWVuIGluLXRyZWUgd2l0aCB0aGlzIHNldHVwIGZvciBzb21lIHRp
+bWUsIGFsdGhvdWdoCj4gPiB0aGUgZG9jdW1lbnRhdGlvbiBoYXMgYmVlbiBtaXNzaW5nICh3ZSBh
+Y3R1YWxseSBoYXZlIGEgX2xvdF8gb2YKPiA+IGluc3RhbmNlcyBvZiB0aGF0LikgIEhvd2V2ZXIs
+IHdlIGhhdmUgbm8gaW4tdHJlZSBEVCB1c2luZyBpdC4KPiA+IAo+ID4gSSBkb24ndCByZWFsbHkg
+c2VlIGhvdyB0byBzYXRpc2Z5IHlvdXIgY29tbWVudHMgd2l0aG91dCB0b3RhbGx5Cj4gPiByZXN0
+cnVjdHVyaW5nIHRoZSBkcml2ZXIsIHdoaWNoIGlzIGdvaW5nIHRvIGJlIHF1aXRlIGEgYmlnIGNo
+dW5rCj4gPiBvZiB3b3JrLiAgSSdtIG5vdCBzdXJlIEkgaGF2ZSB0aGUgbW90aXZhdGlvbiB0byBk
+byB0aGF0IHJpZ2h0IG5vdy4KPiAKPiBOb3RlIHRoYXQgdGhlIGluaXRpYWwgb2JqZWN0aW9uIHdh
+cyBhZ2FpbnN0IHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlCj4gYmVpbmcgbWFuZGF0b3J5IGlm
+ICJ0aGVyZSBpcyBvbmx5IG9uZSBbTENEQ10gZGV2aWNlIi4KPiAKPiBNeSB1bmRlcnN0YW5kaW5n
+IGlzIHRoYXQgbmVlZCB0byBpbmNsdWRlIHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlIGZvcgo+
+IHRoZSBtdWx0aXBsZSBMQ0RDIHNldHVwIChvbiBEb3ZlIHBsYXRmb3JtKSBhbnl3YXlzLiBJcyB0
+aGF0IGNvcnJlY3Q/Cj4gCj4gUm9iLCBJJ20gd29uZGVyaW5nIGlmIHRoZXJlIHdvdWxkIGJlIGEg
+cG9zc2liaWxpdHkgb2YgZmluZGluZyBzb21lCj4gbWlkZGxlIGdyb3VkPyBQZXJoYXBzIGRvY3Vt
+ZW50aW5nLCB0aGF0IHRoZSBkaXNwbGF5LXN1YnN5c3RlbSBub2RlCj4gd291bGQgaWRlYWxseSBi
+ZSBvcHRpb25hbCBmb3Igc2luZ2xlIExDREMgc2V0dXBzLCBidXQgaW5kaWNhdGluZyB0aGF0Cj4g
+dGhlIEFybWFkYSBEUk0gZHJpdmVyIGFjdHVhbGx5IHJlcXVpcmVzIGlzPwo+IAo+IE5vdGUgdGhh
+dCB0aGlzIGlzIG5vdCBhIG5ldyBkcml2ZXIgLS0gaXQgaGFzIGJlZW4gYXJvdW5kIHNpbmNlIDIw
+MTMsCj4gdGhvdWdoLCB3aXRob3V0IHVzZWZ1bCBEVCBiaW5kaW5ncy4gTWF5YmUgaXQgd291bGQg
+ZG8ganVzdCB3ZWxsIGluCj4gY29tcGFueSBvZiB0aGUgb3RoZXIgdGhyZWUgZHJpdmVycyB5b3Ug
+bWVudGlvbmVkIHRoYXQgdXNlIHNpbWlsYXIKPiBiaW5kaW5ncy4KPiAKPiAoQWxzbywgdGhlcmUg
+c2VlbSB0byBoYXZlIHN1YnN0YW50aWFsIGRpc2N1c3Npb24gcmVnYXJkaW5nIHRoZSBiaW5kaW5n
+cwo+IGRlc2lnbiBiYWNrIGluICcxMywgc2hlZGRpbmcgc29tZSBsaWdodCBpbnRvIHdoeSB0aGUg
+ZGlzcGxheS1zdWJzeXN0ZW0KPiBub2RlIHdhcyBkZWVtZWQgdXNlZnVsOiBbMV0pCj4gCj4gWzFd
+IGh0dHBzOi8vd3d3Lm1haWwtYXJjaGl2ZS5jb20vZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tc2c0MDM1OC5odG1sCj4gCj4gVGhhbmtzLAo+IEx1Ym8KPiAKPiAKCi0tIApSTUsncyBQ
+YXRjaCBzeXN0ZW06IGh0dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hl
+cy8KRlRUQyBicm9hZGJhbmQgZm9yIDAuOG1pbGUgbGluZSBpbiBzdWJ1cmJpYTogc3luYyBhdCAx
+Mi4xTWJwcyBkb3duIDYyMmticHMgdXAKQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6IDExLjlN
+YnBzIGRvd24gNTAwa2JwcyB1cApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVz
+a3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9k
+cmktZGV2ZWwK
