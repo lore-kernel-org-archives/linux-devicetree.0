@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v3, 3/6] dt-binding: ptp_qoriq: document "fsl,extts-fifo" property
-Date: Mon, 21 Jan 2019 18:41:40 +0800
-Message-ID: <20190121104143.46782-4-yangbo.lu@nxp.com>
+Subject: [v3, 4/6] ARM: dts: ls1021a: add 1588 external trigger stamp fifo support
+Date: Mon, 21 Jan 2019 18:41:41 +0800
+Message-ID: <20190121104143.46782-5-yangbo.lu@nxp.com>
 References: <20190121104143.46782-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190121104143.46782-1-yangbo.lu@nxp.com>
@@ -10,30 +10,30 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.i
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Documented "fsl,extts-fifo" property.
+This patch is to add external trigger stamp fifo support
+for 1588 timer.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
-	- Modified binding description.
+	- None.
 Changes for v3:
-	- Rephrased fsl,extts-fifo.
+	- None.
 ---
- .../devicetree/bindings/ptp/ptp-qoriq.txt          |    2 ++
- 1 files changed, 2 insertions(+), 0 deletions(-)
+ arch/arm/boot/dts/ls1021a.dtsi |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-index c5d0e79..8e7f855 100644
---- a/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-+++ b/Documentation/devicetree/bindings/ptp/ptp-qoriq.txt
-@@ -17,6 +17,8 @@ Clock Properties:
-   - fsl,tmr-fiper1   Fixed interval period pulse generator.
-   - fsl,tmr-fiper2   Fixed interval period pulse generator.
-   - fsl,max-adj      Maximum frequency adjustment in parts per billion.
-+  - fsl,extts-fifo   The presence of this property indicates hardware
-+		     support for the external trigger stamp FIFO.
+diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+index ed09412..ad75959 100644
+--- a/arch/arm/boot/dts/ls1021a.dtsi
++++ b/arch/arm/boot/dts/ls1021a.dtsi
+@@ -706,6 +706,7 @@
+ 			fsl,tmr-fiper1  = <999999995>;
+ 			fsl,tmr-fiper2  = <99990>;
+ 			fsl,max-adj     = <499999999>;
++			fsl,extts-fifo;
+ 		};
  
-   These properties set the operational parameters for the PTP
-   clock. You must choose these carefully for the clock to work right.
+ 		enet0: ethernet@2d10000 {
 -- 
 1.7.1
