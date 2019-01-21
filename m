@@ -1,408 +1,168 @@
 From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v2 21/21] memblock: drop memblock_alloc_*_nopanic() variants
-Date: Mon, 21 Jan 2019 10:04:08 +0200
-Message-ID: <1548057848-15136-22-git-send-email-rppt@linux.ibm.com>
+Subject: [PATCH v2 14/21] ia64: add checks for the return value
+ of memblock_alloc*()
+Date: Mon, 21 Jan 2019 10:04:01 +0200
+Message-ID: <1548057848-15136-15-git-send-email-rppt@linux.ibm.com>
 References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
 In-Reply-To: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
 To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+d>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, Petr Mladek <pmladek@suse.com>, linux-xtensa@linux-xten
 List-Id: devicetree@vger.kernel.org
 
-As all the memblock allocation functions return NULL in case of error
-rather than panic(), the duplicates with _nopanic suffix can be removed.
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- arch/arc/kernel/unwind.c       |  3 +--
- arch/sh/mm/init.c              |  2 +-
- arch/x86/kernel/setup_percpu.c | 10 +++++-----
- arch/x86/mm/kasan_init_64.c    | 14 ++++++++------
- drivers/firmware/memmap.c      |  2 +-
- drivers/usb/early/xhci-dbc.c   |  2 +-
- include/linux/memblock.h       | 35 -----------------------------------
- kernel/dma/swiotlb.c           |  2 +-
- kernel/printk/printk.c         |  9 +--------
- mm/memblock.c                  | 35 -----------------------------------
- mm/page_alloc.c                | 10 +++++-----
- mm/page_ext.c                  |  2 +-
- mm/percpu.c                    | 11 ++++-------
- mm/sparse.c                    |  6 ++----
- 14 files changed, 31 insertions(+), 112 deletions(-)
-
-diff --git a/arch/arc/kernel/unwind.c b/arch/arc/kernel/unwind.c
-index d34f69e..271e9fa 100644
---- a/arch/arc/kernel/unwind.c
-+++ b/arch/arc/kernel/unwind.c
-@@ -181,8 +181,7 @@ static void init_unwind_hdr(struct unwind_table *table,
-  */
- static void *__init unw_hdr_alloc_early(unsigned long sz)
- {
--	return memblock_alloc_from_nopanic(sz, sizeof(unsigned int),
--					   MAX_DMA_ADDRESS);
-+	return memblock_alloc_from(sz, sizeof(unsigned int), MAX_DMA_ADDRESS);
- }
- 
- static void *unw_hdr_alloc(unsigned long sz)
-diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
-index fceefd9..7062132 100644
---- a/arch/sh/mm/init.c
-+++ b/arch/sh/mm/init.c
-@@ -202,7 +202,7 @@ void __init allocate_pgdat(unsigned int nid)
- 	get_pfn_range_for_nid(nid, &start_pfn, &end_pfn);
- 
- #ifdef CONFIG_NEED_MULTIPLE_NODES
--	NODE_DATA(nid) = memblock_alloc_try_nid_nopanic(
-+	NODE_DATA(nid) = memblock_alloc_try_nid(
- 				sizeof(struct pglist_data),
- 				SMP_CACHE_BYTES, MEMBLOCK_LOW_LIMIT,
- 				MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-diff --git a/arch/x86/kernel/setup_percpu.c b/arch/x86/kernel/setup_percpu.c
-index e8796fc..0c5e9bf 100644
---- a/arch/x86/kernel/setup_percpu.c
-+++ b/arch/x86/kernel/setup_percpu.c
-@@ -106,22 +106,22 @@ static void * __init pcpu_alloc_bootmem(unsigned int cpu, unsigned long size,
- 	void *ptr;
- 
- 	if (!node_online(node) || !NODE_DATA(node)) {
--		ptr = memblock_alloc_from_nopanic(size, align, goal);
-+		ptr = memblock_alloc_from(size, align, goal);
- 		pr_info("cpu %d has no node %d or node-local memory\n",
- 			cpu, node);
- 		pr_debug("per cpu data for cpu%d %lu bytes at %016lx\n",
- 			 cpu, size, __pa(ptr));
- 	} else {
--		ptr = memblock_alloc_try_nid_nopanic(size, align, goal,
--						     MEMBLOCK_ALLOC_ACCESSIBLE,
--						     node);
-+		ptr = memblock_alloc_try_nid(size, align, goal,
-+					     MEMBLOCK_ALLOC_ACCESSIBLE,
-+					     node);
- 
- 		pr_debug("per cpu data for cpu%d %lu bytes on node%d at %016lx\n",
- 			 cpu, size, node, __pa(ptr));
- 	}
- 	return ptr;
- #else
--	return memblock_alloc_from_nopanic(size, align, goal);
-+	return memblock_alloc_from(size, align, goal);
- #endif
- }
- 
-diff --git a/arch/x86/mm/kasan_init_64.c b/arch/x86/mm/kasan_init_64.c
-index 462fde8..8dc0fc0 100644
---- a/arch/x86/mm/kasan_init_64.c
-+++ b/arch/x86/mm/kasan_init_64.c
-@@ -24,14 +24,16 @@ extern struct range pfn_mapped[E820_MAX_ENTRIES];
- 
- static p4d_t tmp_p4d_table[MAX_PTRS_PER_P4D] __initdata __aligned(PAGE_SIZE);
- 
--static __init void *early_alloc(size_t size, int nid, bool panic)
-+static __init void *early_alloc(size_t size, int nid, bool should_panic)
- {
--	if (panic)
--		return memblock_alloc_try_nid(size, size,
--			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
--	else
--		return memblock_alloc_try_nid_nopanic(size, size,
-+	void *ptr = memblock_alloc_try_nid(size, size,
- 			__pa(MAX_DMA_ADDRESS), MEMBLOCK_ALLOC_ACCESSIBLE, nid);
-+
-+	if (!ptr && should_panic)
-+		panic("%pS: Failed to allocate page, nid=%d from=%lx\n",
-+		      (void *)_RET_IP_, nid, __pa(MAX_DMA_ADDRESS));
-+
-+	return ptr;
- }
- 
- static void __init kasan_populate_pmd(pmd_t *pmd, unsigned long addr,
-diff --git a/drivers/firmware/memmap.c b/drivers/firmware/memmap.c
-index ec4fd25..d168c87 100644
---- a/drivers/firmware/memmap.c
-+++ b/drivers/firmware/memmap.c
-@@ -333,7 +333,7 @@ int __init firmware_map_add_early(u64 start, u64 end, const char *type)
- {
- 	struct firmware_map_entry *entry;
- 
--	entry = memblock_alloc_nopanic(sizeof(struct firmware_map_entry),
-+	entry = memblock_alloc(sizeof(struct firmware_map_entry),
- 			       SMP_CACHE_BYTES);
- 	if (WARN_ON(!entry))
- 		return -ENOMEM;
-diff --git a/drivers/usb/early/xhci-dbc.c b/drivers/usb/early/xhci-dbc.c
-index d2652dc..c9cfb10 100644
---- a/drivers/usb/early/xhci-dbc.c
-+++ b/drivers/usb/early/xhci-dbc.c
-@@ -94,7 +94,7 @@ static void * __init xdbc_get_page(dma_addr_t *dma_addr)
- {
- 	void *virt;
- 
--	virt = memblock_alloc_nopanic(PAGE_SIZE, PAGE_SIZE);
-+	virt = memblock_alloc(PAGE_SIZE, PAGE_SIZE);
- 	if (!virt)
- 		return NULL;
- 
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index f5a83a1..71c9e32 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -379,9 +379,6 @@ static inline phys_addr_t memblock_phys_alloc(phys_addr_t size,
- void *memblock_alloc_try_nid_raw(phys_addr_t size, phys_addr_t align,
- 				 phys_addr_t min_addr, phys_addr_t max_addr,
- 				 int nid);
--void *memblock_alloc_try_nid_nopanic(phys_addr_t size, phys_addr_t align,
--				     phys_addr_t min_addr, phys_addr_t max_addr,
--				     int nid);
- void *memblock_alloc_try_nid(phys_addr_t size, phys_addr_t align,
- 			     phys_addr_t min_addr, phys_addr_t max_addr,
- 			     int nid);
-@@ -408,36 +405,12 @@ static inline void * __init memblock_alloc_from(phys_addr_t size,
- 				      MEMBLOCK_ALLOC_ACCESSIBLE, NUMA_NO_NODE);
- }
- 
--static inline void * __init memblock_alloc_nopanic(phys_addr_t size,
--						   phys_addr_t align)
--{
--	return memblock_alloc_try_nid_nopanic(size, align, MEMBLOCK_LOW_LIMIT,
--					      MEMBLOCK_ALLOC_ACCESSIBLE,
--					      NUMA_NO_NODE);
--}
--
- static inline void * __init memblock_alloc_low(phys_addr_t size,
- 					       phys_addr_t align)
- {
- 	return memblock_alloc_try_nid(size, align, MEMBLOCK_LOW_LIMIT,
- 				      ARCH_LOW_ADDRESS_LIMIT, NUMA_NO_NODE);
- }
--static inline void * __init memblock_alloc_low_nopanic(phys_addr_t size,
--						       phys_addr_t align)
--{
--	return memblock_alloc_try_nid_nopanic(size, align, MEMBLOCK_LOW_LIMIT,
--					      ARCH_LOW_ADDRESS_LIMIT,
--					      NUMA_NO_NODE);
--}
--
--static inline void * __init memblock_alloc_from_nopanic(phys_addr_t size,
--							phys_addr_t align,
--							phys_addr_t min_addr)
--{
--	return memblock_alloc_try_nid_nopanic(size, align, min_addr,
--					      MEMBLOCK_ALLOC_ACCESSIBLE,
--					      NUMA_NO_NODE);
--}
- 
- static inline void * __init memblock_alloc_node(phys_addr_t size,
- 						phys_addr_t align, int nid)
-@@ -446,14 +419,6 @@ static inline void * __init memblock_alloc_node(phys_addr_t size,
- 				      MEMBLOCK_ALLOC_ACCESSIBLE, nid);
- }
- 
--static inline void * __init memblock_alloc_node_nopanic(phys_addr_t size,
--							int nid)
--{
--	return memblock_alloc_try_nid_nopanic(size, SMP_CACHE_BYTES,
--					      MEMBLOCK_LOW_LIMIT,
--					      MEMBLOCK_ALLOC_ACCESSIBLE, nid);
--}
--
- static inline void __init memblock_free_early(phys_addr_t base,
- 					      phys_addr_t size)
- {
-diff --git a/kernel/dma/swiotlb.c b/kernel/dma/swiotlb.c
-index e78835c8..659fc2a5 100644
---- a/kernel/dma/swiotlb.c
-+++ b/kernel/dma/swiotlb.c
-@@ -248,7 +248,7 @@ swiotlb_init(int verbose)
- 	bytes = io_tlb_nslabs << IO_TLB_SHIFT;
- 
- 	/* Get IO TLB memory from the low pages */
--	vstart = memblock_alloc_low_nopanic(PAGE_ALIGN(bytes), PAGE_SIZE);
-+	vstart = memblock_alloc_low(PAGE_ALIGN(bytes), PAGE_SIZE);
- 	if (vstart && !swiotlb_init_with_tbl(vstart, io_tlb_nslabs, verbose))
- 		return;
- 
-diff --git a/kernel/printk/printk.c b/kernel/printk/printk.c
-index c4f0a41..35cb48b5 100644
---- a/kernel/printk/printk.c
-+++ b/kernel/printk/printk.c
-@@ -1147,14 +1147,7 @@ void __init setup_log_buf(int early)
- 	if (!new_log_buf_len)
- 		return;
- 
--	if (early) {
--		new_log_buf =
--			memblock_alloc(new_log_buf_len, LOG_ALIGN);
--	} else {
--		new_log_buf = memblock_alloc_nopanic(new_log_buf_len,
--							  LOG_ALIGN);
--	}
--
-+	new_log_buf = memblock_alloc(new_log_buf_len, LOG_ALIGN);
- 	if (unlikely(!new_log_buf)) {
- 		pr_err("log_buf_len: %lu bytes not available\n",
- 			new_log_buf_len);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index 7164275..522a44e 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1491,41 +1491,6 @@ void * __init memblock_alloc_try_nid_raw(
- }
- 
- /**
-- * memblock_alloc_try_nid_nopanic - allocate boot memory block
-- * @size: size of memory block to be allocated in bytes
-- * @align: alignment of the region and block's size
-- * @min_addr: the lower bound of the memory region from where the allocation
-- *	  is preferred (phys address)
-- * @max_addr: the upper bound of the memory region from where the allocation
-- *	      is preferred (phys address), or %MEMBLOCK_ALLOC_ACCESSIBLE to
-- *	      allocate only from memory limited by memblock.current_limit value
-- * @nid: nid of the free area to find, %NUMA_NO_NODE for any node
-- *
-- * Public function, provides additional debug information (including caller
-- * info), if enabled. This function zeroes the allocated memory.
-- *
-- * Return:
-- * Virtual address of allocated memory block on success, NULL on failure.
-- */
--void * __init memblock_alloc_try_nid_nopanic(
--				phys_addr_t size, phys_addr_t align,
--				phys_addr_t min_addr, phys_addr_t max_addr,
--				int nid)
--{
--	void *ptr;
--
--	memblock_dbg("%s: %llu bytes align=0x%llx nid=%d from=%pa max_addr=%pa %pF\n",
--		     __func__, (u64)size, (u64)align, nid, &min_addr,
--		     &max_addr, (void *)_RET_IP_);
--
--	ptr = memblock_alloc_internal(size, align,
--					   min_addr, max_addr, nid);
--	if (ptr)
--		memset(ptr, 0, size);
--	return ptr;
--}
--
--/**
-  * memblock_alloc_try_nid - allocate boot memory block
-  * @size: size of memory block to be allocated in bytes
-  * @align: alignment of the region and block's size
-diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-index d7a5219..cd5c593 100644
---- a/mm/page_alloc.c
-+++ b/mm/page_alloc.c
-@@ -6556,8 +6556,8 @@ static void __ref setup_usemap(struct pglist_data *pgdat,
- 	zone->pageblock_flags = NULL;
- 	if (usemapsize)
- 		zone->pageblock_flags =
--			memblock_alloc_node_nopanic(usemapsize,
--							 pgdat->node_id);
-+			memblock_alloc_node(usemapsize, SMP_CACHE_BYTES,
-+					    pgdat->node_id);
- }
- #else
- static inline void setup_usemap(struct pglist_data *pgdat, struct zone *zone,
-@@ -6786,7 +6786,8 @@ static void __ref alloc_node_mem_map(struct pglist_data *pgdat)
- 		end = pgdat_end_pfn(pgdat);
- 		end = ALIGN(end, MAX_ORDER_NR_PAGES);
- 		size =  (end - start) * sizeof(struct page);
--		map = memblock_alloc_node_nopanic(size, pgdat->node_id);
-+		map = memblock_alloc_node(size, SMP_CACHE_BYTES,
-+					  pgdat->node_id);
- 		pgdat->node_mem_map = map + offset;
- 	}
- 	pr_debug("%s: node %d, pgdat %08lx, node_mem_map %08lx\n",
-@@ -8064,8 +8065,7 @@ void *__init alloc_large_system_hash(const char *tablename,
- 		size = bucketsize << log2qty;
- 		if (flags & HASH_EARLY) {
- 			if (flags & HASH_ZERO)
--				table = memblock_alloc_nopanic(size,
--							       SMP_CACHE_BYTES);
-+				table = memblock_alloc(size, SMP_CACHE_BYTES);
- 			else
- 				table = memblock_alloc_raw(size,
- 							   SMP_CACHE_BYTES);
-diff --git a/mm/page_ext.c b/mm/page_ext.c
-index 0cfaa06..a3db109 100644
---- a/mm/page_ext.c
-+++ b/mm/page_ext.c
-@@ -161,7 +161,7 @@ static int __init alloc_node_page_ext(int nid)
- 
- 	table_size = get_entry_size() * nr_pages;
- 
--	base = memblock_alloc_try_nid_nopanic(
-+	base = memblock_alloc_try_nid(
- 			table_size, PAGE_SIZE, __pa(MAX_DMA_ADDRESS),
- 			MEMBLOCK_ALLOC_ACCESSIBLE, nid);
- 	if (!base)
-diff --git a/mm/percpu.c b/mm/percpu.c
-index 5998b03..e302b81 100644
---- a/mm/percpu.c
-+++ b/mm/percpu.c
-@@ -1905,7 +1905,7 @@ struct pcpu_alloc_info * __init pcpu_alloc_alloc_info(int nr_groups,
- 			  __alignof__(ai->groups[0].cpu_map[0]));
- 	ai_size = base_size + nr_units * sizeof(ai->groups[0].cpu_map[0]);
- 
--	ptr = memblock_alloc_nopanic(PFN_ALIGN(ai_size), PAGE_SIZE);
-+	ptr = memblock_alloc(PFN_ALIGN(ai_size), PAGE_SIZE);
- 	if (!ptr)
- 		return NULL;
- 	ai = ptr;
-@@ -2496,7 +2496,7 @@ int __init pcpu_embed_first_chunk(size_t reserved_size, size_t dyn_size,
- 	size_sum = ai->static_size + ai->reserved_size + ai->dyn_size;
- 	areas_size = PFN_ALIGN(ai->nr_groups * sizeof(void *));
- 
--	areas = memblock_alloc_nopanic(areas_size, SMP_CACHE_BYTES);
-+	areas = memblock_alloc(areas_size, SMP_CACHE_BYTES);
- 	if (!areas) {
- 		rc = -ENOMEM;
- 		goto out_free;
-@@ -2729,8 +2729,7 @@ EXPORT_SYMBOL(__per_cpu_offset);
- static void * __init pcpu_dfl_fc_alloc(unsigned int cpu, size_t size,
- 				       size_t align)
- {
--	return  memblock_alloc_from_nopanic(
--			size, align, __pa(MAX_DMA_ADDRESS));
-+	return  memblock_alloc_from(size, align, __pa(MAX_DMA_ADDRESS));
- }
- 
- static void __init pcpu_dfl_fc_free(void *ptr, size_t size)
-@@ -2778,9 +2777,7 @@ void __init setup_per_cpu_areas(void)
- 	void *fc;
- 
- 	ai = pcpu_alloc_alloc_info(1, 1);
--	fc = memblock_alloc_from_nopanic(unit_size,
--					      PAGE_SIZE,
--					      __pa(MAX_DMA_ADDRESS));
-+	fc = memblock_alloc_from(unit_size, PAGE_SIZE, __pa(MAX_DMA_ADDRESS));
- 	if (!ai || !fc)
- 		panic("Failed to allocate memory for percpu areas.");
- 	/* kmemleak tracks the percpu allocations separately */
-diff --git a/mm/sparse.c b/mm/sparse.c
-index ad94242..1471f06 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -330,9 +330,7 @@ sparse_early_usemaps_alloc_pgdat_section(struct pglist_data *pgdat,
- 	limit = goal + (1UL << PA_SECTION_SHIFT);
- 	nid = early_pfn_to_nid(goal >> PAGE_SHIFT);
- again:
--	p = memblock_alloc_try_nid_nopanic(size,
--						SMP_CACHE_BYTES, goal, limit,
--						nid);
-+	p = memblock_alloc_try_nid(size, SMP_CACHE_BYTES, goal, limit, nid);
- 	if (!p && limit) {
- 		limit = 0;
- 		goto again;
-@@ -386,7 +384,7 @@ static unsigned long * __init
- sparse_early_usemaps_alloc_pgdat_section(struct pglist_data *pgdat,
- 					 unsigned long size)
- {
--	return memblock_alloc_node_nopanic(size, pgdat->node_id);
-+	return memblock_alloc_node(size, SMP_CACHE_BYTES, pgdat->node_id);
- }
- 
- static void __init check_usemap_section_nr(int nid, unsigned long *usemap)
--- 
-2.7.4
+QWRkIHBhbmljKCkgY2FsbHMgaWYgbWVtYmxvY2tfYWxsb2MqKCkgcmV0dXJucyBOVUxMLgoKTW9z
+dCBvZiB0aGUgY2hhbmdlcyBhcmUgc2ltcGx5IGFkZGl0aW9uIG9mCgoJaWYoIXB0cikKCQlwYW5p
+YygpOwoKc3RhdGVtZW50cyBhZnRlciB0aGUgY2FsbHMgdG8gbWVtYmxvY2tfYWxsb2MqKCkgdmFy
+aWFudHMuCgpFeGNlcHRpb25zIGFyZSBjcmVhdGVfbWVtX21hcF9wYWdlX3RhYmxlKCkgYW5kIGlh
+NjRfbG9nX2luaXQoKSB0aGF0IHdlcmUKc2xpZ2h0bHkgcmVmYWN0b3JlZCB0byBhY2NvbW1vZGF0
+ZSB0aGUgY2hhbmdlLgoKU2lnbmVkLW9mZi1ieTogTWlrZSBSYXBvcG9ydCA8cnBwdEBsaW51eC5p
+Ym0uY29tPgotLS0KIGFyY2gvaWE2NC9rZXJuZWwvbWNhLmMgICAgICAgICAgfCAyMCArKysrKysr
+KysrKysrKy0tLS0tLQogYXJjaC9pYTY0L21tL2NvbnRpZy5jICAgICAgICAgICB8ICA4ICsrKysr
+Ky0tCiBhcmNoL2lhNjQvbW0vZGlzY29udGlnLmMgICAgICAgIHwgIDQgKysrKwogYXJjaC9pYTY0
+L21tL2luaXQuYyAgICAgICAgICAgICB8IDM4ICsrKysrKysrKysrKysrKysrKysrKysrKysrKysr
+Ky0tLS0tLS0tCiBhcmNoL2lhNjQvbW0vdGxiLmMgICAgICAgICAgICAgIHwgIDYgKysrKysrCiBh
+cmNoL2lhNjQvc24va2VybmVsL2lvX2NvbW1vbi5jIHwgIDMgKysrCiBhcmNoL2lhNjQvc24va2Vy
+bmVsL3NldHVwLmMgICAgIHwgMTIgKysrKysrKysrKystCiA3IGZpbGVzIGNoYW5nZWQsIDc0IGlu
+c2VydGlvbnMoKyksIDE3IGRlbGV0aW9ucygtKQoKZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9rZXJu
+ZWwvbWNhLmMgYi9hcmNoL2lhNjQva2VybmVsL21jYS5jCmluZGV4IDM3MGJjMzQuLjVjYWJiM2Yg
+MTAwNjQ0Ci0tLSBhL2FyY2gvaWE2NC9rZXJuZWwvbWNhLmMKKysrIGIvYXJjaC9pYTY0L2tlcm5l
+bC9tY2EuYwpAQCAtMzU5LDExICszNTksNiBAQCB0eXBlZGVmIHN0cnVjdCBpYTY0X3N0YXRlX2xv
+Z19zCiAKIHN0YXRpYyBpYTY0X3N0YXRlX2xvZ190IGlhNjRfc3RhdGVfbG9nW0lBNjRfTUFYX0xP
+R19UWVBFU107CiAKLSNkZWZpbmUgSUE2NF9MT0dfQUxMT0NBVEUoaXQsIHNpemUpIFwKLQl7aWE2
+NF9zdGF0ZV9sb2dbaXRdLmlzbF9sb2dbSUE2NF9MT0dfQ1VSUl9JTkRFWChpdCldID0gXAotCQko
+aWE2NF9lcnJfcmVjX3QgKiltZW1ibG9ja19hbGxvYyhzaXplLCBTTVBfQ0FDSEVfQllURVMpOyBc
+Ci0JaWE2NF9zdGF0ZV9sb2dbaXRdLmlzbF9sb2dbSUE2NF9MT0dfTkVYVF9JTkRFWChpdCldID0g
+XAotCQkoaWE2NF9lcnJfcmVjX3QgKiltZW1ibG9ja19hbGxvYyhzaXplLCBTTVBfQ0FDSEVfQllU
+RVMpO30KICNkZWZpbmUgSUE2NF9MT0dfTE9DS19JTklUKGl0KSBzcGluX2xvY2tfaW5pdCgmaWE2
+NF9zdGF0ZV9sb2dbaXRdLmlzbF9sb2NrKQogI2RlZmluZSBJQTY0X0xPR19MT0NLKGl0KSAgICAg
+IHNwaW5fbG9ja19pcnFzYXZlKCZpYTY0X3N0YXRlX2xvZ1tpdF0uaXNsX2xvY2ssIHMpCiAjZGVm
+aW5lIElBNjRfTE9HX1VOTE9DSyhpdCkgICAgc3Bpbl91bmxvY2tfaXJxcmVzdG9yZSgmaWE2NF9z
+dGF0ZV9sb2dbaXRdLmlzbF9sb2NrLHMpCkBAIC0zNzgsNiArMzczLDE5IEBAIHN0YXRpYyBpYTY0
+X3N0YXRlX2xvZ190IGlhNjRfc3RhdGVfbG9nW0lBNjRfTUFYX0xPR19UWVBFU107CiAjZGVmaW5l
+IElBNjRfTE9HX0NVUlJfQlVGRkVSKGl0KSAgICh2b2lkICopKChpYTY0X3N0YXRlX2xvZ1tpdF0u
+aXNsX2xvZ1tJQTY0X0xPR19DVVJSX0lOREVYKGl0KV0pKQogI2RlZmluZSBJQTY0X0xPR19DT1VO
+VChpdCkgICAgICAgICBpYTY0X3N0YXRlX2xvZ1tpdF0uaXNsX2NvdW50CiAKK3N0YXRpYyBpbmxp
+bmUgdm9pZCBpYTY0X2xvZ19hbGxvY2F0ZShpbnQgaXQsIHU2NCBzaXplKQoreworCWlhNjRfc3Rh
+dGVfbG9nW2l0XS5pc2xfbG9nW0lBNjRfTE9HX0NVUlJfSU5ERVgoaXQpXSA9CisJCShpYTY0X2Vy
+cl9yZWNfdCAqKW1lbWJsb2NrX2FsbG9jKHNpemUsIFNNUF9DQUNIRV9CWVRFUyk7CisJaWYgKCFp
+YTY0X3N0YXRlX2xvZ1tpdF0uaXNsX2xvZ1tJQTY0X0xPR19DVVJSX0lOREVYKGl0KV0pCisJCXBh
+bmljKCIlczogRmFpbGVkIHRvIGFsbG9jYXRlICVsbHUgYnl0ZXNcbiIsIF9fZnVuY19fLCBzaXpl
+KTsKKworCWlhNjRfc3RhdGVfbG9nW2l0XS5pc2xfbG9nW0lBNjRfTE9HX05FWFRfSU5ERVgoaXQp
+XSA9CisJCShpYTY0X2Vycl9yZWNfdCAqKW1lbWJsb2NrX2FsbG9jKHNpemUsIFNNUF9DQUNIRV9C
+WVRFUyk7CisJaWYgKCFpYTY0X3N0YXRlX2xvZ1tpdF0uaXNsX2xvZ1tJQTY0X0xPR19ORVhUX0lO
+REVYKGl0KV0pCisJCXBhbmljKCIlczogRmFpbGVkIHRvIGFsbG9jYXRlICVsbHUgYnl0ZXNcbiIs
+IF9fZnVuY19fLCBzaXplKTsKK30KKwogLyoKICAqIGlhNjRfbG9nX2luaXQKICAqCVJlc2V0IHRo
+ZSBPUyBpYTY0IGxvZyBidWZmZXIKQEAgLTM5OSw3ICs0MDcsNyBAQCBpYTY0X2xvZ19pbml0KGlu
+dCBzYWxfaW5mb190eXBlKQogCQlyZXR1cm47CiAKIAkvLyBzZXQgdXAgT1MgZGF0YSBzdHJ1Y3R1
+cmVzIHRvIGhvbGQgZXJyb3IgaW5mbwotCUlBNjRfTE9HX0FMTE9DQVRFKHNhbF9pbmZvX3R5cGUs
+IG1heF9zaXplKTsKKwlpYTY0X2xvZ19hbGxvY2F0ZShzYWxfaW5mb190eXBlLCBtYXhfc2l6ZSk7
+CiB9CiAKIC8qCmRpZmYgLS1naXQgYS9hcmNoL2lhNjQvbW0vY29udGlnLmMgYi9hcmNoL2lhNjQv
+bW0vY29udGlnLmMKaW5kZXggNmU0NDcyMy4uZDI5ZmI2YiAxMDA2NDQKLS0tIGEvYXJjaC9pYTY0
+L21tL2NvbnRpZy5jCisrKyBiL2FyY2gvaWE2NC9tbS9jb250aWcuYwpAQCAtODQsOSArODQsMTMg
+QEAgdm9pZCAqcGVyX2NwdV9pbml0KHZvaWQpCiBzdGF0aWMgaW5saW5lIHZvaWQKIGFsbG9jX3Bl
+cl9jcHVfZGF0YSh2b2lkKQogewotCWNwdV9kYXRhID0gbWVtYmxvY2tfYWxsb2NfZnJvbShQRVJD
+UFVfUEFHRV9TSVpFICogbnVtX3Bvc3NpYmxlX2NwdXMoKSwKLQkJCQkgICAgICAgUEVSQ1BVX1BB
+R0VfU0laRSwKKwlzaXplX3Qgc2l6ZSA9IFBFUkNQVV9QQUdFX1NJWkUgKiBudW1fcG9zc2libGVf
+Y3B1cygpOworCisJY3B1X2RhdGEgPSBtZW1ibG9ja19hbGxvY19mcm9tKHNpemUsIFBFUkNQVV9Q
+QUdFX1NJWkUsCiAJCQkJICAgICAgIF9fcGEoTUFYX0RNQV9BRERSRVNTKSk7CisJaWYgKCFjcHVf
+ZGF0YSkKKwkJcGFuaWMoIiVzOiBGYWlsZWQgdG8gYWxsb2NhdGUgJWx1IGJ5dGVzIGFsaWduPSVs
+eCBmcm9tPSVseFxuIiwKKwkJICAgICAgX19mdW5jX18sIHNpemUsIFBFUkNQVV9QQUdFX1NJWkUs
+IF9fcGEoTUFYX0RNQV9BRERSRVNTKSk7CiB9CiAKIC8qKgpkaWZmIC0tZ2l0IGEvYXJjaC9pYTY0
+L21tL2Rpc2NvbnRpZy5jIGIvYXJjaC9pYTY0L21tL2Rpc2NvbnRpZy5jCmluZGV4IGY5YzM2NzUu
+LjA1NDkwZGQgMTAwNjQ0Ci0tLSBhL2FyY2gvaWE2NC9tbS9kaXNjb250aWcuYworKysgYi9hcmNo
+L2lhNjQvbW0vZGlzY29udGlnLmMKQEAgLTQ1NCw2ICs0NTQsMTAgQEAgc3RhdGljIHZvaWQgX19p
+bml0ICptZW1vcnlfbGVzc19ub2RlX2FsbG9jKGludCBuaWQsIHVuc2lnbmVkIGxvbmcgcGVybm9k
+ZXNpemUpCiAJCQkJICAgICBfX3BhKE1BWF9ETUFfQUREUkVTUyksCiAJCQkJICAgICBNRU1CTE9D
+S19BTExPQ19BQ0NFU1NJQkxFLAogCQkJCSAgICAgYmVzdG5vZGUpOworCWlmICghcHRyKQorCQlw
+YW5pYygiJXM6IEZhaWxlZCB0byBhbGxvY2F0ZSAlbHUgYnl0ZXMgYWxpZ249MHglbHggbmlkPSVk
+IGZyb209JWx4XG4iLAorCQkgICAgICBfX2Z1bmNfXywgcGVybm9kZXNpemUsIFBFUkNQVV9QQUdF
+X1NJWkUsIGJlc3Rub2RlLAorCQkgICAgICBfX3BhKE1BWF9ETUFfQUREUkVTUykpOwogCiAJcmV0
+dXJuIHB0cjsKIH0KZGlmZiAtLWdpdCBhL2FyY2gvaWE2NC9tbS9pbml0LmMgYi9hcmNoL2lhNjQv
+bW0vaW5pdC5jCmluZGV4IDI5ZDg0MTUuLmU0OTIwMGUgMTAwNjQ0Ci0tLSBhL2FyY2gvaWE2NC9t
+bS9pbml0LmMKKysrIGIvYXJjaC9pYTY0L21tL2luaXQuYwpAQCAtNDQ0LDIzICs0NDQsNDUgQEAg
+aW50IF9faW5pdCBjcmVhdGVfbWVtX21hcF9wYWdlX3RhYmxlKHU2NCBzdGFydCwgdTY0IGVuZCwg
+dm9pZCAqYXJnKQogCiAJZm9yIChhZGRyZXNzID0gc3RhcnRfcGFnZTsgYWRkcmVzcyA8IGVuZF9w
+YWdlOyBhZGRyZXNzICs9IFBBR0VfU0laRSkgewogCQlwZ2QgPSBwZ2Rfb2Zmc2V0X2soYWRkcmVz
+cyk7Ci0JCWlmIChwZ2Rfbm9uZSgqcGdkKSkKLQkJCXBnZF9wb3B1bGF0ZSgmaW5pdF9tbSwgcGdk
+LCBtZW1ibG9ja19hbGxvY19ub2RlKFBBR0VfU0laRSwgUEFHRV9TSVpFLCBub2RlKSk7CisJCWlm
+IChwZ2Rfbm9uZSgqcGdkKSkgeworCQkJcHVkID0gbWVtYmxvY2tfYWxsb2Nfbm9kZShQQUdFX1NJ
+WkUsIFBBR0VfU0laRSwgbm9kZSk7CisJCQlpZiAoIXB1ZCkKKwkJCQlnb3RvIGVycl9hbGxvYzsK
+KwkJCXBnZF9wb3B1bGF0ZSgmaW5pdF9tbSwgcGdkLCBwdWQpOworCQl9CiAJCXB1ZCA9IHB1ZF9v
+ZmZzZXQocGdkLCBhZGRyZXNzKTsKIAotCQlpZiAocHVkX25vbmUoKnB1ZCkpCi0JCQlwdWRfcG9w
+dWxhdGUoJmluaXRfbW0sIHB1ZCwgbWVtYmxvY2tfYWxsb2Nfbm9kZShQQUdFX1NJWkUsIFBBR0Vf
+U0laRSwgbm9kZSkpOworCQlpZiAocHVkX25vbmUoKnB1ZCkpIHsKKwkJCXBtZCA9IG1lbWJsb2Nr
+X2FsbG9jX25vZGUoUEFHRV9TSVpFLCBQQUdFX1NJWkUsIG5vZGUpOworCQkJaWYgKCFwbWQpCisJ
+CQkJZ290byBlcnJfYWxsb2M7CisJCQlwdWRfcG9wdWxhdGUoJmluaXRfbW0sIHB1ZCwgcG1kKTsK
+KwkJfQogCQlwbWQgPSBwbWRfb2Zmc2V0KHB1ZCwgYWRkcmVzcyk7CiAKLQkJaWYgKHBtZF9ub25l
+KCpwbWQpKQotCQkJcG1kX3BvcHVsYXRlX2tlcm5lbCgmaW5pdF9tbSwgcG1kLCBtZW1ibG9ja19h
+bGxvY19ub2RlKFBBR0VfU0laRSwgUEFHRV9TSVpFLCBub2RlKSk7CisJCWlmIChwbWRfbm9uZSgq
+cG1kKSkgeworCQkJcHRlID0gbWVtYmxvY2tfYWxsb2Nfbm9kZShQQUdFX1NJWkUsIFBBR0VfU0la
+RSwgbm9kZSk7CisJCQlpZiAoIXB0ZSkKKwkJCQlnb3RvIGVycl9hbGxvYzsKKwkJCXBtZF9wb3B1
+bGF0ZV9rZXJuZWwoJmluaXRfbW0sIHBtZCwgcHRlKTsKKwkJfQogCQlwdGUgPSBwdGVfb2Zmc2V0
+X2tlcm5lbChwbWQsIGFkZHJlc3MpOwogCi0JCWlmIChwdGVfbm9uZSgqcHRlKSkKLQkJCXNldF9w
+dGUocHRlLCBwZm5fcHRlKF9fcGEobWVtYmxvY2tfYWxsb2Nfbm9kZShQQUdFX1NJWkUsIFBBR0Vf
+U0laRSwgbm9kZSkpID4+IFBBR0VfU0hJRlQsCisJCWlmIChwdGVfbm9uZSgqcHRlKSkgeworCQkJ
+dm9pZCAqcGFnZSA9IG1lbWJsb2NrX2FsbG9jX25vZGUoUEFHRV9TSVpFLCBQQUdFX1NJWkUsCisJ
+CQkJCQkJIG5vZGUpOworCQkJaWYgKCFwYWdlKQorCQkJCWdvdG8gZXJyX2FsbG9jOworCQkJc2V0
+X3B0ZShwdGUsIHBmbl9wdGUoX19wYShwYWdlKSA+PiBQQUdFX1NISUZULAogCQkJCQkgICAgIFBB
+R0VfS0VSTkVMKSk7CisJCX0KIAl9CiAJcmV0dXJuIDA7CisKK2Vycl9hbGxvYzoKKwlwYW5pYygi
+JXM6IEZhaWxlZCB0byBhbGxvY2F0ZSAlbHUgYnl0ZXMgYWxpZ249MHglbHggbmlkPSVkXG4iLAor
+CSAgICAgIF9fZnVuY19fLCBQQUdFX1NJWkUsIFBBR0VfU0laRSwgbm9kZSk7CisJcmV0dXJuIC1F
+Tk9NRU07CiB9CiAKIHN0cnVjdCBtZW1tYXBfaW5pdF9jYWxsYmFja19kYXRhIHsKZGlmZiAtLWdp
+dCBhL2FyY2gvaWE2NC9tbS90bGIuYyBiL2FyY2gvaWE2NC9tbS90bGIuYwppbmRleCA5MzQwYmNi
+Li41ZmM4OWFhIDEwMDY0NAotLS0gYS9hcmNoL2lhNjQvbW0vdGxiLmMKKysrIGIvYXJjaC9pYTY0
+L21tL3RsYi5jCkBAIC02MSw4ICs2MSwxNCBAQCBtbXVfY29udGV4dF9pbml0ICh2b2lkKQogewog
+CWlhNjRfY3R4LmJpdG1hcCA9IG1lbWJsb2NrX2FsbG9jKChpYTY0X2N0eC5tYXhfY3R4ICsgMSkg
+Pj4gMywKIAkJCQkJIFNNUF9DQUNIRV9CWVRFUyk7CisJaWYgKCFpYTY0X2N0eC5iaXRtYXApCisJ
+CXBhbmljKCIlczogRmFpbGVkIHRvIGFsbG9jYXRlICV1IGJ5dGVzXG4iLCBfX2Z1bmNfXywKKwkJ
+ICAgICAgKGlhNjRfY3R4Lm1heF9jdHggKyAxKSA+PiAzKTsKIAlpYTY0X2N0eC5mbHVzaG1hcCA9
+IG1lbWJsb2NrX2FsbG9jKChpYTY0X2N0eC5tYXhfY3R4ICsgMSkgPj4gMywKIAkJCQkJICAgU01Q
+X0NBQ0hFX0JZVEVTKTsKKwlpZiAoIWlhNjRfY3R4LmZsdXNobWFwKQorCQlwYW5pYygiJXM6IEZh
+aWxlZCB0byBhbGxvY2F0ZSAldSBieXRlc1xuIiwgX19mdW5jX18sCisJCSAgICAgIChpYTY0X2N0
+eC5tYXhfY3R4ICsgMSkgPj4gMyk7CiB9CiAKIC8qCmRpZmYgLS1naXQgYS9hcmNoL2lhNjQvc24v
+a2VybmVsL2lvX2NvbW1vbi5jIGIvYXJjaC9pYTY0L3NuL2tlcm5lbC9pb19jb21tb24uYwppbmRl
+eCA4ZGYxM2QwLi5kNDY4NDczIDEwMDY0NAotLS0gYS9hcmNoL2lhNjQvc24va2VybmVsL2lvX2Nv
+bW1vbi5jCisrKyBiL2FyY2gvaWE2NC9zbi9rZXJuZWwvaW9fY29tbW9uLmMKQEAgLTM5NCw2ICsz
+OTQsOSBAQCB2b2lkIF9faW5pdCBodWJkZXZfaW5pdF9ub2RlKG5vZGVwZGFfdCAqIG5wZGEsIGNu
+b2RlaWRfdCBub2RlKQogCWh1YmRldl9pbmZvID0gKHN0cnVjdCBodWJkZXZfaW5mbyAqKW1lbWJs
+b2NrX2FsbG9jX25vZGUoc2l6ZSwKIAkJCQkJCQkJU01QX0NBQ0hFX0JZVEVTLAogCQkJCQkJCQlu
+b2RlKTsKKwlpZiAoIWh1YmRldl9pbmZvKQorCQlwYW5pYygiJXM6IEZhaWxlZCB0byBhbGxvY2F0
+ZSAlZCBieXRlcyBhbGlnbj0weCV4IG5pZD0lZFxuIiwKKwkJICAgICAgX19mdW5jX18sIHNpemUs
+IFNNUF9DQUNIRV9CWVRFUywgbm9kZSk7CiAKIAlucGRhLT5wZGluZm8gPSAodm9pZCAqKWh1YmRl
+dl9pbmZvOwogfQpkaWZmIC0tZ2l0IGEvYXJjaC9pYTY0L3NuL2tlcm5lbC9zZXR1cC5jIGIvYXJj
+aC9pYTY0L3NuL2tlcm5lbC9zZXR1cC5jCmluZGV4IGE2ZDQwYTIuLmU2YTUwNDkgMTAwNjQ0Ci0t
+LSBhL2FyY2gvaWE2NC9zbi9rZXJuZWwvc2V0dXAuYworKysgYi9hcmNoL2lhNjQvc24va2VybmVs
+L3NldHVwLmMKQEAgLTUxMyw2ICs1MTMsMTAgQEAgc3RhdGljIHZvaWQgX19pbml0IHNuX2luaXRf
+cGRhcyhjaGFyICoqY21kbGluZV9wKQogCQlub2RlcGRhaW5kcltjbm9kZV0gPQogCQkgICAgbWVt
+YmxvY2tfYWxsb2Nfbm9kZShzaXplb2Yobm9kZXBkYV90KSwgU01QX0NBQ0hFX0JZVEVTLAogCQkJ
+CQljbm9kZSk7CisJCWlmICghbm9kZXBkYWluZHJbY25vZGVdKQorCQkJcGFuaWMoIiVzOiBGYWls
+ZWQgdG8gYWxsb2NhdGUgJWx1IGJ5dGVzIGFsaWduPTB4JXggbmlkPSVkXG4iLAorCQkJICAgICAg
+X19mdW5jX18sIHNpemVvZihub2RlcGRhX3QpLCBTTVBfQ0FDSEVfQllURVMsCisJCQkgICAgICBj
+bm9kZSk7CiAJCW1lbXNldChub2RlcGRhaW5kcltjbm9kZV0tPnBoeXNfY3B1aWQsIC0xLAogCQkg
+ICAgc2l6ZW9mKG5vZGVwZGFpbmRyW2Nub2RlXS0+cGh5c19jcHVpZCkpOwogCQlzcGluX2xvY2tf
+aW5pdCgmbm9kZXBkYWluZHJbY25vZGVdLT5wdGNfbG9jayk7CkBAIC01MjEsOSArNTI1LDE1IEBA
+IHN0YXRpYyB2b2lkIF9faW5pdCBzbl9pbml0X3BkYXMoY2hhciAqKmNtZGxpbmVfcCkKIAkvKgog
+CSAqIEFsbG9jYXRlICYgaW5pdGlhbGl6ZSBub2RlcGRhIGZvciBUSU9zLiAgRm9yIG5vdywgcHV0
+IHRoZW0gb24gbm9kZSAwLgogCSAqLwotCWZvciAoY25vZGUgPSBudW1fb25saW5lX25vZGVzKCk7
+IGNub2RlIDwgbnVtX2Nub2RlczsgY25vZGUrKykKKwlmb3IgKGNub2RlID0gbnVtX29ubGluZV9u
+b2RlcygpOyBjbm9kZSA8IG51bV9jbm9kZXM7IGNub2RlKyspIHsKIAkJbm9kZXBkYWluZHJbY25v
+ZGVdID0KIAkJICAgIG1lbWJsb2NrX2FsbG9jX25vZGUoc2l6ZW9mKG5vZGVwZGFfdCksIFNNUF9D
+QUNIRV9CWVRFUywgMCk7CisJCWlmICghbm9kZXBkYWluZHJbY25vZGVdKQorCQkJcGFuaWMoIiVz
+OiBGYWlsZWQgdG8gYWxsb2NhdGUgJWx1IGJ5dGVzIGFsaWduPTB4JXggbmlkPSVkXG4iLAorCQkJ
+ICAgICAgX19mdW5jX18sIHNpemVvZihub2RlcGRhX3QpLCBTTVBfQ0FDSEVfQllURVMsCisJCQkg
+ICAgICBjbm9kZSk7CisJfQorCiAKIAkvKgogCSAqIE5vdyBjb3B5IHRoZSBhcnJheSBvZiBub2Rl
+cGRhIHBvaW50ZXJzIHRvIGVhY2ggbm9kZXBkYS4KLS0gCjIuNy40CgoKX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KWGVuLWRldmVsIG1haWxpbmcgbGlzdApY
+ZW4tZGV2ZWxAbGlzdHMueGVucHJvamVjdC5vcmcKaHR0cHM6Ly9saXN0cy54ZW5wcm9qZWN0Lm9y
+Zy9tYWlsbWFuL2xpc3RpbmZvL3hlbi1kZXZlbA==
