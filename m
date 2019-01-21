@@ -1,74 +1,81 @@
-From: Lubomir Rintel <lkundrak@v3.sk>
-Subject: [PATCH 2/6] dt-bindings: display: armada: Improve the LCDC documentation
-Date: Sun, 20 Jan 2019 18:25:30 +0100
-Message-ID: <20190120172534.24617-3-lkundrak@v3.sk>
-References: <20190120172534.24617-1-lkundrak@v3.sk>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v3 5/6] dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+Date: Mon, 21 Jan 2019 22:54:26 +0530
+Message-ID: <20190121172427.20446-6-nava.manne@xilinx.com>
+References: <20190121172427.20446-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190120172534.24617-1-lkundrak@v3.sk>
+In-Reply-To: <20190121172427.20446-1-nava.manne@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Russell King <linux@armlinux.org.uk>, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Lubomir Rintel <lkundrak@v3.sk>
+To: mark.rutland@arm.com, michals@xilinx.com, RAJANV@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, JOLLYS@xilinx.com, chinnikishore369@gmail.com
+Cc: Nava kishore Manne <nava.manne@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-The port is a child, not a property. And it deserves an example.
+Add documentation to describe Xilinx ZynqMP nvmem driver
+bindings.
 
-Also, make the title a bit more visually distinguishable -- this will
-look better when the documentation of other Adrmada DRM nodes will be
-present.
-
-Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 ---
- .../display/armada/marvell-armada-drm.txt        | 16 ++++++++++++++--
- 1 file changed, 14 insertions(+), 2 deletions(-)
+Changes for v3:
+		-Added nvmem node as child of FW. Since nvmem driver is a provider.
+  
+ .../bindings/nvmem/xlnx,zynqmp-nvmem.txt      | 47 +++++++++++++++++++
+ 1 file changed, 47 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
 
-diff --git a/Documentation/devicetree/bindings/display/armada/marvell-arm=
-ada-drm.txt b/Documentation/devicetree/bindings/display/armada/marvell-ar=
-mada-drm.txt
-index 46525ea3e646..2606a8efc956 100644
---- a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm=
-.txt
-+++ b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm=
-.txt
-@@ -1,10 +1,11 @@
--Device Tree bindings for Armada DRM CRTC driver
-+Marvell Armada LCD controller
-+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D
-=20
- Required properties:
+diff --git a/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+new file mode 100644
+index 000000000000..2043c8284f8c
+--- /dev/null
++++ b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+@@ -0,0 +1,47 @@
++--------------------------------------------------------------------------
++=  Zynq UltraScale+ MPSoC nvmem firmware driver binding =
++--------------------------------------------------------------------------
++The nvmem_firmware node provides access to the hardware related data
++like soc revision, IDCODE... etc, By using the firmware interface.
 +
-  - compatible: value should be "marvell,dove-lcd".
-  - reg: base address and size of the LCD controller
-  - interrupts: single interrupt number for the LCD controller
-- - port: video output port with endpoints, as described by graph.txt
-=20
- Optional properties:
-=20
-@@ -19,6 +20,11 @@ Note: all clocks are optional but at least one must be=
- specified.
- Further clocks may be added in the future according to requirements of
- different SoCs.
-=20
-+Required child nodes:
++Required properties:
++- compatible: should be "xlnx,zynqmp-nvmem-fw"
 +
-+- port: video output port with endpoints, as described by
-+  Documentation/devicetree/bindings/graph.txt
++= Data cells =
++Are child nodes of silicon id, bindings of which as described in
++bindings/nvmem/nvmem.txt
 +
- Example:
-=20
- 	lcd0: lcd-controller@820000 {
-@@ -27,4 +33,10 @@ Example:
- 		interrupts =3D <47>;
- 		clocks =3D <&si5351 0>;
- 		clock-names =3D "ext_ref_clk_1";
++-------
++ Example
++-------
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		compatible = "xlnx,zynqmp-firmware";
++		method = "smc";
 +
-+		lcd0_port: port {
-+			lcd0_rgb_out: endpoint {
-+				remote-endpoint =3D <&encoder_rgb_in>;
++		nvmem_firmware {
++			compatible = "xlnx,zynqmp-nvmem-fw";
++			#address-cells = <1>;
++			#size-cells = <1>;
++
++			/* Data cells */
++			soc_revision: soc_revision {
++				reg = <0x0 0x4>;
 +			};
 +		};
- 	};
---=20
-2.20.1
++	};
++};
++
++= Data consumers =
++Are device nodes which consume nvmem data cells.
++
++For example:
++	pcap {
++		...
++
++		nvmem-cells = <&soc_revision>;
++		nvmem-cell-names = "soc_revision";
++
++		...
++	};
++
+-- 
+2.18.0
