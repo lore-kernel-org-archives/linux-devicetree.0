@@ -1,13 +1,11 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 01/10] usb: core: comply to PHY framework
-Date: Mon, 21 Jan 2019 12:23:27 +0100
-Message-ID: <20190121112336.23489-2-miquel.raynal@bootlin.com>
-References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 00/10] A3700 USB S2RAM support
+Date: Mon, 21 Jan 2019 12:23:26 +0100
+Message-ID: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -21,84 +19,80 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Current implementation of the USB core does not take into account the
-new PHY framework. Correct the situation by adding a call to
-phy_set_mode() before phy_power_on().
-
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- drivers/usb/core/hcd.c |  5 +++++
- drivers/usb/core/phy.c | 28 ++++++++++++++++++++++++++++
- drivers/usb/core/phy.h |  2 ++
- 3 files changed, 35 insertions(+)
-
-diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
-index 015b126ce455..86f39e44f98a 100644
---- a/drivers/usb/core/hcd.c
-+++ b/drivers/usb/core/hcd.c
-@@ -2736,6 +2736,11 @@ int usb_add_hcd(struct usb_hcd *hcd,
- 		if (retval)
- 			return retval;
- 
-+		retval = usb_phy_roothub_set_mode(hcd->phy_roothub,
-+						  PHY_MODE_USB_HOST_SS);
-+		if (retval)
-+			goto err_usb_phy_roothub_power_on;
-+
- 		retval = usb_phy_roothub_power_on(hcd->phy_roothub);
- 		if (retval)
- 			goto err_usb_phy_roothub_power_on;
-diff --git a/drivers/usb/core/phy.c b/drivers/usb/core/phy.c
-index 38b2c776c4b4..7580493b867a 100644
---- a/drivers/usb/core/phy.c
-+++ b/drivers/usb/core/phy.c
-@@ -123,6 +123,34 @@ int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub)
- }
- EXPORT_SYMBOL_GPL(usb_phy_roothub_exit);
- 
-+int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
-+			     enum phy_mode mode)
-+{
-+	struct usb_phy_roothub *roothub_entry;
-+	struct list_head *head;
-+	int err;
-+
-+	if (!phy_roothub)
-+		return 0;
-+
-+	head = &phy_roothub->list;
-+
-+	list_for_each_entry(roothub_entry, head, list) {
-+		err = phy_set_mode(roothub_entry->phy, mode);
-+		if (err)
-+			goto err_out;
-+	}
-+
-+	return 0;
-+
-+err_out:
-+	list_for_each_entry_continue_reverse(roothub_entry, head, list)
-+		phy_power_off(roothub_entry->phy);
-+
-+	return err;
-+}
-+EXPORT_SYMBOL_GPL(usb_phy_roothub_set_mode);
-+
- int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub)
- {
- 	struct usb_phy_roothub *roothub_entry;
-diff --git a/drivers/usb/core/phy.h b/drivers/usb/core/phy.h
-index 88a3c037e9df..dad564e2d2d4 100644
---- a/drivers/usb/core/phy.h
-+++ b/drivers/usb/core/phy.h
-@@ -16,6 +16,8 @@ struct usb_phy_roothub *usb_phy_roothub_alloc(struct device *dev);
- int usb_phy_roothub_init(struct usb_phy_roothub *phy_roothub);
- int usb_phy_roothub_exit(struct usb_phy_roothub *phy_roothub);
- 
-+int usb_phy_roothub_set_mode(struct usb_phy_roothub *phy_roothub,
-+			     enum phy_mode mode);
- int usb_phy_roothub_power_on(struct usb_phy_roothub *phy_roothub);
- void usb_phy_roothub_power_off(struct usb_phy_roothub *phy_roothub);
- 
--- 
-2.19.1
+SGVsbG8sCgpBcyBwYXJ0IG9mIGFuIGVmZm9ydCB0byBicmluZyBzdXNwZW5kIHRvIFJBTSBzdXBw
+b3J0IHRvIEFybWFkYSAzNzAwClNvQ3MgKG1haW4gdGFyZ2V0OiBFU1BSRVNTT2JpbiksIHRoaXMg
+c2VyaWVzIGhhbmRsZXMgdGhlIHdvcmsgYXJvdW5kCnRoZSBVU0IyIGFuZCBVU0IzMiBJUHMuCgpG
+aXJzdCwgYSBjaGFuZ2UgaW4gdGhlIGNvcmUgYWRkcyBzdXBwb3J0IGZvciB0aGUgbmV3IFBIWSBm
+cmFtZXdvcmsgYnkKZm9sbG93aW5nIHRoZSBwaHlfc2V0X21vZGUoKS9waHlfcG93ZXJfb24oKSBz
+ZXF1ZW5jZSAocGF0Y2ggMSkuIFRoZQpzZWNvbmQgY2hhbmdlIG5lZWRlZCBpcyB0byB1cGRhdGUg
+dGhlIHhIQ0kgTVZFQlUgZHJpdmVyIChwYXRjaCAyKSB3aXRoCnRoZSBYSENJX1JFU0VUX09OX1JF
+U1VNRSBxdWlyayB0aGF0IHdpbGwgZG8gbW9zdCBvZiB0aGUKcmVjb25maWd1cmF0aW9uIHdvcmsg
+d2hlbiByZXN1bWluZy4KClRoZW4sIGJlY2F1c2Ugb2YgdGhlIGFzeW5jaHJvbm91cyBzdXNwZW5k
+IGZlYXR1cmUgaW1wbGVtZW50ZWQgbGF0ZWx5LAp0aGUgeEhDSSBkcml2ZXIgd2FzIGJsb2NraW5n
+IGR1cmluZyB0aGUgUzJSQU0gb3BlcmF0aW9uLCBwcm9iYWJseSBkdWUKdG8gYSByZWdpc3RlciBh
+Y2Nlc3Mgd2hpbGUgdGhlIGNsb2NrIHdhcyBub3QgZW5hYmxlZC4gQSBmaXJzdCBwYXRjaApoYXMg
+YmVlbiB3cml0dGVuIGZvciB0aGF0LCBhZGRpbmcgYSBuZXcgcXVpcmsgdG8gaWdub3JlIHRoZQph
+c3luY2hyb25vdXMgc2V0dGluZyBbMV0gd2hpY2ggaGFzIGJlY29tZSB1c2VsZXNzIG9uY2UgY2xv
+Y2sgbGlua3MKd2l0aCBjb25zdW1lciBoYXZlIGJlZW4gY29udHJpYnV0ZWQgWzJdIChzZXJpZXMg
+bm90IG1lcmdlZCB5ZXQpLgoKVGhlbiwgdGhlIE9IQ0kgT3Jpb24gKFVTQjIgaG9zdCBjb250cm9s
+bGVyKSBkcml2ZXIgaXMgdXBkYXRlZCB0byBhdm9pZApkb2luZyB0d2ljZSB0aGUgUEhZIG1hbmFn
+ZW1lbnQgKHBhdGNoIDMpIGFuZCB1cGdyYWRlZCB3aXRoIHRyYWRpdGlvbmFsClMyUkFNIGNhbGxi
+YWNrcyAocGF0Y2ggNCkuCgpUaGUgbGFzdCBtaXNzaW5nIHBlYWNlIGlzIGEgVVRNSSBQSFkgZHJp
+dmVyIGZvciB0aGUgVVNCMiBwYXJ0IG9mIGVhY2gKY29udHJvbGxlciwgd2hpY2ggaXMgYWRkZWQg
+aW4gcGF0Y2ggNSAoc2VlIHBhdGNoIDYgZm9yIHRoZSBiaW5kaW5ncykuCgpGaW5hbGx5LCB0aGUg
+QTM3MDAgZGV2aWNlIHRyZWUgaXMgdXBkYXRlZCAocGF0Y2ggNywgOCwgOSkgdG8gcmVmZXJlbmNl
+CnRoZSBQSFlzLiB4SENJIGJpbmRpbmdzIGFscmVhZHkgZG9jdW1lbnQgdGhlIFBIWSBzbyBubyB1
+cGRhdGUgaXMgbmVlZGVkCm9uIHRoaXMgcmVnYXJkLgoKWzFdIGh0dHA6Ly9jb2RlLmJ1bGl4Lm9y
+Zy9zMmNjZDQtNTExMTk4ClsyXSBodHRwOi8vbGlzdHMuaW5mcmFkZWFkLm9yZy9waXBlcm1haWwv
+bGludXgtYXJtLWtlcm5lbC8yMDE5LUphbnVhcnkvNjIzODg1Lmh0bWwKClRoYW5rcywKTWlxdcOo
+bAoKQ2hhbmdlcyBzaW5jZSB2MjoKPT09PT09PT09PT09PT09PT0KKiBUeXBvcwoqIFVUTUkgUEhZ
+IGJpbmRpbmdzOgogID4gTmV3IG5hbWUgZm9yIHRoZSBVU0IyIGhvc3QvUEhZIHN5c2NvbnMgKCsg
+Y2hhbmdlcyBpbiB0aGUgRFQpLgogID4gQ2xlYXJseSBzdGF0ZSB0aGF0IHRoZSBQSFlzIGFyZSBk
+aWZmZXJlbnQgYmV0d2VlbiBPVEcgYW5kCiAgICBob3N0LW9ubHkgY29udHJvbGxlcnMuCiogVVRN
+SSBQSFkgZHJpdmVyOgogID4gVXNlIEdFTk1BU0sgbWFjcm8uCiAgPiBSZW1vdmVkIHVzZWxlc3Mg
+Y2hlY2tzIG9uIGRyaXZlciBkYXRhIHJldHJpZXZhbC4KICA+IERyb3BwZWQgdGhlIGVtcHR5IC0+
+cmVtb3ZlKCkgaG9vay4KICA+IFVwZGF0ZWQgdGhlIGxpY2VuY2UgbWFjcm8gdG8gbWF0Y2ggdGhl
+IFNQRFggdGFnLgogID4gVXNlZCB0aGUgb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKCkgaGVscGVy
+LgogID4gUmVtb3ZlZCB0aGUgdXNlIG9mIGEgbG9jYWwgdmFyaWFibGUgaW4gdGhlIC0+cHJvYmUo
+KSBmb3IgdGhlCiAgICBkcml2ZXIncyBvcGVyYXRpb25zLgogID4gRml4ZWQgdGhlIGRyaXZlciBj
+by1hdXRob3I6IElnYWwsIG5vdCBFdmFuLgoqIHhIQ0kgbXZlYnUgZHJpdmVyOgogID4gVXNlZCBB
+cm1hZGEgMzh4IG5hbWluZyBjb252ZW50aW9uOgogICAgcy9Bcm1hZGEgMzcwMCBTb0MvQXJtYWRh
+IDM3eHggU29DLwogID4gQWRkZWQgR3JlZ29yeSdzIFJldmlld2VkLWJ5IHRhZy4KCkNoYW5nZXMg
+c2luY2UgdjE6Cj09PT09PT09PT09PT09PT09CiogQWRkIFVUTUkgUEhZIGRyaXZlci9iaW5kaW5n
+cy9EVCBjaGFuZ2VzIHRvIGJyaW5nIFMyUkFNIHN1cHBvcnQgdG8KICBib3RoIFVTQiBwb3J0cyBh
+dmFpbGFibGUgb24gdGhlIEEzNzAwIFNvQy4KKiBVcGRhdGVzIHRvIHRoZSBPSENJIE9yaW9uIGRy
+aXZlciB0byBhdm9pZCBkb2luZyB0aGUgUEhZCiAgaW5pdGlhbGl6YXRpb24gdHdpY2UuCiogVXBn
+cmFkZSBvZiB0aGUgT0hDSSBPcmlvbiBkcml2ZXIgd2l0aCBTMlJBTSBjYWxsYmFja3MuCiogQWRk
+ZWQgYSByZWZlcmVuY2UgdG8gdGhlIEEzNzAwIFNvQyBpbiB0aGUgVVNCIEhvc3QgS2NvbmZpZyBw
+cm9tcHQKICAobm90IG9ubHkgaW4gdGhlIGhlbHAgc2VjdGlvbikuCiogUmViYXNlZCBvbiB0b3Ag
+b2YgdjUuMC1yYzEuCgoKTWlxdWVsIFJheW5hbCAoOSk6CiAgdXNiOiBjb3JlOiBjb21wbHkgdG8g
+UEhZIGZyYW1ld29yawogIHVzYjogZWhjaS1vcmlvbjogYXZvaWQgZG91YmxlIFBIWSBpbml0aWFs
+aXphdGlvbgogIHVzYjogZWhjaS1vcmlvbjogYWRkIFMyUkFNIHN1cHBvcnQKICBwaHk6IGFkZCBB
+MzcwMCBVVE1JIFBIWSBkcml2ZXIKICBkdC1iaW5kaW5nczogcGh5OiBtdmVidS11dG1pOiBhZGQg
+VVRNSSBQSFkgYmluZGluZ3MKICBNQUlOVEFJTkVSUzogcGh5OiBmaWxsIEFybWFkYSAzNzAwIFBI
+WSBkcml2ZXJzIGVudHJ5CiAgQVJNNjQ6IGR0czogbWFydmVsbDogYXJtYWRhLTM3eHg6IGZpeCBV
+U0IyIG1lbW9yeSByZWdpb24KICBBUk02NDogZHRzOiBtYXJ2ZWxsOiBhcm1hZGEtMzd4eDogZGVj
+bGFyZSBVU0IyIFVUTUkgUEhZcwogIEFSTTY0OiBkdHM6IG1hcnZlbGw6IGFybWFkYS0zN3h4OiBs
+aW5rIFVTQiBob3N0cyB3aXRoIHRoZWlyIFBIWXMKCk9mZXIgSGVpZmV0eiAoMSk6CiAgdXNiOiBo
+b3N0OiB4aGNpOiBtdmVidTogYWRkIHJlc2V0IG9uIHJlc3VtZSBxdWlyawoKIC4uLi9iaW5kaW5n
+cy9waHkvcGh5LW12ZWJ1LXV0bWkudHh0ICAgICAgICAgICB8ICAzOCArKysKIE1BSU5UQUlORVJT
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICB8ICAgNCArLQogYXJjaC9hcm02NC9i
+b290L2R0cy9tYXJ2ZWxsL2FybWFkYS0zN3h4LmR0c2kgIHwgIDM0ICsrLQogZHJpdmVycy9waHkv
+bWFydmVsbC9LY29uZmlnICAgICAgICAgICAgICAgICAgIHwgICA5ICsKIGRyaXZlcnMvcGh5L21h
+cnZlbGwvTWFrZWZpbGUgICAgICAgICAgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL3BoeS9tYXJ2
+ZWxsL3BoeS1tdmVidS1hMzcwMC11dG1pLmMgICAgfCAyNzggKysrKysrKysrKysrKysrKysrCiBk
+cml2ZXJzL3VzYi9jb3JlL2hjZC5jICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDUgKwogZHJp
+dmVycy91c2IvY29yZS9waHkuYyAgICAgICAgICAgICAgICAgICAgICAgIHwgIDI4ICsrCiBkcml2
+ZXJzL3VzYi9jb3JlL3BoeS5oICAgICAgICAgICAgICAgICAgICAgICAgfCAgIDIgKwogZHJpdmVy
+cy91c2IvaG9zdC9LY29uZmlnICAgICAgICAgICAgICAgICAgICAgIHwgICA0ICstCiBkcml2ZXJz
+L3VzYi9ob3N0L2VoY2ktb3Jpb24uYyAgICAgICAgICAgICAgICAgfCAgNTEgKystLQogZHJpdmVy
+cy91c2IvaG9zdC94aGNpLW12ZWJ1LmMgICAgICAgICAgICAgICAgIHwgIDExICsKIGRyaXZlcnMv
+dXNiL2hvc3QveGhjaS1tdmVidS5oICAgICAgICAgICAgICAgICB8ICAgNiArCiBkcml2ZXJzL3Vz
+Yi9ob3N0L3hoY2ktcGxhdC5jICAgICAgICAgICAgICAgICAgfCAgIDcgKwogMTQgZmlsZXMgY2hh
+bmdlZCwgNDUxIGluc2VydGlvbnMoKyksIDI3IGRlbGV0aW9ucygtKQogY3JlYXRlIG1vZGUgMTAw
+NjQ0IERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW12ZWJ1LXV0bWku
+dHh0CiBjcmVhdGUgbW9kZSAxMDA2NDQgZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUtYTM3
+MDAtdXRtaS5jCgotLSAKMi4xOS4xCgoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
