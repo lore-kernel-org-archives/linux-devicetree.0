@@ -1,78 +1,141 @@
-From: Eric Anholt <eric@anholt.net>
-Subject: Re: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Drop unnecessary pinctrl
-Date: Mon, 21 Jan 2019 12:29:08 -0800
-Message-ID: <87y37d3gbv.fsf@anholt.net>
-References: <1548003960-4807-1-git-send-email-stefan.wahren@i2se.com>
+From: Lubomir Rintel <lkundrak@v3.sk>
+Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
+ binding
+Date: Mon, 21 Jan 2019 21:45:22 +0100
+Message-ID: <4c21727d9753d4c0de667566972f2229dc9f1304.camel@v3.sk>
+References: <20190120172534.24617-1-lkundrak@v3.sk>
+         <20190120172534.24617-5-lkundrak@v3.sk>
+         <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
+         <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
+         <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
+         <20190121175301.lremzw6dul7dyff4@e5254000004ec.dyn.armlinux.org.uk>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============7233481504113563960=="
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1548003960-4807-1-git-send-email-stefan.wahren@i2se.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190121175301.lremzw6dul7dyff4@e5254000004ec.dyn.armlinux.org.uk>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Russell King - ARM Linux admin <linux@armlinux.org.uk>, Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
---===============7233481504113563960==
-Content-Type: multipart/signed; boundary="=-=-=";
-	micalg=pgp-sha512; protocol="application/pgp-signature"
+On Mon, 2019-01-21 at 17:53 +0000, Russell King - ARM Linux admin
+wrote:
+> On Mon, Jan 21, 2019 at 10:07:11AM -0600, Rob Herring wrote:
+> > On Mon, Jan 21, 2019 at 9:46 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> > > On Mon, 2019-01-21 at 09:35 -0600, Rob Herring wrote:
+> > > > On Sun, Jan 20, 2019 at 11:26 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
+> > > > > The Marvell Armada DRM master device is a virtual device needed to list all
+> > > > > nodes that comprise the graphics subsystem.
+> > > > > 
+> > > > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
+> > > > > ---
+> > > > >  .../display/armada/marvell-armada-drm.txt     | 24 +++++++++++++++++++
+> > > > >  1 file changed, 24 insertions(+)
+> > > > > 
+> > > > > diff --git a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
+> > > > > index de4cca9432c8..3dbfa8047f0b 100644
+> > > > > --- a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
+> > > > > +++ b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
+> > > > > @@ -1,3 +1,27 @@
+> > > > > +Marvell Armada DRM master device
+> > > > > +================================
+> > > > > +
+> > > > > +The Marvell Armada DRM master device is a virtual device needed to list all
+> > > > > +nodes that comprise the graphics subsystem.
+> > > > > +
+> > > > > +Required properties:
+> > > > > +
+> > > > > + - compatible: value should be "marvell,dove-display-subsystem",
+> > > > > +   "marvell,armada-display-subsystem"
+> > > > > + - ports: a list of phandles pointing to display interface ports of CRTC
+> > > > > +   devices
+> > > > > + - memory-region: phandle to a node describing memory to be used for the
+> > > > > +   framebuffer
+> > > > > +
+> > > > > +Example:
+> > > > > +
+> > > > > +       display-subsystem {
+> > > > > +               compatible = "marvell,dove-display-subsystem",
+> > > > > +                            "marvell,armada-display-subsystem";
+> > > > > +               memory-region = <&display_reserved>;
+> > > > > +               ports = <&lcd0_port>;
+> > > > 
+> > > > If there is only one device, you don't need this virtual node.
+> > > 
+> > > By "one device" you mean one LCD controller (CRTC)?
+> > 
+> > Yes.
+> 
+> How does that work (as far as the Linux implementation) ?  I can't see
+> a way that could work, while allowing the flexibility that Armada DRM
+> allows (two completely independent LCD controllers as two separate DRM
+> devices vs one DRM device containing both LCD controllers.)
+> 
+> > > I suppose in the (single CRTC) example case, the display-subsystem node
+> > > used to associate it with the memory region reserved for allocating the
+> > > frame buffers from. Could that be done differently?
+> > 
+> > Move memory-region to the LCD controller node.
+> 
+> That doesn't work - it would appear in the wrong part of the driver.
+> 
+> > > Also, if the node is indeed made optional, then it's going to
+> > > complicate things on the DRM side. Currently the driver that binds to
+> > > the node creates the DRM device once it sees all the components
+> > > connected to the ports appear. If we loose it, then the LCD controller
+> > > driver would somehow need to find out that it's alone and create the
+> > > DRM device itself.
+> > 
+> > DT is not the only way to create devices. The DRM driver can bind to
+> > the LCDC node and then create a child CRTC device (or even multiple
+> > ones for h/w with multiple pipelines).
+> 
+> That seems completely upside down and rediculous to me - are you
+> really suggesting that we should have some kind of virtual device
+> in DT, and omit the _real_ physical devices for that, having the
+> driver create the device with all the appropriate SoC resources?
 
---=-=-=
-Content-Type: text/plain
+Hmm, that's not how I read that. My understanding (putting aside
+practicality of the solution) is that Rob was merely suggesting that
+for the single LCDC case there would be just a single LCDC node in DT
+and the driver that binds to it would create the DRM device & CRTC
+device pair.
 
-Stefan Wahren <stefan.wahren@i2se.com> writes:
+> > You'll also notice that there are only 3 cases of this virtual node in
+> > the tree: STi, i.MX IPU, and Rockchip. That's because we've deprecated
+> > doing these virtual nodes for some time now. IOW, there are several
+> > examples of how to do this without a virtual node.
+> 
+> This driver has been in-tree with this setup for some time, although
+> the documentation has been missing (we actually have a _lot_ of
+> instances of that.)  However, we have no in-tree DT using it.
+> 
+> I don't really see how to satisfy your comments without totally
+> restructuring the driver, which is going to be quite a big chunk
+> of work.  I'm not sure I have the motivation to do that right now.
 
-> There is no need to specify a pinctrl for the reset GPIO. So we better
-> remove this avoid a potential conflict between pinctrl and pwrseq
-> after the pinmux driver has been changed to strict:
->
-> pinctrl-bcm2835 20200000.gpio: pin gpio41 already requested by wifi-pwrseq;
-> cannot claim for pinctrl-bcm2835:499
-> pinctrl-bcm2835 20200000.gpio: pin-41 (pinctrl-bcm2835:499) status -22
-> pwrseq_simple: probe of wifi-pwrseq failed with error -22
->
-> Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
+Note that the initial objection was against the display-subsystem node
+being mandatory if "there is only one [LCDC] device".
 
-Reviewed-by: Eric Anholt <eric@anholt.net>
+My understanding is that need to include the display-subsystem node for
+the multiple LCDC setup (on Dove platform) anyways. Is that correct?
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+Rob, I'm wondering if there would be a possibility of finding some
+middle groud? Perhaps documenting, that the display-subsystem node
+would ideally be optional for single LCDC setups, but indicating that
+the Armada DRM driver actually requires is?
 
------BEGIN PGP SIGNATURE-----
+Note that this is not a new driver -- it has been around since 2013,
+though, without useful DT bindings. Maybe it would do just well in
+company of the other three drivers you mentioned that use similar
+bindings.
 
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAlxGK5QACgkQtdYpNtH8
-nuiUbQ//U3KGqKij+SJ32+YotSZa64EUJT4R00K4D27hd0/HMWcS/yECReOGv0RX
-gAjxgAc5AIihAZjjlFRfN4fj3mKe+NhQMNNebDAQCdrD8yFFDhAeV5gpOMGLkcbU
-fPEzSQz6/wSkJcAY20VSzBpuavCrUQI+g9w7TFyzhfqnTx1ftZdIinWxtdLudrMI
-/L1eFH4R2XuUOzQ2enyPbvIBka4ouW2rjYZ5q8nwXQWdONSWkxt1UVAK1FvsZtyp
-V/HRq9YvsAttDrJIjuo2kx4U6tWRWAOydfpMjQ67BRbVU/Y8LrXXapZiI3aqvRbG
-88xfiY1zWqncUs9qtumtuUTSlzxPfWx8EInW+ZD9Ys/6IZ86K5Kngb9d5U1UQUxI
-hvea/3wyE+tJI4FawWhZfer9+dzXHFIhpk/PjZGnWCEjcfIAwszSZ/Ctv+vbz2fW
-X6kFgw+jm2oDezO92qy43YnefghpM13rC8CGjI1rhPH/IzOow5t+IBc+Nab5xHqj
-5ESQ1v7pywdPyE1Gn8TRpGnAuohtErt8QR9zCvCNA7Ffiq1XplFfdGyKc3/xgxyP
-zeam0dMkHnNPwclazRe64c+BIK81JiUx7JlFSkoZ8Gob3Y8cjlwrWjKJyMll5M8l
-HjkrPzldf1D/cH7mT9GuMaWv8NmAq4c7DxVwzKptgN1AAG2qGnQ=
-=ZREv
------END PGP SIGNATURE-----
---=-=-=--
+(Also, there seem to have substantial discussion regarding the bindings
+design back in '13, shedding some light into why the display-subsystem
+node was deemed useful: [1])
 
+[1] https://www.mail-archive.com/dri-devel@lists.freedesktop.org/msg40358.html
 
---===============7233481504113563960==
-Content-Type: text/plain; charset="us-ascii"
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-Content-Disposition: inline
-
-_______________________________________________
-linux-arm-kernel mailing list
-linux-arm-kernel@lists.infradead.org
-http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
---===============7233481504113563960==--
+Thanks,
+Lubo
