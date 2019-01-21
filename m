@@ -1,42 +1,269 @@
-From: Jerome Brunet <jbrunet@baylibre.com>
-Subject: Re: [PATCH 0/2] arm64: dts: meson: g12a: enable pinctrl
-Date: Mon, 21 Jan 2019 19:11:19 +0100
-Message-ID: <d8b4eaa459108471ceaf821937dc857c83bb8487.camel@baylibre.com>
-References: <20190117103151.3349-1-jbrunet@baylibre.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec@siol.net>
+Subject: Re: [linux-sunxi] [PATCH v3 02/28] clk: sunxi-ng: Adjust MP clock parent rate when allowed
+Date: Mon, 21 Jan 2019 19:13:07 +0100
+Message-ID: <1726638.4TPIZlPAWH@jernej-laptop>
+References: <20181104182705.18047-1-jernej.skrabec@siol.net> <20190121083729.7qsmj7drxvmnjoye@plaes.org> <20190121133433.lryqz7ivrj5cxu3g@plaes.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117103151.3349-1-jbrunet@baylibre.com>
+In-Reply-To: <20190121133433.lryqz7ivrj5cxu3g@plaes.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, patchwork-bot+notify@kernel.org
+To: Priit Laes <plaes@plaes.org>
+Cc: maxime.ripard@bootlin.com, wens@csie.org, robh+dt@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, airlied@linux.ie, architt@codeaurora.org, a.hajda@samsung.com, Laurent.pinchart@ideasonboard.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 2019-01-17 at 11:31 +0100, Jerome Brunet wrote:
-> This patchset enables pinctrl on the g12a and adds the necessary
-> pinctrl settings to the u200 uart
+Dne ponedeljek, 21. januar 2019 ob 14:34:33 CET je Priit Laes napisal(a):
+> On Mon, Jan 21, 2019 at 08:37:29AM +0000, Priit Laes wrote:
+> > On Fri, Jan 18, 2019 at 10:51:10PM +0100, Jernej Škrabec wrote:
+> > > Dne četrtek, 17. januar 2019 ob 08:24:02 CET je Priit Laes napisal(a):
+> > > > On Wed, Jan 16, 2019 at 06:00:32PM +0100, Jernej Škrabec wrote:
+> > > > > Dne sreda, 16. januar 2019 ob 13:09:58 CET je Priit Laes napisal(a):
+> > > > > > On Thu, Jan 10, 2019 at 06:10:59PM +0100, Jernej Škrabec wrote:
+> > > > > > > Dne četrtek, 10. januar 2019 ob 10:15:48 CET je Priit Laes 
+napisal(a):
+> > > > > > > > On Sun, Nov 04, 2018 at 07:26:39PM +0100, Jernej Skrabec 
+wrote:
+> > > > > > > > > Currently MP clocks don't consider adjusting parent rate
+> > > > > > > > > even if
+> > > > > > > > > they
+> > > > > > > > > are allowed to do so. Such behaviour considerably lowers
+> > > > > > > > > amount of
+> > > > > > > > > possible rates, which is very inconvenient when such clock
+> > > > > > > > > is used
+> > > > > > > > > for
+> > > > > > > > > pixel clock, for example.
+> > > > > > > > > 
+> > > > > > > > > In order to improve the situation, adjusting parent rate is
+> > > > > > > > > considered
+> > > > > > > > > when allowed.
+> > > > > > > > > 
+> > > > > > > > > This code is inspired by clk_divider_bestdiv() function,
+> > > > > > > > > which
+> > > > > > > > > does
+> > > > > > > > > basically the same thing for different clock type.
+> > > > > > > > 
+> > > > > > > > This patch seems to break the eMMC support on
+> > > > > > > > Olinuxino-Lime2-eMMC
+> > > > > > > > boards:
+> > > > > > > > 
+> > > > > > > > EXT4-fs (mmcblk1p4): INFO: recovery required on readonly
+> > > > > > > > filesystem
+> > > > > > > > EXT4-fs (mmcblk1p4): write access will be enabled during
+> > > > > > > > recovery
+> > > > > > > > sunxi-mmc 1c11000.mmc: data error, sending stop command
+> > > > > > > > sunxi-mmc 1c11000.mmc: send stop command failed
+> > > > > > > 
+> > > > > > > I'm not familiar with A20. What is interesting is that emmc
+> > > > > > > clocks
+> > > > > > > don't
+> > > > > > > have CLK_SET_RATE_PARENT flag set, so you shouldn't see any
+> > > > > > > difference.
+> > > > > > > 
+> > > > > > > Can you post content of clk_summary with and without this patch?
+> > > > > > 
+> > > > > > In both cases I booted from FEL with rootfs on sdcard and tried to
+> > > > > > mount
+> > > > > > partition from eMMC to /mnt. With your patch, last step it fails.
+> > > > > > 
+> > > > > > pre-patch working:
+> > > > > > pll-ddr-other[768MHz] -> mmc2[512MHz]. (For some reason ahb-mmc2
+> > > > > > is
+> > > > > > off?)
+> > > > > > 
+> > > > > > post-patch not working:
+> > > > > > pll-periph[600MHz] ->  mmc2[500Mhz], (ahb-mmc2 is enabled)
+> > > > > > 
+> > > > > > Also, attached the logs.
+> > > > > 
+> > > > > Thanks. Just one more request. Can you enable debug messages in mmc
+> > > > > driver?
+> > > > > I'm interested in output of this line:
+> > > > > 
+> > > > > dev_dbg(mmc_dev(mmc), "setting clk to %d, rounded %ld\n",
+> > > > > 
+> > > > > 		clock, rate);
+> > > > 
+> > > > 1c11000 is eMMC:
+> > > > [snip]
+> > > > [    1.961644] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.004091] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.020296] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.039917] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.047847] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.055053] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.065256] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.092351] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.168725] sunxi-mmc 1c11000.mmc: setting clk to 400000, rounded
+> > > > 400000
+> > > > [    2.189403] sunxi-mmc 1c11000.mmc: setting clk to 52000000, rounded
+> > > > 52000000 [    2.203340] sunxi-mmc 1c11000.mmc: setting clk to
+> > > > 52000000,
+> > > > rounded 52000000 [    2.211412] sunxi-mmc 1c11000.mmc: setting clk to
+> > > > 52000000, rounded 52000000 [    4.967865] sunxi-mmc 1c11000.mmc:
+> > > > setting
+> > > > clk to 52000000, rounded 52000000 [    8.755345] sunxi-mmc
+> > > > 1c11000.mmc:
+> > > > setting clk to 52000000, rounded 52000000 [    9.082510] sunxi-mmc
+> > > > 1c11000.mmc: setting clk to 52000000, rounded 52000000
+> > > > 
+> > > > Here I tried to mount partition from eMMC...
+> > > > 
+> > > > [   72.167311] sunxi-mmc 1c11000.mmc: setting clk to 52000000, rounded
+> > > > 52000000 [   72.269629] sunxi-mmc 1c11000.mmc: data error, sending
+> > > > stop
+> > > > command [   73.268999] sunxi-mmc 1c11000.mmc: send stop command failed
+> > > > [/snip]
+> > > > 
+> > > > And clock tree:
+> > > > [snip]
+> > > > pll-periph-base                3        3        0  1200000000        
+> > > >  0
+> > > > 
+> > > >  0  50000 pll-periph                  6        6        0   600000000
+> > > >  
+> > > >    0     0  50000 mmc2                     3        3        0   
+> > > >    50000000
+> > > >    
+> > > >         0     0  50000 mmc2_sample           1        1        0
+> > > > 
+> > > > 50000000          0   120  50000 mmc2_output           1        1     
+> > > >   0
+> > > > 
+> > > >   50000000          0    60  50000 ahb                     18       18
+> > > >   0   300000000          0     0  50000 ahb-mmc2              1       
+> > > >   1
+> > > >   
+> > > >     0   300000000          0     0  50000 [/snip]
+> > > > 
+> > > > And without patch:
+> > > > [snip]
+> > > > [    2.003341] sunxi-mmc 1c11000.mmc: XXX: setting clk to 400000,
+> > > > rounded
+> > > > 400000 [    2.019479] sunxi-mmc 1c11000.mmc: XXX: setting clk to
+> > > > 400000,
+> > > > rounded 400000 [    2.039144] sunxi-mmc 1c11000.mmc: XXX: setting clk
+> > > > to
+> > > > 400000, rounded 400000 [    2.047129] sunxi-mmc 1c11000.mmc: XXX:
+> > > > setting
+> > > > clk to 400000, rounded 400000 [    2.054324] sunxi-mmc 1c11000.mmc:
+> > > > XXX:
+> > > > setting clk to 400000, rounded 400000 [    2.064481] sunxi-mmc
+> > > > 1c11000.mmc:
+> > > > XXX: setting clk to 400000, rounded 400000 [    2.091624] sunxi-mmc
+> > > > 1c11000.mmc: XXX: setting clk to 400000, rounded 400000 [    2.168067]
+> > > > sunxi-mmc 1c11000.mmc: XXX: setting clk to 400000, rounded 400000 [
+> > > > 2.188239] sunxi-mmc 1c11000.mmc: XXX: setting clk to 52000000, rounded
+> > > > 51200000 [    2.202779] sunxi-mmc 1c11000.mmc: XXX: setting clk to
+> > > > 52000000, rounded 51200000 [    2.210817] sunxi-mmc 1c11000.mmc: XXX:
+> > > > setting clk to 52000000, rounded 51200000 [    5.103358] sunxi-mmc
+> > > > 1c11000.mmc: XXX: setting clk to 52000000, rounded 51200000 [   
+> > > > 8.950237]
+> > > > sunxi-mmc 1c11000.mmc: XXX: setting clk to 52000000, rounded 51200000
+> > > > [
+> > > > 9.376201] sunxi-mmc 1c11000.mmc: XXX: setting clk to 52000000, rounded
+> > > > 51200000 [  113.618387] sunxi-mmc 1c11000.mmc: XXX: setting clk to
+> > > > 52000000, rounded 51200000 [  113.707979] EXT4-fs (mmcblk1p4):
+> > > > recovery
+> > > > complete
+> > > > [  113.728162] EXT4-fs (mmcblk1p4): mounted filesystem with ordered
+> > > > data
+> > > > mode. Opts: (null) [/snip]
+> > > > 
+> > > > And clock tree:
+> > > > [snip]
+> > > > pll-ddr-base                   2        2        0   768000000        
+> > > >  0
+> > > > 
+> > > >  0  50000 pll-ddr-other               1        1        0   768000000
+> > > >  
+> > > >    0     0  50000 mmc2                     0        0        0   
+> > > >    51200000
+> > > >    
+> > > >         0     0  50000 mmc2_sample           0        0        0
+> > > > 
+> > > > 51200000          0   120  50000 mmc2_output           0        0     
+> > > >   0
+> > > > 
+> > > >   51200000          0    72  50000 [/snip]
+> > > 
+> > > It seems to me that clock rate is set properly. It's even better than
+> > > before since there is no error between wanted and real clock. I bet
+> > > that if you call clk_get_rate() directly behind clk_set_rate() in mmc
+> > > driver, you'll get correct value.
+> > > 
+> > > However, it seems that at some point some other peripheral changes it's
+> > > parent clock rate, which inadvertely changes emmc2 clock rate too. The
+> > > only possible clock which could interfere is sata. Can you disable
+> > > driver in you kernel config and try again?
+> > 
+> > OK, tried following things in succession, but SATA disabling does not
+> > work:
+> > 
+> > a) Marked all ahci stuff in devicetree as disabled
+> > b) Disable CONFIG_AHCI_SUNXI in kernel
+> > c) Even disabled SATA stuff in u-boot
 > 
-> Kevin, please note that this patchset depends on the:
-> * dts bus fixup: [0]
-> * pinctrl region fixes [1].
-> 
-> [0]: https://lkml.kernel.org/r/20190116165236.8330-1-jbrunet@baylibre.com
-> [1]: https://lkml.kernel.org/r/20190117102315.1833-1-jbrunet@baylibre.com
-> 
-> Cheers.
+> But it works, when I allow mmc2 clock to set parent rate:
 
-Hi Kevin,
+Strange, I checked both pre- and post- patch clk_summary you sent me and in 
+both cases both mmc2 parent clocks have same rate as before. This would need a 
+more detailed analysis with a lot of debug print, but don't have such board.
 
-Please ignore this series. It is missing gpio-ranges.
-I'll add it in the v2
+CLK_SET_PARENT rate might be viable solution, but  you have to be sure that 
+any clock using pll-periph as a parent is in expected range.
+
+On the plus side, if this works, eMMC will work faster due to 8 MHz clock rate 
+increase :)
 
 > 
-> Jerome Brunet (2):
->   arm64: dts: meson: g12a: add pinctrl support controllers
->   arm64: dts: meson: g12a: add uart_ao_a pinctrl
+> pll-periph-base                3        3        0   312000000          0   
+>  0  50000 mbus                        1        1        0    78000000      
+>    0     0  50000 pll-periph-sata             1        1        0   
+> 26000000          0     0  50000 sata                     1        1       
+> 0    26000000          0     0  50000 pll-periph                  5       
+> 5        0   156000000          0     0  50000 mmc2                     0  
+>      0        0    52000000          0     0  50000 mmc2_sample           0
+>        0        0    52000000          0   120  50000 mmc2_output          
+> 0        0        0    52000000          0   120  50000 mmc0               
+>      0        0        0    39000000          0     0  50000 mmc0_sample   
+>        0        0        0    39000000          0    90  50000 mmc0_output 
+>          0        0        0    39000000          0    90  50000
 > 
->  .../boot/dts/amlogic/meson-g12a-u200.dts      |  2 +
->  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi   | 67 +++++++++++++++++++
->  2 files changed, 69 insertions(+)
 > 
+> Now, what I don't understand is why the `enable count` does not increase :(
+
+mmc has suspend/resume functionality which might power down mmc when not in 
+use and thus disable clocks. Try initiate some big transfer from/to eMMC and 
+check clocks in between.
+
+BR,
+Jernej
+
+> 
+> ---
+> diff --git a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c index 129ebd2588fd..605e13b4ef90
+> 100644
+> --- a/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> +++ b/drivers/clk/sunxi-ng/ccu-sun4i-a10.c
+> @@ -498,7 +498,7 @@ static SUNXI_CCU_MP_WITH_MUX_GATE(mmc2_clk, "mmc2",
+> mod0_default_parents, 0x090, 16, 2,        /* P */
+>                                   24, 2,        /* mux */
+>                                   BIT(31),      /* gate */
+> -                                 0);
+> +                                 CLK_SET_RATE_PARENT);
+> 
+>  /* MMC output and sample clocks are not present on A10 */
+>  static SUNXI_CCU_PHASE(mmc2_output_clk, "mmc2_output", "mmc2",
+> 
+> > > Best regards,
+> > > Jernej
