@@ -1,8 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 09/10] ARM64: dts: marvell: armada-37xx: declare USB2 UTMI
- PHYs
-Date: Mon, 21 Jan 2019 12:23:35 +0100
-Message-ID: <20190121112336.23489-10-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 07/10] MAINTAINERS: phy: fill Armada 3700 PHY drivers entry
+Date: Mon, 21 Jan 2019 12:23:33 +0100
+Message-ID: <20190121112336.23489-8-miquel.raynal@bootlin.com>
 References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -22,68 +21,32 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Marvell Armada 3700 SoCs there are two USB2 UTMI PHYs. They are
-both very similar but only one has OTG/charging capabilities.
-
-Because there are USB host registers and PHY registers mixed in a
-single area, a system controller is also created and referenced from
-both the USB host node and the PHY node.
+Update the Armada 3700 PHY drivers entry with the recently added UTMI
+PHY driver.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 28 ++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ MAINTAINERS | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 5cfd1b920f31..aeb2681428b3 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -344,18 +344,46 @@
- 				compatible = "marvell,armada3700-xhci",
- 				"generic-xhci";
- 				reg = <0x58000 0x4000>;
-+				marvell,usb-misc-reg = <&usb32_syscon>;
- 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&sb_periph_clk 12>;
- 				status = "disabled";
- 			};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index abfd80f21b24..2a08a097e107 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9080,11 +9080,13 @@ F:	drivers/gpu/drm/armada/
+ F:	include/uapi/drm/armada_drm.h
+ F:	Documentation/devicetree/bindings/display/armada/
  
-+			usb2_utmi_otg_phy: phy@5d000 {
-+				compatible = "marvell,a3700-utmi-otg-phy";
-+				reg = <0x5d000 0x800>;
-+				marvell,usb-misc-reg = <&usb32_syscon>;
-+				#phy-cells = <0>;
-+			};
-+
-+			usb32_syscon: system-controller@5d800 {
-+				compatible = "marvell,usb2-host-device-miscellaneous",
-+				"syscon";
-+				reg = <0x5d800 0x800>;
-+			};
-+
- 			usb2: usb@5e000 {
- 				compatible = "marvell,armada-3700-ehci";
- 				reg = <0x5e000 0x1000>;
-+				marvell,usb-misc-reg = <&usb2_syscon>;
- 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
+-MARVELL ARMADA 3700 COMPHY DRIVER
++MARVELL ARMADA 3700 PHY DRIVERS
+ M:	Miquel Raynal <miquel.raynal@bootlin.com>
+ S:	Maintained
+ F:	drivers/phy/marvell/phy-mvebu-a3700-comphy.c
++F:	drivers/phy/marvell/phy-mvebu-a3700-utmi.c
+ F:	Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
++F:	Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
  
-+			usb2_utmi_host_phy: phy@5f000 {
-+				compatible = "marvell,a3700-utmi-host-phy";
-+				reg = <0x5f000 0x800>;
-+				marvell,usb-misc-reg = <&usb2_syscon>;
-+				#phy-cells = <0>;
-+			};
-+
-+			usb2_syscon: system-controller@5f800 {
-+				compatible = "marvell,usb2-host-miscellaneous",
-+				"syscon";
-+				reg = <0x5f800 0x800>;
-+			};
-+
- 			xor@60900 {
- 				compatible = "marvell,armada-3700-xor";
- 				reg = <0x60900 0x100>,
+ MARVELL CRYPTO DRIVER
+ M:	Boris Brezillon <bbrezillon@kernel.org>
 -- 
 2.19.1
