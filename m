@@ -1,161 +1,70 @@
 From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: [PATCH v2 12/21] arch: use memblock_alloc() instead of memblock_alloc_from(size, align, 0)
-Date: Mon, 21 Jan 2019 10:03:59 +0200
-Message-ID: <1548057848-15136-13-git-send-email-rppt@linux.ibm.com>
+Subject: [PATCH v2 04/21] memblock: drop
+ memblock_alloc_base_nid()
+Date: Mon, 21 Jan 2019 10:03:51 +0200
+Message-ID: <1548057848-15136-5-git-send-email-rppt@linux.ibm.com>
 References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <xen-devel-bounces@lists.xenproject.org>
 In-Reply-To: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.xenproject.org/mailman/options/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=unsubscribe>
+List-Post: <mailto:xen-devel@lists.xenproject.org>
+List-Help: <mailto:xen-devel-request@lists.xenproject.org?subject=help>
+List-Subscribe: <https://lists.xenproject.org/mailman/listinfo/xen-devel>,
+ <mailto:xen-devel-request@lists.xenproject.org?subject=subscribe>
+Errors-To: xen-devel-bounces@lists.xenproject.org
+Sender: "Xen-devel" <xen-devel-bounces@lists.xenproject.org>
 To: linux-mm@kvack.org
-Cc: Andrew Morton <akpm@linux-foundation.org>, Catalin Marinas <catalin.marinas@arm.com>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+d>
+Cc: Rich Felker <dalias@libc.org>, linux-ia64@vger.kernel.org, devicetree@vger.kernel.org, Catalin Marinas <catalin.marinas@arm.com>, Heiko Carstens <heiko.carstens@de.ibm.com>, x86@kernel.org, linux-mips@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>, Guo Ren <guoren@kernel.org>, sparclinux@vger.kernel.org, Christoph Hellwig <hch@lst.de>, linux-s390@vger.kernel.org, linux-c6x-dev@linux-c6x.org, Yoshinori Sato <ysato@users.sourceforge.jp>, Richard Weinberger <richard@nod.at>, linux-sh@vger.kernel.org, Russell King <linux@armlinux.org.uk>, kasan-dev@googlegroups.com, Mike Rapoport <rppt@linux.ibm.com>, Geert Uytterhoeven <geert@linux-m68k.org>, Mark Salter <msalter@redhat.com>, Dennis Zhou <dennis@kernel.org>, Matt Turner <mattst88@gmail.com>, linux-snps-arc@lists.infradead.org, uclinux-h8-devel@lists.sourceforge.jp, Petr Mladek <pmladek@suse.com>, linux-xtensa@linux-xten
 List-Id: devicetree@vger.kernel.org
 
-The last parameter of memblock_alloc_from() is the lower limit for the
-memory allocation. When it is 0, the call is equivalent to
-memblock_alloc().
-
-Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-Acked-by: Paul Burton <paul.burton@mips.com> # MIPS part
----
- arch/alpha/kernel/core_cia.c  |  2 +-
- arch/alpha/kernel/pci_iommu.c |  4 ++--
- arch/alpha/kernel/setup.c     |  2 +-
- arch/ia64/kernel/mca.c        |  3 +--
- arch/mips/kernel/traps.c      |  2 +-
- arch/sparc/kernel/prom_32.c   |  2 +-
- arch/sparc/mm/init_32.c       |  2 +-
- arch/sparc/mm/srmmu.c         | 10 +++++-----
- 8 files changed, 13 insertions(+), 14 deletions(-)
-
-diff --git a/arch/alpha/kernel/core_cia.c b/arch/alpha/kernel/core_cia.c
-index 867e873..466cd44 100644
---- a/arch/alpha/kernel/core_cia.c
-+++ b/arch/alpha/kernel/core_cia.c
-@@ -331,7 +331,7 @@ cia_prepare_tbia_workaround(int window)
- 	long i;
- 
- 	/* Use minimal 1K map. */
--	ppte = memblock_alloc_from(CIA_BROKEN_TBIA_SIZE, 32768, 0);
-+	ppte = memblock_alloc(CIA_BROKEN_TBIA_SIZE, 32768);
- 	pte = (virt_to_phys(ppte) >> (PAGE_SHIFT - 1)) | 1;
- 
- 	for (i = 0; i < CIA_BROKEN_TBIA_SIZE / sizeof(unsigned long); ++i)
-diff --git a/arch/alpha/kernel/pci_iommu.c b/arch/alpha/kernel/pci_iommu.c
-index aa0f50d..e4cf77b 100644
---- a/arch/alpha/kernel/pci_iommu.c
-+++ b/arch/alpha/kernel/pci_iommu.c
-@@ -87,13 +87,13 @@ iommu_arena_new_node(int nid, struct pci_controller *hose, dma_addr_t base,
- 		printk("%s: couldn't allocate arena ptes from node %d\n"
- 		       "    falling back to system-wide allocation\n",
- 		       __func__, nid);
--		arena->ptes = memblock_alloc_from(mem_size, align, 0);
-+		arena->ptes = memblock_alloc(mem_size, align);
- 	}
- 
- #else /* CONFIG_DISCONTIGMEM */
- 
- 	arena = memblock_alloc(sizeof(*arena), SMP_CACHE_BYTES);
--	arena->ptes = memblock_alloc_from(mem_size, align, 0);
-+	arena->ptes = memblock_alloc(mem_size, align);
- 
- #endif /* CONFIG_DISCONTIGMEM */
- 
-diff --git a/arch/alpha/kernel/setup.c b/arch/alpha/kernel/setup.c
-index 4b5b1b2..5d4c76a 100644
---- a/arch/alpha/kernel/setup.c
-+++ b/arch/alpha/kernel/setup.c
-@@ -293,7 +293,7 @@ move_initrd(unsigned long mem_limit)
- 	unsigned long size;
- 
- 	size = initrd_end - initrd_start;
--	start = memblock_alloc_from(PAGE_ALIGN(size), PAGE_SIZE, 0);
-+	start = memblock_alloc(PAGE_ALIGN(size), PAGE_SIZE);
- 	if (!start || __pa(start) + size > mem_limit) {
- 		initrd_start = initrd_end = 0;
- 		return NULL;
-diff --git a/arch/ia64/kernel/mca.c b/arch/ia64/kernel/mca.c
-index 91bd1e1..74d148b 100644
---- a/arch/ia64/kernel/mca.c
-+++ b/arch/ia64/kernel/mca.c
-@@ -1835,8 +1835,7 @@ format_mca_init_stack(void *mca_data, unsigned long offset,
- /* Caller prevents this from being called after init */
- static void * __ref mca_bootmem(void)
- {
--	return memblock_alloc_from(sizeof(struct ia64_mca_cpu),
--				   KERNEL_STACK_SIZE, 0);
-+	return memblock_alloc(sizeof(struct ia64_mca_cpu), KERNEL_STACK_SIZE);
- }
- 
- /* Do per-CPU MCA-related initialization.  */
-diff --git a/arch/mips/kernel/traps.c b/arch/mips/kernel/traps.c
-index c91097f..2bbdee5 100644
---- a/arch/mips/kernel/traps.c
-+++ b/arch/mips/kernel/traps.c
-@@ -2291,7 +2291,7 @@ void __init trap_init(void)
- 		phys_addr_t ebase_pa;
- 
- 		ebase = (unsigned long)
--			memblock_alloc_from(size, 1 << fls(size), 0);
-+			memblock_alloc(size, 1 << fls(size));
- 
- 		/*
- 		 * Try to ensure ebase resides in KSeg0 if possible.
-diff --git a/arch/sparc/kernel/prom_32.c b/arch/sparc/kernel/prom_32.c
-index 42d7f2a..38940af 100644
---- a/arch/sparc/kernel/prom_32.c
-+++ b/arch/sparc/kernel/prom_32.c
-@@ -32,7 +32,7 @@ void * __init prom_early_alloc(unsigned long size)
- {
- 	void *ret;
- 
--	ret = memblock_alloc_from(size, SMP_CACHE_BYTES, 0UL);
-+	ret = memblock_alloc(size, SMP_CACHE_BYTES);
- 	if (ret != NULL)
- 		memset(ret, 0, size);
- 
-diff --git a/arch/sparc/mm/init_32.c b/arch/sparc/mm/init_32.c
-index d900952..a8ff298 100644
---- a/arch/sparc/mm/init_32.c
-+++ b/arch/sparc/mm/init_32.c
-@@ -264,7 +264,7 @@ void __init mem_init(void)
- 	i = last_valid_pfn >> ((20 - PAGE_SHIFT) + 5);
- 	i += 1;
- 	sparc_valid_addr_bitmap = (unsigned long *)
--		memblock_alloc_from(i << 2, SMP_CACHE_BYTES, 0UL);
-+		memblock_alloc(i << 2, SMP_CACHE_BYTES);
- 
- 	if (sparc_valid_addr_bitmap == NULL) {
- 		prom_printf("mem_init: Cannot alloc valid_addr_bitmap.\n");
-diff --git a/arch/sparc/mm/srmmu.c b/arch/sparc/mm/srmmu.c
-index b609362..a400ec3 100644
---- a/arch/sparc/mm/srmmu.c
-+++ b/arch/sparc/mm/srmmu.c
-@@ -303,13 +303,13 @@ static void __init srmmu_nocache_init(void)
- 
- 	bitmap_bits = srmmu_nocache_size >> SRMMU_NOCACHE_BITMAP_SHIFT;
- 
--	srmmu_nocache_pool = memblock_alloc_from(srmmu_nocache_size,
--						 SRMMU_NOCACHE_ALIGN_MAX, 0UL);
-+	srmmu_nocache_pool = memblock_alloc(srmmu_nocache_size,
-+					    SRMMU_NOCACHE_ALIGN_MAX);
- 	memset(srmmu_nocache_pool, 0, srmmu_nocache_size);
- 
- 	srmmu_nocache_bitmap =
--		memblock_alloc_from(BITS_TO_LONGS(bitmap_bits) * sizeof(long),
--				    SMP_CACHE_BYTES, 0UL);
-+		memblock_alloc(BITS_TO_LONGS(bitmap_bits) * sizeof(long),
-+			       SMP_CACHE_BYTES);
- 	bit_map_init(&srmmu_nocache_map, srmmu_nocache_bitmap, bitmap_bits);
- 
- 	srmmu_swapper_pg_dir = __srmmu_get_nocache(SRMMU_PGD_TABLE_SIZE, SRMMU_PGD_TABLE_SIZE);
-@@ -467,7 +467,7 @@ static void __init sparc_context_init(int numctx)
- 	unsigned long size;
- 
- 	size = numctx * sizeof(struct ctx_list);
--	ctx_list_pool = memblock_alloc_from(size, SMP_CACHE_BYTES, 0UL);
-+	ctx_list_pool = memblock_alloc(size, SMP_CACHE_BYTES);
- 
- 	for (ctx = 0; ctx < numctx; ctx++) {
- 		struct ctx_list *clist;
--- 
-2.7.4
+VGhlIG1lbWJsb2NrX2FsbG9jX2Jhc2VfbmlkKCkgaXMgYSBvbmVsaW5lciB3cmFwcGVyIGZvcgpt
+ZW1ibG9ja19hbGxvY19yYW5nZV9uaWQoKSB3aXRob3V0IGFueSBzaWRlIGVmZmVjdC4KUmVwbGFj
+ZSBpdCdzIHVzYWdlIGJ5IHRoZSBkaXJlY3QgY2FsbHMgdG8gbWVtYmxvY2tfYWxsb2NfcmFuZ2Vf
+bmlkKCkuCgpTaWduZWQtb2ZmLWJ5OiBNaWtlIFJhcG9wb3J0IDxycHB0QGxpbnV4LmlibS5jb20+
+Ci0tLQogaW5jbHVkZS9saW51eC9tZW1ibG9jay5oIHwgIDMgLS0tCiBtbS9tZW1ibG9jay5jICAg
+ICAgICAgICAgfCAxNSArKysrLS0tLS0tLS0tLS0KIDIgZmlsZXMgY2hhbmdlZCwgNCBpbnNlcnRp
+b25zKCspLCAxNCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9pbmNsdWRlL2xpbnV4L21lbWJs
+b2NrLmggYi9pbmNsdWRlL2xpbnV4L21lbWJsb2NrLmgKaW5kZXggNjBlMTAwZi4uZjdlZjMxMyAx
+MDA2NDQKLS0tIGEvaW5jbHVkZS9saW51eC9tZW1ibG9jay5oCisrKyBiL2luY2x1ZGUvbGludXgv
+bWVtYmxvY2suaApAQCAtNDkwLDkgKzQ5MCw2IEBAIHN0YXRpYyBpbmxpbmUgYm9vbCBtZW1ibG9j
+a19ib3R0b21fdXAodm9pZCkKIHBoeXNfYWRkcl90IF9faW5pdCBtZW1ibG9ja19hbGxvY19yYW5n
+ZShwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwKIAkJCQkJcGh5c19hZGRyX3Qg
+c3RhcnQsIHBoeXNfYWRkcl90IGVuZCwKIAkJCQkJZW51bSBtZW1ibG9ja19mbGFncyBmbGFncyk7
+Ci1waHlzX2FkZHJfdCBtZW1ibG9ja19hbGxvY19iYXNlX25pZChwaHlzX2FkZHJfdCBzaXplLAot
+CQkJCQlwaHlzX2FkZHJfdCBhbGlnbiwgcGh5c19hZGRyX3QgbWF4X2FkZHIsCi0JCQkJCWludCBu
+aWQsIGVudW0gbWVtYmxvY2tfZmxhZ3MgZmxhZ3MpOwogcGh5c19hZGRyX3QgbWVtYmxvY2tfYWxs
+b2NfYmFzZShwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwKIAkJCQlwaHlzX2Fk
+ZHJfdCBtYXhfYWRkcik7CiBwaHlzX2FkZHJfdCBfX21lbWJsb2NrX2FsbG9jX2Jhc2UocGh5c19h
+ZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxpZ24sCmRpZmYgLS1naXQgYS9tbS9tZW1ibG9jay5j
+IGIvbW0vbWVtYmxvY2suYwppbmRleCBhMzJkYjMwLi5jODAwMjllIDEwMDY0NAotLS0gYS9tbS9t
+ZW1ibG9jay5jCisrKyBiL21tL21lbWJsb2NrLmMKQEAgLTEzNDYsMjEgKzEzNDYsMTQgQEAgcGh5
+c19hZGRyX3QgX19pbml0IG1lbWJsb2NrX2FsbG9jX3JhbmdlKHBoeXNfYWRkcl90IHNpemUsIHBo
+eXNfYWRkcl90IGFsaWduLAogCQkJCQlmbGFncyk7CiB9CiAKLXBoeXNfYWRkcl90IF9faW5pdCBt
+ZW1ibG9ja19hbGxvY19iYXNlX25pZChwaHlzX2FkZHJfdCBzaXplLAotCQkJCQlwaHlzX2FkZHJf
+dCBhbGlnbiwgcGh5c19hZGRyX3QgbWF4X2FkZHIsCi0JCQkJCWludCBuaWQsIGVudW0gbWVtYmxv
+Y2tfZmxhZ3MgZmxhZ3MpCi17Ci0JcmV0dXJuIG1lbWJsb2NrX2FsbG9jX3JhbmdlX25pZChzaXpl
+LCBhbGlnbiwgMCwgbWF4X2FkZHIsIG5pZCwgZmxhZ3MpOwotfQotCiBwaHlzX2FkZHJfdCBfX2lu
+aXQgbWVtYmxvY2tfcGh5c19hbGxvY19uaWQocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3Qg
+YWxpZ24sIGludCBuaWQpCiB7CiAJZW51bSBtZW1ibG9ja19mbGFncyBmbGFncyA9IGNob29zZV9t
+ZW1ibG9ja19mbGFncygpOwogCXBoeXNfYWRkcl90IHJldDsKIAogYWdhaW46Ci0JcmV0ID0gbWVt
+YmxvY2tfYWxsb2NfYmFzZV9uaWQoc2l6ZSwgYWxpZ24sIE1FTUJMT0NLX0FMTE9DX0FDQ0VTU0lC
+TEUsCi0JCQkJICAgICAgbmlkLCBmbGFncyk7CisJcmV0ID0gbWVtYmxvY2tfYWxsb2NfcmFuZ2Vf
+bmlkKHNpemUsIGFsaWduLCAwLAorCQkJCSAgICAgICBNRU1CTE9DS19BTExPQ19BQ0NFU1NJQkxF
+LCBuaWQsIGZsYWdzKTsKIAogCWlmICghcmV0ICYmIChmbGFncyAmIE1FTUJMT0NLX01JUlJPUikp
+IHsKIAkJZmxhZ3MgJj0gfk1FTUJMT0NLX01JUlJPUjsKQEAgLTEzNzEsOCArMTM2NCw4IEBAIHBo
+eXNfYWRkcl90IF9faW5pdCBtZW1ibG9ja19waHlzX2FsbG9jX25pZChwaHlzX2FkZHJfdCBzaXpl
+LCBwaHlzX2FkZHJfdCBhbGlnbiwKIAogcGh5c19hZGRyX3QgX19pbml0IF9fbWVtYmxvY2tfYWxs
+b2NfYmFzZShwaHlzX2FkZHJfdCBzaXplLCBwaHlzX2FkZHJfdCBhbGlnbiwgcGh5c19hZGRyX3Qg
+bWF4X2FkZHIpCiB7Ci0JcmV0dXJuIG1lbWJsb2NrX2FsbG9jX2Jhc2VfbmlkKHNpemUsIGFsaWdu
+LCBtYXhfYWRkciwgTlVNQV9OT19OT0RFLAotCQkJCSAgICAgICBNRU1CTE9DS19OT05FKTsKKwly
+ZXR1cm4gbWVtYmxvY2tfYWxsb2NfcmFuZ2VfbmlkKHNpemUsIGFsaWduLCAwLCBtYXhfYWRkciwg
+TlVNQV9OT19OT0RFLAorCQkJCQlNRU1CTE9DS19OT05FKTsKIH0KIAogcGh5c19hZGRyX3QgX19p
+bml0IG1lbWJsb2NrX2FsbG9jX2Jhc2UocGh5c19hZGRyX3Qgc2l6ZSwgcGh5c19hZGRyX3QgYWxp
+Z24sIHBoeXNfYWRkcl90IG1heF9hZGRyKQotLSAKMi43LjQKCgpfX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpYZW4tZGV2ZWwgbWFpbGluZyBsaXN0Clhlbi1k
+ZXZlbEBsaXN0cy54ZW5wcm9qZWN0Lm9yZwpodHRwczovL2xpc3RzLnhlbnByb2plY3Qub3JnL21h
+aWxtYW4vbGlzdGluZm8veGVuLWRldmVs
