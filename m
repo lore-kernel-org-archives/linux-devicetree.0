@@ -1,329 +1,66 @@
-From: Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH v4 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Mon, 21 Jan 2019 15:50:43 +0530
-Message-ID: <1548066043-1252-3-git-send-email-yash.shah@sifive.com>
-References: <1548066043-1252-1-git-send-email-yash.shah@sifive.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548066043-1252-1-git-send-email-yash.shah@sifive.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org
-Cc: thierry.reding@gmail.com, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com, Yash Shah <yash.shah@sifive.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v2 05/10] phy: add A3700 UTMI PHY driver
+Date: Mon, 21 Jan 2019 11:24:12 +0100
+Message-ID: <20190121112412.24d5c64a@xps13>
+References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
+ <20190111133133.24803-6-miquel.raynal@bootlin.com>
+ <87zhrxly7f.fsf@FE-laptop>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87zhrxly7f.fsf@FE-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Igal Liberman <igall@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
-
-Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-[Atish: Various fixes and code cleanup]
-Signed-off-by: Atish Patra <atish.patra@wdc.com>
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- drivers/pwm/Kconfig      |  11 ++
- drivers/pwm/Makefile     |   1 +
- drivers/pwm/pwm-sifive.c | 262 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 274 insertions(+)
- create mode 100644 drivers/pwm/pwm-sifive.c
-
-diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-index a8f47df..4a61d1a 100644
---- a/drivers/pwm/Kconfig
-+++ b/drivers/pwm/Kconfig
-@@ -380,6 +380,17 @@ config PWM_SAMSUNG
- 	  To compile this driver as a module, choose M here: the module
- 	  will be called pwm-samsung.
- 
-+config PWM_SIFIVE
-+	tristate "SiFive PWM support"
-+	depends on OF
-+	depends on COMMON_CLK
-+	depends on RISCV || COMPILE_TEST
-+	help
-+	  Generic PWM framework driver for SiFive SoCs.
-+
-+	  To compile this driver as a module, choose M here: the module
-+	  will be called pwm-sifive.
-+
- config PWM_SPEAR
- 	tristate "STMicroelectronics SPEAr PWM support"
- 	depends on PLAT_SPEAR
-diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-index 9c676a0..30089ca 100644
---- a/drivers/pwm/Makefile
-+++ b/drivers/pwm/Makefile
-@@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+= pwm-rcar.o
- obj-$(CONFIG_PWM_RENESAS_TPU)	+= pwm-renesas-tpu.o
- obj-$(CONFIG_PWM_ROCKCHIP)	+= pwm-rockchip.o
- obj-$(CONFIG_PWM_SAMSUNG)	+= pwm-samsung.o
-+obj-$(CONFIG_PWM_SIFIVE)	+= pwm-sifive.o
- obj-$(CONFIG_PWM_SPEAR)		+= pwm-spear.o
- obj-$(CONFIG_PWM_STI)		+= pwm-sti.o
- obj-$(CONFIG_PWM_STM32)		+= pwm-stm32.o
-diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-new file mode 100644
-index 0000000..bbc4ae8
---- /dev/null
-+++ b/drivers/pwm/pwm-sifive.c
-@@ -0,0 +1,262 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2017-2018 SiFive
-+ * For SiFive's PWM IP block documentation please refer Chapter 14 of
-+ * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
-+ */
-+#include <linux/clk.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/pwm.h>
-+#include <linux/slab.h>
-+
-+/* Register offsets */
-+#define PWM_SIFIVE_PWMCFG		0x0
-+#define PWM_SIFIVE_PWMCOUNT		0x8
-+#define PWM_SIFIVE_PWMS			0x10
-+#define PWM_SIFIVE_PWMCMP0		0x20
-+
-+/* PWMCFG fields */
-+#define PWM_SIFIVE_PWMCFG_SCALE		0
-+#define PWM_SIFIVE_PWMCFG_STICKY	8
-+#define PWM_SIFIVE_PWMCFG_ZERO_CMP	9
-+#define PWM_SIFIVE_PWMCFG_DEGLITCH	10
-+#define PWM_SIFIVE_PWMCFG_EN_ALWAYS	12
-+#define PWM_SIFIVE_PWMCFG_EN_ONCE	13
-+#define PWM_SIFIVE_PWMCFG_CENTER	16
-+#define PWM_SIFIVE_PWMCFG_GANG		24
-+#define PWM_SIFIVE_PWMCFG_IP		28
-+
-+/* SIZE_PWMCMP is used to calculate the offset for pwmcmpX registers */
-+#define SIZE_PWMCMP		4
-+#define CMPWIDTH		16
-+
-+struct pwm_sifive_ddata {
-+	struct pwm_chip	chip;
-+	struct notifier_block notifier;
-+	struct clk *clk;
-+	void __iomem *regs;
-+	unsigned int approx_period;
-+	unsigned int real_period;
-+};
-+
-+static inline struct pwm_sifive_ddata *to_pwm_sifive_chip(struct pwm_chip *c)
-+{
-+	return container_of(c, struct pwm_sifive_ddata, chip);
-+}
-+
-+static void pwm_sifive_get_state(struct pwm_chip *chip, struct pwm_device *dev,
-+				 struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = to_pwm_sifive_chip(chip);
-+	u32 duty;
-+
-+	duty = readl(pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
-+
-+	state->period = pwm->real_period;
-+	state->duty_cycle = ((u64)duty * pwm->real_period) >> CMPWIDTH;
-+	state->polarity = PWM_POLARITY_INVERSED;
-+	state->enabled = duty > 0;
-+}
-+
-+static int pwm_sifive_apply(struct pwm_chip *chip, struct pwm_device *dev,
-+			    struct pwm_state *state)
-+{
-+	struct pwm_sifive_ddata *pwm = to_pwm_sifive_chip(chip);
-+	unsigned int duty_cycle;
-+	u32 frac, val;
-+
-+	if (state->polarity != PWM_POLARITY_INVERSED)
-+		return -EINVAL;
-+
-+	if (state->period != pwm->real_period)
-+		return -EINVAL;
-+
-+	duty_cycle = state->duty_cycle;
-+	if (!state->enabled)
-+		duty_cycle = 0;
-+
-+	frac = div_u64((u64)duty_cycle * 0xFFFF, state->period);
-+	frac = min(frac, 0xFFFFU);
-+
-+	val = readl(pwm->regs + PWM_SIFIVE_PWMCFG);
-+	val |= (1 << PWM_SIFIVE_PWMCFG_DEGLITCH);
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	writel(frac, pwm->regs + PWM_SIFIVE_PWMCMP0 + dev->hwpwm * SIZE_PWMCMP);
-+
-+	val &= ~(1 << PWM_SIFIVE_PWMCFG_DEGLITCH);
-+	writel(val, pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	if (state->enabled)
-+		pwm_sifive_get_state(chip, dev, state);
-+
-+	return 0;
-+}
-+
-+static const struct pwm_ops pwm_sifive_ops = {
-+	.get_state = pwm_sifive_get_state,
-+	.apply = pwm_sifive_apply,
-+	.owner = THIS_MODULE,
-+};
-+
-+static struct pwm_device *pwm_sifive_xlate(struct pwm_chip *chip,
-+					   const struct of_phandle_args *args)
-+{
-+	struct pwm_sifive_ddata *pwm = to_pwm_sifive_chip(chip);
-+	struct pwm_device *dev;
-+
-+	if (args->args[0] >= chip->npwm)
-+		return ERR_PTR(-EINVAL);
-+
-+	dev = pwm_request_from_chip(chip, args->args[0], NULL);
-+	if (IS_ERR(dev))
-+		return dev;
-+
-+	/* The period cannot be changed on a per-PWM basis */
-+	dev->args.period = pwm->real_period;
-+	dev->args.polarity = PWM_POLARITY_NORMAL;
-+	if (args->args[1] & PWM_POLARITY_INVERSED)
-+		dev->args.polarity = PWM_POLARITY_INVERSED;
-+
-+	return dev;
-+}
-+
-+static void pwm_sifive_update_clock(struct pwm_sifive_ddata *pwm,
-+				    unsigned long rate)
-+{
-+	/* (1 << (16+scale)) * 10^9/rate = real_period */
-+	unsigned long scale_pow =
-+			(pwm->approx_period * (u64)rate) / NSEC_PER_SEC;
-+	int scale = clamp(ilog2(scale_pow) - 16, 0, 0xf);
-+
-+	writel((1 << PWM_SIFIVE_PWMCFG_EN_ALWAYS) | (scale <<
-+	       PWM_SIFIVE_PWMCFG_SCALE), pwm->regs + PWM_SIFIVE_PWMCFG);
-+
-+	/* As scale <= 15 the shift operation cannot overflow. */
-+	pwm->real_period = div64_ul(1000000000ULL << (16 + scale), rate);
-+	dev_dbg(pwm->chip.dev, "New real_period = %u ns\n", pwm->real_period);
-+}
-+
-+static int pwm_sifive_clock_notifier(struct notifier_block *nb,
-+				     unsigned long event, void *data)
-+{
-+	struct clk_notifier_data *ndata = data;
-+	struct pwm_sifive_ddata *pwm =
-+		container_of(nb, struct pwm_sifive_ddata, notifier);
-+
-+	if (event == POST_RATE_CHANGE)
-+		pwm_sifive_update_clock(pwm, ndata->new_rate);
-+
-+	return NOTIFY_OK;
-+}
-+
-+static int pwm_sifive_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct device_node *node = pdev->dev.of_node;
-+	struct pwm_sifive_ddata *pwm;
-+	struct pwm_chip *chip;
-+	struct resource *res;
-+	int ret;
-+
-+	pwm = devm_kzalloc(dev, sizeof(*pwm), GFP_KERNEL);
-+	if (!pwm)
-+		return -ENOMEM;
-+
-+	chip = &pwm->chip;
-+	chip->dev = dev;
-+	chip->ops = &pwm_sifive_ops;
-+	chip->of_xlate = pwm_sifive_xlate;
-+	chip->of_pwm_n_cells = 2;
-+	chip->base = -1;
-+	chip->npwm = 4;
-+
-+	ret = of_property_read_u32(node, "sifive,period-ns",
-+				   &pwm->approx_period);
-+
-+	if (ret < 0) {
-+		dev_err(dev, "Unable to read sifive,period-ns from DTS\n");
-+		return ret;
-+	}
-+
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	pwm->regs = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(pwm->regs)) {
-+		dev_err(dev, "Unable to map IO resources\n");
-+		return PTR_ERR(pwm->regs);
-+	}
-+
-+	pwm->clk = devm_clk_get(dev, NULL);
-+	if (IS_ERR(pwm->clk)) {
-+		if (PTR_ERR(pwm->clk) != -EPROBE_DEFER)
-+			dev_err(dev, "Unable to find controller clock\n");
-+		return PTR_ERR(pwm->clk);
-+	}
-+
-+	ret = clk_prepare_enable(pwm->clk);
-+	if (ret) {
-+		dev_err(dev, "failed to enable clock for pwm: %d\n", ret);
-+		return ret;
-+	}
-+
-+	/* Watch for changes to underlying clock frequency */
-+	pwm->notifier.notifier_call = pwm_sifive_clock_notifier;
-+	ret = clk_notifier_register(pwm->clk, &pwm->notifier);
-+	if (ret) {
-+		dev_err(dev, "failed to register clock notifier: %d\n", ret);
-+		goto disable_clk;
-+	}
-+
-+	/* Initialize PWM config */
-+	pwm_sifive_update_clock(pwm, clk_get_rate(pwm->clk));
-+
-+	ret = pwmchip_add(chip);
-+	if (ret < 0) {
-+		dev_err(dev, "cannot register PWM: %d\n", ret);
-+		goto unregister_clk;
-+	}
-+
-+	platform_set_drvdata(pdev, pwm);
-+	dev_dbg(dev, "SiFive PWM chip registered %d PWMs\n", chip->npwm);
-+
-+	return 0;
-+
-+unregister_clk:
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+disable_clk:
-+	clk_disable_unprepare(pwm->clk);
-+
-+	return ret;
-+}
-+
-+static int pwm_sifive_remove(struct platform_device *dev)
-+{
-+	struct pwm_sifive_ddata *pwm = platform_get_drvdata(dev);
-+	int ret;
-+
-+	ret = pwmchip_remove(&pwm->chip);
-+	clk_notifier_unregister(pwm->clk, &pwm->notifier);
-+	clk_disable_unprepare(pwm->clk);
-+	return ret;
-+}
-+
-+static const struct of_device_id pwm_sifive_of_match[] = {
-+	{ .compatible = "sifive,pwm0" },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, pwm_sifive_of_match);
-+
-+static struct platform_driver pwm_sifive_driver = {
-+	.probe = pwm_sifive_probe,
-+	.remove = pwm_sifive_remove,
-+	.driver = {
-+		.name = "pwm-sifive",
-+		.of_match_table = pwm_sifive_of_match,
-+	},
-+};
-+module_platform_driver(pwm_sifive_driver);
-+
-+MODULE_DESCRIPTION("SiFive PWM driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+SGkgR3JlZ29yeSwKCkdyZWdvcnkgQ0xFTUVOVCA8Z3JlZ29yeS5jbGVtZW50QGJvb3RsaW4uY29t
+PiB3cm90ZSBvbiBGcmksIDE4IEphbiAyMDE5CjE3OjM2OjM2ICswMTAwOgoKPiBIaSBNaXF1ZWws
+Cj4gCj4gSSBoYXZlIG9ubHkgYSBmZXcgc21hbGxpc2ggcmVtYXJrczoKPiAKPiAgT24gdmVuLiwg
+amFudi4gMTEgMjAxOSwgTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4g
+d3JvdGU6Cj4gCj4gPiBNYXJ2ZWxsIEFybWFkYSAzNzAwIFNvQyBoYXMgdHdvIFVTQiBjb250cm9s
+bGVycywgZWFjaCBvZiB0aGVtIGJlaW5nCj4gPiB3aXJlZCB0byBhbiBpbnRlcm5hbCBVVE1JIFBI
+WS4gQWRkIGEgZHJpdmVyIHRvIGNvbnRyb2wgdGhlbS4KPiA+Cj4gPiBJZ2FsIExpYmVybWFuIHdv
+cmtlZCBvbiBzdXBwb3J0aW5nIHRoZSBQSFksIEkgdG9vayB0aGUgd2hpbGUgJ3JlZ2lzdGVyCj4g
+PiBjb25maWd1cmF0aW9uJyBmcm9tIGhpcyB3b3JrIGFuZCByZXdyb3RlIGFsbW9zdCBlbnRpcmVs
+eSB0aGUKPiA+IGRyaXZlci9iaW5kaW5ncyBhcm91bmQgaXQuCj4gPgo+ID4gQ28tZGV2ZWxvcGVk
+LWJ5OiBJZ2FsIExpYmVybWFuIDxpZ2FsbEBtYXJ2ZWxsLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6
+IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiBTaWduZWQtb2Zm
+LWJ5OiBJZ2FsIExpYmVybWFuIDxpZ2FsbEBtYXJ2ZWxsLmNvbT4KPiA+IC0tLSAgCj4gWy4uLl0K
+PiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9tYXJ2ZWxsL3BoeS1tdmVidS1hMzcwMC11
+dG1pLmMgYi9kcml2ZXJzL3BoeS9tYXJ2ZWxsL3BoeS1tdmVidS1hMzcwMC11dG1pLmMKPiA+IG5l
+dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjk3ZDgyMzVkNjYxZAo+
+ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUt
+YTM3MDAtdXRtaS5jCj4gPiBAQCAtMCwwICsxLDI5NyBAQAo+ID4gKy8vIFNQRFgtTGljZW5zZS1J
+ZGVudGlmaWVyOiBHUEwtMi4wCj4gPiArLyoKPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggTWFy
+dmVsbAo+ID4gKyAqCj4gPiArICogQXV0aG9yczoKPiA+ICsgKiAgIEV2YW4gV2FuZyA8eHN3YW5n
+QG1hcnZlbGwuY29tPgo+ID4gKyAqICAgTWlxdcOobCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9v
+dGxpbi5jb20+ICAKPiAKPiBJZiBpdCBpcyBjby1kZXZlbG9wZWQgd2l0aCBJZ2FsIExpYmVybWFu
+LCBzaG91bGRuJ3QgYmUgYWRkZWQgaGVyZSB0b28/CgpJbiB0aGUgb3JpZ2luYWwgcGF0Y2gsIHRo
+ZSBhdXRob3IgaW4gdGhlIGNvbW1pdCBsb2cgd2FzIElnYWwgYW5kIHRoZQpNT0RVTEVfQVVUSE9S
+IG1hY3JvIHdhcyBzYXlpbmcgRXZhbi4gSSB0aGluayB0aGUgbWFjcm8gaXMgd3JvbmcsIEkgd2ls
+bAprZWVwIElnYWwuCgo+IFsuLi5dCj4gCj4gPiArc3RhdGljIGludCBtdmVidV9hMzcwMF91dG1p
+X3BoeV9wb3dlcl9vbihzdHJ1Y3QgcGh5ICpwaHkpCj4gPiArewo+ID4gKwlzdHJ1Y3QgbXZlYnVf
+YTM3MDBfdXRtaSAqdXRtaSA9IHBoeV9nZXRfZHJ2ZGF0YShwaHkpOwo+ID4gKwlzdHJ1Y3QgZGV2
+aWNlICpkZXYgPSAmcGh5LT5kZXY7Cj4gPiArCWludCB1c2IzMiA9IHV0bWktPmNhcHMtPnVzYjMy
+Owo+ID4gKwlpbnQgcmV0ID0gMDsKPiA+ICsJdTMyIHJlZzsKPiA+ICsKPiA+ICsJaWYgKCF1dG1p
+KQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gPiArCj4gPiArCS8qCj4gPiArCSAqIFNldHVwIFBM
+TC4gNDBNSHogY2xvY2sgdXNlZCB0byBiZSB0aGUgZGVmYXVsdCwgYmVpbiAyNU1IeiBub3cuICAK
+PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgYmVpbj8KPiA+ICsJICogU2VlICJQTEwgU2V0dGluZ3MgZm9yIFR5cGljYWwgUkVGQ0xLIiB0
+YWJsZS4gIAo+IAo+IFsuLi5dCj4gCj4gPiArCj4gPiArCS8qIFdhaXQgZm9yIHNxdWV0Y2ggY2Fs
+aWJyYXRpb24gKi8gIAo+ICAgICAgICAgICAgICAgICAgICAgc3F1ZXRjaD8KCkdvb2QgY2F0Y2gu
+IEl0J3Mgd3JpdHRlbiAic3F1ZWxjaCIgaW4gdGhlIGRhdGFzaGVldCwgYnV0IEkgZG9uJ3Qga25v
+dwp3aGF0IGl0IG1lYW5zIGV4YWN0bHkuCgoKVGhhbmtzLApNaXF1w6hsCgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
+bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
+LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
