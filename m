@@ -1,52 +1,64 @@
-From: Neil Armstrong <narmstrong@baylibre.com>
-Subject: Re: [PATCH v2 2/2] arm64: dts: meson: add g12a x96 max board
-Date: Mon, 21 Jan 2019 11:43:46 +0100
-Message-ID: <4d1ae3a6-874a-f032-a873-a715a67a3992@baylibre.com>
-References: <20181219233519.35287-1-khilman@baylibre.com>
- <20181219233519.35287-2-khilman@baylibre.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V9 3/3] mmc: tegra: HW Command Queue Support for Tegra
+ SDMMC
+Date: Mon, 21 Jan 2019 11:44:32 +0100
+Message-ID: <20190121104432.GE16756@ulmo>
+References: <1547579032-18314-1-git-send-email-skomatineni@nvidia.com>
+ <1547579032-18314-3-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20181219233519.35287-2-khilman@baylibre.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org
-Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cPi+lWm09sJ+d57q"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1547579032-18314-3-git-send-email-skomatineni@nvidia.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
 
-On 20/12/2018 00:35, Kevin Hilman wrote:
-> Add the G12a (S905X2) based X96 Max board[1].
-> 
-> There is no branding for the manufacturer anywhere on the product, so it
-> took some digging to find the manufacturer.  But since there's nothing
-> about the maker on the product I've left it out of the DT name because
-> 1) nobody will know that name and 2) keeps the DT filename shorter.
-> 
-> [1] https://www.cnx-software.com/2018/09/25/x96-max-amlogic-s905x2-tv-box/
-> 
-> Signed-off-by: Kevin Hilman <khilman@baylibre.com>
+--cPi+lWm09sJ+d57q
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Tue, Jan 15, 2019 at 11:03:52AM -0800, Sowjanya Komatineni wrote:
+> This patch adds HW Command Queue for supported Tegra SDMMC
+> controllers.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 > ---
->  .../boot/dts/amlogic/meson-g12a-x96-max.dts   | 28 +++++++++++++++++++
+>  drivers/mmc/host/Kconfig       |   1 +
+>  drivers/mmc/host/sdhci-tegra.c | 117 +++++++++++++++++++++++++++++++++++=
+++++--
+>  drivers/mmc/host/sdhci.c       |   9 +++-
+>  drivers/mmc/host/sdhci.h       |   2 +
+>  4 files changed, 124 insertions(+), 5 deletions(-)
 
-Just found out you forgot to update the Makefile !!
+Looks good to me. It might be worth splitting off the SDHCI core changes
+into a separate patch, but that's for Adrian and Ulf to decide. From a
+Tegra point of view:
 
-Neil
+Acked-by: Thierry Reding <treding@nvidia.com>
 
-[snip]
+--cPi+lWm09sJ+d57q
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> +
-> +&uart_AO {
-> +	status = "okay";
-> +};
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxFopAACgkQ3SOs138+
+s6Hxlg/9HITuwlKXqMJqQliyTbhELbKNJkPdJdBo4IDdYP3JLJIP4MmJfWsmEem2
+vAvMWal7V7J+IOq9sTrwcGXhglYiqnIoD51RPZdfO252/8jF4yxd/M+GNLKkaxAF
+EDQD6Jes6D7PQO2ff20Tu9Prhjy/YTfvEo2RhtGlhn59bSgYoD3RWyFgMv6bjZWX
+Zs6zoTcXisWfqb4iHvLgFWptqi++EpCv09TouNxQpb1BSjJye5EztlPbqp0aWc3a
+NfAog1bce3JeEfwgzrMVrjS7UHYtaxJxuW1ttSFvOkMy9I/Uf8oUcMpVaf6lYHNe
+/dGpgJkqAzXtnvskDJOxYdV6BizdTI8EdEg73E2CZEHjqUz9VjZUn6Fy8t0KUgqH
++1VpMAnqNGvkrNFfBnbnjVDasT7V8dobsOpEZBvzfK4tUubpnyRhPV4+lW6YsS+x
+IlSWMH/c1UaieE7tVAIQsDWP4KcSJzgBilRkqH/vFU+IF5w+EbNM0jfx2DtMASnh
+EINeheFHdNtEivfOq1ohKUQNo7gT1XOfZCQvIGKZzVia41DIQKoOUnOdI/Iwi0JO
+LvDwSE66C4gRYx4gwP7bKUJ3V8x8cS+dxJL2BEcBNszWkrt0mx6ojc47OXf+kRRU
+ndD4n3+C15ewPbiwHfWA9mUFJwnPEI3RbzyB0SRYue0izYIQihU=
+=vgaz
+-----END PGP SIGNATURE-----
+
+--cPi+lWm09sJ+d57q--
