@@ -1,41 +1,35 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH V9 3/3] mmc: tegra: HW Command Queue Support for Tegra
- SDMMC
-Date: Mon, 21 Jan 2019 14:52:59 +0200
-Message-ID: <44e837df-f1c1-b55c-3761-ef699147171f@intel.com>
-References: <1547579032-18314-1-git-send-email-skomatineni@nvidia.com>
- <1547579032-18314-3-git-send-email-skomatineni@nvidia.com>
- <20190121104432.GE16756@ulmo>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/3] clk: renesas: r8a774a1: Add missing CANFD clock
+Date: Mon, 21 Jan 2019 14:00:49 +0100
+Message-ID: <CAMuHMdW0aSmcGRHi3n__dZ9SEAh40EuUrbqLNt9kq8QoLmr1mg@mail.gmail.com>
+References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com> <1547736856-16539-2-git-send-email-fabrizio.castro@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190121104432.GE16756@ulmo>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, jonathanh@nvidia.com, ulf.hansson@linaro.org, anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <1547736856-16539-2-git-send-email-fabrizio.castro@bp.renesas.com>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-can@vger.kernel.org, netdev <netdev@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, linux-clk <linux-clk@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 21/01/19 12:44 PM, Thierry Reding wrote:
-> On Tue, Jan 15, 2019 at 11:03:52AM -0800, Sowjanya Komatineni wrote:
->> This patch adds HW Command Queue for supported Tegra SDMMC
->> controllers.
->>
->> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
->> ---
->>  drivers/mmc/host/Kconfig       |   1 +
->>  drivers/mmc/host/sdhci-tegra.c | 117 +++++++++++++++++++++++++++++++++++++++--
->>  drivers/mmc/host/sdhci.c       |   9 +++-
->>  drivers/mmc/host/sdhci.h       |   2 +
->>  4 files changed, 124 insertions(+), 5 deletions(-)
-> 
-> Looks good to me. It might be worth splitting off the SDHCI core changes
-> into a separate patch, but that's for Adrian and Ulf to decide. From a
+On Thu, Jan 17, 2019 at 3:54 PM Fabrizio Castro
+<fabrizio.castro@bp.renesas.com> wrote:
+> This patch adds the missing CANFD clock to the r8a774a1 specific
+> clock driver.
+>
+> Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
 
-Yes that would be better.  Otherwise seems fine.
+Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+i.e. will queue in clk-renesas-for-v5.1.
 
-> Tegra point of view:
-> 
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> 
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
