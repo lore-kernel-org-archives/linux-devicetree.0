@@ -1,101 +1,89 @@
 From: <min.guo@mediatek.com>
-Subject: [PATCH v4 1/6] dt-bindings: usb: musb: Add support for MediaTek musb
- controller
-Date: Mon, 21 Jan 2019 20:22:26 +0800
-Message-ID: <1548073351-13739-2-git-send-email-min.guo@mediatek.com>
-References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
+Subject: [PATCH v4 0/6] Add MediaTek MUSB Controller Driver
+Date: Mon, 21 Jan 2019 20:22:25 +0800
+Message-ID: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
 To: Bin Liu <b-liu@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, hdegoede@redhat.com, tony@atomide.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, Min Guo <min.guo@mediatek.com>, chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com, Min Guo <min.guo@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Min Guo <min.guo@mediatek.com>
 
-This adds support for MediaTek musb controller in
-host, peripheral and otg mode.
+These patches introduce the MediaTek MUSB controller driver.
 
-Signed-off-by: Min Guo <min.guo@mediatek.com>
----
+The driver can be configured as Dual-Role Device (DRD),
+Peripheral Only and Host Only modes. This has beed tested on
+MT2701 with a variety of devices in host mode and with the 
+f_mass gadget driver in peripheral mode, plugging otg cables
+in/out a lot of times in all possible imaginable plug orders.
+
 changes in v4:
-suggested by Sergei:
+changes of dt-bindings suggested by Sergei:
 1. String alignment
+changes of driver suggested by Tony and Bin:
+1. Add a new patch for set/get_toggle()
+2. Add a new patch for noirq type of dma
+3. Add a new patch musb_clearb/w()
+4. Abondon patch "usb: musb: Delete the const attribute of addr parameter in readb/w/l hooks"
 
 changes in v3:
-1. no changes
+changes of driver suggested by Bin:
+1. Add a new patch for musb_readb/w/l() to remove const attribute 
+2. Use is_out as function parameter in set_toggle/get_toggle() hooks
+3. Remove 'u8/u16 data' parameter in clearb/w() hooks
+4. Remove musb_default_clearb/w()
+5. Replace musb_readb/w() with musb_clearb/w() to clear pending interrupts 
+6. Add comments to clearb/w() hooks
+7. Replace musb_save_toggle() with musb->io.get_toggle()
+8. Replace musb_set_toggle() with musb->io.set_toggle()
 
 changes in v2:
-suggested by Bin:
+changes of dt-bindings suggested by Rob and Bin:
 1. Modify DRC to DRD
-suggested by Rob:
 2. Drop the "<soc-model>-musb" in compatible
 3. Remove phy-names
 4. Add space after comma in clock-names
----
- .../devicetree/bindings/usb/mediatek,musb.txt      | 43 ++++++++++++++++++++++
- 1 file changed, 43 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+dtsi:
+1. Remove phy-names
+changes of driver suggested by Bin:
+1. Add a new patch for musb_set_toggle
+2. Add summarize of MediaTek musb controller differences in the commit log
+3. Abondon patch "usb: musb: Move musbhsdma macro definition to musb_dma.h"
+4. Add "|| COMPILE_TEST" in Kconfig
+5. Add musb_clearb() and musb_clearw() hooks
+6. Add get_toggle() and set_toggle() hooks
+7. Replace musb_readl() with musb_readw() to read 16bit toggle register
+8. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
+9. Create musbhs_dma_controller_create_noirq()
 
-diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-new file mode 100644
-index 0000000..4305770
---- /dev/null
-+++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-@@ -0,0 +1,43 @@
-+MediaTek musb DRD/OTG controller
-+-------------------------------------------
-+
-+Required properties:
-+ - compatible      : should be "mediatek,mtk-musb"
-+ - reg             : specifies physical base address and size of
-+                     the registers
-+ - interrupts      : interrupt used by musb controller
-+ - interrupt-names : must be "mc"
-+ - phys            : PHY specifier for the OTG phy
-+ - dr_mode         : should be one of "host", "peripheral" or "otg",
-+                     refer to usb/generic.txt
-+ - clocks          : a list of phandle + clock-specifier pairs, one for
-+                     each entry in clock-names
-+ - clock-names     : must contain "main", "mcu", "univpll"
-+                     for clocks of controller
-+
-+Optional properties:
-+ - extcon          : external connector for VBUS and ID pin changes detection,
-+                     needed when supports dual-role mode
-+ - vbus-supply     : reference to the VBUS regulator, needed when supports
-+                     dual-role mode
-+ - power-domains   : a phandle to USB power domain node to control USB's
-+                     MTCMOS
-+
-+Example:
-+
-+usb2: usb@11200000 {
-+	compatible = "mediatek,mt2701-musb",
-+		     "mediatek,mtk-musb";
-+	reg = <0 0x11200000 0 0x1000>;
-+	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-+	interrupt-names = "mc";
-+	phys = <&u2port2 PHY_TYPE_USB2>;
-+	vbus-supply = <&usb_vbus>;
-+	extcon = <&extcon_usb>;
-+	dr_mode = "otg";
-+	clocks = <&pericfg CLK_PERI_USB0>,
-+		 <&pericfg CLK_PERI_USB0_MCU>,
-+		 <&pericfg CLK_PERI_USB_SLV>;
-+	clock-names = "main","mcu","univpll";
-+	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-+};
+Min Guo (6):
+  dt-bindings: usb: musb: Add support for MediaTek musb controller
+  arm: dts: mt2701: Add usb2 device nodes
+  usb: musb: Add get/set toggle hooks
+  usb: musb: Add noirq type of dma create interface
+  usb: musb: Add musb_clearb/w() interface
+  usb: musb: Add support for MediaTek musb controller
+
+ .../devicetree/bindings/usb/mediatek,musb.txt      |  43 ++
+ arch/arm/boot/dts/mt2701-evb.dts                   |  21 +
+ arch/arm/boot/dts/mt2701.dtsi                      |  33 ++
+ drivers/usb/musb/Kconfig                           |   8 +-
+ drivers/usb/musb/Makefile                          |   1 +
+ drivers/usb/musb/mediatek.c                        | 624 +++++++++++++++++++++
+ drivers/usb/musb/musb_core.c                       |  74 ++-
+ drivers/usb/musb/musb_core.h                       |  13 +-
+ drivers/usb/musb/musb_dma.h                        |   9 +
+ drivers/usb/musb/musb_host.c                       |  46 +-
+ drivers/usb/musb/musb_io.h                         |  12 +-
+ drivers/usb/musb/musbhsdma.c                       |  57 +-
+ drivers/usb/musb/sunxi.c                           |   4 +-
+ drivers/usb/musb/tusb6010.c                        |   2 +-
+ 14 files changed, 876 insertions(+), 71 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
+ create mode 100644 drivers/usb/musb/mediatek.c
+
 -- 
 1.9.1
