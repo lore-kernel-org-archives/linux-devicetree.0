@@ -1,7 +1,7 @@
 From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 3/4] arm64: dts: sprd: Add SC2731 charger device
-Date: Mon, 21 Jan 2019 15:38:30 +0800
-Message-ID: <1f57f120e915ea9af75a45f48c8ef2f446d10486.1548052878.git.baolin.wang@linaro.org>
+Subject: [PATCH 1/4] arm64: dts: sprd: Remove PMIC INTC irq trigger type
+Date: Mon, 21 Jan 2019 15:38:28 +0800
+Message-ID: <b6a32917d1e231277d240a4084bebb6ad91247e3.1548052878.git.baolin.wang@linaro.org>
 References: <cover.1548052878.git.baolin.wang@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <cover.1548052878.git.baolin.wang@linaro.org>
@@ -12,57 +12,53 @@ To: robh+dt@kernel.org, mark.rutland@arm.com, arnd@arndb.de, olof@lixom.net, ors
 Cc: devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, broonie@kernel.org, baolin.wang@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Add charger device node and related battery node for SC2731 PMIC.
+The Spreadtrum PMIC INTC controller has no registers to set trigger type,
+since it is always high level trigger as default. So remove its child
+devices' irq trigger type setting and change #interrupt-cells to 1.
 
 Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 ---
- arch/arm64/boot/dts/sprd/sc2731.dtsi      |    6 ++++++
- arch/arm64/boot/dts/sprd/sp9860g-1h10.dts |   16 ++++++++++++++++
- 2 files changed, 22 insertions(+)
+ arch/arm64/boot/dts/sprd/sc2731.dtsi |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm64/boot/dts/sprd/sc2731.dtsi b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-index a2edc25..b52eaf0 100644
+index 82bd642..f2f2aa5 100644
 --- a/arch/arm64/boot/dts/sprd/sc2731.dtsi
 +++ b/arch/arm64/boot/dts/sprd/sc2731.dtsi
-@@ -17,6 +17,12 @@
+@@ -13,7 +13,7 @@
+ 		spi-max-frequency = <26000000>;
+ 		interrupts = <GIC_SPI 31 IRQ_TYPE_LEVEL_HIGH>;
+ 		interrupt-controller;
+-		#interrupt-cells = <2>;
++		#interrupt-cells = <1>;
  		#address-cells = <1>;
  		#size-cells = <0>;
  
-+		charger@0 {
-+			compatible = "sprd,sc27xx-charger", "sprd,sc2731-charger";
-+			reg = <0x0>;
-+			monitored-battery = <&bat>;
-+		};
-+
- 		led-controller@200 {
- 			compatible = "sprd,sc27xx-bltc", "sprd,sc2731-bltc";
- 			reg = <0x200>;
-diff --git a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-index 3bd18e3..2a963bd 100644
---- a/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-+++ b/arch/arm64/boot/dts/sprd/sp9860g-1h10.dts
-@@ -41,6 +41,22 @@
- 		#size-cells = <2>;
- 		ranges;
- 	};
-+
-+	bat: battery {
-+		compatible = "simple-battery";
-+		charge-full-design-microamp-hours = <1900000>;
-+		charge-term-current-microamp = <120000>;
-+		constant_charge_voltage_max_microvolt = <4350000>;
-+		internal-resistance-micro-ohms = <250000>;
-+		ocv-capacity-celsius = <20>;
-+		ocv-capacity-table-0 = <4185000 100>, <4113000 95>, <4066000 90>,
-+			<4022000 85>, <3983000 80>, <3949000 75>,
-+			<3917000 70>, <3889000 65>, <3864000 60>,
-+			<3835000 55>, <3805000 50>, <3787000 45>,
-+			<3777000 40>, <3773000 35>, <3770000 30>,
-+			<3765000 25>, <3752000 20>, <3724000 15>,
-+			<3680000 10>, <3605000 5>, <3400000 0>;
-+	};
- };
+@@ -43,14 +43,14 @@
+ 			compatible = "sprd,sc27xx-rtc", "sprd,sc2731-rtc";
+ 			reg = <0x280>;
+ 			interrupt-parent = <&sc2731_pmic>;
+-			interrupts = <2 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <2>;
+ 		};
  
- &uart0 {
+ 		pmic_eic: gpio@300 {
+ 			compatible = "sprd,sc27xx-eic";
+ 			reg = <0x300>;
+ 			interrupt-parent = <&sc2731_pmic>;
+-			interrupts = <5 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <5>;
+ 			gpio-controller;
+ 			#gpio-cells = <2>;
+ 			interrupt-controller;
+@@ -69,7 +69,7 @@
+ 			compatible = "sprd,sc27xx-adc", "sprd,sc2731-adc";
+ 			reg = <0x480>;
+ 			interrupt-parent = <&sc2731_pmic>;
+-			interrupts = <0 IRQ_TYPE_LEVEL_HIGH>;
++			interrupts = <0>;
+ 			#io-channel-cells = <1>;
+ 			hwlocks = <&hwlock 4>;
+ 		};
 -- 
 1.7.9.5
