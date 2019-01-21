@@ -1,83 +1,51 @@
-Return-Path: <robherring2@gmail.com>
-Date: Mon, 21 Jan 2019 11:13:48 -0600
-From: Rob Herring <robh@kernel.org>
+Return-Path: <SRS0=chu1=P5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:43877 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729580AbfAUQaK (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 21 Jan 2019 11:30:10 -0500
+Message-ID: <1548088207.3287.11.camel@pengutronix.de>
 Subject: Re: [PATCH v2 1/3] media: dt-bindings: media: document allegro-dvt
  bindings
-Message-ID: <20190121171348.GA4532@bogus>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Date: Mon, 21 Jan 2019 17:30:07 +0100
+In-Reply-To: <26befa99cb1ddb0c36823cb573f2012d4bd98015.camel@ndufresne.ca>
 References: <20190118133716.29288-1-m.tretter@pengutronix.de>
- <20190118133716.29288-2-m.tretter@pengutronix.de>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190118133716.29288-2-m.tretter@pengutronix.de>
-To: Michael Tretter <m.tretter@pengutronix.de>
-Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, mchehab@kernel.org, tfiga@chromium.org
+         <20190118133716.29288-2-m.tretter@pengutronix.de>
+         <1548068375.3287.1.camel@pengutronix.de>
+         <26befa99cb1ddb0c36823cb573f2012d4bd98015.camel@ndufresne.ca>
+Content-Type: text/plain; charset="UTF-8"
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Sender: devicetree-owner@vger.kernel.org
+To: Nicolas Dufresne <nicolas@ndufresne.ca>, Michael Tretter <m.tretter@pengutronix.de>, linux-media@vger.kernel.org, devicetree@vger.kernel.org
+Cc: mchehab@kernel.org, robh+dt@kernel.org, kernel@pengutronix.de, tfiga@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, Jan 18, 2019 at 02:37:14PM +0100, Michael Tretter wrote:
-> Add device-tree bindings for the Allegro DVT video IP core found on the
-> Xilinx ZynqMP EV family.
+On Mon, 2019-01-21 at 11:17 -0500, Nicolas Dufresne wrote:
+[...]
+> > > +Example:
+> > > +	al5e: al5e@a0009000 {
+> > 
+> > Should the node names be "vpu" or "video-codec"?
 > 
-> Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
-> ---
-> Changes since v1:
-> none
-> 
-> ---
->  .../devicetree/bindings/media/allegro.txt     | 35 +++++++++++++++++++
->  1 file changed, 35 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
-> new file mode 100644
-> index 000000000000..765f4b0c1a57
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/media/allegro.txt
-> @@ -0,0 +1,35 @@
-> +Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
-> +ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
-> +decoder ip core.
-> +
-> +Each actual codec engines is controlled by a microcontroller (MCU). Host
-> +software uses a provided mailbox interface to communicate with the MCU. The
-> +MCU share an interrupt.
-> +
-> +Required properties:
-> +  - compatible: value should be one of the following
-> +    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
-> +    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
-> +  - reg: base and length of the memory mapped register region and base and
-> +    length of the memory mapped sram
-> +  - reg-names: must include "regs" and "sram"
-> +  - interrupts: shared interrupt from the MCUs to the processing system
-> +  - interrupt-names: "vcu_host_interrupt"
+> Xilinx calls this IP the "vcu", so "vpu" would be even more confusing.
+> Was this just a typo ?
 
-No point in having *-names when there is only one entry.
+I was just going by what is already commonly used in other device trees.
+Given that "vpu" doesn't seem to be as universally accepted as for
+example "gpu", maybe "video-codec" is the better choice?
 
-> +
-> +Example:
-> +	al5e: al5e@a0009000 {
+In any case, it should not matter what the the IP vendor or the SoC
+vendor call this, the node name should be common and descriptive of its
+function, same as ethernet controller nodes should be called "ethernet".
 
-video-codec as suggested.
+> That being said, is this referring to the actual
+> HW or the firmware that runs on a microblaze (the firmware being
+> Allegro specific) ?
 
-> +		compatible = "allegro,al5e";
+As I understand it this binding is referring to the whole [microblaze +
+attached encoder/decoder hardware] setup that is supposed to work with
+the Allegro specific firmware.
 
-Doesn't match the documentation above.
-
-> +		reg = <0 0xa0009000 0 0x1000>,
-> +		      <0 0xa0000000 0 0x8000>;
-> +		reg-names = "regs", "sram";
-> +		interrupt-names = "vcu_host_interrupt";
-> +		interrupts = <0 96 4>;
-> +	};
-> +	al5d: al5d@a0029000 {
-> +		compatible = "allegro,al5d";
-> +		reg = <0 0xa0029000 0 0x1000>,
-> +		      <0 0xa0020000 0 0x8000>;
-> +		reg-names = "regs", "sram";
-> +		interrupt-names = "vcu_host_interrupt";
-> +		interrupts = <0 96 4>;
-> +	};
-> -- 
-> 2.20.1
-> 
+regards
+Philipp
