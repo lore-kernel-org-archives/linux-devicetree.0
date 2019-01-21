@@ -1,7 +1,7 @@
 From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v3, 5/6] ptp: add debugfs support for ptp_qoriq
-Date: Mon, 21 Jan 2019 18:41:42 +0800
-Message-ID: <20190121104143.46782-6-yangbo.lu@nxp.com>
+Subject: [v3, 1/6] ptp_qoriq: fix interrupt enabling and handling
+Date: Mon, 21 Jan 2019 18:41:38 +0800
+Message-ID: <20190121104143.46782-2-yangbo.lu@nxp.com>
 References: <20190121104143.46782-1-yangbo.lu@nxp.com>
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190121104143.46782-1-yangbo.lu@nxp.com>
@@ -10,216 +10,147 @@ To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.i
 Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This patch is to add debugfs support for ptp_qoriq. Current debugfs
-supports to control fiper1/fiper2 loopback mode. If the loopback mode
-is enabled, the fiper1/fiper2 pulse is looped back into trigger1/
-trigger2 input. This is very useful for validating hardware and driver
-without external hardware. Below is an example to enable fiper1 loopback.
-
-echo 1 > /sys/kernel/debug/2d10e00.ptp_clock/fiper1-loopback
+The tmr_tevent register would update event bits
+no matter tmr_temask bits were set or not. So we
+should get interrupts by tmr_tevent & tmr_temask,
+and clean up interrupts in tmr_tevent before
+enabling them.
 
 Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
 ---
 Changes for v2:
-	- None.
+	- Remove useless lock/register operations.
 Changes for v3:
-	- Converted to use debugfs.
+	- None.
 ---
- drivers/ptp/Kconfig             |    2 +-
- drivers/ptp/Makefile            |    4 +-
- drivers/ptp/ptp_qoriq.c         |    3 +
- drivers/ptp/ptp_qoriq_debugfs.c |  101 +++++++++++++++++++++++++++++++++++++++
- include/linux/fsl/ptp_qoriq.h   |   12 +++++
- 5 files changed, 120 insertions(+), 2 deletions(-)
- create mode 100644 drivers/ptp/ptp_qoriq_debugfs.c
+ drivers/ptp/ptp_qoriq.c |   62 +++++++++++++++++++++++-----------------------
+ 1 files changed, 31 insertions(+), 31 deletions(-)
 
-diff --git a/drivers/ptp/Kconfig b/drivers/ptp/Kconfig
-index d137c48..aeb4a8b 100644
---- a/drivers/ptp/Kconfig
-+++ b/drivers/ptp/Kconfig
-@@ -53,7 +53,7 @@ config PTP_1588_CLOCK_QORIQ
- 	  packets using the SO_TIMESTAMPING API.
- 
- 	  To compile this driver as a module, choose M here: the module
--	  will be called ptp_qoriq.
-+	  will be called ptp-qoriq.
- 
- config PTP_1588_CLOCK_IXP46X
- 	tristate "Intel IXP46x as PTP clock"
-diff --git a/drivers/ptp/Makefile b/drivers/ptp/Makefile
-index 19efa9c..677d1d1 100644
---- a/drivers/ptp/Makefile
-+++ b/drivers/ptp/Makefile
-@@ -9,4 +9,6 @@ obj-$(CONFIG_PTP_1588_CLOCK_DTE)	+= ptp_dte.o
- obj-$(CONFIG_PTP_1588_CLOCK_IXP46X)	+= ptp_ixp46x.o
- obj-$(CONFIG_PTP_1588_CLOCK_PCH)	+= ptp_pch.o
- obj-$(CONFIG_PTP_1588_CLOCK_KVM)	+= ptp_kvm.o
--obj-$(CONFIG_PTP_1588_CLOCK_QORIQ)	+= ptp_qoriq.o
-+obj-$(CONFIG_PTP_1588_CLOCK_QORIQ)	+= ptp-qoriq.o
-+ptp-qoriq-y				+= ptp_qoriq.o
-+ptp-qoriq-$(CONFIG_DEBUG_FS)		+= ptp_qoriq_debugfs.o
 diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index a2e7702..43416b2 100644
+index fdd49c2..2743214 100644
 --- a/drivers/ptp/ptp_qoriq.c
 +++ b/drivers/ptp/ptp_qoriq.c
-@@ -471,6 +471,7 @@ static int qoriq_ptp_probe(struct platform_device *dev)
+@@ -98,11 +98,18 @@ static irqreturn_t isr(int irq, void *priv)
+ 	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
+ 	struct ptp_clock_event event;
+ 	u64 ns;
+-	u32 ack = 0, lo, hi, mask, val;
++	u32 ack = 0, lo, hi, mask, val, irqs;
++
++	spin_lock(&qoriq_ptp->lock);
  
- 	err = -EINVAL;
+ 	val = qoriq_read(&regs->ctrl_regs->tmr_tevent);
++	mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
++
++	spin_unlock(&qoriq_ptp->lock);
++
++	irqs = val & mask;
  
-+	qoriq_ptp->dev = &dev->dev;
- 	qoriq_ptp->caps = ptp_qoriq_caps;
- 
- 	if (of_property_read_u32(node, "fsl,cksel", &qoriq_ptp->cksel))
-@@ -572,6 +573,7 @@ static int qoriq_ptp_probe(struct platform_device *dev)
+-	if (val & ETS1) {
++	if (irqs & ETS1) {
+ 		ack |= ETS1;
+ 		hi = qoriq_read(&regs->etts_regs->tmr_etts1_h);
+ 		lo = qoriq_read(&regs->etts_regs->tmr_etts1_l);
+@@ -113,7 +120,7 @@ static irqreturn_t isr(int irq, void *priv)
+ 		ptp_clock_event(qoriq_ptp->clock, &event);
  	}
- 	qoriq_ptp->phc_index = ptp_clock_index(qoriq_ptp->clock);
  
-+	ptp_qoriq_create_debugfs(qoriq_ptp);
- 	platform_set_drvdata(dev, qoriq_ptp);
+-	if (val & ETS2) {
++	if (irqs & ETS2) {
+ 		ack |= ETS2;
+ 		hi = qoriq_read(&regs->etts_regs->tmr_etts2_h);
+ 		lo = qoriq_read(&regs->etts_regs->tmr_etts2_l);
+@@ -124,7 +131,7 @@ static irqreturn_t isr(int irq, void *priv)
+ 		ptp_clock_event(qoriq_ptp->clock, &event);
+ 	}
  
- 	return 0;
-@@ -597,6 +599,7 @@ static int qoriq_ptp_remove(struct platform_device *dev)
- 	qoriq_write(&regs->ctrl_regs->tmr_temask, 0);
- 	qoriq_write(&regs->ctrl_regs->tmr_ctrl,   0);
+-	if (val & ALM2) {
++	if (irqs & ALM2) {
+ 		ack |= ALM2;
+ 		if (qoriq_ptp->alarm_value) {
+ 			event.type = PTP_CLOCK_ALARM;
+@@ -136,13 +143,10 @@ static irqreturn_t isr(int irq, void *priv)
+ 			ns = qoriq_ptp->alarm_value + qoriq_ptp->alarm_interval;
+ 			hi = ns >> 32;
+ 			lo = ns & 0xffffffff;
+-			spin_lock(&qoriq_ptp->lock);
+ 			qoriq_write(&regs->alarm_regs->tmr_alarm2_l, lo);
+ 			qoriq_write(&regs->alarm_regs->tmr_alarm2_h, hi);
+-			spin_unlock(&qoriq_ptp->lock);
+ 			qoriq_ptp->alarm_value = ns;
+ 		} else {
+-			qoriq_write(&regs->ctrl_regs->tmr_tevent, ALM2);
+ 			spin_lock(&qoriq_ptp->lock);
+ 			mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
+ 			mask &= ~ALM2EN;
+@@ -153,7 +157,7 @@ static irqreturn_t isr(int irq, void *priv)
+ 		}
+ 	}
  
-+	ptp_qoriq_remove_debugfs(qoriq_ptp);
- 	ptp_clock_unregister(qoriq_ptp->clock);
- 	iounmap(qoriq_ptp->base);
- 	release_resource(qoriq_ptp->rsrc);
-diff --git a/drivers/ptp/ptp_qoriq_debugfs.c b/drivers/ptp/ptp_qoriq_debugfs.c
-new file mode 100644
-index 0000000..d904332
---- /dev/null
-+++ b/drivers/ptp/ptp_qoriq_debugfs.c
-@@ -0,0 +1,101 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/* Copyright 2019 NXP
-+ */
-+#include <linux/device.h>
-+#include <linux/debugfs.h>
-+#include <linux/fsl/ptp_qoriq.h>
+-	if (val & PP1) {
++	if (irqs & PP1) {
+ 		ack |= PP1;
+ 		event.type = PTP_CLOCK_PPS;
+ 		ptp_clock_event(qoriq_ptp->clock, &event);
+@@ -260,7 +264,7 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
+ 	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
+ 	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
+ 	unsigned long flags;
+-	u32 bit, mask;
++	u32 bit, mask = 0;
+ 
+ 	switch (rq->type) {
+ 	case PTP_CLK_REQ_EXTTS:
+@@ -274,32 +278,28 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
+ 		default:
+ 			return -EINVAL;
+ 		}
+-		spin_lock_irqsave(&qoriq_ptp->lock, flags);
+-		mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
+-		if (on)
+-			mask |= bit;
+-		else
+-			mask &= ~bit;
+-		qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
+-		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
+-		return 0;
+-
++		break;
+ 	case PTP_CLK_REQ_PPS:
+-		spin_lock_irqsave(&qoriq_ptp->lock, flags);
+-		mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
+-		if (on)
+-			mask |= PP1EN;
+-		else
+-			mask &= ~PP1EN;
+-		qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
+-		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
+-		return 0;
+-
+-	default:
++		bit = PP1EN;
+ 		break;
++	default:
++		return -EOPNOTSUPP;
+ 	}
+ 
+-	return -EOPNOTSUPP;
++	spin_lock_irqsave(&qoriq_ptp->lock, flags);
 +
-+static int ptp_qoriq_fiper1_lpbk_get(void *data, u64 *val)
-+{
-+	struct qoriq_ptp *qoriq_ptp = data;
-+	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
-+	u32 ctrl;
++	mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
++	if (on) {
++		mask |= bit;
++		qoriq_write(&regs->ctrl_regs->tmr_tevent, bit);
++	} else {
++		mask &= ~bit;
++	}
 +
-+	ctrl = qoriq_read(&regs->ctrl_regs->tmr_ctrl);
-+	*val = ctrl & PP1L ? 1 : 0;
++	qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
 +
++	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
 +	return 0;
-+}
-+
-+static int ptp_qoriq_fiper1_lpbk_set(void *data, u64 val)
-+{
-+	struct qoriq_ptp *qoriq_ptp = data;
-+	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
-+	u32 ctrl;
-+
-+	ctrl = qoriq_read(&regs->ctrl_regs->tmr_ctrl);
-+	if (val == 0)
-+		ctrl &= ~PP1L;
-+	else
-+		ctrl |= PP1L;
-+
-+	qoriq_write(&regs->ctrl_regs->tmr_ctrl, ctrl);
-+	return 0;
-+}
-+
-+DEFINE_SIMPLE_ATTRIBUTE(ptp_qoriq_fiper1_fops, ptp_qoriq_fiper1_lpbk_get,
-+			ptp_qoriq_fiper1_lpbk_set, "%llu\n");
-+
-+static int ptp_qoriq_fiper2_lpbk_get(void *data, u64 *val)
-+{
-+	struct qoriq_ptp *qoriq_ptp = data;
-+	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
-+	u32 ctrl;
-+
-+	ctrl = qoriq_read(&regs->ctrl_regs->tmr_ctrl);
-+	*val = ctrl & PP2L ? 1 : 0;
-+
-+	return 0;
-+}
-+
-+static int ptp_qoriq_fiper2_lpbk_set(void *data, u64 val)
-+{
-+	struct qoriq_ptp *qoriq_ptp = data;
-+	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
-+	u32 ctrl;
-+
-+	ctrl = qoriq_read(&regs->ctrl_regs->tmr_ctrl);
-+	if (val == 0)
-+		ctrl &= ~PP2L;
-+	else
-+		ctrl |= PP2L;
-+
-+	qoriq_write(&regs->ctrl_regs->tmr_ctrl, ctrl);
-+	return 0;
-+}
-+
-+DEFINE_SIMPLE_ATTRIBUTE(ptp_qoriq_fiper2_fops, ptp_qoriq_fiper2_lpbk_get,
-+			ptp_qoriq_fiper2_lpbk_set, "%llu\n");
-+
-+void ptp_qoriq_create_debugfs(struct qoriq_ptp *qoriq_ptp)
-+{
-+	struct dentry *root;
-+
-+	root = debugfs_create_dir(dev_name(qoriq_ptp->dev), NULL);
-+	if (IS_ERR(root))
-+		return;
-+	if (!root)
-+		goto err_root;
-+
-+	qoriq_ptp->debugfs_root = root;
-+
-+	if (!debugfs_create_file("fiper1-loopback", 0600, root, qoriq_ptp,
-+				 &ptp_qoriq_fiper1_fops))
-+		goto err_node;
-+	if (!debugfs_create_file("fiper2-loopback", 0600, root, qoriq_ptp,
-+				 &ptp_qoriq_fiper2_fops))
-+		goto err_node;
-+	return;
-+
-+err_node:
-+	debugfs_remove_recursive(root);
-+	qoriq_ptp->debugfs_root = NULL;
-+err_root:
-+	dev_err(qoriq_ptp->dev, "failed to initialize debugfs\n");
-+}
-+
-+void ptp_qoriq_remove_debugfs(struct qoriq_ptp *qoriq_ptp)
-+{
-+	debugfs_remove_recursive(qoriq_ptp->debugfs_root);
-+	qoriq_ptp->debugfs_root = NULL;
-+}
-diff --git a/include/linux/fsl/ptp_qoriq.h b/include/linux/fsl/ptp_qoriq.h
-index 43b4b44..94e9797 100644
---- a/include/linux/fsl/ptp_qoriq.h
-+++ b/include/linux/fsl/ptp_qoriq.h
-@@ -143,6 +143,8 @@ struct qoriq_ptp {
- 	struct ptp_clock *clock;
- 	struct ptp_clock_info caps;
- 	struct resource *rsrc;
-+	struct dentry *debugfs_root;
-+	struct device *dev;
- 	bool extts_fifo_support;
- 	int irq;
- 	int phc_index;
-@@ -169,4 +171,14 @@ static inline void qoriq_write(unsigned __iomem *addr, u32 val)
- 	iowrite32be(val, addr);
  }
  
-+#ifdef CONFIG_DEBUG_FS
-+void ptp_qoriq_create_debugfs(struct qoriq_ptp *qoriq_ptp);
-+void ptp_qoriq_remove_debugfs(struct qoriq_ptp *qoriq_ptp);
-+#else
-+static inline void ptp_qoriq_create_debugfs(struct qoriq_ptp *qoriq_ptp)
-+{ }
-+static inline void ptp_qoriq_remove_debugfs(struct qoriq_ptp *qoriq_ptp)
-+{ }
-+#endif
-+
- #endif
+ static const struct ptp_clock_info ptp_qoriq_caps = {
 -- 
 1.7.1
