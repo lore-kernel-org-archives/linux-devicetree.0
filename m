@@ -1,7 +1,7 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v3 5/6] dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
-Date: Mon, 21 Jan 2019 23:08:34 +0530
-Message-ID: <20190121173835.21173-6-nava.manne@xilinx.com>
+Subject: [PATCH v3 6/6] dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+Date: Mon, 21 Jan 2019 23:08:35 +0530
+Message-ID: <20190121173835.21173-7-nava.manne@xilinx.com>
 References: <20190121173835.21173-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain
@@ -12,70 +12,38 @@ To: mark.rutland@arm.com, michals@xilinx.com, RAJANV@xilinx.com, linux-arm-kerne
 Cc: Nava kishore Manne <nava.manne@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-Add documentation to describe Xilinx ZynqMP nvmem driver
+Add documentation to describe Xilinx ZynqMP fpga driver
 bindings.
 
 Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
 ---
 Changes for v3:
-		-Added nvmem node as child of FW. Since nvmem driver is a provider.
-  
- .../bindings/nvmem/xlnx,zynqmp-nvmem.txt      | 47 +++++++++++++++++++
- 1 file changed, 47 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+		-Removed PCAP as a child node to the FW and Created
+		an independent node since PCAP driver is a consumer
+		not a provider. 
 
-diff --git a/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+ .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt         | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+
+diff --git a/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
 new file mode 100644
-index 000000000000..2043c8284f8c
+index 000000000000..1f6f58872311
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
-@@ -0,0 +1,47 @@
-+--------------------------------------------------------------------------
-+=  Zynq UltraScale+ MPSoC nvmem firmware driver binding =
-+--------------------------------------------------------------------------
-+The nvmem_firmware node provides access to the hardware related data
-+like soc revision, IDCODE... etc, By using the firmware interface.
++++ b/Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+@@ -0,0 +1,13 @@
++Device Tree zynqmp-fpga bindings for the Zynq Ultrascale+ MPSoC controlled
++using ZynqMP SoC firmware interface
++For Bitstream configuration on ZynqMp Soc uses processor configuration
++port(PCAP) to configure the programmable logic(PL) through PS by using
++FW interface.
 +
 +Required properties:
-+- compatible: should be "xlnx,zynqmp-nvmem-fw"
++- compatible: should contain "xlnx,zynqmp-pcap-fpga"
 +
-+= Data cells =
-+Are child nodes of silicon id, bindings of which as described in
-+bindings/nvmem/nvmem.txt
-+
-+-------
-+ Example
-+-------
-+firmware {
-+	zynqmp_firmware: zynqmp-firmware {
-+		compatible = "xlnx,zynqmp-firmware";
-+		method = "smc";
-+
-+		nvmem_firmware {
-+			compatible = "xlnx,zynqmp-nvmem-fw";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+
-+			/* Data cells */
-+			soc_revision: soc_revision {
-+				reg = <0x0 0x4>;
-+			};
-+		};
++Example:
++	zynqmp_pcap: pcap {
++		compatible = "xlnx,zynqmp-pcap-fpga";
 +	};
-+};
-+
-+= Data consumers =
-+Are device nodes which consume nvmem data cells.
-+
-+For example:
-+	pcap {
-+		...
-+
-+		nvmem-cells = <&soc_revision>;
-+		nvmem-cell-names = "soc_revision";
-+
-+		...
-+	};
-+
 -- 
 2.18.0
