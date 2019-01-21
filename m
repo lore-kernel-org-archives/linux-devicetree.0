@@ -1,66 +1,42 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
- AVDD28-supply property
-Date: Mon, 21 Jan 2019 10:16:43 -0600
-Message-ID: <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com>
-References: <20181215151802.18592-1-jagan@amarulasolutions.com>
- <20181215151802.18592-2-jagan@amarulasolutions.com> <20190107225810.ggmkkbrnkoy2ykx5@penguin>
- <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com> <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
+From: Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH 0/3] kbuild: Add wilddt function instead of listing dtbs
+Date: Mon, 21 Jan 2019 16:16:55 +0000
+Message-ID: <VI1PR04MB553355D6D5EBC2604E1AD256EE9F0@VI1PR04MB5533.eurprd04.prod.outlook.com>
+References: <cover.1546888138.git.leonard.crestez@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Masahiro Yamada <yamada.masahiro@socionext.com>, Olof Johansson <olof@lixom.net>
+Cc: Mark Rutland <mark.rutland@arm.com>, Aisheng Dong <aisheng.dong@nxp.com>, Michal Marek <michal.lkml@markovi.net>, "linux-kbuild@vger.kernel.org" <linux-kbuild@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
-> >
-> > Please CC DT list if you want bindings reviewed.
->
-> Sorry I forgot.
->
-> >
-> > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
-> > <dmitry.torokhov@gmail.com> wrote:
-> > >
-> > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
-> > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
-> > > > which need to supply for controllers like GT5663 on some boards
-> > > > to trigger the power.
-> > > >
-> > > > So, document the supply property so-that the require boards
-> > > > that used on GT5663 can enable it via device tree.
-> > > >
-> > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > > > ---
-> > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
-> > > >  1 file changed, 1 insertion(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > index f7e95c52f3c7..c4622c983e08 100644
-> > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
-> > > > @@ -23,6 +23,7 @@ Optional properties:
-> > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
-> > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
-> > > >                               (swapping is done after inverting the axis)
-> > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
-> > >
-> > > I think we normally use lower case in DT bindings and rarely encode
-> > > voltage in the supply name unless we are dealing with several supplies
-> > > of the same kind, but I'll let Ron comment on this.
-> >
-> > Yes on lowercase though there are some exceptions.
-> >
-> > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
-> > probably need to keep the voltage, but the binding is incomplete.
->
-> What is incomplete here? can you please elaborate.
+On 1/7/2019 9:31 PM, Leonard Crestez wrote:
+> The dts makefiles go through a lot of pointless churn when boards are
+> added. Many SOCs (such as imx) have very simple naming conventions for
+> all boards using a certain chip and board listings can be easily
+> collapsed using wildcards.
+> 
+> Add a "wilddt" function and use it for imx6/7/8 and layerscape. This can
+> be applied to many other soc families later.
+> 
+> Previously sent as RFC: https://lore.kernel.org/patchwork/patch/1022737/
 
-You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
+Any feedback? This should be reviewed by kbuild and arm-soc
 
-Rob
+I think this is a worthwhile cleanup, are there any corner cases or more 
+exotic setup I should try in order to validate this series?
+
+--
+Regards,
+Leonard
