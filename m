@@ -1,46 +1,39 @@
-Return-Path: <SRS0=ntIc=P5=gmail.com=robertshearman@kernel.org>
-From: Robert Shearman <robertshearman@gmail.com>
-Subject: [PATCH 2/2] dt-bindings: i2c-mux-pca954x: Invert i2c-mux-idle-disconnect property
-Date: Mon, 21 Jan 2019 16:47:42 +0000
-Message-Id: <20190121164742.35718-2-robertshearman@gmail.com>
-In-Reply-To: <20190121164742.35718-1-robertshearman@gmail.com>
-References: <20190121164742.35718-1-robertshearman@gmail.com>
+Return-Path: <SRS0=3v29=P5=partner.samsung.com=k.konieczny@kernel.org>
+Subject: Re: [PATCH v3 4/5] arm64: dts: exynos: add imem clock
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Message-ID: <3ca730b9-3cad-4e98-1e3b-19aca71863d5@partner.samsung.com>
+Date: Mon, 21 Jan 2019 09:08:30 +0100
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, Robert Shearman <robert.shearman@att.com>
+In-Reply-To: <20181213211009.GA5444@kozik-lap>
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+References: <20181204165248.17572-1-k.konieczny@partner.samsung.com>
+	<CGME20181204165317eucas1p18cd6168fdefb2aa57259b9ec73438275@eucas1p1.samsung.com>
+	<20181204165248.17572-5-k.konieczny@partner.samsung.com>
+	<20181213211009.GA5444@kozik-lap>
+To: Krzysztof Kozlowski <krzk@kernel.org>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Robert Shearman <robert.shearman@att.com>
+On 13.12.2018 22:10, Krzysztof Kozlowski wrote:
+> On Tue, Dec 04, 2018 at 05:52:47PM +0100, Kamil Konieczny wrote:
+>> Add description for imem clock in the Samsung Exynos5433. The users can use
+>> compatibility "samsung,exynos5433-cmu-imem".
+> 
+> Thanks, applied but the commit message above is not matching contents at all.
+> You did not add the description. Mentioning some users and compatibility
+> also seems unrelated. Instead:
+> 1. You added DT node for IMEM clock controller on Exynos5433.
+> 2. Because it is necessary for SSS to work (beside obvious reasons: for
+>    DTS completeness and allowing to gate them when not used).
+> Also, please use SoC name in commit title (for example at the end) to
+> differentiate from Exynos7 or any other future SoCs.
 
-Update the binding docs for i2c-mux-pca954x to reflect that the driver
-now defaults to idle-disconnect behaviour by removing the documentation
-of the previous i2c-mux-idle-disconnect property and introducing a new
-inverse i2c-mux-no-idle-disconnect property.
+Thank you for your work and insightfull comments, I hope to improve my
+commit messages.
 
-Signed-off-by: Robert Shearman <robert.shearman@att.com>
----
- Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt | 8 +++++---
- 1 file changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-index 30ac6a60f041..c3a94de8b3ef 100644
---- a/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-+++ b/Documentation/devicetree/bindings/i2c/i2c-mux-pca954x.txt
-@@ -25,9 +25,11 @@ Required Properties:
- Optional Properties:
- 
-   - reset-gpios: Reference to the GPIO connected to the reset input.
--  - i2c-mux-idle-disconnect: Boolean; if defined, forces mux to disconnect all
--    children in idle state. This is necessary for example, if there are several
--    multiplexers on the bus and the devices behind them use same I2C addresses.
-+  - i2c-mux-no-idle-disconnect: Boolean; if defined, asks mux to not
-+    disconnect children in idle state. This optimises I2C parent
-+    operations and is useful if it is guaranteed that there are no
-+    multiplexers on the bus with devices behind them using the same
-+    I2C address.
-   - interrupts: Interrupt mapping for IRQ.
-   - interrupt-controller: Marks the device node as an interrupt controller.
-   - #interrupt-cells : Should be two.
 -- 
-2.20.1
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
