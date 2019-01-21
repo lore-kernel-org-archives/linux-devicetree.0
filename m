@@ -1,140 +1,157 @@
-From: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Mon, 21 Jan 2019 11:29:05 +0000
-Message-ID: <0ba215f5-e856-bf31-8dd9-a85710714a7a@arm.com>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
- <20190118103235-mutt-send-email-mst@kernel.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
+Date: Mon, 21 Jan 2019 12:30:39 +0100
+Message-ID: <20190121113039.GI16756@ulmo>
+References: <1547194964-16718-1-git-send-email-yash.shah@sifive.com>
+ <1547194964-16718-3-git-send-email-yash.shah@sifive.com>
+ <20190115220046.etgbno6ymsux75dk@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Return-path: <virtio-dev-return-5341-gcvd-virtio-dev=m.gmane.org@lists.oasis-open.org>
-Sender: <virtio-dev@lists.oasis-open.org>
-List-Post: <mailto:virtio-dev@lists.oasis-open.org>
-List-Help: <mailto:virtio-dev-help@lists.oasis-open.org>
-List-Unsubscribe: <mailto:virtio-dev-unsubscribe@lists.oasis-open.org>
-List-Subscribe: <mailto:virtio-dev-subscribe@lists.oasis-open.org>
-In-Reply-To: <20190118103235-mutt-send-email-mst@kernel.org>
-Content-Language: en-US
-To: "Michael S. Tsirkin" <mst@redhat.com>
-Cc: mark.rutland@arm.com, virtio-dev@lists.oasis-open.org, kevin.tian@intel.com, tnowicki@caviumnetworks.com, devicetree@vger.kernel.org, marc.zyngier@arm.com, linux-pci@vger.kernel.org, will.deacon@arm.com, robin.murphy@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, kvmarm@lists.cs.columbia.edu, bhelgaas@google.com, frowand.list@gmail.com, jasowang@redhat.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="MFZs98Tklfu0WsCO"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190115220046.etgbno6ymsux75dk@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Yash Shah <yash.shah@sifive.com>, palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-Hi,
 
-On 18/01/2019 15:51, Michael S. Tsirkin wrote:
-> 
-> On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
->> Implement the virtio-iommu driver, following specification v0.9 [1].
->>
->> This is a simple rebase onto Linux v5.0-rc2. We now use the
->> dev_iommu_fwspec_get() helper introduced in v5.0 instead of accessing
->> dev->iommu_fwspec, but there aren't any functional change from v6 [2].
->>
->> Our current goal for virtio-iommu is to get a paravirtual IOMMU working
->> on Arm, and enable device assignment to guest userspace. In this
->> use-case the mappings are static, and don't require optimal performance,
->> so this series tries to keep things simple. However there is plenty more
->> to do for features and optimizations, and having this base in v5.1 would
->> be good. Given that most of the changes are to drivers/iommu, I believe
->> the driver and future changes should go via the IOMMU tree.
->>
->> You can find Linux driver and kvmtool device on v0.9.2 branches [3],
->> module and x86 support on virtio-iommu/devel. Also tested with Eric's
->> QEMU device [4]. Please note that the series depends on Robin's
->> probe-deferral fix [5], which will hopefully land in v5.0.
->>
->> [1] Virtio-iommu specification v0.9, sources and pdf
->>     git://linux-arm.org/virtio-iommu.git virtio-iommu/v0.9
->>     http://jpbrucker.net/virtio-iommu/spec/v0.9/virtio-iommu-v0.9.pdf
->>
->> [2] [PATCH v6 0/7] Add virtio-iommu driver
->>     https://lists.linuxfoundation.org/pipermail/iommu/2018-December/032127.html
->>
->> [3] git://linux-arm.org/linux-jpb.git virtio-iommu/v0.9.2
->>     git://linux-arm.org/kvmtool-jpb.git virtio-iommu/v0.9.2
->>
->> [4] [RFC v9 00/17] VIRTIO-IOMMU device
->>     https://www.mail-archive.com/qemu-devel@nongnu.org/msg575578.html
->>
->> [5] [PATCH] iommu/of: Fix probe-deferral
->>     https://www.spinics.net/lists/arm-kernel/msg698371.html
-> 
-> Thanks for the work!
-> So really my only issue with this is that there's no
-> way for the IOMMU to describe the devices that it
-> covers.
-> 
-> As a result that is then done in a platform-specific way.
-> 
-> And this means that for example it does not solve the problem that e.g.
-> some power people have in that their platform simply does not have a way
-> to specify which devices are covered by the IOMMU.
+--MFZs98Tklfu0WsCO
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Isn't power using device tree? I haven't looked much at power because I
-was told a while ago that they already paravirtualize their IOMMU and
-don't need virtio-iommu, except perhaps for some legacy platforms. Or
-something along those lines. But I would certainly be interested in
-enabling the IOMMU for more architectures.
+On Tue, Jan 15, 2019 at 11:00:46PM +0100, Uwe Kleine-K=C3=B6nig wrote:
+> Hello,
+>=20
+> On Fri, Jan 11, 2019 at 01:52:44PM +0530, Yash Shah wrote:
+> > Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed SoC.
+> >=20
+> > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> > [Atish: Various fixes and code cleanup]
+> > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> > ---
+> >  drivers/pwm/Kconfig      |  10 ++
+> >  drivers/pwm/Makefile     |   1 +
+> >  drivers/pwm/pwm-sifive.c | 246 +++++++++++++++++++++++++++++++++++++++=
+++++++++
+> >  3 files changed, 257 insertions(+)
+> >  create mode 100644 drivers/pwm/pwm-sifive.c
+> >=20
+> > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
+> > index a8f47df..3bcaf6a 100644
+> > --- a/drivers/pwm/Kconfig
+> > +++ b/drivers/pwm/Kconfig
+> > @@ -380,6 +380,16 @@ config PWM_SAMSUNG
+> >  	  To compile this driver as a module, choose M here: the module
+> >  	  will be called pwm-samsung.
+> > =20
+> > +config PWM_SIFIVE
+> > +	tristate "SiFive PWM support"
+> > +	depends on OF
+> > +	depends on COMMON_CLK
+>=20
+> I'd say add:
+>=20
+> 	depends on MACH_SIFIVE || COMPILE_TEST
+>=20
+> (I guess "MACH_SIFIVE" is wrong, but I assume you get what I mean.)
+>=20
+> > +	help
+> > +	  Generic PWM framework driver for SiFive SoCs.
+> > +
+> > +	  To compile this driver as a module, choose M here: the module
+> > +	  will be called pwm-sifive.
+> > +
+> >  config PWM_SPEAR
+> >  	tristate "STMicroelectronics SPEAr PWM support"
+> >  	depends on PLAT_SPEAR
+> > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
+> > index 9c676a0..30089ca 100644
+> > --- a/drivers/pwm/Makefile
+> > +++ b/drivers/pwm/Makefile
+> > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
+> >  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
+> >  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
+> >  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
+> > +obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
+> >  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
+> >  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
+> >  obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
+> > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
+> > new file mode 100644
+> > index 0000000..7fee809
+> > --- /dev/null
+> > +++ b/drivers/pwm/pwm-sifive.c
+> > @@ -0,0 +1,246 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2017-2018 SiFive
+> > + * For SiFive's PWM IP block documentation please refer Chapter 14 of
+> > + * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.pdf
+>=20
+> I wonder if such an instance should be only a single PWM instead of
+> four. Then you were more flexible with the period lengths (using
+> pwmcfg.pwmzerocmp) and could do stuff like inverted and uninverted mode.
 
-As for the enumeration problem, I still don't think we can get much
-better than DT and ACPI as solutions (and IMO they are necessary to make
-this device portable). But I believe that getting DT and ACPI support is
-just a one-off inconvenience. That is, once the required bindings are
-accepted, any future extension can then be done at the virtio level with
-feature bits and probe requests, without having to update ACPI or DT.
+I thought this IP only allowed a single period for all PWM channels in
+the IP. If so, splitting this into four different devices is going to
+complicate things because you'd have to coordinate between all four as
+to which period is currently set.
 
-Thanks,
-Jean
+> > +struct sifive_pwm_device {
+> > +	struct pwm_chip	chip;
+> > +	struct notifier_block notifier;
+> > +	struct clk *clk;
+> > +	void __iomem *regs;
+> > +	unsigned int approx_period;
+> > +	unsigned int real_period;
+> > +};
+>=20
+> I'd call this pwm_sifive_ddata. The prefix because the driver is called
+> pwm-sifive and ddata because this is driver data and not a device.
 
-> Solving that problem would make me much more excited about
-> this device.
-> 
-> On the other hand I can see that while there have been some
-> developments most of the code has been stable for quite a while now.
-> 
-> So what I am trying to do right about now, is making a small module that
-> loads early and pokes at the IOMMU sufficiently to get the data about
-> which devices use the IOMMU out of it using standard virtio config
-> space.  IIUC it's claimed to be impossible without messy changes to the
-> boot sequence.
-> 
-> If I succeed at least on some platforms I'll ask that this design is
-> worked into this device, minimizing info that goes through DT/ACPI.  If
-> I see I can't make it in time to meet the next merge window, I plan
-> merging the existing patches using DT (barring surprises).
-> 
-> As I only have a very small amount of time to spend on this attempt, If
-> someone else wants to try doing that in parallel, that would be great!
-> 
-> 
->> Jean-Philippe Brucker (7):
->>   dt-bindings: virtio-mmio: Add IOMMU description
->>   dt-bindings: virtio: Add virtio-pci-iommu node
->>   of: Allow the iommu-map property to omit untranslated devices
->>   PCI: OF: Initialize dev->fwnode appropriately
->>   iommu: Add virtio-iommu driver
->>   iommu/virtio: Add probe request
->>   iommu/virtio: Add event queue
->>
->>  .../devicetree/bindings/virtio/iommu.txt      |   66 +
->>  .../devicetree/bindings/virtio/mmio.txt       |   30 +
->>  MAINTAINERS                                   |    7 +
->>  drivers/iommu/Kconfig                         |   11 +
->>  drivers/iommu/Makefile                        |    1 +
->>  drivers/iommu/virtio-iommu.c                  | 1158 +++++++++++++++++
->>  drivers/of/base.c                             |   10 +-
->>  drivers/pci/of.c                              |    7 +
->>  include/uapi/linux/virtio_ids.h               |    1 +
->>  include/uapi/linux/virtio_iommu.h             |  161 +++
->>  10 files changed, 1449 insertions(+), 3 deletions(-)
->>  create mode 100644 Documentation/devicetree/bindings/virtio/iommu.txt
->>  create mode 100644 drivers/iommu/virtio-iommu.c
->>  create mode 100644 include/uapi/linux/virtio_iommu.h
->>
->> -- 
->> 2.19.1
-> _______________________________________________
-> iommu mailing list
-> iommu@lists.linux-foundation.org
-> https://lists.linuxfoundation.org/mailman/listinfo/iommu
-> 
+I don't think there's a need to have an extra suffix. Just call this
+sifive_pwm or pwm_sifive. There's no ambiguity in that name and it's
+short and crisp.
+
+> > +	if (state->enabled)
+> > +		sifive_pwm_get_state(chip, dev, state);
+>=20
+> @Thierry: Should we bless this correction of state?
+
+I'm not sure I understand why this correction is necessary. Is it okay
+to request a state to be applied and when we're not able to set that
+state we just set anything as close as possible? Sounds a bit risky to
+me. What if somebody wants to use this in a case where precision
+matters?
+
+Now, if you're saying that there can't be such cases and we should
+support this, then why restrict the state correction to when the PWM is
+enabled? What's wrong with correcting it in either case?
+
+Thierry
+
+--MFZs98Tklfu0WsCO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxFrVwACgkQ3SOs138+
+s6GDPhAAqq3K+XU1yZmkcnkI1Zx0WumCOVIx3+P1YxoZRny1aaps0RIVvR3FIoFv
+1I0P/4cuDQ1nUHh8ejdmqE/0uT/+bpxxWg3srsjaKkaSM3TutdX4EPk929EP91oJ
+QIXFTxGm3FBeKbd5wdgqC5zLhC3hDowCpH+vyOB+YiW9bn2EBOQwnCwkeRpOAIVG
+q2Er9KwCuKd1wIT+jCvprKOCnwui7ycZ2ycLbxRiBNMwcRBUfSMy6J6dZ0CJKMdD
+uoSS1XWSOmLymi1g5Ibdii+VGxhXssfR9+YKvgdqJ0kkNqUZ8zrbHinNn0zuPSZH
+SJSNZ0QCAOkvgPFTwFR/QV0DnBu/i8pgybpPawLkwA10QAIe4D5vheHI9YgvTxE3
+9GNuFbUR1r52guNBF00ht3Wvxzu8WaoYwIOMhIDUrQJ4QA8c8eq+1GIJwXhvnzOH
+xW93VlukNv+TmgzE60/9a6JgelKFUw0Iu+yYWs7kFq4WAgPiz9E5TiwoitZq4j5/
+81HxqupXIT1jqI0W3JI6ZdVFk6gYEKts2CLIJKu9IIll59T3R8bS+dRdzp3Zm+JY
+xO3+m7Kt97Nnz+e0SakZ64dnQF50QR+hv+Pd5jNPiLFfeU9sVpULG03tph0vg/0Q
+Qn472hhDUD0VP1zBZxBl8DX0H/yOMaqnKHYyzIKN+JwOrJ/HH3A=
+=aoyh
+-----END PGP SIGNATURE-----
+
+--MFZs98Tklfu0WsCO--
