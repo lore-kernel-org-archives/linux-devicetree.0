@@ -1,46 +1,47 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH lora-next 1/4] dt-bindings: lora: sx130x: add basic
- documentation
-Date: Mon, 21 Jan 2019 13:27:18 -0600
-Message-ID: <20190121192718.GA8189@bogus>
-References: <20190108084132.10214-1-ben.whitten@gmail.com>
- <20190121191420.GA7878@bogus>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: RGB LED class Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX
+ family of the RGB LED driver
+Date: Mon, 21 Jan 2019 20:38:12 +0100
+Message-ID: <e03a96ea-6597-936e-59e0-a9cd7df30525@gmail.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <86299268-3202-814a-134b-04bd2170faab@ti.com>
+ <8dfa2854-2814-6874-ab8e-1858e9a18acf@gmail.com> <20190118000235.GB27661@amd>
+ <61fa89eb-c12e-8f9c-9457-9d6d17ba7717@gmail.com> <20190119213629.GA3654@amd>
+ <9d2e0220-69f0-faaa-adb9-13d905f9c51d@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=windows-1252; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190121191420.GA7878@bogus>
+In-Reply-To: <9d2e0220-69f0-faaa-adb9-13d905f9c51d@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Whitten <ben.whitten@gmail.com>
-Cc: linux-lpwan@lists.infradead.org, afaerber@suse.de, netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+To: Pavel Machek <pavel@ucw.cz>
+Cc: Dan Murphy <dmurphy@ti.com>, linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, dachaac@gmail.com, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 01:14:20PM -0600, Rob Herring wrote:
-> On Tue, Jan 08, 2019 at 05:41:29PM +0900, Ben Whitten wrote:
-> > Add basic documentation in YAML format for the sx130x series concentrators
-> > from Semtech.
-> > Required is; the location on the SPI bus, the reset gpio and the node for
-> > downstream IQ radios, typically sx125x.
-> > 
-> > Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-> > ---
-> >  .../bindings/lora/semtech,sx130x.yaml         | 87 +++++++++++++++++++
-> >  1 file changed, 87 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
+On 1/20/19 4:30 PM, Jacek Anaszewski wrote:
+> On 1/19/19 10:36 PM, Pavel Machek wrote:
+>> Hi!
+[...]
+>> I want to make sure userspace understands this has linear relation to
+>> output power. I'd like to avoid mentioning color because there power
+>> output is not linear with "RGB"
+>>
+>>> s/pwm/color/
+>>
+>> s/pwm/power/ would work for me.
 > 
-> A schema binding. Yay!
-> 
-> > 
-> > diff --git a/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> > new file mode 100644
-> > index 000000000000..ad263bc4e60d
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/lora/semtech,sx130x.yaml
-> > @@ -0,0 +1,87 @@
-> > +# SPDX-License-Identifier: GPL-2.0
+> Power implies physical units. I'd prefer "intensity".
 
-Also, I'd like new bindings to be dual GPL-2.0 and BSD-2-Clause if you 
-don't mind. This will make it easier to move the schema out of the 
-kernel if/when we ever do that.
+Hmm, intensity_channels does not look too informative...
 
-Rob
+OK, so let's stick to power_channels, at least for time being.
+Maybe some better ideas will have appeared before the final
+solution is merged.
+
+-- 
+Best regards,
+Jacek Anaszewski
