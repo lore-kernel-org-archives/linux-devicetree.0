@@ -1,7 +1,8 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v3 03/10] usb: ehci-orion: avoid double PHY initialization
-Date: Mon, 21 Jan 2019 12:23:29 +0100
-Message-ID: <20190121112336.23489-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v3 10/10] ARM64: dts: marvell: armada-37xx: link USB hosts
+ with their PHYs
+Date: Mon, 21 Jan 2019 12:23:36 +0100
+Message-ID: <20190121112336.23489-11-miquel.raynal@bootlin.com>
 References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,72 +22,41 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-No need to initialize the PHY from the driver's probe. It is done by
-the core automatically and doing it twice would increment the
-phy->powercount counter to 2 instead of 1. During later suspend
-operation, the counter will be decremented to one, no phy->power_off()
-will occur and worse than that, the following phy->power_on() at
-resume time will also be skipped, failing the whole S2RAM operation.
+Reference the PHY nodes from the USB controller nodes.
+
+The USB3 host controller is wired to:
+  * the first PHY of the COMPHY IP
+  * the OTG-capable UTMI PHY
+
+The USB2 host controller is wired to:
+  * the host-only UTMI PHY
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 ---
- drivers/usb/host/ehci-orion.c | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 1ad72647a069..3109f082949e 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->phy)) {
- 		err = PTR_ERR(priv->phy);
- 		if (err != -ENOSYS)
--			goto err_phy_get;
--	} else {
--		err = phy_init(priv->phy);
--		if (err)
--			goto err_phy_init;
--
--		err = phy_power_on(priv->phy);
--		if (err)
--			goto err_phy_power_on;
-+			goto err_dis_clk;
- 	}
+diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+index aeb2681428b3..029d8e090cb7 100644
+--- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
++++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
+@@ -347,6 +347,8 @@
+ 				marvell,usb-misc-reg = <&usb32_syscon>;
+ 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
+ 				clocks = <&sb_periph_clk 12>;
++				phys = <&comphy0 0>, <&usb2_utmi_otg_phy>;
++				phy-names = "usb3-phy", "usb2-utmi-otg-phy";
+ 				status = "disabled";
+ 			};
  
- 	/*
-@@ -297,19 +289,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err)
--		goto err_add_hcd;
-+		goto err_dis_clk;
- 
- 	device_wakeup_enable(hcd->self.controller);
- 	return 0;
- 
--err_add_hcd:
--	if (!IS_ERR(priv->phy))
--		phy_power_off(priv->phy);
--err_phy_power_on:
--	if (!IS_ERR(priv->phy))
--		phy_exit(priv->phy);
--err_phy_init:
--err_phy_get:
-+err_dis_clk:
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 	usb_put_hcd(hcd);
-@@ -327,11 +312,6 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
- 
- 	usb_remove_hcd(hcd);
- 
--	if (!IS_ERR(priv->phy)) {
--		phy_power_off(priv->phy);
--		phy_exit(priv->phy);
--	}
--
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
+@@ -368,6 +370,8 @@
+ 				reg = <0x5e000 0x1000>;
+ 				marvell,usb-misc-reg = <&usb2_syscon>;
+ 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
++				phys = <&usb2_utmi_host_phy>;
++				phy-names = "usb2-utmi-host-phy";
+ 				status = "disabled";
+ 			};
  
 -- 
 2.19.1
