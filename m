@@ -1,84 +1,121 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem binding
-Date: Mon, 21 Jan 2019 10:07:11 -0600
-Message-ID: <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
-References: <20190120172534.24617-1-lkundrak@v3.sk> <20190120172534.24617-5-lkundrak@v3.sk>
- <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com> <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
+From: Bin Liu <b-liu@ti.com>
+Subject: Re: [PATCH v4 6/6] usb: musb: Add support for MediaTek musb
+ controller
+Date: Mon, 21 Jan 2019 10:07:49 -0600
+Message-ID: <20190121160749.GD30080@uda0271908>
+References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
+ <1548073351-13739-7-git-send-email-min.guo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
+Content-Disposition: inline
+In-Reply-To: <1548073351-13739-7-git-send-email-min.guo@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lubomir Rintel <lkundrak@v3.sk>
-Cc: Mark Rutland <mark.rutland@arm.com>, Russell King <linux@armlinux.org.uk>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: min.guo@mediatek.com
+Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com, Yonglong Wu <yonglong.wu@mediatek.com>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 9:46 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
->
-> On Mon, 2019-01-21 at 09:35 -0600, Rob Herring wrote:
-> > On Sun, Jan 20, 2019 at 11:26 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > > The Marvell Armada DRM master device is a virtual device needed to list all
-> > > nodes that comprise the graphics subsystem.
-> > >
-> > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > ---
-> > >  .../display/armada/marvell-armada-drm.txt     | 24 +++++++++++++++++++
-> > >  1 file changed, 24 insertions(+)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > index de4cca9432c8..3dbfa8047f0b 100644
-> > > --- a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > +++ b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > @@ -1,3 +1,27 @@
-> > > +Marvell Armada DRM master device
-> > > +================================
-> > > +
-> > > +The Marvell Armada DRM master device is a virtual device needed to list all
-> > > +nodes that comprise the graphics subsystem.
-> > > +
-> > > +Required properties:
-> > > +
-> > > + - compatible: value should be "marvell,dove-display-subsystem",
-> > > +   "marvell,armada-display-subsystem"
-> > > + - ports: a list of phandles pointing to display interface ports of CRTC
-> > > +   devices
-> > > + - memory-region: phandle to a node describing memory to be used for the
-> > > +   framebuffer
-> > > +
-> > > +Example:
-> > > +
-> > > +       display-subsystem {
-> > > +               compatible = "marvell,dove-display-subsystem",
-> > > +                            "marvell,armada-display-subsystem";
-> > > +               memory-region = <&display_reserved>;
-> > > +               ports = <&lcd0_port>;
-> >
-> > If there is only one device, you don't need this virtual node.
->
-> By "one device" you mean one LCD controller (CRTC)?
+Hi Min,
 
-Yes.
+On Mon, Jan 21, 2019 at 08:22:31PM +0800, min.guo@mediatek.com wrote:
+> From: Min Guo <min.guo@mediatek.com>
+> 
+> This adds support for MediaTek musb controller in
+> host, peripheral and otg mode.
+> There are some quirk of MediaTek musb controller, such as:
+>  -W1C interrupt status registers
+>  -Private data toggle registers
+>  -No dedicated DMA interrupt line
+> 
+> Signed-off-by: Min Guo <min.guo@mediatek.com>
+> Signed-off-by: Yonglong Wu <yonglong.wu@mediatek.com>
+> ---
+> changes in v4:
+> 1. no changes
+> 
+> changes in v3:
+> suggested by Bin:
+> 1. Remove 'u8/u16 data' parameter in clearb/w() hooks
+> 2. Replace musb_readb/w() with musb_clearb/w() to clear interrupts status
+> 
+> changes in v2:
+> suggested by Bin:
+> 1. Add summarize of MediaTek musb controller differences in the commit log
+> 2. Add "|| COMPILE_TEST" in Kconfig
+> 3. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
+> 4. Replace musb_readl() with musb_readw() to read 16bit toggle register
+> ---
+>  drivers/usb/musb/Kconfig    |   8 +-
+>  drivers/usb/musb/Makefile   |   1 +
+>  drivers/usb/musb/mediatek.c | 624 ++++++++++++++++++++++++++++++++++++++++++++
+>  3 files changed, 632 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/usb/musb/mediatek.c
+> 
 
-> I suppose in the (single CRTC) example case, the display-subsystem node
-> used to associate it with the memory region reserved for allocating the
-> frame buffers from. Could that be done differently?
+[snip]
 
-Move memory-region to the LCD controller node.
+> +static irqreturn_t generic_interrupt(int irq, void *__hci)
+> +{
+> +	unsigned long flags;
+> +	irqreturn_t retval = IRQ_NONE;
+> +	struct musb *musb = __hci;
+> +
+> +	spin_lock_irqsave(&musb->lock, flags);
+> +	musb->int_usb = musb_readb(musb->mregs, MUSB_INTRUSB) &
+> +	    musb_readb(musb->mregs, MUSB_INTRUSBE);
+> +	musb->int_tx = musb_readw(musb->mregs, MUSB_INTRTX)
+> +	    & musb_readw(musb->mregs, MUSB_INTRTXE);
+> +	musb->int_rx = musb_readw(musb->mregs, MUSB_INTRRX)
+> +	    & musb_readw(musb->mregs, MUSB_INTRRXE);
 
-> Also, if the node is indeed made optional, then it's going to
-> complicate things on the DRM side. Currently the driver that binds to
-> the node creates the DRM device once it sees all the components
-> connected to the ports appear. If we loose it, then the LCD controller
-> driver would somehow need to find out that it's alone and create the
-> DRM device itself.
+Based on my comment in 5/6, the above 3 musb_readb/w() can be changed to
 
-DT is not the only way to create devices. The DRM driver can bind to
-the LCDC node and then create a child CRTC device (or even multiple
-ones for h/w with multiple pipelines).
+> +	/* MediaTek controller interrupt status is W1C */
+> +	musb_clearw(musb->mregs, MUSB_INTRRX);
+> +	musb_clearw(musb->mregs, MUSB_INTRTX);
+> +	musb_clearb(musb->mregs, MUSB_INTRUSB);
 
-You'll also notice that there are only 3 cases of this virtual node in
-the tree: STi, i.MX IPU, and Rockchip. That's because we've deprecated
-doing these virtual nodes for some time now. IOW, there are several
-examples of how to do this without a virtual node.
+	musb->int_usb = musb_clearb(musb->mregs, MUSB_INTRUSB)
+	musb->int_tx = musb_clearw(musb->mregs, MUSB_INTRTX);
+	musb->int_rx = musb_clearw(musb->mregs, MUSB_INTRRX);
 
-Rob
+> +
+> +	if (musb->int_usb || musb->int_tx || musb->int_rx)
+> +		retval = musb_interrupt(musb);
+> +
+> +	spin_unlock_irqrestore(&musb->lock, flags);
+> +
+> +	return retval;
+> +}
+> +
+
+[snip]
+
+> +
+> +static u8 mtk_musb_clearb(void __iomem *addr, unsigned int offset)
+> +{
+> +	u8 data;
+> +
+> +	/* W1C */
+> +	data = musb_readb(addr, offset);
+> +	musb_writeb(addr, offset, data);
+> +	return musb_readb(addr, offset);
+
+	return data;
+
+> +}
+> +
+> +static u16 mtk_musb_clearw(void __iomem *addr, unsigned int offset)
+> +{
+> +	u16 data;
+> +
+> +	/* W1C */
+> +	data = musb_readw(addr, offset);
+> +	musb_writew(addr, offset, data);
+> +	return musb_readw(addr, offset);
+
+	return data;
+
+
+Regards,
+-Bin.
