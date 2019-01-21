@@ -1,7 +1,7 @@
-From: Stefan Wahren <stefan.wahren@i2se.com>
-Subject: [PATCH] ARM: dts: bcm2835-rpi-zero-w: Drop unnecessary pinctrl
-Date: Sun, 20 Jan 2019 18:06:00 +0100
-Message-ID: <1548003960-4807-1-git-send-email-stefan.wahren@i2se.com>
+From: Nava kishore Manne <nava.manne@xilinx.com>
+Subject: [PATCH v3 0/6] dt-bindings: Firmware node binding for ZynqMP core
+Date: Mon, 21 Jan 2019 22:54:21 +0530
+Message-ID: <20190121172427.20446-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
@@ -15,48 +15,108 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
-Cc: Stefan Wahren <stefan.wahren@i2se.com>, devicetree@vger.kernel.org, Linus Walleij <linus.walleij@linaro.org>, bcm-kernel-feedback-list@broadcom.com, linux-rpi-kernel@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+To: mark.rutland@arm.com, michals@xilinx.com, RAJANV@xilinx.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, JOLLYS@xilinx.com, chinnikishore369@gmail.com
+Cc: Nava kishore Manne <nava.manne@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-There is no need to specify a pinctrl for the reset GPIO. So we better
-remove this avoid a potential conflict between pinctrl and pwrseq
-after the pinmux driver has been changed to strict:
+Base firmware node and clock child node binding are part of mainline kernel.
+This patchset adds documentation to describe rest of the firmware child node bindings. 
 
-pinctrl-bcm2835 20200000.gpio: pin gpio41 already requested by wifi-pwrseq;
-cannot claim for pinctrl-bcm2835:499
-pinctrl-bcm2835 20200000.gpio: pin-41 (pinctrl-bcm2835:499) status -22
-pwrseq_simple: probe of wifi-pwrseq failed with error -22
+Complete firmware DT node example is shown below for ease of understanding:
 
-Signed-off-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm/boot/dts/bcm2835-rpi-zero-w.dts | 7 -------
- 1 file changed, 7 deletions(-)
+firmware {
+	zynqmp_firmware: zynqmp-firmware {
+		compatible = "xlnx,zynqmp-firmware";
+		method = "smc";
+		#power-domain-cells = <1>;
+		#reset-cells = <1>;
 
-diff --git a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-index 644d907..6071213 100644
---- a/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-+++ b/arch/arm/boot/dts/bcm2835-rpi-zero-w.dts
-@@ -25,8 +25,6 @@
- 
- 	wifi_pwrseq: wifi-pwrseq {
- 		compatible = "mmc-pwrseq-simple";
--		pinctrl-names = "default";
--		pinctrl-0 = <&wl_on>;
- 		reset-gpios = <&gpio 41 GPIO_ACTIVE_LOW>;
- 	};
- };
-@@ -98,11 +96,6 @@
- 			  "SD_DATA3_R";
- 
- 	pinctrl-0 = <&gpioout &alt0>;
--
--	wl_on: wl-on {
--		brcm,pins = <41>;
--		brcm,function = <BCM2835_FSEL_GPIO_OUT>;
--	};
- };
- 
- &hdmi {
+		zynqmp_clk: clock-controller {
+			#clock-cells = <1>;
+			compatible = "xlnx,zynqmp-clk";
+			clocks = <&pss_ref_clk>, <&video_clk>, <&pss_alt_ref_clk>, <&aux_ref_clk>, <&gt_crx_ref_clk>;
+			clock-names = "pss_ref_clk", "video_clk", "pss_alt_ref_clk","aux_ref_clk", "gt_crx_ref_clk";
+		};
+
+		zynqmp_power: zynqmp-power {
+			compatible = "xlnx,zynqmp-power";
+			interrupts = <0 35 4>;
+		};
+
+		zynqmp_reset: reset-controller {
+			compatible = "xlnx,zynqmp-reset";
+			#reset-cells = <1>;
+		};
+	
+		nvmem_firmware {
+			compatible = "xlnx,zynqmp-nvmem-fw";
+			#address-cells = <1>;
+			#size-cells = <1>;
+
+			/* Data cells */
+			soc_revision: soc_revision {
+				reg = <0x0 0x4>;
+			};
+		};
+
+		pinctrl0: pinctrl@ff180000 {
+			compatible = "xlnx,zynqmp-pinctrl";
+
+			pinctrl_uart1_default: uart1-default {
+				mux {
+					groups = "uart0_4_grp";
+					function = "uart0";
+				};
+	
+				conf {
+					groups = "uart0_4_grp";
+					slew-rate = <SLEW_RATE_SLOW>;
+					io-standard = <IO_STANDARD_LVCMOS18>;
+				};
+	
+				conf-rx {
+					pins = "MIO18";
+					bias-high-impedance;
+				};
+	
+				conf-tx {
+					pins = "MIO19";
+					bias-disable;
+					schmitt-cmos = <PIN_INPUT_TYPE_CMOS>;
+				};
+			};
+		};
+	};
+};
+
+
+Nava kishore Manne (3):
+  dt-bindings: reset: Add bindings for ZynqMP reset driver
+  dt-bindings: nvmem: Add bindings for ZynqMP nvmem driver
+  dt-bindings: fpga: Add bindings for ZynqMP fpga driver
+
+Rajan Vaja (3):
+  dt-bindings: power: Add ZynqMP power domain bindings
+  dt-bindings: soc: Add ZynqMP PM bindings
+  dt-bindings: pinctrl: Add ZynqMP pin controller bindings
+
+ .../bindings/fpga/xlnx,zynqmp-pcap-fpga.txt   |  13 +
+ .../bindings/nvmem/xlnx,zynqmp-nvmem.txt      |  47 +++
+ .../bindings/pinctrl/xlnx,zynqmp-pinctrl.txt  | 275 ++++++++++++++++++
+ .../power/reset/xlnx,zynqmp-power.txt         |  25 ++
+ .../bindings/power/xlnx,zynqmp-genpd.txt      |  34 +++
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  52 ++++
+ include/dt-bindings/power/xlnx-zynqmp-power.h |  39 +++
+ .../dt-bindings/reset/xlnx-zynqmp-resets.h    | 130 +++++++++
+ 8 files changed, 615 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/fpga/xlnx,zynqmp-pcap-fpga.txt
+ create mode 100644 Documentation/devicetree/bindings/nvmem/xlnx,zynqmp-nvmem.txt
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/xlnx,zynqmp-pinctrl.txt
+ create mode 100644 Documentation/devicetree/bindings/power/reset/xlnx,zynqmp-power.txt
+ create mode 100644 Documentation/devicetree/bindings/power/xlnx,zynqmp-genpd.txt
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+ create mode 100644 include/dt-bindings/power/xlnx-zynqmp-power.h
+ create mode 100644 include/dt-bindings/reset/xlnx-zynqmp-resets.h
+
 -- 
-2.7.4
+2.18.0
