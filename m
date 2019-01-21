@@ -1,113 +1,126 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
- binding
-Date: Mon, 21 Jan 2019 17:53:01 +0000
-Message-ID: <20190121175301.lremzw6dul7dyff4@e5254000004ec.dyn.armlinux.org.uk>
-References: <20190120172534.24617-1-lkundrak@v3.sk>
- <20190120172534.24617-5-lkundrak@v3.sk>
- <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
- <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
- <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
+From: Jernej =?utf-8?B?xaBrcmFiZWM=?= <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+Subject: Re: [PATCH 1/3] media: dt: bindings: sunxi-ir: Add A64 compatible
+Date: Mon, 21 Jan 2019 18:59:41 +0100
+Message-ID: <11138144.2AFLRTQIGB@jernej-laptop>
+References: <20190111173015.12119-1-jernej.skrabec@siol.net> <3128239.8RYQUhiYef@jernej-laptop> <CAGb2v65t6kO9HfSTuXZsBu6Pyc+mueLq-5tsYsw9vxwg5o=v4A@mail.gmail.com>
+Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Lubomir Rintel <lkundrak@v3.sk>, Mark Rutland <mark.rutland@arm.com>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBEERTDRAKGQETIEWMCI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <CAGb2v65t6kO9HfSTuXZsBu6Pyc+mueLq-5tsYsw9vxwg5o=v4A-JsoAwUIsXosN+BqQ9rBEUg@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 10:07:11AM -0600, Rob Herring wrote:
-> On Mon, Jan 21, 2019 at 9:46 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> >
-> > On Mon, 2019-01-21 at 09:35 -0600, Rob Herring wrote:
-> > > On Sun, Jan 20, 2019 at 11:26 AM Lubomir Rintel <lkundrak@v3.sk> wrote:
-> > > > The Marvell Armada DRM master device is a virtual device needed to list all
-> > > > nodes that comprise the graphics subsystem.
-> > > >
-> > > > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
-> > > > ---
-> > > >  .../display/armada/marvell-armada-drm.txt     | 24 +++++++++++++++++++
-> > > >  1 file changed, 24 insertions(+)
-> > > >
-> > > > diff --git a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > > index de4cca9432c8..3dbfa8047f0b 100644
-> > > > --- a/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > > +++ b/Documentation/devicetree/bindings/display/armada/marvell-armada-drm.txt
-> > > > @@ -1,3 +1,27 @@
-> > > > +Marvell Armada DRM master device
-> > > > +================================
-> > > > +
-> > > > +The Marvell Armada DRM master device is a virtual device needed to list all
-> > > > +nodes that comprise the graphics subsystem.
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > + - compatible: value should be "marvell,dove-display-subsystem",
-> > > > +   "marvell,armada-display-subsystem"
-> > > > + - ports: a list of phandles pointing to display interface ports of CRTC
-> > > > +   devices
-> > > > + - memory-region: phandle to a node describing memory to be used for the
-> > > > +   framebuffer
-> > > > +
-> > > > +Example:
-> > > > +
-> > > > +       display-subsystem {
-> > > > +               compatible = "marvell,dove-display-subsystem",
-> > > > +                            "marvell,armada-display-subsystem";
-> > > > +               memory-region = <&display_reserved>;
-> > > > +               ports = <&lcd0_port>;
-> > >
-> > > If there is only one device, you don't need this virtual node.
-> >
-> > By "one device" you mean one LCD controller (CRTC)?
-> 
-> Yes.
+Dne ponedeljek, 21. januar 2019 ob 18:39:26 CET je Chen-Yu Tsai napisal(a):
+> On Tue, Jan 22, 2019 at 1:33 AM Jernej =C5=A0krabec <jernej.skrabec@siol.=
+net>=20
+wrote:
+> > Dne ponedeljek, 21. januar 2019 ob 10:57:57 CET je Chen-Yu Tsai=20
+napisal(a):
+> > > On Mon, Jan 21, 2019 at 5:50 PM Maxime Ripard
+> > > <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+> >=20
+> > wrote:
+> > > > Hi,
+> > > >=20
+> > > > I'm a bit late to the party, sorry for that.
+> > > >=20
+> > > > On Sat, Jan 12, 2019 at 09:56:11AM +0800, Chen-Yu Tsai wrote:
+> > > > > On Sat, Jan 12, 2019 at 1:30 AM Jernej Skrabec
+> > > > > <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
+> >=20
+> > wrote:
+> > > > > > A64 IR is compatible with A13, so add A64 compatible with A13 a=
+s a
+> > > > > > fallback.
+> > > > >=20
+> > > > > We ask people to add the SoC-specific compatible as a contigency,
+> > > > > in case things turn out to be not so "compatible".
+> > > > >=20
+> > > > > To be consistent with all the other SoCs and other peripherals,
+> > > > > unless you already spotted a "compatible" difference in the
+> > > > > hardware, i.e. the hardware isn't completely the same, this
+> > > > > patch isn't needed. On the other hand, if you did, please mention
+> > > > > the differences in the commit log.
+> > > >=20
+> > > > Even if we don't spot things, since we have the stable DT now, if w=
+e
+> > > > ever had that compatible in the DT from day 1, it's much easier to
+> > > > deal with.
+> > > >=20
+> > > > I'd really like to have that pattern for all the IPs even if we did=
+n't
+> > > > spot any issue, since we can't really say that the datasheet are
+> > > > complete, and one can always make a mistake and overlook something.
+> > > >=20
+> > > > I'm fine with this version, and can apply it as is if we all agree.
+> > >=20
+> > > I'm OK with having the fallback compatible. I'm just pointing out
+> > > that there are and will be a whole bunch of them, and we don't need
+> > > to document all of them unless we are actually doing something to
+> > > support them.
+> >=20
+> > If you don't document them, checkpatch will complain. But if you can li=
+ve
+> > with this warning, that's fine by me.
+> >=20
+> > > On the other hand, the compatible string situation for IR needs a
+> > > bit of cleaning up at the moment. Right now we have sun4i-a10 and
+> > > sun5i-a13. As Jernej pointed out, the A13's register definition is
+> > > different from A64 (or any other SoCs later than sun6i). So we need
+> > > someone with an A10s/A13 device that has IR to test it and see if
+> > > the driver or the manual is wrong, and we'd likely add a compatible
+> > > for the A20.
+> > >=20
+> > > Also, the earlier SoCs (A10/sun5i/A20) have IR TX capability. This
+> > > was lost in A31, and also all of sun8i / sun50i. So we're going to
+> > > need to add an A31 compatible that all later platforms would need
+> > > to switch to.
+> >=20
+> > H6 has IR TX peripheral too, but it's different IP block...
+> >=20
+> > Do you want me to switch all A31 and newer to different compatible in t=
+his
+> > series? I can do this, but I haven't any A13 device to test if this is
+> > really needed. Or you can argue that this is needed anyway due to missi=
+ng
+> > TX capability.
+>=20
+> The lack of TX capability does necessitate switching to an A31 compatible=
+.
+> So yes, please switch. Lets leave the A10s/A13 alone for now, unless
+> someone complains. I think this was done from inception, so if it was
+> broken, someone should've complained a long time ago. I just want to
+> be sure where the error is, and put in a comment explaining it. However
+> I don't have the hardware either.
 
-How does that work (as far as the Linux implementation) ?  I can't see
-a way that could work, while allowing the flexibility that Armada DRM
-allows (two completely independent LCD controllers as two separate DRM
-devices vs one DRM device containing both LCD controllers.)
+How do you want me to split patches? I propose following:
+1. one patch to add all compatibles to DT binding documentation
+2. one patch to add A31 compatible to driver
+3. one patch for all 32 bit SoCs DT changes
+4. one patch to add A64 compatible
+5. one patch to enable OrangePi Win IR node
 
-> > I suppose in the (single CRTC) example case, the display-subsystem node
-> > used to associate it with the memory region reserved for allocating the
-> > frame buffers from. Could that be done differently?
-> 
-> Move memory-region to the LCD controller node.
+I don't think it's sensible to have multiple patches (one per SoC) for step=
+ 1=20
+and 3.
 
-That doesn't work - it would appear in the wrong part of the driver.
+Best regards,
+Jernej
 
-> > Also, if the node is indeed made optional, then it's going to
-> > complicate things on the DRM side. Currently the driver that binds to
-> > the node creates the DRM device once it sees all the components
-> > connected to the ports appear. If we loose it, then the LCD controller
-> > driver would somehow need to find out that it's alone and create the
-> > DRM device itself.
-> 
-> DT is not the only way to create devices. The DRM driver can bind to
-> the LCDC node and then create a child CRTC device (or even multiple
-> ones for h/w with multiple pipelines).
 
-That seems completely upside down and rediculous to me - are you
-really suggesting that we should have some kind of virtual device
-in DT, and omit the _real_ physical devices for that, having the
-driver create the device with all the appropriate SoC resources?
-
-> You'll also notice that there are only 3 cases of this virtual node in
-> the tree: STi, i.MX IPU, and Rockchip. That's because we've deprecated
-> doing these virtual nodes for some time now. IOW, there are several
-> examples of how to do this without a virtual node.
-
-This driver has been in-tree with this setup for some time, although
-the documentation has been missing (we actually have a _lot_ of
-instances of that.)  However, we have no in-tree DT using it.
-
-I don't really see how to satisfy your comments without totally
-restructuring the driver, which is going to be quite a big chunk
-of work.  I'm not sure I have the motivation to do that right now.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+--=20
+You received this message because you are subscribed to the Google Groups "=
+linux-sunxi" group.
+To unsubscribe from this group and stop receiving emails from it, send an e=
+mail to linux-sunxi+unsubscribe-/JYPxA39Uh5TLH3MbocFF+G/Ez6ZCGd0@public.gmane.org
+For more options, visit https://groups.google.com/d/optout.
