@@ -1,41 +1,59 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v2 1/2] dt-binding: iio: add NPCM ADC documentation
-Date: Mon, 21 Jan 2019 10:12:41 -0600
-Message-ID: <CAL_JsqLn3wCpAWDTQFsrvuPJqWurTDNcu=j988PpHWtuW4Po6w@mail.gmail.com>
-References: <20190109164343.164205-1-tmaimon77@gmail.com> <20190109164343.164205-2-tmaimon77@gmail.com>
- <CACPK8XebHzVAO2TX25N24S0Pgg_0xA=7GN3j0oXhSyD4LmL4=w@mail.gmail.com>
- <CAP6Zq1j=oPdVXZKBteBcaLVZcvoU7M6YbfGhSCaC44Ld9AQ9Ag@mail.gmail.com> <CACPK8XfFRigW9pN4JLrH+KcE6ACJUzX0qJV8xeph_DkfKWgBEQ@mail.gmail.com>
+From: Gregory CLEMENT <gregory.clement@bootlin.com>
+Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
+ bindings
+Date: Mon, 21 Jan 2019 16:47:37 +0100
+Message-ID: <87r2d6ko6e.fsf@FE-laptop>
+References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+ <20190121112336.23489-7-miquel.raynal@bootlin.com>
+ <20190121154451.GA28183@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CACPK8XfFRigW9pN4JLrH+KcE6ACJUzX0qJV8xeph_DkfKWgBEQ@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Joel Stanley <joel@jms.id.au>
-Cc: Tomer Maimon <tmaimon77@gmail.com>, Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, "open list:IIO SUBSYSTEM AND DRIVERS" <linux-iio@vger.kernel.org>, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190121154451.GA28183@bogus> (Rob Herring's message of "Mon, 21
+ Jan 2019 09:44:51 -0600")
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 20, 2019 at 7:48 PM Joel Stanley <joel@jms.id.au> wrote:
->
-> On Sat, 19 Jan 2019 at 02:12, Tomer Maimon <tmaimon77@gmail.com> wrote:
-> >
-> > Hi Joel,
-> >
-> > Thanks for bringing this to my attention,
-> >
-> > I think I will leave it the same way it is now because I will like to develop the reset driver and to handle the NPCM7xx SOC resets.
->
-> You could also do that.
->
-> But I was suggesting you use a phandle, so you could then find the
-> node you want without searching the entire device tree for the node
-> with the correct compatible.
+Hi Rob,
+ 
+ On lun., janv. 21 2019, Rob Herring <robh@kernel.org> wrote:
 
-That's not really any more efficient. You just search the entire tree
-for the matching phandle number instead. Well, that was true until we
-recently added the phandle cache.
+> On Mon, 21 Jan 2019 12:23:32 +0100, Miquel Raynal wrote:
+>> Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
+>> 
+>> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+>> ---
+>>  .../bindings/phy/phy-mvebu-utmi.txt           | 38 +++++++++++++++++++
+>>  1 file changed, 38 insertions(+)
+>>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+>>
 
-In any case, it you plan to move to the reset binding (which would be
-good), then it's better to have nothing in the DT and add something
-rather than change the DT binding.
+I found "marvell,usb2-host-miscellaneous" too generic, I would prefer
+that we call it "marvell,armada-3700-usb2-host-miscellaneous" as we do
+for all the other IP.
 
-Rob
+Gregory
+
+>
+> Reviewed-by: Rob Herring <robh@kernel.org>
+>
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+-- 
+Gregory Clement, Bootlin
+Embedded Linux and Kernel engineering
+http://bootlin.com
