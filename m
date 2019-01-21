@@ -1,66 +1,38 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v2 05/10] phy: add A3700 UTMI PHY driver
-Date: Mon, 21 Jan 2019 11:24:12 +0100
-Message-ID: <20190121112412.24d5c64a@xps13>
-References: <20190111133133.24803-1-miquel.raynal@bootlin.com>
- <20190111133133.24803-6-miquel.raynal@bootlin.com>
- <87zhrxly7f.fsf@FE-laptop>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH v3 2/2] ARM: dts: imx6: Add support for Phytec phyBOARD
+ i.MX6UL Segin
+Date: Mon, 21 Jan 2019 08:33:31 -0200
+Message-ID: <CAOMZO5ADc2-U3AR0eepf619qD1i6-oGrn8p1yb0m3HfWtTPscQ@mail.gmail.com>
+References: <20190121095705.27452-1-martyn.welch@collabora.com> <20190121095705.27452-2-martyn.welch@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <87zhrxly7f.fsf@FE-laptop>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory CLEMENT <gregory.clement@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Igal Liberman <igall@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190121095705.27452-2-martyn.welch@collabora.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Martyn Welch <martyn.welch@collabora.com>
+Cc: Shawn Guo <shawnguo@kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, =?UTF-8?Q?Stefan_Riedm=C3=BCller?= <s.riedmueller@phytec.de>, linux-kernel <linux-kernel@vger.kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Christian Hemp <c.hemp@phytec.de>, Fabio Estevam <fabio.estevam@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgR3JlZ29yeSwKCkdyZWdvcnkgQ0xFTUVOVCA8Z3JlZ29yeS5jbGVtZW50QGJvb3RsaW4uY29t
-PiB3cm90ZSBvbiBGcmksIDE4IEphbiAyMDE5CjE3OjM2OjM2ICswMTAwOgoKPiBIaSBNaXF1ZWws
-Cj4gCj4gSSBoYXZlIG9ubHkgYSBmZXcgc21hbGxpc2ggcmVtYXJrczoKPiAKPiAgT24gdmVuLiwg
-amFudi4gMTEgMjAxOSwgTWlxdWVsIFJheW5hbCA8bWlxdWVsLnJheW5hbEBib290bGluLmNvbT4g
-d3JvdGU6Cj4gCj4gPiBNYXJ2ZWxsIEFybWFkYSAzNzAwIFNvQyBoYXMgdHdvIFVTQiBjb250cm9s
-bGVycywgZWFjaCBvZiB0aGVtIGJlaW5nCj4gPiB3aXJlZCB0byBhbiBpbnRlcm5hbCBVVE1JIFBI
-WS4gQWRkIGEgZHJpdmVyIHRvIGNvbnRyb2wgdGhlbS4KPiA+Cj4gPiBJZ2FsIExpYmVybWFuIHdv
-cmtlZCBvbiBzdXBwb3J0aW5nIHRoZSBQSFksIEkgdG9vayB0aGUgd2hpbGUgJ3JlZ2lzdGVyCj4g
-PiBjb25maWd1cmF0aW9uJyBmcm9tIGhpcyB3b3JrIGFuZCByZXdyb3RlIGFsbW9zdCBlbnRpcmVs
-eSB0aGUKPiA+IGRyaXZlci9iaW5kaW5ncyBhcm91bmQgaXQuCj4gPgo+ID4gQ28tZGV2ZWxvcGVk
-LWJ5OiBJZ2FsIExpYmVybWFuIDxpZ2FsbEBtYXJ2ZWxsLmNvbT4KPiA+IFNpZ25lZC1vZmYtYnk6
-IE1pcXVlbCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiBTaWduZWQtb2Zm
-LWJ5OiBJZ2FsIExpYmVybWFuIDxpZ2FsbEBtYXJ2ZWxsLmNvbT4KPiA+IC0tLSAgCj4gWy4uLl0K
-PiAKPiA+IGRpZmYgLS1naXQgYS9kcml2ZXJzL3BoeS9tYXJ2ZWxsL3BoeS1tdmVidS1hMzcwMC11
-dG1pLmMgYi9kcml2ZXJzL3BoeS9tYXJ2ZWxsL3BoeS1tdmVidS1hMzcwMC11dG1pLmMKPiA+IG5l
-dyBmaWxlIG1vZGUgMTAwNjQ0Cj4gPiBpbmRleCAwMDAwMDAwMDAwMDAuLjk3ZDgyMzVkNjYxZAo+
-ID4gLS0tIC9kZXYvbnVsbAo+ID4gKysrIGIvZHJpdmVycy9waHkvbWFydmVsbC9waHktbXZlYnUt
-YTM3MDAtdXRtaS5jCj4gPiBAQCAtMCwwICsxLDI5NyBAQAo+ID4gKy8vIFNQRFgtTGljZW5zZS1J
-ZGVudGlmaWVyOiBHUEwtMi4wCj4gPiArLyoKPiA+ICsgKiBDb3B5cmlnaHQgKEMpIDIwMTggTWFy
-dmVsbAo+ID4gKyAqCj4gPiArICogQXV0aG9yczoKPiA+ICsgKiAgIEV2YW4gV2FuZyA8eHN3YW5n
-QG1hcnZlbGwuY29tPgo+ID4gKyAqICAgTWlxdcOobCBSYXluYWwgPG1pcXVlbC5yYXluYWxAYm9v
-dGxpbi5jb20+ICAKPiAKPiBJZiBpdCBpcyBjby1kZXZlbG9wZWQgd2l0aCBJZ2FsIExpYmVybWFu
-LCBzaG91bGRuJ3QgYmUgYWRkZWQgaGVyZSB0b28/CgpJbiB0aGUgb3JpZ2luYWwgcGF0Y2gsIHRo
-ZSBhdXRob3IgaW4gdGhlIGNvbW1pdCBsb2cgd2FzIElnYWwgYW5kIHRoZQpNT0RVTEVfQVVUSE9S
-IG1hY3JvIHdhcyBzYXlpbmcgRXZhbi4gSSB0aGluayB0aGUgbWFjcm8gaXMgd3JvbmcsIEkgd2ls
-bAprZWVwIElnYWwuCgo+IFsuLi5dCj4gCj4gPiArc3RhdGljIGludCBtdmVidV9hMzcwMF91dG1p
-X3BoeV9wb3dlcl9vbihzdHJ1Y3QgcGh5ICpwaHkpCj4gPiArewo+ID4gKwlzdHJ1Y3QgbXZlYnVf
-YTM3MDBfdXRtaSAqdXRtaSA9IHBoeV9nZXRfZHJ2ZGF0YShwaHkpOwo+ID4gKwlzdHJ1Y3QgZGV2
-aWNlICpkZXYgPSAmcGh5LT5kZXY7Cj4gPiArCWludCB1c2IzMiA9IHV0bWktPmNhcHMtPnVzYjMy
-Owo+ID4gKwlpbnQgcmV0ID0gMDsKPiA+ICsJdTMyIHJlZzsKPiA+ICsKPiA+ICsJaWYgKCF1dG1p
-KQo+ID4gKwkJcmV0dXJuIC1FTk9ERVY7Cj4gPiArCj4gPiArCS8qCj4gPiArCSAqIFNldHVwIFBM
-TC4gNDBNSHogY2xvY2sgdXNlZCB0byBiZSB0aGUgZGVmYXVsdCwgYmVpbiAyNU1IeiBub3cuICAK
-PiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
-ICAgYmVpbj8KPiA+ICsJICogU2VlICJQTEwgU2V0dGluZ3MgZm9yIFR5cGljYWwgUkVGQ0xLIiB0
-YWJsZS4gIAo+IAo+IFsuLi5dCj4gCj4gPiArCj4gPiArCS8qIFdhaXQgZm9yIHNxdWV0Y2ggY2Fs
-aWJyYXRpb24gKi8gIAo+ICAgICAgICAgICAgICAgICAgICAgc3F1ZXRjaD8KCkdvb2QgY2F0Y2gu
-IEl0J3Mgd3JpdHRlbiAic3F1ZWxjaCIgaW4gdGhlIGRhdGFzaGVldCwgYnV0IEkgZG9uJ3Qga25v
-dwp3aGF0IGl0IG1lYW5zIGV4YWN0bHkuCgoKVGhhbmtzLApNaXF1w6hsCgpfX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVsIG1haWxp
-bmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDovL2xpc3Rz
-LmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Mon, Jan 21, 2019 at 7:57 AM Martyn Welch <martyn.welch@collabora.com> wrote:
+>
+> The Phytec phyBOARD Segin is i.MX6 based SBC, available with either an
+> i.MX6UL or i.MX6ULL SOM and various add-on boards.
+>
+> The following adds support for the "Full Featured" version of the Segin,
+> which is provided with the i.MX6UL SOM and the PEB-EVAL-01 evaluation
+> module.
+>
+> Its hardware specifications are:
+>
+>  * 512MB DDR3 memory
+>  * 512MB NAND flash
+>  * Dual 10/100 Ethernet
+>  * USB Host and USB OTG
+>  * RS232
+>  * MicroSD external storage
+>  * Audio, RS232, I2C, SPI, CAN headers
+>  * Further I/O options via A/V and Expansion headers
+>
+> Signed-off-by: Martyn Welch <martyn.welch@collabora.com>
+
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
