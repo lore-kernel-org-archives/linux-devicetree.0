@@ -1,20 +1,15 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: arm: fsl: Add devicetree binding for
- Oxalis
-Date: Mon, 21 Jan 2019 11:39:50 +0530
-Message-ID: <20190121060950.GA8713@Mani-XPS-13-9360>
-References: <20190114102053.16013-1-manivannan.sadhasivam@linaro.org>
- <20190114102053.16013-3-manivannan.sadhasivam@linaro.org>
- <CAL_JsqJpRPrCpRTpqh1v6JZwpEtZnaeuLTHR+0EiMSoxbk9zeQ@mail.gmail.com>
- <20190116022100.GC15808@dragon>
- <CAL_Jsq+myeZ1n4X=KhHZjtPDHnGH=L65xxYbzMrt8Rq6Bur4Bg@mail.gmail.com>
- <20190116101441.GH15808@dragon>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: Re: [PATCH 1/2] ARM: dts: meson8b: odroidc1: Enable usb phy node
+Date: Mon, 21 Jan 2019 12:07:33 +0530
+Message-ID: <CANAwSgR6gGGx6RgAszwHp+FYeJTdBvMAzc4p4TNpWnFXdxDf4w@mail.gmail.com>
+References: <20190113181808.5768-1-linux.amoon@gmail.com>
+ <CAFBinCCD4o0cXEht_7bgV6moCK2WfVRvZq8UUZD3gDo-TaRKbQ@mail.gmail.com>
+ <CANAwSgQNNRqr3rZRgr71iy7+0zuuYykd+4-1W3LB+Voux6KioQ@mail.gmail.com>
+ <CAFBinCCXufowepJaHgkPwhhNrogXDP-0x0ZS09OGCM=ua-=5MQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/mixed; boundary="00000000000059ee3c057ff219c0"
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190116101441.GH15808@dragon>
+In-Reply-To: <CAFBinCCXufowepJaHgkPwhhNrogXDP-0x0ZS09OGCM=ua-=5MQ@mail.gmail.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -24,80 +19,307 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh+dt@kernel.org>
-Cc: devicetree@vger.kernel.org, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Amit Kucheria <amit.kucheria@linaro.org>, Yang-Leo Li <leoyang.li@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>
+To: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+Cc: devicetree <devicetree@vger.kernel.org>, Neil Armstrong <narmstrong@baylibre.com>, Kevin Hilman <khilman@baylibre.com>, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Emiliano Ingrassia <ingrassia@epigenesys.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Jerome Brunet <jbrunet@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 06:14:43PM +0800, Shawn Guo wrote:
-> On Tue, Jan 15, 2019 at 10:07:12PM -0600, Rob Herring wrote:
-> > On Tue, Jan 15, 2019 at 8:21 PM Shawn Guo <shawnguo@kernel.org> wrote:
+--00000000000059ee3c057ff219c0
+Content-Type: text/plain; charset="UTF-8"
+
+Hi Martin,
+
+Thanks for you comments.
+
+On Mon, 21 Jan 2019 at 03:21, Martin Blumenstingl
+<martin.blumenstingl@googlemail.com> wrote:
+>
+> Hi Anand,
+>
+> On Sun, Jan 20, 2019 at 7:44 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> >
+> > Hi Martin,
+> >
+> > Thanks for your review comments.
+> >
+> > On Sat, 19 Jan 2019 at 03:59, Martin Blumenstingl
+> > <martin.blumenstingl@googlemail.com> wrote:
 > > >
-> > > On Mon, Jan 14, 2019 at 12:02:47PM -0600, Rob Herring wrote:
-> > > > On Mon, Jan 14, 2019 at 4:21 AM Manivannan Sadhasivam
-> > > > <manivannan.sadhasivam@linaro.org> wrote:
-> > > > >
-> > > > > Add devicetree binding for Oxalis board in JSON format. While adding
-> > > > > that, let's fix the description for LS1012A also.
-> > > > >
-> > > > > Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> > > > > ---
-> > > > >  Documentation/devicetree/bindings/arm/fsl.yaml | 3 ++-
-> > > > >  1 file changed, 2 insertions(+), 1 deletion(-)
-> > > > >
-> > > > > diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > > > index d34fe0749199..0f30142fe316 100644
-> > > > > --- a/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > > > +++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-> > > > > @@ -173,12 +173,13 @@ properties:
-> > > > >                - fsl,vf610
-> > > > >                - fsl,vf610m4
-> > > > >
-> > > > > -      - description: LS1021A based Boards
-> > > > > +      - description: LS1012A based Boards
-> > > >
-> > > > Well, yes that was wrong...
-> > > >
-> > > > >          items:
-> > > > >            - enum:
-> > > > >                - fsl,ls1012a-rdb
-> > > > >                - fsl,ls1012a-frdm
-> > > > >                - fsl,ls1012a-qds
-> > > > > +              - ebs-systart,oxalis
-> > > >
-> > > > Sort alphabetically.
-> > > >
-> > > > >            - const: fsl,ls1021a
-> > > >
-> > > > And this is wrong too.
-> > > >
-> > > > I you just change it, then we will be missing an entry for LS1021A.
-> > > > What's the status of that SoC because there is no board dts file? We
-> > > > should not have .dtsi files in the kernel which don't get built.
+> > > Hi Anand,
 > > >
-> > > Hmm, I do not see any LS1021A SoC .dtsi in the tree.  I suspect it's
-> > > just a typo of LS1012A.
+> > > thank you for this patch!
 > > >
-> > > @Leo, do we have a LS1021A SoC?
-> > 
-> > arch/arm/boot/dts/ls1021a.dtsi
-> 
-> Oops, I only searched arm64 folder.
-> 
-> So it seems the compatible of the boards below are missing there.
-> 
->   ls1021a-moxa-uc-8410a.dts
->   ls1021a-qds.dts
->   ls1021a-twr.dts
+> > > On Sun, Jan 13, 2019 at 7:18 PM Anand Moon <linux.amoon@gmail.com> wrote:
+> > > >
+> > > > Add missing vbus-supply link to phy controller for usb_phy0
+> > > > and usb_phy1 nodes, this changes fixed the power issue
+> > > > on usb ports usb, changes help fix usb reset warning.
+> > > I trust you on the fact that GPIOAO_5 controls VBUS of USB0 and USB1
+> > >
+> > > to me the schematics are not 100% clear or I'm bad at interpreting them:
+> > > - I'll refer to odroid-c1+_rev0.4_20150615.pdf
+> > > - page 1 lists GPIOAO.BIT5 as input for the PWREN signal of the
+> > > USB_OTG controller (usb0)
+> > > - page 1 also shows a PWREN signal in the USB_HOST controller (usb1)
+> > > but not it's input
+> > > - based on your patch I assume that PWREN is the same signal for both
+> > > USB controllers
+> > >
+> > As per the schematics odroid-c1+_rev0.4_20150615.pdf
+> >
+> > It seem that their  vbus setting for *OTG* port. *Bus 01.Port 1* using
+> > *GPIOAO.BIT5* gpio
+> that matches my interpretation of the schematics
 
-So how should we proceed here? The above mentioned boards are lacking
-compatible in dts files and I guess that's the reason they didn't get
-mentioned in "fsl" binding file.
+Yep, I feel that GPIOAO.BIT5 enable the PWREN power on  Bus 02.Port (usb1)
+But I could not get this to enable on Bus 01.Port (usb0).
 
-Should I just go ahead and add the compatibles for these boards and list
-them in binding file?
+usb hot-plug of devices is working fine on *usb1* but not on *usb0*.
+I have tried different combination but it's not working for me.
 
-Thanks,
-Mani
+I am attaching small changes to phy which enables the Bus 01.Port
+(usb0) on Odroid C1+/Odroidc2.
+we need to set dr_mode="otg" to enable this bus in dts.
 
-> 
-> Shawn
+>
+> > But we also need set power supply for *USB_B* port. *Bus 02.Port 1* ?
+> > I don't know but I will try to find solution.
+> I assume we also have to enable VBUS for the host only port, but I
+> don't know how
+>
+> > We need to enable some bit in phy driver ?
+> I'm not aware of any bit in the PHY driver which can toggle VBUS
+>
+> (trying to be creative here) maybe the GPIO is incorrectly configured
+> to pull up or down?
+
+I have tried this but no luck.
+
+> if you want me to compare anything: there's some Armbian image (where
+> the USB host ports are working fine) on the eMMC of my Odroid-C1 so I
+> can get you the values you're looking for
+>
+> > > > [  821.991470] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > > > [  825.243385] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > > > [  828.151310] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > > > [  830.991241] usb 1-1.2: reset high-speed USB device number 3 using dwc2
+> > > >
+> > > > Fixes: 2eb79a4d15ff (ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board)
+> > > you already split your original patch into two, however I suggest
+> > > splitting these patches differently:
+> > > - this one (personally I would choose "ARM: dts: meson8b: odroidc1:
+> > > fix USB VBUS supplies" as title), which contains the Fixes tag, adds
+> > > the "usb_vbus" and references it in the "usb0" and "usb1" nodes
+> > > - enables usb0_phy and usb0 as part of your second patch (I would call
+> > > that "ARM: dts: meson8b: odroidc1: enable the OTG capable USB
+> > > controller")
+> >
+> > Ok I will fix this as per you suggestion in the next version.
+> >
+> > >
+> > > > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+> > > > Cc: Jerome Brunet <jbrunet@baylibre.com>
+> > > > Cc: Neil Armstrong <narmstrong@baylibre.com>
+> > > > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
+> > > > ---
+> > > > Rebased on Kevin's amlogic/v5.0/fixes branch
+> > > >
+> > > > [alarm@archl-c1t ~]$ lsusb -t
+> > > > /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> > > >     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+> > > >         |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+> > > >         |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
+> > > >         |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
+> > > >         |__ Port 3: Dev 3, If 2, Class=Audio, Driver=snd-usb-audio, 480M
+> > > >         |__ Port 3: Dev 3, If 3, Class=Audio, Driver=snd-usb-audio, 480M
+> > > > [alarm@archl-c1t ~]$
+> > > > [alarm@archl-c1t ~]$ lsusb -v|egrep "^Bus|MaxPower"
+> > > > Couldn't open device, some information will be missing
+> > > > Bus 001 Device 003: ID 1b71:0056 Fushicai
+> > > >     MaxPower              500mA
+> > > > Couldn't open device, some information will be missing
+> > > > Bus 001 Device 004: ID 152d:0578 JMicron Technology Corp. / JMicron USA Technology Corp. JMS567 SATA 6Gb/s bridge
+> > > >     MaxPower               30mA
+> > > > Couldn't open device, some information will be missing
+> > > > Couldn't open device, some information will be missing
+> > > > Bus 001 Device 002: ID 05e3:0610 Genesys Logic, Inc. 4-port hub
+> > > >     MaxPower              100mA
+> > > > Bus 001 Device 001: ID 1d6b:0002 Linux Foundation 2.0 root hub
+> > > >     MaxPower                0mA
+> > > > ---
+> > > >  arch/arm/boot/dts/meson8b-odroidc1.dts | 23 +++++++++++++++++++++++
+> > > >  1 file changed, 23 insertions(+)
+> > > >
+> > > > diff --git a/arch/arm/boot/dts/meson8b-odroidc1.dts b/arch/arm/boot/dts/meson8b-odroidc1.dts
+> > > > index 0f0a46ddf3ff..a49a8509b288 100644
+> > > > --- a/arch/arm/boot/dts/meson8b-odroidc1.dts
+> > > > +++ b/arch/arm/boot/dts/meson8b-odroidc1.dts
+> > > > @@ -83,6 +83,19 @@
+> > > >                 regulator-max-microvolt = <5000000>;
+> > > >         };
+> > > >
+> > > > +       usb_vbus: regulator-usb-vbus {
+> > > please add a comment here with some details about the regulator and
+> > > add a hint that the signal in the schematics is called "PWREN"
+> > Ok I will add this comment in the next patch.
+> > >
+> > > > +               compatible = "regulator-fixed";
+> > > > +
+> > > > +               regulator-name = "USB_VBUS";
+> > > > +               regulator-min-microvolt = <5000000>;
+> > > > +               regulator-max-microvolt = <5000000>;
+> > > > +
+> > > > +               vin-supply = <&p5v0>;
+> > > > +
+> > > > +               gpio = <&gpio_ao GPIOAO_5 GPIO_ACTIVE_HIGH>;
+> > > > +               enable-active-high;
+> > > > +       };
+> > > > +
+> > > >         tflash_vdd: regulator-tflash_vdd {
+> > > >                 /*
+> > > >                  * signal name from schematics: TFLASH_VDD_EN
+> > > > @@ -293,8 +306,18 @@
+> > > >         pinctrl-names = "default";
+> > > >  };
+> > > >
+> > > > +&usb0_phy {
+> > > > +       status = "okay";
+> > > > +       vbus-supply = <&usb_vbus>;
+> > > > +};
+> > > > +
+> > > >  &usb1_phy {
+> > > >         status = "okay";
+> > > > +       vbus-supply = <&usb_vbus>;
+> > > > +};
+> > > > +
+> > > > +&usb0 {
+> > > > +       status = "okay";
+> > > >  };
+> > > I believe there's a problem with the usb/usb_phy nodes here. on my
+> > > Odroid-C1 this results in:
+> > > # cat /sys/kernel/debug/regulator/regulator_summary | grep USB_VBUS
+> > >    USB_VBUS                      0    0      0 unknown  5000mV     0mA
+> > >  5000mV  5000mV
+> > > (open count is 0)
+> > >
+> > > if I move "vbus-supply" to the "usb1" node (just as an example) then I get:
+> > > # cat /sys/kernel/debug/regulator/regulator_summary | grep USB_VBUS
+> > >    USB_VBUS                      1    1      0 unknown  5000mV     0mA
+> > >  5000mV  5000mV
+> >
+> > Sorry for the mixing the vbus-supply node.
+> >
+> > After fix the phy driver code and dts changes I am getting this changes.
+> > # cat /sys/kernel/debug/regulator/regulator_summary | grep USB_VBUS
+> >     USB_VBUS                      1    2      0 unknown  5000mV
+> > 0mA  5000mV  5000mV
+> >
+> > Now I am able to enable both *Bus 01.Port 1* and *Bus 02.Port 1*
+> >
+> > # lsusb -t
+> > /:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> >     |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+> >         |__ Port 1: Dev 4, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+> >         |__ Port 3: Dev 3, If 0, Class=Video, Driver=uvcvideo, 480M
+> >         |__ Port 3: Dev 3, If 1, Class=Video, Driver=uvcvideo, 480M
+> >         |__ Port 3: Dev 3, If 2, Class=Audio, Driver=snd-usb-audio, 480M
+> >         |__ Port 3: Dev 3, If 3, Class=Audio, Driver=snd-usb-audio, 480M
+> so this is the host-only controller (usb1) and it's working fine for
+> you - very nice!
+>
+> > /:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+> >
+> > But not usb device are getting enable on *Bus 01.Port 1*
+> so you have something plugged into the OTG capable controller (usb0)
+> using an OTG cable?
+
+Yes I have connected USB-OTG cable with storage device attached,
+led lights on the device is blinking, but no power to the port is enable.
+so not hotplug of device is working on this port.
+
+> I've not tried this before on my Odroid-C1 because I'm using the micro
+> USB connector to power the board
+
+Correct me if I am wrong, we need to tune USB phy driver to enable as
+power the board ?
+
+>
+> do you get VBUS (maybe you have a USB thumb drive with an LED which
+> lights up when you connect it)?
+> do you get any errors or warnings from the dwc2 driver during boot?
+>
+
+Please find the boot log of my Odroid C1+ here
+[0]: https://pastebin.com/PiDmVmEC
+
+I dont see any major error on usb side.
+
+> > >
+> > > unfortunately neither your original patch nor the modified version
+> > > seem to enable USB VBUS on my Odroid-C1.
+> > > I have documented my findings already back in December, see "USB
+> > > issues on Odroid-C1" [0]
+> > > help on that would be highly appreciated :)
+> > >
+> > > on which board revision have you tested this patch?
+> > >
+> >
+> > I have with me for testing
+> >
+> > ODROID-C0 REV 0.4 20151217
+> > ODROID-C1+ REV 0.4 20150615 ----> current testing on
+> I have the exact same Odroid-C1+ board revision
+> this is my u-boot version:
+> U-boot-00000-gb7b8dc2-dirty(odroidc@b7b8dc21) (Sep 01 2017 - 01:18:22)
+> -> b7b8dc21 is the lastest commit of the hardkernel odroidc-v2011.03
+> u-boot branch at the time of writing
+>
+
+I am using the the u-boot from archlinux.
+If their is another u-boot for Odroid c1 plz let me know, I will try
+to install this on my system.
+
+Thanks for your input.
+
+>
+> Regards
+> Martin
+
+--00000000000059ee3c057ff219c0
+Content-Type: application/octet-stream; name="otgbusport0.patch"
+Content-Disposition: attachment; filename="otgbusport0.patch"
+Content-Transfer-Encoding: base64
+Content-ID: <f_jr5xh54n0>
+X-Attachment-Id: f_jr5xh54n0
+
+ZGlmZiAtLWdpdCBhL2RyaXZlcnMvcGh5L2FtbG9naWMvcGh5LW1lc29uOGItdXNiMi5jIGIvZHJp
+dmVycy9waHkvYW1sb2dpYy9waHktbWVzb244Yi11c2IyLmMKaW5kZXggOWMwMWI3ZTE5YjA2Li4x
+MzMzYzc3ZTkxNzIgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvcGh5L2FtbG9naWMvcGh5LW1lc29uOGIt
+dXNiMi5jCisrKyBiL2RyaXZlcnMvcGh5L2FtbG9naWMvcGh5LW1lc29uOGItdXNiMi5jCkBAIC0x
+MDksNiArMTA5LDcgQEAKIAogI2RlZmluZSBSRVNFVF9DT01QTEVURV9USU1FCQkJCTUwMAogI2Rl
+ZmluZSBBQ0FfRU5BQkxFX0NPTVBMRVRFX1RJTUUJCQk1MAorI2RlZmluZSBEQ0RfRU5BQkxFX0NP
+TVBMRVRFX1RJTUUJCQkxMAogCiBzdHJ1Y3QgcGh5X21lc29uOGJfdXNiMl9wcml2IHsKIAl2b2lk
+IF9faW9tZW0JCSpyZWdzOwpAQCAtMTg4LDYgKzE4OSwyMCBAQCBzdGF0aWMgaW50IHBoeV9tZXNv
+bjhiX3VzYjJfcG93ZXJfb24oc3RydWN0IHBoeSAqcGh5KQogCiAJCXVkZWxheShBQ0FfRU5BQkxF
+X0NPTVBMRVRFX1RJTUUpOwogCisJCWlmIChwaHlfbWVzb244Yl91c2IyX3JlYWQocHJpdiwgUkVH
+X0FEUF9CQykgJgorCQkJUkVHX0FEUF9CQ19BQ0FfUElOX0ZMT0FUKSB7CisJCQlkZXZfd2Fybigm
+cGh5LT5kZXYsICJVU0IgSUQgZGV0ZWN0IGZhaWxlZCFcbiIpOworCQkJY2xrX2Rpc2FibGVfdW5w
+cmVwYXJlKHByaXYtPmNsa191c2IpOworCQkJY2xrX2Rpc2FibGVfdW5wcmVwYXJlKHByaXYtPmNs
+a191c2JfZ2VuZXJhbCk7CisJCQlyZXR1cm4gLUVJTlZBTDsKKwkJfQorCX0gZWxzZSBpZiAocHJp
+di0+ZHJfbW9kZSA9PSBVU0JfRFJfTU9ERV9PVEcpIHsKKwkJcGh5X21lc29uOGJfdXNiMl9tYXNr
+X2JpdHMocHJpdiwgUkVHX0FEUF9CQywKKwkJCQkJICAgUkVHX0FEUF9CQ19EQ0RfRU5BQkxFLAor
+CQkJCQkgICBSRUdfQURQX0JDX0RDRF9FTkFCTEUpOworCisJCXVkZWxheShEQ0RfRU5BQkxFX0NP
+TVBMRVRFX1RJTUUpOworCiAJCWlmIChwaHlfbWVzb244Yl91c2IyX3JlYWQocHJpdiwgUkVHX0FE
+UF9CQykgJgogCQkJUkVHX0FEUF9CQ19BQ0FfUElOX0ZMT0FUKSB7CiAJCQlkZXZfd2FybigmcGh5
+LT5kZXYsICJVU0IgSUQgZGV0ZWN0IGZhaWxlZCFcbiIpOwo=
+--00000000000059ee3c057ff219c0
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+
+_______________________________________________
+linux-arm-kernel mailing list
+linux-arm-kernel@lists.infradead.org
+http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+
+--00000000000059ee3c057ff219c0--
