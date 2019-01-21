@@ -1,156 +1,157 @@
-From: Yangbo Lu <yangbo.lu@nxp.com>
-Subject: [v3, 1/6] ptp_qoriq: fix interrupt enabling and handling
-Date: Mon, 21 Jan 2019 18:41:38 +0800
-Message-ID: <20190121104143.46782-2-yangbo.lu@nxp.com>
-References: <20190121104143.46782-1-yangbo.lu@nxp.com>
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190121104143.46782-1-yangbo.lu@nxp.com>
-Sender: netdev-owner@vger.kernel.org
-To: netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: "David S . Miller" <davem@davemloft.net>, Richard Cochran <richardcochran@gmail.com>, Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Yangbo Lu <yangbo.lu@nxp.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 2/3] dt-bindings: phy: ti: Add dt binding documentation
+ for SERDES in AM654x SoC
+Date: Mon, 21 Jan 2019 16:17:38 +0530
+Message-ID: <b619ace8-f2be-8eb0-080e-0ae7a43799df@ti.com>
+References: <20190121064813.18444-1-kishon@ti.com>
+ <20190121064813.18444-3-kishon@ti.com> <5C4596F8.7030009@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <5C4596F8.7030009@ti.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Roger Quadros <rogerq@ti.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Sekhar Nori <nsekhar@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The tmr_tevent register would update event bits
-no matter tmr_temask bits were set or not. So we
-should get interrupts by tmr_tevent & tmr_temask,
-and clean up interrupts in tmr_tevent before
-enabling them.
+Hi Roger,
 
-Signed-off-by: Yangbo Lu <yangbo.lu@nxp.com>
----
-Changes for v2:
-	- Remove useless lock/register operations.
-Changes for v3:
-	- None.
----
- drivers/ptp/ptp_qoriq.c |   62 +++++++++++++++++++++++-----------------------
- 1 files changed, 31 insertions(+), 31 deletions(-)
+On 21/01/19 3:25 PM, Roger Quadros wrote:
+> Kishon,
+> 
+> On 21/01/19 08:48, Kishon Vijay Abraham I wrote:
+>> AM654x has two SERDES instances. Each instance has three input clocks
+>> (left input, externel reference clock and right input) and two output
+>> clocks (left output and right output) in addition to a PLL mux clock
+>> which the SERDES uses for Clock Multiplier Unit (CMU refclock).
+>> The PLL mux clock can select from one of the three input clocks.
+>> The right output can select between left input and external reference
+>> clock while the left output can select between the right input and
+>> external reference clock.
+>>
+>> The left and right input reference clock of SERDES0 and SERDES1
+>> respectively are connected to the SoC clock. In the case of two lane
+>> SERDES personality card, the left input of SERDES1 is connected to
+>> the right output of SERDES0 in a chained fashion.
+>>
+>> See section "Reference Clock Distribution" of AM65x Sitara Processors
+>> TRM (SPRUID7 – April 2018) for more details.
+>>
+>> Add dt-binding documentation in order to represent all these different
+>> configurations in device tree.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  .../devicetree/bindings/phy/ti-phy.txt        | 77 +++++++++++++++++++
+>>  include/dt-bindings/phy/phy-am654-serdes.h    | 13 ++++
+>>  2 files changed, 90 insertions(+)
+>>  create mode 100644 include/dt-bindings/phy/phy-am654-serdes.h
+>>
+>> diff --git a/Documentation/devicetree/bindings/phy/ti-phy.txt b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> index 57dfda8a7a1d..fc2fff6b2c37 100644
+>> --- a/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> +++ b/Documentation/devicetree/bindings/phy/ti-phy.txt
+>> @@ -132,3 +132,80 @@ sata_phy: phy@4a096000 {
+>>  	syscon-pllreset = <&scm_conf 0x3fc>;
+>>  	#phy-cells = <0>;
+>>  };
+>> +
+>> +
+>> +TI AM654 SERDES
+>> +
+>> +Required properties:
+>> + - compatible: Should be "ti,phy-am654-serdes"
+>> + - reg : Address and length of the register set for the device.
+>> + - reg-names: Should be "serdes" which corresponds to the register space
+>> +	populated in "reg".
+>> + - #phy-cells: determine the number of cells that should be given in the
+>> +	phandle while referencing this phy. Should be "2". The 1st cell
+>> +	corresponds to the phy type (should be one of the types specified in
+>> +	include/dt-bindings/phy/phy.h) and the 2nd cell should be the serdes
+>> +	lane function.
+>> +	If SERDES0 is referenced 2nd cell should be:
+>> +		0 - USB3
+>> +		1 - PCIe0 Lane0
+>> +		2 - ICSS2 SGMII Lane0
+>> +	If SERDES1 is referenced 2nd cell should be:
+>> +		0 - PCIe1 Lane0
+>> +		1 - PCIe0 Lane1
+>> +		2 - ICSS2 SGMII Lane1
+> 
+> Can we have a way to change default lane at probe time without having any user dependencies.
+> 
+> e.g. To work in USB2.0 mode I don't want SERDES0 to be in lane 0 (which is SoC default).
+> But at the same time the application might not be using PCIe or SGMII, so there is no
+> PHY user to change the lane to 1 or 2.
+> 
+> A DT property to allow selection of a default lane at probe time would help
+Ideally we should be disabling the module that is not used ("status" property
+of SERDES0 dt would be "disabled"). So there is no guarantee SERDES will be probed.
 
-diff --git a/drivers/ptp/ptp_qoriq.c b/drivers/ptp/ptp_qoriq.c
-index fdd49c2..2743214 100644
---- a/drivers/ptp/ptp_qoriq.c
-+++ b/drivers/ptp/ptp_qoriq.c
-@@ -98,11 +98,18 @@ static irqreturn_t isr(int irq, void *priv)
- 	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
- 	struct ptp_clock_event event;
- 	u64 ns;
--	u32 ack = 0, lo, hi, mask, val;
-+	u32 ack = 0, lo, hi, mask, val, irqs;
-+
-+	spin_lock(&qoriq_ptp->lock);
- 
- 	val = qoriq_read(&regs->ctrl_regs->tmr_tevent);
-+	mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
-+
-+	spin_unlock(&qoriq_ptp->lock);
-+
-+	irqs = val & mask;
- 
--	if (val & ETS1) {
-+	if (irqs & ETS1) {
- 		ack |= ETS1;
- 		hi = qoriq_read(&regs->etts_regs->tmr_etts1_h);
- 		lo = qoriq_read(&regs->etts_regs->tmr_etts1_l);
-@@ -113,7 +120,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
--	if (val & ETS2) {
-+	if (irqs & ETS2) {
- 		ack |= ETS2;
- 		hi = qoriq_read(&regs->etts_regs->tmr_etts2_h);
- 		lo = qoriq_read(&regs->etts_regs->tmr_etts2_l);
-@@ -124,7 +131,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		ptp_clock_event(qoriq_ptp->clock, &event);
- 	}
- 
--	if (val & ALM2) {
-+	if (irqs & ALM2) {
- 		ack |= ALM2;
- 		if (qoriq_ptp->alarm_value) {
- 			event.type = PTP_CLOCK_ALARM;
-@@ -136,13 +143,10 @@ static irqreturn_t isr(int irq, void *priv)
- 			ns = qoriq_ptp->alarm_value + qoriq_ptp->alarm_interval;
- 			hi = ns >> 32;
- 			lo = ns & 0xffffffff;
--			spin_lock(&qoriq_ptp->lock);
- 			qoriq_write(&regs->alarm_regs->tmr_alarm2_l, lo);
- 			qoriq_write(&regs->alarm_regs->tmr_alarm2_h, hi);
--			spin_unlock(&qoriq_ptp->lock);
- 			qoriq_ptp->alarm_value = ns;
- 		} else {
--			qoriq_write(&regs->ctrl_regs->tmr_tevent, ALM2);
- 			spin_lock(&qoriq_ptp->lock);
- 			mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
- 			mask &= ~ALM2EN;
-@@ -153,7 +157,7 @@ static irqreturn_t isr(int irq, void *priv)
- 		}
- 	}
- 
--	if (val & PP1) {
-+	if (irqs & PP1) {
- 		ack |= PP1;
- 		event.type = PTP_CLOCK_PPS;
- 		ptp_clock_event(qoriq_ptp->clock, &event);
-@@ -260,7 +264,7 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 	struct qoriq_ptp *qoriq_ptp = container_of(ptp, struct qoriq_ptp, caps);
- 	struct qoriq_ptp_registers *regs = &qoriq_ptp->regs;
- 	unsigned long flags;
--	u32 bit, mask;
-+	u32 bit, mask = 0;
- 
- 	switch (rq->type) {
- 	case PTP_CLK_REQ_EXTTS:
-@@ -274,32 +278,28 @@ static int ptp_qoriq_enable(struct ptp_clock_info *ptp,
- 		default:
- 			return -EINVAL;
- 		}
--		spin_lock_irqsave(&qoriq_ptp->lock, flags);
--		mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
--		if (on)
--			mask |= bit;
--		else
--			mask &= ~bit;
--		qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
--		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
--		return 0;
--
-+		break;
- 	case PTP_CLK_REQ_PPS:
--		spin_lock_irqsave(&qoriq_ptp->lock, flags);
--		mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
--		if (on)
--			mask |= PP1EN;
--		else
--			mask &= ~PP1EN;
--		qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
--		spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
--		return 0;
--
--	default:
-+		bit = PP1EN;
- 		break;
-+	default:
-+		return -EOPNOTSUPP;
- 	}
- 
--	return -EOPNOTSUPP;
-+	spin_lock_irqsave(&qoriq_ptp->lock, flags);
-+
-+	mask = qoriq_read(&regs->ctrl_regs->tmr_temask);
-+	if (on) {
-+		mask |= bit;
-+		qoriq_write(&regs->ctrl_regs->tmr_tevent, bit);
-+	} else {
-+		mask &= ~bit;
-+	}
-+
-+	qoriq_write(&regs->ctrl_regs->tmr_temask, mask);
-+
-+	spin_unlock_irqrestore(&qoriq_ptp->lock, flags);
-+	return 0;
- }
- 
- static const struct ptp_clock_info ptp_qoriq_caps = {
--- 
-1.7.1
+
+> 
+> 
+>> + - clocks: List of clock-specifiers representing the input to the SERDES.
+>> +	Should have 3 items representing the left input clock, external
+>> +	reference clock and right input clock in that order.
+>> + - clock-output-names: List of clock names for each of the clock outputs of
+>> +	SERDES. Should have 3 items for CMU reference clock,
+>> +	left output clock and right output clock in that order.
+>> + - assigned-clocks: As defined in
+>> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> + - assigned-clock-parents: As defined in
+>> +	Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> + - #clock-cells: Should be <1> to choose between the 3 output clocks.
+>> +	Defined in Documentation/devicetree/bindings/clock/clock-bindings.txt
+>> +
+>> +   The following macros are defined in dt-bindings/phy/phy-am654-serdes.h
+>> +   for selecting the correct reference clock. This can be used while
+>> +   specifying the clocks created by SERDES.
+>> +	=> AM654_SERDES_CMU_REFCLK
+>> +	=> AM654_SERDES_LO_REFCLK
+>> +	=> AM654_SERDES_RO_REFCLK
+>> +
+>> + - mux-controls: phandle to the multiplexer
+>> +
+>> +Example:
+>> +
+>> +Example for SERDES0 is given below. It has 3 clock inputs;
+>> +left input reference clock as indicated by <&k3_clks 153 4>, external
+>> +reference clock as indicated by <&k3_clks 153 1> and right input
+>> +reference clock as indicated by <&serdes1 AM654_SERDES_LO_REFCLK>. (The
+>> +right input of SERDES0 is connected to the left output of SERDES1).
+>> +
+>> +SERDES0 registers 3 clock outputs as indicated in clock-output-names. The
+>> +first refers to the CMU reference clock, second refers to the left output
+>> +reference clock and the third refers to the right output reference clock.
+>> +
+>> +The assigned-clocks and assigned-clock-parents is used here to set the
+>> +parent of left input reference clock to MAINHSDIV_CLKOUT4 and parent of
+>> +CMU reference clock to left input reference clock.
+>> +
+>> +serdes0: serdes@900000 {
+>> +	compatible = "ti,phy-am654-serdes";
+>> +	reg = <0x0 0x900000 0x0 0x2000>;
+>> +	reg-names = "serdes";
+>> +	#phy-cells = <2>;
+>> +	power-domains = <&k3_pds 153>;
+>> +	clocks = <&k3_clks 153 4>, <&k3_clks 153 1>,
+>> +			<&serdes1 AM654_SERDES_LO_REFCLK>;
+>> +	clock-output-names = "serdes0_cmu_refclk", "serdes0_lo_refclk",
+>> +				"serdes0_ro_refclk";
+>> +	assigned-clocks = <&k3_clks 153 4>, <&serdes0 AM654_SERDES_CMU_REFCLK>;
+>> +	assigned-clock-parents = <&k3_clks 153 8>, <&k3_clks 153 4>;
+>> +	ti,serdes-clk = <&serdes0_clk>;
+>> +	mux-controls = <&serdes_mux 0>;
+>> +	#clock-cells = <1>;
+>> +	status = "disabled";
+> 
+> We don't keep status "disabled" for AM6. All nodes are enabled by default.
+
+Should all nodes be enabled by default? Is it not based on the features
+supported by the EVM?
+
+Thanks
+Kishon
