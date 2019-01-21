@@ -1,39 +1,30 @@
-From: Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Subject: Re: [PATCH v1 07/12] usb: roles: Find the usb role switch by also
- matching against the device node
-Date: Mon, 21 Jan 2019 15:51:35 +0200
-Message-ID: <20190121135135.GA22960@kuha.fi.intel.com>
-References: <20181203034515.91412-1-chenyu56@huawei.com>
- <20181203034515.91412-8-chenyu56@huawei.com>
- <CAHp75VfUKAQ+Q0cQz-4-=i2JL9uACBX1bVvCeNjZLL1HStDGKQ@mail.gmail.com>
- <20181203122534.GD24338@kuha.fi.intel.com>
- <e9a8f745-6211-d6d2-24f0-ac86f82924f0@huawei.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v10 3/3] dt-bindings: dma: uart: rename binding
+Date: Mon, 21 Jan 2019 08:18:16 -0600
+Message-ID: <20190121141816.GA18109@bogus>
+References: <1547781016-890-1-git-send-email-long.cheng@mediatek.com>
+ <1547781016-890-4-git-send-email-long.cheng@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <e9a8f745-6211-d6d2-24f0-ac86f82924f0@huawei.com>
+In-Reply-To: <1547781016-890-4-git-send-email-long.cheng@mediatek.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Chen Yu <chenyu56@huawei.com>
-Cc: Andy Shevchenko <andy.shevchenko@gmail.com>, liuyu712@hisilicon.com, USB <linux-usb@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Suzhuangluan <suzhuangluan@hisilicon.com>, Kongfei <kongfei@hisilicon.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Hans de Goede <hdegoede@redhat.com>, John Stultz <john.stultz@linaro.org>
+To: Long Cheng <long.cheng@mediatek.com>
+Cc: Vinod Koul <vkoul@kernel.org>, Randy Dunlap <rdunlap@infradead.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ryder Lee <ryder.lee@mediatek.com>, Sean Wang <sean.wang@kernel.org>, Nicolas Boichat <drinkcat@chromium.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Sean Wang <sean.wang@mediatek.com>, dmaengine@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, srv_heupstream@mediatek.com, Yingjoe Chen <yingjoe.chen@mediatek.com>, YT Shen <yt.shen@mediatek.com>, Zhenbao Liu <zhenb>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Fri, 18 Jan 2019 11:10:16 +0800, Long Cheng wrote:
+> The filename matches mtk-uart-apdma.c.
+> So using "mtk-uart-apdma.txt" should be better.
+> 
+> Signed-off-by: Long Cheng <long.cheng@mediatek.com>
+> ---
+>  .../devicetree/bindings/dma/8250_mtk_dma.txt       |   33 --------------------
+>  .../devicetree/bindings/dma/mtk-uart-apdma.txt     |   33 ++++++++++++++++++++
+>  2 files changed, 33 insertions(+), 33 deletions(-)
+>  delete mode 100644 Documentation/devicetree/bindings/dma/8250_mtk_dma.txt
+>  create mode 100644 Documentation/devicetree/bindings/dma/mtk-uart-apdma.txt
+> 
 
-On Mon, Jan 21, 2019 at 04:36:13PM +0800, Chen Yu wrote:
-> Have the fwnode_get_name() patches been accepted?
-
-No, I didn't have a user for the function anymore:
-https://lkml.org/lkml/2018/12/17/284
-
-> And I will be grateful if you can tell me your plan about the
-> https://lkml.org/lkml/2018/10/24/619 patches.
-
-The plan is to send a new version of them together with the
-fwnode_get_name() patch. I can send them this week.
-
-
-thanks,
-
--- 
-heikki
+Reviewed-by: Rob Herring <robh@kernel.org>
