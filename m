@@ -1,146 +1,189 @@
-From: Kishon Vijay Abraham I <kishon@ti.com>
-Subject: Re: [PATCH v5 2/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy
- core
-Date: Mon, 21 Jan 2019 11:15:35 +0530
-Message-ID: <6f0c2f35-f6cd-88ec-32b9-9be247fab4e5@ti.com>
-References: <1545140733-20689-1-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <1545140733-20689-3-git-send-email-anurag.kumar.vulisha@xilinx.com>
- <b521679a-0c79-44b1-8a2b-1f3391a362ae@ti.com>
- <BYAPR02MB5591E4BF4C547C3E29D9CF8AA7830@BYAPR02MB5591.namprd02.prod.outlook.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: Re: [PATCH v3 2/2] mtd: spi-nor: cadence-quadspi: Add support for
+ Octal SPI controller
+Date: Mon, 21 Jan 2019 11:28:30 +0530
+Message-ID: <1fc56694-fdac-ea99-79d3-cd0fad196c3c@ti.com>
+References: <20190116103027.22657-1-vigneshr@ti.com>
+ <20190116103027.22657-3-vigneshr@ti.com>
+ <6e6f7c3a-4772-1a17-0f5f-547ea9809283@microchip.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <BYAPR02MB5591E4BF4C547C3E29D9CF8AA7830@BYAPR02MB5591.namprd02.prod.outlook.com>
+Return-path: <linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org>
+In-Reply-To: <6e6f7c3a-4772-1a17-0f5f-547ea9809283@microchip.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Anurag Kumar Vulisha <anuragku@xilinx.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "vivek.gautam@codeaurora.org" <vivek.gautam@codeaurora.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ajay Yugalkishore Pandey <APANDEY@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, sundeep subbaraya <sundeep.lkml@gmail.com>, Michal Simek <michals@xilinx.com>, "v.anuragkumar@gmail.com" <v.anuragkumar@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-mtd/>
+List-Post: <mailto:linux-mtd@lists.infradead.org>
+List-Help: <mailto:linux-mtd-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-mtd>,
+ <mailto:linux-mtd-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-mtd" <linux-mtd-bounces@lists.infradead.org>
+Errors-To: linux-mtd-bounces+gldm-linux-mtd-36=gmane.org@lists.infradead.org
+To: "Tudor.Ambarus@microchip.com" <Tudor.Ambarus@microchip.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>
+Cc: "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Anurag,
+Hi, Tudor,
 
-On 17/01/19 9:39 PM, Anurag Kumar Vulisha wrote:
-> Hi Kishon,
+On 20/01/19 8:26 PM, Tudor.Ambarus@microchip.com wrote:
+> Hi, Vignesh,
 > 
->> -----Original Message-----
->> From: Kishon Vijay Abraham I [mailto:kishon@ti.com]
->> Sent: Wednesday, January 16, 2019 1:38 PM
->> To: Anurag Kumar Vulisha <anuragku@xilinx.com>; robh+dt@kernel.org; Mark
->> Rutland <mark.rutland@arm.com>; vivek.gautam@codeaurora.org
->> Cc: Michal Simek <michals@xilinx.com>; v.anuragkumar@gmail.com; sundeep
->> subbaraya <sundeep.lkml@gmail.com>; Ajay Yugalkishore Pandey
->> <APANDEY@xilinx.com>; linux-kernel@vger.kernel.org; linux-arm-
->> kernel@lists.infradead.org; devicetree@vger.kernel.org
->> Subject: Re: [PATCH v5 2/2] phy: zynqmp: Add phy driver for xilinx zynqmp phy core
+> On 01/16/2019 12:30 PM, Vignesh R wrote:
+>> Cadence OSPI controller IP supports Octal IO (x8 IO lines),
+>> It also has an integrated PHY. IP register layout is very
+>> similar to existing QSPI IP except for additional bits to support Octal
+>> and Octal DDR mode. Therefore, extend current driver to support Octal
+>> mode.
 >>
->> Hi,
+>> Signed-off-by: Vignesh R <vigneshr@ti.com>
+>> ---
+>> v3: No changes
 >>
->> On 18/12/18 7:15 PM, Anurag Kumar Vulisha wrote:
->>> ZynqMP SoC has a Gigabit Transceiver with four lanes. All the high
->>> speed peripherals such as USB, SATA, PCIE, Display Port and Ethernet
->>> SGMII can rely on any of the four GT lanes for PHY layer. This patch
->>> adds driver for that ZynqMP GT core.
->>>
->>> Signed-off-by: Anurag Kumar Vulisha <anurag.kumar.vulisha@xilinx.com>
->>> ---
->>> Changes in v5:
->>> 	1. No functional changes. Added missing Author name
->>>
->>> Changes in v4:
->>> 	1. Moved include/dt-bindings/phy/phy.h into patch 1 as suggested by
->>> 	   "Rob Herring"
->>>
->>> Changes in v3:
->>> 	1. Corrected the Documentation as suggested by "Vivek Gautam"
->>>
->>> Changes in v2:
->>> 	1. Fixed the compilation error when compiled phy-zynqmp.c as a module
->>> 	2. Added CONFIG_PM macro in phy-zynqmp.c driver
->>> ---
->>>  drivers/phy/Kconfig            |    8 +
->>>  drivers/phy/Makefile           |    1 +
->>>  drivers/phy/phy-zynqmp.c       | 1582
->> ++++++++++++++++++++++++++++++++++++++++
->>>  include/linux/phy/phy-zynqmp.h |   52 ++
->>>  4 files changed, 1643 insertions(+)
->>>  create mode 100644 drivers/phy/phy-zynqmp.c  create mode 100644
->>> include/linux/phy/phy-zynqmp.h
->>>
->>> diff --git a/drivers/phy/Kconfig b/drivers/phy/Kconfig index
->>> 60f949e..7a3c900 100644
->>> --- a/drivers/phy/Kconfig
->>> +++ b/drivers/phy/Kconfig
->>> @@ -40,6 +40,14 @@ config PHY_XGENE
->>>  	help
->>>  	  This option enables support for APM X-Gene SoC multi-purpose PHY.
->>>
->>> +config PHY_XILINX_ZYNQMP
->>> +	tristate "Xilinx ZynqMP PHY driver"
->>> +	depends on ARCH_ZYNQMP
->>> +	select GENERIC_PHY
->>> +	help
->>> +	  Enable this to support ZynqMP High Speed Gigabit Transceiver
->>> +	  that is part of ZynqMP SoC.
->>> +
->>>  source "drivers/phy/allwinner/Kconfig"
->>>  source "drivers/phy/amlogic/Kconfig"
->>>  source "drivers/phy/broadcom/Kconfig"
->>> diff --git a/drivers/phy/Makefile b/drivers/phy/Makefile index
->>> 0301e25..2335e85 100644
->>> --- a/drivers/phy/Makefile
->>> +++ b/drivers/phy/Makefile
->>> +/**
->>> +
->>> +/**
->>> + * xpsgtr_override_deemph - override PIPE TX de-emphasis
->>> + * @phy: pointer to phy
->>> + * @plvl: pre-emphasis level
->>> + * @vlvl: voltage swing level
->>> + *
->>> + * Return: None
->>> + */
->>> +void xpsgtr_override_deemph(struct phy *phy, u8 plvl, u8 vlvl) {
->>> +	struct xpsgtr_phy *gtr_phy = phy_get_drvdata(phy);
->>> +	struct xpsgtr_dev *gtr_dev = gtr_phy->data;
->>> +	static u8 pe[4][4] = { { 0x2, 0x2, 0x2, 0x2 },
->>> +			       { 0x1, 0x1, 0x1, 0xFF },
->>> +			       { 0x0, 0x0, 0xFF, 0xFF },
->>> +			       { 0xFF, 0xFF, 0xFF, 0xFF } };
->>> +
->>> +	writel(pe[plvl][vlvl],
->>> +	       gtr_dev->serdes + gtr_phy->lane * L0_TX_ANA_TM_18_OFFSET +
->>> +	       L0_TX_ANA_TM_18);
->>> +}
->>> +EXPORT_SYMBOL_GPL(xpsgtr_override_deemph);
+>> v2:
+>> Declare Octal mode capability based on compatible.
 >>
->> I thought I gave a feedback to get rid of export symbol. This will make the consumer
->> driver tied to this PHY driver.
+>>  drivers/mtd/spi-nor/cadence-quadspi.c | 54 +++++++++++++++++++++------
+>>  1 file changed, 42 insertions(+), 12 deletions(-)
 >>
+>> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+>> index 04cedd3a2bf6..31ed50f78972 100644
+>> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+>> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+>> @@ -93,6 +93,11 @@ struct cqspi_st {
+>>  	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+>>  };
+>>  
+>> +struct cqspi_driver_platdata {
+>> +	u32 hwcaps_mask;
+>> +	u8 quirks;
+>> +};
+>> +
+>>  /* Operation timeout value */
+>>  #define CQSPI_TIMEOUT_MS			500
+>>  #define CQSPI_READ_TIMEOUT_MS			10
+>> @@ -101,6 +106,7 @@ struct cqspi_st {
+>>  #define CQSPI_INST_TYPE_SINGLE			0
+>>  #define CQSPI_INST_TYPE_DUAL			1
+>>  #define CQSPI_INST_TYPE_QUAD			2
+>> +#define CQSPI_INST_TYPE_OCTAL			3
+>>  
+>>  #define CQSPI_DUMMY_CLKS_PER_BYTE		8
+>>  #define CQSPI_DUMMY_BYTES_MAX			4
+>> @@ -911,6 +917,9 @@ static int cqspi_set_protocol(struct spi_nor *nor, const int read)
+>>  		case SNOR_PROTO_1_1_4:
+>>  			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
+>>  			break;
+>> +		case SNOR_PROTO_1_1_8:
+>> +			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
+>> +			break;
+>>  		default:
+>>  			return -EINVAL;
+>>  		}
+>> @@ -1213,21 +1222,19 @@ static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+>>  
+>>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>>  {
+>> -	const struct spi_nor_hwcaps hwcaps = {
+>> -		.mask = SNOR_HWCAPS_READ |
+>> -			SNOR_HWCAPS_READ_FAST |
+>> -			SNOR_HWCAPS_READ_1_1_2 |
+>> -			SNOR_HWCAPS_READ_1_1_4 |
+>> -			SNOR_HWCAPS_PP,
+>> -	};
+>>  	struct platform_device *pdev = cqspi->pdev;
+>>  	struct device *dev = &pdev->dev;
+>> +	struct cqspi_driver_platdata *ddata;
 > 
-> Thanks a lot for spending your time in reviewing this patch. With the current implementation,
-> if phy-zynqmp.c driver is not compiled and consumer driver calls xpsgtr_override_deemph()
-> routine, static inline function in phy-zynqmp.h gets called and error -ENODEV is returned. So,
-> with the current implementation the consumer driver is already depending on phy-zynqmp.c
-> driver. Please correct me if  my understanding is wrong
+> const struct cqspi_driver_platdata *ddata;
+> 
+>> +	struct spi_nor_hwcaps hwcaps;
+>>  	struct cqspi_flash_pdata *f_pdata;
+>>  	struct spi_nor *nor;
+>>  	struct mtd_info *mtd;
+>>  	unsigned int cs;
+>>  	int i, ret;
+>>  
+>> +	ddata = (struct cqspi_driver_platdata *)of_device_get_match_data(dev);
+> 
+> You forgot to check for NULL. Also, I would expect an implicit type cast, you
+> can drop the explicit cast.
+> 
+>> +	hwcaps.mask = ddata->hwcaps_mask;
+>> +
+>>  	/* Get flash device data */
+>>  	for_each_available_child_of_node(dev->of_node, np) {
+>>  		ret = of_property_read_u32(np, "reg", &cs);
+>> @@ -1310,7 +1317,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>>  	struct cqspi_st *cqspi;
+>>  	struct resource *res;
+>>  	struct resource *res_ahb;
+>> -	unsigned long data;
+>> +	struct cqspi_driver_platdata *ddata;
+> 
+> const struct cqspi_driver_platdata *ddata;
+> 
+>>  	int ret;
+>>  	int irq;
+>>  
+>> @@ -1377,8 +1384,8 @@ static int cqspi_probe(struct platform_device *pdev)
+>>  	}
+>>  
+>>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+>> -	data  = (unsigned long)of_device_get_match_data(dev);
+>> -	if (data & CQSPI_NEEDS_WR_DELAY)
+>> +	ddata  = (struct cqspi_driver_platdata *)of_device_get_match_data(dev);
+> 
+> I would expect an implicit type cast, you can drop the explicit cast.
+> 
+>> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
+>>  		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+>>  						   cqspi->master_ref_clk_hz);
+>>  
+>> @@ -1460,14 +1467,37 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
+>>  #define CQSPI_DEV_PM_OPS	NULL
+>>  #endif
+>>  
+>> +#define cqspi_base_hwcaps_mask					\
+>> +	(SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST |		\
+>> +	SNOR_HWCAPS_READ_1_1_2 | SNOR_HWCAPS_READ_1_1_4 |	\
+>> +	SNOR_HWCAPS_PP)
+>> +
+>> +static const struct cqspi_driver_platdata cdns_qspi = {
+>> +	.hwcaps_mask = cqspi_base_hwcaps_mask,
+>> +};
+>> +
+>> +static const struct cqspi_driver_platdata k2g_qspi = {
+>> +	.hwcaps_mask = cqspi_base_hwcaps_mask,
+>> +	.quirks = CQSPI_NEEDS_WR_DELAY,
+>> +};
+>> +
+>> +static const struct cqspi_driver_platdata am654_ospi = {
+>> +	.hwcaps_mask = cqspi_base_hwcaps_mask | SNOR_HWCAPS_READ_1_1_8,
+>> +	.quirks = CQSPI_NEEDS_WR_DELAY,
+>> +};
+>> +
+>>  static const struct of_device_id cqspi_dt_ids[] = {
+>>  	{
+>>  		.compatible = "cdns,qspi-nor",
+>> -		.data = (void *)0,
+>> +		.data = (void *)&cdns_qspi,
+> 
+> You can drop the (void *) cast.
+> 
+> Looks good. Did you test the octal mode with mt35xu512aba? If yes, it would be
+> nice to specify this in the commit message.
+> 
 
-If the same consumer is used with 5 different PHYs, we would be adding 5
-different APIs for PHY functionality. We would also like to avoid the compiling
-out option if we use something like a multi_v7_defconfig where a single image
-is used for multiple platforms.
+Yes, octal mode was tested with mt35xu512aba flash. I will address all
+the comments in v4. Thanks for the review!
 
-Thanks
-Kishon
 
-> 
-> Best Regards,
-> Anurag Kumar Vulisha
-> 
+-- 
+Regards
+Vignesh
+
+______________________________________________________
+Linux MTD discussion mailing list
+http://lists.infradead.org/mailman/listinfo/linux-mtd/
