@@ -1,70 +1,93 @@
-From: Guo Ren <guoren@kernel.org>
-Subject: Re: [PATCH V2 2/2] dt-bindings: interrupt-controller: Update csky
- mpintc
-Date: Mon, 21 Jan 2019 22:55:24 +0800
-Message-ID: <20190121145524.GA5283@guoren-Inspiron-7460>
-References: <1547830371-22122-1-git-send-email-guoren@kernel.org>
- <1547830371-22122-2-git-send-email-guoren@kernel.org>
- <CAL_JsqKjQK-qViMm55EiP5hXjfr04++5vBTAXCEa6yg9u1qCaQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v4 1/2] pwm: sifive: Add DT documentation for SiFive PWM
+ Controller
+Date: Mon, 21 Jan 2019 08:59:02 -0600
+Message-ID: <20190121145901.GA7547@bogus>
+References: <1548066043-1252-1-git-send-email-yash.shah@sifive.com>
+ <1548066043-1252-2-git-send-email-yash.shah@sifive.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAL_JsqKjQK-qViMm55EiP5hXjfr04++5vBTAXCEa6yg9u1qCaQ@mail.gmail.com>
+In-Reply-To: <1548066043-1252-2-git-send-email-yash.shah@sifive.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+To: Yash Shah <yash.shah@sifive.com>
+Cc: palmer@sifive.com, linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org, thierry.reding@gmail.com, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, paul.walmsley@sifive.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 08:12:15AM -0600, Rob Herring wrote:
-> On Fri, Jan 18, 2019 at 10:53 AM <guoren@kernel.org> wrote:
-> >
-> > From: Guo Ren <ren_guo@c-sky.com>
-> >
-> > Add trigger type and priority setting for csky,mpintc.
-> >
-> > Signed-off-by: Guo Ren <ren_guo@c-sky.com>
-> > ---
-> >  .../bindings/interrupt-controller/csky,mpintc.txt  | 33 +++++++++++++++++++---
-> >  1 file changed, 29 insertions(+), 4 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> > index ab921f1..badbd38 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> > @@ -6,11 +6,18 @@ C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
-> >  SMP soc, and it also could be used in non-SMP system.
-> >
-> >  Interrupt number definition:
-> > -
-> >    0-15  : software irq, and we use 15 as our IPI_IRQ.
-> >   16-31  : private  irq, and we use 16 as the co-processor timer.
-> >   31-1024: common irq for soc ip.
-> >
-> > +Interrupt triger mode:
-> > + IRQ_TYPE_LEVEL_HIGH (default)
-> > + IRQ_TYPE_LEVEL_LOW
-> > + IRQ_TYPE_EDGE_RISING
-> > + IRQ_TYPE_EDGE_FALLING
-> > +
-> > +Interrupt priority range: 0-255
-> > +
-> >  =============================
-> >  intc node bindings definition
-> >  =============================
-> > @@ -26,15 +33,33 @@ intc node bindings definition
-> >         - #interrupt-cells
-> >                 Usage: required
-> >                 Value type: <u32>
-> > -               Definition: must be <1>
-> > +               Definition: could be <1> or <2> or <3>
+On Mon, Jan 21, 2019 at 03:50:42PM +0530, Yash Shah wrote:
+> DT documentation for PWM controller added.
 > 
-> For a given controller, '#interrupt-cells' shouldn't really be
-> variable. If there are different capabilities, then you should have
-> different compatible strings.
-Ok, I'll Define it to <3>, see my next version of patch.
+> Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
+> [Atish: Compatible string update]
+> Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> Signed-off-by: Yash Shah <yash.shah@sifive.com>
+> ---
+>  .../devicetree/bindings/pwm/pwm-sifive.txt         | 37 ++++++++++++++++++++++
+>  1 file changed, 37 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/pwm/pwm-sifive.txt b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> new file mode 100644
+> index 0000000..b207908
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/pwm/pwm-sifive.txt
+> @@ -0,0 +1,37 @@
+> +SiFive PWM controller
+> +
+> +Unlike most other PWM controllers, the SiFive PWM controller currently only
+> +supports one period for all channels in the PWM. This is set globally in DTS.
+> +The period also has significant restrictions on the values it can achieve,
+> +which the driver rounds to the nearest achievable frequency.
+> +
+> +Required properties:
+> +- compatible: Should be "sifive,pwmX" and "sifive,$socname-pwm".
 
-<irqnum trigger_type priority>
+The order here is wrong.
 
-Best Regards
- Guo Ren
+You still need to enumeration valid version numbers. Is 'sifive,pwm20' 
+valid?
+
+> +  Please refer to sifive-blocks-ip-versioning.txt for details.
+> +- reg: physical base address and length of the controller's registers
+> +- clocks: Should contain a clock identifier for the PWM's parent clock.
+> +- #pwm-cells: Should be 2.
+> +  Refer to bindings/pwm/pwm.txt for details.
+> +- sifive,period-ns: the driver will get as close to this period as it can
+> +- interrupts: one interrupt per PWM channel
+
+How many channels? If variable, is the a max number?
+
+> +
+> +PWM RTL that corresponds to the IP block version numbers can be found
+> +here:
+> +
+> +https://github.com/sifive/sifive-blocks/tree/master/src/main/scala/devices/pwm
+
+Put this in the description at the top.
+
+> +
+> +Further information on the format of the IP
+> +block-specific version numbers can be found in
+> +Documentation/devicetree/bindings/sifive/sifive-blocks-ip-versioning.txt
+
+You already said this.
+
+> +
+> +Examples:
+> +
+> +pwm:  pwm@10020000 {
+> +	compatible = "sifive,fu540-c000-pwm","sifive,pwm0";
+
+Space after the ',' needed.
+
+> +	reg = <0x0 0x10020000 0x0 0x1000>;
+> +	clocks = <&tlclk>;
+> +	interrupt-parent = <&plic>;
+> +	interrupts = <42 43 44 45>;
+> +	#pwm-cells = <2>;
+> +	sifive,period-ns = <1000000>;
+> +};
+> -- 
+> 1.9.1
+> 
