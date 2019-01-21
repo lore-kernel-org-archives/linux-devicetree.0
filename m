@@ -1,199 +1,95 @@
-Return-Path: <SRS0=mi1T=QF=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v4 0/7] TVP5150 new features
-Date: Tue, 29 Jan 2019 17:07:50 +0100
-Message-Id: <20190129160757.2314-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=chu1=P5=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-eopbgr1410095.outbound.protection.outlook.com ([40.107.141.95]:46539
+        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725879AbfAURTG (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Mon, 21 Jan 2019 12:19:06 -0500
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 3/5] media: dt-bindings: media: rcar_vin: Add r8a774a1
+ support
+Date: Mon, 21 Jan 2019 17:19:02 +0000
+Message-ID: <TY1PR01MB1770D20B930232D643AF25D5C09F0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+References: <1536589878-26218-1-git-send-email-biju.das@bp.renesas.com>
+ <1536589878-26218-4-git-send-email-biju.das@bp.renesas.com>
+ <TY1PR01MB1770D5713E00E0DB8A3060A5C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+In-Reply-To: <TY1PR01MB1770D5713E00E0DB8A3060A5C0C50@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com
-Cc: devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, afshin.nasser@gmail.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, kernel@pengutronix.de
+Sender: devicetree-owner@vger.kernel.org
+To: Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc: Biju Das <biju.das@bp.renesas.com>, =?iso-8859-1?Q?Niklas_S=F6derlund?= <niklas.soderlund@ragnatech.se>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Simon Horman <horms@verge.net.au>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>Biju Das <biju.das@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Hello Mauro,
 
-this is the v4 of my TVP5150 series which adds the of_graph support.
-Basically this series was just rebased on top of the media-tree/master
-as mentioned by Mauro [1].
+This is a gentle reminder.
 
-I dropped commit ("media: tvp5150: fix irq_request error path during
-probe") since it was already applied and commit ("media: v4l2-subdev:
-fix v4l2_subdev_get_try_* dependency") as mentioned by Sakari [2].
+Thanks,
+Fab
 
-To have a quick overview I added the range-diff to the v3 below.
+> From: Fabrizio Castro
+> Sent: 08 November 2018 14:26
+> Subject: RE: [PATCH 3/5] media: dt-bindings: media: rcar_vin: Add r8a774a=
+1 support
+>
+> Hello Mauro,
+>
+> Does this patch look ok to you?
+>
+> Thanks,
+> Fab
+>
+> > From: linux-renesas-soc-owner@vger.kernel.org <linux-renesas-soc-owner@=
+vger.kernel.org> On Behalf Of Biju Das
+> > Sent: 10 September 2018 15:31
+> > Subject: [PATCH 3/5] media: dt-bindings: media: rcar_vin: Add r8a774a1 =
+support
+> >
+> > Document RZ/G2M (R8A774A1) SoC bindings.
+> >
+> > The RZ/G2M SoC is similar to R-Car M3-W (R8A7796).
+> >
+> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > Reviewed-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > ---
+> >  Documentation/devicetree/bindings/media/rcar_vin.txt | 5 +++--
+> >  1 file changed, 3 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/Documentation/devicetree/bindings/media/rcar_vin.txt b/Doc=
+umentation/devicetree/bindings/media/rcar_vin.txt
+> > index 2f42005..8c81689 100644
+> > --- a/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > +++ b/Documentation/devicetree/bindings/media/rcar_vin.txt
+> > @@ -12,6 +12,7 @@ on Gen3 platforms to a CSI-2 receiver.
+> >   - compatible: Must be one or more of the following
+> >     - "renesas,vin-r8a7743" for the R8A7743 device
+> >     - "renesas,vin-r8a7745" for the R8A7745 device
+> > +   - "renesas,vin-r8a774a1" for the R8A774A1 device
+> >     - "renesas,vin-r8a7778" for the R8A7778 device
+> >     - "renesas,vin-r8a7779" for the R8A7779 device
+> >     - "renesas,vin-r8a7790" for the R8A7790 device
+> > @@ -58,9 +59,9 @@ The per-board settings Gen2 platforms:
+> >      - data-enable-active: polarity of CLKENB signal, see [1] for
+> >        description. Default is active high.
+> >
+> > -The per-board settings Gen3 platforms:
+> > +The per-board settings Gen3 and RZ/G2 platforms:
+> >
+> > -Gen3 platforms can support both a single connected parallel input sour=
+ce
+> > +Gen3 and RZ/G2 platforms can support both a single connected parallel =
+input source
+> >  from external SoC pins (port@0) and/or multiple parallel input sources
+> >  from local SoC CSI-2 receivers (port@1) depending on SoC.
+> >
+> > --
+> > 2.7.4
 
-[1] https://www.spinics.net/lists/devicetree/msg262787.html
-[2] https://www.spinics.net/lists/devicetree/msg249354.html
 
-Javier Martinez Canillas (1):
-  partial revert of "[media] tvp5150: add HW input connectors support"
 
-Marco Felsch (5):
-  media: tvp5150: add input source selection of_graph support
-  media: dt-bindings: tvp5150: Add input port connectors DT bindings
-  media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
-  media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-  media: tvp5150: add s_power callback
 
-Michael Tretter (1):
-  media: tvp5150: initialize subdev before parsing device tree
-
- .../devicetree/bindings/media/i2c/tvp5150.txt |  92 ++-
- drivers/media/i2c/tvp5150.c                   | 652 +++++++++++++-----
- include/dt-bindings/media/tvp5150.h           |   2 -
- include/media/v4l2-subdev.h                   |  15 +-
- 4 files changed, 579 insertions(+), 182 deletions(-)
-
-Range-diff against v3:
- 1:  c3d26f4af009 !  1:  4a35a7fb3a24 partial revert of "[media] tvp5150: add HW input connectors support"
-    @@ -21,6 +21,7 @@
-         [m.felsch@pengutronix.de: rm TVP5150_INPUT_NUM define]
-         Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-         Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-    +    Acked-by: Rob Herring <robh@kernel.org>
-     
-      diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-      --- a/drivers/media/i2c/tvp5150.c
-    @@ -131,7 +132,7 @@
-       ****************************************************************************/
-     @@
-      {
-    - 	struct v4l2_fwnode_endpoint bus_cfg;
-    + 	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
-      	struct device_node *ep;
-     -#ifdef CONFIG_MEDIA_CONTROLLER
-     -	struct device_node *connectors, *child;
- 2:  88f4c4a30a08 <  -:  ------------ media: tvp5150: fix irq_request error path during probe
- 3:  48b34c9c9e5f !  2:  f5ca703e5523 media: tvp5150: add input source selection of_graph support
-    @@ -21,6 +21,11 @@
-         ---
-         Changelog:
-     
-    +    v4:
-    +     - rebase on top of media_tree/master, fix merge conflict due to commit
-    +       60359a28d592 ("media: v4l: fwnode: Initialise the V4L2 fwnode endpoints
-    +       to zero")
-    +
-         v3:
-         - probe(): s/err/err_free_v4l2_ctrls
-         - drop MC dependency for tvp5150_pads
-    @@ -49,13 +54,11 @@
-      #define dprintk0(__dev, __arg...) dev_dbg_lvl(__dev, 0, 0, __arg)
-      
-      enum tvp5150_pads {
-    --       TVP5150_PAD_IF_INPUT,
-    --       TVP5150_PAD_VID_OUT,
-    --       TVP5150_NUM_PADS
-    +-	TVP5150_PAD_IF_INPUT,
-     +	TVP5150_PAD_AIP1A = TVP5150_COMPOSITE0,
-     +	TVP5150_PAD_AIP1B,
-    -+	TVP5150_PAD_VID_OUT,
-    -+	TVP5150_NUM_PADS
-    + 	TVP5150_PAD_VID_OUT,
-    + 	TVP5150_NUM_PADS
-      };
-      
-     +#if defined(CONFIG_MEDIA_CONTROLLER)
-    @@ -345,7 +348,7 @@
-     +#if defined(CONFIG_MEDIA_CONTROLLER)
-     +static int tvp5150_add_of_connectors(struct tvp5150 *decoder)
-      {
-    --	struct v4l2_fwnode_endpoint bus_cfg;
-    +-	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
-     -	struct device_node *ep;
-     -	unsigned int flags;
-     -	int ret = 0;
-    @@ -464,7 +467,7 @@
-     +static int tvp5150_parse_dt(struct tvp5150 *decoder, struct device_node *np)
-     +{
-     +	struct device *dev = decoder->sd.dev;
-    -+	struct v4l2_fwnode_endpoint bus_cfg;
-    ++	struct v4l2_fwnode_endpoint bus_cfg = { .bus_type = 0 };
-     +	struct device_node *ep_np;
-     +	unsigned int flags;
-     +	int ret, i = 0, in = 0;
- 4:  0b168180f4a4 !  3:  a7d06df79366 media: dt-bindings: tvp5150: Add input port connectors DT bindings
-    @@ -15,6 +15,7 @@
-         how the input connectors for these devices should be defined in a DT.
-     
-         Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-    +    Reviewed-by: Rob Herring <robh@kernel.org>
-     
-         ---
-         Changelog:
- 5:  871eb653fcf3 =  4:  860087e6c286 media: v4l2-subdev: add stubs for v4l2_subdev_get_try_*
- 6:  fb141d6c8098 <  -:  ------------ media: v4l2-subdev: fix v4l2_subdev_get_try_* dependency
- 7:  795b4a45cb68 !  5:  fcd223cd1563 media: tvp5150: add FORMAT_TRY support for get/set selection handlers
-    @@ -13,6 +13,13 @@
-     
-         Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
-     
-    +    ---
-    +    Changelog:
-    +
-    +    v4:
-    +     - fix merge conflict due to rebase on top of media-tree/master
-    +     - __tvp5150_get_pad_crop(): cosmetic alignment fixes
-    +
-      diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-      --- a/drivers/media/i2c/tvp5150.c
-      +++ b/drivers/media/i2c/tvp5150.c
-    @@ -148,19 +155,19 @@
-      
-     -	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_START, rect.top);
-     -	regmap_write(decoder->regmap, TVP5150_VERT_BLANKING_STOP,
-    --		      rect.top + rect.height - hmax);
-    +-		     rect.top + rect.height - hmax);
-     -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_MSB,
-    --		      rect.left >> TVP5150_CROP_SHIFT);
-    +-		     rect.left >> TVP5150_CROP_SHIFT);
-     -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_ST_LSB,
-    --		      rect.left | (1 << TVP5150_CROP_SHIFT));
-    +-		     rect.left | (1 << TVP5150_CROP_SHIFT));
-     -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_MSB,
-    --		      (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
-    --		      TVP5150_CROP_SHIFT);
-    +-		     (rect.left + rect.width - TVP5150_MAX_CROP_LEFT) >>
-    +-		     TVP5150_CROP_SHIFT);
-     -	regmap_write(decoder->regmap, TVP5150_ACT_VD_CROP_STP_LSB,
-    --		      rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-    -+	__crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad,
-    -+						  sel->which);
-    -+
-    +-		     rect.left + rect.width - TVP5150_MAX_CROP_LEFT);
-    ++	__crop = __tvp5150_get_pad_crop(decoder, cfg, sel->pad, sel->which);
-    + 
-    +-	decoder->rect = rect;
-     +	/*
-     +	 * Update output image size if the selection (crop) rectangle size or
-     +	 * position has been modified.
-    @@ -168,8 +175,7 @@
-     +	if (!v4l2_rect_equal(&rect, __crop))
-     +		if (sel->which == V4L2_SUBDEV_FORMAT_ACTIVE)
-     +			__tvp5150_set_selection(sd, rect);
-    - 
-    --	decoder->rect = rect;
-    ++
-     +	*__crop = rect;
-      
-      	return 0;
-    @@ -183,14 +189,14 @@
-     -
-      	switch (sel->target) {
-      	case V4L2_SEL_TGT_CROP_BOUNDS:
-    - 	case V4L2_SEL_TGT_CROP_DEFAULT:
-    + 		sel->r.left = 0;
-     @@
-      			sel->r.height = TVP5150_V_MAX_OTHERS;
-      		return 0;
-      	case V4L2_SEL_TGT_CROP:
-     -		sel->r = decoder->rect;
-     +		sel->r = *__tvp5150_get_pad_crop(decoder, cfg, sel->pad,
-    -+						      sel->which);
-    ++						 sel->which);
-      		return 0;
-      	default:
-      		return -EINVAL;
- 8:  8d88797ba94c =  6:  08cc83bcb513 media: tvp5150: initialize subdev before parsing device tree
- 9:  b152e29bc83e =  7:  1249b386cce0 media: tvp5150: add s_power callback
--- 
-2.20.1
+Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End, B=
+uckinghamshire, SL8 5FH, UK. Registered in England & Wales under Registered=
+ No. 04586709.
