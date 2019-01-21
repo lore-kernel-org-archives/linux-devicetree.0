@@ -1,213 +1,273 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
-Subject: Re: [PATCH 2/2] pwm: sifive: Add a driver for SiFive SoC PWM
-Date: Mon, 21 Jan 2019 14:23:55 +0100
-Message-ID: <20190121132355.vqwmwzzcwrqgcxrm@pengutronix.de>
-References: <1547194964-16718-1-git-send-email-yash.shah@sifive.com>
- <1547194964-16718-3-git-send-email-yash.shah@sifive.com>
- <20190115220046.etgbno6ymsux75dk@pengutronix.de>
- <20190121113039.GI16756@ulmo>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Mon, 21 Jan 2019 07:27:30 -0600
+Message-ID: <275255f1-a552-1dc8-71b0-6575695c6ca7@ti.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <efb4e1c1-0d13-bed7-d262-284fc1a0c9ab@gmail.com>
+ <4115ad75-22f7-d9ae-c38f-e0ab61fb6655@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190121113039.GI16756@ulmo>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-riscv/>
-List-Post: <mailto:linux-riscv@lists.infradead.org>
-List-Help: <mailto:linux-riscv-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-riscv>,
- <mailto:linux-riscv-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-riscv" <linux-riscv-bounces@lists.infradead.org>
-Errors-To: linux-riscv-bounces+glpr-linux-riscv=m.gmane.org@lists.infradead.org
-To: Thierry Reding <thierry.reding@gmail.com>
-Cc: mark.rutland@arm.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, palmer@sifive.com, linux-kernel@vger.kernel.org, sachin.ghadi@sifive.com, Yash Shah <yash.shah@sifive.com>, robh+dt@kernel.org, paul.walmsley@sifive.com, linux-riscv@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <4115ad75-22f7-d9ae-c38f-e0ab61fb6655@gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 12:30:39PM +0100, Thierry Reding wrote:
-> On Tue, Jan 15, 2019 at 11:00:46PM +0100, Uwe Kleine-K=F6nig wrote:
-> > Hello,
-> > =
+Vesa
 
-> > On Fri, Jan 11, 2019 at 01:52:44PM +0530, Yash Shah wrote:
-> > > Adds a PWM driver for PWM chip present in SiFive's HiFive Unleashed S=
-oC.
-> > > =
+On 1/19/19 1:11 PM, Vesa Jääskeläinen wrote:
+> Hi Jacek et al,
+> 
+> On 17/01/2019 23.08, Jacek Anaszewski wrote:
+>> On 1/16/19 11:55 AM, Pavel Machek wrote:
+>>> Hi!
+>>>
+>>>> On 1/15/19 4:22 PM, Pavel Machek wrote:
+>>>>> Hi!
+>>>>>
+>>>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
+>>>>>>> +XX - Do not care ignored by the driver
+>>>>>>> +RR - is the 8 bit Red LED value
+>>>>>>> +GG - is the 8 bit Green LED value
+>>>>>>> +BB - is the 8 bit Blue LED value
+>>>>>>> +
+>>>>>>> +Example:
+>>>>>>> +LED module output 4 of the LP5024 will be a yellow color:
+>>>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
+>>>>>>> +
+>>>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
+>>>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
+>>>>>>> +
+>>>>>>> +LED banked RGBs of the LP5036 will be a white color:
+>>>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
+>>>>>>
+>>>>>> This part with example cans remain in Documentation/leds if you
+>>>>>>> like.
+>>>>>
+>>>>> Does it actually work like that on hardware?
+>>>>
+>>>> What?
+>>>
+>>> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
+>>> does it actually produce white? With all the different RGB modules
+>>> manufacturers can use with lp5024P?
+>>>
+>>> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
+>>> it actually produce yellow, with all the different RGB modules
+>>> manufacturers can use with lp5024P?
+>>
+>> Vesa proposed using icc-profiles to make the colors looking similar
+>> on various LEDs. It was in reply to your message with requirements
+>> for RGB LED class.
+>>
+>> For this device we can however do without it. Videos showing the
+>> performance of this particular device with a reference design using
+>> RGB LEDs prove it works nice.
+>>
+>>>>> Is it supposed to support "normal" RGB colors as seen on monitors?
+>>>>
+>>>> Monitors are not an application for this part.
+>>>
+>>> You did not answer the question. When you talk about yellow, is it
+>>> same yellow the rest of world talks about?
+>>>
+>>>>> Because 100% PWM on all channels does not result in white on hardware
+>>>>> I have.
+>>>>
+>>>> I don't know I am usually blinded by the light and have no diffuser over
+>>>> the LEDs to disperse the light so when I look I see all 3 colors.
+>>>
+>>> How can we have useful discussion about colors when you don't see the
+>>> colors?
+>>>
+>>> Place a piece of paper over the LEDs....
+>>>
+>>>>> But...
+>>>>>
+>>>>> I believe we should have a reasonable design before we do something
+>>>>> like this. There's no guarantee someone will not use lp50xx with just
+>>>>> the white LEDs for example. How will this work? Plus existing hardware
+>>>>> already uses three separate LEDs for RGB LED. Why not provide same
+>>>>> interface?
+>>>>
+>>>> Which existing hardware?  Are they using this part?
+>>>
+>>> Nokia N900. They are not using this part, but any interface we invent
+>>> should work there, too.
+>>>
+>>>> <rant>
+>>>> Why are we delaying getting the RGB framework or HSV in?
+>>>> I would rather design against something you want instead of having
+>>>> everyone complain about every implementation I post.
+>>>> </rant>
+>>>
+>>> Because you insist on creating new kernel interfaces, when existing
+>>> interfaces work, and are doing that badly.
+>>>
+>>> Because your patches are of lower quality than is acceptable for linux
+>>> kernel.
+>>
+>> Lets keep things civil please.
+>>
+>> This sentence should look familiar to you - it's not the first time
+>> you resort to this type of narration.
+>>
+>>> Because you don't seem to be reading the emails.
+>>>
+>>> I sent list of requirements for RGB led support. This does not meet
+>>> them.
+>>
+>> And you didn't respond to the comments from Vesa. The requirements
+>> has not been acclaimed.
+>>
+>>>> It is not a normal RGB driver.  The device collates the individual RGB
+>>>> clusters into a single brightness register and you can modify the intensity of the individual
+>>>> LEDs via other registers.  If brightness is 0 then the cluster is OFF regardless of the color
+>>>> set in the individual registers.
+>>>
+>>> I understand that. So just set cluster brightness to 255 and you have
+>>> normal RGB driver you can control with existing interfaces. You don't
+>>> have to use every feature your hardware has.
+>>
+>> This feature is one of the core advantages of this device.
+>>
+>>> You did not answer the "what if someone uses this with all white LEDs"
+>>> question.
+>>>
+>>> You know what? First, submit driver with similar functionality to
+>>> existing RGB drivers, using same interface existing drivers are
+>>> using. When that is accepted, we can talk about extending
+>>> kernel<->user interfaces.
+>>
+>> This stands in contradiction with my request.
+>>
+>> Provided there will be no other NAKs, I am eager to accept the
+>> interface with color and brightness files.
+>>
+>> Moreover, I think that RGB LED class with configurable
+>> brightness-model, and with possible color range adjustments via
+>> icc-profiles or something similar, is the best solution that has been proposed so far. It is just flexible.
+>>
+>> I'd like to capitalize on the ideas shared in this thread and have
+>> finally LED RGB class materialized.
+>>
+> 
+> I have now updated my github code with my understanding of the discussion:
+> https://github.com/vesajaaskelainen/linux/tree/wip-multi-color-led
+> 
 
-> > > Signed-off-by: Wesley W. Terpstra <wesley@sifive.com>
-> > > [Atish: Various fixes and code cleanup]
-> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
-> > > Signed-off-by: Yash Shah <yash.shah@sifive.com>
-> > > ---
-> > >  drivers/pwm/Kconfig      |  10 ++
-> > >  drivers/pwm/Makefile     |   1 +
-> > >  drivers/pwm/pwm-sifive.c | 246 +++++++++++++++++++++++++++++++++++++=
-++++++++++
-> > >  3 files changed, 257 insertions(+)
-> > >  create mode 100644 drivers/pwm/pwm-sifive.c
-> > > =
+Maybe I did not see it but a RFC to the list would be good for discussion points.
 
-> > > diff --git a/drivers/pwm/Kconfig b/drivers/pwm/Kconfig
-> > > index a8f47df..3bcaf6a 100644
-> > > --- a/drivers/pwm/Kconfig
-> > > +++ b/drivers/pwm/Kconfig
-> > > @@ -380,6 +380,16 @@ config PWM_SAMSUNG
-> > >  	  To compile this driver as a module, choose M here: the module
-> > >  	  will be called pwm-samsung.
-> > >  =
+> Commits:
+> - dt-bindings: leds: Introduce linux,default-brightness-model for all leds
+> https://github.com/vesajaaskelainen/linux/commit/4ffb21d644056686096226bbede7c8c78b0254c2
+> - drivers: leds: Add core support for multi color element LEDs
+> https://github.com/vesajaaskelainen/linux/commit/627f38bb78cebc694b8e6d735fb088c87925435d
+> - dt-bindings: leds: leds-pwm: Introduce multi color element leds support
+> https://github.com/vesajaaskelainen/linux/commit/ef6c5730d621e79ea0b02470caa83bc39439536a
+> - WIP: drivers: leds: leds-pwm: Add multi color element LED support.
+> https://github.com/vesajaaskelainen/linux/commit/0430a27823d9162926424b32c23be1c53eb9cbe2
+> 
+> First two commits are common and could be taken before I am happy with the pwm led driver changes. This new conditional feature flag makes it a bit harder. Of course one option would be to require it to be enabled.
+> 
+> Current set of concepts:
+> - brightness-model: hardware, onoff, linear
 
-> > > +config PWM_SIFIVE
-> > > +	tristate "SiFive PWM support"
-> > > +	depends on OF
-> > > +	depends on COMMON_CLK
-> > =
+Seem to be missing logarithmic
 
-> > I'd say add:
-> > =
+>   - could be extended in future with other modes like hsv if wanted
+> - led_common_setup_of: helper for setting up common parts of led class device from devicetree.
+> - led_color_element_setup_of: helper for setting up color element parts of led class device from devicetree.
+> - led_scale_color_elements: single point helper for handling brightness-model.
+> - From user space point-of-view atomic changes for color elements and brightness.
+> 
+> Sysfs interfaces:
+> - brightness_model: Change of brightness model on the fly. Similar if as trigger selection.
+> - color: configuring all color element values as array of values with support for optional brightness entry as last value.
+> - color_names: information for user space about color element values in 'color' array.
+> - max_color: information for user space about maximum values for entries in 'color' array.
+> 
+> Example usage:
+> 
+> $ cd /sys/class/leds/status
+> 
+> $ ls
+> brightness        brightness_model  color             color_names device            max_brightness    max_color         power subsystem         trigger           uevent
+> 
+> $ cat brightness_model
+> hardware [onoff] linear
+> $ cat color_names
+> red green blue
+> $ cat max_color
+> 255 255 255
+> $ cat brightness
+> 0
+> 
 
-> > 	depends on MACH_SIFIVE || COMPILE_TEST
-> > =
+What happens if brightness is set?  Is that ignored?
+What is the driver supposed to do?
+The LP50xx can set brightness independent of color but other devices cannot do that.
 
-> > (I guess "MACH_SIFIVE" is wrong, but I assume you get what I mean.)
-> > =
+> # Setting up color to not so bright purple with brightness set to 255
+> $ echo "32 0 32 255" > color
+> 
+> # Setting up color to a bit brighter purple with brightness
+> $ echo "128 0 128 255" > color
+> 
+> # Activate heartbeat blinking
+> $ echo "heartbeat" > trigger
+> 
+> # Now led is blinking with purple color
+> 
+> # Change color to green
+> $ echo "0 255 0" > color
+> 
+> # Now led is blinking with green color
+> 
+> And in devicetree I had now:
+> 
+> multi-color-leds {
+>     compatible = "pwm-leds";
+> 
+>     status-led {
+>         label = "status";
+>         linux,default-brightness-model = "onoff";
+> 
+>         element-red {
+>             pwms = <&ehrpwm0 0 100000 0>;
+>         };
+>         element-green {
+>             pwms = <&ehrpwm1 0 100000 0>;
+>         };
+>         element-blue {
+>             pwms = <&ehrpwm1 1 100000 0>;
+>         };
+>     };
+> };
+> 
+> What do you think is this something we agree and could go forward?
+> 
+> If it is it would be a good idea to get feedback from Dan on how easy it is to use and other possible issues if he takes common commits and tries it out with his lp50xx driver.
+> 
 
-> > > +	help
-> > > +	  Generic PWM framework driver for SiFive SoCs.
-> > > +
-> > > +	  To compile this driver as a module, choose M here: the module
-> > > +	  will be called pwm-sifive.
-> > > +
-> > >  config PWM_SPEAR
-> > >  	tristate "STMicroelectronics SPEAr PWM support"
-> > >  	depends on PLAT_SPEAR
-> > > diff --git a/drivers/pwm/Makefile b/drivers/pwm/Makefile
-> > > index 9c676a0..30089ca 100644
-> > > --- a/drivers/pwm/Makefile
-> > > +++ b/drivers/pwm/Makefile
-> > > @@ -37,6 +37,7 @@ obj-$(CONFIG_PWM_RCAR)		+=3D pwm-rcar.o
-> > >  obj-$(CONFIG_PWM_RENESAS_TPU)	+=3D pwm-renesas-tpu.o
-> > >  obj-$(CONFIG_PWM_ROCKCHIP)	+=3D pwm-rockchip.o
-> > >  obj-$(CONFIG_PWM_SAMSUNG)	+=3D pwm-samsung.o
-> > > +obj-$(CONFIG_PWM_SIFIVE)	+=3D pwm-sifive.o
-> > >  obj-$(CONFIG_PWM_SPEAR)		+=3D pwm-spear.o
-> > >  obj-$(CONFIG_PWM_STI)		+=3D pwm-sti.o
-> > >  obj-$(CONFIG_PWM_STM32)		+=3D pwm-stm32.o
-> > > diff --git a/drivers/pwm/pwm-sifive.c b/drivers/pwm/pwm-sifive.c
-> > > new file mode 100644
-> > > index 0000000..7fee809
-> > > --- /dev/null
-> > > +++ b/drivers/pwm/pwm-sifive.c
-> > > @@ -0,0 +1,246 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (C) 2017-2018 SiFive
-> > > + * For SiFive's PWM IP block documentation please refer Chapter 14 of
-> > > + * Reference Manual : https://static.dev.sifive.com/FU540-C000-v1.0.=
-pdf
-> > =
+The LP50xx pwm is not standard.
+It defines a PWM dithering mode which phase shifts the LED outputs and does not really control the PWM width of the LEDs.
 
-> > I wonder if such an instance should be only a single PWM instead of
-> > four. Then you were more flexible with the period lengths (using
-> > pwmcfg.pwmzerocmp) and could do stuff like inverted and uninverted mode.
-> =
+I can try to stitch this together for testing.  I will need to go through this code and docs a bit more.
 
-> I thought this IP only allowed a single period for all PWM channels in
-> the IP. If so, splitting this into four different devices is going to
-> complicate things because you'd have to coordinate between all four as
-> to which period is currently set.
+Dan
 
-Take a look at the above link, figure 6 is depicting how this IP works
-(page 92 of the pdf). If you have pwmzerocmp=3D0 (and pwmcmpXgang=3D0) the
-four outputs (pwmcmpXgpio) are independant and the counter only resets
-on overflow of pwms. Then you have 4 outputs that can have their
-duty_cycle (but not period) set individually. So period is restricted to
-a count of clk cycles that is a power of two.
+> Thanks,
+> Vesa Jääskeläinen
 
-With pwmzerocmp=3D1, pwmcmp0 resets the counter with the following
-effects:
 
- - pwmcmp0gpio is always 0 (bad?)
- - more finegrained control over the period length as the restriction to
-   powers of two is gone (good)
-
-The other three output can then either be used as 3 PWM outputs with the
-more flexible (but identical) period or only pwmcmp1gpio is used as a
-single output (my favourite) and with pwmcmp2, pwmcmp3 and pwmcmp2gang=3D1
-the output pwmcmp2gpio can be used as a secondary output to implement
-stuff that was called "complementary mode" or "Push-pull mode" by
-Claudiu Beznea.
-
-> > > +struct sifive_pwm_device {
-> > > +	struct pwm_chip	chip;
-> > > +	struct notifier_block notifier;
-> > > +	struct clk *clk;
-> > > +	void __iomem *regs;
-> > > +	unsigned int approx_period;
-> > > +	unsigned int real_period;
-> > > +};
-> > =
-
-> > I'd call this pwm_sifive_ddata. The prefix because the driver is called
-> > pwm-sifive and ddata because this is driver data and not a device.
-> =
-
-> I don't think there's a need to have an extra suffix. Just call this
-> sifive_pwm or pwm_sifive. There's no ambiguity in that name and it's
-> short and crisp.
-
-fine for me if "_device" goes away.
-
-> > > +	if (state->enabled)
-> > > +		sifive_pwm_get_state(chip, dev, state);
-> > =
-
-> > @Thierry: Should we bless this correction of state?
-> =
-
-> I'm not sure I understand why this correction is necessary. Is it okay
-> to request a state to be applied and when we're not able to set that
-> state we just set anything as close as possible? Sounds a bit risky to
-> me. What if somebody wants to use this in a case where precision
-> matters?
-
-There is always rounding involved. Where should we draw a line then?
-Consider a parent clk running at 1000000001 Hz. Can you provide a duty
-cycle of 1 ps? Of if the clk runs at 500000000 Hz, I can implement even
-periods, but not the uneven. Should the driver fail if an uneven period
-is requested? What should a user do if setting
-
-	.duty_cycle =3D 55, .period =3D 100,
-
-fails? Assume the pwm can set only even duty_cycles? Or maybe duty_cycle
-and period must be dividable by 3? Or maybe only periods that are a
-power of two are possible? To get both, an API that can actually be
-worked with and that provides precision, the driver needs to be allowed
-to round (preferably in some defined way that is used for all devices)
-and we need a function to determine the result without actually
-configuring. That's how it works in the clk_* universe. There is
-clk_round_rate and clk_set_rate and the explicit condition that
-
-	clk_set_rate(clk, somerate)
-
-has the same effect as
-
-	clk_set_rate(clk, clk_round_rate(clk, somerate))
-
-and after one of them we have
-
-	clk_get_rate(clk) =3D clk_round_rate(clk, somerate))
-
-> Now, if you're saying that there can't be such cases and we should
-> support this, then why restrict the state correction to when the PWM is
-> enabled? What's wrong with correcting it in either case?
-
-Either the correction should be done always or never.
-
-Best regards
-Uwe
-
--- =
-
-Pengutronix e.K.                           | Uwe Kleine-K=F6nig            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+-- 
+------------------
+Dan Murphy
