@@ -1,65 +1,99 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH] MAINTAINERS: Add entry for Amlogic NAND controller
- driver
-Date: Mon, 21 Jan 2019 10:10:30 +0100
-Message-ID: <20190121101030.2efbee17@xps13>
-References: <1547917355-13179-1-git-send-email-jianxin.pan@amlogic.com>
-        <20190120160605.33689354@xps13>
-        <3f098e44-9d9b-3d0a-3e19-5913077aeb07@amlogic.com>
-        <20190121092106.2c97ebe2@xps13>
-        <54e8156f-2362-21db-3e6c-e5b68147c49c@amlogic.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: [PATCH 3/5 v9] regulator: fixed/gpio: Update device tree bindings
+Date: Mon, 21 Jan 2019 10:12:04 +0100
+Message-ID: <20190121091206.18239-3-linus.walleij@linaro.org>
+References: <20190121091206.18239-1-linus.walleij@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <54e8156f-2362-21db-3e6c-e5b68147c49c@amlogic.com>
+In-Reply-To: <20190121091206.18239-1-linus.walleij@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liang Yang <liang.yang@amlogic.com>
-Cc: Jianxin Pan <jianxin.pan@amlogic.com>, Boris Brezillon <boris.brezillon@bootlin.com>, linux-mtd@lists.infradead.org, David Woodhouse <dwmw2@infradead.org>, Brian Norris <computersforpeace@gmail.com>, Marek Vasut <marek.vasut@gmail.com>, Richard Weinberger <richard@nod.at>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Carlo Caione <carlo@caione.org>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh@kernel.org>, Jian Hu <jian.hu@amlogic.com>, Hanjie Lin <hanjie.lin@amlogic.com>, Victor Wan <victor.wan@amlogic.com>, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Charles Keepax <ckeepax@opensource.cirrus.com>, Bartosz Golaszewski <bgolaszewski@baylibre.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Linus Walleij <linus.walleij@linaro.org>, devicetree@vger.kernel.org, Rob Herring <robh@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Liang,
+Deprecate the open drain binding for fixed regulator and indicate
+that we prefer this to be passed in the GPIO phandle flags.
 
-Liang Yang <liang.yang@amlogic.com> wrote on Mon, 21 Jan 2019 16:59:42
-+0800:
+Clarify that the line inversion semantics for fixed and GPIO
+regulators completely overrides the active low flags in the
+phandle flags.
 
-> Hi Miquel，
-> 
-> On 2019/1/21 16:21, Miquel Raynal wrote:
-> > Hi Jianxin,
-> > 
-> > Jianxin Pan <jianxin.pan@amlogic.com> wrote on Mon, 21 Jan 2019
-> > 12:18:18 +0800:
-> >   
-> >> Hi Miquel,
-> >>
-> >> On 2019/1/20 23:06, Miquel Raynal wrote:  
-> >>> Hi Jianxin,
-> >>>
-> >>> Jianxin Pan <jianxin.pan@amlogic.com> wrote on Sun, 20 Jan 2019
-> >>> 01:02:35 +0800:  
-> >>>    >>>> Add entry for Amlogic NAND controller driver and its bindings[0].  
-> >>>>
-> >>>> [0] https://lore.kernel.org/lkml/1547566684-57472-1-git-send-email-jianxin.pan@amlogic.com/
-> >>>>
-> >>>> Signed-off-by: Liang Yang <liang.yang@amlogic.com>
-> >>>> Signed-off-by: Jianxin Pan <jianxin.pan@amlogic.com>  
-> >>>
-> >>> If you are the author of the patch your Signed-off-by should come first.  
-> >> OK.  
-> >>>
-> >>> Also, why is Liang the Maintainer? Why not you?  
-> >>>    >> Yangliang is Amlogic maintainer for NAND controller. And all patches about amlogic NAND controller are from him.  
-> > 
-> > Maybe but he never wrote to the ML, the maintainer may be someone else
-> > than the original author, I just want someone to review patches and
-> > help to maintain the driver.
-> > 
-> > Yangliang are you willing to do that?
-> > Of course.it is my pleasure and responsibility.
+Unfortunately this can not be changed to prefer that we pass
+the flags in the phandle: the bindings have been specified and
+deployed such that the presence/absence of this flag and only
+that controls the line inversion semantics. The crucial semantic
+is that the absence of the flag means the core will assume
+the line is active low, which in GPIO terms is an exception,
+as GPIO lines are normally assumed to be active high.
 
-Ok then, it's fine for me!
+This special device tree semantic cannot be changed without
+introducing a whole new compatible string for the fixed and
+GPIO regulators, so we just contain the situation.
 
+Cc: devicetree@vger.kernel.org
+Reviewed-by: Rob Herring <robh@kernel.org>
+Tested-by: Marek Szyprowski <m.szyprowski@samsung.com>
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+---
+ChangeLog v8->v9:
+- Rebased on other changes.
+- Collected Marek's Tested-by.
+ChangeLog v7->v8:
+- Rebase on v5.0-rc1.
+ChangeLog v6->v7:
+- Resend with the rest.
+ChangeLog v3->v6:
+- Resending.
+ChangeLog v2->v3:
+- Resending.
+ChangeLog v1->v2:
+- Collect Rob's ACK.
+---
+ .../bindings/regulator/fixed-regulator.txt          | 13 +++++++++++--
+ .../bindings/regulator/gpio-regulator.txt           |  4 ++++
+ 2 files changed, 15 insertions(+), 2 deletions(-)
 
-Thanks,
-Miquèl
+diff --git a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+index 0c2a6c8a1536..a7a1cd0dfa6e 100644
+--- a/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/fixed-regulator.txt
+@@ -8,10 +8,19 @@ Optional properties:
+ - gpio: gpio to use for enable control
+ - startup-delay-us: startup time in microseconds
+ - enable-active-high: Polarity of GPIO is Active high
+-If this property is missing, the default assumed is Active low.
++  If this property is missing, the default assumed is Active low.
++  If the phandle flags to the GPIO handle also flag the line as active
++  low or high, that will be ignored for fixed regulators and the
++  presence or absence of this flag solely controls the inversion
++  semantics.
++-vin-supply: Input supply name.
++
++Deprecated properties:
+ - gpio-open-drain: GPIO is open drain type.
+   If this property is missing then default assumption is false.
+--vin-supply: Input supply name.
++  Do not use this property in new device trees: instead use the
++  phandle flag to indicate to the GPIO provider that the line
++  should be handled as open drain.
+ 
+ Any property defined as part of the core regulator
+ binding, defined in regulator.txt, can also be used.
+diff --git a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+index 1f496159e2bb..8fef3e5358a2 100644
+--- a/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
++++ b/Documentation/devicetree/bindings/regulator/gpio-regulator.txt
+@@ -14,6 +14,10 @@ Optional properties:
+ 			  defualt is LOW if nothing is specified.
+ - startup-delay-us	: Startup time in microseconds.
+ - enable-active-high	: Polarity of GPIO is active high (default is low).
++			  If the phandle flags to the GPIO handle also flag the line as
++			  active low or high, that will be ignored for fixed regulators
++			  and the presence or absence of this flag solely controls the
++			  inversion semantics.
+ - regulator-type	: Specifies what is being regulated, must be either
+ 			  "voltage" or "current", defaults to voltage.
+ 
+-- 
+2.20.1
