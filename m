@@ -1,95 +1,260 @@
-From: Vivek Gautam <vivek.gautam@codeaurora.org>
-Subject: Re: [PATCHv3 3/4] coresight: etm4x: Add support to enable ETMv4.2
-Date: Mon, 21 Jan 2019 16:18:36 +0530
-Message-ID: <cc71cfa9-8a11-9356-ac41-e27564a9f7b4@codeaurora.org>
-References: <cover.1547813804.git.saiprakash.ranjan@codeaurora.org>
- <d52546764f8570e8c07ac8e3e2841e087e66648c.1547813804.git.saiprakash.ranjan@codeaurora.org>
+From: Bartosz Golaszewski <brgl@bgdev.pl>
+Subject: Re: [PATCH 12/13] input: max77650: add onkey support
+Date: Mon, 21 Jan 2019 11:52:50 +0100
+Message-ID: <CAMRc=MfOWWK+nfYLt03EFe-ekTnbDr6oCoqd=n3dpMjz1sELMQ@mail.gmail.com>
+References: <20190118134244.22253-1-brgl@bgdev.pl> <20190118134244.22253-13-brgl@bgdev.pl>
+ <20190119090318.GB187380@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d52546764f8570e8c07ac8e3e2841e087e66648c.1547813804.git.saiprakash.ranjan@codeaurora.org>
-Content-Language: en-US
+In-Reply-To: <20190119090318.GB187380@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
-Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Linus Walleij <linus.walleij@linaro.org>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-input@vger.kernel.org, linux-leds@vger.kernel.org, linux-pm@vger.kernel.org, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
+sob., 19 sty 2019 o 10:03 Dmitry Torokhov <dmitry.torokhov@gmail.com>
+napisa=C5=82(a):
+>
+> Hi Bartosz,
+>
+> On Fri, Jan 18, 2019 at 02:42:43PM +0100, Bartosz Golaszewski wrote:
+> > From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >
+> > Add support for the push- and slide-button events for max77650.
+> >
+> > Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > ---
+> >  drivers/input/misc/Kconfig          |   9 ++
+> >  drivers/input/misc/Makefile         |   1 +
+> >  drivers/input/misc/max77650-onkey.c | 135 ++++++++++++++++++++++++++++
+> >  3 files changed, 145 insertions(+)
+> >  create mode 100644 drivers/input/misc/max77650-onkey.c
+> >
+> > diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
+> > index ca59a2be9bc5..bb9c45c1269e 100644
+> > --- a/drivers/input/misc/Kconfig
+> > +++ b/drivers/input/misc/Kconfig
+> > @@ -180,6 +180,15 @@ config INPUT_M68K_BEEP
+> >       tristate "M68k Beeper support"
+> >       depends on M68K
+> >
+> > +config INPUT_MAX77650_ONKEY
+> > +     tristate "Maxim MAX77650 ONKEY support"
+> > +     depends on MFD_MAX77650
+> > +     help
+> > +       Support the ONKEY of the MAX77650 PMIC as an input device.
+> > +
+> > +       To compile this driver as a module, choose M here: the module
+> > +       will be called max77650-onkey.
+> > +
+> >  config INPUT_MAX77693_HAPTIC
+> >       tristate "MAXIM MAX77693/MAX77843 haptic controller support"
+> >       depends on (MFD_MAX77693 || MFD_MAX77843) && PWM
+> > diff --git a/drivers/input/misc/Makefile b/drivers/input/misc/Makefile
+> > index 9d0f9d1ff68f..5bd53590ce60 100644
+> > --- a/drivers/input/misc/Makefile
+> > +++ b/drivers/input/misc/Makefile
+> > @@ -43,6 +43,7 @@ obj-$(CONFIG_INPUT_IXP4XX_BEEPER)   +=3D ixp4xx-beepe=
+r.o
+> >  obj-$(CONFIG_INPUT_KEYSPAN_REMOTE)   +=3D keyspan_remote.o
+> >  obj-$(CONFIG_INPUT_KXTJ9)            +=3D kxtj9.o
+> >  obj-$(CONFIG_INPUT_M68K_BEEP)                +=3D m68kspkr.o
+> > +obj-$(CONFIG_INPUT_MAX77650_ONKEY)   +=3D max77650-onkey.o
+> >  obj-$(CONFIG_INPUT_MAX77693_HAPTIC)  +=3D max77693-haptic.o
+> >  obj-$(CONFIG_INPUT_MAX8925_ONKEY)    +=3D max8925_onkey.o
+> >  obj-$(CONFIG_INPUT_MAX8997_HAPTIC)   +=3D max8997_haptic.o
+> > diff --git a/drivers/input/misc/max77650-onkey.c b/drivers/input/misc/m=
+ax77650-onkey.c
+> > new file mode 100644
+> > index 000000000000..cc7e83f589cd
+> > --- /dev/null
+> > +++ b/drivers/input/misc/max77650-onkey.c
+> > @@ -0,0 +1,135 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +/*
+> > + * Copyright (C) 2018 BayLibre SAS
+> > + * Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> > + *
+> > + * ONKEY driver for MAXIM 77650/77651 charger/power-supply.
+> > + */
+> > +
+> > +#include <linux/i2c.h>
+> > +#include <linux/input.h>
+> > +#include <linux/interrupt.h>
+> > +#include <linux/mfd/max77650.h>
+> > +#include <linux/module.h>
+> > +#include <linux/platform_device.h>
+> > +#include <linux/regmap.h>
+> > +
+> > +#define MAX77650_ONKEY_MODE_MASK     BIT(3)
+> > +#define MAX77650_ONKEY_MODE_PUSH     0x00
+> > +#define MAX77650_ONKEY_MODE_SLIDE    BIT(3)
+> > +
+> > +struct max77650_onkey {
+> > +     struct input_dev *input;
+> > +     unsigned int code;
+> > +};
+> > +
+> > +static irqreturn_t
+> > +max77650_onkey_report(struct max77650_onkey *onkey, int value)
+> > +{
+> > +     input_report_key(onkey->input, onkey->code, value);
+> > +     input_sync(onkey->input);
+> > +
+> > +     return IRQ_HANDLED;
+>
+> It is weird that report function returns irqreturn_t. I'd simply moved
+> input_report_key()/input_sync() into real IRQ handlers.
+>
+> > +}
+> > +
+> > +static irqreturn_t max77650_onkey_falling(int irq, void *data)
+> > +{
+> > +     struct max77650_onkey *onkey =3D data;
+> > +
+> > +     return max77650_onkey_report(onkey, 0);
+> > +}
+> > +
+> > +static irqreturn_t max77650_onkey_rising(int irq, void *data)
+> > +{
+> > +     struct max77650_onkey *onkey =3D data;
+> > +
+> > +     return max77650_onkey_report(onkey, 1);
+> > +}
+> > +
+> > +static int max77650_onkey_probe(struct platform_device *pdev)
+> > +{
+> > +     struct regmap_irq_chip_data *irq_data;
+> > +     struct max77650_onkey *onkey;
+> > +     struct device *dev, *parent;
+> > +     int irq_r, irq_f, rv, mode;
+>
+> Please call "rv" "error".
+>
+> > +     struct i2c_client *i2c;
+> > +     const char *mode_prop;
+> > +     struct regmap *map;
+> > +
+> > +     dev =3D &pdev->dev;
+> > +     parent =3D dev->parent;
+> > +     i2c =3D to_i2c_client(parent);
+> > +     irq_data =3D i2c_get_clientdata(i2c);
+> > +
+> > +     map =3D dev_get_regmap(parent, NULL);
+> > +     if (!map)
+> > +             return -ENODEV;
+> > +
+> > +     onkey =3D devm_kzalloc(dev, sizeof(*onkey), GFP_KERNEL);
+> > +     if (!onkey)
+> > +             return -ENOMEM;
+> > +
+> > +     rv =3D device_property_read_u32(dev, "linux,code", &onkey->code);
+> > +     if (rv)
+> > +             onkey->code =3D KEY_POWER;
+> > +
+> > +     rv =3D device_property_read_string(dev, "maxim,onkey-mode", &mode=
+_prop);
+> > +     if (rv)
+> > +             mode_prop =3D "push";
+> > +
+> > +     if (strcmp(mode_prop, "push") =3D=3D 0)
+> > +             mode =3D MAX77650_ONKEY_MODE_PUSH;
+> > +     else if (strcmp(mode_prop, "slide") =3D=3D 0)
+> > +             mode =3D MAX77650_ONKEY_MODE_SLIDE;
+> > +     else
+> > +             return -EINVAL;
+> > +
+> > +     rv =3D regmap_update_bits(map, MAX77650_REG_CNFG_GLBL,
+> > +                             MAX77650_ONKEY_MODE_MASK, mode);
+> > +     if (rv)
+> > +             return rv;
+> > +
+> > +     irq_f =3D regmap_irq_get_virq(irq_data, MAX77650_INT_nEN_F);
+> > +     if (irq_f <=3D 0)
+> > +             return -EINVAL;
+> > +
+> > +     irq_r =3D regmap_irq_get_virq(irq_data, MAX77650_INT_nEN_R);
+> > +     if (irq_r <=3D 0)
+> > +             return -EINVAL;
+>
+> Ugh, it would be better if you handled IRQ mapping in the MFD piece and
+> passed it as resources of platform device. Then you'd simply call
+> platform_get_irq() here and did not have to reach into parent device for
+> "irq_dara".
+>
+> > +
+> > +     onkey->input =3D devm_input_allocate_device(dev);
+> > +     if (!onkey->input)
+> > +             return -ENOMEM;
+> > +
+> > +     onkey->input->name =3D "max77650_onkey";
+> > +     onkey->input->phys =3D "max77650_onkey/input0";
+> > +     onkey->input->id.bustype =3D BUS_I2C;
+> > +     onkey->input->dev.parent =3D dev;
+>
+> Not needed since devm_input_allocate_device sets parent for you.
+>
+> > +     input_set_capability(onkey->input, EV_KEY, onkey->code);
+> > +
+> > +     rv =3D devm_request_threaded_irq(dev, irq_f, NULL,
+>
+> Why threaded interrupt with only hard interrupt handler? If parent
+> interrupt is threaded use "any_context_irq" here.
+>
 
-On 1/18/2019 5:52 PM, Sai Prakash Ranjan wrote:
-> SDM845 has ETMv4.2 and can use the existing etm4x driver.
-> But the current etm driver checks only for ETMv4.0 and
-> errors out for other etm4x versions. This patch adds this
-> missing support to enable SoC's with ETMv4x to use same
-> driver by checking only the ETM architecture major version
-> number.
->
-> Without this change, we get below error during etm probe:
->
-> / # dmesg | grep etm
-> [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-> [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-> [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-> [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-> [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-> [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-> [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-> [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
->
-> With this change, etm probe is successful:
->
-> / # dmesg | grep coresight
-> [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-> [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-> [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-> [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-> [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-> [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-> [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-> [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
->
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-> ---
->   drivers/hwtracing/coresight/coresight-etm4x.c | 2 +-
->   drivers/hwtracing/coresight/coresight-etm4x.h | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-> index 53e2fb6e86f6..93d5f1f3145e 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-> @@ -55,7 +55,7 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
->   
->   static bool etm4_arch_supported(u8 arch)
->   {
-> -	switch (arch) {
-> +	switch (arch >> 4) {
+Hi Dmitry,
 
+actually it's the other way around. Take a look at the function
+prototype for  devm_request_threaded_irq()[1].
 
-While this looks good, from what it looks like arch is a combination of 
-major version
-minor version. So, will it be better to masks, and shifts macros instead 
-of a magic
-number shift.
-But, frankly it's upto Mathieu to decide the readability of this. So, I 
-leave it to him.
+The third parameter is the hard-irq handler (NULL in my patch), the
+fourth is the thread function. Actually even if I did what you're
+saying - it would never work as this is a nested irq for which the
+hard-irq handler is never called.
 
-Thanks
-Vivek
+For the rest: I'll fix it in v2.
 
->   	case ETM_ARCH_V4:
->   		break;
->   	default:
-> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.h b/drivers/hwtracing/coresight/coresight-etm4x.h
-> index 52786e9d8926..05d4bd330881 100644
-> --- a/drivers/hwtracing/coresight/coresight-etm4x.h
-> +++ b/drivers/hwtracing/coresight/coresight-etm4x.h
-> @@ -136,7 +136,7 @@
->   #define ETM_MAX_RES_SEL			16
->   #define ETM_MAX_SS_CMP			8
->   
-> -#define ETM_ARCH_V4			0x40
-> +#define ETM_ARCH_V4			0x4
->   #define ETMv4_SYNC_MASK			0x1F
->   #define ETM_CYC_THRESHOLD_MASK		0xFFF
->   #define ETM_CYC_THRESHOLD_DEFAULT       0x100
+Best regards,
+Bartosz Golaszewski
+
+[1] https://elixir.bootlin.com/linux/latest/source/kernel/irq/devres.c#L52
+
+> > +                                    max77650_onkey_falling,
+> > +                                    IRQF_ONESHOT, "onkey-down", onkey)=
+;
+>
+> Why do you need oneshot with interrupt that is essentially not threaded?
+>
+> > +     if (rv)
+> > +             return rv;
+> > +
+> > +     rv =3D devm_request_threaded_irq(dev, irq_r, NULL,
+> > +                                    max77650_onkey_rising,
+> > +                                    IRQF_ONESHOT, "onkey-up", onkey);
+> > +     if (rv)
+> > +             return rv;
+> > +
+> > +     return input_register_device(onkey->input);
+> > +}
+> > +
+> > +static struct platform_driver max77650_onkey_driver =3D {
+> > +     .driver =3D {
+> > +             .name =3D "max77650-onkey",
+> > +     },
+> > +     .probe =3D max77650_onkey_probe,
+> > +};
+> > +module_platform_driver(max77650_onkey_driver);
+> > +
+> > +MODULE_DESCRIPTION("MAXIM 77650/77651 ONKEY driver");
+> > +MODULE_AUTHOR("Bartosz Golaszewski <bgolaszewski@baylibre.com>");
+> > +MODULE_LICENSE("GPL");
+>
+> SPDX header say GPL-2.0 so please "GPL v2" here as "GPL" means v2 and
+> later.
+>
+> Thanks.
+>
+> --
+> Dmitry
