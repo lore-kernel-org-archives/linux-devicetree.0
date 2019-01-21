@@ -1,61 +1,63 @@
 From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH V2 2/2] dt-bindings: interrupt-controller: Update csky mpintc
-Date: Mon, 21 Jan 2019 08:12:15 -0600
-Message-ID: <CAL_JsqKjQK-qViMm55EiP5hXjfr04++5vBTAXCEa6yg9u1qCaQ@mail.gmail.com>
-References: <1547830371-22122-1-git-send-email-guoren@kernel.org> <1547830371-22122-2-git-send-email-guoren@kernel.org>
+Subject: Re: [PATCH 3/4] dt-bindings: spi: Add the DMA properties for the SPI
+ dma mode
+Date: Mon, 21 Jan 2019 07:52:57 -0600
+Message-ID: <CAL_Jsq+VpO+pX0A27-v_U+4kQKXKD5O1EWrn708RDeLsqnU1ng@mail.gmail.com>
+References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
+ <7538d5806003b8f67e7e0d35638315974b7c2b50.1547559542.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547830371-22122-2-git-send-email-guoren@kernel.org>
+In-Reply-To: <7538d5806003b8f67e7e0d35638315974b7c2b50.1547559542.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: guoren@kernel.org
-Cc: Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Mark Rutland <mark.rutland@arm.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Guo Ren <ren_guo@c-sky.com>
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, lanqing.liu@unisoc.com, linux-spi <linux-spi@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2019 at 10:53 AM <guoren@kernel.org> wrote:
+On Tue, Jan 15, 2019 at 7:47 AM Baolin Wang <baolin.wang@linaro.org> wrote:
 >
-> From: Guo Ren <ren_guo@c-sky.com>
+> From: Lanqing Liu <lanqing.liu@spreadtrum.com>
+
+The email address should be updated with unisoc.com.
+
+> Add the DMA properties for the SPI dma mode.
 >
-> Add trigger type and priority setting for csky,mpintc.
->
-> Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+> Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
->  .../bindings/interrupt-controller/csky,mpintc.txt  | 33 +++++++++++++++++++---
->  1 file changed, 29 insertions(+), 4 deletions(-)
+>  Documentation/devicetree/bindings/spi/spi-sprd.txt |    9 +++++++++
+>  1 file changed, 9 insertions(+)
 >
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> index ab921f1..badbd38 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
-> @@ -6,11 +6,18 @@ C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
->  SMP soc, and it also could be used in non-SMP system.
+> diff --git a/Documentation/devicetree/bindings/spi/spi-sprd.txt b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+> index bad211a..01ef53f 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-sprd.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+> @@ -14,6 +14,12 @@ Required properties:
+>         address on the SPI bus. Should be set to 1.
+>  - #size-cells: Should be set to 0.
 >
->  Interrupt number definition:
-> -
->    0-15  : software irq, and we use 15 as our IPI_IRQ.
->   16-31  : private  irq, and we use 16 as the co-processor timer.
->   31-1024: common irq for soc ip.
->
-> +Interrupt triger mode:
-> + IRQ_TYPE_LEVEL_HIGH (default)
-> + IRQ_TYPE_LEVEL_LOW
-> + IRQ_TYPE_EDGE_RISING
-> + IRQ_TYPE_EDGE_FALLING
+> +Optional properties:
+> +dma-names: Should contain names of the SPI used DMA channel.
+> +dmas: Should contain DMA channels which the SPI used sorted in the
+> +       same order as the dma-names property.
+> +sprd,dma-slave-ids: Should contain the DMA number that the SPI hardware required.
 > +
-> +Interrupt priority range: 0-255
-> +
->  =============================
->  intc node bindings definition
->  =============================
-> @@ -26,15 +33,33 @@ intc node bindings definition
->         - #interrupt-cells
->                 Usage: required
->                 Value type: <u32>
-> -               Definition: must be <1>
-> +               Definition: could be <1> or <2> or <3>
+>  Example:
+>  spi0: spi@70a00000{
+>         compatible = "sprd,sc9860-spi";
+> @@ -21,6 +27,9 @@ spi0: spi@70a00000{
+>         interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+>         clock-names = "spi", "source","enable";
+>         clocks = <&clk_spi0>, <&ext_26m>, <&clk_ap_apb_gates 5>;
+> +       dma-names = "rx_chn", "tx_chn";
+> +       dmas = <&apdma 11>, <&apdma 12>;
+> +       sprd,dma-slave-ids = <11 12>;
 
-For a given controller, '#interrupt-cells' shouldn't really be
-variable. If there are different capabilities, then you should have
-different compatible strings.
+When would this be different values from what's in 'dmas'?
 
-Rob
+>         #address-cells = <1>;
+>         #size-cells = <0>;
+>  };
+> --
+> 1.7.9.5
+>
