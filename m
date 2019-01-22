@@ -1,161 +1,80 @@
-From: Andrey Smirnov <andrew.smirnov@gmail.com>
-Subject: [PATCH v5 1/3] reset: imx7: Add plubming to support multiple IP variants
-Date: Mon, 21 Jan 2019 18:10:41 -0800
-Message-ID: <20190122021043.25449-2-andrew.smirnov@gmail.com>
-References: <20190122021043.25449-1-andrew.smirnov@gmail.com>
+From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
+Subject: Re: [PATCH 1/3] media: dt: bindings: sunxi-ir: Add A64 compatible
+Date: Tue, 22 Jan 2019 10:16:13 +0800
+Message-ID: <CAGb2v67YsevDvjvTSh67wJNSJSUBuZ613hQWyorEiSzCUqjjkQ@mail.gmail.com>
+References: <20190111173015.12119-1-jernej.skrabec@siol.net>
+ <20190111173015.12119-2-jernej.skrabec@siol.net> <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw@mail.gmail.com>
+ <20190121095014.b6iq5dubfi7x2pi4@flea> <CAGb2v66d0wM8Yt2uS4MMhU6PP02h8CKwKjinasO6jtZ4ue1CAQ@mail.gmail.com>
+ <20190122001917.GA31407@bogus>
+Reply-To: wens-jdAy2FN1RRM@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122021043.25449-1-andrew.smirnov@gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de
-Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, linux-imx@nxp.com, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBCMILY6JWQBBB7HZTHRAKGQEULSZVHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190122001917.GA31407@bogus>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-In order to enable supporting i.MX8MQ with this driver, convert it to
-expect variant specific bits to be passed via driver data.
+On Tue, Jan 22, 2019 at 8:19 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+>
+> On Mon, Jan 21, 2019 at 05:57:57PM +0800, Chen-Yu Tsai wrote:
+> > On Mon, Jan 21, 2019 at 5:50 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
+> > >
+> > > Hi,
+> > >
+> > > I'm a bit late to the party, sorry for that.
+> > >
+> > > On Sat, Jan 12, 2019 at 09:56:11AM +0800, Chen-Yu Tsai wrote:
+> > > > On Sat, Jan 12, 2019 at 1:30 AM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
+> > > > >
+> > > > > A64 IR is compatible with A13, so add A64 compatible with A13 as a
+> > > > > fallback.
+> > > >
+> > > > We ask people to add the SoC-specific compatible as a contigency,
+> > > > in case things turn out to be not so "compatible".
+> > > >
+> > > > To be consistent with all the other SoCs and other peripherals,
+> > > > unless you already spotted a "compatible" difference in the
+> > > > hardware, i.e. the hardware isn't completely the same, this
+> > > > patch isn't needed. On the other hand, if you did, please mention
+> > > > the differences in the commit log.
+> > >
+> > > Even if we don't spot things, since we have the stable DT now, if we
+> > > ever had that compatible in the DT from day 1, it's much easier to
+> > > deal with.
+> > >
+> > > I'd really like to have that pattern for all the IPs even if we didn't
+> > > spot any issue, since we can't really say that the datasheet are
+> > > complete, and one can always make a mistake and overlook something.
+> > >
+> > > I'm fine with this version, and can apply it as is if we all agree.
+> >
+> > I'm OK with having the fallback compatible. I'm just pointing out
+> > that there are and will be a whole bunch of them, and we don't need
+> > to document all of them unless we are actually doing something to
+> > support them.
+>
+> Yes, you do. Otherwise, how will we validate what is and isn't a valid
+> set of compatible strings? It's not required yet, but bindings are
+> moving to json-schema.
 
-Cc: p.zabel@pengutronix.de
-Cc: Fabio Estevam <fabio.estevam@nxp.com>
-Cc: cphealy@gmail.com
-Cc: l.stach@pengutronix.de
-Cc: Leonard Crestez <leonard.crestez@nxp.com>
-Cc: "A.s. Dong" <aisheng.dong@nxp.com>
-Cc: Richard Zhu <hongxing.zhu@nxp.com>
-Cc: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org
-Cc: linux-imx@nxp.com
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-kernel@vger.kernel.org
-Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
----
- drivers/reset/reset-imx7.c | 50 +++++++++++++++++++++++++++-----------
- 1 file changed, 36 insertions(+), 14 deletions(-)
+Ideally, if we knew which IP blocks in each SoC were compatible with
+each other, we wouldn't need "per-SoC" compatible strings for each
+block. However in reality this doesn't happen, due to a combination
+of lack of time, lack of / uncertainty of documentation, and lack of
+hardware for testing by the contributors.
 
-diff --git a/drivers/reset/reset-imx7.c b/drivers/reset/reset-imx7.c
-index 77911fa8f31d..cb6e3bc4acc1 100644
---- a/drivers/reset/reset-imx7.c
-+++ b/drivers/reset/reset-imx7.c
-@@ -17,14 +17,26 @@
- 
- #include <linux/mfd/syscon.h>
- #include <linux/mod_devicetable.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/reset-controller.h>
- #include <linux/regmap.h>
- #include <dt-bindings/reset/imx7-reset.h>
- 
-+struct imx7_src_signal {
-+	unsigned int offset, bit;
-+};
-+
-+struct imx7_src_variant {
-+	const struct imx7_src_signal *signals;
-+	unsigned int signals_num;
-+	struct reset_control_ops ops;
-+};
-+
- struct imx7_src {
- 	struct reset_controller_dev rcdev;
- 	struct regmap *regmap;
-+	const struct imx7_src_signal *signals;
- };
- 
- enum imx7_src_registers {
-@@ -39,9 +51,14 @@ enum imx7_src_registers {
- 	SRC_DDRC_RCR		= 0x1000,
- };
- 
--struct imx7_src_signal {
--	unsigned int offset, bit;
--};
-+static int imx7_reset_update(struct imx7_src *imx7src,
-+			     unsigned long id, unsigned int value)
-+{
-+	const struct imx7_src_signal *signal = &imx7src->signals[id];
-+
-+	return regmap_update_bits(imx7src->regmap,
-+				  signal->offset, signal->bit, value);
-+}
- 
- static const struct imx7_src_signal imx7_src_signals[IMX7_RESET_NUM] = {
- 	[IMX7_RESET_A7_CORE_POR_RESET0] = { SRC_A7RCR0, BIT(0) },
-@@ -81,8 +98,8 @@ static int imx7_reset_set(struct reset_controller_dev *rcdev,
- 			  unsigned long id, bool assert)
- {
- 	struct imx7_src *imx7src = to_imx7_src(rcdev);
--	const struct imx7_src_signal *signal = &imx7_src_signals[id];
--	unsigned int value = assert ? signal->bit : 0;
-+	const unsigned int bit = imx7src->signals[id].bit;
-+	unsigned int value = assert ? bit : 0;
- 
- 	switch (id) {
- 	case IMX7_RESET_PCIEPHY:
-@@ -95,12 +112,11 @@ static int imx7_reset_set(struct reset_controller_dev *rcdev,
- 		break;
- 
- 	case IMX7_RESET_PCIE_CTRL_APPS_EN:
--		value = (assert) ? 0 : signal->bit;
-+		value = assert ? 0 : bit;
- 		break;
- 	}
- 
--	return regmap_update_bits(imx7src->regmap,
--				  signal->offset, signal->bit, value);
-+	return imx7_reset_update(imx7src, id, value);
- }
- 
- static int imx7_reset_assert(struct reset_controller_dev *rcdev,
-@@ -115,9 +131,13 @@ static int imx7_reset_deassert(struct reset_controller_dev *rcdev,
- 	return imx7_reset_set(rcdev, id, false);
- }
- 
--static const struct reset_control_ops imx7_reset_ops = {
--	.assert		= imx7_reset_assert,
--	.deassert	= imx7_reset_deassert,
-+static const struct imx7_src_variant variant_imx7 = {
-+	.signals = imx7_src_signals,
-+	.signals_num = ARRAY_SIZE(imx7_src_signals),
-+	.ops = {
-+		.assert   = imx7_reset_assert,
-+		.deassert = imx7_reset_deassert,
-+	},
- };
- 
- static int imx7_reset_probe(struct platform_device *pdev)
-@@ -125,11 +145,13 @@ static int imx7_reset_probe(struct platform_device *pdev)
- 	struct imx7_src *imx7src;
- 	struct device *dev = &pdev->dev;
- 	struct regmap_config config = { .name = "src" };
-+	const struct imx7_src_variant *variant = of_device_get_match_data(dev);
- 
- 	imx7src = devm_kzalloc(dev, sizeof(*imx7src), GFP_KERNEL);
- 	if (!imx7src)
- 		return -ENOMEM;
- 
-+	imx7src->signals = variant->signals;
- 	imx7src->regmap = syscon_node_to_regmap(dev->of_node);
- 	if (IS_ERR(imx7src->regmap)) {
- 		dev_err(dev, "Unable to get imx7-src regmap");
-@@ -138,15 +160,15 @@ static int imx7_reset_probe(struct platform_device *pdev)
- 	regmap_attach_dev(dev, imx7src->regmap, &config);
- 
- 	imx7src->rcdev.owner     = THIS_MODULE;
--	imx7src->rcdev.nr_resets = IMX7_RESET_NUM;
--	imx7src->rcdev.ops       = &imx7_reset_ops;
-+	imx7src->rcdev.nr_resets = variant->signals_num;
-+	imx7src->rcdev.ops       = &variant->ops;
- 	imx7src->rcdev.of_node   = dev->of_node;
- 
- 	return devm_reset_controller_register(dev, &imx7src->rcdev);
- }
- 
- static const struct of_device_id imx7_reset_dt_ids[] = {
--	{ .compatible = "fsl,imx7d-src", },
-+	{ .compatible = "fsl,imx7d-src", .data = &variant_imx7 },
- 	{ /* sentinel */ },
- };
- 
--- 
-2.20.1
+The per-SoC compatible we ask people to add are a contigency plan,
+for when things don't actually work, and we need some way to support
+that specific piece of hardware on old DTs. At which point we will
+add that SoC-specific compatible as a new compatible string to the
+bindings. But not before.
+
+ChenYu
