@@ -1,50 +1,91 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v13 0/8] Introduce on-chip interconnect API
-Date: Tue, 22 Jan 2019 16:00:49 +0100
-Message-ID: <20190122150048.GA11466@kroah.com>
-References: <20190116161103.6937-1-georgi.djakov@linaro.org>
- <20190122124204.GA26969@kroah.com>
- <2ac9b994-ecbf-05fd-5c01-7ecd0089c744@linaro.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Tue, 22 Jan 2019 20:32:51 +0530
+Message-ID: <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
+References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <2ac9b994-ecbf-05fd-5c01-7ecd0089c744@linaro.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: sanjayc@nvidia.com, maxime.ripard@bootlin.com, mturquette@baylibre.com, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, skannan@codeaurora.org, abailon@baylibre.com, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, khilman@baylibre.com, evgreen@chromium.org, ksitaraman@nvidia.com, devicetree@vger.kernel.org, arnd@arndb.de, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, henryc.chen@mediatek.com, andy.gross@linaro.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rjw@rjwysocki.net, dianders@chromium.org, amit.kucheria@linaro.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, olof@lixom.net
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 04:45:20PM +0200, Georgi Djakov wrote:
-> On 1/22/19 14:42, Greg KH wrote:
-> > On Wed, Jan 16, 2019 at 06:10:55PM +0200, Georgi Djakov wrote:
-> [..]
-> > 
-> > All now queued up, thanks.
-> > 
-> > greg k-h
-> 
-> Hi Greg,
-> 
-> Thanks for considering these patches! Actually i have a branch named
-> icc-next [1] which is pulled into linux-next. I will drop these same
-> patches to avoid conflicts.
-> 
-> If all is well, i was wondering how to proceed with follow-up patches.
-> Some consumers of this API are already floating on the lists. How about
-> sending you a pull request before the merge window with the collected
-> patches?
+Hi Suzuki,
 
-Sure, that works, or you can just send them as patches, either works for
-me.
+Thanks for looking into this. Please find my response inline.
 
-greg k-h
+On 1/22/2019 7:30 PM, Suzuki K Poulose wrote:
+> Hi Sai,
+> 
+> On 01/22/2019 01:37 PM, Sai Prakash Ranjan wrote:
+>> Add coresight components found on Qualcomm SDM845 SoC.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>
+> 
+> Sorry, but I hadn't noticed the PID override strings below. Please
+> find the question.
+>
+[..]
+
+>> +        /*
+>> +         * On QCOM SDM845, we bypass the normal AMBA bus discovery
+>> +         * method by forcing the peripheral ID because of the wrong
+>> +         * value read from ETM PID registers.
+>> +         */
+> 
+> What is the value read back from the ETM PIDx registers ? Do they
+> provide inconsistent or incompatible value w.r.t the ETM/Coresight
+> architecture ? If it is an unsupported CPU with proper values,
+> you must add them to the table in etm4x driver.
+> 
+
+The values read from ETM PIDx registers are actually inconsistent
+and is different for some ETMs.
+
+Below are the PIDs read for SDM845:
+
+[    5.996448] resname=etm@7040000 pid=001bb803
+[    6.052891] resname=etm@7140000 pid=001bb803
+
+<snip> .. (Same pid=001bb803 for etm@7240000 to etm@7540000 but differs
+for other 2 cpus as shown below)
+
+[    6.266687] resname=etm@7640000 pid=001bb802
+[    6.329171] resname=etm@7740000 pid=001bb802
+
+This is the case for MSM8996 also as shown below where PID
+value is not correct and has to be hardcoded.
+
+For MSM8996:
+
+resname=etm@3b40000 pid=102f0205
+
+>> +        etm@7040000 {
+>> +            compatible = "arm,coresight-etm4x", "arm,primecell";
+>> +            arm,primecell-periphid = <0x000bb95d> > +            reg 
+>> = <0 0x07040000 0 0x1000>;
+>> +
+>> +            cpu = <&CPU0>;
+>> +
+> 
+> You seem to be specifying the PID of A53 ETM all over, while at least
+> one of your cores is ETMv4.2 (from the other patch) and A53 is not
+> ETMv4.2. As above, it would be good to add the PID to the table.
+> 
+
+As explained in above comment, PID values read are not correct. Please 
+let me know if I am not clear.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
