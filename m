@@ -1,105 +1,91 @@
-From: <Tudor.Ambarus@microchip.com>
-Subject: Re: [PATCH v4 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Tue, 22 Jan 2019 09:55:26 +0000
-Message-ID: <c2be17a4-4725-e68b-f6f7-1ce78fd80e14@microchip.com>
-References: <20190122064137.17114-1-vigneshr@ti.com>
- <20190122064137.17114-3-vigneshr@ti.com>
+From: Sean Wang <sean.wang@mediatek.com>
+Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
+Date: Tue, 22 Jan 2019 18:25:52 +0800
+Message-ID: <1548152752.24552.17.camel@mtkswgap22>
+References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
+ <1547744074-28308-3-git-send-email-lollivier@baylibre.com>
+ <20190121171019.GA2903@bogus> <86imyhapl9.fsf@baylibre.com>
+ <CAGp9LzpgZDEdKFH4ZLqxtO60unxXRJoXNsGugNT=oojHDMp+3g@mail.gmail.com>
+ <86imyh13kb.fsf@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122064137.17114-3-vigneshr@ti.com>
-Content-Language: en-US
-Content-ID: <CB74544DBD439C4585655E1B01B82001@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: vigneshr@ti.com, bbrezillon@kernel.org
-Cc: marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <86imyh13kb.fsf@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh@kernel.org>, devicetree@vger.kernel.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Sean Wang <sean.wang@kernel.org>, Johan Hovold <johan@kernel.org>, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-DQoNCk9uIDAxLzIyLzIwMTkgMDg6NDEgQU0sIFZpZ25lc2ggUiB3cm90ZToNCj4gQ2FkZW5jZSBP
-U1BJIGNvbnRyb2xsZXIgSVAgc3VwcG9ydHMgT2N0YWwgSU8gKHg4IElPIGxpbmVzKSwNCj4gSXQg
-YWxzbyBoYXMgYW4gaW50ZWdyYXRlZCBQSFkuIElQIHJlZ2lzdGVyIGxheW91dCBpcyB2ZXJ5DQo+
-IHNpbWlsYXIgdG8gZXhpc3RpbmcgUVNQSSBJUCBleGNlcHQgZm9yIGFkZGl0aW9uYWwgYml0cyB0
-byBzdXBwb3J0IE9jdGFsDQo+IGFuZCBPY3RhbCBERFIgbW9kZS4gVGhlcmVmb3JlLCBleHRlbmQg
-Y3VycmVudCBkcml2ZXIgdG8gc3VwcG9ydCBPY3RhbA0KPiBtb2RlLiBPbmx5IE9jdGFsIFNEUiBy
-ZWFkICgxLTEtOCltb2RlIGlzIHN1cHBvcnRlZCBmb3Igbm93Lg0KPiANCj4gVGVzdGVkIHdpdGgg
-bXQzNXh1NTEyYWJhIE9jdGFsIGZsYXNoIG9uIFRJJ3MgQU02NTQgRVZNLg0KPiANCj4gU2lnbmVk
-LW9mZi1ieTogVmlnbmVzaCBSIDx2aWduZXNockB0aS5jb20+DQo+IC0tLQ0KPiANCj4gdjQ6IEZp
-eCBjb21tZW50cyBieSBUdWRvciBvbiB2Mw0KPiB2MzogTm8gY2hhbmdlcw0KPiB2MjogRGVjbGFy
-ZSBPY3RhbCBtb2RlIGNhcGFiaWxpdHkgYmFzZWQgb24gY29tcGF0aWJsZS4NCj4gDQo+ICBkcml2
-ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jIHwgNTMgKysrKysrKysrKysrKysrKysr
-KysrLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRp
-b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9jYWRlbmNlLXF1
-YWRzcGkuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gaW5kZXgg
-MDRjZWRkM2EyYmY2Li4yMDkxYWRkYzQ1YTMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL3Nw
-aS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gKysrIGIvZHJpdmVycy9tdGQvc3BpLW5vci9jYWRl
-bmNlLXF1YWRzcGkuYw0KPiBAQCAtNDQsNiArNDQsMTIgQEANCj4gIC8qIFF1aXJrcyAqLw0KPiAg
-I2RlZmluZSBDUVNQSV9ORUVEU19XUl9ERUxBWQkJQklUKDApDQo+ICANCj4gKy8qIENhcGFiaWxp
-dGllcyBtYXNrICovDQo+ICsjZGVmaW5lIGNxc3BpX2Jhc2VfaHdjYXBzX21hc2sJCQkJCVwNCj4g
-KwkoU05PUl9IV0NBUFNfUkVBRCB8IFNOT1JfSFdDQVBTX1JFQURfRkFTVCB8CQlcDQo+ICsJU05P
-Ul9IV0NBUFNfUkVBRF8xXzFfMiB8IFNOT1JfSFdDQVBTX1JFQURfMV8xXzQgfAlcDQo+ICsJU05P
-Ul9IV0NBUFNfUFApDQo+ICsNCj4gIHN0cnVjdCBjcXNwaV9zdDsNCj4gIA0KPiAgc3RydWN0IGNx
-c3BpX2ZsYXNoX3BkYXRhIHsNCj4gQEAgLTkzLDYgKzk5LDExIEBAIHN0cnVjdCBjcXNwaV9zdCB7
-DQo+ICAJc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIGZfcGRhdGFbQ1FTUElfTUFYX0NISVBTRUxF
-Q1RdOw0KPiAgfTsNCj4gIA0KPiArc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSB7DQo+ICsJ
-dTMyIGh3Y2Fwc19tYXNrOw0KPiArCXU4IHF1aXJrczsNCj4gK307DQo+ICsNCj4gIC8qIE9wZXJh
-dGlvbiB0aW1lb3V0IHZhbHVlICovDQo+ICAjZGVmaW5lIENRU1BJX1RJTUVPVVRfTVMJCQk1MDAN
-Cj4gICNkZWZpbmUgQ1FTUElfUkVBRF9USU1FT1VUX01TCQkJMTANCj4gQEAgLTEwMSw2ICsxMTIs
-NyBAQCBzdHJ1Y3QgY3FzcGlfc3Qgew0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfU0lOR0xF
-CQkJMA0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfRFVBTAkJCTENCj4gICNkZWZpbmUgQ1FT
-UElfSU5TVF9UWVBFX1FVQUQJCQkyDQo+ICsjZGVmaW5lIENRU1BJX0lOU1RfVFlQRV9PQ1RBTAkJ
-CTMNCj4gIA0KPiAgI2RlZmluZSBDUVNQSV9EVU1NWV9DTEtTX1BFUl9CWVRFCQk4DQo+ICAjZGVm
-aW5lIENRU1BJX0RVTU1ZX0JZVEVTX01BWAkJCTQNCj4gQEAgLTkxMSw2ICs5MjMsOSBAQCBzdGF0
-aWMgaW50IGNxc3BpX3NldF9wcm90b2NvbChzdHJ1Y3Qgc3BpX25vciAqbm9yLCBjb25zdCBpbnQg
-cmVhZCkNCj4gIAkJY2FzZSBTTk9SX1BST1RPXzFfMV80Og0KPiAgCQkJZl9wZGF0YS0+ZGF0YV93
-aWR0aCA9IENRU1BJX0lOU1RfVFlQRV9RVUFEOw0KPiAgCQkJYnJlYWs7DQo+ICsJCWNhc2UgU05P
-Ul9QUk9UT18xXzFfODoNCj4gKwkJCWZfcGRhdGEtPmRhdGFfd2lkdGggPSBDUVNQSV9JTlNUX1RZ
-UEVfT0NUQUw7DQo+ICsJCQlicmVhazsNCj4gIAkJZGVmYXVsdDoNCj4gIAkJCXJldHVybiAtRUlO
-VkFMOw0KPiAgCQl9DQo+IEBAIC0xMjEzLDIxICsxMjI4LDIyIEBAIHN0YXRpYyB2b2lkIGNxc3Bp
-X3JlcXVlc3RfbW1hcF9kbWEoc3RydWN0IGNxc3BpX3N0ICpjcXNwaSkNCj4gIA0KPiAgc3RhdGlj
-IGludCBjcXNwaV9zZXR1cF9mbGFzaChzdHJ1Y3QgY3FzcGlfc3QgKmNxc3BpLCBzdHJ1Y3QgZGV2
-aWNlX25vZGUgKm5wKQ0KPiAgew0KPiAtCWNvbnN0IHN0cnVjdCBzcGlfbm9yX2h3Y2FwcyBod2Nh
-cHMgPSB7DQo+IC0JCS5tYXNrID0gU05PUl9IV0NBUFNfUkVBRCB8DQo+IC0JCQlTTk9SX0hXQ0FQ
-U19SRUFEX0ZBU1QgfA0KPiAtCQkJU05PUl9IV0NBUFNfUkVBRF8xXzFfMiB8DQo+IC0JCQlTTk9S
-X0hXQ0FQU19SRUFEXzFfMV80IHwNCj4gLQkJCVNOT1JfSFdDQVBTX1BQLA0KPiAtCX07DQo+ICAJ
-c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGNxc3BpLT5wZGV2Ow0KPiAgCXN0cnVjdCBk
-ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ICsJY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZlcl9w
-bGF0ZGF0YSAqZGRhdGE7DQo+ICsJc3RydWN0IHNwaV9ub3JfaHdjYXBzIGh3Y2FwczsNCj4gIAlz
-dHJ1Y3QgY3FzcGlfZmxhc2hfcGRhdGEgKmZfcGRhdGE7DQo+ICAJc3RydWN0IHNwaV9ub3IgKm5v
-cjsNCj4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gIAl1bnNpZ25lZCBpbnQgY3M7DQo+ICAJ
-aW50IGksIHJldDsNCj4gIA0KPiArCWRkYXRhID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRl
-dik7DQo+ICsJaWYgKCFkZGF0YSkNCj4gKwkJaHdjYXBzLm1hc2sgPSBjcXNwaV9iYXNlX2h3Y2Fw
-c19tYXNrOw0KDQpOaWNlIQ0KDQpSZXZpZXdlZC1ieTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1i
-YXJ1c0BtaWNyb2NoaXAuY29tPg0KDQo+ICsJZWxzZQ0KPiArCQlod2NhcHMubWFzayA9IGRkYXRh
-LT5od2NhcHNfbWFzazsNCj4gKw0KPiAgCS8qIEdldCBmbGFzaCBkZXZpY2UgZGF0YSAqLw0KPiAg
-CWZvcl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKGRldi0+b2Zfbm9kZSwgbnApIHsNCj4g
-IAkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJyZWciLCAmY3MpOw0KPiBAQCAtMTMx
-MCw3ICsxMzI2LDcgQEAgc3RhdGljIGludCBjcXNwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
-aWNlICpwZGV2KQ0KPiAgCXN0cnVjdCBjcXNwaV9zdCAqY3FzcGk7DQo+ICAJc3RydWN0IHJlc291
-cmNlICpyZXM7DQo+ICAJc3RydWN0IHJlc291cmNlICpyZXNfYWhiOw0KPiAtCXVuc2lnbmVkIGxv
-bmcgZGF0YTsNCj4gKwljb25zdCBzdHJ1Y3QgY3FzcGlfZHJpdmVyX3BsYXRkYXRhICpkZGF0YTsN
-Cj4gIAlpbnQgcmV0Ow0KPiAgCWludCBpcnE7DQo+ICANCj4gQEAgLTEzNzcsOCArMTM5Myw4IEBA
-IHN0YXRpYyBpbnQgY3FzcGlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4g
-IAl9DQo+ICANCj4gIAljcXNwaS0+bWFzdGVyX3JlZl9jbGtfaHogPSBjbGtfZ2V0X3JhdGUoY3Fz
-cGktPmNsayk7DQo+IC0JZGF0YSAgPSAodW5zaWduZWQgbG9uZylvZl9kZXZpY2VfZ2V0X21hdGNo
-X2RhdGEoZGV2KTsNCj4gLQlpZiAoZGF0YSAmIENRU1BJX05FRURTX1dSX0RFTEFZKQ0KPiArCWRk
-YXRhICA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiArCWlmIChkZGF0YSAmJiAo
-ZGRhdGEtPnF1aXJrcyAmIENRU1BJX05FRURTX1dSX0RFTEFZKSkNCj4gIAkJY3FzcGktPndyX2Rl
-bGF5ID0gNSAqIERJVl9ST1VORF9VUChOU0VDX1BFUl9TRUMsDQo+ICAJCQkJCQkgICBjcXNwaS0+
-bWFzdGVyX3JlZl9jbGtfaHopOw0KPiAgDQo+IEBAIC0xNDYwLDE0ICsxNDc2LDI3IEBAIHN0YXRp
-YyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBjcXNwaV9fZGV2X3BtX29wcyA9IHsNCj4gICNkZWZp
-bmUgQ1FTUElfREVWX1BNX09QUwlOVUxMDQo+ICAjZW5kaWYNCj4gIA0KPiArc3RhdGljIGNvbnN0
-IHN0cnVjdCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgazJnX3FzcGkgPSB7DQo+ICsJLmh3Y2Fwc19t
-YXNrID0gY3FzcGlfYmFzZV9od2NhcHNfbWFzaywNCj4gKwkucXVpcmtzID0gQ1FTUElfTkVFRFNf
-V1JfREVMQVksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZl
-cl9wbGF0ZGF0YSBhbTY1NF9vc3BpID0gew0KPiArCS5od2NhcHNfbWFzayA9IGNxc3BpX2Jhc2Vf
-aHdjYXBzX21hc2sgfCBTTk9SX0hXQ0FQU19SRUFEXzFfMV84LA0KPiArCS5xdWlya3MgPSBDUVNQ
-SV9ORUVEU19XUl9ERUxBWSwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
-ZGV2aWNlX2lkIGNxc3BpX2R0X2lkc1tdID0gew0KPiAgCXsNCj4gIAkJLmNvbXBhdGlibGUgPSAi
-Y2Rucyxxc3BpLW5vciIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKikwLA0KPiAgCX0sDQo+ICAJew0K
-PiAgCQkuY29tcGF0aWJsZSA9ICJ0aSxrMmctcXNwaSIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKilD
-UVNQSV9ORUVEU19XUl9ERUxBWSwNCj4gKwkJLmRhdGEgPSAmazJnX3FzcGksDQo+ICsJfSwNCj4g
-Kwl7DQo+ICsJCS5jb21wYXRpYmxlID0gInRpLGFtNjU0LW9zcGkiLA0KPiArCQkuZGF0YSA9ICZh
-bTY1NF9vc3BpLA0KPiAgCX0sDQo+ICAJeyAvKiBlbmQgb2YgdGFibGUgKi8gfQ0KPiAgfTsNCj4g
-DQo=
+On Tue, 2019-01-22 at 09:47 +0100, Loys Ollivier wrote:
+> On Mon 21 Jan 2019 at 18:44, Sean Wang wrote:
+> 
+> > On Mon, Jan 21, 2019 at 9:29 AM Loys Ollivier <lollivier@baylibre.com> 
+> > wrote:
+> >>
+> >>
+> >> On Mon 21 Jan 2019 at 17:10, Rob Herring wrote:
+> >>
+> >> > On Thu, 17 Jan 2019 17:54:32 +0100, Loys Ollivier wrote:
+> >> >> Add binding for Mediatek-based GNSS receivers.
+> >> >>
+> >> >> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
+> >> >> ---
+> >> >>
+> >> >> v2:
+> >> >> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+> >> >> Moved current-speed as an optional propertie.
+> >> >> Removed the status line in the example.
+> >> >> Added "mediatek,mt3339" compatible.
+> >> >>
+> >> >>  .../devicetree/bindings/gnss/mediatek.txt          | 39
+> >> >>  ++++++++++++++++++++++
+> >> >>  1 file changed, 39 insertions(+)
+> >> >>  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+> >> >>
+> >> >
+> >> > Reviewed-by: Rob Herring <robh@kernel.org>
+> >>
+> >> Thanks Rob,
+> >> If there are no objections by others, I'll stop sending these two patch
+> >> (1/4 and 2/4) and reference any new patch serie for 3 and 4 as depending
+> >> on those two.
+> >>
+> >
+> > Hi Loys,
+> >
+> > Thanks for adding the first GPS device driver. It's really nice to see
+> > more device drivers added to upstream support.
+> >
+> Hi Sean,
+> 
+> Glad to know you're supporting this initiative.
+> 
+> > Do you mind send the series again with Cc linux-mediatek@lists.infradead.org 
+> > ?
+> >
+> The series already has linux-mediatek@lists.infradead.org in Cc. Does it
+> need a resend ?
+> 
+
+It doesn't need a resend, it's my mistake. thanks for clarifying soon.
+
+> > Sean
+> >
+> >> --
+> >> -L
+> >>
+> >> _______________________________________________
+> >> Linux-mediatek mailing list
+> >> Linux-mediatek@lists.infradead.org
+> >> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> 
