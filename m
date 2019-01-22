@@ -1,82 +1,47 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Tue, 22 Jan 2019 14:00:40 +0000
-Message-ID: <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
-References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v1] pinctrl: mediatek: improve Kconfig dependencies
+Date: Tue, 22 Jan 2019 22:00:48 +0800
+Message-ID: <1548165648.2429.13.camel@mtkswgap22>
+References: <e4eb66dec2901016e01767932461c5d560762f66.1544666839.git.ryder.lee@mediatek.com>
+ <CACRpkdZMgnj2S8xPPFm3PnDGrqTerOwWcS-+Uruy1uLH24HRLg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CACRpkdZMgnj2S8xPPFm3PnDGrqTerOwWcS-+Uruy1uLH24HRLg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Linus Walleij <linus.walleij@linaro.org>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao =?UTF-8?Q?=28=E9=AB=98=E6=83=9F=E6=9D=B0=29?= <Weijie.Gao@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, stable@vger.kernel.org, "open
+ list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "moderated
+ list:ARM/Mediatek SoC support" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Sai,
+CC: stable@vger.kernel.org
 
-On 01/22/2019 01:37 PM, Sai Prakash Ranjan wrote:
-> Add coresight components found on Qualcomm SDM845 SoC.
+On Fri, 2018-12-21 at 18:17 +0800, Linus Walleij wrote:
+> On Thu, Dec 13, 2018 at 3:28 AM Ryder Lee <ryder.lee@mediatek.com> wrote:
 > 
-> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> > Remove prompts to make all pinctrl cores to non-visible symbols and
+> > make sure the target SoCs would be coupled with the corresponding
+> > cores.
+> >
+> > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 > 
-
-Sorry, but I hadn't noticed the PID override strings below. Please
-find the question.
-
-> ---
-> Depends on AOSS QMP side channel patches and AMBA bus pclk change
-> by Bjorn Andersson [1][2].
-> Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
-> and size cells for soc") [3].
+> Patch applied with ACK and Tested-by.
 > 
-> [1] https://lore.kernel.org/lkml/20190106080915.4493-1-bjorn.andersson@linaro.org/
-> [2] https://lore.kernel.org/lkml/20190106080915.4493-7-bjorn.andersson@linaro.org/
-> [3] https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/
+> Yours,
+> Linus Walleij
 
-[...]
+I forgot to add stable-kernel into CC list.
+This patch should be applied to stable-rc linux-4.20.y.
 
-	};
-> +
-> +		etr@6048000 {
-> +			compatible = "arm,coresight-tmc", "arm,primecell";
-> +			reg = <0 0x06048000 0 0x1000>;
-> +
-> +			power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
-> +			arm,scatter-gather;
-> +
-> +			in-ports {
-> +				port {
-> +					etr_in: endpoint {
-> +						remote-endpoint =
-> +						  <&replicator_out>;
-> +					};
-> +				};
-> +			};
-> +		};
-> +
-> +		/*
-> +		 * On QCOM SDM845, we bypass the normal AMBA bus discovery
-> +		 * method by forcing the peripheral ID because of the wrong
-> +		 * value read from ETM PID registers.
-> +		 */
-
-What is the value read back from the ETM PIDx registers ? Do they
-provide inconsistent or incompatible value w.r.t the ETM/Coresight
-architecture ? If it is an unsupported CPU with proper values,
-you must add them to the table in etm4x driver.
-
-> +		etm@7040000 {
-> +			compatible = "arm,coresight-etm4x", "arm,primecell";
-> +			arm,primecell-periphid = <0x000bb95d> > +			reg = <0 0x07040000 0 0x1000>;
-> +
-> +			cpu = <&CPU0>;
-> +
-
-You seem to be specifying the PID of A53 ETM all over, while at least
-one of your cores is ETMv4.2 (from the other patch) and A53 is not
-ETMv4.2. As above, it would be good to add the PID to the table.
-
-Suzuki
+Sorry for the inconvenience. 
+Ryder
