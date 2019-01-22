@@ -1,102 +1,60 @@
-From: Ran Wang <ran.wang_1@nxp.com>
-Subject: RE: [PATCH 1/2] usb: dwc3: Add avoiding vbus glitch happen during
- xhci reset
-Date: Tue, 22 Jan 2019 02:38:31 +0000
-Message-ID: <AM5PR0402MB286524243DB67DA15AE4EA42F1980@AM5PR0402MB2865.eurprd04.prod.outlook.com>
-References: <20190116064820.20007-1-ran.wang_1@nxp.com>
- <20190116064820.20007-2-ran.wang_1@nxp.com> <20190122010310.GA5165@bogus>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2 platforms
+Date: Tue, 22 Jan 2019 10:53:57 +0800
+Message-ID: <20190122025355.GA19233@dragon>
+References: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
+ <1545406240-3061-2-git-send-email-ioana.ciornei@nxp.com>
+ <20190112024725.GO32649@dragon>
+ <VI1PR0402MB2800E8F9F1884EB0669EE9F0E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+ <20190116105559.GM15808@dragon>
+ <VI1PR0402MB28007817A29E6116D1FAFC2BE0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+ <VI1PR0402MB2800477D1F1FE0E78F1D8D33E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122010310.GA5165@bogus>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <VI1PR0402MB2800477D1F1FE0E78F1D8D33E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Ioana Ciornei <ioana.ciornei@nxp.com>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Wed, Jan 16, 2019 at 05:31:46PM +0000, Ioana Ciornei wrote:
+> > > Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2
+> > > platforms
+> > >
+> > > On Wed, Jan 16, 2019 at 10:02:01AM +0000, Ioana Ciornei wrote:
+> > > > > Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for
+> > > > > DPAA2 platforms
+> > > > >
+> > > > > On Fri, Dec 21, 2018 at 03:31:09PM +0000, Ioana Ciornei wrote:
+> > > > > > Add the dpaa2-console device tree node for the following
+> > > > > > DPAA2 based platforms: LS1088A, LS2080A and LS2088A.
+> > > > > >
+> > > > > > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> > > > >
+> > > > > DTS patch generally goes to the last in a series.
+> > > >
+> > > > Should I resend this with the DTS patch the last?
+> > >
+> > > You do not have to resend the series only for this.  It's pretty much
+> > > a suggestion for future posting.
+> > 
+> 
+> One more thing, do you have any other feedback on the DTS part?
+> I think the best path for this patch set is through Leo's fsl soc tree but of course we need an ack from the DTS part also.
 
-On January 22, 2019 09:03, Rob Herring wrote:
->=20
-> On Wed, Jan 16, 2019 at 06:48:06AM +0000, Ran Wang wrote:
-> > When DWC3 is set to host mode by programming register DWC3_GCTL,
-> VUBS
->=20
-> s/VUBS/VBUS/
+I do not see there is a hard dependency between driver and dts part,
+e.g. build error or causing regression.  In that case, dts should just
+go via its channel.
 
-Yes, will fix it in next version.
-=20
-> > (or its control signal) will on immediately on related Root Hub ports.
->=20
-> /will on/will turn on/
-
-Got it. Thanks.
-
-> > Then the VUBS will be de-asserted for a little while during xhci reset
-> > (conducted by xhci driver) for a little while and back to normal.
-> >
-> > This VBUS glitch might cause some USB devices emuration fail if kernel
-> > boot with them connected. One SW workaround which can fix this is to
-> > program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
-> > host mode in DWC3 driver(per signal measurement result, it will be too
-> > late to do it in xhci-plat.c or xhci.c).
-> >
-> > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > ---
-> >  Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
-> >  1 files changed, 3 insertions(+), 0 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > index 8e5265e..dadb530 100644
-> > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > @@ -106,6 +106,9 @@ Optional properties:
-> >  			When just one value, which means INCRX burst
-> mode enabled. When
-> >  			more than one value, which means undefined length
-> INCR burst type
-> >  			enabled. The values can be 1, 4, 8, 16, 32, 64, 128
-> and 256.
-> > + - snps,avoid-vbus-glitch-when-set-host: Power off all Root Hub ports
-> immediately
-> > +			after setting host mode to avoid vbus (negative)
-> glitch happen in later
-> > +			xhci reset. And the vbus will back to 5V automatically
-> when reset done.
->=20
-> Can't you imply this from the compatible string. You should have an SoC
-> specific compatible.
-
-Sorry, not quite get your point here? Actually I have discussed with Soc de=
-sign guys
-and Felipe, it seems to be DWC3 native behavior rather than SoC specific is=
-sue.
-https://lkml.org/lkml/2018/11/23/387
-https://lkml.org/lkml/2018/12/12/140
-
-I think there could be 2 reasons why we got no report for a long time till =
-now:
-1. Most USB devices are not so sensitive to this VBUS glitch, they would wo=
-rks fine.
-2. A proper VBUS pump circuit design can successfully filter this glitch ou=
-t. I have
-confirmed this with scope, which means some platforms might resolve issue i=
-n
-this way already (some might not, of cause).
-
-> Does this even need to be conditional? What would be the harm in doing
-> this unconditionally for all DWC3 hosts?
-
->From the logic level, I don't see a harm to DWC3 hosts if unconditionally a=
-pply this.
-However, since this is not a only solution (can fix it in HW way), I prefer=
- to let it
-controlled by property in DTS node for those questionable board already exi=
-sting
-in market.=20
-
-Regards,
-Ran
+Shawn
