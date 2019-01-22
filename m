@@ -1,57 +1,41 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 04/10] dt-bindings: soc: qcom: Add AOSS QMP binding
-Date: Tue, 22 Jan 2019 11:04:17 -0800
-Message-ID: <154818385792.20280.7601798748317142776@swboyd.mtv.corp.google.com>
-References: <20190122055112.30943-1-bjorn.andersson@linaro.org> <20190122055112.30943-5-bjorn.andersson@linaro.org>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH RESEND v1 1/4] dt-bindings: fsl: scu: add fallback
+ compatible string for clock
+Date: Tue, 22 Jan 2019 11:05:45 -0800
+Message-ID: <154818394585.20280.8854282252890827430@swboyd.mtv.corp.google.com>
+References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
+ <1547207400-28307-2-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122055112.30943-5-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547207400-28307-2-git-send-email-aisheng.dong@nxp.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-01-21 21:51:06)
-> Add binding for the QMP based side-channel communication mechanism to
-> the AOSS, which is used to control resources not exposed through the
-> RPMh interface.
->=20
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Quoting Aisheng Dong (2019-01-11 03:55:56)
+> SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
+> Let's add a "fsl,scu-clk" fallback compatible string to allow other
+> SoCs to reuse the common part.
+> 
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 > ---
->=20
-> Changes since v2:
-> - Update indentation of example
-> - Add colling device subnodes to the description
->=20
->  .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 75 +++++++++++++++++++
->  include/dt-bindings/power/qcom-aoss-qmp.h     | 15 ++++
->  2 files changed, 90 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,aoss-=
-qmp.txt
->  create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
->=20
-> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt=
- b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-> new file mode 100644
-> index 000000000000..881dc8c7907a
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-> @@ -0,0 +1,75 @@
-> +Qualcomm Always-On Subsystem side channel binding
-> +
-> +This binding describes the hardware component responsible for side chann=
-el
-> +requests to the always-on subsystem (AOSS), used for certain power manag=
-ement
-> +requests that is not handled by the standard RPMh interface. Each client=
- in the
-> +SoC has it's own block of message RAM and IRQ for communication with the=
- AOSS.
-> +The protocol used to communicate in the message RAM is known as QMP.
 
-Just curious if QMP is "Qualcomm Messaging Protocol"? I don't think it's
-ever spelled out in this patchset.
+Acked-by: Stephen Boyd <sboyd@kernel.org>
