@@ -1,71 +1,129 @@
-From: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: Re: [PATCH v3 0/6] add quartz load support to NXP rtc drivers
-Date: Tue, 22 Jan 2019 18:57:52 +0100
-Message-ID: <20190122175752.GD16702@piout.net>
-References: <20190119090031.29147-1-sam@ravnborg.org>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 5/6] gnss: sirf: add a separate supply for a lna
+Date: Tue, 22 Jan 2019 19:03:21 +0100
+Message-ID: <20190122180321.GS3691@localhost>
+References: <20190116211812.6337-1-andreas@kemnade.info>
+ <20190116211812.6337-6-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190119090031.29147-1-sam@ravnborg.org>
+In-Reply-To: <20190116211812.6337-6-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sam Ravnborg <sam@ravnborg.org>
-Cc: Alessandro Zummo <a.zummo@towertech.it>, Andrew Jeffery <andrew@aj.id.au>, Fabio Estevam <fabio.estevam@nxp.com>, Joel Stanley <joel@jms.id.au>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Russell King <linux@armlinux.org.uk>, Sascha Hauer <s.hauer@pengutronix.de>, Urs =?iso-8859-1?Q?F=E4ssler?= <urs.fassler@bbv.ch>, Shawn Guo <shawnguo@kernel.org>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: letux-kernel@openphoenux.org, johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 19/01/2019 10:00:25+0100, Sam Ravnborg wrote:
-> Respin of patchset on top of v5.0-rc2 with feedback addressed (thanks!)
+On Wed, Jan 16, 2019 at 10:18:11PM +0100, Andreas Kemnade wrote:
+> Devices might have a separate lna between antenna input of the gps
+> chip and the antenna which might have a separate supply.
 > 
-> Introduce a new generic property "quartz-load-femtofarad"
-> to specify the quartz load.
-> The default value is selected to match the current Linux
-> drivers, so there are no behavior changes if a binding do not
-> specify the quarts-load.
-> The unit is femtofarads because several RTC's define the quarts load
-> in steps of 0.5 pF.
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v3:
+>  - improved error checking
+>  - style cleanup
 > 
-> The two drivers rtc-pcf8523 and rtc-pcf85063 are both
-> updated to use the new binding.
-> Previously pcf8523 hardcoded the quartz load to 12.5pF, and
-> pcf85063 used the reset default of 7pF.
-> With this patchset it can now be specified in the DT,
-> if the defaults are not OK.
+> Changes in v2:
+>  - handle lna also if there is no on-off gpio
+>  - rebase on changed 2/5
 > 
-> The patch-set is tested on a proprietary board for both
-> RTC variants (v2 variant only as there was only trivial changes in v3).
+>  drivers/gnss/sirf.c | 50 ++++++++++++++++++++++++++++++++++++++++++++------
+>  1 file changed, 44 insertions(+), 6 deletions(-)
 > 
-> 	Sam
-> 
-> v3:
-> - Document generic property "quartz-load-femtofarads" in rtc.txt (Rob)
-> - Fix indent several places - ups (Alexandre)
-> - Use the simpler name "rtc" in DT examples (Rob)
-> - Collected "Reviewed by's"
-> 
-> v2:
-> - Introduce a generic property "quartz-load-femtofarads"
-> - Add femtofarads to property-units.txt
-> - Make the changes backward compatible
-> - Reduced logging
-> - Warn, when we continue with a default value
-> - Tested, by Søren Andersen, on real HW
-> - Rebased on top of v5.0-rc1
-> 
->         Sam
-> 
-> Sam Ravnborg (6):
->       devicetree: property-units: Add femtofarads unit
->       dt-bindings: rtc: Add quartz-load-femtofarads property
->       dt-binding: pcf8523: add xtal load capacitance
->       dt-binding: pcf85063: add xtal load capacitance
->       rtc: pcf8523: set xtal load capacitance from DT
->       rtc: pcf85063: set xtal load capacitance from DT
-> 
+> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
+> index 943a2ec9b708..7de98edf198a 100644
+> --- a/drivers/gnss/sirf.c
+> +++ b/drivers/gnss/sirf.c
+> @@ -41,6 +41,7 @@ struct sirf_data {
+>  	struct serdev_device *serdev;
+>  	speed_t	speed;
+>  	struct regulator *vcc;
+> +	struct regulator *lna;
+>  	struct gpio_desc *on_off;
+>  	struct gpio_desc *wakeup;
+>  	int irq;
+> @@ -293,21 +294,52 @@ static int sirf_set_active(struct sirf_data *data, bool active)
+>  static int sirf_runtime_suspend(struct device *dev)
+>  {
+>  	struct sirf_data *data = dev_get_drvdata(dev);
+> +	int ret;
+>  
+> -	if (!data->on_off)
+> -		return regulator_disable(data->vcc);
+> +	if (data->on_off)
+> +		ret = sirf_set_active(data, false);
+> +	else
+> +		ret = regulator_disable(data->vcc);
+> +
+> +	if (ret)
+> +		return ret;
+>  
+> -	return sirf_set_active(data, false);
+> +	ret = regulator_disable(data->lna);
+> +	if (ret) {
 
-All applied, thanks.
+Use an error label for this to avoid the indentation.
 
--- 
-Alexandre Belloni, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> +		int reenable_ret;
+
+Rename ret2 and move to start of function.
+
+> +
+> +		if (data->on_off)
+> +			reenable_ret = sirf_set_active(data, true);
+> +		else
+> +			reenable_ret = regulator_enable(data->vcc);
+> +
+> +		if (reenable_ret)
+> +			dev_err(dev,
+> +				"failed to reenable power on failed suspend: %d\n",
+> +				reenable_ret);
+> +	}
+> +
+> +	return ret;
+>  }
+>  
+>  static int sirf_runtime_resume(struct device *dev)
+>  {
+>  	struct sirf_data *data = dev_get_drvdata(dev);
+> +	int ret;
+> +
+> +	ret = regulator_enable(data->lna);
+> +	if (ret)
+> +		return ret;
+>  
+> -	if (!data->on_off)
+> -		return regulator_enable(data->vcc);
+> +	if (data->on_off)
+> +		ret = sirf_set_active(data, true);
+> +	else
+> +		ret = regulator_enable(data->vcc);
+>  
+> -	return sirf_set_active(data, true);
+> +	if (ret)
+
+Use an error label here too for consistency (and if if ever add further
+resources to be manipulated here).
+
+> +		regulator_disable(data->lna);
+> +
+> +	return ret;
+>  }
+>  
+>  static int __maybe_unused sirf_suspend(struct device *dev)
+> @@ -395,6 +427,12 @@ static int sirf_probe(struct serdev_device *serdev)
+>  		goto err_put_device;
+>  	}
+>  
+> +	data->lna = devm_regulator_get(dev, "lna");
+> +	if (IS_ERR(data->lna)) {
+> +		ret = PTR_ERR(data->lna);
+> +		goto err_put_device;
+> +	}
+> +
+>  	data->on_off = devm_gpiod_get_optional(dev, "sirf,onoff",
+>  			GPIOD_OUT_LOW);
+>  	if (IS_ERR(data->on_off))
+
+Johan
