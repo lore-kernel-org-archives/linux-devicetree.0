@@ -1,54 +1,56 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 4/8] net/macb: bindings doc/trivial: fix documentation for
- sama5d3 10/100 interface
-Date: Tue, 22 Jan 2019 07:41:02 -0600
-Message-ID: <CAL_Jsq+31C2KXNy_GeVU9g7mZ_aSw3yqdjU-V5mV2Xdc200TuA@mail.gmail.com>
-References: <cover.1547629763.git.nicolas.ferre@microchip.com>
- <0005c2ef28b985c663e0cd058bbc6d3856e05ec2.1547629763.git.nicolas.ferre@microchip.com>
- <20190122011014.GA25211@bogus> <be8ba0bf-993e-d38c-61e8-af422ff3c636@microchip.com>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv3 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Tue, 22 Jan 2019 19:11:34 +0530
+Message-ID: <91bcd4cc-9f66-0ca3-43bf-d912c6080b49@codeaurora.org>
+References: <cover.1547813804.git.saiprakash.ranjan@codeaurora.org>
+ <73bf137fd5d6cb6bddecdf13026156afcf9d473b.1547813804.git.saiprakash.ranjan@codeaurora.org>
+ <20190121183731.GA14049@xps15>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <be8ba0bf-993e-d38c-61e8-af422ff3c636@microchip.com>
+In-Reply-To: <20190121183731.GA14049@xps15>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Nicolas Ferre <Nicolas.Ferre@microchip.com>
-Cc: Alexandre Belloni <alexandre.belloni@bootlin.com>, Ludovic Desroches <Ludovic.Desroches@microchip.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Reichel <sre@kernel.org>, "open list:THERMAL" <linux-pm@vger.kernel.org>, netdev <netdev@vger.kernel.org>, David Miller <davem@davemloft.net>, Linux USB List <linux-usb@vger.kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, devicetree@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 3:09 AM <Nicolas.Ferre@microchip.com> wrote:
->
-> Hi Rob,
->
-> On 22/01/2019 at 02:10, Rob Herring wrote:
-> > On Wed, Jan 16, 2019 at 10:57:40AM +0100, Nicolas Ferre wrote:
-> >> This removes a line left while adding the correct compatibility string for
-> >> sama5d3 10/100 interface. Now use the "atmel,sama5d3-macb" string.
-> >>
-> >> Signed-off-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-> >> ---
-> >>   Documentation/devicetree/bindings/net/macb.txt | 3 +--
-> >>   1 file changed, 1 insertion(+), 2 deletions(-)
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/net/macb.txt b/Documentation/devicetree/bindings/net/macb.txt
-> >> index 3e17ac1d5d58..f5c414b10e27 100644
-> >> --- a/Documentation/devicetree/bindings/net/macb.txt
-> >> +++ b/Documentation/devicetree/bindings/net/macb.txt
-> >> @@ -3,8 +3,7 @@
-> >>   Required properties:
-> >>   - compatible: Should be "cdns,[<chip>-]{macb|gem}"
-> >>     Use "cdns,at91rm9200-emac" Atmel at91rm9200 SoC.
-> >> -  Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs or the 10/100Mbit IP
-> >> -  available on sama5d3 SoCs.
-> >> +  Use "cdns,at91sam9260-macb" for Atmel at91sam9 SoCs.
-> >
-> > Where is "atmel,sama5d3-macb"?
->
-> It's actually a couple of line below: line 13 of the resulting macb.txt
-> file. It was already in the file when I removed the leftovers.
->
-> Do you advice to try to better sort entries in this file? Is there a
-> common pattern?
+Hi Mathieu,
 
-Okay, it's fine.
+On 1/22/2019 12:07 AM, Mathieu Poirier wrote:
+> Hi Sai,
+> 
+> On Fri, Jan 18, 2019 at 05:52:53PM +0530, Sai Prakash Ranjan wrote:
+>> Add coresight components found on Qualcomm SDM845 SoC.
+>>
+>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+>>
+>> ---
+>> This depends on AMBA bus pclk change by Bjorn Andersson [1].
+>> Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
+>> and size cells for soc") [2].
+>>
+>> [1] https://lore.kernel.org/lkml/20190106080915.4493-7-bjorn.andersson@linaro.org/
+>> [2] https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/
+> 
+> Thank you for making modifications to this patch - I am happy with how it stands
+> now.  I tried to compile it on my side on a 5.0-rc3 kernel and even after
+> applying the above two patches you pointed out I get the following error:
+> 
+> Error: /home/mpoirier/work/coresight/kernel-maint/arch/arm64/boot/dts/qcom/sdm845.dtsi:1356.31-32 syntax error
+> FATAL ERROR: Unable to parse input tree
+> 
+>  From what I see neither aoss_qmp or AOSS_QMP_QDSS_CLK are defined.  Are there
+> more patches that need to be applied?
+> 
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Sorry, I added all the dependent patches in the cover letter, but
+forgot to add the main dependent patch here, now added in v4.
+
+Thanks,
+Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
