@@ -1,71 +1,50 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet support
-Date: Tue, 22 Jan 2019 15:55:29 +0100
-Message-ID: <20190122145529.zuxpni2klc4lxdxn@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-8-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190117115945.bmlaoeoqvsmdqqot@verge.net.au>
- <TY1PR01MB1770241D7A553184ABB589DAC0830@TY1PR01MB1770.jpnprd01.prod.outlook.com>
- <20190120082845.4apq3ylk4i6zbhlx@verge.net.au>
+From: Greg KH <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH v13 0/8] Introduce on-chip interconnect API
+Date: Tue, 22 Jan 2019 16:00:49 +0100
+Message-ID: <20190122150048.GA11466@kroah.com>
+References: <20190116161103.6937-1-georgi.djakov@linaro.org>
+ <20190122124204.GA26969@kroah.com>
+ <2ac9b994-ecbf-05fd-5c01-7ecd0089c744@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <20190120082845.4apq3ylk4i6zbhlx@verge.net.au>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.>
+In-Reply-To: <2ac9b994-ecbf-05fd-5c01-7ecd0089c744@linaro.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Georgi Djakov <georgi.djakov@linaro.org>
+Cc: sanjayc@nvidia.com, maxime.ripard@bootlin.com, mturquette@baylibre.com, daidavid1@codeaurora.org, bjorn.andersson@linaro.org, skannan@codeaurora.org, abailon@baylibre.com, vincent.guittot@linaro.org, seansw@qti.qualcomm.com, khilman@baylibre.com, evgreen@chromium.org, ksitaraman@nvidia.com, devicetree@vger.kernel.org, arnd@arndb.de, linux-pm@vger.kernel.org, linux-arm-msm@vger.kernel.org, henryc.chen@mediatek.com, andy.gross@linaro.org, robh+dt@kernel.org, linux-mediatek@lists.infradead.org, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, rjw@rjwysocki.net, dianders@chromium.org, amit.kucheria@linaro.org, linux-kernel@vger.kernel.org, thierry.reding@gmail.com, olof@lixom.net
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 20, 2019 at 09:28:45AM +0100, Simon Horman wrote:
-> On Thu, Jan 17, 2019 at 01:27:51PM +0000, Fabrizio Castro wrote:
-> > Hello Simon,
+On Tue, Jan 22, 2019 at 04:45:20PM +0200, Georgi Djakov wrote:
+> On 1/22/19 14:42, Greg KH wrote:
+> > On Wed, Jan 16, 2019 at 06:10:55PM +0200, Georgi Djakov wrote:
+> [..]
 > > 
-> > Thank you for your feedback!
+> > All now queued up, thanks.
 > > 
-> > > From: Simon Horman <horms@verge.net.au>
-> > > Sent: 17 January 2019 12:00
-> > > Subject: Re: [PATCH 07/11] arm64: dts: renesas: cat875: Add ethernet support
-> > >
-> > > On Wed, Jan 16, 2019 at 06:37:50PM +0000, Fabrizio Castro wrote:
-> > > > From: Biju Das <biju.das@bp.renesas.com>
-> > > >
-> > > > This patch adds ethernet support to the sub board.
-> > > >
-> > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > > > ---
-> > > >  arch/arm64/boot/dts/renesas/cat875.dtsi | 30 ++++++++++++++++++++++++++++++
-> > > >  1 file changed, 30 insertions(+)
-> > > >
-> > > > diff --git a/arch/arm64/boot/dts/renesas/cat875.dtsi b/arch/arm64/boot/dts/renesas/cat875.dtsi
-> > > > index a41d0d8..805ffa7 100644
-> > > > --- a/arch/arm64/boot/dts/renesas/cat875.dtsi
-> > > > +++ b/arch/arm64/boot/dts/renesas/cat875.dtsi
-> > > > @@ -7,4 +7,34 @@
-> > > >
-> > > >  / {
-> > > >  model = "Silicon Linux sub board for CAT874 (CAT875)";
-> > > > +
-> > > > +aliases {
-> > > > +ethernet0 = &avb;
-> > > > +};
-> > > > +};
-> > > > +
-> > > > +&avb {
-> > > > +pinctrl-0 = <&avb_pins>;
-> > > > +pinctrl-names = "default";
-> > > > +renesas,no-ether-link;
-> > >
-> > > Is the renesas,no-ether-link required?
-> > 
-> > The AVB_LINK pin from the SoC is connected to the PMEB (Power Management Event, B stands for
-> > active low) pin on the  PHY, which means it is not a link signal. The PMEB signal is active when a magic
-> > packet or a wake up frame are detected. As a result, we need renesas,no-ether-link and we can't
-> > specify avb_link with avb_pin either.
+> > greg k-h
 > 
-> Thanks for following-up. In that case I am fine with this patch.
+> Hi Greg,
 > 
+> Thanks for considering these patches! Actually i have a branch named
+> icc-next [1] which is pulled into linux-next. I will drop these same
+> patches to avoid conflicts.
+> 
+> If all is well, i was wondering how to proceed with follow-up patches.
+> Some consumers of this API are already floating on the lists. How about
+> sending you a pull request before the merge window with the collected
+> patches?
 
-Thanks again, applied for v5.1.
+Sure, that works, or you can just send them as patches, either works for
+me.
+
+greg k-h
