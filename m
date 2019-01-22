@@ -1,67 +1,64 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
- bindings
-Date: Tue, 22 Jan 2019 20:16:35 +0100
-Message-ID: <20190122201635.4a6c28d0@xps13>
-References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
- <20190121112336.23489-7-miquel.raynal@bootlin.com>
- <20190122183833.40077d7a@windsurf>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 01/10] arm64: dts: qcom: sdm845: Update PIL region
+ memory map
+Date: Tue, 22 Jan 2019 11:24:05 -0800
+Message-ID: <20190122192404.GB31919@minitux>
+References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
+ <20190122055112.30943-2-bjorn.andersson@linaro.org>
+ <154818353130.20280.17905705223316470797@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190122183833.40077d7a@windsurf>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <154818353130.20280.17905705223316470797@swboyd.mtv.corp.google.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Stephen Boyd <swboyd@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgVGhvbWFzLAoKVGhvbWFzIFBldGF6em9uaSA8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNv
-bT4gd3JvdGUgb24gVHVlLCAyMiBKYW4KMjAxOSAxODozODozMyArMDEwMDoKCj4gSGVsbG8sCj4g
-Cj4gT24gTW9uLCAyMSBKYW4gMjAxOSAxMjoyMzozMiArMDEwMCwgTWlxdWVsIFJheW5hbCB3cm90
-ZToKPiAKPiA+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSBvbmUgb2Y6Cj4gPiArCSAgICAgICog
-Im1hcnZlbGwsYTM3MDAtdXRtaS1ob3N0LXBoeSIgZm9yIHRoZSBQSFkgY29ubmVjdGVkIHRvCj4g
-PiArCSAgICAgICAgdGhlIFVTQjIgaG9zdC1vbmx5IGNvbnRyb2xsZXIuCj4gPiArCSAgICAgICog
-Im1hcnZlbGwsYTM3MDAtdXRtaS1vdGctcGh5IiBmb3IgdGhlIFBIWSBjb25uZWN0ZWQgdG8KPiA+
-ICsJICAgICAgICB0aGUgVVNCMyBhbmQgVVNCMiBPVEcgY2FwYWJsZSBjb250cm9sbGVyLiAgCj4g
-Cj4gRG8gd2UgcmVhbGx5IG5lZWQgZGlmZmVyZW50IGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdGhv
-c2UgPyBJIGFzc3VtZSB0aGUKPiBJUCBibG9jayBpcyBleGFjdGx5IHRoZSBzYW1lIGZvciB0aGUg
-dHdvIFBIWXMsIHJpZ2h0ID8gSWYgc28sIHdlIHNob3VsZAo+IHVzZSB0aGUgc2FtZSBjb21wYXRp
-YmxlIHN0cmluZy4KCkZvciB3aGF0IEkgdW5kZXJzdGFuZCwgdGhlIFBIWXMgYXJlIGRpZmZlcmVu
-dC4gQXQgbGVhc3QgdGhpcyBpcyBob3cKdGhleSBhcmUgZGVzY3JpYmVkIGluIHRoZSBzcGVjaWZp
-Y2F0aW9uLiBJIGNhbiBsaXN0IGF0IGxlYXN0IHR3bwpkaWZmZXJlbmNlcyB2aXNpYmxlIGluIHRo
-ZSByZWdpc3RlciBzZXQ6Ciogb25lIGhhcyBPVEcgcmVnaXN0ZXJzLCB0aGUgb3RoZXIgZG9lcyBu
-b3QuCiogb25lIGhhcyBjaGFyZ2VyIGRldGVjdGlvbiBjYXBhYmlsaXRpZXMgKGFuZCByZWdpc3Rl
-cnMpLCB0aGUgb3RoZXIKICBkb2VzIG5vdC4KCj4gCj4gRGlkbid0IHdlIGRpc2N1c3MgdGhhdCB3
-ZSBjYW4gbG9va3VwIGZyb20gdGhlIFBIWSB3aGV0aGVyIHRoZSBVU0IKPiBjb250cm9sbGVyIGl0
-IGlzIGNvbm5lY3RlZCB0byBpcyBpbiBob3N0IG1vZGUgb3Igb3RnIG1vZGUgPwoKWWVzLCBidXQg
-aGF2aW5nIHR3byBkaWZmZXJlbnQgUEhZcyBtZWFudCBoYXZpbmcgdHdvIGRpZmZlcmVudApjb21w
-YXRpYmxlcywgaGVuY2UgdGhlcmUgd2FzIG5vIG5lZWQgaW4gdGhlIGRyaXZlciB0byB1c2UgdGhp
-cwpsb29rdXAgYXBwcm9hY2guIEFueXdheSB0aGlzIGlzIGFuIGltcGxlbWVudGF0aW9uIGRldGFp
-bCBhbmQgaXQgaXMKYWx3YXlzIHBvc3NpYmxlIHRvIGdvIGJhY2suIAoKPiAKPiA+ICtFeGFtcGxl
-Ogo+ID4gKwo+ID4gKwl1c2IyX3V0bWlfaG9zdF9waHk6IHBoeUA1ZjAwMCB7Cj4gPiArCQljb21w
-YXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLTM3MDAtdXRtaS1ob3N0LXBoeSI7Cj4gPiArCQlyZWcg
-PSA8MHg1ZjAwMCAweDgwMD47Cj4gPiArCQltYXJ2ZWxsLHVzYi1taXNjLXJlZyA9IDwmdXNiMl9z
-eXNjb24+Owo+ID4gKwkJI3BoeS1jZWxscyA9IDwwPjsKPiA+ICsJfTsKPiA+ICsKPiA+ICsJdXNi
-Ml9zeXNjb246IHN5c3RlbS1jb250cm9sbGVyQDVmODAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAi
-bWFydmVsbCx1c2IyLWhvc3QtbWlzY2VsbGFuZW91cyIsICJzeXNjb24iOwo+ID4gKwkJcmVnID0g
-PDB4NWY4MDAgMHg4MDA+Owo+ID4gKwl9OyAgCj4gCj4gVGhvc2UgcmVnaXN0ZXJzIGFyZSBjb250
-aWd1b3VzIHRvIHRoZSByZWdpc3RlciByYW5nZSBvZiB0aGUgUEhZIGl0c2VsZi4KPiBXaGF0IHdh
-cyB0aGUgY3JpdGVyaWEgdXNlZCB0byBkZWNpZGUgdGhhdCB3ZSBuZWVkIHR3byBzZXBhcmF0ZSBE
-VCBub2Rlcwo+IGZvciB0aGVzZSA/CgpCZWNhdXNlIHRoaXMgYXJlYSBjb250YWlucyBhIGJ1bmNo
-IG9mIHJlZ2lzdGVycywgbW9zdCBvZiB0aGVtIGFyZQp0aGVyZSB0byBtYW5hZ2UgdGhlIFBIWSwg
-YnV0IG90aGVycyBhcmUgcmVsYXRlZCB0byB0aGUgVVNCIGNvbnRyb2xsZXIKKGllLiBhIHNvZnR3
-YXJlIHJlc2V0KS4gSSBrbm93IHRoZSBjdXJyZW50IFVTQiBjb250cm9sbGVyIGRyaXZlciBkb2Vz
-Cm5vdCBhY2Nlc3MgdGhpcyBhcmVhIGJ1dCB3aGF0IGlmIG9uZSBkYXkgd2UgZGVjaWRlIHRvIGRv
-IGl0PwoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
-cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
-YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+On Tue 22 Jan 10:58 PST 2019, Stephen Boyd wrote:
+
+> Quoting Bjorn Andersson (2019-01-21 21:51:03)
+> > @@ -103,10 +138,30 @@
+> >                         no-map;
+> >                 };
+> >  
+> > +               venus_mem: memory@95800000 {
+> > +                       reg = <0 0x95800000 0 0x500000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               cdsp_mem: memory@95d00000 {
+> > +                       reg = <0 0x95d00000 0 0x800000>;
+> > +                       no-map;
+> > +               };
+> > +
+> >                 mba_region: memory@96500000 {
+> >                         reg = <0 0x96500000 0 0x200000>;
+> >                         no-map;
+> >                 };
+> > +
+> > +               slpi_mem: memory@96700000 {
+> > +                       reg = <0 0x96700000 0 0x1400000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               spss_mem: memory@97b00000 {
+> > +                       reg = <0 0x97b00000 0 0x100000>;
+> > +                       no-map;
+> > +               };
+> >         };
+> >  
+> 
+> What's the plan if certain configurations don't use all these carveouts?
+> Can we mark the reservation nodes as status = "disabled", or the reverse
+> and mark them as status = "ok" in all boards, and then reclaim the
+> memory for peripherals we don't care to use?
+> 
+
+The code path that picks these up does look for "status", so I suggest
+that we leave them all enabled in the platform dtsi and then let the
+device's reclaim them as needed.
+
+Regards,
+Bjorn
