@@ -1,127 +1,84 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: Re: [PATCH v6 5/9] soc: mellanox: host: Add the common host side
- Rshim driver
-Date: Tue, 22 Jan 2019 13:36:04 +0000
-Message-ID: <DB6PR05MB3223778EE7090BBC8744C9F8A1980@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1541089538-175682-1-git-send-email-lsun@mellanox.com>
- <1541089538-175682-5-git-send-email-lsun@mellanox.com>
- <CAK8P3a2NRbEaS_EJNtBaZ3GCUtRiH2rUDRzJFjvcw2ZacZM1qw@mail.gmail.com>,
- <20190122122022.ipn3jdfnxthhphrs@axis.com>,
- <DB6PR05MB32235BE3E5EBCA60ABDEDB13A1980@DB6PR05MB3223.eurprd05.prod.outlook.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/3] media: dt: bindings: sunxi-ir: Add A64 compatible
+Date: Tue, 22 Jan 2019 07:37:51 -0600
+Message-ID: <CAL_Jsq+u2PdLK3YaYMERHndNpN_PprksPF9gVF+V76c343yrMg@mail.gmail.com>
+References: <20190111173015.12119-1-jernej.skrabec@siol.net>
+ <20190111173015.12119-2-jernej.skrabec@siol.net> <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw@mail.gmail.com>
+ <20190121095014.b6iq5dubfi7x2pi4@flea> <CAGb2v66d0wM8Yt2uS4MMhU6PP02h8CKwKjinasO6jtZ4ue1CAQ@mail.gmail.com>
+ <20190122001917.GA31407@bogus> <CAGb2v67YsevDvjvTSh67wJNSJSUBuZ613hQWyorEiSzCUqjjkQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <DB6PR05MB32235BE3E5EBCA60ABDEDB13A1980@DB6PR05MB3223.eurprd05.prod.outlook.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vincent Whitchurch <vincent.whitchurch@axis.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, linux-pci <linux-pci@vger.kernel.org>, "virtualization@lists.linux-foundation.org" <virtualization@lists.linux-foundation.org>, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, "linux-ntb@googlegroups.com" <linux-ntb@googlegroups.com>, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAGb2v67YsevDvjvTSh67wJNSJSUBuZ613hQWyorEiSzCUqjjkQ@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: Maxime Ripard <maxime.ripard@bootlin.com>, Jernej Skrabec <jernej.skrabec@siol.net>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Linux Media Mailing List <linux-media@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 21, 2019 at 8:16 PM Chen-Yu Tsai <wens@csie.org> wrote:
+>
+> On Tue, Jan 22, 2019 at 8:19 AM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Mon, Jan 21, 2019 at 05:57:57PM +0800, Chen-Yu Tsai wrote:
+> > > On Mon, Jan 21, 2019 at 5:50 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > I'm a bit late to the party, sorry for that.
+> > > >
+> > > > On Sat, Jan 12, 2019 at 09:56:11AM +0800, Chen-Yu Tsai wrote:
+> > > > > On Sat, Jan 12, 2019 at 1:30 AM Jernej Skrabec <jernej.skrabec@siol.net> wrote:
+> > > > > >
+> > > > > > A64 IR is compatible with A13, so add A64 compatible with A13 as a
+> > > > > > fallback.
+> > > > >
+> > > > > We ask people to add the SoC-specific compatible as a contigency,
+> > > > > in case things turn out to be not so "compatible".
+> > > > >
+> > > > > To be consistent with all the other SoCs and other peripherals,
+> > > > > unless you already spotted a "compatible" difference in the
+> > > > > hardware, i.e. the hardware isn't completely the same, this
+> > > > > patch isn't needed. On the other hand, if you did, please mention
+> > > > > the differences in the commit log.
+> > > >
+> > > > Even if we don't spot things, since we have the stable DT now, if we
+> > > > ever had that compatible in the DT from day 1, it's much easier to
+> > > > deal with.
+> > > >
+> > > > I'd really like to have that pattern for all the IPs even if we didn't
+> > > > spot any issue, since we can't really say that the datasheet are
+> > > > complete, and one can always make a mistake and overlook something.
+> > > >
+> > > > I'm fine with this version, and can apply it as is if we all agree.
+> > >
+> > > I'm OK with having the fallback compatible. I'm just pointing out
+> > > that there are and will be a whole bunch of them, and we don't need
+> > > to document all of them unless we are actually doing something to
+> > > support them.
+> >
+> > Yes, you do. Otherwise, how will we validate what is and isn't a valid
+> > set of compatible strings? It's not required yet, but bindings are
+> > moving to json-schema.
+>
+> Ideally, if we knew which IP blocks in each SoC were compatible with
+> each other, we wouldn't need "per-SoC" compatible strings for each
+> block. However in reality this doesn't happen, due to a combination
+> of lack of time, lack of / uncertainty of documentation, and lack of
+> hardware for testing by the contributors.
+>
+> The per-SoC compatible we ask people to add are a contigency plan,
+> for when things don't actually work, and we need some way to support
+> that specific piece of hardware on old DTs.
 
+You are right up to here.
 
-From: Vincent Whitchurch <vincent.whitchurch@axis.com>
-Sent: Tuesday, January 22, 2019 7:20 AM
-To: Arnd Bergmann
-Cc: Liming Sun; Olof Johansson; David Woods; Robin Murphy; arm-soc; DTML; L=
-inux ARM; linux-pci; linux-ntb@googlegroups.com; Christoph Hellwig; virtual=
-ization@lists.linux-foundation.org
-Subject: Re: [PATCH v6 5/9] soc: mellanox: host: Add the common host side R=
-shim driver
-=A0 =
+> At which point we will
+> add that SoC-specific compatible as a new compatible string to the
+> bindings. But not before.
 
+No, the point SoC-specific compatibles is they are already present in
+the DT and you only have to update the OS to fix issues. The SoC
+specific compatible has to be documented when first used in dts files,
+not when the OS uses them. That is the rule.
 
-On Fri, Jan 18, 2019 at 05:02:21PM +0100, Arnd Bergmann wrote:
->> On Thu, Nov 1, 2018 at 5:49 PM Liming Sun <lsun@mellanox.com> wrote:
->> >
->> > An external host can connect to a Mellanox BlueField SoC via an
->> > interface called Rshim. The Rshim driver provides boot, console,
->> > and networking services over this interface. This commit is
->> > the common driver where the other backend (transport) driver will
->> > use.
->> >
->> > Reviewed-by: David Woods <dwoods@mellanox.com>
->> > Signed-off-by: Liming Sun <lsun@mellanox.com>
->> =
-
->> Hi Liming,
->> =
-
->> I've taken a new look at your patch series for drivers/soc/ now,
->> thanks for your continued submissions.
->> =
-
->> This is again just a set of very high-level comments, but I think we
->> should resolve some of the fundamental questions first.
->> Incidentally, Vincent Whitchurch has recently posted another
->> patch series with a very similar intention, but for other hardware
->> and taking a different approach.
->> =
-
->> In both cases, the idea is to use virtio based drivers to provide
->> services from a host machine into another Linux instance running
->> on an embedded system behind a PCIe slot or similar. Your
->> Bluefield SoC patches are well written, but are intentionally
->> kept specific to a particular use case and tied to one piece
->> of hardware. In contrast, Vincent uses the existing code from
->> drivers/misc/mic/vop/ that is equally hardware specific, but he
->> extends it to be applicable to other hardware as well.
->> =
-
->> It would be good if you could look at each other's approaches
->> to see where we could take it from here. I think ideally we
->> should have a common driver framework for doing the same
->> thing across both of your devices and as well as others.
-
-> As far as I can see the biggest difference is that Rshim appears to
-> support interfaces which do not have shared memory between the host and
-> the card, which means that it has to jump through a lot more hoops to
-> make virtio work.
-
-> For example, the card side seems to use normal virtio-net and
-> virto-console drivers, but the drivers/soc/mellanox/tmfifo.c driver,
-> also running on the card, appears to have to actually look inside the
-> virtqueues and shuffle the data over the TmFifo interface, and this
-> driver has hard-coded support for only network and console, since it
-> apparently needs to know the details of how the virtio drivers use their
-> virtqueues (see tmfifo_virtio_rxtx()).
-
-> And the host side appears to _also_ run the virtio-net driver and there
-> the drivers/soc/mellanox/host/rshim_net.c code instead has to look
-> inside the virtqueues and shuffle the data over the other side of the
-> TmFifo interface.
-
-> So to me this looks very different from a traditional virtio
-> driver/device setup (which is what mic/vop uses).=A0 I may be missing
-> something, but I don't quite understand why it's even using virtio in
-> the first place.
-
-Thanks  Vincent! This appears to be very good summary of this driver
-does on the tmfifo part and the difference between  mic/vop. The fifo is
-accessed by=A0register instead of shared memory.
-
-The reason to use virtio framework is that it can be=A0easily used to add
-more virtual devices as needed without implementing driver details for
-each one. For example, the device side supports console and networking
-for now over the FIFO. It only needs to implement function =
-
-tmfifo_virtio_rxtx() once to take care of the virtqueues=A0Rx/Tx, which are
-shared by all virtual devices. With minimum changes, we could easily add
-another device over tmfifo, like a virtio block device, since the queue
-handling is already there. =
-
-
-The host side handles the virtqueues as well in rshim_net.c. It behaves
-like a peer-to-peer to the device side while the tmfifo behaves like a
-'wire' (transport) to pass data between the host and the device without
-worrying about the data details.
+Rob
