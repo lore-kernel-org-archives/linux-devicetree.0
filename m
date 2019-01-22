@@ -1,190 +1,161 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 4/6] dt-bindings: display: armada: Add display subsystem
- binding
-Date: Tue, 22 Jan 2019 10:58:43 +0000
-Message-ID: <20190122105843.cqtzit2adfoungku@e5254000004ec.dyn.armlinux.org.uk>
-References: <20190120172534.24617-1-lkundrak@v3.sk>
- <20190120172534.24617-5-lkundrak@v3.sk>
- <CAL_JsqLT7jEdwi7o7RR_3OcbMTxeNXmSzif8Ez2psjhu24No5Q@mail.gmail.com>
- <3191cdde84978adf98d200a9db6f3c18e0a46390.camel@v3.sk>
- <CAL_JsqJBh9=J+m-eCFXvKw62Fj1Y9aFCNY=Vqo0LfyKoXKSXow@mail.gmail.com>
- <20190121175301.lremzw6dul7dyff4@e5254000004ec.dyn.armlinux.org.uk>
- <CAL_Jsq+6N6y=2ZmXL37G9o=w1wcP_qnCt=g6HJot=CwrJc0zNw@mail.gmail.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
+ support
+Date: Tue, 22 Jan 2019 11:59:18 +0100
+Message-ID: <1548154758.2465.20.camel@pengutronix.de>
+References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+         <1547801609.2626.5.camel@pengutronix.de>
+         <AM0PR04MB42111D634F28492434AA9309809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+         <1547806960.2626.9.camel@pengutronix.de>
+         <AM0PR04MB42111FE266342A2C2EAECC3580980@AM0PR04MB4211.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <CAL_Jsq+6N6y=2ZmXL37G9o=w1wcP_qnCt=g6HJot=CwrJc0zNw@mail.gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Lubomir Rintel <lkundrak@v3.sk>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, dri-devel <dri-devel@lists.freedesktop.org>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <AM0PR04MB42111FE266342A2C2EAECC3580980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gTW9uLCBKYW4gMjEsIDIwMTkgYXQgMDU6NTg6NTBQTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3Jv
-dGU6Cj4gT24gTW9uLCBKYW4gMjEsIDIwMTkgYXQgMTE6NTMgQU0gUnVzc2VsbCBLaW5nIC0gQVJN
-IExpbnV4IGFkbWluCj4gPGxpbnV4QGFybWxpbnV4Lm9yZy51az4gd3JvdGU6Cj4gPgo+ID4gT24g
-TW9uLCBKYW4gMjEsIDIwMTkgYXQgMTA6MDc6MTFBTSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6
-Cj4gPiA+IE9uIE1vbiwgSmFuIDIxLCAyMDE5IGF0IDk6NDYgQU0gTHVib21pciBSaW50ZWwgPGxr
-dW5kcmFrQHYzLnNrPiB3cm90ZToKPiA+ID4gPgo+ID4gPiA+IE9uIE1vbiwgMjAxOS0wMS0yMSBh
-dCAwOTozNSAtMDYwMCwgUm9iIEhlcnJpbmcgd3JvdGU6Cj4gPiA+ID4gPiBPbiBTdW4sIEphbiAy
-MCwgMjAxOSBhdCAxMToyNiBBTSBMdWJvbWlyIFJpbnRlbCA8bGt1bmRyYWtAdjMuc2s+IHdyb3Rl
-Ogo+ID4gPiA+ID4gPiBUaGUgTWFydmVsbCBBcm1hZGEgRFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2
-aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlzdCBhbGwKPiA+ID4gPiA+ID4gbm9kZXMgdGhhdCBj
-b21wcmlzZSB0aGUgZ3JhcGhpY3Mgc3Vic3lzdGVtLgo+ID4gPiA+ID4gPgo+ID4gPiA+ID4gPiBT
-aWduZWQtb2ZmLWJ5OiBMdWJvbWlyIFJpbnRlbCA8bGt1bmRyYWtAdjMuc2s+Cj4gPiA+ID4gPiA+
-IC0tLQo+ID4gPiA+ID4gPiAgLi4uL2Rpc3BsYXkvYXJtYWRhL21hcnZlbGwtYXJtYWRhLWRybS50
-eHQgICAgIHwgMjQgKysrKysrKysrKysrKysrKysrKwo+ID4gPiA+ID4gPiAgMSBmaWxlIGNoYW5n
-ZWQsIDI0IGluc2VydGlvbnMoKykKPiA+ID4gPiA+ID4KPiA+ID4gPiA+ID4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxs
-LWFybWFkYS1kcm0udHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3Bs
-YXkvYXJtYWRhL21hcnZlbGwtYXJtYWRhLWRybS50eHQKPiA+ID4gPiA+ID4gaW5kZXggZGU0Y2Nh
-OTQzMmM4Li4zZGJmYTgwNDdmMGIgMTAwNjQ0Cj4gPiA+ID4gPiA+IC0tLSBhL0RvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0u
-dHh0Cj4gPiA+ID4gPiA+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9k
-aXNwbGF5L2FybWFkYS9tYXJ2ZWxsLWFybWFkYS1kcm0udHh0Cj4gPiA+ID4gPiA+IEBAIC0xLDMg
-KzEsMjcgQEAKPiA+ID4gPiA+ID4gK01hcnZlbGwgQXJtYWRhIERSTSBtYXN0ZXIgZGV2aWNlCj4g
-PiA+ID4gPiA+ICs9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQo+ID4gPiA+ID4gPiAr
-Cj4gPiA+ID4gPiA+ICtUaGUgTWFydmVsbCBBcm1hZGEgRFJNIG1hc3RlciBkZXZpY2UgaXMgYSB2
-aXJ0dWFsIGRldmljZSBuZWVkZWQgdG8gbGlzdCBhbGwKPiA+ID4gPiA+ID4gK25vZGVzIHRoYXQg
-Y29tcHJpc2UgdGhlIGdyYXBoaWNzIHN1YnN5c3RlbS4KPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4g
-PiArUmVxdWlyZWQgcHJvcGVydGllczoKPiA+ID4gPiA+ID4gKwo+ID4gPiA+ID4gPiArIC0gY29t
-cGF0aWJsZTogdmFsdWUgc2hvdWxkIGJlICJtYXJ2ZWxsLGRvdmUtZGlzcGxheS1zdWJzeXN0ZW0i
-LAo+ID4gPiA+ID4gPiArICAgIm1hcnZlbGwsYXJtYWRhLWRpc3BsYXktc3Vic3lzdGVtIgo+ID4g
-PiA+ID4gPiArIC0gcG9ydHM6IGEgbGlzdCBvZiBwaGFuZGxlcyBwb2ludGluZyB0byBkaXNwbGF5
-IGludGVyZmFjZSBwb3J0cyBvZiBDUlRDCj4gPiA+ID4gPiA+ICsgICBkZXZpY2VzCj4gPiA+ID4g
-PiA+ICsgLSBtZW1vcnktcmVnaW9uOiBwaGFuZGxlIHRvIGEgbm9kZSBkZXNjcmliaW5nIG1lbW9y
-eSB0byBiZSB1c2VkIGZvciB0aGUKPiA+ID4gPiA+ID4gKyAgIGZyYW1lYnVmZmVyCj4gPiA+ID4g
-PiA+ICsKPiA+ID4gPiA+ID4gK0V4YW1wbGU6Cj4gPiA+ID4gPiA+ICsKPiA+ID4gPiA+ID4gKyAg
-ICAgICBkaXNwbGF5LXN1YnN5c3RlbSB7Cj4gPiA+ID4gPiA+ICsgICAgICAgICAgICAgICBjb21w
-YXRpYmxlID0gIm1hcnZlbGwsZG92ZS1kaXNwbGF5LXN1YnN5c3RlbSIsCj4gPiA+ID4gPiA+ICsg
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgIm1hcnZlbGwsYXJtYWRhLWRpc3BsYXktc3Vic3lz
-dGVtIjsKPiA+ID4gPiA+ID4gKyAgICAgICAgICAgICAgIG1lbW9yeS1yZWdpb24gPSA8JmRpc3Bs
-YXlfcmVzZXJ2ZWQ+Owo+ID4gPiA+ID4gPiArICAgICAgICAgICAgICAgcG9ydHMgPSA8JmxjZDBf
-cG9ydD47Cj4gPiA+ID4gPgo+ID4gPiA+ID4gSWYgdGhlcmUgaXMgb25seSBvbmUgZGV2aWNlLCB5
-b3UgZG9uJ3QgbmVlZCB0aGlzIHZpcnR1YWwgbm9kZS4KPiA+ID4gPgo+ID4gPiA+IEJ5ICJvbmUg
-ZGV2aWNlIiB5b3UgbWVhbiBvbmUgTENEIGNvbnRyb2xsZXIgKENSVEMpPwo+ID4gPgo+ID4gPiBZ
-ZXMuCj4gPgo+ID4gSG93IGRvZXMgdGhhdCB3b3JrIChhcyBmYXIgYXMgdGhlIExpbnV4IGltcGxl
-bWVudGF0aW9uKSA/ICBJIGNhbid0IHNlZQo+ID4gYSB3YXkgdGhhdCBjb3VsZCB3b3JrLCB3aGls
-ZSBhbGxvd2luZyB0aGUgZmxleGliaWxpdHkgdGhhdCBBcm1hZGEgRFJNCj4gPiBhbGxvd3MgKHR3
-byBjb21wbGV0ZWx5IGluZGVwZW5kZW50IExDRCBjb250cm9sbGVycyBhcyB0d28gc2VwYXJhdGUg
-RFJNCj4gPiBkZXZpY2VzIHZzIG9uZSBEUk0gZGV2aWNlIGNvbnRhaW5pbmcgYm90aCBMQ0QgY29u
-dHJvbGxlcnMuKQo+ID4KPiA+ID4gPiBJIHN1cHBvc2UgaW4gdGhlIChzaW5nbGUgQ1JUQykgZXhh
-bXBsZSBjYXNlLCB0aGUgZGlzcGxheS1zdWJzeXN0ZW0gbm9kZQo+ID4gPiA+IHVzZWQgdG8gYXNz
-b2NpYXRlIGl0IHdpdGggdGhlIG1lbW9yeSByZWdpb24gcmVzZXJ2ZWQgZm9yIGFsbG9jYXRpbmcg
-dGhlCj4gPiA+ID4gZnJhbWUgYnVmZmVycyBmcm9tLiBDb3VsZCB0aGF0IGJlIGRvbmUgZGlmZmVy
-ZW50bHk/Cj4gPiA+Cj4gPiA+IE1vdmUgbWVtb3J5LXJlZ2lvbiB0byB0aGUgTENEIGNvbnRyb2xs
-ZXIgbm9kZS4KPiA+Cj4gPiBUaGF0IGRvZXNuJ3Qgd29yayAtIGl0IHdvdWxkIGFwcGVhciBpbiB0
-aGUgd3JvbmcgcGFydCBvZiB0aGUgZHJpdmVyLgo+IAo+IFdoeT8gWW91IGNhbiBmZXRjaCBwcm9w
-ZXJ0aWVzIGZyb20gb3RoZXIgbm9kZXMuCj4gCj4gSWYgeW91IGhhdmUgMiBDUlRDcywgZG8geW91
-IGhhdmUgMSBvciAyIHJlc2VydmVkIG1lbW9yeSByZWdpb25zPyBJJ2QKPiB0aGluayAyIHdpdGgg
-ZWFjaCBvbmUgaW4gdGhlIGNvcnJlc3BvbmRpbmcgTENEQyB0aGF0IHVzZXMgdGhlbSB3b3VsZAo+
-IGJlIG1vcmUgZmxleGlibGUuCgpUaGVyZSB3b3VsZCBzdGlsbCBiZSBvbmUgcmVzZXJ2ZWQgbWVt
-b3J5IHJlZ2lvbiwgc2luY2UgaXQgaXMgc2hhcmVkCmJldHdlZW4gYm90aCBMQ0RDcy4KCj4gT3Ig
-anVzdCBnZXQgdGhlIGRhdGEgb3V0IG9mIHRoZSAvcmVzZXJ2ZWQtbWVtb3J5IG5vZGUgZGlyZWN0
-bHkuIFN1cmVseQo+IGl0IGhhcyBhIGNvbXBhdGlibGUgdGhhdCB5b3UgY2FuIGZpbmQgaXQgd2l0
-aC4KCkkgc2VlIHRoYXQgdGhlIERUIHJlc2VydmVkIG1lbW9yeSBzdXBwb3J0IGhhcyBwcm9ncmVz
-c2VkIHNpbmNlIEkgd3JvdGUKdGhlIGFybWFkYSBjb2RlIHRvIGRlYWwgd2l0aCBpdCwgYW5kIGl0
-J3Mgbm93IHBvc3NpYmxlIHRvIG1ha2UgdXNlIG9mCnJlc2VydmVkIG1lbW9yeSB2aWEgb2ZfcmVz
-ZXJ2ZWRfbWVtX2xvb2t1cCgpIHJhdGhlciB0aGFuIHVzaW5nIHRoZQpSRVNFUlZFRE1FTV9PRl9E
-RUNMQVJFKCkgYW5kIHNvIGZvcnRoLgoKPiA+ID4gPiBBbHNvLCBpZiB0aGUgbm9kZSBpcyBpbmRl
-ZWQgbWFkZSBvcHRpb25hbCwgdGhlbiBpdCdzIGdvaW5nIHRvCj4gPiA+ID4gY29tcGxpY2F0ZSB0
-aGluZ3Mgb24gdGhlIERSTSBzaWRlLiBDdXJyZW50bHkgdGhlIGRyaXZlciB0aGF0IGJpbmRzIHRv
-Cj4gPiA+ID4gdGhlIG5vZGUgY3JlYXRlcyB0aGUgRFJNIGRldmljZSBvbmNlIGl0IHNlZXMgYWxs
-IHRoZSBjb21wb25lbnRzCj4gPiA+ID4gY29ubmVjdGVkIHRvIHRoZSBwb3J0cyBhcHBlYXIuIElm
-IHdlIGxvb3NlIGl0LCB0aGVuIHRoZSBMQ0QgY29udHJvbGxlcgo+ID4gPiA+IGRyaXZlciB3b3Vs
-ZCBzb21laG93IG5lZWQgdG8gZmluZCBvdXQgdGhhdCBpdCdzIGFsb25lIGFuZCBjcmVhdGUgdGhl
-Cj4gPiA+ID4gRFJNIGRldmljZSBpdHNlbGYuCj4gPiA+Cj4gPiA+IERUIGlzIG5vdCB0aGUgb25s
-eSB3YXkgdG8gY3JlYXRlIGRldmljZXMuIFRoZSBEUk0gZHJpdmVyIGNhbiBiaW5kIHRvCj4gPiA+
-IHRoZSBMQ0RDIG5vZGUgYW5kIHRoZW4gY3JlYXRlIGEgY2hpbGQgQ1JUQyBkZXZpY2UgKG9yIGV2
-ZW4gbXVsdGlwbGUKPiA+ID4gb25lcyBmb3IgaC93IHdpdGggbXVsdGlwbGUgcGlwZWxpbmVzKS4K
-PiA+Cj4gPiBUaGF0IHNlZW1zIGNvbXBsZXRlbHkgdXBzaWRlIGRvd24gYW5kIHJlZGljdWxvdXMg
-dG8gbWUgLSBhcmUgeW91Cj4gPiByZWFsbHkgc3VnZ2VzdGluZyB0aGF0IHdlIHNob3VsZCBoYXZl
-IHNvbWUga2luZCBvZiB2aXJ0dWFsIGRldmljZQo+ID4gaW4gRFQsIGFuZCBvbWl0IHRoZSBfcmVh
-bF8gcGh5c2ljYWwgZGV2aWNlcyBmb3IgdGhhdCwgaGF2aW5nIHRoZQo+ID4gZHJpdmVyIGNyZWF0
-ZSB0aGUgZGV2aWNlIHdpdGggYWxsIHRoZSBhcHByb3ByaWF0ZSBTb0MgcmVzb3VyY2VzPwo+IAo+
-IFdlIGNyZWF0ZSBjaGlsZCBwbGF0Zm9ybSBkZXZpY2VzIHRoYXQgaW5oZXJpdCBmcm9tIHRoZSBw
-YXJlbnQgaW4gRFQKPiBhbGwgdGhlIHRpbWUuIE1GRCBjaGlsZCBkcml2ZXJzIGFyZSBhIGNvbW1v
-biBjYXNlLiBTb21ldGltZSB0aGUgY2hpbGQKPiBkZXZpY2VzIGhhdmUgRFQgbm9kZXMgYW5kIHNv
-bWV0aW1lcyB0aGV5IGRvbid0LgoKSSBzdGlsbCBkb24ndCB0aGluayB3aGF0IHlvdSdyZSBzYXlp
-bmcgaXMgdGhlIHJpZ2h0IHdheSB0byBnbyBhYm91dAp0aGlzLgoKWW91IF9hcHBlYXJfIHRvIGJl
-IHNheWluZyB0byBncm91cCBfYm90aF8gTENEIGNvbnRyb2xsZXJzIGludG8gb25lCkRUIG5vZGUs
-IGRlc3BpdGUgdGhlIGZhY3QgdGhhdCB0aGV5IGFyZSB0d28gc2VwYXJhdGUgZGV2aWNlcyB3aXRo
-CmRpZmZlcmVudCBtbWlvIHJlc291cmNlcywgaW50ZXJydXB0cyBldGMsIGFuZCBoYXZlIGNvZGUg
-aW4gdGhlCmtlcm5lbCB0byBzcGxpdCB0aGUgRFQgZGV2aWNlIHVwIGludG8gc3ViLWRldmljZXMu
-ICBJT1c6CgogICAgICAgICAgICAgICAgICAgICAgICBsY2QtY29udHJvbGxlcnNAODEwMDAwIHsK
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxlID0gIm1hcnZlbGwsZG92
-ZS1sY2Qtc3Vic3lzdGVtIjsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICByZWcgPSA8
-MHg4MTAwMDAgMHgxMDAwPiwgPDB4ODIwMDAwIDB4MTAwMD47CiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw0Nj4sIDw0Nz47CiAgICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKICAgICAgICAgICAgICAgICAgICAgICAg
-fTsKCnJhdGhlciB0aGFuOgoKICAgICAgICAgICAgICAgICAgICAgICAgbGNkMTogbGNkLWNvbnRy
-b2xsZXJAODEwMDAwIHsKICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb21wYXRpYmxl
-ID0gIm1hcnZlbGwsZG92ZS1sY2QiOwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHJl
-ZyA9IDwweDgxMDAwMCAweDEwMDA+OwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlu
-dGVycnVwdHMgPSA8NDY+OwogICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIHN0YXR1cyA9
-ICJkaXNhYmxlZCI7CiAgICAgICAgICAgICAgICAgICAgICAgIH07CgogICAgICAgICAgICAgICAg
-ICAgICAgICBsY2QwOiBsY2QtY29udHJvbGxlckA4MjAwMDAgewogICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIGNvbXBhdGlibGUgPSAibWFydmVsbCxkb3ZlLWxjZCI7CiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgcmVnID0gPDB4ODIwMDAwIDB4MTAwMD47CiAgICAgICAgICAg
-ICAgICAgICAgICAgICAgICAgICAgaW50ZXJydXB0cyA9IDw0Nz47CiAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgc3RhdHVzID0gImRpc2FibGVkIjsKICAgICAgICAgICAgICAgICAgICAg
-ICAgfTsKCldoeSBkbyB3ZSBuZWVkIGFsbCB0aGF0IGV4dHJhIGNvbXBsZXhpdHksIHdoZW4gRFQg
-Y2FuIHBlcmZlY3RseSB3ZWxsCmRlc2NyaWJlIGVhY2ggaW5kaXZpZHVhbCBMQ0QgY29udHJvbGxl
-ciBhcyBhIHNlcGFyYXRlIG5vZGU/CgpIb3cgZG8gd2UgdGhlbiBkbyBzdHVmZiBzdWNoIGFzOgoK
-JmxjZDAgewogICAgICAgIHN0YXR1cyA9ICJva2F5IjsKICAgICAgICBjbG9ja3MgPSA8JnNpNTM1
-MSAwPjsKICAgICAgICBjbG9jay1uYW1lcyA9ICJleHRfcmVmX2NsazEiOwogICAgICAgIGxjZDBf
-cG9ydDogcG9ydCB7CiAgICAgICAgICAgICAgICBsY2QwX3JnYjogZW5kcG9pbnQgewogICAgICAg
-ICAgICAgICAgICAgICAgICByZW1vdGUtZW5kcG9pbnQgPSA8JnRkYTk5OHhfdmlkZW8+OwogICAg
-ICAgICAgICAgICAgfTsKICAgICAgICB9Owp9OwoKJmxjZDEgewogICAgICAgIHN0YXR1cyA9ICJv
-a2F5IjsKICAgICAgICBjbG9ja3MgPSA8JmRpdmlkZXJfY2xrIDM+OwogICAgICAgIGNsb2NrLW5h
-bWVzID0gInBsbGRpdmlkZXIiOwogICAgICAgIGxjZDFfcG9ydDogcG9ydCB7CiAgICAgICAgICAg
-ICAgICBsY2QxX3JnYjogZW5kcG9pbnQgewogICAgICAgICAgICAgICAgICAgICAgICByZW1vdGUt
-ZW5kcG9pbnQgPSA8JnZnYV9icmlkZ2VfaW4+OwogICAgICAgICAgICAgICAgfTsKICAgICAgICB9
-Owp9OwoKaW4gYm9hcmQgZmlsZXMgLSB3ZSBzZWVtIHRvIGxvc2UgYSB3YXkgdG8gcmVmZXJlbmNl
-IGVhY2ggaW5kaXZpZHVhbApMQ0QgY29udHJvbGxlciB1c2luZyB0aGlzIG1ldGhvZC4gIFRoaXMg
-aXMgd2h5IEkgc2F5IHlvdXIgc3VnZ2VzdGlvbgppcyB1cHNpZGUgZG93biBhbmQgcmF0aGVyIHJl
-ZGljdWxvdXMgLSBpdCBkb2Vzbid0IHJlYWxseSBmaXQgdGhlCmhhcmR3YXJlIGF0IGFsbCwgYW5k
-IHRvIG1lIGp1c3Qgc2VlbXMgdG8gYmUgYW4gZXhlcmNpc2UgaW4gbWFraW5nCnRoaW5ncyB1bm5l
-Y2Vzc2FyaWx5IGRpZmZpY3VsdC4KCj4gT3RoZXJ3aXNlLCBkbyBpdCB0aGUgb3RoZXIgd2F5IGFy
-b3VuZC4gQ3JlYXRlIGEgdmlydHVhbCBEUk0gZGV2aWNlCj4gY29uZGl0aW9uZWQgb24gdGhlIFNv
-QzoKPiAKPiBpZiAob2ZfbWFjaGluZV9pc19jb21wYXRpYmxlKCJmb28sYmFyIikpCj4gICBwbGF0
-Zm9ybV9kZXZpY2VfcmVnaXN0ZXJfc2ltcGxlKC4uLikKCkkgZ3Vlc3MgdGhhdCdzIHBvc3NpYmxl
-IGF0IHRoZSBleHBlbnNlIG9mIGxvc2luZyB0aGUgZmxleGliaWxpdHkgLSBteQpvcmlnaW5hbCBp
-ZGVhIHdhcyB0byBhbGxvdyBhIGNhc2Ugd2hlcmUgeW91IGNvdWxkIGhhdmUgdHdvIERSTSBkZXZp
-Y2VzLApvbmUgcGVyIExDRCBjb250cm9sbGVyIGlmIHlvdSB3YW50ZWQsIHJhdGhlciB0aGFuIGhh
-dmluZyBhIGJpbmRpbmcgdGhhdApmb3JjZXMgb25lIERSTSBkZXZpY2Ugb3B0aW9uYWxseSBjb250
-YWluaW5nIGJvdGggTENEIGNvbnRyb2xsZXJzLgoKVGhpcyBpcyB0aGUgZmxleGliaWxpdHkgSSB0
-YWxrIGFib3V0IGFib3ZlLCB0aGF0IHlvdSBzZWVtIHRvIGhhdmUKc2tpcHBlZCBvdmVyIGluIHlv
-dXIgcmVwbHkuCgo+ID4gPiBZb3UnbGwgYWxzbyBub3RpY2UgdGhhdCB0aGVyZSBhcmUgb25seSAz
-IGNhc2VzIG9mIHRoaXMgdmlydHVhbCBub2RlIGluCj4gPiA+IHRoZSB0cmVlOiBTVGksIGkuTVgg
-SVBVLCBhbmQgUm9ja2NoaXAuIFRoYXQncyBiZWNhdXNlIHdlJ3ZlIGRlcHJlY2F0ZWQKPiA+ID4g
-ZG9pbmcgdGhlc2UgdmlydHVhbCBub2RlcyBmb3Igc29tZSB0aW1lIG5vdy4gSU9XLCB0aGVyZSBh
-cmUgc2V2ZXJhbAo+ID4gPiBleGFtcGxlcyBvZiBob3cgdG8gZG8gdGhpcyB3aXRob3V0IGEgdmly
-dHVhbCBub2RlLgo+ID4KPiA+IFRoaXMgZHJpdmVyIGhhcyBiZWVuIGluLXRyZWUgd2l0aCB0aGlz
-IHNldHVwIGZvciBzb21lIHRpbWUsIGFsdGhvdWdoCj4gPiB0aGUgZG9jdW1lbnRhdGlvbiBoYXMg
-YmVlbiBtaXNzaW5nICh3ZSBhY3R1YWxseSBoYXZlIGEgX2xvdF8gb2YKPiA+IGluc3RhbmNlcyBv
-ZiB0aGF0LikgIEhvd2V2ZXIsIHdlIGhhdmUgbm8gaW4tdHJlZSBEVCB1c2luZyBpdC4KPiAKPiBU
-aGUgY3VycmVudCBBcm1hZGEgRFJNIGRyaXZlciBoYXMgbm8gYmluZGluZyB0byBEVCBhdCBhbGws
-IHNvIG5vLCBpdAo+IGlzIG5vdCBqdXN0IG1pc3NpbmcgZG9jdW1lbnRhdGlvbiBvciBhIGR0cyBm
-aWxlLgo+IAo+ID4gSSBkb24ndCByZWFsbHkgc2VlIGhvdyB0byBzYXRpc2Z5IHlvdXIgY29tbWVu
-dHMgd2l0aG91dCB0b3RhbGx5Cj4gPiByZXN0cnVjdHVyaW5nIHRoZSBkcml2ZXIsIHdoaWNoIGlz
-IGdvaW5nIHRvIGJlIHF1aXRlIGEgYmlnIGNodW5rCj4gPiBvZiB3b3JrLiAgSSdtIG5vdCBzdXJl
-IEkgaGF2ZSB0aGUgbW90aXZhdGlvbiB0byBkbyB0aGF0IHJpZ2h0IG5vdy4KPiAKPiBJdCdzIG5v
-dCBhIGJpZyBjaHVuayBvZiB3b3JrLiBMb29rIGF0IGNvbW1pdCAyNDY3NzRkMTdmYzAKPiAoImRy
-bS9ldG5hdml2OiByZW1vdmUgdGhlIG5lZWQgZm9yIGEgZ3B1LXN1YnN5c3RlbSBEVCBub2RlIikg
-Zm9yIGFuCj4gZXhhbXBsZS4KPiAKPiBSb2IKPiAKCi0tIApSTUsncyBQYXRjaCBzeXN0ZW06IGh0
-dHBzOi8vd3d3LmFybWxpbnV4Lm9yZy51ay9kZXZlbG9wZXIvcGF0Y2hlcy8KRlRUQyBicm9hZGJh
-bmQgZm9yIDAuOG1pbGUgbGluZSBpbiBzdWJ1cmJpYTogc3luYyBhdCAxMi4xTWJwcyBkb3duIDYy
-MmticHMgdXAKQWNjb3JkaW5nIHRvIHNwZWVkdGVzdC5uZXQ6IDExLjlNYnBzIGRvd24gNTAwa2Jw
-cyB1cApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmkt
-ZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6
-Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Am Dienstag, den 22.01.2019, 10:39 +0000 schrieb Aisheng Dong:
+> > > > From: Lucas Stach [mailto:l.stach@pengutronix.de]
+> > Sent: Friday, January 18, 2019 6:23 PM
+> 
+> [...]
+> > > > This has been discussed when upstreaming the driver. The controller
+> > > > may support multiple output IRQs, but only one them is actually used
+> > > > depending on the CHANCTRL config. There is no use in hooking up all
+> > > > the output IRQs in DT, if only one of them is actually used. Some of
+> > > > the outputs may not even be visible to the Linux system, but may
+> > > > belong to a Cortex M4 subsystem. All of those configurations can be
+> > > > described in DT by changing the upstream interrupt and "fsl,channel" in a
+> > 
+> > coherent way.
+> > > > 
+> > > > Please correct me if my understanding is totally wrong.
+> > > 
+> > > I'm afraid your understanding of CHAN seems wrong.
+> > > (Binding doc of that property needs change as well).
+> > > 
+> > > On QXP DC SS, the IRQSTEER supports 512 interrupts with 8 interrupt
+> > > output Conntected to GIC.
+> > > The current driver does not support it as it assumes only one interrupt
+> > 
+> > output used.
+> > 
+> > Okay, so let's take a step back. The description in the QXP RM is actually better
+> > than what I've seen until now. Still it's totally confusing that the "channel"
+> > terminology used with different meanings in docs. Let's try to avoid this as
+> > much as possible.
+> > 
+> > So to get things straight: Each irqsteer controller has a number of IRQ groups.
+> > All the input IRQs of one group are ORed together to form on output IRQ.
+> > Depending on the SoC integration, a group can contain 32 or
+> > 64 IRQs, where DCSS irqsteer on MX8M and the big 512 input controllers on
+> > QXP and QM both use 64 IRQs per group. You are claiming that the smaller
+> > controllers on both QXP am QM have only 32 IRQs per group, right?
+> > 
+> > So the only change that is needed is that the driver needs to know the number
+> > of input IRQs per group, with a default of 64 to not break DT compatibility.
+> > 
+> 
+> Not exactly.
+> from HW point of view , there're two parameters during IRQSTEER integration.
+> For example,
+> DC in QXP:
+> > > parameter  IRQCHAN		=  1; 	//Number of IRQ Channels/Slots
+> > > parameter  NINT32		=  8;	//Number of interrupts in multiple of 32
+
+If this is always in multiples of 32, the only change we need to make
+to the driver is to fix DT binding and interpretation of the
+"fsl,irq-groups" property to be in multiples of 32.
+
+This means i.MX8MQ DCSS irqsteer would need to change to 2 irq-groups,
+but as this isn't used upstream yet we can still do this change without
+breaking too much stuff and I would rather correct this now than
+keeping a DT binding around that doesn't match the HW.
+
+> MIPI CSI in MQ:
+> > Parameter  IRQCHAN		= 1
+> > Parameter  NINT32		= 1
+> 
+> You will see no group concept used here. Only channel number and interrupts number.
+> The group is an IP internal concept that ORed a group of 64 interrupts into an output
+> interrupt. But it may also only use 32 interrupts in the same group.
+
+I suppose that the OR group size at that point is always 64 input IRQs
+per output IRQ, right? So with NINT32 == 1 you end up with 1 output
+IRQ, but for NINT32 == 3 you get 2 output IRQs, correct?
+
+> > Also if the connection between IRQ group and output IRQ is fixed, the driver
+> > should be more clever about handling the chained IRQ. If you know which of
+> > the upstream IRQs fired you only need to look at the 32 or 64 IRQ status
+> > registers of that specific group, not all of them.
+> 
+> Yes, that's right.
+> I planned to do that later with a separate patch before.
+
+Let's do it right with the first patch. This doesn't seem like a big
+change.
+
+> 
+> > 
+> > Can you please clarify what the CHANCTRL setting changes in this setup?
+> > 
+> 
+> IRQsteer supports up to 5 separate CAHNNELS which each of them supports up
+> to 512 interrupts. CHANCTL is used to enable those respective CHAN output interrupts.
+> e.g.
+> 1~8 output interrupts of CHAN0.
+> 
+> One notable thing is the each channel has a separate address space.
+> That means the chan1 reg address is not the one we specified in default reg property.
+> So the correct dts may be like for multi channels cases.
+> interrupt-controller@32e2d000 {
+>         compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";
+>         reg = <0x32e2d000 0x1000>,
+>               <0x32e2e000 0x1000>,
+>               <0x32e2f000 0x1000>;
+>               ...
+>         reg-names = "ch0", "ch1", "ch2", ...;
+>         interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+>         fsl,irqs-per-chan= <64>;
+>         interrupt-controller;
+>         #interrupt-cells = <2>; //cell 0: chan index cell 2: interrupt number
+> };
+> This makes the things quite complicated.
+
+With the current binding, what keeps us from describing such a multi-
+channel irqsteer with multiple DT nodes and have multiple driver
+instances? I don't see why we would need to mix this all into one
+driver instance. So for your above example, something like:
+
+interrupt-controller@32e2d000 {
+	compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";>
+	reg = <0x32e2d000 0x1000>;
+	interrupts = <GIC_SPI 18 IRQ_TYPE_LEVEL_HIGH>;
+	fsl,channel = <0>;
+};
+
+interrupt-controller@32e2e000 {
+	compatible = "fsl,imx8m-irqsteer", "fsl,imx-irqsteer";>
+	reg = <0x32e2e000 0x1000>;
+	interrupts = <GIC_SPI 26 IRQ_TYPE_LEVEL_HIGH>;
+	fsl,channel = <1>;
+};
+
+> In reality, we still don't have such using cases so far as as multi channels usually
+> are used to deliver the interrupts to different cores,
+> e.g. M4, SCU, or DSP, A core don't handle it.
+> So I did not change it currently as it's another story.
+> This patch series mainly aims to add support for 32 or 512 interrupts channel and multiple
+> Outputs for a single CHANNEL case.
+
+The thing is, if we want to even try to keep DT stability we need to
+understand how this HW block can be used and how we can describe this
+in the DT.
+
+Regards,
+Lucas
