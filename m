@@ -1,35 +1,146 @@
-From: Heiko Schocher <hs@denx.de>
-Subject: [PATCH v1 2/2] ARM: dts: am335x-shc.dts: fix wrong cd pin level
-Date: Tue, 22 Jan 2019 06:26:23 +0100
-Message-ID: <20190122052623.1779840-3-hs@denx.de>
-References: <20190122052623.1779840-1-hs@denx.de>
+From: Shawn Guo <shawnguo@kernel.org>
+Subject: Re: [v3] arm64: dts: lx2160a: add sata node support
+Date: Tue, 22 Jan 2019 13:35:53 +0800
+Message-ID: <20190122053552.GF19233@dragon>
+References: <20190117021224.19021-1-peng.ma@nxp.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122052623.1779840-1-hs@denx.de>
+Content-Disposition: inline
+In-Reply-To: <20190117021224.19021-1-peng.ma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
-Cc: Heiko Schocher <hs@denx.de>, =?UTF-8?q?Beno=C3=AEt=20Cousson?= <bcousson@baylibre.com>, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Tony Lindgren <tony@atomide.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Peng Ma <peng.ma@nxp.com>
+Cc: leoyang.li@nxp.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, andy.tang@nxp.com
 List-Id: devicetree@vger.kernel.org
 
-cd pin on mmc1 is GPIO_ACTIVE_LOW not GPIO_ACTIVE_HIGH
+On Thu, Jan 17, 2019 at 02:12:24AM +0000, Peng Ma wrote:
+> Add SATA device nodes for fsl-lx2160a and enable support
+> for QDS and RDB boards.
+> 
+> Signed-off-by: Peng Ma <peng.ma@nxp.com>
+> ---
+> changed for V3:
+> 	- updated the commit log 
+> 
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
+>  arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
+>  3 files changed, 76 insertions(+), 0 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> index 99a22ab..1a5acf6 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+> @@ -95,6 +95,22 @@
+>  	};
+>  };
+>  
+> +&sata0 {
+> +	status = "okay";
+> +};
+> +
+> +&sata1 {
+> +	status = "okay";
+> +};
+> +
+> +&sata2 {
+> +	status = "okay";
+> +};
+> +
+> +&sata3 {
+> +	status = "okay";
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> index 6481e5f..5b6799e 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+> @@ -102,6 +102,22 @@
+>  	};
+>  };
+>  
+> +&sata0 {
+> +	status = "okay";
+> +};
+> +
+> +&sata1 {
+> +	status = "okay";
+> +};
+> +
+> +&sata2 {
+> +	status = "okay";
+> +};
+> +
+> +&sata3 {
+> +	status = "okay";
+> +};
+> +
+>  &uart0 {
+>  	status = "okay";
+>  };
+> diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> index a79f5c1..592034b 100644
+> --- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> +++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+> @@ -671,6 +671,50 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		sata0: sata@3200000 {
+> +			compatible = "fsl,lx2160a-ahci";
 
-Signed-off-by: Heiko Schocher <hs@denx.de>
----
+I can not find this compatible in any bindings doc.
 
- arch/arm/boot/dts/am335x-shc.dts | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Shawn
 
-diff --git a/arch/arm/boot/dts/am335x-shc.dts b/arch/arm/boot/dts/am335x-shc.dts
-index 5cdaf0cd9401..bfbe27a80006 100644
---- a/arch/arm/boot/dts/am335x-shc.dts
-+++ b/arch/arm/boot/dts/am335x-shc.dts
-@@ -213,7 +213,7 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&mmc1_pins>;
- 	bus-width = <0x4>;
--	cd-gpios = <&gpio0 6 GPIO_ACTIVE_HIGH>;
-+	cd-gpios = <&gpio0 6 GPIO_ACTIVE_LOW>;
- 	cd-inverted;
- 	max-frequency = <26000000>;
- 	vmmc-supply = <&vmmcsd_fixed>;
--- 
-2.17.2
+> +			reg = <0x0 0x3200000 0x0 0x10000>,
+> +			      <0x7 0x100520 0x0 0x4>;
+> +			reg-names = "ahci", "sata-ecc";
+> +			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 3>;
+> +			dma-coherent;
+> +			status = "disabled";
+> +		};
+> +
+> +		sata1: sata@3210000 {
+> +			compatible = "fsl,lx2160a-ahci";
+> +			reg = <0x0 0x3210000 0x0 0x10000>,
+> +			      <0x7 0x100520 0x0 0x4>;
+> +			reg-names = "ahci", "sata-ecc";
+> +			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 3>;
+> +			dma-coherent;
+> +			status = "disabled";
+> +		};
+> +
+> +		sata2: sata@3220000 {
+> +			compatible = "fsl,lx2160a-ahci";
+> +			reg = <0x0 0x3220000 0x0 0x10000>,
+> +			      <0x7 0x100520 0x0 0x4>;
+> +			reg-names = "ahci", "sata-ecc";
+> +			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 3>;
+> +			dma-coherent;
+> +			status = "disabled";
+> +		};
+> +
+> +		sata3: sata@3230000 {
+> +			compatible = "fsl,lx2160a-ahci";
+> +			reg = <0x0 0x3230000 0x0 0x10000>,
+> +			      <0x7 0x100520 0x0 0x4>;
+> +			reg-names = "ahci", "sata-ecc";
+> +			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&clockgen 4 3>;
+> +			dma-coherent;
+> +			status = "disabled";
+> +		};
+> +
+>  		smmu: iommu@5000000 {
+>  			compatible = "arm,mmu-500";
+>  			reg = <0 0x5000000 0 0x800000>;
+> -- 
+> 1.7.1
+> 
