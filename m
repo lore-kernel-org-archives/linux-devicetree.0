@@ -1,212 +1,87 @@
-From: =?UTF-8?q?Randolph=20Maa=C3=9Fen?= <gaireg@gaireg.de>
-Subject: [PATCH 2/2] iio: imu: mpu6050: Add support for the ICM 20602 IMU
-Date: Tue, 22 Jan 2019 13:02:14 +0100
-Message-ID: <20190122120221.27187-2-gaireg@gaireg.de>
-References: <20190122120221.27187-1-gaireg@gaireg.de>
+From: Vincent Whitchurch <vincent.whitchurch@axis.com>
+Subject: Re: [PATCH v6 5/9] soc: mellanox: host: Add the common host side
+ Rshim driver
+Date: Tue, 22 Jan 2019 13:20:24 +0100
+Message-ID: <20190122122022.ipn3jdfnxthhphrs@axis.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+ <1541089538-175682-1-git-send-email-lsun@mellanox.com>
+ <1541089538-175682-5-git-send-email-lsun@mellanox.com>
+ <CAK8P3a2NRbEaS_EJNtBaZ3GCUtRiH2rUDRzJFjvcw2ZacZM1qw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122120221.27187-1-gaireg@gaireg.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: gaireg@gaireg.de
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Martin Kelly <mkelly@xevo.com>, Douglas Fischer <fischerdouglasc@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Hans de Goede <hdegoede@redhat.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <CAK8P3a2NRbEaS_EJNtBaZ3GCUtRiH2rUDRzJFjvcw2ZacZM1qw@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Arnd Bergmann <arnd@arndb.de>
+Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, linux-pci <linux-pci@vger.kernel.org>, Liming Sun <lsun@mellanox.com>, virtualization@lists.linux-foundation.org, arm-soc <arm@kernel.org>, Olof Johansson <olof@lixom.net>, linux-ntb@googlegroups.com, Robin Murphy <robin.murphy@arm.com>, Christoph Hellwig <hch@lst.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The Invensense ICM-20602 is a 6-axis MotionTracking device that
-combines a 3-axis gyroscope and an 3-axis accelerometer. It is very
-similar to the ICM-20608 imu which is already supported by the mpu6050
-driver. The main difference is that the ICM-20602 has the i2c bus
-disable bit in a separate register.
+On Fri, Jan 18, 2019 at 05:02:21PM +0100, Arnd Bergmann wrote:
+> On Thu, Nov 1, 2018 at 5:49 PM Liming Sun <lsun@mellanox.com> wrote:
+> >
+> > An external host can connect to a Mellanox BlueField SoC via an
+> > interface called Rshim. The Rshim driver provides boot, console,
+> > and networking services over this interface. This commit is
+> > the common driver where the other backend (transport) driver will
+> > use.
+> >
+> > Reviewed-by: David Woods <dwoods@mellanox.com>
+> > Signed-off-by: Liming Sun <lsun@mellanox.com>
+> 
+> Hi Liming,
+> 
+> I've taken a new look at your patch series for drivers/soc/ now,
+> thanks for your continued submissions.
+> 
+> This is again just a set of very high-level comments, but I think we
+> should resolve some of the fundamental questions first.
+> Incidentally, Vincent Whitchurch has recently posted another
+> patch series with a very similar intention, but for other hardware
+> and taking a different approach.
+> 
+> In both cases, the idea is to use virtio based drivers to provide
+> services from a host machine into another Linux instance running
+> on an embedded system behind a PCIe slot or similar. Your
+> Bluefield SoC patches are well written, but are intentionally
+> kept specific to a particular use case and tied to one piece
+> of hardware. In contrast, Vincent uses the existing code from
+> drivers/misc/mic/vop/ that is equally hardware specific, but he
+> extends it to be applicable to other hardware as well.
+> 
+> It would be good if you could look at each other's approaches
+> to see where we could take it from here. I think ideally we
+> should have a common driver framework for doing the same
+> thing across both of your devices and as well as others.
 
-Signed-off-by: Randolph Maaßen <gaireg@gaireg.de>
----
- drivers/iio/imu/inv_mpu6050/Kconfig        |  8 ++++----
- drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 29 +++++++++++++++++++++++++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  |  6 ++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  8 ++++++++
- drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  | 12 +++++++++---
- 5 files changed, 56 insertions(+), 7 deletions(-)
+As far as I can see the biggest difference is that Rshim appears to
+support interfaces which do not have shared memory between the host and
+the card, which means that it has to jump through a lot more hoops to
+make virtio work.
 
-diff --git a/drivers/iio/imu/inv_mpu6050/Kconfig b/drivers/iio/imu/inv_mpu6050/Kconfig
-index 5483b2ea754d..d2fe9dbddda7 100644
---- a/drivers/iio/imu/inv_mpu6050/Kconfig
-+++ b/drivers/iio/imu/inv_mpu6050/Kconfig
-@@ -13,8 +13,8 @@ config INV_MPU6050_I2C
- 	select INV_MPU6050_IIO
- 	select REGMAP_I2C
- 	help
--	  This driver supports the Invensense MPU6050/6500/9150 and ICM20608
--	  motion tracking devices over I2C.
-+	  This driver supports the Invensense MPU6050/6500/9150 and
-+	  ICM20608/20602 motion tracking devices over I2C.
- 	  This driver can be built as a module. The module will be called
- 	  inv-mpu6050-i2c.
- 
-@@ -24,7 +24,7 @@ config INV_MPU6050_SPI
- 	select INV_MPU6050_IIO
- 	select REGMAP_SPI
- 	help
--	  This driver supports the Invensense MPU6050/6500/9150 and ICM20608
--	  motion tracking devices over SPI.
-+	  This driver supports the Invensense MPU6050/6500/9150 and
-+	  ICM20608/20602 motion tracking devices over SPI.
- 	  This driver can be built as a module. The module will be called
- 	  inv-mpu6050-spi.
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-index 1e428c196a82..01c856417d8f 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-@@ -38,6 +38,29 @@ static const int gyro_scale_6050[] = {133090, 266181, 532362, 1064724};
-  */
- static const int accel_scale[] = {598, 1196, 2392, 4785};
- 
-+static const struct inv_mpu6050_reg_map reg_set_icm20602 = {
-+	.sample_rate_div	= INV_MPU6050_REG_SAMPLE_RATE_DIV,
-+	.lpf                    = INV_MPU6050_REG_CONFIG,
-+	.accel_lpf              = INV_MPU6500_REG_ACCEL_CONFIG_2,
-+	.user_ctrl              = INV_MPU6050_REG_USER_CTRL,
-+	.fifo_en                = INV_MPU6050_REG_FIFO_EN,
-+	.gyro_config            = INV_MPU6050_REG_GYRO_CONFIG,
-+	.accl_config            = INV_MPU6050_REG_ACCEL_CONFIG,
-+	.fifo_count_h           = INV_MPU6050_REG_FIFO_COUNT_H,
-+	.fifo_r_w               = INV_MPU6050_REG_FIFO_R_W,
-+	.raw_gyro               = INV_MPU6050_REG_RAW_GYRO,
-+	.raw_accl               = INV_MPU6050_REG_RAW_ACCEL,
-+	.temperature            = INV_MPU6050_REG_TEMPERATURE,
-+	.int_enable             = INV_MPU6050_REG_INT_ENABLE,
-+	.int_status             = INV_MPU6050_REG_INT_STATUS,
-+	.pwr_mgmt_1             = INV_MPU6050_REG_PWR_MGMT_1,
-+	.pwr_mgmt_2             = INV_MPU6050_REG_PWR_MGMT_2,
-+	.int_pin_cfg            = INV_MPU6050_REG_INT_PIN_CFG,
-+	.accl_offset            = INV_MPU6500_REG_ACCEL_OFFSET,
-+	.gyro_offset            = INV_MPU6050_REG_GYRO_OFFSET,
-+	.i2c_if                 = INV_ICM20602_REG_I2C_IF,
-+};
-+
- static const struct inv_mpu6050_reg_map reg_set_6500 = {
- 	.sample_rate_div	= INV_MPU6050_REG_SAMPLE_RATE_DIV,
- 	.lpf                    = INV_MPU6050_REG_CONFIG,
-@@ -140,6 +163,12 @@ static const struct inv_mpu6050_hw hw_info[] = {
- 		.reg = &reg_set_6500,
- 		.config = &chip_config_6050,
- 	},
-+	{
-+		.whoami = INV_ICM20602_WHOAMI_VALUE,
-+		.name = "ICM20602",
-+		.reg = &reg_set_icm20602,
-+		.config = &chip_config_6050,
-+	},
- };
- 
- int inv_mpu6050_switch_engine(struct inv_mpu6050_state *st, bool en, u32 mask)
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-index dd758e3d403d..e46eb4ddea21 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-@@ -127,6 +127,7 @@ static int inv_mpu_probe(struct i2c_client *client,
- 	st = iio_priv(dev_get_drvdata(&client->dev));
- 	switch (st->chip_type) {
- 	case INV_ICM20608:
-+	case INV_ICM20602:
- 		/* no i2c auxiliary bus on the chip */
- 		break;
- 	default:
-@@ -179,6 +180,7 @@ static const struct i2c_device_id inv_mpu_id[] = {
- 	{"mpu9250", INV_MPU9250},
- 	{"mpu9255", INV_MPU9255},
- 	{"icm20608", INV_ICM20608},
-+	{"icm20602", INV_ICM20602},
- 	{}
- };
- 
-@@ -213,6 +215,10 @@ static const struct of_device_id inv_of_match[] = {
- 		.compatible = "invensense,icm20608",
- 		.data = (void *)INV_ICM20608
- 	},
-+	{
-+		.compatible = "invensense,icm20602",
-+		.data = (void *)INV_ICM20602
-+	},
- 	{ }
- };
- MODULE_DEVICE_TABLE(of, inv_of_match);
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-index 6bcc11fc1b88..325afd9f5f61 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-@@ -44,6 +44,7 @@
-  *  @int_pin_cfg;	Controls interrupt pin configuration.
-  *  @accl_offset:	Controls the accelerometer calibration offset.
-  *  @gyro_offset:	Controls the gyroscope calibration offset.
-+ *  @i2c_if:		Controls the i2c interface
-  */
- struct inv_mpu6050_reg_map {
- 	u8 sample_rate_div;
-@@ -65,6 +66,7 @@ struct inv_mpu6050_reg_map {
- 	u8 int_pin_cfg;
- 	u8 accl_offset;
- 	u8 gyro_offset;
-+	u8 i2c_if;
- };
- 
- /*device enum */
-@@ -77,6 +79,7 @@ enum inv_devices {
- 	INV_MPU9250,
- 	INV_MPU9255,
- 	INV_ICM20608,
-+	INV_ICM20602,
- 	INV_NUM_PARTS
- };
- 
-@@ -195,6 +198,10 @@ struct inv_mpu6050_state {
- #define INV_MPU6050_BIT_PWR_ACCL_STBY       0x38
- #define INV_MPU6050_BIT_PWR_GYRO_STBY       0x07
- 
-+/* ICM20602 register */
-+#define INV_ICM20602_REG_I2C_IF             0x70
-+#define INV_ICM20602_BIT_I2C_IF_DIS         0x40
-+
- #define INV_MPU6050_REG_FIFO_COUNT_H        0x72
- #define INV_MPU6050_REG_FIFO_R_W            0x74
- 
-@@ -261,6 +268,7 @@ struct inv_mpu6050_state {
- #define INV_MPU9255_WHOAMI_VALUE		0x73
- #define INV_MPU6515_WHOAMI_VALUE		0x74
- #define INV_ICM20608_WHOAMI_VALUE		0xAF
-+#define INV_ICM20602_WHOAMI_VALUE		0x12
- 
- /* scan element definition */
- enum inv_mpu6050_scan {
-diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-index 227f50afff22..e5b7213c74f9 100644
---- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-+++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-@@ -31,9 +31,14 @@ static int inv_mpu_i2c_disable(struct iio_dev *indio_dev)
- 	if (ret)
- 		return ret;
- 
--	st->chip_config.user_ctrl |= INV_MPU6050_BIT_I2C_IF_DIS;
--	ret = regmap_write(st->map, st->reg->user_ctrl,
--			   st->chip_config.user_ctrl);
-+	if (st->chip_type == INV_ICM20602) {
-+		ret = regmap_write(st->map, INV_ICM20602_REG_I2C_IF,
-+				   INV_ICM20602_BIT_I2C_IF_DIS);
-+	} else {
-+		st->chip_config.user_ctrl |= INV_MPU6050_BIT_I2C_IF_DIS;
-+		ret = regmap_write(st->map, st->reg->user_ctrl,
-+				   st->chip_config.user_ctrl);
-+	}
- 	if (ret) {
- 		inv_mpu6050_set_power_itg(st, false);
- 		return ret;
-@@ -81,6 +86,7 @@ static const struct spi_device_id inv_mpu_id[] = {
- 	{"mpu9250", INV_MPU9250},
- 	{"mpu9255", INV_MPU9255},
- 	{"icm20608", INV_ICM20608},
-+	{"icm20602", INV_ICM20602},
- 	{}
- };
- 
--- 
-2.11.0
+For example, the card side seems to use normal virtio-net and
+virto-console drivers, but the drivers/soc/mellanox/tmfifo.c driver,
+also running on the card, appears to have to actually look inside the
+virtqueues and shuffle the data over the TmFifo interface, and this
+driver has hard-coded support for only network and console, since it
+apparently needs to know the details of how the virtio drivers use their
+virtqueues (see tmfifo_virtio_rxtx()).
+
+And the host side appears to _also_ run the virtio-net driver and there
+the drivers/soc/mellanox/host/rshim_net.c code instead has to look
+inside the virtqueues and shuffle the data over the other side of the
+TmFifo interface.
+
+So to me this looks very different from a traditional virtio
+driver/device setup (which is what mic/vop uses).  I may be missing
+something, but I don't quite understand why it's even using virtio in
+the first place.
