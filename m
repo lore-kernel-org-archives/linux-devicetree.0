@@ -1,56 +1,53 @@
-Return-Path: <>
-From: Martin Kelly <martin@martingkelly.com>
-Subject: [PATCH v2 5/6] iio:bmi160: use iio_pollfunc_store_time
-Date: Mon, 21 Jan 2019 18:04:30 -0800
-Message-Id: <20190122020431.5338-5-martin@martingkelly.com>
-In-Reply-To: <20190122020431.5338-1-martin@martingkelly.com>
-References: <20190122020431.5338-1-martin@martingkelly.com>
-To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org, Martin Kelly <martin@martingkelly.com>
+Return-Path: <SRS0=HE6G=P6=partner.samsung.com=k.konieczny@kernel.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v5 2/5] clk: samsung: exynos5433: fix name typo in sssx
+Date: Tue, 22 Jan 2019 10:02:29 +0100
+Message-Id: <20190122090232.29194-3-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+	<CGME20190122090250eucas1p246a6a567d77d075716fc9f257f72a26e@eucas1p2.samsung.com>
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Kelly <martin@martingkelly.com>
+Fix typo in sssx name, there should be three letters 's'.
 
-Currently, we snap the timestamp after reading from the buffer and
-processing the event. When the IIO poll function is triggered by an
-interrupt,  we can get a slightly more accurate timestamp by snapping it
-prior to reading the data, since the data was already generated prior to
-entering the trigger handler. This is not going to make a huge difference,
-but we might as well improve slightly.
-
-Do this by using iio_pollfunc_store_time as other drivers do.
-
-Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Acked-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 ---
-v2:
-- Use iio_pollfunc_store_time.
+ drivers/clk/samsung/clk-exynos5433.c   | 2 +-
+ include/dt-bindings/clock/exynos5433.h | 2 +-
+ 2 files changed, 2 insertions(+), 2 deletions(-)
 
- drivers/iio/imu/bmi160/bmi160_core.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-index c848fc1bce61..dca53be066e1 100644
---- a/drivers/iio/imu/bmi160/bmi160_core.c
-+++ b/drivers/iio/imu/bmi160/bmi160_core.c
-@@ -425,8 +425,7 @@ static irqreturn_t bmi160_trigger_handler(int irq, void *p)
- 		buf[j++] = sample;
- 	}
-
--	iio_push_to_buffers_with_timestamp(indio_dev, buf,
--					   iio_get_time_ns(indio_dev));
-+	iio_push_to_buffers_with_timestamp(indio_dev, buf, pf->timestamp);
- done:
- 	iio_trigger_notify_done(indio_dev->trig);
- 	return IRQ_HANDLED;
-@@ -854,7 +853,8 @@ int bmi160_core_probe(struct device *dev, struct regmap *regmap,
- 	indio_dev->modes = INDIO_DIRECT_MODE;
- 	indio_dev->info = &bmi160_info;
-
--	ret = devm_iio_triggered_buffer_setup(dev, indio_dev, NULL,
-+	ret = devm_iio_triggered_buffer_setup(dev, indio_dev,
-+					      iio_pollfunc_store_time,
- 					      bmi160_trigger_handler, NULL);
- 	if (ret < 0)
- 		return ret;
---
-2.11.0
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index ea47f49abc7f..24c3360db65b 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+ 	/* ENABLE_ACLK_TOP */
+ 	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
+ 			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
+-	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
++	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
+ 			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
+ 			29, CLK_IGNORE_UNUSED, 0),
+ 	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
+diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
+index 98bd85ce1e45..87bb2b017143 100644
+--- a/include/dt-bindings/clock/exynos5433.h
++++ b/include/dt-bindings/clock/exynos5433.h
+@@ -156,7 +156,7 @@
+ #define CLK_ACLK_G2D_266		220
+ #define CLK_ACLK_G2D_400		221
+ #define CLK_ACLK_G3D_400		222
+-#define CLK_ACLK_IMEM_SSX_266		223
++#define CLK_ACLK_IMEM_SSSX_266		223
+ #define CLK_ACLK_BUS0_400		224
+ #define CLK_ACLK_BUS1_400		225
+ #define CLK_ACLK_IMEM_200		226
+-- 
+2.20.0
