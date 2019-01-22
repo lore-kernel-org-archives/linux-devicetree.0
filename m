@@ -1,53 +1,40 @@
-From: Peter Chen <peter.chen@nxp.com>
-Subject: RE: [PATCH v3 1/2] dt-bindings: usb: ci-hdrc-usb2: add property
- power-active-high
-Date: Tue, 22 Jan 2019 07:50:09 +0000
-Message-ID: <AM0PR04MB5314CEFFC0FEB91184FD872D8B980@AM0PR04MB5314.eurprd04.prod.outlook.com>
-References: <20190116105103.28842-2-philipp.puschmann@emlix.com>
- <20190116111133.31326-1-philipp.puschmann@emlix.com>
- <VI1PR04MB5327656AD22454B054CE0AD08B830@VI1PR04MB5327.eurprd04.prod.outlook.com>
- <7d0da12b-0173-aca1-b0eb-78a00681d35d@emlix.com>
+From: Stefan Wahren <stefan.wahren@i2se.com>
+Subject: Re: [PATCH 0/6] ARM: dts: bcm283x: Several DTS improvements
+Date: Tue, 22 Jan 2019 08:57:28 +0100
+Message-ID: <30ff2336-3839-e005-d298-d0df5f09411b@i2se.com>
+References: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7d0da12b-0173-aca1-b0eb-78a00681d35d@emlix.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1547297008-2740-1-git-send-email-stefan.wahren@i2se.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Philipp Puschmann <pp@emlix.com>, Philipp Puschmann <philipp.puschmann@emlix.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, Eric Anholt <eric@anholt.net>
+Cc: Gottfried Haider <gottfried.haider@gmail.com>, devicetree@vger.kernel.org, Phil Elwell <phil@raspberrypi.org>, bcm-kernel-feedback-list@broadcom.com, Peter Robinson <pbrobinson@gmail.com>, linux-arm-kernel@lists.infradead.org, linux-rpi-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-IA0KPiBBbSAxNy4wMS4xOSB1bSAwODowMSBzY2hyaWViIFBldGVyIENoZW46DQo+ID4NCj4gPj4N
-Cj4gPj4gVGhlIGkuTVg2cS9kbCBVU0IgY29udHJvbGxlciBtYXkgZHJpdmUgdGhlIHVzYiBwb3dl
-ciBsaW5lIGRpcmVjdGx5LA0KPiA+PiBidXQgdGhlIHBvbGFyaXR5IGRlcGVuZHMgb24gdGhlIGJv
-YXJkLiBSZXNldCBzdGF0ZSBvZiB0aGUgcG9sYXJpdHkgaXMNCj4gPj4gbG93LWFjdGl2ZSBzbyBh
-ZGQgdGhpcyBwcm9wZXJ0eSB0byBhbGxvdyBpdCB0byBiZSBoaWdoLWFjdGl2ZS4NCj4gPj4NCj4g
-Pg0KPiA+IEFzIGZhciBhcyBJIGtub3csIG1vc3Qgb2YgaS5teCBVU0IgY29udHJvbGxlcnMgKGV4
-Y2VwdCBpbXgyOC8yMywgYnV0DQo+ID4gdGhleSBkb24ndCBoYXZlIG5vbi1jb3JlIHJlZ2lzdGVy
-cykgd29yayBsaWtlIHRoaXMsIGFuZCBtb3N0IG9mIHRoZW0NCj4gPiBhcmUgbG93IGFjdGl2ZSBm
-b3IgUFAgZGVmYXVsdC4gV291bGQgeW91IGp1c3QgdXNlICJpLm14IiBhdCBib3RoIHlvdXIgY29k
-ZSBhbmQNCj4geW91ciBjb21tZW50Pw0KPiANCj4gQW0gaSByaWdodCB0aGF0IGkgaGF2ZSB0byBh
-ZGQgbXkgY29kZSBibG9jayB0byAobmVhcmx5KSBhbGwgb3RoZXIgdmVyc2lvbiBzcGVjaWZpYyBp
-bml0DQo+IGZ1bmN0aW9ucyB0aGVuPw0KDQpCZXNpZGVzIHlvdXIgY3VycmVudCBwYXRjaCwgb25s
-eSB1c2JtaXNjX2lteDdkX2luaXQgaXMgbmVlZGVkIHRvIGFkZCB0aGUgc2FtZSBjb250ZW50Lg0K
-DQpQZXRlcg0KDQo+IFdpbGwgZG8gc28gaW4gbmV4dCBkYXlzIGFuZCB0aGVuIHNlbmQgYSB2NCBv
-ZiB0aGlzIHBhdGNoLg0KPiA+DQo+ID4gUGV0ZXINCj4gPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBQ
-aGlsaXBwIFB1c2NobWFubiA8cGhpbGlwcC5wdXNjaG1hbm5AZW1saXguY29tPg0KPiA+PiAtLS0N
-Cj4gPj4gQ2hhbmdlcyBpbiB2MzogYWRkIGRlc2NyaXB0aW9uDQo+ID4+IC0tLQ0KPiA+PiAgRG9j
-dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0IHwgMSAr
-DQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPj4NCj4gPj4gZGlmZiAt
-LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2Iy
-LnR4dA0KPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRy
-Yy11c2IyLnR4dA0KPiA+PiBpbmRleCBhZGFlODIzODVkZDYuLjg2OTZlM2VmZjZlNyAxMDA2NDQN
-Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJj
-LXVzYjIudHh0DQo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91
-c2IvY2ktaGRyYy11c2IyLnR4dA0KPiA+PiBAQCAtOTMsNiArOTMsNyBAQCBpLm14IHNwZWNpZmlj
-IHByb3BlcnRpZXMNCj4gPj4gIC0gb3Zlci1jdXJyZW50LWFjdGl2ZS1sb3c6IG92ZXIgY3VycmVu
-dCBzaWduYWwgcG9sYXJpdHkgaXMgYWN0aXZlIGxvdy4NCj4gPj4gIC0gb3Zlci1jdXJyZW50LWFj
-dGl2ZS1oaWdoOiBvdmVyIGN1cnJlbnQgc2lnbmFsIHBvbGFyaXR5IGlzIGFjdGl2ZSBoaWdoLg0K
-PiA+PiAgICBJdCdzIHJlY29tbWVuZGVkIHRvIHNwZWNpZnkgdGhlIG92ZXIgY3VycmVudCBwb2xh
-cml0eS4NCj4gPj4gKy0gcG93ZXItYWN0aXZlLWhpZ2g6IHBvd2VyIHNpZ25hbCBwb2xhcml0eSBp
-cyBoaWdoIGFjdGl2ZSAob25seSBmb3INCj4gPj4gK2lteDZxL2RsKQ0KPiA+PiAgLSBleHRlcm5h
-bC12YnVzLWRpdmlkZXI6IGVuYWJsZXMgb2ZmLWNoaXAgcmVzaXN0b3IgZGl2aWRlciBmb3IgVmJ1
-cw0KPiA+Pg0KPiA+PiAgRXhhbXBsZToNCj4gPj4gLS0NCj4gPj4gMi4yMC4xDQo+ID4NCg==
+Am 12.01.19 um 13:43 schrieb Stefan Wahren:
+> This series consists of fixes for DTC warnings and improvements of
+> the GPIO labels. So this is nothing critical, but helpful
+> in case CONFIG_GPIO_SYSFS is disabled.
+>
+> Stefan Wahren (6):
+>   ARM: dts: bcm283x: Fix DTC warning for memory node
+>   ARM: dts: bcm2835-rpi: Drop unnecessary #address-cells/#size-cells
+>   ARM: dts: bcm2835: Fix labels for GPIO 0,1
+>   ARM: dts: bcm2837-rpi-3-b: Use consistent label for HDMI hotplug
+>   ARM: dts: bcm2837-rpi-3-b-plus: Clarify label for STATUS_LED
+>   ARM: dts: bcm283x: Add missing GPIO line names
+>
+Applied to bcm2835-dt-next
+
+Thanks for test and review
