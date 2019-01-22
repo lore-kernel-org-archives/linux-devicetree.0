@@ -1,240 +1,105 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: [RFC PATCH v1 13/13] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Tue, 22 Jan 2019 11:48:36 +0200
-Message-ID: <ec70833179d1953dbc91e01901b79d3319ff013d.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
-References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+From: <Tudor.Ambarus@microchip.com>
+Subject: Re: [PATCH v4 2/2] mtd: spi-nor: cadence-quadspi: Add support for
+ Octal SPI controller
+Date: Tue, 22 Jan 2019 09:55:26 +0000
+Message-ID: <c2be17a4-4725-e68b-f6f7-1ce78fd80e14@microchip.com>
+References: <20190122064137.17114-1-vigneshr@ti.com>
+ <20190122064137.17114-3-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+In-Reply-To: <20190122064137.17114-3-vigneshr@ti.com>
+Content-Language: en-US
+Content-ID: <CB74544DBD439C4585655E1B01B82001@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: matti.vaittinen@fi.rohmeurope.com, mazziesaccount@gmail.com
-Cc: lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: vigneshr@ti.com, bbrezillon@kernel.org
+Cc: marek.vasut@gmail.com, robh+dt@kernel.org, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Initial support for watchdog block included in ROHM BD70528
-power management IC.
-
-Configurations for low power states are still to be checked.
-
-Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
----
- drivers/watchdog/Kconfig       |  12 +++
- drivers/watchdog/Makefile      |   1 +
- drivers/watchdog/bd70528_wdt.c | 161 +++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 174 insertions(+)
- create mode 100644 drivers/watchdog/bd70528_wdt.c
-
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 57f017d74a97..f30e3a3e886e 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
- 	  watchdog. Be aware that governors might affect the watchdog because it
- 	  is purely software, e.g. the panic governor will stall it!
- 
-+config BD70528_WATCHDOG
-+	tristate "ROHM BD70528 PMIC Watchdog"
-+	depends on MFD_ROHM_BD70528
-+	select WATCHDOG_CORE
-+	help
-+	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-+	  cause system reset.
-+
-+	  Say Y here to include support for the ROHM BD70528 watchdog.
-+	  Alternatively say M to compile the driver as a module,
-+	  which will be called bd70528_wdt.
-+
- config DA9052_WATCHDOG
- 	tristate "Dialog DA9052 Watchdog"
- 	depends on PMIC_DA9052 || COMPILE_TEST
-diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-index a0917ef28e07..1ce87a3b1172 100644
---- a/drivers/watchdog/Makefile
-+++ b/drivers/watchdog/Makefile
-@@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
- obj-$(CONFIG_XEN_WDT) += xen_wdt.o
- 
- # Architecture Independent
-+obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
- obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
- obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
- obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-new file mode 100644
-index 000000000000..e9a32566f595
---- /dev/null
-+++ b/drivers/watchdog/bd70528_wdt.c
-@@ -0,0 +1,161 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) 2018 ROHM Semiconductors
-+// ROHM BD70528MWV watchdog driver
-+
-+#include <linux/bcd.h>
-+#include <linux/kernel.h>
-+#include <linux/mfd/rohm-bd70528.h>
-+#include <linux/module.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/regmap.h>
-+#include <linux/watchdog.h>
-+
-+static int bd70528_wdt_set(struct bd70528 *bd70528, int enable)
-+{
-+	int ret;
-+
-+	if (bd70528->rtc_timer_lock)
-+		mutex_lock(bd70528->rtc_timer_lock);
-+
-+	ret = bd70528->wdt_set(bd70528, enable, NULL);
-+
-+	if (bd70528->rtc_timer_lock)
-+		mutex_unlock(bd70528->rtc_timer_lock);
-+	return ret;
-+}
-+
-+static int bd70528_wdt_start(struct watchdog_device *wdt)
-+{
-+	struct bd70528 *bd70528 = watchdog_get_drvdata(wdt);
-+
-+	return bd70528_wdt_set(bd70528, 1);
-+}
-+
-+static int bd70528_wdt_stop(struct watchdog_device *wdt)
-+{
-+	struct bd70528 *bd70528 = watchdog_get_drvdata(wdt);
-+
-+	return bd70528_wdt_set(bd70528, 0);
-+}
-+
-+static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-+				    unsigned int timeout)
-+{
-+	unsigned int hours;
-+	unsigned int minutes;
-+	unsigned int seconds;
-+	int ret;
-+	struct bd70528 *bd70528 = watchdog_get_drvdata(wdt);
-+
-+	seconds = timeout;
-+	hours = timeout / (60 * 60);
-+	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-+	if (hours)
-+		seconds -= (60 * 60);
-+	minutes = seconds / 60;
-+	seconds = seconds % 60;
-+
-+	if (bd70528->rtc_timer_lock)
-+		mutex_lock(bd70528->rtc_timer_lock);
-+
-+	ret = bd70528->wdt_set(bd70528, 0, NULL);
-+	if (ret)
-+		goto out_unlock;
-+
-+	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_HOUR,
-+				 BD70528_MASK_WDT_HOUR, hours);
-+	if (ret) {
-+		dev_err(bd70528->chip.dev, "Failed to set WDT hours\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_MINUTE,
-+				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-+	if (ret) {
-+		dev_err(bd70528->chip.dev, "Failed to set WDT minutes\n");
-+		goto out_en_unlock;
-+	}
-+	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_SEC,
-+				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-+	if (ret) {
-+		dev_err(bd70528->chip.dev, "Failed to set WDT seconds\n");
-+		goto out_en_unlock;
-+	}
-+
-+out_en_unlock:
-+	ret = bd70528->wdt_set(bd70528, 1, NULL);
-+out_unlock:
-+	if (bd70528->rtc_timer_lock)
-+		mutex_lock(bd70528->rtc_timer_lock);
-+
-+	return ret;
-+}
-+
-+static const struct watchdog_info bd70528_wdt_info = {
-+	.identity = "bd70528-wdt",
-+	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-+};
-+
-+static const struct watchdog_ops bd70528_wdt_ops = {
-+	.start		= bd70528_wdt_start,
-+	.stop		= bd70528_wdt_stop,
-+	/*
-+	 *  bd70528 WDT ping is same as enable. Eg, writing 'enable' to enabled
-+	 * WDT will restart the timeout
-+	 */
-+	.ping		= bd70528_wdt_start,
-+	.set_timeout	= bd70528_wdt_set_timeout,
-+};
-+
-+/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
-+#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
-+/* Minimum time is 1 second */
-+#define WDT_MIN_MS 1000
-+static struct watchdog_device bd70528_wd = {
-+	.info = &bd70528_wdt_info,
-+	.ops =  &bd70528_wdt_ops,
-+	.min_hw_heartbeat_ms = WDT_MIN_MS,
-+	.max_hw_heartbeat_ms = WDT_MAX_MS,
-+};
-+
-+static int bd70528_wdt_probe(struct platform_device *pdev)
-+{
-+	struct bd70528 *tmp;
-+	struct bd70528 *bd70528;
-+	int ret;
-+
-+	tmp = dev_get_drvdata(pdev->dev.parent);
-+	if (!tmp) {
-+		dev_err(&pdev->dev, "No MFD driver data\n");
-+		return -EINVAL;
-+	}
-+	bd70528 = devm_kzalloc(&pdev->dev, sizeof(*bd70528), GFP_KERNEL);
-+	if (!bd70528)
-+		return -ENOMEM;
-+
-+	*bd70528 = *tmp;
-+	bd70528->chip.dev = &pdev->dev;
-+
-+	/*
-+	 * TODO: Set the initial state and timeout.
-+	 * See whether the low power states require special handling
-+	 */
-+	watchdog_set_drvdata(&bd70528_wd, bd70528);
-+	ret = devm_watchdog_register_device(&pdev->dev, &bd70528_wd);
-+	if (ret < 0)
-+		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-+
-+	return ret;
-+}
-+static struct platform_driver bd70528_wdt = {
-+	.driver = {
-+		.name = "bd70528-wdt"
-+	},
-+	.probe = bd70528_wdt_probe,
-+};
-+
-+module_platform_driver(bd70528_wdt);
-+
-+MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-+MODULE_DESCRIPTION("BD70528 watchdog driver");
-+MODULE_LICENSE("GPL");
--- 
-2.14.3
-
-
--- 
-Matti Vaittinen
-ROHM Semiconductors
-
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+DQoNCk9uIDAxLzIyLzIwMTkgMDg6NDEgQU0sIFZpZ25lc2ggUiB3cm90ZToNCj4gQ2FkZW5jZSBP
+U1BJIGNvbnRyb2xsZXIgSVAgc3VwcG9ydHMgT2N0YWwgSU8gKHg4IElPIGxpbmVzKSwNCj4gSXQg
+YWxzbyBoYXMgYW4gaW50ZWdyYXRlZCBQSFkuIElQIHJlZ2lzdGVyIGxheW91dCBpcyB2ZXJ5DQo+
+IHNpbWlsYXIgdG8gZXhpc3RpbmcgUVNQSSBJUCBleGNlcHQgZm9yIGFkZGl0aW9uYWwgYml0cyB0
+byBzdXBwb3J0IE9jdGFsDQo+IGFuZCBPY3RhbCBERFIgbW9kZS4gVGhlcmVmb3JlLCBleHRlbmQg
+Y3VycmVudCBkcml2ZXIgdG8gc3VwcG9ydCBPY3RhbA0KPiBtb2RlLiBPbmx5IE9jdGFsIFNEUiBy
+ZWFkICgxLTEtOCltb2RlIGlzIHN1cHBvcnRlZCBmb3Igbm93Lg0KPiANCj4gVGVzdGVkIHdpdGgg
+bXQzNXh1NTEyYWJhIE9jdGFsIGZsYXNoIG9uIFRJJ3MgQU02NTQgRVZNLg0KPiANCj4gU2lnbmVk
+LW9mZi1ieTogVmlnbmVzaCBSIDx2aWduZXNockB0aS5jb20+DQo+IC0tLQ0KPiANCj4gdjQ6IEZp
+eCBjb21tZW50cyBieSBUdWRvciBvbiB2Mw0KPiB2MzogTm8gY2hhbmdlcw0KPiB2MjogRGVjbGFy
+ZSBPY3RhbCBtb2RlIGNhcGFiaWxpdHkgYmFzZWQgb24gY29tcGF0aWJsZS4NCj4gDQo+ICBkcml2
+ZXJzL210ZC9zcGktbm9yL2NhZGVuY2UtcXVhZHNwaS5jIHwgNTMgKysrKysrKysrKysrKysrKysr
+KysrLS0tLS0tDQo+ICAxIGZpbGUgY2hhbmdlZCwgNDEgaW5zZXJ0aW9ucygrKSwgMTIgZGVsZXRp
+b25zKC0pDQo+IA0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9tdGQvc3BpLW5vci9jYWRlbmNlLXF1
+YWRzcGkuYyBiL2RyaXZlcnMvbXRkL3NwaS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gaW5kZXgg
+MDRjZWRkM2EyYmY2Li4yMDkxYWRkYzQ1YTMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvbXRkL3Nw
+aS1ub3IvY2FkZW5jZS1xdWFkc3BpLmMNCj4gKysrIGIvZHJpdmVycy9tdGQvc3BpLW5vci9jYWRl
+bmNlLXF1YWRzcGkuYw0KPiBAQCAtNDQsNiArNDQsMTIgQEANCj4gIC8qIFF1aXJrcyAqLw0KPiAg
+I2RlZmluZSBDUVNQSV9ORUVEU19XUl9ERUxBWQkJQklUKDApDQo+ICANCj4gKy8qIENhcGFiaWxp
+dGllcyBtYXNrICovDQo+ICsjZGVmaW5lIGNxc3BpX2Jhc2VfaHdjYXBzX21hc2sJCQkJCVwNCj4g
+KwkoU05PUl9IV0NBUFNfUkVBRCB8IFNOT1JfSFdDQVBTX1JFQURfRkFTVCB8CQlcDQo+ICsJU05P
+Ul9IV0NBUFNfUkVBRF8xXzFfMiB8IFNOT1JfSFdDQVBTX1JFQURfMV8xXzQgfAlcDQo+ICsJU05P
+Ul9IV0NBUFNfUFApDQo+ICsNCj4gIHN0cnVjdCBjcXNwaV9zdDsNCj4gIA0KPiAgc3RydWN0IGNx
+c3BpX2ZsYXNoX3BkYXRhIHsNCj4gQEAgLTkzLDYgKzk5LDExIEBAIHN0cnVjdCBjcXNwaV9zdCB7
+DQo+ICAJc3RydWN0IGNxc3BpX2ZsYXNoX3BkYXRhIGZfcGRhdGFbQ1FTUElfTUFYX0NISVBTRUxF
+Q1RdOw0KPiAgfTsNCj4gIA0KPiArc3RydWN0IGNxc3BpX2RyaXZlcl9wbGF0ZGF0YSB7DQo+ICsJ
+dTMyIGh3Y2Fwc19tYXNrOw0KPiArCXU4IHF1aXJrczsNCj4gK307DQo+ICsNCj4gIC8qIE9wZXJh
+dGlvbiB0aW1lb3V0IHZhbHVlICovDQo+ICAjZGVmaW5lIENRU1BJX1RJTUVPVVRfTVMJCQk1MDAN
+Cj4gICNkZWZpbmUgQ1FTUElfUkVBRF9USU1FT1VUX01TCQkJMTANCj4gQEAgLTEwMSw2ICsxMTIs
+NyBAQCBzdHJ1Y3QgY3FzcGlfc3Qgew0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfU0lOR0xF
+CQkJMA0KPiAgI2RlZmluZSBDUVNQSV9JTlNUX1RZUEVfRFVBTAkJCTENCj4gICNkZWZpbmUgQ1FT
+UElfSU5TVF9UWVBFX1FVQUQJCQkyDQo+ICsjZGVmaW5lIENRU1BJX0lOU1RfVFlQRV9PQ1RBTAkJ
+CTMNCj4gIA0KPiAgI2RlZmluZSBDUVNQSV9EVU1NWV9DTEtTX1BFUl9CWVRFCQk4DQo+ICAjZGVm
+aW5lIENRU1BJX0RVTU1ZX0JZVEVTX01BWAkJCTQNCj4gQEAgLTkxMSw2ICs5MjMsOSBAQCBzdGF0
+aWMgaW50IGNxc3BpX3NldF9wcm90b2NvbChzdHJ1Y3Qgc3BpX25vciAqbm9yLCBjb25zdCBpbnQg
+cmVhZCkNCj4gIAkJY2FzZSBTTk9SX1BST1RPXzFfMV80Og0KPiAgCQkJZl9wZGF0YS0+ZGF0YV93
+aWR0aCA9IENRU1BJX0lOU1RfVFlQRV9RVUFEOw0KPiAgCQkJYnJlYWs7DQo+ICsJCWNhc2UgU05P
+Ul9QUk9UT18xXzFfODoNCj4gKwkJCWZfcGRhdGEtPmRhdGFfd2lkdGggPSBDUVNQSV9JTlNUX1RZ
+UEVfT0NUQUw7DQo+ICsJCQlicmVhazsNCj4gIAkJZGVmYXVsdDoNCj4gIAkJCXJldHVybiAtRUlO
+VkFMOw0KPiAgCQl9DQo+IEBAIC0xMjEzLDIxICsxMjI4LDIyIEBAIHN0YXRpYyB2b2lkIGNxc3Bp
+X3JlcXVlc3RfbW1hcF9kbWEoc3RydWN0IGNxc3BpX3N0ICpjcXNwaSkNCj4gIA0KPiAgc3RhdGlj
+IGludCBjcXNwaV9zZXR1cF9mbGFzaChzdHJ1Y3QgY3FzcGlfc3QgKmNxc3BpLCBzdHJ1Y3QgZGV2
+aWNlX25vZGUgKm5wKQ0KPiAgew0KPiAtCWNvbnN0IHN0cnVjdCBzcGlfbm9yX2h3Y2FwcyBod2Nh
+cHMgPSB7DQo+IC0JCS5tYXNrID0gU05PUl9IV0NBUFNfUkVBRCB8DQo+IC0JCQlTTk9SX0hXQ0FQ
+U19SRUFEX0ZBU1QgfA0KPiAtCQkJU05PUl9IV0NBUFNfUkVBRF8xXzFfMiB8DQo+IC0JCQlTTk9S
+X0hXQ0FQU19SRUFEXzFfMV80IHwNCj4gLQkJCVNOT1JfSFdDQVBTX1BQLA0KPiAtCX07DQo+ICAJ
+c3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldiA9IGNxc3BpLT5wZGV2Ow0KPiAgCXN0cnVjdCBk
+ZXZpY2UgKmRldiA9ICZwZGV2LT5kZXY7DQo+ICsJY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZlcl9w
+bGF0ZGF0YSAqZGRhdGE7DQo+ICsJc3RydWN0IHNwaV9ub3JfaHdjYXBzIGh3Y2FwczsNCj4gIAlz
+dHJ1Y3QgY3FzcGlfZmxhc2hfcGRhdGEgKmZfcGRhdGE7DQo+ICAJc3RydWN0IHNwaV9ub3IgKm5v
+cjsNCj4gIAlzdHJ1Y3QgbXRkX2luZm8gKm10ZDsNCj4gIAl1bnNpZ25lZCBpbnQgY3M7DQo+ICAJ
+aW50IGksIHJldDsNCj4gIA0KPiArCWRkYXRhID0gb2ZfZGV2aWNlX2dldF9tYXRjaF9kYXRhKGRl
+dik7DQo+ICsJaWYgKCFkZGF0YSkNCj4gKwkJaHdjYXBzLm1hc2sgPSBjcXNwaV9iYXNlX2h3Y2Fw
+c19tYXNrOw0KDQpOaWNlIQ0KDQpSZXZpZXdlZC1ieTogVHVkb3IgQW1iYXJ1cyA8dHVkb3IuYW1i
+YXJ1c0BtaWNyb2NoaXAuY29tPg0KDQo+ICsJZWxzZQ0KPiArCQlod2NhcHMubWFzayA9IGRkYXRh
+LT5od2NhcHNfbWFzazsNCj4gKw0KPiAgCS8qIEdldCBmbGFzaCBkZXZpY2UgZGF0YSAqLw0KPiAg
+CWZvcl9lYWNoX2F2YWlsYWJsZV9jaGlsZF9vZl9ub2RlKGRldi0+b2Zfbm9kZSwgbnApIHsNCj4g
+IAkJcmV0ID0gb2ZfcHJvcGVydHlfcmVhZF91MzIobnAsICJyZWciLCAmY3MpOw0KPiBAQCAtMTMx
+MCw3ICsxMzI2LDcgQEAgc3RhdGljIGludCBjcXNwaV9wcm9iZShzdHJ1Y3QgcGxhdGZvcm1fZGV2
+aWNlICpwZGV2KQ0KPiAgCXN0cnVjdCBjcXNwaV9zdCAqY3FzcGk7DQo+ICAJc3RydWN0IHJlc291
+cmNlICpyZXM7DQo+ICAJc3RydWN0IHJlc291cmNlICpyZXNfYWhiOw0KPiAtCXVuc2lnbmVkIGxv
+bmcgZGF0YTsNCj4gKwljb25zdCBzdHJ1Y3QgY3FzcGlfZHJpdmVyX3BsYXRkYXRhICpkZGF0YTsN
+Cj4gIAlpbnQgcmV0Ow0KPiAgCWludCBpcnE7DQo+ICANCj4gQEAgLTEzNzcsOCArMTM5Myw4IEBA
+IHN0YXRpYyBpbnQgY3FzcGlfcHJvYmUoc3RydWN0IHBsYXRmb3JtX2RldmljZSAqcGRldikNCj4g
+IAl9DQo+ICANCj4gIAljcXNwaS0+bWFzdGVyX3JlZl9jbGtfaHogPSBjbGtfZ2V0X3JhdGUoY3Fz
+cGktPmNsayk7DQo+IC0JZGF0YSAgPSAodW5zaWduZWQgbG9uZylvZl9kZXZpY2VfZ2V0X21hdGNo
+X2RhdGEoZGV2KTsNCj4gLQlpZiAoZGF0YSAmIENRU1BJX05FRURTX1dSX0RFTEFZKQ0KPiArCWRk
+YXRhICA9IG9mX2RldmljZV9nZXRfbWF0Y2hfZGF0YShkZXYpOw0KPiArCWlmIChkZGF0YSAmJiAo
+ZGRhdGEtPnF1aXJrcyAmIENRU1BJX05FRURTX1dSX0RFTEFZKSkNCj4gIAkJY3FzcGktPndyX2Rl
+bGF5ID0gNSAqIERJVl9ST1VORF9VUChOU0VDX1BFUl9TRUMsDQo+ICAJCQkJCQkgICBjcXNwaS0+
+bWFzdGVyX3JlZl9jbGtfaHopOw0KPiAgDQo+IEBAIC0xNDYwLDE0ICsxNDc2LDI3IEBAIHN0YXRp
+YyBjb25zdCBzdHJ1Y3QgZGV2X3BtX29wcyBjcXNwaV9fZGV2X3BtX29wcyA9IHsNCj4gICNkZWZp
+bmUgQ1FTUElfREVWX1BNX09QUwlOVUxMDQo+ICAjZW5kaWYNCj4gIA0KPiArc3RhdGljIGNvbnN0
+IHN0cnVjdCBjcXNwaV9kcml2ZXJfcGxhdGRhdGEgazJnX3FzcGkgPSB7DQo+ICsJLmh3Y2Fwc19t
+YXNrID0gY3FzcGlfYmFzZV9od2NhcHNfbWFzaywNCj4gKwkucXVpcmtzID0gQ1FTUElfTkVFRFNf
+V1JfREVMQVksDQo+ICt9Ow0KPiArDQo+ICtzdGF0aWMgY29uc3Qgc3RydWN0IGNxc3BpX2RyaXZl
+cl9wbGF0ZGF0YSBhbTY1NF9vc3BpID0gew0KPiArCS5od2NhcHNfbWFzayA9IGNxc3BpX2Jhc2Vf
+aHdjYXBzX21hc2sgfCBTTk9SX0hXQ0FQU19SRUFEXzFfMV84LA0KPiArCS5xdWlya3MgPSBDUVNQ
+SV9ORUVEU19XUl9ERUxBWSwNCj4gK307DQo+ICsNCj4gIHN0YXRpYyBjb25zdCBzdHJ1Y3Qgb2Zf
+ZGV2aWNlX2lkIGNxc3BpX2R0X2lkc1tdID0gew0KPiAgCXsNCj4gIAkJLmNvbXBhdGlibGUgPSAi
+Y2Rucyxxc3BpLW5vciIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKikwLA0KPiAgCX0sDQo+ICAJew0K
+PiAgCQkuY29tcGF0aWJsZSA9ICJ0aSxrMmctcXNwaSIsDQo+IC0JCS5kYXRhID0gKHZvaWQgKilD
+UVNQSV9ORUVEU19XUl9ERUxBWSwNCj4gKwkJLmRhdGEgPSAmazJnX3FzcGksDQo+ICsJfSwNCj4g
+Kwl7DQo+ICsJCS5jb21wYXRpYmxlID0gInRpLGFtNjU0LW9zcGkiLA0KPiArCQkuZGF0YSA9ICZh
+bTY1NF9vc3BpLA0KPiAgCX0sDQo+ICAJeyAvKiBlbmQgb2YgdGFibGUgKi8gfQ0KPiAgfTsNCj4g
+DQo=
