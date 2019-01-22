@@ -1,8 +1,11 @@
 From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH v2 lora-next 4/4] dt-bindings: lora: sx130x: add clock bindings
-Date: Tue, 22 Jan 2019 18:07:29 +0000
-Message-ID: <20190122180729.1834-5-ben.whitten@lairdtech.com>
+Subject: [PATCH v2 lora-next 2/4] dt-bindings: lora: sx125x: add basic documentation
+Date: Tue, 22 Jan 2019 18:07:27 +0000
+Message-ID: <20190122180729.1834-3-ben.whitten@lairdtech.com>
 References: <20190122180729.1834-1-ben.whitten@lairdtech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190122180729.1834-1-ben.whitten@lairdtech.com>
 Sender: netdev-owner@vger.kernel.org
@@ -12,107 +15,74 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ben Whitten <ben.whitten@gmail.com>
 
-The SX130x family consumes two clocks, a 32 MHz clock provided by a
-connected IQ transceiver, and a 133 MHz high speed clock.
+The SX125x family are IQ radio transceivers from Semtech configured over
+SPI, they are typically connected to an SX130x series concentrator however
+may be connected to a host directly.
 
-In the example we connect the concentrator to a fixed clock providing
-the 133 MHz high speed clock, and we connect to a connected transceiver
-32 MHz clock.
-
-The connected radios are both fed from a fixed 32 MHz clock, with only
-one being the clock source back to the SX130x concentrator.
+Required properties include the radio number of the host or concentrator
+bus.
 
 Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 ---
 v1 -> v2:
-* Fixed incorrect usage of clock cells
-* Fixed wording in commit and descriptions
+* Dropped spi-max-frequency binding
+* Wording changes to commit and descriptions
+* Added spi wrapper suggested by Rob H
+* Dual licence
 ---
- .../bindings/net/lora/semtech,sx130x.yaml     | 39 ++++++++++++++++++-
- 1 file changed, 38 insertions(+), 1 deletion(-)
+ .../bindings/net/lora/semtech,sx125x.yaml     | 44 +++++++++++++++++++
+ 1 file changed, 44 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
 
-diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-index 41919fb67ec4..6f9db3c84385 100644
---- a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-+++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-@@ -15,7 +15,8 @@ description: |
-   demodulating LoRa signals on 8 channels simultaneously.
- 
-   It is typically paired with two SX125x IQ radios controlled over an
--  SPI directly from the concentrator.
-+  SPI directly from the concentrator. One of the radios will provide
-+  a 32 MHz clock back into the concentrator.
- 
-   The concentrator itself is controlled over SPI.
- 
-@@ -35,6 +36,20 @@ properties:
-     maxItems: 1
-     description: A connection of the reset gpio line.
- 
-+  clocks:
-+    maxItems: 2
+diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+new file mode 100644
+index 000000000000..4a51a251d97f
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+@@ -0,0 +1,44 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/lora/semtech,sx125x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech IQ modulator/de-modulator transeiver
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++  - Ben Whitten <ben.whitten@gmail.com>
++
++description: |
++  The SX125x family are transceivers capable of supporting multiple constant
++  and non-constant envelope modulation schemes.
++
++properties:
++  compatible:
 +    items:
-+      - description: 32 MHz clock provider (CLK32M)
-+      - description: 133 MHz high speed clock provider (CLKHS)
-+    description: The chip requires two clock inputs; A 32MHz clock at CMOS
-+      level which is provided from a connected radio.
-+      And a 133MHz high speed clock at CMOS level provided by an oscillator.
++      - enum:
++        - semtech,sx1255
++        - semtech,sx1257
++        - semtech,sx1258
 +
-+  clock-names:
-+    maxItems: 2
-+    description: Input clock (CLK32M) name from provider, Input clock (CLKHS)
-+      name from provider.
++  reg:
++    maxItems: 1
++    description: The chip select on the SPI bus or radio number in concentrator
++      , with radio A = 0 and radio B = 1.
 +
-   radio-spi:
-     type: object
-     description: The concentrator can have two radios connected which are
-@@ -68,6 +83,20 @@ examples:
- 
-     #include <dt-bindings/gpio/gpio.h>
- 
-+    tcxo: dummy32m {
-+      compatible = "fixed-clock";
-+      clock-frequency = <32000000>;
-+      clock-output-names = "tcxo";
-+      #clock-cells = <0>;
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      radio0: lora@0 {
++        compatible = "semtech,sx1257";
++        reg = <0>;
++      };
 +    };
-+
-+    clkhs: dummy133m {
-+      compatible = "fixed-clock";
-+      clock-frequency = <133000000>;
-+      clock-output-names = "clkhs";
-+      #clock-cells = <0>;
-+    };
-+
-     spi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-@@ -77,6 +106,8 @@ examples:
-         reg = <0>;
-         reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
-         spi-max-frequency = <8000000>;
-+        clocks = <&radio1>, <&clkhs>;
-+        clock-names = "clk32m", "clkhs";
- 
-         radio-spi {
-           #address-cells = <1>;
-@@ -85,11 +116,17 @@ examples:
-           radio0: lora@0 {
-             compatible = "semtech,sx1257";
-             reg = <0>;
-+            clocks = <&tcxo>;
-+            clock-names = "tcxo";
-           };
- 
-           radio1: lora@1 {
-             compatible = "semtech,sx1257";
-             reg = <1>;
-+            clocks = <&tcxo>;
-+            clock-names = "tcxo";
-+            clock-output-names = "clk32m";
-+            #clock-cells = <0>;
-           };
-         };
-       };
 -- 
 2.17.1
