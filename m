@@ -1,30 +1,76 @@
-From: Ryder Lee <ryder.lee@mediatek.com>
-Subject: Re: [v1,0/2] PCI: mediatek: Add support for MT7629
-Date: Tue, 22 Jan 2019 11:23:52 +0800
-Message-ID: <1548127432.11442.1.camel@mtkswgap22>
-References: <1548069062-12430-1-git-send-email-jianjun.wang@mediatek.com>
+From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Subject: [PATCH v3 0/5] Add Oxalis board support
+Date: Tue, 22 Jan 2019 09:51:42 +0530
+Message-ID: <20190122042147.5424-1-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548069062-12430-1-git-send-email-jianjun.wang@mediatek.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jianjun Wang <jianjun.wang@mediatek.com>
-Cc: bhelgaas@google.com, robh+dt@kernel.org, lorenzo.pieralisi@arm.com, mark.rutland@arm.com, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, honghui.zhang@mediatek.com, youlin.pei@mediatek.com
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: shawnguo@kernel.org, leoyang.li@nxp.com, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, 2019-01-21 at 19:11 +0800, Jianjun Wang wrote:
-> These series patches modify pcie-mediatek.c and dt-bindings compatible
-> string to support MT7629 PCIe host.
-> 
-> Jianjun Wang (2):
->   dt-bindings: PCI: Add support for MT7629
->   PCI: mediatek: Add controller support for MT7629
-> 
->  .../devicetree/bindings/pci/mediatek-pcie.txt |  1 +
->  drivers/pci/controller/pcie-mediatek.c        | 28 +++++++++++++++++++
->  include/linux/pci_ids.h                       |  1 +
->  3 files changed, 30 insertions(+)
-> 
+Hello,
 
-Acked-by: Ryder Lee <ryder.lee@mediatek.com>
+This patchset adds Oxalis board support. This board is one of the
+96Boards Enterprise Edition platform from EBS-SYSTART GmbH. Below are some
+of the key features of this board:
+
+* SoC: NXP Layerscape LS1012A
+* RAM: 1GB DDR3L
+* PMU: NXP VR5100
+* Storage: 64MByte SPI Flash for bootloader and RCW, MicroSD Card, SATA
+* Connectivity: 2x Ethernet
+* USB: 2x USB3.0
+
+More information about this board can be found in 96Boards product
+page: https://www.96boards.org/product/oxalis/
+
+Ethernet and SPI flash are not supported yet!
+
+Thanks,
+Mani
+
+Changes in v3:
+
+* Fixed LS1012A and LS1021A bindings
+* Added missing devicetree compatibles for LS1021A based boards
+* Added Rob's Reviewed-by tag for Vendor prefix patch
+
+Changes in v2:
+
+As per Rob's review:
+
+* Adopted the Oxalis board binding to JSON format.
+* Sorted the EBS-SYSTART vendor prefix alphabetically.
+* Used the generic node name for audio codec.
+
+Manivannan Sadhasivam (5):
+  dt-bindings: arm: fsl: Fix bindings for LS1012A and LS1021A based
+    boards
+  ARM: dts: Add devicetree compatibles for LS1021A based boards
+  dt-bindings: vendor-prefixes: Add EBS-SYSTART GmbH Vendor Prefix
+  dt-bindings: arm: fsl: Add devicetree binding for Oxalis
+  arm64: dts: freescale: Add devicetree for Oxalis
+
+ .../devicetree/bindings/arm/fsl.yaml          | 11 ++-
+ .../devicetree/bindings/vendor-prefixes.txt   |  1 +
+ arch/arm/boot/dts/ls1021a-moxa-uc-8410a.dts   |  1 +
+ arch/arm/boot/dts/ls1021a-qds.dts             |  1 +
+ arch/arm/boot/dts/ls1021a-twr.dts             |  1 +
+ arch/arm64/boot/dts/freescale/Makefile        |  1 +
+ .../boot/dts/freescale/fsl-ls1012a-oxalis.dts | 96 +++++++++++++++++++
+ 7 files changed, 111 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arm64/boot/dts/freescale/fsl-ls1012a-oxalis.dts
+
+-- 
+2.17.1
