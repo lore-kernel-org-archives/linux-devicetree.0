@@ -1,42 +1,126 @@
-From: Viorel Suman <viorel.suman@nxp.com>
-Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine drivers
-Date: Tue, 22 Jan 2019 11:19:36 +0000
-Message-ID: <1548155976.13051.2.camel@nxp.com>
-References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
-         <20190117161804.GA5760@bogus> <1547817384.11482.33.camel@nxp.com>
-         <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
+From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
+Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline
+ description
+Date: Tue, 22 Jan 2019 20:36:03 +0900
+Message-ID: <daa5f00a-1d9c-69b0-ed2d-8ff6a64251cc@socionext.com>
+References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
+ <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
+ <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
+ <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
+ <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
+ <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
+ <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
+ <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
+ <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
+In-Reply-To: <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
 Content-Language: en-US
-Content-ID: <DFCA4B8C8F29DB4A830D39B318FDA373@eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
-Cc: dl-linux-imx <linux-imx@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, "timur@kernel.org" <timur@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "tiwai@suse.com" <tiwai@suse.com>, "robh@kernel.org" <robh@kernel.org>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, "perex@perex.cz" <perex@perex.cz>, alsa-
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgTmljb2xpbiwNCg0KT24gVmksIDIwMTktMDEtMTggYXQgMTE6NDYgLTA4MDAsIE5pY29saW4g
-Q2hlbiB3cm90ZToNCj4gT24gRnJpLCBKYW4gMTgsIDIwMTkgYXQgMDE6MTY6MjRQTSArMDAwMCwg
-VmlvcmVsIFN1bWFuIHdyb3RlOg0KPiA+IA0KPiA+ID4gDQo+ID4gPiA+IA0KPiA+ID4gPiAxLiBN
-b3ZlZCAiZGFpcyIgbm9kZSBmcm9tIG1hY2hpbmUgZHJpdmVyIERUUyBub2RlIHRvIGRldmljZQ0K
-PiA+ID4gPiBkcml2ZXINCj4gPiA+ID4gRFRTIG5vZGUNCj4gPiA+ID4gwqAgYXMgc3VnZ2VzdGVk
-IGJ5IFJvYi4NCj4gPiA+IFRoYXQgd2FzIG5vdCB3aGF0IEkgc3VnZ2VzdGVkLiBZb3Ugc3RpbGwg
-aGF2ZSBhIHZpcnR1YWwgbm9kZQ0KPiA+ID4gd2hpY2gNCj4gPiA+IGxvb2tzIHRvIG1lIHRvIGJl
-IHVubmVjZXNzYXJ5Lg0KPiA+IFRvIG1lIHJlbW92aW5nIHZpcnR1YWwgbm9kZSBpbXBsaWVzIHRo
-YXQgQVVETUlYIG1hY2hpbmUgZHJpdmVyDQo+ID4gKGlteC0NCj4gPiBhdWRtaXguYyArIHZpcnR1
-YWwgbm9kZSkgc2hhbGwgYmUgcmVtb3ZlZCBhbmQgbWFjaGluZSBkcml2ZXIgY29kZQ0KPiA+IG1l
-cmdlZCBpbnRvIGRldmljZSBkcml2ZXIgKGZzbF9hdWRtaXguYyArIGRldmljZSBub2RlKSAtIHBs
-ZWFzZSBsZXQNCj4gPiBtZQ0KPiA+IGtub3cgaWYgbXkgdW5kZXJzdGFuZGluZyBpcyB3cm9uZy4N
-Cj4gV2UgY291bGQgdXNlIGEgbm9uLURUIGNvbmZpZ3VyYXRpb24gcmlnaHQ/IEZyb20gdGhlIGRy
-aXZlciBsb2dpYywNCj4gRFQganVzdCByZWdpc3RlcnMgYSBkZXZpY2UgY29ycmVzcG9uZGluZyB0
-byB0aGUgbWFjaGluZSBkcml2ZXIgc28NCj4gdGhhdCBpdCBjYW4gcHJvYmUoKS4gV2UgY291bGQg
-cmVnaXN0ZXIgb25lIGluIGZzbF9hdWRtaXggaW5zdGVhZC4NCj4gUGxlYXNlIHJlZmVyIHRvIGhv
-dyBmc2xfc3NpIHJlZ2lzdGVycyB0aGUgc291bmQgY2FyZCBkZXZpY2UuIFRoZQ0KPiBtYWNoaW5l
-IGRyaXZlciBjYW4gZ2V0IGF1ZG1peF9ucCBmcm9tIHRoZSBwYXJlbnQgZGV2aWNlIHBvaW50ZXIs
-DQo+IGFuZCBJIHRoaW5rIHRoYXQncyBhbGwgeW91IG5lZWQuDQo+IA0KPiBPciBtYXliZSBzb21l
-b25lIGVsc2Ugd291bGQgcHJvdmlkZSBhIGJldHRlciB3YXkuIEJ1dCBpdCdkIHdvcmsuDQoNClNl
-bnQgVjQgLSBpdCBpbXBsZW1lbnRzIHRoZSBhcHByb2FjaCB5b3Ugc3VnZ2VzdGVkLiBUaGFuayB5
-b3UgZm9yIHRoZQ0KaGludCwgd29ya3Mgd2VsbCBpbmRlZWQuDQoNClJlZ2FyZHMsDQpWaW9yZWwN
-Cg0K
+Hi
+
+On 2018/12/04 22:32, Rob Herring wrote:
+> On Tue, Dec 4, 2018 at 5:30 AM Sugaya, Taichi
+> <sugaya.taichi@socionext.com> wrote:
+>>
+>> Hi
+>>
+>> On 2018/12/04 0:49, Rob Herring wrote:
+>>> On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
+>>> <sugaya.taichi@socionext.com> wrote:
+>>>>
+>>>> Hi,
+>>>>
+>>>> On 2018/11/30 17:16, Stephen Boyd wrote:
+>>>>> Quoting Sugaya, Taichi (2018-11-29 04:24:51)
+>>>>>> On 2018/11/28 11:01, Stephen Boyd wrote:
+>>>>>>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
+>>>>>>>>      create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+>>>>>>>>
+>>>>>>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+>>>>>>>> new file mode 100644
+>>>>>>>> index 0000000..f5d906c
+>>>>>>>> --- /dev/null
+>>>>>>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
+>>>>>>>> @@ -0,0 +1,12 @@
+>>>>>>>> +Socionext M10V SMP trampoline driver binding
+>>>>>>>> +
+>>>>>>>> +This is a driver to wait for sub-cores while boot process.
+>>>>>>>> +
+>>>>>>>> +- compatible: should be "socionext,smp-trampoline"
+>>>>>>>> +- reg: should be <0x4C000100 0x100>
+>>>>>>>> +
+>>>>>>>> +EXAMPLE
+>>>>>>>> +       trampoline: trampoline@0x4C000100 {
+>>>>>>> Drop the 0x part of unit addresses.
+>>>>>>
+>>>>>> Okay.
+>>>>>>
+>>>>>>
+>>>>>>>> +               compatible = "socionext,smp-trampoline";
+>>>>>>>> +               reg = <0x4C000100 0x100>;
+>>>>>>> Looks like a software construct, which we wouldn't want to put into DT
+>>>>>>> this way. DT doesn't describe drivers.
+>>>>>> We would like to use this node only getting the address of the
+>>>>>> trampoline area
+>>>>>> in which sub-cores wait.  (They have finished to go to this area in previous
+>>>>>> bootloader process.)
+>>>>>
+>>>>> Is this area part of memory, or a special SRAM? If it's part of memory,
+>>>>> I would expect this node to be under the reserved-memory node and
+>>>>> pointed to by some other node that uses this region. Could even be the
+>>>>> CPU nodes.
+>>>>
+>>>> Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
+>>>> we would like to use the SRAM ( allocated 0x00000000 ) area instead.
+>>>> BTW, sorry, the trampoline address of this example is simply wrong.  We
+>>>> were going to use a part of the SRAM from the beginning.
+>>>>
+>>>>>
+>>>>>>
+>>>>>> So should we embed the constant value in source codes instead of getting
+>>>>>> from
+>>>>>> DT because the address is constant at the moment? Or is there other
+>>>>>> approach?
+>>>>>>
+>>>>>
+>>>>> If it's constant then that also works. Why does it need to come from DT
+>>>>> at all then?
+>>>>
+>>>> We think it is not good to embed constant value in driver codes and do
+>>>> not have another way...
+>>>> Are there better ways?
+>>>
+>>> If this is just memory, can you use the standard spin-table binding in
+>>> the DT spec? There are some requirements like 64-bit values even on
+>>> 32-bit machines (though this gets violated).
+>>
+>> The spin-table seems to be used on only 64-bit arch. Have it ever worked
+>> on 32-bit machine?
+> 
+> Yes.
+> 
+>> And I would like not to use it because avoid violation.
+> 
+> The issue now that I remember is cpu-release-addr is defined to always
+> be a 64-bit value while some platforms made it a 32-bit value.
+> 'cpu-release-addr' is also used for some other enable-methods.
+
+I have a question about the spin-table.
+The code "smp_spin_table.c" is only in "arch/arm64/kernel" directory so 
+can not be compiled in arm-v7 arch. That means the spin-table can not be 
+used arm-v7 arch..? , or is there the way to compile the code in arm-v7 
+arch?
+
+Thanks,
+Sugaya Taichi
+
+> 
+> Rob
+> 
