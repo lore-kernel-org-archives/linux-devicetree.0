@@ -1,130 +1,155 @@
-From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut
- trampoline description
-Date: Tue, 22 Jan 2019 11:50:10 +0000
-Message-ID: <20190122115010.ziopujojh6hkxyag@e5254000004ec.dyn.armlinux.org.uk>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
- <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
- <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
- <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
- <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
- <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
- <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
- <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
- <daa5f00a-1d9c-69b0-ed2d-8ff6a64251cc@socionext.com>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
+ support
+Date: Tue, 22 Jan 2019 12:03:44 +0000
+Message-ID: <AM0PR04MB4211B9003857795EBC79541480980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+         <1547801609.2626.5.camel@pengutronix.de>
+         <AM0PR04MB42111D634F28492434AA9309809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+         <1547806960.2626.9.camel@pengutronix.de>
+         <AM0PR04MB42111FE266342A2C2EAECC3580980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <1548154758.2465.20.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <daa5f00a-1d9c-69b0-ed2d-8ff6a64251cc@socionext.com>
+In-Reply-To: <1548154758.2465.20.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+To: Lucas Stach <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 08:36:03PM +0900, Sugaya, Taichi wrote:
-> Hi
-> 
-> On 2018/12/04 22:32, Rob Herring wrote:
-> > On Tue, Dec 4, 2018 at 5:30 AM Sugaya, Taichi
-> > <sugaya.taichi@socionext.com> wrote:
-> > > 
-> > > Hi
-> > > 
-> > > On 2018/12/04 0:49, Rob Herring wrote:
-> > > > On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
-> > > > <sugaya.taichi@socionext.com> wrote:
-> > > > > 
-> > > > > Hi,
-> > > > > 
-> > > > > On 2018/11/30 17:16, Stephen Boyd wrote:
-> > > > > > Quoting Sugaya, Taichi (2018-11-29 04:24:51)
-> > > > > > > On 2018/11/28 11:01, Stephen Boyd wrote:
-> > > > > > > > Quoting Sugaya Taichi (2018-11-18 17:01:07)
-> > > > > > > > >      create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
-> > > > > > > > > 
-> > > > > > > > > diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
-> > > > > > > > > new file mode 100644
-> > > > > > > > > index 0000000..f5d906c
-> > > > > > > > > --- /dev/null
-> > > > > > > > > +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
-> > > > > > > > > @@ -0,0 +1,12 @@
-> > > > > > > > > +Socionext M10V SMP trampoline driver binding
-> > > > > > > > > +
-> > > > > > > > > +This is a driver to wait for sub-cores while boot process.
-> > > > > > > > > +
-> > > > > > > > > +- compatible: should be "socionext,smp-trampoline"
-> > > > > > > > > +- reg: should be <0x4C000100 0x100>
-> > > > > > > > > +
-> > > > > > > > > +EXAMPLE
-> > > > > > > > > +       trampoline: trampoline@0x4C000100 {
-> > > > > > > > Drop the 0x part of unit addresses.
-> > > > > > > 
-> > > > > > > Okay.
-> > > > > > > 
-> > > > > > > 
-> > > > > > > > > +               compatible = "socionext,smp-trampoline";
-> > > > > > > > > +               reg = <0x4C000100 0x100>;
-> > > > > > > > Looks like a software construct, which we wouldn't want to put into DT
-> > > > > > > > this way. DT doesn't describe drivers.
-> > > > > > > We would like to use this node only getting the address of the
-> > > > > > > trampoline area
-> > > > > > > in which sub-cores wait.  (They have finished to go to this area in previous
-> > > > > > > bootloader process.)
-> > > > > > 
-> > > > > > Is this area part of memory, or a special SRAM? If it's part of memory,
-> > > > > > I would expect this node to be under the reserved-memory node and
-> > > > > > pointed to by some other node that uses this region. Could even be the
-> > > > > > CPU nodes.
-> > > > > 
-> > > > > Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
-> > > > > we would like to use the SRAM ( allocated 0x00000000 ) area instead.
-> > > > > BTW, sorry, the trampoline address of this example is simply wrong.  We
-> > > > > were going to use a part of the SRAM from the beginning.
-> > > > > 
-> > > > > > 
-> > > > > > > 
-> > > > > > > So should we embed the constant value in source codes instead of getting
-> > > > > > > from
-> > > > > > > DT because the address is constant at the moment? Or is there other
-> > > > > > > approach?
-> > > > > > > 
-> > > > > > 
-> > > > > > If it's constant then that also works. Why does it need to come from DT
-> > > > > > at all then?
-> > > > > 
-> > > > > We think it is not good to embed constant value in driver codes and do
-> > > > > not have another way...
-> > > > > Are there better ways?
-> > > > 
-> > > > If this is just memory, can you use the standard spin-table binding in
-> > > > the DT spec? There are some requirements like 64-bit values even on
-> > > > 32-bit machines (though this gets violated).
-> > > 
-> > > The spin-table seems to be used on only 64-bit arch. Have it ever worked
-> > > on 32-bit machine?
-> > 
-> > Yes.
-> > 
-> > > And I would like not to use it because avoid violation.
-> > 
-> > The issue now that I remember is cpu-release-addr is defined to always
-> > be a 64-bit value while some platforms made it a 32-bit value.
-> > 'cpu-release-addr' is also used for some other enable-methods.
-> 
-> I have a question about the spin-table.
-> The code "smp_spin_table.c" is only in "arch/arm64/kernel" directory so can
-> not be compiled in arm-v7 arch. That means the spin-table can not be used
-> arm-v7 arch..? , or is there the way to compile the code in arm-v7 arch?
-
-Why do you think you need it?  Do you have no way to control individual
-CPUs?
-
-We are going through a process in 32-bit eliminating the "spin table"
-stuff from platforms.
-
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+PiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNl
+bnQ6IFR1ZXNkYXksIEphbnVhcnkgMjIsIDIwMTkgNjo1OSBQTQ0KPiANCj4gQW0gRGllbnN0YWcs
+IGRlbiAyMi4wMS4yMDE5LCAxMDozOSArMDAwMCBzY2hyaWViIEFpc2hlbmcgRG9uZzoNCj4gPiA+
+ID4gPiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+
+ID4gPiBTZW50OiBGcmlkYXksIEphbnVhcnkgMTgsIDIwMTkgNjoyMyBQTQ0KPiA+DQo+ID4gWy4u
+Ll0NCj4gPiA+ID4gPiBUaGlzIGhhcyBiZWVuIGRpc2N1c3NlZCB3aGVuIHVwc3RyZWFtaW5nIHRo
+ZSBkcml2ZXIuIFRoZQ0KPiA+ID4gPiA+IGNvbnRyb2xsZXIgbWF5IHN1cHBvcnQgbXVsdGlwbGUg
+b3V0cHV0IElSUXMsIGJ1dCBvbmx5IG9uZSB0aGVtDQo+ID4gPiA+ID4gaXMgYWN0dWFsbHkgdXNl
+ZCBkZXBlbmRpbmcgb24gdGhlIENIQU5DVFJMIGNvbmZpZy4gVGhlcmUgaXMgbm8NCj4gPiA+ID4g
+PiB1c2UgaW4gaG9va2luZyB1cCBhbGwgdGhlIG91dHB1dCBJUlFzIGluIERULCBpZiBvbmx5IG9u
+ZSBvZiB0aGVtDQo+ID4gPiA+ID4gaXMgYWN0dWFsbHkgdXNlZC4gU29tZSBvZiB0aGUgb3V0cHV0
+cyBtYXkgbm90IGV2ZW4gYmUgdmlzaWJsZSB0bw0KPiA+ID4gPiA+IHRoZSBMaW51eCBzeXN0ZW0s
+IGJ1dCBtYXkgYmVsb25nIHRvIGEgQ29ydGV4IE00IHN1YnN5c3RlbS4gQWxsDQo+ID4gPiA+ID4g
+b2YgdGhvc2UgY29uZmlndXJhdGlvbnMgY2FuIGJlIGRlc2NyaWJlZCBpbiBEVCBieSBjaGFuZ2lu
+ZyB0aGUNCj4gPiA+ID4gPiB1cHN0cmVhbSBpbnRlcnJ1cHQgYW5kICJmc2wsY2hhbm5lbCIgaW4g
+YQ0KPiA+ID4NCj4gPiA+IGNvaGVyZW50IHdheS4NCj4gPiA+ID4gPg0KPiA+ID4gPiA+IFBsZWFz
+ZSBjb3JyZWN0IG1lIGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgdG90YWxseSB3cm9uZy4NCj4gPiA+
+ID4NCj4gPiA+ID4gSSdtIGFmcmFpZCB5b3VyIHVuZGVyc3RhbmRpbmcgb2YgQ0hBTiBzZWVtcyB3
+cm9uZy4NCj4gPiA+ID4gKEJpbmRpbmcgZG9jIG9mIHRoYXQgcHJvcGVydHkgbmVlZHMgY2hhbmdl
+IGFzIHdlbGwpLg0KPiA+ID4gPg0KPiA+ID4gPiBPbiBRWFAgREMgU1MsIHRoZSBJUlFTVEVFUiBz
+dXBwb3J0cyA1MTIgaW50ZXJydXB0cyB3aXRoIDgNCj4gPiA+ID4gaW50ZXJydXB0IG91dHB1dCBD
+b25udGVjdGVkIHRvIEdJQy4NCj4gPiA+ID4gVGhlIGN1cnJlbnQgZHJpdmVyIGRvZXMgbm90IHN1
+cHBvcnQgaXQgYXMgaXQgYXNzdW1lcyBvbmx5IG9uZQ0KPiA+ID4gPiBpbnRlcnJ1cHQNCj4gPiA+
+DQo+ID4gPiBvdXRwdXQgdXNlZC4NCj4gPiA+DQo+ID4gPiBPa2F5LCBzbyBsZXQncyB0YWtlIGEg
+c3RlcCBiYWNrLiBUaGUgZGVzY3JpcHRpb24gaW4gdGhlIFFYUCBSTSBpcw0KPiA+ID4gYWN0dWFs
+bHkgYmV0dGVyIHRoYW4gd2hhdCBJJ3ZlIHNlZW4gdW50aWwgbm93LiBTdGlsbCBpdCdzIHRvdGFs
+bHkgY29uZnVzaW5nIHRoYXQNCj4gdGhlICJjaGFubmVsIg0KPiA+ID4gdGVybWlub2xvZ3kgdXNl
+ZCB3aXRoIGRpZmZlcmVudCBtZWFuaW5ncyBpbiBkb2NzLiBMZXQncyB0cnkgdG8gYXZvaWQNCj4g
+PiA+IHRoaXMgYXMgbXVjaCBhcyBwb3NzaWJsZS4NCj4gPiA+DQo+ID4gPiBTbyB0byBnZXQgdGhp
+bmdzIHN0cmFpZ2h0OiBFYWNoIGlycXN0ZWVyIGNvbnRyb2xsZXIgaGFzIGEgbnVtYmVyIG9mIElS
+UQ0KPiBncm91cHMuDQo+ID4gPiBBbGwgdGhlIGlucHV0IElSUXMgb2Ygb25lIGdyb3VwIGFyZSBP
+UmVkIHRvZ2V0aGVyIHRvIGZvcm0gb24gb3V0cHV0IElSUS4NCj4gPiA+IERlcGVuZGluZyBvbiB0
+aGUgU29DIGludGVncmF0aW9uLCBhIGdyb3VwIGNhbiBjb250YWluIDMyIG9yDQo+ID4gPiA2NCBJ
+UlFzLCB3aGVyZSBEQ1NTIGlycXN0ZWVyIG9uIE1YOE0gYW5kIHRoZSBiaWcgNTEyIGlucHV0DQo+
+ID4gPiBjb250cm9sbGVycyBvbiBRWFAgYW5kIFFNIGJvdGggdXNlIDY0IElSUXMgcGVyIGdyb3Vw
+LiBZb3UgYXJlDQo+ID4gPiBjbGFpbWluZyB0aGF0IHRoZSBzbWFsbGVyIGNvbnRyb2xsZXJzIG9u
+IGJvdGggUVhQIGFtIFFNIGhhdmUgb25seSAzMg0KPiBJUlFzIHBlciBncm91cCwgcmlnaHQ/DQo+
+ID4gPg0KPiA+ID4gU28gdGhlIG9ubHkgY2hhbmdlIHRoYXQgaXMgbmVlZGVkIGlzIHRoYXQgdGhl
+IGRyaXZlciBuZWVkcyB0byBrbm93DQo+ID4gPiB0aGUgbnVtYmVyIG9mIGlucHV0IElSUXMgcGVy
+IGdyb3VwLCB3aXRoIGEgZGVmYXVsdCBvZiA2NCB0byBub3QgYnJlYWsgRFQNCj4gY29tcGF0aWJp
+bGl0eS4NCj4gPiA+DQo+ID4NCj4gPiBOb3QgZXhhY3RseS4NCj4gPiBmcm9tIEhXIHBvaW50IG9m
+IHZpZXcgLCB0aGVyZSdyZSB0d28gcGFyYW1ldGVycyBkdXJpbmcgSVJRU1RFRVINCj4gaW50ZWdy
+YXRpb24uDQo+ID4gRm9yIGV4YW1wbGUsDQo+ID4gREMgaW4gUVhQOg0KPiA+ID4gPiBwYXJhbWV0
+ZXLCoMKgSVJRQ0hBTgkJPcKgwqAxO8KgCS8vTnVtYmVyIG9mIElSUSBDaGFubmVscy9TbG90cw0K
+PiA+ID4gPiBwYXJhbWV0ZXLCoMKgTklOVDMyCQk9wqDCoDg7CS8vTnVtYmVyIG9mIGludGVycnVw
+dHMgaW4gbXVsdGlwbGUNCj4gb2YgMzINCj4gDQo+IElmIHRoaXMgaXMgYWx3YXlzIGluIG11bHRp
+cGxlcyBvZiAzMiwgdGhlIG9ubHkgY2hhbmdlIHdlIG5lZWQgdG8gbWFrZSB0byB0aGUNCj4gZHJp
+dmVyIGlzIHRvIGZpeCBEVCBiaW5kaW5nIGFuZCBpbnRlcnByZXRhdGlvbiBvZiB0aGUgImZzbCxp
+cnEtZ3JvdXBzIiBwcm9wZXJ0eSB0bw0KPiBiZSBpbiBtdWx0aXBsZXMgb2YgMzIuDQo+IA0KPiBU
+aGlzIG1lYW5zIGkuTVg4TVEgRENTUyBpcnFzdGVlciB3b3VsZCBuZWVkIHRvIGNoYW5nZSB0byAy
+IGlycS1ncm91cHMsIGJ1dA0KPiBhcyB0aGlzIGlzbid0IHVzZWQgdXBzdHJlYW0geWV0IHdlIGNh
+biBzdGlsbCBkbyB0aGlzIGNoYW5nZSB3aXRob3V0IGJyZWFraW5nIHRvbw0KPiBtdWNoIHN0dWZm
+IGFuZCBJIHdvdWxkIHJhdGhlciBjb3JyZWN0IHRoaXMgbm93IHRoYW4ga2VlcGluZyBhIERUIGJp
+bmRpbmcNCj4gYXJvdW5kIHRoYXQgZG9lc24ndCBtYXRjaCB0aGUgSFcuDQo+IA0KDQpXZSB3YW50
+IHRvIGF2b2lkIHVzaW5nIG9mIGlycS1ncm91cHMgYXMgaXQncyB3cm9uZy4NClN0aWNrIHRvIEhX
+IHBhcmFtZXRlcnMsIG9ubHkgY2hhbm5lbCBudW1iZXIgYW5kIGludGVycnVwdHMgbnVtYmVyIHNo
+b3VsZCBiZSB1c2VkLg0KDQo+ID4gTUlQSSBDU0kgaW4gTVE6DQo+ID4gPiBQYXJhbWV0ZXLCoMKg
+SVJRQ0hBTgkJPSAxDQo+ID4gPiBQYXJhbWV0ZXLCoMKgTklOVDMyCQk9IDENCj4gPg0KPiA+IFlv
+dSB3aWxsIHNlZSBubyBncm91cCBjb25jZXB0IHVzZWQgaGVyZS4gT25seSBjaGFubmVsIG51bWJl
+ciBhbmQNCj4gaW50ZXJydXB0cyBudW1iZXIuDQo+ID4gVGhlIGdyb3VwIGlzIGFuIElQIGludGVy
+bmFsIGNvbmNlcHQgdGhhdCBPUmVkIGEgZ3JvdXAgb2YgNjQgaW50ZXJydXB0cw0KPiA+IGludG8g
+YW4gb3V0cHV0IGludGVycnVwdC4gQnV0IGl0IG1heSBhbHNvIG9ubHkgdXNlIDMyIGludGVycnVw
+dHMgaW4gdGhlIHNhbWUNCj4gZ3JvdXAuDQo+IA0KPiBJIHN1cHBvc2UgdGhhdCB0aGUgT1IgZ3Jv
+dXAgc2l6ZSBhdCB0aGF0IHBvaW50IGlzIGFsd2F5cyA2NCBpbnB1dCBJUlFzIHBlcg0KPiBvdXRw
+dXQgSVJRLCByaWdodD8gU28gd2l0aCBOSU5UMzIgPT0gMSB5b3UgZW5kIHVwIHdpdGggMSBvdXRw
+dXQgSVJRLCBidXQgZm9yDQo+IE5JTlQzMiA9PSAzIHlvdSBnZXQgMiBvdXRwdXQgSVJRcywgY29y
+cmVjdD8NCg0KWWVzLCB0aGF0J3MgcmlnaHQuDQoNCj4gDQo+ID4gPiBBbHNvIGlmIHRoZSBjb25u
+ZWN0aW9uIGJldHdlZW4gSVJRIGdyb3VwIGFuZCBvdXRwdXQgSVJRIGlzIGZpeGVkLA0KPiA+ID4g
+dGhlIGRyaXZlciBzaG91bGQgYmUgbW9yZSBjbGV2ZXIgYWJvdXQgaGFuZGxpbmcgdGhlIGNoYWlu
+ZWQgSVJRLiBJZg0KPiA+ID4geW91IGtub3cgd2hpY2ggb2YgdGhlIHVwc3RyZWFtIElSUXMgZmly
+ZWQgeW91IG9ubHkgbmVlZCB0byBsb29rIGF0DQo+ID4gPiB0aGUgMzIgb3IgNjQgSVJRIHN0YXR1
+cyByZWdpc3RlcnMgb2YgdGhhdCBzcGVjaWZpYyBncm91cCwgbm90IGFsbCBvZiB0aGVtLg0KPiA+
+DQo+ID4gWWVzLCB0aGF0J3MgcmlnaHQuDQo+ID4gSSBwbGFubmVkIHRvIGRvIHRoYXQgbGF0ZXIg
+d2l0aCBhIHNlcGFyYXRlIHBhdGNoIGJlZm9yZS4NCj4gDQo+IExldCdzIGRvIGl0IHJpZ2h0IHdp
+dGggdGhlIGZpcnN0IHBhdGNoLiBUaGlzIGRvZXNuJ3Qgc2VlbSBsaWtlIGEgYmlnIGNoYW5nZS4N
+Cj4gDQoNCldlIGNhbiBkbyBpdC4NCg0KPiA+DQo+ID4gPg0KPiA+ID4gQ2FuIHlvdSBwbGVhc2Ug
+Y2xhcmlmeSB3aGF0IHRoZSBDSEFOQ1RSTCBzZXR0aW5nIGNoYW5nZXMgaW4gdGhpcyBzZXR1cD8N
+Cj4gPiA+DQo+ID4NCj4gPiBJUlFzdGVlciBzdXBwb3J0cyB1cCB0byA1IHNlcGFyYXRlIENBSE5O
+RUxTIHdoaWNoIGVhY2ggb2YgdGhlbQ0KPiA+IHN1cHBvcnRzIHVwIHRvIDUxMiBpbnRlcnJ1cHRz
+LiBDSEFOQ1RMIGlzIHVzZWQgdG8gZW5hYmxlIHRob3NlIHJlc3BlY3RpdmUNCj4gQ0hBTiBvdXRw
+dXQgaW50ZXJydXB0cy4NCj4gPiBlLmcuDQo+ID4gMX44IG91dHB1dCBpbnRlcnJ1cHRzIG9mIENI
+QU4wLg0KPiA+DQo+ID4gT25lIG5vdGFibGUgdGhpbmcgaXMgdGhlIGVhY2ggY2hhbm5lbCBoYXMg
+YSBzZXBhcmF0ZSBhZGRyZXNzIHNwYWNlLg0KPiA+IFRoYXQgbWVhbnMgdGhlIGNoYW4xIHJlZyBh
+ZGRyZXNzIGlzIG5vdCB0aGUgb25lIHdlIHNwZWNpZmllZCBpbiBkZWZhdWx0IHJlZw0KPiBwcm9w
+ZXJ0eS4NCj4gPiBTbyB0aGUgY29ycmVjdCBkdHMgbWF5IGJlIGxpa2UgZm9yIG11bHRpIGNoYW5u
+ZWxzIGNhc2VzLg0KPiA+IGludGVycnVwdC1jb250cm9sbGVyQDMyZTJkMDAwIHsNCj4gPiDCoMKg
+wqDCoMKgwqDCoMKgY29tcGF0aWJsZSA9ICJmc2wsaW14OG0taXJxc3RlZXIiLCAiZnNsLGlteC1p
+cnFzdGVlciI7DQo+ID4gwqDCoMKgwqDCoMKgwqDCoHJlZyA9IDwweDMyZTJkMDAwIDB4MTAwMD4s
+DQo+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwweDMyZTJlMDAwIDB4MTAwMD4sDQo+
+ID4gwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoDwweDMyZTJmMDAwIDB4MTAwMD47DQo+ID4g
+wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoC4uLg0KPiA+IMKgwqDCoMKgwqDCoMKgwqByZWct
+bmFtZXMgPSAiY2gwIiwgImNoMSIsICJjaDIiLCAuLi47DQo+ID4gwqDCoMKgwqDCoMKgwqDCoGlu
+dGVycnVwdHMgPSA8R0lDX1NQSSAxOCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsNCj4gPiDCoMKgwqDC
+oMKgwqDCoMKgZnNsLGlycXMtcGVyLWNoYW49IDw2ND47DQo+ID4gwqDCoMKgwqDCoMKgwqDCoGlu
+dGVycnVwdC1jb250cm9sbGVyOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqAjaW50ZXJydXB0LWNlbGxz
+ID0gPDI+OyAvL2NlbGwgMDogY2hhbiBpbmRleCBjZWxsIDI6IGludGVycnVwdA0KPiA+IG51bWJl
+ciB9OyBUaGlzIG1ha2VzIHRoZSB0aGluZ3MgcXVpdGUgY29tcGxpY2F0ZWQuDQo+IA0KPiBXaXRo
+IHRoZSBjdXJyZW50IGJpbmRpbmcsIHdoYXQga2VlcHMgdXMgZnJvbSBkZXNjcmliaW5nIHN1Y2gg
+YSBtdWx0aS0gY2hhbm5lbA0KPiBpcnFzdGVlciB3aXRoIG11bHRpcGxlIERUIG5vZGVzIGFuZCBo
+YXZlIG11bHRpcGxlIGRyaXZlciBpbnN0YW5jZXM/IEkgZG9uJ3Qgc2VlDQo+IHdoeSB3ZSB3b3Vs
+ZCBuZWVkIHRvIG1peCB0aGlzIGFsbCBpbnRvIG9uZSBkcml2ZXIgaW5zdGFuY2UuIA0KPiBTbyBm
+b3IgeW91ciBhYm92ZQ0KPiBleGFtcGxlLCBzb21ldGhpbmcgbGlrZToNCj4gDQo+IGludGVycnVw
+dC1jb250cm9sbGVyQDMyZTJkMDAwIHsNCj4gCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtLWlycXN0
+ZWVyIiwgImZzbCxpbXgtaXJxc3RlZXIiOz4NCj4gCXJlZyA9IDwweDMyZTJkMDAwIDB4MTAwMD47
+DQo+IAlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTggSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+IAlm
+c2wsY2hhbm5lbCA9IDwwPjsNCj4gfTsNCj4gDQo+IGludGVycnVwdC1jb250cm9sbGVyQDMyZTJl
+MDAwIHsNCj4gCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtLWlycXN0ZWVyIiwgImZzbCxpbXgtaXJx
+c3RlZXIiOz4NCj4gCXJlZyA9IDwweDMyZTJlMDAwIDB4MTAwMD47DQo+IAlpbnRlcnJ1cHRzID0g
+PEdJQ19TUEkgMjYgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+IAlmc2wsY2hhbm5lbCA9IDwxPjsN
+Cj4gfTsNCj4gDQoNCkJlY2F1c2UgZnJvbSBIVyBwb2ludCBvZiB2aWV3LCBpdCBJUyBhY3R1YWxs
+eSBvbmUgSVJRU1RFRVIgbW9kdWxlIHdpdGggbXVsdGkNCmNoYW5uZWxzIHN1cHBvcnRlZC4gU28g
+SSBmZWVsIGRlc2NyaWJlIGVhY2ggY2hhbm5lbCBpbnRvIHNldmVyYWwgbm9kZXMNCnNlZW1zIHZp
+b2xhdGUgdGhlIEhXIGEgYml0LiBUaGF0IHdoeSBJIG1hZGUgdGhlIGZvcm1lciBkdHMgYmluZGlu
+ZyBhcyBhbiBleGFtcGxlLg0KDQpBbm90aGVyIHBvaW50IGlzIHRoYXQgdGhlcmUncyBvbmx5IG9u
+ZSBwaHlzaWNhbCBDSEFOQ1RMIHJlZ2lzdGVyIHNoYXJlZCB3aXRoIG11bHRpDQpjaGFubmVscy4g
+SG93ZXZlciwgZWFjaCBjaGFubmVsIHNlZW1zIHVzZSBhIG1pcnJvciBDQUhOQ1RSTCByZWdpc3Rl
+ciBpbiBpdHMgc2VwYXJhdGUNCnJlZ2lzdGVyIHNwYWNlIHRvIGVuYWJsZSB0aGUgY2hhbm5lbC4g
+QnV0IG5lZWRzIGNhcmUgYWJvdXQgb3ZlcndyaXRlIG90aGVycy4NCihHb3QgdGhpcyBpbmZvcm1h
+dGlvbiBhZnRlciBkaXNjdXNzaW5nIHdpdGggSUMgZ3V5cywgc3RpbGwgbm90IHZlcmlmaWVkKQ0K
+DQo+ID4gSW4gcmVhbGl0eSwgd2Ugc3RpbGwgZG9uJ3QgaGF2ZSBzdWNoIHVzaW5nIGNhc2VzIHNv
+IGZhciBhcyBhcyBtdWx0aQ0KPiA+IGNoYW5uZWxzIHVzdWFsbHkgYXJlIHVzZWQgdG8gZGVsaXZl
+ciB0aGUgaW50ZXJydXB0cyB0byBkaWZmZXJlbnQNCj4gPiBjb3JlcywgZS5nLiBNNCwgU0NVLCBv
+ciBEU1AsIEEgY29yZSBkb24ndCBoYW5kbGUgaXQuDQo+ID4gU28gSSBkaWQgbm90IGNoYW5nZSBp
+dCBjdXJyZW50bHkgYXMgaXQncyBhbm90aGVyIHN0b3J5Lg0KPiA+IFRoaXMgcGF0Y2ggc2VyaWVz
+IG1haW5seSBhaW1zIHRvIGFkZCBzdXBwb3J0IGZvciAzMiBvciA1MTIgaW50ZXJydXB0cw0KPiA+
+IGNoYW5uZWwgYW5kIG11bHRpcGxlIE91dHB1dHMgZm9yIGEgc2luZ2xlIENIQU5ORUwgY2FzZS4N
+Cj4gDQo+IFRoZSB0aGluZyBpcywgaWYgd2Ugd2FudCB0byBldmVuIHRyeSB0byBrZWVwIERUIHN0
+YWJpbGl0eSB3ZSBuZWVkIHRvIHVuZGVyc3RhbmQNCj4gaG93IHRoaXMgSFcgYmxvY2sgY2FuIGJl
+IHVzZWQgYW5kIGhvdyB3ZSBjYW4gZGVzY3JpYmUgdGhpcyBpbiB0aGUgRFQuDQo+IA0KDQpZZXMs
+IHRoYXQncyByaWdodC4NCkJ1dCB0aGUgYmluZGluZyBpcyBhbHJlYWR5IHRoZXJlLCBzbyB3ZSBj
+YW4gZml4IHRoZW0gb25lIGJ5IG9uZSB3aXRob3V0IGJyZWFraW5nDQp0aGUgc3RhYmlsaXR5Lg0K
+DQpSZWdhcmRzDQpEb25nIEFpc2hlbmcNCg0KPiBSZWdhcmRzLA0KPiBMdWNhcw0K
