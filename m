@@ -1,53 +1,49 @@
-From: Wolfram Sang <wsa@the-dreams.de>
-Subject: Re: [PATCH 3/6] i2c: i2c-qcom-geni: Add interconnect support
-Date: Tue, 22 Jan 2019 10:07:50 +0100
-Message-ID: <20190122090750.GA1012@kunai>
-References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
- <1548138816-1149-4-git-send-email-alokc@codeaurora.org>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 4/8] net/macb: bindings doc/trivial: fix documentation for
+ sama5d3 10/100 interface
+Date: Tue, 22 Jan 2019 09:08:54 +0000
+Message-ID: <be8ba0bf-993e-d38c-61e8-af422ff3c636@microchip.com>
+References: <cover.1547629763.git.nicolas.ferre@microchip.com>
+ <0005c2ef28b985c663e0cd058bbc6d3856e05ec2.1547629763.git.nicolas.ferre@microchip.com>
+ <20190122011014.GA25211@bogus>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="tThc/1wpZn/ma/RB"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548138816-1149-4-git-send-email-alokc@codeaurora.org>
+In-Reply-To: <20190122011014.GA25211@bogus>
+Content-Language: en-US
+Content-ID: <10FC06FC594F804F9A2F3040F5924E4F@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Alok Chauhan <alokc@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>, andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
+To: robh@kernel.org, alexandre.belloni@bootlin.com
+Cc: Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sre@kernel.org, linux-pm@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---tThc/1wpZn/ma/RB
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 22, 2019 at 12:03:33PM +0530, Alok Chauhan wrote:
-> Get the interconnect paths for I2C based Serial Engine device
-> and vote accordingly based on maximum supported I2C frequency.
->=20
-> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
-
-Acked-by: Wolfram Sang <wsa@the-dreams.de>
-
-
---tThc/1wpZn/ma/RB
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAlxG3WIACgkQFA3kzBSg
-KbY+6BAAl5xhp7jUSOyFJXSafZGLgnJuYx3N01zZJhuCm2sGhGhKQcGH2M0EcfUK
-YMTYKp0bvzOjpa9WvJEceZM/OrHSmFMoMzMbsdUC3oxvrN6USnuDIlmkBo4zKGx+
-srmS5YMtb7ekOXsI0rSFJb5VRX3BULLpD/V5vYsysihZsoS6ReFtwqdMWS1uR/JP
-HLpwgPsvynzIblq1TZM0UfTXvz1QBxRAQjKkJcaoXAUGBFZuL5lEmis3yd5amY4N
-Mvwax2A7s6qB9hOazOUwyutoqLZfChk4AtnH07wnvpuf0fFkiv6FeK9BjpwEwXJe
-ofty1FDAF9/KlkohN9TzVJRhITAAbJFLiwXU+yot69bEehGvaVF13qgZkvgDrElF
-vDC2AlBhvlqdfnLetOVdrsbAErUeaj8XDf19y2NzaF9S/cD69aobLlQ3x784ZRch
-JNz3N0J+IgZeCh2ZK9NQxiiiG0XFMJAASY2dyJqR0MFdr7oNFS/rhQTKS2HqwvWx
-012gPahU1GdcQUeo6dx9ZJfd43dGEbe32GPv5JQWtf9lNBvVcGiEXCoH4wMehvxK
-YlixJOpkdTb263JRy335ACAB14A8caTBDHmR1Vhvtw3Rvn3txSldNHrF0ENQ0N9j
-/ZpWV8NT3GhKvUj5v9Erucjn1wTegBlmU4w6aGJI59JPDsr/2as=
-=C1RA
------END PGP SIGNATURE-----
-
---tThc/1wpZn/ma/RB--
+SGkgUm9iLA0KDQpPbiAyMi8wMS8yMDE5IGF0IDAyOjEwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
+T24gV2VkLCBKYW4gMTYsIDIwMTkgYXQgMTA6NTc6NDBBTSArMDEwMCwgTmljb2xhcyBGZXJyZSB3
+cm90ZToNCj4+IFRoaXMgcmVtb3ZlcyBhIGxpbmUgbGVmdCB3aGlsZSBhZGRpbmcgdGhlIGNvcnJl
+Y3QgY29tcGF0aWJpbGl0eSBzdHJpbmcgZm9yDQo+PiBzYW1hNWQzIDEwLzEwMCBpbnRlcmZhY2Uu
+IE5vdyB1c2UgdGhlICJhdG1lbCxzYW1hNWQzLW1hY2IiIHN0cmluZy4NCj4+DQo+PiBTaWduZWQt
+b2ZmLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQo+PiAt
+LS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dCB8
+IDMgKy0tDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMo
+LSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
+L25ldC9tYWNiLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvbWFj
+Yi50eHQNCj4+IGluZGV4IDNlMTdhYzFkNWQ1OC4uZjVjNDE0YjEwZTI3IDEwMDY0NA0KPj4gLS0t
+IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gKysr
+IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gQEAg
+LTMsOCArMyw3IEBADQo+PiAgIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAgIC0gY29tcGF0aWJs
+ZTogU2hvdWxkIGJlICJjZG5zLFs8Y2hpcD4tXXttYWNifGdlbX0iDQo+PiAgICAgVXNlICJjZG5z
+LGF0OTFybTkyMDAtZW1hYyIgQXRtZWwgYXQ5MXJtOTIwMCBTb0MuDQo+PiAtICBVc2UgImNkbnMs
+YXQ5MXNhbTkyNjAtbWFjYiIgZm9yIEF0bWVsIGF0OTFzYW05IFNvQ3Mgb3IgdGhlIDEwLzEwME1i
+aXQgSVANCj4+IC0gIGF2YWlsYWJsZSBvbiBzYW1hNWQzIFNvQ3MuDQo+PiArICBVc2UgImNkbnMs
+YXQ5MXNhbTkyNjAtbWFjYiIgZm9yIEF0bWVsIGF0OTFzYW05IFNvQ3MuDQo+IA0KPiBXaGVyZSBp
+cyAiYXRtZWwsc2FtYTVkMy1tYWNiIj8NCg0KSXQncyBhY3R1YWxseSBhIGNvdXBsZSBvZiBsaW5l
+IGJlbG93OiBsaW5lIDEzIG9mIHRoZSByZXN1bHRpbmcgbWFjYi50eHQgDQpmaWxlLiBJdCB3YXMg
+YWxyZWFkeSBpbiB0aGUgZmlsZSB3aGVuIEkgcmVtb3ZlZCB0aGUgbGVmdG92ZXJzLg0KDQpEbyB5
+b3UgYWR2aWNlIHRvIHRyeSB0byBiZXR0ZXIgc29ydCBlbnRyaWVzIGluIHRoaXMgZmlsZT8gSXMg
+dGhlcmUgYSANCmNvbW1vbiBwYXR0ZXJuPw0KDQpCZXN0IHJlZ2FyZHMsDQogICBOaWNvbGFzDQoN
+Cj4+ICAgICBVc2UgImNkbnMsbnA0LW1hY2IiIGZvciBOUDQgU29DIGRldmljZXMuDQo+PiAgICAg
+VXNlICJjZG5zLGF0MzJhcDcwMDAtbWFjYiIgZm9yIG90aGVyIDEwLzEwMCB1c2FnZSBvciB1c2Ug
+dGhlIGdlbmVyaWMgZm9ybTogImNkbnMsbWFjYiIuDQo+PiAgICAgVXNlICJjZG5zLHBjMzAyLWdl
+bSIgZm9yIFBpY29jaGlwIHBpY29YY2VsbCBwYzMwMiBhbmQgbGF0ZXIgZGV2aWNlcyBiYXNlZCBv
+bg0KPj4gLS0gDQo+PiAyLjE3LjENCj4+DQo+IA0KDQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
