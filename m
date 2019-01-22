@@ -1,55 +1,47 @@
 From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv6 1/4] dt-bindings: add DT binding for the layerscape PCIe controller with EP mode
-Date: Tue, 22 Jan 2019 14:33:25 +0800
-Message-ID: <20190122063328.25228-1-xiaowei.bao@nxp.com>
+Subject: [PATCHv6 4/4] misc: pci_endpoint_test: Add the layerscape EP device support
+Date: Tue, 22 Jan 2019 14:33:28 +0800
+Message-ID: <20190122063328.25228-4-xiaowei.bao@nxp.com>
+References: <20190122063328.25228-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190122063328.25228-1-xiaowei.bao@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
 Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the documentation for the Device Tree binding for the layerscape PCIe
-controller with EP mode.
+Add the layerscape EP device support in pci_endpoint_test driver.
 
 Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
 Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
 Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
-Reviewed-by: Rob Herring <robh+dt@kernel.org>
+Reviewed-by: Greg KH <gregkh@linuxfoundation.org>
 ---
 v2:
- - Add the SoC specific compatibles.
+ - no change
 v3:
- - modify the commit message.
+ - no change
 v4:
- - no change.
+ - delate the comments.
 v5:
  - no change.
 v6:
  - no change.
 
- .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
- 1 files changed, 3 insertions(+), 0 deletions(-)
+ drivers/misc/pci_endpoint_test.c |    1 +
+ 1 files changed, 1 insertions(+), 0 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-index 9b2b8d6..e20ceaa 100644
---- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-+++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
-@@ -13,6 +13,7 @@ information.
- 
- Required properties:
- - compatible: should contain the platform identifier such as:
-+  RC mode:
-         "fsl,ls1021a-pcie"
-         "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
-         "fsl,ls2088a-pcie"
-@@ -20,6 +21,8 @@ Required properties:
-         "fsl,ls1046a-pcie"
-         "fsl,ls1043a-pcie"
-         "fsl,ls1012a-pcie"
-+  EP mode:
-+	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
- - reg: base addresses and lengths of the PCIe controller register blocks.
- - interrupts: A list of interrupt outputs of the controller. Must contain an
-   entry for each entry in the interrupt-names property.
+diff --git a/drivers/misc/pci_endpoint_test.c b/drivers/misc/pci_endpoint_test.c
+index 896e2df..29582fe 100644
+--- a/drivers/misc/pci_endpoint_test.c
++++ b/drivers/misc/pci_endpoint_test.c
+@@ -788,6 +788,7 @@ static void pci_endpoint_test_remove(struct pci_dev *pdev)
+ static const struct pci_device_id pci_endpoint_test_tbl[] = {
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA74x) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_TI, PCI_DEVICE_ID_TI_DRA72x) },
++	{ PCI_DEVICE(PCI_VENDOR_ID_FREESCALE, 0x81c0) },
+ 	{ PCI_DEVICE(PCI_VENDOR_ID_SYNOPSYS, 0xedda) },
+ 	{ }
+ };
 -- 
 1.7.1
