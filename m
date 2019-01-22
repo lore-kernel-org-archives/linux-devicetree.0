@@ -1,51 +1,39 @@
-From: Joerg Roedel <joro@8bytes.org>
-Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
-Date: Wed, 23 Jan 2019 09:34:35 +0100
-Message-ID: <20190123083435.x3svwqp472mdgglw@8bytes.org>
-References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: [PATCH v3 0/5] Add Display support
+Date: Tue, 22 Jan 2019 15:25:44 +0000
+Message-ID: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
-Content-Disposition: inline
-In-Reply-To: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
-List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
-List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
-List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
-List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
-List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
- <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
-Errors-To: kvmarm-bounces@lists.cs.columbia.edu
-Sender: kvmarm-bounces@lists.cs.columbia.edu
-To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
-Cc: virtio-dev@lists.oasis-open.org, kevin.tian@intel.com, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, mst@redhat.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jasowang@redhat.com, will.deacon@arm.com, robin.murphy@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Magnus Damm <magnus.damm@gmail.com>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Simon Horman <horms@verge.net.au>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Jean-Philippe,
-
-thanks for all your hard work on this!
-
-On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
-> Implement the virtio-iommu driver, following specification v0.9 [1].
-
-To make progress on this I think the spec needs to be close to something
-that can be included into the official virtio-specification. Have you
-proposed the specification for inclusion there?
-
-This is because I can't merge a driver that might be incompatible to
-future implementations because the specification needs to be changed on
-its way to an official standard.
-
-I had a short discussion with Michael S. Tsirkin about that and from
-what I understood the spec needs to be proposed for inclusion on the
-virtio-comment[1] mailing list and later the TC needs to vote on it.
-Please work with Michael on this to get the specification official (or
-at least pretty close to something that will be part of the official
-virtio standard).
-
-Regards,
-
-	Joerg
-
-[1] https://www.oasis-open.org/committees/comments/index.php?wg_abbrev=virtio
+VGhpcyBwYXRjaCBzZXJpZXMgYWltcyB0byBhZGQgZGlzcGxheSBzdXBwb3J0IGZvciBpV2F2ZSBH
+MjBELVE3IGJvYXJkIGJhc2VkIG9uIFJaL0cxTi4KClRoaXMgcGF0Y2ggc2VyaWVzIGlzIHRlc3Rl
+ZCBhZ2FpbnN0IGxpbnV4LW5leHQKClYxLS0+IFYyCgkqIEFkZCBEVSBzdXBwb3J0IDogUmVtb3Zl
+ZCBMVkRTIGRlZmluaXRpb24gZnJvbSByOGE3NzQzIERVIG5vZGUuClYyLS0+IFYzCgkqIEFkZGVk
+IExWRFMgc3VwcG9ydCBmb3IgYm90aCByOGE3NzQzIGFuZCByOGE3NzQ0IFNvQy4KCkJpanUgRGFz
+ICg1KToKICBBUk06IGR0czogcjhhNzc0MzogQ29udmVydCB0byBuZXcgTFZEUyBEVCBiaW5kaW5n
+cwogIGR0LWJpbmRpbmdzOiBkaXNwbGF5OiByZW5lc2FzOiBsdmRzOiBEb2N1bWVudCByOGE3NzQ0
+IGJpbmRpbmdzCiAgZHJtOiByY2FyLWR1OiBsdmRzOiBBZGQgcjhhNzc0NCBzdXBwb3J0CiAgQVJN
+OiBkdHM6IHI4YTc3NDQ6IEFkZCBEVSBzdXBwb3J0CiAgQVJNOiBkdHM6IHI4YTc3NDQ6IEFkZCBM
+VkRTIHN1cHBvcnQKCiAuLi4vYmluZGluZ3MvZGlzcGxheS9icmlkZ2UvcmVuZXNhcyxsdmRzLnR4
+dCAgICAgICB8ICAxICsKIGFyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDMuZHRzaSAgICAgICAgICAg
+ICAgICAgICAgIHwgMzYgKysrKysrKysrKysrKysrKy0tLS0KIGFyY2gvYXJtL2Jvb3QvZHRzL3I4
+YTc3NDQuZHRzaSAgICAgICAgICAgICAgICAgICAgIHwgMzggKysrKysrKysrKysrKysrKysrKyst
+LQogZHJpdmVycy9ncHUvZHJtL3JjYXItZHUvcmNhcl9sdmRzLmMgICAgICAgICAgICAgICAgfCAg
+MSArCiA0IGZpbGVzIGNoYW5nZWQsIDY3IGluc2VydGlvbnMoKyksIDkgZGVsZXRpb25zKC0pCgot
+LSAKMi43LjQKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
+dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
