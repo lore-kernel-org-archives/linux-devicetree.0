@@ -1,66 +1,58 @@
-Return-Path: <SRS0=zlaX=QF=linux.intel.com=thor.thayer@kernel.org>
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 3/4] EDAC, altera: Skip DB IRQ for Stratix10
-Date: Tue, 29 Jan 2019 16:03:47 -0600
-Message-Id: <1548799428-10541-4-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1548799428-10541-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1548799428-10541-1-git-send-email-thor.thayer@linux.intel.com>
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+Return-Path: <SRS0=HE6G=P6=partner.samsung.com=k.konieczny@kernel.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v5 0/5] Add imem clock for Exynos 5433
+Date: Tue, 22 Jan 2019 10:02:27 +0100
+Message-Id: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+References: <CGME20190122090249eucas1p1e464ab92e8d5a706981f8dbcb63b1500@eucas1p1.samsung.com>
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+Add imem clock for Exynos 5433. This will allow to use SlimSSS (Slim
+Security SubSystem) with crypto functions.
 
-Stratix10 Double Bit errors are configured as SErrors
-so skip the Double Bit IRQ initialization if Stratix10.
+Changes since v4:
+- added Acked-by to 5th patch,
+- removed all clock ids except CLK_ACLK_SLIMSSS/CLK_PCLK_SLIMSSS and rewrite
+  commit message.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- drivers/edac/altera_edac.c | 31 ++++++++++++++++++-------------
- 1 file changed, 18 insertions(+), 13 deletions(-)
+Changes since v3:
+- added Acked-by and Reviewed-by to patches 2 and 3
+- dropped "[PATCH v3 4/5] arm64: dts: exynos: add imem clock" because it
+  was already applied
+- split "[PATCH v3 5/5] clk: samsung: exynos5433: add imem clocks"
+  into two parts, first for DT bindings and second for clock driver. In
+  clock driver I dropped all SSS clocks and left only two slimSSS, as I
+  was unable to test SSS with crypto driver s5p-sss.
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index c89d82aa2776..6a460c742e3f 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1924,20 +1924,25 @@ static int altr_edac_a10_device_add(struct altr_arria10_edac *edac,
- 		goto err_release_group1;
- 	}
- 
--	altdev->db_irq = irq_of_parse_and_map(np, 1);
--	if (!altdev->db_irq) {
--		edac_printk(KERN_ERR, EDAC_DEVICE, "Error allocating DBIRQ\n");
--		rc = -ENODEV;
--		goto err_release_group1;
--	}
--	rc = devm_request_irq(edac->dev, altdev->db_irq, prv->ecc_irq_handler,
--			      IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
--			      ecc_name, altdev);
--	if (rc) {
--		edac_printk(KERN_ERR, EDAC_DEVICE, "No DBERR IRQ resource\n");
--		goto err_release_group1;
-+	/* Arria10 has double bit error IRQs. Stratix10 uses SErrors */
-+	if (socfpga_is_a10()) {
-+		altdev->db_irq = irq_of_parse_and_map(np, 1);
-+		if (!altdev->db_irq) {
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "Error allocating DBIRQ\n");
-+			rc = -ENODEV;
-+			goto err_release_group1;
-+		}
-+		rc = devm_request_irq(edac->dev, altdev->db_irq,
-+				      prv->ecc_irq_handler,
-+				      IRQF_ONESHOT | IRQF_TRIGGER_HIGH,
-+				      ecc_name, altdev);
-+		if (rc) {
-+			edac_printk(KERN_ERR, EDAC_DEVICE,
-+				    "No DBERR IRQ resource\n");
-+			goto err_release_group1;
-+		}
- 	}
--
- 	rc = edac_device_add_device(dci);
- 	if (rc) {
- 		dev_err(edac->dev, "edac_device_add_device failed\n");
+Changes since v2:
+- added Reviewed-by to two first patches
+- fixed subject for 3rd patch and commit message
+- in patch 3 moved documentation of imem to end of clocks after CMU_CAM1
+- in patch 4 moved cmu_imem declarations after cmu_cam1
+- in patch 5 added newlines after clock registers, moved code after cmu_cam1,
+  removed CLK_OF_DECLARE and exynos5433_cmu_imem_init, moved cmu_imem
+  compatible to the end of exynos5433_cmu_of_match
+
+Changes since v1:
+- splitted typo patch into two, one of them for stable, suggested by Krzysztof
+  Kozlowski
+- added more registers as suggested by Chanwoo Choi
+
+Kamil Konieczny (5):
+  clk: samsung: exynos5433: fix typo in imem divider
+  clk: samsung: exynos5433: fix name typo in sssx
+  dt-bindings: clk: exynos5433: document imem clock
+  dt-bindings: clk: exynos5433: add imem clock
+  clk: samsung: exynos5433: add imem clocks
+
+ .../bindings/clock/exynos5433-clock.txt       | 23 +++++++++++
+ drivers/clk/samsung/clk-exynos5433.c          | 38 +++++++++++++++++--
+ include/dt-bindings/clock/exynos5433.h        |  8 +++-
+ 3 files changed, 65 insertions(+), 4 deletions(-)
+
 -- 
-2.7.4
+2.20.0
