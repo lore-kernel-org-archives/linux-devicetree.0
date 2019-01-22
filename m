@@ -1,148 +1,73 @@
-From: Scott Branden <scott.branden@broadcom.com>
-Subject: Re: [PATCH 1/3] dt-bindings: pwm: kona: Add new compatible for new
- version pwm-kona
-Date: Tue, 22 Jan 2019 12:12:46 -0800
-Message-ID: <9b2dd73d-3a38-3a68-d37c-490811ed80ee@broadcom.com>
-References: <1547184076-20521-1-git-send-email-sheetal.tigadoli@broadcom.com>
- <1547184076-20521-2-git-send-email-sheetal.tigadoli@broadcom.com>
- <20190111204801.2ytdeblcai7lg3on@pengutronix.de>
- <f1ec3121-a8e7-a1c0-008a-ea4ae6028157@broadcom.com>
- <20190112150515.i7mwq7rtd62wlifh@pengutronix.de>
- <faadc46d-94b5-a32c-79ae-4206fbc26608@broadcom.com>
- <20190121231105.GA928@bogus>
+From: Bjorn Helgaas <helgaas@kernel.org>
+Subject: Re: [PATCH] PCI: Use of_node_name_eq for node name comparisons
+Date: Tue, 22 Jan 2019 14:20:35 -0600
+Message-ID: <20190122202035.GD14636@google.com>
+References: <20181205195050.4759-18-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190121231105.GA928@bogus>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <20181205195050.4759-18-robh@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Rob Herring <robh@kernel.org>
-Cc: =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>, Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>, Thierry Reding <thierry.reding@gmail.com>, Florian Fainelli <f.fainelli@gmail.com>, Ray Jui <rjui@broadcom.com>, Scott Branden <sbranden@broadcom.com>, bcm-kernel-feedback-list@broadcom.com, linux-pwm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Praveen Kumar B <praveen.b@broadcom.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, Michael Bringmann <mwb@linux.vnet.ibm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+[+cc Michael B]
 
-On 2019-01-21 3:11 p.m., Rob Herring wrote:
-> On Tue, Jan 15, 2019 at 04:14:21PM -0800, Scott Branden wrote:
->> Hi Uwe,
->>
->> On 2019-01-12 7:05 a.m., Uwe Kleine-König wrote:
->>> Hello Scott,
->>>
->>> On Fri, Jan 11, 2019 at 01:28:45PM -0800, Scott Branden wrote:
->>>> On 2019-01-11 12:48 p.m., Uwe Kleine-König wrote:
->>>>> On Fri, Jan 11, 2019 at 10:51:14AM +0530, Sheetal Tigadoli wrote:
->>>>>> From: Praveen Kumar B <praveen.b@broadcom.com>
->>>>>>
->>>>>> Add new compatible string for new version of pwm-kona
->>>>>>
->>>>>> Signed-off-by: Praveen Kumar B <praveen.b@broadcom.com>
->>>>>> Reviewed-by: Ray Jui <ray.jui@broadcom.com>
->>>>>> Reviewed-by: Scott Branden <scott.branden@broadcom.com>
->>>>>> Signed-off-by: Sheetal Tigadoli <sheetal.tigadoli@broadcom.com>
->>>>>> ---
->>>>>>     Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt | 2 +-
->>>>>>     1 file changed, 1 insertion(+), 1 deletion(-)
->>>>>>
->>>>>> diff --git a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
->>>>>> index 8eae9fe..d37f697 100644
->>>>>> --- a/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
->>>>>> +++ b/Documentation/devicetree/bindings/pwm/brcm,kona-pwm.txt
->>>>>> @@ -3,7 +3,7 @@ Broadcom Kona PWM controller device tree bindings
->>>>>>     This controller has 6 channels.
->>>>>>     Required Properties :
->>>>>> -- compatible: should contain "brcm,kona-pwm"
->>>>>> +- compatible: should contain "brcm,kona-pwm" or "brcm,kona-pwm-v2"
->>>>> Is v2 used on a newer generation of kona SoCs? On i.MX these variants
->>>>> are usually named after the first SoC that came with the new variant. Is
->>>>> this sensible here, too?
->>>> It doesn't make as much sense here as different revs of the IP block are
->>>> picked up based on various decisions.
->>>>
->>>> A new SoC could decide to use an old version.
->>> IMHO this is no reason to not use the name of the oldest SoC with this
->>> variant. I don't know how the SoC names are in the broadcom family, but
->>> if they were (in order of age, oldest first):
->>>
->>> 	ant
->>> 	bear
->>> 	crocodile
->>>
->>> and ant and crocodile use the same IP block we would have
->>>
->>> a) with v1, v2:
->>>
->>> 	ant:
->>> 		compatible = "brcm,kona-pwm-v1";
->>> 	bear:
->>> 		compatible = "brcm,kona-pwm-v2";
->>> 	crocodile:
->>> 		compatible = "brcm,kona-pwm-v1";
-> Version numbers can be fine, but generally only as fallbacks as even the
-> same IP version can be integrated into an SoC differently.
->
-> The other issue with versions is they should be meanful such as
-> corresponding to version tags in IP repos. Often, I'd guess anything
-> with a 'v1' is just what some s/w person made up. Of course, we only
-> can really know that for opensource IP or programmable logic IP.
->
-> If you do use versions, document what the versioning scheme is.
->
->>> ; and
->>>
->>> b) with the SoC naming:
->>>
->>> 	ant:
->>> 		compatible = "brcm,kona-ant-pwm";
->>> 	bear:
->>> 		compatible = "brcm,kona-bear-pwm";
->>> 	crocodile:
->>> 		compatible = "brcm,kona-crocodile-pwm", "brcm,kona-ant-pwm";
-> This is the recommended practice.
->
->>> (If you want, drop "brcm,kona-crocodile-pwm", but keeping it is more
->>> defensive.)
-> Generally, you should have "brcm,kona-crocodile-pwm" in case there's
-> some difference found later. Then you can support the bug or feature
-> without a DT change.
+On Wed, Dec 05, 2018 at 01:50:34PM -0600, Rob Herring wrote:
+> Convert string compares of DT node names to use of_node_name_eq helper
+> instead. This removes direct access to the node name pointer.
+> 
+> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+> Cc: Paul Mackerras <paulus@samba.org>
+> Cc: Michael Ellerman <mpe@ellerman.id.au>
+> Cc: Bjorn Helgaas <bhelgaas@google.com>
+> Cc: linuxppc-dev@lists.ozlabs.org
+> Cc: linux-pci@vger.kernel.org
+> Signed-off-by: Rob Herring <robh@kernel.org>
 
-No DT change would be necessary in any case.
+I applied the pci/of.c change to pci/misc for v5.1, thanks!
 
-A check against the SOC type in the driver without additional DT 
-compatibility strings could be done.
+I dropped the rpaphp_core.c part because there's another patch
+in-flight [1] that touches the same code, and it would be easier if
+Michael picked up this change and added it to his series.
 
->
->>> I like b) (with "...-crocodile-...") better than a). crocodile using
->>> "...-ant-..." is not more ugly than crocodile using "...-v1". This is
->>> also a tad more robust because if broadcom releases kona-dolphin and
->>> someone finds a minor difference between the IPs used on ant and
->>> crocodile it depends on the order of these events who gets v3, while
->>> with the SoC naming the result is clear.
->>>
->>> (OK, and given that "brcm,kona-pwm" is already fixed, both approaches
->>> need slight adaption, but I guess you still get what I meant.)
->> Thanks for your thoughts and explanation.
->>
->> It is unfortunate devicetree has no proper guidelines or documentation on
->>
->> binding naming.  In the interest of getting this upstream we can name it
-> Surely we've captured that somewhere...
+Bjorn
 
-Please point me at such documentation.
+[1] https://lore.kernel.org/lkml/20181214205120.16435.46952.stgit@powerkvm6.aus.stglabs.ibm.com/
 
-There is no consistency in kernel drivers from what I have seen.
-
->
->> "brcm, omega-pwm".  We can drop kona from the binding name as that
->> architecture
->>
->> is really no more - only IP derived from it is - hence the name kona-v2
->> previously.
->>
->>> Best regards
->>> Uwe
->>>
->>>
->> Cheers,
->> Scott
+> ---
+>  drivers/pci/hotplug/rpaphp_core.c | 2 +-
+>  drivers/pci/of.c                  | 2 +-
+>  2 files changed, 2 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
+> index bcd5d357ca23..7697d9c92b98 100644
+> --- a/drivers/pci/hotplug/rpaphp_core.c
+> +++ b/drivers/pci/hotplug/rpaphp_core.c
+> @@ -354,7 +354,7 @@ int rpaphp_add_slot(struct device_node *dn)
+>  	const int *indexes, *names, *types, *power_domains;
+>  	char *name, *type;
+>  
+> -	if (!dn->name || strcmp(dn->name, "pci"))
+> +	if (!of_node_name_eq(dn, "pci"))
+>  		return 0;
+>  
+>  	/* If this is not a hotplug slot, return without doing anything. */
+> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
+> index 4c4217d0c3f1..3d32da15c215 100644
+> --- a/drivers/pci/of.c
+> +++ b/drivers/pci/of.c
+> @@ -113,7 +113,7 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
+>  		 * a fake root for all functions of a multi-function
+>  		 * device we go down them as well.
+>  		 */
+> -		if (!strcmp(node->name, "multifunc-device")) {
+> +		if (of_node_name_eq(node, "multifunc-device")) {
+>  			for_each_child_of_node(node, node2) {
+>  				if (__of_pci_pci_compare(node2, devfn)) {
+>  					of_node_put(node);
+> -- 
+> 2.19.1
+> 
