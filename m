@@ -1,154 +1,50 @@
-From: Adam Ford <aford173@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx: Add support for Logic PD i.MX6QD EVM
-Date: Tue, 22 Jan 2019 10:07:58 -0600
-Message-ID: <CAHCN7x+uSyejYrJWBFyyy7eLwu05OT7Gf-9y+5MORaEVFcHOZg@mail.gmail.com>
-References: <20190122140705.4918-1-aford173@gmail.com> <CAOMZO5D1bNjBkRbVukDCgXYOO6wqAEiBgj17dmW22Zstcj3e7w@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
+ bindings
+Date: Tue, 22 Jan 2019 10:08:41 -0600
+Message-ID: <CAL_JsqLQ+7VZ--n17aDAFS4v1fMOKKPprs9fVVASy9yt=_mR2w@mail.gmail.com>
+References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+ <20190121112336.23489-7-miquel.raynal@bootlin.com>
+ <20190121154451.GA28183@bogus> <87r2d6ko6e.fsf@FE-laptop>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAOMZO5D1bNjBkRbVukDCgXYOO6wqAEiBgj17dmW22Zstcj3e7w@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Fabio Estevam <festevam@gmail.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <87r2d6ko6e.fsf@FE-laptop>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Gregory CLEMENT <gregory.clement@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Linux USB List <linux-usb@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 9:19 AM Fabio Estevam <festevam@gmail.com> wrote:
+On Mon, Jan 21, 2019 at 9:49 AM Gregory CLEMENT
+<gregory.clement@bootlin.com> wrote:
 >
-> Hi Adam,
+> Hi Rob,
 >
-> On Tue, Jan 22, 2019 at 12:07 PM Adam Ford <aford173@gmail.com> wrote:
+>  On lun., janv. 21 2019, Rob Herring <robh@kernel.org> wrote:
 >
-> > +       reg_audio: regulator-audio {
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&pinctrl_reg_audio>;
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "3v3_aud";
-> > +               regulator-min-microvolt = <3300000>;
-> > +               regulator-max-microvolt = <3300000>;
-> > +               gpio = <&gpio1 29 GPIO_ACTIVE_HIGH>;
-> > +               enable-active-high;
-> > +               regulator-always-on;
+> > On Mon, 21 Jan 2019 12:23:32 +0100, Miquel Raynal wrote:
+> >> Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
+> >>
+> >> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
+> >> ---
+> >>  .../bindings/phy/phy-mvebu-utmi.txt           | 38 +++++++++++++++++++
+> >>  1 file changed, 38 insertions(+)
+> >>  create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+> >>
 >
-> It seems that the 'regulator-always-on' property is not needed in this case.
->
-> > +&i2c1 {
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_i2c1>;
-> > +       clock-frequency = <400000>;
-> > +       status = "okay";
-> > +
-> > +       codec: wm8962@1a {
->
-> Node name should be generic and label name should be specific, so:
->
-> wm8962: codec@1a {
->
-> > +       chosen {
-> > +               stdout-path = &uart1;
-> > +       };
-> > +
-> > +       memory@10000000 {
->
-> Need to pass device_type = "memory";
->
-> > +               reg = <0x10000000 0x80000000>;
-> > +       };
-> > +
-> > +       reg_wl18xx_vmmc: regulator-wl18xx {
-> > +               compatible = "regulator-fixed";
-> > +               regulator-name = "vwl1837";
-> > +               regulator-min-microvolt = <3300000>;
-> > +               regulator-max-microvolt = <3300000>;
-> > +               gpio = <&gpio7 0 GPIO_ACTIVE_HIGH>;
-> > +               startup-delay-us = <70000>;
-> > +               enable-active-high;
-> > +       };
-> > +
->
-> No need for this blank line.
->
-> > +};
->
-> > +&i2c3 {
-> > +       clock-frequency = <100000>;
-> > +       pinctrl-names = "default";
-> > +       pinctrl-0 = <&pinctrl_i2c3>;
-> > +       status = "okay";
-> > +
-> > +       pmic: pfuze100@8 {
->
-> pfuze100: pmic@8
->
-> > +       tmp102_0: tmp102@4a {
->
-> generic node name, please.
+> I found "marvell,usb2-host-miscellaneous" too generic, I would prefer
+> that we call it "marvell,armada-3700-usb2-host-miscellaneous" as we do
+> for all the other IP.
 
-I have two temperature sensors.  Should I just call them tempsense0
-and tempsense1?
+Ah yes, you are right. Perhaps just '-misc' to shorten it a little bit.
 
->
-> > +               compatible = "ti,tmp102";
-> > +               reg = <0x4a>;
-> > +               pinctrl-names = "default";
-> > +               pinctrl-0 = <&pinctrl_tempsense>;
-> > +               interrupt-parent = <&gpio6>;
-> > +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-> > +               #thermal-sensor-cells = <1>;
-> > +       };
-> > +
-> > +       tmp102_1: tmp102@49 {
->
-> Ditto
->
-> > +               compatible = "ti,tmp102";
-> > +               reg = <0x49>;
-> > +               interrupt-parent = <&gpio6>;
-> > +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-> > +               #thermal-sensor-cells = <1>;
-> > +       };
-> > +
-> > +       at24c64_mfg: at24@51 {
-
-I have two eeproms.  One is a programmed by the factory with info like
-serial number, model name, etc.  The other is blank and available for
-users.
-
-Should I name them something like 'eeprom_mfg' and 'eeprom_usr'?
->
-> Ditto
->
-> > +               compatible = "atmel,24c64";
-> > +               pagesize = <32>;
-> > +               read-only;      /* Manufacturing EEPROM programmed at factory */
-> > +               reg = <0x51>;
-> > +       };
-> > +
-> > +       at24c64_usr: at24@52 {
->
-> Ditto
->
-> > +       panel-lvds0 {
-> > +               compatible = "ampire,am800480b3tmqw";
->
-> Could not found this compatible documented.
-
-I'll pull this out in V2.  I pushed a patch a while ago for this
-display, but it's not been accepted yet, and I need to follow up on
-this.
->
-> > +&i2c1 {
-> > +       ili_touch: ilitouch@26 {
->
-> Generic node name, please.
->
-> > +               compatible = "ili,ili2117a";
->
-> Could not found this compatible documented.
-
-I'll pull this out in V2.  I have a working driver, but I haven't
-pushed it yet.  I'll add them back in once the driver's been pushed
-and accepted.
-
-thanks for reviewing this so quickly.
-
-adam
+Rob
