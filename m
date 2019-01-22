@@ -1,32 +1,35 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] ARM: dts: imx: Remove 'simple-bus' from anatop compatible
-Date: Tue, 22 Jan 2019 10:04:21 -0200
-Message-ID: <CAOMZO5DbN0akhLobCuuw2GqFCbz+VdfDfh=6KHks_7bbChN+0A@mail.gmail.com>
-References: <20190121202905.31224-1-festevam@gmail.com>
- <20190122060624.GD19929@dragon>
+From: =?UTF-8?q?Randolph=20Maa=C3=9Fen?= <gaireg@gaireg.de>
+Subject: [PATCH 1/2] dt-bindings: iio: imu: add icm20602 bindings to mpu6050
+Date: Tue, 22 Jan 2019 13:02:13 +0100
+Message-ID: <20190122120221.27187-1-gaireg@gaireg.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190122060624.GD19929@dragon>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Shawn Guo <shawnguo@kernel.org>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: gaireg@gaireg.de
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Masney <masneyb@onstation.org>, Jonathan Marek <jonathan@marek.ca>, Martin Kelly <mkelly@xevo.com>, Douglas Fischer <fischerdouglasc@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Shawn,
+Adding the invensense ICM-20602 to the compatible list of the mpu6050
+driver
 
-On Tue, Jan 22, 2019 at 4:07 AM Shawn Guo <shawnguo@kernel.org> wrote:
+Signed-off-by: Randolph Maaßen <gaireg@gaireg.de>
+---
+ Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-> Will the child regulator devices still be populated by kernel?
-
-It seems there is an issue with this patch indeed. Please ignore it
-for now and I will try another fix.
+diff --git a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+index 6ab9a9d196b0..268bf7568e19 100644
+--- a/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
++++ b/Documentation/devicetree/bindings/iio/imu/inv_mpu6050.txt
+@@ -11,6 +11,7 @@ Required properties:
+ 		"invensense,mpu9250"
+ 		"invensense,mpu9255"
+ 		"invensense,icm20608"
++		"invensense,icm20602"
+  - reg : the I2C address of the sensor
+  - interrupts: interrupt mapping for IRQ. It should be configured with flags
+    IRQ_TYPE_LEVEL_HIGH, IRQ_TYPE_EDGE_RISING, IRQ_TYPE_LEVEL_LOW or
+-- 
+2.11.0
