@@ -1,48 +1,43 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 2/8] dt-bindings: arm: atmel: add new sam9x60 reset
- controller binding
-Date: Tue, 22 Jan 2019 09:00:45 +0000
-Message-ID: <24a53365-1a8c-51cd-dcd4-db4a69d5256a@microchip.com>
-References: <cover.1547629763.git.nicolas.ferre@microchip.com>
- <ed46005be5beff6efc47d40cea304185efa2bcc0.1547629763.git.nicolas.ferre@microchip.com>
- <20190122010733.GA21139@bogus>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v5 1/5] clk: samsung: exynos5433: fix typo in imem divider
+Date: Tue, 22 Jan 2019 10:02:28 +0100
+Message-ID: <20190122090232.29194-2-k.konieczny@partner.samsung.com>
+References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+        <CGME20190122090249eucas1p161cfc1364fb8ee76d2d04383935e8f3b@eucas1p1.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122010733.GA21139@bogus>
-Content-Language: en-US
-Content-ID: <4E409B25D09D6B49A95FB5B0B3251B4E@namprd11.prod.outlook.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org
-Cc: alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sre@kernel.org, linux-pm@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
+Content-Transfer-Encoding: 8bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+Sender: stable-owner@vger.kernel.org
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiAyMi8wMS8yMDE5IGF0IDAyOjA3LCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gV2VkLCBKYW4gMTYsIDIwMTkgYXQgMTA6NTc6MzhBTSArMDEwMCwgTmljb2xhcyBGZXJyZSB3
-cm90ZToNCj4+IFVwZGF0ZSB0aGUgUmVzZXQgQ29udHJvbGxlcidzIGJpbmRpbmcgdG8gYWRkIG5l
-dyBTb0MgY29tcGF0aWJpbGl0eSBzdHJpbmcuDQo+Pg0KPj4gU2lnbmVkLW9mZi1ieTogTmljb2xh
-cyBGZXJyZSA8bmljb2xhcy5mZXJyZUBtaWNyb2NoaXAuY29tPg0KPj4gLS0tDQo+PiAgIERvY3Vt
-ZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVncy50eHQgfCAxICsN
-Cj4+ICAgMSBmaWxlIGNoYW5nZWQsIDEgaW5zZXJ0aW9uKCspDQo+Pg0KPj4gZGlmZiAtLWdpdCBh
-L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVncy50eHQg
-Yi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2F0bWVsLXN5c3JlZ3MudHh0
-DQo+PiBpbmRleCAzNjk1MmNjMzk5OTMuLmJhZGNlNmVmM2FiMyAxMDA2NDQNCj4+IC0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVncy50eHQNCj4+
-ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vYXRtZWwtc3lzcmVn
-cy50eHQNCj4+IEBAIC0yMiw2ICsyMiw3IEBAIEl0cyBzdWJub2RlcyBjYW4gYmU6DQo+PiAgIFJT
-VEMgUmVzZXQgQ29udHJvbGxlciByZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPj4gICAtIGNvbXBhdGli
-bGU6IFNob3VsZCBiZSAiYXRtZWwsPGNoaXA+LXJzdGMiLg0KPj4gICAgIDxjaGlwPiBjYW4gYmUg
-ImF0OTFzYW05MjYwIiwgImF0OTFzYW05ZzQ1IiwgInNhbWE1ZDMiIG9yICJzYW14NyINCj4+ICsg
-IGl0IGFsc28gY2FuIGJlICJtaWNyb2NoaXAsc2FtOXg2MC1yc3RjIg0KPiANCj4gSG93IGlzIHRo
-aXMgcmVsYXRlZCB0byBhdDkxc2FtOTI2MC1yc3RjPw0KDQphdDkxc2FtOTI2MCBhbmQgc2FtOXg2
-MCBhcmUgY29tcGxldGVseSBkaWZmZXJlbnQgcHJvZHVjdHMgKHRoZXkgc2hhcmUgDQp0aGUgc2Ft
-ZSBjb3JlIHRob3VnaC4uLikuIEkga25vdyB0aGUgbmFtaW5nIGNvdWxkIGJlIG1pc2xlYWRpbmcg
-YnV0IGl0IA0KaXMgbGlrZSBpdCBpcy4uLg0KDQo+IFRoZSAneCcgaXMgYSB3aWxkY2FyZD8gV2Ug
-Z2VuZXJhbGx5IGF2b2lkIHdpbGRjYXJkcy4NCg0KSGVyZSwgdGhlICd4JyBpcyBkZWZpbml0aXZl
-bHkgbm90IGEgd2lsZGNhcmQgbm9yIGEga2luZCBvZiAiZmFtaWx5IiANCm5hbWUsIGl0J3MgaW5j
-bHVkZWQgaW4gdGhlICh1cGNvbWluZykgc2luZ2xlIHByb2R1Y3QncyBuYW1lLg0KDQpJIGhvcGUg
-aXQgY2xhcmlmaWVzLg0KDQpCZXN0IHJlZ2FyZHMsDQogICBOaWNvbGFzDQoNCj4+ICAgLSByZWc6
-IFNob3VsZCBjb250YWluIHJlZ2lzdGVycyBsb2NhdGlvbiBhbmQgbGVuZ3RoDQo+PiAgIC0gY2xv
-Y2tzOiBwaGFuZGxlIHRvIGlucHV0IGNsb2NrLg0KPj4gICANCj4+IC0tIA0KPj4gMi4xNy4xDQo+
-Pg0KPiANCg0KDQotLSANCk5pY29sYXMgRmVycmUNCg==
+Fix typo in imem clock divider 200 switched with 266.
+
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+---
+ drivers/clk/samsung/clk-exynos5433.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
+index 751e2c4fb65b..ea47f49abc7f 100644
+--- a/drivers/clk/samsung/clk-exynos5433.c
++++ b/drivers/clk/samsung/clk-exynos5433.c
+@@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
+ 	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
+ 			ENABLE_ACLK_TOP, 25,
+ 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+-	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
++	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
+ 			ENABLE_ACLK_TOP, 24,
+ 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
+-	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
++	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
+ 			ENABLE_ACLK_TOP, 23,
+ 			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
+ 	GATE(CLK_ACLK_PERIC_66, "aclk_peric_66", "div_aclk_peric_66_b",
+-- 
+2.20.0
