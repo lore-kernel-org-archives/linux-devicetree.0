@@ -1,67 +1,54 @@
-Return-Path: <SRS0=Tq4V=PY=linux.intel.com=thor.thayer@kernel.org>
-From: thor.thayer@linux.intel.com
-Subject: [PATCH 3/4] EDAC, altera: Add Stratix10 OCRAM ECC support
-Date: Wed, 16 Jan 2019 17:11:53 -0600
-Message-Id: <1547680314-31045-4-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1547680314-31045-1-git-send-email-thor.thayer@linux.intel.com>
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+Return-Path: <SRS0=pK1f=P6=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from fallback21.m.smailru.net ([94.100.176.131]:35314 "EHLO
+        fallback21.mail.ru" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727165AbfAVHyN (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Tue, 22 Jan 2019 02:54:13 -0500
+From: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Subject: =?UTF-8?B?UmU6IFtQQVRDSCAyLzJdIGR0LWJpbmRpbmdzOiBpbnB1dDogVXBkYXRlIGRv?=
+ =?UTF-8?B?Y3VtZW50YXRpb24gZm9yIGNscHM3MTF4LWtleXBhZA==?=
+MIME-Version: 1.0
+Date: Tue, 22 Jan 2019 10:54:04 +0300
+Reply-To: =?UTF-8?B?QWxleGFuZGVyIFNoaXlhbg==?= <shc_work@mail.ru>
+Message-ID: <1548143644.657260392@f543.i.mail.ru>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: base64
+In-Reply-To: <CAL_Jsq+1LRJTtVeH7p9g8XeefxdsdALJHr6PMqE0BJXXbQN=mA@mail.gmail.com>
+References: <20181222155520.8156-1-shc_work@mail.ru>
+ <1547641582.37733941@f484.i.mail.ru>
+ <CAL_Jsq+1LRJTtVeH7p9g8XeefxdsdALJHr6PMqE0BJXXbQN=mA@mail.gmail.com>
+Sender: devicetree-owner@vger.kernel.org
+To: =?UTF-8?B?Um9iIEhlcnJpbmc=?= <robh@kernel.org>
+Cc: linux-input@vger.kernel.org, =?UTF-8?B?RG1pdHJ5IFRvcm9raG92?= <dmitry.torokhov@gmail.com>, devicetree@vger.kernel.org, =?UTF-8?B?TWFyayBSdXRsYW5k?= <mark.rutland@arm.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
-
-Use the newer ECC error injection method for Arria10 and
-Stratix10 OCRAM.
-OCRAM can't call the common peripheral init routine since
-OCRAM is being used. An OCRAM specific init routine ensures
-the OCRAM ECC is setup without clearing memory.
-
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
- drivers/edac/altera_edac.c | 22 ++++++++++++++++++++--
- 1 file changed, 20 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index 56af98d18645..6a8993e6a278 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1216,8 +1216,26 @@ static const struct edac_device_prv_data ocramecc_data = {
- 	.inject_fops = &altr_edac_device_inject_fops,
- };
- 
-+static int __maybe_unused
-+altr_a10_check_ecc_deps_init(struct altr_edac_device_dev *device)
-+{
-+	void __iomem  *base = device->base;
-+	int ret;
-+
-+	ret = altr_check_ecc_deps(device);
-+	if (ret)
-+		return ret;
-+
-+	/* Enable IRQ on Single Bit Error */
-+	writel(ALTR_A10_ECC_SERRINTEN, (base + ALTR_A10_ECC_ERRINTENS_OFST));
-+	/* Ensure all writes complete */
-+	wmb();
-+
-+	return 0;
-+}
-+
- static const struct edac_device_prv_data a10_ocramecc_data = {
--	.setup = altr_check_ecc_deps,
-+	.setup = altr_a10_check_ecc_deps_init,
- 	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
- 	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
- 	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_OCRAM,
-@@ -1227,7 +1245,7 @@ static const struct edac_device_prv_data a10_ocramecc_data = {
- 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
- 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
- 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
--	.inject_fops = &altr_edac_a10_device_inject_fops,
-+	.inject_fops = &altr_edac_a10_device_inject2_fops,
- 	/*
- 	 * OCRAM panic on uncorrectable error because sleep/resume
- 	 * functions and FPGA contents are stored in OCRAM. Prefer
--- 
-2.7.4
+PtCf0L7QvdC10LTQtdC70YzQvdC40LosIDIxINGP0L3QstCw0YDRjyAyMDE5LCAxOToyNSArMDM6
+MDAg0L7RgiBSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPjoKLi4uCj4+ID5PbiBTYXQsIERl
+YyAyMiwgMjAxOCBhdCAwNjo1NToyMFBNICswMzAwLCBBbGV4YW5kZXIgU2hpeWFuIHdyb3RlOgo+
+PiA+PiBTaW5jZSB0aGUgZHJpdmVyIHN3aXRjaGVkIHRvIHVzaW5nIHRoZSBzeXNjb25fcmVnbWFw
+X2xvb2t1cF9ieV9waGFuZGxlKCkKPj4gPj4gZnVuY3Rpb24sIHdlIG5lZWQgdG8gc3BlY2lmeSB0
+aGUgcGhhbmRsZSBmb3IgdGhlIGRyaXZlci4gVGhpcyBwYXRjaAo+PiA+PiB1cGRhdGVzIHRoZSBk
+cml2ZXIgYmluZGluZyBkb2N1bWVudGF0aW9uIGZvciB0aGVzZSBjaGFuZ2VzLgo+PiAuLi4KPj4g
+Pj4gZGlmZiAtLWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnB1dC9j
+bHBzNzExeC1rZXlwYWQudHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lu
+cHV0L2NscHM3MTF4LWtleXBhZC50eHQKPj4gPj4gaW5kZXggM2VlZDg4MS4uYWViZWRjMyAxMDA2
+NDQKPj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L2Ns
+cHM3MTF4LWtleXBhZC50eHQKPj4gPj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2lucHV0L2NscHM3MTF4LWtleXBhZC50eHQKPj4gPj4gQEAgLTYsNiArNiw3IEBAIFJl
+cXVpcmVkIFByb3BlcnRpZXM6Cj4+ID4+ICAtIHBvbGwtaW50ZXJ2YWw6IFBvbGwgaW50ZXJ2YWwg
+dGltZSBpbiBtaWxsaXNlY29uZHMuCj4+ID4+ICAtIGxpbnV4LGtleW1hcDogIFRoZSBkZWZpbml0
+aW9uIGNhbiBiZSBmb3VuZCBhdAo+PiA+PiAgICAgICAgICAgICAgICAgICBiaW5kaW5ncy9pbnB1
+dC9tYXRyaXgta2V5bWFwLnR4dC4KPj4gPj4gKy0gc3lzY29uOiAgICAgICAgUGhhbmRsZSB0aGF0
+IHBvaW50cyB0byB0aGUgQ1BVIHN5c2NvbjEgbm9kZS4KPj4gPgo+PiA+V2hhdCBkb2VzIHRoaXMg
+cHJvdmlkZT8gSWYgdGhlIGtleXBhZCByZWdpc3RlcnMgYXJlIGEgc3ViLWJsb2NrIG9mIHRoZQo+
+PiA+c3lzY29uMSwgdGhlbiB5b3Ugc2hvdWxkIG1ha2UgdGhpcyBub2RlIGEgY2hpbGQgbm9kZS4K
+Pj4KPj4gU3lzY29uIGRvZXMgbm90IHBvcHVsYXRlIGNoaWxkIGRldmljZXMuCj4KPkkgZG9uJ3Qg
+aGF2ZSBhbnkgY29udGV4dCBvZiB3aGF0IHN5c2NvbjEgbG9va3MgbGlrZS4gTWF5YmUgaXQgbmVl
+ZHMKPnNpbXBsZS1tZmQgb3IgYSBkcml2ZXIgZm9yIHRoZSBzeXNjb24uCgpUaGUgU1lTQ09OMSBv
+biB0aGlzIHByb2Nlc3NvciBpcyBhbHJlYWR5IGJlaW5nIHByb2Nlc3NlZCBieSB0aGUKbWZkL3N5
+c2NvbiBkcml2ZXIsIHNvIGl0IGlzIHJlcHJlc2VudHMgaW4gRFRTLCBhcyBzaG93biBiZWxvdzoK
+Li4uCgkJc3lzY29uMTogc3lzY29uQDgwMDAwMTAwIHsKCQkJY29tcGF0aWJsZSA9ICJzeXNjb24i
+OwoJCQlyZWcgPSA8MHg4MDAwMDEwMCAweDgwPjsKCQl9OwouLi4KCWtleXBhZDoga2V5cGFkIHsK
+CQljb21wYXRpYmxlID0gImNpcnJ1cyxlcDcyMDkta2V5cGFkIjsKCQlzeXNjb24gPSA8JnN5c2Nv
+bjE+OwoJCXN0YXR1cyA9ICJkaXNhYmxlZCI7Cgl9OwoKTWF5YmUgSSBuZWVkIHRvIGV4cGFuZCB0
+aGUgZXhhbXBsZSBzZWN0aW9uIGluIHRoZSBEVC1iaW5kaW5ncyBzbyB0aGF0IHdlIGNhbiBzZWUg
+aXQ/CgotLS0K
