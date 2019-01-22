@@ -1,92 +1,64 @@
-Return-Path: <SRS0=pK1f=P6=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mga14.intel.com ([192.55.52.115]:60583 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726148AbfAVRpi (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Tue, 22 Jan 2019 12:45:38 -0500
-From: thor.thayer@linux.intel.com
-Subject: [PATCHv2 2/4] EDAC, altera: Less Intrusive Error Injection
-Date: Tue, 22 Jan 2019 11:48:05 -0600
-Message-Id: <1548179287-21760-3-git-send-email-thor.thayer@linux.intel.com>
-In-Reply-To: <1548179287-21760-1-git-send-email-thor.thayer@linux.intel.com>
-References: <1548179287-21760-1-git-send-email-thor.thayer@linux.intel.com>
-Sender: devicetree-owner@vger.kernel.org
-To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com
-Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
+Return-Path: <SRS0=FLQs=P6=gmail.com=robertshearman@kernel.org>
+Subject: Re: [PATCH 1/2] i2c: mux: pca954x: change the default to deselect
+ after each transfer
+References: <20190121164742.35718-1-robertshearman@gmail.com>
+ <9b484cde-c20c-2078-9a55-eab27b56ef36@axentia.se>
+From: Robert Shearman <robertshearman@gmail.com>
+Message-ID: <66870ca6-4789-57d9-ce30-2beb96efb86b@gmail.com>
+Date: Tue, 22 Jan 2019 10:17:43 +0000
+MIME-Version: 1.0
+In-Reply-To: <9b484cde-c20c-2078-9a55-eab27b56ef36@axentia.se>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
+To: Peter Rosin <peda@axentia.se>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Robert Shearman <robert.shearman@att.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Thor Thayer <thor.thayer@linux.intel.com>
+Hi Peter,
 
-Improve the Arria10 and Stratix10 error injection routines
-by reading the data and changing just 1 bit before writing
-back out. Previous routine would set the first bytes to 0
-then change to 1 but this method is less intrusive.
+On 22/01/2019 08:41, Peter Rosin wrote:
+> Hi Robert,
+> 
+> Thanks, for your patches.
+> 
+> On 2019-01-21 17:47, Robert Shearman wrote:
+>> From: Robert Shearman <robert.shearman@att.com>
+>>
+>> The behaviour, by default, to not deselect after each transfer is
+>> not safe/correct when there is a device with an address that conflicts
+>> with another device either on the parent bus, or on another pca954x
+>> mux on the same parent bus.
+> 
+> Right. The current way might not be the safest, but the way I see it,
+> this ship has sailed a long time ago. It might take quite a while
+> before someone reports a regression, but when that happens and we
+> need to revisit or even revert this, things will get ugly.
+> 
+> Also, doubling or even tripling the I2C traffic (most I2C xfers
+> are small) for unsuspecting users with more normal I2C setups
+> (w/o multiple muxes) just to accommodate the more complexes cases
+> is arguably not the correct balance.
 
-Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
----
-v2  No Changes
----
- drivers/edac/altera_edac.c | 30 +++++++++++++-----------------
- drivers/edac/altera_edac.h |  2 +-
- 2 files changed, 14 insertions(+), 18 deletions(-)
+Ok, thanks for considering the changes. Would a device-level sysfs 
+toggle or module parameter approach be more acceptable?
 
-diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
-index c89d82aa2776..56af98d18645 100644
---- a/drivers/edac/altera_edac.c
-+++ b/drivers/edac/altera_edac.c
-@@ -1756,28 +1756,24 @@ static ssize_t altr_edac_a10_device_trig2(struct file *file,
- 	if (trig_type == ALTR_UE_TRIGGER_CHAR) {
- 		writel(priv->ue_set_mask, set_addr);
- 	} else {
--		/* Setup write of 0 to first 4 bytes */
--		writel(0x0, drvdata->base + ECC_BLK_WDATA0_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
--		/* Setup write of 4 bytes */
-+		/* Setup read/write of 4 bytes */
- 		writel(ECC_WORD_WRITE, drvdata->base + ECC_BLK_DBYTECTRL_OFST);
- 		/* Setup Address to 0 */
--		writel(0x0, drvdata->base + ECC_BLK_ADDRESS_OFST);
--		/* Setup accctrl to write & data override */
--		writel(ECC_WRITE_DOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
--		/* Kick it. */
--		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
--		/* Setup accctrl to read & ecc override */
--		writel(ECC_READ_EOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
-+		writel(0, drvdata->base + ECC_BLK_ADDRESS_OFST);
-+		/* Setup accctrl to read & ecc & data override */
-+		writel(ECC_READ_EDOVR, drvdata->base + ECC_BLK_ACCCTRL_OFST);
- 		/* Kick it. */
- 		writel(ECC_XACT_KICK, drvdata->base + ECC_BLK_STARTACC_OFST);
- 		/* Setup write for single bit change */
--		writel(0x1, drvdata->base + ECC_BLK_WDATA0_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA1_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA2_OFST);
--		writel(0x0, drvdata->base + ECC_BLK_WDATA3_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA0_OFST) ^ 0x1,
-+		       drvdata->base + ECC_BLK_WDATA0_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA1_OFST),
-+		       drvdata->base + ECC_BLK_WDATA1_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA2_OFST),
-+		       drvdata->base + ECC_BLK_WDATA2_OFST);
-+		writel(readl(drvdata->base + ECC_BLK_RDATA3_OFST),
-+		       drvdata->base + ECC_BLK_WDATA3_OFST);
-+
- 		/* Copy Read ECC to Write ECC */
- 		writel(readl(drvdata->base + ECC_BLK_RECC0_OFST),
- 		       drvdata->base + ECC_BLK_WECC0_OFST);
-diff --git a/drivers/edac/altera_edac.h b/drivers/edac/altera_edac.h
-index f8664bac9fa8..a1acca99c50b 100644
---- a/drivers/edac/altera_edac.h
-+++ b/drivers/edac/altera_edac.h
-@@ -319,7 +319,7 @@ struct altr_sdram_mc_data {
- #define ECC_BLK_STARTACC_OFST             0x7C
- 
- #define ECC_XACT_KICK                     0x10000
--#define ECC_WORD_WRITE                    0xF
-+#define ECC_WORD_WRITE                    0xFF
- #define ECC_WRITE_DOVR                    0x101
- #define ECC_WRITE_EDOVR                   0x103
- #define ECC_READ_EOVR                     0x2
--- 
-2.7.4
+The use case where we are hitting this issue is on an x86_64 ACPI 
+platform where we desire to use a general purpose kernel, so the 
+existing devicetree and platform data toggle approaches are not ideal 
+for us.
+
+> 
+>> Therefore, default to the least surprising mode, where the mux
+>> channels are deselected after each transaction, which is safe in the
+>> face of one or more devices hanging off the mux with addresses that
+>> conflict with other devices on different muxes, or on the parent
+> 
+> Side note, and not that it matters since it's a NACK anyway, but
+> having an address conflict with the parent bus is not allowed and is
+> just bad hardware design that simply cannot work reliably, if at all.
+
+Yes, good point.
+
+Thanks,
+Rob
