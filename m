@@ -1,30 +1,64 @@
 From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v1 0/3] add AES support for Exynos5433
-Date: Tue, 22 Jan 2019 16:25:50 +0100
-Message-ID: <20190122152553.1537-1-k.konieczny@partner.samsung.com>
-References: <CGME20190122152607eucas1p2c58a7814bb9ab72cc46d5a84eb1962a4@eucas1p2.samsung.com>
+Subject: [PATCH v1 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
+Date: Tue, 22 Jan 2019 16:25:52 +0100
+Message-ID: <20190122152553.1537-3-k.konieczny@partner.samsung.com>
+References: <20190122152553.1537-1-k.konieczny@partner.samsung.com>
+        <CGME20190122152608eucas1p27cff7b53eb3bb23447ef7ba2b3f69671@eucas1p2.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190122152553.1537-1-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: k.konieczny@partner.samsung.com
-Cc: "David S. Miller" <davem@davemloft.net>, devicetree@vger.kernel.org, Herbert Xu <herbert@gondor.apana.org.au>, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, linux-crypto@vger.kernel.org, linux-kernel@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Vladimir Zapolskiy <vz@mleia.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add slimSSS node to DT and crypto AES support for Exynos5433. Tested on
-Exynos5433 board with crypto run-time self tests and with tcrypt with
-command insmod tcrypt.ko mode=500 sec=1
+Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
+SubSystem) IP.
 
-Kamil Konieczny (3):
-  arm64: dts: exynos: add SlimSSS for Exynos5433
-  dt-bindings: crypto: document Exynos5433 SlimSSS
-  crypto: s5p: add AES support for Exynos5433
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+---
+ .../devicetree/bindings/crypto/samsung-sss.txt      | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
 
- .../bindings/crypto/samsung-sss.txt           | 13 +++--
- arch/arm64/boot/dts/exynos/exynos5433.dtsi    |  9 ++++
- drivers/crypto/s5p-sss.c                      | 50 +++++++++++++++++--
- 3 files changed, 65 insertions(+), 7 deletions(-)
-
+diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+index 7a5ca56683cc..75718f86fe50 100644
+--- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
++++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+@@ -1,4 +1,4 @@
+-Samsung SoC SSS (Security SubSystem) module
++Samsung SoC SSS (Security SubSystem) and SlimSSS module
+ 
+ The SSS module in S5PV210 SoC supports the following:
+ -- Feeder (FeedCtrl)
+@@ -15,6 +15,11 @@ supports the following also:
+ -- True Random Number Generator (TRNG)
+ -- Secure Key Manager
+ 
++The SlimSSS module in Exynos5 (Exynos5433) supports:
++-- Feeder (FeedCtrl)
++-- Advanced Encryption Standard (AES)
++-- SHA-1/SHA-256/HMAC (SHA-1/SHA-256)
++
+ Required properties:
+ 
+ - compatible : Should contain entries for this and backward compatible
+@@ -22,11 +27,13 @@ Required properties:
+   - "samsung,s5pv210-secss" for S5PV210 SoC.
+   - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
+ 		Exynos5260 and Exynos5420 SoCs.
++  - "samsung,exynos5433-slim-sss" for Exynos542x and Exynos5433 SoCs.
+ - reg : Offset and length of the register set for the module
+ - interrupts : interrupt specifiers of SSS module interrupts (one feed
+ 		control interrupt).
+ 
+ - clocks : list of clock phandle and specifier pairs for all clocks  listed in
+ 		clock-names property.
+-- clock-names : list of device clock input names; should contain one entry
+-		"secss".
++- clock-names : list of device clock input names; should contain "pclk" and
++		"aclk" for slim-sss in Exynos5433, and one entry "secss" for
++		other compatibles.
 -- 
 2.20.0
