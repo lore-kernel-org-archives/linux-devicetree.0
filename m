@@ -1,143 +1,108 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [v3] drm/msm/dpu: Clean up dpu hw interrupts
-Date: Tue, 22 Jan 2019 15:11:58 -0500
-Message-ID: <20190122201157.GL114153@art_vandelay>
-References: <1545132948-20833-1-git-send-email-jshekhar@codeaurora.org>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH v2 lora-next 3/4] dt-bindings: lora: sx125x: add clock bindings
+Date: Tue, 22 Jan 2019 14:12:27 -0600
+Message-ID: <CAL_JsqJfm6Pbg0CEzfNtd-aXMi8nAwt_8nZA0_Xs=4p1=cB1Kw@mail.gmail.com>
+References: <20190122180729.1834-1-ben.whitten@lairdtech.com> <20190122180729.1834-4-ben.whitten@lairdtech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-Content-Disposition: inline
-In-Reply-To: <1545132948-20833-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190122180729.1834-4-ben.whitten@lairdtech.com>
+Sender: netdev-owner@vger.kernel.org
+To: Ben Whitten <ben.whitten@gmail.com>
+Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-lpwan@lists.infradead.org, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBEZWMgMTgsIDIwMTggYXQgMDU6MDU6NDhQTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
-d3JvdGU6Cj4gUmVtb3ZlIHVudXNlZCBmdW5jdGlvbnMgYW5kIG1hY3JvcyBmcm9tIGZpbGVzIGhh
-bmRsaW5nCj4gZHB1IGhhcmR3YXJlIGludGVycnVwdHMuCj4gCj4gY2hhbmdlcyBpbiB2MjoKPiAg
-IFJlbW92ZWQgY2xlYXJfaW50ZXJydXB0X3N0YXR1cyAoSm9yZGFuIENyb3VzZSkKPiBjaGFuZ2Vz
-IGluIHYzOgo+ICAgQ2hhbmdlZCBjb21taXQgdGV4dAo+IAo+IFNpZ25lZC1vZmYtYnk6IEpheWFu
-dCBTaGVraGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9yZz4KCkFwcGxpZWQgdG8gZHB1LXN0YWdp
-bmcsIHRoYW5rcyEKClNlYW4KPiAtLS0KPiAgZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
-ZHB1X2h3X2ludGVycnVwdHMuYyB8IDQ0IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tCj4gIGRyaXZl
-cnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmggfCA0NCAtLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLQo+ICAyIGZpbGVzIGNoYW5nZWQsIDg4IGRlbGV0aW9ucygtKQo+IAo+
-IGRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJy
-dXB0cy5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMu
-Ywo+IGluZGV4IGMwYjdmMDAuLjhhMjhhMDMgMTAwNjQ0Cj4gLS0tIGEvZHJpdmVycy9ncHUvZHJt
-L21zbS9kaXNwL2RwdTEvZHB1X2h3X2ludGVycnVwdHMuYwo+ICsrKyBiL2RyaXZlcnMvZ3B1L2Ry
-bS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmMKPiBAQCAtMTcwLDEwICsxNzAsNiBA
-QAo+ICAvKioKPiAgICogQUQ0IGludGVycnVwdCBzdGF0dXMgYml0IGRlZmluaXRpb25zCj4gICAq
-Lwo+IC0jZGVmaW5lIERQVV9JTlRSX0JSSUdIVFBSX1VQREFURUQgQklUKDQpCj4gLSNkZWZpbmUg
-RFBVX0lOVFJfREFSS0VOSF9VUERBVEVEIEJJVCgzKQo+IC0jZGVmaW5lIERQVV9JTlRSX1NUUkVO
-X09VVFJPSV9VUERBVEVEIEJJVCgyKQo+IC0jZGVmaW5lIERQVV9JTlRSX1NUUkVOX0lOUk9JX1VQ
-REFURUQgQklUKDEpCj4gICNkZWZpbmUgRFBVX0lOVFJfQkFDS0xJR0hUX1VQREFURUQgQklUKDAp
-Cj4gIC8qKgo+ICAgKiBzdHJ1Y3QgZHB1X2ludHJfcmVnIC0gYXJyYXkgb2YgRFBVIHJlZ2lzdGVy
-IHNldHMKPiBAQCAtNzgyLDE4ICs3NzgsNiBAQCBzdGF0aWMgaW50IGRwdV9od19pbnRyX2lycWlk
-eF9sb29rdXAoZW51bSBkcHVfaW50cl90eXBlIGludHJfdHlwZSwKPiAgCXJldHVybiAtRUlOVkFM
-Owo+ICB9Cj4gIAo+IC1zdGF0aWMgdm9pZCBkcHVfaHdfaW50cl9zZXRfbWFzayhzdHJ1Y3QgZHB1
-X2h3X2ludHIgKmludHIsIHVpbnQzMl90IHJlZ19vZmYsCj4gLQkJdWludDMyX3QgbWFzaykKPiAt
-ewo+IC0JaWYgKCFpbnRyKQo+IC0JCXJldHVybjsKPiAtCj4gLQlEUFVfUkVHX1dSSVRFKCZpbnRy
-LT5odywgcmVnX29mZiwgbWFzayk7Cj4gLQo+IC0JLyogZW5zdXJlIHJlZ2lzdGVyIHdyaXRlcyBn
-byB0aHJvdWdoICovCj4gLQl3bWIoKTsKPiAtfQo+IC0KPiAgc3RhdGljIHZvaWQgZHB1X2h3X2lu
-dHJfZGlzcGF0Y2hfaXJxKHN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwKPiAgCQl2b2lkICgqY2Jm
-dW5jKSh2b2lkICosIGludCksCj4gIAkJdm9pZCAqYXJnKQo+IEBAIC0xMDA0LDE4ICs5ODgsNiBA
-QCBzdGF0aWMgaW50IGRwdV9od19pbnRyX2Rpc2FibGVfaXJxcyhzdHJ1Y3QgZHB1X2h3X2ludHIg
-KmludHIpCj4gIAlyZXR1cm4gMDsKPiAgfQo+ICAKPiAtc3RhdGljIGludCBkcHVfaHdfaW50cl9n
-ZXRfdmFsaWRfaW50ZXJydXB0cyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCj4gLQkJdWludDMy
-X3QgKm1hc2spCj4gLXsKPiAtCWlmICghaW50ciB8fCAhbWFzaykKPiAtCQlyZXR1cm4gLUVJTlZB
-TDsKPiAtCj4gLQkqbWFzayA9IElSUV9TT1VSQ0VfTURQIHwgSVJRX1NPVVJDRV9EU0kwIHwgSVJR
-X1NPVVJDRV9EU0kxCj4gLQkJfCBJUlFfU09VUkNFX0hETUkgfCBJUlFfU09VUkNFX0VEUDsKPiAt
-Cj4gLQlyZXR1cm4gMDsKPiAtfQo+IC0KPiAgc3RhdGljIHZvaWQgZHB1X2h3X2ludHJfZ2V0X2lu
-dGVycnVwdF9zdGF0dXNlcyhzdHJ1Y3QgZHB1X2h3X2ludHIgKmludHIpCj4gIHsKPiAgCWludCBp
-Owo+IEBAIC0xMDY1LDE5ICsxMDM3LDYgQEAgc3RhdGljIHZvaWQgZHB1X2h3X2ludHJfY2xlYXJf
-aW50cl9zdGF0dXNfbm9sb2NrKHN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwKPiAgCXdtYigpOwo+
-ICB9Cj4gIAo+IC1zdGF0aWMgdm9pZCBkcHVfaHdfaW50cl9jbGVhcl9pbnRlcnJ1cHRfc3RhdHVz
-KHN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwKPiAtCQlpbnQgaXJxX2lkeCkKPiAtewo+IC0JdW5z
-aWduZWQgbG9uZyBpcnFfZmxhZ3M7Cj4gLQo+IC0JaWYgKCFpbnRyKQo+IC0JCXJldHVybjsKPiAt
-Cj4gLQlzcGluX2xvY2tfaXJxc2F2ZSgmaW50ci0+aXJxX2xvY2ssIGlycV9mbGFncyk7Cj4gLQlk
-cHVfaHdfaW50cl9jbGVhcl9pbnRyX3N0YXR1c19ub2xvY2soaW50ciwgaXJxX2lkeCk7Cj4gLQlz
-cGluX3VubG9ja19pcnFyZXN0b3JlKCZpbnRyLT5pcnFfbG9jaywgaXJxX2ZsYWdzKTsKPiAtfQo+
-IC0KPiAgc3RhdGljIHUzMiBkcHVfaHdfaW50cl9nZXRfaW50ZXJydXB0X3N0YXR1cyhzdHJ1Y3Qg
-ZHB1X2h3X2ludHIgKmludHIsCj4gIAkJaW50IGlycV9pZHgsIGJvb2wgY2xlYXIpCj4gIHsKPiBA
-QCAtMTExMywxNiArMTA3MiwxMyBAQCBzdGF0aWMgdTMyIGRwdV9od19pbnRyX2dldF9pbnRlcnJ1
-cHRfc3RhdHVzKHN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwKPiAgCj4gIHN0YXRpYyB2b2lkIF9f
-c2V0dXBfaW50cl9vcHMoc3RydWN0IGRwdV9od19pbnRyX29wcyAqb3BzKQo+ICB7Cj4gLQlvcHMt
-PnNldF9tYXNrID0gZHB1X2h3X2ludHJfc2V0X21hc2s7Cj4gIAlvcHMtPmlycV9pZHhfbG9va3Vw
-ID0gZHB1X2h3X2ludHJfaXJxaWR4X2xvb2t1cDsKPiAgCW9wcy0+ZW5hYmxlX2lycSA9IGRwdV9o
-d19pbnRyX2VuYWJsZV9pcnE7Cj4gIAlvcHMtPmRpc2FibGVfaXJxID0gZHB1X2h3X2ludHJfZGlz
-YWJsZV9pcnE7Cj4gIAlvcHMtPmRpc3BhdGNoX2lycXMgPSBkcHVfaHdfaW50cl9kaXNwYXRjaF9p
-cnE7Cj4gIAlvcHMtPmNsZWFyX2FsbF9pcnFzID0gZHB1X2h3X2ludHJfY2xlYXJfaXJxczsKPiAg
-CW9wcy0+ZGlzYWJsZV9hbGxfaXJxcyA9IGRwdV9od19pbnRyX2Rpc2FibGVfaXJxczsKPiAtCW9w
-cy0+Z2V0X3ZhbGlkX2ludGVycnVwdHMgPSBkcHVfaHdfaW50cl9nZXRfdmFsaWRfaW50ZXJydXB0
-czsKPiAgCW9wcy0+Z2V0X2ludGVycnVwdF9zdGF0dXNlcyA9IGRwdV9od19pbnRyX2dldF9pbnRl
-cnJ1cHRfc3RhdHVzZXM7Cj4gLQlvcHMtPmNsZWFyX2ludGVycnVwdF9zdGF0dXMgPSBkcHVfaHdf
-aW50cl9jbGVhcl9pbnRlcnJ1cHRfc3RhdHVzOwo+ICAJb3BzLT5jbGVhcl9pbnRyX3N0YXR1c19u
-b2xvY2sgPSBkcHVfaHdfaW50cl9jbGVhcl9pbnRyX3N0YXR1c19ub2xvY2s7Cj4gIAlvcHMtPmdl
-dF9pbnRlcnJ1cHRfc3RhdHVzID0gZHB1X2h3X2ludHJfZ2V0X2ludGVycnVwdF9zdGF0dXM7Cj4g
-IH0KPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X2h3X2lu
-dGVycnVwdHMuaCBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1
-cHRzLmgKPiBpbmRleCA2MWU0Y2JhLi40ZDdhMWM3IDEwMDY0NAo+IC0tLSBhL2RyaXZlcnMvZ3B1
-L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19pbnRlcnJ1cHRzLmgKPiArKysgYi9kcml2ZXJzL2dw
-dS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfaW50ZXJydXB0cy5oCj4gQEAgLTIwLDEzICsyMCw2
-IEBACj4gICNpbmNsdWRlICJkcHVfaHdfdXRpbC5oIgo+ICAjaW5jbHVkZSAiZHB1X2h3X21kc3Mu
-aCIKPiAgCj4gLSNkZWZpbmUgSVJRX1NPVVJDRV9NRFAJCUJJVCgwKQo+IC0jZGVmaW5lIElSUV9T
-T1VSQ0VfRFNJMAkJQklUKDQpCj4gLSNkZWZpbmUgSVJRX1NPVVJDRV9EU0kxCQlCSVQoNSkKPiAt
-I2RlZmluZSBJUlFfU09VUkNFX0hETUkJCUJJVCg4KQo+IC0jZGVmaW5lIElSUV9TT1VSQ0VfRURQ
-CQlCSVQoMTIpCj4gLSNkZWZpbmUgSVJRX1NPVVJDRV9NSEwJCUJJVCgxNikKPiAtCj4gIC8qKgo+
-ICAgKiBkcHVfaW50cl90eXBlIC0gSFcgSW50ZXJydXB0IFR5cGUKPiAgICogQERQVV9JUlFfVFlQ
-RV9XQl9ST1RfQ09NUDoJCVdCIHJvdGF0b3IgZG9uZQo+IEBAIC05NiwxOCArODksNiBAQCBlbnVt
-IGRwdV9pbnRyX3R5cGUgewo+ICAgKi8KPiAgc3RydWN0IGRwdV9od19pbnRyX29wcyB7Cj4gIAkv
-KioKPiAtCSAqIHNldF9tYXNrIC0gUHJvZ3JhbXMgdGhlIGdpdmVuIGludGVycnVwdCByZWdpc3Rl
-ciB3aXRoIHRoZQo+IC0JICogICAgICAgICAgICBnaXZlbiBpbnRlcnJ1cHQgbWFzay4gUmVnaXN0
-ZXIgdmFsdWUgd2lsbCBnZXQgb3ZlcndyaXR0ZW4uCj4gLQkgKiBAaW50cjoJSFcgaW50ZXJydXB0
-IGhhbmRsZQo+IC0JICogQHJlZ19vZmY6CU1EU1MgSFcgcmVnaXN0ZXIgb2Zmc2V0Cj4gLQkgKiBA
-aXJxbWFzazoJSVJRIG1hc2sgdmFsdWUKPiAtCSAqLwo+IC0Jdm9pZCAoKnNldF9tYXNrKSgKPiAt
-CQkJc3RydWN0IGRwdV9od19pbnRyICppbnRyLAo+IC0JCQl1aW50MzJfdCByZWcsCj4gLQkJCXVp
-bnQzMl90IGlycW1hc2spOwo+IC0KPiAtCS8qKgo+ICAJICogaXJxX2lkeF9sb29rdXAgLSBMb29r
-dXAgSVJRIGluZGV4IG9uIHRoZSBIVyBpbnRlcnJ1cHQgdHlwZQo+ICAJICogICAgICAgICAgICAg
-ICAgIFVzZWQgZm9yIGFsbCBpcnEgcmVsYXRlZCBvcHMKPiAgCSAqIEBpbnRyX3R5cGU6CQlJbnRl
-cnJ1cHQgdHlwZSBkZWZpbmVkIGluIGRwdV9pbnRyX3R5cGUKPiBAQCAtMTc3LDE2ICsxNTgsNiBA
-QCBzdHJ1Y3QgZHB1X2h3X2ludHJfb3BzIHsKPiAgCQkJc3RydWN0IGRwdV9od19pbnRyICppbnRy
-KTsKPiAgCj4gIAkvKioKPiAtCSAqIGNsZWFyX2ludGVycnVwdF9zdGF0dXMgLSBDbGVhcnMgSFcg
-aW50ZXJydXB0IHN0YXR1cyBiYXNlZCBvbiBnaXZlbgo+IC0JICogICAgICAgICAgICAgICAgICAg
-ICAgICAgIGxvb2t1cCBJUlEgaW5kZXguCj4gLQkgKiBAaW50cjoJSFcgaW50ZXJydXB0IGhhbmRs
-ZQo+IC0JICogQGlycV9pZHg6CUxvb2t1cCBpcnEgaW5kZXggcmV0dXJuIGZyb20gaXJxX2lkeF9s
-b29rdXAKPiAtCSAqLwo+IC0Jdm9pZCAoKmNsZWFyX2ludGVycnVwdF9zdGF0dXMpKAo+IC0JCQlz
-dHJ1Y3QgZHB1X2h3X2ludHIgKmludHIsCj4gLQkJCWludCBpcnFfaWR4KTsKPiAtCj4gLQkvKioK
-PiAgCSAqIGNsZWFyX2ludHJfc3RhdHVzX25vbG9jaygpIC0gY2xlYXJzIHRoZSBIVyBpbnRlcnJ1
-cHRzIHdpdGhvdXQgbG9jawo+ICAJICogQGludHI6CUhXIGludGVycnVwdCBoYW5kbGUKPiAgCSAq
-IEBpcnFfaWR4OglMb29rdXAgaXJxIGluZGV4IHJldHVybiBmcm9tIGlycV9pZHhfbG9va3VwCj4g
-QEAgLTIwNiwyMSArMTc3LDYgQEAgc3RydWN0IGRwdV9od19pbnRyX29wcyB7Cj4gIAkJCXN0cnVj
-dCBkcHVfaHdfaW50ciAqaW50ciwKPiAgCQkJaW50IGlycV9pZHgsCj4gIAkJCWJvb2wgY2xlYXIp
-Owo+IC0KPiAtCS8qKgo+IC0JICogZ2V0X3ZhbGlkX2ludGVycnVwdHMgLSBHZXRzIGEgbWFzayBv
-ZiBhbGwgdmFsaWQgaW50ZXJydXB0IHNvdXJjZXMKPiAtCSAqICAgICAgICAgICAgICAgICAgICAg
-ICAgd2l0aGluIERQVS4gVGhlc2UgYXJlIGFjdHVhbGx5IHN0YXR1cyBiaXRzCj4gLQkgKiAgICAg
-ICAgICAgICAgICAgICAgICAgIHdpdGhpbiBpbnRlcnJ1cHQgcmVnaXN0ZXJzIHRoYXQgc3BlY2lm
-eSB0aGUKPiAtCSAqICAgICAgICAgICAgICAgICAgICAgICAgc291cmNlIG9mIHRoZSBpbnRlcnJ1
-cHQgaW4gSVJRcy4gRm9yIGV4YW1wbGUsCj4gLQkgKiAgICAgICAgICAgICAgICAgICAgICAgIHZh
-bGlkIGludGVycnVwdCBzb3VyY2VzIGNhbiBiZSBNRFAsIERTSSwKPiAtCSAqICAgICAgICAgICAg
-ICAgICAgICAgICAgSERNSSBldGMuCj4gLQkgKiBAaW50cjoJSFcgaW50ZXJydXB0IGhhbmRsZQo+
-IC0JICogQG1hc2s6CVJldHVybmluZyB0aGUgaW50ZXJydXB0IHNvdXJjZSBNQVNLCj4gLQkgKiBA
-cmV0dXJuOgkwIGZvciBzdWNjZXNzLCBvdGhlcndpc2UgZmFpbHVyZQo+IC0JICovCj4gLQlpbnQg
-KCpnZXRfdmFsaWRfaW50ZXJydXB0cykoCj4gLQkJCXN0cnVjdCBkcHVfaHdfaW50ciAqaW50ciwK
-PiAtCQkJdWludDMyX3QgKm1hc2spOwo+ICB9Owo+ICAKPiAgLyoqCj4gLS0gCj4gVGhlIFF1YWxj
-b21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9y
-YSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24gQ29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCj4g
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KPiBGcmVlZHJl
-bm8gbWFpbGluZyBsaXN0Cj4gRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBz
-Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCgotLSAK
-U2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwgR29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxp
-bmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJl
-ZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+On Tue, Jan 22, 2019 at 12:07 PM Ben Whitten <ben.whitten@gmail.com> wrote:
+>
+> From: Ben Whitten <ben.whitten@gmail.com>
+>
+> The SX125x consumes a clock (FXOSC) ranging from 32 to 36 MHz.
+> If the radio is coupled with an SX130x the radio is therefor operating in
+> master mode and it may also provide a gated version of this clock for the
+> concentrator. In this case the concentrator is expecting a 32 MHz input
+> clock.
+>
+> In the example we connect to the "txco" clock source, represented by a
+> fixed clock. The radio also provides a clock output named "clk32m" for
+> consumption by the SX130x concentrator.
+
+You can squash the clock patches into the 1st 2 patches if you want.
+
+> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
+> ---
+> v1 -> v2:
+> * Fixed incorrect usage of clock cells
+> * Fixed wording in commit and descriptions
+> * Dropped enforced clock names
+> ---
+>  .../bindings/net/lora/semtech,sx125x.yaml     | 28 +++++++++++++++++++
+>  1 file changed, 28 insertions(+)
+>
+> diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+> index 4a51a251d97f..8287472fd545 100644
+> --- a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+> +++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+> @@ -27,12 +27,36 @@ properties:
+>      description: The chip select on the SPI bus or radio number in concentrator
+>        , with radio A = 0 and radio B = 1.
+>
+> +  clocks:
+> +    maxItems: 1
+> +    description: Input clock (FXOSC) provider with output ranging from 32 MHz
+> +      to 36 MHz.
+> +
+> +  clock-names:
+> +    maxItems: 1
+
+This needs to say what the names are:
+
+items:
+  - const: txco
+
+With that, you can drop maxItems as that is implied if we list the items.
+
+Just to be clear, this name should be what the clock input is called,
+not what drives the input. Seems like that would be 'fxosc'?
+
+> +    description: Input clock (FXOSC) name from provider.
+> +
+> +  clock-output-names:
+> +    maxItems: 1
+
+This too should list the actual names.
+
+> +    description: Output clock (CLK_OUT) name, clock is gated version of the
+> +      input (FXOSC). Used in master mode operation.
+> +
+> +  '#clock-cells':
+> +    const: 0
+> +
+>  required:
+>    - compatible
+>    - reg
+>
+>  examples:
+>    - |
+> +    tcxo: dummy32m {
+> +      compatible = "fixed-clock";
+> +      clock-frequency = <32000000>;
+> +      clock-output-names = "tcxo";
+> +      #clock-cells = <0>;
+> +    };
+> +
+>      spi {
+>        #address-cells = <1>;
+>        #size-cells = <0>;
+> @@ -40,5 +64,9 @@ examples:
+>        radio0: lora@0 {
+>          compatible = "semtech,sx1257";
+>          reg = <0>;
+> +        clocks = <&tcxo>;
+> +        clock-names = "tcxo";
+> +        clock-output-names = "clk32m";
+> +        #clock-cells = <0>;
+>        };
+>      };
+> --
+> 2.17.1
+>
