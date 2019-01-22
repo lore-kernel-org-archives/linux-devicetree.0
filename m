@@ -1,46 +1,197 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
-Date: Tue, 22 Jan 2019 20:29:24 +0000
-Message-ID: <20190122202924.GL7579@sirena.org.uk>
-References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
- <1548138816-1149-5-git-send-email-alokc@codeaurora.org>
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: Re: [PATCH v2 lora-next 1/4] dt-bindings: lora: sx130x: add basic
+ documentation
+Date: Tue, 22 Jan 2019 20:36:16 +0000
+Message-ID: <60e26fa6-079d-5380-f139-e177c4012e33@gmail.com>
+References: <20190122180729.1834-1-ben.whitten@lairdtech.com>
+ <20190122180729.1834-2-ben.whitten@lairdtech.com>
+ <CAL_JsqJK_UN1pqce-VxJ=gog9OMoz9nUZ6XeQD9jJf+3aLBaUA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="wIc/V6YLA2QdyfT4"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548138816-1149-5-git-send-email-alokc@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alok Chauhan <alokc@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAL_JsqJK_UN1pqce-VxJ=gog9OMoz9nUZ6XeQD9jJf+3aLBaUA@mail.gmail.com>
+Content-Language: en-US
+Sender: netdev-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-lpwan@lists.infradead.org, "David S. Miller" <davem@davemloft.net>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
---wIc/V6YLA2QdyfT4
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+On 22/01/2019 20:04, Rob Herring wrote:
+> On Tue, Jan 22, 2019 at 12:07 PM Ben Whitten <ben.whitten@gmail.com> wrote:
+>>
+>> From: Ben Whitten <ben.whitten@gmail.com>
+>>
+>> Add basic documentation in YAML format for the SX130x series concentrators
+>> from Semtech.
+>> Required is; the location on the SPI bus and the compatible string.
+>>
+>> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
+>> ---
+>> v1 -> v2:
+>> * Dropped reset-gpios, radio-spi from required.
+>> * Dropped spi-max-frequency from binding.
+>> * Changed compatible to allow fallback from SX1308 to SX1301.
+>> * Wording changes in commit and descriptions.
+>> * Dual licence
+>> * Incorperate Robs comments on child node and spi wrapper
+>> ---
+>>   .../bindings/net/lora/semtech,sx130x.yaml     | 96 +++++++++++++++++++
+>>   1 file changed, 96 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+>> new file mode 100644
+>> index 000000000000..41919fb67ec4
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+>> @@ -0,0 +1,96 @@
+>> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
+>> +%YAML 1.2
+>> +---
+>> +$id: http://devicetree.org/schemas/net/lora/semtech,sx130x.yaml#
+>> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+>> +
+>> +title: Semtech LoRa concentrator
+>> +
+>> +maintainers:
+>> +  - Andreas Färber <afaerber@suse.de>
+>> +  - Ben Whitten <ben.whitten@gmail.com>
+>> +
+>> +description: |
+>> +  Semtech LoRa concentrator SX130x digital baseband chip is capable of
+>> +  demodulating LoRa signals on 8 channels simultaneously.
+>> +
+>> +  It is typically paired with two SX125x IQ radios controlled over an
+>> +  SPI directly from the concentrator.
+>> +
+>> +  The concentrator itself is controlled over SPI.
+>> +
+>> +properties:
+>> +  compatible:
+>> +    items:
+>> +      - enum:
+>> +        - semtech,sx1308
+>> +      - enum:
+>> +        - semtech,sx1301
+> 
+> I think you want:
+> 
+> oneOf:
+>    - items:
+>        - enum:
+>            - semtech,sx1308
+>        - const: semtech,sx1301
+>    - items:
+>        - const: semtech,sx1301
+> 
+> That covers these 2 cases:
+> "semtech,sx1308", "semtech,sx1301"
+> "semtech,sx1301"
+> 
 
-On Tue, Jan 22, 2019 at 12:03:34PM +0530, Alok Chauhan wrote:
+Ah yes, that is what I was after. Thanks!
 
-> Get the interconnect paths for SPI based Serial Engine device
-> and vote accordingly based on maximum supported SPI frequency.
+>> +
+>> +  reg:
+>> +    maxItems: 1
+>> +    description: The chip select on the SPI bus.
+>> +
+>> +  reset-gpios:
+>> +    maxItems: 1
+>> +    description: A connection of the reset gpio line.
+>> +
+>> +  radio-spi:
+>> +    type: object
+>> +    description: The concentrator can have two radios connected which are
+>> +      contained within the following node.
+>> +
+>> +    properties:
+>> +      '#address-cells':
+>> +        const: 1
+>> +
+>> +      '#size-cells':
+>> +        const: 0
+>> +
+>> +    patternProperties:
+>> +      "^[a-zA-Z0-9]@[0-1]$":
+> 
+> Is any node name allowed? We like to have generic names. 'lora' is
+> fine for me, but I'm don't know if other devices could be attached?
+> 
 
-Still not seeing anything except this patch here in my inbox - like I
-said what's the story with dependencies?
+This sub bus will only have IQ radios attached to it, perhaps 'radio@0'
+as the system can handle other modulations.
 
---wIc/V6YLA2QdyfT4
-Content-Type: application/pgp-signature; name="signature.asc"
+> I thought up to 8 concentrators was supported? Or channels and radios
+> aren't 1-1?
 
------BEGIN PGP SIGNATURE-----
+You can have multiple concentrator chips (SX130x) however each one may 
+have up to two IQ radios (SX125x) attached to its bus.
+And in terms of channels the system can listen on, the concentrator has 
+9 LoRa demodulators and 1 (G)FSK demodulator.
 
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxHfSMACgkQJNaLcl1U
-h9DqqAf8CaMWvbpCWug3/SP/1Wojbdc+Z24TR24YSW41nHTz0VMhLtkOEtJWyRgp
-1H9iY6cqsqqVJzFO42nBJgT1rk8hcdcvEHw9cGJ6MqUhnwd5IDUhosRiUNPijkgh
-g1pcCZ8Y3hyC+6sKddlOomv744hJmluB1QEy9IeAEBykpE6ScHAhXgebO/iIk38j
-Hj+4VdGyBq/9O5c72J3s7LumYm5JPqAtgjIYIjL9hMgeSXj39hgqX1/mUObI8X9O
-xoZ1irHhtBaeP2jPyZt15XwFaCwbz2vEDUez7e7OOIY6jek1lnTUGUCYbr6tmcEF
-vev6Ccup/Puey+hycNBosXTobNpIOw==
-=R7VJ
------END PGP SIGNATURE-----
+> 
+> This too should have 'type: object' since it is a node name.
+> 
 
---wIc/V6YLA2QdyfT4--
+Ah yes
+
+>> +        properties:
+>> +          reg:
+>> +            maxItems: 1
+> 
+> You can add:
+> minimum: 0
+> maximum: 1 (or 7?)
+> 
+>> +        required:
+>> +          - reg
+>> +
+>> +    required:
+>> +      - '#address-cells'
+>> +      - '#size-cells'
+>> +
+>> +required:
+>> +  - compatible
+>> +  - reg
+>> +
+>> +examples:
+>> +  - |
+>> +
+>> +    #include <dt-bindings/gpio/gpio.h>
+>> +
+>> +    spi {
+>> +      #address-cells = <1>;
+>> +      #size-cells = <0>;
+>> +
+>> +      concentrator0: lora@0 {
+>> +        compatible = "semtech,sx1301";
+>> +        reg = <0>;
+>> +        reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
+>> +        spi-max-frequency = <8000000>;
+>> +
+>> +        radio-spi {
+>> +          #address-cells = <1>;
+>> +          #size-cells = <0>;
+>> +
+>> +          radio0: lora@0 {
+>> +            compatible = "semtech,sx1257";
+>> +            reg = <0>;
+>> +          };
+>> +
+>> +          radio1: lora@1 {
+>> +            compatible = "semtech,sx1257";
+>> +            reg = <1>;
+>> +          };
+>> +        };
+>> +      };
+>> +    };
+>> --
+>> 2.17.1
+>>
+
+Thanks!
+Ben Whitten
