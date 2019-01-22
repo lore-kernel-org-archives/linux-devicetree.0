@@ -1,70 +1,54 @@
 From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
-Date: Tue, 22 Jan 2019 10:47:19 -0800
-Message-ID: <154818283956.20280.2895221927807522124@swboyd.mtv.corp.google.com>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org> <20190117063312.GE25498@builder> <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org> <20190117100807.pmew5iqisdcc63eq@vireshk-i7> <e55df608-7058-63b9-b449-982d32e08759@linaro.org>
+Subject: Re: [PATCH 10/13] arm64: dts: qcom: qcs404: Add HFPLL node
+Date: Tue, 22 Jan 2019 10:49:01 -0800
+Message-ID: <154818294180.20280.13967884067917226851@swboyd.mtv.corp.google.com>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org> <1545039990-19984-11-git-send-email-jorge.ramirez-ortiz@linaro.org> <154507555157.19322.2712807405425817338@swboyd.mtv.corp.google.com> <20190117063804.GJ25498@builder>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <e55df608-7058-63b9-b449-982d32e08759@linaro.org>
+In-Reply-To: <20190117063804.GJ25498@builder>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, jassisinghbrar@gmail.com, jorge.ramirez-ortiz@linaro.org, mark.rutland@arm.com, mturquette@baylibre.com, robh+dt@kernel.org, will.deacon@arm.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Jorge Ramirez (2019-01-17 02:46:21)
-> On 1/17/19 11:08, Viresh Kumar wrote:
-> > On 17-01-19, 09:38, Jorge Ramirez wrote:
-> >> COMMON_CLK_DISABLED_UNUSED relies on the enable_count reference counter
-> >> to disable the clocks that were enabled by the firwmare and not by the
-> >> drivers.
-> >>
-> >> the cpufreq driver does not enable the cpu clock.
-> >>
-> >> so when clk_change_rate is called, the enable_count counter is not
-> >> incremented and therefore it just remains null since this was enabled =
-by
-> >> the firmware.
-> >>
-> >> I tried doing:
-> >>
-> >> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt=
-.c
-> >> index e58bfcb..5a9f83e 100644
-> >> --- a/drivers/cpufreq/cpufreq-dt.c
-> >> +++ b/drivers/cpufreq/cpufreq-dt.c
-> >> @@ -124,6 +124,10 @@ static int resources_available(void)
-> >>                 return ret;
-> >>         }
-> >>
-> >> + ret =3D clk_prepare_enable(cpu_clk);
-> >> + if (ret)
-> >> +         return ret;
-> >> +
-> >>         clk_put(cpu_clk);
-> >>
-> >>         name =3D find_supply_name(cpu_dev);
-> >>
-> >>
-> >> and that removed the need for CLK_IGNORE_UNUSED. But I am not sure of
-> >> the system wide consequences of that change to cpufreq.
-> >=20
-> > If the cpufreq driver enables it then it should disable it on exit as
-> > well, right ? And in that case if you unload your driver's module, you
-> > will hang the system as the clock will get disabled :)
+Quoting Bjorn Andersson (2019-01-16 22:38:04)
+> On Mon 17 Dec 11:39 PST 2018, Stephen Boyd wrote:
 >=20
-> ah, of course, sorry was over-thinking this thing :)
->=20
+> > Quoting Jorge Ramirez-Ortiz (2018-12-17 01:46:27)
+> > > The high frequency pll functionality is required to enable CPU
+> > > frequency scaling operation.
+> > >=20
+> > > Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > > Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> > > Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/qcs404.dtsi | 9 +++++++++
+> > >  1 file changed, 9 insertions(+)
+> > >=20
+> > > diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/d=
+ts/qcom/qcs404.dtsi
+> > > index 4594fea7..ec3f6c7 100644
+> > > --- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+> > > @@ -375,6 +375,15 @@
+> > >                         #mbox-cells =3D <1>;
+> > >                 };
+> > > =20
+> > > +               apcs_hfpll: clock-controller@0b016000 {
 > >=20
-> > Every other platform must either be marking it with CLK_IGNORE_UNUSED
-> > or they must be doing clk_enable from somewhere, maybe the CPU online
-> > path, not sure though.
+> > Drop leading 0 on unit address please.
+> >=20
+> > > +                       compatible =3D "qcom,hfpll";
+> > > +                       reg =3D <0x0b016000 0x30>;
+> >=20
+> > Wow that is small!
 > >=20
 >=20
-> since this clock is enabled by the firmware, it seems to me that using
-> CLK_IGNORE_UNUSED remains the best option.
+> I double checked and it's actually 0x34, but the last register is
+> protected.
 >=20
 
-What do you do about CPUs being offlined? Presumably when the CPU is
-gone the system doesn't need to keep the clk enabled anymore.
+Ok, so then it should be 0x34? I don't think we've left out protected
+registers from the size before.
