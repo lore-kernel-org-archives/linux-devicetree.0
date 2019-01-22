@@ -1,118 +1,51 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH] arm64: dts: imx8mq: Fix boot from eMMC
-Date: Tue, 22 Jan 2019 16:55:46 +0000
-Message-ID: <20190122165546.11712-1-ccaione@baylibre.com>
+From: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v3 4/5] ARM: dts: r8a7744: Add DU support
+Date: Tue, 22 Jan 2019 19:07:51 +0200
+Message-ID: <20190122170751.GB26166@pendragon.ideasonboard.com>
+References: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
+ <1548170749-12773-5-git-send-email-biju.das@bp.renesas.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, l.stach@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, abailon@baylibre.com
-Cc: Carlo Caione <ccaione@baylibre.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <1548170749-12773-5-git-send-email-biju.das@bp.renesas.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
 List-Id: devicetree@vger.kernel.org
 
-The boot from eMMC is currently broken on the NXP i.MX8MQ EVK board.
-When trying to boot from eMMC it fails with:
-
-...
-[    1.271938] mmc1: Tuning failed, falling back to fixed sampling clock
-[    1.287429] print_req_error: I/O error, dev mmcblk1, sector 1 flags 0
-[    1.306833] mmc1: Tuning failed, falling back to fixed sampling clock
-[    1.322325] print_req_error: I/O error, dev mmcblk1, sector 2 flags 0
-[    1.329559] Buffer I/O error on dev mmcblk1, logical block 0, async page read
-[    1.336714]  mmcblk1: unable to read partition table
-...
-
-The problem is the result of a partial misconfiguration of the pins and
-the missing assigned clock rate.
-
-Signed-off-by: Carlo Caione <ccaione@baylibre.com>
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 44 ++++++++++----------
- arch/arm64/boot/dts/freescale/imx8mq.dtsi    |  2 +
- 2 files changed, 24 insertions(+), 22 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 64acccc4bfcb..f74b13aa5aa5 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -227,34 +227,34 @@
- 
- 	pinctrl_usdhc1_100mhz: usdhc1-100grp {
- 		fsl,pins = <
--			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x85
--			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc5
--			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc5
--			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc5
--			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc5
--			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc5
--			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc5
--			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc5
--			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc5
--			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc5
--			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x85
-+			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x8d
-+			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xcd
-+			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xcd
-+			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xcd
-+			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x8d
- 			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
- 		>;
- 	};
- 
- 	pinctrl_usdhc1_200mhz: usdhc1-200grp {
- 		fsl,pins = <
--			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x87
--			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xc7
--			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xc7
--			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xc7
--			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xc7
--			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xc7
--			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xc7
--			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xc7
--			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xc7
--			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xc7
--			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x87
-+			MX8MQ_IOMUXC_SD1_CLK_USDHC1_CLK			0x9f
-+			MX8MQ_IOMUXC_SD1_CMD_USDHC1_CMD			0xdf
-+			MX8MQ_IOMUXC_SD1_DATA0_USDHC1_DATA0		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA1_USDHC1_DATA1		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA2_USDHC1_DATA2		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA3_USDHC1_DATA3		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA4_USDHC1_DATA4		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA5_USDHC1_DATA5		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA6_USDHC1_DATA6		0xdf
-+			MX8MQ_IOMUXC_SD1_DATA7_USDHC1_DATA7		0xdf
-+			MX8MQ_IOMUXC_SD1_STROBE_USDHC1_STROBE		0x9f
- 			MX8MQ_IOMUXC_SD1_RESET_B_USDHC1_RESET_B		0xc1
- 		>;
- 	};
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq.dtsi b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-index 8e9d6d5ed7b2..b6d31499fb43 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8mq.dtsi
-@@ -360,6 +360,8 @@
- 				         <&clk IMX8MQ_CLK_NAND_USDHC_BUS>,
- 				         <&clk IMX8MQ_CLK_USDHC1_ROOT>;
- 				clock-names = "ipg", "ahb", "per";
-+				assigned-clocks = <&clk IMX8MQ_CLK_USDHC1>;
-+				assigned-clock-rates = <400000000>;
- 				fsl,tuning-start-tap = <20>;
- 				fsl,tuning-step = <2>;
- 				bus-width = <4>;
--- 
-2.19.1
+SGkgQmlqdSwKClRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgoKT24gVHVlLCBKYW4gMjIsIDIwMTkg
+YXQgMDM6MjU6NDhQTSArMDAwMCwgQmlqdSBEYXMgd3JvdGU6Cj4gQWRkIGR1IG5vZGUgdG8gcjhh
+Nzc0NCBTb0MgRFQuIEJvYXJkcyB0aGF0IHdhbnQgdG8gZW5hYmxlIHRoZSBEVQo+IG5lZWQgdG8g
+c3BlY2lmeSB0aGUgb3V0cHV0IHRvcG9sb2d5Lgo+IAo+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFz
+IDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4KClJldmlld2VkLWJ5OiBMYXVyZW50IFBpbmNoYXJ0
+IDxsYXVyZW50LnBpbmNoYXJ0QGlkZWFzb25ib2FyZC5jb20+CgpJIGV4cGVjdCBTaW1vbiB0byBw
+aWNrIHRoaXMgdXAuCgo+IC0tLQo+ICBhcmNoL2FybS9ib290L2R0cy9yOGE3NzQ0LmR0c2kgfCAx
+MSArKysrKysrKy0tLQo+ICAxIGZpbGUgY2hhbmdlZCwgOCBpbnNlcnRpb25zKCspLCAzIGRlbGV0
+aW9ucygtKQo+IAo+IGRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ0LmR0c2kg
+Yi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ0LmR0c2kKPiBpbmRleCA4ZDI1YTBhLi44MzgwNGFh
+IDEwMDY0NAo+IC0tLSBhL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQuZHRzaQo+ICsrKyBiL2Fy
+Y2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQuZHRzaQo+IEBAIC0xNjQ1LDggKzE2NDUsMTQgQEAKPiAg
+CQl9Owo+ICAKPiAgCQlkdTogZGlzcGxheUBmZWIwMDAwMCB7Cj4gLQkJCXJlZyA9IDwwIDB4ZmVi
+MDAwMDAgMCAweDQwMDAwPiwKPiAtCQkJICAgICAgPDAgMHhmZWI5MDAwMCAwIDB4MWM+Owo+ICsJ
+CQljb21wYXRpYmxlID0gInJlbmVzYXMsZHUtcjhhNzc0NCI7Cj4gKwkJCXJlZyA9IDwwIDB4ZmVi
+MDAwMDAgMCAweDQwMDAwPjsKPiArCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI1NiBJUlFfVFlQ
+RV9MRVZFTF9ISUdIPiwKPiArCQkJCSAgICAgPEdJQ19TUEkgMjY4IElSUV9UWVBFX0xFVkVMX0hJ
+R0g+Owo+ICsJCQljbG9ja3MgPSA8JmNwZyBDUEdfTU9EIDcyND4sCj4gKwkJCQkgPCZjcGcgQ1BH
+X01PRCA3MjM+Owo+ICsJCQljbG9jay1uYW1lcyA9ICJkdS4wIiwgImR1LjEiOwo+ICsJCQlzdGF0
+dXMgPSAiZGlzYWJsZWQiOwo+ICAKPiAgCQkJcG9ydHMgewo+ICAJCQkJI2FkZHJlc3MtY2VsbHMg
+PSA8MT47Cj4gQEAgLTE2NjMsNyArMTY2OSw2IEBACj4gIAkJCQkJfTsKPiAgCQkJCX07Cj4gIAkJ
+CX07Cj4gLQkJCS8qIHBsYWNlaG9sZGVyICovCj4gIAkJfTsKPiAgCj4gIAkJcHJyOiBjaGlwaWRA
+ZmYwMDAwNDQgewoKLS0gClJlZ2FyZHMsCgpMYXVyZW50IFBpbmNoYXJ0Cl9fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QK
+ZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9w
+Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
