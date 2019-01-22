@@ -1,126 +1,71 @@
-From: "Sugaya, Taichi" <sugaya.taichi@socionext.com>
-Subject: Re: [PATCH 02/14] dt-bindings: soc: milbeaut: Add Milbeaut trampoline
- description
-Date: Tue, 22 Jan 2019 20:36:03 +0900
-Message-ID: <daa5f00a-1d9c-69b0-ed2d-8ff6a64251cc@socionext.com>
-References: <1542589274-13878-1-git-send-email-sugaya.taichi@socionext.com>
- <1542589274-13878-3-git-send-email-sugaya.taichi@socionext.com>
- <154337047410.88331.9696178601340675631@swboyd.mtv.corp.google.com>
- <c746a3de-a9e3-9f25-ecb9-703ceb7e62d0@socionext.com>
- <154356579701.88331.5043467509900444879@swboyd.mtv.corp.google.com>
- <f5917f71-f15b-a92d-649c-e3f5f5f10698@socionext.com>
- <CAL_Jsq+dnKht3TwCh1qB1H4pYFhQJmSN0nAayU+=PJLAvq0bbQ@mail.gmail.com>
- <90b00858-6e9e-8f7c-f6d4-b35e5daa6eee@socionext.com>
- <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
+From: Viorel Suman <viorel.suman@nxp.com>
+Subject: Re: [PATCH v3 0/4] Add NXP AUDMIX device and machine
+	drivers
+Date: Tue, 22 Jan 2019 11:39:39 +0000
+Message-ID: <1548157178.13051.19.camel@nxp.com>
+References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
+ <20190117161804.GA5760@bogus> <1547817384.11482.33.camel@nxp.com>
+ <20190118194642.GA11798@Asurada-Nvidia.nvidia.com>
+ <20190121152335.GA12284@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAL_JsqJ=FRfzVFiOJ0wvoV5iZV+Gx3ft9pGyhb-GoKnOAQgPtQ@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <alsa-devel-bounces@alsa-project.org>
+In-Reply-To: <20190121152335.GA12284@bogus>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-clk <linux-clk@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, Michael Turquette <mturquette@baylibre.com>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Russell King <linux@armlinux.org.uk>, Jiri Slaby <jslaby@suse.com>, Masami Hiramatsu <masami.hiramatsu@linaro.org>, Jassi Brar <jaswinder.singh@linaro.org>
+Content-ID: <105BF5F48250E64DBF5FAE64C9C627EE@eurprd04.prod.outlook.com>
+List-Unsubscribe: <http://mailman.alsa-project.org/mailman/options/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=unsubscribe>
+List-Archive: <http://mailman.alsa-project.org/pipermail/alsa-devel/>
+List-Post: <mailto:alsa-devel@alsa-project.org>
+List-Help: <mailto:alsa-devel-request@alsa-project.org?subject=help>
+List-Subscribe: <http://mailman.alsa-project.org/mailman/listinfo/alsa-devel>,
+ <mailto:alsa-devel-request@alsa-project.org?subject=subscribe>
+Errors-To: alsa-devel-bounces@alsa-project.org
+Sender: alsa-devel-bounces@alsa-project.org
+To: "robh@kernel.org" <robh@kernel.org>, "nicoleotsuka@gmail.com" <nicoleotsuka@gmail.com>
+Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "timur@kernel.org" <timur@kernel.org>, "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>, "lgirdwood@gmail.com" <lgirdwood@gmail.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Daniel Baluta <daniel.baluta@nxp.com>, "tiwai@suse.com" <tiwai@suse.com>, "viorel.suman@gmail.com" <viorel.suman@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "broonie@kernel.org" <broonie@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi
-
-On 2018/12/04 22:32, Rob Herring wrote:
-> On Tue, Dec 4, 2018 at 5:30 AM Sugaya, Taichi
-> <sugaya.taichi@socionext.com> wrote:
->>
->> Hi
->>
->> On 2018/12/04 0:49, Rob Herring wrote:
->>> On Mon, Dec 3, 2018 at 1:42 AM Sugaya, Taichi
->>> <sugaya.taichi@socionext.com> wrote:
->>>>
->>>> Hi,
->>>>
->>>> On 2018/11/30 17:16, Stephen Boyd wrote:
->>>>> Quoting Sugaya, Taichi (2018-11-29 04:24:51)
->>>>>> On 2018/11/28 11:01, Stephen Boyd wrote:
->>>>>>> Quoting Sugaya Taichi (2018-11-18 17:01:07)
->>>>>>>>      create mode 100644 Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>>>>>
->>>>>>>> diff --git a/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>>>>> new file mode 100644
->>>>>>>> index 0000000..f5d906c
->>>>>>>> --- /dev/null
->>>>>>>> +++ b/Documentation/devicetree/bindings/soc/socionext/socionext,m10v.txt
->>>>>>>> @@ -0,0 +1,12 @@
->>>>>>>> +Socionext M10V SMP trampoline driver binding
->>>>>>>> +
->>>>>>>> +This is a driver to wait for sub-cores while boot process.
->>>>>>>> +
->>>>>>>> +- compatible: should be "socionext,smp-trampoline"
->>>>>>>> +- reg: should be <0x4C000100 0x100>
->>>>>>>> +
->>>>>>>> +EXAMPLE
->>>>>>>> +       trampoline: trampoline@0x4C000100 {
->>>>>>> Drop the 0x part of unit addresses.
->>>>>>
->>>>>> Okay.
->>>>>>
->>>>>>
->>>>>>>> +               compatible = "socionext,smp-trampoline";
->>>>>>>> +               reg = <0x4C000100 0x100>;
->>>>>>> Looks like a software construct, which we wouldn't want to put into DT
->>>>>>> this way. DT doesn't describe drivers.
->>>>>> We would like to use this node only getting the address of the
->>>>>> trampoline area
->>>>>> in which sub-cores wait.  (They have finished to go to this area in previous
->>>>>> bootloader process.)
->>>>>
->>>>> Is this area part of memory, or a special SRAM? If it's part of memory,
->>>>> I would expect this node to be under the reserved-memory node and
->>>>> pointed to by some other node that uses this region. Could even be the
->>>>> CPU nodes.
->>>>
->>>> Yes, 0x4C000100 is a part of memory under the reserved-memory node. So
->>>> we would like to use the SRAM ( allocated 0x00000000 ) area instead.
->>>> BTW, sorry, the trampoline address of this example is simply wrong.  We
->>>> were going to use a part of the SRAM from the beginning.
->>>>
->>>>>
->>>>>>
->>>>>> So should we embed the constant value in source codes instead of getting
->>>>>> from
->>>>>> DT because the address is constant at the moment? Or is there other
->>>>>> approach?
->>>>>>
->>>>>
->>>>> If it's constant then that also works. Why does it need to come from DT
->>>>> at all then?
->>>>
->>>> We think it is not good to embed constant value in driver codes and do
->>>> not have another way...
->>>> Are there better ways?
->>>
->>> If this is just memory, can you use the standard spin-table binding in
->>> the DT spec? There are some requirements like 64-bit values even on
->>> 32-bit machines (though this gets violated).
->>
->> The spin-table seems to be used on only 64-bit arch. Have it ever worked
->> on 32-bit machine?
-> 
-> Yes.
-> 
->> And I would like not to use it because avoid violation.
-> 
-> The issue now that I remember is cpu-release-addr is defined to always
-> be a 64-bit value while some platforms made it a 32-bit value.
-> 'cpu-release-addr' is also used for some other enable-methods.
-
-I have a question about the spin-table.
-The code "smp_spin_table.c" is only in "arch/arm64/kernel" directory so 
-can not be compiled in arm-v7 arch. That means the spin-table can not be 
-used arm-v7 arch..? , or is there the way to compile the code in arm-v7 
-arch?
-
-Thanks,
-Sugaya Taichi
-
-> 
-> Rob
-> 
+SGkgUm9iLA0KDQpPbiBMdSwgMjAxOS0wMS0yMSBhdCAwOToyMyAtMDYwMCwgUm9iIEhlcnJpbmcg
+d3JvdGU6DQo+IE9uIEZyaSwgSmFuIDE4LCAyMDE5IGF0IDExOjQ2OjQyQU0gLTA4MDAsIE5pY29s
+aW4gQ2hlbiB3cm90ZToNCj4gPiANCj4gPiBPbiBGcmksIEphbiAxOCwgMjAxOSBhdCAwMToxNjoy
+NFBNICswMDAwLCBWaW9yZWwgU3VtYW4gd3JvdGU6DQo+ID4gPiANCj4gPiA+ID4gDQo+ID4gPiA+
+ID4gDQo+ID4gPiA+ID4gMS4gTW92ZWQgImRhaXMiIG5vZGUgZnJvbSBtYWNoaW5lIGRyaXZlciBE
+VFMgbm9kZSB0byBkZXZpY2UNCj4gPiA+ID4gPiBkcml2ZXINCj4gPiA+ID4gPiBEVFMgbm9kZQ0K
+PiA+ID4gPiA+IMKgIGFzIHN1Z2dlc3RlZCBieSBSb2IuDQo+ID4gPiA+IFRoYXQgd2FzIG5vdCB3
+aGF0IEkgc3VnZ2VzdGVkLiBZb3Ugc3RpbGwgaGF2ZSBhIHZpcnR1YWwgbm9kZQ0KPiA+ID4gPiB3
+aGljaA0KPiA+ID4gPiBsb29rcyB0byBtZSB0byBiZSB1bm5lY2Vzc2FyeS4NCj4gPiA+IFRvIG1l
+IHJlbW92aW5nIHZpcnR1YWwgbm9kZSBpbXBsaWVzIHRoYXQgQVVETUlYIG1hY2hpbmUgZHJpdmVy
+DQo+ID4gPiAoaW14LQ0KPiA+ID4gYXVkbWl4LmMgKyB2aXJ0dWFsIG5vZGUpIHNoYWxsIGJlIHJl
+bW92ZWQgYW5kIG1hY2hpbmUgZHJpdmVyIGNvZGUNCj4gPiA+IG1lcmdlZCBpbnRvIGRldmljZSBk
+cml2ZXIgKGZzbF9hdWRtaXguYyArIGRldmljZSBub2RlKSAtIHBsZWFzZQ0KPiA+ID4gbGV0IG1l
+DQo+ID4gPiBrbm93IGlmIG15IHVuZGVyc3RhbmRpbmcgaXMgd3JvbmcuDQo+ID4gV2UgY291bGQg
+dXNlIGEgbm9uLURUIGNvbmZpZ3VyYXRpb24gcmlnaHQ/IEZyb20gdGhlIGRyaXZlciBsb2dpYywN
+Cj4gPiBEVCBqdXN0IHJlZ2lzdGVycyBhIGRldmljZSBjb3JyZXNwb25kaW5nIHRvIHRoZSBtYWNo
+aW5lIGRyaXZlciBzbw0KPiA+IHRoYXQgaXQgY2FuIHByb2JlKCkuIFdlIGNvdWxkIHJlZ2lzdGVy
+IG9uZSBpbiBmc2xfYXVkbWl4IGluc3RlYWQuDQo+ID4gUGxlYXNlIHJlZmVyIHRvIGhvdyBmc2xf
+c3NpIHJlZ2lzdGVycyB0aGUgc291bmQgY2FyZCBkZXZpY2UuIFRoZQ0KPiA+IG1hY2hpbmUgZHJp
+dmVyIGNhbiBnZXQgYXVkbWl4X25wIGZyb20gdGhlIHBhcmVudCBkZXZpY2UgcG9pbnRlciwNCj4g
+PiBhbmQgSSB0aGluayB0aGF0J3MgYWxsIHlvdSBuZWVkLg0KPiBZZXMuDQoNClRoYW5rIHlvdSwg
+c2VudCBWNCB3aGljaCBpbXBsZW1lbnRzIHRoZSBhcHByb2FjaCBzdWdnZXN0ZWQgYnkgTmljb2xp
+bi4NCg0KPiANCj4gPiANCj4gPiBPciBtYXliZSBzb21lb25lIGVsc2Ugd291bGQgcHJvdmlkZSBh
+IGJldHRlciB3YXkuIEJ1dCBpdCdkIHdvcmsuDQo+IE9yIHRoZSBtYWNoaW5lIGRyaXZlciBjb3Vs
+ZCBjcmVhdGUgdGhlIGF1ZG1peCBkZXZpY2UuIFRoYXQgcHJvYmFibHnCoA0KPiBtYWtlcyBsZXNz
+IHNlbnNlLCBidXQgZWl0aGVyIHdheSB0aGVyZSBkb2Vzbid0IGhhdmUgdG8gYmUgYSAxLTHCoA0K
+PiBjb3JyZXNwb25kZW5jZSBvZiBEVCBub2RlcyBhbmQgKHBsYXRmb3JtKSBkZXZpY2VzLg0KPiAN
+Cj4gSSdtIG5vdCBhbiBBU29DIGV4cGVydCwgYnV0IHdoeSBjYW4ndCB0aGUgbWFjaGluZSBkcml2
+ZXIganVzdCBjb250cm9sDQo+IHRoZSBhdWRtaXggZGlyZWN0bHkgKHdpdGggREFJcyBhcyBzZXBh
+cmF0ZSBkcml2ZXJzKT8gSXMgdGhlIGF1ZG1peA0KPiBldmVyIGdvaW5nIHRvIGEgYmUgYSBjb21w
+b25lbnQgZm9yIGEgZGlmZmVyZW50IG1hY2hpbmUgZHJpdmVyPw0KPiANCj4gUm9iDQoNCkN1cnJl
+bnRseSBJJ20gbm90IGF3YXJlIG9mIGFueSBpbmZvcm1hdGlvbiB3aXRoIHJlZ2FyZCB0byBpZiBh
+dWRtaXggaXMNCmV2ZXIgZ29pbmcgdG8gd29yayB3aXRoIG90aGVyIERBSXMgdGhhbiBTQUkuIEhv
+d2VydmVyIGZyb20gYXVkbWl4IElQDQpibG9jayBpbnRlZ3JhdGlvbiBwZXJzcGVjdGl2ZSB0aGUg
+b25seSByZXF1aXJlbWVudCBpcyB0aGF0IHRoZSBpbnB1dA0KREFJIG11c3QgYmUgY29ubmVjdGVk
+IHRvIGF1ZG1peCBvdmVyIEkyUyBidXMsIHBvc3NpYmxlIERBSSBvcHRpb25zIGFyZQ0KU0FJLCBF
+U0FJLCBldGMgLSBJIHRoaW5rIHRoZSBhcHByb2FjaCB0byBtaXggYm90aCBkZXZpY2UgYW5kIG1h
+Y2hpbmUNCmRyaXZlcnMgaW50byBhIHNpbmdsZSBlbnRpdHkgaXMgbm90IHRoZSBiZXN0IHdheSB0
+byBnby4NCg0KL1Zpb3JlbApfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fXwpBbHNhLWRldmVsIG1haWxpbmcgbGlzdApBbHNhLWRldmVsQGFsc2EtcHJvamVjdC5v
+cmcKaHR0cDovL21haWxtYW4uYWxzYS1wcm9qZWN0Lm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Fsc2Et
+ZGV2ZWwK
