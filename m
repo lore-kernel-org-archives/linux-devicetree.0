@@ -1,46 +1,73 @@
-Return-Path: <>
-From: Martin Kelly <martin@martingkelly.com>
-Subject: [PATCH v2 3/6] dt-bindings: fix incorrect bmi160 IRQ note
-Date: Mon, 21 Jan 2019 18:04:28 -0800
-Message-Id: <20190122020431.5338-3-martin@martingkelly.com>
-In-Reply-To: <20190122020431.5338-1-martin@martingkelly.com>
-References: <20190122020431.5338-1-martin@martingkelly.com>
-To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org, Martin Kelly <martin@martingkelly.com>
+Return-Path: <guoren@kernel.org>
+From: guoren@kernel.org
+Subject: [PATCH V3] dt-bindings: interrupt-controller: Update csky mpintc
+Date: Tue, 22 Jan 2019 22:54:44 +0800
+Message-Id: <1548168884-17742-1-git-send-email-guoren@kernel.org>
+To: robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, guoren@kernel.org, Guo Ren <ren_guo@c-sky.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Kelly <martin@martingkelly.com>
+From: Guo Ren <ren_guo@c-sky.com>
 
-The bmi160 bindings say that the BMI160 requires level-triggered,
-active-low interrupts, but it actually supports all interrupt types, so fix
-the note to reflect that.
+Add trigger type and priority setting for csky,mpintc.
 
-Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Changelog:
+ - change #interrupt-cells to <3>
+
+Signed-off-by: Guo Ren <ren_guo@c-sky.com>
+Cc: Rob Herring <robh+dt@kernel.org>
 ---
- Documentation/devicetree/bindings/iio/imu/bmi160.txt | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ .../bindings/interrupt-controller/csky,mpintc.txt   | 21 +++++++++++++++++----
+ 1 file changed, 17 insertions(+), 4 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/iio/imu/bmi160.txt b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-index 0c1c105fb503..1aec19997fb5 100644
---- a/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-+++ b/Documentation/devicetree/bindings/iio/imu/bmi160.txt
-@@ -9,7 +9,7 @@ Required properties:
-  - spi-max-frequency : set maximum clock frequency (only for SPI)
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+index ab921f1..dccd913 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/csky,mpintc.txt
+@@ -6,11 +6,18 @@ C-SKY Multi-processors Interrupt Controller is designed for ck807/ck810/ck860
+ SMP soc, and it also could be used in non-SMP system.
  
- Optional properties:
-- - interrupts : interrupt mapping for IRQ, must be IRQ_TYPE_LEVEL_LOW
-+ - interrupts : interrupt mapping for IRQ
-  - interrupt-names : set to "INT1" if INT1 pin should be used as interrupt
-    input, set to "INT2" if INT2 pin should be used instead
+ Interrupt number definition:
+-
+   0-15  : software irq, and we use 15 as our IPI_IRQ.
+  16-31  : private  irq, and we use 16 as the co-processor timer.
+  31-1024: common irq for soc ip.
  
-@@ -20,7 +20,7 @@ bmi160@68 {
- 	reg = <0x68>;
++Interrupt triger mode:
++ IRQ_TYPE_LEVEL_HIGH (default)
++ IRQ_TYPE_LEVEL_LOW
++ IRQ_TYPE_EDGE_RISING
++ IRQ_TYPE_EDGE_FALLING
++
++Interrupt priority range: 0-255
++
+ =============================
+ intc node bindings definition
+ =============================
+@@ -26,15 +33,21 @@ intc node bindings definition
+ 	- #interrupt-cells
+ 		Usage: required
+ 		Value type: <u32>
+-		Definition: must be <1>
++		Definition: <3>
+ 	- interrupt-controller:
+ 		Usage: required
  
- 	interrupt-parent = <&gpio4>;
--	interrupts = <12 IRQ_TYPE_LEVEL_LOW>;
-+	interrupts = <12 IRQ_TYPE_EDGE_RISING>;
- 	interrupt-names = "INT1";
- };
+-Examples:
++Examples: ("interrupts = <irq_num IRQ_TYPE_XXX priority>")
+ ---------
  
+ 	intc: interrupt-controller {
+ 		compatible = "csky,mpintc";
+-		#interrupt-cells = <1>;
++		#interrupt-cells = <3>;
+ 		interrupt-controller;
+ 	};
++
++	device: device-example {
++		...
++		interrupts = <34 IRQ_TYPE_EDGE_RISING 254>;
++		interrupt-parent = <&intc>;
++	};
 -- 
-2.11.0
+2.7.4
