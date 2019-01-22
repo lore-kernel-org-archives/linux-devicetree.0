@@ -1,55 +1,55 @@
-From: Alok Chauhan <alokc@codeaurora.org>
-Subject: [PATCH 6/6] arm64: dts: sdm845: Add interconnect for GENI QUP
-Date: Tue, 22 Jan 2019 12:03:36 +0530
-Message-ID: <1548138816-1149-7-git-send-email-alokc@codeaurora.org>
-References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+From: Xiaowei Bao <xiaowei.bao@nxp.com>
+Subject: [PATCHv6 1/4] dt-bindings: add DT binding for the layerscape PCIe controller with EP mode
+Date: Tue, 22 Jan 2019 14:33:25 +0800
+Message-ID: <20190122063328.25228-1-xiaowei.bao@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, Alok Chauhan <alokc@codeaurora.org>
+To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
+Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Add interconnect ports for GENI QUPs to set bus
-capabilities.
+Add the documentation for the Device Tree binding for the layerscape PCIe
+controller with EP mode.
 
-Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
+Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
+Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
+Reviewed-by: Rob Herring <robh+dt@kernel.org>
 ---
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 14 ++++++++++++++
- 1 file changed, 14 insertions(+)
+v2:
+ - Add the SoC specific compatibles.
+v3:
+ - modify the commit message.
+v4:
+ - no change.
+v5:
+ - no change.
+v6:
+ - no change.
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index c27cbd3..fb0a8a7 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -374,6 +374,13 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-+
-+			interconnects = <&rsc_hlos MASTER_BLSP_1
-+					&rsc_hlos SLAVE_EBI1>,
-+					<&rsc_hlos MASTER_APPSS_PROC
-+					&rsc_hlos SLAVE_BLSP_1>;
-+			interconnect-names = "qup-memory", "qup-config";
-+
- 			status = "disabled";
+ .../devicetree/bindings/pci/layerscape-pci.txt     |    3 +++
+ 1 files changed, 3 insertions(+), 0 deletions(-)
+
+diff --git a/Documentation/devicetree/bindings/pci/layerscape-pci.txt b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+index 9b2b8d6..e20ceaa 100644
+--- a/Documentation/devicetree/bindings/pci/layerscape-pci.txt
++++ b/Documentation/devicetree/bindings/pci/layerscape-pci.txt
+@@ -13,6 +13,7 @@ information.
  
- 			i2c0: i2c@880000 {
-@@ -682,6 +689,13 @@
- 			#address-cells = <1>;
- 			#size-cells = <1>;
- 			ranges;
-+
-+			interconnects = <&rsc_hlos MASTER_BLSP_2
-+					&rsc_hlos SLAVE_EBI1>,
-+					<&rsc_hlos MASTER_APPSS_PROC
-+					&rsc_hlos SLAVE_BLSP_2>;
-+			interconnect-names = "qup-memory", "qup-config";
-+
- 			status = "disabled";
- 
- 			i2c8: i2c@a80000 {
+ Required properties:
+ - compatible: should contain the platform identifier such as:
++  RC mode:
+         "fsl,ls1021a-pcie"
+         "fsl,ls2080a-pcie", "fsl,ls2085a-pcie"
+         "fsl,ls2088a-pcie"
+@@ -20,6 +21,8 @@ Required properties:
+         "fsl,ls1046a-pcie"
+         "fsl,ls1043a-pcie"
+         "fsl,ls1012a-pcie"
++  EP mode:
++	"fsl,ls1046a-pcie-ep", "fsl,ls-pcie-ep"
+ - reg: base addresses and lengths of the PCIe controller register blocks.
+ - interrupts: A list of interrupt outputs of the controller. Must contain an
+   entry for each entry in the interrupt-names property.
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+1.7.1
