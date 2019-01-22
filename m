@@ -1,185 +1,139 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v1 13/13] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Tue, 22 Jan 2019 20:03:09 +0200
-Message-ID: <20190122180309.GD2559@localhost.localdomain>
-References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
- <ec70833179d1953dbc91e01901b79d3319ff013d.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
- <20190122154750.GB1705@roeck-us.net>
- <20190122171023.GC2559@localhost.localdomain>
- <20190122174056.GB4964@roeck-us.net>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v2 8/9] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Tue, 22 Jan 2019 10:18:22 -0800
+Message-ID: <20190122181822.GF261387@google.com>
+References: <cover.1547458732.git.amit.kucheria@linaro.org>
+ <7f94696460848a6bcfe5aee5ffda7fe556240736.1547458732.git.amit.kucheria@linaro.org>
+ <20190114220101.GN261387@google.com>
+ <CAHLCerPtVeNo_bMn78RPz8Gz5zgw9jKyWYVRSMpLasbiiSPjnA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190122174056.GB4964@roeck-us.net>
+In-Reply-To: <CAHLCerPtVeNo_bMn78RPz8Gz5zgw9jKyWYVRSMpLasbiiSPjnA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: mazziesaccount@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Viresh Kumar <viresh.kumar@linaro.org>, Eduardo Valentin <edubezval@gmail.com>, Andy Gross <andy.gross@linaro.org>, Taniya Das <tdas@codeaurora.org>, Stephen Boyd <swboyd@chromium.org>, Douglas Anderson <dianders@chromium.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 09:40:56AM -0800, Guenter Roeck wrote:
-> On Tue, Jan 22, 2019 at 07:10:23PM +0200, Matti Vaittinen wrote:
-> > On Tue, Jan 22, 2019 at 07:47:50AM -0800, Guenter Roeck wrote:
-> > > On Tue, Jan 22, 2019 at 11:48:36AM +0200, Matti Vaittinen wrote:
-> > > > Initial support for watchdog block included in ROHM BD70528
-> > > > power management IC.
-> > > > 
-> > > > Configurations for low power states are still to be checked.
-> > > > 
-> > > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> > > > ---
-> > > >  drivers/watchdog/Kconfig       |  12 +++
-> > > >  drivers/watchdog/Makefile      |   1 +
-> > > >  drivers/watchdog/bd70528_wdt.c | 161 +++++++++++++++++++++++++++++++++++++++++
-> > > >  3 files changed, 174 insertions(+)
-> > > >  create mode 100644 drivers/watchdog/bd70528_wdt.c
-> > > > 
-> > > > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> > > > index 57f017d74a97..f30e3a3e886e 100644
-> > > > --- a/drivers/watchdog/Kconfig
-> > > > +++ b/drivers/watchdog/Kconfig
-> > > > @@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
-> > > >  	  watchdog. Be aware that governors might affect the watchdog because it
-> > > >  	  is purely software, e.g. the panic governor will stall it!
-> > > >  
-> > > > +config BD70528_WATCHDOG
-> > > > +	tristate "ROHM BD70528 PMIC Watchdog"
-> > > > +	depends on MFD_ROHM_BD70528
-> > > > +	select WATCHDOG_CORE
-> > > > +	help
-> > > > +	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-> > > > +	  cause system reset.
-> > > > +
-> > > > +	  Say Y here to include support for the ROHM BD70528 watchdog.
-> > > > +	  Alternatively say M to compile the driver as a module,
-> > > > +	  which will be called bd70528_wdt.
-> > > > +
-> > > >  config DA9052_WATCHDOG
-> > > >  	tristate "Dialog DA9052 Watchdog"
-> > > >  	depends on PMIC_DA9052 || COMPILE_TEST
-> > > > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> > > > index a0917ef28e07..1ce87a3b1172 100644
-> > > > --- a/drivers/watchdog/Makefile
-> > > > +++ b/drivers/watchdog/Makefile
-> > > > @@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
-> > > >  obj-$(CONFIG_XEN_WDT) += xen_wdt.o
-> > > >  
-> > > >  # Architecture Independent
-> > > > +obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
-> > > >  obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
-> > > >  obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
-> > > >  obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-> > > > diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-> > > > new file mode 100644
-> > > > index 000000000000..e9a32566f595
-> > > > --- /dev/null
-> > > > +++ b/drivers/watchdog/bd70528_wdt.c
-> > > > @@ -0,0 +1,161 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +// Copyright (C) 2018 ROHM Semiconductors
-> > > > +// ROHM BD70528MWV watchdog driver
-> > > > +
-> > > > +#include <linux/bcd.h>
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/mfd/rohm-bd70528.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/platform_device.h>
-> > > > +#include <linux/regmap.h>
-> > > > +#include <linux/watchdog.h>
-> > > > +
-> > > > +static int bd70528_wdt_set(struct bd70528 *bd70528, int enable)
-> > > > +{
-> > > > +	int ret;
-> > > > +
-> > > > +	if (bd70528->rtc_timer_lock)
-> > > > +		mutex_lock(bd70528->rtc_timer_lock);
-> > > 
-> > > This looks awkward. I don't think the if() is necessary.
-> > 
-> > Right. Now when only bd70528 MFD driver uses this WDT this if is not
-> > required.
-> > 
-> That doesn't warrant the conditional. It just bloats the code.
-> If there is only one user, the mutex will always be acquired.
-
-Yep. What I meant was that the only possible parent is bd70528 MFD
-driver which always initializes the mutex pointer. So pointer should be
-always set. I can imagine some other ROHM PMIC having almost identical
-watchdog block - in which case we might want to re-use this WDT driver
-with this PMIC. And if this PMIC has no RTC, then we may not need this
-mutex. But this is all speculation and I will remove check - or see how
-this changes when I see what to do with the driver's private data.
-
-> > > > +static const struct watchdog_info bd70528_wdt_info = {
-> > > > +	.identity = "bd70528-wdt",
-> > > > +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> > > > +};
-> > > > +
-> > > > +static const struct watchdog_ops bd70528_wdt_ops = {
-> > > > +	.start		= bd70528_wdt_start,
-> > > > +	.stop		= bd70528_wdt_stop,
-> > > > +	/*
-> > > > +	 *  bd70528 WDT ping is same as enable. Eg, writing 'enable' to enabled
-> > > > +	 * WDT will restart the timeout
-> > > > +	 */
-> > > Unnecessary comment.
-> > > 
-> > 
-> > Ok. I will remove the comment if this is obvious to others. For me it
-> > was not obvious. I was first writing a separate ping and start functions
-> > untill I realized that it is the same operation. But this was my first
-> > WDT driver so I don't know if this is a normal for all WDTs.
-> > 
-> It is documented as part of the API.
-I'd better read the documentation then. Thanks for pointing this out.
-I'll remove the comment.
-
-> > > > +static int bd70528_wdt_probe(struct platform_device *pdev)
-> > > > +{
-> > > > +	struct bd70528 *tmp;
-> > > > +	struct bd70528 *bd70528;
-> > > > +	int ret;
-> > > > +
-> > > > +	tmp = dev_get_drvdata(pdev->dev.parent);
-> > > > +	if (!tmp) {
-> > > > +		dev_err(&pdev->dev, "No MFD driver data\n");
-> > > > +		return -EINVAL;
-> > > > +	}
-> > > > +	bd70528 = devm_kzalloc(&pdev->dev, sizeof(*bd70528), GFP_KERNEL);
-> > > > +	if (!bd70528)
-> > > > +		return -ENOMEM;
-> > > > +
-> > > > +	*bd70528 = *tmp;
-> > > > +	bd70528->chip.dev = &pdev->dev;
-> > > 
-> > > This is wrong.
-> > > You should not copy the parent's driver data but have local driver
-> > > data as needed which then points to the parent's driver data if
-> > > needed. I assume this is why the mutex is a pointer, but that
-> > > just shows that the whole approach is wrong.
-> > 
-> > Mutex is a pointer because we want to use same mutex from WDT and RTC.
-> > We can sure point to parent data but then we still need our own dev
-> > pointer. So we can have a struct with pointer to parent data and dev
-> > pointer - but I'm not at all sure it is any clearer.
+On Mon, Jan 21, 2019 at 11:40:45PM +0530, Amit Kucheria wrote:
+> On Tue, Jan 15, 2019 at 3:31 AM Matthias Kaehlcke <mka@chromium.org> wrote:
+> >
+> > On Mon, Jan 14, 2019 at 03:51:10PM +0530, Amit Kucheria wrote:
+> > > Since all cpus in the big and little clusters, respectively, are in the
+> > > same frequency domain, use all of them for mitigation in the
+> > > cooling-map. We end up with two cooling devices - one each for the big
+> > > and little clusters.
+> > >
+> > > At the lower trip points we restrict ourselves to throttling only a few
+> > > OPPs. At higher trip temperatures, allow ourselves to be throttled to
+> > > any extent.
+> > >
+> > > Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> > > ---
+> > >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 177 ++++++++++++++++++++++++---
+> > >  1 file changed, 161 insertions(+), 16 deletions(-)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > index fb7da678b116..7973e88bdf94 100644
+> > > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > >
+> > > ...
+> > >
+> > > @@ -1719,18 +1728,35 @@
+> > >                       thermal-sensors = <&tsens0 1>;
+> > >
+> > >                       trips {
+> > > -                             cpu_alert0: trip0 {
+> > > +                             cpu0_alert0: trip-point@0 {
+> >
+> > Thanks for adapting the trip point names and labels in anticipation of
+> > further additions!
+> >
+> > Seems you aren't overly convinced about the 'target/threshold'
+> > terminology used by some other arm64 platforms ;-)
 > 
-> As I said, that is wrong. To say it in plaintext, I won't accept
-> the driver if it copies the parent's driver data. The driver should
-> have and use its own driver data, and only maintain a pointer to
-> its parent's driver data. And most definitely you don't want to
-> copy and use any device data structure from the parent.
+> target and threshold have an air of finality to them and doesn't lend
+> itself to having a few trip points on the way to the critical trip,
+> IMO.
+> 
+> Let me know if you feel otherwise.
 
-Allright. At the moment the WDT driver only needs regmap pointer from
-parent. I'm not sure if it will later need DT or "chip type" - but I
-will change this.
+I can see your point, and it's also true that target/threshold seem to
+imply the use of power_allocator, which may not always be the case.
 
-Br,
-	Matti Vaittinen
+> > >                                       temperature = <95000>;
+> > >                                       hysteresis = <2000>;
+> > >                                       type = "passive";
+> > >                               };
+> >
+> > I realized that we still have the potential problem of a name change
+> > in the trip point node name if a 'threshold' node for IPA is added,
+> > since this node will have a lower temperature than 95°. If this is
+> > something to be concerned about it might be worth to add that extra
+> > trip point already to avoid headaches or funky trip point enumeration,
+> > even if we know that the value might not be the final one.
+> 
+> I will squash both the DT changes in to a single change introducing 2
+> passive trips and 1 critical trip to avoid the churn.
 
--- 
-Matti Vaittinen
-ROHM Semiconductors
+Sounds good, thanks!
 
-~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
+> See if you like it better.
+
+I didn't really dislike it, was just wondering if renaming nodes could
+break existing users. I imagine it's not a huge problem after all,
+since users with an older kernel version won't see the DT change and
+probably should use the phandle anyway.
+
+> > (I'm aware that we are also changing the node names and labels right
+> > now, it seems less problematic at this point since the SDM845 thermal
+> > zones are a fairly recent addition)
+> >
+> > > -                             cpu_crit0: trip1 {
+> > > +                             cpu0_crit: cpu_crit@0 {
+> >
+> > nit: does the @0 add any value here? IIUC there can be only one
+> > critical trip point, hence there will never be a cpu_crit@1 or
+> > higher.
+> 
+> Agreed. Will remove.
+> 
+> > >                                       temperature = <110000>;
+> > >                                       hysteresis = <1000>;
+> > >                                       type = "critical";
+> > >                               };
+> > >                       };
+> > > +
+> > > +                     cooling-maps {
+> > > +                             map0 {
+> > > +                                     trip = <&cpu0_alert0>;
+> > > +                                     cooling-device = <&CPU0 THERMAL_NO_LIMIT 4>,
+> > > +                                                      <&CPU1 THERMAL_NO_LIMIT 4>,
+> > > +                                                      <&CPU2 THERMAL_NO_LIMIT 4>,
+> > > +                                                      <&CPU3 THERMAL_NO_LIMIT 4>;
+> > > +                             };
+> >
+> > Out of curiosity: how did you determing the max cooling state of 4?
+> 
+> Just some basic testing by pinning a dhrystone benchmark to each of
+> the cores along with some stress-ng threads. Lopping off the top 4
+> OPPs seemed to mitigate anything I could throw at the board.
+
+Thanks for sharing your approach!
+
+> I'm unable to do the "device in a closed car on a hot summer day" type
+> of tests on the dev board. Nevertheless, I've changed the patch now to
+> only remove the boost frequency at 75 degrees and then full throttling
+> at 95 degrees.
+> 
+> I'd appreciate more "real world" testing to validate these.
+
+Sure, we'll run some tests with the new configuration on our site.
+
+Thanks
+
+Matthias
