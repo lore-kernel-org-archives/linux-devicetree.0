@@ -1,8 +1,11 @@
 From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH v2 lora-next 3/4] dt-bindings: lora: sx125x: add clock bindings
-Date: Tue, 22 Jan 2019 18:07:28 +0000
-Message-ID: <20190122180729.1834-4-ben.whitten@lairdtech.com>
+Subject: [PATCH v2 lora-next 1/4] dt-bindings: lora: sx130x: add basic documentation
+Date: Tue, 22 Jan 2019 18:07:26 +0000
+Message-ID: <20190122180729.1834-2-ben.whitten@lairdtech.com>
 References: <20190122180729.1834-1-ben.whitten@lairdtech.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190122180729.1834-1-ben.whitten@lairdtech.com>
 Sender: linux-kernel-owner@vger.kernel.org
@@ -12,76 +15,125 @@ List-Id: devicetree@vger.kernel.org
 
 From: Ben Whitten <ben.whitten@gmail.com>
 
-The SX125x consumes a clock (FXOSC) ranging from 32 to 36 MHz.
-If the radio is coupled with an SX130x the radio is therefor operating in
-master mode and it may also provide a gated version of this clock for the
-concentrator. In this case the concentrator is expecting a 32 MHz input
-clock.
-
-In the example we connect to the "txco" clock source, represented by a
-fixed clock. The radio also provides a clock output named "clk32m" for
-consumption by the SX130x concentrator.
+Add basic documentation in YAML format for the SX130x series concentrators
+from Semtech.
+Required is; the location on the SPI bus and the compatible string.
 
 Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 ---
 v1 -> v2:
-* Fixed incorrect usage of clock cells
-* Fixed wording in commit and descriptions
-* Dropped enforced clock names
+* Dropped reset-gpios, radio-spi from required.
+* Dropped spi-max-frequency from binding.
+* Changed compatible to allow fallback from SX1308 to SX1301.
+* Wording changes in commit and descriptions.
+* Dual licence
+* Incorperate Robs comments on child node and spi wrapper
 ---
- .../bindings/net/lora/semtech,sx125x.yaml     | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
+ .../bindings/net/lora/semtech,sx130x.yaml     | 96 +++++++++++++++++++
+ 1 file changed, 96 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
 
-diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-index 4a51a251d97f..8287472fd545 100644
---- a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-+++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-@@ -27,12 +27,36 @@ properties:
-     description: The chip select on the SPI bus or radio number in concentrator
-       , with radio A = 0 and radio B = 1.
- 
-+  clocks:
+diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+new file mode 100644
+index 000000000000..41919fb67ec4
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+@@ -0,0 +1,96 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/net/lora/semtech,sx130x.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: Semtech LoRa concentrator
++
++maintainers:
++  - Andreas Färber <afaerber@suse.de>
++  - Ben Whitten <ben.whitten@gmail.com>
++
++description: |
++  Semtech LoRa concentrator SX130x digital baseband chip is capable of
++  demodulating LoRa signals on 8 channels simultaneously.
++
++  It is typically paired with two SX125x IQ radios controlled over an
++  SPI directly from the concentrator.
++
++  The concentrator itself is controlled over SPI.
++
++properties:
++  compatible:
++    items:
++      - enum:
++        - semtech,sx1308
++      - enum:
++        - semtech,sx1301
++
++  reg:
 +    maxItems: 1
-+    description: Input clock (FXOSC) provider with output ranging from 32 MHz
-+      to 36 MHz.
++    description: The chip select on the SPI bus.
 +
-+  clock-names:
++  reset-gpios:
 +    maxItems: 1
-+    description: Input clock (FXOSC) name from provider.
++    description: A connection of the reset gpio line.
 +
-+  clock-output-names:
-+    maxItems: 1
-+    description: Output clock (CLK_OUT) name, clock is gated version of the
-+      input (FXOSC). Used in master mode operation.
++  radio-spi:
++    type: object
++    description: The concentrator can have two radios connected which are
++      contained within the following node.
 +
-+  '#clock-cells':
-+    const: 0
++    properties:
++      '#address-cells':
++        const: 1
 +
- required:
-   - compatible
-   - reg
- 
- examples:
-   - |
-+    tcxo: dummy32m {
-+      compatible = "fixed-clock";
-+      clock-frequency = <32000000>;
-+      clock-output-names = "tcxo";
-+      #clock-cells = <0>;
++      '#size-cells':
++        const: 0
++
++    patternProperties:
++      "^[a-zA-Z0-9]@[0-1]$":
++        properties:
++          reg:
++            maxItems: 1
++        required:
++          - reg
++
++    required:
++      - '#address-cells'
++      - '#size-cells'
++
++required:
++  - compatible
++  - reg
++
++examples:
++  - |
++
++    #include <dt-bindings/gpio/gpio.h>
++
++    spi {
++      #address-cells = <1>;
++      #size-cells = <0>;
++
++      concentrator0: lora@0 {
++        compatible = "semtech,sx1301";
++        reg = <0>;
++        reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
++        spi-max-frequency = <8000000>;
++
++        radio-spi {
++          #address-cells = <1>;
++          #size-cells = <0>;
++
++          radio0: lora@0 {
++            compatible = "semtech,sx1257";
++            reg = <0>;
++          };
++
++          radio1: lora@1 {
++            compatible = "semtech,sx1257";
++            reg = <1>;
++          };
++        };
++      };
 +    };
-+
-     spi {
-       #address-cells = <1>;
-       #size-cells = <0>;
-@@ -40,5 +64,9 @@ examples:
-       radio0: lora@0 {
-         compatible = "semtech,sx1257";
-         reg = <0>;
-+        clocks = <&tcxo>;
-+        clock-names = "tcxo";
-+        clock-output-names = "clk32m";
-+        #clock-cells = <0>;
-       };
-     };
 -- 
 2.17.1
