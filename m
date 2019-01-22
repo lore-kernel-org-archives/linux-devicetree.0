@@ -1,49 +1,76 @@
-Return-Path: <SRS0=r4NE=P5=nvidia.com=talho@kernel.org>
-From: Timo Alho <talho@nvidia.com>
-Subject: [PATCH V2 0/4] add Tegra210 BPMP driver
-Date: Mon, 21 Jan 2019 14:28:47 +0200
-Message-ID: <1548073731-6449-1-git-send-email-talho@nvidia.com>
+Return-Path: <SRS0=HE6G=P6=partner.samsung.com=k.konieczny@kernel.org>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: [PATCH v5 3/5] dt-bindings: clk: exynos5433: document imem clock
+Date: Tue, 22 Jan 2019 10:02:30 +0100
+Message-Id: <20190122090232.29194-4-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
 MIME-Version: 1.0
-Content-Type: text/plain
-To: treding@nvidia.com, sivaramn@nvidia.com, robh@kernel.org
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, Timo Alho <talho@nvidia.com>
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="utf-8"
+References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+	<CGME20190122090251eucas1p2db2f383c0b8b4034f66b6a82b0a22d67@eucas1p2.samsung.com>
+To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
+Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh@kernel.org>, Stephen Boyd <sboyd@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hi,
+Document DT bindings for imem clock of the Samsung Exynos5433 SSS (Security
+SubSystem) and SlimSSS IPs.
 
-This is a second version of "add Tegra210 BPMP driver" series. It has
-only some minor updates to original series based on feedback received
-from Sivaram Nair and Rob Herring. The original cover letter of patch
-series one is below.
+Acked-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Acked-by: Stephen Boyd <sboyd@kernel.org>
+Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+---
+ .../bindings/clock/exynos5433-clock.txt       | 23 +++++++++++++++++++
+ 1 file changed, 23 insertions(+)
 
-This series adds a driver for Tegra210 BPMP firmware. The BPMP is a
-specific processor in Tegra210 chip, which runs firmware for assisting
-in entering deep low power states (suspend to ram), and offloading
-DRAM memory clock scaling on some platforms.
-
-The series consist of first refactoring the existing BPMP driver by
-first renaming the terminology used for communication, then splitting
-out the Tegra186 chip specific parts, and finally adding the needed
-functionality for Tegra210.
-
-Timo Alho (4):
-  firmware: tegra: reword messaging terminology
-  firmware: tegra: refactor bpmp driver
-  firmware: tegra: add bpmp driver for Tegra210
-  dt-bindings: firmware: Add bindings for Tegra210 BPMP
-
- .../bindings/firmware/nvidia,tegra210-bpmp.txt     |  36 +++
- drivers/firmware/tegra/Makefile                    |   2 +
- drivers/firmware/tegra/bpmp-private.h              |  29 ++
- drivers/firmware/tegra/bpmp-t186.c                 | 303 +++++++++++++++++
- drivers/firmware/tegra/bpmp-t210.c                 | 241 ++++++++++++++
- drivers/firmware/tegra/bpmp.c                      | 359 ++++++++-------------
- include/soc/tegra/bpmp.h                           |  13 +-
- 7 files changed, 751 insertions(+), 232 deletions(-)
- create mode 100644 Documentation/devicetree/bindings/firmware/nvidia,tegra210-bpmp.txt
- create mode 100644 drivers/firmware/tegra/bpmp-private.h
- create mode 100644 drivers/firmware/tegra/bpmp-t186.c
- create mode 100644 drivers/firmware/tegra/bpmp-t210.c
-
+diff --git a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
+index 50d5897c9849..183c327a7d6b 100644
+--- a/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
++++ b/Documentation/devicetree/bindings/clock/exynos5433-clock.txt
+@@ -50,6 +50,8 @@ Required Properties:
+     IPs.
+   - "samsung,exynos5433-cmu-cam1" - clock controller compatible for CMU_CAM1
+     which generates clocks for Cortex-A5/MIPI_CSIS2/FIMC-LITE_C/FIMC-FD IPs.
++  - "samsung,exynos5433-cmu-imem"   - clock controller compatible for CMU_IMEM
++    which generates clocks for SSS (Security SubSystem) and SlimSSS IPs.
+ 
+ - reg: physical base address of the controller and length of memory mapped
+   region.
+@@ -168,6 +170,12 @@ Required Properties:
+ 		- aclk_cam1_400
+ 		- aclk_cam1_552
+ 
++	Input clocks for imem clock controller:
++		- oscclk
++		- aclk_imem_sssx_266
++		- aclk_imem_266
++		- aclk_imem_200
++
+ Optional properties:
+   - power-domains: a phandle to respective power domain node as described by
+ 	generic PM domain bindings (see power/power_domain.txt for more
+@@ -469,6 +477,21 @@ Example 2: Examples of clock controller nodes are listed below.
+ 		power-domains = <&pd_cam1>;
+ 	};
+ 
++	cmu_imem: clock-controller@11060000 {
++		compatible = "samsung,exynos5433-cmu-imem";
++		reg = <0x11060000 0x1000>;
++		#clock-cells = <1>;
++
++		clock-names = "oscclk",
++			"aclk_imem_sssx_266",
++			"aclk_imem_266",
++			"aclk_imem_200";
++		clocks = <&xxti>,
++			<&cmu_top CLK_DIV_ACLK_IMEM_SSSX_266>,
++			<&cmu_top CLK_DIV_ACLK_IMEM_266>,
++			<&cmu_top CLK_DIV_ACLK_IMEM_200>;
++	};
++
+ Example 3: UART controller node that consumes the clock generated by the clock
+ 	   controller.
+ 
 -- 
-2.7.4
+2.20.0
