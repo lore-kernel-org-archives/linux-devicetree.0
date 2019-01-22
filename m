@@ -1,45 +1,123 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: [PATCH 3/3] arm64: dts: sprd: Change 2 cells to provide DMA controller specific information
-Date: Tue, 22 Jan 2019 21:20:53 +0800
-Message-ID: <44135b35c8a4fb1a68bb9c57013b672dd0fab3e7.1548158832.git.baolin.wang@linaro.org>
-References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
+From: Philippe Schenker <dev@pschenker.ch>
+Subject: [PATCH 1/2] ARM: dts: Add stmpe-adc DT node to Toradex iMX6 modules
+Date: Tue, 22 Jan 2019 14:21:34 +0100
+Message-ID: <20190122132135.5012-2-dev@pschenker.ch>
+References: <20190122132135.5012-1-dev@pschenker.ch>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
-In-Reply-To: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
-References: <a9718ae1e97a5911f47874fe23c00ef297d7fed8.1548158832.git.baolin.wang@linaro.org>
+In-Reply-To: <20190122132135.5012-1-dev@pschenker.ch>
 Sender: linux-kernel-owner@vger.kernel.org
-To: vkoul@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: arnd@arndb.de, olof@lixom.net, orsonzhai@gmail.com, zhang.lyra@gmail.com, dan.j.williams@intel.com, devicetree@vger.kernel.org, arm@kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dmaengine@vger.kernel.org, eric.long@unisoc.com, broonie@kernel.org, baolin.wang@linaro.org
+To: shawnguo@kernel.org, s.hauer@pengutronix.de, thierry.reding@gmail.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: marcel.ziswiler@toradex.com, stefan@agner.ch, max.krummenacher@toradex.com, Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-Change to use 2 cells to provide the channel id and slave id for client.
+From: Philippe Schenker <philippe.schenker@toradex.com>
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+Add the stmpe-adc DT node as found on Toradex iMX6 modules
+
+Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 ---
- arch/arm64/boot/dts/sprd/whale2.dtsi |    4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/sprd/whale2.dtsi b/arch/arm64/boot/dts/sprd/whale2.dtsi
-index 34b6ca0..dbd61f8 100644
---- a/arch/arm64/boot/dts/sprd/whale2.dtsi
-+++ b/arch/arm64/boot/dts/sprd/whale2.dtsi
-@@ -117,7 +117,7 @@
- 				compatible = "sprd,sc9860-dma";
- 				reg = <0 0x20100000 0 0x4000>;
- 				interrupts = <GIC_SPI 42 IRQ_TYPE_LEVEL_HIGH>;
--				#dma-cells = <1>;
-+				#dma-cells = <2>;
- 				#dma-channels = <32>;
- 				clock-names = "enable";
- 				clocks = <&apahb_gate CLK_DMA_EB>;
-@@ -273,7 +273,7 @@
- 			agcp_dma: dma-controller@41580000 {
- 				compatible = "sprd,sc9860-dma";
- 				reg = <0 0x41580000 0 0x4000>;
--				#dma-cells = <1>;
-+				#dma-cells = <2>;
- 				#dma-channels = <32>;
- 				clock-names = "enable", "ashb_eb";
- 				clocks = <&agcp_gate CLK_AGCP_DMAAP_EB>,
+ arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 22 ++++++++++++++--------
+ arch/arm/boot/dts/imx6qdl-colibri.dtsi | 22 ++++++++++++++--------
+ 2 files changed, 28 insertions(+), 16 deletions(-)
+
+diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+index 8380f1b26826..e8c7ef7e078a 100644
+--- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+@@ -332,11 +332,17 @@
+ 		id = <0>;
+ 		blocks = <0x5>;
+ 		irq-trigger = <0x1>;
++		/* 3.25 MHz ADC clock speed */
++		st,adc-freq = <1>;
++		/* 12-bit ADC */
++		st,mod-12b = <1>;
++		/* internal ADC reference */
++		st,ref-sel = <0>;
++		/* ADC converstion time: 80 clocks */
++		st,sample-time = <4>;
+ 
+ 		stmpe_touchscreen {
+ 			compatible = "st,stmpe-ts";
+-			/* 3.25 MHz ADC clock speed */
+-			st,adc-freq = <1>;
+ 			/* 8 sample average control */
+ 			st,ave-ctrl = <3>;
+ 			/* 7 length fractional part in z */
+@@ -346,17 +352,17 @@
+ 			 * current limit value
+ 			 */
+ 			st,i-drive = <1>;
+-			/* 12-bit ADC */
+-			st,mod-12b = <1>;
+-			/* internal ADC reference */
+-			st,ref-sel = <0>;
+-			/* ADC converstion time: 80 clocks */
+-			st,sample-time = <4>;
+ 			/* 1 ms panel driver settling time */
+ 			st,settling = <3>;
+ 			/* 5 ms touch detect interrupt delay */
+ 			st,touch-det-delay = <5>;
+ 		};
++
++		stmpe_adc {
++			compatible = "st,stmpe-adc";
++			/* forbid to use ADC channels 3-0 (touch) */
++			st,norequest-mask = <0x0F>;
++		};
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+index 87e15e7cb32b..eb8603a2444e 100644
+--- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
++++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+@@ -262,11 +262,17 @@
+ 		id = <0>;
+ 		blocks = <0x5>;
+ 		irq-trigger = <0x1>;
++		/* 3.25 MHz ADC clock speed */
++		st,adc-freq = <1>;
++		/* 12-bit ADC */
++		st,mod-12b = <1>;
++		/* internal ADC reference */
++		st,ref-sel = <0>;
++		/* ADC converstion time: 80 clocks */
++		st,sample-time = <4>;
+ 
+ 		stmpe_touchscreen {
+ 			compatible = "st,stmpe-ts";
+-			/* 3.25 MHz ADC clock speed */
+-			st,adc-freq = <1>;
+ 			/* 8 sample average control */
+ 			st,ave-ctrl = <3>;
+ 			/* 7 length fractional part in z */
+@@ -276,17 +282,17 @@
+ 			 * current limit value
+ 			 */
+ 			st,i-drive = <1>;
+-			/* 12-bit ADC */
+-			st,mod-12b = <1>;
+-			/* internal ADC reference */
+-			st,ref-sel = <0>;
+-			/* ADC converstion time: 80 clocks */
+-			st,sample-time = <4>;
+ 			/* 1 ms panel driver settling time */
+ 			st,settling = <3>;
+ 			/* 5 ms touch detect interrupt delay */
+ 			st,touch-det-delay = <5>;
+ 		};
++
++		stmpe_adc {
++			compatible = "st,stmpe-adc";
++			/* forbid to use ADC channels 3-0 (touch) */
++			st,norequest-mask = <0x0F>;
++		};
+ 	};
+ };
+ 
 -- 
-1.7.9.5
+2.20.1
