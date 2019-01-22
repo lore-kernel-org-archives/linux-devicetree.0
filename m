@@ -1,67 +1,312 @@
-From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
-Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
- bindings
-Date: Tue, 22 Jan 2019 18:38:33 +0100
-Message-ID: <20190122183833.40077d7a@windsurf>
-References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
- <20190121112336.23489-7-miquel.raynal@bootlin.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [RFC PATCH v1 13/13] watchdog: bd70528: Initial support for ROHM
+ BD70528 watchdog block
+Date: Tue, 22 Jan 2019 09:40:56 -0800
+Message-ID: <20190122174056.GB4964@roeck-us.net>
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <ec70833179d1953dbc91e01901b79d3319ff013d.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190122154750.GB1705@roeck-us.net>
+ <20190122171023.GC2559@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190121112336.23489-7-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190122171023.GC2559@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+On Tue, Jan 22, 2019 at 07:10:23PM +0200, Matti Vaittinen wrote:
+> On Tue, Jan 22, 2019 at 07:47:50AM -0800, Guenter Roeck wrote:
+> > On Tue, Jan 22, 2019 at 11:48:36AM +0200, Matti Vaittinen wrote:
+> > > Initial support for watchdog block included in ROHM BD70528
+> > > power management IC.
+> > > 
+> > > Configurations for low power states are still to be checked.
+> > > 
+> > > Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+> > > ---
+> > >  drivers/watchdog/Kconfig       |  12 +++
+> > >  drivers/watchdog/Makefile      |   1 +
+> > >  drivers/watchdog/bd70528_wdt.c | 161 +++++++++++++++++++++++++++++++++++++++++
+> > >  3 files changed, 174 insertions(+)
+> > >  create mode 100644 drivers/watchdog/bd70528_wdt.c
+> > > 
+> > > diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> > > index 57f017d74a97..f30e3a3e886e 100644
+> > > --- a/drivers/watchdog/Kconfig
+> > > +++ b/drivers/watchdog/Kconfig
+> > > @@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
+> > >  	  watchdog. Be aware that governors might affect the watchdog because it
+> > >  	  is purely software, e.g. the panic governor will stall it!
+> > >  
+> > > +config BD70528_WATCHDOG
+> > > +	tristate "ROHM BD70528 PMIC Watchdog"
+> > > +	depends on MFD_ROHM_BD70528
+> > > +	select WATCHDOG_CORE
+> > > +	help
+> > > +	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
+> > > +	  cause system reset.
+> > > +
+> > > +	  Say Y here to include support for the ROHM BD70528 watchdog.
+> > > +	  Alternatively say M to compile the driver as a module,
+> > > +	  which will be called bd70528_wdt.
+> > > +
+> > >  config DA9052_WATCHDOG
+> > >  	tristate "Dialog DA9052 Watchdog"
+> > >  	depends on PMIC_DA9052 || COMPILE_TEST
+> > > diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
+> > > index a0917ef28e07..1ce87a3b1172 100644
+> > > --- a/drivers/watchdog/Makefile
+> > > +++ b/drivers/watchdog/Makefile
+> > > @@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
+> > >  obj-$(CONFIG_XEN_WDT) += xen_wdt.o
+> > >  
+> > >  # Architecture Independent
+> > > +obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
+> > >  obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
+> > >  obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
+> > >  obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
+> > > diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
+> > > new file mode 100644
+> > > index 000000000000..e9a32566f595
+> > > --- /dev/null
+> > > +++ b/drivers/watchdog/bd70528_wdt.c
+> > > @@ -0,0 +1,161 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +// Copyright (C) 2018 ROHM Semiconductors
+> > > +// ROHM BD70528MWV watchdog driver
+> > > +
+> > > +#include <linux/bcd.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/mfd/rohm-bd70528.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/of.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/watchdog.h>
+> > > +
+> > > +static int bd70528_wdt_set(struct bd70528 *bd70528, int enable)
+> > > +{
+> > > +	int ret;
+> > > +
+> > > +	if (bd70528->rtc_timer_lock)
+> > > +		mutex_lock(bd70528->rtc_timer_lock);
+> > 
+> > This looks awkward. I don't think the if() is necessary.
+> 
+> Right. Now when only bd70528 MFD driver uses this WDT this if is not
+> required.
+> 
+That doesn't warrant the conditional. It just bloats the code.
+If there is only one user, the mutex will always be acquired.
 
-On Mon, 21 Jan 2019 12:23:32 +0100, Miquel Raynal wrote:
+> > > +
+> > > +	ret = bd70528->wdt_set(bd70528, enable, NULL);
+> > > +
+> > > +	if (bd70528->rtc_timer_lock)
+> > > +		mutex_unlock(bd70528->rtc_timer_lock);
+> > > +	return ret;
+> > > +}
+> > > +
+> > > +static int bd70528_wdt_start(struct watchdog_device *wdt)
+> > > +{
+> > > +	struct bd70528 *bd70528 = watchdog_get_drvdata(wdt);
+> > > +
+> > > +	return bd70528_wdt_set(bd70528, 1);
+> > > +}
+> > > +
+> > > +static int bd70528_wdt_stop(struct watchdog_device *wdt)
+> > > +{
+> > > +	struct bd70528 *bd70528 = watchdog_get_drvdata(wdt);
+> > > +
+> > > +	return bd70528_wdt_set(bd70528, 0);
+> > > +}
+> > > +
+> > > +static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
+> > > +				    unsigned int timeout)
+> > > +{
+> > > +	unsigned int hours;
+> > > +	unsigned int minutes;
+> > > +	unsigned int seconds;
+> > > +	int ret;
+> > > +	struct bd70528 *bd70528 = watchdog_get_drvdata(wdt);
+> > > +
+> > > +	seconds = timeout;
+> > > +	hours = timeout / (60 * 60);
+> > > +	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
+> > > +	if (hours)
+> > > +		seconds -= (60 * 60);
+> > > +	minutes = seconds / 60;
+> > > +	seconds = seconds % 60;
+> > > +
+> > > +	if (bd70528->rtc_timer_lock)
+> > > +		mutex_lock(bd70528->rtc_timer_lock);
+> > > +
+> > > +	ret = bd70528->wdt_set(bd70528, 0, NULL);
+> > > +	if (ret)
+> > > +		goto out_unlock;
+> > > +
+> > > +	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_HOUR,
+> > > +				 BD70528_MASK_WDT_HOUR, hours);
+> > > +	if (ret) {
+> > > +		dev_err(bd70528->chip.dev, "Failed to set WDT hours\n");
+> > > +		goto out_en_unlock;
+> > > +	}
+> > > +	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_MINUTE,
+> > > +				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
+> > > +	if (ret) {
+> > > +		dev_err(bd70528->chip.dev, "Failed to set WDT minutes\n");
+> > > +		goto out_en_unlock;
+> > > +	}
+> > > +	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_SEC,
+> > > +				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
+> > > +	if (ret) {
+> > > +		dev_err(bd70528->chip.dev, "Failed to set WDT seconds\n");
+> > > +		goto out_en_unlock;
+> > 
+> > Unnecessary goto.
+> 
+> True. I'll drop this.
+> 
+> > 
+> > > +	}
+> > > +
+> > > +out_en_unlock:
+> > > +	ret = bd70528->wdt_set(bd70528, 1, NULL);
+> > > +out_unlock:
+> > > +	if (bd70528->rtc_timer_lock)
+> > > +		mutex_lock(bd70528->rtc_timer_lock);
+> > 
+> > I don't think this code was ever tested.
+> 
+> Yep. This should be unlock. What comes to testingI'll quote the
+> cover-sheet for the patch set:
+> 
+> > Currently only MFD core, clk, RTC and regulator portions are
+> > somehow tested. The RFC series also include initial gpio, power-supply
+> > and watchdog patches in order to provide better overview on chip
+> > and to collect initial feedback. Reset and ADC are not supported by
+> > this series.
+> 
+> I think having the wdt_set and rtc_timer_lock in MFD would have been
+> completely mysterious if watchdog draft was not included =)
+> 
+> > > +static const struct watchdog_info bd70528_wdt_info = {
+> > > +	.identity = "bd70528-wdt",
+> > > +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
+> > > +};
+> > > +
+> > > +static const struct watchdog_ops bd70528_wdt_ops = {
+> > > +	.start		= bd70528_wdt_start,
+> > > +	.stop		= bd70528_wdt_stop,
+> > > +	/*
+> > > +	 *  bd70528 WDT ping is same as enable. Eg, writing 'enable' to enabled
+> > > +	 * WDT will restart the timeout
+> > > +	 */
+> > Unnecessary comment.
+> > 
+> 
+> Ok. I will remove the comment if this is obvious to others. For me it
+> was not obvious. I was first writing a separate ping and start functions
+> untill I realized that it is the same operation. But this was my first
+> WDT driver so I don't know if this is a normal for all WDTs.
+> 
+It is documented as part of the API.
 
-> +- compatible: Should be one of:
-> +	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
-> +	        the USB2 host-only controller.
-> +	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
-> +	        the USB3 and USB2 OTG capable controller.
+"Most hardware that does not support this as a separate function uses the
+start function to restart the watchdog timer hardware"
 
-Do we really need different compatible strings for those ? I assume the
-IP block is exactly the same for the two PHYs, right ? If so, we should
-use the same compatible string.
+Repeating the API for each driver doesn't really add value.
 
-Didn't we discuss that we can lookup from the PHY whether the USB
-controller it is connected to is in host mode or otg mode ?
+> > > +	.ping		= bd70528_wdt_start,
+> > > +	.set_timeout	= bd70528_wdt_set_timeout,
+> > > +};
+> > > +
+> > > +/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
+> > > +#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
+> > > +/* Minimum time is 1 second */
+> > > +#define WDT_MIN_MS 1000
+> > > +static struct watchdog_device bd70528_wd = {
+> > > +	.info = &bd70528_wdt_info,
+> > > +	.ops =  &bd70528_wdt_ops,
+> > > +	.min_hw_heartbeat_ms = WDT_MIN_MS,
+> > > +	.max_hw_heartbeat_ms = WDT_MAX_MS,
+> > > +};
+> > > +
+> > > +static int bd70528_wdt_probe(struct platform_device *pdev)
+> > > +{
+> > > +	struct bd70528 *tmp;
+> > > +	struct bd70528 *bd70528;
+> > > +	int ret;
+> > > +
+> > > +	tmp = dev_get_drvdata(pdev->dev.parent);
+> > > +	if (!tmp) {
+> > > +		dev_err(&pdev->dev, "No MFD driver data\n");
+> > > +		return -EINVAL;
+> > > +	}
+> > > +	bd70528 = devm_kzalloc(&pdev->dev, sizeof(*bd70528), GFP_KERNEL);
+> > > +	if (!bd70528)
+> > > +		return -ENOMEM;
+> > > +
+> > > +	*bd70528 = *tmp;
+> > > +	bd70528->chip.dev = &pdev->dev;
+> > 
+> > This is wrong.
+> > You should not copy the parent's driver data but have local driver
+> > data as needed which then points to the parent's driver data if
+> > needed. I assume this is why the mutex is a pointer, but that
+> > just shows that the whole approach is wrong.
+> 
+> Mutex is a pointer because we want to use same mutex from WDT and RTC.
+> We can sure point to parent data but then we still need our own dev
+> pointer. So we can have a struct with pointer to parent data and dev
+> pointer - but I'm not at all sure it is any clearer.
 
-> +Example:
-> +
-> +	usb2_utmi_host_phy: phy@5f000 {
-> +		compatible = "marvell,armada-3700-utmi-host-phy";
-> +		reg = <0x5f000 0x800>;
-> +		marvell,usb-misc-reg = <&usb2_syscon>;
-> +		#phy-cells = <0>;
-> +	};
-> +
-> +	usb2_syscon: system-controller@5f800 {
-> +		compatible = "marvell,usb2-host-miscellaneous", "syscon";
-> +		reg = <0x5f800 0x800>;
-> +	};
+As I said, that is wrong. To say it in plaintext, I won't accept
+the driver if it copies the parent's driver data. The driver should
+have and use its own driver data, and only maintain a pointer to
+its parent's driver data. And most definitely you don't want to
+copy and use any device data structure from the parent.
 
-Those registers are contiguous to the register range of the PHY itself.
-What was the criteria used to decide that we need two separate DT nodes
-for these ?
-
-Best regards,
-
-Thomas
--- 
-Thomas Petazzoni, CTO, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+> > 
+> > > +
+> > > +	/*
+> > > +	 * TODO: Set the initial state and timeout.
+> > 
+> > Confused. Why don't you just do it ?
+> 
+> I will. But it's not ready yet. I still wanted to include the WDT for
+> this RFC. And I hope I could get the MFD core part included in Lee's
+> tree at early phase so that the include/linux/mfd/rohm-bd70528.h would
+> be in other sub trees when they're finalized for upstreaming.
+> 
+> > 
+> > > +	 * See whether the low power states require special handling
+> > > +	 */
+> > > +	watchdog_set_drvdata(&bd70528_wd, bd70528);
+> > 
+> > At least in theory there can be more than one of those devices
+> > in the system, since it is an i2c device. With that in mind, bd70528_wd
+> > should be locally allocated.
+> 
+> Point taken, thanks.
+> 
+> > Also, bd70528_wd should be fully initialized. For example, the parent
+> > device is not set.
+> 
+> Thanks for this point too =) I will see what are all the missing
+> initializations before sending out the final version.
+> 
+> I do really appreciate that you see the trouble of doing the review and
+> giving me the push to right direction!
+> 
+> Br,
+> 	Matti Vaittinen
+> 
+> -- 
+> Matti Vaittinen
+> ROHM Semiconductors
+> 
+> ~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
