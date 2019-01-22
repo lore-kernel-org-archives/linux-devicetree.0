@@ -1,16 +1,16 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH RESEND v1 2/4] dt-bindings: fsl: scu: add imx8qm scu clock
- support
-Date: Tue, 22 Jan 2019 12:58:38 +0000
-Message-ID: <AM0PR04MB421124D0E6031D97E6693E9680980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+Subject: RE: [PATCH RESEND v1 4/4] dt-bindings: imx8-clock: add a53 and a72
+ clock id
+Date: Tue, 22 Jan 2019 12:59:07 +0000
+Message-ID: <AM0PR04MB4211003C959DCC89B169D39B80980@AM0PR04MB4211.eurprd04.prod.outlook.com>
 References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
- <1547207400-28307-3-git-send-email-aisheng.dong@nxp.com>
- <20190121232730.GA22676@bogus>
+ <1547207400-28307-5-git-send-email-aisheng.dong@nxp.com>
+ <20190122001011.GA15952@bogus>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190121232730.GA22676@bogus>
+In-Reply-To: <20190122001011.GA15952@bogus>
 Content-Language: en-US
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
@@ -25,24 +25,61 @@ To: Rob Herring <robh@kernel.org>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-> >  Required properties:
-> >  - compatible:		Should be one of:
-> > -			  "fsl,imx8qxp-clock"
-> > +			  "fsl,imx8qm-clock",
-> > +			  "fsl,imx8qxp-clock".
+> From: Rob Herring [mailto:robh@kernel.org]
+> Sent: Tuesday, January 22, 2019 8:10 AM
 > 
-> No need for the punctuation here. The whole point of one per line is to have 1
-> line changes. Otherwise,
+> On Fri, Jan 11, 2019 at 11:56:09AM +0000, Aisheng Dong wrote:
+> > Add a53 and a72 clock id, as there's still no users, we update
+> > IMX_LSIO_MEM_CLK base to start from 6 to allow a53 and a72 clock id to
+> > be continued with a35 clk.
+> >
+> > Cc: Stephen Boyd <sboyd@kernel.org>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> > Cc: Sascha Hauer <kernel@pengutronix.de>
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: Michael Turquette <mturquette@baylibre.com>
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> > ---
+> >  include/dt-bindings/clock/imx8-clock.h | 6 ++++--
+> >  1 file changed, 4 insertions(+), 2 deletions(-)
+> >
+> > diff --git a/include/dt-bindings/clock/imx8-clock.h
+> > b/include/dt-bindings/clock/imx8-clock.h
+> > index 4236818..2f1aa2f 100644
+> > --- a/include/dt-bindings/clock/imx8-clock.h
+> > +++ b/include/dt-bindings/clock/imx8-clock.h
+> > @@ -13,10 +13,12 @@
+> >
+> >  /* CPU */
+> >  #define IMX_A35_CLK					1
+> > +#define IMX_A53_CLK					2
+> > +#define IMX_A72_CLK					3
+> 
+> All 3 cores in one chip? If not maybe these should be split or define them as
+> cpu cluster x clocks.
 > 
 
-Got it, thanks.
-I will update it later.
+Not in one chip.
+Here are common clock IDs used for both MX8QXP and MX8QM.
+You mean change to something like below?
 
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> 
-> >  			followed by "fsl,scu-clk"
-> >  - #clock-cells:		Should be 1. Contains the Clock ID value.
-> >  - clocks:		List of clock specifiers, must contain an entry for
+#define IMX_CPU_CLUSTER_A53_CLK			2
+#define IMX_CPU_CLUSTER_A72_CLK			3
+
+Regards
+Dong Aisheng
+
+> >
+> >  /* LSIO SS */
+> > -#define IMX_LSIO_MEM_CLK				2
+> > -#define IMX_LSIO_BUS_CLK				3
+> > +#define IMX_LSIO_MEM_CLK				6
+> > +#define IMX_LSIO_BUS_CLK				7
+> >  #define IMX_LSIO_PWM0_CLK				10
+> >  #define IMX_LSIO_PWM1_CLK				11
+> >  #define IMX_LSIO_PWM2_CLK				12
 > > --
 > > 2.7.4
 > >
