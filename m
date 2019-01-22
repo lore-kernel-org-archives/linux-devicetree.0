@@ -1,73 +1,46 @@
-From: Bjorn Helgaas <helgaas@kernel.org>
-Subject: Re: [PATCH] PCI: Use of_node_name_eq for node name comparisons
-Date: Tue, 22 Jan 2019 14:20:35 -0600
-Message-ID: <20190122202035.GD14636@google.com>
-References: <20181205195050.4759-18-robh@kernel.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
+Date: Tue, 22 Jan 2019 20:29:24 +0000
+Message-ID: <20190122202924.GL7579@sirena.org.uk>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-5-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="wIc/V6YLA2QdyfT4"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20181205195050.4759-18-robh@kernel.org>
+In-Reply-To: <1548138816-1149-5-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Paul Mackerras <paulus@samba.org>, Michael Ellerman <mpe@ellerman.id.au>, linuxppc-dev@lists.ozlabs.org, linux-pci@vger.kernel.org, Michael Bringmann <mwb@linux.vnet.ibm.com>
+To: Alok Chauhan <alokc@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-[+cc Michael B]
 
-On Wed, Dec 05, 2018 at 01:50:34PM -0600, Rob Herring wrote:
-> Convert string compares of DT node names to use of_node_name_eq helper
-> instead. This removes direct access to the node name pointer.
-> 
-> Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-> Cc: Paul Mackerras <paulus@samba.org>
-> Cc: Michael Ellerman <mpe@ellerman.id.au>
-> Cc: Bjorn Helgaas <bhelgaas@google.com>
-> Cc: linuxppc-dev@lists.ozlabs.org
-> Cc: linux-pci@vger.kernel.org
-> Signed-off-by: Rob Herring <robh@kernel.org>
+--wIc/V6YLA2QdyfT4
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-I applied the pci/of.c change to pci/misc for v5.1, thanks!
+On Tue, Jan 22, 2019 at 12:03:34PM +0530, Alok Chauhan wrote:
 
-I dropped the rpaphp_core.c part because there's another patch
-in-flight [1] that touches the same code, and it would be easier if
-Michael picked up this change and added it to his series.
+> Get the interconnect paths for SPI based Serial Engine device
+> and vote accordingly based on maximum supported SPI frequency.
 
-Bjorn
+Still not seeing anything except this patch here in my inbox - like I
+said what's the story with dependencies?
 
-[1] https://lore.kernel.org/lkml/20181214205120.16435.46952.stgit@powerkvm6.aus.stglabs.ibm.com/
+--wIc/V6YLA2QdyfT4
+Content-Type: application/pgp-signature; name="signature.asc"
 
-> ---
->  drivers/pci/hotplug/rpaphp_core.c | 2 +-
->  drivers/pci/of.c                  | 2 +-
->  2 files changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/pci/hotplug/rpaphp_core.c b/drivers/pci/hotplug/rpaphp_core.c
-> index bcd5d357ca23..7697d9c92b98 100644
-> --- a/drivers/pci/hotplug/rpaphp_core.c
-> +++ b/drivers/pci/hotplug/rpaphp_core.c
-> @@ -354,7 +354,7 @@ int rpaphp_add_slot(struct device_node *dn)
->  	const int *indexes, *names, *types, *power_domains;
->  	char *name, *type;
->  
-> -	if (!dn->name || strcmp(dn->name, "pci"))
-> +	if (!of_node_name_eq(dn, "pci"))
->  		return 0;
->  
->  	/* If this is not a hotplug slot, return without doing anything. */
-> diff --git a/drivers/pci/of.c b/drivers/pci/of.c
-> index 4c4217d0c3f1..3d32da15c215 100644
-> --- a/drivers/pci/of.c
-> +++ b/drivers/pci/of.c
-> @@ -113,7 +113,7 @@ struct device_node *of_pci_find_child_device(struct device_node *parent,
->  		 * a fake root for all functions of a multi-function
->  		 * device we go down them as well.
->  		 */
-> -		if (!strcmp(node->name, "multifunc-device")) {
-> +		if (of_node_name_eq(node, "multifunc-device")) {
->  			for_each_child_of_node(node, node2) {
->  				if (__of_pci_pci_compare(node2, devfn)) {
->  					of_node_put(node);
-> -- 
-> 2.19.1
-> 
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxHfSMACgkQJNaLcl1U
+h9DqqAf8CaMWvbpCWug3/SP/1Wojbdc+Z24TR24YSW41nHTz0VMhLtkOEtJWyRgp
+1H9iY6cqsqqVJzFO42nBJgT1rk8hcdcvEHw9cGJ6MqUhnwd5IDUhosRiUNPijkgh
+g1pcCZ8Y3hyC+6sKddlOomv744hJmluB1QEy9IeAEBykpE6ScHAhXgebO/iIk38j
+Hj+4VdGyBq/9O5c72J3s7LumYm5JPqAtgjIYIjL9hMgeSXj39hgqX1/mUObI8X9O
+xoZ1irHhtBaeP2jPyZt15XwFaCwbz2vEDUez7e7OOIY6jek1lnTUGUCYbr6tmcEF
+vev6Ccup/Puey+hycNBosXTobNpIOw==
+=R7VJ
+-----END PGP SIGNATURE-----
+
+--wIc/V6YLA2QdyfT4--
