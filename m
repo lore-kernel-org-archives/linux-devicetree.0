@@ -1,52 +1,65 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
- bindings
-Date: Tue, 22 Jan 2019 17:13:07 +0100
-Message-ID: <20190122171307.3dc956b6@xps13>
-References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
- <20190121112336.23489-7-miquel.raynal@bootlin.com>
- <20190121154451.GA28183@bogus> <87r2d6ko6e.fsf@FE-laptop>
- <CAL_JsqLQ+7VZ--n17aDAFS4v1fMOKKPprs9fVVASy9yt=_mR2w@mail.gmail.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v1 05/13] mfd: bd70528: Support ROHM bd70528 PMIC -
+ core
+Date: Tue, 22 Jan 2019 18:20:51 +0200
+Message-ID: <20190122162051.GA2559@localhost.localdomain>
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <fea02522fe54190cfc7f3500f4e6540c8af82453.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <9abdc69e-6aea-e1a5-c170-ebcba7f5b20f@roeck-us.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAL_JsqLQ+7VZ--n17aDAFS4v1fMOKKPprs9fVVASy9yt=_mR2w@mail.gmail.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Rob Herring <robh@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory CLEMENT <gregory.clement@bootlin.com>, Linux USB List <linux-usb@vger.kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Alan Stern <stern@rowland.harvard.edu>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, "moderated list:ARM/FREESCALE IMX / MXC
- ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <9abdc69e-6aea-e1a5-c170-ebcba7f5b20f@roeck-us.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Guenter Roeck <linux@roeck-us.net>
+Cc: mazziesaccount@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-SGVsbG8sCgpSb2IgSGVycmluZyA8cm9iaEBrZXJuZWwub3JnPiB3cm90ZSBvbiBUdWUsIDIyIEph
-biAyMDE5IDEwOjA4OjQxIC0wNjAwOgoKPiBPbiBNb24sIEphbiAyMSwgMjAxOSBhdCA5OjQ5IEFN
-IEdyZWdvcnkgQ0xFTUVOVAo+IDxncmVnb3J5LmNsZW1lbnRAYm9vdGxpbi5jb20+IHdyb3RlOgo+
-ID4KPiA+IEhpIFJvYiwKPiA+Cj4gPiAgT24gbHVuLiwgamFudi4gMjEgMjAxOSwgUm9iIEhlcnJp
-bmcgPHJvYmhAa2VybmVsLm9yZz4gd3JvdGU6Cj4gPiAgCj4gPiA+IE9uIE1vbiwgMjEgSmFuIDIw
-MTkgMTI6MjM6MzIgKzAxMDAsIE1pcXVlbCBSYXluYWwgd3JvdGU6ICAKPiA+ID4+IEFkZCBiaW5k
-aW5ncyBmb3IgTWFydmVsbCBBcm1hZGEgMzcwMCBVU0IyIFVUTUkrIFBIWS4KPiA+ID4+Cj4gPiA+
-PiBTaWduZWQtb2ZmLWJ5OiBNaXF1ZWwgUmF5bmFsIDxtaXF1ZWwucmF5bmFsQGJvb3RsaW4uY29t
-Pgo+ID4gPj4gLS0tCj4gPiA+PiAgLi4uL2JpbmRpbmdzL3BoeS9waHktbXZlYnUtdXRtaS50eHQg
-ICAgICAgICAgIHwgMzggKysrKysrKysrKysrKysrKysrKwo+ID4gPj4gIDEgZmlsZSBjaGFuZ2Vk
-LCAzOCBpbnNlcnRpb25zKCspCj4gPiA+PiAgY3JlYXRlIG1vZGUgMTAwNjQ0IERvY3VtZW50YXRp
-b24vZGV2aWNldHJlZS9iaW5kaW5ncy9waHkvcGh5LW12ZWJ1LXV0bWkudHh0Cj4gPiA+PiAgCj4g
-Pgo+ID4gSSBmb3VuZCAibWFydmVsbCx1c2IyLWhvc3QtbWlzY2VsbGFuZW91cyIgdG9vIGdlbmVy
-aWMsIEkgd291bGQgcHJlZmVyCj4gPiB0aGF0IHdlIGNhbGwgaXQgIm1hcnZlbGwsYXJtYWRhLTM3
-MDAtdXNiMi1ob3N0LW1pc2NlbGxhbmVvdXMiIGFzIHdlIGRvCj4gPiBmb3IgYWxsIHRoZSBvdGhl
-ciBJUC4gIAo+IAo+IEFoIHllcywgeW91IGFyZSByaWdodC4gUGVyaGFwcyBqdXN0ICctbWlzYycg
-dG8gc2hvcnRlbiBpdCBhIGxpdHRsZSBiaXQuCj4gCj4gUm9iCgpTdXJlLCBubyBwcm9ibGVtLgoK
-SSB3aWxsIHdhaXQgZm9yIG90aGVyIGNvbW1lbnRzIG9uIHRoZSByZXN0IG9mIHRoZSBzZXJpZXMg
-YW5kIHRoZW4gSQp3aWxsIHVwZGF0ZSB0aGUgYmluZGluZ3MvRFQgcGF0Y2guIFBlcmhhcHMgaWYg
-SSBkb24ndCBnZXQgbW9yZQpmZWVkYmFjayBJIHdpbGwganVzdCByZXNlbmQgdGhlIGNvbmNlcm5l
-ZCBwYXRjaGVzICg2LzEwIGFuZCA5LzEwKS4KCgpUaGFua3MsCk1pcXXDqGwKCl9fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fCmxpbnV4LWFybS1rZXJuZWwgbWFp
-bGluZyBsaXN0CmxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZwpodHRwOi8vbGlz
-dHMuaW5mcmFkZWFkLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2xpbnV4LWFybS1rZXJuZWwK
+Hello Guenter,
+
+Thanks for taking the time and doing review!
+
+On Tue, Jan 22, 2019 at 06:51:26AM -0800, Guenter Roeck wrote:
+> On 1/22/19 1:44 AM, Matti Vaittinen wrote:
+> > +static DEFINE_MUTEX(rtc_timer_mutex);
+
+// snip
+
+> > +static int bd70528_i2c_probe(struct i2c_client *i2c,
+> > +			    const struct i2c_device_id *id)
+> > +{
+> > +	struct bd70528 *bd70528;
+> > +	struct regmap_irq_chip_data *irq_data;
+> > +	int ret, i;
+> > +
+> > +	if (!i2c->irq) {
+> > +		dev_err(&i2c->dev, "No IRQ configured\n");
+> > +		return -EINVAL;
+> > +	}
+> > +	bd70528 = devm_kzalloc(&i2c->dev, sizeof(*bd70528), GFP_KERNEL);
+> > +
+> > +	if (!bd70528)
+> > +		return -ENOMEM;
+> > +
+> > +	dev_set_drvdata(&i2c->dev, bd70528);
+> > +	bd70528->rtc_timer_lock = &rtc_timer_mutex;
+> 
+> One global mutex for all instances of this driver is odd.
+> Why isn't this just part of struct bd70528 ?
+> 
+
+You are right. This was a brainfart from my side. I don't think there
+is many cases where this would har though. I don't expect to see
+many instances of PMIC drivers load. But you are correct nevertheless.
+I will fix this in future version. Thanks for pointing it out!
+
+Br,
+	Matti Vaittinen
+
+
+-- 
+Matti Vaittinen
+ROHM Semiconductors
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
