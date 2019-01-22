@@ -1,38 +1,69 @@
-Return-Path: <SRS0=qXSO=PS=cogentembedded.com=sergei.shtylyov@kernel.org>
-Subject: [PATCH RFC 1/2] dt-bindings: spi: renesas-rpc: document R8A77970
- bindings
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-References: <c83b1e54-016f-ef28-6bc9-9be9410c0d9a@cogentembedded.com>
-Message-ID: <36b5ecc8-e7df-e351-f267-97a0d94262a1@cogentembedded.com>
-Date: Thu, 10 Jan 2019 22:02:38 +0300
-MIME-Version: 1.0
-In-Reply-To: <c83b1e54-016f-ef28-6bc9-9be9410c0d9a@cogentembedded.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: linux-spi@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Return-Path: <SRS0=Bydg=P6=linux.intel.com=thor.thayer@kernel.org>
+From: thor.thayer@linux.intel.com
+Subject: [PATCHv2 3/4] EDAC, altera: Add Stratix10 OCRAM ECC support
+Date: Tue, 22 Jan 2019 11:48:06 -0600
+Message-Id: <1548179287-21760-4-git-send-email-thor.thayer@linux.intel.com>
+In-Reply-To: <1548179287-21760-1-git-send-email-thor.thayer@linux.intel.com>
+References: <1548179287-21760-1-git-send-email-thor.thayer@linux.intel.com>
+To: bp@alien8.de, dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com
+Cc: thor.thayer@linux.intel.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-Document the R-Car V3M (R8A77970) SoC in the Renesas RPC-IF bindings.
+From: Thor Thayer <thor.thayer@linux.intel.com>
 
-Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Use the newer ECC error injection method for Arria10 and
+Stratix10 OCRAM.
+OCRAM can't call the common peripheral init routine since
+OCRAM is being used. An OCRAM specific init routine ensures
+the OCRAM ECC is setup without clearing memory.
 
+Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
- Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt |    3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+v2  No changes
+---
+ drivers/edac/altera_edac.c | 22 ++++++++++++++++++++--
+ 1 file changed, 20 insertions(+), 2 deletions(-)
 
-Index: renesas/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
-===================================================================
---- renesas.orig/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
-+++ renesas/Documentation/devicetree/bindings/spi/spi-renesas-rpc.txt
-@@ -2,7 +2,8 @@ Renesas R-Car Gen3 RPC-IF controller Dev
- ----------------------------------------------------------
+diff --git a/drivers/edac/altera_edac.c b/drivers/edac/altera_edac.c
+index 56af98d18645..6a8993e6a278 100644
+--- a/drivers/edac/altera_edac.c
++++ b/drivers/edac/altera_edac.c
+@@ -1216,8 +1216,26 @@ static const struct edac_device_prv_data ocramecc_data = {
+ 	.inject_fops = &altr_edac_device_inject_fops,
+ };
  
- Required properties:
--- compatible: should be "renesas,r8a77980-rpc" or
-+- compatible: should be "renesas,r8a77970-rpc" or
-+  	      	        "renesas,r8a77980-rpc" or
-   	      	        "renesas,r8a77995-rpc"
- - #address-cells: should be 1
- - #size-cells: should be 0
++static int __maybe_unused
++altr_a10_check_ecc_deps_init(struct altr_edac_device_dev *device)
++{
++	void __iomem  *base = device->base;
++	int ret;
++
++	ret = altr_check_ecc_deps(device);
++	if (ret)
++		return ret;
++
++	/* Enable IRQ on Single Bit Error */
++	writel(ALTR_A10_ECC_SERRINTEN, (base + ALTR_A10_ECC_ERRINTENS_OFST));
++	/* Ensure all writes complete */
++	wmb();
++
++	return 0;
++}
++
+ static const struct edac_device_prv_data a10_ocramecc_data = {
+-	.setup = altr_check_ecc_deps,
++	.setup = altr_a10_check_ecc_deps_init,
+ 	.ce_clear_mask = ALTR_A10_ECC_SERRPENA,
+ 	.ue_clear_mask = ALTR_A10_ECC_DERRPENA,
+ 	.irq_status_mask = A10_SYSMGR_ECC_INTSTAT_OCRAM,
+@@ -1227,7 +1245,7 @@ static const struct edac_device_prv_data a10_ocramecc_data = {
+ 	.ue_set_mask = ALTR_A10_ECC_TDERRA,
+ 	.set_err_ofst = ALTR_A10_ECC_INTTEST_OFST,
+ 	.ecc_irq_handler = altr_edac_a10_ecc_irq,
+-	.inject_fops = &altr_edac_a10_device_inject_fops,
++	.inject_fops = &altr_edac_a10_device_inject2_fops,
+ 	/*
+ 	 * OCRAM panic on uncorrectable error because sleep/resume
+ 	 * functions and FPGA contents are stored in OCRAM. Prefer
+-- 
+2.7.4
