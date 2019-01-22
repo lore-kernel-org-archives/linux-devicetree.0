@@ -1,16 +1,16 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH RESEND v1 0/4] dt-binding: clk: prepare for imx8qm clock
- support
-Date: Tue, 22 Jan 2019 11:06:48 -0800
-Message-ID: <154818400852.20280.9414688242016617890@swboyd.mtv.corp.google.com>
-References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
- <AM0PR04MB42115D3E98B8B319936AC60E80820@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <20190116110216.GN15808@dragon>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
+ bindings
+Date: Tue, 22 Jan 2019 20:16:35 +0100
+Message-ID: <20190122201635.4a6c28d0@xps13>
+References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+ <20190121112336.23489-7-miquel.raynal@bootlin.com>
+ <20190122183833.40077d7a@windsurf>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190116110216.GN15808@dragon>
+In-Reply-To: <20190122183833.40077d7a@windsurf>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -20,24 +20,48 @@ List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
 Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
 Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, Shawn Guo <shawnguo@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+To: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-Quoting Shawn Guo (2019-01-16 03:02:17)
-> On Wed, Jan 16, 2019 at 05:40:01AM +0000, Aisheng Dong wrote:
-> > Ping...
-> > 
-> > BTW, as the first two patches change the same firmware binding doc fs.scu.txt.
-> > I'm not sure whether it should go to Shawn's tree for the binding part, or Stephen's clock tree.
-> > 
-> > Shawn & Stephen,
-> > What's your suggestion?
-> 
-> I can apply the first two to my tree as long as Rob and Stephen ack on
-> them.
-> 
-
-The first two are documentation updates? I don't care really either way,
-so I gave my ack in case you want to pick them up before I get around to
-the rest of the series.
+SGkgVGhvbWFzLAoKVGhvbWFzIFBldGF6em9uaSA8dGhvbWFzLnBldGF6em9uaUBib290bGluLmNv
+bT4gd3JvdGUgb24gVHVlLCAyMiBKYW4KMjAxOSAxODozODozMyArMDEwMDoKCj4gSGVsbG8sCj4g
+Cj4gT24gTW9uLCAyMSBKYW4gMjAxOSAxMjoyMzozMiArMDEwMCwgTWlxdWVsIFJheW5hbCB3cm90
+ZToKPiAKPiA+ICstIGNvbXBhdGlibGU6IFNob3VsZCBiZSBvbmUgb2Y6Cj4gPiArCSAgICAgICog
+Im1hcnZlbGwsYTM3MDAtdXRtaS1ob3N0LXBoeSIgZm9yIHRoZSBQSFkgY29ubmVjdGVkIHRvCj4g
+PiArCSAgICAgICAgdGhlIFVTQjIgaG9zdC1vbmx5IGNvbnRyb2xsZXIuCj4gPiArCSAgICAgICog
+Im1hcnZlbGwsYTM3MDAtdXRtaS1vdGctcGh5IiBmb3IgdGhlIFBIWSBjb25uZWN0ZWQgdG8KPiA+
+ICsJICAgICAgICB0aGUgVVNCMyBhbmQgVVNCMiBPVEcgY2FwYWJsZSBjb250cm9sbGVyLiAgCj4g
+Cj4gRG8gd2UgcmVhbGx5IG5lZWQgZGlmZmVyZW50IGNvbXBhdGlibGUgc3RyaW5ncyBmb3IgdGhv
+c2UgPyBJIGFzc3VtZSB0aGUKPiBJUCBibG9jayBpcyBleGFjdGx5IHRoZSBzYW1lIGZvciB0aGUg
+dHdvIFBIWXMsIHJpZ2h0ID8gSWYgc28sIHdlIHNob3VsZAo+IHVzZSB0aGUgc2FtZSBjb21wYXRp
+YmxlIHN0cmluZy4KCkZvciB3aGF0IEkgdW5kZXJzdGFuZCwgdGhlIFBIWXMgYXJlIGRpZmZlcmVu
+dC4gQXQgbGVhc3QgdGhpcyBpcyBob3cKdGhleSBhcmUgZGVzY3JpYmVkIGluIHRoZSBzcGVjaWZp
+Y2F0aW9uLiBJIGNhbiBsaXN0IGF0IGxlYXN0IHR3bwpkaWZmZXJlbmNlcyB2aXNpYmxlIGluIHRo
+ZSByZWdpc3RlciBzZXQ6Ciogb25lIGhhcyBPVEcgcmVnaXN0ZXJzLCB0aGUgb3RoZXIgZG9lcyBu
+b3QuCiogb25lIGhhcyBjaGFyZ2VyIGRldGVjdGlvbiBjYXBhYmlsaXRpZXMgKGFuZCByZWdpc3Rl
+cnMpLCB0aGUgb3RoZXIKICBkb2VzIG5vdC4KCj4gCj4gRGlkbid0IHdlIGRpc2N1c3MgdGhhdCB3
+ZSBjYW4gbG9va3VwIGZyb20gdGhlIFBIWSB3aGV0aGVyIHRoZSBVU0IKPiBjb250cm9sbGVyIGl0
+IGlzIGNvbm5lY3RlZCB0byBpcyBpbiBob3N0IG1vZGUgb3Igb3RnIG1vZGUgPwoKWWVzLCBidXQg
+aGF2aW5nIHR3byBkaWZmZXJlbnQgUEhZcyBtZWFudCBoYXZpbmcgdHdvIGRpZmZlcmVudApjb21w
+YXRpYmxlcywgaGVuY2UgdGhlcmUgd2FzIG5vIG5lZWQgaW4gdGhlIGRyaXZlciB0byB1c2UgdGhp
+cwpsb29rdXAgYXBwcm9hY2guIEFueXdheSB0aGlzIGlzIGFuIGltcGxlbWVudGF0aW9uIGRldGFp
+bCBhbmQgaXQgaXMKYWx3YXlzIHBvc3NpYmxlIHRvIGdvIGJhY2suIAoKPiAKPiA+ICtFeGFtcGxl
+Ogo+ID4gKwo+ID4gKwl1c2IyX3V0bWlfaG9zdF9waHk6IHBoeUA1ZjAwMCB7Cj4gPiArCQljb21w
+YXRpYmxlID0gIm1hcnZlbGwsYXJtYWRhLTM3MDAtdXRtaS1ob3N0LXBoeSI7Cj4gPiArCQlyZWcg
+PSA8MHg1ZjAwMCAweDgwMD47Cj4gPiArCQltYXJ2ZWxsLHVzYi1taXNjLXJlZyA9IDwmdXNiMl9z
+eXNjb24+Owo+ID4gKwkJI3BoeS1jZWxscyA9IDwwPjsKPiA+ICsJfTsKPiA+ICsKPiA+ICsJdXNi
+Ml9zeXNjb246IHN5c3RlbS1jb250cm9sbGVyQDVmODAwIHsKPiA+ICsJCWNvbXBhdGlibGUgPSAi
+bWFydmVsbCx1c2IyLWhvc3QtbWlzY2VsbGFuZW91cyIsICJzeXNjb24iOwo+ID4gKwkJcmVnID0g
+PDB4NWY4MDAgMHg4MDA+Owo+ID4gKwl9OyAgCj4gCj4gVGhvc2UgcmVnaXN0ZXJzIGFyZSBjb250
+aWd1b3VzIHRvIHRoZSByZWdpc3RlciByYW5nZSBvZiB0aGUgUEhZIGl0c2VsZi4KPiBXaGF0IHdh
+cyB0aGUgY3JpdGVyaWEgdXNlZCB0byBkZWNpZGUgdGhhdCB3ZSBuZWVkIHR3byBzZXBhcmF0ZSBE
+VCBub2Rlcwo+IGZvciB0aGVzZSA/CgpCZWNhdXNlIHRoaXMgYXJlYSBjb250YWlucyBhIGJ1bmNo
+IG9mIHJlZ2lzdGVycywgbW9zdCBvZiB0aGVtIGFyZQp0aGVyZSB0byBtYW5hZ2UgdGhlIFBIWSwg
+YnV0IG90aGVycyBhcmUgcmVsYXRlZCB0byB0aGUgVVNCIGNvbnRyb2xsZXIKKGllLiBhIHNvZnR3
+YXJlIHJlc2V0KS4gSSBrbm93IHRoZSBjdXJyZW50IFVTQiBjb250cm9sbGVyIGRyaXZlciBkb2Vz
+Cm5vdCBhY2Nlc3MgdGhpcyBhcmVhIGJ1dCB3aGF0IGlmIG9uZSBkYXkgd2UgZGVjaWRlIHRvIGRv
+IGl0PwoKClRoYW5rcywKTWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtl
+cm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxt
+YW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
