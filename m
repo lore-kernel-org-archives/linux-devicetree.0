@@ -1,131 +1,79 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH v4 6/6] usb: musb: Add support for MediaTek musb
- controller
-Date: Tue, 22 Jan 2019 09:45:15 +0800
-Message-ID: <1548121515.4433.259.camel@mhfsdcap03>
-References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
-         <1548073351-13739-7-git-send-email-min.guo@mediatek.com>
-         <20190121160749.GD30080@uda0271908>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: [PATCH v5 0/3] Reset controller support for i.MX8MQ
+Date: Mon, 21 Jan 2019 18:10:40 -0800
+Message-ID: <20190122021043.25449-1-andrew.smirnov@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190121160749.GD30080@uda0271908>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bin Liu <b-liu@ti.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org, tony@atomide.com, hdegoede@redhat.com, Yonglong Wu <yonglong.wu@mediatek.com>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: p.zabel@pengutronix.de
+Cc: "A.s. Dong" <aisheng.dong@nxp.com>, Rob Herring <robh@kernel.org>, Richard Zhu <hongxing.zhu@nxp.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Andrey Smirnov <andrew.smirnov@gmail.com>, linux-kernel@vger.kernel.org, linux-imx@nxp.com, Fabio Estevam <fabio.estevam@nxp.com>, Leonard Crestez <leonard.crestez@nxp.com>, cphealy@gmail.com, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Bin,
+This patch contains changes I made in order to add support for i.MX8MQ
+to reset-imx7.c in order to enable support of PCIE IP block on i.MX8MQ
+SoCs.
 
-On Mon, 2019-01-21 at 10:07 -0600, Bin Liu wrote:
-> Hi Min,
-> 
-> On Mon, Jan 21, 2019 at 08:22:31PM +0800, min.guo@mediatek.com wrote:
-> > From: Min Guo <min.guo@mediatek.com>
-> > 
-> > This adds support for MediaTek musb controller in
-> > host, peripheral and otg mode.
-> > There are some quirk of MediaTek musb controller, such as:
-> >  -W1C interrupt status registers
-> >  -Private data toggle registers
-> >  -No dedicated DMA interrupt line
-> > 
-> > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > Signed-off-by: Yonglong Wu <yonglong.wu@mediatek.com>
-> > ---
-> > changes in v4:
-> > 1. no changes
-> > 
-> > changes in v3:
-> > suggested by Bin:
-> > 1. Remove 'u8/u16 data' parameter in clearb/w() hooks
-> > 2. Replace musb_readb/w() with musb_clearb/w() to clear interrupts status
-> > 
-> > changes in v2:
-> > suggested by Bin:
-> > 1. Add summarize of MediaTek musb controller differences in the commit log
-> > 2. Add "|| COMPILE_TEST" in Kconfig
-> > 3. Move MediaTek's private toggle registers from musb_regs.h to mediatek.c
-> > 4. Replace musb_readl() with musb_readw() to read 16bit toggle register
-> > ---
-> >  drivers/usb/musb/Kconfig    |   8 +-
-> >  drivers/usb/musb/Makefile   |   1 +
-> >  drivers/usb/musb/mediatek.c | 624 ++++++++++++++++++++++++++++++++++++++++++++
-> >  3 files changed, 632 insertions(+), 1 deletion(-)
-> >  create mode 100644 drivers/usb/musb/mediatek.c
-> > 
-> 
-> [snip]
-> 
-> > +static irqreturn_t generic_interrupt(int irq, void *__hci)
-> > +{
-> > +	unsigned long flags;
-> > +	irqreturn_t retval = IRQ_NONE;
-> > +	struct musb *musb = __hci;
-> > +
-> > +	spin_lock_irqsave(&musb->lock, flags);
-> > +	musb->int_usb = musb_readb(musb->mregs, MUSB_INTRUSB) &
-> > +	    musb_readb(musb->mregs, MUSB_INTRUSBE);
-> > +	musb->int_tx = musb_readw(musb->mregs, MUSB_INTRTX)
-> > +	    & musb_readw(musb->mregs, MUSB_INTRTXE);
-> > +	musb->int_rx = musb_readw(musb->mregs, MUSB_INTRRX)
-> > +	    & musb_readw(musb->mregs, MUSB_INTRRXE);
-> 
-> Based on my comment in 5/6, the above 3 musb_readb/w() can be changed to
-> 
-> > +	/* MediaTek controller interrupt status is W1C */
-> > +	musb_clearw(musb->mregs, MUSB_INTRRX);
-> > +	musb_clearw(musb->mregs, MUSB_INTRTX);
-> > +	musb_clearb(musb->mregs, MUSB_INTRUSB);
-> 
-> 	musb->int_usb = musb_clearb(musb->mregs, MUSB_INTRUSB)
-> 	musb->int_tx = musb_clearw(musb->mregs, MUSB_INTRTX);
-> 	musb->int_rx = musb_clearw(musb->mregs, MUSB_INTRRX);
+Feedback is welcome!
 
-Okay.
+Thanks,
+Andrey Smirnov
 
-> > +
-> > +	if (musb->int_usb || musb->int_tx || musb->int_rx)
-> > +		retval = musb_interrupt(musb);
-> > +
-> > +	spin_unlock_irqrestore(&musb->lock, flags);
-> > +
-> > +	return retval;
-> > +}
-> > +
-> 
-> [snip]
-> 
-> > +
-> > +static u8 mtk_musb_clearb(void __iomem *addr, unsigned int offset)
-> > +{
-> > +	u8 data;
-> > +
-> > +	/* W1C */
-> > +	data = musb_readb(addr, offset);
-> > +	musb_writeb(addr, offset, data);
-> > +	return musb_readb(addr, offset);
-> 
-> 	return data;
+Changes since [v4]
 
-Okay.
+ - Reset driver reworked to support different IP variants by providing
+   different struct reset_control_ops instead of having a .prepare
+   callback
 
-> > +}
-> > +
-> > +static u16 mtk_musb_clearw(void __iomem *addr, unsigned int offset)
-> > +{
-> > +	u16 data;
-> > +
-> > +	/* W1C */
-> > +	data = musb_readw(addr, offset);
-> > +	musb_writew(addr, offset, data);
-> > +	return musb_readw(addr, offset);
-> 
-> 	return data;
+Changes since [v3]
 
-Okay.
+ - Kconfig entry is converted to use ARCH_MXC
 
-> 
-> Regards,
-> -Bin.
+ - Collected Reviewed-by from Rob Herring
+
+Changes since [v2]
+
+ - Constified "variant" field in struct imx7_src
+
+ - Moved dt-bindings/reset/imx8mq-reset.h to be a part of the patch
+   documenting DT bindings
+
+Changes since [v1]
+
+ - Series re-written to use a per-variant LUT instead of using a
+   single table
+
+ - Changed driver to use "imx8mq" insead of "imx8m" to match other
+   drivers and CONFIG_ARCH_IMX8MQ
+
+ - Updated list of exported i.MX8MQ resets, add missing and remove
+   bogus ones (hopefully nothing is missing this time)
+
+[v4] lkml.kernel.org/r/20181220010700.8598-1-andrew.smirnov@gmail.com
+[v3] lkml.kernel.org/r/20181217023827.7947-1-andrew.smirnov@gmail.com
+[v2] lkml.kernel.org/r/20181128043738.12714-1-andrew.smirnov@gmail.com
+[v1] lkml.kernel.org/r/20181117181131.9330-2-andrew.smirnov@gmail.com
+
+Andrey Smirnov (3):
+  reset: imx7: Add plubming to support multiple IP variants
+  dt-bindings: reset: imx7: Document usage on i.MX8MQ SoCs
+  reset: imx7: Add support for i.MX8MQ IP block variant
+
+ .../bindings/reset/fsl,imx7-src.txt           |   7 +-
+ drivers/reset/Kconfig                         |   4 +-
+ drivers/reset/reset-imx7.c                    | 172 ++++++++++++++++--
+ include/dt-bindings/reset/imx8mq-reset.h      |  64 +++++++
+ 4 files changed, 229 insertions(+), 18 deletions(-)
+ create mode 100644 include/dt-bindings/reset/imx8mq-reset.h
+
+-- 
+2.20.1
