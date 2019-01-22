@@ -1,66 +1,129 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 03/11] arm64: dts: renesas: Add Si-Linux CAT874 board
- support
-Date: Tue, 22 Jan 2019 15:52:07 +0100
-Message-ID: <20190122145206.ijjwzffwbazsnvrs@verge.net.au>
-References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547663874-29411-4-git-send-email-fabrizio.castro@bp.renesas.com>
- <CAMuHMdWhcH2=FS62jawZrMeSc_qKBS_SpDTMoVvhP2o736wtgg@mail.gmail.com>
+From: Stefan Agner <stefan@agner.ch>
+Subject: Re: [PATCH 1/2] ARM: dts: Add stmpe-adc DT node to Toradex iMX6
+ modules
+Date: Tue, 22 Jan 2019 15:53:30 +0100
+Message-ID: <959c74d19959e0cf2261df7f3deaf536@agner.ch>
+References: <20190122132135.5012-1-dev@pschenker.ch>
+ <20190122132135.5012-2-dev@pschenker.ch>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAMuHMdWhcH2=FS62jawZrMeSc_qKBS_SpDTMoVvhP2o736wtgg@mail.gmail.com>
-Sender: netdev-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Biju Das <biju.das@bp.renesas.com>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <mic>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190122132135.5012-2-dev@pschenker.ch>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Philippe Schenker <dev@pschenker.ch>
+Cc: shawnguo@kernel.org, s.hauer@pengutronix.de, thierry.reding@gmail.com, linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, marcel.ziswiler@toradex.com, max.krummenacher@toradex.com, Philippe Schenker <philippe.schenker@toradex.com>, Fabio Estevam <fabio.estevam@nxp.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, Mark Rutland <mark.rutland@arm.com>, NXP Linux Team <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 12:04:51PM +0100, Geert Uytterhoeven wrote:
-> On Wed, Jan 16, 2019 at 7:38 PM Fabrizio Castro
-> <fabrizio.castro@bp.renesas.com> wrote:
-> > From: Biju Das <biju.das@bp.renesas.com>
-> >
-> > Basic support for the Si-Linux board based on RZ/G2E:
-> >   - Memory,
-> >   - Main crystal,
-> >   - Serial console
-> >
-> > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+On 22.01.2019 14:21, Philippe Schenker wrote:
+> From: Philippe Schenker <philippe.schenker@toradex.com>
 > 
-> Pending acceptance of the DT bindings
-> Reviewed-by: Geert Uytterhoeven <geert+renesas@glider.be>
+> Add the stmpe-adc DT node as found on Toradex iMX6 modules
+> 
+> Signed-off-by: Philippe Schenker <philippe.schenker@toradex.com>
 
-I have applied the binding patch locally and intend to include
-it in my next push. With that in mind I have also applied this patch
-for v5.1.
+Reviewed-by: Stefan Agner <stefan@agner.ch>
 
+> ---
 > 
-> > --- /dev/null
-> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0-cat874.dts
+>  arch/arm/boot/dts/imx6qdl-apalis.dtsi  | 22 ++++++++++++++--------
+>  arch/arm/boot/dts/imx6qdl-colibri.dtsi | 22 ++++++++++++++--------
+>  2 files changed, 28 insertions(+), 16 deletions(-)
 > 
-> > +       chosen {
-> > +               bootargs = "ignore_loglevel rw root=/dev/nfs ip=dhcp";
-> 
-> FWIW, the root and ip parameters won't do anything, until you add network
-> support.
-
-True, but I don't think that warrants a respin.
-
-> 
-> > +               stdout-path = "serial0:115200n8";
-> > +       };
-> 
-> Gr{oetje,eeting}s,
-> 
->                         Geert
-> 
-> -- 
-> Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-> 
-> In personal conversations with technical people, I call myself a hacker. But
-> when I'm talking to journalists I just say "programmer" or something like that.
->                                 -- Linus Torvalds
-> 
+> diff --git a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> index 8380f1b26826..e8c7ef7e078a 100644
+> --- a/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-apalis.dtsi
+> @@ -332,11 +332,17 @@
+>  		id = <0>;
+>  		blocks = <0x5>;
+>  		irq-trigger = <0x1>;
+> +		/* 3.25 MHz ADC clock speed */
+> +		st,adc-freq = <1>;
+> +		/* 12-bit ADC */
+> +		st,mod-12b = <1>;
+> +		/* internal ADC reference */
+> +		st,ref-sel = <0>;
+> +		/* ADC converstion time: 80 clocks */
+> +		st,sample-time = <4>;
+>  
+>  		stmpe_touchscreen {
+>  			compatible = "st,stmpe-ts";
+> -			/* 3.25 MHz ADC clock speed */
+> -			st,adc-freq = <1>;
+>  			/* 8 sample average control */
+>  			st,ave-ctrl = <3>;
+>  			/* 7 length fractional part in z */
+> @@ -346,17 +352,17 @@
+>  			 * current limit value
+>  			 */
+>  			st,i-drive = <1>;
+> -			/* 12-bit ADC */
+> -			st,mod-12b = <1>;
+> -			/* internal ADC reference */
+> -			st,ref-sel = <0>;
+> -			/* ADC converstion time: 80 clocks */
+> -			st,sample-time = <4>;
+>  			/* 1 ms panel driver settling time */
+>  			st,settling = <3>;
+>  			/* 5 ms touch detect interrupt delay */
+>  			st,touch-det-delay = <5>;
+>  		};
+> +
+> +		stmpe_adc {
+> +			compatible = "st,stmpe-adc";
+> +			/* forbid to use ADC channels 3-0 (touch) */
+> +			st,norequest-mask = <0x0F>;
+> +		};
+>  	};
+>  };
+>  
+> diff --git a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> index 87e15e7cb32b..eb8603a2444e 100644
+> --- a/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> +++ b/arch/arm/boot/dts/imx6qdl-colibri.dtsi
+> @@ -262,11 +262,17 @@
+>  		id = <0>;
+>  		blocks = <0x5>;
+>  		irq-trigger = <0x1>;
+> +		/* 3.25 MHz ADC clock speed */
+> +		st,adc-freq = <1>;
+> +		/* 12-bit ADC */
+> +		st,mod-12b = <1>;
+> +		/* internal ADC reference */
+> +		st,ref-sel = <0>;
+> +		/* ADC converstion time: 80 clocks */
+> +		st,sample-time = <4>;
+>  
+>  		stmpe_touchscreen {
+>  			compatible = "st,stmpe-ts";
+> -			/* 3.25 MHz ADC clock speed */
+> -			st,adc-freq = <1>;
+>  			/* 8 sample average control */
+>  			st,ave-ctrl = <3>;
+>  			/* 7 length fractional part in z */
+> @@ -276,17 +282,17 @@
+>  			 * current limit value
+>  			 */
+>  			st,i-drive = <1>;
+> -			/* 12-bit ADC */
+> -			st,mod-12b = <1>;
+> -			/* internal ADC reference */
+> -			st,ref-sel = <0>;
+> -			/* ADC converstion time: 80 clocks */
+> -			st,sample-time = <4>;
+>  			/* 1 ms panel driver settling time */
+>  			st,settling = <3>;
+>  			/* 5 ms touch detect interrupt delay */
+>  			st,touch-det-delay = <5>;
+>  		};
+> +
+> +		stmpe_adc {
+> +			compatible = "st,stmpe-adc";
+> +			/* forbid to use ADC channels 3-0 (touch) */
+> +			st,norequest-mask = <0x0F>;
+> +		};
+>  	};
+>  };
