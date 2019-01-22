@@ -1,99 +1,96 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv3 3/4] coresight: etm4x: Add support to enable ETMv4.2
-Date: Tue, 22 Jan 2019 19:13:04 +0530
-Message-ID: <6824138d-fa5f-0bec-d5f7-9c10d9a40948@codeaurora.org>
-References: <cover.1547813804.git.saiprakash.ranjan@codeaurora.org>
- <d52546764f8570e8c07ac8e3e2841e087e66648c.1547813804.git.saiprakash.ranjan@codeaurora.org>
- <cc71cfa9-8a11-9356-ac41-e27564a9f7b4@codeaurora.org>
- <20190121184831.GB14049@xps15>
- <CANLsYkw5h+-fWhiit+kNJHnGPF__Bz1MHc94sG=WOyfTPHi_NQ@mail.gmail.com>
+From: Rob Herring <robh@kernel.org>
+Subject: Re: [PATCH 1/2] usb: dwc3: Add avoiding vbus glitch happen during
+ xhci reset
+Date: Tue, 22 Jan 2019 07:45:07 -0600
+Message-ID: <CAL_Jsq+SULX5Y2C1Br+3reUHQ+1xJ=oZbuRBP+QJsEWeRgnuPg@mail.gmail.com>
+References: <20190116064820.20007-1-ran.wang_1@nxp.com> <20190116064820.20007-2-ran.wang_1@nxp.com>
+ <20190122010310.GA5165@bogus> <AM5PR0402MB286524243DB67DA15AE4EA42F1980@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkw5h+-fWhiit+kNJHnGPF__Bz1MHc94sG=WOyfTPHi_NQ@mail.gmail.com>
-Content-Language: en-US
+In-Reply-To: <AM5PR0402MB286524243DB67DA15AE4EA42F1980@AM5PR0402MB2865.eurprd04.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Suzuki K Poulose <suzuki.poulose@arm.com>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>
+To: Ran Wang <ran.wang_1@nxp.com>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/22/2019 3:07 AM, Mathieu Poirier wrote:
-> On Mon, 21 Jan 2019 at 11:48, Mathieu Poirier
-> <mathieu.poirier@linaro.org> wrote:
->>
->> On Mon, Jan 21, 2019 at 04:18:36PM +0530, Vivek Gautam wrote:
->>>
->>> On 1/18/2019 5:52 PM, Sai Prakash Ranjan wrote:
->>>> SDM845 has ETMv4.2 and can use the existing etm4x driver.
->>>> But the current etm driver checks only for ETMv4.0 and
->>>> errors out for other etm4x versions. This patch adds this
->>>> missing support to enable SoC's with ETMv4x to use same
->>>> driver by checking only the ETM architecture major version
->>>> number.
->>>>
->>>> Without this change, we get below error during etm probe:
->>>>
->>>> / # dmesg | grep etm
->>>> [    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
->>>> [    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
->>>> [    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
->>>> [    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
->>>> [    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
->>>> [    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
->>>> [    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
->>>> [    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
->>>>
->>>> With this change, etm probe is successful:
->>>>
->>>> / # dmesg | grep coresight
->>>> [    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
->>>> [    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
->>>> [    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
->>>> [    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
->>>> [    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
->>>> [    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
->>>> [    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
->>>> [    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
->>>>
->>>> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>>> ---
->>>>    drivers/hwtracing/coresight/coresight-etm4x.c | 2 +-
->>>>    drivers/hwtracing/coresight/coresight-etm4x.h | 2 +-
->>>>    2 files changed, 2 insertions(+), 2 deletions(-)
->>>>
->>>> diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
->>>> index 53e2fb6e86f6..93d5f1f3145e 100644
->>>> --- a/drivers/hwtracing/coresight/coresight-etm4x.c
->>>> +++ b/drivers/hwtracing/coresight/coresight-etm4x.c
->>>> @@ -55,7 +55,7 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
->>>>    static bool etm4_arch_supported(u8 arch)
->>>>    {
->>>> -   switch (arch) {
->>>> +   switch (arch >> 4) {
->>>
->>>
->>> While this looks good, from what it looks like arch is a combination of
->>> major version
->>> minor version. So, will it be better to masks, and shifts macros instead of
->>> a magic
->>> number shift.
->>> But, frankly it's upto Mathieu to decide the readability of this. So, I
->>> leave it to him.
->>
->> The layout of the architecture is already well defined in etm4_init_arch_data()
->> [1].  As such just doing the following would be fine with me:
->>
->>          /* Mask out the minor version nuber */
->>          switch (arch & 0xf) {
-> 
-> s/0xf/0xf0
-> 
-> Apologies for the confusion.
-> 
+On Mon, Jan 21, 2019 at 8:38 PM Ran Wang <ran.wang_1@nxp.com> wrote:
+>
+> Hi Rob,
+>
+> On January 22, 2019 09:03, Rob Herring wrote:
+> >
+> > On Wed, Jan 16, 2019 at 06:48:06AM +0000, Ran Wang wrote:
+> > > When DWC3 is set to host mode by programming register DWC3_GCTL,
+> > VUBS
+> >
+> > s/VUBS/VBUS/
+>
+> Yes, will fix it in next version.
+>
+> > > (or its control signal) will on immediately on related Root Hub ports.
+> >
+> > /will on/will turn on/
+>
+> Got it. Thanks.
+>
+> > > Then the VUBS will be de-asserted for a little while during xhci reset
+> > > (conducted by xhci driver) for a little while and back to normal.
+> > >
+> > > This VBUS glitch might cause some USB devices emuration fail if kernel
+> > > boot with them connected. One SW workaround which can fix this is to
+> > > program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
+> > > host mode in DWC3 driver(per signal measurement result, it will be too
+> > > late to do it in xhci-plat.c or xhci.c).
+> > >
+> > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
+> > > ---
+> > >  Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
+> > >  1 files changed, 3 insertions(+), 0 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > index 8e5265e..dadb530 100644
+> > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
+> > > @@ -106,6 +106,9 @@ Optional properties:
+> > >                     When just one value, which means INCRX burst
+> > mode enabled. When
+> > >                     more than one value, which means undefined length
+> > INCR burst type
+> > >                     enabled. The values can be 1, 4, 8, 16, 32, 64, 128
+> > and 256.
+> > > + - snps,avoid-vbus-glitch-when-set-host: Power off all Root Hub ports
+> > immediately
+> > > +                   after setting host mode to avoid vbus (negative)
+> > glitch happen in later
+> > > +                   xhci reset. And the vbus will back to 5V automatically
+> > when reset done.
+> >
+> > Can't you imply this from the compatible string. You should have an SoC
+> > specific compatible.
+>
+> Sorry, not quite get your point here? Actually I have discussed with Soc design guys
+> and Felipe, it seems to be DWC3 native behavior rather than SoC specific issue.
+> https://lkml.org/lkml/2018/11/23/387
+> https://lkml.org/lkml/2018/12/12/140
+>
+> I think there could be 2 reasons why we got no report for a long time till now:
+> 1. Most USB devices are not so sensitive to this VBUS glitch, they would works fine.
+> 2. A proper VBUS pump circuit design can successfully filter this glitch out. I have
+> confirmed this with scope, which means some platforms might resolve issue in
+> this way already (some might not, of cause).
+>
+> > Does this even need to be conditional? What would be the harm in doing
+> > this unconditionally for all DWC3 hosts?
+>
+> From the logic level, I don't see a harm to DWC3 hosts if unconditionally apply this.
+> However, since this is not a only solution (can fix it in HW way), I prefer to let it
+> controlled by property in DTS node for those questionable board already existing
+> in market.
 
-Thanks Mathieu, made this change in v4 of this series.
+Okay, sounds fine.
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+I would shorten the name a bit: snps,host-vbus-glitches
+
+Rob
