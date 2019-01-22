@@ -1,80 +1,72 @@
-From: Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>
-Subject: Re: [PATCH 1/3] media: dt: bindings: sunxi-ir: Add A64 compatible
-Date: Tue, 22 Jan 2019 10:16:13 +0800
-Message-ID: <CAGb2v67YsevDvjvTSh67wJNSJSUBuZ613hQWyorEiSzCUqjjkQ@mail.gmail.com>
-References: <20190111173015.12119-1-jernej.skrabec@siol.net>
- <20190111173015.12119-2-jernej.skrabec@siol.net> <CAGb2v66DiqK9sL-hQev4Wy08d9T7f1Yc2DFWJ0gYOnqChJyBRw@mail.gmail.com>
- <20190121095014.b6iq5dubfi7x2pi4@flea> <CAGb2v66d0wM8Yt2uS4MMhU6PP02h8CKwKjinasO6jtZ4ue1CAQ@mail.gmail.com>
- <20190122001917.GA31407@bogus>
-Reply-To: wens-jdAy2FN1RRM@public.gmane.org
+From: Baolin Wang <baolin.wang@linaro.org>
+Subject: Re: [PATCH 3/4] dt-bindings: spi: Add the DMA properties for the SPI
+ dma mode
+Date: Tue, 22 Jan 2019 10:22:58 +0800
+Message-ID: <CAMz4kuK0tvYHL1gGDXCKDzow+YmAj587UoBp=fRi0_sujLh2QQ@mail.gmail.com>
+References: <ab49bb74e921474aa9390f81cdf65f32c3d9d898.1547559542.git.baolin.wang@linaro.org>
+ <7538d5806003b8f67e7e0d35638315974b7c2b50.1547559542.git.baolin.wang@linaro.org>
+ <CAL_Jsq+VpO+pX0A27-v_U+4kQKXKD5O1EWrn708RDeLsqnU1ng@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBCMILY6JWQBBB7HZTHRAKGQEULSZVHI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190122001917.GA31407@bogus>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
-Cc: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Linux Media Mailing List <linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, devicetree <devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-arm-kernel <linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org>, linux-kernel <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAL_Jsq+VpO+pX0A27-v_U+4kQKXKD5O1EWrn708RDeLsqnU1ng@mail.gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Orson Zhai <orsonzhai@gmail.com>, Lyra Zhang <zhang.lyra@gmail.com>, lanqing.liu@unisoc.com, linux-spi <linux-spi@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 8:19 AM Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org> wrote:
+On Mon, 21 Jan 2019 at 21:53, Rob Herring <robh+dt@kernel.org> wrote:
 >
-> On Mon, Jan 21, 2019 at 05:57:57PM +0800, Chen-Yu Tsai wrote:
-> > On Mon, Jan 21, 2019 at 5:50 PM Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org> wrote:
-> > >
-> > > Hi,
-> > >
-> > > I'm a bit late to the party, sorry for that.
-> > >
-> > > On Sat, Jan 12, 2019 at 09:56:11AM +0800, Chen-Yu Tsai wrote:
-> > > > On Sat, Jan 12, 2019 at 1:30 AM Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org> wrote:
-> > > > >
-> > > > > A64 IR is compatible with A13, so add A64 compatible with A13 as a
-> > > > > fallback.
-> > > >
-> > > > We ask people to add the SoC-specific compatible as a contigency,
-> > > > in case things turn out to be not so "compatible".
-> > > >
-> > > > To be consistent with all the other SoCs and other peripherals,
-> > > > unless you already spotted a "compatible" difference in the
-> > > > hardware, i.e. the hardware isn't completely the same, this
-> > > > patch isn't needed. On the other hand, if you did, please mention
-> > > > the differences in the commit log.
-> > >
-> > > Even if we don't spot things, since we have the stable DT now, if we
-> > > ever had that compatible in the DT from day 1, it's much easier to
-> > > deal with.
-> > >
-> > > I'd really like to have that pattern for all the IPs even if we didn't
-> > > spot any issue, since we can't really say that the datasheet are
-> > > complete, and one can always make a mistake and overlook something.
-> > >
-> > > I'm fine with this version, and can apply it as is if we all agree.
+> On Tue, Jan 15, 2019 at 7:47 AM Baolin Wang <baolin.wang@linaro.org> wrote:
 > >
-> > I'm OK with having the fallback compatible. I'm just pointing out
-> > that there are and will be a whole bunch of them, and we don't need
-> > to document all of them unless we are actually doing something to
-> > support them.
+> > From: Lanqing Liu <lanqing.liu@spreadtrum.com>
 >
-> Yes, you do. Otherwise, how will we validate what is and isn't a valid
-> set of compatible strings? It's not required yet, but bindings are
-> moving to json-schema.
+> The email address should be updated with unisoc.com.
 
-Ideally, if we knew which IP blocks in each SoC were compatible with
-each other, we wouldn't need "per-SoC" compatible strings for each
-block. However in reality this doesn't happen, due to a combination
-of lack of time, lack of / uncertainty of documentation, and lack of
-hardware for testing by the contributors.
+Sure.
 
-The per-SoC compatible we ask people to add are a contigency plan,
-for when things don't actually work, and we need some way to support
-that specific piece of hardware on old DTs. At which point we will
-add that SoC-specific compatible as a new compatible string to the
-bindings. But not before.
+>
+> > Add the DMA properties for the SPI dma mode.
+> >
+> > Signed-off-by: Lanqing Liu <lanqing.liu@spreadtrum.com>
+> > Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+> > ---
+> >  Documentation/devicetree/bindings/spi/spi-sprd.txt |    9 +++++++++
+> >  1 file changed, 9 insertions(+)
+> >
+> > diff --git a/Documentation/devicetree/bindings/spi/spi-sprd.txt b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+> > index bad211a..01ef53f 100644
+> > --- a/Documentation/devicetree/bindings/spi/spi-sprd.txt
+> > +++ b/Documentation/devicetree/bindings/spi/spi-sprd.txt
+> > @@ -14,6 +14,12 @@ Required properties:
+> >         address on the SPI bus. Should be set to 1.
+> >  - #size-cells: Should be set to 0.
+> >
+> > +Optional properties:
+> > +dma-names: Should contain names of the SPI used DMA channel.
+> > +dmas: Should contain DMA channels which the SPI used sorted in the
+> > +       same order as the dma-names property.
+> > +sprd,dma-slave-ids: Should contain the DMA number that the SPI hardware required.
+> > +
+> >  Example:
+> >  spi0: spi@70a00000{
+> >         compatible = "sprd,sc9860-spi";
+> > @@ -21,6 +27,9 @@ spi0: spi@70a00000{
+> >         interrupts = <GIC_SPI 7 IRQ_TYPE_LEVEL_HIGH>;
+> >         clock-names = "spi", "source","enable";
+> >         clocks = <&clk_spi0>, <&ext_26m>, <&clk_ap_apb_gates 5>;
+> > +       dma-names = "rx_chn", "tx_chn";
+> > +       dmas = <&apdma 11>, <&apdma 12>;
+> > +       sprd,dma-slave-ids = <11 12>;
+>
+> When would this be different values from what's in 'dmas'?
 
-ChenYu
+Slave id is not always same with the DMA channel number in 'dmas', and
+it is just coincident for SPI driver. Moreover for different SoC , the
+slave ids for DMA engine consumers are not same. So we need one
+property to specify the slave id for the consumers to trigger DMA
+transfer.
+
+-- 
+Baolin Wang
+Best Regards
