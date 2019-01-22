@@ -1,134 +1,46 @@
-From: Min Guo <min.guo@mediatek.com>
-Subject: Re: [PATCH v4 1/6] dt-bindings: usb: musb: Add support for MediaTek
- musb controller
-Date: Tue, 22 Jan 2019 17:36:13 +0800
-Message-ID: <1548149773.4433.284.camel@mhfsdcap03>
-References: <1548073351-13739-1-git-send-email-min.guo@mediatek.com>
-         <1548073351-13739-2-git-send-email-min.guo@mediatek.com>
-         <20190121151417.GA19238@bogus>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: Re: [PATCH V2] pwm: Add MediaTek MT8183 display PWM driver support
+Date: Tue, 22 Jan 2019 17:37:54 +0800
+Message-ID: <1548149874.27796.3.camel@mszsdaap41>
+References: <20190122090243.27304-1-jitao.shi@mediatek.com>
+ <20190122091603.ic46eyf47lu5f6pi@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190121151417.GA19238@bogus>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Bin Liu <b-liu@ti.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, hdegoede@redhat.com, tony@atomide.com, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org, Matthias Brugger <matthias.bgg@gmail.com>, Alan Stern <stern@rowland.harvard.edu>, chunfeng.yun@mediatek.com, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190122091603.ic46eyf47lu5f6pi@pengutronix.de>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, stonea168@163.com, dri-devel@lists.freedesktop.org, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, Sean Paul <seanpaul@chromium.org>, linux-pwm@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Pawel Moll <pawel.moll@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Kumar Gala <galak@codeaurora.org>, Andy Yan <andy.yan@rock-chip>
 List-Id: devicetree@vger.kernel.org
 
-Hi Bin,
-
-Sorry to bother you again, I encounter a problem about the extcon
-property.
-
-I don't find a common driver describing the usb-connector. Is
-there any driver that I can refer to, specially the way to switch MUSB
-controller between host and device mode? 
-If it needs to implement by myself, is it possible to emulate an
-usb-connector driver by extcon-usb-gpio, and also use the notifier
-mechanism or can you give me some advices?
-
-
-Hi Rob,
-
-On Mon, 2019-01-21 at 09:14 -0600, Rob Herring wrote:
-> On Mon, Jan 21, 2019 at 08:22:26PM +0800, min.guo@mediatek.com wrote:
-> > From: Min Guo <min.guo@mediatek.com>
-> > 
-> > This adds support for MediaTek musb controller in
-> > host, peripheral and otg mode.
-> > 
-> > Signed-off-by: Min Guo <min.guo@mediatek.com>
-> > ---
-> > changes in v4:
-> > suggested by Sergei:
-> > 1. String alignment
-> > 
-> > changes in v3:
-> > 1. no changes
-> > 
-> > changes in v2:
-> > suggested by Bin:
-> > 1. Modify DRC to DRD
-> > suggested by Rob:
-> > 2. Drop the "<soc-model>-musb" in compatible
-> 
-> This is not what I said. I gave you the exact text to put.
-
-Sorry to misunderstood your meaning last time,  I will modify it in next
-patch.
-	compatible: should be one of "mediatek,mt2701-musb"...,followed by
-"mediatek,mtk-musb"
-
-> > 3. Remove phy-names
-> > 4. Add space after comma in clock-names
-> > ---
-> >  .../devicetree/bindings/usb/mediatek,musb.txt      | 43 ++++++++++++++++++++++
-> >  1 file changed, 43 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > 
-> > diff --git a/Documentation/devicetree/bindings/usb/mediatek,musb.txt b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > new file mode 100644
-> > index 0000000..4305770
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/usb/mediatek,musb.txt
-> > @@ -0,0 +1,43 @@
-> > +MediaTek musb DRD/OTG controller
-> > +-------------------------------------------
-> > +
-> > +Required properties:
-> > + - compatible      : should be "mediatek,mtk-musb"
-> > + - reg             : specifies physical base address and size of
-> > +                     the registers
-> > + - interrupts      : interrupt used by musb controller
-> > + - interrupt-names : must be "mc"
-> > + - phys            : PHY specifier for the OTG phy
-> > + - dr_mode         : should be one of "host", "peripheral" or "otg",
-> > +                     refer to usb/generic.txt
-> > + - clocks          : a list of phandle + clock-specifier pairs, one for
-> > +                     each entry in clock-names
-> > + - clock-names     : must contain "main", "mcu", "univpll"
-> > +                     for clocks of controller
-> > +
-> > +Optional properties:
-> > + - extcon          : external connector for VBUS and ID pin changes detection,
-> > +                     needed when supports dual-role mode
-> 
-> Again, do not use extcon in new bindings.
-
-Thanks, ok.
-
-> > + - vbus-supply     : reference to the VBUS regulator, needed when supports
-> > +                     dual-role mode
-> > + - power-domains   : a phandle to USB power domain node to control USB's
-> > +                     MTCMOS
-> > +
-> > +Example:
-> > +
-> > +usb2: usb@11200000 {
-> > +	compatible = "mediatek,mt2701-musb",
-> > +		     "mediatek,mtk-musb";
-> > +	reg = <0 0x11200000 0 0x1000>;
-> > +	interrupts = <GIC_SPI 32 IRQ_TYPE_LEVEL_LOW>;
-> > +	interrupt-names = "mc";
-> > +	phys = <&u2port2 PHY_TYPE_USB2>;
-> > +	vbus-supply = <&usb_vbus>;
-> > +	extcon = <&extcon_usb>;
-> > +	dr_mode = "otg";
-> > +	clocks = <&pericfg CLK_PERI_USB0>,
-> > +		 <&pericfg CLK_PERI_USB0_MCU>,
-> > +		 <&pericfg CLK_PERI_USB_SLV>;
-> > +	clock-names = "main","mcu","univpll";
-> > +	power-domains = <&scpsys MT2701_POWER_DOMAIN_IFR_MSC>;
-> > +};
-> > -- 
-> > 1.9.1
-> > 
-> > 
-> > _______________________________________________
-> > linux-arm-kernel mailing list
-> > linux-arm-kernel@lists.infradead.org
-> > http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
-Regards,
-Min.
+T24gVHVlLCAyMDE5LTAxLTIyIGF0IDEwOjE2ICswMTAwLCBVd2UgS2xlaW5lLUvDtm5pZyB3cm90
+ZToKPiBPbiBUdWUsIEphbiAyMiwgMjAxOSBhdCAwNTowMjo0M1BNICswODAwLCBKaXRhbyBTaGkg
+d3JvdGU6Cj4gPiBVc2UgdGhlIG10a19wd21fZGF0YSBzdHJ1Y3Rpb24gdG8gZGVmaW5lIGRpZmZl
+cmVudCByZWdpc3RlcnMKPiA+IGFuZCBhZGQgTVQ4MTgzIHNwZWNpZmljIHJlZ2lzdGVyIG9wZXJh
+dGlvbnMsIHN1Y2ggYXMgTVQ4MTgzCj4gPiBkb2Vzbid0IGhhdmUgY29tbWl0IHJlZ2lzdGVyLCBu
+ZWVkcyB0byBkaXNhYmxlIGRvdWJsZSBidWZmZXIKPiA+IGJlZm9yZSB3cml0aW5nIHJlZ2lzdGVy
+LCBhbmQgbmVlZHMgdG8gc2VsZWN0IGNvbW1pdCBtb2RlCj4gPiBhbmQgdXNlIFBXTV9QRVJJT0Qv
+UFdNX0hJR0hfV0lEVEguCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IEppdGFvIFNoaSA8aml0YW8u
+c2hpQG1lZGlhdGVrLmNvbT4KPiAKPiBUaGVyZSBpcyBubyBkaWZmZXJlbmNlIGNvbXBhcmVkIHRv
+IChpbXBsaWNpdCkgdjEgc2VudCBhIGZldyBtaW51dGVzCj4gZWFybGllciwgcmlnaHQ/IFRoZXJl
+IHdhcyBhbm90aGVyIHBhdGNoIHNlbnQgd2l0aCB0aGUgc2FtZSBTdWJqZWN0IGxhc3QKPiB3ZWVr
+LCBzbyBJIGFzc3VtZSB0aGUgbWFpbCBmcm9tIHRvZGF5IHdpdGhvdXQgInYyIiBpbiB0aGUgU3Vi
+amVjdCB3YXMgYQo+IG1pc3Rha2U/Cj4gCj4gPiAtLS0KPiBBZGRpbmcgYSBwYXJhZ3JhcGggYmVs
+b3cgdGhlIHRyaXBwbGUgZGFzaCB0aGF0IHBvaW50cyBvdXQgd2hhdCB3YXMKPiBjaGFuZ2VkIGNv
+bXBhcmVkIHRvIHRoZSBwcmV2aW91cyBzdWJtaXNzaW9uIGlzIGEgZ29vZCBpZGVhIHRvIGhlbHAK
+PiByZXZpZXdlcnMgdG8gbW9yZSBlYXNpbHkgc2VlIHdoYXQgd2FzIGNoYW5nZWQuIEkgZ3Vlc3Mg
+eW91IG9ubHkgYWRhcHRlZAo+IHRoZSBjb21taXQgbG9nIGFzIGEgcmVhY3Rpb24gdG8gTWF0dGhp
+YXMgQnVyZ2dlcidzIHJldmlldz8KPiAKPiBCZXN0IHJlZ2FyZHMKPiBVd2UKPiAKClllcywgSSBt
+aXNzIHRoZSAiVjIiIGFuZCBmaW5lIHR1bmUgdGhlIGNvbW1pdCBtZXNzYWdlLgoKQmVzdCBSZWdh
+cmRzCkppdGFvCgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+XwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcK
+aHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
