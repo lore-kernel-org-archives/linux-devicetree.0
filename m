@@ -1,54 +1,28 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v1 1/3] arm64: dts: exynos: add SlimSSS for Exynos5433
-Date: Tue, 22 Jan 2019 16:25:51 +0100
-Message-ID: <20190122152553.1537-2-k.konieczny@partner.samsung.com>
-References: <20190122152553.1537-1-k.konieczny@partner.samsung.com>
- <CGME20190122152608eucas1p298d06d6b1232a37be8c1679b7a626811@eucas1p2.samsung.com>
+From: Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH v6 00/15] qcom: spmi: add support for hierarchical IRQ chip
+Date: Tue, 22 Jan 2019 16:31:20 +0100
+Message-ID: <CACRpkdap+AJ+eDVusg=ShwRKXOuR=tAyNLBeCxsxuu28DSfisQ@mail.gmail.com>
+References: <20190119204252.18370-1-masneyb@onstation.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190122152553.1537-1-k.konieczny@partner.samsung.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: k.konieczny@partner.samsung.com
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-samsung-soc@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Rob Herring <robh+dt@kernel.org>, Kukjin Kim <kgene@kernel.org>, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Brian Masney <masneyb@onstation.org>
+Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Add DT node for SlimSSS (aka Slim SecuritySubSystem) in Exynos5433 SoC.
-The users can use compatibility "samsung,exynos5433-slim-sss".
+On Sat, Jan 19, 2019 at 9:43 PM Brian Masney <masneyb@onstation.org> wrote:
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> This patch series adds hierarchical IRQ chip support to spmi-gpio so
+> that device tree consumers can request an IRQ directly from the GPIO
+> block rather than having to request an IRQ from the underlying PMIC.
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index e7cd3b67d818..9e5fcb6c7776 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -559,6 +559,15 @@
- 				<&cmu_top CLK_DIV_ACLK_IMEM_200>;
- 		};
- 
-+		slim_sss: slim-sss@11140000 {
-+			compatible = "samsung,exynos5433-slim-sss";
-+			reg = <0x11140000 0x1000>;
-+			interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "aclk", "pclk";
-+			clocks = <&cmu_imem CLK_ACLK_SLIMSSS>,
-+				 <&cmu_imem CLK_PCLK_SLIMSSS>;
-+		};
-+
- 		pd_gscl: power-domain@105c4000 {
- 			compatible = "samsung,exynos5433-pd";
- 			reg = <0x105c4000 0x20>;
--- 
-2.20.0
+I have applied all these patches including the DTS patches to the GPIO
+tree and pushed for linux-next.
+
+If all works out well I will solidify the branch, pull it into the pin control
+tree as well and offer the branch to ARM SoC.
+
+Yours,
+Linus Walleij
