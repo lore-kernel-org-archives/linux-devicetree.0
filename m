@@ -1,66 +1,85 @@
-From: Stephen Boyd <swboyd@chromium.org>
-Subject: Re: [PATCH v3 04/10] dt-bindings: soc: qcom: Add AOSS QMP binding
-Date: Tue, 22 Jan 2019 11:28:23 -0800
-Message-ID: <154818530327.20280.1477070677484130832@swboyd.mtv.corp.google.com>
-References: <20190122055112.30943-1-bjorn.andersson@linaro.org> <20190122055112.30943-5-bjorn.andersson@linaro.org> <154818385792.20280.7601798748317142776@swboyd.mtv.corp.google.com> <20190122192537.GC31919@minitux>
+From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
+Subject: Re: [PATCH 08/13] clk: qcom: hfpll: CLK_IGNORE_UNUSED
+Date: Tue, 22 Jan 2019 20:35:50 +0100
+Message-ID: <3ffe45a8-401d-37f6-4368-f14e2f2e5392@linaro.org>
+References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <1545039990-19984-9-git-send-email-jorge.ramirez-ortiz@linaro.org>
+ <20190117063312.GE25498@builder>
+ <9abbe59b-433c-4e30-1e4d-b5eed3afc695@linaro.org>
+ <20190117100807.pmew5iqisdcc63eq@vireshk-i7>
+ <e55df608-7058-63b9-b449-982d32e08759@linaro.org>
+ <154818283956.20280.2895221927807522124@swboyd.mtv.corp.google.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122192537.GC31919@minitux>
+In-Reply-To: <154818283956.20280.2895221927807522124@swboyd.mtv.corp.google.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Stephen Boyd <sboyd@kernel.org>, Viresh Kumar <viresh.kumar@linaro.org>
+Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Quoting Bjorn Andersson (2019-01-22 11:25:37)
-> On Tue 22 Jan 11:04 PST 2019, Stephen Boyd wrote:
->=20
-> > Quoting Bjorn Andersson (2019-01-21 21:51:06)
-> > > Add binding for the QMP based side-channel communication mechanism to
-> > > the AOSS, which is used to control resources not exposed through the
-> > > RPMh interface.
-> > >=20
-> > > Reviewed-by: Rob Herring <robh@kernel.org>
-> > > Reviewed-by: Stephen Boyd <swboyd@chromium.org>
-> > > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > > ---
-> > >=20
-> > > Changes since v2:
-> > > - Update indentation of example
-> > > - Add colling device subnodes to the description
-> > >=20
-> > >  .../bindings/soc/qcom/qcom,aoss-qmp.txt       | 75 +++++++++++++++++=
-++
-> > >  include/dt-bindings/power/qcom-aoss-qmp.h     | 15 ++++
-> > >  2 files changed, 90 insertions(+)
-> > >  create mode 100644 Documentation/devicetree/bindings/soc/qcom/qcom,a=
-oss-qmp.txt
-> > >  create mode 100644 include/dt-bindings/power/qcom-aoss-qmp.h
-> > >=20
-> > > diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp=
-.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-> > > new file mode 100644
-> > > index 000000000000..881dc8c7907a
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,aoss-qmp.txt
-> > > @@ -0,0 +1,75 @@
-> > > +Qualcomm Always-On Subsystem side channel binding
-> > > +
-> > > +This binding describes the hardware component responsible for side c=
-hannel
-> > > +requests to the always-on subsystem (AOSS), used for certain power m=
-anagement
-> > > +requests that is not handled by the standard RPMh interface. Each cl=
-ient in the
-> > > +SoC has it's own block of message RAM and IRQ for communication with=
- the AOSS.
-> > > +The protocol used to communicate in the message RAM is known as QMP.
-> >=20
-> > Just curious if QMP is "Qualcomm Messaging Protocol"? I don't think it's
-> > ever spelled out in this patchset.
-> >=20
->=20
-> I believe that is the case, would you like me to spell it out?
+On 1/22/19 19:47, Stephen Boyd wrote:
+> Quoting Jorge Ramirez (2019-01-17 02:46:21)
+>> On 1/17/19 11:08, Viresh Kumar wrote:
+>>> On 17-01-19, 09:38, Jorge Ramirez wrote:
+>>>> COMMON_CLK_DISABLED_UNUSED relies on the enable_count reference counter
+>>>> to disable the clocks that were enabled by the firwmare and not by the
+>>>> drivers.
+>>>>
+>>>> the cpufreq driver does not enable the cpu clock.
+>>>>
+>>>> so when clk_change_rate is called, the enable_count counter is not
+>>>> incremented and therefore it just remains null since this was enabled by
+>>>> the firmware.
+>>>>
+>>>> I tried doing:
+>>>>
+>>>> diff --git a/drivers/cpufreq/cpufreq-dt.c b/drivers/cpufreq/cpufreq-dt.c
+>>>> index e58bfcb..5a9f83e 100644
+>>>> --- a/drivers/cpufreq/cpufreq-dt.c
+>>>> +++ b/drivers/cpufreq/cpufreq-dt.c
+>>>> @@ -124,6 +124,10 @@ static int resources_available(void)
+>>>>                 return ret;
+>>>>         }
+>>>>
+>>>> + ret = clk_prepare_enable(cpu_clk);
+>>>> + if (ret)
+>>>> +         return ret;
+>>>> +
+>>>>         clk_put(cpu_clk);
+>>>>
+>>>>         name = find_supply_name(cpu_dev);
+>>>>
+>>>>
+>>>> and that removed the need for CLK_IGNORE_UNUSED. But I am not sure of
+>>>> the system wide consequences of that change to cpufreq.
+>>>
+>>> If the cpufreq driver enables it then it should disable it on exit as
+>>> well, right ? And in that case if you unload your driver's module, you
+>>> will hang the system as the clock will get disabled :)
+>>
+>> ah, of course, sorry was over-thinking this thing :)
+>>
+>>>
+>>> Every other platform must either be marking it with CLK_IGNORE_UNUSED
+>>> or they must be doing clk_enable from somewhere, maybe the CPU online
+>>> path, not sure though.
+>>>
+>>
+>> since this clock is enabled by the firmware, it seems to me that using
+>> CLK_IGNORE_UNUSED remains the best option.
+>>
+> 
+> What do you do about CPUs being offlined? Presumably when the CPU is
+> gone the system doesn't need to keep the clk enabled anymore.
+> 
+> 
 
-Yes, at least once would be great. Thanks.
+the kernel does not take any action - it is under firmware control; and
+since the clock is shared between all cores I there will have to be some
+involvement not only at TF-A/firmware level but also at the TrustedOS
+level for when the last core is offlined.
+
+I dont have visibility on either of those projects though.
