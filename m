@@ -1,96 +1,82 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH 1/2] usb: dwc3: Add avoiding vbus glitch happen during
- xhci reset
-Date: Tue, 22 Jan 2019 07:45:07 -0600
-Message-ID: <CAL_Jsq+SULX5Y2C1Br+3reUHQ+1xJ=oZbuRBP+QJsEWeRgnuPg@mail.gmail.com>
-References: <20190116064820.20007-1-ran.wang_1@nxp.com> <20190116064820.20007-2-ran.wang_1@nxp.com>
- <20190122010310.GA5165@bogus> <AM5PR0402MB286524243DB67DA15AE4EA42F1980@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Tue, 22 Jan 2019 14:00:40 +0000
+Message-ID: <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
+References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <AM5PR0402MB286524243DB67DA15AE4EA42F1980@AM5PR0402MB2865.eurprd04.prod.outlook.com>
+In-Reply-To: <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ran Wang <ran.wang_1@nxp.com>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mark Rutland <mark.rutland@arm.com>, Felipe Balbi <balbi@kernel.org>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 8:38 PM Ran Wang <ran.wang_1@nxp.com> wrote:
->
-> Hi Rob,
->
-> On January 22, 2019 09:03, Rob Herring wrote:
-> >
-> > On Wed, Jan 16, 2019 at 06:48:06AM +0000, Ran Wang wrote:
-> > > When DWC3 is set to host mode by programming register DWC3_GCTL,
-> > VUBS
-> >
-> > s/VUBS/VBUS/
->
-> Yes, will fix it in next version.
->
-> > > (or its control signal) will on immediately on related Root Hub ports.
-> >
-> > /will on/will turn on/
->
-> Got it. Thanks.
->
-> > > Then the VUBS will be de-asserted for a little while during xhci reset
-> > > (conducted by xhci driver) for a little while and back to normal.
-> > >
-> > > This VBUS glitch might cause some USB devices emuration fail if kernel
-> > > boot with them connected. One SW workaround which can fix this is to
-> > > program all PORTSC[PP] to 0 to turn off VBUS immediately after setting
-> > > host mode in DWC3 driver(per signal measurement result, it will be too
-> > > late to do it in xhci-plat.c or xhci.c).
-> > >
-> > > Signed-off-by: Ran Wang <ran.wang_1@nxp.com>
-> > > ---
-> > >  Documentation/devicetree/bindings/usb/dwc3.txt |    3 +++
-> > >  1 files changed, 3 insertions(+), 0 deletions(-)
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > index 8e5265e..dadb530 100644
-> > > --- a/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > +++ b/Documentation/devicetree/bindings/usb/dwc3.txt
-> > > @@ -106,6 +106,9 @@ Optional properties:
-> > >                     When just one value, which means INCRX burst
-> > mode enabled. When
-> > >                     more than one value, which means undefined length
-> > INCR burst type
-> > >                     enabled. The values can be 1, 4, 8, 16, 32, 64, 128
-> > and 256.
-> > > + - snps,avoid-vbus-glitch-when-set-host: Power off all Root Hub ports
-> > immediately
-> > > +                   after setting host mode to avoid vbus (negative)
-> > glitch happen in later
-> > > +                   xhci reset. And the vbus will back to 5V automatically
-> > when reset done.
-> >
-> > Can't you imply this from the compatible string. You should have an SoC
-> > specific compatible.
->
-> Sorry, not quite get your point here? Actually I have discussed with Soc design guys
-> and Felipe, it seems to be DWC3 native behavior rather than SoC specific issue.
-> https://lkml.org/lkml/2018/11/23/387
-> https://lkml.org/lkml/2018/12/12/140
->
-> I think there could be 2 reasons why we got no report for a long time till now:
-> 1. Most USB devices are not so sensitive to this VBUS glitch, they would works fine.
-> 2. A proper VBUS pump circuit design can successfully filter this glitch out. I have
-> confirmed this with scope, which means some platforms might resolve issue in
-> this way already (some might not, of cause).
->
-> > Does this even need to be conditional? What would be the harm in doing
-> > this unconditionally for all DWC3 hosts?
->
-> From the logic level, I don't see a harm to DWC3 hosts if unconditionally apply this.
-> However, since this is not a only solution (can fix it in HW way), I prefer to let it
-> controlled by property in DTS node for those questionable board already existing
-> in market.
+Hi Sai,
 
-Okay, sounds fine.
+On 01/22/2019 01:37 PM, Sai Prakash Ranjan wrote:
+> Add coresight components found on Qualcomm SDM845 SoC.
+> 
+> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+> 
 
-I would shorten the name a bit: snps,host-vbus-glitches
+Sorry, but I hadn't noticed the PID override strings below. Please
+find the question.
 
-Rob
+> ---
+> Depends on AOSS QMP side channel patches and AMBA bus pclk change
+> by Bjorn Andersson [1][2].
+> Also depends on patch ("arm64: dts: qcom: sdm845: Increase address
+> and size cells for soc") [3].
+> 
+> [1] https://lore.kernel.org/lkml/20190106080915.4493-1-bjorn.andersson@linaro.org/
+> [2] https://lore.kernel.org/lkml/20190106080915.4493-7-bjorn.andersson@linaro.org/
+> [3] https://lore.kernel.org/lkml/20190117042940.25487-2-bjorn.andersson@linaro.org/
+
+[...]
+
+	};
+> +
+> +		etr@6048000 {
+> +			compatible = "arm,coresight-tmc", "arm,primecell";
+> +			reg = <0 0x06048000 0 0x1000>;
+> +
+> +			power-domains = <&aoss_qmp AOSS_QMP_QDSS_CLK>;
+> +			arm,scatter-gather;
+> +
+> +			in-ports {
+> +				port {
+> +					etr_in: endpoint {
+> +						remote-endpoint =
+> +						  <&replicator_out>;
+> +					};
+> +				};
+> +			};
+> +		};
+> +
+> +		/*
+> +		 * On QCOM SDM845, we bypass the normal AMBA bus discovery
+> +		 * method by forcing the peripheral ID because of the wrong
+> +		 * value read from ETM PID registers.
+> +		 */
+
+What is the value read back from the ETM PIDx registers ? Do they
+provide inconsistent or incompatible value w.r.t the ETM/Coresight
+architecture ? If it is an unsupported CPU with proper values,
+you must add them to the table in etm4x driver.
+
+> +		etm@7040000 {
+> +			compatible = "arm,coresight-etm4x", "arm,primecell";
+> +			arm,primecell-periphid = <0x000bb95d> > +			reg = <0 0x07040000 0 0x1000>;
+> +
+> +			cpu = <&CPU0>;
+> +
+
+You seem to be specifying the PID of A53 ETM all over, while at least
+one of your cores is ETMv4.2 (from the other patch) and A53 is not
+ETMv4.2. As above, it would be good to add the PID to the table.
+
+Suzuki
