@@ -1,69 +1,33 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND v1 4/4] dt-bindings: imx8-clock: add a53 and a72
- clock id
-Date: Mon, 21 Jan 2019 18:10:11 -0600
-Message-ID: <20190122001011.GA15952@bogus>
-References: <1547207400-28307-1-git-send-email-aisheng.dong@nxp.com>
- <1547207400-28307-5-git-send-email-aisheng.dong@nxp.com>
+Subject: Re: [PATCH v1 01/11] MIPS: ath79: add helpers for setting clocks and
+ expose the ref clock
+Date: Mon, 21 Jan 2019 18:11:07 -0600
+Message-ID: <20190122001107.GA28193@bogus>
+References: <20190111142240.10908-1-o.rempel@pengutronix.de>
+ <20190111142240.10908-2-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1547207400-28307-5-git-send-email-aisheng.dong@nxp.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Aisheng Dong <aisheng.dong@nxp.com>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+In-Reply-To: <20190111142240.10908-2-o.rempel@pengutronix.de>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Oleksij Rempel <o.rempel@pengutronix.de>
+Cc: Paul Burton <paul.burton@mips.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Felix Fietkau <nbd@nbd.name>, John Crispin <john@phrozen.org>, Pengutronix Kernel Team <kernel@pengutronix.de>, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 11, 2019 at 11:56:09AM +0000, Aisheng Dong wrote:
-> Add a53 and a72 clock id, as there's still no users, we update
-> IMX_LSIO_MEM_CLK base to start from 6 to allow a53 and a72 clock
-> id to be continued with a35 clk.
+On Fri, Jan 11, 2019 at 03:22:30PM +0100, Oleksij Rempel wrote:
+> From: Felix Fietkau <nbd@nbd.name>
 > 
-> Cc: Stephen Boyd <sboyd@kernel.org>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: devicetree@vger.kernel.org
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Sascha Hauer <kernel@pengutronix.de>
-> Cc: Fabio Estevam <fabio.estevam@nxp.com>
-> Cc: Michael Turquette <mturquette@baylibre.com>
-> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> Preparation for transitioning the legacy clock setup code over
+> to OF.
+> 
+> Signed-off-by: Felix Fietkau <nbd@nbd.name>
+> Signed-off-by: John Crispin <john@phrozen.org>
 > ---
->  include/dt-bindings/clock/imx8-clock.h | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
-> 
-> diff --git a/include/dt-bindings/clock/imx8-clock.h b/include/dt-bindings/clock/imx8-clock.h
-> index 4236818..2f1aa2f 100644
-> --- a/include/dt-bindings/clock/imx8-clock.h
-> +++ b/include/dt-bindings/clock/imx8-clock.h
-> @@ -13,10 +13,12 @@
->  
->  /* CPU */
->  #define IMX_A35_CLK					1
-> +#define IMX_A53_CLK					2
-> +#define IMX_A72_CLK					3
+>  arch/mips/ath79/clock.c               | 128 +++++++++++++-------------
 
-All 3 cores in one chip? If not maybe these should be split or define 
-them as cpu cluster x clocks.
+>  include/dt-bindings/clock/ath79-clk.h |   3 +-
 
->  
->  /* LSIO SS */
-> -#define IMX_LSIO_MEM_CLK				2
-> -#define IMX_LSIO_BUS_CLK				3
-> +#define IMX_LSIO_MEM_CLK				6
-> +#define IMX_LSIO_BUS_CLK				7
->  #define IMX_LSIO_PWM0_CLK				10
->  #define IMX_LSIO_PWM1_CLK				11
->  #define IMX_LSIO_PWM2_CLK				12
-> -- 
-> 2.7.4
-> 
+Acked-by: Rob Herring <robh@kernel.org>
+
+>  2 files changed, 68 insertions(+), 63 deletions(-)
