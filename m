@@ -1,20 +1,15 @@
 From: Shawn Guo <shawnguo@kernel.org>
-Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2 platforms
-Date: Tue, 22 Jan 2019 10:53:57 +0800
-Message-ID: <20190122025355.GA19233@dragon>
+Subject: Re: [PATCH 2/3] Documentation: DT: Add entry for DPAA2 console
+Date: Tue, 22 Jan 2019 10:54:43 +0800
+Message-ID: <20190122025441.GB19233@dragon>
 References: <1545406240-3061-1-git-send-email-ioana.ciornei@nxp.com>
- <1545406240-3061-2-git-send-email-ioana.ciornei@nxp.com>
- <20190112024725.GO32649@dragon>
- <VI1PR0402MB2800E8F9F1884EB0669EE9F0E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
- <20190116105559.GM15808@dragon>
- <VI1PR0402MB28007817A29E6116D1FAFC2BE0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
- <VI1PR0402MB2800477D1F1FE0E78F1D8D33E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+ <1545406240-3061-3-git-send-email-ioana.ciornei@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
 Content-Disposition: inline
-In-Reply-To: <VI1PR0402MB2800477D1F1FE0E78F1D8D33E0820@VI1PR0402MB2800.eurprd04.prod.outlook.com>
+In-Reply-To: <1545406240-3061-3-git-send-email-ioana.ciornei@nxp.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -28,33 +23,56 @@ To: Ioana Ciornei <ioana.ciornei@nxp.com>
 Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Ioana Ciocoi Radulescu <ruxandra.radulescu@nxp.com>, Roy Pledge <roy.pledge@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Leo Li <leoyang.li@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 05:31:46PM +0000, Ioana Ciornei wrote:
-> > > Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for DPAA2
-> > > platforms
-> > >
-> > > On Wed, Jan 16, 2019 at 10:02:01AM +0000, Ioana Ciornei wrote:
-> > > > > Subject: Re: [PATCH 1/3] arm64: dts: add dpaa2-console node for
-> > > > > DPAA2 platforms
-> > > > >
-> > > > > On Fri, Dec 21, 2018 at 03:31:09PM +0000, Ioana Ciornei wrote:
-> > > > > > Add the dpaa2-console device tree node for the following
-> > > > > > DPAA2 based platforms: LS1088A, LS2080A and LS2088A.
-> > > > > >
-> > > > > > Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
-> > > > >
-> > > > > DTS patch generally goes to the last in a series.
-> > > >
-> > > > Should I resend this with the DTS patch the last?
-> > >
-> > > You do not have to resend the series only for this.  It's pretty much
-> > > a suggestion for future posting.
-> > 
+On Fri, Dec 21, 2018 at 03:31:11PM +0000, Ioana Ciornei wrote:
+> This patch adds a devicetree binding documentation for
+> FSL's DPAA2 console.
 > 
-> One more thing, do you have any other feedback on the DTS part?
-> I think the best path for this patch set is through Leo's fsl soc tree but of course we need an ack from the DTS part also.
+> Signed-off-by: Ioana Ciornei <ioana.ciornei@nxp.com>
+> ---
+>  Documentation/devicetree/bindings/misc/dpaa2-console.txt | 11 +++++++++++
+>  MAINTAINERS                                              |  1 +
+>  2 files changed, 12 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/misc/dpaa2-console.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/misc/dpaa2-console.txt b/Documentation/devicetree/bindings/misc/dpaa2-console.txt
+> new file mode 100644
+> index 0000000..f4e16b1
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/misc/dpaa2-console.txt
+> @@ -0,0 +1,11 @@
+> +DPAA2 console support
+> +
+> +Required properties:
+> +
+> +    - compatible
+> +        Value type: <string>
+> +        Definition: Must be "dpaa2-console".
 
-I do not see there is a hard dependency between driver and dts part,
-e.g. build error or causing regression.  In that case, dts should just
-go via its channel.
+Why this doesn't need a vendor prefix?
 
 Shawn
+
+> +    - reg
+> +        Value type: <prop-encoded-array>
+> +        Definition: A standard property.  Specifies the region where the MCFBA
+> +                    (MC firmware base address) register can be found.
+> diff --git a/MAINTAINERS b/MAINTAINERS
+> index 7b76a80..229d4fb 100644
+> --- a/MAINTAINERS
+> +++ b/MAINTAINERS
+> @@ -5969,6 +5969,7 @@ M:	Li Yang <leoyang.li@nxp.com>
+>  L:	linuxppc-dev@lists.ozlabs.org
+>  L:	linux-arm-kernel@lists.infradead.org
+>  S:	Maintained
+> +F:	Documentation/devicetree/bindings/misc/dpaa2-console.txt
+>  F:	Documentation/devicetree/bindings/soc/fsl/
+>  F:	drivers/soc/fsl/
+>  F:	include/linux/fsl/
+> -- 
+> 1.9.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
