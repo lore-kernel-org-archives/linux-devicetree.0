@@ -1,42 +1,66 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: [PATCH v4 1/2] dt-bindings: cadence-quadspi: Add new compatible for AM654 SoC
-Date: Tue, 22 Jan 2019 12:11:36 +0530
-Message-ID: <20190122064137.17114-2-vigneshr@ti.com>
-References: <20190122064137.17114-1-vigneshr@ti.com>
+From: alokc@codeaurora.org
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add interconnect binding for
+ GENI QUP
+Date: Tue, 22 Jan 2019 12:13:26 +0530
+Message-ID: <91aa93df80b560ea86520a4773b67d51@codeaurora.org>
+References: <1548069703-26595-1-git-send-email-alokc@codeaurora.org>
+ <1548069703-26595-2-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122064137.17114-1-vigneshr@ti.com>
+In-Reply-To: <1548069703-26595-2-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>, Tudor.Ambarus@microchip.com
-Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
+To: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org
+Cc: georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-AM654 SoC has Cadence Octal SPI controller, which is similar to Cadence
-QSPI controller but supports Octal IO(x8 data lines) and Double Data
-Rate(DDR) mode. Add new compatible to support OSPI controller on TI's
-AM654 SoCs.
+Please don't review this patch. I've resend patches after adding all the 
+mailing list.
+Sorry for inconvenience.
 
-Signed-off-by: Vignesh R <vigneshr@ti.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
----
-v4: No changes
+On 2019-01-21 16:51, Alok Chauhan wrote:
+> Add documentation for the interconnect and interconnect-names bindings
+> for the GENI QUP as detailed by bindings/interconnect/interconnect.txt.
+> 
+> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 10 
+> ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> index dab7ca9..44d7e02 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> @@ -17,6 +17,12 @@ Required properties if child node exists:
+>  - #address-cells: 	Must be <1> for Serial Engine Address
+>  - #size-cells: 		Must be <1> for Serial Engine Address Size
+>  - ranges: 		Must be present
+> +- interconnects:	phandle to a interconnect provider. Please refer
+> +			../interconnect/interconnect.txt for details.
+> +			Must be 2 paths corresponding to 2 AXI ports.
+> +- interconnect-names:	Port names to differentiate between the
+> +			2 interconnect paths defined with interconnect
+> +			specifier.
+> 
+>  Properties for children:
+> 
+> @@ -67,6 +73,10 @@ Example:
+>  		#size-cells = <1>;
+>  		ranges;
+> 
+> +		interconnects = <&qnoc 11 &qnoc 512>,
+> +				<&qnoc 0 &qnoc 543>;
+> +		interconnect-names = "qup-memory", "qup-config";
+> +
+>  		i2c0: i2c@a94000 {
+>  			compatible = "qcom,geni-i2c";
+>  			reg = <0xa94000 0x4000>;
 
- Documentation/devicetree/bindings/mtd/cadence-quadspi.txt | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-index bb2075df9b38..4345c3a6f530 100644
---- a/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-+++ b/Documentation/devicetree/bindings/mtd/cadence-quadspi.txt
-@@ -4,6 +4,7 @@ Required properties:
- - compatible : should be one of the following:
- 	Generic default - "cdns,qspi-nor".
- 	For TI 66AK2G SoC - "ti,k2g-qspi", "cdns,qspi-nor".
-+	For TI AM654 SoC  - "ti,am654-ospi", "cdns,qspi-nor".
- - reg : Contains two entries, each of which is a tuple consisting of a
- 	physical address and length. The first entry is the address and
- 	length of the controller register set. The second entry is the
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,a Linux Foundation Collaborative Project
