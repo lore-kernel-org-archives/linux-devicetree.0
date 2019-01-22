@@ -1,81 +1,92 @@
-Return-Path: <SRS0=mi1T=QF=pengutronix.de=mfe@kernel.org>
-From: Marco Felsch <m.felsch@pengutronix.de>
-Subject: [PATCH v4 7/7] media: tvp5150: add s_power callback
-Date: Tue, 29 Jan 2019 17:07:57 +0100
-Message-Id: <20190129160757.2314-8-m.felsch@pengutronix.de>
-In-Reply-To: <20190129160757.2314-1-m.felsch@pengutronix.de>
-References: <20190129160757.2314-1-m.felsch@pengutronix.de>
+Return-Path: <SRS0=dsw9=P6=pengutronix.de=m.tretter@kernel.org>
+Date: Tue, 22 Jan 2019 14:38:06 +0100
+From: Michael Tretter <m.tretter@pengutronix.de>
+Subject: Re: [PATCH v2 1/3] media: dt-bindings: media: document allegro-dvt
+ bindings
+Message-ID: <20190122143806.1c93e613@litschi.hi.pengutronix.de>
+In-Reply-To: <20190121171348.GA4532@bogus>
+References: <20190118133716.29288-1-m.tretter@pengutronix.de>
+	<20190118133716.29288-2-m.tretter@pengutronix.de>
+	<20190121171348.GA4532@bogus>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, sakari.ailus@linux.intel.com
-Cc: devicetree@vger.kernel.org, p.zabel@pengutronix.de, javierm@redhat.com, afshin.nasser@gmail.com, laurent.pinchart@ideasonboard.com, linux-media@vger.kernel.org, kernel@pengutronix.de
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+To: Rob Herring <robh@kernel.org>
+Cc: linux-media@vger.kernel.org, devicetree@vger.kernel.org, kernel@pengutronix.de, mchehab@kernel.org, tfiga@chromium.org
 List-ID: <devicetree@vger.kernel.org>
 
-Don't en-/disable the interrupts during s_stream because someone can
-disable the stream but wants to get informed if the stream is locked
-again. So keep the interrupts enabled the whole time the pipeline is
-opened.
+On Mon, 21 Jan 2019 11:13:48 -0600, Rob Herring wrote:
+> On Fri, Jan 18, 2019 at 02:37:14PM +0100, Michael Tretter wrote:
+> > Add device-tree bindings for the Allegro DVT video IP core found on the
+> > Xilinx ZynqMP EV family.
+> > 
+> > Signed-off-by: Michael Tretter <m.tretter@pengutronix.de>
+> > ---
+> > Changes since v1:
+> > none
+> > 
+> > ---
+> >  .../devicetree/bindings/media/allegro.txt     | 35 +++++++++++++++++++
+> >  1 file changed, 35 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/media/allegro.txt
+> > 
+> > diff --git a/Documentation/devicetree/bindings/media/allegro.txt b/Documentation/devicetree/bindings/media/allegro.txt
+> > new file mode 100644
+> > index 000000000000..765f4b0c1a57
+> > --- /dev/null
+> > +++ b/Documentation/devicetree/bindings/media/allegro.txt
+> > @@ -0,0 +1,35 @@
+> > +Device-tree bindings for the Allegro DVT video IP codecs present in the Xilinx
+> > +ZynqMP SoC. The IP core may either be a H.264/H.265 encoder or H.264/H.265
+> > +decoder ip core.
+> > +
+> > +Each actual codec engines is controlled by a microcontroller (MCU). Host
+> > +software uses a provided mailbox interface to communicate with the MCU. The
+> > +MCU share an interrupt.
+> > +
+> > +Required properties:
+> > +  - compatible: value should be one of the following
+> > +    "allegro,al5e-1.1", "allegro,al5e": encoder IP core
+> > +    "allegro,al5d-1.1", "allegro,al5d": decoder IP core
+> > +  - reg: base and length of the memory mapped register region and base and
+> > +    length of the memory mapped sram
+> > +  - reg-names: must include "regs" and "sram"
+> > +  - interrupts: shared interrupt from the MCUs to the processing system
+> > +  - interrupt-names: "vcu_host_interrupt"  
+> 
+> No point in having *-names when there is only one entry.
+> 
+> > +
+> > +Example:
+> > +	al5e: al5e@a0009000 {  
+> 
+> video-codec as suggested.
+> 
+> > +		compatible = "allegro,al5e";  
+> 
+> Doesn't match the documentation above.
 
-Signed-off-by: Marco Felsch <m.felsch@pengutronix.de>
----
- drivers/media/i2c/tvp5150.c | 23 +++++++++++++++++------
- 1 file changed, 17 insertions(+), 6 deletions(-)
+Where is the mismatch? "allegro,al5e" is one of the allowed compatible
+strings that are specified above.
 
-diff --git a/drivers/media/i2c/tvp5150.c b/drivers/media/i2c/tvp5150.c
-index e4f2efadd1aa..1f0dd9d3655c 100644
---- a/drivers/media/i2c/tvp5150.c
-+++ b/drivers/media/i2c/tvp5150.c
-@@ -1387,11 +1387,26 @@ static const struct media_entity_operations tvp5150_sd_media_ops = {
- /****************************************************************************
- 			I2C Command
-  ****************************************************************************/
-+static int tvp5150_s_power(struct  v4l2_subdev *sd, int on)
-+{
-+	struct tvp5150 *decoder = to_tvp5150(sd);
-+	unsigned int val = 0;
-+
-+	if (on)
-+		val = TVP5150_INT_A_LOCK;
-+
-+	if (decoder->irq)
-+		/* Enable / Disable lock interrupt */
-+		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
-+				   TVP5150_INT_A_LOCK, val);
-+
-+	return 0;
-+}
- 
- static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- {
- 	struct tvp5150 *decoder = to_tvp5150(sd);
--	unsigned int mask, val = 0, int_val = 0;
-+	unsigned int mask, val = 0;
- 
- 	mask = TVP5150_MISC_CTL_YCBCR_OE | TVP5150_MISC_CTL_SYNC_OE |
- 	       TVP5150_MISC_CTL_CLOCK_OE;
-@@ -1404,15 +1419,10 @@ static int tvp5150_s_stream(struct v4l2_subdev *sd, int enable)
- 			val = decoder->lock ? decoder->oe : 0;
- 		else
- 			val = decoder->oe;
--		int_val = TVP5150_INT_A_LOCK;
- 		v4l2_subdev_notify_event(&decoder->sd, &tvp5150_ev_fmt);
- 	}
- 
- 	regmap_update_bits(decoder->regmap, TVP5150_MISC_CTL, mask, val);
--	if (decoder->irq)
--		/* Enable / Disable lock interrupt */
--		regmap_update_bits(decoder->regmap, TVP5150_INT_ENABLE_REG_A,
--				   TVP5150_INT_A_LOCK, int_val);
- 
- 	return 0;
- }
-@@ -1614,6 +1624,7 @@ static const struct v4l2_subdev_core_ops tvp5150_core_ops = {
- 	.g_register = tvp5150_g_register,
- 	.s_register = tvp5150_s_register,
- #endif
-+	.s_power = tvp5150_s_power,
- };
- 
- static const struct v4l2_subdev_tuner_ops tvp5150_tuner_ops = {
--- 
-2.20.1
+Michael
+
+> 
+> > +		reg = <0 0xa0009000 0 0x1000>,
+> > +		      <0 0xa0000000 0 0x8000>;
+> > +		reg-names = "regs", "sram";
+> > +		interrupt-names = "vcu_host_interrupt";
+> > +		interrupts = <0 96 4>;
+> > +	};
+> > +	al5d: al5d@a0029000 {
+> > +		compatible = "allegro,al5d";
+> > +		reg = <0 0xa0029000 0 0x1000>,
+> > +		      <0 0xa0020000 0 0x8000>;
+> > +		reg-names = "regs", "sram";
+> > +		interrupt-names = "vcu_host_interrupt";
+> > +		interrupts = <0 96 4>;
+> > +	};
+> > -- 
+> > 2.20.1
+> >   
+> 
