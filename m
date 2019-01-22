@@ -1,54 +1,53 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v1 1/1] mmc: dw_mmc-bluefield: : Fix the license information
-Date: Tue, 22 Jan 2019 08:48:09 +0100
-Message-ID: <CAPDyKFp6nK-cWOHdSARsgU6N0gsV3srL2pH2Y5VYiwC-pkXwpg@mail.gmail.com>
-References: <7f45f1c645ec166b25afe51aa9ae1decdae0b600.1547834838.git.lsun@mellanox.com>
+From: Peter Chen <peter.chen@nxp.com>
+Subject: RE: [PATCH v3 1/2] dt-bindings: usb: ci-hdrc-usb2: add property
+ power-active-high
+Date: Tue, 22 Jan 2019 07:50:09 +0000
+Message-ID: <AM0PR04MB5314CEFFC0FEB91184FD872D8B980@AM0PR04MB5314.eurprd04.prod.outlook.com>
+References: <20190116105103.28842-2-philipp.puschmann@emlix.com>
+ <20190116111133.31326-1-philipp.puschmann@emlix.com>
+ <VI1PR04MB5327656AD22454B054CE0AD08B830@VI1PR04MB5327.eurprd04.prod.outlook.com>
+ <7d0da12b-0173-aca1-b0eb-78a00681d35d@emlix.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7f45f1c645ec166b25afe51aa9ae1decdae0b600.1547834838.git.lsun@mellanox.com>
+In-Reply-To: <7d0da12b-0173-aca1-b0eb-78a00681d35d@emlix.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Liming Sun <lsun@mellanox.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaehoon Chung <jh80.chung@samsung.com>, Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Greg KH <gregkh@linuxfoundation.org>, Kate Stewart <kstewart@linuxfoundation.org>, David Woods <dwoods@mellanox.com>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, DTML <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "# 4.0+" <stable@vger.kernel.org>
+To: Philipp Puschmann <pp@emlix.com>, Philipp Puschmann <philipp.puschmann@emlix.com>, "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 18 Jan 2019 at 19:12, Liming Sun <lsun@mellanox.com> wrote:
->
-> The SPDX license identifier and the boiler plate text are
-> contradicting. Only the SPDX license identifier is needed. The
-> other one is removed.
->
-> Fixes: 86958dcc5ad7 ("mmc: dw_mmc-bluefield: Add driver extension")
-> Cc: stable@vger.kernel.org
-> Reviewed-by: David Woods <dwoods@mellanox.com>
-> Signed-off-by: Liming Sun <lsun@mellanox.com>
-
-Applied for fixes, thanks!
-
-Kind regards
-Uffe
-
-
-> ---
->  drivers/mmc/host/dw_mmc-bluefield.c | 5 -----
->  1 file changed, 5 deletions(-)
->
-> diff --git a/drivers/mmc/host/dw_mmc-bluefield.c b/drivers/mmc/host/dw_mmc-bluefield.c
-> index ed8f225..aa38b1a 100644
-> --- a/drivers/mmc/host/dw_mmc-bluefield.c
-> +++ b/drivers/mmc/host/dw_mmc-bluefield.c
-> @@ -1,11 +1,6 @@
->  // SPDX-License-Identifier: GPL-2.0
->  /*
->   * Copyright (C) 2018 Mellanox Technologies.
-> - *
-> - * This program is free software; you can redistribute it and/or modify
-> - * it under the terms of the GNU General Public License as published by
-> - * the Free Software Foundation; either version 2 of the License, or
-> - * (at your option) any later version.
->   */
->
->  #include <linux/bitfield.h>
-> --
-> 1.8.3.1
->
+IA0KPiBBbSAxNy4wMS4xOSB1bSAwODowMSBzY2hyaWViIFBldGVyIENoZW46DQo+ID4NCj4gPj4N
+Cj4gPj4gVGhlIGkuTVg2cS9kbCBVU0IgY29udHJvbGxlciBtYXkgZHJpdmUgdGhlIHVzYiBwb3dl
+ciBsaW5lIGRpcmVjdGx5LA0KPiA+PiBidXQgdGhlIHBvbGFyaXR5IGRlcGVuZHMgb24gdGhlIGJv
+YXJkLiBSZXNldCBzdGF0ZSBvZiB0aGUgcG9sYXJpdHkgaXMNCj4gPj4gbG93LWFjdGl2ZSBzbyBh
+ZGQgdGhpcyBwcm9wZXJ0eSB0byBhbGxvdyBpdCB0byBiZSBoaWdoLWFjdGl2ZS4NCj4gPj4NCj4g
+Pg0KPiA+IEFzIGZhciBhcyBJIGtub3csIG1vc3Qgb2YgaS5teCBVU0IgY29udHJvbGxlcnMgKGV4
+Y2VwdCBpbXgyOC8yMywgYnV0DQo+ID4gdGhleSBkb24ndCBoYXZlIG5vbi1jb3JlIHJlZ2lzdGVy
+cykgd29yayBsaWtlIHRoaXMsIGFuZCBtb3N0IG9mIHRoZW0NCj4gPiBhcmUgbG93IGFjdGl2ZSBm
+b3IgUFAgZGVmYXVsdC4gV291bGQgeW91IGp1c3QgdXNlICJpLm14IiBhdCBib3RoIHlvdXIgY29k
+ZSBhbmQNCj4geW91ciBjb21tZW50Pw0KPiANCj4gQW0gaSByaWdodCB0aGF0IGkgaGF2ZSB0byBh
+ZGQgbXkgY29kZSBibG9jayB0byAobmVhcmx5KSBhbGwgb3RoZXIgdmVyc2lvbiBzcGVjaWZpYyBp
+bml0DQo+IGZ1bmN0aW9ucyB0aGVuPw0KDQpCZXNpZGVzIHlvdXIgY3VycmVudCBwYXRjaCwgb25s
+eSB1c2JtaXNjX2lteDdkX2luaXQgaXMgbmVlZGVkIHRvIGFkZCB0aGUgc2FtZSBjb250ZW50Lg0K
+DQpQZXRlcg0KDQo+IFdpbGwgZG8gc28gaW4gbmV4dCBkYXlzIGFuZCB0aGVuIHNlbmQgYSB2NCBv
+ZiB0aGlzIHBhdGNoLg0KPiA+DQo+ID4gUGV0ZXINCj4gPg0KPiA+PiBTaWduZWQtb2ZmLWJ5OiBQ
+aGlsaXBwIFB1c2NobWFubiA8cGhpbGlwcC5wdXNjaG1hbm5AZW1saXguY29tPg0KPiA+PiAtLS0N
+Cj4gPj4gQ2hhbmdlcyBpbiB2MzogYWRkIGRlc2NyaXB0aW9uDQo+ID4+IC0tLQ0KPiA+PiAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJjLXVzYjIudHh0IHwgMSAr
+DQo+ID4+ICAxIGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gPj4NCj4gPj4gZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRyYy11c2Iy
+LnR4dA0KPiA+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91c2IvY2ktaGRy
+Yy11c2IyLnR4dA0KPiA+PiBpbmRleCBhZGFlODIzODVkZDYuLjg2OTZlM2VmZjZlNyAxMDA2NDQN
+Cj4gPj4gLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL3VzYi9jaS1oZHJj
+LXVzYjIudHh0DQo+ID4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy91
+c2IvY2ktaGRyYy11c2IyLnR4dA0KPiA+PiBAQCAtOTMsNiArOTMsNyBAQCBpLm14IHNwZWNpZmlj
+IHByb3BlcnRpZXMNCj4gPj4gIC0gb3Zlci1jdXJyZW50LWFjdGl2ZS1sb3c6IG92ZXIgY3VycmVu
+dCBzaWduYWwgcG9sYXJpdHkgaXMgYWN0aXZlIGxvdy4NCj4gPj4gIC0gb3Zlci1jdXJyZW50LWFj
+dGl2ZS1oaWdoOiBvdmVyIGN1cnJlbnQgc2lnbmFsIHBvbGFyaXR5IGlzIGFjdGl2ZSBoaWdoLg0K
+PiA+PiAgICBJdCdzIHJlY29tbWVuZGVkIHRvIHNwZWNpZnkgdGhlIG92ZXIgY3VycmVudCBwb2xh
+cml0eS4NCj4gPj4gKy0gcG93ZXItYWN0aXZlLWhpZ2g6IHBvd2VyIHNpZ25hbCBwb2xhcml0eSBp
+cyBoaWdoIGFjdGl2ZSAob25seSBmb3INCj4gPj4gK2lteDZxL2RsKQ0KPiA+PiAgLSBleHRlcm5h
+bC12YnVzLWRpdmlkZXI6IGVuYWJsZXMgb2ZmLWNoaXAgcmVzaXN0b3IgZGl2aWRlciBmb3IgVmJ1
+cw0KPiA+Pg0KPiA+PiAgRXhhbXBsZToNCj4gPj4gLS0NCj4gPj4gMi4yMC4xDQo+ID4NCg==
