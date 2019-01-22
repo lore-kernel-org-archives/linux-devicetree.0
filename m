@@ -1,7 +1,7 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH v3 02/10] arm64: dts: qcom: sdm845: Define rmtfs memory
-Date: Mon, 21 Jan 2019 21:51:04 -0800
-Message-ID: <20190122055112.30943-3-bjorn.andersson@linaro.org>
+Subject: [PATCH v3 09/10] arm64: dts: qcom: Add AOSS QMP node
+Date: Mon, 21 Jan 2019 21:51:11 -0800
+Message-ID: <20190122055112.30943-10-bjorn.andersson@linaro.org>
 References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190122055112.30943-1-bjorn.andersson@linaro.org>
@@ -10,8 +10,8 @@ To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Si
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Define the rmtfs memory node, as described in version 10 of the memory
-map.
+The AOSS QMP provides a number of power domains, used for QDSS and
+PIL, add the node for this.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
@@ -19,28 +19,36 @@ Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Changes since v2:
 - New patch
 
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/qcom/sdm845.dtsi | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index cdcac3704c13..64f57cc5c61a 100644
+index 1033b77856e6..5cc2615461da 100644
 --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
 +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -72,6 +72,15 @@
- 		#size-cells = <2>;
- 		ranges;
+@@ -13,6 +13,7 @@
+ #include <dt-bindings/clock/qcom,videocc-sdm845.h>
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/phy/phy-qcom-qusb2.h>
++#include <dt-bindings/power/qcom-aoss-qmp.h>
+ #include <dt-bindings/power/qcom-rpmpd.h>
+ #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+ #include <dt-bindings/reset/qcom,sdm845-pdc.h>
+@@ -2070,6 +2071,15 @@
+ 			#reset-cells = <1>;
+ 		};
  
-+		rmtfs@85d00000 {
-+			compatible = "qcom,rmtfs-mem";
-+			reg = <0 0x85d00000 0 0x200000>;
-+			no-map;
++		aoss_qmp: qmp@c300000 {
++			compatible = "qcom,sdm845-aoss-qmp";
++			reg = <0 0x0c300000 0 0x100000>;
++			interrupts = <GIC_SPI 389 IRQ_TYPE_EDGE_RISING>;
++			mboxes = <&apss_shared 0>;
 +
-+			qcom,client-id = <1>;
-+			qcom,vmid = <15>;
++			#power-domain-cells = <1>;
 +		};
 +
- 		memory@85fc0000 {
- 			reg = <0 0x85fc0000 0 0x20000>;
- 			no-map;
+ 		spmi_bus: spmi@c440000 {
+ 			compatible = "qcom,spmi-pmic-arb";
+ 			reg = <0 0x0c440000 0 0x1100>,
 -- 
 2.18.0
