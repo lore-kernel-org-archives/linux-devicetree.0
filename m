@@ -1,141 +1,57 @@
-From: Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Tue, 22 Jan 2019 20:12:27 +0000
-Message-ID: <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
-References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
- <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
- <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com>
- <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
+From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
+Subject: Re: [v1] drm/msm/dpu: Remove unused enum and comment
+ from dpu mdss
+Date: Tue, 22 Jan 2019 15:11:32 -0500
+Message-ID: <20190122201132.GJ114153@art_vandelay>
+References: <1545159233-21580-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, john.horley@arm.com
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Disposition: inline
+In-Reply-To: <1545159233-21580-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Sai,
-
-On 01/22/2019 04:48 PM, Sai Prakash Ranjan wrote:
-> Hi Suzuki,
-> 
-> On 1/22/2019 9:38 PM, Suzuki K Poulose wrote:
->>
->> By inconsistent, I meant the registers provides values which are not
->> the same on two different CPUs of the *same type*. And it is expected
->> that two different CPU/ETM implementations will have different PIDs.
->>
-> 
-> SDM845 has 4 Kryo 385 Gold (ARM A75) + 4 Kryo 385 Silver (ARM A55),
-> so the PID values should be same for 4 ETMs atleast. But here one
-> pid value(001bb803) is same for 6 ETMs and other one for 2
-> ETMs(001bb802) which seems odd and hence the doubt if these pids
-> are even valid ones.
-
-Have you checked other SoCs with A55 for the ETM PID ? The drivers
-usually only care about PID0[7-0], PID1[7-0], PID2[3-0] and ignores
-the other fields that may change over revisions of the core. So, in your
-case the ETM ID could be treated as 0xbb802 and 0xbb803.
-
-> 
->>>
->>> Below are the PIDs read for SDM845:
->>>
->>> [    5.996448] resname=etm@7040000 pid=001bb803
->>> [    6.052891] resname=etm@7140000 pid=001bb803
->>>
->>> <snip> .. (Same pid=001bb803 for etm@7240000 to etm@7540000 but differs
->>> for other 2 cpus as shown below)
-
-So thats 4 CPUs with 0x1bb803.
-
->>>
->>> [    6.266687] resname=etm@7640000 pid=001bb802
->>> [    6.329171] resname=etm@7740000 pid=001bb802
->>>
-
-
->>> This is the case for MSM8996 also as shown below where PID
->>> value is not correct and has to be hardcoded.
->>
->> They differ because they are two different types of CPU cores (and 
->> thus different ETM PIDs). What does the Register descriptions say for
->> the Cores ?
->>
->> To me it looks like there are two different types of Qualcomm
->> Cores with their respective ETMs which are missing in the ETM4x
->> driver and we are trying to "make the ETM" work by faking it as
->> something else, which is not nice. I would rather prefer
->> to add the appropriate masks and the expected value for these
->> two different ETM implementations and be done with it, instead
->> of faking it in all the DTs where these cores appear.
->>
-> 
-> ETM4x driver does not have entries for A55 and A75. Could you please
-> let me know the PIDs for these CPUs so that we can compare?
-
-FWIW, here is the PID list:
-
-A75: 0xB_BD_0A
-A55: 0xB_BD_05
-
-Btw, I am not sure if the ETM has been changed/tuned for the Cores in
-SDM845. Please could you get this clarified internally within your
-organisation ?
-
-> 
->>>
->>> For MSM8996:
->>>
->>> resname=etm@3b40000 pid=102f0205
->>
->> I don't know what CPUs the MSM8996 have. If they don't have A53, you
->> must add the actual PIDs to the table once and for all.
->>
-> 
-> But again, this PID is some invalid value. And does not correspond
-> to any of the ARM CPU cores and would be MSM8996 specific.
-> MSM8996 has 2+2 Kryo cores which are not ARM derivative as SDM845
-> if I am right.
-
-As long as the JEP106 coding standard is followed and is indicated in
-the appropriate fields (PIDR2[3]), we should be fine. In the case above:
-PID of the ETM is 0xf0205, implies JEP106 code[6:0] of the designer is 
-0x70 and ETM part number is : 0x205, which makes sense to me.
-
-> 
->>>
->>>>> +        etm@7040000 {
->>>>> +            compatible = "arm,coresight-etm4x", "arm,primecell";
->>>>> +            arm,primecell-periphid = <0x000bb95d> > + reg = <0 
->>>>> 0x07040000 0 0x1000>;
->>>>> +
->>>>> +            cpu = <&CPU0>;
->>>>> +
->>>>
->>>> You seem to be specifying the PID of A53 ETM all over, while at least
->>>> one of your cores is ETMv4.2 (from the other patch) and A53 is not
->>>> ETMv4.2. As above, it would be good to add the PID to the table.
->>>>
->>>
->>> As explained in above comment, PID values read are not correct. 
->>> Please let me know if I am not clear.
->>
->> There is no measure for "correctness" here. If the ETM exposes different
->> PID than what you expect from the TRM, then we could think of overriding
->> it. Otherwise please add the PIDs to the table.
->>
-> 
-> This is exactly the case, ETM PID registers are exposing some invalid
-> value and hence we override in DT.
-
-It would be good to have this clarified. I will check with the internal
-teams here for any details.
-
-Thanks
-Suzuki
+T24gV2VkLCBEZWMgMTksIDIwMTggYXQgMTI6MjM6NTNBTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
+d3JvdGU6Cj4gUmVtb3ZlIGVudW0gZHB1X2lvbW11X2RvbWFpbiBmcm9tIGRwdSBtZHNzIGFzIGl0
+cyB1bnVzZWQuCj4gCj4gUmVtb3ZlIHVubmVjZXNzYXJ5IGNvbW1lbnQgZm9yIHZhcmlhYmxlIHdo
+aWNoIGlzIGFscmVhZHkKPiByZW1vdmVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVr
+aGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9yZz4KCkFwcGxpZWQgdG8gZHB1LXN0YWdpbmcsIHRo
+YW5rcyEKClNlYW4KCj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9o
+d19tZHNzLmggfCA3IC0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgZGVsZXRpb25zKC0pCj4g
+Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19tZHNz
+LmggYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfbWRzcy5oCj4gaW5kZXgg
+NjhjNTRkMi4uMWFiOGQ0YSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3Av
+ZHB1MS9kcHVfaHdfbWRzcy5oCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
+ZHB1X2h3X21kc3MuaAo+IEBAIC0yNTgsMTIgKzI1OCw2IEBAIGVudW0gZHB1X3ZiaWYgewo+ICAJ
+VkJJRl9OUlQgPSBWQklGXzEKPiAgfTsKPiAgCj4gLWVudW0gZHB1X2lvbW11X2RvbWFpbiB7Cj4g
+LQlEUFVfSU9NTVVfRE9NQUlOX1VOU0VDVVJFLAo+IC0JRFBVX0lPTU1VX0RPTUFJTl9TRUNVUkUs
+Cj4gLQlEUFVfSU9NTVVfRE9NQUlOX01BWAo+IC19Owo+IC0KPiAgLyoqCj4gICAqIERQVSBIVyxD
+b21wb25lbnQgb3JkZXIgY29sb3IgbWFwCj4gICAqLwo+IEBAIC0zNTgsNyArMzUyLDYgQEAgZW51
+bSBkcHVfM2RfYmxlbmRfbW9kZSB7Cj4gICAqIEBhbHBoYV9lbmFibGU6IHdoZXRoZXIgdGhlIGZv
+cm1hdCBoYXMgYW4gYWxwaGEgY2hhbm5lbAo+ICAgKiBAbnVtX3BsYW5lczogbnVtYmVyIG9mIHBs
+YW5lcyAoaW5jbHVkaW5nIG1ldGEgZGF0YSBwbGFuZXMpCj4gICAqIEBmZXRjaF9tb2RlOiBsaW5l
+YXIsIHRpbGVkLCBvciB1YndjIGh3IGZldGNoIGJlaGF2aW9yCj4gLSAqIEBpc195dXY6IGlzIGZv
+cm1hdCBhIHl1diB2YXJpYW50Cj4gICAqIEBmbGFnOiB1c2FnZSBiaXQgZmxhZ3MKPiAgICogQHRp
+bGVfd2lkdGg6IGZvcm1hdCB0aWxlIHdpZHRoCj4gICAqIEB0aWxlX2hlaWdodDogZm9ybWF0IHRp
+bGUgaGVpZ2h0Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlz
+IGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24g
+Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX18KPiBGcmVlZHJlbm8gbWFpbGluZyBsaXN0Cj4gRnJlZWRyZW5vQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
+YW4vbGlzdGluZm8vZnJlZWRyZW5vCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwg
+R29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
+c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
+ZnJlZWRyZW5vCg==
