@@ -1,40 +1,59 @@
-From: Rob Herring <robh@kernel.org>
-Subject: [PATCH] dt-bindings: Fix dt_binding_check target for in tree builds
-Date: Tue, 22 Jan 2019 09:52:42 -0600
-Message-ID: <20190122155242.2770-1-robh@kernel.org>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 2/2] dt-bindings: interrupt-controller: loongson ls1x intc
+Date: Tue, 22 Jan 2019 23:45:57 +0800
+Message-ID: <20190122154557.22689-2-jiaxun.yang@flygoat.com>
+References: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, paul.burton@mips.com, devicetree@vger.kernel.org, tglx@linutronix.de, robh+dt@kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
 List-Id: devicetree@vger.kernel.org
 
-On in tree builds, subsequent builds will incorrectly include
-the intermediate file 'processed-schema.yaml' with the input schema
-files resulting in a build error. Update the find command to ignore
-processed-schema.yaml.
+Dt-bindings doc about Loongson-1 interrupt controller
 
-Signed-off-by: Rob Herring <robh@kernel.org>
+Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
 ---
- Documentation/devicetree/bindings/Makefile | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ .../loongson,ls1x-intc.txt                    | 28 +++++++++++++++++++
+ 1 file changed, 28 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
 
-diff --git a/Documentation/devicetree/bindings/Makefile b/Documentation/devicetree/bindings/Makefile
-index 6e5cef0ed6fb..50daa0b3b032 100644
---- a/Documentation/devicetree/bindings/Makefile
-+++ b/Documentation/devicetree/bindings/Makefile
-@@ -17,7 +17,11 @@ extra-y += $(DT_TMP_SCHEMA)
- quiet_cmd_mk_schema = SCHEMA  $@
-       cmd_mk_schema = $(DT_MK_SCHEMA) $(DT_MK_SCHEMA_FLAGS) -o $@ $(filter-out FORCE, $^)
- 
--DT_DOCS = $(shell cd $(srctree)/$(src) && find * -name '*.yaml')
-+DT_DOCS = $(shell \
-+	cd $(srctree)/$(src) && \
-+	find * \( -name '*.yaml' ! -name $(DT_TMP_SCHEMA) \) \
-+	)
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
+new file mode 100644
+index 000000000000..afa8fec45f88
+--- /dev/null
++++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
+@@ -0,0 +1,28 @@
++Loongson ls1x Interrupt Controller
 +
- DT_SCHEMA_FILES ?= $(addprefix $(src)/,$(DT_DOCS))
- 
- extra-y += $(patsubst $(src)/%.yaml,%.example.dts, $(DT_SCHEMA_FILES))
++Required properties:
++
++- compatible : should be "ingenic,<socname>-intc". Valid strings are:
++    loongson,ls1b-intc
++    loongson,ls1c-intc
++
++- reg : Specifies base physical address and size of the registers.
++- interrupt-controller : Identifies the node as an interrupt controller
++- #interrupt-cells : Specifies the number of cells needed to encode an
++  interrupt source. The value shall be 1.
++- interrupts : Specifies the CPU interrupts the controller is connected to,
++    - For ls1b, it must have 4 interrupts.
++    - For ls1c, it must have 5 interrupts.
++
++Example:
++
++intc: interrupt-controller@1fd01040 {
++	compatible = "loongson,ls1c-intc";
++	reg = <0x1fd01040 0x78>;
++
++	interrupt-controller;
++	#interrupt-cells = <1>;
++
++	interrupt-parent = <&cpu_intc>;
++	interrupts = <2>, <3>, <4>, <5>, <6>;
++};
+\ No newline at end of file
 -- 
-2.19.1
+2.20.1
