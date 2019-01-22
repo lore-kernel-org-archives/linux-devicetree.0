@@ -1,99 +1,159 @@
-From: Greg KH <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v13 0/8] Introduce on-chip interconnect API
-Date: Tue, 22 Jan 2019 13:42:04 +0100
-Message-ID: <20190122124204.GA26969@kroah.com>
-References: <20190116161103.6937-1-georgi.djakov@linaro.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
+ support
+Date: Tue, 22 Jan 2019 12:50:26 +0000
+Message-ID: <AM0PR04MB42115D7A2A3BB5505771BD3880980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+         <1547801609.2626.5.camel@pengutronix.de>
+         <AM0PR04MB42111D634F28492434AA9309809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
+         <1547806960.2626.9.camel@pengutronix.de>
+         <AM0PR04MB42111FE266342A2C2EAECC3580980@AM0PR04MB4211.eurprd04.prod.outlook.com>
+ <1548154758.2465.20.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190116161103.6937-1-georgi.djakov@linaro.org>
+In-Reply-To: <1548154758.2465.20.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Georgi Djakov <georgi.djakov@linaro.org>
-Cc: andy.gross@linaro.org, olof@lixom.net, arnd@arndb.de, rjw@rjwysocki.net, robh+dt@kernel.org, mturquette@baylibre.com, khilman@baylibre.com, vincent.guittot@linaro.org, skannan@codeaurora.org, bjorn.andersson@linaro.org, amit.kucheria@linaro.org, seansw@qti.qualcomm.com, daidavid1@codeaurora.org, evgreen@chromium.org, dianders@chromium.org, abailon@baylibre.com, maxime.ripard@bootlin.com, thierry.reding@gmail.com, ksitaraman@nvidia.com, sanjayc@nvidia.com, henryc.chen@mediatek.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org, linux-tegra@vger.kernel.org, linux-mediatek@lists.infradead.org
+To: Lucas Stach <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 06:10:55PM +0200, Georgi Djakov wrote:
-> Modern SoCs have multiple processors and various dedicated cores (video, gpu,
-> graphics, modem). These cores are talking to each other and can generate a
-> lot of data flowing through the on-chip interconnects. These interconnect
-> buses could form different topologies such as crossbar, point to point buses,
-> hierarchical buses or use the network-on-chip concept.
-> 
-> These buses have been sized usually to handle use cases with high data
-> throughput but it is not necessary all the time and consume a lot of power.
-> Furthermore, the priority between masters can vary depending on the running
-> use case like video playback or CPU intensive tasks.
-> 
-> Having an API to control the requirement of the system in terms of bandwidth
-> and QoS, so we can adapt the interconnect configuration to match those by
-> scaling the frequencies, setting link priority and tuning QoS parameters.
-> This configuration can be a static, one-time operation done at boot for some
-> platforms or a dynamic set of operations that happen at run-time.
-> 
-> This patchset introduce a new API to get the requirement and configure the
-> interconnect buses across the entire chipset to fit with the current demand.
-> The API is NOT for changing the performance of the endpoint devices, but only
-> the interconnect path in between them.
-> 
-> The API is using a consumer/provider-based model, where the providers are
-> the interconnect buses and the consumers could be various drivers.
-> The consumers request interconnect resources (path) to an endpoint and set
-> the desired constraints on this data flow path. The provider(s) receive
-> requests from consumers and aggregate these requests for all master-slave
-> pairs on that path. Then the providers configure each participating in the
-> topology node according to the requested data flow path, physical links and
-> constraints. The topology could be complicated and multi-tiered and is SoC
-> specific.
-> 
-> Below is a simplified diagram of a real-world SoC topology. The interconnect
-> providers are the NoCs.
-> 
-> +----------------+    +----------------+
-> | HW Accelerator |--->|      M NoC     |<---------------+
-> +----------------+    +----------------+                |
->                         |      |                    +------------+
->  +-----+  +-------------+      V       +------+     |            |
->  | DDR |  |                +--------+  | PCIe |     |            |
->  +-----+  |                | Slaves |  +------+     |            |
->    ^ ^    |                +--------+     |         |   C NoC    |
->    | |    V                               V         |            |
-> +------------------+   +------------------------+   |            |   +-----+
-> |                  |-->|                        |-->|            |-->| CPU |
-> |                  |-->|                        |<--|            |   +-----+
-> |     Mem NoC      |   |         S NoC          |   +------------+
-> |                  |<--|                        |---------+    |
-> |                  |<--|                        |<------+ |    |   +--------+
-> +------------------+   +------------------------+       | |    +-->| Slaves |
->   ^  ^    ^    ^          ^                             | |        +--------+
->   |  |    |    |          |                             | V
-> +------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
-> | CPUs |  |  | GPU |   | DSP |  | Masters |-->|       P NoC    |-->| Slaves |
-> +------+  |  +-----+   +-----+  +---------+   +----------------+   +--------+
->           |
->       +-------+
->       | Modem |
->       +-------+
-> 
-> It's important to note that the interconnect API, in contrast with devfreq,
-> is allowing drivers to express their needs in advance and be proactive.
-> Devfreq is using a reactive approach (e.g. monitor performance counters and
-> reconfigure bandwidth when the bottleneck had already occurred), which is
-> suboptimal and might not work well. The interconnect API is designed to
-> deal with multi-tiered bus topologies and aggregating constraints provided
-> by drivers, while the devfreq is more oriented towards a device like GPU
-> or CPU, that controls the power/performance of itself and not other devices.
-> 
-> Some examples of how interconnect API is used by consumers:
-> https://lkml.org/lkml/2018/12/20/811
-> https://lkml.org/lkml/2019/1/9/740
-> https://lkml.org/lkml/2018/10/11/499
-> https://lkml.org/lkml/2018/9/20/986
-> 
-> Platform drivers for different SoCs are available:
-> https://lkml.org/lkml/2018/11/17/368
-> https://lkml.org/lkml/2018/8/10/380
-
-All now queued up, thanks.
-
-greg k-h
+PiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNl
+bnQ6IFR1ZXNkYXksIEphbnVhcnkgMjIsIDIwMTkgNjo1OSBQTQ0KPiBUbzogQWlzaGVuZyBEb25n
+IDxhaXNoZW5nLmRvbmdAbnhwLmNvbT47IGxpbnV4LWtlcm5lbEB2Z2VyLmtlcm5lbC5vcmcNCj4g
+Q2M6IGxpbnV4LWFybS1rZXJuZWxAbGlzdHMuaW5mcmFkZWFkLm9yZzsgc2hhd25ndW9Aa2VybmVs
+Lm9yZzsgZGwtbGludXgtaW14DQo+IDxsaW51eC1pbXhAbnhwLmNvbT47IHJvYmgrZHRAa2VybmVs
+Lm9yZzsgZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc7DQo+IHRnbHhAbGludXRyb25peC5kZTsg
+TWFyYyBaeW5naWVyIDxtYXJjLnp5bmdpZXJAYXJtLmNvbT4NCj4gU3ViamVjdDogUmU6IFtQQVRD
+SCA0LzRdIGlycTogaW14OiBpcnFzdGVlcjogYWRkIG11bHRpIG91dHB1dCBpbnRlcnJ1cHRzIHN1
+cHBvcnQNCj4gDQo+IEFtIERpZW5zdGFnLCBkZW4gMjIuMDEuMjAxOSwgMTA6MzkgKzAwMDAgc2No
+cmllYiBBaXNoZW5nIERvbmc6DQo+ID4gPiA+ID4gRnJvbTogTHVjYXMgU3RhY2ggW21haWx0bzps
+LnN0YWNoQHBlbmd1dHJvbml4LmRlXQ0KPiA+ID4gU2VudDogRnJpZGF5LCBKYW51YXJ5IDE4LCAy
+MDE5IDY6MjMgUE0NCj4gPg0KPiA+IFsuLi5dDQo+ID4gPiA+ID4gVGhpcyBoYXMgYmVlbiBkaXNj
+dXNzZWQgd2hlbiB1cHN0cmVhbWluZyB0aGUgZHJpdmVyLiBUaGUNCj4gPiA+ID4gPiBjb250cm9s
+bGVyIG1heSBzdXBwb3J0IG11bHRpcGxlIG91dHB1dCBJUlFzLCBidXQgb25seSBvbmUgdGhlbQ0K
+PiA+ID4gPiA+IGlzIGFjdHVhbGx5IHVzZWQgZGVwZW5kaW5nIG9uIHRoZSBDSEFOQ1RSTCBjb25m
+aWcuIFRoZXJlIGlzIG5vDQo+ID4gPiA+ID4gdXNlIGluIGhvb2tpbmcgdXAgYWxsIHRoZSBvdXRw
+dXQgSVJRcyBpbiBEVCwgaWYgb25seSBvbmUgb2YgdGhlbQ0KPiA+ID4gPiA+IGlzIGFjdHVhbGx5
+IHVzZWQuIFNvbWUgb2YgdGhlIG91dHB1dHMgbWF5IG5vdCBldmVuIGJlIHZpc2libGUgdG8NCj4g
+PiA+ID4gPiB0aGUgTGludXggc3lzdGVtLCBidXQgbWF5IGJlbG9uZyB0byBhIENvcnRleCBNNCBz
+dWJzeXN0ZW0uIEFsbA0KPiA+ID4gPiA+IG9mIHRob3NlIGNvbmZpZ3VyYXRpb25zIGNhbiBiZSBk
+ZXNjcmliZWQgaW4gRFQgYnkgY2hhbmdpbmcgdGhlDQo+ID4gPiA+ID4gdXBzdHJlYW0gaW50ZXJy
+dXB0IGFuZCAiZnNsLGNoYW5uZWwiIGluIGENCj4gPiA+DQo+ID4gPiBjb2hlcmVudCB3YXkuDQo+
+ID4gPiA+ID4NCj4gPiA+ID4gPiBQbGVhc2UgY29ycmVjdCBtZSBpZiBteSB1bmRlcnN0YW5kaW5n
+IGlzIHRvdGFsbHkgd3JvbmcuDQo+ID4gPiA+DQo+ID4gPiA+IEknbSBhZnJhaWQgeW91ciB1bmRl
+cnN0YW5kaW5nIG9mIENIQU4gc2VlbXMgd3JvbmcuDQo+ID4gPiA+IChCaW5kaW5nIGRvYyBvZiB0
+aGF0IHByb3BlcnR5IG5lZWRzIGNoYW5nZSBhcyB3ZWxsKS4NCj4gPiA+ID4NCj4gPiA+ID4gT24g
+UVhQIERDIFNTLCB0aGUgSVJRU1RFRVIgc3VwcG9ydHMgNTEyIGludGVycnVwdHMgd2l0aCA4DQo+
+ID4gPiA+IGludGVycnVwdCBvdXRwdXQgQ29ubnRlY3RlZCB0byBHSUMuDQo+ID4gPiA+IFRoZSBj
+dXJyZW50IGRyaXZlciBkb2VzIG5vdCBzdXBwb3J0IGl0IGFzIGl0IGFzc3VtZXMgb25seSBvbmUN
+Cj4gPiA+ID4gaW50ZXJydXB0DQo+ID4gPg0KPiA+ID4gb3V0cHV0IHVzZWQuDQo+ID4gPg0KPiA+
+ID4gT2theSwgc28gbGV0J3MgdGFrZSBhIHN0ZXAgYmFjay4gVGhlIGRlc2NyaXB0aW9uIGluIHRo
+ZSBRWFAgUk0gaXMNCj4gPiA+IGFjdHVhbGx5IGJldHRlciB0aGFuIHdoYXQgSSd2ZSBzZWVuIHVu
+dGlsIG5vdy4gU3RpbGwgaXQncyB0b3RhbGx5IGNvbmZ1c2luZyB0aGF0DQo+IHRoZSAiY2hhbm5l
+bCINCj4gPiA+IHRlcm1pbm9sb2d5IHVzZWQgd2l0aCBkaWZmZXJlbnQgbWVhbmluZ3MgaW4gZG9j
+cy4gTGV0J3MgdHJ5IHRvIGF2b2lkDQo+ID4gPiB0aGlzIGFzIG11Y2ggYXMgcG9zc2libGUuDQo+
+ID4gPg0KPiA+ID4gU28gdG8gZ2V0IHRoaW5ncyBzdHJhaWdodDogRWFjaCBpcnFzdGVlciBjb250
+cm9sbGVyIGhhcyBhIG51bWJlciBvZiBJUlENCj4gZ3JvdXBzLg0KPiA+ID4gQWxsIHRoZSBpbnB1
+dCBJUlFzIG9mIG9uZSBncm91cCBhcmUgT1JlZCB0b2dldGhlciB0byBmb3JtIG9uIG91dHB1dCBJ
+UlEuDQo+ID4gPiBEZXBlbmRpbmcgb24gdGhlIFNvQyBpbnRlZ3JhdGlvbiwgYSBncm91cCBjYW4g
+Y29udGFpbiAzMiBvcg0KPiA+ID4gNjQgSVJRcywgd2hlcmUgRENTUyBpcnFzdGVlciBvbiBNWDhN
+IGFuZCB0aGUgYmlnIDUxMiBpbnB1dA0KPiA+ID4gY29udHJvbGxlcnMgb24gUVhQIGFuZCBRTSBi
+b3RoIHVzZSA2NCBJUlFzIHBlciBncm91cC4gWW91IGFyZQ0KPiA+ID4gY2xhaW1pbmcgdGhhdCB0
+aGUgc21hbGxlciBjb250cm9sbGVycyBvbiBib3RoIFFYUCBhbSBRTSBoYXZlIG9ubHkgMzINCj4g
+SVJRcyBwZXIgZ3JvdXAsIHJpZ2h0Pw0KPiA+ID4NCj4gPiA+IFNvIHRoZSBvbmx5IGNoYW5nZSB0
+aGF0IGlzIG5lZWRlZCBpcyB0aGF0IHRoZSBkcml2ZXIgbmVlZHMgdG8ga25vdw0KPiA+ID4gdGhl
+IG51bWJlciBvZiBpbnB1dCBJUlFzIHBlciBncm91cCwgd2l0aCBhIGRlZmF1bHQgb2YgNjQgdG8g
+bm90IGJyZWFrIERUDQo+IGNvbXBhdGliaWxpdHkuDQo+ID4gPg0KPiA+DQo+ID4gTm90IGV4YWN0
+bHkuDQo+ID4gZnJvbSBIVyBwb2ludCBvZiB2aWV3ICwgdGhlcmUncmUgdHdvIHBhcmFtZXRlcnMg
+ZHVyaW5nIElSUVNURUVSDQo+IGludGVncmF0aW9uLg0KPiA+IEZvciBleGFtcGxlLA0KPiA+IERD
+IGluIFFYUDoNCj4gPiA+ID4gcGFyYW1ldGVywqDCoElSUUNIQU4JCT3CoMKgMTvCoAkvL051bWJl
+ciBvZiBJUlEgQ2hhbm5lbHMvU2xvdHMNCj4gPiA+ID4gcGFyYW1ldGVywqDCoE5JTlQzMgkJPcKg
+wqA4OwkvL051bWJlciBvZiBpbnRlcnJ1cHRzIGluIG11bHRpcGxlDQo+IG9mIDMyDQo+IA0KPiBJ
+ZiB0aGlzIGlzIGFsd2F5cyBpbiBtdWx0aXBsZXMgb2YgMzIsIHRoZSBvbmx5IGNoYW5nZSB3ZSBu
+ZWVkIHRvIG1ha2UgdG8gdGhlDQo+IGRyaXZlciBpcyB0byBmaXggRFQgYmluZGluZyBhbmQgaW50
+ZXJwcmV0YXRpb24gb2YgdGhlICJmc2wsaXJxLWdyb3VwcyIgcHJvcGVydHkgdG8NCj4gYmUgaW4g
+bXVsdGlwbGVzIG9mIDMyLg0KPiANCj4gVGhpcyBtZWFucyBpLk1YOE1RIERDU1MgaXJxc3RlZXIg
+d291bGQgbmVlZCB0byBjaGFuZ2UgdG8gMiBpcnEtZ3JvdXBzLCBidXQNCj4gYXMgdGhpcyBpc24n
+dCB1c2VkIHVwc3RyZWFtIHlldCB3ZSBjYW4gc3RpbGwgZG8gdGhpcyBjaGFuZ2Ugd2l0aG91dCBi
+cmVha2luZyB0b28NCj4gbXVjaCBzdHVmZiBhbmQgSSB3b3VsZCByYXRoZXIgY29ycmVjdCB0aGlz
+IG5vdyB0aGFuIGtlZXBpbmcgYSBEVCBiaW5kaW5nDQo+IGFyb3VuZCB0aGF0IGRvZXNuJ3QgbWF0
+Y2ggdGhlIEhXLg0KPiANCj4gPiBNSVBJIENTSSBpbiBNUToNCj4gPiA+IFBhcmFtZXRlcsKgwqBJ
+UlFDSEFOCQk9IDENCj4gPiA+IFBhcmFtZXRlcsKgwqBOSU5UMzIJCT0gMQ0KPiA+DQo+ID4gWW91
+IHdpbGwgc2VlIG5vIGdyb3VwIGNvbmNlcHQgdXNlZCBoZXJlLiBPbmx5IGNoYW5uZWwgbnVtYmVy
+IGFuZA0KPiBpbnRlcnJ1cHRzIG51bWJlci4NCj4gPiBUaGUgZ3JvdXAgaXMgYW4gSVAgaW50ZXJu
+YWwgY29uY2VwdCB0aGF0IE9SZWQgYSBncm91cCBvZiA2NCBpbnRlcnJ1cHRzDQo+ID4gaW50byBh
+biBvdXRwdXQgaW50ZXJydXB0LiBCdXQgaXQgbWF5IGFsc28gb25seSB1c2UgMzIgaW50ZXJydXB0
+cyBpbiB0aGUgc2FtZQ0KPiBncm91cC4NCj4gDQo+IEkgc3VwcG9zZSB0aGF0IHRoZSBPUiBncm91
+cCBzaXplIGF0IHRoYXQgcG9pbnQgaXMgYWx3YXlzIDY0IGlucHV0IElSUXMgcGVyDQo+IG91dHB1
+dCBJUlEsIHJpZ2h0PyBTbyB3aXRoIE5JTlQzMiA9PSAxIHlvdSBlbmQgdXAgd2l0aCAxIG91dHB1
+dCBJUlEsIGJ1dCBmb3INCj4gTklOVDMyID09IDMgeW91IGdldCAyIG91dHB1dCBJUlFzLCBjb3Jy
+ZWN0Pw0KPiANCj4gPiA+IEFsc28gaWYgdGhlIGNvbm5lY3Rpb24gYmV0d2VlbiBJUlEgZ3JvdXAg
+YW5kIG91dHB1dCBJUlEgaXMgZml4ZWQsDQo+ID4gPiB0aGUgZHJpdmVyIHNob3VsZCBiZSBtb3Jl
+IGNsZXZlciBhYm91dCBoYW5kbGluZyB0aGUgY2hhaW5lZCBJUlEuIElmDQo+ID4gPiB5b3Uga25v
+dyB3aGljaCBvZiB0aGUgdXBzdHJlYW0gSVJRcyBmaXJlZCB5b3Ugb25seSBuZWVkIHRvIGxvb2sg
+YXQNCj4gPiA+IHRoZSAzMiBvciA2NCBJUlEgc3RhdHVzIHJlZ2lzdGVycyBvZiB0aGF0IHNwZWNp
+ZmljIGdyb3VwLCBub3QgYWxsIG9mIHRoZW0uDQo+ID4NCj4gPiBZZXMsIHRoYXQncyByaWdodC4N
+Cj4gPiBJIHBsYW5uZWQgdG8gZG8gdGhhdCBsYXRlciB3aXRoIGEgc2VwYXJhdGUgcGF0Y2ggYmVm
+b3JlLg0KPiANCj4gTGV0J3MgZG8gaXQgcmlnaHQgd2l0aCB0aGUgZmlyc3QgcGF0Y2guIFRoaXMg
+ZG9lc24ndCBzZWVtIGxpa2UgYSBiaWcgY2hhbmdlLg0KPiANCj4gPg0KPiA+ID4NCj4gPiA+IENh
+biB5b3UgcGxlYXNlIGNsYXJpZnkgd2hhdCB0aGUgQ0hBTkNUUkwgc2V0dGluZyBjaGFuZ2VzIGlu
+IHRoaXMgc2V0dXA/DQo+ID4gPg0KPiA+DQo+ID4gSVJRc3RlZXIgc3VwcG9ydHMgdXAgdG8gNSBz
+ZXBhcmF0ZSBDQUhOTkVMUyB3aGljaCBlYWNoIG9mIHRoZW0NCj4gPiBzdXBwb3J0cyB1cCB0byA1
+MTIgaW50ZXJydXB0cy4gQ0hBTkNUTCBpcyB1c2VkIHRvIGVuYWJsZSB0aG9zZSByZXNwZWN0aXZl
+DQo+IENIQU4gb3V0cHV0IGludGVycnVwdHMuDQo+ID4gZS5nLg0KPiA+IDF+OCBvdXRwdXQgaW50
+ZXJydXB0cyBvZiBDSEFOMC4NCj4gPg0KPiA+IE9uZSBub3RhYmxlIHRoaW5nIGlzIHRoZSBlYWNo
+IGNoYW5uZWwgaGFzIGEgc2VwYXJhdGUgYWRkcmVzcyBzcGFjZS4NCj4gPiBUaGF0IG1lYW5zIHRo
+ZSBjaGFuMSByZWcgYWRkcmVzcyBpcyBub3QgdGhlIG9uZSB3ZSBzcGVjaWZpZWQgaW4gZGVmYXVs
+dCByZWcNCj4gcHJvcGVydHkuDQo+ID4gU28gdGhlIGNvcnJlY3QgZHRzIG1heSBiZSBsaWtlIGZv
+ciBtdWx0aSBjaGFubmVscyBjYXNlcy4NCj4gPiBpbnRlcnJ1cHQtY29udHJvbGxlckAzMmUyZDAw
+MCB7DQo+ID4gwqDCoMKgwqDCoMKgwqDCoGNvbXBhdGlibGUgPSAiZnNsLGlteDhtLWlycXN0ZWVy
+IiwgImZzbCxpbXgtaXJxc3RlZXIiOw0KPiA+IMKgwqDCoMKgwqDCoMKgwqByZWcgPSA8MHgzMmUy
+ZDAwMCAweDEwMDA+LA0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8MHgzMmUyZTAw
+MCAweDEwMDA+LA0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqA8MHgzMmUyZjAwMCAw
+eDEwMDA+Ow0KPiA+IMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqAuLi4NCj4gPiDCoMKgwqDC
+oMKgwqDCoMKgcmVnLW5hbWVzID0gImNoMCIsICJjaDEiLCAiY2gyIiwgLi4uOw0KPiA+IMKgwqDC
+oMKgwqDCoMKgwqBpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTggSVJRX1RZUEVfTEVWRUxfSElHSD47
+DQo+ID4gwqDCoMKgwqDCoMKgwqDCoGZzbCxpcnFzLXBlci1jaGFuPSA8NjQ+Ow0KPiA+IMKgwqDC
+oMKgwqDCoMKgwqBpbnRlcnJ1cHQtY29udHJvbGxlcjsNCj4gPiDCoMKgwqDCoMKgwqDCoMKgI2lu
+dGVycnVwdC1jZWxscyA9IDwyPjsgLy9jZWxsIDA6IGNoYW4gaW5kZXggY2VsbCAyOiBpbnRlcnJ1
+cHQNCj4gPiBudW1iZXIgfTsgVGhpcyBtYWtlcyB0aGUgdGhpbmdzIHF1aXRlIGNvbXBsaWNhdGVk
+Lg0KPiANCj4gV2l0aCB0aGUgY3VycmVudCBiaW5kaW5nLCB3aGF0IGtlZXBzIHVzIGZyb20gZGVz
+Y3JpYmluZyBzdWNoIGEgbXVsdGktIGNoYW5uZWwNCj4gaXJxc3RlZXIgd2l0aCBtdWx0aXBsZSBE
+VCBub2RlcyBhbmQgaGF2ZSBtdWx0aXBsZSBkcml2ZXIgaW5zdGFuY2VzPyBJIGRvbid0IHNlZQ0K
+PiB3aHkgd2Ugd291bGQgbmVlZCB0byBtaXggdGhpcyBhbGwgaW50byBvbmUgZHJpdmVyIGluc3Rh
+bmNlLiBTbyBmb3IgeW91ciBhYm92ZQ0KPiBleGFtcGxlLCBzb21ldGhpbmcgbGlrZToNCj4gDQo+
+IGludGVycnVwdC1jb250cm9sbGVyQDMyZTJkMDAwIHsNCj4gCWNvbXBhdGlibGUgPSAiZnNsLGlt
+eDhtLWlycXN0ZWVyIiwgImZzbCxpbXgtaXJxc3RlZXIiOz4NCj4gCXJlZyA9IDwweDMyZTJkMDAw
+IDB4MTAwMD47DQo+IAlpbnRlcnJ1cHRzID0gPEdJQ19TUEkgMTggSVJRX1RZUEVfTEVWRUxfSElH
+SD47DQo+IAlmc2wsY2hhbm5lbCA9IDwwPjsNCj4gfTsNCj4gDQo+IGludGVycnVwdC1jb250cm9s
+bGVyQDMyZTJlMDAwIHsNCj4gCWNvbXBhdGlibGUgPSAiZnNsLGlteDhtLWlycXN0ZWVyIiwgImZz
+bCxpbXgtaXJxc3RlZXIiOz4NCj4gCXJlZyA9IDwweDMyZTJlMDAwIDB4MTAwMD47DQo+IAlpbnRl
+cnJ1cHRzID0gPEdJQ19TUEkgMjYgSVJRX1RZUEVfTEVWRUxfSElHSD47DQo+IAlmc2wsY2hhbm5l
+bCA9IDwxPjsNCj4gfTsNCj4gDQoNCkFmdGVyIGEgYml0IG1vcmUgdGhpbmtpbmcsIEkgZ3Vlc3Mg
+dGhpcyBtaWdodCB3b3JrIGFzIHdlIGhhdmUgc2VwYXJhdGUgcmVnaXN0ZXIgc3BhY2UNCldlIGFs
+c28gaGF2ZSBtaW5pb3JlZCBDSEFOQ1RMIGZvciBlYWNoIGNoYW5uZWwsIGFsbCB0aGluZ3MgbWFr
+ZSB0aGVtIGxvb2sgbGlrZQ0Kc2VwYXJhdGUgSVJRU1RFRVJzLg0KZS5nLg0KQUlQUyDigJMgc2xv
+dCA5CTY0S0IJSVJRU1RSLlNDVTINCkFJUFMg4oCTIHNsb3QgOAk2NEtCCUlSUVNUUi5EU1ANCkFJ
+UFMg4oCTIHNsb3QgNwk2NEtCCUlSUVNUUi5DTTRfMA0KQUlQUyDigJMgc2xvdCA2CTY0S0IJSVJR
+U1RSLlNDVQ0KDQpJIG5lZWQgdGFsayB0byB0aGUgSVAgbW9kdWxlIGRlc2lnbmVyIHRvIG1ha2Ug
+c3VyZSB0aGUgbWlycm9yIGNoYW5jdGwgY2FuIHdvcmsgd2VsbA0KQW5kIGdldCBiYWNrIHRvIHlv
+dSBsYXRlciBvbmNlIGhhdmUgYW4gY29uY2x1c2lvbi4NCg0KSWYgdGhhdCdzIG9rLCB0aGVuIHdl
+IG1heSBvbmx5IG5lZWQgdXBkYXRlIGZzbCxpcnEtZ3JvdXBzIHRvIGZzbCxpcnFzLXBlci1jaGFu
+Lg0KDQooQlRXLCB0aG9zZSBpcnFzdGVlcnMgYWN0dWFsbHkgYXJlIG5vdCB1c2VkIGJ5IEEgY29y
+ZSwgdGhleSdyZSB1c2QgYnkgU0NVLCBNNCBhbmQgRFNQLg0KU28gdGhpcyBhY3R1YWxseSBkb2Vz
+IG5vdCBhZmZlY3QgQSBjb3JlIHNpZGUgd29yay4gRS5nLiBMaW51eCkNCg0KUmVnYXJkcw0KRG9u
+ZyBBaXNoZW5nDQoNCj4gPiBJbiByZWFsaXR5LCB3ZSBzdGlsbCBkb24ndCBoYXZlIHN1Y2ggdXNp
+bmcgY2FzZXMgc28gZmFyIGFzIGFzIG11bHRpDQo+ID4gY2hhbm5lbHMgdXN1YWxseSBhcmUgdXNl
+ZCB0byBkZWxpdmVyIHRoZSBpbnRlcnJ1cHRzIHRvIGRpZmZlcmVudA0KPiA+IGNvcmVzLCBlLmcu
+IE00LCBTQ1UsIG9yIERTUCwgQSBjb3JlIGRvbid0IGhhbmRsZSBpdC4NCj4gPiBTbyBJIGRpZCBu
+b3QgY2hhbmdlIGl0IGN1cnJlbnRseSBhcyBpdCdzIGFub3RoZXIgc3RvcnkuDQo+ID4gVGhpcyBw
+YXRjaCBzZXJpZXMgbWFpbmx5IGFpbXMgdG8gYWRkIHN1cHBvcnQgZm9yIDMyIG9yIDUxMiBpbnRl
+cnJ1cHRzDQo+ID4gY2hhbm5lbCBhbmQgbXVsdGlwbGUgT3V0cHV0cyBmb3IgYSBzaW5nbGUgQ0hB
+Tk5FTCBjYXNlLg0KPiANCj4gVGhlIHRoaW5nIGlzLCBpZiB3ZSB3YW50IHRvIGV2ZW4gdHJ5IHRv
+IGtlZXAgRFQgc3RhYmlsaXR5IHdlIG5lZWQgdG8gdW5kZXJzdGFuZA0KPiBob3cgdGhpcyBIVyBi
+bG9jayBjYW4gYmUgdXNlZCBhbmQgaG93IHdlIGNhbiBkZXNjcmliZSB0aGlzIGluIHRoZSBEVC4N
+Cj4gDQo+IFJlZ2FyZHMsDQo+IEx1Y2FzDQo=
