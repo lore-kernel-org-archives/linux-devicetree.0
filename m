@@ -1,57 +1,108 @@
-From: Sean Paul <sean-p7yTbzM4H96eqtR555YLDQ@public.gmane.org>
-Subject: Re: [v1] drm/msm/dpu: Remove unused enum and comment
- from dpu mdss
-Date: Tue, 22 Jan 2019 15:11:32 -0500
-Message-ID: <20190122201132.GJ114153@art_vandelay>
-References: <1545159233-21580-1-git-send-email-jshekhar@codeaurora.org>
+From: Sean Paul <sean@poorly.run>
+Subject: Re: [Freedreno] [v1] drm/msm/dpu: Cleanup dpu plane interface
+Date: Tue, 22 Jan 2019 15:11:44 -0500
+Message-ID: <20190122201144.GK114153@art_vandelay>
+References: <1545139238-8395-1-git-send-email-jshekhar@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1545159233-21580-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+In-Reply-To: <1545139238-8395-1-git-send-email-jshekhar@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jayant Shekhar <jshekhar@codeaurora.org>
+Cc: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, robdclark@gmail.com, nganji@codeaurora.org, seanpaul@chromium.org, hoegsberg@chromium.org, jsanka@codeaurora.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-T24gV2VkLCBEZWMgMTksIDIwMTggYXQgMTI6MjM6NTNBTSArMDUzMCwgSmF5YW50IFNoZWtoYXIg
-d3JvdGU6Cj4gUmVtb3ZlIGVudW0gZHB1X2lvbW11X2RvbWFpbiBmcm9tIGRwdSBtZHNzIGFzIGl0
-cyB1bnVzZWQuCj4gCj4gUmVtb3ZlIHVubmVjZXNzYXJ5IGNvbW1lbnQgZm9yIHZhcmlhYmxlIHdo
-aWNoIGlzIGFscmVhZHkKPiByZW1vdmVkLgo+IAo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVr
-aGFyIDxqc2hla2hhckBjb2RlYXVyb3JhLm9yZz4KCkFwcGxpZWQgdG8gZHB1LXN0YWdpbmcsIHRo
-YW5rcyEKClNlYW4KCj4gLS0tCj4gIGRyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9o
-d19tZHNzLmggfCA3IC0tLS0tLS0KPiAgMSBmaWxlIGNoYW5nZWQsIDcgZGVsZXRpb25zKC0pCj4g
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2RwdV9od19tZHNz
-LmggYi9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1MS9kcHVfaHdfbWRzcy5oCj4gaW5kZXgg
-NjhjNTRkMi4uMWFiOGQ0YSAxMDA2NDQKPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3Av
-ZHB1MS9kcHVfaHdfbWRzcy5oCj4gKysrIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEv
-ZHB1X2h3X21kc3MuaAo+IEBAIC0yNTgsMTIgKzI1OCw2IEBAIGVudW0gZHB1X3ZiaWYgewo+ICAJ
-VkJJRl9OUlQgPSBWQklGXzEKPiAgfTsKPiAgCj4gLWVudW0gZHB1X2lvbW11X2RvbWFpbiB7Cj4g
-LQlEUFVfSU9NTVVfRE9NQUlOX1VOU0VDVVJFLAo+IC0JRFBVX0lPTU1VX0RPTUFJTl9TRUNVUkUs
-Cj4gLQlEUFVfSU9NTVVfRE9NQUlOX01BWAo+IC19Owo+IC0KPiAgLyoqCj4gICAqIERQVSBIVyxD
-b21wb25lbnQgb3JkZXIgY29sb3IgbWFwCj4gICAqLwo+IEBAIC0zNTgsNyArMzUyLDYgQEAgZW51
-bSBkcHVfM2RfYmxlbmRfbW9kZSB7Cj4gICAqIEBhbHBoYV9lbmFibGU6IHdoZXRoZXIgdGhlIGZv
-cm1hdCBoYXMgYW4gYWxwaGEgY2hhbm5lbAo+ICAgKiBAbnVtX3BsYW5lczogbnVtYmVyIG9mIHBs
-YW5lcyAoaW5jbHVkaW5nIG1ldGEgZGF0YSBwbGFuZXMpCj4gICAqIEBmZXRjaF9tb2RlOiBsaW5l
-YXIsIHRpbGVkLCBvciB1YndjIGh3IGZldGNoIGJlaGF2aW9yCj4gLSAqIEBpc195dXY6IGlzIGZv
-cm1hdCBhIHl1diB2YXJpYW50Cj4gICAqIEBmbGFnOiB1c2FnZSBiaXQgZmxhZ3MKPiAgICogQHRp
-bGVfd2lkdGg6IGZvcm1hdCB0aWxlIHdpZHRoCj4gICAqIEB0aWxlX2hlaWdodDogZm9ybWF0IHRp
-bGUgaGVpZ2h0Cj4gLS0gCj4gVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVyLCBJbmMuIGlz
-IGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKPiBhIExpbnV4IEZvdW5kYXRpb24g
-Q29sbGFib3JhdGl2ZSBQcm9qZWN0Cj4gCj4gX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX18KPiBGcmVlZHJlbm8gbWFpbGluZyBsaXN0Cj4gRnJlZWRyZW5vQGxp
-c3RzLmZyZWVkZXNrdG9wLm9yZwo+IGh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxt
-YW4vbGlzdGluZm8vZnJlZWRyZW5vCgotLSAKU2VhbiBQYXVsLCBTb2Z0d2FyZSBFbmdpbmVlciwg
-R29vZ2xlIC8gQ2hyb21pdW0gT1MKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRl
-c2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8v
-ZnJlZWRyZW5vCg==
+On Tue, Dec 18, 2018 at 06:50:38PM +0530, Jayant Shekhar wrote:
+> Remove unused functions from dpu plane interface
+> and unused variables from dpu plane state structure.
+> 
+> Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+
+Applied to dpu-staging, thanks!
+
+Sean
+> ---
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h | 27 ---------------------------
+>  1 file changed, 27 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+> index 7fed0b6..0e6063a 100644
+> --- a/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+> +++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_plane.h
+> @@ -28,23 +28,18 @@
+>  /**
+>   * struct dpu_plane_state: Define dpu extension of drm plane state object
+>   * @base:	base drm plane state object
+> - * @property_state: Local storage for msm_prop properties
+> - * @property_values:	cached plane property values
+>   * @aspace:	pointer to address space for input/output buffers
+> - * @input_fence:	dereferenced input fence pointer
+>   * @stage:	assigned by crtc blender
+>   * @multirect_index: index of the rectangle of SSPP
+>   * @multirect_mode: parallel or time multiplex multirect mode
+>   * @pending:	whether the current update is still pending
+>   * @scaler3_cfg: configuration data for scaler3
+>   * @pixel_ext: configuration data for pixel extensions
+> - * @scaler_check_state: indicates status of user provided pixel extension data
+>   * @cdp_cfg:	CDP configuration
+>   */
+>  struct dpu_plane_state {
+>  	struct drm_plane_state base;
+>  	struct msm_gem_address_space *aspace;
+> -	void *input_fence;
+>  	enum dpu_stage stage;
+>  	uint32_t multirect_index;
+>  	uint32_t multirect_mode;
+> @@ -107,12 +102,6 @@ void dpu_plane_get_ctl_flush(struct drm_plane *plane, struct dpu_hw_ctl *ctl,
+>  void dpu_plane_flush(struct drm_plane *plane);
+>  
+>  /**
+> - * dpu_plane_kickoff - final plane operations before commit kickoff
+> - * @plane: Pointer to drm plane structure
+> - */
+> -void dpu_plane_kickoff(struct drm_plane *plane);
+> -
+> -/**
+>   * dpu_plane_set_error: enable/disable error condition
+>   * @plane: pointer to drm_plane structure
+>   */
+> @@ -147,14 +136,6 @@ struct drm_plane *dpu_plane_init(struct drm_device *dev,
+>  void dpu_plane_clear_multirect(const struct drm_plane_state *drm_state);
+>  
+>  /**
+> - * dpu_plane_wait_input_fence - wait for input fence object
+> - * @plane:   Pointer to DRM plane object
+> - * @wait_ms: Wait timeout value
+> - * Returns: Zero on success
+> - */
+> -int dpu_plane_wait_input_fence(struct drm_plane *plane, uint32_t wait_ms);
+> -
+> -/**
+>   * dpu_plane_color_fill - enables color fill on plane
+>   * @plane:  Pointer to DRM plane object
+>   * @color:  RGB fill color value, [23..16] Blue, [15..8] Green, [7..0] Red
+> @@ -164,12 +145,4 @@ struct drm_plane *dpu_plane_init(struct drm_device *dev,
+>  int dpu_plane_color_fill(struct drm_plane *plane,
+>  		uint32_t color, uint32_t alpha);
+>  
+> -/**
+> - * dpu_plane_set_revalidate - sets revalidate flag which forces a full
+> - *	validation of the plane properties in the next atomic check
+> - * @plane: Pointer to DRM plane object
+> - * @enable: Boolean to set/unset the flag
+> - */
+> -void dpu_plane_set_revalidate(struct drm_plane *plane, bool enable);
+> -
+>  #endif /* _DPU_PLANE_H_ */
+> -- 
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
+> 
+> _______________________________________________
+> Freedreno mailing list
+> Freedreno@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/freedreno
+
+-- 
+Sean Paul, Software Engineer, Google / Chromium OS
