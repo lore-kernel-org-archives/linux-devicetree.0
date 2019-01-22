@@ -1,28 +1,27 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH v6 00/15] qcom: spmi: add support for hierarchical IRQ chip
-Date: Tue, 22 Jan 2019 16:31:20 +0100
-Message-ID: <CACRpkdap+AJ+eDVusg=ShwRKXOuR=tAyNLBeCxsxuu28DSfisQ@mail.gmail.com>
-References: <20190119204252.18370-1-masneyb@onstation.org>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v3 1/5] dt-bindings: arm: fsl: Fix bindings for LS1012A
+ and LS1021A based boards
+Date: Tue, 22 Jan 2019 09:40:08 -0600
+Message-ID: <CAL_JsqJR6s-EPJdvvyY=v=0RRUzee2NBXyssgeY1-YYK-C4q3g@mail.gmail.com>
+References: <20190122042147.5424-1-manivannan.sadhasivam@linaro.org> <20190122042147.5424-2-manivannan.sadhasivam@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190119204252.18370-1-masneyb@onstation.org>
+In-Reply-To: <20190122042147.5424-2-manivannan.sadhasivam@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Brian Masney <masneyb@onstation.org>
-Cc: Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Shawn Guo <shawnguo@kernel.org>, Yang-Leo Li <leoyang.li@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, a.tropschug@ebs-systart.com, m.bittner@ebs-systart.com, Amit Kucheria <amit.kucheria@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 19, 2019 at 9:43 PM Brian Masney <masneyb@onstation.org> wrote:
+On Mon, Jan 21, 2019 at 10:22 PM Manivannan Sadhasivam
+<manivannan.sadhasivam@linaro.org> wrote:
+>
+> Fix devicetree bindings for Freescale LS1012A and LS1021A SoC based boards.
+>
+> Fixes: a1a38e1f4d1d ("dt-bindings: arm: Convert FSL board/soc bindings to json-schema")
+> Signed-off-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/fsl.yaml | 10 +++++++++-
+>  1 file changed, 9 insertions(+), 1 deletion(-)
 
-> This patch series adds hierarchical IRQ chip support to spmi-gpio so
-> that device tree consumers can request an IRQ directly from the GPIO
-> block rather than having to request an IRQ from the underlying PMIC.
-
-I have applied all these patches including the DTS patches to the GPIO
-tree and pushed for linux-next.
-
-If all works out well I will solidify the branch, pull it into the pin control
-tree as well and offer the branch to ARM SoC.
-
-Yours,
-Linus Walleij
+Reviewed-by: Rob Herring <robh@kernel.org>
