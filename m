@@ -1,31 +1,57 @@
-From: Brian Norris <briannorris@chromium.org>
-Subject: Re: [PATCH v3 02/10] arm64: dts: qcom: sdm845: Define rmtfs memory
-Date: Tue, 22 Jan 2019 15:34:51 -0800
-Message-ID: <CA+ASDXN2+bBiOT6svRE+1VtY7BQTFjjD_s4pzO8J7-dDx9QLDQ@mail.gmail.com>
-References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
- <20190122055112.30943-3-bjorn.andersson@linaro.org> <CAD=FV=X0x4hQ=8yQ6wDWE8ximf9A8hpgpRWTdPrFXDD4FVO8VQ@mail.gmail.com>
+From: Doug Anderson <dianders@chromium.org>
+Subject: Re: [PATCH v3 03/10] arm64: dts: sdm845: Introduce ADSP and CDSP PAS nodes
+Date: Tue, 22 Jan 2019 15:46:13 -0800
+Message-ID: <CAD=FV=WXind-uk7V_XTDgM83LZbmtKb2Ln6pQjmUkaZMz8SFsA@mail.gmail.com>
+References: <20190122055112.30943-1-bjorn.andersson@linaro.org> <20190122055112.30943-4-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAD=FV=X0x4hQ=8yQ6wDWE8ximf9A8hpgpRWTdPrFXDD4FVO8VQ@mail.gmail.com>
+In-Reply-To: <20190122055112.30943-4-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Bjorn Andersson <bjorn.andersson@linaro.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, Evan Green <evgreen@chromium.org>, Ben Chan <benchan@google.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 3:26 PM Doug Anderson <dianders@chromium.org> wrote:
-> 2. In https://crrev.com/c/1119572, the argument was made that the size
-> of this carveout is board-specific.  That makes it hard to put it in
-> sdm845.dts.
+Hi,
 
-And we've increased the size of the memory carve-out since then,
-because the memory requirements depend on the SW features you're using
-on the modem side.
+On Mon, Jan 21, 2019 at 9:52 PM Bjorn Andersson
+<bjorn.andersson@linaro.org> wrote:
+>
+> Add the ADSP and CDSP nodes for PAS-based remoteproc, supporting booting
+> these cores on e.g. the MTP, and enable the same for the MTP.
+>
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>
+> Changes since v2:
+> - New patch
+>
+>  arch/arm64/boot/dts/qcom/sdm845-mtp.dts |  8 ++++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi    | 58 +++++++++++++++++++++++++
+>  2 files changed, 66 insertions(+)
 
-So that's definitely a reason for giving it a label we can modify it
-with, at a minimum (as Doug suggested). I'm somewhat ambivalent as to
-whether this should or shouldn't go in the base sdm845.dtsi -- it's
-still a feature where most of the definitions (e.g., compatible;
-client ID) should be applicable to all boards.
+It's a bit of a nit of mine that if it's not totally obvious what
+acronyms mean that they should be spelled out in places that use them.
 
-Brian
+In this case I believe ADSP is the Audio DSP.  Is CDSP the Camera DSP?  ...or ?
+
+
+> +       adsp_pas: remoteproc-adsp {
+> +               compatible = "qcom,sdm845-adsp-pas";
+> +
+> +               interrupts-extended = <&intc GIC_SPI 162 IRQ_TYPE_EDGE_RISING>,
+> +                                     <&adsp_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> +                                     <&adsp_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> +                                     <&adsp_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> +                                     <&adsp_smp2p_in 3 IRQ_TYPE_EDGE_RISING>;
+> +               interrupt-names = "wdog", "fatal", "ready",
+> +                                 "handover", "stop-ack";
+> +
+> +               clocks = <&xo_board>;
+> +               clock-names = "xo";
+
+I've found that nearly all the places that refer to xo_board are wrong
+and should actually point to '<&rpmhcc RPMH_CXO_CLK>'.  Maybe yours
+should too?
+
+-Doug
