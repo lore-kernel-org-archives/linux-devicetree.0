@@ -1,88 +1,43 @@
-From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH v2 lora-next 2/4] dt-bindings: lora: sx125x: add basic documentation
-Date: Tue, 22 Jan 2019 18:07:27 +0000
-Message-ID: <20190122180729.1834-3-ben.whitten@lairdtech.com>
-References: <20190122180729.1834-1-ben.whitten@lairdtech.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v3 6/6] dt-bindings: gnss: add lna-supply property
+Date: Tue, 22 Jan 2019 19:11:15 +0100
+Message-ID: <20190122181115.GT3691@localhost>
+References: <20190116211812.6337-1-andreas@kemnade.info>
+ <20190116211812.6337-7-andreas@kemnade.info>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190122180729.1834-1-ben.whitten@lairdtech.com>
-Sender: netdev-owner@vger.kernel.org
-To: afaerber@suse.de
-Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, mark.rutland@arm.com, linux-lpwan@lists.infradead.org, robh@kernel.org, Ben Whitten <ben.whitten@gmail.com>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190116211812.6337-7-andreas@kemnade.info>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: letux-kernel@openphoenux.org, johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Ben Whitten <ben.whitten@gmail.com>
+On Wed, Jan 16, 2019 at 10:18:12PM +0100, Andreas Kemnade wrote:
+> Add lna-supply property.
+> 
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> Changes in v3:
+> - moved to gnss.txt
+> 
+>  Documentation/devicetree/bindings/gnss/gnss.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/gnss/gnss.txt b/Documentation/devicetree/bindings/gnss/gnss.txt
+> index f1e4a2ff47c5..e31bc225957d 100644
+> --- a/Documentation/devicetree/bindings/gnss/gnss.txt
+> +++ b/Documentation/devicetree/bindings/gnss/gnss.txt
+> @@ -17,6 +17,7 @@ Required properties:
+>  		  represents
+>  
+>  Optional properties:
+> +- lna-supply	: Separate supply for a LNA
 
-The SX125x family are IQ radio transceivers from Semtech configured over
-SPI, they are typically connected to an SX130x series concentrator however
-may be connected to a host directly.
+s/a/an/
 
-Required properties include the radio number of the host or concentrator
-bus.
+>  - enable-gpios	: GPIO used to enable the device
+>  - timepulse-gpios	: Time pulse GPIO
 
-Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
----
-v1 -> v2:
-* Dropped spi-max-frequency binding
-* Wording changes to commit and descriptions
-* Added spi wrapper suggested by Rob H
-* Dual licence
----
- .../bindings/net/lora/semtech,sx125x.yaml     | 44 +++++++++++++++++++
- 1 file changed, 44 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-
-diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-new file mode 100644
-index 000000000000..4a51a251d97f
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-@@ -0,0 +1,44 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/lora/semtech,sx125x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
-+
-+title: Semtech IQ modulator/de-modulator transeiver
-+
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+  - Ben Whitten <ben.whitten@gmail.com>
-+
-+description: |
-+  The SX125x family are transceivers capable of supporting multiple constant
-+  and non-constant envelope modulation schemes.
-+
-+properties:
-+  compatible:
-+    items:
-+      - enum:
-+        - semtech,sx1255
-+        - semtech,sx1257
-+        - semtech,sx1258
-+
-+  reg:
-+    maxItems: 1
-+    description: The chip select on the SPI bus or radio number in concentrator
-+      , with radio A = 0 and radio B = 1.
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      radio0: lora@0 {
-+        compatible = "semtech,sx1257";
-+        reg = <0>;
-+      };
-+    };
--- 
-2.17.1
+Johan
