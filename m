@@ -1,43 +1,47 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v5 1/5] clk: samsung: exynos5433: fix typo in imem divider
-Date: Tue, 22 Jan 2019 10:02:28 +0100
-Message-ID: <20190122090232.29194-2-k.konieczny@partner.samsung.com>
-References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
-        <CGME20190122090249eucas1p161cfc1364fb8ee76d2d04383935e8f3b@eucas1p1.samsung.com>
+From: Jitao Shi <jitao.shi@mediatek.com>
+Subject: [PATCH V2] pwm: Add MediaTek MT8183 display PWM driver support
+Date: Tue, 22 Jan 2019 17:02:43 +0800
+Message-ID: <20190122090243.27304-1-jitao.shi@mediatek.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
-Sender: stable-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>, Mark Rutland <mark.rutland@arm.com>, Ian Campbell <ijc+devicetree@hellion.org.uk>, Kumar Gala <galak@codeaurora.org>, linux-pwm@vger.kernel.org, David Airlie <airlied@linux.ie>, Matthias Brugger <matthias.bgg@gmail.com>
+Cc: stonea168@163.com, dri-devel@lists.freedesktop.org, Andy Yan <andy.yan@rock-chips.com>, Ajay Kumar <ajaykumar.rs@samsung.com>, Vincent Palatin <vpalatin@chromium.org>, cawa.cheng@mediatek.com, Russell King <rmk+kernel@arm.linux.org.uk>, Thierry Reding <treding@nvidia.com>, devicetree@vger.kernel.org, Jitao Shi <jitao.shi@mediatek.com>, linux-mediatek@lists.infradead.org, yingjoe.chen@mediatek.com, eddie.huang@mediatek.com, linux-arm-kernel@lists.infradead.org, Rahul Sharma <rahul.sharma@samsung.com>, srv_heupstream@mediatek.com, linux-kernel@vger.kernel.org, Sascha Hauer <kernel@pengutronix.de>, Sean Paul <seanpaul@chromium.org>
 List-Id: devicetree@vger.kernel.org
 
-Fix typo in imem clock divider 200 switched with 266.
-
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- drivers/clk/samsung/clk-exynos5433.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index 751e2c4fb65b..ea47f49abc7f 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -568,10 +568,10 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	GATE(CLK_ACLK_BUS1_400, "aclk_bus1_400", "div_aclk_bus1_400",
- 			ENABLE_ACLK_TOP, 25,
- 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_266",
-+	GATE(CLK_ACLK_IMEM_200, "aclk_imem_200", "div_aclk_imem_200",
- 			ENABLE_ACLK_TOP, 24,
- 			CLK_IS_CRITICAL | CLK_SET_RATE_PARENT, 0),
--	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_200",
-+	GATE(CLK_ACLK_IMEM_266, "aclk_imem_266", "div_aclk_imem_266",
- 			ENABLE_ACLK_TOP, 23,
- 			CLK_IGNORE_UNUSED | CLK_SET_RATE_PARENT, 0),
- 	GATE(CLK_ACLK_PERIC_66, "aclk_peric_66", "div_aclk_peric_66_b",
--- 
-2.20.0
+VXNlIHRoZSBtdGtfcHdtX2RhdGEgc3RydWN0aW9uIHRvIGRlZmluZSBkaWZmZXJlbnQgcmVnaXN0
+ZXJzCmFuZCBhZGQgTVQ4MTgzIHNwZWNpZmljIHJlZ2lzdGVyIG9wZXJhdGlvbnMsIHN1Y2ggYXMg
+TVQ4MTgzCmRvZXNuJ3QgaGF2ZSBjb21taXQgcmVnaXN0ZXIsIG5lZWRzIHRvIGRpc2FibGUgZG91
+YmxlIGJ1ZmZlcgpiZWZvcmUgd3JpdGluZyByZWdpc3RlciwgYW5kIG5lZWRzIHRvIHNlbGVjdCBj
+b21taXQgbW9kZQphbmQgdXNlIFBXTV9QRVJJT0QvUFdNX0hJR0hfV0lEVEguCgpTaWduZWQtb2Zm
+LWJ5OiBKaXRhbyBTaGkgPGppdGFvLnNoaUBtZWRpYXRlay5jb20+Ci0tLQogZHJpdmVycy9wd20v
+cHdtLW10ay1kaXNwLmMgfCAxMSArKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDExIGluc2Vy
+dGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYyBiL2RyaXZl
+cnMvcHdtL3B3bS1tdGstZGlzcC5jCmluZGV4IDg5Mzk0MGQ0NWYwZC4uMTU4MDNjNzFmZTgwIDEw
+MDY0NAotLS0gYS9kcml2ZXJzL3B3bS9wd20tbXRrLWRpc3AuYworKysgYi9kcml2ZXJzL3B3bS9w
+d20tbXRrLWRpc3AuYwpAQCAtMjc3LDEwICsyNzcsMjEgQEAgc3RhdGljIGNvbnN0IHN0cnVjdCBt
+dGtfcHdtX2RhdGEgbXQ4MTczX3B3bV9kYXRhID0gewogCS5jb21taXRfbWFzayA9IDB4MSwKIH07
+CiAKK3N0YXRpYyBjb25zdCBzdHJ1Y3QgbXRrX3B3bV9kYXRhIG10ODE4M19wd21fZGF0YSA9IHsK
+KwkuZW5hYmxlX21hc2sgPSBCSVQoMCksCisJLmNvbjAgPSAweDE4LAorCS5jb24wX3NlbCA9IDB4
+MCwKKwkuY29uMSA9IDB4MWMsCisJLmhhc19jb21taXQgPSBmYWxzZSwKKwkuYmxzX2RlYnVnID0g
+MHg4MCwKKwkuYmxzX2RlYnVnX21hc2sgPSAweDMsCit9OworCiBzdGF0aWMgY29uc3Qgc3RydWN0
+IG9mX2RldmljZV9pZCBtdGtfZGlzcF9wd21fb2ZfbWF0Y2hbXSA9IHsKIAl7IC5jb21wYXRpYmxl
+ID0gIm1lZGlhdGVrLG10MjcwMS1kaXNwLXB3bSIsIC5kYXRhID0gJm10MjcwMV9wd21fZGF0YX0s
+CiAJeyAuY29tcGF0aWJsZSA9ICJtZWRpYXRlayxtdDY1OTUtZGlzcC1wd20iLCAuZGF0YSA9ICZt
+dDgxNzNfcHdtX2RhdGF9LAogCXsgLmNvbXBhdGlibGUgPSAibWVkaWF0ZWssbXQ4MTczLWRpc3At
+cHdtIiwgLmRhdGEgPSAmbXQ4MTczX3B3bV9kYXRhfSwKKwl7IC5jb21wYXRpYmxlID0gIm1lZGlh
+dGVrLG10ODE4My1kaXNwLXB3bSIsIC5kYXRhID0gJm10ODE4M19wd21fZGF0YX0sCiAJeyB9CiB9
+OwogTU9EVUxFX0RFVklDRV9UQUJMRShvZiwgbXRrX2Rpc3BfcHdtX29mX21hdGNoKTsKLS0gCjIu
+MTIuNQoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJp
+LWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBz
+Oi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
