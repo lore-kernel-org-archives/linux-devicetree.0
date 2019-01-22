@@ -1,49 +1,33 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 4/8] net/macb: bindings doc/trivial: fix documentation for
- sama5d3 10/100 interface
-Date: Tue, 22 Jan 2019 09:08:54 +0000
-Message-ID: <be8ba0bf-993e-d38c-61e8-af422ff3c636@microchip.com>
-References: <cover.1547629763.git.nicolas.ferre@microchip.com>
- <0005c2ef28b985c663e0cd058bbc6d3856e05ec2.1547629763.git.nicolas.ferre@microchip.com>
- <20190122011014.GA25211@bogus>
+From: Peter Rosin <peda@axentia.se>
+Subject: Re: [PATCH 3/6] i2c: i2c-qcom-geni: Add interconnect support
+Date: Tue, 22 Jan 2019 09:13:26 +0000
+Message-ID: <d44cdb5e-2408-493c-3f86-db97c224dc3f@axentia.se>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-4-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122011014.GA25211@bogus>
+In-Reply-To: <1548138816-1149-4-git-send-email-alokc@codeaurora.org>
 Content-Language: en-US
-Content-ID: <10FC06FC594F804F9A2F3040F5924E4F@namprd11.prod.outlook.com>
+Content-ID: <C38BDEC1F2845543840C4E8294DB0415@eurprd02.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: robh@kernel.org, alexandre.belloni@bootlin.com
-Cc: Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sre@kernel.org, linux-pm@vger.kernel.org, netdev@vger.kernel.org, davem@davemloft.net, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, devicetree@vger.kernel.org
+To: Alok Chauhan <alokc@codeaurora.org>, "linux-arm-msm@vger.kernel.org" <linux-arm-msm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "linux-serial@vger.kernel.org" <linux-serial@vger.kernel.org>, Karthikeyan Ramasubramanian <kramasub@codeaurora.org>
+Cc: "andy.gross@linaro.org" <andy.gross@linaro.org>, "david.brown@linaro.org" <david.brown@linaro.org>, "georgi.djakov@linaro.org" <georgi.djakov@linaro.org>, "dianders@chromium.org" <dianders@chromium.org>, "swboyd@chromium.org" <swboyd@chromium.org>, "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-SGkgUm9iLA0KDQpPbiAyMi8wMS8yMDE5IGF0IDAyOjEwLCBSb2IgSGVycmluZyB3cm90ZToNCj4g
-T24gV2VkLCBKYW4gMTYsIDIwMTkgYXQgMTA6NTc6NDBBTSArMDEwMCwgTmljb2xhcyBGZXJyZSB3
-cm90ZToNCj4+IFRoaXMgcmVtb3ZlcyBhIGxpbmUgbGVmdCB3aGlsZSBhZGRpbmcgdGhlIGNvcnJl
-Y3QgY29tcGF0aWJpbGl0eSBzdHJpbmcgZm9yDQo+PiBzYW1hNWQzIDEwLzEwMCBpbnRlcmZhY2Uu
-IE5vdyB1c2UgdGhlICJhdG1lbCxzYW1hNWQzLW1hY2IiIHN0cmluZy4NCj4+DQo+PiBTaWduZWQt
-b2ZmLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+DQo+PiAt
-LS0NCj4+ICAgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dCB8
-IDMgKy0tDQo+PiAgIDEgZmlsZSBjaGFuZ2VkLCAxIGluc2VydGlvbigrKSwgMiBkZWxldGlvbnMo
-LSkNCj4+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdz
-L25ldC9tYWNiLnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9uZXQvbWFj
-Yi50eHQNCj4+IGluZGV4IDNlMTdhYzFkNWQ1OC4uZjVjNDE0YjEwZTI3IDEwMDY0NA0KPj4gLS0t
-IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gKysr
-IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL25ldC9tYWNiLnR4dA0KPj4gQEAg
-LTMsOCArMyw3IEBADQo+PiAgIFJlcXVpcmVkIHByb3BlcnRpZXM6DQo+PiAgIC0gY29tcGF0aWJs
-ZTogU2hvdWxkIGJlICJjZG5zLFs8Y2hpcD4tXXttYWNifGdlbX0iDQo+PiAgICAgVXNlICJjZG5z
-LGF0OTFybTkyMDAtZW1hYyIgQXRtZWwgYXQ5MXJtOTIwMCBTb0MuDQo+PiAtICBVc2UgImNkbnMs
-YXQ5MXNhbTkyNjAtbWFjYiIgZm9yIEF0bWVsIGF0OTFzYW05IFNvQ3Mgb3IgdGhlIDEwLzEwME1i
-aXQgSVANCj4+IC0gIGF2YWlsYWJsZSBvbiBzYW1hNWQzIFNvQ3MuDQo+PiArICBVc2UgImNkbnMs
-YXQ5MXNhbTkyNjAtbWFjYiIgZm9yIEF0bWVsIGF0OTFzYW05IFNvQ3MuDQo+IA0KPiBXaGVyZSBp
-cyAiYXRtZWwsc2FtYTVkMy1tYWNiIj8NCg0KSXQncyBhY3R1YWxseSBhIGNvdXBsZSBvZiBsaW5l
-IGJlbG93OiBsaW5lIDEzIG9mIHRoZSByZXN1bHRpbmcgbWFjYi50eHQgDQpmaWxlLiBJdCB3YXMg
-YWxyZWFkeSBpbiB0aGUgZmlsZSB3aGVuIEkgcmVtb3ZlZCB0aGUgbGVmdG92ZXJzLg0KDQpEbyB5
-b3UgYWR2aWNlIHRvIHRyeSB0byBiZXR0ZXIgc29ydCBlbnRyaWVzIGluIHRoaXMgZmlsZT8gSXMg
-dGhlcmUgYSANCmNvbW1vbiBwYXR0ZXJuPw0KDQpCZXN0IHJlZ2FyZHMsDQogICBOaWNvbGFzDQoN
-Cj4+ICAgICBVc2UgImNkbnMsbnA0LW1hY2IiIGZvciBOUDQgU29DIGRldmljZXMuDQo+PiAgICAg
-VXNlICJjZG5zLGF0MzJhcDcwMDAtbWFjYiIgZm9yIG90aGVyIDEwLzEwMCB1c2FnZSBvciB1c2Ug
-dGhlIGdlbmVyaWMgZm9ybTogImNkbnMsbWFjYiIuDQo+PiAgICAgVXNlICJjZG5zLHBjMzAyLWdl
-bSIgZm9yIFBpY29jaGlwIHBpY29YY2VsbCBwYzMwMiBhbmQgbGF0ZXIgZGV2aWNlcyBiYXNlZCBv
-bg0KPj4gLS0gDQo+PiAyLjE3LjENCj4+DQo+IA0KDQoNCi0tIA0KTmljb2xhcyBGZXJyZQ0K
+T24gMjAxOS0wMS0yMiAwNzozMywgQWxvayBDaGF1aGFuIHdyb3RlOg0KPiBHZXQgdGhlIGludGVy
+Y29ubmVjdCBwYXRocyBmb3IgSTJDIGJhc2VkIFNlcmlhbCBFbmdpbmUgZGV2aWNlDQo+IGFuZCB2
+b3RlIGFjY29yZGluZ2x5IGJhc2VkIG9uIG1heGltdW0gc3VwcG9ydGVkIEkyQyBmcmVxdWVuY3ku
+DQo+IA0KPiBTaWduZWQtb2ZmLWJ5OiBBbG9rIENoYXVoYW4gPGFsb2tjQGNvZGVhdXJvcmEub3Jn
+Pg0KPiAtLS0NCj4gIGRyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcWNvbS1nZW5pLmMgfCAxMyArKysr
+KysrKysrKysrDQo+ICAxIGZpbGUgY2hhbmdlZCwgMTMgaW5zZXJ0aW9ucygrKQ0KPiANCj4gZGlm
+ZiAtLWdpdCBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcWNvbS1nZW5pLmMgYi9kcml2ZXJzL2ky
+Yy9idXNzZXMvaTJjLXFjb20tZ2VuaS5jDQo+IGluZGV4IGRiMDc1YmMuLmU4ZmU2M2EgMTAwNjQ0
+DQo+IC0tLSBhL2RyaXZlcnMvaTJjL2J1c3Nlcy9pMmMtcWNvbS1nZW5pLmMNCj4gKysrIGIvZHJp
+dmVycy9pMmMvYnVzc2VzL2kyYy1xY29tLWdlbmkuYw0KPiBAQCAtMTQsNiArMTQsNyBAQA0KPiAg
+I2luY2x1ZGUgPGxpbnV4L3BtX3J1bnRpbWUuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9xY29tLWdl
+bmktc2UuaD4NCj4gICNpbmNsdWRlIDxsaW51eC9zcGlubG9jay5oPg0KPiArI2luY2x1ZGUgPGxp
+bnV4L2ludGVyY29ubmVjdC5oPg0KDQpQbGVhc2Uga2VlcCB0aGUgaW5jbHVkZXMgc29ydGVkLiBQ
+cm9iYWJseSBhcHBsaWVzIGZvciB0aGUgb3RoZXIgcGF0Y2hlcw0KaW4gdGhlIHNlcmllcyBhcyB3
+ZWxsPw0KDQpDaGVlcnMsDQpQZXRlcg0K
