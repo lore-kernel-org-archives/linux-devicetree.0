@@ -1,67 +1,67 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v3 2/6] gnss: sirf: set power state initially off
-Date: Tue, 22 Jan 2019 18:22:15 +0100
-Message-ID: <20190122172215.GQ3691@localhost>
-References: <20190116211812.6337-1-andreas@kemnade.info>
- <20190116211812.6337-3-andreas@kemnade.info>
+From: Thomas Petazzoni <thomas.petazzoni@bootlin.com>
+Subject: Re: [PATCH v3 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY
+ bindings
+Date: Tue, 22 Jan 2019 18:38:33 +0100
+Message-ID: <20190122183833.40077d7a@windsurf>
+References: <20190121112336.23489-1-miquel.raynal@bootlin.com>
+ <20190121112336.23489-7-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190116211812.6337-3-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: letux-kernel@openphoenux.org, johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190121112336.23489-7-miquel.raynal@bootlin.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Alan Stern <stern@rowland.harvard.edu>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 16, 2019 at 10:18:08PM +0100, Andreas Kemnade wrote:
-> On the GTA04 mobile phone, it was observed that the gps was powered
-> on sometimes intially. Generally a reboot without powering the device
-> off (direct reset of the processor, reboot from a system where gps
-> power toggle was done in userspace) or glitches on the gpio pin during
-> power on could cause this problem.
-> This has the drawback that probing takes some seconds on
-> systems without wakeup signal. On systems with wakeup signal
-> this penalty is much lower.
-> But if the chip is initially on and that is not fixed, the suspend
-> current will be multiple times higher, so this sacrifice should
-> be justified
-> 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
-> ---
-> - was part of 2/5 in v2
-> 
->  drivers/gnss/sirf.c | 7 +++++++
->  1 file changed, 7 insertions(+)
-> 
-> diff --git a/drivers/gnss/sirf.c b/drivers/gnss/sirf.c
-> index b21e14351b82..c7706b91f6f0 100644
-> --- a/drivers/gnss/sirf.c
-> +++ b/drivers/gnss/sirf.c
-> @@ -367,6 +367,13 @@ static int sirf_probe(struct serdev_device *serdev)
->  	if (IS_ENABLED(CONFIG_PM)) {
->  		pm_runtime_set_suspended(dev);	/* clear runtime_error flag */
->  		pm_runtime_enable(dev);
-> +		/*
-> +		 * Device might be enabled at boot, so ensure it is off.
-> +		 * This was observed in practice on GTA04.
-> +		 */
-> +		ret = sirf_set_active(data, false);
-> +		if (ret < 0)
-> +			goto err_disable_rpm;
+Hello,
 
-I want to handle this case a bit differently. First, we shouldn't
-penalise the common case where the receiver is already off by power
-cycling when not needed. Second, the above could race with runtime pm.
-Third, we mustn't call sirf_set_active() when we have no on-off gpio.
+On Mon, 21 Jan 2019 12:23:32 +0100, Miquel Raynal wrote:
 
-I've prepare a small series which implements this force hibernate mode
-at probe if already active. This should be easy to extend with a
-function retrieving the current state at boot also for the no-wakeup
-case (e.g. keep the port open for one report cycle).
+> +- compatible: Should be one of:
+> +	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
+> +	        the USB2 host-only controller.
+> +	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
+> +	        the USB3 and USB2 OTG capable controller.
 
-This also allows for a cleaner implementation of sirf_set_active() for
-the no-wakeup case (I noticed you added some optimisation there after I
-implemented force-hibernate-at-probe).
+Do we really need different compatible strings for those ? I assume the
+IP block is exactly the same for the two PHYs, right ? If so, we should
+use the same compatible string.
 
-Johan
+Didn't we discuss that we can lookup from the PHY whether the USB
+controller it is connected to is in host mode or otg mode ?
+
+> +Example:
+> +
+> +	usb2_utmi_host_phy: phy@5f000 {
+> +		compatible = "marvell,armada-3700-utmi-host-phy";
+> +		reg = <0x5f000 0x800>;
+> +		marvell,usb-misc-reg = <&usb2_syscon>;
+> +		#phy-cells = <0>;
+> +	};
+> +
+> +	usb2_syscon: system-controller@5f800 {
+> +		compatible = "marvell,usb2-host-miscellaneous", "syscon";
+> +		reg = <0x5f800 0x800>;
+> +	};
+
+Those registers are contiguous to the register range of the PHY itself.
+What was the criteria used to decide that we need two separate DT nodes
+for these ?
+
+Best regards,
+
+Thomas
+-- 
+Thomas Petazzoni, CTO, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
