@@ -1,97 +1,56 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
- support
-Date: Tue, 22 Jan 2019 10:39:11 +0000
-Message-ID: <AM0PR04MB42111FE266342A2C2EAECC3580980@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
-         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
-         <1547801609.2626.5.camel@pengutronix.de>
-         <AM0PR04MB42111D634F28492434AA9309809C0@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <1547806960.2626.9.camel@pengutronix.de>
+From: Jan Kotas <jank@cadence.com>
+Subject: [PATCH v3 1/2] dt-bindings: rtc: Add bindings for Cadence RTC
+Date: Tue, 22 Jan 2019 10:42:15 +0000
+Message-ID: <20190122104216.12077-2-jank@cadence.com>
+References: <20190122104216.12077-1-jank@cadence.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547806960.2626.9.camel@pengutronix.de>
-Content-Language: en-US
+In-Reply-To: <20190122104216.12077-1-jank@cadence.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+To: a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, mark.rutland@arm.com
+Cc: linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Jan Kotas <jank@cadence.com>
 List-Id: devicetree@vger.kernel.org
 
-PiBGcm9tOiBMdWNhcyBTdGFjaCBbbWFpbHRvOmwuc3RhY2hAcGVuZ3V0cm9uaXguZGVdDQo+IFNl
-bnQ6IEZyaWRheSwgSmFudWFyeSAxOCwgMjAxOSA2OjIzIFBNDQpbLi4uXQ0KPiA+ID4gVGhpcyBo
-YXMgYmVlbiBkaXNjdXNzZWQgd2hlbiB1cHN0cmVhbWluZyB0aGUgZHJpdmVyLiBUaGUgY29udHJv
-bGxlcg0KPiA+ID4gbWF5IHN1cHBvcnQgbXVsdGlwbGUgb3V0cHV0IElSUXMsIGJ1dCBvbmx5IG9u
-ZSB0aGVtIGlzIGFjdHVhbGx5IHVzZWQNCj4gPiA+IGRlcGVuZGluZyBvbiB0aGUgQ0hBTkNUUkwg
-Y29uZmlnLiBUaGVyZSBpcyBubyB1c2UgaW4gaG9va2luZyB1cCBhbGwNCj4gPiA+IHRoZSBvdXRw
-dXQgSVJRcyBpbiBEVCwgaWYgb25seSBvbmUgb2YgdGhlbSBpcyBhY3R1YWxseSB1c2VkLiBTb21l
-IG9mDQo+ID4gPiB0aGUgb3V0cHV0cyBtYXkgbm90IGV2ZW4gYmUgdmlzaWJsZSB0byB0aGUgTGlu
-dXggc3lzdGVtLCBidXQgbWF5DQo+ID4gPiBiZWxvbmcgdG8gYSBDb3J0ZXggTTQgc3Vic3lzdGVt
-LiBBbGwgb2YgdGhvc2UgY29uZmlndXJhdGlvbnMgY2FuIGJlDQo+ID4gPiBkZXNjcmliZWQgaW4g
-RFQgYnkgY2hhbmdpbmcgdGhlIHVwc3RyZWFtIGludGVycnVwdCBhbmQgImZzbCxjaGFubmVsIiBp
-biBhDQo+IGNvaGVyZW50IHdheS4NCj4gPiA+DQo+ID4gPiBQbGVhc2UgY29ycmVjdCBtZSBpZiBt
-eSB1bmRlcnN0YW5kaW5nIGlzIHRvdGFsbHkgd3JvbmcuDQo+ID4NCj4gPiBJJ20gYWZyYWlkIHlv
-dXIgdW5kZXJzdGFuZGluZyBvZiBDSEFOIHNlZW1zIHdyb25nLg0KPiA+IChCaW5kaW5nIGRvYyBv
-ZiB0aGF0IHByb3BlcnR5IG5lZWRzIGNoYW5nZSBhcyB3ZWxsKS4NCj4gPg0KPiA+IE9uIFFYUCBE
-QyBTUywgdGhlIElSUVNURUVSIHN1cHBvcnRzIDUxMiBpbnRlcnJ1cHRzIHdpdGggOCBpbnRlcnJ1
-cHQNCj4gPiBvdXRwdXQgQ29ubnRlY3RlZCB0byBHSUMuDQo+ID4gVGhlIGN1cnJlbnQgZHJpdmVy
-IGRvZXMgbm90IHN1cHBvcnQgaXQgYXMgaXQgYXNzdW1lcyBvbmx5IG9uZSBpbnRlcnJ1cHQNCj4g
-b3V0cHV0IHVzZWQuDQo+IA0KPiBPa2F5LCBzbyBsZXQncyB0YWtlIGEgc3RlcCBiYWNrLiBUaGUg
-ZGVzY3JpcHRpb24gaW4gdGhlIFFYUCBSTSBpcyBhY3R1YWxseSBiZXR0ZXINCj4gdGhhbiB3aGF0
-IEkndmUgc2VlbiB1bnRpbCBub3cuIFN0aWxsIGl0J3MgdG90YWxseSBjb25mdXNpbmcgdGhhdCB0
-aGUgImNoYW5uZWwiDQo+IHRlcm1pbm9sb2d5IHVzZWQgd2l0aCBkaWZmZXJlbnQgbWVhbmluZ3Mg
-aW4gZG9jcy4gTGV0J3MgdHJ5IHRvIGF2b2lkIHRoaXMgYXMNCj4gbXVjaCBhcyBwb3NzaWJsZS4N
-Cj4gDQo+IFNvIHRvIGdldCB0aGluZ3Mgc3RyYWlnaHQ6IEVhY2ggaXJxc3RlZXIgY29udHJvbGxl
-ciBoYXMgYSBudW1iZXIgb2YgSVJRIGdyb3Vwcy4NCj4gQWxsIHRoZSBpbnB1dCBJUlFzIG9mIG9u
-ZSBncm91cCBhcmUgT1JlZCB0b2dldGhlciB0byBmb3JtIG9uIG91dHB1dCBJUlEuDQo+IERlcGVu
-ZGluZyBvbiB0aGUgU29DIGludGVncmF0aW9uLCBhIGdyb3VwIGNhbiBjb250YWluIDMyIG9yDQo+
-IDY0IElSUXMsIHdoZXJlIERDU1MgaXJxc3RlZXIgb24gTVg4TSBhbmQgdGhlIGJpZyA1MTIgaW5w
-dXQgY29udHJvbGxlcnMgb24NCj4gUVhQIGFuZCBRTSBib3RoIHVzZSA2NCBJUlFzIHBlciBncm91
-cC4gWW91IGFyZSBjbGFpbWluZyB0aGF0IHRoZSBzbWFsbGVyDQo+IGNvbnRyb2xsZXJzIG9uIGJv
-dGggUVhQIGFtIFFNIGhhdmUgb25seSAzMiBJUlFzIHBlciBncm91cCwgcmlnaHQ/DQo+IA0KPiBT
-byB0aGUgb25seSBjaGFuZ2UgdGhhdCBpcyBuZWVkZWQgaXMgdGhhdCB0aGUgZHJpdmVyIG5lZWRz
-IHRvIGtub3cgdGhlIG51bWJlcg0KPiBvZiBpbnB1dCBJUlFzIHBlciBncm91cCwgd2l0aCBhIGRl
-ZmF1bHQgb2YgNjQgdG8gbm90IGJyZWFrIERUIGNvbXBhdGliaWxpdHkuDQo+IA0KDQpOb3QgZXhh
-Y3RseS4NCmZyb20gSFcgcG9pbnQgb2YgdmlldyAsIHRoZXJlJ3JlIHR3byBwYXJhbWV0ZXJzIGR1
-cmluZyBJUlFTVEVFUiBpbnRlZ3JhdGlvbi4NCkZvciBleGFtcGxlLA0KREMgaW4gUVhQOg0KcGFy
-YW1ldGVyICBJUlFDSEFOCQk9ICAxOyAJLy9OdW1iZXIgb2YgSVJRIENoYW5uZWxzL1Nsb3RzDQpw
-YXJhbWV0ZXIgIE5JTlQzMgkJPSAgODsJLy9OdW1iZXIgb2YgaW50ZXJydXB0cyBpbiBtdWx0aXBs
-ZSBvZiAzMg0KDQpNSVBJIENTSSBpbiBNUToNClBhcmFtZXRlciAgSVJRQ0hBTgkJPSAxDQpQYXJh
-bWV0ZXIgIE5JTlQzMgkJPSAxDQoNCllvdSB3aWxsIHNlZSBubyBncm91cCBjb25jZXB0IHVzZWQg
-aGVyZS4gT25seSBjaGFubmVsIG51bWJlciBhbmQgaW50ZXJydXB0cyBudW1iZXIuDQpUaGUgZ3Jv
-dXAgaXMgYW4gSVAgaW50ZXJuYWwgY29uY2VwdCB0aGF0IE9SZWQgYSBncm91cCBvZiA2NCBpbnRl
-cnJ1cHRzIGludG8gYW4gb3V0cHV0DQppbnRlcnJ1cHQuIEJ1dCBpdCBtYXkgYWxzbyBvbmx5IHVz
-ZSAzMiBpbnRlcnJ1cHRzIGluIHRoZSBzYW1lIGdyb3VwLg0KDQo+IEFsc28gaWYgdGhlIGNvbm5l
-Y3Rpb24gYmV0d2VlbiBJUlEgZ3JvdXAgYW5kIG91dHB1dCBJUlEgaXMgZml4ZWQsIHRoZSBkcml2
-ZXINCj4gc2hvdWxkIGJlIG1vcmUgY2xldmVyIGFib3V0IGhhbmRsaW5nIHRoZSBjaGFpbmVkIElS
-US4gSWYgeW91IGtub3cgd2hpY2ggb2YNCj4gdGhlIHVwc3RyZWFtIElSUXMgZmlyZWQgeW91IG9u
-bHkgbmVlZCB0byBsb29rIGF0IHRoZSAzMiBvciA2NCBJUlEgc3RhdHVzDQo+IHJlZ2lzdGVycyBv
-ZiB0aGF0IHNwZWNpZmljIGdyb3VwLCBub3QgYWxsIG9mIHRoZW0uDQoNClllcywgdGhhdCdzIHJp
-Z2h0Lg0KSSBwbGFubmVkIHRvIGRvIHRoYXQgbGF0ZXIgd2l0aCBhIHNlcGFyYXRlIHBhdGNoIGJl
-Zm9yZS4NCg0KPiANCj4gQ2FuIHlvdSBwbGVhc2UgY2xhcmlmeSB3aGF0IHRoZSBDSEFOQ1RSTCBz
-ZXR0aW5nIGNoYW5nZXMgaW4gdGhpcyBzZXR1cD8NCj4gDQoNCklSUXN0ZWVyIHN1cHBvcnRzIHVw
-IHRvIDUgc2VwYXJhdGUgQ0FITk5FTFMgd2hpY2ggZWFjaCBvZiB0aGVtIHN1cHBvcnRzIHVwDQp0
-byA1MTIgaW50ZXJydXB0cy4gQ0hBTkNUTCBpcyB1c2VkIHRvIGVuYWJsZSB0aG9zZSByZXNwZWN0
-aXZlIENIQU4gb3V0cHV0IGludGVycnVwdHMuDQplLmcuDQoxfjggb3V0cHV0IGludGVycnVwdHMg
-b2YgQ0hBTjAuDQoNCk9uZSBub3RhYmxlIHRoaW5nIGlzIHRoZSBlYWNoIGNoYW5uZWwgaGFzIGEg
-c2VwYXJhdGUgYWRkcmVzcyBzcGFjZS4NClRoYXQgbWVhbnMgdGhlIGNoYW4xIHJlZyBhZGRyZXNz
-IGlzIG5vdCB0aGUgb25lIHdlIHNwZWNpZmllZCBpbiBkZWZhdWx0IHJlZyBwcm9wZXJ0eS4NClNv
-IHRoZSBjb3JyZWN0IGR0cyBtYXkgYmUgbGlrZSBmb3IgbXVsdGkgY2hhbm5lbHMgY2FzZXMuDQpp
-bnRlcnJ1cHQtY29udHJvbGxlckAzMmUyZDAwMCB7DQogICAgICAgIGNvbXBhdGlibGUgPSAiZnNs
-LGlteDhtLWlycXN0ZWVyIiwgImZzbCxpbXgtaXJxc3RlZXIiOw0KICAgICAgICByZWcgPSA8MHgz
-MmUyZDAwMCAweDEwMDA+LA0KICAgICAgICAgICAgICA8MHgzMmUyZTAwMCAweDEwMDA+LA0KICAg
-ICAgICAgICAgICA8MHgzMmUyZjAwMCAweDEwMDA+Ow0KICAgICAgICAgICAgICAuLi4NCiAgICAg
-ICAgcmVnLW5hbWVzID0gImNoMCIsICJjaDEiLCAiY2gyIiwgLi4uOw0KICAgICAgICBpbnRlcnJ1
-cHRzID0gPEdJQ19TUEkgMTggSVJRX1RZUEVfTEVWRUxfSElHSD47DQogICAgICAgIGZzbCxpcnFz
-LXBlci1jaGFuPSA8NjQ+Ow0KICAgICAgICBpbnRlcnJ1cHQtY29udHJvbGxlcjsNCiAgICAgICAg
-I2ludGVycnVwdC1jZWxscyA9IDwyPjsgLy9jZWxsIDA6IGNoYW4gaW5kZXggY2VsbCAyOiBpbnRl
-cnJ1cHQgbnVtYmVyDQp9Ow0KVGhpcyBtYWtlcyB0aGUgdGhpbmdzIHF1aXRlIGNvbXBsaWNhdGVk
-Lg0KDQpJbiByZWFsaXR5LCB3ZSBzdGlsbCBkb24ndCBoYXZlIHN1Y2ggdXNpbmcgY2FzZXMgc28g
-ZmFyIGFzIGFzIG11bHRpIGNoYW5uZWxzIHVzdWFsbHkNCmFyZSB1c2VkIHRvIGRlbGl2ZXIgdGhl
-IGludGVycnVwdHMgdG8gZGlmZmVyZW50IGNvcmVzLA0KZS5nLiBNNCwgU0NVLCBvciBEU1AsIEEg
-Y29yZSBkb24ndCBoYW5kbGUgaXQuDQpTbyBJIGRpZCBub3QgY2hhbmdlIGl0IGN1cnJlbnRseSBh
-cyBpdCdzIGFub3RoZXIgc3RvcnkuDQpUaGlzIHBhdGNoIHNlcmllcyBtYWlubHkgYWltcyB0byBh
-ZGQgc3VwcG9ydCBmb3IgMzIgb3IgNTEyIGludGVycnVwdHMgY2hhbm5lbCBhbmQgbXVsdGlwbGUN
-Ck91dHB1dHMgZm9yIGEgc2luZ2xlIENIQU5ORUwgY2FzZS4NCg0KUmVnYXJkcw0KRG9uZyBBaXNo
-ZW5nDQoNCj4gUmVnYXJkcywNCj4gTHVjYXMNCg==
+This patch adds a DT binding documentation for
+Cadence RTC controller.
+
+Signed-off-by: Jan Kotas <jank@cadence.com>
+---
+ Documentation/devicetree/bindings/rtc/cdns,rtc.txt | 25 ++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+
+diff --git a/Documentation/devicetree/bindings/rtc/cdns,rtc.txt b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+new file mode 100644
+index 000000000..14a04487b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/rtc/cdns,rtc.txt
+@@ -0,0 +1,25 @@
++Cadence Real Time Clock
++
++The Cadence RTC controller with date, time and alarm capabilities.
++The alarm may wake the system from low-power state.
++
++Required properties:
++- compatible: Should be "cdns,rtc-r109v3"
++- reg: Specifies base physical address and size of the register area.
++- interrupts: A single interrupt specifier.
++- clocks: Must contain two entries:
++	- pclk: APB registers clock
++	- ref_clk: reference 1Hz or 100Hz clock, depending on IP configuration
++	See ../clocks/clock-bindings.txt for details.
++
++Example:
++        rtc0: rtc@fd080000 {
++        	compatible = "cdns,rtc-r109v3";
++        	reg = <0xfd080000 0x1000>;
++
++        	clock-names = "pclk", "ref_clk";
++        	clocks = <&sysclock>, <&refclock>;
++
++        	interrupt-parent = <&gic>;
++        	interrupts = <0 6 IRQ_TYPE_LEVEL_HIGH>;
++        };
+-- 
+2.15.0
