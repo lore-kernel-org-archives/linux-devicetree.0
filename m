@@ -1,91 +1,130 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Tue, 22 Jan 2019 20:32:51 +0530
-Message-ID: <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
-References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] ARM: dts: imx: Add support for Logic PD i.MX6QD EVM
+Date: Tue, 22 Jan 2019 13:19:17 -0200
+Message-ID: <CAOMZO5D1bNjBkRbVukDCgXYOO6wqAEiBgj17dmW22Zstcj3e7w@mail.gmail.com>
+References: <20190122140705.4918-1-aford173@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
-Content-Language: en-US
+In-Reply-To: <20190122140705.4918-1-aford173@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
+To: Adam Ford <aford173@gmail.com>
+Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
+Hi Adam,
 
-Thanks for looking into this. Please find my response inline.
+On Tue, Jan 22, 2019 at 12:07 PM Adam Ford <aford173@gmail.com> wrote:
 
-On 1/22/2019 7:30 PM, Suzuki K Poulose wrote:
-> Hi Sai,
-> 
-> On 01/22/2019 01:37 PM, Sai Prakash Ranjan wrote:
->> Add coresight components found on Qualcomm SDM845 SoC.
->>
->> Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
->>
-> 
-> Sorry, but I hadn't noticed the PID override strings below. Please
-> find the question.
->
-[..]
+> +       reg_audio: regulator-audio {
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_reg_audio>;
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "3v3_aud";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               gpio = <&gpio1 29 GPIO_ACTIVE_HIGH>;
+> +               enable-active-high;
+> +               regulator-always-on;
 
->> +        /*
->> +         * On QCOM SDM845, we bypass the normal AMBA bus discovery
->> +         * method by forcing the peripheral ID because of the wrong
->> +         * value read from ETM PID registers.
->> +         */
-> 
-> What is the value read back from the ETM PIDx registers ? Do they
-> provide inconsistent or incompatible value w.r.t the ETM/Coresight
-> architecture ? If it is an unsupported CPU with proper values,
-> you must add them to the table in etm4x driver.
-> 
+It seems that the 'regulator-always-on' property is not needed in this case.
 
-The values read from ETM PIDx registers are actually inconsistent
-and is different for some ETMs.
+> +&i2c1 {
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c1>;
+> +       clock-frequency = <400000>;
+> +       status = "okay";
+> +
+> +       codec: wm8962@1a {
 
-Below are the PIDs read for SDM845:
+Node name should be generic and label name should be specific, so:
 
-[    5.996448] resname=etm@7040000 pid=001bb803
-[    6.052891] resname=etm@7140000 pid=001bb803
+wm8962: codec@1a {
 
-<snip> .. (Same pid=001bb803 for etm@7240000 to etm@7540000 but differs
-for other 2 cpus as shown below)
+> +       chosen {
+> +               stdout-path = &uart1;
+> +       };
+> +
+> +       memory@10000000 {
 
-[    6.266687] resname=etm@7640000 pid=001bb802
-[    6.329171] resname=etm@7740000 pid=001bb802
+Need to pass device_type = "memory";
 
-This is the case for MSM8996 also as shown below where PID
-value is not correct and has to be hardcoded.
+> +               reg = <0x10000000 0x80000000>;
+> +       };
+> +
+> +       reg_wl18xx_vmmc: regulator-wl18xx {
+> +               compatible = "regulator-fixed";
+> +               regulator-name = "vwl1837";
+> +               regulator-min-microvolt = <3300000>;
+> +               regulator-max-microvolt = <3300000>;
+> +               gpio = <&gpio7 0 GPIO_ACTIVE_HIGH>;
+> +               startup-delay-us = <70000>;
+> +               enable-active-high;
+> +       };
+> +
 
-For MSM8996:
+No need for this blank line.
 
-resname=etm@3b40000 pid=102f0205
+> +};
 
->> +        etm@7040000 {
->> +            compatible = "arm,coresight-etm4x", "arm,primecell";
->> +            arm,primecell-periphid = <0x000bb95d> > +            reg 
->> = <0 0x07040000 0 0x1000>;
->> +
->> +            cpu = <&CPU0>;
->> +
-> 
-> You seem to be specifying the PID of A53 ETM all over, while at least
-> one of your cores is ETMv4.2 (from the other patch) and A53 is not
-> ETMv4.2. As above, it would be good to add the PID to the table.
-> 
+> +&i2c3 {
+> +       clock-frequency = <100000>;
+> +       pinctrl-names = "default";
+> +       pinctrl-0 = <&pinctrl_i2c3>;
+> +       status = "okay";
+> +
+> +       pmic: pfuze100@8 {
 
-As explained in above comment, PID values read are not correct. Please 
-let me know if I am not clear.
+pfuze100: pmic@8
 
-Thanks,
-Sai
+> +       tmp102_0: tmp102@4a {
 
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+generic node name, please.
+
+> +               compatible = "ti,tmp102";
+> +               reg = <0x4a>;
+> +               pinctrl-names = "default";
+> +               pinctrl-0 = <&pinctrl_tempsense>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> +               #thermal-sensor-cells = <1>;
+> +       };
+> +
+> +       tmp102_1: tmp102@49 {
+
+Ditto
+
+> +               compatible = "ti,tmp102";
+> +               reg = <0x49>;
+> +               interrupt-parent = <&gpio6>;
+> +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
+> +               #thermal-sensor-cells = <1>;
+> +       };
+> +
+> +       at24c64_mfg: at24@51 {
+
+Ditto
+
+> +               compatible = "atmel,24c64";
+> +               pagesize = <32>;
+> +               read-only;      /* Manufacturing EEPROM programmed at factory */
+> +               reg = <0x51>;
+> +       };
+> +
+> +       at24c64_usr: at24@52 {
+
+Ditto
+
+> +       panel-lvds0 {
+> +               compatible = "ampire,am800480b3tmqw";
+
+Could not found this compatible documented.
+
+> +&i2c1 {
+> +       ili_touch: ilitouch@26 {
+
+Generic node name, please.
+
+> +               compatible = "ili,ili2117a";
+
+Could not found this compatible documented.
