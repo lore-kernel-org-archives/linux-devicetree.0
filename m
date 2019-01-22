@@ -1,31 +1,39 @@
 From: Andy Gross <andy.gross@linaro.org>
-Subject: Re: [PATCH v6 00/15] qcom: spmi: add support for hierarchical IRQ
- chip
-Date: Tue, 22 Jan 2019 15:13:46 -0600
-Message-ID: <20190122211346.GA30582@hector.attlocal.net>
-References: <20190119204252.18370-1-masneyb@onstation.org>
- <CACRpkdap+AJ+eDVusg=ShwRKXOuR=tAyNLBeCxsxuu28DSfisQ@mail.gmail.com>
+Subject: Re: [PATCH v3 2/3] usb: dwc3: qcom: Add support for MSM8998
+Date: Tue, 22 Jan 2019 15:15:58 -0600
+Message-ID: <20190122211558.GB30582@hector.attlocal.net>
+References: <1548106307-4762-1-git-send-email-jhugo@codeaurora.org>
+ <1548106388-5079-1-git-send-email-jhugo@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CACRpkdap+AJ+eDVusg=ShwRKXOuR=tAyNLBeCxsxuu28DSfisQ@mail.gmail.com>
+In-Reply-To: <1548106388-5079-1-git-send-email-jhugo@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linus Walleij <linus.walleij@linaro.org>
-Cc: Brian Masney <masneyb@onstation.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, Marc Zyngier <marc.zyngier@arm.com>, Shawn Guo <shawnguo@kernel.org>, Doug Anderson <dianders@chromium.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, Nicolas Dechesne <nicolas.dechesne@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "thierry.reding@gmail.com" <thierry.reding@gmail.com>, linux-arm-msm@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>
+To: Jeffrey Hugo <jhugo@codeaurora.org>
+Cc: mark.rutland@arm.com, balbi@kernel.org, bjorn.andersson@linaro.org, david.brown@linaro.org, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, devicetree@vger.kernel.org, gregkh@linuxfoundation.org, linux-usb@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 04:31:20PM +0100, Linus Walleij wrote:
-> On Sat, Jan 19, 2019 at 9:43 PM Brian Masney <masneyb@onstation.org> wrote:
+On Mon, Jan 21, 2019 at 02:33:08PM -0700, Jeffrey Hugo wrote:
+> Add a MSM8998 specific DT compatible so that we can properly bind to the
+> device and enable the USB controller.
 > 
-> > This patch series adds hierarchical IRQ chip support to spmi-gpio so
-> > that device tree consumers can request an IRQ directly from the GPIO
-> > block rather than having to request an IRQ from the underlying PMIC.
+> Signed-off-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+>  drivers/usb/dwc3/dwc3-qcom.c | 1 +
+>  1 file changed, 1 insertion(+)
 > 
-> I have applied all these patches including the DTS patches to the GPIO
-> tree and pushed for linux-next.
-> 
-> If all works out well I will solidify the branch, pull it into the pin control
-> tree as well and offer the branch to ARM SoC.
+> diff --git a/drivers/usb/dwc3/dwc3-qcom.c b/drivers/usb/dwc3/dwc3-qcom.c
+> index a6d0203..184df4d 100644
+> --- a/drivers/usb/dwc3/dwc3-qcom.c
+> +++ b/drivers/usb/dwc3/dwc3-qcom.c
+> @@ -595,6 +595,7 @@ static int __maybe_unused dwc3_qcom_runtime_resume(struct device *dev)
+>  static const struct of_device_id dwc3_qcom_of_match[] = {
+>  	{ .compatible = "qcom,dwc3" },
+>  	{ .compatible = "qcom,msm8996-dwc3" },
+> +	{ .compatible = "qcom,msm8998-dwc3" },
+>  	{ .compatible = "qcom,sdm845-dwc3" },
+>  	{ }
 
-Thanks Linus!
+Reviewed-by: Andy Gross <andy.gross@linaro.org>
