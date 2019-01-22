@@ -1,215 +1,162 @@
-From: Xiaowei Bao <xiaowei.bao@nxp.com>
-Subject: [PATCHv6 3/4] pci: layerscape: Add the EP mode support.
-Date: Tue, 22 Jan 2019 14:33:27 +0800
-Message-ID: <20190122063328.25228-3-xiaowei.bao@nxp.com>
-References: <20190122063328.25228-1-xiaowei.bao@nxp.com>
+From: Vignesh R <vigneshr@ti.com>
+Subject: [PATCH v4 2/2] mtd: spi-nor: cadence-quadspi: Add support for Octal SPI controller
+Date: Tue, 22 Jan 2019 12:11:37 +0530
+Message-ID: <20190122064137.17114-3-vigneshr@ti.com>
+References: <20190122064137.17114-1-vigneshr@ti.com>
+Mime-Version: 1.0
+Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122063328.25228-1-xiaowei.bao@nxp.com>
+In-Reply-To: <20190122064137.17114-1-vigneshr@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: bhelgaas@google.com, robh+dt@kernel.org, mark.rutland@arm.com, shawnguo@kernel.org, leoyang.li@nxp.com, kishon@ti.com, lorenzo.pieralisi@arm.com, arnd@arndb.de, gregkh@linuxfoundation.org, minghuan.Lian@nxp.com, mingkai.hu@nxp.com, roy.zang@nxp.com, kstewart@linuxfoundation.org, cyrille.pitchen@free-electrons.com, pombredanne@nexb.com, shawn.lin@rock-chips.com, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linuxppc-dev@lists.ozlabs.org
-Cc: Xiaowei Bao <xiaowei.bao@nxp.com>
+To: Boris Brezillon <bbrezillon@kernel.org>, Tudor.Ambarus@microchip.com
+Cc: Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Vignesh R <vigneshr@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-Add the PCIe EP mode support for layerscape platform.
+Cadence OSPI controller IP supports Octal IO (x8 IO lines),
+It also has an integrated PHY. IP register layout is very
+similar to existing QSPI IP except for additional bits to support Octal
+and Octal DDR mode. Therefore, extend current driver to support Octal
+mode. Only Octal SDR read (1-1-8)mode is supported for now.
 
-Signed-off-by: Xiaowei Bao <xiaowei.bao@nxp.com>
-Reviewed-by: Minghuan Lian <minghuan.lian@nxp.com>
-Reviewed-by: Zhiqiang Hou <zhiqiang.hou@nxp.com>
-Reviewed-by: Kishon Vijay Abraham I <kishon@ti.com>
+Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
+
+Signed-off-by: Vignesh R <vigneshr@ti.com>
 ---
-depends on: https://patchwork.kernel.org/project/linux-pci/list/?series=66177
 
-v2:
- - remove the EP mode check function.
-v3:
- - modif the return value when enter default case.
-v4:
- - no change.
-v5:
- - no change.
-v6:
- - modify the code base on the submit patch of the EP framework.
+v4: Fix comments by Tudor on v3
+v3: No changes
+v2: Declare Octal mode capability based on compatible.
 
- drivers/pci/controller/dwc/Makefile            |    2 +-
- drivers/pci/controller/dwc/pci-layerscape-ep.c |  157 ++++++++++++++++++++++++
- 2 files changed, 158 insertions(+), 1 deletions(-)
- create mode 100644 drivers/pci/controller/dwc/pci-layerscape-ep.c
+ drivers/mtd/spi-nor/cadence-quadspi.c | 53 +++++++++++++++++++++------
+ 1 file changed, 41 insertions(+), 12 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/Makefile b/drivers/pci/controller/dwc/Makefile
-index 7bcdcdf..b5f3b83 100644
---- a/drivers/pci/controller/dwc/Makefile
-+++ b/drivers/pci/controller/dwc/Makefile
-@@ -8,7 +8,7 @@ obj-$(CONFIG_PCI_EXYNOS) += pci-exynos.o
- obj-$(CONFIG_PCI_IMX6) += pci-imx6.o
- obj-$(CONFIG_PCIE_SPEAR13XX) += pcie-spear13xx.o
- obj-$(CONFIG_PCI_KEYSTONE) += pci-keystone.o
--obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o
-+obj-$(CONFIG_PCI_LAYERSCAPE) += pci-layerscape.o pci-layerscape-ep.o
- obj-$(CONFIG_PCIE_QCOM) += pcie-qcom.o
- obj-$(CONFIG_PCIE_ARMADA_8K) += pcie-armada8k.o
- obj-$(CONFIG_PCIE_ARTPEC6) += pcie-artpec6.o
-diff --git a/drivers/pci/controller/dwc/pci-layerscape-ep.c b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-new file mode 100644
-index 0000000..ddc2dbb
---- /dev/null
-+++ b/drivers/pci/controller/dwc/pci-layerscape-ep.c
-@@ -0,0 +1,157 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * PCIe controller EP driver for Freescale Layerscape SoCs
-+ *
-+ * Copyright (C) 2018 NXP Semiconductor.
-+ *
-+ * Author: Xiaowei Bao <xiaowei.bao@nxp.com>
-+ */
+diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+index 04cedd3a2bf6..2091addc45a3 100644
+--- a/drivers/mtd/spi-nor/cadence-quadspi.c
++++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+@@ -44,6 +44,12 @@
+ /* Quirks */
+ #define CQSPI_NEEDS_WR_DELAY		BIT(0)
+ 
++/* Capabilities mask */
++#define cqspi_base_hwcaps_mask					\
++	(SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST |		\
++	SNOR_HWCAPS_READ_1_1_2 | SNOR_HWCAPS_READ_1_1_4 |	\
++	SNOR_HWCAPS_PP)
 +
-+#include <linux/kernel.h>
-+#include <linux/init.h>
-+#include <linux/of_pci.h>
-+#include <linux/of_platform.h>
-+#include <linux/of_address.h>
-+#include <linux/pci.h>
-+#include <linux/platform_device.h>
-+#include <linux/resource.h>
-+
-+#include "pcie-designware.h"
-+
-+#define PCIE_DBI2_OFFSET		0x1000	/* DBI2 base address*/
-+
-+struct ls_pcie_ep {
-+	struct dw_pcie		*pci;
+ struct cqspi_st;
+ 
+ struct cqspi_flash_pdata {
+@@ -93,6 +99,11 @@ struct cqspi_st {
+ 	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+ };
+ 
++struct cqspi_driver_platdata {
++	u32 hwcaps_mask;
++	u8 quirks;
 +};
 +
-+#define to_ls_pcie_ep(x)	dev_get_drvdata((x)->dev)
+ /* Operation timeout value */
+ #define CQSPI_TIMEOUT_MS			500
+ #define CQSPI_READ_TIMEOUT_MS			10
+@@ -101,6 +112,7 @@ struct cqspi_st {
+ #define CQSPI_INST_TYPE_SINGLE			0
+ #define CQSPI_INST_TYPE_DUAL			1
+ #define CQSPI_INST_TYPE_QUAD			2
++#define CQSPI_INST_TYPE_OCTAL			3
+ 
+ #define CQSPI_DUMMY_CLKS_PER_BYTE		8
+ #define CQSPI_DUMMY_BYTES_MAX			4
+@@ -911,6 +923,9 @@ static int cqspi_set_protocol(struct spi_nor *nor, const int read)
+ 		case SNOR_PROTO_1_1_4:
+ 			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
+ 			break;
++		case SNOR_PROTO_1_1_8:
++			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
++			break;
+ 		default:
+ 			return -EINVAL;
+ 		}
+@@ -1213,21 +1228,22 @@ static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+ 
+ static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+ {
+-	const struct spi_nor_hwcaps hwcaps = {
+-		.mask = SNOR_HWCAPS_READ |
+-			SNOR_HWCAPS_READ_FAST |
+-			SNOR_HWCAPS_READ_1_1_2 |
+-			SNOR_HWCAPS_READ_1_1_4 |
+-			SNOR_HWCAPS_PP,
+-	};
+ 	struct platform_device *pdev = cqspi->pdev;
+ 	struct device *dev = &pdev->dev;
++	const struct cqspi_driver_platdata *ddata;
++	struct spi_nor_hwcaps hwcaps;
+ 	struct cqspi_flash_pdata *f_pdata;
+ 	struct spi_nor *nor;
+ 	struct mtd_info *mtd;
+ 	unsigned int cs;
+ 	int i, ret;
+ 
++	ddata = of_device_get_match_data(dev);
++	if (!ddata)
++		hwcaps.mask = cqspi_base_hwcaps_mask;
++	else
++		hwcaps.mask = ddata->hwcaps_mask;
 +
-+static int ls_pcie_establish_link(struct dw_pcie *pci)
-+{
-+	return 0;
-+}
-+
-+static const struct dw_pcie_ops ls_pcie_ep_ops = {
-+	.start_link = ls_pcie_establish_link,
+ 	/* Get flash device data */
+ 	for_each_available_child_of_node(dev->of_node, np) {
+ 		ret = of_property_read_u32(np, "reg", &cs);
+@@ -1310,7 +1326,7 @@ static int cqspi_probe(struct platform_device *pdev)
+ 	struct cqspi_st *cqspi;
+ 	struct resource *res;
+ 	struct resource *res_ahb;
+-	unsigned long data;
++	const struct cqspi_driver_platdata *ddata;
+ 	int ret;
+ 	int irq;
+ 
+@@ -1377,8 +1393,8 @@ static int cqspi_probe(struct platform_device *pdev)
+ 	}
+ 
+ 	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+-	data  = (unsigned long)of_device_get_match_data(dev);
+-	if (data & CQSPI_NEEDS_WR_DELAY)
++	ddata  = of_device_get_match_data(dev);
++	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
+ 		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+ 						   cqspi->master_ref_clk_hz);
+ 
+@@ -1460,14 +1476,27 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
+ #define CQSPI_DEV_PM_OPS	NULL
+ #endif
+ 
++static const struct cqspi_driver_platdata k2g_qspi = {
++	.hwcaps_mask = cqspi_base_hwcaps_mask,
++	.quirks = CQSPI_NEEDS_WR_DELAY,
 +};
 +
-+static const struct of_device_id ls_pcie_ep_of_match[] = {
-+	{ .compatible = "fsl,ls-pcie-ep",},
-+	{ },
++static const struct cqspi_driver_platdata am654_ospi = {
++	.hwcaps_mask = cqspi_base_hwcaps_mask | SNOR_HWCAPS_READ_1_1_8,
++	.quirks = CQSPI_NEEDS_WR_DELAY,
 +};
 +
-+static const struct pci_epc_features ls_pcie_epc_features = {
-+	.linkup_notifier = false,
-+	.msi_capable = true,
-+	.msix_capable = false,
-+};
-+
-+static const struct pci_epc_features*
-+ls_pcie_ep_get_features(struct dw_pcie_ep *ep)
-+{
-+	return &ls_pcie_epc_features;
-+}
-+
-+static void ls_pcie_ep_init(struct dw_pcie_ep *ep)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+	struct pci_epc *epc = ep->epc;
-+	enum pci_barno bar;
-+
-+	for (bar = BAR_0; bar <= BAR_5; bar++)
-+		dw_pcie_ep_reset_bar(pci, bar);
-+}
-+
-+static int ls_pcie_ep_raise_irq(struct dw_pcie_ep *ep, u8 func_no,
-+				  enum pci_epc_irq_type type, u16 interrupt_num)
-+{
-+	struct dw_pcie *pci = to_dw_pcie_from_ep(ep);
-+
-+	switch (type) {
-+	case PCI_EPC_IRQ_LEGACY:
-+		return dw_pcie_ep_raise_legacy_irq(ep, func_no);
-+	case PCI_EPC_IRQ_MSI:
-+		return dw_pcie_ep_raise_msi_irq(ep, func_no, interrupt_num);
-+	case PCI_EPC_IRQ_MSIX:
-+		return dw_pcie_ep_raise_msix_irq(ep, func_no, interrupt_num);
-+	default:
-+		dev_err(pci->dev, "UNKNOWN IRQ type\n");
-+		return -EINVAL;
-+	}
-+}
-+
-+static struct dw_pcie_ep_ops pcie_ep_ops = {
-+	.ep_init = ls_pcie_ep_init,
-+	.raise_irq = ls_pcie_ep_raise_irq,
-+	.get_features = ls_pcie_ep_get_features,
-+};
-+
-+static int __init ls_add_pcie_ep(struct ls_pcie_ep *pcie,
-+					struct platform_device *pdev)
-+{
-+	struct dw_pcie *pci = pcie->pci;
-+	struct device *dev = pci->dev;
-+	struct dw_pcie_ep *ep;
-+	struct resource *res;
-+	int ret;
-+
-+	ep = &pci->ep;
-+	ep->ops = &pcie_ep_ops;
-+
-+	res = platform_get_resource_byname(pdev, IORESOURCE_MEM, "addr_space");
-+	if (!res)
-+		return -EINVAL;
-+
-+	ep->phys_base = res->start;
-+	ep->addr_size = resource_size(res);
-+
-+	ret = dw_pcie_ep_init(ep);
-+	if (ret) {
-+		dev_err(dev, "failed to initialize endpoint\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int __init ls_pcie_ep_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	struct dw_pcie *pci;
-+	struct ls_pcie_ep *pcie;
-+	struct resource *dbi_base;
-+	int ret;
-+
-+	pcie = devm_kzalloc(dev, sizeof(*pcie), GFP_KERNEL);
-+	if (!pcie)
-+		return -ENOMEM;
-+
-+	pci = devm_kzalloc(dev, sizeof(*pci), GFP_KERNEL);
-+	if (!pci)
-+		return -ENOMEM;
-+
-+	dbi_base = platform_get_resource_byname(pdev, IORESOURCE_MEM, "regs");
-+	pci->dbi_base = devm_pci_remap_cfg_resource(dev, dbi_base);
-+	if (IS_ERR(pci->dbi_base))
-+		return PTR_ERR(pci->dbi_base);
-+
-+	pci->dbi_base2 = pci->dbi_base + PCIE_DBI2_OFFSET;
-+	pci->dev = dev;
-+	pci->ops = &ls_pcie_ep_ops;
-+	pcie->pci = pci;
-+
-+	platform_set_drvdata(pdev, pcie);
-+
-+	ret = ls_add_pcie_ep(pcie, pdev);
-+
-+	return ret;
-+}
-+
-+static struct platform_driver ls_pcie_ep_driver = {
-+	.driver = {
-+		.name = "layerscape-pcie-ep",
-+		.of_match_table = ls_pcie_ep_of_match,
-+		.suppress_bind_attrs = true,
+ static const struct of_device_id cqspi_dt_ids[] = {
+ 	{
+ 		.compatible = "cdns,qspi-nor",
+-		.data = (void *)0,
+ 	},
+ 	{
+ 		.compatible = "ti,k2g-qspi",
+-		.data = (void *)CQSPI_NEEDS_WR_DELAY,
++		.data = &k2g_qspi,
 +	},
-+};
-+builtin_platform_driver_probe(ls_pcie_ep_driver, ls_pcie_ep_probe);
++	{
++		.compatible = "ti,am654-ospi",
++		.data = &am654_ospi,
+ 	},
+ 	{ /* end of table */ }
+ };
 -- 
-1.7.1
+2.20.1
