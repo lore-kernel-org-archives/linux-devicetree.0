@@ -1,49 +1,26 @@
 From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH RESEND] media: s5p-mfc: Fix memdev DMA configuration
-Date: Mon, 21 Jan 2019 18:49:29 -0600
-Message-ID: <20190122004928.GA26160@bogus>
-References: <4235afdd39766f11a3bf4c8daa0d1f4e6a1cd6dc.1547476835.git.robin.murphy@arm.com>
+Subject: Re: [PATCH 1/4] dt-bindings: power: sc27xx: Add one IIO channel to
+ read charge voltage
+Date: Mon, 21 Jan 2019 18:50:09 -0600
+Message-ID: <20190122005009.GA28344@bogus>
+References: <76a12fe5d0cc670266100b0587b047714c9a8a83.1547544142.git.baolin.wang@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <4235afdd39766f11a3bf4c8daa0d1f4e6a1cd6dc.1547476835.git.robin.murphy@arm.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: devicetree@vger.kernel.org, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, linux-media@vger.kernel.org, frowand.list@gmail.com, linux-arm-kernel@lists.infradead.org, Marek Szyprowski <m.szyprowski@samsung.com>
+In-Reply-To: <76a12fe5d0cc670266100b0587b047714c9a8a83.1547544142.git.baolin.wang@linaro.org>
+Sender: linux-kernel-owner@vger.kernel.org
+Cc: sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, linux-pm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, yuanjiang.yu@unisoc.com, baolin.wang@linaro.org, broonie@kernel.org, zhang.lyra@gmail.com, orsonzhai@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 14, 2019 at 03:14:14PM +0000, Robin Murphy wrote:
-> Having of_reserved_mem_device_init() forcibly reconfigure DMA for all
-> callers, potentially overriding the work done by a bus-specific
-> .dma_configure method earlier, is at best a bad idea and at worst
-> actively harmful. If drivers really need virtual devices to own
-> dma-coherent memory, they should explicitly configure those devices
-> based on the appropriate firmware node as they create them.
+On Tue, 15 Jan 2019 18:32:34 +0800, Baolin Wang wrote:
+> Add one IIO channel named "charge_vol" to read the charge voltage for
+> the SC27XX fuel gauge controller.
 > 
-> It looks like the only driver not passing in a proper OF platform device
-> is s5p-mfc, so move the rogue of_dma_configure() call into that driver
-> where it logically belongs.
-> 
-> Reviewed-by: Marek Szyprowski <m.szyprowski@samsung.com>
-> Acked-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
+> Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
 > ---
+>  .../devicetree/bindings/power/supply/sc27xx-fg.txt |    8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
 > 
-> Hi Rob, Frank,
-> 
-> Bit of an old one bit it's rebased cleanly - Mauro reckoned[1] this
-> would suit the OF tree better than media, are you happy to pick it up?
 
-Applied.
-
-Rob
+Reviewed-by: Rob Herring <robh@kernel.org>
