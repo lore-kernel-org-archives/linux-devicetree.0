@@ -1,175 +1,141 @@
-From: Rob Herring <robh@kernel.org>
-Subject: Re: [PATCH v2 lora-next 1/4] dt-bindings: lora: sx130x: add basic documentation
-Date: Tue, 22 Jan 2019 14:04:10 -0600
-Message-ID: <CAL_JsqJK_UN1pqce-VxJ=gog9OMoz9nUZ6XeQD9jJf+3aLBaUA@mail.gmail.com>
-References: <20190122180729.1834-1-ben.whitten@lairdtech.com> <20190122180729.1834-2-ben.whitten@lairdtech.com>
+From: Suzuki K Poulose <suzuki.poulose@arm.com>
+Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Tue, 22 Jan 2019 20:12:27 +0000
+Message-ID: <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
+References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
+ <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
+ <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com>
+ <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190122180729.1834-2-ben.whitten@lairdtech.com>
-Sender: netdev-owner@vger.kernel.org
-To: Ben Whitten <ben.whitten@gmail.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, netdev <netdev@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, linux-lpwan@lists.infradead.org, "David S. Miller" <davem@davemloft.net>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: saiprakash.ranjan@codeaurora.org, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, john.horley@arm.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 12:07 PM Ben Whitten <ben.whitten@gmail.com> wrote:
->
-> From: Ben Whitten <ben.whitten@gmail.com>
->
-> Add basic documentation in YAML format for the SX130x series concentrator=
-s
-> from Semtech.
-> Required is; the location on the SPI bus and the compatible string.
->
-> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-> ---
-> v1 -> v2:
-> * Dropped reset-gpios, radio-spi from required.
-> * Dropped spi-max-frequency from binding.
-> * Changed compatible to allow fallback from SX1308 to SX1301.
-> * Wording changes in commit and descriptions.
-> * Dual licence
-> * Incorperate Robs comments on child node and spi wrapper
-> ---
->  .../bindings/net/lora/semtech,sx130x.yaml     | 96 +++++++++++++++++++
->  1 file changed, 96 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx=
-130x.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.ya=
-ml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-> new file mode 100644
-> index 000000000000..41919fb67ec4
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-> @@ -0,0 +1,96 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/lora/semtech,sx130x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech LoRa concentrator
-> +
-> +maintainers:
-> +  - Andreas F=C3=A4rber <afaerber@suse.de>
-> +  - Ben Whitten <ben.whitten@gmail.com>
-> +
-> +description: |
-> +  Semtech LoRa concentrator SX130x digital baseband chip is capable of
-> +  demodulating LoRa signals on 8 channels simultaneously.
-> +
-> +  It is typically paired with two SX125x IQ radios controlled over an
-> +  SPI directly from the concentrator.
-> +
-> +  The concentrator itself is controlled over SPI.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - semtech,sx1308
-> +      - enum:
-> +        - semtech,sx1301
+Hi Sai,
 
-I think you want:
+On 01/22/2019 04:48 PM, Sai Prakash Ranjan wrote:
+> Hi Suzuki,
+> 
+> On 1/22/2019 9:38 PM, Suzuki K Poulose wrote:
+>>
+>> By inconsistent, I meant the registers provides values which are not
+>> the same on two different CPUs of the *same type*. And it is expected
+>> that two different CPU/ETM implementations will have different PIDs.
+>>
+> 
+> SDM845 has 4 Kryo 385 Gold (ARM A75) + 4 Kryo 385 Silver (ARM A55),
+> so the PID values should be same for 4 ETMs atleast. But here one
+> pid value(001bb803) is same for 6 ETMs and other one for 2
+> ETMs(001bb802) which seems odd and hence the doubt if these pids
+> are even valid ones.
 
-oneOf:
-  - items:
-      - enum:
-          - semtech,sx1308
-      - const: semtech,sx1301
-  - items:
-      - const: semtech,sx1301
+Have you checked other SoCs with A55 for the ETM PID ? The drivers
+usually only care about PID0[7-0], PID1[7-0], PID2[3-0] and ignores
+the other fields that may change over revisions of the core. So, in your
+case the ETM ID could be treated as 0xbb802 and 0xbb803.
 
-That covers these 2 cases:
-"semtech,sx1308", "semtech,sx1301"
-"semtech,sx1301"
+> 
+>>>
+>>> Below are the PIDs read for SDM845:
+>>>
+>>> [    5.996448] resname=etm@7040000 pid=001bb803
+>>> [    6.052891] resname=etm@7140000 pid=001bb803
+>>>
+>>> <snip> .. (Same pid=001bb803 for etm@7240000 to etm@7540000 but differs
+>>> for other 2 cpus as shown below)
 
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: The chip select on the SPI bus.
-> +
-> +  reset-gpios:
-> +    maxItems: 1
-> +    description: A connection of the reset gpio line.
-> +
-> +  radio-spi:
-> +    type: object
-> +    description: The concentrator can have two radios connected which ar=
-e
-> +      contained within the following node.
-> +
-> +    properties:
-> +      '#address-cells':
-> +        const: 1
-> +
-> +      '#size-cells':
-> +        const: 0
-> +
-> +    patternProperties:
-> +      "^[a-zA-Z0-9]@[0-1]$":
+So thats 4 CPUs with 0x1bb803.
 
-Is any node name allowed? We like to have generic names. 'lora' is
-fine for me, but I'm don't know if other devices could be attached?
+>>>
+>>> [    6.266687] resname=etm@7640000 pid=001bb802
+>>> [    6.329171] resname=etm@7740000 pid=001bb802
+>>>
 
-I thought up to 8 concentrators was supported? Or channels and radios
-aren't 1-1?
 
-This too should have 'type: object' since it is a node name.
+>>> This is the case for MSM8996 also as shown below where PID
+>>> value is not correct and has to be hardcoded.
+>>
+>> They differ because they are two different types of CPU cores (and 
+>> thus different ETM PIDs). What does the Register descriptions say for
+>> the Cores ?
+>>
+>> To me it looks like there are two different types of Qualcomm
+>> Cores with their respective ETMs which are missing in the ETM4x
+>> driver and we are trying to "make the ETM" work by faking it as
+>> something else, which is not nice. I would rather prefer
+>> to add the appropriate masks and the expected value for these
+>> two different ETM implementations and be done with it, instead
+>> of faking it in all the DTs where these cores appear.
+>>
+> 
+> ETM4x driver does not have entries for A55 and A75. Could you please
+> let me know the PIDs for these CPUs so that we can compare?
 
-> +        properties:
-> +          reg:
-> +            maxItems: 1
+FWIW, here is the PID list:
 
-You can add:
-minimum: 0
-maximum: 1 (or 7?)
+A75: 0xB_BD_0A
+A55: 0xB_BD_05
 
-> +        required:
-> +          - reg
-> +
-> +    required:
-> +      - '#address-cells'
-> +      - '#size-cells'
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +
-> +    #include <dt-bindings/gpio/gpio.h>
-> +
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      concentrator0: lora@0 {
-> +        compatible =3D "semtech,sx1301";
-> +        reg =3D <0>;
-> +        reset-gpios =3D <&pioB 27 GPIO_ACTIVE_HIGH>;
-> +        spi-max-frequency =3D <8000000>;
-> +
-> +        radio-spi {
-> +          #address-cells =3D <1>;
-> +          #size-cells =3D <0>;
-> +
-> +          radio0: lora@0 {
-> +            compatible =3D "semtech,sx1257";
-> +            reg =3D <0>;
-> +          };
-> +
-> +          radio1: lora@1 {
-> +            compatible =3D "semtech,sx1257";
-> +            reg =3D <1>;
-> +          };
-> +        };
-> +      };
-> +    };
-> --
-> 2.17.1
->
+Btw, I am not sure if the ETM has been changed/tuned for the Cores in
+SDM845. Please could you get this clarified internally within your
+organisation ?
+
+> 
+>>>
+>>> For MSM8996:
+>>>
+>>> resname=etm@3b40000 pid=102f0205
+>>
+>> I don't know what CPUs the MSM8996 have. If they don't have A53, you
+>> must add the actual PIDs to the table once and for all.
+>>
+> 
+> But again, this PID is some invalid value. And does not correspond
+> to any of the ARM CPU cores and would be MSM8996 specific.
+> MSM8996 has 2+2 Kryo cores which are not ARM derivative as SDM845
+> if I am right.
+
+As long as the JEP106 coding standard is followed and is indicated in
+the appropriate fields (PIDR2[3]), we should be fine. In the case above:
+PID of the ETM is 0xf0205, implies JEP106 code[6:0] of the designer is 
+0x70 and ETM part number is : 0x205, which makes sense to me.
+
+> 
+>>>
+>>>>> +        etm@7040000 {
+>>>>> +            compatible = "arm,coresight-etm4x", "arm,primecell";
+>>>>> +            arm,primecell-periphid = <0x000bb95d> > + reg = <0 
+>>>>> 0x07040000 0 0x1000>;
+>>>>> +
+>>>>> +            cpu = <&CPU0>;
+>>>>> +
+>>>>
+>>>> You seem to be specifying the PID of A53 ETM all over, while at least
+>>>> one of your cores is ETMv4.2 (from the other patch) and A53 is not
+>>>> ETMv4.2. As above, it would be good to add the PID to the table.
+>>>>
+>>>
+>>> As explained in above comment, PID values read are not correct. 
+>>> Please let me know if I am not clear.
+>>
+>> There is no measure for "correctness" here. If the ETM exposes different
+>> PID than what you expect from the TRM, then we could think of overriding
+>> it. Otherwise please add the PIDs to the table.
+>>
+> 
+> This is exactly the case, ETM PID registers are exposing some invalid
+> value and hence we override in DT.
+
+It would be good to have this clarified. I will check with the internal
+teams here for any details.
+
+Thanks
+Suzuki
