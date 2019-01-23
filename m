@@ -1,77 +1,67 @@
-From: Randy Dunlap <rdunlap@infradead.org>
-Subject: Re: [PATCH reset-next 2/2] reset: brcmstb: Fix 32-bit build with
- 64-bit resource_size_t
-Date: Tue, 22 Jan 2019 16:53:58 -0800
-Message-ID: <1c64196a-b23c-efae-b449-a62981d44a26@infradead.org>
-References: <20190123003345.13750-1-f.fainelli@gmail.com>
- <20190123003345.13750-3-f.fainelli@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 03/10] arm64: dts: sdm845: Introduce ADSP and CDSP PAS
+ nodes
+Date: Tue, 22 Jan 2019 17:09:30 -0800
+Message-ID: <20190123010930.GI31919@minitux>
+References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
+ <20190122055112.30943-4-bjorn.andersson@linaro.org>
+ <CAD=FV=WXind-uk7V_XTDgM83LZbmtKb2Ln6pQjmUkaZMz8SFsA@mail.gmail.com>
+ <20190123002610.GE31919@minitux>
+ <CAD=FV=Wsk3s2NbX4pR6v9-kK41edLF4hd7B_BanoFkAXyLBwyA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123003345.13750-3-f.fainelli@gmail.com>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Wsk3s2NbX4pR6v9-kK41edLF4hd7B_BanoFkAXyLBwyA@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, linux-next@vger.kernel.org, sfr@canb.auug.org.au, paul.gortmaker@windriver.com
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/22/19 4:33 PM, Florian Fainelli wrote:
-> On 32-bit architectures defining resource_size_t as 64-bit (because of
-> PAE), we can run into a linker failure because of the modulo and the
-> division against resource_size(), replace the two problematic operations
-> with an alignment check on the register resource (instead of modulo),
-> and the division with DIV_ROUND_CLOSEST_ULL().
+On Tue 22 Jan 16:40 PST 2019, Doug Anderson wrote:
+
+> Hi,
 > 
-> Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> Fixes: c196cdc7659d ("reset: Add Broadcom STB SW_INIT reset controller driver")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/reset/reset-brcmstb.c | 6 ++++--
->  1 file changed, 4 insertions(+), 2 deletions(-)
+> On Tue, Jan 22, 2019 at 4:26 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> > > > +               clocks = <&xo_board>;
+> > > > +               clock-names = "xo";
+> > >
+> > > I've found that nearly all the places that refer to xo_board are wrong
+> > > and should actually point to '<&rpmhcc RPMH_CXO_CLK>'.  Maybe yours
+> > > should too?
+> > >
+> >
+> > Yes, xo_board is a fake clock representing the 19.2MHz clock feeding the
+> > cxo (or cxo2) pad of the SoC. So you're definitely right in that this
+> > should be referencing the actual 19.2MHz clock.
+> >
+> > We've kept referring to this as xo_board, as we don't handle probe
+> > deferral when gcc will probe earlier than rpmcc in the boot and for
+> > other non-clock drivers the fear of actually hitting 0 on the refcounter
+> > for this (you don't want to disable the cxo while running the system).
 > 
-> diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
-> index 01ab1f71518b..c4cab8b5052d 100644
-> --- a/drivers/reset/reset-brcmstb.c
-> +++ b/drivers/reset/reset-brcmstb.c
-> @@ -91,7 +91,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
->  		return -ENOMEM;
->  
->  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> -	if (resource_size(res) % SW_INIT_BANK_SIZE) {
-> +	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
-> +	    !IS_AGLINED(resource_size(res), SW_INIT_BANK_SIZE)) {
->  		dev_err(kdev, "incorrect register range\n");
->  		return -EINVAL;
->  	}
-> @@ -103,7 +104,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
->  	dev_set_drvdata(kdev, priv);
->  
->  	priv->rcdev.owner = THIS_MODULE;
-> -	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
-> +	priv->rcdev.nr_resets = DIV_ROUND_CLOSEST_ULL(resource_size(res),
-> +						      SW_INIT_BANK_SIZE) * 32;
->  	priv->rcdev.ops = &brcmstb_reset_ops;
->  	priv->rcdev.of_node = kdev->of_node;
->  	/* Use defaults: 1 cell and simple xlate function */
+> Note that, as defined in the device tree, "xo_board" is actually 38.4.
+> IIUC that is not actually a fake/bogus clock but represents the actual
+> crystal on the board.  There's a divide by 2 in the CPU though so most
+> peripherals consider "xo" as 19.2.
 > 
 
-Hi Florian,
+There's the 38.4MHz XO connected to the PMIC, but the signal going into
+the CXO_IN pad of the SoC is supposed to come from LNBBCLK1 and be
+19.2MHz.
 
-This gives me:
+> ...OK, confirmed.  The actual RF_XO_CLK pin on the board is truly
+> connected to 38.4.
+> 
 
-  CC      drivers/reset/reset-brcmstb.o
-../drivers/reset/reset-brcmstb.c: In function ‘brcmstb_reset_probe’:
-../drivers/reset/reset-brcmstb.c:95:6: error: implicit declaration of function ‘IS_AGLINED’ [-Werror=implicit-function-declaration]
-      !IS_AGLINED(resource_size(res), SW_INIT_BANK_SIZE)) {
-      ^
+And the three RF clocks from the PMIC are all ticking at 38.4MHz.
 
 
-but if the typo is fixed, it is fine :) then you can added:
+The "xo" I need here is the LNBBCLK1 (RPMH_CXO_CLK in clk-rpmh), for the
+purpose of preventing the root clock to be turned off if apps goes to
+suspend while the modem is booting, before it has had a chance to tell
+RPM(h) that it needs it to be on.
 
-Acked-by: Randy Dunlap <rdunlap@infradead.org>
-
-Thanks.
-
--- 
-~Randy
+Regards,
+Bjorn
