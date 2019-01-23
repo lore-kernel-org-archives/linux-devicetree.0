@@ -1,93 +1,56 @@
-From: Philipp Puschmann <philipp.puschmann@emlix.com>
-Subject: [PATCH v4 2/2] usb: chipidea: imx: set power polarity
-Date: Wed, 23 Jan 2019 15:31:03 +0100
-Message-ID: <20190123143103.16891-2-philipp.puschmann@emlix.com>
-References: <20190123143103.16891-1-philipp.puschmann@emlix.com>
+From: Guenter Roeck <linux@roeck-us.net>
+Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx
+ OST
+Date: Wed, 23 Jan 2019 06:31:57 -0800
+Message-ID: <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net>
+References: <20181212220922.18759-1-paul@crapouillou.net>
+ <20181212220922.18759-6-paul@crapouillou.net>
+ <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123143103.16891-1-philipp.puschmann@emlix.com>
+In-Reply-To: <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: gregkh@linuxfoundation.org
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, Peter.Chen@nxp.com, linux-usb@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Philipp Puschmann <philipp.puschmann@emlix.com>
+To: Mathieu Malaterre <malat@debian.org>, Paul Cercueil <paul@crapouillou.net>
+Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Maarten ter Huurne <maarten@treewalker.org>
 List-Id: devicetree@vger.kernel.org
 
-This patch adds support to set the power line polarity for i.MX SoCs.
+On 1/23/19 4:58 AM, Mathieu Malaterre wrote:
+> On Wed, Dec 12, 2018 at 11:09 PM Paul Cercueil <paul@crapouillou.net> wrote:
+>>
+>> From: Maarten ter Huurne <maarten@treewalker.org>
+>>
+>> OST is the OS Timer, a 64-bit timer/counter with buffered reading.
+>>
+>> SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
+>> JZ4780 have a 64-bit OST.
+>>
+>> This driver will register both a clocksource and a sched_clock to the
+>> system.
+>>
+>> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+>> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+>> ---
+>>
+>> Notes:
+>>       v5: New patch
+>>
+>>       v6: - Get rid of SoC IDs; pass pointer to ingenic_ost_soc_info as
+>>             devicetree match data instead.
+>>           - Use device_get_match_data() instead of the of_* variant
+>>           - Handle error of dev_get_regmap() properly
+>>
+>>       v7: Fix section mismatch by using builtin_platform_driver_probe()
+>>
+>>       v8: builtin_platform_driver_probe() does not work anymore in
+>>           4.20-rc6? The probe function won't be called. Work around this
+>>           for now by using late_initcall.
+>>
 
-To let the USB controller control the power it may be necessary to configure
-the polarity of the power line. So far the polarity was configured
-by Bootloader or alternatively the power line was muxed as gpio and
-driven by a regulator.
+Did anyone notice this ? Either something is wrong with the driver, or
+with the kernel core. Hacking around it seems like the worst possible
+"solution".
 
-Also make use of of_property_read_bool.
-
-Signed-off-by: Philipp Puschmann <philipp.puschmann@emlix.com>
----
-Changes in v4: use of_property_read_bool, also apply to imx7d
-
- drivers/usb/chipidea/ci_hdrc_imx.c | 4 ++--
- drivers/usb/chipidea/ci_hdrc_imx.h | 1 +
- drivers/usb/chipidea/usbmisc_imx.c | 7 +++++++
- 3 files changed, 10 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.c b/drivers/usb/chipidea/ci_hdrc_imx.c
-index e81de9ca8729..27c042f01018 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.c
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.c
-@@ -152,8 +152,8 @@ static struct imx_usbmisc_data *usbmisc_get_init_data(struct device *dev)
- 		dev_warn(dev, "No over current polarity defined\n");
- 	}
- 
--	if (of_find_property(np, "external-vbus-divider", NULL))
--		data->evdo = 1;
-+	data->pwr_pol = of_property_read_bool(np, "power-active-high");
-+	data->evdo = of_property_read_bool(np, "external-vbus-divider");
- 
- 	if (of_usb_get_phy_mode(np) == USBPHY_INTERFACE_MODE_ULPI)
- 		data->ulpi = 1;
-diff --git a/drivers/usb/chipidea/ci_hdrc_imx.h b/drivers/usb/chipidea/ci_hdrc_imx.h
-index 7cc53e2ce564..c842e03f8767 100644
---- a/drivers/usb/chipidea/ci_hdrc_imx.h
-+++ b/drivers/usb/chipidea/ci_hdrc_imx.h
-@@ -18,6 +18,7 @@ struct imx_usbmisc_data {
- 	/* true if dt specifies polarity */
- 	unsigned int oc_pol_configured:1;
- 
-+	unsigned int pwr_pol:1; /* power polarity */
- 	unsigned int evdo:1; /* set external vbus divider option */
- 	unsigned int ulpi:1; /* connected to an ULPI phy */
- 	unsigned int hsic:1; /* HSIC controlller */
-diff --git a/drivers/usb/chipidea/usbmisc_imx.c b/drivers/usb/chipidea/usbmisc_imx.c
-index 097ffbca0bd9..d8b67e150b12 100644
---- a/drivers/usb/chipidea/usbmisc_imx.c
-+++ b/drivers/usb/chipidea/usbmisc_imx.c
-@@ -63,6 +63,7 @@
- #define MX6_BM_NON_BURST_SETTING	BIT(1)
- #define MX6_BM_OVER_CUR_DIS		BIT(7)
- #define MX6_BM_OVER_CUR_POLARITY	BIT(8)
-+#define MX6_BM_PWR_POLARITY		BIT(9)
- #define MX6_BM_WAKEUP_ENABLE		BIT(10)
- #define MX6_BM_UTMI_ON_CLOCK		BIT(13)
- #define MX6_BM_ID_WAKEUP		BIT(16)
-@@ -383,6 +384,9 @@ static int usbmisc_imx6q_init(struct imx_usbmisc_data *data)
- 		else if (data->oc_pol_configured)
- 			reg &= ~MX6_BM_OVER_CUR_POLARITY;
- 	}
-+	/* If the polarity is not set keep it as setup by the bootlader */
-+	if (data->pwr_pol == 1)
-+		reg |= MX6_BM_PWR_POLARITY;
- 	writel(reg, usbmisc->base + data->index * 4);
- 
- 	/* SoC non-burst setting */
-@@ -585,6 +589,9 @@ static int usbmisc_imx7d_init(struct imx_usbmisc_data *data)
- 		else if (data->oc_pol_configured)
- 			reg &= ~MX6_BM_OVER_CUR_POLARITY;
- 	}
-+	/* If the polarity is not set keep it as setup by the bootlader */
-+	if (data->pwr_pol == 1)
-+		reg |= MX6_BM_PWR_POLARITY;
- 	writel(reg, usbmisc->base);
- 
- 	reg = readl(usbmisc->base + MX7D_USBNC_USB_CTRL2);
--- 
-2.20.1
+Guenter
