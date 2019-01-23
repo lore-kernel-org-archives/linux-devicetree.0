@@ -1,38 +1,64 @@
-From: David Miller <davem@davemloft.net>
-Subject: Re: [PATCH v3 0/5] net: Add support for Qualcomm ethqos
-Date: Tue, 22 Jan 2019 19:38:20 -0800 (PST)
-Message-ID: <20190122.193820.1381659831144896441.davem@davemloft.net>
-References: <20190121091318.20079-1-vkoul@kernel.org>
-Mime-Version: 1.0
-Content-Type: Text/Plain; charset=us-ascii
-Content-Transfer-Encoding: 7bit
-Return-path: <netdev-owner@vger.kernel.org>
-In-Reply-To: <20190121091318.20079-1-vkoul@kernel.org>
-Sender: netdev-owner@vger.kernel.org
-To: vkoul@kernel.org
-Cc: netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, niklas.cassel@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com
+From: Jayant Shekhar <jshekhar@codeaurora.org>
+Subject: [v6 0/3] Use interconnect API in MDSS on SDM845
+Date: Wed, 23 Jan 2019 09:12:32 +0530
+Message-ID: <1548214955-19692-1-git-send-email-jshekhar@codeaurora.org>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Jayant Shekhar <jshekhar@codeaurora.org>, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-From: Vinod Koul <vkoul@kernel.org>
-Date: Mon, 21 Jan 2019 14:43:13 +0530
+The interconnect API provides an interface for consumer drivers to express
+their bandwidth needs in the SoC. This data is aggregated and the on-chip
+interconnect hardware is configured to the appropriate power/performance
+profile.
 
-> Some Qualcomm SoCs sport a ethqos controller which use DW ip, so add
-> the glue driver which uses stmmac driver along with DT bindings for
-> this device.
-> 
-> This controller supports rgmii mode and doesn't work with existing
-> phy drivers as they do not remove the phy delay delay in this mode,
-> so fix the two phy drivers tested with this.
-> 
-> Changes in v3:
->  - Add description in DT and rename the file and compatible as suggested by
->    Rob
->  - Update changelog for QCA8K driver
->  - Update AT803x phy disable delay for all RGMxx modes
-> 
-> Changes in v2:
->  - Fix the example in dt-binding
->  - Remove DT property for disable the delay and disable delay for RGMII mode
->    in AT803x and QCA8K PHY drivers
+MDSS is one of the interconnect consumers which uses the interconnect APIs
+to get the path between endpoints and set its bandwidth requirements
+for the given interconnected path.
 
-Series applied, thanks.
+Subsequently, there is a clean up patch to remove all the references
+of the DPU custom bus scaling.
+
+There is corresponding DT patch with the source and destination ports
+defined for display driver which will be sent separately.
+
+Changes in v2:
+    - Remove error log and unnecessary check (Jordan Crouse)
+    - Fixed build error due to partial clean up
+
+Changes in v3:
+    - Remove common property definitions (Rob Herring)
+    - Code clean up involving variable name change, removal
+      of extra paranthesis and variables (Matthias Kaehlcke)
+    - Condense multiple lines into a single line (Sean Paul)
+
+Changes in v4:
+   - Add comments, spacings, tabs, proper port name and icc macro
+   - Use port macros and change port string names (Georgi Djakov)
+
+Changes in v5:
+   - Updated commit text and parenthesis alignment (Georgi Djakov)
+
+Changes in v6:
+   - Change icc_set to icc_set_bw (Doug Anderson)
+
+Jayant Shekhar (3):
+  drm/msm/dpu: clean up references of DPU custom bus scaling
+  drm/msm/dpu: Integrate interconnect API in MDSS
+  dt-bindings: msm/disp: Introduce interconnect bindings for MDSS on
+    SDM845
+
+ .../devicetree/bindings/display/msm/dpu.txt        |  10 ++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c      | 174 ++++++++-------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.h      |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           |  13 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c           |  49 +++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_power_handle.c   |  47 ++----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_power_handle.h   |  68 --------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h          |  22 +--
+ 8 files changed, 144 insertions(+), 243 deletions(-)
+
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
