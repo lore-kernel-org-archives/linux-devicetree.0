@@ -1,8 +1,7 @@
 From: Anson Huang <anson.huang@nxp.com>
-Subject: [PATCH 3/3] arm64: dts: freescale: imx8qxp: enable scu general irq
- channel
-Date: Wed, 23 Jan 2019 08:01:21 +0000
-Message-ID: <1548230179-26076-3-git-send-email-Anson.Huang@nxp.com>
+Subject: [PATCH 2/3] firmware: imx: enable imx scu general irq function
+Date: Wed, 23 Jan 2019 08:01:16 +0000
+Message-ID: <1548230179-26076-2-git-send-email-Anson.Huang@nxp.com>
 References: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="iso-8859-1"
@@ -15,40 +14,179 @@ To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutl
 Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On i.MX8QXP, SCU uses MU1 general interrupt channel #3 to notify
-user for IRQs of RTC alarm, thermal alarm and WDOG etc., mailbox
-RX doorbell mode is used for this function, this patch adds
-support for it.
+The System Controller Firmware (SCFW) controls RTC, thermal
+and WDOG etc., these resources' interrupt function are managed
+by SCU. When any IRQ pending, SCU will notify Linux via MU general
+interrupt channel #3, and Linux kernel needs to call SCU APIs
+to get IRQ status and notify each module to handle the interrupt.
+
+Since there is no data transmission for SCU IRQ notification, so
+doorbell mode is used for this MU channel, and SCU driver will
+use notifier mechanism to broadcast to every module which registers
+the SCU block notifier.
 
 Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
 ---
- arch/arm64/boot/dts/freescale/imx8qxp.dtsi | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/firmware/imx/imx-scu.c   | 101 +++++++++++++++++++++++++++++++++++=
+++++
+ include/linux/firmware/imx/sci.h |   3 ++
+ 2 files changed, 104 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi b/arch/arm64/boot/d=
-ts/freescale/imx8qxp.dtsi
-index 4c3dd95..4021f25 100644
---- a/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-+++ b/arch/arm64/boot/dts/freescale/imx8qxp.dtsi
-@@ -87,7 +87,8 @@
- 	scu {
- 		compatible =3D "fsl,imx-scu";
- 		mbox-names =3D "tx0", "tx1", "tx2", "tx3",
--			     "rx0", "rx1", "rx2", "rx3";
-+			     "rx0", "rx1", "rx2", "rx3",
-+			     "gi3";
- 		mboxes =3D <&lsio_mu1 0 0
- 			  &lsio_mu1 0 1
- 			  &lsio_mu1 0 2
-@@ -95,7 +96,8 @@
- 			  &lsio_mu1 1 0
- 			  &lsio_mu1 1 1
- 			  &lsio_mu1 1 2
--			  &lsio_mu1 1 3>;
-+			  &lsio_mu1 1 3
-+			  &lsio_mu1 3 3>;
+diff --git a/drivers/firmware/imx/imx-scu.c b/drivers/firmware/imx/imx-scu.=
+c
+index 2bb1a19..e93bea5 100644
+--- a/drivers/firmware/imx/imx-scu.c
++++ b/drivers/firmware/imx/imx-scu.c
+@@ -7,6 +7,7 @@
+  *
+  */
 =20
- 		clk: clock-controller {
- 			compatible =3D "fsl,imx8qxp-clk";
++#include <dt-bindings/firmware/imx/rsrc.h>
+ #include <linux/err.h>
+ #include <linux/firmware/imx/types.h>
+ #include <linux/firmware/imx/ipc.h>
+@@ -21,6 +22,8 @@
+=20
+ #define SCU_MU_CHAN_NUM		8
+ #define MAX_RX_TIMEOUT		(msecs_to_jiffies(30))
++#define IMX_SC_IRQ_FUNC_STATUS	2
++#define IMX_SC_IRQ_NUM_GROUP	6
+=20
+ struct imx_sc_chan {
+ 	struct imx_sc_ipc *sc_ipc;
+@@ -77,7 +80,23 @@ static int imx_sc_linux_errmap[IMX_SC_ERR_LAST] =3D {
+ 	-EIO,	 /* IMX_SC_ERR_FAIL */
+ };
+=20
++struct imx_sc_msg_irq_get_status {
++	struct imx_sc_rpc_msg hdr;
++	union {
++		struct {
++			u16 resource;
++			u8 group;
++			u8 reserved;
++		} send;
++		struct {
++			u32 status;
++		} receive;
++	} data;
++} __packed;
++
+ static struct imx_sc_ipc *imx_sc_ipc_handle;
++static struct work_struct imx_sc_general_irq_work;
++static BLOCKING_NOTIFIER_HEAD(imx_scu_notifier_chain);
+=20
+ static inline int imx_sc_to_linux_errno(int errno)
+ {
+@@ -194,6 +213,86 @@ int imx_scu_call_rpc(struct imx_sc_ipc *sc_ipc, void *=
+msg, bool have_resp)
+ }
+ EXPORT_SYMBOL(imx_scu_call_rpc);
+=20
++int imx_scu_register_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_register(&imx_scu_notifier_chain, nb);
++}
++EXPORT_SYMBOL(imx_scu_register_notifier);
++
++int imx_scu_unregister_notifier(struct notifier_block *nb)
++{
++	return blocking_notifier_chain_unregister(&imx_scu_notifier_chain, nb);
++}
++EXPORT_SYMBOL(imx_scu_unregister_notifier);
++
++static int imx_scu_notifier_call_chain(unsigned long status, u8 *group)
++{
++	return blocking_notifier_call_chain(&imx_scu_notifier_chain,
++					    status, (void *)group);
++}
++
++static void imx_scu_general_irq_work_handler(struct work_struct *work)
++{
++	struct imx_sc_msg_irq_get_status msg;
++	struct imx_sc_rpc_msg *hdr =3D &msg.hdr;
++	u32 irq_status;
++	int ret;
++	u8 i;
++
++	for (i =3D 0; i < IMX_SC_IRQ_NUM_GROUP; i++) {
++		hdr->ver =3D IMX_SC_RPC_VERSION;
++		hdr->svc =3D IMX_SC_RPC_SVC_IRQ;
++		hdr->func =3D IMX_SC_IRQ_FUNC_STATUS;
++		hdr->size =3D 2;
++
++		msg.data.send.resource =3D IMX_SC_R_MU_1A;
++		msg.data.send.group =3D i;
++
++		ret =3D imx_scu_call_rpc(imx_sc_ipc_handle, &msg, true);
++		if (ret) {
++			pr_err("get irq status failed, ret %d\n", ret);
++			return;
++		}
++
++		irq_status =3D msg.data.receive.status;
++		if (!irq_status)
++			continue;
++
++		imx_scu_notifier_call_chain(irq_status, &i);
++	}
++}
++
++static void imx_scu_rxdb_callback(struct mbox_client *c, void *msg)
++{
++	schedule_work(&imx_sc_general_irq_work);
++}
++
++static int imx_scu_enable_general_irq_channel(struct device *dev)
++{
++	struct mbox_client *cl;
++	struct mbox_chan *ch;
++	int ret =3D 0;
++
++	cl =3D devm_kzalloc(dev, sizeof(*cl), GFP_KERNEL);
++	if (!cl)
++		return -ENOMEM;
++
++	cl->dev =3D dev;
++	cl->rx_callback =3D imx_scu_rxdb_callback;
++
++	/* SCU general IRQ uses general interrupt channel 3 */
++	ch =3D mbox_request_channel_byname(cl, "gi3");
++	if (IS_ERR(ch)) {
++		ret =3D PTR_ERR(ch);
++		dev_err(dev, "failed to request mbox chan gi3, ret %d\n", ret);
++		return ret;
++	}
++
++	INIT_WORK(&imx_sc_general_irq_work, imx_scu_general_irq_work_handler);
++
++	return ret;
++}
++
+ static int imx_scu_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev =3D &pdev->dev;
+@@ -246,6 +345,8 @@ static int imx_scu_probe(struct platform_device *pdev)
+=20
+ 	imx_sc_ipc_handle =3D sc_ipc;
+=20
++	imx_scu_enable_general_irq_channel(dev);
++
+ 	dev_info(dev, "NXP i.MX SCU Initialized\n");
+=20
+ 	return devm_of_platform_populate(dev);
+diff --git a/include/linux/firmware/imx/sci.h b/include/linux/firmware/imx/=
+sci.h
+index ebc5509..9d608db 100644
+--- a/include/linux/firmware/imx/sci.h
++++ b/include/linux/firmware/imx/sci.h
+@@ -15,4 +15,7 @@
+=20
+ #include <linux/firmware/imx/svc/misc.h>
+ #include <linux/firmware/imx/svc/pm.h>
++
++int imx_scu_register_notifier(struct notifier_block *nb);
++int imx_scu_unregister_notifier(struct notifier_block *nb);
+ #endif /* _SC_SCI_H */
 --=20
 2.7.4
