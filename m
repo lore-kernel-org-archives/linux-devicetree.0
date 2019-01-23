@@ -1,107 +1,76 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
- driver
-Date: Wed, 23 Jan 2019 17:05:09 +0000
-Message-ID: <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add interconnect binding for
+ GENI QUP
+Date: Wed, 23 Jan 2019 09:07:58 -0800
+Message-ID: <20190123170758.GB512@tuxbook-pro>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+In-Reply-To: <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: Alok Chauhan <alokc@codeaurora.org>
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:
-> Hello,
-> 
-> As part of an effort to bring suspend to RAM support to Armada 3700
-> SoCs (main target: ESPRESSObin), this series handles the work around
-> the PCIe IP.
-> 
-> First, more configuration is done in the 'setup' helper as inspired
-> from the U-Boot driver. This is needed to entirely initialize the IP
-> during future resume operation (patch 1).
-> 
-> Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
-> current device trees do not provide the corresponding properties, not
-> finding one of these properties is not an error and just produces a
-> warning. However, if the property is present, an error during PHY
-> initialization will fail the probe of the driver.
-> 
-> Note: To be sure the clock will be resumed before this driver, a first
-> series adding links between clocks and consumers has been submitted,
-> see [1]. Anyway, having the clock series applied first is not needed.
+On Mon 21 Jan 22:33 PST 2019, Alok Chauhan wrote:
 
-I do not understand what this means, in particular in relation
-to the blocking clock calls in the suspend/resume NOIRQ hooks.
+> Add documentation for the interconnect and interconnect-names bindings
+> for the GENI QUP as detailed by bindings/interconnect/interconnect.txt.
+> 
+> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> index dab7ca9..44d7e02 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> @@ -17,6 +17,12 @@ Required properties if child node exists:
+>  - #address-cells: 	Must be <1> for Serial Engine Address
+>  - #size-cells: 		Must be <1> for Serial Engine Address Size
+>  - ranges: 		Must be present
+> +- interconnects:	phandle to a interconnect provider. Please refer
+> +			../interconnect/interconnect.txt for details.
+> +			Must be 2 paths corresponding to 2 AXI ports.
+> +- interconnect-names:	Port names to differentiate between the
 
-Thanks,
-Lorenzo
+s/Port names/Path names/
 
-> Patch 5 adds suspend/resume hooks, re-using all the above.
-> 
-> Finally, bindings and device trees are updated to reflect the hardware
-> (patch 6-12). While the clock depends on the SoC, the reset GPIO and
-> the PHY depends on the board so the clock is added in the
-> armada-37xx.dtsi file while the two other properties are added in
-> armada-3720-espressobin.dts.
-> 
-> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-January/623885.html
-> 
-> Thanks,
-> Miqu??l
-> 
-> 
-> Changes since v2:
-> =================
-> * Minor patches reordering.
-> * Added pinctrl patches from Gregory Clement fixing the PCIe pins. His
->   changes implied modifications in the DT/bindings patches adding PCIe
->   reset pin support.
-> * Added a new patch that enlarges the PIO timeout of the driver
->   (explanations in the commit log).
-> * With the timeout changed, removed the "experimental delay" that was
->   needed at resume time before accessing any register.
-> 
-> Changes since v1:
-> =================
-> * Change the capitalization in commit titles to follow the PCI
->   subsystem rules.
-> * Added Suggested-by tag to the patch adding PHY support and to the
->   patch adding the PHY property in the DT.
-> * Added Rob's Reviewed-by tags on bindings.
-> * I am following the discussion about calling functions that might
->   sleep in a NOIRQ context. As there is no real problem yet (as per my
->   understanding), I did not change anything on this regard.
-> 
-> 
-> Miquel Raynal (15):
->   PCI: aardvark: Enlarge PIO timeout
->   PCI: aardvark: Configure more registers in the configuration helper
->   PCI: aardvark: Add clock support
->   PCI: aardvark: Add PHY support
->   PCI: aardvark: Add PCIe warm reset support
->   PCI: aardvark: Add external reset GPIO support
->   PCI: aardvark: Add suspend to RAM support
->   dt-bindings: PCI: aardvark: Describe the clocks property
->   dt-bindings: PCI: aardvark: Describe the PHY property
->   dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
->   dt-bindings: PCI: aardvark: Describe the reset-gpios property
->   ARM64: dts: marvell: armada-37xx: declare PCIe clock
->   ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
->   ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
->   ARM64: dts: marvell: armada-3720-espressobin: declare PCIe warm reset
->     pin
-> 
->  .../devicetree/bindings/pci/aardvark-pci.txt  |  14 ++
->  .../dts/marvell/armada-3720-espressobin.dts   |   3 +
->  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  10 +
->  drivers/pci/controller/pci-aardvark.c         | 217 +++++++++++++++++-
->  4 files changed, 243 insertions(+), 1 deletion(-)
-> 
+> +			2 interconnect paths defined with interconnect
+> +			specifier.
+
+These two names are significant in that they must match what the driver
+expects, hence you must actually specify them here.
+
+And as the scope of these strings are local to the QUP node you can omit
+"qup" from them, so make them "memory" and "config" (or perhaps iface,
+to match the clock naming?).
+
+Regards,
+Bjorn
+
+>  
+>  Properties for children:
+>  
+> @@ -67,6 +73,10 @@ Example:
+>  		#size-cells = <1>;
+>  		ranges;
+>  
+> +		interconnects = <&qnoc 11 &qnoc 512>,
+> +				<&qnoc 0 &qnoc 543>;
+
+I presu
+
+> +		interconnect-names = "qup-memory", "qup-config";
+> +
+>  		i2c0: i2c@a94000 {
+>  			compatible = "qcom,geni-i2c";
+>  			reg = <0xa94000 0x4000>;
 > -- 
-> 2.19.1
+> The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+> a Linux Foundation Collaborative Project
 > 
