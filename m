@@ -1,56 +1,51 @@
-From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: RE: [PATCH V2 0/5] dt-binding: clk: prepare for imx8qm clock support
-Date: Wed, 23 Jan 2019 08:19:22 +0000
-Message-ID: <AM0PR04MB421169B58FFD6FD5B17D015080990@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1548231044-4344-1-git-send-email-aisheng.dong@nxp.com>
+From: Joerg Roedel <joro@8bytes.org>
+Subject: Re: [PATCH v7 0/7] Add virtio-iommu driver
+Date: Wed, 23 Jan 2019 09:34:35 +0100
+Message-ID: <20190123083435.x3svwqp472mdgglw@8bytes.org>
+References: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <1548231044-4344-1-git-send-email-aisheng.dong@nxp.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>
-Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Return-path: <kvmarm-bounces@lists.cs.columbia.edu>
+Content-Disposition: inline
+In-Reply-To: <20190115121959.23763-1-jean-philippe.brucker@arm.com>
+List-Unsubscribe: <https://lists.cs.columbia.edu/mailman/options/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=unsubscribe>
+List-Archive: <https://lists.cs.columbia.edu/pipermail/kvmarm>
+List-Post: <mailto:kvmarm@lists.cs.columbia.edu>
+List-Help: <mailto:kvmarm-request@lists.cs.columbia.edu?subject=help>
+List-Subscribe: <https://lists.cs.columbia.edu/mailman/listinfo/kvmarm>,
+ <mailto:kvmarm-request@lists.cs.columbia.edu?subject=subscribe>
+Errors-To: kvmarm-bounces@lists.cs.columbia.edu
+Sender: kvmarm-bounces@lists.cs.columbia.edu
+To: Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Cc: virtio-dev@lists.oasis-open.org, kevin.tian@intel.com, lorenzo.pieralisi@arm.com, tnowicki@caviumnetworks.com, mst@redhat.com, marc.zyngier@arm.com, linux-pci@vger.kernel.org, jasowang@redhat.com, will.deacon@arm.com, robin.murphy@arm.com, virtualization@lists.linux-foundation.org, iommu@lists.linux-foundation.org, robh+dt@kernel.org, bhelgaas@google.com, frowand.list@gmail.com, kvmarm@lists.cs.columbia.edu, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-> From: Aisheng Dong
-> Sent: Wednesday, January 23, 2019 4:17 PM
-> Subject: [PATCH V2 0/5] dt-binding: clk: prepare for imx8qm clock support
-> 
-> After a bit more investigation on IMX8QM, it seemed SCU clock can be used in
-> a similar way as IMX8QXP. So update the binding and driver to be a bit generic
-> for easily extension of IMX8QM support later.
-> 
-> Dong Aisheng (5):
->   dt-bindings: fsl: scu: add fallback compatible string for clock
->   dt-bindings: fsl: scu: add imx8qm scu clock support
+Hi Jean-Philippe,
 
-Hi Shawn,
-Would you pick the first two patches for scu binding doc?
+thanks for all your hard work on this!
 
-Rob & Stephen,
-Please help review the left ones.
+On Tue, Jan 15, 2019 at 12:19:52PM +0000, Jean-Philippe Brucker wrote:
+> Implement the virtio-iommu driver, following specification v0.9 [1].
 
-Regards
-Dong Aisheng
+To make progress on this I think the spec needs to be close to something
+that can be included into the official virtio-specification. Have you
+proposed the specification for inclusion there?
 
->   dt-bindings: clock: update CPU clock ID name
->   dt-bindings: imx8-clock: add a53 and a72 clock id
->   clk: imx: scu: add fallback compatible string support
-> 
->  Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 7 +++++--
->  drivers/clk/imx/clk-imx8qxp.c                               | 1 +
->  include/dt-bindings/clock/imx8-clock.h                      | 8 +++++---
->  3 files changed, 11 insertions(+), 5 deletions(-)
-> 
-> --
-> 2.7.4
+This is because I can't merge a driver that might be incompatible to
+future implementations because the specification needs to be changed on
+its way to an official standard.
+
+I had a short discussion with Michael S. Tsirkin about that and from
+what I understood the spec needs to be proposed for inclusion on the
+virtio-comment[1] mailing list and later the TC needs to vote on it.
+Please work with Michael on this to get the specification official (or
+at least pretty close to something that will be part of the official
+virtio standard).
+
+Regards,
+
+	Joerg
+
+[1] https://www.oasis-open.org/committees/comments/index.php?wg_abbrev=virtio
