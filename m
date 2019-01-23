@@ -1,34 +1,57 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to
- CAN nodes
-Date: Wed, 23 Jan 2019 10:51:23 +0100
-Message-ID: <20190123095122.l3engeuwx6qr5lzc@verge.net.au>
-References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547736856-16539-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: Re: [PATCH 09/24] dt-bindings: PCI: Document "atu" reg-names
+Date: Wed, 23 Jan 2019 15:34:28 +0530
+Message-ID: <5f2fa7cd-b5a3-e466-6cbc-305f15836241@ti.com>
+References: <20190114132424.6445-1-kishon@ti.com>
+ <20190114132424.6445-10-kishon@ti.com> <20190122004806.GA32204@bogus>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190122004806.GA32204@bogus>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh@kernel.org>
+Cc: Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Jingoo Han <jingoohan1@gmail.com>, Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Murali Karicheri <m-karicheri2@ti.com>, Jesper Nilsson <jesper.nilsson@axis.com>, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-arm-kernel@axis.com
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 18, 2019 at 01:13:53PM +0100, Simon Horman wrote:
-> On Thu, Jan 17, 2019 at 02:54:15PM +0000, Fabrizio Castro wrote:
-> > According to the latest information, clkp2 is available on RZ/G2.
-> > Modify CAN0 and CAN1 nodes accordingly.
-> > 
-> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> 
-> Thanks,
-> 
-> This looks fine to me but I will wait to see if there are other reviews
-> before applying.
-> 
-> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
+Hi Rob,
 
-Thanks again, applied for v5.1.
+On 22/01/19 6:18 AM, Rob Herring wrote:
+> On Mon, Jan 14, 2019 at 06:54:09PM +0530, Kishon Vijay Abraham I wrote:
+>> Document "atu" reg-names required to get the register space for ATU in
+>> Synopsys designware core version >= 4.80.
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>> ---
+>>  Documentation/devicetree/bindings/pci/designware-pcie.txt | 7 +++++--
+>>  1 file changed, 5 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/Documentation/devicetree/bindings/pci/designware-pcie.txt b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> index c124f9bc11f3..5561a1c060d0 100644
+>> --- a/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> +++ b/Documentation/devicetree/bindings/pci/designware-pcie.txt
+>> @@ -4,8 +4,11 @@ Required properties:
+>>  - compatible:
+>>  	"snps,dw-pcie" for RC mode;
+>>  	"snps,dw-pcie-ep" for EP mode;
+>> -- reg: Should contain the configuration address space.
+>> -- reg-names: Must be "config" for the PCIe configuration space.
+>> +- reg: For designware cores version < 4.80 contains the configuration
+>> +       address space. For designware core version >= 4.80, contains
+>> +       the configuration and ATU address space
+>> +- reg-names: Must be "config" for the PCIe configuration space and "atu" for
+>> +	     the ATU address space.
+> 
+> I'm pretty sure we already have other platforms with an ATU. Those all 
+> just represent it with the other ctrl registers? So maybe this is TI 
+> specific that it is separate. Or should have some conditional like 'if 
+> the ATU space is separate, the reg-name should be atu'.
+
+This is specific to Synopsys Designware version >= 4.80 and not to TI. The
+first platform used a fixed offset to get the atu_base which is incorrect.
+
+In the "reg" binding I've noted this dependency.
+
+Thanks
+Kishon
