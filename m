@@ -1,82 +1,43 @@
-From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Subject: Re: [PATCH v5 2/8] ASoC: wcd9335: add support to wcd9335 codec
-Date: Wed, 23 Jan 2019 10:11:42 +0000
-Message-ID: <4e09bbcb-2258-9a41-eca6-19c6a9dea97b@linaro.org>
-References: <20190110150616.2332-1-srinivas.kandagatla@linaro.org>
- <20190110150616.2332-3-srinivas.kandagatla@linaro.org>
- <20190122184146.GF7579@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v2] arm: sun8i-h3-nanopi-m1-plus: enable HDMI
+Date: Wed, 23 Jan 2019 11:40:09 +0100
+Message-ID: <20190123104009.zf5xxsbxacmftwwt@flea>
+References: <1548143206-11404-1-git-send-email-clabbe@baylibre.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset=windows-1252; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122184146.GF7579@sirena.org.uk>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mark Brown <broonie@kernel.org>
-Cc: robh+dt@kernel.org, lgirdwood@gmail.com, bgoswami@codeaurora.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, vkoul@kernel.org, alsa-devel@alsa-project.org
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="7sfrqbci6lvwmlro"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBFEJUHRAKGQEG3DRG2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <1548143206-11404-1-git-send-email-clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+Cc: mark.rutland-5wv7dgnIgG8@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks for the review,
 
-On 22/01/2019 18:41, Mark Brown wrote:
-> On Thu, Jan 10, 2019 at 03:06:10PM +0000, Srinivas Kandagatla wrote:
-> 
-> This all looks good apart from a couple of small things that should be
-> easy to fix:
-> 
->> diff --git a/sound/soc/codecs/Kconfig b/sound/soc/codecs/Kconfig
->> index 62bdb7e333b8..1c4904940621 100644
->> --- a/sound/soc/codecs/Kconfig
->> +++ b/sound/soc/codecs/Kconfig
->> @@ -1100,6 +1100,12 @@ config SND_SOC_UDA1380
->>           tristate
->>   	depends on I2C
->>   
->> +config SND_SOC_WCD9335
->> +	tristate "WCD9335 Codec"
->> +	depends on SLIMBUS
->> +	select REGMAP_SLIMBUS
->> +        tristate
->> +
->>   config SND_SOC_WL1273
->>   	tristate
->>   
-> 
-> You should add this to SND_SOC_ALL_CODECS.
-Sure, I will add this in next version.
-> 
->> +static irqreturn_t wcd9335_slimbus_irq(int irq, void *data)
->> +{
->> +	struct wcd9335_codec *wcd = data;
->> +	unsigned long status = 0;
->> +	int i, j, port_id;
->> +	unsigned int val, int_val = 0;
->> +	bool tx;
->> +	unsigned short reg = 0;
->> +
->> +	for (i = WCD9335_SLIM_PGD_PORT_INT_STATUS_RX_0, j = 0;
->> +	     i <= WCD9335_SLIM_PGD_PORT_INT_STATUS_TX_1; i++, j++) {
->> +		regmap_read(wcd->if_regmap, i, &val);
->> +		status |= ((u32)val << (8 * j));
->> +	}
->> +
->> +	for_each_set_bit(j, &status, 32) {
->> +		tx = (j >= 16 ? true : false);
->> +		port_id = (tx ? j - 16 : j);
-> 
-> ...
-> 
->> +	return IRQ_HANDLED;
->> +}
-> 
-> This will report that it handled the interrupt unconditionally, this
-> means that if the interrupt fires in error or there's some bug the
-> interrupt will never be acknowledged (it looks like the chip requires
-> acks?) but the interrupt core won't be able to notice and handle the
-> problem as effectively as it could've done.  It's better to report
-> IRQ_NONE if nothing as handled so that the core can do error handling.
-I agree, Will fix this in next version!
+--7sfrqbci6lvwmlro
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
 
-thanks,
-srini
+On Tue, Jan 22, 2019 at 07:46:46AM +0000, Corentin Labbe wrote:
+> This patch enable HDMI output on sun8i-h3-nanopi-m1-plus.
 > 
+> Signed-off-by: Corentin Labbe <clabbe-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>
+
+The prefix must be "ARM: dts:"
+
+I've fixed it and applied, thanks!
+Maxime
+
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--7sfrqbci6lvwmlro--
