@@ -1,72 +1,62 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH V10 4/4] mmc: tegra: HW Command Queue Support for Tegra
- SDMMC
-Date: Wed, 23 Jan 2019 10:20:12 +0100
-Message-ID: <20190123092012.GC24072@ulmo>
-References: <1548186993-6229-1-git-send-email-skomatineni@nvidia.com>
- <1548186993-6229-4-git-send-email-skomatineni@nvidia.com>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH reset-next 2/2] reset: brcmstb: Fix 32-bit build with
+ 64-bit resource_size_t
+Date: Wed, 23 Jan 2019 10:39:26 +0100
+Message-ID: <1548236366.3904.1.camel@pengutronix.de>
+References: <20190123003345.13750-1-f.fainelli@gmail.com>
+         <20190123003345.13750-3-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="raC6veAxrt5nqIoY"
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548186993-6229-4-git-send-email-skomatineni@nvidia.com>
+In-Reply-To: <20190123003345.13750-3-f.fainelli@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, rdunlap@infradead.org, linux-next@vger.kernel.org, sfr@canb.auug.org.au, paul.gortmaker@windriver.com
 List-Id: devicetree@vger.kernel.org
 
+Hi Florian,
 
---raC6veAxrt5nqIoY
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 22, 2019 at 11:56:33AM -0800, Sowjanya Komatineni wrote:
-> This patch adds HW Command Queue for supported Tegra SDMMC
-> controllers.
->=20
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+On Tue, 2019-01-22 at 16:33 -0800, Florian Fainelli wrote:
+> On 32-bit architectures defining resource_size_t as 64-bit (because of
+> PAE), we can run into a linker failure because of the modulo and the
+> division against resource_size(), replace the two problematic operations
+> with an alignment check on the register resource (instead of modulo),
+> and the division with DIV_ROUND_CLOSEST_ULL().
+> 
+> Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> Fixes: c196cdc7659d ("reset: Add Broadcom STB SW_INIT reset controller driver")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 > ---
->  [V10]: Changes are same as V9 except this series has SDHCI core changes
-> 	into seperate patch=20
->=20
->  drivers/mmc/host/Kconfig       |   1 +
->  drivers/mmc/host/sdhci-tegra.c | 117 +++++++++++++++++++++++++++++++++++=
-++++--
->  2 files changed, 114 insertions(+), 4 deletions(-)
+>  drivers/reset/reset-brcmstb.c | 6 ++++--
+>  1 file changed, 4 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
+> index 01ab1f71518b..c4cab8b5052d 100644
+> --- a/drivers/reset/reset-brcmstb.c
+> +++ b/drivers/reset/reset-brcmstb.c
+> @@ -91,7 +91,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
+>  		return -ENOMEM;
+>  
+>  	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> -	if (resource_size(res) % SW_INIT_BANK_SIZE) {
+> +	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
+> +	    !IS_AGLINED(resource_size(res), SW_INIT_BANK_SIZE)) {
 
-Sowjanya,
+Typo.
 
-it's good practice to collect the various tags that you've received on
-patches when resending. I had already acked patches 1 and 3 of v9, so
-you should've added the Acked-by for at least this patch 4/4 because it
-is unchanged from v9. The Acked-by on patch 1 was also valid because you
-only moved the documentation, but it is otherwise unchanged.
+>  		dev_err(kdev, "incorrect register range\n");
+>  		return -EINVAL;
+>  	}
+> @@ -103,7 +104,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
+>  	dev_set_drvdata(kdev, priv);
+>  
+>  	priv->rcdev.owner = THIS_MODULE;
+> -	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
+> +	priv->rcdev.nr_resets = DIV_ROUND_CLOSEST_ULL(resource_size(res),
+> +						      SW_INIT_BANK_SIZE) * 32;
 
-No worries, though, just something to keep in mind when you send v11
-with the typofix that Adrian pointed out.
+This should be DIV_ROUND_DOWN_ULL.
 
-Acked-by: Thierry Reding <treding@nvidia.com>
-
---raC6veAxrt5nqIoY
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxIMcwACgkQ3SOs138+
-s6HjCg/7BEzZlYzmxabweiblsUj1bl1Cab3v45QDeCgs88YXI1MKXY69Z5BL483E
-2dk680JImRyLxh3elk838WgLAxn/fNRAO284BXKy0kB66bLZBpUXc96lSoWjpPKD
-+hLZmy85NLMuv966QGLxwMbKeIFgsWkPIH3VJ1noixtrKNNFiVjXAUdBqyj4sdXY
-8YigDcSMyL6jp+oourgLPuTUYPkYCb9h+rYrJe/tjhqTXRaXQ9VMv7NE97WYjjXA
-yf9m9Bn4weOnLBClVd2NEQQiy2YAQbNM/EL8I01vOTqZRU+/i4/PwhQo9s+5zAEk
-Mqz+NqkyBnFlhgRLkXG+Xqoip49rraP1h6JgiqUJlDYbI5VAuEK+3D06Nkid8sdK
-rwf7esBXV4z3m9iZ5O/3mEmdRrekCqcOn6QTFF1kR8U6D0sSl4heQyiAYTRBUqyv
-TysZgJ5F3l+s6JPsIL8N2jD+O3z6bL5sPK1ieUHjQ935QFdVyc8iSrpYA7uWSZkA
-gRo/AxlXLQ/xNFeGThZPDouOwwfGlcOv+DqsIOk3Rju8jdKsUil/jqwkI/8UDWsG
-aqE1cY9qZqoJhWRnbJ/JwXkUrhW8ZQUia87xCg9zOXhCVY/Nbe5FpSsqOIelxlib
-IX2UrsQatNWBnMqex421w6wWqbRGLvs12R3is8sZruv3iMDasCo=
-=hvy0
------END PGP SIGNATURE-----
-
---raC6veAxrt5nqIoY--
+regards
+Philipp
