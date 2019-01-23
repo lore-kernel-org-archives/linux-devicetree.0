@@ -1,195 +1,64 @@
-From: Matthias Kaehlcke <mka@chromium.org>
-Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip
- points to cpufreq
-Date: Tue, 22 Jan 2019 18:12:51 -0800
-Message-ID: <20190123021251.GJ261387@google.com>
-References: <cover.1548093127.git.amit.kucheria@linaro.org>
- <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+From: Jayant Shekhar <jshekhar@codeaurora.org>
+Subject: [v6 0/3] Use interconnect API in MDSS on SDM845
+Date: Wed, 23 Jan 2019 09:01:34 +0530
+Message-ID: <1548214297-17697-1-git-send-email-jshekhar@codeaurora.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Amit Kucheria <amit.kucheria@linaro.org>
-Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Jayant Shekhar <jshekhar@codeaurora.org>, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Amit,
+The interconnect API provides an interface for consumer drivers to express
+their bandwidth needs in the SoC. This data is aggregated and the on-chip
+interconnect hardware is configured to the appropriate power/performance
+profile.
 
-On Mon, Jan 21, 2019 at 11:38:34PM +0530, Amit Kucheria wrote:
-> Since all cpus in the big and little clusters, respectively, are in the
-> same frequency domain, use all of them for mitigation in the
-> cooling-map. We end up with two cooling devices - one each for the big
-> and little clusters.
-> 
-> We throttle lightly at the first trip point, just removing the boost
-> frequency. At the next trip point we allow ourselves to be throttled to
-> any extent.
-> 
-> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
-> ---
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 225 +++++++++++++++++++++++++--
->  1 file changed, 209 insertions(+), 16 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index c27cbd3bcb0a..878f661d16eb 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -13,6 +13,7 @@
->  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
->  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
->  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
-> +#include <dt-bindings/thermal/thermal.h>
->  
->  / {
->  	interrupt-parent = <&intc>;
-> @@ -99,6 +100,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x0>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_0>;
->  			L2_0: l2-cache {
->  				compatible = "cache";
-> @@ -114,6 +116,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x100>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_100>;
->  			L2_100: l2-cache {
->  				compatible = "cache";
-> @@ -126,6 +129,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x200>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_200>;
->  			L2_200: l2-cache {
->  				compatible = "cache";
-> @@ -138,6 +142,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x300>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_300>;
->  			L2_300: l2-cache {
->  				compatible = "cache";
-> @@ -150,6 +155,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x400>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_400>;
->  			L2_400: l2-cache {
->  				compatible = "cache";
-> @@ -162,6 +168,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x500>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_500>;
->  			L2_500: l2-cache {
->  				compatible = "cache";
-> @@ -174,6 +181,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x600>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_600>;
->  			L2_600: l2-cache {
->  				compatible = "cache";
-> @@ -186,6 +194,7 @@
->  			compatible = "qcom,kryo385";
->  			reg = <0x0 0x700>;
->  			enable-method = "psci";
-> +			#cooling-cells = <2>;
->  			next-level-cache = <&L2_700>;
->  			L2_700: l2-cache {
->  				compatible = "cache";
-> @@ -1691,18 +1700,41 @@
->  			thermal-sensors = <&tsens0 1>;
->  
->  			trips {
-> -				cpu_alert0: trip0 {
-> +				cpu0_alert1: trip-point@0 {
->  					temperature = <75000>;
+MDSS is one of the interconnect consumers which uses the interconnect APIs
+to get the path between endpoints and set its bandwidth requirements
+for the given interconnected path.
 
-In my observations a 'switch on/threshold' temperature of 75 degrees
-leads to aggressive throttling with IPA when the temperature is above
-this threshold:
+Subsequently, there is a clean up patch to remove all the references
+of the DPU custom bus scaling.
 
-[  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
-[  716.760836] cpu cpu4: Cooling state set to 10. New max freq = 1920000
-[  716.773390] power_allocator_ratelimit: 15 callbacks suppressed
-[  716.773405] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=73500, curr_temp=75200 total_requested_power=39025 total_granted_power=18654
-[  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
-[  749.609371] cpu cpu4: Cooling state set to 11. New max freq = 1843200
-[  749.624300] power_allocator_ratelimit: 24 callbacks suppressed
-[  749.624323] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=70800, curr_temp=77200 total_requested_power=40136 total_granted_power=17402
-[  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
-[  780.152666] cpu cpu4: Cooling state set to 11. New max freq = 1843200
-[  780.165247] power_allocator_ratelimit: 21 callbacks suppressed
-[  780.165261] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=64800, curr_temp=76900 total_requested_power=39719 total_granted_power=1759
+There is corresponding DT patch with the source and destination ports
+defined for display driver which will be sent separately.
 
-(the logs come from a local patch in our tree:
-https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ec1c501a8093fed44a6697a5913ef2765f518e1f)
+Changes in v2:
+    - Remove error log and unnecessary check (Jordan Crouse)
+    - Fixed build error due to partial clean up
 
-At this point I don't have a clear idea what would be a reasonable
-value for the 'switch on/threshold' temperature, but probably it
-should to be higher than 75 degrees, at least with IPA. If there is
-no reasonable common configuration for different thermal governors I
-guess we'll have to target a commonly used governor and systems
-using other 'incompatible' governors need to override the config in
-their <board>.dtsi.
+Changes in v3:
+    - Remove common property definitions (Rob Herring)
+    - Code clean up involving variable name change, removal
+      of extra paranthesis and variables (Matthias Kaehlcke)
+    - Condense multiple lines into a single line (Sean Paul)
 
-I should also say that the system I'm testing on isn't a
-representative environment (if such a thing exists at all...). It
-isn't running an upstream kernel (it's a recent version though,
-4.19). We try to stay as close to upstream as possible, however our
-tree includes EAS related patches that affect thermal throttling which
-haven't landed upstream yet. Also we currently use a guesstimated
-value for 'dynamic-power-coefficient', which impacts IPA. And our
-device doesn't have it's final thermal envelope yet, possible future
-hardware changes (e.g. heatsink) may alter the behavior.
+Changes in v4:
+   - Add comments, spacings, tabs, proper port name and icc macro
+   - Use port macros and change port string names (Georgi Djakov)
 
->  					hysteresis = <2000>;
->  					type = "passive";
->  				};
->  
-> -				cpu_crit0: trip1 {
-> +				cpu0_alert0: trip-point@1 {
+Changes in v5:
+   - Updated commit text and parenthesis alignment (Georgi Djakov)
 
-The labels of the two trip points (cpu0_alert0 and cpu0_alert1) are
-inverted.
+Changes in v6:
+   - Change icc_set to icc_set_bw (Doug Anderson)
 
-> +					temperature = <95000>;
-> +					hysteresis = <2000>;
-> +					type = "passive";
-> +				};
-> +
-> +				cpu0_crit: cpu_crit {
->  					temperature = <110000>;
->  					hysteresis = <1000>;
->  					type = "critical";
->  				};
->  			};
-> +
-> +			cooling-maps {
-> +				map0 {
-> +					trip = <&cpu0_alert0>;
-> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT 1>,
-> +							 <&CPU1 THERMAL_NO_LIMIT 1>,
-> +							 <&CPU2 THERMAL_NO_LIMIT 1>,
-> +							 <&CPU3 THERMAL_NO_LIMIT 1>;
-> +				};
+Jayant Shekhar (3):
+  drm/msm/dpu: clean up references of DPU custom bus scaling
+  drm/msm/dpu: Integrate interconnect API in MDSS
+  dt-bindings: msm/disp: Introduce interconnect bindings for MDSS on
+    SDM845
 
-With IPA this doesn't really limit throttling to the boost
-frequency. Not sure if it has a negative impact, some other platforms
-with a thermal configuration that targets IPA only have a cooling map
-entry for the 'desired/target' temperature.
+ .../devicetree/bindings/display/msm/dpu.txt        |  10 ++
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.c      | 174 ++++++++-------------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_core_perf.h      |   4 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_crtc.c           |  13 +-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c           |  49 +++++-
+ drivers/gpu/drm/msm/disp/dpu1/dpu_power_handle.c   |  47 ++----
+ drivers/gpu/drm/msm/disp/dpu1/dpu_power_handle.h   |  68 --------
+ drivers/gpu/drm/msm/disp/dpu1/dpu_trace.h          |  22 +--
+ 8 files changed, 144 insertions(+), 243 deletions(-)
 
-Cheers
-
-Matthias
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
