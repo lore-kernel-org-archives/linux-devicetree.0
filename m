@@ -1,116 +1,104 @@
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 10/10] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
-Date: Tue, 22 Jan 2019 17:10:22 -0800
-Message-ID: <20190123011022.GJ31919@minitux>
-References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
- <20190122055112.30943-11-bjorn.andersson@linaro.org>
- <CAD=FV=XuA0Sm0fXfaHtib7+rji1s3s_SmjHc6d_DbEQ1LROq+A@mail.gmail.com>
+From: Paul Burton <paul.burton@mips.com>
+Subject: Re: [PATCH v1 00/11] MIPS: ath79: move towards proper OF support
+Date: Wed, 23 Jan 2019 01:33:53 +0000
+Message-ID: <CY4PR2201MB1272251B8C9F4235284FFB4AC1990@CY4PR2201MB1272.namprd22.prod.outlook.com>
+References: <20190111142240.10908-1-o.rempel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <CAD=FV=XuA0Sm0fXfaHtib7+rji1s3s_SmjHc6d_DbEQ1LROq+A@mail.gmail.com>
+In-Reply-To: <20190111142240.10908-1-o.rempel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Doug Anderson <dianders@chromium.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
+Cc: Paul Burton <pburton@wavecomp.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 22 Jan 16:28 PST 2019, Doug Anderson wrote:
+Hello,
 
-> Hi,
-> 
-> On Mon, Jan 21, 2019 at 9:52 PM Bjorn Andersson
-> <bjorn.andersson@linaro.org> wrote:
-> >
-> > From: Sibi Sankar <sibis@codeaurora.org>
-> >
-> > This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
-> >
-> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
-> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
-> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> > ---
-> >
-> > Changes since v2:
-> > - Picked up Sibi's patch
-> > - Fixed reg to work with address/size-cells as 2
-> >
-> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 58 ++++++++++++++++++++++++++++
-> >  1 file changed, 58 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > index 5cc2615461da..78df5f1bce2d 100644
-> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> > @@ -1617,6 +1617,64 @@
-> >                         clock-names = "xo";
-> >                 };
-> >
-> > +               mss_pil: remoteproc@4080000 {
-> > +                       compatible = "qcom,sdm845-mss-pil";
-> > +                       reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
-> > +                       reg-names = "qdsp6", "rmb";
-> > +
-> > +                       interrupts-extended =
-> > +                               <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
-> > +                               <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
-> > +                               <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
-> > +                               <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
-> > +                               <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
-> > +                               <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
-> > +                       interrupt-names = "wdog", "fatal", "ready",
-> > +                                         "handover", "stop-ack",
-> > +                                         "shutdown-ack";
-> > +
-> > +                       clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
-> > +                                <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
-> > +                                <&gcc GCC_BOOT_ROM_AHB_CLK>,
-> > +                                <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
-> > +                                <&gcc GCC_MSS_SNOC_AXI_CLK>,
-> > +                                <&gcc GCC_MSS_MFAB_AXIS_CLK>,
-> > +                                <&gcc GCC_PRNG_AHB_CLK>,
-> > +                                <&rpmhcc RPMH_CXO_CLK>;
-> > +                       clock-names = "iface", "bus", "mem", "gpll0_mss",
-> > +                                     "snoc_axi", "mnoc_axi", "prng", "xo";
-> > +
-> > +                       qcom,smem-states = <&modem_smp2p_out 0>;
-> > +                       qcom,smem-state-names = "stop";
-> > +
-> > +                       resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
-> > +                                <&pdc_reset PDC_MODEM_SYNC_RESET>;
-> > +                       reset-names = "mss_restart", "pdc_reset";
-> > +
-> > +                       qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
-> > +
-> > +                       power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
-> > +                                       <&rpmhpd SDM845_CX>,
-> > +                                       <&rpmhpd SDM845_MX>,
-> > +                                       <&rpmhpd SDM845_MSS>;
-> > +                       power-domain-names = "load_state", "cx", "mx", "mss";
-> > +
-> > +                       mba {
-> > +                               memory-region = <&mba_region>;
-> > +                       };
-> > +
-> > +                       mpss {
-> > +                               memory-region = <&mpss_region>;
-> > +                       };
-> > +
-> > +                       glink-edge {
-> > +                               interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
-> > +                               label = "modem";
-> > +                               qcom,remote-pid = <1>;
-> > +                               mboxes = <&apss_shared 12>;
-> > +                       };
-> > +               };
-> > +
-> >                 sdhc_2: sdhci@8804000 {
-> 
-> Can you please sort by unit address now that you have a device tree
-> that has more stuff?
-> 
+Oleksij Rempel wrote:
+> This patches are take from OpenWRT, rebased and tested with kernel
+> v5.0-rt1 on DPTechnics DPT-Module (Atheros AR9331) by me.
+>=20
+> Since one dt-bindings header is touched, I added DT maintainers to the
+> TO/CC.
+>=20
+> Felix Fietkau (6):
+> MIPS: ath79: add helpers for setting clocks and expose the ref clock
+> MIPS: ath79: move legacy "wdt" and "uart" clock aliases out of soc
+> init
+> MIPS: ath79: pass PLL base to clock init functions
+> MIPS: ath79: make specifying the reference clock in DT optional
+> MIPS: ath79: support setting up clock via DT on all SoC types
+> MIPS: ath79: export switch MDIO reference clock
+>=20
+> John Crispin (5):
+> MIPS: ath79: drop legacy IRQ code
+> MIPS: ath79: drop machfiles
+> MIPS: ath79: drop legacy pci code
+> MIPS: ath79: drop platform device registration code
+> MIPS: ath79: drop !OF clock code
+>=20
+> arch/mips/Kconfig                        |   1 -
+> arch/mips/ath79/Kconfig                  |  73 -----
+> arch/mips/ath79/Makefile                 |  23 +-
+> arch/mips/ath79/clock.c                  | 342 ++++++++++-------------
+> arch/mips/ath79/common.h                 |   5 -
+> arch/mips/ath79/dev-common.c             | 159 -----------
+> arch/mips/ath79/dev-common.h             |  18 --
+> arch/mips/ath79/dev-gpio-buttons.c       |  56 ----
+> arch/mips/ath79/dev-gpio-buttons.h       |  23 --
+> arch/mips/ath79/dev-leds-gpio.c          |  54 ----
+> arch/mips/ath79/dev-leds-gpio.h          |  21 --
+> arch/mips/ath79/dev-spi.c                |  38 ---
+> arch/mips/ath79/dev-spi.h                |  22 --
+> arch/mips/ath79/dev-usb.c                | 242 ----------------
+> arch/mips/ath79/dev-usb.h                |  17 --
+> arch/mips/ath79/dev-wmac.c               | 155 ----------
+> arch/mips/ath79/dev-wmac.h               |  17 --
+> arch/mips/ath79/irq.c                    | 169 -----------
+> arch/mips/ath79/mach-ap121.c             |  92 ------
+> arch/mips/ath79/mach-ap136.c             | 156 -----------
+> arch/mips/ath79/mach-ap81.c              | 100 -------
+> arch/mips/ath79/mach-db120.c             | 136 ---------
+> arch/mips/ath79/mach-pb44.c              | 128 ---------
+> arch/mips/ath79/mach-ubnt-xm.c           | 126 ---------
+> arch/mips/ath79/machtypes.h              |  28 --
+> arch/mips/ath79/pci.c                    | 273 ------------------
+> arch/mips/ath79/pci.h                    |  35 ---
+> arch/mips/ath79/setup.c                  |  78 +-----
+> arch/mips/include/asm/mach-ath79/ath79.h |   4 -
+> arch/mips/pci/Makefile                   |   1 +
+> arch/mips/pci/fixup-ath79.c              |  21 ++
+> include/dt-bindings/clock/ath79-clk.h    |   4 +-
+> 32 files changed, 185 insertions(+), 2432 deletions(-)
+> delete mode 100644 arch/mips/ath79/dev-common.c
+> delete mode 100644 arch/mips/ath79/dev-common.h
+> delete mode 100644 arch/mips/ath79/dev-gpio-buttons.c
+> delete mode 100644 arch/mips/ath79/dev-gpio-buttons.h
+> delete mode 100644 arch/mips/ath79/dev-leds-gpio.c
+> delete mode 100644 arch/mips/ath79/dev-leds-gpio.h
+> delete mode 100644 arch/mips/ath79/dev-spi.c
+> delete mode 100644 arch/mips/ath79/dev-spi.h
+> delete mode 100644 arch/mips/ath79/dev-usb.c
+> delete mode 100644 arch/mips/ath79/dev-usb.h
+> delete mode 100644 arch/mips/ath79/dev-wmac.c
+> delete mode 100644 arch/mips/ath79/dev-wmac.h
+> delete mode 100644 arch/mips/ath79/irq.c
+> delete mode 100644 arch/mips/ath79/mach-ap121.c
+> delete mode 100644 arch/mips/ath79/mach-ap136.c
+> delete mode 100644 arch/mips/ath79/mach-ap81.c
+> delete mode 100644 arch/mips/ath79/mach-db120.c
+> delete mode 100644 arch/mips/ath79/mach-pb44.c
+> delete mode 100644 arch/mips/ath79/mach-ubnt-xm.c
+> delete mode 100644 arch/mips/ath79/machtypes.h
+> delete mode 100644 arch/mips/ath79/pci.c
+> delete mode 100644 arch/mips/ath79/pci.h
+> create mode 100644 arch/mips/pci/fixup-ath79.c
 
-Of course, sorry for missing that.
+Series applied to mips-next.
 
-Regards,
-Bjorn
+Thanks,
+    Paul
+
+[ This message was auto-generated; if you believe anything is incorrect
+  then please email paul.burton@mips.com to report it. ]
