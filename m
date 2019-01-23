@@ -1,7 +1,7 @@
 From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v10 12/13] media: video-mux: add bayer formats
-Date: Wed, 23 Jan 2019 10:52:21 +0000
-Message-ID: <20190123105222.2378-13-rui.silva@linaro.org>
+Subject: [PATCH v10 07/13] ARM: dts: imx7s: add multiplexer controls
+Date: Wed, 23 Jan 2019 10:52:16 +0000
+Message-ID: <20190123105222.2378-8-rui.silva@linaro.org>
 References: <20190123105222.2378-1-rui.silva@linaro.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,43 +21,36 @@ To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans
 Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add non vendor bayer formats to the  allowed format array.
+The IOMUXC General Purpose Register has bitfield to control video bus
+multiplexer to control the CSI input between the MIPI-CSI2 and parallel
+interface. Add that register and mask.
 
 Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 ---
- drivers/media/platform/video-mux.c | 20 ++++++++++++++++++++
- 1 file changed, 20 insertions(+)
+ arch/arm/boot/dts/imx7s.dtsi | 9 ++++++++-
+ 1 file changed, 8 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/media/platform/video-mux.c b/drivers/media/platform/video-mux.c
-index c33900e3c23e..0ba30756e1e4 100644
---- a/drivers/media/platform/video-mux.c
-+++ b/drivers/media/platform/video-mux.c
-@@ -263,6 +263,26 @@ static int video_mux_set_format(struct v4l2_subdev *sd,
- 	case MEDIA_BUS_FMT_UYYVYY16_0_5X48:
- 	case MEDIA_BUS_FMT_JPEG_1X8:
- 	case MEDIA_BUS_FMT_AHSV8888_1X32:
-+	case MEDIA_BUS_FMT_SBGGR8_1X8:
-+	case MEDIA_BUS_FMT_SGBRG8_1X8:
-+	case MEDIA_BUS_FMT_SGRBG8_1X8:
-+	case MEDIA_BUS_FMT_SRGGB8_1X8:
-+	case MEDIA_BUS_FMT_SBGGR10_1X10:
-+	case MEDIA_BUS_FMT_SGBRG10_1X10:
-+	case MEDIA_BUS_FMT_SGRBG10_1X10:
-+	case MEDIA_BUS_FMT_SRGGB10_1X10:
-+	case MEDIA_BUS_FMT_SBGGR12_1X12:
-+	case MEDIA_BUS_FMT_SGBRG12_1X12:
-+	case MEDIA_BUS_FMT_SGRBG12_1X12:
-+	case MEDIA_BUS_FMT_SRGGB12_1X12:
-+	case MEDIA_BUS_FMT_SBGGR14_1X14:
-+	case MEDIA_BUS_FMT_SGBRG14_1X14:
-+	case MEDIA_BUS_FMT_SGRBG14_1X14:
-+	case MEDIA_BUS_FMT_SRGGB14_1X14:
-+	case MEDIA_BUS_FMT_SBGGR16_1X16:
-+	case MEDIA_BUS_FMT_SGBRG16_1X16:
-+	case MEDIA_BUS_FMT_SGRBG16_1X16:
-+	case MEDIA_BUS_FMT_SRGGB16_1X16:
- 		break;
- 	default:
- 		sdformat->format.code = MEDIA_BUS_FMT_Y8_1X8;
+diff --git a/arch/arm/boot/dts/imx7s.dtsi b/arch/arm/boot/dts/imx7s.dtsi
+index 9a680d3d6424..792efcd2caa1 100644
+--- a/arch/arm/boot/dts/imx7s.dtsi
++++ b/arch/arm/boot/dts/imx7s.dtsi
+@@ -497,8 +497,15 @@
+ 
+ 			gpr: iomuxc-gpr@30340000 {
+ 				compatible = "fsl,imx7d-iomuxc-gpr",
+-					"fsl,imx6q-iomuxc-gpr", "syscon";
++					"fsl,imx6q-iomuxc-gpr", "syscon",
++					"simple-mfd";
+ 				reg = <0x30340000 0x10000>;
++
++				mux: mux-controller {
++					compatible = "mmio-mux";
++					#mux-control-cells = <0>;
++					mux-reg-masks = <0x14 0x00000010>;
++				};
+ 			};
+ 
+ 			ocotp: ocotp-ctrl@30350000 {
 -- 
 2.20.1
