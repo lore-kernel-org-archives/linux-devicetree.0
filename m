@@ -1,60 +1,48 @@
-From: Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH] arm64: dts: armada-3720-espressobin: Configure RGMII and SMI pins
-Date: Wed, 23 Jan 2019 20:39:46 +0100
-Message-ID: <20190123193946.13594-1-repk@triplefau.lt>
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Subject: [PATCH V11 2/4] arm64: dts: tegra: Add CQE Support for SDMMC4
+Date: Wed, 23 Jan 2019 11:30:52 -0800
+Message-ID: <1548271854-1765-2-git-send-email-skomatineni@nvidia.com>
+References: <1548271854-1765-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1548271854-1765-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory Clement <gregory.clement@bootlin.com>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
+To: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, thierry.reding@gmail.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org
+Cc: anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org, Sowjanya Komatineni <skomatineni@nvidia.com>
 List-Id: devicetree@vger.kernel.org
 
-In order to be able to communicate with the 88e6341 switch some pins
-have to be repurposed as RGMII and SMI pins.
+Add CQE Support for Tegra186 and Tegra194 SDMMC4 controller
 
-This fixes ethernet support on system booted via a bootloader that
-has not already configured those pins (e.g. mainline u-boot, or vendor
-u-boot compiled without ethernet support).
-
-Signed-off-by: Remi Pommarel <repk@triplefau.lt>
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 ---
-This should be applied along with pinctrl fixes from
-https://lkml.org/lkml/2018/12/21/507 which have been merged in next branch of
-linux-pinctrl tree.
----
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 2 ++
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi            | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/arm64/boot/dts/nvidia/tegra186.dtsi | 1 +
+ arch/arm64/boot/dts/nvidia/tegra194.dtsi | 1 +
+ 2 files changed, 2 insertions(+)
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-index 846003bb480c..b60897edc885 100644
---- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -196,6 +196,8 @@
- };
+diff --git a/arch/arm64/boot/dts/nvidia/tegra186.dtsi b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+index 22815db4a3ed..3dfdc4701934 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra186.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra186.dtsi
+@@ -319,6 +319,7 @@
+ 		nvidia,default-trim = <0x9>;
+ 		nvidia,dqs-trim = <63>;
+ 		mmc-hs400-1_8v;
++		supports-cqe;
+ 		status = "disabled";
+ 	};
  
- &eth0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>, <&smi_pins>;
- 	phy-mode = "rgmii-id";
- 	status = "okay";
+diff --git a/arch/arm64/boot/dts/nvidia/tegra194.dtsi b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+index 6dfa1ca0b851..9ce1c91d4596 100644
+--- a/arch/arm64/boot/dts/nvidia/tegra194.dtsi
++++ b/arch/arm64/boot/dts/nvidia/tegra194.dtsi
+@@ -325,6 +325,7 @@
+ 			clock-names = "sdhci";
+ 			resets = <&bpmp TEGRA194_RESET_SDMMC4>;
+ 			reset-names = "sdhci";
++			supports-cqe;
+ 			status = "disabled";
+ 		};
  
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index e05594ea15fb..f61538910901 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -271,6 +271,11 @@
- 					function = "mii";
- 				};
- 
-+				smi_pins: smi-pins {
-+					groups = "smi";
-+					function = "smi";
-+				};
-+
- 				sdio_pins: sdio-pins {
- 					groups = "sdio_sb";
- 					function = "sdio";
 -- 
-2.20.1
+2.7.4
