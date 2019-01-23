@@ -1,63 +1,42 @@
-Return-Path: <SRS0=xJLh=P5=davidjohnsummers.uk=beagleboard@kernel.org>
-From: David Summers <beagleboard@davidjohnsummers.uk>
-Subject: [PATCH v4 2/2] dt-bindings: Create the file for Realtek Bluetooth serial devices
-Date: Mon, 21 Jan 2019 20:39:28 +0000
-Message-Id: <20190121203928.32723-2-beagleboard@davidjohnsummers.uk>
-In-Reply-To: <20190121203928.32723-1-beagleboard@davidjohnsummers.uk>
-References: <20190121203928.32723-1-beagleboard@davidjohnsummers.uk>
+Return-Path: <SRS0=xdWx=P7=alien8.de=bp@kernel.org>
+Date: Wed, 23 Jan 2019 13:22:37 +0100
+From: Borislav Petkov <bp@alien8.de>
+Subject: Re: [PATCHv2 0/4] Stratix10 EDAC Improvements
+Message-ID: <20190123122237.GC3227@zn.tnic>
+References: <1548179287-21760-1-git-send-email-thor.thayer@linux.intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-To: robh+dt@kernel.org, mark.rutland@arm.com, marcel@holtmann.org, johan.hedberg@gmail.com
-Cc: David Summers <beagleboard@davidjohnsummers.uk>, linux-bluetooth@vger.kernel.org, devicetree@vger.kernel.org
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <1548179287-21760-1-git-send-email-thor.thayer@linux.intel.com>
+To: thor.thayer@linux.intel.com
+Cc: dinguyen@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, mchehab@kernel.org, james.morse@arm.com, devicetree@vger.kernel.org, linux-edac@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-With the changes requested by Marcel Holtmann and Rob Herring.
+On Tue, Jan 22, 2019 at 11:48:03AM -0600, thor.thayer@linux.intel.com wrote:
+> From: Thor Thayer <thor.thayer@linux.intel.com>
+> 
+> This patch series includes a fix, an improvement and the
+> addition of OCRAM EDAC for Stratix10 SOCFPGA.
+> 
+> V2: Ensure the Fixes: line is on one line.
+> 
+> Thor Thayer (4):
+>   EDAC, altera: Fix S10 persistent register offset
+>   EDAC, altera: Less Intrusive Error Injection
+>   EDAC, altera: Add Stratix10 OCRAM ECC support
+>   arm64: dts: stratix10: Add OCRAM EDAC node
+> 
+>  arch/arm64/boot/dts/altera/socfpga_stratix10.dtsi |  7 +++
+>  drivers/edac/altera_edac.c                        | 52 ++++++++++++++---------
+>  drivers/edac/altera_edac.h                        |  6 +--
+>  3 files changed, 43 insertions(+), 22 deletions(-)
 
-Capitalisation as requested.
+Looks ok, I'll take them when I get an ACK for the DT change in patch 4.
 
-Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
----
- .../bindings/net/realtek-bluetooth-serial.txt | 32 +++++++++++++++++++
- 1 file changed, 32 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt
+Patch 1 I'll send to Linus now as the broken commit is in 4.20 too.
 
-diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt b/Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt
-new file mode 100644
-index 000000000000..2eddde1a0cf1
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt
-@@ -0,0 +1,32 @@
-+Realtek Bluetooth devices connected via a UART.
-+These devices typically also have a WI-FI connected via SDIO - the
-+compatible described here is used just for referencing the Bluetooth.
-+
-+- compatible: should be "realtek,<name>-bt"
-+  except for "realtek,trl8761atv" - which only has a serial Bluetooth connection
-+       "realtek,rtl8723as-bt"
-+       "realtek,rtl8723bs-bt"
-+       "realtek,rtl8723ds-bt"
-+       "realtek,rtl8761atv"
-+       "realtek,rtl8821as-bt"
-+       "realtek,rtl8821cs-bt"
-+       "realtek,rtl8822bs-bt"
-+
-+Example:
-+
-+&uart0 {
-+	status = "okay";
-+	pinctrl-0 = <&uart0_xfer>, <&uart0_cts>;
-+	bluetooth {
-+		compatible = "realtek,rtl8723bs-bt";
-+		uart_rts_gpios = <&gpio4 19 GPIO_ACTIVE_LOW>;
-+		pinctrl-names = "default","rts_gpio";
-+		pinctrl-0 = <&uart0_rts>;
-+		pinctrl-1 = <&uart0_gpios>;
-+		BT,reset_gpio    = <&gpio4 29 GPIO_ACTIVE_HIGH>;
-+		BT,wake_gpio     = <&gpio4 26 GPIO_ACTIVE_HIGH>;
-+		BT,wake_host_irq = <&gpio4 31 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+this ensures that the Bluetooth device is tied to the correct uart.
 -- 
-beagleboard@davidjohnsummers.uk
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
