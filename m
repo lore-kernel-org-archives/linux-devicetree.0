@@ -1,53 +1,57 @@
-Return-Path: <SRS0=HE6G=P6=partner.samsung.com=k.konieczny@kernel.org>
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v5 2/5] clk: samsung: exynos5433: fix name typo in sssx
-Date: Tue, 22 Jan 2019 10:02:29 +0100
-Message-Id: <20190122090232.29194-3-k.konieczny@partner.samsung.com>
-In-Reply-To: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+Return-Path: <vkoul@kernel.org>
+From: Vinod Koul <vkoul@kernel.org>
+Subject: [PATCH 1/3] arm64: dts: qcom: qcs404: Add Ethernet node
+Date: Wed, 23 Jan 2019 23:18:37 +0530
+Message-Id: <20190123174839.5321-1-vkoul@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset="utf-8"
-References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
-	<CGME20190122090250eucas1p246a6a567d77d075716fc9f257f72a26e@eucas1p2.samsung.com>
-To: k.konieczny@partner.samsung.com, linux-samsung-soc@vger.kernel.org
-Cc: linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, Rob Herring <robh@kernel.org>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, Bjorn Andersson <bjorn.andersson@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Fix typo in sssx name, there should be three letters 's'.
+Add the ethernet node found in QCS404 platform.
 
-Acked-by: Rob Herring <robh@kernel.org>
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Vinod Koul <vkoul@kernel.org>
 ---
- drivers/clk/samsung/clk-exynos5433.c   | 2 +-
- include/dt-bindings/clock/exynos5433.h | 2 +-
- 2 files changed, 2 insertions(+), 2 deletions(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 24 ++++++++++++++++++++++++
+ 1 file changed, 24 insertions(+)
 
-diff --git a/drivers/clk/samsung/clk-exynos5433.c b/drivers/clk/samsung/clk-exynos5433.c
-index ea47f49abc7f..24c3360db65b 100644
---- a/drivers/clk/samsung/clk-exynos5433.c
-+++ b/drivers/clk/samsung/clk-exynos5433.c
-@@ -559,7 +559,7 @@ static const struct samsung_gate_clock top_gate_clks[] __initconst = {
- 	/* ENABLE_ACLK_TOP */
- 	GATE(CLK_ACLK_G3D_400, "aclk_g3d_400", "div_aclk_g3d_400",
- 			ENABLE_ACLK_TOP, 30, CLK_IS_CRITICAL, 0),
--	GATE(CLK_ACLK_IMEM_SSX_266, "aclk_imem_ssx_266",
-+	GATE(CLK_ACLK_IMEM_SSSX_266, "aclk_imem_sssx_266",
- 			"div_aclk_imem_sssx_266", ENABLE_ACLK_TOP,
- 			29, CLK_IGNORE_UNUSED, 0),
- 	GATE(CLK_ACLK_BUS0_400, "aclk_bus0_400", "div_aclk_bus0_400",
-diff --git a/include/dt-bindings/clock/exynos5433.h b/include/dt-bindings/clock/exynos5433.h
-index 98bd85ce1e45..87bb2b017143 100644
---- a/include/dt-bindings/clock/exynos5433.h
-+++ b/include/dt-bindings/clock/exynos5433.h
-@@ -156,7 +156,7 @@
- #define CLK_ACLK_G2D_266		220
- #define CLK_ACLK_G2D_400		221
- #define CLK_ACLK_G3D_400		222
--#define CLK_ACLK_IMEM_SSX_266		223
-+#define CLK_ACLK_IMEM_SSSX_266		223
- #define CLK_ACLK_BUS0_400		224
- #define CLK_ACLK_BUS1_400		225
- #define CLK_ACLK_IMEM_200		226
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index f3d77e7ee0d2..4696472bdc4e 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -346,6 +346,30 @@
+ 			status = "okay";
+ 		};
+ 
++		ethernet: ethernet@7a80000 {
++			compatible = "qcom,qcs404-ethqos";
++			reg = <0x07a80000 0x10000>,
++				<0x07a96000 0x100>;
++			reg-names = "stmmaceth", "rgmii";
++			clock-names = "stmmaceth", "pclk", "ptp_ref", "rgmii";
++			clocks = <&gcc GCC_ETH_AXI_CLK>,
++				<&gcc GCC_ETH_SLAVE_AHB_CLK>,
++				<&gcc GCC_ETH_PTP_CLK>,
++				<&gcc GCC_ETH_RGMII_CLK>;
++			interrupts = <GIC_SPI 56 IRQ_TYPE_LEVEL_HIGH>,
++					<GIC_SPI 55 IRQ_TYPE_LEVEL_HIGH>;
++			interrupt-names = "macirq", "eth_lpi";
++
++			snps,txpbl = <8>;
++			snps,rxpbl = <2>;
++			snps,aal;
++			snps,tso;
++			rx-fifo-depth=<4096>;
++			tx-fifo-depth=<4096>;
++
++			status = "disabled";
++		};
++
+ 		wifi: wifi@a000000 {
+ 			compatible = "qcom,wcn3990-wifi";
+ 			reg = <0xa000000 0x800000>;
 -- 
-2.20.0
+2.20.1
