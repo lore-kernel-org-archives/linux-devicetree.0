@@ -1,59 +1,73 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH V2] ARM: dts: imx: Add support for Logic PD i.MX6QD EVM
-Date: Wed, 23 Jan 2019 10:05:07 -0200
-Message-ID: <CAOMZO5DvotRNhzeDEhz_jPVBmme8ozJ80KhjLH7mBGBd-K3BFg@mail.gmail.com>
-References: <20190122164958.30666-1-aford173@gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: [RFC v7 2/5] dt-bindings: pstore-block: new support for blkoops
+Date: Wed, 23 Jan 2019 20:05:13 +0800
+Message-ID: <1548245116-6360-3-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122164958.30666-1-aford173@gmail.com>
+In-Reply-To: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Adam Ford <aford173@gmail.com>
-Cc: "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, linux-kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Pengutronix Kernel Team <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>
+To: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liaoweixiong <liaoweixiong@allwinnertech.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Adam,
+Create DT binding document for blkoops.
 
-On Tue, Jan 22, 2019 at 2:50 PM Adam Ford <aford173@gmail.com> wrote:
+Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+---
+ .../devicetree/bindings/pstore-block/blkoops.txt   | 32 ++++++++++++++++++++++
+ MAINTAINERS                                        |  1 +
+ 2 files changed, 33 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
 
-> +       tmp102@4a {
-
-temperature-sensor@4a
-
-> +               compatible = "ti,tmp102";
-> +               reg = <0x4a>;
-> +               pinctrl-names = "default";
-> +               pinctrl-0 = <&pinctrl_tempsense>;
-> +               interrupt-parent = <&gpio6>;
-> +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-> +               #thermal-sensor-cells = <1>;
-> +       };
-> +
-> +       tmp102@49 {
-
-temperature-sensor@49
-
-> +               compatible = "ti,tmp102";
-> +               reg = <0x49>;
-> +               interrupt-parent = <&gpio6>;
-> +               interrupts = <15 IRQ_TYPE_LEVEL_LOW>;
-> +               #thermal-sensor-cells = <1>;
-> +       };
-> +
-> +       at24@51 {
-
-eeprom@51
-
-> +               compatible = "atmel,24c64";
-> +               pagesize = <32>;
-> +               read-only;      /* Manufacturing EEPROM programmed at factory */
-> +               reg = <0x51>;
-> +       };
-> +
-> +       at24@52 {
-
-eeprom@52
-
-With these changes you can add:
-
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+diff --git a/Documentation/devicetree/bindings/pstore-block/blkoops.txt b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+new file mode 100644
+index 0000000..a25835b
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pstore-block/blkoops.txt
+@@ -0,0 +1,32 @@
++Blkoops oops logger
++===================
++
++Blkoops provides a block partition for oops, excluding panics now, so they can
++be recovered after a reboot.
++
++Any space of block partition will be used for a circular buffer of oops records.
++These records have a configurable size, with a size of 0 indicating that they
++should be disabled.
++
++"partition-size" and at least one of "dmesg-size" or "pmsg-size" must be set
++non-zero, but are otherwise optional as listed below.
++
++Blkoops will take value from Kconfig if device tree do not set, but settings
++from module parameters can also overwrite them.
++
++Required properties:
++
++- compatible: must be "blkoops".
++
++- partition-size: size in kbytes, must be a multiple of 4.
++
++Optional properties:
++
++- partition-path: strings must begin with "/dev", tell blkoops which partition
++  it can used. If it is not set, blkoops will drop all data when reboot.
++
++- dmesg-size: maximum size in kbytes of each dump done on oops, which must be a
++  multiple of 4.
++
++- pmsg-size: maximum size in kbytes for userspace messages, which must be a
++  multiple of 4.
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 0abecc5..91c70df 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12055,6 +12055,7 @@ F:	drivers/firmware/efi/efi-pstore.c
+ F:	drivers/acpi/apei/erst.c
+ F:	Documentation/admin-guide/ramoops.rst
+ F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
++F:	Documentation/devicetree/bindings/pstore-block/
+ K:	\b(pstore|ramoops)
+ 
+ PTP HARDWARE CLOCK SUPPORT
+-- 
+1.9.1
