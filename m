@@ -1,31 +1,34 @@
-From: Evan Green <evgreen@chromium.org>
-Subject: Re: [PATCH] dt-bindings: ufs: Fix the compatible string definition
-Date: Wed, 23 Jan 2019 14:17:17 -0800
-Message-ID: <CAE=gft74tm8+zbg3NF2v3C=0_8yG9R7bs3VvLqyea2Z=yvsawQ@mail.gmail.com>
-References: <20181012213926.253765-1-dianders@chromium.org>
- <CAFp+6iFy8V34cs6pEOie_tBX5wJqM7teUnH_XLLZ7cioPrX_hA@mail.gmail.com>
- <CAD=FV=WYM5OOigy+81cVzPtAJXhvrhB1znr9zHzMf3q5iFOtFw@mail.gmail.com>
- <CAFp+6iGxvDoptnjM18ggnHqX6MV0+HFqsnCMi61b8gquBxaYmw@mail.gmail.com>
- <CAD=FV=XWC8q4Cx4GF0yXCgj2APwd5ZfccVBC_ORwnJg0vRsS7A@mail.gmail.com>
- <1ce7b24c-b154-4ce6-2b4c-9eb0fd0d71cb@codeaurora.org> <CAD=FV=XSjfRSHP6B6GtiTqrQuUZaoA=hZNW_L1=71MU9fEXpDQ@mail.gmail.com>
- <20cf6f02-ff3c-0904-2edc-a1b72c135866@codeaurora.org>
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: Re: [PATCH reset-next 0/2] reset: brcmstb: Misc fixes
+Date: Wed, 23 Jan 2019 14:56:57 -0800
+Message-ID: <759cd990-75a3-d7cc-94a6-c62714c85f0e@gmail.com>
+References: <20190123003345.13750-1-f.fainelli@gmail.com>
+ <1548236510.3904.3.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20cf6f02-ff3c-0904-2edc-a1b72c135866@codeaurora.org>
+In-Reply-To: <1548236510.3904.3.camel@pengutronix.de>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Vivek Gautam <vivek.gautam@codeaurora.org>
-Cc: Doug Anderson <dianders@chromium.org>, Rob Herring <robh+dt@kernel.org>, "Martin K. Petersen" <martin.petersen@oracle.com>, Can Guo <cang@codeaurora.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, sayali <sayalil@codeaurora.org>, Asutosh Das <asutoshd@codeaurora.org>, devicetree@vger.kernel.org, liwei213@huawei.com, LKML <linux-kernel@vger.kernel.org>, Mathieu Malaterre <malat@debian.org>, Mark Rutland <mark.rutland@arm.com>
+To: Philipp Zabel <p.zabel@pengutronix.de>, Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, rdunlap@infradead.org, linux-next@vger.kernel.org, sfr@canb.auug.org.au, paul.gortmaker@windriver.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Oct 18, 2018 at 12:52 AM Vivek Gautam
-<vivek.gautam@codeaurora.org> wrote:
->
-...
->
-> Yes, this patch is good to go.
->
+On 1/23/19 1:41 AM, Philipp Zabel wrote:
+> On Tue, 2019-01-22 at 16:33 -0800, Florian Fainelli wrote:
+>> Hi Philipp,
+>>
+>> These two patches fix some recent issues brought up by Paul and Randy,
+>> feel free to squash into c196cdc7659d ("reset: Add Broadcom STB SW_INIT
+>> reset controller driver") since this is only in reset/next and
+>> linux-next so far.
+> 
+> If you want this squashed, feel free to submit an updated version of the
+> original patches and I'll replace them. That way I don't have to decide
+> how to stitch (or drop) the commit messages.
 
-I don't think this patch ever got picked up, despite being reviewed
-and good to go. Can it be applied somewhere?
--Evan
+Thanks, I sent you a replacement version for the second patch only, hope
+that is alright.
+-- 
+Florian
