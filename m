@@ -1,66 +1,135 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add interconnect binding for
- GENI QUP
-Date: Wed, 23 Jan 2019 20:41:20 +0200
-Message-ID: <5ca1ce61-c458-5550-f89d-ab361f1ec456@linaro.org>
-References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
- <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
- <20190123170758.GB512@tuxbook-pro>
+From: Mathieu Poirier <mathieu.poirier@linaro.org>
+Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Wed, 23 Jan 2019 12:14:35 -0700
+Message-ID: <CANLsYkxLJS-N0V4eOHM5rfe8MXMZHQApZFsDQns+DAS7xhGCoQ@mail.gmail.com>
+References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <1bd39862-0725-70ce-6535-fdb59569f683@arm.com> <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
+ <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com> <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
+ <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com> <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123170758.GB512@tuxbook-pro>
-Content-Language: en-US
+In-Reply-To: <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>, Alok Chauhan <alokc@codeaurora.org>
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, dianders@chromium.org, swboyd@chromium.org
+To: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, John Horley <john.horley@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+On Wed, 23 Jan 2019 at 05:12, Sai Prakash Ranjan
+<saiprakash.ranjan@codeaurora.org> wrote:
+>
+> Hi Suzuki,
+>
+> On 1/23/2019 1:42 AM, Suzuki K Poulose wrote:
+> > Hi Sai,
+> >
+> > On 01/22/2019 04:48 PM, Sai Prakash Ranjan wrote:
+> >> Hi Suzuki,
+> >>
+> [..]
+> >>
+> >> SDM845 has 4 Kryo 385 Gold (ARM A75) + 4 Kryo 385 Silver (ARM A55),
+> >> so the PID values should be same for 4 ETMs atleast. But here one
+> >> pid value(001bb803) is same for 6 ETMs and other one for 2
+> >> ETMs(001bb802) which seems odd and hence the doubt if these pids
+> >> are even valid ones.
+> >
+> > Have you checked other SoCs with A55 for the ETM PID ? The drivers
+> > usually only care about PID0[7-0], PID1[7-0], PID2[3-0] and ignores
+> > the other fields that may change over revisions of the core. So, in your
+> > case the ETM ID could be treated as 0xbb802 and 0xbb803.
+> >
+>
+> Very sorry to have mislead you here. I checked again today on SDM845 and
+> as you said 4 ETMs based on A75 has 0xbb803 and other 4 ETMs based on
+> A55 has 0Xbb803. I wrongly mentioned it as 6 and 2.
+>
+> [    6.688809] resname=etm@7040000 pid = 0x1bb803
+> [    6.694957]
+> [    6.694957] resname=etm@7140000 pid = 0x1bb803
+> [    6.701135]
+> [    6.701135] resname=etm@7240000 pid = 0x1bb803
+> [    6.707256]
+> [    6.707256] resname=etm@7340000 pid = 0x1bb803
+> [    6.713454]
+> [    6.713454] resname=etm@7440000 pid = 0x1bb802
+> [    6.719621]
+> [    6.719621] resname=etm@7540000 pid = 0x1bb802
+> [    6.725814]
+> [    6.725814] resname=etm@7640000 pid = 0x1bb802
+> [    6.731971]
+> [    6.731971] resname=etm@7740000 pid = 0x1bb802
+>
 
-On 1/23/19 19:07, Bjorn Andersson wrote:
-> On Mon 21 Jan 22:33 PST 2019, Alok Chauhan wrote:
-> 
->> Add documentation for the interconnect and interconnect-names bindings
->> for the GENI QUP as detailed by bindings/interconnect/interconnect.txt.
->>
->> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
->> ---
->>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 10 ++++++++++
->>  1 file changed, 10 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->> index dab7ca9..44d7e02 100644
->> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
->> @@ -17,6 +17,12 @@ Required properties if child node exists:
->>  - #address-cells: 	Must be <1> for Serial Engine Address
->>  - #size-cells: 		Must be <1> for Serial Engine Address Size
->>  - ranges: 		Must be present
->> +- interconnects:	phandle to a interconnect provider. Please refer
->> +			../interconnect/interconnect.txt for details.
->> +			Must be 2 paths corresponding to 2 AXI ports.
->> +- interconnect-names:	Port names to differentiate between the
-> 
-> s/Port names/Path names/
-> 
->> +			2 interconnect paths defined with interconnect
->> +			specifier.
-> 
-> These two names are significant in that they must match what the driver
-> expects, hence you must actually specify them here.
-> 
-> And as the scope of these strings are local to the QUP node you can omit
-> "qup" from them, so make them "memory" and "config" (or perhaps iface,
-> to match the clock naming?).
+Ok, so that makes sense.
 
-Actually there was a discussion in the past where we decided include
-both the src and dst endpoint names in this property so that there is
-some symmetry with the "interconnects" property. It would be nice to be
-consistent across different drivers at least for now.
-If we want to denote the master and slave ports here, my two cents would
-be for "qup-mem" and "cpu-qup" or something similar?
+> So is it ok to add these to table as below in etm4x driver with the
+> following comment since these do not exactly match A75 and A55 PIDs
+> which you provided? Or any other way you prefer?
 
-Thanks,
-Georgi
+That depends on whether the ETMs have been modified at all, something
+Suzuki has asked to be clarified.  If ETMs have been modified then we
+need to understand how they differ from the driver's implementation.
+If the implementations are the same:
+
+>
+> @@ -1079,6 +1079,10 @@ static const struct amba_id etm4_ids[] = {
+>          ETM4x_AMBA_ID(0x000bb95a),              /* Cortex-A72 */
+>          ETM4x_AMBA_ID(0x000bb959),              /* Cortex-A73 */
+>          ETM4x_AMBA_ID(0x000bb9da),              /* Cortex-A35 */
+> +       ETM4x_AMBA_ID(0x000f0211),              /* Qualcomm Kryo */
+> +       ETM4x_AMBA_ID(0x000f0205),              /* Qualcomm Kryo */
+
+What version of the Kryo CPU?  And the above will need to be in a
+separate patch with the modifications to address the problem you
+mentionned below.
+
+> +       ETM4x_AMBA_ID(0x000bb803),              /* Qualcomm Kryo 385
+> Cortex-A75 */
+> +       ETM4x_AMBA_ID(0x000bb802),              /* Qualcomm Kryo 385
+> Cortex-A55 */
+
+Please add them in chronological order.
+
+>          {},
+>   };
+>
+> For msm8996, cpu debug module pid returned is same as ETM
+> which is causing the probe failure for cpu debug coresight module
+> as shown in below logs.
+> For this case, I tried adding these ids to cpu debug driver, but it
+> splits some errors (coresight-cpu-debug: probe of 3840000.etm failed
+> with error -16) since the ids are same. Can we override for this case
+> or there is something else we can do here?
+
+That is another problem.  See this patchset [1] from Mike Leach for a
+description of the problem and how to fix it.
+
+[1]. https://lkml.org/lkml/2018/12/7/784
+
+
+>
+> [    5.480629] resname=debug@3810000 pid = 0x102f0211
+> [    5.480920] OF: graph: no port node found in /soc/debug@3810000
+> [    5.513214] coresight-etm4x: probe of 3810000.debug failed with error -22
+> [    5.524362]
+> [    5.524362] resname=debug@3910000 pid = 0x102f0211
+> [    5.524888] OF: graph: no port node found in /soc/debug@3910000
+> [    5.537586] coresight-etm4x: probe of 3910000.debug failed with error -22
+> [    5.541481]
+> [    5.549643] resname=debug@3a10000 pid = 0x102f0205
+> [    5.580990] OF: graph: no port node found in /soc/debug@3a10000
+> [    5.586817] coresight-etm4x: probe of 3a10000.debug failed with error -22
+> [    5.592082]
+> [    5.592629] resname=debug@3b10000 pid = 0x102f0205
+> [    5.604922] OF: graph: no port node found in /soc/debug@3b10000
+> [    5.611234] coresight-etm4x: probe of 3b10000.debug failed with error -22
+>
+>
+> Thanks,
+> Sai
+>
+> --
+> QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+> of Code Aurora Forum, hosted by The Linux Foundation
