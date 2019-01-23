@@ -1,63 +1,105 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
-Date: Wed, 23 Jan 2019 10:58:21 +0000
-Message-ID: <20190123105821.GA7503@sirena.org.uk>
-References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
- <1548138816-1149-5-git-send-email-alokc@codeaurora.org>
- <20190122202924.GL7579@sirena.org.uk>
- <775cdd29a7d536772330a15a7013f251@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+From: liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: [RFC v6 0/4] pstore/block: new support logger for block devices
+Date: Wed, 23 Jan 2019 19:00:56 +0800
+Message-ID: <1548241260-4679-1-git-send-email-liaoweixiong@allwinnertech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <775cdd29a7d536772330a15a7013f251@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: alokc@codeaurora.org
-Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, linux-serial-owner@vger.kernel.org
+To: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>
+Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liaoweixiong <liaoweixiong@allwinnertech.com>
 List-Id: devicetree@vger.kernel.org
 
+Why should we need pstore_block?
+1. Most embedded intelligent equipment have no persistent ram, which
+increases costs. We perfer to cheaper solutions, like block devices.
+In fast, there is already a sample for block device logger in driver
+MTD (drivers/mtd/mtdoops.c).
+2. Do not any equipment have battery, which means that it lost all data
+on general ram if power failure. Pstore has little to do for these
+equipments.
 
---LQksG6bCIzRHxTLp
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+[PATCH v6]
+On patch 1:
+1. Fix according to email from Kees Cook, including spelling mistakes, explicit
+   overflow test, none of the zeroing etc.
+2. Do not recover data but metadata of dmesg when panic.
+3. No need to take recovery when do erase.
+4. Do not use "blkoops" for blkzone any more because "blkoops" is used for other
+   module now.(rename blkbuf to blkoops)
+On patch 2:
+1. Rename blkbuf to blkoops.
+2. Add Kconfig/device tree/module parameters settings for blkoops.
+3. Add document for device tree.
+On patch 3:
+1. Blkoops support pmsg.
+2. Fix description for new version patch.
+On patch 4:
+1. Fix description for new version patch.
 
-On Wed, Jan 23, 2019 at 12:45:30PM +0530, alokc@codeaurora.org wrote:
-> On 2019-01-23 01:59, Mark Brown wrote:
+[PATCH v5]
+On patch 1:
+1. rename pstore/rom to pstore/blk
+2. Do not allocate any memory in the write path of panic. So, use local
+array instead in function romz_recover_dmesg_meta.
+3. Add C header file "linux/fs.h" to fix implicit declaration of function
+   'filp_open','kernel_read'...
+On patch 3:
+1. If panic, do not recover pmsg but flush if it is dirty.
+2. Fix erase pmsg failed.
+On patch 4:
+1. Create a document for pstore/blk
 
-> > Still not seeing anything except this patch here in my inbox - like I
-> > said what's the story with dependencies?
+[PATCH v4]
+On patch 1:
+1. Fix always true condition '(--i >= 0) => (0-u32max >= 0)' in function
+   romz_init_zones by defining variable i to 'int' rahter than
+   'unsigned int'.
+2. To make codes more easily to read, we use macro READ_NEXT_ZONE for
+   return value of romz_dmesg_read if it need to read next zone.
+   Moveover, we assign READ_NEXT_ZONE -1024 rather than 0.
+3. Add 'FLUSH_META' to 'enum romz_flush_mode' and rename 'NOT_FLUSH' to
+   'FLUSH_NONE'
+4. Function romz_zone_write work badly with FLUSH_PART mode as badly
+   address and offset to write.
+On patch 3:
+NEW SUPPORT psmg for pstore_rom.
 
-> I've added linux-spi mailing list to all the patches sent as part of this
-> series. Not sure why you didn't get other patches. Today I've explicitly
-> added you in all the patches.
+[PATCH v3]
+On patch 1:
+Fix build as module error for undefined 'vfs_read' and 'vfs_write'
+Both of 'vfs_read' and 'vfs_write' haven't be exproted yet, so we use
+'kernel_read' and 'kernel_write' instead.
 
-You really need to ensure that things end up in people's inboxes -
-sending them to a mailing list usually means they'll go to a completely
-different folder.
+[PATCH v2]
+On patch 1:
+Fix build as module error for redefinition of 'romz_unregister' and
+'romz_register'
 
-> This change series basically enabled interconnect (as per
-> bindings/interconnect/interconnect.txt) support in GENI QUPs based drivers
-> so appropriate BW request can be put based on SE usages.
-> here is my complete change series: https://lore.kernel.org/lkml/1548069703-26595-1-git-send-email-alokc@codeaurora.org/
-> I hope I answer to your question properly.
+[PATCH v1]
+On patch 1:
+Core codes of pstore_rom, which works well on allwinner(sunxi) platform.
+On patch 2:
+A sample for pstore_rom, using general ram rather than block device.
 
-So it looks like there is a dependency on earlier patches in the series,
-that's what I needed to know.
+liaoweixiong (4):
+  pstore/blk: new support logger for block devices
+  pstore/blk: add blkoops for pstore_blk
+  pstore/blk: support pmsg for pstore block
+  Documentation: pstore/blk: create document for pstore_blk
 
---LQksG6bCIzRHxTLp
-Content-Type: application/pgp-signature; name="signature.asc"
+ Documentation/admin-guide/pstore-block.rst         |  227 ++++
+ .../devicetree/bindings/pstore-block/blkoops.txt   |   32 +
+ MAINTAINERS                                        |    4 +-
+ fs/pstore/Kconfig                                  |  128 +++
+ fs/pstore/Makefile                                 |    5 +
+ fs/pstore/blkoops.c                                |  250 +++++
+ fs/pstore/blkzone.c                                | 1163 ++++++++++++++++++++
+ include/linux/pstore_blk.h                         |   62 ++
+ 8 files changed, 1870 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/admin-guide/pstore-block.rst
+ create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
+ create mode 100644 fs/pstore/blkoops.c
+ create mode 100644 fs/pstore/blkzone.c
+ create mode 100644 include/linux/pstore_blk.h
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxISMwACgkQJNaLcl1U
-h9CoTgf+PA29xBdCek5fu2oi7M3F4k1fLvkUkXx08R30Xh2AEVPfA9BZTIBp64Jd
-6kpDFuGII2h38T7Y02pZhtZtT+36Q0YA6WD9H7AuzupmP7K0CsqOlysR06e43DwX
-8d6tloJYmZlK6isHO+iHG9ID3McrL/9EBng8OCpnIAEAgqR/Dm07L4nAx10NeU4O
-n8WzQJkhCmtvgnSt+ZvF/vVdxGUEKYVmdDsNPUyNmNmH+quhPk52qnVjjWXQIUog
-pULdWHaJADV5o+ewWyAj/67QXWHiq52k63uG80u0/Kp+lstEDfhhL4NkGsixeEpH
-g+6VqKfMx9hBGOpnbcVgX2QpBpvhxQ==
-=ssTu
------END PGP SIGNATURE-----
-
---LQksG6bCIzRHxTLp--
+-- 
+1.9.1
