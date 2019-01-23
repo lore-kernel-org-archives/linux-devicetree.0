@@ -1,47 +1,29 @@
-From: Anand Moon <linux.amoon@gmail.com>
-Subject: Re: [PATCH 1/2] ARM: dts: meson8b: odroidc1: Enable usb phy node
-Date: Wed, 23 Jan 2019 23:55:04 +0530
-Message-ID: <CANAwSgQXFWNP4NdmheyE2O25FzBk7VOwbY1h7rx4GrH9J4XiZg@mail.gmail.com>
-References: <20190113181808.5768-1-linux.amoon@gmail.com> <7hef93mi88.fsf@baylibre.com>
+From: Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: Re: [RFC v7 0/5] pstore/block: new support logger for block devices
+Date: Wed, 23 Jan 2019 20:26:38 +0200
+Message-ID: <20190123182638.GD2792@darkstar.musicnaut.iki.fi>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <7hef93mi88.fsf@baylibre.com>
+Content-Disposition: inline
+In-Reply-To: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kevin Hilman <khilman@baylibre.com>
-Cc: devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-amlogic@lists.infradead.org, Linux Kernel <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Jerome Brunet <jbrunet@baylibre.com>, Neil Armstrong <narmstrong@baylibre.com>, Emiliano Ingrassia <ingrassia@epigenesys.com>
+To: liaoweixiong <liaoweixiong@allwinnertech.com>
+Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Kevin,
-On Wed, 23 Jan 2019 at 22:20, Kevin Hilman <khilman@baylibre.com> wrote:
->
-> Anand Moon <linux.amoon@gmail.com> writes:
->
-> > Add missing vbus-supply link to phy controller for usb_phy0
-> > and usb_phy1 nodes, this changes fixed the power issue
-> > on usb ports usb, changes help fix usb reset warning.
-> >
-> > [  821.991470] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  825.243385] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  828.151310] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> > [  830.991241] usb 1-1.2: reset high-speed USB device number 3 using dwc2
-> >
-> > Fixes: 2eb79a4d15ff (ARM: dts: meson: enabling the USB Host controller on Odroid-C1/C1+ board)
-> > Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>
-> > Cc: Jerome Brunet <jbrunet@baylibre.com>
-> > Cc: Neil Armstrong <narmstrong@baylibre.com>
-> > Signed-off-by: Anand Moon <linux.amoon@gmail.com>
-> > ---
-> > Rebased on Kevin's amlogic/v5.0/fixes branch
->
-> As requested, dropping this series from the fixes branch pending further
-> debug and testing.
->
-> Kevin
+Hi,
 
-[snip]
+On Wed, Jan 23, 2019 at 08:05:11PM +0800, liaoweixiong wrote:
+> Why should we need pstore_block?
+> 1. Most embedded intelligent equipment have no persistent ram, which
+> increases costs. We perfer to cheaper solutions, like block devices.
+> In fast, there is already a sample for block device logger in driver
+> MTD (drivers/mtd/mtdoops.c).
 
-Thanks your very much.
+I think you should add a patch for some actual block device using this
+new framework to show that it can work. What HW you think would be
+using things?
 
-Best Regards
--Anand
+A.
