@@ -1,29 +1,77 @@
-From: Aaro Koskinen <aaro.koskinen@iki.fi>
-Subject: Re: [RFC v7 0/5] pstore/block: new support logger for block devices
-Date: Wed, 23 Jan 2019 20:26:38 +0200
-Message-ID: <20190123182638.GD2792@darkstar.musicnaut.iki.fi>
-References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [PATCH 1/6] dt-bindings: soc: qcom: Add interconnect binding for
+ GENI QUP
+Date: Wed, 23 Jan 2019 20:35:30 +0200
+Message-ID: <c4260d66-5ca4-b194-0cbc-2a682a99db4b@linaro.org>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+In-Reply-To: <1548138816-1149-2-git-send-email-alokc@codeaurora.org>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: liaoweixiong <liaoweixiong@allwinnertech.com>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Alok Chauhan <alokc@codeaurora.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+Hi Alok,
 
-On Wed, Jan 23, 2019 at 08:05:11PM +0800, liaoweixiong wrote:
-> Why should we need pstore_block?
-> 1. Most embedded intelligent equipment have no persistent ram, which
-> increases costs. We perfer to cheaper solutions, like block devices.
-> In fast, there is already a sample for block device logger in driver
-> MTD (drivers/mtd/mtdoops.c).
+Thanks for the patches!
 
-I think you should add a patch for some actual block device using this
-new framework to show that it can work. What HW you think would be
-using things?
+On 1/22/19 08:33, Alok Chauhan wrote:
+> Add documentation for the interconnect and interconnect-names bindings
 
-A.
+s/interconnect /interconnects /
+
+> for the GENI QUP as detailed by bindings/interconnect/interconnect.txt.
+> 
+> Signed-off-by: Alok Chauhan <alokc@codeaurora.org>
+> ---
+>  Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt | 10 ++++++++++
+>  1 file changed, 10 insertions(+)
+> 
+> diff --git a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> index dab7ca9..44d7e02 100644
+> --- a/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> +++ b/Documentation/devicetree/bindings/soc/qcom/qcom,geni-se.txt
+> @@ -17,6 +17,12 @@ Required properties if child node exists:
+>  - #address-cells: 	Must be <1> for Serial Engine Address
+>  - #size-cells: 		Must be <1> for Serial Engine Address Size
+>  - ranges: 		Must be present
+> +- interconnects:	phandle to a interconnect provider. Please refer
+
+s/a interconnect/an interconnect/
+
+> +			../interconnect/interconnect.txt for details.
+> +			Must be 2 paths corresponding to 2 AXI ports.
+> +- interconnect-names:	Port names to differentiate between the
+> +			2 interconnect paths defined with interconnect
+> +			specifier.
+>  
+>  Properties for children:
+>  
+> @@ -67,6 +73,10 @@ Example:
+>  		#size-cells = <1>;
+>  		ranges;
+>  
+> +		interconnects = <&qnoc 11 &qnoc 512>,
+> +				<&qnoc 0 &qnoc 543>;
+
+Please take a snippet from your patch 6/6 and put it here instead of the
+hard-coded integers above.
+
+> +		interconnect-names = "qup-memory", "qup-config";
+> +
+>  		i2c0: i2c@a94000 {
+>  			compatible = "qcom,geni-i2c";
+>  			reg = <0xa94000 0x4000>;
+> 
+
+When you post a new version, please change the subject of the patch
+series to PATCH v2, PATCH v3 etc, in order to be able to distinguish
+between different versions.
+
+Thanks,
+Georgi
