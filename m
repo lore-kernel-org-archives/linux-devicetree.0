@@ -1,57 +1,96 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH v4] kbuild: Add support for DT binding schema checks
-Date: Wed, 23 Jan 2019 16:33:10 +0100
-Message-ID: <CAMuHMdUZHi87Dv=m4USocfQ60s6_uHmny5DvCVm+hZ98+ROvdA@mail.gmail.com>
-References: <20181211202406.27721-1-robh@kernel.org>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH 2/2] PCI: mediatek: Add controller support for MT7629
+Date: Wed, 23 Jan 2019 15:40:24 +0000
+Message-ID: <20190123154023.GA1157@e107981-ln.cambridge.arm.com>
+References: <1544058553-10936-1-git-send-email-jianjun.wang@mediatek.com>
+ <1544058553-10936-3-git-send-email-jianjun.wang@mediatek.com>
+ <20181213145517.GB4701@google.com>
+ <1545034779.8528.8.camel@mhfsdcap03>
+ <20181217143247.GK20725@google.com>
+ <20181217154645.GA24864@e107981-ln.cambridge.arm.com>
+ <1545124764.25199.3.camel@mhfsdcap03>
+ <20181220182043.GC183878@google.com>
+ <1545651628.5634.57.camel@mhfsdcap03>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20181211202406.27721-1-robh@kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1545651628.5634.57.camel@mhfsdcap03>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>
-Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Masahiro Yamada <yamada.masahiro@socionext.com>, Sean Hudson <darknighte@darknighte.com>, Frank Rowand <frowand.list@gmail.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>, linuxppc-dev <linuxppc-dev@lists.ozlabs.org>, Grant Likely <grant.likely@arm.com>, Kumar Gala <kumar.gala@linaro.org>, arm-soc <arm@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Mark Rutland <mark.rutland@arm.com>, Michal Marek <michal.lkml@markovi.net>, "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>, linux-kbuild <linux-kbuild@vger.kernel.org>
+To: Jianjun Wang <jianjun.wang@mediatek.com>
+Cc: Bjorn Helgaas <helgaas@kernel.org>, ryder.lee@mediatek.com, robh+dt@kernel.org, matthias.bgg@gmail.com, linux-pci@vger.kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, youlin.pei@mediatek.com, linux-kernel@vger.kernel.org, linux-mediatek@lists.infradead.org, honghui.zhang@mediatek.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Rob,
+On Mon, Dec 24, 2018 at 07:40:28PM +0800, Jianjun Wang wrote:
+> On Thu, 2018-12-20 at 12:20 -0600, Bjorn Helgaas wrote:
+> > On Tue, Dec 18, 2018 at 05:19:24PM +0800, Jianjun Wang wrote:
+> > > On Mon, 2018-12-17 at 15:46 +0000, Lorenzo Pieralisi wrote:
+> > > > On Mon, Dec 17, 2018 at 08:32:47AM -0600, Bjorn Helgaas wrote:
+> > > > > On Mon, Dec 17, 2018 at 04:19:39PM +0800, Jianjun Wang wrote:
+> > > > > > On Thu, 2018-12-13 at 08:55 -0600, Bjorn Helgaas wrote:
+> > > > > > > On Thu, Dec 06, 2018 at 09:09:13AM +0800, Jianjun Wang wrote:
+> > > > > > > > The read value of BAR0 is 0xffff_ffff, it's size will be
+> > > > > > > > calculated as 4GB in arm64 but bogus alignment values at
+> > > > > > > > arm32, the pcie device and devices behind this bridge will
+> > > > > > > > not be enabled. Fix it's BAR0 resource size to guarantee
+> > > > > > > > the pcie devices will be enabled correctly.
+> > > > > > > 
+> > > > > > > So this is a hardware erratum?  Per spec, a memory BAR has
+> > > > > > > bit 0 hardwired to 0, and an IO BAR has bit 1 hardwired to
+> > > > > > > 0.
+> > > > > > 
+> > > > > > Yes, it only works properly on 64bit platform.
+> > > > > 
+> > > > > I don't understand.  BARs are supposed to work the same
+> > > > > regardless of whether it's a 32- or 64-bit platform.  If this is
+> > > > > a workaround for a hardware defect, please just say that
+> > > > > explicitly.
+> > > > 
+> > > > I do not understand this either. First thing to do is to describe
+> > > > the problem properly so that we can actually find a solution to
+> > > > it.
+> > > 
+> > > This BAR0 is a 64-bit memory BAR, the HW default values for this BAR
+> > > is 0xffff_ffff_0000_0000 and it could not be changed except by
+> > > config write operation.
+> > 
+> > If you literally get 0xffff_ffff_0000_0000 when reading the BAR, that
+> > is out of spec because the low-order 4 bits of a 64-bit memory BAR
+> > cannot all be zero.
+> > 
+> > A 64-bit BAR consumes two DWORDS in config space.  For a 64-bit BAR0,
+> > the DWORD at 0x10 contains the low-order bits, and the DWORD at 0x14
+> > contains the upper 32 bits.  Bits 0-3 of the low-order DWORD (the
+> > one at 0x10) are read-only, and in this case should contain the value
+> > 0b1100 (0xc).  That means the range is prefetchable (bit 3 == 1) and
+> > the BAR is 64 bits (bits 2:1 == 10).
+> 
+> Sorry, I have confused the HW default value and the read value of BAR
+> size. The hardware default value is 0xffff_ffff_0000_000c, it's a 64-bit
+> BAR with prefetchable range.
+> 
+> When we start to decoding the BAR, the read value of BAR0 at 0x10 is
+> 0x0c, and the value at 0x14 is 0xffff_ffff, so the read value of BAR
+> size is 0xffff_ffff_0000_0000, which will be decoded to 0xffff_ffff, and
+> it will be set to the end value of BAR0 resource in the pci_dev.
+> > 
+> > > The calculated BAR size will be 0 in 32-bit platform since the
+> > > phys_addr_t is a 32bit value in 32-bit platform.
+> > 
+> > Either (1) this is a hardware defect that feeds incorrect data to the
+> > BAR size calculation, or (2) there's a problem in the BAR size
+> > calculation code.  We need to figure out which one and work around or
+> > fix it correctly.
+> 
+> The BAR size is calculated by the code (res->end - res->start + 1) is
+> fine, I think it's a hardware defect because that we can not change the
+> hardware default value or just disable it since we don't using it.
 
-On Tue, Dec 11, 2018 at 9:24 PM Rob Herring <robh@kernel.org> wrote:
-> This adds the build infrastructure for checking DT binding schema
-> documents and validating dts files using the binding schema.
->
-> Check DT binding schema documents:
-> make dt_binding_check
->
-> Build dts files and check using DT binding schema:
-> make dtbs_check
->
-> Optionally, DT_SCHEMA_FILES can be passed in with a schema file(s) to
-> use for validation. This makes it easier to find and fix errors
-> generated by a specific schema.
->
-> Currently, the validation targets are separate from a normal build to
-> avoid a hard dependency on the external DT schema project and because
-> there are lots of warnings generated.
+Apologies for the delay in getting back to this.
 
-Thanks, I'm giving this a try, and get errors like:
+This looks like a kernel defect, not a HW defect.
 
-      DTC     arch/arm/boot/dts/emev2-kzm9d.dt.yaml
-    FATAL ERROR: No markers present in property 'cpu0' value
+I need some time to make up my mind on what the right fix for this
+but it is most certainly not this patch.
 
-and
-
-      DTC     arch/arm64/boot/dts/renesas/r8a7795-salvator-x.dt.yaml
-    FATAL ERROR: No markers present in property 'audio_clk_a' value
-
-Do you have a clue?
-Thanks!
-
-Gr{oetje,eeting}s,
-
-                        Geert
-
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+Lorenzo
