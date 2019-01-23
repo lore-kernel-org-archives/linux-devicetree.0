@@ -1,78 +1,82 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v1 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
-Date: Wed, 23 Jan 2019 08:59:56 +0100
-Message-ID: <CAJKOXPfGJxzPVcAitU=uDFfrmtwQZD1dcbbhy+BjEUF_6exx2g@mail.gmail.com>
-References: <CGME20190122152608eucas1p27cff7b53eb3bb23447ef7ba2b3f69671@eucas1p2.samsung.com>
- <20190122152553.1537-1-k.konieczny@partner.samsung.com> <20190122152553.1537-3-k.konieczny@partner.samsung.com>
+From: Anson Huang <anson.huang@nxp.com>
+Subject: [PATCH 1/3] dt-bindings: fsl: scu: add general interrupt support
+Date: Wed, 23 Jan 2019 08:01:11 +0000
+Message-ID: <1548230179-26076-1-git-send-email-Anson.Huang@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122152553.1537-3-k.konieczny@partner.samsung.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>, "kernel@pengutronix.de" <kernel@pengutronix.de>, "festevam@gmail.com" <festevam@gmail.com>, Aisheng Dong <aisheng.dong@nxp.com>, "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>, Daniel Baluta <daniel.baluta@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
+Cc: dl-linux-imx <linux-imx@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Jan 2019 at 16:26, Kamil Konieczny
-<k.konieczny@partner.samsung.com> wrote:
->
-> Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
-> SubSystem) IP.
->
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  .../devicetree/bindings/crypto/samsung-sss.txt      | 13 ++++++++++---
->  1 file changed, 10 insertions(+), 3 deletions(-)
->
-> diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-> index 7a5ca56683cc..75718f86fe50 100644
-> --- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-> +++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-> @@ -1,4 +1,4 @@
-> -Samsung SoC SSS (Security SubSystem) module
-> +Samsung SoC SSS (Security SubSystem) and SlimSSS module
->
->  The SSS module in S5PV210 SoC supports the following:
->  -- Feeder (FeedCtrl)
-> @@ -15,6 +15,11 @@ supports the following also:
->  -- True Random Number Generator (TRNG)
->  -- Secure Key Manager
->
-> +The SlimSSS module in Exynos5 (Exynos5433) supports:
-> +-- Feeder (FeedCtrl)
-> +-- Advanced Encryption Standard (AES)
-> +-- SHA-1/SHA-256/HMAC (SHA-1/SHA-256)
-> +
->  Required properties:
->
->  - compatible : Should contain entries for this and backward compatible
-> @@ -22,11 +27,13 @@ Required properties:
->    - "samsung,s5pv210-secss" for S5PV210 SoC.
->    - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
->                 Exynos5260 and Exynos5420 SoCs.
-> +  - "samsung,exynos5433-slim-sss" for Exynos542x and Exynos5433 SoCs.
+Add scu general interrupt function support.
 
-For Exynos5420 there is a driver for regular/full SSS module. It would
-be nice to explain what is the difference between them and/or mention
-potential conflicts of usage.
+Signed-off-by: Anson Huang <Anson.Huang@nxp.com>
+---
+ .../devicetree/bindings/arm/freescale/fsl,scu.txt      | 18 ++++++++++++--=
+----
+ 1 file changed, 12 insertions(+), 6 deletions(-)
 
-The point is that previously we added drivers/bindings for SSS and now
-you use the other interface. It might be pretty confusing for users...
-
-Best regards,
-Krzysztof
-
->  - reg : Offset and length of the register set for the module
->  - interrupts : interrupt specifiers of SSS module interrupts (one feed
->                 control interrupt).
->
->  - clocks : list of clock phandle and specifier pairs for all clocks  listed in
->                 clock-names property.
-> -- clock-names : list of device clock input names; should contain one entry
-> -               "secss".
-> +- clock-names : list of device clock input names; should contain "pclk" and
-> +               "aclk" for slim-sss in Exynos5433, and one entry "secss" for
-> +               other compatibles.
-> --
-> 2.20.0
->
+diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/=
+Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+index fd2bed2..3c976ac 100644
+--- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
++++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
+@@ -22,9 +22,11 @@ Required properties:
+ -------------------
+ - compatible:	should be "fsl,imx-scu".
+ - mbox-names:	should include "tx0", "tx1", "tx2", "tx3",
+-			       "rx0", "rx1", "rx2", "rx3".
+-- mboxes:	List of phandle of 4 MU channels for tx and 4 MU channels
+-		for rx. All 8 MU channels must be in the same MU instance.
++			       "rx0", "rx1", "rx2", "rx3",
++			       "gi3".
++- mboxes:	List of phandle of 4 MU channels for tx, 4 MU channels for
++		rx, and 1 MU channel for general interrupt. All 9 MU channels
++		must be in the same MU instance.
+ 		Cross instances are not allowed. The MU instance can only
+ 		be one of LSIO MU0~M4 for imx8qxp and imx8qm. Users need
+ 		to make sure use the one which is not conflict with other
+@@ -34,6 +36,7 @@ Required properties:
+ 		Channel 1 must be "tx1" or "rx1".
+ 		Channel 2 must be "tx2" or "rx2".
+ 		Channel 3 must be "tx3" or "rx3".
++		General interrupt channel must be "gi3".
+ 		e.g.
+ 		mboxes =3D <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+@@ -42,7 +45,8 @@ Required properties:
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+ 		See Documentation/devicetree/bindings/mailbox/fsl,mu.txt
+ 		for detailed mailbox binding.
+=20
+@@ -130,7 +134,8 @@ firmware {
+ 	scu {
+ 		compatible =3D "fsl,imx-scu";
+ 		mbox-names =3D "tx0", "tx1", "tx2", "tx3",
+-			     "rx0", "rx1", "rx2", "rx3";
++			     "rx0", "rx1", "rx2", "rx3",
++			     "gi3";
+ 		mboxes =3D <&lsio_mu1 0 0
+ 			  &lsio_mu1 0 1
+ 			  &lsio_mu1 0 2
+@@ -138,7 +143,8 @@ firmware {
+ 			  &lsio_mu1 1 0
+ 			  &lsio_mu1 1 1
+ 			  &lsio_mu1 1 2
+-			  &lsio_mu1 1 3>;
++			  &lsio_mu1 1 3
++			  &lsio_mu1 3 3>;
+=20
+ 		clk: clk {
+ 			compatible =3D "fsl,imx8qxp-clk";
+--=20
+2.7.4
