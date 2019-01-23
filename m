@@ -1,44 +1,171 @@
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v3 4/5] ARM: dts: r8a7744: Add DU support
-Date: Tue, 22 Jan 2019 15:25:48 +0000
-Message-ID: <1548170749-12773-5-git-send-email-biju.das@bp.renesas.com>
-References: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
+From: Boris Brezillon <bbrezillon@kernel.org>
+Subject: Re: [PATCH v4 2/2] mtd: spi-nor: cadence-quadspi: Add support for
+ Octal SPI controller
+Date: Wed, 23 Jan 2019 09:45:52 +0100
+Message-ID: <20190123094552.57665d2e@bbrezillon>
+References: <20190122064137.17114-1-vigneshr@ti.com>
+        <20190122064137.17114-3-vigneshr@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Fabrizio Castro <fabrizio.castro@bp.renesas.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Simon Horman <horms@verge.net.au>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190122064137.17114-3-vigneshr@ti.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Vignesh R <vigneshr@ti.com>
+Cc: Tudor.Ambarus@microchip.com, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGR1IG5vZGUgdG8gcjhhNzc0NCBTb0MgRFQuIEJvYXJkcyB0aGF0IHdhbnQgdG8gZW5hYmxl
-IHRoZSBEVQpuZWVkIHRvIHNwZWNpZnkgdGhlIG91dHB1dCB0b3BvbG9neS4KClNpZ25lZC1vZmYt
-Ynk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4KLS0tCiBhcmNoL2FybS9ib290
-L2R0cy9yOGE3NzQ0LmR0c2kgfCAxMSArKysrKysrKy0tLQogMSBmaWxlIGNoYW5nZWQsIDggaW5z
-ZXJ0aW9ucygrKSwgMyBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9hcmNoL2FybS9ib290L2R0
-cy9yOGE3NzQ0LmR0c2kgYi9hcmNoL2FybS9ib290L2R0cy9yOGE3NzQ0LmR0c2kKaW5kZXggOGQy
-NWEwYS4uODM4MDRhYSAxMDA2NDQKLS0tIGEvYXJjaC9hcm0vYm9vdC9kdHMvcjhhNzc0NC5kdHNp
-CisrKyBiL2FyY2gvYXJtL2Jvb3QvZHRzL3I4YTc3NDQuZHRzaQpAQCAtMTY0NSw4ICsxNjQ1LDE0
-IEBACiAJCX07CiAKIAkJZHU6IGRpc3BsYXlAZmViMDAwMDAgewotCQkJcmVnID0gPDAgMHhmZWIw
-MDAwMCAwIDB4NDAwMDA+LAotCQkJICAgICAgPDAgMHhmZWI5MDAwMCAwIDB4MWM+OworCQkJY29t
-cGF0aWJsZSA9ICJyZW5lc2FzLGR1LXI4YTc3NDQiOworCQkJcmVnID0gPDAgMHhmZWIwMDAwMCAw
-IDB4NDAwMDA+OworCQkJaW50ZXJydXB0cyA9IDxHSUNfU1BJIDI1NiBJUlFfVFlQRV9MRVZFTF9I
-SUdIPiwKKwkJCQkgICAgIDxHSUNfU1BJIDI2OCBJUlFfVFlQRV9MRVZFTF9ISUdIPjsKKwkJCWNs
-b2NrcyA9IDwmY3BnIENQR19NT0QgNzI0PiwKKwkJCQkgPCZjcGcgQ1BHX01PRCA3MjM+OworCQkJ
-Y2xvY2stbmFtZXMgPSAiZHUuMCIsICJkdS4xIjsKKwkJCXN0YXR1cyA9ICJkaXNhYmxlZCI7CiAK
-IAkJCXBvcnRzIHsKIAkJCQkjYWRkcmVzcy1jZWxscyA9IDwxPjsKQEAgLTE2NjMsNyArMTY2OSw2
-IEBACiAJCQkJCX07CiAJCQkJfTsKIAkJCX07Ci0JCQkvKiBwbGFjZWhvbGRlciAqLwogCQl9Owog
-CiAJCXBycjogY2hpcGlkQGZmMDAwMDQ0IHsKLS0gCjIuNy40CgpfX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2ZWwgbWFpbGluZyBsaXN0CmRyaS1k
-ZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3RvcC5vcmcv
-bWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+On Tue, 22 Jan 2019 12:11:37 +0530
+Vignesh R <vigneshr@ti.com> wrote:
+
+> Cadence OSPI controller IP supports Octal IO (x8 IO lines),
+> It also has an integrated PHY. IP register layout is very
+> similar to existing QSPI IP except for additional bits to support Octal
+> and Octal DDR mode. Therefore, extend current driver to support Octal
+> mode. Only Octal SDR read (1-1-8)mode is supported for now.
+> 
+> Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
+> 
+> Signed-off-by: Vignesh R <vigneshr@ti.com>
+> ---
+> 
+> v4: Fix comments by Tudor on v3
+> v3: No changes
+> v2: Declare Octal mode capability based on compatible.
+> 
+>  drivers/mtd/spi-nor/cadence-quadspi.c | 53 +++++++++++++++++++++------
+>  1 file changed, 41 insertions(+), 12 deletions(-)
+> 
+> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
+> index 04cedd3a2bf6..2091addc45a3 100644
+> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
+> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
+> @@ -44,6 +44,12 @@
+>  /* Quirks */
+>  #define CQSPI_NEEDS_WR_DELAY		BIT(0)
+>  
+> +/* Capabilities mask */
+> +#define cqspi_base_hwcaps_mask					\
+
+Nit: we usually use upper cases for such definitions.
+
+> +	(SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST |		\
+> +	SNOR_HWCAPS_READ_1_1_2 | SNOR_HWCAPS_READ_1_1_4 |	\
+> +	SNOR_HWCAPS_PP)
+> +
+>  struct cqspi_st;
+>  
+>  struct cqspi_flash_pdata {
+> @@ -93,6 +99,11 @@ struct cqspi_st {
+>  	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
+>  };
+>  
+> +struct cqspi_driver_platdata {
+> +	u32 hwcaps_mask;
+> +	u8 quirks;
+> +};
+> +
+>  /* Operation timeout value */
+>  #define CQSPI_TIMEOUT_MS			500
+>  #define CQSPI_READ_TIMEOUT_MS			10
+> @@ -101,6 +112,7 @@ struct cqspi_st {
+>  #define CQSPI_INST_TYPE_SINGLE			0
+>  #define CQSPI_INST_TYPE_DUAL			1
+>  #define CQSPI_INST_TYPE_QUAD			2
+> +#define CQSPI_INST_TYPE_OCTAL			3
+>  
+>  #define CQSPI_DUMMY_CLKS_PER_BYTE		8
+>  #define CQSPI_DUMMY_BYTES_MAX			4
+> @@ -911,6 +923,9 @@ static int cqspi_set_protocol(struct spi_nor *nor, const int read)
+>  		case SNOR_PROTO_1_1_4:
+>  			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
+>  			break;
+> +		case SNOR_PROTO_1_1_8:
+> +			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
+> +			break;
+>  		default:
+>  			return -EINVAL;
+>  		}
+> @@ -1213,21 +1228,22 @@ static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
+>  
+>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
+>  {
+> -	const struct spi_nor_hwcaps hwcaps = {
+> -		.mask = SNOR_HWCAPS_READ |
+> -			SNOR_HWCAPS_READ_FAST |
+> -			SNOR_HWCAPS_READ_1_1_2 |
+> -			SNOR_HWCAPS_READ_1_1_4 |
+> -			SNOR_HWCAPS_PP,
+> -	};
+>  	struct platform_device *pdev = cqspi->pdev;
+>  	struct device *dev = &pdev->dev;
+> +	const struct cqspi_driver_platdata *ddata;
+> +	struct spi_nor_hwcaps hwcaps;
+>  	struct cqspi_flash_pdata *f_pdata;
+>  	struct spi_nor *nor;
+>  	struct mtd_info *mtd;
+>  	unsigned int cs;
+>  	int i, ret;
+>  
+> +	ddata = of_device_get_match_data(dev);
+> +	if (!ddata)
+> +		hwcaps.mask = cqspi_base_hwcaps_mask;
+> +	else
+> +		hwcaps.mask = ddata->hwcaps_mask;
+> +
+>  	/* Get flash device data */
+>  	for_each_available_child_of_node(dev->of_node, np) {
+>  		ret = of_property_read_u32(np, "reg", &cs);
+> @@ -1310,7 +1326,7 @@ static int cqspi_probe(struct platform_device *pdev)
+>  	struct cqspi_st *cqspi;
+>  	struct resource *res;
+>  	struct resource *res_ahb;
+> -	unsigned long data;
+> +	const struct cqspi_driver_platdata *ddata;
+>  	int ret;
+>  	int irq;
+>  
+> @@ -1377,8 +1393,8 @@ static int cqspi_probe(struct platform_device *pdev)
+>  	}
+>  
+>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
+> -	data  = (unsigned long)of_device_get_match_data(dev);
+> -	if (data & CQSPI_NEEDS_WR_DELAY)
+> +	ddata  = of_device_get_match_data(dev);
+> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
+>  		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
+>  						   cqspi->master_ref_clk_hz);
+>  
+> @@ -1460,14 +1476,27 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
+>  #define CQSPI_DEV_PM_OPS	NULL
+>  #endif
+>  
+> +static const struct cqspi_driver_platdata k2g_qspi = {
+> +	.hwcaps_mask = cqspi_base_hwcaps_mask,
+> +	.quirks = CQSPI_NEEDS_WR_DELAY,
+> +};
+> +
+> +static const struct cqspi_driver_platdata am654_ospi = {
+> +	.hwcaps_mask = cqspi_base_hwcaps_mask | SNOR_HWCAPS_READ_1_1_8,
+> +	.quirks = CQSPI_NEEDS_WR_DELAY,
+> +};
+> +
+>  static const struct of_device_id cqspi_dt_ids[] = {
+>  	{
+>  		.compatible = "cdns,qspi-nor",
+> -		.data = (void *)0,
+
+Can't we have a cqspi_driver_platdata instance for that one too?
+
+>  	},
+>  	{
+>  		.compatible = "ti,k2g-qspi",
+> -		.data = (void *)CQSPI_NEEDS_WR_DELAY,
+> +		.data = &k2g_qspi,
+> +	},
+> +	{
+> +		.compatible = "ti,am654-ospi",
+> +		.data = &am654_ospi,
+>  	},
+>  	{ /* end of table */ }
+>  };
