@@ -1,108 +1,68 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [v6 2/3] drm/msm/dpu: Integrate interconnect API in MDSS
-Date: Wed, 23 Jan 2019 09:12:34 +0530
-Message-ID: <1548214955-19692-3-git-send-email-jshekhar@codeaurora.org>
+From: Jayant Shekhar <jshekhar@codeaurora.org>
+Subject: [v6 3/3] dt-bindings: msm/disp: Introduce interconnect bindings for MDSS on SDM845
+Date: Wed, 23 Jan 2019 09:12:35 +0530
+Message-ID: <1548214955-19692-4-git-send-email-jshekhar@codeaurora.org>
 References: <1548214955-19692-1-git-send-email-jshekhar@codeaurora.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1548214955-19692-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sravanthi Kollukuduru1 <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1548214955-19692-1-git-send-email-jshekhar@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: Jayant Shekhar <jshekhar@codeaurora.org>, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, Sravanthi Kollukuduru <skolluku@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-VGhlIGludGVyY29ubmVjdCBmcmFtZXdvcmsgaXMgZGVzaWduZWQgdG8gcHJvdmlkZSBhCnN0YW5k
-YXJkIGtlcm5lbCBpbnRlcmZhY2UgdG8gY29udHJvbCB0aGUgc2V0dGluZ3Mgb2YKdGhlIGludGVy
-Y29ubmVjdHMgb24gYSBTb0MuCgpUaGUgaW50ZXJjb25uZWN0IEFQSSB1c2VzIGEgY29uc3VtZXIv
-cHJvdmlkZXItYmFzZWQgbW9kZWwsCndoZXJlIHRoZSBwcm92aWRlcnMgYXJlIHRoZSBpbnRlcmNv
-bm5lY3QgYnVzZXMgYW5kIHRoZQpjb25zdW1lcnMgY291bGQgYmUgdmFyaW91cyBkcml2ZXJzLgoK
-TURTUyBpcyBvbmUgb2YgdGhlIGludGVyY29ubmVjdCBjb25zdW1lcnMgd2hpY2ggdXNlcyB0aGUK
-aW50ZXJjb25uZWN0IEFQSXMgdG8gZ2V0IHRoZSBwYXRoIGJldHdlZW4gZW5kcG9pbnRzIGFuZApz
-ZXQgaXRzIGJhbmR3aWR0aCByZXF1aXJlbWVudCBmb3IgdGhlIGdpdmVuIGludGVyY29ubmVjdGVk
-CnBhdGguCgpDaGFuZ2VzIGluIHYyOgoJLSBSZW1vdmUgZXJyb3IgbG9nIGFuZCB1bm5lY2Vzc2Fy
-eSBjaGVjayAoSm9yZGFuIENyb3VzZSkKCkNoYW5nZXMgaW4gdjM6CgktIENvZGUgY2xlYW4gaW52
-b2x2aW5nIHZhcmlhYmxlIG5hbWUgY2hhbmdlLCByZW1vdmFsCgkgIG9mIGV4dHJhIHBhcmFudGhl
-c2lzIGFuZCB2YXJpYWJsZXMgKE1hdHRoaWFzIEthZWhsY2tlKQoKQ2hhbmdlcyBpbiB2NDoKCS0g
-QWRkIGNvbW1lbnRzLCBzcGFjaW5ncywgdGFicywgcHJvcGVyIHBvcnQgbmFtZQoJICBhbmQgaWNj
-IG1hY3JvIChHZW9yZ2kgRGpha292KQoKQ2hhbmdlcyBpbiB2NToKCS0gQ29tbWl0IHRleHQgYW5k
-IHBhcmVudGhlc2lzIGFsaWdubWVudCAoR2VvcmdpIERqYWtvdikKCkNoYW5nZXMgaW4gdjY6Cgkt
-IENoYW5nZSB0byBuZXcgaWNjX3NldCBBUEkncyAoRG91ZyBBbmRlcnNvbikKClNpZ25lZC1vZmYt
-Ynk6IFNyYXZhbnRoaSBLb2xsdWt1ZHVydTEgPHNrb2xsdWt1QGNvZGVhdXJvcmEub3JnPgpTaWdu
-ZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+Ci0tLQog
-ZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYyB8IDQ5ICsrKysrKysrKysr
-KysrKysrKysrKysrKysrKysrLS0tCiAxIGZpbGUgY2hhbmdlZCwgNDUgaW5zZXJ0aW9ucygrKSwg
-NCBkZWxldGlvbnMoLSkKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rpc3AvZHB1
-MS9kcHVfbWRzcy5jIGIvZHJpdmVycy9ncHUvZHJtL21zbS9kaXNwL2RwdTEvZHB1X21kc3MuYwpp
-bmRleCAzODU3NmY4Li4zOGRhZjhhIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dwdS9kcm0vbXNtL2Rp
-c3AvZHB1MS9kcHVfbWRzcy5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vZGlzcC9kcHUxL2Rw
-dV9tZHNzLmMKQEAgLTQsMTEgKzQsMTUgQEAKICAqLwogCiAjaW5jbHVkZSAiZHB1X2ttcy5oIgor
-I2luY2x1ZGUgPGxpbnV4L2ludGVyY29ubmVjdC5oPgogCiAjZGVmaW5lIHRvX2RwdV9tZHNzKHgp
-IGNvbnRhaW5lcl9vZih4LCBzdHJ1Y3QgZHB1X21kc3MsIGJhc2UpCiAKICNkZWZpbmUgSFdfSU5U
-Ul9TVEFUVVMJCQkweDAwMTAKIAorLyogTWF4IEJXIGRlZmluZWQgaW4gS0JwcyAqLworI2RlZmlu
-ZSBNQVhfQlcJCQkJNjgwMDAwMAorCiBzdHJ1Y3QgZHB1X21kc3MgewogCXN0cnVjdCBtc21fbWRz
-cyBiYXNlOwogCXZvaWQgX19pb21lbSAqbW1pbzsKQEAgLTE2LDggKzIwLDMwIEBAIHN0cnVjdCBk
-cHVfbWRzcyB7CiAJdTMyIGh3dmVyc2lvbjsKIAlzdHJ1Y3QgZHNzX21vZHVsZV9wb3dlciBtcDsK
-IAlzdHJ1Y3QgZHB1X2lycV9jb250cm9sbGVyIGlycV9jb250cm9sbGVyOworCXN0cnVjdCBpY2Nf
-cGF0aCAqcGF0aFsyXTsKKwl1MzIgbnVtX3BhdGhzOwogfTsKIAorc3RhdGljIGludCBkcHVfbWRz
-c19wYXJzZV9kYXRhX2J1c19pY2NfcGF0aChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2LAorCQkJCQkJ
-c3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcykKK3sKKwlzdHJ1Y3QgaWNjX3BhdGggKnBhdGgwID0g
-b2ZfaWNjX2dldChkZXYtPmRldiwgIm1kcDAtbWVtIik7CisJc3RydWN0IGljY19wYXRoICpwYXRo
-MSA9IG9mX2ljY19nZXQoZGV2LT5kZXYsICJtZHAxLW1lbSIpOworCisJaWYgKElTX0VSUihwYXRo
-MCkpCisJCXJldHVybiBQVFJfRVJSKHBhdGgwKTsKKworCWRwdV9tZHNzLT5wYXRoWzBdID0gcGF0
-aDA7CisJZHB1X21kc3MtPm51bV9wYXRocyA9IDE7CisKKwlpZiAoIUlTX0VSUihwYXRoMSkpIHsK
-KwkJZHB1X21kc3MtPnBhdGhbMV0gPSBwYXRoMTsKKwkJZHB1X21kc3MtPm51bV9wYXRocysrOwor
-CX0KKworCXJldHVybiAwOworfQorCiBzdGF0aWMgaXJxcmV0dXJuX3QgZHB1X21kc3NfaXJxKGlu
-dCBpcnEsIHZvaWQgKmFyZykKIHsKIAlzdHJ1Y3QgZHB1X21kc3MgKmRwdV9tZHNzID0gYXJnOwpA
-QCAtMTI3LDcgKzE1MywxMSBAQCBzdGF0aWMgaW50IGRwdV9tZHNzX2VuYWJsZShzdHJ1Y3QgbXNt
-X21kc3MgKm1kc3MpCiB7CiAJc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNz
-KG1kc3MpOwogCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Ci0J
-aW50IHJldDsKKwlpbnQgcmV0LCBpOworCXU2NCBhdmdfYncgPSBkcHVfbWRzcy0+bnVtX3BhdGhz
-ID8gTUFYX0JXIC8gZHB1X21kc3MtPm51bV9wYXRocyA6IDA7CisKKwlmb3IgKGkgPSAwOyBpIDwg
-ZHB1X21kc3MtPm51bV9wYXRoczsgaSsrKQorCQlpY2Nfc2V0X2J3KGRwdV9tZHNzLT5wYXRoW2ld
-LCBhdmdfYncsIGtCcHNfdG9faWNjKE1BWF9CVykpOwogCiAJcmV0ID0gbXNtX2Rzc19lbmFibGVf
-Y2xrKG1wLT5jbGtfY29uZmlnLCBtcC0+bnVtX2NsaywgdHJ1ZSk7CiAJaWYgKHJldCkKQEAgLTE0
-MCwxMiArMTcwLDE1IEBAIHN0YXRpYyBpbnQgZHB1X21kc3NfZGlzYWJsZShzdHJ1Y3QgbXNtX21k
-c3MgKm1kc3MpCiB7CiAJc3RydWN0IGRwdV9tZHNzICpkcHVfbWRzcyA9IHRvX2RwdV9tZHNzKG1k
-c3MpOwogCXN0cnVjdCBkc3NfbW9kdWxlX3Bvd2VyICptcCA9ICZkcHVfbWRzcy0+bXA7Ci0JaW50
-IHJldDsKKwlpbnQgcmV0LCBpOwogCiAJcmV0ID0gbXNtX2Rzc19lbmFibGVfY2xrKG1wLT5jbGtf
-Y29uZmlnLCBtcC0+bnVtX2NsaywgZmFsc2UpOwogCWlmIChyZXQpCiAJCURQVV9FUlJPUigiY2xv
-Y2sgZGlzYWJsZSBmYWlsZWQsIHJldDolZFxuIiwgcmV0KTsKIAorCWZvciAoaSA9IDA7IGkgPCBk
-cHVfbWRzcy0+bnVtX3BhdGhzOyBpKyspCisJCWljY19zZXRfYncoZHB1X21kc3MtPnBhdGhbaV0s
-IDAsIDApOworCiAJcmV0dXJuIHJldDsKIH0KIApAQCAtMTU1LDYgKzE4OCw3IEBAIHN0YXRpYyB2
-b2lkIGRwdV9tZHNzX2Rlc3Ryb3koc3RydWN0IGRybV9kZXZpY2UgKmRldikKIAlzdHJ1Y3QgbXNt
-X2RybV9wcml2YXRlICpwcml2ID0gZGV2LT5kZXZfcHJpdmF0ZTsKIAlzdHJ1Y3QgZHB1X21kc3Mg
-KmRwdV9tZHNzID0gdG9fZHB1X21kc3MocHJpdi0+bWRzcyk7CiAJc3RydWN0IGRzc19tb2R1bGVf
-cG93ZXIgKm1wID0gJmRwdV9tZHNzLT5tcDsKKwlpbnQgaTsKIAogCXBtX3J1bnRpbWVfZGlzYWJs
-ZShkZXYtPmRldik7CiAJX2RwdV9tZHNzX2lycV9kb21haW5fZmluaShkcHVfbWRzcyk7CkBAIC0x
-NjIsNiArMTk2LDkgQEAgc3RhdGljIHZvaWQgZHB1X21kc3NfZGVzdHJveShzdHJ1Y3QgZHJtX2Rl
-dmljZSAqZGV2KQogCW1zbV9kc3NfcHV0X2NsayhtcC0+Y2xrX2NvbmZpZywgbXAtPm51bV9jbGsp
-OwogCWRldm1fa2ZyZWUoJnBkZXYtPmRldiwgbXAtPmNsa19jb25maWcpOwogCisJZm9yIChpID0g
-MDsgaSA8IGRwdV9tZHNzLT5udW1fcGF0aHM7IGkrKykKKwkJaWNjX3B1dChkcHVfbWRzcy0+cGF0
-aFtpXSk7CisKIAlpZiAoZHB1X21kc3MtPm1taW8pCiAJCWRldm1faW91bm1hcCgmcGRldi0+ZGV2
-LCBkcHVfbWRzcy0+bW1pbyk7CiAJZHB1X21kc3MtPm1taW8gPSBOVUxMOwpAQCAtMjAwLDYgKzIz
-NywxMCBAQCBpbnQgZHB1X21kc3NfaW5pdChzdHJ1Y3QgZHJtX2RldmljZSAqZGV2KQogCX0KIAlk
-cHVfbWRzcy0+bW1pb19sZW4gPSByZXNvdXJjZV9zaXplKHJlcyk7CiAKKwlyZXQgPSBkcHVfbWRz
-c19wYXJzZV9kYXRhX2J1c19pY2NfcGF0aChkZXYsIGRwdV9tZHNzKTsKKwlpZiAocmV0KQorCQly
-ZXR1cm4gcmV0OworCiAJbXAgPSAmZHB1X21kc3MtPm1wOwogCXJldCA9IG1zbV9kc3NfcGFyc2Vf
-Y2xvY2socGRldiwgbXApOwogCWlmIChyZXQpIHsKQEAgLTIyMSwxNCArMjYyLDE0IEBAIGludCBk
-cHVfbWRzc19pbml0KHN0cnVjdCBkcm1fZGV2aWNlICpkZXYpCiAJCWdvdG8gaXJxX2Vycm9yOwog
-CX0KIAorCXByaXYtPm1kc3MgPSAmZHB1X21kc3MtPmJhc2U7CisKIAlwbV9ydW50aW1lX2VuYWJs
-ZShkZXYtPmRldik7CiAKIAlwbV9ydW50aW1lX2dldF9zeW5jKGRldi0+ZGV2KTsKIAlkcHVfbWRz
-cy0+aHd2ZXJzaW9uID0gcmVhZGxfcmVsYXhlZChkcHVfbWRzcy0+bW1pbyk7CiAJcG1fcnVudGlt
-ZV9wdXRfc3luYyhkZXYtPmRldik7CiAKLQlwcml2LT5tZHNzID0gJmRwdV9tZHNzLT5iYXNlOwot
-CiAJcmV0dXJuIHJldDsKIAogaXJxX2Vycm9yOgotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24g
-Q2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51
-eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRyZW5vIG1haWxpbmcgbGlzdApGcmVlZHJl
-bm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21h
-aWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Add interconnect properties such as interconnect provider specifier
+, the edge source and destination ports which are required by the
+interconnect API to configure interconnect path for MDSS.
+
+Changes in v2:
+	- none
+
+Changes in v3:
+	- Remove common property definitions (Rob Herring)
+
+Changes in v4:
+	- Use port macros and change port string names (Georgi Djakov)
+
+Changes in v5:
+	- None
+
+Changes in v6:
+	- None
+
+Signed-off-by: Sravanthi Kollukuduru <skolluku@codeaurora.org>
+Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
+---
+ Documentation/devicetree/bindings/display/msm/dpu.txt | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/msm/dpu.txt b/Documentation/devicetree/bindings/display/msm/dpu.txt
+index ad2e883..a61dd40 100644
+--- a/Documentation/devicetree/bindings/display/msm/dpu.txt
++++ b/Documentation/devicetree/bindings/display/msm/dpu.txt
+@@ -28,6 +28,11 @@ Required properties:
+ - #address-cells: number of address cells for the MDSS children. Should be 1.
+ - #size-cells: Should be 1.
+ - ranges: parent bus address space is the same as the child bus address space.
++- interconnects : interconnect path specifier for MDSS according to
++  Documentation/devicetree/bindings/interconnect/interconnect.txt. Should be
++  2 paths corresponding to 2 AXI ports.
++- interconnect-names : MDSS will have 2 port names to differentiate between the
++  2 interconnect paths defined with interconnect specifier.
+ 
+ Optional properties:
+ - assigned-clocks: list of clock specifiers for clocks needing rate assignment
+@@ -86,6 +91,11 @@ Example:
+ 		interrupt-controller;
+ 		#interrupt-cells = <1>;
+ 
++		interconnects = <&rsc_hlos MASTER_MDP0 &rsc_hlos SLAVE_EBI1>,
++				<&rsc_hlos MASTER_MDP1 &rsc_hlos SLAVE_EBI1>;
++
++		interconnect-names = "mdp0-mem", "mdp1-mem";
++
+ 		iommus = <&apps_iommu 0>;
+ 
+ 		#address-cells = <2>;
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
