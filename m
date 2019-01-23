@@ -1,60 +1,58 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v2 2/2] dt-bindings: interrupt-controller: loongson ls1x intc
-Date: Wed, 23 Jan 2019 14:23:35 +0800
-Message-ID: <20190123062341.8957-2-jiaxun.yang@flygoat.com>
-References: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
- <20190123062341.8957-1-jiaxun.yang@flygoat.com>
+From: alokc@codeaurora.org
+Subject: Re: [PATCH 0/6] Add interconnect support for GENI QUPs
+Date: Wed, 23 Jan 2019 12:15:10 +0530
+Message-ID: <74b768d6573665fe2a4533a23ad23a9e@codeaurora.org>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123062341.8957-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: Jiaxun Yang <jiaxun.yang@flygoat.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, linux-arm-msm-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Dt-bindings doc about Loongson-1 interrupt controller
++Mark Brown
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../loongson,ls1x-intc.txt                    | 28 +++++++++++++++++++
- 1 file changed, 28 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
+On 2019-01-22 12:03, Alok Chauhan wrote:
+> This patch series contains following:
+> * Add wrapper framework to support interconnect path from GENI QUPs.
+>   This wrapper enabled and help individual SEs to put their BW request.
+>   Adding this wrapper make sense because we don't want individual SEs
+>   to request to interconnect driver separately and put individual bw
+>   votes from QUP.
+> 
+>   This wrapper framework does the following:
+>   - Request for interconnect path handle
+>   - Maintain record of individual SEs' avg/peak bw.
+>   - Aggregated avg/peak bw based on how many SE's are active and put
+>     single bw request from QUP
+> 
+> * Interconnect wrapper API calling from I2C, SPI & Uart driver
+> * dt binding in sdm845 soc for Interconnect path for GENI QUPs
+> * dt binding documentation
+> 
+> 
+> Alok Chauhan (6):
+>   dt-bindings: soc: qcom: Add interconnect binding for GENI QUP
+>   soc: qcom: Add wrapper to support for Interconnect path
+>   i2c: i2c-qcom-geni: Add interconnect support
+>   spi: spi-geni-qcom: Add interconnect support
+>   tty: serial: qcom_geni_serial: Add interconnect support
+>   arm64: dts: sdm845: Add interconnect for GENI QUP
+> 
+>  .../devicetree/bindings/soc/qcom/qcom,geni-se.txt  |  10 ++
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi               |  14 +++
+>  drivers/i2c/busses/i2c-qcom-geni.c                 |  13 +++
+>  drivers/soc/qcom/qcom-geni-se.c                    | 129 
+> +++++++++++++++++++++
+>  drivers/spi/spi-geni-qcom.c                        |  20 +++-
+>  drivers/tty/serial/qcom_geni_serial.c              |  27 ++++-
+>  include/linux/qcom-geni-se.h                       |  11 ++
+>  7 files changed, 222 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
-new file mode 100644
-index 000000000000..afa8fec45f88
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
-@@ -0,0 +1,28 @@
-+Loongson ls1x Interrupt Controller
-+
-+Required properties:
-+
-+- compatible : should be "ingenic,<socname>-intc". Valid strings are:
-+    loongson,ls1b-intc
-+    loongson,ls1c-intc
-+
-+- reg : Specifies base physical address and size of the registers.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+- interrupts : Specifies the CPU interrupts the controller is connected to,
-+    - For ls1b, it must have 4 interrupts.
-+    - For ls1c, it must have 5 interrupts.
-+
-+Example:
-+
-+intc: interrupt-controller@1fd01040 {
-+	compatible = "loongson,ls1c-intc";
-+	reg = <0x1fd01040 0x78>;
-+
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+
-+	interrupt-parent = <&cpu_intc>;
-+	interrupts = <2>, <3>, <4>, <5>, <6>;
-+};
-\ No newline at end of file
 -- 
-2.20.1
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora 
+Forum,a Linux Foundation Collaborative Project
