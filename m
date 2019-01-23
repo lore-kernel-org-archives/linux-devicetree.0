@@ -1,55 +1,73 @@
-From: Jayant Shekhar <jshekhar@codeaurora.org>
-Subject: [v1] drm/msm: Remove clock and bandwidth votes in mdss pm suspend
-Date: Wed, 23 Jan 2019 16:42:40 +0530
-Message-ID: <1548241960-7412-1-git-send-email-jshekhar@codeaurora.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: RE: [PATCH V2 3/5] dt-bindings: clock: update CPU clock ID name
+Date: Wed, 23 Jan 2019 11:17:09 +0000
+Message-ID: <AM0PR04MB4211EAC52F0744EB516717EE80990@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1548231044-4344-1-git-send-email-aisheng.dong@nxp.com>
+ <1548231044-4344-4-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, Jayant Shekhar <jshekhar@codeaurora.org>, seanpaul@chromium.org, hoegsberg@chromium.org, chandanu@codeaurora.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <1548231044-4344-4-git-send-email-aisheng.dong@nxp.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-TURTUyBQTSBzdXNwZW5kIGlzIGRlcGVuZGVudCBvbiBydW50aW1lIHN1c3BlbmQgZm9yIGRpc2Fi
-bGluZwpjbG9ja3MgYW5kIHJlbW92aW5nIGJhbmR3aWR0aCB2b3Rlcy4gSW4gY2FzZSBvZiBwbV9z
-dXNwZW5kCnRyaWdnZXJlZCwgZHBtX3ByZXBhcmUgaG9sZCBhIHJlZmNvdW50IG9uIHBvd2VyIHVz
-YWdlIG9mIGRldmljZQphbmQgaGVuY2UgcnVudGltZSBzdXNwZW5kIGlzIG5ldmVyIHRyaWdnZXJl
-ZCBkdXJpbmcgcG1fc3VzcGVuZC4KQXMgcnVudGltZSBzdXNwZW5kIGlzIG5vdCB0cmlnZ2VyZWQs
-IGNsb2NrcyBhbmQgYmFuZHdpZHRoIHZvdGVzCnJlbWFpbi4gSGVuY2UgZXhwbGljaXRseSB0cmln
-Z2VyIG1kc3MgZGlzYWJsZSBpbiBtc21fcG1fc3VzcGVuZAp0byBkaXNhYmxlIGNsb2NrcyBhbmQg
-cmVtb3ZlIHRoZSB2b3Rlcy4KClNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hh
-ckBjb2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYyB8IDgg
-KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9k
-cml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Ry
-di5jCmluZGV4IDVjNjBiYjMuLmZmZTNhMjUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
-c20vbXNtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCkBAIC0xMDY4
-LDEyICsxMDY4LDE2IEBAIHN0YXRpYyBpbnQgbXNtX3BtX3N1c3BlbmQoc3RydWN0IGRldmljZSAq
-ZGV2KQogewogCXN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7
-CiAJc3RydWN0IG1zbV9kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOworCXN0
-cnVjdCBtc21fbWRzcyAqbWRzcyA9IHByaXYtPm1kc3M7CiAKIAlpZiAoIUlTX0VSUl9PUl9OVUxM
-KHByaXYtPnBtX3N0YXRlKSkKIAkJcmV0dXJuIDA7CiAKIAlwcml2LT5wbV9zdGF0ZSA9IGRybV9h
-dG9taWNfaGVscGVyX3N1c3BlbmQoZGRldik7CiAKKwlpZiAobWRzcyAmJiBtZHNzLT5mdW5jcykK
-KwkJbWRzcy0+ZnVuY3MtPmRpc2FibGUobWRzcyk7CisKIAlyZXR1cm4gSVNfRVJSKHByaXYtPnBt
-X3N0YXRlKSA/IFBUUl9FUlIocHJpdi0+cG1fc3RhdGUpIDogMDsKIH0KIApAQCAtMTA4MSwxMSAr
-MTA4NSwxNSBAQCBzdGF0aWMgaW50IG1zbV9wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQog
-ewogCXN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7CiAJc3Ry
-dWN0IG1zbV9kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOworCXN0cnVjdCBt
-c21fbWRzcyAqbWRzcyA9IHByaXYtPm1kc3M7CiAJaW50IHJldDsKIAogCWlmIChJU19FUlJfT1Jf
-TlVMTChwcml2LT5wbV9zdGF0ZSkpCiAJCXJldHVybiAwOwogCisJaWYgKG1kc3MgJiYgbWRzcy0+
-ZnVuY3MpCisJCW1kc3MtPmZ1bmNzLT5lbmFibGUobWRzcyk7CisKIAlyZXQgPSBkcm1fYXRvbWlj
-X2hlbHBlcl9yZXN1bWUoZGRldiwgcHJpdi0+cG1fc3RhdGUpOwogCWlmIChyZXQgPT0gMCkKIAkJ
-cHJpdi0+cG1fc3RhdGUgPSBOVUxMOwotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
-LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3Vu
-ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
-bGlzdGluZm8vZHJpLWRldmVsCg==
+> -----Original Message-----
+> From: Aisheng Dong
+> Sent: Wednesday, January 23, 2019 4:17 PM
+> To: linux-clk@vger.kernel.org
+> Cc: linux-arm-kernel@lists.infradead.org; sboyd@kernel.org;
+> mturquette@baylibre.com; shawnguo@kernel.org; Fabio Estevam
+> <fabio.estevam@nxp.com>; dl-linux-imx <linux-imx@nxp.com>;
+> kernel@pengutronix.de; robh+dt@kernel.org; devicetree@vger.kernel.org;
+> Aisheng Dong <aisheng.dong@nxp.com>
+> Subject: [PATCH V2 3/5] dt-bindings: clock: update CPU clock ID name
+> 
+> Update the CPU clocks to CPU cluster clock.
+> 
+> Cc: Stephen Boyd <sboyd@kernel.org>
+> Cc: Rob Herring <robh+dt@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: Sascha Hauer <kernel@pengutronix.de>
+> Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> Cc: Michael Turquette <mturquette@baylibre.com>
+> Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  include/dt-bindings/clock/imx8-clock.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/include/dt-bindings/clock/imx8-clock.h
+> b/include/dt-bindings/clock/imx8-clock.h
+> index 4236818..aa9b9a0 100644
+> --- a/include/dt-bindings/clock/imx8-clock.h
+> +++ b/include/dt-bindings/clock/imx8-clock.h
+> @@ -12,7 +12,7 @@
+>  #define IMX_CLK_DUMMY				0
+> 
+>  /* CPU */
+> -#define IMX_A35_CLK					1
+
+Sorry this one breaks the building as clock driver already use IMX_A35_CLK.
+Will update and resend.
+
+Regards
+Dong Aisheng
+
+> +#define IMX_CPU_CLUSTER_A35_CLK				1
+> 
+>  /* LSIO SS */
+>  #define IMX_LSIO_MEM_CLK				2
+> --
+> 2.7.4
