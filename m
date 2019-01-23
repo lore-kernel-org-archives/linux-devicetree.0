@@ -1,104 +1,195 @@
-From: Paul Burton <paul.burton@mips.com>
-Subject: Re: [PATCH v1 00/11] MIPS: ath79: move towards proper OF support
-Date: Wed, 23 Jan 2019 01:33:53 +0000
-Message-ID: <CY4PR2201MB1272251B8C9F4235284FFB4AC1990@CY4PR2201MB1272.namprd22.prod.outlook.com>
-References: <20190111142240.10908-1-o.rempel@pengutronix.de>
+From: Matthias Kaehlcke <mka@chromium.org>
+Subject: Re: [PATCH v3 1/1] arm64: dts: sdm845: wireup the thermal trip
+ points to cpufreq
+Date: Tue, 22 Jan 2019 18:12:51 -0800
+Message-ID: <20190123021251.GJ261387@google.com>
+References: <cover.1548093127.git.amit.kucheria@linaro.org>
+ <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111142240.10908-1-o.rempel@pengutronix.de>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <6a21a9ee7663e1b32d8ea81ac5e51d187aed25fb.1548093127.git.amit.kucheria@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: Paul Burton <pburton@wavecomp.com>, Ralf Baechle <ralf@linux-mips.org>, James Hogan <jhogan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Oleksij Rempel <o.rempel@pengutronix.de>, Pengutronix Kernel Team <kernel@pengutronix.de>, "linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, John Crispin <john@phrozen.org>, Felix Fietkau <nbd@nbd.name>"linux-mips@vger.kernel.org" <linux-mips@vger.kernel.org>
+To: Amit Kucheria <amit.kucheria@linaro.org>
+Cc: linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, bjorn.andersson@linaro.org, edubezval@gmail.com, andy.gross@linaro.org, tdas@codeaurora.org, swboyd@chromium.org, dianders@chromium.org, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hello,
+Hi Amit,
 
-Oleksij Rempel wrote:
-> This patches are take from OpenWRT, rebased and tested with kernel
-> v5.0-rt1 on DPTechnics DPT-Module (Atheros AR9331) by me.
->=20
-> Since one dt-bindings header is touched, I added DT maintainers to the
-> TO/CC.
->=20
-> Felix Fietkau (6):
-> MIPS: ath79: add helpers for setting clocks and expose the ref clock
-> MIPS: ath79: move legacy "wdt" and "uart" clock aliases out of soc
-> init
-> MIPS: ath79: pass PLL base to clock init functions
-> MIPS: ath79: make specifying the reference clock in DT optional
-> MIPS: ath79: support setting up clock via DT on all SoC types
-> MIPS: ath79: export switch MDIO reference clock
->=20
-> John Crispin (5):
-> MIPS: ath79: drop legacy IRQ code
-> MIPS: ath79: drop machfiles
-> MIPS: ath79: drop legacy pci code
-> MIPS: ath79: drop platform device registration code
-> MIPS: ath79: drop !OF clock code
->=20
-> arch/mips/Kconfig                        |   1 -
-> arch/mips/ath79/Kconfig                  |  73 -----
-> arch/mips/ath79/Makefile                 |  23 +-
-> arch/mips/ath79/clock.c                  | 342 ++++++++++-------------
-> arch/mips/ath79/common.h                 |   5 -
-> arch/mips/ath79/dev-common.c             | 159 -----------
-> arch/mips/ath79/dev-common.h             |  18 --
-> arch/mips/ath79/dev-gpio-buttons.c       |  56 ----
-> arch/mips/ath79/dev-gpio-buttons.h       |  23 --
-> arch/mips/ath79/dev-leds-gpio.c          |  54 ----
-> arch/mips/ath79/dev-leds-gpio.h          |  21 --
-> arch/mips/ath79/dev-spi.c                |  38 ---
-> arch/mips/ath79/dev-spi.h                |  22 --
-> arch/mips/ath79/dev-usb.c                | 242 ----------------
-> arch/mips/ath79/dev-usb.h                |  17 --
-> arch/mips/ath79/dev-wmac.c               | 155 ----------
-> arch/mips/ath79/dev-wmac.h               |  17 --
-> arch/mips/ath79/irq.c                    | 169 -----------
-> arch/mips/ath79/mach-ap121.c             |  92 ------
-> arch/mips/ath79/mach-ap136.c             | 156 -----------
-> arch/mips/ath79/mach-ap81.c              | 100 -------
-> arch/mips/ath79/mach-db120.c             | 136 ---------
-> arch/mips/ath79/mach-pb44.c              | 128 ---------
-> arch/mips/ath79/mach-ubnt-xm.c           | 126 ---------
-> arch/mips/ath79/machtypes.h              |  28 --
-> arch/mips/ath79/pci.c                    | 273 ------------------
-> arch/mips/ath79/pci.h                    |  35 ---
-> arch/mips/ath79/setup.c                  |  78 +-----
-> arch/mips/include/asm/mach-ath79/ath79.h |   4 -
-> arch/mips/pci/Makefile                   |   1 +
-> arch/mips/pci/fixup-ath79.c              |  21 ++
-> include/dt-bindings/clock/ath79-clk.h    |   4 +-
-> 32 files changed, 185 insertions(+), 2432 deletions(-)
-> delete mode 100644 arch/mips/ath79/dev-common.c
-> delete mode 100644 arch/mips/ath79/dev-common.h
-> delete mode 100644 arch/mips/ath79/dev-gpio-buttons.c
-> delete mode 100644 arch/mips/ath79/dev-gpio-buttons.h
-> delete mode 100644 arch/mips/ath79/dev-leds-gpio.c
-> delete mode 100644 arch/mips/ath79/dev-leds-gpio.h
-> delete mode 100644 arch/mips/ath79/dev-spi.c
-> delete mode 100644 arch/mips/ath79/dev-spi.h
-> delete mode 100644 arch/mips/ath79/dev-usb.c
-> delete mode 100644 arch/mips/ath79/dev-usb.h
-> delete mode 100644 arch/mips/ath79/dev-wmac.c
-> delete mode 100644 arch/mips/ath79/dev-wmac.h
-> delete mode 100644 arch/mips/ath79/irq.c
-> delete mode 100644 arch/mips/ath79/mach-ap121.c
-> delete mode 100644 arch/mips/ath79/mach-ap136.c
-> delete mode 100644 arch/mips/ath79/mach-ap81.c
-> delete mode 100644 arch/mips/ath79/mach-db120.c
-> delete mode 100644 arch/mips/ath79/mach-pb44.c
-> delete mode 100644 arch/mips/ath79/mach-ubnt-xm.c
-> delete mode 100644 arch/mips/ath79/machtypes.h
-> delete mode 100644 arch/mips/ath79/pci.c
-> delete mode 100644 arch/mips/ath79/pci.h
-> create mode 100644 arch/mips/pci/fixup-ath79.c
+On Mon, Jan 21, 2019 at 11:38:34PM +0530, Amit Kucheria wrote:
+> Since all cpus in the big and little clusters, respectively, are in the
+> same frequency domain, use all of them for mitigation in the
+> cooling-map. We end up with two cooling devices - one each for the big
+> and little clusters.
+> 
+> We throttle lightly at the first trip point, just removing the boost
+> frequency. At the next trip point we allow ourselves to be throttled to
+> any extent.
+> 
+> Signed-off-by: Amit Kucheria <amit.kucheria@linaro.org>
+> ---
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 225 +++++++++++++++++++++++++--
+>  1 file changed, 209 insertions(+), 16 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index c27cbd3bcb0a..878f661d16eb 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -13,6 +13,7 @@
+>  #include <dt-bindings/reset/qcom,sdm845-aoss.h>
+>  #include <dt-bindings/soc/qcom,rpmh-rsc.h>
+>  #include <dt-bindings/clock/qcom,gcc-sdm845.h>
+> +#include <dt-bindings/thermal/thermal.h>
+>  
+>  / {
+>  	interrupt-parent = <&intc>;
+> @@ -99,6 +100,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x0>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_0>;
+>  			L2_0: l2-cache {
+>  				compatible = "cache";
+> @@ -114,6 +116,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x100>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_100>;
+>  			L2_100: l2-cache {
+>  				compatible = "cache";
+> @@ -126,6 +129,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x200>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_200>;
+>  			L2_200: l2-cache {
+>  				compatible = "cache";
+> @@ -138,6 +142,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x300>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_300>;
+>  			L2_300: l2-cache {
+>  				compatible = "cache";
+> @@ -150,6 +155,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x400>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_400>;
+>  			L2_400: l2-cache {
+>  				compatible = "cache";
+> @@ -162,6 +168,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x500>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_500>;
+>  			L2_500: l2-cache {
+>  				compatible = "cache";
+> @@ -174,6 +181,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x600>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_600>;
+>  			L2_600: l2-cache {
+>  				compatible = "cache";
+> @@ -186,6 +194,7 @@
+>  			compatible = "qcom,kryo385";
+>  			reg = <0x0 0x700>;
+>  			enable-method = "psci";
+> +			#cooling-cells = <2>;
+>  			next-level-cache = <&L2_700>;
+>  			L2_700: l2-cache {
+>  				compatible = "cache";
+> @@ -1691,18 +1700,41 @@
+>  			thermal-sensors = <&tsens0 1>;
+>  
+>  			trips {
+> -				cpu_alert0: trip0 {
+> +				cpu0_alert1: trip-point@0 {
+>  					temperature = <75000>;
 
-Series applied to mips-next.
+In my observations a 'switch on/threshold' temperature of 75 degrees
+leads to aggressive throttling with IPA when the temperature is above
+this threshold:
 
-Thanks,
-    Paul
+[  716.760804] cpu_cooling_ratelimit: 31 callbacks suppressed
+[  716.760836] cpu cpu4: Cooling state set to 10. New max freq = 1920000
+[  716.773390] power_allocator_ratelimit: 15 callbacks suppressed
+[  716.773405] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=73500, curr_temp=75200 total_requested_power=39025 total_granted_power=18654
+[  749.609336] cpu_cooling_ratelimit: 45 callbacks suppressed
+[  749.609371] cpu cpu4: Cooling state set to 11. New max freq = 1843200
+[  749.624300] power_allocator_ratelimit: 24 callbacks suppressed
+[  749.624323] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=70800, curr_temp=77200 total_requested_power=40136 total_granted_power=17402
+[  780.152633] cpu_cooling_ratelimit: 41 callbacks suppressed
+[  780.152666] cpu cpu4: Cooling state set to 11. New max freq = 1843200
+[  780.165247] power_allocator_ratelimit: 21 callbacks suppressed
+[  780.165261] thermal thermal_zone5: Controlling power: control_temp=95000 last_temp=64800, curr_temp=76900 total_requested_power=39719 total_granted_power=1759
 
-[ This message was auto-generated; if you believe anything is incorrect
-  then please email paul.burton@mips.com to report it. ]
+(the logs come from a local patch in our tree:
+https://chromium.googlesource.com/chromiumos/third_party/kernel/+/ec1c501a8093fed44a6697a5913ef2765f518e1f)
+
+At this point I don't have a clear idea what would be a reasonable
+value for the 'switch on/threshold' temperature, but probably it
+should to be higher than 75 degrees, at least with IPA. If there is
+no reasonable common configuration for different thermal governors I
+guess we'll have to target a commonly used governor and systems
+using other 'incompatible' governors need to override the config in
+their <board>.dtsi.
+
+I should also say that the system I'm testing on isn't a
+representative environment (if such a thing exists at all...). It
+isn't running an upstream kernel (it's a recent version though,
+4.19). We try to stay as close to upstream as possible, however our
+tree includes EAS related patches that affect thermal throttling which
+haven't landed upstream yet. Also we currently use a guesstimated
+value for 'dynamic-power-coefficient', which impacts IPA. And our
+device doesn't have it's final thermal envelope yet, possible future
+hardware changes (e.g. heatsink) may alter the behavior.
+
+>  					hysteresis = <2000>;
+>  					type = "passive";
+>  				};
+>  
+> -				cpu_crit0: trip1 {
+> +				cpu0_alert0: trip-point@1 {
+
+The labels of the two trip points (cpu0_alert0 and cpu0_alert1) are
+inverted.
+
+> +					temperature = <95000>;
+> +					hysteresis = <2000>;
+> +					type = "passive";
+> +				};
+> +
+> +				cpu0_crit: cpu_crit {
+>  					temperature = <110000>;
+>  					hysteresis = <1000>;
+>  					type = "critical";
+>  				};
+>  			};
+> +
+> +			cooling-maps {
+> +				map0 {
+> +					trip = <&cpu0_alert0>;
+> +					cooling-device = <&CPU0 THERMAL_NO_LIMIT 1>,
+> +							 <&CPU1 THERMAL_NO_LIMIT 1>,
+> +							 <&CPU2 THERMAL_NO_LIMIT 1>,
+> +							 <&CPU3 THERMAL_NO_LIMIT 1>;
+> +				};
+
+With IPA this doesn't really limit throttling to the boost
+frequency. Not sure if it has a negative impact, some other platforms
+with a thermal configuration that targets IPA only have a cooling map
+entry for the 'desired/target' temperature.
+
+Cheers
+
+Matthias
