@@ -1,13 +1,13 @@
 From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v3 04/10] usb: ehci-orion: add S2RAM support
-Date: Wed, 23 Jan 2019 14:58:44 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1901231456060.1564-100000@iolanthe.rowland.org>
-References: <20190121112336.23489-5-miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 03/10] usb: ehci-orion: avoid double PHY initialization
+Date: Wed, 23 Jan 2019 15:01:56 -0500 (EST)
+Message-ID: <Pine.LNX.4.44L0.1901231500300.1564-100000@iolanthe.rowland.org>
+References: <20190121112336.23489-4-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190121112336.23489-5-miquel.raynal@bootlin.com>
+In-Reply-To: <20190121112336.23489-4-miquel.raynal@bootlin.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -23,68 +23,72 @@ List-Id: devicetree@vger.kernel.org
 
 On Mon, 21 Jan 2019, Miquel Raynal wrote:
 
-> Add suspend/resume callbacks to reset the host controller properly
-> during S2RAM operation.
+> No need to initialize the PHY from the driver's probe. It is done by
+> the core automatically and doing it twice would increment the
+> phy->powercount counter to 2 instead of 1. During later suspend
+> operation, the counter will be decremented to one, no phy->power_off()
+> will occur and worse than that, the following phy->power_on() at
+> resume time will also be skipped, failing the whole S2RAM operation.
 > 
 > Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
 > ---
->  drivers/usb/host/ehci-orion.c | 25 +++++++++++++++++++++++++
->  1 file changed, 25 insertions(+)
+
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
+
+>  drivers/usb/host/ehci-orion.c | 26 +++-----------------------
+>  1 file changed, 3 insertions(+), 23 deletions(-)
 > 
 > diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-> index 3109f082949e..dab22aa57c0b 100644
+> index 1ad72647a069..3109f082949e 100644
 > --- a/drivers/usb/host/ehci-orion.c
 > +++ b/drivers/usb/host/ehci-orion.c
-> @@ -182,6 +182,30 @@ static int ehci_orion_drv_reset(struct usb_hcd *hcd)
->  	return ret;
->  }
+> @@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  	if (IS_ERR(priv->phy)) {
+>  		err = PTR_ERR(priv->phy);
+>  		if (err != -ENOSYS)
+> -			goto err_phy_get;
+> -	} else {
+> -		err = phy_init(priv->phy);
+> -		if (err)
+> -			goto err_phy_init;
+> -
+> -		err = phy_power_on(priv->phy);
+> -		if (err)
+> -			goto err_phy_power_on;
+> +			goto err_dis_clk;
+>  	}
 >  
-> +static int __maybe_unused ehci_orion_drv_suspend(struct device *dev)
-> +{
-> +	struct usb_hcd *hcd = dev_get_drvdata(dev);
-> +	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
-> +
-> +	ehci_prepare_ports_for_controller_suspend(ehci,
-> +						  device_may_wakeup(dev));
-> +
-> +	return ehci_suspend(hcd, false);
-
-This is a little odd.  Why not just call
-
-	ehci_suspend(hcd, device_may_wakeup(dev));
-
-directly and let it take care of calling
-ehci_prepare_ports_for_controller_suspend() for you?  If you have a
-good reason for doing things this way, please mention that reason in
-the Changelog.
-
-> +}
-> +
-> +static int __maybe_unused ehci_orion_drv_resume(struct device *dev)
-> +{
-> +	struct usb_hcd *hcd = dev_get_drvdata(dev);
-> +	struct ehci_hcd *ehci = hcd_to_ehci(hcd);
-> +
-> +	ehci_prepare_ports_for_controller_resume(ehci);
-> +
-> +	return ehci_resume(hcd, false);
-
-Same thing here.
-
-> +}
-> +
-> +static SIMPLE_DEV_PM_OPS(ehci_orion_pm_ops, ehci_orion_drv_suspend,
-> +			 ehci_orion_drv_resume);
-> +
->  static const struct ehci_driver_overrides orion_overrides __initconst = {
->  	.extra_priv_size =	sizeof(struct orion_ehci_hcd),
->  	.reset = ehci_orion_drv_reset,
-> @@ -334,6 +358,7 @@ static struct platform_driver ehci_orion_driver = {
->  	.driver = {
->  		.name	= "orion-ehci",
->  		.of_match_table = ehci_orion_dt_ids,
-> +		.pm = &ehci_orion_pm_ops,
->  	},
->  };
-
-Alan Stern
+>  	/*
+> @@ -297,19 +289,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
+>  
+>  	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
+>  	if (err)
+> -		goto err_add_hcd;
+> +		goto err_dis_clk;
+>  
+>  	device_wakeup_enable(hcd->self.controller);
+>  	return 0;
+>  
+> -err_add_hcd:
+> -	if (!IS_ERR(priv->phy))
+> -		phy_power_off(priv->phy);
+> -err_phy_power_on:
+> -	if (!IS_ERR(priv->phy))
+> -		phy_exit(priv->phy);
+> -err_phy_init:
+> -err_phy_get:
+> +err_dis_clk:
+>  	if (!IS_ERR(priv->clk))
+>  		clk_disable_unprepare(priv->clk);
+>  	usb_put_hcd(hcd);
+> @@ -327,11 +312,6 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
+>  
+>  	usb_remove_hcd(hcd);
+>  
+> -	if (!IS_ERR(priv->phy)) {
+> -		phy_power_off(priv->phy);
+> -		phy_exit(priv->phy);
+> -	}
+> -
+>  	if (!IS_ERR(priv->clk))
+>  		clk_disable_unprepare(priv->clk);
