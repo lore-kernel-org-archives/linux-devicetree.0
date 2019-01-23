@@ -1,185 +1,59 @@
-From: Vignesh R <vigneshr@ti.com>
-Subject: Re: [PATCH v4 2/2] mtd: spi-nor: cadence-quadspi: Add support for
- Octal SPI controller
-Date: Wed, 23 Jan 2019 14:43:36 +0530
-Message-ID: <99eaa2bf-abc2-5432-31fd-e319fddcf478@ti.com>
-References: <20190122064137.17114-1-vigneshr@ti.com>
- <20190122064137.17114-3-vigneshr@ti.com> <20190123094552.57665d2e@bbrezillon>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: Re: [PATCH V10 1/4] dt-bindings: mmc: Add supports-cqe property
+Date: Wed, 23 Jan 2019 10:15:07 +0100
+Message-ID: <20190123091507.GA24072@ulmo>
+References: <1548186993-6229-1-git-send-email-skomatineni@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="d6Gm4EdcadzBjdND"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123094552.57665d2e@bbrezillon>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <1548186993-6229-1-git-send-email-skomatineni@nvidia.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Boris Brezillon <bbrezillon@kernel.org>
-Cc: Tudor.Ambarus@microchip.com, Marek Vasut <marek.vasut@gmail.com>, Rob Herring <robh+dt@kernel.org>, linux-mtd@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, jonathanh@nvidia.com, adrian.hunter@intel.com, ulf.hansson@linaro.org, anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 
+--d6Gm4EdcadzBjdND
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 23-Jan-19 2:15 PM, Boris Brezillon wrote:
-> On Tue, 22 Jan 2019 12:11:37 +0530
-> Vignesh R <vigneshr@ti.com> wrote:
-> 
->> Cadence OSPI controller IP supports Octal IO (x8 IO lines),
->> It also has an integrated PHY. IP register layout is very
->> similar to existing QSPI IP except for additional bits to support Octal
->> and Octal DDR mode. Therefore, extend current driver to support Octal
->> mode. Only Octal SDR read (1-1-8)mode is supported for now.
->>
->> Tested with mt35xu512aba Octal flash on TI's AM654 EVM.
->>
->> Signed-off-by: Vignesh R <vigneshr@ti.com>
->> ---
->>
->> v4: Fix comments by Tudor on v3
->> v3: No changes
->> v2: Declare Octal mode capability based on compatible.
->>
->>  drivers/mtd/spi-nor/cadence-quadspi.c | 53 +++++++++++++++++++++------
->>  1 file changed, 41 insertions(+), 12 deletions(-)
->>
->> diff --git a/drivers/mtd/spi-nor/cadence-quadspi.c b/drivers/mtd/spi-nor/cadence-quadspi.c
->> index 04cedd3a2bf6..2091addc45a3 100644
->> --- a/drivers/mtd/spi-nor/cadence-quadspi.c
->> +++ b/drivers/mtd/spi-nor/cadence-quadspi.c
->> @@ -44,6 +44,12 @@
->>  /* Quirks */
->>  #define CQSPI_NEEDS_WR_DELAY		BIT(0)
->>  
->> +/* Capabilities mask */
->> +#define cqspi_base_hwcaps_mask					\
-> 
-> Nit: we usually use upper cases for such definitions.
-> 
+On Tue, Jan 22, 2019 at 11:56:30AM -0800, Sowjanya Komatineni wrote:
+> Add supports-cqe optional property for MMC hosts.
+>=20
+> This property is used to identify the specific host controller
+> supporting command queue.
+>=20
+> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> ---
+>  [V10]: This patch version moves supports-cqe property from vendor
+> 	specific MMC property to common MMC property.
+>=20
+>  Documentation/devicetree/bindings/mmc/mmc.txt | 2 ++
+>  1 file changed, 2 insertions(+)
 
-Will fix.
+Reviewed-by: Thierry Reding <treding@nvidia.com>
 
->> +	(SNOR_HWCAPS_READ | SNOR_HWCAPS_READ_FAST |		\
->> +	SNOR_HWCAPS_READ_1_1_2 | SNOR_HWCAPS_READ_1_1_4 |	\
->> +	SNOR_HWCAPS_PP)
->> +
->>  struct cqspi_st;
->>  
->>  struct cqspi_flash_pdata {
->> @@ -93,6 +99,11 @@ struct cqspi_st {
->>  	struct cqspi_flash_pdata f_pdata[CQSPI_MAX_CHIPSELECT];
->>  };
->>  
->> +struct cqspi_driver_platdata {
->> +	u32 hwcaps_mask;
->> +	u8 quirks;
->> +};
->> +
->>  /* Operation timeout value */
->>  #define CQSPI_TIMEOUT_MS			500
->>  #define CQSPI_READ_TIMEOUT_MS			10
->> @@ -101,6 +112,7 @@ struct cqspi_st {
->>  #define CQSPI_INST_TYPE_SINGLE			0
->>  #define CQSPI_INST_TYPE_DUAL			1
->>  #define CQSPI_INST_TYPE_QUAD			2
->> +#define CQSPI_INST_TYPE_OCTAL			3
->>  
->>  #define CQSPI_DUMMY_CLKS_PER_BYTE		8
->>  #define CQSPI_DUMMY_BYTES_MAX			4
->> @@ -911,6 +923,9 @@ static int cqspi_set_protocol(struct spi_nor *nor, const int read)
->>  		case SNOR_PROTO_1_1_4:
->>  			f_pdata->data_width = CQSPI_INST_TYPE_QUAD;
->>  			break;
->> +		case SNOR_PROTO_1_1_8:
->> +			f_pdata->data_width = CQSPI_INST_TYPE_OCTAL;
->> +			break;
->>  		default:
->>  			return -EINVAL;
->>  		}
->> @@ -1213,21 +1228,22 @@ static void cqspi_request_mmap_dma(struct cqspi_st *cqspi)
->>  
->>  static int cqspi_setup_flash(struct cqspi_st *cqspi, struct device_node *np)
->>  {
->> -	const struct spi_nor_hwcaps hwcaps = {
->> -		.mask = SNOR_HWCAPS_READ |
->> -			SNOR_HWCAPS_READ_FAST |
->> -			SNOR_HWCAPS_READ_1_1_2 |
->> -			SNOR_HWCAPS_READ_1_1_4 |
->> -			SNOR_HWCAPS_PP,
->> -	};
->>  	struct platform_device *pdev = cqspi->pdev;
->>  	struct device *dev = &pdev->dev;
->> +	const struct cqspi_driver_platdata *ddata;
->> +	struct spi_nor_hwcaps hwcaps;
->>  	struct cqspi_flash_pdata *f_pdata;
->>  	struct spi_nor *nor;
->>  	struct mtd_info *mtd;
->>  	unsigned int cs;
->>  	int i, ret;
->>  
->> +	ddata = of_device_get_match_data(dev);
->> +	if (!ddata)
->> +		hwcaps.mask = cqspi_base_hwcaps_mask;
->> +	else
->> +		hwcaps.mask = ddata->hwcaps_mask;
->> +
->>  	/* Get flash device data */
->>  	for_each_available_child_of_node(dev->of_node, np) {
->>  		ret = of_property_read_u32(np, "reg", &cs);
->> @@ -1310,7 +1326,7 @@ static int cqspi_probe(struct platform_device *pdev)
->>  	struct cqspi_st *cqspi;
->>  	struct resource *res;
->>  	struct resource *res_ahb;
->> -	unsigned long data;
->> +	const struct cqspi_driver_platdata *ddata;
->>  	int ret;
->>  	int irq;
->>  
->> @@ -1377,8 +1393,8 @@ static int cqspi_probe(struct platform_device *pdev)
->>  	}
->>  
->>  	cqspi->master_ref_clk_hz = clk_get_rate(cqspi->clk);
->> -	data  = (unsigned long)of_device_get_match_data(dev);
->> -	if (data & CQSPI_NEEDS_WR_DELAY)
->> +	ddata  = of_device_get_match_data(dev);
->> +	if (ddata && (ddata->quirks & CQSPI_NEEDS_WR_DELAY))
->>  		cqspi->wr_delay = 5 * DIV_ROUND_UP(NSEC_PER_SEC,
->>  						   cqspi->master_ref_clk_hz);
->>  
->> @@ -1460,14 +1476,27 @@ static const struct dev_pm_ops cqspi__dev_pm_ops = {
->>  #define CQSPI_DEV_PM_OPS	NULL
->>  #endif
->>  
->> +static const struct cqspi_driver_platdata k2g_qspi = {
->> +	.hwcaps_mask = cqspi_base_hwcaps_mask,
->> +	.quirks = CQSPI_NEEDS_WR_DELAY,
->> +};
->> +
->> +static const struct cqspi_driver_platdata am654_ospi = {
->> +	.hwcaps_mask = cqspi_base_hwcaps_mask | SNOR_HWCAPS_READ_1_1_8,
->> +	.quirks = CQSPI_NEEDS_WR_DELAY,
->> +};
->> +
->>  static const struct of_device_id cqspi_dt_ids[] = {
->>  	{
->>  		.compatible = "cdns,qspi-nor",
->> -		.data = (void *)0,
-> 
-> Can't we have a cqspi_driver_platdata instance for that one too?
+--d6Gm4EdcadzBjdND
+Content-Type: application/pgp-signature; name="signature.asc"
 
-I had that in v3, will add it back. Thanks for the review!
+-----BEGIN PGP SIGNATURE-----
 
-> 
->>  	},
->>  	{
->>  		.compatible = "ti,k2g-qspi",
->> -		.data = (void *)CQSPI_NEEDS_WR_DELAY,
->> +		.data = &k2g_qspi,
->> +	},
->> +	{
->> +		.compatible = "ti,am654-ospi",
->> +		.data = &am654_ospi,
->>  	},
->>  	{ /* end of table */ }
->>  };
-> 
+iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxIMJgACgkQ3SOs138+
+s6HG3w//cxrFZWZQwgA1NKCvuES8D+RpOE/c1K8+foWs8q/kyfEOJ4ormoKWaM72
+o6aHTxNbIaoJY8PXgd8Dx3IsBy9DJ6mGbLTz6LZD1+TMegRFxjy4gOAFCe2UljXY
+H4tAXZEeeKQ++dsz0UPOddcmlnCQeROSFILth5Em2RQV81NTGSZEYh4xTL9207pw
+w2t6dpyt302cM7A1RO7bYWtIk+jW/VHM9UGzs8h5p4oXknzj50KlqL+2YuQ16vAO
+3iBQbzNofRyM7yMn9pzIQR2Lr/VAHqGEgbuf5ceVIwo5il/gnj27oyN8luZyXELC
+LZcjYnob4L87LdiQL/vnymcr03UrzIdEFXov7kGmLrhRD3WKrrpj8oqvnDJISFEH
+QToBuPGp9RIaKWtgimpI81XR0AcztuuMkOPZsDvzwItKr6v4iLvt9/1h3h+bSxWv
+I6fWcyfJYSjI8xlXmoWPRGyCcxi+U6y4l1X7c5EPD/uW9C3KYf4IPIsM8JuIb1YK
+yLepArovnU/hzIrkPNZimVk5l24lmgsXB6elorbauumiUUsTvxnV7VTxNcE4+IC9
+Ty/moEjN8CsWIqHxpJLO1I972RA+LH2an86mBHMO0OAEg4d5+a+n+E+/u+vKwa6a
+AOp7fU1HSoih5mf/vRJCZNErDP3AAmcXXx/HNZbiEtoAdMnAyXE=
+=doj9
+-----END PGP SIGNATURE-----
 
-Regards
-Vignesh
+--d6Gm4EdcadzBjdND--
