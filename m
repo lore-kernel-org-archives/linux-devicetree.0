@@ -1,32 +1,92 @@
-From: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
-Subject: Re: [v1] arm64: dts: sdm845: add interconnect DT
- entries for MDSS on SDM845
-Date: Wed, 23 Jan 2019 12:17:28 -0800
-Message-ID: <CAE=gft4vYvqi3cqJTb8GhMo4dGbNzTi4txqfkMi7Ky1hZiwfvA@mail.gmail.com>
-References: <1545373748-1416-1-git-send-email-jshekhar@codeaurora.org>
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Thu, 24 Jan 2019 01:47:56 +0530
+Message-ID: <71ae9f41-50ff-742b-3e12-ca2ce84e0d3c@codeaurora.org>
+References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
+ <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
+ <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com>
+ <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
+ <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
+ <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
+ <CANLsYkxLJS-N0V4eOHM5rfe8MXMZHQApZFsDQns+DAS7xhGCoQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1545373748-1416-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CANLsYkxLJS-N0V4eOHM5rfe8MXMZHQApZFsDQns+DAS7xhGCoQ@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, John Horley <john.horley@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-T24gVGh1LCBEZWMgMjAsIDIwMTggYXQgMTA6MjkgUE0gSmF5YW50IFNoZWtoYXIgPGpzaGVraGFy
-QGNvZGVhdXJvcmEub3JnPiB3cm90ZToKPgo+IEFkZCBpbnRlcmNvbm5lY3QgcHJvcGVydGllcyBz
-dWNoIGFzIHRoZSBzb3VyY2UgYW5kIHRoZSBkZXN0aW5hdGlvbgo+IHBvcnRzIGZvciBNRFNTIG9u
-IFNETTg0NS4KPgo+IFNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hhckBjb2Rl
-YXVyb3JhLm9yZz4KClJldmlld2VkLWJ5OiBFdmFuIEdyZWVuIDxldmdyZWVuQGNocm9taXVtLm9y
-Zz4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KRnJlZWRy
-ZW5vIG1haWxpbmcgbGlzdApGcmVlZHJlbm9AbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8v
-bGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZnJlZWRyZW5vCg==
+Hi Mathieu,
+
+On 1/24/2019 12:44 AM, Mathieu Poirier wrote:
+> On Wed, 23 Jan 2019 at 05:12, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+> 
+> That depends on whether the ETMs have been modified at all, something
+> Suzuki has asked to be clarified.  If ETMs have been modified then we
+> need to understand how they differ from the driver's implementation.
+
+We had asked hardware team for clarification regarding this. Let me
+poke them again. As for the driver, downstream implementation also
+uses the same driver, so I am not sure what do you mean by differing
+from the driver's implementation.
+
+> If the implementations are the same:
+> 
+>>
+>> @@ -1079,6 +1079,10 @@ static const struct amba_id etm4_ids[] = {
+>>           ETM4x_AMBA_ID(0x000bb95a),              /* Cortex-A72 */
+>>           ETM4x_AMBA_ID(0x000bb959),              /* Cortex-A73 */
+>>           ETM4x_AMBA_ID(0x000bb9da),              /* Cortex-A35 */
+>> +       ETM4x_AMBA_ID(0x000f0211),              /* Qualcomm Kryo */
+>> +       ETM4x_AMBA_ID(0x000f0205),              /* Qualcomm Kryo */
+> 
+> What version of the Kryo CPU?  And the above will need to be in a
+> separate patch with the modifications to address the problem you
+> mentionned below.
+> 
+
+There is no Kryo version for MSM8996 (its only given as Kryo), MSM8998
+onwards we have Kryo versions like Kryo 280 and so on. Hence I skipped
+for this one and added the version for SDM845.
+
+>> +       ETM4x_AMBA_ID(0x000bb803),              /* Qualcomm Kryo 385
+>> Cortex-A75 */
+>> +       ETM4x_AMBA_ID(0x000bb802),              /* Qualcomm Kryo 385
+>> Cortex-A55 */
+> 
+> Please add them in chronological order.
+> 
+
+Sure, will do it.
+
+>>           {},
+>>    };
+>>
+>> For msm8996, cpu debug module pid returned is same as ETM
+>> which is causing the probe failure for cpu debug coresight module
+>> as shown in below logs.
+>> For this case, I tried adding these ids to cpu debug driver, but it
+>> splits some errors (coresight-cpu-debug: probe of 3840000.etm failed
+>> with error -16) since the ids are same. Can we override for this case
+>> or there is something else we can do here?
+> 
+> That is another problem.  See this patchset [1] from Mike Leach for a
+> description of the problem and how to fix it.
+> 
+> [1]. https://lkml.org/lkml/2018/12/7/784
+> 
+
+Thanks a lot for this link. I will check this out.
+
+- Sai
+
+-- 
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
