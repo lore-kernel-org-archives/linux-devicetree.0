@@ -1,23 +1,51 @@
-Return-Path: <SRS0=qXSO=PS=cogentembedded.com=sergei.shtylyov@kernel.org>
-From: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: [PATCH RFC 0/2] Add R8A77970 support to the Renesas RPC-IF driver
-Message-ID: <c83b1e54-016f-ef28-6bc9-9be9410c0d9a@cogentembedded.com>
-Date: Thu, 10 Jan 2019 22:01:04 +0300
+Return-Path: <SRS0=cfG7=P7=verge.net.au=horms@kernel.org>
+Date: Wed, 23 Jan 2019 10:41:56 +0100
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH v4 0/2] Add Initial Device Tree for RZ/A2
+Message-ID: <20190123094155.ynxgmvy2xg6l2ywq@verge.net.au>
+References: <20181218170555.121673-1-chris.brandt@renesas.com>
+ <TY1PR01MB1562E0657C155C47620BF6F68A9F0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
-To: linux-spi@vger.kernel.org, Mason Yang <masonccyang@mxic.com.tw>, Rob Herring <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
-Cc: linux-renesas-soc@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <TY1PR01MB1562E0657C155C47620BF6F68A9F0@TY1PR01MB1562.jpnprd01.prod.outlook.com>
+To: Chris Brandt <Chris.Brandt@renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-Hello!
+On Mon, Jan 21, 2019 at 09:17:20PM +0000, Chris Brandt wrote:
+> Hi Simon,
+> 
+> On Tuesday, December 18, 2018, Chris Brandt wrote:
+> > Add a Device Tree for RZ/A2 and the existing eval board.
+> > 
+> > Once these get approved, I'll start piling on the other drivers in
+> > another patch series
+> > 
+> > NOTE:
+> > Since Rob is currently converting shmobile.txt to renesas.yaml,
+> > I'll wait till renesas.yaml hits -next, then add this RZ/A2M EVB
+> > board (it's too confusing to me to figure out how to make a patch
+> > series using multiple different trees)
+> > 
+> > Chris Brandt (2):
+> >   ARM: dts: r7s9210: Initial SoC device tree
+> >   ARM: dts: r7s9210-rza2mevb: Add support for RZ/A2M EVB
+> > 
+> >  arch/arm/boot/dts/Makefile             |   1 +
+> >  arch/arm/boot/dts/r7s9210-rza2mevb.dts |  82 +++++++++++++
+> >  arch/arm/boot/dts/r7s9210.dtsi         | 218
+> > +++++++++++++++++++++++++++++++++
+> >  3 files changed, 301 insertions(+)
+> >  create mode 100644 arch/arm/boot/dts/r7s9210-rza2mevb.dts
+> >  create mode 100644 arch/arm/boot/dts/r7s9210.dtsi
+> 
+> 
+> What ever happened to these patches?
+> 
+> I didn't see any negative feedback after V4, but I also never saw 
+> anything get queued up.
 
-Here's the set of 2 patches against the 'devel' branch of Simon Horman's 'renesas.git'
-repo, the 2 patches adding R8A77980 support (posted before NY), and the Renesas RPC-IF driver/bindings patches v5. We're adding support for the R-Car V3M (R8A77970) RPC-IF
-(which needs a special handling)...
+Sorry about that, it slipped through the cracks somehow.
 
-[1/2] dt-bindings: spi: renesas-rpc: document R8A77970 bindings
-[2/2] spi-renesas-rpc: add R8A77970 support 
-
-MBR, Sergei
+I have now applied this for v5.1.
