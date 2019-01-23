@@ -1,62 +1,38 @@
-From: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-Subject: [v6 3/3] dt-bindings: msm/disp: Introduce interconnect
- bindings for MDSS on SDM845
-Date: Wed, 23 Jan 2019 09:01:37 +0530
-Message-ID: <1548214297-17697-4-git-send-email-jshekhar@codeaurora.org>
-References: <1548214297-17697-1-git-send-email-jshekhar@codeaurora.org>
+From: David Miller <davem@davemloft.net>
+Subject: Re: [PATCH v3 0/5] net: Add support for Qualcomm ethqos
+Date: Tue, 22 Jan 2019 19:38:20 -0800 (PST)
+Message-ID: <20190122.193820.1381659831144896441.davem@davemloft.net>
+References: <20190121091318.20079-1-vkoul@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-In-Reply-To: <1548214297-17697-1-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/freedreno>
-List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
- <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
-Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
-Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
-To: dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org
-Cc: linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, Sravanthi Kollukuduru <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <20190121091318.20079-1-vkoul@kernel.org>
+Sender: netdev-owner@vger.kernel.org
+To: vkoul@kernel.org
+Cc: netdev@vger.kernel.org, linux-arm-msm@vger.kernel.org, niklas.cassel@linaro.org, bjorn.andersson@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, peppe.cavallaro@st.com, alexandre.torgue@st.com, joabreu@synopsys.com, andrew@lunn.ch, f.fainelli@gmail.com, vivien.didelot@savoirfairelinux.com
 List-Id: devicetree@vger.kernel.org
 
-QWRkIGludGVyY29ubmVjdCBwcm9wZXJ0aWVzIHN1Y2ggYXMgaW50ZXJjb25uZWN0IHByb3ZpZGVy
-IHNwZWNpZmllcgosIHRoZSBlZGdlIHNvdXJjZSBhbmQgZGVzdGluYXRpb24gcG9ydHMgd2hpY2gg
-YXJlIHJlcXVpcmVkIGJ5IHRoZQppbnRlcmNvbm5lY3QgQVBJIHRvIGNvbmZpZ3VyZSBpbnRlcmNv
-bm5lY3QgcGF0aCBmb3IgTURTUy4KCkNoYW5nZXMgaW4gdjI6CgktIG5vbmUKCkNoYW5nZXMgaW4g
-djM6CgktIFJlbW92ZSBjb21tb24gcHJvcGVydHkgZGVmaW5pdGlvbnMgKFJvYiBIZXJyaW5nKQoK
-Q2hhbmdlcyBpbiB2NDoKCS0gVXNlIHBvcnQgbWFjcm9zIGFuZCBjaGFuZ2UgcG9ydCBzdHJpbmcg
-bmFtZXMgKEdlb3JnaSBEamFrb3YpCgpDaGFuZ2VzIGluIHY1OgogIAktIE5vbmUKCkNoYW5nZXMg
-aW4gdjY6CgktTm9uZQoKU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1IDxza29s
-bHVrdUBjb2RlYXVyb3JhLm9yZz4KU2lnbmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVr
-aGFyQGNvZGVhdXJvcmEub3JnPgotLS0KIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5n
-cy9kaXNwbGF5L21zbS9kcHUudHh0IHwgMTAgKysrKysrKysrKwogMSBmaWxlIGNoYW5nZWQsIDEw
-IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3MvZGlzcGxheS9tc20vZHB1LnR4dCBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5k
-aW5ncy9kaXNwbGF5L21zbS9kcHUudHh0CmluZGV4IGFkMmU4ODMuLmE2MWRkNDAgMTAwNjQ0Ci0t
-LSBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUudHh0
-CisrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUu
-dHh0CkBAIC0yOCw2ICsyOCwxMSBAQCBSZXF1aXJlZCBwcm9wZXJ0aWVzOgogLSAjYWRkcmVzcy1j
-ZWxsczogbnVtYmVyIG9mIGFkZHJlc3MgY2VsbHMgZm9yIHRoZSBNRFNTIGNoaWxkcmVuLiBTaG91
-bGQgYmUgMS4KIC0gI3NpemUtY2VsbHM6IFNob3VsZCBiZSAxLgogLSByYW5nZXM6IHBhcmVudCBi
-dXMgYWRkcmVzcyBzcGFjZSBpcyB0aGUgc2FtZSBhcyB0aGUgY2hpbGQgYnVzIGFkZHJlc3Mgc3Bh
-Y2UuCistIGludGVyY29ubmVjdHMgOiBpbnRlcmNvbm5lY3QgcGF0aCBzcGVjaWZpZXIgZm9yIE1E
-U1MgYWNjb3JkaW5nIHRvCisgIERvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9pbnRl
-cmNvbm5lY3QvaW50ZXJjb25uZWN0LnR4dC4gU2hvdWxkIGJlCisgIDIgcGF0aHMgY29ycmVzcG9u
-ZGluZyB0byAyIEFYSSBwb3J0cy4KKy0gaW50ZXJjb25uZWN0LW5hbWVzIDogTURTUyB3aWxsIGhh
-dmUgMiBwb3J0IG5hbWVzIHRvIGRpZmZlcmVudGlhdGUgYmV0d2VlbiB0aGUKKyAgMiBpbnRlcmNv
-bm5lY3QgcGF0aHMgZGVmaW5lZCB3aXRoIGludGVyY29ubmVjdCBzcGVjaWZpZXIuCiAKIE9wdGlv
-bmFsIHByb3BlcnRpZXM6CiAtIGFzc2lnbmVkLWNsb2NrczogbGlzdCBvZiBjbG9jayBzcGVjaWZp
-ZXJzIGZvciBjbG9ja3MgbmVlZGluZyByYXRlIGFzc2lnbm1lbnQKQEAgLTg2LDYgKzkxLDExIEBA
-IEV4YW1wbGU6CiAJCWludGVycnVwdC1jb250cm9sbGVyOwogCQkjaW50ZXJydXB0LWNlbGxzID0g
-PDE+OwogCisJCWludGVyY29ubmVjdHMgPSA8JnJzY19obG9zIE1BU1RFUl9NRFAwICZyc2NfaGxv
-cyBTTEFWRV9FQkkxPiwKKwkJCQk8JnJzY19obG9zIE1BU1RFUl9NRFAxICZyc2NfaGxvcyBTTEFW
-RV9FQkkxPjsKKworCQlpbnRlcmNvbm5lY3QtbmFtZXMgPSAibWRwMC1tZW0iLCAibWRwMS1tZW0i
-OworCiAJCWlvbW11cyA9IDwmYXBwc19pb21tdSAwPjsKIAogCQkjYWRkcmVzcy1jZWxscyA9IDwy
-PjsKLS0gClRoZSBRdWFsY29tbSBJbm5vdmF0aW9uIENlbnRlciwgSW5jLiBpcyBhIG1lbWJlciBv
-ZiB0aGUgQ29kZSBBdXJvcmEgRm9ydW0sCmEgTGludXggRm91bmRhdGlvbiBDb2xsYWJvcmF0aXZl
-IFByb2plY3QKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CkZyZWVkcmVubyBtYWlsaW5nIGxpc3QKRnJlZWRyZW5vQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2ZyZWVkcmVubwo=
+From: Vinod Koul <vkoul@kernel.org>
+Date: Mon, 21 Jan 2019 14:43:13 +0530
+
+> Some Qualcomm SoCs sport a ethqos controller which use DW ip, so add
+> the glue driver which uses stmmac driver along with DT bindings for
+> this device.
+> 
+> This controller supports rgmii mode and doesn't work with existing
+> phy drivers as they do not remove the phy delay delay in this mode,
+> so fix the two phy drivers tested with this.
+> 
+> Changes in v3:
+>  - Add description in DT and rename the file and compatible as suggested by
+>    Rob
+>  - Update changelog for QCA8K driver
+>  - Update AT803x phy disable delay for all RGMxx modes
+> 
+> Changes in v2:
+>  - Fix the example in dt-binding
+>  - Remove DT property for disable the delay and disable delay for RGMII mode
+>    in AT803x and QCA8K PHY drivers
+
+Series applied, thanks.
