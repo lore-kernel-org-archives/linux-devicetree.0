@@ -1,286 +1,55 @@
-From: liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [RFC v6 4/4] Documentation: pstore/blk: create document for pstore_blk
-Date: Wed, 23 Jan 2019 19:01:00 +0800
-Message-ID: <1548241260-4679-5-git-send-email-liaoweixiong@allwinnertech.com>
-References: <1548241260-4679-1-git-send-email-liaoweixiong@allwinnertech.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548241260-4679-1-git-send-email-liaoweixiong@allwinnertech.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>
-Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liaoweixiong <liaoweixiong@allwinnertech.com>
+From: Jayant Shekhar <jshekhar@codeaurora.org>
+Subject: [v1] drm/msm: Remove clock and bandwidth votes in mdss pm suspend
+Date: Wed, 23 Jan 2019 16:42:40 +0530
+Message-ID: <1548241960-7412-1-git-send-email-jshekhar@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, Jayant Shekhar <jshekhar@codeaurora.org>, seanpaul@chromium.org, hoegsberg@chromium.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The document, at Documentation/admin-guide/pstore-block.rst,
-tells user how to use pstore_blk and the attentions about panic
-read/write
-
-Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
----
- Documentation/admin-guide/pstore-block.rst | 227 +++++++++++++++++++++++++++++
- MAINTAINERS                                |   1 +
- fs/pstore/Kconfig                          |   4 +
- 3 files changed, 232 insertions(+)
- create mode 100644 Documentation/admin-guide/pstore-block.rst
-
-diff --git a/Documentation/admin-guide/pstore-block.rst b/Documentation/admin-guide/pstore-block.rst
-new file mode 100644
-index 0000000..4bb8c4c
---- /dev/null
-+++ b/Documentation/admin-guide/pstore-block.rst
-@@ -0,0 +1,227 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+Pstore block oops/panic logger
-+==============================
-+
-+Introduction
-+------------
-+
-+Pstore block (pstore_blk) is an oops/panic logger that write its logs to block
-+device before the system crashes. Pstore_blk needs block device driver
-+registering a partition path of the block device, like /dev/mmcblk0p7 for mmc
-+driver, and read/write APIs for this partition when on panic.
-+
-+Pstore block concepts
-+---------------------
-+
-+Pstore block begins at function ``blkz_register``, by which block driver
-+registers to pstore_blk. Recomemd that, block driver should register to
-+pstore_blk after block device is ready. Block driver transfers a structure
-+``blkz_info`` which is defined in *linux/pstore_blk.h*.
-+
-+The following key members of ``struct blkz_info`` may be of interest to you.
-+
-+part_path
-+~~~~~~~~~
-+
-+The path of partition used for pstore_blk. It may be ``/dev/mmcblk[N]p[M]`` for
-+mmc, and ``/dev/mtdblock[N]`` for mtd device.
-+
-+The ``part_path`` is not necessarily if you self-defined general read/write APIs
-+on ``blkz_info``. In other words, the ``part_path`` is only used (by function
-+blkz_default_general_read/write) when general read/write APIs are not defined.
-+
-+See more on section **read/write**.
-+
-+part_size
-+~~~~~~~~~
-+
-+The total size in bytes of partition used for pstore_blk. This member **MUST**
-+be effective and a multiple of 4096. It is recommended to 1M or larger for block
-+device.
-+
-+The block device area is divided into many chunks, and each event writes
-+a chunk of information.
-+
-+dmesg_size
-+~~~~~~~~~~
-+
-+The chunk size in bytes for dmesg(oops/panic). It **MUST** be a multiple of
-+SECTOR_SIZE (Most of the time, the SECTOR_SIZE is 512). If you don't need dmesg,
-+you are safely to set it to 0.
-+
-+NOTE that, the remaining space, except ``pmsg_size`` and others, belongs to
-+dmesg. It means that there are multiple chunks for dmesg.
-+
-+Psotre_blk will log to dmesg chunks one by one, and always overwrite the oldest
-+chunk if no free chunk.
-+
-+pmsg_size
-+~~~~~~~~~
-+
-+The chunk size in bytes for pmsg. It **MUST** be a multiple of SECTOR_SIZE (Most
-+of the time, the SECTOR_SIZE is 512). If you don't need pmsg, you are safely to
-+set it to 0.
-+
-+There is only one chunk for pmsg.
-+
-+Pmsg is a user space accessible pstore object. Writes to */dev/pmsg0* are
-+appended to the chunk. On reboot the contents are available in
-+/sys/fs/pstore/pmsg-pstore-blk-0.
-+
-+dump_oops
-+~~~~~~~~~
-+
-+Dumping both oopses and panics can be done by setting 1 in the ``dump_oops``
-+member while setting 0 in that variable dumps only the panics.
-+
-+read/write
-+~~~~~~~~~~
-+
-+They are general ``read/write`` APIs. It is safely and recommended to ignore it,
-+but set ``part_path``.
-+
-+These general APIs are used all the time expect panic. The ``read`` API is
-+usually used to recover data from block device, and the ``write`` API is usually
-+to flush new data and erase to block device.
-+
-+Pstore_blk will temporarily hold all new data before block device is ready. If
-+you ignore both of ``read/write`` and ``part_path``, the old data will not be
-+recovered and the new data will not be flushed until panic, using panic APIs.
-+If you don't have panic APIs neither, all the data will be dropped when reboot.
-+
-+NOTE that, the general APIs must check whether the block device is ready if
-+self-defined.
-+
-+panic_read/panic_write
-+~~~~~~~~~~~~~~~~~~~~~~
-+
-+They are ``read/write`` APIs for panic. They are likely to general
-+``read/write`` but will be used only when on panic.
-+
-+The attentions for panic read/write see section
-+**Attentions in panic read/write APIs**.
-+
-+Register to pstore block
-+------------------------
-+
-+Block device driver call ``blkz_register`` to register to Psotre_blk.
-+For example:
-+
-+.. code-block:: c
-+
-+ #include <linux/pstore_blk.h>
-+ [...]
-+
-+ static ssize_t XXXX_panic_read(char *buf, size bytes, loff_t pos)
-+ {
-+    [...]
-+ }
-+
-+ static ssize_t XXXX_panic_write(const char *buf, size_t bytes, loff_t pos)
-+ {
-+        [...]
-+ }
-+
-+ struct blkz_info XXXX_info = {
-+        .onwer = THIS_MODULE,
-+        .name = <...>,
-+        .dmesg_size = <...>,
-+        .pmsg_size = <...>,
-+        .dump_oops = true,
-+        .panic_read = XXXX_panic_read,
-+        .panic_write = XXXX_panic_write,
-+ };
-+
-+ static int __init XXXX_init(void)
-+ {
-+        [... get partition information ...]
-+        XXXX_info.part_path = <...>;
-+        XXXX_info.part_size = <...>;
-+
-+        [...]
-+        return blkz_register(&XXXX_info);
-+ }
-+
-+There are multiple ways by which you can get partition information.
-+
-+A. Use the module parameters and kernel cmdline.
-+B. Use Device Tree bindings.
-+C. Use Kconfig.
-+D. Use Driver Feature.
-+   For example, traverse all MTD device by ``register_mtd_user``, and get the
-+   matching name MTD partition.
-+
-+NOTE that, all of above are done by block driver rather then pstore_blk. You can
-+get sample on blkoops.
-+
-+The attentions for panic read/write see section
-+**Attentions in panic read/write APIs**.
-+
-+Compression and header
-+----------------------
-+
-+Block device is large enough, it is not necessary to compress dmesg data.
-+Actually, we recommend not compress. Because pstore_blk will insert some
-+information into the first line of dmesg data if no compression.
-+For example::
-+
-+        Panic: Total 16 times
-+
-+It means that it's the 16th times panic log since burning.
-+Sometimes, the oops|panic counter since burning is very important for embedded
-+device to judge whether the system is stable.
-+
-+The follow line is insert by pstore filesystem.
-+For example::
-+
-+        Oops#2 Part1
-+
-+It means that it's the 2nd times oops log on last booting.
-+
-+Reading the data
-+----------------
-+
-+The dump data can be read from the pstore filesystem. The format for these
-+files is ``dmesg-pstore-blk-[N]`` for dmesg(oops|panic) and
-+``pmsg-pstore-blk-0`` for pmsg, where N is the record number. To delete a stored
-+record from block device, simply unlink the respective pstore file. The
-+timestamp of the dump file records the trigger time.
-+
-+Attentions in panic read/write APIs
-+-----------------------------------
-+
-+If on panic, the kernel is not going to be running for much longer. The tasks
-+will not be scheduled and the most kernel resources will be out of service. It
-+looks like a single-threaded program running on a single-core computer.
-+
-+The following points need special attention for panic read/write APIs:
-+
-+1. Can **NOT** allocate any memory.
-+
-+   If you need memory, just allocate while the block driver is initialing rather
-+   than waiting until the panic.
-+
-+2. Must be polled, **NOT** interrupt driven.
-+
-+   No task schedule any more. The block driver should delay to ensure the write
-+   succeeds, but NOT sleep.
-+
-+3. Can **NOT** take any lock.
-+
-+   There is no other task, no any share resource, you are safely to break all
-+   locks.
-+
-+4. Just use cpu to transfer.
-+
-+   Do not use DMA to transfer unless you are sure that DMA will not keep lock.
-+
-+5. Operate register directly.
-+
-+   Try not to use linux kernel resources. Do io map while initialing rather than
-+   waiting until the panic.
-+
-+6. Reset your block device and controller if necessary.
-+
-+   If you are not sure the state of you block device and controller when panic,
-+   you are safely to stop and reset them.
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 534c574..7c98cde 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -12054,6 +12054,7 @@ F:	include/linux/pstore*
- F:	drivers/firmware/efi/efi-pstore.c
- F:	drivers/acpi/apei/erst.c
- F:	Documentation/admin-guide/ramoops.rst
-+F:	Documentation/admin-guide/pstore-block.rst
- F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
- F:	Documentation/devicetree/bindings/pstore-block/
- K:	\b(pstore|ramoops|blkoops)
-diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
-index f0a1a49..c32f66c 100644
---- a/fs/pstore/Kconfig
-+++ b/fs/pstore/Kconfig
-@@ -160,6 +160,10 @@ config PSTORE_BLK
- 	  This enables panic and oops message to be logged to a block dev
- 	  where it can be read back at some later point.
- 
-+	  For more information, see Documentation/admin-guide/pstore-block.rst.
-+
-+	  If unsure, say N.
-+
- config PSTORE_BLKOOPS
- 	tristate "pstore block with oops logger"
- 	depends on PSTORE_BLK
--- 
-1.9.1
+TURTUyBQTSBzdXNwZW5kIGlzIGRlcGVuZGVudCBvbiBydW50aW1lIHN1c3BlbmQgZm9yIGRpc2Fi
+bGluZwpjbG9ja3MgYW5kIHJlbW92aW5nIGJhbmR3aWR0aCB2b3Rlcy4gSW4gY2FzZSBvZiBwbV9z
+dXNwZW5kCnRyaWdnZXJlZCwgZHBtX3ByZXBhcmUgaG9sZCBhIHJlZmNvdW50IG9uIHBvd2VyIHVz
+YWdlIG9mIGRldmljZQphbmQgaGVuY2UgcnVudGltZSBzdXNwZW5kIGlzIG5ldmVyIHRyaWdnZXJl
+ZCBkdXJpbmcgcG1fc3VzcGVuZC4KQXMgcnVudGltZSBzdXNwZW5kIGlzIG5vdCB0cmlnZ2VyZWQs
+IGNsb2NrcyBhbmQgYmFuZHdpZHRoIHZvdGVzCnJlbWFpbi4gSGVuY2UgZXhwbGljaXRseSB0cmln
+Z2VyIG1kc3MgZGlzYWJsZSBpbiBtc21fcG1fc3VzcGVuZAp0byBkaXNhYmxlIGNsb2NrcyBhbmQg
+cmVtb3ZlIHRoZSB2b3Rlcy4KClNpZ25lZC1vZmYtYnk6IEpheWFudCBTaGVraGFyIDxqc2hla2hh
+ckBjb2RlYXVyb3JhLm9yZz4KLS0tCiBkcml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYyB8IDgg
+KysrKysrKysKIDEgZmlsZSBjaGFuZ2VkLCA4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9k
+cml2ZXJzL2dwdS9kcm0vbXNtL21zbV9kcnYuYyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Ry
+di5jCmluZGV4IDVjNjBiYjMuLmZmZTNhMjUgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9t
+c20vbXNtX2Rydi5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9tc20vbXNtX2Rydi5jCkBAIC0xMDY4
+LDEyICsxMDY4LDE2IEBAIHN0YXRpYyBpbnQgbXNtX3BtX3N1c3BlbmQoc3RydWN0IGRldmljZSAq
+ZGV2KQogewogCXN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7
+CiAJc3RydWN0IG1zbV9kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOworCXN0
+cnVjdCBtc21fbWRzcyAqbWRzcyA9IHByaXYtPm1kc3M7CiAKIAlpZiAoIUlTX0VSUl9PUl9OVUxM
+KHByaXYtPnBtX3N0YXRlKSkKIAkJcmV0dXJuIDA7CiAKIAlwcml2LT5wbV9zdGF0ZSA9IGRybV9h
+dG9taWNfaGVscGVyX3N1c3BlbmQoZGRldik7CiAKKwlpZiAobWRzcyAmJiBtZHNzLT5mdW5jcykK
+KwkJbWRzcy0+ZnVuY3MtPmRpc2FibGUobWRzcyk7CisKIAlyZXR1cm4gSVNfRVJSKHByaXYtPnBt
+X3N0YXRlKSA/IFBUUl9FUlIocHJpdi0+cG1fc3RhdGUpIDogMDsKIH0KIApAQCAtMTA4MSwxMSAr
+MTA4NSwxNSBAQCBzdGF0aWMgaW50IG1zbV9wbV9yZXN1bWUoc3RydWN0IGRldmljZSAqZGV2KQog
+ewogCXN0cnVjdCBkcm1fZGV2aWNlICpkZGV2ID0gZGV2X2dldF9kcnZkYXRhKGRldik7CiAJc3Ry
+dWN0IG1zbV9kcm1fcHJpdmF0ZSAqcHJpdiA9IGRkZXYtPmRldl9wcml2YXRlOworCXN0cnVjdCBt
+c21fbWRzcyAqbWRzcyA9IHByaXYtPm1kc3M7CiAJaW50IHJldDsKIAogCWlmIChJU19FUlJfT1Jf
+TlVMTChwcml2LT5wbV9zdGF0ZSkpCiAJCXJldHVybiAwOwogCisJaWYgKG1kc3MgJiYgbWRzcy0+
+ZnVuY3MpCisJCW1kc3MtPmZ1bmNzLT5lbmFibGUobWRzcyk7CisKIAlyZXQgPSBkcm1fYXRvbWlj
+X2hlbHBlcl9yZXN1bWUoZGRldiwgcHJpdi0+cG1fc3RhdGUpOwogCWlmIChyZXQgPT0gMCkKIAkJ
+cHJpdi0+cG1fc3RhdGUgPSBOVUxMOwotLSAKVGhlIFF1YWxjb21tIElubm92YXRpb24gQ2VudGVy
+LCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1bSwKYSBMaW51eCBGb3Vu
+ZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4v
+bGlzdGluZm8vZHJpLWRldmVsCg==
