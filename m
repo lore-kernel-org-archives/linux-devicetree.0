@@ -1,126 +1,34 @@
-From: Corentin Labbe <clabbe@baylibre.com>
-Subject: [PATCH] xtensa: rename BUILTIN_DTB to BUILTIN_DTB_SOURCE
-Date: Wed, 23 Jan 2019 09:49:18 +0000
-Message-ID: <1548236958-17565-1-git-send-email-clabbe@baylibre.com>
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: chris@zankel.net, jcmvbkbc@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-xtensa@linux-xtensa.org, Corentin Labbe <clabbe@baylibre.com>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to
+ CAN nodes
+Date: Wed, 23 Jan 2019 10:51:23 +0100
+Message-ID: <20190123095122.l3engeuwx6qr5lzc@verge.net.au>
+References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547736856-16539-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, linux-can@vger.kernel.org, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-renesas-soc@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-When building some xtensa config, I hit the following warning:
-drivers/staging/mt7621-dts/Kconfig:4:warning: 'BUILTIN_DTB' has wrong type. 'select' only accept arguments of bool and tristate type
+On Fri, Jan 18, 2019 at 01:13:53PM +0100, Simon Horman wrote:
+> On Thu, Jan 17, 2019 at 02:54:15PM +0000, Fabrizio Castro wrote:
+> > According to the latest information, clkp2 is available on RZ/G2.
+> > Modify CAN0 and CAN1 nodes accordingly.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> 
+> Thanks,
+> 
+> This looks fine to me but I will wait to see if there are other reviews
+> before applying.
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-It is due to some arch use BUILTIN_DTB as a flag for the need to builtin
-dtb but xtensa use it as a string for which dtb to bulltin.
-But for this (which dtb to build), it is better to use
-BUILTIN_DTB_SOURCE like other arch do.
-
-Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
----
- arch/xtensa/Kconfig                         | 2 +-
- arch/xtensa/boot/dts/Makefile               | 6 +++---
- arch/xtensa/configs/audio_kc705_defconfig   | 2 +-
- arch/xtensa/configs/cadence_csp_defconfig   | 2 +-
- arch/xtensa/configs/generic_kc705_defconfig | 2 +-
- arch/xtensa/configs/nommu_kc705_defconfig   | 2 +-
- arch/xtensa/configs/smp_lx200_defconfig     | 2 +-
- 7 files changed, 9 insertions(+), 9 deletions(-)
-
-diff --git a/arch/xtensa/Kconfig b/arch/xtensa/Kconfig
-index 48906ac5fd25..ce91682770cb 100644
---- a/arch/xtensa/Kconfig
-+++ b/arch/xtensa/Kconfig
-@@ -451,7 +451,7 @@ config USE_OF
- 	help
- 	  Include support for flattened device tree machine descriptions.
- 
--config BUILTIN_DTB
-+config BUILTIN_DTB_SOURCE
- 	string "DTB to build into the kernel image"
- 	depends on OF
- 
-diff --git a/arch/xtensa/boot/dts/Makefile b/arch/xtensa/boot/dts/Makefile
-index f8052ba5aea8..0b8d00cdae7c 100644
---- a/arch/xtensa/boot/dts/Makefile
-+++ b/arch/xtensa/boot/dts/Makefile
-@@ -7,9 +7,9 @@
- #
- #
- 
--BUILTIN_DTB := $(patsubst "%",%,$(CONFIG_BUILTIN_DTB)).dtb.o
--ifneq ($(CONFIG_BUILTIN_DTB),"")
--obj-$(CONFIG_OF) += $(BUILTIN_DTB)
-+BUILTIN_DTB_SOURCE := $(patsubst "%",%,$(CONFIG_BUILTIN_DTB_SOURCE)).dtb.o
-+ifneq ($(CONFIG_BUILTIN_DTB_SOURCE),"")
-+obj-$(CONFIG_OF) += $(BUILTIN_DTB_SOURCE)
- endif
- 
- # for CONFIG_OF_ALL_DTBS test
-diff --git a/arch/xtensa/configs/audio_kc705_defconfig b/arch/xtensa/configs/audio_kc705_defconfig
-index 2bf964df37ba..f378e56f9ce6 100644
---- a/arch/xtensa/configs/audio_kc705_defconfig
-+++ b/arch/xtensa/configs/audio_kc705_defconfig
-@@ -34,7 +34,7 @@ CONFIG_XTENSA_PLATFORM_XTFPGA=y
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon=uart8250,mmio32native,0xfd050020,115200n8 console=ttyS0,115200n8 ip=dhcp root=/dev/nfs rw debug memmap=0x38000000@0"
- CONFIG_USE_OF=y
--CONFIG_BUILTIN_DTB="kc705"
-+CONFIG_BUILTIN_DTB_SOURCE="kc705"
- # CONFIG_COMPACTION is not set
- # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
- CONFIG_PM=y
-diff --git a/arch/xtensa/configs/cadence_csp_defconfig b/arch/xtensa/configs/cadence_csp_defconfig
-index 3221b7053fa3..62f32a902568 100644
---- a/arch/xtensa/configs/cadence_csp_defconfig
-+++ b/arch/xtensa/configs/cadence_csp_defconfig
-@@ -38,7 +38,7 @@ CONFIG_HIGHMEM=y
- # CONFIG_PCI is not set
- CONFIG_XTENSA_PLATFORM_XTFPGA=y
- CONFIG_USE_OF=y
--CONFIG_BUILTIN_DTB="csp"
-+CONFIG_BUILTIN_DTB_SOURCE="csp"
- # CONFIG_COMPACTION is not set
- CONFIG_XTFPGA_LCD=y
- # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
-diff --git a/arch/xtensa/configs/generic_kc705_defconfig b/arch/xtensa/configs/generic_kc705_defconfig
-index 985fa8546e4e..8bebe07f1060 100644
---- a/arch/xtensa/configs/generic_kc705_defconfig
-+++ b/arch/xtensa/configs/generic_kc705_defconfig
-@@ -33,7 +33,7 @@ CONFIG_XTENSA_PLATFORM_XTFPGA=y
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon=uart8250,mmio32native,0xfd050020,115200n8 console=ttyS0,115200n8 ip=dhcp root=/dev/nfs rw debug memmap=0x38000000@0"
- CONFIG_USE_OF=y
--CONFIG_BUILTIN_DTB="kc705"
-+CONFIG_BUILTIN_DTB_SOURCE="kc705"
- # CONFIG_COMPACTION is not set
- # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
- CONFIG_NET=y
-diff --git a/arch/xtensa/configs/nommu_kc705_defconfig b/arch/xtensa/configs/nommu_kc705_defconfig
-index f3fc4f970ca8..933ab2adf434 100644
---- a/arch/xtensa/configs/nommu_kc705_defconfig
-+++ b/arch/xtensa/configs/nommu_kc705_defconfig
-@@ -39,7 +39,7 @@ CONFIG_XTENSA_PLATFORM_XTFPGA=y
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon=uart8250,mmio32native,0x9d050020,115200n8 console=ttyS0,115200n8 ip=dhcp root=/dev/nfs rw debug memmap=256M@0x60000000"
- CONFIG_USE_OF=y
--CONFIG_BUILTIN_DTB="kc705_nommu"
-+CONFIG_BUILTIN_DTB_SOURCE="kc705_nommu"
- CONFIG_BINFMT_FLAT=y
- CONFIG_NET=y
- CONFIG_PACKET=y
-diff --git a/arch/xtensa/configs/smp_lx200_defconfig b/arch/xtensa/configs/smp_lx200_defconfig
-index 11fed6c06a7c..af9c774502f8 100644
---- a/arch/xtensa/configs/smp_lx200_defconfig
-+++ b/arch/xtensa/configs/smp_lx200_defconfig
-@@ -37,7 +37,7 @@ CONFIG_XTENSA_PLATFORM_XTFPGA=y
- CONFIG_CMDLINE_BOOL=y
- CONFIG_CMDLINE="earlycon=uart8250,mmio32native,0xfd050020,115200n8 console=ttyS0,115200n8 ip=dhcp root=/dev/nfs rw debug memmap=96M@0"
- CONFIG_USE_OF=y
--CONFIG_BUILTIN_DTB="lx200mx"
-+CONFIG_BUILTIN_DTB_SOURCE="lx200mx"
- # CONFIG_COMPACTION is not set
- # CONFIG_CORE_DUMP_DEFAULT_ELF_HEADERS is not set
- CONFIG_NET=y
--- 
-2.19.2
+Thanks again, applied for v5.1.
