@@ -1,52 +1,48 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 2/6] media: sun6i: Add mod_rate quirk
-Date: Wed, 23 Jan 2019 16:44:37 +0100
-Message-ID: <20190123154437.zjrpzzsenoioi43e@flea>
-References: <20190118163158.21418-1-jagan@amarulasolutions.com>
- <20190118163158.21418-3-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [RFC PATCH v1 03/13] regulator: bd718x7 use chip specific and
+ generic data structs
+Date: Wed, 23 Jan 2019 15:51:21 +0000
+Message-ID: <20190123155121.GB7503@sirena.org.uk>
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <3fb3eab3a8a2767404588d0a0a531273fddfc659.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yz2zv5rwxvomehn4"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZUXULRAKGQELESOX3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="BwCQnh7xodEAoBMC"
+Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190118163158.21418-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi <linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <3fb3eab3a8a2767404588d0a0a531273fddfc659.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
 
---yz2zv5rwxvomehn4
-Content-Type: text/plain; charset="UTF-8"
+--BwCQnh7xodEAoBMC
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
 
-On Fri, Jan 18, 2019 at 10:01:54PM +0530, Jagan Teki wrote:
-> Unfortunately default CSI_SCLK rate cannot work properly to
-> drive the connected sensor interface, particularly on few
-> Allwinner SoC's like A64.
-> 
-> So, add mod_rate quirk via driver data so-that the respective
-> SoC's which require to alter the default mod clock rate can assign
-> the operating clock rate.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+On Tue, Jan 22, 2019 at 11:43:28AM +0200, Matti Vaittinen wrote:
+> Header rohm-bd718x7.h was split to generic and component specific
+> parts. This changed the struct bd718x7. Adapt the regulator driver to
+> these changes.
 
-You still don't need the variant stuff. If the sole difference is that
-we need that clock rate to be fixed, then the following patch is enough.
+Acked-by: Mark Brown <broonie@kernel.org>
 
-http://code.bulix.org/9au998-562745?raw
+Does this need to be squashed into the earlier commit for bisection?
 
-Maxime
+--BwCQnh7xodEAoBMC
+Content-Type: application/pgp-signature; name="signature.asc"
 
--- 
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
---yz2zv5rwxvomehn4--
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxIjXgACgkQJNaLcl1U
+h9A/Twf8Cy6U369BDxcnv/21rcw0n0Uj1AO6jYJvFLlzmp5afcCluF69AVR0MDaA
+CqMU/8FU5UJ49/CUW9IP1pq3ZPiUB/6ro7fty0LmKuAvJ52BdzEXIAaSyFO/qBuI
+urEIErNz+20P439mtrwRXjwelnkOvOTq1UcIqRGSFvQIgDJzHrqfwvG/gDTPz+zy
+FfZ3Cwg/FzkGEy9BMxgfObERG0xQ3TMzBVjFf4AWw/aqhoU8xl6wt6lu4sy16GM+
+k9/OZ0vcgINI1RW+/xedkwvvgx/OpyLpiLyxevKVxMaQIGPBRq4cBjEs39SnWo8z
+PbDTVv2+1yyNZGTzEh7mg47Aic1MvQ==
+=nP4q
+-----END PGP SIGNATURE-----
+
+--BwCQnh7xodEAoBMC--
