@@ -1,554 +1,449 @@
-From: Tomasz Duszynski <tduszyns@gmail.com>
-Subject: Re: [PATCH 1/3] iio: chemical: add support for Plantower PMS7003
- sensor
-Date: Wed, 23 Jan 2019 22:08:32 +0100
-Message-ID: <20190123210828.GA18103@arch>
-References: <20190106171614.12615-1-tduszyns@gmail.com>
- <20190106171614.12615-2-tduszyns@gmail.com>
- <20190112174822.25e36471@archlinux>
+From: Jacek Anaszewski <jacek.anaszewski@gmail.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Wed, 23 Jan 2019 22:52:10 +0100
+Message-ID: <1c7680d3-6926-d837-dcd9-254aca23df39@gmail.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <86299268-3202-814a-134b-04bd2170faab@ti.com>
+ <8dfa2854-2814-6874-ab8e-1858e9a18acf@gmail.com>
+ <9f87e1ac-be66-2998-578c-de2c1794a00a@ti.com>
+ <4a20b14c-9514-25b8-affe-20f9ede4d4d8@ti.com>
+ <8fac6aeb-28a8-d136-c654-9d1b5d4f7ddb@gmail.com>
+ <27318c48-f84a-5129-ac88-545edd549101@gmail.com>
+ <21d3e21a-e50e-ee46-6f81-5a22db878c15@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190112174822.25e36471@archlinux>
+In-Reply-To: <21d3e21a-e50e-ee46-6f81-5a22db878c15@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@jic23.retrosnub.co.uk>
-Cc: Tomasz Duszynski <tduszyns@gmail.com>, linux-iio@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Dan Murphy <dmurphy@ti.com>, =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 12, 2019 at 05:48:22PM +0000, Jonathan Cameron wrote:
-> On Sun,  6 Jan 2019 18:16:12 +0100
-> Tomasz Duszynski <tduszyns@gmail.com> wrote:
->
-> > Add support for Plantower PMS7003 particulate matter sensor.
-> >
-> > Signed-off-by: Tomasz Duszynski <tduszyns@gmail.com>
->
-> A few minor bits and pieces from me.
->
+Dan,
 
-Just one minor comment inline and ACK to all other improvements you
-suggested.
+On 1/22/19 11:44 PM, Dan Murphy wrote:
+> Jacek
+> 
+> On 1/22/19 3:39 PM, Jacek Anaszewski wrote:
+>> Hi all,
+>>
+>> On 1/20/19 7:42 AM, Vesa Jääskeläinen wrote:
+>>> Hi Dan,
+>>>
+>>> On 18/01/2019 15.58, Dan Murphy wrote:
+>>>> Jacek
+>>>>
+>>>> On 1/18/19 7:45 AM, Dan Murphy wrote:
+>>>>> Jacek
+>>>>>
+>>>>> On 1/17/19 3:10 PM, Jacek Anaszewski wrote:
+>>>>>> Hi Dan,
+>>>>>>
+>>>>>> On 1/16/19 7:41 PM, Dan Murphy wrote:
+>>>>>>> Hello
+>>>>>>>
+>>>>>>> On 1/16/19 4:55 AM, Pavel Machek wrote:
+>>>>>>>> Hi!
+>>>>>>>>
+>>>>>>>>> On 1/15/19 4:22 PM, Pavel Machek wrote:
+>>>>>>>>>> Hi!
+>>>>>>>>>>
+>>>>>>>>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
+>>>>>>>>>>>> +XX - Do not care ignored by the driver
+>>>>>>>>>>>> +RR - is the 8 bit Red LED value
+>>>>>>>>>>>> +GG - is the 8 bit Green LED value
+>>>>>>>>>>>> +BB - is the 8 bit Blue LED value
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +Example:
+>>>>>>>>>>>> +LED module output 4 of the LP5024 will be a yellow color:
+>>>>>>>>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
+>>>>>>>>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
+>>>>>>>>>>>> +
+>>>>>>>>>>>> +LED banked RGBs of the LP5036 will be a white color:
+>>>>>>>>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
+>>>>>>>>>>>
+>>>>>>>>>>> This part with example cans remain in Documentation/leds if you
+>>>>>>>>>>>> like.
+>>>>>>>>>>
+>>>>>>>>>> Does it actually work like that on hardware?
+>>>>>>>>>
+>>>>>>>>> What?
+>>>>>>>>
+>>>>>>>> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
+>>>>>>>> does it actually produce white? With all the different RGB modules
+>>>>>>>> manufacturers can use with lp5024P?
+>>>>>>>>
+>>>>>>>> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
+>>>>>>>> it actually produce yellow, with all the different RGB modules
+>>>>>>>> manufacturers can use with lp5024P?
+>>>>>>>>
+>>>>>>>
+>>>>>>> I believe the answer to the general questions is no for any RGB cluster and driver out there.
+>>>>>>> Because if you set the same values on each and every RGB device out there you will get varying shades of the color.
+>>>>>>> But for this device yes the color does appear to be yellow to me versus what was displayed on my monitor by the HSL picker.
+>>>>>>> But everyone interprets colors differently.
+>>>>>>>
+>>>>>>> If you write the same value for yellow or white on a droid 4 and the N900 do they produce the same color side by side?
+>>>>>>> Most probably not.
+>>>>>>>
+>>>>>>> As you pointed out the PWM needs to be modified to obtain the correct white color to account for LED and other device constraints.
+>>>>>>>
+>>>>>>> But we need to take into account the light pipe.  Pools nowadays have RGB LED spot lights in them.  It can
+>>>>>>> be set to white.  On my pool right off the lens the color has a purplish hue to it.  As the light is diffracted into
+>>>>>>> the pool the color becomes white.  The pool is clear.  When I add chemicals to the pool and make it cloudy
+>>>>>>> and turn on the lights the color off the lens is now white.  This is an example on a large scale but the issue
+>>>>>>> scales down to the hand helds and smart home applications.
+>>>>>>>
+>>>>>>> If the cluster is piped through a flexible optic 0xffffff may produce the "white" you want on its output.
+>>>>>>>
+>>>>>>> So an expectation of certain color without proper piping based on a single RGB value may be a little unreasonable.
+>>>>>>> There may need to be a way to attenuate the values based on the hardware aspect of the equation ie light pipe (or lack thereof) and LED vendor.
+>>>>>>> So if we write 0xffffff to the RGB driver the driver could adjust the intensity of the individual LEDs based on the diffraction
+>>>>>>> coefficients.
+>>>>>>>
+>>>>>>> I also think that is an unreasonable expectation here that writing a single value to any LED RGB driver would produce
+>>>>>>> a "rest of the world" absolute color.  Maybe it can produce something similar but not identical.
+>>>>>>> As you indicated in the requirements there is more involved here then just the LED and the values written.
+>>>>>>> The colors should be close but may not be identical.
+>>>>>>>
+>>>>>>> A 10 year old N900 should not be considered the gold standard for color production due to advancements in LED,
+>>>>>>> light pipe and LED driver technology.
+>>>>>>> The single package RGB clusters on the board I am testing is about the size of a single RGB LED from 10 years ago.
+>>>>>>>
+>>>>>>> I agree that the interface developed should work on the device but the algorithm derived to obtain the color needs to have
+>>>>>>> a hardware aspect to the calculation.
+>>>>>>>
+>>>>>>>>>> Is it supposed to support "normal" RGB colors as seen on monitors?
+>>>>>>>>>
+>>>>>>>>> Monitors are not an application for this part.
+>>>>>>>>
+>>>>>>>> You did not answer the question. When you talk about yellow, is it
+>>>>>>>> same yellow the rest of world talks about?
+>>>>>>>>
+>>>>>>>
+>>>>>>> See above.  It is close to what was on my monitor displayed.
+>>>>>>>
+>>>>>>>>>> Because 100% PWM on all channels does not result in white on hardware
+>>>>>>>>>> I have.
+>>>>>>>>>
+>>>>>>>>> I don't know I am usually blinded by the light and have no diffuser over
+>>>>>>>>> the LEDs to disperse the light so when I look I see all 3 colors.
+>>>>>>>>
+>>>>>>>> How can we have useful discussion about colors when you don't see the
+>>>>>>>> colors?
+>>>>>>>>
+>>>>>>>> Place a piece of paper over the LEDs....
+>>>>>>>>
+>>>>>>>
+>>>>>>> Good suggestion for a rough test.
+>>>>>>>
+>>>>>>>>>> But...
+>>>>>>>>>>
+>>>>>>>>>> I believe we should have a reasonable design before we do something
+>>>>>>>>>> like this. There's no guarantee someone will not use lp50xx with just
+>>>>>>>>>> the white LEDs for example. How will this work? Plus existing hardware
+>>>>>>>>>> already uses three separate LEDs for RGB LED. Why not provide same
+>>>>>>>>>> interface?
+>>>>>>>>>
+>>>>>>>>> Which existing hardware?  Are they using this part?
+>>>>>>>>
+>>>>>>>> Nokia N900. They are not using this part, but any interface we invent
+>>>>>>>> should work there, too.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Yes a common interface would be nice with some sort of hardware tuning coefficient.
+>>>>>>>
+>>>>>>>>> <rant>
+>>>>>>>>> Why are we delaying getting the RGB framework or HSV in?
+>>>>>>>>> I would rather design against something you want instead of having
+>>>>>>>>> everyone complain about every implementation I post.
+>>>>>>>>> </rant>
+>>>>>>>>
+>>>>>>>> Because you insist on creating new kernel interfaces, when existing
+>>>>>>>> interfaces work, and are doing that badly.
+>>>>>>>>
+>>>>>>>> Because your patches are of lower quality than is acceptable for linux
+>>>>>>>> kernel.
+>>>>>>>>
+>>>>>>>> Because you don't seem to be reading the emails.
+>>>>>>>>
+>>>>>>>> I sent list of requirements for RGB led support. This does not meet
+>>>>>>>> them.
+>>>>>>>>
+>>>>>>>
+>>>>>>> Sigh.  You did not answer my question.
+>>>>>>>
+>>>>>>> Your requirements seem to be centered around monitors but that is only one application of the current
+>>>>>>> RGB LED landscape.
+>>>>>>>
+>>>>>>> I am willing to work with you on the HSV and adapting the LP50xx part to this framework.
+>>>>>>> Or any RGB framework for that matter.  I still don't agree with the kernel needing to declare colors
+>>>>>>>     maybe color capabilities but not specific colors.
+>>>>>>
+>>>>>> Dan, if you have a bandwidth for LED RGB class implementation
+>>>>>> then please go ahead. It would be good to compare colors produced
+>>>>>> by software HSV->RGB algorithm to what can be achieved with
+>>>>>> LEDn_BRIGHTNESS feature.
+>>>>>>
+>>>>>> The requirements for LED RGB class as I would see it:
+>>>>>>
+>>>>>> sysfs interface:
+>>>>>>
+>>>>>> brightness-model: space separated list of available options:
+>>>>>> - rgb (default):
+>>>>>>     - creates color file with "red green blue" decimal values
+>>>>>
+>>>>> What about other colored LEDs?  Presenting RGB for an Amber LED does not seem right.
+>>>>> Should the LED color come from the DT?
+>>>>>
+>>>>
+>>>> I thought about this, other non-RGB LEDs would not use the RGB framework.
+>>>> But should they have the same interfaces as RGB?
+>>>>
+>>>> Should PWM control be a global interface?
+>>>
+>>> In order to being able to set multi color element led at one go I would recommend using then model:
+>>>
+>>> color_names: "red green blue white"
+>>>
+>>> echo "32 43 0 128" > color
+>>>
+>>> This way all elements would be set at same time from user space point of view.
+>>>
+>>> This of course requires that it is part of the physical/logical led that is being controlled. If it is a separate thing then it would logically be differently controlled mono color led.
+>>>
+>>> If you look what kinds of leds are available lets say from digikey you get all kinds of combos:
+>>>
+>>> - red, green, blue
+>>> - red, green, blue, amber
+>>> - red, green, blue, white
+>>> - red, green, blue, white - cool
+>>> - red, green, blue, white - neutral
+>>> - red, green, blue, white - warm
+>>> - red, orange
+>>> - purple, ultraviolet
+>>> - amber, blue
+>>> - amber, blue, cyan, green, red, violet, white - cool
+>>> - amber, blue, green
+>>> - amber, green, blue
+>>> - and then lots of single special colors
+>>
+>> It suggested me another solution. Instead of LED RGB class
+>> we would have LED multi-color class.
+>>
+> 
+> I was thinking the same thing this morning.  But I was thinking that the RGB
+> class should be an additional class to stand on its own or can register to the
+> multi color class.
+> 
+>> Sysfs interface design:
+>> -----------------------
+>>
+>> colors: directory containing files that map to
+>>          the brightness of particular LEDs; there
+>>          would be predefined color names that LED class
+>>          driver should map iouts to, e.g.:
+> 
+> Filling in the missing ideas with questions.
+> 
+> Is it a directory or a file?  If it is a directory does that not break the current
+> directory label model?
+> 
+> so the path would be /sys/class/leds/colors ?  (It is probably not this but needs clarification)
+> How would this look if I had 2 of the same color LEDs?  The Beagle bone black has 2 Blue LEDs.
+> They are assigned to different triggers and have different directories.  Both are GPIO controlled.
+> 
+> Or are you saying it would be something like (More then likely this is what you intended)
+> /sys/class/leds/input4::numlock/colors?
 
-> Jonathan
->
-> > ---
-> >  drivers/iio/chemical/Kconfig   |  10 +
-> >  drivers/iio/chemical/Makefile  |   1 +
-> >  drivers/iio/chemical/pms7003.c | 411 +++++++++++++++++++++++++++++++++
-> >  3 files changed, 422 insertions(+)
-> >  create mode 100644 drivers/iio/chemical/pms7003.c
-> >
-> > diff --git a/drivers/iio/chemical/Kconfig b/drivers/iio/chemical/Kconfig
-> > index 57832b4360e9..d5d146e9e372 100644
-> > --- a/drivers/iio/chemical/Kconfig
-> > +++ b/drivers/iio/chemical/Kconfig
-> > @@ -61,6 +61,16 @@ config IAQCORE
-> >  	  iAQ-Core Continuous/Pulsed VOC (Volatile Organic Compounds)
-> >  	  sensors
-> >
-> > +config PMS7003
-> > +	tristate "Plantower PMS7003 particulate matter sensor"
-> > +	depends on SERIAL_DEV_BUS
-> > +	help
-> > +	  Say Y here to build support for the Plantower PMS7003 particulate
-> > +	  matter sensor.
-> > +
-> > +	  To compile this driver as a module, choose M here: the module will
-> > +	  be called pms7003.
-> > +
-> >  config SPS30
-> >  	tristate "SPS30 particulate matter sensor"
-> >  	depends on I2C
-> > diff --git a/drivers/iio/chemical/Makefile b/drivers/iio/chemical/Makefile
-> > index 65bf0f89c0e4..f5d1365acb49 100644
-> > --- a/drivers/iio/chemical/Makefile
-> > +++ b/drivers/iio/chemical/Makefile
-> > @@ -9,6 +9,7 @@ obj-$(CONFIG_BME680_I2C) += bme680_i2c.o
-> >  obj-$(CONFIG_BME680_SPI) += bme680_spi.o
-> >  obj-$(CONFIG_CCS811)		+= ccs811.o
-> >  obj-$(CONFIG_IAQCORE)		+= ams-iaq-core.o
-> > +obj-$(CONFIG_PMS7003) += pms7003.o
-> >  obj-$(CONFIG_SENSIRION_SGP30)	+= sgp30.o
-> >  obj-$(CONFIG_SPS30) += sps30.o
-> >  obj-$(CONFIG_VZ89X)		+= vz89x.o
-> > diff --git a/drivers/iio/chemical/pms7003.c b/drivers/iio/chemical/pms7003.c
-> > new file mode 100644
-> > index 000000000000..bc8a4fbdf641
-> > --- /dev/null
-> > +++ b/drivers/iio/chemical/pms7003.c
-> > @@ -0,0 +1,411 @@
-> > +// SPDX-License-Identifier: GPL-2.0
-> > +/*
-> > + * Plantower PMS7003 particulate matter sensor driver
-> > + *
-> > + * Copyright (c) Tomasz Duszynski <tduszyns@gmail.com>
-> > + */
-> > +
-> > +#define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
-> > +
-> > +#include <asm/unaligned.h>
-> > +#include <linux/completion.h>
-> > +#include <linux/device.h>
-> > +#include <linux/errno.h>
-> > +#include <linux/iio/buffer.h>
-> > +#include <linux/iio/iio.h>
-> > +#include <linux/iio/trigger_consumer.h>
-> > +#include <linux/iio/triggered_buffer.h>
-> > +#include <linux/jiffies.h>
-> > +#include <linux/kernel.h>
-> > +#include <linux/mod_devicetable.h>
-> > +#include <linux/module.h>
-> > +#include <linux/mutex.h>
-> > +#include <linux/serdev.h>
-> > +
-> > +#define PMS7003_DRIVER_NAME "pms7003"
-> > +
-> > +#define PMS7003_MAGIC_MSB 0x42
-> > +#define PMS7003_MAGIC_LSB 0x4d
-> > +/* last 2 data bytes hold frame checksum */
-> > +#define PMS7003_MAX_DATA_LENGTH 28
-> > +#define PMS7003_CHECKSUM_LENGTH 2
-> > +#define PMS7003_PM10_OFFSET 10
-> > +#define PMS7003_PM2P5_OFFSET 8
-> > +#define PMS7003_PM1_OFFSET 6
-> > +
-> > +#define PMS7003_TIMEOUT msecs_to_jiffies(6000)
-> > +#define PMS7003_CMD_LENGTH 7
-> > +#define PMS7003_PM_MAX 1000
-> > +#define PMS7003_PM_MIN 0
-> > +
-> > +enum {
-> > +	PM1,
-> > +	PM2P5,
-> > +	PM10,
-> > +};
-> > +
-> > +enum {
-> > +	CMD_WAKEUP,
-> > +	CMD_ENTER_PASSIVE_MODE,
-> > +	CMD_READ_PASSIVE,
-> > +	CMD_SLEEP,
-> > +};
-> > +
-> > +enum {
-> > +	STATE_MAGIC_MSB,
-> > +	STATE_MAGIC_LSB,
-> > +	STATE_LENGTH_MSB,
-> > +	STATE_LENGTH_LSB,
-> > +	STATE_DATA,
-> > +};
-> > +
-> > +struct pms7003_frame {
-> > +	u8 data[PMS7003_MAX_DATA_LENGTH];
-> > +	u16 expected_length;
-> > +	u16 length;
-> > +	int state;
-> > +};
-> > +
-> > +struct pms7003_state {
-> > +	struct serdev_device *serdev;
-> > +	struct pms7003_frame frame;
-> > +	struct completion frame_ready;
-> > +	struct mutex lock; /* must be held whenever state gets touched */
-> > +};
-> > +
-> > +static u16 pms7003_calc_checksum(const u8 *data, int size)
-> > +{
-> > +	u16 checksum = 0;
-> > +
-> > +	while (size--)
-> > +		checksum += data[size];
-> > +
-> > +	return checksum;
-> > +}
-> > +
-> > +static int pms7003_do_cmd(struct pms7003_state *state, u8 cmd)
->
-> Use the enum not u8.
->
-> > +{
-> > +	/*
-> > +	 * commands have following format:
-> > +	 *
-> > +	 * +------+------+-----+------+-----+-----------+-----------+
-> > +	 * | 0x42 | 0x4d | cmd | 0x00 | arg | cksum msb | cksum lsb |
-> > +	 * +------+------+-----+------+-----+-----------+-----------+
-> > +	 */
-> > +	u8 tmp[PMS7003_CMD_LENGTH] = { PMS7003_MAGIC_MSB, PMS7003_MAGIC_LSB };
-> > +	int ret, n = 2;
-> > +	u16 checksum;
-> > +
-> > +	switch (cmd) {
-> > +	case CMD_WAKEUP:
-> > +		tmp[n++] = 0xe4;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x01;
-> > +		break;
-> > +	case CMD_ENTER_PASSIVE_MODE:
-> > +		tmp[n++] = 0xe1;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x00;
-> > +		break;
-> > +	case CMD_READ_PASSIVE:
-> > +		tmp[n++] = 0xe2;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x00;
-> > +		break;
-> > +	case CMD_SLEEP:
-> > +		tmp[n++] = 0xe4;
-> > +		tmp[n++] = 0x00;
-> > +		tmp[n++] = 0x00;
->
-> These look like they should be in a look up table to me rather than the more
-> verbose switch statement.
->
-> > +		break;
-> > +	}
-> > +
-> > +	checksum = pms7003_calc_checksum(tmp, n);
->
-> This is fixed for all calls of a given command (I think).  If so, it would
-> be good to precompute it (on startup for example, ideally letting the compiler
-> figure it out if it can).
->
-> > +	put_unaligned_be16(checksum, tmp + n);
-> > +	n += PMS7003_CHECKSUM_LENGTH;
-> > +
-> > +	ret = serdev_device_write(state->serdev, tmp, n, PMS7003_TIMEOUT);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = wait_for_completion_interruptible_timeout(&state->frame_ready,
-> > +							PMS7003_TIMEOUT);
-> > +	if (!ret)
-> > +		ret = -ETIMEDOUT;
-> > +
-> > +	return ret < 0 ? ret : 0;
-> > +}
-> > +
-> > +static u16 pms7003_get_pm(struct pms7003_frame *frame, int offset)
-> > +{
-> > +	return clamp_val(get_unaligned_be16(frame->data + offset),
-> > +			 PMS7003_PM_MIN, PMS7003_PM_MAX);
-> > +}
-> > +
-> > +static irqreturn_t pms7003_trigger_handler(int irq, void *p)
-> > +{
-> > +	struct iio_poll_func *pf = p;
-> > +	struct iio_dev *indio_dev = pf->indio_dev;
-> > +	struct pms7003_state *state = iio_priv(indio_dev);
-> > +	struct pms7003_frame *frame = &state->frame;
-> > +	u16 data[3 + 1 + 4]; /* PM1, PM2P5, PM10, padding, timestamp */
-> > +	int ret;
-> > +
-> > +	mutex_lock(&state->lock);
-> > +	ret = pms7003_do_cmd(state, CMD_READ_PASSIVE);
-> > +	if (ret) {
-> > +		mutex_unlock(&state->lock);
-> > +		goto err;
-> > +	}
-> > +
-> > +	data[PM1] = pms7003_get_pm(frame, PMS7003_PM1_OFFSET);
-> > +	data[PM2P5] = pms7003_get_pm(frame, PMS7003_PM2P5_OFFSET);
-> > +	data[PM10] = pms7003_get_pm(frame, PMS7003_PM10_OFFSET);
->
-> > +	mutex_unlock(&state->lock);
-> > +
-> > +	iio_push_to_buffers_with_timestamp(indio_dev, data,
-> > +					   iio_get_time_ns(indio_dev));
-> > +err:
-> > +	iio_trigger_notify_done(indio_dev->trig);
-> > +
-> > +	return IRQ_HANDLED;
-> > +}
-> > +
-> > +static int pms7003_read_raw(struct iio_dev *indio_dev,
-> > +			    struct iio_chan_spec const *chan,
-> > +			    int *val, int *val2, long mask)
-> > +{
-> > +	struct pms7003_state *state = iio_priv(indio_dev);
-> > +	struct pms7003_frame *frame = &state->frame;
->
-> This local variable for the frame can go away once you make the other
-> change suggested below.
->
-> > +	int ret;
-> > +
-> > +	switch (mask) {
-> > +	case IIO_CHAN_INFO_PROCESSED:
-> > +		switch (chan->type) {
-> > +		case IIO_MASSCONCENTRATION:
-> > +			mutex_lock(&state->lock);
->
-> Will this interfere in any way with buffered operation?  I'd normally
-> expect to see some claim_direct etc calls in here to prevent that.
->
+Yes, this is what I meant.
 
-In either case full data access is protected with a lock hence
-I do not expect to see any surprises here.
+> Maybe it is mandated that "multi" be added to the label when the class is registered so the caller
+> knows that this is a multi color class and not a single LED color class.
 
-> > +			ret = pms7003_do_cmd(state, CMD_READ_PASSIVE);
-> > +			if (ret) {
-> > +				mutex_unlock(&state->lock);
-> > +				return ret;
-> > +			}
-> > +
-> > +			switch (chan->channel2) {
-> > +			case IIO_MOD_PM1:
-> > +				*val = pms7003_get_pm(frame,
-> > +						      PMS7003_PM1_OFFSET);
->
-> Put the PMS7003_PM1_OFFSET in the address element of the channel then
-> you can get rid fo this switch statement.
->
-> > +				break;
-> > +			case IIO_MOD_PM2P5:
-> > +				*val = pms7003_get_pm(frame,
-> > +						      PMS7003_PM2P5_OFFSET);
-> > +				break;
-> > +			case IIO_MOD_PM10:
-> > +				*val = pms7003_get_pm(frame,
-> > +						      PMS7003_PM10_OFFSET);
-> > +				break;
->
-> Just possible some compiler will give us warnings for the lack of a default
-> in here.  Might be worth putting one in to avoid that noise.
-> Particularly as you already have one for the chan->type.
->
-> > +			}
-> > +			mutex_unlock(&state->lock);
-> > +
-> > +			return IIO_VAL_INT;
-> > +		default:
-> > +			return -EINVAL;
-> > +		}
-> > +	}
-> > +
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +
-> > +static const struct iio_info pms7003_info = {
-> > +	.read_raw = pms7003_read_raw,
-> > +};
-> > +
-> > +#define PMS7003_CHAN(_index, _mod) { \
-> > +	.type = IIO_MASSCONCENTRATION, \
-> > +	.modified = 1, \
-> > +	.channel2 = IIO_MOD_ ## _mod, \
-> > +	.info_mask_separate = BIT(IIO_CHAN_INFO_PROCESSED), \
-> > +	.scan_index = _index, \
-> > +	.scan_type = { \
-> > +		.sign = 'u', \
-> > +		.realbits = 10, \
-> > +		.storagebits = 16, \
-> > +		.endianness = IIO_CPU, \
-> > +	}, \
-> > +}
-> > +
-> > +static const struct iio_chan_spec pms7003_channels[] = {
-> > +	PMS7003_CHAN(0, PM1),
-> > +	PMS7003_CHAN(1, PM2P5),
-> > +	PMS7003_CHAN(2, PM10),
-> > +	IIO_CHAN_SOFT_TIMESTAMP(3),
-> > +};
-> > +
-> > +static int pms7003_frame_okay(struct pms7003_frame *frame)
-> > +{
-> > +	int offset = frame->length - PMS7003_CHECKSUM_LENGTH;
-> > +	u16 checksum = PMS7003_MAGIC_MSB + PMS7003_MAGIC_LSB +
-> > +		       (frame->length >> 8) + (u8)frame->length +
-> > +		       pms7003_calc_checksum(frame->data, offset);
-> > +
-> > +	return checksum == get_unaligned_be16(frame->data + offset);
-> > +}
-> > +
->
-> The returning of 1 or 0 is not entirely obvious.  Please provide
-> some documentation on what that is doing.
->
-> This doesn't seem like an entirely obvious construct in general.
->
-> Given we can't (I think) do anything much useful with the data until
-> we get a whole frame, why not simply buffer it up unprocessed until
-> we have enough data to process it in one go?
->
-> On first packet dump data until you get that start markers.  After that
-> wait until you have the 'header' (length) and then wait until all data
-> is available keeping it in a raw buffer.
->
-> A state machine that is a simple step through like this one with only
-> one path ends up less readable to my eye than buffer data and
-> process when all there...
->
->
-> > +static int pms7003_update_frame(struct pms7003_frame *frame, u8 byte)
-> > +{
-> > +	switch (frame->state) {
-> > +	case STATE_MAGIC_MSB:
-> > +		if (byte != PMS7003_MAGIC_MSB)
-> > +			return 1;
-> > +		frame->state = STATE_MAGIC_LSB;
-> > +		frame->length = 0;
-> > +		return 1;
-> > +	case STATE_MAGIC_LSB:
-> > +		if (byte != PMS7003_MAGIC_LSB) {
-> > +			frame->state = STATE_MAGIC_MSB;
-> > +			return 1;
-> > +		}
-> > +		frame->state = STATE_LENGTH_MSB;
-> > +		return 1;
-> > +	case STATE_LENGTH_MSB:
-> > +		frame->expected_length = (u16)byte << 8;
-> > +		frame->state = STATE_LENGTH_LSB;
-> > +		return 1;
-> > +	case STATE_LENGTH_LSB:
-> > +		frame->expected_length |= byte;
-> > +		frame->state = STATE_DATA;
-> > +		return 1;
-> > +	case STATE_DATA:
-> > +		if (frame->length > PMS7003_MAX_DATA_LENGTH) {
-> > +			frame->state = STATE_MAGIC_MSB;
-> > +			return 1;
-> > +		}
-> > +
-> > +		frame->data[frame->length++] = byte;
-> > +
-> > +		if (frame->length != frame->expected_length)
-> > +			return 1;
-> > +
-> > +		if (!pms7003_frame_okay(frame)) {
-> > +			frame->state = STATE_MAGIC_MSB;
-> > +			return 1;
-> > +		}
-> > +
-> > +		frame->state = STATE_MAGIC_MSB;
-> > +		break;
-> > +	}
-> > +
-> > +	return 0;
-> > +}
-> > +
-> > +static int pms7003_receive_buf(struct serdev_device *serdev,
-> > +			       const unsigned char *buf, size_t size)
-> > +{
-> > +	struct iio_dev *indio_dev = serdev_device_get_drvdata(serdev);
-> > +	struct pms7003_state *state = iio_priv(indio_dev);
-> > +	struct pms7003_frame *frame = &state->frame;
-> > +	int i, ret;
-> > +
-> > +	for (i = 0; i < size; i++) {
-> > +		ret = pms7003_update_frame(frame, buf[i]);
-> > +		if (ret)
-> > +			continue;
-> Given this is the normal path (continue) I would invert the
-> logic to be
-> 	if (!ret) {
-> 		complete
-> 		return..
-> 	}
->
-> Trivial but perhaps slightly easier to follow.
->
-> > +
-> > +		complete(&state->frame_ready);
-> > +		return i + 1;
-> > +	}
-> > +
-> > +	return size;
-> > +}
-> > +
-> > +static const struct serdev_device_ops pms7003_serdev_ops = {
-> > +	.receive_buf = pms7003_receive_buf,
-> > +	.write_wakeup = serdev_device_write_wakeup,
-> > +};
-> > +
-> > +static void pms7003_stop(void *data)
-> > +{
-> > +	struct pms7003_state *state = data;
-> > +
-> > +	pms7003_do_cmd(state, CMD_SLEEP);
-> > +}
-> > +
-> > +static const unsigned long pms7003_scan_masks[] = { 0x07, 0x00 };
-> > +
-> > +static int pms7003_probe(struct serdev_device *serdev)
-> > +{
-> > +	struct pms7003_state *state;
-> > +	struct iio_dev *indio_dev;
-> > +	int ret;
-> > +
-> > +	indio_dev = devm_iio_device_alloc(&serdev->dev, sizeof(*state));
-> > +	if (!indio_dev)
-> > +		return -ENOMEM;
-> > +
-> > +	state = iio_priv(indio_dev);
-> > +	serdev_device_set_drvdata(serdev, indio_dev);
-> > +	state->serdev = serdev;
-> > +	indio_dev->dev.parent = &serdev->dev;
-> > +	indio_dev->info = &pms7003_info;
-> > +	indio_dev->name = PMS7003_DRIVER_NAME;
-> > +	indio_dev->channels = pms7003_channels,
-> > +	indio_dev->num_channels = ARRAY_SIZE(pms7003_channels);
-> > +	indio_dev->modes = INDIO_DIRECT_MODE;
-> > +	indio_dev->available_scan_masks = pms7003_scan_masks;
-> > +
-> > +	mutex_init(&state->lock);
-> > +	init_completion(&state->frame_ready);
-> > +
-> > +	serdev_device_set_client_ops(serdev, &pms7003_serdev_ops);
-> > +	ret = devm_serdev_device_open(&serdev->dev, serdev);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	serdev_device_set_baudrate(serdev, 9600);
-> > +	serdev_device_set_flow_control(serdev, false);
-> > +
-> > +	ret = serdev_device_set_parity(serdev, SERDEV_PARITY_NONE);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = pms7003_do_cmd(state, CMD_WAKEUP);
-> > +	if (ret) {
-> > +		dev_err(&serdev->dev, "failed to wakeup sensor\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = pms7003_do_cmd(state, CMD_ENTER_PASSIVE_MODE);
-> > +	if (ret) {
-> > +		dev_err(&serdev->dev, "failed to enter passive mode\n");
-> > +		return ret;
-> > +	}
-> > +
-> > +	ret = devm_add_action_or_reset(&serdev->dev, pms7003_stop, state);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	ret = devm_iio_triggered_buffer_setup(&serdev->dev, indio_dev, NULL,
-> > +					      pms7003_trigger_handler, NULL);
-> > +	if (ret)
-> > +		return ret;
-> > +
-> > +	return devm_iio_device_register(&serdev->dev, indio_dev);
-> > +}
-> > +
-> > +static const struct of_device_id pms7003_of_match[] = {
-> > +	{ .compatible = "plantower,pms7003" },
-> > +	{ }
-> > +};
-> > +MODULE_DEVICE_TABLE(of, pms7003_of_match);
-> > +
-> > +static struct serdev_device_driver pms7003_driver = {
-> > +	.driver = {
-> > +		.name = PMS7003_DRIVER_NAME,
-> > +		.of_match_table = pms7003_of_match,
-> > +	},
-> > +	.probe = pms7003_probe,
-> > +};
-> > +module_serdev_device_driver(pms7003_driver);
-> > +
-> > +MODULE_AUTHOR("Tomasz Duszynski <tduszyns@gmail.com>");
-> > +MODULE_DESCRIPTION("Plantower PMS7003 particulate matter sensor driver");
-> > +MODULE_LICENSE("GPL v2");
->
+Like I am going to come up with standardized color names
+in my LED naming related patch, the multi-color names
+can be defined as well, e.g.: rgb, rgbw, rgbwa, rgbwauv etc.
+
+> What about providing a file called colors_raw which takes in the raw decimal values to obtain other color
+> variants when RGB is only available?  And this can also present a single write to the kernel with the new
+> color values.
+
+My design already covers that in the form of files in the colors
+directory. Like I stated: "files that map to the brightness of
+particular LEDs". Single write is secured by "echo "write" > sync.
+
+> I am not a fan of hard coding preset colors as you can see there are to many of them and variations of the color.
+> In addition this severely limits the ability of the user.  Unless we stick to primary colors only and not secondary
+> colors.
+> Defining and hard coding hte colors can get out of control and not maintainable moving forward.  Especially
+> if we start adding defines like white_warm, white_neutral and other variations to the color.
+
+We would not limit anything. Every color combination can be achieved
+by following this exemplary sequence:
+
+$ echo 154 > colors/red
+$ echo 232 > colors/green
+$ echo 43  > colors/blue
+# echo "write" > sync     //only this changes hardware state
+
+brightness-model is provided only to define mapping of legacy brightness
+levels (governed by brightness file and led_set_brightness() API) to
+the specific combination of colors.
+
+For instance we can define three brightness levels for green hue:
+
+DT definition for it would look like below:
+
+rgb-green = <0x277c33 0x37b048 0x47e45d>;
+
+LED multi color class would then do the following mapping for
+each of the three brightness levels for rgb-green brightness model:
+
+$ echo rgb-green > brightness_model
+$ echo 1 > brightness // red=0x27, green=0x7c, blue=0x33
+$ echo 2 > brightness // red=0x37, green=0xb0, blue=0x48
+$ echo 3 > brightness // red=0x47, green=0xe4, blue=0x5d
+
+> What about IR LEDs used for night vision products?  Do these fall into the multi color class?
+> We do have a driver I submitted that had an IR LED and a White LED combined.  It was created against the
+> flash class but it could be a multi color LED as well.
+> 
+> How would traversing through the full color palette work if you were to want to produce a multi
+> color ring like the LP50xx where the pattern can traverse from one end of the color spectrum and back?
+> Or in a product like the gaming keyboards that will change color or change backlight brightness?
+
+This is not meant as a solution for pattern generator but for
+consolidated source of multi color light. In the simplest case
+RGB LED elements like those used for lp5024 reference board,
+but it could be RGBWAUV LED [0] as well.
+
+For patterns traversing many LEDs I see a trigger as the best solution.
+Hmm, now I see that trigger mechanism actually can serve as very
+flexible pattern generator.
+
+We would need a device that could be configured to register
+a number of multi-led-patternN triggers, one per LED, and generate
+events for each trigger in a loop.
+
+The device would have to allow for configuring pattern intervals
+via sysfs, like in case of current pattern trigger.
+
+LED class devices would have to register for its events:
+
+$/sys/class/leds/led1 echo multi-led-pattern1 > trigger
+$/sys/class/leds/led2 echo multi-led-pattern2 > trigger
+$/sys/class/leds/led3 echo multi-led-pattern3 > trigger
+
+The ability to define brightness models in DT would
+add even more flexibility.
+
+> Not sure what color LEDs the keyboard manufacturers place on their keyboards but does the interface design
+> capable of doing this?
+> 
+> https://www.youtube.com/watch?v=pfKv3g2FeBE
+> or something like this
+> 
+> https://www.youtube.com/watch?v=PO3auX3f5C4
+> 
+> The LP5036 has this capability.
+> 
+>>    - red
+>>    - green
+>>    - blue
+>>    - white
+>>    - sync: accepts "write" and "read", which executes
+>>            write/readout to/from a device respectively.
+>>
+> 
+> What are these above, the values or the files under the colors directory?
+
+They are just color specific counterparts of monochrome brightness.
+In terms of lp50xx they would map to OUTn_COLOR registers.
+
+> I am assuming they are files.
+
+Right.
+
+> Are they mandatory or optional?
+
+Mandatory, one per each iout to control.
+
+>> brightness-model: defines brightness level to color configuration
+>>                    mapping
+>>    - "hardware": for devices with feature like LEDn_BRIGHTNESS of lp50xx
+>>    - "rgb-<hue>": available only when all three red,green,blue colors
+>>                   are present in the colors directory.
+>>                   <hue> is a placeholder for given DT hue presets.
+>>    - "rgbw-<hue>": Same as above, but available only when white color
+>>                   (any of amber or white-{cool|neutral|warm} can be
+>>                   mapped to white) is also available. In this mode
+>>                   max_brightness equals num-of-hue-presets + 1, and
+>>                   max_brightness, when set, turns the "white" LED on
+> 
+> Why do we need white combined here?  Should this not be its own entity?
+
+To be able to set white color. We're still talking about one LED
+element (although they can be be physically few LEDs in one case).
+This is brightness file, so we've got to stick to the semantics.
+Max brightness level should be the brightest. With RGBW LEDs we
+fortunately have a means to achieve pure white, that's why
+rgbw-<hue> would be beneficial. If you increase L component of
+HSL color space, the max value gives white for all hues.
+So maybe this brightness-model would be rather called hsl-<hue>.
+
+For RGBW LEDs, we would have to allow for more shades of white too,
+like in [1].
+
+> Again I don't like limiting the color palette from the DT.  I think that the
+> user space can see what colors are available for that device and makes its own
+> decision on what color to present.
+> 
+> For the RGBw what about RGB amber and RGB purple.  Are the white LEDs always part of the
+> same function trying to be achieved by the system designer?  The RGB can be used to denote
+> notification status and the white can be used to denote that a charger is connected.  Motorola
+> Droid did this.
+
+I hope I've just clarified my idea.
+
+> 
+>>    - "rgb-linear": I'm not sure if it should be available - it will
+>>                    have unpredictable results
+>>
+>> brightness: sets/reads brightness in the way specific to the
+>>              current brightness-model. When more colors are available
+>>              (e.g. amber, blue, cyan, green, red, violet, white), they
+>>              are not touched by write to brightness).
+>>
+>> HSV->RGB conversion is left entirely to the userspace, which can set any
+>> color with use of the proposed interface.
+>>
+>> Let's agree on sysfs interface first, and only after that move
+>> to the DT details.
+>>
+> 
+> DT's are meant to describe hardware and not describe the product.  Unless Rob does not see
+> an issue with defining product capabilities in the DT then we should keep that out of the DT.
+
+LED element is a device. I see nothing irrelevant for DT in describing 
+the lighting specificity of a device mounted on the board. Please keep
+in mind that it will not limit the number of colors available to set.
+It will only allow to define mapping of brightness level to color.
+We need that for current trigger mechanism to work with LED multi-color
+class.
+
+[0] 
+http://www.cobledarray.com/sale-4942931-10w-rgbwauv-led-diode-6-in-1-high-power-multicolor-led-chip.html
+[1] https://www.youtube.com/watch?v=NzlFmTqOh9M
+
+-- 
+Best regards,
+Jacek Anaszewski
