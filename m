@@ -1,111 +1,63 @@
-From: Rui Miguel Silva <rui.silva@linaro.org>
-Subject: [PATCH v10 09/13] ARM: dts: imx7s-warp: add ov2680 sensor node
-Date: Wed, 23 Jan 2019 10:52:18 +0000
-Message-ID: <20190123105222.2378-10-rui.silva@linaro.org>
-References: <20190123105222.2378-1-rui.silva@linaro.org>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 4/6] spi: spi-geni-qcom: Add interconnect support
+Date: Wed, 23 Jan 2019 10:58:21 +0000
+Message-ID: <20190123105821.GA7503@sirena.org.uk>
+References: <1548138816-1149-1-git-send-email-alokc@codeaurora.org>
+ <1548138816-1149-5-git-send-email-alokc@codeaurora.org>
+ <20190122202924.GL7579@sirena.org.uk>
+ <775cdd29a7d536772330a15a7013f251@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <driverdev-devel-bounces@linuxdriverproject.org>
-In-Reply-To: <20190123105222.2378-1-rui.silva@linaro.org>
-List-Unsubscribe: <http://driverdev.linuxdriverproject.org/mailman/options/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=unsubscribe>
-List-Archive: <http://driverdev.linuxdriverproject.org/pipermail/driverdev-devel/>
-List-Post: <mailto:driverdev-devel@linuxdriverproject.org>
-List-Help: <mailto:driverdev-devel-request@linuxdriverproject.org?subject=help>
-List-Subscribe: <http://driverdev.linuxdriverproject.org/mailman/listinfo/driverdev-devel>,
- <mailto:driverdev-devel-request@linuxdriverproject.org?subject=subscribe>
-Errors-To: driverdev-devel-bounces@linuxdriverproject.org
-Sender: "devel" <driverdev-devel-bounces@linuxdriverproject.org>
-To: sakari.ailus@linux.intel.com, Steve Longerbeam <slongerbeam@gmail.com>, Hans Verkuil <hverkuil@xs4all.nl>, Philipp Zabel <p.zabel@pengutronix.de>
-Cc: devel@driverdev.osuosl.org, devicetree@vger.kernel.org, Rui Miguel Silva <rui.silva@linaro.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, linux-media@vger.kernel.org
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="LQksG6bCIzRHxTLp"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <775cdd29a7d536772330a15a7013f251@codeaurora.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: alokc@codeaurora.org
+Cc: linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org, linux-spi@vger.kernel.org, linux-serial@vger.kernel.org, andy.gross@linaro.org, david.brown@linaro.org, georgi.djakov@linaro.org, dianders@chromium.org, swboyd@chromium.org, bjorn.andersson@linaro.org, linux-serial-owner@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Warp7 comes with a Omnivision OV2680 sensor, add the node here to make
-complete the camera data path for this system. Add the needed regulator
-to the analog voltage supply, the port and endpoints in mipi_csi node
-and the pinctrl for the reset gpio.
 
-Signed-off-by: Rui Miguel Silva <rui.silva@linaro.org>
----
- arch/arm/boot/dts/imx7s-warp.dts | 44 ++++++++++++++++++++++++++++++++
- 1 file changed, 44 insertions(+)
+--LQksG6bCIzRHxTLp
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/arch/arm/boot/dts/imx7s-warp.dts b/arch/arm/boot/dts/imx7s-warp.dts
-index 358bcae7ebaf..58d1a89ee3e3 100644
---- a/arch/arm/boot/dts/imx7s-warp.dts
-+++ b/arch/arm/boot/dts/imx7s-warp.dts
-@@ -55,6 +55,14 @@
- 		regulator-always-on;
- 	};
- 
-+	reg_peri_3p15v: regulator-peri-3p15v {
-+		compatible = "regulator-fixed";
-+		regulator-name = "peri_3p15v_reg";
-+		regulator-min-microvolt = <3150000>;
-+		regulator-max-microvolt = <3150000>;
-+		regulator-always-on;
-+	};
-+
- 	sound {
- 		compatible = "simple-audio-card";
- 		simple-audio-card,name = "imx7-sgtl5000";
-@@ -178,6 +186,27 @@
- 	pinctrl-names = "default";
- 	pinctrl-0 = <&pinctrl_i2c2>;
- 	status = "okay";
-+
-+	ov2680: camera@36 {
-+		compatible = "ovti,ov2680";
-+		pinctrl-names = "default";
-+		pinctrl-0 = <&pinctrl_ov2680>;
-+		reg = <0x36>;
-+		clocks = <&osc>;
-+		clock-names = "xvclk";
-+		reset-gpios = <&gpio1 3 GPIO_ACTIVE_LOW>;
-+		DOVDD-supply = <&sw2_reg>;
-+		DVDD-supply = <&sw2_reg>;
-+		AVDD-supply = <&reg_peri_3p15v>;
-+
-+		port {
-+			ov2680_to_mipi: endpoint {
-+				remote-endpoint = <&mipi_from_sensor>;
-+				clock-lanes = <0>;
-+				data-lanes = <1>;
-+			};
-+		};
-+	};
- };
- 
- &i2c3 {
-@@ -319,6 +348,15 @@
- 	#size-cells = <0>;
- 	fsl,csis-hs-settle = <3>;
- 
-+	port@0 {
-+		reg = <0>;
-+
-+		mipi_from_sensor: endpoint {
-+			remote-endpoint = <&ov2680_to_mipi>;
-+			data-lanes = <1>;
-+		};
-+	};
-+
- 	port@1 {
- 		reg = <1>;
- 
-@@ -382,6 +420,12 @@
- 		>;
- 	};
- 
-+	pinctrl_ov2680: ov2660grp {
-+		fsl,pins = <
-+			MX7D_PAD_LPSR_GPIO1_IO03__GPIO1_IO3	0x14
-+		>;
-+	};
-+
- 	pinctrl_sai1: sai1grp {
- 		fsl,pins = <
- 			MX7D_PAD_SAI1_RX_DATA__SAI1_RX_DATA0	0x1f
--- 
-2.20.1
+On Wed, Jan 23, 2019 at 12:45:30PM +0530, alokc@codeaurora.org wrote:
+> On 2019-01-23 01:59, Mark Brown wrote:
+
+> > Still not seeing anything except this patch here in my inbox - like I
+> > said what's the story with dependencies?
+
+> I've added linux-spi mailing list to all the patches sent as part of this
+> series. Not sure why you didn't get other patches. Today I've explicitly
+> added you in all the patches.
+
+You really need to ensure that things end up in people's inboxes -
+sending them to a mailing list usually means they'll go to a completely
+different folder.
+
+> This change series basically enabled interconnect (as per
+> bindings/interconnect/interconnect.txt) support in GENI QUPs based drivers
+> so appropriate BW request can be put based on SE usages.
+> here is my complete change series: https://lore.kernel.org/lkml/1548069703-26595-1-git-send-email-alokc@codeaurora.org/
+> I hope I answer to your question properly.
+
+So it looks like there is a dependency on earlier patches in the series,
+that's what I needed to know.
+
+--LQksG6bCIzRHxTLp
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxISMwACgkQJNaLcl1U
+h9CoTgf+PA29xBdCek5fu2oi7M3F4k1fLvkUkXx08R30Xh2AEVPfA9BZTIBp64Jd
+6kpDFuGII2h38T7Y02pZhtZtT+36Q0YA6WD9H7AuzupmP7K0CsqOlysR06e43DwX
+8d6tloJYmZlK6isHO+iHG9ID3McrL/9EBng8OCpnIAEAgqR/Dm07L4nAx10NeU4O
+n8WzQJkhCmtvgnSt+ZvF/vVdxGUEKYVmdDsNPUyNmNmH+quhPk52qnVjjWXQIUog
+pULdWHaJADV5o+ewWyAj/67QXWHiq52k63uG80u0/Kp+lstEDfhhL4NkGsixeEpH
+g+6VqKfMx9hBGOpnbcVgX2QpBpvhxQ==
+=ssTu
+-----END PGP SIGNATURE-----
+
+--LQksG6bCIzRHxTLp--
