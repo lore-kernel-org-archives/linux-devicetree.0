@@ -1,56 +1,65 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx
- OST
-Date: Wed, 23 Jan 2019 06:31:57 -0800
-Message-ID: <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
- <20181212220922.18759-6-paul@crapouillou.net>
- <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
+From: Anand Moon <linux.amoon@gmail.com>
+Subject: [RFCv1 0/3] Odroid c1+ usb fixs
+Date: Wed, 23 Jan 2019 15:12:06 +0000
+Message-ID: <20190123151209.2080-1-linux.amoon@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Malaterre <malat@debian.org>, Paul Cercueil <paul@crapouillou.net>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Maarten ter Huurne <maarten@treewalker.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, devicetree@vger.kernel.org
+Cc: Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Kevin Hilman <khilman@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Kishon Vijay Abraham I <kishon@ti.com>
 List-Id: devicetree@vger.kernel.org
 
-On 1/23/19 4:58 AM, Mathieu Malaterre wrote:
-> On Wed, Dec 12, 2018 at 11:09 PM Paul Cercueil <paul@crapouillou.net> wrote:
->>
->> From: Maarten ter Huurne <maarten@treewalker.org>
->>
->> OST is the OS Timer, a 64-bit timer/counter with buffered reading.
->>
->> SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
->> JZ4780 have a 64-bit OST.
->>
->> This driver will register both a clocksource and a sched_clock to the
->> system.
->>
->> Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
->> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->> ---
->>
->> Notes:
->>       v5: New patch
->>
->>       v6: - Get rid of SoC IDs; pass pointer to ingenic_ost_soc_info as
->>             devicetree match data instead.
->>           - Use device_get_match_data() instead of the of_* variant
->>           - Handle error of dev_get_regmap() properly
->>
->>       v7: Fix section mismatch by using builtin_platform_driver_probe()
->>
->>       v8: builtin_platform_driver_probe() does not work anymore in
->>           4.20-rc6? The probe function won't be called. Work around this
->>           for now by using late_initcall.
->>
+This is follow up on my previous patches.
 
-Did anyone notice this ? Either something is wrong with the driver, or
-with the kernel core. Hacking around it seems like the worst possible
-"solution".
+[0] https://lore.kernel.org/patchwork/patch/1031616/
+[1] https://lore.kernel.org/patchwork/patch/1031617/
 
-Guenter
+As per Martin's suggestion and input I have tried to fix below issue.
+
+Fixed the phy power issue on the usb port.
+# cat /sys/kernel/debug/regulator/regulator_summary
+    USB_VBUS                      4    2      0 unknown  5000mV     0mA  5000mV  5000mV
+       phy-c1108820.phy.1         2                                 0mA     0mV     0mV
+       phy-c1108800.phy.0         2                                 0mA     0mV     0mV
+
+Fixed the OTG phy warning and initilizaion of usb0_phy 
+# lsusb -t
+/:  Bus 02.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+    |__ Port 1: Dev 2, If 0, Class=Hub, Driver=hub/4p, 480M
+        |__ Port 1: Dev 5, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+        |__ Port 2: Dev 3, If 0, Class=Mass Storage, Driver=usb-storage, 480M
+        |__ Port 3: Dev 4, If 1, Class=Video, Driver=uvcvideo, 480M
+        |__ Port 3: Dev 4, If 2, Class=Audio, Driver=snd-usb-audio, 480M
+        |__ Port 3: Dev 4, If 0, Class=Video, Driver=uvcvideo, 480M
+        |__ Port 3: Dev 4, If 3, Class=Audio, Driver=snd-usb-audio, 480M
+/:  Bus 01.Port 1: Dev 1, Class=root_hub, Driver=dwc2/1p, 480M
+ 
+Now hotpluing of usb device is working on odroid c1+ boards.
+TODO: need to initialize the otg usb port to accept usb device.
+
+Any input are welcome 
+
+Best Regards
+-Anand
+
+Anand Moon (3):
+  phy: meson8b-usb2: Enable otg phy controller on Meson8b SoCs
+  ARM: dts: meson8b: odroidc1: fix USB power supplies for phy
+  ARM: dts: meson8b: odroidc1: enable the OTG capable USB controller
+
+ arch/arm/boot/dts/meson8b-odroidc1.dts | 27 ++++++++++++++++++++++++++
+ drivers/phy/amlogic/phy-meson8b-usb2.c | 15 ++++++++++++++
+ 2 files changed, 42 insertions(+)
+
+-- 
+2.20.1
