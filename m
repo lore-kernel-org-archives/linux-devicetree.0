@@ -1,65 +1,107 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v2 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
-Date: Wed, 23 Jan 2019 17:55:32 +0100
-Message-ID: <20190123165533.29645-3-k.konieczny@partner.samsung.com>
-References: <20190123165533.29645-1-k.konieczny@partner.samsung.com>
-        <CGME20190123165551eucas1p2bb80cfe58535b5f665271c7448cffc30@eucas1p2.samsung.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
+ driver
+Date: Wed, 23 Jan 2019 17:05:09 +0000
+Message-ID: <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123165533.29645-1-k.konieczny@partner.samsung.com>
+Content-Disposition: inline
+In-Reply-To: <20190108162441.5278-1-miquel.raynal@bootlin.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: k.konieczny@partner.samsung.com
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
-SubSystem) IP.
+On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:
+> Hello,
+> 
+> As part of an effort to bring suspend to RAM support to Armada 3700
+> SoCs (main target: ESPRESSObin), this series handles the work around
+> the PCIe IP.
+> 
+> First, more configuration is done in the 'setup' helper as inspired
+> from the U-Boot driver. This is needed to entirely initialize the IP
+> during future resume operation (patch 1).
+> 
+> Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+> current device trees do not provide the corresponding properties, not
+> finding one of these properties is not an error and just produces a
+> warning. However, if the property is present, an error during PHY
+> initialization will fail the probe of the driver.
+> 
+> Note: To be sure the clock will be resumed before this driver, a first
+> series adding links between clocks and consumers has been submitted,
+> see [1]. Anyway, having the clock series applied first is not needed.
 
-Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
----
- .../devicetree/bindings/crypto/samsung-sss.txt     | 14 +++++++++++---
- 1 file changed, 11 insertions(+), 3 deletions(-)
+I do not understand what this means, in particular in relation
+to the blocking clock calls in the suspend/resume NOIRQ hooks.
 
-diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-index 7a5ca56683cc..d9af679d38ab 100644
---- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-+++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
-@@ -1,4 +1,4 @@
--Samsung SoC SSS (Security SubSystem) module
-+Samsung SoC SSS (Security SubSystem) and SlimSSS module
- 
- The SSS module in S5PV210 SoC supports the following:
- -- Feeder (FeedCtrl)
-@@ -15,6 +15,12 @@ supports the following also:
- -- True Random Number Generator (TRNG)
- -- Secure Key Manager
- 
-+Exynos5433 has both SSS and SlimSSS module.
-+SlimSSS in Exynos5433 supports:
-+-- Feeder (FeedCtrl)
-+-- Advanced Encryption Standard (AES)
-+-- SHA-1/SHA-256/HMAC (SHA-1/SHA-256)
-+
- Required properties:
- 
- - compatible : Should contain entries for this and backward compatible
-@@ -22,11 +28,13 @@ Required properties:
-   - "samsung,s5pv210-secss" for S5PV210 SoC.
-   - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
- 		Exynos5260 and Exynos5420 SoCs.
-+  - "samsung,exynos5433-slim-sss" for Exynos5433 SoCs.
- - reg : Offset and length of the register set for the module
- - interrupts : interrupt specifiers of SSS module interrupts (one feed
- 		control interrupt).
- 
- - clocks : list of clock phandle and specifier pairs for all clocks  listed in
- 		clock-names property.
--- clock-names : list of device clock input names; should contain one entry
--		"secss".
-+- clock-names : list of device clock input names; should contain "pclk" and
-+		"aclk" for slim-sss in Exynos5433, and one entry "secss" for
-+		other compatibles.
--- 
-2.20.0
+Thanks,
+Lorenzo
+
+> Patch 5 adds suspend/resume hooks, re-using all the above.
+> 
+> Finally, bindings and device trees are updated to reflect the hardware
+> (patch 6-12). While the clock depends on the SoC, the reset GPIO and
+> the PHY depends on the board so the clock is added in the
+> armada-37xx.dtsi file while the two other properties are added in
+> armada-3720-espressobin.dts.
+> 
+> [1] http://lists.infradead.org/pipermail/linux-arm-kernel/2019-January/623885.html
+> 
+> Thanks,
+> Miqu??l
+> 
+> 
+> Changes since v2:
+> =================
+> * Minor patches reordering.
+> * Added pinctrl patches from Gregory Clement fixing the PCIe pins. His
+>   changes implied modifications in the DT/bindings patches adding PCIe
+>   reset pin support.
+> * Added a new patch that enlarges the PIO timeout of the driver
+>   (explanations in the commit log).
+> * With the timeout changed, removed the "experimental delay" that was
+>   needed at resume time before accessing any register.
+> 
+> Changes since v1:
+> =================
+> * Change the capitalization in commit titles to follow the PCI
+>   subsystem rules.
+> * Added Suggested-by tag to the patch adding PHY support and to the
+>   patch adding the PHY property in the DT.
+> * Added Rob's Reviewed-by tags on bindings.
+> * I am following the discussion about calling functions that might
+>   sleep in a NOIRQ context. As there is no real problem yet (as per my
+>   understanding), I did not change anything on this regard.
+> 
+> 
+> Miquel Raynal (15):
+>   PCI: aardvark: Enlarge PIO timeout
+>   PCI: aardvark: Configure more registers in the configuration helper
+>   PCI: aardvark: Add clock support
+>   PCI: aardvark: Add PHY support
+>   PCI: aardvark: Add PCIe warm reset support
+>   PCI: aardvark: Add external reset GPIO support
+>   PCI: aardvark: Add suspend to RAM support
+>   dt-bindings: PCI: aardvark: Describe the clocks property
+>   dt-bindings: PCI: aardvark: Describe the PHY property
+>   dt-bindings: PCI: aardvark: Describe the PCIe endpoint card reset pins
+>   dt-bindings: PCI: aardvark: Describe the reset-gpios property
+>   ARM64: dts: marvell: armada-37xx: declare PCIe clock
+>   ARM64: dts: marvell: armada-3720-espressobin: declare PCIe PHY
+>   ARM64: dts: marvell: armada-37xx: declare PCIe reset pin
+>   ARM64: dts: marvell: armada-3720-espressobin: declare PCIe warm reset
+>     pin
+> 
+>  .../devicetree/bindings/pci/aardvark-pci.txt  |  14 ++
+>  .../dts/marvell/armada-3720-espressobin.dts   |   3 +
+>  arch/arm64/boot/dts/marvell/armada-37xx.dtsi  |  10 +
+>  drivers/pci/controller/pci-aardvark.c         | 217 +++++++++++++++++-
+>  4 files changed, 243 insertions(+), 1 deletion(-)
+> 
+> -- 
+> 2.19.1
+> 
