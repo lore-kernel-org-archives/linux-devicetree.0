@@ -1,92 +1,40 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Thu, 24 Jan 2019 01:47:56 +0530
-Message-ID: <71ae9f41-50ff-742b-3e12-ca2ce84e0d3c@codeaurora.org>
-References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
- <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
- <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com>
- <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
- <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
- <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
- <CANLsYkxLJS-N0V4eOHM5rfe8MXMZHQApZFsDQns+DAS7xhGCoQ@mail.gmail.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH][RESEND] arm64: dts: hikey: Add DMA entries for Bluetooth UART
+Date: Wed, 23 Jan 2019 12:30:37 -0800
+Message-ID: <1548275437-6022-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CANLsYkxLJS-N0V4eOHM5rfe8MXMZHQApZFsDQns+DAS7xhGCoQ@mail.gmail.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mathieu Poirier <mathieu.poirier@linaro.org>
-Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, John Horley <john.horley@arm.com>
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Mathieu,
+Add dma0 references for bluetooth uart to enable dma
+for bt transfers.
 
-On 1/24/2019 12:44 AM, Mathieu Poirier wrote:
-> On Wed, 23 Jan 2019 at 05:12, Sai Prakash Ranjan
-> <saiprakash.ranjan@codeaurora.org> wrote:
-> 
-> That depends on whether the ETMs have been modified at all, something
-> Suzuki has asked to be clarified.  If ETMs have been modified then we
-> need to understand how they differ from the driver's implementation.
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ryan Grachek <ryan@edited.us>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: devicetree@vger.kernel.org
+Signed-off-by: John Stultz <john.stultz@linaro.org>
+---
+ arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 2 ++
+ 1 file changed, 2 insertions(+)
 
-We had asked hardware team for clarification regarding this. Let me
-poke them again. As for the driver, downstream implementation also
-uses the same driver, so I am not sure what do you mean by differing
-from the driver's implementation.
-
-> If the implementations are the same:
-> 
->>
->> @@ -1079,6 +1079,10 @@ static const struct amba_id etm4_ids[] = {
->>           ETM4x_AMBA_ID(0x000bb95a),              /* Cortex-A72 */
->>           ETM4x_AMBA_ID(0x000bb959),              /* Cortex-A73 */
->>           ETM4x_AMBA_ID(0x000bb9da),              /* Cortex-A35 */
->> +       ETM4x_AMBA_ID(0x000f0211),              /* Qualcomm Kryo */
->> +       ETM4x_AMBA_ID(0x000f0205),              /* Qualcomm Kryo */
-> 
-> What version of the Kryo CPU?  And the above will need to be in a
-> separate patch with the modifications to address the problem you
-> mentionned below.
-> 
-
-There is no Kryo version for MSM8996 (its only given as Kryo), MSM8998
-onwards we have Kryo versions like Kryo 280 and so on. Hence I skipped
-for this one and added the version for SDM845.
-
->> +       ETM4x_AMBA_ID(0x000bb803),              /* Qualcomm Kryo 385
->> Cortex-A75 */
->> +       ETM4x_AMBA_ID(0x000bb802),              /* Qualcomm Kryo 385
->> Cortex-A55 */
-> 
-> Please add them in chronological order.
-> 
-
-Sure, will do it.
-
->>           {},
->>    };
->>
->> For msm8996, cpu debug module pid returned is same as ETM
->> which is causing the probe failure for cpu debug coresight module
->> as shown in below logs.
->> For this case, I tried adding these ids to cpu debug driver, but it
->> splits some errors (coresight-cpu-debug: probe of 3840000.etm failed
->> with error -16) since the ids are same. Can we override for this case
->> or there is something else we can do here?
-> 
-> That is another problem.  See this patchset [1] from Mike Leach for a
-> description of the problem and how to fix it.
-> 
-> [1]. https://lkml.org/lkml/2018/12/7/784
-> 
-
-Thanks a lot for this link. I will check this out.
-
-- Sai
-
+diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+index aec9e37..fa15a08 100644
+--- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
++++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
+@@ -319,6 +319,8 @@
+ 			clock-names = "uartclk", "apb_pclk";
+ 			pinctrl-names = "default";
+ 			pinctrl-0 = <&uart1_pmx_func &uart1_cfg_func1 &uart1_cfg_func2>;
++			dmas = <&dma0 8 &dma0 9>;
++			dma-names = "rx", "tx";
+ 			status = "disabled";
+ 		};
+ 
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.7.4
