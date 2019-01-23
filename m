@@ -1,54 +1,131 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH reset-next 2/2] reset: brcmstb: Fix 32-bit build with 64-bit resource_size_t
-Date: Tue, 22 Jan 2019 16:33:45 -0800
-Message-ID: <20190123003345.13750-3-f.fainelli@gmail.com>
-References: <20190123003345.13750-1-f.fainelli@gmail.com>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: Re: [PATCH v3 01/10] arm64: dts: qcom: sdm845: Update PIL region
+ memory map
+Date: Tue, 22 Jan 2019 16:39:58 -0800
+Message-ID: <20190123003958.GG31919@minitux>
+References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
+ <20190122055112.30943-2-bjorn.andersson@linaro.org>
+ <CAD=FV=Ubg2D+1w8AxwYMwFfBZt3ZFf6auPJGDr8+2wE7=DV6Yw@mail.gmail.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123003345.13750-1-f.fainelli@gmail.com>
+Content-Disposition: inline
+In-Reply-To: <CAD=FV=Ubg2D+1w8AxwYMwFfBZt3ZFf6auPJGDr8+2wE7=DV6Yw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: Florian Fainelli <f.fainelli@gmail.com>, Philipp Zabel <p.zabel@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Brian Norris <computersforpeace@gmail.com>, Gregory Fong <gregory.0xf0@gmail.com>, "maintainer:BROADCOM BCM7XXX ARM
-        ARCHITECTURE" <bcm-kernel-feedback-list@broadcom.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, "moderated list:BROADCOM BCM7XXX
-        ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, rdunlap@infradead.org, linux-next@vger.kernel.org, sfr@canb.auug.org.au, paul.gortmaker@windriver.com
+To: Doug Anderson <dianders@chromium.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 32-bit architectures defining resource_size_t as 64-bit (because of
-PAE), we can run into a linker failure because of the modulo and the
-division against resource_size(), replace the two problematic operations
-with an alignment check on the register resource (instead of modulo),
-and the division with DIV_ROUND_CLOSEST_ULL().
+On Tue 22 Jan 15:16 PST 2019, Doug Anderson wrote:
 
-Reported-by: Randy Dunlap <rdunlap@infradead.org>
-Fixes: c196cdc7659d ("reset: Add Broadcom STB SW_INIT reset controller driver")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/reset/reset-brcmstb.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+> Hi,
+> 
+> On Mon, Jan 21, 2019 at 9:52 PM Bjorn Andersson
+> <bjorn.andersson@linaro.org> wrote:
+> >
+> > Update existing and add all missing PIL regions to the reserved memory
+> > map, as described in version 10.
+> >
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >
+> > Changes since v2:
+> > - New patch
+> >
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++--
+> >  1 file changed, 58 insertions(+), 3 deletions(-)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 0ec827394e92..cdcac3704c13 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -89,12 +89,47 @@
+> >                 };
+> >
+> >                 memory@86200000 {
+> > -                       reg = <0 0x86200000 0 0x2d00000>;
+> > +                       reg = <0 0x86200000 0 0x100000>;
+> >                         no-map;
+> >                 };
+> >
+> > -               wlan_msa_mem: memory@96700000 {
+> > -                       reg = <0 0x96700000 0 0x100000>;
+> > +               memory@86300000 {
+> > +                       reg = <0 0x86300000 0 0x4800000>;
+> > +                       no-map;
+> > +               };
+> 
+> I know it's not a problem upstream (yet), but downstream this collides
+> with a memory region in the cheza board.  We have:
+> 
+> rmtfs@88f00000 {
+>   compatible = "qcom,rmtfs-mem";
+>   reg = <0x0 0x88f00000 0x0 0x800000>;
+>   no-map;
+> 
+>   qcom,client-id = <1>;
+> };
+> 
+> ...and the above region overlays it since it goes till 0x8ab00000
+> 
 
-diff --git a/drivers/reset/reset-brcmstb.c b/drivers/reset/reset-brcmstb.c
-index 01ab1f71518b..c4cab8b5052d 100644
---- a/drivers/reset/reset-brcmstb.c
-+++ b/drivers/reset/reset-brcmstb.c
-@@ -91,7 +91,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
- 		return -ENOMEM;
- 
- 	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--	if (resource_size(res) % SW_INIT_BANK_SIZE) {
-+	if (!IS_ALIGNED(res->start, SW_INIT_BANK_SIZE) ||
-+	    !IS_AGLINED(resource_size(res), SW_INIT_BANK_SIZE)) {
- 		dev_err(kdev, "incorrect register range\n");
- 		return -EINVAL;
- 	}
-@@ -103,7 +104,8 @@ static int brcmstb_reset_probe(struct platform_device *pdev)
- 	dev_set_drvdata(kdev, priv);
- 
- 	priv->rcdev.owner = THIS_MODULE;
--	priv->rcdev.nr_resets = (resource_size(res) / SW_INIT_BANK_SIZE) * 32;
-+	priv->rcdev.nr_resets = DIV_ROUND_CLOSEST_ULL(resource_size(res),
-+						      SW_INIT_BANK_SIZE) * 32;
- 	priv->rcdev.ops = &brcmstb_reset_ops;
- 	priv->rcdev.of_node = kdev->of_node;
- 	/* Use defaults: 1 cell and simple xlate function */
--- 
-2.17.1
+Digging through the table again I see that there's another level here,
+so it seems only the first 44MB of these 78MB are reserved for non-APSS
+things. So this should actually be 0x2c00000 long.
+
+I will update this and we'll have one conflict less.
+
+> 
+> > +
+> > +               memory@8ab00000 {
+> > +                       reg = <0 0x8ab00000 0 0x1400000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               memory@8bf00000 {
+> > +                       reg = <0 0x8bf00000 0 0x500000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               ipa_fw_mem: memory@8c400000 {
+> > +                       reg = <0 0x8c400000 0 0x10000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               ipa_gsi_mem: memory@8c410000 {
+> > +                       reg = <0 0x8c410000 0 0x5000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               memory@8c415000 {
+> > +                       reg = <0 0x8c415000 0 0x2000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               adsp_mem: memory@8c500000 {
+> > +                       reg = <0 0x8c500000 0 0x1a00000>;
+> > +                       no-map;
+> > +               };
+> > +
+> > +               wlan_msa_mem: memory@8df00000 {
+> 
+> Your patch moves 'wlan_msa_mem' from 0x96700000 to 0x8df00000.  Is
+> that OK?  I haven't been involved in all of the previous discussions
+> but if everything is all OK w/ the device tree just moving this chunk
+> around (without any other coordination w/ firmware) it seems really
+> weird that we even need to specify it in the device tree.  ...but
+> maybe I shouldn't open this can of worms.  You can pretend I didn't
+> say anything.
+> 
+
+0x96700000 seems to be reserved for the sensor core, so either WiFi
+wasn't actually tested before, or more likely its firmware is position
+independent.
+
+Most (all?) firmware is position independent, but the security
+configuration prevents us from relocating it. One such example is that
+the ADSP in the newer firmware versions are not allowed to execute from
+the old memory region.
+
+Regards,
+Bjorn
