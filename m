@@ -1,112 +1,424 @@
 From: liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: [RFC v7 0/5] pstore/block: new support logger for block devices
-Date: Wed, 23 Jan 2019 20:05:11 +0800
-Message-ID: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+Subject: [RFC v7 3/5] pstore/blk: add blkoops for pstore_blk
+Date: Wed, 23 Jan 2019 20:05:14 +0800
+Message-ID: <1548245116-6360-4-git-send-email-liaoweixiong@allwinnertech.com>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>
 Cc: linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, liaoweixiong <liaoweixiong@allwinnertech.com>
 List-Id: devicetree@vger.kernel.org
 
-Why should we need pstore_block?
-1. Most embedded intelligent equipment have no persistent ram, which
-increases costs. We perfer to cheaper solutions, like block devices.
-In fast, there is already a sample for block device logger in driver
-MTD (drivers/mtd/mtdoops.c).
-2. Do not any equipment have battery, which means that it lost all data
-on general ram if power failure. Pstore has little to do for these
-equipments.
+blkoops is a sample for pstore/blk. It can only record oops, excluding
+panics as no read/write apis for panic registered. It support settings
+on Kconfg/device tree/module parameters. It can record oops log even
+power failure if "PSTORE_BLKOOPS_PART_PATH" on Kconfig or
+"partition-path" on dts or "part_path" on module parameter is valid.
+Otherwise, it can only record data to ram buffer, which will be dropped
+when reboot.
 
-[PATCH v7]
-On patch 1:
-1. Fix line over 80 characters.
-On patch 2:
-1. Insert a separate patch for DT bindings.
-
-[PATCH v6]
-On patch 1:
-1. Fix according to email from Kees Cook, including spelling mistakes,
-   explicit overflow test, none of the zeroing etc.
-2. Do not recover data but metadata of dmesg when panic.
-3. No need to take recovery when do erase.
-4. Do not use "blkoops" for blkzone any more because "blkoops" is used for
-   other module now. (rename blkbuf to blkoops)
-On patch 2:
-1. Rename blkbuf to blkoops.
-2. Add Kconfig/device tree/module parameters settings for blkoops.
-3. Add document for device tree.
-On patch 3:
-1. Blkoops support pmsg.
-2. Fix description for new version patch.
-On patch 4:
-1. Fix description for new version patch.
-
-[PATCH v5]
-On patch 1:
-1. rename pstore/rom to pstore/blk
-2. Do not allocate any memory in the write path of panic. So, use local
-array instead in function romz_recover_dmesg_meta.
-3. Add C header file "linux/fs.h" to fix implicit declaration of function
-   'filp_open','kernel_read'...
-On patch 3:
-1. If panic, do not recover pmsg but flush if it is dirty.
-2. Fix erase pmsg failed.
-On patch 4:
-1. Create a document for pstore/blk
-
-[PATCH v4]
-On patch 1:
-1. Fix always true condition '(--i >= 0) => (0-u32max >= 0)' in function
-   romz_init_zones by defining variable i to 'int' rahter than
-   'unsigned int'.
-2. To make codes more easily to read, we use macro READ_NEXT_ZONE for
-   return value of romz_dmesg_read if it need to read next zone.
-   Moveover, we assign READ_NEXT_ZONE -1024 rather than 0.
-3. Add 'FLUSH_META' to 'enum romz_flush_mode' and rename 'NOT_FLUSH' to
-   'FLUSH_NONE'
-4. Function romz_zone_write work badly with FLUSH_PART mode as badly
-   address and offset to write.
-On patch 3:
-NEW SUPPORT psmg for pstore_rom.
-
-[PATCH v3]
-On patch 1:
-Fix build as module error for undefined 'vfs_read' and 'vfs_write'
-Both of 'vfs_read' and 'vfs_write' haven't be exproted yet, so we use
-'kernel_read' and 'kernel_write' instead.
-
-[PATCH v2]
-On patch 1:
-Fix build as module error for redefinition of 'romz_unregister' and
-'romz_register'
-
-[PATCH v1]
-On patch 1:
-Core codes of pstore_rom, which works well on allwinner(sunxi) platform.
-On patch 2:
-A sample for pstore_rom, using general ram rather than block device.
-
-liaoweixiong (5):
-  pstore/blk: new support logger for block devices
-  dt-bindings: pstore-block: new support for blkoops
-  pstore/blk: add blkoops for pstore_blk
-  pstore/blk: support pmsg for pstore block
-  Documentation: pstore/blk: create document for pstore_blk
-
- Documentation/admin-guide/pstore-block.rst         |  227 ++++
- .../devicetree/bindings/pstore-block/blkoops.txt   |   32 +
- MAINTAINERS                                        |    4 +-
- fs/pstore/Kconfig                                  |  128 +++
- fs/pstore/Makefile                                 |    5 +
- fs/pstore/blkoops.c                                |  250 +++++
- fs/pstore/blkzone.c                                | 1164 ++++++++++++++++++++
- include/linux/pstore_blk.h                         |   62 ++
- 8 files changed, 1871 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/admin-guide/pstore-block.rst
- create mode 100644 Documentation/devicetree/bindings/pstore-block/blkoops.txt
+Signed-off-by: liaoweixiong <liaoweixiong@allwinnertech.com>
+---
+ MAINTAINERS         |   2 +-
+ fs/pstore/Kconfig   | 117 +++++++++++++++++++++++++
+ fs/pstore/Makefile  |   2 +
+ fs/pstore/blkoops.c | 239 ++++++++++++++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 359 insertions(+), 1 deletion(-)
  create mode 100644 fs/pstore/blkoops.c
- create mode 100644 fs/pstore/blkzone.c
- create mode 100644 include/linux/pstore_blk.h
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 91c70df..534c574 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -12056,7 +12056,7 @@ F:	drivers/acpi/apei/erst.c
+ F:	Documentation/admin-guide/ramoops.rst
+ F:	Documentation/devicetree/bindings/reserved-memory/ramoops.txt
+ F:	Documentation/devicetree/bindings/pstore-block/
+-K:	\b(pstore|ramoops)
++K:	\b(pstore|ramoops|blkoops)
+ 
+ PTP HARDWARE CLOCK SUPPORT
+ M:	Richard Cochran <richardcochran@gmail.com>
+diff --git a/fs/pstore/Kconfig b/fs/pstore/Kconfig
+index a881c53..f0a1a49 100644
+--- a/fs/pstore/Kconfig
++++ b/fs/pstore/Kconfig
+@@ -159,3 +159,120 @@ config PSTORE_BLK
+ 	help
+ 	  This enables panic and oops message to be logged to a block dev
+ 	  where it can be read back at some later point.
++
++config PSTORE_BLKOOPS
++	tristate "pstore block with oops logger"
++	depends on PSTORE_BLK
++	help
++	  This is a sample for pstore block with oops logger.
++
++	  It CANNOT record panic log as no read/write apis for panic registered.
++
++	  It CAN record oops log even power failure if
++	  "PSTORE_BLKOOPS_PART_PATH" on Kconfig or "partition-path" on dts or
++	  "part_path" on module parameter is valid.
++
++	  Otherwise, it can only record data to ram buffer, which will be
++	  dropped when reboot.
++
++	  NOTE that, there are three ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < device tree < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. device tree
++	     It is set on device tree, which will overwrites value from Kconfig,
++	     but can also be overwritten by module parameters.
++	  3. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_DMESG_SIZE
++	int "dmesg_size in kbytes for blkoops"
++	depends on PSTORE_BLKOOPS
++	default 64
++	help
++	  This just sets size of dmesg (dmesg_size) for pstore/blk. The value
++	  must be a multiple of 4096.
++
++	  NOTE that, there are three ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < device tree < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. device tree
++	     It is set on device tree, which will overwrites value from Kconfig,
++	     but can also be overwritten by module parameters.
++	  3. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_PMSG_SIZE
++	int "pmsg_size in kbytes for blkoops"
++	depends on PSTORE_BLKOOPS
++	default 64
++	help
++	  This just sets size of pmsg (pmsg_size) for pstore/blk. The value must
++	  be a multiple of 4096. Pmsg work only if "part_path" is set.
++
++	  NOTE that, there are three ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < device tree < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. device tree
++	     It is set on device tree, which will overwrites value from Kconfig,
++	     but can also be overwritten by module parameters.
++	  3. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_PART_SIZE
++	int "part_size in kbytes for blkoops"
++	depends on PSTORE_BLKOOPS
++	default 1024
++	help
++	  This just sets partition size (part_size) for pstore/blk. Pstore/blk
++	  will allocate part_size memory to temporarily hold the data. It's the
++	  size of partition on part_path. The value must be a multiple of 4096.
++
++	  NOTE that, there are three ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < device tree < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. device tree
++	     It is set on device tree, which will overwrites value from Kconfig,
++	     but can also be overwritten by module parameters.
++	  3. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
++
++config PSTORE_BLKOOPS_PART_PATH
++	string "part_path for blkoops"
++	depends on PSTORE_BLKOOPS
++	default ""
++	help
++	  This just sets partition path (part_path) for pstore/blk. Pstore/blk
++	  will record data to this block partition to avoid losing data due to
++	  power failure. So, If it is not set, pstore/blk will drop all data
++	  when reboot.
++
++	  The strings must begin with "/dev/".
++
++	  NOTE that, there are three ways to set parameters of blkoops and
++	  prioritize according to configuration flexibility. That is
++	  Kconfig < device tree < module parameters. It means that the value can
++	  be overwritten by higher priority settings.
++	  1. Kconfig
++	     It	just sets a default value.
++	  2. device tree
++	     It is set on device tree, which will overwrites value from Kconfig,
++	     but can also be overwritten by module parameters.
++	  3. module parameters
++	     It is the first priority. Take care of that blkoops will take lower
++	     priority settings if higher priority one do not set.
+diff --git a/fs/pstore/Makefile b/fs/pstore/Makefile
+index 0ee2fc8..24b3d48 100644
+--- a/fs/pstore/Makefile
++++ b/fs/pstore/Makefile
+@@ -15,3 +15,5 @@ obj-$(CONFIG_PSTORE_RAM)	+= ramoops.o
+ 
+ obj-$(CONFIG_PSTORE_BLK) += pstore_blk.o
+ pstore_blk-y += blkzone.o
++
++obj-$(CONFIG_PSTORE_BLKOOPS) += blkoops.o
+diff --git a/fs/pstore/blkoops.c b/fs/pstore/blkoops.c
+new file mode 100644
+index 0000000..fd926a5
+--- /dev/null
++++ b/fs/pstore/blkoops.c
+@@ -0,0 +1,239 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ *
++ * blkoops.c: Block device Oops logger
++ *
++ * Copyright (C) 2019 liaoweixiong <liaoweixiong@gallwinnertech.com>
++ *
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License version 2 as
++ * published by the Free Software Foundation.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
++ * GNU General Public License for more details.
++ *
++ */
++#define MODNAME "blkoops"
++#define pr_fmt(fmt) MODNAME ": " fmt
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/string.h>
++#include <linux/platform_device.h>
++#include <linux/of.h>
++#include <linux/of_address.h>
++#include <linux/pstore_blk.h>
++
++static long dmesg_size = -1;
++module_param(dmesg_size, long, 0400);
++MODULE_PARM_DESC(dmesg_size, "demsg size in kbytes");
++
++static long part_size = -1;
++module_param(part_size, long, 0400);
++MODULE_PARM_DESC(part_size, "partition size in kbytes");
++
++#define PART_PATH_INVALID "INVALID"
++static char part_path[80] = {PART_PATH_INVALID};
++module_param_string(part_path, part_path, 80, 0400);
++MODULE_PARM_DESC(part_path, "path of partition in /dev for general read/write");
++
++struct blkz_info blkz_info = {
++	.owner = THIS_MODULE,
++	.name = "blkoops",
++	.dump_oops = true,
++};
++
++struct blkoops_info {
++	unsigned long dmesg_size;
++	unsigned long part_size;
++	const char *part_path;
++};
++struct blkoops_info blkoops_info = {
++	.dmesg_size = CONFIG_PSTORE_BLKOOPS_DMESG_SIZE * 1024,
++	.part_size = CONFIG_PSTORE_BLKOOPS_PART_SIZE * 1024,
++	.part_path = CONFIG_PSTORE_BLKOOPS_PART_PATH,
++};
++
++static struct platform_device *dummy;
++
++static int blkoops_parse_dt_size(struct device_node *np,
++		const char *propname, u32 *value)
++{
++	u32 val32 = 0;
++	int ret;
++
++	ret = of_property_read_u32(np, propname, &val32);
++	if (ret < 0) {
++		if (ret != -EINVAL)
++			pr_err("failed to parse property %s: %d\n",
++				propname, ret);
++		return ret;
++	}
++
++	if (val32 * 1024 > INT_MAX) {
++		pr_err("%s %u > INT_MAX\n", propname, val32);
++		return -EOVERFLOW;
++	}
++
++	*value = val32 * 1024;
++	return 0;
++}
++
++static int __init blkoops_parse_dt(struct blkoops_info *info,
++		struct device_node *np)
++{
++	int ret;
++	u32 value;
++
++	pr_info("using device tree\n");
++
++	ret = of_property_read_string(np, "partition-path",
++			&info->part_path);
++	if (ret < 0 && ret != -EINVAL) {
++		pr_err("failed to parse partition path : %d\n", ret);
++		return ret;
++	}
++
++#define parse_size(name, field) {					\
++		ret = blkoops_parse_dt_size(np, name, &value);		\
++		if (ret < 0 && ret != -EINVAL)				\
++			return ret;					\
++		else if (ret == 0)					\
++			field = value;					\
++	}
++
++	parse_size("partition-size", info->part_size);
++	parse_size("dmesg-size", info->dmesg_size);
++
++#undef parse_size
++	return 0;
++}
++
++static int blkoops_probe(struct platform_device *pdev)
++{
++	struct device *dev = &pdev->dev;
++	struct device_node *of_node = dev_of_node(dev);
++	struct blkoops_info *info = dev->platform_data;
++
++	if (of_node && !info) {
++		int err;
++
++		info = &blkoops_info;
++		err = blkoops_parse_dt(info, of_node);
++		if (err)
++			return err;
++	}
++
++	if (!strcmp(info->part_path, PART_PATH_INVALID) ||
++			strlen(info->part_path) == 0) {
++		pr_info("no path for block partition, use ram buffer only\n");
++	} else if (strncmp(info->part_path, "/dev/", 5) != 0) {
++		pr_err("invalid partition path %s, use ram buffer only\n",
++				info->part_path);
++	} else {
++		pr_debug("path for block partition: %s\n", info->part_path);
++		blkz_info.part_path = info->part_path;
++	}
++
++#define check_size(name, size) {					\
++		if (info->name & (size - 1)) {				\
++			pr_err(#name " must be a multiple of %d\n",	\
++					(size));			\
++			return -EINVAL;					\
++		}							\
++		blkz_info.name = info->name;				\
++	}
++
++	check_size(part_size, 4096);
++	check_size(dmesg_size, 4096);
++
++#undef check_size
++
++	/*
++	 * Update the module parameter variables as well so they are visible
++	 * through /sys/module/blkoops/parameters/
++	 */
++	dmesg_size = blkz_info.dmesg_size;
++	part_size = blkz_info.part_size;
++	if (blkz_info.part_path)
++		strncpy(part_path, blkz_info.part_path, 80 - 1);
++	else
++		part_path[0] = '\0';
++	return blkz_register(&blkz_info);
++}
++
++static int blkoops_remove(struct platform_device *pdev)
++{
++	blkz_unregister(&blkz_info);
++	return 0;
++}
++
++static const struct of_device_id dt_match[] = {
++	{ .compatible = MODNAME},
++	{}
++};
++
++static struct platform_driver blkoops_driver = {
++	.probe		= blkoops_probe,
++	.remove		= blkoops_remove,
++	.driver		= {
++		.name		= MODNAME,
++		.of_match_table	= dt_match,
++	},
++};
++
++void blkoops_register_dummy(void)
++{
++	struct blkoops_info *info = &blkoops_info;
++	/*
++	 * Prepare a dummy platform data structure to carry the module
++	 * parameters. If mem_size isn't set, then there are no module
++	 * parameters, and we can skip this.
++	 */
++	if (part_size < 0)
++		return;
++
++	pr_info("using module parameters\n");
++
++	info->part_size = (unsigned long)part_size * 1024;
++	if (strcmp(part_path, PART_PATH_INVALID))
++		info->part_path = (const char *)part_path;
++	if (dmesg_size >= 0)
++		info->dmesg_size = (unsigned long)dmesg_size * 1024;
++
++	dummy = platform_device_register_data(NULL, MODNAME, -1, info,
++			sizeof(*info));
++	if (IS_ERR(dummy)) {
++		pr_err("could not create platform device: %ld\n",
++			PTR_ERR(dummy));
++		dummy = NULL;
++	}
++}
++
++static int __init blkoops_init(void)
++{
++	int ret;
++
++	blkoops_register_dummy();
++	ret = platform_driver_register(&blkoops_driver);
++	if (ret != 0) {
++		platform_device_unregister(dummy);
++		dummy = NULL;
++	}
++	return ret;
++}
++module_init(blkoops_init);
++
++static void __exit blkoops_exit(void)
++{
++	platform_driver_unregister(&blkoops_driver);
++	platform_device_unregister(dummy);
++	dummy = NULL;
++}
++module_exit(blkoops_exit);
++
++MODULE_LICENSE("GPL");
++MODULE_AUTHOR("liaoweixiong <liaoweixiong@allwinnertech.com>");
++MODULE_DESCRIPTION("Sample for Pstore BLK with Oops logger");
 -- 
 1.9.1
