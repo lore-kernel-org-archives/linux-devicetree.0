@@ -1,47 +1,51 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH] arm64: dts: hikey: Revert "Enable HS200 mode on eMMC"
-Date: Wed, 23 Jan 2019 12:06:06 -0800
-Message-ID: <1548273966-5889-1-git-send-email-john.stultz@linaro.org>
-Return-path: <stable-owner@vger.kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: lkml <linux-kernel@vger.kernel.org>
-Cc: Alistair Strachan <astrachan@google.com>, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, "stable #4 . 17+" <stable@vger.kernel.org>, John Stultz <john.stultz@linaro.org>
+From: Evan Green <evgreen-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org>
+Subject: Re: [v6 2/3] drm/msm/dpu: Integrate interconnect API in
+ MDSS
+Date: Wed, 23 Jan 2019 12:17:13 -0800
+Message-ID: <CAE=gft5SQmuY_iUY+5qaL8iJDADYCJVfS_A1YTbeUgQUnTz-DQ@mail.gmail.com>
+References: <1548214955-19692-1-git-send-email-jshekhar@codeaurora.org>
+ <1548214955-19692-3-git-send-email-jshekhar@codeaurora.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+In-Reply-To: <1548214955-19692-3-git-send-email-jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/freedreno>
+List-Post: <mailto:freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+List-Help: <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/freedreno>,
+ <mailto:freedreno-request-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org?subject=subscribe>
+Errors-To: freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org
+Sender: "Freedreno" <freedreno-bounces-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org>
+To: Jayant Shekhar <jshekhar-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>
+Cc: devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Sravanthi Kollukuduru1 <skolluku-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org>, linux-arm-msm <linux-arm-msm-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, LKML <linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org>, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, Rob Clark <robdclark-Re5JQEeQqe8AvxtiuMwx3w@public.gmane.org>, nganji-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, seanpaul-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, abhinavk-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, hoegsberg-F7+t8E8rja9g9hUCZPvPmw@public.gmane.org, freedreno-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, jsanka-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org, chandanu-sgV2jX0FEOL9JmXXK+q4OQ@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-From: Alistair Strachan <astrachan@google.com>
-
-This reverts commit abd7d0972a192ee653efc7b151a6af69db58f2bb. This
-change was already partially reverted by John Stultz in commit
-9c6d26df1fae ("arm64: dts: hikey: Fix eMMC corruption regression").
-
-This change appears to cause controller resets and block read failures
-which prevents successful booting on some hikey boards.
-
-Cc: Ryan Grachek <ryan@edited.us>
-Cc: Wei Xu <xuwei5@hisilicon.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>
-Cc: Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: devicetree@vger.kernel.org
-Cc: stable <stable@vger.kernel.org> #4.17+
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: John Stultz <john.stultz@linaro.org>
----
- arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts | 1 -
- 1 file changed, 1 deletion(-)
-
-diff --git a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-index 6102350..7092460 100644
---- a/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-+++ b/arch/arm64/boot/dts/hisilicon/hi6220-hikey.dts
-@@ -300,7 +300,6 @@
- 
- 		dwmmc_0: dwmmc0@f723d000 {
- 			cap-mmc-highspeed;
--			mmc-hs200-1_8v;
- 			non-removable;
- 			bus-width = <0x8>;
- 			vmmc-supply = <&ldo19>;
--- 
-2.7.4
+T24gVHVlLCBKYW4gMjIsIDIwMTkgYXQgNzo0MyBQTSBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJA
+Y29kZWF1cm9yYS5vcmc+IHdyb3RlOgo+Cj4gVGhlIGludGVyY29ubmVjdCBmcmFtZXdvcmsgaXMg
+ZGVzaWduZWQgdG8gcHJvdmlkZSBhCj4gc3RhbmRhcmQga2VybmVsIGludGVyZmFjZSB0byBjb250
+cm9sIHRoZSBzZXR0aW5ncyBvZgo+IHRoZSBpbnRlcmNvbm5lY3RzIG9uIGEgU29DLgo+Cj4gVGhl
+IGludGVyY29ubmVjdCBBUEkgdXNlcyBhIGNvbnN1bWVyL3Byb3ZpZGVyLWJhc2VkIG1vZGVsLAo+
+IHdoZXJlIHRoZSBwcm92aWRlcnMgYXJlIHRoZSBpbnRlcmNvbm5lY3QgYnVzZXMgYW5kIHRoZQo+
+IGNvbnN1bWVycyBjb3VsZCBiZSB2YXJpb3VzIGRyaXZlcnMuCj4KPiBNRFNTIGlzIG9uZSBvZiB0
+aGUgaW50ZXJjb25uZWN0IGNvbnN1bWVycyB3aGljaCB1c2VzIHRoZQo+IGludGVyY29ubmVjdCBB
+UElzIHRvIGdldCB0aGUgcGF0aCBiZXR3ZWVuIGVuZHBvaW50cyBhbmQKPiBzZXQgaXRzIGJhbmR3
+aWR0aCByZXF1aXJlbWVudCBmb3IgdGhlIGdpdmVuIGludGVyY29ubmVjdGVkCj4gcGF0aC4KPgo+
+IENoYW5nZXMgaW4gdjI6Cj4gICAgICAgICAtIFJlbW92ZSBlcnJvciBsb2cgYW5kIHVubmVjZXNz
+YXJ5IGNoZWNrIChKb3JkYW4gQ3JvdXNlKQo+Cj4gQ2hhbmdlcyBpbiB2MzoKPiAgICAgICAgIC0g
+Q29kZSBjbGVhbiBpbnZvbHZpbmcgdmFyaWFibGUgbmFtZSBjaGFuZ2UsIHJlbW92YWwKPiAgICAg
+ICAgICAgb2YgZXh0cmEgcGFyYW50aGVzaXMgYW5kIHZhcmlhYmxlcyAoTWF0dGhpYXMgS2FlaGxj
+a2UpCj4KPiBDaGFuZ2VzIGluIHY0Ogo+ICAgICAgICAgLSBBZGQgY29tbWVudHMsIHNwYWNpbmdz
+LCB0YWJzLCBwcm9wZXIgcG9ydCBuYW1lCj4gICAgICAgICAgIGFuZCBpY2MgbWFjcm8gKEdlb3Jn
+aSBEamFrb3YpCj4KPiBDaGFuZ2VzIGluIHY1Ogo+ICAgICAgICAgLSBDb21taXQgdGV4dCBhbmQg
+cGFyZW50aGVzaXMgYWxpZ25tZW50IChHZW9yZ2kgRGpha292KQo+Cj4gQ2hhbmdlcyBpbiB2NjoK
+PiAgICAgICAgIC0gQ2hhbmdlIHRvIG5ldyBpY2Nfc2V0IEFQSSdzIChEb3VnIEFuZGVyc29uKQo+
+Cj4gU2lnbmVkLW9mZi1ieTogU3JhdmFudGhpIEtvbGx1a3VkdXJ1MSA8c2tvbGx1a3VAY29kZWF1
+cm9yYS5vcmc+CgouLi53ZWlyZCB0aGF0IHRoZXJlJ3MgYSAxIGluIHlvdXIgbmFtZS4KCj4gU2ln
+bmVkLW9mZi1ieTogSmF5YW50IFNoZWtoYXIgPGpzaGVraGFyQGNvZGVhdXJvcmEub3JnPgoKUmV2
+aWV3ZWQtYnk6IEV2YW4gR3JlZW4gPGV2Z3JlZW5AY2hyb21pdW0ub3JnPgpfX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpGcmVlZHJlbm8gbWFpbGluZyBsaXN0
+CkZyZWVkcmVub0BsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9saXN0cy5mcmVlZGVza3Rv
+cC5vcmcvbWFpbG1hbi9saXN0aW5mby9mcmVlZHJlbm8K
