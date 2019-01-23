@@ -1,67 +1,116 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: Re: [PATCH v3 03/10] arm64: dts: sdm845: Introduce ADSP and CDSP PAS
- nodes
-Date: Tue, 22 Jan 2019 17:09:30 -0800
-Message-ID: <20190123010930.GI31919@minitux>
+Subject: Re: [PATCH v3 10/10] arm64: dts: qcom: sdm845: Add Q6V5 MSS node
+Date: Tue, 22 Jan 2019 17:10:22 -0800
+Message-ID: <20190123011022.GJ31919@minitux>
 References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
- <20190122055112.30943-4-bjorn.andersson@linaro.org>
- <CAD=FV=WXind-uk7V_XTDgM83LZbmtKb2Ln6pQjmUkaZMz8SFsA@mail.gmail.com>
- <20190123002610.GE31919@minitux>
- <CAD=FV=Wsk3s2NbX4pR6v9-kK41edLF4hd7B_BanoFkAXyLBwyA@mail.gmail.com>
+ <20190122055112.30943-11-bjorn.andersson@linaro.org>
+ <CAD=FV=XuA0Sm0fXfaHtib7+rji1s3s_SmjHc6d_DbEQ1LROq+A@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <CAD=FV=Wsk3s2NbX4pR6v9-kK41edLF4hd7B_BanoFkAXyLBwyA@mail.gmail.com>
+In-Reply-To: <CAD=FV=XuA0Sm0fXfaHtib7+rji1s3s_SmjHc6d_DbEQ1LROq+A@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: Doug Anderson <dianders@chromium.org>
 Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Sibi Sankar <sibis@codeaurora.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Tue 22 Jan 16:40 PST 2019, Doug Anderson wrote:
+On Tue 22 Jan 16:28 PST 2019, Doug Anderson wrote:
 
 > Hi,
 > 
-> On Tue, Jan 22, 2019 at 4:26 PM Bjorn Andersson
+> On Mon, Jan 21, 2019 at 9:52 PM Bjorn Andersson
 > <bjorn.andersson@linaro.org> wrote:
-> > > > +               clocks = <&xo_board>;
-> > > > +               clock-names = "xo";
-> > >
-> > > I've found that nearly all the places that refer to xo_board are wrong
-> > > and should actually point to '<&rpmhcc RPMH_CXO_CLK>'.  Maybe yours
-> > > should too?
-> > >
 > >
-> > Yes, xo_board is a fake clock representing the 19.2MHz clock feeding the
-> > cxo (or cxo2) pad of the SoC. So you're definitely right in that this
-> > should be referencing the actual 19.2MHz clock.
+> > From: Sibi Sankar <sibis@codeaurora.org>
 > >
-> > We've kept referring to this as xo_board, as we don't handle probe
-> > deferral when gcc will probe earlier than rpmcc in the boot and for
-> > other non-clock drivers the fear of actually hitting 0 on the refcounter
-> > for this (you don't want to disable the cxo while running the system).
+> > This patch adds Q6V5 MSS remoteproc node for SDM845 SoCs.
+> >
+> > Signed-off-by: Sibi Sankar <sibis@codeaurora.org>
+> > Reviewed-by: Douglas Anderson <dianders@chromium.org>
+> > Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> > ---
+> >
+> > Changes since v2:
+> > - Picked up Sibi's patch
+> > - Fixed reg to work with address/size-cells as 2
+> >
+> >  arch/arm64/boot/dts/qcom/sdm845.dtsi | 58 ++++++++++++++++++++++++++++
+> >  1 file changed, 58 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > index 5cc2615461da..78df5f1bce2d 100644
+> > --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> > @@ -1617,6 +1617,64 @@
+> >                         clock-names = "xo";
+> >                 };
+> >
+> > +               mss_pil: remoteproc@4080000 {
+> > +                       compatible = "qcom,sdm845-mss-pil";
+> > +                       reg = <0 0x04080000 0 0x408>, <0 0x04180000 0 0x48>;
+> > +                       reg-names = "qdsp6", "rmb";
+> > +
+> > +                       interrupts-extended =
+> > +                               <&intc GIC_SPI 266 IRQ_TYPE_EDGE_RISING>,
+> > +                               <&modem_smp2p_in 0 IRQ_TYPE_EDGE_RISING>,
+> > +                               <&modem_smp2p_in 1 IRQ_TYPE_EDGE_RISING>,
+> > +                               <&modem_smp2p_in 2 IRQ_TYPE_EDGE_RISING>,
+> > +                               <&modem_smp2p_in 3 IRQ_TYPE_EDGE_RISING>,
+> > +                               <&modem_smp2p_in 7 IRQ_TYPE_EDGE_RISING>;
+> > +                       interrupt-names = "wdog", "fatal", "ready",
+> > +                                         "handover", "stop-ack",
+> > +                                         "shutdown-ack";
+> > +
+> > +                       clocks = <&gcc GCC_MSS_CFG_AHB_CLK>,
+> > +                                <&gcc GCC_MSS_Q6_MEMNOC_AXI_CLK>,
+> > +                                <&gcc GCC_BOOT_ROM_AHB_CLK>,
+> > +                                <&gcc GCC_MSS_GPLL0_DIV_CLK_SRC>,
+> > +                                <&gcc GCC_MSS_SNOC_AXI_CLK>,
+> > +                                <&gcc GCC_MSS_MFAB_AXIS_CLK>,
+> > +                                <&gcc GCC_PRNG_AHB_CLK>,
+> > +                                <&rpmhcc RPMH_CXO_CLK>;
+> > +                       clock-names = "iface", "bus", "mem", "gpll0_mss",
+> > +                                     "snoc_axi", "mnoc_axi", "prng", "xo";
+> > +
+> > +                       qcom,smem-states = <&modem_smp2p_out 0>;
+> > +                       qcom,smem-state-names = "stop";
+> > +
+> > +                       resets = <&aoss_reset AOSS_CC_MSS_RESTART>,
+> > +                                <&pdc_reset PDC_MODEM_SYNC_RESET>;
+> > +                       reset-names = "mss_restart", "pdc_reset";
+> > +
+> > +                       qcom,halt-regs = <&tcsr_mutex_regs 0x23000 0x25000 0x24000>;
+> > +
+> > +                       power-domains = <&aoss_qmp AOSS_QMP_LS_MODEM>,
+> > +                                       <&rpmhpd SDM845_CX>,
+> > +                                       <&rpmhpd SDM845_MX>,
+> > +                                       <&rpmhpd SDM845_MSS>;
+> > +                       power-domain-names = "load_state", "cx", "mx", "mss";
+> > +
+> > +                       mba {
+> > +                               memory-region = <&mba_region>;
+> > +                       };
+> > +
+> > +                       mpss {
+> > +                               memory-region = <&mpss_region>;
+> > +                       };
+> > +
+> > +                       glink-edge {
+> > +                               interrupts = <GIC_SPI 449 IRQ_TYPE_EDGE_RISING>;
+> > +                               label = "modem";
+> > +                               qcom,remote-pid = <1>;
+> > +                               mboxes = <&apss_shared 12>;
+> > +                       };
+> > +               };
+> > +
+> >                 sdhc_2: sdhci@8804000 {
 > 
-> Note that, as defined in the device tree, "xo_board" is actually 38.4.
-> IIUC that is not actually a fake/bogus clock but represents the actual
-> crystal on the board.  There's a divide by 2 in the CPU though so most
-> peripherals consider "xo" as 19.2.
+> Can you please sort by unit address now that you have a device tree
+> that has more stuff?
 > 
 
-There's the 38.4MHz XO connected to the PMIC, but the signal going into
-the CXO_IN pad of the SoC is supposed to come from LNBBCLK1 and be
-19.2MHz.
-
-> ...OK, confirmed.  The actual RF_XO_CLK pin on the board is truly
-> connected to 38.4.
-> 
-
-And the three RF clocks from the PMIC are all ticking at 38.4MHz.
-
-
-The "xo" I need here is the LNBBCLK1 (RPMH_CXO_CLK in clk-rpmh), for the
-purpose of preventing the root clock to be turned off if apps goes to
-suspend while the modem is booting, before it has had a chance to tell
-RPM(h) that it needs it to be on.
+Of course, sorry for missing that.
 
 Regards,
 Bjorn
