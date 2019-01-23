@@ -1,112 +1,70 @@
-From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Wed, 23 Jan 2019 17:41:57 +0530
-Message-ID: <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
-References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
- <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
- <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
- <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com>
- <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
- <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
+From: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Subject: RE: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN
+ nodes
+Date: Wed, 23 Jan 2019 12:18:45 +0000
+Message-ID: <TYXPR01MB1775B75CED683E38B9171EA8C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547736856-16539-3-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
+ <20190123095122.l3engeuwx6qr5lzc@verge.net.au>
+ <20190123113812.e3nojtxjxywmg4gn@verge.net.au>
+ <TYXPR01MB1775ABDCFD939F91F1053534C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
+ <CAMuHMdVkFJ7Cy-+tNHsOcYaxDj82WjMynuFuPRXa4k=DH2fGCQ@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <netdev-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdVkFJ7Cy-+tNHsOcYaxDj82WjMynuFuPRXa4k=DH2fGCQ@mail.gmail.com>
 Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, john.horley@arm.com
+Sender: netdev-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Simon Horman <horms@verge.net.au>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@vger.kern>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
-
-On 1/23/2019 1:42 AM, Suzuki K Poulose wrote:
-> Hi Sai,
-> 
-> On 01/22/2019 04:48 PM, Sai Prakash Ranjan wrote:
->> Hi Suzuki,
->>
-[..]
->>
->> SDM845 has 4 Kryo 385 Gold (ARM A75) + 4 Kryo 385 Silver (ARM A55),
->> so the PID values should be same for 4 ETMs atleast. But here one
->> pid value(001bb803) is same for 6 ETMs and other one for 2
->> ETMs(001bb802) which seems odd and hence the doubt if these pids
->> are even valid ones.
-> 
-> Have you checked other SoCs with A55 for the ETM PID ? The drivers
-> usually only care about PID0[7-0], PID1[7-0], PID2[3-0] and ignores
-> the other fields that may change over revisions of the core. So, in your
-> case the ETM ID could be treated as 0xbb802 and 0xbb803.
-> 
-
-Very sorry to have mislead you here. I checked again today on SDM845 and 
-as you said 4 ETMs based on A75 has 0xbb803 and other 4 ETMs based on
-A55 has 0Xbb803. I wrongly mentioned it as 6 and 2.
-
-[    6.688809] resname=etm@7040000 pid = 0x1bb803
-[    6.694957]
-[    6.694957] resname=etm@7140000 pid = 0x1bb803
-[    6.701135]
-[    6.701135] resname=etm@7240000 pid = 0x1bb803
-[    6.707256]
-[    6.707256] resname=etm@7340000 pid = 0x1bb803
-[    6.713454]
-[    6.713454] resname=etm@7440000 pid = 0x1bb802
-[    6.719621]
-[    6.719621] resname=etm@7540000 pid = 0x1bb802
-[    6.725814]
-[    6.725814] resname=etm@7640000 pid = 0x1bb802
-[    6.731971]
-[    6.731971] resname=etm@7740000 pid = 0x1bb802
-
-So is it ok to add these to table as below in etm4x driver with the
-following comment since these do not exactly match A75 and A55 PIDs
-which you provided? Or any other way you prefer?
-
-@@ -1079,6 +1079,10 @@ static const struct amba_id etm4_ids[] = {
-         ETM4x_AMBA_ID(0x000bb95a),              /* Cortex-A72 */
-         ETM4x_AMBA_ID(0x000bb959),              /* Cortex-A73 */
-         ETM4x_AMBA_ID(0x000bb9da),              /* Cortex-A35 */
-+       ETM4x_AMBA_ID(0x000f0211),              /* Qualcomm Kryo */
-+       ETM4x_AMBA_ID(0x000f0205),              /* Qualcomm Kryo */
-+       ETM4x_AMBA_ID(0x000bb803),              /* Qualcomm Kryo 385 
-Cortex-A75 */
-+       ETM4x_AMBA_ID(0x000bb802),              /* Qualcomm Kryo 385 
-Cortex-A55 */
-         {},
-  };
-
-For msm8996, cpu debug module pid returned is same as ETM
-which is causing the probe failure for cpu debug coresight module
-as shown in below logs.
-For this case, I tried adding these ids to cpu debug driver, but it
-splits some errors (coresight-cpu-debug: probe of 3840000.etm failed 
-with error -16) since the ids are same. Can we override for this case
-or there is something else we can do here?
-
-[    5.480629] resname=debug@3810000 pid = 0x102f0211
-[    5.480920] OF: graph: no port node found in /soc/debug@3810000
-[    5.513214] coresight-etm4x: probe of 3810000.debug failed with error -22
-[    5.524362]
-[    5.524362] resname=debug@3910000 pid = 0x102f0211
-[    5.524888] OF: graph: no port node found in /soc/debug@3910000
-[    5.537586] coresight-etm4x: probe of 3910000.debug failed with error -22
-[    5.541481]
-[    5.549643] resname=debug@3a10000 pid = 0x102f0205
-[    5.580990] OF: graph: no port node found in /soc/debug@3a10000
-[    5.586817] coresight-etm4x: probe of 3a10000.debug failed with error -22
-[    5.592082]
-[    5.592629] resname=debug@3b10000 pid = 0x102f0205
-[    5.604922] OF: graph: no port node found in /soc/debug@3b10000
-[    5.611234] coresight-etm4x: probe of 3b10000.debug failed with error -22
-
-
-Thanks,
-Sai
-
--- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+SGVsbG8gR2VlcnQsDQoNClRoYW5rIHlvdSBmb3IgeW91ciBmZWVkYmFjayENCg0KPiBGcm9tOiBH
+ZWVydCBVeXR0ZXJob2V2ZW4gPGdlZXJ0QGxpbnV4LW02OGsub3JnPg0KPiBTZW50OiAyMyBKYW51
+YXJ5IDIwMTkgMTI6MDgNCj4gU3ViamVjdDogUmU6IFtQQVRDSCAyLzNdIGFybTY0OiBkdHM6IHJl
+bmVzYXM6IHI4YTc3NGExOiBBZGQgY2xrcDIgY2xvY2sgdG8gQ0FOIG5vZGVzDQo+DQo+IEhpIEZh
+YnJpemlvLA0KPg0KPiBPbiBXZWQsIEphbiAyMywgMjAxOSBhdCAxOjAxIFBNIEZhYnJpemlvIENh
+c3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+IEZy
+b206IFNpbW9uIEhvcm1hbiA8aG9ybXNAdmVyZ2UubmV0LmF1Pg0KPiA+ID4gU2VudDogMjMgSmFu
+dWFyeSAyMDE5IDExOjM4DQo+ID4gPiBTdWJqZWN0OiBSZTogW1BBVENIIDIvM10gYXJtNjQ6IGR0
+czogcmVuZXNhczogcjhhNzc0YTE6IEFkZCBjbGtwMiBjbG9jayB0byBDQU4gbm9kZXMNCj4gPiA+
+DQo+ID4gPiBPbiBXZWQsIEphbiAyMywgMjAxOSBhdCAxMDo1MToyM0FNICswMTAwLCBTaW1vbiBI
+b3JtYW4gd3JvdGU6DQo+ID4gPiA+IE9uIEZyaSwgSmFuIDE4LCAyMDE5IGF0IDAxOjEzOjUzUE0g
+KzAxMDAsIFNpbW9uIEhvcm1hbiB3cm90ZToNCj4gPiA+ID4gPiBPbiBUaHUsIEphbiAxNywgMjAx
+OSBhdCAwMjo1NDoxNVBNICswMDAwLCBGYWJyaXppbyBDYXN0cm8gd3JvdGU6DQo+ID4gPiA+ID4g
+PiBBY2NvcmRpbmcgdG8gdGhlIGxhdGVzdCBpbmZvcm1hdGlvbiwgY2xrcDIgaXMgYXZhaWxhYmxl
+IG9uIFJaL0cyLg0KPiA+ID4gPiA+ID4gTW9kaWZ5IENBTjAgYW5kIENBTjEgbm9kZXMgYWNjb3Jk
+aW5nbHkuDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gU2lnbmVkLW9mZi1ieTogRmFicml6aW8g
+Q2FzdHJvIDxmYWJyaXppby5jYXN0cm9AYnAucmVuZXNhcy5jb20+DQo+ID4gPiA+ID4gPiBSZXZp
+ZXdlZC1ieTogQ2hyaXMgUGF0ZXJzb24gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT4NCj4N
+Cj4gPiA+ID4gVGhhbmtzIGFnYWluLCBhcHBsaWVkIGZvciB2NS4xLg0KPiA+ID4NCj4gPiA+IFNv
+cnJ5LCBJIHdhcyBhIGxpdHRsZSBoYXN0eSB0aGVyZS4NCj4gPiA+DQo+ID4gPiBUaGlzIHBhdGNo
+IGRlcGVuZHMgb24gdGhlIHByZXNlbmNlIG9mIFI4QTc3NEExX0NMS19DQU5GRCB3aGljaA0KPiA+
+ID4gKHJpZ2h0bHkpIGlzIGFkZGVkIGluIGEgZGlmZmVyZW50IHBhdGNoIGluIHRoaXMgc2VyaWVz
+IHdoaWNoIGlzIHRvDQo+ID4gPiBnbyB1cHN0cmVhbSB2aWEgYSBkaWZmZXJlbnQgdHJlZS4NCj4g
+PiA+DQo+ID4gPiBJIGhhdmUgZHJvcHBlZCB0aGlzIHBhdGNoIGZvciBub3cuIEkgdGhpbmsgdGhl
+cmUgYXJlIHR3byBzb2x1dGlvbiB0byB0aGlzDQo+ID4gPiBwcm9ibGVtLg0KPiA+ID4NCj4gPiA+
+IDEuIFByb3ZpZGUgYSB2ZXJzaW9uIG9mIHRoaXMgcGF0Y2ggd2hpY2ggdXNlcyBhIG51bWVyaWMg
+aW5kZXggaW5zdGVhZCBvZg0KPiA+ID4gICAgUjhBNzc0QTFfQ0xLX0NBTkZELiBBbmQgdGhlbiwg
+b25jZSBSOEE3NzRBMV9DTEtfQ0FORkQgaXMgcHJlc2VudCBpbiBhbg0KPiA+ID4gICAgUkMgcmVs
+ZWFzZSBwcm92aWRlIGEgcGF0Y2ggdG8gc3dpdGNoIHRvIHVzaW5nIFI4QTc3NEExX0NMS19DQU5G
+RC4NCj4gPiA+DQo+ID4gPiAyLiBEZWZlciB0aGlzIHBhdGNoIHVudGlsIFI4QTc3NEExX0NMS19D
+QU5GRCBpcyBwcmVzZW50IGluIGFuIFJDIHJlbGVhc2UuDQo+ID4NCj4gPiBZZWFoLCBteSBwZXJz
+b25hbCBwcmVmZXJlbmNlIGlzIHNvbHV0aW9uIDIuDQo+DQo+IE5vdGUgdGhhdCBzb2x1dGlvbiAy
+IHdpbGwgcHJvYmFibHkgZGVmZXIgdGhlIERUIHBhdGNoIHRvIHY1LjIuDQoNClllYWgsIG15IHVu
+ZGVyc3RhbmRpbmcgaXMgdGhhdCBldmVuIGlmIHdlIGNob3NlIHNvbHV0aW9uIDEgd2Ugd291bGQg
+c3RpbGwgbmVlZCB0byBiZQ0Kd2FpdGluZyBmb3IgdjUuMiBmb3IgdGhlIHBhdGNoIHRvIHN3aXRj
+aCB0byB1c2luZyBSOEE3NzRBMV9DTEtfQ0FORkQgdG8gYXBwZWFyIGluDQphIHJjLCB0aGVyZWZv
+cmUgSSB0aGluayBzb2x1dGlvbiAyIGlzIGZpbmUuDQoNClRoYW5rcywNCkZhYg0KDQo+DQo+IEdy
+e29ldGplLGVldGluZ31zLA0KPg0KPiAgICAgICAgICAgICAgICAgICAgICAgICBHZWVydA0KPg0K
+PiAtLQ0KPiBHZWVydCBVeXR0ZXJob2V2ZW4gLS0gVGhlcmUncyBsb3RzIG9mIExpbnV4IGJleW9u
+ZCBpYTMyIC0tIGdlZXJ0QGxpbnV4LW02OGsub3JnDQo+DQo+IEluIHBlcnNvbmFsIGNvbnZlcnNh
+dGlvbnMgd2l0aCB0ZWNobmljYWwgcGVvcGxlLCBJIGNhbGwgbXlzZWxmIGEgaGFja2VyLiBCdXQN
+Cj4gd2hlbiBJJ20gdGFsa2luZyB0byBqb3VybmFsaXN0cyBJIGp1c3Qgc2F5ICJwcm9ncmFtbWVy
+IiBvciBzb21ldGhpbmcgbGlrZSB0aGF0Lg0KPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIC0tIExpbnVzIFRvcnZhbGRzDQoNCg0KDQpSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBM
+dGQsIER1a2VzIE1lYWRvdywgTWlsbGJvYXJkIFJvYWQsIEJvdXJuZSBFbmQsIEJ1Y2tpbmdoYW1z
+aGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyIFJl
+Z2lzdGVyZWQgTm8uIDA0NTg2NzA5Lg0K
