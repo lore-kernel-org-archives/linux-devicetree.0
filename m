@@ -1,32 +1,38 @@
-From: Tony Lindgren <tony@atomide.com>
-Subject: Re: [PATCH v1 1/2] ARM: dts: am335x-shc.dts: Switch to SPDX identifier
-Date: Thu, 24 Jan 2019 08:21:38 -0800
-Message-ID: <20190124162138.GQ5720@atomide.com>
-References: <20190122052623.1779840-1-hs@denx.de>
- <20190122052623.1779840-2-hs@denx.de>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH 3/3] drm/panel: simple: Add support for VXT
+ VL050-8048NT-C01 panel
+Date: Thu, 24 Jan 2019 14:27:00 -0200
+Message-ID: <CAOMZO5COJtWfGvvQbSdi16ado7a=ADrQC9B0KonOuRHyg8B40A@mail.gmail.com>
+References: <1543942655-5942-1-git-send-email-festevam@gmail.com>
+ <1543942655-5942-3-git-send-email-festevam@gmail.com>
+ <CAOMZO5DijiTF-=vMYY-VQez00W9ZEndWuguEbrLSRKQ66vNjAA@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190122052623.1779840-2-hs@denx.de>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Heiko Schocher <hs@denx.de>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, linux-omap@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <CAOMZO5DijiTF-=vMYY-VQez00W9ZEndWuguEbrLSRKQ66vNjAA@mail.gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Otavio Salvador <otavio@ossystems.com.br>, DRI mailing list <dri-devel@lists.freedesktop.org>, John Weber <john.weber@technexion.com>
 List-Id: devicetree@vger.kernel.org
 
-* Heiko Schocher <hs@denx.de> [190121 21:26]:
-> Adopt the SPDX license identifier headers to ease license
-> compliance management.
-
-Applying into omap-for-v5.1/dt thanks.
-
-Tony
+UGluZwoKT24gU3VuLCBEZWMgMTYsIDIwMTggYXQgMTA6MzkgUE0gRmFiaW8gRXN0ZXZhbSA8ZmVz
+dGV2YW1AZ21haWwuY29tPiB3cm90ZToKPgo+IEhpIFRoaWVycnksCj4KPiBPbiBUdWUsIERlYyA0
+LCAyMDE4IGF0IDI6NTcgUE0gRmFiaW8gRXN0ZXZhbSA8ZmVzdGV2YW1AZ21haWwuY29tPiB3cm90
+ZToKPiA+Cj4gPiBBZGQgc3VwcG9ydCBmb3IgdGhlIFZYVCBWTDA1MC04MDQ4TlQtQzAxIDgwMHg0
+ODAgcGFuZWwgdG8gdGhlCj4gPiBwYW5lbC1zaW1wbGUgZHJpdmVyLgo+ID4KPiA+IFRoaXMgcGFu
+ZWwgaXMgdXNlZCBvbiBzb21lIGJvYXJkcyBtYW51ZmFjdHVyZWQgYnkgVGVjaE5leGlvbiwgc3Vj
+aCBhcwo+ID4gaW14N2QtcGljby4KPiA+Cj4gPiBTaWduZWQtb2ZmLWJ5OiBGYWJpbyBFc3RldmFt
+IDxmZXN0ZXZhbUBnbWFpbC5jb20+Cj4KPiBEbyB5b3UgdGhpbmsgaXQgaXMgcG9zc2libGUgdG8g
+Z2V0IHRoaXMgc2VyaWVzIGFwcGxpZWQgZm9yIDQuMjE/Cj4KPiBUaGFua3MKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
