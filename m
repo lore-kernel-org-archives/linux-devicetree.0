@@ -1,27 +1,43 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [linux-sunxi] [PATCH v3 2/2] arm64: dts: allwinner: a64: Enable
- A64 timer workaround
-Date: Thu, 24 Jan 2019 18:06:58 +0800
-Message-ID: <CAGb2v65H_ZBMFY_c86acSxX96wFC=0_p_H2x+vzio4-ATayHHQ@mail.gmail.com>
-References: <20190113021719.46457-1-samuel@sholland.org> <20190113021719.46457-3-samuel@sholland.org>
+From: Philipp Zabel <p.zabel@pengutronix.de>
+Subject: Re: [PATCH v3 1/3] firmware: xilinx: Add reset API's
+Date: Thu, 24 Jan 2019 11:10:43 +0100
+Message-ID: <1548324643.6014.8.camel@pengutronix.de>
+References: <20190125074654.10950-1-nava.manne@xilinx.com>
+         <20190125074654.10950-2-nava.manne@xilinx.com>
+         <1548322989.6014.4.camel@pengutronix.de>
+         <e0f6e1d3-e443-040e-8c07-79359e2af37a@xilinx.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190113021719.46457-3-samuel@sholland.org>
+In-Reply-To: <e0f6e1d3-e443-040e-8c07-79359e2af37a@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Samuel Holland <samuel@sholland.org>
-Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Michal Simek <michal.simek@xilinx.com>, Nava kishore Manne <nava.manne@xilinx.com>, robh+dt@kernel.org, mark.rutland@arm.com, rajanv@xilinx.com, jollys@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-On Sun, Jan 13, 2019 at 10:17 AM Samuel Holland <samuel@sholland.org> wrote:
->
-> As instability in the architectural timer has been observed on multiple
-> devices using this SoC, inluding the Pine64 and the Orange Pi Win,
-> enable the workaround in the SoC's device tree.
->
-> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
-> Signed-off-by: Samuel Holland <samuel@sholland.org>
+On Thu, 2019-01-24 at 10:49 +0100, Michal Simek wrote:
+> On 24. 01. 19 10:43, Philipp Zabel wrote:
+> > On Fri, 2019-01-25 at 13:16 +0530, Nava kishore Manne wrote:
+> > > This Patch Adds reset API's to support release, assert
+> > > and status functionalities by using firmware interface.
+> > > 
+> > > Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> > 
+> > Michal, Should I merge this through the reset tree together with the
+> > reset driver?
+> 
+> It would be better if this goes via my tree. There is at least one
+> series which also touches the same parts in these files that's why there
+> will be collisions.
+> 
+> If you can review that I will take it via my tree and arm-soc guys to
+> mainline.
 
-Applied for 5.1.
+Ok, thanks. Feel free to add my
 
-ChenYu
+Acked-by: Philipp Zabel <p.zabel@pengutronix.de>
+
+to to reset patches and pick them up together into your tree.
+
+regards
+Philipp
