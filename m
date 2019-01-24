@@ -1,51 +1,67 @@
-From: Nishanth Menon <nm@ti.com>
-Subject: Re: [PATCH v3 0/2] Support for eMMC in AM65x-evm
-Date: Thu, 24 Jan 2019 06:40:32 -0600
-Message-ID: <20190124124032.aqp4ctqkpozbttwl@kahuna>
-References: <20190117094424.7683-1-faiz_abbas@ti.com>
- <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
+From: Niklas Cassel <niklas.cassel@linaro.org>
+Subject: [PATCH RESEND] arm64: dts: msm8916: remove bogus argument to the cpu clock
+Date: Thu, 24 Jan 2019 13:45:08 +0100
+Message-ID: <20190124124508.6541-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>
-Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: Niklas Cassel <niklas.cassel@linaro.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 13:43-20190124, Faiz Abbas wrote:
-> Hi,
-> 
-> On 17/01/19 3:14 PM, Faiz Abbas wrote:
-> > The following patches add eMMC support on TI's AM65x-evm.
-> > 
-> > v3:
-> >  1. Fixed patch titles to only include eMMC
-> >  2. Added dma-coherent to the sdhci0 node.
-> > 
-> > v2:
-> >  1. The SD card node is under debug for some usecases.
-> >     Only upstreaming eMMC support for now.
-> >  2. Rebased to latest mainline.
-> >  3. Removed status = "disabled" from dtsi patch
-> >  4. Fixed node name to not include '_'s
-> > 
-> > Faiz Abbas (2):
-> >   arm64: dts: ti: k3-am654: Add Support for eMMC host controller
-> >   arm64: dts: ti: k3-am654-base-board: Add eMMC Support
-> > 
-> >  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 14 +++++++++++
-> >  .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
-> >  2 files changed, 39 insertions(+)
-> > 
-> 
-> Gentle ping.
+The apcs node has #clock-cells = <0>, which means that those who
+references it should specify 0 arguments.
 
+The apcs reference in the cpu node incorrectly specifies an argument,
+remove this bogus argument.
 
-OK With me. Tero: are you publishing a next branch? could you
-pick this up please?
+Fixes: 65afdf458360 ("arm64: dts: qcom: msm8916: Add CPU frequency scaling support")
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+---
+ arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
+diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+index d302d8d639a1..e4bfd47178b1 100644
+--- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+@@ -111,7 +111,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -123,7 +123,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -135,7 +135,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
+@@ -147,7 +147,7 @@
+ 			next-level-cache = <&L2_0>;
+ 			enable-method = "psci";
+ 			cpu-idle-states = <&CPU_SPC>;
+-			clocks = <&apcs 0>;
++			clocks = <&apcs>;
+ 			operating-points-v2 = <&cpu_opp_table>;
+ 			#cooling-cells = <2>;
+ 		};
 -- 
-Regards,
-Nishanth Menon
+2.19.1
