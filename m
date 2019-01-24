@@ -1,54 +1,96 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH][RESEND] arm64: dts: hikey: Add DMA entries for Bluetooth
- UART
-Date: Thu, 24 Jan 2019 16:05:23 +0530
-Message-ID: <20190124103523.GA20854@Mani-XPS-13-9360>
-References: <1548275437-6022-1-git-send-email-john.stultz@linaro.org>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v1 13/13] watchdog: bd70528: Initial support for ROHM
+ BD70528 watchdog block
+Date: Thu, 24 Jan 2019 12:44:35 +0200
+Message-ID: <20190124104434.GF2559@localhost.localdomain>
+References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <ec70833179d1953dbc91e01901b79d3319ff013d.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
+ <20190122154750.GB1705@roeck-us.net>
+ <20190122171023.GC2559@localhost.localdomain>
+ <20190122174056.GB4964@roeck-us.net>
+ <20190122180309.GD2559@localhost.localdomain>
+ <20190123174728.uu7zhno5xea2bga7@earth.universe>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548275437-6022-1-git-send-email-john.stultz@linaro.org>
+In-Reply-To: <20190123174728.uu7zhno5xea2bga7@earth.universe>
 Sender: linux-kernel-owner@vger.kernel.org
-To: John Stultz <john.stultz@linaro.org>
-Cc: lkml <linux-kernel@vger.kernel.org>, Ryan Grachek <ryan@edited.us>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
+To: Sebastian Reichel <sre@kernel.org>
+Cc: Guenter Roeck <linux@roeck-us.net>, mazziesaccount@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
 List-Id: devicetree@vger.kernel.org
 
-On Wed, Jan 23, 2019 at 12:30:37PM -0800, John Stultz wrote:
-> Add dma0 references for bluetooth uart to enable dma
-> for bt transfers.
+On Wed, Jan 23, 2019 at 06:47:28PM +0100, Sebastian Reichel wrote:
+> Hi,
 > 
-> Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-> Cc: Ryan Grachek <ryan@edited.us>
-> Cc: Wei Xu <xuwei5@hisilicon.com>
-> Cc: Rob Herring <robh+dt@kernel.org>
-> Cc: Mark Rutland <mark.rutland@arm.com>
-> Cc: linux-arm-kernel@lists.infradead.org
-> Cc: devicetree@vger.kernel.org
-> Signed-off-by: John Stultz <john.stultz@linaro.org>
-
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-
-Thanks,
-Mani
-
-> ---
->  arch/arm64/boot/dts/hisilicon/hi6220.dtsi | 2 ++
->  1 file changed, 2 insertions(+)
+> On Tue, Jan 22, 2019 at 08:03:09PM +0200, Matti Vaittinen wrote:
+> > On Tue, Jan 22, 2019 at 09:40:56AM -0800, Guenter Roeck wrote:
+> > > On Tue, Jan 22, 2019 at 07:10:23PM +0200, Matti Vaittinen wrote:
+> > > > On Tue, Jan 22, 2019 at 07:47:50AM -0800, Guenter Roeck wrote:
+> > > > > On Tue, Jan 22, 2019 at 11:48:36AM +0200, Matti Vaittinen wrote:
+> > > > > > +static int bd70528_wdt_probe(struct platform_device *pdev)
+> > > > > > +{
+> > > > > > +	struct bd70528 *tmp;
+> > > > > > +	struct bd70528 *bd70528;
+> > > > > > +	int ret;
+> > > > > > +
+> > > > > > +	tmp = dev_get_drvdata(pdev->dev.parent);
+> > > > > > +	if (!tmp) {
+> > > > > > +		dev_err(&pdev->dev, "No MFD driver data\n");
+> > > > > > +		return -EINVAL;
+> > > > > > +	}
+> > > > > > +	bd70528 = devm_kzalloc(&pdev->dev, sizeof(*bd70528), GFP_KERNEL);
+> > > > > > +	if (!bd70528)
+> > > > > > +		return -ENOMEM;
+> > > > > > +
+> > > > > > +	*bd70528 = *tmp;
+> > > > > > +	bd70528->chip.dev = &pdev->dev;
+> > > > > 
+> > > > > This is wrong.
+> > > > > You should not copy the parent's driver data but have local driver
+> > > > > data as needed which then points to the parent's driver data if
+> > > > > needed. I assume this is why the mutex is a pointer, but that
+> > > > > just shows that the whole approach is wrong.
+> > > > 
+> > > > Mutex is a pointer because we want to use same mutex from WDT and RTC.
+> > > > We can sure point to parent data but then we still need our own dev
+> > > > pointer. So we can have a struct with pointer to parent data and dev
+> > > > pointer - but I'm not at all sure it is any clearer.
+> > > 
+> > > As I said, that is wrong. To say it in plaintext, I won't accept
+> > > the driver if it copies the parent's driver data. The driver should
+> > > have and use its own driver data, and only maintain a pointer to
+> > > its parent's driver data. And most definitely you don't want to
+> > > copy and use any device data structure from the parent.
+> > 
+> > Allright. At the moment the WDT driver only needs regmap pointer from
+> > parent. I'm not sure if it will later need DT or "chip type" - but I
+> > will change this.
 > 
-> diff --git a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> index aec9e37..fa15a08 100644
-> --- a/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> +++ b/arch/arm64/boot/dts/hisilicon/hi6220.dtsi
-> @@ -319,6 +319,8 @@
->  			clock-names = "uartclk", "apb_pclk";
->  			pinctrl-names = "default";
->  			pinctrl-0 = <&uart1_pmx_func &uart1_cfg_func1 &uart1_cfg_func2>;
-> +			dmas = <&dma0 8 &dma0 9>;
-> +			dma-names = "rx", "tx";
->  			status = "disabled";
->  		};
->  
-> -- 
-> 2.7.4
+> You probably want to use this:
 > 
+> dev_get_regmap(pdev->dev.parent, NULL);
+
+Thanks a bunch Sebastian. All help is highly appreciated!! =)
+
+Unfortunately I forgot to mention the key thing - the RTC mutex. We also
+need that because RTC needs to stop WDT when RTC is adjusted as the WDT
+uses RTC as counter - and jumping the RTC WDT enabled might trigger WDT
+or have other consequences.
+
+Se even if we used dev_get_regmap (which is slightly heavier than
+accessing direct pointer) - we would still need at least the mutex from
+parent data, possibly also the chip type and if we want to avoid code
+dublication - then also the WDT start/stop function.
+
+Thus I guess we can as well keep the regmap in parent data because we
+need the parent data anyways, right?
+
+Br
+	Matti Vaittinen
+
+-- 
+Matti Vaittinen
+ROHM Semiconductors
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
