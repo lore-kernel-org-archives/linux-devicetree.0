@@ -1,33 +1,49 @@
-From: "Zhou Yanjie" <zhouyanjie@cduestc.edu.cn>
-Subject: [PATCH] DTS: CI20: Fix bugs in ci20's device tree.
-Date: Fri, 25 Jan 2019 02:22:15 +0800
-Message-ID: <190125022215331921004107@cduestc.edu.cn>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [PATCH 4/6] ARM: dts: sunxi: h3-h5: Add pinmux setting for CSI
+ MCLK on PE1
+Date: Thu, 24 Jan 2019 18:16:55 +0800
+Message-ID: <CAGb2v67nAGC0xwgtq+_mYv_ZRmhBQsPdLbbJ6thfKDNY456sYg@mail.gmail.com>
+References: <20181130075849.16941-1-wens@csie.org> <20181130075849.16941-5-wens@csie.org>
+ <CAMty3ZB6p8Uv7abMC8jDHHYwdAeuBen2GPjOhN=wEL7+=DDt3g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain;
- charset="UTF-8"
-Content-Transfer-Encoding: base64
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMty3ZB6p8Uv7abMC8jDHHYwdAeuBen2GPjOhN=wEL7+=DDt3g@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips <linux-mips@vger.kernel.org>
-Cc: linux-kernel <linux-kernel@vger.kernel.org>, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com, malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org, syq <syq@debian.org>, "jiaxun.yang" <jiaxun.yang@flygoat.com>
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Yong Deng <yong.deng@magewell.com>, Jagan Teki <jagan@amarulasolutions.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogWmhvdSBZYW5qaWUgPHpob3V5YW5qaWVAY2R1ZXN0Yy5lZHUuY24+CgpBY2Nv
-cmRpbmcgdG8gdGhlIFNjaGVtYXRpYywgdGhlIGhhcmR3YXJlIG9mIGNpMjAgbGVhZHMg
-dG8gdWFydDMsCmJ1dCBub3QgdG8gdWFydDIuIFVhcnQyIGlzIG1pc3dyaXR0ZW4gaW4g
-dGhlIG9yaWdpbmFsIGNvZGUuCgpTaWduZWQtb2ZmLWJ5OiBaaG91IFlhbmppZSA8emhv
-dXlhbmppZUBjZHVlc3RjLmVkdS5jbj4KLS0tCiBhcmNoL21pcHMvYm9vdC9kdHMvaW5n
-ZW5pYy9jaTIwLmR0cyB8IDggKysrKy0tLS0KIDEgZmlsZSBjaGFuZ2VkLCA0IGluc2Vy
-dGlvbnMoKyksIDQgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvYXJjaC9taXBzL2Jv
-b3QvZHRzL2luZ2VuaWMvY2kyMC5kdHMgYi9hcmNoL21pcHMvYm9vdC9kdHMvaW5nZW5p
-Yy9jaTIwLmR0cwppbmRleCA1MGNmZjNjLi40ZjdiMWZhIDEwMDY0NAotLS0gYS9hcmNo
-L21pcHMvYm9vdC9kdHMvaW5nZW5pYy9jaTIwLmR0cworKysgYi9hcmNoL21pcHMvYm9v
-dC9kdHMvaW5nZW5pYy9jaTIwLmR0cwpAQCAtNzYsNyArNzYsNyBAQAogCXN0YXR1cyA9
-ICJva2F5IjsKIAogCXBpbmN0cmwtbmFtZXMgPSAiZGVmYXVsdCI7Ci0JcGluY3RybC0w
-ID0gPCZwaW5zX3VhcnQyPjsKKwlwaW5jdHJsLTAgPSA8JnBpbnNfdWFydDM+OwogfTsK
-IAogJnVhcnQ0IHsKQEAgLTE5Niw5ICsxOTYsOSBAQAogCQliaWFzLWRpc2FibGU7CiAJ
-fTsKIAotCXBpbnNfdWFydDI6IHVhcnQyIHsKLQkJZnVuY3Rpb24gPSAidWFydDIiOwot
-CQlncm91cHMgPSAidWFydDItZGF0YSIsICJ1YXJ0Mi1od2Zsb3ciOworCXBpbnNfdWFy
-dDM6IHVhcnQzIHsKKwkJZnVuY3Rpb24gPSAidWFydDMiOworCQlncm91cHMgPSAidWFy
-dDMtZGF0YSIsICJ1YXJ0My1od2Zsb3ciOwogCQliaWFzLWRpc2FibGU7CiAJfTsKIAot
-LSAKMi43LjQK
+On Mon, Dec 3, 2018 at 5:46 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
+>
+> On Fri, Nov 30, 2018 at 1:28 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > Some camera modules have the SoC feeding a master clock to the sensor
+> > instead of having a standalone crystal. This clock signal is generated
+> > from the clock control unit and output from the CSI MCLK function of
+> > pin PE1.
+> >
+> > Add a pinmux setting for it for camera sensors to reference.
+> >
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+>
+> On Fri, Nov 30, 2018 at 1:29 PM Chen-Yu Tsai <wens@csie.org> wrote:
+> >
+> > The CSI controller found on the H3 (and H5) is a reduced version of the
+> > one found on the A31. It only has 1 channel, instead of 4 channels for
+> > time-multiplexed BT.656. Since the H3 is a reduced version, it cannot
+> > "fallback" to a compatible that implements more features than it
+> > supports.
+> >
+> > Drop the A31 fallback compatible.
+> >
+> > Fixes: f89120b6f554 ("ARM: dts: sun8i: Add the H3/H5 CSI controller")
+> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+> > ---
+>
+> Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
+
+Not merging this one, as there are no boards in tree that directly use this.
+
+ChenYu
