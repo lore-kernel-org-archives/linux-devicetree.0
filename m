@@ -1,45 +1,40 @@
-From: Niklas Cassel <niklas.cassel@linaro.org>
-Subject: [PATCH] ARM: dts: qcom: ipq4019: Fix MSI IRQ type
-Date: Thu, 24 Jan 2019 14:00:47 +0100
-Message-ID: <20190124130047.8071-1-niklas.cassel@linaro.org>
+From: Aisheng Dong <aisheng.dong@nxp.com>
+Subject: [PATCH V3 0/5] dt-binding: clk: prepare for imx8qm clock support
+Date: Thu, 24 Jan 2019 13:22:28 +0000
+Message-ID: <1548335800-6438-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Niklas Cassel <niklas.cassel@linaro.org>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
+Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-The databook clearly states that the MSI IRQ (msi_ctrl_int) is a level
-triggered interrupt.
+After a bit more investigation on IMX8QM, it seemed SCU clock can be used
+in a similar way as IMX8QXP. So update the binding and driver to be a bit
+generic for easily extension of IMX8QM support later.
 
-The msi_ctrl_int will be high for as long as any MSI status bit is set,
-thus the IRQ type should be set to IRQ_TYPE_LEVEL_HIGH, causing the
-IRQ handler to keep getting called, as long as any MSI status bit is set.
+Dong Aisheng (5):
+  dt-bindings: fsl: scu: add fallback compatible string for clock
+  dt-bindings: fsl: scu: add imx8qm scu clock support
+  dt-bindings: clock: update CPU clock ID name
+  dt-bindings: imx8-clock: add a53 and a72 clock id
+  clk: imx: scu: add fallback compatible string support
 
-A git grep shows that ipq4019 is the only SoC using snps,dw-pcie that has
-configured this IRQ incorrectly.
+ Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 7 +++++--
+ drivers/clk/imx/clk-imx8qxp.c                               | 1 +
+ include/dt-bindings/clock/imx8-clock.h                      | 7 +++++--
+ 3 files changed, 11 insertions(+), 4 deletions(-)
 
-Not having the correct IRQ type defined will cause us to lose interrupts,
-which in turn causes timeouts in the PCIe endpoint drivers.
-
-Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
----
- arch/arm/boot/dts/qcom-ipq4019.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/arm/boot/dts/qcom-ipq4019.dtsi b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-index 19635f91e2c4..48b3cb474ba0 100644
---- a/arch/arm/boot/dts/qcom-ipq4019.dtsi
-+++ b/arch/arm/boot/dts/qcom-ipq4019.dtsi
-@@ -398,7 +398,7 @@
- 			ranges = <0x81000000 0 0x40200000 0x40200000 0 0x00100000
- 				  0x82000000 0 0x40300000 0x40300000 0 0x400000>;
- 
--			interrupts = <GIC_SPI 141 IRQ_TYPE_EDGE_RISING>;
-+			interrupts = <GIC_SPI 141 IRQ_TYPE_LEVEL_HIGH>;
- 			interrupt-names = "msi";
- 			#interrupt-cells = <1>;
- 			interrupt-map-mask = <0 0 0 0x7>;
 -- 
-2.20.1
+2.7.4
