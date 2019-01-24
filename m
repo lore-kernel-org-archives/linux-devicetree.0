@@ -1,174 +1,45 @@
-From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v3 3/3] reset: reset-zynqmp: Adding support for Xilinx zynqmp reset controller.
-Date: Fri, 25 Jan 2019 13:16:54 +0530
-Message-ID: <20190125074654.10950-4-nava.manne@xilinx.com>
-References: <20190125074654.10950-1-nava.manne@xilinx.com>
+From: Faiz Abbas <faiz_abbas@ti.com>
+Subject: Re: [PATCH v3 0/2] Support for eMMC in AM65x-evm
+Date: Thu, 24 Jan 2019 13:43:01 +0530
+Message-ID: <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
+References: <20190117094424.7683-1-faiz_abbas@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125074654.10950-1-nava.manne@xilinx.com>
+In-Reply-To: <20190117094424.7683-1-faiz_abbas@ti.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
+To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Cc: mark.rutland@arm.com, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-Add a reset controller driver for Xilinx Zynq UltraScale+ MPSoC.
-The zynqmp reset-controller has the ability to reset lines
-connected to different blocks and peripheral in the Soc.
+Hi,
 
-Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
----
-Changes for v3:
-		-Fixed some minor coding issues as suggested
-                 by philipp and vesa.
+On 17/01/19 3:14 PM, Faiz Abbas wrote:
+> The following patches add eMMC support on TI's AM65x-evm.
+> 
+> v3:
+>  1. Fixed patch titles to only include eMMC
+>  2. Added dma-coherent to the sdhci0 node.
+> 
+> v2:
+>  1. The SD card node is under debug for some usecases.
+>     Only upstreaming eMMC support for now.
+>  2. Rebased to latest mainline.
+>  3. Removed status = "disabled" from dtsi patch
+>  4. Fixed node name to not include '_'s
+> 
+> Faiz Abbas (2):
+>   arm64: dts: ti: k3-am654: Add Support for eMMC host controller
+>   arm64: dts: ti: k3-am654-base-board: Add eMMC Support
+> 
+>  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 14 +++++++++++
+>  .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
+>  2 files changed, 39 insertions(+)
+> 
 
-Changes for v2:
-		-Fixed some minor coding issues as suggested
-		 by philipp.
+Gentle ping.
 
-Changes for v1:
-		-None.
-
-Changes for RFC-V3:
-		-None.
-
-Changes for RFC-V2:
-		-Moved eemi_ops into a priv struct as suggested
-		 by philipp.
-
- drivers/reset/Makefile       |   1 +
- drivers/reset/reset-zynqmp.c | 114 +++++++++++++++++++++++++++++++++++
- 2 files changed, 115 insertions(+)
- create mode 100644 drivers/reset/reset-zynqmp.c
-
-diff --git a/drivers/reset/Makefile b/drivers/reset/Makefile
-index dc7874df78d9..573b8386d901 100644
---- a/drivers/reset/Makefile
-+++ b/drivers/reset/Makefile
-@@ -26,4 +26,5 @@ obj-$(CONFIG_RESET_TI_SYSCON) += reset-ti-syscon.o
- obj-$(CONFIG_RESET_UNIPHIER) += reset-uniphier.o
- obj-$(CONFIG_RESET_UNIPHIER_GLUE) += reset-uniphier-glue.o
- obj-$(CONFIG_RESET_ZYNQ) += reset-zynq.o
-+obj-$(CONFIG_ARCH_ZYNQMP) += reset-zynqmp.o
- 
-diff --git a/drivers/reset/reset-zynqmp.c b/drivers/reset/reset-zynqmp.c
-new file mode 100644
-index 000000000000..2ef1f13aa47b
---- /dev/null
-+++ b/drivers/reset/reset-zynqmp.c
-@@ -0,0 +1,114 @@
-+// SPDX-License-Identifier: GPL-2.0+
-+/*
-+ * Copyright (C) 2018 Xilinx, Inc.
-+ *
-+ */
-+
-+#include <linux/err.h>
-+#include <linux/of.h>
-+#include <linux/platform_device.h>
-+#include <linux/reset-controller.h>
-+#include <linux/firmware/xlnx-zynqmp.h>
-+
-+#define ZYNQMP_NR_RESETS (ZYNQMP_PM_RESET_END - ZYNQMP_PM_RESET_START)
-+#define ZYNQMP_RESET_ID ZYNQMP_PM_RESET_START
-+
-+struct zynqmp_reset_data {
-+	struct reset_controller_dev rcdev;
-+	const struct zynqmp_eemi_ops *eemi_ops;
-+};
-+
-+static inline struct zynqmp_reset_data *
-+to_zynqmp_reset_data(struct reset_controller_dev *rcdev)
-+{
-+	return container_of(rcdev, struct zynqmp_reset_data, rcdev);
-+}
-+
-+static int zynqmp_reset_assert(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+
-+	return priv->eemi_ops->reset_assert(ZYNQMP_RESET_ID + id,
-+					    PM_RESET_ACTION_ASSERT);
-+}
-+
-+static int zynqmp_reset_deassert(struct reset_controller_dev *rcdev,
-+				 unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+
-+	return priv->eemi_ops->reset_assert(ZYNQMP_RESET_ID + id,
-+					    PM_RESET_ACTION_RELEASE);
-+}
-+
-+static int zynqmp_reset_status(struct reset_controller_dev *rcdev,
-+			       unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+	int val, err;
-+
-+	err = priv->eemi_ops->reset_get_status(ZYNQMP_RESET_ID + id, &val);
-+	if (err)
-+		return err;
-+
-+	return val;
-+}
-+
-+static int zynqmp_reset_reset(struct reset_controller_dev *rcdev,
-+			      unsigned long id)
-+{
-+	struct zynqmp_reset_data *priv = to_zynqmp_reset_data(rcdev);
-+
-+	return priv->eemi_ops->reset_assert(ZYNQMP_RESET_ID + id,
-+					    PM_RESET_ACTION_PULSE);
-+}
-+
-+static struct reset_control_ops zynqmp_reset_ops = {
-+	.reset = zynqmp_reset_reset,
-+	.assert = zynqmp_reset_assert,
-+	.deassert = zynqmp_reset_deassert,
-+	.status = zynqmp_reset_status,
-+};
-+
-+static int zynqmp_reset_probe(struct platform_device *pdev)
-+{
-+	struct zynqmp_reset_data *priv;
-+
-+	priv = devm_kzalloc(&pdev->dev, sizeof(*priv), GFP_KERNEL);
-+	if (!priv)
-+		return -ENOMEM;
-+
-+	platform_set_drvdata(pdev, priv);
-+
-+	priv->eemi_ops = zynqmp_pm_get_eemi_ops();
-+	if (!priv->eemi_ops)
-+		return -ENXIO;
-+
-+	priv->rcdev.ops = &zynqmp_reset_ops;
-+	priv->rcdev.owner = THIS_MODULE;
-+	priv->rcdev.of_node = pdev->dev.of_node;
-+	priv->rcdev.nr_resets = ZYNQMP_NR_RESETS;
-+
-+	return devm_reset_controller_register(&pdev->dev, &priv->rcdev);
-+}
-+
-+static const struct of_device_id zynqmp_reset_dt_ids[] = {
-+	{ .compatible = "xlnx,zynqmp-reset", },
-+	{ /* sentinel */ },
-+};
-+
-+static struct platform_driver zynqmp_reset_driver = {
-+	.probe	= zynqmp_reset_probe,
-+	.driver = {
-+		.name		= KBUILD_MODNAME,
-+		.of_match_table	= zynqmp_reset_dt_ids,
-+	},
-+};
-+
-+static int __init zynqmp_reset_init(void)
-+{
-+	return platform_driver_register(&zynqmp_reset_driver);
-+}
-+
-+arch_initcall(zynqmp_reset_init);
--- 
-2.18.0
+Thanks,
+Faiz
