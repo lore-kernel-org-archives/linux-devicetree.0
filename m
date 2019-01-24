@@ -1,37 +1,103 @@
-From: Chen-Yu Tsai <wens@csie.org>
-Subject: Re: [PATCH 3/6] ARM: dts: sunxi: h3/h5: Drop A31 fallback compatible
- for CSI controller
-Date: Thu, 24 Jan 2019 18:15:43 +0800
-Message-ID: <CAGb2v67oLffVXYAHHcHEo6_rNddqpFwCGq2DzgFW_zkfbpf12g@mail.gmail.com>
-References: <20181130075849.16941-1-wens@csie.org> <20181130075849.16941-4-wens@csie.org>
- <CAMty3ZBFVStHNbYaBxT+Rmy6+g4jtm0cFKk8BL5BDid3c5VW-Q@mail.gmail.com>
+From: Shun-Chih.Yu <shun-chih.yu@mediatek.com>
+Subject: Re: [PATCH v5] add support for Mediatek Command-Queue DMA
+ controller on MT6765 SoC
+Date: Thu, 24 Jan 2019 18:16:36 +0800
+Message-ID: <1548324996.26017.2.camel@mtkswgap22>
+References: <1548314060-4833-1-git-send-email-shun-chih.yu@mediatek.com>
+ <CAGp9LzqMbYOXCEmHOEcCboQLfpXwxH7zcJ3snj4a8NBLiHhQdg@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMty3ZBFVStHNbYaBxT+Rmy6+g4jtm0cFKk8BL5BDid3c5VW-Q@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Jagan Teki <jagan@amarulasolutions.com>, Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>, Chen-Yu Tsai <wens@csie.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <CAGp9LzqMbYOXCEmHOEcCboQLfpXwxH7zcJ3snj4a8NBLiHhQdg@mail.gmail.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sean Wang <sean.wang@kernel.org>
+Cc: devicetree@vger.kernel.org, Sean Wang <sean.wang@mediatek.com>, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, Matthias Brugger <matthias.bgg@gmail.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org, Dan Williams <dan.j.williams@intel.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Dec 3, 2018 at 5:44 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
->
-> On Fri, Nov 30, 2018 at 1:29 PM Chen-Yu Tsai <wens@csie.org> wrote:
-> >
-> > The CSI controller found on the H3 (and H5) is a reduced version of the
-> > one found on the A31. It only has 1 channel, instead of 4 channels for
-> > time-multiplexed BT.656. Since the H3 is a reduced version, it cannot
-> > "fallback" to a compatible that implements more features than it
-> > supports.
-> >
-> > Drop the A31 fallback compatible.
-> >
-> > Fixes: f89120b6f554 ("ARM: dts: sun8i: Add the H3/H5 CSI controller")
-> > Signed-off-by: Chen-Yu Tsai <wens@csie.org>
-> > ---
->
-> Reviewed-by: Jagan Teki <jagan@amarulasolutions.com>
+Hi Sean,
 
-Merged for 5.1, as the accompanying driver changes were also merged for 5.1
+I would send a patch based on v5.0-rc1 for the changes, thanks for your
+kind reminder.
 
-ChenYu
+thanks,
+Shun-Chih
+
+On Thu, 2019-01-24 at 01:35 -0800, Sean Wang wrote:
+> Hi Shun-Chih,
+> 
+> the driver seems already be applied since v5.0-rc1
+> 
+> I suggest these improvements you made in the recent version can be
+> split into several patches and then be applied on the top of the base
+> driver.
+> 
+> On Wed, Jan 23, 2019 at 11:15 PM <shun-chih.yu@mediatek.com> wrote:
+> >
+> > This patchset introduces support for MediaTek Command-Queue DMA controller.
+> >
+> > MediaTek Command-Queue DMA controller (CQDMA) on MT6765 SoC is dedicated to memory-to-memory transfer through queue-based descriptor management.
+> >
+> > There are only 3 physical channels inside CQDMA, while the driver is extended to support 32 virtual channels for multiple dma users to issue dma requests onto the CQDMA simultaneously.
+> >
+> > dmatest result:
+> > dmatest: dma0chan0-copy2: summary 5000 tests, 0 failures 3500 iops 28037 KB/s (0)
+> > dmatest: dma0chan0-copy4: summary 5000 tests, 0 failures 3494 iops 27612 KB/s (0)
+> > dmatest: dma0chan0-copy1: summary 5000 tests, 0 failures 3491 iops 27749 KB/s (0)
+> > dmatest: dma0chan0-copy7: summary 5000 tests, 0 failures 3673 iops 29092 KB/s (0)
+> > dmatest: dma0chan0-copy6: summary 5000 tests, 0 failures 3763 iops 30237 KB/s (0)
+> > dmatest: dma0chan0-copy0: summary 5000 tests, 0 failures 3730 iops 30131 KB/s (0)
+> > dmatest: dma0chan0-copy3: summary 5000 tests, 0 failures 3717 iops 29569 KB/s (0)
+> > dmatest: dma0chan0-copy5: summary 5000 tests, 0 failures 3699 iops 29302 KB/s (0)
+> >
+> > Changes since v4:
+> > - remove redundant queue structure in mtk_cqdma_pchan
+> > - remove redundant completion management
+> > - fix wrong residue assignment in mtk_cqdma_tx_status
+> > - fix typos
+> >
+> > Changes since v3:
+> > - simplify the ISR and management on descriptors by removing tasklet and ASYNC_TX_ENABLE_CHANNEL_SWITCH
+> > - remove useless field in mtk_cqdma_vdesc structure
+> > - change dev_info to dev_dbg
+> > - fix typos
+> >
+> > Changes since v2:
+> > - fix build warning for kernel with DMA address in 32-bit
+> >
+> > Changes since v1:
+> > - remove unused macros, typos
+> > - leverage ASYNC_TX_ENABLE_CHANNEL_SWITCH to maintain DMA descriptor list
+> >
+> > Shun-Chih Yu (2):
+> >   dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller
+> >     bindings
+> >   dmaengine: mediatek: Add MediaTek Command-Queue DMA controller for
+> >     MT6765 SoC
+> >
+> >  .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 +
+> >  drivers/dma/mediatek/Kconfig                       |   12 +
+> >  drivers/dma/mediatek/Makefile                      |    1 +
+> >  drivers/dma/mediatek/mtk-cqdma.c                   |  748 ++++++++++++++++++++
+> >  4 files changed, 792 insertions(+)
+> >  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
+> >  create mode 100644 drivers/dma/mediatek/mtk-cqdma.c
+> >
+> >
+> > _______________________________________________
+> > Linux-mediatek mailing list
+> > Linux-mediatek@lists.infradead.org
+> > http://lists.infradead.org/mailman/listinfo/linux-mediatek
+> 
+> _______________________________________________
+> Linux-mediatek mailing list
+> Linux-mediatek@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-mediatek
