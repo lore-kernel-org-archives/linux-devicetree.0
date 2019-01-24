@@ -1,7 +1,7 @@
 From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 03/22] drm/sun4i: sun6i_mipi_dsi: Setup burst mode timings
-Date: Fri, 25 Jan 2019 01:28:41 +0530
-Message-ID: <20190124195900.22620-4-jagan@amarulasolutions.com>
+Subject: [PATCH v6 04/22] drm/sun4i: sun6i_mipi_dsi: Simplify drq to support all modes
+Date: Fri, 25 Jan 2019 01:28:42 +0530
+Message-ID: <20190124195900.22620-5-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,51 +12,76 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, 
 Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
 List-Id: devicetree@vger.kernel.org
 
-Burst mode display timings are different from conventional
-video mode, for burst mode most of the timings hsa, hbp, hfp,
-vblk are 0 and hblk is computed as (mode->hdisplay * Bpp)
+Allwinner MIPI DSI drq has enable mode and set bits.
+- for burst mode, drq need to set enable mode bit.
+- for non-burst video modes, drq need to set enable mode,
+  set bits for those front proch greater than 20 and for
+  rest drq is not used.
 
-This patch add burst mode timings and directly goto alloc buffer.
-
-Reference code taken from BSP (from linux-sunxi/
-drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-
-dsi_hsa  = 0;
-dsi_hbp  = 0;
-dsi_hact = x*dsi_pixel_bits[format]/8;
-dsi_hblk = dsi_hact;
-dsi_hfp  = 0;
-dsi_vblk = 0;
+This patch simplifies existing drq code by grouping into
+sun6i_dsi_get_drq and support all video modes.
 
 Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 +++++++
- 1 file changed, 7 insertions(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 39 ++++++++++++++++----------
+ 1 file changed, 24 insertions(+), 15 deletions(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 813d5523f1c7..0f02bcc997a5 100644
+index 0f02bcc997a5..16a86d35dc5a 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -477,6 +477,12 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+@@ -354,6 +354,28 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+ 		     SUN6I_DSI_INST_JUMP_CFG_NUM(1));
+ };
  
- 	/* Do all timing calculations up front to allocate buffer space */
- 
-+	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
-+		hbp = hfp = hsa = vblk = 0;
-+		hblk = (mode->hdisplay * Bpp);
-+		goto alloc_buf;
++static int sun6i_dsi_get_drq(struct sun6i_dsi *dsi,
++			      struct drm_display_mode *mode)
++{
++	struct mipi_dsi_device *device = dsi->device;
++
++	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
++		return SUN6I_DSI_TCON_DRQ_ENABLE_MODE;
++
++	if ((mode->hsync_start - mode->hdisplay) > 20) {
++		/* Maaaaaagic */
++		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
++
++		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
++		drq /= 32;
++
++		return (SUN6I_DSI_TCON_DRQ_ENABLE_MODE |
++			SUN6I_DSI_TCON_DRQ_SET(drq));
 +	}
 +
- 	/*
- 	 * A sync period is composed of a blanking packet (4 bytes +
- 	 * payload + 2 bytes) and a sync event packet (4 bytes). Its
-@@ -515,6 +521,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	 */
- 	vblk = 0;
++	return 0;
++}
++
+ static u16 sun6i_dsi_setup_inst_delay(struct sun6i_dsi *dsi,
+ 				      struct drm_display_mode *mode)
+ {
+@@ -381,21 +403,8 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 				  struct drm_display_mode *mode)
+ {
+-	struct mipi_dsi_device *device = dsi->device;
+-	u32 val = 0;
+-
+-	if ((mode->hsync_end - mode->hdisplay) > 20) {
+-		/* Maaaaaagic */
+-		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
+-
+-		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
+-		drq /= 32;
+-
+-		val = (SUN6I_DSI_TCON_DRQ_ENABLE_MODE |
+-		       SUN6I_DSI_TCON_DRQ_SET(drq));
+-	}
+-
+-	regmap_write(dsi->regs, SUN6I_DSI_TCON_DRQ_REG, val);
++	regmap_write(dsi->regs, SUN6I_DSI_TCON_DRQ_REG,
++		     sun6i_dsi_get_drq(dsi, mode));
+ }
  
-+alloc_buf:
- 	/* How many bytes do we need to send all payloads? */
- 	bytes = max_t(size_t, max(max(hfp, hblk), max(hsa, hbp)), vblk);
- 	buffer = kmalloc(bytes, GFP_KERNEL);
+ static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
 -- 
 2.18.0.321.gffc6fa0e3
