@@ -1,508 +1,317 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 1/7] mmc: sdhci: add support for using external DMA
- devices
-Date: Thu, 24 Jan 2019 13:40:16 +0200
-Message-ID: <bcea7bae-41c8-358a-11c1-3886f9dc0351@intel.com>
-References: <20190111110851.6805-1-faiz_abbas@ti.com>
- <20190111110851.6805-2-faiz_abbas@ti.com>
+From: Georgi Djakov <georgi.djakov@linaro.org>
+Subject: Re: [<PATCH v1> 1/1] scsi: qcom-ufs: Add support for bus voting using
+ ICB framework
+Date: Thu, 24 Jan 2019 13:46:22 +0200
+Message-ID: <e91d4007-edab-da66-e241-bdf55bcf58aa@linaro.org>
+References: <cover.1548312692.git.asutoshd@codeaurora.org>
+ <d6aa4d9bd29bbb2c3ee78e6635d4704e4113a26e.1548312692.git.asutoshd@codeaurora.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111110851.6805-2-faiz_abbas@ti.com>
+In-Reply-To: <d6aa4d9bd29bbb2c3ee78e6635d4704e4113a26e.1548312692.git.asutoshd@codeaurora.org>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: zhang.chunyan@linaro.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org
+To: Asutosh Das <asutoshd@codeaurora.org>, subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org
+Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/19 1:08 PM, Faiz Abbas wrote:
-> From: Chunyan Zhang <zhang.chunyan@linaro.org>
-> 
-> Some standard SD host controllers can support both external dma
-> controllers as well as ADMA/SDMA in which the SD host controller
-> acts as DMA master. TI's omap controller is the case as an example.
-> 
-> Currently the generic SDHCI code supports ADMA/SDMA integrated in
-> the host controller but does not have any support for external DMA
-> controllers implemented using dmaengine, meaning that custom code is
-> needed for any systems that use an external DMA controller with SDHCI.
-> 
-> Fixes by Faiz Abbas <faiz_abbas@ti.com>:
-> 1. Map scatterlists before dmaengine_prep_slave_sg()
-> 2. Use dma_async() functions inside of the send_command() path and
-> synchronize once at the start of each request.
+Hi Asutosh,
 
-Sorry for the slow reply, but I do have some concerns.  Please see the comments.
+Thanks for the patch!
 
+On 1/24/19 09:01, Asutosh Das wrote:
+> Adapt to the new ICB framework for bus bandwidth voting.
+
+It's actually called interconnect API or interconnect framework.
+
+> This requires the source/destination port ids.
+> Also this requires a tuple of values.
 > 
-> Signed-off-by: Chunyan Zhang <zhang.chunyan@linaro.org>
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
+> The tuple is for two different paths - from UFS master
+> to BIMC slave. The other is from CPU master to UFS slave.
+> This tuple consists of the average and peak bandwidth.
+> 
+> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
 > ---
->  drivers/mmc/host/Kconfig |   3 +
->  drivers/mmc/host/sdhci.c | 266 ++++++++++++++++++++++++++++++++++++++-
->  drivers/mmc/host/sdhci.h |   8 ++
->  3 files changed, 273 insertions(+), 4 deletions(-)
+
+You can put here (below the --- line) the text from the cover letter.
+Usually people do not add separate cover letters for single patches.
+
+>  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  12 ++
+>  drivers/scsi/ufs/ufs-qcom.c                        | 234 ++++++++++++++++-----
+>  drivers/scsi/ufs/ufs-qcom.h                        |  20 ++
+>  3 files changed, 218 insertions(+), 48 deletions(-)
 > 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index e26b8145efb3..333292e8ecdd 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -999,3 +999,6 @@ config MMC_SDHCI_AM654
->  	  If you have a controller with this interface, say Y or M here.
+> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> index a99ed55..94249ef 100644
+> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
+> @@ -45,6 +45,18 @@ Optional properties:
+>  Note: If above properties are not defined it can be assumed that the supply
+>  regulators or clocks are always on.
 >  
->  	  If unsure, say N.
+> +* Following bus parameters are required:
+> +interconnects
+> +interconnect-names
+
+Is the above really required? Are the interconnect bandwidth requests
+required to enable something critical to UFS functionality?
+Would UFS still work without any bandwidth scaling, although for example
+slower? Could you please clarify.
+
+> +- Please refer to Documentation/devicetree/bindings/interconnect/
+> +  for more details on the above.
+> +qcom,msm-bus,name - string describing the bus path
+> +qcom,msm-bus,num-cases - number of configurations in which ufs can operate in
+> +qcom,msm-bus,num-paths - number of paths to vote for
+> +qcom,msm-bus,vectors-KBps - Takes a tuple <ib ab>, <ib ab> (2 tuples for 2 num-paths)
+> +			    The number of these entries *must* be same as
+> +			    num-cases.
+
+DT bindings should be submitted as a separate patch. Anyway, people
+frown upon putting configuration data in DT. Could we put this data into
+the driver as a static table instead of DT? Also maybe use ab/pb for
+average/peak bandwidth.
+
 > +
-> +config MMC_SDHCI_EXTERNAL_DMA
-> +        bool
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index a22e11a65658..4a9044c06e21 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -14,6 +14,7 @@
->   */
+>  Example:
+>  	ufshc@0xfc598000 {
+>  		compatible = "jedec,ufs-1.1";
+> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
+> index 2b38db2..213e975 100644
+> --- a/drivers/scsi/ufs/ufs-qcom.c
+> +++ b/drivers/scsi/ufs/ufs-qcom.c
+> @@ -16,6 +16,7 @@
+>  #include <linux/of.h>
+>  #include <linux/platform_device.h>
+>  #include <linux/phy/phy.h>
+> +#include <linux/interconnect.h>
+>  #include <linux/phy/phy-qcom-ufs.h>
+
+Alphabetical order?
+
 >  
->  #include <linux/delay.h>
-> +#include <linux/dmaengine.h>
->  #include <linux/ktime.h>
->  #include <linux/highmem.h>
->  #include <linux/io.h>
-> @@ -1118,6 +1119,226 @@ static void sdhci_prepare_data(struct sdhci_host *host, struct mmc_command *cmd)
+>  #include "ufshcd.h"
+> @@ -27,6 +28,10 @@
+>  #define UFS_QCOM_DEFAULT_DBG_PRINT_EN	\
+>  	(UFS_QCOM_DBG_PRINT_REGS_EN | UFS_QCOM_DBG_PRINT_TEST_BUS_EN)
+>  
+> +#define UFS_DDR "ufs-ddr"
+> +#define CPU_UFS "cpu-ufs"
+
+Not sure if it's really useful to have them as #defines. Also maybe use
+"ufs-mem" instead of "ufs-ddr" to be more consistent with other users.
+
+> +
+> +
+>  enum {
+>  	TSTBUS_UAWM,
+>  	TSTBUS_UARM,
+> @@ -714,7 +719,6 @@ static int ufs_qcom_get_pwr_dev_param(struct ufs_qcom_dev_params *qcom_param,
+>  	return 0;
+>  }
+>  
+> -#ifdef CONFIG_MSM_BUS_SCALING
+>  static int ufs_qcom_get_bus_vote(struct ufs_qcom_host *host,
+>  		const char *speed_mode)
+>  {
+> @@ -768,24 +772,83 @@ static void ufs_qcom_get_speed_mode(struct ufs_pa_layer_attr *p, char *result)
 >  	}
 >  }
 >  
-> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
-> +static int sdhci_external_dma_init(struct sdhci_host *host)
+> +static int ufs_qcom_get_ib_ab(struct ufs_qcom_host *host, int index,
+> +			      struct qcom_bus_vectors *ufs_ddr_vec,
+> +			      struct qcom_bus_vectors *cpu_ufs_vec)
 > +{
-> +	int ret = 0;
-> +	struct mmc_host *mmc = host->mmc;
+> +	struct qcom_bus_path *usecase;
 > +
-> +	host->tx_chan = dma_request_chan(mmc->parent, "tx");
-> +	if (IS_ERR(host->tx_chan)) {
-> +		ret = PTR_ERR(host->tx_chan);
-> +		if (ret != -EPROBE_DEFER)
-> +			pr_warn("Failed to request TX DMA channel.\n");
-> +		host->tx_chan = NULL;
-> +		return ret;
-> +	}
-> +
-> +	host->rx_chan = dma_request_chan(mmc->parent, "rx");
-> +	if (IS_ERR(host->rx_chan)) {
-> +		if (host->tx_chan) {
-> +			dma_release_channel(host->tx_chan);
-> +			host->tx_chan = NULL;
-> +		}
-> +
-> +		ret = PTR_ERR(host->rx_chan);
-> +		if (ret != -EPROBE_DEFER)
-> +			pr_warn("Failed to request RX DMA channel.\n");
-> +		host->rx_chan = NULL;
-> +	}
-> +
-> +	return ret;
-> +}
-> +
-> +static inline struct dma_chan *
-> +sdhci_external_dma_channel(struct sdhci_host *host, struct mmc_data *data)
-> +{
-> +	return data->flags & MMC_DATA_WRITE ? host->tx_chan : host->rx_chan;
-> +}
-> +
-> +static int sdhci_external_dma_setup(struct sdhci_host *host,
-> +				    struct mmc_command *cmd)
-> +{
-> +	int ret, i;
-> +	struct dma_async_tx_descriptor *desc;
-> +	struct mmc_data *data = cmd->data;
-> +	struct dma_chan *chan;
-> +	struct dma_slave_config cfg;
-> +	dma_cookie_t cookie;
-> +	int sg_cnt;
-> +
-> +	if (!host->mapbase)
+> +	if (!host->qbsd)
 > +		return -EINVAL;
 > +
-> +	cfg.src_addr = host->mapbase + SDHCI_BUFFER;
-> +	cfg.dst_addr = host->mapbase + SDHCI_BUFFER;
-> +	cfg.src_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> +	cfg.dst_addr_width = DMA_SLAVE_BUSWIDTH_4_BYTES;
-> +	cfg.src_maxburst = data->blksz / 4;
-> +	cfg.dst_maxburst = data->blksz / 4;
-> +
-> +	/* Sanity check: all the SG entries must be aligned by block size. */
-> +	for (i = 0; i < data->sg_len; i++) {
-> +		if ((data->sg + i)->length % data->blksz)
-> +			return -EINVAL;
-> +	}
-> +
-> +	chan = sdhci_external_dma_channel(host, data);
-> +
-> +	ret = dmaengine_slave_config(chan, &cfg);
-> +	if (ret)
-> +		return ret;
-> +
-> +	sg_cnt = sdhci_pre_dma_transfer(host, data, COOKIE_MAPPED);
-> +	if (sg_cnt <= 0)
+> +	if (index > host->qbsd->num_usecase)
 > +		return -EINVAL;
 > +
-> +	desc = dmaengine_prep_slave_sg(chan, data->sg, data->sg_len,
-> +				       mmc_get_dma_dir(data),
-> +				       DMA_PREP_INTERRUPT | DMA_CTRL_ACK);
-> +	if (!desc)
-> +		return -EINVAL;
-> +
-> +	desc->callback = NULL;
-> +	desc->callback_param = NULL;
-> +
-> +	cookie = dmaengine_submit(desc);
-> +	if (cookie < 0)
-> +		ret = cookie;
-> +
-> +	return ret;
-> +}
-> +
-> +static void sdhci_external_dma_release(struct sdhci_host *host)
-> +{
-> +	if (host->tx_chan) {
-> +		dma_release_channel(host->tx_chan);
-> +		host->tx_chan = NULL;
-> +	}
-> +
-> +	if (host->rx_chan) {
-> +		dma_release_channel(host->rx_chan);
-> +		host->rx_chan = NULL;
-> +	}
-> +
-> +	sdhci_switch_external_dma(host, false);
-> +}
-> +
-> +static int __sdhci_external_dma_prepare_data(struct sdhci_host *host,
-> +					     struct mmc_command *cmd)
-> +{
-> +	struct mmc_data *data = cmd->data;
-> +
-> +	host->data_timeout = 0;
-> +
-> +	if (sdhci_data_line_cmd(cmd))
-> +		sdhci_set_timeout(host, cmd);
-> +
-> +	WARN_ON(host->data);
-> +
-> +	/* Sanity checks */
-> +	WARN_ON(data->blksz * data->blocks > 524288);
-> +	WARN_ON(data->blksz > host->mmc->max_blk_size);
-> +	WARN_ON(data->blocks > 65535);
-> +
-> +	host->flags |= SDHCI_REQ_USE_DMA;
-> +	host->data = data;
-> +	host->data_early = 0;
-> +	host->data->bytes_xfered = 0;
-> +
-> +	sdhci_set_transfer_irqs(host);
+> +	usecase = host->qbsd->usecase;
 > +
 > +	/*
-> +	 * For Version 4.10 onwards, if v4 mode is enabled, 32-bit Block Count
-> +	 * can be supported, in that case 16-bit block count register must be 0.
+> +	 *
+> +	 * usecase:0  usecase:0
+> +	 * ufs->ddr   cpu->ufs
+> +	 * |vec[0&1] | vec[2&3]|
+> +	 * +----+----+----+----+
+> +	 * | ab | ib | ab | ib |
+> +	 * |----+----+----+----+
+> +	 * .
+> +	 * .
+> +	 * .
+> +	 * usecase:n  usecase:n
+> +	 * ufs->ddr   cpu->ufs
+> +	 * |vec[0&1] | vec[2&3]|
+> +	 * +----+----+----+----+
+> +	 * | ab | ib | ab | ib |
+> +	 * |----+----+----+----+
 > +	 */
-> +	if (host->version >= SDHCI_SPEC_410 && host->v4_mode &&
-> +	    (host->quirks2 & SDHCI_QUIRK2_USE_32BIT_BLK_CNT)) {
-> +		if (sdhci_readw(host, SDHCI_BLOCK_COUNT))
-> +			sdhci_writew(host, 0, SDHCI_BLOCK_COUNT);
-> +		sdhci_writew(host, data->blocks, SDHCI_32BIT_BLK_CNT);
-> +	} else {
-> +		sdhci_writew(host, data->blocks, SDHCI_BLOCK_COUNT);
-> +	}
-
-It is probably worth factoring out the code that is shared with
-sdhci_prepare_data() where possible.
-
+> +
+> +	/* index refers to offset in usecase */
+> +	ufs_ddr_vec->ab = usecase[index].vec[0].ab;
+> +	ufs_ddr_vec->ib = usecase[index].vec[0].ib;
+> +
+> +	cpu_ufs_vec->ab = usecase[index].vec[1].ab;
+> +	cpu_ufs_vec->ib = usecase[index].vec[1].ib;
 > +
 > +	return 0;
 > +}
 > +
-> +static void sdhci_external_dma_prepare_data(struct sdhci_host *host,
-> +					    struct mmc_command *cmd)
-> +{
-> +	struct mmc_data *data = cmd->data;
-> +
-> +	if (!data)
-> +		return;
-
-Even in the !data case, we still need to set up a timeout for commands with
-busy waiting.  I suggest checking the !data case before calling
-sdhci_external_dma_prepare_data()
-
-> +
-> +	if (sdhci_external_dma_setup(host, cmd) ||
-> +	    __sdhci_external_dma_prepare_data(host, cmd)) {
-> +		sdhci_external_dma_release(host);
-> +		pr_err("%s: Cannot use external DMA, switch to the DMA/PIO which standard SDHCI provides.\n",
-> +		       mmc_hostname(host->mmc));
-> +		sdhci_prepare_data(host, cmd);
-> +	}
-> +}
-> +
-> +static void sdhci_external_dma_pre_transfer(struct sdhci_host *host,
-> +					    struct mmc_command *cmd)
-> +{
-> +	struct dma_chan *chan;
-> +
-> +	if (!cmd->data || cmd->opcode == MMC_SET_BLOCK_COUNT)
-
-MMC_SET_BLOCK_COUNT never has cmd->data and so does not need to be checked.
-
-> +		return;
-> +
-> +	sdhci_writew(host, cmd->data->blksz, SDHCI_BLOCK_SIZE);
-
-Block size is set in __sdhci_external_dma_prepare_data() so does it need to
-be set here also.
-
-> +	chan = sdhci_external_dma_channel(host, cmd->data);
-> +	if (chan)
-> +		dma_async_issue_pending(chan);
-> +}
-> +
-> +static int sdhci_external_dma_cleanup(struct sdhci_host *host,
-> +				    struct mmc_data *data)
-
-Please align parameters with open parenthesis
-
-> +{
-> +	struct dma_chan *chan = sdhci_external_dma_channel(host, data);
-> +	int ret = 0;
-> +
-> +	if (chan)
-> +		ret = dmaengine_terminate_async(chan);
-> +
-> +	return ret;
-> +}
-> +#else
-> +static int sdhci_external_dma_init(struct sdhci_host *host)
-> +{
-> +	return -EOPNOTSUPP;
-> +}
-> +
-> +static void sdhci_external_dma_release(struct sdhci_host *host)
-> +{}
-> +
-> +static void sdhci_external_dma_prepare_data(struct sdhci_host *host,
-> +					    struct mmc_command *cmd)
-> +{
-> +	/* If MMC_SDHCI_EXTERNAL_DMA not supported, PIO will be used */
-> +	sdhci_prepare_data(host, cmd);
-> +}
-> +
-> +static void sdhci_external_dma_pre_transfer(struct sdhci_host *host,
-> +					    struct mmc_command *cmd)
-> +{}
-> +
-> +static int sdhci_external_dma_cleanup(struct sdhci_host *host,
-> +				    struct mmc_data *data)
-
-Please align parameters with open parenthesis
-
-> +{
-> +	return 0;
-> +}
-> +#endif
-> +
-> +void sdhci_switch_external_dma(struct sdhci_host *host, bool en)
-> +{
-> +	host->use_external_dma = en;
-> +}
-> +EXPORT_SYMBOL_GPL(sdhci_switch_external_dma);
-> +
->  static inline bool sdhci_auto_cmd12(struct sdhci_host *host,
->  				    struct mmc_request *mrq)
+>  static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
 >  {
-> @@ -1374,7 +1595,10 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->  		host->data_cmd = cmd;
->  	}
+>  	int err = 0;
+> +	struct qcom_bus_scale_data *d = host->qbsd;
+> +	struct qcom_bus_vectors path0, path1;
+> +	struct device *dev = host->hba->dev;
 >  
-> -	sdhci_prepare_data(host, cmd);
-> +	if (host->use_external_dma)
-
-As mentioned above wrt sdhci_external_dma_prepare_data():
-
-	if (host->use_external_dma && cmd->data)
-
-> +		sdhci_external_dma_prepare_data(host, cmd);
-> +	else
-> +		sdhci_prepare_data(host, cmd);
->  
->  	sdhci_writel(host, cmd->arg, SDHCI_ARGUMENT);
->  
-> @@ -1416,6 +1640,9 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->  		timeout += 10 * HZ;
->  	sdhci_mod_timer(host, cmd->mrq, timeout);
->  
-> +	if (host->use_external_dma)
-> +		sdhci_external_dma_pre_transfer(host, cmd);
-
-Why is sdhci_external_dma_pre_transfer() needed here - couldn't it be done
-in sdhci_external_dma_prepare_data()?
-
-> +
->  	sdhci_writew(host, SDHCI_MAKE_CMD(cmd->opcode, flags), SDHCI_COMMAND);
->  }
->  EXPORT_SYMBOL_GPL(sdhci_send_command);
-> @@ -1781,6 +2008,11 @@ void sdhci_request(struct mmc_host *mmc, struct mmc_request *mrq)
->  
->  	sdhci_led_activate(host);
->  
-> +	if (host->use_external_dma && mrq->data) {
-> +		struct dma_chan *chan = sdhci_external_dma_channel(host,
-> +								   mrq->data);
-
-sdhci_external_dma_channel is not declared if
-!IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
-
-> +		dmaengine_synchronize(chan);
-
-So this is to cover for using dmaengine_terminate_async()?
-
+> -	if (vote != host->bus_vote.curr_vote) {
+> -		err = msm_bus_scale_client_update_request(
+> -				host->bus_vote.client_handle, vote);
+> -		if (err) {
+> -			dev_err(host->hba->dev,
+> -				"%s: msm_bus_scale_client_update_request() failed: bus_client_handle=0x%x, vote=%d, err=%d\n",
+> -				__func__, host->bus_vote.client_handle,
+> -				vote, err);
+> -			goto out;
+> -		}
+> +	err = ufs_qcom_get_ib_ab(host, vote, &path0, &path1);
+> +	if (err) {
+> +		dev_err(dev, "Error: failed (%d) to get ib/ab\n",
+> +			err);
+> +		return err;
 > +	}
->  	/*
->  	 * Ensure we don't send the STOP for non-SET_BLOCK_COUNTED
->  	 * requests if Auto-CMD12 is enabled.
-> @@ -2658,6 +2890,8 @@ static bool sdhci_request_done(struct sdhci_host *host)
->  				dma_unmap_sg(mmc_dev(host->mmc), data->sg,
->  					     data->sg_len,
->  					     mmc_get_dma_dir(data));
-> +				if (host->use_external_dma)
-> +					sdhci_external_dma_cleanup(host, data);
-
-Is sdhci_external_dma_cleanup() only needed in the error case?
-
-The DMA must be stopped before the memory is unmapped and potentially freed.
-
-Isn't the DMA cleanup also needed in the bounce buffer case?
-
-Isn't the DMA cleanup also needed in the COOKIE_PRE_MAPPED case?
-
-dmaengine_terminate_async() doesn't stop the DMA but
-dmaengine_terminate_sync() is not atomic, which looks like a problem.
-
-Perhaps you look at scheduling some work for the external dma error case
-instead of calling __sdhci_finish_mrq()?  Then the work can do the
-dmaengine_terminate_sync() and call __sdhci_finish_mrq().
-
->  			}
->  			data->host_cookie = COOKIE_UNMAPPED;
->  		}
-> @@ -3692,12 +3926,15 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		       mmc_hostname(mmc), host->version);
+>  
+> -		host->bus_vote.curr_vote = vote;
+> +	dev_dbg(dev, "Setting vote: %d: ufs-ddr: ab: %llu ib: %llu\n", vote,
+> +		path0.ab, path0.ib);
+> +	err = icc_set_bw(d->ufs_ddr, path0.ab, path0.ib);
+> +	if (err) {
+> +		dev_err(dev, "Error: (%d) failed setting (%s) bus vote\n", err,
+> +			UFS_DDR);
+> +		return err;
 >  	}
->  
-> -	if (host->quirks & SDHCI_QUIRK_FORCE_DMA)
-> +	if (host->quirks & SDHCI_QUIRK_FORCE_DMA) {
->  		host->flags |= SDHCI_USE_SDMA;
-> -	else if (!(host->caps & SDHCI_CAN_DO_SDMA))
-> +	} else if (!(host->caps & SDHCI_CAN_DO_SDMA)) {
->  		DBG("Controller doesn't have SDMA capability\n");
-> -	else
-> +	} else if (host->use_external_dma) {
-> +		/* Using dma-names to detect external dma capability */
-> +	} else {
->  		host->flags |= SDHCI_USE_SDMA;
-> +	}
-
-These if-statements are about setting SDHCI_USE_SDMA but why is a change
-needed for the host->use_external_dma case?
-
->  
->  	if ((host->quirks & SDHCI_QUIRK_BROKEN_DMA) &&
->  		(host->flags & SDHCI_USE_SDMA)) {
-> @@ -3785,6 +4022,19 @@ int sdhci_setup_host(struct sdhci_host *host)
->  		}
->  	}
->  
-> +	if (host->use_external_dma) {
-> +		ret = sdhci_external_dma_init(host);
-> +		if (ret == -EPROBE_DEFER)
-> +			goto unreg;
+> -out:
 > +
-> +		/*
-> +		 * Fall back to use the DMA/PIO integrated in standard SDHCI
-> +		 * instead of external DMA devices.
-> +		 */
-> +		if (ret)
-> +			sdhci_switch_external_dma(host, false);
+> +	dev_dbg(dev, "Setting: cpu-ufs: ab: %llu ib: %llu\n", path1.ab,
+> +		path1.ib);
+> +	err = icc_set(d->cpu_ufs, path1.ab, path1.ib);
+> +	if (err) {
+> +		dev_err(dev, "Error: (%d) failed setting (%s) bus vote\n", err,
+> +			CPU_UFS);
+> +		return err;
 > +	}
 > +
->  	/*
->  	 * If we use DMA, then it's up to the caller to set the DMA
->  	 * mask, but PIO does not need the hw shim so we set a new
-> @@ -4201,6 +4451,10 @@ void sdhci_cleanup_host(struct sdhci_host *host)
->  		dma_free_coherent(mmc_dev(mmc), host->align_buffer_sz +
->  				  host->adma_table_sz, host->align_buffer,
->  				  host->align_addr);
+> +	host->bus_vote.curr_vote = vote;
 > +
-> +	if (host->use_external_dma)
-> +		sdhci_external_dma_release(host);
-> +
->  	host->adma_table = NULL;
->  	host->align_buffer = NULL;
+>  	return err;
 >  }
-> @@ -4247,6 +4501,7 @@ int __sdhci_add_host(struct sdhci_host *host)
 >  
->  	pr_info("%s: SDHCI controller on %s [%s] using %s\n",
->  		mmc_hostname(mmc), host->hw_name, dev_name(mmc_dev(mmc)),
-> +		host->use_external_dma ? "External DMA" :
->  		(host->flags & SDHCI_USE_ADMA) ?
->  		(host->flags & SDHCI_USE_64_BIT_DMA) ? "ADMA 64-bit" : "ADMA" :
->  		(host->flags & SDHCI_USE_SDMA) ? "DMA" : "PIO");
-> @@ -4335,6 +4590,9 @@ void sdhci_remove_host(struct sdhci_host *host, int dead)
->  				  host->adma_table_sz, host->align_buffer,
->  				  host->align_addr);
->  
-> +	if (host->use_external_dma)
-> +		sdhci_external_dma_release(host);
+> @@ -807,6 +870,7 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+>  		dev_err(host->hba->dev, "%s: failed %d\n", __func__, err);
+>  	else
+>  		host->bus_vote.saved_vote = vote;
 > +
->  	host->adma_table = NULL;
->  	host->align_buffer = NULL;
+>  	return err;
 >  }
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 6cc9a3c2ac66..7a52823ebef4 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -482,6 +482,7 @@ struct sdhci_host {
 >  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> +	phys_addr_t mapbase;	/* physical address base */
->  	char *bounce_buffer;	/* For packing SDMA reads/writes */
->  	dma_addr_t bounce_addr;
->  	unsigned int bounce_buffer_size;
-> @@ -531,6 +532,7 @@ struct sdhci_host {
->  	bool pending_reset;	/* Cmd/data reset is pending */
->  	bool irq_wake_enabled;	/* IRQ wakeup is enabled */
->  	bool v4_mode;		/* Host Version 4 Enable */
-> +	bool use_external_dma; /* Host selects to use external DMA */
-
-Please align /**/ with above i.e. use tab
-
+> @@ -837,34 +901,114 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
+>  	return count;
+>  }
 >  
->  	struct mmc_request *mrqs_done[SDHCI_MAX_MRQS];	/* Requests done */
->  	struct mmc_command *cmd;	/* Current command */
-> @@ -559,6 +561,11 @@ struct sdhci_host {
->  	struct timer_list timer;	/* Timer for timeouts */
->  	struct timer_list data_timer;	/* Timer for data timeouts */
->  
-> +#if IS_ENABLED(CONFIG_MMC_SDHCI_EXTERNAL_DMA)
-> +	struct dma_chan	*rx_chan;
-> +	struct dma_chan	*tx_chan;
-> +#endif
+> +static struct qcom_bus_scale_data *ufs_qcom_get_bus_scale_data(struct device
+> +							       *dev)
 > +
->  	u32 caps;		/* CAPABILITY_0 */
->  	u32 caps1;		/* CAPABILITY_1 */
->  	bool read_caps;		/* Capability flags have been read */
-> @@ -792,5 +799,6 @@ void sdhci_start_tuning(struct sdhci_host *host);
->  void sdhci_end_tuning(struct sdhci_host *host);
->  void sdhci_reset_tuning(struct sdhci_host *host);
->  void sdhci_send_tuning(struct sdhci_host *host, u32 opcode);
-> +void sdhci_switch_external_dma(struct sdhci_host *host, bool en);
->  
->  #endif /* __SDHCI_HW_H */
-> 
+> +{
+> +	struct platform_device *pdev = to_platform_device(dev);
+> +	struct device_node *of_node = dev->of_node;
+> +	struct qcom_bus_scale_data *qsd;
+> +	struct qcom_bus_path *usecase = NULL;
+> +	int ret = 0, i = 0, j, num_paths, len;
+> +	const uint32_t *vec_arr = NULL;
+
+Please use u32 instead of uint32_t.
+
+> +	bool mem_err = false;
+> +
+> +	if (!pdev) {
+> +		dev_err(dev, "Null platform device!\n");
+> +		return NULL;
+> +	}
+> +
+> +	qsd = devm_kzalloc(dev, sizeof(struct qcom_bus_scale_data), GFP_KERNEL);
+> +	if (!qsd)
+> +		return NULL;
+> +
+> +	ret = of_property_read_string(of_node, "qcom,msm-bus,name", &qsd->name);
+> +	if (ret) {
+> +		dev_err(dev, "Error: (%d) Bus name missing!\n", ret);
+> +		return NULL;
+> +	}
+> +
+> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-cases",
+> +		&qsd->num_usecase);
+> +	if (ret) {
+> +		pr_err("Error: num-usecases not found\n");
+> +		goto err;
+> +	}
+> +
+> +	usecase = devm_kzalloc(dev, (sizeof(struct qcom_bus_path) *
+> +				   qsd->num_usecase), GFP_KERNEL);
+> +	if (!usecase)
+> +		return NULL;
+> +
+> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-paths",
+> +				   &num_paths);
+> +	if (ret) {
+> +		pr_err("Error: num_paths not found\n");
+> +		return NULL;
+> +	}
+> +
+> +	vec_arr = of_get_property(of_node, "qcom,msm-bus,vectors-KBps", &len);
+> +	if (vec_arr == NULL) {
+> +		pr_err("Error: Vector array not found\n");
+> +		return NULL;
+> +	}
+> +
+> +	for (i = 0; i < qsd->num_usecase; i++) {
+> +		usecase[i].num_paths = num_paths;
+> +		usecase[i].vec = devm_kzalloc(dev, num_paths *
+> +					      sizeof(struct qcom_bus_vectors),
+> +					      GFP_KERNEL);
+> +		if (!usecase[i].vec) {
+> +			mem_err = true;
+> +			dev_err(dev, "Error: Failed to alloc mem for vectors\n");
+> +			goto err;
+> +		}
+> +
+> +		for (j = 0; j < num_paths; j++) {
+> +			int idx = ((i * num_paths) + j) * 2;
+> +
+> +			usecase[i].vec[j].ab = (uint64_t)
+> +				be32_to_cpu(vec_arr[idx]);
+> +			usecase[i].vec[j].ib = (uint64_t)
+> +				be32_to_cpu(vec_arr[idx + 1]);
+> +		}
+> +	}
+> +
+> +	qsd->usecase = usecase;
+> +	return qsd;
+> +err:
+> +	if (mem_err) {
+> +		for (; i > 0; i--)
+> +			kfree(usecase[i].vec);
+> +	}
+> +	return NULL;
+> +}
+
+We wouldn't need all the above DT parsing if we add a sdm845 bandwidth
+usecase table. Could you give it a try?
+
+Thanks,
+Georgi
