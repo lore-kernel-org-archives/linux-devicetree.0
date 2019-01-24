@@ -1,76 +1,52 @@
-From: Amit Kucheria <amit.kucheria@verdurent.com>
-Subject: Re: [PATCH RESEND] arm64: dts: msm8916: remove bogus argument to the
- cpu clock
-Date: Thu, 24 Jan 2019 20:23:07 +0530
-Message-ID: <CAHLCerOvpf0ONVV0V6JKbQL_k31qqyiT8vcjvsvK4PPTMqZS_Q@mail.gmail.com>
-References: <20190124124508.6541-1-niklas.cassel@linaro.org>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+From: Ben Whitten <ben.whitten@gmail.com>
+Subject: [PATCH v3 lora-next 0/4] net: lora: Add documentation for SX130x and SX125x parts
+Date: Thu, 24 Jan 2019 14:53:05 +0000
+Message-ID: <20190124145309.21698-1-ben.whitten@lairdtech.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124124508.6541-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Niklas Cassel <niklas.cassel@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
+To: afaerber@suse.de
+Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ben Whitten <ben.whitten@lairdtech.com>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 6:15 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
->
-> The apcs node has #clock-cells = <0>, which means that those who
-> references it should specify 0 arguments.
->
-> The apcs reference in the cpu node incorrectly specifies an argument,
-> remove this bogus argument.
->
-> Fixes: 65afdf458360 ("arm64: dts: qcom: msm8916: Add CPU frequency scaling support")
-> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
-> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+Hello,
 
-Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
+This series adds documentation for the SX130x and SX125x chips.
+We are using the yaml binding format and this series builds with
+'make dt_binding_check'.
 
-> ---
->  arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
->
-> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> index d302d8d639a1..e4bfd47178b1 100644
-> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-> @@ -111,7 +111,7 @@
->                         next-level-cache = <&L2_0>;
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SPC>;
-> -                       clocks = <&apcs 0>;
-> +                       clocks = <&apcs>;
->                         operating-points-v2 = <&cpu_opp_table>;
->                         #cooling-cells = <2>;
->                 };
-> @@ -123,7 +123,7 @@
->                         next-level-cache = <&L2_0>;
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SPC>;
-> -                       clocks = <&apcs 0>;
-> +                       clocks = <&apcs>;
->                         operating-points-v2 = <&cpu_opp_table>;
->                         #cooling-cells = <2>;
->                 };
-> @@ -135,7 +135,7 @@
->                         next-level-cache = <&L2_0>;
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SPC>;
-> -                       clocks = <&apcs 0>;
-> +                       clocks = <&apcs>;
->                         operating-points-v2 = <&cpu_opp_table>;
->                         #cooling-cells = <2>;
->                 };
-> @@ -147,7 +147,7 @@
->                         next-level-cache = <&L2_0>;
->                         enable-method = "psci";
->                         cpu-idle-states = <&CPU_SPC>;
-> -                       clocks = <&apcs 0>;
-> +                       clocks = <&apcs>;
->                         operating-points-v2 = <&cpu_opp_table>;
->                         #cooling-cells = <2>;
->                 };
-> --
-> 2.19.1
->
+This series is split such that the basic documentation can be taken
+without clock components, as there is an ongoing problem running clk
+over spi backed regmaps on certain spi controller drivers [1]
+
+Thanks,
+Ben Whitten
+
+v2 -> v3
+* Added the clock input and output names
+* Limited the radio-spi node children names to radio@
+* Fixed fallback compatible for SX1308 -> SX1301
+v1 -> v2
+* Dropped reset-gpios, radio-spi from required.
+* Dropped spi-max-frequency from binding.
+* Changed compatible to allow fallback from SX1308 to SX1301.
+* Wording changes in commit and descriptions.
+* Dual licence
+* Incorperate Robs comments on child node and spi wrapper
+
+[1] http://lists.infradead.org/pipermail/linux-lpwan/2018-December/000063.html
+
+
+Ben Whitten (4):
+  dt-bindings: lora: sx130x: add basic documentation
+  dt-bindings: lora: sx125x: add basic documentation
+  dt-bindings: lora: sx125x: add clock bindings
+  dt-bindings: lora: sx130x: add clock bindings
+
+ .../bindings/net/lora/semtech,sx125x.yaml     |  77 +++++++++
+ .../bindings/net/lora/semtech,sx130x.yaml     | 151 ++++++++++++++++++
+ 2 files changed, 228 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+ create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+
+-- 
+2.17.1
