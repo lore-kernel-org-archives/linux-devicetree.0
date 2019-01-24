@@ -1,107 +1,509 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx
- OST
-Date: Thu, 24 Jan 2019 17:46:28 -0300
-Message-ID: <1548362788.3881.0@crapouillou.net>
-References: <20181212220922.18759-1-paul@crapouillou.net>
-        <20181212220922.18759-6-paul@crapouillou.net>
-        <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com>
-        <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net>
-        <1548264353.3173.1@crapouillou.net> <20190123180155.GB9781@roeck-us.net>
-        <154835808767.136743.14531363127962557756@swboyd.mtv.corp.google.com>
+From: Dan Murphy <dmurphy@ti.com>
+Subject: Re: [PATCH v2 2/2] leds: lp50xx: Add the LP50XX family of the RGB LED
+ driver
+Date: Thu, 24 Jan 2019 15:00:06 -0600
+Message-ID: <3e804986-89ef-2465-51ad-86e793b39b7e@ti.com>
+References: <20190114211723.11186-1-dmurphy@ti.com>
+ <20190114211723.11186-2-dmurphy@ti.com>
+ <ce911fdf-c7c2-63e8-5c7a-b0be965ab69b@gmail.com> <20190115222223.GA17363@amd>
+ <79394d17-3124-75b2-ccac-dc1046499d14@ti.com> <20190116105537.GA1803@amd>
+ <86299268-3202-814a-134b-04bd2170faab@ti.com>
+ <8dfa2854-2814-6874-ab8e-1858e9a18acf@gmail.com>
+ <9f87e1ac-be66-2998-578c-de2c1794a00a@ti.com>
+ <4a20b14c-9514-25b8-affe-20f9ede4d4d8@ti.com>
+ <8fac6aeb-28a8-d136-c654-9d1b5d4f7ddb@gmail.com>
+ <27318c48-f84a-5129-ac88-545edd549101@gmail.com>
+ <21d3e21a-e50e-ee46-6f81-5a22db878c15@ti.com>
+ <1c7680d3-6926-d837-dcd9-254aca23df39@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <154835808767.136743.14531363127962557756@swboyd.mtv.corp.google.com>
+In-Reply-To: <1c7680d3-6926-d837-dcd9-254aca23df39@gmail.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Stephen Boyd <sboyd@kernel.org>
-Cc: Guenter Roeck <linux@roeck-us.net>, Mathieu Malaterre <malat@debian.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-c
+To: Jacek Anaszewski <jacek.anaszewski@gmail.com>, =?UTF-8?B?VmVzYSBKw6TDpHNrZWzDpGluZW4=?= <dachaac@gmail.com>, Pavel Machek <pavel@ucw.cz>
+Cc: linux-leds@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org
 List-Id: devicetree@vger.kernel.org
 
+Jacek
+
+On 1/23/19 3:52 PM, Jacek Anaszewski wrote:
+> Dan,
+> 
+> On 1/22/19 11:44 PM, Dan Murphy wrote:
+>> Jacek
+>>
+>> On 1/22/19 3:39 PM, Jacek Anaszewski wrote:
+>>> Hi all,
+>>>
+>>> On 1/20/19 7:42 AM, Vesa Jääskeläinen wrote:
+>>>> Hi Dan,
+>>>>
+>>>> On 18/01/2019 15.58, Dan Murphy wrote:
+>>>>> Jacek
+>>>>>
+>>>>> On 1/18/19 7:45 AM, Dan Murphy wrote:
+>>>>>> Jacek
+>>>>>>
+>>>>>> On 1/17/19 3:10 PM, Jacek Anaszewski wrote:
+>>>>>>> Hi Dan,
+>>>>>>>
+>>>>>>> On 1/16/19 7:41 PM, Dan Murphy wrote:
+>>>>>>>> Hello
+>>>>>>>>
+>>>>>>>> On 1/16/19 4:55 AM, Pavel Machek wrote:
+>>>>>>>>> Hi!
+>>>>>>>>>
+>>>>>>>>>> On 1/15/19 4:22 PM, Pavel Machek wrote:
+>>>>>>>>>>> Hi!
+>>>>>>>>>>>
+>>>>>>>>>>>>> +The 24-bit RGB value passed in follows the pattern 0xXXRRGGBB
+>>>>>>>>>>>>> +XX - Do not care ignored by the driver
+>>>>>>>>>>>>> +RR - is the 8 bit Red LED value
+>>>>>>>>>>>>> +GG - is the 8 bit Green LED value
+>>>>>>>>>>>>> +BB - is the 8 bit Blue LED value
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> +Example:
+>>>>>>>>>>>>> +LED module output 4 of the LP5024 will be a yellow color:
+>>>>>>>>>>>>> +echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> +LED module output 4 of the LP5024 will be dimmed 50%:
+>>>>>>>>>>>>> +echo 0x80 > /sys/class/leds/lp5024\:led4_mod/brightness
+>>>>>>>>>>>>> +
+>>>>>>>>>>>>> +LED banked RGBs of the LP5036 will be a white color:
+>>>>>>>>>>>>> +echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color
+>>>>>>>>>>>>
+>>>>>>>>>>>> This part with example cans remain in Documentation/leds if you
+>>>>>>>>>>>>> like.
+>>>>>>>>>>>
+>>>>>>>>>>> Does it actually work like that on hardware?
+>>>>>>>>>>
+>>>>>>>>>> What?
+>>>>>>>>>
+>>>>>>>>> If you do echo 0xffffff > /sys/class/leds/lp5036\:led_banked/color,
+>>>>>>>>> does it actually produce white? With all the different RGB modules
+>>>>>>>>> manufacturers can use with lp5024P?
+>>>>>>>>>
+>>>>>>>>> If you do echo 0xe6de00 > /sys/class/leds/lp5024\:led4_mod/color, does
+>>>>>>>>> it actually produce yellow, with all the different RGB modules
+>>>>>>>>> manufacturers can use with lp5024P?
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> I believe the answer to the general questions is no for any RGB cluster and driver out there.
+>>>>>>>> Because if you set the same values on each and every RGB device out there you will get varying shades of the color.
+>>>>>>>> But for this device yes the color does appear to be yellow to me versus what was displayed on my monitor by the HSL picker.
+>>>>>>>> But everyone interprets colors differently.
+>>>>>>>>
+>>>>>>>> If you write the same value for yellow or white on a droid 4 and the N900 do they produce the same color side by side?
+>>>>>>>> Most probably not.
+>>>>>>>>
+>>>>>>>> As you pointed out the PWM needs to be modified to obtain the correct white color to account for LED and other device constraints.
+>>>>>>>>
+>>>>>>>> But we need to take into account the light pipe.  Pools nowadays have RGB LED spot lights in them.  It can
+>>>>>>>> be set to white.  On my pool right off the lens the color has a purplish hue to it.  As the light is diffracted into
+>>>>>>>> the pool the color becomes white.  The pool is clear.  When I add chemicals to the pool and make it cloudy
+>>>>>>>> and turn on the lights the color off the lens is now white.  This is an example on a large scale but the issue
+>>>>>>>> scales down to the hand helds and smart home applications.
+>>>>>>>>
+>>>>>>>> If the cluster is piped through a flexible optic 0xffffff may produce the "white" you want on its output.
+>>>>>>>>
+>>>>>>>> So an expectation of certain color without proper piping based on a single RGB value may be a little unreasonable.
+>>>>>>>> There may need to be a way to attenuate the values based on the hardware aspect of the equation ie light pipe (or lack thereof) and LED vendor.
+>>>>>>>> So if we write 0xffffff to the RGB driver the driver could adjust the intensity of the individual LEDs based on the diffraction
+>>>>>>>> coefficients.
+>>>>>>>>
+>>>>>>>> I also think that is an unreasonable expectation here that writing a single value to any LED RGB driver would produce
+>>>>>>>> a "rest of the world" absolute color.  Maybe it can produce something similar but not identical.
+>>>>>>>> As you indicated in the requirements there is more involved here then just the LED and the values written.
+>>>>>>>> The colors should be close but may not be identical.
+>>>>>>>>
+>>>>>>>> A 10 year old N900 should not be considered the gold standard for color production due to advancements in LED,
+>>>>>>>> light pipe and LED driver technology.
+>>>>>>>> The single package RGB clusters on the board I am testing is about the size of a single RGB LED from 10 years ago.
+>>>>>>>>
+>>>>>>>> I agree that the interface developed should work on the device but the algorithm derived to obtain the color needs to have
+>>>>>>>> a hardware aspect to the calculation.
+>>>>>>>>
+>>>>>>>>>>> Is it supposed to support "normal" RGB colors as seen on monitors?
+>>>>>>>>>>
+>>>>>>>>>> Monitors are not an application for this part.
+>>>>>>>>>
+>>>>>>>>> You did not answer the question. When you talk about yellow, is it
+>>>>>>>>> same yellow the rest of world talks about?
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> See above.  It is close to what was on my monitor displayed.
+>>>>>>>>
+>>>>>>>>>>> Because 100% PWM on all channels does not result in white on hardware
+>>>>>>>>>>> I have.
+>>>>>>>>>>
+>>>>>>>>>> I don't know I am usually blinded by the light and have no diffuser over
+>>>>>>>>>> the LEDs to disperse the light so when I look I see all 3 colors.
+>>>>>>>>>
+>>>>>>>>> How can we have useful discussion about colors when you don't see the
+>>>>>>>>> colors?
+>>>>>>>>>
+>>>>>>>>> Place a piece of paper over the LEDs....
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Good suggestion for a rough test.
+>>>>>>>>
+>>>>>>>>>>> But...
+>>>>>>>>>>>
+>>>>>>>>>>> I believe we should have a reasonable design before we do something
+>>>>>>>>>>> like this. There's no guarantee someone will not use lp50xx with just
+>>>>>>>>>>> the white LEDs for example. How will this work? Plus existing hardware
+>>>>>>>>>>> already uses three separate LEDs for RGB LED. Why not provide same
+>>>>>>>>>>> interface?
+>>>>>>>>>>
+>>>>>>>>>> Which existing hardware?  Are they using this part?
+>>>>>>>>>
+>>>>>>>>> Nokia N900. They are not using this part, but any interface we invent
+>>>>>>>>> should work there, too.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Yes a common interface would be nice with some sort of hardware tuning coefficient.
+>>>>>>>>
+>>>>>>>>>> <rant>
+>>>>>>>>>> Why are we delaying getting the RGB framework or HSV in?
+>>>>>>>>>> I would rather design against something you want instead of having
+>>>>>>>>>> everyone complain about every implementation I post.
+>>>>>>>>>> </rant>
+>>>>>>>>>
+>>>>>>>>> Because you insist on creating new kernel interfaces, when existing
+>>>>>>>>> interfaces work, and are doing that badly.
+>>>>>>>>>
+>>>>>>>>> Because your patches are of lower quality than is acceptable for linux
+>>>>>>>>> kernel.
+>>>>>>>>>
+>>>>>>>>> Because you don't seem to be reading the emails.
+>>>>>>>>>
+>>>>>>>>> I sent list of requirements for RGB led support. This does not meet
+>>>>>>>>> them.
+>>>>>>>>>
+>>>>>>>>
+>>>>>>>> Sigh.  You did not answer my question.
+>>>>>>>>
+>>>>>>>> Your requirements seem to be centered around monitors but that is only one application of the current
+>>>>>>>> RGB LED landscape.
+>>>>>>>>
+>>>>>>>> I am willing to work with you on the HSV and adapting the LP50xx part to this framework.
+>>>>>>>> Or any RGB framework for that matter.  I still don't agree with the kernel needing to declare colors
+>>>>>>>>     maybe color capabilities but not specific colors.
+>>>>>>>
+>>>>>>> Dan, if you have a bandwidth for LED RGB class implementation
+>>>>>>> then please go ahead. It would be good to compare colors produced
+>>>>>>> by software HSV->RGB algorithm to what can be achieved with
+>>>>>>> LEDn_BRIGHTNESS feature.
+>>>>>>>
+>>>>>>> The requirements for LED RGB class as I would see it:
+>>>>>>>
+>>>>>>> sysfs interface:
+>>>>>>>
+>>>>>>> brightness-model: space separated list of available options:
+>>>>>>> - rgb (default):
+>>>>>>>     - creates color file with "red green blue" decimal values
+>>>>>>
+>>>>>> What about other colored LEDs?  Presenting RGB for an Amber LED does not seem right.
+>>>>>> Should the LED color come from the DT?
+>>>>>>
+>>>>>
+>>>>> I thought about this, other non-RGB LEDs would not use the RGB framework.
+>>>>> But should they have the same interfaces as RGB?
+>>>>>
+>>>>> Should PWM control be a global interface?
+>>>>
+>>>> In order to being able to set multi color element led at one go I would recommend using then model:
+>>>>
+>>>> color_names: "red green blue white"
+>>>>
+>>>> echo "32 43 0 128" > color
+>>>>
+>>>> This way all elements would be set at same time from user space point of view.
+>>>>
+>>>> This of course requires that it is part of the physical/logical led that is being controlled. If it is a separate thing then it would logically be differently controlled mono color led.
+>>>>
+>>>> If you look what kinds of leds are available lets say from digikey you get all kinds of combos:
+>>>>
+>>>> - red, green, blue
+>>>> - red, green, blue, amber
+>>>> - red, green, blue, white
+>>>> - red, green, blue, white - cool
+>>>> - red, green, blue, white - neutral
+>>>> - red, green, blue, white - warm
+>>>> - red, orange
+>>>> - purple, ultraviolet
+>>>> - amber, blue
+>>>> - amber, blue, cyan, green, red, violet, white - cool
+>>>> - amber, blue, green
+>>>> - amber, green, blue
+>>>> - and then lots of single special colors
+>>>
+>>> It suggested me another solution. Instead of LED RGB class
+>>> we would have LED multi-color class.
+>>>
+>>
+>> I was thinking the same thing this morning.  But I was thinking that the RGB
+>> class should be an additional class to stand on its own or can register to the
+>> multi color class.
+>>
+>>> Sysfs interface design:
+>>> -----------------------
+>>>
+>>> colors: directory containing files that map to
+>>>          the brightness of particular LEDs; there
+>>>          would be predefined color names that LED class
+>>>          driver should map iouts to, e.g.:
+>>
+>> Filling in the missing ideas with questions.
+>>
+>> Is it a directory or a file?  If it is a directory does that not break the current
+>> directory label model?
+>>
+>> so the path would be /sys/class/leds/colors ?  (It is probably not this but needs clarification)
+>> How would this look if I had 2 of the same color LEDs?  The Beagle bone black has 2 Blue LEDs.
+>> They are assigned to different triggers and have different directories.  Both are GPIO controlled.
+>>
+>> Or are you saying it would be something like (More then likely this is what you intended)
+>> /sys/class/leds/input4::numlock/colors?
+> 
+> Yes, this is what I meant.
+> 
+
+OK.  Thanks for the clarification
+
+>> Maybe it is mandated that "multi" be added to the label when the class is registered so the caller
+>> knows that this is a multi color class and not a single LED color class.
+> 
+> Like I am going to come up with standardized color names
+> in my LED naming related patch, the multi-color names
+> can be defined as well, e.g.: rgb, rgbw, rgbwa, rgbwauv etc.
+> 
+
+That may be better it is descriptive off the command line.
+
+>> What about providing a file called colors_raw which takes in the raw decimal values to obtain other color
+>> variants when RGB is only available?  And this can also present a single write to the kernel with the new
+>> color values.
+> 
+> My design already covers that in the form of files in the colors
+> directory. Like I stated: "files that map to the brightness of
+> particular LEDs". Single write is secured by "echo "write" > sync.
+> 
+
+OK.  So set the new values and then tell the set the sync which will make the device driver write the 
+device.
+
+Sounds good.  how about echo 1 > sync and we can stay away from a long string conversion
+
+>> I am not a fan of hard coding preset colors as you can see there are to many of them and variations of the color.
+>> In addition this severely limits the ability of the user.  Unless we stick to primary colors only and not secondary
+>> colors.
+>> Defining and hard coding hte colors can get out of control and not maintainable moving forward.  Especially
+>> if we start adding defines like white_warm, white_neutral and other variations to the color.
+> 
+> We would not limit anything. Every color combination can be achieved
+> by following this exemplary sequence:
+> 
+> $ echo 154 > colors/red
+> $ echo 232 > colors/green
+> $ echo 43  > colors/blue
+> # echo "write" > sync     //only this changes hardware state
+> 
+> brightness-model is provided only to define mapping of legacy brightness
+> levels (governed by brightness file and led_set_brightness() API) to
+> the specific combination of colors.
+> 
+> For instance we can define three brightness levels for green hue:
+> 
+> DT definition for it would look like below:
+> 
+> rgb-green = <0x277c33 0x37b048 0x47e45d>;
+> 
+> LED multi color class would then do the following mapping for
+> each of the three brightness levels for rgb-green brightness model:
+> 
+> $ echo rgb-green > brightness_model
+> $ echo 1 > brightness // red=0x27, green=0x7c, blue=0x33
+> $ echo 2 > brightness // red=0x37, green=0xb0, blue=0x48
+> $ echo 3 > brightness // red=0x47, green=0xe4, blue=0x5d
+> 
+
+OK I would have to play with this on the LP devices.
+
+>> What about IR LEDs used for night vision products?  Do these fall into the multi color class?
+>> We do have a driver I submitted that had an IR LED and a White LED combined.  It was created against the
+>> flash class but it could be a multi color LED as well.
+>>
+>> How would traversing through the full color palette work if you were to want to produce a multi
+>> color ring like the LP50xx where the pattern can traverse from one end of the color spectrum and back?
+>> Or in a product like the gaming keyboards that will change color or change backlight brightness?
+> 
+> This is not meant as a solution for pattern generator but for
+> consolidated source of multi color light. In the simplest case
+> RGB LED elements like those used for lp5024 reference board,
+> but it could be RGBWAUV LED [0] as well.
+> 
+> For patterns traversing many LEDs I see a trigger as the best solution.
+> Hmm, now I see that trigger mechanism actually can serve as very
+> flexible pattern generator.
+> 
+> We would need a device that could be configured to register
+> a number of multi-led-patternN triggers, one per LED, and generate
+> events for each trigger in a loop.
+> 
+> The device would have to allow for configuring pattern intervals
+> via sysfs, like in case of current pattern trigger.
+> 
+> LED class devices would have to register for its events:
+> 
+> $/sys/class/leds/led1 echo multi-led-pattern1 > trigger
+> $/sys/class/leds/led2 echo multi-led-pattern2 > trigger
+> $/sys/class/leds/led3 echo multi-led-pattern3 > trigger
+> 
+
+A bit off topic but I like the idea.  We should save this for another day
 
 
-Le jeu. 24 janv. 2019 =E0 16:28, Stephen Boyd <sboyd@kernel.org> a=20
-=E9crit :
-> Quoting Guenter Roeck (2019-01-23 10:01:55)
->>  On Wed, Jan 23, 2019 at 02:25:53PM -0300, Paul Cercueil wrote:
->>  > Hi,
->>  >
->>  > Le mer. 23 janv. 2019 =C3  11:31, Guenter Roeck=20
->> <linux@roeck-us.net> a =C3=A9crit :
->>  > >On 1/23/19 4:58 AM, Mathieu Malaterre wrote:
->>  > >>On Wed, Dec 12, 2018 at 11:09 PM Paul Cercueil=20
->> <paul@crapouillou.net>
->>  > >>wrote:
->>  > >>>
->>  > >>>From: Maarten ter Huurne <maarten@treewalker.org>
->>  > >>>
->>  > >>>OST is the OS Timer, a 64-bit timer/counter with buffered=20
->> reading.
->>  > >>>
->>  > >>>SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770=20
->> and
->>  > >>>JZ4780 have a 64-bit OST.
->>  > >>>
->>  > >>>This driver will register both a clocksource and a sched_clock=20
->> to the
->>  > >>>system.
->>  > >>>
->>  > >>>Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
->>  > >>>Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  > >>>---
->>  > >>>
->>  > >>>Notes:
->>  > >>>      v5: New patch
->>  > >>>
->>  > >>>      v6: - Get rid of SoC IDs; pass pointer to=20
->> ingenic_ost_soc_info
->>  > >>>as
->>  > >>>            devicetree match data instead.
->>  > >>>          - Use device_get_match_data() instead of the of_*=20
->> variant
->>  > >>>          - Handle error of dev_get_regmap() properly
->>  > >>>
->>  > >>>      v7: Fix section mismatch by using
->>  > >>>builtin_platform_driver_probe()
->>  > >>>
->>  > >>>      v8: builtin_platform_driver_probe() does not work=20
->> anymore in
->>  > >>>          4.20-rc6? The probe function won't be called. Work=20
->> around
->>  > >>>this
->>  > >>>          for now by using late_initcall.
->>  > >>>
->>  > >
->>  > >Did anyone notice this ? Either something is wrong with the=20
->> driver, or
->>  > >with the kernel core. Hacking around it seems like the worst=20
->> possible
->>  > >"solution".
->>  >
->>  > I can confirm it still happens on 5.0-rc3.
->>  >
->>  > Just to explain what I'm doing:
->>  >
->>  > My ingenic-timer driver probes with builtin_platform_driver_probe=20
->> (this
->>  > works),
->>  > and then calls of_platform_populate to probe its children. This=20
->> driver,
->>  > ingenic-ost, is one of them, and will fail to probe with
->>  > builtin_platform_driver_probe.
->>  >
->>=20
->>  The big question is _why_ it fails to probe.
->>=20
->=20
-> Are you sharing the device tree node between a 'normal' platform=20
-> device
-> driver and something more low level DT that marks the device's backing
-> DT node as OF_POPULATED early on? That's my only guess why it's not
-> working.
+> The ability to define brightness models in DT would
+> add even more flexibility.
+> 
 
-I do, but I clear the OF_POPULATED flag so that it is then probed as a
-normal platform device, and it's not on this driver's node but its=20
-parent.
-=
+brightness models would be mandatory to support in the driver but an optional
+DT entry.
+
+Is that a correct assumption?
+
+>> Not sure what color LEDs the keyboard manufacturers place on their keyboards but does the interface design
+>> capable of doing this?
+>>
+>> https://www.youtube.com/watch?v=pfKv3g2FeBE
+>> or something like this
+>>
+>> https://www.youtube.com/watch?v=PO3auX3f5C4
+>>
+>> The LP5036 has this capability.
+>>
+>>>    - red
+>>>    - green
+>>>    - blue
+>>>    - white
+>>>    - sync: accepts "write" and "read", which executes
+>>>            write/readout to/from a device respectively.
+>>>
+>>
+>> What are these above, the values or the files under the colors directory?
+> 
+> They are just color specific counterparts of monochrome brightness.
+> In terms of lp50xx they would map to OUTn_COLOR registers.
+> 
+>> I am assuming they are files.
+> 
+> Right.
+> 
+>> Are they mandatory or optional?
+> 
+> Mandatory, one per each iout to control.
+> 
+
+OK And all the LEDs within this directory would be considered a LED cluster?
+
+And if there are 2 like colors of the LED defined in the same cluster would we just see a single
+file and write a common value to that file and the driver would have to update each
+red LED within that cluster.  No independent control of like colored LEDs within the
+registered LED cluster.
+
+If the developer wants this level of control they would have to register two separate classes
+
+Correct?
+
+>>> brightness-model: defines brightness level to color configuration
+>>>                    mapping
+>>>    - "hardware": for devices with feature like LEDn_BRIGHTNESS of lp50xx
+>>>    - "rgb-<hue>": available only when all three red,green,blue colors
+>>>                   are present in the colors directory.
+>>>                   <hue> is a placeholder for given DT hue presets.
+>>>    - "rgbw-<hue>": Same as above, but available only when white color
+>>>                   (any of amber or white-{cool|neutral|warm} can be
+>>>                   mapped to white) is also available. In this mode
+>>>                   max_brightness equals num-of-hue-presets + 1, and
+>>>                   max_brightness, when set, turns the "white" LED on
+>>
+>> Why do we need white combined here?  Should this not be its own entity?
+> 
+> To be able to set white color. We're still talking about one LED
+> element (although they can be be physically few LEDs in one case).
+> This is brightness file, so we've got to stick to the semantics.
+> Max brightness level should be the brightest. With RGBW LEDs we
+> fortunately have a means to achieve pure white, that's why
+> rgbw-<hue> would be beneficial. If you increase L component of
+> HSL color space, the max value gives white for all hues.
+> So maybe this brightness-model would be rather called hsl-<hue>.
+> 
+> For RGBW LEDs, we would have to allow for more shades of white too,
+> like in [1].
+> 
+
+Yep.
+
+>> Again I don't like limiting the color palette from the DT.  I think that the
+>> user space can see what colors are available for that device and makes its own
+>> decision on what color to present.
+>>
+>> For the RGBw what about RGB amber and RGB purple.  Are the white LEDs always part of the
+>> same function trying to be achieved by the system designer?  The RGB can be used to denote
+>> notification status and the white can be used to denote that a charger is connected.  Motorola
+>> Droid did this.
+> 
+> I hope I've just clarified my idea.
+> 
+
+Its getting clearer.  I would like to see it in code and play with it not as a user
+but as a developer.  Make sure the paper model works as well as the real implementation.
+
+Is this model clear to the developer?
+How would a developer define what values are appropriate for the brightness-model?
+Does the driver have to become overly complex to support simple color generation?
+
+Thoughts on putting code to idea?
+
+
+>>
+>>>    - "rgb-linear": I'm not sure if it should be available - it will
+>>>                    have unpredictable results
+>>>
+>>> brightness: sets/reads brightness in the way specific to the
+>>>              current brightness-model. When more colors are available
+>>>              (e.g. amber, blue, cyan, green, red, violet, white), they
+>>>              are not touched by write to brightness).
+>>>
+>>> HSV->RGB conversion is left entirely to the userspace, which can set any
+>>> color with use of the proposed interface.
+>>>
+>>> Let's agree on sysfs interface first, and only after that move
+>>> to the DT details.
+>>>
+>>
+>> DT's are meant to describe hardware and not describe the product.  Unless Rob does not see
+>> an issue with defining product capabilities in the DT then we should keep that out of the DT.
+> 
+> LED element is a device. I see nothing irrelevant for DT in describing the lighting specificity of a device mounted on the board. Please keep
+> in mind that it will not limit the number of colors available to set.
+> It will only allow to define mapping of brightness level to color.
+> We need that for current trigger mechanism to work with LED multi-color
+> class.
+> 
+
+I see this now.
+
+Dan
+
+> [0] http://www.cobledarray.com/sale-4942931-10w-rgbwauv-led-diode-6-in-1-high-power-multicolor-led-chip.html
+> [1] https://www.youtube.com/watch?v=NzlFmTqOh9M
+> 
+
+
+-- 
+------------------
+Dan Murphy
