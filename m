@@ -1,96 +1,76 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: Re: [PATCH 1/2] kbuild: skip 'addtree' and 'flags' magic for external
- module build
-Date: Thu, 24 Jan 2019 13:28:35 +0900
-Message-ID: <CAK7LNASPGoBLqGbujYA5uvEDzLXdzU919_+jgJaD5Vwr++8tPw@mail.gmail.com>
-References: <1547607401-20118-1-git-send-email-yamada.masahiro@socionext.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH v3 1/4] dt-bindings: input: touchscreen: goodix: Document
+ AVDD28-supply property
+Date: Thu, 24 Jan 2019 10:02:50 +0530
+Message-ID: <CAMty3ZAYn=jTB_2SKYKO_7WHTCNeazytsDPVxW23DcxO7QUiEA@mail.gmail.com>
+References: <20181215151802.18592-1-jagan@amarulasolutions.com>
+ <20181215151802.18592-2-jagan@amarulasolutions.com> <20190107225810.ggmkkbrnkoy2ykx5@penguin>
+ <CAL_JsqKTnPVM7Qahy9ejQbPfENpLCdzf5K5uUTcPh8j3EiqWRA@mail.gmail.com>
+ <CAMty3ZCyq=tZMt6RC1aYJuEWgYp2zv1LBh+ZUwucE+g4RCoUaQ@mail.gmail.com>
+ <CAL_JsqKCw3EV+0_DuMiHh7GRGxv7YogQf-xwp71n9gpc2GzSSQ@mail.gmail.com> <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547607401-20118-1-git-send-email-yamada.masahiro@socionext.com>
+In-Reply-To: <CAMty3ZBtoocXBW5A0astyQPh2y7vG7NtbZ_M0BjSeex2etmGsw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
-Cc: DTML <devicetree@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+To: Rob Herring <robh@kernel.org>
+Cc: devicetree <devicetree@vger.kernel.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Chen-Yu Tsai <wens@csie.org>, linux-input@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 1:18 AM Masahiro Yamada
-<yamada.masahiro@socionext.com> wrote:
->
-> When building an external module, $(obj) is the absolute path to it.
->
-> The header search paths from ccflags-y etc. should not be tweaked.
->
-> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-> ---
++ DT ML
 
-Applied to linux-kbuild.
-
-(2/2 was discarded.)
-
-
->  scripts/Makefile.host |  6 ++++--
->  scripts/Makefile.lib  | 11 ++++++-----
->  2 files changed, 10 insertions(+), 7 deletions(-)
+On Tue, Jan 22, 2019 at 7:08 PM Jagan Teki <jagan@amarulasolutions.com> wrote:
 >
-> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
-> index 0393f75..a115259 100644
-> --- a/scripts/Makefile.host
-> +++ b/scripts/Makefile.host
-> @@ -67,13 +67,15 @@ _hostc_flags   = $(KBUILD_HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
->  _hostcxx_flags = $(KBUILD_HOSTCXXFLAGS) $(HOST_EXTRACXXFLAGS) \
->                   $(HOSTCXXFLAGS_$(basetarget).o)
+> On Mon, Jan 21, 2019 at 9:46 PM Rob Herring <robh@kernel.org> wrote:
+> >
+> > On Fri, Jan 18, 2019 at 10:01 AM Jagan Teki <jagan@amarulasolutions.com> wrote:
+> > >
+> > > On Wed, Jan 9, 2019 at 7:08 PM Rob Herring <robh@kernel.org> wrote:
+> > > >
+> > > > Please CC DT list if you want bindings reviewed.
+> > >
+> > > Sorry I forgot.
+> > >
+> > > >
+> > > > On Wed, Jan 9, 2019 at 1:40 AM Dmitry Torokhov
+> > > > <dmitry.torokhov@gmail.com> wrote:
+> > > > >
+> > > > > On Sat, Dec 15, 2018 at 08:47:59PM +0530, Jagan Teki wrote:
+> > > > > > Most of the Goodix CTP controllers are supply with AVDD28 pin.
+> > > > > > which need to supply for controllers like GT5663 on some boards
+> > > > > > to trigger the power.
+> > > > > >
+> > > > > > So, document the supply property so-that the require boards
+> > > > > > that used on GT5663 can enable it via device tree.
+> > > > > >
+> > > > > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > > > > ---
+> > > > > >  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+> > > > > >  1 file changed, 1 insertion(+)
+> > > > > >
+> > > > > > diff --git a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > index f7e95c52f3c7..c4622c983e08 100644
+> > > > > > --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> > > > > > @@ -23,6 +23,7 @@ Optional properties:
+> > > > > >   - touchscreen-inverted-y  : Y axis is inverted (boolean)
+> > > > > >   - touchscreen-swapped-x-y : X and Y axis are swapped (boolean)
+> > > > > >                               (swapping is done after inverting the axis)
+> > > > > > + - AVDD28-supply     : Analog power supply regulator on AVDD28 pin
+> > > > >
+> > > > > I think we normally use lower case in DT bindings and rarely encode
+> > > > > voltage in the supply name unless we are dealing with several supplies
+> > > > > of the same kind, but I'll let Ron comment on this.
+> > > >
+> > > > Yes on lowercase though there are some exceptions.
+> > > >
+> > > > There's also a AVDD22 supply as well as DVDD12 and VDDIO. So we
+> > > > probably need to keep the voltage, but the binding is incomplete.
+> > >
+> > > What is incomplete here? can you please elaborate.
+> >
+> > You are missing the 3 other supplies the chip has: AVDD22, DVDD12 and VDDIO.
 >
-> -ifeq ($(KBUILD_SRC),)
->  __hostc_flags  = $(_hostc_flags)
->  __hostcxx_flags        = $(_hostcxx_flags)
-> -else
-> +
-> +ifeq ($(KBUILD_EXTMOD),)
-> +ifneq ($(KBUILD_SRC),)
->  __hostc_flags  = -I$(obj) $(call flags,_hostc_flags)
->  __hostcxx_flags        = -I$(obj) $(call flags,_hostcxx_flags)
->  endif
-> +endif
->
->  hostc_flags    = -Wp,-MD,$(depfile) $(__hostc_flags)
->  hostcxx_flags  = -Wp,-MD,$(depfile) $(__hostcxx_flags)
-> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
-> index 12b88d0..ecad15b 100644
-> --- a/scripts/Makefile.lib
-> +++ b/scripts/Makefile.lib
-> @@ -137,14 +137,14 @@ _c_flags += $(if $(patsubst n%,, \
->         $(CFLAGS_KCOV))
->  endif
->
-> -# If building the kernel in a separate objtree expand all occurrences
-> -# of -Idir to -I$(srctree)/dir except for absolute paths (starting with '/').
-> -
-> -ifeq ($(KBUILD_SRC),)
->  __c_flags      = $(_c_flags)
->  __a_flags      = $(_a_flags)
->  __cpp_flags     = $(_cpp_flags)
-> -else
-> +
-> +# If building the kernel in a separate objtree expand all occurrences
-> +# of -Idir to -I$(srctree)/dir except for absolute paths (starting with '/').
-> +ifeq ($(KBUILD_EXTMOD),)
-> +ifneq ($(KBUILD_SRC),)
->
->  # -I$(obj) locates generated .h files
->  # $(call addtree,-I$(obj)) locates .h files in srctree, from generated .c files
-> @@ -155,6 +155,7 @@ __c_flags   = $(if $(obj),$(call addtree,-I$(src)) -I$(obj)) \
->  __a_flags      = $(call flags,_a_flags)
->  __cpp_flags     = $(call flags,_cpp_flags)
->  endif
-> +endif
->
->  c_flags        = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)     \
->                  -include $(srctree)/include/linux/compiler_types.h       \
-> --
-> 2.7.4
->
-
-
--- 
-Best Regards
-Masahiro Yamada
+> Though it has other supplies, only AVDD28 is connected in the Host
+> interface design similar like 9. Reference Schematic on Page, 23 in
+> attached manual.
