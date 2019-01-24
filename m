@@ -1,127 +1,148 @@
-From: Liming Sun <lsun@mellanox.com>
-Subject: RE: [PATCH v4 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox
- BlueField SoC
-Date: Thu, 24 Jan 2019 15:07:45 +0000
-Message-ID: <DB6PR05MB3223E186F175CB50D7F03A0FA19A0@DB6PR05MB3223.eurprd05.prod.outlook.com>
-References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
- <1540403734-137721-1-git-send-email-lsun@mellanox.com>
- <1540403734-137721-3-git-send-email-lsun@mellanox.com>
- <CAK8P3a1K7BjgZRyBMKFrqWfcr-Bb3HQus+QE7qTpd27voE9e0A@mail.gmail.com>
- <AM4PR05MB3220F4E5EEB673F0CC97C11DA1F00@AM4PR05MB3220.eurprd05.prod.outlook.com>
- <CAK8P3a21y1jm+1aZ8is7Rp=Re++BxL3mJM-Zj=_3c-Lq4y_Few@mail.gmail.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [Linux-stm32] [PATCH V3 1/2] mmc: mmci: add variant property to
+ set command stop bit
+Date: Thu, 24 Jan 2019 16:12:35 +0100
+Message-ID: <CAPDyKFp+3E35KXVCACO3-6JcRyqdsNGJ-5mAEKmUK0nggGs9nQ@mail.gmail.com>
+References: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com>
+ <1544109212-12621-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFq7TZMKWMqmoDR0yfr2N2cf2nr4-BuEs5DPgJSGy-nvAA@mail.gmail.com>
+ <35f22c1a-888d-5abd-7ffe-ecf47a74b69a@st.com> <9e22fd3d-f029-2a2a-18d1-af1987c94e4e@st.com>
+ <ab4cae87-0a5a-fe22-08ab-7c7661be7c8c@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <CAK8P3a21y1jm+1aZ8is7Rp=Re++BxL3mJM-Zj=_3c-Lq4y_Few@mail.gmail.com>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Arnd Bergmann <arnd@arndb.de>
-Cc: DTML <devicetree@vger.kernel.org>, David Woods <dwoods@mellanox.com>, Vadim Pasternak <vadimp@mellanox.com>, arm-soc <arm@kernel.org>, Andy Shevchenko <andy@infradead.org>, Olof Johansson <olof@lixom.net>, Darren Hart <dvhart@infradead.org>, Robin Murphy <robin.murphy@arm.com>, Linux ARM <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <ab4cae87-0a5a-fe22-08ab-7c7661be7c8c@st.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Ludovic BARRE <ludovic.barre@st.com>
+Cc: DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Arnd,
+On Thu, 24 Jan 2019 at 16:03, Ludovic BARRE <ludovic.barre@st.com> wrote:
+>
+> hi Ulf
+>
+> I don't think you've seen my previous mail :-(
+> what is your feeling about "mmc: mmci: send stop command to clear the dpsm"
 
-According to the emails and discussions I saw recently, I think that your comments "Finally, drivers/platform/mellanox might be a reasonable choice, and it would let you keep both sides of the driver in one place." does make more sense.
+Apologize for the delay. I wanted to check this in detail so I applied
+your patch locally and started to play/test it.
 
-I'll try to resubmit the changes under the drivers/platform/mellanox directory.
+However, a couple of other regressions was reported for v5.0 rcs, so I
+got sidetracked.
 
-Thanks!
-Liming
+Back on track by now, so I will have look asap. Thanks for pinging me!
 
-> -----Original Message-----
-> From: Arnd Bergmann <arnd@arndb.de>
-> Sent: Friday, October 26, 2018 4:34 PM
-> To: Liming Sun <lsun@mellanox.com>
-> Cc: Olof Johansson <olof@lixom.net>; David Woods <dwoods@mellanox.com>; Robin Murphy <robin.murphy@arm.com>; arm-soc
-> <arm@kernel.org>; DTML <devicetree@vger.kernel.org>; Linux ARM <linux-arm-kernel@lists.infradead.org>
-> Subject: Re: [PATCH v4 3/4] dt-bindings: soc: Add TmFifo binding for Mellanox BlueField SoC
-> 
-> On Fri, Oct 26, 2018 at 9:36 PM Liming Sun <lsun@mellanox.com> wrote:
-> > > -----Original Message-----
-> > > From: arndbergmann@gmail.com [mailto:arndbergmann@gmail.com] On
-> > > > --- /dev/null
-> > > > +++ b/Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
-> > > > @@ -0,0 +1,23 @@
-> > > > +* Mellanox BlueField SoC TmFifo
-> > > > +
-> > > > +BlueField TmFifo provides a shared FIFO between the target and the
-> > > > +external host machine, which can be accessed by external host via
-> > > > +USB or PCIe. In the current tmfifo driver, this FIFO has been demuxed
-> > > > +to implement virtual console and network interface based on the virtio
-> > > > +framework.
-> > > > +
-> > > > +Required properties:
-> > > > +
-> > > > +- compatible:      Should be "mellanox,bf-tmfifo"
-> > > > +- reg:             Physical base address and length of Rx/Tx block
-> > > > +- interrupts:      The interrupt number of Rx low water mark, Rx high water
-> > > > mark
-> > > > +           Tx low water mark, Tx high water mark respectively.
-> > >
-> > >
-> > > This sounds like it might fit into the mailbox subsystem, and perhaps
-> > > it should use the mailbox DT bindings. Have you had a look at that?
+Kind regards
+Uffe
+
+>
+> Regards
+> Ludo
+>
+> On 1/3/19 11:35 AM, Ludovic BARRE wrote:
+> > hi Ulf
 > >
-> > This commit of dt-bindings is mainly to solve the warning of checkpatch.pl.
-> > Like the response to patch 2/4, ACPI is actually used now instead of device tree.
-> > The TMFIFO definition in the ACPI DSDT table would be something like below.
+> > happy new years.
 > >
-> >     // RShim TMFIFO
-> >     Device(RSH0) {
-> >       Name(_HID, "MLNXBF01")
-> >       Name(_UID, Zero)
-> >       Name(_CCA, 1)
-> >       Name(_CRS, ResourceTemplate() {
-> >         Memory32Fixed(ReadWrite, 0x00800a20, 0x00000018)
-> >         Memory32Fixed(ReadWrite, 0x00800a40, 0x00000018)
-> >         Interrupt(ResourceConsumer, Edge, ActiveHigh, Exclusive)
-> >           { BF1_RSH0_TM_HTT_LWM_INT,
-> >             BF1_RSH0_TM_HTT_HWM_INT,
-> >             BF1_RSH0_TM_TTH_LWM_INT,
-> >             BF1_RSH0_TM_TTH_HWM_INT
-> >           }
-> >       })
-> >     }
+> > Just a gentleman ping about patch2 of this series
+> > "mmc: mmci: send stop command to clear the dpsm."
 > >
-> > Any suggestion how it should be added into Linux Documentation, or maybe I
-> > should just remove this commit from this patch series?
-> 
-> Maybe the best way here would be to not use ACPI for the case
-> where bluefin is integrated into a PCIe endpoint, since ACPI is
-> not as flexible here and generally relies on having an SBSA
-> compliant hardware that you no longer have if you require
-> random platform devices for booting from and for your console.
-> 
-> For the case where a bluefin SoC is used in a standalone system,
-> having ACPI makes more sense, as that lets you install Red Hat
-> Linux or other operating systems that rely on SBBR and SBSA.
-> 
-> > As for the sub-component of this driver, the "soc" might be better fit than the mailbox
-> > for some reasons. It's a communication between extern machines and the SoC via
-> > USB / PCIe,  like pushing boot stream, console and network mgmt. Some of the features,
-> > like pushing boot stream, doesn't communicate with the ARM core. The boot stream
-> > is pushed to the SoC HW logic directly. I'll add the host-side virtio-based driver in patch v5.
-> 
-> Right, the drivers/mailbox subsystem was not the right idea here,
-> I noticed that myself after actually reading the driver. Drivers/soc
-> may also not be the best fit, since this is not really about it being
-> a SoC, but rather a way to encapsulate virtual devices. The
-> mic driver I mentioned is in drivers/misc, but I don't like to add stuff
-> there if we can avoid it.
-> 
-> drivers/virtio, drivers/bus or drivers/mfd might also be an option that
-> could fit better than drivers/soc, or you could have your own subdir
-> below drivers/ as some others do. Finally, drivers/platform/mellanox
-> might be a reasonable choice, and it would let you keep both sides
-> of the driver in one place.
-> 
->        Arnd
+> > Regards
+> > Ludo
+> >
+> > On 12/11/18 10:53 AM, Ludovic BARRE wrote:
+> >>
+> >>
+> >> On 12/11/18 10:47 AM, Ulf Hansson wrote:
+> >>> On Thu, 6 Dec 2018 at 16:13, Ludovic Barre <ludovic.Barre@st.com> wrote:
+> >>>>
+> >>>> From: Ludovic Barre <ludovic.barre@st.com>
+> >>>>
+> >>>> On cmd12 (STOP_TRANSMISSION), STM32 sdmmc variant needs to set
+> >>>> cmdstop bit in command register. The CPSM ("Command Path State
+> >>>> Machine")
+> >>>> treats the command as a Stop Transmission command and signals
+> >>>> abort to the DPSM ("Data Path State Machine").
+> >>>>
+> >>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+> >>>
+> >>> Applied for next, thanks!
+> >>
+> >> thanks
+> >>
+> >>>
+> >>> Withholding patch2 for a while, as I need some more time to review it.
+> >>
+> >> No problem,
+> >>
+> >> Regards
+> >> Ludo
+> >>
+> >>>
+> >>> Kind regards
+> >>> Uffe
+> >>>
+> >>>> ---
+> >>>>   drivers/mmc/host/mmci.c | 6 ++++++
+> >>>>   drivers/mmc/host/mmci.h | 2 ++
+> >>>>   2 files changed, 8 insertions(+)
+> >>>>
+> >>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+> >>>> index 13fa640..e352f5a 100644
+> >>>> --- a/drivers/mmc/host/mmci.c
+> >>>> +++ b/drivers/mmc/host/mmci.c
+> >>>> @@ -21,6 +21,7 @@
+> >>>>   #include <linux/err.h>
+> >>>>   #include <linux/highmem.h>
+> >>>>   #include <linux/log2.h>
+> >>>> +#include <linux/mmc/mmc.h>
+> >>>>   #include <linux/mmc/pm.h>
+> >>>>   #include <linux/mmc/host.h>
+> >>>>   #include <linux/mmc/card.h>
+> >>>> @@ -274,6 +275,7 @@ static struct variant_data variant_stm32_sdmmc = {
+> >>>>          .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
+> >>>>          .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
+> >>>>          .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
+> >>>> +       .cmdreg_stop            = MCI_CPSM_STM32_CMDSTOP,
+> >>>>          .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
+> >>>>          .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
+> >>>>          .datactrl_first         = true,
+> >>>> @@ -1100,6 +1102,10 @@ mmci_start_command(struct mmci_host *host,
+> >>>> struct mmc_command *cmd, u32 c)
+> >>>>                  mmci_reg_delay(host);
+> >>>>          }
+> >>>>
+> >>>> +       if (host->variant->cmdreg_stop &&
+> >>>> +           cmd->opcode == MMC_STOP_TRANSMISSION)
+> >>>> +               c |= host->variant->cmdreg_stop;
+> >>>> +
+> >>>>          c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
+> >>>>          if (cmd->flags & MMC_RSP_PRESENT) {
+> >>>>                  if (cmd->flags & MMC_RSP_136)
+> >>>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+> >>>> index 550dd39..2422909 100644
+> >>>> --- a/drivers/mmc/host/mmci.h
+> >>>> +++ b/drivers/mmc/host/mmci.h
+> >>>> @@ -264,6 +264,7 @@ struct mmci_host;
+> >>>>    * @cmdreg_lrsp_crc: enable value for long response with crc
+> >>>>    * @cmdreg_srsp_crc: enable value for short response with crc
+> >>>>    * @cmdreg_srsp: enable value for short response without crc
+> >>>> + * @cmdreg_stop: enable value for stop and abort transmission
+> >>>>    * @datalength_bits: number of bits in the MMCIDATALENGTH register
+> >>>>    * @fifosize: number of bytes that can be written when
+> >>>> MMCI_TXFIFOEMPTY
+> >>>>    *           is asserted (likewise for RX)
+> >>>> @@ -316,6 +317,7 @@ struct variant_data {
+> >>>>          unsigned int            cmdreg_lrsp_crc;
+> >>>>          unsigned int            cmdreg_srsp_crc;
+> >>>>          unsigned int            cmdreg_srsp;
+> >>>> +       unsigned int            cmdreg_stop;
+> >>>>          unsigned int            datalength_bits;
+> >>>>          unsigned int            fifosize;
+> >>>>          unsigned int            fifohalfsize;
+> >>>> --
+> >>>> 2.7.4
+> >>>>
+> > _______________________________________________
+> > Linux-stm32 mailing list
+> > Linux-stm32@st-md-mailman.stormreply.com
+> > https://st-md-mailman.stormreply.com/mailman/listinfo/linux-stm32
