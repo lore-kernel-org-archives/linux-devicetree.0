@@ -1,147 +1,97 @@
 From: Ben Whitten <ben.whitten@gmail.com>
-Subject: [PATCH v3 lora-next 1/4] dt-bindings: lora: sx130x: add basic documentation
-Date: Thu, 24 Jan 2019 14:53:06 +0000
-Message-ID: <20190124145309.21698-2-ben.whitten@lairdtech.com>
+Subject: [PATCH v3 lora-next 3/4] dt-bindings: lora: sx125x: add clock bindings
+Date: Thu, 24 Jan 2019 14:53:08 +0000
+Message-ID: <20190124145309.21698-4-ben.whitten@lairdtech.com>
 References: <20190124145309.21698-1-ben.whitten@lairdtech.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 In-Reply-To: <20190124145309.21698-1-ben.whitten@lairdtech.com>
-Sender: linux-kernel-owner@vger.kernel.org
+Sender: netdev-owner@vger.kernel.org
 To: afaerber@suse.de
 Cc: davem@davemloft.net, robh+dt@kernel.org, mark.rutland@arm.com, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Ben Whitten <ben.whitten@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
 From: Ben Whitten <ben.whitten@gmail.com>
 
-Add basic documentation in YAML format for the SX130x series concentrators
-from Semtech.
-Required is; the location on the SPI bus and the compatible string.
+The SX125x consumes a clock (FXOSC) ranging from 32 to 36 MHz as its main
+XTAL. It may also consume a clock for the TX synthesizer or DAC input clock
+(FCLK_IN).
+If the radio is coupled with an SX130x the radio is therefor operating in
+master mode and it may also provide a gated version of FXOSC clock for the
+concentrator. In this case the concentrator is expecting a 32 MHz input
+clock.
+
+In the example we connect fxosc to the "txco" clock source, represented by a
+fixed clock. The radio also provides a clock output "fclk_out" for
+consumption by the SX130x concentrator.
 
 Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
 ---
 v2 -> v3:
-* Corrected fallback notation
-* Limited radio node names from anything to 'radio@'
+* Name clock inputs and outputs
+* Add FCLK_IN
 v1 -> v2:
-* Dropped reset-gpios, radio-spi from required.
-* Dropped spi-max-frequency from binding.
-* Changed compatible to allow fallback from SX1308 to SX1301.
-* Wording changes in commit and descriptions.
-* Dual licence
-* Incorperate Robs comments on child node and spi wrapper
+* Fixed incorrect usage of clock cells
+* Fixed wording in commit and descriptions
+* Dropped enforced clock names
 ---
- .../bindings/net/lora/semtech,sx130x.yaml     | 101 ++++++++++++++++++
- 1 file changed, 101 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
+ .../bindings/net/lora/semtech,sx125x.yaml     | 33 +++++++++++++++++++
+ 1 file changed, 33 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-new file mode 100644
-index 000000000000..24fad1218735
---- /dev/null
-+++ b/Documentation/devicetree/bindings/net/lora/semtech,sx130x.yaml
-@@ -0,0 +1,101 @@
-+# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-+%YAML 1.2
-+---
-+$id: http://devicetree.org/schemas/net/lora/semtech,sx130x.yaml#
-+$schema: http://devicetree.org/meta-schemas/core.yaml#
+diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+index fe2d2a23c28b..be45bcfd97be 100644
+--- a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
++++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
+@@ -27,12 +27,41 @@ properties:
+     description: The chip select on the SPI bus or radio number in concentrator
+       , with radio A = 0 and radio B = 1.
+ 
++  clocks:
++    maxItems: 2
++    description: Input clock (FXOSC) provider with output ranging from 32 MHz
++      to 36 MHz. TX synthesizer or DAC input clock (FCLK_IN) provider with
++      output ranging from 32 MHz to 36 MHz.
 +
-+title: Semtech LoRa concentrator
++  clock-names:
++    items:
++      - const: fxosc
++      - const: fclk_in
++    description: Input clock (FXOSC), TX synthesizer or DAC input clock
++      (FCLK_IN)
 +
-+maintainers:
-+  - Andreas Färber <afaerber@suse.de>
-+  - Ben Whitten <ben.whitten@gmail.com>
++  clock-output-names:
++    items:
++      - const: fclk_out
++    description: Output clock (FCLK_OUT) name, clock is gated version of the
++      input (FXOSC). Used in master mode operation.
 +
-+description: |
-+  Semtech LoRa concentrator SX130x digital baseband chip is capable of
-+  demodulating LoRa signals on 8 channels simultaneously.
++  '#clock-cells':
++    const: 0
 +
-+  It is typically paired with two SX125x IQ radios controlled over an
-+  SPI directly from the concentrator.
-+
-+  The concentrator itself is controlled over SPI.
-+
-+properties:
-+  compatible:
-+    oneOf:
-+      - items:
-+        - enum:
-+          - semtech,sx1308
-+        - const: semtech,sx1301
-+      - items:
-+        - const: semtech,sx1301
-+
-+  reg:
-+    maxItems: 1
-+    description: The chip select on the SPI bus.
-+
-+  reset-gpios:
-+    maxItems: 1
-+    description: A connection of the reset gpio line.
-+
-+  radio-spi:
-+    type: object
-+    description: The concentrator can have two radios connected which are
-+      contained within the following node.
-+
-+    properties:
-+      '#address-cells':
-+        const: 1
-+
-+      '#size-cells':
-+        const: 0
-+
-+    patternProperties:
-+      "^radio@[0-1]$":
-+        type: object
-+        properties:
-+          reg:
-+            maxItems: 1
-+            minimum: 0
-+            maximum: 1
-+        required:
-+          - reg
-+
-+    required:
-+      - '#address-cells'
-+      - '#size-cells'
-+
-+required:
-+  - compatible
-+  - reg
-+
-+examples:
-+  - |
-+
-+    #include <dt-bindings/gpio/gpio.h>
-+
-+    spi {
-+      #address-cells = <1>;
-+      #size-cells = <0>;
-+
-+      concentrator0: lora@0 {
-+        compatible = "semtech,sx1301";
-+        reg = <0>;
-+        reset-gpios = <&pioB 27 GPIO_ACTIVE_HIGH>;
-+        spi-max-frequency = <8000000>;
-+
-+        radio-spi {
-+          #address-cells = <1>;
-+          #size-cells = <0>;
-+
-+          radio0: radio@0 {
-+            compatible = "semtech,sx1257";
-+            reg = <0>;
-+          };
-+
-+          radio1: radio@1 {
-+            compatible = "semtech,sx1257";
-+            reg = <1>;
-+          };
-+        };
-+      };
+ required:
+   - compatible
+   - reg
+ 
+ examples:
+   - |
++    tcxo: dummy32m {
++      compatible = "fixed-clock";
++      clock-frequency = <32000000>;
++      clock-output-names = "tcxo";
++      #clock-cells = <0>;
 +    };
++
+     spi {
+       #address-cells = <1>;
+       #size-cells = <0>;
+@@ -40,5 +69,9 @@ examples:
+       radio0: radio@0 {
+         compatible = "semtech,sx1257";
+         reg = <0>;
++        clocks = <&tcxo>;
++        clock-names = "fxosc";
++        clock-output-names = "fclk_out";
++        #clock-cells = <0>;
+       };
+     };
 -- 
 2.17.1
