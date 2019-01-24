@@ -1,7 +1,7 @@
 From: Michael Ellerman <patch-notifications@ellerman.id.au>
 Subject: Re: [1/2] powerpc: wii.dts: Add interrupt-related properties to GPIO node
-Date: Thu, 24 Jan 2019 14:40:26 +1100 (AEDT)
-Message-ID: <43lSbb0ffyz9sNM@ozlabs.org>
+Date: Thu, 24 Jan 2019 14:40:27 +1100 (AEDT)
+Message-ID: <43lSbc47L8z9sBn@ozlabs.org>
 References: <20190112162124.3341-2-j.neuschaefer@gmx.net>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190112162124.3341-2-j.neuschaefer@gmx.net>
@@ -20,6 +20,6 @@ On Sat, 2019-01-12 at 16:21:23 UTC, =?utf-8?q?Jonathan_Neusch=C3=A4fer?= wrote:
 
 Applied to powerpc next, thanks.
 
-https://git.kernel.org/powerpc/c/8de7547e03059281fda075355c114694
+https://git.kernel.org/powerpc/c/f4ddc19a711736eb54fb8259499faf5a
 
 cheers
