@@ -1,317 +1,102 @@
-From: Georgi Djakov <georgi.djakov@linaro.org>
-Subject: Re: [<PATCH v1> 1/1] scsi: qcom-ufs: Add support for bus voting using
- ICB framework
-Date: Thu, 24 Jan 2019 13:46:22 +0200
-Message-ID: <e91d4007-edab-da66-e241-bdf55bcf58aa@linaro.org>
-References: <cover.1548312692.git.asutoshd@codeaurora.org>
- <d6aa4d9bd29bbb2c3ee78e6635d4704e4113a26e.1548312692.git.asutoshd@codeaurora.org>
+From: Sekhar Nori <nsekhar@ti.com>
+Subject: Re: [PATCH 02/17] clocksource: davinci-timer: new driver
+Date: Thu, 24 Jan 2019 17:39:19 +0530
+Message-ID: <06da1719-26d6-19b0-97f5-ef4bb976e444@ti.com>
+References: <20190111172134.30147-1-brgl@bgdev.pl>
+ <20190111172134.30147-3-brgl@bgdev.pl>
+ <08200de1-fde5-c525-c874-c7872259067b@ti.com>
+ <CAMRc=McrT4KTW45=3CTBxspVb+z8k=DDjOvKi9NH0aA9eJ8=cQ@mail.gmail.com>
+ <a7d4994d-7740-c845-da67-9d06e6d874cc@ti.com>
+ <d9bc1153-3b65-19a8-67ef-e131296cd8b1@ti.com>
+ <CAMRc=McPCJxd7i7Ei+xOKOXYhYZgC=MYYFwyn2zAjStQov91fw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <d6aa4d9bd29bbb2c3ee78e6635d4704e4113a26e.1548312692.git.asutoshd@codeaurora.org>
+In-Reply-To: <CAMRc=McPCJxd7i7Ei+xOKOXYhYZgC=MYYFwyn2zAjStQov91fw@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Asutosh Das <asutoshd@codeaurora.org>, subhashj@codeaurora.org, cang@codeaurora.org, vivek.gautam@codeaurora.org, rnayak@codeaurora.org, vinholikatti@gmail.com, jejb@linux.vnet.ibm.com, martin.petersen@oracle.com, linux-scsi@vger.kernel.org
-Cc: linux-arm-msm@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, open list <linux-kernel@vger.kernel.org>
+To: Bartosz Golaszewski <brgl@bgdev.pl>
+Cc: Kevin Hilman <khilman@kernel.org>, Daniel Lezcano <daniel.lezcano@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Linux ARM <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>, Bartosz Golaszewski <bgolaszewski@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Asutosh,
-
-Thanks for the patch!
-
-On 1/24/19 09:01, Asutosh Das wrote:
-> Adapt to the new ICB framework for bus bandwidth voting.
-
-It's actually called interconnect API or interconnect framework.
-
-> This requires the source/destination port ids.
-> Also this requires a tuple of values.
+On 17/01/19 7:31 PM, Bartosz Golaszewski wrote:
+> czw., 17 sty 2019 o 13:42 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>
+>> On 16/01/19 2:48 PM, Sekhar Nori wrote:
+>>> On 14/01/19 10:09 PM, Bartosz Golaszewski wrote:
+>>>> pon., 14 sty 2019 o 13:20 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>>>>
+>>>>> Hi Bartosz,
+>>>>>
+>>>>> On 11/01/19 10:51 PM, Bartosz Golaszewski wrote:
+>>>>>> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>>>
+>>>>>> Currently the clocksource and clockevent support for davinci platforms
+>>>>>> lives in mach-davinci. It hard-codes many things, used global variables,
+>>>>>> implements functionalities unused by any platform and has code fragments
+>>>>>> scattered across many (often unrelated) files.
+>>>>>>
+>>>>>> Implement a new, modern and simplified timer driver and put it into
+>>>>>> drivers/clocksource. We still need to support legacy board files so
+>>>>>> export a config structure and a function that allows machine code to
+>>>>>> register the timer.
+>>>>>>
+>>>>>> We don't check the return values of regmap reads and writes since with
+>>>>>> mmio it's only likely to fail due to programmer's errors.
+>>>>>>
+>>>>>> We also don't bother freeing resources on errors in
+>>>>>> davinci_timer_register() as the system won't boot without a timer anyway.
+>>>>>>
+>>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>>
+>>>>> With this series, DA830 fails to boot. Rest of the devices are okay from
+>>>>> boot perspective.
+>>>>>
+>>>>> DA830 is pretty unique because it uses the same timer-half for both
+>>>>> clocksource and clockevent. May be you can set the same configuration on
+>>>>> your DA850 to see the same issue? Else, I will enable low-level debug
+>>>>> and try to provide more debug data.
+>>>>>
+>>>>
+>>>> I can't boot da850 with the same config as da830 (0x60 compare
+>>>> register, compare irq 74) even with the old timer code. Just to make
+>>>> sure: does da830 boot fine with mainline v5.0-rc2?
+>>>
+>>> Yeah, I did check that without the patch DA830 does boot.
+>>
+>> You are right that DA850 lacks compare interrupts for timers 0 and 1.
+>> So, yes, it seems like we will have to shift to timer2 to test
+>> compare interrupts on DA850.
+>>
 > 
-> The tuple is for two different paths - from UFS master
-> to BIMC slave. The other is from CPU master to UFS slave.
-> This tuple consists of the average and peak bandwidth.
+> Timers 2 and 3 are a bit different on da850 - for instance they don't
+> have separate interrupts for bottom and top halfs.
+
+We should only be using the compare feature which has a a separate
+interrupt (distinct from top and bottom half interrupts). Only timer 2
+and 3 of DA850 have the compare interrupts though. So you will have to
+use those timers to be able to test compare feature on DA850.
+
 > 
-> Signed-off-by: Asutosh Das <asutoshd@codeaurora.org>
-> ---
+> I configured the old code to use timer 2 - bottom half only with
+> compare register 0x60 and compare intterupt 74. It boots although very
+> slowly and something's broken with timekeeping as the clock goes
+> backwards and forward (seemingly) randomly.
 
-You can put here (below the --- line) the text from the cover letter.
-Usually people do not add separate cover letters for single patches.
+Ah, okay. Timer 2/3 use ASYNC3 as clock input instead of PLL0_AUXCLK.
+Did you make adjustment for this too?
 
->  .../devicetree/bindings/ufs/ufshcd-pltfrm.txt      |  12 ++
->  drivers/scsi/ufs/ufs-qcom.c                        | 234 ++++++++++++++++-----
->  drivers/scsi/ufs/ufs-qcom.h                        |  20 ++
->  3 files changed, 218 insertions(+), 48 deletions(-)
 > 
-> diff --git a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> index a99ed55..94249ef 100644
-> --- a/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> +++ b/Documentation/devicetree/bindings/ufs/ufshcd-pltfrm.txt
-> @@ -45,6 +45,18 @@ Optional properties:
->  Note: If above properties are not defined it can be assumed that the supply
->  regulators or clocks are always on.
->  
-> +* Following bus parameters are required:
-> +interconnects
-> +interconnect-names
+> Kevin has an OMAP-L137 starter kit - is this the same as da830-evm? If
 
-Is the above really required? Are the interconnect bandwidth requests
-required to enable something critical to UFS functionality?
-Would UFS still work without any bandwidth scaling, although for example
-slower? Could you please clarify.
+Yes.
 
-> +- Please refer to Documentation/devicetree/bindings/interconnect/
-> +  for more details on the above.
-> +qcom,msm-bus,name - string describing the bus path
-> +qcom,msm-bus,num-cases - number of configurations in which ufs can operate in
-> +qcom,msm-bus,num-paths - number of paths to vote for
-> +qcom,msm-bus,vectors-KBps - Takes a tuple <ib ab>, <ib ab> (2 tuples for 2 num-paths)
-> +			    The number of these entries *must* be same as
-> +			    num-cases.
+> so, then I can get remote access to it and work on this problem.
+> Otherwise, I can prepare something that works on da850 with broken
+> timekeeping and let you see if it works correctly on da830.
 
-DT bindings should be submitted as a separate patch. Anyway, people
-frown upon putting configuration data in DT. Could we put this data into
-the driver as a static table instead of DT? Also maybe use ab/pb for
-average/peak bandwidth.
-
-> +
->  Example:
->  	ufshc@0xfc598000 {
->  		compatible = "jedec,ufs-1.1";
-> diff --git a/drivers/scsi/ufs/ufs-qcom.c b/drivers/scsi/ufs/ufs-qcom.c
-> index 2b38db2..213e975 100644
-> --- a/drivers/scsi/ufs/ufs-qcom.c
-> +++ b/drivers/scsi/ufs/ufs-qcom.c
-> @@ -16,6 +16,7 @@
->  #include <linux/of.h>
->  #include <linux/platform_device.h>
->  #include <linux/phy/phy.h>
-> +#include <linux/interconnect.h>
->  #include <linux/phy/phy-qcom-ufs.h>
-
-Alphabetical order?
-
->  
->  #include "ufshcd.h"
-> @@ -27,6 +28,10 @@
->  #define UFS_QCOM_DEFAULT_DBG_PRINT_EN	\
->  	(UFS_QCOM_DBG_PRINT_REGS_EN | UFS_QCOM_DBG_PRINT_TEST_BUS_EN)
->  
-> +#define UFS_DDR "ufs-ddr"
-> +#define CPU_UFS "cpu-ufs"
-
-Not sure if it's really useful to have them as #defines. Also maybe use
-"ufs-mem" instead of "ufs-ddr" to be more consistent with other users.
-
-> +
-> +
->  enum {
->  	TSTBUS_UAWM,
->  	TSTBUS_UARM,
-> @@ -714,7 +719,6 @@ static int ufs_qcom_get_pwr_dev_param(struct ufs_qcom_dev_params *qcom_param,
->  	return 0;
->  }
->  
-> -#ifdef CONFIG_MSM_BUS_SCALING
->  static int ufs_qcom_get_bus_vote(struct ufs_qcom_host *host,
->  		const char *speed_mode)
->  {
-> @@ -768,24 +772,83 @@ static void ufs_qcom_get_speed_mode(struct ufs_pa_layer_attr *p, char *result)
->  	}
->  }
->  
-> +static int ufs_qcom_get_ib_ab(struct ufs_qcom_host *host, int index,
-> +			      struct qcom_bus_vectors *ufs_ddr_vec,
-> +			      struct qcom_bus_vectors *cpu_ufs_vec)
-> +{
-> +	struct qcom_bus_path *usecase;
-> +
-> +	if (!host->qbsd)
-> +		return -EINVAL;
-> +
-> +	if (index > host->qbsd->num_usecase)
-> +		return -EINVAL;
-> +
-> +	usecase = host->qbsd->usecase;
-> +
-> +	/*
-> +	 *
-> +	 * usecase:0  usecase:0
-> +	 * ufs->ddr   cpu->ufs
-> +	 * |vec[0&1] | vec[2&3]|
-> +	 * +----+----+----+----+
-> +	 * | ab | ib | ab | ib |
-> +	 * |----+----+----+----+
-> +	 * .
-> +	 * .
-> +	 * .
-> +	 * usecase:n  usecase:n
-> +	 * ufs->ddr   cpu->ufs
-> +	 * |vec[0&1] | vec[2&3]|
-> +	 * +----+----+----+----+
-> +	 * | ab | ib | ab | ib |
-> +	 * |----+----+----+----+
-> +	 */
-> +
-> +	/* index refers to offset in usecase */
-> +	ufs_ddr_vec->ab = usecase[index].vec[0].ab;
-> +	ufs_ddr_vec->ib = usecase[index].vec[0].ib;
-> +
-> +	cpu_ufs_vec->ab = usecase[index].vec[1].ab;
-> +	cpu_ufs_vec->ib = usecase[index].vec[1].ib;
-> +
-> +	return 0;
-> +}
-> +
->  static int ufs_qcom_set_bus_vote(struct ufs_qcom_host *host, int vote)
->  {
->  	int err = 0;
-> +	struct qcom_bus_scale_data *d = host->qbsd;
-> +	struct qcom_bus_vectors path0, path1;
-> +	struct device *dev = host->hba->dev;
->  
-> -	if (vote != host->bus_vote.curr_vote) {
-> -		err = msm_bus_scale_client_update_request(
-> -				host->bus_vote.client_handle, vote);
-> -		if (err) {
-> -			dev_err(host->hba->dev,
-> -				"%s: msm_bus_scale_client_update_request() failed: bus_client_handle=0x%x, vote=%d, err=%d\n",
-> -				__func__, host->bus_vote.client_handle,
-> -				vote, err);
-> -			goto out;
-> -		}
-> +	err = ufs_qcom_get_ib_ab(host, vote, &path0, &path1);
-> +	if (err) {
-> +		dev_err(dev, "Error: failed (%d) to get ib/ab\n",
-> +			err);
-> +		return err;
-> +	}
->  
-> -		host->bus_vote.curr_vote = vote;
-> +	dev_dbg(dev, "Setting vote: %d: ufs-ddr: ab: %llu ib: %llu\n", vote,
-> +		path0.ab, path0.ib);
-> +	err = icc_set_bw(d->ufs_ddr, path0.ab, path0.ib);
-> +	if (err) {
-> +		dev_err(dev, "Error: (%d) failed setting (%s) bus vote\n", err,
-> +			UFS_DDR);
-> +		return err;
->  	}
-> -out:
-> +
-> +	dev_dbg(dev, "Setting: cpu-ufs: ab: %llu ib: %llu\n", path1.ab,
-> +		path1.ib);
-> +	err = icc_set(d->cpu_ufs, path1.ab, path1.ib);
-> +	if (err) {
-> +		dev_err(dev, "Error: (%d) failed setting (%s) bus vote\n", err,
-> +			CPU_UFS);
-> +		return err;
-> +	}
-> +
-> +	host->bus_vote.curr_vote = vote;
-> +
->  	return err;
->  }
->  
-> @@ -807,6 +870,7 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
->  		dev_err(host->hba->dev, "%s: failed %d\n", __func__, err);
->  	else
->  		host->bus_vote.saved_vote = vote;
-> +
->  	return err;
->  }
->  
-> @@ -837,34 +901,114 @@ static int ufs_qcom_update_bus_bw_vote(struct ufs_qcom_host *host)
->  	return count;
->  }
->  
-> +static struct qcom_bus_scale_data *ufs_qcom_get_bus_scale_data(struct device
-> +							       *dev)
-> +
-> +{
-> +	struct platform_device *pdev = to_platform_device(dev);
-> +	struct device_node *of_node = dev->of_node;
-> +	struct qcom_bus_scale_data *qsd;
-> +	struct qcom_bus_path *usecase = NULL;
-> +	int ret = 0, i = 0, j, num_paths, len;
-> +	const uint32_t *vec_arr = NULL;
-
-Please use u32 instead of uint32_t.
-
-> +	bool mem_err = false;
-> +
-> +	if (!pdev) {
-> +		dev_err(dev, "Null platform device!\n");
-> +		return NULL;
-> +	}
-> +
-> +	qsd = devm_kzalloc(dev, sizeof(struct qcom_bus_scale_data), GFP_KERNEL);
-> +	if (!qsd)
-> +		return NULL;
-> +
-> +	ret = of_property_read_string(of_node, "qcom,msm-bus,name", &qsd->name);
-> +	if (ret) {
-> +		dev_err(dev, "Error: (%d) Bus name missing!\n", ret);
-> +		return NULL;
-> +	}
-> +
-> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-cases",
-> +		&qsd->num_usecase);
-> +	if (ret) {
-> +		pr_err("Error: num-usecases not found\n");
-> +		goto err;
-> +	}
-> +
-> +	usecase = devm_kzalloc(dev, (sizeof(struct qcom_bus_path) *
-> +				   qsd->num_usecase), GFP_KERNEL);
-> +	if (!usecase)
-> +		return NULL;
-> +
-> +	ret = of_property_read_u32(of_node, "qcom,msm-bus,num-paths",
-> +				   &num_paths);
-> +	if (ret) {
-> +		pr_err("Error: num_paths not found\n");
-> +		return NULL;
-> +	}
-> +
-> +	vec_arr = of_get_property(of_node, "qcom,msm-bus,vectors-KBps", &len);
-> +	if (vec_arr == NULL) {
-> +		pr_err("Error: Vector array not found\n");
-> +		return NULL;
-> +	}
-> +
-> +	for (i = 0; i < qsd->num_usecase; i++) {
-> +		usecase[i].num_paths = num_paths;
-> +		usecase[i].vec = devm_kzalloc(dev, num_paths *
-> +					      sizeof(struct qcom_bus_vectors),
-> +					      GFP_KERNEL);
-> +		if (!usecase[i].vec) {
-> +			mem_err = true;
-> +			dev_err(dev, "Error: Failed to alloc mem for vectors\n");
-> +			goto err;
-> +		}
-> +
-> +		for (j = 0; j < num_paths; j++) {
-> +			int idx = ((i * num_paths) + j) * 2;
-> +
-> +			usecase[i].vec[j].ab = (uint64_t)
-> +				be32_to_cpu(vec_arr[idx]);
-> +			usecase[i].vec[j].ib = (uint64_t)
-> +				be32_to_cpu(vec_arr[idx + 1]);
-> +		}
-> +	}
-> +
-> +	qsd->usecase = usecase;
-> +	return qsd;
-> +err:
-> +	if (mem_err) {
-> +		for (; i > 0; i--)
-> +			kfree(usecase[i].vec);
-> +	}
-> +	return NULL;
-> +}
-
-We wouldn't need all the above DT parsing if we add a sdm845 bandwidth
-usecase table. Could you give it a try?
+Alright, happy to test.
 
 Thanks,
-Georgi
+Sekhar
