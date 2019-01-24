@@ -1,55 +1,61 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 10/13] gpio: max77650: add GPIO support
-Date: Thu, 24 Jan 2019 11:30:18 +0100
-Message-ID: <CACRpkdacfOLSs1GPew4gMtL_BX0OTXqBQNWzWZMwAkk+Ah2ETQ@mail.gmail.com>
-References: <20190118134244.22253-1-brgl@bgdev.pl> <20190118134244.22253-11-brgl@bgdev.pl>
- <CACRpkdZhy7yBZrGLxhRGaac7v5jZhgUSz9gZAhFXbevJbKjpZw@mail.gmail.com> <CAMRc=Me6OSKDk7bN4++M68DjoeArd+gZx16o0oQBXfRoCWBt2A@mail.gmail.com>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
+Date: Thu, 24 Jan 2019 10:30:42 +0000
+Message-ID: <a5fec080-d388-5362-7f44-b50f7d7e1adf@nvidia.com>
+References: <20190107032810.13522-1-josephl@nvidia.com>
+ <20190107032810.13522-2-josephl@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAMRc=Me6OSKDk7bN4++M68DjoeArd+gZx16o0oQBXfRoCWBt2A@mail.gmail.com>
+In-Reply-To: <20190107032810.13522-2-josephl@nvidia.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bartosz Golaszewski <brgl@bgdev.pl>
-Cc: Brian Masney <masneyb@onstation.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Jacek Anaszewski <jacek.anaszewski@gmail.com>, Pavel Machek <pavel@ucw.cz>, Lee Jones <lee.jones@linaro.org>, Sebastian Reichel <sre@kernel.org>, Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Linux Input <linux-input@vger.kernel.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, Linux PM list <linux-pm@vger.kernel.org>
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-tegra@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 6:07 PM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
 
-> Thank you for your review. While I think you're right about the issue
-> being present in this driver, I'm not sure it's really a problem. Do
-> we actually require every gpio-controller to also be a stand-alone
-> interrupt-controller?
+On 07/01/2019 03:28, Joseph Lo wrote:
+> The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
+> timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
+> from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
+> (TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
+> or watchdog interrupts.
+> 
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-kernel@vger.kernel.org
+> Cc: devicetree@vger.kernel.org
+> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+> ---
+>  .../bindings/timer/nvidia,tegra210-timer.txt  | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+> new file mode 100644
+> index 000000000000..ba511220a669
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+> @@ -0,0 +1,25 @@
+> +NVIDIA Tegra210 timer
+> +
+> +The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
+> +timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
+> +from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
+> +(TMR10-TMR13). Each TMR can be programmed to generate one-shot, periodic,
+> +or watchdog interrupts.
+> +
+> +Required properties:
+> +- compatible : "nvidia,tegra210-timer".
+> +- reg : Specifies base physical address and size of the registers.
+> +- interrupts : A list of 4 interrupts; one per each of TMR10 through TMR13.
 
-Absolutely not :D
+Why do we only add the interrupts for TMR10 - TMR13? What about the others?
 
-Just GPIO is fine.
+Cheers
+Jon
 
-> The binding document for the GPIO module doesn't
-> mention this - it only requires the gpio-controller property. Without
-> the "interrupt-controller" property dtc will bail-out if anyone uses
-> this node as the interrupt parent.
->
-> If I'm wrong and we do require it, then I think we need to update
-> Documentation/devicetree/bindings/gpio/gpio.txt.
-
-What is weird is if a driver with DT bindings not mentioning IRQ
-and only probing from DT start implementing IRQ support, that
-becomes quite inconsistent. So then max77650_gpio_to_irq()
-should just return -ENOTSUPP
-or something for now, then it's fine.
-
-We can add the (complicated) IRQ handling later.
-
-I am trying to eat my own dogfood here, I was sweating all
-last night trying to implement a hierarchical IRQ controller.
-There is no running away from that now. :/
-
-Apparently doing hierarchical IRQs demand that all irq
-controllers up to the top-level SoC IRQ controller support
-hierarchical interrupts using the v2 version of the irqdomain
-API, and currently it seems like the ARM
-GIC seems like the only top level IRQ controller that can
-do that.
-
-Yours,
-Linus Walleij
+-- 
+nvpublic
