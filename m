@@ -1,51 +1,51 @@
-From: Uwe =?iso-8859-1?Q?Kleine-K=F6nig?=
-        <u.kleine-koenig@pengutronix.de>
-Subject: Re: [RFC PATCH v3 2/2] pwm: imx: Configure output to GPIO in
- disabled state
-Date: Thu, 24 Jan 2019 11:44:35 +0100
-Message-ID: <20190124104435.e6paqwcuz3hizwnv@pengutronix.de>
-References: <1544103655-104466-1-git-send-email-michal.vokac@ysoft.com>
- <1544103655-104466-3-git-send-email-michal.vokac@ysoft.com>
- <20181212080154.kcfh57mulypwuscu@pengutronix.de>
- <52ed0614-d1f5-81cb-3b17-8eb137967872@ysoft.com>
- <20181212121255.yg6b4pw7qord7ebi@pengutronix.de>
- <4b0356b7-bc7d-a026-ac90-3f0c5754ed29@ysoft.com>
- <20190124092215.zbu62lhxf667rzvs@pengutronix.de>
- <4004896e-34fc-7160-2f21-30280d96f750@ysoft.com>
+From: <shun-chih.yu@mediatek.com>
+Subject: [PATCH] remove redundant queue structure for Mediatek Command-Queue
+ DMA controller
+Date: Thu, 24 Jan 2019 18:44:38 +0800
+Message-ID: <1548326680-16454-1-git-send-email-shun-chih.yu@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <4004896e-34fc-7160-2f21-30280d96f750@ysoft.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>
-Cc: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Lukasz Majewski <l.majewski@majess.pl>, Fabio Estevam <fabio.estevam@nxp.com>, Lothar =?iso-8859-1?Q?Wa=DFmann?= <LW@karo-electronics.de>, Linus Walleij <linus.walleij@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Rob
+ Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 11:12:12AM +0100, Michal Vokáč wrote:
-> On 24.1.2019 10:22, Uwe Kleine-König wrote:
-> > I think it might be beneficial to allow (or require) that disable acts
-> > immediately. But this is not how it used to be and in my discussion with
-> > Thierry (IIRC) he required to complete the currently running period.
-> 
-> I am confused here. IFAIK it always used to be that:
-> 
-> 	pwm_apply_state(pwm, { .enabled = 0 });
-> 
-> immediately stops the PWM with:
-> 
-> 	writel(0, imx->mmio_base + MX3_PWMCR);
-> 
-> regardless of the period (for pwm-imx).
+This patchset introduces support for MediaTek Command-Queue DMA controller in dt-bindings, and simplifies the controller by removing redundant structures.
 
-Then is is a bug since forever (well, or a fact that resulted from the
-intended semantic not being documented and the driver author not caring
-or knowing better).
+Main changes to the initial version:
+- remove redundant queue structure in mtk_cqdma_pchan
+- remove redundant completion management
+- remove redundant tasklet management
+- fix wrong residue assignment in mtk_cqdma_tx_status
+- fix typos
 
-Best regards
-Uwe
+The result of dmatest shown below:
+dmatest: dma0chan0-copy2: summary 5000 tests, 0 failures 3500 iops 28037 KB/s
+dmatest: dma0chan0-copy4: summary 5000 tests, 0 failures 3494 iops 27612 KB/s
+dmatest: dma0chan0-copy1: summary 5000 tests, 0 failures 3491 iops 27749 KB/s
+dmatest: dma0chan0-copy7: summary 5000 tests, 0 failures 3673 iops 29092 KB/s 
+dmatest: dma0chan0-copy6: summary 5000 tests, 0 failures 3763 iops 30237 KB/s 
+dmatest: dma0chan0-copy0: summary 5000 tests, 0 failures 3730 iops 30131 KB/s
+dmatest: dma0chan0-copy3: summary 5000 tests, 0 failures 3717 iops 29569 KB/s
+dmatest: dma0chan0-copy5: summary 5000 tests, 0 failures 3699 iops 29302 KB/s
 
--- 
-Pengutronix e.K.                           | Uwe Kleine-König            |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
+Shun-Chih Yu (2):
+  dt-bindings: dmaengine: Add MediaTek Command-Queue DMA controller
+    bindings
+  dmaengine: mediatek-cqdma: remove redundant queue structure
+
+ .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 ++
+ drivers/dma/mediatek/mtk-cqdma.c                   |  399 +++++---------------
+ 2 files changed, 129 insertions(+), 301 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
