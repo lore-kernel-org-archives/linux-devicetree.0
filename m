@@ -1,52 +1,45 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 6/7] arm64: dts: xilinx: ultra96: Standardize LED
- labels and triggers
-Date: Thu, 24 Jan 2019 10:49:30 -0600
-Message-ID: <CAL_Jsq+zfV66EZHX7psh2=r-=wDrmLLcr5PWtSzuKRNOdMR-Dw@mail.gmail.com>
-References: <20181029094245.7886-1-manivannan.sadhasivam@linaro.org>
- <20181029094245.7886-7-manivannan.sadhasivam@linaro.org> <20181221023708.GC3233@Mani-XPS-13-9360>
- <9f4f05cb-f326-a4e3-e306-cfbf64b629b4@xilinx.com>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH v5] arm64: dts: marvell: Add device tree for uDPU board
+Date: Thu, 24 Jan 2019 17:51:43 +0100
+Message-ID: <20190124165143.GK482@lunn.ch>
+References: <20190124163225.10863-1-vladimir.vid@sartura.hr>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <9f4f05cb-f326-a4e3-e306-cfbf64b629b4@xilinx.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Michal Simek <michal.simek@xilinx.com>
-Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Linux LED Subsystem <linux-leds@vger.kernel.org>, devicetree@vger.kernel.org, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "open list:ARM/Rockchip SoC..." <linux-rockchip@lists.infradead.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:ARM/QUALCOMM SUPPORT" <linux-soc@vger.kernel.org>, Daniel Thompson <daniel.thompson@linaro.org>, Amit Kucheria <amit.kucheria@linaro.org>, Linus Walleij <linus.walleij@linaro.org>, koen.kooi@linaro.org, Nicolas Dechesne <nicolas.dechesne@linaro.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190124163225.10863-1-vladimir.vid@sartura.hr>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Vladimir Vid <vladimir.vid@sartura.hr>
+Cc: devicetree@vger.kernel.org, Luis Torres <luis.torres@methode.com>, Jason Cooper <jason@lakedaemon.net>, Paul Arola <paul.arola@telus.com>, Gregory Clement <gregory.clement@bootlin.com>, Scott Roberts <scott.roberts@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Dec 21, 2018 at 12:51 AM Michal Simek <michal.simek@xilinx.com> wrote:
->
-> On 21. 12. 18 3:37, Manivannan Sadhasivam wrote:
-> > On Mon, Oct 29, 2018 at 03:12:44PM +0530, Manivannan Sadhasivam wrote:
-> >> For all 96Boards, the following standard is used for onboard LEDs.
-> >>
-> >> green:user1  default-trigger: heartbeat
-> >> green:user2  default-trigger: mmc0/disk-activity(onboard-storage)
-> >> green:user3  default-trigger: mmc1 (SD-card)
-> >> green:user4  default-trigger: none, panic-indicator
-> >> yellow:wlan  default-trigger: phy0tx
-> >> blue:bt      default-trigger: hci0-power
-> >>
-> >> So lets adopt the same for Ultra96, which is one of the 96Boards
-> >> CE and AI platform. Since the WLAN and BT LEDs are hardwired onboard,
-> >> consolidate only User LEDs.
-> >>
-> >
-> > Hello,
-> >
-> > Any update on this patch?
->
-> I am still waiting for reaction from Rob.
-> We are keep trying to keep backward compatibility and this patch is
-> breaking it that's why I want to know DT guys reaction on this change.
+> +	leds {
+> +		pinctrl-names = "default";
+> +		compatible = "gpio-leds";
+> +
+> +		power1 {
+> +			label = "power:green:led1";
+> +			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
+> +		};
 
-dts changes and backwards compatibility are ultimately up to the
-platform maintainers. Your users can yell at you if they care. I only
-ask that changes that break compatibility are documented as doing so.
+Documentation/leds/leds-class.txt
 
-Personally, I'm in favor of this change. I'd rather seem uniformity
-across boards and this is just a dev board and LED functions won't
-affect booting.
+LED Device Naming
+=================
 
-Rob
+Is currently of the form:
+
+"devicename:colour:function"
+
+Your device is not named 'power'.
+
+     Andrew
