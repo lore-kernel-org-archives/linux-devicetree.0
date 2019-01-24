@@ -1,69 +1,57 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 05/22] drm/sun4i: tcon: Export get tcon0 routine
-Date: Fri, 25 Jan 2019 01:28:43 +0530
-Message-ID: <20190124195900.22620-6-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v6 06/22] drm/sun4i: sun6i_mipi_dsi: Probe tcon0 during
+ dsi_bind
+Date: Fri, 25 Jan 2019 01:28:44 +0530
+Message-ID: <20190124195900.22620-7-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBM5SVDRAKGQEULG7O3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190124195900.22620-1-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Sometimes tcon attributes like tcon divider, clock rate etc are needed
-in interface drivers like DSI. So for such cases interface driver must
-probe the respective tcon and get the attributes.
-
-Since tcon0 probe is already available, via sun4i_get_tcon0 function,
-export the same instead of probing tcon explicitly.
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun4i_tcon.c | 3 ++-
- drivers/gpu/drm/sun4i/sun4i_tcon.h | 1 +
- 2 files changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-index 0420f5c978b9..3da75a0c5c5d 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
-@@ -221,7 +221,7 @@ EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
-  * are located in TCON0. This helper returns a pointer to TCON0's
-  * sun4i_tcon structure, or NULL if not found.
-  */
--static struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
-+struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
- {
- 	struct sun4i_drv *drv = drm->dev_private;
- 	struct sun4i_tcon *tcon;
-@@ -235,6 +235,7 @@ static struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
- 
- 	return NULL;
- }
-+EXPORT_SYMBOL(sun4i_get_tcon0);
- 
- void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
- 			const struct drm_encoder *encoder)
-diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-index b5214d71610f..a52696db14a5 100644
---- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
-+++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
-@@ -274,6 +274,7 @@ struct sun4i_tcon {
- struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node);
- struct drm_panel *sun4i_tcon_find_panel(struct device_node *node);
- 
-+struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm);
- void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable);
- void sun4i_tcon_mode_set(struct sun4i_tcon *tcon,
- 			 const struct drm_encoder *encoder,
--- 
-2.18.0.321.gffc6fa0e3
+UHJvYmUgdGNvbjAgZHVyaW5nIGRzaV9iaW5kLCBzby10aGF0IHRoZSB0Y29uIGF0dHJpYnV0ZXMg
+bGlrZQpkaXZpZGVyIHZhbHVlLCBjbG9jayByYXRlIGNhbiBnZXQgd2hlbmV2ZXIgaXQgbmVlZC4K
+ClNpZ25lZC1vZmYtYnk6IEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29tPgot
+LS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5jIHwgNyArKysrKysrCiBk
+cml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuaCB8IDEgKwogMiBmaWxlcyBjaGFu
+Z2VkLCA4IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2dwdS9kcm0vc3VuNGkv
+c3VuNmlfbWlwaV9kc2kuYyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2RzaS5j
+CmluZGV4IDE2YTg2ZDM1ZGM1YS4uMmFlYWExOWE4ZDFlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2dw
+dS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9kc2kuYworKysgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkv
+c3VuNmlfbWlwaV9kc2kuYwpAQCAtMjQsNiArMjQsNyBAQAogI2luY2x1ZGUgPGRybS9kcm1fcGFu
+ZWwuaD4KIAogI2luY2x1ZGUgInN1bjRpX2Rydi5oIgorI2luY2x1ZGUgInN1bjRpX3Rjb24uaCIK
+ICNpbmNsdWRlICJzdW42aV9taXBpX2RzaS5oIgogCiAjaW5jbHVkZSA8dmlkZW8vbWlwaV9kaXNw
+bGF5Lmg+CkBAIC05NDcsNiArOTQ4LDcgQEAgc3RhdGljIGludCBzdW42aV9kc2lfYmluZChzdHJ1
+Y3QgZGV2aWNlICpkZXYsIHN0cnVjdCBkZXZpY2UgKm1hc3RlciwKIAlzdHJ1Y3QgZHJtX2Rldmlj
+ZSAqZHJtID0gZGF0YTsKIAlzdHJ1Y3Qgc3VuNGlfZHJ2ICpkcnYgPSBkcm0tPmRldl9wcml2YXRl
+OwogCXN0cnVjdCBzdW42aV9kc2kgKmRzaSA9IGRldl9nZXRfZHJ2ZGF0YShkZXYpOworCXN0cnVj
+dCBzdW40aV90Y29uICp0Y29uMCA9IHN1bjRpX2dldF90Y29uMChkcm0pOwogCWludCByZXQ7CiAK
+IAlpZiAoIWRzaS0+cGFuZWwpCkBAIC05NTQsNiArOTU2LDExIEBAIHN0YXRpYyBpbnQgc3VuNmlf
+ZHNpX2JpbmQoc3RydWN0IGRldmljZSAqZGV2LCBzdHJ1Y3QgZGV2aWNlICptYXN0ZXIsCiAKIAlk
+c2ktPmRydiA9IGRydjsKIAorCWlmICghdGNvbjApCisJCXJldHVybiAtRUlOVkFMOworCisJZHNp
+LT50Y29uID0gdGNvbjA7CisKIAlkcm1fZW5jb2Rlcl9oZWxwZXJfYWRkKCZkc2ktPmVuY29kZXIs
+CiAJCQkgICAgICAgJnN1bjZpX2RzaV9lbmNfaGVscGVyX2Z1bmNzKTsKIAlyZXQgPSBkcm1fZW5j
+b2Rlcl9pbml0KGRybSwKZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9t
+aXBpX2RzaS5oIGIvZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmgKaW5kZXgg
+ZGJiYzViM2VjYmRhLi4yNTdjY2E2NjBkYTAgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9z
+dW40aS9zdW42aV9taXBpX2RzaS5oCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9t
+aXBpX2RzaS5oCkBAIC0zMyw2ICszMyw3IEBAIHN0cnVjdCBzdW42aV9kc2kgewogCiAJc3RydWN0
+IGRldmljZQkJKmRldjsKIAlzdHJ1Y3Qgc3VuNGlfZHJ2CSpkcnY7CisJc3RydWN0IHN1bjRpX3Rj
+b24JKnRjb247CiAJc3RydWN0IG1pcGlfZHNpX2RldmljZQkqZGV2aWNlOwogCXN0cnVjdCBkcm1f
+cGFuZWwJKnBhbmVsOwogfTsKLS0gCjIuMTguMC4zMjEuZ2ZmYzZmYTBlMwoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
