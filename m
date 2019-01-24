@@ -1,148 +1,83 @@
-From: Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [Linux-stm32] [PATCH V3 1/2] mmc: mmci: add variant property to
- set command stop bit
-Date: Thu, 24 Jan 2019 16:12:35 +0100
-Message-ID: <CAPDyKFp+3E35KXVCACO3-6JcRyqdsNGJ-5mAEKmUK0nggGs9nQ@mail.gmail.com>
-References: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com>
- <1544109212-12621-2-git-send-email-ludovic.Barre@st.com> <CAPDyKFq7TZMKWMqmoDR0yfr2N2cf2nr4-BuEs5DPgJSGy-nvAA@mail.gmail.com>
- <35f22c1a-888d-5abd-7ffe-ecf47a74b69a@st.com> <9e22fd3d-f029-2a2a-18d1-af1987c94e4e@st.com>
- <ab4cae87-0a5a-fe22-08ab-7c7661be7c8c@st.com>
+From: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Subject: [PATCH v4 0/5] misc: Add support to Qualcomm FastRPC driver
+Date: Thu, 24 Jan 2019 15:24:07 +0000
+Message-ID: <20190124152412.10503-1-srinivas.kandagatla@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <ab4cae87-0a5a-fe22-08ab-7c7661be7c8c@st.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ludovic BARRE <ludovic.barre@st.com>
-Cc: DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
+To: robh+dt@kernel.org, gregkh@linuxfoundation.org, arnd@arndb.de
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, bjorn.andersson@linaro.org, bkumar@qti.qualcomm.com, linux-arm-msm@vger.kernel.org, thierry.escande@linaro.org, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, 24 Jan 2019 at 16:03, Ludovic BARRE <ludovic.barre@st.com> wrote:
->
-> hi Ulf
->
-> I don't think you've seen my previous mail :-(
-> what is your feeling about "mmc: mmci: send stop command to clear the dpsm"
+Thanks for reviewing the v3, here is new version addressing the
+comments from v3.
+This patchset adds support to Qualcomm FastRPC driver which implements
+an IPC (Inter-Processor Communication) mechanism that allows for clients
+to transparently make remote method invocations across processor boundaries.
 
-Apologize for the delay. I wanted to check this in detail so I applied
-your patch locally and started to play/test it.
+The below diagram depicts invocation of a single method where the client
+and objects reside on different processors. An object could expose
+multiple methods which can be grouped together and referred to as an
+interface.
 
-However, a couple of other regressions was reported for v5.0 rcs, so I
-got sidetracked.
+: ,--------,        ,------,  ,-----------,  ,------,        ,--------,
+: |        | method |      |  |           |  |      | method |        |
+: | Client |------->| Stub |->| Transport |->| Skel |------->| Object |
+: |        |        |      |  |           |  |      |        |        |
+: `--------`        `------`  `-----------`  `------`        `--------`
 
-Back on track by now, so I will have look asap. Thanks for pinging me!
+Client:    Linux user mode process that initiates the remote invocation
+Stub:      Auto generated code linked in with the user mode process that
+           takes care of marshaling parameters
 
-Kind regards
-Uffe
+Transport: Involved in carrying an invocation from a client to an
+           object. This involves two portions: 1) FastRPC Linux
+           kernel driver that receives the remote invocation, queues
+           them up and then waits for the response after signaling the
+           remote side. 2) Service running on the remote side that
+           dequeues the messages from the queue and dispatches them for
+           processing.
+Skel:      Auto generated code that takes care of un-marshaling
+           parameters
+Object:    Method implementation
 
->
-> Regards
-> Ludo
->
-> On 1/3/19 11:35 AM, Ludovic BARRE wrote:
-> > hi Ulf
-> >
-> > happy new years.
-> >
-> > Just a gentleman ping about patch2 of this series
-> > "mmc: mmci: send stop command to clear the dpsm."
-> >
-> > Regards
-> > Ludo
-> >
-> > On 12/11/18 10:53 AM, Ludovic BARRE wrote:
-> >>
-> >>
-> >> On 12/11/18 10:47 AM, Ulf Hansson wrote:
-> >>> On Thu, 6 Dec 2018 at 16:13, Ludovic Barre <ludovic.Barre@st.com> wrote:
-> >>>>
-> >>>> From: Ludovic Barre <ludovic.barre@st.com>
-> >>>>
-> >>>> On cmd12 (STOP_TRANSMISSION), STM32 sdmmc variant needs to set
-> >>>> cmdstop bit in command register. The CPSM ("Command Path State
-> >>>> Machine")
-> >>>> treats the command as a Stop Transmission command and signals
-> >>>> abort to the DPSM ("Data Path State Machine").
-> >>>>
-> >>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
-> >>>
-> >>> Applied for next, thanks!
-> >>
-> >> thanks
-> >>
-> >>>
-> >>> Withholding patch2 for a while, as I need some more time to review it.
-> >>
-> >> No problem,
-> >>
-> >> Regards
-> >> Ludo
-> >>
-> >>>
-> >>> Kind regards
-> >>> Uffe
-> >>>
-> >>>> ---
-> >>>>   drivers/mmc/host/mmci.c | 6 ++++++
-> >>>>   drivers/mmc/host/mmci.h | 2 ++
-> >>>>   2 files changed, 8 insertions(+)
-> >>>>
-> >>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
-> >>>> index 13fa640..e352f5a 100644
-> >>>> --- a/drivers/mmc/host/mmci.c
-> >>>> +++ b/drivers/mmc/host/mmci.c
-> >>>> @@ -21,6 +21,7 @@
-> >>>>   #include <linux/err.h>
-> >>>>   #include <linux/highmem.h>
-> >>>>   #include <linux/log2.h>
-> >>>> +#include <linux/mmc/mmc.h>
-> >>>>   #include <linux/mmc/pm.h>
-> >>>>   #include <linux/mmc/host.h>
-> >>>>   #include <linux/mmc/card.h>
-> >>>> @@ -274,6 +275,7 @@ static struct variant_data variant_stm32_sdmmc = {
-> >>>>          .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
-> >>>>          .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
-> >>>>          .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
-> >>>> +       .cmdreg_stop            = MCI_CPSM_STM32_CMDSTOP,
-> >>>>          .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
-> >>>>          .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
-> >>>>          .datactrl_first         = true,
-> >>>> @@ -1100,6 +1102,10 @@ mmci_start_command(struct mmci_host *host,
-> >>>> struct mmc_command *cmd, u32 c)
-> >>>>                  mmci_reg_delay(host);
-> >>>>          }
-> >>>>
-> >>>> +       if (host->variant->cmdreg_stop &&
-> >>>> +           cmd->opcode == MMC_STOP_TRANSMISSION)
-> >>>> +               c |= host->variant->cmdreg_stop;
-> >>>> +
-> >>>>          c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
-> >>>>          if (cmd->flags & MMC_RSP_PRESENT) {
-> >>>>                  if (cmd->flags & MMC_RSP_136)
-> >>>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
-> >>>> index 550dd39..2422909 100644
-> >>>> --- a/drivers/mmc/host/mmci.h
-> >>>> +++ b/drivers/mmc/host/mmci.h
-> >>>> @@ -264,6 +264,7 @@ struct mmci_host;
-> >>>>    * @cmdreg_lrsp_crc: enable value for long response with crc
-> >>>>    * @cmdreg_srsp_crc: enable value for short response with crc
-> >>>>    * @cmdreg_srsp: enable value for short response without crc
-> >>>> + * @cmdreg_stop: enable value for stop and abort transmission
-> >>>>    * @datalength_bits: number of bits in the MMCIDATALENGTH register
-> >>>>    * @fifosize: number of bytes that can be written when
-> >>>> MMCI_TXFIFOEMPTY
-> >>>>    *           is asserted (likewise for RX)
-> >>>> @@ -316,6 +317,7 @@ struct variant_data {
-> >>>>          unsigned int            cmdreg_lrsp_crc;
-> >>>>          unsigned int            cmdreg_srsp_crc;
-> >>>>          unsigned int            cmdreg_srsp;
-> >>>> +       unsigned int            cmdreg_stop;
-> >>>>          unsigned int            datalength_bits;
-> >>>>          unsigned int            fifosize;
-> >>>>          unsigned int            fifohalfsize;
-> >>>> --
-> >>>> 2.7.4
-> >>>>
-> > _______________________________________________
-> > Linux-stm32 mailing list
-> > Linux-stm32@st-md-mailman.stormreply.com
-> > https://st-md-mailman.stormreply.com/mailman/listinfo/linux-stm32
+Most of the work is derived from various downstream Qualcomm kernels.
+Credits to various Qualcomm authors who have contributed to this code.
+Specially Tharun Kumar Merugu <mtharu@codeaurora.org>
+
+TODO:
+ - Support INIT_STATIC process
+ - Support remote mmap/unmap methods.
+ - Handling secure compute context banks.
+ - Add secure buffer support
+
+This patchset has been tested on DB410c(msm8916), DB820c (msm8996), SDM845
+and QCS404 Qualcomm SoCs with sample apps like matrix multiply, calculator
+from Hexagon SDK. You can find more info on how to test this at:
+https://github.com/96boards/documentation/wiki/Dragonboard-Hexagon-DSP
+
+Changes since v3(https://patchwork.kernel.org/cover/10763343/) :
+- removed secured property from dt binding, defer it till we add
+	support to secure buffers.
+- reword various bits in bindings suggested by Rob Herring
+
+Srinivas Kandagatla (5):
+  misc: dt-bindings: Add Qualcomm Fastrpc bindings
+  misc: fastrpc: Add Qualcomm fastrpc basic driver model
+  misc: fastrpc: Add support for context Invoke method
+  misc: fastrpc: Add support for create remote init process
+  misc: fastrpc: Add support for dmabuf exporter
+
+ .../devicetree/bindings/misc/qcom,fastrpc.txt |   78 +
+ drivers/misc/Kconfig                          |   10 +
+ drivers/misc/Makefile                         |    1 +
+ drivers/misc/fastrpc.c                        | 1354 +++++++++++++++++
+ include/uapi/misc/fastrpc.h                   |   41 +
+ 5 files changed, 1484 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/misc/qcom,fastrpc.txt
+ create mode 100644 drivers/misc/fastrpc.c
+ create mode 100644 include/uapi/misc/fastrpc.h
+
+-- 
+2.20.1
