@@ -1,101 +1,76 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC PATCH v1 13/13] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Thu, 24 Jan 2019 06:37:47 -0800
-Message-ID: <20190124143747.GA29002@roeck-us.net>
-References: <cover.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
- <ec70833179d1953dbc91e01901b79d3319ff013d.1548149337.git.matti.vaittinen@fi.rohmeurope.com>
- <20190122154750.GB1705@roeck-us.net>
- <20190122171023.GC2559@localhost.localdomain>
- <20190122174056.GB4964@roeck-us.net>
- <20190122180309.GD2559@localhost.localdomain>
- <20190123174728.uu7zhno5xea2bga7@earth.universe>
- <20190124104434.GF2559@localhost.localdomain>
+From: Amit Kucheria <amit.kucheria@verdurent.com>
+Subject: Re: [PATCH RESEND] arm64: dts: msm8916: remove bogus argument to the
+ cpu clock
+Date: Thu, 24 Jan 2019 20:23:07 +0530
+Message-ID: <CAHLCerOvpf0ONVV0V6JKbQL_k31qqyiT8vcjvsvK4PPTMqZS_Q@mail.gmail.com>
+References: <20190124124508.6541-1-niklas.cassel@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190124104434.GF2559@localhost.localdomain>
+In-Reply-To: <20190124124508.6541-1-niklas.cassel@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Cc: Sebastian Reichel <sre@kernel.org>, mazziesaccount@gmail.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, lgirdwood@gmail.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org, mikko.mutanen@fi.rohmeurope.com, heikki.haikola@fi.rohmeurope.com
+To: Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Bjorn Andersson <bjorn.andersson@linaro.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 12:44:35PM +0200, Matti Vaittinen wrote:
-> On Wed, Jan 23, 2019 at 06:47:28PM +0100, Sebastian Reichel wrote:
-> > Hi,
-> > 
-> > On Tue, Jan 22, 2019 at 08:03:09PM +0200, Matti Vaittinen wrote:
-> > > On Tue, Jan 22, 2019 at 09:40:56AM -0800, Guenter Roeck wrote:
-> > > > On Tue, Jan 22, 2019 at 07:10:23PM +0200, Matti Vaittinen wrote:
-> > > > > On Tue, Jan 22, 2019 at 07:47:50AM -0800, Guenter Roeck wrote:
-> > > > > > On Tue, Jan 22, 2019 at 11:48:36AM +0200, Matti Vaittinen wrote:
-> > > > > > > +static int bd70528_wdt_probe(struct platform_device *pdev)
-> > > > > > > +{
-> > > > > > > +	struct bd70528 *tmp;
-> > > > > > > +	struct bd70528 *bd70528;
-> > > > > > > +	int ret;
-> > > > > > > +
-> > > > > > > +	tmp = dev_get_drvdata(pdev->dev.parent);
-> > > > > > > +	if (!tmp) {
-> > > > > > > +		dev_err(&pdev->dev, "No MFD driver data\n");
-> > > > > > > +		return -EINVAL;
-> > > > > > > +	}
-> > > > > > > +	bd70528 = devm_kzalloc(&pdev->dev, sizeof(*bd70528), GFP_KERNEL);
-> > > > > > > +	if (!bd70528)
-> > > > > > > +		return -ENOMEM;
-> > > > > > > +
-> > > > > > > +	*bd70528 = *tmp;
-> > > > > > > +	bd70528->chip.dev = &pdev->dev;
-> > > > > > 
-> > > > > > This is wrong.
-> > > > > > You should not copy the parent's driver data but have local driver
-> > > > > > data as needed which then points to the parent's driver data if
-> > > > > > needed. I assume this is why the mutex is a pointer, but that
-> > > > > > just shows that the whole approach is wrong.
-> > > > > 
-> > > > > Mutex is a pointer because we want to use same mutex from WDT and RTC.
-> > > > > We can sure point to parent data but then we still need our own dev
-> > > > > pointer. So we can have a struct with pointer to parent data and dev
-> > > > > pointer - but I'm not at all sure it is any clearer.
-> > > > 
-> > > > As I said, that is wrong. To say it in plaintext, I won't accept
-> > > > the driver if it copies the parent's driver data. The driver should
-> > > > have and use its own driver data, and only maintain a pointer to
-> > > > its parent's driver data. And most definitely you don't want to
-> > > > copy and use any device data structure from the parent.
-> > > 
-> > > Allright. At the moment the WDT driver only needs regmap pointer from
-> > > parent. I'm not sure if it will later need DT or "chip type" - but I
-> > > will change this.
-> > 
-> > You probably want to use this:
-> > 
-> > dev_get_regmap(pdev->dev.parent, NULL);
-> 
-> Thanks a bunch Sebastian. All help is highly appreciated!! =)
-> 
-> Unfortunately I forgot to mention the key thing - the RTC mutex. We also
-> need that because RTC needs to stop WDT when RTC is adjusted as the WDT
-> uses RTC as counter - and jumping the RTC WDT enabled might trigger WDT
-> or have other consequences.
-> 
-> Se even if we used dev_get_regmap (which is slightly heavier than
-> accessing direct pointer) - we would still need at least the mutex from
-> parent data, possibly also the chip type and if we want to avoid code
-> dublication - then also the WDT start/stop function.
-> 
-> Thus I guess we can as well keep the regmap in parent data because we
-> need the parent data anyways, right?
-> 
+On Thu, Jan 24, 2019 at 6:15 PM Niklas Cassel <niklas.cassel@linaro.org> wrote:
+>
+> The apcs node has #clock-cells = <0>, which means that those who
+> references it should specify 0 arguments.
+>
+> The apcs reference in the cpu node incorrectly specifies an argument,
+> remove this bogus argument.
+>
+> Fixes: 65afdf458360 ("arm64: dts: qcom: msm8916: Add CPU frequency scaling support")
+> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
+> Reviewed-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 
-You are free to _use_ the parent data. Just not copy it.
+Reviewed-by: Amit Kucheria <amit.kucheria@linaro.org>
 
-Another possibility would be for the parent to provide platform
-data for the rtc driver to use, and that platform data would
-include pointers to the regmap and to the rtc mutex.
-
-However, again, the one thing you can _not_ do is to copy the parent's
-driver data.
-
-Guenter
+> ---
+>  arch/arm64/boot/dts/qcom/msm8916.dtsi | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> index d302d8d639a1..e4bfd47178b1 100644
+> --- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
+> @@ -111,7 +111,7 @@
+>                         next-level-cache = <&L2_0>;
+>                         enable-method = "psci";
+>                         cpu-idle-states = <&CPU_SPC>;
+> -                       clocks = <&apcs 0>;
+> +                       clocks = <&apcs>;
+>                         operating-points-v2 = <&cpu_opp_table>;
+>                         #cooling-cells = <2>;
+>                 };
+> @@ -123,7 +123,7 @@
+>                         next-level-cache = <&L2_0>;
+>                         enable-method = "psci";
+>                         cpu-idle-states = <&CPU_SPC>;
+> -                       clocks = <&apcs 0>;
+> +                       clocks = <&apcs>;
+>                         operating-points-v2 = <&cpu_opp_table>;
+>                         #cooling-cells = <2>;
+>                 };
+> @@ -135,7 +135,7 @@
+>                         next-level-cache = <&L2_0>;
+>                         enable-method = "psci";
+>                         cpu-idle-states = <&CPU_SPC>;
+> -                       clocks = <&apcs 0>;
+> +                       clocks = <&apcs>;
+>                         operating-points-v2 = <&cpu_opp_table>;
+>                         #cooling-cells = <2>;
+>                 };
+> @@ -147,7 +147,7 @@
+>                         next-level-cache = <&L2_0>;
+>                         enable-method = "psci";
+>                         cpu-idle-states = <&CPU_SPC>;
+> -                       clocks = <&apcs 0>;
+> +                       clocks = <&apcs>;
+>                         operating-points-v2 = <&cpu_opp_table>;
+>                         #cooling-cells = <2>;
+>                 };
+> --
+> 2.19.1
+>
