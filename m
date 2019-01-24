@@ -1,65 +1,49 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 09/22] drm/sun4i: sun6i_mipi_dsi: Enable
- burst mode HBP, HSA_HSE
-Date: Fri, 25 Jan 2019 01:28:47 +0530
-Message-ID: <20190124195900.22620-10-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: [PATCH v6 10/22] clk: sunxi-ng: Add check for minimal rate to NKM PLLs
+Date: Fri, 25 Jan 2019 01:28:48 +0530
+Message-ID: <20190124195900.22620-11-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSFSVDRAKGQEQRUOZ6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190124195900.22620-1-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Horizontal back porch, sync active and sync end bits are
-needed to disable for burst mode panel operations.
-
-So, disable them via dsi base control register.
-
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index a2ad9fa7f8d5..3d7c03161954 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -549,12 +549,17 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	u16 hbp, hfp, hsa, hblk, vblk;
- 	size_t bytes;
- 	u8 *buffer;
-+	u32 val = 0;
- 
- 	/* Do all timing calculations up front to allocate buffer space */
- 
- 	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
- 		hbp = hfp = hsa = vblk = 0;
- 		hblk = (mode->hdisplay * Bpp);
-+
-+		regmap_read(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, &val);
-+		val |= SUN6I_DSI_BASIC_CTL_HBP_DIS;
-+		val |= SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS;
- 		goto alloc_buf;
- 	}
- 
-@@ -603,7 +608,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
- 	if (WARN_ON(!buffer))
- 		return;
- 
--	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, 0);
-+	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, val);
- 
- 	regmap_write(dsi->regs, SUN6I_DSI_SYNC_HSS_REG,
- 		     sun6i_dsi_build_sync_pkt(MIPI_DSI_H_SYNC_START,
--- 
-2.18.0.321.gffc6fa0e3
+U29tZSBOS00gUExMcyBkb2Vzbid0IHdvcmsgd2VsbCB3aGVuIHRoZWlyIG91dHB1dCBjbG9jayBy
+YXRlIGlzIHNldCBiZWxvdwpjZXJ0YWluIHJhdGUuCgpTbywgYWRkIHN1cHBvcnQgZm9yIG1pbmlt
+YWwgcmF0ZSBmb3IgcmVsZXZhbnQgUExMcy4KClNpZ25lZC1vZmYtYnk6IEphZ2FuIFRla2kgPGph
+Z2FuQGFtYXJ1bGFzb2x1dGlvbnMuY29tPgpBY2tlZC1ieTogU3RlcGhlbiBCb3lkIDxzYm95ZEBr
+ZXJuZWwub3JnPgotLS0KIGRyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9ua20uYyB8IDUgKysrKysK
+IGRyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9ua20uaCB8IDEgKwogMiBmaWxlcyBjaGFuZ2VkLCA2
+IGluc2VydGlvbnMoKykKCmRpZmYgLS1naXQgYS9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Vfbmtt
+LmMgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbmttLmMKaW5kZXggODQxODQwZTM1ZTYxLi4w
+OTZmZjRmNDgzOWEgMTAwNjQ0Ci0tLSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9ua20uYwor
+KysgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbmttLmMKQEAgLTEyNSw2ICsxMjUsMTEgQEAg
+c3RhdGljIHVuc2lnbmVkIGxvbmcgY2N1X25rbV9yb3VuZF9yYXRlKHN0cnVjdCBjY3VfbXV4X2lu
+dGVybmFsICptdXgsCiAJaWYgKG5rbS0+Y29tbW9uLmZlYXR1cmVzICYgQ0NVX0ZFQVRVUkVfRklY
+RURfUE9TVERJVikKIAkJcmF0ZSAqPSBua20tPmZpeGVkX3Bvc3RfZGl2OwogCisJaWYgKHJhdGUg
+PCBua20tPm1pbl9yYXRlKSB7CisJCXJhdGUgPSBua20tPm1pbl9yYXRlOworCQlyZXR1cm4gcmF0
+ZTsKKwl9CisKIAljY3VfbmttX2ZpbmRfYmVzdCgqcGFyZW50X3JhdGUsIHJhdGUsICZfbmttKTsK
+IAogCXJhdGUgPSAqcGFyZW50X3JhdGUgKiBfbmttLm4gKiBfbmttLmsgLyBfbmttLm07CmRpZmYg
+LS1naXQgYS9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3VfbmttLmggYi9kcml2ZXJzL2Nsay9zdW54
+aS1uZy9jY3VfbmttLmgKaW5kZXggY2M2ZWZiNzBhMTAyLi5mZjViZDAwZjQyOWYgMTAwNjQ0Ci0t
+LSBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdV9ua20uaAorKysgYi9kcml2ZXJzL2Nsay9zdW54
+aS1uZy9jY3VfbmttLmgKQEAgLTM1LDYgKzM1LDcgQEAgc3RydWN0IGNjdV9ua20gewogCXN0cnVj
+dCBjY3VfbXV4X2ludGVybmFsCW11eDsKIAogCXVuc2lnbmVkIGludAkJZml4ZWRfcG9zdF9kaXY7
+CisJdW5zaWduZWQgaW50CQltaW5fcmF0ZTsKIAogCXN0cnVjdCBjY3VfY29tbW9uCWNvbW1vbjsK
+IH07Ci0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxp
+c3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFu
+L2xpc3RpbmZvL2RyaS1kZXZlbAo=
