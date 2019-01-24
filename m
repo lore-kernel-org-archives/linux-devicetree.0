@@ -1,109 +1,83 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 00/22] drm/sun4i: Allwinner A64 MIPI-DSI support
-Date: Fri, 25 Jan 2019 01:28:38 +0530
-Message-ID: <20190124195900.22620-1-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v6 01/22] drm/sun4i: sun6i_mipi_dsi: Compute
+ burst mode loop N1 instruction delay
+Date: Fri, 25 Jan 2019 01:28:39 +0530
+Message-ID: <20190124195900.22620-2-jagan@amarulasolutions.com>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBG5SVDRAKGQEFZ53I4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-SGVyZSBpcyBuZXh0IHZlcnNpb24gY2hhbmdlcyBmb3IgQWxsd2lubmVyIEE2NCBNSVBJLURTSSBz
-dXBwb3J0CgpUaGlzIHNlcmllcyBncm91cGVkIHRoZSBjaGFuZ2VzIGZyb20gcHJldmlvdXMgdmVy
-c2lvbiBBNjQgTUlQSS1EU0lbMV0KYWxvbmcgd2l0aCBidXJzdCBtb2RlWzJdLgoKVGhvdWdoIHRo
-ZSBzZXJpZXMgc2VlbXMgdG8gaGF2ZSBtb3JlIHBhdGNoZXMsIGJ1dCBhbGwgcGF0Y2hlcyBhcmUg
-b3JkZXJlZCAKaW4gYSB3YXkgdGhhdCB0aGUgcmV2aWV3IHByb2Nlc3MgaXMgYXMgc21vb3RoIGFz
-IHBvc3NpYmxlLgoKT3ZlcmFsbCB0aGUgc2VyaWVzIGlzIGdyb3VwZWQgaW50byBmb3VyIGRpZmZl
-cmVudCBzZXRzIHRvIHN1cHBvcnQgdGhyZWUgCmRpZmZlcmVudCBwYW5lbHMgdHlwZXMgdGhhdCBj
-YW4gZml0IGludG8gdGhlIERTSSBjb250cm9sbGVyLgoKc2V0OjEgZm9yIDQtbGFuZSwgYnVyc3Qg
-bW9kZToKLSBwYXRjaCAwMDAxOiAwMDA5LCBEU0kgY29udHJvbGxlciBjaGFuZ2VzIHRoYXQgc3Vw
-cG9ydCBidXJzdCBtb2RlLgogIGFsbCB0aGUgcGF0Y2hlcyBmaXhlZCB0aGUgcHJldmlvdXMgY29t
-bWVudHMgYWxvbmcgd2l0aCBwcm9wZXIgY29tbWl0IG1lc3NhZ2UuCgpzZXQ6MiBmb3IgQTY0IERT
-SSBjaGFuZ2VzOgotIHBhdGNoIDAwMTA6IDAwMTEsIFBMTC1NSVBJIGNoYW5nZXMgcmVsYXRlZCB0
-byBBNjQKLSBwYXRjaCAwMDEyOiAwMDEzLCBWQ0MtRFNJIHN1cHBseSBjaGFuZ2Ugb24gRFNJIGNv
-bnRyb2xsZXIKLSBwYXRjaCAwMDE0OiAwMDE1OiBkdC1iaW5kaW5ncyBwYXRjaGVzIGZvciBBNjQg
-RFNJIGFuZCBEUEhZIGRvY3VtZW50YXRpb24KLSBwYXRjaCAwMDE2OiBBNjQgRFNJIHBpcGVsaW5l
-IHBhdGNoCi0gcGF0Y2ggMDAxNzogT3ZlcmxheSBwYXRjaCB0aGF0IGVuYWJsZSBGZWl5YW5nIEZZ
-MDcwMjRESTI2QTMwLUQgYnVyc3QgbW9kZQogIHBhbmVsIG9uIFBpbmU2NC1MVFMgdG8gdmFsaWRh
-dGUgc2V0OjEgY2hhbmdlcwoKc2V0OjMgZm9yIDQtbGFuZSwgbm9uLWJ1cnN0IG1vZGU6Ci0gcGF0
-Y2ggMDAxODogbXNnIHR5cGUgTUlQSV9EU0lfR0VORVJJQ19TSE9SVF9XUklURV8yX1BBUkFNIHN1
-cHBvcnQKLSBwYXRjaCAwMDE5OiBPdmVybGF5IHBhdGNoIHRoYXQgZW5hYmxlIEJhbmFuYXBpIFMw
-NzBXVjIwLUNUMTYgSUNONjIxMSAKICBwYW5lbCBvbiBCYW5hbmFwaSBNNjQgdG8gdmFsaWRhdGUg
-c2V0OjMgY2hhbmdlcwoKc2V0OjQgZm9yIDItbGFuZSwgbm9uLWJ1cnN0IG1vZGU6Ci0gcGF0Y2gg
-MDAyMDogMDAyMSwgRFNJIGhmcCBhbmQgaGJwIHRpbWluZ3MgZml4ZXMKLSBwYXRjaCAwMDIyOiBw
-YXRjaCB0byBlbmFibGUgVGVjaHN0YXIgVFM4NTUwQiBwYW5lbCBvbiBBbWFydWxhIEE2NC1SZWxp
-YwogIHRvIHZhbGlkYXRlIHNldDo0IGNoYW5nZXMuCgpDaGFuZ2VzIGZvciB2NjoKLSBkcm9wcGVk
-IHVubmVlZGVkIGNoYW5nZXMsIHBhdGNoZXMKLSBmaXhlZCBhbGwgYnVyc3QgbW9kZSBwYXRjaGVz
-IGFzIHBlciBwcmV2aW91cyB2ZXJzaW9uIGNvbW1lbnRzCi0gcmViYXNlIG9uIG1hc3RlcgotIHVw
-ZGF0ZSBwcm9wZXIgY29tbWl0IG1lc3NhZ2UKLSBkcm9wcGVkIHVubmVlZGVkIGNvbW1lbnRzCi0g
-b3JkZXIgdGhlIHBhdGNoZXMgdGhhdCBtYWtlIHJldmlldyBlYXN5CkNoYW5nZXMgZm9yIHY1Ogot
-IGNvbGxlY3QgUm9iLCBBY2tlZC1ieQotIGRyb3BlZCAiRml4IFZCUCBzaXplIGNhbGN1bGF0aW9u
-IiBwYXRjaAotIHVwZGF0ZWQgdmJsayB0aW1pbmcgY2FsY3VsYXRpb24uCi0gZHJvcGVkIHRlY2hz
-dGFyLCBiYW5hbmFwaSBkc2kgcGFuZWwgZHJpdmVycyB3aGljaCBtYXkgcmVxdWlyZQogIGJyaWRn
-ZSBvciBvdGhlciBzZXR1cC4gaXQncyB1bmRlciBkaXNjdXNzaW9uLgpDaGFuZ2VzIGZvciB2NDoK
-LSBkcm9wcG9lZCB1bnRlc3RlZCBDQ1VfRkVBVFVSRV9GSVhFRF9QT1NURElWIGNoZWNrIGNvZGUg
-aW4KICBua20gbWluLCBtYXggcmF0ZSBwYXRjaGVzCi0gY3JlYXRlIHR3byBwYXRjaGVzIGZvciAi
-QWRkIEFsbHdpbm5lciBBNjQgTUlQSSBEU0kgc3VwcG9ydCIKICBvbmUgZm9yIGhhc19tb2RfY2xr
-IHF1aXJrIGFuZCBvdGhlciBvbmUgZm9yIEE2NCBzdXBwb3J0Ci0gdXNlIGV4aXN0aW5nIGRyaXZl
-ciBjb2RlIGNvbnN0cnVjdCBmb3IgaGJsayBjb21wdXRhdGlvbgotIGRyb3BwZWQgIkluY3JlYXNl
-IGhmcCBwYWNrZXQgb3ZlcmhlYWQiIHBhdGNoIFsyXSwgdGhvdWdoIEJTUCBhZGRlZAogIHRoaXMg
-YnV0IHdlIGhhdmUgbm8gaXNzdWVzIGFzIG9mIG5vdy4KICAobm8gaXNzdWVzIG9uIHBhbmVsIHNp
-ZGUgdy9vIHRoaXMgY2hhbmdlKQotIGNyZWF0ZSBzZXBhcmF0ZSBmdW5jdGlvbiBmb3IgdmJsayBj
-b21wdXRhdGlvbiAKLSBlbmFibGUgdmNjLWRzaSByZWd1bGF0b3IgaW4gZHNpX3J1bnRpbWVfcmVz
-dW1lCi0gY29sbGVjdCBSb2IsIEFja2VkLWJ5Ci0gdXBkYXRlIE1BSU5UQUlORVJTIGZpbGUgZm9y
-IHBhbmVsIGRyaXZlcnMKLSBjbGVhbnVwIGNvbW1pdCBtZXNzYWdlcwotIGZpeGVkIGNoZWNrcGF0
-Y2ggd2FybmluZ3MvZXJyb3JzCgpbMV0gaHR0cHM6Ly9wYXRjaHdvcmsua2VybmVsLm9yZy9jb3Zl
-ci8xMDcyMTUwOS8KWzJdIGh0dHBzOi8vcGF0Y2h3b3JrLmtlcm5lbC5vcmcvY292ZXIvMTA2ODY2
-NTUvCgpBbnkgaW5wdXRzPwpKYWdhbi4KCkphZ2FuIFRla2kgKDIyKToKICBkcm0vc3VuNGk6IHN1
-bjZpX21pcGlfZHNpOiBDb21wdXRlIGJ1cnN0IG1vZGUgbG9vcCBOMSBpbnN0cnVjdGlvbgogICAg
-ZGVsYXkKICBkcm0vc3VuNGk6IHN1bjZpX21pcGlfZHNpOiBTdXBwb3J0IGluc3RydWN0aW9uIGxv
-b3Agc2VsZWN0aW9uCiAgZHJtL3N1bjRpOiBzdW42aV9taXBpX2RzaTogU2V0dXAgYnVyc3QgbW9k
-ZSB0aW1pbmdzCiAgZHJtL3N1bjRpOiBzdW42aV9taXBpX2RzaTogU2ltcGxpZnkgZHJxIHRvIHN1
-cHBvcnQgYWxsIG1vZGVzCiAgZHJtL3N1bjRpOiB0Y29uOiBFeHBvcnQgZ2V0IHRjb24wIHJvdXRp
-bmUKICBkcm0vc3VuNGk6IHN1bjZpX21pcGlfZHNpOiBQcm9iZSB0Y29uMCBkdXJpbmcgZHNpX2Jp
-bmQKICBkcm0vc3VuNGk6IHN1bjZpX21pcGlfZHNpOiBTZXR1cCBidXJzdCBtb2RlCiAgZHJtL3N1
-bjRpOiBzdW42aV9taXBpX2RzaTogRW5hYmxlIDJieXRlIHRyYWlsIGZvciA0LWxhbmUgYnVyc3Qg
-bW9kZQogIGRybS9zdW40aTogc3VuNmlfbWlwaV9kc2k6IEVuYWJsZSBidXJzdCBtb2RlIEhCUCwg
-SFNBX0hTRQogIGNsazogc3VueGktbmc6IEFkZCBjaGVjayBmb3IgbWluaW1hbCByYXRlIHRvIE5L
-TSBQTExzCiAgY2xrOiBzdW54aS1uZzogYTY0OiBBZGQgbWluaW11bSByYXRlIGZvciBQTExfTUlQ
-SQogIGR0LWJpbmRpbmdzOiBzdW42aS1kc2k6IEFkZCBWQ0MtRFNJIHN1cHBseSBwcm9wZXJ0eQog
-IGRybS9zdW40aTogc3VuNmlfbWlwaV9kc2k6IEFkZCBzdXBwb3J0IGZvciBWQ0MtRFNJIHZvbHRh
-Z2UgcmVndWxhdG9yCiAgZHQtYmluZGluZ3M6IHN1bjZpLWRzaTogQWRkIEE2NCBEU0kgY29tcGF0
-aWJsZSAody8gQTMxIGZhbGxiYWNrKQogIGR0LWJpbmRpbmdzOiBzdW42aS1kc2k6IEFkZCBBNjQg
-RFBIWSBjb21wYXRpYmxlICh3LyBBMzEgZmFsbGJhY2spCiAgYXJtNjQ6IGR0czogYWxsd2lubmVy
-OiBhNjQ6IEFkZCBEU0kgcGlwZWxpbmUKICBbRE8gTk9UIE1FUkdFXSBhcm02NDogYWxsd2lubmVy
-OiBhNjQ6IHBpbmU2NC1sdHM6IEVuYWJsZSBGZWl5YW5nIEZZMDcwMjRESTI2QTMwLUQgRFNJCiAg
-ICBwYW5lbAogIGRybS9zdW40aTogc3VuNmlfbWlwaV9kc2k6IEFkZCBEU0kgR2VuZXJpYyBzaG9y
-dCB3cml0ZSAyIHBhcmFtCiAgICB0cmFuc2ZlcgogIFtETyBOT1QgTUVSR0VdIGFybTY0OiBkdHM6
-IGFsbHdpbm5lcjogYmFuYW5hcGktbTY0OiBCYW5hbmFwaSBTMDcwV1YyMC1DVDE2IERTSSBwYW5l
-bAogIGRybS9zdW40aTogc3VuNmlfbWlwaV9kc2k6IEZpeCBEU0kgaGJwIHRpbWluZyB2YWx1ZQog
-IGRybS9zdW40aTogc3VuNmlfbWlwaV9kc2k6IEZpeCBEU0kgaGZwIHRpbWluZyB2YWx1ZQogIGFy
-bTY0OiBkdHM6IGFsbHdpbm5lcjogYTY0LWFtYXJ1bGEtcmVsaWM6IEFkZCBUZWNoc3RhciBUUzg1
-NTBCCiAgICBNSVBJLURTSSBwYW5lbAoKIC4uLi9iaW5kaW5ncy9kaXNwbGF5L3N1bnhpL3N1bjZp
-LWRzaS50eHQgICAgICB8ICAgNSArCiAuLi4vYWxsd2lubmVyL3N1bjUwaS1hNjQtYW1hcnVsYS1y
-ZWxpYy5kdHMgICAgfCAgMzkgKysrKysKIC4uLi9kdHMvYWxsd2lubmVyL3N1bjUwaS1hNjQtYmFu
-YW5hcGktbTY0LmR0cyB8ICA0MyArKysrKwogLi4uL2R0cy9hbGx3aW5uZXIvc3VuNTBpLWE2NC1w
-aW5lNjQtbHRzLmR0cyAgIHwgIDM5ICsrKysrCiBhcmNoL2FybTY0L2Jvb3QvZHRzL2FsbHdpbm5l
-ci9zdW41MGktYTY0LmR0c2kgfCAgNDcgKysrKysKIGRyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1z
-dW41MGktYTY0LmMgICAgICAgICB8ICAgMSArCiBkcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Vfbmtt
-LmMgICAgICAgICAgICAgICAgfCAgIDUgKwogZHJpdmVycy9jbGsvc3VueGktbmcvY2N1X25rbS5o
-ICAgICAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW40aV90Y29u
-LmMgICAgICAgICAgICB8ICAgMyArLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjRpX3Rjb24u
-aCAgICAgICAgICAgIHwgICAxICsKIGRyaXZlcnMvZ3B1L2RybS9zdW40aS9zdW42aV9taXBpX2Rz
-aS5jICAgICAgICB8IDE2NSArKysrKysrKysrKysrKysrLS0KIGRyaXZlcnMvZ3B1L2RybS9zdW40
-aS9zdW42aV9taXBpX2RzaS5oICAgICAgICB8ICAgNCArCiAxMiBmaWxlcyBjaGFuZ2VkLCAzMzcg
-aW5zZXJ0aW9ucygrKSwgMTYgZGVsZXRpb25zKC0pCgotLSAKMi4xOC4wLjMyMS5nZmZjNmZhMGUz
-CgpfX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpkcmktZGV2
-ZWwgbWFpbGluZyBsaXN0CmRyaS1kZXZlbEBsaXN0cy5mcmVlZGVza3RvcC5vcmcKaHR0cHM6Ly9s
-aXN0cy5mcmVlZGVza3RvcC5vcmcvbWFpbG1hbi9saXN0aW5mby9kcmktZGV2ZWwK
+Loop N1 instruction delay varies between burst and non-burst
+video modes. for burst mode panels it is computed based on the
+panel clock along with horizontal sync and porch timings and
+the rest it is simply (50 - 1)
+
+Reference code is available in BSP (from linux-sunxi
+drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+
+dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
+(panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
+=> (((mode->htotal - mode->hdisplay) * 150) /
+     ((mode->clock / 1000) * 8)) - 50;
+
+So, this patch add loop N1 computation for burst mode, for non-burst
+which is already available.
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 20 +++++++++++++++++++-
+ 1 file changed, 19 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index e3b34a345546..a5fcee750bee 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -354,6 +354,24 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
+ 		     SUN6I_DSI_INST_JUMP_CFG_NUM(1));
+ };
+ 
++static u16 sun6i_dsi_setup_inst_delay(struct sun6i_dsi *dsi,
++				      struct drm_display_mode *mode)
++{
++	struct mipi_dsi_device *device = dsi->device;
++	u32 hsync_porch, dclk;
++	u16 delay;
++
++	hsync_porch = (mode->htotal - mode->hdisplay);
++	dclk = (mode->clock / 1000);
++
++	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
++		delay = ((hsync_porch * 150) / (dclk * 8)) - 50;
++	else
++		delay = 50 - 1;
++
++	return delay;
++}
++
+ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
+ 					   struct drm_display_mode *mode)
+ {
+@@ -383,7 +401,7 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
+ 				      struct drm_display_mode *mode)
+ {
+-	u16 delay = 50 - 1;
++	u16 delay = sun6i_dsi_setup_inst_delay(dsi, mode);
+ 
+ 	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
+ 		     SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
+-- 
+2.18.0.321.gffc6fa0e3
