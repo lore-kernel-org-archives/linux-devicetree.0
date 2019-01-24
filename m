@@ -1,64 +1,59 @@
-From: Vivien Didelot <vivien.didelot@gmail.com>
-Subject: Re: [PATCH] of: Make of_node_name_eq() case insensitive
-Date: Thu, 24 Jan 2019 15:19:06 -0500
-Message-ID: <20190124151906.GB31994@t480s.localdomain>
-References: <20190124200825.2611-1-f.fainelli@gmail.com>
+From: Lina Iyer <ilina@codeaurora.org>
+Subject: [PATCH v2 4/8] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
+Date: Thu, 24 Jan 2019 13:22:01 -0700
+Message-ID: <20190124202205.7940-5-ilina@codeaurora.org>
+References: <20190124202205.7940-1-ilina@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124200825.2611-1-f.fainelli@gmail.com>
-Content-Disposition: inline
+In-Reply-To: <20190124202205.7940-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com
+Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
+routed to the PDC as interrupts that can be used to wake the system up
+from deep low power modes and suspend.
 
-On Thu, 24 Jan 2019 12:08:25 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
-> Since c32569e358ad ("regulator: Use of_node_name_eq for node name
-> comparisons") Vivien reported the mc13892-regulator complaining about
-> not being able to find regulators.
-> 
-> This is because prior to that commit we used of_node_cmp() to compare
-> the regulator array passed from mc13892_regulators down to
-> mc13xxx_parse_regulators_dt() and they are all defined in uppercase
-> letters by the MC13892_*_DEFINE* macros, whereas they are defined as
-> lowercase in the DTS.
-> 
-> Fix this by use strncasecmp() since that makes sure the comparison is
-> case insensitive like what of_node_cmp() did.
-> 
-> Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
-> Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+Cc: devicetree@vger.kernel.org
+Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+---
+ .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
+
+diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+index 665aadb5ea28..f0fedbc5d41a 100644
+--- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
++++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
+@@ -29,6 +29,11 @@ SDM845 platform.
+ 	Definition: must be 2. Specifying the pin number and flags, as defined
+ 		    in <dt-bindings/interrupt-controller/irq.h>
  
-This fixes the boot on i.MX51 ZII RDU1, which was printing this:
-
-    [    2.895302] imx-ipuv3 40000000.ipu: IPUv3EX probed
-    [    2.903869] spi_imx 70010000.spi: dma setup error -19, use pio
-    [    2.911943] mc13xxx spi0.0: mc13892: rev: 2.4, fin: 2, fab: 0, icid: 7/2
-    [    2.921463] mc13892-regulator mc13892-regulator: Unknown regulator: sw1
-    [    2.928207] mc13892-regulator mc13892-regulator: Unknown regulator: sw2
-    [    2.934896] mc13892-regulator mc13892-regulator: Unknown regulator: sw3
-    [    2.941575] mc13892-regulator mc13892-regulator: Unknown regulator: sw4
-    [    2.948263] mc13892-regulator mc13892-regulator: Unknown regulator: vpll
-    [    2.955050] mc13892-regulator mc13892-regulator: Unknown regulator: vdig
-    [    2.961820] mc13892-regulator mc13892-regulator: Unknown regulator: vsd
-    [    2.968464] mc13892-regulator mc13892-regulator: Unknown regulator: vusb
-    [    2.975251] mc13892-regulator mc13892-regulator: Unknown regulator: vusb2
-    [    2.982110] mc13892-regulator mc13892-regulator: Unknown regulator: vvideo
-    [    2.989039] mc13892-regulator mc13892-regulator: Unknown regulator: vaudio
-    [    2.995983] mc13892-regulator mc13892-regulator: Unknown regulator: vcam
-    [    3.002754] mc13892-regulator mc13892-regulator: Unknown regulator: vgen1
-    [    3.009597] mc13892-regulator mc13892-regulator: Unknown regulator: vgen2
-    [    3.016458] mc13892-regulator mc13892-regulator: Unknown regulator: vgen3
-
-before looping forever on the defered probe of the Marvell switch.
-
-Tested-by: Vivien Didelot <vivien.didelot@gmail.com>
-
-
-Thanks,
-
-	Vivien
++- wakeup-parent:
++	Usage: optional
++	Value type: <phandle>
++	Definition: A phandle to the wakeup interrupt controller for the SoC.
++
+ - gpio-controller:
+ 	Usage: required
+ 	Value type: <none>
+@@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
+ mux function to select on those pin(s)/group(s), and various pin configuration
+ parameters, such as pull-up, drive strength, etc.
+ 
+-
+ PIN CONFIGURATION NODES:
+ 
+ The name of each subnode is not important; all subnodes should be enumerated
+@@ -160,6 +164,7 @@ Example:
+ 		#gpio-cells = <2>;
+ 		interrupt-controller;
+ 		#interrupt-cells = <2>;
++		wake-parent = <&pdc_intc>;
+ 
+ 		qup9_active: qup9-active {
+ 			mux {
+-- 
+The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
+a Linux Foundation Collaborative Project
