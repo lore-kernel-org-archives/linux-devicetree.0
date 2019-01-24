@@ -1,66 +1,47 @@
-From: Adrian Hunter <adrian.hunter@intel.com>
-Subject: Re: [PATCH 4/7] mmc: sdhci: Add quirk for disabling DTO during erase
- command
-Date: Thu, 24 Jan 2019 14:08:48 +0200
-Message-ID: <8c5875db-016c-c416-7356-d7a26d8d2a0e@intel.com>
-References: <20190111110851.6805-1-faiz_abbas@ti.com>
- <20190111110851.6805-5-faiz_abbas@ti.com>
+From: liaoweixiong <liaoweixiong@allwinnertech.com>
+Subject: Re: [RFC v7 0/5] pstore/block: new support logger for block devices
+Date: Thu, 24 Jan 2019 20:16:30 +0800
+Message-ID: <5f243418-c6bd-061e-1161-1c0139ad84bf@allwinnertech.com>
+References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
+ <20190123182638.GD2792@darkstar.musicnaut.iki.fi>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190111110851.6805-5-faiz_abbas@ti.com>
+In-Reply-To: <20190123182638.GD2792@darkstar.musicnaut.iki.fi>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Faiz Abbas <faiz_abbas@ti.com>, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-mmc@vger.kernel.org
-Cc: zhang.chunyan@linaro.org, kishon@ti.com, mark.rutland@arm.com, robh+dt@kernel.org, ulf.hansson@linaro.org
+To: Aaro Koskinen <aaro.koskinen@iki.fi>
+Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 11/01/19 1:08 PM, Faiz Abbas wrote:
-> Some controllers might prematurely issue a data timeout during an erase
-> command. Add a quirk to disable the interrupt when an erase command is
-> issued.
+On 2019-01-24 02:26, Aaro Koskinen wrote:
+> Hi,
+> 
+> On Wed, Jan 23, 2019 at 08:05:11PM +0800, liaoweixiong wrote:
+>> Why should we need pstore_block?
+>> 1. Most embedded intelligent equipment have no persistent ram, which
+>> increases costs. We perfer to cheaper solutions, like block devices.
+>> In fast, there is already a sample for block device logger in driver
+>> MTD (drivers/mtd/mtdoops.c).
+> 
+> I think you should add a patch for some actual block device using this
+> new framework to show that it can work. What HW you think would be
+> using things?
+> 
 
-I might have already asked this, but would it be possible to use the
-existing SDHCI_QUIRK2_DISABLE_HW_TIMEOUT quirk?
+I will try to add a patch. Actually, I have implemented it on allwinner
+platform, but unfortunately these codes are unsuitable to submit to
+upper stream.
 
+In addition, there is already a sample for pstore/blk on patch 3 of
+version 7. It names
+blkoops. Blkoops is suitable for most block device as what it need is
+just a path of a partition. We can use it to test most of features but
+panic.
+
+> A.
 > 
-> Signed-off-by: Faiz Abbas <faiz_abbas@ti.com>
-> ---
->  drivers/mmc/host/sdhci.c | 8 ++++++++
->  drivers/mmc/host/sdhci.h | 2 ++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/mmc/host/sdhci.c b/drivers/mmc/host/sdhci.c
-> index 4a9044c06e21..cfd716aee552 100644
-> --- a/drivers/mmc/host/sdhci.c
-> +++ b/drivers/mmc/host/sdhci.c
-> @@ -1560,6 +1560,14 @@ void sdhci_send_command(struct sdhci_host *host, struct mmc_command *cmd)
->  	/* Initially, a command has no error */
->  	cmd->error = 0;
->  
-> +	if (cmd->opcode == MMC_ERASE &&
-> +	    (host->quirks2 & SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE)) {
-> +		mask = sdhci_readl(host, SDHCI_INT_ENABLE);
-> +		mask &= ~SDHCI_INT_DATA_TIMEOUT;
-> +		sdhci_writel(host, mask, SDHCI_INT_ENABLE);
-> +		sdhci_writel(host, mask, SDHCI_SIGNAL_ENABLE);
-> +	}
-> +
->  	if ((host->quirks2 & SDHCI_QUIRK2_STOP_WITH_TC) &&
->  	    cmd->opcode == MMC_STOP_TRANSMISSION)
->  		cmd->flags |= MMC_RSP_BUSY;
-> diff --git a/drivers/mmc/host/sdhci.h b/drivers/mmc/host/sdhci.h
-> index 7a52823ebef4..d0c6d4fe5371 100644
-> --- a/drivers/mmc/host/sdhci.h
-> +++ b/drivers/mmc/host/sdhci.h
-> @@ -479,6 +479,8 @@ struct sdhci_host {
->   * block count.
->   */
->  #define SDHCI_QUIRK2_USE_32BIT_BLK_CNT			(1<<18)
-> +/* Controller needs to disable DTO for erase command */
-> +#define SDHCI_QUIRK2_DISABLE_DTO_FOR_ERASE		(1<<19)
->  
->  	int irq;		/* Device IRQ */
->  	void __iomem *ioaddr;	/* Mapped address */
-> 
+
+-- 
+liaoweixiong
