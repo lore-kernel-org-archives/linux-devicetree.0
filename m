@@ -1,42 +1,51 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 11/22] clk: sunxi-ng: a64: Add minimum rate for PLL_MIPI
-Date: Fri, 25 Jan 2019 01:28:49 +0530
-Message-ID: <20190124195900.22620-12-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v6 12/22] dt-bindings: sun6i-dsi: Add VCC-DSI
+ supply property
+Date: Fri, 25 Jan 2019 01:28:50 +0530
+Message-ID: <20190124195900.22620-13-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190124195900.22620-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBV5SVDRAKGQEPDPQ6TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-TWluaW11bSBQTEwgdXNlZCBmb3IgTUlQSSBpcyA1MDBNSHosIGFzIHBlciBtYW51YWwsIGJ1dAps
-b3dlcmluZyB0aGUgbWluIHJhdGUgYnkgMzAwTUh6IGNhbiByZXN1bHQgcHJvcGVyIHdvcmtpbmcK
-bmttcyBkaXZpZGVyIHdpdGggdGhlIGhlbHAgb2YgZGVzaXJlZCBkY2xvY2sgcmF0ZSBmcm9tCnBh
-bmVsIGRyaXZlci4KClNpZ25lZC1vZmYtYnk6IEphZ2FuIFRla2kgPGphZ2FuQGFtYXJ1bGFzb2x1
-dGlvbnMuY29tPgpBY2tlZC1ieTogU3RlcGhlbiBCb3lkIDxzYm95ZEBrZXJuZWwub3JnPgotLS0K
-IGRyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1zdW41MGktYTY0LmMgfCAxICsKIDEgZmlsZSBjaGFu
-Z2VkLCAxIGluc2VydGlvbigrKQoKZGlmZiAtLWdpdCBhL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2Nj
-dS1zdW41MGktYTY0LmMgYi9kcml2ZXJzL2Nsay9zdW54aS1uZy9jY3Utc3VuNTBpLWE2NC5jCmlu
-ZGV4IDkzMjgzNmQyNmUyYi4uMjk2ZDQ4OWFhZDZlIDEwMDY0NAotLS0gYS9kcml2ZXJzL2Nsay9z
-dW54aS1uZy9jY3Utc3VuNTBpLWE2NC5jCisrKyBiL2RyaXZlcnMvY2xrL3N1bnhpLW5nL2NjdS1z
-dW41MGktYTY0LmMKQEAgLTE4Myw2ICsxODMsNyBAQCBzdGF0aWMgc3RydWN0IGNjdV9ua20gcGxs
-X21pcGlfY2xrID0gewogCS5uCQk9IF9TVU5YSV9DQ1VfTVVMVCg4LCA0KSwKIAkuawkJPSBfU1VO
-WElfQ0NVX01VTFRfTUlOKDQsIDIsIDIpLAogCS5tCQk9IF9TVU5YSV9DQ1VfRElWKDAsIDQpLAor
-CS5taW5fcmF0ZQk9IDMwMDAwMDAwMCwKIAkuY29tbW9uCQk9IHsKIAkJLnJlZwkJPSAweDA0MCwK
-IAkJLmh3LmluaXQJPSBDTEtfSFdfSU5JVCgicGxsLW1pcGkiLCAicGxsLXZpZGVvMCIsCi0tIAoy
-LjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVk
-ZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZv
-L2RyaS1kZXZlbAo=
+Most of the Allwinner MIPI DSI controllers are supply with
+VCC-DSI pin. which need to supply for some of the boards to
+trigger the power.
+
+So, document the supply property so-that the required board
+can eable it via device tree.
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+---
+ Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+index 6a6cf5de08b0..69e233e8fad1 100644
+--- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
++++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+@@ -27,6 +27,9 @@ Required properties:
+     first port should be the input endpoint, usually coming from the
+     associated TCON.
+ 
++Optional properties:
++  - vcc-dsi-supply: the VCC-DSI power supply of the DSI encoder
++
+ Any MIPI-DSI device attached to this should be described according to
+ the bindings defined in ../mipi-dsi-bus.txt
+ 
+-- 
+2.18.0.321.gffc6fa0e3
