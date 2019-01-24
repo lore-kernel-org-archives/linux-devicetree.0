@@ -1,100 +1,137 @@
-From: Ben Whitten <benwhitten@gmail.com>
-Subject: Re: [PATCH v3 lora-next 2/4] dt-bindings: lora: sx125x: add basic documentation
-Date: Thu, 24 Jan 2019 15:03:42 +0000
-Message-ID: <CAF3==isTrF7cT5ZNL7CetprgHLN50Zyh2t1ViP6XyBSFtQ_LUA@mail.gmail.com>
-References: <20190124145309.21698-1-ben.whitten@lairdtech.com> <20190124145309.21698-3-ben.whitten@lairdtech.com>
+From: Ludovic BARRE <ludovic.barre@st.com>
+Subject: Re: [Linux-stm32] [PATCH V3 1/2] mmc: mmci: add variant property to
+ set command stop bit
+Date: Thu, 24 Jan 2019 16:03:38 +0100
+Message-ID: <ab4cae87-0a5a-fe22-08ab-7c7661be7c8c@st.com>
+References: <1544109212-12621-1-git-send-email-ludovic.Barre@st.com>
+ <1544109212-12621-2-git-send-email-ludovic.Barre@st.com>
+ <CAPDyKFq7TZMKWMqmoDR0yfr2N2cf2nr4-BuEs5DPgJSGy-nvAA@mail.gmail.com>
+ <35f22c1a-888d-5abd-7ffe-ecf47a74b69a@st.com>
+ <9e22fd3d-f029-2a2a-18d1-af1987c94e4e@st.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124145309.21698-3-ben.whitten@lairdtech.com>
+In-Reply-To: <9e22fd3d-f029-2a2a-18d1-af1987c94e4e@st.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>
-Cc: "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-lpwan@lists.infradead.org
+To: Ulf Hansson <ulf.hansson@linaro.org>
+Cc: DTML <devicetree@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Srinivas Kandagatla <srinivas.kandagatla@linaro.org>, Maxime Coquelin <mcoquelin.stm32@gmail.com>, linux-stm32@st-md-mailman.stormreply.com, Linux ARM <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Missed linux-lpwan
+hi Ulf
 
-On Thu, 24 Jan 2019 at 14:53, Ben Whitten <ben.whitten@gmail.com> wrote:
->
-> From: Ben Whitten <ben.whitten@gmail.com>
->
-> The SX125x family are IQ radio transceivers from Semtech configured over
-> SPI, they are typically connected to an SX130x series concentrator howeve=
-r
-> may be connected to a host directly.
->
-> Required properties include the radio number of the host or concentrator
-> bus.
->
-> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-> ---
-> v2 -> v3:
-> * Renamed example node name to be consistent with concentrator
-> v1 -> v2:
-> * Dropped spi-max-frequency binding
-> * Wording changes to commit and descriptions
-> * Added spi wrapper suggested by Rob H
-> * Dual licence
-> ---
->  .../bindings/net/lora/semtech,sx125x.yaml     | 44 +++++++++++++++++++
->  1 file changed, 44 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/net/lora/semtech,sx=
-125x.yaml
->
-> diff --git a/Documentation/devicetree/bindings/net/lora/semtech,sx125x.ya=
-ml b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-> new file mode 100644
-> index 000000000000..fe2d2a23c28b
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/net/lora/semtech,sx125x.yaml
-> @@ -0,0 +1,44 @@
-> +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
-> +%YAML 1.2
-> +---
-> +$id: http://devicetree.org/schemas/net/lora/semtech,sx125x.yaml#
-> +$schema: http://devicetree.org/meta-schemas/core.yaml#
-> +
-> +title: Semtech IQ modulator/de-modulator transeiver
-> +
-> +maintainers:
-> +  - Andreas F=C3=A4rber <afaerber@suse.de>
-> +  - Ben Whitten <ben.whitten@gmail.com>
-> +
-> +description: |
-> +  The SX125x family are transceivers capable of supporting multiple cons=
-tant
-> +  and non-constant envelope modulation schemes.
-> +
-> +properties:
-> +  compatible:
-> +    items:
-> +      - enum:
-> +        - semtech,sx1255
-> +        - semtech,sx1257
-> +        - semtech,sx1258
-> +
-> +  reg:
-> +    maxItems: 1
-> +    description: The chip select on the SPI bus or radio number in conce=
-ntrator
-> +      , with radio A =3D 0 and radio B =3D 1.
-> +
-> +required:
-> +  - compatible
-> +  - reg
-> +
-> +examples:
-> +  - |
-> +    spi {
-> +      #address-cells =3D <1>;
-> +      #size-cells =3D <0>;
-> +
-> +      radio0: radio@0 {
-> +        compatible =3D "semtech,sx1257";
-> +        reg =3D <0>;
-> +      };
-> +    };
-> --
-> 2.17.1
->
+I don't think you've seen my previous mail :-(
+what is your feeling about "mmc: mmci: send stop command to clear the dpsm"
+
+Regards
+Ludo
+
+On 1/3/19 11:35 AM, Ludovic BARRE wrote:
+> hi Ulf
+> 
+> happy new years.
+> 
+> Just a gentleman ping about patch2 of this series
+> "mmc: mmci: send stop command to clear the dpsm."
+> 
+> Regards
+> Ludo
+> 
+> On 12/11/18 10:53 AM, Ludovic BARRE wrote:
+>>
+>>
+>> On 12/11/18 10:47 AM, Ulf Hansson wrote:
+>>> On Thu, 6 Dec 2018 at 16:13, Ludovic Barre <ludovic.Barre@st.com> wrote:
+>>>>
+>>>> From: Ludovic Barre <ludovic.barre@st.com>
+>>>>
+>>>> On cmd12 (STOP_TRANSMISSION), STM32 sdmmc variant needs to set
+>>>> cmdstop bit in command register. The CPSM ("Command Path State 
+>>>> Machine")
+>>>> treats the command as a Stop Transmission command and signals
+>>>> abort to the DPSM ("Data Path State Machine").
+>>>>
+>>>> Signed-off-by: Ludovic Barre <ludovic.barre@st.com>
+>>>
+>>> Applied for next, thanks!
+>>
+>> thanks
+>>
+>>>
+>>> Withholding patch2 for a while, as I need some more time to review it.
+>>
+>> No problem,
+>>
+>> Regards
+>> Ludo
+>>
+>>>
+>>> Kind regards
+>>> Uffe
+>>>
+>>>> ---
+>>>>   drivers/mmc/host/mmci.c | 6 ++++++
+>>>>   drivers/mmc/host/mmci.h | 2 ++
+>>>>   2 files changed, 8 insertions(+)
+>>>>
+>>>> diff --git a/drivers/mmc/host/mmci.c b/drivers/mmc/host/mmci.c
+>>>> index 13fa640..e352f5a 100644
+>>>> --- a/drivers/mmc/host/mmci.c
+>>>> +++ b/drivers/mmc/host/mmci.c
+>>>> @@ -21,6 +21,7 @@
+>>>>   #include <linux/err.h>
+>>>>   #include <linux/highmem.h>
+>>>>   #include <linux/log2.h>
+>>>> +#include <linux/mmc/mmc.h>
+>>>>   #include <linux/mmc/pm.h>
+>>>>   #include <linux/mmc/host.h>
+>>>>   #include <linux/mmc/card.h>
+>>>> @@ -274,6 +275,7 @@ static struct variant_data variant_stm32_sdmmc = {
+>>>>          .cmdreg_lrsp_crc        = MCI_CPSM_STM32_LRSP_CRC,
+>>>>          .cmdreg_srsp_crc        = MCI_CPSM_STM32_SRSP_CRC,
+>>>>          .cmdreg_srsp            = MCI_CPSM_STM32_SRSP,
+>>>> +       .cmdreg_stop            = MCI_CPSM_STM32_CMDSTOP,
+>>>>          .data_cmd_enable        = MCI_CPSM_STM32_CMDTRANS,
+>>>>          .irq_pio_mask           = MCI_IRQ_PIO_STM32_MASK,
+>>>>          .datactrl_first         = true,
+>>>> @@ -1100,6 +1102,10 @@ mmci_start_command(struct mmci_host *host, 
+>>>> struct mmc_command *cmd, u32 c)
+>>>>                  mmci_reg_delay(host);
+>>>>          }
+>>>>
+>>>> +       if (host->variant->cmdreg_stop &&
+>>>> +           cmd->opcode == MMC_STOP_TRANSMISSION)
+>>>> +               c |= host->variant->cmdreg_stop;
+>>>> +
+>>>>          c |= cmd->opcode | host->variant->cmdreg_cpsm_enable;
+>>>>          if (cmd->flags & MMC_RSP_PRESENT) {
+>>>>                  if (cmd->flags & MMC_RSP_136)
+>>>> diff --git a/drivers/mmc/host/mmci.h b/drivers/mmc/host/mmci.h
+>>>> index 550dd39..2422909 100644
+>>>> --- a/drivers/mmc/host/mmci.h
+>>>> +++ b/drivers/mmc/host/mmci.h
+>>>> @@ -264,6 +264,7 @@ struct mmci_host;
+>>>>    * @cmdreg_lrsp_crc: enable value for long response with crc
+>>>>    * @cmdreg_srsp_crc: enable value for short response with crc
+>>>>    * @cmdreg_srsp: enable value for short response without crc
+>>>> + * @cmdreg_stop: enable value for stop and abort transmission
+>>>>    * @datalength_bits: number of bits in the MMCIDATALENGTH register
+>>>>    * @fifosize: number of bytes that can be written when 
+>>>> MMCI_TXFIFOEMPTY
+>>>>    *           is asserted (likewise for RX)
+>>>> @@ -316,6 +317,7 @@ struct variant_data {
+>>>>          unsigned int            cmdreg_lrsp_crc;
+>>>>          unsigned int            cmdreg_srsp_crc;
+>>>>          unsigned int            cmdreg_srsp;
+>>>> +       unsigned int            cmdreg_stop;
+>>>>          unsigned int            datalength_bits;
+>>>>          unsigned int            fifosize;
+>>>>          unsigned int            fifohalfsize;
+>>>> -- 
+>>>> 2.7.4
+>>>>
+> _______________________________________________
+> Linux-stm32 mailing list
+> Linux-stm32@st-md-mailman.stormreply.com
+> https://st-md-mailman.stormreply.com/mailman/listinfo/linux-stm32
