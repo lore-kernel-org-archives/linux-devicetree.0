@@ -1,87 +1,69 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 04/22] drm/sun4i: sun6i_mipi_dsi: Simplify drq to support all modes
-Date: Fri, 25 Jan 2019 01:28:42 +0530
-Message-ID: <20190124195900.22620-5-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v6 05/22] drm/sun4i: tcon: Export get tcon0 routine
+Date: Fri, 25 Jan 2019 01:28:43 +0530
+Message-ID: <20190124195900.22620-6-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124195900.22620-1-jagan@amarulasolutions.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBM5SVDRAKGQEULG7O3Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Allwinner MIPI DSI drq has enable mode and set bits.
-- for burst mode, drq need to set enable mode bit.
-- for non-burst video modes, drq need to set enable mode,
-  set bits for those front proch greater than 20 and for
-  rest drq is not used.
+Sometimes tcon attributes like tcon divider, clock rate etc are needed
+in interface drivers like DSI. So for such cases interface driver must
+probe the respective tcon and get the attributes.
 
-This patch simplifies existing drq code by grouping into
-sun6i_dsi_get_drq and support all video modes.
+Since tcon0 probe is already available, via sun4i_get_tcon0 function,
+export the same instead of probing tcon explicitly.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 39 ++++++++++++++++----------
- 1 file changed, 24 insertions(+), 15 deletions(-)
+ drivers/gpu/drm/sun4i/sun4i_tcon.c | 3 ++-
+ drivers/gpu/drm/sun4i/sun4i_tcon.h | 1 +
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 0f02bcc997a5..16a86d35dc5a 100644
---- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-+++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -354,6 +354,28 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
- 		     SUN6I_DSI_INST_JUMP_CFG_NUM(1));
- };
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.c b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+index 0420f5c978b9..3da75a0c5c5d 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.c
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.c
+@@ -221,7 +221,7 @@ EXPORT_SYMBOL(sun4i_tcon_enable_vblank);
+  * are located in TCON0. This helper returns a pointer to TCON0's
+  * sun4i_tcon structure, or NULL if not found.
+  */
+-static struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
++struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
+ {
+ 	struct sun4i_drv *drv = drm->dev_private;
+ 	struct sun4i_tcon *tcon;
+@@ -235,6 +235,7 @@ static struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm)
  
-+static int sun6i_dsi_get_drq(struct sun6i_dsi *dsi,
-+			      struct drm_display_mode *mode)
-+{
-+	struct mipi_dsi_device *device = dsi->device;
-+
-+	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-+		return SUN6I_DSI_TCON_DRQ_ENABLE_MODE;
-+
-+	if ((mode->hsync_start - mode->hdisplay) > 20) {
-+		/* Maaaaaagic */
-+		u16 drq = (mode->hsync_start - mode->hdisplay) - 20;
-+
-+		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
-+		drq /= 32;
-+
-+		return (SUN6I_DSI_TCON_DRQ_ENABLE_MODE |
-+			SUN6I_DSI_TCON_DRQ_SET(drq));
-+	}
-+
-+	return 0;
-+}
-+
- static u16 sun6i_dsi_setup_inst_delay(struct sun6i_dsi *dsi,
- 				      struct drm_display_mode *mode)
- {
-@@ -381,21 +403,8 @@ static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
- 				  struct drm_display_mode *mode)
- {
--	struct mipi_dsi_device *device = dsi->device;
--	u32 val = 0;
--
--	if ((mode->hsync_end - mode->hdisplay) > 20) {
--		/* Maaaaaagic */
--		u16 drq = (mode->hsync_end - mode->hdisplay) - 20;
--
--		drq *= mipi_dsi_pixel_format_to_bpp(device->format);
--		drq /= 32;
--
--		val = (SUN6I_DSI_TCON_DRQ_ENABLE_MODE |
--		       SUN6I_DSI_TCON_DRQ_SET(drq));
--	}
--
--	regmap_write(dsi->regs, SUN6I_DSI_TCON_DRQ_REG, val);
-+	regmap_write(dsi->regs, SUN6I_DSI_TCON_DRQ_REG,
-+		     sun6i_dsi_get_drq(dsi, mode));
+ 	return NULL;
  }
++EXPORT_SYMBOL(sun4i_get_tcon0);
  
- static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
+ void sun4i_tcon_set_mux(struct sun4i_tcon *tcon, int channel,
+ 			const struct drm_encoder *encoder)
+diff --git a/drivers/gpu/drm/sun4i/sun4i_tcon.h b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+index b5214d71610f..a52696db14a5 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_tcon.h
++++ b/drivers/gpu/drm/sun4i/sun4i_tcon.h
+@@ -274,6 +274,7 @@ struct sun4i_tcon {
+ struct drm_bridge *sun4i_tcon_find_bridge(struct device_node *node);
+ struct drm_panel *sun4i_tcon_find_panel(struct device_node *node);
+ 
++struct sun4i_tcon *sun4i_get_tcon0(struct drm_device *drm);
+ void sun4i_tcon_enable_vblank(struct sun4i_tcon *tcon, bool enable);
+ void sun4i_tcon_mode_set(struct sun4i_tcon *tcon,
+ 			 const struct drm_encoder *encoder,
 -- 
 2.18.0.321.gffc6fa0e3
