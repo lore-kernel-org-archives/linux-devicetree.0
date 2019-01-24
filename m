@@ -1,78 +1,49 @@
-Return-Path: <SRS0=ySGx=QB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mail-eopbgr1410097.outbound.protection.outlook.com ([40.107.141.97]:8840
-        "EHLO JPN01-OS2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728469AbfAYLah (ORCPT <rfc822;devicetree@vger.kernel.org>);
-        Fri, 25 Jan 2019 06:30:37 -0500
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
-Date: Fri, 25 Jan 2019 11:30:29 +0000
-Message-ID: <OSBPR01MB21034B1D07C9BA05859AEA73B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
- <CAMuHMdW-qt+3iNit1wVxN2JyRwCArJzBNvvjDZJyxYRjvDkLuA@mail.gmail.com>
-In-Reply-To: <CAMuHMdW-qt+3iNit1wVxN2JyRwCArJzBNvvjDZJyxYRjvDkLuA@mail.gmail.com>
-Content-Language: en-US
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+Return-Path: <SRS0=CXjO=QA=gmail.com=geert.uytterhoeven@kernel.org>
 MIME-Version: 1.0
-Sender: devicetree-owner@vger.kernel.org
-To: Geert Uytterhoeven <geert@linux-m68k.org>, Vincent Guittot <vincent.guittot@linaro.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
+In-Reply-To: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Date: Thu, 24 Jan 2019 11:15:56 +0100
+Message-ID: <CAMuHMdW-qt+3iNit1wVxN2JyRwCArJzBNvvjDZJyxYRjvDkLuA@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Content-Type: text/plain; charset="UTF-8"
+To: Biju Das <biju.das@bp.renesas.com>
 Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Samuel Holland <samuel@sholland.org>
 List-ID: <devicetree@vger.kernel.org>
 
-SGkgR2VlcnQsDQoNClRoYW5rcyBmb3IgdGhlIGZlZWRiYWNrLiBJIHN0YXJ0ZWQgdGVzdGluZyBD
-TVQgb24gbGF0ZXN0IGtlcm5lbChMaW51eC1uZXh0LTIwMTkwMTI1IGFuZCBhbHNvIHJlbmVzYXMt
-ZGV2KSBhbmQgZm91bmQgdGhhdCBpdCBpcyBicm9rZW4gb24gUi1DYXIgTTMtVyBkZXZpY2UuDQoN
-Ck9uIGZ1cnRoZXIgaW52ZXN0aWdhdGlvbiB0aGUgcGF0Y2ggKCIgODIzNGY2NzM0YzVkNzRhYzc5
-NGU1NTE3NDM3ZjUxYzU3ZDY1Zjg2NSIgICBQTS1ydW50aW1lOiBTd2l0Y2ggYXV0b3N1c3BlbmQg
-b3ZlciB0byB1c2luZyBocnRpbWVycykgIGlzIGNhdXNpbmcgdGhlIGlzc3VlLg0KDQpEdXJpbmcg
-Y2xvY2sgc291cmNlIHN3aXRjaGluZywgSXQgY2FsbHMgdGhlIGZ1bmN0aW9uICJzaF9jbXRfZW5h
-YmxlIiAgd2hpY2ggY2FsbHMgIiBwbV9ydW50aW1lX2dldF9zeW5jKCZjaC0+Y210LT5wZGV2LT5k
-ZXYpOyIgIGFuZCBhZnRlciB0aGF0IGNvbnNvbGUgZnJlZXplcy4NCg0KU2VyZ2VpOiBIYXZlIHlv
-dSBub3RpY2VkIHRoaXMgaXNzdWUgIG9uIFItQ2FyIFYzTSBhbmQgVjNIIGJvYXJkcyB3aXRoIGxh
-dGVzdCBrZXJuZWw/DQoNClJlZ2FyZHMsDQpCaWp1DQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogbGludXgtcmVuZXNhcy1zb2Mtb3duZXJAdmdlci5rZXJuZWwub3JnIDxs
-aW51eC1yZW5lc2FzLXNvYy0NCj4gb3duZXJAdmdlci5rZXJuZWwub3JnPiBPbiBCZWhhbGYgT2Yg
-R2VlcnQgVXl0dGVyaG9ldmVuDQo+IFNlbnQ6IDI0IEphbnVhcnkgMjAxOSAxMDoxNg0KPiBUbzog
-QmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiBDYzogUm9iIEhlcnJpbmcgPHJv
-YmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA8bWFyay5ydXRsYW5kQGFybS5jb20+
-OyBTaW1vbiBIb3JtYW4gPGhvcm1zQHZlcmdlLm5ldC5hdT47IE1hZ251cw0KPiBEYW1tIDxtYWdu
-dXMuZGFtbUBnbWFpbC5jb20+OyBMaW51eC1SZW5lc2FzIDxsaW51eC1yZW5lc2FzLQ0KPiBzb2NA
-dmdlci5rZXJuZWwub3JnPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdBUkUgQU5EIEZMQVRURU5FRCBE
-RVZJQ0UNCj4gVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBHZWVy
-dCBVeXR0ZXJob2V2ZW4NCj4gPGdlZXJ0K3JlbmVzYXNAZ2xpZGVyLmJlPjsgQ2hyaXMgUGF0ZXJz
-b24NCj4gPENocmlzLlBhdGVyc29uMkByZW5lc2FzLmNvbT47IERhbmllbCBMZXpjYW5vDQo+IDxk
-YW5pZWwubGV6Y2Fub0BsaW5hcm8ub3JnPjsgVGhvbWFzIEdsZWl4bmVyIDx0Z2x4QGxpbnV0cm9u
-aXguZGU+OyBKb2huDQo+IFN0dWx0eiA8am9obi5zdHVsdHpAbGluYXJvLm9yZz47IEZhYnJpemlv
-IENhc3Rybw0KPiA8ZmFicml6aW8uY2FzdHJvQGJwLnJlbmVzYXMuY29tPjsgU2FtdWVsIEhvbGxh
-bmQgPHNhbXVlbEBzaG9sbGFuZC5vcmc+DQo+IFN1YmplY3Q6IFJlOiBbUEFUQ0hdIGFybTY0OiBk
-dHM6IHJlbmVzYXM6IHI4YTc3OTY6IEFkZCBDTVQgZGV2aWNlIG5vZGVzDQo+DQo+IEhpIEJpanUs
-DQo+DQo+IE9uIEZyaSwgT2N0IDI2LCAyMDE4IGF0IDEwOjMyIEFNIEJpanUgRGFzIDxiaWp1LmRh
-c0BicC5yZW5lc2FzLmNvbT4gd3JvdGU6DQo+ID4gVGhpcyBwYXRjaCBhZGRzIENNVHswfDF8Mnwz
-fSBkZXZpY2Ugbm9kZXMgZm9yIHI4YTc3OTYgU29DLg0KPiA+DQo+ID4gU2lnbmVkLW9mZi1ieTog
-QmlqdSBEYXMgPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0KPiA+IC0tLQ0KPiA+IFRoaXMgcGF0
-Y2ggaXMgdGVzdGVkIGFnYWluc3QgcmVuZXNhcy1kZXYNCj4gPg0KPiA+IEkgaGF2ZSBleGVjdXRl
-ZCBvbiBpbmNvbnNpc3RlbmN5LWNoZWNrLCBuYW5vc2xlZXAgYW5kDQo+ID4gY2xvY2tzb3VyY2Vf
-c3dpdGNoIHNlbGZ0ZXN0cyBvbiB0aGlzIGFybTY0IFNvQy4gVGhlDQo+ID4gaW5jb25zaXN0ZW5j
-eS1jaGVjayBhbmQgbmFub3NsZWVwIHRlc3RzIGFyZSB3b3JraW5nIGZpbmUuVGhlDQo+ID4gY2xv
-Y2tzb3VyY2Vfc3dpdGNoIGFzeW5jaHJvbm91cyB0ZXN0IGlzIGZhaWxpbmcgZHVlIHRvIGluY29u
-c2lzdGVuY3ktY2hlY2sNCj4gZmFpbHVyZSBvbiAiYXJjaF9zeXNfY291bnRlciIuDQo+ID4NCj4g
-PiBCdXQgaWYgaSBza2lwIHRoZSBjbG9ja3NvdXJjZV9zd2l0Y2hpbmcgb2YgImFyY2hfc3lzX2Nv
-dW50ZXIiLCB0aGUNCj4gPiBhc3luY2hyb25vdXMgdGVzdCBpcyBwYXNzaW5nIGZvciBDTVQwLzEv
-Mi8zIHRpbWVyLg0KPiA+DQo+ID4gSGFzIGFueSBvbmUgbm90aWNlZCB0aGlzIGlzc3VlPw0KPg0K
-PiBjbG9ja2V2ZW50cy9uZXh0IG5vdyBoYXMgY29tbWl0IDdjZDZkY2EzNjAwZDhkNzENCj4gKCJj
-bG9ja3NvdXJjZS9kcml2ZXJzL2FyY2hfdGltZXI6IFdvcmthcm91bmQgZm9yIEFsbHdpbm5lciBB
-NjQgdGltZXINCj4gaW5zdGFiaWxpdHkiKS4gIFBlcmhhcHMgdGhpcyBpcyByZWxhdGVkLCBhbmQg
-dGhlIHNhbWUgdGVzdCBwcm9ncmFtIG1heSBpbmRpY2F0ZQ0KPiBzaW1pbGFyIGlzc3Vlcz8NCj4N
-Cj4gU2VlIGFsc28gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8yMDE5MDExMzAyMTcxOS40
-NjQ1Ny0yLQ0KPiBzYW11ZWxAc2hvbGxhbmQub3JnLw0KPg0KPiBHcntvZXRqZSxlZXRpbmd9cywN
-Cj4NCj4gICAgICAgICAgICAgICAgICAgICAgICAgR2VlcnQNCj4NCj4gLS0NCj4gR2VlcnQgVXl0
-dGVyaG9ldmVuIC0tIFRoZXJlJ3MgbG90cyBvZiBMaW51eCBiZXlvbmQgaWEzMiAtLSBnZWVydEBs
-aW51eC0NCj4gbTY4ay5vcmcNCj4NCj4gSW4gcGVyc29uYWwgY29udmVyc2F0aW9ucyB3aXRoIHRl
-Y2huaWNhbCBwZW9wbGUsIEkgY2FsbCBteXNlbGYgYSBoYWNrZXIuIEJ1dA0KPiB3aGVuIEknbSB0
-YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkganVzdCBzYXkgInByb2dyYW1tZXIiIG9yIHNvbWV0aGlu
-ZyBsaWtlIHRoYXQuDQo+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgLS0gTGludXMg
-VG9ydmFsZHMNCg0KDQoNClJlbmVzYXMgRWxlY3Ryb25pY3MgRXVyb3BlIEx0ZCwgRHVrZXMgTWVh
-ZG93LCBNaWxsYm9hcmQgUm9hZCwgQm91cm5lIEVuZCwgQnVja2luZ2hhbXNoaXJlLCBTTDggNUZI
-LCBVSy4gUmVnaXN0ZXJlZCBpbiBFbmdsYW5kICYgV2FsZXMgdW5kZXIgUmVnaXN0ZXJlZCBOby4g
-MDQ1ODY3MDkuDQo=
+Hi Biju,
+
+On Fri, Oct 26, 2018 at 10:32 AM Biju Das <biju.das@bp.renesas.com> wrote:
+> This patch adds CMT{0|1|2|3} device nodes for r8a7796 SoC.
+>
+> Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> ---
+> This patch is tested against renesas-dev
+>
+> I have executed on inconsistency-check, nanosleep and clocksource_switch
+> selftests on this arm64 SoC. The inconsistency-check and nanosleep tests
+> are working fine.The clocksource_switch asynchronous test is failing due
+> to inconsistency-check failure on "arch_sys_counter".
+>
+> But if i skip the clocksource_switching of "arch_sys_counter", the
+> asynchronous test is passing for CMT0/1/2/3 timer.
+>
+> Has any one noticed this issue?
+
+clockevents/next now has commit 7cd6dca3600d8d71
+("clocksource/drivers/arch_timer: Workaround for Allwinner A64 timer
+instability").  Perhaps this is related, and the same test program may
+indicate similar issues?
+
+See also https://lore.kernel.org/lkml/20190113021719.46457-2-samuel@sholland.org/
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
