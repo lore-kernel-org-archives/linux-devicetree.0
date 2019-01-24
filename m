@@ -1,181 +1,62 @@
 From: Jayant Shekhar <jshekhar@codeaurora.org>
-Subject: [v7 2/3] drm/msm/dpu: Integrate interconnect API in MDSS
-Date: Thu, 24 Jan 2019 10:39:51 +0530
-Message-ID: <1548306592-4708-3-git-send-email-jshekhar@codeaurora.org>
+Subject: [v7 3/3] dt-bindings: msm/disp: Introduce interconnect bindings for
+ MDSS on SDM845
+Date: Thu, 24 Jan 2019 10:39:52 +0530
+Message-ID: <1548306592-4708-4-git-send-email-jshekhar@codeaurora.org>
 References: <1548306592-4708-1-git-send-email-jshekhar@codeaurora.org>
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
 In-Reply-To: <1548306592-4708-1-git-send-email-jshekhar@codeaurora.org>
-Sender: linux-kernel-owner@vger.kernel.org
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
 To: dri-devel@lists.freedesktop.org, linux-arm-msm@vger.kernel.org, freedreno@lists.freedesktop.org, devicetree@vger.kernel.org
-Cc: Jayant Shekhar <jshekhar@codeaurora.org>, linux-kernel@vger.kernel.org, robdclark@gmail.com, seanpaul@chromium.org, hoegsberg@chromium.org, abhinavk@codeaurora.org, jsanka@codeaurora.org, chandanu@codeaurora.org, nganji@codeaurora.org, Sravanthi Kollukuduru <skolluku@codeaurora.org>
+Cc: linux-kernel@vger.kernel.org, abhinavk@codeaurora.org, Jayant Shekhar <jshekhar@codeaurora.org>, seanpaul@chromium.org, Sravanthi Kollukuduru <skolluku@codeaurora.org>, hoegsberg@chromium.org, chandanu@codeaurora.org
 List-Id: devicetree@vger.kernel.org
 
-The interconnect framework is designed to provide a
-standard kernel interface to control the settings of
-the interconnects on a SoC.
-
-The interconnect API uses a consumer/provider-based model,
-where the providers are the interconnect buses and the
-consumers could be various drivers.
-
-MDSS is one of the interconnect consumers which uses the
-interconnect APIs to get the path between endpoints and
-set its bandwidth requirement for the given interconnected
-path.
-
-Changes in v2:
-	- Remove error log and unnecessary check (Jordan Crouse)
-
-Changes in v3:
-	- Code clean involving variable name change, removal
-	  of extra paranthesis and variables (Matthias Kaehlcke)
-
-Changes in v4:
-	- Add comments, spacings, tabs, proper port name
-	  and icc macro (Georgi Djakov)
-
-Changes in v5:
-	- Commit text and parenthesis alignment (Georgi Djakov)
-
-Changes in v6:
-	- Change to new icc_set API's (Doug Anderson)
-
-Changes in v7:
-	- Fixed a typo
-
-Signed-off-by: Sravanthi Kollukuduru <skolluku@codeaurora.org>
-Signed-off-by: Jayant Shekhar <jshekhar@codeaurora.org>
----
- drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c | 49 +++++++++++++++++++++++++++++---
- 1 file changed, 45 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-index 38576f8..38daf8a 100644
---- a/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-+++ b/drivers/gpu/drm/msm/disp/dpu1/dpu_mdss.c
-@@ -4,11 +4,15 @@
-  */
- 
- #include "dpu_kms.h"
-+#include <linux/interconnect.h>
- 
- #define to_dpu_mdss(x) container_of(x, struct dpu_mdss, base)
- 
- #define HW_INTR_STATUS			0x0010
- 
-+/* Max BW defined in KBps */
-+#define MAX_BW				6800000
-+
- struct dpu_mdss {
- 	struct msm_mdss base;
- 	void __iomem *mmio;
-@@ -16,8 +20,30 @@ struct dpu_mdss {
- 	u32 hwversion;
- 	struct dss_module_power mp;
- 	struct dpu_irq_controller irq_controller;
-+	struct icc_path *path[2];
-+	u32 num_paths;
- };
- 
-+static int dpu_mdss_parse_data_bus_icc_path(struct drm_device *dev,
-+						struct dpu_mdss *dpu_mdss)
-+{
-+	struct icc_path *path0 = of_icc_get(dev->dev, "mdp0-mem");
-+	struct icc_path *path1 = of_icc_get(dev->dev, "mdp1-mem");
-+
-+	if (IS_ERR(path0))
-+		return PTR_ERR(path0);
-+
-+	dpu_mdss->path[0] = path0;
-+	dpu_mdss->num_paths = 1;
-+
-+	if (!IS_ERR(path1)) {
-+		dpu_mdss->path[1] = path1;
-+		dpu_mdss->num_paths++;
-+	}
-+
-+	return 0;
-+}
-+
- static irqreturn_t dpu_mdss_irq(int irq, void *arg)
- {
- 	struct dpu_mdss *dpu_mdss = arg;
-@@ -127,7 +153,11 @@ static int dpu_mdss_enable(struct msm_mdss *mdss)
- {
- 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
- 	struct dss_module_power *mp = &dpu_mdss->mp;
--	int ret;
-+	int ret, i;
-+	u64 avg_bw = dpu_mdss->num_paths ? MAX_BW / dpu_mdss->num_paths : 0;
-+
-+	for (i = 0; i < dpu_mdss->num_paths; i++)
-+		icc_set_bw(dpu_mdss->path[i], avg_bw, kBps_to_icc(MAX_BW));
- 
- 	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, true);
- 	if (ret)
-@@ -140,12 +170,15 @@ static int dpu_mdss_disable(struct msm_mdss *mdss)
- {
- 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(mdss);
- 	struct dss_module_power *mp = &dpu_mdss->mp;
--	int ret;
-+	int ret, i;
- 
- 	ret = msm_dss_enable_clk(mp->clk_config, mp->num_clk, false);
- 	if (ret)
- 		DPU_ERROR("clock disable failed, ret:%d\n", ret);
- 
-+	for (i = 0; i < dpu_mdss->num_paths; i++)
-+		icc_set_bw(dpu_mdss->path[i], 0, 0);
-+
- 	return ret;
- }
- 
-@@ -155,6 +188,7 @@ static void dpu_mdss_destroy(struct drm_device *dev)
- 	struct msm_drm_private *priv = dev->dev_private;
- 	struct dpu_mdss *dpu_mdss = to_dpu_mdss(priv->mdss);
- 	struct dss_module_power *mp = &dpu_mdss->mp;
-+	int i;
- 
- 	pm_runtime_disable(dev->dev);
- 	_dpu_mdss_irq_domain_fini(dpu_mdss);
-@@ -162,6 +196,9 @@ static void dpu_mdss_destroy(struct drm_device *dev)
- 	msm_dss_put_clk(mp->clk_config, mp->num_clk);
- 	devm_kfree(&pdev->dev, mp->clk_config);
- 
-+	for (i = 0; i < dpu_mdss->num_paths; i++)
-+		icc_put(dpu_mdss->path[i]);
-+
- 	if (dpu_mdss->mmio)
- 		devm_iounmap(&pdev->dev, dpu_mdss->mmio);
- 	dpu_mdss->mmio = NULL;
-@@ -200,6 +237,10 @@ int dpu_mdss_init(struct drm_device *dev)
- 	}
- 	dpu_mdss->mmio_len = resource_size(res);
- 
-+	ret = dpu_mdss_parse_data_bus_icc_path(dev, dpu_mdss);
-+	if (ret)
-+		return ret;
-+
- 	mp = &dpu_mdss->mp;
- 	ret = msm_dss_parse_clock(pdev, mp);
- 	if (ret) {
-@@ -221,14 +262,14 @@ int dpu_mdss_init(struct drm_device *dev)
- 		goto irq_error;
- 	}
- 
-+	priv->mdss = &dpu_mdss->base;
-+
- 	pm_runtime_enable(dev->dev);
- 
- 	pm_runtime_get_sync(dev->dev);
- 	dpu_mdss->hwversion = readl_relaxed(dpu_mdss->mmio);
- 	pm_runtime_put_sync(dev->dev);
- 
--	priv->mdss = &dpu_mdss->base;
--
- 	return ret;
- 
- irq_error:
--- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+QWRkIGludGVyY29ubmVjdCBwcm9wZXJ0aWVzIHN1Y2ggYXMgaW50ZXJjb25uZWN0IHByb3ZpZGVy
+IHNwZWNpZmllcgosIHRoZSBlZGdlIHNvdXJjZSBhbmQgZGVzdGluYXRpb24gcG9ydHMgd2hpY2gg
+YXJlIHJlcXVpcmVkIGJ5IHRoZQppbnRlcmNvbm5lY3QgQVBJIHRvIGNvbmZpZ3VyZSBpbnRlcmNv
+bm5lY3QgcGF0aCBmb3IgTURTUy4KCkNoYW5nZXMgaW4gdjI6CgktIE5vbmUKCkNoYW5nZXMgaW4g
+djM6CgktIFJlbW92ZSBjb21tb24gcHJvcGVydHkgZGVmaW5pdGlvbnMgKFJvYiBIZXJyaW5nKQoK
+Q2hhbmdlcyBpbiB2NDoKCS0gVXNlIHBvcnQgbWFjcm9zIGFuZCBjaGFuZ2UgcG9ydCBzdHJpbmcg
+bmFtZXMgKEdlb3JnaSBEamFrb3YpCgpDaGFuZ2VzIGluIHY1LXY3OgoJLSBOb25lCgpTaWduZWQt
+b2ZmLWJ5OiBTcmF2YW50aGkgS29sbHVrdWR1cnUgPHNrb2xsdWt1QGNvZGVhdXJvcmEub3JnPgpT
+aWduZWQtb2ZmLWJ5OiBKYXlhbnQgU2hla2hhciA8anNoZWtoYXJAY29kZWF1cm9yYS5vcmc+Ci0t
+LQogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQg
+fCAxMCArKysrKysrKysrCiAxIGZpbGUgY2hhbmdlZCwgMTAgaW5zZXJ0aW9ucygrKQoKZGlmZiAt
+LWdpdCBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L21zbS9kcHUu
+dHh0IGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50
+eHQKaW5kZXggYWQyZTg4My4uYTYxZGQ0MCAxMDA2NDQKLS0tIGEvRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9k
+ZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvbXNtL2RwdS50eHQKQEAgLTI4LDYgKzI4LDExIEBA
+IFJlcXVpcmVkIHByb3BlcnRpZXM6CiAtICNhZGRyZXNzLWNlbGxzOiBudW1iZXIgb2YgYWRkcmVz
+cyBjZWxscyBmb3IgdGhlIE1EU1MgY2hpbGRyZW4uIFNob3VsZCBiZSAxLgogLSAjc2l6ZS1jZWxs
+czogU2hvdWxkIGJlIDEuCiAtIHJhbmdlczogcGFyZW50IGJ1cyBhZGRyZXNzIHNwYWNlIGlzIHRo
+ZSBzYW1lIGFzIHRoZSBjaGlsZCBidXMgYWRkcmVzcyBzcGFjZS4KKy0gaW50ZXJjb25uZWN0cyA6
+IGludGVyY29ubmVjdCBwYXRoIHNwZWNpZmllciBmb3IgTURTUyBhY2NvcmRpbmcgdG8KKyAgRG9j
+dW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2ludGVyY29ubmVjdC9pbnRlcmNvbm5lY3Qu
+dHh0LiBTaG91bGQgYmUKKyAgMiBwYXRocyBjb3JyZXNwb25kaW5nIHRvIDIgQVhJIHBvcnRzLgor
+LSBpbnRlcmNvbm5lY3QtbmFtZXMgOiBNRFNTIHdpbGwgaGF2ZSAyIHBvcnQgbmFtZXMgdG8gZGlm
+ZmVyZW50aWF0ZSBiZXR3ZWVuIHRoZQorICAyIGludGVyY29ubmVjdCBwYXRocyBkZWZpbmVkIHdp
+dGggaW50ZXJjb25uZWN0IHNwZWNpZmllci4KIAogT3B0aW9uYWwgcHJvcGVydGllczoKIC0gYXNz
+aWduZWQtY2xvY2tzOiBsaXN0IG9mIGNsb2NrIHNwZWNpZmllcnMgZm9yIGNsb2NrcyBuZWVkaW5n
+IHJhdGUgYXNzaWdubWVudApAQCAtODYsNiArOTEsMTEgQEAgRXhhbXBsZToKIAkJaW50ZXJydXB0
+LWNvbnRyb2xsZXI7CiAJCSNpbnRlcnJ1cHQtY2VsbHMgPSA8MT47CiAKKwkJaW50ZXJjb25uZWN0
+cyA9IDwmcnNjX2hsb3MgTUFTVEVSX01EUDAgJnJzY19obG9zIFNMQVZFX0VCSTE+LAorCQkJCTwm
+cnNjX2hsb3MgTUFTVEVSX01EUDEgJnJzY19obG9zIFNMQVZFX0VCSTE+OworCisJCWludGVyY29u
+bmVjdC1uYW1lcyA9ICJtZHAwLW1lbSIsICJtZHAxLW1lbSI7CisKIAkJaW9tbXVzID0gPCZhcHBz
+X2lvbW11IDA+OwogCiAJCSNhZGRyZXNzLWNlbGxzID0gPDI+OwotLSAKVGhlIFF1YWxjb21tIElu
+bm92YXRpb24gQ2VudGVyLCBJbmMuIGlzIGEgbWVtYmVyIG9mIHRoZSBDb2RlIEF1cm9yYSBGb3J1
+bSwKYSBMaW51eCBGb3VuZGF0aW9uIENvbGxhYm9yYXRpdmUgUHJvamVjdAoKX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlz
+dApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0
+b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
