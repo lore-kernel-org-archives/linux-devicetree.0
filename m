@@ -1,45 +1,79 @@
-From: Faiz Abbas <faiz_abbas@ti.com>
-Subject: Re: [PATCH v3 0/2] Support for eMMC in AM65x-evm
-Date: Thu, 24 Jan 2019 13:43:01 +0530
-Message-ID: <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
-References: <20190117094424.7683-1-faiz_abbas@ti.com>
+From: Erin Lo <erin.lo@mediatek.com>
+Subject: [PATCH v6 0/6] Add basic and clock support for Mediatek MT8183 SoC
+Date: Thu, 24 Jan 2019 16:07:14 +0800
+Message-ID: <1548317240-44682-1-git-send-email-erin.lo@mediatek.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117094424.7683-1-faiz_abbas@ti.com>
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org
-Cc: mark.rutland@arm.com, robh+dt@kernel.org, nm@ti.com, t-kristo@ti.com
+To: Matthias Brugger <matthias.bgg@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Thomas Gleixner <tglx@linutronix.de>, Jason Cooper <jason@lakedaemon.net>, Marc Zyngier <marc.zyngier@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Stephen Boyd <sboyd@codeaurora.org>
+Cc: devicetree@vger.kernel.org, srv_heupstream <srv_heupstream@mediatek.com>, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, yingjoe.chen@mediatek.com, erin.lo@mediatek.com, mars.cheng@mediatek.com, eddie.huang@mediatek.com, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
+MT8183 is a SoC based on 64bit ARMv8 architecture.
+It contains 4 CA53 and 4 CA73 cores.
+MT8183 share many HW IP with MT65xx series.
+This patchset was tested on MT8183 evaluation board and use correct clock to shell.
 
-On 17/01/19 3:14 PM, Faiz Abbas wrote:
-> The following patches add eMMC support on TI's AM65x-evm.
-> 
-> v3:
->  1. Fixed patch titles to only include eMMC
->  2. Added dma-coherent to the sdhci0 node.
-> 
-> v2:
->  1. The SD card node is under debug for some usecases.
->     Only upstreaming eMMC support for now.
->  2. Rebased to latest mainline.
->  3. Removed status = "disabled" from dtsi patch
->  4. Fixed node name to not include '_'s
-> 
-> Faiz Abbas (2):
->   arm64: dts: ti: k3-am654: Add Support for eMMC host controller
->   arm64: dts: ti: k3-am654-base-board: Add eMMC Support
-> 
->  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 14 +++++++++++
->  .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
->  2 files changed, 39 insertions(+)
-> 
+This series contains document bindings, device tree including interrupt, uart, clock,
+pinctrl, spi, and pwrap.
 
-Gentle ping.
+Based on v5.0-rc1 and
+http://lists.infradead.org/pipermail/linux-mediatek/2018-December/016243.html
 
-Thanks,
-Faiz
+Change in v6:
+1. Remove power and iommu nodes
+2. Fix dtb build warning
+3. Fix pinctrl binding doc
+4. Fix '_' in node names
+
+Change in v5:
+1. Collect all device tree nodes to the last patch
+2. Add PMU
+3. Add Signed-off-by
+4. Remove clock driver code and binding doc
+5. Add pinctrl, iommu, spi, and pwrap nodes
+
+Change in v4:
+1. Correct syntax error in dtsi
+2. Add MT8183 clock support
+
+Change in v3:
+1. Fill out GICC, GICH, GICV regions
+2. Update Copyright to 2018
+
+Change in v2:
+1. Split dt-bindings into different patches 2. Correct bindings for supported SoCs (mtk-uart.txt)
+
+Ben Ho (1):
+  arm64: dts: Add Mediatek SoC MT8183 and evaluation board dts and
+    Makefile
+
+Erin Lo (3):
+  dt-bindings: arm: Add bindings for Mediatek MT8183 SoC Platform
+  dt-bindings: mtk-sysirq: Add compatible for Mediatek MT8183
+  dt-bindings: serial: Add compatible for Mediatek MT8183
+
+Seiya Wang (1):
+  irqchip/mtk-sysirq: support 4 interrupt parameters for sysirq
+
+Zhiyong Tao (1):
+  dt-bindings: pinctrl: mt8183: add binding document
+
+ Documentation/devicetree/bindings/arm/mediatek.txt |    4 +
+ .../interrupt-controller/mediatek,sysirq.txt       |    1 +
+ .../devicetree/bindings/pinctrl/pinctrl-mt8183.txt |  115 ++
+ .../devicetree/bindings/serial/mtk-uart.txt        |    1 +
+ arch/arm64/boot/dts/mediatek/Makefile              |    1 +
+ arch/arm64/boot/dts/mediatek/mt8183-evb.dts        |  136 +++
+ arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h      | 1120 ++++++++++++++++++++
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi           |  408 +++++++
+ drivers/irqchip/irq-mtk-sysirq.c                   |    4 +-
+ 9 files changed, 1788 insertions(+), 2 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/pinctrl/pinctrl-mt8183.txt
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-evb.dts
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183-pinfunc.h
+ create mode 100644 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+
+--
+1.9.1
