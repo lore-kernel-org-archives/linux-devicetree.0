@@ -1,102 +1,47 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 22/22] arm64: dts: allwinner: a64-amarula-relic: Add Techstar TS8550B MIPI-DSI panel
-Date: Fri, 25 Jan 2019 01:29:00 +0530
-Message-ID: <20190124195900.22620-23-jagan@amarulasolutions.com>
-References: <20190124195900.22620-1-jagan@amarulasolutions.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Florian Fainelli <f.fainelli@gmail.com>
+Subject: [PATCH] of: Make of_node_name_eq() case insensitive
+Date: Thu, 24 Jan 2019 12:08:25 -0800
+Message-ID: <20190124200825.2611-1-f.fainelli@gmail.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124195900.22620-1-jagan@amarulasolutions.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>
+To: linux-kernel@vger.kernel.org
+Cc: vivien.didelot@gmail.com, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
+        DEVICE TREE" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Amarula A64-Relic board by default bound with Techstar TS8550B
-MIPI-DSI panel, add support for it.
+Since c32569e358ad ("regulator: Use of_node_name_eq for node name
+comparisons") Vivien reported the mc13892-regulator complaining about
+not being able to find regulators.
 
-DSI panel connected via board DSI port with,
-- DLDO2 as VCC supply
-- DLDO2 as IOVCC supply
-- DLDO1 as VCC-DSI supply
-- PD24 gpio for reset pin
-- PD23 gpio for backlight enable pin
+This is because prior to that commit we used of_node_cmp() to compare
+the regulator array passed from mc13892_regulators down to
+mc13xxx_parse_regulators_dt() and they are all defined in uppercase
+letters by the MC13892_*_DEFINE* macros, whereas they are defined as
+lowercase in the DTS.
 
-Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+Fix this by use strncasecmp() since that makes sure the comparison is
+case insensitive like what of_node_cmp() did.
+
+Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
+Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
+Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
 ---
- .../allwinner/sun50i-a64-amarula-relic.dts    | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/of/base.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-index f180c841ac3c..703055f2a4fb 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-@@ -9,6 +9,7 @@
- #include "sun50i-a64.dtsi"
+diff --git a/drivers/of/base.c b/drivers/of/base.c
+index 5226e898476e..ff47c86277cb 100644
+--- a/drivers/of/base.c
++++ b/drivers/of/base.c
+@@ -66,7 +66,8 @@ bool of_node_name_eq(const struct device_node *np, const char *name)
+ 	node_name = kbasename(np->full_name);
+ 	len = strchrnul(node_name, '@') - node_name;
  
- #include <dt-bindings/gpio/gpio.h>
-+#include <dt-bindings/pwm/pwm.h>
- 
- / {
- 	model = "Amarula A64-Relic";
-@@ -18,6 +19,14 @@
- 		serial0 = &uart0;
- 	};
- 
-+	backlight: backlight {
-+		compatible = "pwm-backlight";
-+		pwms = <&pwm 0 50000 PWM_POLARITY_INVERTED>;
-+		brightness-levels = <1 2 4 8 16 32 64 128 512>;
-+		default-brightness-level = <2>;
-+		enable-gpios = <&pio 3 23 GPIO_ACTIVE_HIGH>; /* LCD-BL-EN: PD23 */
-+	};
-+
- 	chosen {
- 		stdout-path = "serial0:115200n8";
- 	};
-@@ -83,6 +92,30 @@
- 	};
- };
- 
-+&de {
-+	status = "okay";
-+};
-+
-+&dphy {
-+	status = "okay";
-+};
-+
-+&dsi {
-+	vcc-dsi-supply = <&reg_dldo1>;
-+	#address-cells = <1>;
-+	#size-cells = <0>;
-+	status = "okay";
-+
-+	panel@0 {
-+		compatible = "techstar,ts8550b", "sitronix,st7701";
-+		reg = <0>;
-+		VCC-supply = <&reg_dldo2>;
-+		IOVCC-supply = <&reg_dldo2>;
-+		reset-gpios = <&pio 3 24 GPIO_ACTIVE_HIGH>; /* LCD-RST: PD24 */
-+		backlight = <&backlight>;
-+	};
-+};
-+
- &ehci0 {
- 	status = "okay";
- };
-@@ -160,6 +193,12 @@
- 	status = "okay";
- };
- 
-+&pwm {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&pwm_pin>;
-+	status = "okay";
-+};
-+
- &r_rsb {
- 	status = "okay";
+-	return (strlen(name) == len) && (strncmp(node_name, name, len) == 0);
++	return (strlen(name) == len) &&
++		(strncasecmp(node_name, name, len) == 0);
+ }
+ EXPORT_SYMBOL(of_node_name_eq);
  
 -- 
-2.18.0.321.gffc6fa0e3
+2.17.1
