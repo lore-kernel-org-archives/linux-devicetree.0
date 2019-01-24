@@ -1,37 +1,64 @@
-From: Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: qcom: Add MSM8976/56 Global Clock Controller (GCC) driver
-Date: Thu, 24 Jan 2019 11:22:55 -0800
-Message-ID: <154835777525.136743.6424256006615217720@swboyd.mtv.corp.google.com>
-References: <65fb363366f651e42d3e97792d5990185823cbc3.camel@gmail.com>
+From: Vivien Didelot <vivien.didelot@gmail.com>
+Subject: Re: [PATCH] of: Make of_node_name_eq() case insensitive
+Date: Thu, 24 Jan 2019 15:19:06 -0500
+Message-ID: <20190124151906.GB31994@t480s.localdomain>
+References: <20190124200825.2611-1-f.fainelli@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <65fb363366f651e42d3e97792d5990185823cbc3.camel@gmail.com>
+In-Reply-To: <20190124200825.2611-1-f.fainelli@gmail.com>
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Michael Turquette <mturquette@baylibre.com>
-Cc: AngeloGioacchino Del Regno <kholk11@gmail.com>, linux-clk@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-soc@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Quoting AngeloGioacchino Del Regno (2019-01-12 07:03:18)
-> From 50465f2a4454625aac622bb84dbecdeaf5a50904 Mon Sep 17 00:00:00 2001
-> From: "Angelo G. Del Regno" <kholk11@gmail.com>
-> Date: Sat, 12 Jan 2019 10:52:18 +0100
-> Subject: [PATCH] clk: qcom: Add MSM8976/56 Global Clock Controller (GCC)
->  driver
->=20
-> Add support for the global clock controller found on MSM8976
-> and MSM8976 SoCs.
-> Since the multimedia clocks are actually in the GCC on these
-> SoCs, this will allow drivers to probe and control basically
-> all the required clocks.
->=20
-> Signed-off-by: Angelo G. Del Regno <kholk11@gmail.com>
+Hi,
 
-Are you going to send out DTS bits and provide platform support? I'm not
-interested in merging the clk bits and then having to support a driver
-that never gets used.
+On Thu, 24 Jan 2019 12:08:25 -0800, Florian Fainelli <f.fainelli@gmail.com> wrote:
+> Since c32569e358ad ("regulator: Use of_node_name_eq for node name
+> comparisons") Vivien reported the mc13892-regulator complaining about
+> not being able to find regulators.
+> 
+> This is because prior to that commit we used of_node_cmp() to compare
+> the regulator array passed from mc13892_regulators down to
+> mc13xxx_parse_regulators_dt() and they are all defined in uppercase
+> letters by the MC13892_*_DEFINE* macros, whereas they are defined as
+> lowercase in the DTS.
+> 
+> Fix this by use strncasecmp() since that makes sure the comparison is
+> case insensitive like what of_node_cmp() did.
+> 
+> Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
+> Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
+> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+ 
+This fixes the boot on i.MX51 ZII RDU1, which was printing this:
 
-Also, is this copy/pasted from some downstream kernel sources? Would be
-good to have a pointer to that so we can compare and see if you've
-changed anything.
+    [    2.895302] imx-ipuv3 40000000.ipu: IPUv3EX probed
+    [    2.903869] spi_imx 70010000.spi: dma setup error -19, use pio
+    [    2.911943] mc13xxx spi0.0: mc13892: rev: 2.4, fin: 2, fab: 0, icid: 7/2
+    [    2.921463] mc13892-regulator mc13892-regulator: Unknown regulator: sw1
+    [    2.928207] mc13892-regulator mc13892-regulator: Unknown regulator: sw2
+    [    2.934896] mc13892-regulator mc13892-regulator: Unknown regulator: sw3
+    [    2.941575] mc13892-regulator mc13892-regulator: Unknown regulator: sw4
+    [    2.948263] mc13892-regulator mc13892-regulator: Unknown regulator: vpll
+    [    2.955050] mc13892-regulator mc13892-regulator: Unknown regulator: vdig
+    [    2.961820] mc13892-regulator mc13892-regulator: Unknown regulator: vsd
+    [    2.968464] mc13892-regulator mc13892-regulator: Unknown regulator: vusb
+    [    2.975251] mc13892-regulator mc13892-regulator: Unknown regulator: vusb2
+    [    2.982110] mc13892-regulator mc13892-regulator: Unknown regulator: vvideo
+    [    2.989039] mc13892-regulator mc13892-regulator: Unknown regulator: vaudio
+    [    2.995983] mc13892-regulator mc13892-regulator: Unknown regulator: vcam
+    [    3.002754] mc13892-regulator mc13892-regulator: Unknown regulator: vgen1
+    [    3.009597] mc13892-regulator mc13892-regulator: Unknown regulator: vgen2
+    [    3.016458] mc13892-regulator mc13892-regulator: Unknown regulator: vgen3
+
+before looping forever on the defered probe of the Marvell switch.
+
+Tested-by: Vivien Didelot <vivien.didelot@gmail.com>
+
+
+Thanks,
+
+	Vivien
