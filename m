@@ -1,38 +1,47 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH v3 4/5] ARM: dts: r8a7744: Add DU support
-Date: Wed, 23 Jan 2019 10:02:40 +0100
-Message-ID: <20190123090239.2un7uavw3vwtguay@verge.net.au>
-References: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
- <1548170749-12773-5-git-send-email-biju.das@bp.renesas.com>
- <20190122170751.GB26166@pendragon.ideasonboard.com>
+From: Kishon Vijay Abraham I <kishon@ti.com>
+Subject: [PATCH v3 0/3] PCI: dra7xx: Support PCIe x2 lane mode
+Date: Thu, 24 Jan 2019 13:59:54 +0530
+Message-ID: <20190124082957.29077-1-kishon@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190122170751.GB26166@pendragon.ideasonboard.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, Chris Paterson <Chris.Paterson2@renesas.com>, Geert Uytterhoeven <geert+renesas@glider.be>, David Airlie <airlied@linux.ie>, Kieran Bingham <kieran.bingham+renesas@ideasonboard.com>, dri-devel@lists.freedesktop.org, Biju Das <biju.das@bp.renesas.com>, linux-renesas-soc@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Bjorn Helgaas <bhelgaas@google.com>, Mark Rutland <mark.rutland@arm.com>, linux-omap@vger.kernel.org, linux-pci@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-T24gVHVlLCBKYW4gMjIsIDIwMTkgYXQgMDc6MDc6NTFQTSArMDIwMCwgTGF1cmVudCBQaW5jaGFy
-dCB3cm90ZToKPiBIaSBCaWp1LAo+IAo+IFRoYW5rIHlvdSBmb3IgdGhlIHBhdGNoLgo+IAo+IE9u
-IFR1ZSwgSmFuIDIyLCAyMDE5IGF0IDAzOjI1OjQ4UE0gKzAwMDAsIEJpanUgRGFzIHdyb3RlOgo+
-ID4gQWRkIGR1IG5vZGUgdG8gcjhhNzc0NCBTb0MgRFQuIEJvYXJkcyB0aGF0IHdhbnQgdG8gZW5h
-YmxlIHRoZSBEVQo+ID4gbmVlZCB0byBzcGVjaWZ5IHRoZSBvdXRwdXQgdG9wb2xvZ3kuCj4gPiAK
-PiA+IFNpZ25lZC1vZmYtYnk6IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4KPiAK
-PiBSZXZpZXdlZC1ieTogTGF1cmVudCBQaW5jaGFydCA8bGF1cmVudC5waW5jaGFydEBpZGVhc29u
-Ym9hcmQuY29tPgo+IAo+IEkgZXhwZWN0IFNpbW9uIHRvIHBpY2sgdGhpcyB1cC4KClRoYW5rcywg
-YXBwbGllZCBmb3IgdjUuMS4KX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX18KZHJpLWRldmVsIG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0
-b3Aub3JnCmh0dHBzOi8vbGlzdHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJp
-LWRldmVsCg==
+Previous version of the patch series can be found here [1]
+
+Patch series adds support to enable x2 lane mode in dra74/dra76 and
+dra72 based boards in pci-dra7xx driver. It introduces new compatible
+strings in order to enable x2 lane mode support.
+
+Changes from v2:
+*) Have a single syscon dt property for configuring x2 lanes
+*) Fix minor comments given by Lorenzo (falling back to 1 lane mode,
+   remove unused structure member).
+
+Changes from v1:
+*) Added ti prefix to syscon-lane-conf and syscon-lane-sel as
+   suggested to Rob
+*) Merged "PCI: dwc: dra7xx: Add support for SoC specific compatible
+   strings" and "PCI: dwc: pci-dra7xx: Enable x2 mode support" into
+   a single patch.
+*) Fixed $subject as suggested by Bjorn
+*) Added x2 lane mode support for DRA72x
+
+The dts changes and phy changes will be sent as a separate series.
+
+[1] ->  https://lkml.org/lkml/2017/12/19/175
+
+Kishon Vijay Abraham I (3):
+  dt-bindings: PCI: dra7xx: Add SoC specific compatible strings
+  dt-bindings: PCI: dra7xx: Add properties to enable x2 lane in dra7
+  PCI: dra7xx: Enable x2 mode support for dra74x, dra76x and dra72x
+
+ .../devicetree/bindings/pci/ti-pci.txt        | 11 ++-
+ drivers/pci/controller/dwc/pci-dra7xx.c       | 77 +++++++++++++++++++
+ 2 files changed, 86 insertions(+), 2 deletions(-)
+
+-- 
+2.17.1
