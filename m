@@ -1,47 +1,79 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: [PATCH] of: Make of_node_name_eq() case insensitive
-Date: Thu, 24 Jan 2019 12:08:25 -0800
-Message-ID: <20190124200825.2611-1-f.fainelli@gmail.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH v8 05/26] clocksource: Add driver for the Ingenic JZ47xx OST
+Date: Thu, 24 Jan 2019 11:28:07 -0800
+Message-ID: <154835808767.136743.14531363127962557756@swboyd.mtv.corp.google.com>
+References: <20181212220922.18759-1-paul@crapouillou.net> <20181212220922.18759-6-paul@crapouillou.net> <CA+7wUsxNN2SL9_7tDh0DiBAgdUwxd_osgmi=09HP7110Tm0DYQ@mail.gmail.com> <128675a5-7ede-4114-a649-89a536346dc8@roeck-us.net> <1548264353.3173.1@crapouillou.net> <20190123180155.GB9781@roeck-us.net>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190123180155.GB9781@roeck-us.net>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org
-Cc: vivien.didelot@gmail.com, Florian Fainelli <f.fainelli@gmail.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, "open list:OPEN FIRMWARE AND FLATTENED
-        DEVICE TREE" <devicetree@vger.kernel.org>
+To: Guenter Roeck <linux@roeck-us.net>, Paul Cercueil <paul@crapouillou.net>
+Cc: Mathieu Malaterre <malat@debian.org>, Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Jonathan Corbet <corbet@lwn.net>, Ezequiel Garcia <ezequiel@collabora.co.uk>, PrasannaKumar Muralidharan <prasannatsmkumar@gmail.com>, linux-pwm@vger.kernel.org, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, LKML <linux-kernel@vger.kernel.org>, linux-watchdog@vger.kernel.org, linux-mips@vger.kernel.org, linux-doc@vger.kernel.org, linux-clk@vger.kernel.org, od@zcrc.me, Maar
 List-Id: devicetree@vger.kernel.org
 
-Since c32569e358ad ("regulator: Use of_node_name_eq for node name
-comparisons") Vivien reported the mc13892-regulator complaining about
-not being able to find regulators.
+Quoting Guenter Roeck (2019-01-23 10:01:55)
+> On Wed, Jan 23, 2019 at 02:25:53PM -0300, Paul Cercueil wrote:
+> > Hi,
+> >=20
+> > Le mer. 23 janv. 2019 =C3=83=C2=A0 11:31, Guenter Roeck <linux@roeck-us=
+.net> a =C3=83=C2=A9crit :
+> > >On 1/23/19 4:58 AM, Mathieu Malaterre wrote:
+> > >>On Wed, Dec 12, 2018 at 11:09 PM Paul Cercueil <paul@crapouillou.net>
+> > >>wrote:
+> > >>>
+> > >>>From: Maarten ter Huurne <maarten@treewalker.org>
+> > >>>
+> > >>>OST is the OS Timer, a 64-bit timer/counter with buffered reading.
+> > >>>
+> > >>>SoCs before the JZ4770 had (if any) a 32-bit OST; the JZ4770 and
+> > >>>JZ4780 have a 64-bit OST.
+> > >>>
+> > >>>This driver will register both a clocksource and a sched_clock to the
+> > >>>system.
+> > >>>
+> > >>>Signed-off-by: Maarten ter Huurne <maarten@treewalker.org>
+> > >>>Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+> > >>>---
+> > >>>
+> > >>>Notes:
+> > >>>      v5: New patch
+> > >>>
+> > >>>      v6: - Get rid of SoC IDs; pass pointer to ingenic_ost_soc_info
+> > >>>as
+> > >>>            devicetree match data instead.
+> > >>>          - Use device_get_match_data() instead of the of_* variant
+> > >>>          - Handle error of dev_get_regmap() properly
+> > >>>
+> > >>>      v7: Fix section mismatch by using
+> > >>>builtin_platform_driver_probe()
+> > >>>
+> > >>>      v8: builtin_platform_driver_probe() does not work anymore in
+> > >>>          4.20-rc6? The probe function won't be called. Work around
+> > >>>this
+> > >>>          for now by using late_initcall.
+> > >>>
+> > >
+> > >Did anyone notice this ? Either something is wrong with the driver, or
+> > >with the kernel core. Hacking around it seems like the worst possible
+> > >"solution".
+> >=20
+> > I can confirm it still happens on 5.0-rc3.
+> >=20
+> > Just to explain what I'm doing:
+> >=20
+> > My ingenic-timer driver probes with builtin_platform_driver_probe (this
+> > works),
+> > and then calls of_platform_populate to probe its children. This driver,
+> > ingenic-ost, is one of them, and will fail to probe with
+> > builtin_platform_driver_probe.
+> >=20
+>=20
+> The big question is _why_ it fails to probe.
+>=20
 
-This is because prior to that commit we used of_node_cmp() to compare
-the regulator array passed from mc13892_regulators down to
-mc13xxx_parse_regulators_dt() and they are all defined in uppercase
-letters by the MC13892_*_DEFINE* macros, whereas they are defined as
-lowercase in the DTS.
-
-Fix this by use strncasecmp() since that makes sure the comparison is
-case insensitive like what of_node_cmp() did.
-
-Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
-Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
-Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
----
- drivers/of/base.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/of/base.c b/drivers/of/base.c
-index 5226e898476e..ff47c86277cb 100644
---- a/drivers/of/base.c
-+++ b/drivers/of/base.c
-@@ -66,7 +66,8 @@ bool of_node_name_eq(const struct device_node *np, const char *name)
- 	node_name = kbasename(np->full_name);
- 	len = strchrnul(node_name, '@') - node_name;
- 
--	return (strlen(name) == len) && (strncmp(node_name, name, len) == 0);
-+	return (strlen(name) == len) &&
-+		(strncasecmp(node_name, name, len) == 0);
- }
- EXPORT_SYMBOL(of_node_name_eq);
- 
--- 
-2.17.1
+Are you sharing the device tree node between a 'normal' platform device
+driver and something more low level DT that marks the device's backing
+DT node as OF_POPULATED early on? That's my only guess why it's not
+working.
