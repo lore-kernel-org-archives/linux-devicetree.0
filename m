@@ -1,100 +1,65 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: [PATCH v6 07/22] drm/sun4i: sun6i_mipi_dsi: Setup burst mode
-Date: Fri, 25 Jan 2019 01:28:45 +0530
-Message-ID: <20190124195900.22620-8-jagan@amarulasolutions.com>
+From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Subject: [PATCH v6 08/22] drm/sun4i: sun6i_mipi_dsi: Enable
+ 2byte trail for 4-lane burst mode
+Date: Fri, 25 Jan 2019 01:28:46 +0530
+Message-ID: <20190124195900.22620-9-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190124195900.22620-1-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Maxime Ripard <maxime.ripard@bootlin.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>, Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, linux-sunxi@googlegroups.com, Jagan Teki <jagan@amarulasolutions.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBQ5SVDRAKGQEVS7EISI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
+Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-U2V0dGluZyB1cCBidXJzdCBtb2RlIGRpc3BsYXkgd291bGQgcmVxdWlyZSB0byBjb21wdXRlCi0g
-SG9yaXpvbnRhbCB0aW1pbmcgZWRnZSB2YWx1ZXMgdG8gZmlsbCBidXJzdCBkcnEgcmVnaXN0ZXIK
-LSBMaW5lLCBzeW5jIHZhbHVlcyB0byBmaWxsIGJ1cnN0IGxpbmUgcmVnaXN0ZXIKClNpbmNlIHRo
-ZXJlIGlzIG5vIGRpcmVjdCBkb2N1bWVudGF0aW9uIGZvciB0aGVzZSBjb21wdXRhdGlvbnMKdGhl
-IGVkZ2UgYW5kIGxpbmUgZm9ybXVsYXMgYXJlIHRha2VuIGZyb20gQlNQIGNvZGUgKGZyb20gbGlu
-dXgtc3VueGkvCmRyaXZlcnMvdmlkZW8vc3VueGkvZGlzcDIvZGlzcC9kZS9sb3dsZXZlbF9zdW41
-MGl3MS9kZV9kc2kuYykKCmxpbmVfbnVtID0gcGFuZWwtPmxjZF9odCpkc2lfcGl4ZWxfYml0c1tw
-YW5lbC0+bGNkX2RzaV9mb3JtYXRdLwoJICAoOCpwYW5lbC0+bGNkX2RzaV9sYW5lKTsKZWRnZTEg
-PSBzeW5jX3BvaW50KyhwYW5lbC0+bGNkX3grcGFuZWwtPmxjZF9oYnArMjApKgoJZHNpX3BpeGVs
-X2JpdHNbcGFuZWwtPmxjZF9kc2lfZm9ybWF0XSAvKDgqcGFuZWwtPmxjZF9kc2lfbGFuZSk7CmVk
-Z2UxID0gKGVkZ2UxPmxpbmVfbnVtKT9saW5lX251bTplZGdlMTsKZWRnZTAgPSBlZGdlMSsocGFu
-ZWwtPmxjZF94KzQwKSp0Y29uX2Rpdi84OwplZGdlMCA9IChlZGdlMD5saW5lX251bSk/KGVkZ2Uw
-LWxpbmVfbnVtKToxOwoKU2lnbmVkLW9mZi1ieTogSmFnYW4gVGVraSA8amFnYW5AYW1hcnVsYXNv
-bHV0aW9ucy5jb20+Ci0tLQogZHJpdmVycy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmMg
-fCA3MCArKysrKysrKysrKysrKysrKysrKysrKystLQogMSBmaWxlIGNoYW5nZWQsIDY3IGluc2Vy
-dGlvbnMoKyksIDMgZGVsZXRpb25zKC0pCgpkaWZmIC0tZ2l0IGEvZHJpdmVycy9ncHUvZHJtL3N1
-bjRpL3N1bjZpX21pcGlfZHNpLmMgYi9kcml2ZXJzL2dwdS9kcm0vc3VuNGkvc3VuNmlfbWlwaV9k
-c2kuYwppbmRleCAyYWVhYTE5YThkMWUuLjQ2YWQxNDJlNjZlOCAxMDA2NDQKLS0tIGEvZHJpdmVy
-cy9ncHUvZHJtL3N1bjRpL3N1bjZpX21pcGlfZHNpLmMKKysrIGIvZHJpdmVycy9ncHUvZHJtL3N1
-bjRpL3N1bjZpX21pcGlfZHNpLmMKQEAgLTM1NSw2ICszNTUsNDEgQEAgc3RhdGljIHZvaWQgc3Vu
-NmlfZHNpX2luc3RfaW5pdChzdHJ1Y3Qgc3VuNmlfZHNpICpkc2ksCiAJCSAgICAgU1VONklfRFNJ
-X0lOU1RfSlVNUF9DRkdfTlVNKDEpKTsKIH07CiAKK3N0YXRpYyB1MzIgc3VuNmlfZHNpX2dldF9l
-ZGdlMShzdHJ1Y3Qgc3VuNmlfZHNpICpkc2ksCisJCQkgICAgICAgc3RydWN0IGRybV9kaXNwbGF5
-X21vZGUgKm1vZGUsIHUzMiBzeW5jX3BvaW50KQoreworCXN0cnVjdCBtaXBpX2RzaV9kZXZpY2Ug
-KmRldmljZSA9IGRzaS0+ZGV2aWNlOworCXVuc2lnbmVkIGludCBicHAgPSBtaXBpX2RzaV9waXhl
-bF9mb3JtYXRfdG9fYnBwKGRldmljZS0+Zm9ybWF0KTsKKwl1MzIgaGFjdF9zeW5jX2JwOworCisJ
-LyogSG9yaXpvbnRhbCB0aW1pbmdzIGR1cmF0aW9uIGV4Y2x1ZGluZyBmcm9udCBwb3JjaCAqLwor
-CWhhY3Rfc3luY19icCA9IChtb2RlLT5oZGlzcGxheSArIG1vZGUtPmh0b3RhbCAtIG1vZGUtPmhz
-eW5jX3N0YXJ0KTsKKworCXJldHVybiAoc3luY19wb2ludCArICgoaGFjdF9zeW5jX2JwICsgMjAp
-ICogYnBwIC8gKDggKiBkZXZpY2UtPmxhbmVzKSkpOworfQorCitzdGF0aWMgdTMyIHN1bjZpX2Rz
-aV9nZXRfZWRnZTAoc3RydWN0IHN1bjZpX2RzaSAqZHNpLAorCQkJICAgICAgIHN0cnVjdCBkcm1f
-ZGlzcGxheV9tb2RlICptb2RlLCB1MzIgZWRnZTEpCit7CisJc3RydWN0IHN1bjRpX3Rjb24gKnRj
-b24gPSBkc2ktPnRjb247CisJdW5zaWduZWQgbG9uZyBkY2xrX3JhdGUsIGRjbGtfcGFyZW50X3Jh
-dGUsIHRjb24wX2RpdjsKKworCWRjbGtfcmF0ZSA9IGNsa19nZXRfcmF0ZSh0Y29uLT5kY2xrKTsK
-KwlkY2xrX3BhcmVudF9yYXRlID0gY2xrX2dldF9yYXRlKGNsa19nZXRfcGFyZW50KHRjb24tPmRj
-bGspKTsKKwl0Y29uMF9kaXYgPSBkY2xrX3BhcmVudF9yYXRlIC8gZGNsa19yYXRlOworCisJcmV0
-dXJuIChlZGdlMSArIChtb2RlLT5oZGlzcGxheSArIDQwKSAqIHRjb24wX2RpdiAvIDgpOworfQor
-CitzdGF0aWMgdTMyIHN1bjZpX2RzaV9nZXRfbGluZV9udW0oc3RydWN0IHN1bjZpX2RzaSAqZHNp
-LAorCQkJCSAgc3RydWN0IGRybV9kaXNwbGF5X21vZGUgKm1vZGUpCit7CisJc3RydWN0IG1pcGlf
-ZHNpX2RldmljZSAqZGV2aWNlID0gZHNpLT5kZXZpY2U7CisJdW5zaWduZWQgaW50IGJwcCA9IG1p
-cGlfZHNpX3BpeGVsX2Zvcm1hdF90b19icHAoZGV2aWNlLT5mb3JtYXQpOworCisJcmV0dXJuICht
-b2RlLT5odG90YWwgKiBicHAgLyAoOCAqIGRldmljZS0+bGFuZXMpKTsKK30KKwogc3RhdGljIGlu
-dCBzdW42aV9kc2lfZ2V0X2RycShzdHJ1Y3Qgc3VuNmlfZHNpICpkc2ksCiAJCQkgICAgICBzdHJ1
-Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKIHsKQEAgLTQwNCw4ICs0MzksMzIgQEAgc3RhdGlj
-IHUxNiBzdW42aV9kc2lfZ2V0X3ZpZGVvX3N0YXJ0X2RlbGF5KHN0cnVjdCBzdW42aV9kc2kgKmRz
-aSwKIHN0YXRpYyB2b2lkIHN1bjZpX2RzaV9zZXR1cF9idXJzdChzdHJ1Y3Qgc3VuNmlfZHNpICpk
-c2ksCiAJCQkJICBzdHJ1Y3QgZHJtX2Rpc3BsYXlfbW9kZSAqbW9kZSkKIHsKLQlyZWdtYXBfd3Jp
-dGUoZHNpLT5yZWdzLCBTVU42SV9EU0lfVENPTl9EUlFfUkVHLAotCQkgICAgIHN1bjZpX2RzaV9n
-ZXRfZHJxKGRzaSwgbW9kZSkpOworCXN0cnVjdCBtaXBpX2RzaV9kZXZpY2UgKmRldmljZSA9IGRz
-aS0+ZGV2aWNlOworCXUzMiBzeW5jX3BvaW50ID0gNDA7CisJdTMyIGxpbmVfbnVtID0gc3VuNmlf
-ZHNpX2dldF9saW5lX251bShkc2ksIG1vZGUpOworCXUzMiBlZGdlMSA9IHN1bjZpX2RzaV9nZXRf
-ZWRnZTEoZHNpLCBtb2RlLCBzeW5jX3BvaW50KTsKKwl1MzIgZWRnZTAgPSBzdW42aV9kc2lfZ2V0
-X2VkZ2UwKGRzaSwgbW9kZSwgZWRnZTEpOworCXUzMiB2YWw7CisKKwlpZiAoZWRnZTEgPiBsaW5l
-X251bSkKKwkJZWRnZTEgPSBsaW5lX251bTsKKworCWlmIChlZGdlMCA+IGxpbmVfbnVtKQorCQll
-ZGdlMCAtPSBsaW5lX251bTsKKwllbHNlCisJCWVkZ2UwID0gMTsKKworCXJlZ21hcF93cml0ZShk
-c2ktPnJlZ3MsIFNVTjZJX0RTSV9CVVJTVF9EUlFfUkVHLAorCQkgICAgIFNVTjZJX0RTSV9CVVJT
-VF9EUlFfRURHRTEoZWRnZTEpIHwKKwkJICAgICBTVU42SV9EU0lfQlVSU1RfRFJRX0VER0UwKGVk
-Z2UwKSk7CisJcmVnbWFwX3dyaXRlKGRzaS0+cmVncywgU1VONklfRFNJX0JVUlNUX0xJTkVfUkVH
-LAorCQkgICAgIFNVTjZJX0RTSV9CVVJTVF9MSU5FX05VTShsaW5lX251bSkgfAorCQkgICAgIFNV
-TjZJX0RTSV9CVVJTVF9MSU5FX1NZTkNfUE9JTlQoc3luY19wb2ludCkpOworCisJLyogZW5hYmxl
-IGJ1cnN0IG1vZGUgKi8KKwlyZWdtYXBfcmVhZChkc2ktPnJlZ3MsIFNVTjZJX0RTSV9CQVNJQ19D
-VExfUkVHLCAmdmFsKTsKKwl2YWwgfD0gU1VONklfRFNJX0JBU0lDX0NUTF9WSURFT19CVVJTVDsK
-KwlyZWdtYXBfd3JpdGUoZHNpLT5yZWdzLCBTVU42SV9EU0lfQkFTSUNfQ1RMX1JFRywgdmFsKTsK
-IH0KIAogc3RhdGljIHZvaWQgc3VuNmlfZHNpX3NldHVwX2luc3RfbG9vcChzdHJ1Y3Qgc3VuNmlf
-ZHNpICpkc2ksCkBAIC02NjcsNyArNzI2LDEyIEBAIHN0YXRpYyB2b2lkIHN1bjZpX2RzaV9lbmNv
-ZGVyX2VuYWJsZShzdHJ1Y3QgZHJtX2VuY29kZXIgKmVuY29kZXIpCiAJCSAgICAgU1VONklfRFNJ
-X0JBU0lDX0NUTDFfVklERU9fUFJFQ0lTSU9OIHwKIAkJICAgICBTVU42SV9EU0lfQkFTSUNfQ1RM
-MV9WSURFT19NT0RFKTsKIAotCXN1bjZpX2RzaV9zZXR1cF9idXJzdChkc2ksIG1vZGUpOworCXJl
-Z21hcF93cml0ZShkc2ktPnJlZ3MsIFNVTjZJX0RTSV9UQ09OX0RSUV9SRUcsCisJCSAgICAgc3Vu
-NmlfZHNpX2dldF9kcnEoZHNpLCBtb2RlKSk7CisKKwlpZiAoZGV2aWNlLT5tb2RlX2ZsYWdzICYg
-TUlQSV9EU0lfTU9ERV9WSURFT19CVVJTVCkKKwkJc3VuNmlfZHNpX3NldHVwX2J1cnN0KGRzaSwg
-bW9kZSk7CisKIAlzdW42aV9kc2lfc2V0dXBfaW5zdF9sb29wKGRzaSwgbW9kZSk7CiAJc3VuNmlf
-ZHNpX3NldHVwX2Zvcm1hdChkc2ksIG1vZGUpOwogCXN1bjZpX2RzaV9zZXR1cF90aW1pbmdzKGRz
-aSwgbW9kZSk7Ci0tIAoyLjE4LjAuMzIxLmdmZmM2ZmEwZTMKCl9fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRl
-dmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9t
-YWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+For 4-lane, burst mode panels would need to enable 2byte trail_fill
+along with filling trail_env in dsi base control register.
+
+Similar reference code avialable in BSP (from linux-sunxi/
+drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
+
+if (panel->lcd_dsi_lane == 4)
+{
+   dsi_dev[sel]->dsi_basic_ctl.bits.trail_inv = 0xc;
+   dsi_dev[sel]->dsi_basic_ctl.bits.trail_fill     = 1;
+}
+
+Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+---
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
+
+diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+index 46ad142e66e8..a2ad9fa7f8d5 100644
+--- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
++++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
+@@ -33,6 +33,8 @@
+ #define SUN6I_DSI_CTL_EN			BIT(0)
+ 
+ #define SUN6I_DSI_BASIC_CTL_REG		0x00c
++#define SUN6I_DSI_BASIC_CTL_TRAIL_INV(n)	(((n) & 0xf) << 4)
++#define SUN6I_DSI_BASIC_CTL_TRAIL_FILL		BIT(3)
+ #define SUN6I_DSI_BASIC_CTL_HBP_DIS		BIT(2)
+ #define SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS		BIT(1)
+ #define SUN6I_DSI_BASIC_CTL_VIDEO_BURST		BIT(0)
+@@ -464,6 +466,10 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
+ 	/* enable burst mode */
+ 	regmap_read(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, &val);
+ 	val |= SUN6I_DSI_BASIC_CTL_VIDEO_BURST;
++	if (device->lanes == 4) {
++		val |= SUN6I_DSI_BASIC_CTL_TRAIL_INV(0xc);
++		val |= SUN6I_DSI_BASIC_CTL_TRAIL_FILL;
++	}
+ 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, val);
+ }
+ 
+-- 
+2.18.0.321.gffc6fa0e3
