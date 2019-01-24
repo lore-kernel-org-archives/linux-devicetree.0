@@ -1,60 +1,38 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v8 1/5] spi: spi-mem: Add driver for NXP FlexSPI
- controller
-Date: Thu, 24 Jan 2019 18:35:16 +0000
-Message-ID: <20190124183516.GG5641@sirena.org.uk>
-References: <1547553487-9936-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1547553487-9936-2-git-send-email-yogeshnarayan.gaur@nxp.com>
- <VI1PR04MB5726F4A5073E3E4C01E61CEE99980@VI1PR04MB5726.eurprd04.prod.outlook.com>
+From: Stephen Boyd <sboyd@kernel.org>
+Subject: Re: [PATCH 1/3] Revert "Input: olpc_apsp - enable the SP clock"
+Date: Thu, 24 Jan 2019 10:53:23 -0800
+Message-ID: <154835600359.136743.8585628353385883771@swboyd.mtv.corp.google.com>
+References: <20190121062255.551587-1-lkundrak@v3.sk> <20190121062255.551587-2-lkundrak@v3.sk> <20190123220545.GD179701@dtor-ws>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="WK3l2KTTmXPVedZ6"
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: quoted-printable
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <VI1PR04MB5726F4A5073E3E4C01E61CEE99980@VI1PR04MB5726.eurprd04.prod.outlook.com>
+In-Reply-To: <20190123220545.GD179701@dtor-ws>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@kontron.de" <frieder.schrempf@kontron.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "bbrezillon@kernel.org" <bbrezillon@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Lubomir Rintel <lkundrak@v3.sk>
+Cc: Michael Turquette <mturquette@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-
---WK3l2KTTmXPVedZ6
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Tue, Jan 22, 2019 at 08:54:59AM +0000, Yogesh Narayan Gaur wrote:
-> Hello Mark,
+Quoting Dmitry Torokhov (2019-01-23 14:05:45)
+> On Mon, Jan 21, 2019 at 07:22:54AM +0100, Lubomir Rintel wrote:
+> > Turns out this is not such a great idea. Once the SP clock is disabled,
+> > it's not sufficient to just enable in order to bring the SP core back u=
+p.
+> >=20
+> > It seems that the kernel has no business managing this clock. Just let
+> > the firmware keep it enabled.
+> >=20
+> > This reverts commit ed22cee91a88c47e564478b012fdbcb079653499.
+> >=20
+> > Link: https://lore.kernel.org/lkml/154783267051.169631.3197836544646625=
+747@swboyd.mtv.corp.google.com/
+> > Signed-off-by: Lubomir Rintel <lkundrak@v3.sk>
 >=20
-> Can you please apply below patch in SPI tree?
-> Patch has been reviewed by Boris and Frieder.
+> OK, as clock folks say it is a bad idea it must be so. Merge though clk
+> tree?
+>=20
+> Acked-by: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+>=20
 
-Please don't send content free pings and please allow a reasonable time
-for review.  People get busy, go on holiday, attend conferences and so=20
-on so unless there is some reason for urgency (like critical bug fixes)
-please allow at least a couple of weeks for review.  If there have been
-review comments then people may be waiting for those to be addressed.
-
-Sending content free pings adds to the mail volume (if they are seen at
-all) which is often the problem and since they can't be reviewed
-directly if something has gone wrong you'll have to resend the patches
-anyway, so sending again is generally a better approach though there are
-some other maintainers who like them - if in doubt look at how patches
-for the subsystem are normally handled.
-
---WK3l2KTTmXPVedZ6
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxKBWMACgkQJNaLcl1U
-h9DrBgf/REAKB4rWORx9/tToi7RLirNzI0JRdRCU7oYs6F4KmE5JdgPCdHGeRP3x
-j2WNkMX3cLo5cQJ+hPqTiTYPzdmC7laIDjvJl+s0IUYZhLjxjpZfMrd57OliNd04
-gER50xwNJowG0d71gepBkOwApy+HUpApFMP5GDzc3Lc6hSrVqphlzmlbxCZVhku9
-Pb6Vgs8BYo6BhRQaTH2qUbtf6Euw7csOnY2ekiyE9WuWpoC4YTWTVXc6YOwFLu5C
-hid26ImHy4QcsomHbqSTEH/gW1Eac8Z5/NFxYdHZv0uOGQRQk7PW09ddLEupbZ10
-+vp3rTIIobw+kOiI/GHwRwubz+80NQ==
-=bc1i
------END PGP SIGNATURE-----
-
---WK3l2KTTmXPVedZ6--
+Ok sure. I'll merge them through clk tree. I'll fast track it through
+clk-fixes too.
