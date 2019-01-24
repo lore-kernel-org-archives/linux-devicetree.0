@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 12/22] dt-bindings: sun6i-dsi: Add VCC-DSI
- supply property
-Date: Fri, 25 Jan 2019 01:28:50 +0530
-Message-ID: <20190124195900.22620-13-jagan@amarulasolutions.com>
+Subject: [PATCH v6 14/22] dt-bindings: sun6i-dsi: Add A64 DSI
+ compatible (w/ A31 fallback)
+Date: Fri, 25 Jan 2019 01:28:52 +0530
+Message-ID: <20190124195900.22620-15-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBV5SVDRAKGQEPDPQ6TQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBYNSVDRAKGQEMPK6Y7Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,32 +20,31 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Most of the Allwinner MIPI DSI controllers are supply with
-VCC-DSI pin. which need to supply for some of the boards to
-trigger the power.
+The MIPI DSI controller in Allwinner A64 is similar to A33.
 
-So, document the supply property so-that the required board
-can eable it via device tree.
+But unlike A33, A64 doesn't have DSI_SCLK gating which eventually
+set the mod clock rate for the controller.
+
+So, use the DSI_DPHY gating for the similar purpose of mod clock
+so-that the controller can operate properly.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
 ---
- Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 3 +++
- 1 file changed, 3 insertions(+)
+ Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-index 6a6cf5de08b0..69e233e8fad1 100644
+index 69e233e8fad1..dbda2e567760 100644
 --- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
 +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-@@ -27,6 +27,9 @@ Required properties:
-     first port should be the input endpoint, usually coming from the
-     associated TCON.
- 
-+Optional properties:
-+  - vcc-dsi-supply: the VCC-DSI power supply of the DSI encoder
-+
- Any MIPI-DSI device attached to this should be described according to
- the bindings defined in ../mipi-dsi-bus.txt
- 
+@@ -12,6 +12,7 @@ The DSI Encoder generates the DSI signal from the TCON's.
+ Required properties:
+   - compatible: value must be one of:
+     * allwinner,sun6i-a31-mipi-dsi
++    * "allwinner,sun50i-a64-mipi-dsi", "allwinner,sun6i-a31-mipi-dsi"
+   - reg: base address and size of memory-mapped region
+   - interrupts: interrupt associated to this IP
+   - clocks: phandles to the clocks feeding the DSI encoder
 -- 
 2.18.0.321.gffc6fa0e3
