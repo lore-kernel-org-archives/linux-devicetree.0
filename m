@@ -1,47 +1,51 @@
-From: liaoweixiong <liaoweixiong@allwinnertech.com>
-Subject: Re: [RFC v7 0/5] pstore/block: new support logger for block devices
-Date: Thu, 24 Jan 2019 20:16:30 +0800
-Message-ID: <5f243418-c6bd-061e-1161-1c0139ad84bf@allwinnertech.com>
-References: <1548245116-6360-1-git-send-email-liaoweixiong@allwinnertech.com>
- <20190123182638.GD2792@darkstar.musicnaut.iki.fi>
+From: Nishanth Menon <nm@ti.com>
+Subject: Re: [PATCH v3 0/2] Support for eMMC in AM65x-evm
+Date: Thu, 24 Jan 2019 06:40:32 -0600
+Message-ID: <20190124124032.aqp4ctqkpozbttwl@kahuna>
+References: <20190117094424.7683-1-faiz_abbas@ti.com>
+ <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="us-ascii"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123182638.GD2792@darkstar.musicnaut.iki.fi>
-Content-Language: en-US
+Content-Disposition: inline
+In-Reply-To: <d75a123b-9e97-a3d1-1e3c-41ef6942dffb@ti.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aaro Koskinen <aaro.koskinen@iki.fi>
-Cc: Kees Cook <keescook@chromium.org>, Anton Vorontsov <anton@enomsg.org>, Colin Cross <ccross@android.com>, Tony Luck <tony.luck@intel.com>, Jonathan Corbet <corbet@lwn.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, "David S. Miller" <davem@davemloft.net>, Andrew Morton <akpm@linux-foundation.org>, Nicolas Ferre <nicolas.ferre@microchip.com>, Arnd Bergmann <arnd@arndb.de>, linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Faiz Abbas <faiz_abbas@ti.com>
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, mark.rutland@arm.com, robh+dt@kernel.org, t-kristo@ti.com
 List-Id: devicetree@vger.kernel.org
 
-On 2019-01-24 02:26, Aaro Koskinen wrote:
+On 13:43-20190124, Faiz Abbas wrote:
 > Hi,
 > 
-> On Wed, Jan 23, 2019 at 08:05:11PM +0800, liaoweixiong wrote:
->> Why should we need pstore_block?
->> 1. Most embedded intelligent equipment have no persistent ram, which
->> increases costs. We perfer to cheaper solutions, like block devices.
->> In fast, there is already a sample for block device logger in driver
->> MTD (drivers/mtd/mtdoops.c).
+> On 17/01/19 3:14 PM, Faiz Abbas wrote:
+> > The following patches add eMMC support on TI's AM65x-evm.
+> > 
+> > v3:
+> >  1. Fixed patch titles to only include eMMC
+> >  2. Added dma-coherent to the sdhci0 node.
+> > 
+> > v2:
+> >  1. The SD card node is under debug for some usecases.
+> >     Only upstreaming eMMC support for now.
+> >  2. Rebased to latest mainline.
+> >  3. Removed status = "disabled" from dtsi patch
+> >  4. Fixed node name to not include '_'s
+> > 
+> > Faiz Abbas (2):
+> >   arm64: dts: ti: k3-am654: Add Support for eMMC host controller
+> >   arm64: dts: ti: k3-am654-base-board: Add eMMC Support
+> > 
+> >  arch/arm64/boot/dts/ti/k3-am65-main.dtsi      | 14 +++++++++++
+> >  .../arm64/boot/dts/ti/k3-am654-base-board.dts | 25 +++++++++++++++++++
+> >  2 files changed, 39 insertions(+)
+> > 
 > 
-> I think you should add a patch for some actual block device using this
-> new framework to show that it can work. What HW you think would be
-> using things?
-> 
+> Gentle ping.
 
-I will try to add a patch. Actually, I have implemented it on allwinner
-platform, but unfortunately these codes are unsuitable to submit to
-upper stream.
 
-In addition, there is already a sample for pstore/blk on patch 3 of
-version 7. It names
-blkoops. Blkoops is suitable for most block device as what it need is
-just a path of a partition. We can use it to test most of features but
-panic.
-
-> A.
-> 
+OK With me. Tero: are you publishing a next branch? could you
+pick this up please?
 
 -- 
-liaoweixiong
+Regards,
+Nishanth Menon
