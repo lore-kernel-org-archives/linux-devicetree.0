@@ -1,59 +1,57 @@
-From: Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH v2 4/8] dt-bindings: sdm845-pinctrl: add wakeup interrupt parent for GPIO
-Date: Thu, 24 Jan 2019 13:22:01 -0700
-Message-ID: <20190124202205.7940-5-ilina@codeaurora.org>
-References: <20190124202205.7940-1-ilina@codeaurora.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 0/8 v5] k3dma patches to add support for hi3660/HiKey960
+Date: Thu, 24 Jan 2019 12:24:15 -0800
+Message-ID: <1548361463-28372-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124202205.7940-1-ilina@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: swboyd@chromium.org, evgreen@chromium.org, marc.zyngier@arm.com
-Cc: linux-kernel@vger.kernel.org, rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com, bjorn.andersson@linaro.org, dianders@chromium.org, linus.walleij@linaro.org, Lina Iyer <ilina@codeaurora.org>, devicetree@vger.kernel.org
+To: lkml <linux-kernel@vger.kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Dan Williams <dan.j.williams@intel.com>, Vinod Koul <vkoul@kernel.org>, Wei Xu <xuwei5@hisilicon.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Guodong Xu <guodong.xu@linaro.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Ryan Grachek <ryan@edited.us>, devicetree@vger.kernel.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-SDM845 SoC has an always-on interrupt controller (PDC) with select GPIO
-routed to the PDC as interrupts that can be used to wake the system up
-from deep low power modes and suspend.
+This patch series is based on recent work by Tanglei Han, and
+adds support for hi3660 SoCs as found on the HiKey960 board,
+along with a few patches I've been carrying.
 
-Cc: devicetree@vger.kernel.org
-Signed-off-by: Lina Iyer <ilina@codeaurora.org>
----
- .../devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt    | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
+thanks
+-john
 
-diff --git a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-index 665aadb5ea28..f0fedbc5d41a 100644
---- a/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-+++ b/Documentation/devicetree/bindings/pinctrl/qcom,sdm845-pinctrl.txt
-@@ -29,6 +29,11 @@ SDM845 platform.
- 	Definition: must be 2. Specifying the pin number and flags, as defined
- 		    in <dt-bindings/interrupt-controller/irq.h>
- 
-+- wakeup-parent:
-+	Usage: optional
-+	Value type: <phandle>
-+	Definition: A phandle to the wakeup interrupt controller for the SoC.
-+
- - gpio-controller:
- 	Usage: required
- 	Value type: <none>
-@@ -53,7 +58,6 @@ pin, a group, or a list of pins or groups. This configuration can include the
- mux function to select on those pin(s)/group(s), and various pin configuration
- parameters, such as pull-up, drive strength, etc.
- 
--
- PIN CONFIGURATION NODES:
- 
- The name of each subnode is not important; all subnodes should be enumerated
-@@ -160,6 +164,7 @@ Example:
- 		#gpio-cells = <2>;
- 		interrupt-controller;
- 		#interrupt-cells = <2>;
-+		wake-parent = <&pdc_intc>;
- 
- 		qup9_active: qup9-active {
- 			mux {
+New in v5:
+* Minor typo fixes, minor rework to use BIT() macros 
+
+Cc: Tanglei Han <hantanglei@huawei.com>
+Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: Vinod Koul <vkoul@kernel.org>
+Cc: Wei Xu <xuwei5@hisilicon.com>
+Cc: Mark Rutland <mark.rutland@arm.com>
+Cc: Rob Herring <robh+dt@kernel.org>
+Cc: Guodong Xu <guodong.xu@linaro.org>
+Cc: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
+Cc: Ryan Grachek <ryan@edited.us>
+CC: devicetree@vger.kernel.org
+Cc: dmaengine@vger.kernel.org
+Cc: linux-arm-kernel@lists.infradead.org
+
+John Stultz (3):
+  Documentation: bindings: dma: Add binding for dma-channel-mask
+  arm64: dts: hi3660: Add dma to uart nodes
+  arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-channel-mask
+
+Li Yu (2):
+  dma: k3dma: Delete axi_config
+  dma: k3dma: Add support for dma-channel-mask
+
+Youlin Wang (3):
+  Documentation: bindings: k3dma: Extend the k3dma driver binding to
+    support hisi-asp
+  dma: k3dma: Upgrade k3dma driver to support hisi_asp_dma hardware
+  arm64: dts: hi3660: Add hisi asp dma device
+
+ Documentation/devicetree/bindings/dma/dma.txt   |  4 ++
+ Documentation/devicetree/bindings/dma/k3dma.txt |  4 +-
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi       | 20 +++++++-
+ drivers/dma/k3dma.c                             | 61 +++++++++++++++++++++----
+ 4 files changed, 78 insertions(+), 11 deletions(-)
+
 -- 
-The Qualcomm Innovation Center, Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project
+2.7.4
