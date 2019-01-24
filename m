@@ -1,31 +1,27 @@
-From: Krzysztof Kozlowski <krzk@kernel.org>
-Subject: Re: [PATCH v2 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
-Date: Thu, 24 Jan 2019 11:01:25 +0100
-Message-ID: <CAJKOXPe1_XwYdgRjqO7hena-YtLFuX-Mcw01mx9M9yUAhD36Zw@mail.gmail.com>
-References: <CGME20190123165551eucas1p2bb80cfe58535b5f665271c7448cffc30@eucas1p2.samsung.com>
- <20190123165533.29645-1-k.konieczny@partner.samsung.com> <20190123165533.29645-3-k.konieczny@partner.samsung.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: Re: [linux-sunxi] [PATCH v3 2/2] arm64: dts: allwinner: a64: Enable
+ A64 timer workaround
+Date: Thu, 24 Jan 2019 18:06:58 +0800
+Message-ID: <CAGb2v65H_ZBMFY_c86acSxX96wFC=0_p_H2x+vzio4-ATayHHQ@mail.gmail.com>
+References: <20190113021719.46457-1-samuel@sholland.org> <20190113021719.46457-3-samuel@sholland.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123165533.29645-3-k.konieczny@partner.samsung.com>
+In-Reply-To: <20190113021719.46457-3-samuel@sholland.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+To: Samuel Holland <samuel@sholland.org>
+Cc: Catalin Marinas <catalin.marinas@arm.com>, Will Deacon <will.deacon@arm.com>, Maxime Ripard <maxime.ripard@bootlin.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <Mark.Rutland@arm.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>, devicetree <devicetree@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
 List-Id: devicetree@vger.kernel.org
 
-On Wed, 23 Jan 2019 at 17:55, Kamil Konieczny
-<k.konieczny@partner.samsung.com> wrote:
+On Sun, Jan 13, 2019 at 10:17 AM Samuel Holland <samuel@sholland.org> wrote:
 >
-> Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
-> SubSystem) IP.
+> As instability in the architectural timer has been observed on multiple
+> devices using this SoC, inluding the Pine64 and the Orange Pi Win,
+> enable the workaround in the SoC's device tree.
 >
-> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
-> ---
->  .../devicetree/bindings/crypto/samsung-sss.txt     | 14 +++++++++++---
->  1 file changed, 11 insertions(+), 3 deletions(-)
->
+> Acked-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> Signed-off-by: Samuel Holland <samuel@sholland.org>
 
-Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
+Applied for 5.1.
 
-Best regards,
-Krzysztof
+ChenYu
