@@ -1,138 +1,72 @@
-From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [DO NOT MERGE] [PATCH v7 5/5] arm64: dts: allwinner:
- bananapi-m64: Add HDF5640 camera module
-Date: Thu, 24 Jan 2019 23:37:36 +0530
-Message-ID: <20190124180736.28408-6-jagan@amarulasolutions.com>
-References: <20190124180736.28408-1-jagan@amarulasolutions.com>
-Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
+From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
+Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
+Date: Thu, 24 Jan 2019 23:51:28 +0530
+Message-ID: <de6e021a-4f9a-8e2e-dff0-1e7c61ad8b2b@codeaurora.org>
+References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
+ <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
+ <75ed74af-6946-b86d-092e-42dc16e55308@codeaurora.org>
+ <91a90daa-9e14-2d2e-e633-2ddfdc0955bf@arm.com>
+ <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
+ <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
+ <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
+ <18b70426-60fe-4871-6388-6e09fd5feb37@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBLP6U7RAKGQEAECVCBI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190124180736.28408-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>
-Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <18b70426-60fe-4871-6388-6e09fd5feb37@arm.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
+Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, John.Horley@arm.com
 List-Id: devicetree@vger.kernel.org
 
-Bananapi M64 comes with an optional sensor based on the ov5640,
-add support for it with below pin information.
+Hi Suzuki,
 
-- PE13, PE12 via i2c-gpio bitbanging
-- CLK_CSI_MCLK as external clock
-- PE1 as external clock pin muxing
-- DLDO3 as AVDD supply
-- ALDO1 as DOVDD supply
-- ELDO3 as DVDD supply
-- PE16 gpio for reset pin
-- PE17 gpio for powerdown pin
+On 1/24/2019 4:49 PM, Suzuki K Poulose wrote:
+> Hi Sai,
+> 
+> 
+> That looks fine with me. But as Mathieu said, this needs to be a separate
+> patch. But before all that please could you provide me the PIDR4 value for
+> the Kryo A75 and A55 please ?
+> 
 
-Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
----
- .../dts/allwinner/sun50i-a64-bananapi-m64.dts | 65 +++++++++++++++++++
- 1 file changed, 65 insertions(+)
+Sure.
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-index 9d0afd7d50ec..c99f66271287 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-bananapi-m64.dts
-@@ -60,6 +60,41 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	i2c-csi {
-+		compatible = "i2c-gpio";
-+		sda-gpios = <&pio 4 13 GPIO_ACTIVE_HIGH>; /* CSI0-SDA: PE13 */
-+		scl-gpios = <&pio 4 12 GPIO_ACTIVE_HIGH>; /* CSI0-SCK: PE12 */
-+		i2c-gpio,delay-us = <5>;
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		ov5640: camera@3c {
-+			compatible = "ovti,ov5640";
-+			reg = <0x3c>;
-+			pinctrl-names = "default";
-+			pinctrl-0 = <&csi_mclk_pin>;
-+			clocks = <&ccu CLK_CSI_MCLK>;
-+			clock-names = "xclk";
-+
-+			AVDD-supply = <&reg_dldo3>;
-+			DOVDD-supply = <&reg_aldo1>;
-+			DVDD-supply = <&reg_eldo3>;
-+			reset-gpios = <&pio 4 16 GPIO_ACTIVE_LOW>; /* CSI0-RST: PE16 */
-+			powerdown-gpios = <&pio 4 17 GPIO_ACTIVE_HIGH>; /* CSI0-PWDN: PE17 */
-+
-+			port {
-+				ov5640_ep: endpoint {
-+					remote-endpoint = <&csi_ep>;
-+					bus-width = <8>;
-+					hsync-active = <1>; /* Active high */
-+					vsync-active = <0>; /* Active low */
-+					data-active = <1>;  /* Active high */
-+					pclk-sample = <1>;  /* Rising */
-+				};
-+			};
-+		};
-+	};
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -108,6 +143,24 @@
- 	status = "okay";
- };
- 
-+&csi {
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		csi_ep: endpoint {
-+			remote-endpoint = <&ov5640_ep>;
-+			bus-width = <8>;
-+			hsync-active = <1>; /* Active high */
-+			vsync-active = <0>; /* Active low */
-+			data-active = <1>;  /* Active high */
-+			pclk-sample = <1>;  /* Rising */
-+		};
-+	};
-+};
-+
- &dai {
- 	status = "okay";
- };
-@@ -298,6 +351,12 @@
- 	regulator-name = "vcc-wifi";
- };
- 
-+&reg_dldo3 {
-+	regulator-min-microvolt = <2800000>;
-+	regulator-max-microvolt = <2800000>;
-+	regulator-name = "avdd-csi";
-+};
-+
- &reg_dldo4 {
- 	regulator-min-microvolt = <1800000>;
- 	regulator-max-microvolt = <3300000>;
-@@ -315,6 +374,12 @@
- 	regulator-name = "cpvdd";
- };
- 
-+&reg_eldo3 {
-+	regulator-min-microvolt = <1500000>;
-+	regulator-max-microvolt = <1500000>;
-+	regulator-name = "dvdd-csi";
-+};
-+
- &reg_fldo1 {
- 	regulator-min-microvolt = <1200000>;
- 	regulator-max-microvolt = <1200000>;
+PIDR4 value is 0x4.
+
+I get it now. So we are looking for JEP106 identification(PIDR1[7:4] and
+PIDR2[2:0]) and continuation code(PIDR4[3:0]).
+
+ From ARM Coresight Spec:
+
+DES_0, PIDR1 bits[7:4] JEP106 identification code bits[3:0].
+DES_1, PIDR2 bits[2:0] JEP106 identification code bits[6:4].
+DES_2, PIDR4 bits[3:0] JEP106 continuation code.
+
+For SDM845(A75 based):
+
+*0xB_B8_03* does indicate that the JEP106 identification
+code is 0x3B and continuation code is 0x4 which is of ARM and not
+QCOM(JEP106 ID is 0x70) which is expected.
+
+And the other values of PIDR0[0:7] and PIDR1[3:0] are *Implementation
+defined part numbers* and can be different from ARM A75/A55.
+
+I think this clears up case for SDM845.
+
+As for MSM8996, it is not based on any ARM derivative and hence the
+JEP106 ID is of QCOM(0x70) from the value of pid = *0xF_02_11*
+based on PIDR1[7:4] and PIDR2[2:0]. This clears this as well.
+
+Please correct me if I am wrong and also let me know if I can
+continue with PID addition to table.
+
+Thanks,
+Sai
+
 -- 
-2.18.0.321.gffc6fa0e3
+QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
+of Code Aurora Forum, hosted by The Linux Foundation
