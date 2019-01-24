@@ -1,56 +1,28 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: [PATCH v3 2/2] dt-bindings: interrupt-controller: loongson ls1x intc
-Date: Thu, 24 Jan 2019 11:27:30 +0800
-Message-ID: <20190124032730.18237-3-jiaxun.yang@flygoat.com>
-References: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
- <20190124032730.18237-1-jiaxun.yang@flygoat.com>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Michael Ellerman <patch-notifications@ellerman.id.au>
+Subject: Re: powerpc: build virtex dtb
+Date: Thu, 24 Jan 2019 14:40:16 +1100 (AEDT)
+Message-ID: <43lSbP32bBz9sDK@ozlabs.org>
+References: <1546951970-29079-1-git-send-email-clabbe@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124032730.18237-1-jiaxun.yang@flygoat.com>
+In-Reply-To: <1546951970-29079-1-git-send-email-clabbe@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: tglx@linutronix.de, jason@lakedaemon.net, marc.zyngier@arm.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, Jiaxun Yang <jiaxun.yang@flygoat.com>
+To: benh@kernel.crashing.org, mark.rutland@arm.com, paulus@samba.org, robh+dt@kernel.org
+Cc: devicetree@vger.kernel.org, linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org, Corentin Labbe <clabbe@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Dt-bindings doc about Loongson-1 interrupt controller
+On Tue, 2019-01-08 at 12:52:50 UTC, Corentin Labbe wrote:
+> I wanted to test the virtex440-ml507 qemu machine and found that the dtb
+> for it was not builded.
+> All powerpc DTB are only built when CONFIG_OF_ALL_DTBS is set which depend on
+> COMPILE_TEST.
+> 
+> This patchs adds build of virtex dtbs depending on
+> CONFIG_XILINX_VIRTEX440_GENERIC_BOARD option.
+> 
+> Signed-off-by: Corentin Labbe <clabbe@baylibre.com>
 
-Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
----
- .../loongson,ls1x-intc.txt                    | 24 +++++++++++++++++++
- 1 file changed, 24 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
+Applied to powerpc next, thanks.
 
-diff --git a/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
-new file mode 100644
-index 000000000000..a4e17c3f5f93
---- /dev/null
-+++ b/Documentation/devicetree/bindings/interrupt-controller/loongson,ls1x-intc.txt
-@@ -0,0 +1,24 @@
-+Loongson ls1x Interrupt Controller
-+
-+Required properties:
-+
-+- compatible : should be "loongson,ls1x-intc". Valid strings are:
-+
-+- reg : Specifies base physical address and size of the registers.
-+- interrupt-controller : Identifies the node as an interrupt controller
-+- #interrupt-cells : Specifies the number of cells needed to encode an
-+  interrupt source. The value shall be 1.
-+- interrupts : Specifies the CPU interrupts the controller is connected to.
-+
-+Example:
-+
-+intc: interrupt-controller@1fd01040 {
-+	compatible = "loongson,ls1x-intc";
-+	reg = <0x1fd01040 0x78>;
-+
-+	interrupt-controller;
-+	#interrupt-cells = <1>;
-+
-+	interrupt-parent = <&cpu_intc>;
-+	interrupts = <2>, <3>, <4>, <5>, <6>;
-+};
-\ No newline at end of file
--- 
-2.20.1
+https://git.kernel.org/powerpc/c/acef5e0165912c459a9ae98a25f0f879
+
+cheers
