@@ -1,7 +1,7 @@
 From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 Subject: Re: [PATCHv4 1/4] arm64: dts: qcom: sdm845: Add Coresight support
-Date: Thu, 24 Jan 2019 23:51:28 +0530
-Message-ID: <de6e021a-4f9a-8e2e-dff0-1e7c61ad8b2b@codeaurora.org>
+Date: Fri, 25 Jan 2019 00:01:04 +0530
+Message-ID: <1384cbbb-6e3e-f2e3-5ea4-8d0b237d64c7@codeaurora.org>
 References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
  <ad16cfb9b6f5efb85149458d5f5a1abf43fa027c.1548133311.git.saiprakash.ranjan@codeaurora.org>
  <1bd39862-0725-70ce-6535-fdb59569f683@arm.com>
@@ -10,59 +10,57 @@ References: <cover.1548133311.git.saiprakash.ranjan@codeaurora.org>
  <3906faf1-abbd-9c28-ad55-ed3800f06352@codeaurora.org>
  <c03b63bf-aca8-ea46-70ad-ee4558f0319e@arm.com>
  <5b54c6e0-7d22-ecee-486f-31333f49f84a@codeaurora.org>
- <18b70426-60fe-4871-6388-6e09fd5feb37@arm.com>
+ <CANLsYkxLJS-N0V4eOHM5rfe8MXMZHQApZFsDQns+DAS7xhGCoQ@mail.gmail.com>
+ <71ae9f41-50ff-742b-3e12-ca2ce84e0d3c@codeaurora.org>
+ <CANLsYkyeG4mZTJbFPnAsTNpt_2OBy5JYP6g80rbmZv-F8KTrUA@mail.gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <18b70426-60fe-4871-6388-6e09fd5feb37@arm.com>
+In-Reply-To: <CANLsYkyeG4mZTJbFPnAsTNpt_2OBy5JYP6g80rbmZv-F8KTrUA@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Suzuki K Poulose <suzuki.poulose@arm.com>, robh+dt@kernel.org, mathieu.poirier@linaro.org, leo.yan@linaro.org, alexander.shishkin@linux.intel.com, andy.gross@linaro.org, david.brown@linaro.org, vivek.gautam@codeaurora.org, dianders@chromium.org, sboyd@kernel.org, bjorn.andersson@linaro.org, devicetree@vger.kernel.org, mark.rutland@arm.com
-Cc: rnayak@codeaurora.org, sibis@codeaurora.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, John.Horley@arm.com
+To: Mathieu Poirier <mathieu.poirier@linaro.org>
+Cc: Suzuki K Poulose <suzuki.poulose@arm.com>, Rob Herring <robh+dt@kernel.org>, Leo Yan <leo.yan@linaro.org>, Alexander Shishkin <alexander.shishkin@linux.intel.com>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Vivek Gautam <vivek.gautam@codeaurora.org>, Doug Anderson <dianders@chromium.org>, Stephen Boyd <sboyd@kernel.org>, Bjorn Andersson <bjorn.andersson@linaro.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, linux-arm-msm <linux-arm-msm@vger.kernel.org>, John Horley <john.horley@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Suzuki,
+Good day Mathieu,
 
-On 1/24/2019 4:49 PM, Suzuki K Poulose wrote:
-> Hi Sai,
+On 1/24/2019 9:37 PM, Mathieu Poirier wrote:
+> Good day Sai,
 > 
+> On Wed, 23 Jan 2019 at 13:18, Sai Prakash Ranjan
+> <saiprakash.ranjan@codeaurora.org> wrote:
+>>
+>> Hi Mathieu,
+>>
+>> On 1/24/2019 12:44 AM, Mathieu Poirier wrote:
+>>> On Wed, 23 Jan 2019 at 05:12, Sai Prakash Ranjan
+>>> <saiprakash.ranjan@codeaurora.org> wrote:
+>>>
+>>> That depends on whether the ETMs have been modified at all, something
+>>> Suzuki has asked to be clarified.  If ETMs have been modified then we
+>>> need to understand how they differ from the driver's implementation.
+>>
+>> We had asked hardware team for clarification regarding this. Let me
+>> poke them again. As for the driver, downstream implementation also
+>> uses the same driver, so I am not sure what do you mean by differing
+>> from the driver's implementation.
 > 
-> That looks fine with me. But as Mathieu said, this needs to be a separate
-> patch. But before all that please could you provide me the PIDR4 value for
-> the Kryo A75 and A55 please ?
+> The driver has been implemented in accordance to ARM's coresight
+> technical reference manual and expects the HW to behave in accordance
+> to that specification.  Here we want to make sure the IP on your board
+> is conformant to the same specification.  If not then the driver needs
+> to be made flexible to handle both kind IPs.
 > 
 
-Sure.
-
-PIDR4 value is 0x4.
-
-I get it now. So we are looking for JEP106 identification(PIDR1[7:4] and
-PIDR2[2:0]) and continuation code(PIDR4[3:0]).
-
- From ARM Coresight Spec:
-
-DES_0, PIDR1 bits[7:4] JEP106 identification code bits[3:0].
-DES_1, PIDR2 bits[2:0] JEP106 identification code bits[6:4].
-DES_2, PIDR4 bits[3:0] JEP106 continuation code.
-
-For SDM845(A75 based):
-
-*0xB_B8_03* does indicate that the JEP106 identification
-code is 0x3B and continuation code is 0x4 which is of ARM and not
-QCOM(JEP106 ID is 0x70) which is expected.
-
-And the other values of PIDR0[0:7] and PIDR1[3:0] are *Implementation
-defined part numbers* and can be different from ARM A75/A55.
-
-I think this clears up case for SDM845.
-
-As for MSM8996, it is not based on any ARM derivative and hence the
-JEP106 ID is of QCOM(0x70) from the value of pid = *0xF_02_11*
-based on PIDR1[7:4] and PIDR2[2:0]. This clears this as well.
-
-Please correct me if I am wrong and also let me know if I can
-continue with PID addition to table.
+The HW does behave as per the specification. As discussed in reply to
+Suzuki, Coresight peripherals do use JEP106 ID of ARM for SDM845 and for 
+MSM8996, the ID is of QCOM(0x70) since it was not based on any ARM 
+derivative.
+And the etm4x driver handles it all well. Other values of PID registers
+are implementation defined and can be different from standard ARM cpu
+core types.
 
 Thanks,
 Sai
