@@ -1,25 +1,96 @@
-From: Michael Ellerman <patch-notifications@ellerman.id.au>
-Subject: Re: [1/2] powerpc: wii.dts: Add interrupt-related properties to GPIO node
-Date: Thu, 24 Jan 2019 14:40:27 +1100 (AEDT)
-Message-ID: <43lSbc47L8z9sBn@ozlabs.org>
-References: <20190112162124.3341-2-j.neuschaefer@gmx.net>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: Re: [PATCH 1/2] kbuild: skip 'addtree' and 'flags' magic for external
+ module build
+Date: Thu, 24 Jan 2019 13:28:35 +0900
+Message-ID: <CAK7LNASPGoBLqGbujYA5uvEDzLXdzU919_+jgJaD5Vwr++8tPw@mail.gmail.com>
+References: <1547607401-20118-1-git-send-email-yamada.masahiro@socionext.com>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190112162124.3341-2-j.neuschaefer@gmx.net>
+In-Reply-To: <1547607401-20118-1-git-send-email-yamada.masahiro@socionext.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linuxppc-dev@lists.ozlabs.org
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, =?utf-8?q?Jonathan_Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>, Rob Herring <robh+dt@kernel.org>, Paul Mackerras <paulus@samba.org>
+To: Linux Kbuild mailing list <linux-kbuild@vger.kernel.org>
+Cc: DTML <devicetree@vger.kernel.org>, Michal Marek <michal.lkml@markovi.net>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Sat, 2019-01-12 at 16:21:23 UTC, =?utf-8?q?Jonathan_Neusch=C3=A4fer?= wrote:
-> The Hollywood GPIO controller is connected to the Hollywood PIC (&PIC1)
-> at IRQs 10 and 11; IRQ 10 for GPIO lines that are configured for access
-> by the PPC, 11 for GPIO lines that are configured for access by the
-> ARM926.
-> 
-> Signed-off-by: Jonathan NeuschÃ¤fer <j.neuschaefer@gmx.net>
+On Thu, Jan 17, 2019 at 1:18 AM Masahiro Yamada
+<yamada.masahiro@socionext.com> wrote:
+>
+> When building an external module, $(obj) is the absolute path to it.
+>
+> The header search paths from ccflags-y etc. should not be tweaked.
+>
+> Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+> ---
 
-Applied to powerpc next, thanks.
+Applied to linux-kbuild.
 
-https://git.kernel.org/powerpc/c/f4ddc19a711736eb54fb8259499faf5a
+(2/2 was discarded.)
 
-cheers
+
+>  scripts/Makefile.host |  6 ++++--
+>  scripts/Makefile.lib  | 11 ++++++-----
+>  2 files changed, 10 insertions(+), 7 deletions(-)
+>
+> diff --git a/scripts/Makefile.host b/scripts/Makefile.host
+> index 0393f75..a115259 100644
+> --- a/scripts/Makefile.host
+> +++ b/scripts/Makefile.host
+> @@ -67,13 +67,15 @@ _hostc_flags   = $(KBUILD_HOSTCFLAGS)   $(HOST_EXTRACFLAGS)   \
+>  _hostcxx_flags = $(KBUILD_HOSTCXXFLAGS) $(HOST_EXTRACXXFLAGS) \
+>                   $(HOSTCXXFLAGS_$(basetarget).o)
+>
+> -ifeq ($(KBUILD_SRC),)
+>  __hostc_flags  = $(_hostc_flags)
+>  __hostcxx_flags        = $(_hostcxx_flags)
+> -else
+> +
+> +ifeq ($(KBUILD_EXTMOD),)
+> +ifneq ($(KBUILD_SRC),)
+>  __hostc_flags  = -I$(obj) $(call flags,_hostc_flags)
+>  __hostcxx_flags        = -I$(obj) $(call flags,_hostcxx_flags)
+>  endif
+> +endif
+>
+>  hostc_flags    = -Wp,-MD,$(depfile) $(__hostc_flags)
+>  hostcxx_flags  = -Wp,-MD,$(depfile) $(__hostcxx_flags)
+> diff --git a/scripts/Makefile.lib b/scripts/Makefile.lib
+> index 12b88d0..ecad15b 100644
+> --- a/scripts/Makefile.lib
+> +++ b/scripts/Makefile.lib
+> @@ -137,14 +137,14 @@ _c_flags += $(if $(patsubst n%,, \
+>         $(CFLAGS_KCOV))
+>  endif
+>
+> -# If building the kernel in a separate objtree expand all occurrences
+> -# of -Idir to -I$(srctree)/dir except for absolute paths (starting with '/').
+> -
+> -ifeq ($(KBUILD_SRC),)
+>  __c_flags      = $(_c_flags)
+>  __a_flags      = $(_a_flags)
+>  __cpp_flags     = $(_cpp_flags)
+> -else
+> +
+> +# If building the kernel in a separate objtree expand all occurrences
+> +# of -Idir to -I$(srctree)/dir except for absolute paths (starting with '/').
+> +ifeq ($(KBUILD_EXTMOD),)
+> +ifneq ($(KBUILD_SRC),)
+>
+>  # -I$(obj) locates generated .h files
+>  # $(call addtree,-I$(obj)) locates .h files in srctree, from generated .c files
+> @@ -155,6 +155,7 @@ __c_flags   = $(if $(obj),$(call addtree,-I$(src)) -I$(obj)) \
+>  __a_flags      = $(call flags,_a_flags)
+>  __cpp_flags     = $(call flags,_cpp_flags)
+>  endif
+> +endif
+>
+>  c_flags        = -Wp,-MD,$(depfile) $(NOSTDINC_FLAGS) $(LINUXINCLUDE)     \
+>                  -include $(srctree)/include/linux/compiler_types.h       \
+> --
+> 2.7.4
+>
+
+
+-- 
+Best Regards
+Masahiro Yamada
