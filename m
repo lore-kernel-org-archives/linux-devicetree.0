@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 01/22] drm/sun4i: sun6i_mipi_dsi: Compute
- burst mode loop N1 instruction delay
-Date: Fri, 25 Jan 2019 01:28:39 +0530
-Message-ID: <20190124195900.22620-2-jagan@amarulasolutions.com>
+Subject: [PATCH v6 02/22] drm/sun4i: sun6i_mipi_dsi: Support
+ instruction loop selection
+Date: Fri, 25 Jan 2019 01:28:40 +0530
+Message-ID: <20190124195900.22620-3-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBG5SVDRAKGQEFZ53I4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBIFSVDRAKGQEPVWXP4A-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,64 +20,34 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-Loop N1 instruction delay varies between burst and non-burst
-video modes. for burst mode panels it is computed based on the
-panel clock along with horizontal sync and porch timings and
-the rest it is simply (50 - 1)
+Instruction loop selection would require before writing
+loop number registers, so enable idle, LP11 bits on
+loop selection register.
 
-Reference code is available in BSP (from linux-sunxi
+Reference code available in BSP (from linux-sunxi/
 drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
 
-dsi_dev[sel]->dsi_inst_loop_num.bits.loop_n1=
-(panel->lcd_ht-panel->lcd_x)*(150)/(panel->lcd_dclk_freq*8) - 50;
-=> (((mode->htotal - mode->hdisplay) * 150) /
-     ((mode->clock / 1000) * 8)) - 50;
-
-So, this patch add loop N1 computation for burst mode, for non-burst
-which is already available.
+(dsi_dev[sel]->dsi_inst_loop_sel.dwval = 2<<(4*DSI_INST_ID_LP11) |
+	3<<(4*DSI_INST_ID_DLY);
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 20 +++++++++++++++++++-
- 1 file changed, 19 insertions(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index e3b34a345546..a5fcee750bee 100644
+index a5fcee750bee..813d5523f1c7 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -354,6 +354,24 @@ static void sun6i_dsi_inst_init(struct sun6i_dsi *dsi,
- 		     SUN6I_DSI_INST_JUMP_CFG_NUM(1));
- };
- 
-+static u16 sun6i_dsi_setup_inst_delay(struct sun6i_dsi *dsi,
-+				      struct drm_display_mode *mode)
-+{
-+	struct mipi_dsi_device *device = dsi->device;
-+	u32 hsync_porch, dclk;
-+	u16 delay;
-+
-+	hsync_porch = (mode->htotal - mode->hdisplay);
-+	dclk = (mode->clock / 1000);
-+
-+	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST)
-+		delay = ((hsync_porch * 150) / (dclk * 8)) - 50;
-+	else
-+		delay = 50 - 1;
-+
-+	return delay;
-+}
-+
- static u16 sun6i_dsi_get_video_start_delay(struct sun6i_dsi *dsi,
- 					   struct drm_display_mode *mode)
+@@ -403,6 +403,9 @@ static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
  {
-@@ -383,7 +401,7 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
- static void sun6i_dsi_setup_inst_loop(struct sun6i_dsi *dsi,
- 				      struct drm_display_mode *mode)
- {
--	u16 delay = 50 - 1;
-+	u16 delay = sun6i_dsi_setup_inst_delay(dsi, mode);
+ 	u16 delay = sun6i_dsi_setup_inst_delay(dsi, mode);
  
++	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_SEL_REG,
++		     DSI_INST_ID_HSC  << (4 * DSI_INST_ID_LP11) |
++		     DSI_INST_ID_HSD  << (4 * DSI_INST_ID_DLY));
  	regmap_write(dsi->regs, SUN6I_DSI_INST_LOOP_NUM_REG(0),
  		     SUN6I_DSI_INST_LOOP_NUM_N0(50 - 1) |
+ 		     SUN6I_DSI_INST_LOOP_NUM_N1(delay));
 -- 
 2.18.0.321.gffc6fa0e3
