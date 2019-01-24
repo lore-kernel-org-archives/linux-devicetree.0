@@ -1,18 +1,17 @@
 From: John Stultz <john.stultz@linaro.org>
-Subject: [PATCH 7/8 v5] arm64: dts: hi3660: Add hisi asp dma device
-Date: Thu, 24 Jan 2019 12:24:22 -0800
-Message-ID: <1548361463-28372-8-git-send-email-john.stultz@linaro.org>
+Subject: [PATCH 8/8 v5] arm64: dts: hi3660: Fixup unofficial dma-min-chan to dma-channel-mask
+Date: Thu, 24 Jan 2019 12:24:23 -0800
+Message-ID: <1548361463-28372-9-git-send-email-john.stultz@linaro.org>
 References: <1548361463-28372-1-git-send-email-john.stultz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548361463-28372-1-git-send-email-john.stultz@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 To: lkml <linux-kernel@vger.kernel.org>
-Cc: Youlin Wang <wwx575822@notesmail.huawei.com>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, John Stultz <john.stultz@linaro.org>
+Cc: John Stultz <john.stultz@linaro.org>, Tanglei Han <hantanglei@huawei.com>, Zhuangluan Su <suzhuangluan@hisilicon.com>, Ryan Grachek <ryan@edited.us>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Youlin Wang <wwx575822@notesmail.huawei.com>
-
-Add asp-dma device to hi3660 dts
+A undocumented and unimplemented binding got into the hi3660
+dtsi, and this switches that binding to the now documented one.
 
 Cc: Tanglei Han <hantanglei@huawei.com>
 Cc: Zhuangluan Su <suzhuangluan@hisilicon.com>
@@ -23,36 +22,26 @@ Cc: Rob Herring <robh+dt@kernel.org>
 Cc: Mark Rutland <mark.rutland@arm.com>
 Cc: linux-arm-kernel@lists.infradead.org
 Cc: devicetree@vger.kernel.org
-Acked-by: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Signed-off-by: Youlin Wang <wwx575822@notesmail.huawei.com>
-Signed-off-by: Tanglei Han <hantanglei@huawei.com>
 Signed-off-by: John Stultz <john.stultz@linaro.org>
 ---
-v2: Removed undocumented bindings
+v3: Renamed to hisi-dma-avail-chan
+v4: Renamed to dma-channel-mask
 ---
- arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm64/boot/dts/hisilicon/hi3660.dtsi | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-index 4c8d682..77a7135 100644
+index 77a7135..8e48f42 100644
 --- a/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
 +++ b/arch/arm64/boot/dts/hisilicon/hi3660.dtsi
-@@ -567,6 +567,16 @@
- 			dma-type = "hi3660_dma";
- 		};
- 
-+		asp_dmac: dma-controller@e804b000 {
-+			compatible = "hisilicon,hisi-pcm-asp-dma-1.0";
-+			reg = <0x0 0xe804b000 0x0 0x1000>;
-+			#dma-cells = <1>;
-+			dma-channels = <16>;
-+			dma-requests = <32>;
-+			interrupts = <GIC_SPI 216 IRQ_TYPE_LEVEL_HIGH>;
-+			interrupt-names = "asp_dma_irq";
-+		};
-+
- 		rtc0: rtc@fff04000 {
- 			compatible = "arm,pl031", "arm,primecell";
- 			reg = <0x0 0Xfff04000 0x0 0x1000>;
+@@ -560,7 +560,7 @@
+ 			#dma-cells = <1>;
+ 			dma-channels = <16>;
+ 			dma-requests = <32>;
+-			dma-min-chan = <1>;
++			dma-channel-mask = <0xfffe>;
+ 			interrupts = <GIC_SPI 143 IRQ_TYPE_LEVEL_HIGH>;
+ 			clocks = <&crg_ctrl HI3660_CLK_GATE_DMAC>;
+ 			dma-no-cci;
 -- 
 2.7.4
