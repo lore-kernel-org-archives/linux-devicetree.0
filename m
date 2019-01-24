@@ -1,9 +1,9 @@
 From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: [PATCH v3 1/3] arm64: dts: exynos: add SlimSSS for Exynos5433
-Date: Thu, 24 Jan 2019 16:45:19 +0100
-Message-ID: <20190124154521.13589-2-k.konieczny@partner.samsung.com>
+Subject: [PATCH v3 2/3] dt-bindings: crypto: document Exynos5433 SlimSSS
+Date: Thu, 24 Jan 2019 16:45:20 +0100
+Message-ID: <20190124154521.13589-3-k.konieczny@partner.samsung.com>
 References: <20190124154521.13589-1-k.konieczny@partner.samsung.com>
-        <CGME20190124154538eucas1p2cdc2ce1eab4446e3ac139fd07d622ca7@eucas1p2.samsung.com>
+        <CGME20190124154539eucas1p16fb97dd0cab2c18d82113c511cd8a1ca@eucas1p1.samsung.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
@@ -11,36 +11,56 @@ Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190124154521.13589-1-k.konieczny@partner.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 To: k.konieczny@partner.samsung.com
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Kukjin Kim <kgene@kernel.org>, Krzysztof Kozlowski <krzk@kernel.org>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
+Cc: Herbert Xu <herbert@gondor.apana.org.au>, "David S. Miller" <davem@davemloft.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-crypto@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>
 List-Id: devicetree@vger.kernel.org
 
-Add DT node for SlimSSS (aka Slim SecuritySubSystem) in Exynos5433 SoC.
-The users can use compatibility "samsung,exynos5433-slim-sss".
+Document DT bindings for crypto Samsung Exynos5433 SlimSSS (Slim Security
+SubSystem) IP.
 
+Reviewed-by: Krzysztof Kozlowski <krzk@kernel.org>
 Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
 ---
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../devicetree/bindings/crypto/samsung-sss.txt     | 14 +++++++++++---
+ 1 file changed, 11 insertions(+), 3 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index e7cd3b67d818..9e5fcb6c7776 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -559,6 +559,15 @@
- 				<&cmu_top CLK_DIV_ACLK_IMEM_200>;
- 		};
+diff --git a/Documentation/devicetree/bindings/crypto/samsung-sss.txt b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+index 7a5ca56683cc..d9af679d38ab 100644
+--- a/Documentation/devicetree/bindings/crypto/samsung-sss.txt
++++ b/Documentation/devicetree/bindings/crypto/samsung-sss.txt
+@@ -1,4 +1,4 @@
+-Samsung SoC SSS (Security SubSystem) module
++Samsung SoC SSS (Security SubSystem) and SlimSSS module
  
-+		slim_sss: slim-sss@11140000 {
-+			compatible = "samsung,exynos5433-slim-sss";
-+			reg = <0x11140000 0x1000>;
-+			interrupts = <GIC_SPI 312 IRQ_TYPE_LEVEL_HIGH>;
-+			clock-names = "aclk", "pclk";
-+			clocks = <&cmu_imem CLK_ACLK_SLIMSSS>,
-+				 <&cmu_imem CLK_PCLK_SLIMSSS>;
-+		};
+ The SSS module in S5PV210 SoC supports the following:
+ -- Feeder (FeedCtrl)
+@@ -15,6 +15,12 @@ supports the following also:
+ -- True Random Number Generator (TRNG)
+ -- Secure Key Manager
+ 
++Exynos5433 has both SSS and SlimSSS module.
++SlimSSS in Exynos5433 supports:
++-- Feeder (FeedCtrl)
++-- Advanced Encryption Standard (AES)
++-- SHA-1/SHA-256/HMAC (SHA-1/SHA-256)
 +
- 		pd_gscl: power-domain@105c4000 {
- 			compatible = "samsung,exynos5433-pd";
- 			reg = <0x105c4000 0x20>;
+ Required properties:
+ 
+ - compatible : Should contain entries for this and backward compatible
+@@ -22,11 +28,13 @@ Required properties:
+   - "samsung,s5pv210-secss" for S5PV210 SoC.
+   - "samsung,exynos4210-secss" for Exynos4210, Exynos4212, Exynos4412, Exynos5250,
+ 		Exynos5260 and Exynos5420 SoCs.
++  - "samsung,exynos5433-slim-sss" for Exynos5433 SoCs.
+ - reg : Offset and length of the register set for the module
+ - interrupts : interrupt specifiers of SSS module interrupts (one feed
+ 		control interrupt).
+ 
+ - clocks : list of clock phandle and specifier pairs for all clocks  listed in
+ 		clock-names property.
+-- clock-names : list of device clock input names; should contain one entry
+-		"secss".
++- clock-names : list of device clock input names; should contain "pclk" and
++		"aclk" for slim-sss in Exynos5433, and one entry "secss" for
++		other compatibles.
 -- 
 2.20.0
