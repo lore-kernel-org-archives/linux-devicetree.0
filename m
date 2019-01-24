@@ -1,8 +1,7 @@
 From: Aisheng Dong <aisheng.dong@nxp.com>
-Subject: [PATCH V3 1/5] dt-bindings: fsl: scu: add fallback compatible string
- for clock
-Date: Thu, 24 Jan 2019 13:22:32 +0000
-Message-ID: <1548335800-6438-2-git-send-email-aisheng.dong@nxp.com>
+Subject: [PATCH V3 2/5] dt-bindings: fsl: scu: add imx8qm scu clock support
+Date: Thu, 24 Jan 2019 13:22:36 +0000
+Message-ID: <1548335800-6438-3-git-send-email-aisheng.dong@nxp.com>
 References: <1548335800-6438-1-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -23,9 +22,7 @@ To: "linux-clk@vger.kernel.org" <linux-clk@vger.kernel.org>
 Cc: Aisheng Dong <aisheng.dong@nxp.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "sboyd@kernel.org" <sboyd@kernel.org>, "mturquette@baylibre.com" <mturquette@baylibre.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "kernel@pengutronix.de" <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-SCU clock can be used in a similar way by IMX8QXP and IMX8QM SoCs.
-Let's add a "fsl,scu-clk" fallback compatible string to allow other
-SoCs to reuse the common part.
+Add imx8qm scu clock support
 
 Cc: Shawn Guo <shawnguo@kernel.org>
 Cc: Sascha Hauer <kernel@pengutronix.de>
@@ -35,32 +32,20 @@ Acked-by: Stephen Boyd <sboyd@kernel.org>
 Reviewed-by: Rob Herring <robh@kernel.org>
 Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
 ---
- Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
 diff --git a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-index fd2bed2..6b4e24a 100644
+index 6b4e24a..72d481c 100644
 --- a/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
 +++ b/Documentation/devicetree/bindings/arm/freescale/fsl,scu.txt
-@@ -74,7 +74,9 @@ Clock bindings based on SCU Message Protocol
- This binding uses the common clock binding[1].
+@@ -75,6 +75,7 @@ This binding uses the common clock binding[1].
  
  Required properties:
--- compatible:		Should be "fsl,imx8qxp-clock".
-+- compatible:		Should be one of:
-+			  "fsl,imx8qxp-clock"
-+			followed by "fsl,scu-clk"
+ - compatible:		Should be one of:
++			  "fsl,imx8qm-clock"
+ 			  "fsl,imx8qxp-clock"
+ 			followed by "fsl,scu-clk"
  - #clock-cells:		Should be 1. Contains the Clock ID value.
- - clocks:		List of clock specifiers, must contain an entry for
- 			each required entry in clock-names
-@@ -141,7 +143,7 @@ firmware {
- 			  &lsio_mu1 1 3>;
- 
- 		clk: clk {
--			compatible = "fsl,imx8qxp-clk";
-+			compatible = "fsl,imx8qxp-clk", "fsl,scu-clk";
- 			#clock-cells = <1>;
- 		};
- 
 -- 
 2.7.4
