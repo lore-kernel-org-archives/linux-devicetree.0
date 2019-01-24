@@ -1,13 +1,13 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v6 08/22] drm/sun4i: sun6i_mipi_dsi: Enable
- 2byte trail for 4-lane burst mode
-Date: Fri, 25 Jan 2019 01:28:46 +0530
-Message-ID: <20190124195900.22620-9-jagan@amarulasolutions.com>
+Subject: [PATCH v6 09/22] drm/sun4i: sun6i_mipi_dsi: Enable
+ burst mode HBP, HSA_HSE
+Date: Fri, 25 Jan 2019 01:28:47 +0530
+Message-ID: <20190124195900.22620-10-jagan@amarulasolutions.com>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBQ5SVDRAKGQEVS7EISI-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBBSFSVDRAKGQEQRUOZ6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190124195900.22620-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -20,46 +20,46 @@ To: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>, David
 Cc: linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-For 4-lane, burst mode panels would need to enable 2byte trail_fill
-along with filling trail_env in dsi base control register.
+Horizontal back porch, sync active and sync end bits are
+needed to disable for burst mode panel operations.
 
-Similar reference code avialable in BSP (from linux-sunxi/
-drivers/video/sunxi/disp2/disp/de/lowlevel_sun50iw1/de_dsi.c)
-
-if (panel->lcd_dsi_lane == 4)
-{
-   dsi_dev[sel]->dsi_basic_ctl.bits.trail_inv = 0xc;
-   dsi_dev[sel]->dsi_basic_ctl.bits.trail_fill     = 1;
-}
+So, disable them via dsi base control register.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 ---
- drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c | 7 ++++++-
+ 1 file changed, 6 insertions(+), 1 deletion(-)
 
 diff --git a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-index 46ad142e66e8..a2ad9fa7f8d5 100644
+index a2ad9fa7f8d5..3d7c03161954 100644
 --- a/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
 +++ b/drivers/gpu/drm/sun4i/sun6i_mipi_dsi.c
-@@ -33,6 +33,8 @@
- #define SUN6I_DSI_CTL_EN			BIT(0)
+@@ -549,12 +549,17 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	u16 hbp, hfp, hsa, hblk, vblk;
+ 	size_t bytes;
+ 	u8 *buffer;
++	u32 val = 0;
  
- #define SUN6I_DSI_BASIC_CTL_REG		0x00c
-+#define SUN6I_DSI_BASIC_CTL_TRAIL_INV(n)	(((n) & 0xf) << 4)
-+#define SUN6I_DSI_BASIC_CTL_TRAIL_FILL		BIT(3)
- #define SUN6I_DSI_BASIC_CTL_HBP_DIS		BIT(2)
- #define SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS		BIT(1)
- #define SUN6I_DSI_BASIC_CTL_VIDEO_BURST		BIT(0)
-@@ -464,6 +466,10 @@ static void sun6i_dsi_setup_burst(struct sun6i_dsi *dsi,
- 	/* enable burst mode */
- 	regmap_read(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, &val);
- 	val |= SUN6I_DSI_BASIC_CTL_VIDEO_BURST;
-+	if (device->lanes == 4) {
-+		val |= SUN6I_DSI_BASIC_CTL_TRAIL_INV(0xc);
-+		val |= SUN6I_DSI_BASIC_CTL_TRAIL_FILL;
-+	}
- 	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, val);
- }
+ 	/* Do all timing calculations up front to allocate buffer space */
  
+ 	if (device->mode_flags & MIPI_DSI_MODE_VIDEO_BURST) {
+ 		hbp = hfp = hsa = vblk = 0;
+ 		hblk = (mode->hdisplay * Bpp);
++
++		regmap_read(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, &val);
++		val |= SUN6I_DSI_BASIC_CTL_HBP_DIS;
++		val |= SUN6I_DSI_BASIC_CTL_HSA_HSE_DIS;
+ 		goto alloc_buf;
+ 	}
+ 
+@@ -603,7 +608,7 @@ static void sun6i_dsi_setup_timings(struct sun6i_dsi *dsi,
+ 	if (WARN_ON(!buffer))
+ 		return;
+ 
+-	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, 0);
++	regmap_write(dsi->regs, SUN6I_DSI_BASIC_CTL_REG, val);
+ 
+ 	regmap_write(dsi->regs, SUN6I_DSI_SYNC_HSS_REG,
+ 		     sun6i_dsi_build_sync_pkt(MIPI_DSI_H_SYNC_START,
 -- 
 2.18.0.321.gffc6fa0e3
