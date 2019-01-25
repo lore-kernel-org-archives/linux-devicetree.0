@@ -1,33 +1,44 @@
-From: Paul Cercueil <paul@crapouillou.net>
-Subject: [PATCH] MIPS: DTS: jz4740: Correct interrupt number of DMA core
-Date: Fri, 25 Jan 2019 15:12:45 -0300
-Message-ID: <20190125181245.9966-1-paul@crapouillou.net>
+From: Bjorn Andersson <bjorn.andersson@linaro.org>
+Subject: [PATCH] arm64: dts: qcom: qcs404: Add rpmcc node
+Date: Fri, 25 Jan 2019 10:14:22 -0800
+Message-ID: <20190125181422.21434-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>
-Cc: devicetree@vger.kernel.org, linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>
+To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>
 List-Id: devicetree@vger.kernel.org
 
-The interrupt number set in the devicetree node of the DMA driver was
-wrong.
+Add the rpm clock controller node, to provide the low-noise baseband
+clock for the USB PHYs, among other things.
 
-Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- arch/mips/boot/dts/ingenic/jz4740.dtsi | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/qcs404.dtsi | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/mips/boot/dts/ingenic/jz4740.dtsi b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-index 6fb16fd24035..2beb78a62b7d 100644
---- a/arch/mips/boot/dts/ingenic/jz4740.dtsi
-+++ b/arch/mips/boot/dts/ingenic/jz4740.dtsi
-@@ -161,7 +161,7 @@
- 		#dma-cells = <2>;
+diff --git a/arch/arm64/boot/dts/qcom/qcs404.dtsi b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+index b3be39e088db..d90decd00f5c 100644
+--- a/arch/arm64/boot/dts/qcom/qcs404.dtsi
++++ b/arch/arm64/boot/dts/qcom/qcs404.dtsi
+@@ -3,6 +3,7 @@
  
- 		interrupt-parent = <&intc>;
--		interrupts = <29>;
-+		interrupts = <20>;
+ #include <dt-bindings/interrupt-controller/arm-gic.h>
+ #include <dt-bindings/clock/qcom,gcc-qcs404.h>
++#include <dt-bindings/clock/qcom,rpmcc.h>
+ #include <dt-bindings/gpio/gpio.h>
  
- 		clocks = <&cgu JZ4740_CLK_DMA>;
+ / {
+@@ -225,6 +226,11 @@
+ 		rpm_requests: glink-channel {
+ 			compatible = "qcom,rpm-qcs404";
+ 			qcom,glink-channels = "rpm_requests";
++
++			rpmcc: clock-controller {
++				compatible = "qcom,rpmcc-qcs404";
++				#clock-cells = <1>;
++			};
+ 		};
+ 	};
  
 -- 
-2.11.0
+2.18.0
