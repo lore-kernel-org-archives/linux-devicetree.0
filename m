@@ -1,49 +1,75 @@
-From: Fabio Estevam <festevam@gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Fix boot from eMMC
-Date: Fri, 25 Jan 2019 10:39:23 -0200
-Message-ID: <CAOMZO5CLdyP6ZHLqOrcDSq4CV3vjt1aYsesyCf7hb-8e0BuNvg@mail.gmail.com>
-References: <20190122165546.11712-1-ccaione@baylibre.com>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
+ driver
+Date: Fri, 25 Jan 2019 12:40:11 +0000
+Message-ID: <20190125124011.GA16389@e107981-ln.cambridge.arm.com>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+ <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
+ <20190125110530.0ff11a54@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190122165546.11712-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, abailon@baylibre.com, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, Lucas Stach <l.stach@pengutronix.de>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125110530.0ff11a54@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-Hi Carlo,
+On Fri, Jan 25, 2019 at 11:05:30AM +0100, Miquel Raynal wrote:
+> Hi Lorenzo,
+> 
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
+> 17:05:09 +0000:
+> 
+> > On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:
+> > > Hello,
+> > > 
+> > > As part of an effort to bring suspend to RAM support to Armada 3700
+> > > SoCs (main target: ESPRESSObin), this series handles the work around
+> > > the PCIe IP.
+> > > 
+> > > First, more configuration is done in the 'setup' helper as inspired
+> > > from the U-Boot driver. This is needed to entirely initialize the IP
+> > > during future resume operation (patch 1).
+> > > 
+> > > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+> > > current device trees do not provide the corresponding properties, not
+> > > finding one of these properties is not an error and just produces a
+> > > warning. However, if the property is present, an error during PHY
+> > > initialization will fail the probe of the driver.
+> > > 
+> > > Note: To be sure the clock will be resumed before this driver, a first
+> > > series adding links between clocks and consumers has been submitted,
+> > > see [1]. Anyway, having the clock series applied first is not needed.  
+> > 
+> > I do not understand what this means, in particular in relation
+> > to the blocking clock calls in the suspend/resume NOIRQ hooks.
+> 
+> I am not sure to understand your question.
+> 
+> As there are multiple points in this sentence I will detail each of
+> them so please comment on the one which is bothering you:
+> * I am working in parallel on a series adding device links to the clock
+>   framework. This way when a driver consumes a clock, the clock
+>   provider driver will be resumed first.
+> * If the clock series I am talking about is applied after this one,
+>   there is no build issue. Of course suspending the platform may
+>   not work but this is a new feature so nothing will be broken.
 
-On Tue, Jan 22, 2019 at 2:57 PM Carlo Caione <ccaione@baylibre.com> wrote:
->
-> The boot from eMMC is currently broken on the NXP i.MX8MQ EVK board.
-> When trying to boot from eMMC it fails with:
->
-> ...
-> [    1.271938] mmc1: Tuning failed, falling back to fixed sampling clock
-> [    1.287429] print_req_error: I/O error, dev mmcblk1, sector 1 flags 0
-> [    1.306833] mmc1: Tuning failed, falling back to fixed sampling clock
-> [    1.322325] print_req_error: I/O error, dev mmcblk1, sector 2 flags 0
-> [    1.329559] Buffer I/O error on dev mmcblk1, logical block 0, async page read
-> [    1.336714]  mmcblk1: unable to read partition table
-> ...
->
-> The problem is the result of a partial misconfiguration of the pins and
-> the missing assigned clock rate.
->
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+Suspend to RAM will be broken if the clock is suspended and no
+notification will happen in the NOIRQ phase, it is a new-broken-feature.
 
-Thanks for the fix.
+> * Device links do not enforce any priority if the suspend/resume phase
+>   between two drivers is not the same. The PCIe driver suspends in the
+>   NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
+>   suspend/resume callbacks must be promoted to the NOIRQ phase as well
+>   (and this is part of another series). As of today there is
+>   no alternative.
 
-It would be nice to add a Fixes tag so that it can reach 5.0-rc.
+I will merge this series when it works, I have no evidence that it does
+given what you are writing above, if the series you mention are
+*necessary* for suspend-to-RAM to work they ought to be merged first.
 
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Thanks,
+Lorenzo
