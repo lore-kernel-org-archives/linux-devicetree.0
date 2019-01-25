@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 03/10] usb: ehci-orion: avoid double PHY initialization
-Date: Fri, 25 Jan 2019 11:39:17 +0100
-Message-ID: <20190125103925.15753-4-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY bindings
+Date: Fri, 25 Jan 2019 11:39:20 +0100
+Message-ID: <20190125103925.15753-7-miquel.raynal@bootlin.com>
 References: <20190125103925.15753-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,73 +21,58 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-No need to initialize the PHY from the driver's probe. It is done by
-the core automatically and doing it twice would increment the
-phy->powercount counter to 2 instead of 1. During later suspend
-operation, the counter will be decremented to one, no phy->power_off()
-will occur and worse than that, the following phy->power_on() at
-resume time will also be skipped, failing the whole S2RAM operation.
+Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Acked-by: Alan Stern <stern@rowland.harvard.edu>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- drivers/usb/host/ehci-orion.c | 26 +++-----------------------
- 1 file changed, 3 insertions(+), 23 deletions(-)
+ .../bindings/phy/phy-mvebu-utmi.txt           | 38 +++++++++++++++++++
+ 1 file changed, 38 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
 
-diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-index 1ad72647a069..3109f082949e 100644
---- a/drivers/usb/host/ehci-orion.c
-+++ b/drivers/usb/host/ehci-orion.c
-@@ -257,15 +257,7 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 	if (IS_ERR(priv->phy)) {
- 		err = PTR_ERR(priv->phy);
- 		if (err != -ENOSYS)
--			goto err_phy_get;
--	} else {
--		err = phy_init(priv->phy);
--		if (err)
--			goto err_phy_init;
--
--		err = phy_power_on(priv->phy);
--		if (err)
--			goto err_phy_power_on;
-+			goto err_dis_clk;
- 	}
- 
- 	/*
-@@ -297,19 +289,12 @@ static int ehci_orion_drv_probe(struct platform_device *pdev)
- 
- 	err = usb_add_hcd(hcd, irq, IRQF_SHARED);
- 	if (err)
--		goto err_add_hcd;
-+		goto err_dis_clk;
- 
- 	device_wakeup_enable(hcd->self.controller);
- 	return 0;
- 
--err_add_hcd:
--	if (!IS_ERR(priv->phy))
--		phy_power_off(priv->phy);
--err_phy_power_on:
--	if (!IS_ERR(priv->phy))
--		phy_exit(priv->phy);
--err_phy_init:
--err_phy_get:
-+err_dis_clk:
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 	usb_put_hcd(hcd);
-@@ -327,11 +312,6 @@ static int ehci_orion_drv_remove(struct platform_device *pdev)
- 
- 	usb_remove_hcd(hcd);
- 
--	if (!IS_ERR(priv->phy)) {
--		phy_power_off(priv->phy);
--		phy_exit(priv->phy);
--	}
--
- 	if (!IS_ERR(priv->clk))
- 		clk_disable_unprepare(priv->clk);
- 
+diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+new file mode 100644
+index 000000000000..aa99ceec73b0
+--- /dev/null
++++ b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+@@ -0,0 +1,38 @@
++MVEBU A3700 UTMI PHY
++--------------------
++
++USB2 UTMI+ PHY controllers can be found on the following Marvell MVEBU SoCs:
++* Armada 3700
++
++On Armada 3700, there are two USB controllers, one is compatible with the USB2
++and USB3 specifications and supports OTG. The other one is USB2 compliant and
++only supports host mode. Both of these controllers come with a slightly
++different UTMI PHY.
++
++Required Properties:
++
++- compatible: Should be one of:
++	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
++	        the USB2 host-only controller.
++	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
++	        the USB3 and USB2 OTG capable controller.
++- reg: PHY IP register range.
++- marvell,usb-misc-reg: handle on the "USB miscellaneous registers" shared
++			region covering registers related to both the host
++			controller and the PHY.
++- #phy-cells: Standard property (Documentation: phy-bindings.txt) Should be 0.
++
++
++Example:
++
++	usb2_utmi_host_phy: phy@5f000 {
++		compatible = "marvell,armada-3700-utmi-host-phy";
++		reg = <0x5f000 0x800>;
++		marvell,usb-misc-reg = <&usb2_syscon>;
++		#phy-cells = <0>;
++	};
++
++	usb2_syscon: system-controller@5f800 {
++		compatible = "marvell,armada-3700-usb2-host-misc", "syscon";
++		reg = <0x5f800 0x800>;
++	};
 -- 
 2.19.1
