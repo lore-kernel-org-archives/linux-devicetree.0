@@ -1,92 +1,127 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH v6 15/22] dt-bindings: sun6i-dsi: Add A64 DPHY compatible
- (w/ A31 fallback)
-Date: Fri, 25 Jan 2019 16:52:53 +0100
-Message-ID: <20190125155253.v33vk3rfpdgv6537@flea>
-References: <20190124195900.22620-1-jagan@amarulasolutions.com>
- <20190124195900.22620-16-jagan@amarulasolutions.com>
+From: Rob Herring <robh@kernel.org>
+Subject: [PATCH 2/2] regulator: da9052: Use lowercase regulator names to match the DT
+Date: Fri, 25 Jan 2019 09:37:05 -0600
+Message-ID: <20190125153705.29921-2-robh@kernel.org>
+References: <20190125153705.29921-1-robh@kernel.org>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1592560104=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <20190124195900.22620-16-jagan@amarulasolutions.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190125153705.29921-1-robh@kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mark Brown <broonie@kernel.org>
+Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Support Opensource <support.opensource@diasemi.com>, Liam Girdwood <lgirdwood@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
+Since c32569e358ad ("regulator: Use of_node_name_eq for node name
+comparisons"), regulator node name comparisons are case sensitive.
+The DA9052 driver uses uppercase, but the DT has lowercase.
 
---===============1592560104==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="ykfgu7c2rq7ykthf"
-Content-Disposition: inline
+Fix this by using a lowercase regulator name to match the DT node name.
 
+Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
+Cc: Support Opensource <support.opensource@diasemi.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>
+Cc: Mark Brown <broonie@kernel.org>
+Signed-off-by: Rob Herring <robh@kernel.org>
+---
+ drivers/regulator/da9052-regulator.c | 64 ++++++++++++++--------------
+ 1 file changed, 32 insertions(+), 32 deletions(-)
 
---ykfgu7c2rq7ykthf
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 25, 2019 at 01:28:53AM +0530, Jagan Teki wrote:
-> The MIPI DSI PHY controller on Allwinner A64 is similar
-> on the one on A31.
->=20
-> Add A64 compatible and append A31 compatible as fallback.
->=20
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> ---
->  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
->  1 file changed, 1 insertion(+)
->=20
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.tx=
-t b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> index dbda2e567760..9c553637c72b 100644
-> --- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> @@ -40,6 +40,7 @@ D-PHY
->  Required properties:
->    - compatible: value must be one of:
->      * allwinner,sun6i-a31-mipi-dphy
-> +    * "allwinner,sun50i-a64-mipi-dphy", "allwinner,sun6i-a31-mipi-dphy"
-
-Same remark than patch 14
-
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---ykfgu7c2rq7ykthf
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXEsw1QAKCRDj7w1vZxhR
-xTi8AQDz3tkCaFBlGhOZG03SKppIfmHwuOSJbl3fNs5PW6BAKwEAuk0HYmnWsXo8
-fkTCcHkKV1uTbLP+Woq7p1BlVjuvMg4=
-=DoXw
------END PGP SIGNATURE-----
-
---ykfgu7c2rq7ykthf--
-
---===============1592560104==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
-
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
-
---===============1592560104==--
+diff --git a/drivers/regulator/da9052-regulator.c b/drivers/regulator/da9052-regulator.c
+index 207cb3859dcc..cefa3558236d 100644
+--- a/drivers/regulator/da9052-regulator.c
++++ b/drivers/regulator/da9052-regulator.c
+@@ -290,10 +290,10 @@ static const struct regulator_ops da9052_ldo_ops = {
+ 	.disable = regulator_disable_regmap,
+ };
+ 
+-#define DA9052_LDO(_id, step, min, max, sbits, ebits, abits) \
++#define DA9052_LDO(_id, _name, step, min, max, sbits, ebits, abits) \
+ {\
+ 	.reg_desc = {\
+-		.name = #_id,\
++		.name = #_name,\
+ 		.ops = &da9052_ldo_ops,\
+ 		.type = REGULATOR_VOLTAGE,\
+ 		.id = DA9052_ID_##_id,\
+@@ -310,10 +310,10 @@ static const struct regulator_ops da9052_ldo_ops = {
+ 	.activate_bit = (abits),\
+ }
+ 
+-#define DA9052_DCDC(_id, step, min, max, sbits, ebits, abits) \
++#define DA9052_DCDC(_id, _name, step, min, max, sbits, ebits, abits) \
+ {\
+ 	.reg_desc = {\
+-		.name = #_id,\
++		.name = #_name,\
+ 		.ops = &da9052_dcdc_ops,\
+ 		.type = REGULATOR_VOLTAGE,\
+ 		.id = DA9052_ID_##_id,\
+@@ -331,37 +331,37 @@ static const struct regulator_ops da9052_ldo_ops = {
+ }
+ 
+ static struct da9052_regulator_info da9052_regulator_info[] = {
+-	DA9052_DCDC(BUCK1, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBCOREGO),
+-	DA9052_DCDC(BUCK2, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBPROGO),
+-	DA9052_DCDC(BUCK3, 25, 950, 2525, 6, 6, DA9052_SUPPLY_VBMEMGO),
+-	DA9052_DCDC(BUCK4, 50, 1800, 3600, 5, 6, 0),
+-	DA9052_LDO(LDO1, 50, 600, 1800, 5, 6, 0),
+-	DA9052_LDO(LDO2, 25, 600, 1800, 6, 6, DA9052_SUPPLY_VLDO2GO),
+-	DA9052_LDO(LDO3, 25, 1725, 3300, 6, 6, DA9052_SUPPLY_VLDO3GO),
+-	DA9052_LDO(LDO4, 25, 1725, 3300, 6, 6, 0),
+-	DA9052_LDO(LDO5, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO6, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO7, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO8, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO9, 50, 1250, 3650, 6, 6, 0),
+-	DA9052_LDO(LDO10, 50, 1200, 3600, 6, 6, 0),
++	DA9052_DCDC(BUCK1, buck1, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBCOREGO),
++	DA9052_DCDC(BUCK2, buck2, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBPROGO),
++	DA9052_DCDC(BUCK3, buck3, 25, 950, 2525, 6, 6, DA9052_SUPPLY_VBMEMGO),
++	DA9052_DCDC(BUCK4, buck4, 50, 1800, 3600, 5, 6, 0),
++	DA9052_LDO(LDO1, ldo1, 50, 600, 1800, 5, 6, 0),
++	DA9052_LDO(LDO2, ldo2, 25, 600, 1800, 6, 6, DA9052_SUPPLY_VLDO2GO),
++	DA9052_LDO(LDO3, ldo3, 25, 1725, 3300, 6, 6, DA9052_SUPPLY_VLDO3GO),
++	DA9052_LDO(LDO4, ldo4, 25, 1725, 3300, 6, 6, 0),
++	DA9052_LDO(LDO5, ldo5, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO6, ldo6, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO7, ldo7, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO8, ldo8, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO9, ldo9, 50, 1250, 3650, 6, 6, 0),
++	DA9052_LDO(LDO10, ldo10, 50, 1200, 3600, 6, 6, 0),
+ };
+ 
+ static struct da9052_regulator_info da9053_regulator_info[] = {
+-	DA9052_DCDC(BUCK1, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBCOREGO),
+-	DA9052_DCDC(BUCK2, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBPROGO),
+-	DA9052_DCDC(BUCK3, 25, 950, 2525, 6, 6, DA9052_SUPPLY_VBMEMGO),
+-	DA9052_DCDC(BUCK4, 25, 950, 2525, 6, 6, 0),
+-	DA9052_LDO(LDO1, 50, 600, 1800, 5, 6, 0),
+-	DA9052_LDO(LDO2, 25, 600, 1800, 6, 6, DA9052_SUPPLY_VLDO2GO),
+-	DA9052_LDO(LDO3, 25, 1725, 3300, 6, 6, DA9052_SUPPLY_VLDO3GO),
+-	DA9052_LDO(LDO4, 25, 1725, 3300, 6, 6, 0),
+-	DA9052_LDO(LDO5, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO6, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO7, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO8, 50, 1200, 3600, 6, 6, 0),
+-	DA9052_LDO(LDO9, 50, 1250, 3650, 6, 6, 0),
+-	DA9052_LDO(LDO10, 50, 1200, 3600, 6, 6, 0),
++	DA9052_DCDC(BUCK1, buck1, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBCOREGO),
++	DA9052_DCDC(BUCK2, buck2, 25, 500, 2075, 6, 6, DA9052_SUPPLY_VBPROGO),
++	DA9052_DCDC(BUCK3, buck3, 25, 950, 2525, 6, 6, DA9052_SUPPLY_VBMEMGO),
++	DA9052_DCDC(BUCK4, buck4, 25, 950, 2525, 6, 6, 0),
++	DA9052_LDO(LDO1, ldo1, 50, 600, 1800, 5, 6, 0),
++	DA9052_LDO(LDO2, ldo2, 25, 600, 1800, 6, 6, DA9052_SUPPLY_VLDO2GO),
++	DA9052_LDO(LDO3, ldo3, 25, 1725, 3300, 6, 6, DA9052_SUPPLY_VLDO3GO),
++	DA9052_LDO(LDO4, ldo4, 25, 1725, 3300, 6, 6, 0),
++	DA9052_LDO(LDO5, ldo5, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO6, ldo6, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO7, ldo7, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO8, ldo8, 50, 1200, 3600, 6, 6, 0),
++	DA9052_LDO(LDO9, ldo9, 50, 1250, 3650, 6, 6, 0),
++	DA9052_LDO(LDO10, ldo10, 50, 1200, 3600, 6, 6, 0),
+ };
+ 
+ static inline struct da9052_regulator_info *find_regulator_info(u8 chip_id,
+-- 
+2.19.1
