@@ -1,80 +1,99 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64-amarula-relic: Add STLM75
- sensor
-Date: Fri, 25 Jan 2019 09:40:04 +0100
-Message-ID: <20190125084004.fsbxtpcesb5yaiod@flea>
-References: <20190124175254.27650-1-jagan@amarulasolutions.com>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH v2 2/4] dt-bindings: gnss: add mediatek binding
+Date: Fri, 25 Jan 2019 10:07:55 +0100
+Message-ID: <20190125090755.GB3691@localhost>
+References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
+ <1547744074-28308-3-git-send-email-lollivier@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="cqlyaxwsslzi66qo"
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190124175254.27650-1-jagan@amarulasolutions.com>
+In-Reply-To: <1547744074-28308-3-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jagan Teki <jagan@amarulasolutions.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Loys Ollivier <lollivier@baylibre.com>
+Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---cqlyaxwsslzi66qo
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Thu, Jan 24, 2019 at 11:22:54PM +0530, Jagan Teki wrote:
-> Amarula A64 Relic has STLM75 sensor for digital temperature
-> and thermal watchdog.
->=20
-> Add support for it.
->=20
-> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+On Thu, Jan 17, 2019 at 05:54:32PM +0100, Loys Ollivier wrote:
+> Add binding for Mediatek-based GNSS receivers.
+> 
+> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 > ---
-> Note: the respective driver change is already in mainline
-> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
-t/?id=3D2e9a41bbc1079776dabe42ed8113b086b99ae56c
->=20
->  .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
->  1 file changed, 15 insertions(+)
->=20
-> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b=
-/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> index 6cb2b7f0c817..5d942543d978 100644
-> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> @@ -34,6 +34,21 @@
->  	status =3D "okay";
->  };
-> =20
-> +&i2c0 {
-> +	pinctrl-names =3D "default";
-> +	pinctrl-0 =3D <&i2c0_pins>;
-> +	status =3D "okay";
+> 
+> v2:
+> Renamed bindings from Globaltop/gtop to Mediatek/mtk.
+> Moved current-speed as an optional propertie.
+> Removed the status line in the example.
+> Added "mediatek,mt3339" compatible.
+> 
+>  .../devicetree/bindings/gnss/mediatek.txt          | 39 ++++++++++++++++++++++
+>  1 file changed, 39 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/gnss/mediatek.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/gnss/mediatek.txt b/Documentation/devicetree/bindings/gnss/mediatek.txt
+> new file mode 100644
+> index 000000000000..fd984b4a9a6d
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/gnss/mediatek.txt
+> @@ -0,0 +1,39 @@
+> +Mediatek-based GNSS Receiver DT binding
 > +
-> +	temp@48 {
+> +Mediatek chipsets are used in GNSS-receiver modules produced by several
+> +vendors and can use UART, SPI or I2C interfaces.
+> +
+> +Please see Documentation/devicetree/bindings/gnss/gnss.txt for generic
+> +properties.
+> +
+> +Required properties:
+> +
+> +- compatible	: Must be one of
+> +
+> +			"globaltop,pa6h"
+> +			"mediatek,mt3339"
 
-That would be sensor@48
+I'm not sure it makes sense to add the GPS chip itself as it cannot be
+used stand-alone AFAIU, and either not way would require a lot more
+resources to be defined than what you add to this binding.
 
-> +		compatible =3D "st,stlm75";
+> +
+> +- vcc-supply	: Main voltage regulator (pin name: 3V3_IN, VCC, VDD)
 
-That compatible isn't documented.
+The pin names in parenthesis were copied from the sirf-star binding and
+were used to capture the various names given to this supply by different
+vendors. Please drop as it doesn't apply here.
 
-The rest looks good, thanks!
-Maxime
+> +
+> +Required properties (I2C):
+> +- reg		: I2C slave address
+> +
+> +Required properties (SPI):
+> +- reg		: SPI chip select address
 
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
+While the mt3339 appears to support these interfaces, the globaltop one
+does not.
 
---cqlyaxwsslzi66qo
-Content-Type: application/pgp-signature; name="signature.asc"
+Have you looked around for a small sample of mt3339-based receivers, to
+see whether anyone actually provides these?
 
------BEGIN PGP SIGNATURE-----
+> +Optional properties:
+> +
+> +- timepulse-gpios	: Time pulse GPIO
+> +- v-bckp-supply		: Backup voltage regulator
+> +- current-speed		: Default UART baud rate
 
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXErLYwAKCRDj7w1vZxhR
-xdJsAQCkGNW1D6vgjZZi2m2OyaFk/OM5jou7yJaveoU0vEeuzgD/fDDwXy3yfWnA
-PQcsxjl7Ogj6oNY63U+pBRW8tJZ34wE=
-=SIYm
------END PGP SIGNATURE-----
+Looks like you forgot the optional NRESET input and 3D-FIX output (even
+if the latter might be of limited use).
 
---cqlyaxwsslzi66qo--
+> +
+> +Example:
+> +
+> +serial@1234 {
+> +	compatible = "ns16550a";
+> +
+> +	gnss {
+> +		compatible = "globaltop,pa6h";
+> +		vcc-supply = <&vcc_3v3>;
+> +	};
+> +};
+
+Johan
