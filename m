@@ -1,77 +1,49 @@
-From: Joseph Lo <josephl@nvidia.com>
-Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
-Date: Fri, 25 Jan 2019 11:23:11 +0800
-Message-ID: <285bd3f7-e1c0-0767-6381-4b1d748bd6db@nvidia.com>
-References: <20190107032810.13522-1-josephl@nvidia.com>
- <20190107032810.13522-2-josephl@nvidia.com>
- <a5fec080-d388-5362-7f44-b50f7d7e1adf@nvidia.com>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 04/11] drm/sun4i: layer: Assign backend pointer before calling DRM helpers
+Date: Fri, 25 Jan 2019 11:23:07 +0800
+Message-ID: <20190125032314.20915-5-wens@csie.org>
+References: <20190125032314.20915-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <a5fec080-d388-5362-7f44-b50f7d7e1adf@nvidia.com>
-Content-Language: en-US
+In-Reply-To: <20190125032314.20915-1-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jon Hunter <jonathanh@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>
+Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jon,
+We might want to use the backend pointer from DRM callbacks that get
+called within drm_universal_plane_init(), such as the
+.format_mod_supported callback.
 
-Thanks for reviewing.
+Move the assignment of the layer's backend pointer to right after the
+structure is allocated.
 
-On 1/24/19 6:30 PM, Jon Hunter wrote:
-> 
-> On 07/01/2019 03:28, Joseph Lo wrote:
->> The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
->> timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
->> from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
->> (TMR10-TMR13). Each TMR can be programmed to generate one-shot periodic,
->> or watchdog interrupts.
->>
->> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->> Cc: Thomas Gleixner <tglx@linutronix.de>
->> Cc: linux-kernel@vger.kernel.org
->> Cc: devicetree@vger.kernel.org
->> Signed-off-by: Joseph Lo <josephl@nvidia.com>
->> ---
->>   .../bindings/timer/nvidia,tegra210-timer.txt  | 25 +++++++++++++++++++
->>   1 file changed, 25 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
->>
->> diff --git a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
->> new file mode 100644
->> index 000000000000..ba511220a669
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
->> @@ -0,0 +1,25 @@
->> +NVIDIA Tegra210 timer
->> +
->> +The Tegra210 timer provides fourteen 29-bit timer counters and one 32-bit
->> +timestamp counter. The TMRs run at either a fixed 1 MHz clock rate derived
->> +from the oscillator clock (TMR0-TMR9) or directly at the oscillator clock
->> +(TMR10-TMR13). Each TMR can be programmed to generate one-shot, periodic,
->> +or watchdog interrupts.
->> +
->> +Required properties:
->> +- compatible : "nvidia,tegra210-timer".
->> +- reg : Specifies base physical address and size of the registers.
->> +- interrupts : A list of 4 interrupts; one per each of TMR10 through TMR13.
-> 
-> Why do we only add the interrupts for TMR10 - TMR13? What about the others?
-> 
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ drivers/gpu/drm/sun4i/sun4i_layer.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-The others (TMR0-TMR9) are occupied for other usages. TMR5 is occupied 
-for the watchdog timer in the upstream kernel. And others (still in 
-TMR0-TMR9) are occupied for different usages in our downstream kernel.
-
-And notice that only TMR10-TMR13 are running at the oscillator clock 
-(clk_m). With the Tegra210 timer driver, we introduce in this series, 
-which only replace the clock event device function that was originally 
-owned by the arch timer (armv8 timer) and it also running at the 
-oscillator clock. The sched_timer still owns by the arch timer. So the 
-timer resolution will be the same. That's why we choose TMR10-TMR13 as 
-the timer for Tegra210.
-
-Thanks,
-Joseph
+diff --git a/drivers/gpu/drm/sun4i/sun4i_layer.c b/drivers/gpu/drm/sun4i/sun4i_layer.c
+index c5a999ca1d72..95d4aaa51a5c 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_layer.c
++++ b/drivers/gpu/drm/sun4i/sun4i_layer.c
+@@ -182,6 +182,8 @@ static struct sun4i_layer *sun4i_layer_init_one(struct drm_device *drm,
+ 	if (!layer)
+ 		return ERR_PTR(-ENOMEM);
+ 
++	layer->backend = backend;
++
+ 	/* possible crtcs are set later */
+ 	ret = drm_universal_plane_init(drm, &layer->plane, 0,
+ 				       &sun4i_backend_layer_funcs,
+@@ -195,7 +197,6 @@ static struct sun4i_layer *sun4i_layer_init_one(struct drm_device *drm,
+ 
+ 	drm_plane_helper_add(&layer->plane,
+ 			     &sun4i_backend_layer_helper_funcs);
+-	layer->backend = backend;
+ 
+ 	drm_plane_create_alpha_property(&layer->plane);
+ 	drm_plane_create_zpos_property(&layer->plane, 0, 0,
+-- 
+2.20.1
