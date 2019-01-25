@@ -1,41 +1,39 @@
-From: John Stultz <john.stultz@linaro.org>
-Subject: Re: [PATCH] arm64: dts: hikey: Revert "Enable HS200 mode on eMMC"
-Date: Fri, 25 Jan 2019 09:41:48 -0800
-Message-ID: <CALAqxLW9B6zZi=iQK02QEcAq=xzBiZ-xO-18t2izsKgJstzfmQ@mail.gmail.com>
-References: <1548273966-5889-1-git-send-email-john.stultz@linaro.org> <107a6e2e-ddd8-cbc1-5680-1b5899665327@arm.com>
+From: Catalin Marinas <catalin.marinas@arm.com>
+Subject: Re: [PATCH v2 06/21] memblock: memblock_phys_alloc_try_nid(): don't
+ panic
+Date: Fri, 25 Jan 2019 17:45:02 +0000
+Message-ID: <20190125174502.GL25901@arrakis.emea.arm.com>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <1548057848-15136-7-git-send-email-rppt@linux.ibm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <107a6e2e-ddd8-cbc1-5680-1b5899665327@arm.com>
-Sender: stable-owner@vger.kernel.org
-To: Robin Murphy <robin.murphy@arm.com>
-Cc: lkml <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ryan Grachek <ryan@edited.us>, Alistair Strachan <astrachan@google.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, "stable #4 . 17+" <stable@vger.kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <1548057848-15136-7-git-send-email-rppt@linux.ibm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Mike Rapoport <rppt@linux.ibm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Russell
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 3:18 AM Robin Murphy <robin.murphy@arm.com> wrote:
->
-> Hi John,
->
-> On 23/01/2019 20:06, John Stultz wrote:
-> > From: Alistair Strachan <astrachan@google.com>
-> >
-> > This reverts commit abd7d0972a192ee653efc7b151a6af69db58f2bb. This
-> > change was already partially reverted by John Stultz in commit
-> > 9c6d26df1fae ("arm64: dts: hikey: Fix eMMC corruption regression").
-> >
-> > This change appears to cause controller resets and block read failures
-> > which prevents successful booting on some hikey boards.
->
-> FWIW, you might want to have a play with the pinctrl settings - I've
-> seen various flakiness with HS200 eMMCs on Rockchip boards which could
-> be solved by bumping up the drive strength.
->
+On Mon, Jan 21, 2019 at 10:03:53AM +0200, Mike Rapoport wrote:
+> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> index ae34e3a..2c61ea4 100644
+> --- a/arch/arm64/mm/numa.c
+> +++ b/arch/arm64/mm/numa.c
+> @@ -237,6 +237,10 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+>  		pr_info("Initmem setup node %d [<memory-less node>]\n", nid);
+>  
+>  	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+> +	if (!nd_pa)
+> +		panic("Cannot allocate %zu bytes for node %d data\n",
+> +		      nd_size, nid);
+> +
+>  	nd = __va(nd_pa);
+>  
+>  	/* report and initialize */
 
-Hm. Thanks for the tip. I'll have to dig around to see if that can
-help. In the meantime though, I think the revert is the right
-solution, as this is currently blocking some boards from booting
-mainline.  We can then look to re-enable HS200 mode if we can sort out
-the issues we saw with boards using hynix mmc chips.
+Does it mean that memblock_phys_alloc_try_nid() never returns valid
+physical memory starting at 0?
 
-thanks
--john
+-- 
+Catalin
