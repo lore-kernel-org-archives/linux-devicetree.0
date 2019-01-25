@@ -1,77 +1,136 @@
-From: Malathi Gottam <mgottam@codeaurora.org>
-Subject: [PATCH v5] arm64: dts: sdm845: add video nodes
-Date: Fri, 25 Jan 2019 13:41:33 +0530
-Message-ID: <1548403893-21677-1-git-send-email-mgottam@codeaurora.org>
+From: Peng Ma <peng.ma@nxp.com>
+Subject: [v5 2/2] arm64: dts: lx2160a: add sata node support
+Date: Fri, 25 Jan 2019 08:10:13 +0000
+Message-ID: <20190125081013.21663-2-peng.ma@nxp.com>
+References: <20190125081013.21663-1-peng.ma@nxp.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190125081013.21663-1-peng.ma@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com
-Cc: devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, stanimir.varbanov@linaro.org, vgarodia@codeaurora.org, mgottam@codeaurora.org
+To: axboe@kernel.dk, shawnguo@kernel.org
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.tang@nxp.com, Peng Ma <peng.ma@nxp.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds video nodes to sdm845 based on the examples
-in the bindings.
+Add SATA device nodes for fsl-lx2160a and enable support
+for QDS and RDB boards.
 
-Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+Signed-off-by: Peng Ma <peng.ma@nxp.com>
 ---
-Changes:
-	Added video firmware node
- arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 38 insertions(+)
+changed for V5:
+	- no change
 
-diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-index b72bdb0..1af68f5 100644
---- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-+++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-@@ -87,6 +87,11 @@
- 			reg = <0 0x86200000 0 0x2d00000>;
- 			no-map;
- 		};
-+
-+		venus_region: memory@95800000 {
-+			reg = <0x0 0x95800000 0x0 0x500000>;
-+			no-map;
-+		};
- 	};
- 
- 	cpus {
-@@ -1403,5 +1408,38 @@
- 				status = "disabled";
- 			};
- 		};
-+
-+		video-codec@aa00000 {
-+			compatible = "qcom,sdm845-venus";
-+			reg = <0x0aa00000 0xff000>;
-+			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-+			power-domains = <&videocc VENUS_GDSC>;
-+			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-+				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-+			clock-names = "core", "iface", "bus";
-+			iommus = <&apps_smmu 0x10a0 0x8>,
-+				 <&apps_smmu 0x10b0 0x0>;
-+			memory-region = <&venus_region>;
-+
-+			video-core0 {
-+				compatible = "venus-decoder";
-+				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-+					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-+				clock-names = "core", "bus";
-+				power-domains = <&videocc VCODEC0_GDSC>;
-+			};
-+
-+			video-core1 {
-+				compatible = "venus-encoder";
-+				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-+					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-+				clock-names = "core", "bus";
-+				power-domains = <&videocc VCODEC1_GDSC>;
-+			};
-+			video-firmware {
-+				iommus = <&apps_smmu 0x10b2 0x0>;
-+			};
-+		};
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
+ arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
+ 3 files changed, 76 insertions(+), 0 deletions(-)
+
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+index 99a22ab..1a5acf6 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
+@@ -95,6 +95,22 @@
  	};
  };
+ 
++&sata0 {
++	status = "okay";
++};
++
++&sata1 {
++	status = "okay";
++};
++
++&sata2 {
++	status = "okay";
++};
++
++&sata3 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+index 6481e5f..5b6799e 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
+@@ -102,6 +102,22 @@
+ 	};
+ };
+ 
++&sata0 {
++	status = "okay";
++};
++
++&sata1 {
++	status = "okay";
++};
++
++&sata2 {
++	status = "okay";
++};
++
++&sata3 {
++	status = "okay";
++};
++
+ &uart0 {
+ 	status = "okay";
+ };
+diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+index a79f5c1..592034b 100644
+--- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
++++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
+@@ -671,6 +671,50 @@
+ 			status = "disabled";
+ 		};
+ 
++		sata0: sata@3200000 {
++			compatible = "fsl,lx2160a-ahci";
++			reg = <0x0 0x3200000 0x0 0x10000>,
++			      <0x7 0x100520 0x0 0x4>;
++			reg-names = "ahci", "sata-ecc";
++			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 3>;
++			dma-coherent;
++			status = "disabled";
++		};
++
++		sata1: sata@3210000 {
++			compatible = "fsl,lx2160a-ahci";
++			reg = <0x0 0x3210000 0x0 0x10000>,
++			      <0x7 0x100520 0x0 0x4>;
++			reg-names = "ahci", "sata-ecc";
++			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 3>;
++			dma-coherent;
++			status = "disabled";
++		};
++
++		sata2: sata@3220000 {
++			compatible = "fsl,lx2160a-ahci";
++			reg = <0x0 0x3220000 0x0 0x10000>,
++			      <0x7 0x100520 0x0 0x4>;
++			reg-names = "ahci", "sata-ecc";
++			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 3>;
++			dma-coherent;
++			status = "disabled";
++		};
++
++		sata3: sata@3230000 {
++			compatible = "fsl,lx2160a-ahci";
++			reg = <0x0 0x3230000 0x0 0x10000>,
++			      <0x7 0x100520 0x0 0x4>;
++			reg-names = "ahci", "sata-ecc";
++			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&clockgen 4 3>;
++			dma-coherent;
++			status = "disabled";
++		};
++
+ 		smmu: iommu@5000000 {
+ 			compatible = "arm,mmu-500";
+ 			reg = <0 0x5000000 0 0x800000>;
 -- 
-1.9.1
+1.7.1
