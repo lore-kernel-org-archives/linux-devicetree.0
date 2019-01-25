@@ -1,43 +1,46 @@
-From: <Nicolas.Ferre@microchip.com>
-Subject: Re: [PATCH 8/8] net: macb: add sam9x60-macb compatibility string
-Date: Fri, 25 Jan 2019 09:16:30 +0000
-Message-ID: <2f8d3a0b-fa06-2157-db4b-fc0d6e8d9016@microchip.com>
-References: <cover.1547629763.git.nicolas.ferre@microchip.com>
- <dfc7db7606e0898fbedc1f45ed9637379595f9cb.1547629763.git.nicolas.ferre@microchip.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+From: Zhou Yanjie <zhouyanjie@zoho.com>
+Subject: [PATCH RESEND] DTS: CI20: Fix bugs in ci20's device tree.
+Date: Fri, 25 Jan 2019 17:19:22 +0800
+Message-ID: <1548407962-6484-1-git-send-email-zhouyanjie@zoho.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <dfc7db7606e0898fbedc1f45ed9637379595f9cb.1547629763.git.nicolas.ferre@microchip.com>
-Content-Language: en-US
-Content-ID: <E4A375AA93587C48B64E20C9290C4942@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: netdev@vger.kernel.org, davem@davemloft.net
-Cc: alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sre@kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, robh+dt@kernel.org, devicetree@vger.kernel.org
+To: linux-mips@vger.kernel.org
+Cc: linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, ralf@linux-mips.org, jhogan@kernel.org, mark.rutland@arm.com, malat@debian.org, ezequiel@collabora.co.uk, ulf.hansson@linaro.org, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
 List-Id: devicetree@vger.kernel.org
 
-SGkgRGF2aWQsDQoNCk9uIDE2LzAxLzIwMTkgYXQgMTA6NTcsIE5pY29sYXMgRmVycmUgd3JvdGU6
-DQo+IEFkZCBhIG5ldyBjb21wYXRpYmlsaXR5IHN0cmluZyBmb3IgdGhpcyBwcm9kdWN0LiBJdCdz
-IHVzaW5nDQo+IGF0OTFzYW05MjYwLW1hY2IgbGF5b3V0IGJ1dCBoYXMgYSBuZXdlciBoYXJkd2Fy
-ZSByZXZpc2lvbjogaXQncyBzYWZlcg0KPiB0byB1c2UgaXRzIG93biBzdHJpbmcuDQo+IA0KPiBT
-aWduZWQtb2ZmLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+
-DQoNCkknbSB0aGlua2luZyBvZiBwdXNoaW5nIHRoaXMgcGF0Y2ggd2l0aCB0aGUgb3RoZXJzIG9m
-IHRoZSBzZXJpZXMgdGhyb3VnaCANCmFybS1zb2MgdHJlZS4gQ2FuIEkgaGF2ZSB5b3VyICJBY2tl
-ZC1ieSIgdGFnIHRoZW4/DQoNCkJlc3QgcmVnYXJkcywNCiAgIE5pY29sYXMNCg0KDQo+IC0tLQ0K
-PiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMgfCAxICsNCj4gICAx
-IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
-L25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
-Y2FkZW5jZS9tYWNiX21haW4uYw0KPiBpbmRleCA2NmNjNzkyNzA2MWEuLmEwODg5ZWYxMDdhMSAx
-MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYw0K
-PiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IEBAIC0z
-OTQxLDYgKzM5NDEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtYWNiX2R0
-X2lkc1tdID0gew0KPiAgIAl7IC5jb21wYXRpYmxlID0gImNkbnMsbnA0LW1hY2IiLCAuZGF0YSA9
-ICZucDRfY29uZmlnIH0sDQo+ICAgCXsgLmNvbXBhdGlibGUgPSAiY2RucyxwYzMwMi1nZW0iLCAu
-ZGF0YSA9ICZwYzMwMmdlbV9jb25maWcgfSwNCj4gICAJeyAuY29tcGF0aWJsZSA9ICJjZG5zLGdl
-bSIsIC5kYXRhID0gJnBjMzAyZ2VtX2NvbmZpZyB9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAiY2Ru
-cyxzYW05eDYwLW1hY2IiLCAuZGF0YSA9ICZhdDkxc2FtOTI2MF9jb25maWcgfSwNCj4gICAJeyAu
-Y29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQyLWdlbSIsIC5kYXRhID0gJnNhbWE1ZDJfY29uZmln
-IH0sDQo+ICAgCXsgLmNvbXBhdGlibGUgPSAiYXRtZWwsc2FtYTVkMy1nZW0iLCAuZGF0YSA9ICZz
-YW1hNWQzX2NvbmZpZyB9LA0KPiAgIAl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDMtbWFj
-YiIsIC5kYXRhID0gJnNhbWE1ZDNtYWNiX2NvbmZpZyB9LA0KPiANCg0KDQotLSANCk5pY29sYXMg
-RmVycmUNCg==
+According to the Schematic, the hardware of ci20 leads to uart3,
+but not to uart2. Uart2 is miswritten in the original code.
+
+Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+---
+ arch/mips/boot/dts/ingenic/ci20.dts | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/arch/mips/boot/dts/ingenic/ci20.dts b/arch/mips/boot/dts/ingenic/ci20.dts
+index 50cff3c..4f7b1fa 100644
+--- a/arch/mips/boot/dts/ingenic/ci20.dts
++++ b/arch/mips/boot/dts/ingenic/ci20.dts
+@@ -76,7 +76,7 @@
+ 	status = "okay";
+ 
+ 	pinctrl-names = "default";
+-	pinctrl-0 = <&pins_uart2>;
++	pinctrl-0 = <&pins_uart3>;
+ };
+ 
+ &uart4 {
+@@ -196,9 +196,9 @@
+ 		bias-disable;
+ 	};
+ 
+-	pins_uart2: uart2 {
+-		function = "uart2";
+-		groups = "uart2-data", "uart2-hwflow";
++	pins_uart3: uart3 {
++		function = "uart3";
++		groups = "uart3-data", "uart3-hwflow";
+ 		bias-disable;
+ 	};
+ 
+-- 
+2.7.4
