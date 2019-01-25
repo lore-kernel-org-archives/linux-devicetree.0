@@ -1,58 +1,40 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
-Date: Fri, 25 Jan 2019 17:50:31 +0000
-Message-ID: <20190125175031.GA25898@sirena.org.uk>
-References: <20190125114429.20066-1-jonas@norrbonn.se>
- <20190125114429.20066-2-jonas@norrbonn.se>
- <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
- <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se>
- <20190125174713.GA6939@sirena.org.uk>
+From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
+Subject: [PATCH 0/4] input: misc: gp2a: Add device tree support
+Date: Fri, 25 Jan 2019 18:50:41 +0100
+Message-ID: <20190125175045.22576-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="EeQfGwPcQSOJBaQU"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125174713.GA6939@sirena.org.uk>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Bonn <jonas@norrbonn.se>
-Cc: Baolin Wang <baolin.wang@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
+To: dmitry.torokhov@gmail.com
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, colyli@suse.de, ckeepax@opensource.wolfsonmicro.com, andrew.smirnov@gmail.com, arnd@arndb.de, xiaotong.lu@spreadtrum.com, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+The main goal of this patchset is to add device tree support to driver.
 
---EeQfGwPcQSOJBaQU
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+First patch is doing little cleanup by using managed resource helpers.
 
-On Fri, Jan 25, 2019 at 05:47:13PM +0000, Mark Brown wrote:
-> On Fri, Jan 25, 2019 at 01:06:45PM +0100, Jonas Bonn wrote:
+Second patch adds support for light sensor part, which is supported by hw,
+but was not supported by driver.
 
-> > Having this as device property rather than a transfer property allows this
-> > to be configured one time in setup() rather than having to fiddle with the
-> > configuration register for every transfer.
+The last two patches adds device tree support to driver,
+with documentation.
 
-> That doesn't mean that the coniguration should be done in DT though, and
-> given that this presumably is a property of the device there seems to be
-> no reason why we'd have it in DT - if every instance of the device is
-> going to need to set the property we should just figure it out from the
-> compatble string instead.
+It was tested on s5pv210-galaxys and s5pv210-fascinate4g.
 
-To be clear here: the suggestion is to add a parameter the slave device
-can set in spi_device which sets the default word_delay similarly to how
-max_speed_hz works.
+Jonathan Bakker (4):
+  input: misc: gp2a: Use managed resource helpers
+  input: misc: gp2a: Add support for light sensor
+  input: misc: gp2a: Enable device tree
+  dt-bindings: input: Add documentation for gp2a sensor
 
---EeQfGwPcQSOJBaQU
-Content-Type: application/pgp-signature; name="signature.asc"
+ .../bindings/input/sharp,gp2ap002a00f.txt     |  29 ++++
+ drivers/input/misc/Kconfig                    |   2 +
+ drivers/input/misc/gp2ap002a00f.c             | 154 +++++++++++++++---
+ include/linux/input/gp2ap002a00f.h            |   4 +
+ 4 files changed, 163 insertions(+), 26 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/input/sharp,gp2ap002a00f.txt
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxLTGYACgkQJNaLcl1U
-h9DCxAf/ZhToJUZAbdC/m5PTY8/S4yw7f6hqcYtAsweSErRzlz8oiLKYQNQ7h29F
-pqKkoM6bRQMgVQU+P91QjCFJwsfOVHYUowcG97/zu8h5wmG/Ca9PNErXj1yhh8GI
-nWP6HidxnqPgnuv61U3nLxDV4sClpQwjbsVNKyGuyshyQiYNn5+8w2kjMJkEsjUe
-cGPLwgwpmarj4W3gvhdrQYZO09d6je5QH4hu1PGLLBIB2KfAPRWgHdpzrifZRSnC
-csO5ofEbBTOAsmgvtYxwG4jg7ewHbJmQ5zcOSVTziPs3GCWyrK7exyY29jDnzQqH
-Y1exY/p6I1RNfMj3R7U2EvWz7mbVaA==
-=AuTe
------END PGP SIGNATURE-----
-
---EeQfGwPcQSOJBaQU--
+-- 
+2.17.1
