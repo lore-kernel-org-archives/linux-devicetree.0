@@ -1,79 +1,48 @@
-From: Jonas Bonn <jonas@norrbonn.se>
-Subject: [PATCH v2 1/2] spi: support inter-word delay requirement for devices
-Date: Fri, 25 Jan 2019 13:24:24 +0100
-Message-ID: <20190125122425.30676-2-jonas@norrbonn.se>
-References: <20190125122425.30676-1-jonas@norrbonn.se>
+From: Fabio Estevam <festevam@gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq-evk: add missing MDIO / PHY nodes
+Date: Fri, 25 Jan 2019 10:24:31 -0200
+Message-ID: <CAOMZO5DKzOsVXp9TcDC3AGzrtTSNiDG7cUkkdPRvbu4VGHV9nw@mail.gmail.com>
+References: <20190125121257.7151-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125122425.30676-1-jonas@norrbonn.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org
-Cc: Jonas Bonn <jonas@norrbonn.se>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190125121257.7151-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Sascha Hauer <s.hauer@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, NXP Linux Team <linux-imx@nxp.com>, Sascha Hauer <kernel@pengutronix.de>, Fabio Estevam <fabio.estevam@nxp.com>, Shawn Guo <shawnguo@kernel.org>, Dong Aisheng <aisheng.dong@nxp.com>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, abailon@baylibre.com
 List-Id: devicetree@vger.kernel.org
 
-Some devices are slow and cannot keep up with the SPI bus and therefore
-require a short delay between words of the SPI transfer.
+Hi Carlo,
 
-The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
-clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
-bytes on the bus fast enough to keep up with the SoC's SPI controller
-even at the lowest bus speed.
+On Fri, Jan 25, 2019 at 10:13 AM Carlo Caione <ccaione@baylibre.com> wrote:
+>
+> Populate the fec1 node with the missing MDIO and PHY entries.
+>
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+> ---
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 12 ++++++++++++
+>  1 file changed, 12 insertions(+)
+>
+> diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> index 64acccc4bfcb..02f6da92957f 100644
+> --- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> +++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+> @@ -37,7 +37,19 @@
+>         pinctrl-names = "default";
+>         pinctrl-0 = <&pinctrl_fec1>;
+>         phy-mode = "rgmii-id";
+> +       phy-handle = <&ethphy0>;
+> +       fsl,magic-packet;
 
-This patch introduces the ability to specify a required inter-word
-delay for SPI devices.  It is up to the controller driver to configure
-itself accordingly in order to introduce the requested delay.
+This looks like an unrelated change.
 
-Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-CC: Mark Brown <broonie@kernel.org>
-CC: Rob Herring <robh+dt@kernel.org>
-CC: Mark Rutland <mark.rutland@arm.com>
-CC: linux-spi@vger.kernel.org
-CC: devicetree@vger.kernel.org
----
- Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
- drivers/spi/spi.c                                 | 4 ++++
- include/linux/spi/spi.h                           | 1 +
- 3 files changed, 6 insertions(+)
-
-diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-index 1f6e86f787ef..a5f20060676d 100644
---- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-+++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-@@ -77,6 +77,7 @@ All slave nodes can contain the following optional properties:
- 		    Defaults to 1 if not present.
- - spi-rx-delay-us - Microsecond delay after a read transfer.
- - spi-tx-delay-us - Microsecond delay after a write transfer.
-+- spi-word-delay-us - Microsecond delay between individual words of a transfer
- 
- Some SPI controllers and devices support Dual and Quad SPI transfer mode.
- It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
-diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-index 9a7def7c3237..cd4d4065eca2 100644
---- a/drivers/spi/spi.c
-+++ b/drivers/spi/spi.c
-@@ -1692,6 +1692,10 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
- 	}
- 	spi->max_speed_hz = value;
- 
-+	if (!of_property_read_u32(nc, "spi-word-delay-us", &value)) {
-+		spi->word_delay = value;
-+	}
-+
- 	return 0;
- }
- 
-diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-index 314d922ca607..e5200dd9d750 100644
---- a/include/linux/spi/spi.h
-+++ b/include/linux/spi/spi.h
-@@ -164,6 +164,7 @@ struct spi_device {
- 	char			modalias[SPI_NAME_SIZE];
- 	const char		*driver_override;
- 	int			cs_gpio;	/* chip select gpio */
-+	uint16_t		word_delay;	/* inter-word delay (us) */
- 
- 	/* the statistics */
- 	struct spi_statistics	statistics;
--- 
-2.19.1
+Otherwise it looks fine.
