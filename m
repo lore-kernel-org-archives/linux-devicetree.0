@@ -1,50 +1,89 @@
-From: Florian Fainelli <f.fainelli@gmail.com>
-Subject: Re: [PATCH 1/2] regulator: mc13xxx: Use lowercase regulator names to
- match the DT
-Date: Fri, 25 Jan 2019 10:17:39 -0800
-Message-ID: <8ba0eee6-2bfd-b1a1-8607-d57690755af1@gmail.com>
-References: <20190125153705.29921-1-robh@kernel.org>
+From: Heiner Kallweit <hkallweit1@gmail.com>
+Subject: Re: [PATCH] r8169: Load MAC address from device tree if present
+Date: Fri, 25 Jan 2019 19:26:39 +0100
+Message-ID: <42d32783-c433-b859-6ba4-f2864f034871@gmail.com>
+References: <20190125101814.6262-1-thierry.reding@gmail.com>
+ <20190125145711.GF12962@lunn.ch>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125153705.29921-1-robh@kernel.org>
+In-Reply-To: <20190125145711.GF12962@lunn.ch>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Rob Herring <robh@kernel.org>, Mark Brown <broonie@kernel.org>
-Cc: linux-kernel@vger.kernel.org, Frank Rowand <frowand.list@gmail.com>, devicetree@vger.kernel.org, Liam Girdwood <lgirdwood@gmail.com>, Vivien Didelot <vivien.didelot@gmail.com>
+To: Andrew Lunn <andrew@lunn.ch>, Thierry Reding <thierry.reding@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/25/19 7:37 AM, Rob Herring wrote:
-> Since c32569e358ad ("regulator: Use of_node_name_eq for node name
-> comparisons") Vivien reported the mc13892-regulator complaining about
-> not being able to find regulators.
+On 25.01.2019 15:57, Andrew Lunn wrote:
+> On Fri, Jan 25, 2019 at 11:18:14AM +0100, Thierry Reding wrote:
+>> From: Thierry Reding <treding@nvidia.com>
+>>
+>> If the system was booted using a device tree and if the device tree
+>> contains a MAC address, use it instead of reading one from the EEPROM.
+>> This is useful in situations where the EEPROM isn't properly programmed
+>> or where the firmware wants to override the existing MAC address.
+>>
+>> Signed-off-by: Thierry Reding <treding@nvidia.com>
+>> ---
+>> Based on net-next.
+>>
+>>  drivers/net/ethernet/realtek/r8169.c | 35 +++++++++++++++++-----------
+>>  1 file changed, 22 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+>> index f574b6b557f9..fd9edd643ca5 100644
+>> --- a/drivers/net/ethernet/realtek/r8169.c
+>> +++ b/drivers/net/ethernet/realtek/r8169.c
+>> @@ -6957,6 +6957,21 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
+>>  	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
+>>  }
+>>  
+>> +static void rtl_read_mac_address(struct rtl8169_private *tp,
+>> +				 u8 mac_addr[ETH_ALEN])
+>> +{
+>> +	/* Get MAC address */
+>> +	switch (tp->mac_version) {
+>> +	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
+>> +	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
+>> +		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
+>> +		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
+>> +		break;
+>> +	default:
+>> +		break;
+>> +	}
+>> +}
+>> +
+>>  DECLARE_RTL_COND(rtl_link_list_ready_cond)
+>>  {
+>>  	return RTL_R8(tp, MCU) & LINK_LIST_RDY;
+>> @@ -7148,6 +7163,7 @@ static int rtl_get_ether_clk(struct rtl8169_private *tp)
+>>  static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>>  {
+>>  	const struct rtl_cfg_info *cfg = rtl_cfg_infos + ent->driver_data;
+>> +	u8 mac_addr[ETH_ALEN] __aligned(4);
 > 
-> This is because prior to that commit we used of_node_cmp() to compare
-> the regulator array passed from mc13892_regulators down to
-> mc13xxx_parse_regulators_dt() and they are all defined in uppercase
-> letters by the MC13892_*_DEFINE* macros, whereas they are defined as
-> lowercase in the DTS.
+> Hi Thierry
 > 
-> Fix this by using a lowercase regulator name to match the DT node name.
+> Maybe now would be a good time to cleanup this __aligned(4), pointer
+> aliasing, etc?
 > 
-> Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
-> Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
-> Reported-by: Florian Fainelli <f.fainelli@gmail.com>
-> Cc: Liam Girdwood <lgirdwood@gmail.com>
-> Cc: Mark Brown <broonie@kernel.org>
-> Signed-off-by: Rob Herring <robh@kernel.org>
+Andrew, for my understanding: What do you think is wrong with the 
+alignment requirement? It was introduced because we do a 32 bit access
+to the start address of the array and want to avoid an unaligned access.
 
-Thanks, when I looked at it last night, it seems to me that you also
-need to patch the following drivers:
-
-drivers/regulator/88pm8607.c
-drivers/regulator/da9052-regulator.c
-drivers/regulator/max8997-regulator.c
-drivers/regulator/s5m8767.c
-
-since they all define their array of regulators using uppercase, and
-then later match that using the same logic that
-drivers/regulator/mc13xxx-regulator-core.c does.
--- 
-Florian
+>> +	/* get MAC address */
+>> +	if (eth_platform_get_mac_address(&pdev->dev, mac_addr))
+>> +		rtl_read_mac_address(tp, mac_addr);
+>> +
+> 
+> Maybe that could be made more readable with:
+> 
+>       err = eth_platform_get_mac_address(&pdev->dev, mac_addr);
+>       if (err)
+>       	 	rtl_read_mac_address(tp, mac_addr);
+> 
+> Thanks
+> 	Andrew
+> .
+> 
