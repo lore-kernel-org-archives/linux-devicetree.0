@@ -1,7 +1,7 @@
 From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 06/10] dt-bindings: phy: mvebu-utmi: add UTMI PHY bindings
-Date: Fri, 25 Jan 2019 11:39:20 +0100
-Message-ID: <20190125103925.15753-7-miquel.raynal@bootlin.com>
+Subject: [PATCH v4 07/10] MAINTAINERS: phy: fill Armada 3700 PHY drivers entry
+Date: Fri, 25 Jan 2019 11:39:21 +0100
+Message-ID: <20190125103925.15753-8-miquel.raynal@bootlin.com>
 References: <20190125103925.15753-1-miquel.raynal@bootlin.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,58 +21,32 @@ To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemo
 Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Add bindings for Marvell Armada 3700 USB2 UTMI+ PHY.
+Update the Armada 3700 PHY drivers entry with the recently added UTMI
+PHY driver.
 
 Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-Reviewed-by: Rob Herring <robh@kernel.org>
 ---
- .../bindings/phy/phy-mvebu-utmi.txt           | 38 +++++++++++++++++++
- 1 file changed, 38 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+ MAINTAINERS | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
-new file mode 100644
-index 000000000000..aa99ceec73b0
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
-@@ -0,0 +1,38 @@
-+MVEBU A3700 UTMI PHY
-+--------------------
-+
-+USB2 UTMI+ PHY controllers can be found on the following Marvell MVEBU SoCs:
-+* Armada 3700
-+
-+On Armada 3700, there are two USB controllers, one is compatible with the USB2
-+and USB3 specifications and supports OTG. The other one is USB2 compliant and
-+only supports host mode. Both of these controllers come with a slightly
-+different UTMI PHY.
-+
-+Required Properties:
-+
-+- compatible: Should be one of:
-+	      * "marvell,a3700-utmi-host-phy" for the PHY connected to
-+	        the USB2 host-only controller.
-+	      * "marvell,a3700-utmi-otg-phy" for the PHY connected to
-+	        the USB3 and USB2 OTG capable controller.
-+- reg: PHY IP register range.
-+- marvell,usb-misc-reg: handle on the "USB miscellaneous registers" shared
-+			region covering registers related to both the host
-+			controller and the PHY.
-+- #phy-cells: Standard property (Documentation: phy-bindings.txt) Should be 0.
-+
-+
-+Example:
-+
-+	usb2_utmi_host_phy: phy@5f000 {
-+		compatible = "marvell,armada-3700-utmi-host-phy";
-+		reg = <0x5f000 0x800>;
-+		marvell,usb-misc-reg = <&usb2_syscon>;
-+		#phy-cells = <0>;
-+	};
-+
-+	usb2_syscon: system-controller@5f800 {
-+		compatible = "marvell,armada-3700-usb2-host-misc", "syscon";
-+		reg = <0x5f800 0x800>;
-+	};
+diff --git a/MAINTAINERS b/MAINTAINERS
+index abfd80f21b24..2a08a097e107 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -9080,11 +9080,13 @@ F:	drivers/gpu/drm/armada/
+ F:	include/uapi/drm/armada_drm.h
+ F:	Documentation/devicetree/bindings/display/armada/
+ 
+-MARVELL ARMADA 3700 COMPHY DRIVER
++MARVELL ARMADA 3700 PHY DRIVERS
+ M:	Miquel Raynal <miquel.raynal@bootlin.com>
+ S:	Maintained
+ F:	drivers/phy/marvell/phy-mvebu-a3700-comphy.c
++F:	drivers/phy/marvell/phy-mvebu-a3700-utmi.c
+ F:	Documentation/devicetree/bindings/phy/phy-mvebu-comphy.txt
++F:	Documentation/devicetree/bindings/phy/phy-mvebu-utmi.txt
+ 
+ MARVELL CRYPTO DRIVER
+ M:	Boris Brezillon <bbrezillon@kernel.org>
 -- 
 2.19.1
