@@ -1,650 +1,569 @@
-Return-Path: <SRS0=915k=P6=linuxfoundation.org=gregkh@kernel.org>
-Date: Tue, 22 Jan 2019 14:20:47 +0100
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [PATCH v10 03/12] peci: Add support for PECI bus driver core
-Message-ID: <20190122132047.GA12357@kroah.com>
-References: <20190107214136.5256-1-jae.hyun.yoo@linux.intel.com>
- <20190107214136.5256-4-jae.hyun.yoo@linux.intel.com>
+Return-Path: <SRS0=UxJn=QB=linaro.org=vincent.guittot@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190107214136.5256-4-jae.hyun.yoo@linux.intel.com>
-To: Jae Hyun Yoo <jae.hyun.yoo@linux.intel.com>
-Cc: Lee Jones <lee.jones@linaro.org>, Rob Herring <robh+dt@kernel.org>, Jean Delvare <jdelvare@suse.com>, Guenter Roeck <linux@roeck-us.net>, Mark Rutland <mark.rutland@arm.com>, Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>, Jonathan Corbet <corbet@lwn.net>, Gustavo Pimentel <gustavo.pimentel@synopsys.com>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, "Darrick J . Wong" <darrick.wong@oracle.com>, Eric Sandeen <sandeen@redhat.com>, Arnd Bergmann <arnd@arndb.de>, Wu Hao <hao.wu@intel.com>, Tomohiro Kusumi <kusumi.tomohiro@gmail.com>, "Bryant G . Ly" <bryantly@linux.vnet.ibm.com>, Frederic Barrat <fbarrat@linux.vnet.ibm.com>, "David S . Miller" <davem@davemloft.net>, Mauro Carvalho Chehab <mchehab+samsung@kernel.org>, Andrew Morton <akpm@linux-foundation.org>, Randy Dunlap <rdunlap@infradead.org>, Philippe Ombredanne <pombredanne@nexb.com>, Vinod Koul <vkoul@kernel.org>, Stephen Boyd <sboyd@codeaurora.org>, David Kershner <david.kershner@unisys.com>, Uwe Kleine-Konig <u.kleine-koenig@pengutronix.de>, Sagar Dharia <sdharia@codeaurora.org>, Johan Hovold <johan@kernel.org>, Thomas Gleixner <tglx@linutronix.de>, Juergen Gross <jgross@suse.com>, Cyrille Pitchen <cyrille.pitchen@wedev4u.fr>, linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-doc@vger.kernel.org, openbmc@lists.ozlabs.org, Gavin Schenk <g.schenk@eckelmann.de>, Viresh Kumar <viresh.kumar@linaro.org>, Cyrille Pitchen <cyrille.pitchen@free-electrons.com>, Alan Cox <alan@linux.intel.com>, Andrew Lunn <andrew@lunn.ch>, Andy Shevchenko <andriy.shevchenko@intel.com>, Benjamin Herrenschmidt <benh@kernel.crashing.org>, Fengguang Wu <fengguang.wu@intel.com>, Jason M Biils <jason.m.bills@linux.intel.com>, Julia Cartwright <juliac@eso.teric.us>, Haiyue Wang <haiyue.wang@linux.intel.com>, James Feist <james.feist@linux.intel.com>, Vernon Mauery <vernon.mauery@linux.intel.com>
+References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
+ <CAMuHMdW-qt+3iNit1wVxN2JyRwCArJzBNvvjDZJyxYRjvDkLuA@mail.gmail.com>
+ <OSBPR01MB21034B1D07C9BA05859AEA73B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <OSBPR01MB210397F6201DBAC36BFB0CB2B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190125140606.GA17196@linaro.org> <OSBPR01MB2103AFD4C1E401F26963EA31B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <OSBPR01MB21035AD5A7D94E2D0A1A9189B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <CAKfTPtAWxp16_C1Nvdt3Ni6j+_fKDCdtM1doTTMoNpi_B=nH2A@mail.gmail.com>
+ <CAKfTPtA1ttFJ_Reb3KCzzjX52cuTTFZrTPKJqhVw7hu+VQDkMA@mail.gmail.com> <OSBPR01MB21039EBC232C2290A89B47D6B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+In-Reply-To: <OSBPR01MB21039EBC232C2290A89B47D6B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+From: Vincent Guittot <vincent.guittot@linaro.org>
+Date: Fri, 25 Jan 2019 16:20:10 +0100
+Message-ID: <CAKfTPtCxdq2LgQOH-2QpiY8DP9jArdvp6syYRw_6Yg6C8jbzDw@mail.gmail.com>
+Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
+To: Biju Das <biju.das@bp.renesas.com>
+Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Samuel Holland <samuel@sholland.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Mon, Jan 07, 2019 at 01:41:27PM -0800, Jae Hyun Yoo wrote:
-> +config PECI
-> +	bool "PECI support"
-> +	select RT_MUTEXES
-> +	select CRC8
-> +	help
-> +	  The Platform Environment Control Interface (PECI) is a one-wire bus
-> +	  interface that provides a communication channel from Intel processors
-> +	  and chipset components to external monitoring or control devices.
-
-Why can't this be built as a module?
-
-And why do you rely on rt mutexes?
-
-Anyway, the driver core interaction looks good, I have a few other minor
-comments on the ioctl handling:
-
-> +typedef int (*peci_ioctl_fn_type)(struct peci_adapter *, void *);
-> +
-> +static const peci_ioctl_fn_type peci_ioctl_fn[PECI_CMD_MAX] = {
-> +	peci_ioctl_xfer,
-> +	peci_ioctl_ping,
-> +	peci_ioctl_get_dib,
-> +	peci_ioctl_get_temp,
-> +	peci_ioctl_rd_pkg_cfg,
-> +	peci_ioctl_wr_pkg_cfg,
-> +	peci_ioctl_rd_ia_msr,
-> +	NULL, /* Reserved */
-> +	peci_ioctl_rd_pci_cfg,
-> +	NULL, /* Reserved */
-> +	peci_ioctl_rd_pci_cfg_local,
-> +	peci_ioctl_wr_pci_cfg_local,
-> +};
-
-That's "interesting", why not have a list that has the ioctl number, and
-the function pointer?  That way no need for "reserved" entries, and you
-don't have to add a new item to your "is this a valid ioctl" check
-below:
-
-> +static long peci_ioctl(struct file *file, unsigned int iocmd, unsigned long arg)
-> +{
-> +	struct peci_adapter *adapter = file->private_data;
-> +	void __user *argp = (void __user *)arg;
-> +	unsigned int msg_len;
-> +	enum peci_cmd cmd;
-> +	int rc = 0;
-
-No need to set rc here.
-
-> +	u8 *msg;
-> +
-> +	if (!capable(CAP_SYS_ADMIN))
-> +		return -EPERM;
-
-Really?  Nice, you have userspace tools running as root, what could go
-wrong... :)
-
-> +
-> +	dev_dbg(&adapter->dev, "ioctl, cmd=0x%x, arg=0x%lx\n", iocmd, arg);
-
-I understand the need for this type of thing when debugging the code
-initially, but you can remove them all now, ftrace should provide what
-you need now, right?
-
-> +
-> +	switch (iocmd) {
-> +	case PECI_IOC_XFER:
-> +	case PECI_IOC_PING:
-> +	case PECI_IOC_GET_DIB:
-> +	case PECI_IOC_GET_TEMP:
-> +	case PECI_IOC_RD_PKG_CFG:
-> +	case PECI_IOC_WR_PKG_CFG:
-> +	case PECI_IOC_RD_IA_MSR:
-> +	case PECI_IOC_RD_PCI_CFG:
-> +	case PECI_IOC_RD_PCI_CFG_LOCAL:
-> +	case PECI_IOC_WR_PCI_CFG_LOCAL:
-> +		cmd = _IOC_NR(iocmd);
-> +		msg_len = _IOC_SIZE(iocmd);
-> +		break;
-
-That check up there can be replaced with an iteration over the list of
-ioctl functions, right?
-
-
-> +
-> +	default:
-> +		dev_dbg(&adapter->dev, "Invalid ioctl cmd : 0x%x\n", iocmd);
-> +		return -ENOTTY;
-> +	}
-> +
-> +	if (!access_ok(argp, msg_len))
-> +		return -EFAULT;
-> +
-> +	msg = memdup_user(argp, msg_len);
-> +	if (IS_ERR(msg))
-> +		return PTR_ERR(msg);
-
-Why call access_ok() if you are going to copy the memory anyways?
-memdup_user should fail with -EFAULT if you can't copy the memory
-properly.
-
-> +
-> +	rc = peci_command(adapter, cmd, msg);
-
-Are you _SURE_ you audited your ioctls to not do foolish things with
-userspace values?  I sure didn't, so can you please have someone else do
-this and sign off on this patch that they did so?
-
-> +static int peci_detect(struct peci_adapter *adapter, u8 addr)
-> +{
-> +	struct peci_ping_msg msg;
-> +
-> +	msg.addr = addr;
-
-What about the un-initialized fields in this structure?  Can you
-properly handle that, and also, is this ok to be on the stack?
-
-> +static ssize_t peci_sysfs_new_device(struct device *dev,
-> +				     struct device_attribute *attr,
-> +				     const char *buf, size_t count)
-> +{
-> +	struct peci_adapter *adapter = to_peci_adapter(dev);
-> +	struct peci_board_info info = {};
-> +	struct peci_client *client;
-> +	char *blank, end;
-> +	int rc;
-> +
-> +	/* Parse device type */
-> +	blank = strchr(buf, ' ');
-> +	if (!blank) {
-> +		dev_err(dev, "%s: Missing parameters\n", "new_device");
-> +		return -EINVAL;
-> +	}
-> +	if (blank - buf > PECI_NAME_SIZE - 1) {
-> +		dev_err(dev, "%s: Invalid device type\n", "new_device");
-> +		return -EINVAL;
-> +	}
-> +	memcpy(info.type, buf, blank - buf);
-> +
-> +	/* Parse remaining parameters, reject extra parameters */
-> +	rc = sscanf(++blank, "%hi%c", &info.addr, &end);
-
-Please do not tell me you are parsing a sysfs write to do some type of
-new configuration.  That is not what sysfs is for, that is what configfs
-is for, please use that instead, this isn't ok.
-
-
-
-> +	if (rc < 1) {
-> +		dev_err(dev, "%s: Can't parse client address\n", "new_device");
-> +		return -EINVAL;
-> +	}
-> +	if (rc > 1  && end != '\n') {
-> +		dev_err(dev, "%s: Extra parameters\n", "new_device");
-> +		return -EINVAL;
-> +	}
-> +
-> +	client = peci_new_device(adapter, &info);
-> +	if (!client)
-> +		return -EINVAL;
-> +
-> +	/* Keep track of the added device */
-> +	mutex_lock(&adapter->userspace_clients_lock);
-> +	list_add_tail(&client->detected, &adapter->userspace_clients);
-> +	mutex_unlock(&adapter->userspace_clients_lock);
-> +	dev_info(dev, "%s: Instantiated device %s at 0x%02hx\n", "new_device",
-> +		 info.type, info.addr);
-
-Don't be noisy for things that are expected to happen.
-
-
-> +
-> +	return count;
-> +}
-> +static DEVICE_ATTR(new_device, 0200, NULL, peci_sysfs_new_device);
-
-Not that you should be doing this, but DEVICE_ATTR_RO() is what you want
-here, right?
-
-
-> +
-> +static ssize_t peci_sysfs_delete_device(struct device *dev,
-> +					struct device_attribute *attr,
-> +					const char *buf, size_t count)
-> +{
-> +	struct peci_adapter *adapter = to_peci_adapter(dev);
-> +	struct peci_client *client, *next;
-> +	struct peci_board_info info = {};
-> +	struct peci_driver *driver;
-> +	char *blank, end;
-> +	int rc;
-> +
-> +	/* Parse device type */
-> +	blank = strchr(buf, ' ');
-> +	if (!blank) {
-> +		dev_err(dev, "%s: Missing parameters\n", "delete_device");
-> +		return -EINVAL;
-> +	}
-> +	if (blank - buf > PECI_NAME_SIZE - 1) {
-> +		dev_err(dev, "%s: Invalid device type\n", "delete_device");
-> +		return -EINVAL;
-> +	}
-> +	memcpy(info.type, buf, blank - buf);
-> +
-> +	/* Parse remaining parameters, reject extra parameters */
-> +	rc = sscanf(++blank, "%hi%c", &info.addr, &end);
-> +	if (rc < 1) {
-> +		dev_err(dev, "%s: Can't parse client address\n",
-> +			"delete_device");
-> +		return -EINVAL;
-> +	}
-> +	if (rc > 1  && end != '\n') {
-> +		dev_err(dev, "%s: Extra parameters\n", "delete_device");
-> +		return -EINVAL;
-> +	}
-
-Same here, no parsing of configurations through sysfs, that is not ok.
-Again, use configfs.
-
-> +
-> +	/* Make sure the device was added through sysfs */
-> +	rc = -ENOENT;
-> +	mutex_lock(&adapter->userspace_clients_lock);
-> +	list_for_each_entry_safe(client, next, &adapter->userspace_clients,
-> +				 detected) {
-> +		driver = to_peci_driver(client->dev.driver);
-> +
-> +		if (client->addr == info.addr &&
-> +		    !strncmp(client->name, info.type, PECI_NAME_SIZE)) {
-> +			dev_info(dev, "%s: Deleting device %s at 0x%02hx\n",
-> +				 "delete_device", client->name, client->addr);
-> +			list_del(&client->detected);
-> +			peci_unregister_device(client);
-> +			rc = count;
-> +			break;
-> +		}
-> +	}
-> +	mutex_unlock(&adapter->userspace_clients_lock);
-> +
-> +	if (rc < 0)
-> +		dev_err(dev, "%s: Can't find device in list\n",
-> +			"delete_device");
-
-So you can just spam the syslog by writing odd values to the file?  Not
-good.
-
-> +
-> +	return rc;
-> +}
-> +static DEVICE_ATTR_IGNORE_LOCKDEP(delete_device, 0200, NULL,
-> +				  peci_sysfs_delete_device);
-
-sysfs files that remove themselves are reserved for a specific circle in
-hell, you really don't want to mess with them :(
-
-> +/**
-> + * struct peci_adapter - represent a PECI adapter
-> + * @owner: owner module of the PECI adpater
-> + * @bus_lock: mutex for exclusion of multiple callers
-> + * @dev: device interface to this driver
-> + * @cdev: character device object to create character device
-> + * @nr: the bus number to map
-> + * @name: name of the adapter
-> + * @userspace_clients_lock: mutex for exclusion of clients handling
-> + * @userspace_clients: list of registered clients
-> + * @xfer: low-level transfer function pointer of the adapter
-> + * @cmd_mask: mask for supportable PECI commands
-> + *
-> + * Each PECI adapter can communicate with one or more PECI client children.
-> + * These make a small bus, sharing a single wired PECI connection.
-> + */
-> +struct peci_adapter {
-> +	struct module		*owner;
-> +	struct rt_mutex		bus_lock;
-> +	struct device		dev;
-> +	struct cdev		cdev;
-
-Yeah, two differently reference counted variables in the same structure,
-what could go wrong!  :(
-
-Don't do this, make your cdev a pointer to be sure you get things right,
-otherwise this will never work properly.
-
-And shouldn't the character device be a class device?  Don't confuse
-devices in the driver model with the interaction of them to userspace in
-a specific manner, those should be separate things, right?
-
-
-> +	int			nr;
-> +	char			name[PECI_NAME_SIZE];
-
-What's wrong with the name in struct device?
-
-
-> +	struct mutex		userspace_clients_lock; /* clients list mutex */
-> +	struct list_head	userspace_clients;
-> +	int			(*xfer)(struct peci_adapter *adapter,
-> +					struct peci_xfer_msg *msg);
-> +	uint			cmd_mask;
-
-u32?
-
-> --- /dev/null
-> +++ b/include/uapi/linux/peci-ioctl.h
-> @@ -0,0 +1,403 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/* Copyright (c) 2018-2019 Intel Corporation */
-> +
-> +#ifndef __PECI_IOCTL_H
-> +#define __PECI_IOCTL_H
-> +
-> +#include <linux/ioctl.h>
-> +#include <linux/types.h>
-> +
-> +/* Base Address of 48d */
-> +#define PECI_BASE_ADDR  0x30  /* The PECI client's default address of 0x30 */
-> +#define PECI_OFFSET_MAX 8     /* Max numver of CPU clients */
-> +
-> +/* PCI Access */
-> +#define MAX_PCI_READ_LEN 24   /* Number of bytes of the PCI Space read */
-
-PCI?  Or PECI?  I'm confused now, what does PCI have to do with PECI?
-
-> +
-> +#define PCI_BUS0_CPU0      0x00
-> +#define PCI_BUS0_CPU1      0x80
-> +#define PCI_CPUBUSNO_BUS   0x00
-> +#define PCI_CPUBUSNO_DEV   0x08
-> +#define PCI_CPUBUSNO_FUNC  0x02
-> +#define PCI_CPUBUSNO       0xcc
-> +#define PCI_CPUBUSNO_1     0xd0
-> +#define PCI_CPUBUSNO_VALID 0xd4
-
-You just abused the PCI core namespace here, are you sure about that?
-
-
-> +
-> +/* Package Identifier Read Parameter Value */
-> +#define PKG_ID_CPU_ID               0x0000  /* CPUID Info */
-> +#define PKG_ID_PLATFORM_ID          0x0001  /* Platform ID */
-> +#define PKG_ID_UNCORE_ID            0x0002  /* Uncore Device ID */
-> +#define PKG_ID_MAX_THREAD_ID        0x0003  /* Max Thread ID */
-> +#define PKG_ID_MICROCODE_REV        0x0004  /* CPU Microcode Update Revision */
-> +#define PKG_ID_MACHINE_CHECK_STATUS 0x0005  /* Machine Check Status */
-> +
-> +/* RdPkgConfig Index */
-> +#define MBX_INDEX_CPU_ID            0   /* Package Identifier Read */
-> +#define MBX_INDEX_VR_DEBUG          1   /* VR Debug */
-> +#define MBX_INDEX_PKG_TEMP_READ     2   /* Package Temperature Read */
-> +#define MBX_INDEX_ENERGY_COUNTER    3   /* Energy counter */
-> +#define MBX_INDEX_ENERGY_STATUS     4   /* DDR Energy Status */
-> +#define MBX_INDEX_WAKE_MODE_BIT     5   /* "Wake on PECI" Mode bit */
-> +#define MBX_INDEX_EPI               6   /* Efficient Performance Indication */
-> +#define MBX_INDEX_PKG_RAPL_PERF     8   /* Pkg RAPL Performance Status Read */
-> +#define MBX_INDEX_PER_CORE_DTS_TEMP 9   /* Per Core DTS Temperature Read */
-> +#define MBX_INDEX_DTS_MARGIN        10  /* DTS thermal margin */
-> +#define MBX_INDEX_SKT_PWR_THRTL_DUR 11  /* Socket Power Throttled Duration */
-> +#define MBX_INDEX_CFG_TDP_CONTROL   12  /* TDP Config Control */
-> +#define MBX_INDEX_CFG_TDP_LEVELS    13  /* TDP Config Levels */
-> +#define MBX_INDEX_DDR_DIMM_TEMP     14  /* DDR DIMM Temperature */
-> +#define MBX_INDEX_CFG_ICCMAX        15  /* Configurable ICCMAX */
-> +#define MBX_INDEX_TEMP_TARGET       16  /* Temperature Target Read */
-> +#define MBX_INDEX_CURR_CFG_LIMIT    17  /* Current Config Limit */
-> +#define MBX_INDEX_DIMM_TEMP_READ    20  /* Package Thermal Status Read */
-> +#define MBX_INDEX_DRAM_IMC_TMP_READ 22  /* DRAM IMC Temperature Read */
-> +#define MBX_INDEX_DDR_CH_THERM_STAT 23  /* DDR Channel Thermal Status */
-> +#define MBX_INDEX_PKG_POWER_LIMIT1  26  /* Package Power Limit1 */
-> +#define MBX_INDEX_PKG_POWER_LIMIT2  27  /* Package Power Limit2 */
-> +#define MBX_INDEX_TDP               28  /* Thermal design power minimum */
-> +#define MBX_INDEX_TDP_HIGH          29  /* Thermal design power maximum */
-> +#define MBX_INDEX_TDP_UNITS         30  /* Units for power/energy registers */
-> +#define MBX_INDEX_RUN_TIME          31  /* Accumulated Run Time */
-> +#define MBX_INDEX_CONSTRAINED_TIME  32  /* Thermally Constrained Time Read */
-> +#define MBX_INDEX_TURBO_RATIO       33  /* Turbo Activation Ratio */
-> +#define MBX_INDEX_DDR_RAPL_PL1      34  /* DDR RAPL PL1 */
-> +#define MBX_INDEX_DDR_PWR_INFO_HIGH 35  /* DRAM Power Info Read (high) */
-> +#define MBX_INDEX_DDR_PWR_INFO_LOW  36  /* DRAM Power Info Read (low) */
-> +#define MBX_INDEX_DDR_RAPL_PL2      37  /* DDR RAPL PL2 */
-> +#define MBX_INDEX_DDR_RAPL_STATUS   38  /* DDR RAPL Performance Status */
-> +#define MBX_INDEX_DDR_HOT_ABSOLUTE  43  /* DDR Hottest Dimm Absolute Temp */
-> +#define MBX_INDEX_DDR_HOT_RELATIVE  44  /* DDR Hottest Dimm Relative Temp */
-> +#define MBX_INDEX_DDR_THROTTLE_TIME 45  /* DDR Throttle Time */
-> +#define MBX_INDEX_DDR_THERM_STATUS  46  /* DDR Thermal Status */
-> +#define MBX_INDEX_TIME_AVG_TEMP     47  /* Package time-averaged temperature */
-> +#define MBX_INDEX_TURBO_RATIO_LIMIT 49  /* Turbo Ratio Limit Read */
-> +#define MBX_INDEX_HWP_AUTO_OOB      53  /* HWP Autonomous Out-of-band */
-> +#define MBX_INDEX_DDR_WARM_BUDGET   55  /* DDR Warm Power Budget */
-> +#define MBX_INDEX_DDR_HOT_BUDGET    56  /* DDR Hot Power Budget */
-> +#define MBX_INDEX_PKG_PSYS_PWR_LIM3 57  /* Package/Psys Power Limit3 */
-> +#define MBX_INDEX_PKG_PSYS_PWR_LIM1 58  /* Package/Psys Power Limit1 */
-> +#define MBX_INDEX_PKG_PSYS_PWR_LIM2 59  /* Package/Psys Power Limit2 */
-> +#define MBX_INDEX_PKG_PSYS_PWR_LIM4 60  /* Package/Psys Power Limit4 */
-> +#define MBX_INDEX_PERF_LIMIT_REASON 65  /* Performance Limit Reasons */
-> +
-> +/* WrPkgConfig Index */
-> +#define MBX_INDEX_DIMM_AMBIENT      19
-> +#define MBX_INDEX_DIMM_TEMP         24
-> +
-> +/* Device Specific Completion Code (CC) Definition */
-> +#define DEV_PECI_CC_SUCCESS          0x40
-> +#define DEV_PECI_CC_TIMEOUT          0x80
-> +#define DEV_PECI_CC_OUT_OF_RESOURCE  0x81
-> +#define DEV_PECI_CC_UNAVAIL_RESOURCE 0x82
-> +#define DEV_PECI_CC_INVALID_REQ      0x90
-> +
-> +/* Completion Code mask to check retry needs */
-> +#define DEV_PECI_CC_RETRY_CHECK_MASK 0xf0
-> +#define DEV_PECI_CC_NEED_RETRY       0x80
-> +
-> +/* Skylake EDS says to retry for 250ms */
-> +#define DEV_PECI_RETRY_TIME_MS       250
-> +#define DEV_PECI_RETRY_INTERVAL_USEC 10000
-> +#define DEV_PECI_RETRY_BIT           0x01
-> +
-> +#define GET_TEMP_WR_LEN   1
-> +#define GET_TEMP_RD_LEN   2
-> +#define GET_TEMP_PECI_CMD 0x01
-> +
-> +#define GET_DIB_WR_LEN   1
-> +#define GET_DIB_RD_LEN   8
-> +#define GET_DIB_PECI_CMD 0xf7
-> +
-> +#define RDPKGCFG_WRITE_LEN     5
-> +#define RDPKGCFG_READ_LEN_BASE 1
-> +#define RDPKGCFG_PECI_CMD      0xa1
-> +
-> +#define WRPKGCFG_WRITE_LEN_BASE 6
-> +#define WRPKGCFG_READ_LEN       1
-> +#define WRPKGCFG_PECI_CMD       0xa5
-> +
-> +#define RDIAMSR_WRITE_LEN 5
-> +#define RDIAMSR_READ_LEN  9
-> +#define RDIAMSR_PECI_CMD  0xb1
-> +
-> +#define WRIAMSR_PECI_CMD  0xb5
-> +
-> +#define RDPCICFG_WRITE_LEN 6
-> +#define RDPCICFG_READ_LEN  5
-> +#define RDPCICFG_PECI_CMD  0x61
-> +
-> +#define WRPCICFG_PECI_CMD  0x65
-> +
-> +#define RDPCICFGLOCAL_WRITE_LEN     5
-> +#define RDPCICFGLOCAL_READ_LEN_BASE 1
-> +#define RDPCICFGLOCAL_PECI_CMD      0xe1
-> +
-> +#define WRPCICFGLOCAL_WRITE_LEN_BASE 6
-> +#define WRPCICFGLOCAL_READ_LEN       1
-> +#define WRPCICFGLOCAL_PECI_CMD       0xe5
-
-Alignment?
-
-> +
-> +#define PECI_BUFFER_SIZE 32
-
-Why don't all of these have PECI_ at the front of them?
-
-> +/**
-> + * enum peci_cmd - PECI client commands
-> + * @PECI_CMD_XFER: raw PECI transfer
-> + * @PECI_CMD_PING: ping, a required message for all PECI devices
-> + * @PECI_CMD_GET_DIB: get DIB (Device Info Byte)
-> + * @PECI_CMD_GET_TEMP: get maximum die temperature
-> + * @PECI_CMD_RD_PKG_CFG: read access to the PCS (Package Configuration Space)
-> + * @PECI_CMD_WR_PKG_CFG: write access to the PCS (Package Configuration Space)
-> + * @PECI_CMD_RD_IA_MSR: read access to MSRs (Model Specific Registers)
-> + * @PECI_CMD_WR_IA_MSR: write access to MSRs (Model Specific Registers)
-> + * @PECI_CMD_RD_PCI_CFG: sideband read access to the PCI configuration space
-> + *	maintained in downstream devices external to the processor
-> + * @PECI_CMD_WR_PCI_CFG: sideband write access to the PCI configuration space
-> + *	maintained in downstream devices external to the processor
-> + * @PECI_CMD_RD_PCI_CFG_LOCAL: sideband read access to the PCI configuration
-> + *	space that resides within the processor
-> + * @PECI_CMD_WR_PCI_CFG_LOCAL: sideband write access to the PCI configuration
-> + *	space that resides within the processor
-> + *
-> + * Available commands depend on client's PECI revision.
-> + */
-> +enum peci_cmd {
-> +	PECI_CMD_XFER = 0,
-> +	PECI_CMD_PING,
-> +	PECI_CMD_GET_DIB,
-> +	PECI_CMD_GET_TEMP,
-> +	PECI_CMD_RD_PKG_CFG,
-> +	PECI_CMD_WR_PKG_CFG,
-> +	PECI_CMD_RD_IA_MSR,
-> +	PECI_CMD_WR_IA_MSR,
-> +	PECI_CMD_RD_PCI_CFG,
-> +	PECI_CMD_WR_PCI_CFG,
-> +	PECI_CMD_RD_PCI_CFG_LOCAL,
-> +	PECI_CMD_WR_PCI_CFG_LOCAL,
-> +	PECI_CMD_MAX
-> +};
-> +
-> +/**
-> + * struct peci_xfer_msg - raw PECI transfer command
-> + * @addr; address of the client
-> + * @tx_len: number of data to be written in bytes
-> + * @rx_len: number of data to be read in bytes
-> + * @tx_buf: data to be written, or NULL
-> + * @rx_buf: data to be read, or NULL
-> + *
-> + * raw PECI transfer
-> + */
-> +struct peci_xfer_msg {
-> +	__u8 addr;
-> +	__u8 tx_len;
-> +	__u8 rx_len;
-> +	__u8 tx_buf[PECI_BUFFER_SIZE];
-> +	__u8 rx_buf[PECI_BUFFER_SIZE];
-> +} __attribute__((__packed__));
-
-Go kick the hardware engineer who did not align things on a 32bit
-boundry.  They should have known better :(
-
-> +
-> +/**
-> + * struct peci_ping_msg - ping command
-> + * @addr: address of the client
-> + *
-> + * Ping() is a required message for all PECI devices. This message is used to
-> + * enumerate devices or determine if a device has been removed, been
-> + * powered-off, etc.
-> + */
-> +struct peci_ping_msg {
-> +	__u8 addr;
-> +} __attribute__((__packed__));
-> +
-> +/**
-> + * struct peci_get_dib_msg - GetDIB command
-> + * @addr: address of the client
-> + * @dib: DIB data to be read
-> + *
-> + * The processor PECI client implementation of GetDIB() includes an 8-byte
-> + * response and provides information regarding client revision number and the
-> + * number of supported domains. All processor PECI clients support the GetDIB()
-> + * command.
-> + */
-> +struct peci_get_dib_msg {
-> +	__u8  addr;
-> +	__u64 dib;
-> +} __attribute__((__packed__));
-
-Ick, really?  That's horrible, again, go kick them hard!
-
-> +/**
-> + * struct peci_get_temp_msg - GetTemp command
-> + * @addr: address of the client
-> + * @temp_raw: raw temperature data to be read
-> + *
-> + * The GetTemp() command is used to retrieve the maximum die temperature from a
-> + * target PECI address. The temperature is used by the external thermal
-> + * management system to regulate the temperature on the die. The data is
-> + * returned as a negative value representing the number of degrees centigrade
-> + * below the maximum processor junction temperature.
-> + */
-> +struct peci_get_temp_msg {
-> +	__u8  addr;
-> +	__s16 temp_raw;
-> +} __attribute__((__packed__));
-
-{kick kick kick}
-
-> +
-> +/**
-> + * struct peci_rd_pkg_cfg_msg - RdPkgConfig command
-> + * @addr: address of the client
-> + * @index: encoding index for the requested service
-> + * @param: specific data being requested
-> + * @rx_len: number of data to be read in bytes
-> + * @pkg_config: package config data to be read
-> + *
-> + * The RdPkgConfig() command provides read access to the Package Configuration
-> + * Space (PCS) within the processor, including various power and thermal
-> + * management functions. Typical PCS read services supported by the processor
-> + * may include access to temperature data, energy status, run time information,
-> + * DIMM temperatures and so on.
-> + */
-> +struct peci_rd_pkg_cfg_msg {
-> +	__u8  addr;
-> +	__u8  index;
-> +	__u16 param;
-> +	__u8  rx_len;
-> +	__u8  pkg_config[4];
-> +} __attribute__((__packed__));
-
-Ok, that's better, someone finally wisened up.
-
-> +
-> +/**
-> + * struct peci_wr_pkg_cfg_msg - WrPkgConfig command
-> + * @addr: address of the client
-> + * @index: encoding index for the requested service
-> + * @param: specific data being requested
-> + * @tx_len: number of data to be written in bytes
-> + * @value: package config data to be written
-> + *
-> + * The WrPkgConfig() command provides write access to the Package Configuration
-> + * Space (PCS) within the processor, including various power and thermal
-> + * management functions. Typical PCS write services supported by the processor
-> + * may include power limiting, thermal averaging constant programming and so on.
-> + */
-> +struct peci_wr_pkg_cfg_msg {
-> +	__u8  addr;
-> +	__u8  index;
-> +	__u16 param;
-> +	__u8  tx_len;
-> +	__u32 value;
-> +} __attribute__((__packed__));
-
-No they didn't, ick, no one cares about speed here I guess.  Oh well :(
-
-> +
-> +/**
-> + * struct peci_rd_ia_msr_msg - RdIAMSR command
-> + * @addr: address of the client
-> + * @thread_id: ID of the specific logical processor
-> + * @address: address of MSR to read from
-> + * @value: data to be read
-> + *
-> + * The RdIAMSR() PECI command provides read access to Model Specific Registers
-> + * (MSRs) defined in the processor's Intel Architecture (IA).
-> + */
-> +struct peci_rd_ia_msr_msg {
-> +	__u8  addr;
-> +	__u8  thread_id;
-> +	__u16 address;
-> +	__u64 value;
-> +} __attribute__((__packed__));
-
-They got lucky!
-
-oh well,
-
-greg k-h
+On Fri, 25 Jan 2019 at 16:12, Biju Das <biju.das@bp.renesas.com> wrote:
+>
+> Hi Vincent and Rafael,
+>
+> Are you going to send the patch for the dead lock fix? Or Do you want me =
+to send the patch?
+
+I will send it once agreed with Rafael that's the best solution.
+Furthermore, linux next has few more patches that modify this part so
+we have to decide how to apply it for v5.0-rcX
+
+Thanks
+Vincent
+>
+> Please let me know.
+>
+> Regards,
+> Biju
+>
+> > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+> >
+> > Adding Rafael
+> >
+> > On Fri, 25 Jan 2019 at 15:48, Vincent Guittot <vincent.guittot@linaro.o=
+rg>
+> > wrote:
+> > >
+> > > On Fri, 25 Jan 2019 at 15:45, Biju Das <biju.das@bp.renesas.com> wrot=
+e:
+> > > >
+> > > > Hi Vincent,
+> > > >
+> > > > The below patch fixed deadlock.
+> > > >
+> > > > --- a/include/linux/pm_runtime.h
+> > > > +++ b/include/linux/pm_runtime.h
+> > > > @@ -105,7 +105,7 @@ static inline bool
+> > > > pm_runtime_callbacks_present(struct device *dev)
+> > > >
+> > > >  static inline void pm_runtime_mark_last_busy(struct device *dev)  =
+{
+> > > > -       WRITE_ONCE(dev->power.last_busy, ktime_to_ns(ktime_get()));
+> > > > +       WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
+> > >
+> > > Ah yes. I have searched in runtime.c but  forgot to looked in
+> > > pm_runtime.h
+> >
+> > Rafael,
+> >
+> > When pm-runtime is used for a clocksource, we get a deadlock because we
+> > call pm_runtime_mark_last_busy() when ebaling the clocksource whereas
+> > we are in the write_seqcount sequence.
+> > Using ktime_get_mono_fast_ns fixes the problem because it doesn't use
+> > tk_core.seq
+> >
+> > Regards,
+> > Vincent
+> >
+> > >
+> > > >  }
+> > > >
+> > > > Regards,
+> > > > Biju
+> > > > > -----Original Message-----
+> > > > > From: Biju Das
+> > > > > Sent: 25 January 2019 14:26
+> > > > > To: 'Vincent Guittot' <vincent.guittot@linaro.org>
+> > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>; Sergei Shtylyov
+> > > > > <sergei.shtylyov@cogentembedded.com>; Rob Herring
+> > > > > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
+> > Simon
+> > > > > Horman <horms@verge.net.au>; Magnus Damm
+> > <magnus.damm@gmail.com>;
+> > > > > Linux-Renesas <linux-renesas- soc@vger.kernel.org>; open list:OPE=
+N
+> > > > > FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
+> > > > > <devicetree@vger.kernel.org>; Geert Uytterhoeven
+> > > > > <geert+renesas@glider.be>; Chris Paterson
+> > > > > <Chris.Paterson2@renesas.com>; Daniel Lezcano
+> > > > > <daniel.lezcano@linaro.org>; Thomas Gleixner <tglx@linutronix.de>=
+;
+> > > > > John Stultz <john.stultz@linaro.org>; Fabrizio Castro
+> > > > > <fabrizio.castro@bp.renesas.com>; Samuel Holland
+> > > > > <samuel@sholland.org>
+> > > > > Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device
+> > > > > nodes
+> > > > >
+> > > > > Hi Vincent,
+> > > > >
+> > > > > Thanks for the update. I am still seeing the same deadlock.
+> > > > >
+> > > > > diff --git a/drivers/base/power/runtime.c
+> > > > > b/drivers/base/power/runtime.c index fb5e2b6..a96641a 100644
+> > > > > --- a/drivers/base/power/runtime.c
+> > > > > +++ b/drivers/base/power/runtime.c
+> > > > > @@ -155,7 +155,7 @@ u64
+> > pm_runtime_autosuspend_expiration(struct
+> > > > > device *dev)
+> > > > >
+> > > > >         expires  =3D READ_ONCE(dev->power.last_busy);
+> > > > >         expires +=3D (u64)autosuspend_delay * NSEC_PER_MSEC;
+> > > > > -       if (expires > ktime_to_ns(ktime_get()))
+> > > > > +       if (expires > ktime_get_mono_fast_ns())
+> > > > >                 return expires; /* Expires in the future */
+> > > > >
+> > > > >         return 0;
+> > > > > @@ -921,7 +921,7 @@ static enum hrtimer_restart
+> > > > > pm_suspend_timer_fn(struct hrtimer *timer)
+> > > > >          * If 'expires' is after the current time, we've been cal=
+led
+> > > > >          * too early.
+> > > > >          */
+> > > > > -       if (expires > 0 && expires < ktime_to_ns(ktime_get())) {
+> > > > > +       if (expires > 0 && expires < ktime_get_mono_fast_ns()) {
+> > > > >                 dev->power.timer_expires =3D 0;
+> > > > >                 rpm_suspend(dev, dev->power.timer_autosuspends ?
+> > > > >                     (RPM_ASYNC | RPM_AUTO) : RPM_ASYNC); @@ -940,=
+7
+> > > > > +940,7 @@ static enum hrtimer_restart  pm_suspend_timer_fn(struct
+> > > > > hrtimer
+> > > > > *timer)  int pm_schedule_suspend(struct device *dev, unsigned int
+> > delay)  {
+> > > > >         unsigned long flags;
+> > > > > -       ktime_t expires;
+> > > > > +       u64 expires;
+> > > > >         int retval;
+> > > > >
+> > > > >         spin_lock_irqsave(&dev->power.lock, flags); @@ -957,8
+> > > > > +957,8 @@ int pm_schedule_suspend(struct device *dev, unsigned in=
+t
+> > delay)
+> > > > >         /* Other scheduled or pending requests need to be cancele=
+d. */
+> > > > >         pm_runtime_cancel_pending(dev);
+> > > > >
+> > > > > -       expires =3D ktime_add(ktime_get(), ms_to_ktime(delay));
+> > > > > -       dev->power.timer_expires =3D ktime_to_ns(expires);
+> > > > > +       expires =3D ktime_get_mono_fast_ns() + ((u64)delay *
+> > > > > NSEC_PER_MSEC);
+> > > > > +       dev->power.timer_expires =3D expires;
+> > > > >         dev->power.timer_autosuspends =3D 0;
+> > > > >         hrtimer_start(&dev->power.suspend_timer, expires,
+> > > > > HRTIMER_MODE_ABS);
+> > > > >
+> > > > >
+> > > > > please find the logs.
+> > > > >
+> > > > > root@salvator-x:~# echo  e60f0000.timer >
+> > > > > /sys/devices/system/clocksource/clocksource0/current_clocksource
+> > > > > [   42.769260]
+> > > > > [   42.770760] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D
+> > > > > [   42.776068] WARNING: possible recursive locking detected
+> > > > > [   42.781378] 5.0.0-rc3-next-20190125-00001-gfa6709c-dirty #33 N=
+ot
+> > tainted
+> > > > > [   42.788076] --------------------------------------------
+> > > > > [   42.793385] migration/0/11 is trying to acquire lock:
+> > > > > [   42.798435] 00000000b43b7183 (tk_core.seq){----}, at:
+> > > > > rpm_resume+0x5f0/0x7a8
+> > > > > [   42.805497]
+> > > > > [   42.805497] but task is already holding lock:
+> > > > > [   42.811326] 00000000b43b7183 (tk_core.seq){----}, at:
+> > > > > multi_cpu_stop+0x8c/0x140
+> > > > > [   42.818641]
+> > > > > [   42.818641] other info that might help us debug this:
+> > > > > [   42.825165]  Possible unsafe locking scenario:
+> > > > > [   42.825165]
+> > > > > [   42.831080]        CPU0
+> > > > > [   42.833521]        ----
+> > > > > [   42.835962]   lock(tk_core.seq);
+> > > > > [   42.839185]   lock(tk_core.seq);
+> > > > > [   42.842409]
+> > > > > [   42.842409]  *** DEADLOCK ***
+> > > > > [   42.842409]
+> > > > > [   42.848328]  May be due to missing lock nesting notation
+> > > > > [   42.848328]
+> > > > > [   42.855115] 4 locks held by migration/0/11:
+> > > > > [   42.859293]  #0: 00000000a7511731 (timekeeper_lock){-.-.}, at:
+> > > > > change_clocksource+0x2c/0x118
+> > > > > [   42.867738]  #1: 00000000b43b7183 (tk_core.seq){----}, at:
+> > > > > multi_cpu_stop+0x8c/0x140
+> > > > > [   42.875484]  #2: 00000000b54c38a2 (&ch->lock){....}, at:
+> > > > > sh_cmt_start+0x28/0x200
+> > > > > [   42.882887]  #3: 0000000010d14eec (&(&dev->power.lock)->rlock)=
+{-
+> > ...}, at:
+> > > > > __rpm_callback+0xbc/0x1e8
+> > > > > [   42.891937]
+> > > > > [   42.891937] stack backtrace:
+> > > > > [   42.896294] CPU: 0 PID: 11 Comm: migration/0 Not tainted 5.0.0=
+-rc3-
+> > next-
+> > > > > 20190125-00001-gfa6709c-dirty #33
+> > > > > [   42.905860] Hardware name: Renesas Salvator-X 2nd version boar=
+d
+> > based
+> > > > > on r8a7796 (DT)
+> > > > > [   42.913689] Call trace:
+> > > > > [   42.916137]  dump_backtrace+0x0/0x178
+> > > > > [   42.919796]  show_stack+0x14/0x20
+> > > > > [   42.923111]  dump_stack+0xb0/0xec
+> > > > > [   42.926425]  __lock_acquire+0xfb4/0x1c08
+> > > > > [   42.930345]  lock_acquire+0xd0/0x268
+> > > > > [   42.933917]  ktime_get+0x5c/0x108
+> > > > > [   42.937229]  rpm_resume+0x5f0/0x7a8
+> > > > > [   42.940714]  __pm_runtime_resume+0x50/0x98
+> > > > > [   42.944807]  sh_cmt_start+0x84/0x200
+> > > > > [   42.948380]  sh_cmt_clocksource_enable+0x28/0x48
+> > > > > [   42.952995]  change_clocksource+0x84/0x118
+> > > > > [   42.957087]  multi_cpu_stop+0x8c/0x140
+> > > > > [   42.960834]  cpu_stopper_thread+0xac/0x120
+> > > > > [   42.964931]  smpboot_thread_fn+0x1ac/0x2c8
+> > > > > [   42.969024]  kthread+0x12c/0x130
+> > > > > [   42.972249]  ret_from_fork+0x10/0x18
+> > > > >
+> > > > > Regards,
+> > > > > Biju
+> > > > >
+> > > > > > -----Original Message-----
+> > > > > > From: Vincent Guittot <vincent.guittot@linaro.org>
+> > > > > > Sent: 25 January 2019 14:06
+> > > > > > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT
+> > > > > > device nodes
+> > > > > >
+> > > > > > Hi Biju,
+> > > > > >
+> > > > > > It seems that the call of mark_last_busy in rpm_resume raises
+> > > > > > this
+> > > > > problem.
+> > > > > > We have the sequence:
+> > > > > > change_clocksource
+> > > > > >
+> > > > > >     write_seqcount_begin
+> > > > > >     ...
+> > > > > >     timekeeping_update
+> > > > > >         ...
+> > > > > >         sh_cmt_clocksource_enable
+> > > > > >             ...
+> > > > > >             rpm_resume
+> > > > > >                 pm_runtime_mark_last_busy
+> > > > > >                     ktime_get
+> > > > > >                         do
+> > > > > >                             read_seqcount_begin
+> > > > > >                         while read_seqcount_retry
+> > > > > >     ....
+> > > > > >     write_seqcount_end
+> > > > > >
+> > > > > > In fact, we should be safe because we haven't yet changed the
+> > > > > > clocksource as we are enabling the clocksource that will be use=
+d
+> > > > > > for the
+> > > > > switch.
+> > > > > >
+> > > > > > Can you try the patch below ?
+> > > > > > It uses ktime_get_mono_fast_ns instead which is lock safe for
+> > > > > > such case
+> > > > > >
+> > > > > > ---
+> > > > > >  drivers/base/power/runtime.c | 10 +++++-----
+> > > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
+> > > > > >
+> > > > > > diff --git a/drivers/base/power/runtime.c
+> > > > > > b/drivers/base/power/runtime.c index 457be03..708a13f 100644
+> > > > > > --- a/drivers/base/power/runtime.c
+> > > > > > +++ b/drivers/base/power/runtime.c
+> > > > > > @@ -130,7 +130,7 @@ u64
+> > pm_runtime_autosuspend_expiration(struct
+> > > > > > device *dev)  {
+> > > > > >  int autosuspend_delay;
+> > > > > >  u64 last_busy, expires =3D 0;
+> > > > > > -u64 now =3D ktime_to_ns(ktime_get());
+> > > > > > +u64 now =3D ktime_get_mono_fast_ns();
+> > > > > >
+> > > > > >  if (!dev->power.use_autosuspend)  goto out; @@ -909,7 +909,7 @=
+@
+> > > > > > static enum hrtimer_restart pm_suspend_timer_fn(struct hrtimer
+> > > > > > *timer)
+> > > > > >   * If 'expires' is after the current time, we've been called
+> > > > > >   * too early.
+> > > > > >   */
+> > > > > > -if (expires > 0 && expires < ktime_to_ns(ktime_get())) {
+> > > > > > +if (expires > 0 && expires < ktime_get_mono_fast_ns()) {
+> > > > > >  dev->power.timer_expires =3D 0;
+> > > > > >  rpm_suspend(dev, dev->power.timer_autosuspends ?
+> > > > > >      (RPM_ASYNC | RPM_AUTO) : RPM_ASYNC); @@ -928,7
+> > > > > > +928,7 @@ static enum hrtimer_restart
+> > > > > > +pm_suspend_timer_fn(struct
+> > > > > > hrtimer *timer)  int pm_schedule_suspend(struct device *dev,
+> > > > > > unsigned int
+> > > > > > delay)  {
+> > > > > >  unsigned long flags;
+> > > > > > -ktime_t expires;
+> > > > > > +u64 expires;
+> > > > > >  int retval;
+> > > > > >
+> > > > > >  spin_lock_irqsave(&dev->power.lock, flags); @@ -945,8 +945,8 @=
+@
+> > > > > int
+> > > > > > pm_schedule_suspend(struct device *dev, unsigned int delay)
+> > > > > >  /* Other scheduled or pending requests need to be canceled. */
+> > > > > > pm_runtime_cancel_pending(dev);
+> > > > > >
+> > > > > > -expires =3D ktime_add(ktime_get(), ms_to_ktime(delay));
+> > > > > > -dev->power.timer_expires =3D ktime_to_ns(expires);
+> > > > > > +expires =3D ktime_get_mono_fast_ns() + (u64)delay *
+> > > > > > NSEC_PER_MSEC);
+> > > > > > +dev->power.timer_expires =3D expires;
+> > > > > >  dev->power.timer_autosuspends =3D 0;
+> > > > > > hrtimer_start(&dev->power.suspend_timer, expires,
+> > > > > HRTIMER_MODE_ABS);
+> > > > > >
+> > > > > > --
+> > > > > > 2.7.4
+> > > > > >
+> > > > > > Le Friday 25 Jan 2019 =C3=A0 12:26:54 (+0000), Biju Das a =C3=
+=A9crit :
+> > > > > > > Hi All,
+> > > > > > >
+> > > > > > > I have enabled lock debugging  and it is showing "possible
+> > > > > > > recursive locking
+> > > > > > detected "with the patch
+> > ("8234f6734c5d74ac794e5517437f51c57d65f865"
+> > > > > > PM-runtime: Switch autosuspend over to using hrtimers)
+> > > > > > >
+> > > > > > > root@salvator-x:~# echo  e60f0000.timer >
+> > > > > > /sys/devices/system/clocksource/clocksource0/current_clocksourc=
+e
+> > > > > > > [   67.995854]
+> > > > > > > [   67.997354]
+> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
+=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
+> > > > > > > [   68.002663] WARNING: possible recursive locking detected
+> > > > > > > [   68.007974] 5.0.0-rc3-next-20190125-00005-g382822b #31 Not
+> > tainted
+> > > > > > > [   68.014150] --------------------------------------------
+> > > > > > > [   68.019459] migration/0/11 is trying to acquire lock:
+> > > > > > > [   68.024509] 0000000065de5fdf (tk_core.seq){----}, at:
+> > > > > > rpm_resume+0x5f0/0x7a8
+> > > > > > > [   68.031570]
+> > > > > > > [   68.031570] but task is already holding lock:
+> > > > > > > [   68.037399] 0000000065de5fdf (tk_core.seq){----}, at:
+> > > > > > multi_cpu_stop+0x8c/0x140
+> > > > > > > [   68.044714]
+> > > > > > > [   68.044714] other info that might help us debug this:
+> > > > > > > [   68.051237]  Possible unsafe locking scenario:
+> > > > > > > [   68.051237]
+> > > > > > > [   68.057153]        CPU0
+> > > > > > > [   68.059594]        ----
+> > > > > > > [   68.062034]   lock(tk_core.seq);
+> > > > > > > [   68.065258]   lock(tk_core.seq);
+> > > > > > > [   68.068482]
+> > > > > > > [   68.068482]  *** DEADLOCK ***
+> > > > > > > [   68.068482]
+> > > > > > > [   68.074402]  May be due to missing lock nesting notation
+> > > > > > > [   68.074402]
+> > > > > > > [   68.081188] 4 locks held by migration/0/11:
+> > > > > > > [   68.085366]  #0: 00000000463b6446 (timekeeper_lock){-.-.},=
+ at:
+> > > > > > change_clocksource+0x2c/0x118
+> > > > > > > [   68.093812]  #1: 0000000065de5fdf (tk_core.seq){----}, at:
+> > > > > > multi_cpu_stop+0x8c/0x140
+> > > > > > > [   68.101558]  #2: 0000000098b45550 (&ch->lock){....}, at:
+> > > > > > sh_cmt_start+0x28/0x200
+> > > > > > > [   68.108961]  #3: 00000000da0f4e80 (&(&dev->power.lock)-
+> > >rlock){-...},
+> > > > > at:
+> > > > > > __rpm_callback+0xbc/0x1e8
+> > > > > > > [   68.118011]
+> > > > > > > [   68.118011] stack backtrace:
+> > > > > > > [   68.122368] CPU: 0 PID: 11 Comm: migration/0 Not tainted 5=
+.0.0-
+> > rc3-
+> > > > > next-
+> > > > > > 20190125-00005-g382822b #31
+> > > > > > > [   68.131412] Hardware name: Renesas Salvator-X 2nd version
+> > board
+> > > > > based
+> > > > > > on r8a7796 (DT)
+> > > > > > > [   68.139240] Call trace:
+> > > > > > > [   68.141687]  dump_backtrace+0x0/0x178
+> > > > > > > [   68.145346]  show_stack+0x14/0x20
+> > > > > > > [   68.148661]  dump_stack+0xb0/0xec
+> > > > > > > [   68.151975]  __lock_acquire+0xfb4/0x1c08
+> > > > > > > [   68.155894]  lock_acquire+0xd0/0x268
+> > > > > > > [   68.159467]  ktime_get+0x5c/0x108
+> > > > > > > [   68.162779]  rpm_resume+0x5f0/0x7a8
+> > > > > > > [   68.166265]  __pm_runtime_resume+0x50/0x98
+> > > > > > > [   68.170358]  sh_cmt_start+0x84/0x200
+> > > > > > > [   68.173931]  sh_cmt_clocksource_enable+0x28/0x48
+> > > > > > > [   68.178546]  change_clocksource+0x84/0x118
+> > > > > > > [   68.182639]  multi_cpu_stop+0x8c/0x140
+> > > > > > > [   68.186385]  cpu_stopper_thread+0xac/0x120
+> > > > > > > [   68.190481]  smpboot_thread_fn+0x1ac/0x2c8
+> > > > > > > [   68.194574]  kthread+0x12c/0x130
+> > > > > > > [   68.197800]  ret_from_fork+0x10/0x18
+> > > > > > >
+> > > > > > > Regards,
+> > > > > > > Biju
+> > > > > > >
+> > > > > > > > -----Original Message-----
+> > > > > > > > From: Biju Das
+> > > > > > > > Sent: 25 January 2019 11:27
+> > > > > > > > To: 'Geert Uytterhoeven' <geert@linux-m68k.org>; Vincent
+> > > > > > > > Guittot <vincent.guittot@linaro.org>; Sergei Shtylyov
+> > > > > > > > <sergei.shtylyov@cogentembedded.com>
+> > > > > > > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > > > > > > > <mark.rutland@arm.com>; Simon Horman
+> > <horms@verge.net.au>;
+> > > > > > Magnus
+> > > > > > > > Damm <magnus.damm@gmail.com>; Linux-Renesas <linux-
+> > renesas-
+> > > > > > > > soc@vger.kernel.org>; open list:OPEN FIRMWARE AND
+> > FLATTENED
+> > > > > > DEVICE
+> > > > > > > > TREE BINDINGS <devicetree@vger.kernel.org>; Geert
+> > > > > > > > Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
+> > > > > > > > <Chris.Paterson2@renesas.com>; Daniel Lezcano
+> > > > > > > > <daniel.lezcano@linaro.org>; Thomas Gleixner
+> > > > > > > > <tglx@linutronix.de>; John Stultz <john.stultz@linaro.org>;
+> > > > > > > > Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Samuel
+> > > > > > > > Holland <samuel@sholland.org>
+> > > > > > > > Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT
+> > > > > > > > device nodes
+> > > > > > > >
+> > > > > > > > Hi Geert,
+> > > > > > > >
+> > > > > > > > Thanks for the feedback. I started testing CMT on latest
+> > > > > > > > kernel(Linux-next-
+> > > > > > > > 20190125 and also renesas-dev) and found that it is broken
+> > > > > > > > on R-Car M3-W device.
+> > > > > > > >
+> > > > > > > > On further investigation the patch ("
+> > > > > > > > 8234f6734c5d74ac794e5517437f51c57d65f865"   PM-runtime:
+> > Switch
+> > > > > > > > autosuspend over to using hrtimers)  is causing the issue.
+> > > > > > > >
+> > > > > > > > During clock source switching, It calls the function
+> > "sh_cmt_enable"
+> > > > > > > > which calls " pm_runtime_get_sync(&ch->cmt->pdev->dev);"
+> > > > > > > > and after that console freezes.
+> > > > > > > >
+> > > > > > > > Sergei: Have you noticed this issue  on R-Car V3M and V3H
+> > > > > > > > boards with latest kernel?
+> > > > > > > >
+> > > > > > > > Regards,
+> > > > > > > > Biju
+> > > > > > > >
+> > > > > > > > > -----Original Message-----
+> > > > > > > > > From: linux-renesas-soc-owner@vger.kernel.org
+> > > > > > > > > <linux-renesas-soc- owner@vger.kernel.org> On Behalf Of
+> > > > > > > > > Geert Uytterhoeven
+> > > > > > > > > Sent: 24 January 2019 10:16
+> > > > > > > > > To: Biju Das <biju.das@bp.renesas.com>
+> > > > > > > > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
+> > > > > > > > > <mark.rutland@arm.com>; Simon Horman
+> > <horms@verge.net.au>;
+> > > > > > > > Magnus Damm
+> > > > > > > > > <magnus.damm@gmail.com>; Linux-Renesas <linux-renesas-
+> > > > > > > > > soc@vger.kernel.org>; open list:OPEN FIRMWARE AND
+> > > > > > > > > FLATTENED
+> > > > > > DEVICE
+> > > > > > > > > TREE BINDINGS <devicetree@vger.kernel.org>; Geert
+> > > > > > > > > Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
+> > > > > > > > > <Chris.Paterson2@renesas.com>; Daniel Lezcano
+> > > > > > > > > <daniel.lezcano@linaro.org>; Thomas Gleixner
+> > > > > > > > > <tglx@linutronix.de>; John Stultz
+> > > > > > > > > <john.stultz@linaro.org>; Fabrizio Castro
+> > > > > > > > > <fabrizio.castro@bp.renesas.com>; Samuel Holland
+> > > > > > > > <samuel@sholland.org>
+> > > > > > > > > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CM=
+T
+> > > > > > > > > device nodes
+> > > > > > > > >
+> > > > > > > > > Hi Biju,
+> > > > > > > > >
+> > > > > > > > > On Fri, Oct 26, 2018 at 10:32 AM Biju Das
+> > > > > > > > > <biju.das@bp.renesas.com>
+> > > > > > > > wrote:
+> > > > > > > > > > This patch adds CMT{0|1|2|3} device nodes for r8a7796 S=
+oC.
+> > > > > > > > > >
+> > > > > > > > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
+> > > > > > > > > > ---
+> > > > > > > > > > This patch is tested against renesas-dev
+> > > > > > > > > >
+> > > > > > > > > > I have executed on inconsistency-check, nanosleep and
+> > > > > > > > > > clocksource_switch selftests on this arm64 SoC. The
+> > > > > > > > > > inconsistency-check and nanosleep tests are working
+> > > > > > > > > > fine.The clocksource_switch asynchronous test is failin=
+g
+> > > > > > > > > > due to inconsistency-check
+> > > > > > > > > failure on "arch_sys_counter".
+> > > > > > > > > >
+> > > > > > > > > > But if i skip the clocksource_switching of
+> > > > > > > > > > "arch_sys_counter", the asynchronous test is passing fo=
+r
+> > CMT0/1/2/3 timer.
+> > > > > > > > > >
+> > > > > > > > > > Has any one noticed this issue?
+> > > > > > > > >
+> > > > > > > > > clockevents/next now has commit 7cd6dca3600d8d71
+> > > > > > > > > ("clocksource/drivers/arch_timer: Workaround for Allwinne=
+r
+> > > > > > > > > A64 timer instability").  Perhaps this is related, and th=
+e
+> > > > > > > > > same test program may indicate similar issues?
+> > > > > > > > >
+> > > > > > > > > See also
+> > > > > > > > > https://lore.kernel.org/lkml/20190113021719.46457-2-
+> > > > > > > > > samuel@sholland.org/
+> > > > > > > > >
+> > > > > > > > > Gr{oetje,eeting}s,
+> > > > > > > > >
+> > > > > > > > >                         Geert
+> > > > > > > > >
+> > > > > > > > > --
+> > > > > > > > > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -=
+-
+> > > > > > > > > geert@linux- m68k.org
+> > > > > > > > >
+> > > > > > > > > In personal conversations with technical people, I call
+> > > > > > > > > myself a hacker. But when I'm talking to journalists I
+> > > > > > > > > just say "programmer" or
+> > > > > > > > something like that.
+> > > > > > > > >                                 -- Linus Torvalds
+> > > > > > >
+> > > > > > >
+> > > > > > >
+> > > > > > > Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road,
+> > > > > > > Bourne
+> > > > > > End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wale=
+s
+> > > > > > under Registered No. 04586709.
+> > > >
+> > > >
+> > > >
+> > > > Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourn=
+e
+> > End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under
+> > Registered No. 04586709.
+>
+>
+>
+> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End,=
+ Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Register=
+ed No. 04586709.
