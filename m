@@ -1,50 +1,66 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 1/2] dt-bindings: display: tegra: Support SOR crossbar
- configuration
-Date: Fri, 25 Jan 2019 11:00:57 +0100
-Message-ID: <20190125100058.20203-1-thierry.reding@gmail.com>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
+ driver
+Date: Fri, 25 Jan 2019 11:05:30 +0100
+Message-ID: <20190125110530.0ff11a54@xps13>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+        <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Thierry Reding <thierry.reding@gmail.com>, Rob Herring <robh+dt@kernel.org>
-Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-RnJvbTogVGhpZXJyeSBSZWRpbmcgPHRyZWRpbmdAbnZpZGlhLmNvbT4KClRoZSBTT1IgaGFzIGEg
-Y3Jvc3NiYXIgdGhhdCBjYW4gbWFwIGVhY2ggbGFuZSBvZiB0aGUgU09SIHRvIGVhY2ggb2YgdGhl
-ClNPUiBwYWRzLiBUaGUgbWFwcGluZyBpcyB1c3VhbGx5IHRoZSBzYW1lIGFjcm9zcyBkZXNpZ25z
-IGZvciBhIHNwZWNpZmljClNvQyBnZW5lcmF0aW9uLCBidXQgZXZlcnkgbm93IGFuZCB0aGVuIHRo
-ZXJlJ3MgYSBkZXNpZ24gdGhhdCBkb2Vzbid0LgoKQWxsb3cgdGhlIGNyb3NzYmFyIGNvbmZpZ3Vy
-YXRpb24gdG8gYmUgc3BlY2lmaWVkIGluIGRldmljZSB0cmVlIHRvIG1ha2UKaXQgcG9zc2libGUg
-dG8gc3VwcG9ydCB0aGVzZSBkZXNpZ25zLgoKU2lnbmVkLW9mZi1ieTogVGhpZXJyeSBSZWRpbmcg
-PHRyZWRpbmdAbnZpZGlhLmNvbT4KLS0tCiAuLi4vYmluZGluZ3MvZGlzcGxheS90ZWdyYS9udmlk
-aWEsdGVncmEyMC1ob3N0MXgudHh0ICAgICAgICAgICB8IDMgKysrCiAxIGZpbGUgY2hhbmdlZCwg
-MyBpbnNlcnRpb25zKCspCgpkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvdGVncmEvbnZpZGlhLHRlZ3JhMjAtaG9zdDF4LnR4dCBiL0RvY3VtZW50
-YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RlZ3JhL252aWRpYSx0ZWdyYTIwLWhv
-c3QxeC50eHQKaW5kZXggNTkzYmU0NGE1M2M5Li45OTk5MjU1YWM1YjYgMTAwNjQ0Ci0tLSBhL0Rv
-Y3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9kaXNwbGF5L3RlZ3JhL252aWRpYSx0ZWdy
-YTIwLWhvc3QxeC50eHQKKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rp
-c3BsYXkvdGVncmEvbnZpZGlhLHRlZ3JhMjAtaG9zdDF4LnR4dApAQCAtMjM4LDYgKzIzOCw5IEBA
-IG9mIHRoZSBmb2xsb3dpbmcgaG9zdDF4IGNsaWVudCBtb2R1bGVzOgogICAtIG52aWRpYSxocGQt
-Z3Bpbzogc3BlY2lmaWVzIGEgR1BJTyB1c2VkIGZvciBob3RwbHVnIGRldGVjdGlvbgogICAtIG52
-aWRpYSxlZGlkOiBzdXBwbGllcyBhIGJpbmFyeSBFRElEIGJsb2IKICAgLSBudmlkaWEscGFuZWw6
-IHBoYW5kbGUgb2YgYSBkaXNwbGF5IHBhbmVsCisgIC0gbnZpZGlhLHhiYXItY2ZnOiA1IGNlbGxz
-IGNvbnRhaW5pbmcgdGhlIGNyb3NzYmFyIGNvbmZpZ3VyYXRpb24uIEVhY2ggbGFuZQorICAgIG9m
-IHRoZSBTT1IsIGlkZW50aWZpZWQgYnkgdGhlIGNlbGwncyBpbmRleCwgaXMgbWFwcGVkIHZpYSB0
-aGUgY3Jvc3NiYXIgdG8KKyAgICB0aGUgcGFkIHNwZWNpZmllZCBieSB0aGUgY2VsbCdzIHZhbHVl
-LgogCiAgIE9wdGlvbmFsIHByb3BlcnRpZXMgd2hlbiBkcml2aW5nIGFuIGVEUCBvdXRwdXQ6CiAg
-IC0gbnZpZGlhLGRwYXV4OiBwaGFuZGxlIHRvIGEgRGlzcGF5UG9ydCBBVVggaW50ZXJmYWNlCi0t
-IAoyLjE5LjEKCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-CmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpo
-dHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
+Hi Lorenzo,
+
+Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
+17:05:09 +0000:
+
+> On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:
+> > Hello,
+> > 
+> > As part of an effort to bring suspend to RAM support to Armada 3700
+> > SoCs (main target: ESPRESSObin), this series handles the work around
+> > the PCIe IP.
+> > 
+> > First, more configuration is done in the 'setup' helper as inspired
+> > from the U-Boot driver. This is needed to entirely initialize the IP
+> > during future resume operation (patch 1).
+> > 
+> > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+> > current device trees do not provide the corresponding properties, not
+> > finding one of these properties is not an error and just produces a
+> > warning. However, if the property is present, an error during PHY
+> > initialization will fail the probe of the driver.
+> > 
+> > Note: To be sure the clock will be resumed before this driver, a first
+> > series adding links between clocks and consumers has been submitted,
+> > see [1]. Anyway, having the clock series applied first is not needed.  
+> 
+> I do not understand what this means, in particular in relation
+> to the blocking clock calls in the suspend/resume NOIRQ hooks.
+
+I am not sure to understand your question.
+
+As there are multiple points in this sentence I will detail each of
+them so please comment on the one which is bothering you:
+* I am working in parallel on a series adding device links to the clock
+  framework. This way when a driver consumes a clock, the clock
+  provider driver will be resumed first.
+* If the clock series I am talking about is applied after this one,
+  there is no build issue. Of course suspending the platform may
+  not work but this is a new feature so nothing will be broken.
+* Device links do not enforce any priority if the suspend/resume phase
+  between two drivers is not the same. The PCIe driver suspends in the
+  NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
+  suspend/resume callbacks must be promoted to the NOIRQ phase as well
+  (and this is part of another series). As of today there is
+  no alternative.
+
+
+Thanks,
+Miquèl
