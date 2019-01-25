@@ -1,49 +1,76 @@
-From: Carlo Caione <ccaione@baylibre.com>
-Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Fri, 25 Jan 2019 18:48:46 +0000
-Message-ID: <20190125184330.dm3kaoewvbwddacy@xps>
-References: <20190125125513.23656-1-ccaione@baylibre.com>
- <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v6 16/22] arm64: dts: allwinner: a64: Add
+ DSI pipeline
+Date: Fri, 25 Jan 2019 19:51:22 +0100
+Message-ID: <20190125185122.idyipbgcgy5fzf7q@flea>
+References: <20190124195900.22620-1-jagan@amarulasolutions.com>
+ <20190124195900.22620-17-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"; Format="flowed"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBK5VVXRAKGQEHDAHM2I-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, robh+dt@kernel.org, abailon@baylibre.com, kernel@pengutronix.de, fabio.estevam@nxp.com, hkallweit1@gmail.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+In-Reply-To: <20190124195900.22620-17-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-On 25/01/19 13:06, Russell King - ARM Linux admin wrote:
->On Fri, Jan 25, 2019 at 12:55:10PM +0000, Carlo Caione wrote:
->> SmartEEE, compatible with IEEE802.3az standard, is designed to include
->> legacy MAC without EEE capability into the power saving system. SmartEEE
->> is enabled by default configuration on AR8031 after power-on or hardware
->> reset.
->>
->> Unfortunately this is proved causing issues for certain hw
->> configurations.  We add a quirk to optionally disable SmartEEE.
->
->It may be a good idea to detail what "certain hw configurations" are
->and/or what the "issues" are, so it's easier to find this if/when
->others encounter the same issue.
+On Fri, Jan 25, 2019 at 01:28:54AM +0530, Jagan Teki wrote:
+> The A64 has a MIPI-DSI block which is similar to A31.
+> 
+> Add dsi, dphy nodes with A31 fallback compatible and finally
+> connect the dsi node to tcon0 node to make proper DSI pipeline.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> ---
+>  arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 47 +++++++++++++++++++
+>  1 file changed, 47 insertions(+)
+> 
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> index cdc154b14a7e..e18d81aff813 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+> @@ -358,6 +358,12 @@
+>  					#address-cells = <1>;
+>  					#size-cells = <0>;
+>  					reg = <1>;
+> +
+> +					tcon0_out_dsi: endpoint@1 {
+> +						reg = <1>;
+> +						remote-endpoint = <&dsi_in_tcon0>;
+> +						allwinner,tcon-channel = <1>;
+> +					};
+>  				};
+>  			};
+>  		};
+> @@ -935,6 +941,47 @@
+>  			status = "disabled";
+>  		};
+>  
+> +		dsi: dsi@1ca0000 {
+> +			compatible = "allwinner,sun50i-a64-mipi-dsi",
+> +				     "allwinner,sun6i-a31-mipi-dsi";
+> +			reg = <0x01ca0000 0x1000>;
+> +			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
+> +			clocks = <&ccu CLK_BUS_MIPI_DSI>,
+> +				 <&ccu CLK_DSI_DPHY>;
 
-This fix was upstreamed from the imx downstream kernel so I do not have 
-much informations on that but something is reported in the U-Boot fix 
-for the same problem at [0] so I'll add more info in the next revision.
+This one looks weird. There's only a single clock in the A64, and it
+seems to be for the D-PHY only.
 
-Cheers,
+And the rate is fixed at 148.5 MHz apparently, as opposed to the
+current code that is running at twice that speed.
 
-[0] https://patchwork.ozlabs.org/patch/1015783/
+Maxime
 
 -- 
-Carlo Caione
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
