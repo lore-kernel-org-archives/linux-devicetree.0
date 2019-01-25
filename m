@@ -1,98 +1,110 @@
-From: Jon Hunter <jonathanh@nvidia.com>
-Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
-Date: Fri, 25 Jan 2019 12:06:47 +0000
-Message-ID: <709e24fa-02e1-96ea-2b20-acf150caff00@nvidia.com>
-References: <20190107032810.13522-1-josephl@nvidia.com>
- <20190107032810.13522-2-josephl@nvidia.com>
- <a5fec080-d388-5362-7f44-b50f7d7e1adf@nvidia.com>
- <285bd3f7-e1c0-0767-6381-4b1d748bd6db@nvidia.com>
- <381f94c0-6c19-0f5b-df06-91353455a4c0@nvidia.com>
+From: Jonas Bonn <jonas@norrbonn.se>
+Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
+Date: Fri, 25 Jan 2019 13:06:45 +0100
+Message-ID: <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se>
+References: <20190125114429.20066-1-jonas@norrbonn.se>
+ <20190125114429.20066-2-jonas@norrbonn.se>
+ <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <381f94c0-6c19-0f5b-df06-91353455a4c0@nvidia.com>
+In-Reply-To: <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
 Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
-Cc: devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
+To: Baolin Wang <baolin.wang@linaro.org>
+Cc: LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+Hi,
 
-On 25/01/2019 12:01, Jon Hunter wrote:
->=20
-> On 25/01/2019 03:23, Joseph Lo wrote:
->> Hi Jon,
+On 25/01/2019 12:53, Baolin Wang wrote:
+> Hi,
+> On Fri, 25 Jan 2019 at 19:44, Jonas Bonn <jonas@norrbonn.se> wrote:
 >>
->> Thanks for reviewing.
+>> Some devices are slow and cannot keep up with the SPI bus and therefore
+>> require a short delay between words of the SPI transfer.
 >>
->> On 1/24/19 6:30 PM, Jon Hunter wrote:
->>>
->>> On 07/01/2019 03:28, Joseph Lo wrote:
->>>> The Tegra210 timer provides fourteen 29-bit timer counters and one
->>>> 32-bit
->>>> timestamp counter. The TMRs run at either a fixed 1 MHz clock rate
->>>> derived
->>>> from the oscillator clock (TMR0-TMR9) or directly at the oscillator
->>>> clock
->>>> (TMR10-TMR13). Each TMR can be programmed to generate one-shot periodi=
-c,
->>>> or watchdog interrupts.
->>>>
->>>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
->>>> Cc: Thomas Gleixner <tglx@linutronix.de>
->>>> Cc: linux-kernel@vger.kernel.org
->>>> Cc: devicetree@vger.kernel.org
->>>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
->>>> ---
->>>> =C2=A0 .../bindings/timer/nvidia,tegra210-timer.txt=C2=A0 | 25 +++++++=
-++++++++++++
->>>> =C2=A0 1 file changed, 25 insertions(+)
->>>> =C2=A0 create mode 100644
->>>> Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
->>>>
->>>> diff --git
->>>> a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
->>>> b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
->>>> new file mode 100644
->>>> index 000000000000..ba511220a669
->>>> --- /dev/null
->>>> +++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.tx=
-t
->>>> @@ -0,0 +1,25 @@
->>>> +NVIDIA Tegra210 timer
->>>> +
->>>> +The Tegra210 timer provides fourteen 29-bit timer counters and one
->>>> 32-bit
->>>> +timestamp counter. The TMRs run at either a fixed 1 MHz clock rate
->>>> derived
->>>> +from the oscillator clock (TMR0-TMR9) or directly at the oscillator
->>>> clock
->>>> +(TMR10-TMR13). Each TMR can be programmed to generate one-shot,
->>>> periodic,
->>>> +or watchdog interrupts.
->>>> +
->>>> +Required properties:
->>>> +- compatible : "nvidia,tegra210-timer".
->>>> +- reg : Specifies base physical address and size of the registers.
->>>> +- interrupts : A list of 4 interrupts; one per each of TMR10 through
->>>> TMR13.
->>>
->>> Why do we only add the interrupts for TMR10 - TMR13? What about the
->>> others?
->>>
+>> The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
+>> clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
+>> bytes on the bus fast enough to keep up with the SoC's SPI controller
+>> even at the lowest bus speed.
 >>
->> The others (TMR0-TMR9) are occupied for other usages. TMR5 is occupied
->> for the watchdog timer in the upstream kernel. And others (still in
->> TMR0-TMR9) are occupied for different usages in our downstream kernel.
->=20
-> Where is TMR5 reserved for the watchdog? I don't see this?
+>> This patch introduces the ability to specify a required inter-word
+>> delay for SPI devices.  It is up to the controller driver to configure
+>> itself accordingly in order to introduce the requested delay.
+> 
+> Can we configure it at runtime by the device rather than at DT time by
+> the controller? If yes, we already have a patch for this, please
+> check:
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eeaceb8b7d1fb64b6030249ca0dd1d902ef3069e
+> 
 
-I see it now, it is hard-coded in the driver. I was looking at arm64 to
-see where it is used.
+It's a characteristic of the SPI slave, in the same sense as CPOL/CPHA 
+are, and therefore it makes sense to specify it in the device tree.
 
-Cheers
-Jon
+Having this as device property rather than a transfer property allows 
+this to be configured one time in setup() rather than having to fiddle 
+with the configuration register for every transfer.
 
---=20
-nvpublic
+The two approaches are complementary.
+
+/Jonas
+
+>>
+>> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
+>> CC: Mark Brown <broonie@kernel.org>
+>> CC: Rob Herring <robh+dt@kernel.org>
+>> CC: Mark Rutland <mark.rutland@arm.com>
+>> CC: linux-spi@vger.kernel.org
+>> CC: devicetree@vger.kernel.org
+>> ---
+>>   Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
+>>   drivers/spi/spi.c                                 | 4 ++++
+>>   include/linux/spi/spi.h                           | 1 +
+>>   3 files changed, 6 insertions(+)
+>>
+>> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> index 1f6e86f787ef..a5f20060676d 100644
+>> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
+>> @@ -77,6 +77,7 @@ All slave nodes can contain the following optional properties:
+>>                      Defaults to 1 if not present.
+>>   - spi-rx-delay-us - Microsecond delay after a read transfer.
+>>   - spi-tx-delay-us - Microsecond delay after a write transfer.
+>> +- spi-word-delay-us - Microsecond delay between individual words of a transfer
+>>
+>>   Some SPI controllers and devices support Dual and Quad SPI transfer mode.
+>>   It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
+>> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
+>> index 9a7def7c3237..cd4d4065eca2 100644
+>> --- a/drivers/spi/spi.c
+>> +++ b/drivers/spi/spi.c
+>> @@ -1692,6 +1692,10 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
+>>          }
+>>          spi->max_speed_hz = value;
+>>
+>> +       if (!of_property_read_u32(nc, "spi-word-delay-us", &value)) {
+>> +               spi->word_delay = value;
+>> +       }
+>> +
+>>          return 0;
+>>   }
+>>
+>> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
+>> index 314d922ca607..e5200dd9d750 100644
+>> --- a/include/linux/spi/spi.h
+>> +++ b/include/linux/spi/spi.h
+>> @@ -164,6 +164,7 @@ struct spi_device {
+>>          char                    modalias[SPI_NAME_SIZE];
+>>          const char              *driver_override;
+>>          int                     cs_gpio;        /* chip select gpio */
+>> +       uint16_t                word_delay;     /* inter-word delay (us) */
+>>
+>>          /* the statistics */
+>>          struct spi_statistics   statistics;
+>> --
+>> 2.19.1
+>>
+> 
+> 
