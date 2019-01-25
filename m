@@ -1,80 +1,44 @@
-Return-Path: <SRS0=BUTN=P6=bp.renesas.com=biju.das@kernel.org>
-From: Biju Das <biju.das@bp.renesas.com>
-Subject: [PATCH v3 1/5] ARM: dts: r8a7743: Convert to new LVDS DT bindings
-Date: Tue, 22 Jan 2019 15:25:45 +0000
-Message-Id: <1548170749-12773-2-git-send-email-biju.das@bp.renesas.com>
-In-Reply-To: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
-References: <1548170749-12773-1-git-send-email-biju.das@bp.renesas.com>
-To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: Biju Das <biju.das@bp.renesas.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, linux-renesas-soc@vger.kernel.org, devicetree@vger.kernel.org, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Return-Path: <SRS0=ySGx=QB=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from muru.com ([72.249.23.125]:35504 "EHLO muru.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729115AbfAYQxK (ORCPT <rfc822;devicetree@vger.kernel.org>);
+        Fri, 25 Jan 2019 11:53:10 -0500
+Date: Fri, 25 Jan 2019 08:53:07 -0800
+From: Tony Lindgren <tony@atomide.com>
+Subject: Re: [PATCH] ARM: dts: omap4-droid4: Fix typo in cpcap IRQ flags
+Message-ID: <20190125165307.GW5720@atomide.com>
+References: <20190107175907.45268-1-tony@atomide.com>
+ <20190125162814.GA7571@amd>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: 8BIT
+In-Reply-To: <20190125162814.GA7571@amd>
+Sender: devicetree-owner@vger.kernel.org
+To: Pavel Machek <pavel@ucw.cz>
+Cc: linux-omap@vger.kernel.org, =?utf-8?Q?Beno=C3=AEt?= Cousson <bcousson@baylibre.com>, devicetree@vger.kernel.org, Sebastian Reichel <sre@kernel.org>
 List-ID: <devicetree@vger.kernel.org>
 
-The internal LVDS encoder now has DT bindings separate from the DU. Port
-the device tree over to the new model.
+* Pavel Machek <pavel@ucw.cz> [190125 16:28]:
+> Hi!
+> 
+> > We're now getting the following error:
+> > 
+> > genirq: Setting trigger mode 1 for irq 230 failed
+> > (regmap_irq_set_type+0x0/0x15c)
+> > cpcap-usb-phy cpcap-usb-phy.0: could not get irq dp: -524
+> > 
+> > This is because of a typo in the irq flags. Really these interrupts
+> > are LEVEL, but before we change them we need to test them. So let's
+> > do a minimal fix first.
+> 
+> Could we get this one applied? It is regression fix for 5.0-rc1...
 
-Fixes: c6a27fa41fab ("drm: rcar-du: Convert LVDS encoder code to bridge driver")
+Yes thanks for reminding me, was planning to send off
+the first set earlier but got hit with more regressions
+and delays. Anyways, I just sent a pull request for
+the dts regressions.
 
-Signed-off-by: Biju Das <biju.das@bp.renesas.com>
----
- arch/arm/boot/dts/r8a7743.dtsi | 36 ++++++++++++++++++++++++++++++------
- 1 file changed, 30 insertions(+), 6 deletions(-)
+Regards,
 
-diff --git a/arch/arm/boot/dts/r8a7743.dtsi b/arch/arm/boot/dts/r8a7743.dtsi
-index 24e6c2b..de981d6 100644
---- a/arch/arm/boot/dts/r8a7743.dtsi
-+++ b/arch/arm/boot/dts/r8a7743.dtsi
-@@ -1660,15 +1660,12 @@
- 
- 		du: display@feb00000 {
- 			compatible = "renesas,du-r8a7743";
--			reg = <0 0xfeb00000 0 0x40000>,
--			      <0 0xfeb90000 0 0x1c>;
--			reg-names = "du", "lvds.0";
-+			reg = <0 0xfeb00000 0 0x40000>;
- 			interrupts = <GIC_SPI 256 IRQ_TYPE_LEVEL_HIGH>,
- 				     <GIC_SPI 268 IRQ_TYPE_LEVEL_HIGH>;
- 			clocks = <&cpg CPG_MOD 724>,
--				 <&cpg CPG_MOD 723>,
--				 <&cpg CPG_MOD 726>;
--			clock-names = "du.0", "du.1", "lvds.0";
-+				 <&cpg CPG_MOD 723>;
-+			clock-names = "du.0", "du.1";
- 			status = "disabled";
- 
- 			ports {
-@@ -1683,6 +1680,33 @@
- 				port@1 {
- 					reg = <1>;
- 					du_out_lvds0: endpoint {
-+						remote-endpoint = <&lvds0_in>;
-+					};
-+				};
-+			};
-+		};
-+
-+		lvds0: lvds@feb90000 {
-+			compatible = "renesas,r8a7743-lvds";
-+			reg = <0 0xfeb90000 0 0x1c>;
-+			clocks = <&cpg CPG_MOD 726>;
-+			power-domains = <&sysc R8A7743_PD_ALWAYS_ON>;
-+			resets = <&cpg 726>;
-+			status = "disabled";
-+
-+			ports {
-+				#address-cells = <1>;
-+				#size-cells = <0>;
-+
-+				port@0 {
-+					reg = <0>;
-+					lvds0_in: endpoint {
-+						remote-endpoint = <&du_out_lvds0>;
-+					};
-+				};
-+				port@1 {
-+					reg = <1>;
-+					lvds0_out: endpoint {
- 					};
- 				};
- 			};
--- 
-2.7.4
+Tony
