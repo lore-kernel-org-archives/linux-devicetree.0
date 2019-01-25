@@ -1,94 +1,82 @@
-From: Baolin Wang <baolin.wang@linaro.org>
-Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
-Date: Fri, 25 Jan 2019 19:53:13 +0800
-Message-ID: <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
-References: <20190125114429.20066-1-jonas@norrbonn.se> <20190125114429.20066-2-jonas@norrbonn.se>
+From: Jon Hunter <jonathanh@nvidia.com>
+Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
+Date: Fri, 25 Jan 2019 12:01:51 +0000
+Message-ID: <381f94c0-6c19-0f5b-df06-91353455a4c0@nvidia.com>
+References: <20190107032810.13522-1-josephl@nvidia.com>
+ <20190107032810.13522-2-josephl@nvidia.com>
+ <a5fec080-d388-5362-7f44-b50f7d7e1adf@nvidia.com>
+ <285bd3f7-e1c0-0767-6381-4b1d748bd6db@nvidia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125114429.20066-2-jonas@norrbonn.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Bonn <jonas@norrbonn.se>
-Cc: LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <285bd3f7-e1c0-0767-6381-4b1d748bd6db@nvidia.com>
+Content-Language: en-US
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
+Cc: devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi,
-On Fri, 25 Jan 2019 at 19:44, Jonas Bonn <jonas@norrbonn.se> wrote:
->
-> Some devices are slow and cannot keep up with the SPI bus and therefore
-> require a short delay between words of the SPI transfer.
->
-> The example of this that I'm looking at is a SAMA5D2 with a minimum SPI
-> clock of 400kHz talking to an AVR-based SPI slave.  The AVR cannot put
-> bytes on the bus fast enough to keep up with the SoC's SPI controller
-> even at the lowest bus speed.
->
-> This patch introduces the ability to specify a required inter-word
-> delay for SPI devices.  It is up to the controller driver to configure
-> itself accordingly in order to introduce the requested delay.
-
-Can we configure it at runtime by the device rather than at DT time by
-the controller? If yes, we already have a patch for this, please
-check:
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=eeaceb8b7d1fb64b6030249ca0dd1d902ef3069e
-
->
-> Signed-off-by: Jonas Bonn <jonas@norrbonn.se>
-> CC: Mark Brown <broonie@kernel.org>
-> CC: Rob Herring <robh+dt@kernel.org>
-> CC: Mark Rutland <mark.rutland@arm.com>
-> CC: linux-spi@vger.kernel.org
-> CC: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/spi/spi-bus.txt | 1 +
->  drivers/spi/spi.c                                 | 4 ++++
->  include/linux/spi/spi.h                           | 1 +
->  3 files changed, 6 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/spi/spi-bus.txt b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> index 1f6e86f787ef..a5f20060676d 100644
-> --- a/Documentation/devicetree/bindings/spi/spi-bus.txt
-> +++ b/Documentation/devicetree/bindings/spi/spi-bus.txt
-> @@ -77,6 +77,7 @@ All slave nodes can contain the following optional properties:
->                     Defaults to 1 if not present.
->  - spi-rx-delay-us - Microsecond delay after a read transfer.
->  - spi-tx-delay-us - Microsecond delay after a write transfer.
-> +- spi-word-delay-us - Microsecond delay between individual words of a transfer
->
->  Some SPI controllers and devices support Dual and Quad SPI transfer mode.
->  It allows data in the SPI system to be transferred using 2 wires (DUAL) or 4
-> diff --git a/drivers/spi/spi.c b/drivers/spi/spi.c
-> index 9a7def7c3237..cd4d4065eca2 100644
-> --- a/drivers/spi/spi.c
-> +++ b/drivers/spi/spi.c
-> @@ -1692,6 +1692,10 @@ static int of_spi_parse_dt(struct spi_controller *ctlr, struct spi_device *spi,
->         }
->         spi->max_speed_hz = value;
->
-> +       if (!of_property_read_u32(nc, "spi-word-delay-us", &value)) {
-> +               spi->word_delay = value;
-> +       }
-> +
->         return 0;
->  }
->
-> diff --git a/include/linux/spi/spi.h b/include/linux/spi/spi.h
-> index 314d922ca607..e5200dd9d750 100644
-> --- a/include/linux/spi/spi.h
-> +++ b/include/linux/spi/spi.h
-> @@ -164,6 +164,7 @@ struct spi_device {
->         char                    modalias[SPI_NAME_SIZE];
->         const char              *driver_override;
->         int                     cs_gpio;        /* chip select gpio */
-> +       uint16_t                word_delay;     /* inter-word delay (us) */
->
->         /* the statistics */
->         struct spi_statistics   statistics;
-> --
-> 2.19.1
->
-
-
--- 
-Baolin Wang
-Best Regards
+Ck9uIDI1LzAxLzIwMTkgMDM6MjMsIEpvc2VwaCBMbyB3cm90ZToKPiBIaSBKb24sCj4gCj4gVGhh
+bmtzIGZvciByZXZpZXdpbmcuCj4gCj4gT24gMS8yNC8xOSA2OjMwIFBNLCBKb24gSHVudGVyIHdy
+b3RlOgo+Pgo+PiBPbiAwNy8wMS8yMDE5IDAzOjI4LCBKb3NlcGggTG8gd3JvdGU6Cj4+PiBUaGUg
+VGVncmEyMTAgdGltZXIgcHJvdmlkZXMgZm91cnRlZW4gMjktYml0IHRpbWVyIGNvdW50ZXJzIGFu
+ZCBvbmUKPj4+IDMyLWJpdAo+Pj4gdGltZXN0YW1wIGNvdW50ZXIuIFRoZSBUTVJzIHJ1biBhdCBl
+aXRoZXIgYSBmaXhlZCAxIE1IeiBjbG9jayByYXRlCj4+PiBkZXJpdmVkCj4+PiBmcm9tIHRoZSBv
+c2NpbGxhdG9yIGNsb2NrIChUTVIwLVRNUjkpIG9yIGRpcmVjdGx5IGF0IHRoZSBvc2NpbGxhdG9y
+Cj4+PiBjbG9jawo+Pj4gKFRNUjEwLVRNUjEzKS4gRWFjaCBUTVIgY2FuIGJlIHByb2dyYW1tZWQg
+dG8gZ2VuZXJhdGUgb25lLXNob3QgcGVyaW9kaWMsCj4+PiBvciB3YXRjaGRvZyBpbnRlcnJ1cHRz
+Lgo+Pj4KPj4+IENjOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4K
+Pj4+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4KPj4+IENjOiBsaW51
+eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
+cmcKPj4+IFNpZ25lZC1vZmYtYnk6IEpvc2VwaCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+Pj4g
+LS0tCj4+PiDCoCAuLi4vYmluZGluZ3MvdGltZXIvbnZpZGlhLHRlZ3JhMjEwLXRpbWVyLnR4dMKg
+IHwgMjUgKysrKysrKysrKysrKysrKysrKwo+Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDI1IGluc2Vy
+dGlvbnMoKykKPj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4gRG9jdW1lbnRhdGlvbi9kZXZp
+Y2V0cmVlL2JpbmRpbmdzL3RpbWVyL252aWRpYSx0ZWdyYTIxMC10aW1lci50eHQKPj4+Cj4+PiBk
+aWZmIC0tZ2l0Cj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9u
+dmlkaWEsdGVncmEyMTAtdGltZXIudHh0Cj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
+aW5kaW5ncy90aW1lci9udmlkaWEsdGVncmEyMTAtdGltZXIudHh0Cj4+PiBuZXcgZmlsZSBtb2Rl
+IDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5iYTUxMTIyMGE2NjkKPj4+IC0tLSAvZGV2
+L251bGwKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9u
+dmlkaWEsdGVncmEyMTAtdGltZXIudHh0Cj4+PiBAQCAtMCwwICsxLDI1IEBACj4+PiArTlZJRElB
+IFRlZ3JhMjEwIHRpbWVyCj4+PiArCj4+PiArVGhlIFRlZ3JhMjEwIHRpbWVyIHByb3ZpZGVzIGZv
+dXJ0ZWVuIDI5LWJpdCB0aW1lciBjb3VudGVycyBhbmQgb25lCj4+PiAzMi1iaXQKPj4+ICt0aW1l
+c3RhbXAgY291bnRlci4gVGhlIFRNUnMgcnVuIGF0IGVpdGhlciBhIGZpeGVkIDEgTUh6IGNsb2Nr
+IHJhdGUKPj4+IGRlcml2ZWQKPj4+ICtmcm9tIHRoZSBvc2NpbGxhdG9yIGNsb2NrIChUTVIwLVRN
+UjkpIG9yIGRpcmVjdGx5IGF0IHRoZSBvc2NpbGxhdG9yCj4+PiBjbG9jawo+Pj4gKyhUTVIxMC1U
+TVIxMykuIEVhY2ggVE1SIGNhbiBiZSBwcm9ncmFtbWVkIHRvIGdlbmVyYXRlIG9uZS1zaG90LAo+
+Pj4gcGVyaW9kaWMsCj4+PiArb3Igd2F0Y2hkb2cgaW50ZXJydXB0cy4KPj4+ICsKPj4+ICtSZXF1
+aXJlZCBwcm9wZXJ0aWVzOgo+Pj4gKy0gY29tcGF0aWJsZSA6ICJudmlkaWEsdGVncmEyMTAtdGlt
+ZXIiLgo+Pj4gKy0gcmVnIDogU3BlY2lmaWVzIGJhc2UgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6
+ZSBvZiB0aGUgcmVnaXN0ZXJzLgo+Pj4gKy0gaW50ZXJydXB0cyA6IEEgbGlzdCBvZiA0IGludGVy
+cnVwdHM7IG9uZSBwZXIgZWFjaCBvZiBUTVIxMCB0aHJvdWdoCj4+PiBUTVIxMy4KPj4KPj4gV2h5
+IGRvIHdlIG9ubHkgYWRkIHRoZSBpbnRlcnJ1cHRzIGZvciBUTVIxMCAtIFRNUjEzPyBXaGF0IGFi
+b3V0IHRoZQo+PiBvdGhlcnM/Cj4+Cj4gCj4gVGhlIG90aGVycyAoVE1SMC1UTVI5KSBhcmUgb2Nj
+dXBpZWQgZm9yIG90aGVyIHVzYWdlcy4gVE1SNSBpcyBvY2N1cGllZAo+IGZvciB0aGUgd2F0Y2hk
+b2cgdGltZXIgaW4gdGhlIHVwc3RyZWFtIGtlcm5lbC4gQW5kIG90aGVycyAoc3RpbGwgaW4KPiBU
+TVIwLVRNUjkpIGFyZSBvY2N1cGllZCBmb3IgZGlmZmVyZW50IHVzYWdlcyBpbiBvdXIgZG93bnN0
+cmVhbSBrZXJuZWwuCgpXaGVyZSBpcyBUTVI1IHJlc2VydmVkIGZvciB0aGUgd2F0Y2hkb2c/IEkg
+ZG9uJ3Qgc2VlIHRoaXM/Cgo+IEFuZCBub3RpY2UgdGhhdCBvbmx5IFRNUjEwLVRNUjEzIGFyZSBy
+dW5uaW5nIGF0IHRoZSBvc2NpbGxhdG9yIGNsb2NrCj4gKGNsa19tKS4gV2l0aCB0aGUgVGVncmEy
+MTAgdGltZXIgZHJpdmVyLCB3ZSBpbnRyb2R1Y2UgaW4gdGhpcyBzZXJpZXMsCj4gd2hpY2ggb25s
+eSByZXBsYWNlIHRoZSBjbG9jayBldmVudCBkZXZpY2UgZnVuY3Rpb24gdGhhdCB3YXMgb3JpZ2lu
+YWxseQo+IG93bmVkIGJ5IHRoZSBhcmNoIHRpbWVyIChhcm12OCB0aW1lcikgYW5kIGl0IGFsc28g
+cnVubmluZyBhdCB0aGUKPiBvc2NpbGxhdG9yIGNsb2NrLiBUaGUgc2NoZWRfdGltZXIgc3RpbGwg
+b3ducyBieSB0aGUgYXJjaCB0aW1lci4gU28gdGhlCj4gdGltZXIgcmVzb2x1dGlvbiB3aWxsIGJl
+IHRoZSBzYW1lLiBUaGF0J3Mgd2h5IHdlIGNob29zZSBUTVIxMC1UTVIxMyBhcwo+IHRoZSB0aW1l
+ciBmb3IgVGVncmEyMTAuCgpUaGF0IG1heWJlIGZpbmUsIGJ1dCBEVCBzaG91bGQgZGVzY3JpYmUg
+dGhlIGhhcmR3YXJlIGFuZCBzbyBJIGRvbid0IHNlZQp3aHkgd2Ugd291bGQgbm90IGxpc3QgYWxs
+IHRoZSBpbnRlcnJ1cHRzLiBXZSBjYW4gc3RpbGwgb25seSB1c2UgVE1SMTAtMTMKaW4gdGhlIGRy
+aXZlci4KCkNoZWVycwpKb24KCi0tIApudnB1YmxpYwoKX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
+dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
+b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
