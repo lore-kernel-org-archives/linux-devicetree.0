@@ -1,66 +1,89 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
- driver
-Date: Fri, 25 Jan 2019 11:05:30 +0100
-Message-ID: <20190125110530.0ff11a54@xps13>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
-        <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH] r8169: Load MAC address from device tree if present
+Date: Fri, 25 Jan 2019 11:18:14 +0100
+Message-ID: <20190125101814.6262-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: "David S. Miller" <davem@davemloft.net>
+Cc: Heiner Kallweit <hkallweit1@gmail.com>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
+From: Thierry Reding <treding@nvidia.com>
 
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
-17:05:09 +0000:
+If the system was booted using a device tree and if the device tree
+contains a MAC address, use it instead of reading one from the EEPROM.
+This is useful in situations where the EEPROM isn't properly programmed
+or where the firmware wants to override the existing MAC address.
 
-> On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:
-> > Hello,
-> > 
-> > As part of an effort to bring suspend to RAM support to Armada 3700
-> > SoCs (main target: ESPRESSObin), this series handles the work around
-> > the PCIe IP.
-> > 
-> > First, more configuration is done in the 'setup' helper as inspired
-> > from the U-Boot driver. This is needed to entirely initialize the IP
-> > during future resume operation (patch 1).
-> > 
-> > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
-> > current device trees do not provide the corresponding properties, not
-> > finding one of these properties is not an error and just produces a
-> > warning. However, if the property is present, an error during PHY
-> > initialization will fail the probe of the driver.
-> > 
-> > Note: To be sure the clock will be resumed before this driver, a first
-> > series adding links between clocks and consumers has been submitted,
-> > see [1]. Anyway, having the clock series applied first is not needed.  
-> 
-> I do not understand what this means, in particular in relation
-> to the blocking clock calls in the suspend/resume NOIRQ hooks.
+Signed-off-by: Thierry Reding <treding@nvidia.com>
+---
+Based on net-next.
 
-I am not sure to understand your question.
+ drivers/net/ethernet/realtek/r8169.c | 35 +++++++++++++++++-----------
+ 1 file changed, 22 insertions(+), 13 deletions(-)
 
-As there are multiple points in this sentence I will detail each of
-them so please comment on the one which is bothering you:
-* I am working in parallel on a series adding device links to the clock
-  framework. This way when a driver consumes a clock, the clock
-  provider driver will be resumed first.
-* If the clock series I am talking about is applied after this one,
-  there is no build issue. Of course suspending the platform may
-  not work but this is a new feature so nothing will be broken.
-* Device links do not enforce any priority if the suspend/resume phase
-  between two drivers is not the same. The PCIe driver suspends in the
-  NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
-  suspend/resume callbacks must be promoted to the NOIRQ phase as well
-  (and this is part of another series). As of today there is
-  no alternative.
-
-
-Thanks,
-Miquèl
+diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+index f574b6b557f9..fd9edd643ca5 100644
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -6957,6 +6957,21 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
+ 	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
+ }
+ 
++static void rtl_read_mac_address(struct rtl8169_private *tp,
++				 u8 mac_addr[ETH_ALEN])
++{
++	/* Get MAC address */
++	switch (tp->mac_version) {
++	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
++	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
++		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
++		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
++		break;
++	default:
++		break;
++	}
++}
++
+ DECLARE_RTL_COND(rtl_link_list_ready_cond)
+ {
+ 	return RTL_R8(tp, MCU) & LINK_LIST_RDY;
+@@ -7148,6 +7163,7 @@ static int rtl_get_ether_clk(struct rtl8169_private *tp)
+ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ {
+ 	const struct rtl_cfg_info *cfg = rtl_cfg_infos + ent->driver_data;
++	u8 mac_addr[ETH_ALEN] __aligned(4);
+ 	struct rtl8169_private *tp;
+ 	struct net_device *dev;
+ 	int chipset, region, i;
+@@ -7252,20 +7268,13 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+ 	u64_stats_init(&tp->rx_stats.syncp);
+ 	u64_stats_init(&tp->tx_stats.syncp);
+ 
+-	/* Get MAC address */
+-	switch (tp->mac_version) {
+-		u8 mac_addr[ETH_ALEN] __aligned(4);
+-	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
+-	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
+-		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
+-		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
++	/* get MAC address */
++	if (eth_platform_get_mac_address(&pdev->dev, mac_addr))
++		rtl_read_mac_address(tp, mac_addr);
++
++	if (is_valid_ether_addr(mac_addr))
++		rtl_rar_set(tp, mac_addr);
+ 
+-		if (is_valid_ether_addr(mac_addr))
+-			rtl_rar_set(tp, mac_addr);
+-		break;
+-	default:
+-		break;
+-	}
+ 	for (i = 0; i < ETH_ALEN; i++)
+ 		dev->dev_addr[i] = RTL_R8(tp, MAC0 + i);
+ 
+-- 
+2.19.1
