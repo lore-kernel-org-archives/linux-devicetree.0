@@ -1,192 +1,148 @@
-From: =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>
-Subject: [PATCH 2/4] input: misc: gp2a: Add support for light sensor
-Date: Fri, 25 Jan 2019 18:50:43 +0100
-Message-ID: <20190125175045.22576-3-pawel.mikolaj.chmiel@gmail.com>
-References: <20190125175045.22576-1-pawel.mikolaj.chmiel@gmail.com>
+From: Vishal Sagar <vishal.sagar@xilinx.com>
+Subject: [PATCH v2 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2 Rx Subsystem
+Date: Fri, 25 Jan 2019 23:22:56 +0530
+Message-ID: <1548438777-11203-2-git-send-email-vishal.sagar@xilinx.com>
+References: <1548438777-11203-1-git-send-email-vishal.sagar@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125175045.22576-1-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <1548438777-11203-1-git-send-email-vishal.sagar@xilinx.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: dmitry.torokhov@gmail.com
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, colyli@suse.de, ckeepax@opensource.wolfsonmicro.com, andrew.smirnov@gmail.com, arnd@arndb.de, xiaotong.lu@spreadtrum.com, xc-racer2@live.ca, pawel.mikolaj.chmiel@gmail.com, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: hyun.kwon@xilinx.com, laurent.pinchart@ideasonboard.com, mchehab@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, linux-media@vger.kernel.org, devicetree@vger.kernel.org, sakari.ailus@linux.intel.com, hans.verkuil@cisco.com
+Cc: linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, dineshk@xilinx.com, sandipk@xilinx.com, Vishal Sagar <vishal.sagar@xilinx.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Jonathan Bakker <xc-racer2@live.ca>
+Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
 
-The gp2a driver previously only supported the proximity part of the
-sensor while the hardware supports both.
+The Xilinx MIPI CSI-2 Rx Subsystem consists of a CSI-2 Rx controller, a
+DPHY in Rx mode, an optional I2C controller and a Video Format Bridge.
 
-Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
 ---
- drivers/input/misc/Kconfig         |  2 +
- drivers/input/misc/gp2ap002a00f.c  | 71 +++++++++++++++++++++++++++++-
- include/linux/input/gp2ap002a00f.h |  4 ++
- 3 files changed, 76 insertions(+), 1 deletion(-)
+v2
+- updated the compatible string to latest version supported
+- removed DPHY related parameters
+- added CSI v2.0 related property (including VCX for supporting upto 16
+  virtual channels).
+- modified csi-pxl-format from string to unsigned int type where the value
+  is as per the CSI specification
+- Defined port 0 and port 1 as sink and source ports.
+- Removed max-lanes property as suggested by Rob and Sakari
 
-diff --git a/drivers/input/misc/Kconfig b/drivers/input/misc/Kconfig
-index ca59a2be9bc5..a532efb4e6d8 100644
---- a/drivers/input/misc/Kconfig
-+++ b/drivers/input/misc/Kconfig
-@@ -252,6 +252,8 @@ config INPUT_GP2A
- 	tristate "Sharp GP2AP002A00F I2C Proximity/Opto sensor driver"
- 	depends on I2C
- 	depends on GPIOLIB || COMPILE_TEST
-+	depends on IIO
-+	select INPUT_POLLDEV
- 	help
- 	  Say Y here if you have a Sharp GP2AP002A00F proximity/als combo-chip
- 	  hooked to an I2C bus.
-diff --git a/drivers/input/misc/gp2ap002a00f.c b/drivers/input/misc/gp2ap002a00f.c
-index 79c8c4c56d1a..090c8c313295 100644
---- a/drivers/input/misc/gp2ap002a00f.c
-+++ b/drivers/input/misc/gp2ap002a00f.c
-@@ -10,9 +10,12 @@
-  */
- 
- #include <linux/i2c.h>
-+#include <linux/iio/consumer.h>
-+#include <linux/iio/iio.h>
- #include <linux/irq.h>
- #include <linux/slab.h>
- #include <linux/input.h>
-+#include <linux/input-polldev.h>
- #include <linux/module.h>
- #include <linux/interrupt.h>
- #include <linux/gpio.h>
-@@ -20,7 +23,9 @@
- #include <linux/input/gp2ap002a00f.h>
- 
- struct gp2a_data {
-+	struct iio_channel *channel;
- 	struct input_dev *input;
-+	struct input_polled_dev *poll_dev;
- 	const struct gp2a_platform_data *pdata;
- 	struct i2c_client *i2c_client;
- };
-@@ -58,6 +63,19 @@ static irqreturn_t gp2a_irq(int irq, void *handle)
- 	return IRQ_HANDLED;
- }
- 
-+static void gp2a_poll(struct input_polled_dev *dev)
-+{
-+	struct gp2a_data *dt = dev->private;
-+	int ret, value;
+ .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 105 +++++++++++++++++++++
+ 1 file changed, 105 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+
+diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+new file mode 100644
+index 0000000..98781cf
+--- /dev/null
++++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
+@@ -0,0 +1,105 @@
++Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
++--------------------------------------------------------
 +
-+	ret = iio_read_channel_processed(dt->channel, &value);
-+	if (ret < 0)
-+		dev_err(&dt->i2c_client->dev, "failed to read value!");
++The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
++from compliant camera sensors and send the output as AXI4 Stream video data
++for image processing.
 +
-+	input_report_abs(dev->input, ABS_MISC, value);
-+	input_sync(dev->input);
-+}
++The subsystem consists of a MIPI DPHY in slave mode which captures the
++data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
++packet data. The Video Format Bridge (VFB) converts this data to AXI4 Stream
++video data.
 +
- static int gp2a_enable(struct gp2a_data *dt)
- {
- 	return i2c_smbus_write_byte_data(dt->i2c_client, GP2A_ADDR_OPMOD,
-@@ -127,7 +145,7 @@ static int gp2a_probe(struct i2c_client *client,
- {
- 	const struct gp2a_platform_data *pdata = dev_get_platdata(&client->dev);
- 	struct gp2a_data *dt;
--	int error;
-+	int error, value;
- 
- 	if (!pdata)
- 		return -EINVAL;
-@@ -152,6 +170,49 @@ static int gp2a_probe(struct i2c_client *client,
- 	dt->pdata = pdata;
- 	dt->i2c_client = client;
- 
-+	dt->channel = devm_iio_channel_get(&client->dev, "light");
-+	if (!IS_ERR(dt->channel)) {
-+		if (!dt->channel->indio_dev) {
-+			error = -ENXIO;
-+			goto err_hw_shutdown;
-+		}
++For more details, please refer to PG232 Xilinx MIPI CSI-2 Receiver Subsystem.
 +
-+		if (dt->pdata->light_adc_max <= 0 ||
-+			dt->pdata->light_adc_fuzz <= 0) {
-+			error = -EINVAL;
-+			goto err_hw_shutdown;
-+		}
++Required properties:
++--------------------
++- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-4.0".
++- reg: Physical base address and length of the registers set for the device.
++- interrupt-parent: specifies the phandle to the parent interrupt controller
++- interrupts: Property with a value describing the interrupt number.
++- clocks: List of phandles to AXI Lite, Video and 200 MHz DPHY clocks.
++- clock-names: Must contain "lite_aclk", "video_aclk" and "dphy_clk_200M" in
++  the same order as clocks listed in clocks property.
++- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
++  Packets other than this data type (except for RAW8 and User defined data
++  types) will be filtered out. Possible values are as below -
++  0x1E - YUV4228B
++  0x1F - YUV42210B
++  0x20 - RGB444
++  0x21 - RGB555
++  0x22 - RGB565
++  0x23 - RGB666
++  0x24 - RGB888
++  0x28 - RAW6
++  0x29 - RAW7
++  0x2A - RAW8
++  0x2B - RAW10
++  0x2C - RAW12
++  0x2D - RAW14
++  0x2E - RAW16
++  0x2F - RAW20
++- xlnx,vfb: This is present when Video Format Bridge is enabled.
 +
-+		dt->poll_dev = devm_input_allocate_polled_device(&client->dev);
-+		if (!dt->poll_dev) {
-+			dev_err(&client->dev,
-+				"failed to allocate polled input device");
-+			error = -ENOMEM;
-+			goto err_hw_shutdown;
-+		}
++Optional properties:
++--------------------
++- xlnx,en-csi-v2-0: Present if CSI v2 is enabled in IP configuration.
++- xlnx,en-vcx: When present, there are maximum 16 virtual channels, else
++  only 4. This is present only if xlnx,en-csi-v2-0 is present.
++- xlnx,en-active-lanes: Enable Active lanes configuration in Protocol
++  Configuration Register.
++- xlnx,cfa-pattern: This goes in the sink port to indicate bayer pattern.
++  Valid values are "bggr", "rggb", "gbrg" and "grbg".
 +
-+		if (!device_property_read_u32(&client->dev, "poll-interval",
-+					      &value))
-+			dt->poll_dev->poll_interval = value;
++Ports
++-----
++The device node shall contain two 'port' child nodes as defined in
++Documentation/devicetree/bindings/media/video-interfaces.txt.
 +
-+		dt->poll_dev->poll = gp2a_poll;
-+		dt->poll_dev->private = dt;
++The port@0 is sink port and shall connect to CSI2 source like camera.
++It must have the data-lanes property. It may have the xlnx,cfa-pattern
++property to indicate bayer pattern of source.
 +
-+		dt->poll_dev->input->name = GP2A_I2C_NAME;
++The port@1 is source port could be connected to any video processing IP
++which can work with AXI4 Stream data.
 +
-+		input_set_capability(dt->poll_dev->input, EV_ABS, ABS_MISC);
-+		input_set_abs_params(dt->poll_dev->input, ABS_MISC, 0,
-+				     dt->pdata->light_adc_max,
-+				     dt->pdata->light_adc_fuzz, 0);
++Both ports must have remote-endpoints.
 +
-+		error = input_register_polled_device(dt->poll_dev);
-+		if (error)
-+			goto err_hw_shutdown;
-+	} else if (PTR_ERR(dt->channel) == -EPROBE_DEFER) {
-+		error = -EPROBE_DEFER;
-+		goto err_hw_shutdown;
-+	}
++Example:
 +
- 	error = gp2a_initialize(dt);
- 	if (error < 0)
- 		goto err_hw_shutdown;
-@@ -203,6 +264,8 @@ static int gp2a_remove(struct i2c_client *client)
- 	const struct gp2a_platform_data *pdata = dt->pdata;
- 
- 	input_unregister_device(dt->input);
-+	if (dt->poll_dev)
-+		input_unregister_polled_device(dt->poll_dev);
- 
- 	if (pdata->hw_shutdown)
- 		pdata->hw_shutdown(client);
-@@ -243,6 +306,12 @@ static int __maybe_unused gp2a_resume(struct device *dev)
- 		mutex_unlock(&dt->input->mutex);
- 	}
- 
-+	if (dt->poll_dev) {
-+		/* Out of range value so real value goes through next */
-+		input_abs_set_val(dt->poll_dev->input, ABS_MISC,
-+				  -dt->pdata->light_adc_max);
-+	}
++	csiss_1: csiss@a0020000 {
++		compatible = "xlnx,mipi-csi2-rx-subsystem-4.0";
++		reg = <0x0 0xa0020000 0x0 0x10000>;
++		interrupt-parent = <&gic>;
++		interrupts = <0 95 4>;
++		xlnx,csi-pxl-format = <0x2a>;
++		xlnx,vfb;
++		xlnx,en-active-lanes;
++		xlnx,en-csi-v2-0;
++		xlnx,en-vcx;
++		clock-names = "lite_aclk", "dphy_clk_200M", "video_aclk";
++		clocks = <&misc_clk_0>, <&misc_clk_1>, <&misc_clk_2>;
 +
- 	return retval;
- }
- 
-diff --git a/include/linux/input/gp2ap002a00f.h b/include/linux/input/gp2ap002a00f.h
-index 3614a13a8297..0212948897b4 100644
---- a/include/linux/input/gp2ap002a00f.h
-+++ b/include/linux/input/gp2ap002a00f.h
-@@ -12,12 +12,16 @@
-  * @wakeup: Set to true if the proximity can wake the device from suspend
-  * @hw_setup: Callback for setting up hardware such as gpios and vregs
-  * @hw_shutdown: Callback for properly shutting down hardware
-+ * @light_adc_max: Maximum adc value the light sensor will read
-+ * @light_adc_fuzz: Fuzz value for light adc sensor
-  */
- struct gp2a_platform_data {
- 	int vout_gpio;
- 	bool wakeup;
- 	int (*hw_setup)(struct i2c_client *client);
- 	int (*hw_shutdown)(struct i2c_client *client);
-+	int light_adc_max;
-+	int light_adc_fuzz;
- };
- 
- #endif
++		ports {
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			port@0 {
++				/* Sink port */
++				reg = <0>;
++				xlnx,cfa-pattern = "bggr"
++				csiss_in: endpoint {
++					data-lanes = <1 2 3 4>;
++					/* MIPI CSI2 Camera handle */
++					remote-endpoint = <&camera_out>;
++				};
++			};
++			port@1 {
++				/* Source port */
++				reg = <1>;
++				csiss_out: endpoint {
++					remote-endpoint = <&vproc_in>;
++				};
++			};
++		};
++	};
 -- 
-2.17.1
+2.7.4
