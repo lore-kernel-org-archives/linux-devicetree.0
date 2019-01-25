@@ -1,69 +1,52 @@
-From: Heiner Kallweit <hkallweit1@gmail.com>
-Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Fri, 25 Jan 2019 20:27:16 +0100
-Message-ID: <3e09ef54-f817-2659-4e9e-74a88a80cbcc@gmail.com>
-References: <20190125125513.23656-1-ccaione@baylibre.com>
- <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
- <20190125184330.dm3kaoewvbwddacy@xps>
- <a8b8e82f-2b68-ed9d-6106-0542dddc1181@gmail.com>
- <20190125191947.um4w4e5jpsv2kcxc@e5254000004ec.dyn.armlinux.org.uk>
+From: Mike Rapoport <rppt@linux.ibm.com>
+Subject: Re: [PATCH v2 06/21] memblock: memblock_phys_alloc_try_nid(): don't
+ panic
+Date: Fri, 25 Jan 2019 21:32:52 +0200
+Message-ID: <20190125193252.GH31519@rapoport-lnx>
+References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
+ <1548057848-15136-7-git-send-email-rppt@linux.ibm.com>
+ <20190125174502.GL25901@arrakis.emea.arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190125191947.um4w4e5jpsv2kcxc@e5254000004ec.dyn.armlinux.org.uk>
-Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, Carlo Caione <ccaione@baylibre.com>, robh+dt@kernel.org, abailon@baylibre.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, linux-imx@nxp.com
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125174502.GL25901@arrakis.emea.arm.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Catalin Marinas <catalin.marinas@arm.com>
+Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Russell
 List-Id: devicetree@vger.kernel.org
 
-T24gMjUuMDEuMjAxOSAyMDoxOSwgUnVzc2VsbCBLaW5nIC0gQVJNIExpbnV4IGFkbWluIHdyb3Rl
-Ogo+IE9uIEZyaSwgSmFuIDI1LCAyMDE5IGF0IDA4OjA3OjU2UE0gKzAxMDAsIEhlaW5lciBLYWxs
-d2VpdCB3cm90ZToKPj4gT24gMjUuMDEuMjAxOSAxOTo0OCwgQ2FybG8gQ2Fpb25lIHdyb3RlOgo+
-Pj4gT24gMjUvMDEvMTkgMTM6MDYsIFJ1c3NlbGwgS2luZyAtIEFSTSBMaW51eCBhZG1pbiB3cm90
-ZToKPj4+PiBPbiBGcmksIEphbiAyNSwgMjAxOSBhdCAxMjo1NToxMFBNICswMDAwLCBDYXJsbyBD
-YWlvbmUgd3JvdGU6Cj4+Pj4+IFNtYXJ0RUVFLCBjb21wYXRpYmxlIHdpdGggSUVFRTgwMi4zYXog
-c3RhbmRhcmQsIGlzIGRlc2lnbmVkIHRvIGluY2x1ZGUKPj4+Pj4gbGVnYWN5IE1BQyB3aXRob3V0
-IEVFRSBjYXBhYmlsaXR5IGludG8gdGhlIHBvd2VyIHNhdmluZyBzeXN0ZW0uIFNtYXJ0RUVFCj4+
-Pj4+IGlzIGVuYWJsZWQgYnkgZGVmYXVsdCBjb25maWd1cmF0aW9uIG9uIEFSODAzMSBhZnRlciBw
-b3dlci1vbiBvciBoYXJkd2FyZQo+Pj4+PiByZXNldC4KPj4+Pj4KPj4+Pj4gVW5mb3J0dW5hdGVs
-eSB0aGlzIGlzIHByb3ZlZCBjYXVzaW5nIGlzc3VlcyBmb3IgY2VydGFpbiBodwo+Pj4+PiBjb25m
-aWd1cmF0aW9ucy7CoCBXZSBhZGQgYSBxdWlyayB0byBvcHRpb25hbGx5IGRpc2FibGUgU21hcnRF
-RUUuCj4+Pj4KPj4+PiBJdCBtYXkgYmUgYSBnb29kIGlkZWEgdG8gZGV0YWlsIHdoYXQgImNlcnRh
-aW4gaHcgY29uZmlndXJhdGlvbnMiIGFyZQo+Pj4+IGFuZC9vciB3aGF0IHRoZSAiaXNzdWVzIiBh
-cmUsIHNvIGl0J3MgZWFzaWVyIHRvIGZpbmQgdGhpcyBpZi93aGVuCj4+Pj4gb3RoZXJzIGVuY291
-bnRlciB0aGUgc2FtZSBpc3N1ZS4KPj4+Cj4+PiBUaGlzIGZpeCB3YXMgdXBzdHJlYW1lZCBmcm9t
-IHRoZSBpbXggZG93bnN0cmVhbSBrZXJuZWwgc28gSSBkbyBub3QgaGF2ZSBtdWNoIGluZm9ybWF0
-aW9ucyBvbiB0aGF0IGJ1dCBzb21ldGhpbmcgaXMgcmVwb3J0ZWQgaW4gdGhlIFUtQm9vdCBmaXgg
-Zm9yIHRoZSBzYW1lIHByb2JsZW0gYXQgWzBdIHNvIEknbGwgYWRkIG1vcmUgaW5mbyBpbiB0aGUg
-bmV4dCByZXZpc2lvbi4KPj4+Cj4+PiBDaGVlcnMsCj4+Pgo+Pj4gWzBdIGh0dHBzOi8vcGF0Y2h3
-b3JrLm96bGFicy5vcmcvcGF0Y2gvMTAxNTc4My8KPj4+Cj4+IFRoYW5rcyBmb3IgdGhlIGxpbmsu
-IEFjY29yZGluZyB0byB0aGUgZGVzY3JpcHRpb24gU21hcnRFRUUgd29ya3Mgb25seSBpZgo+PiBi
-b3RoIGxpbmsgcGFydG5lcnMgc3VwcG9ydCBpdCAoaGVuY2UgYXJlIEF0aGVyb3MgUEhZJ3MpLiBJ
-IHdvdWxkIGFzc3VtZQo+PiB0aGF0IHRoaXMgdXN1YWxseSBpc24ndCB0aGUgY2FzZSwgc2hvdWxk
-bid0IHRoZSBmZWF0dXJlIGJlIGFuIG9wdC1pbgo+PiB0aGVyZWZvcmU/Cj4gCj4gSSdtIG5vdCBj
-b252aW5jZWQgYWJvdXQgdGhhdCAtIEkndmUgYmVlbiB1c2luZyBBdGhlck9TIFNtYXJ0RUVFIHdp
-dGgKPiBpLk1YNiBmb3IgcXVpdGUgc29tZSB0aW1lIChJIGhhdmUgcGF0Y2hlcyB3aGljaCBhbGxv
-dyBtZSB0byByZWFkIG91dAo+IHRoZSBzdGF0cyB2aWEgZXRodG9vbCwgYW5kIGNvbmZpZ3VyZSBp
-dCAtIHRoZXkncmUgc3BlY2lmaWMgdG8gdGhlCj4gRkVDIGRyaXZlciB0aG91Z2guKSAgU21hcnRF
-RUUgd29ya3MganVzdCBsaWtlIEVFRSBmb3IgbWUsIGFuZCBJCj4gbm90aWNlIG5vIHByb2JsZW1z
-Lgo+IAo+IEkgaGF2ZSBpLk1YNiBib2FyZHMgY29ubmVjdGVkIHRvIE5ldGdlYXIgR1MxMTYgYW5k
-IHNpbWlsYXIgc3dpdGNoZXMsCj4gYW5kIGFsc28gTWFydmVsbCBEU0Egc3dpdGNoZXMgb24gb3Ro
-ZXIgcGxhdGZvcm1zLgo+IAo+IFRoaXMgaXMgd2h5IEkgc2FpZCBhYm92ZSBhYm91dCAibW9yZSBk
-ZXRhaWwiLiAgVGhlbiBtYXliZSBmb2xrIHdvdWxkCj4ga25vdyB3aGF0IHRvIGxvb2sgZm9yIHRv
-IHNlZSB3aGV0aGVyIHRoZXJlIGlzIGEgcHJvYmxlbS4KPiAKT0ssIHRoZW4gdGhlIGRlc2NyaXB0
-aW9uIG9mIHRoZSByZWZlcmVuY2VkIHBhdGNoIGlzbid0IGZ1bGx5IGNvcnJlY3QKYW5kIFNtYXJ0
-RUVFIGFuZCBFRUUgYXJlIHBhcnRpYWxseSBjb21wYXRpYmxlLCBhbmQgdGhlIHByb2JsZW0gaXMK
-anVzdCB0aGF0IHdlIGRvbid0IGtub3cgZXhhY3RseSB0byB3aGljaCBleHRlbnQuCgpfX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fXwpsaW51eC1hcm0ta2VybmVs
-IG1haWxpbmcgbGlzdApsaW51eC1hcm0ta2VybmVsQGxpc3RzLmluZnJhZGVhZC5vcmcKaHR0cDov
-L2xpc3RzLmluZnJhZGVhZC5vcmcvbWFpbG1hbi9saXN0aW5mby9saW51eC1hcm0ta2VybmVsCg==
+On Fri, Jan 25, 2019 at 05:45:02PM +0000, Catalin Marinas wrote:
+> On Mon, Jan 21, 2019 at 10:03:53AM +0200, Mike Rapoport wrote:
+> > diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
+> > index ae34e3a..2c61ea4 100644
+> > --- a/arch/arm64/mm/numa.c
+> > +++ b/arch/arm64/mm/numa.c
+> > @@ -237,6 +237,10 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
+> >  		pr_info("Initmem setup node %d [<memory-less node>]\n", nid);
+> >  
+> >  	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
+> > +	if (!nd_pa)
+> > +		panic("Cannot allocate %zu bytes for node %d data\n",
+> > +		      nd_size, nid);
+> > +
+> >  	nd = __va(nd_pa);
+> >  
+> >  	/* report and initialize */
+> 
+> Does it mean that memblock_phys_alloc_try_nid() never returns valid
+> physical memory starting at 0?
+
+Yes, it does.
+memblock_find_in_range_node() that is used by all allocation methods
+skips the first page [1].
+ 
+[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/memblock.c#n257
+
+> -- 
+> Catalin
+> 
+
+-- 
+Sincerely yours,
+Mike.
