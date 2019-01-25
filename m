@@ -1,89 +1,53 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: [PATCH v4 09/10] ARM64: dts: marvell: armada-37xx: declare USB2 UTMI
- PHYs
-Date: Fri, 25 Jan 2019 11:39:23 +0100
-Message-ID: <20190125103925.15753-10-miquel.raynal@bootlin.com>
-References: <20190125103925.15753-1-miquel.raynal@bootlin.com>
+From: Lucas Stach <l.stach@pengutronix.de>
+Subject: Re: [PATCH 2/4] dt-bindings: irq: imx-irqsteer: add multi output
+ interrupts support
+Date: Fri, 25 Jan 2019 11:46:09 +0100
+Message-ID: <1548413169.28802.43.camel@pengutronix.de>
+References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
+         <1547797668-30342-3-git-send-email-aisheng.dong@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190125103925.15753-1-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Mathias Nyman <mathias.nyman@intel.com>, Alan Stern <stern@rowland.harvard.edu>
-Cc: devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, linux-usb@vger.kernel.org, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Miquel Raynal <miquel.raynal@bootlin.com>, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <1547797668-30342-3-git-send-email-aisheng.dong@nxp.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
 List-Id: devicetree@vger.kernel.org
 
-On Marvell Armada 3700 SoCs there are two USB2 UTMI PHYs. They are
-both very similar but only one has OTG/charging capabilities.
+Am Freitag, den 18.01.2019, 07:53 +0000 schrieb Aisheng Dong:
+> One irqsteer channel can support up to 8 output interrupts.
+> 
+> > Cc: Marc Zyngier <marc.zyngier@arm.com>
+> > Cc: Rob Herring <robh+dt@kernel.org>
+> > Cc: Lucas Stach <l.stach@pengutronix.de>
+> > Cc: Shawn Guo <shawnguo@kernel.org>
+> Cc: devicetree@vger.kernel.org
+> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
+> ---
+>  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt        | 5 +++--
+>  1 file changed, 3 insertions(+), 2 deletions(-)
+> 
+> diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> index eaabcda..beeed4a 100644
+> --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
+> @@ -6,8 +6,9 @@ Required properties:
+> >  	- "fsl,imx8m-irqsteer"
+> >  	- "fsl,imx-irqsteer"
+>  - reg: Physical base address and size of registers.
+> -- interrupts: Should contain the parent interrupt line used to multiplex the
+> -  input interrupts.
+> +- interrupts: Should contain the up to 8 parent interrupt lines used to
+> +  multiplex the input interrupts. They should be sepcified seqencially
+> +  from output 0 to 7. NOTE at least one output interrupt has to be specified.
 
-Because there are USB host registers and PHY registers mixed in a
-single area, a system controller is also created and referenced from
-both the USB host node and the PHY node.
+I don't think the note clarifies anything. Given that the thing is a
+irq multiplexer I don't think anyone expects that you could get away
+with no output irq.
 
-Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
----
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi | 28 ++++++++++++++++++++
- 1 file changed, 28 insertions(+)
+If anything this should specify that it's always groups of (up to) 64
+input irqs being muxed onto a single output irq.
 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index 5cfd1b920f31..d2d8ef00c592 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -344,18 +344,46 @@
- 				compatible = "marvell,armada3700-xhci",
- 				"generic-xhci";
- 				reg = <0x58000 0x4000>;
-+				marvell,usb-misc-reg = <&usb32_syscon>;
- 				interrupts = <GIC_SPI 3 IRQ_TYPE_LEVEL_HIGH>;
- 				clocks = <&sb_periph_clk 12>;
- 				status = "disabled";
- 			};
- 
-+			usb2_utmi_otg_phy: phy@5d000 {
-+				compatible = "marvell,a3700-utmi-otg-phy";
-+				reg = <0x5d000 0x800>;
-+				marvell,usb-misc-reg = <&usb32_syscon>;
-+				#phy-cells = <0>;
-+			};
-+
-+			usb32_syscon: system-controller@5d800 {
-+				compatible = "marvell,armada-3700-usb2-host-device-misc",
-+				"syscon";
-+				reg = <0x5d800 0x800>;
-+			};
-+
- 			usb2: usb@5e000 {
- 				compatible = "marvell,armada-3700-ehci";
- 				reg = <0x5e000 0x1000>;
-+				marvell,usb-misc-reg = <&usb2_syscon>;
- 				interrupts = <GIC_SPI 17 IRQ_TYPE_LEVEL_HIGH>;
- 				status = "disabled";
- 			};
- 
-+			usb2_utmi_host_phy: phy@5f000 {
-+				compatible = "marvell,a3700-utmi-host-phy";
-+				reg = <0x5f000 0x800>;
-+				marvell,usb-misc-reg = <&usb2_syscon>;
-+				#phy-cells = <0>;
-+			};
-+
-+			usb2_syscon: system-controller@5f800 {
-+				compatible = "marvell,armada-3700-usb2-host-misc",
-+				"syscon";
-+				reg = <0x5f800 0x800>;
-+			};
-+
- 			xor@60900 {
- 				compatible = "marvell,armada-3700-xor";
- 				reg = <0x60900 0x100>,
--- 
-2.19.1
+Regards,
+Lucas
