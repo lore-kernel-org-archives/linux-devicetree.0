@@ -1,7 +1,7 @@
 From: Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH 01/11] clk: sunxi-ng: sun8i-a23: Enable PLL-MIPI LDOs when ungating it
-Date: Fri, 25 Jan 2019 11:23:04 +0800
-Message-ID: <20190125032314.20915-2-wens@csie.org>
+Subject: [PATCH 03/11] drm/sun4i: backend: Remove BGRX8888 from list of supported formats
+Date: Fri, 25 Jan 2019 11:23:06 +0800
+Message-ID: <20190125032314.20915-4-wens@csie.org>
 References: <20190125032314.20915-1-wens@csie.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,30 +12,30 @@ To: Maxime Ripard <maxime.ripard@bootlin.com>, Michael Turquette <mturquette@bay
 Cc: Chen-Yu Tsai <wens@csie.org>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The PLL-MIPI clock is somewhat special as it has its own LDOs which
-need to be turned on for this PLL to actually work and output a clock
-signal.
+The display backend does not support BGRX8888. There is also no trace
+of this in the original list of supported formats before the commit
+b636d3f97d04 ("drm/sun4i: frontend: Add support for the BGRX8888 input
+format"). Nor do the backend configuration helpers handle this format.
 
-Add the 2 LDO enable bits to the gate bits.
+Remove BGRX8888 from list of supported formats by the backend.
 
-Fixes: 5690879d93e8 ("clk: sunxi-ng: Add A23 CCU")
+Fixes: 3d4265f89d06 ("drm/sun4i: backend: Add a helper and a list for supported formats")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/clk/sunxi-ng/ccu-sun8i-a23.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/gpu/drm/sun4i/sun4i_backend.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-index a4fa2945f230..4b5f8f4e4ab8 100644
---- a/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-+++ b/drivers/clk/sunxi-ng/ccu-sun8i-a23.c
-@@ -144,7 +144,7 @@ static SUNXI_CCU_NKM_WITH_GATE_LOCK(pll_mipi_clk, "pll-mipi",
- 				    8, 4,		/* N */
- 				    4, 2,		/* K */
- 				    0, 4,		/* M */
--				    BIT(31),		/* gate */
-+				    BIT(31) | BIT(23) | BIT(22), /* gate */
- 				    BIT(28),		/* lock */
- 				    CLK_SET_RATE_UNGATE);
- 
+diff --git a/drivers/gpu/drm/sun4i/sun4i_backend.c b/drivers/gpu/drm/sun4i/sun4i_backend.c
+index c17ec850b614..85e64d02fb5f 100644
+--- a/drivers/gpu/drm/sun4i/sun4i_backend.c
++++ b/drivers/gpu/drm/sun4i/sun4i_backend.c
+@@ -141,7 +141,6 @@ static const uint32_t sun4i_backend_formats[] = {
+ 	DRM_FORMAT_ARGB1555,
+ 	DRM_FORMAT_ARGB4444,
+ 	DRM_FORMAT_ARGB8888,
+-	DRM_FORMAT_BGRX8888,
+ 	DRM_FORMAT_RGB565,
+ 	DRM_FORMAT_RGB888,
+ 	DRM_FORMAT_RGBA4444,
 -- 
 2.20.1
