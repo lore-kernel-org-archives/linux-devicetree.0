@@ -1,11 +1,13 @@
 From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
-Date: Fri, 25 Jan 2019 12:55:10 +0000
-Message-ID: <20190125125513.23656-1-ccaione@baylibre.com>
+Subject: [PATCH 3/3] arm64: dts: imx8mq-evk: Disable SmartEEE
+Date: Fri, 25 Jan 2019 12:55:13 +0000
+Message-ID: <20190125125513.23656-4-ccaione@baylibre.com>
+References: <20190125125513.23656-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190125125513.23656-1-ccaione@baylibre.com>
 List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
  <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
 List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
@@ -19,27 +21,29 @@ To: andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, robh+dt@kernel.o
 Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-SmartEEE, compatible with IEEE802.3az standard, is designed to include
-legacy MAC without EEE capability into the power saving system. SmartEEE 
-is enabled by default configuration on AR8031 after power-on or hardware 
-reset.
+Disable SmartEEE mode (active by default) because this is known to cause
+issues on certain PHYs.
 
-Unfortunately this is proved causing issues for certain hw 
-configurations.  We add a quirk to optionally disable SmartEEE.
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+---
 
-PATCH 3/3 depends on https://patchwork.kernel.org/patch/10781297/
+This patch depends on https://patchwork.kernel.org/patch/10781297/
 
+---
+ arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Carlo Caione (3):
-  net: phy: at803x: Introduce quirk to disable SmartEEE
-  dt-bindings: net: at803x: Document at803x,smarteee-disabled property
-  arm64: dts: imx8mq-evk: Disable SmartEEE
-
- .../devicetree/bindings/net/at803x.txt        | 18 +++++++++++++++
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  1 +
- drivers/net/phy/at803x.c                      | 22 +++++++++++++++++++
- 3 files changed, 41 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/net/at803x.txt
-
+diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+index 02f6da92957f..f324fd1e78d0 100644
+--- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
++++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
+@@ -48,6 +48,7 @@
+ 		ethphy0: ethernet-phy@0 {
+ 			compatible = "ethernet-phy-ieee802.3-c22";
+ 			reg = <0>;
++			at803x,smarteee-disabled;
+ 		};
+ 	};
+ };
 -- 
 2.19.1
