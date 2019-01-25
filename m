@@ -1,100 +1,66 @@
-From: Miquel Raynal <miquel.raynal@bootlin.com>
-Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
- driver
-Date: Fri, 25 Jan 2019 13:57:57 +0100
-Message-ID: <20190125135757.6518191e@xps13>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
-        <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
-        <20190125110530.0ff11a54@xps13>
-        <20190125124011.GA16389@e107981-ln.cambridge.arm.com>
+From: Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Subject: Re: [PATCH 0/3] at803x: Add quirk to disable SmartEEE
+Date: Fri, 25 Jan 2019 13:06:13 +0000
+Message-ID: <20190125130612.npknjuzjmny4yohg@e5254000004ec.dyn.armlinux.org.uk>
+References: <20190125125513.23656-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125124011.GA16389@e107981-ln.cambridge.arm.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+Content-Disposition: inline
+In-Reply-To: <20190125125513.23656-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: mark.rutland@arm.com, andrew@lunn.ch, f.fainelli@gmail.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, abailon@baylibre.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, aisheng.dong@nxp.com, linux-arm-kernel@lists.infradead.org, hkallweit1@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-Hi Lorenzo,
-
-Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Fri, 25 Jan 2019
-12:40:11 +0000:
-
-> On Fri, Jan 25, 2019 at 11:05:30AM +0100, Miquel Raynal wrote:
-> > Hi Lorenzo,
-> > 
-> > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
-> > 17:05:09 +0000:
-> >   
-> > > On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:  
-> > > > Hello,
-> > > > 
-> > > > As part of an effort to bring suspend to RAM support to Armada 3700
-> > > > SoCs (main target: ESPRESSObin), this series handles the work around
-> > > > the PCIe IP.
-> > > > 
-> > > > First, more configuration is done in the 'setup' helper as inspired
-> > > > from the U-Boot driver. This is needed to entirely initialize the IP
-> > > > during future resume operation (patch 1).
-> > > > 
-> > > > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
-> > > > current device trees do not provide the corresponding properties, not
-> > > > finding one of these properties is not an error and just produces a
-> > > > warning. However, if the property is present, an error during PHY
-> > > > initialization will fail the probe of the driver.
-> > > > 
-> > > > Note: To be sure the clock will be resumed before this driver, a first
-> > > > series adding links between clocks and consumers has been submitted,
-> > > > see [1]. Anyway, having the clock series applied first is not needed.    
-> > > 
-> > > I do not understand what this means, in particular in relation
-> > > to the blocking clock calls in the suspend/resume NOIRQ hooks.  
-> > 
-> > I am not sure to understand your question.
-> > 
-> > As there are multiple points in this sentence I will detail each of
-> > them so please comment on the one which is bothering you:
-> > * I am working in parallel on a series adding device links to the clock
-> >   framework. This way when a driver consumes a clock, the clock
-> >   provider driver will be resumed first.
-> > * If the clock series I am talking about is applied after this one,
-> >   there is no build issue. Of course suspending the platform may
-> >   not work but this is a new feature so nothing will be broken.  
+On Fri, Jan 25, 2019 at 12:55:10PM +0000, Carlo Caione wrote:
+> SmartEEE, compatible with IEEE802.3az standard, is designed to include
+> legacy MAC without EEE capability into the power saving system. SmartEEE 
+> is enabled by default configuration on AR8031 after power-on or hardware 
+> reset.
 > 
-> Suspend to RAM will be broken if the clock is suspended and no
-> notification will happen in the NOIRQ phase, it is a new-broken-feature.
->
+> Unfortunately this is proved causing issues for certain hw 
+> configurations.  We add a quirk to optionally disable SmartEEE.
+
+It may be a good idea to detail what "certain hw configurations" are
+and/or what the "issues" are, so it's easier to find this if/when
+others encounter the same issue.
+
 > 
-> > * Device links do not enforce any priority if the suspend/resume phase
-> >   between two drivers is not the same. The PCIe driver suspends in the
-> >   NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
-> >   suspend/resume callbacks must be promoted to the NOIRQ phase as well
-> >   (and this is part of another series). As of today there is
-> >   no alternative.  
+> PATCH 3/3 depends on https://patchwork.kernel.org/patch/10781297/
 > 
-> I will merge this series when it works, I have no evidence that it does
-> given what you are writing above, if the series you mention are
-> *necessary* for suspend-to-RAM to work they ought to be merged first.
+> 
+> Carlo Caione (3):
+>   net: phy: at803x: Introduce quirk to disable SmartEEE
+>   dt-bindings: net: at803x: Document at803x,smarteee-disabled property
+>   arm64: dts: imx8mq-evk: Disable SmartEEE
+> 
+>  .../devicetree/bindings/net/at803x.txt        | 18 +++++++++++++++
+>  arch/arm64/boot/dts/freescale/imx8mq-evk.dts  |  1 +
+>  drivers/net/phy/at803x.c                      | 22 +++++++++++++++++++
+>  3 files changed, 41 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/net/at803x.txt
+> 
+> -- 
+> 2.19.1
+> 
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+> 
 
-I am working actively to bring A3700 SoC suspend to RAM support almost
-from scratch. 
-
-As of today I have contributed 65 patches spread in 8 series for the
-PHY, clk, PCIe, SATA, USB, pinctrl and net subsystems. Some of them
-have been merged, but the vast majority has not, yet.
-
-I mentioned this run-time dependency because it exists for people who
-would like to test just the PCIe IP. But S2RAM on A3700 will be a
-new-broken-feature until all patches are merged. While there is
-still one missing, the feature is broken. If everybody waits for
-the other patches to be merged first, it is gonna be a long process :)
-
-However, if you want to wait for the clock core series to be applied
-first I respect this choice and I will update you when it will be the
-case.
-
-
-Thanks,
-Miquèl
+-- 
+RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
+FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
+According to speedtest.net: 11.9Mbps down 500kbps up
