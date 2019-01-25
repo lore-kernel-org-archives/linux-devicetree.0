@@ -1,100 +1,54 @@
-From: Nicolin Chen <nicoleotsuka@gmail.com>
-Subject: Re: [PATCH v4 2/3] ASoC: add fsl_audmix DT binding documentation
-Date: Fri, 25 Jan 2019 11:43:16 -0800
-Message-ID: <20190125194315.GA21222@Asurada-Nvidia.nvidia.com>
-References: <1548155654-12985-1-git-send-email-viorel.suman@nxp.com>
- <1548155654-12985-3-git-send-email-viorel.suman@nxp.com>
-Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+From: Andreas Kemnade <andreas@kemnade.info>
+Subject: [PATCH] arm: dts: gta04: add gps support
+Date: Fri, 25 Jan 2019 20:43:10 +0100
+Message-ID: <20190125194310.11170-1-andreas@kemnade.info>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1548155654-12985-3-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Viorel Suman <viorel.suman@nxp.com>
-Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
+To: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
+Cc: Andreas Kemnade <andreas@kemnade.info>
 List-Id: devicetree@vger.kernel.org
 
-On Tue, Jan 22, 2019 at 11:14:27AM +0000, Viorel Suman wrote:
-> Add the DT binding documentation for NXP Audio Mixer
-> CPU DAI driver.
-> 
-> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
-> ---
->  .../devicetree/bindings/sound/fsl,audmix.txt       | 54 ++++++++++++++++++++++
->  1 file changed, 54 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/sound/fsl,audmix.txt b/Documentation/devicetree/bindings/sound/fsl,audmix.txt
-> new file mode 100644
-> index 0000000..45f807e
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/sound/fsl,audmix.txt
-> @@ -0,0 +1,54 @@
-> +NXP Audio Mixer (AUDMIX).
-> +
-> +The Audio Mixer is a on-chip functional module that allows mixing of two
-> +audio streams into a single audio stream. Audio Mixer has two input serial
-> +audio interfaces. These are driven by two Synchronous Audio interface
-> +modules (SAI). Each input serial interface carries 8 audio channels in its
-> +frame in TDM manner. Mixer mixes audio samples of corresponding channels
-> +from two interfaces into a single sample. Before mixing, audio samples of
-> +two inputs can be attenuated based on configuration. The output of the
-> +Audio Mixer is also a serial audio interface. Like input interfaces it has
-> +the same TDM frame format. This output is used to drive the serial DAC TDM
-> +interface of audio codec and also sent to the external pins along with the
-> +receive path of normal audio SAI module for readback by the CPU.
-> +
-> +The output of Audio Mixer can be selected from any of the three streams
-> + - serial audio input 1
-> + - serial audio input 2
-> + - mixed audio
-> +
-> +Mixing operation is independent of audio sample rate but the two audio
-> +input streams must have same audio sample rate with same number of channels
-> +in TDM frame to be eligible for mixing.
-> +
-> +Device driver required properties:
-> +=================================
-> +  - compatible		: Compatible list, contains "fsl,imx8qm-audmix"
-> +
-> +  - reg			: Offset and length of the register set for the device.
-> +
-> +  - clocks		: Must contain an entry for each entry in clock-names.
-> +
-> +  - clock-names		: Must include the "ipg" for register access.
-> +
-> +  - power-domains	: Must contain the phandle to AUDMIX power domain node
-> +
-> +  - dais		: Must contain a list of phandles to AUDMIX connected
-> +			  DAIs. The current implementation requires two phandles
-> +			  to SAI interfaces to be provided, the first SAI in the
-> +			  list being used to route the AUDMIX output.
-> +
-> +  - model		: Must contain machine driver name which will configure
-> +			  and instantiate the appropriate audio card.
+The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
+which one is mounted so use the compatibility entry for w2sg0004
+for all which will work for both.
 
-I don't feel this is necessary for DT node. The driver should be
-able to figure out a proper name for the machine driver: it could
-use the compatible string to get "imx8qm-audmix" as the name like
-fsl_ssi; Or it could have built-in "imx-audmix" of_device_id data
-corresponding to "fsl,imx8qm-audmix" compatible string -- for any
-non-imx compatible in the future, use something else.
+Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+---
+w2sg0004 bindings (together with the corresponding support is in
+https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss gnss-next)
+ arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
 
-Thanks
-Nic
-
-> +
-> +Device driver configuration example:
-> +======================================
-> +  audmix: audmix@59840000 {
-> +    compatible = "fsl,imx8qm-audmix";
-> +    reg = <0x0 0x59840000 0x0 0x10000>;
-> +    clocks = <&clk IMX8QXP_AUD_AUDMIX_IPG>;
-> +    clock-names = "ipg";
-> +    power-domains = <&pd_audmix>;
-> +    dais = <&sai4>, <&sai5>;
-> +    model = "imx-audmix";
-> +  };
-> -- 
-> 2.7.4
-> 
+diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+index e53d32691308..d58c117e429f 100644
+--- a/arch/arm/boot/dts/omap3-gta04.dtsi
++++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+@@ -312,6 +312,12 @@
+ 		>;
+        };
+ 
++	gps_pins: pinmux_gps_pins {
++		pinctrl-single,pins = <
++			OMAP3_CORE1_IOPAD(0x2176, PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* gpio145 */
++		>;
++	};
++
+ 	hdq_pins: hdq_pins {
+ 		pinctrl-single,pins = <
+ 			OMAP3_CORE1_IOPAD(0x21c6, PIN_INPUT_PULLUP | MUX_MODE0) /* i2c3_sda.hdq */
+@@ -644,6 +650,13 @@
+ &uart2 {
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&uart2_pins>;
++	gps: gps {
++		compatible = "wi2wi,w2sg0004";
++		pinctrl-names = "default";
++		pinctrl-0 = <&gps_pins>;
++		sirf,onoff-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
++		lna-supply = <&vsim>;
++	};
+ };
+ 
+ &uart3 {
+-- 
+2.11.0
