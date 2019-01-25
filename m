@@ -1,52 +1,100 @@
-From: Mike Rapoport <rppt@linux.ibm.com>
-Subject: Re: [PATCH v2 06/21] memblock: memblock_phys_alloc_try_nid(): don't
- panic
-Date: Fri, 25 Jan 2019 21:32:52 +0200
-Message-ID: <20190125193252.GH31519@rapoport-lnx>
-References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
- <1548057848-15136-7-git-send-email-rppt@linux.ibm.com>
- <20190125174502.GL25901@arrakis.emea.arm.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v4 2/3] ASoC: add fsl_audmix DT binding documentation
+Date: Fri, 25 Jan 2019 11:43:16 -0800
+Message-ID: <20190125194315.GA21222@Asurada-Nvidia.nvidia.com>
+References: <1548155654-12985-1-git-send-email-viorel.suman@nxp.com>
+ <1548155654-12985-3-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190125174502.GL25901@arrakis.emea.arm.com>
+In-Reply-To: <1548155654-12985-3-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Catalin Marinas <catalin.marinas@arm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Russell
+To: Viorel Suman <viorel.suman@nxp.com>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 05:45:02PM +0000, Catalin Marinas wrote:
-> On Mon, Jan 21, 2019 at 10:03:53AM +0200, Mike Rapoport wrote:
-> > diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> > index ae34e3a..2c61ea4 100644
-> > --- a/arch/arm64/mm/numa.c
-> > +++ b/arch/arm64/mm/numa.c
-> > @@ -237,6 +237,10 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
-> >  		pr_info("Initmem setup node %d [<memory-less node>]\n", nid);
-> >  
-> >  	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-> > +	if (!nd_pa)
-> > +		panic("Cannot allocate %zu bytes for node %d data\n",
-> > +		      nd_size, nid);
-> > +
-> >  	nd = __va(nd_pa);
-> >  
-> >  	/* report and initialize */
+On Tue, Jan 22, 2019 at 11:14:27AM +0000, Viorel Suman wrote:
+> Add the DT binding documentation for NXP Audio Mixer
+> CPU DAI driver.
 > 
-> Does it mean that memblock_phys_alloc_try_nid() never returns valid
-> physical memory starting at 0?
+> Signed-off-by: Viorel Suman <viorel.suman@nxp.com>
+> ---
+>  .../devicetree/bindings/sound/fsl,audmix.txt       | 54 ++++++++++++++++++++++
+>  1 file changed, 54 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/sound/fsl,audmix.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/sound/fsl,audmix.txt b/Documentation/devicetree/bindings/sound/fsl,audmix.txt
+> new file mode 100644
+> index 0000000..45f807e
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/sound/fsl,audmix.txt
+> @@ -0,0 +1,54 @@
+> +NXP Audio Mixer (AUDMIX).
+> +
+> +The Audio Mixer is a on-chip functional module that allows mixing of two
+> +audio streams into a single audio stream. Audio Mixer has two input serial
+> +audio interfaces. These are driven by two Synchronous Audio interface
+> +modules (SAI). Each input serial interface carries 8 audio channels in its
+> +frame in TDM manner. Mixer mixes audio samples of corresponding channels
+> +from two interfaces into a single sample. Before mixing, audio samples of
+> +two inputs can be attenuated based on configuration. The output of the
+> +Audio Mixer is also a serial audio interface. Like input interfaces it has
+> +the same TDM frame format. This output is used to drive the serial DAC TDM
+> +interface of audio codec and also sent to the external pins along with the
+> +receive path of normal audio SAI module for readback by the CPU.
+> +
+> +The output of Audio Mixer can be selected from any of the three streams
+> + - serial audio input 1
+> + - serial audio input 2
+> + - mixed audio
+> +
+> +Mixing operation is independent of audio sample rate but the two audio
+> +input streams must have same audio sample rate with same number of channels
+> +in TDM frame to be eligible for mixing.
+> +
+> +Device driver required properties:
+> +=================================
+> +  - compatible		: Compatible list, contains "fsl,imx8qm-audmix"
+> +
+> +  - reg			: Offset and length of the register set for the device.
+> +
+> +  - clocks		: Must contain an entry for each entry in clock-names.
+> +
+> +  - clock-names		: Must include the "ipg" for register access.
+> +
+> +  - power-domains	: Must contain the phandle to AUDMIX power domain node
+> +
+> +  - dais		: Must contain a list of phandles to AUDMIX connected
+> +			  DAIs. The current implementation requires two phandles
+> +			  to SAI interfaces to be provided, the first SAI in the
+> +			  list being used to route the AUDMIX output.
+> +
+> +  - model		: Must contain machine driver name which will configure
+> +			  and instantiate the appropriate audio card.
 
-Yes, it does.
-memblock_find_in_range_node() that is used by all allocation methods
-skips the first page [1].
- 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/mm/memblock.c#n257
+I don't feel this is necessary for DT node. The driver should be
+able to figure out a proper name for the machine driver: it could
+use the compatible string to get "imx8qm-audmix" as the name like
+fsl_ssi; Or it could have built-in "imx-audmix" of_device_id data
+corresponding to "fsl,imx8qm-audmix" compatible string -- for any
+non-imx compatible in the future, use something else.
 
+Thanks
+Nic
+
+> +
+> +Device driver configuration example:
+> +======================================
+> +  audmix: audmix@59840000 {
+> +    compatible = "fsl,imx8qm-audmix";
+> +    reg = <0x0 0x59840000 0x0 0x10000>;
+> +    clocks = <&clk IMX8QXP_AUD_AUDMIX_IPG>;
+> +    clock-names = "ipg";
+> +    power-domains = <&pd_audmix>;
+> +    dais = <&sai4>, <&sai5>;
+> +    model = "imx-audmix";
+> +  };
 > -- 
-> Catalin
+> 2.7.4
 > 
-
--- 
-Sincerely yours,
-Mike.
