@@ -1,57 +1,62 @@
-From: Frank Rowand <frowand.list@gmail.com>
-Subject: Re: [PATCH] of: Make of_node_name_eq() case insensitive
-Date: Thu, 24 Jan 2019 15:45:59 -0800
-Message-ID: <1a19b5f3-1387-0e6d-2d84-1b61079b4efb@gmail.com>
-References: <20190124200825.2611-1-f.fainelli@gmail.com>
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
+Subject: Re: [PATCH v5 3/3] reset: imx7: Add support for i.MX8MQ IP block variant
+Date: Thu, 24 Jan 2019 16:21:24 -0800
+Message-ID: <CAHQ1cqFx3b2fTy8YbpwC0fGJYpO4BLO4FW9q-Z2Np1tVktrKpg@mail.gmail.com>
+References: <20190122021043.25449-1-andrew.smirnov@gmail.com>
+ <20190122021043.25449-4-andrew.smirnov@gmail.com> <1548240560.3904.6.camel@pengutronix.de>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124200825.2611-1-f.fainelli@gmail.com>
-Content-Language: en-US
+In-Reply-To: <1548240560.3904.6.camel@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Florian Fainelli <f.fainelli@gmail.com>, linux-kernel@vger.kernel.org
-Cc: vivien.didelot@gmail.com, Rob Herring <robh+dt@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
+To: Philipp Zabel <p.zabel@pengutronix.de>
+Cc: Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/24/19 12:08 PM, Florian Fainelli wrote:
-> Since c32569e358ad ("regulator: Use of_node_name_eq for node name
-> comparisons") Vivien reported the mc13892-regulator complaining about
-> not being able to find regulators.
-> 
-> This is because prior to that commit we used of_node_cmp() to compare
-> the regulator array passed from mc13892_regulators down to
-> mc13xxx_parse_regulators_dt() and they are all defined in uppercase
-> letters by the MC13892_*_DEFINE* macros, whereas they are defined as
-> lowercase in the DTS.
-> 
-> Fix this by use strncasecmp() since that makes sure the comparison is
-> case insensitive like what of_node_cmp() did.
-> 
-> Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
-> Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
-> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
-> ---
->  drivers/of/base.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/of/base.c b/drivers/of/base.c
-> index 5226e898476e..ff47c86277cb 100644
-> --- a/drivers/of/base.c
-> +++ b/drivers/of/base.c
-> @@ -66,7 +66,8 @@ bool of_node_name_eq(const struct device_node *np, const char *name)
->  	node_name = kbasename(np->full_name);
->  	len = strchrnul(node_name, '@') - node_name;
->  
-> -	return (strlen(name) == len) && (strncmp(node_name, name, len) == 0);
-> +	return (strlen(name) == len) &&
-> +		(strncasecmp(node_name, name, len) == 0);
->  }
->  EXPORT_SYMBOL(of_node_name_eq);
->  
-> 
+On Wed, Jan 23, 2019 at 2:49 AM Philipp Zabel <p.zabel@pengutronix.de> wrote:
+>
+> Hi Andrey,
+>
+> On Mon, 2019-01-21 at 18:10 -0800, Andrey Smirnov wrote:
+> > Add bits and pieces needed to support IP block variant found on
+> > i.MX8MQ SoCs.
+> >
+> > Cc: p.zabel@pengutronix.de
+> > Cc: Fabio Estevam <fabio.estevam@nxp.com>
+> > Cc: cphealy@gmail.com
+> > Cc: l.stach@pengutronix.de
+> > Cc: Leonard Crestez <leonard.crestez@nxp.com>
+> > Cc: "A.s. Dong" <aisheng.dong@nxp.com>
+> > Cc: Richard Zhu <hongxing.zhu@nxp.com>
+> > Cc: Rob Herring <robh@kernel.org>
+> > Cc: devicetree@vger.kernel.org
+> > Cc: linux-imx@nxp.com
+> > Cc: linux-arm-kernel@lists.infradead.org
+> > Cc: linux-kernel@vger.kernel.org
+> > Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> [...]
+> > +static int imx8mq_reset_assert(struct reset_controller_dev *rcdev,
+> > +                          unsigned long id)
+>                             ^
+> > +{
+> > +     return imx8mq_reset_set(rcdev, id, true);
+> > +}
+> > +
+> > +static int imx8mq_reset_deassert(struct reset_controller_dev *rcdev,
+> > +                            unsigned long id)
+>                               ^
+> > +{
+> > +     return imx8mq_reset_set(rcdev, id, false);
+> > +}
+>
+> Thank you, applied all three to reset/next with a small whitespace
+> alignment fix.
+>
 
-Node names are case sensitive.  Please fix mc13xxx_parse_regulators_dt() to
-properly handle case instead of changing of_node_name_eq().
+Thanks again for applying this stuff. If that's not too much to ask,
+would you mind creating an immutable branch, so I could start sending
+patches that depend on "dt-bindings/reset/imx8mq-reset.h" to i.MX tree
+without waiting for it to trickle down? If not, no worries, I'll wait.
 
--Frank
+Thanks,
+Andrey Smirnov
