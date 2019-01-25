@@ -1,300 +1,151 @@
-From: Jiaxun Yang <jiaxun.yang@flygoat.com>
-Subject: Re: [PATCH v3 1/2] irqchip: Add driver for Loongson-1 interrupt
- controller
-Date: Fri, 25 Jan 2019 18:56:33 +0800
-Message-ID: <a0041cdb-1db6-9fee-411a-ae9d2a575349@flygoat.com>
-References: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
- <20190124032730.18237-1-jiaxun.yang@flygoat.com>
- <20190124032730.18237-2-jiaxun.yang@flygoat.com>
- <86pnsm8jon.wl-marc.zyngier@arm.com>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: [RFC PATCH v2 00/10] support ROHM BD70528 PMIC
+Date: Fri, 25 Jan 2019 13:01:10 +0200
+Message-ID: <20190125110110.GA29171@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <86pnsm8jon.wl-marc.zyngier@arm.com>
-Content-Language: en-US
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
-To: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: mazziesaccount@gmail.com, matti.vaittinen@fi.rohmeurope.com
+Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Marc
+Patch series introducing support for ROHM BD70528 PMIC
 
-Thanks for your suggestions, I'm working on v4 and I would like to ask 
-if it is better to have a driver for only one irqchip
+Please note that patch 1 breaks compilation without patches 2 and 3
 
-and create dt nodes for each chip, or just register all the chips in a 
-single driver with only one dt node.
+ROHM BD70528 is a programmable Power Management IC for battery
+powered 'ultra low power' systems like the pre-announced NXP
+i.MX7 ULP. This patch series introduces support for the PMIC.
 
-ÔÚ 2019/1/24 ÏÂÎç5:54, Marc Zyngier Ð´µÀ:
-> On Thu, 24 Jan 2019 03:27:29 +0000,
-> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
->> This controller appeared on Loongson-1 family MCUs
->> including Loongson-1B and Loongson-1C.
->>
->> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
->> ---
->>   drivers/irqchip/Kconfig    |   9 ++
->>   drivers/irqchip/Makefile   |   1 +
->>   drivers/irqchip/irq-ls1x.c | 176 +++++++++++++++++++++++++++++++++++++
->>   3 files changed, 186 insertions(+)
->>   create mode 100644 drivers/irqchip/irq-ls1x.c
->>
->> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->> index 3d1e60779078..5dcb5456cd14 100644
->> --- a/drivers/irqchip/Kconfig
->> +++ b/drivers/irqchip/Kconfig
->> @@ -406,6 +406,15 @@ config IMX_IRQSTEER
->>   	help
->>   	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
->>   
->> +config LS1X_IRQ
->> +	bool "Loongson-1 Interrupt Controller"
->> +	depends on MACH_LOONGSON32
->> +	default y
->> +	select IRQ_DOMAIN
->> +	select GENERIC_IRQ_CHIP
->> +	help
->> +	  Support for the Loongson-1 platform Interrupt Controller.
->> +
->>   endmenu
->>   
->>   config SIFIVE_PLIC
->> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->> index c93713d24b86..7acd0e36d0b4 100644
->> --- a/drivers/irqchip/Makefile
->> +++ b/drivers/irqchip/Makefile
->> @@ -94,3 +94,4 @@ obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
->>   obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
->>   obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
->>   obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
->> +obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->> diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
->> new file mode 100644
->> index 000000000000..de92ca04cf9f
->> --- /dev/null
->> +++ b/drivers/irqchip/irq-ls1x.c
->> @@ -0,0 +1,176 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + *  Copyright (C) 2019, Jiaxun Yang <jiaxun.yang@flygoat.com>
->> + *  Loongson-1 platform IRQ support
->> + */
->> +
->> +#include <linux/errno.h>
->> +#include <linux/init.h>
->> +#include <linux/types.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/ioport.h>
->> +#include <linux/irqchip.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/io.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +
->> +#include <asm/mach-loongson32/irq.h>
->> +
->> +
->> +#define MAX_CHIPS	5
->> +#define LS_REG_INTC_STATUS	0x00
->> +#define LS_REG_INTC_EN	0x04
->> +#define LS_REG_INTC_SET	0x08
->> +#define LS_REG_INTC_CLR	0x0c
->> +#define LS_REG_INTC_POL	0x10
->> +#define LS_REG_INTC_EDGE	0x14
->> +#define CHIP_SIZE	0x18
->> +
->> +static void ls_chained_handle_irq(struct irq_desc *desc)
->> +{
->> +	struct irq_chip_generic *gc = irq_desc_get_handler_data(desc);
->> +	struct irq_chip *chip = irq_desc_get_chip(desc);
->> +	u32 pending;
->> +
->> +	chained_irq_enter(chip, desc);
->> +	pending = readl(gc->reg_base + LS_REG_INTC_STATUS) &
->> +			readl(gc->reg_base + LS_REG_INTC_EN);
->> +
->> +	if (!pending) {
->> +		spurious_interrupt();
->> +		chained_irq_exit(chip, desc);
->> +		return;
->> +	}
-> Given the context, this is the same as writing:
->
-> 	if (!pending)
-> 		spurious_interrupt();
->
-> and let it go through.
->
->> +
->> +	while (pending) {
->> +		int bit = __ffs(pending);
->> +
->> +		generic_handle_irq(gc->irq_base + bit);
->> +		pending &= ~BIT(bit);
->> +	}
->> +
->> +	chained_irq_exit(chip, desc);
->> +}
->> +
->> +static void ls_intc_set_bit(struct irq_chip_generic *gc,
->> +							unsigned int offset,
->> +							u32 mask, bool set)
->> +{
->> +	if (set)
->> +		writel(readl(gc->reg_base + offset) | mask,
->> +		gc->reg_base + offset);
->> +	else
->> +		writel(readl(gc->reg_base + offset) & ~mask,
->> +		gc->reg_base + offset);
->> +}
->> +
->> +static int ls_intc_set_type(struct irq_data *data, unsigned int type)
->> +{
->> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
->> +	u32 mask = data->mask;
->> +
->> +	switch (type) {
->> +	case IRQ_TYPE_LEVEL_HIGH:
->> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, false);
->> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, true);
->> +		break;
->> +	case IRQ_TYPE_LEVEL_LOW:
->> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, false);
->> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, false);
->> +		break;
->> +	case IRQ_TYPE_EDGE_RISING:
->> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, true);
->> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, true);
->> +		break;
->> +	case IRQ_TYPE_EDGE_FALLING:
->> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, true);
->> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, false);
->> +		break;
->> +	case IRQ_TYPE_NONE:
->> +		break;
->> +	default:
->> +		return -EINVAL;
->> +	}
-> I just realised that in your DT binding, you define the interrupt
-> specifier as having a single cell. Which means that you never describe
-> the interrupt trigger there. Why?
->
-> Does it mean that all the drivers have to configure their interrupt
-> trigger themselves, and cannot rely on DT to do it? This seems quite
-> backward.
+I send this a RFC now as I would like to receive comments from
+Lee, Mark and Stephen regarding splitting the existing
+include/linux/mfd/bd718x7.h into ROHM generic and chip specific
+portions. Benefit is that for example the clk sub-driver does
+not need to be aware of chip specific structure(s) (struct
+bd718x7 and struct bd70528) as it only needs to derefernce the
+generic struct rohm_regmap_dev. Thus same clk subdriver can
+support both the bd718x7 and bd70528 as long as MFD driver
+data has this generic structure in the beginning of allocated
+data. But knowing the bd718x7 driver is already in upstream,
+it might be good if this change went through single tree, right?
 
-My fault, will fix it later.
+RTC block of the bd70528 can support 'wake' irq which wakes PMIC
+from standby state. Wake irq's can be armed to wake up system up
+to 24 hours from arming. bd70528 can also generate alarm interrupts
+which can be armed to occur years after triggering. The RTC driver
+does always arm both the waker and alarm irqs and does not utilize
+longer period of alarm interrupts. All the RTC timers are limited
+to occur within the next 24 hours. Any suggestions on more elegant
+timer support are welcome =)
 
->
->> +
->> +	return 0;
->> +}
->> +
->> +
->> +static int __init ls_intc_of_init(struct device_node *node,
->> +				       struct device_node *parent)
->> +{
->> +	struct irq_chip_generic *gc[MAX_CHIPS];
->> +	struct irq_chip_type *ct;
->> +	struct irq_domain *domain;
->> +	void __iomem *base;
->> +	int parent_irq[MAX_CHIPS], err = 0;
->> +	unsigned int i = 0;
->> +
->> +	unsigned int num_chips = of_irq_count(node);
->> +
->> +	base = of_iomap(node, 0);
->> +	if (!base)
->> +		return -ENODEV;
->> +
->> +	for (i = 0; i < num_chips; i++) {
->> +		/* Mask all irqs */
->> +		writel(0x0, base + (i * CHIP_SIZE) +
->> +		       LS_REG_INTC_EN);
->> +
->> +		/* Set all irqs to high level triggered */
->> +		writel(0xffffffff, base + (i * CHIP_SIZE) +
->> +		       LS_REG_INTC_POL);
->> +
->> +		parent_irq[i] = irq_of_parse_and_map(node, i);
->> +
->> +		if (!parent_irq[i]) {
->> +			pr_warn("unable to get parent irq for irqchip %u\n", i);
->> +			goto out_err;
->> +		}
->> +
->> +		gc[i] = irq_alloc_generic_chip("INTC", 1,
->> +					    LS1X_IRQ_BASE + (i * 32),
->> +					    base + (i * CHIP_SIZE),
->> +					    handle_level_irq);
->> +
->> +		ct = gc[i]->chip_types;
->> +		ct->regs.mask = LS_REG_INTC_EN;
->> +		ct->regs.ack = LS_REG_INTC_CLR;
->> +		ct->chip.irq_unmask = irq_gc_mask_set_bit;
->> +		ct->chip.irq_mask = irq_gc_mask_clr_bit;
->> +		ct->chip.irq_ack = irq_gc_ack_set_bit;
->> +		ct->chip.irq_set_type = ls_intc_set_type;
->> +
->> +		irq_setup_generic_chip(gc[i], IRQ_MSK(32), 0, 0,
->> +				       IRQ_NOPROBE | IRQ_LEVEL);
->> +	}
->> +
->> +	domain = irq_domain_add_legacy(node, num_chips * 32, LS1X_IRQ_BASE, 0,
->> +		&irq_domain_simple_ops, NULL);
-> Why a legacy domain? This is usually reserved to old drivers that are
-> converted to a new infrastructure, while needing some form of platform
-> hacks. I don't see this being the case here.
->
-> It is also worrying that although you have up to 5 irqchips, they all
-> share a single domain. What does this mean? each irqchip is expected
-> to have its own domain.
+GPIO portion of bd70528 driver adds I/O support for driving GPIO
+pins or reading the state. The interrupt functionality is provided
+by regmap-irq. Current GPIO driver is not aware of whether the pin(s)
+are used for I/O or interrupts and it is up-to driver user to
+ensure there is no misconfiguration or "double use".
 
-Yes, I do like this for backward compatible reason. I'm turning
+Currently only MFD core, clk, RTC and regulator portions are
+somehow tested. The RFC series also include initial gpio, power-supply
+and watchdog patches in order to provide better overview on chip
+and to collect initial feedback. Reset and ADC are not supported by
+this series.
 
-a legacy platform device mach(arch/mips/loongson32) in to
+Changelog v2: Mainly feedback from Guenter Roeck:
+- patches 1, 2, 3, 5, 7, 9 are unchanged.
+- mfd: own mutex for each bd70528 instance - embed in struct bd70528
+- watchdog: do not copy parent device data
+- watchdog: fix deadlock caused by double locked mutex
+- watchdog: set initial timeouts and WDT parent information
+- watchdog: remove unnecessary ping function from ops
+- watchdog: and the comment regarding it
+- watchdog: allocate watchdog struct in order to allow multiple WDG
+  instances
+- rtc: bd70528 fix the order of mutex unlock and re-enabling RTC based
+  timers
+- rtc: fix the irq mask register address
+- power: fix the irq mask register address
+- regulator/regmap-irq: Drop the patches 1, 8 and 9 from original series
+  as those were already applied by Mark 
 
-dt based generic mach and I would like to do it step by step rather than 
-one time.
+Patch 1:
+	split the bd718x7.h to generic and chip specific portions.
+	(breaks compilation without patch 2 and 3)
+Patch 2:
+	adapt bd718x7.h changes to bd718x7 regulator driver
+Patch 3:
+	adapt bd718x7.h changes to bd718x7 clk driver
+Patch 4:
+	add MFD core support for bd70528
+Patch 5:
+	support bd70528 clk using bd718x7 clk driver
+Patch 6:
+	document DT bindings for BD70528
+Patch 7:
+	support BD70528 GPIO block
+Patch 8:
+	support BD70528 RTC
+Patch 9:
+	support BD70528 battery charger
+Patch 10:
+	support BD70528 watchdog
 
-So I use legacy domain in order to keep IRQ same with the
+This patch series is based on Mark's regulator/for-next branch
 
-old driver exist on arch/mips/loongson32/common/irq.c
+---
 
->> +	if (!domain) {
->> +		pr_warn("unable to register IRQ domain\n");
->> +		err = -EINVAL;
->> +		goto out_err;
->> +	}
->> +
->> +	for (i = 0; i < num_chips; i++)
->> +		irq_set_chained_handler_and_data(parent_irq[i],
->> +		ls_chained_handle_irq, gc[i]);
->> +
->> +	pr_info("ls1x-irq: %u chips registered\n", num_chips);
->> +
->> +	return 0;
->> +
->> +out_err:
->> +	for (i = 0; i < MAX_CHIPS; i++) {
->> +		if (gc[i])
-> But you've never initialised gc[], nor parent_irq[]. So you'll get
-> whatever the stack had at this point. Not great.
->
->> +			irq_destroy_generic_chip(gc[i], IRQ_MSK(32),
->> +				       IRQ_NOPROBE | IRQ_LEVEL, 0);
->> +		if (parent_irq[i])
->> +			irq_dispose_mapping(parent_irq[i]);
->> +	}
->> +	return err;
->> +}
->> +
->> +IRQCHIP_DECLARE(ls1x_intc, "loongson,ls1x-intc", ls_intc_of_init);
->> -- 
->> 2.20.1
->>
-> Thanks,
->
-> 	M.
->
+Matti Vaittinen (10):
+  mfd: bd718x7.h split to ROHM common and bd718x7 specific parts
+  regulator: bd718x7 use chip specific and generic data structs
+  clk: bd718x7: use chip specific and generic data structs
+  mfd: bd70528: Support ROHM bd70528 PMIC - core
+  clk: bd718x7: Support ROHM BD70528 clk block
+  devicetree: bindings: Document first ROHM BD70528 bindings
+  gpio: Initial support for ROHM bd70528 GPIO block
+  rtc: bd70528: Initial support for ROHM bd70528 RTC
+  power: supply: Initial support for ROHM BD70528 PMIC charger block
+  watchdog: bd70528: Initial support for ROHM BD70528 watchdog block
+
+ .../devicetree/bindings/mfd/rohm,bd70528-pmic.txt  | 104 ++++
+ drivers/clk/Kconfig                                |   6 +-
+ drivers/clk/clk-bd718x7.c                          |  25 +-
+ drivers/gpio/Kconfig                               |  11 +
+ drivers/gpio/Makefile                              |   1 +
+ drivers/gpio/gpio-bd70528.c                        | 192 ++++++
+ drivers/mfd/Kconfig                                |  17 +
+ drivers/mfd/Makefile                               |   1 +
+ drivers/mfd/rohm-bd70528.c                         | 410 +++++++++++++
+ drivers/mfd/rohm-bd718x7.c                         |  23 +-
+ drivers/power/supply/Kconfig                       |   9 +
+ drivers/power/supply/Makefile                      |   1 +
+ drivers/power/supply/bd70528-charger.c             | 670 +++++++++++++++++++++
+ drivers/regulator/bd718x7-regulator.c              |  22 +-
+ drivers/rtc/Kconfig                                |   8 +
+ drivers/rtc/Makefile                               |   1 +
+ drivers/rtc/rtc-bd70528.c                          | 451 ++++++++++++++
+ drivers/watchdog/Kconfig                           |  12 +
+ drivers/watchdog/Makefile                          |   1 +
+ drivers/watchdog/bd70528_wdt.c                     | 183 ++++++
+ include/linux/mfd/rohm-bd70528.h                   | 392 ++++++++++++
+ include/linux/mfd/rohm-bd718x7.h                   |  22 +-
+ include/linux/mfd/rohm-generic.h                   |  20 +
+ 23 files changed, 2537 insertions(+), 45 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/mfd/rohm,bd70528-pmic.txt
+ create mode 100644 drivers/gpio/gpio-bd70528.c
+ create mode 100644 drivers/mfd/rohm-bd70528.c
+ create mode 100644 drivers/power/supply/bd70528-charger.c
+ create mode 100644 drivers/rtc/rtc-bd70528.c
+ create mode 100644 drivers/watchdog/bd70528_wdt.c
+ create mode 100644 include/linux/mfd/rohm-bd70528.h
+ create mode 100644 include/linux/mfd/rohm-generic.h
+
+-- 
+2.14.3
+
+
+-- 
+Matti Vaittinen
+ROHM Semiconductors
+
+~~~ "I don't think so," said Rene Descartes.  Just then, he vanished ~~~
