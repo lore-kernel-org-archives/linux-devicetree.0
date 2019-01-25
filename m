@@ -1,39 +1,66 @@
-From: Catalin Marinas <catalin.marinas@arm.com>
-Subject: Re: [PATCH v2 06/21] memblock: memblock_phys_alloc_try_nid(): don't
- panic
-Date: Fri, 25 Jan 2019 17:45:02 +0000
-Message-ID: <20190125174502.GL25901@arrakis.emea.arm.com>
-References: <1548057848-15136-1-git-send-email-rppt@linux.ibm.com>
- <1548057848-15136-7-git-send-email-rppt@linux.ibm.com>
+From: Mark Brown <broonie@kernel.org>
+Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
+Date: Fri, 25 Jan 2019 17:47:13 +0000
+Message-ID: <20190125174713.GA6939@sirena.org.uk>
+References: <20190125114429.20066-1-jonas@norrbonn.se>
+ <20190125114429.20066-2-jonas@norrbonn.se>
+ <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
+ <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="M9NhX3UHpAaciwkO"
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <1548057848-15136-7-git-send-email-rppt@linux.ibm.com>
+In-Reply-To: <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Mike Rapoport <rppt@linux.ibm.com>
-Cc: linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>, Christoph Hellwig <hch@lst.de>, "David S. Miller" <davem@davemloft.net>, Dennis Zhou <dennis@kernel.org>, Geert Uytterhoeven <geert@linux-m68k.org>, Greentime Hu <green.hu@gmail.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Guan Xuetao <gxt@pku.edu.cn>, Guo Ren <guoren@kernel.org>, Heiko Carstens <heiko.carstens@de.ibm.com>, Mark Salter <msalter@redhat.com>, Matt Turner <mattst88@gmail.com>, Max Filippov <jcmvbkbc@gmail.com>, Michael Ellerman <mpe@ellerman.id.au>, Michal Simek <monstr@monstr.eu>, Paul Burton <paul.burton@mips.com>, Petr Mladek <pmladek@suse.com>, Rich Felker <dalias@libc.org>, Richard Weinberger <richard@nod.at>, Rob Herring <robh+dt@kernel.org>, Russell
+To: Jonas Bonn <jonas@norrbonn.se>
+Cc: Baolin Wang <baolin.wang@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 21, 2019 at 10:03:53AM +0200, Mike Rapoport wrote:
-> diff --git a/arch/arm64/mm/numa.c b/arch/arm64/mm/numa.c
-> index ae34e3a..2c61ea4 100644
-> --- a/arch/arm64/mm/numa.c
-> +++ b/arch/arm64/mm/numa.c
-> @@ -237,6 +237,10 @@ static void __init setup_node_data(int nid, u64 start_pfn, u64 end_pfn)
->  		pr_info("Initmem setup node %d [<memory-less node>]\n", nid);
->  
->  	nd_pa = memblock_phys_alloc_try_nid(nd_size, SMP_CACHE_BYTES, nid);
-> +	if (!nd_pa)
-> +		panic("Cannot allocate %zu bytes for node %d data\n",
-> +		      nd_size, nid);
-> +
->  	nd = __va(nd_pa);
->  
->  	/* report and initialize */
 
-Does it mean that memblock_phys_alloc_try_nid() never returns valid
-physical memory starting at 0?
+--M9NhX3UHpAaciwkO
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
--- 
-Catalin
+On Fri, Jan 25, 2019 at 01:06:45PM +0100, Jonas Bonn wrote:
+> On 25/01/2019 12:53, Baolin Wang wrote:
+> > On Fri, 25 Jan 2019 at 19:44, Jonas Bonn <jonas@norrbonn.se> wrote:
+
+> > Can we configure it at runtime by the device rather than at DT time by
+> > the controller? If yes, we already have a patch for this, please
+> > check:
+
+> It's a characteristic of the SPI slave, in the same sense as CPOL/CPHA are,
+> and therefore it makes sense to specify it in the device tree.
+
+No, that doesn't follow at all.  There's two bits here - where the
+configuration gets done and the mechanism by which it gets done.  If
+something in DT is completely orthogonal to which device it is a
+property of.
+
+> Having this as device property rather than a transfer property allows this
+> to be configured one time in setup() rather than having to fiddle with the
+> configuration register for every transfer.
+
+That doesn't mean that the coniguration should be done in DT though, and
+given that this presumably is a property of the device there seems to be
+no reason why we'd have it in DT - if every instance of the device is
+going to need to set the property we should just figure it out from the
+compatble string instead.
+
+--M9NhX3UHpAaciwkO
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxLS58ACgkQJNaLcl1U
+h9Ci1Af+KPQ6Fd4EwOmXjTuA/3wvO5WHx034mRClNaY5DwGvpFwEr3ZJmUQlIDND
+5Sd8+g6AjlOmkjsv7Lhoe2UCvYcPVUqbr5J0HId083UZDlHi7vIBChD9JnW5a0Up
+u0aur6HuzudvMplSCT1eaCtp0EZ81TdwfPsLESCTAe1dGUQUSANCpv2SpbJfDtBO
+dLituQEv3GeGhiGtoEcfajriq0k+IaI/zC6D+iaFgR1qgzU9YCmPQCYtw+MtaI2X
+nUXxQyOx8G7W09bToK55cHSBd6k5uwrCBK0rGbDERSp+h+nnQoZMiLxxFMVd+PTm
+ceJVw/ruBPHRTpIz0bLX3wrAUWLiXQ==
+=xcYV
+-----END PGP SIGNATURE-----
+
+--M9NhX3UHpAaciwkO--
