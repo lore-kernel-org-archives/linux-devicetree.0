@@ -1,64 +1,92 @@
-From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v6 14/22] dt-bindings: sun6i-dsi: Add A64
- DSI compatible (w/ A31 fallback)
-Date: Fri, 25 Jan 2019 16:52:36 +0100
-Message-ID: <20190125155236.agxwkxvyefmrbvym@flea>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH v6 15/22] dt-bindings: sun6i-dsi: Add A64 DPHY compatible
+ (w/ A31 fallback)
+Date: Fri, 25 Jan 2019 16:52:53 +0100
+Message-ID: <20190125155253.v33vk3rfpdgv6537@flea>
 References: <20190124195900.22620-1-jagan@amarulasolutions.com>
- <20190124195900.22620-15-jagan@amarulasolutions.com>
-Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
+ <20190124195900.22620-16-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="yh73odnggzve526p"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBRXBVTRAKGQEJ75BFQY-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-Content-Disposition: inline
-In-Reply-To: <20190124195900.22620-15-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Cc: David Airlie <airlied-cv59FeDIM0c@public.gmane.org>, Daniel Vetter <daniel-/w4YWyX8dFk@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Michael Turquette <mturquette-rdvid1DuHRBWk0Htik3J/w@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-clk-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, dri-devel-PD4FTy7X32lNgt0PjOBp9y5qC8QIuHrW@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: multipart/mixed; boundary="===============1592560104=="
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190124195900.22620-16-jagan@amarulasolutions.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org, David Airlie <airlied@linux.ie>, Michael Turquette <mturquette@baylibre.com>, linux-sunxi@googlegroups.com, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, linux-clk@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
 
---yh73odnggzve526p
-Content-Type: text/plain; charset="UTF-8"
+--===============1592560104==
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="ykfgu7c2rq7ykthf"
 Content-Disposition: inline
 
-On Fri, Jan 25, 2019 at 01:28:52AM +0530, Jagan Teki wrote:
-> The MIPI DSI controller in Allwinner A64 is similar to A33.
-> 
-> But unlike A33, A64 doesn't have DSI_SCLK gating which eventually
-> set the mod clock rate for the controller.
-> 
-> So, use the DSI_DPHY gating for the similar purpose of mod clock
-> so-that the controller can operate properly.
-> 
-> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-> Reviewed-by: Rob Herring <robh-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>
+
+--ykfgu7c2rq7ykthf
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Fri, Jan 25, 2019 at 01:28:53AM +0530, Jagan Teki wrote:
+> The MIPI DSI PHY controller on Allwinner A64 is similar
+> on the one on A31.
+>=20
+> Add A64 compatible and append A31 compatible as fallback.
+>=20
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> Reviewed-by: Rob Herring <robh@kernel.org>
 > ---
 >  Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt | 1 +
 >  1 file changed, 1 insertion(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> index 69e233e8fad1..dbda2e567760 100644
+>=20
+> diff --git a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.tx=
+t b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
+> index dbda2e567760..9c553637c72b 100644
 > --- a/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
 > +++ b/Documentation/devicetree/bindings/display/sunxi/sun6i-dsi.txt
-> @@ -12,6 +12,7 @@ The DSI Encoder generates the DSI signal from the TCON's.
+> @@ -40,6 +40,7 @@ D-PHY
 >  Required properties:
 >    - compatible: value must be one of:
->      * allwinner,sun6i-a31-mipi-dsi
-> +    * "allwinner,sun50i-a64-mipi-dsi", "allwinner,sun6i-a31-mipi-dsi"
+>      * allwinner,sun6i-a31-mipi-dphy
+> +    * "allwinner,sun50i-a64-mipi-dphy", "allwinner,sun6i-a31-mipi-dphy"
 
-The other line doesn't have quotes, we should be consistent
+Same remark than patch 14
 
 Maxime
 
--- 
+--=20
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---yh73odnggzve526p--
+
+--ykfgu7c2rq7ykthf
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXEsw1QAKCRDj7w1vZxhR
+xTi8AQDz3tkCaFBlGhOZG03SKppIfmHwuOSJbl3fNs5PW6BAKwEAuk0HYmnWsXo8
+fkTCcHkKV1uTbLP+Woq7p1BlVjuvMg4=
+=DoXw
+-----END PGP SIGNATURE-----
+
+--ykfgu7c2rq7ykthf--
+
+--===============1592560104==
+Content-Type: text/plain; charset="utf-8"
+MIME-Version: 1.0
+Content-Transfer-Encoding: base64
+Content-Disposition: inline
+
+X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
+IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
+dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+
+--===============1592560104==--
