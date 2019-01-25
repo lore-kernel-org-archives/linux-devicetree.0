@@ -1,75 +1,41 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
- driver
-Date: Fri, 25 Jan 2019 12:40:11 +0000
-Message-ID: <20190125124011.GA16389@e107981-ln.cambridge.arm.com>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
- <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
- <20190125110530.0ff11a54@xps13>
+From: Kamil Konieczny <k.konieczny@partner.samsung.com>
+Subject: Re: [PATCH v5 1/5] clk: samsung: exynos5433: fix typo in imem
+ divider
+Date: Fri, 25 Jan 2019 13:41:00 +0100
+Message-ID: <9725eefc-2f2b-5fe1-326f-59f377999e17@partner.samsung.com>
+References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
+        <CGME20190122090249eucas1p161cfc1364fb8ee76d2d04383935e8f3b@eucas1p1.samsung.com>
+        <20190122090232.29194-2-k.konieczny@partner.samsung.com>
+        <20190122093313.GA21774@kroah.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125110530.0ff11a54@xps13>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <20190122093313.GA21774@kroah.com>
+Content-Language: en-US
+Sender: stable-owner@vger.kernel.org
+To: Greg KH <greg@kroah.com>
+Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 11:05:30AM +0100, Miquel Raynal wrote:
-> Hi Lorenzo,
+On 22.01.2019 10:33, Greg KH wrote:
+> On Tue, Jan 22, 2019 at 10:02:28AM +0100, Kamil Konieczny wrote:
+>> Fix typo in imem clock divider 200 switched with 266.
+>>
+>> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+>> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
+>> ---
+>>  drivers/clk/samsung/clk-exynos5433.c | 4 ++--
+>>  1 file changed, 2 insertions(+), 2 deletions(-)
 > 
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
-> 17:05:09 +0000:
+> <formletter>
 > 
-> > On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:
-> > > Hello,
-> > > 
-> > > As part of an effort to bring suspend to RAM support to Armada 3700
-> > > SoCs (main target: ESPRESSObin), this series handles the work around
-> > > the PCIe IP.
-> > > 
-> > > First, more configuration is done in the 'setup' helper as inspired
-> > > from the U-Boot driver. This is needed to entirely initialize the IP
-> > > during future resume operation (patch 1).
-> > > 
-> > > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
-> > > current device trees do not provide the corresponding properties, not
-> > > finding one of these properties is not an error and just produces a
-> > > warning. However, if the property is present, an error during PHY
-> > > initialization will fail the probe of the driver.
-> > > 
-> > > Note: To be sure the clock will be resumed before this driver, a first
-> > > series adding links between clocks and consumers has been submitted,
-> > > see [1]. Anyway, having the clock series applied first is not needed.  
-> > 
-> > I do not understand what this means, in particular in relation
-> > to the blocking clock calls in the suspend/resume NOIRQ hooks.
-> 
-> I am not sure to understand your question.
-> 
-> As there are multiple points in this sentence I will detail each of
-> them so please comment on the one which is bothering you:
-> * I am working in parallel on a series adding device links to the clock
->   framework. This way when a driver consumes a clock, the clock
->   provider driver will be resumed first.
-> * If the clock series I am talking about is applied after this one,
->   there is no build issue. Of course suspending the platform may
->   not work but this is a new feature so nothing will be broken.
+> This is not the correct way to submit patches for inclusion in the
+> stable kernel tree.  Please read: [...]
+After reconsideration that there are no users of imem clock in old kernels,
+please drop this patch from stable.
 
-Suspend to RAM will be broken if the clock is suspended and no
-notification will happen in the NOIRQ phase, it is a new-broken-feature.
-
-> * Device links do not enforce any priority if the suspend/resume phase
->   between two drivers is not the same. The PCIe driver suspends in the
->   NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
->   suspend/resume callbacks must be promoted to the NOIRQ phase as well
->   (and this is part of another series). As of today there is
->   no alternative.
-
-I will merge this series when it works, I have no evidence that it does
-given what you are writing above, if the series you mention are
-*necessary* for suspend-to-RAM to work they ought to be merged first.
-
-Thanks,
-Lorenzo
+-- 
+Best regards,
+Kamil Konieczny
+Samsung R&D Institute Poland
