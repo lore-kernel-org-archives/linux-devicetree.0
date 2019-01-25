@@ -1,7 +1,7 @@
 From: Brian Masney <masneyb@onstation.org>
-Subject: [PATCH 9/9] mfd: pm8xxx: revert "disassociate old virq if hwirq mapping already exists"
-Date: Fri, 25 Jan 2019 11:23:02 -0500
-Message-ID: <20190125162302.14036-10-masneyb@onstation.org>
+Subject: [PATCH 8/9] arm: dts: qcom: mdm9615: add interrupt controller properties
+Date: Fri, 25 Jan 2019 11:23:01 -0500
+Message-ID: <20190125162302.14036-9-masneyb@onstation.org>
 References: <20190125162302.14036-1-masneyb@onstation.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190125162302.14036-1-masneyb@onstation.org>
@@ -10,36 +10,39 @@ To: linus.walleij@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org, andy
 Cc: tglx@linutronix.de, shawnguo@kernel.org, dianders@chromium.org, linux-gpio@vger.kernel.org, nicolas.dechesne@linaro.org, niklas.cassel@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, thierry.reding@gmail.com, linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Now that ssbi-gpio is a proper hierarchical IRQ chip, and all in-tree
-users of device tree have been updated, we can now drop the hack that
-was introduced to disassociate the old Linux virq if a hwirq mapping
-already exists. That patch was introduced to not break git bisect for
-any existing boards.
+Add interrupt controller properties now that ssbi-gpio is a proper
+hierarchical IRQ chip. The interrupts property is no longer needed so
+remove it.
 
-This change was not tested on any actual hardware, however the same
-change was made to spmi-pmic-arb.c and tested on a LG Nexus 5
-(hammerhead) phone.
+Note that the IRQs started at 24 instead of 192 like all of the other
+PMICs. This is the same IRQs as the MPP for this board. qcom-pm8xxx.c
+doesn't set the shared IRQs so this is highly likely to be a copy and
+paste error.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- drivers/mfd/qcom-pm8xxx.c | 5 -----
- 1 file changed, 5 deletions(-)
+ arch/arm/boot/dts/qcom-mdm9615.dtsi | 9 ++-------
+ 1 file changed, 2 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/mfd/qcom-pm8xxx.c b/drivers/mfd/qcom-pm8xxx.c
-index 97b931465601..a976890c4019 100644
---- a/drivers/mfd/qcom-pm8xxx.c
-+++ b/drivers/mfd/qcom-pm8xxx.c
-@@ -387,11 +387,6 @@ static void pm8xxx_irq_domain_map(struct pm_irq_chip *chip,
- 				  irq_hw_number_t hwirq, unsigned int type)
- {
- 	irq_flow_handler_t handler;
--	unsigned int old_virq;
--
--	old_virq = irq_find_mapping(domain, hwirq);
--	if (old_virq)
--		irq_domain_disassociate(domain, old_virq);
+diff --git a/arch/arm/boot/dts/qcom-mdm9615.dtsi b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+index c852b69229c9..0ed6fc3e873c 100644
+--- a/arch/arm/boot/dts/qcom-mdm9615.dtsi
++++ b/arch/arm/boot/dts/qcom-mdm9615.dtsi
+@@ -323,13 +323,8 @@
  
- 	if (type & IRQ_TYPE_EDGE_BOTH)
- 		handler = handle_edge_irq;
+ 				pmicgpio: gpio@150 {
+ 					compatible = "qcom,pm8018-gpio", "qcom,ssbi-gpio";
+-					interrupt-parent = <&pmicintc>;
+-					interrupts = <24 IRQ_TYPE_NONE>,
+-						     <25 IRQ_TYPE_NONE>,
+-						     <26 IRQ_TYPE_NONE>,
+-						     <27 IRQ_TYPE_NONE>,
+-						     <28 IRQ_TYPE_NONE>,
+-						     <29 IRQ_TYPE_NONE>;
++					interrupt-controller;
++					#interrupt-cells = <2>;
+ 					gpio-controller;
+ 					#gpio-cells = <2>;
+ 				};
 -- 
 2.17.2
