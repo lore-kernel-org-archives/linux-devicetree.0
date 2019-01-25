@@ -1,80 +1,134 @@
-From: Sean Wang <sean.wang@kernel.org>
-Subject: Re: [PATCH 1/2] dt-bindings: dmaengine: Add MediaTek Command-Queue
- DMA controller bindings
-Date: Thu, 24 Jan 2019 19:52:21 -0800
-Message-ID: <CAGp9LzofToojhoXL9DpbrF-GKcxnGX7VBKrTq27SF8uGYnQOMg@mail.gmail.com>
-References: <1548326680-16454-1-git-send-email-shun-chih.yu@mediatek.com> <1548326680-16454-2-git-send-email-shun-chih.yu@mediatek.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
+Date: Fri, 25 Jan 2019 11:52:43 +0800
+Message-ID: <1548388363.29237.17.camel@mtkswgap22>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
+         <c007d399-af86-98d3-94f9-b9762efdc219@gmail.com>
+         <1547866487.14213.10.camel@mtkswgap22>
+         <20190121084948.frpcgg6wkdjxkl7k@pengutronix.de>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548326680-16454-2-git-send-email-shun-chih.yu@mediatek.com>
+In-Reply-To: <20190121084948.frpcgg6wkdjxkl7k@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shun-chih.yu@mediatek.com
-Cc: Sean Wang <sean.wang@mediatek.com>, Vinod Koul <vkoul@kernel.org>, Rob Herring <robh+dt@kernel.org>, Matthias Brugger <matthias.bgg@gmail.com>, Dan Williams <dan.j.williams@intel.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, srv_wsdupstream@mediatek.com, linux-mediatek@lists.infradead.org, dmaengine@vger.kernel.org, linux-arm-kernel@lists.infradead.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, John Crispin <john@phrozen.org>
+Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao =?UTF-8?Q?=28=E9=AB=98=E6=83=9F=E6=9D=B0=29?= <Weijie.Gao@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-You dropped the version tag that doesn't reflect that is a newer one
-and that would be easily ignored by other people
++John
 
-On Thu, Jan 24, 2019 at 2:46 AM <shun-chih.yu@mediatek.com> wrote:
->
-> From: Shun-Chih Yu <shun-chih.yu@mediatek.com>
->
-> Document the devicetree bindings for MediaTek Command-Queue DMA controller
-> which could be found on MT6765 SoC or other similar Mediatek SoCs.
->
-> Signed-off-by: Shun-Chih Yu <shun-chih.yu@mediatek.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+HI John,
 
-otherwise, Acked-by: Sean Wang <sean.wang@kernel.org>
+On Mon, 2019-01-21 at 16:49 +0800, Uwe Kleine-König wrote:
+> On Sat, Jan 19, 2019 at 10:54:47AM +0800, Ryder Lee wrote:
+> > On Fri, 2019-01-18 at 09:43 +0100, Matthias Brugger wrote:
+> > >
+> > > On 18/01/2019 04:24, Ryder Lee wrote:
+> > > > This adds a property "mediatek,num-pwms" to avoid having an endless
+> > > > list of compatibles with no differences for the same driver.
+> > > >
+> > > > Thus, the driver should have backwards compatibility to older DTs.
+> > > >
+> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > ---
+> > > > Changes since v1: add some checks for backwards compatibility.
+> > > > ---
+> > > >  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
+> > > >  1 file changed, 18 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> > > > index eb6674c..81b7e5e 100644
+> > > > --- a/drivers/pwm/pwm-mediatek.c
+> > > > +++ b/drivers/pwm/pwm-mediatek.c
+> > > > @@ -55,7 +55,7 @@ enum {
+> > > >  };
+> > > >
+> > > >  struct mtk_pwm_platform_data {
+> > > > - unsigned int num_pwms;
+> > > > + unsigned int num_pwms;  /* it should not be used in the future SoCs */
+> > > >   bool pwm45_fixup;
+> > > >   bool has_clks;
+> > > >  };
+> > > > @@ -226,27 +226,36 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> > > >
+> > > >  static int mtk_pwm_probe(struct platform_device *pdev)
+> > > >  {
+> > > > - const struct mtk_pwm_platform_data *data;
+> > > > + struct device_node *np = pdev->dev.of_node;
+> > > >   struct mtk_pwm_chip *pc;
+> > > >   struct resource *res;
+> > > > - unsigned int i;
+> > > > + unsigned int i, num_pwms;
+> > > >   int ret;
+> > > >
+> > > >   pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+> > > >   if (!pc)
+> > > >           return -ENOMEM;
+> > > >
+> > > > - data = of_device_get_match_data(&pdev->dev);
+> > > > - if (data == NULL)
+> > > > -         return -EINVAL;
+> > > > - pc->soc = data;
+> > > > + pc->soc = of_device_get_match_data(&pdev->dev);
+> > > >
+> > > >   res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > >   pc->regs = devm_ioremap_resource(&pdev->dev, res);
+> > > >   if (IS_ERR(pc->regs))
+> > > >           return PTR_ERR(pc->regs);
+> > > >
+> > > > - for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
+> > > > + /* Check if we have set 'num-pwms' in DTs. */
+> > > > + ret = of_property_read_u32(np, "mediatek,num-pwms", &num_pwms);
+> > > > + if (ret < 0) {
+> > > > +         /* If no, fallback to use SoC data for backwards compatibility. */
+> > > > +         if (pc->soc->num_pwms) {
+> > > > +                 num_pwms = pc->soc->num_pwms;
+> > >
+> > > Maybe that's bike shedding, but I think it would be better to carve out the
+> > > num_pwms from the mtk_pwm_platform_data and check against the compatible here.
+> >
+> > I'm not sure how to properly curve it out? I think we still need this
+> > variable to save the specific value for some legacy SoCs (with older
+> > DTs).
+> 
+> I guess he means  something like:
+> 
+>         if (is_compatible_to_variant_A(dev))
+>                 num_pwms = 12;
+>         else if (is_compatible_to_variant_B(dev))
+>                 num_pwms = 2;
+> 
+> . In my eyes the bike shed should be light red and I prefer to collect
+> the fallback num_pwms in the compatible_data as is to keep the code
+> simpler. Maybe rename the member from num_pwms to fallback_num_pwms to
+> make it more obvious that it doesn't represent the actually used value.
+> 
+> > > With a expressive comment it will help other driver developers to not start
+> > > adding num_pwms in the platform data in their first attempt.
+> >
+> > Definitely.
+> 
+> My suggestion was to add a dev_warn, which IMHO is still better than a
+> comment.
+> 
+> Best regards
+> Uwe
+> 
 
-> ---
->  .../devicetree/bindings/dma/mtk-cqdma.txt          |   31 ++++++++++++++++++++
->  1 file changed, 31 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/dma/mtk-cqdma.txt
->
-> diff --git a/Documentation/devicetree/bindings/dma/mtk-cqdma.txt b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-> new file mode 100644
-> index 0000000..fb12927
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/dma/mtk-cqdma.txt
-> @@ -0,0 +1,31 @@
-> +MediaTek Command-Queue DMA Controller
-> +==================================
-> +
-> +Required properties:
-> +
-> +- compatible:  Must be "mediatek,mt6765-cqdma" for MT6765.
-> +- reg:         Should contain the base address and length for each channel.
-> +- interrupts:  Should contain references to the interrupts for each channel.
-> +- clocks:      Should be the clock specifiers corresponding to the entry in
-> +               clock-names property.
-> +- clock-names: Should contain "cqdma" entries.
-> +- dma-channels: The number of DMA channels supported by the controller.
-> +- dma-requests: The number of DMA request supported by the controller.
-> +- #dma-cells:  The length of the DMA specifier, must be <1>. This one cell
-> +               in dmas property of a client device represents the channel
-> +               number.
-> +Example:
-> +
-> +        cqdma: dma-controller@10212000 {
-> +               compatible = "mediatek,mt6765-cqdma";
-> +               reg = <0 0x10212000 0 0x1000>;
-> +               interrupts = <GIC_SPI 113 IRQ_TYPE_LEVEL_LOW>,
-> +                       <GIC_SPI 114 IRQ_TYPE_LEVEL_LOW>;
-> +               clocks = <&infracfg CLK_IFR_CQ_DMA>;
-> +               clock-names = "cqdma";
-> +               dma-channels = <2>;
-> +               dma-requests = <32>;
-> +               #dma-cells = <1>;
-> +       };
-> +
-> +DMA clients must use the format described in dma/dma.txt file.
-> --
-> 1.7.9.5
->
->
-> _______________________________________________
-> Linux-mediatek mailing list
-> Linux-mediatek@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-mediatek
+Unrelated to this patch: I'm ready to send v2 to allocate the clks array
+dynamically, but I guess MT7628 couldn't work in original code.
+
+
+In mtk_pwm_config():
+
+        clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]; 
+        ....
+        resolution = (u64)NSEC_PER_SEC * 1000;
+        do_div(resolution, clk_get_rate(clk));
+        ....
+
+I think clk should be NULL and resolution is always 0 here. 
+
+
+Ryder
