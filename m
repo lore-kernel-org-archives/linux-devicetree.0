@@ -1,134 +1,138 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH] r8169: Load MAC address from device tree if present
-Date: Fri, 25 Jan 2019 16:33:10 +0100
-Message-ID: <20190125153310.GA30990@ulmo>
-References: <20190125101814.6262-1-thierry.reding@gmail.com>
- <20190125145711.GF12962@lunn.ch>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH] of: Make of_node_name_eq() case insensitive
+Date: Fri, 25 Jan 2019 09:33:35 -0600
+Message-ID: <CAL_JsqL=N7+mHrAbNotMeQmuyTLkVWTQ0C38Hq22szOk+kOyRg@mail.gmail.com>
+References: <20190124200825.2611-1-f.fainelli@gmail.com> <1a19b5f3-1387-0e6d-2d84-1b61079b4efb@gmail.com>
+ <3e63d0c3-cb92-5caa-c0db-a04ef8fb5393@gmail.com> <04286c55-b995-3c5b-dc03-9f3c46d6376b@gmail.com>
+ <bb238bed-0183-18b4-0182-fac4a74ed8a2@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="PEIAKu/WMn1b1Hv9"
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125145711.GF12962@lunn.ch>
+In-Reply-To: <bb238bed-0183-18b4-0182-fac4a74ed8a2@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: "David S. Miller" <davem@davemloft.net>, Heiner Kallweit <hkallweit1@gmail.com>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+To: Florian Fainelli <f.fainelli@gmail.com>
+Cc: Frank Rowand <frowand.list@gmail.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, vivien.didelot@gmail.com, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Thu, Jan 24, 2019 at 11:00 PM Florian Fainelli <f.fainelli@gmail.com> wrote:
+>
+>
+>
+> On 1/24/19 6:06 PM, Frank Rowand wrote:
+> > On 1/24/19 5:20 PM, Florian Fainelli wrote:
+> >>
+> >>
+> >> On 1/24/19 3:45 PM, Frank Rowand wrote:
+> >>> On 1/24/19 12:08 PM, Florian Fainelli wrote:
+> >>>> Since c32569e358ad ("regulator: Use of_node_name_eq for node name
+> >>>> comparisons") Vivien reported the mc13892-regulator complaining about
+> >>>> not being able to find regulators.
+> >>>>
+> >>>> This is because prior to that commit we used of_node_cmp() to compare
+> >>>> the regulator array passed from mc13892_regulators down to
+> >>>> mc13xxx_parse_regulators_dt() and they are all defined in uppercase
+> >>>> letters by the MC13892_*_DEFINE* macros, whereas they are defined as
+> >>>> lowercase in the DTS.
+> >>>>
+> >>>> Fix this by use strncasecmp() since that makes sure the comparison is
+> >>>> case insensitive like what of_node_cmp() did.
+> >>>>
+> >>>> Reported-by: Vivien Didelot <vivien.didelot@gmail.com>
+> >>>> Fixes: c32569e358ad ("regulator: Use of_node_name_eq for node name comparisons")
+> >>>> Signed-off-by: Florian Fainelli <f.fainelli@gmail.com>
+> >>>> ---
+> >>>>  drivers/of/base.c | 3 ++-
+> >>>>  1 file changed, 2 insertions(+), 1 deletion(-)
+> >>>>
+> >>>> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> >>>> index 5226e898476e..ff47c86277cb 100644
+> >>>> --- a/drivers/of/base.c
+> >>>> +++ b/drivers/of/base.c
+> >>>> @@ -66,7 +66,8 @@ bool of_node_name_eq(const struct device_node *np, const char *name)
+> >>>>    node_name = kbasename(np->full_name);
+> >>>>    len = strchrnul(node_name, '@') - node_name;
+> >>>>
+> >>>> -  return (strlen(name) == len) && (strncmp(node_name, name, len) == 0);
+> >>>> +  return (strlen(name) == len) &&
+> >>>> +          (strncasecmp(node_name, name, len) == 0);
+> >>>>  }
+> >>>>  EXPORT_SYMBOL(of_node_name_eq);
+> >>>>
+> >>>>
+> >>>
+> >>> Node names are case sensitive.  Please fix mc13xxx_parse_regulators_dt() to
+> >>> properly handle case instead of changing of_node_name_eq().
+> >>
+> >> Fair enough, should we issue a warning if np->full_name contains upper
+> >> case while name does not (and vice versa) to help troubleshoot cases
+> >> like the one we found with Vivien?
+> >
+> > It seems like a lot of work to detect that specific case.  If anything,
+> > maybe just add some text to the existing "Unknown regulator: ..." warning
+> > in mc13xxx_parse_regulators_dt() to mention that case matters.
+>
+> I was not thinking about something very clever, just issue a warning
+> like this, completely untested and likely flawed:
+>
+> diff --git a/drivers/of/base.c b/drivers/of/base.c
+> index 5226e898476e..2505286c875b 100644
+> --- a/drivers/of/base.c
+> +++ b/drivers/of/base.c
+> @@ -58,6 +58,7 @@ DEFINE_RAW_SPINLOCK(devtree_lock);
+>  bool of_node_name_eq(const struct device_node *np, const char *name)
+>  {
+>         const char *node_name;
+> +       int ret1, ret2;
+>         size_t len;
+>
+>         if (!np)
+> @@ -66,7 +67,12 @@ bool of_node_name_eq(const struct device_node *np,
+> const char *name)
+>         node_name = kbasename(np->full_name);
+>         len = strchrnul(node_name, '@') - node_name;
+>
+> -       return (strlen(name) == len) && (strncmp(node_name, name, len)
+> == 0);
+> +       ret1 = strncmp(node_name, name, len);
+> +       ret2 = strncasecmp(node_name, len);
+> +
+> +       WARN(ret1 ^ ret2, "Comparing case sensitive names!");
+> +
+> +       return (strlen(name) == len && (strncmp(node_name, name, len) == 0);
 
---PEIAKu/WMn1b1Hv9
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+If it comes to this, I'd rather not always do 3 string compares.
 
-On Fri, Jan 25, 2019 at 03:57:11PM +0100, Andrew Lunn wrote:
-> On Fri, Jan 25, 2019 at 11:18:14AM +0100, Thierry Reding wrote:
-> > From: Thierry Reding <treding@nvidia.com>
-> >=20
-> > If the system was booted using a device tree and if the device tree
-> > contains a MAC address, use it instead of reading one from the EEPROM.
-> > This is useful in situations where the EEPROM isn't properly programmed
-> > or where the firmware wants to override the existing MAC address.
-> >=20
-> > Signed-off-by: Thierry Reding <treding@nvidia.com>
-> > ---
-> > Based on net-next.
-> >=20
-> >  drivers/net/ethernet/realtek/r8169.c | 35 +++++++++++++++++-----------
-> >  1 file changed, 22 insertions(+), 13 deletions(-)
-> >=20
-> > diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/etherne=
-t/realtek/r8169.c
-> > index f574b6b557f9..fd9edd643ca5 100644
-> > --- a/drivers/net/ethernet/realtek/r8169.c
-> > +++ b/drivers/net/ethernet/realtek/r8169.c
-> > @@ -6957,6 +6957,21 @@ static int rtl_alloc_irq(struct rtl8169_private =
-*tp)
-> >  	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
-> >  }
-> > =20
-> > +static void rtl_read_mac_address(struct rtl8169_private *tp,
-> > +				 u8 mac_addr[ETH_ALEN])
-> > +{
-> > +	/* Get MAC address */
-> > +	switch (tp->mac_version) {
-> > +	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
-> > +	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
-> > +		*(u32 *)&mac_addr[0] =3D rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
-> > +		*(u16 *)&mac_addr[4] =3D rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
-> > +		break;
-> > +	default:
-> > +		break;
-> > +	}
-> > +}
-> > +
-> >  DECLARE_RTL_COND(rtl_link_list_ready_cond)
-> >  {
-> >  	return RTL_R8(tp, MCU) & LINK_LIST_RDY;
-> > @@ -7148,6 +7163,7 @@ static int rtl_get_ether_clk(struct rtl8169_priva=
-te *tp)
-> >  static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_=
-id *ent)
-> >  {
-> >  	const struct rtl_cfg_info *cfg =3D rtl_cfg_infos + ent->driver_data;
-> > +	u8 mac_addr[ETH_ALEN] __aligned(4);
->=20
-> Hi Thierry
->=20
-> Maybe now would be a good time to cleanup this __aligned(4), pointer
-> aliasing, etc?
+>  }
+>  EXPORT_SYMBOL(of_node_name_eq);
+>
+>
+> My concern is that we have identified one place here where the
+> conversion to of_node_name_eq() broke that particular driver in fact,
+> all other regulator drivers but qcom-rpmh-regulator.c that use
+> of_node_name_eq() are broken after that change, but presumably this is
+> not the only place in the kernel where things could break, so having a
+> warning could potentially help (also adding the backtrace which is neat).
 
-Are you proposing that I rewrite rtl_read_mac_address() to manually
-extract bytes from each register read? Something along these lines:
+Most modern DT's don't really rely on the node names. Regulators are
+the oddball.
 
-	value =3D rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
-	mac_addr[0] =3D (value >>  0) & 0xff;
-	mac_addr[1] =3D (value >>  8) & 0xff;
-	mac_addr[2] =3D (value >> 16) & 0xff;
-	mac_addr[3] =3D (value >> 24) & 0xff;
+I checked all the other affected regulator drivers. da9052 is also
+affected. IMO, we should fix the drivers and I'm sending out patches
+to do that.
 
-	value =3D rtl_eri_read(tp, 0xe4 ERIAR_EXGMAC);
-	mac_addr[4] =3D (value >>  0) & 0xff;
-	mac_addr[5] =3D (value >>  8) & 0xff;
+> What should the fix look like though? Add an of_node_casename_eq() and
+> use it, revert Rob's commit that changes these regulators to use
+> of_node_name_eq()?
 
-Looks like maybe that should be a separate patch?
+No, we don't want to add of_node_casename_eq.
 
->=20
-> > +	/* get MAC address */
-> > +	if (eth_platform_get_mac_address(&pdev->dev, mac_addr))
-> > +		rtl_read_mac_address(tp, mac_addr);
-> > +
->=20
-> Maybe that could be made more readable with:
->=20
->       err =3D eth_platform_get_mac_address(&pdev->dev, mac_addr);
->       if (err)
->       	 	rtl_read_mac_address(tp, mac_addr);
+We may have to internally go back to case insensitive compare, but I'd
+like to avoid that and fix any specific cases if possible.
 
-I was following the same pattern that other drivers were, but I can
-change to the above if you prefer.
+> I don't know the regulator framework enough to know whether forcibly
+> making the names lowercase is not breaking sysfs/debugfs...
 
-Thanks,
-Thierry
+Userspace relying on specific regulator names seems questionable to
+me. Certainly, debugfs is not an ABI.
 
---PEIAKu/WMn1b1Hv9
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxLLDEACgkQ3SOs138+
-s6FADQ//bIJRLjuvqMg1gqSqCK/Lze06PFPhtnRYtXQyAqo3YqblXqbgyyUWxg5Z
-UivTex/Jou2z7nHnfc0v5l3zmqG1TzovaLh6F8H2JBZXrIALm2xnycI6kdv+R8EP
-0+pAS7J0sDHxUmygDeLiLT1ufDvoOnMyPKEAVThPexEX9VqlJze1cqG7ecV8BcBv
-k1HSzZckrgPn/rOD8s2yBFU8cjs3fW61yyxR6ME6g3pjz/1gew2uiG+bytOjmuYp
-44K3woMqjoO9PTUqdmpaKIeTNnVcwQwzwZzLC78TUA/kRnD75Ny7rmOKf4UvyazL
-SD6YDW8J2iGdhyrS+ZZL9sV+RNbHFxC7lDidple8ZCBo0QJXl3kaZKwnqbqbHau2
-xGOF2RXYD8PZMfwcOXzQpfgn9hsqEk6veq0tLS8CNm6CPBknGYu2iySZiohZesQ0
-ftb/RMCk6ecRw0vAH2RZlXpBNKx9lgeUTSjtfdBXapyp5CeFT1HMBxjCb1SxHKoN
-mpRCcEHDBBQJTcIQssADZQWYUsA3wwEKJqKsN94xMqdVWnkSnQbgGTkCsscl3SJJ
-pu5k2YPf1c1xs3iVhY3QZUjspYg0WZTlFDommfbaL0RkuY2Y4qrW9OF1z2X+XC9K
-Nhvf/poV/3syJTsNfClsK08Cnb2GdqfGyBGlG599L7C+pvS/aEQ=
-=bENl
------END PGP SIGNATURE-----
-
---PEIAKu/WMn1b1Hv9--
+Rob
