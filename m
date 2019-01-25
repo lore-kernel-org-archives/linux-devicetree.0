@@ -1,569 +1,400 @@
-Return-Path: <SRS0=UxJn=QB=linaro.org=vincent.guittot@kernel.org>
-MIME-Version: 1.0
+Return-Path: <SRS0=g+jV=QB=bp.renesas.com=biju.das@kernel.org>
+From: Biju Das <biju.das@bp.renesas.com>
+Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
+Date: Fri, 25 Jan 2019 15:12:27 +0000
+Message-ID: 
+ <OSBPR01MB21039EBC232C2290A89B47D6B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
 References: <1540542307-63158-1-git-send-email-biju.das@bp.renesas.com>
  <CAMuHMdW-qt+3iNit1wVxN2JyRwCArJzBNvvjDZJyxYRjvDkLuA@mail.gmail.com>
  <OSBPR01MB21034B1D07C9BA05859AEA73B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
  <OSBPR01MB210397F6201DBAC36BFB0CB2B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
- <20190125140606.GA17196@linaro.org> <OSBPR01MB2103AFD4C1E401F26963EA31B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
+ <20190125140606.GA17196@linaro.org>
+ <OSBPR01MB2103AFD4C1E401F26963EA31B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
  <OSBPR01MB21035AD5A7D94E2D0A1A9189B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
  <CAKfTPtAWxp16_C1Nvdt3Ni6j+_fKDCdtM1doTTMoNpi_B=nH2A@mail.gmail.com>
- <CAKfTPtA1ttFJ_Reb3KCzzjX52cuTTFZrTPKJqhVw7hu+VQDkMA@mail.gmail.com> <OSBPR01MB21039EBC232C2290A89B47D6B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-In-Reply-To: <OSBPR01MB21039EBC232C2290A89B47D6B89B0@OSBPR01MB2103.jpnprd01.prod.outlook.com>
-From: Vincent Guittot <vincent.guittot@linaro.org>
-Date: Fri, 25 Jan 2019 16:20:10 +0100
-Message-ID: <CAKfTPtCxdq2LgQOH-2QpiY8DP9jArdvp6syYRw_6Yg6C8jbzDw@mail.gmail.com>
-Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-To: Biju Das <biju.das@bp.renesas.com>
-Cc: "Rafael J. Wysocki" <rjw@rjwysocki.net>, Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Samuel Holland <samuel@sholland.org>
+ <CAKfTPtA1ttFJ_Reb3KCzzjX52cuTTFZrTPKJqhVw7hu+VQDkMA@mail.gmail.com>
+In-Reply-To: 
+ <CAKfTPtA1ttFJ_Reb3KCzzjX52cuTTFZrTPKJqhVw7hu+VQDkMA@mail.gmail.com>
+Content-Language: en-US
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+To: Vincent Guittot <vincent.guittot@linaro.org>, "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Simon Horman <horms@verge.net.au>, Magnus Damm <magnus.damm@gmail.com>, Linux-Renesas <linux-renesas-soc@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS  <devicetree@vger.kernel.org>, Geert Uytterhoeven" <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Daniel Lezcano <daniel.lezcano@linaro.org>, Thomas Gleixner <tglx@linutronix.de>, John Stultz <john.stultz@linaro.org>, Fabrizio Castro <fabrizio.castro@bp.renesas.com>, Samuel Holland <samuel@sholland.org>
 List-ID: <devicetree@vger.kernel.org>
 
-On Fri, 25 Jan 2019 at 16:12, Biju Das <biju.das@bp.renesas.com> wrote:
->
-> Hi Vincent and Rafael,
->
-> Are you going to send the patch for the dead lock fix? Or Do you want me =
-to send the patch?
-
-I will send it once agreed with Rafael that's the best solution.
-Furthermore, linux next has few more patches that modify this part so
-we have to decide how to apply it for v5.0-rcX
-
-Thanks
-Vincent
->
-> Please let me know.
->
-> Regards,
-> Biju
->
-> > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device nodes
-> >
-> > Adding Rafael
-> >
-> > On Fri, 25 Jan 2019 at 15:48, Vincent Guittot <vincent.guittot@linaro.o=
-rg>
-> > wrote:
-> > >
-> > > On Fri, 25 Jan 2019 at 15:45, Biju Das <biju.das@bp.renesas.com> wrot=
-e:
-> > > >
-> > > > Hi Vincent,
-> > > >
-> > > > The below patch fixed deadlock.
-> > > >
-> > > > --- a/include/linux/pm_runtime.h
-> > > > +++ b/include/linux/pm_runtime.h
-> > > > @@ -105,7 +105,7 @@ static inline bool
-> > > > pm_runtime_callbacks_present(struct device *dev)
-> > > >
-> > > >  static inline void pm_runtime_mark_last_busy(struct device *dev)  =
-{
-> > > > -       WRITE_ONCE(dev->power.last_busy, ktime_to_ns(ktime_get()));
-> > > > +       WRITE_ONCE(dev->power.last_busy, ktime_get_mono_fast_ns());
-> > >
-> > > Ah yes. I have searched in runtime.c but  forgot to looked in
-> > > pm_runtime.h
-> >
-> > Rafael,
-> >
-> > When pm-runtime is used for a clocksource, we get a deadlock because we
-> > call pm_runtime_mark_last_busy() when ebaling the clocksource whereas
-> > we are in the write_seqcount sequence.
-> > Using ktime_get_mono_fast_ns fixes the problem because it doesn't use
-> > tk_core.seq
-> >
-> > Regards,
-> > Vincent
-> >
-> > >
-> > > >  }
-> > > >
-> > > > Regards,
-> > > > Biju
-> > > > > -----Original Message-----
-> > > > > From: Biju Das
-> > > > > Sent: 25 January 2019 14:26
-> > > > > To: 'Vincent Guittot' <vincent.guittot@linaro.org>
-> > > > > Cc: Geert Uytterhoeven <geert@linux-m68k.org>; Sergei Shtylyov
-> > > > > <sergei.shtylyov@cogentembedded.com>; Rob Herring
-> > > > > <robh+dt@kernel.org>; Mark Rutland <mark.rutland@arm.com>;
-> > Simon
-> > > > > Horman <horms@verge.net.au>; Magnus Damm
-> > <magnus.damm@gmail.com>;
-> > > > > Linux-Renesas <linux-renesas- soc@vger.kernel.org>; open list:OPE=
-N
-> > > > > FIRMWARE AND FLATTENED DEVICE TREE BINDINGS
-> > > > > <devicetree@vger.kernel.org>; Geert Uytterhoeven
-> > > > > <geert+renesas@glider.be>; Chris Paterson
-> > > > > <Chris.Paterson2@renesas.com>; Daniel Lezcano
-> > > > > <daniel.lezcano@linaro.org>; Thomas Gleixner <tglx@linutronix.de>=
-;
-> > > > > John Stultz <john.stultz@linaro.org>; Fabrizio Castro
-> > > > > <fabrizio.castro@bp.renesas.com>; Samuel Holland
-> > > > > <samuel@sholland.org>
-> > > > > Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT device
-> > > > > nodes
-> > > > >
-> > > > > Hi Vincent,
-> > > > >
-> > > > > Thanks for the update. I am still seeing the same deadlock.
-> > > > >
-> > > > > diff --git a/drivers/base/power/runtime.c
-> > > > > b/drivers/base/power/runtime.c index fb5e2b6..a96641a 100644
-> > > > > --- a/drivers/base/power/runtime.c
-> > > > > +++ b/drivers/base/power/runtime.c
-> > > > > @@ -155,7 +155,7 @@ u64
-> > pm_runtime_autosuspend_expiration(struct
-> > > > > device *dev)
-> > > > >
-> > > > >         expires  =3D READ_ONCE(dev->power.last_busy);
-> > > > >         expires +=3D (u64)autosuspend_delay * NSEC_PER_MSEC;
-> > > > > -       if (expires > ktime_to_ns(ktime_get()))
-> > > > > +       if (expires > ktime_get_mono_fast_ns())
-> > > > >                 return expires; /* Expires in the future */
-> > > > >
-> > > > >         return 0;
-> > > > > @@ -921,7 +921,7 @@ static enum hrtimer_restart
-> > > > > pm_suspend_timer_fn(struct hrtimer *timer)
-> > > > >          * If 'expires' is after the current time, we've been cal=
-led
-> > > > >          * too early.
-> > > > >          */
-> > > > > -       if (expires > 0 && expires < ktime_to_ns(ktime_get())) {
-> > > > > +       if (expires > 0 && expires < ktime_get_mono_fast_ns()) {
-> > > > >                 dev->power.timer_expires =3D 0;
-> > > > >                 rpm_suspend(dev, dev->power.timer_autosuspends ?
-> > > > >                     (RPM_ASYNC | RPM_AUTO) : RPM_ASYNC); @@ -940,=
-7
-> > > > > +940,7 @@ static enum hrtimer_restart  pm_suspend_timer_fn(struct
-> > > > > hrtimer
-> > > > > *timer)  int pm_schedule_suspend(struct device *dev, unsigned int
-> > delay)  {
-> > > > >         unsigned long flags;
-> > > > > -       ktime_t expires;
-> > > > > +       u64 expires;
-> > > > >         int retval;
-> > > > >
-> > > > >         spin_lock_irqsave(&dev->power.lock, flags); @@ -957,8
-> > > > > +957,8 @@ int pm_schedule_suspend(struct device *dev, unsigned in=
-t
-> > delay)
-> > > > >         /* Other scheduled or pending requests need to be cancele=
-d. */
-> > > > >         pm_runtime_cancel_pending(dev);
-> > > > >
-> > > > > -       expires =3D ktime_add(ktime_get(), ms_to_ktime(delay));
-> > > > > -       dev->power.timer_expires =3D ktime_to_ns(expires);
-> > > > > +       expires =3D ktime_get_mono_fast_ns() + ((u64)delay *
-> > > > > NSEC_PER_MSEC);
-> > > > > +       dev->power.timer_expires =3D expires;
-> > > > >         dev->power.timer_autosuspends =3D 0;
-> > > > >         hrtimer_start(&dev->power.suspend_timer, expires,
-> > > > > HRTIMER_MODE_ABS);
-> > > > >
-> > > > >
-> > > > > please find the logs.
-> > > > >
-> > > > > root@salvator-x:~# echo  e60f0000.timer >
-> > > > > /sys/devices/system/clocksource/clocksource0/current_clocksource
-> > > > > [   42.769260]
-> > > > > [   42.770760] =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D
-> > > > > [   42.776068] WARNING: possible recursive locking detected
-> > > > > [   42.781378] 5.0.0-rc3-next-20190125-00001-gfa6709c-dirty #33 N=
-ot
-> > tainted
-> > > > > [   42.788076] --------------------------------------------
-> > > > > [   42.793385] migration/0/11 is trying to acquire lock:
-> > > > > [   42.798435] 00000000b43b7183 (tk_core.seq){----}, at:
-> > > > > rpm_resume+0x5f0/0x7a8
-> > > > > [   42.805497]
-> > > > > [   42.805497] but task is already holding lock:
-> > > > > [   42.811326] 00000000b43b7183 (tk_core.seq){----}, at:
-> > > > > multi_cpu_stop+0x8c/0x140
-> > > > > [   42.818641]
-> > > > > [   42.818641] other info that might help us debug this:
-> > > > > [   42.825165]  Possible unsafe locking scenario:
-> > > > > [   42.825165]
-> > > > > [   42.831080]        CPU0
-> > > > > [   42.833521]        ----
-> > > > > [   42.835962]   lock(tk_core.seq);
-> > > > > [   42.839185]   lock(tk_core.seq);
-> > > > > [   42.842409]
-> > > > > [   42.842409]  *** DEADLOCK ***
-> > > > > [   42.842409]
-> > > > > [   42.848328]  May be due to missing lock nesting notation
-> > > > > [   42.848328]
-> > > > > [   42.855115] 4 locks held by migration/0/11:
-> > > > > [   42.859293]  #0: 00000000a7511731 (timekeeper_lock){-.-.}, at:
-> > > > > change_clocksource+0x2c/0x118
-> > > > > [   42.867738]  #1: 00000000b43b7183 (tk_core.seq){----}, at:
-> > > > > multi_cpu_stop+0x8c/0x140
-> > > > > [   42.875484]  #2: 00000000b54c38a2 (&ch->lock){....}, at:
-> > > > > sh_cmt_start+0x28/0x200
-> > > > > [   42.882887]  #3: 0000000010d14eec (&(&dev->power.lock)->rlock)=
-{-
-> > ...}, at:
-> > > > > __rpm_callback+0xbc/0x1e8
-> > > > > [   42.891937]
-> > > > > [   42.891937] stack backtrace:
-> > > > > [   42.896294] CPU: 0 PID: 11 Comm: migration/0 Not tainted 5.0.0=
--rc3-
-> > next-
-> > > > > 20190125-00001-gfa6709c-dirty #33
-> > > > > [   42.905860] Hardware name: Renesas Salvator-X 2nd version boar=
-d
-> > based
-> > > > > on r8a7796 (DT)
-> > > > > [   42.913689] Call trace:
-> > > > > [   42.916137]  dump_backtrace+0x0/0x178
-> > > > > [   42.919796]  show_stack+0x14/0x20
-> > > > > [   42.923111]  dump_stack+0xb0/0xec
-> > > > > [   42.926425]  __lock_acquire+0xfb4/0x1c08
-> > > > > [   42.930345]  lock_acquire+0xd0/0x268
-> > > > > [   42.933917]  ktime_get+0x5c/0x108
-> > > > > [   42.937229]  rpm_resume+0x5f0/0x7a8
-> > > > > [   42.940714]  __pm_runtime_resume+0x50/0x98
-> > > > > [   42.944807]  sh_cmt_start+0x84/0x200
-> > > > > [   42.948380]  sh_cmt_clocksource_enable+0x28/0x48
-> > > > > [   42.952995]  change_clocksource+0x84/0x118
-> > > > > [   42.957087]  multi_cpu_stop+0x8c/0x140
-> > > > > [   42.960834]  cpu_stopper_thread+0xac/0x120
-> > > > > [   42.964931]  smpboot_thread_fn+0x1ac/0x2c8
-> > > > > [   42.969024]  kthread+0x12c/0x130
-> > > > > [   42.972249]  ret_from_fork+0x10/0x18
-> > > > >
-> > > > > Regards,
-> > > > > Biju
-> > > > >
-> > > > > > -----Original Message-----
-> > > > > > From: Vincent Guittot <vincent.guittot@linaro.org>
-> > > > > > Sent: 25 January 2019 14:06
-> > > > > > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CMT
-> > > > > > device nodes
-> > > > > >
-> > > > > > Hi Biju,
-> > > > > >
-> > > > > > It seems that the call of mark_last_busy in rpm_resume raises
-> > > > > > this
-> > > > > problem.
-> > > > > > We have the sequence:
-> > > > > > change_clocksource
-> > > > > >
-> > > > > >     write_seqcount_begin
-> > > > > >     ...
-> > > > > >     timekeeping_update
-> > > > > >         ...
-> > > > > >         sh_cmt_clocksource_enable
-> > > > > >             ...
-> > > > > >             rpm_resume
-> > > > > >                 pm_runtime_mark_last_busy
-> > > > > >                     ktime_get
-> > > > > >                         do
-> > > > > >                             read_seqcount_begin
-> > > > > >                         while read_seqcount_retry
-> > > > > >     ....
-> > > > > >     write_seqcount_end
-> > > > > >
-> > > > > > In fact, we should be safe because we haven't yet changed the
-> > > > > > clocksource as we are enabling the clocksource that will be use=
-d
-> > > > > > for the
-> > > > > switch.
-> > > > > >
-> > > > > > Can you try the patch below ?
-> > > > > > It uses ktime_get_mono_fast_ns instead which is lock safe for
-> > > > > > such case
-> > > > > >
-> > > > > > ---
-> > > > > >  drivers/base/power/runtime.c | 10 +++++-----
-> > > > > >  1 file changed, 5 insertions(+), 5 deletions(-)
-> > > > > >
-> > > > > > diff --git a/drivers/base/power/runtime.c
-> > > > > > b/drivers/base/power/runtime.c index 457be03..708a13f 100644
-> > > > > > --- a/drivers/base/power/runtime.c
-> > > > > > +++ b/drivers/base/power/runtime.c
-> > > > > > @@ -130,7 +130,7 @@ u64
-> > pm_runtime_autosuspend_expiration(struct
-> > > > > > device *dev)  {
-> > > > > >  int autosuspend_delay;
-> > > > > >  u64 last_busy, expires =3D 0;
-> > > > > > -u64 now =3D ktime_to_ns(ktime_get());
-> > > > > > +u64 now =3D ktime_get_mono_fast_ns();
-> > > > > >
-> > > > > >  if (!dev->power.use_autosuspend)  goto out; @@ -909,7 +909,7 @=
-@
-> > > > > > static enum hrtimer_restart pm_suspend_timer_fn(struct hrtimer
-> > > > > > *timer)
-> > > > > >   * If 'expires' is after the current time, we've been called
-> > > > > >   * too early.
-> > > > > >   */
-> > > > > > -if (expires > 0 && expires < ktime_to_ns(ktime_get())) {
-> > > > > > +if (expires > 0 && expires < ktime_get_mono_fast_ns()) {
-> > > > > >  dev->power.timer_expires =3D 0;
-> > > > > >  rpm_suspend(dev, dev->power.timer_autosuspends ?
-> > > > > >      (RPM_ASYNC | RPM_AUTO) : RPM_ASYNC); @@ -928,7
-> > > > > > +928,7 @@ static enum hrtimer_restart
-> > > > > > +pm_suspend_timer_fn(struct
-> > > > > > hrtimer *timer)  int pm_schedule_suspend(struct device *dev,
-> > > > > > unsigned int
-> > > > > > delay)  {
-> > > > > >  unsigned long flags;
-> > > > > > -ktime_t expires;
-> > > > > > +u64 expires;
-> > > > > >  int retval;
-> > > > > >
-> > > > > >  spin_lock_irqsave(&dev->power.lock, flags); @@ -945,8 +945,8 @=
-@
-> > > > > int
-> > > > > > pm_schedule_suspend(struct device *dev, unsigned int delay)
-> > > > > >  /* Other scheduled or pending requests need to be canceled. */
-> > > > > > pm_runtime_cancel_pending(dev);
-> > > > > >
-> > > > > > -expires =3D ktime_add(ktime_get(), ms_to_ktime(delay));
-> > > > > > -dev->power.timer_expires =3D ktime_to_ns(expires);
-> > > > > > +expires =3D ktime_get_mono_fast_ns() + (u64)delay *
-> > > > > > NSEC_PER_MSEC);
-> > > > > > +dev->power.timer_expires =3D expires;
-> > > > > >  dev->power.timer_autosuspends =3D 0;
-> > > > > > hrtimer_start(&dev->power.suspend_timer, expires,
-> > > > > HRTIMER_MODE_ABS);
-> > > > > >
-> > > > > > --
-> > > > > > 2.7.4
-> > > > > >
-> > > > > > Le Friday 25 Jan 2019 =C3=A0 12:26:54 (+0000), Biju Das a =C3=
-=A9crit :
-> > > > > > > Hi All,
-> > > > > > >
-> > > > > > > I have enabled lock debugging  and it is showing "possible
-> > > > > > > recursive locking
-> > > > > > detected "with the patch
-> > ("8234f6734c5d74ac794e5517437f51c57d65f865"
-> > > > > > PM-runtime: Switch autosuspend over to using hrtimers)
-> > > > > > >
-> > > > > > > root@salvator-x:~# echo  e60f0000.timer >
-> > > > > > /sys/devices/system/clocksource/clocksource0/current_clocksourc=
-e
-> > > > > > > [   67.995854]
-> > > > > > > [   67.997354]
-> > =3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=
-=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D=3D
-> > > > > > > [   68.002663] WARNING: possible recursive locking detected
-> > > > > > > [   68.007974] 5.0.0-rc3-next-20190125-00005-g382822b #31 Not
-> > tainted
-> > > > > > > [   68.014150] --------------------------------------------
-> > > > > > > [   68.019459] migration/0/11 is trying to acquire lock:
-> > > > > > > [   68.024509] 0000000065de5fdf (tk_core.seq){----}, at:
-> > > > > > rpm_resume+0x5f0/0x7a8
-> > > > > > > [   68.031570]
-> > > > > > > [   68.031570] but task is already holding lock:
-> > > > > > > [   68.037399] 0000000065de5fdf (tk_core.seq){----}, at:
-> > > > > > multi_cpu_stop+0x8c/0x140
-> > > > > > > [   68.044714]
-> > > > > > > [   68.044714] other info that might help us debug this:
-> > > > > > > [   68.051237]  Possible unsafe locking scenario:
-> > > > > > > [   68.051237]
-> > > > > > > [   68.057153]        CPU0
-> > > > > > > [   68.059594]        ----
-> > > > > > > [   68.062034]   lock(tk_core.seq);
-> > > > > > > [   68.065258]   lock(tk_core.seq);
-> > > > > > > [   68.068482]
-> > > > > > > [   68.068482]  *** DEADLOCK ***
-> > > > > > > [   68.068482]
-> > > > > > > [   68.074402]  May be due to missing lock nesting notation
-> > > > > > > [   68.074402]
-> > > > > > > [   68.081188] 4 locks held by migration/0/11:
-> > > > > > > [   68.085366]  #0: 00000000463b6446 (timekeeper_lock){-.-.},=
- at:
-> > > > > > change_clocksource+0x2c/0x118
-> > > > > > > [   68.093812]  #1: 0000000065de5fdf (tk_core.seq){----}, at:
-> > > > > > multi_cpu_stop+0x8c/0x140
-> > > > > > > [   68.101558]  #2: 0000000098b45550 (&ch->lock){....}, at:
-> > > > > > sh_cmt_start+0x28/0x200
-> > > > > > > [   68.108961]  #3: 00000000da0f4e80 (&(&dev->power.lock)-
-> > >rlock){-...},
-> > > > > at:
-> > > > > > __rpm_callback+0xbc/0x1e8
-> > > > > > > [   68.118011]
-> > > > > > > [   68.118011] stack backtrace:
-> > > > > > > [   68.122368] CPU: 0 PID: 11 Comm: migration/0 Not tainted 5=
-.0.0-
-> > rc3-
-> > > > > next-
-> > > > > > 20190125-00005-g382822b #31
-> > > > > > > [   68.131412] Hardware name: Renesas Salvator-X 2nd version
-> > board
-> > > > > based
-> > > > > > on r8a7796 (DT)
-> > > > > > > [   68.139240] Call trace:
-> > > > > > > [   68.141687]  dump_backtrace+0x0/0x178
-> > > > > > > [   68.145346]  show_stack+0x14/0x20
-> > > > > > > [   68.148661]  dump_stack+0xb0/0xec
-> > > > > > > [   68.151975]  __lock_acquire+0xfb4/0x1c08
-> > > > > > > [   68.155894]  lock_acquire+0xd0/0x268
-> > > > > > > [   68.159467]  ktime_get+0x5c/0x108
-> > > > > > > [   68.162779]  rpm_resume+0x5f0/0x7a8
-> > > > > > > [   68.166265]  __pm_runtime_resume+0x50/0x98
-> > > > > > > [   68.170358]  sh_cmt_start+0x84/0x200
-> > > > > > > [   68.173931]  sh_cmt_clocksource_enable+0x28/0x48
-> > > > > > > [   68.178546]  change_clocksource+0x84/0x118
-> > > > > > > [   68.182639]  multi_cpu_stop+0x8c/0x140
-> > > > > > > [   68.186385]  cpu_stopper_thread+0xac/0x120
-> > > > > > > [   68.190481]  smpboot_thread_fn+0x1ac/0x2c8
-> > > > > > > [   68.194574]  kthread+0x12c/0x130
-> > > > > > > [   68.197800]  ret_from_fork+0x10/0x18
-> > > > > > >
-> > > > > > > Regards,
-> > > > > > > Biju
-> > > > > > >
-> > > > > > > > -----Original Message-----
-> > > > > > > > From: Biju Das
-> > > > > > > > Sent: 25 January 2019 11:27
-> > > > > > > > To: 'Geert Uytterhoeven' <geert@linux-m68k.org>; Vincent
-> > > > > > > > Guittot <vincent.guittot@linaro.org>; Sergei Shtylyov
-> > > > > > > > <sergei.shtylyov@cogentembedded.com>
-> > > > > > > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> > > > > > > > <mark.rutland@arm.com>; Simon Horman
-> > <horms@verge.net.au>;
-> > > > > > Magnus
-> > > > > > > > Damm <magnus.damm@gmail.com>; Linux-Renesas <linux-
-> > renesas-
-> > > > > > > > soc@vger.kernel.org>; open list:OPEN FIRMWARE AND
-> > FLATTENED
-> > > > > > DEVICE
-> > > > > > > > TREE BINDINGS <devicetree@vger.kernel.org>; Geert
-> > > > > > > > Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
-> > > > > > > > <Chris.Paterson2@renesas.com>; Daniel Lezcano
-> > > > > > > > <daniel.lezcano@linaro.org>; Thomas Gleixner
-> > > > > > > > <tglx@linutronix.de>; John Stultz <john.stultz@linaro.org>;
-> > > > > > > > Fabrizio Castro <fabrizio.castro@bp.renesas.com>; Samuel
-> > > > > > > > Holland <samuel@sholland.org>
-> > > > > > > > Subject: RE: [PATCH] arm64: dts: renesas: r8a7796: Add CMT
-> > > > > > > > device nodes
-> > > > > > > >
-> > > > > > > > Hi Geert,
-> > > > > > > >
-> > > > > > > > Thanks for the feedback. I started testing CMT on latest
-> > > > > > > > kernel(Linux-next-
-> > > > > > > > 20190125 and also renesas-dev) and found that it is broken
-> > > > > > > > on R-Car M3-W device.
-> > > > > > > >
-> > > > > > > > On further investigation the patch ("
-> > > > > > > > 8234f6734c5d74ac794e5517437f51c57d65f865"   PM-runtime:
-> > Switch
-> > > > > > > > autosuspend over to using hrtimers)  is causing the issue.
-> > > > > > > >
-> > > > > > > > During clock source switching, It calls the function
-> > "sh_cmt_enable"
-> > > > > > > > which calls " pm_runtime_get_sync(&ch->cmt->pdev->dev);"
-> > > > > > > > and after that console freezes.
-> > > > > > > >
-> > > > > > > > Sergei: Have you noticed this issue  on R-Car V3M and V3H
-> > > > > > > > boards with latest kernel?
-> > > > > > > >
-> > > > > > > > Regards,
-> > > > > > > > Biju
-> > > > > > > >
-> > > > > > > > > -----Original Message-----
-> > > > > > > > > From: linux-renesas-soc-owner@vger.kernel.org
-> > > > > > > > > <linux-renesas-soc- owner@vger.kernel.org> On Behalf Of
-> > > > > > > > > Geert Uytterhoeven
-> > > > > > > > > Sent: 24 January 2019 10:16
-> > > > > > > > > To: Biju Das <biju.das@bp.renesas.com>
-> > > > > > > > > Cc: Rob Herring <robh+dt@kernel.org>; Mark Rutland
-> > > > > > > > > <mark.rutland@arm.com>; Simon Horman
-> > <horms@verge.net.au>;
-> > > > > > > > Magnus Damm
-> > > > > > > > > <magnus.damm@gmail.com>; Linux-Renesas <linux-renesas-
-> > > > > > > > > soc@vger.kernel.org>; open list:OPEN FIRMWARE AND
-> > > > > > > > > FLATTENED
-> > > > > > DEVICE
-> > > > > > > > > TREE BINDINGS <devicetree@vger.kernel.org>; Geert
-> > > > > > > > > Uytterhoeven <geert+renesas@glider.be>; Chris Paterson
-> > > > > > > > > <Chris.Paterson2@renesas.com>; Daniel Lezcano
-> > > > > > > > > <daniel.lezcano@linaro.org>; Thomas Gleixner
-> > > > > > > > > <tglx@linutronix.de>; John Stultz
-> > > > > > > > > <john.stultz@linaro.org>; Fabrizio Castro
-> > > > > > > > > <fabrizio.castro@bp.renesas.com>; Samuel Holland
-> > > > > > > > <samuel@sholland.org>
-> > > > > > > > > Subject: Re: [PATCH] arm64: dts: renesas: r8a7796: Add CM=
-T
-> > > > > > > > > device nodes
-> > > > > > > > >
-> > > > > > > > > Hi Biju,
-> > > > > > > > >
-> > > > > > > > > On Fri, Oct 26, 2018 at 10:32 AM Biju Das
-> > > > > > > > > <biju.das@bp.renesas.com>
-> > > > > > > > wrote:
-> > > > > > > > > > This patch adds CMT{0|1|2|3} device nodes for r8a7796 S=
-oC.
-> > > > > > > > > >
-> > > > > > > > > > Signed-off-by: Biju Das <biju.das@bp.renesas.com>
-> > > > > > > > > > ---
-> > > > > > > > > > This patch is tested against renesas-dev
-> > > > > > > > > >
-> > > > > > > > > > I have executed on inconsistency-check, nanosleep and
-> > > > > > > > > > clocksource_switch selftests on this arm64 SoC. The
-> > > > > > > > > > inconsistency-check and nanosleep tests are working
-> > > > > > > > > > fine.The clocksource_switch asynchronous test is failin=
-g
-> > > > > > > > > > due to inconsistency-check
-> > > > > > > > > failure on "arch_sys_counter".
-> > > > > > > > > >
-> > > > > > > > > > But if i skip the clocksource_switching of
-> > > > > > > > > > "arch_sys_counter", the asynchronous test is passing fo=
-r
-> > CMT0/1/2/3 timer.
-> > > > > > > > > >
-> > > > > > > > > > Has any one noticed this issue?
-> > > > > > > > >
-> > > > > > > > > clockevents/next now has commit 7cd6dca3600d8d71
-> > > > > > > > > ("clocksource/drivers/arch_timer: Workaround for Allwinne=
-r
-> > > > > > > > > A64 timer instability").  Perhaps this is related, and th=
-e
-> > > > > > > > > same test program may indicate similar issues?
-> > > > > > > > >
-> > > > > > > > > See also
-> > > > > > > > > https://lore.kernel.org/lkml/20190113021719.46457-2-
-> > > > > > > > > samuel@sholland.org/
-> > > > > > > > >
-> > > > > > > > > Gr{oetje,eeting}s,
-> > > > > > > > >
-> > > > > > > > >                         Geert
-> > > > > > > > >
-> > > > > > > > > --
-> > > > > > > > > Geert Uytterhoeven -- There's lots of Linux beyond ia32 -=
--
-> > > > > > > > > geert@linux- m68k.org
-> > > > > > > > >
-> > > > > > > > > In personal conversations with technical people, I call
-> > > > > > > > > myself a hacker. But when I'm talking to journalists I
-> > > > > > > > > just say "programmer" or
-> > > > > > > > something like that.
-> > > > > > > > >                                 -- Linus Torvalds
-> > > > > > >
-> > > > > > >
-> > > > > > >
-> > > > > > > Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road,
-> > > > > > > Bourne
-> > > > > > End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wale=
-s
-> > > > > > under Registered No. 04586709.
-> > > >
-> > > >
-> > > >
-> > > > Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourn=
-e
-> > End, Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under
-> > Registered No. 04586709.
->
->
->
-> Renesas Electronics Europe Ltd, Dukes Meadow, Millboard Road, Bourne End,=
- Buckinghamshire, SL8 5FH, UK. Registered in England & Wales under Register=
-ed No. 04586709.
+SGkgVmluY2VudCBhbmQgUmFmYWVsLA0KDQpBcmUgeW91IGdvaW5nIHRvIHNlbmQgdGhlIHBhdGNo
+IGZvciB0aGUgZGVhZCBsb2NrIGZpeD8gT3IgRG8geW91IHdhbnQgbWUgdG8gc2VuZCB0aGUgcGF0
+Y2g/DQoNClBsZWFzZSBsZXQgbWUga25vdy4NCg0KUmVnYXJkcywNCkJpanUNCg0KPiBTdWJqZWN0
+OiBSZTogW1BBVENIXSBhcm02NDogZHRzOiByZW5lc2FzOiByOGE3Nzk2OiBBZGQgQ01UIGRldmlj
+ZSBub2Rlcw0KPg0KPiBBZGRpbmcgUmFmYWVsDQo+DQo+IE9uIEZyaSwgMjUgSmFuIDIwMTkgYXQg
+MTU6NDgsIFZpbmNlbnQgR3VpdHRvdCA8dmluY2VudC5ndWl0dG90QGxpbmFyby5vcmc+DQo+IHdy
+b3RlOg0KPiA+DQo+ID4gT24gRnJpLCAyNSBKYW4gMjAxOSBhdCAxNTo0NSwgQmlqdSBEYXMgPGJp
+anUuZGFzQGJwLnJlbmVzYXMuY29tPiB3cm90ZToNCj4gPiA+DQo+ID4gPiBIaSBWaW5jZW50LA0K
+PiA+ID4NCj4gPiA+IFRoZSBiZWxvdyBwYXRjaCBmaXhlZCBkZWFkbG9jay4NCj4gPiA+DQo+ID4g
+PiAtLS0gYS9pbmNsdWRlL2xpbnV4L3BtX3J1bnRpbWUuaA0KPiA+ID4gKysrIGIvaW5jbHVkZS9s
+aW51eC9wbV9ydW50aW1lLmgNCj4gPiA+IEBAIC0xMDUsNyArMTA1LDcgQEAgc3RhdGljIGlubGlu
+ZSBib29sDQo+ID4gPiBwbV9ydW50aW1lX2NhbGxiYWNrc19wcmVzZW50KHN0cnVjdCBkZXZpY2Ug
+KmRldikNCj4gPiA+DQo+ID4gPiAgc3RhdGljIGlubGluZSB2b2lkIHBtX3J1bnRpbWVfbWFya19s
+YXN0X2J1c3koc3RydWN0IGRldmljZSAqZGV2KSAgew0KPiA+ID4gLSAgICAgICBXUklURV9PTkNF
+KGRldi0+cG93ZXIubGFzdF9idXN5LCBrdGltZV90b19ucyhrdGltZV9nZXQoKSkpOw0KPiA+ID4g
+KyAgICAgICBXUklURV9PTkNFKGRldi0+cG93ZXIubGFzdF9idXN5LCBrdGltZV9nZXRfbW9ub19m
+YXN0X25zKCkpOw0KPiA+DQo+ID4gQWggeWVzLiBJIGhhdmUgc2VhcmNoZWQgaW4gcnVudGltZS5j
+IGJ1dCAgZm9yZ290IHRvIGxvb2tlZCBpbg0KPiA+IHBtX3J1bnRpbWUuaA0KPg0KPiBSYWZhZWws
+DQo+DQo+IFdoZW4gcG0tcnVudGltZSBpcyB1c2VkIGZvciBhIGNsb2Nrc291cmNlLCB3ZSBnZXQg
+YSBkZWFkbG9jayBiZWNhdXNlIHdlDQo+IGNhbGwgcG1fcnVudGltZV9tYXJrX2xhc3RfYnVzeSgp
+IHdoZW4gZWJhbGluZyB0aGUgY2xvY2tzb3VyY2Ugd2hlcmVhcw0KPiB3ZSBhcmUgaW4gdGhlIHdy
+aXRlX3NlcWNvdW50IHNlcXVlbmNlLg0KPiBVc2luZyBrdGltZV9nZXRfbW9ub19mYXN0X25zIGZp
+eGVzIHRoZSBwcm9ibGVtIGJlY2F1c2UgaXQgZG9lc24ndCB1c2UNCj4gdGtfY29yZS5zZXENCj4N
+Cj4gUmVnYXJkcywNCj4gVmluY2VudA0KPg0KPiA+DQo+ID4gPiAgfQ0KPiA+ID4NCj4gPiA+IFJl
+Z2FyZHMsDQo+ID4gPiBCaWp1DQo+ID4gPiA+IC0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQo+
+ID4gPiA+IEZyb206IEJpanUgRGFzDQo+ID4gPiA+IFNlbnQ6IDI1IEphbnVhcnkgMjAxOSAxNDoy
+Ng0KPiA+ID4gPiBUbzogJ1ZpbmNlbnQgR3VpdHRvdCcgPHZpbmNlbnQuZ3VpdHRvdEBsaW5hcm8u
+b3JnPg0KPiA+ID4gPiBDYzogR2VlcnQgVXl0dGVyaG9ldmVuIDxnZWVydEBsaW51eC1tNjhrLm9y
+Zz47IFNlcmdlaSBTaHR5bHlvdg0KPiA+ID4gPiA8c2VyZ2VpLnNodHlseW92QGNvZ2VudGVtYmVk
+ZGVkLmNvbT47IFJvYiBIZXJyaW5nDQo+ID4gPiA+IDxyb2JoK2R0QGtlcm5lbC5vcmc+OyBNYXJr
+IFJ1dGxhbmQgPG1hcmsucnV0bGFuZEBhcm0uY29tPjsNCj4gU2ltb24NCj4gPiA+ID4gSG9ybWFu
+IDxob3Jtc0B2ZXJnZS5uZXQuYXU+OyBNYWdudXMgRGFtbQ0KPiA8bWFnbnVzLmRhbW1AZ21haWwu
+Y29tPjsNCj4gPiA+ID4gTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0gc29jQHZnZXIua2Vy
+bmVsLm9yZz47IG9wZW4gbGlzdDpPUEVODQo+ID4gPiA+IEZJUk1XQVJFIEFORCBGTEFUVEVORUQg
+REVWSUNFIFRSRUUgQklORElOR1MNCj4gPiA+ID4gPGRldmljZXRyZWVAdmdlci5rZXJuZWwub3Jn
+PjsgR2VlcnQgVXl0dGVyaG9ldmVuDQo+ID4gPiA+IDxnZWVydCtyZW5lc2FzQGdsaWRlci5iZT47
+IENocmlzIFBhdGVyc29uDQo+ID4gPiA+IDxDaHJpcy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBE
+YW5pZWwgTGV6Y2Fubw0KPiA+ID4gPiA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz47IFRob21h
+cyBHbGVpeG5lciA8dGdseEBsaW51dHJvbml4LmRlPjsNCj4gPiA+ID4gSm9obiBTdHVsdHogPGpv
+aG4uc3R1bHR6QGxpbmFyby5vcmc+OyBGYWJyaXppbyBDYXN0cm8NCj4gPiA+ID4gPGZhYnJpemlv
+LmNhc3Ryb0BicC5yZW5lc2FzLmNvbT47IFNhbXVlbCBIb2xsYW5kDQo+ID4gPiA+IDxzYW11ZWxA
+c2hvbGxhbmQub3JnPg0KPiA+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIXSBhcm02NDogZHRzOiBy
+ZW5lc2FzOiByOGE3Nzk2OiBBZGQgQ01UIGRldmljZQ0KPiA+ID4gPiBub2Rlcw0KPiA+ID4gPg0K
+PiA+ID4gPiBIaSBWaW5jZW50LA0KPiA+ID4gPg0KPiA+ID4gPiBUaGFua3MgZm9yIHRoZSB1cGRh
+dGUuIEkgYW0gc3RpbGwgc2VlaW5nIHRoZSBzYW1lIGRlYWRsb2NrLg0KPiA+ID4gPg0KPiA+ID4g
+PiBkaWZmIC0tZ2l0IGEvZHJpdmVycy9iYXNlL3Bvd2VyL3J1bnRpbWUuYw0KPiA+ID4gPiBiL2Ry
+aXZlcnMvYmFzZS9wb3dlci9ydW50aW1lLmMgaW5kZXggZmI1ZTJiNi4uYTk2NjQxYSAxMDA2NDQN
+Cj4gPiA+ID4gLS0tIGEvZHJpdmVycy9iYXNlL3Bvd2VyL3J1bnRpbWUuYw0KPiA+ID4gPiArKysg
+Yi9kcml2ZXJzL2Jhc2UvcG93ZXIvcnVudGltZS5jDQo+ID4gPiA+IEBAIC0xNTUsNyArMTU1LDcg
+QEAgdTY0DQo+IHBtX3J1bnRpbWVfYXV0b3N1c3BlbmRfZXhwaXJhdGlvbihzdHJ1Y3QNCj4gPiA+
+ID4gZGV2aWNlICpkZXYpDQo+ID4gPiA+DQo+ID4gPiA+ICAgICAgICAgZXhwaXJlcyAgPSBSRUFE
+X09OQ0UoZGV2LT5wb3dlci5sYXN0X2J1c3kpOw0KPiA+ID4gPiAgICAgICAgIGV4cGlyZXMgKz0g
+KHU2NClhdXRvc3VzcGVuZF9kZWxheSAqIE5TRUNfUEVSX01TRUM7DQo+ID4gPiA+IC0gICAgICAg
+aWYgKGV4cGlyZXMgPiBrdGltZV90b19ucyhrdGltZV9nZXQoKSkpDQo+ID4gPiA+ICsgICAgICAg
+aWYgKGV4cGlyZXMgPiBrdGltZV9nZXRfbW9ub19mYXN0X25zKCkpDQo+ID4gPiA+ICAgICAgICAg
+ICAgICAgICByZXR1cm4gZXhwaXJlczsgLyogRXhwaXJlcyBpbiB0aGUgZnV0dXJlICovDQo+ID4g
+PiA+DQo+ID4gPiA+ICAgICAgICAgcmV0dXJuIDA7DQo+ID4gPiA+IEBAIC05MjEsNyArOTIxLDcg
+QEAgc3RhdGljIGVudW0gaHJ0aW1lcl9yZXN0YXJ0DQo+ID4gPiA+IHBtX3N1c3BlbmRfdGltZXJf
+Zm4oc3RydWN0IGhydGltZXIgKnRpbWVyKQ0KPiA+ID4gPiAgICAgICAgICAqIElmICdleHBpcmVz
+JyBpcyBhZnRlciB0aGUgY3VycmVudCB0aW1lLCB3ZSd2ZSBiZWVuIGNhbGxlZA0KPiA+ID4gPiAg
+ICAgICAgICAqIHRvbyBlYXJseS4NCj4gPiA+ID4gICAgICAgICAgKi8NCj4gPiA+ID4gLSAgICAg
+ICBpZiAoZXhwaXJlcyA+IDAgJiYgZXhwaXJlcyA8IGt0aW1lX3RvX25zKGt0aW1lX2dldCgpKSkg
+ew0KPiA+ID4gPiArICAgICAgIGlmIChleHBpcmVzID4gMCAmJiBleHBpcmVzIDwga3RpbWVfZ2V0
+X21vbm9fZmFzdF9ucygpKSB7DQo+ID4gPiA+ICAgICAgICAgICAgICAgICBkZXYtPnBvd2VyLnRp
+bWVyX2V4cGlyZXMgPSAwOw0KPiA+ID4gPiAgICAgICAgICAgICAgICAgcnBtX3N1c3BlbmQoZGV2
+LCBkZXYtPnBvd2VyLnRpbWVyX2F1dG9zdXNwZW5kcyA/DQo+ID4gPiA+ICAgICAgICAgICAgICAg
+ICAgICAgKFJQTV9BU1lOQyB8IFJQTV9BVVRPKSA6IFJQTV9BU1lOQyk7IEBAIC05NDAsNw0KPiA+
+ID4gPiArOTQwLDcgQEAgc3RhdGljIGVudW0gaHJ0aW1lcl9yZXN0YXJ0ICBwbV9zdXNwZW5kX3Rp
+bWVyX2ZuKHN0cnVjdA0KPiA+ID4gPiBocnRpbWVyDQo+ID4gPiA+ICp0aW1lcikgIGludCBwbV9z
+Y2hlZHVsZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWduZWQgaW50DQo+IGRlbGF5
+KSAgew0KPiA+ID4gPiAgICAgICAgIHVuc2lnbmVkIGxvbmcgZmxhZ3M7DQo+ID4gPiA+IC0gICAg
+ICAga3RpbWVfdCBleHBpcmVzOw0KPiA+ID4gPiArICAgICAgIHU2NCBleHBpcmVzOw0KPiA+ID4g
+PiAgICAgICAgIGludCByZXR2YWw7DQo+ID4gPiA+DQo+ID4gPiA+ICAgICAgICAgc3Bpbl9sb2Nr
+X2lycXNhdmUoJmRldi0+cG93ZXIubG9jaywgZmxhZ3MpOyBAQCAtOTU3LDgNCj4gPiA+ID4gKzk1
+Nyw4IEBAIGludCBwbV9zY2hlZHVsZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2UgKmRldiwgdW5zaWdu
+ZWQgaW50DQo+IGRlbGF5KQ0KPiA+ID4gPiAgICAgICAgIC8qIE90aGVyIHNjaGVkdWxlZCBvciBw
+ZW5kaW5nIHJlcXVlc3RzIG5lZWQgdG8gYmUgY2FuY2VsZWQuICovDQo+ID4gPiA+ICAgICAgICAg
+cG1fcnVudGltZV9jYW5jZWxfcGVuZGluZyhkZXYpOw0KPiA+ID4gPg0KPiA+ID4gPiAtICAgICAg
+IGV4cGlyZXMgPSBrdGltZV9hZGQoa3RpbWVfZ2V0KCksIG1zX3RvX2t0aW1lKGRlbGF5KSk7DQo+
+ID4gPiA+IC0gICAgICAgZGV2LT5wb3dlci50aW1lcl9leHBpcmVzID0ga3RpbWVfdG9fbnMoZXhw
+aXJlcyk7DQo+ID4gPiA+ICsgICAgICAgZXhwaXJlcyA9IGt0aW1lX2dldF9tb25vX2Zhc3RfbnMo
+KSArICgodTY0KWRlbGF5ICoNCj4gPiA+ID4gTlNFQ19QRVJfTVNFQyk7DQo+ID4gPiA+ICsgICAg
+ICAgZGV2LT5wb3dlci50aW1lcl9leHBpcmVzID0gZXhwaXJlczsNCj4gPiA+ID4gICAgICAgICBk
+ZXYtPnBvd2VyLnRpbWVyX2F1dG9zdXNwZW5kcyA9IDA7DQo+ID4gPiA+ICAgICAgICAgaHJ0aW1l
+cl9zdGFydCgmZGV2LT5wb3dlci5zdXNwZW5kX3RpbWVyLCBleHBpcmVzLA0KPiA+ID4gPiBIUlRJ
+TUVSX01PREVfQUJTKTsNCj4gPiA+ID4NCj4gPiA+ID4NCj4gPiA+ID4gcGxlYXNlIGZpbmQgdGhl
+IGxvZ3MuDQo+ID4gPiA+DQo+ID4gPiA+IHJvb3RAc2FsdmF0b3IteDp+IyBlY2hvICBlNjBmMDAw
+MC50aW1lciA+DQo+ID4gPiA+IC9zeXMvZGV2aWNlcy9zeXN0ZW0vY2xvY2tzb3VyY2UvY2xvY2tz
+b3VyY2UwL2N1cnJlbnRfY2xvY2tzb3VyY2UNCj4gPiA+ID4gWyAgIDQyLjc2OTI2MF0NCj4gPiA+
+ID4gWyAgIDQyLjc3MDc2MF0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT0NCj4gPiA+ID4gWyAgIDQyLjc3NjA2OF0gV0FSTklORzogcG9zc2libGUgcmVjdXJzaXZl
+IGxvY2tpbmcgZGV0ZWN0ZWQNCj4gPiA+ID4gWyAgIDQyLjc4MTM3OF0gNS4wLjAtcmMzLW5leHQt
+MjAxOTAxMjUtMDAwMDEtZ2ZhNjcwOWMtZGlydHkgIzMzIE5vdA0KPiB0YWludGVkDQo+ID4gPiA+
+IFsgICA0Mi43ODgwNzZdIC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tDQo+ID4gPiA+IFsgICA0Mi43OTMzODVdIG1pZ3JhdGlvbi8wLzExIGlzIHRyeWluZyB0byBh
+Y3F1aXJlIGxvY2s6DQo+ID4gPiA+IFsgICA0Mi43OTg0MzVdIDAwMDAwMDAwYjQzYjcxODMgKHRr
+X2NvcmUuc2VxKXstLS0tfSwgYXQ6DQo+ID4gPiA+IHJwbV9yZXN1bWUrMHg1ZjAvMHg3YTgNCj4g
+PiA+ID4gWyAgIDQyLjgwNTQ5N10NCj4gPiA+ID4gWyAgIDQyLjgwNTQ5N10gYnV0IHRhc2sgaXMg
+YWxyZWFkeSBob2xkaW5nIGxvY2s6DQo+ID4gPiA+IFsgICA0Mi44MTEzMjZdIDAwMDAwMDAwYjQz
+YjcxODMgKHRrX2NvcmUuc2VxKXstLS0tfSwgYXQ6DQo+ID4gPiA+IG11bHRpX2NwdV9zdG9wKzB4
+OGMvMHgxNDANCj4gPiA+ID4gWyAgIDQyLjgxODY0MV0NCj4gPiA+ID4gWyAgIDQyLjgxODY0MV0g
+b3RoZXIgaW5mbyB0aGF0IG1pZ2h0IGhlbHAgdXMgZGVidWcgdGhpczoNCj4gPiA+ID4gWyAgIDQy
+LjgyNTE2NV0gIFBvc3NpYmxlIHVuc2FmZSBsb2NraW5nIHNjZW5hcmlvOg0KPiA+ID4gPiBbICAg
+NDIuODI1MTY1XQ0KPiA+ID4gPiBbICAgNDIuODMxMDgwXSAgICAgICAgQ1BVMA0KPiA+ID4gPiBb
+ICAgNDIuODMzNTIxXSAgICAgICAgLS0tLQ0KPiA+ID4gPiBbICAgNDIuODM1OTYyXSAgIGxvY2so
+dGtfY29yZS5zZXEpOw0KPiA+ID4gPiBbICAgNDIuODM5MTg1XSAgIGxvY2sodGtfY29yZS5zZXEp
+Ow0KPiA+ID4gPiBbICAgNDIuODQyNDA5XQ0KPiA+ID4gPiBbICAgNDIuODQyNDA5XSAgKioqIERF
+QURMT0NLICoqKg0KPiA+ID4gPiBbICAgNDIuODQyNDA5XQ0KPiA+ID4gPiBbICAgNDIuODQ4MzI4
+XSAgTWF5IGJlIGR1ZSB0byBtaXNzaW5nIGxvY2sgbmVzdGluZyBub3RhdGlvbg0KPiA+ID4gPiBb
+ICAgNDIuODQ4MzI4XQ0KPiA+ID4gPiBbICAgNDIuODU1MTE1XSA0IGxvY2tzIGhlbGQgYnkgbWln
+cmF0aW9uLzAvMTE6DQo+ID4gPiA+IFsgICA0Mi44NTkyOTNdICAjMDogMDAwMDAwMDBhNzUxMTcz
+MSAodGltZWtlZXBlcl9sb2NrKXstLi0ufSwgYXQ6DQo+ID4gPiA+IGNoYW5nZV9jbG9ja3NvdXJj
+ZSsweDJjLzB4MTE4DQo+ID4gPiA+IFsgICA0Mi44Njc3MzhdICAjMTogMDAwMDAwMDBiNDNiNzE4
+MyAodGtfY29yZS5zZXEpey0tLS19LCBhdDoNCj4gPiA+ID4gbXVsdGlfY3B1X3N0b3ArMHg4Yy8w
+eDE0MA0KPiA+ID4gPiBbICAgNDIuODc1NDg0XSAgIzI6IDAwMDAwMDAwYjU0YzM4YTIgKCZjaC0+
+bG9jayl7Li4uLn0sIGF0Og0KPiA+ID4gPiBzaF9jbXRfc3RhcnQrMHgyOC8weDIwMA0KPiA+ID4g
+PiBbICAgNDIuODgyODg3XSAgIzM6IDAwMDAwMDAwMTBkMTRlZWMgKCYoJmRldi0+cG93ZXIubG9j
+ayktPnJsb2NrKXstDQo+IC4uLn0sIGF0Og0KPiA+ID4gPiBfX3JwbV9jYWxsYmFjaysweGJjLzB4
+MWU4DQo+ID4gPiA+IFsgICA0Mi44OTE5MzddDQo+ID4gPiA+IFsgICA0Mi44OTE5MzddIHN0YWNr
+IGJhY2t0cmFjZToNCj4gPiA+ID4gWyAgIDQyLjg5NjI5NF0gQ1BVOiAwIFBJRDogMTEgQ29tbTog
+bWlncmF0aW9uLzAgTm90IHRhaW50ZWQgNS4wLjAtcmMzLQ0KPiBuZXh0LQ0KPiA+ID4gPiAyMDE5
+MDEyNS0wMDAwMS1nZmE2NzA5Yy1kaXJ0eSAjMzMNCj4gPiA+ID4gWyAgIDQyLjkwNTg2MF0gSGFy
+ZHdhcmUgbmFtZTogUmVuZXNhcyBTYWx2YXRvci1YIDJuZCB2ZXJzaW9uIGJvYXJkDQo+IGJhc2Vk
+DQo+ID4gPiA+IG9uIHI4YTc3OTYgKERUKQ0KPiA+ID4gPiBbICAgNDIuOTEzNjg5XSBDYWxsIHRy
+YWNlOg0KPiA+ID4gPiBbICAgNDIuOTE2MTM3XSAgZHVtcF9iYWNrdHJhY2UrMHgwLzB4MTc4DQo+
+ID4gPiA+IFsgICA0Mi45MTk3OTZdICBzaG93X3N0YWNrKzB4MTQvMHgyMA0KPiA+ID4gPiBbICAg
+NDIuOTIzMTExXSAgZHVtcF9zdGFjaysweGIwLzB4ZWMNCj4gPiA+ID4gWyAgIDQyLjkyNjQyNV0g
+IF9fbG9ja19hY3F1aXJlKzB4ZmI0LzB4MWMwOA0KPiA+ID4gPiBbICAgNDIuOTMwMzQ1XSAgbG9j
+a19hY3F1aXJlKzB4ZDAvMHgyNjgNCj4gPiA+ID4gWyAgIDQyLjkzMzkxN10gIGt0aW1lX2dldCsw
+eDVjLzB4MTA4DQo+ID4gPiA+IFsgICA0Mi45MzcyMjldICBycG1fcmVzdW1lKzB4NWYwLzB4N2E4
+DQo+ID4gPiA+IFsgICA0Mi45NDA3MTRdICBfX3BtX3J1bnRpbWVfcmVzdW1lKzB4NTAvMHg5OA0K
+PiA+ID4gPiBbICAgNDIuOTQ0ODA3XSAgc2hfY210X3N0YXJ0KzB4ODQvMHgyMDANCj4gPiA+ID4g
+WyAgIDQyLjk0ODM4MF0gIHNoX2NtdF9jbG9ja3NvdXJjZV9lbmFibGUrMHgyOC8weDQ4DQo+ID4g
+PiA+IFsgICA0Mi45NTI5OTVdICBjaGFuZ2VfY2xvY2tzb3VyY2UrMHg4NC8weDExOA0KPiA+ID4g
+PiBbICAgNDIuOTU3MDg3XSAgbXVsdGlfY3B1X3N0b3ArMHg4Yy8weDE0MA0KPiA+ID4gPiBbICAg
+NDIuOTYwODM0XSAgY3B1X3N0b3BwZXJfdGhyZWFkKzB4YWMvMHgxMjANCj4gPiA+ID4gWyAgIDQy
+Ljk2NDkzMV0gIHNtcGJvb3RfdGhyZWFkX2ZuKzB4MWFjLzB4MmM4DQo+ID4gPiA+IFsgICA0Mi45
+NjkwMjRdICBrdGhyZWFkKzB4MTJjLzB4MTMwDQo+ID4gPiA+IFsgICA0Mi45NzIyNDldICByZXRf
+ZnJvbV9mb3JrKzB4MTAvMHgxOA0KPiA+ID4gPg0KPiA+ID4gPiBSZWdhcmRzLA0KPiA+ID4gPiBC
+aWp1DQo+ID4gPiA+DQo+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+
+ID4gPiBGcm9tOiBWaW5jZW50IEd1aXR0b3QgPHZpbmNlbnQuZ3VpdHRvdEBsaW5hcm8ub3JnPg0K
+PiA+ID4gPiA+IFNlbnQ6IDI1IEphbnVhcnkgMjAxOSAxNDowNg0KPiA+ID4gPiA+IFN1YmplY3Q6
+IFJlOiBbUEFUQ0hdIGFybTY0OiBkdHM6IHJlbmVzYXM6IHI4YTc3OTY6IEFkZCBDTVQNCj4gPiA+
+ID4gPiBkZXZpY2Ugbm9kZXMNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEhpIEJpanUsDQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiBJdCBzZWVtcyB0aGF0IHRoZSBjYWxsIG9mIG1hcmtfbGFzdF9idXN5IGlu
+IHJwbV9yZXN1bWUgcmFpc2VzDQo+ID4gPiA+ID4gdGhpcw0KPiA+ID4gPiBwcm9ibGVtLg0KPiA+
+ID4gPiA+IFdlIGhhdmUgdGhlIHNlcXVlbmNlOg0KPiA+ID4gPiA+IGNoYW5nZV9jbG9ja3NvdXJj
+ZQ0KPiA+ID4gPiA+DQo+ID4gPiA+ID4gICAgIHdyaXRlX3NlcWNvdW50X2JlZ2luDQo+ID4gPiA+
+ID4gICAgIC4uLg0KPiA+ID4gPiA+ICAgICB0aW1la2VlcGluZ191cGRhdGUNCj4gPiA+ID4gPiAg
+ICAgICAgIC4uLg0KPiA+ID4gPiA+ICAgICAgICAgc2hfY210X2Nsb2Nrc291cmNlX2VuYWJsZQ0K
+PiA+ID4gPiA+ICAgICAgICAgICAgIC4uLg0KPiA+ID4gPiA+ICAgICAgICAgICAgIHJwbV9yZXN1
+bWUNCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgcG1fcnVudGltZV9tYXJrX2xhc3RfYnVzeQ0K
+PiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAga3RpbWVfZ2V0DQo+ID4gPiA+ID4gICAgICAg
+ICAgICAgICAgICAgICAgICAgZG8NCj4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgcmVhZF9zZXFjb3VudF9iZWdpbg0KPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+IHdoaWxlIHJlYWRfc2VxY291bnRfcmV0cnkNCj4gPiA+ID4gPiAgICAgLi4uLg0KPiA+ID4gPiA+
+ICAgICB3cml0ZV9zZXFjb3VudF9lbmQNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IEluIGZhY3QsIHdl
+IHNob3VsZCBiZSBzYWZlIGJlY2F1c2Ugd2UgaGF2ZW4ndCB5ZXQgY2hhbmdlZCB0aGUNCj4gPiA+
+ID4gPiBjbG9ja3NvdXJjZSBhcyB3ZSBhcmUgZW5hYmxpbmcgdGhlIGNsb2Nrc291cmNlIHRoYXQg
+d2lsbCBiZSB1c2VkDQo+ID4gPiA+ID4gZm9yIHRoZQ0KPiA+ID4gPiBzd2l0Y2guDQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiBDYW4geW91IHRyeSB0aGUgcGF0Y2ggYmVsb3cgPw0KPiA+ID4gPiA+IEl0
+IHVzZXMga3RpbWVfZ2V0X21vbm9fZmFzdF9ucyBpbnN0ZWFkIHdoaWNoIGlzIGxvY2sgc2FmZSBm
+b3INCj4gPiA+ID4gPiBzdWNoIGNhc2UNCj4gPiA+ID4gPg0KPiA+ID4gPiA+IC0tLQ0KPiA+ID4g
+PiA+ICBkcml2ZXJzL2Jhc2UvcG93ZXIvcnVudGltZS5jIHwgMTAgKysrKystLS0tLQ0KPiA+ID4g
+PiA+ICAxIGZpbGUgY2hhbmdlZCwgNSBpbnNlcnRpb25zKCspLCA1IGRlbGV0aW9ucygtKQ0KPiA+
+ID4gPiA+DQo+ID4gPiA+ID4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvYmFzZS9wb3dlci9ydW50aW1l
+LmMNCj4gPiA+ID4gPiBiL2RyaXZlcnMvYmFzZS9wb3dlci9ydW50aW1lLmMgaW5kZXggNDU3YmUw
+My4uNzA4YTEzZiAxMDA2NDQNCj4gPiA+ID4gPiAtLS0gYS9kcml2ZXJzL2Jhc2UvcG93ZXIvcnVu
+dGltZS5jDQo+ID4gPiA+ID4gKysrIGIvZHJpdmVycy9iYXNlL3Bvd2VyL3J1bnRpbWUuYw0KPiA+
+ID4gPiA+IEBAIC0xMzAsNyArMTMwLDcgQEAgdTY0DQo+IHBtX3J1bnRpbWVfYXV0b3N1c3BlbmRf
+ZXhwaXJhdGlvbihzdHJ1Y3QNCj4gPiA+ID4gPiBkZXZpY2UgKmRldikgIHsNCj4gPiA+ID4gPiAg
+aW50IGF1dG9zdXNwZW5kX2RlbGF5Ow0KPiA+ID4gPiA+ICB1NjQgbGFzdF9idXN5LCBleHBpcmVz
+ID0gMDsNCj4gPiA+ID4gPiAtdTY0IG5vdyA9IGt0aW1lX3RvX25zKGt0aW1lX2dldCgpKTsNCj4g
+PiA+ID4gPiArdTY0IG5vdyA9IGt0aW1lX2dldF9tb25vX2Zhc3RfbnMoKTsNCj4gPiA+ID4gPg0K
+PiA+ID4gPiA+ICBpZiAoIWRldi0+cG93ZXIudXNlX2F1dG9zdXNwZW5kKSAgZ290byBvdXQ7IEBA
+IC05MDksNyArOTA5LDcgQEANCj4gPiA+ID4gPiBzdGF0aWMgZW51bSBocnRpbWVyX3Jlc3RhcnQg
+cG1fc3VzcGVuZF90aW1lcl9mbihzdHJ1Y3QgaHJ0aW1lcg0KPiA+ID4gPiA+ICp0aW1lcikNCj4g
+PiA+ID4gPiAgICogSWYgJ2V4cGlyZXMnIGlzIGFmdGVyIHRoZSBjdXJyZW50IHRpbWUsIHdlJ3Zl
+IGJlZW4gY2FsbGVkDQo+ID4gPiA+ID4gICAqIHRvbyBlYXJseS4NCj4gPiA+ID4gPiAgICovDQo+
+ID4gPiA+ID4gLWlmIChleHBpcmVzID4gMCAmJiBleHBpcmVzIDwga3RpbWVfdG9fbnMoa3RpbWVf
+Z2V0KCkpKSB7DQo+ID4gPiA+ID4gK2lmIChleHBpcmVzID4gMCAmJiBleHBpcmVzIDwga3RpbWVf
+Z2V0X21vbm9fZmFzdF9ucygpKSB7DQo+ID4gPiA+ID4gIGRldi0+cG93ZXIudGltZXJfZXhwaXJl
+cyA9IDA7DQo+ID4gPiA+ID4gIHJwbV9zdXNwZW5kKGRldiwgZGV2LT5wb3dlci50aW1lcl9hdXRv
+c3VzcGVuZHMgPw0KPiA+ID4gPiA+ICAgICAgKFJQTV9BU1lOQyB8IFJQTV9BVVRPKSA6IFJQTV9B
+U1lOQyk7IEBAIC05MjgsNw0KPiA+ID4gPiA+ICs5MjgsNyBAQCBzdGF0aWMgZW51bSBocnRpbWVy
+X3Jlc3RhcnQNCj4gPiA+ID4gPiArcG1fc3VzcGVuZF90aW1lcl9mbihzdHJ1Y3QNCj4gPiA+ID4g
+PiBocnRpbWVyICp0aW1lcikgIGludCBwbV9zY2hlZHVsZV9zdXNwZW5kKHN0cnVjdCBkZXZpY2Ug
+KmRldiwNCj4gPiA+ID4gPiB1bnNpZ25lZCBpbnQNCj4gPiA+ID4gPiBkZWxheSkgIHsNCj4gPiA+
+ID4gPiAgdW5zaWduZWQgbG9uZyBmbGFnczsNCj4gPiA+ID4gPiAta3RpbWVfdCBleHBpcmVzOw0K
+PiA+ID4gPiA+ICt1NjQgZXhwaXJlczsNCj4gPiA+ID4gPiAgaW50IHJldHZhbDsNCj4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ICBzcGluX2xvY2tfaXJxc2F2ZSgmZGV2LT5wb3dlci5sb2NrLCBmbGFncyk7
+IEBAIC05NDUsOCArOTQ1LDggQEANCj4gPiA+ID4gaW50DQo+ID4gPiA+ID4gcG1fc2NoZWR1bGVf
+c3VzcGVuZChzdHJ1Y3QgZGV2aWNlICpkZXYsIHVuc2lnbmVkIGludCBkZWxheSkNCj4gPiA+ID4g
+PiAgLyogT3RoZXIgc2NoZWR1bGVkIG9yIHBlbmRpbmcgcmVxdWVzdHMgbmVlZCB0byBiZSBjYW5j
+ZWxlZC4gKi8NCj4gPiA+ID4gPiBwbV9ydW50aW1lX2NhbmNlbF9wZW5kaW5nKGRldik7DQo+ID4g
+PiA+ID4NCj4gPiA+ID4gPiAtZXhwaXJlcyA9IGt0aW1lX2FkZChrdGltZV9nZXQoKSwgbXNfdG9f
+a3RpbWUoZGVsYXkpKTsNCj4gPiA+ID4gPiAtZGV2LT5wb3dlci50aW1lcl9leHBpcmVzID0ga3Rp
+bWVfdG9fbnMoZXhwaXJlcyk7DQo+ID4gPiA+ID4gK2V4cGlyZXMgPSBrdGltZV9nZXRfbW9ub19m
+YXN0X25zKCkgKyAodTY0KWRlbGF5ICoNCj4gPiA+ID4gPiBOU0VDX1BFUl9NU0VDKTsNCj4gPiA+
+ID4gPiArZGV2LT5wb3dlci50aW1lcl9leHBpcmVzID0gZXhwaXJlczsNCj4gPiA+ID4gPiAgZGV2
+LT5wb3dlci50aW1lcl9hdXRvc3VzcGVuZHMgPSAwOw0KPiA+ID4gPiA+IGhydGltZXJfc3RhcnQo
+JmRldi0+cG93ZXIuc3VzcGVuZF90aW1lciwgZXhwaXJlcywNCj4gPiA+ID4gSFJUSU1FUl9NT0RF
+X0FCUyk7DQo+ID4gPiA+ID4NCj4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+IDIuNy40DQo+ID4gPiA+
+ID4NCj4gPiA+ID4gPiBMZSBGcmlkYXkgMjUgSmFuIDIwMTkgw6AgMTI6MjY6NTQgKCswMDAwKSwg
+QmlqdSBEYXMgYSDDqWNyaXQgOg0KPiA+ID4gPiA+ID4gSGkgQWxsLA0KPiA+ID4gPiA+ID4NCj4g
+PiA+ID4gPiA+IEkgaGF2ZSBlbmFibGVkIGxvY2sgZGVidWdnaW5nICBhbmQgaXQgaXMgc2hvd2lu
+ZyAicG9zc2libGUNCj4gPiA+ID4gPiA+IHJlY3Vyc2l2ZSBsb2NraW5nDQo+ID4gPiA+ID4gZGV0
+ZWN0ZWQgIndpdGggdGhlIHBhdGNoDQo+ICgiODIzNGY2NzM0YzVkNzRhYzc5NGU1NTE3NDM3ZjUx
+YzU3ZDY1Zjg2NSINCj4gPiA+ID4gPiBQTS1ydW50aW1lOiBTd2l0Y2ggYXV0b3N1c3BlbmQgb3Zl
+ciB0byB1c2luZyBocnRpbWVycykNCj4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiByb290QHNhbHZh
+dG9yLXg6fiMgZWNobyAgZTYwZjAwMDAudGltZXIgPg0KPiA+ID4gPiA+IC9zeXMvZGV2aWNlcy9z
+eXN0ZW0vY2xvY2tzb3VyY2UvY2xvY2tzb3VyY2UwL2N1cnJlbnRfY2xvY2tzb3VyY2UNCj4gPiA+
+ID4gPiA+IFsgICA2Ny45OTU4NTRdDQo+ID4gPiA+ID4gPiBbICAgNjcuOTk3MzU0XQ0KPiA9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KPiA+ID4gPiA+ID4gWyAg
+IDY4LjAwMjY2M10gV0FSTklORzogcG9zc2libGUgcmVjdXJzaXZlIGxvY2tpbmcgZGV0ZWN0ZWQN
+Cj4gPiA+ID4gPiA+IFsgICA2OC4wMDc5NzRdIDUuMC4wLXJjMy1uZXh0LTIwMTkwMTI1LTAwMDA1
+LWczODI4MjJiICMzMSBOb3QNCj4gdGFpbnRlZA0KPiA+ID4gPiA+ID4gWyAgIDY4LjAxNDE1MF0g
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4gPiA+ID4gPiA+
+IFsgICA2OC4wMTk0NTldIG1pZ3JhdGlvbi8wLzExIGlzIHRyeWluZyB0byBhY3F1aXJlIGxvY2s6
+DQo+ID4gPiA+ID4gPiBbICAgNjguMDI0NTA5XSAwMDAwMDAwMDY1ZGU1ZmRmICh0a19jb3JlLnNl
+cSl7LS0tLX0sIGF0Og0KPiA+ID4gPiA+IHJwbV9yZXN1bWUrMHg1ZjAvMHg3YTgNCj4gPiA+ID4g
+PiA+IFsgICA2OC4wMzE1NzBdDQo+ID4gPiA+ID4gPiBbICAgNjguMDMxNTcwXSBidXQgdGFzayBp
+cyBhbHJlYWR5IGhvbGRpbmcgbG9jazoNCj4gPiA+ID4gPiA+IFsgICA2OC4wMzczOTldIDAwMDAw
+MDAwNjVkZTVmZGYgKHRrX2NvcmUuc2VxKXstLS0tfSwgYXQ6DQo+ID4gPiA+ID4gbXVsdGlfY3B1
+X3N0b3ArMHg4Yy8weDE0MA0KPiA+ID4gPiA+ID4gWyAgIDY4LjA0NDcxNF0NCj4gPiA+ID4gPiA+
+IFsgICA2OC4wNDQ3MTRdIG90aGVyIGluZm8gdGhhdCBtaWdodCBoZWxwIHVzIGRlYnVnIHRoaXM6
+DQo+ID4gPiA+ID4gPiBbICAgNjguMDUxMjM3XSAgUG9zc2libGUgdW5zYWZlIGxvY2tpbmcgc2Nl
+bmFyaW86DQo+ID4gPiA+ID4gPiBbICAgNjguMDUxMjM3XQ0KPiA+ID4gPiA+ID4gWyAgIDY4LjA1
+NzE1M10gICAgICAgIENQVTANCj4gPiA+ID4gPiA+IFsgICA2OC4wNTk1OTRdICAgICAgICAtLS0t
+DQo+ID4gPiA+ID4gPiBbICAgNjguMDYyMDM0XSAgIGxvY2sodGtfY29yZS5zZXEpOw0KPiA+ID4g
+PiA+ID4gWyAgIDY4LjA2NTI1OF0gICBsb2NrKHRrX2NvcmUuc2VxKTsNCj4gPiA+ID4gPiA+IFsg
+ICA2OC4wNjg0ODJdDQo+ID4gPiA+ID4gPiBbICAgNjguMDY4NDgyXSAgKioqIERFQURMT0NLICoq
+Kg0KPiA+ID4gPiA+ID4gWyAgIDY4LjA2ODQ4Ml0NCj4gPiA+ID4gPiA+IFsgICA2OC4wNzQ0MDJd
+ICBNYXkgYmUgZHVlIHRvIG1pc3NpbmcgbG9jayBuZXN0aW5nIG5vdGF0aW9uDQo+ID4gPiA+ID4g
+PiBbICAgNjguMDc0NDAyXQ0KPiA+ID4gPiA+ID4gWyAgIDY4LjA4MTE4OF0gNCBsb2NrcyBoZWxk
+IGJ5IG1pZ3JhdGlvbi8wLzExOg0KPiA+ID4gPiA+ID4gWyAgIDY4LjA4NTM2Nl0gICMwOiAwMDAw
+MDAwMDQ2M2I2NDQ2ICh0aW1la2VlcGVyX2xvY2spey0uLS59LCBhdDoNCj4gPiA+ID4gPiBjaGFu
+Z2VfY2xvY2tzb3VyY2UrMHgyYy8weDExOA0KPiA+ID4gPiA+ID4gWyAgIDY4LjA5MzgxMl0gICMx
+OiAwMDAwMDAwMDY1ZGU1ZmRmICh0a19jb3JlLnNlcSl7LS0tLX0sIGF0Og0KPiA+ID4gPiA+IG11
+bHRpX2NwdV9zdG9wKzB4OGMvMHgxNDANCj4gPiA+ID4gPiA+IFsgICA2OC4xMDE1NThdICAjMjog
+MDAwMDAwMDA5OGI0NTU1MCAoJmNoLT5sb2NrKXsuLi4ufSwgYXQ6DQo+ID4gPiA+ID4gc2hfY210
+X3N0YXJ0KzB4MjgvMHgyMDANCj4gPiA+ID4gPiA+IFsgICA2OC4xMDg5NjFdICAjMzogMDAwMDAw
+MDBkYTBmNGU4MCAoJigmZGV2LT5wb3dlci5sb2NrKS0NCj4gPnJsb2NrKXstLi4ufSwNCj4gPiA+
+ID4gYXQ6DQo+ID4gPiA+ID4gX19ycG1fY2FsbGJhY2srMHhiYy8weDFlOA0KPiA+ID4gPiA+ID4g
+WyAgIDY4LjExODAxMV0NCj4gPiA+ID4gPiA+IFsgICA2OC4xMTgwMTFdIHN0YWNrIGJhY2t0cmFj
+ZToNCj4gPiA+ID4gPiA+IFsgICA2OC4xMjIzNjhdIENQVTogMCBQSUQ6IDExIENvbW06IG1pZ3Jh
+dGlvbi8wIE5vdCB0YWludGVkIDUuMC4wLQ0KPiByYzMtDQo+ID4gPiA+IG5leHQtDQo+ID4gPiA+
+ID4gMjAxOTAxMjUtMDAwMDUtZzM4MjgyMmIgIzMxDQo+ID4gPiA+ID4gPiBbICAgNjguMTMxNDEy
+XSBIYXJkd2FyZSBuYW1lOiBSZW5lc2FzIFNhbHZhdG9yLVggMm5kIHZlcnNpb24NCj4gYm9hcmQN
+Cj4gPiA+ID4gYmFzZWQNCj4gPiA+ID4gPiBvbiByOGE3Nzk2IChEVCkNCj4gPiA+ID4gPiA+IFsg
+ICA2OC4xMzkyNDBdIENhbGwgdHJhY2U6DQo+ID4gPiA+ID4gPiBbICAgNjguMTQxNjg3XSAgZHVt
+cF9iYWNrdHJhY2UrMHgwLzB4MTc4DQo+ID4gPiA+ID4gPiBbICAgNjguMTQ1MzQ2XSAgc2hvd19z
+dGFjaysweDE0LzB4MjANCj4gPiA+ID4gPiA+IFsgICA2OC4xNDg2NjFdICBkdW1wX3N0YWNrKzB4
+YjAvMHhlYw0KPiA+ID4gPiA+ID4gWyAgIDY4LjE1MTk3NV0gIF9fbG9ja19hY3F1aXJlKzB4ZmI0
+LzB4MWMwOA0KPiA+ID4gPiA+ID4gWyAgIDY4LjE1NTg5NF0gIGxvY2tfYWNxdWlyZSsweGQwLzB4
+MjY4DQo+ID4gPiA+ID4gPiBbICAgNjguMTU5NDY3XSAga3RpbWVfZ2V0KzB4NWMvMHgxMDgNCj4g
+PiA+ID4gPiA+IFsgICA2OC4xNjI3NzldICBycG1fcmVzdW1lKzB4NWYwLzB4N2E4DQo+ID4gPiA+
+ID4gPiBbICAgNjguMTY2MjY1XSAgX19wbV9ydW50aW1lX3Jlc3VtZSsweDUwLzB4OTgNCj4gPiA+
+ID4gPiA+IFsgICA2OC4xNzAzNThdICBzaF9jbXRfc3RhcnQrMHg4NC8weDIwMA0KPiA+ID4gPiA+
+ID4gWyAgIDY4LjE3MzkzMV0gIHNoX2NtdF9jbG9ja3NvdXJjZV9lbmFibGUrMHgyOC8weDQ4DQo+
+ID4gPiA+ID4gPiBbICAgNjguMTc4NTQ2XSAgY2hhbmdlX2Nsb2Nrc291cmNlKzB4ODQvMHgxMTgN
+Cj4gPiA+ID4gPiA+IFsgICA2OC4xODI2MzldICBtdWx0aV9jcHVfc3RvcCsweDhjLzB4MTQwDQo+
+ID4gPiA+ID4gPiBbICAgNjguMTg2Mzg1XSAgY3B1X3N0b3BwZXJfdGhyZWFkKzB4YWMvMHgxMjAN
+Cj4gPiA+ID4gPiA+IFsgICA2OC4xOTA0ODFdICBzbXBib290X3RocmVhZF9mbisweDFhYy8weDJj
+OA0KPiA+ID4gPiA+ID4gWyAgIDY4LjE5NDU3NF0gIGt0aHJlYWQrMHgxMmMvMHgxMzANCj4gPiA+
+ID4gPiA+IFsgICA2OC4xOTc4MDBdICByZXRfZnJvbV9mb3JrKzB4MTAvMHgxOA0KPiA+ID4gPiA+
+ID4NCj4gPiA+ID4gPiA+IFJlZ2FyZHMsDQo+ID4gPiA+ID4gPiBCaWp1DQo+ID4gPiA+ID4gPg0K
+PiA+ID4gPiA+ID4gPiAtLS0tLU9yaWdpbmFsIE1lc3NhZ2UtLS0tLQ0KPiA+ID4gPiA+ID4gPiBG
+cm9tOiBCaWp1IERhcw0KPiA+ID4gPiA+ID4gPiBTZW50OiAyNSBKYW51YXJ5IDIwMTkgMTE6MjcN
+Cj4gPiA+ID4gPiA+ID4gVG86ICdHZWVydCBVeXR0ZXJob2V2ZW4nIDxnZWVydEBsaW51eC1tNjhr
+Lm9yZz47IFZpbmNlbnQNCj4gPiA+ID4gPiA+ID4gR3VpdHRvdCA8dmluY2VudC5ndWl0dG90QGxp
+bmFyby5vcmc+OyBTZXJnZWkgU2h0eWx5b3YNCj4gPiA+ID4gPiA+ID4gPHNlcmdlaS5zaHR5bHlv
+dkBjb2dlbnRlbWJlZGRlZC5jb20+DQo+ID4gPiA+ID4gPiA+IENjOiBSb2IgSGVycmluZyA8cm9i
+aCtkdEBrZXJuZWwub3JnPjsgTWFyayBSdXRsYW5kDQo+ID4gPiA+ID4gPiA+IDxtYXJrLnJ1dGxh
+bmRAYXJtLmNvbT47IFNpbW9uIEhvcm1hbg0KPiA8aG9ybXNAdmVyZ2UubmV0LmF1PjsNCj4gPiA+
+ID4gPiBNYWdudXMNCj4gPiA+ID4gPiA+ID4gRGFtbSA8bWFnbnVzLmRhbW1AZ21haWwuY29tPjsg
+TGludXgtUmVuZXNhcyA8bGludXgtDQo+IHJlbmVzYXMtDQo+ID4gPiA+ID4gPiA+IHNvY0B2Z2Vy
+Lmtlcm5lbC5vcmc+OyBvcGVuIGxpc3Q6T1BFTiBGSVJNV0FSRSBBTkQNCj4gRkxBVFRFTkVEDQo+
+ID4gPiA+ID4gREVWSUNFDQo+ID4gPiA+ID4gPiA+IFRSRUUgQklORElOR1MgPGRldmljZXRyZWVA
+dmdlci5rZXJuZWwub3JnPjsgR2VlcnQNCj4gPiA+ID4gPiA+ID4gVXl0dGVyaG9ldmVuIDxnZWVy
+dCtyZW5lc2FzQGdsaWRlci5iZT47IENocmlzIFBhdGVyc29uDQo+ID4gPiA+ID4gPiA+IDxDaHJp
+cy5QYXRlcnNvbjJAcmVuZXNhcy5jb20+OyBEYW5pZWwgTGV6Y2Fubw0KPiA+ID4gPiA+ID4gPiA8
+ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz47IFRob21hcyBHbGVpeG5lcg0KPiA+ID4gPiA+ID4g
+PiA8dGdseEBsaW51dHJvbml4LmRlPjsgSm9obiBTdHVsdHogPGpvaG4uc3R1bHR6QGxpbmFyby5v
+cmc+Ow0KPiA+ID4gPiA+ID4gPiBGYWJyaXppbyBDYXN0cm8gPGZhYnJpemlvLmNhc3Ryb0BicC5y
+ZW5lc2FzLmNvbT47IFNhbXVlbA0KPiA+ID4gPiA+ID4gPiBIb2xsYW5kIDxzYW11ZWxAc2hvbGxh
+bmQub3JnPg0KPiA+ID4gPiA+ID4gPiBTdWJqZWN0OiBSRTogW1BBVENIXSBhcm02NDogZHRzOiBy
+ZW5lc2FzOiByOGE3Nzk2OiBBZGQgQ01UDQo+ID4gPiA+ID4gPiA+IGRldmljZSBub2Rlcw0KPiA+
+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiBIaSBHZWVydCwNCj4gPiA+ID4gPiA+ID4NCj4gPiA+
+ID4gPiA+ID4gVGhhbmtzIGZvciB0aGUgZmVlZGJhY2suIEkgc3RhcnRlZCB0ZXN0aW5nIENNVCBv
+biBsYXRlc3QNCj4gPiA+ID4gPiA+ID4ga2VybmVsKExpbnV4LW5leHQtDQo+ID4gPiA+ID4gPiA+
+IDIwMTkwMTI1IGFuZCBhbHNvIHJlbmVzYXMtZGV2KSBhbmQgZm91bmQgdGhhdCBpdCBpcyBicm9r
+ZW4NCj4gPiA+ID4gPiA+ID4gb24gUi1DYXIgTTMtVyBkZXZpY2UuDQo+ID4gPiA+ID4gPiA+DQo+
+ID4gPiA+ID4gPiA+IE9uIGZ1cnRoZXIgaW52ZXN0aWdhdGlvbiB0aGUgcGF0Y2ggKCINCj4gPiA+
+ID4gPiA+ID4gODIzNGY2NzM0YzVkNzRhYzc5NGU1NTE3NDM3ZjUxYzU3ZDY1Zjg2NSIgICBQTS1y
+dW50aW1lOg0KPiBTd2l0Y2gNCj4gPiA+ID4gPiA+ID4gYXV0b3N1c3BlbmQgb3ZlciB0byB1c2lu
+ZyBocnRpbWVycykgIGlzIGNhdXNpbmcgdGhlIGlzc3VlLg0KPiA+ID4gPiA+ID4gPg0KPiA+ID4g
+PiA+ID4gPiBEdXJpbmcgY2xvY2sgc291cmNlIHN3aXRjaGluZywgSXQgY2FsbHMgdGhlIGZ1bmN0
+aW9uDQo+ICJzaF9jbXRfZW5hYmxlIg0KPiA+ID4gPiA+ID4gPiB3aGljaCBjYWxscyAiIHBtX3J1
+bnRpbWVfZ2V0X3N5bmMoJmNoLT5jbXQtPnBkZXYtPmRldik7Ig0KPiA+ID4gPiA+ID4gPiBhbmQg
+YWZ0ZXIgdGhhdCBjb25zb2xlIGZyZWV6ZXMuDQo+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+
+IFNlcmdlaTogSGF2ZSB5b3Ugbm90aWNlZCB0aGlzIGlzc3VlICBvbiBSLUNhciBWM00gYW5kIFYz
+SA0KPiA+ID4gPiA+ID4gPiBib2FyZHMgd2l0aCBsYXRlc3Qga2VybmVsPw0KPiA+ID4gPiA+ID4g
+Pg0KPiA+ID4gPiA+ID4gPiBSZWdhcmRzLA0KPiA+ID4gPiA+ID4gPiBCaWp1DQo+ID4gPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiA+ID4gLS0tLS1PcmlnaW5hbCBNZXNzYWdlLS0tLS0NCj4gPiA+ID4g
+PiA+ID4gPiBGcm9tOiBsaW51eC1yZW5lc2FzLXNvYy1vd25lckB2Z2VyLmtlcm5lbC5vcmcNCj4g
+PiA+ID4gPiA+ID4gPiA8bGludXgtcmVuZXNhcy1zb2MtIG93bmVyQHZnZXIua2VybmVsLm9yZz4g
+T24gQmVoYWxmIE9mDQo+ID4gPiA+ID4gPiA+ID4gR2VlcnQgVXl0dGVyaG9ldmVuDQo+ID4gPiA+
+ID4gPiA+ID4gU2VudDogMjQgSmFudWFyeSAyMDE5IDEwOjE2DQo+ID4gPiA+ID4gPiA+ID4gVG86
+IEJpanUgRGFzIDxiaWp1LmRhc0BicC5yZW5lc2FzLmNvbT4NCj4gPiA+ID4gPiA+ID4gPiBDYzog
+Um9iIEhlcnJpbmcgPHJvYmgrZHRAa2VybmVsLm9yZz47IE1hcmsgUnV0bGFuZA0KPiA+ID4gPiA+
+ID4gPiA+IDxtYXJrLnJ1dGxhbmRAYXJtLmNvbT47IFNpbW9uIEhvcm1hbg0KPiA8aG9ybXNAdmVy
+Z2UubmV0LmF1PjsNCj4gPiA+ID4gPiA+ID4gTWFnbnVzIERhbW0NCj4gPiA+ID4gPiA+ID4gPiA8
+bWFnbnVzLmRhbW1AZ21haWwuY29tPjsgTGludXgtUmVuZXNhcyA8bGludXgtcmVuZXNhcy0NCj4g
+PiA+ID4gPiA+ID4gPiBzb2NAdmdlci5rZXJuZWwub3JnPjsgb3BlbiBsaXN0Ok9QRU4gRklSTVdB
+UkUgQU5EDQo+ID4gPiA+ID4gPiA+ID4gRkxBVFRFTkVEDQo+ID4gPiA+ID4gREVWSUNFDQo+ID4g
+PiA+ID4gPiA+ID4gVFJFRSBCSU5ESU5HUyA8ZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5vcmc+OyBH
+ZWVydA0KPiA+ID4gPiA+ID4gPiA+IFV5dHRlcmhvZXZlbiA8Z2VlcnQrcmVuZXNhc0BnbGlkZXIu
+YmU+OyBDaHJpcyBQYXRlcnNvbg0KPiA+ID4gPiA+ID4gPiA+IDxDaHJpcy5QYXRlcnNvbjJAcmVu
+ZXNhcy5jb20+OyBEYW5pZWwgTGV6Y2Fubw0KPiA+ID4gPiA+ID4gPiA+IDxkYW5pZWwubGV6Y2Fu
+b0BsaW5hcm8ub3JnPjsgVGhvbWFzIEdsZWl4bmVyDQo+ID4gPiA+ID4gPiA+ID4gPHRnbHhAbGlu
+dXRyb25peC5kZT47IEpvaG4gU3R1bHR6DQo+ID4gPiA+ID4gPiA+ID4gPGpvaG4uc3R1bHR6QGxp
+bmFyby5vcmc+OyBGYWJyaXppbyBDYXN0cm8NCj4gPiA+ID4gPiA+ID4gPiA8ZmFicml6aW8uY2Fz
+dHJvQGJwLnJlbmVzYXMuY29tPjsgU2FtdWVsIEhvbGxhbmQNCj4gPiA+ID4gPiA+ID4gPHNhbXVl
+bEBzaG9sbGFuZC5vcmc+DQo+ID4gPiA+ID4gPiA+ID4gU3ViamVjdDogUmU6IFtQQVRDSF0gYXJt
+NjQ6IGR0czogcmVuZXNhczogcjhhNzc5NjogQWRkIENNVA0KPiA+ID4gPiA+ID4gPiA+IGRldmlj
+ZSBub2Rlcw0KPiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gSGkgQmlqdSwNCj4gPiA+
+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IE9uIEZyaSwgT2N0IDI2LCAyMDE4IGF0IDEwOjMy
+IEFNIEJpanUgRGFzDQo+ID4gPiA+ID4gPiA+ID4gPGJpanUuZGFzQGJwLnJlbmVzYXMuY29tPg0K
+PiA+ID4gPiA+ID4gPiB3cm90ZToNCj4gPiA+ID4gPiA+ID4gPiA+IFRoaXMgcGF0Y2ggYWRkcyBD
+TVR7MHwxfDJ8M30gZGV2aWNlIG5vZGVzIGZvciByOGE3Nzk2IFNvQy4NCj4gPiA+ID4gPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiA+ID4gPiBTaWduZWQtb2ZmLWJ5OiBCaWp1IERhcyA8YmlqdS5kYXNA
+YnAucmVuZXNhcy5jb20+DQo+ID4gPiA+ID4gPiA+ID4gPiAtLS0NCj4gPiA+ID4gPiA+ID4gPiA+
+IFRoaXMgcGF0Y2ggaXMgdGVzdGVkIGFnYWluc3QgcmVuZXNhcy1kZXYNCj4gPiA+ID4gPiA+ID4g
+PiA+DQo+ID4gPiA+ID4gPiA+ID4gPiBJIGhhdmUgZXhlY3V0ZWQgb24gaW5jb25zaXN0ZW5jeS1j
+aGVjaywgbmFub3NsZWVwIGFuZA0KPiA+ID4gPiA+ID4gPiA+ID4gY2xvY2tzb3VyY2Vfc3dpdGNo
+IHNlbGZ0ZXN0cyBvbiB0aGlzIGFybTY0IFNvQy4gVGhlDQo+ID4gPiA+ID4gPiA+ID4gPiBpbmNv
+bnNpc3RlbmN5LWNoZWNrIGFuZCBuYW5vc2xlZXAgdGVzdHMgYXJlIHdvcmtpbmcNCj4gPiA+ID4g
+PiA+ID4gPiA+IGZpbmUuVGhlIGNsb2Nrc291cmNlX3N3aXRjaCBhc3luY2hyb25vdXMgdGVzdCBp
+cyBmYWlsaW5nDQo+ID4gPiA+ID4gPiA+ID4gPiBkdWUgdG8gaW5jb25zaXN0ZW5jeS1jaGVjaw0K
+PiA+ID4gPiA+ID4gPiA+IGZhaWx1cmUgb24gImFyY2hfc3lzX2NvdW50ZXIiLg0KPiA+ID4gPiA+
+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiA+IEJ1dCBpZiBpIHNraXAgdGhlIGNsb2Nrc291cmNl
+X3N3aXRjaGluZyBvZg0KPiA+ID4gPiA+ID4gPiA+ID4gImFyY2hfc3lzX2NvdW50ZXIiLCB0aGUg
+YXN5bmNocm9ub3VzIHRlc3QgaXMgcGFzc2luZyBmb3INCj4gQ01UMC8xLzIvMyB0aW1lci4NCj4g
+PiA+ID4gPiA+ID4gPiA+DQo+ID4gPiA+ID4gPiA+ID4gPiBIYXMgYW55IG9uZSBub3RpY2VkIHRo
+aXMgaXNzdWU/DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBjbG9ja2V2ZW50cy9u
+ZXh0IG5vdyBoYXMgY29tbWl0IDdjZDZkY2EzNjAwZDhkNzENCj4gPiA+ID4gPiA+ID4gPiAoImNs
+b2Nrc291cmNlL2RyaXZlcnMvYXJjaF90aW1lcjogV29ya2Fyb3VuZCBmb3IgQWxsd2lubmVyDQo+
+ID4gPiA+ID4gPiA+ID4gQTY0IHRpbWVyIGluc3RhYmlsaXR5IikuICBQZXJoYXBzIHRoaXMgaXMg
+cmVsYXRlZCwgYW5kIHRoZQ0KPiA+ID4gPiA+ID4gPiA+IHNhbWUgdGVzdCBwcm9ncmFtIG1heSBp
+bmRpY2F0ZSBzaW1pbGFyIGlzc3Vlcz8NCj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+
+IFNlZSBhbHNvDQo+ID4gPiA+ID4gPiA+ID4gaHR0cHM6Ly9sb3JlLmtlcm5lbC5vcmcvbGttbC8y
+MDE5MDExMzAyMTcxOS40NjQ1Ny0yLQ0KPiA+ID4gPiA+ID4gPiA+IHNhbXVlbEBzaG9sbGFuZC5v
+cmcvDQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiBHcntvZXRqZSxlZXRpbmd9cywN
+Cj4gPiA+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4gPiA+ICAgICAgICAgICAgICAgICAgICAgICAg
+IEdlZXJ0DQo+ID4gPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+ID4gPiAtLQ0KPiA+ID4gPiA+ID4g
+PiA+IEdlZXJ0IFV5dHRlcmhvZXZlbiAtLSBUaGVyZSdzIGxvdHMgb2YgTGludXggYmV5b25kIGlh
+MzIgLS0NCj4gPiA+ID4gPiA+ID4gPiBnZWVydEBsaW51eC0gbTY4ay5vcmcNCj4gPiA+ID4gPiA+
+ID4gPg0KPiA+ID4gPiA+ID4gPiA+IEluIHBlcnNvbmFsIGNvbnZlcnNhdGlvbnMgd2l0aCB0ZWNo
+bmljYWwgcGVvcGxlLCBJIGNhbGwNCj4gPiA+ID4gPiA+ID4gPiBteXNlbGYgYSBoYWNrZXIuIEJ1
+dCB3aGVuIEknbSB0YWxraW5nIHRvIGpvdXJuYWxpc3RzIEkNCj4gPiA+ID4gPiA+ID4gPiBqdXN0
+IHNheSAicHJvZ3JhbW1lciIgb3INCj4gPiA+ID4gPiA+ID4gc29tZXRoaW5nIGxpa2UgdGhhdC4N
+Cj4gPiA+ID4gPiA+ID4gPiAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tIExpbnVz
+IFRvcnZhbGRzDQo+ID4gPiA+ID4gPg0KPiA+ID4gPiA+ID4NCj4gPiA+ID4gPiA+DQo+ID4gPiA+
+ID4gPiBSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJv
+YXJkIFJvYWQsDQo+ID4gPiA+ID4gPiBCb3VybmUNCj4gPiA+ID4gPiBFbmQsIEJ1Y2tpbmdoYW1z
+aGlyZSwgU0w4IDVGSCwgVUsuIFJlZ2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzDQo+ID4gPiA+
+ID4gdW5kZXIgUmVnaXN0ZXJlZCBOby4gMDQ1ODY3MDkuDQo+ID4gPg0KPiA+ID4NCj4gPiA+DQo+
+ID4gPiBSZW5lc2FzIEVsZWN0cm9uaWNzIEV1cm9wZSBMdGQsIER1a2VzIE1lYWRvdywgTWlsbGJv
+YXJkIFJvYWQsIEJvdXJuZQ0KPiBFbmQsIEJ1Y2tpbmdoYW1zaGlyZSwgU0w4IDVGSCwgVUsuIFJl
+Z2lzdGVyZWQgaW4gRW5nbGFuZCAmIFdhbGVzIHVuZGVyDQo+IFJlZ2lzdGVyZWQgTm8uIDA0NTg2
+NzA5Lg0KDQoNCg0KUmVuZXNhcyBFbGVjdHJvbmljcyBFdXJvcGUgTHRkLCBEdWtlcyBNZWFkb3cs
+IE1pbGxib2FyZCBSb2FkLCBCb3VybmUgRW5kLCBCdWNraW5naGFtc2hpcmUsIFNMOCA1RkgsIFVL
+LiBSZWdpc3RlcmVkIGluIEVuZ2xhbmQgJiBXYWxlcyB1bmRlciBSZWdpc3RlcmVkIE5vLiAwNDU4
+NjcwOS4NCg==
