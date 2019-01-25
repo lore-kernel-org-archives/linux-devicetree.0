@@ -1,269 +1,222 @@
 From: Nava kishore Manne <nava.manne@xilinx.com>
-Subject: [PATCH v3 1/3] firmware: xilinx: Add reset API's
-Date: Thu, 24 Jan 2019 07:46:49 -0000 (UTC)
-Message-ID: <20190125074654.10950-2-nava.manne@xilinx.com>
+Subject: [PATCH v3 2/3] dt-bindings: reset: Add bindings for ZynqMP reset driver
+Date: Fri, 25 Jan 2019 13:16:53 +0530
+Message-ID: <20190125074654.10950-3-nava.manne@xilinx.com>
 References: <20190125074654.10950-1-nava.manne@xilinx.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Date: Fri, 25 Jan 2019 13:16:52 +0530
+Content-Type: text/plain
+Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190125074654.10950-1-nava.manne@xilinx.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: p.zabel@pengutronix.de, robh+dt@kernel.org, mark.rutland@arm.com, michal.simek@xilinx.com, rajanv@xilinx.com, jollys@xilinx.com, nava.manne@xilinx.com, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, chinnikishore369@gmail.com
 List-Id: devicetree@vger.kernel.org
 
-This Patch Adds reset API's to support release, assert
-and status functionalities by using firmware interface.
+Add documentation to describe Xilinx ZynqMP reset driver
+bindings.
 
 Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+Signed-off-by: Jolly Shah <jollys@xilinx.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
 ---
-Changes for v3:
-		-Modified the reset start and end macro
-		 values as suggested by Vesa.
+ .../bindings/reset/xlnx,zynqmp-reset.txt      |  52 +++++++
+ .../dt-bindings/reset/xlnx-zynqmp-resets.h    | 130 ++++++++++++++++++
+ 2 files changed, 182 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+ create mode 100644 include/dt-bindings/reset/xlnx-zynqmp-resets.h
 
-Changes for v2:
-		-None.
-
-Changes for v1:
-		-None.
-
-Changes for RFC-V3:
-		-None.
-
-Changes for RFC-V2:
-		-New patch.
-
- drivers/firmware/xilinx/zynqmp.c     |  40 ++++++++
- include/linux/firmware/xlnx-zynqmp.h | 136 +++++++++++++++++++++++++++
- 2 files changed, 176 insertions(+)
-
-diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
-index 9a1c72a9280f..70b50377ae5f 100644
---- a/drivers/firmware/xilinx/zynqmp.c
-+++ b/drivers/firmware/xilinx/zynqmp.c
-@@ -469,6 +469,44 @@ static int zynqmp_pm_ioctl(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2,
- 				   arg1, arg2, out);
- }
- 
-+/**
-+ * zynqmp_pm_reset_assert - Request setting of reset (1 - assert, 0 - release)
-+ * @reset:		Reset to be configured
-+ * @assert_flag:	Flag stating should reset be asserted (1) or
-+ *			released (0)
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_reset_assert(const enum zynqmp_pm_reset reset,
-+				  const enum zynqmp_pm_reset_action assert_flag)
-+{
-+	return zynqmp_pm_invoke_fn(PM_RESET_ASSERT, reset, assert_flag,
-+				   0, 0, NULL);
-+}
+diff --git a/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+new file mode 100644
+index 000000000000..27a45fe5ecf1
+--- /dev/null
++++ b/Documentation/devicetree/bindings/reset/xlnx,zynqmp-reset.txt
+@@ -0,0 +1,52 @@
++--------------------------------------------------------------------------
++ =  Zynq UltraScale+ MPSoC reset driver binding =
++--------------------------------------------------------------------------
++The Zynq UltraScale+ MPSoC has several different resets.
 +
-+/**
-+ * zynqmp_pm_reset_get_status - Get status of the reset
-+ * @reset:      Reset whose status should be returned
-+ * @status:     Returned status
-+ *
-+ * Return: Returns status, either success or error+reason
-+ */
-+static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
-+				      u32 *status)
-+{
-+	u32 ret_payload[PAYLOAD_ARG_CNT];
-+	int ret;
++See Chapter 36 of the Zynq UltraScale+ MPSoC TRM (UG) for more information
++about zynqmp resets.
 +
-+	if (!status)
-+		return -EINVAL;
++Please also refer to reset.txt in this directory for common reset
++controller binding usage.
 +
-+	ret = zynqmp_pm_invoke_fn(PM_RESET_GET_STATUS, reset, 0,
-+				  0, 0, ret_payload);
-+	*status = ret_payload[1];
++Required Properties:
++- compatible:	"xlnx,zynqmp-reset"
++- #reset-cells:	Specifies the number of cells needed to encode reset
++		line, should be 1
 +
-+	return ret;
-+}
++-------
++Example
++-------
 +
- static const struct zynqmp_eemi_ops eemi_ops = {
- 	.get_api_version = zynqmp_pm_get_api_version,
- 	.query_data = zynqmp_pm_query_data,
-@@ -482,6 +520,8 @@ static const struct zynqmp_eemi_ops eemi_ops = {
- 	.clock_setparent = zynqmp_pm_clock_setparent,
- 	.clock_getparent = zynqmp_pm_clock_getparent,
- 	.ioctl = zynqmp_pm_ioctl,
-+	.reset_assert = zynqmp_pm_reset_assert,
-+	.reset_get_status = zynqmp_pm_reset_get_status,
- };
- 
- /**
-diff --git a/include/linux/firmware/xlnx-zynqmp.h b/include/linux/firmware/xlnx-zynqmp.h
-index 3c3c28eff56a..07c587a0b06e 100644
---- a/include/linux/firmware/xlnx-zynqmp.h
-+++ b/include/linux/firmware/xlnx-zynqmp.h
-@@ -34,6 +34,8 @@
- 
- enum pm_api_id {
- 	PM_GET_API_VERSION = 1,
-+	PM_RESET_ASSERT = 17,
-+	PM_RESET_GET_STATUS,
- 	PM_IOCTL = 34,
- 	PM_QUERY_DATA,
- 	PM_CLOCK_ENABLE,
-@@ -75,6 +77,137 @@ enum pm_query_id {
- 	PM_QID_CLOCK_GET_NUM_CLOCKS = 12,
- };
- 
-+enum zynqmp_pm_reset_action {
-+	PM_RESET_ACTION_RELEASE,
-+	PM_RESET_ACTION_ASSERT,
-+	PM_RESET_ACTION_PULSE,
++firmware {
++	zynqmp_firmware: zynqmp-firmware {
++		compatible = "xlnx,zynqmp-firmware";
++		method = "smc";
++
++		zynqmp_reset: reset-controller {
++			compatible = "xlnx,zynqmp-reset";
++			#reset-cells = <1>;
++		};
++	};
 +};
 +
-+enum zynqmp_pm_reset {
-+	ZYNQMP_PM_RESET_START = 1000,
-+	ZYNQMP_PM_RESET_PCIE_CFG = ZYNQMP_PM_RESET_START,
-+	ZYNQMP_PM_RESET_PCIE_BRIDGE,
-+	ZYNQMP_PM_RESET_PCIE_CTRL,
-+	ZYNQMP_PM_RESET_DP,
-+	ZYNQMP_PM_RESET_SWDT_CRF,
-+	ZYNQMP_PM_RESET_AFI_FM5,
-+	ZYNQMP_PM_RESET_AFI_FM4,
-+	ZYNQMP_PM_RESET_AFI_FM3,
-+	ZYNQMP_PM_RESET_AFI_FM2,
-+	ZYNQMP_PM_RESET_AFI_FM1,
-+	ZYNQMP_PM_RESET_AFI_FM0,
-+	ZYNQMP_PM_RESET_GDMA,
-+	ZYNQMP_PM_RESET_GPU_PP1,
-+	ZYNQMP_PM_RESET_GPU_PP0,
-+	ZYNQMP_PM_RESET_GPU,
-+	ZYNQMP_PM_RESET_GT,
-+	ZYNQMP_PM_RESET_SATA,
-+	ZYNQMP_PM_RESET_ACPU3_PWRON,
-+	ZYNQMP_PM_RESET_ACPU2_PWRON,
-+	ZYNQMP_PM_RESET_ACPU1_PWRON,
-+	ZYNQMP_PM_RESET_ACPU0_PWRON,
-+	ZYNQMP_PM_RESET_APU_L2,
-+	ZYNQMP_PM_RESET_ACPU3,
-+	ZYNQMP_PM_RESET_ACPU2,
-+	ZYNQMP_PM_RESET_ACPU1,
-+	ZYNQMP_PM_RESET_ACPU0,
-+	ZYNQMP_PM_RESET_DDR,
-+	ZYNQMP_PM_RESET_APM_FPD,
-+	ZYNQMP_PM_RESET_SOFT,
-+	ZYNQMP_PM_RESET_GEM0,
-+	ZYNQMP_PM_RESET_GEM1,
-+	ZYNQMP_PM_RESET_GEM2,
-+	ZYNQMP_PM_RESET_GEM3,
-+	ZYNQMP_PM_RESET_QSPI,
-+	ZYNQMP_PM_RESET_UART0,
-+	ZYNQMP_PM_RESET_UART1,
-+	ZYNQMP_PM_RESET_SPI0,
-+	ZYNQMP_PM_RESET_SPI1,
-+	ZYNQMP_PM_RESET_SDIO0,
-+	ZYNQMP_PM_RESET_SDIO1,
-+	ZYNQMP_PM_RESET_CAN0,
-+	ZYNQMP_PM_RESET_CAN1,
-+	ZYNQMP_PM_RESET_I2C0,
-+	ZYNQMP_PM_RESET_I2C1,
-+	ZYNQMP_PM_RESET_TTC0,
-+	ZYNQMP_PM_RESET_TTC1,
-+	ZYNQMP_PM_RESET_TTC2,
-+	ZYNQMP_PM_RESET_TTC3,
-+	ZYNQMP_PM_RESET_SWDT_CRL,
-+	ZYNQMP_PM_RESET_NAND,
-+	ZYNQMP_PM_RESET_ADMA,
-+	ZYNQMP_PM_RESET_GPIO,
-+	ZYNQMP_PM_RESET_IOU_CC,
-+	ZYNQMP_PM_RESET_TIMESTAMP,
-+	ZYNQMP_PM_RESET_RPU_R50,
-+	ZYNQMP_PM_RESET_RPU_R51,
-+	ZYNQMP_PM_RESET_RPU_AMBA,
-+	ZYNQMP_PM_RESET_OCM,
-+	ZYNQMP_PM_RESET_RPU_PGE,
-+	ZYNQMP_PM_RESET_USB0_CORERESET,
-+	ZYNQMP_PM_RESET_USB1_CORERESET,
-+	ZYNQMP_PM_RESET_USB0_HIBERRESET,
-+	ZYNQMP_PM_RESET_USB1_HIBERRESET,
-+	ZYNQMP_PM_RESET_USB0_APB,
-+	ZYNQMP_PM_RESET_USB1_APB,
-+	ZYNQMP_PM_RESET_IPI,
-+	ZYNQMP_PM_RESET_APM_LPD,
-+	ZYNQMP_PM_RESET_RTC,
-+	ZYNQMP_PM_RESET_SYSMON,
-+	ZYNQMP_PM_RESET_AFI_FM6,
-+	ZYNQMP_PM_RESET_LPD_SWDT,
-+	ZYNQMP_PM_RESET_FPD,
-+	ZYNQMP_PM_RESET_RPU_DBG1,
-+	ZYNQMP_PM_RESET_RPU_DBG0,
-+	ZYNQMP_PM_RESET_DBG_LPD,
-+	ZYNQMP_PM_RESET_DBG_FPD,
-+	ZYNQMP_PM_RESET_APLL,
-+	ZYNQMP_PM_RESET_DPLL,
-+	ZYNQMP_PM_RESET_VPLL,
-+	ZYNQMP_PM_RESET_IOPLL,
-+	ZYNQMP_PM_RESET_RPLL,
-+	ZYNQMP_PM_RESET_GPO3_PL_0,
-+	ZYNQMP_PM_RESET_GPO3_PL_1,
-+	ZYNQMP_PM_RESET_GPO3_PL_2,
-+	ZYNQMP_PM_RESET_GPO3_PL_3,
-+	ZYNQMP_PM_RESET_GPO3_PL_4,
-+	ZYNQMP_PM_RESET_GPO3_PL_5,
-+	ZYNQMP_PM_RESET_GPO3_PL_6,
-+	ZYNQMP_PM_RESET_GPO3_PL_7,
-+	ZYNQMP_PM_RESET_GPO3_PL_8,
-+	ZYNQMP_PM_RESET_GPO3_PL_9,
-+	ZYNQMP_PM_RESET_GPO3_PL_10,
-+	ZYNQMP_PM_RESET_GPO3_PL_11,
-+	ZYNQMP_PM_RESET_GPO3_PL_12,
-+	ZYNQMP_PM_RESET_GPO3_PL_13,
-+	ZYNQMP_PM_RESET_GPO3_PL_14,
-+	ZYNQMP_PM_RESET_GPO3_PL_15,
-+	ZYNQMP_PM_RESET_GPO3_PL_16,
-+	ZYNQMP_PM_RESET_GPO3_PL_17,
-+	ZYNQMP_PM_RESET_GPO3_PL_18,
-+	ZYNQMP_PM_RESET_GPO3_PL_19,
-+	ZYNQMP_PM_RESET_GPO3_PL_20,
-+	ZYNQMP_PM_RESET_GPO3_PL_21,
-+	ZYNQMP_PM_RESET_GPO3_PL_22,
-+	ZYNQMP_PM_RESET_GPO3_PL_23,
-+	ZYNQMP_PM_RESET_GPO3_PL_24,
-+	ZYNQMP_PM_RESET_GPO3_PL_25,
-+	ZYNQMP_PM_RESET_GPO3_PL_26,
-+	ZYNQMP_PM_RESET_GPO3_PL_27,
-+	ZYNQMP_PM_RESET_GPO3_PL_28,
-+	ZYNQMP_PM_RESET_GPO3_PL_29,
-+	ZYNQMP_PM_RESET_GPO3_PL_30,
-+	ZYNQMP_PM_RESET_GPO3_PL_31,
-+	ZYNQMP_PM_RESET_RPU_LS,
-+	ZYNQMP_PM_RESET_PS_ONLY,
-+	ZYNQMP_PM_RESET_PL,
-+	ZYNQMP_PM_RESET_PS_PL0,
-+	ZYNQMP_PM_RESET_PS_PL1,
-+	ZYNQMP_PM_RESET_PS_PL2,
-+	ZYNQMP_PM_RESET_PS_PL3,
-+	ZYNQMP_PM_RESET_END = ZYNQMP_PM_RESET_PS_PL3
-+};
++Specifying reset lines connected to IP modules
++==============================================
 +
- /**
-  * struct zynqmp_pm_query_data - PM query data
-  * @qid:	query ID
-@@ -102,6 +235,9 @@ struct zynqmp_eemi_ops {
- 	int (*clock_setparent)(u32 clock_id, u32 parent_id);
- 	int (*clock_getparent)(u32 clock_id, u32 *parent_id);
- 	int (*ioctl)(u32 node_id, u32 ioctl_id, u32 arg1, u32 arg2, u32 *out);
-+	int (*reset_assert)(const enum zynqmp_pm_reset reset,
-+			    const enum zynqmp_pm_reset_action assert_flag);
-+	int (*reset_get_status)(const enum zynqmp_pm_reset reset, u32 *status);
- };
- 
- #if IS_REACHABLE(CONFIG_ARCH_ZYNQMP)
++Device nodes that need access to reset lines should
++specify them as a reset phandle in their corresponding node as
++specified in reset.txt.
++
++For list of all valid reset indicies see
++<dt-bindings/reset/xlnx-zynqmp-resets.h>
++
++Example:
++
++serdes: zynqmp_phy@fd400000 {
++	...
++
++	resets = <&zynqmp_reset ZYNQMP_RESET_SATA>;
++	reset-names = "sata_rst";
++
++	...
++};
+diff --git a/include/dt-bindings/reset/xlnx-zynqmp-resets.h b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+new file mode 100644
+index 000000000000..d44525b9f8db
+--- /dev/null
++++ b/include/dt-bindings/reset/xlnx-zynqmp-resets.h
+@@ -0,0 +1,130 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ *  Copyright (C) 2018 Xilinx, Inc.
++ */
++
++#ifndef _DT_BINDINGS_ZYNQMP_RESETS_H
++#define _DT_BINDINGS_ZYNQMP_RESETS_H
++
++#define		ZYNQMP_RESET_PCIE_CFG		0
++#define		ZYNQMP_RESET_PCIE_BRIDGE	1
++#define		ZYNQMP_RESET_PCIE_CTRL		2
++#define		ZYNQMP_RESET_DP			3
++#define		ZYNQMP_RESET_SWDT_CRF		4
++#define		ZYNQMP_RESET_AFI_FM5		5
++#define		ZYNQMP_RESET_AFI_FM4		6
++#define		ZYNQMP_RESET_AFI_FM3		7
++#define		ZYNQMP_RESET_AFI_FM2		8
++#define		ZYNQMP_RESET_AFI_FM1		9
++#define		ZYNQMP_RESET_AFI_FM0		10
++#define		ZYNQMP_RESET_GDMA		11
++#define		ZYNQMP_RESET_GPU_PP1		12
++#define		ZYNQMP_RESET_GPU_PP0		13
++#define		ZYNQMP_RESET_GPU		14
++#define		ZYNQMP_RESET_GT			15
++#define		ZYNQMP_RESET_SATA		16
++#define		ZYNQMP_RESET_ACPU3_PWRON	17
++#define		ZYNQMP_RESET_ACPU2_PWRON	18
++#define		ZYNQMP_RESET_ACPU1_PWRON	19
++#define		ZYNQMP_RESET_ACPU0_PWRON	20
++#define		ZYNQMP_RESET_APU_L2		21
++#define		ZYNQMP_RESET_ACPU3		22
++#define		ZYNQMP_RESET_ACPU2		23
++#define		ZYNQMP_RESET_ACPU1		24
++#define		ZYNQMP_RESET_ACPU0		25
++#define		ZYNQMP_RESET_DDR		26
++#define		ZYNQMP_RESET_APM_FPD		27
++#define		ZYNQMP_RESET_SOFT		28
++#define		ZYNQMP_RESET_GEM0		29
++#define		ZYNQMP_RESET_GEM1		30
++#define		ZYNQMP_RESET_GEM2		31
++#define		ZYNQMP_RESET_GEM3		32
++#define		ZYNQMP_RESET_QSPI		33
++#define		ZYNQMP_RESET_UART0		34
++#define		ZYNQMP_RESET_UART1		35
++#define		ZYNQMP_RESET_SPI0		36
++#define		ZYNQMP_RESET_SPI1		37
++#define		ZYNQMP_RESET_SDIO0		38
++#define		ZYNQMP_RESET_SDIO1		39
++#define		ZYNQMP_RESET_CAN0		40
++#define		ZYNQMP_RESET_CAN1		41
++#define		ZYNQMP_RESET_I2C0		42
++#define		ZYNQMP_RESET_I2C1		43
++#define		ZYNQMP_RESET_TTC0		44
++#define		ZYNQMP_RESET_TTC1		45
++#define		ZYNQMP_RESET_TTC2		46
++#define		ZYNQMP_RESET_TTC3		47
++#define		ZYNQMP_RESET_SWDT_CRL		48
++#define		ZYNQMP_RESET_NAND		49
++#define		ZYNQMP_RESET_ADMA		50
++#define		ZYNQMP_RESET_GPIO		51
++#define		ZYNQMP_RESET_IOU_CC		52
++#define		ZYNQMP_RESET_TIMESTAMP		53
++#define		ZYNQMP_RESET_RPU_R50		54
++#define		ZYNQMP_RESET_RPU_R51		55
++#define		ZYNQMP_RESET_RPU_AMBA		56
++#define		ZYNQMP_RESET_OCM		57
++#define		ZYNQMP_RESET_RPU_PGE		58
++#define		ZYNQMP_RESET_USB0_CORERESET	59
++#define		ZYNQMP_RESET_USB1_CORERESET	60
++#define		ZYNQMP_RESET_USB0_HIBERRESET	61
++#define		ZYNQMP_RESET_USB1_HIBERRESET	62
++#define		ZYNQMP_RESET_USB0_APB		63
++#define		ZYNQMP_RESET_USB1_APB		64
++#define		ZYNQMP_RESET_IPI		65
++#define		ZYNQMP_RESET_APM_LPD		66
++#define		ZYNQMP_RESET_RTC		67
++#define		ZYNQMP_RESET_SYSMON		68
++#define		ZYNQMP_RESET_AFI_FM6		69
++#define		ZYNQMP_RESET_LPD_SWDT		70
++#define		ZYNQMP_RESET_FPD		71
++#define		ZYNQMP_RESET_RPU_DBG1		72
++#define		ZYNQMP_RESET_RPU_DBG0		73
++#define		ZYNQMP_RESET_DBG_LPD		74
++#define		ZYNQMP_RESET_DBG_FPD		75
++#define		ZYNQMP_RESET_APLL		76
++#define		ZYNQMP_RESET_DPLL		77
++#define		ZYNQMP_RESET_VPLL		78
++#define		ZYNQMP_RESET_IOPLL		79
++#define		ZYNQMP_RESET_RPLL		80
++#define		ZYNQMP_RESET_GPO3_PL_0		81
++#define		ZYNQMP_RESET_GPO3_PL_1		82
++#define		ZYNQMP_RESET_GPO3_PL_2		83
++#define		ZYNQMP_RESET_GPO3_PL_3		84
++#define		ZYNQMP_RESET_GPO3_PL_4		85
++#define		ZYNQMP_RESET_GPO3_PL_5		86
++#define		ZYNQMP_RESET_GPO3_PL_6		87
++#define		ZYNQMP_RESET_GPO3_PL_7		88
++#define		ZYNQMP_RESET_GPO3_PL_8		89
++#define		ZYNQMP_RESET_GPO3_PL_9		90
++#define		ZYNQMP_RESET_GPO3_PL_10		91
++#define		ZYNQMP_RESET_GPO3_PL_11		92
++#define		ZYNQMP_RESET_GPO3_PL_12		93
++#define		ZYNQMP_RESET_GPO3_PL_13		94
++#define		ZYNQMP_RESET_GPO3_PL_14		95
++#define		ZYNQMP_RESET_GPO3_PL_15		96
++#define		ZYNQMP_RESET_GPO3_PL_16		97
++#define		ZYNQMP_RESET_GPO3_PL_17		98
++#define		ZYNQMP_RESET_GPO3_PL_18		99
++#define		ZYNQMP_RESET_GPO3_PL_19		100
++#define		ZYNQMP_RESET_GPO3_PL_20		101
++#define		ZYNQMP_RESET_GPO3_PL_21		102
++#define		ZYNQMP_RESET_GPO3_PL_22		103
++#define		ZYNQMP_RESET_GPO3_PL_23		104
++#define		ZYNQMP_RESET_GPO3_PL_24		105
++#define		ZYNQMP_RESET_GPO3_PL_25		106
++#define		ZYNQMP_RESET_GPO3_PL_26		107
++#define		ZYNQMP_RESET_GPO3_PL_27		108
++#define		ZYNQMP_RESET_GPO3_PL_28		109
++#define		ZYNQMP_RESET_GPO3_PL_29		110
++#define		ZYNQMP_RESET_GPO3_PL_30		111
++#define		ZYNQMP_RESET_GPO3_PL_31		112
++#define		ZYNQMP_RESET_RPU_LS		113
++#define		ZYNQMP_RESET_PS_ONLY		114
++#define		ZYNQMP_RESET_PL			115
++#define		ZYNQMP_RESET_PS_PL0		116
++#define		ZYNQMP_RESET_PS_PL1		117
++#define		ZYNQMP_RESET_PS_PL2		118
++#define		ZYNQMP_RESET_PS_PL3		119
++
++#endif
 -- 
 2.18.0
