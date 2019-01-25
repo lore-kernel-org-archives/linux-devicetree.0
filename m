@@ -1,101 +1,56 @@
-From: Alexandre Courbot <acourbot@chromium.org>
-Subject: Re: [PATCH v3] arm64: dts: sdm845: add video nodes
-Date: Fri, 25 Jan 2019 19:10:57 +0900
-Message-ID: <CAPBb6MUOqQVY=L8cu=RN9pWBsDZhmpvHh_3-kvvuSRHQpyTbAQ@mail.gmail.com>
-References: <1545292023-5489-1-git-send-email-mgottam@codeaurora.org>
- <0ee6676f-f169-1ea1-506e-16e4097d1c04@linaro.org> <CAPBb6MWedPvoFW2jrqhZhNP-41PrEC+G4xnXs=cex1ywnVdm-w@mail.gmail.com>
- <323bca85-6dc3-4d28-ec02-69ce57bc6506@linaro.org>
+From: Miquel Raynal <miquel.raynal@bootlin.com>
+Subject: Re: [PATCH v3 04/10] usb: ehci-orion: add S2RAM support
+Date: Fri, 25 Jan 2019 11:35:38 +0100
+Message-ID: <20190125113538.24d5ca02@xps13>
+References: <20190121112336.23489-5-miquel.raynal@bootlin.com>
+ <Pine.LNX.4.44L0.1901231456060.1564-100000@iolanthe.rowland.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <323bca85-6dc3-4d28-ec02-69ce57bc6506@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Cc: Malathi Gottam <mgottam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <Pine.LNX.4.44L0.1901231456060.1564-100000@iolanthe.rowland.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Alan Stern <stern@rowland.harvard.edu>
+Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 5:32 PM Stanimir Varbanov
-<stanimir.varbanov@linaro.org> wrote:
->
-> Hi Alex,
->
-> On 1/25/19 9:46 AM, Alexandre Courbot wrote:
-> > On Thu, Jan 17, 2019 at 8:58 PM Stanimir Varbanov
-> > <stanimir.varbanov@linaro.org> wrote:
-> >>
-> >> Hi Malathi,
-> >>
-> >> On 12/20/18 9:47 AM, Malathi Gottam wrote:
-> >>> This adds video nodes to sdm845 based on the examples
-> >>> in the bindings.
-> >>>
-> >>> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
-> >>> ---
-> >>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
-> >>>  1 file changed, 35 insertions(+)
-> >>
-> >> Looks good to me:
-> >>
-> >> Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-> >>
-> >>>
-> >>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >>> index b72bdb0..ccd2b10 100644
-> >>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> >>> @@ -87,6 +87,11 @@
-> >>>                       reg = <0 0x86200000 0 0x2d00000>;
-> >>>                       no-map;
-> >>>               };
-> >>> +
-> >>> +             venus_region: memory@95800000 {
-> >>> +                     reg = <0x0 0x95800000 0x0 0x500000>;
-> >>> +                     no-map;
-> >>> +             };
-> >>>       };
-> >>>
-> >>>       cpus {
-> >>> @@ -1403,5 +1408,35 @@
-> >>>                               status = "disabled";
-> >>>                       };
-> >>>               };
-> >>> +
-> >>> +             video-codec@aa00000 {
-> >>> +                     compatible = "qcom,sdm845-venus";
-> >>> +                     reg = <0x0aa00000 0xff000>;
-> >>> +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
-> >>> +                     power-domains = <&videocc VENUS_GDSC>;
-> >>> +                     clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
-> >>> +                              <&videocc VIDEO_CC_VENUS_AHB_CLK>,
-> >>> +                              <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
-> >>> +                     clock-names = "core", "iface", "bus";
-> >>> +                     iommus = <&apps_smmu 0x10a0 0x8>,
-> >>> +                              <&apps_smmu 0x10b0 0x0>;
-> >>> +                     memory-region = <&venus_region>;
-> >>> +
-> >>> +                     video-core0 {
-> >>> +                             compatible = "venus-decoder";
-> >>> +                             clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
-> >>> +                                      <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
-> >>> +                             clock-names = "core", "bus";
-> >>> +                             power-domains = <&videocc VCODEC0_GDSC>;
-> >>> +                     };
-> >>> +
-> >>> +                     video-core1 {
-> >>> +                             compatible = "venus-encoder";
-> >>> +                             clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
-> >>> +                                      <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
-> >>> +                             clock-names = "core", "bus";
-> >>> +                             power-domains = <&videocc VCODEC1_GDSC>;
-> >>> +                     };
-> >>> +             };
-> >
-> > This patch lacks the video-firmware node, it should at the very least
-> > be added before this gets merged.
->
-> The firmware node should be added in board dts file, the for example
-> sdm845-mtp will not populate firmware node because it uses TZ for
-> firmware loading.
-
-Ah, that's a good point. In that case the previous patch was alright,
-sorry Malathi!
+SGkgQWxhbiwKCkFsYW4gU3Rlcm4gPHN0ZXJuQHJvd2xhbmQuaGFydmFyZC5lZHU+IHdyb3RlIG9u
+IFdlZCwgMjMgSmFuIDIwMTkKMTQ6NTg6NDQgLTA1MDAgKEVTVCk6Cgo+IE9uIE1vbiwgMjEgSmFu
+IDIwMTksIE1pcXVlbCBSYXluYWwgd3JvdGU6Cj4gCj4gPiBBZGQgc3VzcGVuZC9yZXN1bWUgY2Fs
+bGJhY2tzIHRvIHJlc2V0IHRoZSBob3N0IGNvbnRyb2xsZXIgcHJvcGVybHkKPiA+IGR1cmluZyBT
+MlJBTSBvcGVyYXRpb24uCj4gPiAKPiA+IFNpZ25lZC1vZmYtYnk6IE1pcXVlbCBSYXluYWwgPG1p
+cXVlbC5yYXluYWxAYm9vdGxpbi5jb20+Cj4gPiAtLS0KPiA+ICBkcml2ZXJzL3VzYi9ob3N0L2Vo
+Y2ktb3Jpb24uYyB8IDI1ICsrKysrKysrKysrKysrKysrKysrKysrKysKPiA+ICAxIGZpbGUgY2hh
+bmdlZCwgMjUgaW5zZXJ0aW9ucygrKQo+ID4gCj4gPiBkaWZmIC0tZ2l0IGEvZHJpdmVycy91c2Iv
+aG9zdC9laGNpLW9yaW9uLmMgYi9kcml2ZXJzL3VzYi9ob3N0L2VoY2ktb3Jpb24uYwo+ID4gaW5k
+ZXggMzEwOWYwODI5NDllLi5kYWIyMmFhNTdjMGIgMTAwNjQ0Cj4gPiAtLS0gYS9kcml2ZXJzL3Vz
+Yi9ob3N0L2VoY2ktb3Jpb24uYwo+ID4gKysrIGIvZHJpdmVycy91c2IvaG9zdC9laGNpLW9yaW9u
+LmMKPiA+IEBAIC0xODIsNiArMTgyLDMwIEBAIHN0YXRpYyBpbnQgZWhjaV9vcmlvbl9kcnZfcmVz
+ZXQoc3RydWN0IHVzYl9oY2QgKmhjZCkKPiA+ICAJcmV0dXJuIHJldDsKPiA+ICB9Cj4gPiAgCj4g
+PiArc3RhdGljIGludCBfX21heWJlX3VudXNlZCBlaGNpX29yaW9uX2Rydl9zdXNwZW5kKHN0cnVj
+dCBkZXZpY2UgKmRldikKPiA+ICt7Cj4gPiArCXN0cnVjdCB1c2JfaGNkICpoY2QgPSBkZXZfZ2V0
+X2RydmRhdGEoZGV2KTsKPiA+ICsJc3RydWN0IGVoY2lfaGNkICplaGNpID0gaGNkX3RvX2VoY2ko
+aGNkKTsKPiA+ICsKPiA+ICsJZWhjaV9wcmVwYXJlX3BvcnRzX2Zvcl9jb250cm9sbGVyX3N1c3Bl
+bmQoZWhjaSwKPiA+ICsJCQkJCQkgIGRldmljZV9tYXlfd2FrZXVwKGRldikpOwo+ID4gKwo+ID4g
+KwlyZXR1cm4gZWhjaV9zdXNwZW5kKGhjZCwgZmFsc2UpOyAgCj4gCj4gVGhpcyBpcyBhIGxpdHRs
+ZSBvZGQuICBXaHkgbm90IGp1c3QgY2FsbAo+IAo+IAllaGNpX3N1c3BlbmQoaGNkLCBkZXZpY2Vf
+bWF5X3dha2V1cChkZXYpKTsKPiAKPiBkaXJlY3RseSBhbmQgbGV0IGl0IHRha2UgY2FyZSBvZiBj
+YWxsaW5nCj4gZWhjaV9wcmVwYXJlX3BvcnRzX2Zvcl9jb250cm9sbGVyX3N1c3BlbmQoKSBmb3Ig
+eW91PyAgSWYgeW91IGhhdmUgYQo+IGdvb2QgcmVhc29uIGZvciBkb2luZyB0aGluZ3MgdGhpcyB3
+YXksIHBsZWFzZSBtZW50aW9uIHRoYXQgcmVhc29uIGluCj4gdGhlIENoYW5nZWxvZy4KClRoZXJl
+IGlzIG5vIHJlYXNvbiwgSSB0aGluayBJIGdvdCB0aGUgaW5zcGlyYXRpb24gZnJvbSBhbiBvdGhl
+ciBkcml2ZXIKY2FsbGluZyBtYW51YWxseSBlaGNpX3ByZXBhcmVfcG9ydHNfZm9yX2NvbnRyb2xs
+ZXJfc3VzcGVuZCgpLCBidXQgSSBkaWQKbm90IGNoZWNrIGl0IHdhcyBhbHJlYWR5IHRha2VuIGNh
+cmUgb2YgYnkgZWhjaV9zdXNwZW5kL3Jlc3VtZSgpLgoKQ2FsbCByZW1vdmVkIGluIGJvdGggcGF0
+aHMsIHRoYW5rcyEKTWlxdcOobAoKX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGludXgtYXJtLWtlcm5l
+bEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQub3JnL21haWxtYW4v
+bGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
