@@ -1,114 +1,62 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 4/7] PCI: qcom: Use clk_bulk API for 2.4.0 controllers
-Date: Fri, 25 Jan 2019 15:45:06 -0800
-Message-ID: <20190125234509.26419-5-bjorn.andersson@linaro.org>
+Subject: [PATCH 1/7] clk: gcc-qcs404: Add PCIe resets
+Date: Fri, 25 Jan 2019 15:45:03 -0800
+Message-ID: <20190125234509.26419-2-bjorn.andersson@linaro.org>
 References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190125234509.26419-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Stanimir Varbanov <svarbanov@mm-sol.com>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Before introducing the QCS404 platform, which uses the same PCIe
-controller as IPQ4019, migrate this to use the bulk clock API, in order
-to make the error paths slighly cleaner.
+Enabling PCIe requires several of the PCIe related resets from GCC, so
+add them all.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- drivers/pci/controller/dwc/pcie-qcom.c | 48 +++++++-------------------
- 1 file changed, 13 insertions(+), 35 deletions(-)
 
-diff --git a/drivers/pci/controller/dwc/pcie-qcom.c b/drivers/pci/controller/dwc/pcie-qcom.c
-index a7f703556790..9d366fad2b7f 100644
---- a/drivers/pci/controller/dwc/pcie-qcom.c
-+++ b/drivers/pci/controller/dwc/pcie-qcom.c
-@@ -113,9 +113,8 @@ struct qcom_pcie_resources_2_3_2 {
+Stephen, I suggest that we merge this patch through Andy's devicetree branch,
+together with the DT patch in the end of this series.
+
+ drivers/clk/qcom/gcc-qcs404.c               | 7 +++++++
+ include/dt-bindings/clock/qcom,gcc-qcs404.h | 7 +++++++
+ 2 files changed, 14 insertions(+)
+
+diff --git a/drivers/clk/qcom/gcc-qcs404.c b/drivers/clk/qcom/gcc-qcs404.c
+index 64da032bb9ed..cfb8789ff706 100644
+--- a/drivers/clk/qcom/gcc-qcs404.c
++++ b/drivers/clk/qcom/gcc-qcs404.c
+@@ -2675,6 +2675,13 @@ static const struct qcom_reset_map gcc_qcs404_resets[] = {
+ 	[GCC_PCIE_0_PHY_BCR] = { 0x3e004 },
+ 	[GCC_PCIE_0_LINK_DOWN_BCR] = { 0x3e038 },
+ 	[GCC_PCIEPHY_0_PHY_BCR] = { 0x3e03c },
++	[GCC_PCIE_0_AXI_MASTER_STICKY_ARES] = {0x3e040, 6},
++	[GCC_PCIE_0_AHB_ARES] = {0x3e040, 5},
++	[GCC_PCIE_0_AXI_SLAVE_ARES] = {0x3e040, 4},
++	[GCC_PCIE_0_AXI_MASTER_ARES] = {0x3e040, 3},
++	[GCC_PCIE_0_CORE_STICKY_ARES] = {0x3e040, 2},
++	[GCC_PCIE_0_SLEEP_ARES] = {0x3e040, 1},
++	[GCC_PCIE_0_PIPE_ARES] = {0x3e040, 0},
+ 	[GCC_EMAC_BCR] = { 0x4e000 },
  };
  
- struct qcom_pcie_resources_2_4_0 {
--	struct clk *aux_clk;
--	struct clk *master_clk;
--	struct clk *slave_clk;
-+	struct clk_bulk_data clks[3];
-+	int num_clks;
- 	struct reset_control *axi_m_reset;
- 	struct reset_control *axi_s_reset;
- 	struct reset_control *pipe_reset;
-@@ -638,18 +637,17 @@ static int qcom_pcie_get_resources_2_4_0(struct qcom_pcie *pcie)
- 	struct qcom_pcie_resources_2_4_0 *res = &pcie->res.v2_4_0;
- 	struct dw_pcie *pci = pcie->pci;
- 	struct device *dev = pci->dev;
-+	int ret;
+diff --git a/include/dt-bindings/clock/qcom,gcc-qcs404.h b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+index 6ceb55ed72c6..00ab0d77b38a 100644
+--- a/include/dt-bindings/clock/qcom,gcc-qcs404.h
++++ b/include/dt-bindings/clock/qcom,gcc-qcs404.h
+@@ -161,5 +161,12 @@
+ #define GCC_PCIE_0_LINK_DOWN_BCR			11
+ #define GCC_PCIEPHY_0_PHY_BCR				12
+ #define GCC_EMAC_BCR					13
++#define GCC_PCIE_0_AXI_MASTER_STICKY_ARES		14
++#define GCC_PCIE_0_AHB_ARES				15
++#define GCC_PCIE_0_AXI_SLAVE_ARES			16
++#define GCC_PCIE_0_AXI_MASTER_ARES			17
++#define GCC_PCIE_0_CORE_STICKY_ARES			18
++#define GCC_PCIE_0_SLEEP_ARES				19
++#define GCC_PCIE_0_PIPE_ARES				20
  
--	res->aux_clk = devm_clk_get(dev, "aux");
--	if (IS_ERR(res->aux_clk))
--		return PTR_ERR(res->aux_clk);
-+	res->clks[0].id = "aux";
-+	res->clks[1].id = "master_bus";
-+	res->clks[2].id = "slave_bus";
- 
--	res->master_clk = devm_clk_get(dev, "master_bus");
--	if (IS_ERR(res->master_clk))
--		return PTR_ERR(res->master_clk);
-+	res->num_clks = 3;
- 
--	res->slave_clk = devm_clk_get(dev, "slave_bus");
--	if (IS_ERR(res->slave_clk))
--		return PTR_ERR(res->slave_clk);
-+	ret = devm_clk_bulk_get(dev, res->num_clks, res->clks);
-+	if (ret < 0)
-+		return ret;
- 
- 	res->axi_m_reset = devm_reset_control_get_exclusive(dev, "axi_m");
- 	if (IS_ERR(res->axi_m_reset))
-@@ -719,9 +717,7 @@ static void qcom_pcie_deinit_2_4_0(struct qcom_pcie *pcie)
- 	reset_control_assert(res->axi_m_sticky_reset);
- 	reset_control_assert(res->pwr_reset);
- 	reset_control_assert(res->ahb_reset);
--	clk_disable_unprepare(res->aux_clk);
--	clk_disable_unprepare(res->master_clk);
--	clk_disable_unprepare(res->slave_clk);
-+	clk_bulk_disable_unprepare(res->num_clks, res->clks);
- }
- 
- static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
-@@ -850,23 +846,9 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
- 
- 	usleep_range(10000, 12000);
- 
--	ret = clk_prepare_enable(res->aux_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable iface clock\n");
-+	ret = clk_bulk_prepare_enable(res->num_clks, res->clks);
-+	if (ret)
- 		goto err_clk_aux;
--	}
--
--	ret = clk_prepare_enable(res->master_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable core clock\n");
--		goto err_clk_axi_m;
--	}
--
--	ret = clk_prepare_enable(res->slave_clk);
--	if (ret) {
--		dev_err(dev, "cannot prepare/enable phy clock\n");
--		goto err_clk_axi_s;
--	}
- 
- 	/* enable PCIe clocks and resets */
- 	val = readl(pcie->parf + PCIE20_PARF_PHY_CTRL);
-@@ -891,10 +873,6 @@ static int qcom_pcie_init_2_4_0(struct qcom_pcie *pcie)
- 
- 	return 0;
- 
--err_clk_axi_s:
--	clk_disable_unprepare(res->master_clk);
--err_clk_axi_m:
--	clk_disable_unprepare(res->aux_clk);
- err_clk_aux:
- 	reset_control_assert(res->ahb_reset);
- err_rst_ahb:
+ #endif
 -- 
 2.18.0
