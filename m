@@ -1,46 +1,80 @@
-From: Chris Spencer <spencercw@gmail.com>
-Subject: Re: [PATCH] arm64: dts: imx8mq: Fix boot from eMMC
-Date: Fri, 25 Jan 2019 08:37:52 +0000
-Message-ID: <CAGUNXRSBMnvgtWgUk1b83=x04T81Bw0h0Q5GahCR7htej8eoiw@mail.gmail.com>
-References: <20190122165546.11712-1-ccaione@baylibre.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-amarula-relic: Add STLM75
+ sensor
+Date: Fri, 25 Jan 2019 09:40:04 +0100
+Message-ID: <20190125084004.fsbxtpcesb5yaiod@flea>
+References: <20190124175254.27650-1-jagan@amarulasolutions.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190122165546.11712-1-ccaione@baylibre.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Carlo Caione <ccaione@baylibre.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, abailon@baylibre.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="cqlyaxwsslzi66qo"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190124175254.27650-1-jagan@amarulasolutions.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Jan 2019 at 16:57, Carlo Caione <ccaione@baylibre.com> wrote:
-> The boot from eMMC is currently broken on the NXP i.MX8MQ EVK board.
-> When trying to boot from eMMC it fails with:
->
-> ...
-> [    1.271938] mmc1: Tuning failed, falling back to fixed sampling clock
-> [    1.287429] print_req_error: I/O error, dev mmcblk1, sector 1 flags 0
-> [    1.306833] mmc1: Tuning failed, falling back to fixed sampling clock
-> [    1.322325] print_req_error: I/O error, dev mmcblk1, sector 2 flags 0
-> [    1.329559] Buffer I/O error on dev mmcblk1, logical block 0, async page read
-> [    1.336714]  mmcblk1: unable to read partition table
-> ...
->
-> The problem is the result of a partial misconfiguration of the pins and
-> the missing assigned clock rate.
->
-> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 
-Tested on my i.MX8MQ-EVK. I'm still booting from the SD card, but I
-can confirm it resolves the indicated I/O errors during boot and I can
-now see and mount the partitions on the eMMC.
+--cqlyaxwsslzi66qo
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Tested-by: Chris Spencer <christopher.spencer@sea.co.uk>
+On Thu, Jan 24, 2019 at 11:22:54PM +0530, Jagan Teki wrote:
+> Amarula A64 Relic has STLM75 sensor for digital temperature
+> and thermal watchdog.
+>=20
+> Add support for it.
+>=20
+> Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> ---
+> Note: the respective driver change is already in mainline
+> https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commi=
+t/?id=3D2e9a41bbc1079776dabe42ed8113b086b99ae56c
+>=20
+>  .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
+>  1 file changed, 15 insertions(+)
+>=20
+> diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b=
+/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> index 6cb2b7f0c817..5d942543d978 100644
+> --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> @@ -34,6 +34,21 @@
+>  	status =3D "okay";
+>  };
+> =20
+> +&i2c0 {
+> +	pinctrl-names =3D "default";
+> +	pinctrl-0 =3D <&i2c0_pins>;
+> +	status =3D "okay";
+> +
+> +	temp@48 {
+
+That would be sensor@48
+
+> +		compatible =3D "st,stlm75";
+
+That compatible isn't documented.
+
+The rest looks good, thanks!
+Maxime
+
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--cqlyaxwsslzi66qo
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXErLYwAKCRDj7w1vZxhR
+xdJsAQCkGNW1D6vgjZZi2m2OyaFk/OM5jou7yJaveoU0vEeuzgD/fDDwXy3yfWnA
+PQcsxjl7Ogj6oNY63U+pBRW8tJZ34wE=
+=SIYm
+-----END PGP SIGNATURE-----
+
+--cqlyaxwsslzi66qo--
