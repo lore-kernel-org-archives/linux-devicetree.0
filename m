@@ -1,112 +1,139 @@
-From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
-Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
- driver
-Date: Fri, 25 Jan 2019 17:38:42 +0000
-Message-ID: <20190125173834.GA24052@e107981-ln.cambridge.arm.com>
-References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
- <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
- <20190125110530.0ff11a54@xps13>
- <20190125124011.GA16389@e107981-ln.cambridge.arm.com>
- <20190125135757.6518191e@xps13>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v3 01/10] arm64: dts: qcom: sdm845: Update PIL region
+ memory map
+Date: Fri, 25 Jan 2019 23:10:47 +0530
+Message-ID: <d8bb5a09037835e07838ab6996eb01ed@codeaurora.org>
+References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
+ <20190122055112.30943-2-bjorn.andersson@linaro.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125135757.6518191e@xps13>
+In-Reply-To: <20190122055112.30943-2-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
+To: Bjorn Andersson <bjorn.andersson@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 01:57:57PM +0100, Miquel Raynal wrote:
-> Hi Lorenzo,
-> 
-> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Fri, 25 Jan 2019
-> 12:40:11 +0000:
-> 
-> > On Fri, Jan 25, 2019 at 11:05:30AM +0100, Miquel Raynal wrote:
-> > > Hi Lorenzo,
-> > > 
-> > > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
-> > > 17:05:09 +0000:
-> > >   
-> > > > On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:  
-> > > > > Hello,
-> > > > > 
-> > > > > As part of an effort to bring suspend to RAM support to Armada 3700
-> > > > > SoCs (main target: ESPRESSObin), this series handles the work around
-> > > > > the PCIe IP.
-> > > > > 
-> > > > > First, more configuration is done in the 'setup' helper as inspired
-> > > > > from the U-Boot driver. This is needed to entirely initialize the IP
-> > > > > during future resume operation (patch 1).
-> > > > > 
-> > > > > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
-> > > > > current device trees do not provide the corresponding properties, not
-> > > > > finding one of these properties is not an error and just produces a
-> > > > > warning. However, if the property is present, an error during PHY
-> > > > > initialization will fail the probe of the driver.
-> > > > > 
-> > > > > Note: To be sure the clock will be resumed before this driver, a first
-> > > > > series adding links between clocks and consumers has been submitted,
-> > > > > see [1]. Anyway, having the clock series applied first is not needed.    
-> > > > 
-> > > > I do not understand what this means, in particular in relation
-> > > > to the blocking clock calls in the suspend/resume NOIRQ hooks.  
-> > > 
-> > > I am not sure to understand your question.
-> > > 
-> > > As there are multiple points in this sentence I will detail each of
-> > > them so please comment on the one which is bothering you:
-> > > * I am working in parallel on a series adding device links to the clock
-> > >   framework. This way when a driver consumes a clock, the clock
-> > >   provider driver will be resumed first.
-> > > * If the clock series I am talking about is applied after this one,
-> > >   there is no build issue. Of course suspending the platform may
-> > >   not work but this is a new feature so nothing will be broken.  
-> > 
-> > Suspend to RAM will be broken if the clock is suspended and no
-> > notification will happen in the NOIRQ phase, it is a new-broken-feature.
-> >
-> > 
-> > > * Device links do not enforce any priority if the suspend/resume phase
-> > >   between two drivers is not the same. The PCIe driver suspends in the
-> > >   NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
-> > >   suspend/resume callbacks must be promoted to the NOIRQ phase as well
-> > >   (and this is part of another series). As of today there is
-> > >   no alternative.  
-> > 
-> > I will merge this series when it works, I have no evidence that it does
-> > given what you are writing above, if the series you mention are
-> > *necessary* for suspend-to-RAM to work they ought to be merged first.
-> 
-> I am working actively to bring A3700 SoC suspend to RAM support almost
-> from scratch. 
-> 
-> As of today I have contributed 65 patches spread in 8 series for the
-> PHY, clk, PCIe, SATA, USB, pinctrl and net subsystems. Some of them
-> have been merged, but the vast majority has not, yet.
-> 
-> I mentioned this run-time dependency because it exists for people who
-> would like to test just the PCIe IP. But S2RAM on A3700 will be a
-> new-broken-feature until all patches are merged. While there is
-> still one missing, the feature is broken. If everybody waits for
-> the other patches to be merged first, it is gonna be a long process :)
-> 
-> However, if you want to wait for the clock core series to be applied
-> first I respect this choice and I will update you when it will be the
-> case.
+Hey Bjorn,
 
-I do not want to merge new code with known issues, it makes no sense.
+On 2019-01-22 11:21, Bjorn Andersson wrote:
+> Update existing and add all missing PIL regions to the reserved memory
+> map, as described in version 10.
+> 
+> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
+> ---
+> 
+> Changes since v2:
+> - New patch
+> 
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++--
+>  1 file changed, 58 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index 0ec827394e92..cdcac3704c13 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -89,12 +89,47 @@
+>  		};
 
-There are other drivers with a similar problem in the mainline, we
-ought to fix those but certainly adding more won't help in that respect.
+Shouldn't we add hyp and xbl regions
+as well?
 
-There is nothing I am saying here that goes against your work, I just
-want to have working code in the mainlike kernel, we will merge this
-series when it is ready, thanks for bearing with me.
+> 
+>  		memory@86200000 {
+> -			reg = <0 0x86200000 0 0x2d00000>;
+> +			reg = <0 0x86200000 0 0x100000>;
+>  			no-map;
+>  		};
+> 
+> -		wlan_msa_mem: memory@96700000 {
+> -			reg = <0 0x96700000 0 0x100000>;
+> +		memory@86300000 {
+> +			reg = <0 0x86300000 0 0x4800000>;
 
-Feel free to ping me/rebase/repost when dependencies are sorted.
+from v10 I see we don't need to reserve the
+last 28M it just needs to be
 
-Thanks,
-Lorenzo
+reg = <0 0x86300000 0 0x2c00000>;
+
+> +			no-map;
+> +		};
+> +
+> +		memory@8ab00000 {
+> +			reg = <0 0x8ab00000 0 0x1400000>;
+> +			no-map;
+> +		};
+> +
+> +		memory@8bf00000 {
+> +			reg = <0 0x8bf00000 0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		ipa_fw_mem: memory@8c400000 {
+> +			reg = <0 0x8c400000 0 0x10000>;
+> +			no-map;
+> +		};
+> +
+> +		ipa_gsi_mem: memory@8c410000 {
+> +			reg = <0 0x8c410000 0 0x5000>;
+> +			no-map;
+> +		};
+> +
+> +		memory@8c415000 {
+> +			reg = <0 0x8c415000 0 0x2000>;
+> +			no-map;
+> +		};
+> +
+> +		adsp_mem: memory@8c500000 {
+> +			reg = <0 0x8c500000 0 0x1a00000>;
+> +			no-map;
+> +		};
+> +
+> +		wlan_msa_mem: memory@8df00000 {
+> +			reg = <0 0x8df00000 0 0x100000>;
+>  			no-map;
+>  		};
+> 
+> @@ -103,10 +138,30 @@
+>  			no-map;
+>  		};
+> 
+> +		venus_mem: memory@95800000 {
+> +			reg = <0 0x95800000 0 0x500000>;
+> +			no-map;
+> +		};
+> +
+> +		cdsp_mem: memory@95d00000 {
+> +			reg = <0 0x95d00000 0 0x800000>;
+> +			no-map;
+> +		};
+> +
+>  		mba_region: memory@96500000 {
+
+should we re-name mba_region/mpss_region
+to mba_mem and mpss_mem for consistency.
+
+>  			reg = <0 0x96500000 0 0x200000>;
+>  			no-map;
+>  		};
+> +
+> +		slpi_mem: memory@96700000 {
+> +			reg = <0 0x96700000 0 0x1400000>;
+> +			no-map;
+> +		};
+> +
+> +		spss_mem: memory@97b00000 {
+> +			reg = <0 0x97b00000 0 0x100000>;
+> +			no-map;
+> +		};
+>  	};
+> 
+>  	cpus {
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
