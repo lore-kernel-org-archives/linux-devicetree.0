@@ -1,44 +1,134 @@
-From: Masahiro Yamada <yamada.masahiro@socionext.com>
-Subject: [PATCH] libfdt: prefix header search paths with $(srctree)/
-Date: Fri, 25 Jan 2019 12:41:38 +0900
-Message-ID: <1548387699-9222-1-git-send-email-yamada.masahiro@socionext.com>
+From: Ryder Lee <ryder.lee@mediatek.com>
+Subject: Re: [PATCH v1 1/5] pwm: mediatek: add a property "mediatek,num-pwms"
+Date: Fri, 25 Jan 2019 11:48:36 +0800
+Message-ID: <1548388116.29237.15.camel@mtkswgap22>
+References: <de316385a84e079d3b23891e61c959094b9fa7e5.1547781007.git.ryder.lee@mediatek.com>
+         <c007d399-af86-98d3-94f9-b9762efdc219@gmail.com>
+         <1547866487.14213.10.camel@mtkswgap22>
+         <20190121084948.frpcgg6wkdjxkl7k@pengutronix.de>
+Mime-Version: 1.0
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190121084948.frpcgg6wkdjxkl7k@pengutronix.de>
 Sender: linux-kernel-owner@vger.kernel.org
-To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
-Cc: Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org
+To: Uwe =?ISO-8859-1?Q?Kleine-K=F6nig?= <u.kleine-koenig@pengutronix.de>, John Crispin <blogic@openwrt.org>
+Cc: "linux-pwm@vger.kernel.org" <linux-pwm@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Sean Wang <sean.wang@kernel.org>, Weijie Gao =?UTF-8?Q?=28=E9=AB=98=E6=83=9F=E6=9D=B0=29?= <Weijie.Gao@mediatek.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, Thierry Reding <thierry.reding@gmail.com>, "linux-mediatek@lists.infradead.org" <linux-mediatek@lists.infradead.org>, Matthias Brugger <matthias.bgg@gmail.com>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Currently, the Kbuild core manipulates header search paths in a crazy
-way [1].
++John
 
-To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
-the search paths in the srctree. Some Makefiles are already written in
-that way, but not all. The goal of this work is to make the notation
-consistent, and finally get rid of the gross hacks.
+HI John,
 
-Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
-("kbuild: do not drop -I without parameter").
+On Mon, 2019-01-21 at 16:49 +0800, Uwe Kleine-König wrote:
+> On Sat, Jan 19, 2019 at 10:54:47AM +0800, Ryder Lee wrote:
+> > On Fri, 2019-01-18 at 09:43 +0100, Matthias Brugger wrote:
+> > >
+> > > On 18/01/2019 04:24, Ryder Lee wrote:
+> > > > This adds a property "mediatek,num-pwms" to avoid having an endless
+> > > > list of compatibles with no differences for the same driver.
+> > > >
+> > > > Thus, the driver should have backwards compatibility to older DTs.
+> > > >
+> > > > Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
+> > > > ---
+> > > > Changes since v1: add some checks for backwards compatibility.
+> > > > ---
+> > > >  drivers/pwm/pwm-mediatek.c | 27 ++++++++++++++++++---------
+> > > >  1 file changed, 18 insertions(+), 9 deletions(-)
+> > > >
+> > > > diff --git a/drivers/pwm/pwm-mediatek.c b/drivers/pwm/pwm-mediatek.c
+> > > > index eb6674c..81b7e5e 100644
+> > > > --- a/drivers/pwm/pwm-mediatek.c
+> > > > +++ b/drivers/pwm/pwm-mediatek.c
+> > > > @@ -55,7 +55,7 @@ enum {
+> > > >  };
+> > > >
+> > > >  struct mtk_pwm_platform_data {
+> > > > - unsigned int num_pwms;
+> > > > + unsigned int num_pwms;  /* it should not be used in the future SoCs */
+> > > >   bool pwm45_fixup;
+> > > >   bool has_clks;
+> > > >  };
+> > > > @@ -226,27 +226,36 @@ static void mtk_pwm_disable(struct pwm_chip *chip, struct pwm_device *pwm)
+> > > >
+> > > >  static int mtk_pwm_probe(struct platform_device *pdev)
+> > > >  {
+> > > > - const struct mtk_pwm_platform_data *data;
+> > > > + struct device_node *np = pdev->dev.of_node;
+> > > >   struct mtk_pwm_chip *pc;
+> > > >   struct resource *res;
+> > > > - unsigned int i;
+> > > > + unsigned int i, num_pwms;
+> > > >   int ret;
+> > > >
+> > > >   pc = devm_kzalloc(&pdev->dev, sizeof(*pc), GFP_KERNEL);
+> > > >   if (!pc)
+> > > >           return -ENOMEM;
+> > > >
+> > > > - data = of_device_get_match_data(&pdev->dev);
+> > > > - if (data == NULL)
+> > > > -         return -EINVAL;
+> > > > - pc->soc = data;
+> > > > + pc->soc = of_device_get_match_data(&pdev->dev);
+> > > >
+> > > >   res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > >   pc->regs = devm_ioremap_resource(&pdev->dev, res);
+> > > >   if (IS_ERR(pc->regs))
+> > > >           return PTR_ERR(pc->regs);
+> > > >
+> > > > - for (i = 0; i < data->num_pwms + 2 && pc->soc->has_clks; i++) {
+> > > > + /* Check if we have set 'num-pwms' in DTs. */
+> > > > + ret = of_property_read_u32(np, "mediatek,num-pwms", &num_pwms);
+> > > > + if (ret < 0) {
+> > > > +         /* If no, fallback to use SoC data for backwards compatibility. */
+> > > > +         if (pc->soc->num_pwms) {
+> > > > +                 num_pwms = pc->soc->num_pwms;
+> > >
+> > > Maybe that's bike shedding, but I think it would be better to carve out the
+> > > num_pwms from the mtk_pwm_platform_data and check against the compatible here.
+> >
+> > I'm not sure how to properly curve it out? I think we still need this
+> > variable to save the specific value for some legacy SoCs (with older
+> > DTs).
+> 
+> I guess he means  something like:
+> 
+>         if (is_compatible_to_variant_A(dev))
+>                 num_pwms = 12;
+>         else if (is_compatible_to_variant_B(dev))
+>                 num_pwms = 2;
+> 
+> . In my eyes the bike shed should be light red and I prefer to collect
+> the fallback num_pwms in the compatible_data as is to keep the code
+> simpler. Maybe rename the member from num_pwms to fallback_num_pwms to
+> make it more obvious that it doesn't represent the actually used value.
+> 
+> > > With a expressive comment it will help other driver developers to not start
+> > > adding num_pwms in the platform data in their first attempt.
+> >
+> > Definitely.
+> 
+> My suggestion was to add a dev_warn, which IMHO is still better than a
+> comment.
+> 
+> Best regards
+> Uwe
+> 
 
-[1]: https://patchwork.kernel.org/patch/9632347/
+Unrelated to this patch: I'm ready to send v2 to allocate the clks array
+dynamically, but I guess MT7628 couldn't work in original code.
 
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
----
 
- lib/Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+In mtk_pwm_config():
 
-diff --git a/lib/Makefile b/lib/Makefile
-index e1b59da..05973c1 100644
---- a/lib/Makefile
-+++ b/lib/Makefile
-@@ -208,7 +208,7 @@ KCOV_INSTRUMENT_stackdepot.o := n
- libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
- 	       fdt_empty_tree.o
- $(foreach file, $(libfdt_files), \
--	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
-+	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
- lib-$(CONFIG_LIBFDT) += $(libfdt_files)
- 
- obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
--- 
-2.7.4
+	clk = pc->clks[MTK_CLK_PWM1 + pwm->hwpwm]; 
+	....
+	resolution = (u64)NSEC_PER_SEC * 1000;
+	do_div(resolution, clk_get_rate(clk));
+	....
+
+I think clk should be NULL and resolution is always 0 here. 
+
+
+Ryder
