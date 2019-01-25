@@ -1,52 +1,52 @@
 From: Thierry Reding <thierry.reding@gmail.com>
-Subject: [PATCH 1/5] dt-bindings: phy: tegra: Add Tegra186 support
-Date: Fri, 25 Jan 2019 12:25:21 +0100
-Message-ID: <20190125112525.10697-1-thierry.reding@gmail.com>
+Subject: [PATCH 1/6] dt-bindings: usb: xhci-tegra: Add Tegra186 support
+Date: Fri, 25 Jan 2019 12:30:08 +0100
+Message-ID: <20190125113013.11447-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, JC Kuo <jckuo@nvidia.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Rob Herring <robh+dt@kernel.org>
+Cc: Mathias Nyman <mathias.nyman@intel.com>, Jon Hunter <jonathanh@nvidia.com>, JC Kuo <jckuo@nvidia.com>, linux-usb@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
 From: Thierry Reding <treding@nvidia.com>
 
-Extend the bindings to cover the set of features found in Tegra186. Note
-that, technically, there are four more supplies connected to the XUSB
-pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL), but
-the power sequencing requirements of Tegra186 require these to be under
-the control of the PMIC.
+Extend the bindings to cover the set of features found in Tegra186.
 
 Signed-off-by: Thierry Reding <treding@nvidia.com>
 ---
- .../bindings/phy/nvidia,tegra124-xusb-padctl.txt         | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ .../devicetree/bindings/usb/nvidia,tegra124-xusb.txt          | 4 ++++
+ 1 file changed, 4 insertions(+)
 
-diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-index 3742c152c467..daedb15f322e 100644
---- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-+++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-@@ -36,11 +36,20 @@ Required properties:
-   - Tegra124: "nvidia,tegra124-xusb-padctl"
-   - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
-   - Tegra210: "nvidia,tegra210-xusb-padctl"
-+  - Tegra186: "nvidia,tegra186-xusb-padctl"
- - reg: Physical base address and length of the controller's registers.
- - resets: Must contain an entry for each entry in reset-names.
- - reset-names: Must include the following entries:
-   - "padctl"
- 
-+For Tegra186:
-+- avdd-pll-erefeut-supply: UPHY brick and reference clock as well as UTMI PHY
-+  power supply. Must supply 1.8 V.
-+- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
-+  3.3 V.
-+- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
-+- vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
+diff --git a/Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.txt b/Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.txt
+index 4156c3e181c5..5bfcc0b4d6b9 100644
+--- a/Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.txt
++++ b/Documentation/devicetree/bindings/usb/nvidia,tegra124-xusb.txt
+@@ -10,6 +10,7 @@ Required properties:
+   - Tegra124: "nvidia,tegra124-xusb"
+   - Tegra132: "nvidia,tegra132-xusb", "nvidia,tegra124-xusb"
+   - Tegra210: "nvidia,tegra210-xusb"
++  - Tegra186: "nvidia,tegra186-xusb"
+ - reg: Must contain the base and length of the xHCI host registers, XUSB FPCI
+   registers and XUSB IPFS registers.
+ - reg-names: Must contain the following entries:
+@@ -59,6 +60,8 @@ For Tegra210:
+ - avdd-pll-uerefe-supply: PLLE reference PLL power supply. Must supply 1.05 V.
+ - dvdd-pex-pll-supply: PCIe/USB3 PLL power supply. Must supply 1.05 V.
+ - hvdd-pex-pll-e-supply: High-voltage PLLE power supply. Must supply 1.8 V.
 +
++For Tegra210 and Tegra186:
+ - power-domains: A list of PM domain specifiers that reference each power-domain
+   used by the xHCI controller. This list must comprise of a specifier for the
+   XUSBA and XUSBC power-domains. See ../power/power_domain.txt and
+@@ -78,6 +81,7 @@ Optional properties:
+   - Tegra132: usb2-0, usb2-1, usb2-2, hsic-0, hsic-1, usb3-0, usb3-1
+   - Tegra210: usb2-0, usb2-1, usb2-2, usb2-3, hsic-0, usb3-0, usb3-1, usb3-2,
+               usb3-3
++  - Tegra186: usb2-0, usb2-1, usb2-2, hsic-0, usb3-0, usb3-1, usb3-2
  
- Pad nodes:
- ==========
+ Example:
+ --------
 -- 
 2.19.1
