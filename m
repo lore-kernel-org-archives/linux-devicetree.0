@@ -1,108 +1,80 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v4 2/5] gnss: sirf: add support for configurations
- without wakeup signal
-Date: Fri, 25 Jan 2019 15:31:53 +0100
-Message-ID: <20190125143153.GF3691@localhost>
-References: <20190124063439.29897-1-andreas@kemnade.info>
- <20190124063439.29897-3-andreas@kemnade.info>
+From: Andrew Lunn <andrew@lunn.ch>
+Subject: Re: [PATCH] r8169: Load MAC address from device tree if present
+Date: Fri, 25 Jan 2019 15:57:11 +0100
+Message-ID: <20190125145711.GF12962@lunn.ch>
+References: <20190125101814.6262-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
-Return-path: <linux-kernel-owner@vger.kernel.org>
+Return-path: <netdev-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190124063439.29897-3-andreas@kemnade.info>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andreas Kemnade <andreas@kemnade.info>
-Cc: letux-kernel@openphoenux.org, johan@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+In-Reply-To: <20190125101814.6262-1-thierry.reding@gmail.com>
+Sender: netdev-owner@vger.kernel.org
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: "David S. Miller" <davem@davemloft.net>, Heiner Kallweit <hkallweit1@gmail.com>, Realtek linux nic maintainers <nic_swsd@realtek.com>, netdev@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 07:34:36AM +0100, Andreas Kemnade wrote:
-> Some Wi2Wi devices do not have a wakeup output, so device state can
-> only be indirectly detected by looking whether there is communication
-> over the serial lines.
-> This approach requires a report cycle set to a value less than 2 seconds
-> to be reliable.
+On Fri, Jan 25, 2019 at 11:18:14AM +0100, Thierry Reding wrote:
+> From: Thierry Reding <treding@nvidia.com>
 > 
-> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> If the system was booted using a device tree and if the device tree
+> contains a MAC address, use it instead of reading one from the EEPROM.
+> This is useful in situations where the EEPROM isn't properly programmed
+> or where the firmware wants to override the existing MAC address.
+> 
+> Signed-off-by: Thierry Reding <treding@nvidia.com>
 > ---
-> Changes in v4:
->  - was 3/6 earlier
->  - more cleanup
->  - separate no wakeup version for sirf_wait_for_power_state
->  - cleaned up optimisation for initial power off
+> Based on net-next.
 > 
-> Changes in v3:
->  - was 2/5 earlier
->  - changed commit headline
->  - more style cleanup
->  - split out initial power off as 2/6
->  - introduced SIRF_REPORT_CYCLE constant
->  - added documentation about limitations
->  - ignore first data after power state on so no
->    shutdown meassages are treated as power on success
->  - clearer logic in sirf_wait_for_power_state
+>  drivers/net/ethernet/realtek/r8169.c | 35 +++++++++++++++++-----------
+>  1 file changed, 22 insertions(+), 13 deletions(-)
 > 
-> Changes in v2:
->  - style cleanup
->  - do not keep serdev open just because runtime is active,
->    only when needed (gnss device is opened or state is changed)
->  - clearer timeout semantics
-> 
->  drivers/gnss/sirf.c | 124 ++++++++++++++++++++++++++++++++++++++++++++--------
->  1 file changed, 105 insertions(+), 19 deletions(-)
-
->  static int sirf_wait_for_power_state(struct sirf_data *data, bool active,
->  					unsigned long timeout)
->  {
->  	int ret;
+> diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+> index f574b6b557f9..fd9edd643ca5 100644
+> --- a/drivers/net/ethernet/realtek/r8169.c
+> +++ b/drivers/net/ethernet/realtek/r8169.c
+> @@ -6957,6 +6957,21 @@ static int rtl_alloc_irq(struct rtl8169_private *tp)
+>  	return pci_alloc_irq_vectors(tp->pci_dev, 1, 1, flags);
+>  }
 >  
-> +	if (!data->wakeup)
-> +		return sirf_wait_for_power_state_nowakeup(data, active,
-> +							  timeout);
-> +
->  	ret = wait_event_interruptible_timeout(data->power_wait,
->  			data->active == active, msecs_to_jiffies(timeout));
->  	if (ret < 0)
-> @@ -195,6 +267,12 @@ static int sirf_set_active(struct sirf_data *data, bool active)
->  	else
->  		timeout = SIRF_HIBERNATE_TIMEOUT;
->  
-> +	if (!data->wakeup) {
-> +		ret = sirf_serdev_open(data);
-> +		if (ret)
-> +			return ret;
+> +static void rtl_read_mac_address(struct rtl8169_private *tp,
+> +				 u8 mac_addr[ETH_ALEN])
+> +{
+> +	/* Get MAC address */
+> +	switch (tp->mac_version) {
+> +	case RTL_GIGA_MAC_VER_35 ... RTL_GIGA_MAC_VER_38:
+> +	case RTL_GIGA_MAC_VER_40 ... RTL_GIGA_MAC_VER_51:
+> +		*(u32 *)&mac_addr[0] = rtl_eri_read(tp, 0xe0, ERIAR_EXGMAC);
+> +		*(u16 *)&mac_addr[4] = rtl_eri_read(tp, 0xe4, ERIAR_EXGMAC);
+> +		break;
+> +	default:
+> +		break;
 > +	}
+> +}
 > +
->  	do {
->  		sirf_pulse_on_off(data);
->  		ret = sirf_wait_for_power_state(data, active, timeout);
-> @@ -202,12 +280,17 @@ static int sirf_set_active(struct sirf_data *data, bool active)
->  			if (ret == -ETIMEDOUT)
->  				continue;
->  
-> -			return ret;
->  		}
-> -
->  		break;
+>  DECLARE_RTL_COND(rtl_link_list_ready_cond)
+>  {
+>  	return RTL_R8(tp, MCU) & LINK_LIST_RDY;
+> @@ -7148,6 +7163,7 @@ static int rtl_get_ether_clk(struct rtl8169_private *tp)
+>  static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
+>  {
+>  	const struct rtl_cfg_info *cfg = rtl_cfg_infos + ent->driver_data;
+> +	u8 mac_addr[ETH_ALEN] __aligned(4);
+
+Hi Thierry
+
+Maybe now would be a good time to cleanup this __aligned(4), pointer
+aliasing, etc?
+
+> +	/* get MAC address */
+> +	if (eth_platform_get_mac_address(&pdev->dev, mac_addr))
+> +		rtl_read_mac_address(tp, mac_addr);
 > +
->  	} while (retries--);
 
-I noticed there were some odd white-space changes here after you
-reverted the modified error handling from v3 which initially looked a
-little out of place to me.
+Maybe that could be made more readable with:
 
-I decided to add those changed back in instead after looking at the end
-result and noticing that the (retries < 0) check below also becomes
-superfluous.
+      err = eth_platform_get_mac_address(&pdev->dev, mac_addr);
+      if (err)
+      	 	rtl_read_mac_address(tp, mac_addr);
 
-> +	if (!data->wakeup)
-> +		sirf_serdev_close(data);
-> +
-> +	if (ret)
-> +		return ret;
-> +
->  	if (retries < 0)
->  		return -ETIMEDOUT;
-
-Series now applied, good job!
-
-Johan
+Thanks
+	Andrew
