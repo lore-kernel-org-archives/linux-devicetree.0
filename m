@@ -1,256 +1,112 @@
-From: Vladimir Vid <vladimir.vid@sartura.hr>
-Subject: [PATCH v6] arm64: dts: marvell: Add device tree for uDPU board
-Date: Fri, 25 Jan 2019 18:17:08 +0100
-Message-ID: <20190125171707.27742-1-vladimir.vid@sartura.hr>
+From: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Subject: Re: [PATCH v3 00/15] Bring suspend to RAM support to PCIe Aardvark
+ driver
+Date: Fri, 25 Jan 2019 17:38:42 +0000
+Message-ID: <20190125173834.GA24052@e107981-ln.cambridge.arm.com>
+References: <20190108162441.5278-1-miquel.raynal@bootlin.com>
+ <20190123170509.GB1157@e107981-ln.cambridge.arm.com>
+ <20190125110530.0ff11a54@xps13>
+ <20190125124011.GA16389@e107981-ln.cambridge.arm.com>
+ <20190125135757.6518191e@xps13>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: devicetree@vger.kernel.org
-Cc: Andrew Lunn <andrew@lunn.ch>, Luis Torres <luis.torres@methode.com>, Jason Cooper <jason@lakedaemon.net>, Paul Arola <paul.arola@telus.com>, Gregory Clement <gregory.clement@bootlin.com>, Vladimir Vid <vladimir.vid@sartura.hr>, Scott Roberts <scott.roberts@telus.com>, Luka Perkov <luka.perkov@sartura.hr>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125135757.6518191e@xps13>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Miquel Raynal <miquel.raynal@bootlin.com>
+Cc: Gregory Clement <gregory.clement@bootlin.com>, Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Bjorn Helgaas <bhelgaas@google.com>, devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Antoine Tenart <antoine.tenart@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, Nadav Haklai <nadavh@marvell.com>
 List-Id: devicetree@vger.kernel.org
 
-This adds initial support for micro-DPU (uDPU) board which is based on
-Armada-3720 SoC.  micro-DPU is the single-port FTTdp distribution point
-unit made by Methode Electronics which offers complete modularity with
-replaceable SFP modules both for uplink and downlink (G.hn over
-twisted-pair, G.hn over coax, 1G and 2.5G Ethernet over Cat-5e cable).
+On Fri, Jan 25, 2019 at 01:57:57PM +0100, Miquel Raynal wrote:
+> Hi Lorenzo,
+> 
+> Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Fri, 25 Jan 2019
+> 12:40:11 +0000:
+> 
+> > On Fri, Jan 25, 2019 at 11:05:30AM +0100, Miquel Raynal wrote:
+> > > Hi Lorenzo,
+> > > 
+> > > Lorenzo Pieralisi <lorenzo.pieralisi@arm.com> wrote on Wed, 23 Jan 2019
+> > > 17:05:09 +0000:
+> > >   
+> > > > On Tue, Jan 08, 2019 at 05:24:25PM +0100, Miquel Raynal wrote:  
+> > > > > Hello,
+> > > > > 
+> > > > > As part of an effort to bring suspend to RAM support to Armada 3700
+> > > > > SoCs (main target: ESPRESSObin), this series handles the work around
+> > > > > the PCIe IP.
+> > > > > 
+> > > > > First, more configuration is done in the 'setup' helper as inspired
+> > > > > from the U-Boot driver. This is needed to entirely initialize the IP
+> > > > > during future resume operation (patch 1).
+> > > > > 
+> > > > > Then, reset GPIO, PHY and clock support are introduced (patch 2-4). As
+> > > > > current device trees do not provide the corresponding properties, not
+> > > > > finding one of these properties is not an error and just produces a
+> > > > > warning. However, if the property is present, an error during PHY
+> > > > > initialization will fail the probe of the driver.
+> > > > > 
+> > > > > Note: To be sure the clock will be resumed before this driver, a first
+> > > > > series adding links between clocks and consumers has been submitted,
+> > > > > see [1]. Anyway, having the clock series applied first is not needed.    
+> > > > 
+> > > > I do not understand what this means, in particular in relation
+> > > > to the blocking clock calls in the suspend/resume NOIRQ hooks.  
+> > > 
+> > > I am not sure to understand your question.
+> > > 
+> > > As there are multiple points in this sentence I will detail each of
+> > > them so please comment on the one which is bothering you:
+> > > * I am working in parallel on a series adding device links to the clock
+> > >   framework. This way when a driver consumes a clock, the clock
+> > >   provider driver will be resumed first.
+> > > * If the clock series I am talking about is applied after this one,
+> > >   there is no build issue. Of course suspending the platform may
+> > >   not work but this is a new feature so nothing will be broken.  
+> > 
+> > Suspend to RAM will be broken if the clock is suspended and no
+> > notification will happen in the NOIRQ phase, it is a new-broken-feature.
+> >
+> > 
+> > > * Device links do not enforce any priority if the suspend/resume phase
+> > >   between two drivers is not the same. The PCIe driver suspends in the
+> > >   NOIRQ phase. If we want the clock driver to suspend *after* PCIe, its
+> > >   suspend/resume callbacks must be promoted to the NOIRQ phase as well
+> > >   (and this is part of another series). As of today there is
+> > >   no alternative.  
+> > 
+> > I will merge this series when it works, I have no evidence that it does
+> > given what you are writing above, if the series you mention are
+> > *necessary* for suspend-to-RAM to work they ought to be merged first.
+> 
+> I am working actively to bring A3700 SoC suspend to RAM support almost
+> from scratch. 
+> 
+> As of today I have contributed 65 patches spread in 8 series for the
+> PHY, clk, PCIe, SATA, USB, pinctrl and net subsystems. Some of them
+> have been merged, but the vast majority has not, yet.
+> 
+> I mentioned this run-time dependency because it exists for people who
+> would like to test just the PCIe IP. But S2RAM on A3700 will be a
+> new-broken-feature until all patches are merged. While there is
+> still one missing, the feature is broken. If everybody waits for
+> the other patches to be merged first, it is gonna be a long process :)
+> 
+> However, if you want to wait for the clock core series to be applied
+> first I respect this choice and I will update you when it will be the
+> case.
 
-On-board features:
-- 512 MiB DDR3
-- 2 x 2.5G SFP via HSGMII SERDES interface to the A3720 SoC
-- USB 2.0 Type-C connector
-- 4GB eMMC
-- ETSI TS 101548 reverse powering via twisted pair (RJ45) or coax (F Type)
+I do not want to merge new code with known issues, it makes no sense.
 
-Cc: Luka Perkov <luka.perkov@sartura.hr>
-Cc: Luis Torres <luis.torres@methode.com>
-Cc: Scott Roberts <scott.roberts@telus.com>
-Cc: Paul Arola <paul.arola@telus.com>
-Cc: Andrew Lunn <andrew@lunn.ch>
-Cc: Jason Cooper <jason@lakedaemon.net>
-Cc: Gregory Clement <gregory.clement@bootlin.com>
-Cc: Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Signed-off-by: Vladimir Vid <vladimir.vid@sartura.hr>
----
+There are other drivers with a similar problem in the mainline, we
+ought to fix those but certainly adding more won't help in that respect.
 
-v6 changes:
-- updated LED labels per naming convention (Documentation/leds/leds-class.txt)
+There is nothing I am saying here that goes against your work, I just
+want to have working code in the mainlike kernel, we will merge this
+series when it is ready, thanks for bearing with me.
 
----
- MAINTAINERS                                   |   5 +
- arch/arm64/boot/dts/marvell/Makefile          |   1 +
- .../boot/dts/marvell/armada-3720-uDPU.dts     | 164 ++++++++++++++++++
- 3 files changed, 170 insertions(+)
- create mode 100644 arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
+Feel free to ping me/rebase/repost when dependencies are sorted.
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 51029a425dbe..21174a13049b 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -9851,6 +9851,11 @@ F:	drivers/media/platform/meson/ao-cec.c
- F:	Documentation/devicetree/bindings/media/meson-ao-cec.txt
- T:	git git://linuxtv.org/media_tree.git
- 
-+METHODE UDPU SUPPORT
-+M:	Vladimir Vid <vladimir.vid@sartura.hr>
-+S:	Maintained
-+F:	arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-+
- MICROBLAZE ARCHITECTURE
- M:	Michal Simek <monstr@monstr.eu>
- W:	http://www.monstr.eu/fdt/
-diff --git a/arch/arm64/boot/dts/marvell/Makefile b/arch/arm64/boot/dts/marvell/Makefile
-index 2eff1f927471..caed4334f27d 100644
---- a/arch/arm64/boot/dts/marvell/Makefile
-+++ b/arch/arm64/boot/dts/marvell/Makefile
-@@ -2,6 +2,7 @@
- # Mvebu SoC Family
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-espressobin.dtb
-+dtb-$(CONFIG_ARCH_MVEBU) += armada-3720-uDPU.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-7040-db.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-clearfog-gt-8k.dtb
- dtb-$(CONFIG_ARCH_MVEBU) += armada-8040-db.dtb
-diff --git a/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-new file mode 100644
-index 000000000000..2441481643a4
---- /dev/null
-+++ b/arch/arm64/boot/dts/marvell/armada-3720-uDPU.dts
-@@ -0,0 +1,164 @@
-+// SPDX-License-Identifier: (GPL-2.0+ OR MIT)
-+/*
-+ * Device tree for the uDPU board.
-+ * Based on Marvell Armada 3720 development board (DB-88F3720-DDR3)
-+ * Copyright (C) 2016 Marvell
-+ * Copyright (C) 2019 Methode Electronics
-+ * Copyright (C) 2019 Telus
-+ *
-+ * Vladimir Vid <vladimir.vid@sartura.hr>
-+ */
-+
-+/dts-v1/;
-+
-+#include <dt-bindings/gpio/gpio.h>
-+#include "armada-372x.dtsi"
-+
-+/ {
-+	model = "Methode uDPU Board";
-+	compatible = "methode,udpu", "marvell,armada3720";
-+
-+	chosen {
-+		stdout-path = "serial0:115200n8";
-+	};
-+
-+	memory@0 {
-+		device_type = "memory";
-+		reg = <0x00000000 0x00000000 0x00000000 0x20000000>;
-+	};
-+
-+	leds {
-+		pinctrl-names = "default";
-+		compatible = "gpio-leds";
-+
-+		power1 {
-+			label = "udpu:green:power";
-+			gpios = <&gpionb 11 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		power2 {
-+			label = "udpu:red:power";
-+			gpios = <&gpionb 12 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		network1 {
-+			label = "udpu:green:network";
-+			gpios = <&gpionb 13 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		network2 {
-+			label = "udpu:red:network";
-+			gpios = <&gpionb 14 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		alarm1 {
-+			label = "udpu:green:alarm";
-+			gpios = <&gpionb 15 GPIO_ACTIVE_LOW>;
-+		};
-+
-+		alarm2 {
-+			label = "udpu:red:alarm";
-+			gpios = <&gpionb 16 GPIO_ACTIVE_LOW>;
-+		};
-+	};
-+
-+	sfp_eth0: sfp-eth0 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c0>;
-+		los-gpio = <&gpiosb 2 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpio = <&gpiosb 3 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpio = <&gpiosb 4 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpio = <&gpiosb 5 GPIO_ACTIVE_HIGH>;
-+	};
-+
-+	sfp_eth1: sfp-eth1 {
-+		compatible = "sff,sfp";
-+		i2c-bus = <&i2c1>;
-+		los-gpio = <&gpiosb 7 GPIO_ACTIVE_HIGH>;
-+		mod-def0-gpio = <&gpiosb 8 GPIO_ACTIVE_LOW>;
-+		tx-disable-gpio = <&gpiosb 9 GPIO_ACTIVE_HIGH>;
-+		tx-fault-gpio = <&gpiosb 10 GPIO_ACTIVE_HIGH>;
-+	};
-+};
-+
-+&sdhci0 {
-+	status = "okay";
-+	bus-width = <8>;
-+	mmc-ddr-1_8v;
-+	mmc-hs400-1_8v;
-+	marvell,pad-type = "fixed-1-8v";
-+	non-removable;
-+	no-sd;
-+	no-sdio;
-+};
-+
-+&spi0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&spi_quad_pins>;
-+
-+	m25p80@0 {
-+		compatible = "jedec,spi-nor";
-+		reg = <0>;
-+		#address-cells = <1>;
-+		#size-cells = <1>;
-+		spi-max-frequency = <54000000>;
-+
-+		partitions {
-+			compatible = "fixed-partitions";
-+			#address-cells = <1>;
-+			#size-cells = <1>;
-+			/* only bootloader is located on the SPI */
-+			partition@0 {
-+				label = "uboot";
-+				reg = <0 0x400000>;
-+			};
-+		};
-+	};
-+};
-+
-+&i2c0 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c1_pins>;
-+};
-+
-+&i2c1 {
-+	status = "okay";
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&i2c2_pins>;
-+
-+	lm75@48 {
-+		status = "okay";
-+		compatible = "lm75";
-+		reg = <0x48>;
-+	};
-+
-+	lm75@49 {
-+		status = "okay";
-+		compatible = "lm75";
-+		reg = <0x49>;
-+	};
-+};
-+
-+&eth0 {
-+	phy-mode = "sgmii";
-+	status = "okay";
-+	managed = "in-band-status";
-+	sfp = <&sfp_eth0>;
-+};
-+
-+&eth1 {
-+	phy-mode = "sgmii";
-+	status = "okay";
-+	managed = "in-band-status";
-+	sfp = <&sfp_eth1>;
-+};
-+
-+&usb3 {
-+	status = "okay";
-+};
-+
-+&uart0 {
-+	status = "okay";
-+};
--- 
-2.19.0
+Thanks,
+Lorenzo
