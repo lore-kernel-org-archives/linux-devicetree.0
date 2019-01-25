@@ -1,41 +1,117 @@
-From: Kamil Konieczny <k.konieczny@partner.samsung.com>
-Subject: Re: [PATCH v5 1/5] clk: samsung: exynos5433: fix typo in imem
- divider
-Date: Fri, 25 Jan 2019 13:41:00 +0100
-Message-ID: <9725eefc-2f2b-5fe1-326f-59f377999e17@partner.samsung.com>
-References: <20190122090232.29194-1-k.konieczny@partner.samsung.com>
-        <CGME20190122090249eucas1p161cfc1364fb8ee76d2d04383935e8f3b@eucas1p1.samsung.com>
-        <20190122090232.29194-2-k.konieczny@partner.samsung.com>
-        <20190122093313.GA21774@kroah.com>
+From: Carlo Caione <ccaione@baylibre.com>
+Subject: [PATCH 1/3] net: phy: at803x: Introduce quirk to disable SmartEEE
+Date: Fri, 25 Jan 2019 12:55:11 +0000
+Message-ID: <20190125125513.23656-2-ccaione@baylibre.com>
+References: <20190125125513.23656-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190122093313.GA21774@kroah.com>
-Content-Language: en-US
-Sender: stable-owner@vger.kernel.org
-To: Greg KH <greg@kroah.com>
-Cc: linux-samsung-soc@vger.kernel.org, linux-clk@vger.kernel.org, Chanwoo Choi <cw00.choi@samsung.com>, devicetree@vger.kernel.org, Krzysztof Kozlowski <krzk@kernel.org>, Kukjin Kim <kgene@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Sylwester Nawrocki <s.nawrocki@samsung.com>, Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>, Marek Szyprowski <m.szyprowski@samsung.com>, stable@vger.kernel.org
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190125125513.23656-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, robh+dt@kernel.org, shawnguo@kernel.org, s.hauer@pengutronix.de, kernel@pengutronix.de, fabio.estevam@nxp.com, linux-imx@nxp.com, mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, aisheng.dong@nxp.com, abailon@baylibre.com
+Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-On 22.01.2019 10:33, Greg KH wrote:
-> On Tue, Jan 22, 2019 at 10:02:28AM +0100, Kamil Konieczny wrote:
->> Fix typo in imem clock divider 200 switched with 266.
->>
->> Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
->> Signed-off-by: Kamil Konieczny <k.konieczny@partner.samsung.com>
->> ---
->>  drivers/clk/samsung/clk-exynos5433.c | 4 ++--
->>  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> <formletter>
-> 
-> This is not the correct way to submit patches for inclusion in the
-> stable kernel tree.  Please read: [...]
-After reconsideration that there are no users of imem clock in old kernels,
-please drop this patch from stable.
+The proprietary SmartEEE mode makes the PHY entering a sleep mode after
+a configurable idle time. It does this without LPI signals coming from
+MAC.
 
+Since this is a configurable behavior and it is known to cause issues
+add a way to disable it using a custom quirk.
+
+Signed-off-by: Carlo Caione <ccaione@baylibre.com>
+---
+ drivers/net/phy/at803x.c | 22 ++++++++++++++++++++++
+ 1 file changed, 22 insertions(+)
+
+diff --git a/drivers/net/phy/at803x.c b/drivers/net/phy/at803x.c
+index f9432d053a22..509cd7a4f7eb 100644
+--- a/drivers/net/phy/at803x.c
++++ b/drivers/net/phy/at803x.c
+@@ -38,12 +38,14 @@
+ #define AT803X_DEVICE_ADDR			0x03
+ #define AT803X_LOC_MAC_ADDR_0_15_OFFSET		0x804C
+ #define AT803X_LOC_MAC_ADDR_16_31_OFFSET	0x804B
++#define AT803X_SMARTEEE_CTL3_OFFSET		0x805D
+ #define AT803X_LOC_MAC_ADDR_32_47_OFFSET	0x804A
+ #define AT803X_MMD_ACCESS_CONTROL		0x0D
+ #define AT803X_MMD_ACCESS_CONTROL_DATA		0x0E
+ #define AT803X_FUNC_DATA			0x4003
+ #define AT803X_REG_CHIP_CONFIG			0x1f
+ #define AT803X_BT_BX_REG_SEL			0x8000
++#define AT803X_SMARTEEE_DISABLED_VAL		0x1000
+ 
+ #define AT803X_DEBUG_ADDR			0x1D
+ #define AT803X_DEBUG_DATA			0x1E
+@@ -65,12 +67,15 @@
+ #define ATH8035_PHY_ID 0x004dd072
+ #define AT803X_PHY_ID_MASK			0xffffffef
+ 
++#define AT803X_SMARTEEE_FEATURE_DISABLE		BIT(1)
++
+ MODULE_DESCRIPTION("Atheros 803x PHY driver");
+ MODULE_AUTHOR("Matus Ujhelyi");
+ MODULE_LICENSE("GPL");
+ 
+ struct at803x_priv {
+ 	bool phy_reset:1;
++	u32 quirks;
+ };
+ 
+ struct at803x_context {
+@@ -210,6 +215,13 @@ static void at803x_get_wol(struct phy_device *phydev,
+ 		wol->wolopts |= WAKE_MAGIC;
+ }
+ 
++static int at803x_disable_smarteee(struct phy_device *phydev)
++{
++	return phy_write_mmd(phydev, AT803X_DEVICE_ADDR,
++			     AT803X_SMARTEEE_CTL3_OFFSET,
++			     AT803X_SMARTEEE_DISABLED_VAL);
++}
++
+ static int at803x_suspend(struct phy_device *phydev)
+ {
+ 	int value;
+@@ -242,6 +254,9 @@ static int at803x_probe(struct phy_device *phydev)
+ 	if (!priv)
+ 		return -ENOMEM;
+ 
++	if (of_property_read_bool(dev->of_node, "at803x,smarteee-disabled"))
++		priv->quirks |= AT803X_SMARTEEE_FEATURE_DISABLE;
++
+ 	phydev->priv = priv;
+ 
+ 	return 0;
+@@ -249,6 +264,7 @@ static int at803x_probe(struct phy_device *phydev)
+ 
+ static int at803x_config_init(struct phy_device *phydev)
+ {
++	struct at803x_priv *priv = phydev->priv;
+ 	int ret;
+ 
+ 	ret = genphy_config_init(phydev);
+@@ -269,6 +285,12 @@ static int at803x_config_init(struct phy_device *phydev)
+ 			return ret;
+ 	}
+ 
++	if (priv->quirks & AT803X_SMARTEEE_FEATURE_DISABLE) {
++		ret = at803x_disable_smarteee(phydev);
++		if (ret < 0)
++			return ret;
++	}
++
+ 	return 0;
+ }
+ 
 -- 
-Best regards,
-Kamil Konieczny
-Samsung R&D Institute Poland
+2.19.1
