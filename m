@@ -1,49 +1,43 @@
-From: Johan Hovold <johan@kernel.org>
-Subject: Re: [PATCH v2 3/4] gnss: add mtk receiver type support
-Date: Fri, 25 Jan 2019 10:12:56 +0100
-Message-ID: <20190125091256.GC3691@localhost>
-References: <1547744074-28308-1-git-send-email-lollivier@baylibre.com>
- <1547744074-28308-4-git-send-email-lollivier@baylibre.com>
+From: <Nicolas.Ferre@microchip.com>
+Subject: Re: [PATCH 8/8] net: macb: add sam9x60-macb compatibility string
+Date: Fri, 25 Jan 2019 09:16:30 +0000
+Message-ID: <2f8d3a0b-fa06-2157-db4b-fc0d6e8d9016@microchip.com>
+References: <cover.1547629763.git.nicolas.ferre@microchip.com>
+ <dfc7db7606e0898fbedc1f45ed9637379595f9cb.1547629763.git.nicolas.ferre@microchip.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <1547744074-28308-4-git-send-email-lollivier@baylibre.com>
+In-Reply-To: <dfc7db7606e0898fbedc1f45ed9637379595f9cb.1547629763.git.nicolas.ferre@microchip.com>
+Content-Language: en-US
+Content-ID: <E4A375AA93587C48B64E20C9290C4942@namprd11.prod.outlook.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Loys Ollivier <lollivier@baylibre.com>
-Cc: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
+To: netdev@vger.kernel.org, davem@davemloft.net
+Cc: alexandre.belloni@bootlin.com, Ludovic.Desroches@microchip.com, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, sre@kernel.org, linux-pm@vger.kernel.org, linux-usb@vger.kernel.org, stern@rowland.harvard.edu, gregkh@linuxfoundation.org, robh+dt@kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 17, 2019 at 05:54:33PM +0100, Loys Ollivier wrote:
-> Add an MTK (Mediatek) type to the "GNSS_TYPE" attribute.
-> 
-> Note that MTK receivers support a subset of NMEA 0183 with vendor
-> extensions (e.g. to allow switching to the vendor protocol).
-
-Copy paste error? AFAICT there is no Mediatek vendor protocol, only the
-extensions to NMEA.
-
-> Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
-> ---
-> 
-> v2: renamed from GTOP to MTK.
-> 
->  include/linux/gnss.h | 1 +
->  1 file changed, 1 insertion(+)
-> 
-> diff --git a/include/linux/gnss.h b/include/linux/gnss.h
-> index 43546977098c..36968a0f33e8 100644
-> --- a/include/linux/gnss.h
-> +++ b/include/linux/gnss.h
-> @@ -22,6 +22,7 @@ enum gnss_type {
->  	GNSS_TYPE_NMEA = 0,
->  	GNSS_TYPE_SIRF,
->  	GNSS_TYPE_UBX,
-> +	GNSS_TYPE_MTK,
->  
->  	GNSS_TYPE_COUNT
->  };
-
-Add the gnss_type_names string in this patch along with the define.
-
-Johan
+SGkgRGF2aWQsDQoNCk9uIDE2LzAxLzIwMTkgYXQgMTA6NTcsIE5pY29sYXMgRmVycmUgd3JvdGU6
+DQo+IEFkZCBhIG5ldyBjb21wYXRpYmlsaXR5IHN0cmluZyBmb3IgdGhpcyBwcm9kdWN0LiBJdCdz
+IHVzaW5nDQo+IGF0OTFzYW05MjYwLW1hY2IgbGF5b3V0IGJ1dCBoYXMgYSBuZXdlciBoYXJkd2Fy
+ZSByZXZpc2lvbjogaXQncyBzYWZlcg0KPiB0byB1c2UgaXRzIG93biBzdHJpbmcuDQo+IA0KPiBT
+aWduZWQtb2ZmLWJ5OiBOaWNvbGFzIEZlcnJlIDxuaWNvbGFzLmZlcnJlQG1pY3JvY2hpcC5jb20+
+DQoNCkknbSB0aGlua2luZyBvZiBwdXNoaW5nIHRoaXMgcGF0Y2ggd2l0aCB0aGUgb3RoZXJzIG9m
+IHRoZSBzZXJpZXMgdGhyb3VnaCANCmFybS1zb2MgdHJlZS4gQ2FuIEkgaGF2ZSB5b3VyICJBY2tl
+ZC1ieSIgdGFnIHRoZW4/DQoNCkJlc3QgcmVnYXJkcywNCiAgIE5pY29sYXMNCg0KDQo+IC0tLQ0K
+PiAgIGRyaXZlcnMvbmV0L2V0aGVybmV0L2NhZGVuY2UvbWFjYl9tYWluLmMgfCAxICsNCj4gICAx
+IGZpbGUgY2hhbmdlZCwgMSBpbnNlcnRpb24oKykNCj4gDQo+IGRpZmYgLS1naXQgYS9kcml2ZXJz
+L25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jIGIvZHJpdmVycy9uZXQvZXRoZXJuZXQv
+Y2FkZW5jZS9tYWNiX21haW4uYw0KPiBpbmRleCA2NmNjNzkyNzA2MWEuLmEwODg5ZWYxMDdhMSAx
+MDA2NDQNCj4gLS0tIGEvZHJpdmVycy9uZXQvZXRoZXJuZXQvY2FkZW5jZS9tYWNiX21haW4uYw0K
+PiArKysgYi9kcml2ZXJzL25ldC9ldGhlcm5ldC9jYWRlbmNlL21hY2JfbWFpbi5jDQo+IEBAIC0z
+OTQxLDYgKzM5NDEsNyBAQCBzdGF0aWMgY29uc3Qgc3RydWN0IG9mX2RldmljZV9pZCBtYWNiX2R0
+X2lkc1tdID0gew0KPiAgIAl7IC5jb21wYXRpYmxlID0gImNkbnMsbnA0LW1hY2IiLCAuZGF0YSA9
+ICZucDRfY29uZmlnIH0sDQo+ICAgCXsgLmNvbXBhdGlibGUgPSAiY2RucyxwYzMwMi1nZW0iLCAu
+ZGF0YSA9ICZwYzMwMmdlbV9jb25maWcgfSwNCj4gICAJeyAuY29tcGF0aWJsZSA9ICJjZG5zLGdl
+bSIsIC5kYXRhID0gJnBjMzAyZ2VtX2NvbmZpZyB9LA0KPiArCXsgLmNvbXBhdGlibGUgPSAiY2Ru
+cyxzYW05eDYwLW1hY2IiLCAuZGF0YSA9ICZhdDkxc2FtOTI2MF9jb25maWcgfSwNCj4gICAJeyAu
+Y29tcGF0aWJsZSA9ICJhdG1lbCxzYW1hNWQyLWdlbSIsIC5kYXRhID0gJnNhbWE1ZDJfY29uZmln
+IH0sDQo+ICAgCXsgLmNvbXBhdGlibGUgPSAiYXRtZWwsc2FtYTVkMy1nZW0iLCAuZGF0YSA9ICZz
+YW1hNWQzX2NvbmZpZyB9LA0KPiAgIAl7IC5jb21wYXRpYmxlID0gImF0bWVsLHNhbWE1ZDMtbWFj
+YiIsIC5kYXRhID0gJnNhbWE1ZDNtYWNiX2NvbmZpZyB9LA0KPiANCg0KDQotLSANCk5pY29sYXMg
+RmVycmUNCg==
