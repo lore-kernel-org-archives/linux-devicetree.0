@@ -1,102 +1,46 @@
-From: Stanimir Varbanov <stanimir.varbanov@linaro.org>
-Subject: Re: [PATCH v3] arm64: dts: sdm845: add video nodes
-Date: Fri, 25 Jan 2019 10:32:26 +0200
-Message-ID: <323bca85-6dc3-4d28-ec02-69ce57bc6506@linaro.org>
-References: <1545292023-5489-1-git-send-email-mgottam@codeaurora.org>
- <0ee6676f-f169-1ea1-506e-16e4097d1c04@linaro.org>
- <CAPBb6MWedPvoFW2jrqhZhNP-41PrEC+G4xnXs=cex1ywnVdm-w@mail.gmail.com>
+From: Chris Spencer <spencercw@gmail.com>
+Subject: Re: [PATCH] arm64: dts: imx8mq: Fix boot from eMMC
+Date: Fri, 25 Jan 2019 08:37:52 +0000
+Message-ID: <CAGUNXRSBMnvgtWgUk1b83=x04T81Bw0h0Q5GahCR7htej8eoiw@mail.gmail.com>
+References: <20190122165546.11712-1-ccaione@baylibre.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAPBb6MWedPvoFW2jrqhZhNP-41PrEC+G4xnXs=cex1ywnVdm-w@mail.gmail.com>
-Content-Language: en-US
-Sender: linux-kernel-owner@vger.kernel.org
-To: Alexandre Courbot <acourbot@chromium.org>
-Cc: Malathi Gottam <mgottam@codeaurora.org>, Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>, linux-arm-msm@vger.kernel.org, Vikash Garodia <vgarodia@codeaurora.org>
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190122165546.11712-1-ccaione@baylibre.com>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Carlo Caione <ccaione@baylibre.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, s.hauer@pengutronix.de, abailon@baylibre.com, robh+dt@kernel.org, linux-imx@nxp.com, kernel@pengutronix.de, fabio.estevam@nxp.com, shawnguo@kernel.org, linux-arm-kernel@lists.infradead.org, l.stach@pengutronix.de
 List-Id: devicetree@vger.kernel.org
 
-Hi Alex,
+On Tue, 22 Jan 2019 at 16:57, Carlo Caione <ccaione@baylibre.com> wrote:
+> The boot from eMMC is currently broken on the NXP i.MX8MQ EVK board.
+> When trying to boot from eMMC it fails with:
+>
+> ...
+> [    1.271938] mmc1: Tuning failed, falling back to fixed sampling clock
+> [    1.287429] print_req_error: I/O error, dev mmcblk1, sector 1 flags 0
+> [    1.306833] mmc1: Tuning failed, falling back to fixed sampling clock
+> [    1.322325] print_req_error: I/O error, dev mmcblk1, sector 2 flags 0
+> [    1.329559] Buffer I/O error on dev mmcblk1, logical block 0, async page read
+> [    1.336714]  mmcblk1: unable to read partition table
+> ...
+>
+> The problem is the result of a partial misconfiguration of the pins and
+> the missing assigned clock rate.
+>
+> Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 
-On 1/25/19 9:46 AM, Alexandre Courbot wrote:
-> On Thu, Jan 17, 2019 at 8:58 PM Stanimir Varbanov
-> <stanimir.varbanov@linaro.org> wrote:
->>
->> Hi Malathi,
->>
->> On 12/20/18 9:47 AM, Malathi Gottam wrote:
->>> This adds video nodes to sdm845 based on the examples
->>> in the bindings.
->>>
->>> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
->>> ---
->>>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 35 +++++++++++++++++++++++++++++++++++
->>>  1 file changed, 35 insertions(+)
->>
->> Looks good to me:
->>
->> Reviewed-by: Stanimir Varbanov <stanimir.varbanov@linaro.org>
->>
->>>
->>> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> index b72bdb0..ccd2b10 100644
->>> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
->>> @@ -87,6 +87,11 @@
->>>                       reg = <0 0x86200000 0 0x2d00000>;
->>>                       no-map;
->>>               };
->>> +
->>> +             venus_region: memory@95800000 {
->>> +                     reg = <0x0 0x95800000 0x0 0x500000>;
->>> +                     no-map;
->>> +             };
->>>       };
->>>
->>>       cpus {
->>> @@ -1403,5 +1408,35 @@
->>>                               status = "disabled";
->>>                       };
->>>               };
->>> +
->>> +             video-codec@aa00000 {
->>> +                     compatible = "qcom,sdm845-venus";
->>> +                     reg = <0x0aa00000 0xff000>;
->>> +                     interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
->>> +                     power-domains = <&videocc VENUS_GDSC>;
->>> +                     clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
->>> +                              <&videocc VIDEO_CC_VENUS_AHB_CLK>,
->>> +                              <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
->>> +                     clock-names = "core", "iface", "bus";
->>> +                     iommus = <&apps_smmu 0x10a0 0x8>,
->>> +                              <&apps_smmu 0x10b0 0x0>;
->>> +                     memory-region = <&venus_region>;
->>> +
->>> +                     video-core0 {
->>> +                             compatible = "venus-decoder";
->>> +                             clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
->>> +                                      <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
->>> +                             clock-names = "core", "bus";
->>> +                             power-domains = <&videocc VCODEC0_GDSC>;
->>> +                     };
->>> +
->>> +                     video-core1 {
->>> +                             compatible = "venus-encoder";
->>> +                             clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
->>> +                                      <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
->>> +                             clock-names = "core", "bus";
->>> +                             power-domains = <&videocc VCODEC1_GDSC>;
->>> +                     };
->>> +             };
-> 
-> This patch lacks the video-firmware node, it should at the very least
-> be added before this gets merged.
+Tested on my i.MX8MQ-EVK. I'm still booting from the SD card, but I
+can confirm it resolves the indicated I/O errors during boot and I can
+now see and mount the partitions on the eMMC.
 
-The firmware node should be added in board dts file, the for example
-sdm845-mtp will not populate firmware node because it uses TZ for
-firmware loading.
-
-
--- 
-regards,
-Stan
+Tested-by: Chris Spencer <christopher.spencer@sea.co.uk>
