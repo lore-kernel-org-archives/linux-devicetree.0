@@ -1,69 +1,85 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH 2/7] dt-bindings: phy: Add binding for Qualcomm PCIe2 PHY
-Date: Fri, 25 Jan 2019 15:45:04 -0800
-Message-ID: <20190125234509.26419-3-bjorn.andersson@linaro.org>
+Subject: [PATCH 5/7] dt-bindings: PCI: qcom: Add QCS404 to the binding
+Date: Fri, 25 Jan 2019 15:45:07 -0800
+Message-ID: <20190125234509.26419-6-bjorn.andersson@linaro.org>
 References: <20190125234509.26419-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <20190125234509.26419-1-bjorn.andersson@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Kishon Vijay Abraham I <kishon@ti.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Michael Turquette <mturquette@baylibre.com>, Niklas Cassel <niklas.cassel@linaro.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
+To: Bjorn Helgaas <bhelgaas@google.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>
+Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Michael Turquette <mturquette@baylibre.com>, Niklas Cassel <niklas.cassel@linaro.org>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-The Qualcomm PCIe2 PHY is a Synopsys based PCIe PHY found in a number of
-Qualcomm platforms, add a binding to describe this.
+The Qualcomm QCS404 platform contains a PCIe controller, add this to the
+Qualcomm PCI binding document. The controller is the same version as the
+one used in IPQ4019, but the PHY part is described separately, hence the
+difference in clocks and resets.
 
 Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 ---
- .../bindings/phy/qcom-pcie2-phy.txt           | 40 +++++++++++++++++++
- 1 file changed, 40 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+ .../devicetree/bindings/pci/qcom,pcie.txt     | 25 +++++++++++++++++--
+ 1 file changed, 23 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-new file mode 100644
-index 000000000000..7da02f9d78c7
---- /dev/null
-+++ b/Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
-@@ -0,0 +1,40 @@
-+Qualcomm PCIe2 PHY controller
-+=============================
+diff --git a/Documentation/devicetree/bindings/pci/qcom,pcie.txt b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+index 1fd703bd73e0..ada80b01bf0c 100644
+--- a/Documentation/devicetree/bindings/pci/qcom,pcie.txt
++++ b/Documentation/devicetree/bindings/pci/qcom,pcie.txt
+@@ -10,6 +10,7 @@
+ 			- "qcom,pcie-msm8996" for msm8996 or apq8096
+ 			- "qcom,pcie-ipq4019" for ipq4019
+ 			- "qcom,pcie-ipq8074" for ipq8074
++			- "qcom,pcie-qcs404" for qcs404
+ 
+ - reg:
+ 	Usage: required
+@@ -116,6 +117,15 @@
+ 			- "ahb"		AHB clock
+ 			- "aux"		Auxiliary clock
+ 
++- clock-names:
++	Usage: required for qcs404
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "iface"	AHB clock
++			- "aux"		Auxiliary clock
++			- "master_bus"	AXI Master clock
++			- "slave_bus"	AXI Slave clock
 +
-+The Qualcomm PCIe2 PHY is a Synopsys based phy found in a number of Qualcomm
-+platforms.
+ - resets:
+ 	Usage: required
+ 	Value type: <prop-encoded-array>
+@@ -167,6 +177,17 @@
+ 			- "ahb"			AHB Reset
+ 			- "axi_m_sticky"	AXI Master Sticky reset
+ 
++- reset-names:
++	Usage: required for qcs404
++	Value type: <stringlist>
++	Definition: Should contain the following entries
++			- "axi_m"		AXI Master reset
++			- "axi_s"		AXI Slave reset
++			- "axi_m_sticky"	AXI Master Sticky reset
++			- "pipe_sticky"		PIPE sticky reset
++			- "pwr"			PWR reset
++			- "ahb"			AHB reset
 +
-+Required properties:
-+ - compatible: compatible list, should be:
-+	       "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy"
-+
-+ - reg: offset and length of the PHY register set.
-+ - #phy-cells: must be 0.
-+
-+ - clocks: a clock-specifier pair for the "pipe" clock
-+
-+ - vdda-vp-supply: phandle to low voltage regulator
-+ - vdda-vph-supply: phandle to high voltage regulator
-+
-+ - resets: reset-specifier pairs for the "phy" and "pipe" resets
-+ - reset-names: list of resets, should contain:
-+		"phy" and "pipe"
-+
-+ - clock-output-names: name of the outgoing clock signal from the PHY PLL
-+
-+Example:
-+ phy@7786000 {
-+	compatible = "qcom,qcs404-pcie2-phy", "qcom,pcie2-phy";
-+	reg = <0x07786000 0xb8>;
-+
-+	clocks = <&gcc GCC_PCIE_0_PIPE_CLK>;
-+	resets = <&gcc GCC_PCIEPHY_0_PHY_BCR>,
-+	         <&gcc GCC_PCIE_0_PIPE_ARES>;
-+	reset-names = "phy", "pipe";
-+
-+	vdda-vp-supply = <&vreg_l3_1p05>;
-+	vdda-vph-supply = <&vreg_l5_1p8>;
-+
-+	clock-output-names = "pcie_0_pipe_clk";
-+	#phy-cells = <0>;
-+ };
+ - power-domains:
+ 	Usage: required for apq8084 and msm8996/apq8096
+ 	Value type: <prop-encoded-array>
+@@ -195,12 +216,12 @@
+ 	Definition: A phandle to the PCIe endpoint power supply
+ 
+ - phys:
+-	Usage: required for apq8084
++	Usage: required for apq8084 and qcs404
+ 	Value type: <phandle>
+ 	Definition: List of phandle(s) as listed in phy-names property
+ 
+ - phy-names:
+-	Usage: required for apq8084
++	Usage: required for apq8084 and qcs404
+ 	Value type: <stringlist>
+ 	Definition: Should contain "pciephy"
+ 
 -- 
 2.18.0
