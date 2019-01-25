@@ -1,44 +1,37 @@
 From: Bjorn Andersson <bjorn.andersson@linaro.org>
-Subject: [PATCH] arm64: dts: qcs404: evb: Fix voltages for s5 and l3
-Date: Fri, 25 Jan 2019 15:29:54 -0800
-Message-ID: <20190125232954.26166-1-bjorn.andersson@linaro.org>
+Subject: [PATCH 0/7] QCS404 PCIe PHY and controller
+Date: Fri, 25 Jan 2019 15:45:02 -0800
+Message-ID: <20190125234509.26419-1-bjorn.andersson@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Niklas Cassel <niklas.cassel@linaro.org>
+Cc: Andy Gross <andy.gross@linaro.org>, Bjorn Helgaas <bhelgaas@google.com>, David Brown <david.brown@linaro.org>, Khasim Syed Mohammed <khasim.mohammed@linaro.org>, Kishon Vijay Abraham I <kishon@ti.com>, Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Niklas Cassel <niklas.cassel@linaro.org>, Rob Herring <robh+dt@kernel.org>, Stanimir Varbanov <svarbanov@mm-sol.com>, Stephen Boyd <sboyd@kernel.org>, devicetree@vger.kernel.org, linux-arm-msm@vger.kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-PMS405 S5 was upstreamed without a voltage and PMS405 L3 is outside the
-acceptable range, causing PCIe to fail. Fix these.
+This series adds support for the PCIe controller and PHY found in the Qualcomm
+platform QCS404.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
----
- arch/arm64/boot/dts/qcom/qcs404-evb.dtsi | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+Bjorn Andersson (7):
+  clk: gcc-qcs404: Add PCIe resets
+  dt-bindings: phy: Add binding for Qualcomm PCIe2 PHY
+  phy: qcom: Add Qualcomm PCIe2 PHY driver
+  PCI: qcom: Use clk_bulk API for 2.4.0 controllers
+  dt-bindings: PCI: qcom: Add QCS404 to the binding
+  PCI: qcom: Add QCS404 PCIe controller support
+  arm64: dts: qcom: qcs404: Add PCIe related nodes
 
-diff --git a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-index 579ddaf4f5fa..072061aa1b79 100644
---- a/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-+++ b/arch/arm64/boot/dts/qcom/qcs404-evb.dtsi
-@@ -72,8 +72,8 @@
- 		};
- 
- 		vreg_s5_1p35: s5 {
--			regulator-min-microvolt = <>;
--			regulator-max-microvolt = <>;
-+			regulator-min-microvolt = <1352000>;
-+			regulator-max-microvolt = <1352000>;
- 		};
- 
- 		vreg_l1_1p3: l1 {
-@@ -87,7 +87,7 @@
- 		};
- 
- 		vreg_l3_1p05: l3 {
--			regulator-min-microvolt = <976000>;
-+			regulator-min-microvolt = <1050000>;
- 			regulator-max-microvolt = <1160000>;
- 		};
- 
+ .../devicetree/bindings/pci/qcom,pcie.txt     |  25 +-
+ .../bindings/phy/qcom-pcie2-phy.txt           |  40 +++
+ arch/arm64/boot/dts/qcom/qcs404-evb.dtsi      |  25 ++
+ arch/arm64/boot/dts/qcom/qcs404.dtsi          |  67 ++++
+ drivers/clk/qcom/gcc-qcs404.c                 |   7 +
+ drivers/pci/controller/dwc/pcie-qcom.c        | 108 +++---
+ drivers/phy/qualcomm/Kconfig                  |   8 +
+ drivers/phy/qualcomm/Makefile                 |   1 +
+ drivers/phy/qualcomm/phy-qcom-pcie2.c         | 331 ++++++++++++++++++
+ include/dt-bindings/clock/qcom,gcc-qcs404.h   |   7 +
+ 10 files changed, 558 insertions(+), 61 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/phy/qcom-pcie2-phy.txt
+ create mode 100644 drivers/phy/qualcomm/phy-qcom-pcie2.c
+
 -- 
 2.18.0
