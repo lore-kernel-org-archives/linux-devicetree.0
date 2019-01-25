@@ -1,134 +1,44 @@
-From: Peng Ma <peng.ma@nxp.com>
-Subject: [v4] arm64: dts: lx2160a: add sata node support
-Date: Fri, 25 Jan 2019 11:32:20 +0800
-Message-ID: <20190125033221.30333-1-peng.ma@nxp.com>
+From: Masahiro Yamada <yamada.masahiro@socionext.com>
+Subject: [PATCH] libfdt: prefix header search paths with $(srctree)/
+Date: Fri, 25 Jan 2019 12:41:38 +0900
+Message-ID: <1548387699-9222-1-git-send-email-yamada.masahiro@socionext.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: shawnguo@kernel.org, axboe@kernel.dk
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, leoyang.li@nxp.com, linux-ide@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, andy.tang@nxp.com, Peng Ma <peng.ma@nxp.com>
+To: devicetree@vger.kernel.org, Rob Herring <robh+dt@kernel.org>
+Cc: Frank Rowand <frowand.list@gmail.com>, Masahiro Yamada <yamada.masahiro@socionext.com>, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Add SATA device nodes for fsl-lx2160a and enable support
-for QDS and RDB boards.
+Currently, the Kbuild core manipulates header search paths in a crazy
+way [1].
 
-Signed-off-by: Peng Ma <peng.ma@nxp.com>
+To fix this mess, I want all Makefiles to add explicit $(srctree)/ to
+the search paths in the srctree. Some Makefiles are already written in
+that way, but not all. The goal of this work is to make the notation
+consistent, and finally get rid of the gross hacks.
+
+Having whitespaces after -I does not matter since commit 48f6e3cf5bc6
+("kbuild: do not drop -I without parameter").
+
+[1]: https://patchwork.kernel.org/patch/9632347/
+
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 ---
-changed for V4:
-	- no change
 
- arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts |   16 +++++++
- arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi    |   44 +++++++++++++++++++++
- 3 files changed, 76 insertions(+), 0 deletions(-)
+ lib/Makefile | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-index 99a22ab..1a5acf6 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-qds.dts
-@@ -95,6 +95,22 @@
- 	};
- };
+diff --git a/lib/Makefile b/lib/Makefile
+index e1b59da..05973c1 100644
+--- a/lib/Makefile
++++ b/lib/Makefile
+@@ -208,7 +208,7 @@ KCOV_INSTRUMENT_stackdepot.o := n
+ libfdt_files = fdt.o fdt_ro.o fdt_wip.o fdt_rw.o fdt_sw.o fdt_strerror.o \
+ 	       fdt_empty_tree.o
+ $(foreach file, $(libfdt_files), \
+-	$(eval CFLAGS_$(file) = -I$(src)/../scripts/dtc/libfdt))
++	$(eval CFLAGS_$(file) = -I $(srctree)/scripts/dtc/libfdt))
+ lib-$(CONFIG_LIBFDT) += $(libfdt_files)
  
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-index 6481e5f..5b6799e 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a-rdb.dts
-@@ -102,6 +102,22 @@
- 	};
- };
- 
-+&sata0 {
-+	status = "okay";
-+};
-+
-+&sata1 {
-+	status = "okay";
-+};
-+
-+&sata2 {
-+	status = "okay";
-+};
-+
-+&sata3 {
-+	status = "okay";
-+};
-+
- &uart0 {
- 	status = "okay";
- };
-diff --git a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-index a79f5c1..592034b 100644
---- a/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-+++ b/arch/arm64/boot/dts/freescale/fsl-lx2160a.dtsi
-@@ -671,6 +671,50 @@
- 			status = "disabled";
- 		};
- 
-+		sata0: sata@3200000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3200000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 133 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata1: sata@3210000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3210000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 136 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata2: sata@3220000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3220000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 97 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
-+		sata3: sata@3230000 {
-+			compatible = "fsl,lx2160a-ahci";
-+			reg = <0x0 0x3230000 0x0 0x10000>,
-+			      <0x7 0x100520 0x0 0x4>;
-+			reg-names = "ahci", "sata-ecc";
-+			interrupts = <GIC_SPI 100 IRQ_TYPE_LEVEL_HIGH>;
-+			clocks = <&clockgen 4 3>;
-+			dma-coherent;
-+			status = "disabled";
-+		};
-+
- 		smmu: iommu@5000000 {
- 			compatible = "arm,mmu-500";
- 			reg = <0 0x5000000 0 0x800000>;
+ obj-$(CONFIG_RBTREE_TEST) += rbtree_test.o
 -- 
-1.7.1
+2.7.4
