@@ -1,7 +1,8 @@
 From: Carlo Caione <ccaione@baylibre.com>
-Subject: [PATCH 3/3] arm64: dts: imx8mq-evk: Disable SmartEEE
-Date: Fri, 25 Jan 2019 12:55:13 +0000
-Message-ID: <20190125125513.23656-4-ccaione@baylibre.com>
+Subject: [PATCH 2/3] dt-bindings: net: at803x: Document at803x,
+ smarteee-disabled property
+Date: Fri, 25 Jan 2019 12:55:12 +0000
+Message-ID: <20190125125513.23656-3-ccaione@baylibre.com>
 References: <20190125125513.23656-1-ccaione@baylibre.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="us-ascii"
@@ -21,29 +22,41 @@ To: andrew@lunn.ch, f.fainelli@gmail.com, hkallweit1@gmail.com, robh+dt@kernel.o
 Cc: Carlo Caione <ccaione@baylibre.com>
 List-Id: devicetree@vger.kernel.org
 
-Disable SmartEEE mode (active by default) because this is known to cause
-issues on certain PHYs.
+SmartEEE is a proprietary protocol that allows legacy MAC/SoC devices
+without 802.3az support to function as a complete 802.3az system.
+
+This is know to cause issues so a new property is added to optionally
+disable this feature.
 
 Signed-off-by: Carlo Caione <ccaione@baylibre.com>
 ---
+ .../devicetree/bindings/net/at803x.txt         | 18 ++++++++++++++++++
+ 1 file changed, 18 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/net/at803x.txt
 
-This patch depends on https://patchwork.kernel.org/patch/10781297/
-
----
- arch/arm64/boot/dts/freescale/imx8mq-evk.dts | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-index 02f6da92957f..f324fd1e78d0 100644
---- a/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-+++ b/arch/arm64/boot/dts/freescale/imx8mq-evk.dts
-@@ -48,6 +48,7 @@
- 		ethphy0: ethernet-phy@0 {
- 			compatible = "ethernet-phy-ieee802.3-c22";
- 			reg = <0>;
-+			at803x,smarteee-disabled;
- 		};
- 	};
- };
+diff --git a/Documentation/devicetree/bindings/net/at803x.txt b/Documentation/devicetree/bindings/net/at803x.txt
+new file mode 100644
+index 000000000000..931cb34534fb
+--- /dev/null
++++ b/Documentation/devicetree/bindings/net/at803x.txt
+@@ -0,0 +1,18 @@
++* Atheros AR803x Integrated 10/100/1000 Mbps Ethernet Transceiver
++
++Required properties:
++	- reg - The ID number for the phy, usually a small integer
++
++Optional property:
++	- at803x,smarteee-disabled: Disable SmartEEE feature
++
++Example:
++
++	ethernet-phy@0 {
++		compatible = "ethernet-phy-ieee802.3-c22";
++		reg = <0>;
++		at803x,smarteee-disabled
++	};
++
++Datasheet can be found:
++https://media.digikey.com/pdf/Data%20Sheets/CSR%20PDFs/AR8031_DS_(Atheros)_Rev1.0_Aug2011.pdf
 -- 
 2.19.1
