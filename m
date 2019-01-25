@@ -1,91 +1,68 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: Re: [PATCH 00/11] ARM: sun8i: a23: Enable display pipeline
-Date: Fri, 25 Jan 2019 10:44:22 +0100
-Message-ID: <20190125094422.cpisr63pk7af3nnq@flea>
-References: <20190125032314.20915-1-wens@csie.org>
+From: Thierry Reding <thierry.reding@gmail.com>
+Subject: [PATCH 2/2] drm/tegra: sor: Support device tree crossbar configuration
+Date: Fri, 25 Jan 2019 11:00:58 +0100
+Message-ID: <20190125100058.20203-2-thierry.reding@gmail.com>
+References: <20190125100058.20203-1-thierry.reding@gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="rscg5zrsk3zckgor"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190125032314.20915-1-wens@csie.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Chen-Yu Tsai <wens@csie.org>
-Cc: Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+In-Reply-To: <20190125100058.20203-1-thierry.reding@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: Thierry Reding <thierry.reding@gmail.com>
+Cc: linux-tegra@vger.kernel.org, devicetree@vger.kernel.org, dri-devel@lists.freedesktop.org
 List-Id: devicetree@vger.kernel.org
 
-
---rscg5zrsk3zckgor
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Fri, Jan 25, 2019 at 11:23:03AM +0800, Chen-Yu Tsai wrote:
-> Hi everyone,
->=20
-> This series enables the display pipeline on the Allwinner A23 SoC.
-> A few fixes are included for corner cases when the frontend isn't
-> enabled.
->=20
-> The A23 display pipeline is very much the same as the A33, except
-> that the A23 does not have the SAT IP block embedded within the
-> display backend.
->=20
-> MIPI DSI is not covered as I do not have a device that uses it.
->=20
-> Patch 1 fixes the pll-mipi clock on the A23.
->=20
-> Patch 2 adds compatible strings for the various hardware blocks
-> of the A23 display pipeline.
->=20
-> Patch 3 through 5 fix some issues in our DRM plane support, namely
-> declaring support for formats when we shouldn't.
->=20
-> Patch 6 adds support for the A23 display pipeline to the driver.
->=20
-> Patch 7 is a small cleanup before moving the display pipeline device
-> nodes.
->=20
-> Patch 8 moves the display nodes from the A33-specific dtsi file to
-> the A23-A33 shared dtsi file. Note that the MIPI DSI device nodes are
-> not moved.
->=20
-> Patch 9 adds compatible strings to the display nodes in the A23-specific
-> dtsi file.
->=20
-> Patch 10 enables the display pipeline for the shared A23/A33 Q8 tablet
-> dtsi file. The compatible string should be filled in by the tablet dts
-> files.
->=20
-> Patch 11 fills in the compatible string for the standard A23 Q8 tablet.
-> Note the compatible string is not for the specific model used in the
-> tablet, as it varies between production runs. Rather it is just one that
-> works.
->=20
-> Please have a look. Patch 3 might be worth applying as a fix, but might
-> not be worth the trouble. It could just as easily be applied for -next
-> and then backported.
->=20
-> Also, the fixes tags are no longer line wrapped, unlike patches I've
-> sent in the past.
-
-Applied all, thanks!
-Maxime
-
---=20
-Maxime Ripard, Bootlin
-Embedded Linux and Kernel engineering
-https://bootlin.com
-
---rscg5zrsk3zckgor
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXEradQAKCRDj7w1vZxhR
-xU1iAP4gdJXMRt2zbfjcLw4OB2DzAijDTr0FQfYjolcT9AHgHgD+I0KOJCZ9tJAM
-iiCJXi+JYKLhP+SyLjnL4p20FOAw+ww=
-=+w+u
------END PGP SIGNATURE-----
-
---rscg5zrsk3zckgor--
+RnJvbTogVGhpZXJyeSBSZWRpbmcgPHRyZWRpbmdAbnZpZGlhLmNvbT4KClRoZSBjcm9zc2JhciBj
+b25maWd1cmF0aW9uIGlzIHVzdWFsbHkgdGhlIHNhbWUgYWNyb3NzIGFsbCBkZXNpZ25zIGZvciBh
+CmdpdmVuIFNvQyBnZW5lcmF0aW9uLiBCdXQgc29tZXRpbWVzIHRoZXJlIGFyZSBkZXNpZ25zIHRo
+YXQgcmVxdWlyZSBzb21lCm90aGVyIGNvbmZpZ3VyYXRpb24uCgpJbXBsZW1lbnQgc3VwcG9ydCBm
+b3IgcGFyc2luZyB0aGUgY3Jvc3NiYXIgY29uZmlndXJhdGlvbiBmcm9tIGEgZGV2aWNlCnRyZWUu
+IElmIHRoZSBjcm9zc2JhciBjb25maWd1cmF0aW9uIGlzIG5vdCBwcmVzZW50IGluIHRoZSBkZXZp
+Y2UgdHJlZSwKZmFsbCBiYWNrIHRvIHRoZSBkZWZhdWx0IGNyb3NzYmFyIGNvbmZpZ3VyYXRpb24u
+CgpTaWduZWQtb2ZmLWJ5OiBUaGllcnJ5IFJlZGluZyA8dHJlZGluZ0BudmlkaWEuY29tPgotLS0K
+IGRyaXZlcnMvZ3B1L2RybS90ZWdyYS9zb3IuYyB8IDE5ICsrKysrKysrKysrKysrKysrLS0KIDEg
+ZmlsZSBjaGFuZ2VkLCAxNyBpbnNlcnRpb25zKCspLCAyIGRlbGV0aW9ucygtKQoKZGlmZiAtLWdp
+dCBhL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9zb3IuYyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9z
+b3IuYwppbmRleCAyMzMyOWYxZTA3ZTguLjQwMDU3MTA2ZjVmMyAxMDA2NDQKLS0tIGEvZHJpdmVy
+cy9ncHUvZHJtL3RlZ3JhL3Nvci5jCisrKyBiL2RyaXZlcnMvZ3B1L2RybS90ZWdyYS9zb3IuYwpA
+QCAtNDEwLDYgKzQxMCw4IEBAIHN0cnVjdCB0ZWdyYV9zb3IgewogCXN0cnVjdCBjbGsgKmNsa19k
+cDsKIAlzdHJ1Y3QgY2xrICpjbGs7CiAKKwl1OCB4YmFyX2NmZ1s1XTsKKwogCXN0cnVjdCBkcm1f
+ZHBfYXV4ICphdXg7CiAKIAlzdHJ1Y3QgZHJtX2luZm9fbGlzdCAqZGVidWdmc19maWxlczsKQEAg
+LTE4MTQsNyArMTgxNiw3IEBAIHN0YXRpYyB2b2lkIHRlZ3JhX3Nvcl9lZHBfZW5hYmxlKHN0cnVj
+dCBkcm1fZW5jb2RlciAqZW5jb2RlcikKIAogCS8qIFhYWCBub3QgaW4gVFJNICovCiAJZm9yICh2
+YWx1ZSA9IDAsIGkgPSAwOyBpIDwgNTsgaSsrKQotCQl2YWx1ZSB8PSBTT1JfWEJBUl9DVFJMX0xJ
+TkswX1hTRUwoaSwgc29yLT5zb2MtPnhiYXJfY2ZnW2ldKSB8CisJCXZhbHVlIHw9IFNPUl9YQkFS
+X0NUUkxfTElOSzBfWFNFTChpLCBzb3ItPnhiYXJfY2ZnW2ldKSB8CiAJCQkgU09SX1hCQVJfQ1RS
+TF9MSU5LMV9YU0VMKGksIGkpOwogCiAJdGVncmFfc29yX3dyaXRlbChzb3IsIDB4MDAwMDAwMDAs
+IFNPUl9YQkFSX1BPTCk7CkBAIC0yNTUxLDcgKzI1NTMsNyBAQCBzdGF0aWMgdm9pZCB0ZWdyYV9z
+b3JfaGRtaV9lbmFibGUoc3RydWN0IGRybV9lbmNvZGVyICplbmNvZGVyKQogCiAJLyogWFhYIG5v
+dCBpbiBUUk0gKi8KIAlmb3IgKHZhbHVlID0gMCwgaSA9IDA7IGkgPCA1OyBpKyspCi0JCXZhbHVl
+IHw9IFNPUl9YQkFSX0NUUkxfTElOSzBfWFNFTChpLCBzb3ItPnNvYy0+eGJhcl9jZmdbaV0pIHwK
+KwkJdmFsdWUgfD0gU09SX1hCQVJfQ1RSTF9MSU5LMF9YU0VMKGksIHNvci0+eGJhcl9jZmdbaV0p
+IHwKIAkJCSBTT1JfWEJBUl9DVFJMX0xJTksxX1hTRUwoaSwgaSk7CiAKIAl0ZWdyYV9zb3Jfd3Jp
+dGVsKHNvciwgMHgwMDAwMDAwMCwgU09SX1hCQVJfUE9MKTsKQEAgLTMxNzIsNiArMzE3NCw4IEBA
+IE1PRFVMRV9ERVZJQ0VfVEFCTEUob2YsIHRlZ3JhX3Nvcl9vZl9tYXRjaCk7CiBzdGF0aWMgaW50
+IHRlZ3JhX3Nvcl9wYXJzZV9kdChzdHJ1Y3QgdGVncmFfc29yICpzb3IpCiB7CiAJc3RydWN0IGRl
+dmljZV9ub2RlICpucCA9IHNvci0+ZGV2LT5vZl9ub2RlOworCXUzMiB4YmFyX2NmZ1s1XTsKKwl1
+bnNpZ25lZCBpbnQgaTsKIAl1MzIgdmFsdWU7CiAJaW50IGVycjsKIApAQCAtMzE4OSw2ICszMTkz
+LDE3IEBAIHN0YXRpYyBpbnQgdGVncmFfc29yX3BhcnNlX2R0KHN0cnVjdCB0ZWdyYV9zb3IgKnNv
+cikKIAkJc29yLT5wYWQgPSBURUdSQV9JT19QQURfSERNSV9EUDAgKyBzb3ItPmluZGV4OwogCX0K
+IAorCWVyciA9IG9mX3Byb3BlcnR5X3JlYWRfdTMyX2FycmF5KG5wLCAibnZpZGlhLHhiYXItY2Zn
+IiwgeGJhcl9jZmcsIDUpOworCWlmIChlcnIgPCAwKSB7CisJCS8qIGZhbGwgYmFjayB0byBkZWZh
+dWx0IHBlci1Tb0MgWEJBUiBjb25maWd1cmF0aW9uICovCisJCWZvciAoaSA9IDA7IGkgPCA1OyBp
+KyspCisJCQlzb3ItPnhiYXJfY2ZnW2ldID0gc29yLT5zb2MtPnhiYXJfY2ZnW2ldOworCX0gZWxz
+ZSB7CisJCS8qIGNvcHkgY2VsbHMgdG8gU09SIFhCQVIgY29uZmlndXJhdGlvbiAqLworCQlmb3Ig
+KGkgPSAwOyBpIDwgNTsgaSsrKQorCQkJc29yLT54YmFyX2NmZ1tpXSA9IHhiYXJfY2ZnW2ldOwor
+CX0KKwogCXJldHVybiAwOwogfQogCi0tIAoyLjE5LjEKCl9fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fX19fX19fX19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVs
+QGxpc3RzLmZyZWVkZXNrdG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWls
+bWFuL2xpc3RpbmZvL2RyaS1kZXZlbAo=
