@@ -1,139 +1,41 @@
-From: Sibi Sankar <sibis@codeaurora.org>
-Subject: Re: [PATCH v3 01/10] arm64: dts: qcom: sdm845: Update PIL region
- memory map
-Date: Fri, 25 Jan 2019 23:10:47 +0530
-Message-ID: <d8bb5a09037835e07838ab6996eb01ed@codeaurora.org>
-References: <20190122055112.30943-1-bjorn.andersson@linaro.org>
- <20190122055112.30943-2-bjorn.andersson@linaro.org>
+From: John Stultz <john.stultz@linaro.org>
+Subject: Re: [PATCH] arm64: dts: hikey: Revert "Enable HS200 mode on eMMC"
+Date: Fri, 25 Jan 2019 09:41:48 -0800
+Message-ID: <CALAqxLW9B6zZi=iQK02QEcAq=xzBiZ-xO-18t2izsKgJstzfmQ@mail.gmail.com>
+References: <1548273966-5889-1-git-send-email-john.stultz@linaro.org> <107a6e2e-ddd8-cbc1-5680-1b5899665327@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122055112.30943-2-bjorn.andersson@linaro.org>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: Andy Gross <andy.gross@linaro.org>, David Brown <david.brown@linaro.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-arm-msm@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <stable-owner@vger.kernel.org>
+In-Reply-To: <107a6e2e-ddd8-cbc1-5680-1b5899665327@arm.com>
+Sender: stable-owner@vger.kernel.org
+To: Robin Murphy <robin.murphy@arm.com>
+Cc: lkml <linux-kernel@vger.kernel.org>, Mark Rutland <mark.rutland@arm.com>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Ryan Grachek <ryan@edited.us>, Alistair Strachan <astrachan@google.com>, Wei Xu <xuwei5@hisilicon.com>, Rob Herring <robh+dt@kernel.org>, "stable #4 . 17+" <stable@vger.kernel.org>, Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
 List-Id: devicetree@vger.kernel.org
 
-Hey Bjorn,
+On Thu, Jan 24, 2019 at 3:18 AM Robin Murphy <robin.murphy@arm.com> wrote:
+>
+> Hi John,
+>
+> On 23/01/2019 20:06, John Stultz wrote:
+> > From: Alistair Strachan <astrachan@google.com>
+> >
+> > This reverts commit abd7d0972a192ee653efc7b151a6af69db58f2bb. This
+> > change was already partially reverted by John Stultz in commit
+> > 9c6d26df1fae ("arm64: dts: hikey: Fix eMMC corruption regression").
+> >
+> > This change appears to cause controller resets and block read failures
+> > which prevents successful booting on some hikey boards.
+>
+> FWIW, you might want to have a play with the pinctrl settings - I've
+> seen various flakiness with HS200 eMMCs on Rockchip boards which could
+> be solved by bumping up the drive strength.
+>
 
-On 2019-01-22 11:21, Bjorn Andersson wrote:
-> Update existing and add all missing PIL regions to the reserved memory
-> map, as described in version 10.
-> 
-> Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
-> ---
-> 
-> Changes since v2:
-> - New patch
-> 
->  arch/arm64/boot/dts/qcom/sdm845.dtsi | 61 ++++++++++++++++++++++++++--
->  1 file changed, 58 insertions(+), 3 deletions(-)
-> 
-> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> index 0ec827394e92..cdcac3704c13 100644
-> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
-> @@ -89,12 +89,47 @@
->  		};
+Hm. Thanks for the tip. I'll have to dig around to see if that can
+help. In the meantime though, I think the revert is the right
+solution, as this is currently blocking some boards from booting
+mainline.  We can then look to re-enable HS200 mode if we can sort out
+the issues we saw with boards using hynix mmc chips.
 
-Shouldn't we add hyp and xbl regions
-as well?
-
-> 
->  		memory@86200000 {
-> -			reg = <0 0x86200000 0 0x2d00000>;
-> +			reg = <0 0x86200000 0 0x100000>;
->  			no-map;
->  		};
-> 
-> -		wlan_msa_mem: memory@96700000 {
-> -			reg = <0 0x96700000 0 0x100000>;
-> +		memory@86300000 {
-> +			reg = <0 0x86300000 0 0x4800000>;
-
-from v10 I see we don't need to reserve the
-last 28M it just needs to be
-
-reg = <0 0x86300000 0 0x2c00000>;
-
-> +			no-map;
-> +		};
-> +
-> +		memory@8ab00000 {
-> +			reg = <0 0x8ab00000 0 0x1400000>;
-> +			no-map;
-> +		};
-> +
-> +		memory@8bf00000 {
-> +			reg = <0 0x8bf00000 0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		ipa_fw_mem: memory@8c400000 {
-> +			reg = <0 0x8c400000 0 0x10000>;
-> +			no-map;
-> +		};
-> +
-> +		ipa_gsi_mem: memory@8c410000 {
-> +			reg = <0 0x8c410000 0 0x5000>;
-> +			no-map;
-> +		};
-> +
-> +		memory@8c415000 {
-> +			reg = <0 0x8c415000 0 0x2000>;
-> +			no-map;
-> +		};
-> +
-> +		adsp_mem: memory@8c500000 {
-> +			reg = <0 0x8c500000 0 0x1a00000>;
-> +			no-map;
-> +		};
-> +
-> +		wlan_msa_mem: memory@8df00000 {
-> +			reg = <0 0x8df00000 0 0x100000>;
->  			no-map;
->  		};
-> 
-> @@ -103,10 +138,30 @@
->  			no-map;
->  		};
-> 
-> +		venus_mem: memory@95800000 {
-> +			reg = <0 0x95800000 0 0x500000>;
-> +			no-map;
-> +		};
-> +
-> +		cdsp_mem: memory@95d00000 {
-> +			reg = <0 0x95d00000 0 0x800000>;
-> +			no-map;
-> +		};
-> +
->  		mba_region: memory@96500000 {
-
-should we re-name mba_region/mpss_region
-to mba_mem and mpss_mem for consistency.
-
->  			reg = <0 0x96500000 0 0x200000>;
->  			no-map;
->  		};
-> +
-> +		slpi_mem: memory@96700000 {
-> +			reg = <0 0x96700000 0 0x1400000>;
-> +			no-map;
-> +		};
-> +
-> +		spss_mem: memory@97b00000 {
-> +			reg = <0 0x97b00000 0 0x100000>;
-> +			no-map;
-> +		};
->  	};
-> 
->  	cpus {
-
--- 
--- Sibi Sankar --
-Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+thanks
+-john
