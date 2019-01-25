@@ -1,112 +1,300 @@
-From: Lucas Stach <l.stach@pengutronix.de>
-Subject: Re: [PATCH 4/4] irq: imx: irqsteer: add multi output interrupts
- support
-Date: Fri, 25 Jan 2019 11:54:35 +0100
-Message-ID: <1548413675.28802.45.camel@pengutronix.de>
-References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
-         <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: Re: [PATCH v3 1/2] irqchip: Add driver for Loongson-1 interrupt
+ controller
+Date: Fri, 25 Jan 2019 18:56:33 +0800
+Message-ID: <a0041cdb-1db6-9fee-411a-ae9d2a575349@flygoat.com>
+References: <20190122154557.22689-1-jiaxun.yang@flygoat.com>
+ <20190124032730.18237-1-jiaxun.yang@flygoat.com>
+ <20190124032730.18237-2-jiaxun.yang@flygoat.com>
+ <86pnsm8jon.wl-marc.zyngier@arm.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=gbk; format=flowed
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1547797668-30342-5-git-send-email-aisheng.dong@nxp.com>
+In-Reply-To: <86pnsm8jon.wl-marc.zyngier@arm.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Cc: "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+To: Marc Zyngier <marc.zyngier@arm.com>
+Cc: linux-mips@vger.kernel.org, tglx@linutronix.de, jason@lakedaemon.net, robh+dt@kernel.org, mark.rutland@arm.com, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Am Freitag, den 18.01.2019, 07:53 +0000 schrieb Aisheng Dong:
-> One irqsteer channel can support up to 8 output interrupts.
-> 
-> > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> ---
->  drivers/irqchip/irq-imx-irqsteer.c | 39 +++++++++++++++++++++++++++-----------
->  1 file changed, 28 insertions(+), 11 deletions(-)
-> 
-> diff --git a/drivers/irqchip/irq-imx-irqsteer.c b/drivers/irqchip/irq-imx-irqsteer.c
-> index 1bebf0a..54802fa 100644
-> --- a/drivers/irqchip/irq-imx-irqsteer.c
-> +++ b/drivers/irqchip/irq-imx-irqsteer.c
-> @@ -10,6 +10,7 @@
->  #include <linux/irqchip/chained_irq.h>
->  #include <linux/irqdomain.h>
->  #include <linux/kernel.h>
-> +#include <linux/of_irq.h>
->  #include <linux/of_platform.h>
->  #include <linux/spinlock.h>
->  
-> @@ -21,10 +22,13 @@
-> >  #define CHAN_MINTDIS(t)		(CTRL_STRIDE_OFF(t, 3) + 0x4)
-> >  #define CHAN_MASTRSTAT(t)	(CTRL_STRIDE_OFF(t, 3) + 0x8)
->  
-> > +#define CHAN_MAX_OUTPUT_INT	0x8
-> +
->  struct irqsteer_data {
-> > >  	void __iomem		*regs;
-> > >  	struct clk		*ipg_clk;
-> > > -	int			irq;
-> > > +	int			irq[CHAN_MAX_OUTPUT_INT];
-> > > +	int			irq_count;
-> > >  	raw_spinlock_t		lock;
-> > >  	int			reg_num;
-> > >  	int			channel;
-> @@ -117,7 +121,7 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  	struct device_node *np = pdev->dev.of_node;
-> >  	struct irqsteer_data *data;
-> >  	struct resource *res;
-> > -	int ret;
-> > +	int i, ret;
->  
-> >  	data = devm_kzalloc(&pdev->dev, sizeof(*data), GFP_KERNEL);
-> >  	if (!data)
-> @@ -130,12 +134,6 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  		return PTR_ERR(data->regs);
-> >  	}
->  
-> > -	data->irq = platform_get_irq(pdev, 0);
-> > -	if (data->irq <= 0) {
-> > -		dev_err(&pdev->dev, "failed to get irq\n");
-> > -		return -ENODEV;
-> > -	}
-> -
-> >  	data->ipg_clk = devm_clk_get(&pdev->dev, "ipg");
-> >  	if (IS_ERR(data->ipg_clk)) {
-> >  		ret = PTR_ERR(data->ipg_clk);
-> @@ -177,8 +175,23 @@ static int imx_irqsteer_probe(struct platform_device *pdev)
-> >  		return -ENOMEM;
-> >  	}
->  
-> > -	irq_set_chained_handler_and_data(data->irq, imx_irqsteer_irq_handler,
-> > -					 data);
-> +	data->irq_count = of_irq_count(np);
+Hi Marc
 
-We normally don't validate stuff that comes from the DT, but I guess it
-might be helpful to validate that the number of output irqs specified
-matches what the number of input irqs, i.e. there is one output irqs
-specified for each group of 64 inputs.
+Thanks for your suggestions, I'm working on v4 and I would like to ask 
+if it is better to have a driver for only one irqchip
 
-> +	if (!data->irq_count || data->irq_count > CHAN_MAX_OUTPUT_INT) {
-> > +		clk_disable_unprepare(data->ipg_clk);
-> > +		return -EINVAL;
-> > +	}
-> +
-> > +	for (i = 0; i < data->irq_count; i++) {
-> > +		data->irq[i] = irq_of_parse_and_map(np, i);
-> > +		if (!data->irq[i]) {
-> > +			clk_disable_unprepare(data->ipg_clk);
-> > +			return -EINVAL;
-> > +		}
-> +
-> > +		irq_set_chained_handler_and_data(data->irq[i],
-> > +						 imx_irqsteer_irq_handler,
-> +						 data);
+and create dt nodes for each chip, or just register all the chips in a 
+single driver with only one dt node.
 
-We really want some data about the output irq being passed here, so we
-can cut down the number of register reads in the irq handler to the
-maximum of 2 status registers per group.
+�� 2019/1/24 ����5:54, Marc Zyngier д��:
+> On Thu, 24 Jan 2019 03:27:29 +0000,
+> Jiaxun Yang <jiaxun.yang@flygoat.com> wrote:
+>> This controller appeared on Loongson-1 family MCUs
+>> including Loongson-1B and Loongson-1C.
+>>
+>> Signed-off-by: Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> ---
+>>   drivers/irqchip/Kconfig    |   9 ++
+>>   drivers/irqchip/Makefile   |   1 +
+>>   drivers/irqchip/irq-ls1x.c | 176 +++++++++++++++++++++++++++++++++++++
+>>   3 files changed, 186 insertions(+)
+>>   create mode 100644 drivers/irqchip/irq-ls1x.c
+>>
+>> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
+>> index 3d1e60779078..5dcb5456cd14 100644
+>> --- a/drivers/irqchip/Kconfig
+>> +++ b/drivers/irqchip/Kconfig
+>> @@ -406,6 +406,15 @@ config IMX_IRQSTEER
+>>   	help
+>>   	  Support for the i.MX IRQSTEER interrupt multiplexer/remapper.
+>>   
+>> +config LS1X_IRQ
+>> +	bool "Loongson-1 Interrupt Controller"
+>> +	depends on MACH_LOONGSON32
+>> +	default y
+>> +	select IRQ_DOMAIN
+>> +	select GENERIC_IRQ_CHIP
+>> +	help
+>> +	  Support for the Loongson-1 platform Interrupt Controller.
+>> +
+>>   endmenu
+>>   
+>>   config SIFIVE_PLIC
+>> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
+>> index c93713d24b86..7acd0e36d0b4 100644
+>> --- a/drivers/irqchip/Makefile
+>> +++ b/drivers/irqchip/Makefile
+>> @@ -94,3 +94,4 @@ obj-$(CONFIG_CSKY_APB_INTC)		+= irq-csky-apb-intc.o
+>>   obj-$(CONFIG_SIFIVE_PLIC)		+= irq-sifive-plic.o
+>>   obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
+>>   obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
+>> +obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
+>> diff --git a/drivers/irqchip/irq-ls1x.c b/drivers/irqchip/irq-ls1x.c
+>> new file mode 100644
+>> index 000000000000..de92ca04cf9f
+>> --- /dev/null
+>> +++ b/drivers/irqchip/irq-ls1x.c
+>> @@ -0,0 +1,176 @@
+>> +// SPDX-License-Identifier: GPL-2.0
+>> +/*
+>> + *  Copyright (C) 2019, Jiaxun Yang <jiaxun.yang@flygoat.com>
+>> + *  Loongson-1 platform IRQ support
+>> + */
+>> +
+>> +#include <linux/errno.h>
+>> +#include <linux/init.h>
+>> +#include <linux/types.h>
+>> +#include <linux/interrupt.h>
+>> +#include <linux/ioport.h>
+>> +#include <linux/irqchip.h>
+>> +#include <linux/of_address.h>
+>> +#include <linux/of_irq.h>
+>> +#include <linux/io.h>
+>> +#include <linux/irqchip/chained_irq.h>
+>> +
+>> +#include <asm/mach-loongson32/irq.h>
+>> +
+>> +
+>> +#define MAX_CHIPS	5
+>> +#define LS_REG_INTC_STATUS	0x00
+>> +#define LS_REG_INTC_EN	0x04
+>> +#define LS_REG_INTC_SET	0x08
+>> +#define LS_REG_INTC_CLR	0x0c
+>> +#define LS_REG_INTC_POL	0x10
+>> +#define LS_REG_INTC_EDGE	0x14
+>> +#define CHIP_SIZE	0x18
+>> +
+>> +static void ls_chained_handle_irq(struct irq_desc *desc)
+>> +{
+>> +	struct irq_chip_generic *gc = irq_desc_get_handler_data(desc);
+>> +	struct irq_chip *chip = irq_desc_get_chip(desc);
+>> +	u32 pending;
+>> +
+>> +	chained_irq_enter(chip, desc);
+>> +	pending = readl(gc->reg_base + LS_REG_INTC_STATUS) &
+>> +			readl(gc->reg_base + LS_REG_INTC_EN);
+>> +
+>> +	if (!pending) {
+>> +		spurious_interrupt();
+>> +		chained_irq_exit(chip, desc);
+>> +		return;
+>> +	}
+> Given the context, this is the same as writing:
+>
+> 	if (!pending)
+> 		spurious_interrupt();
+>
+> and let it go through.
+>
+>> +
+>> +	while (pending) {
+>> +		int bit = __ffs(pending);
+>> +
+>> +		generic_handle_irq(gc->irq_base + bit);
+>> +		pending &= ~BIT(bit);
+>> +	}
+>> +
+>> +	chained_irq_exit(chip, desc);
+>> +}
+>> +
+>> +static void ls_intc_set_bit(struct irq_chip_generic *gc,
+>> +							unsigned int offset,
+>> +							u32 mask, bool set)
+>> +{
+>> +	if (set)
+>> +		writel(readl(gc->reg_base + offset) | mask,
+>> +		gc->reg_base + offset);
+>> +	else
+>> +		writel(readl(gc->reg_base + offset) & ~mask,
+>> +		gc->reg_base + offset);
+>> +}
+>> +
+>> +static int ls_intc_set_type(struct irq_data *data, unsigned int type)
+>> +{
+>> +	struct irq_chip_generic *gc = irq_data_get_irq_chip_data(data);
+>> +	u32 mask = data->mask;
+>> +
+>> +	switch (type) {
+>> +	case IRQ_TYPE_LEVEL_HIGH:
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, false);
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, true);
+>> +		break;
+>> +	case IRQ_TYPE_LEVEL_LOW:
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, false);
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, false);
+>> +		break;
+>> +	case IRQ_TYPE_EDGE_RISING:
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, true);
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, true);
+>> +		break;
+>> +	case IRQ_TYPE_EDGE_FALLING:
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_EDGE, mask, true);
+>> +		ls_intc_set_bit(gc, LS_REG_INTC_POL, mask, false);
+>> +		break;
+>> +	case IRQ_TYPE_NONE:
+>> +		break;
+>> +	default:
+>> +		return -EINVAL;
+>> +	}
+> I just realised that in your DT binding, you define the interrupt
+> specifier as having a single cell. Which means that you never describe
+> the interrupt trigger there. Why?
+>
+> Does it mean that all the drivers have to configure their interrupt
+> trigger themselves, and cannot rely on DT to do it? This seems quite
+> backward.
 
-Regards,
-Lucas
+My fault, will fix it later.
+
+>
+>> +
+>> +	return 0;
+>> +}
+>> +
+>> +
+>> +static int __init ls_intc_of_init(struct device_node *node,
+>> +				       struct device_node *parent)
+>> +{
+>> +	struct irq_chip_generic *gc[MAX_CHIPS];
+>> +	struct irq_chip_type *ct;
+>> +	struct irq_domain *domain;
+>> +	void __iomem *base;
+>> +	int parent_irq[MAX_CHIPS], err = 0;
+>> +	unsigned int i = 0;
+>> +
+>> +	unsigned int num_chips = of_irq_count(node);
+>> +
+>> +	base = of_iomap(node, 0);
+>> +	if (!base)
+>> +		return -ENODEV;
+>> +
+>> +	for (i = 0; i < num_chips; i++) {
+>> +		/* Mask all irqs */
+>> +		writel(0x0, base + (i * CHIP_SIZE) +
+>> +		       LS_REG_INTC_EN);
+>> +
+>> +		/* Set all irqs to high level triggered */
+>> +		writel(0xffffffff, base + (i * CHIP_SIZE) +
+>> +		       LS_REG_INTC_POL);
+>> +
+>> +		parent_irq[i] = irq_of_parse_and_map(node, i);
+>> +
+>> +		if (!parent_irq[i]) {
+>> +			pr_warn("unable to get parent irq for irqchip %u\n", i);
+>> +			goto out_err;
+>> +		}
+>> +
+>> +		gc[i] = irq_alloc_generic_chip("INTC", 1,
+>> +					    LS1X_IRQ_BASE + (i * 32),
+>> +					    base + (i * CHIP_SIZE),
+>> +					    handle_level_irq);
+>> +
+>> +		ct = gc[i]->chip_types;
+>> +		ct->regs.mask = LS_REG_INTC_EN;
+>> +		ct->regs.ack = LS_REG_INTC_CLR;
+>> +		ct->chip.irq_unmask = irq_gc_mask_set_bit;
+>> +		ct->chip.irq_mask = irq_gc_mask_clr_bit;
+>> +		ct->chip.irq_ack = irq_gc_ack_set_bit;
+>> +		ct->chip.irq_set_type = ls_intc_set_type;
+>> +
+>> +		irq_setup_generic_chip(gc[i], IRQ_MSK(32), 0, 0,
+>> +				       IRQ_NOPROBE | IRQ_LEVEL);
+>> +	}
+>> +
+>> +	domain = irq_domain_add_legacy(node, num_chips * 32, LS1X_IRQ_BASE, 0,
+>> +		&irq_domain_simple_ops, NULL);
+> Why a legacy domain? This is usually reserved to old drivers that are
+> converted to a new infrastructure, while needing some form of platform
+> hacks. I don't see this being the case here.
+>
+> It is also worrying that although you have up to 5 irqchips, they all
+> share a single domain. What does this mean? each irqchip is expected
+> to have its own domain.
+
+Yes, I do like this for backward compatible reason. I'm turning
+
+a legacy platform device mach(arch/mips/loongson32) in to
+
+dt based generic mach and I would like to do it step by step rather than 
+one time.
+
+So I use legacy domain in order to keep IRQ same with the
+
+old driver exist on arch/mips/loongson32/common/irq.c
+
+>> +	if (!domain) {
+>> +		pr_warn("unable to register IRQ domain\n");
+>> +		err = -EINVAL;
+>> +		goto out_err;
+>> +	}
+>> +
+>> +	for (i = 0; i < num_chips; i++)
+>> +		irq_set_chained_handler_and_data(parent_irq[i],
+>> +		ls_chained_handle_irq, gc[i]);
+>> +
+>> +	pr_info("ls1x-irq: %u chips registered\n", num_chips);
+>> +
+>> +	return 0;
+>> +
+>> +out_err:
+>> +	for (i = 0; i < MAX_CHIPS; i++) {
+>> +		if (gc[i])
+> But you've never initialised gc[], nor parent_irq[]. So you'll get
+> whatever the stack had at this point. Not great.
+>
+>> +			irq_destroy_generic_chip(gc[i], IRQ_MSK(32),
+>> +				       IRQ_NOPROBE | IRQ_LEVEL, 0);
+>> +		if (parent_irq[i])
+>> +			irq_dispose_mapping(parent_irq[i]);
+>> +	}
+>> +	return err;
+>> +}
+>> +
+>> +IRQCHIP_DECLARE(ls1x_intc, "loongson,ls1x-intc", ls_intc_of_init);
+>> -- 
+>> 2.20.1
+>>
+> Thanks,
+>
+> 	M.
+>
