@@ -1,82 +1,98 @@
 From: Jon Hunter <jonathanh@nvidia.com>
 Subject: Re: [PATCH 1/6] dt-bindings: timer: add Tegra210 timer
-Date: Fri, 25 Jan 2019 12:01:51 +0000
-Message-ID: <381f94c0-6c19-0f5b-df06-91353455a4c0@nvidia.com>
+Date: Fri, 25 Jan 2019 12:06:47 +0000
+Message-ID: <709e24fa-02e1-96ea-2b20-acf150caff00@nvidia.com>
 References: <20190107032810.13522-1-josephl@nvidia.com>
  <20190107032810.13522-2-josephl@nvidia.com>
  <a5fec080-d388-5362-7f44-b50f7d7e1adf@nvidia.com>
  <285bd3f7-e1c0-0767-6381-4b1d748bd6db@nvidia.com>
+ <381f94c0-6c19-0f5b-df06-91353455a4c0@nvidia.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <285bd3f7-e1c0-0767-6381-4b1d748bd6db@nvidia.com>
+Content-Transfer-Encoding: quoted-printable
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <381f94c0-6c19-0f5b-df06-91353455a4c0@nvidia.com>
 Content-Language: en-US
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+Sender: linux-kernel-owner@vger.kernel.org
 To: Joseph Lo <josephl@nvidia.com>, Thierry Reding <thierry.reding@gmail.com>
 Cc: devicetree@vger.kernel.org, Daniel Lezcano <daniel.lezcano@linaro.org>, linux-kernel@vger.kernel.org, linux-tegra@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Ck9uIDI1LzAxLzIwMTkgMDM6MjMsIEpvc2VwaCBMbyB3cm90ZToKPiBIaSBKb24sCj4gCj4gVGhh
-bmtzIGZvciByZXZpZXdpbmcuCj4gCj4gT24gMS8yNC8xOSA2OjMwIFBNLCBKb24gSHVudGVyIHdy
-b3RlOgo+Pgo+PiBPbiAwNy8wMS8yMDE5IDAzOjI4LCBKb3NlcGggTG8gd3JvdGU6Cj4+PiBUaGUg
-VGVncmEyMTAgdGltZXIgcHJvdmlkZXMgZm91cnRlZW4gMjktYml0IHRpbWVyIGNvdW50ZXJzIGFu
-ZCBvbmUKPj4+IDMyLWJpdAo+Pj4gdGltZXN0YW1wIGNvdW50ZXIuIFRoZSBUTVJzIHJ1biBhdCBl
-aXRoZXIgYSBmaXhlZCAxIE1IeiBjbG9jayByYXRlCj4+PiBkZXJpdmVkCj4+PiBmcm9tIHRoZSBv
-c2NpbGxhdG9yIGNsb2NrIChUTVIwLVRNUjkpIG9yIGRpcmVjdGx5IGF0IHRoZSBvc2NpbGxhdG9y
-Cj4+PiBjbG9jawo+Pj4gKFRNUjEwLVRNUjEzKS4gRWFjaCBUTVIgY2FuIGJlIHByb2dyYW1tZWQg
-dG8gZ2VuZXJhdGUgb25lLXNob3QgcGVyaW9kaWMsCj4+PiBvciB3YXRjaGRvZyBpbnRlcnJ1cHRz
-Lgo+Pj4KPj4+IENjOiBEYW5pZWwgTGV6Y2FubyA8ZGFuaWVsLmxlemNhbm9AbGluYXJvLm9yZz4K
-Pj4+IENjOiBUaG9tYXMgR2xlaXhuZXIgPHRnbHhAbGludXRyb25peC5kZT4KPj4+IENjOiBsaW51
-eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnCj4+PiBDYzogZGV2aWNldHJlZUB2Z2VyLmtlcm5lbC5v
-cmcKPj4+IFNpZ25lZC1vZmYtYnk6IEpvc2VwaCBMbyA8am9zZXBobEBudmlkaWEuY29tPgo+Pj4g
-LS0tCj4+PiDCoCAuLi4vYmluZGluZ3MvdGltZXIvbnZpZGlhLHRlZ3JhMjEwLXRpbWVyLnR4dMKg
-IHwgMjUgKysrKysrKysrKysrKysrKysrKwo+Pj4gwqAgMSBmaWxlIGNoYW5nZWQsIDI1IGluc2Vy
-dGlvbnMoKykKPj4+IMKgIGNyZWF0ZSBtb2RlIDEwMDY0NAo+Pj4gRG9jdW1lbnRhdGlvbi9kZXZp
-Y2V0cmVlL2JpbmRpbmdzL3RpbWVyL252aWRpYSx0ZWdyYTIxMC10aW1lci50eHQKPj4+Cj4+PiBk
-aWZmIC0tZ2l0Cj4+PiBhL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9u
-dmlkaWEsdGVncmEyMTAtdGltZXIudHh0Cj4+PiBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9i
-aW5kaW5ncy90aW1lci9udmlkaWEsdGVncmEyMTAtdGltZXIudHh0Cj4+PiBuZXcgZmlsZSBtb2Rl
-IDEwMDY0NAo+Pj4gaW5kZXggMDAwMDAwMDAwMDAwLi5iYTUxMTIyMGE2NjkKPj4+IC0tLSAvZGV2
-L251bGwKPj4+ICsrKyBiL0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy90aW1lci9u
-dmlkaWEsdGVncmEyMTAtdGltZXIudHh0Cj4+PiBAQCAtMCwwICsxLDI1IEBACj4+PiArTlZJRElB
-IFRlZ3JhMjEwIHRpbWVyCj4+PiArCj4+PiArVGhlIFRlZ3JhMjEwIHRpbWVyIHByb3ZpZGVzIGZv
-dXJ0ZWVuIDI5LWJpdCB0aW1lciBjb3VudGVycyBhbmQgb25lCj4+PiAzMi1iaXQKPj4+ICt0aW1l
-c3RhbXAgY291bnRlci4gVGhlIFRNUnMgcnVuIGF0IGVpdGhlciBhIGZpeGVkIDEgTUh6IGNsb2Nr
-IHJhdGUKPj4+IGRlcml2ZWQKPj4+ICtmcm9tIHRoZSBvc2NpbGxhdG9yIGNsb2NrIChUTVIwLVRN
-UjkpIG9yIGRpcmVjdGx5IGF0IHRoZSBvc2NpbGxhdG9yCj4+PiBjbG9jawo+Pj4gKyhUTVIxMC1U
-TVIxMykuIEVhY2ggVE1SIGNhbiBiZSBwcm9ncmFtbWVkIHRvIGdlbmVyYXRlIG9uZS1zaG90LAo+
-Pj4gcGVyaW9kaWMsCj4+PiArb3Igd2F0Y2hkb2cgaW50ZXJydXB0cy4KPj4+ICsKPj4+ICtSZXF1
-aXJlZCBwcm9wZXJ0aWVzOgo+Pj4gKy0gY29tcGF0aWJsZSA6ICJudmlkaWEsdGVncmEyMTAtdGlt
-ZXIiLgo+Pj4gKy0gcmVnIDogU3BlY2lmaWVzIGJhc2UgcGh5c2ljYWwgYWRkcmVzcyBhbmQgc2l6
-ZSBvZiB0aGUgcmVnaXN0ZXJzLgo+Pj4gKy0gaW50ZXJydXB0cyA6IEEgbGlzdCBvZiA0IGludGVy
-cnVwdHM7IG9uZSBwZXIgZWFjaCBvZiBUTVIxMCB0aHJvdWdoCj4+PiBUTVIxMy4KPj4KPj4gV2h5
-IGRvIHdlIG9ubHkgYWRkIHRoZSBpbnRlcnJ1cHRzIGZvciBUTVIxMCAtIFRNUjEzPyBXaGF0IGFi
-b3V0IHRoZQo+PiBvdGhlcnM/Cj4+Cj4gCj4gVGhlIG90aGVycyAoVE1SMC1UTVI5KSBhcmUgb2Nj
-dXBpZWQgZm9yIG90aGVyIHVzYWdlcy4gVE1SNSBpcyBvY2N1cGllZAo+IGZvciB0aGUgd2F0Y2hk
-b2cgdGltZXIgaW4gdGhlIHVwc3RyZWFtIGtlcm5lbC4gQW5kIG90aGVycyAoc3RpbGwgaW4KPiBU
-TVIwLVRNUjkpIGFyZSBvY2N1cGllZCBmb3IgZGlmZmVyZW50IHVzYWdlcyBpbiBvdXIgZG93bnN0
-cmVhbSBrZXJuZWwuCgpXaGVyZSBpcyBUTVI1IHJlc2VydmVkIGZvciB0aGUgd2F0Y2hkb2c/IEkg
-ZG9uJ3Qgc2VlIHRoaXM/Cgo+IEFuZCBub3RpY2UgdGhhdCBvbmx5IFRNUjEwLVRNUjEzIGFyZSBy
-dW5uaW5nIGF0IHRoZSBvc2NpbGxhdG9yIGNsb2NrCj4gKGNsa19tKS4gV2l0aCB0aGUgVGVncmEy
-MTAgdGltZXIgZHJpdmVyLCB3ZSBpbnRyb2R1Y2UgaW4gdGhpcyBzZXJpZXMsCj4gd2hpY2ggb25s
-eSByZXBsYWNlIHRoZSBjbG9jayBldmVudCBkZXZpY2UgZnVuY3Rpb24gdGhhdCB3YXMgb3JpZ2lu
-YWxseQo+IG93bmVkIGJ5IHRoZSBhcmNoIHRpbWVyIChhcm12OCB0aW1lcikgYW5kIGl0IGFsc28g
-cnVubmluZyBhdCB0aGUKPiBvc2NpbGxhdG9yIGNsb2NrLiBUaGUgc2NoZWRfdGltZXIgc3RpbGwg
-b3ducyBieSB0aGUgYXJjaCB0aW1lci4gU28gdGhlCj4gdGltZXIgcmVzb2x1dGlvbiB3aWxsIGJl
-IHRoZSBzYW1lLiBUaGF0J3Mgd2h5IHdlIGNob29zZSBUTVIxMC1UTVIxMyBhcwo+IHRoZSB0aW1l
-ciBmb3IgVGVncmEyMTAuCgpUaGF0IG1heWJlIGZpbmUsIGJ1dCBEVCBzaG91bGQgZGVzY3JpYmUg
-dGhlIGhhcmR3YXJlIGFuZCBzbyBJIGRvbid0IHNlZQp3aHkgd2Ugd291bGQgbm90IGxpc3QgYWxs
-IHRoZSBpbnRlcnJ1cHRzLiBXZSBjYW4gc3RpbGwgb25seSB1c2UgVE1SMTAtMTMKaW4gdGhlIGRy
-aXZlci4KCkNoZWVycwpKb24KCi0tIApudnB1YmxpYwoKX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fX19fX19fX19fX19fX18KbGludXgtYXJtLWtlcm5lbCBtYWlsaW5nIGxpc3QKbGlu
-dXgtYXJtLWtlcm5lbEBsaXN0cy5pbmZyYWRlYWQub3JnCmh0dHA6Ly9saXN0cy5pbmZyYWRlYWQu
-b3JnL21haWxtYW4vbGlzdGluZm8vbGludXgtYXJtLWtlcm5lbAo=
+
+On 25/01/2019 12:01, Jon Hunter wrote:
+>=20
+> On 25/01/2019 03:23, Joseph Lo wrote:
+>> Hi Jon,
+>>
+>> Thanks for reviewing.
+>>
+>> On 1/24/19 6:30 PM, Jon Hunter wrote:
+>>>
+>>> On 07/01/2019 03:28, Joseph Lo wrote:
+>>>> The Tegra210 timer provides fourteen 29-bit timer counters and one
+>>>> 32-bit
+>>>> timestamp counter. The TMRs run at either a fixed 1 MHz clock rate
+>>>> derived
+>>>> from the oscillator clock (TMR0-TMR9) or directly at the oscillator
+>>>> clock
+>>>> (TMR10-TMR13). Each TMR can be programmed to generate one-shot periodi=
+c,
+>>>> or watchdog interrupts.
+>>>>
+>>>> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+>>>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>>>> Cc: linux-kernel@vger.kernel.org
+>>>> Cc: devicetree@vger.kernel.org
+>>>> Signed-off-by: Joseph Lo <josephl@nvidia.com>
+>>>> ---
+>>>> =C2=A0 .../bindings/timer/nvidia,tegra210-timer.txt=C2=A0 | 25 +++++++=
+++++++++++++
+>>>> =C2=A0 1 file changed, 25 insertions(+)
+>>>> =C2=A0 create mode 100644
+>>>> Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+>>>>
+>>>> diff --git
+>>>> a/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+>>>> b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.txt
+>>>> new file mode 100644
+>>>> index 000000000000..ba511220a669
+>>>> --- /dev/null
+>>>> +++ b/Documentation/devicetree/bindings/timer/nvidia,tegra210-timer.tx=
+t
+>>>> @@ -0,0 +1,25 @@
+>>>> +NVIDIA Tegra210 timer
+>>>> +
+>>>> +The Tegra210 timer provides fourteen 29-bit timer counters and one
+>>>> 32-bit
+>>>> +timestamp counter. The TMRs run at either a fixed 1 MHz clock rate
+>>>> derived
+>>>> +from the oscillator clock (TMR0-TMR9) or directly at the oscillator
+>>>> clock
+>>>> +(TMR10-TMR13). Each TMR can be programmed to generate one-shot,
+>>>> periodic,
+>>>> +or watchdog interrupts.
+>>>> +
+>>>> +Required properties:
+>>>> +- compatible : "nvidia,tegra210-timer".
+>>>> +- reg : Specifies base physical address and size of the registers.
+>>>> +- interrupts : A list of 4 interrupts; one per each of TMR10 through
+>>>> TMR13.
+>>>
+>>> Why do we only add the interrupts for TMR10 - TMR13? What about the
+>>> others?
+>>>
+>>
+>> The others (TMR0-TMR9) are occupied for other usages. TMR5 is occupied
+>> for the watchdog timer in the upstream kernel. And others (still in
+>> TMR0-TMR9) are occupied for different usages in our downstream kernel.
+>=20
+> Where is TMR5 reserved for the watchdog? I don't see this?
+
+I see it now, it is hard-coded in the driver. I was looking at arm64 to
+see where it is used.
+
+Cheers
+Jon
+
+--=20
+nvpublic
