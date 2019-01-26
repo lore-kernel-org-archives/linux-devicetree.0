@@ -1,236 +1,87 @@
-From: Jonathan Cameron <jic23@kernel.org>
-Subject: Re: [PATCH 2/2] iio: imu: mpu6050: Add support for the ICM 20602
- IMU
-Date: Sat, 26 Jan 2019 20:05:23 +0000
-Message-ID: <20190126200523.5233466c@archlinux>
-References: <20190122120221.27187-1-gaireg@gaireg.de>
-        <20190122120221.27187-2-gaireg@gaireg.de>
+From: Sam Ravnborg <sam@ravnborg.org>
+Subject: Re: [PATCH 1/2] drm: panel: Add Samsung s6e63m0 panel documentation
+Date: Sat, 26 Jan 2019 21:55:01 +0100
+Message-ID: <20190126205501.GA31182@ravnborg.org>
+References: <20190125164645.19208-1-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: quoted-printable
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190122120221.27187-2-gaireg@gaireg.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Randolph =?UTF-8?B?TWFhw59lbg==?= <gaireg@gaireg.de>
-Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jonathan Marek <jonathan@marek.ca>, Brian Masney <masneyb@onstation.org>, Martin Kelly <mkelly@xevo.com>, Douglas Fischer <fischerdouglasc@gmail.com>, Jean-Baptiste Maneyrol <jmaneyrol@invensense.com>, Hans de Goede <hdegoede@redhat.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <dri-devel-bounces@lists.freedesktop.org>
+Content-Disposition: inline
+In-Reply-To: <20190125164645.19208-1-pawel.mikolaj.chmiel@gmail.com>
+List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
+List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
+List-Post: <mailto:dri-devel@lists.freedesktop.org>
+List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
+List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
+ <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
+Errors-To: dri-devel-bounces@lists.freedesktop.org
+Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, Jonathan Bakker <xc-racer2@live.ca>, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, m.szyprowski@samsung.com
 List-Id: devicetree@vger.kernel.org
 
-On Tue, 22 Jan 2019 13:02:14 +0100
-Randolph Maa=C3=9Fen <gaireg@gaireg.de> wrote:
-
-> The Invensense ICM-20602 is a 6-axis MotionTracking device that
-> combines a 3-axis gyroscope and an 3-axis accelerometer. It is very
-> similar to the ICM-20608 imu which is already supported by the mpu6050
-> driver. The main difference is that the ICM-20602 has the i2c bus
-> disable bit in a separate register.
->=20
-> Signed-off-by: Randolph Maa=C3=9Fen <gaireg@gaireg.de>
-
-There is a slight oddity in here, in that you introduce a
-field in the chip info to describe the register to control the i2c disable
-but then don't actually use it in the code.
-
-You should check if that is 0 and if not, write the separate
-register it provides.
-
-Jonathan
-> ---
->  drivers/iio/imu/inv_mpu6050/Kconfig        |  8 ++++----
->  drivers/iio/imu/inv_mpu6050/inv_mpu_core.c | 29 ++++++++++++++++++++++++=
-+++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c  |  6 ++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h  |  8 ++++++++
->  drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c  | 12 +++++++++---
->  5 files changed, 56 insertions(+), 7 deletions(-)
->=20
-> diff --git a/drivers/iio/imu/inv_mpu6050/Kconfig b/drivers/iio/imu/inv_mp=
-u6050/Kconfig
-> index 5483b2ea754d..d2fe9dbddda7 100644
-> --- a/drivers/iio/imu/inv_mpu6050/Kconfig
-> +++ b/drivers/iio/imu/inv_mpu6050/Kconfig
-> @@ -13,8 +13,8 @@ config INV_MPU6050_I2C
->  	select INV_MPU6050_IIO
->  	select REGMAP_I2C
->  	help
-> -	  This driver supports the Invensense MPU6050/6500/9150 and ICM20608
-> -	  motion tracking devices over I2C.
-> +	  This driver supports the Invensense MPU6050/6500/9150 and
-> +	  ICM20608/20602 motion tracking devices over I2C.
->  	  This driver can be built as a module. The module will be called
->  	  inv-mpu6050-i2c.
-> =20
-> @@ -24,7 +24,7 @@ config INV_MPU6050_SPI
->  	select INV_MPU6050_IIO
->  	select REGMAP_SPI
->  	help
-> -	  This driver supports the Invensense MPU6050/6500/9150 and ICM20608
-> -	  motion tracking devices over SPI.
-> +	  This driver supports the Invensense MPU6050/6500/9150 and
-> +	  ICM20608/20602 motion tracking devices over SPI.
->  	  This driver can be built as a module. The module will be called
->  	  inv-mpu6050-spi.
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c b/drivers/iio/imu=
-/inv_mpu6050/inv_mpu_core.c
-> index 1e428c196a82..01c856417d8f 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_core.c
-> @@ -38,6 +38,29 @@ static const int gyro_scale_6050[] =3D {133090, 266181=
-, 532362, 1064724};
->   */
->  static const int accel_scale[] =3D {598, 1196, 2392, 4785};
-> =20
-> +static const struct inv_mpu6050_reg_map reg_set_icm20602 =3D {
-> +	.sample_rate_div	=3D INV_MPU6050_REG_SAMPLE_RATE_DIV,
-> +	.lpf                    =3D INV_MPU6050_REG_CONFIG,
-> +	.accel_lpf              =3D INV_MPU6500_REG_ACCEL_CONFIG_2,
-> +	.user_ctrl              =3D INV_MPU6050_REG_USER_CTRL,
-> +	.fifo_en                =3D INV_MPU6050_REG_FIFO_EN,
-> +	.gyro_config            =3D INV_MPU6050_REG_GYRO_CONFIG,
-> +	.accl_config            =3D INV_MPU6050_REG_ACCEL_CONFIG,
-> +	.fifo_count_h           =3D INV_MPU6050_REG_FIFO_COUNT_H,
-> +	.fifo_r_w               =3D INV_MPU6050_REG_FIFO_R_W,
-> +	.raw_gyro               =3D INV_MPU6050_REG_RAW_GYRO,
-> +	.raw_accl               =3D INV_MPU6050_REG_RAW_ACCEL,
-> +	.temperature            =3D INV_MPU6050_REG_TEMPERATURE,
-> +	.int_enable             =3D INV_MPU6050_REG_INT_ENABLE,
-> +	.int_status             =3D INV_MPU6050_REG_INT_STATUS,
-> +	.pwr_mgmt_1             =3D INV_MPU6050_REG_PWR_MGMT_1,
-> +	.pwr_mgmt_2             =3D INV_MPU6050_REG_PWR_MGMT_2,
-> +	.int_pin_cfg            =3D INV_MPU6050_REG_INT_PIN_CFG,
-> +	.accl_offset            =3D INV_MPU6500_REG_ACCEL_OFFSET,
-> +	.gyro_offset            =3D INV_MPU6050_REG_GYRO_OFFSET,
-> +	.i2c_if                 =3D INV_ICM20602_REG_I2C_IF,
-> +};
-> +
->  static const struct inv_mpu6050_reg_map reg_set_6500 =3D {
->  	.sample_rate_div	=3D INV_MPU6050_REG_SAMPLE_RATE_DIV,
->  	.lpf                    =3D INV_MPU6050_REG_CONFIG,
-> @@ -140,6 +163,12 @@ static const struct inv_mpu6050_hw hw_info[] =3D {
->  		.reg =3D &reg_set_6500,
->  		.config =3D &chip_config_6050,
->  	},
-> +	{
-> +		.whoami =3D INV_ICM20602_WHOAMI_VALUE,
-> +		.name =3D "ICM20602",
-> +		.reg =3D &reg_set_icm20602,
-> +		.config =3D &chip_config_6050,
-> +	},
->  };
-> =20
->  int inv_mpu6050_switch_engine(struct inv_mpu6050_state *st, bool en, u32=
- mask)
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_i2c.c
-> index dd758e3d403d..e46eb4ddea21 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_i2c.c
-> @@ -127,6 +127,7 @@ static int inv_mpu_probe(struct i2c_client *client,
->  	st =3D iio_priv(dev_get_drvdata(&client->dev));
->  	switch (st->chip_type) {
->  	case INV_ICM20608:
-> +	case INV_ICM20602:
->  		/* no i2c auxiliary bus on the chip */
->  		break;
->  	default:
-> @@ -179,6 +180,7 @@ static const struct i2c_device_id inv_mpu_id[] =3D {
->  	{"mpu9250", INV_MPU9250},
->  	{"mpu9255", INV_MPU9255},
->  	{"icm20608", INV_ICM20608},
-> +	{"icm20602", INV_ICM20602},
->  	{}
->  };
-> =20
-> @@ -213,6 +215,10 @@ static const struct of_device_id inv_of_match[] =3D {
->  		.compatible =3D "invensense,icm20608",
->  		.data =3D (void *)INV_ICM20608
->  	},
-> +	{
-> +		.compatible =3D "invensense,icm20602",
-> +		.data =3D (void *)INV_ICM20602
-> +	},
->  	{ }
->  };
->  MODULE_DEVICE_TABLE(of, inv_of_match);
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_iio.h
-> index 6bcc11fc1b88..325afd9f5f61 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_iio.h
-> @@ -44,6 +44,7 @@
->   *  @int_pin_cfg;	Controls interrupt pin configuration.
->   *  @accl_offset:	Controls the accelerometer calibration offset.
->   *  @gyro_offset:	Controls the gyroscope calibration offset.
-> + *  @i2c_if:		Controls the i2c interface
-
-This is introduced but never actually used.
-
->   */
->  struct inv_mpu6050_reg_map {
->  	u8 sample_rate_div;
-> @@ -65,6 +66,7 @@ struct inv_mpu6050_reg_map {
->  	u8 int_pin_cfg;
->  	u8 accl_offset;
->  	u8 gyro_offset;
-> +	u8 i2c_if;
->  };
-> =20
->  /*device enum */
-> @@ -77,6 +79,7 @@ enum inv_devices {
->  	INV_MPU9250,
->  	INV_MPU9255,
->  	INV_ICM20608,
-> +	INV_ICM20602,
->  	INV_NUM_PARTS
->  };
-> =20
-> @@ -195,6 +198,10 @@ struct inv_mpu6050_state {
->  #define INV_MPU6050_BIT_PWR_ACCL_STBY       0x38
->  #define INV_MPU6050_BIT_PWR_GYRO_STBY       0x07
-> =20
-> +/* ICM20602 register */
-> +#define INV_ICM20602_REG_I2C_IF             0x70
-> +#define INV_ICM20602_BIT_I2C_IF_DIS         0x40
-> +
->  #define INV_MPU6050_REG_FIFO_COUNT_H        0x72
->  #define INV_MPU6050_REG_FIFO_R_W            0x74
-> =20
-> @@ -261,6 +268,7 @@ struct inv_mpu6050_state {
->  #define INV_MPU9255_WHOAMI_VALUE		0x73
->  #define INV_MPU6515_WHOAMI_VALUE		0x74
->  #define INV_ICM20608_WHOAMI_VALUE		0xAF
-> +#define INV_ICM20602_WHOAMI_VALUE		0x12
-> =20
->  /* scan element definition */
->  enum inv_mpu6050_scan {
-> diff --git a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c b/drivers/iio/imu/=
-inv_mpu6050/inv_mpu_spi.c
-> index 227f50afff22..e5b7213c74f9 100644
-> --- a/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> +++ b/drivers/iio/imu/inv_mpu6050/inv_mpu_spi.c
-> @@ -31,9 +31,14 @@ static int inv_mpu_i2c_disable(struct iio_dev *indio_d=
-ev)
->  	if (ret)
->  		return ret;
-> =20
-> -	st->chip_config.user_ctrl |=3D INV_MPU6050_BIT_I2C_IF_DIS;
-> -	ret =3D regmap_write(st->map, st->reg->user_ctrl,
-> -			   st->chip_config.user_ctrl);
-> +	if (st->chip_type =3D=3D INV_ICM20602) {
-> +		ret =3D regmap_write(st->map, INV_ICM20602_REG_I2C_IF,
-> +				   INV_ICM20602_BIT_I2C_IF_DIS);
-> +	} else {
-> +		st->chip_config.user_ctrl |=3D INV_MPU6050_BIT_I2C_IF_DIS;
-> +		ret =3D regmap_write(st->map, st->reg->user_ctrl,
-> +				   st->chip_config.user_ctrl);
-> +	}
->  	if (ret) {
->  		inv_mpu6050_set_power_itg(st, false);
->  		return ret;
-> @@ -81,6 +86,7 @@ static const struct spi_device_id inv_mpu_id[] =3D {
->  	{"mpu9250", INV_MPU9250},
->  	{"mpu9255", INV_MPU9255},
->  	{"icm20608", INV_ICM20608},
-> +	{"icm20602", INV_ICM20602},
->  	{}
->  };
-> =20
+SGkgUGF3ZWwuCgpUaGFua3MgZm9yIHRoZSBwYXRjaCwgc29tZSBjb21tZW50cyBmb2xsb3dzLgpQ
+bGVhc2UganVkZ2Ugd2hhdCBjb21tZW50cyB5b3UgY2hvc2UgdG8gZm9sbG93LCBzZWUgdGhpcyBh
+cyBzdWdnZXN0aW9ucy4KCkFjY29yZGluZyB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
+ZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdDoKCglUaGUgcHJlZmVycmVkIHN1YmplY3QgcHJl
+Zml4IGZvciBiaW5kaW5nIHBhdGNoZXMgaXM6CgkiZHQtYmluZGluZ3M6IDxiaW5kaW5nIGRpcj46
+IC4uLiIKCkl0IHdvdWxkIGJlIGEgZ29vZCBpZGVhIHRvIGZvbGxvdyB0aGlzIHByYWN0aWNlIGlu
+IG5leHQgcmV2aXNpb24uCgpPbiBGcmksIEphbiAyNSwgMjAxOSBhdCAwNTo0Njo0NFBNICswMTAw
+LCBQYXdlxYIgQ2htaWVsIHdyb3RlOgo+IEZyb206IEpvbmF0aGFuIEJha2tlciA8eGMtcmFjZXIy
+QGxpdmUuY2E+Cj4gCj4gVGhpcyBjb21taXQgYWRkcyBkb2N1bWVudGF0aW9uIGZvciBTYW1zdW5n
+IHM2ZTYzbTAgQU1PTEVEIExDRCBwYW5lbAo+IGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBK
+b25hdGhhbiBCYWtrZXIgPHhjLXJhY2VyMkBsaXZlLmNhPgo+IFNpZ25lZC1vZmYtYnk6IFBhd2XF
+giBDaG1pZWwgPHBhd2VsLm1pa29sYWouY2htaWVsQGdtYWlsLmNvbT4KPiAtLS0KPiAgLi4uL2Rp
+c3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M20wLnR4dCAgICAgICAgIHwgNjAgKysrKysrKysrKysr
+KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9k
+ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
+c2Ftc3VuZyxzNmU2M20wLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
+ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzbTAudHh0IGIvRG9jdW1l
+bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M20w
+LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi40OTc5MjAw
+ZTJkZDIKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M20wLnR4dAo+IEBAIC0wLDAgKzEsNjAg
+QEAKPiArU2Ftc3VuZyBzNmU2M20wIEFNT0xFRCBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiAic2Ftc3VuZyxzNmU2M20wIgo+ICsgIC0gcmVz
+ZXQtZ3BpbzogR1BJTyBzcGVjIGZvciByZXNldCBwaW4KVGhlIHByZWZlcnJlZCBuYW1lIGlzIHJl
+c2V0LWdwaW9zIChhZGRlZCAncycpCgo+ICsgIC0gdmRkMy1zdXBwbHk6IFZERCByZWd1bGF0b3IK
+PiArICAtIHZjaS1zdXBwbHk6IFZDSSByZWd1bGF0b3IKPiArICAtIGRpc3BsYXktdGltaW5nczog
+dGltaW5ncyBmb3IgdGhlIGNvbm5lY3RlZCBwYW5lbCBhcyBkZXNjcmliZWQgYnkgWzFdClRvZGF5
+LCBhcyBpcyBteSBiZXN0IHVuZGVyc3RhbmRpbmcsIGl0IGlzIGVuY291cmFnZWQgdG8gc3BlY2lm
+eSB0aGUgdGltaW5nCmluIHRoZSBhY3R1YWwgZHJpdmVyIGFuZCBub3QgaW4gRFQsCgpUaGUgZXhh
+bXBsZSBpbmNsdWRlIGEgc3BpLW1heC1mcmVxdWVuY3kgd2hpY2ggaXMgbm90IG1lbnRpb25lZD8K
+Cj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgIC0gcmVzZXQtZGVsYXk6IERlbGF5IGlu
+IG1zIGFmdGVyIGFkanVzdGluZyByZXNldC1ncGlvLCBkZWZhdWx0IDEyMG1zCj4gKyAgLSBwb3dl
+ci1vbi1kZWxheTogRGVsYXkgaW4gbXMgYWZ0ZXIgcG93ZXJpbmcgb24sIGRlZmF1bHQgMjVtcwo+
+ICsgIC0gcG93ZXItb2ZmLWRlbGF5OiBEZWxheSBpbiBtcyBiZWZvcmUgcG93ZXJpbmcgb2ZmLCBk
+ZWZhdWx0IDIwMG1zCj4gKyAgLSBwYW5lbC13aWR0aC1tbTogcGh5c2ljYWwgcGFuZWwgd2lkdGgg
+aW4gbW0KPiArICAtIHBhbmVsLWhlaWdodC1tbTogcGh5c2ljYWwgcGFuZWwgaGVpZ2h0IGluIG1t
+Ckxpa2V3aXNlIHRoZXNlIGRlbGF5cyBhcmUgYWxzbyBwcm9wZXJ0aWVzIHRoYXQgdG9kYXkgYXJl
+IGluY2x1ZGVkIGluIHRoZSBkcml2ZXIuCgpJIGNhbm5vdCBleHBsYWluIHRoZSBiYWNrZ3JvdW5k
+IGZvciB0aGlzLCB0aGlzIGlzIGp1c3QgaG93IHRoaW5ncyBhcmUgZG9uZS4KCj4gKwo+ICtUaGUg
+ZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNo
+aWxkCj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVk
+IGluIFsyXS4gVGhpcwo+ICtub2RlIHNob3VsZCBkZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4K
+PiArCj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
+ZWwvZGlzcGxheS10aW1pbmcudHh0Cj4gK1syXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
+bmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gKwo+ICtFeGFtcGxlOgo+ICsKPiAr
+CQlzNmU2M20wOiBkaXNwbGF5QDAgewo+ICsJCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlNjNt
+MCI7Cj4gKwkJCXJlZyA9IDwwPjsKPiArCQkJcmVzZXQtZ3BpbyA9IDwmbXAwNSA1IDE+Owo+ICsJ
+CQl2ZGQzLXN1cHBseSA9IDwmbGRvMTJfcmVnPjsKPiArCQkJdmNpLXN1cHBseSA9IDwmbGRvMTFf
+cmVnPjsKPiArCQkJc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMD47Cj4gKwo+ICsJCQlwb3dl
+ci1vbi1kZWxheSA9IDwwPjsKPiArCQkJcG93ZXItb2ZmLWRlbGF5ID0gPDA+Owo+ICsJCQlyZXNl
+dC1kZWxheSA9IDwxMD47Cj4gKwkJCXBhbmVsLXdpZHRoLW1tID0gPDUzPjsKPiArCQkJcGFuZWwt
+aGVpZ2h0LW1tID0gPDg5PjsKPiArCj4gKwkJCWRpc3BsYXktdGltaW5ncyB7Cj4gKwkJCQl0aW1p
+bmctMCB7Cj4gKwkJCQkJLyogNDgweDgwMEA2MEh6ICovCj4gKwkJCQkJY2xvY2stZnJlcXVlbmN5
+ID0gPDI1NjI4MDQwPjsKPiArCQkJCQloYWN0aXZlID0gPDQ4MD47Cj4gKwkJCQkJdmFjdGl2ZSA9
+IDw4MDA+Owo+ICsJCQkJCWhmcm9udC1wb3JjaCA9IDwxNj47Cj4gKwkJCQkJaGJhY2stcG9yY2gg
+PSA8MTY+Owo+ICsJCQkJCWhzeW5jLWxlbiA9IDwyPjsKPiArCQkJCQl2ZnJvbnQtcG9yY2ggPSA8
+Mjg+Owo+ICsJCQkJCXZiYWNrLXBvcmNoID0gPDE+Owo+ICsJCQkJCXZzeW5jLWxlbiA9IDwyPjsK
+PiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0IHsKPiArCQkJCWxjZF9lcDogZW5kcG9p
+bnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZmltZF9lcD47Cj4gKwkJCQl9Owo+ICsJ
+CQl9Owo+ICsJCX07CgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
+X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
+dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
+aS1kZXZlbAo=
