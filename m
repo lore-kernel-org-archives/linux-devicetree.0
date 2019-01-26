@@ -1,72 +1,51 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
-Date: Sat, 26 Jan 2019 11:25:34 +0100
-Message-ID: <CAMuHMdUyt=DDMwDZA-TB0Yac13NJQCo2LxzvqnRzvn6LZ5F98w@mail.gmail.com>
-References: <20190125114429.20066-1-jonas@norrbonn.se> <20190125114429.20066-2-jonas@norrbonn.se>
- <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
- <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se> <20190125174713.GA6939@sirena.org.uk>
- <20190125175031.GA25898@sirena.org.uk> <84d6c40f-62bb-fd00-0dcb-d2f390b136c1@norrbonn.se>
+From: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+Subject: [PATCH 1/3] arm64: dts: rockchip: fix rk3300-gru-bob graph_port
+ warning
+Date: Sat, 26 Jan 2019 11:37:28 +0100
+Message-ID: <20190126103730.3883-1-enric.balletbo@collabora.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <84d6c40f-62bb-fd00-0dcb-d2f390b136c1@norrbonn.se>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Bonn <jonas@norrbonn.se>
-Cc: Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: devicetree@vger.kernel.org
+Cc: Mark Rutland <mark.rutland@arm.com>, Heiko Stuebner <heiko@sntech.de>, linux-kernel@vger.kernel.org, Vicente Bergas <vicencb@gmail.com>, linux-rockchip@lists.infradead.org, Rob Herring <robh+dt@kernel.org>, kernel@collabora.com, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Jonas,
+Ports are described by child 'port' nodes contained in the device node.
+'ports' is optional and is used to group all 'port' nodes which is not
+the case here.
 
-On Sat, Jan 26, 2019 at 8:53 AM Jonas Bonn <jonas@norrbonn.se> wrote:
-> On 25/01/2019 18:50, Mark Brown wrote:
-> > On Fri, Jan 25, 2019 at 05:47:13PM +0000, Mark Brown wrote:
-> >> On Fri, Jan 25, 2019 at 01:06:45PM +0100, Jonas Bonn wrote:
-> >>> Having this as device property rather than a transfer property allows this
-> >>> to be configured one time in setup() rather than having to fiddle with the
-> >>> configuration register for every transfer.
-> >
-> >> That doesn't mean that the coniguration should be done in DT though, and
-> >> given that this presumably is a property of the device there seems to be
-> >> no reason why we'd have it in DT - if every instance of the device is
-> >> going to need to set the property we should just figure it out from the
-> >> compatble string instead.
-> >
-> > To be clear here: the suggestion is to add a parameter the slave device
-> > can set in spi_device which sets the default word_delay similarly to how
-> > max_speed_hz works.
->
-> I'm confused... isn't that exactly what this patch does?  It adds a
-> field word_delay to spi_device in the same manner as max_speed_hz.
->
-> I also added the ability to set it via DT, which I can break out into a
-> separate patch if that's an issue.  Or is the problem that it's set via
-> DT, at all?  Documentation/devicetree/bindings/spi-bus.txt documents 10
-> other slave-node properties related to transfer characteristics;
-> word_delay is just another such characteristic.
->
-> But again, I'm having trouble parsing your response  Is the patch wrong,
-> should be broken up, or you just misunderstood it?
+This patch fixes the following warning:
 
-IIUIC, Mark means that it may be a non-configurable property of the slave
-device, and thus should be handled (fixed setting) in the SPI slave driver.
+arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts:25.9-29.5: Warning (graph_port): /edp-panel/ports: graph port node name should be 'port'
 
-Compare this to CPHA/CPOL, which are properties of the SPI slave device,
-but which may be configurable. E.g. many SPI FLASHes support multiple
-configurations. See e.g. commit 9c5becce21af35e5 ("ARM: shmobile: koelsch:
-Fix QSPI mode of SPI-Flash into mode3").
+Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
+---
 
-Again, max_speed_hz is something different: while both the SPI master and
-slave may support high speeds, board wiring (capacitance/inductance) may
-need to force a slower speed than supported by the devices, so it makes
-sense to make that configurable from DT.
+ arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Gr{oetje,eeting}s,
-
-                        Geert
-
+diff --git a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
+index 1ee0dc0d9f10..d1cf404b8708 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3399-gru-bob.dts
+@@ -22,7 +22,7 @@
+ 		backlight = <&backlight>;
+ 		power-supply = <&pp3300_disp>;
+ 
+-		ports {
++		port {
+ 			panel_in_edp: endpoint {
+ 				remote-endpoint = <&edp_out_panel>;
+ 			};
 -- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
-
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+2.20.1
