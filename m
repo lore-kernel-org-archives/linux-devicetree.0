@@ -1,270 +1,467 @@
-From: Guenter Roeck <linux@roeck-us.net>
-Subject: Re: [RFC PATCH v2 10/10] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Sat, 26 Jan 2019 08:36:14 -0800
-Message-ID: <1d05ec19-daf6-f1d9-f80c-57fc92906d22@roeck-us.net>
-References: <20190125110625.GA29348@localhost.localdomain>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v3 2/2] iio: adc: add NPCM ADC driver
+Date: Sat, 26 Jan 2019 17:32:40 +0000
+Message-ID: <20190126173240.4f87423d@archlinux>
+References: <20190116164855.200357-1-tmaimon77@gmail.com>
+        <20190116164855.200357-3-tmaimon77@gmail.com>
+        <20190119180843.78510580@archlinux>
+        <CAP6Zq1j=wjkKYsP=aFSDCYKV3ESUibtV0oXTXG5P1LikVgdJdw@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125110625.GA29348@localhost.localdomain>
-Content-Language: en-US
+In-Reply-To: <CAP6Zq1j=wjkKYsP=aFSDCYKV3ESUibtV0oXTXG5P1LikVgdJdw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>, mazziesaccount@gmail.com
-Cc: heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Tomer Maimon <tmaimon77@gmail.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Nancy Yuen <yuenn@google.com>, Patrick Venture <venture@google.com>, Brendan Higgins <brendanhiggins@google.com>, Avi Fishman <avifishman70@gmail.com>, Joel Stanley <joel@jms.id.au>, linux-iio@vger.kernel.org, OpenBMC Maillist <openbmc@lists.ozlabs.org>, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, devicetree <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On 1/25/19 3:06 AM, Matti Vaittinen wrote:
-> Initial support for watchdog block included in ROHM BD70528
-> power management IC.
+On Sun, 20 Jan 2019 17:05:38 +0200
+Tomer Maimon <tmaimon77@gmail.com> wrote:
+
+> Hi Jonathan,
 > 
-> Configurations for low power states are still to be checked.
+> Thanks a lot for reviewing our driver,
 > 
-> Signed-off-by: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-> ---
->   drivers/watchdog/Kconfig       |  12 +++
->   drivers/watchdog/Makefile      |   1 +
->   drivers/watchdog/bd70528_wdt.c | 183 +++++++++++++++++++++++++++++++++++++++++
->   3 files changed, 196 insertions(+)
->   create mode 100644 drivers/watchdog/bd70528_wdt.c
+> On Sat, 19 Jan 2019 at 20:08, Jonathan Cameron <jic23@kernel.org> wrote:
 > 
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 57f017d74a97..f30e3a3e886e 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -90,6 +90,18 @@ config SOFT_WATCHDOG_PRETIMEOUT
->   	  watchdog. Be aware that governors might affect the watchdog because it
->   	  is purely software, e.g. the panic governor will stall it!
->   
-> +config BD70528_WATCHDOG
-> +	tristate "ROHM BD70528 PMIC Watchdog"
-> +	depends on MFD_ROHM_BD70528
-> +	select WATCHDOG_CORE
-> +	help
-> +	  Support for the watchdog in the ROHM BD70528 PMIC. Watchdog trigger
-> +	  cause system reset.
-> +
-> +	  Say Y here to include support for the ROHM BD70528 watchdog.
-> +	  Alternatively say M to compile the driver as a module,
-> +	  which will be called bd70528_wdt.
-> +
->   config DA9052_WATCHDOG
->   	tristate "Dialog DA9052 Watchdog"
->   	depends on PMIC_DA9052 || COMPILE_TEST
-> diff --git a/drivers/watchdog/Makefile b/drivers/watchdog/Makefile
-> index a0917ef28e07..1ce87a3b1172 100644
-> --- a/drivers/watchdog/Makefile
-> +++ b/drivers/watchdog/Makefile
-> @@ -204,6 +204,7 @@ obj-$(CONFIG_WATCHDOG_SUN4V)		+= sun4v_wdt.o
->   obj-$(CONFIG_XEN_WDT) += xen_wdt.o
->   
->   # Architecture Independent
-> +obj-$(CONFIG_BD70528_WATCHDOG) += bd70528_wdt.o
->   obj-$(CONFIG_DA9052_WATCHDOG) += da9052_wdt.o
->   obj-$(CONFIG_DA9055_WATCHDOG) += da9055_wdt.o
->   obj-$(CONFIG_DA9062_WATCHDOG) += da9062_wdt.o
-> diff --git a/drivers/watchdog/bd70528_wdt.c b/drivers/watchdog/bd70528_wdt.c
-> new file mode 100644
-> index 000000000000..347339683cb9
-> --- /dev/null
-> +++ b/drivers/watchdog/bd70528_wdt.c
-> @@ -0,0 +1,183 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Copyright (C) 2018 ROHM Semiconductors
-> +// ROHM BD70528MWV watchdog driver
-> +
-> +#include <linux/bcd.h>
-> +#include <linux/kernel.h>
-> +#include <linux/mfd/rohm-bd70528.h>
-> +#include <linux/module.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/regmap.h>
-> +#include <linux/watchdog.h>
-> +
-> +struct wdtbd70528 {
-> +	struct bd70528 *bd;
-> +	struct device *dev;
-> +};
-> +
-> +static int bd70528_wdt_set(struct bd70528 *bd70528, int enable)
-> +{
-> +	int ret;
-> +
-> +	mutex_lock(&bd70528->rtc_timer_lock);
-> +	ret = bd70528->wdt_set(bd70528, enable, NULL);
-> +	mutex_unlock(&bd70528->rtc_timer_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static int bd70528_wdt_start(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	dev_dbg(w->dev, "WDT ping...\n");
-> +	return bd70528_wdt_set(w->bd, 1);
-> +}
-> +
-> +static int bd70528_wdt_stop(struct watchdog_device *wdt)
-> +{
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	dev_dbg(w->dev, "WDT stopping...\n");
-> +	return bd70528_wdt_set(w->bd, 0);
-> +}
-> +
-> +static int bd70528_wdt_set_timeout(struct watchdog_device *wdt,
-> +				    unsigned int timeout)
-> +{
-> +	unsigned int hours;
-> +	unsigned int minutes;
-> +	unsigned int seconds;
-> +	int ret;
-> +	struct bd70528 *bd70528;
-> +	struct wdtbd70528 *w = watchdog_get_drvdata(wdt);
-> +
-> +	bd70528 = w->bd;
-> +	seconds = timeout;
-> +	hours = timeout / (60 * 60);
-> +	/* Maximum timeout is 1h 59m 59s => hours is 1 or 0 */
-> +	if (hours)
-> +		seconds -= (60 * 60);
-> +	minutes = seconds / 60;
-> +	seconds = seconds % 60;
-> +
-> +	mutex_lock(&bd70528->rtc_timer_lock);
-> +
-> +	ret = bd70528->wdt_set(bd70528, 0, NULL);
-> +	if (ret)
-> +		goto out_unlock;
-> +
-> +	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_HOUR,
-> +				 BD70528_MASK_WDT_HOUR, hours);
-> +	if (ret) {
-> +		dev_err(w->dev, "Failed to set WDT hours\n");
-> +		goto out_en_unlock;
-> +	}
-> +	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_MINUTE,
-> +				 BD70528_MASK_WDT_MINUTE, bin2bcd(minutes));
-> +	if (ret) {
-> +		dev_err(w->dev, "Failed to set WDT minutes\n");
-> +		goto out_en_unlock;
-> +	}
-> +	ret = regmap_update_bits(bd70528->chip.regmap, BD70528_REG_WDT_SEC,
-> +				 BD70528_MASK_WDT_SEC, bin2bcd(seconds));
-> +	if (ret)
-> +		dev_err(w->dev, "Failed to set WDT seconds\n");
-> +	else
-> +		dev_dbg(w->dev, "WDT tmo set to %u\n", timeout);
-> +
-> +out_en_unlock:
-> +	ret = bd70528->wdt_set(bd70528, 1, NULL);
-> +out_unlock:
-> +	mutex_unlock(&bd70528->rtc_timer_lock);
-> +
-> +	return ret;
-> +}
-> +
-> +static const struct watchdog_info bd70528_wdt_info = {
-> +	.identity = "bd70528-wdt",
-> +	.options = WDIOF_SETTIMEOUT | WDIOF_KEEPALIVEPING | WDIOF_MAGICCLOSE,
-> +};
-> +
-> +static const struct watchdog_ops bd70528_wdt_ops = {
-> +	.start		= bd70528_wdt_start,
-> +	.stop		= bd70528_wdt_stop,
-> +	.set_timeout	= bd70528_wdt_set_timeout,
-> +};
-> +
-> +/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
-> +#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
-> +/* Minimum time is 1 second */
-> +#define WDT_MIN_MS 1000
-> +#define DEFAULT_TIMEOUT 60
-> +
-> +static int bd70528_wdt_probe(struct platform_device *pdev)
-> +{
-> +	struct bd70528 *bd70528;
-> +	struct wdtbd70528 *w;
-> +	int ret;
-> +	unsigned int reg;
-> +	struct watchdog_device *wdt;
-> +
-> +	bd70528 = dev_get_drvdata(pdev->dev.parent);
-> +	if (!bd70528) {
-> +		dev_err(&pdev->dev, "No MFD driver data\n");
-> +		return -EINVAL;
-> +	}
-> +	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-> +	if (!w)
-> +		return -ENOMEM;
-> +	w->bd = bd70528;
-
-Unless I am missing something, only the mutex and the regmap pointer
-are used from struct bd70528. With that in mind, it might be desirable
-to copy those pointers to struct wdtbd70528 to avoid the additional
-dereferencing at runtime.
-
-> +	w->dev = &pdev->dev;
-> +
-> +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> +	if (!wdt)
-> +		return -ENOMEM;
-> +
-
-struct watchdog_device can be part of struct wdtbd70528. Two separate allocations
-are not necessary.
-
-> +	wdt->info = &bd70528_wdt_info;
-> +	wdt->ops =  &bd70528_wdt_ops;
-> +	wdt->min_hw_heartbeat_ms = WDT_MIN_MS;
-> +	wdt->max_hw_heartbeat_ms = WDT_MAX_MS;
-> +	wdt->parent = pdev->dev.parent;
-> +	wdt->timeout = DEFAULT_TIMEOUT;
-> +	watchdog_set_drvdata(wdt, w);
-> +	watchdog_init_timeout(wdt, 0, pdev->dev.parent);
-> +
-> +	ret = bd70528_wdt_set_timeout(wdt, wdt->timeout);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-> +		return ret;
-> +	}
-> +
-> +	mutex_lock(&bd70528->rtc_timer_lock);
-> +	ret = regmap_read(bd70528->chip.regmap, BD70528_REG_WDT_CTRL, &reg);
-> +	mutex_unlock(&bd70528->rtc_timer_lock);
-> +
-
-I don't see the point for the above mutex locks. This is just reading a
-single register. regmap itself provides locking for that already.
-
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to get the watchdog state\n");
-> +		return ret;
-> +	}
-> +	if (reg & BD70528_MASK_WDT_EN) {
-> +		dev_dbg(&pdev->dev, "watchdog was running during probe\n");
-> +		set_bit(WDOG_HW_RUNNING, &wdt->status);
-> +	}
-> +
-> +	ret = devm_watchdog_register_device(&pdev->dev, wdt);
-> +	if (ret < 0)
-> +		dev_err(&pdev->dev, "watchdog registration failed: %d\n", ret);
-> +
-> +	return ret;
-> +}
-> +static struct platform_driver bd70528_wdt = {
-> +	.driver = {
-> +		.name = "bd70528-wdt"
-> +	},
-> +	.probe = bd70528_wdt_probe,
-> +};
-> +
-> +module_platform_driver(bd70528_wdt);
-> +
-> +MODULE_AUTHOR("Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>");
-> +MODULE_DESCRIPTION("BD70528 watchdog driver");
-> +MODULE_LICENSE("GPL");
+> > On Wed, 16 Jan 2019 18:48:55 +0200
+> > Tomer Maimon <tmaimon77@gmail.com> wrote:
+> >  
+> > > Add Nuvoton NPCM BMC Analog-to-Digital Converter(ADC) driver.
+> > >
+> > > The NPCM ADC is a 10-bit converter for eight channel inputs.
+> > >
+> > > Signed-off-by: Tomer Maimon <tmaimon77@gmail.com>  
+> > One trivial ordering in remove oddity that I'll just fix up.
+> > Also, I don't particularly like printing a message on success
+> > as it's not providing any useful info.  Hmm. I don't care
+> > strongly enough to remove it though.
+> >  
 > 
+> The Probe log is is important for us when customers doing bring-up or have
+> some issues,
+> we ask the logs w/o asking to do all kinds of things to see if a device was
+> probed.
+
+You should probably develop a proper info gathering script.  Chances of this
+randomly getting 'tidied up' in future (i.e. remove) is rather high and
+I doubt I'll remember this if you miss the patch...
+
+I don't care all that much though and your problem if it goes away. Kernel
+logs shouldn't be used as ABI.  Even error messages tend to change over time!
+
+Jonathan
+
+> 
+> 
+> > Applied to the togreg branch of iio.git and pushed out as
+> > testing for the autobuilders to play with it.
+> >
+> > Thanks,
+> >
+> > Jonathan
+> >  
+> > > ---
+> > >  drivers/iio/adc/Kconfig    |  10 ++
+> > >  drivers/iio/adc/Makefile   |   1 +
+> > >  drivers/iio/adc/npcm_adc.c | 335  
+> > +++++++++++++++++++++++++++++++++++++++++++++  
+> > >  3 files changed, 346 insertions(+)
+> > >  create mode 100644 drivers/iio/adc/npcm_adc.c
+> > >
+> > > diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
+> > > index 7a3ca4ec0cb7..2d1e70a7d5c4 100644
+> > > --- a/drivers/iio/adc/Kconfig
+> > > +++ b/drivers/iio/adc/Kconfig
+> > > @@ -576,6 +576,16 @@ config NAU7802
+> > >         To compile this driver as a module, choose M here: the
+> > >         module will be called nau7802.
+> > >
+> > > +config NPCM_ADC
+> > > +     tristate "Nuvoton NPCM ADC driver"
+> > > +     depends on ARCH_NPCM || COMPILE_TEST
+> > > +     depends on HAS_IOMEM
+> > > +     help
+> > > +       Say yes here to build support for Nuvoton NPCM ADC.
+> > > +
+> > > +       This driver can also be built as a module. If so, the module
+> > > +       will be called npcm_adc.
+> > > +
+> > >  config PALMAS_GPADC
+> > >       tristate "TI Palmas General Purpose ADC"
+> > >       depends on MFD_PALMAS
+> > > diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
+> > > index 07df37f621bd..3337eb1f4c30 100644
+> > > --- a/drivers/iio/adc/Makefile
+> > > +++ b/drivers/iio/adc/Makefile
+> > > @@ -55,6 +55,7 @@ obj-$(CONFIG_MEN_Z188_ADC) += men_z188_adc.o
+> > >  obj-$(CONFIG_MESON_SARADC) += meson_saradc.o
+> > >  obj-$(CONFIG_MXS_LRADC_ADC) += mxs-lradc-adc.o
+> > >  obj-$(CONFIG_NAU7802) += nau7802.o
+> > > +obj-$(CONFIG_NPCM_ADC) += npcm_adc.o
+> > >  obj-$(CONFIG_PALMAS_GPADC) += palmas_gpadc.o
+> > >  obj-$(CONFIG_QCOM_SPMI_ADC5) += qcom-spmi-adc5.o
+> > >  obj-$(CONFIG_QCOM_SPMI_IADC) += qcom-spmi-iadc.o
+> > > diff --git a/drivers/iio/adc/npcm_adc.c b/drivers/iio/adc/npcm_adc.c
+> > > new file mode 100644
+> > > index 000000000000..1cc377cdf1f7
+> > > --- /dev/null
+> > > +++ b/drivers/iio/adc/npcm_adc.c
+> > > @@ -0,0 +1,335 @@
+> > > +// SPDX-License-Identifier: GPL-2.0
+> > > +// Copyright (c) 2019 Nuvoton Technology corporation.
+> > > +
+> > > +#include <linux/clk.h>
+> > > +#include <linux/device.h>
+> > > +#include <linux/mfd/syscon.h>
+> > > +#include <linux/io.h>
+> > > +#include <linux/iio/iio.h>
+> > > +#include <linux/interrupt.h>
+> > > +#include <linux/kernel.h>
+> > > +#include <linux/module.h>
+> > > +#include <linux/platform_device.h>
+> > > +#include <linux/regmap.h>
+> > > +#include <linux/regulator/consumer.h>
+> > > +#include <linux/spinlock.h>
+> > > +#include <linux/uaccess.h>
+> > > +
+> > > +struct npcm_adc {
+> > > +     bool int_status;
+> > > +     u32 adc_sample_hz;
+> > > +     struct device *dev;
+> > > +     void __iomem *regs;
+> > > +     struct clk *adc_clk;
+> > > +     wait_queue_head_t wq;
+> > > +     struct regulator *vref;
+> > > +     struct regmap *rst_regmap;
+> > > +};
+> > > +
+> > > +/* NPCM7xx reset module */
+> > > +#define NPCM7XX_IPSRST1_OFFSET               0x020
+> > > +#define NPCM7XX_IPSRST1_ADC_RST              BIT(27)
+> > > +
+> > > +/* ADC registers */
+> > > +#define NPCM_ADCCON   0x00
+> > > +#define NPCM_ADCDATA  0x04
+> > > +
+> > > +/* ADCCON Register Bits */
+> > > +#define NPCM_ADCCON_ADC_INT_EN               BIT(21)
+> > > +#define NPCM_ADCCON_REFSEL           BIT(19)
+> > > +#define NPCM_ADCCON_ADC_INT_ST               BIT(18)
+> > > +#define NPCM_ADCCON_ADC_EN           BIT(17)
+> > > +#define NPCM_ADCCON_ADC_RST          BIT(16)
+> > > +#define NPCM_ADCCON_ADC_CONV         BIT(13)
+> > > +
+> > > +#define NPCM_ADCCON_CH_MASK          GENMASK(27, 24)
+> > > +#define NPCM_ADCCON_CH(x)            ((x) << 24)
+> > > +#define NPCM_ADCCON_DIV_SHIFT                1
+> > > +#define NPCM_ADCCON_DIV_MASK         GENMASK(8, 1)
+> > > +#define NPCM_ADC_DATA_MASK(x)                ((x) & GENMASK(9, 0))
+> > > +
+> > > +#define NPCM_ADC_ENABLE              (NPCM_ADCCON_ADC_EN |  
+> > NPCM_ADCCON_ADC_INT_EN)  
+> > > +
+> > > +/* ADC General Definition */
+> > > +#define NPCM_RESOLUTION_BITS         10
+> > > +#define NPCM_INT_VREF_MV             2000
+> > > +
+> > > +#define NPCM_ADC_CHAN(ch) {                                  \
+> > > +     .type = IIO_VOLTAGE,                                    \
+> > > +     .indexed = 1,                                           \
+> > > +     .channel = ch,                                          \
+> > > +     .info_mask_separate = BIT(IIO_CHAN_INFO_RAW),           \
+> > > +     .info_mask_shared_by_type = BIT(IIO_CHAN_INFO_SCALE) |  \
+> > > +                             BIT(IIO_CHAN_INFO_SAMP_FREQ),   \
+> > > +}
+> > > +
+> > > +static const struct iio_chan_spec npcm_adc_iio_channels[] = {
+> > > +     NPCM_ADC_CHAN(0),
+> > > +     NPCM_ADC_CHAN(1),
+> > > +     NPCM_ADC_CHAN(2),
+> > > +     NPCM_ADC_CHAN(3),
+> > > +     NPCM_ADC_CHAN(4),
+> > > +     NPCM_ADC_CHAN(5),
+> > > +     NPCM_ADC_CHAN(6),
+> > > +     NPCM_ADC_CHAN(7),
+> > > +};
+> > > +
+> > > +static irqreturn_t npcm_adc_isr(int irq, void *data)
+> > > +{
+> > > +     u32 regtemp;
+> > > +     struct iio_dev *indio_dev = data;
+> > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > +
+> > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > +     if (regtemp & NPCM_ADCCON_ADC_INT_ST) {
+> > > +             iowrite32(regtemp, info->regs + NPCM_ADCCON);
+> > > +             wake_up_interruptible(&info->wq);
+> > > +             info->int_status = true;
+> > > +     }
+> > > +
+> > > +     return IRQ_HANDLED;
+> > > +}
+> > > +
+> > > +static int npcm_adc_read(struct npcm_adc *info, int *val, u8 channel)
+> > > +{
+> > > +     int ret;
+> > > +     u32 regtemp;
+> > > +
+> > > +     /* Select ADC channel */
+> > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > +     regtemp &= ~NPCM_ADCCON_CH_MASK;
+> > > +     info->int_status = false;
+> > > +     iowrite32(regtemp | NPCM_ADCCON_CH(channel) |
+> > > +               NPCM_ADCCON_ADC_CONV, info->regs + NPCM_ADCCON);
+> > > +
+> > > +     ret = wait_event_interruptible_timeout(info->wq, info->int_status,
+> > > +                                            msecs_to_jiffies(10));
+> > > +     if (ret == 0) {
+> > > +             regtemp = ioread32(info->regs + NPCM_ADCCON);
+> > > +             if ((regtemp & NPCM_ADCCON_ADC_CONV) && info->rst_regmap) {
+> > > +                     /* if conversion failed - reset ADC module */
+> > > +                     regmap_write(info->rst_regmap,  
+> > NPCM7XX_IPSRST1_OFFSET,  
+> > > +                                  NPCM7XX_IPSRST1_ADC_RST);
+> > > +                     msleep(100);
+> > > +                     regmap_write(info->rst_regmap,  
+> > NPCM7XX_IPSRST1_OFFSET,  
+> > > +                                  0x0);
+> > > +                     msleep(100);
+> > > +
+> > > +                     /* Enable ADC and start conversion module */
+> > > +                     iowrite32(NPCM_ADC_ENABLE | NPCM_ADCCON_ADC_CONV,
+> > > +                               info->regs + NPCM_ADCCON);
+> > > +                     dev_err(info->dev, "RESET ADC Complete\n");
+> > > +             }
+> > > +             return -ETIMEDOUT;
+> > > +     }
+> > > +     if (ret < 0)
+> > > +             return ret;
+> > > +
+> > > +     *val = NPCM_ADC_DATA_MASK(ioread32(info->regs + NPCM_ADCDATA));
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static int npcm_adc_read_raw(struct iio_dev *indio_dev,
+> > > +                          struct iio_chan_spec const *chan, int *val,
+> > > +                          int *val2, long mask)
+> > > +{
+> > > +     int ret;
+> > > +     int vref_uv;
+> > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > +
+> > > +     switch (mask) {
+> > > +     case IIO_CHAN_INFO_RAW:
+> > > +             mutex_lock(&indio_dev->mlock);
+> > > +             ret = npcm_adc_read(info, val, chan->channel);
+> > > +             mutex_unlock(&indio_dev->mlock);
+> > > +             if (ret) {
+> > > +                     dev_err(info->dev, "NPCM ADC read failed\n");
+> > > +                     return ret;
+> > > +             }
+> > > +             return IIO_VAL_INT;
+> > > +     case IIO_CHAN_INFO_SCALE:
+> > > +             if (info->vref) {
+> > > +                     vref_uv = regulator_get_voltage(info->vref);
+> > > +                     *val = vref_uv / 1000;
+> > > +             } else {
+> > > +                     *val = NPCM_INT_VREF_MV;
+> > > +             }
+> > > +             *val2 = NPCM_RESOLUTION_BITS;
+> > > +             return IIO_VAL_FRACTIONAL_LOG2;
+> > > +     case IIO_CHAN_INFO_SAMP_FREQ:
+> > > +             *val = info->adc_sample_hz;
+> > > +             return IIO_VAL_INT;
+> > > +     default:
+> > > +             return -EINVAL;
+> > > +     }
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static const struct iio_info npcm_adc_iio_info = {
+> > > +     .read_raw = &npcm_adc_read_raw,
+> > > +};
+> > > +
+> > > +static const struct of_device_id npcm_adc_match[] = {
+> > > +     { .compatible = "nuvoton,npcm750-adc", },
+> > > +     { /* sentinel */ }
+> > > +};
+> > > +MODULE_DEVICE_TABLE(of, npcm_adc_match);
+> > > +
+> > > +static int npcm_adc_probe(struct platform_device *pdev)
+> > > +{
+> > > +     int ret;
+> > > +     int irq;
+> > > +     u32 div;
+> > > +     u32 reg_con;
+> > > +     struct resource *res;
+> > > +     struct npcm_adc *info;
+> > > +     struct iio_dev *indio_dev;
+> > > +     struct device *dev = &pdev->dev;
+> > > +     struct device_node *np = pdev->dev.of_node;
+> > > +
+> > > +     indio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*info));
+> > > +     if (!indio_dev)
+> > > +             return -ENOMEM;
+> > > +     info = iio_priv(indio_dev);
+> > > +
+> > > +     info->dev = &pdev->dev;
+> > > +
+> > > +     res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
+> > > +     info->regs = devm_ioremap_resource(&pdev->dev, res);
+> > > +     if (IS_ERR(info->regs))
+> > > +             return PTR_ERR(info->regs);
+> > > +
+> > > +     info->adc_clk = devm_clk_get(&pdev->dev, NULL);
+> > > +     if (IS_ERR(info->adc_clk)) {
+> > > +             dev_warn(&pdev->dev, "ADC clock failed: can't read clk\n");
+> > > +             return PTR_ERR(info->adc_clk);
+> > > +     }
+> > > +
+> > > +     /* calculate ADC clock sample rate */
+> > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > +     div = reg_con & NPCM_ADCCON_DIV_MASK;
+> > > +     div = div >> NPCM_ADCCON_DIV_SHIFT;
+> > > +     info->adc_sample_hz = clk_get_rate(info->adc_clk) / ((div + 1) *  
+> > 2);  
+> > > +
+> > > +     if (of_device_is_compatible(np, "nuvoton,npcm750-adc")) {
+> > > +             info->rst_regmap = syscon_regmap_lookup_by_compatible
+> > > +                     ("nuvoton,npcm750-rst");
+> > > +             if (IS_ERR(info->rst_regmap)) {
+> > > +                     dev_err(&pdev->dev, "Failed to find  
+> > nuvoton,npcm750-rst\n");  
+> > > +                     ret = PTR_ERR(info->rst_regmap);
+> > > +                     goto err_disable_clk;
+> > > +             }
+> > > +     }
+> > > +
+> > > +     irq = platform_get_irq(pdev, 0);
+> > > +     if (irq <= 0) {
+> > > +             dev_err(dev, "failed getting interrupt resource\n");
+> > > +             ret = -EINVAL;
+> > > +             goto err_disable_clk;
+> > > +     }
+> > > +
+> > > +     ret = devm_request_irq(&pdev->dev, irq, npcm_adc_isr, 0,
+> > > +                            "NPCM_ADC", indio_dev);
+> > > +     if (ret < 0) {
+> > > +             dev_err(dev, "failed requesting interrupt\n");
+> > > +             goto err_disable_clk;
+> > > +     }
+> > > +
+> > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > +     info->vref = devm_regulator_get_optional(&pdev->dev, "vref");
+> > > +     if (!IS_ERR(info->vref)) {
+> > > +             ret = regulator_enable(info->vref);
+> > > +             if (ret) {
+> > > +                     dev_err(&pdev->dev, "Can't enable ADC reference  
+> > voltage\n");  
+> > > +                     goto err_disable_clk;
+> > > +             }
+> > > +
+> > > +             iowrite32(reg_con & ~NPCM_ADCCON_REFSEL,
+> > > +                       info->regs + NPCM_ADCCON);
+> > > +     } else {
+> > > +             /*
+> > > +              * Any error which is not ENODEV indicates the regulator
+> > > +              * has been specified and so is a failure case.
+> > > +              */
+> > > +             if (PTR_ERR(info->vref) != -ENODEV) {
+> > > +                     ret = PTR_ERR(info->vref);
+> > > +                     goto err_disable_clk;
+> > > +             }
+> > > +
+> > > +             /* Use internal reference */
+> > > +             iowrite32(reg_con | NPCM_ADCCON_REFSEL,
+> > > +                       info->regs + NPCM_ADCCON);
+> > > +     }
+> > > +
+> > > +     init_waitqueue_head(&info->wq);
+> > > +
+> > > +     reg_con = ioread32(info->regs + NPCM_ADCCON);
+> > > +     reg_con |= NPCM_ADC_ENABLE;
+> > > +
+> > > +     /* Enable the ADC Module */
+> > > +     iowrite32(reg_con, info->regs + NPCM_ADCCON);
+> > > +
+> > > +     /* Start ADC conversion */
+> > > +     iowrite32(reg_con | NPCM_ADCCON_ADC_CONV, info->regs +  
+> > NPCM_ADCCON);  
+> > > +
+> > > +     platform_set_drvdata(pdev, indio_dev);
+> > > +     indio_dev->name = dev_name(&pdev->dev);
+> > > +     indio_dev->dev.parent = &pdev->dev;
+> > > +     indio_dev->info = &npcm_adc_iio_info;
+> > > +     indio_dev->modes = INDIO_DIRECT_MODE;
+> > > +     indio_dev->channels = npcm_adc_iio_channels;
+> > > +     indio_dev->num_channels = ARRAY_SIZE(npcm_adc_iio_channels);
+> > > +
+> > > +     ret = iio_device_register(indio_dev);
+> > > +     if (ret) {
+> > > +             dev_err(&pdev->dev, "Couldn't register the device.\n");
+> > > +             goto err_iio_register;
+> > > +     }
+> > > +
+> > > +     pr_info("NPCM ADC driver probed\n");  
+> > Hmm. Not sure this tells us anything useful.  If we have succeeding
+> > in probing there are lots of ways to find out that are better than
+> > filling up the kernel log.
+> >  
+> > > +
+> > > +     return 0;
+> > > +
+> > > +err_iio_register:
+> > > +     iowrite32(reg_con & ~NPCM_ADCCON_ADC_EN, info->regs + NPCM_ADCCON);
+> > > +     if (!IS_ERR(info->vref))
+> > > +             regulator_disable(info->vref);
+> > > +err_disable_clk:
+> > > +     clk_disable_unprepare(info->adc_clk);
+> > > +
+> > > +     return ret;
+> > > +}
+> > > +
+> > > +static int npcm_adc_remove(struct platform_device *pdev)
+> > > +{
+> > > +     struct iio_dev *indio_dev = platform_get_drvdata(pdev);
+> > > +     struct npcm_adc *info = iio_priv(indio_dev);
+> > > +     u32 regtemp;
+> > > +
+> > > +     regtemp = ioread32(info->regs + NPCM_ADCCON);  
+> >
+> > The ordering is a bit odd here.  I would have done the unregister
+> > first then read the value.  Doesn't have any real effect other than making
+> > reviewers wonder if there is something interesting going on!
+> >  
+> > > +
+> > > +     iio_device_unregister(indio_dev);
+> > > +     iowrite32(regtemp & ~NPCM_ADCCON_ADC_EN, info->regs + NPCM_ADCCON);
+> > > +     if (!IS_ERR(info->vref))
+> > > +             regulator_disable(info->vref);
+> > > +     clk_disable_unprepare(info->adc_clk);
+> > > +
+> > > +     return 0;
+> > > +}
+> > > +
+> > > +static struct platform_driver npcm_adc_driver = {
+> > > +     .probe          = npcm_adc_probe,
+> > > +     .remove         = npcm_adc_remove,
+> > > +     .driver         = {
+> > > +             .name   = "npcm_adc",
+> > > +             .of_match_table = npcm_adc_match,
+> > > +     },
+> > > +};
+> > > +
+> > > +module_platform_driver(npcm_adc_driver);
+> > > +
+> > > +MODULE_DESCRIPTION("Nuvoton NPCM ADC Driver");
+> > > +MODULE_AUTHOR("Tomer Maimon <tomer.maimon@nuvoton.com>");
+> > > +MODULE_LICENSE("GPL v2");  
+> >
+> >  
+> Thanks,
+> 
+> Tomer
