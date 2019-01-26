@@ -1,64 +1,64 @@
-From: Alan Stern <stern@rowland.harvard.edu>
-Subject: Re: [PATCH v4 04/10] usb: ehci-orion: add S2RAM support
-Date: Fri, 25 Jan 2019 21:56:27 -0500 (EST)
-Message-ID: <Pine.LNX.4.44L0.1901252152190.18583-100000@netrider.rowland.org>
-References: <20190125103925.15753-5-miquel.raynal@bootlin.com>
+From: Jonathan Bakker <xc-racer2@live.ca>
+Subject: Re: [PATCH 4/4] dt-bindings: input: Add documentation for gp2a sensor
+Date: Sat, 26 Jan 2019 03:14:14 +0000
+Message-ID: <BYAPR02MB54959FD8A7CF5977B0D4B5B7A3940@BYAPR02MB5495.namprd02.prod.outlook.com>
+References: <20190125175045.22576-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190125175045.22576-5-pawel.mikolaj.chmiel@gmail.com>
+ <20190126013237.GF212026@dtor-ws>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-In-Reply-To: <20190125103925.15753-5-miquel.raynal@bootlin.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Miquel Raynal <miquel.raynal@bootlin.com>
-Cc: Mark Rutland <mark.rutland@arm.com>, Andrew Lunn <andrew@lunn.ch>, Jason Cooper <jason@lakedaemon.net>, Mathias Nyman <mathias.nyman@intel.com>, devicetree@vger.kernel.org, Antoine Tenart <antoine.tenart@bootlin.com>, Greg Kroah-Hartman <gregkh@linuxfoundation.org>, Gregory Clement <gregory.clement@bootlin.com>, linux-usb@vger.kernel.org, Kishon Vijay Abraham I <kishon@ti.com>, Nadav Haklai <nadavh@marvell.com>, Rob Herring <robh+dt@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Maxime Chevallier <maxime.chevallier@bootlin.com>, linux-arm-kernel@lists.infradead.org, Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190126013237.GF212026@dtor-ws>
+Content-Language: en-US
+Content-ID: <D5B4C8A28AC48D4489BEF83537B93157@namprd02.prod.outlook.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, =?utf-8?B?UGF3ZcWCIENobWllbA==?= <pawel.mikolaj.chmiel@gmail.com>
+Cc: "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "mchehab+samsung@kernel.org" <mchehab+samsung@kernel.org>, "colyli@suse.de" <colyli@suse.de>, "ckeepax@opensource.wolfsonmicro.com" <ckeepax@opensource.wolfsonmicro.com>, "andrew.smirnov@gmail.com" <andrew.smirnov@gmail.com>, "arnd@arndb.de" <arnd@arndb.de>, "xiaotong.lu@spreadtrum.com" <xiaotong.lu@spreadtrum.com>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, 25 Jan 2019, Miquel Raynal wrote:
-
-> Add suspend/resume callbacks to reset the host controller properly
-> during S2RAM operation.
-> 
-> Signed-off-by: Miquel Raynal <miquel.raynal@bootlin.com>
-> ---
->  drivers/usb/host/ehci-orion.c | 18 ++++++++++++++++++
->  1 file changed, 18 insertions(+)
-> 
-> diff --git a/drivers/usb/host/ehci-orion.c b/drivers/usb/host/ehci-orion.c
-> index 3109f082949e..0dab099b5d15 100644
-> --- a/drivers/usb/host/ehci-orion.c
-> +++ b/drivers/usb/host/ehci-orion.c
-> @@ -182,6 +182,23 @@ static int ehci_orion_drv_reset(struct usb_hcd *hcd)
->  	return ret;
->  }
->  
-> +static int __maybe_unused ehci_orion_drv_suspend(struct device *dev)
-> +{
-> +	struct usb_hcd *hcd = dev_get_drvdata(dev);
-> +
-> +	return ehci_suspend(hcd, device_may_wakeup(dev));
-
-Okay, good.
-
-> +}
-> +
-> +static int __maybe_unused ehci_orion_drv_resume(struct device *dev)
-> +{
-> +	struct usb_hcd *hcd = dev_get_drvdata(dev);
-> +
-> +	return ehci_resume(hcd, device_may_wakeup(dev));
-
-Not so good.  The second argument here is force_reset; presumably you 
-want it always to be false.  (Note that the v3 version of this patch 
-did not call device_may_wakeup() in ehci_orion_drv_resume.)
-
-Yes, the API is not symmetrical.  So sue me...
-
-Alan Stern
+SGkgRG1pdHJ5LA0KDQpUaGFua3MgZm9yIHlvdXIgcmV2aWV3IG9mIHRoZSBwYXRjaGVzLg0KDQpD
+b25zaWRlcmluZyB0aGF0IHRoZSBsaWdodCBzZW5zb3IgcGFydCBzaG91bGQgYmUgaW4gSUlPLCBz
+aG91bGQgdGhlIGVudGlyZSBkcml2ZXIgYmUgcmV3cml0dGVuIGFzIGFuIElJTyBkcml2ZXI/ICBU
+aGVyZSdzIGFscmVhZHkgdGhlIGRyaXZlciBmb3IgZ3AyYXAwMjBhMDBmIHRoZXJlIHdoaWNoIGlz
+IHByZXN1bWFibHkgdGhlIGdwMmFwMDAyYTAwZidzIHN1Y2Nlc3NvciBhbmQgZG9lcyB0aGUgc2Ft
+ZSBmdW5jdGlvbnMuDQoNCk9uIDIwMTktMDEtMjUgNTozMiBwLm0uLCBEbWl0cnkgVG9yb2tob3Yg
+d3JvdGU6DQo+IE9uIEZyaSwgSmFuIDI1LCAyMDE5IGF0IDA2OjUwOjQ1UE0gKzAxMDAsIFBhd2XF
+giBDaG1pZWwgd3JvdGU6DQo+PiBGcm9tOiBKb25hdGhhbiBCYWtrZXIgPHhjLXJhY2VyMkBsaXZl
+LmNhPg0KPj4NCj4+IFRoaXMgY29tbWl0IGFkZHMgZG9jdW1lbnRhdGlvbiBmb3IgU2hhcnAgR1Ay
+QVAwMDJBMDBGLg0KPj4gSXQncyBQcm94aW1pdHkvT3B0byBTZW5zb3IgY29ubmVjdGVkIG92ZXIg
+aTJjLg0KPj4NCj4+IFNpZ25lZC1vZmYtYnk6IEpvbmF0aGFuIEJha2tlciA8eGMtcmFjZXIyQGxp
+dmUuY2E+DQo+PiBTaWduZWQtb2ZmLWJ5OiBQYXdlxYIgQ2htaWVsIDxwYXdlbC5taWtvbGFqLmNo
+bWllbEBnbWFpbC5jb20+DQo+PiAtLS0NCj4+ICAuLi4vYmluZGluZ3MvaW5wdXQvc2hhcnAsZ3Ay
+YXAwMDJhMDBmLnR4dCAgICAgfCAyOSArKysrKysrKysrKysrKysrKysrDQo+PiAgMSBmaWxlIGNo
+YW5nZWQsIDI5IGluc2VydGlvbnMoKykNCj4+ICBjcmVhdGUgbW9kZSAxMDA2NDQgRG9jdW1lbnRh
+dGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0L3NoYXJwLGdwMmFwMDAyYTAwZi50eHQNCj4+
+DQo+PiBkaWZmIC0tZ2l0IGEvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2lucHV0
+L3NoYXJwLGdwMmFwMDAyYTAwZi50eHQgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGlu
+Z3MvaW5wdXQvc2hhcnAsZ3AyYXAwMDJhMDBmLnR4dA0KPj4gbmV3IGZpbGUgbW9kZSAxMDA2NDQN
+Cj4+IGluZGV4IDAwMDAwMDAwMDAwMC4uYzUyNGViN2QzZDYwDQo+PiAtLS0gL2Rldi9udWxsDQo+
+PiArKysgYi9Eb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvaW5wdXQvc2hhcnAsZ3Ay
+YXAwMDJhMDBmLnR4dA0KPj4gQEAgLTAsMCArMSwyOSBAQA0KPj4gKyogU2hhcnAgR1AyQVAwMDJB
+MDBGIEkyQyBQcm94aW1pdHkvT3B0byBTZW5zb3INCj4+ICsNCj4+ICtSZXF1aXJlZCBwcm9wZXJ0
+aWVzOg0KPj4gKy0gY29tcGF0aWJsZSA6IFNob3VsZCBiZSAic2hhcnAsZ3AyYXAwMDJhMDBmIg0K
+Pj4gKy0gcmVnIDogVGhlIEkyQyBhZGRyZXNzIG9mIHRoZSBzZW5zb3INCj4+ICstIHZvdXQtZ3Bp
+byA6IFRoZSBncGlvIGNvbm5lY3RlZCB0byB0aGUgdm91dCBwaW4NCj4gDQo+IERvIHlvdSBrbm93
+IHdoYXQgaXQgaXMgZm9yPw0KPiANCkl0J3MgdGhlIGNvbnRyb2wgb2YgdGhlIG1haW4gcG93ZXIg
+c3VwcGx5IHRvIHRoZSBjaGlwLg0KPj4gKy0gaW50ZXJydXB0LXBhcmVudCA6IHNob3VsZCBiZSB0
+aGUgcGhhbmRsZSBmb3IgdGhlIGludGVycnVwdCBjb250cm9sbGVyDQo+PiArLSBpbnRlcnJ1cHRz
+IDogSW50ZXJydXB0IG1hcHBpbmcgZm9yIEdQSU8gSVJRLCBpdCBzaG91bGQgYnkgY29uZmlndXJl
+ZCB3aXRoDQo+PiArCQlmbGFncyBJUlFfVFlQRV9FREdFX0JPVEgNCj4+ICsNCj4+ICtPcHRpb25h
+bCBwcm9wZXJ0aWVzOg0KPj4gKy0gd2FrZXVwIDogSWYgdGhlIGRldmljZSBpcyBjYXBhYmxlIG9m
+IHdha2luZyB1cCB0aGUgc3lzdGVtDQo+PiArLSBpby1jaGFubmVscyA6IFBoYW5kbGUgdG8gYW4g
+QURDIGNoYW5uZWwgY29ubmVjdGVkIHRvIHRoZSBsaWdodCBzZW5zb3INCj4+ICstIGlvLWNoYW5u
+ZWwtbmFtZXMgPSAibGlnaHQiOw0KPj4gKy0gcG9sbC1pbnRlcnZhbCA6IFBvbGwgaW50ZXJ2YWwg
+dGltZSBpbiBtaWxsaXNlY29uZHMsIGRlZmF1bHQgNTAwbXMNCj4+ICstIGxpZ2h0LWFkYy1tYXgg
+OiBNYXhpbXVtIGxpZ2h0IHZhbHVlIHJlcG9ydGVkLCBkZWZhdWx0IDQwOTYNCj4+ICstIGxpZ2h0
+LWFkYy1mdXp6IDogRnV6eiB2YWx1ZSBmb3IgcmVwb3J0ZWQgbGlnaHQgdmFsdWUsIGRlZmF1bHQg
+ODANCj4+ICsNCj4+ICtFeGFtcGxlOg0KPj4gKw0KPj4gK2dwMmFANDQgew0KPj4gKwljb21wYXRp
+YmxlID0gInNoYXJwLGdwMmFwMDAyYTAwZiI7DQo+PiArCXJlZyA9IDwweDQ0PjsNCj4+ICsJdm91
+dC1ncGlvID0gPCZncGgwIDIgR1BJT19BQ1RJVkVfSElHSD47DQo+PiArCWludGVycnVwdC1wYXJl
+bnQgPSA8JmdwaDA+Ow0KPj4gKwlpbnRlcnJ1cHRzID0gPDIgSVJRX1RZUEVfRURHRV9CT1RIPjsN
+Cj4+ICsJaW8tY2hhbm5lbHMgPSA8JmFkYyA5PjsNCj4+ICsJaW8tY2hhbm5lbC1uYW1lcyA9ICJs
+aWdodCI7DQo+PiArfTsNCj4+IC0tIA0KPj4gMi4xNy4xDQo+Pg0KPiANClRoYW5rcywNCkpvbmF0
+aGFuDQo=
