@@ -1,33 +1,37 @@
-From: Linus Walleij <linus.walleij@linaro.org>
-Subject: Re: [PATCH 1/3] mmc: jz4740: Remove platform data and use standard APIs
-Date: Sat, 26 Jan 2019 13:10:37 +0100
-Message-ID: <CACRpkdbhgpkEJ2B2bEDpmM9WLHxUxM8SWhWw28Of5ZRcZ7okSA@mail.gmail.com>
-References: <20190125200927.21045-1-paul@crapouillou.net>
+From: Vladimir Zapolskiy <vz@mleia.com>
+Subject: [PATCH 0/3] ARM: dts: lpc32xx: fix lpc32xx-key device node
+Date: Sat, 26 Jan 2019 16:29:18 +0200
+Message-ID: <20190126142921.16041-1-vz@mleia.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125200927.21045-1-paul@crapouillou.net>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Paul Cercueil <paul@crapouillou.net>
-Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Ulf Hansson <ulf.hansson@linaro.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-mmc <linux-mmc@vger.kernel.org>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>
+Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, linux-arm-kernel@lists.infradead.org, Sylvain Lemieux <slemieux.tyco@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 9:09 PM Paul Cercueil <paul@crapouillou.net> wrote:
+The changeset adds missing but required 'clocks' property and fixes
+'interrupts' property of a keypad controller on NXP LPC32xx powered boards.
 
-> Drop the custom code to get the 'cd' and 'wp' GPIOs. The driver now
-> calls mmc_of_parse() which will init these from devicetree or
-> device properties.
->
-> Also drop the custom code to get the 'power' GPIO. The MMC core
-> provides us with the means to power the MMC card through an external
-> regulator.
->
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
+The devicetree binding documentation is updated accordingly.
 
-Execellent patching!
-Reviewed-by: Linus Walleij <linus.walleij@linaro.org>
+Vladimir Zapolskiy (3):
+  Input: lpc32xx-key - add clocks property and fix DT binding example
+  ARM: dts: lpc32xx: add required clocks property to keypad device node
+  ARM: dts: lpc32xx: reparent keypad controller to SIC1
 
-For all three patches.
+ Documentation/devicetree/bindings/input/lpc32xx-key.txt | 5 ++++-
+ arch/arm/boot/dts/lpc32xx.dtsi                          | 4 +++-
+ 2 files changed, 7 insertions(+), 2 deletions(-)
 
-Yours,
-Linus Walleij
+-- 
+2.20.1
