@@ -1,7 +1,7 @@
 From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: [PATCH 3/4] Irqchip: Ingenic: Add support for the X1000.
-Date: Sat, 26 Jan 2019 23:38:42 +0800
-Message-ID: <1548517123-60058-4-git-send-email-zhouyanjie@zoho.com>
+Subject: [PATCH 4/4] Irqchip: Ingenic: Add support for the X1000.
+Date: Sat, 26 Jan 2019 23:38:43 +0800
+Message-ID: <1548517123-60058-5-git-send-email-zhouyanjie@zoho.com>
 References: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548517123-60058-1-git-send-email-zhouyanjie@zoho.com>
@@ -16,17 +16,20 @@ with double precision hardware float point unit.
 
 Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
 ---
- drivers/irqchip/irq-ingenic.c | 1 +
+ Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt | 1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/irqchip/irq-ingenic.c b/drivers/irqchip/irq-ingenic.c
-index 69be219..0b643c7 100644
---- a/drivers/irqchip/irq-ingenic.c
-+++ b/drivers/irqchip/irq-ingenic.c
-@@ -177,3 +177,4 @@ static int __init intc_2chip_of_init(struct device_node *node,
- IRQCHIP_DECLARE(jz4770_intc, "ingenic,jz4770-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(jz4775_intc, "ingenic,jz4775-intc", intc_2chip_of_init);
- IRQCHIP_DECLARE(jz4780_intc, "ingenic,jz4780-intc", intc_2chip_of_init);
-+IRQCHIP_DECLARE(x1000_intc, "ingenic,x1000-intc", intc_2chip_of_init);
+diff --git a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+index d4373d0..fa69b3f 100644
+--- a/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
++++ b/Documentation/devicetree/bindings/interrupt-controller/ingenic,intc.txt
+@@ -8,6 +8,7 @@ Required properties:
+     ingenic,jz4770-intc
+     ingenic,jz4775-intc
+     ingenic,jz4780-intc
++    ingenic,x1000-intc
+ - reg : Specifies base physical address and size of the registers.
+ - interrupt-controller : Identifies the node as an interrupt controller
+ - #interrupt-cells : Specifies the number of cells needed to encode an
 -- 
 2.7.4
