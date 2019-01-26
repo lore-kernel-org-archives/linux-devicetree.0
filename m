@@ -1,74 +1,132 @@
 From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH v2 2/2] Input: st1232 - add support for st1633
-Date: Fri, 25 Jan 2019 16:55:36 -0800
-Message-ID: <20190126005536.GA212026@dtor-ws>
-References: <20190124102125.25458-1-martink@posteo.de>
- <20190124102125.25458-2-martink@posteo.de>
+Subject: Re: [PATCH 1/4] input: misc: gp2a: Use managed resource helpers
+Date: Fri, 25 Jan 2019 17:17:02 -0800
+Message-ID: <20190126011702.GB212026@dtor-ws>
+References: <20190125175045.22576-1-pawel.mikolaj.chmiel@gmail.com>
+ <20190125175045.22576-2-pawel.mikolaj.chmiel@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190124102125.25458-2-martink@posteo.de>
+In-Reply-To: <20190125175045.22576-2-pawel.mikolaj.chmiel@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Martin Kepplinger <martink@posteo.de>
-Cc: devicetree@vger.kernel.org, linux-input@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, chinyeow.sim.xt@renesas.com, linux-kernel@vger.kernel.org, Martin Kepplinger <martin.kepplinger@ginzinger.com>
+To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
+Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, colyli@suse.de, ckeepax@opensource.wolfsonmicro.com, andrew.smirnov@gmail.com, arnd@arndb.de, xiaotong.lu@spreadtrum.com, xc-racer2@live.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Martin,
-
-On Thu, Jan 24, 2019 at 11:21:25AM +0100, Martin Kepplinger wrote:
-> From: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+On Fri, Jan 25, 2019 at 06:50:42PM +0100, Paweł Chmiel wrote:
+> From: Jonathan Bakker <xc-racer2@live.ca>
 > 
-> Add support for the Sitronix ST1633 touchscreen controller to the st1232
-> driver. A protocol spec can be found here:
-> www.ampdisplay.com/documents/pdf/AM-320480B6TZQW-TC0H.pdf
+> Simplify cleanup of failures by using managed resource helpers
 > 
-> Signed-off-by: Martin Kepplinger <martin.kepplinger@ginzinger.com>
+> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
+> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
 > ---
+>  drivers/input/misc/gp2ap002a00f.c | 37 ++++++++++---------------------
+>  1 file changed, 12 insertions(+), 25 deletions(-)
 > 
-> while this works, I'm not totally convinced by how the i2c path of probe
-> looks. what do you say?
+> diff --git a/drivers/input/misc/gp2ap002a00f.c b/drivers/input/misc/gp2ap002a00f.c
+> index c6a29e57b5e4..79c8c4c56d1a 100644
+> --- a/drivers/input/misc/gp2ap002a00f.c
+> +++ b/drivers/input/misc/gp2ap002a00f.c
+> @@ -138,14 +138,15 @@ static int gp2a_probe(struct i2c_client *client,
+>  			return error;
+>  	}
+>  
+> -	error = gpio_request_one(pdata->vout_gpio, GPIOF_IN, GP2A_I2C_NAME);
+> +	error = devm_gpio_request_one(&client->dev, pdata->vout_gpio,
+> +				      GPIOF_IN, GP2A_I2C_NAME);
+>  	if (error)
+>  		goto err_hw_shutdown;
+>  
+> -	dt = kzalloc(sizeof(struct gp2a_data), GFP_KERNEL);
+> +	dt = devm_kzalloc(&client->dev, sizeof(struct gp2a_data), GFP_KERNEL);
+>  	if (!dt) {
+>  		error = -ENOMEM;
+> -		goto err_free_gpio;
+> +		goto err_hw_shutdown;
+>  	}
+>  
+>  	dt->pdata = pdata;
+> @@ -153,12 +154,12 @@ static int gp2a_probe(struct i2c_client *client,
+>  
+>  	error = gp2a_initialize(dt);
+>  	if (error < 0)
+> -		goto err_free_mem;
+> +		goto err_hw_shutdown;
+>  
+> -	dt->input = input_allocate_device();
+> +	dt->input = devm_input_allocate_device(&client->dev);
+>  	if (!dt->input) {
+>  		error = -ENOMEM;
+> -		goto err_free_mem;
+> +		goto err_hw_shutdown;
+>  	}
+>  
+>  	input_set_drvdata(dt->input, dt);
+> @@ -171,19 +172,18 @@ static int gp2a_probe(struct i2c_client *client,
+>  
+>  	input_set_capability(dt->input, EV_SW, SW_FRONT_PROXIMITY);
+>  
+> -	error = request_threaded_irq(client->irq, NULL, gp2a_irq,
+> -			IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+> -				IRQF_ONESHOT,
+> -			GP2A_I2C_NAME, dt);
+> +	error = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> +			gp2a_irq, IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING |
+> +			IRQF_ONESHOT, GP2A_I2C_NAME, dt);
+>  	if (error) {
+>  		dev_err(&client->dev, "irq request failed\n");
+> -		goto err_free_input_dev;
+> +		goto err_hw_shutdown;
+>  	}
+>  
+>  	error = input_register_device(dt->input);
+>  	if (error) {
+>  		dev_err(&client->dev, "device registration failed\n");
+> -		goto err_free_irq;
+> +		goto err_hw_shutdown;
+>  	}
+>  
+>  	device_init_wakeup(&client->dev, pdata->wakeup);
+> @@ -191,14 +191,6 @@ static int gp2a_probe(struct i2c_client *client,
+>  
+>  	return 0;
+>  
+> -err_free_irq:
+> -	free_irq(client->irq, dt);
+> -err_free_input_dev:
+> -	input_free_device(dt->input);
+> -err_free_mem:
+> -	kfree(dt);
+> -err_free_gpio:
+> -	gpio_free(pdata->vout_gpio);
+>  err_hw_shutdown:
+>  	if (pdata->hw_shutdown)
+>  		pdata->hw_shutdown(client);
+> @@ -210,12 +202,7 @@ static int gp2a_remove(struct i2c_client *client)
+>  	struct gp2a_data *dt = i2c_get_clientdata(client);
+>  	const struct gp2a_platform_data *pdata = dt->pdata;
+>  
+> -	free_irq(client->irq, dt);
+> -
+>  	input_unregister_device(dt->input);
 
-Not quite what I had in mind. See below...
+You do not need explicitly unregister input device if it is managed
+(allocated with devm).
 
->  static int st1232_ts_probe(struct i2c_client *client,
->  			   const struct i2c_device_id *id)
->  {
->  	struct st1232_ts_data *ts;
-> +	struct st1232_ts_finger *finger;
->  	struct input_dev *input_dev;
->  	int error;
-> +	const struct st_chip_info *match = NULL;
-> +
-> +	if (dev_fwnode(&client->dev))
-> +		match = device_get_match_data(&client->dev);
-> +	else if (id && id->driver_data == st1232)
-> +		match = &st1232_chip_info;
-> +	else if (id && id->driver_data == st1633)
-> +		match = &st1633_chip_info;
-> +	if (!match) {
-> +		dev_err(&client->dev, "unknown device model\n");
-> +		return -ENODEV;
-> +	}
+> -	kfree(dt);
+> -
+> -	gpio_free(pdata->vout_gpio);
+>  
+>  	if (pdata->hw_shutdown)
+>  		pdata->hw_shutdown(client);
 
-If you do:
-
-static const struct i2c_device_id st1232_ts_id[] = {
-	{ ST1232_TS_NAME, (unsigned long)&st1232_chip_info },
-	{ ST1633_TS_NAME, (unsigned long)&st1633_chip_info },
-	{ }
-};
-
-
-Then you can do:
-
-	match = device_get_match_data(&client->dev);
-	if (!match && id)
-		match = (const void *)id->driver_data;
-	if (!match) {
-		dev_err(&client->dev, "unknown device model\n");
-		return -ENODEV;
-	}
+This is however is wrong, as you can't shutdown hardware before
+disapling/freeing IRQ, etc. Given that there are no users of
+gp2a_platform_data in kernel I'd recommend creating a preparatory patch
+removing platform data support from the driver.
 
 Thanks.
 
