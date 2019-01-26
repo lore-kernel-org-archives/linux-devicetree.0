@@ -1,87 +1,63 @@
-From: Sam Ravnborg <sam@ravnborg.org>
-Subject: Re: [PATCH 1/2] drm: panel: Add Samsung s6e63m0 panel documentation
-Date: Sat, 26 Jan 2019 21:55:01 +0100
-Message-ID: <20190126205501.GA31182@ravnborg.org>
-References: <20190125164645.19208-1-pawel.mikolaj.chmiel@gmail.com>
+From: Jonathan Cameron <jic23@kernel.org>
+Subject: Re: [PATCH v2 2/2] Add device tree binding documentation for
+ MAX44009
+Date: Sat, 26 Jan 2019 21:04:11 +0000
+Message-ID: <20190126210411.1efcde38@archlinux>
+References: <3de73cb366285113e0e7c2e1938d15b7c3981891.1548529751.git.bobbyeshleman@gmail.com>
+        <7201ee3e0e1c119fa521ed33793be96eaa0eb159.1548529751.git.bobbyeshleman@gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-Content-Disposition: inline
-In-Reply-To: <20190125164645.19208-1-pawel.mikolaj.chmiel@gmail.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, Jonathan Bakker <xc-racer2@live.ca>, linux-kernel@vger.kernel.org, krzk@kernel.org, robh+dt@kernel.org, thierry.reding@gmail.com, dri-devel@lists.freedesktop.org, m.szyprowski@samsung.com
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <7201ee3e0e1c119fa521ed33793be96eaa0eb159.1548529751.git.bobbyeshleman@gmail.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Robert Eshleman <bobbyeshleman@gmail.com>
+Cc: Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-SGkgUGF3ZWwuCgpUaGFua3MgZm9yIHRoZSBwYXRjaCwgc29tZSBjb21tZW50cyBmb2xsb3dzLgpQ
-bGVhc2UganVkZ2Ugd2hhdCBjb21tZW50cyB5b3UgY2hvc2UgdG8gZm9sbG93LCBzZWUgdGhpcyBh
-cyBzdWdnZXN0aW9ucy4KCkFjY29yZGluZyB0byBEb2N1bWVudGF0aW9uL2RldmljZXRyZWUvYmlu
-ZGluZ3Mvc3VibWl0dGluZy1wYXRjaGVzLnJzdDoKCglUaGUgcHJlZmVycmVkIHN1YmplY3QgcHJl
-Zml4IGZvciBiaW5kaW5nIHBhdGNoZXMgaXM6CgkiZHQtYmluZGluZ3M6IDxiaW5kaW5nIGRpcj46
-IC4uLiIKCkl0IHdvdWxkIGJlIGEgZ29vZCBpZGVhIHRvIGZvbGxvdyB0aGlzIHByYWN0aWNlIGlu
-IG5leHQgcmV2aXNpb24uCgpPbiBGcmksIEphbiAyNSwgMjAxOSBhdCAwNTo0Njo0NFBNICswMTAw
-LCBQYXdlxYIgQ2htaWVsIHdyb3RlOgo+IEZyb206IEpvbmF0aGFuIEJha2tlciA8eGMtcmFjZXIy
-QGxpdmUuY2E+Cj4gCj4gVGhpcyBjb21taXQgYWRkcyBkb2N1bWVudGF0aW9uIGZvciBTYW1zdW5n
-IHM2ZTYzbTAgQU1PTEVEIExDRCBwYW5lbAo+IGRyaXZlci4KPiAKPiBTaWduZWQtb2ZmLWJ5OiBK
-b25hdGhhbiBCYWtrZXIgPHhjLXJhY2VyMkBsaXZlLmNhPgo+IFNpZ25lZC1vZmYtYnk6IFBhd2XF
-giBDaG1pZWwgPHBhd2VsLm1pa29sYWouY2htaWVsQGdtYWlsLmNvbT4KPiAtLS0KPiAgLi4uL2Rp
-c3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M20wLnR4dCAgICAgICAgIHwgNjAgKysrKysrKysrKysr
-KysrKysrKwo+ICAxIGZpbGUgY2hhbmdlZCwgNjAgaW5zZXJ0aW9ucygrKQo+ICBjcmVhdGUgbW9k
-ZSAxMDA2NDQgRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwv
-c2Ftc3VuZyxzNmU2M20wLnR4dAo+IAo+IGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0aW9uL2Rldmlj
-ZXRyZWUvYmluZGluZ3MvZGlzcGxheS9wYW5lbC9zYW1zdW5nLHM2ZTYzbTAudHh0IGIvRG9jdW1l
-bnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M20w
-LnR4dAo+IG5ldyBmaWxlIG1vZGUgMTAwNjQ0Cj4gaW5kZXggMDAwMDAwMDAwMDAwLi40OTc5MjAw
-ZTJkZDIKPiAtLS0gL2Rldi9udWxsCj4gKysrIGIvRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL2Rpc3BsYXkvcGFuZWwvc2Ftc3VuZyxzNmU2M20wLnR4dAo+IEBAIC0wLDAgKzEsNjAg
-QEAKPiArU2Ftc3VuZyBzNmU2M20wIEFNT0xFRCBMQ0QgcGFuZWwKPiArCj4gK1JlcXVpcmVkIHBy
-b3BlcnRpZXM6Cj4gKyAgLSBjb21wYXRpYmxlOiAic2Ftc3VuZyxzNmU2M20wIgo+ICsgIC0gcmVz
-ZXQtZ3BpbzogR1BJTyBzcGVjIGZvciByZXNldCBwaW4KVGhlIHByZWZlcnJlZCBuYW1lIGlzIHJl
-c2V0LWdwaW9zIChhZGRlZCAncycpCgo+ICsgIC0gdmRkMy1zdXBwbHk6IFZERCByZWd1bGF0b3IK
-PiArICAtIHZjaS1zdXBwbHk6IFZDSSByZWd1bGF0b3IKPiArICAtIGRpc3BsYXktdGltaW5nczog
-dGltaW5ncyBmb3IgdGhlIGNvbm5lY3RlZCBwYW5lbCBhcyBkZXNjcmliZWQgYnkgWzFdClRvZGF5
-LCBhcyBpcyBteSBiZXN0IHVuZGVyc3RhbmRpbmcsIGl0IGlzIGVuY291cmFnZWQgdG8gc3BlY2lm
-eSB0aGUgdGltaW5nCmluIHRoZSBhY3R1YWwgZHJpdmVyIGFuZCBub3QgaW4gRFQsCgpUaGUgZXhh
-bXBsZSBpbmNsdWRlIGEgc3BpLW1heC1mcmVxdWVuY3kgd2hpY2ggaXMgbm90IG1lbnRpb25lZD8K
-Cj4gKwo+ICtPcHRpb25hbCBwcm9wZXJ0aWVzOgo+ICsgIC0gcmVzZXQtZGVsYXk6IERlbGF5IGlu
-IG1zIGFmdGVyIGFkanVzdGluZyByZXNldC1ncGlvLCBkZWZhdWx0IDEyMG1zCj4gKyAgLSBwb3dl
-ci1vbi1kZWxheTogRGVsYXkgaW4gbXMgYWZ0ZXIgcG93ZXJpbmcgb24sIGRlZmF1bHQgMjVtcwo+
-ICsgIC0gcG93ZXItb2ZmLWRlbGF5OiBEZWxheSBpbiBtcyBiZWZvcmUgcG93ZXJpbmcgb2ZmLCBk
-ZWZhdWx0IDIwMG1zCj4gKyAgLSBwYW5lbC13aWR0aC1tbTogcGh5c2ljYWwgcGFuZWwgd2lkdGgg
-aW4gbW0KPiArICAtIHBhbmVsLWhlaWdodC1tbTogcGh5c2ljYWwgcGFuZWwgaGVpZ2h0IGluIG1t
-Ckxpa2V3aXNlIHRoZXNlIGRlbGF5cyBhcmUgYWxzbyBwcm9wZXJ0aWVzIHRoYXQgdG9kYXkgYXJl
-IGluY2x1ZGVkIGluIHRoZSBkcml2ZXIuCgpJIGNhbm5vdCBleHBsYWluIHRoZSBiYWNrZ3JvdW5k
-IGZvciB0aGlzLCB0aGlzIGlzIGp1c3QgaG93IHRoaW5ncyBhcmUgZG9uZS4KCj4gKwo+ICtUaGUg
-ZGV2aWNlIG5vZGUgY2FuIGNvbnRhaW4gb25lICdwb3J0JyBjaGlsZCBub2RlIHdpdGggb25lIGNo
-aWxkCj4gKydlbmRwb2ludCcgbm9kZSwgYWNjb3JkaW5nIHRvIHRoZSBiaW5kaW5ncyBkZWZpbmVk
-IGluIFsyXS4gVGhpcwo+ICtub2RlIHNob3VsZCBkZXNjcmliZSBwYW5lbCdzIHZpZGVvIGJ1cy4K
-PiArCj4gK1sxXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2JpbmRpbmdzL2Rpc3BsYXkvcGFu
-ZWwvZGlzcGxheS10aW1pbmcudHh0Cj4gK1syXTogRG9jdW1lbnRhdGlvbi9kZXZpY2V0cmVlL2Jp
-bmRpbmdzL21lZGlhL3ZpZGVvLWludGVyZmFjZXMudHh0Cj4gKwo+ICtFeGFtcGxlOgo+ICsKPiAr
-CQlzNmU2M20wOiBkaXNwbGF5QDAgewo+ICsJCQljb21wYXRpYmxlID0gInNhbXN1bmcsczZlNjNt
-MCI7Cj4gKwkJCXJlZyA9IDwwPjsKPiArCQkJcmVzZXQtZ3BpbyA9IDwmbXAwNSA1IDE+Owo+ICsJ
-CQl2ZGQzLXN1cHBseSA9IDwmbGRvMTJfcmVnPjsKPiArCQkJdmNpLXN1cHBseSA9IDwmbGRvMTFf
-cmVnPjsKPiArCQkJc3BpLW1heC1mcmVxdWVuY3kgPSA8MTAwMDAwMD47Cj4gKwo+ICsJCQlwb3dl
-ci1vbi1kZWxheSA9IDwwPjsKPiArCQkJcG93ZXItb2ZmLWRlbGF5ID0gPDA+Owo+ICsJCQlyZXNl
-dC1kZWxheSA9IDwxMD47Cj4gKwkJCXBhbmVsLXdpZHRoLW1tID0gPDUzPjsKPiArCQkJcGFuZWwt
-aGVpZ2h0LW1tID0gPDg5PjsKPiArCj4gKwkJCWRpc3BsYXktdGltaW5ncyB7Cj4gKwkJCQl0aW1p
-bmctMCB7Cj4gKwkJCQkJLyogNDgweDgwMEA2MEh6ICovCj4gKwkJCQkJY2xvY2stZnJlcXVlbmN5
-ID0gPDI1NjI4MDQwPjsKPiArCQkJCQloYWN0aXZlID0gPDQ4MD47Cj4gKwkJCQkJdmFjdGl2ZSA9
-IDw4MDA+Owo+ICsJCQkJCWhmcm9udC1wb3JjaCA9IDwxNj47Cj4gKwkJCQkJaGJhY2stcG9yY2gg
-PSA8MTY+Owo+ICsJCQkJCWhzeW5jLWxlbiA9IDwyPjsKPiArCQkJCQl2ZnJvbnQtcG9yY2ggPSA8
-Mjg+Owo+ICsJCQkJCXZiYWNrLXBvcmNoID0gPDE+Owo+ICsJCQkJCXZzeW5jLWxlbiA9IDwyPjsK
-PiArCQkJCX07Cj4gKwkJCX07Cj4gKwo+ICsJCQlwb3J0IHsKPiArCQkJCWxjZF9lcDogZW5kcG9p
-bnQgewo+ICsJCQkJCXJlbW90ZS1lbmRwb2ludCA9IDwmZmltZF9lcD47Cj4gKwkJCQl9Owo+ICsJ
-CQl9Owo+ICsJCX07CgoJU2FtCl9fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19f
-X19fX19fX19fCmRyaS1kZXZlbCBtYWlsaW5nIGxpc3QKZHJpLWRldmVsQGxpc3RzLmZyZWVkZXNr
-dG9wLm9yZwpodHRwczovL2xpc3RzLmZyZWVkZXNrdG9wLm9yZy9tYWlsbWFuL2xpc3RpbmZvL2Ry
-aS1kZXZlbAo=
+On Sat, 26 Jan 2019 11:16:21 -0800
+Robert Eshleman <bobbyeshleman@gmail.com> wrote:
+
+> Signed-off-by: Robert Eshleman <bobbyeshleman@gmail.com>
+Looks good to me.  As we are going for a v3 due to patch 1, plenty
+of time for others to comment.
+
+Thanks,
+
+Jonathan
+> ---
+>  .../bindings/iio/light/max44009.txt           | 25 +++++++++++++++++++
+>  1 file changed, 25 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/iio/light/max44009.txt
+> 
+> diff --git a/Documentation/devicetree/bindings/iio/light/max44009.txt b/Documentation/devicetree/bindings/iio/light/max44009.txt
+> new file mode 100644
+> index 000000000000..b287d7732e37
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/iio/light/max44009.txt
+> @@ -0,0 +1,25 @@
+> +* MAX44009 Ambient Light Sensor
+> +
+> +Required properties:
+> +
+> +- compatible: should be "maxim,max44009"
+> +- reg: the I2C address of the device (default is <0x4a>)
+> +
+> +Optional properties:
+> +
+> +- interrupts: interrupt mapping for GPIO IRQ. Should be configured with
+> +  IRQ_TYPE_EDGE_FALLING.
+> +
+> +Refer to interrupt-controller/interrupts.txt for generic interrupt client
+> +node bindings.
+> +
+> +Example:
+> +
+> +max44009: max44009@4a {
+> +	compatible = "maxim,max44009";
+> +	reg = <0x4a>;
+> +
+> +	interrupt-parent = <&gpio1>;
+> +	interrupts = <17 IRQ_TYPE_EDGE_FALLING>;
+> +};
+> +
