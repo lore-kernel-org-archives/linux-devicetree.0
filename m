@@ -1,230 +1,148 @@
-Return-Path: <SRS0=k+7t=P7=intel.com=adrian.hunter@kernel.org>
-Subject: Re: [PATCH V10 4/4] mmc: tegra: HW Command Queue Support for Tegra
- SDMMC
-References: <1548186993-6229-1-git-send-email-skomatineni@nvidia.com>
- <1548186993-6229-4-git-send-email-skomatineni@nvidia.com>
-From: Adrian Hunter <adrian.hunter@intel.com>
-Message-ID: <837dcb7b-61c8-bab0-73f8-b32136245802@intel.com>
-Date: Wed, 23 Jan 2019 09:28:38 +0200
+Return-Path: <SRS0=+7pD=QC=vger.kernel.org=devicetree-owner@kernel.org>
+Received: from mail-gw.unlimitedwebhosting.co.uk ([149.255.60.82]:45815 "EHLO
+        mail-gw.unlimitedwebhosting.co.uk" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725987AbfAZO0q (ORCPT
+        <rfc822;devicetree@vger.kernel.org>);
+        Sat, 26 Jan 2019 09:26:46 -0500
+Received: from uwhbsf01.unlimitedwebhosting.co.uk (mail-gw.unlimitedwebhosting.co.uk [149.255.60.72])
+        by mail-gw.unlimitedwebhosting.co.uk (Postfix) with ESMTPS id A516A602D3F1
+        for <devicetree@vger.kernel.org>; Sat, 26 Jan 2019 14:26:44 +0000 (GMT)
+Subject: Re: [PATCH v4 2/2] dt-bindings: Create the file for Realtek Bluetooth
+ serial devices
+References: <20190121203928.32723-1-beagleboard@davidjohnsummers.uk>
+ <20190121203928.32723-2-beagleboard@davidjohnsummers.uk>
+ <CAL_Jsq+9zjPaDiJ0Uynp9p7WpH-NK-sT91vUm-+R7D_me8a9Mw@mail.gmail.com>
+From: David Summers <beagleboard@davidjohnsummers.uk>
+Message-ID: <712d0ad2-0003-881c-b066-9462d3d8fa11@davidjohnsummers.uk>
+Date: Sat, 26 Jan 2019 14:26:39 +0000
 MIME-Version: 1.0
-In-Reply-To: <1548186993-6229-4-git-send-email-skomatineni@nvidia.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+In-Reply-To: <CAL_Jsq+9zjPaDiJ0Uynp9p7WpH-NK-sT91vUm-+R7D_me8a9Mw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-To: Sowjanya Komatineni <skomatineni@nvidia.com>, robh+dt@kernel.org, mark.rutland@arm.com, mperttunen@nvidia.com, chunyan.zhang@unisoc.com, thierry.reding@gmail.com, jonathanh@nvidia.com, ulf.hansson@linaro.org
-Cc: anrao@nvidia.com, devicetree@vger.kernel.org, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, linux-mmc@vger.kernel.org
+Content-Language: en-PH
+Sender: devicetree-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>
+Cc: Mark Rutland <mark.rutland@arm.com>, Marcel Holtmann <marcel@holtmann.org>, Johan Hedberg <johan.hedberg@gmail.com>, "open list:BLUETOOTH DRIVERS" <linux-bluetooth@vger.kernel.org>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-On 22/01/19 9:56 PM, Sowjanya Komatineni wrote:
-> This patch adds HW Command Queue for supported Tegra SDMMC
-> controllers.
-> 
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+Dear All,
 
-Acked-by: Adrian Hunter <adrian.hunter@intel.com>
+OK - spent some time last night and today reading 
+/Documentation/devicetree/bindings/pinctrl/pinctrl-bindings.txt and 
+/Documentation/devicetree/bindings/serial/serial.txt; reviewing the Asus 
+Tinker Board device tree, and the comments. What is clear:
 
-> ---
->  [V10]: Changes are same as V9 except this series has SDHCI core changes
-> 	into seperate patch 
-> 
->  drivers/mmc/host/Kconfig       |   1 +
->  drivers/mmc/host/sdhci-tegra.c | 117 +++++++++++++++++++++++++++++++++++++++--
->  2 files changed, 114 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/mmc/host/Kconfig b/drivers/mmc/host/Kconfig
-> index e26b8145efb3..0739d26c001b 100644
-> --- a/drivers/mmc/host/Kconfig
-> +++ b/drivers/mmc/host/Kconfig
-> @@ -250,6 +250,7 @@ config MMC_SDHCI_TEGRA
->  	depends on ARCH_TEGRA
->  	depends on MMC_SDHCI_PLTFM
->  	select MMC_SDHCI_IO_ACCESSORS
-> +	select MMC_CQHCI
->  	help
->  	  This selects the Tegra SD/MMC controller. If you have a Tegra
->  	  platform with SD or MMC devices, say Y or M here.
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index e6ace31e2a41..d400f158bee4 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -33,6 +33,7 @@
->  #include <linux/ktime.h>
->  
->  #include "sdhci-pltfm.h"
-> +#include "cqhci.h"
->  
->  /* Tegra SDHOST controller vendor register definitions */
->  #define SDHCI_TEGRA_VENDOR_CLOCK_CTRL			0x100
-> @@ -89,6 +90,9 @@
->  #define NVQUIRK_NEEDS_PAD_CONTROL			BIT(7)
->  #define NVQUIRK_DIS_CARD_CLK_CONFIG_TAP			BIT(8)
->  
-> +/* SDMMC CQE Base Address for Tegra Host Ver 4.1 and Higher */
-> +#define SDHCI_TEGRA_CQE_BASE_ADDR			0xF000
-> +
->  struct sdhci_tegra_soc_data {
->  	const struct sdhci_pltfm_data *pdata;
->  	u32 nvquirks;
-> @@ -128,6 +132,7 @@ struct sdhci_tegra {
->  	u32 default_tap;
->  	u32 default_trim;
->  	u32 dqs_trim;
-> +	bool enable_hwcq;
->  };
->  
->  static u16 tegra_sdhci_readw(struct sdhci_host *host, int reg)
-> @@ -595,6 +600,20 @@ static void tegra_sdhci_parse_tap_and_trim(struct sdhci_host *host)
->  		tegra_host->dqs_trim = 0x11;
->  }
->  
-> +static void tegra_sdhci_parse_dt(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> +
-> +	if (device_property_read_bool(host->mmc->parent, "supports-cqe"))
-> +		tegra_host->enable_hwcq = true;
-> +	else
-> +		tegra_host->enable_hwcq = false;
-> +
-> +	tegra_sdhci_parse_pad_autocal_dt(host);
-> +	tegra_sdhci_parse_tap_and_trim(host);
-> +}
-> +
->  static void tegra_sdhci_set_clock(struct sdhci_host *host, unsigned int clock)
->  {
->  	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> @@ -836,6 +855,49 @@ static void tegra_sdhci_voltage_switch(struct sdhci_host *host)
->  		tegra_host->pad_calib_required = true;
->  }
->  
-> +static void sdhci_tegra_cqe_enable(struct mmc_host *mmc)
-> +{
-> +	struct cqhci_host *cq_host = mmc->cqe_private;
-> +	u32 cqcfg = 0;
-> +
-> +	/*
-> +	 * Tegra SDMMC Controller design prevents write access to BLOCK_COUNT
-> +	 * registers when CQE is enabled.
-> +	 */
-> +	cqcfg = cqhci_readl(cq_host, CQHCI_CFG);
-> +	if (cqcfg & CQHCI_ENABLE)
-> +		cqhci_writel(cq_host, (cqcfg & ~CQHCI_ENABLE), CQHCI_CFG);
-> +
-> +	sdhci_cqe_enable(mmc);
-> +
-> +	if (cqcfg & CQHCI_ENABLE)
-> +		cqhci_writel(cq_host, cqcfg, CQHCI_CFG);
-> +}
-> +
-> +static void sdhci_tegra_dumpregs(struct mmc_host *mmc)
-> +{
-> +	sdhci_dumpregs(mmc_priv(mmc));
-> +}
-> +
-> +static u32 sdhci_tegra_cqhci_irq(struct sdhci_host *host, u32 intmask)
-> +{
-> +	int cmd_error = 0;
-> +	int data_error = 0;
-> +
-> +	if (!sdhci_cqe_irq(host, intmask, &cmd_error, &data_error))
-> +		return intmask;
-> +
-> +	cqhci_irq(host->mmc, intmask, cmd_error, data_error);
-> +
-> +	return 0;
-> +}
-> +
-> +static const struct cqhci_host_ops sdhci_tegra_cqhci_ops = {
-> +	.enable	= sdhci_tegra_cqe_enable,
-> +	.disable = sdhci_cqe_disable,
-> +	.dumpregs = sdhci_tegra_dumpregs,
-> +};
-> +
->  static const struct sdhci_ops tegra_sdhci_ops = {
->  	.get_ro     = tegra_sdhci_get_ro,
->  	.read_w     = tegra_sdhci_readw,
-> @@ -989,6 +1051,7 @@ static const struct sdhci_ops tegra186_sdhci_ops = {
->  	.set_uhs_signaling = tegra_sdhci_set_uhs_signaling,
->  	.voltage_switch = tegra_sdhci_voltage_switch,
->  	.get_max_clock = tegra_sdhci_get_max_clock,
-> +	.irq = sdhci_tegra_cqhci_irq,
->  };
->  
->  static const struct sdhci_pltfm_data sdhci_tegra186_pdata = {
-> @@ -1030,6 +1093,54 @@ static const struct of_device_id sdhci_tegra_dt_match[] = {
->  };
->  MODULE_DEVICE_TABLE(of, sdhci_tegra_dt_match);
->  
-> +static int sdhci_tegra_add_host(struct sdhci_host *host)
-> +{
-> +	struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +	struct sdhci_tegra *tegra_host = sdhci_pltfm_priv(pltfm_host);
-> +	struct cqhci_host *cq_host;
-> +	bool dma64;
-> +	int ret;
-> +
-> +	if (!tegra_host->enable_hwcq)
-> +		return sdhci_add_host(host);
-> +
-> +	sdhci_enable_v4_mode(host);
-> +
-> +	ret = sdhci_setup_host(host);
-> +	if (ret)
-> +		return ret;
-> +
-> +	host->mmc->caps2 |= MMC_CAP2_CQE | MMC_CAP2_CQE_DCMD;
-> +
-> +	cq_host = devm_kzalloc(host->mmc->parent,
-> +				sizeof(*cq_host), GFP_KERNEL);
-> +	if (!cq_host) {
-> +		ret = -ENOMEM;
-> +		goto cleanup;
-> +	}
-> +
-> +	cq_host->mmio = host->ioaddr + SDHCI_TEGRA_CQE_BASE_ADDR;
-> +	cq_host->ops = &sdhci_tegra_cqhci_ops;
-> +
-> +	dma64 = host->flags & SDHCI_USE_64_BIT_DMA;
-> +	if (dma64)
-> +		cq_host->caps |= CQHCI_TASK_DESC_SZ_128;
-> +
-> +	ret = cqhci_init(cq_host, host->mmc, dma64);
-> +	if (ret)
-> +		goto cleanup;
-> +
-> +	ret = __sdhci_add_host(host);
-> +	if (ret)
-> +		goto cleanup;
-> +
-> +	return 0;
-> +
-> +cleanup:
-> +	sdhci_cleanup_host(host);
-> +	return ret;
-> +}
-> +
->  static int sdhci_tegra_probe(struct platform_device *pdev)
->  {
->  	const struct of_device_id *match;
-> @@ -1077,9 +1188,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  	if (tegra_host->soc_data->nvquirks & NVQUIRK_ENABLE_DDR50)
->  		host->mmc->caps |= MMC_CAP_1_8V_DDR;
->  
-> -	tegra_sdhci_parse_pad_autocal_dt(host);
-> -
-> -	tegra_sdhci_parse_tap_and_trim(host);
-> +	tegra_sdhci_parse_dt(host);
->  
->  	tegra_host->power_gpio = devm_gpiod_get_optional(&pdev->dev, "power",
->  							 GPIOD_OUT_HIGH);
-> @@ -1117,7 +1226,7 @@ static int sdhci_tegra_probe(struct platform_device *pdev)
->  
->  	usleep_range(2000, 4000);
->  
-> -	rc = sdhci_add_host(host);
-> +	rc = sdhci_tegra_add_host(host);
->  	if (rc)
->  		goto err_add_host;
->  
-> 
+ 1. I do not have the time available to learn in detail the preferred
+    linux style of device tree
+ 2. The example I gave was for the ASUS Tinker Board, taken from the
+    rk3288-miniarm.dts
+ 3. The current ASUS Tinker Board device tree is a patch done by ASUS
+    for debian:
+    https://github.com/TinkerBoard/debian_kernel/blob/develop/arch/arm/boot/dts/rk3288-miniarm.dts
+ 4. This device tree is non standard, and not suitable for inclusion in
+    mainline
+ 5. This device tree is the only really device tree available for the
+    ASUS Tinker Board (S)
+ 6. The schematic for the ASUS Tinker Board is available on:
+    https://www.asus.com/uk/Single-Board-Computer/Tinker-Board/
+ 7. The schematic is not detailed, it for example does not show how
+    Bluetooth and Wi-Fi are wired
+ 8. The only hints on wiring are in the ASUS developed patches to the
+    debian device tree
+ 9. The documentation for realtek Bluetooth will only be accepted with
+    an example that is complete:
+    https://www.spinics.net/lists/linux-bluetooth/msg78545.html
+10. Marcel has only had major problem with the first version of the
+    patch. Since changes made to hci_h5.c his only problem has the
+    naming of the compatible names, where he needs an Ack from Rob:
+    https://www.spinics.net/lists/linux-bluetooth/msg78637.html
+11. Marcel needs the device tree compatible hooks documented:
+    https://www.spinics.net/lists/linux-bluetooth/msg78445.html
+12. Now it is clear that I don't have time to do documentation, of the
+    required standard, that is applicable to the ASUS Tinker Board (S)
+13. So it is with regret that on reflection I have decided to withdraw
+    this patchset
+
+This to my mind is a pity, ASUS Tinker Board (S) uses currently don't 
+have good mainline support, most use the debian/ASUS rk3288-miniarm.dts 
+device tree. Without mainlining, it is very hard to support this board 
+in distributions like Arm Arch. But its also clear that I am not the 
+person to mainline the support. I neither have the knowledge of the 
+device tree. Access to proper schematics for the device. Nor the time 
+available to do this.
+
+Hopefully someone else will take up mainlining these boards. I hope the 
+bits I've done will at least give someone else ideas on how to proceed, 
+and that they will be more successful than I. I'll probably keep 
+learning the preferred device tree vocabulary and grammar - but at a 
+slow pace as time allows.
+
+Thank you all for your time and help,
+
+David Summers
+
+On 25/01/2019 19:46, Rob Herring wrote:
+> On Mon, Jan 21, 2019 at 2:39 PM David Summers
+> <beagleboard@davidjohnsummers.uk> wrote:
+>> With the changes requested by Marcel Holtmann and Rob Herring.
+>>
+>> Capitalisation as requested.
+> Write something that makes sense for the git history. The above 2
+> lines are not useful information.
+>
+>> Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+>> ---
+>>   .../bindings/net/realtek-bluetooth-serial.txt | 32 +++++++++++++++++++
+>>   1 file changed, 32 insertions(+)
+>>   create mode 100644 Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt
+>>
+>> diff --git a/Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt b/Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt
+>> new file mode 100644
+>> index 000000000000..2eddde1a0cf1
+>> --- /dev/null
+>> +++ b/Documentation/devicetree/bindings/net/realtek-bluetooth-serial.txt
+>> @@ -0,0 +1,32 @@
+>> +Realtek Bluetooth devices connected via a UART.
+>> +These devices typically also have a WI-FI connected via SDIO - the
+>> +compatible described here is used just for referencing the Bluetooth.
+>> +
+>> +- compatible: should be "realtek,<name>-bt"
+>> +  except for "realtek,trl8761atv" - which only has a serial Bluetooth connection
+>> +       "realtek,rtl8723as-bt"
+>> +       "realtek,rtl8723bs-bt"
+>> +       "realtek,rtl8723ds-bt"
+>> +       "realtek,rtl8761atv"
+>> +       "realtek,rtl8821as-bt"
+>> +       "realtek,rtl8821cs-bt"
+>> +       "realtek,rtl8822bs-bt"
+>> +
+>> +Example:
+>> +
+>> +&uart0 {
+>> +       status = "okay";
+> Don't show 'status' in examples.
+>
+>> +       pinctrl-0 = <&uart0_xfer>, <&uart0_cts>;
+>> +       bluetooth {
+>> +               compatible = "realtek,rtl8723bs-bt";
+>> +               uart_rts_gpios = <&gpio4 19 GPIO_ACTIVE_LOW>;
+> We already have a standard property name and location for handling RTS
+> on a GPIO and this is not it.
+>
+>> +               pinctrl-names = "default","rts_gpio";
+>> +               pinctrl-0 = <&uart0_rts>;
+> This belongs in the parent node.
+>
+>> +               pinctrl-1 = <&uart0_gpios>;
+>> +               BT,reset_gpio    = <&gpio4 29 GPIO_ACTIVE_HIGH>;
+>> +               BT,wake_gpio     = <&gpio4 26 GPIO_ACTIVE_HIGH>;
+>> +               BT,wake_host_irq = <&gpio4 31 GPIO_ACTIVE_HIGH>;
+> All the above need to be documented. Putting in an example is not documented.
+>
+> Drop the 'BT,' as the part preceding the comma should be a vendor name
+> if present and use '-' rather than '_' in property names.
+>
+> 'reset-gpios' is the standard name for a reset gpio. An irq should use
+> the 'interrupts' binding even if connected to a GPIO on the host.
+>
+> Rob
