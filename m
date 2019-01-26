@@ -1,68 +1,112 @@
-From: Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>
-Subject: Re: [PATCH 0/5] Add initial Bitmain BM1880 SoC/Board support
-Date: Sat, 26 Jan 2019 20:47:33 +0530
-Message-ID: <20190126151733.GA15434@Mani-XPS-13-9360>
-References: <20190126041041.13173-1-manivannan.sadhasivam@linaro.org>
- <20190126150320.GB20679@lunn.ch>
+From: Jonas Bonn <jonas@norrbonn.se>
+Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
+Date: Sat, 26 Jan 2019 16:40:06 +0100
+Message-ID: <ed62564f-d36b-1492-8e65-60166c0aa4a6@norrbonn.se>
+References: <20190125114429.20066-1-jonas@norrbonn.se>
+ <20190125114429.20066-2-jonas@norrbonn.se>
+ <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
+ <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se>
+ <20190125174713.GA6939@sirena.org.uk> <20190125175031.GA25898@sirena.org.uk>
+ <84d6c40f-62bb-fd00-0dcb-d2f390b136c1@norrbonn.se>
+ <CAMuHMdUyt=DDMwDZA-TB0Yac13NJQCo2LxzvqnRzvn6LZ5F98w@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <20190126150320.GB20679@lunn.ch>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Andrew Lunn <andrew@lunn.ch>
-Cc: devicetree@vger.kernel.org, arnd@arndb.de, linux-kernel@vger.kernel.org, amit.kucheria@linaro.org, darren.tsao@bitmain.com, robh+dt@kernel.org, haitao.suo@bitmain.com, linux-arm-kernel@lists.infradead.org
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <CAMuHMdUyt=DDMwDZA-TB0Yac13NJQCo2LxzvqnRzvn6LZ5F98w@mail.gmail.com>
+Content-Language: en-US
+Sender: linux-kernel-owner@vger.kernel.org
+To: Geert Uytterhoeven <geert@linux-m68k.org>
+Cc: Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrew,
+Hi Geert,
 
-On Sat, Jan 26, 2019 at 04:03:20PM +0100, Andrew Lunn wrote:
-> On Sat, Jan 26, 2019 at 09:40:36AM +0530, Manivannan Sadhasivam wrote:
-> > Hello,
-> > 
-> > This patchset adds initial support for Bitmain BM1880 SoC and Sophon
-> > Edge board. BM1880 SoC consists of a Dual Core ARM Cortex A53 Application
-> > processor subsystem, a single core RISC-V subsystem and a Tensor
-> > Processor subsystem.
+On 26/01/2019 11:25, Geert Uytterhoeven wrote:
+> Hi Jonas,
 > 
-> Hi Manivannan
+> On Sat, Jan 26, 2019 at 8:53 AM Jonas Bonn <jonas@norrbonn.se> wrote:
+>> On 25/01/2019 18:50, Mark Brown wrote:
+>>> On Fri, Jan 25, 2019 at 05:47:13PM +0000, Mark Brown wrote:
+>>>> On Fri, Jan 25, 2019 at 01:06:45PM +0100, Jonas Bonn wrote:
+>>>>> Having this as device property rather than a transfer property allows this
+>>>>> to be configured one time in setup() rather than having to fiddle with the
+>>>>> configuration register for every transfer.
+>>>
+>>>> That doesn't mean that the coniguration should be done in DT though, and
+>>>> given that this presumably is a property of the device there seems to be
+>>>> no reason why we'd have it in DT - if every instance of the device is
+>>>> going to need to set the property we should just figure it out from the
+>>>> compatble string instead.
+>>>
+>>> To be clear here: the suggestion is to add a parameter the slave device
+>>> can set in spi_device which sets the default word_delay similarly to how
+>>> max_speed_hz works.
+>>
+>> I'm confused... isn't that exactly what this patch does?  It adds a
+>> field word_delay to spi_device in the same manner as max_speed_hz.
+>>
+>> I also added the ability to set it via DT, which I can break out into a
+>> separate patch if that's an issue.  Or is the problem that it's set via
+>> DT, at all?  Documentation/devicetree/bindings/spi-bus.txt documents 10
+>> other slave-node properties related to transfer characteristics;
+>> word_delay is just another such characteristic.
+>>
+>> But again, I'm having trouble parsing your response  Is the patch wrong,
+>> should be broken up, or you just misunderstood it?
 > 
-> Interesting combination of CPUs. 
-> 
-> > This patchset adds support for only ARM Cortex A53 Application
-> > processor subsystem with UART, which enables the board to boot into
-> > initramfs with 2 CPUs.
-> 
-> Looking forward, what sharing do you expect at the device tree level?
-> 
-> Looking at 
-> 
-> https://sophon-file.bitmain.com.cn/sophon-prod/drive/18/11/06/19/BM1880%20product%20brief%20V0.04_Chinese%20versionV0.06.pdf
-> 
-> it appears all the devices can be shared between the CPUs. So do you
-> plan to have a shared .dtsi file somewhere? 
-> 
-> Is ARCH_BITMAIN going to be both ARM64 and RISC-V?
-> 
+> IIUIC, Mark means that it may be a non-configurable property of the slave
+> device, and thus should be handled (fixed setting) in the SPI slave driver.
 
-We don't have any plan to add support for RISC-V subsystem. Moreover,
-from the SoC product brief it look like the RISC-V core is a MCU grade
-core, so I doubt whether we can run linux on it! It might be a candidate
-for RTOS.
+OK, so given that the "compatible" property identifies the hardware and 
+there is no other _hardware_ configuration detail that affects the 
+required inter-word delay, then setting the property in the device tree 
+is not allowed as the driver has enough info to set it properly.  Fair 
+enough!
 
-For now, ARCH_BITMAIN is going to have only ARM64 support.
+> 
+> Compare this to CPHA/CPOL, which are properties of the SPI slave device,
+> but which may be configurable. E.g. many SPI FLASHes support multiple
+> configurations. See e.g. commit 9c5becce21af35e5 ("ARM: shmobile: koelsch:
+> Fix QSPI mode of SPI-Flash into mode3").
 
-Thanks,
-Mani
+There is nothing about the hardware referenced in that patch that 
+enforces either mode.  Why does the driver get to defer to DT here?
 
->    Thanks
-> 	Andrew
+Looking at Documentation/devicetree/bindings/spi/spi-bus.txt:
+
+spi-lsb-first:  used only by MAXIM DS-1302 which is always LSB first; 
+driver should set this
+
+spi-3wire: again, only set by MAXIM DS-1302 which always needs this 
+setting; driver could set this
+
+spi-tx-delay-us:
+spi-rx-delay-us:  only parsed by RMI4 driver... no DTS files in kernel 
+set these.  I hardly see how these are "hardware" settings rather than 
+message settings, but the driver can set these in any case.
+
+Anyway, the point is, looking at the current documentation, it's pretty 
+difficult to understand whether devicetree is restricted to describing 
+hardware or is also for configuring drivers...
+
+> 
+> Again, max_speed_hz is something different: while both the SPI master and
+> slave may support high speeds, board wiring (capacitance/inductance) may
+> need to force a slower speed than supported by the devices, so it makes
+> sense to make that configurable from DT.
+
+Yeah, that one make sense.  But if the DT is only overriding the maximum 
+device frequency that the driver should otherwise be setting, why is 
+spi-max-frequency a _required_ property?
+
+Thanks for taking the time to provide the additional explanation.  I had 
+to ruminate on it for a bit, but I think it's starting to sink in now!
+
+/Jonas
+
+> 
+> Gr{oetje,eeting}s,
+> 
+>                          Geert
+> 
