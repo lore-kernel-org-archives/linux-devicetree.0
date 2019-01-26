@@ -1,74 +1,33 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 4/4] dt-bindings: input: Add documentation for gp2a sensor
-Date: Fri, 25 Jan 2019 17:32:37 -0800
-Message-ID: <20190126013237.GF212026@dtor-ws>
-References: <20190125175045.22576-1-pawel.mikolaj.chmiel@gmail.com>
- <20190125175045.22576-5-pawel.mikolaj.chmiel@gmail.com>
+From: Nicolin Chen <nicoleotsuka@gmail.com>
+Subject: Re: [PATCH v3 2/4] ASoC: add fsl_audmix DT binding documentation
+Date: Fri, 25 Jan 2019 17:49:19 -0800
+Message-ID: <20190126014918.GA2617@Asurada-Nvidia.nvidia.com>
+References: <1547729177-14317-1-git-send-email-viorel.suman@nxp.com>
+ <1547729177-14317-3-git-send-email-viorel.suman@nxp.com>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190125175045.22576-5-pawel.mikolaj.chmiel@gmail.com>
+In-Reply-To: <1547729177-14317-3-git-send-email-viorel.suman@nxp.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, mchehab+samsung@kernel.org, colyli@suse.de, ckeepax@opensource.wolfsonmicro.com, andrew.smirnov@gmail.com, arnd@arndb.de, xiaotong.lu@spreadtrum.com, xc-racer2@live.ca, linux-input@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Viorel Suman <viorel.suman@nxp.com>, Rob Herring <robh+dt@kernel.org>
+Cc: Liam Girdwood <lgirdwood@gmail.com>, Mark Brown <broonie@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>, Timur Tabi <timur@kernel.org>, Xiubo Li <Xiubo.Lee@gmail.com>, Fabio Estevam <fabio.estevam@nxp.com>, "S.j. Wang" <shengjiu.wang@nxp.com>, Daniel Baluta <daniel.baluta@nxp.com>, Cosmin Samoila <cosmin.samoila@nxp.com>, "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>, dl-linux-imx <linux-imx@nxp.com>, Viorel Suman <viorel.suman@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 06:50:45PM +0100, Paweł Chmiel wrote:
-> From: Jonathan Bakker <xc-racer2@live.ca>
-> 
-> This commit adds documentation for Sharp GP2AP002A00F.
-> It's Proximity/Opto Sensor connected over i2c.
-> 
-> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> ---
->  .../bindings/input/sharp,gp2ap002a00f.txt     | 29 +++++++++++++++++++
->  1 file changed, 29 insertions(+)
->  create mode 100644 Documentation/devicetree/bindings/input/sharp,gp2ap002a00f.txt
-> 
-> diff --git a/Documentation/devicetree/bindings/input/sharp,gp2ap002a00f.txt b/Documentation/devicetree/bindings/input/sharp,gp2ap002a00f.txt
-> new file mode 100644
-> index 000000000000..c524eb7d3d60
-> --- /dev/null
-> +++ b/Documentation/devicetree/bindings/input/sharp,gp2ap002a00f.txt
-> @@ -0,0 +1,29 @@
-> +* Sharp GP2AP002A00F I2C Proximity/Opto Sensor
-> +
-> +Required properties:
-> +- compatible : Should be "sharp,gp2ap002a00f"
-> +- reg : The I2C address of the sensor
-> +- vout-gpio : The gpio connected to the vout pin
+On Thu, Jan 17, 2019 at 12:46:29PM +0000, Viorel Suman wrote:
 
-Do you know what it is for?
+> +  - dais		: Must contain a list of phandles to AUDMIX connected
+> +			  DAIs. The current implementation requires two phandles
+> +			  to SAI interfaces to be provided, the first SAI in the
+> +			  list being used to route the AUDMIX output.
 
-> +- interrupt-parent : should be the phandle for the interrupt controller
-> +- interrupts : Interrupt mapping for GPIO IRQ, it should by configured with
-> +		flags IRQ_TYPE_EDGE_BOTH
-> +
-> +Optional properties:
-> +- wakeup : If the device is capable of waking up the system
-> +- io-channels : Phandle to an ADC channel connected to the light sensor
-> +- io-channel-names = "light";
-> +- poll-interval : Poll interval time in milliseconds, default 500ms
-> +- light-adc-max : Maximum light value reported, default 4096
-> +- light-adc-fuzz : Fuzz value for reported light value, default 80
-> +
-> +Example:
-> +
-> +gp2a@44 {
-> +	compatible = "sharp,gp2ap002a00f";
-> +	reg = <0x44>;
-> +	vout-gpio = <&gph0 2 GPIO_ACTIVE_HIGH>;
-> +	interrupt-parent = <&gph0>;
-> +	interrupts = <2 IRQ_TYPE_EDGE_BOTH>;
-> +	io-channels = <&adc 9>;
-> +	io-channel-names = "light";
-> +};
-> -- 
-> 2.17.1
-> 
+Another small thing, that I just noticed, is this list. It forces
+the first input source to be the output source without giving any
+chance. I feel that we could have some flexibility here: one node
+for two input sources, and one node for the output source.
 
--- 
-Dmitry
+Well, there is no critical problem with the current binding since
+it follows the SoC design. Yet I doubt if this routing logic will
+never break.
+
+Any suggestion, Rob?
