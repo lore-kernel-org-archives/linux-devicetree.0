@@ -1,53 +1,42 @@
-Return-Path: <SRS0=/eZE=QE=ysoft.com=michal.vokac@kernel.org>
-From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
-Subject: [PATCH RESEND v2 3/4] ARM: dts: imx28-cfa10036: Fix the reset gpio signal polarity
-Date: Mon, 28 Jan 2019 12:53:02 +0100
-Message-Id: <1548676383-29685-4-git-send-email-michal.vokac@ysoft.com>
-In-Reply-To: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
-References: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
+Return-Path: <SRS0=WAFM=QD=martingkelly.com=martin@kernel.org>
+Subject: Re: [PATCH v2 2/6] iio:bmi160: add drdy interrupt support
+References: <20190122020431.5338-1-martin@martingkelly.com>
+ <20190122020431.5338-2-martin@martingkelly.com>
+ <20190126201756.12faa7bb@archlinux>
+From: Martin Kelly <martin@martingkelly.com>
+Message-ID: <e2ede2cc-527e-24e1-81de-0fe7b6b2cc4c@martingkelly.com>
+Date: Sun, 27 Jan 2019 12:43:26 -0800
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
+In-Reply-To: <20190126201756.12faa7bb@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+To: Jonathan Cameron <jic23@kernel.org>
+Cc: linux-iio@vger.kernel.org, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org
 List-ID: <devicetree@vger.kernel.org>
 
-The reset signal of the SSD1306 OLED display is actually active-low.
-Adapt the DT to reflect the real world.
+On 1/26/19 12:17 PM, Jonathan Cameron wrote:
+> On Mon, 21 Jan 2019 18:04:27 -0800
+> Martin Kelly <martin@martingkelly.com> wrote:
+> 
+>> From: Martin Kelly <martin@martingkelly.com>
+>>
+>> Add interrupt support for the data ready signal on the BMI160, which fires
+>> an interrupt whenever new accelerometer/gyroscope data is ready to read.
+>>
+>> Signed-off-by: Martin Kelly <martin@martingkelly.com>
+[snip]
 
-Reviewed-by: Rob Herring <robh@kernel.org>
-Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
----
-Changes in v2 resend:
- - Add Acked-by from Alexandre.
+> 
+> That seems unlikely.  Why on a rising trigger are we setting a flag
+> that is named to imply it sets level triggering?
+> 
 
-Changes from v1:
- - Add R-by from Rob
+Looking again, I see that the code is right but the names/comment were 
+wrong. In v3, I renamed BMI160_LEVEL_TRIGGERED to BMI160_EDGE_TRIGGERED, 
+as the default is actually level-triggered active-low. The datasheet (p 
+63) has a sentence:
 
- arch/arm/boot/dts/imx28-cfa10036.dts | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+‘1’ (‘0’) is edge (level) triggered for INT1 pin
 
-diff --git a/arch/arm/boot/dts/imx28-cfa10036.dts b/arch/arm/boot/dts/imx28-cfa10036.dts
-index d3e3622..de48b58 100644
---- a/arch/arm/boot/dts/imx28-cfa10036.dts
-+++ b/arch/arm/boot/dts/imx28-cfa10036.dts
-@@ -11,6 +11,7 @@
- 
- /dts-v1/;
- #include "imx28.dtsi"
-+#include <dt-bindings/gpio/gpio.h>
- 
- / {
- 	model = "Crystalfontz CFA-10036 Board";
-@@ -96,7 +97,7 @@
- 					pinctrl-names = "default";
- 					pinctrl-0 = <&ssd1306_cfa10036>;
- 					reg = <0x3c>;
--					reset-gpios = <&gpio2 7 0>;
-+					reset-gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
- 					solomon,height = <32>;
- 					solomon,width = <128>;
- 					solomon,page-offset = <0>;
--- 
-2.1.4
+which I read backwards.
