@@ -1,44 +1,78 @@
-Return-Path: <SRS0=ySGx=QB=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from svr.coutbloog.ml ([157.230.181.185]:55865 "EHLO
-        svr.coutbloog.ml" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726312AbfAYHI2 (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Fri, 25 Jan 2019 02:08:28 -0500
-Received: from authenticated-user (svr.coutbloog.ml [157.230.181.185])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by svr.coutbloog.ml (Postfix) with ESMTPSA id D973E56689
-        for <devicetree@vger.kernel.org>; Thu, 24 Jan 2019 11:17:17 +0000 (UTC)
-Reply-To: earthlink@zoho.com
-From: Sasha Kelley <info@coutbloog.ml>
-Subject: Request for Quotation
-Date: 24 Jan 2019 12:16:24 -0800
-Message-ID: <20190124121623.6CD1ADE9B3CA63D3@coutbloog.ml>
-MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="utf-8"
-Content-Transfer-Encoding: quoted-printable
-Sender: devicetree-owner@vger.kernel.org
-To: devicetree@vger.kernel.org
+Return-Path: <>
+From: Martin Kelly <martin@martingkelly.com>
+Subject: [PATCH v3 1/6] iio:bmi160: add SPDX identifiers
+Date: Sun, 27 Jan 2019 12:39:06 -0800
+Message-Id: <20190127203911.8696-2-martin@martingkelly.com>
+In-Reply-To: <20190127203911.8696-1-martin@martingkelly.com>
+References: <20190127203911.8696-1-martin@martingkelly.com>
+To: linux-iio@vger.kernel.org
+Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org, Martin Kelly <martin@martingkelly.com>
 List-ID: <devicetree@vger.kernel.org>
 
-Nice day to you!
+From: Martin Kelly <martin@martingkelly.com>
 
-My Names Sasha Kelley from Earthlink, Inc. Moscow Russia
+Add SPDX identifiers (GPL 2) for the BMI160 driver. bmi160.h had an
+identifier, but the other files did not.
 
-There is an available invitation to tender suitable for your=C2=A0
-products and I would like to inquire if your company will be=C2=A0
-interested to submit offer for your products in Moscow Russia.
+Signed-off-by: Martin Kelly <martin@martingkelly.com>
+---
+ drivers/iio/imu/bmi160/bmi160_core.c | 5 +----
+ drivers/iio/imu/bmi160/bmi160_i2c.c  | 5 +----
+ drivers/iio/imu/bmi160/bmi160_spi.c  | 4 +---
+ 3 files changed, 3 insertions(+), 11 deletions(-)
 
-Please confirm interest by sending product catalog/price list=20
-for=C2=A0
-our review.
-
-Looking forward to hearing from you.
-
-Best Regards,
-
-Area Manager
-Sasha Kelley
-Tel: +79017731031
-E-mail: earthlink@zoho.com
-Earthlink, Inc (Moscow).
+diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
+index b10330b0f93f..ce61026d84c3 100644
+--- a/drivers/iio/imu/bmi160/bmi160_core.c
++++ b/drivers/iio/imu/bmi160/bmi160_core.c
+@@ -1,12 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * BMI160 - Bosch IMU (accel, gyro plus external magnetometer)
+  *
+  * Copyright (c) 2016, Intel Corporation.
+  *
+- * This file is subject to the terms and conditions of version 2 of
+- * the GNU General Public License.  See the file COPYING in the main
+- * directory of this archive for more details.
+- *
+  * IIO core driver for BMI160, with support for I2C/SPI busses
+  *
+  * TODO: magnetometer, interrupts, hardware FIFO
+diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
+index 5b1f7e6af651..e36f5e82d400 100644
+--- a/drivers/iio/imu/bmi160/bmi160_i2c.c
++++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
+@@ -1,12 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * BMI160 - Bosch IMU, I2C bits
+  *
+  * Copyright (c) 2016, Intel Corporation.
+  *
+- * This file is subject to the terms and conditions of version 2 of
+- * the GNU General Public License.  See the file COPYING in the main
+- * directory of this archive for more details.
+- *
+  * 7-bit I2C slave address is:
+  *      - 0x68 if SDO is pulled to GND
+  *      - 0x69 if SDO is pulled to VDDIO
+diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
+index e521ad14eeac..c19e3df35559 100644
+--- a/drivers/iio/imu/bmi160/bmi160_spi.c
++++ b/drivers/iio/imu/bmi160/bmi160_spi.c
+@@ -1,11 +1,9 @@
++// SPDX-License-Identifier: GPL-2.0
+ /*
+  * BMI160 - Bosch IMU, SPI bits
+  *
+  * Copyright (c) 2016, Intel Corporation.
+  *
+- * This file is subject to the terms and conditions of version 2 of
+- * the GNU General Public License.  See the file COPYING in the main
+- * directory of this archive for more details.
+  */
+ #include <linux/acpi.h>
+ #include <linux/module.h>
+-- 
+2.11.0
