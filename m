@@ -1,55 +1,50 @@
-From: Dong Aisheng <dongas86@gmail.com>
-Subject: Re: [PATCH 2/4] dt-bindings: irq: imx-irqsteer: add multi output
- interrupts support
-Date: Sun, 27 Jan 2019 22:05:23 +0800
-Message-ID: <CAA+hA=QsbQ7k-5aXyWCM+Fss5nc7yr5=CRC3Uo+5r67Da5Pg6g@mail.gmail.com>
-References: <1547797668-30342-1-git-send-email-aisheng.dong@nxp.com>
- <1547797668-30342-3-git-send-email-aisheng.dong@nxp.com> <1548413169.28802.43.camel@pengutronix.de>
+From: Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH 4/5] ARM: dts: sun5i: q8-tablet: Add LCD Panel power supply
+Date: Sun, 27 Jan 2019 22:48:37 +0800
+Message-ID: <20190127144838.3578-5-wens@csie.org>
+References: <20190127144838.3578-1-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548413169.28802.43.camel@pengutronix.de>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Lucas Stach <l.stach@pengutronix.de>
-Cc: Aisheng Dong <aisheng.dong@nxp.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "shawnguo@kernel.org" <shawnguo@kernel.org>, dl-linux-imx <linux-imx@nxp.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tglx@linutronix.de" <tglx@linutronix.de>, Marc Zyngier <marc.zyngier@arm.com>
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
+In-Reply-To: <20190127144838.3578-1-wens@csie.org>
+List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
+List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
+List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
+List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
+List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
+ <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
+Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
+Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: devicetree@vger.kernel.org, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 6:47 PM Lucas Stach <l.stach@pengutronix.de> wrote:
->
-> Am Freitag, den 18.01.2019, 07:53 +0000 schrieb Aisheng Dong:
-> > One irqsteer channel can support up to 8 output interrupts.
-> >
-> > > Cc: Marc Zyngier <marc.zyngier@arm.com>
-> > > Cc: Rob Herring <robh+dt@kernel.org>
-> > > Cc: Lucas Stach <l.stach@pengutronix.de>
-> > > Cc: Shawn Guo <shawnguo@kernel.org>
-> > Cc: devicetree@vger.kernel.org
-> > > Signed-off-by: Dong Aisheng <aisheng.dong@nxp.com>
-> > ---
-> >  .../devicetree/bindings/interrupt-controller/fsl,irqsteer.txt        | 5 +++--
-> >  1 file changed, 3 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> > index eaabcda..beeed4a 100644
-> > --- a/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> > +++ b/Documentation/devicetree/bindings/interrupt-controller/fsl,irqsteer.txt
-> > @@ -6,8 +6,9 @@ Required properties:
-> > >     - "fsl,imx8m-irqsteer"
-> > >     - "fsl,imx-irqsteer"
-> >  - reg: Physical base address and size of registers.
-> > -- interrupts: Should contain the parent interrupt line used to multiplex the
-> > -  input interrupts.
-> > +- interrupts: Should contain the up to 8 parent interrupt lines used to
-> > +  multiplex the input interrupts. They should be sepcified seqencially
-> > +  from output 0 to 7. NOTE at least one output interrupt has to be specified.
->
-> I don't think the note clarifies anything. Given that the thing is a
-> irq multiplexer I don't think anyone expects that you could get away
-> with no output irq.
->
+The A13 Q8 tablet, following the A13 reference tablet design, has the
+system's fixed 3.3V rail feed the VCC supply of the LCD panel.
+Additional voltage rails used by the panel are generated using a
+regulator fed from the unregulated IPSOUT output of the PMIC. The latter
+is unrepresentable in the device tree. Both are controlled with MOSFETs
+by the enable GPIO added in the previous patch. The actual enable or
+reset pin for the panel is tied directly to LCD-VCC after the MOSFET.
 
-Sound reasonable to me.
-I will remove the note and keep other as it is.
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+---
+ arch/arm/boot/dts/sun5i-a13-q8-tablet.dts | 1 +
+ 1 file changed, 1 insertion(+)
 
-Regards
-Dong Aisheng
+diff --git a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
+index ead159f89e74..c77c0758145a 100644
+--- a/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
++++ b/arch/arm/boot/dts/sun5i-a13-q8-tablet.dts
+@@ -50,6 +50,7 @@
+ 
+ 	panel: panel {
+ 		compatible = "urt,umsh-8596md-t", "simple-panel";
++		power-supply = <&reg_vcc3v3>;
+ 		enable-gpios = <&axp_gpio 0 GPIO_ACTIVE_HIGH>; /* AXP GPIO0 */
+ 		backlight = <&backlight>;
+ 		#address-cells = <1>;
+-- 
+2.20.1
