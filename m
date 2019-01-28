@@ -1,112 +1,84 @@
-From: Jorge Ramirez <jorge.ramirez-ortiz@linaro.org>
-Subject: Re: [PATCH 04/13] dt-bindings: mailbox: qcom: Add clock-name optional
- property
-Date: Mon, 28 Jan 2019 17:57:35 +0100
-Message-ID: <83e77b69-9a22-641f-ada9-7dac565160e1@linaro.org>
-References: <1545039990-19984-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <1545039990-19984-5-git-send-email-jorge.ramirez-ortiz@linaro.org>
- <20190117064411.GK25498@builder>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.14 079/170] ARM: dts: Fix up the D-Link DIR-685 MTD partition info
+Date: Mon, 28 Jan 2019 11:10:29 -0500
+Message-ID: <20190128161200.55107-79-sashal@kernel.org>
+References: <20190128161200.55107-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190117064411.GK25498@builder>
-Content-Language: en-US
+In-Reply-To: <20190128161200.55107-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Bjorn Andersson <bjorn.andersson@linaro.org>
-Cc: robh+dt@kernel.org, mark.rutland@arm.com, andy.gross@linaro.org, david.brown@linaro.org, sboyd@kernel.org, will.deacon@arm.com, mturquette@baylibre.com, jassisinghbrar@gmail.com, vkoul@kernel.org, niklas.cassel@linaro.org, sibis@codeaurora.org, georgi.djakov@linaro.org, arnd@arndb.de, horms+renesas@verge.net.au, heiko@sntech.de, enric.balletbo@collabora.com, jagan@amarulasolutions.com, olof@lixom.net, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Linus Walleij <linus.walleij@linaro.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On 1/17/19 07:44, Bjorn Andersson wrote:
-> On Mon 17 Dec 01:46 PST 2018, Jorge Ramirez-Ortiz wrote:
-> 
->> When the APCS clock is registered (platform dependent), it retrieves
->> its parent names from hardcoded values in the driver.
->>
->> The following commit allows the DT node to provide such clock names to
->> the platform data based clock driver therefore avoiding having to
->> explicitly embed those names in the clock driver source code.
->>
->> Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
->> Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
->> Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
->> ---
->>  .../bindings/mailbox/qcom,apcs-kpss-global.txt      | 21 +++++++++++++++++++++
->>  1 file changed, 21 insertions(+)
->>
->> diff --git a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
->> index 1232fc9..f252439 100644
->> --- a/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
->> +++ b/Documentation/devicetree/bindings/mailbox/qcom,apcs-kpss-global.txt
->> @@ -23,6 +23,10 @@ platforms.
->>  	Value type: <phandle>
->>  	Definition: phandle to the input PLL, which feeds the APCS mux/divider
->>  
->> +       Usage: required if #clock-names property is present
->> +       Value type: <phandle array>
->> +	Definition: phandles to the two parent clocks of the clock driver.
-> 
-> I presume you meant to replace the existing definition of "clocks"?
+From: Linus Walleij <linus.walleij@linaro.org>
 
-I am sorry didn't reply to this earlier. Yes this is not very clear.
+[ Upstream commit 738a05e673435afb986b53da43befd83ad87ec3b ]
 
-This is required as an extension to the apcs-msm8916.c driver also used
-on the qcs404; since it is an extension, the previous definition should
-still be applicable.
+The vendor firmware was analyzed to get the right idea about
+this flash layout. /proc/mtd contains:
 
-In the case of the msm8916 the #clock-names property is NOT necessary
-(it would be ignored by the driver), so having it should not mean that
-we need to have #clocks.
+dev:    size   erasesize  name
+mtd0: 01e7ff40 00020000 "rootfs"
+mtd1: 01f40000 00020000 "upgrade"
+mtd2: 00040000 00020000 "rgdb"
+mtd3: 00020000 00020000 "nvram"
+mtd4: 00040000 00020000 "RedBoot"
+mtd5: 00020000 00020000 "LangPack"
+mtd6: 02000000 00020000 "flash"
 
-In the case of the qcs404, having clock-names means that we do need to
-have #clocks (hence the additional if)
+Here "flash" is obviously the whole device and we know "rootfs"
+is a bogus hack to point to a squashfs rootfs inside of the main
+"upgrade partition". We know "RedBoot" is the first 0x40000 of
+the flash and the "upgrade" partition follows from 0x40000 to
+0x1f8000. So we have mtd0, 1, 4 and 6 covered.
 
-and not quite sure how to word this condition in the bindings..
+Remains:
+mtd2: 00040000 00020000 "rgdb"
+mtd3: 00020000 00020000 "nvram"
+mtd5: 00020000 00020000 "LangPack"
 
-I am going to post v2 with some updates and if required will post a v3
-with more clarifications.
+Inspecting the flash at 0x1f8000 and 0x1fa000 reveals each of
+these starting with "RGCFG1" so we assume 0x1f8000-1fbfff is
+"rgdb" of 0x40000.
 
-> 
-> I think the purpose of "required if #clock-cells" comes from that
-> meaning that it represents a clock-controller if #clock-cells is
-> specified, in which case it requires the upstream clock(s).
-> 
-> Regards,
-> Bjorn
-> 
->> +
->>  - #mbox-cells:
->>  	Usage: required
->>  	Value type: <u32>
->> @@ -33,6 +37,12 @@ platforms.
->>  	Value type: <u32>
->>  	Definition: as described in clock.txt, must be 0
->>  
->> +- clock-names:
->> +	Usage: required if the platform data based clock driver needs to
->> +	retrieve the parent clock names from device tree.
->> +	This will requires two mandatory clocks to be defined.
->> +	Value type: <string-array>
->> +	Definition: must be "aux" and "pll"
->>  
->>  = EXAMPLE
->>  The following example describes the APCS HMSS found in MSM8996 and part of the
->> @@ -65,3 +75,14 @@ Below is another example of the APCS binding on MSM8916 platforms:
->>  		clocks = <&a53pll>;
->>  		#clock-cells = <0>;
->>  	};
->> +
->> +Below is another example of the APCS binding on QCS404 platforms:
->> +
->> +	apcs_glb: mailbox@b011000 {
->> +		compatible = "qcom,qcs404-apcs-apps-global", "syscon";
->> +		reg = <0x0b011000 0x1000>;
->> +		#mbox-cells = <1>;
->> +		clocks = <&gcc GCC_GPLL0_AO_OUT_MAIN>, <&apcs_hfpll>;
->> +		clock-names = "aux", "pll";
->> +		#clock-cells = <0>;
->> +	};
->> -- 
->> 2.7.4
->>
-> 
+Signed-off-by: Linus Walleij <linus.walleij@linaro.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/gemini-dlink-dir-685.dts | 16 ++++++----------
+ 1 file changed, 6 insertions(+), 10 deletions(-)
+
+diff --git a/arch/arm/boot/dts/gemini-dlink-dir-685.dts b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+index e75e2d44371c..d6f752ab07bb 100644
+--- a/arch/arm/boot/dts/gemini-dlink-dir-685.dts
++++ b/arch/arm/boot/dts/gemini-dlink-dir-685.dts
+@@ -128,20 +128,16 @@
+ 				read-only;
+ 			};
+ 			/*
+-			 * Between the boot loader and the rootfs is the kernel
+-			 * in a custom Storlink format flashed from the boot
+-			 * menu. The rootfs is in squashfs format.
++			 * This firmware image contains the kernel catenated
++			 * with the squashfs root filesystem. For some reason
++			 * this is called "upgrade" on the vendor system.
+ 			 */
+-			partition@1800c0 {
+-				label = "rootfs";
+-				reg = <0x001800c0 0x01dbff40>;
+-				read-only;
+-			};
+-			partition@1f40000 {
++			partition@40000 {
+ 				label = "upgrade";
+-				reg = <0x01f40000 0x00040000>;
++				reg = <0x00040000 0x01f40000>;
+ 				read-only;
+ 			};
++			/* RGDB, Residental Gateway Database? */
+ 			partition@1f80000 {
+ 				label = "rgdb";
+ 				reg = <0x01f80000 0x00040000>;
+-- 
+2.19.1
