@@ -1,101 +1,77 @@
-From: Simon Horman <horms@verge.net.au>
-Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to
- CAN nodes
-Date: Mon, 28 Jan 2019 14:01:12 +0100
-Message-ID: <20190128130111.t54jbcyx35fiymq6@verge.net.au>
-References: <1547736856-16539-1-git-send-email-fabrizio.castro@bp.renesas.com>
- <1547736856-16539-3-git-send-email-fabrizio.castro@bp.renesas.com>
- <20190118121353.3mb44a7rmmp2ru5d@verge.net.au>
- <20190123095122.l3engeuwx6qr5lzc@verge.net.au>
- <20190123113812.e3nojtxjxywmg4gn@verge.net.au>
- <TYXPR01MB1775ABDCFD939F91F1053534C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <CAMuHMdVkFJ7Cy-+tNHsOcYaxDj82WjMynuFuPRXa4k=DH2fGCQ@mail.gmail.com>
- <TYXPR01MB1775B75CED683E38B9171EA8C0990@TYXPR01MB1775.jpnprd01.prod.outlook.com>
- <20190124100123.a2gvucnnwrxibulf@verge.net.au>
- <TY1PR01MB177085C4C1DF3D9827EB769BC09B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
+From: Artur Rojek <contact@artur-rojek.eu>
+Subject: [PATCH 1/3] dt-bindings: iio/adc: Add docs for Ingenic JZ47xx SoCs ADC.
+Date: Mon, 28 Jan 2019 14:02:39 +0100
+Message-ID: <20190128130241.5027-1-contact@artur-rojek.eu>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Return-path: <netdev-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <TY1PR01MB177085C4C1DF3D9827EB769BC09B0@TY1PR01MB1770.jpnprd01.prod.outlook.com>
-Sender: netdev-owner@vger.kernel.org
-To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-Cc: Geert Uytterhoeven <geert@linux-m68k.org>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, "David S. Miller" <davem@davemloft.net>, Magnus Damm <magnus.damm@gmail.com>, Geert Uytterhoeven <geert+renesas@glider.be>, Chris Paterson <Chris.Paterson2@renesas.com>, Biju Das <biju.das@bp.renesas.com>, "linux-can@vger.kernel.org" <linux-can@vger.kernel.org>, "netdev@vger.kernel.org" <netdev@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-renesas-soc@vger.kernel.org" <linux-renesas-soc@vger.kernel.org>, "linux-clk@vger.kernel.org" <linux-clk@v>
+Content-Transfer-Encoding: 8bit
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
+Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 11:33:41AM +0000, Fabrizio Castro wrote:
-> Hello Simon,
-> 
-> Thank you for your feedback!
-> 
-> > From: Simon Horman <horms@verge.net.au>
-> > Sent: 24 January 2019 10:01
-> > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> >
-> > On Wed, Jan 23, 2019 at 12:18:45PM +0000, Fabrizio Castro wrote:
-> > > Hello Geert,
-> > >
-> > > Thank you for your feedback!
-> > >
-> > > > From: Geert Uytterhoeven <geert@linux-m68k.org>
-> > > > Sent: 23 January 2019 12:08
-> > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > > >
-> > > > Hi Fabrizio,
-> > > >
-> > > > On Wed, Jan 23, 2019 at 1:01 PM Fabrizio Castro
-> > > > <fabrizio.castro@bp.renesas.com> wrote:
-> > > > > > From: Simon Horman <horms@verge.net.au>
-> > > > > > Sent: 23 January 2019 11:38
-> > > > > > Subject: Re: [PATCH 2/3] arm64: dts: renesas: r8a774a1: Add clkp2 clock to CAN nodes
-> > > > > >
-> > > > > > On Wed, Jan 23, 2019 at 10:51:23AM +0100, Simon Horman wrote:
-> > > > > > > On Fri, Jan 18, 2019 at 01:13:53PM +0100, Simon Horman wrote:
-> > > > > > > > On Thu, Jan 17, 2019 at 02:54:15PM +0000, Fabrizio Castro wrote:
-> > > > > > > > > According to the latest information, clkp2 is available on RZ/G2.
-> > > > > > > > > Modify CAN0 and CAN1 nodes accordingly.
-> > > > > > > > >
-> > > > > > > > > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-> > > > > > > > > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
-> > > >
-> > > > > > > Thanks again, applied for v5.1.
-> > > > > >
-> > > > > > Sorry, I was a little hasty there.
-> > > > > >
-> > > > > > This patch depends on the presence of R8A774A1_CLK_CANFD which
-> > > > > > (rightly) is added in a different patch in this series which is to
-> > > > > > go upstream via a different tree.
-> > > > > >
-> > > > > > I have dropped this patch for now. I think there are two solution to this
-> > > > > > problem.
-> > > > > >
-> > > > > > 1. Provide a version of this patch which uses a numeric index instead of
-> > > > > >    R8A774A1_CLK_CANFD. And then, once R8A774A1_CLK_CANFD is present in an
-> > > > > >    RC release provide a patch to switch to using R8A774A1_CLK_CANFD.
-> > > > > >
-> > > > > > 2. Defer this patch until R8A774A1_CLK_CANFD is present in an RC release.
-> > > > >
-> > > > > Yeah, my personal preference is solution 2.
-> > > >
-> > > > Note that solution 2 will probably defer the DT patch to v5.2.
-> > >
-> > > Yeah, my understanding is that even if we chose solution 1 we would still
-> > > need to be waiting for v5.2 for the patch to switch to using
-> > > R8A774A1_CLK_CANFD to appear in a rc, therefore I think solution 2 is
-> > > fine.
-> >
-> > Your understanding is the same as mine.
-> >
-> > I do seem some slight value in option 1 in terms of getting the change,
-> > less the minor issue of using an index rather than a symbol, upstream
-> > earlier. But I do not feel strongly about this.
-> >
-> > I am marking this patch as deferred. Please repost or otherwise ping me
-> > when you would like to revisit this topic.
-> 
-> Thank you. Will do.
+Add documentation for the ADC controller on JZ47xx SoCs,
+used by the ingenic-adc driver.
 
-Thanks.
+Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
+---
+ .../bindings/iio/adc/ingenic,adc.txt          | 48 +++++++++++++++++++
+ 1 file changed, 48 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
 
-I believe "[10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to CAN nodes"
-falls into the same category. I have marked it as deferred accordingly.
+diff --git a/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+new file mode 100644
+index 000000000000..884f459bb9b9
+--- /dev/null
++++ b/Documentation/devicetree/bindings/iio/adc/ingenic,adc.txt
+@@ -0,0 +1,48 @@
++* Ingenic JZ47xx ADC controller IIO bindings
++
++Required properties:
++
++- compatible: Should be one of:
++  * ingenic,jz4725b-adc
++  * ingenic,jz4740-adc
++- reg: ADC controller registers location and length.
++- clocks: phandle to the SoC's ADC clock.
++- clock-names: Must be set to "adc".
++- #io-channel-cells: Must be set to <1> to indicate channels are selected
++  by index.
++
++ADC clients must use the format described in iio-bindings.txt, giving
++a phandle and IIO specifier pair ("io-channels") to the ADC controller.
++
++Example:
++
++#include <dt-bindings/iio/adc/ingenic,adc.h>
++
++adc: adc@10070000 {
++	compatible = "ingenic,jz4740-adc";
++	#io-channel-cells = <1>;
++
++	reg = <0x10070000 0x30>;
++
++	clocks = <&cgu JZ4740_CLK_ADC>;
++	clock-names = "adc";
++
++	interrupt-parent = <&intc>;
++	interrupts = <18>;
++};
++
++adc-keys {
++	...
++	compatible = "adc-keys";
++	io-channels = <&adc INGENIC_ADC_AUX>;
++	io-channel-names = "buttons";
++	...
++};
++
++battery {
++	...
++	compatible = "ingenic,jz4740-battery",
++	io-channels = <&adc INGENIC_ADC_BATTERY>;
++	io-channel-names = "battery";
++	...
++};
+-- 
+2.20.1
