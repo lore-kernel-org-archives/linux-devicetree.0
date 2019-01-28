@@ -1,105 +1,97 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v2 10/10] watchdog: bd70528: Initial support for ROHM
- BD70528 watchdog block
-Date: Mon, 28 Jan 2019 10:13:47 +0200
-Message-ID: <20190128081347.GD2030@localhost.localdomain>
-References: <20190125110625.GA29348@localhost.localdomain>
- <1d05ec19-daf6-f1d9-f80c-57fc92906d22@roeck-us.net>
- <20190128080035.GC2030@localhost.localdomain>
+From: Sibi Sankar <sibis@codeaurora.org>
+Subject: Re: [PATCH v5] arm64: dts: sdm845: add video nodes
+Date: Mon, 28 Jan 2019 14:02:44 +0530
+Message-ID: <4df9ddb2ea57d4d85b407b7d7a934ac2@codeaurora.org>
+References: <1548403893-21677-1-git-send-email-mgottam@codeaurora.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190128080035.GC2030@localhost.localdomain>
+In-Reply-To: <1548403893-21677-1-git-send-email-mgottam@codeaurora.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Malathi Gottam <mgottam@codeaurora.org>
+Cc: andy.gross@linaro.org, david.brown@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, acourbot@chromium.org, stanimir.varbanov@linaro.org, vgarodia@codeaurora.org, linux-arm-msm-owner@vger.kernel.org, bjorn.andersson@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-On Mon, Jan 28, 2019 at 10:00:35AM +0200, Matti Vaittinen wrote:
-> On Sat, Jan 26, 2019 at 08:36:14AM -0800, Guenter Roeck wrote:
-> > On 1/25/19 3:06 AM, Matti Vaittinen wrote:
-> > > +/* Max time we can set is 1 hour, 59 minutes and 59 seconds */
-> > > +#define WDT_MAX_MS ((2 * 60 * 60 - 1) * 1000)
-> > > +/* Minimum time is 1 second */
-> > > +#define WDT_MIN_MS 1000
-> > > +#define DEFAULT_TIMEOUT 60
-> > > +
-> > > +static int bd70528_wdt_probe(struct platform_device *pdev)
-> > > +{
-> > > +	struct bd70528 *bd70528;
-> > > +	struct wdtbd70528 *w;
-> > > +	int ret;
-> > > +	unsigned int reg;
-> > > +	struct watchdog_device *wdt;
-> > > +
-> > > +	bd70528 = dev_get_drvdata(pdev->dev.parent);
-> > > +	if (!bd70528) {
-> > > +		dev_err(&pdev->dev, "No MFD driver data\n");
-> > > +		return -EINVAL;
-> > > +	}
-> > > +	w = devm_kzalloc(&pdev->dev, sizeof(*w), GFP_KERNEL);
-> > > +	if (!w)
-> > > +		return -ENOMEM;
-> > > +	w->bd = bd70528;
-> > 
-> > Unless I am missing something, only the mutex and the regmap pointer
-> > are used from struct bd70528. With that in mind, it might be desirable
-> > to copy those pointers to struct wdtbd70528 to avoid the additional
-> > dereferencing at runtime.
-> 
-> You are not missing anyting. If we ever add support for another PMIC
-> variant we will probably be using also the chip_type. Untill then only
-> the mutex and regmap. (And maybe the of_node if we have any RTC
-> properties in DT). So at this point we just use regmap and mutex. I will
-> change this.
+Hi Malathi,
 
-Oh, but actually we are also using the WDT state setting function
-provided by MFD. And this is taking the struct bd70528 as parameter. So
-maybe we can keep it like this afterall? 
+Bjorn has a patch adding all reserved memory
+nodes from version 10 so you can probably drop
+the venus_region node from the patch.
 
+https://patchwork.kernel.org/patch/10774869/
+
+On 2019-01-25 13:41, Malathi Gottam wrote:
+> This adds video nodes to sdm845 based on the examples
+> in the bindings.
 > 
-> > > +	w->dev = &pdev->dev;
-> > > +
-> > > +	wdt = devm_kzalloc(&pdev->dev, sizeof(*wdt), GFP_KERNEL);
-> > > +	if (!wdt)
-> > > +		return -ENOMEM;
-> > > +
-> > 
-> > struct watchdog_device can be part of struct wdtbd70528. Two separate allocations
-> > are not necessary.
+> Signed-off-by: Malathi Gottam <mgottam@codeaurora.org>
+> ---
+> Changes:
+> 	Added video firmware node
+>  arch/arm64/boot/dts/qcom/sdm845.dtsi | 38 
+> ++++++++++++++++++++++++++++++++++++
+>  1 file changed, 38 insertions(+)
 > 
-> Correct. Thanks for pointing that out. I'll simplify this.
+> diff --git a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> index b72bdb0..1af68f5 100644
+> --- a/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> +++ b/arch/arm64/boot/dts/qcom/sdm845.dtsi
+> @@ -87,6 +87,11 @@
+>  			reg = <0 0x86200000 0 0x2d00000>;
+>  			no-map;
+>  		};
+> +
+> +		venus_region: memory@95800000 {
+> +			reg = <0x0 0x95800000 0x0 0x500000>;
+> +			no-map;
+> +		};
+>  	};
 > 
-> > > +	wdt->info = &bd70528_wdt_info;
-> > > +	wdt->ops =  &bd70528_wdt_ops;
-> > > +	wdt->min_hw_heartbeat_ms = WDT_MIN_MS;
-> > > +	wdt->max_hw_heartbeat_ms = WDT_MAX_MS;
-> > > +	wdt->parent = pdev->dev.parent;
-> > > +	wdt->timeout = DEFAULT_TIMEOUT;
-> > > +	watchdog_set_drvdata(wdt, w);
-> > > +	watchdog_init_timeout(wdt, 0, pdev->dev.parent);
-> > > +
-> > > +	ret = bd70528_wdt_set_timeout(wdt, wdt->timeout);
-> > > +	if (ret) {
-> > > +		dev_err(&pdev->dev, "Failed to set the watchdog timeout\n");
-> > > +		return ret;
-> > > +	}
-> > > +
-> > > +	mutex_lock(&bd70528->rtc_timer_lock);
-> > > +	ret = regmap_read(bd70528->chip.regmap, BD70528_REG_WDT_CTRL, &reg);
-> > > +	mutex_unlock(&bd70528->rtc_timer_lock);
-> > > +
-> > 
-> > I don't see the point for the above mutex locks. This is just reading a
-> > single register. regmap itself provides locking for that already.
-> 
-> It has a purpose here - but I'd better add a comment. We want to get the
-> initial state of WDG here. If the probe is executed when RTC time is being
-> set we may read the state just when RTC is (temporarily) disabling WDT -
-> and we might tell the WDT core that WDT is disabled - even if it is
-> actually enabled. The mutex prevents us from reading the WDT state when
-> RTC is being set.
->  
-> Br,
-> 	Matti Vaittinen
+>  	cpus {
+> @@ -1403,5 +1408,38 @@
+>  				status = "disabled";
+>  			};
+>  		};
+> +
+> +		video-codec@aa00000 {
+> +			compatible = "qcom,sdm845-venus";
+> +			reg = <0x0aa00000 0xff000>;
+> +			interrupts = <GIC_SPI 174 IRQ_TYPE_LEVEL_HIGH>;
+> +			power-domains = <&videocc VENUS_GDSC>;
+> +			clocks = <&videocc VIDEO_CC_VENUS_CTL_CORE_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_AHB_CLK>,
+> +				 <&videocc VIDEO_CC_VENUS_CTL_AXI_CLK>;
+> +			clock-names = "core", "iface", "bus";
+> +			iommus = <&apps_smmu 0x10a0 0x8>,
+> +				 <&apps_smmu 0x10b0 0x0>;
+> +			memory-region = <&venus_region>;
+> +
+> +			video-core0 {
+> +				compatible = "venus-decoder";
+> +				clocks = <&videocc VIDEO_CC_VCODEC0_CORE_CLK>,
+> +					 <&videocc VIDEO_CC_VCODEC0_AXI_CLK>;
+> +				clock-names = "core", "bus";
+> +				power-domains = <&videocc VCODEC0_GDSC>;
+> +			};
+> +
+> +			video-core1 {
+> +				compatible = "venus-encoder";
+> +				clocks = <&videocc VIDEO_CC_VCODEC1_CORE_CLK>,
+> +					 <&videocc VIDEO_CC_VCODEC1_AXI_CLK>;
+> +				clock-names = "core", "bus";
+> +				power-domains = <&videocc VCODEC1_GDSC>;
+> +			};
+> +			video-firmware {
+> +				iommus = <&apps_smmu 0x10b2 0x0>;
+> +			};
+> +		};
+>  	};
+>  };
+
+-- 
+-- Sibi Sankar --
+Qualcomm Innovation Center, Inc. is a member of Code Aurora Forum,
+a Linux Foundation Collaborative Project.
