@@ -1,87 +1,140 @@
-From: Thierry Reding <thierry.reding@gmail.com>
-Subject: Re: [PATCH v2 1/3] dt-bindings: add vendor prefix for PDA Precision
- Design Associates, Inc.
-Date: Mon, 28 Jan 2019 17:17:20 +0100
-Message-ID: <20190128161720.GG26200@ulmo>
-References: <1547458584-29548-1-git-send-email-eugen.hristev@microchip.com>
- <1547458584-29548-2-git-send-email-eugen.hristev@microchip.com>
+From: Rob Herring <robh+dt@kernel.org>
+Subject: Re: [PATCH v2 1/5] dt-bindings: media: Add Allwinner A10 CSI binding
+Date: Mon, 28 Jan 2019 10:17:09 -0600
+Message-ID: <CAL_JsqKOyr3nbXozTqBsEAQGw2bPsBGvFpJ_X7S-izdjTWxK=g@mail.gmail.com>
+References: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
+ <f6b6adf84c58e0de605d0a23dd559fee011f380c.1548687041.git-series.maxime.ripard@bootlin.com>
 Mime-Version: 1.0
-Content-Type: multipart/mixed; boundary="===============1984472233=="
-Return-path: <dri-devel-bounces@lists.freedesktop.org>
-In-Reply-To: <1547458584-29548-2-git-send-email-eugen.hristev@microchip.com>
-List-Unsubscribe: <https://lists.freedesktop.org/mailman/options/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=unsubscribe>
-List-Archive: <https://lists.freedesktop.org/archives/dri-devel>
-List-Post: <mailto:dri-devel@lists.freedesktop.org>
-List-Help: <mailto:dri-devel-request@lists.freedesktop.org?subject=help>
-List-Subscribe: <https://lists.freedesktop.org/mailman/listinfo/dri-devel>,
- <mailto:dri-devel-request@lists.freedesktop.org?subject=subscribe>
-Errors-To: dri-devel-bounces@lists.freedesktop.org
-Sender: "dri-devel" <dri-devel-bounces@lists.freedesktop.org>
-To: Eugen.Hristev@microchip.com
-Cc: mark.rutland@arm.com, devicetree@vger.kernel.org, airlied@linux.ie, linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org, Nicolas.Ferre@microchip.com, robh+dt@kernel.org, Cristian.Birsan@microchip.com, linux-arm-kernel@lists.infradead.org
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <f6b6adf84c58e0de605d0a23dd559fee011f380c.1548687041.git-series.maxime.ripard@bootlin.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, Linux Media Mailing List <linux-media@vger.kernel.org>, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" <linux-arm-kernel@lists.infradead.org>, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Frank Rowand <frowand.list@gmail.com>
 List-Id: devicetree@vger.kernel.org
 
-
---===============1984472233==
-Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="j2AXaZ4YhVcLc+PQ"
-Content-Disposition: inline
-
-
---j2AXaZ4YhVcLc+PQ
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
-
-On Mon, Jan 14, 2019 at 09:43:26AM +0000, Eugen.Hristev@microchip.com wrote:
-> From: Eugen Hristev <eugen.hristev@microchip.com>
->=20
-> Precision Design Associates, Inc. (PDA) manufactures standard and custom
-> capacitive touch screens, LCD's embedded controllers and custom embedded
-> software. They specialize in industrial, rugged and outdoor applications.
-> Website: http://www.pdaatl.com/
->=20
-> Signed-off-by: Eugen Hristev <eugen.hristev@microchip.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
+On Mon, Jan 28, 2019 at 8:52 AM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> The Allwinner A10 CMOS Sensor Interface is a camera capture interface also
+> used in later (A10s, A13, A20, R8 and GR8) SoCs.
+>
+> On some SoCs, like the A10, there's multiple instances of that controller,
+> with one instance supporting more channels and having an ISP.
+>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 > ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
+>  Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml | 73 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 73 insertions(+)
+>  create mode 100644 Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+>
+> diff --git a/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> new file mode 100644
+> index 000000000000..f550fefa074f
+> --- /dev/null
+> +++ b/Documentation/devicetree/bindings/media/allwinner,sun4i-a10-csi.yaml
+> @@ -0,0 +1,73 @@
+> +# SPDX-License-Identifier: (GPL-2.0+ OR X11)
 
-Applied to drm-misc-next, thanks.
+X11 is generally wrong because it is specific to X Consortium. MIT is
+what you want.
 
-Thierry
+The core bindings are using 'GPL-2.0 OR BSD-2-Clause'. I don't think
+it really matters whether we have a mixture of MIT and BSD, but if you
+don't have a reason to deviate, I wouldn't.
 
---j2AXaZ4YhVcLc+PQ
-Content-Type: application/pgp-signature; name="signature.asc"
+> +%YAML 1.2
+> +---
+> +$id: http://devicetree.org/schemas/arm/allwinner,sun4i-a10-csi.yaml#
+> +$schema: http://devicetree.org/meta-schemas/core.yaml#
+> +
+> +title: Allwinner A10 CMOS Sensor Interface (CSI) Device Tree Bindings
+> +
+> +maintainers:
+> +  - Chen-Yu Tsai <wens@csie.org>
+> +  - Maxime Ripard <maxime.ripard@bootlin.com>
+> +
+> +properties:
+> +  compatible:
+> +    oneOf:
+> +      - description: Allwinner A10 CSI0 Controller
+> +        items:
+> +        - const: allwinner,sun4i-a10-csi0
+> +
+> +      - description: Allwinner A20 CSI0 Controller
+> +        items:
+> +        - const: allwinner,sun7i-a20-csi0
 
------BEGIN PGP SIGNATURE-----
+You may want to use 'enum' here if you will have more to add later.
 
-iQIzBAABCAAdFiEEiOrDCAFJzPfAjcif3SOs138+s6EFAlxPKw0ACgkQ3SOs138+
-s6FjaQ/8Dz8ooo1Sw+gdDzpk+oaeVdeilOjCttAtRJpGhZkCnA12MCjqsVPrpn3M
-kjEAYf+3mz4cK3Dbe1A4Cvjuog8kKvbpnVePdxky/A/QtIO6rsMlwvo9gX5kZJ54
-IbmmYWO2szqXYa25QjqUCpUtRa7sdZQ/sOaaLHh60orWq7e5zavuuxUQNHr2+UGT
-Mp5erO+18P1SdRyAKrf80Fzq4CYTbtLyvDt0hZiHoddC8fYy17L8i8a0VmdRMIcI
-NXEwC7XA0XlRJsiqYXJZqizxKALkFfqzkHbFK22rdyLlb6bKkC/hHwTVk4Pua6BC
-P0RYSH7ZHd3oyHJco8pTIvwWrHRwCgHjvzo1Bgun1uJZpFuIGRcUhWxVlyUG95i9
-NuWJxkEXQA7mjXNmJOyvPB9CTGlXPF+UQ9WJ5/dTqHuZdIhYWGrtoCHlqlscuWws
-Ewmjd1axA53lQQoL/WDJxNWIU8p8s7XIZqgGHv1WFDZwJCioKTlEcUPfnq2MixPR
-QAo6WjFy1LGOlpZJW5ixf3OiftbD9Dup8S4/ZryDnC2mSB3AtzXZ/XuPo+MSrqhs
-UuNSFSTo5NYB0TmaE3oq+d8ZnshuwH2qN3RZSNCgzELkiEmHdrFza2+nhIX3eLNP
-v0lkzln3ZyN31aXoDmOK02tx/bl6YCVQBoNU+zWkuIdwEF8DOk8=
-=/+Y0
------END PGP SIGNATURE-----
+> +        - const: allwinner,sun4i-a10-csi0
+> +
+> +  reg:
+> +    description: The base address and size of the memory-mapped region
 
---j2AXaZ4YhVcLc+PQ--
+IMO, we don't need to define what 'reg' is everywhere.
 
---===============1984472233==
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
-Content-Transfer-Encoding: base64
-Content-Disposition: inline
+> +    maxItems: 1
+> +
+> +  interrupts:
+> +    description: The interrupt associated to this IP
 
-X19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX19fX18KZHJpLWRldmVs
-IG1haWxpbmcgbGlzdApkcmktZGV2ZWxAbGlzdHMuZnJlZWRlc2t0b3Aub3JnCmh0dHBzOi8vbGlz
-dHMuZnJlZWRlc2t0b3Aub3JnL21haWxtYW4vbGlzdGluZm8vZHJpLWRldmVsCg==
+Same here.
 
---===============1984472233==--
+> +    maxItems: 1
+> +
+> +  clocks:
+> +    minItems: 4
+> +    maxItems: 4
+
+No need for these. We count 'items' and add them automatically. You
+only need them if the size is variable.
+
+> +    items:
+> +      - description: The CSI interface clock
+> +      - description: The CSI module clock
+> +      - description: The CSI ISP clock
+> +      - description: The CSI DRAM clock
+> +
+> +  clock-names:
+> +    minItems: 4
+> +    maxItems: 4
+
+Same here.
+
+> +    items:
+> +      - const: bus
+> +      - const: mod
+> +      - const: isp
+> +      - const: ram
+> +
+> +  resets:
+> +    description: The reset line driver this IP
+> +    maxItems: 1
+> +
+> +  pinctrl-0: true
+
+No defined length? I guess we generally allow a variable number of entries.
+
+> +
+> +  pinctrl-names:
+> +    description:
+> +      When present, must have one state named "default" that sets up
+> +      pins for ordinary operations.
+> +    minItems: 1
+> +    maxItems: 1
+> +    items:
+> +      - const: default
+
+A single entry can be simplified to just 'const: default' under pinctrl-names.
+
+> +
+> +required:
+> +  - compatible
+> +  - reg
+> +  - interrupts
+> +  - clocks
+> +
+> +# The media OF-graph binding hasn't been described yet
+> +# additionalProperties: false
+> --
+> git-series 0.9.1
