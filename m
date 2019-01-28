@@ -1,52 +1,32 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v3 1/2] spi: support inter-word delay requirement for
- devices
-Date: Mon, 28 Jan 2019 18:10:38 +0000
-Message-ID: <20190128181038.GF11699@sirena.org.uk>
-References: <20190126163220.26421-1-jonas@norrbonn.se>
- <20190126163220.26421-2-jonas@norrbonn.se>
+From: Jerome Brunet <jbrunet@baylibre.com>
+Subject: [PATCH v2 0/2] reset: meson: add g12a SoC support
+Date: Mon, 28 Jan 2019 19:13:13 +0100
+Message-ID: <20190128181316.30814-1-jbrunet@baylibre.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="uTRFFR9qmiCqR05s"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190126163220.26421-2-jonas@norrbonn.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonas Bonn <jonas@norrbonn.se>
-Cc: linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org
+To: Philipp Zabel <p.zabel@pengutronix.de>, Kevin Hilman <khilman@baylibre.com>
+Cc: Jerome Brunet <jbrunet@baylibre.com>, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
+This patchset adds new dt-bindings for the reset lines of amlogic g12a SoC
+and the related compatible in the driver.
 
---uTRFFR9qmiCqR05s
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Changes since v1 [0]:
+* Correct patch 2 commit message.
 
-On Sat, Jan 26, 2019 at 05:32:19PM +0100, Jonas Bonn wrote:
+[0]: https://lkml.kernel.org/r/20190128141330.21927-1-jbrunet@baylibre.com
 
-> @@ -164,6 +166,7 @@ struct spi_device {
->  	char			modalias[SPI_NAME_SIZE];
->  	const char		*driver_override;
->  	int			cs_gpio;	/* chip select gpio */
-> +	uint16_t		word_delay;	/* inter-word delay (us) */
+Jerome Brunet (2):
+  dt-bindings: reset: meson: add g12a bindings
+  reset: meson: add g12a compatible string
 
-This needs some code in the core joining it up with the per-transfer
-word delay similar to what we have for speed_hz and bits_per_word in
-__spi_validate().  Then the controller drivers can just look at the
-per-transfer value and support both without having to duplicate logic.
+ .../bindings/reset/amlogic,meson-reset.txt    |   7 +-
+ drivers/reset/reset-meson.c                   |   1 +
+ .../reset/amlogic,meson-g12a-reset.h          | 134 ++++++++++++++++++
+ 3 files changed, 140 insertions(+), 2 deletions(-)
+ create mode 100644 include/dt-bindings/reset/amlogic,meson-g12a-reset.h
 
---uTRFFR9qmiCqR05s
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxPRZ0ACgkQJNaLcl1U
-h9Ac7Qf+PnvdYqut3vqHiLuZnIkM0rUN8LzkQjuzbXAcNDhc1Mng0wacMxY8/197
-iHfg/0ZtyZGvI3LXfVstZaUtryS7tT5sUzuf7zLhUMANNTPT73J+RxabEMojYVdC
-gXAcYSvZklqJW1C8SPR+KyxvrrkVJzfTDOt1QjIP2RuKTzqqrXZMXsUyw+8ZveMP
-kfDi8HPRqFwpN3TnofAUG8pXYFWUnuBqYBZtZ1p44E741r3DXPP2aT3JMNEvl3lI
-Du0WLYv06i4T8VjinvD7aChUtWcPdBYBjh157S+/E7YExhJvqXFKav7BtPc54VJu
-Z/iGAOazu9hGpRh6EnHpkMMyFfyNqA==
-=ilNl
------END PGP SIGNATURE-----
-
---uTRFFR9qmiCqR05s--
+-- 
+2.20.1
