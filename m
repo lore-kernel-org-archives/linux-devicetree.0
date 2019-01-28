@@ -1,48 +1,61 @@
-From: Geert Uytterhoeven <geert@linux-m68k.org>
-Subject: Re: [PATCH 1/2] Serial: Ingenic: Add support for the X1000.
-Date: Mon, 28 Jan 2019 11:53:27 +0100
-Message-ID: <CAMuHMdWgYgMWD=oE6vCZtb1_-K5y19AHwn1WptLhJ47hc6Ah+g@mail.gmail.com>
-References: <1548667176-119830-1-git-send-email-zhouyanjie@zoho.com> <1548667176-119830-2-git-send-email-zhouyanjie@zoho.com>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH 5/5] ARM: dts: sun5i: q8-tablet: Use
+ bananapi,s070wv20-ct16 panel compatible
+Date: Mon, 28 Jan 2019 11:53:44 +0100
+Message-ID: <20190128105344.y7m5gruyamsp3r7s@flea>
+References: <20190127144838.3578-1-wens@csie.org>
+ <20190127144838.3578-6-wens@csie.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="twqhz7ijjeox7jmv"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548667176-119830-2-git-send-email-zhouyanjie@zoho.com>
+Content-Disposition: inline
+In-Reply-To: <20190127144838.3578-6-wens@csie.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Zhou Yanjie <zhouyanjie@zoho.com>
-Cc: linux-mips@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "open list:SERIAL DRIVERS" <linux-serial@vger.kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Paul Burton <paul.burton@mips.com>, Greg KH <gregkh@linuxfoundation.org>, Jiri Slaby <jslaby@suse.com>, Mark Rutland <mark.rutland@arm.com>, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
+To: Chen-Yu Tsai <wens@csie.org>
+Cc: devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Zhou,
 
-On Mon, Jan 28, 2019 at 10:23 AM Zhou Yanjie <zhouyanjie@zoho.com> wrote:
-> Add support for probing the 8250_ingenic driver on the
-> X1000 Soc from Ingenic.
->
-> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+--twqhz7ijjeox7jmv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Thanks for your patch!
+On Sun, Jan 27, 2019 at 10:48:38PM +0800, Chen-Yu Tsai wrote:
+> The compatible string for the LCD panel used for the Q8 tablets are just
+> a placeholder that was shown to be compatible with the actual panels
+> found on these devices. The real panels do not have any identifiable
+> markings and vary between production runs.
+>=20
+> The compatibe string previously used had a pixel clock that could not
+> be accurately reproduced on Allwinner hardware, and discussions on
+> whether a margin should be added to the display drivers and how large
+> a margin was acceptable had stalled.
+>=20
+> Now that we have a panel model that is actually used with Allwinner
+> hardware, has the same dimensions, and the timings have been shown to
+> work with the nameless panels, we can use that one instead.
+>=20
+> Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 
-> --- a/drivers/tty/serial/8250/8250_ingenic.c
-> +++ b/drivers/tty/serial/8250/8250_ingenic.c
-> @@ -145,6 +145,10 @@ EARLYCON_DECLARE(jz4780_uart, ingenic_early_console_setup);
->  OF_EARLYCON_DECLARE(jz4780_uart, "ingenic,jz4780-uart",
->                     ingenic_early_console_setup);
->
-> +EARLYCON_DECLARE(x1000_uart, ingenic_early_console_setup);
-> +OF_EARLYCON_DECLARE(x1000_uart, "ingenic,x1000-uart",
-> +                   ingenic_early_console_setup);
+Applied, thanks!
+Maxime
 
-As of commit 2eaa790989e03900 ("earlycon: Use common framework for
-earlycon declarations") it is no longer needer to specify both
-EARLYCON_DECLARE() and OF_EARLYCON_DECLARE().
+--=20
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
-Gr{oetje,eeting}s,
+--twqhz7ijjeox7jmv
+Content-Type: application/pgp-signature; name="signature.asc"
 
-                        Geert
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXE7fOAAKCRDj7w1vZxhR
+xb0SAQCen0HJZMPM7YPMTT/lFOVFjJ1E275HdjloKPHfl2nYZgD/V66ZJEYxbzdi
+9BAQshREanIdghSWrwSpXbURp4wd9Qc=
+=GUyW
+-----END PGP SIGNATURE-----
 
-In personal conversations with technical people, I call myself a hacker. But
-when I'm talking to journalists I just say "programmer" or something like that.
-                                -- Linus Torvalds
+--twqhz7ijjeox7jmv--
