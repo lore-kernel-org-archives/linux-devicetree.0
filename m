@@ -1,37 +1,52 @@
-From: Philipp Zabel <p.zabel@pengutronix.de>
-Subject: Re: [PATCH v5 3/3] reset: imx7: Add support for i.MX8MQ IP block
- variant
-Date: Mon, 28 Jan 2019 11:55:08 +0100
-Message-ID: <1548672908.6421.1.camel@pengutronix.de>
-References: <20190122021043.25449-1-andrew.smirnov@gmail.com>
-         <20190122021043.25449-4-andrew.smirnov@gmail.com>
-         <1548240560.3904.6.camel@pengutronix.de>
-         <CAHQ1cqFx3b2fTy8YbpwC0fGJYpO4BLO4FW9q-Z2Np1tVktrKpg@mail.gmail.com>
+From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
+Subject: Re: [PATCH v8 2/5] media: sun6i: Add A64 CSI block support
+Date: Mon, 28 Jan 2019 12:02:11 +0100
+Message-ID: <20190128110211.fmbnudcfrw2rnqya@flea>
+References: <20190128085847.7217-1-jagan@amarulasolutions.com>
+ <20190128085847.7217-3-jagan@amarulasolutions.com>
+Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <CAHQ1cqFx3b2fTy8YbpwC0fGJYpO4BLO4FW9q-Z2Np1tVktrKpg@mail.gmail.com>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc: Fabio Estevam <fabio.estevam@nxp.com>, Chris Healy <cphealy@gmail.com>, Lucas Stach <l.stach@pengutronix.de>, Leonard Crestez <leonard.crestez@nxp.com>, "A.s. Dong" <aisheng.dong@nxp.com>, Richard Zhu <hongxing.zhu@nxp.com>, Rob Herring <robh@kernel.org>, "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" <devicetree@vger.kernel.org>, dl-linux-imx <linux-imx@nxp.com>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+	protocol="application/pgp-signature"; boundary="6okpvrlphzl3mugw"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPWCXPRAKGQERZDDYYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Disposition: inline
+In-Reply-To: <20190128085847.7217-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Archive: <https://groups.google.com/group/linux-sunxi
+List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
+ <https://groups.google.com/group/linux-sunxi/subscribe>
+To: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalho Chehab <mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Chen-Yu Tsai <wens-jdAy2FN1RRM@public.gmane.org>, Rob Herring <robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org>, Mark Rutland <mark.rutland-5wv7dgnIgG8@public.gmane.org>, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-Hi Andrey,
 
-On Thu, 2019-01-24 at 16:21 -0800, Andrey Smirnov wrote:
-> > Thank you, applied all three to reset/next with a small whitespace
-> > alignment fix.
-> > 
+--6okpvrlphzl3mugw
+Content-Type: text/plain; charset="UTF-8"
+Content-Disposition: inline
+
+On Mon, Jan 28, 2019 at 02:28:44PM +0530, Jagan Teki wrote:
+> CSI block in Allwinner A64 has similar features as like in H3,
+> but the default CSI_SCLK rate cannot work properly to drive the
+> connected sensor interface.
 > 
-> Thanks again for applying this stuff. If that's not too much to ask,
-> would you mind creating an immutable branch, so I could start sending
-> patches that depend on "dt-bindings/reset/imx8mq-reset.h" to i.MX tree
-> without waiting for it to trickle down? If not, no worries, I'll wait.
+> The tested mod cock rate is 300 MHz and BSP vfe media driver is also
+> using the same rate. Unfortunately there is no valid information about
+> clock rate in manual or any other sources except the BSP driver. so more
+> faith on BSP code, because same has tested in mainline.
+> 
+> So, add support for A64 CSI block by setting updated mod clock rate.
+> 
+> Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 
-Here is an immutable branch containing just the header/dt-binding patch:
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-  git://git.pengutronix.de/pza/linux reset/imx8mq
+Maxime
 
-regards
-Philipp
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+--6okpvrlphzl3mugw--
