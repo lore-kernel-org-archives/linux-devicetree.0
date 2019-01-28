@@ -1,31 +1,75 @@
-From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: Re: [PATCH v2 1/2] Serial: Ingenic: Add X1000 suppor for the UART
- driver.
-Date: Tue, 29 Jan 2019 00:45:00 +0800
-Message-ID: <5C4F318C.20505@zoho.com>
-References: <1548667176-119830-1-git-send-email-zhouyanjie@zoho.com>
- <1548683821-120924-1-git-send-email-zhouyanjie@zoho.com>
- <1548683821-120924-2-git-send-email-zhouyanjie@zoho.com>
- <20190128162245.GA25853@kroah.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.9 044/107] ARM: dts: Fix OMAP4430 SDP Ethernet startup
+Date: Mon, 28 Jan 2019 11:18:44 -0500
+Message-ID: <20190128161947.57405-44-sashal@kernel.org>
+References: <20190128161947.57405-1-sashal@kernel.org>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=UTF-8; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128162245.GA25853@kroah.com>
+In-Reply-To: <20190128161947.57405-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Greg KH <gregkh@linuxfoundation.org>
-Cc: linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org, devicetree@vger.kernel.org, robh+dt@kernel.org, paul.burton@mips.com, jslaby@suse.com, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Russell King <rmk+kernel@armlinux.org.uk>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-I am very sorry, I understood wrong before.
+From: Russell King - ARM Linux <linux@armlinux.org.uk>
 
-On 2019=E5=B9=B401=E6=9C=8829=E6=97=A5 00:22, Greg KH wrote:
-> On Mon, Jan 28, 2019 at 09:57:00PM +0800, Zhou Yanjie wrote:
->> Add support for probing the 8250_ingenic driver on the
->> X1000 Soc from Ingenic.
->>
->> Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
->> ---
->>   drivers/tty/serial/8250/8250_ingenic.c | 13 +++++++++----
->>   1 file changed, 9 insertions(+), 4 deletions(-)
-> Your subject lines are still identical for both patches :(
+[ Upstream commit 84fb6c7feb1494ebb7d1ec8b95cfb7ada0264465 ]
+
+It was noticed that unbinding and rebinding the KSZ8851 ethernet
+resulted in the driver reporting "failed to read device ID" at probe.
+Probing the reset line with a 'scope while repeatedly attempting to
+bind the driver in a shell loop revealed that the KSZ8851 RSTN pin is
+constantly held at zero, meaning the device is held in reset, and
+does not respond on the SPI bus.
+
+Experimentation with the startup delay on the regulator set to 50ms
+shows that the reset is positively released after 20ms.
+
+Schematics for this board are not available, and the traces are buried
+in the inner layers of the board which makes tracing where the RSTN pin
+extremely difficult.  We can only guess that the RSTN pin is wired to a
+reset generator chip driven off the ethernet supply, which fits the
+observed behaviour.
+
+Include this delay in the regulator startup delay - effectively
+treating the reset as a "supply stable" indicator.
+
+This can not be modelled as a delay in the KSZ8851 driver since the
+reset generation is board specific - if the RSTN pin had been wired to
+a GPIO, reset could be released earlier via the already provided support
+in the KSZ8851 driver.
+
+This also got confirmed by Peter Ujfalusi <peter.ujfalusi@ti.com> based
+on Blaze schematics that should be very close to SDP4430:
+
+TPS22902YFPR is used as the regulator switch (gpio48 controlled):
+Convert arm boot_lock to raw The VOUT is routed to TPS3808G01DBV.
+(SCH Note: Threshold set at 90%. Vsense: 0.405V).
+
+According to the TPS3808 data sheet the RESET delay time when Ct is
+open (this is the case in the schema): MIN/TYP/MAX: 12/20/28 ms.
+
+Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
+Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+[tony@atomide.com: updated with notes from schematics from Peter]
+Signed-off-by: Tony Lindgren <tony@atomide.com>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ arch/arm/boot/dts/omap4-sdp.dts | 1 +
+ 1 file changed, 1 insertion(+)
+
+diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
+index d728ec963111..891ba75fd459 100644
+--- a/arch/arm/boot/dts/omap4-sdp.dts
++++ b/arch/arm/boot/dts/omap4-sdp.dts
+@@ -33,6 +33,7 @@
+ 		gpio = <&gpio2 16 GPIO_ACTIVE_HIGH>;  /* gpio line 48 */
+ 		enable-active-high;
+ 		regulator-boot-on;
++		startup-delay-us = <25000>;
+ 	};
+ 
+ 	vbat: fixedregulator-vbat {
+-- 
+2.19.1
