@@ -1,197 +1,181 @@
-From: Sakari Ailus <sakari.ailus@linux.intel.com>
-Subject: Re: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI
- CSI-2 Rx Subsystem
-Date: Mon, 28 Jan 2019 14:00:18 +0200
-Message-ID: <20190128120018.ztdxmcq4tizwwepn@paasikivi.fi.intel.com>
-References: <1527620084-94864-1-git-send-email-vishal.sagar@xilinx.com>
- <1527620084-94864-2-git-send-email-vishal.sagar@xilinx.com>
- <20190108130457.syjuq7u7vep3km3h@paasikivi.fi.intel.com>
- <CY4PR02MB2709C346C4BEF853C48C32DCA7800@CY4PR02MB2709.namprd02.prod.outlook.com>
+From: Ulf Hansson <ulf.hansson@linaro.org>
+Subject: Re: [PATCH 1/3] mmc: jz4740: Remove platform data and use standard APIs
+Date: Mon, 28 Jan 2019 13:02:58 +0100
+Message-ID: <CAPDyKFrkq4GQbCbcJFqeERt3y41VJ7we+eL9NziPf2Obe+yGkg@mail.gmail.com>
+References: <20190125200927.21045-1-paul@crapouillou.net>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 7bit
-Return-path: <linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org>
-Content-Disposition: inline
-In-Reply-To: <CY4PR02MB2709C346C4BEF853C48C32DCA7800@CY4PR02MB2709.namprd02.prod.outlook.com>
-List-Unsubscribe: <http://lists.infradead.org/mailman/options/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=unsubscribe>
-List-Archive: <http://lists.infradead.org/pipermail/linux-arm-kernel/>
-List-Post: <mailto:linux-arm-kernel@lists.infradead.org>
-List-Help: <mailto:linux-arm-kernel-request@lists.infradead.org?subject=help>
-List-Subscribe: <http://lists.infradead.org/mailman/listinfo/linux-arm-kernel>,
- <mailto:linux-arm-kernel-request@lists.infradead.org?subject=subscribe>
-Sender: "linux-arm-kernel" <linux-arm-kernel-bounces@lists.infradead.org>
-Errors-To: linux-arm-kernel-bounces+linux-arm-kernel=m.gmane.org@lists.infradead.org
-To: Vishal Sagar <vsagar@xilinx.com>
-Cc: "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, Dinesh Kumar <dineshk@xilinx.com>, Hyun Kwon <hyunk@xilinx.com>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, "robh+dt@kernel.org" <robh+dt@kernel.org>, Michal Simek <michals@xilinx.com>, "laurent.pinchart@ideasonboard.com" <laurent.pinchart@ideasonboard.com>, Vishal Sagar <vishal.sagar@xilinx.com>, "hans.verkuil@cisco.com" <hans.verkuil@cisco.com>, "mchehab@kernel.org" <mchehab@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <20190125200927.21045-1-paul@crapouillou.net>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Paul Cercueil <paul@crapouillou.net>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Ralf Baechle <ralf@linux-mips.org>, Paul Burton <paul.burton@mips.com>, James Hogan <jhogan@kernel.org>, Linus Walleij <linus.walleij@linaro.org>, DTML <devicetree@vger.kernel.org>, linux-mips@vger.kernel.org, Linux Kernel Mailing List <linux-kernel@vger.kernel.org>, "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hi Vishal,
+On Fri, 25 Jan 2019 at 21:09, Paul Cercueil <paul@crapouillou.net> wrote:
+>
+> Drop the custom code to get the 'cd' and 'wp' GPIOs. The driver now
+> calls mmc_of_parse() which will init these from devicetree or
+> device properties.
+>
+> Also drop the custom code to get the 'power' GPIO. The MMC core
+> provides us with the means to power the MMC card through an external
+> regulator.
+>
+> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
 
-On Mon, Jan 14, 2019 at 09:47:41AM +0000, Vishal Sagar wrote:
-> Hi Sakari,
-> 
-> Thanks for reviewing this. 
-> 
-> > -----Original Message-----
-> > From: Sakari Ailus [mailto:sakari.ailus@linux.intel.com]
-> > Sent: Tuesday, January 08, 2019 6:35 PM
-> > To: Vishal Sagar <vishal.sagar@xilinx.com>
-> > Cc: Hyun Kwon <hyunk@xilinx.com>; laurent.pinchart@ideasonboard.com;
-> > Michal Simek <michals@xilinx.com>; linux-media@vger.kernel.org;
-> > devicetree@vger.kernel.org; hans.verkuil@cisco.com; mchehab@kernel.org;
-> > robh+dt@kernel.org; mark.rutland@arm.com; Dinesh Kumar
-> > <dineshk@xilinx.com>; linux-arm-kernel@lists.infradead.org; linux-
-> > kernel@vger.kernel.org
-> > Subject: Re: [PATCH 1/2] media: dt-bindings: media: xilinx: Add Xilinx MIPI CSI-2
-> > Rx Subsystem
-> > 
-> > EXTERNAL EMAIL
-> > 
-> > Hi Vishal,
-> > 
-> > The patchset hard escaped me somehow earlier and your reply to Rob made me
-> > notice it again. Thanks. :-)
-> > 
-> > On Wed, May 30, 2018 at 12:24:43AM +0530, Vishal Sagar wrote:
-> > > Add bindings documentation for Xilinx MIPI CSI-2 Rx Subsystem.
-> > >
-> > > The Xilinx MIPI CSI-2 Rx Subsystem consists of a DPHY, CSI-2 Rx, an
-> > > optional I2C controller and an optional Video Format Bridge (VFB). The
-> > > active lanes can be configured at run time if enabled in the IP. The
-> > > DPHY register interface may also be enabled.
-> > >
-> > > Signed-off-by: Vishal Sagar <vishal.sagar@xilinx.com>
-> > > ---
-> > >  .../bindings/media/xilinx/xlnx,csi2rxss.txt        | 117
-> > +++++++++++++++++++++
-> > >  1 file changed, 117 insertions(+)
-> > >  create mode 100644
-> > Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> > >
-> > > diff --git a/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> > b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> > > new file mode 100644
-> > > index 0000000..31ed721
-> > > --- /dev/null
-> > > +++ b/Documentation/devicetree/bindings/media/xilinx/xlnx,csi2rxss.txt
-> > > @@ -0,0 +1,117 @@
-> > > +
-> > 
-> > Extra newline.
-> > 
-> 
-> Will remove it in next version. 
-> 
-> > > +Xilinx MIPI CSI2 Receiver Subsystem Device Tree Bindings
-> > > +--------------------------------------------------------
-> > > +
-> > > +The Xilinx MIPI CSI2 Receiver Subsystem is used to capture MIPI CSI2 traffic
-> > > +from compliant camera sensors and send the output as AXI4 Stream video
-> > data
-> > > +for image processing.
-> > > +
-> > > +The subsystem consists of a MIPI DPHY in slave mode which captures the
-> > > +data packets. This is passed along the MIPI CSI2 Rx IP which extracts the
-> > > +packet data. This data is taken in by the Video Format Bridge (VFB),
-> > > +if selected, and converted into AXI4 Stream video data at selected
-> > > +pixels per clock as per AXI4-Stream Video IP and System Design UG934.
-> > > +
-> > > +For more details, please refer to PG232 MIPI CSI-2 Receiver Subsystem.
-> > >
-> > +https://www.xilinx.com/support/documentation/ip_documentation/mipi_csi
-> > 2_rx_subsystem/v3_0/pg232-mipi-csi2-rx.pdf
-> > > +
-> > > +Required properties:
-> > > +
-> > > +- compatible: Must contain "xlnx,mipi-csi2-rx-subsystem-2.0" or
-> > > +  "xlnx,mipi-csi2-rx-subsystem-3.0"
-> > > +
-> > > +- reg: Physical base address and length of the registers set for the device.
-> > > +
-> > > +- interrupt-parent: specifies the phandle to the parent interrupt controller
-> > > +
-> > > +- interrupts: Property with a value describing the interrupt number.
-> > > +
-> > > +- xlnx,max-lanes: Maximum active lanes in the design.
-> > > +
-> > > +- xlnx,vc: Virtual Channel, specifies virtual channel number to be filtered.
-> > > +  If this is 4 then all virtual channels are allowed.
-> > 
-> > This seems like something a driver should configure, based on the
-> > configuration of the connected device.
-> > 
-> 
-> The filtering of the Virtual channels is property of the hardware IP and is fixed in design. 
-> This is not software controlled.
+Applied for next, thanks!
 
-So... you have different IP blocks between which (one of) the difference(s)
-is the virtual channel?
+Should I also pick up the other two MIPS patches or you want to funnel
+those through the MIPS soc tree?
 
-> 
-> > > +
-> > > +- xlnx,csi-pxl-format: This denotes the CSI Data type selected in hw design.
-> > > +  Packets other than this data type (except for RAW8 and User defined data
-> > > +  types) will be filtered out. Possible values are RAW6, RAW7, RAW8, RAW10,
-> > > +  RAW12, RAW14, RGB444, RGB555, RGB565, RGB666, RGB888 and
-> > YUV4228bit.
-> > 
-> > This should be configured at runtime instead through V4L2 sub-device
-> > interface; it's not a property of the hardware.
-> >
-> 
-> This too is a property of the hardware IP and is fixed to one data type
-> during design to reduce gate count. So for e.g. if RGB888 is selected
-> during design, then the hardware will only pass across RGB888 packet data
-> to output. (RAW8 packets are also allowed to pass through for all data
-> types selected) This is used in the driver to determine the media bus
-> format of the connected pads.
+Kind regards
+Uffe
 
-If I understand this correctly, RAW8 and user defined data types will
-always pass through, plus the other data types listed here. Is that right?
-
-> 
-> > > +
-> > > +- xlnx,axis-tdata-width: AXI Stream width, This denotes the AXI Stream width.
-> > > +  It depends on Data type chosen, Video Format Bridge enabled/disabled and
-> > > +  pixels per clock. If VFB is disabled then its value is either 0x20 (32 bit)
-> > > +  or 0x40(64 bit) width.
-> > > +
-> > > +- xlnx,video-format, xlnx,video-width: Video format and width, as defined in
-> > > +  video.txt.
-> > 
-> > Ditto.
-> > 
-> Again these are fixed values and can't be changed at run time. 
-> These are used to determine the media bus format.
-
-What kind of values can the xlnx,video-format property have? How about
-xlnx.video-width? Where can video.txt be found?
-
-> 
-> > > +
-> > > +- port: Video port, using the DT bindings defined in ../video-interfaces.txt.
-> > > +  The CSI 2 Rx Subsystem has a two ports, one input port for connecting to
-> > > +  camera sensor and other is output port.
-> > > +
-> > > +- data-lanes: The number of data lanes through which CSI2 Rx Subsystem is
-> > > +  connected to the camera sensor as per video-interfaces.txt
-> > 
-> > This is somewhat different from the documentation in video-interfaces.txt.
-> > Could you align the two? I don't think there's a need to document standard
-> > properties in device binding files elaborately; rather just the hardware
-> > specific bits.
-> > 
-> 
-> Agree. In this current IP there is no way to re-order the lanes which are set at design time.
-> So physical and logical lanes are at same index. This could only be used to determine how many lanes are allowed to be programmed.
-> For e.g. if design has set the number of lanes as 4 and xlnx,en-active-lanes is present, then the number of lanes 
-> can be set from 1 to 4.
-
-Ack.
-
--- 
-Regards,
-
-Sakari Ailus
-sakari.ailus@linux.intel.com
+> ---
+>  drivers/mmc/host/jz4740_mmc.c | 71 +++++++++----------------------------------
+>  1 file changed, 14 insertions(+), 57 deletions(-)
+>
+> diff --git a/drivers/mmc/host/jz4740_mmc.c b/drivers/mmc/host/jz4740_mmc.c
+> index 33215d66afa2..e41c7230815f 100644
+> --- a/drivers/mmc/host/jz4740_mmc.c
+> +++ b/drivers/mmc/host/jz4740_mmc.c
+> @@ -21,7 +21,6 @@
+>  #include <linux/dmaengine.h>
+>  #include <linux/dma-mapping.h>
+>  #include <linux/err.h>
+> -#include <linux/gpio/consumer.h>
+>  #include <linux/interrupt.h>
+>  #include <linux/io.h>
+>  #include <linux/irq.h>
+> @@ -36,7 +35,6 @@
+>  #include <asm/cacheflush.h>
+>
+>  #include <asm/mach-jz4740/dma.h>
+> -#include <asm/mach-jz4740/jz4740_mmc.h>
+>
+>  #define JZ_REG_MMC_STRPCL      0x00
+>  #define JZ_REG_MMC_STATUS      0x04
+> @@ -148,9 +146,7 @@ enum jz4780_cookie {
+>  struct jz4740_mmc_host {
+>         struct mmc_host *mmc;
+>         struct platform_device *pdev;
+> -       struct jz4740_mmc_platform_data *pdata;
+>         struct clk *clk;
+> -       struct gpio_desc *power;
+>
+>         enum jz4740_mmc_version version;
+>
+> @@ -894,16 +890,16 @@ static void jz4740_mmc_set_ios(struct mmc_host *mmc, struct mmc_ios *ios)
+>         switch (ios->power_mode) {
+>         case MMC_POWER_UP:
+>                 jz4740_mmc_reset(host);
+> -               if (host->power)
+> -                       gpiod_set_value(host->power, 1);
+> +               if (!IS_ERR(mmc->supply.vmmc))
+> +                       mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, ios->vdd);
+>                 host->cmdat |= JZ_MMC_CMDAT_INIT;
+>                 clk_prepare_enable(host->clk);
+>                 break;
+>         case MMC_POWER_ON:
+>                 break;
+>         default:
+> -               if (host->power)
+> -                       gpiod_set_value(host->power, 0);
+> +               if (!IS_ERR(mmc->supply.vmmc))
+> +                       mmc_regulator_set_ocr(mmc, mmc->supply.vmmc, 0);
+>                 clk_disable_unprepare(host->clk);
+>                 break;
+>         }
+> @@ -936,38 +932,6 @@ static const struct mmc_host_ops jz4740_mmc_ops = {
+>         .enable_sdio_irq = jz4740_mmc_enable_sdio_irq,
+>  };
+>
+> -static int jz4740_mmc_request_gpios(struct jz4740_mmc_host *host,
+> -                                   struct mmc_host *mmc,
+> -                                   struct platform_device *pdev)
+> -{
+> -       struct jz4740_mmc_platform_data *pdata = dev_get_platdata(&pdev->dev);
+> -       int ret = 0;
+> -
+> -       if (!pdata)
+> -               return 0;
+> -
+> -       if (!pdata->card_detect_active_low)
+> -               mmc->caps2 |= MMC_CAP2_CD_ACTIVE_HIGH;
+> -       if (!pdata->read_only_active_low)
+> -               mmc->caps2 |= MMC_CAP2_RO_ACTIVE_HIGH;
+> -
+> -       /*
+> -        * Get optional card detect and write protect GPIOs,
+> -        * only back out on probe deferral.
+> -        */
+> -       ret = mmc_gpiod_request_cd(mmc, "cd", 0, false, 0, NULL);
+> -       if (ret == -EPROBE_DEFER)
+> -               return ret;
+> -
+> -       ret = mmc_gpiod_request_ro(mmc, "wp", 0, false, 0, NULL);
+> -       if (ret == -EPROBE_DEFER)
+> -               return ret;
+> -
+> -       host->power = devm_gpiod_get_optional(&pdev->dev, "power",
+> -                                             GPIOD_OUT_HIGH);
+> -       return PTR_ERR_OR_ZERO(host->power);
+> -}
+> -
+>  static const struct of_device_id jz4740_mmc_of_match[] = {
+>         { .compatible = "ingenic,jz4740-mmc", .data = (void *) JZ_MMC_JZ4740 },
+>         { .compatible = "ingenic,jz4725b-mmc", .data = (void *)JZ_MMC_JZ4725B },
+> @@ -982,9 +946,6 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
+>         struct mmc_host *mmc;
+>         struct jz4740_mmc_host *host;
+>         const struct of_device_id *match;
+> -       struct jz4740_mmc_platform_data *pdata;
+> -
+> -       pdata = dev_get_platdata(&pdev->dev);
+>
+>         mmc = mmc_alloc_host(sizeof(struct jz4740_mmc_host), &pdev->dev);
+>         if (!mmc) {
+> @@ -993,29 +954,25 @@ static int jz4740_mmc_probe(struct platform_device* pdev)
+>         }
+>
+>         host = mmc_priv(mmc);
+> -       host->pdata = pdata;
+>
+>         match = of_match_device(jz4740_mmc_of_match, &pdev->dev);
+>         if (match) {
+>                 host->version = (enum jz4740_mmc_version)match->data;
+> -               ret = mmc_of_parse(mmc);
+> -               if (ret) {
+> -                       if (ret != -EPROBE_DEFER)
+> -                               dev_err(&pdev->dev,
+> -                                       "could not parse of data: %d\n", ret);
+> -                       goto err_free_host;
+> -               }
+>         } else {
+>                 /* JZ4740 should be the only one using legacy probe */
+>                 host->version = JZ_MMC_JZ4740;
+> -               mmc->caps |= MMC_CAP_SDIO_IRQ;
+> -               if (!(pdata && pdata->data_1bit))
+> -                       mmc->caps |= MMC_CAP_4_BIT_DATA;
+> -               ret = jz4740_mmc_request_gpios(host, mmc, pdev);
+> -               if (ret)
+> -                       goto err_free_host;
+>         }
+>
+> +       ret = mmc_of_parse(mmc);
+> +       if (ret) {
+> +               if (ret != -EPROBE_DEFER)
+> +                       dev_err(&pdev->dev,
+> +                               "could not parse device properties: %d\n", ret);
+> +               goto err_free_host;
+> +       }
+> +
+> +       mmc_regulator_get_supply(mmc);
+> +
+>         host->irq = platform_get_irq(pdev, 0);
+>         if (host->irq < 0) {
+>                 ret = host->irq;
+> --
+> 2.11.0
+>
