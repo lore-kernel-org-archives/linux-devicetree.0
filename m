@@ -1,7 +1,7 @@
 From: Remi Pommarel <repk@triplefau.lt>
-Subject: [PATCH 1/2] arm64: dts: armada-3720-espressobin: Configure RGMII and SMI pins
-Date: Mon, 28 Jan 2019 21:07:27 +0100
-Message-ID: <20190128200728.17747-2-repk@triplefau.lt>
+Subject: [PATCH 2/2] arm64: dts: armada-3720-espressobin: Set mv88e6341 cpu port as RGMII-ID
+Date: Mon, 28 Jan 2019 21:07:28 +0100
+Message-ID: <20190128200728.17747-3-repk@triplefau.lt>
 References: <20190128200728.17747-1-repk@triplefau.lt>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,47 +12,33 @@ To: Jason Cooper <jason@lakedaemon.net>, Andrew Lunn <andrew@lunn.ch>, Gregory C
 Cc: linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Remi Pommarel <repk@triplefau.lt>
 List-Id: devicetree@vger.kernel.org
 
-In order to be able to communicate with the 88e6341 switch some pins
-have to be repurposed as RGMII and SMI pins.
+The mv88e6341 ethernet switch needs the cpu port control register to be
+set with TX and RX internal delay in order to work.
 
 This fixes ethernet support on system booted via a bootloader that
-has not already configured those pins (e.g. mainline u-boot, or vendor
-u-boot compiled without ethernet support).
+has not already configured this register (e.g. mainline u-boot, or
+vendor u-boot compiled without ethernet support).
 
 Signed-off-by: Remi Pommarel <repk@triplefau.lt>
 ---
- arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 2 ++
- arch/arm64/boot/dts/marvell/armada-37xx.dtsi            | 5 +++++
- 2 files changed, 7 insertions(+)
+ arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-index 846003bb480c..b60897edc885 100644
+index b60897edc885..86e8a1e3207f 100644
 --- a/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
 +++ b/arch/arm64/boot/dts/marvell/armada-3720-espressobin.dts
-@@ -196,6 +196,8 @@
- };
- 
- &eth0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&rgmii_pins>, <&smi_pins>;
- 	phy-mode = "rgmii-id";
- 	status = "okay";
- 
-diff --git a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-index e05594ea15fb..f61538910901 100644
---- a/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-+++ b/arch/arm64/boot/dts/marvell/armada-37xx.dtsi
-@@ -271,6 +271,11 @@
- 					function = "mii";
- 				};
- 
-+				smi_pins: smi-pins {
-+					groups = "smi";
-+					function = "smi";
+@@ -156,6 +156,11 @@
+ 				reg = <0>;
+ 				label = "cpu";
+ 				ethernet = <&eth0>;
++				phy-mode = "rgmii-id";
++				fixed-link {
++					speed = <1000>;
++					full-duplex;
 +				};
-+
- 				sdio_pins: sdio-pins {
- 					groups = "sdio_sb";
- 					function = "sdio";
+ 			};
+ 
+ 			port@1 {
 -- 
 2.20.1
