@@ -1,12 +1,13 @@
 From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 3/6] media: cedrus: Add support for H6
-Date: Mon, 28 Jan 2019 21:55:01 +0100
-Message-ID: <20190128205504.11225-4-jernej.skrabec@siol.net>
+Subject: [PATCH 5/6] arm64: dts: allwinner: h6: Add support for
+ the SRAM C1 section
+Date: Mon, 28 Jan 2019 21:55:03 +0100
+Message-ID: <20190128205504.11225-6-jernej.skrabec@siol.net>
 References: <20190128205504.11225-1-jernej.skrabec@siol.net>
 Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBO6YXXRAKGQEU645U4Q-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBDQNBWPU7YERBQGYXXRAKGQEBOCRWSA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190128205504.11225-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,40 +20,40 @@ To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@publ
 Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 List-Id: devicetree@vger.kernel.org
 
-H6 has improved VPU. It supports 10-bit HEVC decoding and AFBC output
-format for HEVC.
+Add a node for H6 SRAM C1 section.
+
+Manual calls it VE SRAM, but for consistency with older SoCs, SRAM C1
+name is used.
 
 Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
 ---
- drivers/staging/media/sunxi/cedrus/cedrus.c | 9 +++++++++
- 1 file changed, 9 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/drivers/staging/media/sunxi/cedrus/cedrus.c b/drivers/staging/media/sunxi/cedrus/cedrus.c
-index ff11cbeba205..b98add3cdedd 100644
---- a/drivers/staging/media/sunxi/cedrus/cedrus.c
-+++ b/drivers/staging/media/sunxi/cedrus/cedrus.c
-@@ -396,6 +396,11 @@ static const struct cedrus_variant sun50i_h5_cedrus_variant = {
- 	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
- };
- 
-+static const struct cedrus_variant sun50i_h6_cedrus_variant = {
-+	.capabilities	= CEDRUS_CAPABILITY_UNTILED,
-+	.quirks		= CEDRUS_QUIRK_NO_DMA_OFFSET,
-+};
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+index d93a7add67e7..247dc0a5ce89 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
+@@ -167,6 +167,20 @@
+ 					reg = <0x0000 0x1e000>;
+ 				};
+ 			};
 +
- static const struct of_device_id cedrus_dt_match[] = {
- 	{
- 		.compatible = "allwinner,sun4i-a10-video-engine",
-@@ -425,6 +430,10 @@ static const struct of_device_id cedrus_dt_match[] = {
- 		.compatible = "allwinner,sun50i-h5-video-engine",
- 		.data = &sun50i_h5_cedrus_variant,
- 	},
-+	{
-+		.compatible = "allwinner,sun50i-h6-video-engine",
-+		.data = &sun50i_h6_cedrus_variant,
-+	},
- 	{ /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, cedrus_dt_match);
++			sram_c1: sram@1a00000 {
++				compatible = "mmio-sram";
++				reg = <0x01a00000 0x200000>;
++				#address-cells = <1>;
++				#size-cells = <1>;
++				ranges = <0 0x01a00000 0x200000>;
++
++				ve_sram: sram-section@0 {
++					compatible = "allwinner,sun50i-h6-sram-c1",
++						     "allwinner,sun4i-a10-sram-c1";
++					reg = <0x000000 0x200000>;
++				};
++			};
+ 		};
+ 
+ 		ccu: clock@3001000 {
 -- 
 2.20.1
