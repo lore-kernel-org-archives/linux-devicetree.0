@@ -1,75 +1,56 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 3.18 24/61] ARM: dts: Fix OMAP4430 SDP Ethernet startup
-Date: Mon, 28 Jan 2019 11:25:46 -0500
-Message-ID: <20190128162623.59854-24-sashal@kernel.org>
-References: <20190128162623.59854-1-sashal@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
+From: Loys Ollivier <lollivier@baylibre.com>
+Subject: [PATCH v3 3/4] gnss: add mtk receiver type support
+Date: Mon, 28 Jan 2019 17:38:00 +0100
+Message-ID: <1548693481-1162-4-git-send-email-lollivier@baylibre.com>
+References: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128162623.59854-1-sashal@kernel.org>
+In-Reply-To: <1548693481-1162-1-git-send-email-lollivier@baylibre.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Russell King - ARM Linux <linux@armlinux.org.uk>, Russell King <rmk+kernel@armlinux.org.uk>, Tony Lindgren <tony@atomide.com>, Sasha Levin <sashal@kernel.org>, linux-omap@vger.kernel.org, devicetree@vger.kernel.org
+To: devicetree@vger.kernel.org, Johan Hovold <johan@kernel.org>
+Cc: Loys Ollivier <lollivier@baylibre.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-kernel@vger.kernel.org, Kevin Hilman <khilman@baylibre.com>, linux-amlogic@lists.infradead.org, linux-mediatek@lists.infradead.org, linux-arm-kernel@lists.infradead.org, Martin Blumenstingl <martin.blumenstingl@googlemail.com>
 List-Id: devicetree@vger.kernel.org
 
-From: Russell King - ARM Linux <linux@armlinux.org.uk>
+Add an MTK (Mediatek) type to the "GNSS_TYPE" attribute.
 
-[ Upstream commit 84fb6c7feb1494ebb7d1ec8b95cfb7ada0264465 ]
+Note that MTK receivers support a subset of NMEA 0183 with vendor
+extensions.
 
-It was noticed that unbinding and rebinding the KSZ8851 ethernet
-resulted in the driver reporting "failed to read device ID" at probe.
-Probing the reset line with a 'scope while repeatedly attempting to
-bind the driver in a shell loop revealed that the KSZ8851 RSTN pin is
-constantly held at zero, meaning the device is held in reset, and
-does not respond on the SPI bus.
-
-Experimentation with the startup delay on the regulator set to 50ms
-shows that the reset is positively released after 20ms.
-
-Schematics for this board are not available, and the traces are buried
-in the inner layers of the board which makes tracing where the RSTN pin
-extremely difficult.  We can only guess that the RSTN pin is wired to a
-reset generator chip driven off the ethernet supply, which fits the
-observed behaviour.
-
-Include this delay in the regulator startup delay - effectively
-treating the reset as a "supply stable" indicator.
-
-This can not be modelled as a delay in the KSZ8851 driver since the
-reset generation is board specific - if the RSTN pin had been wired to
-a GPIO, reset could be released earlier via the already provided support
-in the KSZ8851 driver.
-
-This also got confirmed by Peter Ujfalusi <peter.ujfalusi@ti.com> based
-on Blaze schematics that should be very close to SDP4430:
-
-TPS22902YFPR is used as the regulator switch (gpio48 controlled):
-Convert arm boot_lock to raw The VOUT is routed to TPS3808G01DBV.
-(SCH Note: Threshold set at 90%. Vsense: 0.405V).
-
-According to the TPS3808 data sheet the RESET delay time when Ct is
-open (this is the case in the schema): MIN/TYP/MAX: 12/20/28 ms.
-
-Signed-off-by: Russell King <rmk+kernel@armlinux.org.uk>
-Reviewed-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
-[tony@atomide.com: updated with notes from schematics from Peter]
-Signed-off-by: Tony Lindgren <tony@atomide.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Loys Ollivier <lollivier@baylibre.com>
 ---
- arch/arm/boot/dts/omap4-sdp.dts | 1 +
- 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm/boot/dts/omap4-sdp.dts b/arch/arm/boot/dts/omap4-sdp.dts
-index 3e1da43068f6..4669854614c3 100644
---- a/arch/arm/boot/dts/omap4-sdp.dts
-+++ b/arch/arm/boot/dts/omap4-sdp.dts
-@@ -33,6 +33,7 @@
- 		gpio = <&gpio2 16 0>;  /* gpio line 48 */
- 		enable-active-high;
- 		regulator-boot-on;
-+		startup-delay-us = <25000>;
- 	};
+v3:
+Moved the gnss_type_names string addition to this patch.
+Edited the commit message to remove the reference to a vendor protocol.
+
+v2: renamed from GTOP to MTK.
+
+ drivers/gnss/core.c  | 1 +
+ include/linux/gnss.h | 1 +
+ 2 files changed, 2 insertions(+)
+
+diff --git a/drivers/gnss/core.c b/drivers/gnss/core.c
+index 4291a0dd22aa..320cfca80d5f 100644
+--- a/drivers/gnss/core.c
++++ b/drivers/gnss/core.c
+@@ -334,6 +334,7 @@ static const char * const gnss_type_names[GNSS_TYPE_COUNT] = {
+ 	[GNSS_TYPE_NMEA]	= "NMEA",
+ 	[GNSS_TYPE_SIRF]	= "SiRF",
+ 	[GNSS_TYPE_UBX]		= "UBX",
++	[GNSS_TYPE_MTK]		= "MTK",
+ };
  
- 	vbat: fixedregulator-vbat {
+ static const char *gnss_type_name(struct gnss_device *gdev)
+diff --git a/include/linux/gnss.h b/include/linux/gnss.h
+index 43546977098c..36968a0f33e8 100644
+--- a/include/linux/gnss.h
++++ b/include/linux/gnss.h
+@@ -22,6 +22,7 @@ enum gnss_type {
+ 	GNSS_TYPE_NMEA = 0,
+ 	GNSS_TYPE_SIRF,
+ 	GNSS_TYPE_UBX,
++	GNSS_TYPE_MTK,
+ 
+ 	GNSS_TYPE_COUNT
+ };
 -- 
-2.19.1
+2.7.4
