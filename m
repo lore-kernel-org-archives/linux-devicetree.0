@@ -1,7 +1,7 @@
 From: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-Subject: [PATCH v2 09/14] arm64: dts: qcom: msm8916: Add the clocks for the APCS mux/divider
-Date: Mon, 28 Jan 2019 19:32:56 +0100
-Message-ID: <1548700381-22376-10-git-send-email-jorge.ramirez-ortiz@linaro.org>
+Subject: [PATCH v2 14/14] arm64: defconfig: Enable HFPLL
+Date: Mon, 28 Jan 2019 19:33:01 +0100
+Message-ID: <1548700381-22376-15-git-send-email-jorge.ramirez-ortiz@linaro.org>
 References: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548700381-22376-1-git-send-email-jorge.ramirez-ortiz@linaro.org>
@@ -10,31 +10,27 @@ To: jorge.ramirez-ortiz@linaro.org, sboyd@kernel.org, bjorn.andersson@linaro.org
 Cc: vkoul@kernel.org, niklas.cassel@linaro.org, georgi.djakov@linaro.org, amit.kucheria@linaro.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-clk@vger.kernel.org, linux-arm-msm@vger.kernel.org, khasim.mohammed@linaro.org
 List-Id: devicetree@vger.kernel.org
 
-Specify the cloks that feed the APCS mux/dirivider instead of using
-default hardcoded values in the source code.
+The high frequency pll is required on compatible Qualcomm SoCs to
+support the CPU frequency scaling feature.
 
-The driver still supports the previous bindings; however with this
-update it we allow the msm8916 to access the parent clock names
-required by the driver operation using the device tree node.
-
+Co-developed-by: Niklas Cassel <niklas.cassel@linaro.org>
+Signed-off-by: Niklas Cassel <niklas.cassel@linaro.org>
 Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
 ---
- arch/arm64/boot/dts/qcom/msm8916.dtsi | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/configs/defconfig | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/arm64/boot/dts/qcom/msm8916.dtsi b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-index c5348c3..729c117 100644
---- a/arch/arm64/boot/dts/qcom/msm8916.dtsi
-+++ b/arch/arm64/boot/dts/qcom/msm8916.dtsi
-@@ -425,7 +425,8 @@
- 			compatible = "qcom,msm8916-apcs-kpss-global", "syscon";
- 			reg = <0xb011000 0x1000>;
- 			#mbox-cells = <1>;
--			clocks = <&a53pll>;
-+			clocks = <&gcc GPLL0_VOTE>, <&a53pll>;
-+			clock-names = "aux", "pll";
- 			#clock-cells = <0>;
- 		};
- 
+diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+index c8432e2..67f0cca 100644
+--- a/arch/arm64/configs/defconfig
++++ b/arch/arm64/configs/defconfig
+@@ -628,6 +628,7 @@ CONFIG_MSM_MMCC_8996=y
+ CONFIG_MSM_GCC_8998=y
+ CONFIG_QCS_GCC_404=y
+ CONFIG_SDM_GCC_845=y
++CONFIG_QCOM_HFPLL=y
+ CONFIG_HWSPINLOCK=y
+ CONFIG_HWSPINLOCK_QCOM=y
+ CONFIG_ARM_MHU=y
 -- 
 2.7.4
