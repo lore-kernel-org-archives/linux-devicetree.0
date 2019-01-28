@@ -1,78 +1,54 @@
-Return-Path: <>
-From: Martin Kelly <martin@martingkelly.com>
-Subject: [PATCH v3 1/6] iio:bmi160: add SPDX identifiers
-Date: Sun, 27 Jan 2019 12:39:06 -0800
-Message-Id: <20190127203911.8696-2-martin@martingkelly.com>
-In-Reply-To: <20190127203911.8696-1-martin@martingkelly.com>
-References: <20190127203911.8696-1-martin@martingkelly.com>
-To: linux-iio@vger.kernel.org
-Cc: Jonathan Cameron <jic23@kernel.org>, Hartmut Knaack <knaack.h@gmx.de>, Lars-Peter Clausen <lars@metafoo.de>, Peter Meerwald-Stadler <pmeerw@pmeerw.net>, Rob Herring <robh+dt@kernel.org>, Daniel Baluta <daniel.baluta@gmail.com>, devicetree@vger.kernel.org, Martin Kelly <martin@martingkelly.com>
+Return-Path: <SRS0=/eZE=QE=ysoft.com=michal.vokac@kernel.org>
+From: =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
+Subject: [PATCH RESEND v2 2/4] video: ssd1307fb: Do not hard code active-low reset sequence
+Date: Mon, 28 Jan 2019 12:53:01 +0100
+Message-Id: <1548676383-29685-3-git-send-email-michal.vokac@ysoft.com>
+In-Reply-To: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
+References: <1548676383-29685-1-git-send-email-michal.vokac@ysoft.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+To: Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Shawn Guo <shawnguo@kernel.org>, Fabio Estevam <fabio.estevam@nxp.com>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Maxime Ripard <maxime.ripard@bootlin.com>, linux-fbdev@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org, =?UTF-8?q?Michal=20Vok=C3=A1=C4=8D?= <michal.vokac@ysoft.com>
 List-ID: <devicetree@vger.kernel.org>
 
-From: Martin Kelly <martin@martingkelly.com>
+The SSD130x OLED display reset signal is active low. Now the reset
+sequence is implemented in such a way that users are forced to
+define reset-gpios as GPIO_ACTIVE_HIGH in DT to make the reset work.
 
-Add SPDX identifiers (GPL 2) for the BMI160 driver. bmi160.h had an
-identifier, but the other files did not.
+Do not hard code the active-low sequence into the driver but instead
+allow the user to specify the gpio as GPIO_ACTIVE_LOW to reflect
+the real world.
 
-Signed-off-by: Martin Kelly <martin@martingkelly.com>
+Reviewed-by: Rob Herring <robh@kernel.org>
+Reviewed-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Signed-off-by: Michal Vokáč <michal.vokac@ysoft.com>
 ---
- drivers/iio/imu/bmi160/bmi160_core.c | 5 +----
- drivers/iio/imu/bmi160/bmi160_i2c.c  | 5 +----
- drivers/iio/imu/bmi160/bmi160_spi.c  | 4 +---
- 3 files changed, 3 insertions(+), 11 deletions(-)
+Changes in v2 resend:
+ - Add R-by from Alexandre.
 
-diff --git a/drivers/iio/imu/bmi160/bmi160_core.c b/drivers/iio/imu/bmi160/bmi160_core.c
-index b10330b0f93f..ce61026d84c3 100644
---- a/drivers/iio/imu/bmi160/bmi160_core.c
-+++ b/drivers/iio/imu/bmi160/bmi160_core.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * BMI160 - Bosch IMU (accel, gyro plus external magnetometer)
-  *
-  * Copyright (c) 2016, Intel Corporation.
-  *
-- * This file is subject to the terms and conditions of version 2 of
-- * the GNU General Public License.  See the file COPYING in the main
-- * directory of this archive for more details.
-- *
-  * IIO core driver for BMI160, with support for I2C/SPI busses
-  *
-  * TODO: magnetometer, interrupts, hardware FIFO
-diff --git a/drivers/iio/imu/bmi160/bmi160_i2c.c b/drivers/iio/imu/bmi160/bmi160_i2c.c
-index 5b1f7e6af651..e36f5e82d400 100644
---- a/drivers/iio/imu/bmi160/bmi160_i2c.c
-+++ b/drivers/iio/imu/bmi160/bmi160_i2c.c
-@@ -1,12 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * BMI160 - Bosch IMU, I2C bits
-  *
-  * Copyright (c) 2016, Intel Corporation.
-  *
-- * This file is subject to the terms and conditions of version 2 of
-- * the GNU General Public License.  See the file COPYING in the main
-- * directory of this archive for more details.
-- *
-  * 7-bit I2C slave address is:
-  *      - 0x68 if SDO is pulled to GND
-  *      - 0x69 if SDO is pulled to VDDIO
-diff --git a/drivers/iio/imu/bmi160/bmi160_spi.c b/drivers/iio/imu/bmi160/bmi160_spi.c
-index e521ad14eeac..c19e3df35559 100644
---- a/drivers/iio/imu/bmi160/bmi160_spi.c
-+++ b/drivers/iio/imu/bmi160/bmi160_spi.c
-@@ -1,11 +1,9 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  * BMI160 - Bosch IMU, SPI bits
-  *
-  * Copyright (c) 2016, Intel Corporation.
-  *
-- * This file is subject to the terms and conditions of version 2 of
-- * the GNU General Public License.  See the file COPYING in the main
-- * directory of this archive for more details.
-  */
- #include <linux/acpi.h>
- #include <linux/module.h>
+Changes from v1:
+ - Add R-by from Rob
+
+ drivers/video/fbdev/ssd1307fb.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/drivers/video/fbdev/ssd1307fb.c b/drivers/video/fbdev/ssd1307fb.c
+index 4061a20..3b361bc 100644
+--- a/drivers/video/fbdev/ssd1307fb.c
++++ b/drivers/video/fbdev/ssd1307fb.c
+@@ -667,10 +667,10 @@ static int ssd1307fb_probe(struct i2c_client *client,
+ 
+ 	if (par->reset) {
+ 		/* Reset the screen */
+-		gpiod_set_value_cansleep(par->reset, 0);
+-		udelay(4);
+ 		gpiod_set_value_cansleep(par->reset, 1);
+ 		udelay(4);
++		gpiod_set_value_cansleep(par->reset, 0);
++		udelay(4);
+ 	}
+ 
+ 	if (par->vbat_reg) {
 -- 
-2.11.0
+2.1.4
