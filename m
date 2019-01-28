@@ -1,128 +1,66 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v2 08/10] rtc: bd70528: Initial support for ROHM
- bd70528 RTC
-Date: Mon, 28 Jan 2019 09:48:49 +0200
-Message-ID: <20190128074849.GB2030@localhost.localdomain>
-References: <20190125110536.GA29321@localhost.localdomain>
- <35bbc5b9-5f8c-ec80-3eaa-bb2c0e2812c9@roeck-us.net>
+From: Johan Hovold <johan@kernel.org>
+Subject: Re: [PATCH] arm: dts: gta04: add gps support
+Date: Mon, 28 Jan 2019 08:53:56 +0100
+Message-ID: <20190128075356.GJ3691@localhost>
+References: <20190125194310.11170-1-andreas@kemnade.info>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <35bbc5b9-5f8c-ec80-3eaa-bb2c0e2812c9@roeck-us.net>
+In-Reply-To: <20190125194310.11170-1-andreas@kemnade.info>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Guenter Roeck <linux@roeck-us.net>
-Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Andreas Kemnade <andreas@kemnade.info>
+Cc: bcousson@baylibre.com, tony@atomide.com, robh+dt@kernel.org, mark.rutland@arm.com, linux-omap@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, letux-kernel@openphoenux.org
 List-Id: devicetree@vger.kernel.org
 
-Thanks again Guenter,
-
-On Sat, Jan 26, 2019 at 08:30:24AM -0800, Guenter Roeck wrote:
-> On 1/25/19 3:05 AM, Matti Vaittinen wrote:
-> > +/*
-> > + * We read regs RTC_SEC => RTC_YEAR
-> > + * this struct is ordered according to chip registers.
-> > + * Keep it u8 only to avoid padding issues.
-> > + */
-> > +struct bd70528_rtc_day {
-> > +	u8 sec;
-> > +	u8 min;
-> > +	u8 hour;
-> > +};
-> > +
-> > +struct bd70528_rtc_data {
-> > +	struct bd70528_rtc_day time;
-> > +	u8 week;
-> > +	u8 day;
-> > +	u8 month;
-> > +	u8 year;
-> > +};
-> > +
-> > +struct bd70528_rtc_wake {
-> > +	struct bd70528_rtc_day time;
-> > +	u8 ctrl;
-> > +};
-> > +
-> > +struct bd70528_rtc_alm {
-> > +	struct bd70528_rtc_data data;
-> > +	u8 alm_mask;
-> > +	u8 alm_repeat;
-> > +};
+On Fri, Jan 25, 2019 at 08:43:10PM +0100, Andreas Kemnade wrote:
+> The GTA04 has a w2sg0004 or w2sg0084 gps chip. Not detectable
+> which one is mounted so use the compatibility entry for w2sg0004
+> for all which will work for both.
 > 
-> At least some of the above are directly associated with chip registers.
-> I don't think this will work for all architectures without explicit packed
-> attribute.
-
-Allright. I was thinking of that but thought that most of the
-architectures using this PMIC would handle alignments fine if I used
-only u8 members. I did consider using __attribute__((packed)) - but I'm
-not sure if we hit into troubles with that too. I guess some people
-would like to compile kernel with other compiler(s) but gcc - although
-I'm not sure if this should be taken into account. I'll try doing some
-study on this - unless someone replies to this and just tells how this
-should be done. (I am pretty sure I can find the answer from mail
-archives though). I'll try adding some packing hint for compiler at v3.
-
-> > +		if ((!enable) == (!(*old_state & BD70528_WAKE_STATE_BIT)))
-> > +			return 0;
+> Signed-off-by: Andreas Kemnade <andreas@kemnade.info>
+> ---
+> w2sg0004 bindings (together with the corresponding support is in
+> https://git.kernel.org/pub/scm/linux/kernel/git/johan/gnss gnss-next)
+>  arch/arm/boot/dts/omap3-gta04.dtsi | 13 +++++++++++++
+>  1 file changed, 13 insertions(+)
 > 
-> I think
-> 		if (enable == !!(*old_state & BD70528_WAKE_STATE_BIT))
-> would be much better readable. Even if not, there are way too many ()
-> in the above conditional.
+> diff --git a/arch/arm/boot/dts/omap3-gta04.dtsi b/arch/arm/boot/dts/omap3-gta04.dtsi
+> index e53d32691308..d58c117e429f 100644
+> --- a/arch/arm/boot/dts/omap3-gta04.dtsi
+> +++ b/arch/arm/boot/dts/omap3-gta04.dtsi
+> @@ -312,6 +312,12 @@
+>  		>;
+>         };
+>  
+> +	gps_pins: pinmux_gps_pins {
+> +		pinctrl-single,pins = <
+> +			OMAP3_CORE1_IOPAD(0x2176, PIN_OUTPUT_PULLDOWN | MUX_MODE4) /* gpio145 */
+> +		>;
+> +	};
+> +
+>  	hdq_pins: hdq_pins {
+>  		pinctrl-single,pins = <
+>  			OMAP3_CORE1_IOPAD(0x21c6, PIN_INPUT_PULLUP | MUX_MODE0) /* i2c3_sda.hdq */
+> @@ -644,6 +650,13 @@
+>  &uart2 {
+>  	pinctrl-names = "default";
+>  	pinctrl-0 = <&uart2_pins>;
+> +	gps: gps {
 
-Allright. I'll fix this
- 
-> > +	if (alm.alm_mask & BD70528_MASK_ALM_EN)
-> > +		a->enabled = 0;
-> > +	else
-> > +		a->enabled = 1;
-> > +
-> Without conditional:
-> 	a->enabled = !(alm.alm_mask & BD70528_MASK_ALM_EN);
-> 
+The node should be named "gnss" as per the binding.
 
-Right. Much nicer, thanks! I'll change this.
+> +		compatible = "wi2wi,w2sg0004";
+> +		pinctrl-names = "default";
+> +		pinctrl-0 = <&gps_pins>;
+> +		sirf,onoff-gpios = <&gpio5 17 GPIO_ACTIVE_HIGH>;
+> +		lna-supply = <&vsim>;
 
-> > +static int bd70528_set_time(struct device *dev, struct rtc_time *t)
-> > +{
-> > +	int ret, old_states;
-> > +	struct bd70528_rtc_data rtc_data;
-> > +	struct bd70528_rtc *r = dev_get_drvdata(dev);
-> > +	struct bd70528 *bd70528 = r->mfd;
-> > +
-> > +	ret = bd70528_disable_rtc_based_timers(r, &old_states);
-> > +
-> 
-> AFAICS the disable/enable functions are only called once. Since they
-> also apply set / clear a mutex, I find that a bit confusing. I think
-> it would be better to fold the code into this function. If anything,
-> I could imagine something like
-> 
-> 	mutex_lock();
-> 	ret = bd70528_set_time_locked();
-> 	mutex_unlock()
-> 
-> to simplify error handling.
+Also, the vcc-supply is a required property.
 
-Yep. Makes sense. I'll tidy this.
+> +	};
+>  };
+>  
+>  &uart3 {
 
-> > +	ret = regmap_bulk_read(bd70528->chip.regmap,
-> > +			       BD70528_REG_RTC_START, &rtc_data,
-> > +			       sizeof(rtc_data));
-> > +
-> > +	tm2rtc(t, &rtc_data);
-> > +
-> > +	ret = regmap_bulk_write(bd70528->chip.regmap,
-> > +				BD70528_REG_RTC_START, &rtc_data,
-> > +				sizeof(rtc_data));
-> > +
-> > +	ret = bd70528_re_enable_rtc_based_timers(r, old_states);
-> > +
-> 
-> Kind of off that all the error returns are ignored here.
-
-And I'll fix this too.
-
-Br,
-	Matti Vaittinen
+Johan
