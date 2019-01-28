@@ -1,421 +1,80 @@
-From: Artur Rojek <contact@artur-rojek.eu>
-Subject: [PATCH 3/3] IIO: add Ingenic JZ47xx ADC driver.
-Date: Mon, 28 Jan 2019 14:02:41 +0100
-Message-ID: <20190128130241.5027-3-contact@artur-rojek.eu>
-References: <20190128130241.5027-1-contact@artur-rojek.eu>
+From: Simon Horman <horms@verge.net.au>
+Subject: Re: [PATCH 10/11] arm64: dts: renesas: r8a774c0: Add clkp2 clock to
+ CAN nodes
+Date: Mon, 28 Jan 2019 14:02:38 +0100
+Message-ID: <20190128130238.gork4cep3qonghwz@verge.net.au>
+References: <1547663874-29411-1-git-send-email-fabrizio.castro@bp.renesas.com>
+ <1547663874-29411-11-git-send-email-fabrizio.castro@bp.renesas.com>
+ <20190117120541.slymsz47fjkzz3kg@verge.net.au>
 Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190128130241.5027-1-contact@artur-rojek.eu>
-Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Cameron <jic23@kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>
-Cc: linux-iio@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, Paul Cercueil <paul@crapouillou.net>, Artur Rojek <contact@artur-rojek.eu>
+Content-Type: text/plain; charset=us-ascii
+Return-path: <netdev-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190117120541.slymsz47fjkzz3kg@verge.net.au>
+Sender: netdev-owner@vger.kernel.org
+To: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+Cc: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Wolfgang Grandegger <wg@grandegger.com>, Marc Kleine-Budde <mkl@pengutronix.de>, Michael Turquette <mturquette@baylibre.com>, Stephen Boyd <sboyd@kernel.org>, Magnus Damm <magnus.damm@gmail.com>, "David S. Miller" <davem@davemloft.net>, Geert Uytterhoeven <geert+renesas@glider.be>, Thierry Reding <treding@nvidia.com>, Andreas =?utf-8?Q?F=C3=A4rber?= <afaerber@suse.de>, Alexandre Belloni <alexandre.belloni@bootlin.com>, Kevin Hilman <khilman@baylibre.com>, Johan Hovold <johan@kernel.org>, Lukasz Majewski <lukma@denx.de>, Michal Simek <monstr@monstr.eu>, Michal =?utf-8?B?Vm9rw6HEjQ==?= <michal.vokac@ysoft.com>, Martin Blumenstingl <martin.blumenstingl@googlemail.com>, Ben
 List-Id: devicetree@vger.kernel.org
 
-Add an IIO driver for the ADC hardware present on Ingenic JZ47xx SoCs.
+On Thu, Jan 17, 2019 at 01:05:42PM +0100, Simon Horman wrote:
+> On Wed, Jan 16, 2019 at 06:37:53PM +0000, Fabrizio Castro wrote:
+> > According to the latest information, clkp2 is available on RZ/G2.
+> > Modify CAN0 and CAN1 nodes accordingly.
+> > 
+> > Signed-off-by: Fabrizio Castro <fabrizio.castro@bp.renesas.com>
+> > Reviewed-by: Chris Paterson <Chris.Paterson2@renesas.com>
+> 
+> Taking your word for the motivation for this change,
+> this patch seems fine to me but I would like to wait for review
+> from others.
+> 
+> Reviewed-by: Simon Horman <horms+renesas@verge.net.au>
 
-Signed-off-by: Artur Rojek <contact@artur-rojek.eu>
----
- drivers/iio/adc/Kconfig       |   9 +
- drivers/iio/adc/Makefile      |   1 +
- drivers/iio/adc/ingenic-adc.c | 357 ++++++++++++++++++++++++++++++++++
- 3 files changed, 367 insertions(+)
- create mode 100644 drivers/iio/adc/ingenic-adc.c
+I am marking this as deferred until R8A774C0_CLK_CANFD
+shows up in an rc release.
 
-diff --git a/drivers/iio/adc/Kconfig b/drivers/iio/adc/Kconfig
-index 7a3ca4ec0cb7..f9f349a22b04 100644
---- a/drivers/iio/adc/Kconfig
-+++ b/drivers/iio/adc/Kconfig
-@@ -367,6 +367,15 @@ config INA2XX_ADC
- 	  Say yes here to build support for TI INA2xx family of Power Monitors.
- 	  This driver is mutually exclusive with the HWMON version.
- 
-+config INGENIC_ADC
-+	tristate "Ingenic JZ47xx SoCs ADC driver"
-+	depends on MIPS || COMPILE_TEST
-+	help
-+	  Say yes here to build support for the Ingenic JZ47xx SoCs ADC unit.
-+
-+	  This driver can also be built as a module. If so, the module will be
-+	  called ingenic_adc.
-+
- config IMX7D_ADC
- 	tristate "Freescale IMX7D ADC driver"
- 	depends on ARCH_MXC || COMPILE_TEST
-diff --git a/drivers/iio/adc/Makefile b/drivers/iio/adc/Makefile
-index 07df37f621bd..0a7acab33b91 100644
---- a/drivers/iio/adc/Makefile
-+++ b/drivers/iio/adc/Makefile
-@@ -36,6 +36,7 @@ obj-$(CONFIG_HI8435) += hi8435.o
- obj-$(CONFIG_HX711) += hx711.o
- obj-$(CONFIG_IMX7D_ADC) += imx7d_adc.o
- obj-$(CONFIG_INA2XX_ADC) += ina2xx-adc.o
-+obj-$(CONFIG_INGENIC_ADC) += ingenic-adc.o
- obj-$(CONFIG_LP8788_ADC) += lp8788_adc.o
- obj-$(CONFIG_LPC18XX_ADC) += lpc18xx_adc.o
- obj-$(CONFIG_LPC32XX_ADC) += lpc32xx_adc.o
-diff --git a/drivers/iio/adc/ingenic-adc.c b/drivers/iio/adc/ingenic-adc.c
-new file mode 100644
-index 000000000000..4235d46a3d37
---- /dev/null
-+++ b/drivers/iio/adc/ingenic-adc.c
-@@ -0,0 +1,357 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * ADC driver for the Ingenic JZ47xx SoCs
-+ * Copyright (c) 2019 Artur Rojek <contact@artur-rojek.eu>
-+ *
-+ * based on drivers/mfd/jz4740-adc.c
-+ */
-+
-+#include <dt-bindings/iio/adc/ingenic,adc.h>
-+#include <linux/clk.h>
-+#include <linux/iio/iio.h>
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/platform_device.h>
-+#include <linux/spinlock.h>
-+
-+#define JZ_ADC_REG_ENABLE		0x00
-+#define JZ_ADC_REG_CFG			0x04
-+#define JZ_ADC_REG_CTRL			0x08
-+#define JZ_ADC_REG_STATUS		0x0c
-+#define JZ_ADC_REG_ADTCH		0x18
-+#define JZ_ADC_REG_ADBDAT		0x1c
-+#define JZ_ADC_REG_ADSDAT		0x20
-+
-+#define REG_CFG_BAT_MD			BIT(4)
-+
-+#define AUX_VREF			3300
-+#define AUX_VREF_BITS			12
-+#define BATTERY_LOW_VREF		2500
-+#define BATTERY_LOW_VREF_BITS		12
-+#define JZ4725B_BATTERY_HIGH_VREF	7500
-+#define JZ4725B_BATTERY_HIGH_VREF_BITS	10
-+#define JZ4740_BATTERY_HIGH_VREF	(7500 * 0.986)
-+#define JZ4740_BATTERY_HIGH_VREF_BITS	12
-+
-+struct ingenic_adc_soc_data {
-+	unsigned int battery_high_vref;
-+	unsigned int battery_high_vref_bits;
-+	const int *battery_raw_avail;
-+	size_t battery_raw_avail_size;
-+	const int *battery_scale_avail;
-+	size_t battery_scale_avail_size;
-+};
-+
-+struct ingenic_adc {
-+	void __iomem *base;
-+	struct clk *clk;
-+	spinlock_t lock;
-+	const struct ingenic_adc_soc_data *soc_data;
-+	bool low_vref_mode;
-+};
-+
-+static void ingenic_adc_set_config(struct ingenic_adc *adc,
-+				   uint32_t mask,
-+				   uint32_t val)
-+{
-+	unsigned long flags;
-+	uint32_t cfg;
-+
-+	clk_enable(adc->clk);
-+	spin_lock_irqsave(&adc->lock, flags);
-+
-+	cfg = readl(adc->base + JZ_ADC_REG_CFG) & ~mask;
-+	cfg |= val;
-+	writel(cfg, adc->base + JZ_ADC_REG_CFG);
-+
-+	spin_unlock_irqrestore(&adc->lock, flags);
-+	clk_disable(adc->clk);
-+}
-+
-+static void ingenic_adc_enable(struct ingenic_adc *adc,
-+			       int engine,
-+			       bool enabled)
-+{
-+	unsigned long flags;
-+	u8 val;
-+
-+	spin_lock_irqsave(&adc->lock, flags);
-+	val = readb(adc->base + JZ_ADC_REG_ENABLE);
-+
-+	if (enabled)
-+		val |= BIT(engine);
-+	else
-+		val &= ~BIT(engine);
-+
-+	writeb(val, adc->base + JZ_ADC_REG_ENABLE);
-+	spin_unlock_irqrestore(&adc->lock, flags);
-+}
-+
-+static int ingenic_adc_capture(struct ingenic_adc *adc,
-+			       int engine)
-+{
-+	u8 val;
-+	int ret;
-+
-+	ingenic_adc_enable(adc, engine, true);
-+	ret = readb_poll_timeout(adc->base + JZ_ADC_REG_ENABLE, val,
-+				 !(val & BIT(engine)), 250, 1000);
-+	if (ret)
-+		ingenic_adc_enable(adc, engine, false);
-+
-+	return ret;
-+}
-+
-+static int ingenic_adc_write_raw(struct iio_dev *iio_dev,
-+				 struct iio_chan_spec const *chan,
-+				 int val,
-+				 int val2,
-+				 long m)
-+{
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->channel) {
-+		case INGENIC_ADC_BATTERY:
-+			if (val > BATTERY_LOW_VREF) {
-+				ingenic_adc_set_config(adc,
-+						       REG_CFG_BAT_MD,
-+						       0);
-+				adc->low_vref_mode = false;
-+			} else {
-+				ingenic_adc_set_config(adc,
-+						       REG_CFG_BAT_MD,
-+						       REG_CFG_BAT_MD);
-+				adc->low_vref_mode = true;
-+			}
-+			return 0;
-+		default:
-+			return -EINVAL;
-+		}
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const int jz4725b_adc_battery_raw_avail[] = {
-+	0, 1, (1 << BATTERY_LOW_VREF_BITS) - 1,
-+};
-+
-+static const int jz4725b_adc_battery_scale_avail[] = {
-+	JZ4725B_BATTERY_HIGH_VREF, JZ4725B_BATTERY_HIGH_VREF_BITS,
-+	BATTERY_LOW_VREF, BATTERY_LOW_VREF_BITS,
-+};
-+
-+static const int jz4740_adc_battery_raw_avail[] = {
-+	0, 1, (1 << BATTERY_LOW_VREF_BITS) - 1,
-+};
-+
-+static const int jz4740_adc_battery_scale_avail[] = {
-+	JZ4740_BATTERY_HIGH_VREF, JZ4740_BATTERY_HIGH_VREF_BITS,
-+	BATTERY_LOW_VREF, BATTERY_LOW_VREF_BITS,
-+};
-+
-+static const struct ingenic_adc_soc_data jz4725b_adc_soc_data = {
-+	.battery_high_vref = JZ4725B_BATTERY_HIGH_VREF,
-+	.battery_high_vref_bits = JZ4725B_BATTERY_HIGH_VREF_BITS,
-+	.battery_raw_avail = jz4725b_adc_battery_raw_avail,
-+	.battery_raw_avail_size = ARRAY_SIZE(jz4725b_adc_battery_raw_avail),
-+	.battery_scale_avail = jz4725b_adc_battery_scale_avail,
-+	.battery_scale_avail_size = ARRAY_SIZE(jz4725b_adc_battery_scale_avail),
-+};
-+
-+static const struct ingenic_adc_soc_data jz4740_adc_soc_data = {
-+	.battery_high_vref = JZ4740_BATTERY_HIGH_VREF,
-+	.battery_high_vref_bits = JZ4740_BATTERY_HIGH_VREF_BITS,
-+	.battery_raw_avail = jz4740_adc_battery_raw_avail,
-+	.battery_raw_avail_size = ARRAY_SIZE(jz4740_adc_battery_raw_avail),
-+	.battery_scale_avail = jz4740_adc_battery_scale_avail,
-+	.battery_scale_avail_size = ARRAY_SIZE(jz4740_adc_battery_scale_avail),
-+};
-+
-+static int ingenic_adc_read_avail(struct iio_dev *iio_dev,
-+				  struct iio_chan_spec const *chan,
-+				  const int **vals,
-+				  int *type,
-+				  int *length,
-+				  long m)
-+{
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_RAW:
-+		*type = IIO_VAL_INT;
-+		*length = adc->soc_data->battery_raw_avail_size;
-+		*vals = adc->soc_data->battery_raw_avail;
-+		return IIO_AVAIL_RANGE;
-+	case IIO_CHAN_INFO_SCALE:
-+		*type = IIO_VAL_FRACTIONAL_LOG2;
-+		*length = adc->soc_data->battery_scale_avail_size;
-+		*vals = adc->soc_data->battery_scale_avail;
-+		return IIO_AVAIL_LIST;
-+	default:
-+		return -EINVAL;
-+	};
-+}
-+
-+static int ingenic_adc_read_raw(struct iio_dev *iio_dev,
-+				struct iio_chan_spec const *chan,
-+				int *val,
-+				int *val2,
-+				long m)
-+{
-+	struct ingenic_adc *adc = iio_priv(iio_dev);
-+	int ret;
-+
-+	switch (m) {
-+	case IIO_CHAN_INFO_RAW:
-+		clk_enable(adc->clk);
-+		ret = ingenic_adc_capture(adc, chan->channel);
-+		if (ret) {
-+			clk_disable(adc->clk);
-+			return ret;
-+		}
-+
-+		switch (chan->channel) {
-+		case INGENIC_ADC_AUX:
-+			*val = readw(adc->base + JZ_ADC_REG_ADSDAT);
-+			break;
-+		case INGENIC_ADC_BATTERY:
-+			*val = readw(adc->base + JZ_ADC_REG_ADBDAT);
-+			break;
-+		}
-+
-+		clk_disable(adc->clk);
-+
-+		return IIO_VAL_INT;
-+	case IIO_CHAN_INFO_SCALE:
-+		switch (chan->channel) {
-+		case INGENIC_ADC_AUX:
-+			*val = AUX_VREF;
-+			*val2 = AUX_VREF_BITS;
-+			break;
-+		case INGENIC_ADC_BATTERY:
-+			if (adc->low_vref_mode) {
-+				*val = BATTERY_LOW_VREF;
-+				*val2 = BATTERY_LOW_VREF_BITS;
-+			} else {
-+				*val = adc->soc_data->battery_high_vref;
-+				*val2 = adc->soc_data->battery_high_vref_bits;
-+			}
-+			break;
-+		}
-+
-+		return IIO_VAL_FRACTIONAL_LOG2;
-+	default:
-+		return -EINVAL;
-+	}
-+}
-+
-+static const struct iio_info ingenic_adc_info = {
-+	.write_raw = ingenic_adc_write_raw,
-+	.read_raw = ingenic_adc_read_raw,
-+	.read_avail = ingenic_adc_read_avail,
-+};
-+
-+static const struct iio_chan_spec ingenic_channels[] = {
-+	{
-+		.extend_name = "aux",
-+		.type = IIO_VOLTAGE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE),
-+		.indexed = 1,
-+		.channel = INGENIC_ADC_AUX,
-+	},
-+	{
-+		.extend_name = "battery",
-+		.type = IIO_VOLTAGE,
-+		.info_mask_separate = BIT(IIO_CHAN_INFO_RAW) |
-+				      BIT(IIO_CHAN_INFO_SCALE),
-+		.info_mask_separate_available = BIT(IIO_CHAN_INFO_RAW) |
-+						BIT(IIO_CHAN_INFO_SCALE),
-+		.indexed = 1,
-+		.channel = INGENIC_ADC_BATTERY,
-+	},
-+};
-+
-+static int ingenic_adc_probe(struct platform_device *pdev)
-+{
-+	struct iio_dev *iio_dev;
-+	struct ingenic_adc *adc;
-+	struct resource *mem_base;
-+	const struct ingenic_adc_soc_data *soc_data;
-+	int ret;
-+
-+	soc_data = device_get_match_data(&pdev->dev);
-+	if (!soc_data)
-+		return -EINVAL;
-+
-+	iio_dev = devm_iio_device_alloc(&pdev->dev, sizeof(*adc));
-+	if (!iio_dev)
-+		return -ENOMEM;
-+
-+	adc = iio_priv(iio_dev);
-+	spin_lock_init(&adc->lock);
-+	adc->soc_data = soc_data;
-+
-+	mem_base = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	adc->base = devm_ioremap_resource(&pdev->dev, mem_base);
-+	if (IS_ERR(adc->base)) {
-+		dev_err(&pdev->dev, "Unable to ioremap mmio resource\n");
-+		return PTR_ERR(adc->base);
-+	}
-+
-+	adc->clk = devm_clk_get(&pdev->dev, "adc");
-+	if (IS_ERR(adc->clk)) {
-+		dev_err(&pdev->dev, "Unable to get clock\n");
-+		return PTR_ERR(adc->clk);
-+	}
-+
-+	ret = clk_prepare_enable(adc->clk);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Failed to enable clock\n");
-+		return ret;
-+	}
-+
-+	/* Put hardware in a known passive state. */
-+	writeb(0x00, adc->base + JZ_ADC_REG_ENABLE);
-+	writeb(0xff, adc->base + JZ_ADC_REG_CTRL);
-+	clk_disable(adc->clk);
-+
-+	devm_add_action(&pdev->dev, (void (*)(void *))clk_unprepare, adc->clk);
-+
-+	iio_dev->dev.parent = &pdev->dev;
-+	iio_dev->name = "adc";
-+	iio_dev->modes = INDIO_DIRECT_MODE;
-+	iio_dev->channels = ingenic_channels;
-+	iio_dev->num_channels = ARRAY_SIZE(ingenic_channels);
-+	iio_dev->info = &ingenic_adc_info;
-+
-+	ret = devm_iio_device_register(&pdev->dev, iio_dev);
-+	if (ret) {
-+		dev_err(&pdev->dev, "Unable to register IIO device\n");
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+#ifdef CONFIG_OF
-+static const struct of_device_id ingenic_adc_of_match[] = {
-+	{ .compatible = "ingenic,jz4725b-adc", .data = &jz4725b_adc_soc_data, },
-+	{ .compatible = "ingenic,jz4740-adc", .data = &jz4740_adc_soc_data, },
-+	{ },
-+};
-+MODULE_DEVICE_TABLE(of, ingenic_adc_of_match);
-+#endif
-+
-+static struct platform_driver ingenic_adc_driver = {
-+	.driver = {
-+		.name = "ingenic-adc",
-+		.of_match_table = of_match_ptr(ingenic_adc_of_match),
-+	},
-+	.probe = ingenic_adc_probe,
-+};
-+module_platform_driver(ingenic_adc_driver);
--- 
-2.20.1
+Alternatively I'd be happy to take a version that uses
+numeric values, followed up by a patch to switching to R8A774C0_CLK_CANFD
+once it is available in an rc release.
+
+Please repost or otherwise ping me as appropriate.
+
+> 
+> > ---
+> >  arch/arm64/boot/dts/renesas/r8a774c0.dtsi | 12 ++++++++----
+> >  1 file changed, 8 insertions(+), 4 deletions(-)
+> > 
+> > diff --git a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> > index 3970aaf..326ab3a 100644
+> > --- a/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> > +++ b/arch/arm64/boot/dts/renesas/r8a774c0.dtsi
+> > @@ -809,8 +809,10 @@
+> >  				     "renesas,rcar-gen3-can";
+> >  			reg = <0 0xe6c30000 0 0x1000>;
+> >  			interrupts = <GIC_SPI 186 IRQ_TYPE_LEVEL_HIGH>;
+> > -			clocks = <&cpg CPG_MOD 916>, <&can_clk>;
+> > -			clock-names = "clkp1", "can_clk";
+> > +			clocks = <&cpg CPG_MOD 916>,
+> > +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
+> > +				 <&can_clk>;
+> > +			clock-names = "clkp1", "clkp2", "can_clk";
+> >  			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> >  			resets = <&cpg 916>;
+> >  			status = "disabled";
+> > @@ -821,8 +823,10 @@
+> >  				     "renesas,rcar-gen3-can";
+> >  			reg = <0 0xe6c38000 0 0x1000>;
+> >  			interrupts = <GIC_SPI 187 IRQ_TYPE_LEVEL_HIGH>;
+> > -			clocks = <&cpg CPG_MOD 915>, <&can_clk>;
+> > -			clock-names = "clkp1", "can_clk";
+> > +			clocks = <&cpg CPG_MOD 915>,
+> > +				 <&cpg CPG_CORE R8A774C0_CLK_CANFD>,
+> > +				 <&can_clk>;
+> > +			clock-names = "clkp1", "clkp2", "can_clk";
+> >  			power-domains = <&sysc R8A774C0_PD_ALWAYS_ON>;
+> >  			resets = <&cpg 915>;
+> >  			status = "disabled";
+> > -- 
+> > 2.7.4
+> > 
+> 
