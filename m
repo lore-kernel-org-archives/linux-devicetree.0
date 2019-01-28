@@ -1,17 +1,18 @@
 From: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-Subject: Re: [PATCH v8 2/5] media: sun6i: Add A64 CSI block support
-Date: Mon, 28 Jan 2019 12:02:11 +0100
-Message-ID: <20190128110211.fmbnudcfrw2rnqya@flea>
+Subject: Re: [PATCH v8 3/5] arm64: dts: allwinner: a64: Add A64
+ CSI controller
+Date: Mon, 28 Jan 2019 12:02:52 +0100
+Message-ID: <20190128110252.n3en2wu5izoyfy5b@flea>
 References: <20190128085847.7217-1-jagan@amarulasolutions.com>
- <20190128085847.7217-3-jagan@amarulasolutions.com>
+ <20190128085847.7217-4-jagan@amarulasolutions.com>
 Reply-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org
 Mime-Version: 1.0
 Content-Type: multipart/signed; micalg=pgp-sha256;
-	protocol="application/pgp-signature"; boundary="6okpvrlphzl3mugw"
-Return-path: <linux-sunxi+bncBDSJBYGBRIMBBPWCXPRAKGQERZDDYYA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+	protocol="application/pgp-signature"; boundary="wqhrlsjxt33kaa7a"
+Return-path: <linux-sunxi+bncBDSJBYGBRIMBBZ6CXPRAKGQEKGUQWEA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 Content-Disposition: inline
-In-Reply-To: <20190128085847.7217-3-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+In-Reply-To: <20190128085847.7217-4-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 List-Archive: <https://groups.google.com/group/linux-sunxi
@@ -23,30 +24,24 @@ Cc: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalh
 List-Id: devicetree@vger.kernel.org
 
 
---6okpvrlphzl3mugw
+--wqhrlsjxt33kaa7a
 Content-Type: text/plain; charset="UTF-8"
 Content-Disposition: inline
 
-On Mon, Jan 28, 2019 at 02:28:44PM +0530, Jagan Teki wrote:
-> CSI block in Allwinner A64 has similar features as like in H3,
-> but the default CSI_SCLK rate cannot work properly to drive the
-> connected sensor interface.
+On Mon, Jan 28, 2019 at 02:28:45PM +0530, Jagan Teki wrote:
+> Add dts node details for Allwinner A64 CSI controller.
 > 
-> The tested mod cock rate is 300 MHz and BSP vfe media driver is also
-> using the same rate. Unfortunately there is no valid information about
-> clock rate in manual or any other sources except the BSP driver. so more
-> faith on BSP code, because same has tested in mainline.
-> 
-> So, add support for A64 CSI block by setting updated mod clock rate.
+> A64 CSI has similar features as like in H3, but the CSI_SCLK
+> need to update it to 300MHz than default clock rate.
 > 
 > Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+> Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 
-Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
-
+Applied, thanks!
 Maxime
 
 -- 
 Maxime Ripard, Bootlin
 Embedded Linux and Kernel engineering
 https://bootlin.com
---6okpvrlphzl3mugw--
+--wqhrlsjxt33kaa7a--
