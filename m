@@ -1,154 +1,16 @@
-From: Maxime Ripard <maxime.ripard@bootlin.com>
-Subject: [PATCH v2 5/5] DO NOT MERGE: ARM: dts: bananapi: Add Camera support
-Date: Mon, 28 Jan 2019 15:52:36 +0100
-Message-ID: <b1279df2faefbb50120270417c3f5d66bb52df18.1548687041.git-series.maxime.ripard@bootlin.com>
-References: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
+From: Jiaxun Yang <jiaxun.yang@flygoat.com>
+Subject: [PATCH 0/3] Enhance loongson-1 clock driver
+Date: Mon, 28 Jan 2019 23:20:49 +0800
+Message-ID: <20190128152052.3047-1-jiaxun.yang@flygoat.com>
+References: <20190125133413.4130-1-jiaxun.yang@flygoat.com>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <cover.ba7411f0c7155d0292b38d3dec698e26b5cc813b.1548687041.git-series.maxime.ripard@bootlin.com>
+In-Reply-To: <20190125133413.4130-1-jiaxun.yang@flygoat.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Hans Verkuil <hans.verkuil@cisco.com>, Sakari Ailus <sakari.ailus@linux.intel.com>, Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc: Thomas Petazzoni <thomas.petazzoni@bootlin.com>, Laurent Pinchart <laurent.pinchart@ideasonboard.com>, linux-media@vger.kernel.org, Andrzej Hajda <a.hajda@samsung.com>, Chen-Yu Tsai <wens@csie.org>, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, devicetree@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>, Rob Herring <robh+dt@kernel.org>, Frank Rowand <frowand.list@gmail.com>, Maxime Ripard <maxime.ripard@bootlin.com>
+To: linux-mips@vger.kernel.org
+Cc: mturquette@baylibre.com, sboyd@kernel.org, linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org, robh+dt@kernel.org, mark.rutland@arm.com, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- arch/arm/boot/dts/sun7i-a20-bananapi.dts | 94 +++++++++++++++++++++++++-
- 1 file changed, 94 insertions(+)
-
-diff --git a/arch/arm/boot/dts/sun7i-a20-bananapi.dts b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-index 556b1b591c5d..f5fee1f95900 100644
---- a/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-+++ b/arch/arm/boot/dts/sun7i-a20-bananapi.dts
-@@ -54,6 +54,9 @@
- 	compatible = "lemaker,bananapi", "allwinner,sun7i-a20";
- 
- 	aliases {
-+		i2c0 = &i2c0;
-+		i2c1 = &i2c1;
-+		i2c2 = &i2c2;
- 		serial0 = &uart0;
- 		serial1 = &uart3;
- 		serial2 = &uart7;
-@@ -63,6 +66,41 @@
- 		stdout-path = "serial0:115200n8";
- 	};
- 
-+	reg_cam: cam {
-+		compatible = "regulator-fixed";
-+		regulator-name = "cam";
-+		regulator-min-microvolt = <5000000>;
-+		regulator-max-microvolt = <5000000>;
-+		vin-supply = <&reg_vcc5v0>;
-+		gpio = <&pio 7 16 GPIO_ACTIVE_HIGH>;
-+		enable-active-high;
-+		regulator-always-on;
-+	};
-+
-+        reg_cam_avdd: cam-avdd {
-+                compatible = "regulator-fixed";
-+                regulator-name = "cam500b-avdd";
-+                regulator-min-microvolt = <2800000>;
-+                regulator-max-microvolt = <2800000>;
-+                vin-supply = <&reg_cam>;
-+        };
-+
-+        reg_cam_dovdd: cam-dovdd {
-+                compatible = "regulator-fixed";
-+                regulator-name = "cam500b-dovdd";
-+                regulator-min-microvolt = <1800000>;
-+                regulator-max-microvolt = <1800000>;
-+                vin-supply = <&reg_cam>;
-+        };
-+
-+        reg_cam_dvdd: cam-dvdd {
-+                compatible = "regulator-fixed";
-+                regulator-name = "cam500b-dvdd";
-+                regulator-min-microvolt = <1500000>;
-+                regulator-max-microvolt = <1500000>;
-+                vin-supply = <&reg_cam>;
-+        };
-+
- 	hdmi-connector {
- 		compatible = "hdmi-connector";
- 		type = "a";
-@@ -116,6 +154,26 @@
- 		>;
- };
- 
-+&csi0 {
-+	pinctrl-names = "default";
-+	pinctrl-0 = <&csi0_pins_a>;
-+	status = "okay";
-+
-+	port {
-+		#address-cells = <1>;
-+		#size-cells = <0>;
-+
-+		csi_from_ov5640: endpoint {
-+                        remote-endpoint = <&ov5640_to_csi>;
-+                        bus-width = <8>;
-+                        hsync-active = <1>; /* Active high */
-+                        vsync-active = <0>; /* Active low */
-+                        data-active = <1>;  /* Active high */
-+                        pclk-sample = <1>;  /* Rising */
-+                };
-+	};
-+};
-+
- &de {
- 	status = "okay";
- };
-@@ -161,6 +219,36 @@
- 	};
- };
- 
-+&i2c1 {
-+	status = "okay";
-+
-+	camera: camera@21 {
-+		compatible = "ovti,ov5640";
-+		reg = <0x21>;
-+                clocks = <&ccu CLK_CSI0>;
-+                clock-names = "xclk";
-+		assigned-clocks = <&ccu CLK_CSI0>;
-+		assigned-clock-rates = <24000000>;
-+
-+                reset-gpios = <&pio 7 14 GPIO_ACTIVE_LOW>;
-+                powerdown-gpios = <&pio 7 19 GPIO_ACTIVE_HIGH>;
-+                AVDD-supply = <&reg_cam_avdd>;
-+                DOVDD-supply = <&reg_cam_dovdd>;
-+                DVDD-supply = <&reg_cam_dvdd>;
-+
-+                port {
-+                        ov5640_to_csi: endpoint {
-+                                remote-endpoint = <&csi_from_ov5640>;
-+                                bus-width = <8>;
-+                                hsync-active = <1>; /* Active high */
-+                                vsync-active = <0>; /* Active low */
-+                                data-active = <1>;  /* Active high */
-+                                pclk-sample = <1>;  /* Rising */
-+                        };
-+                };
-+	};
-+};
-+
- &i2c2 {
- 	status = "okay";
- };
-@@ -242,6 +330,12 @@
- 		"IO-6", "IO-3", "IO-2", "IO-0", "", "", "", "",
- 		"", "", "", "", "", "", "", "";
- 
-+	csi0_pins_a: csi_pins_a@0 {
-+		pins = "PE0", "PE1", "PE2", "PE3", "PE4", "PE5",
-+		       "PE6", "PE7", "PE8", "PE9", "PE10", "PE11";
-+		function = "csi0";
-+	};
-+
- 	usb0_id_detect_pin: usb0-id-detect-pin {
- 		pins = "PH4";
- 		function = "gpio_in";
--- 
-git-series 0.9.1
+Add of support for ls1c-clock and ls1b-clock
+v2: Move of declear into per clk file
