@@ -1,7 +1,7 @@
 From: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
-Subject: [PATCHv5 4/7] coresight: etm4x: Add support to enable ETMv4.2
-Date: Tue, 29 Jan 2019 00:44:01 +0530
-Message-ID: <980aaf18c0fe92a667930e3a035394442af74869.1548419933.git.saiprakash.ranjan@codeaurora.org>
+Subject: [PATCHv5 3/7] arm64: dts: qcom: msm8996: Add Coresight support
+Date: Tue, 29 Jan 2019 00:44:00 +0530
+Message-ID: <6813e9d39150fb2c874abd986a8e134f8a10fba7.1548419933.git.saiprakash.ranjan@codeaurora.org>
 References: <cover.1548419933.git.saiprakash.ranjan@codeaurora.org>
 Mime-Version: 1.0
 Content-Transfer-Encoding: 8bit
@@ -12,56 +12,464 @@ To: Rob Herring <robh+dt@kernel.org>, Mathieu Poirier <mathieu.poirier@linaro.or
 Cc: Rajendra Nayak <rnayak@codeaurora.org>, Sibi Sankar <sibis@codeaurora.org>, Tingwei Zhang <tingwei@codeaurora.org>, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org, Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 List-Id: devicetree@vger.kernel.org
 
-SDM845 has ETMv4.2 and can use the existing etm4x driver.
-But the current etm driver checks only for ETMv4.0 and
-errors out for other etm4x versions. This patch adds this
-missing support to enable SoC's with ETMv4x to use same
-driver by checking only the ETM architecture major version
-number.
+From: Vivek Gautam <vivek.gautam@codeaurora.org>
 
-Without this change, we get below error during etm probe:
+Enable coresight support by adding device nodes for the
+available source, sinks and channel blocks on msm8996.
 
-/ # dmesg | grep etm
-[    6.660093] coresight-etm4x: probe of 7040000.etm failed with error -22
-[    6.666902] coresight-etm4x: probe of 7140000.etm failed with error -22
-[    6.673708] coresight-etm4x: probe of 7240000.etm failed with error -22
-[    6.680511] coresight-etm4x: probe of 7340000.etm failed with error -22
-[    6.687313] coresight-etm4x: probe of 7440000.etm failed with error -22
-[    6.694113] coresight-etm4x: probe of 7540000.etm failed with error -22
-[    6.700914] coresight-etm4x: probe of 7640000.etm failed with error -22
-[    6.707717] coresight-etm4x: probe of 7740000.etm failed with error -22
+This also adds coresight cpu debug nodes.
 
-With this change, etm probe is successful:
-
-/ # dmesg | grep etm
-[    6.659198] coresight-etm4x 7040000.etm: CPU0: ETM v4.2 initialized
-[    6.665848] coresight-etm4x 7140000.etm: CPU1: ETM v4.2 initialized
-[    6.672493] coresight-etm4x 7240000.etm: CPU2: ETM v4.2 initialized
-[    6.679129] coresight-etm4x 7340000.etm: CPU3: ETM v4.2 initialized
-[    6.685770] coresight-etm4x 7440000.etm: CPU4: ETM v4.2 initialized
-[    6.692403] coresight-etm4x 7540000.etm: CPU5: ETM v4.2 initialized
-[    6.699024] coresight-etm4x 7640000.etm: CPU6: ETM v4.2 initialized
-[    6.705646] coresight-etm4x 7740000.etm: CPU7: ETM v4.2 initialized
-
+Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
 Signed-off-by: Sai Prakash Ranjan <saiprakash.ranjan@codeaurora.org>
 ---
- drivers/hwtracing/coresight/coresight-etm4x.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
+ arch/arm64/boot/dts/qcom/msm8996.dtsi | 434 ++++++++++++++++++++++++++
+ 1 file changed, 434 insertions(+)
 
-diff --git a/drivers/hwtracing/coresight/coresight-etm4x.c b/drivers/hwtracing/coresight/coresight-etm4x.c
-index 53e2fb6e86f6..fe76b176974a 100644
---- a/drivers/hwtracing/coresight/coresight-etm4x.c
-+++ b/drivers/hwtracing/coresight/coresight-etm4x.c
-@@ -55,7 +55,8 @@ static void etm4_os_unlock(struct etmv4_drvdata *drvdata)
+diff --git a/arch/arm64/boot/dts/qcom/msm8996.dtsi b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+index 99b7495455a6..3406a10f40db 100644
+--- a/arch/arm64/boot/dts/qcom/msm8996.dtsi
++++ b/arch/arm64/boot/dts/qcom/msm8996.dtsi
+@@ -429,6 +429,440 @@
+ 			reg = <0x300000 0x90000>;
+ 		};
  
- static bool etm4_arch_supported(u8 arch)
- {
--	switch (arch) {
-+	/* Mask out the minor version number */
-+	switch (arch & 0xf0) {
- 	case ETM_ARCH_V4:
- 		break;
- 	default:
++		stm@3002000 {
++			compatible = "arm,coresight-stm", "arm,primecell";
++			reg = <0x3002000 0x1000>,
++			      <0x8280000 0x180000>;
++			reg-names = "stm-base", "stm-stimulus-base";
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			out-ports {
++				port {
++					stm_out: endpoint {
++						remote-endpoint =
++						  <&funnel0_in>;
++					};
++				};
++			};
++		};
++
++		tpiu@3020000 {
++			compatible = "arm,coresight-tpiu", "arm,primecell";
++			reg = <0x3020000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				port {
++					tpiu_in: endpoint {
++						remote-endpoint =
++						  <&replicator_out1>;
++					};
++				};
++			};
++		};
++
++		funnel@3021000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x3021000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				port {
++					funnel0_in: endpoint {
++						remote-endpoint =
++						  <&stm_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					funnel0_out: endpoint {
++						remote-endpoint =
++						  <&merge_funnel_in0>;
++					};
++				};
++			};
++		};
++
++		funnel@3022000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x3022000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				port {
++					funnel1_in: endpoint {
++						remote-endpoint =
++						  <&apss_merge_funnel_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					funnel1_out: endpoint {
++						remote-endpoint =
++						  <&merge_funnel_in1>;
++					};
++				};
++			};
++		};
++
++		funnel@3025000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x3025000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					merge_funnel_in0: endpoint {
++						remote-endpoint =
++						  <&funnel0_out>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					merge_funnel_in1: endpoint {
++						remote-endpoint =
++						  <&funnel1_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					merge_funnel_out: endpoint {
++						remote-endpoint =
++						  <&etf_in>;
++					};
++				};
++			};
++		};
++
++		replicator@3026000 {
++			compatible = "arm,coresight-dynamic-replicator", "arm,primecell";
++			reg = <0x3026000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				port {
++					replicator_in: endpoint {
++						remote-endpoint =
++						  <&etf_out>;
++					};
++				};
++			};
++
++			out-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					replicator_out0: endpoint {
++						remote-endpoint =
++						  <&etr_in>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					replicator_out1: endpoint {
++						remote-endpoint =
++						  <&tpiu_in>;
++					};
++				};
++			};
++		};
++
++		etf@3027000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x3027000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				port {
++					etf_in: endpoint {
++						remote-endpoint =
++						  <&merge_funnel_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					etf_out: endpoint {
++						remote-endpoint =
++						  <&replicator_in>;
++					};
++				};
++			};
++		};
++
++		etr@3028000 {
++			compatible = "arm,coresight-tmc", "arm,primecell";
++			reg = <0x3028000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++			arm,scatter-gather;
++
++			in-ports {
++				port {
++					etr_in: endpoint {
++						remote-endpoint =
++						  <&replicator_out0>;
++					};
++				};
++			};
++		};
++
++		debug@3810000 {
++			compatible = "arm,coresight-cpu-debug", "arm,primecell";
++			reg = <0x3810000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU0>;
++		};
++
++		etm@3840000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x3840000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU0>;
++
++			out-ports {
++				port {
++					etm0_out: endpoint {
++						remote-endpoint =
++						  <&apss_funnel0_in0>;
++					};
++				};
++			};
++		};
++
++		debug@3910000 {
++			compatible = "arm,coresight-cpu-debug", "arm,primecell";
++			reg = <0x3910000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU1>;
++		};
++
++		etm@3940000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x3940000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU1>;
++
++			out-ports {
++				port {
++					etm1_out: endpoint {
++						remote-endpoint =
++						  <&apss_funnel0_in1>;
++					};
++				};
++			};
++		};
++
++		funnel@39b0000 { /* APSS Funnel 0 */
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x39b0000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					apss_funnel0_in0: endpoint {
++						remote-endpoint = <&etm0_out>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					apss_funnel0_in1: endpoint {
++						remote-endpoint = <&etm1_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					apss_funnel0_out: endpoint {
++						remote-endpoint =
++						  <&apss_merge_funnel_in0>;
++					};
++				};
++			};
++		};
++
++		debug@3a10000 {
++			compatible = "arm,coresight-cpu-debug", "arm,primecell";
++			reg = <0x3a10000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU2>;
++		};
++
++		etm@3a40000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x3a40000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU2>;
++
++			out-ports {
++				port {
++					etm2_out: endpoint {
++						remote-endpoint =
++						  <&apss_funnel1_in0>;
++					};
++				};
++			};
++		};
++
++		debug@3b10000 {
++			compatible = "arm,coresight-cpu-debug", "arm,primecell";
++			reg = <0x3b10000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>;
++			clock-names = "apb_pclk";
++
++			cpu = <&CPU3>;
++		};
++
++		etm@3b40000 {
++			compatible = "arm,coresight-etm4x", "arm,primecell";
++			reg = <0x3b40000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			cpu = <&CPU3>;
++
++			out-ports {
++				port {
++					etm3_out: endpoint {
++						remote-endpoint =
++						  <&apss_funnel1_in1>;
++					};
++				};
++			};
++		};
++
++		funnel@3bb0000 { /* APSS Funnel 1 */
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x3bb0000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					apss_funnel1_in0: endpoint {
++						remote-endpoint = <&etm2_out>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					apss_funnel1_in1: endpoint {
++						remote-endpoint = <&etm3_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					apss_funnel1_out: endpoint {
++						remote-endpoint =
++						  <&apss_merge_funnel_in1>;
++					};
++				};
++			};
++		};
++
++		funnel@3bc0000 {
++			compatible = "arm,coresight-funnel", "arm,primecell";
++			reg = <0x3bc0000 0x1000>;
++
++			clocks = <&rpmcc RPM_QDSS_CLK>, <&rpmcc RPM_QDSS_A_CLK>;
++			clock-names = "apb_pclk", "atclk";
++
++			in-ports {
++				#address-cells = <1>;
++				#size-cells = <0>;
++
++				port@0 {
++					reg = <0>;
++					apss_merge_funnel_in0: endpoint {
++						remote-endpoint =
++						  <&apss_funnel0_out>;
++					};
++				};
++
++				port@1 {
++					reg = <1>;
++					apss_merge_funnel_in1: endpoint {
++						remote-endpoint =
++						  <&apss_funnel1_out>;
++					};
++				};
++			};
++
++			out-ports {
++				port {
++					apss_merge_funnel_out: endpoint {
++						remote-endpoint =
++						  <&funnel1_in>;
++					};
++				};
++			};
++		};
++
+ 		kryocc: clock-controller@6400000 {
+ 			compatible = "qcom,apcc-msm8996";
+ 			reg = <0x6400000 0x90000>;
 -- 
 QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
 of Code Aurora Forum, hosted by The Linux Foundation
