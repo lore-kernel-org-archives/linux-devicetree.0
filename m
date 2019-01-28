@@ -1,88 +1,48 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH v7 2/5] media: sun6i: Add A64 CSI block support
-Date: Mon, 28 Jan 2019 13:01:54 +0530
-Message-ID: <CAMty3ZB6Es45D=fcCLrv4dAxJAgMDr3aLbbc4hF87ZC4UizBpQ@mail.gmail.com>
-References: <20190124180736.28408-1-jagan@amarulasolutions.com>
- <20190124180736.28408-3-jagan@amarulasolutions.com> <20190125154245.5wx2mwhzsjeaahi3@flea>
+From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Subject: Re: [RFC PATCH v2 00/10] support ROHM BD70528 PMIC
+Date: Mon, 28 Jan 2019 09:38:03 +0200
+Message-ID: <20190128073803.GA2030@localhost.localdomain>
+References: <20190125110110.GA29171@localhost.localdomain>
+ <20190128071936.GD4678@dell>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125154245.5wx2mwhzsjeaahi3@flea>
+Content-Disposition: inline
+In-Reply-To: <20190128071936.GD4678@dell>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Yong Deng <yong.deng@magewell.com>, Mauro Carvalho Chehab <mchehab@kernel.org>, Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, linux-media <linux-media@vger.kernel.org>, linux-arm-kernel <linux-arm-kernel@lists.infradead.org>, linux-kernel <linux-kernel@vger.kernel.org>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree <devicetree@vger.kernel.org>, linux-sunxi <linux-sunxi@googlegroups.com>
+To: Lee Jones <lee.jones@linaro.org>
+Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 9:12 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Jan 24, 2019 at 11:37:33PM +0530, Jagan Teki wrote:
-> > CSI block in Allwinner A64 has similar features as like in H3,
-> > but the default CSI_SCLK rate cannot work properly to drive the
-> > connected sensor interface.
-> >
-> > The tested mod cock rate is 300 MHz and BSP vfe media driver is also
-> > using the same rate. Unfortunately there is no valid information about
-> > clock rate in manual or any other sources except the BSP driver. so more
-> > faith on BSP code, because same has tested in mainline.
-> >
-> > So, add support for A64 CSI block by setting updated mod clock rate.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> >  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 13 ++++++++++++-
-> >  1 file changed, 12 insertions(+), 1 deletion(-)
-> >
-> > diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > index ee882b66a5ea..cd2d33242c17 100644
-> > --- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > +++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-> > @@ -15,6 +15,7 @@
-> >  #include <linux/ioctl.h>
-> >  #include <linux/module.h>
-> >  #include <linux/of.h>
-> > +#include <linux/of_device.h>
-> >  #include <linux/platform_device.h>
-> >  #include <linux/pm_runtime.h>
-> >  #include <linux/regmap.h>
-> > @@ -154,6 +155,7 @@ bool sun6i_csi_is_format_supported(struct sun6i_csi *csi,
-> >  int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
-> >  {
-> >       struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-> > +     struct device *dev = sdev->dev;
-> >       struct regmap *regmap = sdev->regmap;
-> >       int ret;
-> >
-> > @@ -161,15 +163,20 @@ int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
-> >               regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, 0);
-> >
-> >               clk_disable_unprepare(sdev->clk_ram);
-> > +             if (of_device_is_compatible(dev->of_node, "allwinner,sun50i-a64-csi"))
-> > +                     clk_rate_exclusive_put(sdev->clk_mod);
-> >               clk_disable_unprepare(sdev->clk_mod);
-> >               reset_control_assert(sdev->rstc_bus);
-> >               return 0;
-> >       }
-> >
-> > +     if (of_device_is_compatible(dev->of_node, "allwinner,sun50i-a64-csi"))
-> > +             clk_set_rate_exclusive(sdev->clk_mod, 300000000);
-> > +
-> >       ret = clk_prepare_enable(sdev->clk_mod);
-> >       if (ret) {
-> >               dev_err(sdev->dev, "Enable csi clk err %d\n", ret);
-> > -             return ret;
-> > +             goto clk_mod_put;
-> >       }
-> >
-> >       ret = clk_prepare_enable(sdev->clk_ram);
-> > @@ -192,6 +199,9 @@ int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
-> >       clk_disable_unprepare(sdev->clk_ram);
-> >  clk_mod_disable:
-> >       clk_disable_unprepare(sdev->clk_mod);
-> > +clk_mod_put:
-> > +     if (of_device_is_compatible(dev->of_node, "allwinner,sun50i-a64-csi"))
-> > +             clk_rate_exclusive_put(sdev->clk_mod);
-> >       return ret;
->
-> The sequence in the error path and in the disable path aren't the same, why?
+Hello Lee, All
 
-True, it should be similar sequence, will fix and send next version. thanks!
+On Mon, Jan 28, 2019 at 07:19:36AM +0000, Lee Jones wrote:
+> On Fri, 25 Jan 2019, Matti Vaittinen wrote:
+> 
+> > Patch series introducing support for ROHM BD70528 PMIC
+> > 
+> > Please note that patch 1 breaks compilation without patches 2 and 3
+> > 
+> > ROHM BD70528 is a programmable Power Management IC for battery
+> > powered 'ultra low power' systems like the pre-announced NXP
+> > i.MX7 ULP. This patch series introduces support for the PMIC.
+> 
+> It looks like you've sent this set un-threaded, which means as people
+> reply to the patches, they are going to be spread out into the four
+> winds (in Inbox terms).
+
+Sigh. Sorry for trouble then. I must've forgotten the --thread from
+git format-patch. You can skip the v2 if it's all scattered out, I
+will address issues spotted by Guenter and send out the v3 - and this
+time I make sure to use --thread =)
+
+Br,
+    Matti Vaittinen
+
+> 
+> -- 
+> Lee Jones [李琼斯]
+> Linaro Services Technical Lead
+> Linaro.org │ Open source software for ARM SoCs
+> Follow Linaro: Facebook | Twitter | Blog
