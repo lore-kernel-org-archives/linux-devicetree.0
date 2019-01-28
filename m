@@ -1,17 +1,17 @@
 Return-Path: <SRS0=OP5l=QE=vger.kernel.org=devicetree-owner@kernel.org>
-Received: from mailout1.w1.samsung.com ([210.118.77.11]:58462 "EHLO
+Received: from mailout1.w1.samsung.com ([210.118.77.11]:57917 "EHLO
         mailout1.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726862AbfA1TVy (ORCPT
-        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Jan 2019 14:21:54 -0500
-Received: from eucas1p2.samsung.com (unknown [182.198.249.207])
-        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190128192152euoutp01e5ea84f11fc7ce6badb252f09ba605a7~_GXUNhTuC3243432434euoutp01X
-        for <devicetree@vger.kernel.org>; Mon, 28 Jan 2019 19:21:52 +0000 (GMT)
+        with ESMTP id S1727946AbfA1TQl (ORCPT
+        <rfc822;devicetree@vger.kernel.org>); Mon, 28 Jan 2019 14:16:41 -0500
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout1.w1.samsung.com (KnoxPortal) with ESMTP id 20190128191640euoutp018d329369a73dc2d66bc0b55337b5710c~_GSxSznn_2805428054euoutp01A
+        for <devicetree@vger.kernel.org>; Mon, 28 Jan 2019 19:16:40 +0000 (GMT)
 From: Lukasz Luba <l.luba@partner.samsung.com>
 Subject: [PATCH 0/8] Exynos5 Dynamic Memory Controller driver
-Date: Mon, 28 Jan 2019 20:21:31 +0100
-Message-Id: <1548703299-15806-1-git-send-email-l.luba@partner.samsung.com>
+Date: Mon, 28 Jan 2019 20:16:06 +0100
+Message-Id: <1548702974-13427-1-git-send-email-l.luba@partner.samsung.com>
 Content-Type: text/plain; charset="utf-8"
-References: <CGME20190128192150eucas1p14eb93be3b6a54657a48725b4615cc7aa@eucas1p1.samsung.com>
+References: <CGME20190128191637eucas1p1b34ef8f5e05c11b4ddb72622ef65f311@eucas1p1.samsung.com>
 Sender: devicetree-owner@vger.kernel.org
 To: devicetree@vger.kernel.org
 Cc: b.zolnierkie@samsung.com, myungjoo.ham@samsung.com, krzk@kernel.org, Lukasz Luba <l.luba@partner.samsung.com>
@@ -23,6 +23,7 @@ This patch set add support for Exynos5422 SoC for Dynamic Memory Controller.
 The driver supports Dynamic Frequency and Voltage Scalling
 for the DMC and DRAM. It also provides needed timings for different
 speed operations of the DRAM memory.
+There are also files related to DT and DT bindings.
 
 Regards,
 Lukasz Luba
