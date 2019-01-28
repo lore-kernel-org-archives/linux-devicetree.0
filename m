@@ -1,12 +1,12 @@
 From: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
-Subject: [PATCH v8 2/5] media: sun6i: Add A64 CSI block support
-Date: Mon, 28 Jan 2019 14:28:44 +0530
-Message-ID: <20190128085847.7217-3-jagan@amarulasolutions.com>
+Subject: [PATCH v8 3/5] arm64: dts: allwinner: a64: Add A64 CSI controller
+Date: Mon, 28 Jan 2019 14:28:45 +0530
+Message-ID: <20190128085847.7217-4-jagan@amarulasolutions.com>
 References: <20190128085847.7217-1-jagan@amarulasolutions.com>
 Reply-To: jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBD7MFH7A7EEBBZMIXPRAKGQES5CDCAA-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
+Return-path: <linux-sunxi+bncBD7MFH7A7EEBB2UIXPRAKGQEHTVFW6Y-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
 Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
 In-Reply-To: <20190128085847.7217-1-jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
@@ -19,78 +19,54 @@ To: Yong Deng <yong.deng-+3dxTMOEIRNWk0Htik3J/w@public.gmane.org>, Mauro Carvalh
 Cc: linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, Michael Trimarchi <michael-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>, linux-amarula-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org, Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
 List-Id: devicetree@vger.kernel.org
 
-CSI block in Allwinner A64 has similar features as like in H3,
-but the default CSI_SCLK rate cannot work properly to drive the
-connected sensor interface.
+Add dts node details for Allwinner A64 CSI controller.
 
-The tested mod cock rate is 300 MHz and BSP vfe media driver is also
-using the same rate. Unfortunately there is no valid information about
-clock rate in manual or any other sources except the BSP driver. so more
-faith on BSP code, because same has tested in mainline.
-
-So, add support for A64 CSI block by setting updated mod clock rate.
+A64 CSI has similar features as like in H3, but the CSI_SCLK
+need to update it to 300MHz than default clock rate.
 
 Signed-off-by: Jagan Teki <jagan-dyjBcgdgk7Pe9wHmmfpqLFaTQe2KTcn/@public.gmane.org>
+Acked-by: Maxime Ripard <maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org>
 ---
- drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-diff --git a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-index ee882b66a5ea..5ecdfbf9f6ae 100644
---- a/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-+++ b/drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c
-@@ -15,6 +15,7 @@
- #include <linux/ioctl.h>
- #include <linux/module.h>
- #include <linux/of.h>
-+#include <linux/of_device.h>
- #include <linux/platform_device.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
-@@ -154,6 +155,7 @@ bool sun6i_csi_is_format_supported(struct sun6i_csi *csi,
- int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
- {
- 	struct sun6i_csi_dev *sdev = sun6i_csi_to_dev(csi);
-+	struct device *dev = sdev->dev;
- 	struct regmap *regmap = sdev->regmap;
- 	int ret;
+diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+index 839b2ae88583..62fdf850e9e5 100644
+--- a/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
++++ b/arch/arm64/boot/dts/allwinner/sun50i-a64.dtsi
+@@ -558,6 +558,12 @@
+ 			interrupt-controller;
+ 			#interrupt-cells = <3>;
  
-@@ -161,6 +163,9 @@ int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
- 		regmap_update_bits(regmap, CSI_EN_REG, CSI_EN_CSI_EN, 0);
- 
- 		clk_disable_unprepare(sdev->clk_ram);
-+		if (of_device_is_compatible(dev->of_node,
-+					    "allwinner,sun50i-a64-csi"))
-+			clk_rate_exclusive_put(sdev->clk_mod);
- 		clk_disable_unprepare(sdev->clk_mod);
- 		reset_control_assert(sdev->rstc_bus);
- 		return 0;
-@@ -172,6 +177,9 @@ int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
- 		return ret;
- 	}
- 
-+	if (of_device_is_compatible(dev->of_node, "allwinner,sun50i-a64-csi"))
-+		clk_set_rate_exclusive(sdev->clk_mod, 300000000);
++			csi_pins: csi-pins {
++				pins = "PE0", "PE2", "PE3", "PE4", "PE5", "PE6",
++				       "PE7", "PE8", "PE9", "PE10", "PE11";
++				function = "csi";
++			};
 +
- 	ret = clk_prepare_enable(sdev->clk_ram);
- 	if (ret) {
- 		dev_err(sdev->dev, "Enable clk_dram_csi clk err %d\n", ret);
-@@ -191,6 +199,8 @@ int sun6i_csi_set_power(struct sun6i_csi *csi, bool enable)
- clk_ram_disable:
- 	clk_disable_unprepare(sdev->clk_ram);
- clk_mod_disable:
-+	if (of_device_is_compatible(dev->of_node, "allwinner,sun50i-a64-csi"))
-+		clk_rate_exclusive_put(sdev->clk_mod);
- 	clk_disable_unprepare(sdev->clk_mod);
- 	return ret;
- }
-@@ -895,6 +905,7 @@ static const struct of_device_id sun6i_csi_of_match[] = {
- 	{ .compatible = "allwinner,sun6i-a31-csi", },
- 	{ .compatible = "allwinner,sun8i-h3-csi", },
- 	{ .compatible = "allwinner,sun8i-v3s-csi", },
-+	{ .compatible = "allwinner,sun50i-a64-csi", },
- 	{},
- };
- MODULE_DEVICE_TABLE(of, sun6i_csi_of_match);
+ 			i2c0_pins: i2c0_pins {
+ 				pins = "PH0", "PH1";
+ 				function = "i2c0";
+@@ -925,6 +931,20 @@
+ 			status = "disabled";
+ 		};
+ 
++		csi: csi@1cb0000 {
++			compatible = "allwinner,sun50i-a64-csi";
++			reg = <0x01cb0000 0x1000>;
++			interrupts = <GIC_SPI 84 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&ccu CLK_BUS_CSI>,
++				 <&ccu CLK_CSI_SCLK>,
++				 <&ccu CLK_DRAM_CSI>;
++			clock-names = "bus", "mod", "ram";
++			resets = <&ccu RST_BUS_CSI>;
++			pinctrl-names = "default";
++			pinctrl-0 = <&csi_pins>;
++			status = "disabled";
++		};
++
+ 		hdmi: hdmi@1ee0000 {
+ 			compatible = "allwinner,sun50i-a64-dw-hdmi",
+ 				     "allwinner,sun8i-a83t-dw-hdmi";
 -- 
 2.18.0.321.gffc6fa0e3
