@@ -1,56 +1,35 @@
-From: Jagan Teki <jagan@amarulasolutions.com>
-Subject: Re: [PATCH] arm64: dts: allwinner: a64-amarula-relic: Add STLM75 sensor
-Date: Mon, 28 Jan 2019 12:46:48 +0530
-Message-ID: <CAMty3ZBmHpsTRXARnT5nf1VcnCmz0QpZ5B8caHONLV0UZdXS9Q@mail.gmail.com>
-References: <20190124175254.27650-1-jagan@amarulasolutions.com> <20190125084004.fsbxtpcesb5yaiod@flea>
+From: Lee Jones <lee.jones@linaro.org>
+Subject: Re: [RFC PATCH v2 00/10] support ROHM BD70528 PMIC
+Date: Mon, 28 Jan 2019 07:19:36 +0000
+Message-ID: <20190128071936.GD4678@dell>
+References: <20190125110110.GA29171@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125084004.fsbxtpcesb5yaiod@flea>
+Content-Disposition: inline
+In-Reply-To: <20190125110110.GA29171@localhost.localdomain>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Maxime Ripard <maxime.ripard@bootlin.com>
-Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-On Fri, Jan 25, 2019 at 2:10 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
->
-> On Thu, Jan 24, 2019 at 11:22:54PM +0530, Jagan Teki wrote:
-> > Amarula A64 Relic has STLM75 sensor for digital temperature
-> > and thermal watchdog.
-> >
-> > Add support for it.
-> >
-> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
-> > ---
-> > Note: the respective driver change is already in mainline
-> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=2e9a41bbc1079776dabe42ed8113b086b99ae56c
-> >
-> >  .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
-> >  1 file changed, 15 insertions(+)
-> >
-> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > index 6cb2b7f0c817..5d942543d978 100644
-> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
-> > @@ -34,6 +34,21 @@
-> >       status = "okay";
-> >  };
-> >
-> > +&i2c0 {
-> > +     pinctrl-names = "default";
-> > +     pinctrl-0 = <&i2c0_pins>;
-> > +     status = "okay";
-> > +
-> > +     temp@48 {
->
-> That would be sensor@48
->
-> > +             compatible = "st,stlm75";
->
-> That compatible isn't documented.
+On Fri, 25 Jan 2019, Matti Vaittinen wrote:
 
-True, but none of the compatible strings used on the driver doesn't
-documented in binding instead there are documented in
-Documentation/hwmon/lm75.
+> Patch series introducing support for ROHM BD70528 PMIC
+> 
+> Please note that patch 1 breaks compilation without patches 2 and 3
+> 
+> ROHM BD70528 is a programmable Power Management IC for battery
+> powered 'ultra low power' systems like the pre-announced NXP
+> i.MX7 ULP. This patch series introduces support for the PMIC.
 
-Don't know the exact reason, do we need to document this in binding as well?
+It looks like you've sent this set un-threaded, which means as people
+reply to the patches, they are going to be spread out into the four
+winds (in Inbox terms).
+
+-- 
+Lee Jones [李琼斯]
+Linaro Services Technical Lead
+Linaro.org │ Open source software for ARM SoCs
+Follow Linaro: Facebook | Twitter | Blog
