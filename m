@@ -1,47 +1,77 @@
-From: Rob Herring <robh+dt@kernel.org>
-Subject: Re: [PATCH v3 lora-next 4/4] dt-bindings: lora: sx130x: add clock bindings
-Date: Mon, 28 Jan 2019 12:23:45 -0600
-Message-ID: <CAL_JsqLczDnQis5SkmfrFie+aj9pb+UfPyF4dfiKs7aomeRPXg@mail.gmail.com>
-References: <20190124145309.21698-1-ben.whitten@lairdtech.com> <20190124145309.21698-5-ben.whitten@lairdtech.com>
+From: Bastien Nocera <hadess@hadess.net>
+Subject: Re: [PATCH] input: goodix - support Goodix gt5688
+Date: Mon, 28 Jan 2019 19:24:33 +0100
+Message-ID: <7e289e6b3410a3fdea99d7d6becfe5180a69f0c5.camel@hadess.net>
+References: <20190128170310.GA305@bogon.m.sigxcpu.org>
 Mime-Version: 1.0
 Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190124145309.21698-5-ben.whitten@lairdtech.com>
+In-Reply-To: <20190128170310.GA305@bogon.m.sigxcpu.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Ben Whitten <ben.whitten@gmail.com>
-Cc: =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>, David Miller <davem@davemloft.net>, Mark Rutland <mark.rutland@arm.com>, netdev <netdev@vger.kernel.org>, devicetree@vger.kernel.org, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>, linux-lpwan@lists.infradead.org
+To: Guido =?ISO-8859-1?Q?G=FCnther?= <agx@sigxcpu.org>, Dmitry Torokhov <dmitry.torokhov@gmail.com>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Matthias Brugger <matthias.bgg@gmail.com>, linux-input@vger.kernel.org, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-mediatek@lists.infradead.org
 List-Id: devicetree@vger.kernel.org
 
-On Thu, Jan 24, 2019 at 8:54 AM Ben Whitten <ben.whitten@gmail.com> wrote:
->
-> From: Ben Whitten <ben.whitten@gmail.com>
->
-> The SX130x family consumes two clocks, a 32 MHz clock provided by a
-> connected IQ transceiver, and a 133 MHz high speed clock.
-> It also provides a 32 MHz clock out to the radio in the TX path.
->
-> In the example we connect the concentrator to a fixed clock providing
-> the 133 MHz high speed clock, and we connect to a connected transceiver
-> 32 MHz clock.
->
-> A radio in the TX path is also connected to the 32 MHz clock out from the
-> concentrator.
->
-> The connected radios are both fed from a fixed 32 MHz clock, with only
-> one being the clock source back to the SX130x concentrator.
->
-> Signed-off-by: Ben Whitten <ben.whitten@gmail.com>
-> ---
-> v2 -> v3:
-> * Name input clocks specifically
-> * Add output clock for radio in TX path
-> v1 -> v2:
-> * Fixed incorrect usage of clock cells
-> * Fixed wording in commit and descriptions
-> ---
->  .../bindings/net/lora/semtech,sx130x.yaml     | 52 ++++++++++++++++++-
->  1 file changed, 51 insertions(+), 1 deletion(-)
+On Mon, 2019-01-28 at 18:03 +0100, Guido Günther wrote:
+> From what I've seen in vendor trees it's fine to treat this as gt1x¹.
+> 
+> [1]: https://github.com/TadiT7/android_kernel_mtk-4.4/tree/master/drivers/input/touchscreen/mediatek/GT5688
 
-Other than the issue on patch 3 that affects the example here,
+Can you please point to the exact line of code that makes you say that?
+I'm not saying it's not compatible, but it's not the same driver that
+the current goodix.c was based on, or even goodix.c.
 
-Reviewed-by: Rob Herring <robh@kernel.org>
+Can you please elaborate?
+
+Finding that data in the specs would also be fine:
+https://github.com/hadess/gt9xx/tree/master/specifications
+
+Cheers
+
+[1]: original driver:
+https://github.com/hadess/gt9xx/commit/82b141220e8bce00060e0de697735d0a70af2678
+
+> Signed-off-by: Guido Günther <agx@sigxcpu.org>
+> ---
+>  Documentation/devicetree/bindings/input/touchscreen/goodix.txt | 1 +
+>  drivers/input/touchscreen/goodix.c                             | 2
+> ++
+>  2 files changed, 3 insertions(+)
+> 
+> diff --git
+> a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> index f7e95c52f3c7..57d3d8870a09 100644
+> --- a/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> +++ b/Documentation/devicetree/bindings/input/touchscreen/goodix.txt
+> @@ -3,6 +3,7 @@ Device tree bindings for Goodix GT9xx series
+> touchscreen controller
+>  Required properties:
+>  
+>   - compatible		: Should be "goodix,gt1151"
+> +				 or "goodix,gt5688"
+>  				 or "goodix,gt911"
+>  				 or "goodix,gt9110"
+>  				 or "goodix,gt912"
+> diff --git a/drivers/input/touchscreen/goodix.c
+> b/drivers/input/touchscreen/goodix.c
+> index f2d9c2c41885..47b1ced41576 100644
+> --- a/drivers/input/touchscreen/goodix.c
+> +++ b/drivers/input/touchscreen/goodix.c
+> @@ -216,6 +216,7 @@ static const struct goodix_chip_data
+> *goodix_get_chip_data(u16 id)
+>  {
+>  	switch (id) {
+>  	case 1151:
+> +	case 5688:
+>  		return &gt1x_chip_data;
+>  
+>  	case 911:
+> @@ -942,6 +943,7 @@ MODULE_DEVICE_TABLE(acpi, goodix_acpi_match);
+>  #ifdef CONFIG_OF
+>  static const struct of_device_id goodix_of_match[] = {
+>  	{ .compatible = "goodix,gt1151" },
+> +	{ .compatible = "goodix,gt5688" },
+>  	{ .compatible = "goodix,gt911" },
+>  	{ .compatible = "goodix,gt9110" },
+>  	{ .compatible = "goodix,gt912" },
