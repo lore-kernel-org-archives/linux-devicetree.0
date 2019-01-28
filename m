@@ -1,53 +1,44 @@
-From: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-Subject: [PATCH 6/6] arm64: dts: allwinner: h6: Add Video Engine node
-Date: Mon, 28 Jan 2019 21:55:04 +0100
-Message-ID: <20190128205504.11225-7-jernej.skrabec@siol.net>
-References: <20190128205504.11225-1-jernej.skrabec@siol.net>
-Reply-To: jernej.skrabec-gGgVlfcn5nU@public.gmane.org
+From: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: Re: [RFC PATCH v2 08/10] rtc: bd70528: Initial support for ROHM
+ bd70528 RTC
+Date: Mon, 28 Jan 2019 22:20:09 +0100
+Message-ID: <20190128212009.GE18309@piout.net>
+References: <20190125110536.GA29321@localhost.localdomain>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
-Return-path: <linux-sunxi+bncBDQNBWPU7YERBQWYXXRAKGQEJ5LMUEQ-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-Sender: linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
-In-Reply-To: <20190128205504.11225-1-jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
-List-Post: <https://groups.google.com/group/linux-sunxi/post>, <mailto:linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Help: <https://groups.google.com/support/>, <mailto:linux-sunxi+help-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Archive: <https://groups.google.com/group/linux-sunxi
-List-Subscribe: <https://groups.google.com/group/linux-sunxi/subscribe>, <mailto:linux-sunxi+subscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>
-List-Unsubscribe: <mailto:googlegroups-manage+1076902468213+unsubscribe-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org>,
- <https://groups.google.com/group/linux-sunxi/subscribe>
-To: maxime.ripard-LDxbnhwyfcJBDgjK7y7TUQ@public.gmane.org, wens-jdAy2FN1RRM@public.gmane.org
-Cc: mchehab-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, robh+dt-DgEjT+Ai2ygdnm+yROfE0A@public.gmane.org, mark.rutland-5wv7dgnIgG8@public.gmane.org, linux-media-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-arm-kernel-IAPFreCvJWM7uuMidbF8XUB+6BGkLq7r@public.gmane.org, devicetree-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-kernel-u79uwXL29TY76Z2rM5mHXA@public.gmane.org, linux-sunxi-/JYPxA39Uh5TLH3MbocFFw@public.gmane.org
+Content-Type: text/plain; charset=us-ascii
+Return-path: <linux-kernel-owner@vger.kernel.org>
+Content-Disposition: inline
+In-Reply-To: <20190125110536.GA29321@localhost.localdomain>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
+Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-This adds the Video engine node for H6. It can use whole DRAM range so
-there is no need for reserved memory node.
+Hello,
 
-Signed-off-by: Jernej Skrabec <jernej.skrabec-gGgVlfcn5nU@public.gmane.org>
----
- arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+On 25/01/2019 13:05:36+0200, Matti Vaittinen wrote:
+> +static const struct rtc_class_ops bd70528_rtc_ops = {
+> +	.read_time	= bd70528_get_time,
+> +	.set_time	= bd70528_set_time,
+> +	.read_alarm	= bd70528_read_alarm,
+> +	.set_alarm	= bd70528_set_alarm,
 
-diff --git a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-index 247dc0a5ce89..de4b7a1f1012 100644
---- a/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-+++ b/arch/arm64/boot/dts/allwinner/sun50i-h6.dtsi
-@@ -146,6 +146,17 @@
- 			};
- 		};
- 
-+		video-codec@1c0e000 {
-+			compatible = "allwinner,sun50i-h6-video-engine";
-+			reg = <0x01c0e000 0x2000>;
-+			clocks = <&ccu CLK_BUS_VE>, <&ccu CLK_VE>,
-+				 <&ccu CLK_MBUS_VE>;
-+			clock-names = "ahb", "mod", "ram";
-+			resets = <&ccu RST_BUS_VE>;
-+			interrupts = <GIC_SPI 89 IRQ_TYPE_LEVEL_HIGH>;
-+			allwinner,sram = <&ve_sram 1>;
-+		};
-+
- 		syscon: syscon@3000000 {
- 			compatible = "allwinner,sun50i-h6-system-control",
- 				     "allwinner,sun50i-a64-system-control";
+You actually need to provide a .alarm_irq_enable callback, else there is
+no way to disable a set alarm.
+
+> +	rtc = devm_rtc_device_register(&pdev->dev, "bd70528-rtc",
+> +				       &bd70528_rtc_ops, THIS_MODULE);
+> +	if (IS_ERR(rtc)) {
+> +		dev_err(&pdev->dev, "Registering RTC failed\n");
+> +		return PTR_ERR(rtc);
+> +	}
+
+Please use devm_rtc_allocate_device() and set rtc->range_min and
+rtc->range_max before registering with rtc_register_device() (which can
+be done after trying to request the irq).
+
+
 -- 
-2.20.1
+Alexandre Belloni, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
