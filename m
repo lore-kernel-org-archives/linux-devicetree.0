@@ -1,83 +1,79 @@
-From: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Subject: Re: [PATCH 3/3] input: dt-bindings: Add binding for bma150 sensor
-Date: Mon, 28 Jan 2019 11:31:07 -0800
-Message-ID: <20190128193107.GF34692@dtor-ws>
-References: <20190125184400.17669-1-pawel.mikolaj.chmiel@gmail.com>
- <20190125184400.17669-4-pawel.mikolaj.chmiel@gmail.com>
- <20190126012802.GD212026@dtor-ws>
- <BYAPR02MB54950EDEEE82D5F06C7131CEA3940@BYAPR02MB5495.namprd02.prod.outlook.com>
+From: Ray Jui <ray.jui@broadcom.com>
+Subject: Re: [PATCH v3 0/8] Add IPROC I2C slave mode and NIC I2C support
+Date: Mon, 28 Jan 2019 11:31:31 -0800
+Message-ID: <746cf074-69e0-7bd1-034e-c8d3156b5506@broadcom.com>
+References: <1547791464-3540-1-git-send-email-rayagonda.kokatanur@broadcom.com>
+ <e658ce66-98e3-3ca6-5786-56bfea6d176e@broadcom.com>
 Mime-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <BYAPR02MB54950EDEEE82D5F06C7131CEA3940@BYAPR02MB5495.namprd02.prod.outlook.com>
+In-Reply-To: <e658ce66-98e3-3ca6-5786-56bfea6d176e@broadcom.com>
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
-To: Jonathan Bakker <xc-racer2@live.ca>
-Cc: =?utf-8?B?UGF3ZcWC?= Chmiel <pawel.mikolaj.chmiel@gmail.com>, "robh+dt@kernel.org" <robh+dt@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Rayagonda Kokatanur <rayagonda.kokatanur@broadcom.com>, rjui@broadcom.com
+Cc: bcm-kernel-feedback-list@broadcom.com, shreesha.rajashekar@broadcom.com, sbranden@broadcom.com, wsa@the-dreams.de, linux-i2c@vger.kernel.org, devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org, ccheng@broadcom.com, heikki.krogerus@linux.intel.com, geert@linux-m68k.org, arnd@arndb.de, manivannan.sadhasivam@linaro.org, ajayg@nvidia.com, ard.biesheuvel@linaro.org, eajames@linux.vnet.ibm.com, kramasub@codeaurora.org, vigneshr@ti.com, mika.westerberg@linux.intel.com, pierre-yves.mordret@st.com, f.fainelli@gmail.com, aaron.wu@analog.com, jdelvare@suse.de, andriy.shevchenko@linux.intel.com, jarkko.nikula@linux.intel.com, robh+dt@kernel.org, mark.rutland@arm.com, rayagonoda.kokatanur@braodcom.com
 List-Id: devicetree@vger.kernel.org
 
-On Sat, Jan 26, 2019 at 03:39:17AM +0000, Jonathan Bakker wrote:
+Hi Wolfram,
+
+Just want to check if you had a chance to review the following patch series?
+
+Thanks,
+
+Ray
+
+On 1/20/2019 1:49 PM, Ray Jui wrote:
+> Hi Rayagonda/Wolfram,
 > 
+> I reviewed the entire patch series and added my Reviewed-by tag on 1/8
+> and 2/8. The rest of the patches in this series already had my
+> Signed-off-by tag.
 > 
-> On 2019-01-25 5:28 p.m., Dmitry Torokhov wrote:
-> > On Fri, Jan 25, 2019 at 07:44:00PM +0100, Paweł Chmiel wrote:
-> >> From: Jonathan Bakker <xc-racer2@live.ca>
-> >>
-> >> Add device tree bindings for Bosch BMA150 Accelerometer Sensor
-> >>
-> >> Signed-off-by: Jonathan Bakker <xc-racer2@live.ca>
-> >> Signed-off-by: Paweł Chmiel <pawel.mikolaj.chmiel@gmail.com>
-> >> ---
-> >>  .../bindings/input/bosch,bma150.txt           | 20 +++++++++++++++++++
-> >>  1 file changed, 20 insertions(+)
-> >>  create mode 100644 Documentation/devicetree/bindings/input/bosch,bma150.txt
-> >>
-> >> diff --git a/Documentation/devicetree/bindings/input/bosch,bma150.txt b/Documentation/devicetree/bindings/input/bosch,bma150.txt
-> >> new file mode 100644
-> >> index 000000000000..290c60e38c70
-> >> --- /dev/null
-> >> +++ b/Documentation/devicetree/bindings/input/bosch,bma150.txt
-> >> @@ -0,0 +1,20 @@
-> >> +* Bosch BMA150 Accelerometer Sensor
-> >> +
-> >> +Also works for the SMB380 and BMA023 accelerometers
-> >> +
-> >> +Required properties:
-> >> +- compatible : Should be "bosch,bma150"
-> >> +- reg : The I2C address of the sensor
-> >> +
-> >> +Optional properties:
-> >> +- interrupt-parent : should be the phandle for the interrupt controller
-> >> +- interrupts : Interrupt mapping for IRQ.  If not present device will be polled
-> >> +
-> >> +Example:
-> >> +
-> >> +bma150@38 {
-> >> +	compatible = "bosch,bma150";
-> >> +	reg = <0x38>;
-> >> +	interrupt-parent = <&gph0>;
-> >> +	interrupts = <1 IRQ_TYPE_LEVEL_HIGH>;
-> > 
-> > Hmm, here you say that IRQ_TYPE_LEVEL_HIGH, so it is level interrupts,
-> > but the driver overrides to rising edge unconditionally. Since you are
-> > the first to add DT support please make separate patch to driver to drop
-> > the ORQ trigger from request_theraded_irq() leaving only IRQF_ONESHOT.
-> > 
-> This was simply an oversight on my part, my device was using the the polled method as opposed to an interrupt.  I'll correct this in v2.
-> > Also please create patch removing platform data support as noone is
-> > using it upstream.
-> > 
-> Will do.
-> > What about the rest of config parameters from bma150_cfg? They should be
-> > handled as device properties too.
-> > 
-> Ok, I can add them as well.  I didn't bother as the comment in the source code says that the default values are the ones recommended by Bosch.
-
-OK, if you do not need to handle them then we can leave this task to the
-next user ;)
-
-Thanks.
-
--- 
-Dmitry
+> Thanks,
+> 
+> Ray
+> 
+> On 1/17/2019 10:04 PM, Rayagonda Kokatanur wrote:
+>> Hi,
+>> This patchset contains support for IPROC I2C slave and NIC I2C support.
+>> Following are the brief changes done inorder to support both IPROC I2C
+>> slave mode and NIC I2C,
+>>
+>> a. Add support to allow I2C rx transfer upto 255 bytes
+>> b. Add polling mode support to the iProc I2C driver. Polling mode is used
+>>    in certain SoCs where interrupt is not connected from the I2C block.
+>> c. Add warpper read/write access for register to support indirect register
+>>    access. This is required in certain SoCs with this iProc I2C
+>>    block registered.
+>> d. Remove the set RESET bit to LOW right after setting it to HIGH so that
+>>    wait duration can be met.
+>>
+>> This patch series is based on kernel v5.0.0-rc2.
+>>
+>> Changes from v2:
+>>  - Address Ray's review comments.
+>>
+>> Changes from v1:
+>>  - Rebased to Linux v5.0.0-rc2
+>>
+>> Ray Jui (1):
+>>   dt-bindings: i2c: iproc: make 'interrupts' optional
+>>
+>> Rayagonda Kokatanur (5):
+>>   i2c: iproc: add polling support
+>>   i2c: iproc: use wrapper for read/write access
+>>   dt-bindings: i2c: iproc: add "brcm,iproc-nic-i2c" compatible string
+>>   i2c: iproc: add NIC I2C support
+>>   arm64: dts: Stingray: Add NIC i2c device node
+>>
+>> Shreesha Rajashekar (2):
+>>   i2c: iproc: I2C read up to 255 bytes support
+>>   i2c: iproc: Add Slave mode support
+>>
+>>  .../devicetree/bindings/i2c/brcm,iproc-i2c.txt     |  14 +-
+>>  .../arm64/boot/dts/broadcom/stingray/stingray.dtsi |  18 +
+>>  drivers/i2c/busses/Kconfig                         |   1 +
+>>  drivers/i2c/busses/i2c-bcm-iproc.c                 | 757 +++++++++++++++++----
+>>  4 files changed, 659 insertions(+), 131 deletions(-)
+>>
