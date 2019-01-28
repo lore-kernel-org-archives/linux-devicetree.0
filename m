@@ -1,57 +1,74 @@
-From: Mark Brown <broonie@kernel.org>
-Subject: Re: [PATCH v7 4/5] spi: nxp-fspi: add octal mode flag bit for octal
- support
-Date: Mon, 28 Jan 2019 12:30:50 +0000
-Message-ID: <20190128123050.GE11699@sirena.org.uk>
-References: <1547546584-5254-1-git-send-email-yogeshnarayan.gaur@nxp.com>
- <1547546584-5254-5-git-send-email-yogeshnarayan.gaur@nxp.com>
- <20190128122631.GD11699@sirena.org.uk>
+From: Maxime Ripard <maxime.ripard@bootlin.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-amarula-relic: Add STLM75
+ sensor
+Date: Mon, 28 Jan 2019 13:33:53 +0100
+Message-ID: <20190128123353.zgvrepgqvvselwzb@flea>
+References: <20190124175254.27650-1-jagan@amarulasolutions.com>
+ <20190125084004.fsbxtpcesb5yaiod@flea>
+ <CAMty3ZBmHpsTRXARnT5nf1VcnCmz0QpZ5B8caHONLV0UZdXS9Q@mail.gmail.com>
 Mime-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="r7U+bLA8boMOj+mD"
+Content-Type: text/plain; charset=us-ascii
+Content-Transfer-Encoding: 8BIT
 Return-path: <linux-kernel-owner@vger.kernel.org>
 Content-Disposition: inline
-In-Reply-To: <20190128122631.GD11699@sirena.org.uk>
+In-Reply-To: <CAMty3ZBmHpsTRXARnT5nf1VcnCmz0QpZ5B8caHONLV0UZdXS9Q@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Yogesh Narayan Gaur <yogeshnarayan.gaur@nxp.com>
-Cc: "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>, "boris.brezillon@bootlin.com" <boris.brezillon@bootlin.com>, "marek.vasut@gmail.com" <marek.vasut@gmail.com>, "vigneshr@ti.com" <vigneshr@ti.com>, "linux-spi@vger.kernel.org" <linux-spi@vger.kernel.org>, "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>, "tudor.ambarus@microchip.com" <tudor.ambarus@microchip.com>, "robh@kernel.org" <robh@kernel.org>, "mark.rutland@arm.com" <mark.rutland@arm.com>, "shawnguo@kernel.org" <shawnguo@kernel.org>, "linux-arm-kernel@lists.infradead.org" <linux-arm-kernel@lists.infradead.org>, "computersforpeace@gmail.com" <computersforpeace@gmail.com>, "frieder.schrempf@exceet.de" <frieder.schrempf@exceet.de>, "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+To: Jagan Teki <jagan@amarulasolutions.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
+On Mon, Jan 28, 2019 at 12:46:48PM +0530, Jagan Teki wrote:
+> On Fri, Jan 25, 2019 at 2:10 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Thu, Jan 24, 2019 at 11:22:54PM +0530, Jagan Teki wrote:
+> > > Amarula A64 Relic has STLM75 sensor for digital temperature
+> > > and thermal watchdog.
+> > >
+> > > Add support for it.
+> > >
+> > > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > > ---
+> > > Note: the respective driver change is already in mainline
+> > > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=2e9a41bbc1079776dabe42ed8113b086b99ae56c
+> > >
+> > >  .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
+> > >  1 file changed, 15 insertions(+)
+> > >
+> > > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > index 6cb2b7f0c817..5d942543d978 100644
+> > > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > > @@ -34,6 +34,21 @@
+> > >       status = "okay";
+> > >  };
+> > >
+> > > +&i2c0 {
+> > > +     pinctrl-names = "default";
+> > > +     pinctrl-0 = <&i2c0_pins>;
+> > > +     status = "okay";
+> > > +
+> > > +     temp@48 {
+> >
+> > That would be sensor@48
+> >
+> > > +             compatible = "st,stlm75";
+> >
+> > That compatible isn't documented.
+> 
+> True, but none of the compatible strings used on the driver doesn't
+> documented in binding instead there are documented in
+> Documentation/hwmon/lm75.
 
---r7U+bLA8boMOj+mD
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+It doesn't look like a DT binding documentation.
 
-On Mon, Jan 28, 2019 at 12:26:31PM +0000, Mark Brown wrote:
-> On Tue, Jan 15, 2019 at 10:05:29AM +0000, Yogesh Narayan Gaur wrote:
+> Don't know the exact reason, do we need to document this in binding
+> as well?
 
-> > diff --git a/drivers/spi/spi-nxp-fspi.c b/drivers/spi/spi-nxp-fspi.c
-> > index e23ad9ef028e..adc3c0e14f38 100644
-> > --- a/drivers/spi/spi-nxp-fspi.c
-> > +++ b/drivers/spi/spi-nxp-fspi.c
-> > @@ -952,8 +952,8 @@ static int nxp_fspi_probe(struct platform_device *pdev)
+Yep
 
-> This does not apply against current code, the above file is not present
-> upstream.  Please do not submit patches to out of tree code upstream.
+Maxime
 
-So it turns out your other series was adding that driver.  Please if
-you're doing this make sure you call out any interdependencies in either
-the patch itself or the cover letter, if you're sending separate patch
-serieses you should expect them to be handled separately.
-
---r7U+bLA8boMOj+mD
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAlxO9fkACgkQJNaLcl1U
-h9BsYQf6A45qVJRvph5tyVH50pk3XTa/3pcow8e2pPLdqTbQDypz5tpGQaDC4jqB
-nsGIHXjKMru6xRvC49DPoKm4XGOpdHyW/qWGvaZmVnbGK2YX61L8BHQyfkN5LEGo
-NsW89904eo5ycNYgapwwDwpUoUoE8Vj/9oYI/mDpW9Nr1QqyyIOHsh7yRXrZTdEV
-S6pR/iU+KWgAFP3zrEXxkZqm8mdjwA5SEuAJ6oNl78Lz+Vtt3TleiLSnG2K+enTQ
-WJYfS3mvVCjI6XQILWXracX0HmeC9T58GiyKyr8V4l8JEJS0YJI/zqb6b9ccSjgb
-2YJA6Gp3Bh4MozVa3Dq+m2WFYN3giw==
-=llBo
------END PGP SIGNATURE-----
-
---r7U+bLA8boMOj+mD--
+-- 
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
