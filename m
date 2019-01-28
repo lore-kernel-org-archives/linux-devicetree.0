@@ -1,48 +1,124 @@
-From: Matti Vaittinen <matti.vaittinen@fi.rohmeurope.com>
-Subject: Re: [RFC PATCH v2 00/10] support ROHM BD70528 PMIC
-Date: Mon, 28 Jan 2019 09:38:03 +0200
-Message-ID: <20190128073803.GA2030@localhost.localdomain>
-References: <20190125110110.GA29171@localhost.localdomain>
- <20190128071936.GD4678@dell>
+From: Geert Uytterhoeven <geert@linux-m68k.org>
+Subject: Re: [PATCH 1/2] spi: support inter-word delay requirement for devices
+Date: Mon, 28 Jan 2019 08:41:05 +0100
+Message-ID: <CAMuHMdXQONq1UFuFHwny_xfAtxY7sOv2K3yi2i9T22OovMqFhw@mail.gmail.com>
+References: <20190125114429.20066-1-jonas@norrbonn.se> <20190125114429.20066-2-jonas@norrbonn.se>
+ <CAMz4ku+sqzK19994BpdSfaDjNdXW_-gnCutr_fYQiv5ynxOq2g@mail.gmail.com>
+ <f34151c8-28a3-3d53-a27e-b5ff512d9c94@norrbonn.se> <20190125174713.GA6939@sirena.org.uk>
+ <20190125175031.GA25898@sirena.org.uk> <84d6c40f-62bb-fd00-0dcb-d2f390b136c1@norrbonn.se>
+ <CAMuHMdUyt=DDMwDZA-TB0Yac13NJQCo2LxzvqnRzvn6LZ5F98w@mail.gmail.com> <ed62564f-d36b-1492-8e65-60166c0aa4a6@norrbonn.se>
 Mime-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-Content-Disposition: inline
-In-Reply-To: <20190128071936.GD4678@dell>
+In-Reply-To: <ed62564f-d36b-1492-8e65-60166c0aa4a6@norrbonn.se>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Lee Jones <lee.jones@linaro.org>
-Cc: mazziesaccount@gmail.com, heikki.haikola@fi.rohmeurope.com, mikko.mutanen@fi.rohmeurope.com, robh+dt@kernel.org, mark.rutland@arm.com, broonie@kernel.org, gregkh@linuxfoundation.org, rafael@kernel.org, mturquette@baylibre.com, sboyd@kernel.org, linus.walleij@linaro.org, bgolaszewski@baylibre.com, sre@kernel.org, lgirdwood@gmail.com, a.zummo@towertech.it, alexandre.belloni@bootlin.com, wim@linux-watchdog.org, linux@roeck-us.net, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, linux-clk@vger.kernel.org, linux-gpio@vger.kernel.org, linux-pm@vger.kernel.org, linux-rtc@vger.kernel.org, linux-watchdog@vger.kernel.org
+To: Jonas Bonn <jonas@norrbonn.se>
+Cc: Mark Brown <broonie@kernel.org>, Baolin Wang <baolin.wang@linaro.org>, LKML <linux-kernel@vger.kernel.org>, linux-spi <linux-spi@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, DTML <devicetree@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Hello Lee, All
+Hi Jonas,
 
-On Mon, Jan 28, 2019 at 07:19:36AM +0000, Lee Jones wrote:
-> On Fri, 25 Jan 2019, Matti Vaittinen wrote:
-> 
-> > Patch series introducing support for ROHM BD70528 PMIC
-> > 
-> > Please note that patch 1 breaks compilation without patches 2 and 3
-> > 
-> > ROHM BD70528 is a programmable Power Management IC for battery
-> > powered 'ultra low power' systems like the pre-announced NXP
-> > i.MX7 ULP. This patch series introduces support for the PMIC.
-> 
-> It looks like you've sent this set un-threaded, which means as people
-> reply to the patches, they are going to be spread out into the four
-> winds (in Inbox terms).
+On Sat, Jan 26, 2019 at 4:40 PM Jonas Bonn <jonas@norrbonn.se> wrote:
+> On 26/01/2019 11:25, Geert Uytterhoeven wrote:
+> > On Sat, Jan 26, 2019 at 8:53 AM Jonas Bonn <jonas@norrbonn.se> wrote:
+> >> On 25/01/2019 18:50, Mark Brown wrote:
+> >>> On Fri, Jan 25, 2019 at 05:47:13PM +0000, Mark Brown wrote:
+> >>>> On Fri, Jan 25, 2019 at 01:06:45PM +0100, Jonas Bonn wrote:
+> >>>>> Having this as device property rather than a transfer property allows this
+> >>>>> to be configured one time in setup() rather than having to fiddle with the
+> >>>>> configuration register for every transfer.
+> >>>
+> >>>> That doesn't mean that the coniguration should be done in DT though, and
+> >>>> given that this presumably is a property of the device there seems to be
+> >>>> no reason why we'd have it in DT - if every instance of the device is
+> >>>> going to need to set the property we should just figure it out from the
+> >>>> compatble string instead.
+> >>>
+> >>> To be clear here: the suggestion is to add a parameter the slave device
+> >>> can set in spi_device which sets the default word_delay similarly to how
+> >>> max_speed_hz works.
+> >>
+> >> I'm confused... isn't that exactly what this patch does?  It adds a
+> >> field word_delay to spi_device in the same manner as max_speed_hz.
+> >>
+> >> I also added the ability to set it via DT, which I can break out into a
+> >> separate patch if that's an issue.  Or is the problem that it's set via
+> >> DT, at all?  Documentation/devicetree/bindings/spi-bus.txt documents 10
+> >> other slave-node properties related to transfer characteristics;
+> >> word_delay is just another such characteristic.
+> >>
+> >> But again, I'm having trouble parsing your response  Is the patch wrong,
+> >> should be broken up, or you just misunderstood it?
+> >
+> > IIUIC, Mark means that it may be a non-configurable property of the slave
+> > device, and thus should be handled (fixed setting) in the SPI slave driver.
+>
+> OK, so given that the "compatible" property identifies the hardware and
+> there is no other _hardware_ configuration detail that affects the
+> required inter-word delay, then setting the property in the device tree
+> is not allowed as the driver has enough info to set it properly.  Fair
+> enough!
+>
+> >
+> > Compare this to CPHA/CPOL, which are properties of the SPI slave device,
+> > but which may be configurable. E.g. many SPI FLASHes support multiple
+> > configurations. See e.g. commit 9c5becce21af35e5 ("ARM: shmobile: koelsch:
+> > Fix QSPI mode of SPI-Flash into mode3").
+>
+> There is nothing about the hardware referenced in that patch that
+> enforces either mode.  Why does the driver get to defer to DT here?
 
-Sigh. Sorry for trouble then. I must've forgotten the --thread from
-git format-patch. You can skip the v2 if it's all scattered out, I
-will address issues spotted by Guenter and send out the v3 - and this
-time I make sure to use --thread =)
+The default is non-cpol and non-pha.
+The device supports both (perhaps even all four modes, didn't check).
 
-Br,
-    Matti Vaittinen
+> Looking at Documentation/devicetree/bindings/spi/spi-bus.txt:
+>
+> spi-lsb-first:  used only by MAXIM DS-1302 which is always LSB first;
+> driver should set this
 
-> 
-> -- 
-> Lee Jones [李琼斯]
-> Linaro Services Technical Lead
-> Linaro.org │ Open source software for ARM SoCs
-> Follow Linaro: Facebook | Twitter | Blog
+For DS1302, this is probable true.
+For e.g. a generic shift register (e.g. hc595), the driver cannot know.
+
+> spi-3wire: again, only set by MAXIM DS-1302 which always needs this
+> setting; driver could set this
+
+For DS1302, this is probable true.
+Some devices may support both 4-wire or 3-wire mode?
+
+> spi-tx-delay-us:
+> spi-rx-delay-us:  only parsed by RMI4 driver... no DTS files in kernel
+> set these.  I hardly see how these are "hardware" settings rather than
+> message settings, but the driver can set these in any case.
+>
+> Anyway, the point is, looking at the current documentation, it's pretty
+> difficult to understand whether devicetree is restricted to describing
+> hardware or is also for configuring drivers...
+
+True.
+
+> > Again, max_speed_hz is something different: while both the SPI master and
+> > slave may support high speeds, board wiring (capacitance/inductance) may
+> > need to force a slower speed than supported by the devices, so it makes
+> > sense to make that configurable from DT.
+>
+> Yeah, that one make sense.  But if the DT is only overriding the maximum
+> device frequency that the driver should otherwise be setting, why is
+> spi-max-frequency a _required_ property?
+
+That's a good question. Legacy?
+
+> Thanks for taking the time to provide the additional explanation.  I had
+> to ruminate on it for a bit, but I think it's starting to sink in now!
+
+You're welcome!
+
+Gr{oetje,eeting}s,
+
+                        Geert
+
+-- 
+Geert Uytterhoeven -- There's lots of Linux beyond ia32 -- geert@linux-m68k.org
+
+In personal conversations with technical people, I call myself a hacker. But
+when I'm talking to journalists I just say "programmer" or something like that.
+                                -- Linus Torvalds
