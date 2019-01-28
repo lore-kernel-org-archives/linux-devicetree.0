@@ -1,57 +1,56 @@
-From: jckuo <jckuo@nvidia.com>
-Subject: Re: [PATCH 1/5] dt-bindings: phy: tegra: Add Tegra186 support
-Date: Mon, 28 Jan 2019 15:04:36 +0800
-Message-ID: <45ab054d-674f-fcdf-85cf-b07c049f0e7d@nvidia.com>
-References: <20190125112525.10697-1-thierry.reding@gmail.com>
+From: Jagan Teki <jagan@amarulasolutions.com>
+Subject: Re: [PATCH] arm64: dts: allwinner: a64-amarula-relic: Add STLM75 sensor
+Date: Mon, 28 Jan 2019 12:46:48 +0530
+Message-ID: <CAMty3ZBmHpsTRXARnT5nf1VcnCmz0QpZ5B8caHONLV0UZdXS9Q@mail.gmail.com>
+References: <20190124175254.27650-1-jagan@amarulasolutions.com> <20190125084004.fsbxtpcesb5yaiod@flea>
 Mime-Version: 1.0
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset="UTF-8"
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <20190125112525.10697-1-thierry.reding@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190125084004.fsbxtpcesb5yaiod@flea>
 Sender: linux-kernel-owner@vger.kernel.org
-To: Thierry Reding <thierry.reding@gmail.com>, Kishon Vijay Abraham I <kishon@ti.com>, Rob Herring <robh+dt@kernel.org>
-Cc: Jonathan Hunter <jonathanh@nvidia.com>, linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org, devicetree@vger.kernel.org
+To: Maxime Ripard <maxime.ripard@bootlin.com>
+Cc: Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Michael Trimarchi <michael@amarulasolutions.com>, linux-amarula@amarulasolutions.com, devicetree <devicetree@vger.kernel.org>, linux-kernel <linux-kernel@vger.kernel.org>
 List-Id: devicetree@vger.kernel.org
 
-Reviewed-by: JC Kuo <jckuo@nvidia.com>
+On Fri, Jan 25, 2019 at 2:10 PM Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+>
+> On Thu, Jan 24, 2019 at 11:22:54PM +0530, Jagan Teki wrote:
+> > Amarula A64 Relic has STLM75 sensor for digital temperature
+> > and thermal watchdog.
+> >
+> > Add support for it.
+> >
+> > Signed-off-by: Jagan Teki <jagan@amarulasolutions.com>
+> > ---
+> > Note: the respective driver change is already in mainline
+> > https://git.kernel.org/pub/scm/linux/kernel/git/next/linux-next.git/commit/?id=2e9a41bbc1079776dabe42ed8113b086b99ae56c
+> >
+> >  .../dts/allwinner/sun50i-a64-amarula-relic.dts    | 15 +++++++++++++++
+> >  1 file changed, 15 insertions(+)
+> >
+> > diff --git a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > index 6cb2b7f0c817..5d942543d978 100644
+> > --- a/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > +++ b/arch/arm64/boot/dts/allwinner/sun50i-a64-amarula-relic.dts
+> > @@ -34,6 +34,21 @@
+> >       status = "okay";
+> >  };
+> >
+> > +&i2c0 {
+> > +     pinctrl-names = "default";
+> > +     pinctrl-0 = <&i2c0_pins>;
+> > +     status = "okay";
+> > +
+> > +     temp@48 {
+>
+> That would be sensor@48
+>
+> > +             compatible = "st,stlm75";
+>
+> That compatible isn't documented.
 
-On 1/25/19 7:25 PM, Thierry Reding wrote:
-> From: Thierry Reding <treding@nvidia.com>
->
-> Extend the bindings to cover the set of features found in Tegra186. Note
-> that, technically, there are four more supplies connected to the XUSB
-> pad controller (DVDD_PEX, DVDD_PEX_PLL, HVDD_PEX and HVDD_PEX_PLL), but
-> the power sequencing requirements of Tegra186 require these to be under
-> the control of the PMIC.
->
-> Signed-off-by: Thierry Reding <treding@nvidia.com>
-> ---
->   .../bindings/phy/nvidia,tegra124-xusb-padctl.txt         | 9 +++++++++
->   1 file changed, 9 insertions(+)
->
-> diff --git a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-> index 3742c152c467..daedb15f322e 100644
-> --- a/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-> +++ b/Documentation/devicetree/bindings/phy/nvidia,tegra124-xusb-padctl.txt
-> @@ -36,11 +36,20 @@ Required properties:
->     - Tegra124: "nvidia,tegra124-xusb-padctl"
->     - Tegra132: "nvidia,tegra132-xusb-padctl", "nvidia,tegra124-xusb-padctl"
->     - Tegra210: "nvidia,tegra210-xusb-padctl"
-> +  - Tegra186: "nvidia,tegra186-xusb-padctl"
->   - reg: Physical base address and length of the controller's registers.
->   - resets: Must contain an entry for each entry in reset-names.
->   - reset-names: Must include the following entries:
->     - "padctl"
->   
-> +For Tegra186:
-> +- avdd-pll-erefeut-supply: UPHY brick and reference clock as well as UTMI PHY
-> +  power supply. Must supply 1.8 V.
-> +- avdd-usb-supply: USB I/Os, VBUS, ID, REXT, D+/D- power supply. Must supply
-> +  3.3 V.
-> +- vclamp-usb-supply: Bias rail for USB pad. Must supply 1.8 V.
-> +- vddio-hsic-supply: HSIC PHY power supply. Must supply 1.2 V.
-> +
->   
->   Pad nodes:
->   ==========
+True, but none of the compatible strings used on the driver doesn't
+documented in binding instead there are documented in
+Documentation/hwmon/lm75.
+
+Don't know the exact reason, do we need to document this in binding as well?
