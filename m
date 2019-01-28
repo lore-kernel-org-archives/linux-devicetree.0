@@ -1,7 +1,7 @@
 From: thor.thayer@linux.intel.com
-Subject: [PATCHv3 5/6] net: stmmac: socfpga: Use shared System Manager driver
-Date: Mon, 28 Jan 2019 16:14:14 -0600
-Message-ID: <1548713655-25940-6-git-send-email-thor.thayer@linux.intel.com>
+Subject: [PATCHv3 2/6] Documentation: dt: socfpga: Add S10 System Manager binding
+Date: Mon, 28 Jan 2019 16:14:11 -0600
+Message-ID: <1548713655-25940-3-git-send-email-thor.thayer@linux.intel.com>
 References: <1548713655-25940-1-git-send-email-thor.thayer@linux.intel.com>
 Return-path: <linux-kernel-owner@vger.kernel.org>
 In-Reply-To: <1548713655-25940-1-git-send-email-thor.thayer@linux.intel.com>
@@ -12,44 +12,35 @@ List-Id: devicetree@vger.kernel.org
 
 From: Thor Thayer <thor.thayer@linux.intel.com>
 
-The ARM64 System Manager requires a different method of reading
-the System Manager than ARM32. A new System Manager driver was
-created to steer ARM32 System Manager calls to regmap_mmio and
-ARM64 System Manager calls to the new access method.
-
-Convert from syscon to the shared System Manager driver so that
-both ARM64 and ARM32 are supported.
+Add the device tree bindings for the Stratix10 System Manager.
 
 Signed-off-by: Thor Thayer <thor.thayer@linux.intel.com>
 ---
-v2  No change to code. Update commit message.
-v3  Remove the unused syscon.h header.
+v2  New compatible string and usage for Stratix10
+v3  No change
 ---
- drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+ .../devicetree/bindings/arm/altera/socfpga-system.txt        | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-index 5b3b06a0a3bf..d466e33635b0 100644
---- a/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-socfpga.c
-@@ -15,7 +15,7 @@
-  * Adopted from dwmac-sti.c
-  */
- 
--#include <linux/mfd/syscon.h>
-+#include <linux/mfd/altera-sysmgr.h>
- #include <linux/of.h>
- #include <linux/of_address.h>
- #include <linux/of_net.h>
-@@ -114,7 +114,8 @@ static int socfpga_dwmac_parse_data(struct socfpga_dwmac *dwmac, struct device *
- 
- 	dwmac->interface = of_get_phy_mode(np);
- 
--	sys_mgr_base_addr = syscon_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
-+	sys_mgr_base_addr =
-+		altr_sysmgr_regmap_lookup_by_phandle(np, "altr,sysmgr-syscon");
- 	if (IS_ERR(sys_mgr_base_addr)) {
- 		dev_info(dev, "No sysmgr-syscon node found\n");
- 		return PTR_ERR(sys_mgr_base_addr);
+diff --git a/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt b/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
+index f4d04a067282..82edbaaa3f85 100644
+--- a/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
++++ b/Documentation/devicetree/bindings/arm/altera/socfpga-system.txt
+@@ -11,3 +11,15 @@ Example:
+ 		reg = <0xffd08000 0x1000>;
+ 		cpu1-start-addr = <0xffd080c4>;
+ 	};
++
++ARM64 - Stratix10
++Required properties:
++- compatible : "altr,sys-mgr-s10"
++- reg : Should contain 1 register range(address and length)
++        for system manager register.
++
++Example:
++	 sysmgr@ffd12000 {
++		compatible = "altr,sys-mgr-s10";
++		reg = <0xffd12000 0x228>;
++	};
 -- 
 2.7.4
