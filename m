@@ -1,72 +1,76 @@
-From: Zhou Yanjie <zhouyanjie@zoho.com>
-Subject: [PATCH 3/3] RTC: Ingenic: Replace jz47xx with XBurst.
-Date: Tue, 29 Jan 2019 01:29:59 +0800
-Message-ID: <1548696599-53639-4-git-send-email-zhouyanjie@zoho.com>
-References: <1548696599-53639-1-git-send-email-zhouyanjie@zoho.com>
+From: Sasha Levin <sashal@kernel.org>
+Subject: [PATCH AUTOSEL 4.20 150/304] ARM: dts: imx51-zii-rdu1: Do not specify "power-gpio" for hpa1
+Date: Mon, 28 Jan 2019 10:41:07 -0500
+Message-ID: <20190128154341.47195-150-sashal@kernel.org>
+References: <20190128154341.47195-1-sashal@kernel.org>
+Mime-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Return-path: <linux-kernel-owner@vger.kernel.org>
-In-Reply-To: <1548696599-53639-1-git-send-email-zhouyanjie@zoho.com>
+In-Reply-To: <20190128154341.47195-1-sashal@kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
-To: linux-mips@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org, linux-rtc@vger.kernel.org, devicetree@vger.kernel.org, a.zummo@towertech.it, alexandre.belloni@bootlin.com, robh+dt@kernel.org, paul.burton@mips.com, mark.rutland@arm.com, syq@debian.org, jiaxun.yang@flygoat.com, 772753199@qq.com
+To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
+Cc: Andrey Smirnov <andrew.smirnov@gmail.com>, Fabio Estevam <festevam@gmail.com>, Shawn Guo <shawnguo@kernel.org>, Sasha Levin <sashal@kernel.org>, devicetree@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-Ingenic had changed their product code name.
-Latest SoCs had divided to several series such as
-T30/M200/X1000 and no longer called JZ47xx.
+From: Andrey Smirnov <andrew.smirnov@gmail.com>
 
-Signed-off-by: Zhou Yanjie <zhouyanjie@zoho.com>
+[ Upstream commit 79da07dec740a42c70963ebacbd2bf8866af9e20 ]
+
+TPA6130A2 SD pin on RDU1 is not really controlled by SoC and instead
+is only meant to notify the system that audio was "muted" by external
+actors. To accommodate that, drop "power-gpio" property of hpa1 node as
+well as specify a name for that GPIO so that userspace can access it.
+
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Signed-off-by: Fabio Estevam <festevam@gmail.com>
+Tested-by: Chris Healy <cphealy@gmail.com>
+Signed-off-by: Shawn Guo <shawnguo@kernel.org>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/rtc/Kconfig      |  4 ++--
- drivers/rtc/rtc-jz4740.c | 15 +++------------
- 2 files changed, 5 insertions(+), 14 deletions(-)
+ arch/arm/boot/dts/imx51-zii-rdu1.dts | 17 +++++++++++++----
+ 1 file changed, 13 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/rtc/Kconfig b/drivers/rtc/Kconfig
-index 225b0b8..8b41853 100644
---- a/drivers/rtc/Kconfig
-+++ b/drivers/rtc/Kconfig
-@@ -1576,10 +1576,10 @@ config RTC_DRV_MPC5121
- 	  will be called rtc-mpc5121.
+diff --git a/arch/arm/boot/dts/imx51-zii-rdu1.dts b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+index 69d753cac89a..44985f61c0ba 100644
+--- a/arch/arm/boot/dts/imx51-zii-rdu1.dts
++++ b/arch/arm/boot/dts/imx51-zii-rdu1.dts
+@@ -477,6 +477,15 @@
+ };
  
- config RTC_DRV_JZ4740
--	tristate "Ingenic JZ4740 SoC"
-+	tristate "Ingenic XBurst SoC"
- 	depends on MIPS || COMPILE_TEST
- 	help
--	  If you say yes here you get support for the Ingenic JZ47xx SoCs RTC
-+	  If you say yes here you get support for the Ingenic XBurst SoCs RTC
- 	  controllers.
+ &gpio1 {
++	gpio-line-names = "", "", "", "",
++			  "", "", "", "",
++			  "", "hp-amp-shutdown-b", "", "",
++			  "", "", "", "",
++			  "", "", "", "",
++			  "", "", "", "",
++			  "", "", "", "",
++			  "", "", "", "";
++
+ 	unused-sd3-wp-gpio {
+ 		/*
+ 		 * See pinctrl_esdhc1 below for more details on this
+@@ -495,9 +504,6 @@
+ 	hpa1: amp@60 {
+ 		compatible = "ti,tpa6130a2";
+ 		reg = <0x60>;
+-		pinctrl-names = "default";
+-		pinctrl-0 = <&pinctrl_ampgpio>;
+-		power-gpio = <&gpio1 9 GPIO_ACTIVE_HIGH>;
+ 		Vdd-supply = <&reg_3p3v>;
+ 	};
  
- 	  This driver can also be built as a module. If so, the module
-diff --git a/drivers/rtc/rtc-jz4740.c b/drivers/rtc/rtc-jz4740.c
-index 0c7ae65..a262632 100644
---- a/drivers/rtc/rtc-jz4740.c
-+++ b/drivers/rtc/rtc-jz4740.c
-@@ -1,17 +1,8 @@
-+// SPDX-License-Identifier: GPL-2.0
- /*
-  *  Copyright (C) 2009-2010, Lars-Peter Clausen <lars@metafoo.de>
-  *  Copyright (C) 2010, Paul Cercueil <paul@crapouillou.net>
-- *	 JZ4740 SoC RTC driver
-- *
-- *  This program is free software; you can redistribute it and/or modify it
-- *  under  the terms of  the GNU General Public License as published by the
-- *  Free Software Foundation;  either version 2 of the License, or (at your
-- *  option) any later version.
-- *
-- *  You should have received a copy of the GNU General Public License along
-- *  with this program; if not, write to the Free Software Foundation, Inc.,
-- *  675 Mass Ave, Cambridge, MA 02139, USA.
-- *
-+ *	Ingenic XBurst platform RTC support
-  */
+@@ -671,7 +677,10 @@
+ };
  
- #include <linux/clk.h>
-@@ -450,5 +441,5 @@ module_platform_driver(jz4740_rtc_driver);
- 
- MODULE_AUTHOR("Lars-Peter Clausen <lars@metafoo.de>");
- MODULE_LICENSE("GPL");
--MODULE_DESCRIPTION("RTC driver for the JZ4740 SoC\n");
-+MODULE_DESCRIPTION("RTC driver for Ingenic XBurst platform\n");
- MODULE_ALIAS("platform:jz4740-rtc");
+ &iomuxc {
+-	pinctrl_ampgpio: ampgpiogrp {
++	pinctrl-names = "default";
++	pinctrl-0 = <&pinctrl_hog>;
++
++	pinctrl_hog: hoggrp {
+ 		fsl,pins = <
+ 			MX51_PAD_GPIO1_9__GPIO1_9		0x5e
+ 		>;
 -- 
-2.7.4
+2.19.1
