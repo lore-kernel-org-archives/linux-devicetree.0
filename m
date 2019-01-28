@@ -1,59 +1,46 @@
-From: Sasha Levin <sashal@kernel.org>
-Subject: [PATCH AUTOSEL 4.19 031/258] MIPS: Boston: Disable EG20T prefetch
-Date: Mon, 28 Jan 2019 10:55:37 -0500
-Message-ID: <20190128155924.51521-31-sashal@kernel.org>
-References: <20190128155924.51521-1-sashal@kernel.org>
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Return-path: <stable-owner@vger.kernel.org>
-In-Reply-To: <20190128155924.51521-1-sashal@kernel.org>
-Sender: stable-owner@vger.kernel.org
-To: linux-kernel@vger.kernel.org, stable@vger.kernel.org
-Cc: Paul Burton <paul.burton@mips.com>, linux-mips@linux-mips.org, Sasha Levin <sashal@kernel.org>, linux-mips@vger.kernel.org, devicetree@vger.kernel.org
+From: Liming Sun <lsun@mellanox.com>
+Subject: [PATCH v8 0/2] TmFifo platform driver for Mellanox BlueField SoC
+Date: Mon, 28 Jan 2019 12:28:05 -0500
+Message-ID: <1548696487-8840-1-git-send-email-lsun@mellanox.com>
+References: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+Return-path: <linux-kernel-owner@vger.kernel.org>
+In-Reply-To: <b143b40446c1870fb8d422b364ead95d54552be9.1527264077.git.lsun@mellanox.com>
+Sender: linux-kernel-owner@vger.kernel.org
+To: Rob Herring <robh+dt@kernel.org>, Mark Rutland <mark.rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>, David Woods <dwoods@mellanox.com>, Andy Shevchenko <andy@infradead.org>, Darren Hart <dvhart@infradead.org>, Vadim Pasternak <vadimp@mellanox.com>
+Cc: Liming Sun <lsun@mellanox.com>, devicetree@vger.kernel.org, linux-kernel@vger.kernel.org, platform-driver-x86@vger.kernel.org
 List-Id: devicetree@vger.kernel.org
 
-From: Paul Burton <paul.burton@mips.com>
+This patch series implements the device side platform driver
+support for the TmFifo on Mellanox BlueField SoC.
 
-[ Upstream commit 5ec17af7ead09701e23d2065e16db6ce4e137289 ]
+TmFifo is part of the RShim component. It provides FIFOs to
+communicate with external host machine via USB or PCIe (SmartNic
+case). External host machine has driver to access the RShim
+component as well, which is not covered in this patch series.
 
-The Intel EG20T Platform Controller Hub used on the MIPS Boston
-development board supports prefetching memory to optimize DMA transfers.
-Unfortunately for unknown reasons this doesn't work well with some MIPS
-CPUs such as the P6600, particularly when using an I/O Coherence Unit
-(IOCU) to provide cache-coherent DMA. In these systems it is common for
-DMA data to be lost, resulting in broken access to EG20T devices such as
-the MMC or SATA controllers.
+This patch series was submitted to drivers/soc in previous versions.
+This version (v8) re-submit it to drivers/platform according to
+the received comments / suggestions.
 
-Support for a DT property to configure the prefetching was added a while
-back by commit 549ce8f134bd ("misc: pch_phub: Read prefetch value from
-device tree if passed") but we never added the DT snippet to make use of
-it. Add that now in order to disable the prefetching & fix DMA on the
-affected systems.
+Patch v8 1/2 has changes according to some comments from Vadim
+Pasternak during Mellanox internal review.
 
-Signed-off-by: Paul Burton <paul.burton@mips.com>
-Patchwork: https://patchwork.linux-mips.org/patch/21068/
-Cc: linux-mips@linux-mips.org
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- arch/mips/boot/dts/img/boston.dts | 6 ++++++
- 1 file changed, 6 insertions(+)
+Patch v8 2/2 was reviewed by Rob Herring before, but might need
+a second look since the location of the driver code is moved.
 
-diff --git a/arch/mips/boot/dts/img/boston.dts b/arch/mips/boot/dts/img/boston.dts
-index 65af3f6ba81c..84328afa3a55 100644
---- a/arch/mips/boot/dts/img/boston.dts
-+++ b/arch/mips/boot/dts/img/boston.dts
-@@ -141,6 +141,12 @@
- 				#size-cells = <2>;
- 				#interrupt-cells = <1>;
- 
-+				eg20t_phub@2,0,0 {
-+					compatible = "pci8086,8801";
-+					reg = <0x00020000 0 0 0 0>;
-+					intel,eg20t-prefetch = <0>;
-+				};
-+
- 				eg20t_mac@2,0,1 {
- 					compatible = "pci8086,8802";
- 					reg = <0x00020100 0 0 0 0>;
+Liming Sun (2):
+  platform/mellanox: Add TmFifo driver for Mellanox BlueField Soc
+  dt-bindings: soc: Add TmFifo binding for Mellanox BlueField SoC
+
+ .../devicetree/bindings/soc/mellanox/tmfifo.txt    |   23 +
+ drivers/platform/mellanox/Kconfig                  |   13 +-
+ drivers/platform/mellanox/Makefile                 |    1 +
+ drivers/platform/mellanox/mlxbf-tmfifo-regs.h      |   67 +
+ drivers/platform/mellanox/mlxbf-tmfifo.c           | 1289 ++++++++++++++++++++
+ 5 files changed, 1392 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/devicetree/bindings/soc/mellanox/tmfifo.txt
+ create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo-regs.h
+ create mode 100644 drivers/platform/mellanox/mlxbf-tmfifo.c
+
 -- 
-2.19.1
+1.8.3.1
